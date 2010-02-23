@@ -194,19 +194,18 @@ class ImagingApi(MyXmlrpc):
         def onSuccess(result):
             try:
                 if result[0]:
-                    UUIDCache().set(MACAddress, result[1])
+                    UUIDCache().set(result[1], MACAddress, '', '')
                 return result
-            except:
-                self.logger.info('Imaging: Got an unexpected result for %s : %s' % (MACAddress, result))
+            except Exception, e:
+                self.logger.info('Imaging: While processing result %s for %s : %s' % (MACAddress, result, e))
 
         if not isMACAddress(MACAddress):
             raise TypeError
 
         # try to extract from our cache
-        uuid = UUIDCache().get(MACAddress)
-
-        if uuid: # fetched from cache
-            return maybeDeferred(lambda uuid: uuid, uuid)
+        res = UUIDCache().getByMac(MACAddress)
+        if res: # fetched from cache
+            return maybeDeferred(lambda x: x['uuid'], res)
         else : # cache fetching failed, try to obtain the real value
             url, credentials = makeURL(PackageServerConfig().mmc_agent)
             self.logger.info('Imaging: Getting computer UUID for %s' % (MACAddress))

@@ -49,31 +49,166 @@ class UUIDCache(pulse2.utils.Singleton):
     def __init__(self):
         if not os.path.isfile(self.cachePath):
             try:
-                fd = open(self.cachePath, 'wb')
-                fd.close()
+                fp = open(self.cachePath, 'wb')
+                self.config.write(fp)
+                fp.close()
             except Exception, e:
                 self.log.warn("Can't create my UUID Cache File %s : %s" % (self.cachePath, e))
-                return False
-        self.config.read(self.cachePath)
+                return None
+        if not self._fetch():
+            return None
 
     def _flush(self):
-        # update cache file using our memory stucture
-            try:
-                fd = open(self.cachePath, 'wb')
-                self.config.write(fd)
-                fd.close()
-            except Exception, e:
-                self.log.warn("Can't create my UUID Cache File %s : %s" % (self.cachePath, e))
-                return False
+        """
+        Update cache file using our memory stucture
+        """
+        try:
+            fp = open(self.cachePath, 'wb')
+            self.config.write(fp)
+            fp.close()
+        except Exception, e:
+            self.log.warn("Can't write my UUID Cache File %s : %s" % (self.cachePath, e))
+            return False
+        return True
 
-    def get(self, mac):
-        if self.config.has_section(mac):
-            if self.config.has_option(mac,'uuid'):
-                return self.config.get(mac, 'uuid')
+    def _fetch(self):
+        """
+        Update memory stucture using our cache file
+        """
+        try:
+            fp = open(self.cachePath, 'rb')
+            self.config.read(fp)
+            fp.close()
+        except Exception, e:
+            self.log.warn("Can't read my UUID Cache File %s : %s" % (self.cachePath, e))
+            return False
+        return True
+
+    def getByMac(self, mac):
+        """
+        Get a computer by its MAC from the cache.
+
+        @param mac : the client mac address (mandatory)
+        @type mac : str
+
+        @return a dict(uuid, mac, shortname, fqdn) or False
+        @rtype dict
+        """
+
+        uuid = ''
+        shortname = ''
+        fqdn = ''
+
+        for section in self.config.sections() :
+            if self.config.has_option(section, 'mac'):
+                if self.config.get(section, 'mac') == mac:
+                    uuid = section
+                    if self.config.has_option(section, 'shortname'):
+                        shortname = self.config.get(section, 'shortname')
+                    if self.config.has_option(section, 'fullname'):
+                        fqdn = self.config.get(section, 'fullname')
+                    return {
+                        'uuid'      : uuid,
+                        'mac'       : mac,
+                        'shortname' : shortname,
+                        'fqdn'      : fqdn
+                        }
         return False
 
-    def set(self, mac, uuid):
-        if not self.config.has_section(mac):
-            self.config.add_section(mac)
-        self.config.set(mac, 'uuid', uuid)
+    def getByShortName(self, name):
+        """
+        Get a computer by its shortname from the cache.
+
+        @param name : the client name (mandatory)
+        @type name : str
+
+        @return a dict(uuid, mac, shortname, fqdn) or False
+        @rtype dict
+        """
+
+        uuid = ''
+        mac = ''
+        fqdn = ''
+
+        for section in self.config.sections :
+            if self.config.has_option(section, 'shortname'):
+                if self.config.get(section, 'shortname') == name:
+                    shortname = self.config.get(section, 'shortname')
+                    uuid = section
+                    if self.config.has_option(section, 'mac'):
+                        mac = self.config.get(section, 'mac')
+                    if self.config.has_option(section, 'fullname'):
+                        fqdn = self.config.get(section, 'fullname')
+                    return {
+                        'uuid'      : uuid,
+                        'mac'       : mac,
+                        'shortname' : shortname,
+                        'fqdn'      : fqdn
+                        }
+        return False
+
+    def getByUUID(self, uuid):
+        """
+        Get a computer by its UUID from the cache.
+
+        @param uuid : the client UUID (mandatory)
+        @type uuid : str
+
+        @return a dict(uuid, mac, shortname, fqdn) or False
+        @rtype dict
+        """
+
+        mac = ''
+        shortname = ''
+        fqdn = ''
+
+        if self.config.has_section(uuid):
+            if self.config.has_option(uuid, 'mac'):
+                mac = self.config.get(uuid, 'mac')
+            if self.config.has_option(uuid, 'shortname'):
+                shortname = self.config.get(uuid, 'shortname')
+            if self.config.has_option(uuid, 'fullname'):
+                fqdn = self.config.get(uuid, 'fullname')
+            return {
+                'uuid'      : uuid,
+                'mac'       : mac,
+                'shortname' : shortname,
+                'fqdn'      : fqdn
+                }
+        return False
+
+    def get(self, uuid):
+        """
+        """
+        return self.getByUUID(uuid)
+
+    def set(self, uuid, mac, shortname = '', fqdn = ''):
+        """
+        Add a computer in cache.
+
+        @param uuid : the client UUID (mandatory)
+        @type uuid : str
+        @param mac : the client UUID (mandatory)
+        @type mac : str
+        @param shortname : the client UUID (default : '')
+        @type shortname : str
+        @param fqdn : the client UUID (default : '<shortname>.')
+        @type fqdn : str
+
+        @return True on success
+        @rtype boolean
+        """
+
+        if not pulse2.utils.isMACAddress(mac):
+            return False
+        if type(uuid) != str:
+            return False
+        if fqdn == '':
+            fqdn = "%s." % shortname
+        if not self.config.has_section(uuid):
+            self.config.add_section(uuid)
+        self.config.set(uuid, 'mac', mac)
+        self.config.set(uuid, 'shortname', shortname)
+        self.config.set(uuid, 'fqdn', fqdn)
         self._flush()
+        return True
