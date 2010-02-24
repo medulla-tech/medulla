@@ -116,8 +116,8 @@ class P2PServerCP(pulse2.utils.Singleton):
     mirror_api = {}
     user_package_api = {}
     scheduler_api = {}
+    imaging_api = {}
     cp = None
-    imaging = None
 
     mmc_agent = {}
 
