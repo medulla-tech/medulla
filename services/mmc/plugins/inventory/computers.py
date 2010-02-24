@@ -135,7 +135,13 @@ class InventoryComputers(ComputerI):
         return self.inventory.delMachine(uuid)
 
     def getComputerByMac(self, mac):
-        return self.inventory.getMachinesBy(None, 'Network', 'MACAddress', mac)
+        ret = self.inventory.getMachinesBy(None, 'Network', 'MACAddress', mac, False)
+        if type(ret) == list:
+            if len(ret) != 0:
+                return ret[0]
+            else:
+                return None
+        return ret
 
     def getComputersListHeaders(self, ctx):
         """

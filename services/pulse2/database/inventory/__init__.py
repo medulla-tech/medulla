@@ -22,6 +22,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+"""
+Inventory database backend
+"""
+
 from pulse2.managers.group import ComputerGroupManager
 
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
@@ -546,7 +550,7 @@ class Inventory(DyngroupDatabaseHelper):
 
         return ret
 
-    def getMachinesBy(self, ctx, table, field, value):
+    def getMachinesBy(self, ctx, table, field, value, onlyName = True):
         """
         Return a list of machine that correspond to the table.field = value
         """
@@ -559,7 +563,7 @@ class Inventory(DyngroupDatabaseHelper):
         result = session.query(Machine).\
             add_column(func.max(haspartTable.c.inventory).label("inventoryid")).\
             add_column(func.min(self.inventory.c.Date)).\
-            select_from(self.machine.join(haspartTable.join(self.inventory).join(partTable)))
+            select_from(self.machine.join(haspartTable).join(self.inventory, getattr(haspartTable.c, 'inventory') == self.inventory.c.id).join(partTable))
 
         import re
         p1 = re.compile('\*')
@@ -575,9 +579,12 @@ class Inventory(DyngroupDatabaseHelper):
             order_by(haspartTable.c.inventory)
         session.close()
 
-        if result:
+        if result and onlyName:
             for res in result:
                 ret.append(res[0].Name)
+        else:
+            for res in result:
+                ret.append(res[0].toH())
 
         return ret
 
@@ -912,7 +919,7 @@ class Inventory(DyngroupDatabaseHelper):
         except:
             return None
 
-    def addMachine(self, name, ip, mac, netmask, comment = None, location = None): # TODO add the location association
+    def addMachine(self, name, ip, mac, netmask, comment = None, location_uuid = None): # TODO add the location association
         session = create_session()
         m = Machine()
         m.Name = name
@@ -921,7 +928,7 @@ class Inventory(DyngroupDatabaseHelper):
         query = session.query(InventoryTable).select_from(self.inventory.join(self.table['hasNetwork']).join(self.machine)).filter(self.machine.c.Name == name)
         for inv in query:
             inv.Last = 0
-            session.save(inv)
+            session.save_or_update(inv)
         i = InventoryTable()
         i.Last = 1
         session.save(i)
@@ -953,6 +960,17 @@ class Inventory(DyngroupDatabaseHelper):
             h.inventory = i.id
             session.save(h)
             session.flush()
+
+        if location_uuid != None:
+            query = session.query(self.klass['Entity']).filter(self.table['Entity'].c.id == fromUUID(location_uuid)).first()
+            if query != None:
+                hasEntity = self.klass['hasEntity']
+                hl = hasEntity()
+                hl.machine = m.id
+                hl.entity = query.id
+                hl.inventory = i.id
+                session.save(hl)
+                session.flush()
         session.close()
         return toUUID(m.id)
 
@@ -1112,6 +1130,18 @@ class Inventory(DyngroupDatabaseHelper):
             # Also add entity children
             ret.extend(__addChildren(session, entity.id, level))
         session.close()
+        return ret
+
+    def getComputersLocations(self, machine_uuids):
+        """
+        Return the locations in which the computers are
+        """
+        session = create_session()
+        q = session.query(self.klass['Entity']).add_column(self.machine.c.id).select_from(self.table['Entity'].join(self.table['hasEntity']).join(self.machine)).filter(self.machine.c.id.in_(map(fromUUID, machine_uuids))).all()
+        session.close()
+        ret = {}
+        for entity, mid in q:
+            ret[toUUID(mid)] = entity.toH()
         return ret
 
     def getLocationsCount(self):

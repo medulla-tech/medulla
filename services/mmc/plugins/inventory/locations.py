@@ -54,6 +54,8 @@ class InventoryLocation(ComputerLocationI):
     def getUsersInSameLocations(self, userid):
         return Inventory().getUsersInSameLocations(userid)
 
+    def getMachinesLocations(self, machine_uuids):
+        return Inventory().getComputersLocations(machine_uuids)
 
 def convertLocations(hloc):
     location = hloc[0]
