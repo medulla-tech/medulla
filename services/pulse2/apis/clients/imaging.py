@@ -65,11 +65,8 @@ class Imaging(Pulse2Api):
         """
         if not isMACAddress(MACAddress):
             raise TypeError
-
-        #MDV/NR uuid = getUUIDFromMac(MACAddress)
-
-        d = self.callRemote("computerPrepareImagingDirectory", uuid, imagingData)
-        d.addErrback(self.onErrorRaise, "Imaging:computerPrepareImagingDirectory", [uuid, imagingData])
+        d = self.callRemote("computerPrepareImagingDirectory", MACAddress, imagingData)
+        d.addErrback(self.onErrorRaise, "Imaging:computerPrepareImagingDirectory", [MACAddress, imagingData])
         return d
     def computerUnregister(self, uuid, archive = True):
         """
@@ -225,6 +222,13 @@ class Imaging(Pulse2Api):
         """
         d = self.callRemote("getComputerByMac", MACAddress)
         d.addErrback(self.onErrorRaise, "Imaging:getComputerByMac", MACAddress)
+        return d
+    def logClientAction(self, mac, level, phase, message):
+        """
+        Get a computer UUID using the MAC Address
+        """
+        d = self.callRemote("logClientAction", mac, level, phase, message)
+        d.addErrback(self.onErrorRaise, "Imaging:logClientAction", mac, level, phase, message)
         return d
 
 # need to get a PackageApiManager, it will manage a PackageApi for each mirror
