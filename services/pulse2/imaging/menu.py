@@ -192,12 +192,12 @@ class ImagingMenu:
             write the client menu
         """
         buf = self.buildMenu()
-        filename = os.path.join(self.config.imaging_api['bootmenus_folder'], pulse2.utils.reduceMACAddress(self.mac))
+        filename = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['bootmenus_folder'], pulse2.utils.reduceMACAddress(self.mac))
 
         try:
-            fid, tempname = tempfile.mkstemp(dir=self.config.imaging_api['bootmenus_folder'])
+            fid, tempname = tempfile.mkstemp(dir = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['bootmenus_folder']))
             fid.write(buf)
-            fid.close()            
+            fid.close()
             os.rename(tempname, filename)
             for item in self.menuitems.values():
                 item.write(self.config)
