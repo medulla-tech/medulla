@@ -41,6 +41,7 @@ from pulse2.apis import makeURL
 class ImagingApi(MyXmlrpc):
 
     myType = 'Imaging'
+    myUUIDCache = UUIDCache()
 
     def __init__(self, name, config):
         """
@@ -57,8 +58,41 @@ class ImagingApi(MyXmlrpc):
     def xmlrpc_getServerDetails(self):
         pass
 
-    def xmlrpc_logClientAction(self):
-        pass
+    def xmlrpc_logClientAction(self, mac, level, phase, message):
+        """
+        Remote loging.
+
+        Mainly used to send progress info to our mmc-agent.
+
+        @param mac : The mac address of the client
+        @param level : the log level
+        @param phase : what the client was doing when the info was logged
+        @param message : the log message itself
+        @raise TypeError: if MACAddress is malformed
+        @return: a deferred object resulting to 1 if processing was
+                 successful, else 0.
+        @rtype: int
+        """
+
+        def _getmacCB(result):
+            if result and type(result) == dict :
+                client = self._getXMLRPCClient()
+                func = 'imaging.logClientAction'
+                args = (result['uuid'], level, phase, message)
+                d = client.callRemote(func, *args)
+                d.addCallbacks(lambda x : True, client.onError, errbackArgs = (func, args, 0))
+                return d
+
+            self.logger.warn('Imaging: Failed resolving UUID for client %s : %s' % (mac, result))
+            return False
+
+        if not isMACAddress(mac):
+            raise TypeError
+
+        self.logger.debug('Imaging: Client %s sent a log message while %s (%s) : %s' % (mac, phase, level, message))
+        d = self.xmlrpc_getComputerByMac(mac)
+        d.addCallback(_getmacCB)
+        return d
 
     def xmlrpc_imagingServerStatus(self):
         """
@@ -93,17 +127,8 @@ class ImagingApi(MyXmlrpc):
             raise TypeError
         profile, entities, hostname, domain = splitComputerPath(computerName)
 
-        url, credentials = makeURL(PackageServerConfig().mmc_agent)
-
         self.logger.info('Imaging: Starting registration for %s as %s' % (MACAddress, computerName))
-        # Call the MMC agent
-        client = ImagingXMLRPCClient(
-            '',
-            url,
-            PackageServerConfig().mmc_agent['verifypeer'],
-            PackageServerConfig().mmc_agent['cacert'],
-            PackageServerConfig().mmc_agent['localcert']
-        )
+        client = self._getXMLRPCClient()
         func = 'imaging.computerRegister'
         args = (hostname, domain, MACAddress, profile, entities)
         d = client.callRemote(func, *args)
@@ -130,14 +155,7 @@ class ImagingApi(MyXmlrpc):
         url, credentials = makeURL(PackageServerConfig().mmc_agent)
 
         self.logger.info('Imaging: Starting menu update for %s' % (MACAddress))
-        # Call the MMC agent
-        client = ImagingXMLRPCClient(
-            '',
-            url,
-            PackageServerConfig().mmc_agent['verifypeer'],
-            PackageServerConfig().mmc_agent['cacert'],
-            PackageServerConfig().mmc_agent['localcert']
-        )
+        client = self._getXMLRPCClient()
         func = 'imaging.getMenu'
         args = (MACAddress)
         d = client.callRemote(func, *args)
@@ -160,18 +178,8 @@ class ImagingApi(MyXmlrpc):
 
         if not isMACAddress(MACAddress):
             raise TypeError
-
-        url, credentials = makeURL(PackageServerConfig().mmc_agent)
-
         self.logger.info('Imaging: Starting inventory processing for %s' % (MACAddress))
-        # Call the MMC agent
-        client = ImagingXMLRPCClient(
-            '',
-            url,
-            PackageServerConfig().mmc_agent['verifypeer'],
-            PackageServerConfig().mmc_agent['cacert'],
-            PackageServerConfig().mmc_agent['localcert']
-        )
+        client = self._getXMLRPCClient()
         func = 'imaging.injectInventory'
         args = (MACAddress, Inventory)
         d = client.callRemote(func, *args)
@@ -195,7 +203,7 @@ class ImagingApi(MyXmlrpc):
         def onSuccess(result):
             try:
                 if result[0]:
-                    UUIDCache().set(result[1]['uuid'], MACAddress, result[1]['shortname'], result[1]['fqdn'])
+                    self.myUUIDCache.set(result[1]['uuid'], MACAddress, result[1]['shortname'], result[1]['fqdn'])
                     self.logger.info('Imaging: Updating cache for %s' % (MACAddress))
                 return result[1]
             except Exception, e:
@@ -205,22 +213,16 @@ class ImagingApi(MyXmlrpc):
             raise TypeError
 
         # try to extract from our cache
-        res = UUIDCache().getByMac(MACAddress)
+        res = self.myUUIDCache.getByMac(MACAddress)
         if res: # fetched from cache
             return maybeDeferred(lambda x: x, res)
         else : # cache fetching failed, try to obtain the real value
-            url, credentials = makeURL(PackageServerConfig().mmc_agent)
             self.logger.info('Imaging: Getting computer UUID for %s' % (MACAddress))
-            # Call the MMC agent
-            client = ImagingXMLRPCClient(
-                '',
-                url,
-                PackageServerConfig().mmc_agent['verifypeer'],
-                PackageServerConfig().mmc_agent['cacert'],
-                PackageServerConfig().mmc_agent['localcert']
-            )
-            d = client.callRemote('imaging.getComputerByMac', MACAddress)
-            d.addCallbacks(onSuccess, client.onError, errbackArgs = ('imaging.getComputerByMac', MACAddress, 0))
+            client = self._getXMLRPCClient()
+            func = 'imaging.getComputerByMac'
+            args = [MACAddress]
+            d = client.callRemote(func, *args)
+            d.addCallbacks(onSuccess, client.onError, errbackArgs = (func, args, 0))
             return d
 
     def xmlrpc_computersMenuSet(self, menus):
@@ -248,3 +250,14 @@ class ImagingApi(MyXmlrpc):
                     ret.append(uuid)
                     # FIXME: Rollback to the previous menu
         return ret
+
+    def _getXMLRPCClient(self):
+        # Call the MMC agent
+        url, credentials = makeURL(PackageServerConfig().mmc_agent)
+        return ImagingXMLRPCClient(
+            '',
+            url,
+            PackageServerConfig().mmc_agent['verifypeer'],
+            PackageServerConfig().mmc_agent['cacert'],
+            PackageServerConfig().mmc_agent['localcert']
+        )
