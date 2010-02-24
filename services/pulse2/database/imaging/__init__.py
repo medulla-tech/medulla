@@ -668,7 +668,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def getPossibleBootServices(self, target_uuid, start, end, filter):
         session = create_session()
         menu = self.getTargetsMenuTUUID(target_uuid)
-        print menu
         q1 = self.__PossibleBootServices(session, target_uuid, filter)
         q1 = q1.group_by(self.boot_service.c.id)
         if end != -1:
@@ -1341,9 +1340,12 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session.close()
         return q
         
-    def getImagingServerByPackageServerUUID(self, uuid):
+    def getImagingServerByPackageServerUUID(self, uuid, with_entity = False):
         session = create_session()
-        q = session.query(ImagingServer).filter(self.imaging_server.c.packageserver_uuid == uuid).all()
+        q = session.query(ImagingServer)
+        if with_entity:
+            q = q.add_entity(Entity).select_from(self.imaging_server.join(self.entity))
+        q = q.filter(self.imaging_server.c.packageserver_uuid == uuid).all()
         session.close()
         return q
     
@@ -1579,13 +1581,16 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q
 
     ######### REGISTRATION
-    def isTargetRegister(self, uuid, type, session = None):
+    def isTargetRegister(self, uuid, target_type, session = None):
         session_need_to_close = False
         if session == None:
             session_need_to_close = True
             session = create_session()
 
-        q = session.query(Target).filter(and_(self.target.c.uuid == uuid, self.target_type.c.id == type)).first()
+        if type(uuid) == list:
+            q = session.query(Target).filter(and_(self.target.c.uuid.in_(uuid), self.target_type.c.id == target_type)).all()
+        else:
+            q = session.query(Target).filter(and_(self.target.c.uuid == uuid, self.target_type.c.id == target_type)).first()
         ret = (q != None)
         
         if session_need_to_close:
@@ -1648,7 +1653,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.flush()
         session.close()
         return [True]
-        
         
     def getMyMenuTarget(self, uuid, type):
         session = create_session()

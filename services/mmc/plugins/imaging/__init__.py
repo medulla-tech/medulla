@@ -195,10 +195,10 @@ class RpcProxy(RpcProxyI):
         return [count, xmlrpcCleanup(ret)]
 
     # EDITION
-    def moveItemUpInMenu(self, target_uuid, type, mi_uuid):
+    def moveItemUpInMenu(self, target_uuid, target_type, mi_uuid):
         return ImagingDatabase().moveItemUpInMenu(target_uuid, mi_uuid)
 
-    def moveItemDownInMenu(self, target_uuid, type, mi_uuid):
+    def moveItemDownInMenu(self, target_uuid, target_type, mi_uuid):
         return ImagingDatabase().moveItemDownInMenu(target_uuid, mi_uuid)
 
     def moveItemUpInMenu4Location(self, loc_id, mi_uuid):
@@ -208,7 +208,7 @@ class RpcProxy(RpcProxyI):
         return ImagingDatabase().moveItemDownInMenu4Location(loc_id, mi_uuid)
 
     ###### IMAGES
-    def __getTargetImages(self, id, type, start = 0, end = -1, filter = ''):
+    def __getTargetImages(self, id, target_type, start = 0, end = -1, filter = ''):
         # carrefull the end is used for each list (image and master)
         db = ImagingDatabase()
         reti = map(lambda l: l.toH(), db.getPossibleImages(id, start, end, filter))
@@ -285,7 +285,7 @@ class RpcProxy(RpcProxyI):
             return xmlrpcCleanup([False, e])
 
     ###### BOOT SERVICES
-    def __getTargetBootServices(self, id, type, start = 0, end = -1, filter = ''):
+    def __getTargetBootServices(self, id, target_type, start = 0, end = -1, filter = ''):
         db = ImagingDatabase()
         ret = map(lambda l: l.toH(), db.getBootServicesOnTargetById(id, start, end, filter))
         count = db.countBootServicesOnTargetById(id, filter)
@@ -362,10 +362,10 @@ class RpcProxy(RpcProxyI):
         return False
 
     ###### LOGS
-    def __getTargetMasteredOns(self, id, type, start = 0, end = -1, filter = ''):
+    def __getTargetMasteredOns(self, id, target_type, start = 0, end = -1, filter = ''):
         db = ImagingDatabase()
-        ret = map(lambda l: l.toH(), db.getMasteredOnsOnTargetByIdAndType(id, type, start, end, filter))
-        count = db.countMasteredOnsOnTargetByIdAndType(id, type, filter)
+        ret = map(lambda l: l.toH(), db.getMasteredOnsOnTargetByIdAndType(id, target_type, start, end, filter))
+        count = db.countMasteredOnsOnTargetByIdAndType(id, target_type, filter)
         return [count, xmlrpcCleanup(ret)]
 
     def getComputerLogs(self, id, start = 0, end = -1, filter = ''):
@@ -433,8 +433,8 @@ class RpcProxy(RpcProxyI):
         return ImagingDatabase().doesLocationHasImagingServer(loc_id)
 
     ###### REGISTRATION
-    def isTargetRegister(self, uuid, type):
-        return ImagingDatabase().isTargetRegister(uuid, type)
+    def isTargetRegister(self, uuid, target_type):
+        return ImagingDatabase().isTargetRegister(uuid, target_type)
 
     def isComputerRegistered(self, machine_uuid):
         return self.isTargetRegister(machine_uuid, TYPE_COMPUTER)
@@ -443,14 +443,14 @@ class RpcProxy(RpcProxyI):
         return self.isTargetRegister(profile_uuid, TYPE_PROFILE)
 
     ###### Menus
-    def getMyMenuTarget(self, uuid, type):
-        ret = ImagingDatabase().getMyMenuTarget(uuid, type)
+    def getMyMenuTarget(self, uuid, target_type):
+        ret = ImagingDatabase().getMyMenuTarget(uuid, target_type)
         if ret[1]:
             ret[1] = ret[1].toH()
         return ret
 
-    def setMyMenuTarget(self, uuid, params, type):
-        ret = ImagingDatabase().setMyMenuTarget(uuid, params, type)
+    def setMyMenuTarget(self, uuid, params, target_type):
+        ret = ImagingDatabase().setMyMenuTarget(uuid, params, target_type)
         return ret
 
     def getMyMenuComputer(self, uuid):
@@ -471,7 +471,7 @@ class RpcProxy(RpcProxyI):
         ret = map(lambda l: l.toH(), db.getAllTargetPostInstallScript(target_uuid, start, end, filter))
         count = db.countAllTargetPostInstallScript(target_uuid, filter)
         return [count, xmlrpcCleanup(ret)]
-
+    
     def getAllPostInstallScripts(self, location, start = 0, end = -1, filter = ''):
         db = ImagingDatabase()
         ret = map(lambda l: l.toH(), db.getAllPostInstallScripts(location, start, end, filter))
@@ -504,31 +504,72 @@ class RpcProxy(RpcProxyI):
         #    return xmlrpcCleanup([False, e])
 
     ###### API to be called from the imaging server (ie : without authentication)
-    def computerRegister(self, hostname, domain, MACAddress, profile, entities):
+    def computerRegister(self, imaging_server_uuid, hostname, domain, MACAddress, profile):
         """
         Called by the Package Server to register a new computer.
         The computer name may contain a profile and an entity path (like profile:/entityA/entityB/computer)
         """
 
+        logger = logging.getLogger()
+        db = ImagingDatabase()
+        
+        imaging_server = db.getImagingServerByPackageServerUUID(imaging_server_uuid, True)
+        imaging_server = imaging_server[0]
+        if imaging_server == None:
+            return [False, "failed to find the imaging server%s"%imaging_server_uuid]
+
+        loc_id = imaging_server[1].uuid
         computer = {
             'computername'          : hostname, # FIXME : what about domain ?
             'computerdescription'   : '',
             'computerip'            : '',
             'computermac'           : MACAddress,
             'computernet'           : '',
-            'location_uuid'         : ''
+            'location_uuid'         : loc_id
         }
 
-        ComputerManager().addComputer(None, computer)
+        uuid = None
+        db_computer = ComputerManager().getComputerByMac(MACAddress)
+        if db_computer != None:
+            uuid = db_computer['uuid']
+        if uuid == None or type(uuid) == list and len(uuid) == 0:
+            logger.info("the computer %s (%s) does not exist in the backend, trying to add it"%(hostname, MACAddress))
+            # the computer does not exists, so we create it
+            uuid = ComputerManager().addComputer(None, computer)
+            if mid == None:
+                logger.warn("failed to create computer %s (%s)"%(hostname, MACAddress))
+                return [False, "failed to create computer %s (%s)"%(hostname, MACAddress)]
+        else:
+            logger.debug("computer %s (%s) already exists, we dont need to declare it again"%(hostname, MACAddress))
+
+        target_type = TYPE_COMPUTER
+        if not db.isTargetRegister(uuid, target_type):
+            logger.info("computer %s (%s) need registration"%(hostname, MACAddress))
+            menu = self.getMyMenuTarget(uuid, TYPE_COMPUTER)
+            menu = menu[1] # menu[O] is the owner of the menu, and it does not matter here
+
+            params = {
+                'target_name':hostname,
+                'default_name':menu['default_name'],
+                'timeout':menu['timeout'],
+                'background_uri':menu['background_uri'],
+                'message':menu['message'],
+                'protocol':menu['protocol'],
+                'target_uuid':uuid
+            }
+            
+            ret = db.setMyMenuTarget(uuid, params, target_type)
+        else:
+            logger.debug("computer %s (%s) dont need registration"%(hostname, MACAddress))
 
         if profile:
             # TODO
             pass
 
-
-        if entities:
-            # TODO
-            pass
+#        if entities:
+#            # TODO
+#            pass
+        return uuid
 
     def imagingServerRegister(self, name, url, uuid):
         """
