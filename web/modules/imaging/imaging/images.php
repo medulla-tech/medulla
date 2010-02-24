@@ -101,7 +101,6 @@ function image_edit($type, $images, $masters) {
     $id = $_GET['itemid'];
     $target_uuid = $_GET['target_uuid'];
     $label = urldecode($_GET['itemlabel']);
-    print $id;
     $all = array_merge($images[1], $masters[1]);
     foreach ($all as $m) {
         if ($m['imaging_uuid'] == $id) {
