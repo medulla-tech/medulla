@@ -24,6 +24,8 @@ Pulse 2 Package Server Imaging API
 """
 
 import logging
+import tempfile
+import os
 
 from twisted.internet import defer
 from twisted.internet.defer import maybeDeferred
@@ -35,8 +37,13 @@ from pulse2.package_server.imaging.cache import UUIDCache
 from pulse2.package_server.imaging.api.status import Status
 from pulse2.package_server.imaging.menu import isMenuStructure, ImagingMenuBuilder
 
-from pulse2.utils import isMACAddress, splitComputerPath
+from pulse2.utils import isMACAddress, splitComputerPath, macToNode
 from pulse2.apis import makeURL
+
+try:
+    import uuid
+except ImportError:
+    import mmc.support.uuid as uuid
 
 class ImagingApi(MyXmlrpc):
 
@@ -90,6 +97,30 @@ class ImagingApi(MyXmlrpc):
             raise TypeError
 
         self.logger.debug('Imaging: Client %s sent a log message while %s (%s) : %s' % (mac, phase, level, message))
+        d = self.xmlrpc_getComputerByMac(mac)
+        d.addCallback(_getmacCB)
+        return d
+
+    def xmlrpc_computerMenuUpdate(self, mac):
+        """
+        Perform a menu refresh.
+
+        @param mac : The mac address of the client
+        @return: a deferred object resulting to 1 if processing was
+                 successful, else 0.
+        @rtype: int
+        """
+
+        def _getmacCB(result):
+            if result and type(result) == dict :
+                # TODO : call menu refresh here
+                return True
+            self.logger.warn('Imaging: Failed resolving UUID for client %s : %s' % (mac, result))
+            return False
+
+        if not isMACAddress(mac):
+            raise TypeError
+        self.logger.debug('Imaging: Client %s asked for a menu update' % (mac))
         d = self.xmlrpc_getComputerByMac(mac)
         d.addCallback(_getmacCB)
         return d
@@ -172,20 +203,23 @@ class ImagingApi(MyXmlrpc):
         @rtype: int
         """
 
-        def onSuccess(result):
-            # TODO : add menu re-generation here
-            return 1
+        def _getmacCB(result):
+            if result and type(result) == dict :
+                client = self._getXMLRPCClient()
+                func = 'imaging.injectInventory'
+                args = (result['uuid'], Inventory)
+                d = client.callRemote(func, *args)
+                d.addCallbacks(lambda x : True, client.onError, errbackArgs = (func, args, 0))
+                return d
+            self.logger.warn('Imaging: Failed resolving UUID for client %s : %s' % (mac, result))
+            return False
 
-        if not isMACAddress(MACAddress):
+        if not isMACAddress(mac):
             raise TypeError
-        self.logger.info('Imaging: Starting inventory processing for %s' % (MACAddress))
-        client = self._getXMLRPCClient()
-        func = 'imaging.injectInventory'
-        args = (MACAddress, Inventory)
-        d = client.callRemote(func, *args)
-        d.addCallbacks(onSuccess, client.onError, errbackArgs = (func, args, 0))
+        self.logger.debug('Imaging: Starting inventory processing for %s' % (MACAddress))
+        d = self.xmlrpc_getComputerByMac(MACAddress)
+        d.addCallback(_getmacCB)
         return d
-
 
     def xmlrpc_getComputerByMac(self, MACAddress):
         """
@@ -258,6 +292,67 @@ class ImagingApi(MyXmlrpc):
                     ret.append(uuid)
                     # FIXME: Rollback to the previous menu
         return ret
+
+
+    def xmlrpc_computerPrepareImagingDirectory(self, mac, imagingData):
+        """
+        Prepare an image folder.
+
+        This is quiet different as for the LRS, where the UUID was given
+        in revosavedir (kernel command line) : folder is now generated
+        real-time, if no generation has been done backup is dropped
+        client-side
+
+        if imagingData is False, ask the mmc agent for additional
+        parameters (not yet done).
+
+        @param mac : The mac address of the client
+        @type menus: MAC Address
+        @param imagingData : The data to use for image creation
+        @type imagingData: ????
+
+        """
+        def _getImagingData(result):
+            pass
+
+        def _getmacCB(result):
+            if result and type(result) == dict :
+                computer_uuid = result['uuid']
+                self.logger.warn('Imaging: New image %s for client %s' % (image_uuid, computer_uuid))
+                return image_uuid
+
+            self.logger.warn('Imaging: Failed resolving UUID for client %s : %s' % (mac, result))
+            return False
+
+        if not isMACAddress(mac):
+            raise TypeError
+
+        self.logger.debug('Imaging: Client %s want to create an image; additionnal parameters were %s ' % (mac, imagingData))
+
+        target_folder = os.path.join(PackageServerConfig().imaging_api['base_folder'], PackageServerConfig().imaging_api['masters_folder'])
+        # compute our future UUID, using the MAC address as node
+        # according the doc, the node is a 48 bits (= 6 bytes) integer
+        attempts = 10
+        while attempts:
+            image_uuid = str(uuid.uuid1(macToNode(mac)))
+            if not os.path.exists(os.path.join(target_folder, image_uuid)):
+                break
+            attempts -= 1
+
+        if not attempts:
+            self.logger.debug('Imaging: I was not able to create a folder for client %s ' % (mac))
+            return maybeDeferred(lambda x: x, False)
+
+        try:
+            os.mkdir(os.path.join(target_folder, image_uuid))
+        except:
+            self.logger.debug('Imaging: I was not able to create folder %s for client %s ' % (os.path.join(target_folder, image_uuid), mac))
+            return maybeDeferred(lambda x: x, False)
+
+        # now the folder is created (and exists), if can safely be used
+        d = self.xmlrpc_getComputerByMac(mac)
+        d.addCallback(_getmacCB)
+        return d
 
     def _getXMLRPCClient(self):
         # Call the MMC agent
