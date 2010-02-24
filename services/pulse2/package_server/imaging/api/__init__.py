@@ -239,14 +239,22 @@ class ImagingApi(MyXmlrpc):
         ret = []
         for uuid, menu in menus:
             if not isMenuStructure(menu):
+                self.logger.error("Invalid menu structure for computer UUID %s" % uuid)
                 ret.append(uuid)
+                continue
+            macaddress = self.myUUIDCache.getByUUID(uuid)
+            if macaddress == False:
+                self.logger.error("Can't get MAC address for UUID %s" % uuid)
+                ret.append(uuid)
+                continue
             else:
-                imb = ImagingMenuBuilder()
                 try:
-                    imenu = imb.make(self.config, uuid, menu)
+                    self.logger.debug('Setting menu for computer UUID/MAC %s/%s' % (uuid, macaddress))
+                    imb = ImagingMenuBuilder(self.config, macaddress, menu)
+                    imenu = imb.make()
                     imenu.write()
                 except Exception, e:
-                    self.logger.error("Error while setting new menu of computer %s: %s" % (uuid, str(e)))
+                    self.logger.error("Error while setting new menu of computer uuid/mac %s: %s" % (uuid, str(e)))
                     ret.append(uuid)
                     # FIXME: Rollback to the previous menu
         return ret
