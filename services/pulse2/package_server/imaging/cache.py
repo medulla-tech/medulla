@@ -47,7 +47,6 @@ class UUIDCache(pulse2.utils.Singleton):
     config = ConfigParser.ConfigParser()
 
     def __init__(self):
-        pulse2.utils.Singleton.__init__(self)
         if not os.path.isfile(self.cachePath):
             try:
                 self.log.info("Creating my UUID Cache File %s" % (self.cachePath))
@@ -81,7 +80,7 @@ class UUIDCache(pulse2.utils.Singleton):
         try:
             self.log.info("Reading my UUID Cache File %s" % (self.cachePath))
             fp = open(self.cachePath, 'rb')
-            self.config.read(fp)
+            self.config.readfp(fp)
             fp.close()
         except Exception, e:
             self.log.warn("Can't read my UUID Cache File %s : %s" % (self.cachePath, e))
