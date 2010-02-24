@@ -320,10 +320,34 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
     }
     // before a save
     if (buf[0] == 0xEC) {
-        char operation[16];
-        snprintf(operation, 16, "%c", buf[1]);
-        if (analyseresult(mysystem(3, gPathCreateImage, smac, operation))) {
-            // FIXME : we should also send back a NAK
+        // create a temporary file to get our UUID
+        char filename[256];
+        snprintf(filename, 255, "/tmp/uuid.pulse2.%s.XXXXXX", smac);
+
+        if (!(fo = mkstemp(filename))) {        // can't create .inf file
+            char *msg = malloc(256);
+            snprintf(msg, 256, "can't create %s", filename);
+            myLogger(msg);
+            free(msg);
+            return 0;
+        }
+        close(fo);
+
+        if (mysystem(3, gPathCreateImage, mac, filename) == 0) {
+            /*
+             * thanks to system(), we do not have any chance to get our
+             * so we uses a temporary file to recover it.
+             * yes, that's quiet ugly
+             */
+            char *name = malloc(40);
+            bzero(name, 40);
+            fo = open(filename, 'r');
+            read(fo, name, 40);
+            close(fo);
+            unlink(filename);
+            sendto(s, name, strlen(name) + 1 , MSG_NOSIGNAL,
+                   (struct sockaddr *)si_other, sizeof(*si_other));
+            free(name);
         }
         return 0;
     }
