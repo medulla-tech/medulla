@@ -321,6 +321,15 @@ def reduceMACAddress(mac):
     """
     return mac.replace(':', '')
 
+def macToNode(mac):
+    """
+    @return: the MAC address in the form of a 48-bits integer
+    """
+    try:
+        return int(reduceMACAddress(mac), 16)
+    except:
+        return 0
+
 def splitComputerPath(path):
     """
     Split the computer path according to this scheme:
