@@ -24,6 +24,7 @@ Pulse 2 Package Server Imaging API status class.
 """
 
 import logging
+import os
 
 from twisted.internet.utils import getProcessOutput
 
