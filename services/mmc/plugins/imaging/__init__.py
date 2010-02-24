@@ -471,7 +471,7 @@ class RpcProxy(RpcProxyI):
         ret = map(lambda l: l.toH(), db.getAllTargetPostInstallScript(target_uuid, start, end, filter))
         count = db.countAllTargetPostInstallScript(target_uuid, filter)
         return [count, xmlrpcCleanup(ret)]
-    
+
     def getAllPostInstallScripts(self, location, start = 0, end = -1, filter = ''):
         db = ImagingDatabase()
         ret = map(lambda l: l.toH(), db.getAllPostInstallScripts(location, start, end, filter))
@@ -550,6 +550,13 @@ class RpcProxy(RpcProxyI):
         #MDV/NR computer = ComputerManager().getComputerByMac(mac)
         # return [True, "UUID%s"%computer.id]
         return [True, {'uuid': "FAKE_UUID", 'mac': mac, 'shortname': "shortname", 'fqdn': "fqdn"}]
+
+    def logClientAction(self, uuid, level, phase, message):
+        """
+        Called by the package server, to log some info
+        """
+        # TODO !!!
+        return [True, True]
 
     def imageRegister(self, imaging_server_uuid, computer_uuid, image_uuid, name, desc, path, checksum, size, creation_date, creator = None):
         """
