@@ -33,7 +33,7 @@ from pulse2.package_server.xmlrpc import MyXmlrpc
 from pulse2.package_server.imaging.api.client import ImagingXMLRPCClient
 from pulse2.package_server.imaging.cache import UUIDCache
 from pulse2.package_server.imaging.api.status import Status
-from pulse2.imaging.menu import isMenuStructure, ImagingMenuBuilder
+from pulse2.package_server.imaging.menu import isMenuStructure, ImagingMenuBuilder
 
 from pulse2.utils import isMACAddress, splitComputerPath
 from pulse2.apis import makeURL
