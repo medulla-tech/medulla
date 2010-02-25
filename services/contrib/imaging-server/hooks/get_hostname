@@ -90,7 +90,7 @@ def myTreatment(result):
 
         try :
             filestream = open(filename, 'w')
-            filestream.write(result['hostname'])
+            filestream.write(result['shortname'])
             filestream.close()
         except Exception, e:
             logging.getLogger().error('HOOK %s : Can\'t write %s : %s, giving up' % (sys.argv[0], filename, e))
