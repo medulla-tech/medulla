@@ -305,10 +305,14 @@ class P2PServerCP(pulse2.utils.Singleton):
             diskless_initrd = 'initrd'
             # diskless memtest tool
             diskless_memtest = 'memtest'
+            # will contain computer-related materials
+            computers_folder = "computers"
             # will contain inventories
             inventories_folder = 'inventories'
             # will contain masters, served by tftp
             masters_folder = 'masters'
+            # will contain postinstall binaries
+            postinst_folder = 'postinst'
             # will contain our UUID/MAC Addr cache
             uuid_cache_file = os.path.join(base_folder, 'uuid-cache.txt')
             # Entity UUID
@@ -332,10 +336,14 @@ class P2PServerCP(pulse2.utils.Singleton):
                 diskless_initrd = self.cp.get("imaging_api", 'diskless_initrd')
             if self.cp.has_option("imaging_api", 'diskless_memtest'):
                 diskless_memtest = self.cp.get("imaging_api", 'diskless_memtest')
+            if self.cp.has_option('imaging_api', 'computers_folder'):
+                computers_folder = self.cp.get('imaging_api', 'computers_folder')
             if self.cp.has_option('imaging_api', 'inventories_folder'):
                 inventories_folder = self.cp.get('imaging_api', 'inventories_folder')
             if self.cp.has_option('imaging_api', 'masters_folder'):
                 masters_folder = self.cp.get('imaging_api', 'masters_folder')
+            if self.cp.has_option('imaging_api', 'postinst_folder'):
+                postinst_folder = self.cp.get('imaging_api', 'postinst_folder')
             if self.cp.has_option('imaging_api', 'uuid_cache_file'):
                 uuid_cache_file = os.path.join(self.base_folder, self.cp.get('imaging_api', 'uuid_cache_file'))
             if self.cp.has_option("imaging_api", 'uuid'):
@@ -351,8 +359,10 @@ class P2PServerCP(pulse2.utils.Singleton):
                 'diskless_kernel'   : diskless_kernel,
                 'diskless_initrd'   : diskless_initrd,
                 'diskless_memtest'  : diskless_memtest,
+                'computers_folder'  : computers_folder,
                 'inventories_folder': inventories_folder,
                 'masters_folder'    : masters_folder,
+                'postinst_folder'   : postinst_folder,
                 'src'               : src,
                 'uuid'              : uuid,
                 'uuid_cache_file'   : uuid_cache_file,
