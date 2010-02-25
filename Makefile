@@ -153,7 +153,7 @@ test-package-server:
 test: unit-tests xmlrpc-tests
 
 unit-tests:
-	PYTHONPATH=$(PWD)/services/ python ./services/pulse2/tests/*.py
+	python ./services/pulse2/tests/*.py
 
 xmlrpc-tests:
 	cd tests/services && ./start.sh
