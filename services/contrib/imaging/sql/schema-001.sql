@@ -64,6 +64,14 @@ CREATE TABLE Language (
   label Text NOT NULL,
   PRIMARY KEY (id)
 );
+
+-- SynchroState
+CREATE TABLE SynchroState (
+  id INT NOT NULL AUTO_INCREMENT,
+  label Text NOT NULL,
+  PRIMARY KEY (id)
+);
+
 -- end of the nomenclatures tables
 
 -- BootService
@@ -139,6 +147,7 @@ CREATE TABLE Menu (
   fk_default_item INT,
   fk_default_item_WOL INT,
   fk_protocol INT DEFAULT 1,
+  fk_synchrostate INT NOT NULL DEFAULT 1,
   PRIMARY KEY (id)
 ) AUTO_INCREMENT = 1000;
 
@@ -259,6 +268,7 @@ ALTER TABLE Menu ADD FOREIGN KEY(fk_name)               REFERENCES International
 ALTER TABLE Menu ADD FOREIGN KEY(fk_default_item)       REFERENCES MenuItem(id);
 ALTER TABLE Menu ADD FOREIGN KEY(fk_default_item_WOL)   REFERENCES MenuItem(id);
 ALTER TABLE Menu ADD FOREIGN KEY(fk_protocol)           REFERENCES Protocol(id);
+ALTER TABLE Menu ADD FOREIGN KEY(fk_synchrostate)       REFERENCES SynchroState(id);
 
 ALTER TABLE BootServiceOnImagingServer ADD FOREIGN KEY(fk_boot_service)     REFERENCES BootService(id);
 ALTER TABLE BootServiceOnImagingServer ADD FOREIGN KEY(fk_imaging_server)   REFERENCES ImagingServer(id);
@@ -311,6 +321,7 @@ CREATE INDEX fk_menu_name_idx               ON Menu(fk_name);
 CREATE INDEX fk_menu_default_item_idx       ON Menu(fk_default_item);
 CREATE INDEX fk_menu_default_item_WOL_idx   ON Menu(fk_default_item_WOL);
 CREATE INDEX fk_menu_protocol_idx           ON Menu(fk_protocol);
+CREATE INDEX fk_menu_state_idx              ON Menu(fk_state);
 
 CREATE INDEX fk_boot_service_on_imaging_server_boot_service_idx     ON BootServiceOnImagingServer(fk_boot_service);
 CREATE INDEX fk_boot_service_on_imaging_server_imaging_server_idx   ON BootServiceOnImagingServer(fk_imaging_server);
@@ -358,6 +369,10 @@ INSERT INTO Protocol (label) VALUES ("mtftp");
 INSERT INTO Language (label) VALUES ("English");
 INSERT INTO Language (label) VALUES ("Français");
 INSERT INTO Language (label) VALUES ("Español");
+
+INSERT INTO SynchroState (label) VALUES ("TODO");
+INSERT INTO SynchroState (label) VALUES ("DONE");
+INSERT INTO SynchroState (label) VALUES ("RUNNING");
 
 INSERT INTO Internationalization (id, fk_language, label) VALUES (1, 2, "Menu par défaut");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (2, 2, "Continuer le démarrage normalement");
