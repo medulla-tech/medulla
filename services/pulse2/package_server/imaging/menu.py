@@ -85,7 +85,7 @@ class ImagingMenu:
     """
     hold an imaging menu
     """
-    
+
     PULSE2_K_DISKLESS = 'bzImage.initrd'
     PULSE2_I_DISKLESS = ''
 
@@ -128,6 +128,8 @@ class ImagingMenu:
             ('##PULSE2_F_DISKLESS##', self.config.imaging_api['diskless_folder'], 'global'),
             ('##PULSE2_K_DISKLESS##', self.config.imaging_api['diskless_kernel'], 'global'),
             ('##PULSE2_F_MASTERS##', self.config.imaging_api['masters_folder'], 'global'),
+            ('##PULSE2_F_COMPUTERS##', self.config.imaging_api['computers_folder'], 'global'),
+            ('##PULSE2_F_POSTINST##', self.config.imaging_api['postinst_folder'], 'global'),
             ('##PULSE2_F_BASE##', self.config.imaging_api['base_folder'], 'global'),
             ('##PULSE2_I_DISKLESS##', self.config.imaging_api['diskless_initrd'], 'global'),
             ('##PULSE2_MEMTEST##', self.config.imaging_api['diskless_memtest'], 'global')
@@ -188,7 +190,7 @@ class ImagingMenu:
 
         assert(type(buf) == unicode)
         # Encode menu using code page 437 (MS-DOS) encoding
-        buf = buf.encode('cp437')    
+        buf = buf.encode('cp437')
         return buf
 
     def write(self):
@@ -209,7 +211,7 @@ class ImagingMenu:
         except Exception, e:
             logging.getLogger().error("While writing boot menu for %s : %s" % (self.mac, e))
             return False
-        
+
         return True
 
     def read(self):
@@ -312,7 +314,7 @@ class ImagingItem:
 
     title = None # the item title
     desc = None # the item desc
-    
+
     def __init__(self, entry):
         """
         @param entry: menu item in dict format
@@ -343,7 +345,7 @@ class ImagingBootServiceItem(ImagingItem):
         ImagingItem.__init__(self, entry)
         self.value = entry['value']
         assert(type(self.value) == unicode)
-        
+
     def getEntry(self, protocol):
         """
         Return the entry, in a GRUB compatible format
