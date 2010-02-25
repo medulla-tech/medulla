@@ -26,7 +26,7 @@ Tests for pulse2.utils
 
 import unittest
 
-from pulse2.utils import isMACAddress, splitComputerPath
+from pulse2.utils import isMACAddress, isUUID, splitComputerPath
 
 class InputTests(unittest.TestCase):
 
@@ -36,6 +36,17 @@ class InputTests(unittest.TestCase):
     def test_MACNotValid(self):
         self.assertFalse(isMACAddress('00:11:aa:BB:22:zz'))
         self.assertFalse(isMACAddress('00:11:aa:BB:22:33:00'))
+
+    def test_UUIDValid(self):
+        self.assertTrue(isUUID('UUID1'))
+        self.assertTrue(isUUID('1a10b1f4-bb6e-4798-b39e-bb8d090dd8b6'))
+
+    def test_UUIDNotValid(self):
+        self.assertFalse(isUUID('UUID0'))
+        self.assertFalse(isUUID('UUID-10'))
+        self.assertFalse(isUUID(''))
+        self.assertFalse(isUUID('1a10b1f4-bb6e-4798-b39e-bb8d090dd8b'))
+        self.assertFalse(isUUID(42))
 
     def test_computerPathValid(self):
         self.assertEqual(splitComputerPath('hostname'), ('', '', 'hostname', ''))

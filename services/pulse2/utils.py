@@ -44,6 +44,11 @@ try:
 except ImportError:
     mxDateTime = None
 
+try:
+    import uuid
+except ImportError:
+    import mmc.support.uuid as uuid
+
 class Singleton(object):
     """
         Duplicate from the Singleton() class from the MMC Project,
@@ -329,6 +334,29 @@ def macToNode(mac):
         return int(reduceMACAddress(mac), 16)
     except:
         return 0
+
+def isUUID(value):
+    """
+    Check input validity for:
+     - standard UUID like: 35f23420-4050-4734-b172-d458915ef17d
+     - Pulse 2 fake UUID style: UUID<positive-int>
+    
+    @return: True if the parameter is a valid UUID
+    @rtype: bool
+    """
+    if type(value) == str and value.startswith('UUID'):
+        try:
+            value = int(value[4:])
+            ret = value > 0
+        except ValueError:
+            ret = False
+    else:
+        try:
+            uuid.UUID(value)
+            ret = True
+        except (ValueError, AttributeError):
+            ret = False
+    return ret
 
 def splitComputerPath(path):
     """
