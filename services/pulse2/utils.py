@@ -344,7 +344,7 @@ def isUUID(value):
     @return: True if the parameter is a valid UUID
     @rtype: bool
     """
-    if type(value) == str and value.startswith('UUID'):
+    if type(value) in [str, unicode] and value.startswith('UUID'):
         try:
             value = int(value[4:])
             ret = value > 0
