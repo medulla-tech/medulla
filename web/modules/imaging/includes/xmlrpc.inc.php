@@ -21,9 +21,17 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
   
-
 function xmlrpc_isProfileRegistered($profile_uuid) {
-    return xmlCall("imaging.isProfileRegistered", array($profile_uuid));
+    # we call as long as it's not registered, but once it is,
+    # we can store that information in the session.
+    if (!isset($_SESSION["imaging.isProfileRegistered_".$profile_uuid])) {
+        $ret = xmlCall("imaging.isProfileRegistered", array($profile_uuid));
+        if ($ret) {
+            $_SESSION["imaging.isProfileRegistered_".$profile_uuid] = $ret;
+        }
+        return $ret;
+    }
+    return $_SESSION["imaging.isProfileRegistered_".$profile_uuid];
 }
 function xmlrpc_getMyMenuProfile($target_uuid) {
     return xmlCall("imaging.getMyMenuProfile", array($target_uuid));
@@ -33,7 +41,16 @@ function xmlrpc_setMyMenuProfile($target_uuid, $params) {
 }
 
 function xmlrpc_isComputerRegistered($machine_uuid) {
-    return xmlCall("imaging.isComputerRegistered", array($machine_uuid));
+    # we call as long as it's not registered, but once it is,
+    # we can store that information in the session.
+    if (!isset($_SESSION["imaging.isComputerRegistered_".$machine_uuid])) {
+        $ret = xmlCall("imaging.isComputerRegistered", array($machine_uuid));
+        if ($ret) {
+            $_SESSION["imaging.isComputerRegistered_".$machine_uuid] = $ret;
+        }
+        return $ret;
+    }
+    return $_SESSION["imaging.isComputerRegistered_".$machine_uuid];
 }
 function xmlrpc_getMyMenuComputer($target_uuid) {
     return xmlCall("imaging.getMyMenuComputer", array($target_uuid));
@@ -202,7 +219,17 @@ function xmlrpc_linkImagingServerToLocation($is_uuid, $loc_id, $loc_name) {
 }
 
 function xmlrpc_doesLocationHasImagingServer($location) {
-    return xmlCall("imaging.doesLocationHasImagingServer", array($location));
+    # we call as long as it's not registered, but once it is,
+    # we can store that information in the session.
+    if (!isset($_SESSION["imaging.doesLocationHasImagingServer_".$location])) {
+        $ret = xmlCall("imaging.doesLocationHasImagingServer", array($location));
+        if ($ret) {
+            $_SESSION["imaging.doesLocationHasImagingServer_".$location] = $ret;
+        }
+        return $ret;
+    }
+    return $_SESSION["imaging.doesLocationHasImagingServer_".$location];
+
 }
 
 function xmlrpc_getImagingServerConfig($location) {
