@@ -67,6 +67,7 @@ char gPathUpdateClient[256];
 char gPathUpdateImage[256];
 char gPathLogAction[256];
 char gPathGetUUID[256];
+char gPathGetHostName[256];
 char gPathMTFTPSync[256];
 // global config options, daemon section
 char *gUser;
