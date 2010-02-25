@@ -88,6 +88,7 @@ def myTreatment(result):
         don't forget to set exitcode and finally call endBack()
     """
     global exitcode
+
     if result and result != None:
         exitcode= ERROR_OK
         logging.getLogger().info('HOOK %s : SUCCESS !' % sys.argv[0])
