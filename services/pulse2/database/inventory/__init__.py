@@ -31,7 +31,7 @@ from pulse2.managers.group import ComputerGroupManager
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 from pulse2.database.utilities import unique, handle_deconnect, DbObject
 from pulse2.database.inventory.mapping import OcsMapping
-from pulse2.utils import same_network, Singleton
+from pulse2.utils import same_network, Singleton, isUUID
 
 from sqlalchemy import *
 from sqlalchemy.orm import *
@@ -919,7 +919,12 @@ class Inventory(DyngroupDatabaseHelper):
         except:
             return None
 
-    def addMachine(self, name, ip, mac, netmask, comment = None, location_uuid = None): # TODO add the location association
+    def addMachine(self, name, ip, mac, netmask, comment = None, location_uuid = None):
+        # if location is not set, link the computer to the root entity
+        if location_uuid == None:
+            location_uuid = 'UUID1'
+        assert(isUUID(location_uuid))
+
         session = create_session()
         m = Machine()
         m.Name = name
