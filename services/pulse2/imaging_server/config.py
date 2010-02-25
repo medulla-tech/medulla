@@ -117,49 +117,49 @@ class ImagingConfig(pulse2.utils.Singleton):
 
         if self.cp.has_section("hooks"):
             if self.cp.has_option("hooks", "hooks_dir"):
-                self.hooks_dir = self.cp.get("hooks-server", "hooks_dir")
+                self.hooks_dir = self.cp.get("hooks", "hooks_dir")
             if self.cp.has_option("hooks", "create_client_path"):
                 self.create_client_path = os.path.join(
                     self.hooks_dir,
-                    self.cp.get("hooks-server", "create_client_path")
+                    self.cp.get("hooks", "create_client_path")
                 )
-            if self.cp.has_option("hooks", "update_client"):
+            if self.cp.has_option("hooks", "update_client_path"):
                 self.update_client = os.path.join(
                     self.hooks_dir,
-                    self.cp.get("hooks-server", "update_client")
+                    self.cp.get("hooks", "update_client_path")
                 )
-            if self.cp.has_option("hooks", "process_inventory"):
+            if self.cp.has_option("hooks", "process_inventory_path"):
                 self.process_inventory = os.path.join(
                     self.hooks_dir,
-                    self.cp.get("hooks-server", "process_inventory")
+                    self.cp.get("hooks", "process_inventory_path")
                 )
-            if self.cp.has_option("hooks", "create_image"):
+            if self.cp.has_option("hooks", "create_image_path"):
                 self.create_image = os.path.join(
                     self.hooks_dir,
-                    self.cp.get("hooks-server", "create_image")
+                    self.cp.get("hooks", "create_image_path")
                 )
-            if self.cp.has_option("hooks", "update_image"):
+            if self.cp.has_option("hooks", "update_image_path"):
                 self.update_image = os.path.join(
                     self.hooks_dir,
-                    self.cp.get("hooks-server", "update_image")
+                    self.cp.get("hooks", "update_image_path")
                 )
-            if self.cp.has_option("hooks", "log_action"):
+            if self.cp.has_option("hooks", "log_action_path"):
                 self.log_action = os.path.join(
                     self.hooks_dir,
-                    self.cp.get("hooks-server", "log_action")
+                    self.cp.get("hooks", "log_action_path")
                 )
-            if self.cp.has_option("hooks", "get_uuid"):
+            if self.cp.has_option("hooks", "get_uuid_path"):
                 self.get_uuid = os.path.join(
                     self.hooks_dir,
-                    self.cp.get("hooks-server", "get_uuid")
+                    self.cp.get("hooks", "get_uuid_path")
                 )
-            if self.cp.has_option("hooks", "get_hostname"):
+            if self.cp.has_option("hooks", "get_hostname_path"):
                 self.get_hostname = os.path.join(
                     self.hooks_dir,
-                    self.cp.get("hooks-server", "get_hostname")
+                    self.cp.get("hooks", "get_hostname_path")
                 )
-            if self.cp.has_option("hooks", "mtftp_sync"):
+            if self.cp.has_option("hooks", "mtftp_sync_path"):
                 self.mtftp_sync = os.path.join(
                     self.hooks_dir,
-                    self.cp.get("hooks-server", "mtftp_sync")
+                    self.cp.get("hooks", "mtftp_sync_path")
                 )
