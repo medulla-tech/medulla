@@ -316,7 +316,7 @@ class P2PServerCP(pulse2.utils.Singleton):
             # will contain our UUID/MAC Addr cache
             uuid_cache_file = os.path.join(base_folder, 'uuid-cache.txt')
             # Entity UUID
-            uuid = None
+            uuid = 'PLEASE_PUT_A_UUID_FOR_THAT_SERVER'
 
             if self.cp.has_option("imaging_api", 'mount_point'):
                 imaging_mp = self.cp.get("imaging_api", 'mount_point')
