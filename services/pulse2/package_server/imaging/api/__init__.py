@@ -25,6 +25,7 @@ Pulse 2 Package Server Imaging API
 
 import logging
 import os
+import shutil
 
 from twisted.internet import defer
 from twisted.internet.defer import maybeDeferred
@@ -36,7 +37,7 @@ from pulse2.package_server.imaging.cache import UUIDCache
 from pulse2.package_server.imaging.api.status import Status
 from pulse2.package_server.imaging.menu import isMenuStructure, ImagingMenuBuilder
 
-from pulse2.utils import isMACAddress, splitComputerPath, macToNode
+from pulse2.utils import isMACAddress, splitComputerPath, macToNode, isUUID
 from pulse2.apis import makeURL
 
 try:
@@ -160,7 +161,7 @@ class ImagingApi(MyXmlrpc):
         self.logger.info('Imaging: Starting registration for %s as %s' % (MACAddress, computerName))
         client = self._getXMLRPCClient()
         func = 'imaging.computerRegister'
-        args = (hostname, domain, MACAddress, profile, entities)
+        args = (self.config.imaging_api['uuid'], hostname, domain, MACAddress, profile, entities)
         d = client.callRemote(func, *args)
         d.addCallbacks(onSuccess, client.onError, errbackArgs = (func, args, 0))
         return d
@@ -271,6 +272,9 @@ class ImagingApi(MyXmlrpc):
         """
         ret = []
         for cuuid, menu in menus:
+            if not isUUID(cuuid):
+                self.logger.error('Invalid computer UUID %s' % cuuid)
+                continue
             if not isMenuStructure(menu):
                 self.logger.error("Invalid menu structure for computer UUID %s" % cuuid)
                 ret.append(cuuid)
@@ -363,3 +367,46 @@ class ImagingApi(MyXmlrpc):
             PackageServerConfig().mmc_agent['cacert'],
             PackageServerConfig().mmc_agent['localcert']
         )
+
+    ## Image management
+
+    def imagingServerImageDelete(self, imageUUID):
+        """
+        Delete an image (backup or master) from the imaging server.
+        The corresponding directory is simply removed.
+
+        @param imageUUID: image UUID
+        @type: str
+
+        @return: True if it worked, else False
+        @rtype: bool
+        """
+        if not isUUID(imageUUID):
+            self.logger.warn("Bad image UUID %s" % str(imageUUID))
+            ret = False
+        else:
+            path = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['masters_folder'], imageUUID)
+            if os.path.exits(path):
+                try:
+                    shutil.rmtree(path)
+                    ret = True
+                except Exception, e:
+                    self.logger.error("Error while removing image with UUID %s: %s" % (imageUUID, e))
+                    ret = False
+
+            else:
+                self.logger.warn("Can't delete unavailable image with UUID %s" % imageUUID)
+                ret = False
+        return ret
+
+    ## Imaging server configuration
+
+    def imagingServerConfigurationSet(self, conf):
+        """
+        Set the global imaging server configuration (traffic shaping, etc.)
+
+        @param conf: imaging server configuration to apply
+        @type conf: dict
+        """
+        self.logger.warn("Not yet implemented !")
+        return True
