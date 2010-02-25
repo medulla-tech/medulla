@@ -504,7 +504,7 @@ class RpcProxy(RpcProxyI):
         #    return xmlrpcCleanup([False, e])
 
     ###### API to be called from the imaging server (ie : without authentication)
-    def computerRegister(self, imaging_server_uuid, hostname, domain, MACAddress, profile):
+    def computerRegister(self, imaging_server_uuid, hostname, domain, MACAddress, profile, entity = None):
         """
         Called by the Package Server to register a new computer.
         The computer name may contain a profile and an entity path (like profile:/entityA/entityB/computer)
