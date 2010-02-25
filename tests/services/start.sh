@@ -42,6 +42,8 @@ echo "Testing Package Server with no package (pserverempty.py)"
 python pserverempty.py
 echo "Testing Package Server with one package (pserver.py)"
 python pserver.py
+echo "Testing Package Server imaging API"
+python pserver-imaging.py
 echo "Testing Launcher"
 python launcher.py
 echo "Testing Scheduler"
