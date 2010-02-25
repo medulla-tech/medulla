@@ -68,6 +68,7 @@ class ImagingConfig(pulse2.utils.Singleton):
     update_image_path = os.path.join(hooks_dir, "update_image")
     log_action_path = os.path.join(hooks_dir, "log_action")
     get_uuid_path = os.path.join(hooks_dir, "get_uuid")
+    get_hostname_path = os.path.join(hooks_dir, "get_hostname")
     mtftp_sync_path = os.path.join(hooks_dir, "mtftp_sync")
 
     def setup(self, config_file):
@@ -148,9 +149,14 @@ class ImagingConfig(pulse2.utils.Singleton):
                     self.cp.get("hooks-server", "log_action")
                 )
             if self.cp.has_option("hooks", "get_uuid"):
-                self.update_image = os.path.join(
-                    self.get_uuid,
+                self.get_uuid = os.path.join(
+                    self.hooks_dir,
                     self.cp.get("hooks-server", "get_uuid")
+                )
+            if self.cp.has_option("hooks", "get_hostname"):
+                self.get_hostname = os.path.join(
+                    self.hooks_dir,
+                    self.cp.get("hooks-server", "get_hostname")
                 )
             if self.cp.has_option("hooks", "mtftp_sync"):
                 self.mtftp_sync = os.path.join(
