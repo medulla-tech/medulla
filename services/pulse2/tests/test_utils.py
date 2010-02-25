@@ -39,6 +39,7 @@ class InputTests(unittest.TestCase):
 
     def test_UUIDValid(self):
         self.assertTrue(isUUID('UUID1'))
+        self.assertTrue(isUUID(u'UUID1'))
         self.assertTrue(isUUID('1a10b1f4-bb6e-4798-b39e-bb8d090dd8b6'))
 
     def test_UUIDNotValid(self):
