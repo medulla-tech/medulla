@@ -24,7 +24,6 @@ Pulse 2 Package Server Imaging API
 """
 
 import logging
-import tempfile
 import os
 
 from twisted.internet import defer
@@ -67,7 +66,7 @@ class ImagingApi(MyXmlrpc):
 
     def xmlrpc_logClientAction(self, mac, level, phase, message):
         """
-        Remote loging.
+        Remote logging.
 
         Mainly used to send progress info to our mmc-agent.
 
@@ -211,10 +210,10 @@ class ImagingApi(MyXmlrpc):
                 d = client.callRemote(func, *args)
                 d.addCallbacks(lambda x : True, client.onError, errbackArgs = (func, args, 0))
                 return d
-            self.logger.warn('Imaging: Failed resolving UUID for client %s : %s' % (mac, result))
+            self.logger.warn('Imaging: Failed resolving UUID for client %s : %s' % (MACAddress, result))
             return False
 
-        if not isMACAddress(mac):
+        if not isMACAddress(MACAddress):
             raise TypeError
         self.logger.debug('Imaging: Starting inventory processing for %s' % (MACAddress))
         d = self.xmlrpc_getComputerByMac(MACAddress)
@@ -271,25 +270,25 @@ class ImagingApi(MyXmlrpc):
         @rtype: list
         """
         ret = []
-        for uuid, menu in menus:
+        for cuuid, menu in menus:
             if not isMenuStructure(menu):
-                self.logger.error("Invalid menu structure for computer UUID %s" % uuid)
-                ret.append(uuid)
+                self.logger.error("Invalid menu structure for computer UUID %s" % cuuid)
+                ret.append(cuuid)
                 continue
-            macaddress = self.myUUIDCache.getByUUID(uuid)
+            macaddress = self.myUUIDCache.getByUUID(cuuid)
             if macaddress == False:
-                self.logger.error("Can't get MAC address for UUID %s" % uuid)
-                ret.append(uuid)
+                self.logger.error("Can't get MAC address for UUID %s" % cuuid)
+                ret.append(cuuid)
                 continue
             else:
                 try:
-                    self.logger.debug('Setting menu for computer UUID/MAC %s/%s' % (uuid, macaddress))
+                    self.logger.debug('Setting menu for computer UUID/MAC %s/%s' % (cuuid, macaddress))
                     imb = ImagingMenuBuilder(self.config, macaddress, menu)
                     imenu = imb.make()
                     imenu.write()
                 except Exception, e:
-                    self.logger.error("Error while setting new menu of computer uuid/mac %s: %s" % (uuid, str(e)))
-                    ret.append(uuid)
+                    self.logger.error("Error while setting new menu of computer uuid/mac %s: %s" % (cuuid, str(e)))
+                    ret.append(cuuid)
                     # FIXME: Rollback to the previous menu
         return ret
 
