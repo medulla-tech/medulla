@@ -149,14 +149,27 @@ class ImagingApi(MyXmlrpc):
         """
 
         def onSuccess(result):
-            self.logger.info('Imaging: New client registration succeeded for: %s %s (%s)' % (computerName, MACAddress, str(result)))
-            return 1
+            if type(result) == dict :
+                self.logger.warn('Imaging: Couldn\'t registred client %s (%s) : %s' % (computerName, MACAddress, str(result)))
+                return False
 
+            uuid = result
+            self.logger.info('Imaging: Registred client %s (%s) as %s' % (computerName, MACAddress, uuid))
+
+            return self.xmlrpc_computerPrepareImagingDirectory(uuid, {'mac': MACAddress, 'hostname': hostname})
+
+        # check MAC Addr is conform
         if not isMACAddress(MACAddress):
             raise TypeError
+
+        # check computer name is conform
         if not len(computerName):
             raise TypeError
-        profile, entities, hostname, domain = splitComputerPath(computerName)
+        try:
+            profile, entities, hostname, domain = splitComputerPath(computerName)
+        except TypeError, e:
+            self.logger.info('Imaging: Won\'t register %s as %s : %s' % (MACAddress, computerName, e))
+            return maybeDeferred(lambda x: x, False)
 
         self.logger.info('Imaging: Starting registration for %s as %s' % (MACAddress, computerName))
         client = self._getXMLRPCClient()
@@ -165,6 +178,26 @@ class ImagingApi(MyXmlrpc):
         d = client.callRemote(func, *args)
         d.addCallbacks(onSuccess, client.onError, errbackArgs = (func, args, 0))
         return d
+
+    def xmlrpc_computerPrepareImagingDirectory(self, uuid, imagingData = None):
+        """
+        Prepare a full imaging folder for client <uuid>
+
+        if imagingData is False, ask the mmc agent for additional
+        parameters (not yet done).
+
+        @param mac : The mac address of the client
+        @type menus: MAC Address
+        @param imagingData : The data to use for image creation
+        @type imagingData: ????
+        """
+        target_folder = os.path.join(PackageServerConfig().imaging_api['base_folder'], PackageServerConfig().imaging_api['computers_folder'], uuid)
+        try:
+            os.mkdir(target_folder)
+        except Exception, e:
+            self.logger.warn('Imaging: I was not able to create folder %s for client %s : %s' % (target_folder, uuid, e))
+            return False
+        return True
 
     def xmlrpc_computerUpdate(self, MACAddress):
         """
@@ -297,27 +330,18 @@ class ImagingApi(MyXmlrpc):
         return ret
 
 
-    def xmlrpc_computerPrepareImagingDirectory(self, mac, imagingData):
+    def xmlrpc_computerCreateImageDirectory(self, mac):
         """
-        Prepare an image folder.
+        Create an image folder for client <mac>
 
         This is quiet different as for the LRS, where the UUID was given
         in revosavedir (kernel command line) : folder is now generated
         real-time, if no generation has been done backup is dropped
         client-side
 
-        if imagingData is False, ask the mmc agent for additional
-        parameters (not yet done).
-
         @param mac : The mac address of the client
         @type menus: MAC Address
-        @param imagingData : The data to use for image creation
-        @type imagingData: ????
-
         """
-        def _getImagingData(result):
-            pass
-
         def _getmacCB(result):
             if result and type(result) == dict :
                 computer_uuid = result['uuid']
@@ -330,7 +354,7 @@ class ImagingApi(MyXmlrpc):
         if not isMACAddress(mac):
             raise TypeError
 
-        self.logger.debug('Imaging: Client %s want to create an image; additionnal parameters were %s ' % (mac, imagingData))
+        self.logger.debug('Imaging: Client %s want to create an image' % (mac))
 
         target_folder = os.path.join(PackageServerConfig().imaging_api['base_folder'], PackageServerConfig().imaging_api['masters_folder'])
         # compute our future UUID, using the MAC address as node
@@ -343,13 +367,13 @@ class ImagingApi(MyXmlrpc):
             attempts -= 1
 
         if not attempts:
-            self.logger.debug('Imaging: I was not able to create a folder for client %s ' % (mac))
+            self.logger.warn('Imaging: I was not able to create a folder for client %s' % (mac))
             return maybeDeferred(lambda x: x, False)
 
         try:
             os.mkdir(os.path.join(target_folder, image_uuid))
-        except:
-            self.logger.debug('Imaging: I was not able to create folder %s for client %s ' % (os.path.join(target_folder, image_uuid), mac))
+        except Exception, e:
+            self.logger.warn('Imaging: I was not able to create folder %s for client %s : %s' % (os.path.join(target_folder, image_uuid), mac, e))
             return maybeDeferred(lambda x: x, False)
 
         # now the folder is created (and exists), if can safely be used
