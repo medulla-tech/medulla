@@ -21,6 +21,10 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+"""
+Computer Manager is used to call methods giving informations on computers whatever is the computer backend.
+
+"""
 import logging
 from mmc.support.mmctools import Singleton
 
@@ -100,6 +104,13 @@ class ComputerI:
         """
         pass
 
+    def getComputerByMac(self, mac):
+        """
+        Get the computer who have that mac address
+        send a list with possibly more than one computer
+        """
+        pass
+
     def getComputersListHeaders(self, ctx):
         """
         Get the headers of the computer list
@@ -150,14 +161,20 @@ class ComputerManager(Singleton):
         return False
         
     def addComputer(self, ctx, params):
+        r = None
         for plugin in self.components:
             klass = self.components[plugin]
             instance = klass()
             if klass().canAddComputer():
                 try:
-                    instance.addComputer(ctx, params)
+                    ret = instance.addComputer(ctx, params)
+                    if plugin == self.main:
+                        r = ret
                 except TypeError:
-                    instance.addComputer(params)
+                    ret = instance.addComputer(params)
+                    if plugin == self.main:
+                        r = ret
+        return r
 
     def delComputer(self, ctx, params):
         for plugin in self.components:
@@ -218,6 +235,11 @@ class ComputerManager(Singleton):
         klass = self.components[self.main]
         instance = klass()
         return instance.getRestrictedComputersList(ctx, min, max, filt, advanced, justId, toH)
+    
+    def getComputerByMac(self, mac):
+        klass = self.components[self.main]
+        instance = klass()
+        return instance.getComputerByMac(mac)
 
     def getComputersListHeaders(self, ctx):
         klass = self.components[self.main]
