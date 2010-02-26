@@ -29,6 +29,7 @@ imaging plugin
 import logging
 import os
 import shutil
+from twisted.internet import defer
 
 import mmc.plugins.imaging.images
 import mmc.plugins.imaging.iso
@@ -37,7 +38,7 @@ from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 from mmc.plugins.imaging.config import ImagingConfig
 from mmc.plugins.base.computers import ComputerManager
 from pulse2.database.imaging import ImagingDatabase
-from pulse2.database.imaging.types import PULSE2_IMAGING_TYPE_COMPUTER, PULSE2_IMAGING_TYPE_PROFILE
+from pulse2.database.imaging.types import PULSE2_IMAGING_TYPE_COMPUTER, PULSE2_IMAGING_TYPE_PROFILE, PULSE2_IMAGING_SYNCHROSTATE_RUNNING, PULSE2_IMAGING_SYNCHROSTATE_TODO, PULSE2_IMAGING_SYNCHROSTATE_DONE
 from pulse2.apis.clients.imaging import ImagingApi
 
 VERSION = "0.1"
@@ -440,6 +441,158 @@ class RpcProxy(RpcProxyI):
 
     def isProfileRegistered(self, profile_uuid):
         return self.isTargetRegister(profile_uuid, PULSE2_IMAGING_TYPE_PROFILE)
+
+    ###### Synchronisation
+    def getTargetSynchroState(self, uuid, target_type):
+        ret = ImagingDatabase().getTargetsSynchroState([uuid], target_type)
+        return ret[0]
+    
+    def getComputerSynchroState(self, uuid):
+        if not self.isTargetRegister(uuid, PULSE2_IMAGING_TYPE_COMPUTER):
+            return {'id':0}
+        ret = self.getTargetSynchroState(uuid, PULSE2_IMAGING_TYPE_COMPUTER)
+        return xmlrpcCleanup(ret.toH())
+
+    def getProfileSynchroState(self, uuid):
+        if not self.isTargetRegister(uuid, PULSE2_IMAGING_TYPE_PROFILE):
+            return {'id':0}
+        ret = self.getTargetSynchroState(uuid, PULSE2_IMAGING_TYPE_PROFILE)
+        return xmlrpcCleanup(ret.toH())
+
+    def getLocationSynchroState(self, uuid):
+        if not self.doesLocationHasImagingServer(uuid):
+            return {'id':0}
+        ret = ImagingDatabase().getLocationSynchroState(uuid)
+        if type(ret) != dict:
+            ret = ret.toH()
+        return xmlrpcCleanup(ret)
+
+    def __synchroTargets(self, uuids, target_type):
+        logger = logging.getLogger()
+        db = ImagingDatabase()
+        ret = db.changeTargetsSynchroState(uuids, target_type, PULSE2_IMAGING_SYNCHROSTATE_RUNNING)
+        # get target location
+        locations = db.getTargetsEntity(uuids)
+        if len(locations) != len(uuids):
+            # do fail
+            logger.error("couldn't get the target entity for %s"%(str(uuids)))
+        distinct_loc = {}
+        h_pis = {}
+
+        targets = db.getTargetsByUUID(uuids)
+        h_targets = {}
+        for target in targets:
+            h_targets[target.uuid] = target.toH()
+            
+        for loc, target in locations:
+            menu_items = db.getBootMenu(target.uuid, 0, -1, '')
+            menu = db.getTargetsMenuTUUID(target.uuid)
+            menu = menu.toH()
+            menu['bootservices'] = {}
+            menu['images'] = {}
+            for mi in menu_items:
+                if menu['fk_default_item'] == mi.id:
+                    menu['default_item'] = mi.order
+                if menu['fk_default_item_WOL'] == mi.id:
+                    menu['default_item_WOL'] = mi.order
+                    menu['default_item_wol'] = mi.order # TODO : remove 
+                menu['target'] = h_targets[target.uuid]
+                mi = mi.toH()
+                if mi.has_key('image'):
+                    if h_pis.has_key(mi['image']['id']):
+                        h_pis[mi['image']['id']].append([loc.uuid, target.uuid, str(mi['order'])])
+                    else:
+                        h_pis[mi['image']['id']] = [[loc.uuid, target.uuid, str(mi['order'])]]
+                    im = {
+                        'uuid' : mi['image']['uuid'],
+                        'name' : mi['image']['name'],
+                        'desc' : mi['image']['desc']
+                    }
+                    menu['images'][str(mi['order'])] = im
+                else:
+                    bs = {
+                        'name' : mi['boot_service']['default_name'],
+                        'desc' : mi['boot_service']['default_desc'],
+                        'value' : mi['boot_service']['value'],
+                        'hidden' : mi['hidden'],
+                        'hidden_WOL' : mi['hidden_WOL']
+                    }
+                    menu['bootservices'][str(mi['order'])] = bs
+            
+            if distinct_loc.has_key(loc.uuid):
+                distinct_loc[loc.uuid][1].append({target.uuid:menu})
+            else:
+                url = self.__chooseImagingApiUrl(loc.uuid)
+                distinct_loc[loc.uuid] = [url, {target.uuid:menu}]
+
+        ims = h_pis.keys()
+        a_pis = db.getImagesPostInstallScript(ims)
+        for pis, im in a_pis:
+            pis = {
+                'id':pis.id,
+                'name':pis.default_name,
+                'desc':pis.default_desc,
+                'value':pis.value
+            }
+            a_targets = h_pis[im.id]
+            for loc_uuid, t_uuid, order in a_targets:
+                distinct_loc[loc_uuid][1][t_uuid]['images'][order]['post_install_script'] = pis
+            
+        def treatFailures(result, location_uuid, distinct_loc = distinct_loc, logger = logger, target_type = target_type):
+            failures = []
+            success = []
+            for fuuid in result:
+                logger.warn("failed to synchronize menu for %s"%(str(fuuid)))
+                failures.append(fuuid)
+                # failure menu distinct_loc[location_uuid][1][fuuid]
+            
+            for uuid in distinct_loc[location_uuid][1]:
+                if not uuid in failures:
+                    logger.debug("succeed to synchronize menu for %s"%(str(uuid)))
+                    success.append(uuid)
+            db.changeTargetsSynchroState(failures, target_type, PULSE2_IMAGING_SYNCHROSTATE_TODO)
+            db.changeTargetsSynchroState(success, target_type, PULSE2_IMAGING_SYNCHROSTATE_DONE)
+            return failures
+            
+        dl = []
+        for location_uuid in distinct_loc:
+            url = distinct_loc[location_uuid][0]
+            i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
+            if i == None:
+                # do fail
+                logger.error("couldn't initialize the ImagingApi to %s"%(url))
+
+            l_menus = distinct_loc[location_uuid][1]
+            d = i.computersMenuSet(l_menus)
+            d.addCallback(treatFailures, location_uuid)
+            dl.append(d)
+            
+        def sendResult(results):
+            failures = []
+            for s, uuids in results:
+                failures.extend(uuids)
+            if len(failures) == 0:
+                return [True]
+            return [False, failures]
+
+        dl = defer.DeferredList(dl)
+        dl.addCallback(sendResult)
+        return dl
+
+    def synchroComputer(self, uuid):
+        if not self.isTargetRegister(uuid, PULSE2_IMAGING_TYPE_COMPUTER):
+            return False
+        ret = self.__synchroTargets([uuid], PULSE2_IMAGING_TYPE_COMPUTER)
+        return xmlrpcCleanup(ret)
+
+    def synchroProfile(self, uuid):
+        if not self.isTargetRegister(uuid, PULSE2_IMAGING_TYPE_PROFILE):
+            return False
+        ret = self.__synchroTargets([uuid], PULSE2_IMAGING_TYPE_PROFILE)
+        return xmlrpcCleanup(ret)
+
+    def synchroLocation(self, uuid):
+        pass
 
     ###### Menus
     def getMyMenuTarget(self, uuid, target_type):

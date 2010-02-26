@@ -73,8 +73,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if not self.initMappersCatchException():
             return False
         self.metadata.create_all()
-        self.nomenclatures = {'MasteredOnState':MasteredOnState, 'TargetType':TargetType, 'Protocol':Protocol}
-        self.fk_nomenclatures = {'MasteredOn':{'fk_mastered_on_state':'MasteredOnState'}, 'Target':{'type':'TargetType'}, 'Menu':{'fk_protocol':'Protocol'}}
+        self.nomenclatures = {'MasteredOnState':MasteredOnState, 'TargetType':TargetType, 'Protocol':Protocol, 'SynchroState':SynchroState}
+        self.fk_nomenclatures = {'MasteredOn':{'fk_mastered_on_state':'MasteredOnState'}, 'Target':{'type':'TargetType'}, 'Menu':{'fk_protocol':'Protocol', 'fk_synchrostate':'SynchroState'}}
         self.__loadNomenclatureTables()
         self.loadDefaults()
         self.is_activated = True
@@ -117,6 +117,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         mapper(PostInstallScriptInImage, self.post_install_script_in_image)
         mapper(PostInstallScriptOnImagingServer, self.post_install_script_on_imaging_server)
         mapper(Protocol, self.protocol)
+        mapper(SynchroState, self.synchro_state)
         mapper(Target, self.target)
         mapper(TargetType, self.target_type)
         mapper(User, self.user)
@@ -147,6 +148,12 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         self.mastered_on_state = Table(
             "MasteredOnState",
+            self.metadata,
+            autoload = True
+        )
+
+        self.synchro_state = Table(
+            "SynchroState",
             self.metadata,
             autoload = True
         )
@@ -208,6 +215,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             Column('fk_default_item_WOL', Integer),
             Column('fk_protocol', Integer, ForeignKey('Protocol.id')),
             # fk_name is not an explicit FK, you need to choose the lang before beeing able to join
+            Column('fk_synchrostate', Integer, ForeignKey('SynchroState.id')),
             useexisting=True,
             autoload = True
         )
@@ -349,7 +357,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         for i in objs:
             ids[i['fk_target']] = None
         ids = ids.keys()
-        targets = self.__getTargetById(ids)
+        targets = self.getTargetsById(ids)
         id_target = {}
         for t in targets:
             t = t.toH()
@@ -367,9 +375,21 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return self.version.select().execute().fetchone()[0]
 
 ###########################################################
-    def __getTargetById(self, ids):
+    def getTargetsEntity(self, uuids):
+        session = create_session()
+        e = session.query(Entity).add_entity(Target).select_from(self.entity.join(self.target, self.target.c.fk_entity == self.entity.c.id)).filter(self.target.c.uuid.in_(uuids)).all()
+        session.close()
+        return e
+
+    def getTargetsById(self, ids):
         session = create_session()
         n = session.query(Target).filter(self.target.c.id.in_(ids)).all()
+        session.close()
+        return n
+
+    def getTargetsByUUID(self, ids):
+        session = create_session()
+        n = session.query(Target).filter(self.target.c.uuid.in_(ids)).all()
         session.close()
         return n
 
@@ -493,7 +513,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             self.logger.error("cant find any imaging_server for menu '%s'"%(menu_id))
             return  None
     
-    def getMenuContent(self, menu_id, type = MENU_ALL, start = 0, end = -1, filter = '', session = None):# TODO implement the start/end with a union betwen q1 and q2
+    def getMenuContent(self, menu_id, type = PULSE2_IMAGING_MENU_ALL, start = 0, end = -1, filter = '', session = None):# TODO implement the start/end with a union betwen q1 and q2
         session_need_close = False
         if session == None:
             session = create_session()
@@ -517,14 +537,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             is_id = imaging_server.id
         
         q = []
-        if type == MENU_ALL or type == MENU_BOOTSERVICE:
+        if type == PULSE2_IMAGING_MENU_ALL or type == PULSE2_IMAGING_MENU_BOOTSERVICE:
             q1 = session.query(MenuItem).add_entity(BootService).add_entity(Menu).add_entity(BootServiceOnImagingServer)
             q1 = q1.select_from(self.menu_item.join(self.boot_service_in_menu).join(self.boot_service).join(self.menu, self.menu_item.c.fk_menu == self.menu.c.id).outerjoin(self.boot_service_on_imaging_server))
             q1 = q1.filter(and_(self.menu_item.c.id.in_(mi_ids), or_(self.boot_service_on_imaging_server.c.fk_boot_service == None, self.boot_service_on_imaging_server.c.fk_imaging_server == is_id)))
             q1 = q1.order_by(self.menu_item.c.order).all()
             q1 = self.__mergeBootServiceInMenuItem(q1)
             q.extend(q1)
-        if type == MENU_ALL or type == MENU_IMAGE:
+        if type == PULSE2_IMAGING_MENU_ALL or type == PULSE2_IMAGING_MENU_IMAGE:
             q2 = session.query(MenuItem).add_entity(Image).add_entity(Menu).select_from(self.menu_item.join(self.image_in_menu).join(self.image).join(self.menu, self.menu_item.c.fk_menu == self.menu.c.id))
             q2 = q2.filter(self.menu_item.c.id.in_(mi_ids)).order_by(self.menu_item.c.order).all()
             q2 = self.__mergeImageInMenuItem(q2)
@@ -542,23 +562,23 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             return 0
         return q
 
-    def countMenuContentFast(self, menu_id): # get MENU_ALL and empty filter
+    def countMenuContentFast(self, menu_id): # get PULSE2_IMAGING_MENU_ALL and empty filter
         session = create_session()
         q = session.query(MenuItem).filter(self.menu_item.c.fk_menu == menu_id).count()
         session.close()
         return q
         
-    def countMenuContent(self, menu_id, type = MENU_ALL, filter = ''):
-        if type == MENU_ALL and filter =='':
+    def countMenuContent(self, menu_id, type = PULSE2_IMAGING_MENU_ALL, filter = ''):
+        if type == PULSE2_IMAGING_MENU_ALL and filter =='':
             return self.countMenuContentFast(menu_id)
         
         session = create_session()
         q = 0
-        if type == MENU_ALL or type == MENU_BOOTSERVICE:
+        if type == PULSE2_IMAGING_MENU_ALL or type == PULSE2_IMAGING_MENU_BOOTSERVICE:
             q1 = session.query(MenuItem).add_entity(BootService).select_from(self.menu_item.join(self.boot_service_in_menu).join(self.boot_service))
             q1 = q1.filter(and_(self.menu_item.c.fk_menu == menu_id, self.boot_service.c.desc.like('%'+filter+'%'))).count()
             q += q1
-        if type == MENU_ALL or type == MENU_IMAGE:
+        if type == PULSE2_IMAGING_MENU_ALL or type == PULSE2_IMAGING_MENU_IMAGE:
             q2 = session.query(MenuItem).add_entity(Image).select_from(self.menu_item.join(self.image_in_menu).join(self.image))
             q2 = q2.filter(and_(self.menu_item.c.fk_menu == menu_id, self.boot_service.c.desc.like('%'+filter+'%'))).count()
             q += q2
@@ -602,9 +622,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     #####################
     def __MasteredOnsOnTargetByIdAndType(self, session, target_id, type, filter):
         q = session.query(MasteredOn).add_entity(Target).select_from(self.mastered_on.join(self.target)).filter(self.target.c.uuid == target_id)
-        if type == TYPE_COMPUTER:
+        if type == PULSE2_IMAGING_TYPE_COMPUTER:
             q = q.filter(self.target.c.type == 1)
-        elif type == TYPE_PROFILE:
+        elif type == PULSE2_IMAGING_TYPE_PROFILE:
             q = q.filter(self.target.c.type == 2)
         else:
             self.logger.error("type %s does not exists!"%(type))
@@ -909,11 +929,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = q.filter(self.target.c.uuid == target_uuid) # , or_(self.image.c.is_master == True, and_(self.image.c.is_master == False, )))
         if filter != '':
             q = q.filter(or_(self.image.c.desc.like('%'+filter+'%'), self.image.c.value.like('%'+filter+'%')))
-        if is_master == IMAGE_IS_MASTER_ONLY:
+        if is_master == PULSE2_IMAGING_IMAGE_IS_MASTER_ONLY:
             q = q.filter(self.image.c.is_master == True)
-        elif is_master == IMAGE_IS_IMAGE_ONLY:
+        elif is_master == PULSE2_IMAGING_IMAGE_IS_IMAGE_ONLY:
             q = q.filter(and_(self.image.c.is_master == False, self.target.c.id == self.mastered_on.c.fk_target))
-        elif is_master == IMAGE_IS_BOTH:
+        elif is_master == PULSE2_IMAGING_IMAGE_IS_BOTH:
             pass
             
         return q
@@ -961,10 +981,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q
 
     def getPossibleImages(self, target_uuid, start, end, filter):
-        return self.getPossibleImagesOrMaster(target_uuid, IMAGE_IS_IMAGE_ONLY, start, end, filter)
+        return self.getPossibleImagesOrMaster(target_uuid, PULSE2_IMAGING_IMAGE_IS_IMAGE_ONLY, start, end, filter)
     
     def getPossibleMasters(self, target_uuid, start, end, filter):
-        return self.getPossibleImagesOrMaster(target_uuid, IMAGE_IS_MASTER_ONLY, start, end, filter)
+        return self.getPossibleImagesOrMaster(target_uuid, PULSE2_IMAGING_IMAGE_IS_MASTER_ONLY, start, end, filter)
 
     def getEntityMasters(self, loc_id, start, end, filter):
         session = create_session()
@@ -985,10 +1005,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q
 
     def countPossibleImages(self, target_uuid, filter):
-        return self.countPossibleImagesOrMaster(target_uuid, IMAGE_IS_IMAGE_ONLY, filter)
+        return self.countPossibleImagesOrMaster(target_uuid, PULSE2_IMAGING_IMAGE_IS_IMAGE_ONLY, filter)
 
     def countPossibleMasters(self, target_uuid, filter):
-        return self.countPossibleImagesOrMaster(target_uuid, IMAGE_IS_MASTER_ONLY, filter)
+        return self.countPossibleImagesOrMaster(target_uuid, PULSE2_IMAGING_IMAGE_IS_MASTER_ONLY, filter)
 
     def countEntityMasters(self, loc_id, filter):
         session = create_session()
@@ -1198,14 +1218,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         menu = self.getTargetsMenuTUUID(target_id)
         if menu == None:
             return []
-        menu_items = self.getMenuContent(menu.id, MENU_BOOTSERVICE, start, end, filter)
+        menu_items = self.getMenuContent(menu.id, PULSE2_IMAGING_MENU_BOOTSERVICE, start, end, filter)
         return menu_items
 
     def countBootServicesOnTargetById(self, target_id, filter):
         menu = self.getTargetsMenuTUUID(target_id)
         if menu == None:
             return 0
-        count_items = self.countMenuContent(menu.id, MENU_BOOTSERVICE, filter)
+        count_items = self.countMenuContent(menu.id, PULSE2_IMAGING_MENU_BOOTSERVICE, filter)
         return count_items
     
     def isLocalBootService(self, mi_uuid, session = None):
@@ -1240,34 +1260,34 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         menu = self.getTargetsMenuTUUID(target_id)
         if menu == None:
             return []
-        menu_items = self.getMenuContent(menu.id, MENU_ALL, start, end, filter)
+        menu_items = self.getMenuContent(menu.id, PULSE2_IMAGING_MENU_ALL, start, end, filter)
         return menu_items
         
     def countBootMenu(self, target_id, filter): 
         menu = self.getTargetsMenuTUUID(target_id)
         if menu == None:
             return 0
-        count_items = self.countMenuContent(menu.id, MENU_ALL, filter)
+        count_items = self.countMenuContent(menu.id, PULSE2_IMAGING_MENU_ALL, filter)
         return count_items
 
     def getEntityBootMenu(self, loc_id, start, end, filter):
         menu = self.getEntityDefaultMenu(loc_id)
         if menu == None:
             return []
-        menu_items = self.getMenuContent(menu.id, MENU_ALL, start, end, filter)
+        menu_items = self.getMenuContent(menu.id, PULSE2_IMAGING_MENU_ALL, start, end, filter)
         return menu_items
 
     def countEntityBootMenu(self, loc_id, filter):
         menu = self.getEntityDefaultMenu(loc_id)
         if menu == None:
             return 0
-        count_items = self.countMenuContent(menu.id, MENU_ALL, filter)
+        count_items = self.countMenuContent(menu.id, PULSE2_IMAGING_MENU_ALL, filter)
         return count_items
         
     ######################
     def __moveItemInMenu(self, menu, mi_uuid, reverse = False):
         session = create_session()
-        mis = self.getMenuContent(menu.id, MENU_ALL, 0, -1, '', session)
+        mis = self.getMenuContent(menu.id, PULSE2_IMAGING_MENU_ALL, 0, -1, '', session)
         if reverse:
             mis.sort(lambda x,y: cmp(y.order, x.order))
         move = False
@@ -1481,6 +1501,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         menu_items, mi = self.__duplicateDefaultMenuItem(session)
         menu.fk_default_item = mi[0]
         menu.fk_default_item_WOL = mi[1]
+        menu.fk_synchrostate = 1
         session.save(menu)
         session.flush()
         for menu_item in menu_items:
@@ -1503,6 +1524,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             menu.fk_protocol = proto.id
         menu.fk_default_item = 0
         menu.fk_default_item_WOL = 0
+        menu.fk_synchrostate = 1
         menu.fk_name = 0
         session.save(menu)
         return menu
@@ -1609,24 +1631,75 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.save(target)
         return target
 
+    ######### SYNCHRO
+    def __getSynchroStates(self, uuids, target_type, session):
+        q = session.query(SynchroState).add_entity(Menu)
+        q = q.select_from(self.synchro_state.join(self.menu).join(self.target, self.menu.c.id == self.target.c.fk_menu))
+        q = q.filter(and_(self.target.c.uuid.in_(uuids), self.target.c.type == target_type)).all()
+        return q
+        
+    def getTargetsSynchroState(self, uuids, target_type):
+        session = create_session()
+        q = self.__getSynchroStates(uuids, target_type, session)
+        session.close()
+        if q:
+            return map(lambda x: x[0], q)
+        return False
+
+    def getLocationSynchroState(self, uuid):
+        session = create_session()
+
+        q2 = session.query(SynchroState)
+        q2 = q2.select_from(self.synchro_state.join(self.menu).join(self.entity, self.entity.c.fk_default_menu == self.menu.c.id))
+        q2 = q2.filter(self.entity.c.uuid == uuid).first()
+
+        if q2.id == 3: # running
+            session.close()
+            return q2
+        # in the 2 other cases we have to check the state of the content of this entity
+        
+        q1 = session.query(SynchroState)
+        q1 = q1.select_from(self.synchro_state.join(self.menu).join(self.target, self.menu.c.id == self.target.c.fk_menu).join(self.entity, self.entity.c.id == self.target.c.fk_entity))
+        q1 = q1.filter(self.entity.c.uuid == uuid).all()
+        
+        session.close()
+        
+        a_state = [0, 0]
+        for q in q1:
+            if q.id == 3: # running
+                return q
+            a_state[q.id] += 1
+        if a_state[0] == 0:
+            return {'id':1, 'label':'DONE'}
+        return {'id':0, 'label':'TODO'}
+
+    def changeTargetsSynchroState(self, uuids, target_type, state):
+        session = create_session()
+        synchro_states = self.__getSynchroStates(uuids, target_type, session)
+        for synchro_state, menu in synchro_states:
+            menu.fk_synchrostate = state
+            session.save_or_update(menu)
+        session.flush()
+        session.close()
+        return True
+
     ######### MENUS
     def setMyMenuTarget(self, uuid, params, type):
         session = create_session()
-        session.close()
         menu = self.getTargetMenu(uuid, type, session)
         location_id = None
         if not menu:
-            if type == TYPE_COMPUTER:
+            if type == PULSE2_IMAGING_TYPE_COMPUTER:
                 profile = ComputerProfileManager().getComputersProfile(uuid)
                 default_menu = None
                 if profile:
-                    default_menu = self.getTargetMenu(profile.id, TYPE_PROFILE, session)
+                    default_menu = self.getTargetMenu(profile.id, PULSE2_IMAGING_TYPE_PROFILE, session)
                 if default_menu == None or not profile:
                     location = ComputerLocationManager().getMachinesLocations([uuid])
                     loc_id = location[uuid]['uuid']
                     location_id = loc_id
                     default_menu = self.getEntityDefaultMenu(loc_id, session)
-            elif type == TYPE_PROFILE:
+            elif type == PULSE2_IMAGING_TYPE_PROFILE:
                 m_uuids = map(lambda c: c.uuid, ComputerProfileManager().getProfileContent(uuid))
                 locations = ComputerLocationManager().getMachinesLocations(m_uuids)
                 # WARNING! here we take the location that is the most represented, it's wrong! 
@@ -1657,7 +1730,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def getMyMenuTarget(self, uuid, type):
         session = create_session()
         muuid = False
-        if type == TYPE_COMPUTER:
+        if type == PULSE2_IMAGING_TYPE_COMPUTER:
             # if registered, get the computer menu and finish
             if self.isTargetRegister(uuid, type, session):
                 whose = [uuid, type]
@@ -1672,9 +1745,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                     uuid = profile.id # WARNING we must pass in UUIDs!
             
         # if profile is registered, get the profile menu and finish
-        if uuid and self.isTargetRegister(uuid, TYPE_PROFILE, session):
-            whose = [uuid, TYPE_PROFILE]
-            menu = self.getTargetMenu(uuid, TYPE_PROFILE, session)
+        if uuid and self.isTargetRegister(uuid, PULSE2_IMAGING_TYPE_PROFILE, session):
+            whose = [uuid, PULSE2_IMAGING_TYPE_PROFILE]
+            menu = self.getTargetMenu(uuid, PULSE2_IMAGING_TYPE_PROFILE, session)
         # else get the entity menu
         else:
             whose = False
@@ -1794,6 +1867,20 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close
         return True
     
+    def getImagesPostInstallScript(self, ims, session = None):
+        session_need_to_close = False
+        if session == None:
+            session_need_to_close = True
+            session = create_session()
+            
+        q = session.query(PostInstallScript).add_entity(Image)
+        q = q.select_from(self.post_install_script.join(self.post_install_script_in_image).join(self.image))
+        q = q.filter(self.image.c.id.in_(ims)).all()
+     
+        if session_need_to_close:
+            session.close()
+        return q
+    
     def editPostInstallScript(self, pis_uuid, params):
         session = create_session()
         pis = self.getPostInstallScript(pis_uuid, session)
@@ -1898,7 +1985,7 @@ class MasteredOnState(DBObject):
     to_be_exported = ['id', 'label']
 
 class Menu(DBObject):
-    to_be_exported = ['id', 'default_name', 'fk_name', 'timeout', 'background_uri', 'message', 'fk_default_item', 'fk_default_item_WOL', 'fk_protocol', 'protocol']
+    to_be_exported = ['id', 'default_name', 'fk_name', 'timeout', 'background_uri', 'message', 'fk_default_item', 'fk_default_item_WOL', 'fk_protocol', 'protocol', 'synchrostate']
 
 class MenuItem(DBObject):
     to_be_exported = ['id', 'default_name', 'order', 'hidden', 'hidden_WOL', 'fk_menu', 'fk_name', 'default', 'default_WOL', 'desc']
@@ -1917,6 +2004,9 @@ class PostInstallScriptOnImagingServer(DBObject):
     pass
 
 class Protocol(DBObject):
+    to_be_exported = ['id', 'label']
+
+class SynchroState(DBObject):
     to_be_exported = ['id', 'label']
 
 class Target(DBObject):
