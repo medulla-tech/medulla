@@ -98,6 +98,7 @@ popd
 popd
 
 IPADDRESS=`ifconfig eth0 | grep 'inet ' | awk '{print $2}' | sed 's/addr://'`
+echo "My IP address is $IPADDRESS"
 
 export MYSQL_HOST=localhost
 export MYSQL_USER=root
