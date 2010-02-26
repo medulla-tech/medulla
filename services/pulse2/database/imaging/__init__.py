@@ -29,7 +29,8 @@ Database class for imaging
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 from pulse2.database.imaging.types import PULSE2_IMAGING_MENU_ALL, PULSE2_IMAGING_IMAGE_IS_BOTH, PULSE2_IMAGING_IMAGE_IS_IMAGE_ONLY, PULSE2_IMAGING_IMAGE_IS_MASTER_ONLY, PULSE2_IMAGING_MENU_BOOTSERVICE, PULSE2_IMAGING_MENU_IMAGE, PULSE2_IMAGING_TYPE_COMPUTER, PULSE2_IMAGING_TYPE_PROFILE
 
-from sqlalchemy import create_engine, create_session, ForeignKey, Integer, MetaData, Table, Column, and_, or_, mapper
+from sqlalchemy import create_engine, ForeignKey, Integer, MetaData, Table, Column, and_, or_
+from sqlalchemy.orm import create_session, mapper
 
 import logging
 
