@@ -22,4 +22,21 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
+global $stateid;
+global $SYNCHROSTATE_TODO;
+
+if ($stateid == $SYNCHROSTATE_TODO) {
+    print "<table><tr><td>";
+    print _T('This target has been modified, when you are done, please press on "Synchronize" so that modifications are updated on the Imaging server.', 'imaging');
+    print "</td><td>";
+    
+    $f = new ValidatingForm();
+    $f->add(new HiddenTpl("target_uuid"),                        array("value" => $params['target_uuid'],  "hide" => True));
+    $f->add(new HiddenTpl("type"),                               array("value" => $params['type'],         "hide" => True));
+  
+    $f->addButton("bsync", _T("Synchronize", "imaging"));
+    $f->display();
+    print "</td></tr></table>";
+}
 ?>

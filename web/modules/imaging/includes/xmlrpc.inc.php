@@ -31,7 +31,7 @@ function xmlrpc_isProfileRegistered($profile_uuid) {
         }
         return $ret;
     }
-    return $_SESSION["imaging.isProfileRegistered_".$profile_uuid];
+    return ($_SESSION["imaging.isProfileRegistered_".$profile_uuid] == 1);
 }
 function xmlrpc_getMyMenuProfile($target_uuid) {
     return xmlCall("imaging.getMyMenuProfile", array($target_uuid));
@@ -50,7 +50,7 @@ function xmlrpc_isComputerRegistered($machine_uuid) {
         }
         return $ret;
     }
-    return $_SESSION["imaging.isComputerRegistered_".$machine_uuid];
+    return ($_SESSION["imaging.isComputerRegistered_".$machine_uuid] == 1);
 }
 function xmlrpc_getMyMenuComputer($target_uuid) {
     return xmlCall("imaging.getMyMenuComputer", array($target_uuid));
@@ -69,6 +69,27 @@ function xmlrpc_getProfileBootMenu($id) {
 
 function xmlrpc_getLocationBootMenu($id) {
     return xmlCall("imaging.getLocationBootMenu", array($id));
+}
+
+
+function xmlrpc_getComputerSynchroState($id) {
+    return xmlCall("imaging.getComputerSynchroState", array($id));
+}
+function xmlrpc_getProfileSynchroState($id) {
+    return xmlCall("imaging.getProfileSynchroState", array($id));
+}
+function xmlrpc_getLocationSynchroState($id) {
+    return xmlCall("imaging.getLocationSynchroState", array($id));
+}
+
+function xmlrpc_synchroComputer($id) {
+    return xmlCall("imaging.synchroComputer", array($id));
+}
+function xmlrpc_synchroProfile($id) {
+    return xmlCall("imaging.synchroProfile", array($id));
+}
+function xmlrpc_synchroLocation($id) {
+    return xmlCall("imaging.synchroLocation", array($id));
 }
 
 //Actions
@@ -228,8 +249,7 @@ function xmlrpc_doesLocationHasImagingServer($location) {
         }
         return $ret;
     }
-    return $_SESSION["imaging.doesLocationHasImagingServer_".$location];
-
+    return ($_SESSION["imaging.doesLocationHasImagingServer_".$location] == 1);
 }
 
 function xmlrpc_getImagingServerConfig($location) {

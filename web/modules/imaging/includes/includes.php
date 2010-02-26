@@ -25,6 +25,11 @@
  
 require('web_def.inc.php');
 
+global $SYNCHROSTATE_SYNCHRO;
+global $SYNCHROSTATE_TODO;
+global $SYNCHROSTATE_RUNNING;
+list($SYNCHROSTATE_SYNCHRO, $SYNCHROSTATE_TODO, $SYNCHROSTATE_RUNNING) = array(2, 1, 3);
+
 function getCurrentLocation() {
 
     $location = false;
