@@ -258,7 +258,7 @@ def isCiscoMacAddress(mac_addr):
     @returns: returns True if the given MAC address is valid
     @rtype: bool
     """
-    if type(mac_addr) != str:
+    if type(mac_addr) not in [str, unicode]:
         return False
     regex = '^([0-9a-f]{4}\.[0-9a-f]{4}\.[0-9a-f]{4})$'
     return re.match(regex, mac_addr) != None
@@ -272,7 +272,7 @@ def isLinuxMacAddress(mac_addr):
     @returns: returns True if the given MAC address is valid
     @rtype: bool
     """
-    if type(mac_addr) != str:
+    if type(mac_addr) not in [str, unicode]:
         return False
     regex = '^([0-9a-fA-F][0-9a-fA-F]:){5}([0-9a-fA-F][0-9a-fA-F])$'
     return re.match(regex, mac_addr) != None
@@ -286,8 +286,7 @@ def isWinMacAddress(mac_addr):
     @returns: returns True if the given MAC address is valid
     @rtype: bool
     """
-
-    if type(mac_addr) != str:
+    if type(mac_addr) not in [str, unicode]:
         return False
     regex = '^([0-9a-fA-F][0-9a-fA-F]-){5}([0-9a-fA-F][0-9a-fA-F])$'
     return re.match(regex, mac_addr) != None
@@ -301,8 +300,7 @@ def isShortMacAddress(mac_addr):
     @returns: returns True if the given MAC address is valid
     @rtype: bool
     """
-
-    if type(mac_addr) != str:
+    if type(mac_addr) not in [str, unicode]:
         return False
     regex = '^(([0-9a-fA-F]){12})$'
     return re.match(regex, mac_addr) != None
@@ -316,8 +314,6 @@ def isMACAddress(mac_addr):
     @returns: returns True if the given MAC address is valid
     @rtype: bool
     """
-    if type(mac_addr) != str and type(mac_addr) != unicode:
-        return False
     return isCiscoMacAddress(mac_addr) or isLinuxMacAddress(mac_addr) or isWinMacAddress(mac_addr) or isShortMacAddress(mac_addr)
 
 def reduceMACAddress(mac):
