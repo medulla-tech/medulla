@@ -38,13 +38,16 @@ def isMenuStructure(menu):
     @rtype: bool
     """
     ret = True
+    logger = logging.getLogger()
     if type(menu) == dict:
         for k in ['message', 'protocol', 'default_item', 'default_item_wol',
                   'timeout', 'background_uri', 'bootservices', 'images', 'target']:
             if not k in menu:
+                logger.debug("your menu is missing %s"%(k))
                 ret = False
                 break
     else:
+        logger.debug("your menu is not a dict")
         ret = False
     return ret
 
