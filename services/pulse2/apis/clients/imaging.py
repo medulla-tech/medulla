@@ -85,6 +85,15 @@ class Imaging(Pulse2Api):
         d = self.callRemote("computerMenuUpdate", uuid)
         d.addErrback(self.onErrorRaise, "Imaging:computerMenuUpdate", uuid)
         return d
+
+    def computersMenuSet(self, menus):
+        """
+        send a full bunch of menus in a uuid=>menu format
+        to the pserver.
+        """
+        d = self.callRemote("computersMenuSet", menus)
+        d.addErrback(self.onErrorRaise, "Imaging:computersMenuSet", menus)
+        return d
     # Computer log management
     def computerLogGet(self, uuid): # str
         """Get the imaging log of a computer."""
