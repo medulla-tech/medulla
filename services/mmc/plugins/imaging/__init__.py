@@ -513,9 +513,11 @@ class RpcProxy(RpcProxyI):
         db = ImagingDatabase()
 
         imaging_server = db.getImagingServerByPackageServerUUID(imaging_server_uuid, True)
+        if not imaging_server:
+            return [False, "Failed to find the imaging server %s" % imaging_server_uuid]
         imaging_server = imaging_server[0]
         if imaging_server == None:
-            return [False, "failed to find the imaging server %s " % imaging_server_uuid]
+            return [False, "Failed to find the imaging server %s" % imaging_server_uuid]
 
         loc_id = imaging_server[1].uuid
         computer = {

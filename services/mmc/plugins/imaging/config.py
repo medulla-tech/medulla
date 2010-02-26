@@ -25,13 +25,9 @@
 Configuration reader for imaging
 """
 
-import logging
-import os
-
 from mmc.support import mmctools
 from mmc.support.config import PluginConfig
 from pulse2.database.imaging.config import ImagingDatabaseConfig
-from ConfigParser import NoOptionError
 
 class ImagingConfig(ImagingDatabaseConfig):
     disable = True
@@ -61,7 +57,7 @@ class ImagingConfig(ImagingDatabaseConfig):
           + publicdir
         """
         self.disable = self.cp.getboolean("main", "disable")
-        
+
         if self.cp.has_section("web"):
             for i in ('date_fmt', 'default_protocol', 'default_menu_name', 'default_timeout', 'default_background_uri', 'default_message'):
                 full_name = "web_def_%s"%(i)
