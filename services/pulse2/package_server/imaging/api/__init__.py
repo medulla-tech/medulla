@@ -189,7 +189,7 @@ class ImagingApi(MyXmlrpc):
             self.myUUIDCache.set(cuuid, MACAddress)
             if not self.xmlrpc_computerPrepareImagingDirectory(cuuid, {'mac': MACAddress, 'hostname': computerName}):
                 return False
-            if self.xmlrpc_computersMenuSet({ cuuid : imagingData[cuuid]}):
+            if self.xmlrpc_computersMenuSet(imagingData['menu']):
                 return False
             return True
 
