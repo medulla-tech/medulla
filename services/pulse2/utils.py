@@ -316,7 +316,7 @@ def isMACAddress(mac_addr):
     @returns: returns True if the given MAC address is valid
     @rtype: bool
     """
-    if type(mac_addr) != str:
+    if type(mac_addr) != str and type(mac_addr) != unicode:
         return False
     return isCiscoMacAddress(mac_addr) or isLinuxMacAddress(mac_addr) or isWinMacAddress(mac_addr) or isShortMacAddress(mac_addr)
 
