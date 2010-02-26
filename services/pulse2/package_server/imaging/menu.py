@@ -197,10 +197,9 @@ class ImagingMenu:
         """
             write the client menu
         """
-        self.logger.debug('Writing boot menu for computer MAC %s' % self.mac)
-        buf = self.buildMenu()
         filename = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['bootmenus_folder'], pulse2.utils.reduceMACAddress(self.mac))
-
+        self.logger.debug('Preparing to write boot menu for computer MAC %s into file %s' % (self.mac, filename))
+        buf = self.buildMenu()
         try:
             fid, tempname = tempfile.mkstemp(dir = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['bootmenus_folder']))
             fid.write(buf)
