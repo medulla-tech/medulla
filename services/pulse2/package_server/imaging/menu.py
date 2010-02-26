@@ -69,7 +69,7 @@ class ImagingMenuBuilder:
         """
         @return: an ImagingMenu object
         """
-        self.logger.debug('Building menu structure for computer uuid/mac %s/%s ' % (self.uuid, self.macaddress))
+        self.logger.debug('Building menu structure for computer mac %s' % self.macaddress)
         m = ImagingMenu(self.config, self.macaddress)
         m.setSplashScreen(self.menu['background_uri'])
         m.setMessage(self.menu['message'])
