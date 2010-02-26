@@ -467,9 +467,8 @@ class RpcProxy(RpcProxyI):
             ret = ret.toH()
         return xmlrpcCleanup(ret)
 
-    def __synchroTargets(self, uuids, target_type):
-        logger = logging.getLogger()
-        db = ImagingDatabase()
+
+    def __generateMenus(self, logger, db, uuids, target_type):
         ret = db.changeTargetsSynchroState(uuids, target_type, PULSE2_IMAGING_SYNCHROSTATE_RUNNING)
         # get target location
         locations = db.getTargetsEntity(uuids)
@@ -537,7 +536,13 @@ class RpcProxy(RpcProxyI):
             a_targets = h_pis[im.id]
             for loc_uuid, t_uuid, order in a_targets:
                 distinct_loc[loc_uuid][1][t_uuid]['images'][order]['post_install_script'] = pis
-            
+        return distinct_loc
+         
+    def __synchroTargets(self, uuids, target_type):
+        logger = logging.getLogger()
+        db = ImagingDatabase()
+        distinct_loc = self.__generateMenus(logger, db, uuids, target_type)
+           
         def treatFailures(result, location_uuid, distinct_loc = distinct_loc, logger = logger, target_type = target_type):
             failures = []
             success = []
@@ -602,8 +607,47 @@ class RpcProxy(RpcProxyI):
         return ret
 
     def setMyMenuTarget(self, uuid, params, target_type):
-        ret = ImagingDatabase().setMyMenuTarget(uuid, params, target_type)
-        return ret
+        db = ImagingDatabase()
+        isRegistered = db.isTargetRegister(uuid, target_type)
+        try:
+            ret = db.setMyMenuTarget(uuid, params, target_type)
+        except Exception, e:
+            return [False, e]
+        
+        #WIP
+        if not isRegistered:
+            logger = logging.getLogger()
+            db = ImagingDatabase()
+            distinct_loc = self.__generateMenus(logger, db, [uuid], target_type)
+ 
+            if target_type == PULSE2_IMAGING_TYPE_COMPUTER:
+                location = db.getTargetsEntity([uuid])[0]
+                url = self.__chooseImagingApiUrl(location[0].uuid)
+                i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
+                if i != None:
+                    # imagingData = {'uuid':uuid}
+                    menu = distinct_loc[location[0].uuid][1]
+                    imagingData = {'menu':menu, 'uuid':uuid}
+                    ctx = self.currentContext
+                    MACAddress = ComputerManager().getMachineMac(ctx, {'uuid':uuid})
+                    def treatRegister(result, location = location, uuid = uuid):
+                        if not result:
+                            # TODO
+                            # revert the target registering!
+                            # and return false
+                            return True
+                            
+                    d = i.computerRegister(params['target_name'], MACAddress[0], imagingData)
+                    d.addCallback(treatRegister)
+                    return d
+                else:
+                    logger.warn("can't contact the url %s"%(url))
+                    return [False, ""]
+            else:
+                pass
+                #locations = db.getTargetsEntity([uuid])
+
+        return [True]
 
     def getMyMenuComputer(self, uuid):
         return xmlrpcCleanup(self.getMyMenuTarget(uuid, PULSE2_IMAGING_TYPE_COMPUTER))
@@ -716,6 +760,7 @@ class RpcProxy(RpcProxyI):
 
         else:
             logger.debug("computer %s (%s) dont need registration"%(hostname, MACAddress))
+
 
         if profile:
             # TODO
