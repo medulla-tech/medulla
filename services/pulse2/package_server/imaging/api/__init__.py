@@ -189,7 +189,7 @@ class ImagingApi(MyXmlrpc):
             self.myUUIDCache.set(cuuid, MACAddress)
             if not self.xmlrpc_computerPrepareImagingDirectory(cuuid, {'mac': MACAddress, 'hostname': computerName}):
                 return False
-            if self.xmlrpc_computersMenuSet(imagingData):
+            if self.xmlrpc_computersMenuSet({ cuuid : imagingData[cuuid]}):
                 return False
             return True
 
@@ -332,8 +332,9 @@ class ImagingApi(MyXmlrpc):
                 self.logger.error("Can't get MAC address for UUID %s" % cuuid)
                 ret.append(cuuid)
                 continue
-            else:
+            else:                
                 try:
+                    macaddress = macaddress['mac']
                     self.logger.debug('Setting menu for computer UUID/MAC %s/%s' % (cuuid, macaddress))
                     imb = ImagingMenuBuilder(self.config, macaddress, menu)
                     imenu = imb.make()
