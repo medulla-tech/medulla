@@ -204,7 +204,7 @@ class UUIDCache(pulse2.utils.Singleton):
 
         if not pulse2.utils.isMACAddress(mac):
             return False
-        if type(uuid) != str:
+        if not pulse2.utils.isUUID(uuid):
             return False
         if fqdn == '':
             fqdn = "%s." % shortname
