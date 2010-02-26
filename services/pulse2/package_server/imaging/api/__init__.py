@@ -138,9 +138,12 @@ class ImagingApi(MyXmlrpc):
         status.get()
         return status.deferred
 
-    def xmlrpc_computerRegister(self, computerName, MACAddress):
+    def xmlrpc_computerRegister(self, computerName, MACAddress, imagingData = None):
         """
         Method to register a new computer.
+
+        if imagingData is set, we know that the method is called from a MMC
+        agent !
 
         @raise TypeError: if computerName or MACAddress are malformed
         @return: a deferred object resulting to True if registration was
@@ -171,13 +174,24 @@ class ImagingApi(MyXmlrpc):
             self.logger.error('Imaging: Won\'t register %s as %s : %s' % (MACAddress, computerName, e))
             return maybeDeferred(lambda x: x, False)
 
-        self.logger.info('Imaging: Starting registration for %s as %s' % (MACAddress, computerName))
-        client = self._getXMLRPCClient()
-        func = 'imaging.computerRegister'
-        args = (self.config.imaging_api['uuid'], hostname, domain, MACAddress, profile, entities)
-        d = client.callRemote(func, *args)
-        d.addCallbacks(onSuccess, client.onError, errbackArgs = (func, args, False))
-        return d
+        if not imagingData:
+            # Registration is coming from the imaging server
+            self.logger.info('Imaging: Starting registration for %s as %s' % (MACAddress, computerName))
+            client = self._getXMLRPCClient()
+            func = 'imaging.computerRegister'
+            args = (self.config.imaging_api['uuid'], hostname, domain, MACAddress, profile, entities)
+            d = client.callRemote(func, *args)
+            d.addCallbacks(onSuccess, client.onError, errbackArgs = (func, args, False))
+            return d
+        else:
+            # Registration is coming from the MMC agent
+            cuuid = imagingData['uuid']
+            self.myUUIDCache.set(cuuid, MACAddress)
+            if not self.xmlrpc_computerPrepareImagingDirectory(cuuid, {'mac': MACAddress, 'hostname': computerName}):
+                return False
+            if self.xmlrpc_computersMenuSet(imagingData):
+                return False
+            return True
 
     def xmlrpc_computerPrepareImagingDirectory(self, uuid, imagingData = None):
         """
