@@ -31,6 +31,11 @@ import xmlrpclib
 
 from pulse2.package_server.config import P2PServerCP
 
+try:
+    import uuid
+except ImportError:
+    import mmc.support.uuid as uuid
+
 ERROR_BAD_ARGUMENT = 2
 
 inifile = "/etc/mmc/pulse2/package-server/package-server.ini"
@@ -39,25 +44,36 @@ def display_help(code):
     """
     Display command line help and exit using specified code
     """
-    if ERROR_BAD_ARGUMENT:
+    if code == ERROR_BAD_ARGUMENT:
         sys.stderr.write("ERROR: Bad command line arguments\n")
-    print "Usage: pulse2-package-server-register-imaging -m MMC_AGENT_URL -n NAME [options]"
-    print "Options:"
-    print "-m        : MMC Agent URL (mandatory)"
-    print "-n        : Imaging server name (mandatory)"
-    print "-f        : Alternate configuration file (%s)" % inifile
-    print "-h --help : Display help"
+    print "Usage :"
+    print "    register                 : pulse2-package-server-register-imaging -m MMC_AGENT_URL -n NAME"
+    print "    generate an UUID         : pulse2-package-server-register-imaging -u"
+    print "    show help                : pulse2-package-server-register-imaging -h"
+    print "With :"
+    print "    -m http://...            : MMC Agent URL (mandatory)"
+    print "    -n 'My Imaging Server'   : Imaging server name (mandatory)"
+    print "    -f                       : Alternate configuration file (%s)" % inifile
+    print "    -u                       : Ask to Generate an UUID"
+    print "    -h --help                : Display this help"
     sys.exit(code)
+
+def generate_uuid():
+    """
+    Generate (and display) an uuid, telling the user where to pu it
+    """
+    print "Here is your UUID :"
+    print uuid.uuid1()
+    sys.exit(0)
 
 my_name = None
 mmc_url = None
 
 try:
-    opts, suivarg = getopt.getopt(sys.argv[1:], "f:n:m:h", ["help"])
+    opts, suivarg = getopt.getopt(sys.argv[1:], "f:n:m:h:u", ["help"])
 except getopt.GetoptError:
     display_help(ERROR_BAD_ARGUMENT)
-    
-print "reading command line opts"
+
 for option, argument in opts:
     if option == "-f": # alternate config file
         inifile = argument
@@ -65,6 +81,8 @@ for option, argument in opts:
         my_name = argument
     elif option == "-m": # MMC url
         mmc_url = argument
+    elif option == "-u": # MMC url
+        generate_uuid()
     elif option in ("-h", "--help"):
         display_help(0)
     else:
@@ -83,14 +101,19 @@ if failure:
 
 if not os.path.exists(inifile):
     if os.path.exists("/etc/mmc/pulse2/pserver/package-server.ini"):
-            print "Please move your configuration file from /etc/mmc/pulse2/pserver/package-server.ini to %s, or use the -f option."%(inifile)
-            sys.exit(3)
+        print "Please move your configuration file from /etc/mmc/pulse2/pserver/package-server.ini to %s, or use the -f option."%(inifile)
+        sys.exit(3)
     print "File '%s' does not exist." % inifile
     sys.exit(3)
 
 config = P2PServerCP()
-# TODO need to put the logger handler for root
-config.setup(inifile)
+
+try:
+    # TODO need to put the logger handler for root
+    config.setup(inifile)
+except Exception, e:
+    print "ERROR : %s" % e
+    display_help(5)
 
 config.imaging_api['mount_point'] = config.imaging_api['mount_point'].replace('/', '')
 my_url = "%s://%s:%s/%s" % (config.proto, config.bind, str(config.port), config.imaging_api['mount_point'])
