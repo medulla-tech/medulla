@@ -28,7 +28,7 @@ import logging
 from twisted.internet import reactor
 import twisted.web.xmlrpc
 import pulse2.xmlrpc
-from pulse2.apis.consts import *
+from pulse2.apis.consts import PULSE2_ERR_404, PULSE2_ERR_CONN_REF
 import exceptions
 
 class Pulse2Api(twisted.web.xmlrpc.Proxy):

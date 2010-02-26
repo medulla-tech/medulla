@@ -33,7 +33,7 @@ import shutil
 import md5
 import logging
 import random
-from pulse2.package_server.types import *
+from pulse2.package_server.types import Mirror, Command, A_Packages, Package, AFiles, File, Machine, User
 from pulse2.package_server.parser import PackageParser
 from pulse2.package_server.find import Find
 import pulse2.utils

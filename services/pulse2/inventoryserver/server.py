@@ -21,6 +21,10 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+"""
+Inventory server http server part.
+"""
+
 import BaseHTTPServer
 from zlib import *
 from time import strftime
@@ -40,7 +44,7 @@ from pulse2.database.inventory.mapping import OcsMapping
 from pulse2.database.inventory.entitiesrules import EntitiesRules, DefaultEntityRules
 from pulse2.utils import Singleton
 from pulse2.inventoryserver.config import Pulse2OcsserverConfigParser
-from pulse2.inventoryserver.ssl import *
+from pulse2.inventoryserver.ssl import SecureHTTPRequestHandler, SecureThreadedHTTPServer
 
 class InventoryServer:
     def log_message(self, format, *args):
