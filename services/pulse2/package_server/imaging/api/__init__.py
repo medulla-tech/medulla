@@ -143,32 +143,32 @@ class ImagingApi(MyXmlrpc):
         Method to register a new computer.
 
         @raise TypeError: if computerName or MACAddress are malformed
-        @return: a deferred object resulting to 1 if registration was
-                 successful, else 0.
-        @rtype: int
+        @return: a deferred object resulting to True if registration was
+                 successful, else False.
+        @rtype: bool
         """
 
         def onSuccess(result):
             if type(result) == dict :
-                self.logger.warn('Imaging: Couldn\'t registred client %s (%s) : %s' % (computerName, MACAddress, str(result)))
+                self.logger.warn('Imaging: Couldn\'t register client %s (%s) : %s' % (computerName, MACAddress, str(result)))
                 return False
 
             uuid = result
-            self.logger.info('Imaging: Registred client %s (%s) as %s' % (computerName, MACAddress, uuid))
+            self.logger.info('Imaging: Register client %s (%s) as %s' % (computerName, MACAddress, uuid))
+            self.myUUIDCache.set(uuid, MACAddress)
 
             return self.xmlrpc_computerPrepareImagingDirectory(uuid, {'mac': MACAddress, 'hostname': hostname})
 
-        # check MAC Addr is conform
-        if not isMACAddress(MACAddress):
-            raise TypeError
-
-        # check computer name is conform
-        if not len(computerName):
-            raise TypeError
         try:
+            # check MAC Addr is conform
+            if not isMACAddress(MACAddress):
+                raise TypeError, 'Malformed MAC address: %s' % MACAddress
+            # check computer name is conform
+            if not len(computerName):
+                raise TypeError, 'Malformed computer name: %s' % computerName
             profile, entities, hostname, domain = splitComputerPath(computerName)
         except TypeError, e:
-            self.logger.info('Imaging: Won\'t register %s as %s : %s' % (MACAddress, computerName, e))
+            self.logger.error('Imaging: Won\'t register %s as %s : %s' % (MACAddress, computerName, e))
             return maybeDeferred(lambda x: x, False)
 
         self.logger.info('Imaging: Starting registration for %s as %s' % (MACAddress, computerName))
@@ -176,7 +176,7 @@ class ImagingApi(MyXmlrpc):
         func = 'imaging.computerRegister'
         args = (self.config.imaging_api['uuid'], hostname, domain, MACAddress, profile, entities)
         d = client.callRemote(func, *args)
-        d.addCallbacks(onSuccess, client.onError, errbackArgs = (func, args, 0))
+        d.addCallbacks(onSuccess, client.onError, errbackArgs = (func, args, False))
         return d
 
     def xmlrpc_computerPrepareImagingDirectory(self, uuid, imagingData = None):
