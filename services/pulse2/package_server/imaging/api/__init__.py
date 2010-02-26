@@ -304,7 +304,8 @@ class ImagingApi(MyXmlrpc):
         @rtype: list
         """
         ret = []
-        for cuuid, menu in menus:
+        for cuuid in menus:
+            menu = menus[cuuid]
             if not isUUID(cuuid):
                 self.logger.error('Invalid computer UUID %s' % cuuid)
                 continue
