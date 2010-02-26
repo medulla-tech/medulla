@@ -54,6 +54,10 @@ fi
 
 for i in `seq --format=%03.f $(($DB_VERSION + 1)) $SCHEMA_MAXVERSION`; do
     $MYSQL_CMD $MYSQL_BASE < $SCHEMA_NAME-$i.sql
+    if [ "?" -ne 0 ]; then
+        echo "error creating/updating database; please check schema $SCHEMA_NAME-$i.sql"
+        exit 1	
+    fi
 done
 
 echo "Update to v.$SCHEMA_MAXVERSION succeeded"
