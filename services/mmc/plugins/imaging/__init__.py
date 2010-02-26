@@ -28,6 +28,7 @@ imaging plugin
 
 import logging
 import os
+import shutil
 
 import mmc.plugins.imaging.images
 import mmc.plugins.imaging.iso
@@ -36,14 +37,14 @@ from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 from mmc.plugins.imaging.config import ImagingConfig
 from mmc.plugins.base.computers import ComputerManager
 from pulse2.database.imaging import ImagingDatabase
-from pulse2.database.imaging.types import *
+from pulse2.database.imaging.types import PULSE2_IMAGING_TYPE_COMPUTER, PULSE2_IMAGING_TYPE_PROFILE
 from pulse2.apis.clients.imaging import ImagingApi
 
 VERSION = "0.1"
 APIVERSION = "0:0:0"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
-NOAUTHNEEDED = ['computerRegister', 'imagingServerRegister', 'getComputerByMac', 'imageRegister', 'logClientAction']
+NOAUTHNEEDED = ['computerRegister', 'imagingServerRegister', 'getComputerByMac', 'imageRegister', 'logClientAction', 'injectInventory']
 
 def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION
@@ -155,7 +156,6 @@ class RpcProxy(RpcProxyI):
         create an iso from an image
 
         """
-        config = mmc.plugins.imaging.ImagingConfig("imaging")
         image = mmc.plugins.imaging.iso.Iso(name, filename, size)
         image.prepareImage()
         image.createImage()
@@ -223,10 +223,10 @@ class RpcProxy(RpcProxyI):
         }
 
     def getComputerImages(self, id, start = 0, end = -1, filter = ''):
-        return self.__getTargetImages(id, TYPE_COMPUTER, start, end, filter)
+        return self.__getTargetImages(id, PULSE2_IMAGING_TYPE_COMPUTER, start, end, filter)
 
     def getProfileImages(self, id, start = 0, end = -1, filter = ''):
-        return self.__getTargetImages(id, TYPE_PROFILE, start, end, filter)
+        return self.__getTargetImages(id, PULSE2_IMAGING_TYPE_PROFILE, start, end, filter)
 
     def getLocationImages(self, loc_id, start = 0, end = -1, filter = ''):
         # Entities are names Location in the php part, here we convert them from Location to Entity
@@ -292,10 +292,10 @@ class RpcProxy(RpcProxyI):
         return [count, xmlrpcCleanup(ret)]
 
     def getComputerBootServices(self, id, start = 0, end = -1, filter = ''):
-        return self.__getTargetBootServices(id, TYPE_COMPUTER, start, end, filter)
+        return self.__getTargetBootServices(id, PULSE2_IMAGING_TYPE_COMPUTER, start, end, filter)
 
     def getProfileBootServices(self, id, start = 0, end = -1, filter = ''):
-        return self.__getTargetBootServices(id, TYPE_PROFILE, start, end, filter)
+        return self.__getTargetBootServices(id, PULSE2_IMAGING_TYPE_PROFILE, start, end, filter)
 
     def getPossibleBootServices(self, target_uuid, start = 0, end = -1, filter = ''):
         db = ImagingDatabase()
@@ -369,10 +369,10 @@ class RpcProxy(RpcProxyI):
         return [count, xmlrpcCleanup(ret)]
 
     def getComputerLogs(self, id, start = 0, end = -1, filter = ''):
-        return self.__getTargetMasteredOns(id, TYPE_COMPUTER, start, end, filter)
+        return self.__getTargetMasteredOns(id, PULSE2_IMAGING_TYPE_COMPUTER, start, end, filter)
 
     def getProfileLogs(self, id, start = 0, end = -1, filter = ''):
-        return self.__getTargetMasteredOns(id, TYPE_PROFILE, start, end, filter)
+        return self.__getTargetMasteredOns(id, PULSE2_IMAGING_TYPE_PROFILE, start, end, filter)
 
     def getLogs4Location(self, location_uuid, start = 0, end = -1, filter = ''):
         if location_uuid == False:
@@ -384,7 +384,6 @@ class RpcProxy(RpcProxyI):
 
     ###### GET IMAGING API URL
     def __chooseImagingApiUrl(self, location):
-        db = ImagingDatabase()
         return ImagingDatabase().getEntityUrl(location)
 
     ###### IMAGING API CALLS
@@ -406,7 +405,7 @@ class RpcProxy(RpcProxyI):
     def linkImagingServerToLocation(self, is_uuid, loc_id, loc_name):
         db = ImagingDatabase()
         try:
-            ret = db.linkImagingServerToEntity(is_uuid, loc_id, loc_name)
+            db.linkImagingServerToEntity(is_uuid, loc_id, loc_name) # FIXME : are not we supposed to deal with the return value ?
         except Exception, e:
             return [False, str(e)]
         return [True]
@@ -437,10 +436,10 @@ class RpcProxy(RpcProxyI):
         return ImagingDatabase().isTargetRegister(uuid, target_type)
 
     def isComputerRegistered(self, machine_uuid):
-        return self.isTargetRegister(machine_uuid, TYPE_COMPUTER)
+        return self.isTargetRegister(machine_uuid, PULSE2_IMAGING_TYPE_COMPUTER)
 
     def isProfileRegistered(self, profile_uuid):
-        return self.isTargetRegister(profile_uuid, TYPE_PROFILE)
+        return self.isTargetRegister(profile_uuid, PULSE2_IMAGING_TYPE_PROFILE)
 
     ###### Menus
     def getMyMenuTarget(self, uuid, target_type):
@@ -454,16 +453,16 @@ class RpcProxy(RpcProxyI):
         return ret
 
     def getMyMenuComputer(self, uuid):
-        return xmlrpcCleanup(self.getMyMenuTarget(uuid, TYPE_COMPUTER))
+        return xmlrpcCleanup(self.getMyMenuTarget(uuid, PULSE2_IMAGING_TYPE_COMPUTER))
 
     def setMyMenuComputer(self, target_uuid, params):
-        return xmlrpcCleanup(self.setMyMenuTarget(target_uuid, params, TYPE_COMPUTER))
+        return xmlrpcCleanup(self.setMyMenuTarget(target_uuid, params, PULSE2_IMAGING_TYPE_COMPUTER))
 
     def getMyMenuProfile(self, uuid):
-        return xmlrpcCleanup(self.getMyMenuTarget(uuid, TYPE_PROFILE))
+        return xmlrpcCleanup(self.getMyMenuTarget(uuid, PULSE2_IMAGING_TYPE_PROFILE))
 
     def setMyMenuProfile(self, target_uuid, params):
-        return xmlrpcCleanup(self.setMyMenuTarget(target_uuid, params, TYPE_PROFILE))
+        return xmlrpcCleanup(self.setMyMenuTarget(target_uuid, params, PULSE2_IMAGING_TYPE_PROFILE))
 
     ###### POST INSTALL SCRIPTS
     def getAllTargetPostInstallScript(self, target_uuid, start = 0, end = -1, filter = ''):
@@ -471,7 +470,7 @@ class RpcProxy(RpcProxyI):
         ret = map(lambda l: l.toH(), db.getAllTargetPostInstallScript(target_uuid, start, end, filter))
         count = db.countAllTargetPostInstallScript(target_uuid, filter)
         return [count, xmlrpcCleanup(ret)]
-    
+
     def getAllPostInstallScripts(self, location, start = 0, end = -1, filter = ''):
         db = ImagingDatabase()
         ret = map(lambda l: l.toH(), db.getAllPostInstallScripts(location, start, end, filter))
@@ -512,11 +511,11 @@ class RpcProxy(RpcProxyI):
 
         logger = logging.getLogger()
         db = ImagingDatabase()
-        
+
         imaging_server = db.getImagingServerByPackageServerUUID(imaging_server_uuid, True)
         imaging_server = imaging_server[0]
         if imaging_server == None:
-            return [False, "failed to find the imaging server%s"%imaging_server_uuid]
+            return [False, "failed to find the imaging server %s " % imaging_server_uuid]
 
         loc_id = imaging_server[1].uuid
         computer = {
@@ -533,19 +532,19 @@ class RpcProxy(RpcProxyI):
         if db_computer != None:
             uuid = db_computer['uuid']
         if uuid == None or type(uuid) == list and len(uuid) == 0:
-            logger.info("the computer %s (%s) does not exist in the backend, trying to add it"%(hostname, MACAddress))
+            logger.info("the computer %s (%s) does not exist in the backend, trying to add it" % (hostname, MACAddress))
             # the computer does not exists, so we create it
             uuid = ComputerManager().addComputer(None, computer)
-            if mid == None:
-                logger.warn("failed to create computer %s (%s)"%(hostname, MACAddress))
-                return [False, "failed to create computer %s (%s)"%(hostname, MACAddress)]
+            if uuid == None:
+                logger.warn("failed to create computer %s (%s)" % (hostname, MACAddress))
+                return [False, "failed to create computer %s (%s)" % (hostname, MACAddress)]
         else:
             logger.debug("computer %s (%s) already exists, we dont need to declare it again"%(hostname, MACAddress))
 
-        target_type = TYPE_COMPUTER
+        target_type = PULSE2_IMAGING_TYPE_COMPUTER
         if not db.isTargetRegister(uuid, target_type):
             logger.info("computer %s (%s) need registration"%(hostname, MACAddress))
-            menu = self.getMyMenuTarget(uuid, TYPE_COMPUTER)
+            menu = self.getMyMenuTarget(uuid, PULSE2_IMAGING_TYPE_COMPUTER)
             menu = menu[1] # menu[O] is the owner of the menu, and it does not matter here
 
             params = {
@@ -557,8 +556,9 @@ class RpcProxy(RpcProxyI):
                 'protocol':menu['protocol'],
                 'target_uuid':uuid
             }
-            
-            ret = db.setMyMenuTarget(uuid, params, target_type)
+
+            db.setMyMenuTarget(uuid, params, target_type) # FIXME : are not we supposed to deal with the return value ?
+
         else:
             logger.debug("computer %s (%s) dont need registration"%(hostname, MACAddress))
 
@@ -617,7 +617,7 @@ class RpcProxy(RpcProxyI):
         db = ImagingDatabase()
         if db.countImagingServerByPackageServerUUID(imaging_server_uuid) == 0:
             return [False, "The imaging server UUID you try to access don't exists in the MMC."]
-        if not db.isTargetRegister(computer_uuid, TYPE_COMPUTER):
+        if not db.isTargetRegister(computer_uuid, PULSE2_IMAGING_TYPE_COMPUTER):
             return [False, "The computer UUID you try to access don't exists in the MMC."]
 
         try:
@@ -625,3 +625,10 @@ class RpcProxy(RpcProxyI):
             return ret
         except Exception, e:
             return [False, e]
+
+    def injectInventory(self, computer_uuid, inventory = None):
+        """
+        Called by the Package Server to inject an inventory.
+        """
+        # TODO !
+        return [True, True]
