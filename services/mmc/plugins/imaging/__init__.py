@@ -38,7 +38,7 @@ from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 from mmc.plugins.imaging.config import ImagingConfig
 from mmc.plugins.base.computers import ComputerManager
 from pulse2.database.imaging import ImagingDatabase
-from pulse2.database.imaging.types import PULSE2_IMAGING_TYPE_COMPUTER, PULSE2_IMAGING_TYPE_PROFILE, PULSE2_IMAGING_SYNCHROSTATE_RUNNING, PULSE2_IMAGING_SYNCHROSTATE_TODO, PULSE2_IMAGING_SYNCHROSTATE_DONE
+from pulse2.database.imaging.types import PULSE2_IMAGING_TYPE_COMPUTER, PULSE2_IMAGING_TYPE_PROFILE, PULSE2_IMAGING_SYNCHROSTATE_RUNNING, PULSE2_IMAGING_SYNCHROSTATE_TODO, PULSE2_IMAGING_SYNCHROSTATE_DONE, PULSE2_IMAGING_SYNCHROSTATE_INIT_ERROR
 from pulse2.apis.clients.imaging import ImagingApi
 
 VERSION = "0.1"
@@ -467,7 +467,6 @@ class RpcProxy(RpcProxyI):
             ret = ret.toH()
         return xmlrpcCleanup(ret)
 
-
     def __generateMenus(self, logger, db, uuids, target_type):
         ret = db.changeTargetsSynchroState(uuids, target_type, PULSE2_IMAGING_SYNCHROSTATE_RUNNING)
         # get target location
@@ -631,24 +630,26 @@ class RpcProxy(RpcProxyI):
                     ctx = self.currentContext
                     MACAddress = ComputerManager().getMachineMac(ctx, {'uuid':uuid})
                     def treatRegister(result, location = location, uuid = uuid):
-                        if not result:
-                            # TODO
+                        if result:
+                            db.changeTargetsSynchroState([uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_DONE)
+                            return [True]
+                        else:
                             # revert the target registering!
-                            # and return false
-                            return True
+                            db.changeTargetsSynchroState([uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_INIT_ERROR)
+                            return [False, 'PULSE2_IMAGING_SYNCHROSTATE_INIT_ERROR']
                             
                     d = i.computerRegister(params['target_name'], MACAddress[0], imagingData)
                     d.addCallback(treatRegister)
                     return d
                 else:
-                    logger.warn("can't contact the url %s"%(url))
+                    logger.error("couldn't initialize the ImagingApi to %s"%(url))
                     return [False, ""]
             else:
                 pass
                 #locations = db.getTargetsEntity([uuid])
 
         return [True]
-
+    
     def getMyMenuComputer(self, uuid):
         return xmlrpcCleanup(self.getMyMenuTarget(uuid, PULSE2_IMAGING_TYPE_COMPUTER))
 
