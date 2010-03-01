@@ -545,9 +545,9 @@ class RpcProxy(RpcProxyI):
             mi = mi.toH()
             if mi.has_key('image'):
                 if h_pis.has_key(mi['image']['id']):
-                    h_pis[mi['image']['id']].append([loc.uuid, target.uuid, str(mi['order'])])
+                    h_pis[mi['image']['id']].append([loc_uuid, target_uuid, str(mi['order'])])
                 else:
-                    h_pis[mi['image']['id']] = [[loc.uuid, target.uuid, str(mi['order'])]]
+                    h_pis[mi['image']['id']] = [[loc_uuid, target_uuid, str(mi['order'])]]
                 im = {
                     'uuid' : mi['image']['uuid'],
                     'name' : mi['image']['name'],
