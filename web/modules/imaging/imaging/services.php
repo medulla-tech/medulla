@@ -50,7 +50,7 @@ if (($type == '' && xmlrpc_isComputerRegistered($target_uuid)) || ($type == 'gro
         $item_uuid = $_GET['itemid'];
         $label = urldecode($_GET['itemlabel']);
         
-        $ret = xmlrpc_addServiceToTarget($item_uuid, $target_uuid);
+        $ret = xmlrpc_addServiceToTarget($item_uuid, $target_uuid, $type);
     
         // goto images list 
         if ($ret[0]) {

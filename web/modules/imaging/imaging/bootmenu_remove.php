@@ -54,7 +54,7 @@ if(isset($_GET['gid'])) {
     
 if (quickGet('valid')) {
     if (isset($bs_uuid)) {
-        $ret = xmlrpc_delServiceToTarget($bs_uuid, $target_uuid);
+        $ret = xmlrpc_delServiceToTarget($bs_uuid, $target_uuid, $type);
     } else {
         $ret = xmlrpc_delImageToTarget($im_uuid, $target_uuid);
     }

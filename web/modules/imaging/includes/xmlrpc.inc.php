@@ -173,16 +173,16 @@ function xmlrpc_getMenuItemByUUID($id) {
 }
 
 // actions
-function xmlrpc_addServiceToTarget($item_uuid, $target_uuid, $params) {
-    return xmlCall("imaging.addServiceToTarget", array($item_uuid, $target_uuid, $params));
+function xmlrpc_addServiceToTarget($item_uuid, $target_uuid, $params, $type) {
+    return xmlCall("imaging.addServiceToTarget", array($item_uuid, $target_uuid, $params, $type));
 }
 
-function xmlrpc_delServiceToTarget($item_uuid, $target_uuid) {
-    return xmlCall("imaging.delServiceToTarget", array($item_uuid, $target_uuid));
+function xmlrpc_delServiceToTarget($item_uuid, $target_uuid, $type) {
+    return xmlCall("imaging.delServiceToTarget", array($item_uuid, $target_uuid, $type));
 }
 
-function xmlrpc_editServiceToTarget($item_uuid, $target_uuid, $params) {
-    return xmlCall("imaging.editServiceToTarget", array($item_uuid, $target_uuid, $params));
+function xmlrpc_editServiceToTarget($item_uuid, $target_uuid, $params, $type) {
+    return xmlCall("imaging.editServiceToTarget", array($item_uuid, $target_uuid, $params, $type));
 }
 
 function xmlrpc_addServiceToLocation($item_uuid, $location_id, $params) {
