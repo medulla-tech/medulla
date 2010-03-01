@@ -1456,17 +1456,32 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def __getDefaultMenu(self, session):
         return session.query(Menu).filter(self.menu.c.id == 1).first()
-    def __getDefaultMenuItem(self, session):
-        default_item = session.query(MenuItem).filter(and_(self.menu.c.id == 1, self.menu.c.fk_default_item == self.menu_item.c.id)).first()
-        default_item_WOL = session.query(MenuItem).filter(and_(self.menu.c.id == 1, self.menu.c.fk_default_item_WOL == self.menu_item.c.id)).first()
+    def __getDefaultMenuItem(self, session, menu_id = 1):
+        default_item = session.query(MenuItem).filter(and_(self.menu.c.id == menu_id, self.menu.c.fk_default_item == self.menu_item.c.id)).first()
+        default_item_WOL = session.query(MenuItem).filter(and_(self.menu.c.id == menu_id, self.menu.c.fk_default_item_WOL == self.menu_item.c.id)).first()
         return [default_item, default_item_WOL]
     def __getDefaultMenuMenuItems(self, session):
-        return session.query(MenuItem).add_entity(BootServiceInMenu).select_from(self.menu_item.join(self.boot_service_in_menu)).filter(self.menu_item.c.fk_menu == 1).all()
+        return self.__getMenuItemsInMenu(session, 1)
+    def __getMenuItemsInMenu(self, session, menu_id):
+        return session.query(MenuItem).add_entity(BootServiceInMenu).select_from(self.menu_item.join(self.boot_service_in_menu)).filter(self.menu_item.c.fk_menu == menu_id).all()
 
-    def __duplicateDefaultMenuItem(self, session):
+    def __duplicateDefaultMenuItem(self, session, loc_id = None, p_id = None):
         # warning ! cant be an image !
-        default_list = self.__getDefaultMenuMenuItems(session)
-        mi = self.__getDefaultMenuItem(session)
+        default_list = []
+        if p_id != None:
+            # get the profile menu
+            menu = self.getTargetMenu(p_id, PULSE2_IMAGING_TYPE_PROFILE, session)
+            default_list = self.__getMenuItemsInMenu(session, menu.id)
+            mi = self.__getDefaultMenuItem(session, menu.id)
+        elif loc_id != None:
+            # get the entity menu
+            menu = self.getEntityDefaultMenu(loc_id, session)
+            default_list = self.__getMenuItemsInMenu(session, menu.id)
+            mi = self.__getDefaultMenuItem(session, menu.id)
+        else:
+            # get the default menu
+            default_list = self.__getDefaultMenuMenuItems(session)
+            mi = self.__getDefaultMenuItem(session)
         ret = []
         mi_out = [0,0]
         for default_menu_item, default_bsim in default_list:
@@ -1493,7 +1508,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         default_menu = self.__getDefaultMenu(session)
         return self.__duplicateMenu(session, default_menu)
 
-    def __duplicateMenu(self, session, default_menu):
+    def __duplicateMenu(self, session, default_menu, loc_id = None, p_id = None):
         menu = Menu()
         menu.default_name = default_menu.default_name
         menu.fk_name = default_menu.fk_name
@@ -1501,7 +1516,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         menu.background_uri = default_menu.background_uri
         menu.message = default_menu.message
         menu.fk_protocol = default_menu.fk_protocol
-        menu_items, mi = self.__duplicateDefaultMenuItem(session)
+        menu_items, mi = self.__duplicateDefaultMenuItem(session, loc_id, p_id)
         menu.fk_default_item = mi[0]
         menu.fk_default_item_WOL = mi[1]
         menu.fk_synchrostate = 1
@@ -1691,6 +1706,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session = create_session()
         menu = self.getTargetMenu(uuid, type, session)
         location_id = None
+        p_id = None
         if not menu:
             if type == PULSE2_IMAGING_TYPE_COMPUTER:
                 profile = ComputerProfileManager().getComputersProfile(uuid)
@@ -1702,6 +1718,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                     loc_id = location[uuid]['uuid']
                     location_id = loc_id
                     default_menu = self.getEntityDefaultMenu(loc_id, session)
+                else:
+                    p_id = profile.id
             elif type == PULSE2_IMAGING_TYPE_PROFILE:
                 m_uuids = map(lambda c: c.uuid, ComputerProfileManager().getProfileContent(uuid))
                 locations = ComputerLocationManager().getMachinesLocations(m_uuids)
@@ -1710,10 +1728,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 # TODO!
                 loc_id = locations[m_uuids[0]]['uuid']
                 location_id = loc_id
-                default_menu = self.getEntityDefaultMenu(loc_id, session)
+                default_menu = self.getEntityDefaultMenu(location_id, session)
             else:
                 raise "%s:Don't know that type of target : %s"%(ERR_DEFAULT, type)
-            menu = self.__duplicateMenu(session, default_menu)
+            menu = self.__duplicateMenu(session, default_menu, loc_id, p_id)
             menu = self.__modifyMenu(id2uuid(menu.id), params, session)
             session.flush()
         else:

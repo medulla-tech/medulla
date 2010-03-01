@@ -468,7 +468,6 @@ class RpcProxy(RpcProxyI):
         return xmlrpcCleanup(ret)
 
     def __generateMenus(self, logger, db, uuids, target_type):
-        ret = db.changeTargetsSynchroState(uuids, target_type, PULSE2_IMAGING_SYNCHROSTATE_RUNNING)
         # get target location
         locations = db.getTargetsEntity(uuids)
         if len(locations) != len(uuids):
@@ -540,6 +539,7 @@ class RpcProxy(RpcProxyI):
     def __synchroTargets(self, uuids, target_type):
         logger = logging.getLogger()
         db = ImagingDatabase()
+        ret = db.changeTargetsSynchroState(uuids, target_type, PULSE2_IMAGING_SYNCHROSTATE_RUNNING)
         distinct_loc = self.__generateMenus(logger, db, uuids, target_type)
            
         def treatFailures(result, location_uuid, distinct_loc = distinct_loc, logger = logger, target_type = target_type):
@@ -617,6 +617,7 @@ class RpcProxy(RpcProxyI):
         if not isRegistered:
             logger = logging.getLogger()
             db = ImagingDatabase()
+            ret = db.changeTargetsSynchroState([uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_RUNNING)
             distinct_loc = self.__generateMenus(logger, db, [uuid], target_type)
  
             if target_type == PULSE2_IMAGING_TYPE_COMPUTER:
