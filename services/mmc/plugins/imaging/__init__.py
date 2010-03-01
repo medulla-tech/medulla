@@ -344,7 +344,12 @@ class RpcProxy(RpcProxyI):
         return [count, xmlrpcCleanup(ret)]
 
     # EDITION
-    def addServiceToTarget(self, bs_uuid, target_uuid, params):
+    def addServiceToTarget(self, bs_uuid, target_uuid, params, target_type):
+        db = ImagingDatabase()
+        if target_type == '':
+            target_type = PULSE2_IMAGING_TYPE_COMPUTER
+        elif target_type == 'group':
+            target_type = PULSE2_IMAGING_TYPE_PROFILE
         try:
             db.changeTargetsSynchroState([target_uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_TODO)
             ret = ImagingDatabase().addServiceToTarget(bs_uuid, target_uuid, params)
@@ -352,7 +357,12 @@ class RpcProxy(RpcProxyI):
         except Exception, e:
             return xmlrpcCleanup([False, e])
 
-    def delServiceToTarget(self, bs_uuid, target_uuid):
+    def delServiceToTarget(self, bs_uuid, target_uuid, target_type):
+        db = ImagingDatabase()
+        if target_type == '':
+            target_type = PULSE2_IMAGING_TYPE_COMPUTER
+        elif target_type == 'group':
+            target_type = PULSE2_IMAGING_TYPE_PROFILE
         try:
             db.changeTargetsSynchroState([target_uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_TODO)
             ret = ImagingDatabase().delServiceToTarget(bs_uuid, target_uuid)
@@ -360,7 +370,12 @@ class RpcProxy(RpcProxyI):
         except Exception, e:
             return xmlrpcCleanup([False, e])
 
-    def editServiceToTarget(self, bs_uuid, target_uuid, params):
+    def editServiceToTarget(self, bs_uuid, target_uuid, params, target_type):
+        db = ImagingDatabase()
+        if target_type == '':
+            target_type = PULSE2_IMAGING_TYPE_COMPUTER
+        elif target_type == 'group':
+            target_type = PULSE2_IMAGING_TYPE_PROFILE
         try:
             db.changeTargetsSynchroState([target_uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_TODO)
             ret = ImagingDatabase().editServiceToTarget(bs_uuid, target_uuid, params)
@@ -370,6 +385,7 @@ class RpcProxy(RpcProxyI):
             return xmlrpcCleanup([False, e])
 
     def addServiceToLocation(self, bs_uuid, location_id, params):
+        db = ImagingDatabase()
         try:
             db.setLocationSynchroState(location_id, PULSE2_IMAGING_SYNCHROSTATE_TODO)
             ret = ImagingDatabase().addServiceToEntity(bs_uuid, location_id, params)
@@ -378,6 +394,7 @@ class RpcProxy(RpcProxyI):
             return xmlrpcCleanup([False, e])
 
     def delServiceToLocation(self, bs_uuid, location_id):
+        db = ImagingDatabase()
         try:
             db.setLocationSynchroState(location_id, PULSE2_IMAGING_SYNCHROSTATE_TODO)
             ret = ImagingDatabase().delServiceToEntity(bs_uuid, location_id)
@@ -386,6 +403,7 @@ class RpcProxy(RpcProxyI):
             return xmlrpcCleanup([False, e])
 
     def editServiceToLocation(self, mi_uuid, location_id, params):
+        db = ImagingDatabase()
         try:
             db.setLocationSynchroState(location_id, PULSE2_IMAGING_SYNCHROSTATE_TODO)
             ret = ImagingDatabase().editServiceToEntity(mi_uuid, location_id, params)
