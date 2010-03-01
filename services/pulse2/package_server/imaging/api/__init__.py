@@ -422,7 +422,7 @@ class ImagingApi(MyXmlrpc):
         @param size: image size in bytes
         @type size: int
         @param creationDate: image creation timestamp
-        @type creationDate: tuple (using time.gmtime() format)
+        @type creationDate: tuple (using tuple(time.gmtime()) format)
         
         @return: True if successful
         @rtype: bool
@@ -455,7 +455,7 @@ class ImagingApi(MyXmlrpc):
                 computerUUID = computerUUID['uuid']
                 client = self._getXMLRPCClient()
                 func = 'imaging.imageRegister'
-                args = (self.config.imaging_api['uuid'], computerUUID, imageUUID, name, desc, path, size, creationDate, creator)
+                args = (self.config.imaging_api['uuid'], computerUUID, imageUUID, isMaster, name, desc, path, size, creationDate, creator)
                 d = client.callRemote(func, *args)
                 d.addCallbacks(onSuccess, client.onError, errbackArgs = (func, args, False))
                 return d
