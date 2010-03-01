@@ -1691,6 +1691,19 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             return {'id':1, 'label':'DONE'}
         return {'id':0, 'label':'TODO'}
 
+    def setLocationSynchroState(self, uuid, state):
+        session = create_session()
+        q2 = session.query(SynchroState).add_entity(Menu)
+        q2 = q2.select_from(self.synchro_state.join(self.menu).join(self.entity, self.entity.c.fk_default_menu == self.menu.c.id))
+        q2 = q2.filter(self.entity.c.uuid == uuid).first()
+        
+        synchro_state, menu = q2
+        menu.fk_synchrostate = state
+        session.save_or_update(menu)
+        session.flush()
+        session.close()
+        return True
+
     def changeTargetsSynchroState(self, uuids, target_type, state):
         session = create_session()
         synchro_states = self.__getSynchroStates(uuids, target_type, session)

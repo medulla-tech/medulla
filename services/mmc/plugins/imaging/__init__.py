@@ -197,16 +197,32 @@ class RpcProxy(RpcProxyI):
 
     # EDITION
     def moveItemUpInMenu(self, target_uuid, target_type, mi_uuid):
-        return ImagingDatabase().moveItemUpInMenu(target_uuid, mi_uuid)
+        db = ImagingDatabase()
+        if target_type == '':
+            target_type = PULSE2_IMAGING_TYPE_COMPUTER
+        elif target_type == 'group':
+            target_type = PULSE2_IMAGING_TYPE_PROFILE
+        db.changeTargetsSynchroState([target_uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_TODO)
+        return db.moveItemUpInMenu(target_uuid, mi_uuid)
 
     def moveItemDownInMenu(self, target_uuid, target_type, mi_uuid):
-        return ImagingDatabase().moveItemDownInMenu(target_uuid, mi_uuid)
+        db = ImagingDatabase()
+        if target_type == '':
+            target_type = PULSE2_IMAGING_TYPE_COMPUTER
+        elif target_type == 'group':
+            target_type = PULSE2_IMAGING_TYPE_PROFILE
+        db.changeTargetsSynchroState([target_uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_TODO)
+        return db.moveItemDownInMenu(target_uuid, mi_uuid)
 
     def moveItemUpInMenu4Location(self, loc_id, mi_uuid):
-        return ImagingDatabase().moveItemUpInMenu4Location(loc_id, mi_uuid)
+        db = ImagingDatabase()
+        db.setLocationSynchroState(loc_id, PULSE2_IMAGING_SYNCHROSTATE_TODO)
+        return db.moveItemUpInMenu4Location(loc_id, mi_uuid)
 
     def moveItemDownInMenu4Location(self, loc_id, mi_uuid):
-        return ImagingDatabase().moveItemDownInMenu4Location(loc_id, mi_uuid)
+        db = ImagingDatabase()
+        db.setLocationSynchroState(loc_id, PULSE2_IMAGING_SYNCHROSTATE_TODO)
+        return db.moveItemDownInMenu4Location(loc_id, mi_uuid)
 
     ###### IMAGES
     def __getTargetImages(self, id, target_type, start = 0, end = -1, filter = ''):
@@ -238,49 +254,65 @@ class RpcProxy(RpcProxyI):
 
     # EDITION
     def addImageToTarget(self, item_uuid, target_uuid, params):
+        db = ImagingDatabase()
         try:
-            ret = ImagingDatabase().addImageToTarget(item_uuid, target_uuid, params)
+            db.changeTargetsSynchroState([target_uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_TODO)
+            ret = db.addImageToTarget(item_uuid, target_uuid, params)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
-            raise e
             return xmlrpcCleanup([False, e])
 
     def editImageToTarget(self, item_uuid, target_uuid, params):
-        #try:
-            ret = ImagingDatabase().editImageToTarget(item_uuid, target_uuid, params)
+        db = ImagingDatabase()
+        try:
+            db.changeTargetsSynchroState([target_uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_TODO)
+            ret = db.editImageToTarget(item_uuid, target_uuid, params)
             return xmlrpcCleanup([True, ret])
-        #except Exception, e:
-        #    return xmlrpcCleanup([False, e])
+        except Exception, e:
+            return xmlrpcCleanup([False, e])
 
     def editImage(self, item_uuid, target_uuid, params):
-        ret = ImagingDatabase().editImage(item_uuid, target_uuid, params)
-        return xmlrpcCleanup([True, ret])
+        db = ImagingDatabase()
+        try:
+            db.changeTargetsSynchroState([target_uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_TODO)
+            ret = db.editImage(item_uuid, target_uuid, params)
+            return xmlrpcCleanup([True, ret])
+        except Exception, e:
+            return xmlrpcCleanup([False, e])
 
     def delImageToTarget(self, item_uuid, target_uuid):
+        db = ImagingDatabase()
         try:
-            ret = ImagingDatabase().delImageToTarget(item_uuid, target_uuid)
+            db.changeTargetsSynchroState([target_uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_TODO)
+            ret = db.delImageToTarget(item_uuid, target_uuid)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
             return xmlrpcCleanup([False, e])
 
     def addImageToLocation(self, item_uuid, loc_id, params):
+        db = ImagingDatabase()
         try:
-            ret = ImagingDatabase().addImageToEntity(item_uuid, loc_id, params)
+            db.setLocationSynchroState(loc_id, PULSE2_IMAGING_SYNCHROSTATE_TODO)
+            ret = db.addImageToEntity(item_uuid, loc_id, params)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
             raise e
             return xmlrpcCleanup([False, e])
 
     def editImageToLocation(self, item_uuid, loc_id, params):
+        db = ImagingDatabase()
         try:
-            ret = ImagingDatabase().editImageToEntity(item_uuid, loc_id, params)
+            db.setLocationSynchroState(loc_id, PULSE2_IMAGING_SYNCHROSTATE_TODO)
+            ret = db.editImageToEntity(item_uuid, loc_id, params)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
             return xmlrpcCleanup([False, e])
 
     def delImageToLocation(self, item_uuid, loc_id):
+        db = ImagingDatabase()
         try:
-            ret = ImagingDatabase().delImageToEntity(item_uuid, loc_id)
+            db.setLocationSynchroState(loc_id, PULSE2_IMAGING_SYNCHROSTATE_TODO)
+            ret = db.delImageToEntity(item_uuid, loc_id)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
             return xmlrpcCleanup([False, e])
@@ -314,6 +346,7 @@ class RpcProxy(RpcProxyI):
     # EDITION
     def addServiceToTarget(self, bs_uuid, target_uuid, params):
         try:
+            db.changeTargetsSynchroState([target_uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_TODO)
             ret = ImagingDatabase().addServiceToTarget(bs_uuid, target_uuid, params)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
@@ -321,6 +354,7 @@ class RpcProxy(RpcProxyI):
 
     def delServiceToTarget(self, bs_uuid, target_uuid):
         try:
+            db.changeTargetsSynchroState([target_uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_TODO)
             ret = ImagingDatabase().delServiceToTarget(bs_uuid, target_uuid)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
@@ -328,6 +362,7 @@ class RpcProxy(RpcProxyI):
 
     def editServiceToTarget(self, bs_uuid, target_uuid, params):
         try:
+            db.changeTargetsSynchroState([target_uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_TODO)
             ret = ImagingDatabase().editServiceToTarget(bs_uuid, target_uuid, params)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
@@ -335,25 +370,28 @@ class RpcProxy(RpcProxyI):
             return xmlrpcCleanup([False, e])
 
     def addServiceToLocation(self, bs_uuid, location_id, params):
-        #try:
+        try:
+            db.setLocationSynchroState(location_id, PULSE2_IMAGING_SYNCHROSTATE_TODO)
             ret = ImagingDatabase().addServiceToEntity(bs_uuid, location_id, params)
             return xmlrpcCleanup([True, ret])
-        #except Exception, e:
-        #    return xmlrpcCleanup([False, e])
+        except Exception, e:
+            return xmlrpcCleanup([False, e])
 
     def delServiceToLocation(self, bs_uuid, location_id):
-        #try:
+        try:
+            db.setLocationSynchroState(location_id, PULSE2_IMAGING_SYNCHROSTATE_TODO)
             ret = ImagingDatabase().delServiceToEntity(bs_uuid, location_id)
             return xmlrpcCleanup([True, ret])
-        #except Exception, e:
-        #    return xmlrpcCleanup([False, e])
+        except Exception, e:
+            return xmlrpcCleanup([False, e])
 
     def editServiceToLocation(self, mi_uuid, location_id, params):
-        #try:
+        try:
+            db.setLocationSynchroState(location_id, PULSE2_IMAGING_SYNCHROSTATE_TODO)
             ret = ImagingDatabase().editServiceToEntity(mi_uuid, location_id, params)
             return xmlrpcCleanup([True, ret])
-        #except Exception, e:
-        #    return xmlrpcCleanup([False, e])
+        except Exception, e:
+            return xmlrpcCleanup([False, e])
 
     ###### MENU ITEMS
     def getMenuItemByUUID(self, bs_uuid):
@@ -406,6 +444,7 @@ class RpcProxy(RpcProxyI):
     def linkImagingServerToLocation(self, is_uuid, loc_id, loc_name):
         db = ImagingDatabase()
         try:
+            db.setLocationSynchroState(loc_id, PULSE2_IMAGING_SYNCHROSTATE_TODO)
             db.linkImagingServerToEntity(is_uuid, loc_id, loc_name) # FIXME : are not we supposed to deal with the return value ?
         except Exception, e:
             return [False, str(e)]
@@ -424,8 +463,10 @@ class RpcProxy(RpcProxyI):
     def setImagingServerConfig(self, location, config):
         menu = ImagingDatabase().getEntityDefaultMenu(location)
         menu = menu.toH()
+        db = ImagingDatabase()
         try:
-            return xmlrpcCleanup([ImagingDatabase().modifyMenu(menu['imaging_uuid'], config)])
+            db.setLocationSynchroState(location, PULSE2_IMAGING_SYNCHROSTATE_TODO)
+            return xmlrpcCleanup([db.modifyMenu(menu['imaging_uuid'], config)])
         except Exception, e:
             return xmlrpcCleanup([False, e])
 
@@ -684,22 +725,25 @@ class RpcProxy(RpcProxyI):
 
     # edit
     def delPostInstallScript(self, pis_uuid):
+        # TODO should be sync
         try:
             return xmlrpcCleanup(ImagingDatabase().delPostInstallScript(pis_uuid))
         except Exception, e:
             return xmlrpcCleanup([False, e])
 
     def editPostInstallScript(self, pis_uuid, params):
+        # TODO should be sync
         try:
             return xmlrpcCleanup(ImagingDatabase().editPostInstallScript(pis_uuid, params))
         except Exception, e:
             return xmlrpcCleanup([False, e])
 
     def addPostInstallScript(self, loc_id, params):
-        #try:
+        # TODO should be sync
+        try:
             return xmlrpcCleanup(ImagingDatabase().addPostInstallScript(loc_id, params))
-        #except Exception, e:
-        #    return xmlrpcCleanup([False, e])
+        except Exception, e:
+            return xmlrpcCleanup([False, e])
 
     ###### API to be called from the imaging server (ie : without authentication)
     def computerRegister(self, imaging_server_uuid, hostname, domain, MACAddress, profile, entity = None):
