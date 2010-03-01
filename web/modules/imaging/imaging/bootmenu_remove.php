@@ -56,7 +56,7 @@ if (quickGet('valid')) {
     if (isset($bs_uuid)) {
         $ret = xmlrpc_delServiceToTarget($bs_uuid, $target_uuid, $type);
     } else {
-        $ret = xmlrpc_delImageToTarget($im_uuid, $target_uuid);
+        $ret = xmlrpc_delImageToTarget($im_uuid, $target_uuid, $type);
     }
     if ($ret[0] and !isXMLRPCError()) {                     
         $str = sprintf(_T("Menu Item <strong>%s</strong> removed from boot menu", "imaging"), $label);             

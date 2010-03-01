@@ -122,16 +122,16 @@ function xmlrpc_getLocationImages($location_id, $start = 0, $end = -1, $filter =
     return xmlCall("imaging.getLocationImages", array($location_id, $start, $end, $filter));
 }
 //Actions
-function xmlrpc_addImageToTarget($item_uuid, $target_uuid, $params) {
-    return xmlCall("imaging.addImageToTarget", array($item_uuid, $target_uuid, $params));
+function xmlrpc_addImageToTarget($item_uuid, $target_uuid, $params, $type_target) {
+    return xmlCall("imaging.addImageToTarget", array($item_uuid, $target_uuid, $params, $type_target));
 }
 
-function xmlrpc_editImageToTarget($item_uuid, $target_uuid, $params) {
-    return xmlCall("imaging.editImageToTarget", array($item_uuid, $target_uuid, $params));
+function xmlrpc_editImageToTarget($item_uuid, $target_uuid, $params, $type_target) {
+    return xmlCall("imaging.editImageToTarget", array($item_uuid, $target_uuid, $params, $type_target));
 }
 
-function xmlrpc_delImageToTarget($item_uuid, $target_uuid) {
-    return xmlCall("imaging.delImageToTarget", array($item_uuid, $target_uuid));
+function xmlrpc_delImageToTarget($item_uuid, $target_uuid, $type_target) {
+    return xmlCall("imaging.delImageToTarget", array($item_uuid, $target_uuid, $type_target));
 }
 
 function xmlrpc_addImageToLocation($item_uuid, $loc_id, $params) {
@@ -146,8 +146,8 @@ function xmlrpc_delImageToLocation($item_uuid, $loc_id) {
     return xmlCall("imaging.delImageToLocation", array($item_uuid, $loc_id));
 }
 
-function xmlrpc_editImage($item_uuid, $target_uuid, $params) {
-    return xmlCall("imaging.editImage", array($item_uuid, $target_uuid, $params));
+function xmlrpc_editImage($item_uuid, $target_uuid, $params, $type_target) {
+    return xmlCall("imaging.editImage", array($item_uuid, $target_uuid, $params, $type_target));
 }
 
 

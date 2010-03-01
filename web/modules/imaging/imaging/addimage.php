@@ -46,7 +46,7 @@ if (isset($_POST["bconfirm"])) {
     $params['default'] = ($_POST['do_default'] == 'on');
     $params['default_WOL'] = ($_POST['do_default_WOL'] == 'on');
 
-    $ret = xmlrpc_addImageToTarget($item_uuid, $target_uuid, $params);
+    $ret = xmlrpc_addImageToTarget($item_uuid, $target_uuid, $params, $type);
 
     // goto images list 
     if ($ret[0] and !isXMLRPCError()) {

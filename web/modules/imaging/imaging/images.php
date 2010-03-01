@@ -144,7 +144,7 @@ function image_edit($type, $images, $masters) {
             $item_uuid = $id;
             $params['name'] = $_POST['image_label'];
             $params['desc'] = $_POST['image_description'];
-            $ret = xmlrpc_editImage($item_uuid, $target_uuid, $params);
+            $ret = xmlrpc_editImage($item_uuid, $target_uuid, $params, $type);
             // goto images list
             header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
         } elseif (isset($_POST['bconvert_master'])) {
@@ -183,7 +183,7 @@ function image_edit($type, $images, $masters) {
             $params['desc'] = $_POST['image_description'];
             $params['post_install_script'] = $_POST['post_install'];
             $params['is_master'] = True;
-            $ret = xmlrpc_editImage($item_uuid, $target_uuid, $params);
+            $ret = xmlrpc_editImage($item_uuid, $target_uuid, $params, $type);
             header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
         } elseif (isset($_POST['bconvert_image'])) {
             $item_uuid = $id;

@@ -40,13 +40,31 @@ $sidemenu->setBackgroundImage("modules/imaging/graph/images/section_large.png");
 $p->setSideMenu($sidemenu);
 $p->display();
 
+# synchronization of locations
+global $SYNCHROSTATE_SYNCHRO;
+global $SYNCHROSTATE_TODO;
+global $SYNCHROSTATE_RUNNING;
+global $SYNCHROSTATE_INIT_ERROR;
+
+$location = getCurrentLocation();
+
+if (isset($_POST['bsync'])) {
+    $params['bsync'] = '1';
+    $ret = xmlrpc_synchroLocation($_POST['location_uuid']);
+    // goto images list 
+    if ($ret[0] and !isXMLRPCError()) {
+        $str = sprintf(_T("Synchronization launched on this location.", "imaging"), $label);
+        new NotifyWidgetSuccess($str);
+    } elseif (!$ret[0] and !isXMLRPCError()) {
+        new NotifyWidgetFailure(sprintf(_T("Synchronization failed for : %s", "imaging"), implode(', ', $ret[1])));
+    }
+}
+
 # needed in the case we have to go back to the good list.
 $params['from'] = $_GET['action'];
 
 if (displayLocalisationBar()) {
-
     $location = getCurrentLocation();
-    
 
     $ajax = new AjaxLocation("modules/imaging/manage/$page.php", "container_$page", "location", $params);
     $list = array();
