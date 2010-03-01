@@ -51,9 +51,9 @@ class Imaging(Pulse2Api):
         """
 
         if type(computerName) != str:
-            raise TypeError
+            raise TypeError, 'Bad Computer name: %s' % computerName
         if not isMACAddress(MACAddress):
-            raise TypeError
+            raise TypeError, 'BAD MAC address: %s' % MACAddress
         d = self.callRemote("computerRegister", computerName, MACAddress, imagingData)
         d.addErrback(self.onErrorRaise, "Imaging:computerRegister", [computerName, MACAddress, imagingData])
         return d
@@ -100,6 +100,7 @@ class Imaging(Pulse2Api):
         d = self.callRemote("computerLogGet", uuid)
         d.addErrback(self.onErrorRaise, "Imaging:computerLogGet", uuid)
         return d
+
     # Computer images management
     def computerBackupImagesGet(self, uuid): # list of imageData
         """
