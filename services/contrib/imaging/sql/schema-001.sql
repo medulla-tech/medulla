@@ -321,7 +321,7 @@ CREATE INDEX fk_menu_name_idx               ON Menu(fk_name);
 CREATE INDEX fk_menu_default_item_idx       ON Menu(fk_default_item);
 CREATE INDEX fk_menu_default_item_WOL_idx   ON Menu(fk_default_item_WOL);
 CREATE INDEX fk_menu_protocol_idx           ON Menu(fk_protocol);
-CREATE INDEX fk_menu_state_idx              ON Menu(fk_state);
+CREATE INDEX fk_menu_state_idx              ON Menu(fk_synchrostate);
 
 CREATE INDEX fk_boot_service_on_imaging_server_boot_service_idx     ON BootServiceOnImagingServer(fk_boot_service);
 CREATE INDEX fk_boot_service_on_imaging_server_imaging_server_idx   ON BootServiceOnImagingServer(fk_imaging_server);
