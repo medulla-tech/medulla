@@ -33,6 +33,8 @@ from sqlalchemy import create_engine, ForeignKey, Integer, MetaData, Table, Colu
 from sqlalchemy.orm import create_session, mapper
 
 import logging
+import time
+import datetime
 
 # THAT REQUIRE TO BE IN A MMC SCOPE, NOT IN A PULSE2 ONE
 from pulse2.managers.profile import ComputerProfileManager
@@ -1043,6 +1045,13 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return ret
 
     def registerImage(self, imaging_server_uuid, computer_uuid, params):
+        """
+        Registers an image into the database, and link it to a package server
+        and to a computer.
+
+        @return: True on success, else will raise an exception
+        @rtype: bool
+        """
         session = create_session()
         # create the image item
         image = Image()
@@ -1052,8 +1061,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         image.uuid = params['uuid']
         image.checksum = params['checksum']
         image.size = params['size']
-        import time
-        image.creation_date = time.localtime() # image['creation_date']
+        image.creation_date = datetime.date.fromtimestamp(time.mktime(params['creation_date']))
         image.fk_creator = 1 # TOBEDONE image['']
         image.is_master = params['is_master']
         session.save(image)
@@ -1062,7 +1070,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         # fill the mastered_on
         #   there is way to much fields!
         mastered_on = MasteredOn()
-        mastered_on.timestamp = time.localtime()
+        mastered_on.timestamp = datetime.date.fromtimestamp(time.mktime(params['creation_date']))
         mastered_on.title = params['name']
         mastered_on.detail = params['desc']
         mastered_on.fk_mastered_on_state = 1 # done
@@ -1083,7 +1091,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         # self.addImageToTarget(id2uuid(image.id), computer_uuid, params)
         session.flush()
         session.close()
-        return [True]
+        return True
 
     def addImageToEntity(self, item_uuid, loc_id, params):
         session = create_session()
