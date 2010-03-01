@@ -38,7 +38,7 @@ class Imaging(Pulse2Api):
         Pulse2Api.__init__(self, *attr)
 
     # Computer registration
-    def computerRegister(self, computerName, MACAddress):
+    def computerRegister(self, computerName, MACAddress, imagingData):
         """
         Called by pulse2-imaging-server to tell the Package Server to register a new computer.
         The computer name may contain a profile and an entity path (self, like profile:/entityA/entityB/computer)
@@ -54,8 +54,8 @@ class Imaging(Pulse2Api):
             raise TypeError
         if not isMACAddress(MACAddress):
             raise TypeError
-        d = self.callRemote("computerRegister", computerName, MACAddress)
-        d.addErrback(self.onErrorRaise, "Imaging:computerRegister", [computerName, MACAddress])
+        d = self.callRemote("computerRegister", computerName, MACAddress, imagingData)
+        d.addErrback(self.onErrorRaise, "Imaging:computerRegister", [computerName, MACAddress, imagingData])
         return d
 
     def computerPrepareImagingDirectory(self, MACAddress, imagingData = None):
