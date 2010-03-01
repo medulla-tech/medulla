@@ -343,7 +343,7 @@ class ImagingApi(MyXmlrpc):
                     imenu = imb.make()
                     imenu.write()
                 except Exception, e:
-                    self.logger.error("Error while setting new menu of computer uuid/mac %s: %s" % (cuuid, str(e)))
+                    self.logger.exception("Error while setting new menu of computer uuid/mac %s: %s" % (cuuid, e))
                     ret.append(cuuid)
                     # FIXME: Rollback to the previous menu
         return ret
@@ -413,7 +413,56 @@ class ImagingApi(MyXmlrpc):
 
     ## Image management
 
-    def imagingServerImageDelete(self, imageUUID):
+    def xmlrpc_imageRegister(self, computerMACAddress, imageUUID, isMaster, name, desc, path, size, creationDate, creator = False):
+        """
+        Called by the imaging server to register a new image.
+
+        @param isMaster: Flag telling if this is a master or a backup image
+        @type isMaster: bool
+        @param size: image size in bytes
+        @type size: int
+        @param creationDate: image creation timestamp
+        @type creationDate: tuple (using time.gmtime() format)
+        
+        @return: True if successful
+        @rtype: bool
+        """
+
+        def onSuccess(result):
+            if type(result) != list and len(result) != 2:
+                self.logger.error('Imaging: Couldn\'t register on the MMC agent the image with UUID %s : %s' % (imageUUID, str(result)))
+                ret = False
+            elif not result[0]:
+                self.logger.error('Imaging: Couldn\'t register on the MMC agent the image with UUID %s : %s' % (imageUUID, result[1]))
+                ret = False
+            else:
+                self.logger.debug('Imaging: Successfully registered image %s' % imageUUID)
+                ret = True
+            return ret
+        
+        if not isUUID(imageUUID):
+            self.logger.error("Bad image UUID %s" % str(imageUUID))
+            ret = False
+        elif not isMACAddress(computerMACAddress):
+            self.logger.error("Bad computer MAC %s" % str(computerMACAddress))
+            ret = False
+        else:
+            computerUUID = self.myUUIDCache.getByMac(computerMACAddress)
+            if not computerUUID:
+                self.logger.error("Can't get computer UUID for MAC address %s" % computerMACAddress)
+                ret = False
+            else:
+                computerUUID = computerUUID['uuid']
+                client = self._getXMLRPCClient()
+                func = 'imaging.imageRegister'
+                args = (self.config.imaging_api['uuid'], computerUUID, imageUUID, name, desc, path, size, creationDate, creator)
+                d = client.callRemote(func, *args)
+                d.addCallbacks(onSuccess, client.onError, errbackArgs = (func, args, False))
+                return d
+        return ret
+
+
+    def xmlrpc_imagingServerImageDelete(self, imageUUID):
         """
         Delete an image (backup or master) from the imaging server.
         The corresponding directory is simply removed.
@@ -444,7 +493,7 @@ class ImagingApi(MyXmlrpc):
 
     ## Imaging server configuration
 
-    def imagingServerConfigurationSet(self, conf):
+    def xmlrpc_imagingServerConfigurationSet(self, conf):
         """
         Set the global imaging server configuration (traffic shaping, etc.)
 
