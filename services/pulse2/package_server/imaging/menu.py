@@ -90,29 +90,6 @@ class ImagingMenu:
     hold an imaging menu
     """
 
-    PULSE2_K_DISKLESS = 'bzImage.initrd'
-    PULSE2_I_DISKLESS = ''
-
-    mac = None # the client MAC Address
-    config = None # the server configuration
-
-    # menu items
-    timeout = 0 # the menu timeout
-    default_item = 0 # the menu default entry
-    default_item_wol = 0 # the menu default entry on WOL
-    splashscreen = None # the menu splashscreen
-    message = None
-    colors = { # menu colors
-        'normal' : { 'fg': 7, 'bg': 1 },
-        'highlight' : { 'fg': 15, 'bg': 3 }
-    }
-    keyboard = None # the menu keymap, None is C
-    hidden = False # do we hide the menu ?
-
-    menuitems = dict()
-
-    additionnal = list() # additionnal keywords, put in the menu 'as is'
-
     def __init__(self, config, macaddress):
         """
         Initialize this object.
@@ -120,9 +97,24 @@ class ImagingMenu:
         @param config: a ImagingConfig object
         @param macaddress: the client MAC Address
         """
-        self.config = config
+        self.logger = logging.getLogger()
+        self.config = config # the server configuration
         assert pulse2.utils.isMACAddress(macaddress)
-        self.mac = macaddress
+        self.mac = macaddress # the client MAC Address
+        self.menuitems = {}
+
+        # menu items
+        self.timeout = 0 # the menu timeout
+        self.default_item = 0 # the menu default entry
+        self.default_item_wol = 0 # the menu default entry on WOL
+        self.splashscreen = None # the menu splashscreen
+        self.message = None
+        self.colors = { # menu colors
+            'normal' : { 'fg': 7, 'bg': 1 },
+            'highlight' : { 'fg': 15, 'bg': 3 }
+        }
+        self.keyboard = None # the menu keymap, None is C
+        self.hidden = False # do we hide the menu ?
 
         # list of replacements to perform
         self.replacements = [
@@ -182,8 +174,6 @@ class ImagingMenu:
         if self.hidden:
             buf += 'hide\n'
 
-        buf += '\n'.join(self.additionnal)
-
         # then write items
         indices = self.menuitems.keys()
         indices.sort()
@@ -205,12 +195,14 @@ class ImagingMenu:
         self.logger.debug('Preparing to write boot menu for computer MAC %s into file %s' % (self.mac, filename))
         buf = self.buildMenu()
         try:
-            fid, tempname = tempfile.mkstemp(dir = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['bootmenus_folder']))
+            fdtemp, tempname = tempfile.mkstemp(dir = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['bootmenus_folder']))
+            fid = os.fdopen(fdtemp, 'w+b')
             fid.write(buf)
             fid.close()
             os.rename(tempname, filename)
             for item in self.menuitems.values():
                 item.write(self.config)
+            self.logger.debug('Successfully wrote boot menu for computer MAC %s into file %s' % (self.mac, filename))
         except Exception, e:
             logging.getLogger().error("While writing boot menu for %s : %s" % (self.mac, e))
             return False
@@ -256,7 +248,7 @@ class ImagingMenu:
         """
         assert(type(position) == int and position > 0)
         if position in self.menuitems:
-            raise ValueError
+            raise ValueError, 'Position %d in menu already taken' % position
         item = ImagingImageItem(entry)
         self.menuitems[position] = item
 
@@ -266,7 +258,7 @@ class ImagingMenu:
         """
         assert(type(position) == int and position > 0)
         if position in self.menuitems:
-            raise ValueError
+            raise ValueError, 'Position %d in menu already taken' % position
         self.menuitems[position] = ImagingBootServiceItem(entry)
 
     def removeEntry(self, position = None):
@@ -301,12 +293,16 @@ class ImagingMenu:
         self.protocol = value
 
     def setSplashScreen(self, value):
+        if type(value == str):
+            value = value.decode('utf-8')
         assert(type(value) == unicode)
         self.splashscreen = value
 
-    def setMessage(self, message):
-        assert(type(message) == unicode)
-        self.message = message
+    def setMessage(self, value):
+        if type(value == str):
+             value = value.decode('utf-8')
+        assert(type(value) == unicode)
+        self.message = value
 
 
 class ImagingItem:
@@ -315,8 +311,14 @@ class ImagingItem:
     Common class to hold an imaging menu item
     """
 
-    title = None # the item title
-    desc = None # the item desc
+    def _convertEntry(self, array):
+        """
+        Convert dictionary value of type str to unicode.
+        """
+        for key, value in array.items():
+            if type(value) == str:
+                value = value.decode('utf-8')
+            array[key] = value
 
     def __init__(self, entry):
         """
@@ -324,8 +326,9 @@ class ImagingItem:
         @type entry: dict
         """
         self.logger = logging.getLogger()
-        self.title = entry['name']
-        self.desc = entry['desc']
+        self._convertEntry(entry)
+        self.title = entry['name'] # the item title
+        self.desc = entry['desc'] # the item desc
         assert(type(self.title) == unicode)
         assert(type(self.desc) == unicode)
 
@@ -342,11 +345,9 @@ class ImagingBootServiceItem(ImagingItem):
     hold an imaging menu item for a boot service
     """
 
-    value = None # the GRUB command line
-
     def __init__(self, entry):
         ImagingItem.__init__(self, entry)
-        self.value = entry['value']
+        self.value = entry['value'] # the GRUB command line
         assert(type(self.value) == unicode)
 
     def getEntry(self, protocol):
@@ -427,6 +428,7 @@ class ImagingImageItem(ImagingItem):
                 f.close()
             except OSError, e:
                 self.logger.error("Can't update post-installation script %s: %s" % (initinst, e ))
+                raise
         else:
             if os.path.exists(initinst):
                 self.logger.debug('Deleting previous post-installation script: %s' % initinst)
@@ -434,3 +436,4 @@ class ImagingImageItem(ImagingItem):
                     os.unlink(initinst)
                 except OSError, e:
                     self.logger.error("Can't delete post-installation script %s: %s" % (initinst, e ))
+                    raise
