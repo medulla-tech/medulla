@@ -863,7 +863,7 @@ class RpcProxy(RpcProxyI):
         # TODO !!!
         return [True, True]
 
-    def imageRegister(self, imaging_server_uuid, computer_uuid, image_uuid, name, desc, path, checksum, size, creation_date, creator = None):
+    def imageRegister(self, imaging_server_uuid, computer_uuid, image_uuid, is_master, name, desc, path, size, creation_date, creator = 'root'):
         """
         Called by the Package Server to register a new Image.
         """
@@ -872,23 +872,25 @@ class RpcProxy(RpcProxyI):
             'desc':desc,
             'path':path,
             'uuid':image_uuid,
-            'checksum':checksum,
+            'checksum': '',
             'size':size,
             'creation_date':creation_date,
-            'is_master':False,
+            'is_master':is_master,
             'creator':creator
         }
         db = ImagingDatabase()
         if db.countImagingServerByPackageServerUUID(imaging_server_uuid) == 0:
-            return [False, "The imaging server UUID you try to access don't exists in the MMC."]
+            return [False, "The imaging server UUID you try to access doesn't exist in the imaging database."]
         if not db.isTargetRegister(computer_uuid, PULSE2_IMAGING_TYPE_COMPUTER):
-            return [False, "The computer UUID you try to access don't exists in the MMC."]
+            return [False, "The computer UUID you try to access doesn't exists in the imaging database."]
 
         try:
             ret = db.registerImage(imaging_server_uuid, computer_uuid, image)
-            return ret
+            ret = [ret, '']
         except Exception, e:
-            return [False, e]
+            self.logger.exception(e)
+            ret = [False, str(e)]
+        return ret
 
     def injectInventory(self, computer_uuid, inventory = None):
         """
