@@ -34,6 +34,7 @@ $hostname = $params['hostname'];
 global $SYNCHROSTATE_SYNCHRO;
 global $SYNCHROSTATE_TODO;
 global $SYNCHROSTATE_RUNNING;
+global $SYNCHROSTATE_INIT_ERROR;
 
 if (isset($_POST['bsync'])) {
     if (isset($params['uuid'])) {
@@ -70,7 +71,14 @@ if (isset($params['uuid'])) {
         $sidemenu->forceActiveItem("index");
         $p->setSideMenu($sidemenu);
         $p->display();
-        print _T("The synchro is running, please wait.", "imaging");
+        $a_href_open = "<a href=''>";
+        print sprintf(_T("The synchro is running, please wait or reload the page %shere%s", "imaging"), $a_href_open, '</a>');
+    } elseif ($ret['id'] == $SYNCHROSTATE_INIT_ERROR) {
+        $p = new PageGenerator(sprintf(_T("%s's computer imaging", 'imaging'), $hostname));
+        $sidemenu->forceActiveItem("index");
+        $p->setSideMenu($sidemenu);
+        $p->display();
+        print _T("The registering in the imaging server has failed.", "imaging");
     } else {
         # do nothing special if $SYNCHROSTATE_DONE
         $p = new TabbedPageGenerator();
