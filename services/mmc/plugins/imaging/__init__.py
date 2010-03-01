@@ -769,7 +769,7 @@ class RpcProxy(RpcProxyI):
 #        if entities:
 #            # TODO
 #            pass
-        return uuid
+        return [True, uuid]
 
     def imagingServerRegister(self, name, url, uuid):
         """
