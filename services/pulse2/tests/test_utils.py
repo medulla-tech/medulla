@@ -32,6 +32,7 @@ class InputTests(unittest.TestCase):
 
     def test_MACValid(self):
         self.assertTrue(isMACAddress('00:11:aa:BB:22:33'))
+        self.assertTrue(isMACAddress(u'00:11:aa:BB:22:33'))
 
     def test_MACNotValid(self):
         self.assertFalse(isMACAddress('00:11:aa:BB:22:zz'))
@@ -51,6 +52,7 @@ class InputTests(unittest.TestCase):
 
     def test_computerPathValid(self):
         self.assertEqual(splitComputerPath('hostname'), ('', '', 'hostname', ''))
+        self.assertEqual(splitComputerPath(u'123456'), ('', '', '123456', ''))
         self.assertEqual(splitComputerPath('hostname.domain-example.net'), ('', '', 'hostname', 'domain-example.net'))
         self.assertEqual(splitComputerPath('profile:hostname'), ('profile', '', 'hostname', ''))
         self.assertEqual(splitComputerPath('profile:/hostname'), ('profile', '', 'hostname', ''))
