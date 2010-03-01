@@ -373,6 +373,7 @@ INSERT INTO Language (label) VALUES ("Español");
 INSERT INTO SynchroState (label) VALUES ("TODO");
 INSERT INTO SynchroState (label) VALUES ("DONE");
 INSERT INTO SynchroState (label) VALUES ("RUNNING");
+INSERT INTO SynchroState (label) VALUES ("INIT_ERROR");
 
 INSERT INTO Internationalization (id, fk_language, label) VALUES (1, 2, "Menu par défaut");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (2, 2, "Continuer le démarrage normalement");
