@@ -64,6 +64,7 @@ class ImagingMenuBuilder:
             raise TypeError, 'Bad menu structure for computer MAC %s' % macaddress
         self.menu = menu
         self.config = config
+        self.macaddress = macaddress
 
     def make(self):
         """
