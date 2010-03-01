@@ -152,15 +152,18 @@ class ImagingApi(MyXmlrpc):
         """
 
         def onSuccess(result):
-            if type(result) == dict :
+            if type(result) != list and len(result) != 2:
                 self.logger.warn('Imaging: Couldn\'t register client %s (%s) : %s' % (computerName, MACAddress, str(result)))
-                return False
-
-            uuid = result
-            self.logger.info('Imaging: Register client %s (%s) as %s' % (computerName, MACAddress, uuid))
-            self.myUUIDCache.set(uuid, MACAddress)
-
-            return self.xmlrpc_computerPrepareImagingDirectory(uuid, {'mac': MACAddress, 'hostname': hostname})
+                ret = False
+            elif not result[0]:
+                self.logger.warn('Imaging: Couldn\'t register client %s (%s) : %s' % (computerName, MACAddress, result[1]))
+                ret = False
+            else:
+                uuid = result[1]
+                self.logger.info('Imaging: Register client %s (%s) as %s' % (computerName, MACAddress, uuid))
+                self.myUUIDCache.set(uuid, MACAddress)
+                ret = self.xmlrpc_computerPrepareImagingDirectory(uuid, {'mac': MACAddress, 'hostname': hostname})
+            return ret
 
         try:
             # check MAC Addr is conform
