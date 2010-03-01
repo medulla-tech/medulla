@@ -176,6 +176,13 @@ class RpcProxy(RpcProxyI):
 
     ###########################################################
     ###### BOOT MENU (image+boot service on the target)
+    def __convertType(self, target_type):
+        if target_type == '':
+            target_type = PULSE2_IMAGING_TYPE_COMPUTER
+        elif target_type == 'group':
+            target_type = PULSE2_IMAGING_TYPE_PROFILE
+        return target_type
+
     def __getTargetBootMenu(self, target_id, start = 0, end = -1, filter = ''):
         db = ImagingDatabase()
         menu = map(lambda l: l.toH(), db.getBootMenu(target_id, start, end, filter))
@@ -198,19 +205,13 @@ class RpcProxy(RpcProxyI):
     # EDITION
     def moveItemUpInMenu(self, target_uuid, target_type, mi_uuid):
         db = ImagingDatabase()
-        if target_type == '':
-            target_type = PULSE2_IMAGING_TYPE_COMPUTER
-        elif target_type == 'group':
-            target_type = PULSE2_IMAGING_TYPE_PROFILE
+        target_type = self.__convertType(target_type)
         db.changeTargetsSynchroState([target_uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_TODO)
         return db.moveItemUpInMenu(target_uuid, mi_uuid)
 
     def moveItemDownInMenu(self, target_uuid, target_type, mi_uuid):
         db = ImagingDatabase()
-        if target_type == '':
-            target_type = PULSE2_IMAGING_TYPE_COMPUTER
-        elif target_type == 'group':
-            target_type = PULSE2_IMAGING_TYPE_PROFILE
+        target_type = self.__convertType(target_type)
         db.changeTargetsSynchroState([target_uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_TODO)
         return db.moveItemDownInMenu(target_uuid, mi_uuid)
 
@@ -253,17 +254,20 @@ class RpcProxy(RpcProxyI):
         return [count, xmlrpcCleanup(ret)]
 
     # EDITION
-    def addImageToTarget(self, item_uuid, target_uuid, params):
+    def addImageToTarget(self, item_uuid, target_uuid, params, target_type):
         db = ImagingDatabase()
+        target_type = self.__convertType(target_type)
         try:
             db.changeTargetsSynchroState([target_uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_TODO)
             ret = db.addImageToTarget(item_uuid, target_uuid, params)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
+            raise e
             return xmlrpcCleanup([False, e])
 
-    def editImageToTarget(self, item_uuid, target_uuid, params):
+    def editImageToTarget(self, item_uuid, target_uuid, params, target_type):
         db = ImagingDatabase()
+        target_type = self.__convertType(target_type)
         try:
             db.changeTargetsSynchroState([target_uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_TODO)
             ret = db.editImageToTarget(item_uuid, target_uuid, params)
@@ -271,17 +275,20 @@ class RpcProxy(RpcProxyI):
         except Exception, e:
             return xmlrpcCleanup([False, e])
 
-    def editImage(self, item_uuid, target_uuid, params):
+    def editImage(self, item_uuid, target_uuid, params, target_type):
         db = ImagingDatabase()
+        target_type = self.__convertType(target_type)
         try:
             db.changeTargetsSynchroState([target_uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_TODO)
             ret = db.editImage(item_uuid, target_uuid, params)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
+            raise e
             return xmlrpcCleanup([False, e])
 
-    def delImageToTarget(self, item_uuid, target_uuid):
+    def delImageToTarget(self, item_uuid, target_uuid, target_type):
         db = ImagingDatabase()
+        target_type = self.__convertType(target_type)
         try:
             db.changeTargetsSynchroState([target_uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_TODO)
             ret = db.delImageToTarget(item_uuid, target_uuid)
@@ -525,7 +532,59 @@ class RpcProxy(RpcProxyI):
         if type(ret) != dict:
             ret = ret.toH()
         return xmlrpcCleanup(ret)
-
+    
+    def __generateMenusContent(self, menu, menu_items, loc_uuid, target_uuid = None, h_pis = {}):
+        menu['bootservices'] = {}
+        menu['images'] = {}
+        for mi in menu_items:
+            if menu['fk_default_item'] == mi.id:
+                menu['default_item'] = mi.order
+            if menu['fk_default_item_WOL'] == mi.id:
+                menu['default_item_WOL'] = mi.order
+                menu['default_item_wol'] = mi.order # TODO : remove 
+            mi = mi.toH()
+            if mi.has_key('image'):
+                if h_pis.has_key(mi['image']['id']):
+                    h_pis[mi['image']['id']].append([loc.uuid, target.uuid, str(mi['order'])])
+                else:
+                    h_pis[mi['image']['id']] = [[loc.uuid, target.uuid, str(mi['order'])]]
+                im = {
+                    'uuid' : mi['image']['uuid'],
+                    'name' : mi['image']['name'],
+                    'desc' : mi['image']['desc']
+                }
+                menu['images'][str(mi['order'])] = im
+            else:
+                bs = {
+                    'name' : mi['boot_service']['default_name'],
+                    'desc' : mi['boot_service']['default_desc'],
+                    'value' : mi['boot_service']['value'],
+                    'hidden' : mi['hidden'],
+                    'hidden_WOL' : mi['hidden_WOL']
+                }
+                menu['bootservices'][str(mi['order'])] = bs
+        return (menu, menu_items, h_pis)
+    
+    def __generateLocationMenu(self, logger, db, loc_uuid):
+        menu = db.getEntityDefaultMenu(loc_uuid)
+        menu_items = db.getMenuContent(menu.id, PULSE2_IMAGING_MENU_ALL, 0, -1, '')
+        menu = menu.toH()
+        menu['target'] = h_targets[target.uuid]
+        menu, menu_items, h_pis = self.__generateMenusContent(menu, menu_items, loc_uuid)
+        ims = h_pis.keys()
+        a_pis = db.getImagesPostInstallScript(ims)
+        for pis, im in a_pis:
+            pis = {
+                'id':pis.id,
+                'name':pis.default_name,
+                'desc':pis.default_desc,
+                'value':pis.value
+            }
+            a_targets = h_pis[im.id]
+            for loc_uuid, t_uuid, order in a_targets:
+                menu['images'][order]['post_install_script'] = pis
+        return menu
+         
     def __generateMenus(self, logger, db, uuids, target_type):
         # get target location
         locations = db.getTargetsEntity(uuids)
@@ -544,36 +603,8 @@ class RpcProxy(RpcProxyI):
             menu_items = db.getBootMenu(target.uuid, 0, -1, '')
             menu = db.getTargetsMenuTUUID(target.uuid)
             menu = menu.toH()
-            menu['bootservices'] = {}
-            menu['images'] = {}
-            for mi in menu_items:
-                if menu['fk_default_item'] == mi.id:
-                    menu['default_item'] = mi.order
-                if menu['fk_default_item_WOL'] == mi.id:
-                    menu['default_item_WOL'] = mi.order
-                    menu['default_item_wol'] = mi.order # TODO : remove 
-                menu['target'] = h_targets[target.uuid]
-                mi = mi.toH()
-                if mi.has_key('image'):
-                    if h_pis.has_key(mi['image']['id']):
-                        h_pis[mi['image']['id']].append([loc.uuid, target.uuid, str(mi['order'])])
-                    else:
-                        h_pis[mi['image']['id']] = [[loc.uuid, target.uuid, str(mi['order'])]]
-                    im = {
-                        'uuid' : mi['image']['uuid'],
-                        'name' : mi['image']['name'],
-                        'desc' : mi['image']['desc']
-                    }
-                    menu['images'][str(mi['order'])] = im
-                else:
-                    bs = {
-                        'name' : mi['boot_service']['default_name'],
-                        'desc' : mi['boot_service']['default_desc'],
-                        'value' : mi['boot_service']['value'],
-                        'hidden' : mi['hidden'],
-                        'hidden_WOL' : mi['hidden_WOL']
-                    }
-                    menu['bootservices'][str(mi['order'])] = bs
+            menu['target'] = h_targets[target.uuid]
+            menu, menu_items, h_pis = self.__generateMenusContent(menu, menu_items, loc.uuid, target.uuid, h_pis)
             
             if distinct_loc.has_key(loc.uuid):
                 distinct_loc[loc.uuid][1].append({target.uuid:menu})
@@ -595,6 +626,27 @@ class RpcProxy(RpcProxyI):
                 distinct_loc[loc_uuid][1][t_uuid]['images'][order]['post_install_script'] = pis
         return distinct_loc
          
+    def __synchroLocation(self, loc_uuid):
+        logger = logging.getLogger()
+        db = ImagingDatabase()
+        ret = db.setLocationSynchroState(loc_uuid, PULSE2_IMAGING_SYNCHROSTATE_RUNNING)
+        menu = self.__generateLocationMenu(logger, db, loc_uuid)
+        def treatFailures(result, location_uuid = loc_uuid, menu = menu, logger = logger):
+            if result:
+                db.setLocationSynchroState(loc_uuid, PULSE2_IMAGING_SYNCHROSTATE_DONE)
+            else:
+                db.setLocationSynchroState(loc_uuid, PULSE2_IMAGING_SYNCHROSTATE_TODO)
+            return result
+
+        url = self.__chooseImagingApiUrl(loc_uuid)
+        i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
+        if i == None:
+            # do fail
+            logger.error("couldn't initialize the ImagingApi to %s"%(url))
+        d = i.ImagingServerDefaultMenuSet(menu) # WIP
+        d.addCallback(treatFailures)
+        return d
+        
     def __synchroTargets(self, uuids, target_type):
         logger = logging.getLogger()
         db = ImagingDatabase()
@@ -655,7 +707,36 @@ class RpcProxy(RpcProxyI):
         return xmlrpcCleanup(ret)
 
     def synchroLocation(self, uuid):
-        pass
+        db = ImagingDatabase()
+        # get computers in location that need synchro
+        uuids = db.getComputersThatNeedSynchroInEntity(uuid)
+        def __getUUID(x):
+            x = x[0].toH()
+            return x['uuid']
+        uuids = map(__getUUID, uuids)
+        # get computers in profiles of location that need synchro
+        puuids = []
+        for pid in pids:
+            puuids.extend(map(lambda c: c.uuid, ComputerProfileManager().getProfileContent(pids)))
+        puuids = db.getComputersSynchroStates(pids_uuids)
+        pids_uuids = []
+        for computer, synchro_state in puuids:
+            if synchro_state.id == PULSE2_IMAGING_SYNCHROSTATE_TODO or synchro_state.id == PULSE2_IMAGING_SYNCHROSTATE_INIT_ERROR:
+                computer = computer.toH()
+                pids_uuids.append(computer['uuid'])
+
+        uuids.extend(pids_uuids)
+        # synchronize all
+        ret1 = self.__synchroTargets(uuids, PULSE2_IMAGING_TYPE_COMPUTER)
+        # synchro the location
+        ret2 = self.__synchroLocation(uuid)
+
+        def sendResult(results):
+            return xmlrpcCleanup(results)
+
+        dl = defer.DeferredList((ret1, ret2))
+        dl.addCallback(sendResult)
+        return dl
 
     ###### Menus
     def getMyMenuTarget(self, uuid, target_type):

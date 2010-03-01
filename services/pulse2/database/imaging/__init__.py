@@ -27,7 +27,7 @@ Database class for imaging
 """
 
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
-from pulse2.database.imaging.types import PULSE2_IMAGING_MENU_ALL, PULSE2_IMAGING_IMAGE_IS_BOTH, PULSE2_IMAGING_IMAGE_IS_IMAGE_ONLY, PULSE2_IMAGING_IMAGE_IS_MASTER_ONLY, PULSE2_IMAGING_MENU_BOOTSERVICE, PULSE2_IMAGING_MENU_IMAGE, PULSE2_IMAGING_TYPE_COMPUTER, PULSE2_IMAGING_TYPE_PROFILE
+from pulse2.database.imaging.types import PULSE2_IMAGING_MENU_ALL, PULSE2_IMAGING_IMAGE_IS_BOTH, PULSE2_IMAGING_IMAGE_IS_IMAGE_ONLY, PULSE2_IMAGING_IMAGE_IS_MASTER_ONLY, PULSE2_IMAGING_MENU_BOOTSERVICE, PULSE2_IMAGING_MENU_IMAGE, PULSE2_IMAGING_TYPE_COMPUTER, PULSE2_IMAGING_TYPE_PROFILE, PULSE2_IMAGING_SYNCHROSTATE_RUNNING, PULSE2_IMAGING_SYNCHROSTATE_TODO, PULSE2_IMAGING_SYNCHROSTATE_DONE, PULSE2_IMAGING_SYNCHROSTATE_INIT_ERROR
 
 from sqlalchemy import create_engine, ForeignKey, Integer, MetaData, Table, Column, and_, or_
 from sqlalchemy.orm import create_session, mapper
@@ -1658,6 +1658,20 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return target
 
     ######### SYNCHRO
+    def getComputersThatNeedSynchroInEntity(self, loc_id, session = None):
+        session_need_to_close = False
+        if session == None:
+            session_need_to_close = True
+            session = create_session()
+
+        q = session.query(Target).add_entity(SynchroState)
+        q = q.select_from(self.target.join(self.menu).join(self.entity, self.target.c.fk_entity == self.entity.c.id))
+        q = q.filter(and_(self.entity.c.uuid == loc_id, self.menu.c.fk_synchrostate.in_(PULSE2_IMAGING_SYNCHROSTATE_TODO, PULSE2_IMAGING_SYNCHROSTATE_INIT_ERROR))).all()
+
+        if session_need_to_close:
+            session.close()
+        return q
+
     def __getSynchroStates(self, uuids, target_type, session):
         q = session.query(SynchroState).add_entity(Menu)
         q = q.select_from(self.synchro_state.join(self.menu).join(self.target, self.menu.c.id == self.target.c.fk_menu))
@@ -1679,7 +1693,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q2 = q2.select_from(self.synchro_state.join(self.menu).join(self.entity, self.entity.c.fk_default_menu == self.menu.c.id))
         q2 = q2.filter(self.entity.c.uuid == uuid).first()
 
-        if q2.id == 3: # running
+        if q2.id == 3 or q2.id == 4: # running
             session.close()
             return q2
         # in the 2 other cases we have to check the state of the content of this entity
@@ -1692,12 +1706,13 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         a_state = [0, 0]
         for q in q1:
-            if q.id == 3: # running
+            print q.toH()
+            if q.id == 3 or q.id == 4: # running
                 return q
-            a_state[q.id] += 1
+            a_state[q.id - 1] += 1
         if a_state[0] == 0:
-            return {'id':1, 'label':'DONE'}
-        return {'id':0, 'label':'TODO'}
+            return {'id':2, 'label':'DONE'}
+        return {'id':1, 'label':'TODO'}
 
     def setLocationSynchroState(self, uuid, state):
         session = create_session()
