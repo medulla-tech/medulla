@@ -56,7 +56,7 @@ if (isset($_POST["bconfirm"])) {
 
     // goto images list 
     if ($ret[0] and !isXMLRPCError()) {
-        $str = sprintf(_T("Link betwen imaging server <strong>%s</strong> and the entity <strong>%s</strong> succeded.", "imaging"), $label, $loc_id);
+        $str = sprintf(_T("Link between imaging server <strong>%s</strong> and the entity <strong>%s</strong> succeeded.", "imaging"), $label, $loc_id);
         new NotifyWidgetSuccess($str);
         header("Location: " . urlStrRedirect("imaging/manage/configuration", $params));
     } elseif ($ret[0]) {
