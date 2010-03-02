@@ -1772,7 +1772,11 @@ class LdapUserGroupControl:
                     'objectClass':('organizationalUnit','top')}
         attributes=[ (k,v) for k,v in addr_info.items() ]
 
-        self.l.add_s(addrdn, attributes)
+        try:
+            self.l.add_s(addrdn, attributes)
+        except ldap.ALREADY_EXISTS, err:
+            r.commit()
+        
         r.commit()
 
 ldapUserGroupControl = LdapUserGroupControl
