@@ -354,7 +354,7 @@ class DyngroupDatabase(DatabaseHelper):
         Get all computers that are in a profile
         """
         session = create_session()
-        q = session.query(Machines).select_from(self.machines.join(self.profilesResults).join(self.groups).join(self.groupType))
+        q = session.query(Machines).select_from(self.groups.join(self.profilesResults).join(self.machines).join(self.groupType))
         q = q.filter(and_(self.groupType.c.value == 'Profile', self.groups.c.id == uuid)).all()
         session.close()
         return q
