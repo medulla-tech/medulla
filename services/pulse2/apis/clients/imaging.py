@@ -58,15 +58,24 @@ class Imaging(Pulse2Api):
         d.addErrback(self.onErrorRaise, "Imaging:computerRegister", [computerName, MACAddress, imagingData])
         return d
 
-    def computerPrepareImagingDirectory(self, MACAddress, imagingData = None):
+    def computerPrepareImagingDirectory(self, MACAddress, imagingData = False):
         """
         Asks the Package Server to create the file system structure for the given computer uuid thanks to imagingData content.
-        If imagingData is None, the package server queries the MMC agent for the imaging data.
+        If imagingData is False, the package server queries the MMC agent for the imaging data.
         """
         if not isMACAddress(MACAddress):
             raise TypeError
         d = self.callRemote("computerPrepareImagingDirectory", MACAddress, imagingData)
         d.addErrback(self.onErrorRaise, "Imaging:computerPrepareImagingDirectory", [MACAddress, imagingData])
+        return d
+    def computerCreateImageDirectory(self, MACAddress):
+        """
+        Asks the Package Server to create the file system structure for the given computer uuid thanks to imagingData content.
+        """
+        if not isMACAddress(MACAddress):
+            raise TypeError
+        d = self.callRemote("computerCreateImageDirectory", MACAddress)
+        d.addErrback(self.onErrorRaise, "Imaging:computerCreateImageDirectory", [MACAddress])
         return d
     def computerUnregister(self, uuid, archive = True):
         """
