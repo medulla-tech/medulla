@@ -295,7 +295,7 @@ class UserPPolicy(ldapUserGroupControl):
         The pwdAttribute is also set to the value 'userPassword'.
         """
         if not self.hasPPolicyObjectClass():
-            r = AF().log(PLUGIN_NAME, AA.PPOLICY_ADD_USER_PPOLICY_ATTR, [(self.dn, AT.USER)])
+            r = AF().log(PLUGIN_NAME, AA.PPOLICY_ADD_USER_PPOLICY_CLASS, [(self.dn, AT.USER)])
             # Get current user entry
             s = self.l.search_s(self.dn, ldap.SCOPE_BASE)
             c, old = s[0]
@@ -310,6 +310,15 @@ class UserPPolicy(ldapUserGroupControl):
             modlist = ldap.modlist.modifyModlist(old, new)
             self.l.modify_s(self.dn, modlist)
             r.commit()
+            
+    def removePPolicyObjectClass(self, uid):
+        """
+        Remove the pwdPolicy objectClass to the current user.
+
+        """ 
+        r = AF().log(PLUGIN_NAME, AA.PPOLICY_DEL_USER_PPOLICY_CLASS, [(self.dn, AT.USER)])
+        UserPPolicy(uid).removeUserObjectClass(uid, 'pwdPolicy')
+        r.commit()
 
     def isAccountLocked(self):
         """
@@ -385,10 +394,10 @@ def hasPPolicyObjectClass(uid):
     return UserPPolicy(uid).hasPPolicyObjectClass()
     
 def addPPolicyObjectClass(uid):
-    UserPPolicy(uid).addPPolicyObjectClass()    
+    UserPPolicy(uid).addPPolicyObjectClass()
     
 def removePPolicyObjectClass(uid):
-    UserPPolicy(uid).removeUserObjectClass(uid, 'pwdPolicy')
+    UserPPolicy(uid).removePPolicyObjectClass()
     
 def getUserPPolicyAttribut(uid, nameAttribut):
     if nameAttribut == '': nameAttribut = None
