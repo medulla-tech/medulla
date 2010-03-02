@@ -1087,6 +1087,9 @@ class LdapUserGroupControl:
 
         @param attrVal: attribute value
         @type  attrVal: object
+        
+        @param log: log action or not
+        @type  log: boolean
         """
         userdn = self.searchUserDN(uid)
 
@@ -1131,6 +1134,9 @@ class LdapUserGroupControl:
 
          @param attrVal: attribute value
          @type  attrVal: object
+         
+        @param log: log action or not
+        @type  log: boolean
         """
         group = group.encode("utf-8")
         groupdn = 'cn=' + group + ','+ self.baseGroupsDN
