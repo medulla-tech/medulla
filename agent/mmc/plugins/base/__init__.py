@@ -1074,7 +1074,7 @@ class LdapUserGroupControl:
         r.commit()
         return 0
 
-    def changeUserAttributes(self, uid, attr, attrVal):
+    def changeUserAttributes(self, uid, attr, attrVal, log=True):
         """
         Change an user attribute.
         If an attrVal is empty, the attribute will be removed.
@@ -1097,25 +1097,29 @@ class LdapUserGroupControl:
             attrValue = attrVal            
         
         if attrVal:
-            r = AF().log(PLUGIN_NAME, AA.BASE_MOD_USER_ATTR, [(userdn, AT.USER), (attr,AT.ATTRIBUTE)], attrValue)
+            if log:
+                r = AF().log(PLUGIN_NAME, AA.BASE_MOD_USER_ATTR, [(userdn, AT.USER), (attr,AT.ATTRIBUTE)], attrValue)
             if type(attrVal) == unicode:
                 attrVal = attrVal.encode("utf-8")
             elif isinstance(attrVal, xmlrpclib.Binary):
                 # Needed for binary string coming from XMLRPC
                 attrVal = str(attrVal)
             self.l.modify_s(userdn, [(ldap.MOD_REPLACE,attr,attrVal)])
-            r.commit()
+            if log:
+                r.commit()
         else:
             # Remove the attribute because its value is empty
-            r = AF().log(PLUGIN_NAME, AA.BASE_DEL_USER_ATTR, [(userdn, AT.USER), (attr,AT.ATTRIBUTE)])
+            if log:
+                r = AF().log(PLUGIN_NAME, AA.BASE_DEL_USER_ATTR, [(userdn, AT.USER), (attr,AT.ATTRIBUTE)])
             try:
                 self.l.modify_s('uid='+uid+','+ self.baseUsersDN, [(ldap.MOD_DELETE,attr, None)])
-                r.commit()
+                if log:
+                    r.commit()
             except ldap.NO_SUCH_ATTRIBUTE:
                 # The attribute has been already deleted
                 pass
 
-    def changeGroupAttributes(self, group, attr, attrVal):
+    def changeGroupAttributes(self, group, attr, attrVal, log=True):
         """
          change a group attributes
 
@@ -1131,10 +1135,12 @@ class LdapUserGroupControl:
         group = group.encode("utf-8")
         groupdn = 'cn=' + group + ','+ self.baseGroupsDN
         if attrVal:
-            r = AF().log(PLUGIN_NAME, AA.BASE_MOD_GROUP, [(groupdn, AT.GROUP), (attr, AT.ATTRIBUTE)], attrVal)
+            if log:
+                r = AF().log(PLUGIN_NAME, AA.BASE_MOD_GROUP, [(groupdn, AT.GROUP), (attr, AT.ATTRIBUTE)], attrVal)
             attrVal = str(attrVal.encode("utf-8"))
             self.l.modify_s(groupdn, [(ldap.MOD_REPLACE, attr, attrVal)])
-            r.commit()
+            if log:
+                r.commit()
         else:
             self.l.modify_s(groupdn, [(ldap.MOD_REPLACE, attr, 'none')])
             self.l.modify_s(groupdn, [(ldap.MOD_DELETE, attr, 'none')])
@@ -1628,9 +1634,13 @@ class LdapUserGroupControl:
 
         return maxuid
 
-    def removeUserObjectClass(self, uid, className):
+    def removeUserObjectClass(self, uid, className, log=True):    
         # Create LDAP path
         cn = 'uid=' + uid + ', ' + self.baseUsersDN
+        
+        if log:
+            r = AF().log(PLUGIN_NAME, AA.BASE_DEL_USER_ATTR, [(cn, AT.USER), (className, AT.ATTRIBUTE)])
+        
         attrs= []
         attrib = self.l.search_s(cn, ldap.SCOPE_BASE)
 
@@ -1652,11 +1662,17 @@ class LdapUserGroupControl:
         # Apply modification
         mlist = ldap.modlist.modifyModlist(attrs, newattrs)
         self.l.modify_s(cn, mlist)
+        if log:
+            r.commit()
 
-    def removeGroupObjectClass(self, group, className):
+    def removeGroupObjectClass(self, group, className, log=True):
         # Create LDAP path
         group = group.encode("utf-8")
         cn = 'cn=' + group + ', ' + self.baseGroupsDN
+        
+        if log:
+            r = AF().log(PLUGIN_NAME, AA.BASE_DEL_GROUP_ATTR, [(cn, AT.GROUP), (className, AT.ATTRIBUTE)])
+        
         attrs= []
         attrib = self.l.search_s(cn, ldap.SCOPE_BASE)
 
@@ -1674,10 +1690,12 @@ class LdapUserGroupControl:
             for k in newattrs.keys():
                 if k.lower()==entry.lower():
                     del newattrs[k] #delete it
-
+                    
         # Apply modification
         mlist = ldap.modlist.modifyModlist(attrs, newattrs)
         self.l.modify_s(cn, mlist)
+        if log:
+            r.commit()
 
     def getAttrToDelete(self, dn, className):
         """retrieve all attributes to delete wich correspond to param schema"""
