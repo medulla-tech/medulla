@@ -72,7 +72,7 @@ class Inventory(DyngroupDatabaseHelper):
         self.logger.info("Inventory is activating")
         self.config = config
         PossibleQueries().init(self.config)
-        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize, convert_unicode=True)
+        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize, convert_unicode=True, echo = False)
         self.metadata = MetaData(self.db)
         if not self.initMappersCatchException():
             return False
@@ -195,7 +195,7 @@ class Inventory(DyngroupDatabaseHelper):
 
         # Join on entity table for location support
         join_query = join_query.join(self.table['hasEntity']).join(self.table['Entity']).join(self.inventory)
-        
+
         query = session.query(Machine).select_from(join_query).filter(query_filter)
         # end of dyngroups
 
@@ -239,7 +239,7 @@ class Inventory(DyngroupDatabaseHelper):
                      if pattern.has_key('filter'):
                          filt = pattern['filter']
                      if count:
-                         # when the entities will be in dyngroup, we will be able to use 
+                         # when the entities will be in dyngroup, we will be able to use
                          # ComputerGroupManager().countresult_group(ctx, gid, filt) again
                          machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, gid, 0, -1, filt))
                      else:
@@ -279,7 +279,7 @@ class Inventory(DyngroupDatabaseHelper):
                 if ('gid' in pattern and ComputerGroupManager().isrequest_group(ctx, pattern['gid'])) \
                         or 'gid' not in pattern \
                         or 'gid' in pattern and 'location' in pattern:
-                            # the last check (or 'gid' in pattern and 'location' in pattern) 
+                            # the last check (or 'gid' in pattern and 'location' in pattern)
                             # will be useless when the entities will be in dyngroup
                     query = query.offset(pattern['min'])
                     query = query.limit(int(pattern['max']) - int(pattern['min']))
@@ -708,7 +708,7 @@ class Inventory(DyngroupDatabaseHelper):
             (ifmac, ifaddr, netmask) = orderIpAdresses(item[1])
             ret.append([item[0], {'IP':ifaddr, 'MACAddress':ifmac, 'SubnetMask':netmask }, item[2]])
         return ret
-        
+
     def getMachineNetwork(self, ctx, params):
         return self.getLastMachineInventoryPart(ctx, 'Network', params)
 
@@ -818,7 +818,7 @@ class Inventory(DyngroupDatabaseHelper):
         # Also join on the entity related table to filter on the computers the
         # user has the right to see
         select_from = select_from.join(self.table['hasEntity'], self.table['hasEntity'].c.machine == self.machine.c.id)
-        
+
         if noms.has_key(part):
             for nom in noms[part]:
                 nomTable = self.table['nom%s%s' % (part, nom)]
@@ -922,7 +922,12 @@ class Inventory(DyngroupDatabaseHelper):
     def addMachine(self, name, ip, mac, netmask, comment = None, location_uuid = None):
         # if location is not set, link the computer to the root entity
         if location_uuid == None:
+            logging.getLogger().warn("inventory.addMachine() : tried to add a computer on an undefined entity, linking it to the root entity")
             location_uuid = 'UUID1'
+        if location_uuid == "NEED_ASSOCIATION":
+            logging.getLogger().warn("inventory.addMachine() : tried to add a computer via an imaging server not attached to an entity, linking it to the root entity")
+            location_uuid = 'UUID1'
+
         assert(isUUID(location_uuid))
 
         session = create_session()
@@ -1003,7 +1008,7 @@ class Inventory(DyngroupDatabaseHelper):
         return True
 
     # User management method
-    
+
     def setUserEntities(self, userid, entities):
         """
         Set entities associated to a user.
@@ -1029,7 +1034,7 @@ class Inventory(DyngroupDatabaseHelper):
             u.uid = userid
             session.save(u)
             session.flush()
-        
+
         # Create/get entities
         elist = []
         for entity in entities:
@@ -1096,7 +1101,7 @@ class Inventory(DyngroupDatabaseHelper):
             ret = False
         session.close()
         return ret
-                
+
     def getUserLocations(self, userid, with_level = False):
         """
         Returns all the locations granted for a given userid.
@@ -1119,7 +1124,7 @@ class Inventory(DyngroupDatabaseHelper):
                         ret.append(entity)
                     ret.extend(__addChildren(session, entity.id, level))
             return ret
-        
+
         session = create_session()
         ret = []
         if userid != 'root':
@@ -1163,11 +1168,11 @@ class Inventory(DyngroupDatabaseHelper):
         q = session.query(self.klass['Entity']).filter(self.table['Entity'].c.id == 1)
         session.close()
         return q.first()
-    
+
     def getUsersInSameLocations(self, userid, locations = None):
         """
         Returns all the users id that share the same locations than the given
-        user. 
+        user.
         """
         if locations == None:
             locations = self.getUserLocations(userid)
