@@ -41,7 +41,7 @@ def isMenuStructure(menu):
     logger = logging.getLogger()
     if type(menu) == dict:
         for k in ['message', 'protocol', 'default_item', 'default_item_WOL',
-                  'timeout', 'background_uri', 'bootservices', 'images', 'target']:
+                  'timeout', 'background_uri', 'bootservices', 'images']:
             if not k in menu:
                 logger.debug("your menu is missing %s"%(k))
                 ret = False
