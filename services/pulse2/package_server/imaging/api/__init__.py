@@ -35,7 +35,7 @@ from pulse2.package_server.xmlrpc import MyXmlrpc
 from pulse2.package_server.imaging.api.client import ImagingXMLRPCClient
 from pulse2.package_server.imaging.cache import UUIDCache
 from pulse2.package_server.imaging.api.status import Status
-from pulse2.package_server.imaging.menu import isMenuStructure, ImagingMenuBuilder
+from pulse2.package_server.imaging.menu import isMenuStructure, ImagingDefaultMenuBuilder, ImagingComputerMenuBuilder
 
 from pulse2.utils import isMACAddress, splitComputerPath, macToNode, isUUID
 from pulse2.apis import makeURL
@@ -61,6 +61,20 @@ class ImagingApi(MyXmlrpc):
         self.logger.info("Initializing %s" % self.myType)
         # Read and check configuration
         self.config = config
+
+    def _getXMLRPCClient(self):
+        """
+        @return: a XML-RPC client allowing to connect to the agent
+        @rtype: ImagingXMLRPCClient
+        """
+        url, credentials = makeURL(PackageServerConfig().mmc_agent)
+        return ImagingXMLRPCClient(
+            '',
+            url,
+            PackageServerConfig().mmc_agent['verifypeer'],
+            PackageServerConfig().mmc_agent['cacert'],
+            PackageServerConfig().mmc_agent['localcert']
+        )
 
     def xmlrpc_getServerDetails(self):
         pass
@@ -339,7 +353,7 @@ class ImagingApi(MyXmlrpc):
                 try:
                     macaddress = macaddress['mac']
                     self.logger.debug('Setting menu for computer UUID/MAC %s/%s' % (cuuid, macaddress))
-                    imb = ImagingMenuBuilder(self.config, macaddress, menu)
+                    imb = ImagingComputerMenuBuilder(self.config, macaddress, menu)
                     imenu = imb.make()
                     imenu.write()
                 except Exception, e:
@@ -348,6 +362,35 @@ class ImagingApi(MyXmlrpc):
                     # FIXME: Rollback to the previous menu
         return ret
 
+    def xmlrpc_imagingServerDefaultMenuSet(self, menu):
+        """
+        Set the imaging server default boot menu displayed to all un-registered
+        computers.
+
+        Called by the MMC agent.
+
+        @param menu: default menu to set
+        @type menu: dict
+
+        @return: True if successful
+        @rtype: bool
+        """
+        if not isMenuStructure(menu):
+            self.logger.error("Can't set default computer menu: bad menu structure")
+            ret = False
+        else:
+            try:
+                self.logger.debug('Setting default boot menu for computers')
+                imb = ImagingDefaultMenuBuilder(self.config, menu)
+                imenu = imb.make()
+                imenu.write()
+                ret = True
+            except Exception, e:
+                self.logger.exception("Error while setting default boot menu of unregistered computers: %s" % e)
+                ret = False
+        return ret
+
+    ## Image management
 
     def xmlrpc_computerCreateImageDirectory(self, mac):
         """
@@ -399,19 +442,6 @@ class ImagingApi(MyXmlrpc):
         d = self.xmlrpc_getComputerByMac(mac)
         d.addCallback(_getmacCB)
         return d
-
-    def _getXMLRPCClient(self):
-        # Call the MMC agent
-        url, credentials = makeURL(PackageServerConfig().mmc_agent)
-        return ImagingXMLRPCClient(
-            '',
-            url,
-            PackageServerConfig().mmc_agent['verifypeer'],
-            PackageServerConfig().mmc_agent['cacert'],
-            PackageServerConfig().mmc_agent['localcert']
-        )
-
-    ## Image management
 
     def xmlrpc_imageRegister(self, computerMACAddress, imageUUID, isMaster, name, desc, path, size, creationDate, creator = False):
         """

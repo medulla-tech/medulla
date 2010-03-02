@@ -52,26 +52,25 @@ def isMenuStructure(menu):
     return ret
 
 
-class ImagingMenuBuilder:
+class ImagingDefaultMenuBuilder:
 
     """
-    Class that builds an imaging menu according to its dict structure
+    Class that builds an imaging menu according to its dict structure.
     """
 
-    def __init__(self, config, macaddress, menu):
+    def __init__(self, config, menu):
         self.logger = logging.getLogger()
         if not isMenuStructure(menu):
-            raise TypeError, 'Bad menu structure for computer MAC %s' % macaddress
+            raise TypeError, 'Bad menu structure'
         self.menu = menu
         self.config = config
-        self.macaddress = macaddress
 
-    def make(self):
+    def make(self, macaddress = None):
         """
         @return: an ImagingMenu object
+        @rtype: ImagingMenu
         """
-        self.logger.debug('Building menu structure for computer mac %s' % self.macaddress)
-        m = ImagingMenu(self.config, self.macaddress)
+        m = ImagingMenu(self.config, macaddress)
         m.setSplashScreen(self.menu['background_uri'])
         m.setMessage(self.menu['message'])
         m.setTimeout(self.menu['timeout'])
@@ -85,12 +84,31 @@ class ImagingMenuBuilder:
         return m
 
 
+class ImagingComputerMenuBuilder(ImagingDefaultMenuBuilder):
+
+    """
+    Class that builds an imaging menu for a computer according to its dict
+    structure.
+    """
+
+    def __init__(self, config, macaddress, menu):
+        ImagingDefaultMenuBuilder.__init__(self, config, menu)
+        self.macaddress = macaddress
+
+    def make(self):
+        self.logger.debug('Building menu structure for computer mac %s' % self.macaddress)
+        return ImagingDefaultMenuBuilder.make(self, self.macaddress)
+
+
 class ImagingMenu:
+
     """
     hold an imaging menu
     """
 
-    def __init__(self, config, macaddress):
+    DEFAULT_MENU_FILE = 'default'
+
+    def __init__(self, config, macaddress = None):
         """
         Initialize this object.
 
@@ -99,11 +117,12 @@ class ImagingMenu:
         """
         self.logger = logging.getLogger()
         self.config = config # the server configuration
-        assert pulse2.utils.isMACAddress(macaddress)
+        if macaddress:
+            assert pulse2.utils.isMACAddress(macaddress)
         self.mac = macaddress # the client MAC Address
-        self.menuitems = {}
 
         # menu items
+        self.menuitems = {}
         self.timeout = 0 # the menu timeout
         self.default_item = 0 # the menu default entry
         self.default_item_wol = 0 # the menu default entry on WOL
@@ -117,8 +136,11 @@ class ImagingMenu:
         self.hidden = False # do we hide the menu ?
 
         # list of replacements to perform
+        # a replacement is using the following structure :
+        # key 'from' : the PCRE to look for
+        # key 'to' : the replacement to perform
+        # key 'when' : when to perform the replacement (only 'global' for now)
         self.replacements = [
-            ('##MAC##', pulse2.utils.reduceMACAddress(self.mac), 'global'),
             ('##PULSE2_LANG##', 'C', 'global'),
             ('##PULSE2_F_BOOTSPLASH##', self.config.imaging_api['bootsplash_file'], 'global'),
             ('##PULSE2_F_DISKLESS##', self.config.imaging_api['diskless_folder'], 'global'),
@@ -130,21 +152,22 @@ class ImagingMenu:
             ('##PULSE2_I_DISKLESS##', self.config.imaging_api['diskless_initrd'], 'global'),
             ('##PULSE2_MEMTEST##', self.config.imaging_api['diskless_memtest'], 'global')
             ]
-        # a replacement is using the following structure :
-        # key 'from' : the PCRE to look for
-        # key 'to' : the replacement to perform
-        # key 'when' : when to perform the replacement (only 'global' for now)
+        if self.mac:
+            self.replacements.append(
+                ('##MAC##',
+                 pulse2.utils.reduceMACAddress(self.mac),
+                 'global'))
 
     def _applyReplacement(self, string, condition = 'global'):
         """
-            Private func, to apply a replacement into a given string
+        Private func, to apply a replacement into a given string
 
-            Some examples :
-            ##MAC:fmt## replaced by the client MAC address; ATM fmt can be:
-              - short (pure MAC addr)
-              - cisco (cisco-fmt MAC addr)
-              - linux (linux-fmt MAC addr)
-              - win (win-fmt MAC addr)
+        Some examples :
+        ##MAC:fmt## replaced by the client MAC address; ATM fmt can be:
+          - short (pure MAC addr)
+          - cisco (cisco-fmt MAC addr)
+          - linux (linux-fmt MAC addr)
+          - win (win-fmt MAC addr)
         """
         output = string
         for replacement in self.replacements:
@@ -154,6 +177,10 @@ class ImagingMenu:
         return output
 
     def buildMenu(self):
+        """
+        @return: the GRUB boot menu as a string encoded using CP-437
+        @rtype: str
+        """
         # takes global items, one by one
         buf  = '# Auto-generated by Pulse 2 Imaging Server on %s \n\n' % time.asctime()
 
@@ -189,10 +216,14 @@ class ImagingMenu:
 
     def write(self):
         """
-            write the client menu
+        Write the boot menu to disk
         """
-        filename = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['bootmenus_folder'], pulse2.utils.reduceMACAddress(self.mac))
-        self.logger.debug('Preparing to write boot menu for computer MAC %s into file %s' % (self.mac, filename))
+        if self.mac:
+            filename = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['bootmenus_folder'], pulse2.utils.reduceMACAddress(self.mac))
+            self.logger.debug('Preparing to write boot menu for computer MAC %s into file %s' % (self.mac, filename))
+        else:
+            filename = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['bootmenus_folder'], 'default')
+            self.logger.debug('Preparing to write the default boot menu for unregistered computers into file %s' % filename)
         buf = self.buildMenu()
         try:
             fdtemp, tempname = tempfile.mkstemp(dir = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['bootmenus_folder']))
@@ -202,20 +233,18 @@ class ImagingMenu:
             os.rename(tempname, filename)
             for item in self.menuitems.values():
                 item.write(self.config)
-            self.logger.debug('Successfully wrote boot menu for computer MAC %s into file %s' % (self.mac, filename))
+            if self.mac:
+                self.logger.debug('Successfully wrote boot menu for computer MAC %s into file %s' % (self.mac, filename))
+            else:
+                self.logger.debug('Successfully wrote boot menu for unregistered computers into file %s' % filename)
         except Exception, e:
-            logging.getLogger().error("While writing boot menu for %s : %s" % (self.mac, e))
+            if self.mac:
+                logging.getLogger().error("While writing boot menu for %s : %s" % (self.mac, e))
+            else:
+                logging.getLogger().error("While writing default boot menu : %s" % e)
             return False
 
         return True
-
-    def read(self):
-        """
-            read the client menu
-            don't expect the summoned structure to be usable :
-            menu.lst <-> menu.conf if far for beeing a bijection
-        """
-        pass
 
     def setTimeout(self, value):
         """
@@ -223,24 +252,12 @@ class ImagingMenu:
         """
         self.timeout = value
 
-    def getTimeout(self):
-        """
-            get the default timeout
-        """
-        return self.timeout
-
     def setDefaultItem(self, value):
         """
             set the default item number
         """
         assert(type(value) == int)
         self.default_item = value
-
-    def getDefaultItem(self):
-        """
-            get the default item number
-        """
-        return self.default_item
 
     def addImageEntry(self, position, entry):
         """
@@ -261,30 +278,23 @@ class ImagingMenu:
             raise ValueError, 'Position %d in menu already taken' % position
         self.menuitems[position] = ImagingBootServiceItem(entry)
 
-    def removeEntry(self, position = None):
+    def setKeyboard(self, mapping = None):
         """
-            remove the entrey at position
-            if position is None, remove the last image
+        set keyboard map
+        if mapping is none, do not set keymap
         """
-        pass
-
-    def setKeyboard(self, map = None):
-        """
-            set keyboard map
-            if map is none, do not set keymap
-        """
-        if map in ['fr']:
-            self.keyboard = map
+        if mapping in ['fr']:
+            self.keyboard = mapping
 
     def hideMenu(self):
         """
-            Do hide the menu
+        Hide the menu
         """
         self.hidden = True
 
     def showMenu(self):
         """
-            Do show the menu
+        Show the menu
         """
         self.hidden = False
 
