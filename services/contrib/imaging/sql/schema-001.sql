@@ -386,6 +386,7 @@ INSERT INTO Internationalization (id, fk_language, label) VALUES (8, 2, "Démarr
 INSERT INTO Internationalization (id, fk_language, label) VALUES (9, 2, "Charger un environnement sans disque et obtenir une invite de commande");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (10, 2, "Test mémoire");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (11, 2, "Réaliser une vérification complète de la mémoire");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (12, 2, "Menu d'inscription d'un ordinateur");
 
 INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (1, "Continue Normal Startup", "Start as usual", 1, 2, "root (hd0)\r\nchainloader +1");
 INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (2, "Register as Pulse 2 Client", "Record this computer in Pulse 2 Server", 3, 4, "identify L=##PULSE2_LANG## P=none\nreboot");
@@ -394,14 +395,20 @@ INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `valu
 INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (5, "Memory test", "Run a full memory check", 9, 10, "kernel --kernel-type=openbsd ##PULSE2_NETDEVICE##/##PULSE2_F_DISKLESS##/##PULSE2_MEMTEST##");
 
 INSERT INTO Menu (id, default_name, fk_name, timeout, background_uri, message, fk_default_item, fk_default_item_WOL, fk_protocol) VALUES (1, "Default Boot Menu", 1, 60, "/##PULSE2_F_DISKLESS##/##PULSE2_F_BOOTSPLASH##", "-- Warning! Your PC is being backed up or restored. Do not reboot !", NULL, NULL, 1);
+INSERT INTO Menu (id, default_name, fk_name, timeout, background_uri, message, fk_default_item, fk_default_item_WOL, fk_protocol) VALUES (2, "Suscribe Boot Menu", 12, 60, "/##PULSE2_F_DISKLESS##/##PULSE2_F_BOOTSPLASH##", "-- Warning! Your PC is being backed up or restored. Do not reboot !", NULL, NULL, 1);
 
 INSERT INTO MenuItem (id, `order`, hidden, hidden_WOL, fk_menu) VALUES (1, 1, 0, 0, 1);
 INSERT INTO MenuItem (id, `order`, hidden, hidden_WOL, fk_menu) VALUES (2, 2, 0, 0, 1);
+INSERT INTO MenuItem (id, `order`, hidden, hidden_WOL, fk_menu) VALUES (3, 1, 0, 0, 2);
+INSERT INTO MenuItem (id, `order`, hidden, hidden_WOL, fk_menu) VALUES (4, 2, 0, 0, 2);
 
 INSERT INTO BootServiceInMenu (fk_bootservice, fk_menuitem) VALUES (1, 1);
-INSERT INTO BootServiceInMenu (fk_bootservice, fk_menuitem) VALUES (2, 2);
+INSERT INTO BootServiceInMenu (fk_bootservice, fk_menuitem) VALUES (3, 2);
+INSERT INTO BootServiceInMenu (fk_bootservice, fk_menuitem) VALUES (1, 3);
+INSERT INTO BootServiceInMenu (fk_bootservice, fk_menuitem) VALUES (2, 4);
 
 UPDATE Menu SET fk_default_item = 1, fk_default_item_WOL = 1 WHERE id = 1;
+UPDATE Menu SET fk_default_item = 3, fk_default_item_WOL = 3 WHERE id = 2;
 
 INSERT INTO Entity (id, name, uuid, fk_default_menu) VALUES (1, "NEED_ASSOCIATION", "NEED_ASSOCIATION", 1);
 
