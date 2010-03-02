@@ -69,51 +69,26 @@ $f->add(new TrFormElement(_("Client hostname"), new HiddenTpl("hostname")),
         array("value" => $log[0]["client-host"]));
 $f->add(new TrFormElement(_("Agent Hostname"), new HiddenTpl("ahostname")),
         array("value" => $log[0]["agent-host"]));
-        
-$i=1;
 
+$i = 1;
 foreach ($log[0]["objects"] as $obj) {    
-
     $f->add(new TrFormElement(_("Object"), new HiddenTpl("obj".$i)),
         array("value" => $obj["object"]));
     $f->add(new TrFormElement(_("Object type"), new HiddenTpl("type".$i)),
         array("value" => $auditManager->getCode($obj["type"])));
-
-    if (isset($obj["previous"]) && isset($obj["current"])) {
-
-        /*if(isset($obj["previous"][0]) and $obj["previous"][0]) {
-            $previous = trim($obj["previous"][0]);
+    if (isset($obj["current"])) {
+        foreach($obj["current"] as $current) {
+            if($current) {
+                $current_val = trim($current);
+            }
+            else {
+                $current_val = "(empty)";
+            }                        
+            $f->add(new TrFormElement(_("Value"), new HiddenTpl("current")), 
+                array("value"=> $current_val));
         }
-        else {
-            $previous = " ";
-        }*/
-
-        if(isset($obj["current"][0]) and $obj["current"][0]) {
-            $current = trim($obj["current"][0]);
-        }
-        else {
-            $current = "(empty)";
-        }        
-    
-        //if($previous != " " or $current != " ") {
-            /*$f->add(new TrFormElement(_("Previous"), new DisabledInputTpl("previous")), 
-                array("value"=> $previous, "disabled"=>True));*/
-            
-            /*for ($i = 1; $i < sizeof($obj["previous"]); $i++) {
-                $f->add(new TrFormElement("",new DisabledInputTpl("previous")), 
-                array("value"=> $previous, "disabled"=>True));
-            }*/
-            
-            $f->add(new TrFormElement(_("Current value"),new HiddenTpl("current")), 
-                array("value"=> $current));
-
-            /*for ($i = 1; $i < sizeof($obj["current"]); $i++) {
-                $f->add(new TrFormElement("",new DisabledInputTpl("current")), 
-                array("value"=> $current, "disabled"=>True));            
-            }*/
-        //}
     }
-    $i++;        
+    $i++;
 }
 $f->pop();
 $f->display();
