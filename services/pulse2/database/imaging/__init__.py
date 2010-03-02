@@ -915,7 +915,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session_need_close = True
             session = create_session()
         mi = session.query(MenuItem).add_entity(BootService).add_entity(Image).add_entity(Menu)
-        mi = mi.select_from(self.menu_item.join(self.menu).outerjoin(self.boot_service_in_menu).outerjoin(self.boot_service).outerjoin(self.image_in_menu).outerjoin(self.image))
+        mi = mi.select_from(self.menu_item.join(self.menu, self.menu.c.id == self.menu_item.c.fk_menu).outerjoin(self.boot_service_in_menu).outerjoin(self.boot_service).outerjoin(self.image_in_menu).outerjoin(self.image))
         mi = mi.filter(self.menu_item.c.id == uuid2id(mi_uuid)).first()
         mi = self.__mergeBootServiceOrImageInMenuItem(mi)
         if hasattr(mi, 'boot_service'):
