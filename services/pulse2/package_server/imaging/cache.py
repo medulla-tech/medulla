@@ -102,6 +102,11 @@ class UUIDCache(pulse2.utils.Singleton):
         shortname = ''
         fqdn = ''
 
+        if not pulse2.utils.isMACAddress(mac):
+            return False
+
+        mac = pulse2.utils.normalizeMACAddress(mac)
+
         for section in self.config.sections() :
             if self.config.has_option(section, 'mac'):
                 if self.config.get(section, 'mac') == mac:
@@ -165,6 +170,9 @@ class UUIDCache(pulse2.utils.Singleton):
         shortname = ''
         fqdn = ''
 
+        if not pulse2.utils.isUUID(uuid):
+            return False
+
         if self.config.has_section(uuid):
             if self.config.has_option(uuid, 'mac'):
                 mac = self.config.get(uuid, 'mac')
@@ -208,6 +216,8 @@ class UUIDCache(pulse2.utils.Singleton):
             return False
         if fqdn == '':
             fqdn = "%s." % shortname
+
+        mac = pulse2.utils.normalizeMACAddress(mac)
         if not self.config.has_section(uuid):
             self.config.add_section(uuid)
         self.config.set(uuid, 'mac', mac)
