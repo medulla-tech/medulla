@@ -469,9 +469,10 @@ class RpcProxy(RpcProxyI):
     def linkImagingServerToLocation(self, is_uuid, loc_id, loc_name):
         db = ImagingDatabase()
         try:
+            db.linkImagingServerToEntity(is_uuid, loc_id, loc_name) # FIXME : are not we supposed to deal with the return value ?            
             db.setLocationSynchroState(loc_id, PULSE2_IMAGING_SYNCHROSTATE_TODO)
-            db.linkImagingServerToEntity(is_uuid, loc_id, loc_name) # FIXME : are not we supposed to deal with the return value ?
         except Exception, e:
+            logging.getLogger().exception(e)
             return [False, str(e)]
         return [True]
 
@@ -880,31 +881,27 @@ class RpcProxy(RpcProxyI):
             # the computer does not exists, so we create it
             uuid = ComputerManager().addComputer(None, computer)
             if uuid == None:
-                logger.warn("failed to create computer %s (%s)" % (hostname, MACAddress))
+                logger.error("failed to create computer %s (%s)" % (hostname, MACAddress))
                 return [False, "failed to create computer %s (%s)" % (hostname, MACAddress)]
+            else:
+                logger.debug("The computer %s (%s) has been successfully added to the inventory database" % (hostname, MACAddress))
         else:
-            logger.debug("computer %s (%s) already exists, we dont need to declare it again"%(hostname, MACAddress))
+            logger.debug("computer %s (%s) already exists, we dont need to declare it again" % (hostname, MACAddress))
 
         target_type = PULSE2_IMAGING_TYPE_COMPUTER
         if not db.isTargetRegister(uuid, target_type):
-            logger.info("computer %s (%s) need registration"%(hostname, MACAddress))
-            menu = self.getMyMenuTarget(uuid, PULSE2_IMAGING_TYPE_COMPUTER)
-            menu = menu[1] # menu[O] is the owner of the menu, and it does not matter here
-
+            logger.info("computer %s (%s) needs to be registered" %(hostname, MACAddress))
             params = {
                 'target_name':hostname,
-                'default_name':menu['default_name'],
-                'timeout':menu['timeout'],
-                'background_uri':menu['background_uri'],
-                'message':menu['message'],
-                'protocol':menu['protocol'],
-                'target_uuid':uuid
             }
-
+            # Set the computer menu
             db.setMyMenuTarget(uuid, params, target_type) # FIXME : are not we supposed to deal with the return value ?
-
+            # Tell the MMC agent to synchronize the menu
+            # As it in some way returns a deferred object, it is run in
+            # background
+            self.synchroComputer(uuid)
         else:
-            logger.debug("computer %s (%s) dont need registration"%(hostname, MACAddress))
+            logger.debug("computer %s (%s) dont need registration" % (hostname, MACAddress))
 
 
         if profile:
