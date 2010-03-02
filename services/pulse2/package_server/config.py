@@ -35,6 +35,7 @@ import pulse2.utils
 import logging
 import os
 from pulse2.xmlrpc import isTwistedEnoughForLoginPass
+from pulse2.utils import isUUID
 
 if sys.platform != "win32":
     import pwd
@@ -316,7 +317,7 @@ class P2PServerCP(pulse2.utils.Singleton):
             # will contain our UUID/MAC Addr cache
             uuid_cache_file = os.path.join(base_folder, 'uuid-cache.txt')
             # Entity UUID
-            uuid = 'PLEASE_PUT_A_UUID_FOR_THAT_SERVER'
+            uuid = ""
 
             if self.cp.has_option("imaging_api", 'mount_point'):
                 imaging_mp = self.cp.get("imaging_api", 'mount_point')
@@ -348,6 +349,8 @@ class P2PServerCP(pulse2.utils.Singleton):
                 uuid_cache_file = os.path.join(self.base_folder, self.cp.get('imaging_api', 'uuid_cache_file'))
             if self.cp.has_option("imaging_api", 'uuid'):
                 uuid = self.cp.get("imaging_api", 'uuid')
+            if not isUUID(uuid):
+                raise TypeError ("'%s' is not an valid UUID : in my config file, section [imaging_api], set a correct uuid." % uuid)
 
             self.imaging_api = {
                 'mount_point'       : imaging_mp,
