@@ -65,7 +65,6 @@ def getHealth():
     return health
 
 def checkPool():
-    health = getHealth()
     try :
         pool = MscDatabase().db.pool
         if pool._max_overflow > -1 and pool._overflow >= pool._max_overflow :
