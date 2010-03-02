@@ -48,7 +48,7 @@ VERSION = "0.1"
 APIVERSION = "0:0:0"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
-NOAUTHNEEDED = ['computerRegister', 'imagingServerRegister', 'getComputerByMac', 'imageRegister', 'logClientAction', 'injectInventory', 'getDefaultMenuForSuscription']
+NOAUTHNEEDED = ['computerRegister', 'imagingServerRegister', 'getComputerByMac', 'imageRegister', 'logClientAction', 'injectInventory', 'getDefaultMenuForSuscription', 'linkImagingServerToLocation']
 
 def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION
