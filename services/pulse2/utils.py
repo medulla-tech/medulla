@@ -20,7 +20,31 @@
 # along with Pulse 2.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-Some common utility methods used by Pulse 2 components
+Some common utility methods used by Pulse 2 components.
+
+Some words about MAC Addresses : Pulse 2 recognizes 4 formats, without
+consideration of case.
+
+The following formats can be used :
+ - IEEE 802.3 'Unix'        :
+    + grouped by two,
+    + separator is ":",
+    + example 12:34:56:78:90:ab
+ - IEEE 802.3 'Microsoft'   :
+    + grouped by two,
+    + separator is "-",
+    + example 12-34-56-78-90-ab
+ - EUI-64 'Cisco'           :
+    + grouped by four,
+    + separator is '.',
+    + example 1234.5678.90ab
+  - Short                   :
+    + no group,
+    + no separator,
+    + example 1234.5678.90ab
+However a Pulse 2 stored MAC Address is always following the IEEE 802.3
+'Unix' convention, with capital letters : 12:34:56:78:90:AB
+
 """
 
 # to build Pulse2ConfigParser on top of ConfigParser()
@@ -320,12 +344,25 @@ def reduceMACAddress(mac):
     """
     @return: the MAC address without ':'
     """
-    return mac.replace(':', '')
+    assert isMACAddress(mac)
+    ret = mac
+    ret = ret.replace(':', '')
+    ret = ret.replace('-', '')
+    ret = ret.replace('.', '')
+    return ret
+
+def normalizeMACAddress(mac):
+    """
+    @return: the MAC address normalized (see this module documentation)
+    """
+    assert isMACAddress(mac)
+    return ':'.join(map(lambda (x,y): x + y, zip(reduceMACAddress(mac)[0:11:2].upper(), reduceMACAddress(mac)[1:12:2].upper()))) # any questions ?
 
 def macToNode(mac):
     """
     @return: the MAC address in the form of a 48-bits integer
     """
+    assert isMACAddress(mac)
     try:
         return int(reduceMACAddress(mac), 16)
     except:
@@ -336,7 +373,7 @@ def isUUID(value):
     Check input validity for:
      - standard UUID like: 35f23420-4050-4734-b172-d458915ef17d
      - Pulse 2 fake UUID style: UUID<positive-int>
-    
+
     @return: True if the parameter is a valid UUID
     @rtype: bool
     """
