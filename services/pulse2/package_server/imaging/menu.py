@@ -321,15 +321,6 @@ class ImagingItem:
     Common class to hold an imaging menu item
     """
 
-    def _convertEntry(self, array):
-        """
-        Convert dictionary value of type str to unicode.
-        """
-        for key, value in array.items():
-            if type(value) == str:
-                value = value.decode('utf-8')
-            array[key] = value
-
     def __init__(self, entry):
         """
         @param entry: menu item in dict format
@@ -341,6 +332,27 @@ class ImagingItem:
         self.desc = entry['desc'] # the item desc
         assert(type(self.title) == unicode)
         assert(type(self.desc) == unicode)
+        self.uuid = None
+
+    def _applyReplacement(self, out, network = True):        
+        if network:
+            device = '(nd)'
+        else:
+            # FIXME: Is it the right device name ?
+            device = '(cdrom)'
+        out = re.sub('##PULSE2_NETDEVICE##', device, out)
+        if self.uuid:
+            out = re.sub('##PULSE2_F_IMAGE##', self.uuid, out)
+        return out
+
+    def _convertEntry(self, array):
+        """
+        Convert dictionary value of type str to unicode.
+        """
+        for key, value in array.items():
+            if type(value) == str:
+                value = value.decode('utf-8')
+            array[key] = value
 
     def write(self, config):
         """
@@ -360,7 +372,7 @@ class ImagingBootServiceItem(ImagingItem):
         self.value = entry['value'] # the GRUB command line
         assert(type(self.value) == unicode)
 
-    def getEntry(self, protocol):
+    def getEntry(self, protocol, network = True):
         """
         Return the entry, in a GRUB compatible format
         """
@@ -369,7 +381,7 @@ class ImagingBootServiceItem(ImagingItem):
             buf += 'desc %s\n' % self.desc
         if self.value:
             buf += self.value + '\n'
-        return buf
+        return self._applyReplacement(buf, network)
 
 
 class ImagingImageItem(ImagingItem):
@@ -396,16 +408,6 @@ class ImagingImageItem(ImagingItem):
             self.post_install_script = entry['post_install_script']['value']
         else:
             self.post_install_script = None
-
-    def _applyReplacement(self, out, network = True):
-        if network:
-            device = '(nd)'
-        else:
-            # FIXME: Is it the right device name ?
-            device = '(cdrom)'
-        out = re.sub('##PULSE2_NETDEVICE##', device, out)
-        out = re.sub('##PULSE2_F_IMAGE##', self.uuid, out)
-        return out
 
     def getEntry(self, protocol, network = True):
         """
