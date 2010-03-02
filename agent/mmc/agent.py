@@ -155,6 +155,19 @@ class MmcServer(xmlrpc.XMLRPC,object):
                 self.logger.warning("Function can't be called because the user is not logged in")
                 raise Fault(8003, "Can't use MMC agent server because you are not logged in")
             else:
+                if not self._needAuth(functionPath):
+                    # Provide a security context when a method which doesn't
+                    # require a user authentication is called
+                    s = request.getSession()
+                    s.userid = 'root'
+                    try:
+                        self._associateContext(request, s, s.userid)
+                    except Exception, e:
+                        s.loggedin = False
+                        self.logger.exception(e)
+                        f = Fault(8004, "MMC agent can't provide a security context")
+                        self._cbRender(f, request)
+                        return server.NOT_DONE_YET
                 function = self._getFunction(functionPath, request)
         except Fault, f:
             self._cbRender(f, request)
@@ -222,6 +235,7 @@ class MmcServer(xmlrpc.XMLRPC,object):
     def _cbRender(self, result, request, functionPath = None, args = None):
         s = request.getSession()
         if functionPath == "base.ldapAuth" and not isinstance(result, Fault):
+            # if we are logging on and there was no error
             if result:
                 s = request.getSession()
                 s.loggedin = True
