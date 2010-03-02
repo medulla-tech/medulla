@@ -51,8 +51,8 @@ $location = getCurrentLocation();
 if (isset($_POST['bsync'])) {
     $params['bsync'] = '1';
     $ret = xmlrpc_synchroLocation($_POST['location_uuid']);
-    // goto images list 
-    if ($ret[0] and !isXMLRPCError()) {
+    // goto images list
+    if ((is_array($ret) and $ret[0] or !is_array($ret) and $ret) and !isXMLRPCError()) {
         $str = sprintf(_T("Synchronization launched on this location.", "imaging"), $label);
         new NotifyWidgetSuccess($str);
     } elseif (!$ret[0] and !isXMLRPCError()) {
@@ -88,6 +88,6 @@ if (displayLocalisationBar()) {
         $ajax->setSelected($location);
     $ajax->display();
     $ajax->displayDivToUpdate();
-} 
+}
 
 ?>
