@@ -210,7 +210,7 @@ class ImagingApi(MyXmlrpc):
                 return False
             return True
 
-    def xmlrpc_computerPrepareImagingDirectory(self, uuid, imagingData = None):
+    def xmlrpc_computerPrepareImagingDirectory(self, uuid, imagingData = False):
         """
         Prepare a full imaging folder for client <uuid>
 
@@ -223,6 +223,12 @@ class ImagingApi(MyXmlrpc):
         @type imagingData: ????
         """
         target_folder = os.path.join(PackageServerConfig().imaging_api['base_folder'], PackageServerConfig().imaging_api['computers_folder'], uuid)
+        if os.path.isdir(target_folder):
+            self.logger.warn('Imaging: folder %s for client %s : It already exists !' % (target_folder, uuid))
+            return True
+        if os.path.exist(target_folder):
+            self.logger.warn('Imaging: folder %s for client %s : It already exists, but is not a folder !' % (target_folder, uuid))
+            return False
         try:
             os.mkdir(target_folder)
         except Exception, e:
@@ -453,7 +459,7 @@ class ImagingApi(MyXmlrpc):
         @type size: int
         @param creationDate: image creation timestamp
         @type creationDate: tuple (using tuple(time.gmtime()) format)
-        
+
         @return: True if successful
         @rtype: bool
         """
@@ -469,7 +475,7 @@ class ImagingApi(MyXmlrpc):
                 self.logger.debug('Imaging: Successfully registered image %s' % imageUUID)
                 ret = True
             return ret
-        
+
         if not isUUID(imageUUID):
             self.logger.error("Bad image UUID %s" % str(imageUUID))
             ret = False
