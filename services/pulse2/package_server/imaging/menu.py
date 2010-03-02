@@ -222,7 +222,7 @@ class ImagingMenu:
             filename = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['bootmenus_folder'], pulse2.utils.reduceMACAddress(self.mac))
             self.logger.debug('Preparing to write boot menu for computer MAC %s into file %s' % (self.mac, filename))
         else:
-            filename = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['bootmenus_folder'], 'default')
+            filename = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['bootmenus_folder'], self.DEFAULT_MENU_FILE)
             self.logger.debug('Preparing to write the default boot menu for unregistered computers into file %s' % filename)
         buf = self.buildMenu()
         try:
