@@ -37,8 +37,10 @@ from mmc.support.mmctools import xmlrpcCleanup
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 from mmc.plugins.imaging.config import ImagingConfig
 from mmc.plugins.base.computers import ComputerManager
+from pulse2.managers.profile import ComputerProfileManager
+from pulse2.managers.location import ComputerLocationManager
 from pulse2.database.imaging import ImagingDatabase
-from pulse2.database.imaging.types import PULSE2_IMAGING_TYPE_COMPUTER, PULSE2_IMAGING_TYPE_PROFILE, PULSE2_IMAGING_SYNCHROSTATE_RUNNING, PULSE2_IMAGING_SYNCHROSTATE_TODO, PULSE2_IMAGING_SYNCHROSTATE_DONE, PULSE2_IMAGING_SYNCHROSTATE_INIT_ERROR
+from pulse2.database.imaging.types import PULSE2_IMAGING_TYPE_COMPUTER, PULSE2_IMAGING_TYPE_PROFILE, PULSE2_IMAGING_SYNCHROSTATE_RUNNING, PULSE2_IMAGING_SYNCHROSTATE_TODO, PULSE2_IMAGING_SYNCHROSTATE_DONE, PULSE2_IMAGING_SYNCHROSTATE_INIT_ERROR, PULSE2_IMAGING_MENU_ALL
 from pulse2.apis.clients.imaging import ImagingApi
 import pulse2.utils
 
@@ -571,7 +573,6 @@ class RpcProxy(RpcProxyI):
         menu = db.getEntityDefaultMenu(loc_uuid)
         menu_items = db.getMenuContent(menu.id, PULSE2_IMAGING_MENU_ALL, 0, -1, '')
         menu = menu.toH()
-        menu['target'] = h_targets[target.uuid]
         menu, menu_items, h_pis = self.__generateMenusContent(menu, menu_items, loc_uuid)
         ims = h_pis.keys()
         a_pis = db.getImagesPostInstallScript(ims)
@@ -589,8 +590,8 @@ class RpcProxy(RpcProxyI):
 
     def __generateMenus(self, logger, db, uuids, target_type):
         # get target location
-        locations = db.getTargetsEntity(uuids)
-        if len(locations) != len(uuids):
+        locations = ComputerLocationManager().getMachinesLocations(uuids)
+        if len(locations.keys()) != len(uuids):
             # do fail
             logger.error("couldn't get the target entity for %s"%(str(uuids)))
         distinct_loc = {}
@@ -601,18 +602,19 @@ class RpcProxy(RpcProxyI):
         for target in targets:
             h_targets[target.uuid] = target.toH()
 
-        for loc, target in locations:
-            menu_items = db.getBootMenu(target.uuid, 0, -1, '')
-            menu = db.getTargetsMenuTUUID(target.uuid)
+        for m_uuid in locations:
+            loc_uuid = "UUID%s"%locations[m_uuid]['id']
+            menu_items = db.getBootMenu(m_uuid, 0, -1, '')
+            menu = db.getTargetsMenuTUUID(m_uuid)
             menu = menu.toH()
-            menu['target'] = h_targets[target.uuid]
-            menu, menu_items, h_pis = self.__generateMenusContent(menu, menu_items, loc.uuid, target.uuid, h_pis)
+            menu['target'] = h_targets[m_uuid]
+            menu, menu_items, h_pis = self.__generateMenusContent(menu, menu_items, loc_uuid, m_uuid, h_pis)
 
-            if distinct_loc.has_key(loc.uuid):
-                distinct_loc[loc.uuid][1].append({target.uuid:menu})
+            if distinct_loc.has_key(loc_uuid):
+                distinct_loc[loc_uuid][1][m_uuid] = menu
             else:
-                url = self.__chooseImagingApiUrl(loc.uuid)
-                distinct_loc[loc.uuid] = [url, {target.uuid:menu}]
+                url = self.__chooseImagingApiUrl(loc_uuid)
+                distinct_loc[loc_uuid] = [url, {m_uuid:menu}]
 
         ims = h_pis.keys()
         a_pis = db.getImagesPostInstallScript(ims)
@@ -645,7 +647,7 @@ class RpcProxy(RpcProxyI):
         if i == None:
             # do fail
             logger.error("couldn't initialize the ImagingApi to %s"%(url))
-        d = i.ImagingServerDefaultMenuSet(menu) # WIP
+        d = i.imagingServerDefaultMenuSet(menu) # WIP
         d.addCallback(treatFailures)
         return d
 
@@ -718,10 +720,12 @@ class RpcProxy(RpcProxyI):
             return x['uuid']
         uuids = map(__getUUID, uuids)
         # get computers in profiles of location that need synchro
+        pids = db.getProfilesThatNeedSynchroInEntity(uuid)
         puuids = []
-        for pid in pids:
-            puuids.extend(map(lambda c: c.uuid, ComputerProfileManager().getProfileContent(pids)))
-        puuids = db.getComputersSynchroStates(pids_uuids)
+        for profile, synchro_state in pids:
+            pid = profile.uuid
+            puuids.extend(map(lambda c: c.uuid, ComputerProfileManager().getProfileContent(pid)))
+        puuids = db.getComputersSynchroStates(puuids)
         pids_uuids = []
         for computer, synchro_state in puuids:
             if synchro_state.id == PULSE2_IMAGING_SYNCHROSTATE_TODO or synchro_state.id == PULSE2_IMAGING_SYNCHROSTATE_INIT_ERROR:
@@ -730,16 +734,17 @@ class RpcProxy(RpcProxyI):
 
         uuids.extend(pids_uuids)
         # synchronize all
-        ret1 = self.__synchroTargets(uuids, PULSE2_IMAGING_TYPE_COMPUTER)
+        # ret1 = self.__synchroTargets(uuids, PULSE2_IMAGING_TYPE_COMPUTER)
         # synchro the location
         ret2 = self.__synchroLocation(uuid)
+        return ret2
 
-        def sendResult(results):
-            return xmlrpcCleanup(results)
-
-        dl = defer.DeferredList((ret1, ret2))
-        dl.addCallback(sendResult)
-        return dl
+#        def sendResult(results):
+#            return xmlrpcCleanup(results)
+#
+#        dl = defer.DeferredList((ret1, ret2))
+#        dl.addCallback(sendResult)
+#        return dl
 
     ###### Menus
     def getMyMenuTarget(self, uuid, target_type):

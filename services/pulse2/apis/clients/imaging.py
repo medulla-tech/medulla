@@ -240,6 +240,13 @@ class Imaging(Pulse2Api):
         d = self.callRemote("logClientAction", mac, level, phase, message)
         d.addErrback(self.onErrorRaise, "Imaging:logClientAction", mac, level, phase, message)
         return d
+    def imagingServerDefaultMenuSet(self, menu):
+        """
+        Set the default menu for an imaging server
+        """
+        d = self.callRemote("imagingServerDefaultMenuSet", menu)
+        d.addErrback(self.onErrorRaise, "Imaging:imagingServerDefaultMenuSet", menu)
+        return d
 
 # need to get a PackageApiManager, it will manage a PackageApi for each mirror
 # defined in the conf file.
