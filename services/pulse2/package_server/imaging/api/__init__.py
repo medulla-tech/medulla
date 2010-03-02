@@ -152,7 +152,7 @@ class ImagingApi(MyXmlrpc):
         status.get()
         return status.deferred
 
-    def xmlrpc_computerRegister(self, computerName, MACAddress, imagingData = None):
+    def xmlrpc_computerRegister(self, computerName, MACAddress, imagingData = False):
         """
         Method to register a new computer.
 
@@ -349,7 +349,7 @@ class ImagingApi(MyXmlrpc):
                 self.logger.error("Can't get MAC address for UUID %s" % cuuid)
                 ret.append(cuuid)
                 continue
-            else:                
+            else:
                 try:
                     macaddress = macaddress['mac']
                     self.logger.debug('Setting menu for computer UUID/MAC %s/%s' % (cuuid, macaddress))
