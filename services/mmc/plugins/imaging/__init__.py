@@ -48,7 +48,7 @@ VERSION = "0.1"
 APIVERSION = "0:0:0"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
-NOAUTHNEEDED = ['computerRegister', 'imagingServerRegister', 'getComputerByMac', 'imageRegister', 'logClientAction', 'injectInventory']
+NOAUTHNEEDED = ['computerRegister', 'imagingServerRegister', 'getComputerByMac', 'imageRegister', 'logClientAction', 'injectInventory', 'getDefaultMenuForSuscription']
 
 def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION
@@ -569,6 +569,27 @@ class RpcProxy(RpcProxyI):
                 menu['bootservices'][str(mi['order'])] = bs
         return (menu, menu_items, h_pis)
 
+    def __generateDefaultSuscribeMenu(self, logger, db):
+        menu = db.getDefaultSuscribeMenu()
+        menu_items = db.getMenuContent(menu.id, PULSE2_IMAGING_MENU_ALL, 0, -1, '')
+        menu = menu.toH()
+        menu, menu_items, h_pis = self.__generateMenusContent(menu, menu_items, None)
+        ims = h_pis.keys()
+        a_pis = db.getImagesPostInstallScript(ims)
+        for pis, im in a_pis:
+            pis = {
+                'id':pis.id,
+                'name':pis.default_name,
+                'desc':pis.default_desc,
+                'value':pis.value
+            }
+            a_targets = h_pis[im.id]
+            for loc_uuid, t_uuid, order in a_targets:
+                # loc_uuid = None
+                # t_uuid = None
+                menu['images'][order]['post_install_script'] = pis
+        return menu
+
     def __generateLocationMenu(self, logger, db, loc_uuid):
         menu = db.getEntityDefaultMenu(loc_uuid)
         menu_items = db.getMenuContent(menu.id, PULSE2_IMAGING_MENU_ALL, 0, -1, '')
@@ -984,3 +1005,12 @@ class RpcProxy(RpcProxyI):
         """
         # TODO !
         return [True, True]
+
+    def getDefaultMenuForSuscription(self):
+        """
+        Called by the Package Server to get the default menu used by computers to suscribe from the database.
+        """
+        db = ImagingDatabase()
+        logger = logging.getLogger()
+        menu = self.__generateDefaultSuscribeMenu(logger, db)
+        return xmlrpcCleanup(menu)

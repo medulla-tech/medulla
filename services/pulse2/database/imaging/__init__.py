@@ -422,6 +422,16 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session.close()
         return q
 
+    def getDefaultSuscribeMenu(self, session = None):
+        need_to_close_session = False
+        if session == None:
+            need_to_close_session = True
+            session = create_session()
+        q = session.query(Menu).filter(self.menu.c.id == 2).first()
+        if need_to_close_session:
+            session.close()
+        return q
+
     def getEntityDefaultMenu(self, loc_id, session = None):
         need_to_close_session = False
         if session == None:
@@ -1719,26 +1729,30 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q2 = q2.select_from(self.synchro_state.join(self.menu).join(self.entity, self.entity.c.fk_default_menu == self.menu.c.id))
         q2 = q2.filter(self.entity.c.uuid == uuid).first()
 
-        if q2.id == 3 or q2.id == 4: # running
-            session.close()
-            return q2
-        # in the 2 other cases we have to check the state of the content of this entity
-
-        q1 = session.query(SynchroState)
-        q1 = q1.select_from(self.synchro_state.join(self.menu).join(self.target, self.menu.c.id == self.target.c.fk_menu).join(self.entity, self.entity.c.id == self.target.c.fk_entity))
-        q1 = q1.filter(self.entity.c.uuid == uuid).all()
-
+        # temporary : here until we fully work on the entity content when we work on the entity
         session.close()
+        return q2
 
-        a_state = [0, 0]
-        for q in q1:
-            print q.toH()
-            if q.id == 3 or q.id == 4: # running
-                return q
-            a_state[q.id - 1] += 1
-        if a_state[0] == 0:
-            return {'id':2, 'label':'DONE'}
-        return {'id':1, 'label':'TODO'}
+#        if q2.id == 3 or q2.id == 4: # running
+#            session.close()
+#            return q2
+#        # in the 2 other cases we have to check the state of the content of this entity
+#
+#        q1 = session.query(SynchroState)
+#        q1 = q1.select_from(self.synchro_state.join(self.menu).join(self.target, self.menu.c.id == self.target.c.fk_menu).join(self.entity, self.entity.c.id == self.target.c.fk_entity))
+#        q1 = q1.filter(self.entity.c.uuid == uuid).all()
+#
+#        session.close()
+#
+#        a_state = [0, 0]
+#        for q in q1:
+#            print q.toH()
+#            if q.id == 3 or q.id == 4: # running
+#                return q
+#            a_state[q.id - 1] += 1
+#        if a_state[0] == 0:
+#            return {'id':2, 'label':'DONE'}
+#        return {'id':1, 'label':'TODO'}
 
     def setLocationSynchroState(self, uuid, state):
         session = create_session()
