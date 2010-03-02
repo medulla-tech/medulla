@@ -40,6 +40,7 @@ from mmc.plugins.base.computers import ComputerManager
 from pulse2.database.imaging import ImagingDatabase
 from pulse2.database.imaging.types import PULSE2_IMAGING_TYPE_COMPUTER, PULSE2_IMAGING_TYPE_PROFILE, PULSE2_IMAGING_SYNCHROSTATE_RUNNING, PULSE2_IMAGING_SYNCHROSTATE_TODO, PULSE2_IMAGING_SYNCHROSTATE_DONE, PULSE2_IMAGING_SYNCHROSTATE_INIT_ERROR
 from pulse2.apis.clients.imaging import ImagingApi
+import pulse2.utils
 
 VERSION = "0.1"
 APIVERSION = "0:0:0"
@@ -469,11 +470,11 @@ class RpcProxy(RpcProxyI):
     def linkImagingServerToLocation(self, is_uuid, loc_id, loc_name):
         db = ImagingDatabase()
         try:
-            db.linkImagingServerToEntity(is_uuid, loc_id, loc_name) # FIXME : are not we supposed to deal with the return value ?            
+            db.linkImagingServerToEntity(is_uuid, loc_id, loc_name) # FIXME : are not we supposed to deal with the return value ?
             db.setLocationSynchroState(loc_id, PULSE2_IMAGING_SYNCHROSTATE_TODO)
         except Exception, e:
-            logging.getLogger().exception(e)
-            return [False, str(e)]
+            logging.getLogger().warn("Imaging.linkImagingServerToLocation : %s" % e)
+            return [False, "Failed to link Imaging Server to Location : %s" % e]
         return [True]
 
     def getImagingServerConfig(self, location):
@@ -513,7 +514,7 @@ class RpcProxy(RpcProxyI):
     def getTargetSynchroState(self, uuid, target_type):
         ret = ImagingDatabase().getTargetsSynchroState([uuid], target_type)
         return ret[0]
-    
+
     def getComputerSynchroState(self, uuid):
         if not self.isTargetRegister(uuid, PULSE2_IMAGING_TYPE_COMPUTER):
             return {'id':0}
@@ -533,7 +534,7 @@ class RpcProxy(RpcProxyI):
         if type(ret) != dict:
             ret = ret.toH()
         return xmlrpcCleanup(ret)
-    
+
     def __generateMenusContent(self, menu, menu_items, loc_uuid, target_uuid = None, h_pis = {}):
         menu['bootservices'] = {}
         menu['images'] = {}
@@ -542,7 +543,7 @@ class RpcProxy(RpcProxyI):
                 menu['default_item'] = mi.order
             if menu['fk_default_item_WOL'] == mi.id:
                 menu['default_item_WOL'] = mi.order
-                menu['default_item_wol'] = mi.order # TODO : remove 
+                menu['default_item_wol'] = mi.order # TODO : remove
             mi = mi.toH()
             if mi.has_key('image'):
                 if h_pis.has_key(mi['image']['id']):
@@ -565,7 +566,7 @@ class RpcProxy(RpcProxyI):
                 }
                 menu['bootservices'][str(mi['order'])] = bs
         return (menu, menu_items, h_pis)
-    
+
     def __generateLocationMenu(self, logger, db, loc_uuid):
         menu = db.getEntityDefaultMenu(loc_uuid)
         menu_items = db.getMenuContent(menu.id, PULSE2_IMAGING_MENU_ALL, 0, -1, '')
@@ -585,7 +586,7 @@ class RpcProxy(RpcProxyI):
             for loc_uuid, t_uuid, order in a_targets:
                 menu['images'][order]['post_install_script'] = pis
         return menu
-         
+
     def __generateMenus(self, logger, db, uuids, target_type):
         # get target location
         locations = db.getTargetsEntity(uuids)
@@ -599,14 +600,14 @@ class RpcProxy(RpcProxyI):
         h_targets = {}
         for target in targets:
             h_targets[target.uuid] = target.toH()
-            
+
         for loc, target in locations:
             menu_items = db.getBootMenu(target.uuid, 0, -1, '')
             menu = db.getTargetsMenuTUUID(target.uuid)
             menu = menu.toH()
             menu['target'] = h_targets[target.uuid]
             menu, menu_items, h_pis = self.__generateMenusContent(menu, menu_items, loc.uuid, target.uuid, h_pis)
-            
+
             if distinct_loc.has_key(loc.uuid):
                 distinct_loc[loc.uuid][1].append({target.uuid:menu})
             else:
@@ -626,7 +627,7 @@ class RpcProxy(RpcProxyI):
             for loc_uuid, t_uuid, order in a_targets:
                 distinct_loc[loc_uuid][1][t_uuid]['images'][order]['post_install_script'] = pis
         return distinct_loc
-         
+
     def __synchroLocation(self, loc_uuid):
         logger = logging.getLogger()
         db = ImagingDatabase()
@@ -647,13 +648,13 @@ class RpcProxy(RpcProxyI):
         d = i.ImagingServerDefaultMenuSet(menu) # WIP
         d.addCallback(treatFailures)
         return d
-        
+
     def __synchroTargets(self, uuids, target_type):
         logger = logging.getLogger()
         db = ImagingDatabase()
         ret = db.changeTargetsSynchroState(uuids, target_type, PULSE2_IMAGING_SYNCHROSTATE_RUNNING)
         distinct_loc = self.__generateMenus(logger, db, uuids, target_type)
-           
+
         def treatFailures(result, location_uuid, distinct_loc = distinct_loc, logger = logger, target_type = target_type):
             failures = []
             success = []
@@ -661,7 +662,7 @@ class RpcProxy(RpcProxyI):
                 logger.warn("failed to synchronize menu for %s"%(str(fuuid)))
                 failures.append(fuuid)
                 # failure menu distinct_loc[location_uuid][1][fuuid]
-            
+
             for uuid in distinct_loc[location_uuid][1]:
                 if not uuid in failures:
                     logger.debug("succeed to synchronize menu for %s"%(str(uuid)))
@@ -669,7 +670,7 @@ class RpcProxy(RpcProxyI):
             db.changeTargetsSynchroState(failures, target_type, PULSE2_IMAGING_SYNCHROSTATE_TODO)
             db.changeTargetsSynchroState(success, target_type, PULSE2_IMAGING_SYNCHROSTATE_DONE)
             return failures
-            
+
         dl = []
         for location_uuid in distinct_loc:
             url = distinct_loc[location_uuid][0]
@@ -679,10 +680,11 @@ class RpcProxy(RpcProxyI):
                 logger.error("couldn't initialize the ImagingApi to %s"%(url))
 
             l_menus = distinct_loc[location_uuid][1]
+            print "WOOT : %s" % l_menus
             d = i.computersMenuSet(l_menus)
             d.addCallback(treatFailures, location_uuid)
             dl.append(d)
-            
+
         def sendResult(results):
             failures = []
             for s, uuids in results:
@@ -753,14 +755,14 @@ class RpcProxy(RpcProxyI):
             ret = db.setMyMenuTarget(uuid, params, target_type)
         except Exception, e:
             return [False, e]
-        
+
         #WIP
         if not isRegistered:
             logger = logging.getLogger()
             db = ImagingDatabase()
             ret = db.changeTargetsSynchroState([uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_RUNNING)
             distinct_loc = self.__generateMenus(logger, db, [uuid], target_type)
- 
+
             if target_type == PULSE2_IMAGING_TYPE_COMPUTER:
                 location = db.getTargetsEntity([uuid])[0]
                 url = self.__chooseImagingApiUrl(location[0].uuid)
@@ -779,7 +781,7 @@ class RpcProxy(RpcProxyI):
                             # revert the target registering!
                             db.changeTargetsSynchroState([uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_INIT_ERROR)
                             return [False, 'PULSE2_IMAGING_SYNCHROSTATE_INIT_ERROR']
-                            
+
                     d = i.computerRegister(params['target_name'], MACAddress[0], imagingData)
                     d.addCallback(treatRegister)
                     return d
@@ -791,7 +793,7 @@ class RpcProxy(RpcProxyI):
                 #locations = db.getTargetsEntity([uuid])
 
         return [True]
-    
+
     def getMyMenuComputer(self, uuid):
         return xmlrpcCleanup(self.getMyMenuTarget(uuid, PULSE2_IMAGING_TYPE_COMPUTER))
 
@@ -863,6 +865,7 @@ class RpcProxy(RpcProxyI):
             return [False, "Failed to find the imaging server %s" % imaging_server_uuid]
 
         loc_id = imaging_server[1].uuid
+        print imaging_server[1]
         computer = {
             'computername'          : hostname, # FIXME : what about domain ?
             'computerdescription'   : '',
@@ -892,7 +895,7 @@ class RpcProxy(RpcProxyI):
         if not db.isTargetRegister(uuid, target_type):
             logger.info("computer %s (%s) needs to be registered" %(hostname, MACAddress))
             params = {
-                'target_name':hostname,
+                'target_name': hostname,
             }
             # Set the computer menu
             db.setMyMenuTarget(uuid, params, target_type) # FIXME : are not we supposed to deal with the return value ?
@@ -902,7 +905,6 @@ class RpcProxy(RpcProxyI):
             self.synchroComputer(uuid)
         else:
             logger.debug("computer %s (%s) dont need registration" % (hostname, MACAddress))
-
 
         if profile:
             # TODO
@@ -929,10 +931,11 @@ class RpcProxy(RpcProxyI):
         """
         Called by the package server, to obtain a computer UUID/shortname/fqdn in exchange of its MAC address
         """
-        # TODO, for now return a fake value
-        #MDV/NR computer = ComputerManager().getComputerByMac(mac)
-        # return [True, "UUID%s"%computer.id]
-        return [True, {'uuid': "FAKE_UUID", 'mac': mac, 'shortname': "shortname", 'fqdn': "fqdn"}]
+        assert pulse2.utils.isMACAddress(mac)
+        computer = ComputerManager().getComputerByMac(mac)
+        if not computer:
+            return [False, "imaging.getComputerByMac() : I was unable to find a computer corresponding to the MAC address %s" % mac]
+        return [True, {'uuid': "UUID%s" % computer.uuid, 'mac': mac, 'shortname': computer.hostname, 'fqdn': computer.hostname}]
 
     def logClientAction(self, uuid, level, phase, message):
         """
