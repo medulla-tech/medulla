@@ -91,7 +91,8 @@ def myCall():
         callFunction(
             imagingAPI.computerRegister(
                 name,
-                mac
+                mac,
+                False # imagingData = False, since we are not the mmc agent !
             )
         )
     except AttributeError, e:
