@@ -1673,7 +1673,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 self.entity.c.uuid == loc_id, \
                 self.menu.c.fk_synchrostate.in_(PULSE2_IMAGING_SYNCHROSTATE_TODO, PULSE2_IMAGING_SYNCHROSTATE_INIT_ERROR), \
                 self.target.c.type == target_type \
-            )).all()
+            )).group_by(self.target.c.id).all()
 
         if session_need_to_close:
             session.close()
@@ -1693,11 +1693,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = session.query(Target).add_entity(SynchroState)
         q = q.select_from(self.target.join(self.menu).join(self.synchro_state))
         q = q.filter(self.target.c.uuid.in_(uuids)).all()
-                    
+
         if session_need_to_close:
             session.close()
         return q
-        
+
     def __getSynchroStates(self, uuids, target_type, session):
         q = session.query(SynchroState).add_entity(Menu)
         q = q.select_from(self.synchro_state.join(self.menu).join(self.target, self.menu.c.id == self.target.c.fk_menu))
