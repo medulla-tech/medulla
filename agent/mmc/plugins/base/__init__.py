@@ -1634,13 +1634,9 @@ class LdapUserGroupControl:
 
         return maxuid
 
-    def removeUserObjectClass(self, uid, className, log=True):    
+    def removeUserObjectClass(self, uid, className):    
         # Create LDAP path
-        cn = 'uid=' + uid + ', ' + self.baseUsersDN
-        
-        if log:
-            r = AF().log(PLUGIN_NAME, AA.BASE_DEL_USER_ATTR, [(cn, AT.USER), (className, AT.ATTRIBUTE)])
-        
+        cn = 'uid=' + uid + ', ' + self.baseUsersDN        
         attrs= []
         attrib = self.l.search_s(cn, ldap.SCOPE_BASE)
 
@@ -1662,17 +1658,11 @@ class LdapUserGroupControl:
         # Apply modification
         mlist = ldap.modlist.modifyModlist(attrs, newattrs)
         self.l.modify_s(cn, mlist)
-        if log:
-            r.commit()
 
-    def removeGroupObjectClass(self, group, className, log=True):
+    def removeGroupObjectClass(self, group, className):
         # Create LDAP path
         group = group.encode("utf-8")
-        cn = 'cn=' + group + ', ' + self.baseGroupsDN
-        
-        if log:
-            r = AF().log(PLUGIN_NAME, AA.BASE_DEL_GROUP_ATTR, [(cn, AT.GROUP), (className, AT.ATTRIBUTE)])
-        
+        cn = 'cn=' + group + ', ' + self.baseGroupsDN                
         attrs= []
         attrib = self.l.search_s(cn, ldap.SCOPE_BASE)
 
@@ -1694,8 +1684,6 @@ class LdapUserGroupControl:
         # Apply modification
         mlist = ldap.modlist.modifyModlist(attrs, newattrs)
         self.l.modify_s(cn, mlist)
-        if log:
-            r.commit()
 
     def getAttrToDelete(self, dn, className):
         """retrieve all attributes to delete wich correspond to param schema"""
