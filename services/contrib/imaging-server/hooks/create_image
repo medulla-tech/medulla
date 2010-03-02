@@ -32,6 +32,7 @@ import logging.config
 
 import pulse2.apis.clients.imaging
 import pulse2.imaging_server.config
+import pulse2.utils
 
 CONFIG_FILE = '/etc/mmc/pulse2/imaging-server/imaging-server.ini' #: config file location
 
@@ -66,7 +67,7 @@ def myCall():
         return endBack()
 
     try:
-        callFunction(imagingAPI.computerPrepareImagingDirectory(mac))
+        callFunction(imagingAPI.computerCreateImageDirectory(mac))
     except AttributeError, e:
         logging.getLogger().error('HOOK %s : %s' % (sys.argv[0], e))
         exitcode = ERROR_CLIENT
@@ -79,9 +80,9 @@ def myTreatment(result):
         don't forget to set exitcode and finally call endBack()
     """
     global exitcode
-    if result and result != None:
+    if pulse2.utils.isUUID(result):
         # result shall be my UUID
-		
+
         filename = sys.argv[2]
 
         if not os.path.isfile(filename):
