@@ -1658,7 +1658,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return target
 
     ######### SYNCHRO
-    def getComputersThatNeedSynchroInEntity(self, loc_id, session = None):
+    def getTargetsThatNeedSynchroInEntity(self, loc_id, target_type, session = None):
         session_need_to_close = False
         if session == None:
             session_need_to_close = True
@@ -1666,12 +1666,21 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         q = session.query(Target).add_entity(SynchroState)
         q = q.select_from(self.target.join(self.menu).join(self.entity, self.target.c.fk_entity == self.entity.c.id))
-        q = q.filter(and_(self.entity.c.uuid == loc_id, self.menu.c.fk_synchrostate.in_(PULSE2_IMAGING_SYNCHROSTATE_TODO, PULSE2_IMAGING_SYNCHROSTATE_INIT_ERROR))).all()
+        q = q.filter(and_(
+                self.entity.c.uuid == loc_id, \
+                self.menu.c.fk_synchrostate.in_(PULSE2_IMAGING_SYNCHROSTATE_TODO, PULSE2_IMAGING_SYNCHROSTATE_INIT_ERROR), \
+                self.target.c.type == target_type \
+            )).all()
 
         if session_need_to_close:
             session.close()
         return q
 
+    def getComputersThatNeedSynchroInEntity(self, loc_id, session = None):
+        return self.getTargetsThatNeedSynchroInEntity(loc_id, PULSE2_IMAGING_TYPE_COMPUTER, session)
+    def getProfilesThatNeedSynchroInEntity(self, loc_id, session = None):
+        return self.getTargetsThatNeedSynchroInEntity(loc_id, PULSE2_IMAGING_TYPE_PROFILE, session)
+        
     def __getSynchroStates(self, uuids, target_type, session):
         q = session.query(SynchroState).add_entity(Menu)
         q = q.select_from(self.synchro_state.join(self.menu).join(self.target, self.menu.c.id == self.target.c.fk_menu))
