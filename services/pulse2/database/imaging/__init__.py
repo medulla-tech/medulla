@@ -1728,10 +1728,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q2 = session.query(SynchroState).add_entity(Menu)
         q2 = q2.select_from(self.synchro_state.join(self.menu).join(self.entity, self.entity.c.fk_default_menu == self.menu.c.id))
         q2 = q2.filter(self.entity.c.uuid == uuid).first()
-        
-        synchro_state, menu = q2
-        menu.fk_synchrostate = state
-        session.save_or_update(menu)
+
+        if q2 :
+            synchro_state, menu = q2
+            menu.fk_synchrostate = state
+            session.save_or_update(menu)
+        else :
+            logging.getLogger().warn("Imaging.setLocationSynchroState : failed to set synchro_state")
+
         session.flush()
         session.close()
         return True
