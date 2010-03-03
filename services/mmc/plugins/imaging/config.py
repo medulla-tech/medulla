@@ -1,36 +1,37 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# (c) 2007 Mandriva, http://www.mandriva.com/
+# (c) 2010 Mandriva, http://www.mandriva.com
 #
 # $Id$
 #
-# This file is part of Mandriva Management Console (MMC).
+# This file is part of Pulse 2.
 #
-# MMC is free software; you can redistribute it and/or modify
+# Pulse 2 is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
 #
-# MMC is distributed in the hope that it will be useful,
+# Pulse 2 is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with MMC; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with Pulse 2.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 Configuration reader for imaging
 """
 
-from mmc.support import mmctools
 from mmc.support.config import PluginConfig
 from pulse2.database.imaging.config import ImagingDatabaseConfig
 
-class ImagingConfig(ImagingDatabaseConfig):
-    disable = True
+class ImagingConfig(PluginConfig, ImagingDatabaseConfig):
+
+    """
+    Read and hold MMC agent imaging plugin configuration
+    """
+
     web_def_date_fmt = "%Y-%m-%d %H:%M:%S"
     web_def_default_protocol = 'nfs'
     web_def_default_menu_name = 'Menu'
@@ -40,35 +41,22 @@ class ImagingConfig(ImagingDatabaseConfig):
     web_def_kernel_parameters = 'quiet'
     web_def_image_parameters = ''
 
-    def init(self, name = 'imaging', conffile = None):
-        self.dbsection = "database"
-        self.name = name
-        if not conffile: self.conffile = mmctools.getConfigFile(name)
-        else: self.conffile = conffile
+    def __init__(self, name = 'imaging', conffile = None):
+        if not hasattr(self, 'initdone'):
+            PluginConfig.__init__(self, name, conffile)
+            ImagingDatabaseConfig.__init__(self)
+            self.initdone = True
 
+    def readConf(self):
+        """
+        Read web section of the imaging plugin configuration file
+        """
+        PluginConfig.readConf(self)
         ImagingDatabaseConfig.setup(self, self.conffile)
-        self.setup(self.conffile)
-
-    def setup(self, conf_file):
-        """
-        Read the module configuration
-
-        Currently used params:
-        - section "imaging":
-          + revopath
-          + publicdir
-        """
-        self.disable = self.cp.getboolean("main", "disable")
-
-        if self.cp.has_section("web"):
-            for i in ('date_fmt', 'default_protocol', 'default_menu_name', 'default_timeout', 'default_background_uri', 'default_message', 'kernel_parameters', 'image_parameters'):
-                full_name = "web_def_%s"%(i)
-                if self.cp.has_option("web", full_name):
-                    setattr(self, full_name, self.cp.get("web", full_name))
-
-    def setDefault(self):
-        """
-        Set default values
-        """
-        PluginConfig.setDefault(self)
-
+        if self.has_section("web"):
+            for i in ('date_fmt', 'default_protocol', 'default_menu_name',
+                      'default_timeout', 'default_background_uri',
+                      'default_message'):
+                full_name = "web_def_%s" % i
+                if self.has_option("web", full_name):
+                    setattr(self, full_name, self.get("web", full_name))
