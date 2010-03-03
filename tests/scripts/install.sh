@@ -158,9 +158,6 @@ sed -i "s/# method = inventory/method = inventory/" /etc/mmc/plugins/base.ini
 # create the temp folder for packages
 mkdir -p /tmp/package_tmp/put1/test1
 mkdir -p /tmp/package_tmp/put1/test2
-# Create all the imaging related directories
-mkdir -p /var/lib/pulse2/imaging/bootmenus
-mkdir /var/lib/pulse2/imaging/computers
 
 sed -i "6s/^# host =/host = $IPADDRESS/" /etc/mmc/pulse2/package-server/package-server.ini
 sed -i "s/# \[imaging_api\]/\[imaging_api\]/" /etc/mmc/pulse2/package-server/package-server.ini
