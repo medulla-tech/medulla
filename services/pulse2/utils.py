@@ -75,13 +75,13 @@ except ImportError:
 
 class Singleton(object):
     """
-        Duplicate from the Singleton() class from the MMC Project,
-        to remove unwanted dependancies
+    Duplicate from the Singleton() class from the MMC Project,
+    to remove unwanted dependencies
     """
-    def __new__(type):
-        if not '_the_instance' in type.__dict__:
-            type._the_instance = object.__new__(type)
-        return type._the_instance
+    def __new__(cls, *args):
+        if not '_the_instance' in cls.__dict__:
+            cls._the_instance = object.__new__(cls)
+        return cls._the_instance
 
 class Pulse2ConfigParser(ConfigParser):
     """
@@ -342,10 +342,10 @@ def isMACAddress(mac_addr):
 
 def reduceMACAddress(mac):
     """
-    @return: the MAC address without ':'
+    @return: the MAC address in upper case without ':'
     """
     assert isMACAddress(mac)
-    ret = mac
+    ret = mac.upper()
     ret = ret.replace(':', '')
     ret = ret.replace('-', '')
     ret = ret.replace('.', '')
@@ -356,7 +356,7 @@ def normalizeMACAddress(mac):
     @return: the MAC address normalized (see this module documentation)
     """
     assert isMACAddress(mac)
-    return ':'.join(map(lambda (x,y): x + y, zip(reduceMACAddress(mac)[0:11:2].upper(), reduceMACAddress(mac)[1:12:2].upper()))) # any questions ?
+    return ':'.join(map(lambda (x,y): x + y, zip(reduceMACAddress(mac)[0:11:2], reduceMACAddress(mac)[1:12:2]))) # any questions ?
 
 def macToNode(mac):
     """
