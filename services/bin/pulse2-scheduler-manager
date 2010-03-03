@@ -311,6 +311,18 @@ if __name__ == "__main__":
             print('FAILED')
             return 1
 
+    def __status():
+        pid = get_pidfile(config)
+        if not pid :
+            print('Pulse2 Scheduler is stopped')
+            return 3
+        elif pid_is_alive(pid) :
+            print('Pulse2 Scheduler (pid %s) is running...' % pid)
+            return 0
+        else:
+            print('Pulse2 Scheduler dead but pid file exists')
+            return 1
+
     parser = optparse.OptionParser()
     parser.add_option("-c", "--config-file", help='path to the config file', default='/etc/mmc/pulse2/scheduler/scheduler.ini')
     parser.add_option("-o", "--id", help='id of this scheduler')
@@ -376,5 +388,7 @@ if __name__ == "__main__":
         if ret != 0:
             sys.exit(ret)
         sys.exit(__start())
+    elif args[0] == "status":
+        sys.exit(__status())
 
 
