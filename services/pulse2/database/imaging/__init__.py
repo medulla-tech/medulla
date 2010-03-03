@@ -1644,11 +1644,18 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session_need_to_close = True
             session = create_session()
 
+        ret = False
         if type(uuid) == list:
+            ret = {}
             q = session.query(Target).filter(and_(self.target.c.uuid.in_(uuid), self.target_type.c.id == target_type)).all()
+            for target in q:
+                ret[target.uuid] = True
+            for l_uuid in uuid:
+                if not ret.has_key(l_uuid):
+                    ret[l_uuid] = False
         else:
             q = session.query(Target).filter(and_(self.target.c.uuid == uuid, self.target_type.c.id == target_type)).first()
-        ret = (q != None)
+            ret = (q != None)
 
         if session_need_to_close:
             session.close()
@@ -1742,7 +1749,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 #
 #        a_state = [0, 0]
 #        for q in q1:
-#            print q.toH()
 #            if q.id == 3 or q.id == 4: # running
 #                return q
 #            a_state[q.id - 1] += 1
@@ -1797,6 +1803,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                     default_menu = self.getEntityDefaultMenu(loc_id, session)
                 else:
                     p_id = profile.id
+                    loc_id = None
             elif type == P2IT.PROFILE:
                 m_uuids = map(lambda c: c.uuid, ComputerProfileManager().getProfileContent(uuid))
                 locations = ComputerLocationManager().getMachinesLocations(m_uuids)
