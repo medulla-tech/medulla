@@ -256,7 +256,7 @@ class P2PServerCP(pulse2.utils.Singleton):
                 'port' : 7080,
                 'username' : 'mmc',
                 'password' : 's3cr3t',
-                'enablessl' : False,
+                'enablessl' : True,
                 'verifypeer' : False,
                 'cacert' : "/etc/mmc/pulse2/package-server/keys/cacert.pem",
                 'localcert' : "/etc/mmc/pulse2/package-server/keys/privkey.pem"
@@ -316,7 +316,7 @@ class P2PServerCP(pulse2.utils.Singleton):
             postinst_folder = 'postinst'
             # will contain our UUID/MAC Addr cache
             uuid_cache_file = os.path.join(base_folder, 'uuid-cache.txt')
-            # Entity UUID
+            # Package Server UUID
             uuid = ""
 
             if self.cp.has_option("imaging_api", 'mount_point'):
@@ -324,7 +324,7 @@ class P2PServerCP(pulse2.utils.Singleton):
             if self.cp.has_option('imaging_api', 'base_folder'):
                 base_folder = self.cp.get('imaging_api', 'base_folder')
             if self.cp.has_option('imaging_api', 'bootloader_folder'):
-                bootloader_folder = os.path.join(self.base_folder, self.cp.get('imaging_api', 'bootloader_folder'))
+                bootloader_folder = os.path.join(base_folder, self.cp.get('imaging_api', 'bootloader_folder'))
             if self.cp.has_option('imaging_api', 'bootsplash_file'):
                 bootsplash_file = self.cp.get('imaging_api', 'bootloader_file')
             if self.cp.has_option('imaging_api', 'bootmenus_folder'):
@@ -346,7 +346,7 @@ class P2PServerCP(pulse2.utils.Singleton):
             if self.cp.has_option('imaging_api', 'postinst_folder'):
                 postinst_folder = self.cp.get('imaging_api', 'postinst_folder')
             if self.cp.has_option('imaging_api', 'uuid_cache_file'):
-                uuid_cache_file = os.path.join(self.base_folder, self.cp.get('imaging_api', 'uuid_cache_file'))
+                uuid_cache_file = os.path.join(base_folder, self.cp.get('imaging_api', 'uuid_cache_file'))
             if self.cp.has_option("imaging_api", 'uuid'):
                 uuid = self.cp.get("imaging_api", 'uuid')
             if not isUUID(uuid):
