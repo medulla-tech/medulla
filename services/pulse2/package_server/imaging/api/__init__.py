@@ -45,6 +45,7 @@ try:
 except ImportError:
     import mmc.support.uuid as uuid
 
+
 class ImagingApi(MyXmlrpc):
 
     myType = 'Imaging'
@@ -73,8 +74,7 @@ class ImagingApi(MyXmlrpc):
             url,
             PackageServerConfig().mmc_agent['verifypeer'],
             PackageServerConfig().mmc_agent['cacert'],
-            PackageServerConfig().mmc_agent['localcert']
-        )
+            PackageServerConfig().mmc_agent['localcert'])
 
     def xmlrpc_getServerDetails(self):
         pass
@@ -274,12 +274,12 @@ class ImagingApi(MyXmlrpc):
         """
 
         def _getmacCB(result):
-            if result and type(result) == dict :
+            if result and type(result) == dict:
                 client = self._getXMLRPCClient()
                 func = 'imaging.injectInventory'
                 args = (result['uuid'], Inventory)
                 d = client.callRemote(func, *args)
-                d.addCallbacks(lambda x : True, client.onError, errbackArgs = (func, args, 0))
+                d.addCallbacks(lambda x: True, client.onError, errbackArgs=(func, args, 0))
                 return d
             self.logger.warn('Imaging: Failed resolving UUID for client %s : %s' % (MACAddress, result))
             return False
@@ -305,13 +305,16 @@ class ImagingApi(MyXmlrpc):
         """
 
         def onSuccess(result):
+            if type(result) == dict and "faultCode" in result:
+                self.logger.warning('Imaging: While processing result for %s : %s' % (MACAddress, result['faultTraceback']))
+                return False
             try:
                 if result[0]:
                     self.myUUIDCache.set(result[1]['uuid'], MACAddress, result[1]['shortname'], result[1]['fqdn'])
                     self.logger.info('Imaging: Updating cache for %s' % (MACAddress))
                 return result[1]
             except Exception, e:
-                self.logger.warning('Imaging: While processing result %s for %s : %s' % (MACAddress, result, e))
+                self.logger.warning('Imaging: While processing result %s for %s : %s' % (result, MACAddress, e))
 
         if not isMACAddress(MACAddress):
             raise TypeError
@@ -320,13 +323,13 @@ class ImagingApi(MyXmlrpc):
         res = self.myUUIDCache.getByMac(MACAddress)
         if res: # fetched from cache
             return maybeDeferred(lambda x: x, res)
-        else : # cache fetching failed, try to obtain the real value
+        else: # cache fetching failed, try to obtain the real value
             self.logger.info('Imaging: Getting computer UUID for %s' % (MACAddress))
             client = self._getXMLRPCClient()
             func = 'imaging.getComputerByMac'
             args = [MACAddress]
             d = client.callRemote(func, *args)
-            d.addCallbacks(onSuccess, client.onError, errbackArgs = (func, args, 0))
+            d.addCallbacks(onSuccess, client.onError, errbackArgs=(func, args, 0))
             return d
 
     def xmlrpc_computersMenuSet(self, menus):
