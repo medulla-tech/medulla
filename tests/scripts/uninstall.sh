@@ -54,7 +54,7 @@ fi
 rm -fr $PREFIX/lib/python2.*/site-packages/pulse2
 rm -f /etc/init.d/pulse2-*
 rm -f $PREFIX/sbin/pulse2-*
-rm -fr /var/lib/pulse2/packages/*-*-*-*-*
+rm -fr /var/lib/pulse2/packages/*-*-*-*-* /var/lib/pulse2/imaging
 rm -fr /tmp/package_tmp
 
 exit 0
