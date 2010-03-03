@@ -148,7 +148,7 @@ def scheduleLogStats():
 
 def scheduleCheckStatus():
     """ periodicaly check our status stats """
-    logging.getLogger().info('scheduler "%s": CHECK: Sleeping' % (SchedulerConfig().name)),
+    logging.getLogger().debug('scheduler "%s": CHECK: Sleeping' % (SchedulerConfig().name)),
     twisted.internet.reactor.callLater(get_next_delay(SchedulerConfig().checkstatus_period, True), awakeCheckStatus)
 
 def awakeAnalyseCommands():
@@ -230,7 +230,7 @@ def awakeLogStats():
     scheduleLogStats()
 
 def awakeCheckStatus():
-    logging.getLogger().info('scheduler %s: CHECK: Starting' % (SchedulerConfig().name))
+    logging.getLogger().debug('scheduler %s: CHECK: Starting' % (SchedulerConfig().name))
     checkStatus()
     scheduleCheckStatus()
 
