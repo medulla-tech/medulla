@@ -32,7 +32,10 @@ import logging
 
 # need to get a ImagingApiManager, it will manage a Imaging api for each mirror
 # defined in the conf file.
+
+
 class Imaging(Pulse2Api):
+
     def __init__(self, *attr):
         self.name = "Imaging"
         Pulse2Api.__init__(self, *attr)
@@ -40,8 +43,9 @@ class Imaging(Pulse2Api):
     # Computer registration
     def computerRegister(self, computerName, MACAddress, imagingData):
         """
-        Called by pulse2-imaging-server to tell the Package Server to register a new computer.
-        The computer name may contain a profile and an entity path (self, like profile:/entityA/entityB/computer)
+        Called by pulse2-imaging-server to tell the Package Server to
+        register a new computer. The computer name may contain a profile
+        and an entity path (self,like profile:/entityA/entityB/computer)
 
         @type computerName: str
         @type MACAddress: str
@@ -49,16 +53,15 @@ class Imaging(Pulse2Api):
         @raise : TypeError is MACAddress is not a mac addr
         @rtype : bool
         """
-
         if type(computerName) != str:
-            raise TypeError, 'Bad Computer name: %s' % computerName
+            raise TypeError('Bad Computer name: %s' % computerName)
         if not isMACAddress(MACAddress):
-            raise TypeError, 'BAD MAC address: %s' % MACAddress
+            raise TypeError('BAD MAC address: %s' % MACAddress)
         d = self.callRemote("computerRegister", computerName, MACAddress, imagingData)
         d.addErrback(self.onErrorRaise, "Imaging:computerRegister", [computerName, MACAddress, imagingData])
         return d
 
-    def computerPrepareImagingDirectory(self, MACAddress, imagingData = False):
+    def computerPrepareImagingDirectory(self, MACAddress, imagingData=False):
         """
         Asks the Package Server to create the file system structure for the given computer uuid thanks to imagingData content.
         If imagingData is False, the package server queries the MMC agent for the imaging data.
@@ -68,6 +71,7 @@ class Imaging(Pulse2Api):
         d = self.callRemote("computerPrepareImagingDirectory", MACAddress, imagingData)
         d.addErrback(self.onErrorRaise, "Imaging:computerPrepareImagingDirectory", [MACAddress, imagingData])
         return d
+
     def computerCreateImageDirectory(self, MACAddress):
         """
         Asks the Package Server to create the file system structure for the given computer uuid thanks to imagingData content.
@@ -77,7 +81,8 @@ class Imaging(Pulse2Api):
         d = self.callRemote("computerCreateImageDirectory", MACAddress)
         d.addErrback(self.onErrorRaise, "Imaging:computerCreateImageDirectory", [MACAddress])
         return d
-    def computerUnregister(self, uuid, archive = True):
+
+    def computerUnregister(self, uuid, archive=True):
         """
         Remove computer data from the Imaging Server.
         The computer must be registered again to use imaging.
@@ -87,6 +92,7 @@ class Imaging(Pulse2Api):
         d.addErrback(self.onErrorRaise, "Imaging:computerUnregister", [uuid, archive])
         return d
     # Computer Menu management
+
     def computerMenuUpdate(self, uuid):
         """
         Ask the pserver to update a menu.
@@ -103,6 +109,7 @@ class Imaging(Pulse2Api):
         d = self.callRemote("computersMenuSet", menus)
         d.addErrback(self.onErrorRaise, "Imaging:computersMenuSet", menus)
         return d
+
     # Computer log management
     def computerLogGet(self, uuid): # str
         """Get the imaging log of a computer."""
@@ -119,6 +126,7 @@ class Imaging(Pulse2Api):
         d = self.callRemote("computerBackupImagesGet", uuid)
         d.addErrback(self.onErrorRaise, "Imaging:computerBackupImagesGet", uuid)
         return d
+
     def computerBackupImageLogGet(self, uuid, imageId):
         """
         Get the imaging log of a computer backup image.
@@ -127,6 +135,7 @@ class Imaging(Pulse2Api):
         d = self.callRemote("computerBackupImageLogGet", uuid, imageId)
         d.addErrback(self.onErrorRaise, "Imaging:computerBackupImageLogGet", [uuid, imageId])
         return d
+
     def computerImageIsoBuild(self, uuid, imageId):
         """
         Build the auto restoration ISO CDROM of an image.
@@ -135,6 +144,7 @@ class Imaging(Pulse2Api):
         d = self.callRemote("computerImageIsoBuild", uuid, imageId)
         d.addErrback(self.onErrorRaise, "Imaging:computerImageIsoBuild", [uuid, imageId])
         return d
+
     def computerBackupImagesSetInformations(self, imageId, informations):
         """
         Set backup image informations, informations is a dict containing image label, description, and a post installation script name.
@@ -143,6 +153,7 @@ class Imaging(Pulse2Api):
         d = self.callRemote("computerBackupImagesSetInformations", imageId, informations)
         d.addErrback(self.onErrorRaise, "Imaging:computerBackupImagesSetInformations", [imageId, informations])
         return d
+
     # Imaging server images management
     def imagingServerStatus(self):
         """
@@ -257,10 +268,12 @@ class Imaging(Pulse2Api):
         d.addErrback(self.onErrorRaise, "Imaging:imagingServerDefaultMenuSet", menu)
         return d
 
+
 # need to get a PackageApiManager, it will manage a PackageApi for each mirror
 # defined in the conf file.
 class ImagingApi(Imaging):
-    def __init__(self, url = None):
+
+    def __init__(self, url=None):
         self.logger = logging.getLogger()
         credit = ''
         if type(url) == str or type(url) == unicode:
@@ -278,18 +291,16 @@ class ImagingApi(Imaging):
                 self.server_addr += url['username']
                 credit = url['username']
                 if url['password'] != '':
-                    self.server_addr += ":"+url['password']
-                    credit += ":"+url['password']
+                    self.server_addr += ":" + url['password']
+                    credit += ":" + url['password']
                 self.server_addr += "@"
 
-            self.server_addr += url['server']+':'+str(url['port']) + url['mountpoint']
+            self.server_addr += url['server'] + ':' + str(url['port']) + url['mountpoint']
 
             if url['verifypeer']:
                 Imaging.__init__(self, credit, self.server_addr, url['verifypeer'], url['cacert'], url['localcert'])
             else:
                 Imaging.__init__(self, credit, self.server_addr)
         else:
-            self.logger.error("Imaging api : cant connect to %s, dont know how to do"%(url))
-        self.logger.debug("ImagingApi> connected to %s"%(self.server_addr))
-
-
+            self.logger.error("Imaging api : cant connect to %s, dont know how to do" % (url))
+        self.logger.debug("ImagingApi> connected to %s" % (self.server_addr))
