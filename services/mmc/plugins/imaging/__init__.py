@@ -904,9 +904,9 @@ class RpcProxy(RpcProxyI):
             'computername': hostname, # FIXME : what about domain ?
             'computerdescription': '',
             'computerip': '',
-            'computermac'           : MACAddress,
-            'computernet'           : '',
-            'location_uuid'         : loc_id}
+            'computermac': MACAddress,
+            'computernet': '',
+            'location_uuid': loc_id}
 
         uuid = None
         db_computer = ComputerManager().getComputerByMac(MACAddress)
@@ -926,7 +926,7 @@ class RpcProxy(RpcProxyI):
 
         target_type = P2IT.COMPUTER
         if not db.isTargetRegister(uuid, target_type):
-            logger.info("computer %s (%s) needs to be registered" %(hostname, MACAddress))
+            logger.info("computer %s (%s) needs to be registered" % (hostname, MACAddress))
             params = {
                 'target_name': hostname,
             }
