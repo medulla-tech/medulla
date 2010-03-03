@@ -40,7 +40,7 @@ from mmc.plugins.base.computers import ComputerManager
 from pulse2.managers.profile import ComputerProfileManager
 from pulse2.managers.location import ComputerLocationManager
 from pulse2.database.imaging import ImagingDatabase
-from pulse2.database.imaging.types import PULSE2_IMAGING_TYPE_COMPUTER, PULSE2_IMAGING_TYPE_PROFILE, PULSE2_IMAGING_SYNCHROSTATE_RUNNING, PULSE2_IMAGING_SYNCHROSTATE_TODO, PULSE2_IMAGING_SYNCHROSTATE_DONE, PULSE2_IMAGING_SYNCHROSTATE_INIT_ERROR, PULSE2_IMAGING_MENU_ALL
+from pulse2.database.imaging.types import P2IT, P2ISS, P2IM
 from pulse2.apis.clients.imaging import ImagingApi
 import pulse2.utils
 
@@ -181,9 +181,9 @@ class RpcProxy(RpcProxyI):
     ###### BOOT MENU (image+boot service on the target)
     def __convertType(self, target_type):
         if target_type == '':
-            target_type = PULSE2_IMAGING_TYPE_COMPUTER
+            target_type = P2IT.COMPUTER
         elif target_type == 'group':
-            target_type = PULSE2_IMAGING_TYPE_PROFILE
+            target_type = P2IT.PROFILE
         return target_type
 
     def __getTargetBootMenu(self, target_id, start = 0, end = -1, filter = ''):
@@ -209,23 +209,23 @@ class RpcProxy(RpcProxyI):
     def moveItemUpInMenu(self, target_uuid, target_type, mi_uuid):
         db = ImagingDatabase()
         target_type = self.__convertType(target_type)
-        db.changeTargetsSynchroState([target_uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_TODO)
+        db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
         return db.moveItemUpInMenu(target_uuid, mi_uuid)
 
     def moveItemDownInMenu(self, target_uuid, target_type, mi_uuid):
         db = ImagingDatabase()
         target_type = self.__convertType(target_type)
-        db.changeTargetsSynchroState([target_uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_TODO)
+        db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
         return db.moveItemDownInMenu(target_uuid, mi_uuid)
 
     def moveItemUpInMenu4Location(self, loc_id, mi_uuid):
         db = ImagingDatabase()
-        db.setLocationSynchroState(loc_id, PULSE2_IMAGING_SYNCHROSTATE_TODO)
+        db.setLocationSynchroState(loc_id, P2ISS.TODO)
         return db.moveItemUpInMenu4Location(loc_id, mi_uuid)
 
     def moveItemDownInMenu4Location(self, loc_id, mi_uuid):
         db = ImagingDatabase()
-        db.setLocationSynchroState(loc_id, PULSE2_IMAGING_SYNCHROSTATE_TODO)
+        db.setLocationSynchroState(loc_id, P2ISS.TODO)
         return db.moveItemDownInMenu4Location(loc_id, mi_uuid)
 
     ###### IMAGES
@@ -244,10 +244,10 @@ class RpcProxy(RpcProxyI):
         }
 
     def getComputerImages(self, id, start = 0, end = -1, filter = ''):
-        return self.__getTargetImages(id, PULSE2_IMAGING_TYPE_COMPUTER, start, end, filter)
+        return self.__getTargetImages(id, P2IT.COMPUTER, start, end, filter)
 
     def getProfileImages(self, id, start = 0, end = -1, filter = ''):
-        return self.__getTargetImages(id, PULSE2_IMAGING_TYPE_PROFILE, start, end, filter)
+        return self.__getTargetImages(id, P2IT.PROFILE, start, end, filter)
 
     def getLocationImages(self, loc_id, start = 0, end = -1, filter = ''):
         # Entities are names Location in the php part, here we convert them from Location to Entity
@@ -261,7 +261,7 @@ class RpcProxy(RpcProxyI):
         db = ImagingDatabase()
         target_type = self.__convertType(target_type)
         try:
-            db.changeTargetsSynchroState([target_uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_TODO)
+            db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
             ret = db.addImageToTarget(item_uuid, target_uuid, params)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
@@ -272,7 +272,7 @@ class RpcProxy(RpcProxyI):
         db = ImagingDatabase()
         target_type = self.__convertType(target_type)
         try:
-            db.changeTargetsSynchroState([target_uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_TODO)
+            db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
             ret = db.editImageToTarget(item_uuid, target_uuid, params)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
@@ -282,7 +282,7 @@ class RpcProxy(RpcProxyI):
         db = ImagingDatabase()
         target_type = self.__convertType(target_type)
         try:
-            db.changeTargetsSynchroState([target_uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_TODO)
+            db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
             ret = db.editImage(item_uuid, target_uuid, params)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
@@ -293,7 +293,7 @@ class RpcProxy(RpcProxyI):
         db = ImagingDatabase()
         target_type = self.__convertType(target_type)
         try:
-            db.changeTargetsSynchroState([target_uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_TODO)
+            db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
             ret = db.delImageToTarget(item_uuid, target_uuid)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
@@ -302,7 +302,7 @@ class RpcProxy(RpcProxyI):
     def addImageToLocation(self, item_uuid, loc_id, params):
         db = ImagingDatabase()
         try:
-            db.setLocationSynchroState(loc_id, PULSE2_IMAGING_SYNCHROSTATE_TODO)
+            db.setLocationSynchroState(loc_id, P2ISS.TODO)
             ret = db.addImageToEntity(item_uuid, loc_id, params)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
@@ -312,7 +312,7 @@ class RpcProxy(RpcProxyI):
     def editImageToLocation(self, item_uuid, loc_id, params):
         db = ImagingDatabase()
         try:
-            db.setLocationSynchroState(loc_id, PULSE2_IMAGING_SYNCHROSTATE_TODO)
+            db.setLocationSynchroState(loc_id, P2ISS.TODO)
             ret = db.editImageToEntity(item_uuid, loc_id, params)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
@@ -321,7 +321,7 @@ class RpcProxy(RpcProxyI):
     def delImageToLocation(self, item_uuid, loc_id):
         db = ImagingDatabase()
         try:
-            db.setLocationSynchroState(loc_id, PULSE2_IMAGING_SYNCHROSTATE_TODO)
+            db.setLocationSynchroState(loc_id, P2ISS.TODO)
             ret = db.delImageToEntity(item_uuid, loc_id)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
@@ -335,10 +335,10 @@ class RpcProxy(RpcProxyI):
         return [count, xmlrpcCleanup(ret)]
 
     def getComputerBootServices(self, id, start = 0, end = -1, filter = ''):
-        return self.__getTargetBootServices(id, PULSE2_IMAGING_TYPE_COMPUTER, start, end, filter)
+        return self.__getTargetBootServices(id, P2IT.COMPUTER, start, end, filter)
 
     def getProfileBootServices(self, id, start = 0, end = -1, filter = ''):
-        return self.__getTargetBootServices(id, PULSE2_IMAGING_TYPE_PROFILE, start, end, filter)
+        return self.__getTargetBootServices(id, P2IT.PROFILE, start, end, filter)
 
     def getPossibleBootServices(self, target_uuid, start = 0, end = -1, filter = ''):
         db = ImagingDatabase()
@@ -357,11 +357,11 @@ class RpcProxy(RpcProxyI):
     def addServiceToTarget(self, bs_uuid, target_uuid, params, target_type):
         db = ImagingDatabase()
         if target_type == '':
-            target_type = PULSE2_IMAGING_TYPE_COMPUTER
+            target_type = P2IT.COMPUTER
         elif target_type == 'group':
-            target_type = PULSE2_IMAGING_TYPE_PROFILE
+            target_type = P2IT.PROFILE
         try:
-            db.changeTargetsSynchroState([target_uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_TODO)
+            db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
             ret = ImagingDatabase().addServiceToTarget(bs_uuid, target_uuid, params)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
@@ -370,11 +370,11 @@ class RpcProxy(RpcProxyI):
     def delServiceToTarget(self, bs_uuid, target_uuid, target_type):
         db = ImagingDatabase()
         if target_type == '':
-            target_type = PULSE2_IMAGING_TYPE_COMPUTER
+            target_type = P2IT.COMPUTER
         elif target_type == 'group':
-            target_type = PULSE2_IMAGING_TYPE_PROFILE
+            target_type = P2IT.PROFILE
         try:
-            db.changeTargetsSynchroState([target_uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_TODO)
+            db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
             ret = ImagingDatabase().delServiceToTarget(bs_uuid, target_uuid)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
@@ -383,11 +383,11 @@ class RpcProxy(RpcProxyI):
     def editServiceToTarget(self, bs_uuid, target_uuid, params, target_type):
         db = ImagingDatabase()
         if target_type == '':
-            target_type = PULSE2_IMAGING_TYPE_COMPUTER
+            target_type = P2IT.COMPUTER
         elif target_type == 'group':
-            target_type = PULSE2_IMAGING_TYPE_PROFILE
+            target_type = P2IT.PROFILE
         try:
-            db.changeTargetsSynchroState([target_uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_TODO)
+            db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
             ret = ImagingDatabase().editServiceToTarget(bs_uuid, target_uuid, params)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
@@ -397,7 +397,7 @@ class RpcProxy(RpcProxyI):
     def addServiceToLocation(self, bs_uuid, location_id, params):
         db = ImagingDatabase()
         try:
-            db.setLocationSynchroState(location_id, PULSE2_IMAGING_SYNCHROSTATE_TODO)
+            db.setLocationSynchroState(location_id, P2ISS.TODO)
             ret = ImagingDatabase().addServiceToEntity(bs_uuid, location_id, params)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
@@ -406,7 +406,7 @@ class RpcProxy(RpcProxyI):
     def delServiceToLocation(self, bs_uuid, location_id):
         db = ImagingDatabase()
         try:
-            db.setLocationSynchroState(location_id, PULSE2_IMAGING_SYNCHROSTATE_TODO)
+            db.setLocationSynchroState(location_id, P2ISS.TODO)
             ret = ImagingDatabase().delServiceToEntity(bs_uuid, location_id)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
@@ -415,7 +415,7 @@ class RpcProxy(RpcProxyI):
     def editServiceToLocation(self, mi_uuid, location_id, params):
         db = ImagingDatabase()
         try:
-            db.setLocationSynchroState(location_id, PULSE2_IMAGING_SYNCHROSTATE_TODO)
+            db.setLocationSynchroState(location_id, P2ISS.TODO)
             ret = ImagingDatabase().editServiceToEntity(mi_uuid, location_id, params)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
@@ -436,10 +436,10 @@ class RpcProxy(RpcProxyI):
         return [count, xmlrpcCleanup(ret)]
 
     def getComputerLogs(self, id, start = 0, end = -1, filter = ''):
-        return self.__getTargetMasteredOns(id, PULSE2_IMAGING_TYPE_COMPUTER, start, end, filter)
+        return self.__getTargetMasteredOns(id, P2IT.COMPUTER, start, end, filter)
 
     def getProfileLogs(self, id, start = 0, end = -1, filter = ''):
-        return self.__getTargetMasteredOns(id, PULSE2_IMAGING_TYPE_PROFILE, start, end, filter)
+        return self.__getTargetMasteredOns(id, P2IT.PROFILE, start, end, filter)
 
     def getLogs4Location(self, location_uuid, start = 0, end = -1, filter = ''):
         if location_uuid == False:
@@ -473,7 +473,7 @@ class RpcProxy(RpcProxyI):
         db = ImagingDatabase()
         try:
             db.linkImagingServerToEntity(is_uuid, loc_id, loc_name) # FIXME : are not we supposed to deal with the return value ?
-            db.setLocationSynchroState(loc_id, PULSE2_IMAGING_SYNCHROSTATE_TODO)
+            db.setLocationSynchroState(loc_id, P2ISS.TODO)
         except Exception, e:
             logging.getLogger().warn("Imaging.linkImagingServerToLocation : %s" % e)
             return [False, "Failed to link Imaging Server to Location : %s" % e]
@@ -494,7 +494,7 @@ class RpcProxy(RpcProxyI):
         menu = menu.toH()
         db = ImagingDatabase()
         try:
-            db.setLocationSynchroState(location, PULSE2_IMAGING_SYNCHROSTATE_TODO)
+            db.setLocationSynchroState(location, P2ISS.TODO)
             return xmlrpcCleanup([db.modifyMenu(menu['imaging_uuid'], config)])
         except Exception, e:
             return xmlrpcCleanup([False, e])
@@ -507,10 +507,10 @@ class RpcProxy(RpcProxyI):
         return ImagingDatabase().isTargetRegister(uuid, target_type)
 
     def isComputerRegistered(self, machine_uuid):
-        return self.isTargetRegister(machine_uuid, PULSE2_IMAGING_TYPE_COMPUTER)
+        return self.isTargetRegister(machine_uuid, P2IT.COMPUTER)
 
     def isProfileRegistered(self, profile_uuid):
-        return self.isTargetRegister(profile_uuid, PULSE2_IMAGING_TYPE_PROFILE)
+        return self.isTargetRegister(profile_uuid, P2IT.PROFILE)
 
     ###### Synchronisation
     def getTargetSynchroState(self, uuid, target_type):
@@ -518,15 +518,15 @@ class RpcProxy(RpcProxyI):
         return ret[0]
 
     def getComputerSynchroState(self, uuid):
-        if not self.isTargetRegister(uuid, PULSE2_IMAGING_TYPE_COMPUTER):
+        if not self.isTargetRegister(uuid, P2IT.COMPUTER):
             return {'id':0}
-        ret = self.getTargetSynchroState(uuid, PULSE2_IMAGING_TYPE_COMPUTER)
+        ret = self.getTargetSynchroState(uuid, P2IT.COMPUTER)
         return xmlrpcCleanup(ret.toH())
 
     def getProfileSynchroState(self, uuid):
-        if not self.isTargetRegister(uuid, PULSE2_IMAGING_TYPE_PROFILE):
+        if not self.isTargetRegister(uuid, P2IT.PROFILE):
             return {'id':0}
-        ret = self.getTargetSynchroState(uuid, PULSE2_IMAGING_TYPE_PROFILE)
+        ret = self.getTargetSynchroState(uuid, P2IT.PROFILE)
         return xmlrpcCleanup(ret.toH())
 
     def getLocationSynchroState(self, uuid):
@@ -571,7 +571,7 @@ class RpcProxy(RpcProxyI):
 
     def __generateDefaultSuscribeMenu(self, logger, db):
         menu = db.getDefaultSuscribeMenu()
-        menu_items = db.getMenuContent(menu.id, PULSE2_IMAGING_MENU_ALL, 0, -1, '')
+        menu_items = db.getMenuContent(menu.id, P2IM.ALL, 0, -1, '')
         menu = menu.toH()
         menu, menu_items, h_pis = self.__generateMenusContent(menu, menu_items, None)
         ims = h_pis.keys()
@@ -592,7 +592,7 @@ class RpcProxy(RpcProxyI):
 
     def __generateLocationMenu(self, logger, db, loc_uuid):
         menu = db.getEntityDefaultMenu(loc_uuid)
-        menu_items = db.getMenuContent(menu.id, PULSE2_IMAGING_MENU_ALL, 0, -1, '')
+        menu_items = db.getMenuContent(menu.id, P2IM.ALL, 0, -1, '')
         menu = menu.toH()
         menu, menu_items, h_pis = self.__generateMenusContent(menu, menu_items, loc_uuid)
         ims = h_pis.keys()
@@ -654,13 +654,13 @@ class RpcProxy(RpcProxyI):
     def __synchroLocation(self, loc_uuid):
         logger = logging.getLogger()
         db = ImagingDatabase()
-        ret = db.setLocationSynchroState(loc_uuid, PULSE2_IMAGING_SYNCHROSTATE_RUNNING)
+        ret = db.setLocationSynchroState(loc_uuid, P2ISS.RUNNING)
         menu = self.__generateLocationMenu(logger, db, loc_uuid)
         def treatFailures(result, location_uuid = loc_uuid, menu = menu, logger = logger):
             if result:
-                db.setLocationSynchroState(loc_uuid, PULSE2_IMAGING_SYNCHROSTATE_DONE)
+                db.setLocationSynchroState(loc_uuid, P2ISS.DONE)
             else:
-                db.setLocationSynchroState(loc_uuid, PULSE2_IMAGING_SYNCHROSTATE_TODO)
+                db.setLocationSynchroState(loc_uuid, P2ISS.TODO)
             return result
 
         url = self.__chooseImagingApiUrl(loc_uuid)
@@ -675,7 +675,7 @@ class RpcProxy(RpcProxyI):
     def __synchroTargets(self, uuids, target_type):
         logger = logging.getLogger()
         db = ImagingDatabase()
-        ret = db.changeTargetsSynchroState(uuids, target_type, PULSE2_IMAGING_SYNCHROSTATE_RUNNING)
+        ret = db.changeTargetsSynchroState(uuids, target_type, P2ISS.RUNNING)
         distinct_loc = self.__generateMenus(logger, db, uuids, target_type)
 
         def treatFailures(result, location_uuid, distinct_loc = distinct_loc, logger = logger, target_type = target_type):
@@ -690,8 +690,8 @@ class RpcProxy(RpcProxyI):
                 if not uuid in failures:
                     logger.debug("succeed to synchronize menu for %s"%(str(uuid)))
                     success.append(uuid)
-            db.changeTargetsSynchroState(failures, target_type, PULSE2_IMAGING_SYNCHROSTATE_TODO)
-            db.changeTargetsSynchroState(success, target_type, PULSE2_IMAGING_SYNCHROSTATE_DONE)
+            db.changeTargetsSynchroState(failures, target_type, P2ISS.TODO)
+            db.changeTargetsSynchroState(success, target_type, P2ISS.DONE)
             return failures
 
         dl = []
@@ -721,15 +721,15 @@ class RpcProxy(RpcProxyI):
         return dl
 
     def synchroComputer(self, uuid):
-        if not self.isTargetRegister(uuid, PULSE2_IMAGING_TYPE_COMPUTER):
+        if not self.isTargetRegister(uuid, P2IT.COMPUTER):
             return False
-        ret = self.__synchroTargets([uuid], PULSE2_IMAGING_TYPE_COMPUTER)
+        ret = self.__synchroTargets([uuid], P2IT.COMPUTER)
         return xmlrpcCleanup(ret)
 
     def synchroProfile(self, uuid):
-        if not self.isTargetRegister(uuid, PULSE2_IMAGING_TYPE_PROFILE):
+        if not self.isTargetRegister(uuid, P2IT.PROFILE):
             return False
-        ret = self.__synchroTargets([uuid], PULSE2_IMAGING_TYPE_PROFILE)
+        ret = self.__synchroTargets([uuid], P2IT.PROFILE)
         return xmlrpcCleanup(ret)
 
     def synchroLocation(self, uuid):
@@ -749,13 +749,13 @@ class RpcProxy(RpcProxyI):
         puuids = db.getComputersSynchroStates(puuids)
         pids_uuids = []
         for computer, synchro_state in puuids:
-            if synchro_state.id == PULSE2_IMAGING_SYNCHROSTATE_TODO or synchro_state.id == PULSE2_IMAGING_SYNCHROSTATE_INIT_ERROR:
+            if synchro_state.id == P2ISS.TODO or synchro_state.id == P2ISS.INIT_ERROR:
                 computer = computer.toH()
                 pids_uuids.append(computer['uuid'])
 
         uuids.extend(pids_uuids)
         # synchronize all
-        # ret1 = self.__synchroTargets(uuids, PULSE2_IMAGING_TYPE_COMPUTER)
+        # ret1 = self.__synchroTargets(uuids, P2IT.COMPUTER)
         # synchro the location
         ret2 = self.__synchroLocation(uuid)
         return ret2
@@ -786,10 +786,10 @@ class RpcProxy(RpcProxyI):
         if not isRegistered:
             logger = logging.getLogger()
             db = ImagingDatabase()
-            ret = db.changeTargetsSynchroState([uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_RUNNING)
+            ret = db.changeTargetsSynchroState([uuid], target_type, P2ISS.RUNNING)
             distinct_loc = self.__generateMenus(logger, db, [uuid], target_type)
 
-            if target_type == PULSE2_IMAGING_TYPE_COMPUTER:
+            if target_type == P2IT.COMPUTER:
                 location = db.getTargetsEntity([uuid])[0]
                 url = self.__chooseImagingApiUrl(location[0].uuid)
                 i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
@@ -801,12 +801,12 @@ class RpcProxy(RpcProxyI):
                     MACAddress = ComputerManager().getMachineMac(ctx, {'uuid':uuid})
                     def treatRegister(result, location = location, uuid = uuid):
                         if result:
-                            db.changeTargetsSynchroState([uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_DONE)
+                            db.changeTargetsSynchroState([uuid], target_type, P2ISS.DONE)
                             return [True]
                         else:
                             # revert the target registering!
-                            db.changeTargetsSynchroState([uuid], target_type, PULSE2_IMAGING_SYNCHROSTATE_INIT_ERROR)
-                            return [False, 'PULSE2_IMAGING_SYNCHROSTATE_INIT_ERROR']
+                            db.changeTargetsSynchroState([uuid], target_type, P2ISS.INIT_ERROR)
+                            return [False, 'P2ISS.INIT_ERROR']
 
                     d = i.computerRegister(params['target_name'], MACAddress[0], imagingData)
                     d.addCallback(treatRegister)
@@ -821,16 +821,16 @@ class RpcProxy(RpcProxyI):
         return [True]
 
     def getMyMenuComputer(self, uuid):
-        return xmlrpcCleanup(self.getMyMenuTarget(uuid, PULSE2_IMAGING_TYPE_COMPUTER))
+        return xmlrpcCleanup(self.getMyMenuTarget(uuid, P2IT.COMPUTER))
 
     def setMyMenuComputer(self, target_uuid, params):
-        return xmlrpcCleanup(self.setMyMenuTarget(target_uuid, params, PULSE2_IMAGING_TYPE_COMPUTER))
+        return xmlrpcCleanup(self.setMyMenuTarget(target_uuid, params, P2IT.COMPUTER))
 
     def getMyMenuProfile(self, uuid):
-        return xmlrpcCleanup(self.getMyMenuTarget(uuid, PULSE2_IMAGING_TYPE_PROFILE))
+        return xmlrpcCleanup(self.getMyMenuTarget(uuid, P2IT.PROFILE))
 
     def setMyMenuProfile(self, target_uuid, params):
-        return xmlrpcCleanup(self.setMyMenuTarget(target_uuid, params, PULSE2_IMAGING_TYPE_PROFILE))
+        return xmlrpcCleanup(self.setMyMenuTarget(target_uuid, params, P2IT.PROFILE))
 
     ###### POST INSTALL SCRIPTS
     def getAllTargetPostInstallScript(self, target_uuid, start = 0, end = -1, filter = ''):
@@ -917,7 +917,7 @@ class RpcProxy(RpcProxyI):
         else:
             logger.debug("computer %s (%s) already exists, we dont need to declare it again" % (hostname, MACAddress))
 
-        target_type = PULSE2_IMAGING_TYPE_COMPUTER
+        target_type = P2IT.COMPUTER
         if not db.isTargetRegister(uuid, target_type):
             logger.info("computer %s (%s) needs to be registered" %(hostname, MACAddress))
             params = {
@@ -988,7 +988,7 @@ class RpcProxy(RpcProxyI):
         db = ImagingDatabase()
         if db.countImagingServerByPackageServerUUID(imaging_server_uuid) == 0:
             return [False, "The imaging server UUID you try to access doesn't exist in the imaging database."]
-        if not db.isTargetRegister(computer_uuid, PULSE2_IMAGING_TYPE_COMPUTER):
+        if not db.isTargetRegister(computer_uuid, P2IT.COMPUTER):
             return [False, "The computer UUID you try to access doesn't exists in the imaging database."]
 
         try:
