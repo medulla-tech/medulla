@@ -32,13 +32,14 @@ from pulse2.utils import reduceMACAddress
 
 from testutils import ipconfig
 
-ipserver = ipconfig()
-protocol = 'https' # protocol's server
-server = xmlrpclib.ServerProxy('%s://%s:9990/imaging_api' % (protocol,ipserver))
-mmcagent = xmlrpclib.ServerProxy('%s://mmc:s3cr3t@%s:7080' % (protocol, '127.0.0.1'))
+IPSERVER = ipconfig()
+PROTOCOL = 'https' # protocol's SERVER
+SERVER = xmlrpclib.ServerProxy('%s://%s:9990/imaging_api'
+                               % (PROTOCOL, IPSERVER))
+MMCAGENT = xmlrpclib.ServerProxy('%s://mmc:s3cr3t@%s:7080'
+                                 % (PROTOCOL, '127.0.0.1'))
 
-menus = {}
-menu = { 'timeout' : 20,
+MENU = { 'timeout' : 20,
          'background_uri' : u'/##PULSE2_F_DISKLESS##/##PULSE2_F_BOOTSPLASH##',
          'name' : u'Default Boot Menu',
          'message' : u'-- Warning! Your PC is being backed up or restored. Do not reboot !',
@@ -70,47 +71,56 @@ menu = { 'timeout' : 20,
                       'image_parameters' : u'....',
                     }
         }
-menus = { 'UUID27' : menu }
+MENUS = { 'UUID27' : MENU }
 
 class Imaging(unittest.TestCase):
 
+    """
+    Tests for the Imaging API of the package server.
+    """
+
     def test_01registerPackageServer(self):
-        ret = os.system('pulse2-package-server-register-imaging  -n \"Pulse 2 imaging\" -m http://mmc:s3cr3t@localhost:7080')
+        """
+        Check package server registration
+        """
+        ret = os.system('pulse2-package-server-register-imaging  -n \"Pulse 2 imaging\" -m https://mmc:s3cr3t@localhost:7080')
         self.assertEqual(0, ret)
-        self.assertEqual([True], mmcagent.imaging.linkImagingServerToLocation('UUID1', 'UUID1', 'root'))
+        self.assertEqual([True], MMCAGENT.imaging.linkImagingServerToLocation('UUID1', 'UUID1', 'root'))
 
     def test_02registerComputer(self):
+        """
+        Check computer registration
+        """
         mac = '00:11:22:33:44:ff'
-        result = server.computerRegister('foobar', 'BADMAC')
+        result = SERVER.computerRegister('foobar', 'BADMAC')
         self.assertFalse(result)
-        result = server.computerRegister('bad _ name', mac)
+        result = SERVER.computerRegister('bad _ name', mac)
         self.assertFalse(result)
-        result = server.computerRegister('foobar', mac)
+        result = SERVER.computerRegister('foobar', mac)
         self.assertTrue(result)
         self.assertTrue(os.path.exists('/var/lib/pulse2/imaging/uuid-cache.txt'))
         self.assertTrue(os.path.isdir('/var/lib/pulse2/imaging/computers/%s' % 'UUID1'))
         self.assertTrue(os.path.exists('/var/lib/pulse2/imaging/bootmenus/%s' % reduceMACAddress(mac)))
 
     def atest_computersMenuSet(self):
-        #result = server.computersMenuSet([('UUID17', {})])
+        #result = SERVER.computersMenuSet([('UUID17', {})])
         #self.assertEqual(['UUID1'], result)
-        result = server.computersMenuSet(menus)
+        result = SERVER.computersMenuSet(menus)
         self.assertEqual(['UUID27'], result)
 
     def atest_logClientAction(self):
-        result = server.logClientAction('mac', 'level', 'phase', 'message')
+        result = SERVER.logClientAction('mac', 'level', 'phase', 'message')
         self.assertTrue('faultCode' in result and
                         'TypeError' in result['faultCode'])
-        result = server.logClientAction('00:11:22:33:44:55', 'level', 'phase', 'message')
+        result = SERVER.logClientAction('00:11:22:33:44:55', 'level', 'phase', 'message')
         self.assertTrue(result)
 
     def atest_computerUpdate(self):
-        result = server.computerUpdate('BADMAC')
+        result = SERVER.computerUpdate('BADMAC')
         self.assertTrue('faultCode' in result and
-                        'TypeError' in result['faultCode'])        
-        
+                        'TypeError' in result['faultCode'])
     def atest_status(self):
-        result = server.imagingServerStatus()
+        result = SERVER.imagingSERVERStatus()
         self.assertEqual(dict, type(result))
         self.assertTrue('space_available' in result)
         self.assertTrue('mem_info' in result)
@@ -121,26 +131,26 @@ class Imaging(unittest.TestCase):
         pass
 
     def atest_02getComputerByMAC(self):
-        result = server.getComputerByMac('BADMAC')
+        result = SERVER.getComputerByMac('BADMAC')
         self.assertTrue('faultCode' in result and
                         'TypeError' in result['faultCode'])
-        result = server.getComputerByMac('00:11:22:33:44:55')
+        result = SERVER.getComputerByMac('00:11:22:33:44:55')
         self.assertTrue('uuid' in result and result['uuid'] == 'FAKE_UUID')
 
-    def atest_imagingServerImageDelete(self):
-        result = server.imagingServerImageDelete('foo')
+    def atest_imagingSERVERImageDelete(self):
+        result = SERVER.imagingSERVERImageDelete('foo')
         self.assertFalse(result)
-        result = server.imagingServerImageDelete('35f23420-4050-4734-b172-d458915ef17d')
+        result = SERVER.imagingSERVERImageDelete('35f23420-4050-4734-b172-d458915ef17d')
         self.assertFalse(result)
 
     def atest_imageRegister(self):
-        result = server.imageRegister('30:11:22:33:44:ff', '35f23420-4050-4734-b172-d458915ef17d', False, 'Image 1', 'Mon Mar  1 15:46:43 CET 2010', '/path/?', 12345, tuple(gmtime()), 'cdelfosse')
+        result = SERVER.imageRegister('30:11:22:33:44:ff', '35f23420-4050-4734-b172-d458915ef17d', False, 'Image 1', 'Mon Mar  1 15:46:43 CET 2010', '/path/?', 12345, tuple(gmtime()), 'cdelfosse')
         self.assertTrue(result)
 
-    def atest_imagingServerDefaultMenuSet(self):
-        result = server.imagingServerDefaultMenuSet(menu)
+    def atest_imagingSERVERDefaultMenuSet(self):
+        result = SERVER.imagingSERVERDefaultMenuSet(menu)
         self.assertEqual(['UUID1'], result)
-        
+
 
 if __name__ == '__main__':
     unittest.main()
