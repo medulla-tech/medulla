@@ -163,7 +163,7 @@ mkdir -p /var/lib/pulse2/imaging/bootmenus
 mkdir /var/lib/pulse2/imaging/computers
 
 sed -i "6s/^# host =/host = $IPADDRESS/" /etc/mmc/pulse2/package-server/package-server.ini
-sed -i "s/# [imaging_api]/[imaging_api]/" /etc/mmc/pulse2/package-server/package-server.ini
+sed -i "s/# \[imaging_api\]/\[imaging_api\]/" /etc/mmc/pulse2/package-server/package-server.ini
 UUID=`uuidgen`
 sed -i "s/# uuid = PLEASE_PUT_A_UUID_FOR_THAT_SERVER/uuid = $UUID/" /etc/mmc/pulse2/package-server/package-server.ini
 
