@@ -65,33 +65,39 @@ def getHealth():
     return health
 
 def checkPool():
+    ret = True
     try :
         pool = MscDatabase().db.pool
         if pool._max_overflow > -1 and pool._overflow >= pool._max_overflow :
-            logging.getLogger().error('scheduler %s: CHECK: Timeout then overflow (%d vs. %d) detected in SQL pool : check your network connectivity !' % (SchedulerConfig().name, pool._overflow, pool._max_overflow))
+            logging.getLogger().error('scheduler %s: CHECK: NOK: timeout then overflow (%d vs. %d) detected in SQL pool : check your network connectivity !' % (SchedulerConfig().name, pool._overflow, pool._max_overflow))
             pool.dispose()
             pool = pool.recreate()
+            ret = False
     except Exception, e:
-        logging.getLogger().warn('scheduler %s: CHECK: got the following error : %s' % (SchedulerConfig().name, e))
-        pass
-
+        logging.getLogger().warn('scheduler %s: CHECK: NOK: got the following error : %s' % (SchedulerConfig().name, e))
+        ret = False
+    return ret
 
 def checkLoops():
+    ret = True
     try :
         if startLoopTS.delta() > 3 * SchedulerConfig().awake_time: # sounds the alarm if more than 3 start iteration were missed
-            logging.getLogger().warn('scheduler %s: CHECK: Seems the START loop is running into trouble; this may be due to load / network issue; please check your network environment !' % (SchedulerConfig().name))
+            logging.getLogger().warn('scheduler %s: CHECK: NOK: seems the START loop is running into trouble; this may be due to load / network issue; please check your network environment !' % (SchedulerConfig().name))
+            ret = False
         if stopLoopTS.delta() > 3 * SchedulerConfig().awake_time: # sounds the alarm if more than 3 stop iteration were missed
-            logging.getLogger().warn('scheduler %s: CHECK: Seems the STOP loop is running into trouble; this may be due to load / network issue; please check your network environment !' % (SchedulerConfig().name))
+            logging.getLogger().warn('scheduler %s: CHECK: NOK: seems the STOP loop is running into trouble; this may be due to load / network issue; please check your network environment !' % (SchedulerConfig().name))
+            ret = False
         if preemptLoopTS.delta() > SchedulerConfig().awake_time: # sounds the alarm if no preempt was done in awake-time interval
-            logging.getLogger().warn('scheduler %s: Seems the PREEMPT loop is running into trouble; this may be due to load / network issue; please check your network environment !' % (SchedulerConfig().name))
+            logging.getLogger().warn('scheduler %s: CHECK: NOK: seems the PREEMPT loop is running into trouble; this may be due to load / network issue; please check your network environment !' % (SchedulerConfig().name))
+            ret = False
         if logLoopTS.delta() > SchedulerConfig().awake_time: # sounds the alarm if no log was done in awake-time interval
-            logging.getLogger().warn('scheduler %s: Seems the HEALTH loop is running into trouble; this may be due to load issue; please check your scheduler settings !' % (SchedulerConfig().name))
-
+            logging.getLogger().warn('scheduler %s: CHECK: NOK: seems the HEALTH loop is running into trouble; this may be due to load issue; please check your scheduler settings !' % (SchedulerConfig().name))
+            ret = False
     except Exception, e:
-        logging.getLogger().warn('scheduler %s: CHECK: got the following error : %s' % (SchedulerConfig().name, e))
-        pass
-
+        logging.getLogger().warn('scheduler %s: CHECK: NOK: got the following error : %s' % (SchedulerConfig().name, e))
+        ret = False
+    return ret
 
 def checkStatus():
-    checkPool()
-    checkLoops()
+    if checkPool() and checkLoops():
+        logging.getLogger().info('scheduler %s: CHECK: OK' % SchedulerConfig().name)
