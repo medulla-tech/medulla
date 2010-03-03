@@ -32,7 +32,7 @@ import logging.config
 from pulse2.inventoryserver.server import InventoryGetService
 from pulse2.inventoryserver.config import Pulse2OcsserverConfigParser
 
-VERSION = "1.2.2"
+VERSION = "1.3.0"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
 def getVersion():  return VERSION
@@ -49,7 +49,7 @@ def running(daemonize, inifile):
 
     # Create log dir if it doesn't exist
     os.system('mkdir -p /var/log/mmc')
-                                    
+
     logging.config.fileConfig(inifile)
     logger = logging.getLogger()
 
@@ -79,13 +79,13 @@ def daemon(config):
     @type pidfile: str
     """
     pidfile = config.pidfile
-        
+
     # Test if mmcagent has been already launched in daemon mode
     if os.path.isfile(pidfile):
         print pidfile+" pid already exist. Maybe pulse2-inventory-server is already running\n"
         print "use /etc/init.d script to stop and relaunch it"
         sys.exit(0)
-        
+
     # do the UNIX double-fork magic, see Stevens' "Advanced
     # Programming in the UNIX Environment" for details (ISBN 0201563177)
     try:
@@ -96,14 +96,17 @@ def daemon(config):
     except OSError, e:
         print >>sys.stderr, "fork #1 failed: %d (%s)" % (e.errno, e.strerror)
         sys.exit(1)
-        
+
     # decouple from parent environment
     os.close(sys.stdin.fileno())
     os.close(sys.stdout.fileno())
     os.close(sys.stderr.fileno())
+    os.open(os.devnull, os.O_RDWR)
+    os.dup2(sys.stdin.fileno(), sys.stdout.fileno())
+    os.dup2(sys.stdout.fileno(), sys.stderr.fileno())
     os.chdir("/")
     os.setsid()
-    
+
     # do second fork
     try:
         pid = os.fork()
@@ -137,7 +140,7 @@ if __name__ == "__main__":
     if not os.path.exists(inifile):
         print "File '%s' does not exist." % inifile
         sys.exit(3)
- 
+
     # Start the daemon main loop
     sys.exit(running(daemonize, inifile))
 
