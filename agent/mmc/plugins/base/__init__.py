@@ -1786,10 +1786,9 @@ class LdapUserGroupControl:
 
         try:
             self.l.add_s(addrdn, attributes)
-        except ldap.ALREADY_EXISTS, err:
             r.commit()
-        
-        r.commit()
+        except ldap.ALREADY_EXISTS:
+            r.commit()        
 
 ldapUserGroupControl = LdapUserGroupControl
 ###########################################################################################
