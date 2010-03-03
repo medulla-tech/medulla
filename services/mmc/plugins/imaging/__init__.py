@@ -48,7 +48,10 @@ VERSION = "0.1"
 APIVERSION = "0:0:0"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
-NOAUTHNEEDED = ['computerRegister', 'imagingServerRegister', 'getComputerByMac', 'imageRegister', 'logClientAction', 'injectInventory', 'getDefaultMenuForSuscription', 'linkImagingServerToLocation']
+NOAUTHNEEDED = ['computerRegister', 'imagingServerRegister',
+                'getComputerByMac', 'imageRegister', 'logClientAction',
+                'injectInventory', 'getDefaultMenuForSuscription',
+                'linkImagingServerToLocation']
 
 def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION
@@ -56,18 +59,17 @@ def getRevision(): return REVISION
 
 def activate():
     """
-    Run some tests to ensure the module is ready to operate.
+    Read the plugin configuration, initialize it, and run some tests to ensure
+    it is ready to operate.
     """
     logger = logging.getLogger()
-    config = ImagingConfig()
-    config.init("imaging")
+    config = ImagingConfig("imaging")
 
-    if config.disable:
+    if config.disabled:
         logger.warning("Plugin imaging: disabled by configuration.")
         return False
-    # TODO: check images directories exists
 
-    # initialise imaging database
+    # Initialize imaging database
     if not ImagingDatabase().activate(config):
         logger.warning("Plugin imaging: an error occured during the database initialization")
         return False
