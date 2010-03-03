@@ -130,7 +130,7 @@ int mysystem(int argc, ...) {
     system(tmp);
     snprintf(tmp, 1023, "%.900s 1>>%s 2>&1", cmd, gLogFile);
 
-    // we now take care of the error code :
+    /* we now take care of the error code : */
     retval = WEXITSTATUS(system(tmp));
     return retval;
 }
@@ -149,7 +149,7 @@ void logClientActivity(char *mac, int priority, char *phase,
     snprintf(prio, 2, "%d", priority);
 
     if (mysystem(5, gPathLogAction, mac, prio, phase, buf) == 0) {
-        // FIXME : we should send back a NAK
+	    /* FIXME : we should send back a NAK */
     }
 }
 
@@ -187,9 +187,8 @@ int getentry(char *file, char *pktmac) {
         if ((buf[0] != '#') && (buf[0] != ';') && (strlen(buf) > 10)) {
             s++;
             if (sscanf(buf, "%19s%*s%32s", mac, name) == 2) {
-                //printf("%s*%s\n", mac, name);
                 if (!strncasecmp(mac, pktmac, 17)) {
-                    /* return the name in the global buffer */
+		    // return the name in the global buffer
                     strcpy((char *)gBuff, name);
                     fclose(fi);
                     return 1;
@@ -218,7 +217,7 @@ unsigned char *getmac(struct in_addr addr) {
 
     myLogger("Warning: MAC not found in packet");
     fi = fopen("/proc/net/arp", "r");
-    if (!fi) {                  //can't open file
+    if (!fi) {                  /* can't open file */
         myLogger("can't open /proc/net/arp");
         return 0;
     }
@@ -240,11 +239,11 @@ unsigned char *getmac(struct in_addr addr) {
 unsigned char *getmacfrompkt(char *buf, int l) {
     if (l <= 20)
         return NULL;
-    // check for a magic number and for ':' x6
+    /* check for a magic number and for ':' x6 */
     if (buf[l - 20] == 'M' && buf[l - 19] == 'c' && buf[l - 18] == ':'
         && buf[l - 15] == ':' && buf[l - 12] == ':' && buf[l - 9] == ':'
         && buf[l - 6] == ':' && buf[l - 3] == ':') {
-        // let's copy the mac address
+        /* let's copy the mac address */
         strncpy((char *)gBuff, buf + l - 17, 17);
         gBuff[17] = 0;
         return gBuff;
@@ -269,13 +268,13 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         myLogger(buff);
         free(buff);
     }
-    // Hardware Info...
+    /* Hardware Info... */
     if (buf[0] == 0xAA) {
         char buffer[100 * 1024];
         char filename[256];
         int buffer_len = 0;
-        if (analyseresult(mysystem(2, gPathUpdateClient, mac))) {
-            // FIXME : we should also send back a NAK
+        if (analyseresult(mysystem(2, gPathBootClient, mac))) {
+	    /* Fixme : We Should also send back a NAK */
             return 0;
         }
 
@@ -333,7 +332,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         }
         close(fo);
 
-        if (mysystem(3, gPathCreateImage, mac, filename) == 0) {
+        if (mysystem(3, gPathStartImage, mac, filename) == 0) {
             /*
              * thanks to system(), we do not have any chance to get our
              * so we uses a temporary file to recover it.
@@ -355,7 +354,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
     if (buf[0] == 0xCD) {
         char item[16];
         snprintf(item, 16, "%d", buf[1]);
-        mysystem(3, gPathUpdateClient, smac, item);
+        mysystem(3, gPathEndImage, smac, item);
         return 0;
     }
     // log data
@@ -585,9 +584,9 @@ void readConfig(char *config_file_path) {
     snprintf(gPathCreateClient, 256, "%s/%s", gDirHooks, tmp);
     syslog(LOG_DEBUG, "[hooks] create_client_path = %s", gPathCreateClient);
 
-    tmp = iniparser_getstring(ini, "hooks:update_client_path", "update_client");
-    snprintf(gPathUpdateClient, 256, "%s/%s", gDirHooks, tmp);
-    syslog(LOG_DEBUG, "[hooks] update_client_path = %s", gPathUpdateClient);
+    tmp = iniparser_getstring(ini, "hooks:boot_client_path", "boot_client");
+    snprintf(gPathBootClient, 256, "%s/%s", gDirHooks, tmp);
+    syslog(LOG_DEBUG, "[hooks] boot_client_path = %s", gPathBootClient);
 
     tmp =
         iniparser_getstring(ini, "hooks:process_inventory_path",
@@ -596,13 +595,13 @@ void readConfig(char *config_file_path) {
     syslog(LOG_DEBUG, "[hooks] process_inventory_path = %s",
            gPathProcessInventory);
 
-    tmp = iniparser_getstring(ini, "hooks:create_image_path", "create_image");
-    snprintf(gPathCreateImage, 256, "%s/%s", gDirHooks, tmp);
-    syslog(LOG_DEBUG, "[hooks] create_image_path = %s", gPathCreateImage);
+    tmp = iniparser_getstring(ini, "hooks:start_image_path", "start_image");
+    snprintf(gPathStartImage, 256, "%s/%s", gDirHooks, tmp);
+    syslog(LOG_DEBUG, "[hooks] start_image_path = %s", gPathStartImage);
 
-    tmp = iniparser_getstring(ini, "hooks:update_image_path", "update_image");
-    snprintf(gPathUpdateImage, 256, "%s/%s", gDirHooks, tmp);
-    syslog(LOG_DEBUG, "[hooks] update_image_path = %s", gPathUpdateImage);
+    tmp = iniparser_getstring(ini, "hooks:end_image_path", "end_image");
+    snprintf(gPathEndImage, 256, "%s/%s", gDirHooks, tmp);
+    syslog(LOG_DEBUG, "[hooks] end_image_path = %s", gPathEndImage);
 
     tmp = iniparser_getstring(ini, "hooks:log_action_path", "log_action");
     snprintf(gPathLogAction, 256, "%s/%s", gDirHooks, tmp);
