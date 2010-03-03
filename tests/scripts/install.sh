@@ -31,14 +31,14 @@ if [ ! -f "/etc/init.d/mmc-agent" ];
 then
     echo "Please install MMC CORE first."
     exit 1
-fi	
+fi
 
 if [ ! -f "/bin/lsb_release" ];
 then
     echo "Please install lsb_release."
     echo "urpmi lsb-release"
     exit 1
-fi	
+fi
 
 DISTRIBUTION=`lsb_release -i -s`
 RELEASE=`lsb_release -r -s`
@@ -163,6 +163,9 @@ mkdir -p /var/lib/pulse2/imaging/bootmenus
 mkdir /var/lib/pulse2/imaging/computers
 
 sed -i "6s/^# host =/host = $IPADDRESS/" /etc/mmc/pulse2/package-server/package-server.ini
+sed -i "s/# [imaging_api]/[imaging_api]/" /etc/mmc/pulse2/package-server/package-server.ini
+UUID=`uuidgen`
+sed -i "s/# uuid = PLEASE_PUT_A_UUID_FOR_THAT_SERVER/uuid = $UUID/" /etc/mmc/pulse2/package-server/package-server.ini
 
 # Config pkgs.ini
 sed -i "s/server = localhost/server = $IPADDRESS/" /etc/mmc/plugins/pkgs.ini
