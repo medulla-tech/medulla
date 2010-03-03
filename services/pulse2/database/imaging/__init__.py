@@ -1666,8 +1666,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         target.uuid = uuid
         target.name = name
         target.type = type
-        target.kernel_parameters = params['target_opt_kernel']
-        target.image_parameters = params['target_opt_image']
+        if params.has_key('target_opt_kernel'):
+            target.kernel_parameters = params['target_opt_kernel']
+        else:
+            target.kernel_parameters = self.config.web_def_kernel_parameters
+        if params.has_key('target_opt_image'):
+            target.image_parameters = params['target_opt_image']
+        else:
+            target.image_parameters = self.config.web_def_image_parameters
         target.fk_entity = entity_id
         target.fk_menu = menu_id
         session.save(target)
