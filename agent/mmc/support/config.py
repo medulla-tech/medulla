@@ -22,17 +22,28 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+"""
+Contains classes to read MMC agent plugin configuration files.
+"""
+
 import mmctools
 
 import ldap
 import re
-from ConfigParser import *
+from ConfigParser import ConfigParser, NoOptionError, NoSectionError
 
 
 class ConfigException(Exception):
+    """
+    Exception raised when there is a configuration error.
+    """
     pass
 
 class MMCConfigParser(ConfigParser):
+
+    """
+    Class to read and parse a MMC agent plugin configuration file.
+    """
 
     def __init__(self):
         ConfigParser.__init__(self)
@@ -55,17 +66,21 @@ class MMCConfigParser(ConfigParser):
         For example: passwd = {base64}bWFuL2RyaXZhMjAwOA==
         """
         value = self.get(section, option)
-        m = re.search('^{(\w+)}(.+)$', value)
-        if m:
-            scheme = m.group(1)
-            obfuscated = m.group(2)
+        match = re.search('^{(\w+)}(.+)$', value)
+        if match:
+            scheme = match.group(1)
+            obfuscated = match.group(2)
             ret = obfuscated.decode(scheme)
         else:
             ret = value
         return ret
-    
+
 
 class PluginConfig(MMCConfigParser):
+
+    """
+    Class to hold a MMC agent plugin configuration
+    """
 
     USERDEFAULT = "userdefault"
     HOOKS = "hooks"
@@ -73,22 +88,25 @@ class PluginConfig(MMCConfigParser):
     def __init__(self, name, conffile = None):
         MMCConfigParser.__init__(self)
         self.name = name
-        if not conffile: self.conffile = mmctools.getConfigFile(name)
+        self.userDefault = {}
+        self.hooks = {}
+        if not conffile:
+            self.conffile = mmctools.getConfigFile(name)
         else: self.conffile = conffile
         self.setDefault()
-        fp = file(self.conffile, "r")
-        self.readfp(fp, self.conffile)
+        fid = file(self.conffile, "r")
+        self.readfp(fid, self.conffile)
         self.readConf()
 
     def readConf(self):
         """Read the configuration file"""
-        try: self.disabled = self.getboolean("main", "disable")
-        except NoSectionError, NoOptionError: pass
-        self.userDefault = {}
+        try:
+            self.disabled = self.getboolean("main", "disable")
+        except (NoSectionError, NoOptionError):
+            pass
         if self.has_section(self.USERDEFAULT):
             for option in self.options(self.USERDEFAULT):
                 self.userDefault[option] = self.get(self.USERDEFAULT, option)
-        self.hooks = {}
         if self.has_section(self.HOOKS):
             for option in self.options(self.HOOKS):
                 self.hooks[self.name + "." + option] = self.get(self.HOOKS, option)
