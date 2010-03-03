@@ -901,13 +901,12 @@ class RpcProxy(RpcProxyI):
         loc_id = imaging_server[1].uuid
         print imaging_server[1]
         computer = {
-            'computername'          : hostname, # FIXME : what about domain ?
-            'computerdescription'   : '',
-            'computerip'            : '',
+            'computername': hostname, # FIXME : what about domain ?
+            'computerdescription': '',
+            'computerip': '',
             'computermac'           : MACAddress,
             'computernet'           : '',
-            'location_uuid'         : loc_id
-        }
+            'location_uuid'         : loc_id}
 
         uuid = None
         db_computer = ComputerManager().getComputerByMac(MACAddress)
@@ -957,7 +956,7 @@ class RpcProxy(RpcProxyI):
         """
         db = ImagingDatabase()
         if db.countImagingServerByPackageServerUUID(uuid) != 0:
-            return [False, "The UUID you try to declare (%s) already exists in the database, please check you know what you are doing."%(uuid)]
+            return [False, "The UUID you try to declare (%s) already exists in the database, please check you know what you are doing." % (uuid)]
         db.registerImagingServer(name, url, uuid)
         return [True, "Your Imaging Server has been correctly registered. You can now associate it to the correct entity in the MMC."]
 
@@ -969,7 +968,7 @@ class RpcProxy(RpcProxyI):
         computer = ComputerManager().getComputerByMac(mac)
         if not computer:
             return [False, "imaging.getComputerByMac() : I was unable to find a computer corresponding to the MAC address %s" % mac]
-        return [True, {'uuid': "UUID%s" % computer.uuid, 'mac': mac, 'shortname': computer.hostname, 'fqdn': computer.hostname}]
+        return [True, {'uuid': "UUID%s" % computer['uuid'], 'mac': mac, 'shortname': computer['hostname'], 'fqdn': computer['hostname']}]
 
     def logClientAction(self, uuid, level, phase, message):
         """
@@ -978,7 +977,7 @@ class RpcProxy(RpcProxyI):
         # TODO !!!
         return [True, True]
 
-    def imageRegister(self, imaging_server_uuid, computer_uuid, image_uuid, is_master, name, desc, path, size, creation_date, creator = 'root'):
+    def imageRegister(self, imaging_server_uuid, computer_uuid, image_uuid, is_master, name, desc, path, size, creation_date, creator='root'):
         """
         Called by the Package Server to register a new Image.
         """
