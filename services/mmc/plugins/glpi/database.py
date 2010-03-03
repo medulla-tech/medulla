@@ -56,7 +56,7 @@ class Glpi(DyngroupDatabaseHelper):
 
     def db_check(self):
         return self.database.db_check()
-        
+
     def activate(self, conffile = None):
         self.logger = logging.getLogger()
 
@@ -72,13 +72,13 @@ class Glpi(DyngroupDatabaseHelper):
         elif Glpi08().try_activation(self.config):
             self.database = Glpi08()
         else:
-            self.logger.warn("can load the apropriate backend for your version of glpi")
+            self.logger.warn("Can't load the right database backend for your version of GLPI")
             return False
 
         # activate the backend
         ret = self.database.activate(self.config)
         self.is_activated = self.database.is_activated
-        
+
         # we get all the needed methods
         methods = ['initMappers', 'getMachineUUID', 'activate', 'config', 'decode', 'doesUserHaveAccessToMachine', 'doesUserHaveAccessToMachines', \
             'getLastMachineInventoryFull', 'getLastMachineInventoryPart', 'getLocationsCount', 'getMachineIp', 'getMachineMac', 'getMachineUUID', 'getUserLocations', \
@@ -91,6 +91,6 @@ class Glpi(DyngroupDatabaseHelper):
             ]
         for i in methods:
             setattr(self, i, getattr(self.database, i))
-                    
+
         return ret
 
