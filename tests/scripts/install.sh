@@ -151,9 +151,11 @@ FLUSH PRIVILEGES
 EOF
 
 # configure base.ini
-
 sed -i "s/# \[computers\]/\[computers\]/" /etc/mmc/plugins/base.ini
 sed -i "s/# method = inventory/method = inventory/" /etc/mmc/plugins/base.ini
+
+# Configure imaging.ini
+sed -i "s/# disable = 1/disable = 0/" /etc/mmc/plugins/imaging.ini
 
 # create the temp folder for packages
 mkdir -p /tmp/package_tmp/put1/test1
