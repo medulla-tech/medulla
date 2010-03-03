@@ -23,7 +23,7 @@
 PULSE2_OWNER	:= root
 PULSE2_GROUP	:= root
 PREFIX 			:= /usr/local
-VARDIR 			:= /var/lib/pulse2
+VARDIR 			:= /var/lib/pulse2/imaging
 VARIMAGINGDIR	:= $(VARDIR)/imaging-server
 HOOKSDIR		:= $(PREFIX)/lib/pulse2/imaging-server/hooks
 SBINDIR 		:= $(PREFIX)/sbin
