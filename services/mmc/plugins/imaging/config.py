@@ -37,6 +37,8 @@ class ImagingConfig(ImagingDatabaseConfig):
     web_def_default_timeout = '60'
     web_def_default_background_uri = ''
     web_def_default_message = 'Warning ! Your PC is being backed up or restored. Do not reboot !'
+    web_def_kernel_parameters = 'quiet'
+    web_def_image_parameters = ''
 
     def init(self, name = 'imaging', conffile = None):
         self.dbsection = "database"
@@ -59,7 +61,7 @@ class ImagingConfig(ImagingDatabaseConfig):
         self.disable = self.cp.getboolean("main", "disable")
 
         if self.cp.has_section("web"):
-            for i in ('date_fmt', 'default_protocol', 'default_menu_name', 'default_timeout', 'default_background_uri', 'default_message'):
+            for i in ('date_fmt', 'default_protocol', 'default_menu_name', 'default_timeout', 'default_background_uri', 'default_message', 'kernel_parameters', 'image_parameters'):
                 full_name = "web_def_%s"%(i)
                 if self.cp.has_option("web", full_name):
                     setattr(self, full_name, self.cp.get("web", full_name))

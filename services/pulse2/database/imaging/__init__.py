@@ -382,10 +382,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return n
 
-    def getTargetsByUUID(self, ids):
-        session = create_session()
+    def getTargetsByUUID(self, ids, session = None):
+        need_to_close_session = False
+        if session == None:
+            need_to_close_session = True
+            session = create_session()
         n = session.query(Target).filter(self.target.c.uuid.in_(ids)).all()
-        session.close()
+        if need_to_close_session:
+            session.close()
         return n
 
     def __mergeTargetInMasteredOn(self, mastered_on_list):
@@ -1655,8 +1659,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         target.uuid = uuid
         target.name = name
         target.type = type
-        target.kernel_parameters = ''
-        target.image_parameters = ''
+        target.kernel_parameters = params['target_opt_kernel']
+        target.image_parameters = params['target_opt_image']
         target.fk_entity = entity_id
         target.fk_menu = menu_id
         session.save(target)
@@ -1779,6 +1783,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         menu = self.getTargetMenu(uuid, type, session)
         location_id = None
         p_id = None
+
         if not menu:
             if type == P2IT.COMPUTER:
                 profile = ComputerProfileManager().getComputersProfile(uuid)
@@ -1809,6 +1814,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         else:
             menu = self.__modifyMenu(id2uuid(menu.id), params, session)
 
+        target = None
         if not self.isTargetRegister(uuid, type, session):
             if location_id == None:
                 location = ComputerLocationManager().getMachinesLocations([uuid])
@@ -1816,6 +1822,12 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             loc = session.query(Entity).filter(self.entity.c.uuid == location_id).first()
             target = self.__createTarget(session, uuid, params['target_name'], type, loc.id, menu.id, params)
             # TODO : what do we do with target ?
+        else:
+            target = self.getTargetsByUUID([uuid], session)
+            target = target[0]
+            target.kernel_parameters = params['target_opt_kernel']
+            target.image_parameters = params['target_opt_image']
+            session.save_or_update(target)
 
         session.flush()
         session.close()
@@ -1827,7 +1839,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if type == P2IT.COMPUTER:
             # if registered, get the computer menu and finish
             if self.isTargetRegister(uuid, type, session):
-                whose = [uuid, type]
+                target = self.getTargetsByUUID([uuid])
+                whose = [uuid, type, target[0].toH()]
                 menu = self.getTargetMenu(uuid, type, session)
                 session.close()
                 return [whose, menu]
@@ -1840,7 +1853,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         # if profile is registered, get the profile menu and finish
         if uuid and self.isTargetRegister(uuid, P2IT.PROFILE, session):
-            whose = [uuid, P2IT.PROFILE]
+            target = self.getTargetsByUUID([uuid])
+            whose = [uuid, P2IT.PROFILE, target[0].toH()]
             menu = self.getTargetMenu(uuid, P2IT.PROFILE, session)
         # else get the entity menu
         else:
@@ -2104,7 +2118,7 @@ class SynchroState(DBObject):
     to_be_exported = ['id', 'label']
 
 class Target(DBObject):
-    to_be_exported = ['id', 'name', 'uuid', 'type', 'fk_entity', 'fk_menu']
+    to_be_exported = ['id', 'name', 'uuid', 'type', 'fk_entity', 'fk_menu', 'kernel_parameters', 'image_parameters']
 
 class TargetType(DBObject):
     to_be_exported = ['id', 'label']

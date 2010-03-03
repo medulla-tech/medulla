@@ -177,6 +177,12 @@ class RpcProxy(RpcProxyI):
     def get_web_def_default_protocol(self):
         return xmlrpcCleanup(ImagingConfig().web_def_default_protocol)
 
+    def get_web_def_kernel_parameters(self):
+        return xmlrpcCleanup(ImagingConfig().web_def_kernel_parameters)
+
+    def get_web_def_image_parameters(self):
+        return xmlrpcCleanup(ImagingConfig().web_def_image_parameters)
+
     ###########################################################
     ###### BOOT MENU (image+boot service on the target)
     def __convertType(self, target_type):

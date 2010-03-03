@@ -76,6 +76,14 @@ function web_def_menu_timeout() {
     #return __web_def_in_session("menu_timeout");
 }
 
+function web_def_kernel_parameters() {
+    return __web_def_in_session("kernel_parameters");
+}
+
+function web_def_image_parameters() {
+    return __web_def_in_session("image_parameters");
+}
+
 function web_def_menu_message() {
     #return __web_def_in_session("menu_message");
     return "Warning...";

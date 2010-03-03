@@ -49,6 +49,8 @@ if (isset($_POST["bvalid"])) {
     $params['protocol'] = $_POST['rest_type'];
     $params['target_name'] = $target_name;
     $params['target_uuid'] = $target_uuid;
+    $params['target_opt_kernel'] = $_POST['target_opt_kernel'];
+    $params['target_opt_image'] = $_POST['target_opt_image'];
 
     if ($type == '') {
         $ret = xmlrpc_setMyMenuComputer($target_uuid, $params);
@@ -63,7 +65,7 @@ if (isset($_POST["bvalid"])) {
     unset($params['default_name']);
     unset($params['background_uri']);
     $params['hostname'] = $params['target_name'];
-    // goto images list 
+    // goto images list
     if ($ret[0] and !isXMLRPCError()) {
         $str = sprintf(_T("Boot menu is created for <strong>%s</strong>.", "imaging"), $target_name);
         new NotifyWidgetSuccess($str);
@@ -106,34 +108,38 @@ if (!$whose && !$menu) {
     $f->add(new TitleElement(sprintf(_T("You must define a default menu for the entity before trying to set a menu to that %s.", "imaging"), ($type==''?'computer':'profile')), 3));
     $f->display();
 } else {
+    $target = null;
     if (!$whose) {
         $f->add(new TitleElement(sprintf(_T("The default values displayed here come from this %s's entity default menu.", "imaging"), ($type==''?'computer':'profile')), 4));
-    } elseif ($whose[1] == 2 && $type == '') { #PROFILE
-        $f->add(new TitleElement(sprintf(_T("The default values displayed here come from this %s's profile menu.", "imaging"), ($type==''?'computer':'profile')), 4));
+    } else {
+        $target = $whose[2];
+        if ($whose[1] == 2 && $type == '') { #PROFILE
+            $f->add(new TitleElement(sprintf(_T("The default values displayed here come from this %s's profile menu.", "imaging"), ($type==''?'computer':'profile')), 4));
+        }
     }
-    
+
     // form preseeding
     $f->add(new HiddenTpl("target_uuid"),                    array("value" => $target_uuid,            "hide" => True));
     $f->add(new HiddenTpl("target_name"),                    array("value" => $target_name,            "hide" => True));
     $f->add(new HiddenTpl("type"),                           array("value" => $type,                   "hide" => True));
-    
-    
+
+
     $f->add(new TitleElement(sprintf(_T("%s menu parameters", "imaging"), ($type=='' ? _T('Computer', 'imaging') : _T('Profile', 'imaging') ))));
     $f->push(new Table());
-    
+
     $f->add(
         new TrFormElement(_T('Default menu label', 'imaging'),
         new InputTpl("default_m_label")), array("value" => $menu['default_name'])
     );
     $f->pop();
-    
+
     $f->add(new TitleElement(_T("Restoration options", "imaging")));
     $f->push(new Table());
     $possible_protocols = web_def_possible_protocols();
-    $default_protocol = web_def_default_protocol(); 
+    $default_protocol = web_def_default_protocol();
     $protocols_choices = array();
     $protocols_values = array();
-    
+
     /* translate possibles protocols */
     _T('nfs', 'imaging');
     _T('tftp', 'imaging');
@@ -150,9 +156,9 @@ if (!$whose && !$menu) {
             $protocols_values[$p['imaging_uuid']] = $p['imaging_uuid'];
         }
     }
-    
+
     $rest_type = new RadioTpl("rest_type");
-    
+
     $rest_type->setChoices($protocols_choices);
     $rest_type->setValues($protocols_values);
     $rest_type->setSelected($rest_selected);
@@ -164,7 +170,7 @@ if (!$whose && !$menu) {
         new InputTpl("rest_wait")), array("value" => $menu['timeout'])
     );
     $f->pop();
-    
+
     $f->add(new TitleElement(_T("Boot options", "imaging")));
     $f->push(new Table());
     $f->add(
@@ -175,20 +181,32 @@ if (!$whose && !$menu) {
         new TrFormElement(_T("Message displayed during backup/restoration", "imaging"),
         new TextareaTpl("boot_msg")), array("value" => $menu['message']) //"Warning ! Your PC is being backed up or restored. Do not reboot !")
     );
-    $f->add(
+/*    $f->add(
         new TrFormElement(_T("Keyboard mapping (empty/fr)", "imaging"),
         new InputTpl("boot_keyboard")), array("value" => "")
-    );
+    ); */
     $f->pop();
-    
-    $f->add(new TitleElement(_T("Administration options", "imaging")));
+
+    /* $f->add(new TitleElement(_T("Administration options", "imaging")));
     $f->push(new Table());
     $f->add(
         new TrFormElement(_T("Password for adding a new client", "imaging"),
         new InputTpl("misc_passwd")), array("value" => "")
     );
+    $f->pop();*/
+
+    $f->add(new TitleElement(_T("Target options", "imaging")));
+    $f->push(new Table());
+    $f->add(
+        new TrFormElement(_T("Kernel parameters", "imaging"),
+        new InputTpl("target_opt_kernel")), array("value" => ($target != null?$target['kernel_parameters']:web_def_kernel_parameters()))
+    );
+    $f->add(
+        new TrFormElement(_T("Image parameters", "imaging"),
+        new InputTpl("target_opt_image")), array("value" => ($target != null?$target['image_parameters']:web_def_image_parameters()))
+    );
     $f->pop();
-    
+
     $f->addButton("bvalid", _T("Validate"));
     $f->pop();
     $f->display();
