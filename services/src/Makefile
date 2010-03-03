@@ -19,8 +19,15 @@
 # along with Pulse 2. If not, see <http://www.gnu.org/licenses/>.
 #
 
-CFLAGS=-O2 -Wall
+CFLAGS=-O2 -Wall -Wextra -std=gnu99
 SRC = dictionary.c iniparser.c pulse2-imaging-server.c strlib.c
+
+all: pulse2-imaging-server
+
+.PHONY: check-syntax
+
+check-syntax:
+	$(CC) $(CFLAGS) -pedantic -fsyntax-only $(SRC)
 
 pulse2-imaging-server: $(SRC)
 
