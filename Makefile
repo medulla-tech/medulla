@@ -131,7 +131,7 @@ install: build_mo
 	@echo "Install additionnal tools in $(DESTDIR)$(SBINDIR)"
 	$(INSTALL) $(SBINFILES) -m 755 -o root -g root $(DESTDIR)$(SBINDIR)
 
-	$(MAKE) -C services PREFIX=$(PREFIX)
+	$(MAKE) -C services install PREFIX=$(PREFIX)
 
 include common.mk
 
