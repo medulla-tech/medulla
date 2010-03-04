@@ -47,7 +47,7 @@ class GlpiComputers(ComputerI):
             filt['ctxlocation'] = location
         except exceptions.AttributeError:
             pass
-            
+
         try:
             return self.glpi.getComputer(ctx, filt)
         except Exception, e:
@@ -59,13 +59,22 @@ class GlpiComputers(ComputerI):
 
     def getComputersNetwork(self, ctx, params):
         return self.glpi.getComputersList(ctx, {'uuid' : params['uuids'] }).values()
-    
+
     def getMachineMac(self, ctx, params):
         return self.glpi.getMachineMac(params['uuid'])
 
     def getMachineIp(self, ctx, filt):
         return self.glpi.getMachineIp(filt['uuid'])
-        
+
+    def getMachineHostname(self, ctx, filt = None):
+        machines = self.glpi.getRestrictedComputersListLen(ctx, filt)
+        ret = []
+        for m in machines:
+            ret.append(m.toH())
+        if len(ret) == 1:
+            return ret[0]
+        return ret
+
     def getComputersList(self, ctx, filt = None):
         """
         Return a list of computers
@@ -74,7 +83,7 @@ class GlpiComputers(ComputerI):
         @type filter: str
 
         @return: LDAP results
-        @rtype: 
+        @rtype:
         """
         if filt == None or filt == '':
             filt = {}
@@ -86,7 +95,7 @@ class GlpiComputers(ComputerI):
             filt['ctxlocation'] = location
         except exceptions.AttributeError:
             pass
-            
+
         return self.glpi.getComputersList(ctx, filt)
 
     def getRestrictedComputersListLen(self, ctx, filt = None):
@@ -101,7 +110,7 @@ class GlpiComputers(ComputerI):
         except exceptions.AttributeError:
             pass
         return self.glpi.getRestrictedComputersListLen(ctx, filt)
-                    
+
     def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = None, advanced = True, justId = False, toH = False):
         if filt == None or filt == '':
             filt = {}
@@ -130,20 +139,20 @@ class GlpiComputers(ComputerI):
 
     def canAddComputer(self):
         return False
-        
+
     def addComputer(self, ctx, params):
         """
         Add a computer in the main computer list
-        
+
         @param name: name of the computer. It should be a fqdn
         @type name: str
-        
+
         @param comment: a comment for the computer list
         @type comment: str
-            
+
         @return: the machine uuuid
         @rtype: str
-        """         
+        """
         #name = params["computername"]
         #comment = params["computerdescription"].encode("utf-8")
         #uuid = str(uuid1())
@@ -163,4 +172,4 @@ class GlpiComputers(ComputerI):
 
     def getComputerByMac(self, mac):
         return self.glpi.getMachineByMacAddress('imaging_module', mac)
-            
+

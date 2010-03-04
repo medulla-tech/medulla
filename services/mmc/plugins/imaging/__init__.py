@@ -631,32 +631,91 @@ class RpcProxy(RpcProxyI):
         return menu
 
     def __generateMenus(self, logger, db, uuids, target_type):
+        # WIP
         # get target location
-        locations = ComputerLocationManager().getMachinesLocations(uuids)
-        if len(locations.keys()) != len(uuids):
-            # do fail
-            logger.error("couldn't get the target entity for %s"%(str(uuids)))
         distinct_loc = {}
-        h_pis = {}
+        distinct_loc_own_menu = {}
+        if target_type == P2IT.PROFILE:
+            pid = uuids[0]
+            uuids = map(lambda c: c.uuid, ComputerProfileManager().getProfileContent(pid))
 
-        targets = db.getTargetsByUUID(uuids)
-        h_targets = {}
-        for target in targets:
-            h_targets[target.uuid] = target.toH()
+            # remove the computers that already have their own menu
+            own_menu_uuids = []
+            registered = db.isTargetRegister(uuids, P2IT.COMPUTER)
+            uuids = []
+            for uuid in registered:
+                if registered[uuid]:
+                    own_menu_uuids.append(uuid)
+                else:
+                    uuids.append(uuid)
+            distinct_loc_own_menu = self.__generateMenus(logger, db, own_menu_uuids, P2IT.COMPUTER)
 
-        for m_uuid in locations:
-            loc_uuid = "UUID%s"%locations[m_uuid]['id']
-            menu_items = db.getBootMenu(m_uuid, 0, -1, '')
-            menu = db.getTargetsMenuTUUID(m_uuid)
+            # get the locations for the remaining
+            locations = ComputerLocationManager().getMachinesLocations(uuids)
+            if len(locations.keys()) != len(uuids):
+                # do fail
+                logger.error("couldn't get the target entity for %s"%(str(uuids)))
+
+            # get all the targets
+            ptarget = db.getTargetsByUUID([pid])
+            ptarget = ptarget[0]
+            targets = db.getTargetsByUUID(uuids)
+            # will get nothing that way, we need to ask the backend level
+            # what is needed :
+            #  {u'image_parameters': u'', 'fk_entity': 2L, u'name': u'131031', u'kernel_parameters': u'quiet', 'imaging_uuid': 'UUID2', 'fk_menu': 5L, u'type': 1L, u'id': 2L, u'uuid': u'UUID5481'},
+            h_targets = {}
+            for uuid in uuids:
+                h_targets[uuid] = {
+                    u'image_parameters':ptarget.image_parameters,
+                    u'kernel_parameters':ptarget.kernel_parameters,
+                    u'type':P2IT.COMPUTER,
+                    u'name':'',
+                    u'uuid':uuid,
+                }
+
+            # get the profile menu
+            menu_items = db.getBootMenu(pid, 0, -1, '')
+            menu = db.getTargetsMenuTUUID(pid)
             menu = menu.toH()
-            menu['target'] = h_targets[m_uuid]
-            menu, menu_items, h_pis = self.__generateMenusContent(menu, menu_items, loc_uuid, m_uuid, h_pis)
+            menu, menu_items, h_pis = self.__generateMenusContent(menu, menu_items, None)
 
-            if distinct_loc.has_key(loc_uuid):
-                distinct_loc[loc_uuid][1][m_uuid] = menu
-            else:
-                url = self.__chooseImagingApiUrl(loc_uuid)
-                distinct_loc[loc_uuid] = [url, {m_uuid:menu}]
+            # fill distinct_loc with the computers uuids and the appropriate menu
+            for m_uuid in locations:
+                loc_uuid = "UUID%s"%locations[m_uuid]['id']
+
+                if distinct_loc.has_key(loc_uuid):
+                    distinct_loc[loc_uuid][1][m_uuid] = menu.copy()
+                else:
+                    url = self.__chooseImagingApiUrl(loc_uuid)
+                    distinct_loc[loc_uuid] = [url, {m_uuid:menu.copy()}]
+
+                distinct_loc[loc_uuid][1][m_uuid]['target'] = h_targets[m_uuid]
+
+        else: # P2IT.COMPUTER
+            locations = ComputerLocationManager().getMachinesLocations(uuids)
+            if len(locations.keys()) != len(uuids):
+                # do fail
+                logger.error("couldn't get the target entity for %s"%(str(uuids)))
+            h_pis = {}
+
+            targets = db.getTargetsByUUID(uuids)
+            h_targets = {}
+            for target in targets:
+                h_targets[target.uuid] = target.toH()
+
+            for m_uuid in locations:
+                loc_uuid = "UUID%s"%locations[m_uuid]['id']
+                menu_items = db.getBootMenu(m_uuid, 0, -1, '')
+                menu = db.getTargetsMenuTUUID(m_uuid)
+                menu = menu.toH()
+                menu['target'] = h_targets[m_uuid]
+                menu, menu_items, h_pis = self.__generateMenusContent(menu, menu_items, loc_uuid, m_uuid, h_pis)
+
+                if distinct_loc.has_key(loc_uuid):
+                    distinct_loc[loc_uuid][1][m_uuid] = menu
+                else:
+                    url = self.__chooseImagingApiUrl(loc_uuid)
+                    distinct_loc[loc_uuid] = [url, {m_uuid:menu}]
 
         ims = h_pis.keys()
         a_pis = db.getImagesPostInstallScript(ims)
@@ -670,6 +729,14 @@ class RpcProxy(RpcProxyI):
             a_targets = h_pis[im.id]
             for loc_uuid, t_uuid, order in a_targets:
                 distinct_loc[loc_uuid][1][t_uuid]['images'][order]['post_install_script'] = pis
+        if target_type == P2IT.PROFILE:
+            # merge distinct_loc and distinct_loc_own_menu
+            for loc_uuid in distinct_loc_own_menu:
+                if not distinct_loc.has_key(loc_uuid):
+                    url = self.__chooseImagingApiUrl(loc_uuid)
+                    distinct_loc[loc_uuid] = [url, {}]
+                for m_uuid in distinct_loc_own_menu[loc_uuid][1]:
+                    distinct_loc[loc_uuid][1][m_uuid] = distinct_loc_own_menu[loc_uuid][1][m_uuid]
         return distinct_loc
 
     def __synchroLocation(self, loc_uuid):
@@ -799,9 +866,9 @@ class RpcProxy(RpcProxyI):
         db = ImagingDatabase()
         isRegistered = db.isTargetRegister(uuid, target_type)
         try:
-            ret = db.setMyMenuTarget(uuid, params, target_type)
+            ret, target = db.setMyMenuTarget(uuid, params, target_type)
         except Exception, e:
-            return [False, e]
+            return [False, "setMyMenuTarget : %s"%(str(e))]
 
         #WIP
         if not isRegistered:
@@ -820,7 +887,7 @@ class RpcProxy(RpcProxyI):
                     imagingData = {'menu':menu, 'uuid':uuid}
                     ctx = self.currentContext
                     MACAddress = ComputerManager().getMachineMac(ctx, {'uuid':uuid})
-                    def treatRegister(result, location = location, uuid = uuid):
+                    def treatRegister(result, location = location, uuid = uuid, db = db):
                         if result:
                             db.changeTargetsSynchroState([uuid], target_type, P2ISS.DONE)
                             return [True]
@@ -835,9 +902,82 @@ class RpcProxy(RpcProxyI):
                 else:
                     logger.error("couldn't initialize the ImagingApi to %s"%(url))
                     return [False, ""]
-            else:
-                pass
-                #locations = db.getTargetsEntity([uuid])
+            elif target_type == P2IT.PROFILE:
+                pid = uuid
+                defer_list = []
+                uuids = []
+                for loc_uuid in distinct_loc:
+                    uuids.extend(distinct_loc[loc_uuid][1].keys())
+                ctx = self.currentContext
+                hostnames = ComputerManager().getMachineHostname(ctx, {'uuids':uuids})
+                macaddress = ComputerManager().getMachineMac(ctx, {'uuids':uuids})
+                h_hostnames = {}
+                for computer in hostnames:
+                    h_hostnames[computer['uuid']] = computer['hostname']
+                params['hostnames'] = h_hostnames
+                h_macaddress = {}
+                index = 0
+                for computer in macaddress:
+                    h_macaddress[uuids[index]] = computer[0]
+                    index += 1
+
+                try:
+                    params['target_name'] = '' # put the real name!
+                    ret = db.setProfileMenuTarget(uuids, pid, params)
+                except Exception, e:
+                    return [False, "setProfileMenuTarget : %s"%(str(e))]
+
+                for loc_uuid in distinct_loc:
+                    url = distinct_loc[loc_uuid][0]
+                    menus = distinct_loc[loc_uuid][1]
+                    # to do again when computerRegister is plural
+                    i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
+                    if i != None:
+                        dl = []
+                        computers = []
+                        for uuid in menus:
+                            if db.isTargetRegister(uuid, P2IT.COMPUTER):
+                                logger.debug("computer %s is already registered as a P2IT.COMPUTER"%(uuid))
+                                continue
+                            menu = menus[uuid]
+                            imagingData = {'menu':{uuid:menu}, 'uuid':uuid}
+                            computers.append((h_hostnames[uuid], h_macaddress[uuid], imagingData))
+
+                        def treatRegister(results, uuids = uuids):
+                            failures = uuids
+                            for l_uuid in results:
+                                uuids.remove(l_uuid)
+                            return failures
+
+                        d = i.computersRegister(computers)
+                        d.addCallback(treatRegister)
+                        defer_list.append(d)
+                    else:
+                        logger.error("couldn't initialize the ImagingApi to %s"%(url))
+                        return [False, ""]
+
+                def sendResult(results, pid = pid, db = db):
+                    failures = []
+                    for fail in results:
+                        failures.extend(fail[1])
+                    if len(failures) == 0:
+                        db.changeTargetsSynchroState([pid], P2IT.PROFILE, P2ISS.DONE)
+                        return [True]
+                    db.delProfileMenuTarget(failures)
+                    db.changeTargetsSynchroState([pid], P2IT.PROFILE, P2ISS.INIT_ERROR)
+                    return [False, failures]
+
+                if len(defer_list) == 0:
+                    if len(uuids) == 0: # the profile is empty ...
+                        db.changeTargetsSynchroState([pid], P2IT.PROFILE, P2ISS.DONE)
+                        return [True]
+                    else: # the profile wasn't empty => we fail to treat it
+                        db.changeTargetsSynchroState([pid], P2IT.PROFILE, P2ISS.INIT_ERROR)
+                        return [False]
+
+                defer_list = defer.DeferredList(defer_list)
+                defer_list.addCallback(sendResult)
+                return defer_list
 
         return [True]
 
@@ -912,7 +1052,6 @@ class RpcProxy(RpcProxyI):
             return [False, "Failed to find the imaging server %s" % imaging_server_uuid]
 
         loc_id = imaging_server[1].uuid
-        print imaging_server[1]
         computer = {
             'computername': hostname, # FIXME : what about domain ?
             'computerdescription': '',
