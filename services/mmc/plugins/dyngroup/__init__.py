@@ -229,15 +229,27 @@ class RpcProxy(RpcProxyI):
 
     def reload_group(self, id):
         ctx = self.currentContext
-        return xmlrpcCleanup(DyngroupDatabase().reload_group(ctx, id, queryManager))
+        ret = DyngroupDatabase().reload_group(ctx, id, queryManager)
+        # WIP : call ComputerProfileManager to add machines
+        if self.isprofile(id):
+            ComputerProfileManager().addComputersToProfile([1, 2], id) # fake!
+        return xmlrpcCleanup(ret)
 
     def addmembers_to_group(self, id, uuids):
         ctx = self.currentContext
-        return xmlrpcCleanup(DyngroupDatabase().addmembers_to_group(ctx, id, uuids))
+        ret = DyngroupDatabase().addmembers_to_group(ctx, id, uuids)
+        # WIP : call ComputerProfileManager to add machines
+        if len(uuids) != 0 and self.isprofile(id):
+            ComputerProfileManager().addComputersToProfile(uuids, id)
+        return xmlrpcCleanup(ret)
 
     def delmembers_to_group(self, id, uuids):
         ctx = self.currentContext
-        return xmlrpcCleanup(DyngroupDatabase().delmembers_to_group(ctx, id, uuids))
+        ret = DyngroupDatabase().delmembers_to_group(ctx, id, uuids)
+        # WIP : call ComputerProfileManager to add machines
+        if len(uuids) != 0 and self.isprofile(id):
+            ComputerProfileManager().delComputersFromProfile(uuids, id)
+        return xmlrpcCleanup(ret)
 
     def importmembers_to_group(self, id, elt, values):
         ctx = self.currentContext
@@ -346,15 +358,15 @@ class RpcProxy(RpcProxyI):
     def update_machine_cache(self):
         ctx = self.currentContext
         dyndatabase = DyngroupDatabase()
-    
+
         cache = dyndatabase.getAllMachinesUuid()
         machines = ComputerManager().getRestrictedComputersList(ctx, 0, -1, {'uuids':cache.keys()}, False, False, True)
-    
+
         need_update = {}
         for m in machines:
             if m['hostname'] != cache[m['uuid']]:
                 need_update[m['uuid']] = m['hostname']
-    
+
         dyndatabase.updateNewNames(need_update)
         return len(need_update)
 

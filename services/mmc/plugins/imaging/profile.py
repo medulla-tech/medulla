@@ -21,27 +21,18 @@
 # MA 02110-1301, USA.
 
 """
-Dyngroup implementation of the profile manager interface
+Imaging implementation of the profile manager interface
+it only implement the client part
 """
 
 from pulse2.managers.profile import ComputerProfileI
-from mmc.plugins.dyngroup.database import DyngroupDatabase
-from mmc.plugins.dyngroup.qmanager import QueryManager
+from pulse2.database.imaging import ImagingDatabase
+from pulse2.database.imaging.types import P2IT, P2ISS
 
-class DyngroupProfile(ComputerProfileI):
-    def getProfileByUUID(self, uuid):
-        return DyngroupDatabase().getProfileByUUID(uuid)
-
-    def getComputersProfile(self, uuid):
-        return DyngroupDatabase().getComputersProfile(uuid)
-
-    def getProfileContent(self, uuid):
-        return DyngroupDatabase().getProfileContent(uuid)
-
+class ImagingProfile(ComputerProfileI):
     def addComputersToProfile(self, computers_UUID, profile_UUID):
-        pass
+        ImagingDatabase().changeTargetsSynchroState([profile_UUID], P2IT.PROFILE, P2ISS.TODO)
 
     def delComputersFromProfile(self, computers_UUID, profile_UUID):
-        pass
+        ImagingDatabase().changeTargetsSynchroState([profile_UUID], P2IT.PROFILE, P2ISS.TODO)
 
-    # TODO need to be completed

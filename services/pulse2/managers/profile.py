@@ -59,7 +59,7 @@ class ComputerProfileManager(Singleton):
     def getProfileByUUID(self, uuid):
         klass = self.components[self.main]
         return klass().getProfileByUUID(uuid)
-    
+
     def getComputersProfile(self, uuid):
         klass = self.components[self.main]
         return klass().getComputersProfile(uuid)
@@ -67,13 +67,25 @@ class ComputerProfileManager(Singleton):
     def doesProfileExistsByUUID(self, uuid):
         pass
 
-    def addMachineToProfile(self, machine_UUID, profile_UUID):
-        pass
+    def addComputersToProfile(self, computers_UUID, profile_UUID):
+        ret = True
+        for mod in self.components:
+            klass = self.components[mod]
+            if hasattr(klass, 'addComputersToProfile'):
+                r = klass().addComputersToProfile(computers_UUID, profile_UUID)
+                ret = ret and r
+        return ret
 
-    def delMachineFromProfile(self, machine_UUID, profile_UUID):
-        pass
+    def delComputersFromProfile(self, computers_UUID, profile_UUID):
+        ret = True
+        for mod in self.components:
+            klass = self.components[mod]
+            if hasattr(klass, 'delComputersFromProfile'):
+                r = klass().delComputersFromProfile(computers_UUID, profile_UUID)
+                ret = ret and r
+        return ret
 
-    def isMachineInProfile(self, machine_UUID, profile_UUID):
+    def isComputerInProfile(self, computer_UUID, profile_UUID):
         pass
 
     def getProfileContent(self, uuid):
@@ -109,13 +121,13 @@ class ComputerProfileI:
     def doesProfileExistsByUUID(self, uuid):
         pass
 
-    def addMachineToProfile(self, machine_UUID, profile_UUID):
+    def addComputersToProfile(self, computers_UUID, profile_UUID):
         pass
 
-    def delMachineFromProfile(self, machine_UUID, profile_UUID):
+    def delComputersFromProfile(self, computers_UUID, profile_UUID):
         pass
 
-    def isMachineInProfile(self, machine_UUID, profile_UUID):
+    def isComputerInProfile(self, computer_UUID, profile_UUID):
         pass
 
     def getProfileContent(self, uuid):
