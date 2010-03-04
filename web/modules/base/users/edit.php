@@ -94,10 +94,10 @@ if (isset($_POST["buser"])) {
         $desactive = false;
     }
     
-    if (strlen($cn) == 0) {
-        $error.= _("The common name field can't be empty.")." <br/>";
-        setFormError("cn");
-    }
+#    if (strlen($cn) == 0) {
+#        $error.= _("The common name field can't be empty.")." <br/>";
+#        setFormError("cn");
+#    }
 
     if ($pass != $confpass) {
         $error.= _("The confirmation password does not match the new password.")." <br/>";
@@ -132,7 +132,16 @@ if (isset($_POST["buser"])) {
                 setFormError("pass");
             } else {  //if no problem
                 $createHomeDir = isset($_POST["createHomeDir"]);                
-                $result = add_user($nlogin, $pass, $firstname, $name, $homedir, $createHomeDir, $_POST["primary_autocomplete"]);
+                $ret = add_user($nlogin, $pass, $firstname, $name, $homedir, $createHomeDir, $_POST["primary_autocomplete"]);
+                $result = $ret["info"];
+                # password doesn't match the pwd policies
+                # set randomSmbPwd for samba plugin
+                if($ret["code"] == 5) {
+                    $FH->setValue("randomSmbPwd", 1);
+                }
+                else {
+                    $FH->setValue("randomSmbPwd", 0);
+                }
                 if (strlen($_POST['mail']) > 0) 
                     changeUserAttributes($nlogin, "mail", $_POST["mail"]);
 		        if (strlen($loginShell) > 0) 
@@ -235,19 +244,10 @@ if (!empty($_GET["user"])) {
             if($FH->isUpdated('firstname') or $FH->isUpdated('name'))
                 change_user_main_attr($_GET["user"], $nlogin, $firstname, $name);
 
-            $result.=_("Attributes updated.")."<br />";
-
             if (!$FH->getPostValue("groupsselected")) $FH->setPostValue("groupsselected", array());
             
             // Create/modify user in all enabled MMC modules
             callPluginFunction("changeUser", array($FH));
-
-            // If we change the password of an already existing user
-            if (($_POST["pass"] == $_POST["confpass"]) && ($_POST["pass"] != "") && ($_GET["action"] != "add")) {
-                callPluginFunction("changeUserPasswd", array(array($_GET["user"], prepare_string($_POST["pass"]))));
-                //update result display
-                $result.=_("Password updated.")."<br />";
-            }
 
             /* Primary group management */
             $primaryGroup = getUserPrimaryGroup($_POST['nlogin']);
@@ -267,18 +267,38 @@ if (!empty($_GET["user"])) {
             foreach (array_diff($new, $old) as $group) {
                 add_member($group, $_POST['nlogin']);
                 callPluginFunction("addUserToGroup", array($_POST['nlogin'], $group));
-            }    
+            }
+            
+            // If we change the password of an already existing user
+            if (($_POST["pass"] == $_POST["confpass"]) && ($_POST["pass"] != "") && ($_GET["action"] != "add")) {
+                $ret = callPluginFunction("changeUserPasswd", array(array($_GET["user"], prepare_string($_POST["pass"]))));
+                if(isXMLRPCError()) {
+                    foreach($ret as $info) {
+                        $result .= "<strong>"._("Password not updated");
+                        $result .= " "._($info)."</strong><br/>";
+                    }
+                    # set errorStatus to 0 in order to make next xmlcalls
+                    global $errorStatus;
+                    $errorStatus = 0;
+                } 
+                else {
+                    //update result display
+                    $result .= _("Password updated.")."<br />";
+                }
+            }                
+            $result.=_("Attributes updated.")."<br />";
         }
     }    
     $detailArr = getDetailedUser($_GET["user"]);
     $enabled = isEnabled($_GET["user"]);
 }
 
-if (strstr($_SERVER['HTTP_REFERER'],'module=base&submod=users&action=add') && isset($_GET["user"])) {
+// message is set from add_user xml call, line 135
+/*if (strstr($_SERVER['HTTP_REFERER'],'module=base&submod=users&action=add') && isset($_GET["user"])) {
     if (!isXMLRPCError()) {
         $result = sprintf(_("User %s has been successfully created."), $_GET["user"]);
     }
-}
+}*/
 
 // get user info
 if(isset($detailArr["uid"][0])) { $user_uid = $detailArr["uid"][0]; } else { $user_uid = ""; }
@@ -308,7 +328,6 @@ if (isset($_SESSION["addusererror"])) {
     new NotifyWidgetWarning("The user has not been completely created because of the following error(s):" . "<br/><br/>" .  $_SESSION["addusererror"]);
     unset($_SESSION["addusererror"]);
 }
-
 
 //title differ with action
 if ($_GET["action"]=="add") {

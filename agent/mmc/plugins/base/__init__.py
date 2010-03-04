@@ -886,7 +886,12 @@ class LdapUserGroupControl:
             # Write user entry into the directory
             self.l.add_s(ident, attributes)
             # Set user password
-            self.changeUserPasswd(uid, password)
+            pwd_change = True
+            try:
+                self.changeUserPasswd(uid, password)
+            # continue user creation when password fails pwd policies
+            except ldap.CONSTRAINT_VIOLATION:
+                pwd_change = False
             # Add user to her/his group primary group
             self.addUserToGroup(primaryGroup, uid)
         except ldap.LDAPError, error:
@@ -910,7 +915,12 @@ class LdapUserGroupControl:
         # Run addUser hook
         self.runHook("base.adduser", uid, password)
         r.commit()
-        return 0
+        # password has been changed, user is created
+        if pwd_change:
+            return 0
+        # password change failed, user is created
+        else:
+            return 5
 
     def isAuthorizedHome(self,home):
         for ahome in self.authorizedHomeDir:
@@ -1165,10 +1175,14 @@ class LdapUserGroupControl:
         userdn = self.searchUserDN(uid)
         r = AF().log(PLUGIN_NAME, AA.BASE_MOD_USER_PASSWORD, [(userdn, AT.USER)])
         if self.config.passwordscheme == "passmod":
-            self.l.passwd_s(userdn, None, str(passwd))
+            try:
+                self.l.passwd_s(userdn, None, str(passwd))
+            except ldap.CONSTRAINT_VIOLATION:
+                raise Exception("Password fails quality checking policy")
         else:
             userpassword = self._generatePassword(passwd)
             self.l.modify_s(userdn, [(ldap.MOD_REPLACE, "userPassword", userpassword)])
+            
         # Run ChangeUserPassword hook
         self.runHook("base.changeuserpassword", uid, passwd)
         r.commit()

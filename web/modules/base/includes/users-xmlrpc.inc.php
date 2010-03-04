@@ -87,8 +87,15 @@ function get_users_detailed(&$error, $filter = null, $start = null, $end = null)
 function add_user($login, $pass, $firstname, $name, $homedir, $createhomedir, $primaryGroup = "")
 {
     $param = array($login, prepare_string($pass), $firstname, $name, $homedir, $createhomedir, $primaryGroup);
-    $ret = xmlCall("base.createUser", $param);    
-    return sprintf(_("user %s created<br />"), $login);
+    $ret = xmlCall("base.createUser", $param);
+    if($ret == 5) {
+        $msg = sprintf(_("User %s created but password is not valid regarding your password policies.<br/><strong>You must change the user password.</strong><br />"), $login);
+        return array("code" => $ret, "info" => $msg);
+    }
+    else {
+        $msg = sprintf(_("User %s successfully created<br />"), $login);
+        return array("code" => $ret, "info" => $msg);
+    }
 }
 
 function del_user($login, $files)
