@@ -42,7 +42,7 @@ if (isset($_POST['bsync'])) {
     } else {
         $ret = xmlrpc_synchroProfile($params['gid']);
     }
-    // goto images list 
+    // goto images list
     if ($ret[0] and !isXMLRPCError()) {
         $str = sprintf(_T("Synchronization launched on this target.", "imaging"), $label);
         new NotifyWidgetSuccess($str);
@@ -65,7 +65,7 @@ if (isset($params['uuid'])) {
     $params['hostname'] = $hostname;
 
     $ret = xmlrpc_getComputerSynchroState($params['target_uuid']);
-   
+
     if ($ret['id'] == $SYNCHROSTATE_RUNNING || isset($_POST['bsync'])) {
         $p = new PageGenerator(sprintf(_T("%s's computer imaging", 'imaging'), $hostname));
         $sidemenu->forceActiveItem("index");
@@ -86,18 +86,18 @@ if (isset($params['uuid'])) {
         $p->setSideMenu($sidemenu);
         global $stateid;
         $stateid = $ret['id'];
-        $p->addTop(sprintf(_T("%s's computer imaging", 'imaging'), $hostname), 
+        $p->addTop(sprintf(_T("%s's computer imaging", 'imaging'), $hostname),
             "modules/imaging/imaging/header.php");
 
-        $p->addTab("tabbootmenu", _T("Boot menu", 'imaging'), _T("Current boot menu", "imaging"), 
+        $p->addTab("tabbootmenu", _T("Boot menu", 'imaging'), _T("Current boot menu", "imaging"),
             "modules/imaging/imaging/bootmenu.php", $params);
-        $p->addTab("tabimages", _T("Images and Masters", 'imaging'), "", 
+        $p->addTab("tabimages", _T("Images and Masters", 'imaging'), "",
             "modules/imaging/imaging/images.php", $params);
-        $p->addTab("tabservices", _T("Boot services", 'imaging'), _T("Available boot menu services", "imaging"), 
+        $p->addTab("tabservices", _T("Boot services", 'imaging'), _T("Available boot menu services", "imaging"),
             "modules/imaging/imaging/services.php", $params);
-        $p->addTab("tablogs", _T("Imaging log", 'imaging'), "", 
+        $p->addTab("tablogs", _T("Imaging log", 'imaging'), "",
             "modules/imaging/imaging/logs.php", $params);
-        $p->addTab("tabconfigure", _T("Menu configuration", 'imaging'), "", 
+        $p->addTab("tabconfigure", _T("Menu configuration", 'imaging'), "",
             "modules/imaging/imaging/configure.php", $params);
         $p->display();
     }
@@ -115,7 +115,7 @@ if (isset($params['uuid'])) {
     if ($group->exists == False) {
         require("modules/msc/includes/widgets.inc.php");
         # TODO need to use a generic widget!
-        
+
         $msc_host = new RenderedMSCGroupDontExists($_GET['gid']);
         $msc_host->headerDisplay();
     } else {
@@ -126,7 +126,8 @@ if (isset($params['uuid'])) {
             $sidemenu->forceActiveItem("index");
             $p->setSideMenu($sidemenu);
             $p->display();
-            print _T("The synchro is running, please wait.", "imaging");
+            $a_href_open = "<a href=''>";
+            print sprintf(_T("The synchro is running, please wait or reload the page %shere%s", "imaging"), $a_href_open, '</a>');
         } else {
             # do nothing special if $SYNCHROSTATE_DONE
             $p = new TabbedPageGenerator();
@@ -134,31 +135,31 @@ if (isset($params['uuid'])) {
             $p->setSideMenu($sidemenu);
             global $stateid;
             $stateid = $ret['id'];
-    
+
             $params['groupname'] = $group->getName();
-            $p->addTop(sprintf(_T("%s's profile imaging", 'imaging'), $group->getName()), 
+            $p->addTop(sprintf(_T("%s's profile imaging", 'imaging'), $group->getName()),
                 "modules/imaging/imaging/header.php");
-            $p->addTab("grouptabbootmenu", _T("Boot menu", 'imaging'), _T("Current boot menu", "imaging"), 
+            $p->addTab("grouptabbootmenu", _T("Boot menu", 'imaging'), _T("Current boot menu", "imaging"),
                 "modules/imaging/imaging/bootmenu.php", $params);
-            $p->addTab("grouptabimages", _T("Masters", 'imaging'), "", 
+            $p->addTab("grouptabimages", _T("Masters", 'imaging'), "",
                 "modules/imaging/imaging/images.php", $params);
-            $p->addTab("grouptabservices", _T("Boot services", 'imaging'), _T("Available boot menu services", "imaging"), 
+            $p->addTab("grouptabservices", _T("Boot services", 'imaging'), _T("Available boot menu services", "imaging"),
                 "modules/imaging/imaging/services.php", $params);
-            $p->addTab("grouptablogs", _T("Imaging log", 'imaging'), "", 
+            $p->addTab("grouptablogs", _T("Imaging log", 'imaging'), "",
                 "modules/imaging/imaging/logs.php", $params);
-            $p->addTab("grouptabconfigure", _T("Menu configuration", 'imaging'), "", 
+            $p->addTab("grouptabconfigure", _T("Menu configuration", 'imaging'), "",
                 "modules/imaging/imaging/configure.php", $params);
             $p->display();
         }
     }
-    
+
 } else {
 
     $p = new PageGenerator();
     $p->setSideMenu($sidemenu);
     $p->display();
     print _T("Not enough informations", "imaging");
-    
+
 }
 
 ?>
