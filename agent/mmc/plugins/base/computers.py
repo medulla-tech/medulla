@@ -33,7 +33,7 @@ class ComputerI:
 
     def canAddComputer(self):
         """
-        Does this module handle addition of computers 
+        Does this module handle addition of computers
         """
         pass
 
@@ -42,7 +42,7 @@ class ComputerI:
         Does this module handle association between computers and locations
         """
         pass
-        
+
     def addComputer(self, ctx, params):
         """
         Add a new computer
@@ -67,25 +67,31 @@ class ComputerI:
         Get only one computer
         """
         pass
-    
+
     def getMachineMac(self, ctx, params):
         """
         Get the computers mac adresses
         """
         pass
-        
+
     def getMachineIp(self, ctx, params):
         """
         Get the computers ip addresses
         """
         pass
-    
+
+    def getMachineHostname(self, ctx, params):
+        """
+        Get the computers hostnames
+        """
+        pass
+
     def getComputerList(self, ctx, params):
         """
         Get computer list
         """
         pass
-    
+
     def getComputerCount(self, ctx, params = None):
         """
         Get the number of computer
@@ -97,7 +103,7 @@ class ComputerI:
         Get a limited computer list size
         """
         pass
-        
+
     def getRestrictedComputersList(self, ctx, params):
         """
         Get a limited computer list
@@ -137,7 +143,7 @@ class ComputerManager(Singleton):
     def register(self, name, klass):
         self.logger.debug("Registering computer manager %s / %s" % (name, str(klass)))
         self.components[name] = klass
-        
+
     def validate(self):
         ret = (self.main == "none") or (self.main in self.components)
         if not ret:
@@ -159,7 +165,7 @@ class ComputerManager(Singleton):
         if hasattr(instance, 'canAssociateComputer2Location'):
             return instance.canAssociateComputer2Location()
         return False
-        
+
     def addComputer(self, ctx, params):
         r = None
         for plugin in self.components:
@@ -198,7 +204,7 @@ class ComputerManager(Singleton):
         klass = self.components[self.main]
         instance = klass()
         return instance.getComputer(ctx, filt)
-        
+
     def getMachineMac(self, ctx, filt = None):
         klass = self.components[self.main]
         instance = klass()
@@ -209,33 +215,38 @@ class ComputerManager(Singleton):
         instance = klass()
         return instance.getMachineIp(ctx, filt)
 
+    def getMachineHostname(self, ctx, filt = None):
+        klass = self.components[self.main]
+        instance = klass()
+        return instance.getMachineHostname(ctx, filt)
+
     def getComputersNetwork(self, ctx, filt = None):
         klass = self.components[self.main]
         instance = klass()
         return instance.getComputersNetwork(ctx, filt)
-        
+
     def getComputersList(self, ctx, filt = None):
         klass = self.components[self.main]
         instance = klass()
         return instance.getComputersList(ctx, filt)
-        
+
     def getComputerCount(self, ctx, filt = None):
         klass = self.components[self.main]
         instance = klass()
         return instance.getComputerCount(ctx, filt)
-        
+
     def getRestrictedComputersListLen(self, ctx, filt = None, advanced = True):
         klass = self.components[self.main]
         instance = klass()
         return instance.getRestrictedComputersListLen(ctx, filt)
-    
+
     def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = None, advanced = True, justId = False, toH = False):
         min = int(min)
         max = int(max)
         klass = self.components[self.main]
         instance = klass()
         return instance.getRestrictedComputersList(ctx, min, max, filt, advanced, justId, toH)
-    
+
     def getComputerByMac(self, mac):
         klass = self.components[self.main]
         instance = klass()
