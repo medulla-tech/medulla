@@ -53,12 +53,27 @@ class Imaging(Pulse2Api):
         @raise : TypeError is MACAddress is not a mac addr
         @rtype : bool
         """
-        if type(computerName) != str:
+        if type(computerName) != str and type(computerName) != unicode:
             raise TypeError('Bad Computer name: %s' % computerName)
         if not isMACAddress(MACAddress):
             raise TypeError('BAD MAC address: %s' % MACAddress)
         d = self.callRemote("computerRegister", computerName, MACAddress, imagingData)
         d.addErrback(self.onErrorRaise, "Imaging:computerRegister", [computerName, MACAddress, imagingData])
+        return d
+
+    def computersRegister(self, computers):
+        """
+        Mass method to perform multiple computerRegister.
+        Always called by the MMC agent.
+
+        @param computers: list of triplets (hostname,MAC address,imaging data)
+        @type computers: list
+
+        @return: the (computer/MAC address) that were successfully registered.
+        @rtype: list
+        """
+        d = self.callRemote("computersRegister", computers)
+        d.addErrback(self.onErrorRaise, "Imaging:computersRegister", [computers])
         return d
 
     def computerPrepareImagingDirectory(self, MACAddress, imagingData=False):
