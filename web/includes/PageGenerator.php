@@ -570,7 +570,12 @@ class ListInfos extends HtmlElement {
             if ($this->extraInfo)
                 foreach ($this->extraInfo as $arrayTMP) {
                     echo "<td>";
-                    echo_obj($arrayTMP[$idx]);
+                    if(trim($arrayTMP[$idx]) != "") {
+                        echo_obj($arrayTMP[$idx]);
+                    }
+                    else {
+                        echo "&nbsp;";
+                    }
                     echo "</td>";
                 }
             if (count($this->arrAction)!=0) {

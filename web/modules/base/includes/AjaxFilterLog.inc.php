@@ -176,15 +176,7 @@ class LogDynamicDateTpl extends InputTpl {
             </span>';
         print '
             <script type="text/javascript" charset="utf-8">
-            Calendar.setup({
-            inputField      :   "'.$this->name.'",
-            ifFormat        :   "%Y-%m-%d %H:%M:%S",       // format of the input field
-            showsTime       :   true,
-            timeFormat      :   "24",
-            button          :   "'.$this->name.'_button",
-            firstDay        :   1,
-            weekNumbers     :   false,
-            });
+            Calendar.setup({ inputField:"'.$this->name.'", ifFormat:"%Y-%m-%d %H:%M:%S", showsTime:true, timeFormat:"24", button:"'.$this->name.'_button", firstDay:1, weekNumbers:false });
             </script>';
     }
 }
@@ -278,7 +270,12 @@ class LogListInfos extends OptimizedListInfos {
             if ($this->extraInfo)
                 foreach ($this->extraInfo as $arrayTMP) {
                     echo "<td>";
-                    echo_obj($arrayTMP[$idx]);
+                    if(trim($arrayTMP[$idx]) != "") {
+                        echo_obj($arrayTMP[$idx]);
+                    }
+                    else {
+                        echo "&nbsp;";
+                    }
                     echo "</td>";
                 }
             if (count($this->arrAction)!=0) {
@@ -342,7 +339,7 @@ class AjaxFilterLog extends AjaxFilter {
         
 ?>
 <form name="Form" id="Form" class="ajaxfilterlog" action="#">
-    <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
+    <div id="loader"><img id="loadimg" src="img/common/loader.gif" alt="loader" class="loader"/></div>
     <div id="searchSpan" class="searchboxlog">
         <span class="searchfieldfilter">
 <?php
@@ -370,31 +367,27 @@ class AjaxFilterLog extends AjaxFilter {
     </span>&nbsp;
     </div>
     <script type="text/javascript">
-        window.onload=searchbar;
-        //window.onload=document.getElementById('param').focus();
+    
+        Event.observe(window, 'load', function() {
+            searchbar();
+        });
         
         /**
         * update div with user
         */
         function searchbar() {
-            new Ajax.Updater(
-                'searchfilter','<?php echo $this->urlsearch ?>', {
-                    method:'get',
-                    parameters: { 'filtertype': document.Form.filtertype.value },
-                    onSuccess: pushSearch,
-                }
-            );
+            new Ajax.Updater('searchfilter','<?php echo $this->urlsearch ?>&filtertype='+document.Form.filtertype.value, { onSuccess: pushSearch });
         }
                 
         function updateSearch() {
             launch--;
-                if (launch==0) {
-                    if (document.getElementById('param')==null)
-                        new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter=&filtertype='+document.Form.filtertype.value+'&begindate='+document.Form.begindate.value+'&enddate='+document.Form.enddate.value+'&page=<?= $this->page; ?>', { asynchronous:true, evalScripts: true});    
-                    else
+            if (launch==0) {
+                if (document.getElementById('param') == null)
+                    new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter=&filtertype='+document.Form.filtertype.value+'&begindate='+document.Form.begindate.value+'&enddate='+document.Form.enddate.value+'&page=<?= $this->page; ?>', { asynchronous:true, evalScripts: true});    
+                else
                     new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+document.Form.param.value+'&filtertype='+document.Form.filtertype.value+'&begindate='+document.Form.begindate.value+'&enddate='+document.Form.enddate.value+'&page=<?= $this->page; ?>', { asynchronous:true, evalScripts: true});
-                }
             }
+        }
 
         /**
         * provide navigation in ajax for user

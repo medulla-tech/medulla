@@ -592,10 +592,10 @@ html>body #sidebar ul li a { width: auto; }
 
 #section {
 	padding: 8px 25px 8px 25px;
-	margin: 0 0 0 190px;
 	border-left: solid 1px #A0A0A0;
 	border-right: solid 1px #A0A0A0;
-        height: 350px;
+    height: 350px;
+    margin-left: 190px;
 }
 
 html>body #section {
@@ -991,7 +991,7 @@ li.empty a {
 }
 
 #section table {
-	width: 100%;
+	width: 99%;
 	color: #333;
 	border-color: #CCCCCC;
 	border-width: 0 0 1px 0;
@@ -1233,10 +1233,11 @@ select {
 	border-bottom: 1px solid #CCC;
 	border-left: 1px solid #CCC;
 	clear: right;
-	padding: 2px;
+	padding: 4px 2px 2px;
+	padding-top: 0px !ie;
 	background-color: #FFF;
 	color: #666;
-        -moz-border-radius: 5px;
+    -moz-border-radius: 5px;
 }
 
 .searchfieldreal {
