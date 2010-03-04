@@ -160,7 +160,7 @@ class ImagingApi(MyXmlrpc):
         @param computers: list of triplets (hostname,MAC address,imaging data)
         @type computers: list
 
-        @return: the (computer/MAC address) that were successfully registered.
+        @return: the list of UUID that were successfully registered.
         @rtype: list
         """
         ret = []
@@ -176,7 +176,7 @@ class ImagingApi(MyXmlrpc):
             try:
                 if self.xmlrpc_computerRegister(computerName, macAddress, imagingData):
                     # Registration succeeded
-                    ret.append((computerName, macAddress))
+                    ret.append(imagingData['uuid'])
             except Exception, e:
                 self.logger.error("Can't register computer %s / %s: %s" % (computerName, macAddress, str(e)))
         return ret
