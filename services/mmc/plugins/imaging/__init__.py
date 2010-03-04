@@ -48,14 +48,27 @@ VERSION = "0.1"
 APIVERSION = "0:0:0"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
-NOAUTHNEEDED = ['computerRegister', 'imagingServerRegister',
-                'getComputerByMac', 'imageRegister', 'logClientAction',
-                'injectInventory', 'getDefaultMenuForSuscription',
+NOAUTHNEEDED = ['computerRegister',
+                'imagingServerRegister',
+                'getComputerByMac',
+                'imageRegister',
+                'logClientAction',
+                'injectInventory',
+                'getDefaultMenuForSuscription',
                 'linkImagingServerToLocation']
 
-def getVersion(): return VERSION
-def getApiVersion(): return APIVERSION
-def getRevision(): return REVISION
+
+def getVersion():
+    return VERSION
+
+
+def getApiVersion():
+    return APIVERSION
+
+
+def getRevision():
+    return REVISION
+
 
 def activate():
     """
@@ -174,7 +187,7 @@ class RpcProxy(RpcProxyI):
         return xmlrpcCleanup(ImagingConfig().web_def_date_fmt)
 
     def get_web_def_possible_protocols(self):
-        return xmlrpcCleanup(map(lambda p:p.toH(), ImagingDatabase().getAllProtocols()))
+        return xmlrpcCleanup(map(lambda p: p.toH(), ImagingDatabase().getAllProtocols()))
 
     def get_web_def_default_protocol(self):
         return xmlrpcCleanup(ImagingConfig().web_def_default_protocol)
@@ -982,16 +995,15 @@ class RpcProxy(RpcProxyI):
         Called by the Package Server to register a new Image.
         """
         image = {
-            'name':name,
-            'desc':desc,
-            'path':path,
-            'uuid':image_uuid,
+            'name': name,
+            'desc': desc,
+            'path': path,
+            'uuid': image_uuid,
             'checksum': '',
-            'size':size,
-            'creation_date':creation_date,
-            'is_master':is_master,
-            'creator':creator
-        }
+            'size': size,
+            'creation_date': creation_date,
+            'is_master': is_master,
+            'creator': creator}
         db = ImagingDatabase()
         if db.countImagingServerByPackageServerUUID(imaging_server_uuid) == 0:
             return [False, "The imaging server UUID you try to access doesn't exist in the imaging database."]
@@ -1006,7 +1018,7 @@ class RpcProxy(RpcProxyI):
             ret = [False, str(e)]
         return ret
 
-    def injectInventory(self, computer_uuid, inventory = None):
+    def injectInventory(self, computer_uuid, inventory=None):
         """
         Called by the Package Server to inject an inventory.
         """
