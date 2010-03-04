@@ -889,31 +889,102 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return None
 
+    def __getFirstMenuItem(self, session, menu_id, exclude = None):
+        mi = session.query(MenuItem).filter(self.menu_item.c.fk_menu == menu_id)
+        if exclude != None:
+            mi = mi.filter(self.menu_item.c.id != exclude)
+        mi = mi.order_by(self.menu_item.c.order)
+        return mi.first()
+
     def delServiceToTarget(self, bs_uuid, target_uuid):
         session = create_session()
-        mi = session.query(MenuItem).select_from(self.menu_item.join(self.boot_service_in_menu).join(self.boot_service).join(self.menu).join(self.target))
+        mi = session.query(MenuItem).select_from(self.menu_item \
+                .join(self.boot_service_in_menu, self.boot_service_in_menu.c.fk_menuitem == self.menu_item.c.id) \
+                .join(self.boot_service, self.boot_service_in_menu.c.fk_bootservice == self.boot_service.c.id) \
+                .join(self.menu, self.menu_item.c.fk_menu == self.menu.c.id) \
+                .join(self.target, self.menu.c.id == self.target.c.fk_menu))
         mi = mi.filter(and_(self.boot_service.c.id == uuid2id(bs_uuid), self.target.c.uuid == target_uuid)).first()
-        bsim = session.query(BootServiceInMenu).select_from(self.boot_service_in_menu.join(self.menu_item).join(self.boot_service).join(self.menu).join(self.target))
+        bsim = session.query(BootServiceInMenu).select_from(self.boot_service_in_menu \
+                .join(self.menu_item, self.boot_service_in_menu.c.fk_menuitem == self.menu_item.c.id) \
+                .join(self.boot_service, self.boot_service_in_menu.c.fk_bootservice == self.boot_service.c.id) \
+                .join(self.menu, self.menu_item.c.fk_menu == self.menu.c.id) \
+                .join(self.target, self.menu.c.id == self.target.c.fk_menu))
         bsim = bsim.filter(and_(self.boot_service.c.id == uuid2id(bs_uuid), self.target.c.uuid == target_uuid)).first()
-        session.delete(mi)
+        # if mi is the fk_default_item or the fk_default_item_WOL, we need to change that
+        menu = session.query(Menu).filter(self.menu.c.id == mi.fk_menu).first()
+        need_to_save_menu = False
+        first_mi = None
+        if menu.fk_default_item == mi.id:
+            need_to_save_menu = True
+            if first_mi == None:
+                first_mi = self.__getFirstMenuItem(session, menu.id, mi.id)
+                print first_mi
+                if first_mi == None:
+                    session.close()
+                    return [False, "cant find any other mi"]
+            menu.fk_default_item = first_mi.id
+        if menu.fk_default_item_WOL == mi.id:
+            need_to_save_menu = True
+            if first_mi == None:
+                first_mi = self.__getFirstMenuItem(session, menu.id, mi.id)
+                if first_mi == None:
+                    session.close()
+                    return [False, "cant find any other mi"]
+            menu.fk_default_item_WOL = first_mi.id
+        if need_to_save_menu:
+            session.save_or_update(menu)
+            session.flush()
         session.delete(bsim)
+        session.flush()
+        session.delete(mi)
         session.flush()
 
         session.close()
-        return None
+        return [True]
 
     def delServiceToEntity(self, bs_uuid, loc_id):
         session = create_session()
-        mi = session.query(MenuItem).select_from(self.menu_item.join(self.boot_service_in_menu).join(self.boot_service).join(self.menu))
+        mi = session.query(MenuItem).select_from(self.menu_item
+                .join(self.boot_service_in_menu, self.boot_service_in_menu.c.fk_menuitem == self.menu_item.c.id) \
+                .join(self.boot_service, self.boot_service_in_menu.c.fk_bootservice == self.boot_service.c.id) \
+                .join(self.menu, self.menu_item.c.fk_menu == self.menu.c.id))
         mi = mi.filter(and_(self.boot_service.c.id == uuid2id(bs_uuid), self.menu.c.id == self.entity.c.fk_default_menu, self.entity.c.uuid == loc_id)).first()
-        bsim = session.query(BootServiceInMenu).select_from(self.boot_service_in_menu.join(self.menu_item).join(self.boot_service).join(self.menu))
+        bsim = session.query(BootServiceInMenu).select_from(self.boot_service_in_menu \
+                .join(self.menu_item, self.boot_service_in_menu.c.fk_menuitem == self.menu_item.c.id) \
+                .join(self.boot_service, self.boot_service_in_menu.c.fk_bootservice == self.boot_service.c.id) \
+                .join(self.menu, self.menu_item.c.fk_menu == self.menu.c.id))
         bsim = bsim.filter(and_(self.boot_service.c.id == uuid2id(bs_uuid), self.menu.c.id == self.entity.c.fk_default_menu, self.entity.c.uuid == loc_id)).first()
-        session.delete(mi)
+        # if mi is the fk_default_item or the fk_default_item_WOL, we need to change that
+        menu = session.query(Menu).filter(self.menu.c.id == mi.fk_menu).first()
+        need_to_save_menu = False
+        first_mi = None
+        if menu.fk_default_item == mi.id:
+            need_to_save_menu = True
+            if first_mi == None:
+                first_mi = self.__getFirstMenuItem(session, menu.id, mi.id)
+                if first_mi == None:
+                    session.close()
+                    return [False, "cant find any other mi"]
+            menu.fk_default_item = first_mi.id
+        if menu.fk_default_item_WOL == mi.id:
+            need_to_save_menu = True
+            if first_mi == None:
+                first_mi = self.__getFirstMenuItem(session, menu.id, mi.id)
+                if first_mi == None:
+                    session.close()
+                    return [False, "cant find any other mi"]
+            menu.fk_default_item_WOL = first_mi.id
+        if need_to_save_menu:
+            session.save_or_update(menu)
+            session.flush()
+
         session.delete(bsim)
+        session.flush()
+        session.delete(mi)
         session.flush()
 
         session.close()
-        return None
+        return [True]
 
     def getMenuItemByUUID(self, mi_uuid, session = None):
         session_need_close = False
@@ -1812,7 +1883,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         registered = self.isTargetRegister(uuids, P2IT.COMPUTER_IN_PROFILE, session)
         for uuid in uuids:
             if not (registered.has_key(uuid) and registered[uuid]):
-                # self.isTargetRegister(uuid, P2IT.COMPUTER_IN_PROFILE, session):
                 loc_id = 0
                 location_id = locations[uuid]['uuid']
                 if not cache_location_id.has_key(location_id):
