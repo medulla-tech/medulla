@@ -48,7 +48,7 @@
 #include "iniparser.h"
 
 #define BUFLEN 1532
-#define CONFIGURATION_FILE "/etc/mmc/pulse2/imaging-server/imaging-server.ini";
+#define CONFIGURATION_FILE "/etc/mmc/pulse2/imaging-server/imaging-server.ini"
 
 unsigned char gBuff[80];
 
@@ -62,9 +62,9 @@ char gAdminPass[256];
 char gDirHooks[256];
 char gPathProcessInventory[256];
 char gPathCreateClient[256];
-char gPathCreateImage[256];
-char gPathUpdateClient[256];
-char gPathUpdateImage[256];
+char gPathStartImage[256];
+char gPathBootClient[256];
+char gPathEndImage[256];
 char gPathLogAction[256];
 char gPathGetUUID[256];
 char gPathGetHostName[256];
