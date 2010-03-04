@@ -58,7 +58,7 @@ class ImagingApi(MyXmlrpc):
         """
         MyXmlrpc.__init__(self)
         self.name = name
-        self.logger = logging.getLogger()
+        self.logger = logging.getLogger('imaging')
         self.logger.info("Initializing %s" % self.myType)
         # Read and check configuration
         self.config = config
@@ -155,16 +155,30 @@ class ImagingApi(MyXmlrpc):
     def xmlrpc_computersRegister(self, computers):
         """
         Mass method to perform multiple computerRegister.
-        Always called by the MMC agent 
+        Always called by the MMC agent.
 
-        @return: the of computers that fail to be registered
+        @param computers: list of triplets (hostname,MAC address,imaging data)
+        @type computers: list
+
+        @return: the (computer/MAC address) that were successfully registered.
         @rtype: list
         """
         ret = []
-        for computerName, macAddress, imagingData in computers:
+        for item in computers:
+            try:
+                computerName, macAddress, imagingData = item
+            except (ValueError, TypeError):
+                self.logger.error("Can't register computer, bad input value: %s" % (str(item)))
+                continue
             if not imagingData:
-                ret.append
-            pass
+                self.logger.error("No imaging data available for %s / %s" % (computerName, macAddress))
+                continue
+            try:
+                if self.xmlrpc_computerRegister(computerName, macAddress, imagingData):
+                    # Registration succeeded
+                    ret.append((computerName, macAddress))
+            except Exception, e:
+                self.logger.error("Can't register computer %s / %s: %s" % (computerName, macAddress, str(e)))
         return ret
 
     def xmlrpc_computerRegister(self, computerName, macAddress, imagingData = False):
@@ -217,6 +231,9 @@ class ImagingApi(MyXmlrpc):
             return d
         else:
             # Registration is coming from the MMC agent
+            if not 'uuid' in imagingData:
+                self.logger.error('UUID missing in imaging data')
+                return False
             cuuid = imagingData['uuid']
             self.myUUIDCache.set(cuuid, macAddress)
             if not self.xmlrpc_computerPrepareImagingDirectory(cuuid, {'mac': macAddress, 'hostname': computerName}):
