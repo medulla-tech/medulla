@@ -238,7 +238,7 @@ class ImagingApi(MyXmlrpc):
             self.myUUIDCache.set(cuuid, macAddress)
             if not self.xmlrpc_computerPrepareImagingDirectory(cuuid, {'mac': macAddress, 'hostname': computerName}):
                 return False
-            if self.xmlrpc_computersMenuSet(imagingData['menu']):
+            if self.xmlrpc_computersMenuSet(imagingData['menu']) != [cuuid]:
                 return False
             return True
 
@@ -371,8 +371,7 @@ class ImagingApi(MyXmlrpc):
         @param menus: list of (uuid, menu) couples
         @type menus: list
 
-        @ret: list of the computer uuid which menu have not been set because of
-              an error
+        @ret: list of the computer uuid which menu have been successfully set
         @rtype: list
         """
         ret = []
@@ -383,12 +382,10 @@ class ImagingApi(MyXmlrpc):
                 continue
             if not isMenuStructure(menu):
                 self.logger.error("Invalid menu structure for computer UUID %s" % cuuid)
-                ret.append(cuuid)
                 continue
             macaddress = self.myUUIDCache.getByUUID(cuuid)
             if macaddress == False:
                 self.logger.error("Can't get MAC address for UUID %s" % cuuid)
-                ret.append(cuuid)
                 continue
             else:
                 try:
@@ -397,9 +394,9 @@ class ImagingApi(MyXmlrpc):
                     imb = ImagingComputerMenuBuilder(self.config, macaddress, menu)
                     imenu = imb.make()
                     imenu.write()
+                    ret.append(cuuid)
                 except Exception, e:
                     self.logger.exception("Error while setting new menu of computer uuid/mac %s: %s" % (cuuid, e))
-                    ret.append(cuuid)
                     # FIXME: Rollback to the previous menu
         return ret
 
