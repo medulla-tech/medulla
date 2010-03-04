@@ -42,7 +42,7 @@ class UUIDCache(pulse2.utils.Singleton):
     """
 
     cachePath = pulse2.package_server.config.P2PServerCP().imaging_api['uuid_cache_file']
-    log = logging.getLogger()
+    log = logging.getLogger('imaging')
     log.info("Using %s as UUID Cache File" % cachePath)
     config = ConfigParser.ConfigParser()
 
@@ -64,7 +64,7 @@ class UUIDCache(pulse2.utils.Singleton):
         Update cache file using our memory stucture
         """
         try:
-            self.log.info("Writing my UUID Cache File %s" % (self.cachePath))
+            self.log.debug("Writing my UUID Cache File %s" % (self.cachePath))
             fp = open(self.cachePath, 'wb')
             self.config.write(fp)
             fp.close()
