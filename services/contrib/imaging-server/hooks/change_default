@@ -53,11 +53,31 @@ def myCall():
     """
     global exitcode
 
+    mac = '' # client MAC address
+
+    if len(sys.argv) != 3: # not enough (or too much) args
+        logging.getLogger().error('HOOK %s : I was not called with the right number of arguments (two expected, got %d)' % (sys.argv[0], len(sys.argv) - 1))
+        exitcode = ERROR_CLIENT
+        return endBack()
+
+    mac = sys.argv[1]
+
+    if not pulse2.utils.isMACAddress(mac):
+        logging.getLogger().error('HOOK %s : First arg (%s) do not seems to be a MAC address' % (sys.argv[0], mac))
+        exitcode = ERROR_CLIENT
+        return endBack()
+
+    requested_menu = sys.argv[2]
+  
     try:
-        callFunction(
-            imagingAPI.imagingServerStatus(
-            )
-        )
+        int(requested_menu)
+    except ValueError:
+        logging.getLogger().error('HOOK %s : Second argument is not a number (%s), giving up' % (sys.argv[0], sys.argv[2]))
+        exitcode = ERROR_CLIENT
+        return endBack()
+
+    try:
+        callFunction(imagingAPI.setDefaultMenu(mac, requested_menu))
     except AttributeError, e:
         logging.getLogger().error('HOOK %s : %s' % (sys.argv[0], e))
         exitcode = ERROR_CLIENT
