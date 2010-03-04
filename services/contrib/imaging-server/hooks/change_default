@@ -54,6 +54,7 @@ def myCall():
     global exitcode
 
     mac = '' # client MAC address
+    requested_menu = 0 # requeste menu
 
     if len(sys.argv) != 3: # not enough (or too much) args
         logging.getLogger().error('HOOK %s : I was not called with the right number of arguments (two expected, got %d)' % (sys.argv[0], len(sys.argv) - 1))
