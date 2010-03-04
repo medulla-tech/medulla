@@ -68,7 +68,7 @@ class ImagingApi(MyXmlrpc):
         @return: a XML-RPC client allowing to connect to the agent
         @rtype: ImagingXMLRPCClient
         """
-        url, credentials = makeURL(PackageServerConfig().mmc_agent)
+        url, _ = makeURL(PackageServerConfig().mmc_agent)
         return ImagingXMLRPCClient(
             '',
             url,
@@ -152,7 +152,22 @@ class ImagingApi(MyXmlrpc):
         status.get()
         return status.deferred
 
-    def xmlrpc_computerRegister(self, computerName, MACAddress, imagingData = False):
+    def xmlrpc_computersRegister(self, computers):
+        """
+        Mass method to perform multiple computerRegister.
+        Always called by the MMC agent 
+
+        @return: the of computers that fail to be registered
+        @rtype: list
+        """
+        ret = []
+        for computerName, macAddress, imagingData in computers:
+            if not imagingData:
+                ret.append
+            pass
+        return ret
+
+    def xmlrpc_computerRegister(self, computerName, macAddress, imagingData = False):
         """
         Method to register a new computer.
 
@@ -167,44 +182,44 @@ class ImagingApi(MyXmlrpc):
 
         def onSuccess(result):
             if type(result) != list and len(result) != 2:
-                self.logger.warn('Imaging: Couldn\'t register client %s (%s) : %s' % (computerName, MACAddress, str(result)))
+                self.logger.warn('Imaging: Couldn\'t register client %s (%s) : %s' % (computerName, macAddress, str(result)))
                 ret = False
             elif not result[0]:
-                self.logger.warn('Imaging: Couldn\'t register client %s (%s) : %s' % (computerName, MACAddress, result[1]))
+                self.logger.warn('Imaging: Couldn\'t register client %s (%s) : %s' % (computerName, macAddress, result[1]))
                 ret = False
             else:
                 uuid = result[1]
-                self.logger.info('Imaging: Register client %s (%s) as %s' % (computerName, MACAddress, uuid))
-                self.myUUIDCache.set(uuid, MACAddress)
-                ret = self.xmlrpc_computerPrepareImagingDirectory(uuid, {'mac': MACAddress, 'hostname': hostname})
+                self.logger.info('Imaging: Register client %s (%s) as %s' % (computerName, macAddress, uuid))
+                self.myUUIDCache.set(uuid, macAddress)
+                ret = self.xmlrpc_computerPrepareImagingDirectory(uuid, {'mac': macAddress, 'hostname': hostname})
             return ret
 
         try:
             # check MAC Addr is conform
-            if not isMACAddress(MACAddress):
-                raise TypeError, 'Malformed MAC address: %s' % MACAddress
+            if not isMACAddress(macAddress):
+                raise TypeError, 'Malformed MAC address: %s' % macAddress
             # check computer name is conform
             if not len(computerName):
                 raise TypeError, 'Malformed computer name: %s' % computerName
             profile, entities, hostname, domain = splitComputerPath(computerName)
-        except TypeError, e:
-            self.logger.error('Imaging: Won\'t register %s as %s : %s' % (MACAddress, computerName, e))
+        except TypeError, ex:
+            self.logger.error('Imaging: Won\'t register %s as %s : %s' % (macAddress, computerName, ex))
             return maybeDeferred(lambda x: x, False)
 
         if not imagingData:
             # Registration is coming from the imaging server
-            self.logger.info('Imaging: Starting registration for %s as %s' % (MACAddress, computerName))
+            self.logger.info('Imaging: Starting registration for %s as %s' % (macAddress, computerName))
             client = self._getXMLRPCClient()
             func = 'imaging.computerRegister'
-            args = (self.config.imaging_api['uuid'], hostname, domain, MACAddress, profile, entities)
+            args = (self.config.imaging_api['uuid'], hostname, domain, macAddress, profile, entities)
             d = client.callRemote(func, *args)
             d.addCallbacks(onSuccess, client.onError, errbackArgs = (func, args, False))
             return d
         else:
             # Registration is coming from the MMC agent
             cuuid = imagingData['uuid']
-            self.myUUIDCache.set(cuuid, MACAddress)
-            if not self.xmlrpc_computerPrepareImagingDirectory(cuuid, {'mac': MACAddress, 'hostname': computerName}):
+            self.myUUIDCache.set(cuuid, macAddress)
+            if not self.xmlrpc_computerPrepareImagingDirectory(cuuid, {'mac': macAddress, 'hostname': computerName}):
                 return False
             if self.xmlrpc_computersMenuSet(imagingData['menu']):
                 return False
@@ -226,7 +241,7 @@ class ImagingApi(MyXmlrpc):
         if os.path.isdir(target_folder):
             self.logger.warn('Imaging: folder %s for client %s : It already exists !' % (target_folder, uuid))
             return True
-        if os.path.exist(target_folder):
+        if os.path.exists(target_folder):
             self.logger.warn('Imaging: folder %s for client %s : It already exists, but is not a folder !' % (target_folder, uuid))
             return False
         try:
