@@ -32,7 +32,8 @@ void initlog(void) {
  * logging
  */
 
-int myLogger(char *msg) {
+int myLogger(char *
+msg) {
     char cmd[1024];
     snprintf(cmd, 1023, "echo \"`date --rfc-3339=seconds` %.900s\" 1>>%s 2>&1",
              msg, gLogFile);
@@ -149,7 +150,7 @@ void logClientActivity(char *mac, int priority, char *phase,
     snprintf(prio, 2, "%d", priority);
 
     if (mysystem(5, gPathLogAction, mac, prio, phase, buf) == 0) {
-	    /* FIXME : we should send back a NAK */
+        /* FIXME : we should send back a NAK */
     }
 }
 
@@ -188,7 +189,7 @@ int getentry(char *file, char *pktmac) {
             s++;
             if (sscanf(buf, "%19s%*s%32s", mac, name) == 2) {
                 if (!strncasecmp(mac, pktmac, 17)) {
-		    // return the name in the global buffer
+                    // return the name in the global buffer
                     strcpy((char *)gBuff, name);
                     fclose(fi);
                     return 1;
@@ -304,6 +305,10 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
     // identification
     if (buf[0] == 0xAD) {
         char *ptr, pass[256], hostname[256], buff[256];
+
+        char *answ = malloc(40);
+        bzero(answ, 40);
+
         ptr = strrchr((char *)buf + 3, ':');
         *ptr = 0;
         strcpy(pass, ptr + 1);
@@ -313,8 +318,15 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
                  ntohs(si_other->sin_port), mac, hostname);
         myLogger(buff);
         if (analyseresult(mysystem(4, gPathCreateClient, mac, hostname, pass))) {
-            // FIXME : we should also send back a NAK
+            strncpy(answ, "OK", 40);
+        } else {
+            strncpy(answ, "KO", 40);
         }
+
+        // FIXME : n time, we should also send back an ACK/ NACK by decommenting the following line
+        // sendto(s, answ, strlen(answ) , MSG_NOSIGNAL, (struct sockaddr *)si_other, sizeof(*si_other));
+
+        free(answ);
         return 0;
     }
     // before a save
@@ -650,8 +662,9 @@ int main(void) {
     readConfig(gConfigurationFile);
 
     /* Daemonize here */
-    if ((daemon(0, 0) != 0))
-        diep("daemon");
+    if ((daemon(0, 0) != 0)) {
+	diep("daemon");
+    }
 
     pid = getpid();
     if (pid) {
