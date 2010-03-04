@@ -110,9 +110,9 @@ class Imaging(unittest.TestCase):
         """
         arg = [
             ('hostname1', '00:11:22:33:44:dd',
-             { 'uuid' : 'UUID2', 'menu' : MENUS }),
+             { 'uuid' : 'UUID2', 'menu' : { 'UUID2' : MENU }}),
             ('hostname2', '00:11:22:33:44:ee',
-             { 'uuid' : 'UUID3', 'menu' : MENUS }),
+             { 'uuid' : 'UUID3', 'menu' : { 'UUID3' : MENU }}),
             ]
         result = SERVER.computersRegister(arg)
         self.assertEqual([['hostname1', '00:11:22:33:44:dd'],
