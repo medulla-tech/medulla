@@ -61,6 +61,15 @@ class InventoryComputers(ComputerI):
             return ret[0]
         return ret
 
+    def getMachineHostname(self, ctx, filt = None):
+        machines = self.inventory.getMachinesOnly(ctx, filt)
+        ret = []
+        for m in machines:
+            ret.append(m.toH())
+        if len(ret) == 1:
+            return ret[0]
+        return ret
+
     def getComputersNetwork(self, ctx, filt):
         computers = self.inventory.getMachinesNetworkSorted(ctx, filt)
         ret = []
