@@ -104,6 +104,21 @@ class Imaging(unittest.TestCase):
         sleep(5)
         self.assertTrue(os.path.exists('/var/lib/pulse2/imaging/bootmenus/%s' % reduceMACAddress(mac)))
 
+    def test_03registerComputers(self):
+        """
+        Check mass computers registration
+        """
+        arg = [
+            ('hostname1', '00:11:22:33:44:dd',
+             { 'uuid' : 'UUID2', 'menu' : MENUS }),
+            ('hostname2', '00:11:22:33:44:ee',
+             { 'uuid' : 'UUID3', 'menu' : MENUS }),
+            ]
+        result = SERVER.computersRegister(arg)
+        self.assertEqual([['hostname1', '00:11:22:33:44:dd'],
+                          ['hostname2', '00:11:22:33:44:ee']],
+                         result)
+
     def atest_computersMenuSet(self):
         #result = SERVER.computersMenuSet([('UUID17', {})])
         #self.assertEqual(['UUID1'], result)
