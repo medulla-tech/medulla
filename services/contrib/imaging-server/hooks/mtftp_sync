@@ -41,8 +41,9 @@ ERROR_UNKNOWN = 3   #: unknow (and default) error
 exitcode = ERROR_UNKNOWN #: global error code, used when exiting
 
 ########################################################################
-#         NOTHING SHOULD BE ALTERED ABOVE THIS LINE                    #
+#         NOTHING SHOULD BE ALTERED ABOVE THIS LINE                    #
 ########################################################################
+
 
 def myCall():
     """
@@ -62,6 +63,7 @@ def myCall():
         exitcode = ERROR_CLIENT
         return endBack()
 
+
 def myTreatment(result):
     """
         Design your own treatment here
@@ -80,8 +82,9 @@ def myTreatment(result):
     return endBack()
 
 ########################################################################
-#         NOTHING SHOULD BE ALTERED BELOW THIS LINE                    #
+#         NOTHING SHOULD BE ALTERED BELOW THIS LINE                    #
 ########################################################################
+
 
 def endBack(when = None):
     """
@@ -90,6 +93,7 @@ def endBack(when = None):
     if when == "timeout" :
         logging.getLogger().error('HOOK %s : Killed by a timeout' % sys.argv[0])
     twisted.internet.reactor.callLater(0, twisted.internet.reactor.stop)
+
 
 def callBack(result):
     """
@@ -103,7 +107,7 @@ def callBack(result):
     global exitcode
     # if result is a list and the first arg a string and its value,
     # 'PULSE2_ERR', then something went wrong
-    if type(result) == list and type(result[0]) == str and result[0] == 'PULSE2_ERR':
+    if type(result) == list and len(result) > 0 and type(result[0]) == str and result[0] == 'PULSE2_ERR':
         logging.getLogger().error("HOOK %s : Error code = %d (see previous line)" % (sys.argv[0], result[1]))
         exitcode = ERROR_SERVER
         return endBack()
@@ -111,6 +115,7 @@ def callBack(result):
         logging.getLogger().debug("%s : No error" % (sys.argv[0]))
         exitcode = ERROR_CLIENT
         myTreatment(result)
+
 
 def errorBack(reason):
     """
@@ -122,6 +127,7 @@ def errorBack(reason):
     exitcode = ERROR_CLIENT
     return endBack()
 
+
 def callFunction(deffered):
     """
         XMLRPC request handling
@@ -130,8 +136,7 @@ def callFunction(deffered):
     """
     deffered.addCallbacks( # deferred handling
         callBack,
-        errorBack
-    )
+        errorBack)
 
 # Parse the command line
 config = pulse2.imaging_server.config.ImagingConfig() #: ConfigParser object
