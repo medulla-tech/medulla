@@ -115,14 +115,12 @@ class Imaging(unittest.TestCase):
              { 'uuid' : 'UUID3', 'menu' : { 'UUID3' : MENU }}),
             ]
         result = SERVER.computersRegister(arg)
-        self.assertEqual([['hostname1', '00:11:22:33:44:dd'],
-                          ['hostname2', '00:11:22:33:44:ee']],
-                         result)
+        self.assertEqual(['UUID2', 'UUID3'], result)
 
     def atest_computersMenuSet(self):
         #result = SERVER.computersMenuSet([('UUID17', {})])
         #self.assertEqual(['UUID1'], result)
-        result = SERVER.computersMenuSet(menus)
+        result = SERVER.computersMenuSet(MENUS)
         self.assertEqual(['UUID27'], result)
 
     def atest_logClientAction(self):
