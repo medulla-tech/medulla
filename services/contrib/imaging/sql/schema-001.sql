@@ -356,6 +356,7 @@ CREATE INDEX fk_post_install_script_in_image_post_install_script_idx    ON PostI
 -- ----------------------------------------------------------------------
 INSERT INTO TargetType (label) VALUES ("computer");
 INSERT INTO TargetType (label) VALUES ("profile");
+INSERT INTO TargetType (label) VALUES ("computer_in_profile");
 
 INSERT INTO MasteredOnState (label) VALUES ("backup_done");
 INSERT INTO MasteredOnState (label) VALUES ("backup_failed");

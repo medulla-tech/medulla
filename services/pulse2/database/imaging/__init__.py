@@ -1647,14 +1647,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         ret = False
         if type(uuid) == list:
             ret = {}
-            q = session.query(Target).filter(and_(self.target.c.uuid.in_(uuid), self.target_type.c.id == target_type)).all()
+            q = session.query(Target).filter(and_(self.target.c.uuid.in_(uuid), self.target.c.type == target_type)).all()
             for target in q:
                 ret[target.uuid] = True
             for l_uuid in uuid:
                 if not ret.has_key(l_uuid):
                     ret[l_uuid] = False
         else:
-            q = session.query(Target).filter(and_(self.target.c.uuid == uuid, self.target_type.c.id == target_type)).first()
+            q = session.query(Target).filter(and_(self.target.c.uuid == uuid, self.target.c.type == target_type)).first()
             ret = (q != None)
 
         if session_need_to_close:
@@ -1790,6 +1790,50 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return True
 
     ######### MENUS
+    def delProfileMenuTarget(self, uuids):
+        session = create_session()
+        targets = session.query(Target).filter(and_(self.target.c.uuid.in_(uuids), self.target.c.type == P2IT.COMPUTER_IN_PROFILE)).all()
+        for t in targets:
+            session.delete(t)
+        session.flush()
+        session.close()
+        return True
+
+    def setProfileMenuTarget(self, uuids, profile_uuid, params):
+        session = create_session()
+        menu = self.getTargetMenu(profile_uuid, P2IT.PROFILE, session)
+        cache_location_id = {}
+        locations = ComputerLocationManager().getMachinesLocations(uuids)
+
+        hostnames = {}
+        if params.has_key('hostnames'):
+            params['hostnames']
+
+        registered = self.isTargetRegister(uuids, P2IT.COMPUTER_IN_PROFILE, session)
+        for uuid in uuids:
+            if not (registered.has_key(uuid) and registered[uuid]):
+                # self.isTargetRegister(uuid, P2IT.COMPUTER_IN_PROFILE, session):
+                loc_id = 0
+                location_id = locations[uuid]['uuid']
+                if not cache_location_id.has_key(location_id):
+                    loc = session.query(Entity).filter(self.entity.c.uuid == location_id).first()
+                    cache_location_id[location_id] = loc.id
+                loc_id = cache_location_id[location_id]
+                target_name = ''
+                if hostnames.has_key(uuid):
+                    target_name = hostnames[uuid]
+                target = self.__createTarget(session, uuid, target_name, P2IT.COMPUTER_IN_PROFILE, loc_id, menu.id, params)
+            else:
+                target = self.getTargetsByUUID([uuid], session)
+                target = target[0]
+                target.kernel_parameters = params['target_opt_kernel']
+                target.image_parameters = params['target_opt_image']
+                target.fk_menu = menu.id
+                session.save_or_update(target)
+        session.flush()
+        session.close()
+        return [True]
+
     def setMyMenuTarget(self, uuid, params, type):
         session = create_session()
         menu = self.getTargetMenu(uuid, type, session)
@@ -1844,7 +1888,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         session.flush()
         session.close()
-        return [True]
+        return [True, target]
 
     def getMyMenuTarget(self, uuid, type):
         session = create_session()

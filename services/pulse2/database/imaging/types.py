@@ -35,6 +35,7 @@ P2ISS = Pulse2ImagingSynchroStates
 class Pulse2ImagingTypes:
     COMPUTER=1
     PROFILE=2
+    COMPUTER_IN_PROFILE=3
 P2IT = Pulse2ImagingTypes
 
 class Pulse2ImagingMenu:
