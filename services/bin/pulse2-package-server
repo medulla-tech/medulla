@@ -75,6 +75,7 @@ def running(inifile, daemonize):
     if not daemonize:
         hdlr2 = logging.StreamHandler()
         logger.addHandler(hdlr2)
+        logging.getLogger('imaging').addHandler(hdlr2)
 
     try:
         ThreadLauncher().initialize(config)
