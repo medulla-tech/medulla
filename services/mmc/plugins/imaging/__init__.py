@@ -394,10 +394,13 @@ class RpcProxy(RpcProxyI):
             target_type = P2IT.COMPUTER
         elif target_type == 'group':
             target_type = P2IT.PROFILE
-        try:
+        #try:
+        if True:
             db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
             ret = ImagingDatabase().delServiceToTarget(bs_uuid, target_uuid)
-            return xmlrpcCleanup([True, ret])
+            return xmlrpcCleanup(ret)
+        try:
+            pass
         except Exception, e:
             return xmlrpcCleanup([False, e])
 
@@ -429,7 +432,7 @@ class RpcProxy(RpcProxyI):
         try:
             db.setLocationSynchroState(location_id, P2ISS.TODO)
             ret = ImagingDatabase().delServiceToEntity(bs_uuid, location_id)
-            return xmlrpcCleanup([True, ret])
+            return xmlrpcCleanup(ret)
         except Exception, e:
             return xmlrpcCleanup([False, e])
 
@@ -765,21 +768,31 @@ class RpcProxy(RpcProxyI):
         db = ImagingDatabase()
         ret = db.changeTargetsSynchroState(uuids, target_type, P2ISS.RUNNING)
         distinct_loc = self.__generateMenus(logger, db, uuids, target_type)
+        pid = None
+        if target_type == P2IT.PROFILE:
+            pid = uuids[0]
 
-        def treatFailures(result, location_uuid, distinct_loc = distinct_loc, logger = logger, target_type = target_type):
+        def treatFailures(result, location_uuid, distinct_loc = distinct_loc, logger = logger, target_type = target_type, pid = pid):
             failures = []
             success = []
-            for fuuid in result:
-                logger.warn("failed to synchronize menu for %s"%(str(fuuid)))
-                failures.append(fuuid)
-                # failure menu distinct_loc[location_uuid][1][fuuid]
+            for uuid in result:
+                logger.debug("succeed to synchronize menu for %s"%(str(uuid)))
+                success.append(uuid)
 
             for uuid in distinct_loc[location_uuid][1]:
-                if not uuid in failures:
-                    logger.debug("succeed to synchronize menu for %s"%(str(uuid)))
-                    success.append(uuid)
-            db.changeTargetsSynchroState(failures, target_type, P2ISS.TODO)
-            db.changeTargetsSynchroState(success, target_type, P2ISS.DONE)
+                if not uuid in success:
+                    logger.warn("failed to synchronize menu for %s"%(str(uuid)))
+                    failures.append(uuid)
+                    # failure menu distinct_loc[location_uuid][1][fuuid]
+
+            if pid != None:
+                if len(failures) != 0:
+                    db.changeTargetsSynchroState([pid], target_type, P2ISS.TODO)
+                else:
+                    db.changeTargetsSynchroState([pid], target_type, P2ISS.DONE)
+            else:
+                db.changeTargetsSynchroState(failures, target_type, P2ISS.TODO)
+                db.changeTargetsSynchroState(success, target_type, P2ISS.DONE)
             return failures
 
         dl = []
@@ -865,6 +878,14 @@ class RpcProxy(RpcProxyI):
     def setMyMenuTarget(self, uuid, params, target_type):
         db = ImagingDatabase()
         isRegistered = db.isTargetRegister(uuid, target_type)
+        if not isRegistered and target_type == P2IT.COMPUTER and db.isTargetRegister(uuid, P2IT.COMPUTER_IN_PROFILE):
+            # if the computer change from a profile to it's own registering,
+            # we remove the COMPUTER_IN_PROFILE target and register a COMPUTER one
+            try:
+                db.delProfileMenuTarget(uuid)
+            except Exception, e:
+                return [False, "delProfileMenuTarget : %s"%(str(e))]
+
         try:
             ret, target = db.setMyMenuTarget(uuid, params, target_type)
         except Exception, e:
@@ -873,7 +894,6 @@ class RpcProxy(RpcProxyI):
         #WIP
         if not isRegistered:
             logger = logging.getLogger()
-            db = ImagingDatabase()
             ret = db.changeTargetsSynchroState([uuid], target_type, P2ISS.RUNNING)
             distinct_loc = self.__generateMenus(logger, db, [uuid], target_type)
 
