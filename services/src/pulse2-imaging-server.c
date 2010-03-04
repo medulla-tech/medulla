@@ -260,15 +260,15 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
     int fo;
     static unsigned int lastfile = 0, lasttime = 0;
 
-    {
-        char *buff = malloc(256);
 
-        snprintf(buff, 255, "Packet from %s:%d, MAC Address:%s, Command: %02x",
-                 inet_ntoa(si_other->sin_addr), ntohs(si_other->sin_port), mac,
-                 buf[0]);
-        myLogger(buff);
-        free(buff);
-    }
+    char *buff = malloc(256);
+
+    snprintf(buff, 255, "Packet from %s:%d, MAC Address:%s, Command: %02x",
+             inet_ntoa(si_other->sin_addr), ntohs(si_other->sin_port), mac,
+             buf[0]);
+    myLogger(buff);
+    free(buff);
+
     /* Hardware Info... */
     if (buf[0] == 0xAA) {
         char buffer[100 * 1024];
@@ -362,11 +362,18 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         }
         return 0;
     }
-    // change default menu
+    // after a save
+    if (buf[0] == 0xED) {
+        char uuid[36];
+        snprintf(uuid, 36 + 1, "%s", buf + 1);
+        mysystem(3, gPathEndImage, mac, uuid);
+        return 0;
+    }
+    // Ask to change the default boot menu
     if (buf[0] == 0xCD) {
         char item[16];
         snprintf(item, 16, "%d", buf[1]);
-        mysystem(3, gPathEndImage, smac, item);
+        mysystem(3, gPathChangeDefault, mac, item);
         return 0;
     }
     // log data
@@ -630,6 +637,10 @@ void readConfig(char *config_file_path) {
     tmp = iniparser_getstring(ini, "hooks:mtftp_sync_path", "mtftp_sync");
     snprintf(gPathMTFTPSync, 256, "%s/%s", gDirHooks, tmp);
     syslog(LOG_DEBUG, "[hooks] mtftp_sync_path = %s", gPathMTFTPSync);
+
+    tmp = iniparser_getstring(ini, "hooks:change_default_path", "change_default");
+    snprintf(gPathChangeDefault, 256, "%s/%s", gDirHooks, tmp);
+    syslog(LOG_DEBUG, "[hooks] change_default_path = %s", gPathChangeDefault);
 
     // Parse LOGGER section : get args keyword from handler_hand01 section//
     gLogFile =
