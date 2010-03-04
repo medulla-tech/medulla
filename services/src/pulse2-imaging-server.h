@@ -64,6 +64,7 @@ char gPathProcessInventory[256];
 char gPathCreateClient[256];
 char gPathStartImage[256];
 char gPathBootClient[256];
+char gPathChangeDefault[256];
 char gPathEndImage[256];
 char gPathLogAction[256];
 char gPathGetUUID[256];
