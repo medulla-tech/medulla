@@ -77,7 +77,7 @@ if (isset($_POST["bvalid"])) {
             header("Location: ".urlStrRedirect("base/computers/".$type."imgtabs/".$type."tabbootmenu", $params));
         }
     } else {
-        new NotifyWidgetFailure($ret[1]);
+        new NotifyWidgetFailure(sprintf(_T("Failed to synchronize those computers : %s", "imaging"), implode($ret[1], ", ")));
     }
 }
 
