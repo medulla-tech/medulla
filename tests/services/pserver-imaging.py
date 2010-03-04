@@ -26,7 +26,7 @@ Unit tests for the imaging API of the Pulse 2 Package Server
 import os
 import unittest
 import xmlrpclib
-from time import gmtime
+from time import gmtime, sleep
 
 from pulse2.utils import reduceMACAddress
 
@@ -100,6 +100,8 @@ class Imaging(unittest.TestCase):
         self.assertTrue(result)
         self.assertTrue(os.path.exists('/var/lib/pulse2/imaging/uuid-cache.txt'))
         self.assertTrue(os.path.isdir('/var/lib/pulse2/imaging/computers/%s' % 'UUID1'))
+        # Wait a bit for the menu to be generated asynchronously
+        sleep(5)
         self.assertTrue(os.path.exists('/var/lib/pulse2/imaging/bootmenus/%s' % reduceMACAddress(mac)))
 
     def atest_computersMenuSet(self):
