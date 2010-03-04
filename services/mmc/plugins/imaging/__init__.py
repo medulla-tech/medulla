@@ -36,6 +36,7 @@ import mmc.plugins.imaging.iso
 from mmc.support.mmctools import xmlrpcCleanup
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 from mmc.plugins.imaging.config import ImagingConfig
+from mmc.plugins.imaging.profile import ImagingProfile
 from mmc.plugins.base.computers import ComputerManager
 from pulse2.managers.profile import ComputerProfileManager
 from pulse2.managers.location import ComputerLocationManager
@@ -86,6 +87,10 @@ def activate():
     if not ImagingDatabase().activate(config):
         logger.warning("Plugin imaging: an error occured during the database initialization")
         return False
+
+    # register ImagingProfile in ComputerProfileManager but only as a client
+    ComputerProfileManager().register("imaging", ImagingProfile)
+
     return True
 
 class ContextMaker(ContextMakerI):
@@ -769,10 +774,81 @@ class RpcProxy(RpcProxyI):
         ret = db.changeTargetsSynchroState(uuids, target_type, P2ISS.RUNNING)
         distinct_loc = self.__generateMenus(logger, db, uuids, target_type)
         pid = None
+        defer_list = []
         if target_type == P2IT.PROFILE:
             pid = uuids[0]
 
-        def treatFailures(result, location_uuid, distinct_loc = distinct_loc, logger = logger, target_type = target_type, pid = pid):
+            uuids = []
+            for loc_uuid in distinct_loc:
+                uuids.extend(distinct_loc[loc_uuid][1].keys())
+
+            registered = db.isTargetRegister(uuids, P2IT.COMPUTER_IN_PROFILE)
+            for loc_uuid in distinct_loc:
+                url = distinct_loc[loc_uuid][0]
+                menus = distinct_loc[loc_uuid][1]
+                to_register = {}
+                for uuid in menus:
+                    if not registered[uuid]:
+                        to_register[uuid] = menus[uuid]
+
+                if len(to_register.keys()) != 0:
+                    ctx = self.currentContext
+                    hostnames = ComputerManager().getMachineHostname(ctx, {'uuids':to_register.keys()})
+                    macaddress = ComputerManager().getMachineMac(ctx, {'uuids':to_register.keys()})
+                    h_hostnames = {}
+                    if type(hostnames) == list:
+                        for computer in hostnames:
+                            h_hostnames[computer['uuid']] = computer['hostname']
+                    else:
+                         h_hostnames[hostnames['uuid']] = hostnames['hostname']
+                    h_macaddress = {}
+                    index = 0
+                    if type(macaddress[0]) == list:
+                        for computer in macaddress:
+                            h_macaddress[to_register.keys()[index]] = computer[0]
+                            index += 1
+                    else:
+                        h_macaddress[to_register.keys()[0]] = macaddress[0]
+
+                    # some new computers are in the profile
+                    i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
+                    if i != None:
+                        computers = []
+                        for uuid in to_register:
+                            if db.isTargetRegister(uuid, P2IT.COMPUTER):
+                                logger.debug("computer %s is already registered as a P2IT.COMPUTER"%(uuid))
+                                continue
+                            menu = menus[uuid]
+                            imagingData = {'menu':{uuid:menu}, 'uuid':uuid}
+                            computers.append((h_hostnames[uuid], h_macaddress[uuid], imagingData))
+
+                        def treatRegister(results, uuids = to_register.keys()):
+                            failures = uuids
+                            for l_uuid in results:
+                                uuids.remove(l_uuid)
+                            return failures
+
+                        d = i.computersRegister(computers)
+                        d.addCallback(treatRegister)
+                        defer_list.append(d)
+                    else:
+                        logger.error("couldn't initialize the ImagingApi to %s"%(url))
+                        return [False, ""]
+        if len(defer_list) == 0:
+            return self.__synchroTargetsSecondPart(distinct_loc, target_type, pid)
+        else:
+            def sendResult(results, distinct_loc = distinct_loc, target_type = target_type, pid = pid, db = db):
+                for result, uuids in results:
+                    db.delProfileMenuTarget(uuids)
+                return self.__synchroTargetsSecondPart(distinct_loc, target_type, pid)
+            defer_list = defer.DeferredList(defer_list)
+            defer_list.addCallback(sendResult)
+            return defer_list
+
+    def __synchroTargetsSecondPart(self, distinct_loc, target_type, pid):
+        logger = logging.getLogger()
+        db = ImagingDatabase()
+        def treatFailures(result, location_uuid, distinct_loc = distinct_loc, logger = logger, target_type = target_type, pid = pid, db = db):
             failures = []
             success = []
             for uuid in result:
@@ -804,7 +880,6 @@ class RpcProxy(RpcProxyI):
                 logger.error("couldn't initialize the ImagingApi to %s"%(url))
 
             l_menus = distinct_loc[location_uuid][1]
-            print "WOOT : %s" % l_menus
             d = i.computersMenuSet(l_menus)
             d.addCallback(treatFailures, location_uuid)
             dl.append(d)
@@ -932,14 +1007,20 @@ class RpcProxy(RpcProxyI):
                 hostnames = ComputerManager().getMachineHostname(ctx, {'uuids':uuids})
                 macaddress = ComputerManager().getMachineMac(ctx, {'uuids':uuids})
                 h_hostnames = {}
-                for computer in hostnames:
-                    h_hostnames[computer['uuid']] = computer['hostname']
+                if type(hostnames) == list:
+                    for computer in hostnames:
+                        h_hostnames[computer['uuid']] = computer['hostname']
+                else:
+                     h_hostnames[hostnames['uuid']] = hostnames['hostname']
                 params['hostnames'] = h_hostnames
                 h_macaddress = {}
                 index = 0
-                for computer in macaddress:
-                    h_macaddress[uuids[index]] = computer[0]
-                    index += 1
+                if type(macaddress) == list:
+                    for computer in macaddress:
+                        h_macaddress[uuids[index]] = computer[0]
+                        index += 1
+                else:
+                    h_macaddress[uuids[0]] = macaddress
 
                 try:
                     params['target_name'] = '' # put the real name!
