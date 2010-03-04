@@ -776,43 +776,40 @@ class RpcProxy(RpcProxyI):
         pid = None
         defer_list = []
         if target_type == P2IT.PROFILE:
-            pid = uuids[0]
+            h_computers = {}
+            for pid in uuids:
+                uuids = []
+                for loc_uuid in distinct_loc:
+                    uuids.extend(distinct_loc[loc_uuid][1].keys())
 
-            uuids = []
-            for loc_uuid in distinct_loc:
-                uuids.extend(distinct_loc[loc_uuid][1].keys())
+                registered = db.isTargetRegister(uuids, P2IT.COMPUTER_IN_PROFILE)
+                for loc_uuid in distinct_loc:
+                    url = distinct_loc[loc_uuid][0]
+                    menus = distinct_loc[loc_uuid][1]
+                    to_register = {}
+                    for uuid in menus:
+                        if not registered[uuid]:
+                            to_register[uuid] = menus[uuid]
 
-            registered = db.isTargetRegister(uuids, P2IT.COMPUTER_IN_PROFILE)
-            for loc_uuid in distinct_loc:
-                url = distinct_loc[loc_uuid][0]
-                menus = distinct_loc[loc_uuid][1]
-                to_register = {}
-                for uuid in menus:
-                    if not registered[uuid]:
-                        to_register[uuid] = menus[uuid]
+                    if len(to_register.keys()) != 0:
+                        ctx = self.currentContext
+                        hostnames = ComputerManager().getMachineHostname(ctx, {'uuids':to_register.keys()})
+                        macaddress = ComputerManager().getMachineMac(ctx, {'uuids':to_register.keys()})
+                        h_hostnames = {}
+                        if type(hostnames) == list:
+                            for computer in hostnames:
+                                h_hostnames[computer['uuid']] = computer['hostname']
+                        else:
+                             h_hostnames[hostnames['uuid']] = hostnames['hostname']
+                        h_macaddress = {}
+                        index = 0
+                        if type(macaddress[0]) == list:
+                            for computer in macaddress:
+                                h_macaddress[to_register.keys()[index]] = computer[0]
+                                index += 1
+                        else:
+                            h_macaddress[to_register.keys()[0]] = macaddress[0]
 
-                if len(to_register.keys()) != 0:
-                    ctx = self.currentContext
-                    hostnames = ComputerManager().getMachineHostname(ctx, {'uuids':to_register.keys()})
-                    macaddress = ComputerManager().getMachineMac(ctx, {'uuids':to_register.keys()})
-                    h_hostnames = {}
-                    if type(hostnames) == list:
-                        for computer in hostnames:
-                            h_hostnames[computer['uuid']] = computer['hostname']
-                    else:
-                         h_hostnames[hostnames['uuid']] = hostnames['hostname']
-                    h_macaddress = {}
-                    index = 0
-                    if type(macaddress[0]) == list:
-                        for computer in macaddress:
-                            h_macaddress[to_register.keys()[index]] = computer[0]
-                            index += 1
-                    else:
-                        h_macaddress[to_register.keys()[0]] = macaddress[0]
-
-                    # some new computers are in the profile
-                    i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
-                    if i != None:
                         computers = []
                         for uuid in to_register:
                             if db.isTargetRegister(uuid, P2IT.COMPUTER):
@@ -821,19 +818,27 @@ class RpcProxy(RpcProxyI):
                             menu = menus[uuid]
                             imagingData = {'menu':{uuid:menu}, 'uuid':uuid}
                             computers.append((h_hostnames[uuid], h_macaddress[uuid], imagingData))
+                        if not h_computers.has_key(url):
+                            h_computers[url] = []
+                        h_computers[url].extend(computers)
 
-                        def treatRegister(results, uuids = to_register.keys()):
-                            failures = uuids
-                            for l_uuid in results:
-                                uuids.remove(l_uuid)
-                            return failures
+            # some new computers are in the profile
+            for url in h_computers:
+                computers = h_computers[url]
+                i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
+                if i != None:
+                    def treatRegister(results, uuids = to_register.keys()):
+                        failures = uuids
+                        for l_uuid in results:
+                            uuids.remove(l_uuid)
+                        return failures
 
-                        d = i.computersRegister(computers)
-                        d.addCallback(treatRegister)
-                        defer_list.append(d)
-                    else:
-                        logger.error("couldn't initialize the ImagingApi to %s"%(url))
-                        return [False, ""]
+                    d = i.computersRegister(computers)
+                    d.addCallback(treatRegister)
+                    defer_list.append(d)
+                else:
+                    logger.error("couldn't initialize the ImagingApi to %s"%(url))
+
         if len(defer_list) == 0:
             return self.__synchroTargetsSecondPart(distinct_loc, target_type, pid)
         else:
@@ -909,39 +914,54 @@ class RpcProxy(RpcProxyI):
         return xmlrpcCleanup(ret)
 
     def synchroLocation(self, uuid):
+        logger = logging.getLogger()
         db = ImagingDatabase()
-        # get computers in location that need synchro
-        uuids = db.getComputersThatNeedSynchroInEntity(uuid)
+        dl = []
         def __getUUID(x):
             x = x[0].toH()
             return x['uuid']
+
+        # get computers in location that need synchro
+        uuids = db.getComputersThatNeedSynchroInEntity(uuid)
         uuids = map(__getUUID, uuids)
-        # get computers in profiles of location that need synchro
+
+        def treatComputers(results):
+            logger.debug("treatComputers>>>>>>")
+            logger.debug(results)
+
+        if len(uuids) != 0:
+            d1 = self.__synchroTargets(uuids, P2IT.COMPUTER)
+            d1.addCallback(treatComputers)
+            dl.append(d1)
+
+        # get profiles in location that need synchro
         pids = db.getProfilesThatNeedSynchroInEntity(uuid)
-        puuids = []
-        for profile, synchro_state in pids:
-            pid = profile.uuid
-            puuids.extend(map(lambda c: c.uuid, ComputerProfileManager().getProfileContent(pid)))
-        puuids = db.getComputersSynchroStates(puuids)
-        pids_uuids = []
-        for computer, synchro_state in puuids:
-            if synchro_state.id == P2ISS.TODO or synchro_state.id == P2ISS.INIT_ERROR:
-                computer = computer.toH()
-                pids_uuids.append(computer['uuid'])
+        pids = map(__getUUID, pids)
 
-        uuids.extend(pids_uuids)
-        # synchronize all
-        # ret1 = self.__synchroTargets(uuids, P2IT.COMPUTER)
+        def treatProfiles(results):
+            logger.debug("treatProfiles>>>>>>")
+            logger.debug(results)
+
+        if len(pids) != 0:
+            d2 = self.__synchroTargets(pids, P2IT.PROFILE)
+            d2.addCallback(treatProfiles)
+            dl.append(d2)
+
         # synchro the location
-        ret2 = self.__synchroLocation(uuid)
-        return ret2
+        def treatLocation(results):
+            logger.debug("treatLocation>>>>>>")
+            logger.debug(results)
 
-#        def sendResult(results):
-#            return xmlrpcCleanup(results)
-#
-#        dl = defer.DeferredList((ret1, ret2))
-#        dl.addCallback(sendResult)
-#        return dl
+        d3 = self.__synchroLocation(uuid)
+        d3.addCallback(treatLocation)
+        dl.append(d3)
+
+        def sendResult(results):
+            return xmlrpcCleanup(results)
+
+        dl = defer.DeferredList(dl)
+        dl.addCallback(sendResult)
+        return dl
 
     ###### Menus
     def getMyMenuTarget(self, uuid, target_type):
