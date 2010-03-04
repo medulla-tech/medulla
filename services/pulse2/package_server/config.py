@@ -63,10 +63,9 @@ class P2PServerCP(pulse2.utils.Singleton):
     tmp_input_dir = '/tmp/packages/default'
 
     if sys.platform != "win32":
-        umask = 0077
         daemon_group = 0
         daemon_user = pwd.getpwnam('root')[2]
-        umask = string.atoi('0077', 8)
+        umask = int('0022', 8)
         pidfile = '/var/run/pulse2-package-server.pid'
     if sys.platform == "win32":
         use_iocp_reactor = False
@@ -80,8 +79,9 @@ class P2PServerCP(pulse2.utils.Singleton):
     SMART_DETECT_SIZE = 3
 
     detectSmartMethod = ['none', 'last', 'loop', 'size']
+
     def packageDetectSmartMethod(self):
-        return ', '.join(map(lambda x:self.detectSmartMethod[x], self.package_detect_smart_method))
+        return ', '.join(map(lambda x: self.detectSmartMethod[x], self.package_detect_smart_method))
 
     package_detect_smart = False
     package_detect_smart_method = []
@@ -158,7 +158,7 @@ class P2PServerCP(pulse2.utils.Singleton):
                 if self.cp.has_option("daemon", "group"):
                     self.daemon_group = grp.getgrnam(self.cp.get("daemon", "group"))[2]
                 if self.cp.has_option("daemon", "umask"):
-                    self.umask = string.atoi(self.cp.get("daemon", "umask"), 8)
+                    self.umask = int(self.cp.get("daemon", "umask"), 8)
 
         if sys.platform == "win32":
             if self.cp.has_option("main", "use_iocp_reactor"):
@@ -229,14 +229,14 @@ class P2PServerCP(pulse2.utils.Singleton):
             if re.compile('^mirror:[0-9]+$').match(section):
                 mount_point = self.cp.get(section, 'mount_point')
                 src = self.cp.get(section, 'src')
-                mirror = {'mount_point':mount_point, 'src':src}
+                mirror = {'mount_point': mount_point, 'src': src}
                 if self.cp.has_option(section, 'mirror'):
                     mirror['mirror'] = self.cp.get(section, 'mirror')
                 self.mirrors.append(mirror)
             if re.compile('^package_api_get:[0-9]+$').match(section):
                 mount_point = self.cp.get(section, 'mount_point')
                 src = self.cp.get(section, 'src')
-                self.package_api_get.append({'mount_point':mount_point, 'src':src})
+                self.package_api_get.append({'mount_point': mount_point, 'src': src})
             if re.compile('^package_api_put:[0-9]+$').match(section):
                 mount_point = self.cp.get(section, 'mount_point')
                 src = self.cp.get(section, 'src')
@@ -246,7 +246,7 @@ class P2PServerCP(pulse2.utils.Singleton):
                     self.package_detect_tmp_activate = True
                     pap_tmp_input_dir = self.cp.get(section, 'tmp_input_dir')
 
-                self.package_api_put.append({'mount_point':mount_point, 'src':src, 'tmp_input_dir':pap_tmp_input_dir})
+                self.package_api_put.append({'mount_point': mount_point, 'src': src, 'tmp_input_dir': pap_tmp_input_dir})
 
         # [mmc_agent] section parsing
         self.mmc_agent = {}
@@ -259,8 +259,7 @@ class P2PServerCP(pulse2.utils.Singleton):
                 'enablessl' : True,
                 'verifypeer' : False,
                 'cacert' : "/etc/mmc/pulse2/package-server/keys/cacert.pem",
-                'localcert' : "/etc/mmc/pulse2/package-server/keys/privkey.pem"
-            }
+                'localcert' : "/etc/mmc/pulse2/package-server/keys/privkey.pem"}
             if self.cp.has_option('mmc_agent', 'host'):
                 self.mmc_agent['host'] = self.cp.get('mmc_agent', 'host')
             if self.cp.has_option('mmc_agent', 'port'):
@@ -350,7 +349,7 @@ class P2PServerCP(pulse2.utils.Singleton):
             if self.cp.has_option("imaging_api", 'uuid'):
                 uuid = self.cp.get("imaging_api", 'uuid')
             if not isUUID(uuid):
-                raise TypeError ("'%s' is not an valid UUID : in my config file, section [imaging_api], set a correct uuid." % uuid)
+                raise TypeError("'%s' is not an valid UUID : in my config file, section [imaging_api], set a correct uuid." % uuid)
 
             self.imaging_api = {
                 'mount_point'       : imaging_mp,
@@ -368,8 +367,7 @@ class P2PServerCP(pulse2.utils.Singleton):
                 'postinst_folder'   : postinst_folder,
                 'src'               : src,
                 'uuid'              : uuid,
-                'uuid_cache_file'   : uuid_cache_file,
-            }
+                'uuid_cache_file'   : uuid_cache_file}
 
         if self.cp.has_option("main", "package_detect_activate"):
             # WARN this must overide the previously defined activate if it is in the config file
@@ -430,6 +428,7 @@ class P2PServerCP(pulse2.utils.Singleton):
         if self.cp.has_option("main", "up_assign_algo"):
             self.up_assign_algo = self.cp.get("main", 'up_assign_algo')
 
+
 def config_addons(conf):
     if len(conf.mirrors) > 0:
 #        for mirror_params in conf.mirrors:
@@ -439,6 +438,7 @@ def config_addons(conf):
             map(lambda x: add_server(x, conf), conf.package_api_get)
     return conf
 
+
 def add_access(mirror_params, conf):
     mirror_params['port'] = conf.port
     mirror_params['server'] = conf.bind
@@ -447,11 +447,8 @@ def add_access(mirror_params, conf):
     mirror_params['file_access_port'] = conf.port
     return mirror_params
 
+
 def add_server(mirror_params, conf):
     mirror_params['port'] = conf.port
     mirror_params['server'] = conf.bind
     return mirror_params
-
-
-
-
