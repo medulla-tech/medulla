@@ -211,10 +211,10 @@ class ImagingApi(MyXmlrpc):
         try:
             # check MAC Addr is conform
             if not isMACAddress(macAddress):
-                raise TypeError, 'Malformed MAC address: %s' % macAddress
+                raise TypeError('Malformed MAC address: %s' % macAddress)
             # check computer name is conform
             if not len(computerName):
-                raise TypeError, 'Malformed computer name: %s' % computerName
+                raise TypeError('Malformed computer name: %s' % computerName)
             profile, entities, hostname, domain = splitComputerPath(computerName)
         except TypeError, ex:
             self.logger.error('Imaging: Won\'t register %s as %s : %s' % (macAddress, computerName, ex))
@@ -442,6 +442,7 @@ class ImagingApi(MyXmlrpc):
         @param mac : The mac address of the client
         @type menus: MAC Address
         """
+
         def _getmacCB(result):
             if result and type(result) == dict :
                 computer_uuid = result['uuid']
@@ -514,7 +515,7 @@ class ImagingApi(MyXmlrpc):
             else:
                 computerUUID = computerUUID['uuid']
                 client = self._getXMLRPCClient()
-                func = 'imaging.computerChangeDefaultMenu'
+                func = 'imaging.computerChangeDefaultMenuItem'
                 args = (self.config.imaging_api['uuid'], computerUUID, num)
                 d = client.callRemote(func, *args)
                 d.addCallbacks(onSuccess, client.onError, errbackArgs = (func, args, False))
@@ -568,7 +569,6 @@ class ImagingApi(MyXmlrpc):
                 d.addCallbacks(onSuccess, client.onError, errbackArgs = (func, args, False))
                 return d
         return ret
-
 
     def xmlrpc_imagingServerImageDelete(self, imageUUID):
         """
