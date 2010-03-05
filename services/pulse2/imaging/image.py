@@ -114,7 +114,7 @@ class Pulse2Image:
         for line_size_file in fd_size_file:
             line_size_file_part = re.search("^([0-9]+)", line_size_file)
             if not line_size_file_part == None:
-                self.size = int(line_size_file_part.group(1)) * 512
+                self.size = int(line_size_file_part.group(1)) * 1024
         fd_size_file.close()
 
 
