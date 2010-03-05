@@ -78,7 +78,7 @@ def myCall():
         return endBack()
 
     try:
-        callFunction(imagingAPI.setDefaultMenu(mac, requested_menu))
+        callFunction(imagingAPI.computerChangeDefaultMenuItem(mac, requested_menu))
     except AttributeError, e:
         logging.getLogger().error('HOOK %s : %s' % (sys.argv[0], e))
         exitcode = ERROR_CLIENT
