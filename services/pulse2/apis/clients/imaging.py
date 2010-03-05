@@ -106,8 +106,8 @@ class Imaging(Pulse2Api):
         d = self.callRemote("computerUnregister", uuid, archive)
         d.addErrback(self.onErrorRaise, "Imaging:computerUnregister", [uuid, archive])
         return d
-    # Computer Menu management
 
+    # Computer Menu management
     def computerMenuUpdate(self, uuid):
         """
         Ask the pserver to update a menu.
@@ -123,6 +123,14 @@ class Imaging(Pulse2Api):
         """
         d = self.callRemote("computersMenuSet", menus)
         d.addErrback(self.onErrorRaise, "Imaging:computersMenuSet", menus)
+        return d
+
+    def computerSetDefaultMenuItem(self, uuid, num):
+        """
+        Ask the pserver to change the default item in a menu
+        """
+        d = self.callRemote("computerSetDefaultMenuItem", uuid, num)
+        d.addErrback(self.onErrorRaise, "Imaging:computerSetDefaultMenuItem", uuid, num)
         return d
 
     # Computer log management
