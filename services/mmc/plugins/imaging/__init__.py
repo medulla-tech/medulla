@@ -1296,7 +1296,7 @@ class RpcProxy(RpcProxyI):
             ret = db.registerImage(imaging_server_uuid, computer_uuid, image)
             ret = [ret, '']
         except Exception, e:
-            logger.exception(e)
+            logging.getlogger().exception(e)
             ret = [False, str(e)]
         return ret
 
