@@ -41,21 +41,25 @@ if (!$gid) { // TODO !!
         $item = null;
     }
     if ($group->type == 0) {
-        __my_header(sprintf(_T("Display group '%s' content", "dyngroup"), $group->getName()), $sidemenu, $item);
+        __my_header(sprintf(_T("Display group '%s' content", "dyngroup"), $group->getName()), $sidemenu, $item, $group);
     } else {
-        __my_header(sprintf(_T("Display profile '%s' content", "dyngroup"), $group->getName()), $sidemenu, $item);
+        __my_header(sprintf(_T("Display profile '%s' content", "dyngroup"), $group->getName()), $sidemenu, $item, $group);
     }
     $group->prettyDisplay();
 }
 
-function __my_header($label, $sidemenu, $item) {
+function __my_header($label, $sidemenu, $item, $group) {
     $p = new PageGenerator($label);
     if (!empty($item)) {
         $sidemenu->forceActiveItem($item->action);
     } else {
-        /* Highlight the "All groups" menu item on the left if the group is
-           not displayed on the menu bar */
-        $sidemenu->forceActiveItem('list');
+        if ($group->type == 0) {
+            /* Highlight the "All groups" menu item on the left if the group is
+               not displayed on the menu bar */
+            $sidemenu->forceActiveItem('list');
+        } else {
+            $sidemenu->forceActiveItem('list_profiles');
+        }
     }
     $p->setSideMenu($sidemenu);
     $p->display();
