@@ -125,12 +125,12 @@ class Imaging(Pulse2Api):
         d.addErrback(self.onErrorRaise, "Imaging:computersMenuSet", menus)
         return d
 
-    def computerSetDefaultMenuItem(self, uuid, num):
+    def computerChangeDefaultMenuItem(self, uuid, num):
         """
         Ask the pserver to change the default item in a menu
         """
-        d = self.callRemote("computerSetDefaultMenuItem", uuid, num)
-        d.addErrback(self.onErrorRaise, "Imaging:computerSetDefaultMenuItem", uuid, num)
+        d = self.callRemote("computerChangeDefaultMenuItem", uuid, num)
+        d.addErrback(self.onErrorRaise, "Imaging:computerChangeDefaultMenuItem", uuid, num)
         return d
 
     # Computer log management
