@@ -302,12 +302,12 @@ class Imaging(Pulse2Api):
         return d
 
     # Images related stuff
-    def imageRegister(self, MACAddress, image_uuid):
+    def imageDone(self, MACAddress, image_uuid):
         """
-        Declare a new image done on computer
+        Declare a new image image_uuid as done on computer MACAddress
         """
-        d = self.callRemote("imageRegister", MACAddress, image_uuid)
-        d.addErrback(self.onErrorRaise, "Imaging:logClientAction", MACAddress, image_uuid)
+        d = self.callRemote("imageDone", MACAddress, image_uuid)
+        d.addErrback(self.onErrorRaise, "Imaging:imageDone", MACAddress, image_uuid)
         return d
 
 
