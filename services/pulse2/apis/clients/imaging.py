@@ -274,6 +274,7 @@ class Imaging(Pulse2Api):
         d.addErrback(self.onErrorRaise, "Imaging:imagingServerConfigurationSet", configuration)
         return d
 
+    # inventory related stuff
     def injectInventory(self, uuid, inventory):
         """
         Called by pulse2-imaging-server to give the Package Server a new inventory from MACAddress.
@@ -282,22 +283,32 @@ class Imaging(Pulse2Api):
         d.addErrback(self.onErrorRaise, "Imaging:injectInventory", [uuid, inventory])
         return d
 
+    # misc stuff
     def getComputerByMac(self, MACAddress):
         """
-        Get a computer UUID using the MAC Adress
+        Get a computer UUID using the MAC Address
         """
         d = self.callRemote("getComputerByMac", MACAddress)
         d.addErrback(self.onErrorRaise, "Imaging:getComputerByMac", MACAddress)
         return d
 
-    def logClientAction(self, mac, level, phase, message):
+    # Logging stuff
+    def logClientAction(self, uuid, level, phase, message):
         """
-        Get a computer UUID using the MAC Address
+        Log action done by uuid
         """
-        d = self.callRemote("logClientAction", mac, level, phase, message)
-        d.addErrback(self.onErrorRaise, "Imaging:logClientAction", mac, level, phase, message)
+        d = self.callRemote("logClientAction", uuid, level, phase, message)
+        d.addErrback(self.onErrorRaise, "Imaging:logClientAction", uuid, level, phase, message)
         return d
 
+    # Images related stuff
+    def imageRegister(self, computer_uuid, image_uuid):
+        """
+        Declare a new image done on computer
+        """
+        d = self.callRemote("imageRegister", computer_uuid, image_uuid)
+        d.addErrback(self.onErrorRaise, "Imaging:logClientAction", computer_uuid, image_uuid)
+        return d
 
 class ImagingApi(Imaging):
 # need to get a PackageApiManager, it will manage a PackageApi for each mirror
