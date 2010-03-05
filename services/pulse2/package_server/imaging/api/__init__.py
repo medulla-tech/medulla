@@ -37,9 +37,11 @@ from pulse2.package_server.imaging.cache import UUIDCache
 from pulse2.package_server.imaging.api.status import Status
 from pulse2.package_server.imaging.menu import isMenuStructure, ImagingDefaultMenuBuilder, ImagingComputerMenuBuilder
 
-from pulse2.utils import isMACAddress, splitComputerPath, macToNode, isUUID
+from pulse2.utils import isMACAddress, splitComputerPath, macToNode, isUUID, rfc3339Time, humanReadable
 from pulse2.apis import makeURL
+from pulse2.imaging.image import Pulse2Image
 
+from time import gmtime
 try:
     import uuid
 except ImportError:
@@ -522,16 +524,9 @@ class ImagingApi(MyXmlrpc):
                 return d
         return ret
 
-    def xmlrpc_imageRegister(self, computerMACAddress, imageUUID, isMaster, name, desc, path, size, creationDate, creator = False):
+    def xmlrpc_imageDone(self, computerMACAddress, imageUUID):
         """
         Called by the imaging server to register a new image.
-
-        @param isMaster: Flag telling if this is a master or a backup image
-        @type isMaster: bool
-        @param size: image size in bytes
-        @type size: int
-        @param creationDate: image creation timestamp
-        @type creationDate: tuple (using tuple(time.gmtime()) format)
 
         @return: True if successful
         @rtype: bool
@@ -561,10 +556,21 @@ class ImagingApi(MyXmlrpc):
                 self.logger.error("Can't get computer UUID for MAC address %s" % computerMACAddress)
                 ret = False
             else:
-                computerUUID = computerUUID['uuid']
+                # start gathering details about our image
+
+                c_uuid = computerUUID['uuid']
+                isMaster = False # by default, an image is private
+                path = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['masters_folder'], imageUUID)
+                image = Pulse2Image(path)
+                size = image.size
+                creationDate = tuple(gmtime())
+                name = "Backup of %s" % computerUUID['shortname']
+                desc = "%s, %s" % (rfc3339Time(), humanReadable(size))
+                creator = ""
+
                 client = self._getXMLRPCClient()
                 func = 'imaging.imageRegister'
-                args = (self.config.imaging_api['uuid'], computerUUID, imageUUID, isMaster, name, desc, path, size, creationDate, creator)
+                args = (self.config.imaging_api['uuid'], c_uuid, imageUUID, isMaster, name, desc, path, size, creationDate, creator)
                 d = client.callRemote(func, *args)
                 d.addCallbacks(onSuccess, client.onError, errbackArgs = (func, args, False))
                 return d
