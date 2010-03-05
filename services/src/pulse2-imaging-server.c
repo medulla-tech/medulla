@@ -275,7 +275,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         char filename[256];
         int buffer_len = 0;
         if (analyseresult(mysystem(2, gPathBootClient, mac))) {
-	    /* Fixme : We Should also send back a NAK */
+            /* Fixme : We Should also send back a NAK */
             return 0;
         }
 
@@ -674,7 +674,7 @@ int main(void) {
 
     /* Daemonize here */
     if ((daemon(0, 0) != 0)) {
-	diep("daemon");
+        diep("daemon");
     }
 
     pid = getpid();
