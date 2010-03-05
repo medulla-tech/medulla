@@ -465,3 +465,37 @@ def rfc3339Time(ref = False):
     if not ref:
         ref = gmtime()
     return strftime('%Y-%m-%dT%H:%M:%SZ', ref)
+
+
+def rfc3339Time(ref = False):
+    """
+    Return a RFC 3339 string representing the time @ref
+    """
+    if not ref:
+        ref = gmtime()
+    return strftime('%Y-%m-%dT%H:%M:%SZ', ref)
+
+
+def humanFormat(num, unit = "B", base = 1024):
+    """
+    port of my famous "human readable" formating function
+    """
+
+    assert type(num) in [float, int]
+    assert type(unit) in [str]
+    assert type(base) in [int]
+
+    units = ["Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi", "Yi"]
+
+    ret = "%s" % num
+    num = float(num)
+
+    if num < base:
+        ret = "%.0f %s" % (num, unit)
+    else:
+        for i in units:
+            num /= base
+            if num < base:
+                ret = "%.1f %s%s" % (num, i, unit)
+                break
+    return ret
