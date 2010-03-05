@@ -78,7 +78,7 @@ def myCall():
         return endBack()
 
     try:
-        callFunction(imagingAPI.computerDoneImage(mac, uuid))
+        callFunction(imagingAPI.imageDone(mac, uuid))
     except AttributeError, e:
         logging.getLogger().error('HOOK %s : %s' % (sys.argv[0], e))
         exitcode = ERROR_CLIENT
