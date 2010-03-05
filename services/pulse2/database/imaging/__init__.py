@@ -1,7 +1,7 @@
 # -*- coding: utf-8; -*-
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# (c) 2007-2009 Mandriva, http://www.mandriva.com/
+# (c) 2007-2010 Mandriva, http://www.mandriva.com/
 #
 # $Id$
 #
@@ -204,13 +204,13 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         self.menu = Table(
             "Menu",
             self.metadata,
-            # cant put them for circular dependancies reasons, the join must be explicit
+            # cant put them for circular dependencies reasons, the join must be explicit
             # Column('fk_default_item', Integer, ForeignKey('MenuItem.id')),
             Column('fk_default_item', Integer),
             # Column('fk_default_item_WOL', Integer, ForeignKey('MenuItem.id')),
             Column('fk_default_item_WOL', Integer),
             Column('fk_protocol', Integer, ForeignKey('Protocol.id')),
-            # fk_name is not an explicit FK, you need to choose the lang before beeing able to join
+            # fk_name is not an explicit FK, you need to choose the lang before being able to join
             Column('fk_synchrostate', Integer, ForeignKey('SynchroState.id')),
             useexisting=True,
             autoload = True
@@ -220,7 +220,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             "MenuItem",
             self.metadata,
             Column('fk_menu', Integer, ForeignKey('Menu.id')),
-            # fk_name is not an explicit FK, you need to choose the lang before beeing able to join
+            # fk_name is not an explicit FK, you need to choose the lang before being able to join
             useexisting=True,
             autoload = True
         )
@@ -247,7 +247,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             self.metadata,
             Column('fk_boot_service', Integer, ForeignKey('BootService.id'), primary_key=True),
             # Column('fk_imaging_server', Integer, ForeignKey('ImagingServer.id'), primary_key=True),
-            # cant declare it implicit as a FK else it make circular dependancies
+            # cant declare it implicit as a FK else it make circular dependencies
             Column('fk_imaging_server', Integer, primary_key=True),
             useexisting=True,
             autoload = True
@@ -531,7 +531,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             self.logger.error("cant find any imaging_server for menu '%s'"%(menu_id))
             return  None
 
-    def getMenuContent(self, menu_id, type = P2IM.ALL, start = 0, end = -1, filter = '', session = None):# TODO implement the start/end with a union betwen q1 and q2
+    def getMenuContent(self, menu_id, type = P2IM.ALL, start = 0, end = -1, filter = '', session = None):# TODO implement the start/end with a union between q1 and q2
         session_need_close = False
         if session == None:
             session = create_session()
@@ -645,7 +645,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             q = q.filter(self.target.c.type == 2)
         else:
             self.logger.error("type %s does not exists!"%(type))
-            # to be sure we dont get anything, this is an error case!
+            # to be sure we don't get anything, this is an error case!
             q = q.filter(self.target.c.type == 0)
         if filter != '':
             q = q.filter(or_(self.imaging_log.c.title.like('%'+filter+'%'), self.target.c.name.like('%'+filter+'%')))
@@ -889,7 +889,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 session.save_or_update(bs)
         mi = self.__getMenuItemByUUID(session, mi_uuid)
         if mi == None:
-            raise '%s:This MenuItem doesnot exists'%(P2ERR.ERR_UNEXISTING_MENUITEM)
+            raise '%s:This MenuItem does not exists'%(P2ERR.ERR_UNEXISTING_MENUITEM)
         ret = self.__fillMenuItem(session, mi, mi.fk_menu, params)
         # TODO : what do we do with ret ?
         session.flush()
@@ -1586,7 +1586,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return session.query(MenuItem).add_entity(BootServiceInMenu).select_from(self.menu_item.join(self.boot_service_in_menu)).filter(self.menu_item.c.fk_menu == menu_id).all()
 
     def __duplicateDefaultMenuItem(self, session, loc_id = None, p_id = None):
-        # warning ! cant be an image !
+        # warning ! can't be an image !
         default_list = []
         if p_id != None:
             # get the profile menu
@@ -2206,8 +2206,8 @@ class DBObject(object):
             if i in self.to_be_exported:
                 ret[i] = getattr(self, i)
             if i in self.need_iteration and level < 1:
-                # we dont want to enter in an infinite loop
-                # and generaly we dont need more levels
+                # we don't want to enter in an infinite loop
+                # and generally we don't need more levels
                 ret[i] = getattr(self, i).toH(level+1)
         ret['imaging_uuid'] = self.getUUID()
         return ret
