@@ -73,21 +73,25 @@ try:
 except ImportError:
     import mmc.support.uuid as uuid
 
+
 class Singleton(object):
     """
     Duplicate from the Singleton() class from the MMC Project,
     to remove unwanted dependencies
     """
+
     def __new__(cls, *args):
         if not '_the_instance' in cls.__dict__:
             cls._the_instance = object.__new__(cls)
         return cls._the_instance
+
 
 class Pulse2ConfigParser(ConfigParser):
     """
         Duplicate from the MMCConfigParser() class from the MMC Project,
         to remove unwanted dependancies
     """
+
     def __init__(self):
         ConfigParser.__init__(self)
 
@@ -144,7 +148,6 @@ def xmlrpcCleanup(data):
     else:
         ret = data
     return ret
-
 
 
 def unique(s):
@@ -221,17 +224,19 @@ def unique(s):
             u.append(x)
     return u
 
+
 def same_network(ip1, ip2, netmask):
     try:
-        ip1 = map(lambda x:int(x), ip1.split('.'))
-        ip2 = map(lambda x:int(x), ip2.split('.'))
-        netmask = map(lambda x:int(x), netmask.split('.'))
-        for i in [0,1,2,3]:
+        ip1 = map(lambda x: int(x), ip1.split('.'))
+        ip2 = map(lambda x: int(x), ip2.split('.'))
+        netmask = map(lambda x: int(x), netmask.split('.'))
+        for i in range(4):
             if ip1[i].__and__(netmask[i]) != ip2[i].__and__(netmask[i]):
                 return False
     except ValueError:
         return False
     return True
+
 
 def onlyAddNew(obj, value):
     if type(value) == list:
@@ -252,26 +257,32 @@ def getConfigFile(module, path = "/etc/mmc/plugins/"):
     """Return the path of the default config file for a plugin"""
     return os.path.join(path, module) + ".ini"
 
+
 def isdigit(i):
     if type(i) == int or type(i) == long:
         return True
-    if (type(i) == str or type(i) == unicode) and re.search("^\d*$",i):
+    if (type(i) == str or type(i) == unicode) and re.search("^\d*$", i):
         return True
     return False
 
-def grep(string,list):
-    expr = re.compile(string)
-    return filter(expr.search,list)
 
-def grepv(string,list):
+def grep(string, list):
+    expr = re.compile(string)
+    return filter(expr.search, list)
+
+
+def grepv(string, list):
     expr = re.compile(string)
     return [item for item in list if not expr.search(item)]
+
 
 def whoami():
     return inspect.stack()[1][3]
 
+
 def whosdaddy():
     return inspect.stack()[2][3]
+
 
 def isCiscoMacAddress(mac_addr):
     """
@@ -287,6 +298,7 @@ def isCiscoMacAddress(mac_addr):
     regex = '^([0-9a-f]{4}\.[0-9a-f]{4}\.[0-9a-f]{4})$'
     return re.match(regex, mac_addr) != None
 
+
 def isLinuxMacAddress(mac_addr):
     """
     Check that the given MAC adress is a linux-formatted MAC Address.
@@ -300,6 +312,7 @@ def isLinuxMacAddress(mac_addr):
         return False
     regex = '^([0-9a-fA-F][0-9a-fA-F]:){5}([0-9a-fA-F][0-9a-fA-F])$'
     return re.match(regex, mac_addr) != None
+
 
 def isWinMacAddress(mac_addr):
     """
@@ -315,6 +328,7 @@ def isWinMacAddress(mac_addr):
     regex = '^([0-9a-fA-F][0-9a-fA-F]-){5}([0-9a-fA-F][0-9a-fA-F])$'
     return re.match(regex, mac_addr) != None
 
+
 def isShortMacAddress(mac_addr):
     """
     Check that the given MAC adress is a short-formatted MAC Address.
@@ -329,6 +343,7 @@ def isShortMacAddress(mac_addr):
     regex = '^(([0-9a-fA-F]){12})$'
     return re.match(regex, mac_addr) != None
 
+
 def isMACAddress(mac_addr):
     """
     Check that the given MAC adress seems to be a MAC Address.
@@ -339,6 +354,7 @@ def isMACAddress(mac_addr):
     @rtype: bool
     """
     return isCiscoMacAddress(mac_addr) or isLinuxMacAddress(mac_addr) or isWinMacAddress(mac_addr) or isShortMacAddress(mac_addr)
+
 
 def reduceMACAddress(mac):
     """
@@ -351,12 +367,14 @@ def reduceMACAddress(mac):
     ret = ret.replace('.', '')
     return ret
 
+
 def normalizeMACAddress(mac):
     """
     @return: the MAC address normalized (see this module documentation)
     """
     assert isMACAddress(mac)
-    return ':'.join(map(lambda (x,y): x + y, zip(reduceMACAddress(mac)[0:11:2], reduceMACAddress(mac)[1:12:2]))) # any questions ?
+    return ':'.join(map(lambda (x, y): x + y, zip(reduceMACAddress(mac)[0:11:2], reduceMACAddress(mac)[1:12:2]))) # any questions ?
+
 
 def macToNode(mac):
     """
@@ -367,6 +385,7 @@ def macToNode(mac):
         return int(reduceMACAddress(mac), 16)
     except:
         return 0
+
 
 def isUUID(value):
     """
@@ -390,6 +409,7 @@ def isUUID(value):
         except (ValueError, AttributeError):
             ret = False
     return ret
+
 
 def splitComputerPath(path):
     """
@@ -419,7 +439,7 @@ def splitComputerPath(path):
         for entity in entities.split('/'):
             # FIXME: re to check entity name ?
             if entity and not re.match('^[a-zA-Z0-9]{3,64}$', entity):
-                raise TypeError, 'Bad entity: %s' % entity
+                raise TypeError('Bad entity: %s' % entity)
     else:
         entities = ''
 
@@ -430,9 +450,9 @@ def splitComputerPath(path):
         domain = ''
 
     if domain and not re.match('^([a-z][a-z0-9-]*[a-z0-9]\.){0,10}[a-z][a-z0-9-]*[a-z0-9]$', domain):
-        raise TypeError, 'Bad domain: %s' % domain
+        raise TypeError('Bad domain: %s' % domain)
 
     if not re.match('^[a-z0-9][a-z0-9-]*[a-z0-9]$', hostname):
-        raise TypeError, 'Bad hostname: %s' % hostname
+        raise TypeError('Bad hostname: %s' % hostname)
 
     return (profile, entities, hostname, domain)
