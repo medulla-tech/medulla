@@ -99,7 +99,7 @@ class ImagingApi(MyXmlrpc):
             if result and type(result) == dict :
                 client = self._getXMLRPCClient()
                 func = 'imaging.logClientAction'
-                args = (result['uuid'], level, phase, message)
+                args = (self.config.imaging_api['uuid'], result['uuid'], level, phase, message)
                 d = client.callRemote(func, *args)
                 d.addCallbacks(lambda x : True, client.onError, errbackArgs = (func, args, 0))
                 return d
@@ -309,7 +309,7 @@ class ImagingApi(MyXmlrpc):
             if result and type(result) == dict:
                 client = self._getXMLRPCClient()
                 func = 'imaging.injectInventory'
-                args = (result['uuid'], Inventory)
+                args = (self.config.imaging_api['uuid'], result['uuid'], Inventory)
                 d = client.callRemote(func, *args)
                 d.addCallbacks(lambda x: True, client.onError, errbackArgs=(func, args, 0))
                 return d
