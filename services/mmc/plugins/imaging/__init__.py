@@ -1247,7 +1247,7 @@ class RpcProxy(RpcProxyI):
             return [False, "imaging.getComputerByMac() : I was unable to find a computer corresponding to the MAC address %s" % mac]
         return [True, {'uuid': "UUID%s" % computer['uuid'], 'mac': mac, 'shortname': computer['hostname'], 'fqdn': computer['hostname']}]
 
-    def logClientAction(self, uuid, level, phase, message):
+    def logClientAction(self, imaging_server_uuid, uuid, level, phase, message):
         """
         Called by the package server, to log some info
         """
@@ -1282,7 +1282,7 @@ class RpcProxy(RpcProxyI):
             ret = [False, str(e)]
         return ret
 
-    def injectInventory(self, computer_uuid, inventory=None):
+    def injectInventory(self, imaging_server_uuid, computer_uuid, inventory=None):
         """
         Called by the Package Server to inject an inventory.
         """
@@ -1298,7 +1298,7 @@ class RpcProxy(RpcProxyI):
         menu = self.__generateDefaultSuscribeMenu(logger, db)
         return xmlrpcCleanup(menu)
 
-    def computerChangeDefaultMenuItem(self, computer_uuid, item_number):
+    def computerChangeDefaultMenuItem(self, imaging_server_uuid, computer_uuid, item_number):
         """
         Called by the Package Server to change the default value of a menu
         """
