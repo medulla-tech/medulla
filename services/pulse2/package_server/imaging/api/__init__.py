@@ -481,6 +481,46 @@ class ImagingApi(MyXmlrpc):
         d.addCallback(_getmacCB)
         return d
 
+    def xmlrpc_computerChangeDefaultMenuItem(self, mac, num):
+        """
+        Called by computer MAC when he want to set its default entry to num
+
+        @param mac : The mac address of the client
+        @param num : The menu number
+        @type mac: MAC Address
+        @type num: int
+        """
+
+        def onSuccess(result):
+            if type(result) != list and len(result) != 2:
+                self.logger.error('Imaging: Couldn\'t set default entry on %s for %s : %s' % (num, computerUUID, str(result)))
+                ret = False
+            elif not result[0]:
+                self.logger.error('Imaging: Couldn\'t set default entry on %s for %s : %s' % (num, computerUUID, str(result)))
+                ret = False
+            else:
+                self.logger.error('Imaging: Couldn\'t set default entry on %s for %s : %s' % (num, computerUUID, str(result)))
+                ret = True
+            return ret
+
+        if not isMACAddress(mac):
+            self.logger.error("Bad computer MAC %s" % str(mac))
+            ret = False
+        else:
+            computerUUID = self.myUUIDCache.getByMac(mac)
+            if not computerUUID:
+                self.logger.error("Can't get computer UUID for MAC address %s" % mac)
+                ret = False
+            else:
+                computerUUID = computerUUID['uuid']
+                client = self._getXMLRPCClient()
+                func = 'imaging.computerChangeDefaultMenu'
+                args = (self.config.imaging_api['uuid'], computerUUID, num)
+                d = client.callRemote(func, *args)
+                d.addCallbacks(onSuccess, client.onError, errbackArgs = (func, args, False))
+                return d
+        return ret
+
     def xmlrpc_imageRegister(self, computerMACAddress, imageUUID, isMaster, name, desc, path, size, creationDate, creator = False):
         """
         Called by the imaging server to register a new image.
