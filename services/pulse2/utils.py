@@ -467,15 +467,6 @@ def rfc3339Time(ref = False):
     return strftime('%Y-%m-%dT%H:%M:%SZ', ref)
 
 
-def rfc3339Time(ref = False):
-    """
-    Return a RFC 3339 string representing the time @ref
-    """
-    if not ref:
-        ref = gmtime()
-    return strftime('%Y-%m-%dT%H:%M:%SZ', ref)
-
-
 def humanReadable(num, unit = "B", base = 1024):
     """
     port of my famous "human readable" formating function
