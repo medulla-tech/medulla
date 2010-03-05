@@ -21,6 +21,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+"""
+Parse the scheduler configuration file
+"""
+
 # Misc
 import re           # for re.compil
 import pwd          # for getpwnam
@@ -50,7 +54,7 @@ class SchedulerDatabaseConfig(MscDatabaseConfig):
                 logging.getLogger().info("Trying to read configuration file (database config): %s" % conffile)
                 MscDatabaseConfig.setup(self, conffile)
             except Exception, e:
-                logging.getLogger().warn("Configuration file: %s does not contain any database config" % conffile)
+                logging.getLogger().warn("Configuration file: %s does not contain any database config : %s" % (conffile, e))
                 self.__setup_fallback(mscconffile)
             if not self.cp.has_section("database"):
                 logging.getLogger().warn("Configuration file: %s does not contain any database config" % conffile)
@@ -197,7 +201,7 @@ class SchedulerConfig(pulse2.utils.Singleton):
         for s in self.active_clean_states.split(','):
             if s == 'run': self.active_clean_states_run = True
             if s == 'stop': self.active_clean_states_stop = True
-                
+
         self.setoption("scheduler", "max_slots", "max_slots", 'int')
         self.setoption("scheduler", "max_command_time", "max_command_time", 'int')
         self.setoption("scheduler", "max_upload_time", "max_upload_time", 'int')
