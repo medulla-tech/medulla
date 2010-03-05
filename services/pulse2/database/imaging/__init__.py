@@ -68,8 +68,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if not self.initMappersCatchException():
             return False
         self.metadata.create_all()
-        self.nomenclatures = {'MasteredOnState':MasteredOnState, 'TargetType':TargetType, 'Protocol':Protocol, 'SynchroState':SynchroState}
-        self.fk_nomenclatures = {'MasteredOn':{'fk_mastered_on_state':'MasteredOnState'}, 'Target':{'type':'TargetType'}, 'Menu':{'fk_protocol':'Protocol', 'fk_synchrostate':'SynchroState'}}
+        self.nomenclatures = {'ImagingLogState':ImagingLogState, 'TargetType':TargetType, 'Protocol':Protocol, 'SynchroState':SynchroState}
+        self.fk_nomenclatures = {'ImagingLog':{'fk_imaging_log_state':'ImagingLogState'}, 'Target':{'type':'TargetType'}, 'Menu':{'fk_protocol':'Protocol', 'fk_synchrostate':'SynchroState'}}
         self.__loadNomenclatureTables()
         self.loadDefaults()
         self.is_activated = True
@@ -103,8 +103,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         mapper(ImagingServer, self.imaging_server)
         mapper(Internationalization, self.internationalization)
         mapper(Language, self.language)
+        mapper(ImagingLog, self.imaging_log)
+        mapper(ImagingLogState, self.imaging_log_state)
         mapper(MasteredOn, self.mastered_on)
-        mapper(MasteredOnState, self.mastered_on_state)
         mapper(Menu, self.menu) #, properties = { 'default_item':relation(MenuItem), 'default_item_WOL':relation(MenuItem) } )
         mapper(MenuItem, self.menu_item) #, properties = { 'menu' : relation(Menu) })
         mapper(Partition, self.partition)
@@ -141,8 +142,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             autoload = True
         )
 
-        self.mastered_on_state = Table(
-            "MasteredOnState",
+        self.imaging_log_state = Table(
+            "ImagingLogState",
             self.metadata,
             autoload = True
         )
@@ -279,12 +280,20 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             autoload = True
         )
 
+        self.imaging_log = Table(
+            "ImagingLog",
+            self.metadata,
+            Column('fk_imaging_log_state', Integer, ForeignKey('ImagingLogState.id')),
+            Column('fk_target', Integer, ForeignKey('Target.id')),
+            useexisting=True,
+            autoload = True
+        )
+
         self.mastered_on = Table(
             "MasteredOn",
             self.metadata,
-            Column('fk_mastered_on_state', Integer, ForeignKey('MasteredOnState.id')),
-            Column('fk_image', Integer, ForeignKey('Image.id')),
-            Column('fk_target', Integer, ForeignKey('Target.id')),
+            Column('fk_image', Integer, ForeignKey('Image.id'), primary_key=True),
+            Column('fk_imaging_log', Integer, ForeignKey('ImagingLog.id'), primary_key=True),
             useexisting=True,
             autoload = True
         )
@@ -310,8 +319,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         )
 
 
-#self.nomenclatures = {'MasteredOnState':MasteredOnState, 'TargetType':TargetType, 'Protocol':Protocol}
-#self.fk_nomenclatures = {'MasteredOn':{'fk_mastered_on_state':'MasteredOnState'}, 'Target':{'type':'TargetType'}, 'Menu':{'fk_protocol':'Protocol'}}
+#self.nomenclatures = {'ImagingLogState':ImagingLogState, 'TargetType':TargetType, 'Protocol':Protocol}
+#self.fk_nomenclatures = {'ImagingLog':{'fk_imaging_log_state':'ImagingLogState'}, 'Target':{'type':'TargetType'}, 'Menu':{'fk_protocol':'Protocol'}}
 
     def __loadNomenclatureTables(self):
         session = create_session()
@@ -392,11 +401,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session.close()
         return n
 
-    def __mergeTargetInMasteredOn(self, mastered_on_list):
+    def __mergeTargetInImagingLog(self, imaging_log_list):
         ret = []
-        for mastered_on, target in mastered_on_list:
-            setattr(mastered_on, 'target', target)
-            ret.append(mastered_on)
+        for imaging_log, target in imaging_log_list:
+            setattr(imaging_log, 'target', target)
+            ret.append(imaging_log)
         return ret
 
     def __getTargetsMenuQuery(self, session):
@@ -603,33 +612,33 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             return None
         return q.url
 
-    def __MasteredOns4Location(self, session, location_uuid, filter):
-        n = session.query(MasteredOn).add_entity(Target).select_from(self.mastered_on.join(self.target).join(self.entity)).filter(self.entity.c.uuid == location_uuid)
+    def __ImagingLogs4Location(self, session, location_uuid, filter):
+        n = session.query(ImagingLog).add_entity(Target).select_from(self.imaging_log.join(self.target).join(self.entity)).filter(self.entity.c.uuid == location_uuid)
         if filter != '':
-            n = n.filter(or_(self.mastered_on.c.title.like('%'+filter+'%'), self.target.c.name.like('%'+filter+'%')))
+            n = n.filter(or_(self.imaging_log.c.title.like('%'+filter+'%'), self.target.c.name.like('%'+filter+'%')))
         return n
 
-    def getMasteredOns4Location(self, location_uuid, start, end, filter):
+    def getImagingLogs4Location(self, location_uuid, start, end, filter):
         session = create_session()
-        n = self.__MasteredOns4Location(session, location_uuid, filter)
+        n = self.__ImagingLogs4Location(session, location_uuid, filter)
         if end != -1:
             n = n.offset(int(start)).limit(int(end)-int(start))
         else:
             n = n.all()
         session.close()
-        n = self.__mergeTargetInMasteredOn(n)
+        n = self.__mergeTargetInImagingLog(n)
         return n
 
-    def countMasteredOns4Location(self, location_uuid, filter):
+    def countImagingLogs4Location(self, location_uuid, filter):
         session = create_session()
-        n = self.__MasteredOns4Location(session, location_uuid, filter)
+        n = self.__ImagingLogs4Location(session, location_uuid, filter)
         n = n.count()
         session.close()
         return n
 
     #####################
-    def __MasteredOnsOnTargetByIdAndType(self, session, target_id, type, filter):
-        q = session.query(MasteredOn).add_entity(Target).select_from(self.mastered_on.join(self.target)).filter(self.target.c.uuid == target_id)
+    def __ImagingLogsOnTargetByIdAndType(self, session, target_id, type, filter):
+        q = session.query(ImagingLog).add_entity(Target).select_from(self.imaging_log.join(self.target)).filter(self.target.c.uuid == target_id)
         if type == P2IT.COMPUTER:
             q = q.filter(self.target.c.type == 1)
         elif type == P2IT.PROFILE:
@@ -639,23 +648,23 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             # to be sure we dont get anything, this is an error case!
             q = q.filter(self.target.c.type == 0)
         if filter != '':
-            q = q.filter(or_(self.mastered_on.c.title.like('%'+filter+'%'), self.target.c.name.like('%'+filter+'%')))
+            q = q.filter(or_(self.imaging_log.c.title.like('%'+filter+'%'), self.target.c.name.like('%'+filter+'%')))
         return q
 
-    def getMasteredOnsOnTargetByIdAndType(self, target_id, type, start, end, filter):
+    def getImagingLogsOnTargetByIdAndType(self, target_id, type, start, end, filter):
         session = create_session()
-        q = self.__MasteredOnsOnTargetByIdAndType(session, target_id, type, filter)
+        q = self.__ImagingLogsOnTargetByIdAndType(session, target_id, type, filter)
         if end != -1:
             q = q.offset(int(start)).limit(int(end)-int(start))
         else:
             q = q.all()
         session.close()
-        q = self.__mergeTargetInMasteredOn(q)
+        q = self.__mergeTargetInImagingLog(q)
         return q
 
-    def countMasteredOnsOnTargetByIdAndType(self, target_id, type, filter):
+    def countImagingLogsOnTargetByIdAndType(self, target_id, type, filter):
         session = create_session()
-        q = self.__MasteredOnsOnTargetByIdAndType(session, target_id, type, filter)
+        q = self.__ImagingLogsOnTargetByIdAndType(session, target_id, type, filter)
         q = q.count()
         session.close()
         return q
@@ -1004,15 +1013,16 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     ######################
     def __PossibleImages(self, session, target_uuid, is_master, filter):
+        # WIP MASTERED
         q = session.query(Image).add_column(self.image.c.id)
-        q = q.select_from(self.image.join(self.image_on_imaging_server).join(self.imaging_server).join(self.entity).join(self.target, self.target.c.fk_entity == self.entity.c.id).join(self.mastered_on, self.mastered_on.c.fk_image == self.image.c.id))
+        q = q.select_from(self.image.join(self.image_on_imaging_server).join(self.imaging_server).join(self.entity).join(self.target, self.target.c.fk_entity == self.entity.c.id).join(self.mastered_on, self.mastered_on.c.fk_image == self.image.c.id).join(self.imaging_log, self.imaging_log.c.id == self.mastered_on.c.fk_imaging_log))
         q = q.filter(self.target.c.uuid == target_uuid) # , or_(self.image.c.is_master == True, and_(self.image.c.is_master == False, )))
         if filter != '':
             q = q.filter(or_(self.image.c.desc.like('%'+filter+'%'), self.image.c.value.like('%'+filter+'%')))
         if is_master == P2IIK.IS_MASTER_ONLY:
             q = q.filter(self.image.c.is_master == True)
         elif is_master == P2IIK.IS_IMAGE_ONLY:
-            q = q.filter(and_(self.image.c.is_master == False, self.target.c.id == self.mastered_on.c.fk_target))
+            q = q.filter(and_(self.image.c.is_master == False, self.target.c.id == self.imaging_log.c.fk_target))
         elif is_master == P2IIK.IS_BOTH:
             pass
 
@@ -1035,6 +1045,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q
 
     def getPossibleImagesOrMaster(self, target_uuid, is_master, start, end, filter):
+        # WIP MASTERED
         session = create_session()
         menu = self.getTargetsMenuTUUID(target_uuid)
         q1 = self.__PossibleImages(session, target_uuid, is_master, filter)
@@ -1047,7 +1058,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q2 = self.__PossibleImageAndMenuItem(session, bs_ids, menu.id)
 
         im_ids = map(lambda im:im[0].id, q1)
-        q3 = session.query(Target).add_entity(MasteredOn).select_from(self.target.join(self.mastered_on)).filter(self.mastered_on.c.fk_image.in_(im_ids)).all()
+        q3 = session.query(Target).add_entity(MasteredOn).select_from(self.target.join(self.imaging_log).join(self.mastered_on)).filter(self.mastered_on.c.fk_image.in_(im_ids)).all()
         session.close()
 
         q = self.__mergeMenuItemInImage(q1, q2, q3)
@@ -1138,22 +1149,29 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         image.uuid = params['uuid']
         image.checksum = params['checksum']
         image.size = params['size']
-        image.creation_date = datetime.date.fromtimestamp(time.mktime(params['creation_date']))
+        image.creation_date = datetime.datetime.fromtimestamp(time.mktime(params['creation_date']))
         image.fk_creator = 1 # TOBEDONE image['']
         image.is_master = params['is_master']
         session.save(image)
         session.flush()
 
-        # fill the mastered_on
+        # fill the imaging_log
         #   there is way to much fields!
-        mastered_on = MasteredOn()
-        mastered_on.timestamp = datetime.date.fromtimestamp(time.mktime(params['creation_date']))
-        mastered_on.title = params['name']
-        mastered_on.detail = params['desc']
-        mastered_on.fk_mastered_on_state = 1 # done
-        mastered_on.fk_image = image.id
+        # WIP MASTERED
+        imaging_log = ImagingLog()
+        imaging_log.timestamp = datetime.datetime.fromtimestamp(time.mktime(params['creation_date']))
+        imaging_log.title = params['name']
+        imaging_log.detail = params['desc']
+        imaging_log.fk_imaging_log_state = 1 # done
         target = session.query(Target).filter(self.target.c.uuid == computer_uuid).first()
-        mastered_on.fk_target = target.id
+        imaging_log.fk_target = target.id
+        session.save(imaging_log)
+        session.flush()
+
+        # Mastered on
+        mastered_on = MasteredOn()
+        mastered_on.fk_image = image.id
+        mastered_on.fk_imaging_log = imaging_log.id
         session.save(mastered_on)
 
         # link the image to the imaging_server
@@ -1166,6 +1184,20 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         # link the image to the machine
         # DONT PUT IN THE MENU BY DEFAULT
         # self.addImageToTarget(id2uuid(image.id), computer_uuid, params)
+        session.flush()
+        session.close()
+        return True
+
+    def logClientAction(self, loc_uuid, item_uuid, log):
+        session = create_session()
+        imaging_log = ImagingLog()
+        imaging_log.timestamp = datetime.datetime.fromtimestamp(time.mktime(time.localtime()))
+        imaging_log.title = log['level']
+        imaging_log.detail = log['detail']
+        imaging_log.fk_imaging_log_state = log['state']
+        target = session.query(Target).filter(self.target.c.uuid == item_uuid).first()
+        imaging_log.fk_target = target.id
+        session.save(imaging_log)
         session.flush()
         session.close()
         return True
@@ -2200,6 +2232,13 @@ class Image(DBObject):
 class ImageInMenu(DBObject):
     pass
 
+class ImagingLog(DBObject):
+    to_be_exported = ['id', 'timestamp', 'title', 'completeness', 'detail', 'fk_imaging_log_state', 'fk_target', 'imaging_log_state']
+    need_iteration = ['target']
+
+class ImagingLogState(DBObject):
+    to_be_exported = ['id', 'label']
+
 class ImageOnImagingServer(DBObject):
     pass
 
@@ -2213,11 +2252,7 @@ class Language(DBObject):
     to_be_exported = ['id', 'label']
 
 class MasteredOn(DBObject):
-    to_be_exported = ['id', 'timestamp', 'title', 'completeness', 'detail', 'fk_mastered_on_state', 'fk_image', 'fk_target', 'mastered_on_state', 'image']
-    need_iteration = ['target']
-
-class MasteredOnState(DBObject):
-    to_be_exported = ['id', 'label']
+    to_be_exported = ['fk_image', 'image', 'fk_imaging_log', 'imaging_log']
 
 class Menu(DBObject):
     to_be_exported = ['id', 'default_name', 'fk_name', 'timeout', 'background_uri', 'message', 'fk_default_item', 'fk_default_item_WOL', 'fk_protocol', 'protocol', 'synchrostate']

@@ -44,8 +44,8 @@ CREATE TABLE TargetType (
   PRIMARY KEY (id)
 );
 
--- MasteredOnState
-CREATE TABLE MasteredOnState (
+-- ImagingLogState
+CREATE TABLE ImagingLogState (
   id INT NOT NULL AUTO_INCREMENT,
   label Text NOT NULL,
   PRIMARY KEY (id)
@@ -220,12 +220,17 @@ CREATE TABLE Image (
 
 -- MasteredOn
 CREATE TABLE MasteredOn (
+  fk_image INT NOT NULL,
+  fk_imaging_log INT NOT NULL
+);
+
+-- ImagingLog
+CREATE TABLE ImagingLog (
   id INT NOT NULL AUTO_INCREMENT,
   timestamp datetime,
   title Text NOT NULL,
   detail Text NOT NULL,
-  fk_mastered_on_state INT NOT NULL,
-  fk_image INT NOT NULL,
+  fk_imaging_log_state INT NOT NULL,
   fk_target INT NOT NULL,
   PRIMARY KEY (id)
 );
@@ -252,6 +257,7 @@ ALTER TABLE ImageOnImagingServer                ADD UNIQUE (fk_image, fk_imaging
 ALTER TABLE Internationalization                ADD UNIQUE (id, fk_language);
 ALTER TABLE ImageInMenu                         ADD UNIQUE (fk_image, fk_menuitem);
 ALTER TABLE BootServiceInMenu                   ADD UNIQUE (fk_menuitem, fk_bootservice);
+ALTER TABLE MasteredOn                          ADD UNIQUE (fk_image, fk_imaging_log);
 
 -- ----------------------------------------------------------------------
 -- Add foreign constraints
@@ -290,9 +296,11 @@ ALTER TABLE ImageInMenu ADD FOREIGN KEY(fk_menuitem)    REFERENCES MenuItem(id);
 
 ALTER TABLE Image ADD FOREIGN KEY(fk_creator) REFERENCES `User`(id);
 
-ALTER TABLE MasteredOn ADD FOREIGN KEY(fk_mastered_on_state)    REFERENCES MasteredOnState(id);
+ALTER TABLE ImagingLog ADD FOREIGN KEY(fk_imaging_log_state)    REFERENCES ImagingLogState(id);
+ALTER TABLE ImagingLog ADD FOREIGN KEY(fk_target)               REFERENCES Target(id);
+
 ALTER TABLE MasteredOn ADD FOREIGN KEY(fk_image)                REFERENCES Image(id);
-ALTER TABLE MasteredOn ADD FOREIGN KEY(fk_target)               REFERENCES Target(id);
+ALTER TABLE MasteredOn ADD FOREIGN KEY(fk_imaging_log)          REFERENCES ImagingLog(id);
 
 ALTER TABLE BootServiceInMenu ADD FOREIGN KEY(fk_menuitem)      REFERENCES MenuItem(id);
 ALTER TABLE BootServiceInMenu ADD FOREIGN KEY(fk_bootservice)   REFERENCES BootService(id);
@@ -341,9 +349,11 @@ CREATE INDEX fk_image_in_menu_menuitem_idx  ON ImageInMenu(fk_menuitem);
 
 CREATE INDEX fk_image_creator_idx ON Image(fk_creator);
 
-CREATE INDEX fk_mastered_on_state_idx   ON MasteredOn(fk_mastered_on_state);
-CREATE INDEX fk_mastered_on_image_idx   ON MasteredOn(fk_image);
-CREATE INDEX fk_mastered_on_target_idx  ON MasteredOn(fk_target);
+CREATE INDEX fk_imaging_log_state_idx   ON ImagingLog(fk_imaging_log_state);
+CREATE INDEX fk_imaging_log_target_idx  ON ImagingLog(fk_target);
+
+CREATE INDEX fk_mastered_on_image_idx         ON MasteredOn(fk_image);
+CREATE INDEX fk_mastered_on_imaging_log_idx   ON MasteredOn(fk_imaging_log);
 
 CREATE INDEX fk_boot_service_in_menu_menuitem_idx       ON BootServiceInMenu(fk_menuitem);
 CREATE INDEX fk_boot_service_in_menu_bootservice_idx    ON BootServiceInMenu(fk_bootservice);
@@ -358,10 +368,10 @@ INSERT INTO TargetType (label) VALUES ("computer");
 INSERT INTO TargetType (label) VALUES ("profile");
 INSERT INTO TargetType (label) VALUES ("computer_in_profile");
 
-INSERT INTO MasteredOnState (label) VALUES ("backup_done");
-INSERT INTO MasteredOnState (label) VALUES ("backup_failed");
-INSERT INTO MasteredOnState (label) VALUES ("restore_done");
-INSERT INTO MasteredOnState (label) VALUES ("restore_failed");
+INSERT INTO ImagingLogState (label) VALUES ("backup_done");
+INSERT INTO ImagingLogState (label) VALUES ("backup_failed");
+INSERT INTO ImagingLogState (label) VALUES ("restore_done");
+INSERT INTO ImagingLogState (label) VALUES ("restore_failed");
 
 INSERT INTO Protocol (label) VALUES ("nfs");
 INSERT INTO Protocol (label) VALUES ("tftp");

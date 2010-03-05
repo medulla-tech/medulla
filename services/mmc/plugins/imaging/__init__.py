@@ -462,24 +462,24 @@ class RpcProxy(RpcProxyI):
         return False
 
     ###### LOGS
-    def __getTargetMasteredOns(self, id, target_type, start = 0, end = -1, filter = ''):
+    def __getTargetImagingLogs(self, id, target_type, start = 0, end = -1, filter = ''):
         db = ImagingDatabase()
-        ret = map(lambda l: l.toH(), db.getMasteredOnsOnTargetByIdAndType(id, target_type, start, end, filter))
-        count = db.countMasteredOnsOnTargetByIdAndType(id, target_type, filter)
+        ret = map(lambda l: l.toH(), db.getImagingLogsOnTargetByIdAndType(id, target_type, start, end, filter))
+        count = db.countImagingLogsOnTargetByIdAndType(id, target_type, filter)
         return [count, xmlrpcCleanup(ret)]
 
     def getComputerLogs(self, id, start = 0, end = -1, filter = ''):
-        return self.__getTargetMasteredOns(id, P2IT.COMPUTER, start, end, filter)
+        return self.__getTargetImagingLogs(id, P2IT.COMPUTER, start, end, filter)
 
     def getProfileLogs(self, id, start = 0, end = -1, filter = ''):
-        return self.__getTargetMasteredOns(id, P2IT.PROFILE, start, end, filter)
+        return self.__getTargetImagingLogs(id, P2IT.PROFILE, start, end, filter)
 
     def getLogs4Location(self, location_uuid, start = 0, end = -1, filter = ''):
         if location_uuid == False:
             return [0, []]
         db = ImagingDatabase()
-        ret = map(lambda l: l.toH(), db.getMasteredOns4Location(location_uuid, start, end, filter))
-        count = db.countMasteredOns4Location(location_uuid, filter)
+        ret = map(lambda l: l.toH(), db.getImagingLogs4Location(location_uuid, start, end, filter))
+        count = db.countImagingLogs4Location(location_uuid, filter)
         return [count, xmlrpcCleanup(ret)]
 
     ###### GET IMAGING API URL
@@ -1247,17 +1247,35 @@ class RpcProxy(RpcProxyI):
             return [False, "imaging.getComputerByMac() : I was unable to find a computer corresponding to the MAC address %s" % mac]
         return [True, {'uuid': "UUID%s" % computer['uuid'], 'mac': mac, 'shortname': computer['hostname'], 'fqdn': computer['hostname']}]
 
-    def logClientAction(self, imaging_server_uuid, uuid, level, phase, message):
+    def logClientAction(self, imaging_server_uuid, computer_uuid, level, phase, message):
         """
         Called by the package server, to log some info
         """
-        # TODO !!!
-        return [True, True]
+        logger = logging.getLogger()
+        log = {
+            'level':level,
+            'detail':message,
+            'state':phase
+        }
+        db = ImagingDatabase()
+        if db.countImagingServerByPackageServerUUID(imaging_server_uuid) == 0:
+            return [False, "The imaging server UUID you try to access doesn't exist in the imaging database."]
+        if not db.isTargetRegister(computer_uuid, P2IT.COMPUTER):
+            return [False, "The computer UUID you try to access doesn't exists in the imaging database."]
+
+        try:
+            ret = db.logClientAction(imaging_server_uuid, computer_uuid, log)
+            ret = [ret, '']
+        except Exception, e:
+            logger.exception(e)
+            ret = [False, str(e)]
+        return ret
 
     def imageRegister(self, imaging_server_uuid, computer_uuid, image_uuid, is_master, name, desc, path, size, creation_date, creator='root'):
         """
         Called by the Package Server to register a new Image.
         """
+        logger = logging.getLogger()
         image = {
             'name': name,
             'desc': desc,
@@ -1278,7 +1296,7 @@ class RpcProxy(RpcProxyI):
             ret = db.registerImage(imaging_server_uuid, computer_uuid, image)
             ret = [ret, '']
         except Exception, e:
-            self.logger.exception(e)
+            logger.exception(e)
             ret = [False, str(e)]
         return ret
 
