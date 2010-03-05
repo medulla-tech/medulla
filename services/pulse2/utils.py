@@ -476,7 +476,7 @@ def rfc3339Time(ref = False):
     return strftime('%Y-%m-%dT%H:%M:%SZ', ref)
 
 
-def humanFormat(num, unit = "B", base = 1024):
+def humanReadable(num, unit = "B", base = 1024):
     """
     port of my famous "human readable" formating function
     """
