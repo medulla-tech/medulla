@@ -54,7 +54,7 @@ from ConfigParser import ConfigParser
 import datetime
 import re
 import os
-from time import struct_time
+from time import struct_time, gmtime, strftime
 import inspect
 
 # python 2.3 fallback for set() in xmlrpcleanup
@@ -456,3 +456,12 @@ def splitComputerPath(path):
         raise TypeError('Bad hostname: %s' % hostname)
 
     return (profile, entities, hostname, domain)
+
+
+def rfc3339Time(ref = False):
+    """
+    Return a RFC 3339 string representing the time @ref
+    """
+    if not ref:
+        ref = gmtime()
+    return strftime('%Y-%m-%dT%H:%M:%SZ', ref)
