@@ -178,6 +178,7 @@ class Imaging(Pulse2Api):
         d = self.callRemote("imagingServerStatus")
         d.addErrback(self.onErrorRaise, "Imaging:imagingServerStatus", None)
         return d
+
     def imagingServerMastersGet(self): # list of imageData
         """
         Returns the list of available master on the imaging server.
@@ -186,6 +187,7 @@ class Imaging(Pulse2Api):
         d = self.callRemote("imagingServerMastersGet")
         d.addErrback(self.onErrorRaise, "Imaging:imagingServerMastersGet", None)
         return d
+
     def imagingServerMasterSetInformations(self, imageId, informations):
         """
         Set master image informations, informations is a dict containing image label, description, and a post installation script name.
@@ -194,6 +196,7 @@ class Imaging(Pulse2Api):
         d = self.callRemote("imagingServerMasterSetInformations", imageId, informations)
         d.addErrback(self.onErrorRaise, "Imaging:imagingServerMasterSetInformations", [imageId, informations])
         return d
+
     def imagingServerBootServicesGet(self): # list of bootServiceData
         """
         Returns the list of available boot services on the imaging server.
@@ -202,6 +205,7 @@ class Imaging(Pulse2Api):
         d = self.callRemote("imagingServerBootServicesGet")
         d.addErrback(self.onErrorRaise, "Imaging:imagingServerBootServicesGet")
         return d
+
     def imagingServerBootServiceSetInformations(self, imageId, informations):
         """
         Set boot service informations, informations is a dict containing image label, description, and a post installation script name.
@@ -210,6 +214,7 @@ class Imaging(Pulse2Api):
         d = self.callRemote("imagingServerBootServiceSetInformations", imageId, informations)
         d.addErrback(self.onErrorRaise, "Imaging:imagingServerBootServiceSetInformations", [imageId, informations])
         return d
+
     def imagingServerDefaultMenuGet(self): # imagingMenu
         """
         Returns the default boot menu of the imaging server.
@@ -218,6 +223,7 @@ class Imaging(Pulse2Api):
         d = self.callRemote("imagingServerDefaultMenuGet")
         d.addErrback(self.onErrorRaise, "Imaging:imagingServerDefaultMenuGet")
         return d
+
     def imagingServerDefaultMenuSet(self, imagingMenu):
         """
         Set the default boot menu on this imaging server for new computer without a profile.
@@ -226,6 +232,7 @@ class Imaging(Pulse2Api):
         d = self.callRemote("imagingServerDefaultMenuSet", imagingMenu)
         d.addErrback(self.onErrorRaise, "Imaging:imagingServerDefaultMenuSet", imagingMenu)
         return d
+
     def imagingServerMasterIsoBuild(self, imageId):
         """
         Build the auto restoration ISO CDROM of a master.
@@ -234,26 +241,31 @@ class Imaging(Pulse2Api):
         d = self.callRemote("imagingServerMasterIsoBuild", imageId)
         d.addErrback(self.onErrorRaise, "Imaging:imagingServerMasterIsoBuild", imageId)
         return d
+
     def imagingServerBackupToMaster(self, imageId):
         """Convert a backup image to a master."""
         d = self.callRemote("imagingServerBackupToMaster", imageId)
         d.addErrback(self.onErrorRaise, "Imaging:imagingServerBackupToMaster", imageId)
         return d
+
     def imagingServerMasterDisable(self, imageId):
         """Disable a master."""
         d = self.callRemote("imagingServerMasterDisable", imageId)
         d.addErrback(self.onErrorRaise, "Imaging:imagingServerMasterDisable", imageId)
         return d
+
     def imagingServerMasterDelete(self, imageId, archive = True):
         """Delete a master. Maybe archive it."""
         d = self.callRemote("imagingServerMasterDelete", imageId, archive)
         d.addErrback(self.onErrorRaise, "Imaging:imagingServerMasterDelete", [imageId, archive])
         return d
+
     def imagingServerConfigurationSet(self, configuration):
         """Set the imaging server configuration (dict)."""
         d = self.callRemote("imagingServerConfigurationSet", configuration)
         d.addErrback(self.onErrorRaise, "Imaging:imagingServerConfigurationSet", configuration)
         return d
+
     def injectInventory(self, uuid, inventory):
         """
         Called by pulse2-imaging-server to give the Package Server a new inventory from MACAddress.
@@ -261,6 +273,7 @@ class Imaging(Pulse2Api):
         d = self.callRemote("injectInventory", uuid, inventory)
         d.addErrback(self.onErrorRaise, "Imaging:injectInventory", [uuid, inventory])
         return d
+
     def getComputerByMac(self, MACAddress):
         """
         Get a computer UUID using the MAC Adress
@@ -268,6 +281,7 @@ class Imaging(Pulse2Api):
         d = self.callRemote("getComputerByMac", MACAddress)
         d.addErrback(self.onErrorRaise, "Imaging:getComputerByMac", MACAddress)
         return d
+
     def logClientAction(self, mac, level, phase, message):
         """
         Get a computer UUID using the MAC Address
@@ -275,18 +289,11 @@ class Imaging(Pulse2Api):
         d = self.callRemote("logClientAction", mac, level, phase, message)
         d.addErrback(self.onErrorRaise, "Imaging:logClientAction", mac, level, phase, message)
         return d
-    def imagingServerDefaultMenuSet(self, menu):
-        """
-        Set the default menu for an imaging server
-        """
-        d = self.callRemote("imagingServerDefaultMenuSet", menu)
-        d.addErrback(self.onErrorRaise, "Imaging:imagingServerDefaultMenuSet", menu)
-        return d
 
 
+class ImagingApi(Imaging):
 # need to get a PackageApiManager, it will manage a PackageApi for each mirror
 # defined in the conf file.
-class ImagingApi(Imaging):
 
     def __init__(self, url=None):
         self.logger = logging.getLogger()
