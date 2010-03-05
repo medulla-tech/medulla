@@ -56,7 +56,8 @@ NOAUTHNEEDED = ['computerRegister',
                 'logClientAction',
                 'injectInventory',
                 'getDefaultMenuForSuscription',
-                'linkImagingServerToLocation']
+                'linkImagingServerToLocation',
+                'computerChangeDefaultMenuItem']
 
 
 def getVersion():
@@ -93,16 +94,20 @@ def activate():
 
     return True
 
+
 class ContextMaker(ContextMakerI):
+
     def getContext(self):
         s = SecurityContext()
         s.userid = self.userid
         return s
 
+
 class RpcProxy(RpcProxyI):
     """ XML/RPC Bindings """
 
     """ DEPRECATED """
+
     def getPublicImagesList():
         """
         Return a list of public images
@@ -266,8 +271,7 @@ class RpcProxy(RpcProxyI):
 
         return {
             'images': [counti, xmlrpcCleanup(reti)],
-            'masters': [countm, xmlrpcCleanup(retm)]
-        }
+            'masters': [countm, xmlrpcCleanup(retm)]}
 
     def getComputerImages(self, id, start = 0, end = -1, filter = ''):
         return self.__getTargetImages(id, P2IT.COMPUTER, start, end, filter)
@@ -1293,3 +1297,10 @@ class RpcProxy(RpcProxyI):
         logger = logging.getLogger()
         menu = self.__generateDefaultSuscribeMenu(logger, db)
         return xmlrpcCleanup(menu)
+
+    def computerChangeDefaultMenuItem(self, computer_uuid, item_number):
+        """
+        Called by the Package Server to change the default value of a menu
+        """
+        # TODO !
+        return [True, True]
