@@ -2287,4 +2287,3 @@ class TargetType(DBObject):
 
 class User(DBObject):
     to_be_exported = ['id', 'login']
-
