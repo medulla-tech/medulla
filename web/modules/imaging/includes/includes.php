@@ -22,14 +22,15 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
- 
+
 require('web_def.inc.php');
 
 global $SYNCHROSTATE_SYNCHRO;
 global $SYNCHROSTATE_TODO;
 global $SYNCHROSTATE_RUNNING;
 global $SYNCHROSTATE_INIT_ERROR;
-list($SYNCHROSTATE_SYNCHRO, $SYNCHROSTATE_TODO, $SYNCHROSTATE_RUNNING, $SYNCHROSTATE_INIT_ERROR) = array(2, 1, 3, 4);
+global $SYNCHROSTATE_UNKNOWN;
+list($SYNCHROSTATE_UNKNOWN, $SYNCHROSTATE_SYNCHRO, $SYNCHROSTATE_TODO, $SYNCHROSTATE_RUNNING, $SYNCHROSTATE_INIT_ERROR) = array(0, 2, 1, 3, 4);
 
 function getCurrentLocation() {
 
@@ -40,25 +41,25 @@ function getCurrentLocation() {
 
     if(isset($_SESSION["location"]))
         $location = $_SESSION["location"];
-        
+
     return $location;
 }
 
-class TitleElement extends HtmlElement {    
+class TitleElement extends HtmlElement {
     function TitleElement($title, $level = 2){
         $this->title=$title;
         $this->level = $level;
-    }    
+    }
     function display(){
         print '<br/><h'.$this->level.'>'.$this->title.'</h'.$this->level.'>';
     }
 }
 
-class LedElement extends HtmlElement {    
+class LedElement extends HtmlElement {
     function LedElement($color){
         $this->color=$color;
         $this->value='<img style="vertical-align: middle" src="modules/imaging/graph/images/led_circle_'.$this->color.'.png">';
-    }    
+    }
     function display(){
         print $this->value;
     }
@@ -105,7 +106,7 @@ function print_mem_bar($title, $max, $used, $cache = 0, $width = 320) {
 function print_health() {
     $up = xmlCall("base.getUptime");
     $up = trim($up[0]);
-    
+
     $mem = xmlCall("base.getMemoryInfos");
     echo format_health($up, $mem);
 }
@@ -136,13 +137,13 @@ function format_disk_info($df) {
 
         if ((array_search($disk[0], array("tmpfs", "none", "udev"))!==FALSE) || ($disk[1] == "0"))
             continue;
-      
+
         $ret .= format_mem_bar("<strong>$disk[5]</strong> <em>($disk[0])</em> : ".humanSize($disk[2]*1024)."/".humanSize($disk[3]*1024), $disk[1], $disk[2]);
     }
     return $ret;
 }
 
-function format_mem_bar($title, $max, $used, $cache = 0, $width = 320) { 
+function format_mem_bar($title, $max, $used, $cache = 0, $width = 320) {
     $ret = '';
     if ($max != 0) {
         $wused = ($used / $max) * $width;
@@ -201,23 +202,23 @@ function format_health($up, $mem) {
 function _toDate($a, $noneIsAsap = False) {
     $never = array(2031, 12, 31, 23, 59, 59);
     $asap = array(1970, 1, 1, 0, 0, 0);
-        
+
     if (is_array($a) && (count($a) == 6 || count($a) == 9)) {
-                
+
         if (count(array_diff(array_slice($a, 0, 6), $never)) == 0)
             return _T('Never', 'msc');
-            
+
         if (count(array_diff(array_slice($a, 0, 6), $asap)) == 0)
             return _T('As soon as possible', 'msc');
-        
+
         $parsed_date = mktime($a[3], $a[4], $a[5], $a[1], $a[2], $a[0]);
         return strftime(web_def_date_fmt(), $parsed_date);
-        
+
     } elseif ($noneIsAsap && !$a) {
         return _T('As soon as possible', 'msc');
     } else { # can't guess if we talk about a date or something else :/
         return _T('<i>undefined</i>', 'msc');
-    }   
+    }
 }
 
 

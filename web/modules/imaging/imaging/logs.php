@@ -26,7 +26,7 @@
 require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
 
-if (isset($_GET['gid'])) {
+if (isset($_GET['gid']) && $_GET['gid'] != '') {
     $type = 'group';
     $target_uuid = $_GET['gid'];
     $target_name = $_GET['groupname'];
@@ -37,12 +37,12 @@ if (isset($_GET['gid'])) {
 }
 
 if (($type == '' && xmlrpc_isComputerRegistered($target_uuid)) || ($type == 'group' && xmlrpc_isProfileRegistered($target_uuid)))  {
-    
+
     if(isset($_GET['mod']))
         $mod = $_GET['mod'];
-    else 
+    else
         $mod = "none";
-    
+
     switch($mod) {
         case 'details':
             log_details();

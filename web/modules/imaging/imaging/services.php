@@ -26,7 +26,7 @@
 require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
 
-if (isset($_GET['gid'])) {
+if (isset($_GET['gid']) && $_GET['gid'] != '') {
     $type = 'group';
     $target_uuid = $_GET['gid'];
     $target_name = $_GET['groupname'];
@@ -41,18 +41,18 @@ if (($type == '' && xmlrpc_isComputerRegistered($target_uuid)) || ($type == 'gro
 
     if(isset($_GET['mod']))
         $mod = $_GET['mod'];
-    else 
+    else
         $mod = "none";
-    
-   
+
+
     function service_add($type, $menu, $target_uuid) {
         $params = getParams();
         $item_uuid = $_GET['itemid'];
         $label = urldecode($_GET['itemlabel']);
-        
+
         $ret = xmlrpc_addServiceToTarget($item_uuid, $target_uuid, $type);
-    
-        // goto images list 
+
+        // goto images list
         if ($ret[0]) {
             $str = sprintf(_T("Service <strong>%s</strong> added to boot menu", "imaging"), $label);
             new NotifyWidgetSuccess($str);
@@ -61,18 +61,18 @@ if (($type == '' && xmlrpc_isComputerRegistered($target_uuid)) || ($type == 'gro
             new NotifyWidgetFailure($ret[1]);
         }
     }
-    
+
     function service_list($type, $menu, $count, $target_uuid) {
         $params = getParams();
-    
+
         $addActions = array();
-        
+
         $addAction = new ActionPopupItem(_T("Add service to boot menu", "imaging"), "addservice", "addbootmenu", "image", "base", "computers", null, 300, "add");
         $delAction = new ActionPopupItem(_T("Remove service from boot menu"), "bootmenu_remove", "delbootmenu", "item", "base", "computers", $type."tabbootmenu", 300, "delete");
-            
+
         $emptyAction = new EmptyActionItem();
-    
-        // show services list    
+
+        // show services list
         $a_label = array();
         $a_desc = array();
         $a_in_boot_menu = array();
@@ -91,11 +91,11 @@ if (($type == '' && xmlrpc_isComputerRegistered($target_uuid)) || ($type == 'gro
                 $addActions[] = $delAction;
                 $list_params[$i]["mi_itemid"] = $entry['menu_item']['imaging_uuid'];
             }
-    
+
             $a_label[]= sprintf("%s%s", ($script['is_local']?'':'X) '), $entry['default_name']);
             $a_desc[]= $entry['default_desc'];
             $a_in_boot_menu[]= (isset($entry['menu_item'])? True:False);
-            
+
         }
         $l = new ListInfos($a_label, _T("Label", "imaging"));
         $l->addExtraInfo($a_desc, _T("Description", "imaging"));
@@ -104,7 +104,7 @@ if (($type == '' && xmlrpc_isComputerRegistered($target_uuid)) || ($type == 'gro
         $l->addActionItemArray($addActions);
         $l->disableFirstColumnActionLink();
         $l->display();
-        
+
     }
     switch($mod) {
         case 'add':
@@ -114,7 +114,7 @@ if (($type == '' && xmlrpc_isComputerRegistered($target_uuid)) || ($type == 'gro
             service_list($type, $menu, $count, $target_uuid);
             break;
     }
- 
+
 } else {
     # register the target (computer or profile)
     $params = array('target_uuid'=>$target_uuid, 'type'=>$type, 'from'=>"services", "target_name"=>$target_name);

@@ -35,6 +35,7 @@ global $SYNCHROSTATE_SYNCHRO;
 global $SYNCHROSTATE_TODO;
 global $SYNCHROSTATE_RUNNING;
 global $SYNCHROSTATE_INIT_ERROR;
+global $SYNCHROSTATE_UNKNOWN;
 
 if (isset($_POST['bsync'])) {
     if (isset($params['uuid'])) {
@@ -55,6 +56,7 @@ if (isset($params['uuid'])) {
     $_GET['type'] = '';
     $_GET['target_uuid'] = $params['uuid'];
     $_GET['target_name'] = $params['hostname'];
+    unset($_GET['gid']);
     $params['type'] = '';
     $params['target_uuid'] = $params['uuid'];
     $params['target_name'] = $params['hostname'];
@@ -152,14 +154,11 @@ if (isset($params['uuid'])) {
             $p->display();
         }
     }
-
 } else {
-
     $p = new PageGenerator();
     $p->setSideMenu($sidemenu);
     $p->display();
     print _T("Not enough informations", "imaging");
-
 }
 
 ?>

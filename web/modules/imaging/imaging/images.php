@@ -26,7 +26,7 @@
 require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
 
-if (isset($_GET['gid'])) {
+if (isset($_GET['gid']) && $_GET['gid'] != '') {
     $type = 'group';
     $target_uuid = $_GET['gid'];
     $target_name = $_GET['groupname'];
@@ -43,15 +43,15 @@ if (($type == '' && xmlrpc_isComputerRegistered($target_uuid)) || ($type == 'gro
     } else {
         $all = xmlrpc_getComputerImages($_GET['uuid']);
     }
-    
+
     $images = $all['images'];
     $masters = $all['masters'];
-    
+
     if(isset($_GET['mod']))
         $mod = $_GET['mod'];
-    else 
+    else
         $mod = "none";
-    
+
     switch($mod) {
         case 'edit':
             image_edit($type, $images, $masters);
@@ -77,7 +77,7 @@ if (($type == '' && xmlrpc_isComputerRegistered($target_uuid)) || ($type == 'gro
 
 
 function image_add($type, $target_uuid) {
-    
+
     $params = getParams();
     // add to menu
     $item_uuid = $_GET['itemid'];
@@ -86,7 +86,7 @@ function image_add($type, $target_uuid) {
     $ret = xmlrpc_addImageToTarget($item_uuid, $target_uuid);
 
     if($ret[0]) {
-        // goto images list   
+        // goto images list
         $str = sprintf(_T("Image <strong>%s</strong> added to boot menu", "imaging"), $label);
         new NotifyWidgetSuccess($str);
         header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
@@ -108,14 +108,14 @@ function image_edit($type, $images, $masters) {
             continue;
         }
     }
-    
+
 
     if (count($_POST) == 0) {
         printf("<h3>"._T("Edition of image", "imaging")." : <em>%s</em></h3>", $label);
-                
+
         // get current values
         $desc = $image["desc"];
-        
+
         $f = new ValidatingForm();
         $f->add(new HiddenTpl('target_uuid'),                   array("value" => $target_uuid,                   "hide" => True));
         $f->add(new HiddenTpl("itemlabel"),                     array("value" => $label,                         "hide" => True));
@@ -129,7 +129,7 @@ function image_edit($type, $images, $masters) {
             new TrFormElement(_T("Description", "imaging"), new InputTpl("image_description")),
             array("value" => $desc)
         );
-        
+
         $f->pop();
         $f->addButton("bvalid", _T("Validate"));
         if ($image['is_master']) {
@@ -156,7 +156,7 @@ function image_edit($type, $images, $masters) {
             $f->add(new HiddenTpl('target_uuid'),                   array("value" => $target_uuid,                   "hide" => True));
             $f->add(new HiddenTpl('image_label'),                   array("value" => $_POST['image_label'],          "hide" => True));
             $f->add(new HiddenTpl('image_description'),             array("value" => $_POST['image_description'],    "hide" => True));
-            
+
             $post_installs = xmlrpc_getAllTargetPostInstallScript($target_uuid);
             $post_installs = $post_installs[1];
 
@@ -193,19 +193,19 @@ function image_edit($type, $images, $masters) {
             $ret = xmlrpc_editImage($item_uuid, $target_uuid, $params);
             header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
         }
-    }    
+    }
 }
 
 function image_list($type, $title, $images, $actions=true) {
 
     $params = getParams();
-    
+
     // show title
     if($title) {
         $t = new TitleElement(_T($title, "imaging"));
         $t->display();
     }
-    
+
     $addActions = array();
     $addAction = new ActionPopupItem(_T("Add image to boot menu", "imaging"), "addimage", "addbootmenu", "image", "base", "computers", null, 300, "add");
     $delAction = new ActionPopupItem(_T("Remove from boot menu"), "bootmenu_remove", "delbootmenu", "item", "base", "computers", $type."tabbootmenu", 300, "delete");
@@ -213,7 +213,7 @@ function image_list($type, $title, $images, $actions=true) {
 
     $editActions = array();
     $editAction = new ActionItem(_T("Edit image", "imaging"), "imgtabs", "edit", "image", "base", "computers", $type."tabimages", "edit");
-    
+
     // forge params
     list($count, $images) = $images;
 
@@ -227,13 +227,13 @@ function image_list($type, $title, $images, $actions=true) {
     $a_inbootmenu = array();
     foreach ($images as $image) {
         $i += 1;
-        
+
         $name = $image['name'];
         $list_params[$i] = $params;
         $list_params[$i]["itemid"] = $image['imaging_uuid'];
         $list_params[$i]["itemlabel"] = urlencode($name);
         $list_params[$i]["target_uuid"] = $_GET['target_uuid'];
-        
+
         // don't show action if image is in bootmenu
         if(!isset($image['menu_item'])) {
             $addActions[] = $addAction;
@@ -247,7 +247,7 @@ function image_list($type, $title, $images, $actions=true) {
         } else {
             $editActions[] = $emptyAction;
         }
-        
+
         # TODO no label in image!
         $a_label[] = $name;
         $a_desc[] = $image['desc'];
@@ -261,20 +261,20 @@ function image_list($type, $title, $images, $actions=true) {
     $l->addExtraInfo($a_desc, _T("Description", "imaging"));
     $l->addExtraInfo($a_date, _T("Created", "imaging"));
     $l->addExtraInfo($a_size, _T("Size (compressed)", "imaging"));
-    $l->addExtraInfo($a_inbootmenu, _T("In boot menu", "imaging"));    
+    $l->addExtraInfo($a_inbootmenu, _T("In boot menu", "imaging"));
     $l->addActionItemArray($addActions);
 /* TODO!    $l->addActionItem(
-        new ActionPopupItem(_T("Create bootable iso", "imaging"), 
+        new ActionPopupItem(_T("Create bootable iso", "imaging"),
         "images_iso", "backup", "image", "base", "computers")
     );*/
     // if not in boot menu
     if ($actions) {
         $l->addActionItem(
-            new ActionItem(_T("Edit image", "imaging"), 
+            new ActionItem(_T("Edit image", "imaging"),
             "imgtabs", "edit", "image", "base", "computers", $type."tabimages", "edit")
         );
         $l->addActionItem(
-            new ActionPopupItem(_T("Delete", "imaging"), 
+            new ActionPopupItem(_T("Delete", "imaging"),
             "images_delete", "delete", "image", "base", "computers", $type."tabimages", 300, "delete")
         );
     } else {
