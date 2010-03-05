@@ -42,10 +42,10 @@ $end = $start + $maxperpage;
 $logStates = array(
     "restore_in_progress" => array(_T("Restore in progress", "imaging"), 'orange'),
     "restore_done" => array(_T("Restore done", "imaging"), 'green'),
-    "restore_fail" => array(_T("Restore failed", "imaging"), 'red'),
+    "restore_failed" => array(_T("Restore failed", "imaging"), 'red'),
     "backup_in_progress" => array(_T("Backup in progress", "imaging"), 'orange'),
     "backup_done" => array(_T("Backup done", "imaging"), "green"),
-    "backup_fail" => array(_T("Backup failed", "imaging"), "red"),
+    "backup_failed" => array(_T("Backup failed", "imaging"), "red"),
     "unknow" => array(_T("Status unknow", "imaging"), "black"),
 );
 
@@ -53,7 +53,7 @@ list($count, $db_logs) = xmlrpc_getLogs4Location($location, $start, $end, $filte
 
 $logs = array();
 foreach ($db_logs as $log) {
-    $logs[] = array(sprintf(_T("%s - %s on %s", "imaging"), _toDate($log['timestamp']), $log['title'], $log['target']['name']), $log['mastered_on_state']);
+    $logs[] = array(sprintf(_T("%s - %s on %s", "imaging"), _toDate($log['timestamp']), $log['title'], $log['target']['name']), $log['imaging_log_state']);
 }
 
 $filter = $_GET["filter"];
@@ -72,7 +72,7 @@ foreach ($db_logs as $log) {
     $list_params[$i]["hostname"] = $log['target']['name'];
     //$list_params[$i]["itemlabel"] = urlencode($logs[$i][0]);
 
-    $status = $log['mastered_on_state'];
+    $status = $log['imaging_log_state'];
     $title = sprintf(_T("%s - %s on %s", "imaging"), _toDate($log['timestamp']), $log['title'], $log['target']['name']);
     // add image to description
     if (ereg('backup', $status)) {
@@ -89,7 +89,7 @@ foreach ($db_logs as $log) {
     // complete status display
     $led = new LedElement($logStates[$status][1]);
     $status = $led->value.'&nbsp;'.$logStates[$status][0];
-    
+
     $a_titles[]= $title;
     $a_desc[]= $log['detail'];
     $a_states[]= $status;
