@@ -399,7 +399,7 @@ class ImagingImageItem(ImagingItem):
     Hold an imaging menu item for a image to restore
     """
 
-    NFSRESTORE = u"kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## revosavedir=/##PULSE2_MASTERS_DIR##/##PULSE2_IMAGE_UUID## revobase=##PULSE2_BASE_DIR## revorestorenfs quiet revopost revomac=##MAC## \ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##\n"
+    NFSRESTORE = u"kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## revosavedir=##PULSE2_MASTERS_DIR## revoinfodir=##PULSE2_COMPUTERS_DIR## revooptdir=##PULSE2_POSTINST_DIR## revobase=##PULSE2_BASE_DIR## revorestorenfs quiet revopost revomac=##MAC## revoimage=##PULSE2_IMAGE_UUID## \ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##\n"
     # FIXME ! TFTP/MTFTP to be implemented
     TFTPRESTORE = NFSRESTORE
     MTFTPRESTORE = NFSRESTORE
