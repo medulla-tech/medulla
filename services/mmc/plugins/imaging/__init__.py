@@ -103,24 +103,31 @@ class RpcProxy(RpcProxyI):
     """ XML/RPC Bindings """
 
     ################################################### web def
+    """ Functions to access the web default values as defined in the configuration """
     def get_web_def_date_fmt(self):
+        """ get the date format """
         return xmlrpcCleanup(ImagingConfig().web_def_date_fmt)
 
     def get_web_def_possible_protocols(self):
+        """ get the possible protocols """
         return xmlrpcCleanup(map(lambda p: p.toH(), ImagingDatabase().getAllProtocols()))
 
     def get_web_def_default_protocol(self):
+        """ get the default protocol """
         return xmlrpcCleanup(ImagingConfig().web_def_default_protocol)
 
     def get_web_def_kernel_parameters(self):
+        """ get the default kernel parameters """
         return xmlrpcCleanup(ImagingConfig().web_def_kernel_parameters)
 
     def get_web_def_image_parameters(self):
+        """ get the default image backup and restoration parameters """
         return xmlrpcCleanup(ImagingConfig().web_def_image_parameters)
 
     ###########################################################
     ###### BOOT MENU (image+boot service on the target)
     def __convertType(self, target_type):
+        """ convert type from '' or 'group' to P2IT.COMPUTER and P2IT.PROFILE """
         if target_type == '':
             target_type = P2IT.COMPUTER
         elif target_type == 'group':
@@ -134,12 +141,72 @@ class RpcProxy(RpcProxyI):
         return [count, xmlrpcCleanup(menu)]
 
     def getProfileBootMenu(self, target_id, start = 0, end = -1, filter = ''):
+        """
+        get a profile boot menu
+
+        @param target_id: the uuid of the profile (field Target.uuid)
+        @type target_id: str
+
+        @param start: the beginning of the list, default 0
+        @type start: int
+
+        @param end: the end of the list, if == -1, no end limit, default -1
+        @type end: int
+
+        @param filter: a string to filter the list, default ''
+        @type filter: str
+
+        @returns: return a list of two elements :
+            1) the size of the list
+            2) the list delimited by start and end
+        @rtype: list
+        """
         return self.__getTargetBootMenu(target_id, start, end, filter)
 
     def getComputerBootMenu(self, target_id, start = 0, end = -1, filter = ''):
+        """
+        get a computer boot menu
+
+        @param target_id: the uuid of the profile (field Target.uuid)
+        @type target_id: str
+
+        @param start: the beginning of the list, default 0
+        @type start: int
+
+        @param end: the end of the list, if == -1, no end limit, default -1
+        @type end: int
+
+        @param filter: a string to filter the list, default ''
+        @type filter: str
+
+        @returns: return a list of two elements :
+            1) the size of the list
+            2) the list delimited by start and end
+        @rtype: list
+        """
         return self.__getTargetBootMenu(target_id, start, end, filter)
 
     def getLocationBootMenu(self, loc_id, start = 0, end = -1, filter = ''):
+        """
+        get a location boot menu
+
+        @param loc_id: the uuid of the location (field Entity.uuid)
+        @type loc_id: str
+
+        @param start: the beginning of the list, default 0
+        @type start: int
+
+        @param end: the end of the list, if == -1, no end limit, default -1
+        @type end: int
+
+        @param filter: a string to filter the list, default ''
+        @type filter: str
+
+        @returns: return a list of two elements :
+            1) the size of the list
+            2) the list delimited by start and end
+        @rtype: list
+        """
         # Entities are names Location in the php part, here we convert them from Location to Entity
         db = ImagingDatabase()
         ret = map(lambda l: l.toH(), db.getEntityBootMenu(loc_id, start, end, filter))
@@ -148,23 +215,81 @@ class RpcProxy(RpcProxyI):
 
     # EDITION
     def moveItemUpInMenu(self, target_uuid, target_type, mi_uuid):
+        """
+        move a menu item up in the target's boot menu
+
+        @param target_uuid: the uuid of the target (field Target.uuid)
+        @type target_uuid: str
+
+        @param target_type: the target type can be one of those two :
+            1) '' or P2IT.COMPUTER (1) for a computer
+            2) 'group" or P2IT.PrOFILE (2) for a profile
+        @type target_type: str or int
+
+        @param mi_uuid: the menu item to move UUID
+        @type mi_uuid: str
+
+        @returns: True if succeed to move the menu item, else return False
+        @rtype: boolean
+        """
         db = ImagingDatabase()
         target_type = self.__convertType(target_type)
         db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
         return db.moveItemUpInMenu(target_uuid, mi_uuid)
 
     def moveItemDownInMenu(self, target_uuid, target_type, mi_uuid):
+        """
+        move a menu item down in the target's boot menu
+
+        @param target_uuid: the uuid of the target (field Target.uuid)
+        @type target_uuid: str
+
+        @param target_type: the target type can be one of those two :
+            1) '' or P2IT.COMPUTER (1) for a computer
+            2) 'group" or P2IT.PrOFILE (2) for a profile
+        @type target_type: str or int
+
+        @param mi_uuid: the menu item to move UUID
+        @type mi_uuid: str
+
+        @returns: True if succeed to move the menu item, else return False
+        @rtype: boolean
+        """
         db = ImagingDatabase()
         target_type = self.__convertType(target_type)
         db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
         return db.moveItemDownInMenu(target_uuid, mi_uuid)
 
     def moveItemUpInMenu4Location(self, loc_id, mi_uuid):
+        """
+        move a menu item up in the location boot menu
+
+        @param target_uuid: the uuid of the location (field Entity.uuid)
+        @type target_uuid: str
+
+        @param mi_uuid: the menu item to move UUID
+        @type mi_uuid: str
+
+        @returns: True if succeed to move the menu item, else return False
+        @rtype: boolean
+        """
         db = ImagingDatabase()
         db.setLocationSynchroState(loc_id, P2ISS.TODO)
         return db.moveItemUpInMenu4Location(loc_id, mi_uuid)
 
     def moveItemDownInMenu4Location(self, loc_id, mi_uuid):
+        """
+        move a menu item down in the location boot menu
+
+        @param target_uuid: the uuid of the location (field Entity.uuid)
+        @type target_uuid: str
+
+        @param mi_uuid: the menu item to move UUID
+        @type mi_uuid: str
+
+        @returns: True if succeed to move the menu item, else return False
+        @rtype: boolean
+        """
         db = ImagingDatabase()
         db.setLocationSynchroState(loc_id, P2ISS.TODO)
         return db.moveItemDownInMenu4Location(loc_id, mi_uuid)
@@ -296,10 +421,7 @@ class RpcProxy(RpcProxyI):
     # EDITION
     def addServiceToTarget(self, bs_uuid, target_uuid, params, target_type):
         db = ImagingDatabase()
-        if target_type == '':
-            target_type = P2IT.COMPUTER
-        elif target_type == 'group':
-            target_type = P2IT.PROFILE
+        target_type = self.__convertType(target_type)
         try:
             db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
             ret = ImagingDatabase().addServiceToTarget(bs_uuid, target_uuid, params)
@@ -309,26 +431,17 @@ class RpcProxy(RpcProxyI):
 
     def delServiceToTarget(self, bs_uuid, target_uuid, target_type):
         db = ImagingDatabase()
-        if target_type == '':
-            target_type = P2IT.COMPUTER
-        elif target_type == 'group':
-            target_type = P2IT.PROFILE
-        #try:
-        if True:
+        target_type = self.__convertType(target_type)
+        try:
             db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
             ret = ImagingDatabase().delServiceToTarget(bs_uuid, target_uuid)
             return xmlrpcCleanup(ret)
-        try:
-            pass
         except Exception, e:
             return xmlrpcCleanup([False, e])
 
     def editServiceToTarget(self, bs_uuid, target_uuid, params, target_type):
         db = ImagingDatabase()
-        if target_type == '':
-            target_type = P2IT.COMPUTER
-        elif target_type == 'group':
-            target_type = P2IT.PROFILE
+        target_type = self.__convertType(target_type)
         try:
             db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
             ret = ImagingDatabase().editServiceToTarget(bs_uuid, target_uuid, params)
