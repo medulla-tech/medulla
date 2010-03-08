@@ -146,7 +146,7 @@ pyflakes:
 
 test-launcher:
 	PYTHONPATH=$(PWD)/services/ python ./tests/services/launcher.py $(MODE) $(VERBOSITY)
-	@echo "Launcher is OK"	
+	@echo "Launcher is OK"
 
 test-package-server:
 	PYTHONPATH=$(PWD)/services/ python ./services/test/Pserver.py $(MODE) $(VERBOSITY)
