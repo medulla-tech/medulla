@@ -141,15 +141,16 @@ class ImagingMenu:
         # key 'when' : when to perform the replacement (only 'global' for now)
         self.replacements = [
             ('##PULSE2_LANG##', 'C', 'global'),
+            ('##PULSE2_D_BOOTLOADER##', self.config.imaging_api['bootloader_folder'], 'global'),
             ('##PULSE2_F_BOOTSPLASH##', self.config.imaging_api['bootsplash_file'], 'global'),
-            ('##PULSE2_F_DISKLESS##', self.config.imaging_api['diskless_folder'], 'global'),
-            ('##PULSE2_K_DISKLESS##', self.config.imaging_api['diskless_kernel'], 'global'),
-            ('##PULSE2_F_MASTERS##', self.config.imaging_api['masters_folder'], 'global'),
-            ('##PULSE2_F_COMPUTERS##', self.config.imaging_api['computers_folder'], 'global'),
-            ('##PULSE2_F_POSTINST##', self.config.imaging_api['postinst_folder'], 'global'),
-            ('##PULSE2_F_BASE##', self.config.imaging_api['base_folder'], 'global'),
-            ('##PULSE2_I_DISKLESS##', self.config.imaging_api['diskless_initrd'], 'global'),
-            ('##PULSE2_MEMTEST##', self.config.imaging_api['diskless_memtest'], 'global')]
+            ('##PULSE2_D_DISKLESS##', self.config.imaging_api['diskless_folder'], 'global'),
+            ('##PULSE2_F_KERNEL##', self.config.imaging_api['diskless_kernel'], 'global'),
+            ('##PULSE2_D_MASTERS##', self.config.imaging_api['masters_folder'], 'global'),
+            ('##PULSE2_D_POSTINST##', self.config.imaging_api['postinst_folder'], 'global'),
+            ('##PULSE2_D_COMPUTERS##', self.config.imaging_api['computers_folder'], 'global'),
+            ('##PULSE2_D_BASE##', self.config.imaging_api['base_folder'], 'global'),
+            ('##PULSE2_F_INITRD#', self.config.imaging_api['diskless_initrd'], 'global'),
+            ('##PULSE2_F_MEMTEST##', self.config.imaging_api['diskless_memtest'], 'global')]
         if self.mac:
             self.replacements.append(
                 ('##MAC##',
@@ -274,7 +275,7 @@ class ImagingMenu:
         """
         assert(type(position) == int and position > 0)
         if position in self.menuitems:
-            raise ValueError, 'Position %d in menu already taken' % position
+            raise ValueError('Position %d in menu already taken' % position)
         item = ImagingImageItem(entry)
         self.menuitems[position] = item
 
@@ -284,7 +285,7 @@ class ImagingMenu:
         """
         assert(type(position) == int and position > 0)
         if position in self.menuitems:
-            raise ValueError, 'Position %d in menu already taken' % position
+            raise ValueError('Position %d in menu already taken' % position)
         self.menuitems[position] = ImagingBootServiceItem(entry)
 
     def setKeyboard(self, mapping = None):
@@ -319,7 +320,7 @@ class ImagingMenu:
 
     def setMessage(self, value):
         if type(value == str):
-             value = value.decode('utf-8')
+            value = value.decode('utf-8')
         assert(type(value) == unicode)
         self.message = value
 
@@ -343,7 +344,7 @@ class ImagingItem:
         assert(type(self.desc) == unicode)
         self.uuid = None
 
-    def _applyReplacement(self, out, network = True):        
+    def _applyReplacement(self, out, network = True):
         if network:
             device = '(nd)'
         else:
@@ -448,7 +449,7 @@ class ImagingImageItem(ImagingItem):
                 f.write(self.post_install_script)
                 f.close()
             except OSError, e:
-                self.logger.error("Can't update post-installation script %s: %s" % (initinst, e ))
+                self.logger.error("Can't update post-installation script %s: %s" % (initinst, e))
                 raise
         else:
             if os.path.exists(initinst):
@@ -456,5 +457,5 @@ class ImagingImageItem(ImagingItem):
                 try:
                     os.unlink(initinst)
                 except OSError, e:
-                    self.logger.error("Can't delete post-installation script %s: %s" % (initinst, e ))
+                    self.logger.error("Can't delete post-installation script %s: %s" % (initinst, e))
                     raise
