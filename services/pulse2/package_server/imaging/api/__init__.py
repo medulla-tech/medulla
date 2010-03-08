@@ -346,7 +346,9 @@ class ImagingApi(MyXmlrpc):
                 if result[0]:
                     self.myUUIDCache.set(result[1]['uuid'], MACAddress, result[1]['shortname'], result[1]['fqdn'])
                     self.logger.info('Imaging: Updating cache for %s' % (MACAddress))
-                return result[1]
+                    return result[1]
+                else:
+                    return False
             except Exception, e:
                 self.logger.warning('Imaging: While processing result %s for %s : %s' % (result, MACAddress, e))
 
@@ -532,7 +534,7 @@ class ImagingApi(MyXmlrpc):
         @rtype: bool
         """
 
-        def onSuccess(result):
+        def _onSuccess(result):
             if type(result) != list and len(result) != 2:
                 self.logger.error('Imaging: Couldn\'t register on the MMC agent the image with UUID %s : %s' % (imageUUID, str(result)))
                 ret = False
@@ -544,27 +546,23 @@ class ImagingApi(MyXmlrpc):
                 ret = True
             return ret
 
-        if not isUUID(imageUUID):
-            self.logger.error("Bad image UUID %s" % str(imageUUID))
-            ret = False
-        elif not isMACAddress(computerMACAddress):
-            self.logger.error("Bad computer MAC %s" % str(computerMACAddress))
-            ret = False
-        else:
-            computerUUID = self.myUUIDCache.getByMac(computerMACAddress)
-            if not computerUUID:
-                self.logger.error("Can't get computer UUID for MAC address %s" % computerMACAddress)
-                ret = False
+        def _gotMAC(result):
+            """
+            Process result return by xmlrpc_getComputerByMac, BTW should be either False or the required info
+            """
+            if not result:
+                self.logger.error("Can't get computer UUID for MAC address %s" % (computerMACAddress))
+                return False
             else:
                 # start gathering details about our image
 
-                c_uuid = computerUUID['uuid']
+                c_uuid = result['uuid']
                 isMaster = False # by default, an image is private
                 path = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['masters_folder'], imageUUID)
                 image = Pulse2Image(path)
                 size = image.size
                 creationDate = tuple(gmtime())
-                name = "Backup of %s" % computerUUID['shortname']
+                name = "Backup of %s" % result['shortname']
                 desc = "%s, %s" % (rfc3339Time(), humanReadable(size))
                 creator = ""
 
@@ -572,8 +570,19 @@ class ImagingApi(MyXmlrpc):
                 func = 'imaging.imageRegister'
                 args = (self.config.imaging_api['uuid'], c_uuid, imageUUID, isMaster, name, desc, path, size, creationDate, creator)
                 d = client.callRemote(func, *args)
-                d.addCallbacks(onSuccess, client.onError, errbackArgs = (func, args, False))
+                d.addCallbacks(_onSuccess, client.onError, errbackArgs = (func, args, False))
                 return d
+
+        if not isUUID(imageUUID):
+            self.logger.error("Bad image UUID %s" % str(imageUUID))
+            ret = False
+        elif not isMACAddress(computerMACAddress):
+            self.logger.error("Bad computer MAC %s" % str(computerMACAddress))
+            ret = False
+        else:
+            d = self.xmlrpc_getComputerByMac(computerMACAddress)
+            d.addCallback(_gotMAC)
+            return d
         return ret
 
     def xmlrpc_imagingServerImageDelete(self, imageUUID):
