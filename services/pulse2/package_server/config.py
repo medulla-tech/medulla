@@ -292,7 +292,7 @@ class P2PServerCP(pulse2.utils.Singleton):
             # base folder
             base_folder = '/var/lib/pulse2/imaging'
             # will contain the bootloader material (revoboot + splashscreen), served by tftp
-            bootloader_folder = os.path.join(base_folder, 'bootloader')
+            bootloader_folder = 'bootloader'
             # Boot splash screen
             bootsplash_file = 'bootsplash.xpm'
             # will contain the boot menus, served by tftp
@@ -323,7 +323,7 @@ class P2PServerCP(pulse2.utils.Singleton):
             if self.cp.has_option('imaging_api', 'base_folder'):
                 base_folder = self.cp.get('imaging_api', 'base_folder')
             if self.cp.has_option('imaging_api', 'bootloader_folder'):
-                bootloader_folder = os.path.join(base_folder, self.cp.get('imaging_api', 'bootloader_folder'))
+                bootloader_folder = self.cp.get('imaging_api', 'bootloader_folder')
             if self.cp.has_option('imaging_api', 'bootsplash_file'):
                 bootsplash_file = self.cp.get('imaging_api', 'bootloader_file')
             if self.cp.has_option('imaging_api', 'bootmenus_folder'):
