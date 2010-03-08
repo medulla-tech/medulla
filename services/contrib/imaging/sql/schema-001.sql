@@ -388,7 +388,7 @@ INSERT INTO SynchroState (label) VALUES ("INIT_ERROR");
 
 INSERT INTO Internationalization (id, fk_language, label) VALUES (1, 2, "Menu par défaut");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (2, 2, "Continuer le démarrage normalement");
-INSERT INTO Internationalization (id, fk_language, label) VALUES (3, 2, "Démarrer comme d\'habitude");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (3, 2, "Démarrer comme d'habitude");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (4, 2, "Ajouter comme client Pulse 2");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (5, 2, "Enregistrer ce poste auprès du server Pulse 2");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (6, 2, "Créer une image");
@@ -401,12 +401,12 @@ INSERT INTO Internationalization (id, fk_language, label) VALUES (12, 2, "Menu d
 
 INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (1, "Continue Normal Startup", "Start as usual", 1, 2, "root (hd0)\r\nchainloader +1");
 INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (2, "Register as Pulse 2 Client", "Record this computer in Pulse 2 Server", 3, 4, "identify L=##PULSE2_LANG## P=none\nreboot");
-INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (3, "Create a backup", "Create a backup of this computer", 5, 6, "kernel ##PULSE2_NETDEVICE##/##PULSE2_F_DISKLESS##/##PULSE2_K_DISKLESS## revosavedir=##PULSE2_F_MASTERS## revoinfodir=##PULSE2_F_COMPUTERS## revobase=##PULSE2_F_BASE## quiet\ninitrd ##PULSE2_NETDEVICE##/##PULSE2_F_DISKLESS##/##PULSE2_I_DISKLESS##");
-INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (4, "Diskless Boot", "Load diskless environment then get a prompt", 7, 8, "kernel ##PULSE2_NETDEVICE##/##PULSE2_F_DISKLESS##/##PULSE2_K_DISKLESS## revodebug revobase=##PULSE2_F_BASE## quiet\ninitrd ##PULSE2_NETDEVICE##/##PULSE2_F_DISKLESS##/##PULSE2_I_DISKLESS##");
-INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (5, "Memory test", "Run a full memory check", 9, 10, "kernel --kernel-type=openbsd ##PULSE2_NETDEVICE##/##PULSE2_F_DISKLESS##/##PULSE2_MEMTEST##");
+INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (3, "Create a backup", "Create a backup of this computer", 5, 6, "kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## revosavedir=##PULSE2_MASTERS_DIR## revoinfodir=##PULSE2_COMPUTERS_DIR## revobase=##PULSE2_BASE_DIR## quiet\ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##");
+INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (4, "Diskless Boot", "Load diskless environment then get a prompt", 7, 8, "kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## revodebug revobase=##PULSE2_F_BASE## quiet\ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##");
+INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (5, "Memory test", "Run a full memory check", 9, 10, "kernel --kernel-type=openbsd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_MEMTEST##");
 
-INSERT INTO Menu (id, default_name, fk_name, timeout, background_uri, message, fk_default_item, fk_default_item_WOL, fk_protocol) VALUES (1, "Default Boot Menu", 1, 60, "/##PULSE2_F_DISKLESS##/##PULSE2_F_BOOTSPLASH##", "-- Warning! Your PC is being backed up or restored. Do not reboot !", NULL, NULL, 1);
-INSERT INTO Menu (id, default_name, fk_name, timeout, background_uri, message, fk_default_item, fk_default_item_WOL, fk_protocol) VALUES (2, "Suscribe Boot Menu", 12, 60, "/##PULSE2_F_DISKLESS##/##PULSE2_F_BOOTSPLASH##", "-- Warning! Your PC is being backed up or restored. Do not reboot !", NULL, NULL, 1);
+INSERT INTO Menu (id, default_name, fk_name, timeout, background_uri, message, fk_default_item, fk_default_item_WOL, fk_protocol) VALUES (1, "Default Boot Menu", 1, 60, "/##PULSE2_BOOLOADER_DIR##/##PULSE2_BOOTSPLASH_FILE##", "-- Warning! Your PC is being backed up or restored. Do not reboot !", NULL, NULL, 1);
+INSERT INTO Menu (id, default_name, fk_name, timeout, background_uri, message, fk_default_item, fk_default_item_WOL, fk_protocol) VALUES (2, "Suscribe Boot Menu", 12, 60, "/##PULSE2_BOOTLOADER_DIR##/##PULSE2_BOOTSPLASH_FILE##", "-- Warning! Your PC is being backed up or restored. Do not reboot !", NULL, NULL, 1);
 
 INSERT INTO MenuItem (id, `order`, hidden, hidden_WOL, fk_menu) VALUES (1, 1, 0, 0, 1);
 INSERT INTO MenuItem (id, `order`, hidden, hidden_WOL, fk_menu) VALUES (2, 2, 0, 0, 1);
@@ -426,4 +426,3 @@ INSERT INTO Entity (id, name, uuid, fk_default_menu) VALUES (1, "NEED_ASSOCIATIO
 INSERT INTO User (id, login) VALUES (1, 'UNKNOWN');
 
 COMMIT;
-
