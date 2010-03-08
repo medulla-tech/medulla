@@ -21,6 +21,10 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+"""
+Class to manage msc mmc-agent plugin
+"""
+
 # Big modules
 import logging
 import time
@@ -407,7 +411,7 @@ class RpcProxy(RpcProxyI):
     def get_command_on_bundle_status(self, bundle_id):
         ctx = self.currentContext
         return xmlrpcCleanup2(MscDatabase().getCommandOnBundleStatus(ctx, bundle_id))
-    
+
     def get_command_on_bundle_by_state(self, bundle_id, state, min = 0, max = -1):
         ctx = self.currentContext
         return xmlrpcCleanup2(MscDatabase().getCommandOnBundleByState(ctx, bundle_id, state, min, max))
@@ -500,7 +504,7 @@ class RpcProxy(RpcProxyI):
 
     def get_web_def_issue_halt_to(self):
         return xmlrpcCleanup(MscConfig().web_def_issue_halt_to)
-    
+
     def get_web_def_show_reboot(self):
         return xmlrpcCleanup(MscConfig().web_show_reboot)
 
@@ -677,12 +681,6 @@ def get_new_bundle_title(nb = 0):
     return get_default_bundle_name(nb)
 
 #############################
-def file_exists(filename):
-    return os.path.exists(filename)
-
-def is_dir(filename):
-    return os.path.isdir(filename)
-
 def xmlrpcCleanup2(obj):
     try:
         return xmlrpcCleanup(obj.toH())
