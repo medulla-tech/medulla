@@ -144,7 +144,7 @@ class ImagingMenu:
             ('##PULSE2_BOOTSPLASH_FILE##', self.config.imaging_api['bootsplash_file'], 'global'),
             ('##PULSE2_DISKLESS_DIR##', self.config.imaging_api['diskless_folder'], 'global'),
             ('##PULSE2_DISKLESS_KERNEL##', self.config.imaging_api['diskless_kernel'], 'global'),
-            ('##PULSE2_DISKLESS_INITRD#', self.config.imaging_api['diskless_initrd'], 'global'),
+            ('##PULSE2_DISKLESS_INITRD##', self.config.imaging_api['diskless_initrd'], 'global'),
             ('##PULSE2_DISKLESS_MEMTEST##', self.config.imaging_api['diskless_memtest'], 'global'),
             ('##PULSE2_MASTERS_DIR##', self.config.imaging_api['masters_folder'], 'global'),
             ('##PULSE2_POSTINST_DIR##', self.config.imaging_api['postinst_folder'], 'global'),
