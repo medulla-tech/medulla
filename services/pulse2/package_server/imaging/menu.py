@@ -351,7 +351,7 @@ class ImagingItem:
             device = '(cdrom)'
         out = re.sub('##PULSE2_NETDEVICE##', device, out)
         if self.uuid:
-            out = re.sub('##PULSE2_F_IMAGE##', self.uuid, out)
+            out = re.sub('##PULSE2_IMAGE_UUID##', self.uuid, out)
         return out
 
     def _convertEntry(self, array):
