@@ -29,7 +29,6 @@ import os.path
 import os
 import logging
 import time
-import tempfile
 
 
 def isMenuStructure(menu):
@@ -43,7 +42,7 @@ def isMenuStructure(menu):
         for k in ['message', 'protocol', 'default_item', 'default_item_WOL',
                   'timeout', 'background_uri', 'bootservices', 'images']:
             if not k in menu:
-                logger.debug("your menu is missing %s"%(k))
+                logger.debug("your menu is missing %s" % (k))
                 ret = False
                 break
     else:
@@ -61,7 +60,7 @@ class ImagingDefaultMenuBuilder:
     def __init__(self, config, menu):
         self.logger = logging.getLogger()
         if not isMenuStructure(menu):
-            raise TypeError, 'Bad menu structure'
+            raise TypeError('Bad menu structure')
         self.menu = menu
         self.config = config
 
