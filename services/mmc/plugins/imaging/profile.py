@@ -1,7 +1,7 @@
 #
 # (c) 2008 Mandriva, http://www.mandriva.com/
 #
-# $Id: group.py 5110 2010-01-25 14:26:53Z jpbraun $
+# $Id$
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
 #
