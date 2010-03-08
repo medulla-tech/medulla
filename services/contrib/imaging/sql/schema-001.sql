@@ -405,7 +405,7 @@ INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `valu
 INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (4, "Diskless Boot", "Load diskless environment then get a prompt", 7, 8, "kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## revodebug revobase=##PULSE2_F_BASE## quiet\ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##");
 INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (5, "Memory test", "Run a full memory check", 9, 10, "kernel --kernel-type=openbsd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_MEMTEST##");
 
-INSERT INTO Menu (id, default_name, fk_name, timeout, background_uri, message, fk_default_item, fk_default_item_WOL, fk_protocol) VALUES (1, "Default Boot Menu", 1, 60, "/##PULSE2_BOOLOADER_DIR##/##PULSE2_BOOTSPLASH_FILE##", "-- Warning! Your PC is being backed up or restored. Do not reboot !", NULL, NULL, 1);
+INSERT INTO Menu (id, default_name, fk_name, timeout, background_uri, message, fk_default_item, fk_default_item_WOL, fk_protocol) VALUES (1, "Default Boot Menu", 1, 60, "/##PULSE2_BOOTLOADER_DIR##/##PULSE2_BOOTSPLASH_FILE##", "-- Warning! Your PC is being backed up or restored. Do not reboot !", NULL, NULL, 1);
 INSERT INTO Menu (id, default_name, fk_name, timeout, background_uri, message, fk_default_item, fk_default_item_WOL, fk_protocol) VALUES (2, "Suscribe Boot Menu", 12, 60, "/##PULSE2_BOOTLOADER_DIR##/##PULSE2_BOOTSPLASH_FILE##", "-- Warning! Your PC is being backed up or restored. Do not reboot !", NULL, NULL, 1);
 
 INSERT INTO MenuItem (id, `order`, hidden, hidden_WOL, fk_menu) VALUES (1, 1, 0, 0, 1);
