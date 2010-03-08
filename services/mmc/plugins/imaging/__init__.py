@@ -1275,7 +1275,6 @@ class RpcProxy(RpcProxyI):
         """
         Called by the Package Server to register a new Image.
         """
-        logger = logging.getLogger()
         image = {
             'name': name,
             'desc': desc,
@@ -1290,7 +1289,7 @@ class RpcProxy(RpcProxyI):
         if db.countImagingServerByPackageServerUUID(imaging_server_uuid) == 0:
             return [False, "The imaging server UUID you try to access doesn't exist in the imaging database."]
         if not db.isTargetRegister(computer_uuid, P2IT.COMPUTER):
-            return [False, "The computer UUID you try to access doesn't exists in the imaging database."]
+            return [False, "The computer UUID (%s) you try to access doesn't exists in the imaging database." % computer_uuid]
 
         try:
             ret = db.registerImage(imaging_server_uuid, computer_uuid, image)
