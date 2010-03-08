@@ -27,12 +27,8 @@ imaging plugin
 """
 
 import logging
-import os
-import shutil
 from twisted.internet import defer
 
-import mmc.plugins.imaging.images
-import mmc.plugins.imaging.iso
 from mmc.support.mmctools import xmlrpcCleanup
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 from mmc.plugins.imaging.config import ImagingConfig
@@ -86,7 +82,7 @@ def activate():
 
     # Initialize imaging database
     if not ImagingDatabase().activate(config):
-        logger.warning("Plugin imaging: an error occured during the database initialization")
+        logger.warning("Plugin imaging: an error occurred during the database initialization")
         return False
 
     # register ImagingProfile in ComputerProfileManager but only as a client
@@ -105,92 +101,6 @@ class ContextMaker(ContextMakerI):
 
 class RpcProxy(RpcProxyI):
     """ XML/RPC Bindings """
-
-    """ DEPRECATED """
-
-    def getPublicImagesList():
-        """
-        Return a list of public images
-
-        Only images names are returned
-        """
-        mylist = []
-        for image in mmc.plugins.imaging.images.getPublicImages().values():
-            mylist.append(image.name)
-        return mylist
-
-    def getPublicImageInfos(name):
-        """
-        Return some informations about an Image
-
-        """
-        return xmlrpcCleanup(mmc.plugins.imaging.images.Image(name).getRawInfo())
-
-    def deletePublicImage(name):
-        """
-        delete an Image
-
-        """
-        mmc.plugins.imaging.images.Image(name).delete()
-
-    def isAnImage(name):
-        """
-        Check if pub image is a real image
-
-        """
-        config = mmc.plugins.imaging.ImagingConfig("imaging")
-        return mmc.plugins.imaging.images.hasImagingData(os.path.join(config.publicpath, name))
-
-    def duplicatePublicImage(name, newname):
-        """
-        duplicate an Image
-
-        """
-        config = mmc.plugins.imaging.ImagingConfig("imaging")
-        newpath = os.path.join(config.publicpath, newname)
-        if os.path.exists(newpath): # target already exists
-            return 1
-        if os.path.islink(newpath): # target already exists
-            return 1
-        try:
-            mmc.plugins.imaging.images.Image(name).copy(newname)
-        except: # something weird append
-            shutil.rmtree(newpath)
-            return 255
-        else:   # copy succedeed
-            return 0
-
-    def setPublicImageData(name, newname, title, desc):
-        """
-        duplicate an Image
-
-        """
-        config = mmc.plugins.imaging.ImagingConfig("imaging")
-        newpath = os.path.join(config.publicpath, newname)
-        if name != newname:
-            if os.path.exists(newpath): # target already exists
-                return 1
-            if os.path.islink(newpath): # target already exists
-                return 1
-            try:
-                mmc.plugins.imaging.images.Image(name).move(newname)
-            except: # something weird append
-                return 255
-        mmc.plugins.imaging.images.Image(newname).setTitle(title)
-        mmc.plugins.imaging.images.Image(newname).setDesc(desc)
-        return 0
-
-    def createIsoFromImage(name, filename, size):
-        """
-        create an iso from an image
-
-        """
-        image = mmc.plugins.imaging.iso.Iso(name, filename, size)
-        image.prepareImage()
-        image.createImage()
-        return 0
-
-    """ END DEPRECATED """
 
     ################################################### web def
     def get_web_def_date_fmt(self):
@@ -261,7 +171,7 @@ class RpcProxy(RpcProxyI):
 
     ###### IMAGES
     def __getTargetImages(self, id, target_type, start = 0, end = -1, filter = ''):
-        # carrefull the end is used for each list (image and master)
+        # be careful the end is used for each list (image and master)
         db = ImagingDatabase()
         reti = map(lambda l: l.toH(), db.getPossibleImages(id, start, end, filter))
         counti = db.countPossibleImages(id, filter)
