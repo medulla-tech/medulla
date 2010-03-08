@@ -140,16 +140,16 @@ class ImagingMenu:
         # key 'when' : when to perform the replacement (only 'global' for now)
         self.replacements = [
             ('##PULSE2_LANG##', 'C', 'global'),
-            ('##PULSE2_D_BOOTLOADER##', self.config.imaging_api['bootloader_folder'], 'global'),
-            ('##PULSE2_F_BOOTSPLASH##', self.config.imaging_api['bootsplash_file'], 'global'),
-            ('##PULSE2_D_DISKLESS##', self.config.imaging_api['diskless_folder'], 'global'),
-            ('##PULSE2_F_KERNEL##', self.config.imaging_api['diskless_kernel'], 'global'),
-            ('##PULSE2_D_MASTERS##', self.config.imaging_api['masters_folder'], 'global'),
-            ('##PULSE2_D_POSTINST##', self.config.imaging_api['postinst_folder'], 'global'),
-            ('##PULSE2_D_COMPUTERS##', self.config.imaging_api['computers_folder'], 'global'),
-            ('##PULSE2_D_BASE##', self.config.imaging_api['base_folder'], 'global'),
-            ('##PULSE2_F_INITRD#', self.config.imaging_api['diskless_initrd'], 'global'),
-            ('##PULSE2_F_MEMTEST##', self.config.imaging_api['diskless_memtest'], 'global')]
+            ('##PULSE2_BOOTLOADER_DIR##', self.config.imaging_api['bootloader_folder'], 'global'),
+            ('##PULSE2_BOOTSPLASH_FILE##', self.config.imaging_api['bootsplash_file'], 'global'),
+            ('##PULSE2_DISKLESS_DIR##', self.config.imaging_api['diskless_folder'], 'global'),
+            ('##PULSE2_DISKLESS_KERNEL##', self.config.imaging_api['diskless_kernel'], 'global'),
+            ('##PULSE2_DISKLESS_INITRD#', self.config.imaging_api['diskless_initrd'], 'global'),
+            ('##PULSE2_DISKLESS_MEMTEST##', self.config.imaging_api['diskless_memtest'], 'global'),
+            ('##PULSE2_MASTERS_DIR##', self.config.imaging_api['masters_folder'], 'global'),
+            ('##PULSE2_POSTINST_DIR##', self.config.imaging_api['postinst_folder'], 'global'),
+            ('##PULSE2_COMPUTERS_DIR##', self.config.imaging_api['computers_folder'], 'global'),
+            ('##PULSE2_BASE_DIR##', self.config.imaging_api['base_folder'], 'global')]
         if self.mac:
             self.replacements.append(
                 ('##MAC##',
@@ -399,7 +399,7 @@ class ImagingImageItem(ImagingItem):
     Hold an imaging menu item for a image to restore
     """
 
-    NFSRESTORE = u"kernel ##PULSE2_NETDEVICE##/##PULSE2_F_DISKLESS##/##PULSE2_K_DISKLESS## revosavedir=/##PULSE2_F_MASTERS##/##PULSE2_F_IMAGE## revobase=##PULSE2_F_BASE## revorestorenfs quiet revopost revomac=##MAC## \ninitrd ##PULSE2_NETDEVICE##/##PULSE2_F_DISKLESS##/##PULSE2_I_DISKLESS##\n"
+    NFSRESTORE = u"kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## revosavedir=/##PULSE2_MASTERS_DIR##/##PULSE2_IMAGE_UUID## revobase=##PULSE2_BASE_DIR## revorestorenfs quiet revopost revomac=##MAC## \ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##\n"
     # FIXME ! TFTP/MTFTP to be implemented
     TFTPRESTORE = NFSRESTORE
     MTFTPRESTORE = NFSRESTORE
