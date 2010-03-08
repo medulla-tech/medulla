@@ -541,9 +541,9 @@ class RpcProxy(RpcProxyI):
         if imaging_server and default_menu:
             return xmlrpcCleanup((imaging_server.toH(), default_menu.toH()))
         elif default_menu:
-            return [False, ":cant find imaging server linked to location %s"%(location)]
+            return [False, ":cant find imaging server linked to location %s" % (location)]
         elif imaging_server:
-            return [False, ":cant find the default menu for location %s"%(location), xmlrpcCleanup(imaging_server.toH())]
+            return [False, ":cant find the default menu for location %s" % (location), xmlrpcCleanup(imaging_server.toH())]
 
     def setImagingServerConfig(self, location, config):
         menu = ImagingDatabase().getEntityDefaultMenu(location)
@@ -575,19 +575,19 @@ class RpcProxy(RpcProxyI):
 
     def getComputerSynchroState(self, uuid):
         if not self.isTargetRegister(uuid, P2IT.COMPUTER):
-            return {'id':0}
+            return {'id': 0}
         ret = self.getTargetSynchroState(uuid, P2IT.COMPUTER)
         return xmlrpcCleanup(ret.toH())
 
     def getProfileSynchroState(self, uuid):
         if not self.isTargetRegister(uuid, P2IT.PROFILE):
-            return {'id':0}
+            return {'id': 0}
         ret = self.getTargetSynchroState(uuid, P2IT.PROFILE)
         return xmlrpcCleanup(ret.toH())
 
     def getLocationSynchroState(self, uuid):
         if not self.doesLocationHasImagingServer(uuid):
-            return {'id':0}
+            return {'id': 0}
         ret = ImagingDatabase().getLocationSynchroState(uuid)
         if type(ret) != dict:
             ret = ret.toH()
@@ -1268,7 +1268,7 @@ class RpcProxy(RpcProxyI):
         computer = ComputerManager().getComputerByMac(mac)
         if not computer:
             return [False, "imaging.getComputerByMac() : I was unable to find a computer corresponding to the MAC address %s" % mac]
-        return [True, {'uuid': "UUID%s" % computer['uuid'], 'mac': mac, 'shortname': computer['hostname'], 'fqdn': computer['hostname']}]
+        return [True, {'uuid': computer['uuid'], 'mac': mac, 'shortname': computer['hostname'], 'fqdn': computer['hostname']}]
 
     def logClientAction(self, imaging_server_uuid, computer_uuid, level, phase, message):
         """
@@ -1276,10 +1276,9 @@ class RpcProxy(RpcProxyI):
         """
         logger = logging.getLogger()
         log = {
-            'level':level,
-            'detail':message,
-            'state':phase
-        }
+            'level': level,
+            'detail': message,
+            'state': phase}
         db = ImagingDatabase()
         if db.countImagingServerByPackageServerUUID(imaging_server_uuid) == 0:
             return [False, "The imaging server UUID you try to access doesn't exist in the imaging database."]
