@@ -223,7 +223,7 @@ class RpcProxy(RpcProxyI):
 
         @param target_type: the target type can be one of those two :
             1) '' or P2IT.COMPUTER (1) for a computer
-            2) 'group" or P2IT.PrOFILE (2) for a profile
+            2) 'group" or P2IT.PROFILE (2) for a profile
         @type target_type: str or int
 
         @param mi_uuid: the menu item to move UUID
@@ -246,7 +246,7 @@ class RpcProxy(RpcProxyI):
 
         @param target_type: the target type can be one of those two :
             1) '' or P2IT.COMPUTER (1) for a computer
-            2) 'group" or P2IT.PrOFILE (2) for a profile
+            2) 'group" or P2IT.PROFILE (2) for a profile
         @type target_type: str or int
 
         @param mi_uuid: the menu item to move UUID
@@ -306,15 +306,83 @@ class RpcProxy(RpcProxyI):
 
         return {
             'images': [counti, xmlrpcCleanup(reti)],
-            'masters': [countm, xmlrpcCleanup(retm)]}
+            'masters': [countm, xmlrpcCleanup(retm)]
+        }
 
     def getComputerImages(self, id, start = 0, end = -1, filter = ''):
+        """
+        get the list of all images and masters defined for a computer
+        the list is divided into two parts : images and masters
+        WARNING : the start and end element are applied to each list
+
+        @param id: the uuid of the computer (field Target.uuid)
+        @type id: str
+
+        @param start: the beginning of the list, default 0
+        @type start: int
+
+        @param end: the end of the list, if == -1, no end limit, default -1
+        @type end: int
+
+        @param filter: a string to filter the list, default ''
+        @type filter: str
+
+        @returns: return a dict of two elements : the images and the masters
+        to content of each value is a list of two elements :
+            1) the size of the list
+            2) the list delimited by start and end
+        @rtype: list
+        """
         return self.__getTargetImages(id, P2IT.COMPUTER, start, end, filter)
 
     def getProfileImages(self, id, start = 0, end = -1, filter = ''):
+        """
+        get the list of all masters defined for a profile
+        the list is divided into two parts : images and masters
+        but the image part is always empty
+        WARNING : the start and end element are applied to each list
+
+        @param id: the uuid of the profile (field Target.uuid)
+        @type id: str
+
+        @param start: the beginning of the list, default 0
+        @type start: int
+
+        @param end: the end of the list, if == -1, no end limit, default -1
+        @type end: int
+
+        @param filter: a string to filter the list, default ''
+        @type filter: str
+
+        @returns: return a dict of two elements : the images and the masters
+        to content of each value is a list of two elements :
+            1) the size of the list
+            2) the list delimited by start and end
+        @rtype: list
+        """
         return self.__getTargetImages(id, P2IT.PROFILE, start, end, filter)
 
     def getLocationImages(self, loc_id, start = 0, end = -1, filter = ''):
+        """
+        get the list of all masters defined for a location
+
+        @param loc_id: the uuid of the location (field Entity.uuid)
+        @type loc_id: str
+
+        @param start: the beginning of the list, default 0
+        @type start: int
+
+        @param end: the end of the list, if == -1, no end limit, default -1
+        @type end: int
+
+        @param filter: a string to filter the list, default ''
+        @type filter: str
+
+        @returns: return a list of two elements :
+            1) the size of the list
+            2) the list delimited by start and end
+        @rtype: list
+        """
         # Entities are names Location in the php part, here we convert them from Location to Entity
         db = ImagingDatabase()
         ret = map(lambda l: l.toH(), db.getEntityMasters(loc_id, start, end, filter))
@@ -323,6 +391,33 @@ class RpcProxy(RpcProxyI):
 
     # EDITION
     def addImageToTarget(self, item_uuid, target_uuid, params, target_type):
+        """
+        add an image to the target boot menu
+
+        @param item_uuid: the image UUID
+        @type: str
+
+        @param target_uuid: the target UUID
+        @type target_uuid: str
+
+        @param params: the parameters of the association with the menu :
+            * hidden : boolean, is the image shown in the menu
+            * hidden_WOL : boolean, is the image shown in the WOL menu
+            * default : boolean, is the image the default
+            * default_WOL : boolean, is the image the default when booting after a WOL
+            * name : the name
+        @type params: dict
+
+        @param target_type: the target type can be one of those two :
+            1) '' or P2IT.COMPUTER (1) for a computer
+            2) 'group" or P2IT.PROFILE (2) for a profile
+        @type target_type: str or int
+
+        @returns: a pair :
+            * True if succeed or False otherwise
+            * the error in case of failure
+        @rtype: list
+        """
         db = ImagingDatabase()
         target_type = self.__convertType(target_type)
         try:
@@ -330,10 +425,36 @@ class RpcProxy(RpcProxyI):
             ret = db.addImageToTarget(item_uuid, target_uuid, params)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
-            raise e
             return xmlrpcCleanup([False, e])
 
     def editImageToTarget(self, item_uuid, target_uuid, params, target_type):
+        """
+        edit the image to boot menu link parameters
+
+        @param item_uuid: the image UUID
+        @type: str
+
+        @param target_uuid: the target UUID
+        @type target_uuid: str
+
+        @param params: the parameters of the association with the menu :
+            * hidden : boolean, is the image shown in the menu
+            * hidden_WOL : boolean, is the image shown in the WOL menu
+            * default : boolean, is the image the default
+            * default_WOL : boolean, is the image the default when booting after a WOL
+            * name : the name
+        @type params: dict
+
+        @param target_type: the target type can be one of those two :
+            1) '' or P2IT.COMPUTER (1) for a computer
+            2) 'group" or P2IT.PROFILE (2) for a profile
+        @type target_type: str or int
+
+        @returns: a pair :
+            * True if succeed or False otherwise
+            * the error in case of failure
+        @rtype: list
+        """
         db = ImagingDatabase()
         target_type = self.__convertType(target_type)
         try:
@@ -344,6 +465,33 @@ class RpcProxy(RpcProxyI):
             return xmlrpcCleanup([False, e])
 
     def editImage(self, item_uuid, target_uuid, params, target_type):
+        """
+        edit an image
+
+        @param item_uuid: the image UUID
+        @type: str
+
+        @param target_uuid: the target UUID
+        @type target_uuid: str
+
+        @param params: the parameters of the association with the menu :
+            * hidden : boolean, is the image shown in the menu
+            * hidden_WOL : boolean, is the image shown in the WOL menu
+            * default : boolean, is the image the default
+            * default_WOL : boolean, is the image the default when booting after a WOL
+            * name : the name
+        @type params: dict
+
+        @param target_type: the target type can be one of those two :
+            1) '' or P2IT.COMPUTER (1) for a computer
+            2) 'group" or P2IT.PROFILE (2) for a profile
+        @type target_type: str or int
+
+        @returns: a pair :
+            * True if succeed or False otherwise
+            * the error in case of failure
+        @rtype: list
+        """
         db = ImagingDatabase()
         target_type = self.__convertType(target_type)
         try:
@@ -355,6 +503,25 @@ class RpcProxy(RpcProxyI):
             return xmlrpcCleanup([False, e])
 
     def delImageToTarget(self, item_uuid, target_uuid, target_type):
+        """
+        remove an image from a boot menu
+
+        @param item_uuid: the image UUID
+        @type: str
+
+        @param target_uuid: the target UUID
+        @type target_uuid: str
+
+        @param target_type: the target type can be one of those two :
+            1) '' or P2IT.COMPUTER (1) for a computer
+            2) 'group" or P2IT.PROFILE (2) for a profile
+        @type target_type: str or int
+
+        @returns: a pair :
+            * True if succeed or False otherwise
+            * the error in case of failure
+        @rtype: list
+        """
         db = ImagingDatabase()
         target_type = self.__convertType(target_type)
         try:
@@ -365,6 +532,7 @@ class RpcProxy(RpcProxyI):
             return xmlrpcCleanup([False, e])
 
     def addImageToLocation(self, item_uuid, loc_id, params):
+        """ same as addImageToTarget but for a location """
         db = ImagingDatabase()
         try:
             db.setLocationSynchroState(loc_id, P2ISS.TODO)
@@ -375,6 +543,7 @@ class RpcProxy(RpcProxyI):
             return xmlrpcCleanup([False, e])
 
     def editImageToLocation(self, item_uuid, loc_id, params):
+        """ same as editImageToTarget but for a location """
         db = ImagingDatabase()
         try:
             db.setLocationSynchroState(loc_id, P2ISS.TODO)
@@ -384,6 +553,7 @@ class RpcProxy(RpcProxyI):
             return xmlrpcCleanup([False, e])
 
     def delImageToLocation(self, item_uuid, loc_id):
+        """ same as delImageToTarget but for a location """
         db = ImagingDatabase()
         try:
             db.setLocationSynchroState(loc_id, P2ISS.TODO)
@@ -400,18 +570,98 @@ class RpcProxy(RpcProxyI):
         return [count, xmlrpcCleanup(ret)]
 
     def getComputerBootServices(self, id, start = 0, end = -1, filter = ''):
+        """
+        get the boot services that are in a computer's boot menu
+
+        @param id: the computer's UUID (Target.uuid)
+        @type id: str
+
+        @param start: the beginning of the list, default 0
+        @type start: int
+
+        @param end: the end of the list, if == -1, no end limit, default -1
+        @type end: int
+
+        @param filter: a string to filter the list, default ''
+        @type filter: str
+
+        @returns: return a list of two elements :
+            1) the size of the list
+            2) the list delimited by start and end
+        @rtype: list
+        """
         return self.__getTargetBootServices(id, P2IT.COMPUTER, start, end, filter)
 
     def getProfileBootServices(self, id, start = 0, end = -1, filter = ''):
+        """
+        get the boot services that are in a profile's boot menu
+
+        @param id: the profile's UUID (Target.uuid)
+        @type id: str
+
+        @param start: the beginning of the list, default 0
+        @type start: int
+
+        @param end: the end of the list, if == -1, no end limit, default -1
+        @type end: int
+
+        @param filter: a string to filter the list, default ''
+        @type filter: str
+
+        @returns: return a list of two elements :
+            1) the size of the list
+            2) the list delimited by start and end
+        @rtype: list
+        """
         return self.__getTargetBootServices(id, P2IT.PROFILE, start, end, filter)
 
     def getPossibleBootServices(self, target_uuid, start = 0, end = -1, filter = ''):
+        """
+        get all the boot services that a target can use
+
+        @param target_uuid: the target's UUID (Target.uuid)
+        @type target_uuid: str
+
+        @param start: the beginning of the list, default 0
+        @type start: int
+
+        @param end: the end of the list, if == -1, no end limit, default -1
+        @type end: int
+
+        @param filter: a string to filter the list, default ''
+        @type filter: str
+
+        @returns: return a list of two elements :
+            1) the size of the list
+            2) the list delimited by start and end
+        @rtype: list
+        """
         db = ImagingDatabase()
         ret = map(lambda l: l.toH(), db.getPossibleBootServices(target_uuid, start, end, filter))
         count = db.countPossibleBootServices(target_uuid, filter)
         return [count, xmlrpcCleanup(ret)]
 
     def getLocationBootServices(self, loc_id, start = 0, end = -1, filter = ''):
+        """
+        get all the boot services that a location can use
+
+        @param loc_id: the location's UUID (Entity.uuid)
+        @type loc_id: str
+
+        @param start: the beginning of the list, default 0
+        @type start: int
+
+        @param end: the end of the list, if == -1, no end limit, default -1
+        @type end: int
+
+        @param filter: a string to filter the list, default ''
+        @type filter: str
+
+        @returns: return a list of two elements :
+            1) the size of the list
+            2) the list delimited by start and end
+        @rtype: list
+        """
         # Entities are names Location in the php part, here we convert them from Location to Entity
         db = ImagingDatabase()
         ret = map(lambda l: l.toH(), db.getEntityBootServices(loc_id, start, end, filter))
@@ -420,6 +670,33 @@ class RpcProxy(RpcProxyI):
 
     # EDITION
     def addServiceToTarget(self, bs_uuid, target_uuid, params, target_type):
+        """
+        add a boot service to a target boot menu
+
+        @param bs_uuid: boot service uuid
+        @type bs_uuid: str
+
+        @param target_uuid: target's UUID (Target.uuid)
+        @type target_uuid: str
+
+        @param params: the parameters of the association with the menu :
+            * hidden : boolean, is the image shown in the menu
+            * hidden_WOL : boolean, is the image shown in the WOL menu
+            * default : boolean, is the image the default
+            * default_WOL : boolean, is the image the default when booting after a WOL
+            * name : the name
+        @type params: dict
+
+        @param target_type: the target type can be one of those two :
+            1) '' or P2IT.COMPUTER (1) for a computer
+            2) 'group" or P2IT.PROFILE (2) for a profile
+        @type target_type: str or int
+
+        @returns: return a list of two elements :
+            1) the size of the list
+            2) the list delimited by start and end
+        @rtype: list
+        """
         db = ImagingDatabase()
         target_type = self.__convertType(target_type)
         try:
@@ -430,6 +707,25 @@ class RpcProxy(RpcProxyI):
             return xmlrpcCleanup([False, e])
 
     def delServiceToTarget(self, bs_uuid, target_uuid, target_type):
+        """
+        remove a boot service from a target boot menu
+
+        @param bs_uuid: boot service uuid
+        @type bs_uuid: str
+
+        @param target_uuid: target's UUID (Target.uuid)
+        @type target_uuid: str
+
+        @param target_type: the target type can be one of those two :
+            1) '' or P2IT.COMPUTER (1) for a computer
+            2) 'group" or P2IT.PROFILE (2) for a profile
+        @type target_type: str or int
+
+        @returns: return a list of two elements :
+            1) the size of the list
+            2) the list delimited by start and end
+        @rtype: list
+        """
         db = ImagingDatabase()
         target_type = self.__convertType(target_type)
         try:
@@ -440,6 +736,33 @@ class RpcProxy(RpcProxyI):
             return xmlrpcCleanup([False, e])
 
     def editServiceToTarget(self, bs_uuid, target_uuid, params, target_type):
+        """
+        edit a boot service already associated to a target boot menu
+
+        @param bs_uuid: boot service uuid
+        @type bs_uuid: str
+
+        @param target_uuid: target's UUID (Target.uuid)
+        @type target_uuid: str
+
+        @param params: the parameters of the association with the menu :
+            * hidden : boolean, is the image shown in the menu
+            * hidden_WOL : boolean, is the image shown in the WOL menu
+            * default : boolean, is the image the default
+            * default_WOL : boolean, is the image the default when booting after a WOL
+            * name : the name
+        @type params: dict
+
+        @param target_type: the target type can be one of those two :
+            1) '' or P2IT.COMPUTER (1) for a computer
+            2) 'group" or P2IT.PROFILE (2) for a profile
+        @type target_type: str or int
+
+        @returns: return a list of two elements :
+            1) the size of the list
+            2) the list delimited by start and end
+        @rtype: list
+        """
         db = ImagingDatabase()
         target_type = self.__convertType(target_type)
         try:
@@ -451,6 +774,7 @@ class RpcProxy(RpcProxyI):
             return xmlrpcCleanup([False, e])
 
     def addServiceToLocation(self, bs_uuid, location_id, params):
+        """ same as addServiceToTarget for a location """
         db = ImagingDatabase()
         try:
             db.setLocationSynchroState(location_id, P2ISS.TODO)
@@ -460,6 +784,7 @@ class RpcProxy(RpcProxyI):
             return xmlrpcCleanup([False, e])
 
     def delServiceToLocation(self, bs_uuid, location_id):
+        """ same as delServiceToTarget for a location """
         db = ImagingDatabase()
         try:
             db.setLocationSynchroState(location_id, P2ISS.TODO)
@@ -469,6 +794,7 @@ class RpcProxy(RpcProxyI):
             return xmlrpcCleanup([False, e])
 
     def editServiceToLocation(self, mi_uuid, location_id, params):
+        """ same as editServiceToTarget for a location """
         db = ImagingDatabase()
         try:
             db.setLocationSynchroState(location_id, P2ISS.TODO)
@@ -479,6 +805,15 @@ class RpcProxy(RpcProxyI):
 
     ###### MENU ITEMS
     def getMenuItemByUUID(self, bs_uuid):
+        """
+        get the detail of a menu item for an uuid
+
+        @param bs_uuid: the menu item UUID
+        @type bs_uuid: str
+
+        @returns: a dictionary containing the menu item details
+        @rtype: dict
+        """
         mi = ImagingDatabase().getMenuItemByUUID(bs_uuid)
         if mi != None:
             return xmlrpcCleanup(mi.toH())
@@ -492,12 +827,72 @@ class RpcProxy(RpcProxyI):
         return [count, xmlrpcCleanup(ret)]
 
     def getComputerLogs(self, id, start = 0, end = -1, filter = ''):
+        """
+        get all the imaging logs of a computer
+
+        @param id: the computer UUID (Target.uuid)
+        @type id: str
+
+        @param start: the beginning of the list, default 0
+        @type start: int
+
+        @param end: the end of the list, if == -1, no end limit, default -1
+        @type end: int
+
+        @param filter: a string to filter the list, default ''
+        @type filter: str
+
+        @returns: return a list of two elements :
+            1) the size of the list
+            2) the list delimited by start and end
+        @rtype: list
+        """
         return self.__getTargetImagingLogs(id, P2IT.COMPUTER, start, end, filter)
 
     def getProfileLogs(self, id, start = 0, end = -1, filter = ''):
+        """
+        get all the imaging logs of a profile
+
+        @param id: the profile UUID (Target.uuid)
+        @type id: str
+
+        @param start: the beginning of the list, default 0
+        @type start: int
+
+        @param end: the end of the list, if == -1, no end limit, default -1
+        @type end: int
+
+        @param filter: a string to filter the list, default ''
+        @type filter: str
+
+        @returns: return a list of two elements :
+            1) the size of the list
+            2) the list delimited by start and end
+        @rtype: list
+        """
         return self.__getTargetImagingLogs(id, P2IT.PROFILE, start, end, filter)
 
     def getLogs4Location(self, location_uuid, start = 0, end = -1, filter = ''):
+        """
+        get all the imaging logs of all the elements of a location
+
+        @param location_uuid: the entity UUID (Entity.uuid)
+        @type location_uuid: str
+
+        @param start: the beginning of the list, default 0
+        @type start: int
+
+        @param end: the end of the list, if == -1, no end limit, default -1
+        @type end: int
+
+        @param filter: a string to filter the list, default ''
+        @type filter: str
+
+        @returns: return a list of two elements :
+            1) the size of the list
+            2) the list delimited by start and end
+        @rtype: list
+        """
         if location_uuid == False:
             return [0, []]
         db = ImagingDatabase()
@@ -511,6 +906,15 @@ class RpcProxy(RpcProxyI):
 
     ###### IMAGING API CALLS
     def getGlobalStatus(self, location):
+        """
+        get an imaging server status
+
+        @param location: the location UUID (Entity.uuid)
+        @type location: str
+
+        @returns: a dict containing disk usage....
+        @rtype: dict
+        """
         url = self.__chooseImagingApiUrl(location)
         i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
         # TODO need to be done in async
@@ -520,22 +924,68 @@ class RpcProxy(RpcProxyI):
 
     ####### IMAGING SERVER
     def getAllNonLinkedImagingServer(self, start = 0, end = -1, filter = ''):
+        """
+        get all imaging servers that are not linked to any location
+
+        @param start: the beginning of the list, default 0
+        @type start: int
+
+        @param end: the end of the list, if == -1, no end limit, default -1
+        @type end: int
+
+        @param filter: a string to filter the list, default ''
+        @type filter: str
+
+        @returns: return a list of two elements :
+            1) the size of the list
+            2) the list delimited by start and end
+        @rtype: list
+        """
         db = ImagingDatabase()
         ret = map(lambda l: l.toH(), db.getAllNonLinkedImagingServer(start, end, filter))
         count = db.countAllNonLinkedImagingServer(filter)
         return [count, xmlrpcCleanup(ret)]
 
     def linkImagingServerToLocation(self, is_uuid, loc_id, loc_name):
+        """
+        link an imaging server to a location
+
+        @param is_uuid: the imaging server UUID
+        @type is_uuid: str
+
+        @param loc_id: the location UUID (Entity.uuid)
+        @type loc_id: str
+
+        @param loc_name: the location name
+        @type loc_name: str
+
+        @returns: a pair :
+            * True if succeed or False otherwise
+            * the error in case of failure
+        @rtype: list
+        """
         db = ImagingDatabase()
         try:
-            db.linkImagingServerToEntity(is_uuid, loc_id, loc_name) # FIXME : are not we supposed to deal with the return value ?
+            ret = db.linkImagingServerToEntity(is_uuid, loc_id, loc_name)
             db.setLocationSynchroState(loc_id, P2ISS.TODO)
+            return [True, ret]
         except Exception, e:
             logging.getLogger().warn("Imaging.linkImagingServerToLocation : %s" % e)
             return [False, "Failed to link Imaging Server to Location : %s" % e]
         return [True]
 
     def getImagingServerConfig(self, location):
+        """
+        get an imaging server configuration
+
+        @param location: the location UUID (Entity.uuid)
+        @type location: str
+
+        @returns: a pair:
+            * the imaging server configuration as a dict
+            * the imaging server default menu as a dict
+        @rtype: list
+        """
         imaging_server = ImagingDatabase().getImagingServerByEntityUUID(location)
         default_menu = ImagingDatabase().getEntityDefaultMenu(location)
         if imaging_server and default_menu:
@@ -546,6 +996,20 @@ class RpcProxy(RpcProxyI):
             return [False, ":cant find the default menu for location %s" % (location), xmlrpcCleanup(imaging_server.toH())]
 
     def setImagingServerConfig(self, location, config):
+        """
+        set an imaging server configuration
+
+        @param location: the location UUID (Entity.uuid)
+        @type location: str
+
+        @param config:
+        @type config: dict
+
+        @returns: a pair:
+            * True if succeed or False otherwise
+            * the error in case of failure
+        @rtype: list
+        """
         menu = ImagingDatabase().getEntityDefaultMenu(location)
         menu = menu.toH()
         db = ImagingDatabase()
@@ -556,36 +1020,88 @@ class RpcProxy(RpcProxyI):
             return xmlrpcCleanup([False, e])
 
     def doesLocationHasImagingServer(self, loc_id):
+        """
+        check if a location has an imaging server associated
+
+        @param loc_id: the location UUID (Entity.uuid)
+        @type loc_id: str
+
+        @returns: true if the location has an imaging server
+        @rtype: boolean
+        """
         return ImagingDatabase().doesLocationHasImagingServer(loc_id)
 
     ###### REGISTRATION
     def isTargetRegister(self, uuid, target_type):
+        """
+        check if a target has already been registered or not
+
+        @param uuid: the target's UUID (Target.uuid)
+        @type uuid: str
+
+        @param target_type: the target type can be one of those two :
+            1) '' or P2IT.COMPUTER (1) for a computer
+            2) 'group" or P2IT.PROFILE (2) for a profile
+        @type target_type: str or int
+
+        @returns: true if the target has been registered
+        @rtype: boolean
+        """
         return ImagingDatabase().isTargetRegister(uuid, target_type)
 
     def isComputerRegistered(self, machine_uuid):
+        """ see isTargetRegister """
         return self.isTargetRegister(machine_uuid, P2IT.COMPUTER)
 
     def isProfileRegistered(self, profile_uuid):
+        """ see isTargetRegister """
         return self.isTargetRegister(profile_uuid, P2IT.PROFILE)
 
     ###### Synchronisation
     def getTargetSynchroState(self, uuid, target_type):
+        """
+        get the synchronization state of a target
+
+        @param uuid: the target's UUID (Target.uuid)
+        @type uuid: str
+
+        @param target_type: the target type can be one of those two :
+            1) '' or P2IT.COMPUTER (1) for a computer
+            2) 'group" or P2IT.PROFILE (2) for a profile
+        @type target_type: str or int
+
+        @returns: the synchronization state associated to that target's boot menu,
+        it's a dict containing an id and a name
+        @rtype: dict
+        """
         ret = ImagingDatabase().getTargetsSynchroState([uuid], target_type)
         return ret[0]
 
     def getComputerSynchroState(self, uuid):
+        """ see getTargetSynchroState """
         if not self.isTargetRegister(uuid, P2IT.COMPUTER):
             return {'id': 0}
         ret = self.getTargetSynchroState(uuid, P2IT.COMPUTER)
         return xmlrpcCleanup(ret.toH())
 
     def getProfileSynchroState(self, uuid):
+        """ see getTargetSynchroState """
         if not self.isTargetRegister(uuid, P2IT.PROFILE):
             return {'id': 0}
         ret = self.getTargetSynchroState(uuid, P2IT.PROFILE)
         return xmlrpcCleanup(ret.toH())
 
     def getLocationSynchroState(self, uuid):
+        """
+        get the synchronization state of a location
+
+        @param uuid: the location's UUID (Entity.uuid)
+        @type uuid: str
+
+        @returns: the synchronization state associated to that location's boot menu,
+        it's a dict containing an id and a name
+        @rtype: dict
+        """
         if not self.doesLocationHasImagingServer(uuid):
             return {'id': 0}
         ret = ImagingDatabase().getLocationSynchroState(uuid)
@@ -666,7 +1182,6 @@ class RpcProxy(RpcProxyI):
         return menu
 
     def __generateMenus(self, logger, db, uuids, target_type):
-        # WIP
         # get target location
         distinct_loc = {}
         distinct_loc_own_menu = {}
@@ -796,6 +1311,21 @@ class RpcProxy(RpcProxyI):
         return d
 
     def __synchroTargets(self, uuids, target_type):
+        """
+        synchronize targets with their imaging servers
+
+        @param uuids: the targets UUID (Target.uuid)
+        @type uuids: list
+
+        @param target_type: the target type can be one of those two :
+            1) '' or P2IT.COMPUTER (1) for a computer
+            2) 'group" or P2IT.PROFILE (2) for a profile
+        but as to be the same for all the targets
+        @type target_type: str or int
+
+        @returns: the list of uuids of the target that failed to synchronize
+        @rtype: list
+        """
         logger = logging.getLogger()
         db = ImagingDatabase()
         ret = db.changeTargetsSynchroState(uuids, target_type, P2ISS.RUNNING)
@@ -929,18 +1459,30 @@ class RpcProxy(RpcProxyI):
         return dl
 
     def synchroComputer(self, uuid):
+        """ see __synchroTargets """
         if not self.isTargetRegister(uuid, P2IT.COMPUTER):
             return False
         ret = self.__synchroTargets([uuid], P2IT.COMPUTER)
         return xmlrpcCleanup(ret)
 
     def synchroProfile(self, uuid):
+        """ see __synchroTargets """
         if not self.isTargetRegister(uuid, P2IT.PROFILE):
             return False
         ret = self.__synchroTargets([uuid], P2IT.PROFILE)
         return xmlrpcCleanup(ret)
 
     def synchroLocation(self, uuid):
+        """
+        synchronize all the configuration from the database to the imaging server
+        also synchronize all the targets contained in this location
+
+        @param uuid: the location's UUID (Entity.uuid)
+        @type uuid: str
+
+        @returns: the list of uuids of the target that failed to synchronize
+        @rtype: list
+        """
         logger = logging.getLogger()
         db = ImagingDatabase()
         dl = []
@@ -992,12 +1534,50 @@ class RpcProxy(RpcProxyI):
 
     ###### Menus
     def getMyMenuTarget(self, uuid, target_type):
+        """
+        get a target's boot menu and configuration
+        it can come from the target itself,
+        or from it's profile if it's a computer,
+        or from it's entity whatever it is.
+
+        @param uuid: the target's UUID (Target.uuid)
+        @type uuid: str
+
+        @param target_type: the target type can be one of those two :
+            1) '' or P2IT.COMPUTER (1) for a computer
+            2) 'group" or P2IT.PROFILE (2) for a profile
+        @type target_type: str or int
+
+        @returns: a couple:
+            * from where the menu comes
+            * the menu as a dict
+        @rtype: list
+        """
         ret = ImagingDatabase().getMyMenuTarget(uuid, target_type)
         if ret[1]:
             ret[1] = ret[1].toH()
         return ret
 
     def setMyMenuTarget(self, uuid, params, target_type):
+        """
+        set a boot menu and configuration for a target
+
+        @param uuid: the target's UUID (Target.uuid)
+        @type uuid: str
+
+        @param params: all the values to define that menu
+        @type params: dict
+
+        @param target_type: the target type can be one of those two :
+            1) '' or P2IT.COMPUTER (1) for a computer
+            2) 'group" or P2IT.PROFILE (2) for a profile
+        @type target_type: str or int
+
+        @returns: a pair:
+            * True if succeed or False otherwise
+            * the error in case of failure
+        @rtype: list
+        """
         db = ImagingDatabase()
         isRegistered = db.isTargetRegister(uuid, target_type)
         if not isRegistered and target_type == P2IT.COMPUTER and db.isTargetRegister(uuid, P2IT.COMPUTER_IN_PROFILE):
@@ -1013,7 +1593,6 @@ class RpcProxy(RpcProxyI):
         except Exception, e:
             return [False, "setMyMenuTarget : %s"%(str(e))]
 
-        #WIP
         if not isRegistered:
             logger = logging.getLogger()
             ret = db.changeTargetsSynchroState([uuid], target_type, P2ISS.RUNNING)
@@ -1091,14 +1670,14 @@ class RpcProxy(RpcProxyI):
                             imagingData = {'menu':{uuid:menu}, 'uuid':uuid}
                             computers.append((h_hostnames[uuid], h_macaddress[uuid], imagingData))
 
-                        def treatRegister(results, uuids = uuids):
+                        def treatRegisters(results, uuids = uuids):
                             failures = uuids
                             for l_uuid in results:
                                 uuids.remove(l_uuid)
                             return failures
 
                         d = i.computersRegister(computers)
-                        d.addCallback(treatRegister)
+                        d.addCallback(treatRegisters)
                         defer_list.append(d)
                     else:
                         logger.error("couldn't initialize the ImagingApi to %s"%(url))
@@ -1130,31 +1709,84 @@ class RpcProxy(RpcProxyI):
         return [True]
 
     def getMyMenuComputer(self, uuid):
+        """ see getMyMenuTarget """
         return xmlrpcCleanup(self.getMyMenuTarget(uuid, P2IT.COMPUTER))
 
     def setMyMenuComputer(self, target_uuid, params):
+        """ see setMyMenuTarget """
         return xmlrpcCleanup(self.setMyMenuTarget(target_uuid, params, P2IT.COMPUTER))
 
     def getMyMenuProfile(self, uuid):
+        """ see getMyMenuTarget """
         return xmlrpcCleanup(self.getMyMenuTarget(uuid, P2IT.PROFILE))
 
     def setMyMenuProfile(self, target_uuid, params):
+        """ see setMyMenuTarget """
         return xmlrpcCleanup(self.setMyMenuTarget(target_uuid, params, P2IT.PROFILE))
 
     ###### POST INSTALL SCRIPTS
     def getAllTargetPostInstallScript(self, target_uuid, start = 0, end = -1, filter = ''):
+        """
+        get the list of all the post install script that are possible for a target
+
+        @param target_uuid: the target's UUID (Target.uuid)
+        @type target_uuid: str
+
+        @param start: the beginning of the list, default 0
+        @type start: int
+
+        @param end: the end of the list, if == -1, no end limit, default -1
+        @type end: int
+
+        @param filter: a string to filter the list, default ''
+        @type filter: str
+
+        @returns: a pair:
+            * True if succeed or False otherwise
+            * the error in case of failure
+        @rtype: list
+        """
         db = ImagingDatabase()
         ret = map(lambda l: l.toH(), db.getAllTargetPostInstallScript(target_uuid, start, end, filter))
         count = db.countAllTargetPostInstallScript(target_uuid, filter)
         return [count, xmlrpcCleanup(ret)]
 
     def getAllPostInstallScripts(self, location, start = 0, end = -1, filter = ''):
+        """
+        get the list of all the post install script possible in a location
+
+        @param location: the location uuid (Entity.uuid)
+        @type location: str
+
+        @param start: the beginning of the list, default 0
+        @type start: int
+
+        @param end: the end of the list, if == -1, no end limit, default -1
+        @type end: int
+
+        @param filter: a string to filter the list, default ''
+        @type filter: str
+
+        @returns: a pair:
+            * True if succeed or False otherwise
+            * the error in case of failure
+        @rtype: list
+        """
         db = ImagingDatabase()
         ret = map(lambda l: l.toH(), db.getAllPostInstallScripts(location, start, end, filter))
         count = db.countAllPostInstallScripts(location, filter)
         return [count, xmlrpcCleanup(ret)]
 
     def getPostInstallScript(self, pis_uuid):
+        """
+        get the detail of a post install script
+
+        @param pis_uuid: the post install script uuid
+        @type pis_uuid: str
+
+        @returns: a dict with all the detail of the post install script or False if that pis dont exists
+        @rtype: dict
+        """
         pis = ImagingDatabase().getPostInstallScript(pis_uuid)
         if pis:
             return xmlrpcCleanup(pis.toH())
@@ -1162,6 +1794,18 @@ class RpcProxy(RpcProxyI):
 
     # edit
     def delPostInstallScript(self, pis_uuid):
+        """
+        delete a post install script from a location
+        it's only possible for pis created after the install
+
+        @param pis_uuid: the post install script uuid
+        @type pis_uuid: str
+
+        @returns: a pair:
+            * True if succeed or False otherwise
+            * the error in case of failure
+        @rtype: list
+        """
         # TODO should be sync
         try:
             return xmlrpcCleanup(ImagingDatabase().delPostInstallScript(pis_uuid))
@@ -1169,6 +1813,20 @@ class RpcProxy(RpcProxyI):
             return xmlrpcCleanup([False, e])
 
     def editPostInstallScript(self, pis_uuid, params):
+        """
+        edit a post install script in a location
+
+        @param pis_uuid: the post install script uuid
+        @type pis_uuid: str
+
+        @param params: the detail of the post install script
+        @type params: dict
+
+        @returns: a pair:
+            * True if succeed or False otherwise
+            * the error in case of failure
+        @rtype: list
+        """
         # TODO should be sync
         try:
             return xmlrpcCleanup(ImagingDatabase().editPostInstallScript(pis_uuid, params))
@@ -1176,6 +1834,20 @@ class RpcProxy(RpcProxyI):
             return xmlrpcCleanup([False, e])
 
     def addPostInstallScript(self, loc_id, params):
+        """
+        add a post install script in a location
+
+        @param loc_id: the location uuid (Entity.uuid)
+        @type loc_id: str
+
+        @param params: the detail of the post install script
+        @type params: dict
+
+        @returns: a pair:
+            * True if succeed or False otherwise
+            * the error in case of failure
+        @rtype: list
+        """
         # TODO should be sync
         try:
             return xmlrpcCleanup(ImagingDatabase().addPostInstallScript(loc_id, params))
@@ -1187,8 +1859,30 @@ class RpcProxy(RpcProxyI):
         """
         Called by the Package Server to register a new computer.
         The computer name may contain a profile and an entity path (like profile:/entityA/entityB/computer)
-        """
 
+        @param imaging_server_uuid:
+        @type imaging_server_uuid:
+
+        @param hostname: the computer to be registered hostname
+        @type hostname: str
+
+        @param domain: the computer to be registered domain
+        @type domain: str
+
+        @param MACAddress: the computer to be registered mac address
+        @type MACAddress: str
+
+        @param profile: the computer to be registered profile
+        @type profile: str
+
+        @param entity: the computer to be registered entity
+        @type entity:
+
+        @returns: a pair:
+            * True if succeed or False otherwise
+            * the error in case of failure
+        @rtype: list
+        """
         logger = logging.getLogger()
         db = ImagingDatabase()
 
@@ -1253,6 +1947,20 @@ class RpcProxy(RpcProxyI):
         Called by the imagingServer register script, it fills all the required fields for an
         imaging server, then the server is available in the list of server not linked to any entity
         and need to be linked.
+
+        @param name: the imaging server name
+        @type name: str
+
+        @param url: the url to contact this imaging server
+        @type url: str
+
+        @param uuid: the imaging server's uuid (it's generated on the imaging server side)
+        @type uuid: str
+
+        @returns: a pair:
+            * True if succeed or False otherwise
+            * the error in case of failure
+        @rtype: list
         """
         db = ImagingDatabase()
         if db.countImagingServerByPackageServerUUID(uuid) != 0:
@@ -1263,6 +1971,14 @@ class RpcProxy(RpcProxyI):
     def getComputerByMac(self, mac):
         """
         Called by the package server, to obtain a computer UUID/shortname/fqdn in exchange of its MAC address
+
+        @param mac: the mac address
+        @type mac: str
+
+        @results: a pair:
+            * True if succeed or False otherwise
+            * the error in case of failure else the computer as a dict
+        @rtype: list
         """
         assert pulse2.utils.isMACAddress(mac)
         computer = ComputerManager().getComputerByMac(mac)
@@ -1272,7 +1988,28 @@ class RpcProxy(RpcProxyI):
 
     def logClientAction(self, imaging_server_uuid, computer_uuid, level, phase, message):
         """
-        Called by the package server, to log some info
+        Called by the package server, to log some info on imaging
+        like backup/restore start or finish, in which state....
+
+        @param imaging_server_uuid: the imaging server uuid where the action happened
+        @type imaging_server_uuid: str
+
+        @param computer_uuid: the computer on which the action happened
+        @type computer_uuid: str
+
+        @param level: the level of the message
+        @type level: str
+
+        @param phase: in which phase that happened (the id of ImagingLogState)
+        @type phase: int
+
+        @param message: the textual message
+        @type message: str
+
+        @results: a pair:
+            * True if succeed or False otherwise
+            * the error in case of failure
+        @rtype: list
         """
         logger = logging.getLogger()
         log = {
@@ -1296,6 +2033,23 @@ class RpcProxy(RpcProxyI):
     def imageRegister(self, imaging_server_uuid, computer_uuid, image_uuid, is_master, name, desc, path, size, creation_date, creator='root'):
         """
         Called by the Package Server to register a new Image.
+
+        @param imaging_server_uuid: the imaging server uuid where the action happened
+        @type imaging_server_uuid: str
+
+        @param computer_uuid: the computer on which the action happened
+        @type computer_uuid: str
+
+        @param image_uuid: the image uuid (generated by the imaging server)
+        @type image_uuid: str
+
+        @param is_master: is the image a master or an image
+        @type is_master: boolean
+
+        @results: a pair:
+            * True if succeed or False otherwise
+            * the error in case of failure
+        @rtype: list
         """
         image = {
             'name': name,
@@ -1330,7 +2084,10 @@ class RpcProxy(RpcProxyI):
 
     def getDefaultMenuForSuscription(self):
         """
-        Called by the Package Server to get the default menu used by computers to suscribe from the database.
+        Called by the Package Server to get the default menu used by computers to subscribe from the database.
+
+        @results: give the default menu for subscription (Menu.id == 2)
+        @rtype: dict
         """
         db = ImagingDatabase()
         logger = logging.getLogger()
