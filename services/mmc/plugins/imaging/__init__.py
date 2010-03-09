@@ -1384,7 +1384,10 @@ class RpcProxy(RpcProxyI):
                 computers = h_computers[url]
                 i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
                 if i != None:
-                    def treatRegister(results, uuids = to_register.keys()):
+                    def treatRegister(results, uuids = to_register.keys(), logger = logger, url = url):
+                        if type(results) == list and len(results) > 0 and  results[0] == 'PULSE2_ERR':
+                            logger.warn("couldn't connect to the ImagingApi %s"%(url))
+                            return uuids
                         failures = uuids
                         for l_uuid in results:
                             uuids.remove(l_uuid)
@@ -1410,18 +1413,20 @@ class RpcProxy(RpcProxyI):
     def __synchroTargetsSecondPart(self, distinct_loc, target_type, pid):
         logger = logging.getLogger()
         db = ImagingDatabase()
-        def treatFailures(result, location_uuid, distinct_loc = distinct_loc, logger = logger, target_type = target_type, pid = pid, db = db):
+        def treatFailures(result, location_uuid, url, distinct_loc = distinct_loc, logger = logger, target_type = target_type, pid = pid, db = db):
             failures = []
             success = []
-            for uuid in result:
-                logger.debug("succeed to synchronize menu for %s"%(str(uuid)))
-                success.append(uuid)
+            if type(result) == list and len(result) > 0 and result[0] == 'PULSE2_ERR':
+                logger.warn("couldn't connect to the ImagingApi %s"%(url))
+            else:
+                for uuid in result:
+                    logger.debug("succeed to synchronize menu for %s"%(str(uuid)))
+                    success.append(uuid)
 
             for uuid in distinct_loc[location_uuid][1]:
                 if not uuid in success:
                     logger.warn("failed to synchronize menu for %s"%(str(uuid)))
                     failures.append(uuid)
-                    # failure menu distinct_loc[location_uuid][1][fuuid]
 
             if pid != None:
                 if len(failures) != 0:
@@ -1443,7 +1448,7 @@ class RpcProxy(RpcProxyI):
 
             l_menus = distinct_loc[location_uuid][1]
             d = i.computersMenuSet(l_menus)
-            d.addCallback(treatFailures, location_uuid)
+            d.addCallback(treatFailures, location_uuid, url)
             dl.append(d)
 
         def sendResult(results):
