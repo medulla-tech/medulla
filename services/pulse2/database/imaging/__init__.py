@@ -1199,8 +1199,12 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         imaging_log.detail = log['detail']
         if self.r_nomenclatures['ImagingLogState'].has_key(log['state']):
             imaging_log.fk_imaging_log_state = self.r_nomenclatures['ImagingLogState'][log['state']]
-        else:
+        elif self.nomenclatures['ImagingLogState'].has_key(log['state']):
             imaging_log.fk_imaging_log_state = log['state']
+        else: # this state is unknown!
+            self.logger.warn("don't know that imaging log state %s"%(log['state']))
+            imaging_log.fk_imaging_log_state = 1 # the UNKNOWN entry
+
         target = session.query(Target).filter(self.target.c.uuid == item_uuid).first()
         imaging_log.fk_target = target.id
         session.save(imaging_log)
