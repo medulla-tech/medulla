@@ -1,6 +1,0 @@
-You need ntfs.sys and ntoskrnl.exe from an XP installation or service pack
-
-1- Go to http://www.microsoft.com/WindowsXP/pro/downloads/servicepacks/sp1/checkedbuild.asp
-2- use cabextract 1.0 to extract the files
-3- copy ntfs.sys and ntoskrnl.exe to /tftpboot/revoboot/lib/util
-
