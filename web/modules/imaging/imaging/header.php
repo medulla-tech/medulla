@@ -38,5 +38,16 @@ if ($stateid == $SYNCHROSTATE_TODO) {
     $f->addButton("bsync", _T("Synchronize", "imaging"));
     $f->display();
     print "</td></tr></table>";
+} elseif ($_GET['tab'] == 'tabbootmenu' && isExpertMode()) {
+    print "<table><tr><td>";
+    print _T('Click on "Force synchronize" if you want to force the synchronization', 'imaging');
+    print "</td><td>";
+    $f = new ValidatingForm();
+    $f->add(new HiddenTpl("target_uuid"),                        array("value" => $params['target_uuid'],  "hide" => True));
+    $f->add(new HiddenTpl("type"),                               array("value" => $params['type'],         "hide" => True));
+
+    $f->addButton("bsync", _T("Force synchronize", "imaging"));
+    $f->display();
+    print "</td></tr></table>";
 }
 ?>
