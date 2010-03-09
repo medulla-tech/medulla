@@ -200,6 +200,7 @@ function image_list($type, $title, $images, $actions=true) {
 
     $params = getParams();
 
+
     // show title
     if($title) {
         $t = new TitleElement(_T($title, "imaging"));
@@ -208,8 +209,10 @@ function image_list($type, $title, $images, $actions=true) {
 
     $addActions = array();
     $addAction = new ActionPopupItem(_T("Add image to boot menu", "imaging"), "addimage", "addbootmenu", "image", "base", "computers", null, 300, "add");
-    $delAction = new ActionPopupItem(_T("Remove from boot menu"), "bootmenu_remove", "delbootmenu", "item", "base", "computers", $type."tabbootmenu", 300, "delete");
+    $delAction = new ActionPopupItem(_T("Remove from boot menu", "imaging"), "bootmenu_remove", "delbootmenu", "item", "base", "computers", $type."tabbootmenu", 300, "delete");
     $emptyAction = new EmptyActionItem();
+    $destroyAction = new ActionPopupItem(_T("Delete the image", "imaging"), "images_delete", "delete", "image", "base", "computers", $type."tabimages", 300, "delete");
+    $showImAction = new ActionPopupItem(_T("Show target using that image", "imaging"), "showtarget", "showtarget", "image", "base", "computers");
 
     $editActions = array();
     $editAction = new ActionItem(_T("Edit image", "imaging"), "imgtabs", "edit", "image", "base", "computers", $type."tabimages", "edit");
@@ -225,6 +228,8 @@ function image_list($type, $title, $images, $actions=true) {
     $a_date = array();
     $a_size = array();
     $a_inbootmenu = array();
+    $a_destroy = array();
+    $l_im = array();
     foreach ($images as $image) {
         $i += 1;
 
@@ -254,7 +259,20 @@ function image_list($type, $title, $images, $actions=true) {
         $a_date[] = _toDate($image['creation_date']);
         $a_size[] = humanReadable($image['size']);
         $a_inbootmenu[] = (isset($image['menu_item'])?True:False);
+        $l_im[] = array($image['imaging_uuid'], $_GET['target_uuid'], $type);
     }
+
+    if (!$actions) {
+        $ret = xmlrpc_areImagesUsed($l_im);
+        foreach ($images as $image) {
+            if ($ret[$image['imaging_uuid']]) {
+                $a_destroy[] = $showImAction;
+            } else {
+                $a_destroy[] = $destroyAction;
+            }
+        }
+    }
+
     // show images list
     $l = new ListInfos($a_label, _T("Label"));
     $l->setParamInfo($list_params);
@@ -273,12 +291,10 @@ function image_list($type, $title, $images, $actions=true) {
             new ActionItem(_T("Edit image", "imaging"),
             "imgtabs", "edit", "image", "base", "computers", $type."tabimages", "edit")
         );
-        $l->addActionItem(
-            new ActionPopupItem(_T("Delete", "imaging"),
-            "images_delete", "delete", "image", "base", "computers", $type."tabimages", 300, "delete")
-        );
+        $l->addActionItem($destroyAction);
     } else {
         $l->addActionItemArray($editActions);
+        $l->addActionItemArray($a_destroy);
     }
     $l->disableFirstColumnActionLink();
     $l->display();
@@ -286,3 +302,8 @@ function image_list($type, $title, $images, $actions=true) {
 
 
 ?>
+
+<!-- inject styles -->
+<link rel="stylesheet" href="modules/imaging/graph/css/imaging.css" type="text/css" media="screen" />
+
+

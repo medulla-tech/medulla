@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
-  
+
 function xmlrpc_isProfileRegistered($profile_uuid) {
     # we call as long as it's not registered, but once it is,
     # we can store that information in the session.
@@ -58,7 +58,7 @@ function xmlrpc_getMyMenuComputer($target_uuid) {
 function xmlrpc_setMyMenuComputer($target_uuid, $params) {
     return xmlCall("imaging.setMyMenuComputer", array($target_uuid, $params));
 }
-        
+
 function xmlrpc_getComputerBootMenu($id) {
     return xmlCall("imaging.getComputerBootMenu", array($id));
 }
@@ -120,6 +120,14 @@ function xmlrpc_getProfileImages($id, $start = 0, $end = -1, $filter = '') {
 
 function xmlrpc_getLocationImages($location_id, $start = 0, $end = -1, $filter = '') {
     return xmlCall("imaging.getLocationImages", array($location_id, $start, $end, $filter));
+}
+
+function xmlrpc_areImagesUsed($images) {
+    return xmlCall("imaging.areImagesUsed", array($images));
+}
+
+function xmlrpc_imagingServerImageDelete($image_uuid) {
+    return xmlCall("imaging.imagingServerImageDelete", array($image_uuid));
 }
 //Actions
 function xmlrpc_addImageToTarget($item_uuid, $target_uuid, $params, $type_target) {

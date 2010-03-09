@@ -44,7 +44,7 @@ $submod->addPage($page);
 $page = new Page("master",_T("Manage masters","imaging"));
 $submod->addPage($page);
 $page = new Page("master_delete",_T("Delete master","imaging"));
-$page->setOptions(array("visible" => False, "noHeader" => True));    
+$page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
 $page = new Page("master_edit",_T("Edit master","imaging"));
 $page->setOptions(array("visible" => False));
@@ -119,7 +119,7 @@ if (!empty($submod)) {
     $page->setFile("modules/imaging/imaging/register_target.php");
     $page->setOptions(array("visible" => False));
     $submod->addPage($page);
-    
+
     $page = new Page("imgtabs", _T("Imaging on computer", "imaging"));
     $page->setFile("modules/imaging/imaging/tabs.php");
     $page->setOptions(array("visible" => False));
@@ -140,7 +140,7 @@ if (!empty($submod)) {
     $page->setFile("modules/imaging/imaging/register_target.php");
     $page->setOptions(array("visible" => False));
     $submod->addPage($page);
-    
+
     $page = new Page("groupimgtabs", _T("Imaging on group", "imaging"));
     $page->setFile("modules/imaging/imaging/tabs.php");
     $page->setOptions(array("visible" => False));
@@ -158,12 +158,12 @@ if (!empty($submod)) {
     // actions on computer & groups
     $page = new Page("bootmenu_remove",_T("Remove from boot menu","imaging"));
     $page->setFile("modules/imaging/imaging/bootmenu_remove.php");
-    $page->setOptions(array("visible" => False, "noHeader" => True));    
+    $page->setOptions(array("visible" => False, "noHeader" => True));
     $submod->addPage($page);
     $page = new Page("images_delete",_T("Delete image","imaging"));
     $page->setFile("modules/imaging/imaging/images_delete.php");
-    $page->setOptions(array("visible" => False, "noHeader" => True));    
-    $submod->addPage($page); 
+    $page->setOptions(array("AJAX" => True, "visible" => False));
+    $submod->addPage($page);
     $page = new Page("images_iso",_T("Create iso image","imaging"));
     $page->setFile("modules/imaging/imaging/images_iso.php");
     $page->setOptions(array("visible" => False, "noHeader" => True));
@@ -203,7 +203,7 @@ if (!empty($submod)) {
     $page = new Page("delservice", _T("Remove a service from a target", "msc"));
     $page->setFile("modules/imaging/imaging/addservice.php");
     $page->setOptions(array("AJAX" => True, "visible" => False));
-     
+
     $page = new Page("addimage", _T("Add a image to a target", "msc"));
     $page->setFile("modules/imaging/imaging/addimage.php");
     $page->setOptions(array("AJAX" => True, "visible" => False));
@@ -212,8 +212,8 @@ if (!empty($submod)) {
     $page->setFile("modules/imaging/imaging/addimage.php");
     $page->setOptions(array("AJAX" => True, "visible" => False));
     $submod->addPage($page);
-    
-                
+
+
     unset($submod);
 }
 
