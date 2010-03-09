@@ -1144,6 +1144,12 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         @rtype: bool
         """
         session = create_session()
+        # check no image with the same uuid exists
+        c = session.query(Image).filter(self.image.c.uuid == params['uuid']).count()
+        if c != 0:
+            self.logger.warn('an image with the same UUID already exists (%s)'%(params['uuid']))
+            raise '%s:An image with the same UUID already exists! (%s)'%(P2ERR.ERR_IMAGE_ALREADY_EXISTS, params['uuid'])
+
         # create the image item
         image = Image()
         image.name = params['name']
