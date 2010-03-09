@@ -221,5 +221,13 @@ function _toDate($a, $noneIsAsap = False) {
     }
 }
 
+function humanReadable($num, $unit='B', $base=1024) {
+    foreach (array('', 'K', 'M', 'G', 'T') as $i) {
+        if ($num < $base) {
+            return sprintf("%3.1f %s%s", $num, $i, $unit);
+        }
+        $num /= $base;
+    }
+}
 
 ?>

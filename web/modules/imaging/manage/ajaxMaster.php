@@ -34,45 +34,45 @@ require('../includes/xmlrpc.inc.php');
 
 $params = getParams();
 $location = getCurrentLocation();
-    
+
 if (xmlrpc_doesLocationHasImagingServer($location)) {
-    
+
     list($count, $masters) = xmlrpc_getLocationImages($location);
-    
+
     // forge params
     $addAction = new ActionPopupItem(_T("Add image to default boot menu", "imaging"), "master_add", "addbootmenu", "master", "imaging", "manage");
     $emptyAction = new EmptyActionItem();
     $addActions = array();
-    
+
     $a_label = array();
     $a_desc = array();
     $a_date = array();
     $a_size = array();
     $a_is_in_menu = array();
-    
+
     $i = -1;
     foreach ($masters as $master) {
         $i += 1;
         $list_params[$i] = $params;
         $list_params[$i]["itemid"] = $master['imaging_uuid'];
         $list_params[$i]["itemlabel"] = urlencode($master['desc']);
-        
+
         if (!$master['menu_item']) {
             $addActions[] = $addAction;
         } else {
             $addActions[] = $emptyAction;
         }
-    
+
         $a_label[] = $master['desc'];
         $a_desc[] = $master['desc'];
         $a_date[] = _toDate($master['creation_date']);
-        $a_size[] = $master['size'];
+        $a_size[] = humanReadable($master['size']);
         $a_is_in_menu[] = ($master['menu_item']?True:False);
     }
-    
+
     $t = new TitleElement(_T("Available masters", "imaging"));
     $t->display();
-    
+
     // show images list
     $l = new ListInfos($a_label, _T("Label"));
     $l->setParamInfo($list_params);
@@ -82,21 +82,21 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
     $l->addExtraInfo($a_is_in_menu, _T("In default boot menu", "imaging"));
     $l->addActionItemArray($addActions);
     $l->addActionItem(
-        new ActionPopupItem(_T("Create bootable iso", "imaging"), 
+        new ActionPopupItem(_T("Create bootable iso", "imaging"),
         "master_iso", "backup", "master", "imaging", "manage")
     );
     $l->addActionItem(
-        new ActionItem(_T("Edit image", "imaging"), 
+        new ActionItem(_T("Edit image", "imaging"),
         "master_edit", "edit", "master", "imaging", "manage")
     );
     $l->addActionItem(
-        new ActionPopupItem(_T("Delete", "imaging"), 
+        new ActionPopupItem(_T("Delete", "imaging"),
         "master_delete", "delete", "master", "imaging", "manage")
     );
-    
+
     $l->disableFirstColumnActionLink();
     $l->display();
-    
+
 } else {
     $ajax = new AjaxFilter(urlStrRedirect("imaging/manage/ajaxAvailableImagingServer"), "container", array('from'=>$_GET['from']));
     $ajax->display();

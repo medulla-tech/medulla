@@ -252,7 +252,7 @@ function image_list($type, $title, $images, $actions=true) {
         $a_label[] = $name;
         $a_desc[] = $image['desc'];
         $a_date[] = _toDate($image['creation_date']);
-        $a_size[] = $image['size'];
+        $a_size[] = humanReadable($image['size']);
         $a_inbootmenu[] = (isset($image['menu_item'])?True:False);
     }
     // show images list
