@@ -60,3 +60,13 @@ class Pulse2ImagingErrors:
     ERR_ENTITY_HAS_NO_DEFAULT_MENU = 1007
 P2ERR = Pulse2ImagingErrors
 
+class Pulse2ImagingLogStates:
+    UNKNOWN=1
+    BOOT=2
+    MENU=3
+    RESTORATION=4
+    BACKUP=5
+    POSTINSTALL=6
+    ERROR=7
+P2ILS = Pulse2ImagingLogStates
+

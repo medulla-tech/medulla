@@ -68,6 +68,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if not self.initMappersCatchException():
             return False
         self.metadata.create_all()
+        self.r_nomenclatures = {}
         self.nomenclatures = {'ImagingLogState':ImagingLogState, 'TargetType':TargetType, 'Protocol':Protocol, 'SynchroState':SynchroState}
         self.fk_nomenclatures = {'ImagingLog':{'fk_imaging_log_state':'ImagingLogState'}, 'Target':{'type':'TargetType'}, 'Menu':{'fk_protocol':'Protocol', 'fk_synchrostate':'SynchroState'}}
         self.__loadNomenclatureTables()
@@ -327,8 +328,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         for i in self.nomenclatures:
             n = session.query(self.nomenclatures[i]).all()
             self.nomenclatures[i] = {}
+            self.r_nomenclatures[i] = {}
             for j in n:
                 self.nomenclatures[i][j.id] = j.label
+                self.r_nomenclatures[i][j.label] = j.id
         session.close()
 
     def completeNomenclatureLabel(self, objs):
@@ -1194,7 +1197,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         imaging_log.timestamp = datetime.datetime.fromtimestamp(time.mktime(time.localtime()))
         imaging_log.title = log['level']
         imaging_log.detail = log['detail']
-        imaging_log.fk_imaging_log_state = log['state']
+        if self.r_nomenclatures['ImagingLogState'].has_key(log['state']):
+            imaging_log.fk_imaging_log_state = self.r_nomenclatures['ImagingLogState'][log['state']]
+        else:
+            imaging_log.fk_imaging_log_state = log['state']
         target = session.query(Target).filter(self.target.c.uuid == item_uuid).first()
         imaging_log.fk_target = target.id
         session.save(imaging_log)
