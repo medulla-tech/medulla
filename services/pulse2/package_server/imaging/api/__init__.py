@@ -36,6 +36,7 @@ from pulse2.package_server.imaging.api.client import ImagingXMLRPCClient
 from pulse2.package_server.imaging.cache import UUIDCache
 from pulse2.package_server.imaging.api.status import Status
 from pulse2.package_server.imaging.menu import isMenuStructure, ImagingDefaultMenuBuilder, ImagingComputerMenuBuilder
+from pulse2.package_server.imaging.iso import ISOImage
 
 from pulse2.utils import isMACAddress, splitComputerPath, macToNode, isUUID, rfc3339Time, humanReadable
 from pulse2.apis import makeURL
@@ -637,6 +638,30 @@ class ImagingApi(MyXmlrpc):
             else:
                 self.logger.warn("Can't delete unavailable image with UUID %s" % imageUUID)
                 ret = False
+        return ret
+
+    def xmlrpc_imagingServerISOCreate(self, imageUUID, size):
+        """
+        Create an ISO image corresponding to a Pulse 2 image.
+        The ISO image is bootable and allows to auto-restore the Pulse 2 image
+        to a computer hard disk.
+        For now, the creation process is started as a background process.
+
+        @param imageUUID: UUID of the Pulse 2 image to convert to an ISO
+        @type imageUUID: str
+        @param size: media size, in bytes
+        @type size: int
+        @return: True if the creation process started
+        @rtype: bool
+        """
+        iso = ISOImage(self.config, imageUUID, size)
+        ret = True
+        try:
+            iso.prepare()
+            iso.create()
+        except Exception, e:
+            self.logger.error('Error while creating ISO image: %s' % e)
+            ret = False
         return ret
 
     ## Imaging server configuration
