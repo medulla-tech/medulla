@@ -70,7 +70,7 @@ class ImagingDefaultMenuBuilder:
         @rtype: ImagingMenu
         """
         m = ImagingMenu(self.config, macaddress)
-        m.setSplashScreen(self.menu['background_uri'])
+        m.setSplashImage(self.menu['background_uri'])
         m.setMessage(self.menu['message'])
         m.setTimeout(self.menu['timeout'])
         m.setDefaultItem(self.menu['default_item'])
@@ -125,7 +125,7 @@ class ImagingMenu:
         self.timeout = 0 # the menu timeout
         self.default_item = 0 # the menu default entry
         self.default_item_wol = 0 # the menu default entry on WOL
-        self.splashscreen = None # the menu splashscreen
+        self.splashimage = None # the menu splashimage
         self.message = None
         self.colors = { # menu colors
             'normal': {'fg': 7, 'bg': 1},
@@ -185,8 +185,8 @@ class ImagingMenu:
         if self.timeout:
             buf += 'timeout %s\n' % self.timeout
         buf += 'default %s\n' % self.default_item
-        if self.splashscreen:
-            buf += self._applyReplacement('splashscreen %s\n' % self.splashscreen)
+        if self.splashimage:
+            buf += self._applyReplacement('splashimage %s\n' % self.splashimage)
         buf += 'color %d/%d %d/%d\n' % (
             self.colors['normal']['fg'],
             self.colors['normal']['bg'],
@@ -311,11 +311,11 @@ class ImagingMenu:
         assert(value in ['nfs', 'tftp', 'mtftp'])
         self.protocol = value
 
-    def setSplashScreen(self, value):
+    def setSplashImage(self, value):
         if type(value == str):
             value = value.decode('utf-8')
         assert(type(value) == unicode)
-        self.splashscreen = value
+        self.splashimage = value
 
     def setMessage(self, value):
         if type(value == str):
