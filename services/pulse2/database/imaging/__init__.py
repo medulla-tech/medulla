@@ -1264,6 +1264,16 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return ret
 
+    def isImageInMenu(self, target_uuid, target_type, item_uuid):
+        session = create_session()
+        q = session.query(Image).select_from(self.image \
+                .join(self.image_in_menu, self.image.c.id == self.image_in_menu.c.fk_image) \
+                .join(self.menu_item, self.menu_item.c.id == self.image_in_menu.c.fk_menuitem) \
+                .join(self.menu, self.menu.c.id == self.menu_item.c.fk_menu) \
+                .join(self.target, self.target.c.fk_menu == self.menu.c.id) \
+        ).filter(and_(self.target.c.uuid == target_uuid, self.target.c.type == target_type, self.image.c.id == uuid2id(item_uuid))).count()
+        return (q > 0)
+
     def editImage(self, item_uuid, target_uuid, params):
         session = create_session()
         im = session.query(Image).filter(self.image.c.id == uuid2id(item_uuid)).first()

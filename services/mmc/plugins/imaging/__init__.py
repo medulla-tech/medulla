@@ -495,7 +495,8 @@ class RpcProxy(RpcProxyI):
         db = ImagingDatabase()
         target_type = self.__convertType(target_type)
         try:
-            db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
+            if db.isImageInMenu(target_uuid, target_type, item_uuid):
+                db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
             ret = db.editImage(item_uuid, target_uuid, params)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
