@@ -27,14 +27,14 @@ global $stateid;
 global $SYNCHROSTATE_TODO;
 
 if ($stateid == $SYNCHROSTATE_TODO) {
-    print "<table><tr><td>";
+    print "<table><tr><td><font color='red'><b>";
     print _T('This target has been modified, when you are done, please press on "Synchronize" so that modifications are updated on the Imaging server.', 'imaging');
-    print "</td><td>";
-    
+    print "</b></font></td><td>";
+
     $f = new ValidatingForm();
     $f->add(new HiddenTpl("target_uuid"),                        array("value" => $params['target_uuid'],  "hide" => True));
     $f->add(new HiddenTpl("type"),                               array("value" => $params['type'],         "hide" => True));
-  
+
     $f->addButton("bsync", _T("Synchronize", "imaging"));
     $f->display();
     print "</td></tr></table>";
