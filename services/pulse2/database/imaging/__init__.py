@@ -930,7 +930,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             need_to_save_menu = True
             if first_mi == None:
                 first_mi = self.__getFirstMenuItem(session, menu.id, mi.id)
-                print first_mi
                 if first_mi == None:
                     session.close()
                     return [False, "cant find any other mi"]
