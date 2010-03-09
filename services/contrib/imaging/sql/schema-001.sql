@@ -368,13 +368,13 @@ INSERT INTO TargetType (label) VALUES ("computer");
 INSERT INTO TargetType (label) VALUES ("profile");
 INSERT INTO TargetType (label) VALUES ("computer_in_profile");
 
-INSERT INTO ImagingLogState (label) VALUES ("unknown");
-INSERT INTO ImagingLogState (label) VALUES ("boot");
-INSERT INTO ImagingLogState (label) VALUES ("menu");
-INSERT INTO ImagingLogState (label) VALUES ("restoration");
-INSERT INTO ImagingLogState (label) VALUES ("backup");
-INSERT INTO ImagingLogState (label) VALUES ("postinstall");
-INSERT INTO ImagingLogState (label) VALUES ("error");
+INSERT INTO ImagingLogState (id, label) VALUES (1, "unknown");
+INSERT INTO ImagingLogState (id, label) VALUES (2, "boot");
+INSERT INTO ImagingLogState (id, label) VALUES (3, "menu");
+INSERT INTO ImagingLogState (id, label) VALUES (4, "restoration");
+INSERT INTO ImagingLogState (id, label) VALUES (5, "backup");
+INSERT INTO ImagingLogState (id, label) VALUES (6, "postinstall");
+INSERT INTO ImagingLogState (id, label) VALUES (7, "error");
 
 INSERT INTO Protocol (label) VALUES ("nfs");
 INSERT INTO Protocol (label) VALUES ("tftp");
