@@ -47,8 +47,6 @@ if(isset($_GET['gid'])) {
     list($nbLogs, $db_logs) = xmlrpc_getComputerLogs($_GET['uuid'], $start, $end, $filter);
 }
 
-$nbInfos = count($db_logs[0]);
-
 $logStates = array(
     "restore_in_progress" => array(_T("Restore in progress", "imaging"), 'orange'),
     "restore_done" => array(_T("Restore done", "imaging"), 'green'),
@@ -98,8 +96,8 @@ foreach ($db_logs as $log) {
 }
 
 $l = new OptimizedListInfos($a_titles, _T("Title", "imaging"));
-$l->setItemCount($count);
-$l->setNavBar(new AjaxNavBar($count, $filter));
+$l->setItemCount($nbLogs);
+$l->setNavBar(new AjaxNavBar($nbLogs, $filter));
 $l->setParamInfo($list_params);
 $l->addExtraInfo($a_desc, _T("Details", "imaging"));
 $l->addExtraInfo($a_states, _T("State", "imaging"));
