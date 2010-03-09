@@ -64,6 +64,31 @@ class ImagingApi(MyXmlrpc):
         self.logger.info("Initializing %s" % self.myType)
         # Read and check configuration
         self.config = config
+        # FIXME: un-comment me later :)
+        # self.check()
+
+    def check(self):
+        """
+        Validate imaging configuration.
+
+        @raise ValueError: if the configuration is not right
+        """
+        basefolder = self.config.imaging_api['base_folder']
+        for folder in ['base', 'bootloader', 'bootmenus', 'diskless',
+                       'computers', 'inventories', 'masters', 'postinst']:
+            optname = folder + '_folder'
+            dirname = self.config.imaging_api[optname]
+            if folder != 'base':
+                dirname = os.path.join(basefolder, dirname)
+            if not os.path.isdir(dirname):
+                raise ValueError, "Directory '%s' does not exists. Please check option '%s' in your configuration file." % (dirname, optname)
+        for optname in ['diskless_kernel', 'diskless_initrd',
+                      'diskless_memtest']:
+            fpath = os.path.join(basefolder,
+                                 self.config.imaging_api['diskless_folder'],
+                                 self.config.imaging_api[optname])
+            if not os.path.isfile(fpath):
+                raise ValueError, "File '%s' does not exists. Please check option '%s' in your configuration file." % (fpath, optname)
 
     def _getXMLRPCClient(self):
         """
@@ -206,7 +231,7 @@ class ImagingApi(MyXmlrpc):
             else:
                 uuid = result[1]
                 self.logger.info('Imaging: Register client %s (%s) as %s' % (computerName, macAddress, uuid))
-                self.myUUIDCache.set(uuid, macAddress)
+                self.myUUIDCache.set(uuid, macAddress, hostname, domain)
                 ret = self.xmlrpc_computerPrepareImagingDirectory(uuid, {'mac': macAddress, 'hostname': hostname})
             return ret
 
@@ -237,7 +262,7 @@ class ImagingApi(MyXmlrpc):
                 self.logger.error('UUID missing in imaging data')
                 return False
             cuuid = imagingData['uuid']
-            self.myUUIDCache.set(cuuid, macAddress)
+            self.myUUIDCache.set(cuuid, macAddress, hostname, domain)
             if not self.xmlrpc_computerPrepareImagingDirectory(cuuid, {'mac': macAddress, 'hostname': computerName}):
                 return False
             if self.xmlrpc_computersMenuSet(imagingData['menu']) != [cuuid]:
