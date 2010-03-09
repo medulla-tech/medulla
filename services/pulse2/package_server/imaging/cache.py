@@ -47,6 +47,7 @@ class UUIDCache(pulse2.utils.Singleton):
     config = ConfigParser.ConfigParser()
 
     def __init__(self):
+        pulse2.utils.Singleton.__init__(self)
         if not os.path.isfile(self.cachePath):
             try:
                 self.log.info("Creating my UUID Cache File %s" % (self.cachePath))
@@ -193,30 +194,28 @@ class UUIDCache(pulse2.utils.Singleton):
         """
         return self.getByUUID(uuid)
 
-    def set(self, uuid, mac, shortname = '', fqdn = ''):
+    def set(self, uuid, mac, shortname = '', domain = ''):
         """
         Add a computer in cache.
 
         @param uuid : the client UUID (mandatory)
         @type uuid : str
-        @param mac : the client UUID (mandatory)
+        @param mac : the client MAC address(mandatory)
         @type mac : str
-        @param shortname : the client UUID (default : '')
+        @param shortname : the client host name (default : '')
         @type shortname : str
-        @param fqdn : the client UUID (default : '<shortname>.')
-        @type fqdn : str
+        @param domain : the client domain name (default: '')
+        @type domain : str
 
-        @return True on success
-        @rtype boolean
+        @return: True on success
+        @rtype: boolean
         """
 
         if not pulse2.utils.isMACAddress(mac):
             return False
         if not pulse2.utils.isUUID(uuid):
             return False
-        if fqdn == '':
-            fqdn = "%s." % shortname
-
+        fqdn = shortname + '.' + domain
         mac = pulse2.utils.normalizeMACAddress(mac)
         if not self.config.has_section(uuid):
             self.config.add_section(uuid)
