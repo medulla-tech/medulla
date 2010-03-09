@@ -41,7 +41,7 @@ $location = getCurrentLocation();
 
 if (xmlrpc_doesLocationHasImagingServer($location)) {
     $ret = xmlrpc_getLocationSynchroState($location);
-    
+
     if ($ret['id'] == $SYNCHROSTATE_RUNNING || isset($_GET['bsync'])) {
         $a_href_open = "<a href=''>";
         print sprintf(_T("The synchro is running, please wait or reload the page %shere%s", "imaging"), $a_href_open, '</a>');
@@ -50,34 +50,34 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
     } else {
         if ($ret['id'] == $SYNCHROSTATE_TODO) {
             # DISPLAY the sync link
-    
-            print "<table><tr><td>";
+
+            print "<table><tr><td><font color='red'><b>";
             print _T('This location has been modified, when you are done, please press on "Synchronize" so that modifications are updated on the Imaging server.', 'imaging');
-            print "</td><td>";
-    
+            print "</b></font></td><td>";
+
             $f = new ValidatingForm();
             $f->add(new HiddenTpl("location_uuid"),                        array("value" => $location,  "hide" => True));
-    
+
             $f->addButton("bsync", _T("Synchronize", "imaging"));
             $f->display();
             print "</td></tr></table>";
         }
-    
+
         list($count, $menu) = xmlrpc_getLocationBootMenu($location);
-        
+
         $upAction = new ActionItem(_T("Move Up"), "bootmenu_up", "up", "item", "imaging", "manage");
         $downAction = new ActionItem(_T("Move down"), "bootmenu_down", "down", "item", "imaging", "manage");
         $emptyAction = new EmptyActionItem();
         $actionUp = array();
         $actionDown = array();
-        
+
         $a_label = array();
         $a_desc = array();
         $a_default = array();
         $a_display = array();
         $a_defaultWOL = array();
         $a_displayWOL = array();
-        
+
         $i = -1;
         foreach ($menu as $entry) {
             $i = $i + 1;
@@ -87,7 +87,7 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
             }
             $list_params[$i] = $params;
             $list_params[$i]["itemid"] = $entry['imaging_uuid'];
-        
+
             if ($i==0) {
                 if ($count == 1) {
                     $actionsDown[] = $emptyAction;
@@ -102,8 +102,8 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
             } else {
                 $actionsDown[] = $downAction;
                 $actionsUp[] = $upAction;
-            }       
-            
+            }
+
             if ($is_image) { # TODO $entry has now a cache for desc.
                 $a_desc[] = $entry['image']['default_desc'];
                 $default_name = $entry['image']['default_name'];
@@ -114,7 +114,7 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
                 $kind = 'BS';
             }
             $list_params[$i]["itemlabel"] = urlencode($default_name);
-            
+
             $kind .= $entry['imaging_uuid'];
             $a_label[] = sprintf("%s) %s", $kind, $default_name); # should be replaced by the label in the good language
             $a_default[] = $entry['default'];
@@ -124,7 +124,7 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
         }
         $t = new TitleElement(_T("Default boot menu configuration", "imaging"));
         $t->display();
-        
+
         $l = new ListInfos($a_label, _T("Label", "imaging"));
         $l->setParamInfo($list_params);
         $l->addExtraInfo($a_desc, _T("Description", "imaging"));
