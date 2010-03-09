@@ -31,6 +31,7 @@ require("../../../includes/session.inc.php");
 require("../../../includes/PageGenerator.php");
 require("../includes/includes.php");
 require('../includes/xmlrpc.inc.php');
+require("../../base/includes/edit.inc.php");
 
 global $SYNCHROSTATE_SYNCHRO;
 global $SYNCHROSTATE_TODO;
@@ -61,7 +62,19 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
             $f->addButton("bsync", _T("Synchronize", "imaging"));
             $f->display();
             print "</td></tr></table>";
+        } elseif (isExpertMode()) {
+            print "<table><tr><td>";
+            print _T('Click on "Force synchronize" if you want to force the synchronization', 'imaging');
+            print "</td><td>";
+
+            $f = new ValidatingForm();
+            $f->add(new HiddenTpl("location_uuid"),                        array("value" => $location,  "hide" => True));
+
+            $f->addButton("bsync", _T("Force synchronize", "imaging"));
+            $f->display();
+            print "</td></tr></table>";
         }
+
 
         list($count, $menu) = xmlrpc_getLocationBootMenu($location);
 
