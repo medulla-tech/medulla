@@ -115,7 +115,7 @@ class Imaging(unittest.TestCase):
              { 'uuid' : 'UUID4', 'menu' : { 'UUID4' : MENU }}),
             ]
         result = SERVER.computersRegister(arg)
-        self.assertEqual(['UUID2', 'UUID3'], result)
+        self.assertEqual(['UUID3', 'UUID4'], result)
 
     def atest_computersMenuSet(self):
         #result = SERVER.computersMenuSet([('UUID17', {})])
