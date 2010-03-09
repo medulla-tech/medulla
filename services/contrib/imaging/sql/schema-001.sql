@@ -375,6 +375,7 @@ INSERT INTO ImagingLogState (id, label) VALUES (4, "restoration");
 INSERT INTO ImagingLogState (id, label) VALUES (5, "backup");
 INSERT INTO ImagingLogState (id, label) VALUES (6, "postinstall");
 INSERT INTO ImagingLogState (id, label) VALUES (7, "error");
+INSERT INTO ImagingLogState (id, label) VALUES (8, "delete");
 
 INSERT INTO Protocol (label) VALUES ("nfs");
 INSERT INTO Protocol (label) VALUES ("tftp");

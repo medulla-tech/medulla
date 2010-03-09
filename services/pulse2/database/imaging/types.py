@@ -78,4 +78,5 @@ class Pulse2ImagingLogStates:
     BACKUP = 5
     POSTINSTALL = 6
     ERROR = 7
+    DELETE = 8
 P2ILS = Pulse2ImagingLogStates
