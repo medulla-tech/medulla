@@ -577,7 +577,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = session.query(MenuItem).filter(self.menu_item.c.fk_menu == menu_id).max(self.menu_item.c.order)
         session.close()
         if q == None:
-            return 0
+            return -1
         return q
 
     def countMenuContentFast(self, menu_id): # get P2IM.ALL and empty filter
