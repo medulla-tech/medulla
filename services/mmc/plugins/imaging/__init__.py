@@ -495,7 +495,7 @@ class RpcProxy(RpcProxyI):
         db = ImagingDatabase()
         target_type = self.__convertType(target_type)
         try:
-            if db.isImageInMenu(target_uuid, target_type, item_uuid):
+            if db.isImageInMenu(item_uuid, target_uuid, target_type):
                 db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
             ret = db.editImage(item_uuid, target_uuid, params)
             return xmlrpcCleanup([True, ret])
@@ -531,6 +531,75 @@ class RpcProxy(RpcProxyI):
             return xmlrpcCleanup([True, ret])
         except Exception, e:
             return xmlrpcCleanup([False, e])
+
+    def areImagesUsed(self, images): #image_uuid, target_uuid = None, target_type = None):
+        """
+        tell if the images are used by someone else than the target
+
+        @param images: a list of triple (image_uuid, target_uuid, target_type)
+        @type images: list
+
+        @returns: a list of list. the second level is a pair :
+        (target_uuid, target_type) of the targets that use that image in their boot menu
+        @rtype: list
+        """
+        db = ImagingDatabase()
+        ims = []
+        for im in images:
+            i = [im[0], im[1], self.__convertType(im[2])]
+            ims.append(i)
+
+        return db.areImagesUsed(ims)
+
+    def imagingServerImageDelete(self, image_uuid):
+        """
+        delete an image from the database AND from the imaging server
+
+        @param image_uuid: the image uuid (WARN : it's the uuid in the mmc, not in the package server)
+        @type image_uuid: str
+
+        @returns: a pair :
+            * True if succeed or False otherwise
+            * the error in case of failure
+        @rtype: list
+        """
+        db = ImagingDatabase()
+        logger = logging.getLogger()
+        # try:
+        if True:
+            # check we are going to be able to remove from the menu
+            is_used = self.areImagesUsed([[image_uuid, None, None]])
+            is_used = is_used[image_uuid]
+            if len(is_used) != 0:
+                # some target have that image in their menu
+                if not db.canRemoveFromMenu(image_uuid):
+                    return [False, "Can't remove %s from some boot menus"%(image_uuid)]
+
+            # remove from the imaging server
+            ims = db.getImageImagingServer(image_uuid)
+            i = ImagingApi(ims.url.encode('utf8'))
+            if i == None:
+                logger.error("couldn't initialize the ImagingApi to %s"%(ims.url))
+                return [False, "couldn't initialize the ImagingApi to %s"%(ims.url)]
+
+            def treatDel(results, image_uuid, db, logger):
+                if not results:
+                    logger.error("The package server failed to delete the image")
+                    return [False, "The package server failed to delete the image"]
+
+                #try:
+                if True:
+                    # remove all the remaining from the database
+                    ret = db.imagingServerImageDelete(image_uuid)
+                    return xmlrpcCleanup([True, ret])
+                #except Exception, e:
+                #    return xmlrpcCleanup([False, e])
+
+            d = i.imagingServerImageDelete(image_uuid)
+            d.addCallback(treatDel, image_uuid, db, logger)
+            return d
+        #except Exception, e:
+        #    return xmlrpcCleanup([False, e])
 
     def addImageToLocation(self, item_uuid, loc_id, params):
         """ same as addImageToTarget but for a location """

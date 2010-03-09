@@ -310,6 +310,13 @@ class Imaging(Pulse2Api):
         d.addErrback(self.onErrorRaise, "Imaging:imageDone", MACAddress, image_uuid)
         return d
 
+    def imagingServerImageDelete(self, image_uuid):
+        """
+        Remove an existing image (image_uuid) from the imaging server
+        """
+        d = self.callRemote("imagingServerImageDelete", image_uuid)
+        d.addErrback(self.onErrorRaise, "Imaging:imagingServerImageDelete", image_uuid)
+        return d
 
 class ImagingApi(Imaging):
 # need to get a PackageApiManager, it will manage a PackageApi for each mirror
