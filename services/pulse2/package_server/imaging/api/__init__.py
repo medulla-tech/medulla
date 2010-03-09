@@ -626,7 +626,7 @@ class ImagingApi(MyXmlrpc):
             ret = False
         else:
             path = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['masters_folder'], imageUUID)
-            if os.path.exits(path):
+            if os.path.exists(path):
                 try:
                     shutil.rmtree(path)
                     ret = True
