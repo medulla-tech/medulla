@@ -1,0 +1,84 @@
+Postinstall scripts are shell scripts
+
+
+PATHS
+=====
+/mnt		target file system
+/revoinfo	/tftpboot/revoboot/images
+/revoinfo/data	user data
+/revosave	the image data related to the postinstall (only mounted if the
+		postinstall is linked to a particular image).
+/opt		additional utilities for the postinstall
+
+Execution order of postinstall scripts
+======================================
+
+From the client point of view:
+
+/revoinfo/preinst
+/revoinfo/$MAC/postinst or /revosave/postinst (if mounted, see above)
+/revoinfo/postinst
+
+From the server point of view:
+
+/tftpboot/revoboot/images/preinst
+/tftpboot/revoboot/images/$MAC/postinst or /tftpboot/revoboot/images/$MAC/(Local|Base)-Image
+/tftpboot/revoboot/images/postinst
+
+VARIABLES
+=========
+
+$MAC		The MAC address in compact form ( 001122334455 )
+$HOSTNAME	The hostname as declared in the LRS interface
+$IPSERVER	IP of the LRS server
+
+HIGH LEVEL FUNCTIONS
+====================
+
+Mount <DEVICE>
+	Mount the windows partition in /mnt using the <DEVICE> device.
+	<DEVICE> can also be a number. In that case it mounts the Nth partition
+	found
+	Example: 
+	    Mount /dev/hda1
+	    Mount 2
+
+RegistryAddString <KEY> <NAME> <VALUE>
+	In the <KEY> directory, add the entry <NAME> with value <VALUE>	
+	Only HKEY_LOCAL_MACHINE\Software keys supported !
+	Example:
+	     RegistryAddString "HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run" SETUP setup.exe 
+
+RegistryAddRunOnce <VALUE>
+RegistryAddRun <VALUE>
+	Shortcuts for:
+	    RegistryAddString "HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\RunOnce" LRS <VALUE> 
+	and
+	    RegistryAddString "HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run" LRS <VALUE> 
+
+	
+CopySysprepInf <FILE>
+	Copy the file <FILE> to /sysprep/Sysprep.inf on the target and
+	subtitute the 'ComputerName' entry by the name as known by the LRS.
+	Example: 
+	    CopySysprepInf /revoinfo/$MAC/mysysprep.inf
+	    CopySysprepInf /revoinfo/data/my_nice_sysprep.inf
+	    
+ChangeSID
+	Change the SID of the computer (using newsid.exe)	    
+
+ChangeSIDAndName
+	Change the SID and the Netbios name of the computer. The name is
+	reset to the one used in the LRS.
+	
+	
+	    
+...And the following shell commands:
+        [, ash, basename, busybox, cat, chgrp, chmod, chown, chvt, clear,
+        cp, cut, date, dd, df, dirname, dmesg, dos2unix, du, echo, env,
+        false, find, free, grep, gunzip, halt, head, id, ifconfig, init,
+        insmod, kill, killall, klogd, linuxrc, ln, logger, ls, lsmod,
+        mkdir, modprobe, more, mount, mv, pidof, ping, poweroff, ps, pwd,
+        reboot, reset, rm, rmdir, route, sed, sh, sleep, sort, stty, sync,
+        syslogd, tail, telnet, test, touch, tr, true, tty, umount, uname,
+        uniq, unix2dos, wc, which, whoami, xargs, yes, zcat
