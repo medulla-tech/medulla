@@ -85,7 +85,7 @@ class Imaging(unittest.TestCase):
         """
         ret = os.system('pulse2-package-server-register-imaging  -n \"Pulse 2 imaging\" -m https://mmc:s3cr3t@localhost:7080')
         self.assertEqual(0, ret)
-        self.assertEqual([True], MMCAGENT.imaging.linkImagingServerToLocation('UUID1', 'UUID1', 'root'))
+        self.assertEqual([True, True], MMCAGENT.imaging.linkImagingServerToLocation('UUID1', 'UUID1', 'root'))
 
     def test_02registerComputer(self):
         """
@@ -99,7 +99,7 @@ class Imaging(unittest.TestCase):
         result = SERVER.computerRegister('foobar', mac)
         self.assertTrue(result)
         self.assertTrue(os.path.exists('/var/lib/pulse2/imaging/uuid-cache.txt'))
-        self.assertTrue(os.path.isdir('/var/lib/pulse2/imaging/computers/%s' % 'UUID1'))
+        self.assertTrue(os.path.isdir('/var/lib/pulse2/imaging/computers/%s' % 'UUID2'))
         # Wait a bit for the menu to be generated asynchronously
         sleep(5)
         self.assertTrue(os.path.exists('/var/lib/pulse2/imaging/bootmenus/%s' % reduceMACAddress(mac)))
@@ -110,9 +110,9 @@ class Imaging(unittest.TestCase):
         """
         arg = [
             ('hostname1', '00:11:22:33:44:dd',
-             { 'uuid' : 'UUID2', 'menu' : { 'UUID2' : MENU }}),
-            ('hostname2', '00:11:22:33:44:ee',
              { 'uuid' : 'UUID3', 'menu' : { 'UUID3' : MENU }}),
+            ('hostname2', '00:11:22:33:44:ee',
+             { 'uuid' : 'UUID4', 'menu' : { 'UUID4' : MENU }}),
             ]
         result = SERVER.computersRegister(arg)
         self.assertEqual(['UUID2', 'UUID3'], result)

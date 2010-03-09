@@ -10,7 +10,7 @@ echo ""
 echo "Statistics of package-server unittest pserverempty.py"
 echo ""
 echo ""
-python statistics.py $RPCPSERVER pserverempty.py 
+python statistics.py $RPCPSERVER pserverempty.py
 
 echo ""
 echo ""
@@ -22,14 +22,14 @@ rm -f $RPCPSERVER
 
 echo ""
 echo ""
-echo "Statistics of launcher unittest" 
+echo "Statistics of launcher unittest"
 echo ""
 echo ""
 python statistics.py /usr/sbin/pulse2-launcher launcher.py
 
 echo ""
 echo ""
-echo "Statistics of scheduler unittest" 
+echo "Statistics of scheduler unittest"
 echo ""
 echo ""
 python statistics.py /usr/sbin/pulse2-scheduler scheduler.py
@@ -42,15 +42,15 @@ echo "Testing Package Server with no package (pserverempty.py)"
 python pserverempty.py
 echo "Testing Package Server with one package (pserver.py)"
 python pserver.py
-echo "Testing Package Server imaging API"
-python pserver-imaging.py
 echo "Testing Launcher"
 python launcher.py
 echo "Testing Scheduler"
 python scheduler.py
+echo "Testing Package Server imaging API"
+python pserver-imaging.py
 
 echo ""
-echo "" 
-echo "`date` - Ending Python Pulse2 tests." 
+echo ""
+echo "`date` - Ending Python Pulse2 tests."
 
 exit 0
