@@ -54,7 +54,7 @@ class Pulse2Image:
         try:
             fd_grub_file = open(os.path.join(directory, PULSE2_IMAGING_GRUB_FNAME))
         except Exception, e:
-            logging.getLogger.error("Pulse2Image : can't read %s" % (fd_grub_file, e))
+            logging.getLogger().error("Pulse2Image : can't read %s" % (fd_grub_file, e))
             return None
 
         # read grub file
@@ -108,7 +108,7 @@ class Pulse2Image:
         try:
             fd_size_file = open(os.path.join(directory, PULSE2_IMAGING_SIZE_FNAME))
         except Exception, e:
-            logging.getLogger.error("Pulse2Image : can't read %s : %s" % (fd_size_file, e))
+            logging.getLogger().error("Pulse2Image : can't read %s : %s" % (fd_size_file, e))
             return None
 
         for line_size_file in fd_size_file:
