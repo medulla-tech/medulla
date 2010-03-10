@@ -263,12 +263,14 @@ function image_list($type, $title, $images, $actions=true) {
     }
 
     if (!$actions) {
-        $ret = xmlrpc_areImagesUsed($l_im);
-        foreach ($images as $image) {
-            if ($ret[$image['imaging_uuid']]) {
-                $a_destroy[] = $showImAction;
-            } else {
-                $a_destroy[] = $destroyAction;
+        if (count($l_im) != 0) {
+            $ret = xmlrpc_areImagesUsed($l_im);
+            foreach ($images as $image) {
+                if ($ret[$image['imaging_uuid']]) {
+                    $a_destroy[] = $showImAction;
+                } else {
+                    $a_destroy[] = $destroyAction;
+                }
             }
         }
     }
