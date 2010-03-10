@@ -31,11 +31,11 @@ require_once('modules/imaging/includes/xmlrpc.inc.php');
 $params = getParams();
 $hostname = $params['hostname'];
 
-global $SYNCHROSTATE_SYNCHRO;
+global $SYNCHROSTATE_UNKNOWN;
 global $SYNCHROSTATE_TODO;
+global $SYNCHROSTATE_SYNCHRO;
 global $SYNCHROSTATE_RUNNING;
 global $SYNCHROSTATE_INIT_ERROR;
-global $SYNCHROSTATE_UNKNOWN;
 
 if (isset($_POST['bsync'])) {
     if (isset($params['uuid'])) {
@@ -68,7 +68,7 @@ if (isset($params['uuid'])) {
 
     $ret = xmlrpc_getComputerSynchroState($params['target_uuid']);
 
-    if ($ret['id'] == $SYNCHROSTATE_RUNNING || isset($_POST['bsync'])) {
+    if ($ret['id'] == $SYNCHROSTATE_RUNNING) {
         $p = new PageGenerator(sprintf(_T("%s's computer imaging", 'imaging'), $hostname));
         $sidemenu->forceActiveItem("index");
         $p->setSideMenu($sidemenu);
@@ -123,7 +123,7 @@ if (isset($params['uuid'])) {
     } else {
         $ret = xmlrpc_getProfileSynchroState($params['target_uuid']);
 
-         if ($ret['id'] == $SYNCHROSTATE_RUNNING || isset($_POST['bsync'])) {
+         if ($ret['id'] == $SYNCHROSTATE_RUNNING) {
             $p = new PageGenerator(sprintf(_T("%s's profile imaging", 'imaging'), $group->getName()));
             $sidemenu->forceActiveItem("index");
             $p->setSideMenu($sidemenu);
