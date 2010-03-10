@@ -839,6 +839,10 @@ class RpcProxy(RpcProxyI):
         """
         db = ImagingDatabase()
         target_type = self.__convertType(target_type)
+        if bs_uuid == '':
+            return [False, "You are trying to access to editServiceToTarget without any Service ID."]
+        if target_uuid == '':
+            return [False, "You are trying to access to editServiceToTarget without any Target ID."]
         try:
             db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
             ret = ImagingDatabase().editServiceToTarget(bs_uuid, target_uuid, params)
