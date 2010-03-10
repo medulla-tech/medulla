@@ -73,12 +73,12 @@ class Status:
         d.addErrback(self.getMemoryInformationsErr)
 
     def getMemoryInformationsOk(self, result):
-        self.ret['mem_info'] = result
+        self.ret['disk_info'] = result
         self.getUptime()
 
     def getMemoryInformationsErr(self, error):
         self.logging.error(error)
-        self.ret['mem_info'] = -1
+        self.ret['disk_info'] = -1
         self.getUptime()
 
     def getUptime(self):
