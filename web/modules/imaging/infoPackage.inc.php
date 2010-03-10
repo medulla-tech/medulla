@@ -160,6 +160,10 @@ if (!empty($submod)) {
     $page->setFile("modules/imaging/imaging/bootmenu_remove.php");
     $page->setOptions(array("visible" => False, "noHeader" => True));
     $submod->addPage($page);
+    $page = new Page("showtarget",_T("Show target that use that image","imaging"));
+    $page->setFile("modules/imaging/imaging/showtarget.php");
+    $page->setOptions(array("AJAX" => True, "visible" => False));
+    $submod->addPage($page);
     $page = new Page("images_delete",_T("Delete image","imaging"));
     $page->setFile("modules/imaging/imaging/images_delete.php");
     $page->setOptions(array("AJAX" => True, "visible" => False));
