@@ -303,16 +303,24 @@ class P2PServerCP(pulse2.utils.Singleton):
             diskless_kernel = 'kernel'
             # diskless initrd
             diskless_initrd = 'initrd'
+            # diskless initrd for CD-ROM
+            diskless_initrdcd = 'initrdcd'
+            # diskless GRUB for CD-ROM
+            diskless_grubfile = 'grub.cdrom'
             # diskless memtest tool
             diskless_memtest = 'memtest'
             # will contain computer-related materials
-            computers_folder = "computers"
+            computers_folder = 'computers'
             # will contain inventories
             inventories_folder = 'inventories'
             # will contain masters, served by tftp
             masters_folder = 'masters'
             # will contain postinstall binaries
             postinst_folder = 'postinst'
+            # will contain generated ISO images
+            isos_folder = '/var/lib/pulse2/imaging/isos'
+            # tool used to generate ISO file
+            isogen_tool = '/usr/bin/mkisofs'
             # will contain our UUID/MAC Addr cache
             uuid_cache_file = os.path.join(base_folder, 'uuid-cache.txt')
             # Package Server UUID
@@ -334,6 +342,10 @@ class P2PServerCP(pulse2.utils.Singleton):
                 diskless_kernel = self.cp.get("imaging_api", 'diskless_kernel')
             if self.cp.has_option("imaging_api", 'diskless_initrd'):
                 diskless_initrd = self.cp.get("imaging_api", 'diskless_initrd')
+            if self.cp.has_option('imaging_api', 'diskless_initrdcd'):
+                diskless_initrdcd = self.cp.get("imaging_api", 'diskless_initrdcd')
+            if self.cp.has_option('imaging_api', 'diskless_grubfile'):
+                diskless_grubfile = self.cp.get('imaging_api', 'diskless_grubfile')
             if self.cp.has_option("imaging_api", 'diskless_memtest'):
                 diskless_memtest = self.cp.get("imaging_api", 'diskless_memtest')
             if self.cp.has_option('imaging_api', 'computers_folder'):
@@ -344,6 +356,10 @@ class P2PServerCP(pulse2.utils.Singleton):
                 masters_folder = self.cp.get('imaging_api', 'masters_folder')
             if self.cp.has_option('imaging_api', 'postinst_folder'):
                 postinst_folder = self.cp.get('imaging_api', 'postinst_folder')
+            if self.cp.has_option('imaging_api', 'isos_folder'):
+                isos_folder = self.cp.get('imaging_api', 'isos_folder')
+            if self.cp.has_option('imaging_api', 'isogen_tool'):
+                isogen_tool = self.cp.get('imaging_api', 'isogen_tool')
             if self.cp.has_option('imaging_api', 'uuid_cache_file'):
                 uuid_cache_file = os.path.join(base_folder, self.cp.get('imaging_api', 'uuid_cache_file'))
             if self.cp.has_option("imaging_api", 'uuid'):
@@ -360,11 +376,15 @@ class P2PServerCP(pulse2.utils.Singleton):
                 'diskless_folder'   : diskless_folder,
                 'diskless_kernel'   : diskless_kernel,
                 'diskless_initrd'   : diskless_initrd,
+                'diskless_initrdcd' : diskless_initrdcd,
+                'diskless_grubfile' : diskless_grubfile,
                 'diskless_memtest'  : diskless_memtest,
                 'computers_folder'  : computers_folder,
                 'inventories_folder': inventories_folder,
                 'masters_folder'    : masters_folder,
                 'postinst_folder'   : postinst_folder,
+                'isos_folder'       : isos_folder,
+                'isogen_tool'       : isogen_tool,
                 'src'               : src,
                 'uuid'              : uuid,
                 'uuid_cache_file'   : uuid_cache_file}
