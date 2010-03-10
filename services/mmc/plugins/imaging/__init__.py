@@ -545,8 +545,12 @@ class RpcProxy(RpcProxyI):
         """
         db = ImagingDatabase()
         ims = []
-        for im in images:
-            i = [im[0], im[1], self.__convertType(im[2])]
+        if type(images[0]) == list:
+            for im in images:
+                i = [im[0], im[1], self.__convertType(im[2])]
+                ims.append(i)
+        else:
+            i = [images[0], images[1], self.__convertType(images[2])]
             ims.append(i)
 
         return db.areImagesUsed(ims)

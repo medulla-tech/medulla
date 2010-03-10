@@ -1095,13 +1095,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def imagingServerImageDelete(self, image_uuid):
         session = create_session()
+
+        image_id = uuid2id(image_uuid)
+
         il = ImagingLog()
         il.timestamp = datetime.datetime.fromtimestamp(time.mktime(time.localtime()))
         il.title = 'INFO'
         il.detail = 'Image %s has been removed from Imaging Server by %s'%(image_uuid, '')
         il.fk_imaging_log_state = 8
-
-        image_id = uuid2id(image_uuid)
 
         q = session.query(MasteredOn).add_entity(ImageOnImagingServer).add_entity(Image).add_column(self.imaging_log.c.fk_target) \
                 .select_from(self.mastered_on \
@@ -1113,9 +1114,28 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         mo, iois, image, target_id = q
         il.fk_target = target_id
 
-        # TODO!
         # delete PostInstallScriptInImage if exists
-        # delete ImageInMenu and MenuItem if exists
+        q = session.query(PostInstallScriptInImage).filter(self.post_install_script_in_image.c.fk_image == image_id).first()
+        if q:
+            session.delete(q)
+
+        # TODO!
+        # delete ImageInMenu and MenuItem if exists for all targets and put the synchro state flag to TODO
+        q = session.query(ImageInMenu).add_entity(MenuItem).add_entity(Target)
+        q = q.select_from(self.menu_item \
+                .join(self.image_in_menu, self.menu_item.c.id == self.image_in_menu.c.fk_menuitem) \
+                .join(self.menu, self.menu.c.id == self.menu_item.c.fk_menu) \
+                .join(self.target, self.target.c.fk_menu == self.menu.c.id) \
+        ).filter(self.image_in_menu.c.fk_image == image_id).all()
+        targets = {P2IT.COMPUTER:[], P2IT.PROFILE:[]}
+        for iim, mi, target in q:
+            targets[target.type].append(target.uuid)
+            session.delete(iim)
+            session.delete(mi)
+
+        for i in (P2IT.COMPUTER, P2IT.PROFILE):
+            if len(targets[i]) > 0:
+                self.changeTargetsSynchroState(targets[i], i, P2ISS.TODO)
 
         session.save(il)
         session.delete(mo)
@@ -1357,7 +1377,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             ret1 = []
             for im, target in q:
                 target = target.toH()
-                ret1.append([target['uuid'], target['type']])
+                ret1.append([target['uuid'], target['type'], target['name']])
             ret[item_uuid] = ret1
         return ret
 
