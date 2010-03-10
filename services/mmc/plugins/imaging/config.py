@@ -52,11 +52,12 @@ class ImagingConfig(PluginConfig, ImagingDatabaseConfig):
         Read web section of the imaging plugin configuration file
         """
         PluginConfig.readConf(self)
-        ImagingDatabaseConfig.setup(self, self.conffile)
-        if self.has_section("web"):
-            for i in ('date_fmt', 'default_protocol', 'default_menu_name',
-                      'default_timeout', 'default_background_uri',
-                      'default_message'):
-                full_name = "web_def_%s" % i
-                if self.has_option("web", full_name):
-                    setattr(self, full_name, self.get("web", full_name))
+        if not self.disabled:
+            ImagingDatabaseConfig.setup(self, self.conffile)
+            if self.has_section("web"):
+                for i in ('date_fmt', 'default_protocol', 'default_menu_name',
+                          'default_timeout', 'default_background_uri',
+                          'default_message'):
+                    full_name = "web_def_%s" % i
+                    if self.has_option("web", full_name):
+                        setattr(self, full_name, self.get("web", full_name))
