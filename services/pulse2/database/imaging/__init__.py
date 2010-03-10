@@ -412,7 +412,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return ret
 
     def __getTargetsMenuQuery(self, session):
-        return session.query(Menu).select_from(self.menu.join(self.target))
+        return session.query(Menu).select_from(self.menu.join(self.target, self.target.c.fk_menu == self.menu.c.id))
 
     def getTargetsMenuTID(self, target_id):
         session = create_session()
@@ -852,7 +852,12 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return ret
 
     def __getServiceMenuItem(self, session, bs_uuid, target_uuid):
-        mi = session.query(MenuItem).select_from(self.menu_item.join(self.boot_service_in_menu).join(self.boot_service).join(self.menu).join(self.target))
+        mi = session.query(MenuItem).select_from(self.menu_item \
+                .join(self.boot_service_in_menu, self.boot_service_in_menu.c.fk_menuitem == self.menu_item.c.id) \
+                .join(self.boot_service, self.boot_service_in_menu.c.fk_bootservice == self.boot_service.c.id) \
+                .join(self.menu, self.menu_item.c.fk_menu == self.menu.c.id) \
+                .join(self.target, self.target.c.fk_menu == self.menu.c.id) \
+        )
         mi = mi.filter(and_(self.boot_service.c.id == uuid2id(bs_uuid), self.target.c.uuid == target_uuid)).first()
         return mi
 
