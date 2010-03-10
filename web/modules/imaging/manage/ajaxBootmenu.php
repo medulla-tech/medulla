@@ -43,7 +43,7 @@ $location = getCurrentLocation();
 if (xmlrpc_doesLocationHasImagingServer($location)) {
     $ret = xmlrpc_getLocationSynchroState($location);
 
-    if ($ret['id'] == $SYNCHROSTATE_RUNNING || isset($_GET['bsync'])) {
+    if ($ret['id'] == $SYNCHROSTATE_RUNNING) {
         $a_href_open = "<a href=''>";
         print sprintf(_T("The synchro is running, please wait or reload the page %shere%s", "imaging"), $a_href_open, '</a>');
     } elseif ($ret['id'] == $SYNCHROSTATE_INIT_ERROR) {

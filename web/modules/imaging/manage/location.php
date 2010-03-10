@@ -41,8 +41,9 @@ $p->setSideMenu($sidemenu);
 $p->display();
 
 # synchronization of locations
-global $SYNCHROSTATE_SYNCHRO;
+global $SYNCHROSTATE_UNKNOWN;
 global $SYNCHROSTATE_TODO;
+global $SYNCHROSTATE_SYNCHRO;
 global $SYNCHROSTATE_RUNNING;
 global $SYNCHROSTATE_INIT_ERROR;
 
