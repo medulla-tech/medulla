@@ -159,6 +159,12 @@ function image_edit($type, $images, $masters) {
 
             $post_installs = xmlrpc_getAllTargetPostInstallScript($target_uuid);
             $post_installs = $post_installs[1];
+            if (count($post_installs) == 0) {
+                $params['name'] = $_POST['image_label'];
+                $params['desc'] = $_POST['image_description'];
+                new NotifyWidgetFailure("You must have a Post install script to convert an image into a master.");
+                header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
+            }
 
             $elements = array();
             $elementsVal = array();
