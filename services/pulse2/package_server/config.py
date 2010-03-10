@@ -293,6 +293,10 @@ class P2PServerCP(pulse2.utils.Singleton):
             base_folder = '/var/lib/pulse2/imaging'
             # will contain the bootloader material (revoboot + splashscreen), served by tftp
             bootloader_folder = 'bootloader'
+            # PXE Bootloader
+            pxe_bootloader = 'pxe_boot'
+            # CDROM bootloader
+            cdrom_bootloader = 'cdrom_boot'
             # Boot splash screen
             bootsplash_file = 'bootsplash.xpm'
             # will contain the boot menus, served by tftp
@@ -305,8 +309,6 @@ class P2PServerCP(pulse2.utils.Singleton):
             diskless_initrd = 'initrd'
             # diskless initrd for CD-ROM
             diskless_initrdcd = 'initrdcd'
-            # diskless GRUB for CD-ROM
-            diskless_grubfile = 'grub.cdrom'
             # diskless memtest tool
             diskless_memtest = 'memtest'
             # will contain computer-related materials
@@ -332,8 +334,12 @@ class P2PServerCP(pulse2.utils.Singleton):
                 base_folder = self.cp.get('imaging_api', 'base_folder')
             if self.cp.has_option('imaging_api', 'bootloader_folder'):
                 bootloader_folder = self.cp.get('imaging_api', 'bootloader_folder')
+            if self.cp.has_option('imaging_api', 'cdrom_bootloader'):
+                cdrom_bootloader = self.cp.get('imaging_api', 'cdrom_bootloader')
+            if self.cp.has_option('imaging_api', 'pxe_bootloader'):
+                pxe_bootloader = self.cp.get('imaging_api', 'pxe_bootloader')
             if self.cp.has_option('imaging_api', 'bootsplash_file'):
-                bootsplash_file = self.cp.get('imaging_api', 'bootloader_file')
+                bootsplash_file = self.cp.get('imaging_api', 'bootlsplash_file')
             if self.cp.has_option('imaging_api', 'bootmenus_folder'):
                 bootmenus_folder = self.cp.get('imaging_api', 'bootmenus_folder')
             if self.cp.has_option('imaging_api', 'diskless_folder'):
@@ -344,8 +350,6 @@ class P2PServerCP(pulse2.utils.Singleton):
                 diskless_initrd = self.cp.get("imaging_api", 'diskless_initrd')
             if self.cp.has_option('imaging_api', 'diskless_initrdcd'):
                 diskless_initrdcd = self.cp.get("imaging_api", 'diskless_initrdcd')
-            if self.cp.has_option('imaging_api', 'diskless_grubfile'):
-                diskless_grubfile = self.cp.get('imaging_api', 'diskless_grubfile')
             if self.cp.has_option("imaging_api", 'diskless_memtest'):
                 diskless_memtest = self.cp.get("imaging_api", 'diskless_memtest')
             if self.cp.has_option('imaging_api', 'computers_folder'):
@@ -373,11 +377,12 @@ class P2PServerCP(pulse2.utils.Singleton):
                 'bootloader_folder' : bootloader_folder,
                 'bootsplash_file'   : bootsplash_file,
                 'bootmenus_folder'  : bootmenus_folder,
+                'pxe_bootloader'    : pxe_bootloader,
+                'cdrom_bootloader'  : cdrom_bootloader,
                 'diskless_folder'   : diskless_folder,
                 'diskless_kernel'   : diskless_kernel,
                 'diskless_initrd'   : diskless_initrd,
                 'diskless_initrdcd' : diskless_initrdcd,
-                'diskless_grubfile' : diskless_grubfile,
                 'diskless_memtest'  : diskless_memtest,
                 'computers_folder'  : computers_folder,
                 'inventories_folder': inventories_folder,
