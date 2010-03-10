@@ -68,13 +68,13 @@ $a_level = array();
 $a_date = array();
 $a_target = array();
 
-
-$i = -1;
 foreach ($db_logs as $log) {
-    $i += 1;
-    $list_params[$i]["itemid"] = $log['imaging_uuid'];
-    $list_params[$i]["uuid"] = $log['target']['uuid'];
-    $list_params[$i]["hostname"] = $log['target']['name'];
+    $params = array();
+    $params["itemid"] = $log['imaging_uuid'];
+    $params["uuid"] = $log['target']['uuid'];
+    $params["hostname"] = $log['target']['name'];
+
+    $list_params[] = $params;
 
     $status = $log['imaging_log_state'];
     $date = _toDate($log['timestamp']);
@@ -101,9 +101,6 @@ foreach ($db_logs as $log) {
 }
 
 $l = new OptimizedListInfos($a_date, _T("Title", "imaging"));
-$l->setItemCount($count);
-$l->setNavBar(new AjaxNavBar($count, $filter));
-$l->setParamInfo($list_params);
 // $l->addExtraInfo($a_level, _T("Log level", "imaging"));
 $l->addExtraInfo($a_target, _T("Target", "imaging"));
 $l->addExtraInfo($a_desc, _T("Message", "imaging"));
@@ -112,11 +109,12 @@ $l->addExtraInfo($a_desc, _T("Message", "imaging"));
 $l->addActionItem(
     new ActionItem(_T("Details"), "imgtabs", "display", "item", "base", "computers", "tablogs", "details")
 );
+$l->disableFirstColumnActionLink();
+$l->setParamInfo($list_params);
 $l->setItemCount($count);
 $l->setNavBar(new AjaxNavBar($count, $filter));
 $l->start = 0;
 $l->end = $maxperpage;
-$l->disableFirstColumnActionLink();
 $l->display();
 
 ?>
