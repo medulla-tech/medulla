@@ -54,11 +54,10 @@ install-imaging-server:
 	@echo "Creating directories ..."
 	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(VARDIR)
 	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(VARDIR)/bootmenus
-	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(VARDIR)/inventories
-	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(VARDIR)/custom
-	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(VARDIR)/masters
 	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(VARDIR)/computers
-	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(VARDIR)/diskless
+	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(VARDIR)/custom
+	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(VARDIR)/inventories
+	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(VARDIR)/masters
 
 	@echo "Installing binaries ..."
 	$(INSTALL) -m 755 -o root -g root src/pulse2-imaging-server $(SBINDIR)/pulse2-imaging-server
