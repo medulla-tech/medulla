@@ -123,8 +123,8 @@ class ISOImage:
         Fill the medialist dict with needed value to build the ISO image
         """
         grubfile = os.path.join(self.config.imaging_api['base_folder'],
-                                self.config.imaging_api['diskless_folder'],
-                                self.config.imaging_api['diskless_grubfile'])
+                                self.config.imaging_api['bootloader_folder'],
+                                self.config.imaging_api['cdrom_bootloader'])
         medialist[medianumber]['mediasize'] += os.stat(grubfile).st_size
         medialist[medianumber]['files'][len(medialist[medianumber]['files'])] = { 'src': grubfile, 'dst': 'grub.cdrom'}
 
