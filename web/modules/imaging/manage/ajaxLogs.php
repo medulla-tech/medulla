@@ -40,6 +40,15 @@ $start = empty($_GET["start"])                  ? 0     : $_GET["start"];
 $end = $start + $maxperpage;
 
 $logStates = array(
+    "unknown" => array(_T("Status unknow", "imaging"), 'black'),
+    "boot" => array(_T("Boot", "imaging"), 'green'),
+    "menu" => array(_T("Menu", "imaging"), 'green'),
+    "restoration" => array(_T("Restoration", "imaging"), 'green'),
+    "backup" => array(_T("Backup", "imaging"), 'green'),
+    "postinstall" => array(_T("Post-install", "imaging"), 'green'),
+    "error" => array(_T("Error", "imaging"), 'red'),
+    "delete" => array(_T("Delete", "imaging"), 'orange'),
+
     "restore_in_progress" => array(_T("Restore in progress", "imaging"), 'orange'),
     "restore_done" => array(_T("Restore done", "imaging"), 'green'),
     "restore_failed" => array(_T("Restore failed", "imaging"), 'red'),
@@ -51,18 +60,14 @@ $logStates = array(
 
 list($count, $db_logs) = xmlrpc_getLogs4Location($location, $start, $end, $filter);
 
-$logs = array();
-foreach ($db_logs as $log) {
-    $logs[] = array(sprintf(_T("%s - %s on %s", "imaging"), _toDate($log['timestamp']), $log['title'], $log['target']['name']), $log['imaging_log_state']);
-}
-
 $filter = $_GET["filter"];
-$nbLogs = count($logs);
-$nbInfos = count($logs[0]);
 
-$a_titles = array();
 $a_desc = array();
 $a_states = array();
+$a_level = array();
+$a_date = array();
+$a_target = array();
+
 
 $i = -1;
 foreach ($db_logs as $log) {
@@ -70,16 +75,14 @@ foreach ($db_logs as $log) {
     $list_params[$i]["itemid"] = $log['imaging_uuid'];
     $list_params[$i]["uuid"] = $log['target']['uuid'];
     $list_params[$i]["hostname"] = $log['target']['name'];
-    //$list_params[$i]["itemlabel"] = urlencode($logs[$i][0]);
 
     $status = $log['imaging_log_state'];
-    $title = sprintf(_T("%s - %s on %s", "imaging"), _toDate($log['timestamp']), $log['title'], $log['target']['name']);
-    // add image to description
-    if (ereg('backup', $status)) {
-        $title = '<img src="modules/imaging/graph/images/backup.png" />&nbsp;'.$title;
+    $date = _toDate($log['timestamp']);
+    /*if(ereg('backup', $status)) {
+        $date = '<img src="modules/imaging/graph/images/backup.png" style="vertical-align: bottom"/>&nbsp;'.$date;
     } elseif (ereg('restore', $status)) {
-        $title = '<img src="modules/imaging/graph/images/restore.png" />&nbsp;'.$title;
-    }
+        $date = '<img src="modules/imaging/graph/images/restore.png" style="vertical-align: bottom"/>&nbsp;'.$date;
+    }*/
 
     // get status
     if(!array_key_exists($status, $logStates)) {
@@ -90,17 +93,21 @@ foreach ($db_logs as $log) {
     $led = new LedElement($logStates[$status][1]);
     $status = $led->value.'&nbsp;'.$logStates[$status][0];
 
-    $a_titles[]= $title;
+    $a_level[] = $log['imaging_log_level'];
+    $a_date[] = $date;
+    $a_target[] = $log['target']['name'];
     $a_desc[]= $log['detail'];
     $a_states[]= $status;
 }
 
-$l = new OptimizedListInfos($a_titles, _T("Title", "imaging"));
+$l = new OptimizedListInfos($a_date, _T("Title", "imaging"));
 $l->setItemCount($count);
 $l->setNavBar(new AjaxNavBar($count, $filter));
 $l->setParamInfo($list_params);
-$l->addExtraInfo($a_desc, _T("Details", "imaging"));
-$l->addExtraInfo($a_states, _T("State", "imaging"));
+// $l->addExtraInfo($a_level, _T("Log level", "imaging"));
+$l->addExtraInfo($a_target, _T("Target", "imaging"));
+$l->addExtraInfo($a_desc, _T("Message", "imaging"));
+//$l->addExtraInfo($a_states, _T("State", "imaging"));
 
 $l->addActionItem(
     new ActionItem(_T("Details"), "imgtabs", "display", "item", "base", "computers", "tablogs", "details")

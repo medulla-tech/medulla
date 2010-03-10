@@ -51,6 +51,13 @@ CREATE TABLE ImagingLogState (
   PRIMARY KEY (id)
 );
 
+-- ImagingLogLevel
+CREATE TABLE ImagingLogLevel (
+  id INT NOT NULL AUTO_INCREMENT,
+  label Text NOT NULL,
+  PRIMARY KEY (id)
+);
+
 -- Protocol
 CREATE TABLE Protocol (
   id INT NOT NULL AUTO_INCREMENT,
@@ -228,10 +235,10 @@ CREATE TABLE MasteredOn (
 CREATE TABLE ImagingLog (
   id INT NOT NULL AUTO_INCREMENT,
   timestamp datetime,
-  title Text NOT NULL,
   detail Text NOT NULL,
   fk_imaging_log_state INT NOT NULL,
   fk_target INT NOT NULL,
+  fk_imaging_log_level INT NOT NULL,
   PRIMARY KEY (id)
 );
 
@@ -297,6 +304,7 @@ ALTER TABLE ImageInMenu ADD FOREIGN KEY(fk_menuitem)    REFERENCES MenuItem(id);
 ALTER TABLE Image ADD FOREIGN KEY(fk_creator) REFERENCES `User`(id);
 
 ALTER TABLE ImagingLog ADD FOREIGN KEY(fk_imaging_log_state)    REFERENCES ImagingLogState(id);
+ALTER TABLE ImagingLog ADD FOREIGN KEY(fk_imaging_log_level)    REFERENCES ImagingLogLevel(id);
 ALTER TABLE ImagingLog ADD FOREIGN KEY(fk_target)               REFERENCES Target(id);
 
 ALTER TABLE MasteredOn ADD FOREIGN KEY(fk_image)                REFERENCES Image(id);
@@ -350,6 +358,7 @@ CREATE INDEX fk_image_in_menu_menuitem_idx  ON ImageInMenu(fk_menuitem);
 CREATE INDEX fk_image_creator_idx ON Image(fk_creator);
 
 CREATE INDEX fk_imaging_log_state_idx   ON ImagingLog(fk_imaging_log_state);
+CREATE INDEX fk_imaging_log_level_idx   ON ImagingLog(fk_imaging_log_level);
 CREATE INDEX fk_imaging_log_target_idx  ON ImagingLog(fk_target);
 
 CREATE INDEX fk_mastered_on_image_idx         ON MasteredOn(fk_image);
@@ -376,6 +385,15 @@ INSERT INTO ImagingLogState (id, label) VALUES (5, "backup");
 INSERT INTO ImagingLogState (id, label) VALUES (6, "postinstall");
 INSERT INTO ImagingLogState (id, label) VALUES (7, "error");
 INSERT INTO ImagingLogState (id, label) VALUES (8, "delete");
+
+INSERT INTO ImagingLogLevel (id, label) VALUES (0, "LOG_EMERG");
+INSERT INTO ImagingLogLevel (id, label) VALUES (1, "LOG_ALERT");
+INSERT INTO ImagingLogLevel (id, label) VALUES (2, "LOG_CRIT");
+INSERT INTO ImagingLogLevel (id, label) VALUES (3, "LOG_ERR");
+INSERT INTO ImagingLogLevel (id, label) VALUES (4, "LOG_WARNING");
+INSERT INTO ImagingLogLevel (id, label) VALUES (5, "LOG_NOTICE");
+INSERT INTO ImagingLogLevel (id, label) VALUES (6, "LOG_INFO");
+INSERT INTO ImagingLogLevel (id, label) VALUES (7, "LOG_DEBUG");
 
 INSERT INTO Protocol (label) VALUES ("nfs");
 INSERT INTO Protocol (label) VALUES ("tftp");

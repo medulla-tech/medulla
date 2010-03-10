@@ -27,7 +27,7 @@ Database class for imaging
 """
 
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
-from pulse2.database.imaging.types import P2ISS, P2IT, P2IM, P2IIK, P2ERR
+from pulse2.database.imaging.types import P2ISS, P2IT, P2IM, P2IIK, P2ERR, P2ILL
 
 from sqlalchemy import create_engine, ForeignKey, Integer, MetaData, Table, Column, and_, or_
 from sqlalchemy.orm import create_session, mapper
@@ -69,8 +69,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             return False
         self.metadata.create_all()
         self.r_nomenclatures = {}
-        self.nomenclatures = {'ImagingLogState':ImagingLogState, 'TargetType':TargetType, 'Protocol':Protocol, 'SynchroState':SynchroState}
-        self.fk_nomenclatures = {'ImagingLog':{'fk_imaging_log_state':'ImagingLogState'}, 'Target':{'type':'TargetType'}, 'Menu':{'fk_protocol':'Protocol', 'fk_synchrostate':'SynchroState'}}
+        self.nomenclatures = {'ImagingLogState':ImagingLogState, 'ImagingLogLevel':ImagingLogLevel, 'TargetType':TargetType, 'Protocol':Protocol, 'SynchroState':SynchroState}
+        self.fk_nomenclatures = {'ImagingLog':{'fk_imaging_log_state':'ImagingLogState', 'fk_imaging_log_level':'ImagingLogLevel'}, 'Target':{'type':'TargetType'}, 'Menu':{'fk_protocol':'Protocol', 'fk_synchrostate':'SynchroState'}}
         self.__loadNomenclatureTables()
         self.loadDefaults()
         self.is_activated = True
@@ -106,6 +106,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         mapper(Language, self.language)
         mapper(ImagingLog, self.imaging_log)
         mapper(ImagingLogState, self.imaging_log_state)
+        mapper(ImagingLogLevel, self.imaging_log_level)
         mapper(MasteredOn, self.mastered_on)
         mapper(Menu, self.menu) #, properties = { 'default_item':relation(MenuItem), 'default_item_WOL':relation(MenuItem) } )
         mapper(MenuItem, self.menu_item) #, properties = { 'menu' : relation(Menu) })
@@ -145,6 +146,12 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         self.imaging_log_state = Table(
             "ImagingLogState",
+            self.metadata,
+            autoload = True
+        )
+
+        self.imaging_log_level = Table(
+            "ImagingLogLevel",
             self.metadata,
             autoload = True
         )
@@ -285,6 +292,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             "ImagingLog",
             self.metadata,
             Column('fk_imaging_log_state', Integer, ForeignKey('ImagingLogState.id')),
+            Column('fk_imaging_log_level', Integer, ForeignKey('ImagingLogLevel.id')),
             Column('fk_target', Integer, ForeignKey('Target.id')),
             useexisting=True,
             autoload = True
@@ -618,7 +626,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def __ImagingLogs4Location(self, session, location_uuid, filter):
         n = session.query(ImagingLog).add_entity(Target).select_from(self.imaging_log.join(self.target).join(self.entity)).filter(self.entity.c.uuid == location_uuid)
         if filter != '':
-            n = n.filter(or_(self.imaging_log.c.title.like('%'+filter+'%'), self.target.c.name.like('%'+filter+'%')))
+            n = n.filter(or_(self.imaging_log.c.detail.like('%'+filter+'%'), self.target.c.name.like('%'+filter+'%')))
         return n
 
     def getImagingLogs4Location(self, location_uuid, start, end, filter):
@@ -651,7 +659,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             # to be sure we don't get anything, this is an error case!
             q = q.filter(self.target.c.type == 0)
         if filter != '':
-            q = q.filter(or_(self.imaging_log.c.title.like('%'+filter+'%'), self.target.c.name.like('%'+filter+'%')))
+            q = q.filter(or_(self.imaging_log.c.detail.like('%'+filter+'%'), self.target.c.name.like('%'+filter+'%')))
         return q
 
     def getImagingLogsOnTargetByIdAndType(self, target_id, type, start, end, filter):
@@ -1105,7 +1113,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         il = ImagingLog()
         il.timestamp = datetime.datetime.fromtimestamp(time.mktime(time.localtime()))
-        il.title = 'INFO'
+        il.fk_imaging_log_level = P2ILL.LOG_INFO
         il.detail = 'Image %s has been removed from Imaging Server by %s'%(image_uuid, '')
         il.fk_imaging_log_state = 8
 
@@ -1256,8 +1264,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         # WIP MASTERED
         imaging_log = ImagingLog()
         imaging_log.timestamp = datetime.datetime.fromtimestamp(time.mktime(params['creation_date']))
-        imaging_log.title = params['name']
         imaging_log.detail = params['desc']
+        imaging_log.fk_imaging_log_level = P2ILL.LOG_INFO
         imaging_log.fk_imaging_log_state = 1 # done
         target = session.query(Target).filter(self.target.c.uuid == computer_uuid).first()
         imaging_log.fk_target = target.id
@@ -1288,8 +1296,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session = create_session()
         imaging_log = ImagingLog()
         imaging_log.timestamp = datetime.datetime.fromtimestamp(time.mktime(time.localtime()))
-        imaging_log.title = log['level']
         imaging_log.detail = log['detail']
+        imaging_log.fk_imaging_log_level = log['level']
         if self.r_nomenclatures['ImagingLogState'].has_key(log['state']):
             imaging_log.fk_imaging_log_state = self.r_nomenclatures['ImagingLogState'][log['state']]
         elif self.nomenclatures['ImagingLogState'].has_key(log['state']):
@@ -2433,10 +2441,13 @@ class ImageInMenu(DBObject):
     pass
 
 class ImagingLog(DBObject):
-    to_be_exported = ['id', 'timestamp', 'title', 'completeness', 'detail', 'fk_imaging_log_state', 'fk_target', 'imaging_log_state']
+    to_be_exported = ['id', 'timestamp', 'completeness', 'detail', 'fk_imaging_log_state', 'fk_imaging_log_level', 'fk_target', 'imaging_log_state', 'imaging_log_level']
     need_iteration = ['target']
 
 class ImagingLogState(DBObject):
+    to_be_exported = ['id', 'label']
+
+class ImagingLogLevel(DBObject):
     to_be_exported = ['id', 'label']
 
 class ImageOnImagingServer(DBObject):
