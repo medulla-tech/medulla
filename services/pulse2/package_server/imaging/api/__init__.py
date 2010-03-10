@@ -52,7 +52,6 @@ except ImportError:
 class ImagingApi(MyXmlrpc):
 
     myType = 'Imaging'
-    myUUIDCache = UUIDCache()
 
     def __init__(self, name, config):
         """
@@ -65,6 +64,7 @@ class ImagingApi(MyXmlrpc):
         self.logger.info("Initializing %s" % self.myType)
         # Read and check configuration
         self.config = config
+        self.myUUIDCache = UUIDCache()
         # FIXME: un-comment me later :)
         # self.check()
 

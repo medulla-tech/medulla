@@ -41,13 +41,13 @@ class UUIDCache(pulse2.utils.Singleton):
      - if not, try to find it asking the agent, updating both disk cache and local cache, resetting lifetime
     """
 
-    cachePath = pulse2.package_server.config.P2PServerCP().imaging_api['uuid_cache_file']
     log = logging.getLogger('imaging')
-    log.info("Using %s as UUID Cache File" % cachePath)
     config = ConfigParser.ConfigParser()
 
     def __init__(self):
         pulse2.utils.Singleton.__init__(self)
+        self.cachePath = pulse2.package_server.config.P2PServerCP().imaging_api['uuid_cache_file']
+        self.log.info("Using %s as UUID Cache File" % self.cachePath)
         if not os.path.isfile(self.cachePath):
             try:
                 self.log.info("Creating my UUID Cache File %s" % (self.cachePath))
