@@ -191,10 +191,10 @@ function format_health($up, $mem) {
 
 
     $m = preg_split("/[ ]+/", $mem[1]);
-    $ret .= format_mem_bar("<em>"._("Memory")."</em> : ".humanSize($m[2]*1024*1024)."/".humanSize(($m[5]+$m[6])*1024*1024)."/".humanSize($m[1]*1024*1024), $m[1], $m[2],$m[5]+$m[6]);
+    $ret .= format_mem_bar("<em>"._("Memory")."</em> : ".humanSize($m[2]*1024)."/".humanSize(($m[5]+$m[6])*1024)."/".humanSize($m[1]*1024), $m[1], $m[2],$m[5]+$m[6]);
     $m = preg_split("/[ ]+/", $mem[3]);
     if ($m[1] > 0) {
-        $ret .= format_mem_bar("<em>"._("Swap")."</em> : ".humanSize($m[2]*1024*1024)."/".humanSize($m[1]*1024*1024), $m[1], $m[2]);
+        $ret .= format_mem_bar("<em>"._("Swap")."</em> : ".humanSize($m[2]*1024)."/".humanSize($m[1]*1024), $m[1], $m[2]);
     }
     return $ret;
 }

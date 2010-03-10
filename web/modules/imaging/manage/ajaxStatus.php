@@ -32,13 +32,12 @@ require("../../../includes/PageGenerator.php");
 require("../includes/includes.php");
 require("../includes/xmlrpc.inc.php");
 
-
 $location = getCurrentLocation();
 if (xmlrpc_doesLocationHasImagingServer($location)) {
     $global_status = xmlrpc_getGlobalStatus($location);
-    $disk_info = format_disk_info($global_status['disks_info']);
+    $disk_info = format_disk_info($global_status['disk_info']);
     $health = format_health($global_status['uptime'], $global_status['mem_info']);
-    $short_status = $global_status['short_status'];
+    $short_status = $global_status['stats'];
 ?>
 
 <br/>
