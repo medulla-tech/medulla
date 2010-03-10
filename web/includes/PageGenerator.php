@@ -38,8 +38,8 @@ function getUniqId() {
  * similar to "echo" in PHP5
  */
 function echo_obj($obj) {
-    
-   if (is_object($obj)){        
+
+   if (is_object($obj)){
         echo $obj->__toString();
    }
    else if(is_bool($obj)) {
@@ -655,21 +655,18 @@ class OptimizedListInfos extends ListInfos {
     function initVar() {
         $this->name="Elements";
         global $conf;
-        if (!isset($_GET["start"]))
-                {
-                    if (!isset($_POST["start"]))
-                        {
-                            $this->start = 0;
-                            if (count($this->arrInfo) > 0)              {
-                                $this->end = $conf["global"]["maxperpage"] - 1;
-                            } else {
-                                $this->end = 0;
-                    }
-                        }
+        if (!isset($_GET["start"])) {
+            if (!isset($_POST["start"])) {
+                $this->start = 0;
+                if (count($this->arrInfo) > 0) {
+                    $this->end = $conf["global"]["maxperpage"] - 1;
+                } else {
+                    $this->end = 0;
                 }
-        else        {
-                $this->start = $_GET["start"];
-                $this->end = $_GET["end"];
+            }
+        } else {
+            $this->start = $_GET["start"];
+            $this->end = $_GET["end"];
         }
         $this->maxperpage = $conf["global"]["maxperpage"];
         $this->setItemCount(count($this->arrInfo));
@@ -704,7 +701,6 @@ class OptimizedListInfos extends ListInfos {
         }
         echo "</p>";
     }
-
 }
 
 /**
@@ -857,7 +853,7 @@ class AjaxFilter extends HtmlElement {
         foreach ($params as $k => $v) {
             $this->params .= "&".$k."=".$v;
         }
-            
+
         // get the current module pages
         if (isset($_GET["module"]))
             $__module = $_GET["module"];
@@ -874,11 +870,11 @@ class AjaxFilter extends HtmlElement {
         if (isset($_GET['tab']))
             $__tab = $_GET['tab'];
         else
-            $__tab = "default";            
+            $__tab = "default";
         // then get our filter info
         if(isset($_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_filter"])) {
             $this->storedfilter = $_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_filter"];
-        }    
+        }
     }
 
     /**
@@ -909,7 +905,7 @@ class AjaxFilter extends HtmlElement {
     <script type="text/javascript">
 <?
 if(!$this->formid) {
-?>        
+?>
         document.getElementById('param<?=$this->formid?>').focus();
 <?
 }
@@ -917,7 +913,7 @@ if(isset($this->storedfilter)) {
 ?>
         document.Form<?=$this->formid?>.param.value = "<?=$this->storedfilter?>";
 <?
-}    
+}
 ?>
 
 
@@ -942,7 +938,7 @@ if(isset($this->storedfilter)) {
          */
         updateSearch<?=$this->formid?> = function() {
             new Ajax.Updater('<?= $this->divid; ?>',
-            '<?= $this->url; ?>filter='+document.Form<?=$this->formid?>.param.value+'<?= $this->params ?>',     
+            '<?= $this->url; ?>filter='+document.Form<?=$this->formid?>.param.value+'<?= $this->params ?>',
             { asynchronous:true, evalScripts: true}
             );
 
@@ -1086,7 +1082,7 @@ if(isset($this->storedfilter)) {
 ?>
         document.Form.param.value = "<?=$this->storedfilter?>";
 <?
-}    
+}
 ?>
         /**
         * update div with user
@@ -1110,14 +1106,14 @@ if(isset($this->storedfilter)) {
             var filter = "";
             var reg1 = new RegExp(tableau[0]+"##", "g");
             if (filt.match(reg1)) {
-                if (tableau[0] != undefined) { 
+                if (tableau[0] != undefined) {
                     filter = tableau[0];
                 }
                 if (tableau[1] != undefined) {
                     location = tableau[1];
                 }
             } else if (tableau.length == 1) {
-                if (tableau[0] != undefined) { 
+                if (tableau[0] != undefined) {
                     location = tableau[0];
                 }
             }
@@ -1147,7 +1143,7 @@ class AjaxLocation extends AjaxFilterLocation {
         $this->AjaxFilterLocation($url, $divid, $paramname, $params);
         $this->location = new SelectItem($paramname, 'pushSearchLocation', 'searchfieldreal noborder');
     }
-    
+
     function display() {
         global $conf;
         $root = $conf["global"]["root"];
@@ -1165,7 +1161,7 @@ class AjaxLocation extends AjaxFilterLocation {
         </span>
         <img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" />
     </div>
-    
+
 
     <script type="text/javascript">
         /**
@@ -1747,9 +1743,9 @@ class NotifyWidget {
      * private internal function
      */
     function showJS() {
-        # if this function has already been launch, no need for a second launch 
-        global $doneJS; 
-        if ($doneJS) { return; } 
+        # if this function has already been launch, no need for a second launch
+        global $doneJS;
+        if ($doneJS) { return; }
         $doneJS = True;
         if (!isset($_SESSION['__notify'])) {
             return;
@@ -2200,7 +2196,6 @@ class PopupWindowForm extends PopupForm {
     }
 
     function addValidateButtonWithFade($name) {
-        print_r($options);
         $this->buttons[] = $this->getButtonString($name, _("Confirm"), "btnPrimary", "onclick=\"new Effect.Fade('popup'); window.open('".$this->target_uri."', '', 'toolbar=no, location=no, menubar=no, status=no, status=no, scrollbars=no, width=330, height=200'); return false;\"" );
     }
 }
