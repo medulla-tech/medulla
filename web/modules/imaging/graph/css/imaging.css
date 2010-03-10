@@ -1,0 +1,23 @@
+
+li.showtarget a {
+        padding: 3px 0px 5px 20px;
+        margin: 0 0px 0 0px;
+        background-image: url("../images/info.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.deleteimage a {
+        padding: 3px 0px 5px 20px;
+        margin: 0 0px 0 0px;
+        background-image: url("../images/delete.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
