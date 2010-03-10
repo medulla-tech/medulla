@@ -64,6 +64,14 @@ class ISOImage:
         if not os.path.isdir(targetdir):
             raise Exception("Target directory %s for ISO image doesn't exist" % targetdir)
         self.target = os.path.join(targetdir, title)
+        if os.path.exists('%s-1.iso' % self.target):
+            # ISO file already exists, find another file name.
+            i = 1
+            while True:
+                if not os.path.exists('%s-%d-1.iso' % (self.target, i)):
+                    self.target += '-' + str(i)
+                    break
+                i += 1
         self.size = size
         self.tempdir = tempfile.mkdtemp('pulse2-iso')
         self.medialist = {}
