@@ -68,15 +68,29 @@ class Status:
         self.getMemoryInformations()
 
     def getMemoryInformations(self):
-        d = getProcessOutput('/bin/df', ['-k'], { 'LANG' : 'C', 'LANGUAGE' : 'C'})
+        d = getProcessOutput('free', { 'LANG' : 'C', 'LANGUAGE' : 'C'})
         d.addCallback(self.getMemoryInformationsOk)
         d.addErrback(self.getMemoryInformationsErr)
 
     def getMemoryInformationsOk(self, result):
-        self.ret['disk_info'] = result
-        self.getUptime()
+        self.ret['mem_info'] = result.split('\n')
+        self.getDiskInformations()
 
     def getMemoryInformationsErr(self, error):
+        self.logging.error(error)
+        self.ret['mem_info'] = -1
+        self.getDiskInformations()
+
+    def getDiskInformations(self):
+        d = getProcessOutput('/bin/df', ['-k'], { 'LANG' : 'C', 'LANGUAGE' : 'C'})
+        d.addCallback(self.getDiskInformationsOk)
+        d.addErrback(self.getDiskInformationsErr)
+
+    def getDiskInformationsOk(self, result):
+        self.ret['disk_info'] = result.split('\n')
+        self.getUptime()
+
+    def getDiskInformationsErr(self, error):
         self.logging.error(error)
         self.ret['disk_info'] = -1
         self.getUptime()
@@ -94,8 +108,10 @@ class Status:
 
     def getStats(self):
         self.ret['stats'] = {}
+        # TODO need to get that information from internals
         self.ret['stats']['rescue'] = 0
         self.ret['stats']['master'] = 0
+        self.ret['stats']['total'] = 0
         self.returnResult()
 
     def returnResult(self):
