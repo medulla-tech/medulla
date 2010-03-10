@@ -640,7 +640,7 @@ class ImagingApi(MyXmlrpc):
                 ret = False
         return ret
 
-    def xmlrpc_imagingServerISOCreate(self, imageUUID, size):
+    def xmlrpc_imagingServerISOCreate(self, imageUUID, size, title):
         """
         Create an ISO image corresponding to a Pulse 2 image.
         The ISO image is bootable and allows to auto-restore the Pulse 2 image
@@ -651,10 +651,12 @@ class ImagingApi(MyXmlrpc):
         @type imageUUID: str
         @param size: media size, in bytes
         @type size: int
+        @param title: title of the image, in UTF-8
+        @type title: str
         @return: True if the creation process started
         @rtype: bool
         """
-        iso = ISOImage(self.config, imageUUID, size)
+        iso = ISOImage(self.config, imageUUID, size, title)
         ret = True
         try:
             iso.prepare()
