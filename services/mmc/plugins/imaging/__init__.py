@@ -993,7 +993,11 @@ class RpcProxy(RpcProxyI):
         i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
         # TODO need to be done in async
         if i != None:
-            return xmlrpcCleanup(i.imagingServerStatus())
+            def treatResults(results):
+                return xmlrpcCleanup(results)
+            d = i.imagingServerStatus()
+            d.addCallback(treatResults)
+            return d
         return {}
 
     ####### IMAGING SERVER
