@@ -37,7 +37,7 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
     $global_status = xmlrpc_getGlobalStatus($location);
     $disk_info = format_disk_info($global_status['disk_info']);
     $health = format_health($global_status['uptime'], $global_status['mem_info']);
-    $short_status = $global_status['stats'];
+    $short_status = $global_status['short_status'];
 ?>
 
 <br/>
