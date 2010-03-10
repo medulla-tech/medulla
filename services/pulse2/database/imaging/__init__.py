@@ -1613,6 +1613,31 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     ##################################
     # ImagingServer
+    def getEntityStatus(self, location):
+        session = create_session()
+        q = session.query(Target).add_entity(Image).select_from(self.target \
+                .join(self.imaging_server, self.target.c.fk_entity == self.imaging_server.c.fk_entity) \
+                .join(self.entity, self.entity.c.id == self.target.c.fk_entity) \
+                .outerjoin(self.imaging_log, self.imaging_log.c.fk_target == self.target.c.id) \
+                .outerjoin(self.mastered_on, self.mastered_on.c.fk_imaging_log == self.imaging_log.c.id) \
+                .outerjoin(self.image, self.mastered_on.c.fk_image == self.image.c.id) \
+        ).filter(and_(self.entity.c.uuid == location, self.target.c.type.in_((P2IT.COMPUTER, P2IT.COMPUTER_IN_PROFILE))))
+        q = q.group_by().all()
+        im_total = 0
+        im_rescue = 0
+        for t, i in q:
+            im_total += 1
+            if i != None:
+                im_rescue += 1
+
+        im_master = session.query(Image).select_from(self.image \
+                .join(self.image_on_imaging_server, self.image_on_imaging_server.c.fk_image == self.image.c.id) \
+                .join(self.imaging_server, self.image_on_imaging_server.c.fk_imaging_server == self.imaging_server.c.id) \
+                .join(self.entity, self.entity.c.id == self.imaging_server.c.fk_entity) \
+        ).filter(and_(self.entity.c.uuid == location, self.image.c.is_master == 1)).count()
+
+        return {'total': im_total, 'master': im_master, 'rescue': im_rescue}
+
     def countImagingServerByPackageServerUUID(self, uuid):
         session = create_session()
         q = session.query(ImagingServer).filter(self.imaging_server.c.packageserver_uuid == uuid).count()
