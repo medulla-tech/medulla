@@ -42,12 +42,14 @@ class ISOImage:
     Allows to prepare and create an ISO image
     """
 
-    def __init__(self, config, imageUUID, size):
+    def __init__(self, config, imageUUID, size, title):
         """
         @param imageUUID: UUID of the Pulse 2 image to convert to an ISO
         @type imageUUID: str
         @param size: media size, in bytes
         @type size: int
+        @param title: title of the image, in UTF-8
+        @type title: str
         """
         self.logger = logging.getLogger('imaging')
         self.config = config
@@ -55,9 +57,13 @@ class ISOImage:
         if not isPulse2Image(self.source):
             raise ValueError('Image %s is not a valid image' % imageUUID)
         self.imageUUID = imageUUID
-        self.target = self.config.imaging_api['iso_folder']
-        if not os.path.isdir(self.target):
-            self.logger.warn("Target directory %s for ISO image doesn't exist" % self.target)
+        if not title:
+            raise ValueError('Image ISO title is empty')
+        self.title = title
+        targetdir = self.config.imaging_api['isos_folder']
+        if not os.path.isdir(targetdir):
+            raise Exception("Target directory %s for ISO image doesn't exist" % targetdir)
+        self.target = os.path.join(targetdir, title)
         self.size = size
         self.tempdir = tempfile.mkdtemp('pulse2-iso')
         self.medialist = {}
@@ -65,6 +71,7 @@ class ISOImage:
     def _makeGRUBMenu(self, medialist):
         """
         Build GRUB menu file
+        FIXME: we should use menu.py to build the menu content
         """
         buf = []
         buf.append("color 6/0\n")
@@ -73,7 +80,7 @@ class ISOImage:
         buf.append("desc Boot on the 1st local HD\n")
         buf.append("root (hd0)\n")
         buf.append("chainloader +1\n")
-        buf.append("title %s\n" % 'FIXME')
+        buf.append("title %s\n" % self.title)
         buf.append("desc %s\n" % 'FIXME')
         buf.append("kernel (cd)/bzImage revorestorenfs revosavedir=/cdrom quiet revonospc\n")
         buf.append("initrd (cd)/initrd\n")
@@ -104,7 +111,7 @@ class ISOImage:
                                 self.config.imaging_api['diskless_initrd'])
         initrdcd = os.path.join(self.config.imaging_api['base_folder'],
                                 self.config.imaging_api['diskless_folder'],
-                                self.config.imaging_api['cd_initrd'])
+                                self.config.imaging_api['diskless_initrdcd'])
         shutil.copy(initrd, initrdfile)
         # Read initrdcd content
         fid = file(initrdcd)
@@ -180,8 +187,25 @@ class ISOImage:
         Generates the final ISO files.
         For now, the image are generated in background.
         """
+
+        def _cbSuccess(result):
+            out, err, code = result
+            if code:
+                self.logger.error('Error while generating ISO image: error code = %d' % code)
+                self.logger.error('stderr: %s' % err)
+                ret = False
+            else:
+                self.logger.debug('ISO generation succeeded')
+                ret = True
+            return ret
+
+        def _cbError(result):
+            out, err, signalNum = result
+            self.logger.error('Signal %d received while generating ISO image' % signalNum)
+            return False
+
         for medianumber in self.medialist:
-            args = ['-f', 'v', '-v', '-R']
+            args = ['-f', '-v', '-v', '-R']
             # Volume ID
             args = args + ['-V', 'FIXME TITLE']
             # Application ID
@@ -197,9 +221,10 @@ class ISOImage:
                     self.medialist[medianumber]['files'][fname]['dst']
                     + "="
                     + self.medialist[medianumber]['files'][fname]['src'])
-            getProcessOutputAndValue(
+            d = getProcessOutputAndValue(
                 self.config.imaging_api['isogen_tool'],
                 args)
+            d.addCallbacks(_cbSuccess, _cbError)
             self.logger.debug("Creating ISO image %s-%d.iso from image %s" % (self.target, medianumber+1, self.imageUUID))
 
     def removeTempDir(self):
