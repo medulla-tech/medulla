@@ -1,3 +1,0 @@
-# Maximise la deuxieme et derniere partition NTFS du disque dur.
-# desc_en: Maximize the 2nd and last NTFS partition on the hard disk.
-NtfsResizeMax 2

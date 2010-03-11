@@ -1,4 +1,0 @@
-# Changement du SID et du nom Netbios de la machine
-# desc_en: Change the SID and the Netbios name of the system
-Mount 1
-ChangeSIDAndName

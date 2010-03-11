@@ -1,6 +1,0 @@
-# Copier des fichiers sur la 2eme partition et lancer un programme au demarrage
-# desc_en: Copy some files on the 2nd partition and run a program at startup
-Mount 2
-mkdir -p /mnt/tmp
-copy /revoinfo/data/* /mnt/tmp
-RegistryAddRunOnce 'D:\tmp\myprogram.bat'

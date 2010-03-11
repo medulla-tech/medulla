@@ -1,5 +1,0 @@
-# Test. Inscrit la date dans \date.txt
-# desc_en: Test. Write the current date to \date.txt
-Mount 1
-
-date | unix2dos >> /mnt/date.txt

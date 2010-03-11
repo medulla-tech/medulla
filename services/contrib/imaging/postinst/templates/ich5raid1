@@ -1,4 +1,0 @@
-# RAID1 synchro pour chipset ICH5 du 1er disque vers le 2e
-# desc_en: RAID1 synchro for ICH5 chipset, from 1st disk to the 2nd
-
-/opt/bin/dd_rescue -b 10485760 /dev/sda /dev/sdb

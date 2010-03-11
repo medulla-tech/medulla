@@ -1,6 +1,0 @@
-# Copier des fichiers et lancer un programme au démarrage
-# desc_en: Copy some files and run a program at startup
-Mount 1
-mkdir -p /mnt/tmp
-copy /revoinfo/data/* /mnt/tmp
-RegistryAddRunOnce 'C:\tmp\myprogram.bat'

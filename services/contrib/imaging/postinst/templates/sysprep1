@@ -1,4 +1,0 @@
-# Installation du fichier sysprep.inf sur la 1ere partition
-# desc_en: Install of the sysprep.inf file on the 1st partition
-Mount 1
-CopySysprepInf /revoinfo/data/[Ss]ysprep.inf
