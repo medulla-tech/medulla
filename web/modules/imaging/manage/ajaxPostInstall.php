@@ -22,11 +22,11 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
- 
+
 /*
  * Post-installation scripts list page
  */
- 
+
 /* Get MMC includes */
 require("../../../includes/config.inc.php");
 require("../../../includes/i18n.inc.php");
@@ -39,9 +39,18 @@ require('../includes/xmlrpc.inc.php');
 $location = getCurrentLocation();
 
 if (xmlrpc_doesLocationHasImagingServer($location)) {
-    
+
+    $t = new TitleElement(_T("Available masters", "imaging"));
+    $t->display();
+
+    $ajax = new AjaxFilter("modules/imaging/manage/ajaxPostInstallLevel2.php", "Level2", $params, "formLevel2");
+    //$ajax->setRefresh(10000);
+    $ajax->display();
+    echo '<br/><br/><br/>';
+    $ajax->displayDivToUpdate();
+   /*
     list($count, $scripts) = xmlrpc_getAllPostInstallScripts($location);
-    
+
     $a_label = array();
     $a_desc = array();
     $i = 0;
@@ -52,26 +61,26 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
         $list_params[$i]["itemlabel"] = $script["default_name"];
         $i++;
     }
-    
+
     // show scripts list
     $l = new ListInfos($a_label, _T("Name"));
     $l->addExtraInfo($a_desc, _T("Description", "imaging"));
     $l->setParamInfo($list_params);
     $l->addActionItem(
-        new ActionItem(_T("Edit script", "imaging"), 
+        new ActionItem(_T("Edit script", "imaging"),
         "postinstall_edit", "edit", "image", "imaging", "manage")
     );
     $l->addActionItem(
-        new ActionItem(_T("Duplicate", "imaging"), 
+        new ActionItem(_T("Duplicate", "imaging"),
         "postinstall_duplicate", "duplicatescript", "image", "imaging", "manage")
     );
     $l->addActionItem(
-        new ActionPopupItem(_T("Delete", "imaging"), 
+        new ActionPopupItem(_T("Delete", "imaging"),
         "postinstall_delete", "delete", "image", "imaging", "manage")
     );
     $l->disableFirstColumnActionLink();
-    $l->display();
-    
+    $l->display();*/
+
 } else {
     $ajax = new AjaxFilter(urlStrRedirect("imaging/manage/ajaxAvailableImagingServer"), "container", array('from'=>$_GET['from']));
     $ajax->display();

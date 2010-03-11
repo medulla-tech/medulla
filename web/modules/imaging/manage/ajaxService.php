@@ -35,53 +35,13 @@ require('../includes/xmlrpc.inc.php');
 $location = getCurrentLocation();
 
 if (xmlrpc_doesLocationHasImagingServer($location)) {
-    list($count, $services) = xmlrpc_getLocationBootServices($location);
-
-    // forge params
-    $params = getParams();
-    $addAction = new ActionPopupItem(_T("Add service to default boot menu", "imaging"), "service_add", "addbootmenu", "master", "imaging", "manage");
-    $delAction = new ActionPopupItem(_T("Remove service from default boot menu", "imaging"), "service_del", "delbootmenu", "master", "imaging", "manage");
-    $addActions = array();
-
-    $a_label = array();
-    $a_desc = array();
-    $a_in_boot_menu = array();
-    $i = -1;
-    foreach ($services as $entry) {
-        $i = $i+1;
-        $list_params[$i] = $params;
-        $list_params[$i]["itemlabel"] = $entry['default_name'];
-        $list_params[$i]["itemid"] = $entry['imaging_uuid'];
-        // don't show action if service is in bootmenu
-        if(!isset($entry['menu_item'])) {
-            $addActions[] = $addAction;
-        } else {
-            $addActions[] = $delAction;
-        }
-
-        $a_label[]= sprintf("%s%s", ($script['is_local']?'':'X) '), $entry['default_name']);
-        $a_desc[]= $entry['default_desc'];
-        $a_in_boot_menu[]= (isset($entry['menu_item'])? True:False);
-    }
-
-
     $t = new TitleElement(_T("Manage services", "imaging"));
     $t->display();
-
-    // show images list
-    $l = new ListInfos($a_label, _T("Label", "imaging"));
-    $l->setParamInfo($list_params);
-    $l->addExtraInfo($a_desc, _T("Description", "imaging"));
-    $l->addExtraInfo($a_in_boot_menu, _T("In bootmenu", "imaging"));
-    $l->addActionItemArray($addActions);
-    /* should we be able to to that ?!
-    $l->addActionItem(
-        new ActionItem(_T("Edit service", "imaging"), 
-        "service_edit", "edit", "master", "imaging", "manage")
-    );*/
-    $l->setTableHeaderPadding(1);
-    $l->disableFirstColumnActionLink();
-    $l->display();
+    $ajax = new AjaxFilter("modules/imaging/manage/ajaxServiceLevel2.php", "Level2", $params, "formLevel2");
+    //$ajax->setRefresh(10000);
+    $ajax->display();
+    echo '<br/><br/><br/>';
+    $ajax->displayDivToUpdate();
 } else {
     $ajax = new AjaxFilter(urlStrRedirect("imaging/manage/ajaxAvailableImagingServer"), "container", array('from'=>$_GET['from']));
     $ajax->display();
