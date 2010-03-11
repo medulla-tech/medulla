@@ -155,6 +155,7 @@ class ImagingMenu:
                 ('##MAC##',
                  pulse2.utils.reduceMACAddress(self.mac),
                  'global'))
+        self.protocol = 'nfs' # by default
 
     def _applyReplacement(self, string, condition = 'global'):
         """
@@ -272,7 +273,7 @@ class ImagingMenu:
         """
         Add the ImagingEntry entry to our menu
         """
-        assert(type(position) == int and position > 0)
+        assert(type(position) == int and position >= 0)
         if position in self.menuitems:
             raise ValueError('Position %d in menu already taken' % position)
         item = ImagingImageItem(entry)
@@ -282,7 +283,7 @@ class ImagingMenu:
         """
         Add the ImagingEntry entry to our menu
         """
-        assert(type(position) == int and position > 0)
+        assert(type(position) == int and position >= 0)
         if position in self.menuitems:
             raise ValueError('Position %d in menu already taken' % position)
         self.menuitems[position] = ImagingBootServiceItem(entry)
@@ -308,6 +309,10 @@ class ImagingMenu:
         self.hidden = False
 
     def setProtocol(self, value):
+        """
+        Set the restoration protocol.
+        ATM protocol can be 'nfs', 'tftp' or 'tftp'
+        """
         assert(value in ['nfs', 'tftp', 'mtftp'])
         self.protocol = value
 
