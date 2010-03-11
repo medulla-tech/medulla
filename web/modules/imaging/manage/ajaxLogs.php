@@ -113,7 +113,7 @@ $l->addActionItem(
 $l->disableFirstColumnActionLink();
 $l->setParamInfo($list_params);
 $l->setItemCount($count);
-$l->setNavBar(new AjaxNavBar($count, $filter));
+$l->setNavBar(new AjaxNavBar($count, $filter, "updateSearchParamLogs"));
 $l->start = 0;
 $l->end = $maxperpage;
 $l->display();
