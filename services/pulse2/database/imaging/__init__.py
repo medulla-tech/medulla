@@ -604,11 +604,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = 0
         if type == P2IM.ALL or type == P2IM.BOOTSERVICE:
             q1 = session.query(MenuItem).add_entity(BootService).select_from(self.menu_item.join(self.boot_service_in_menu).join(self.boot_service))
-            q1 = q1.filter(and_(self.menu_item.c.fk_menu == menu_id, self.boot_service.c.desc.like('%'+filter+'%'))).count()
+            q1 = q1.filter(and_(self.menu_item.c.fk_menu == menu_id, self.boot_service.c.default_desc.like('%'+filter+'%'))).count()
             q += q1
         if type == P2IM.ALL or type == P2IM.IMAGE:
             q2 = session.query(MenuItem).add_entity(Image).select_from(self.menu_item.join(self.image_in_menu).join(self.image))
-            q2 = q2.filter(and_(self.menu_item.c.fk_menu == menu_id, self.boot_service.c.desc.like('%'+filter+'%'))).count()
+            q2 = q2.filter(and_(self.menu_item.c.fk_menu == menu_id, self.boot_service.c.default_desc.like('%'+filter+'%'))).count()
             q += q2
         session.close()
         return q
@@ -689,7 +689,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 .outerjoin(self.entity).outerjoin(self.target))
         q = q.filter(or_(self.target.c.uuid == target_uuid, self.boot_service_on_imaging_server.c.fk_boot_service == None))
         if filter != '':
-            q = q.filter(or_(self.boot_service.c.desc.like('%'+filter+'%'), self.boot_service.c.value.like('%'+filter+'%')))
+            q = q.filter(or_(self.boot_service.c.default_desc.like('%'+filter+'%'), self.boot_service.c.value.like('%'+filter+'%')))
         return q
 
     def __EntityBootServices(self, session, loc_id, filter):
@@ -700,7 +700,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 .outerjoin(self.entity))
         q = q.filter(or_(self.entity.c.uuid == loc_id, self.boot_service_on_imaging_server.c.fk_boot_service == None))
         if filter != '':
-            q = q.filter(or_(self.boot_service.c.desc.like('%'+filter+'%'), self.boot_service.c.value.like('%'+filter+'%')))
+            q = q.filter(or_(self.boot_service.c.default_desc.like('%'+filter+'%'), self.boot_service.c.value.like('%'+filter+'%')))
         return q
 
     def __PossibleBootServiceAndMenuItem(self, session, bs_ids, menu_id):
