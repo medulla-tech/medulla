@@ -386,14 +386,14 @@ INSERT INTO ImagingLogState (id, label) VALUES (6, "postinstall");
 INSERT INTO ImagingLogState (id, label) VALUES (7, "error");
 INSERT INTO ImagingLogState (id, label) VALUES (8, "delete");
 
-INSERT INTO ImagingLogLevel (id, label) VALUES (0, "LOG_EMERG");
-INSERT INTO ImagingLogLevel (id, label) VALUES (1, "LOG_ALERT");
-INSERT INTO ImagingLogLevel (id, label) VALUES (2, "LOG_CRIT");
-INSERT INTO ImagingLogLevel (id, label) VALUES (3, "LOG_ERR");
-INSERT INTO ImagingLogLevel (id, label) VALUES (4, "LOG_WARNING");
-INSERT INTO ImagingLogLevel (id, label) VALUES (5, "LOG_NOTICE");
-INSERT INTO ImagingLogLevel (id, label) VALUES (6, "LOG_INFO");
-INSERT INTO ImagingLogLevel (id, label) VALUES (7, "LOG_DEBUG");
+INSERT INTO ImagingLogLevel (label) VALUES ("LOG_EMERG");
+INSERT INTO ImagingLogLevel (label) VALUES ("LOG_ALERT");
+INSERT INTO ImagingLogLevel (label) VALUES ("LOG_CRIT");
+INSERT INTO ImagingLogLevel (label) VALUES ("LOG_ERR");
+INSERT INTO ImagingLogLevel (label) VALUES ("LOG_WARNING");
+INSERT INTO ImagingLogLevel (label) VALUES ("LOG_NOTICE");
+INSERT INTO ImagingLogLevel (label) VALUES ("LOG_INFO");
+INSERT INTO ImagingLogLevel (label) VALUES ("LOG_DEBUG");
 
 INSERT INTO Protocol (label) VALUES ("nfs");
 INSERT INTO Protocol (label) VALUES ("tftp");
