@@ -36,16 +36,16 @@ if (isset($_GET['gid']) && $_GET['gid'] != '') {
     $target_name = $_GET['hostname'];
 }
 
+function getTargetImage($type, $gid, $uuid) {
+    if ($type == 'group') {
+        $all = xmlrpc_getProfileImages($gid);
+    } else {
+        $all = xmlrpc_getComputerImages($uuid);
+    }
+    return $all;
+}
 if (($type == '' && xmlrpc_isComputerRegistered($target_uuid)) || ($type == 'group' && xmlrpc_isProfileRegistered($target_uuid)))  {
 
-    if ($type == 'group') {
-        $all = xmlrpc_getProfileImages($_GET['gid']);
-    } else {
-        $all = xmlrpc_getComputerImages($_GET['uuid']);
-    }
-
-    $images = $all['images'];
-    $masters = $all['masters'];
 
     if(isset($_GET['mod']))
         $mod = $_GET['mod'];
@@ -54,6 +54,9 @@ if (($type == '' && xmlrpc_isComputerRegistered($target_uuid)) || ($type == 'gro
 
     switch($mod) {
         case 'edit':
+            $all = getTargetImage($type, $_GET['gid'], $_GET['uuid']);
+            $images = $all['images'];
+            $masters = $all['masters'];
             image_edit($type, $images, $masters);
             break;
         case 'add':
@@ -64,9 +67,9 @@ if (($type == '' && xmlrpc_isComputerRegistered($target_uuid)) || ($type == 'gro
             break;
         default:
             if (empty($type)) {
-                image_list($type, "Available images", $images);
+                image_list($type, "Available images");
             }
-            image_list($type, "Available masters", $masters, false);
+            image_list($type, "Available masters", false);
             break;
     }
 } else {
@@ -202,7 +205,7 @@ function image_edit($type, $images, $masters) {
     }
 }
 
-function image_list($type, $title, $images, $actions=true) {
+function image_list($type, $title, $actions=true) {
     $params = getParams();
     if (!$actions) {
         $params['master'] = True;

@@ -137,10 +137,10 @@ $l->addExtraInfo($a_size, _T("Size (compressed)", "imaging"));
 $l->addExtraInfo($a_inbootmenu, _T("In boot menu", "imaging"));
 $l->addActionItemArray($addActions);
 
-/* TODO!    $l->addActionItem(
+$l->addActionItem(
         new ActionPopupItem(_T("Create bootable iso", "imaging"),
         "images_iso", "backup", "image", "base", "computers")
-    );*/
+);
 
 // if not in boot menu
 if ($actions) {

@@ -110,6 +110,10 @@ function xmlrpc_moveItemUpInMenu4Location($loc_id, $item_uuid) {
 }
 
 /* Images */
+function xmlrpc_imagingServerISOCreate($image_uuid, $size, $title) {
+    return xmlCall("imaging.imagingServerISOCreate", array($image_uuid, $size, $title));
+}
+
 function xmlrpc_getComputerImages($id, $start = 0, $end = -1, $filter = '') {
     return xmlCall("imaging.getComputerImages", array($id, $start, $end, $filter));
 }

@@ -24,47 +24,64 @@
  */
 
 include('modules/imaging/includes/includes.php');
+include('modules/imaging/includes/xmlrpc.inc.php');
 
 $id = $_GET['itemid'];
 $label = urldecode($_GET['itemlabel']);
 $params = getParams();
 
-if(isset($_GET['gid'])) 
+if(isset($_GET['gid']))
     $type = 'group';
 else
     $type = '';
 
 if ($_POST) {
     $label = $_POST['label'];
-    // create iso
-    // ...
-    $str = "<h2>"._("Create iso from master")."</h2>";
-    $str .= "<p>";
-    $str .= sprintf(_("Iso of master <strong>%s</strong> has been launched in background."), $label);
-    $str .= "</p><p>";
-    $str .= sprintf(_("The files will be stored in the directory %s of the server at the end of the backup."), $isopath);
-    $str .= "</p><p>";
-    $str .= _("Please go to the status page to check the iso creation status.");
-    $str .= "</p><p>";
-    $str .= _("This operation will last according to the amount of data of the master.");
-    $str .= "</p>";
+    $title = $_POST['title'];
+    $size = $_POST['media'];
+    $image_uuid = $_POST['itemid'];
 
-    new NotifyWidgetSuccess($str);
-    header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
+    $ret = xmlrpc_imagingServerISOCreate($image_uuid, $size, $title);
+    // goto images list
+    if ($ret[0] and !isXMLRPCError()) {
+        $str = "<h2>"._T("Create iso from master", "imaging")."</h2>";
+        $str .= "<p>";
+        $str .= sprintf(_T("Iso of master <strong>%s</strong> has been launched in background.", "imaging"), $label);
+        $str .= "</p><p>";
+        $str .= sprintf(_T("The files will be stored in the directory %s of the server at the end of the backup.", "imaging"), $isopath); # TODO get the path
+        $str .= "</p><p>";
+        $str .= _T("Please go to the status page to check the iso creation status.", "imaging");
+        $str .= "</p><p>";
+        $str .= _T("This operation will last according to the amount of data of the master.", "imaging");
+        $str .= "</p>";
+
+        new NotifyWidgetSuccess($str);
+        header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
+    } elseif ($ret[0]) {
+        header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
+    } else {
+        new NotifyWidgetFailure($ret[1]);
+    }
 }
 
 ?>
 <h2><?= sprintf(_T("Create iso for <strong>%s</strong>", "imaging"), $label) ?></h2>
 <form action="<?=urlStr("base/computers/images_iso",$params)?>" method="post">
-<p>Please select media size. If your data exceeds the volume size, 
+<table>
+<tr><td><?= _T('Title', 'imaging'); ?></td><td> <input name="title" type="text" value="" /></td></tr>
+<tr><td colspan="2">
+<p>Please select media size. If your data exceeds the volume size,
 several files of your media size will be created.</p>
-<?= _("Media size"); ?>
+</td></tr>
+<tr><td><?= _T("Media size", "imaging"); ?></td><td>
 <select name="media" />
 <option value="600">CD (650 Mo)</option>
 <option value="4200">DVD (4.7 Go)</option>
 </select>
+</td></tr></table>
 <br/><br/>
-<input name="label" type="hidden" value="<?=$label?>" />
-<input name="bgo" type="submit" class="btnPrimary" value="<?= _("Launch backup"); ?>" />
+<input name="label" type="hidden" value="<?=$label;?>" />
+<input name="itemid" type="hidden" value="<?=$id;?>" />
+<input name="bgo" type="submit" class="btnPrimary" value="<?= _T("Launch backup", "imaging"); ?>" />
 <input name="bback" type="submit" class="btnSecondary" value="<?= _("Cancel"); ?>" onclick="new Effect.Fade('popup'); return false;" />
 </form>

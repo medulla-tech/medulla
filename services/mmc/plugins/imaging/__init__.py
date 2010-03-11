@@ -295,6 +295,42 @@ class RpcProxy(RpcProxyI):
         return db.moveItemDownInMenu4Location(loc_id, mi_uuid)
 
     ###### IMAGES
+    def imagingServerISOCreate(self, image_uuid, size, title):
+        """
+        Call the pserver to create an ISO image corresponding to a Pulse 2 image.
+        The ISO image is bootable and allows to auto-restore the Pulse 2 image
+        to a computer hard disk.
+        For now, the creation process is started as a background process.
+
+        @param image_uuid: UUID of the Pulse 2 image to convert to an ISO
+        @type image_uuid: str
+        @param size: media size, in bytes
+        @type size: int
+        @param title: title of the image, in UTF-8
+        @type title: str
+        @return: True if the creation process started
+        @rtype: boolean
+        """
+        db = ImagingDatabase()
+        logger = logging.getLogger()
+        image, imaging_server = db.getImageAndImagingServer(image_uuid)
+
+        i = ImagingApi(imaging_server.url.encode('utf8'))
+        if i == None:
+            logger.error("couldn't initialize the ImagingApi to %s"%(imaging_server.url))
+            return [False, "couldn't initialize the ImagingApi to %s"%(imaging_server.url)]
+
+        def treatResult(results, image = image, logger = logger):
+            if results:
+                logger.debug("ISO was created for image %s"%(image.uuid))
+                return [results, "ISO was created for image %s"%(image.uuid)]
+            else:
+                logger.info("ISO wasn't created for image %s, look in the package server logs for more informations."%(image.uuid))
+                return [results, "ISO wasn't created for image %s, look in the package server logs for more informations."%(image.uuid)]
+        d = i.imagingServerISOCreate(image.uuid, size, title)
+        d.addCallback(treatResult)
+        return d
+
     def __getTargetImages(self, id, target_type, start = 0, end = -1, filter = ''):
         # be careful the end is used for each list (image and master)
         db = ImagingDatabase()

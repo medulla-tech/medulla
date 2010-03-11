@@ -1657,6 +1657,20 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return q
 
+    def getImageAndImagingServer(self, uuid, session = None):
+        session_need_to_close = False
+        if session == None:
+            session_need_to_close = True
+            session = create_session()
+        q = session.query(Image).add_entity(ImagingServer).select_from(self.imaging_server \
+                .join(self.image_on_imaging_server) \
+                .join(self.image) \
+        ).filter(self.image.c.id == uuid2id(uuid)).first()
+
+        if session_need_to_close:
+            session.close()
+        return q
+
     def getImageImagingServer(self, uuid, session = None):
         session_need_to_close = False
         if session == None:

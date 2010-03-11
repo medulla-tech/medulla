@@ -318,6 +318,14 @@ class Imaging(Pulse2Api):
         d.addErrback(self.onErrorRaise, "Imaging:imagingServerImageDelete", image_uuid)
         return d
 
+    def imagingServerISOCreate(self, image_uuid, size, title):
+        """
+        Create an ISO image corresponding to a Pulse 2 image.
+        """
+        d = self.callRemote("imagingServerISOCreate", image_uuid, size, title)
+        d.addErrback(self.onErrorRaise, "Imaging:imagingServerISOCreate", image_uuid, size, title)
+        return d
+
 class ImagingApi(Imaging):
 # need to get a PackageApiManager, it will manage a PackageApi for each mirror
 # defined in the conf file.
