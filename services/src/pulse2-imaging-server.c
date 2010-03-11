@@ -149,7 +149,7 @@ void logClientActivity(char *mac, int priority, char *phase,
 
     snprintf(prio, 2, "%d", priority);
 
-    if (mysystem(5, gPathLogAction, mac, prio, phase, buf) == 0) {
+    if (mysystem(5, gPathLogAction, mac, prio, phase, buf) != 0) {
         /* FIXME : we should send back a NAK */
     }
 }
@@ -274,11 +274,14 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         char buffer[100 * 1024];
         char filename[256];
         int buffer_len = 0;
+
+        logClientActivity(mac, LOG_WARNING, "boot", "'client just booted'");
         if (analyseresult(mysystem(2, gPathBootClient, mac))) {
             /* Fixme : We Should also send back a NAK */
             return 0;
         }
 
+        logClientActivity(mac, LOG_INFO, "inventory", "'inventory sent'");
         /* write inventory to a temporary file. Must fit in one packet ! */
         snprintf(filename, 255, "/tmp/inventory.pulse2.%s.XXXXXX", smac);
 
@@ -287,6 +290,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             snprintf(msg, 256, "can't create %s", filename);
             myLogger(msg);
             free(msg);
+            logClientActivity(mac, LOG_WARNING, "inventory", "'inventory not received'");
             return 0;
         }
         buffer_len = snprintf(buffer, 100 * 1024,
@@ -298,6 +302,9 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
 
         if (analyseresult(mysystem(3, gPathProcessInventory, mac, filename))) {
             // FIXME : we should also send back a NAK
+            logClientActivity(mac, LOG_WARNING, "inventory", "'inventory not injected'");
+        } else {
+            logClientActivity(mac, LOG_INFO, "inventory", "'inventory injected'");
         }
         unlink(filename);
         return 0;
@@ -318,9 +325,11 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
                  ntohs(si_other->sin_port), mac, hostname);
         myLogger(buff);
         if (analyseresult(mysystem(4, gPathCreateClient, mac, hostname, pass))) {
-            strncpy(answ, "OK", 40);
-        } else {
             strncpy(answ, "KO", 40);
+            logClientActivity(mac, LOG_INFO, "menu", "'identified'");
+        } else {
+            strncpy(answ, "OK", 40);
+            logClientActivity(mac, LOG_WARNING, "menu", "'not identified'"); // stupid : I'm not in database !
         }
 
         // FIXME : n time, we should also send back an ACK/ NACK by decommenting the following line
@@ -335,11 +344,14 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         char filename[256];
         snprintf(filename, 255, "/tmp/uuid.pulse2.%s.XXXXXX", smac);
 
+        logClientActivity(mac, LOG_INFO, "backup", "'asked an image UUID'");
+
         if (!(fo = mkstemp(filename))) {        // can't create .inf file
             char *msg = malloc(256);
             snprintf(msg, 256, "can't create %s", filename);
             myLogger(msg);
             free(msg);
+            logClientActivity(mac, LOG_WARNING, "backup", "'failed to obtain an image UUID'");
             return 0;
         }
         close(fo);
@@ -359,6 +371,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             sendto(s, name, strlen(name) + 1 , MSG_NOSIGNAL,
                    (struct sockaddr *)si_other, sizeof(*si_other));
             free(name);
+            logClientActivity(mac, LOG_INFO, "backup", "'obtained an image UUID'");
         }
         return 0;
     }
@@ -367,6 +380,8 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         char uuid[36];
         snprintf(uuid, 36 + 1, "%s", buf + 1);
         mysystem(3, gPathEndImage, mac, uuid);
+        // TODO : check previous command result
+        logClientActivity(mac, LOG_INFO, "backup", "'backup done'");
         return 0;
     }
     // Ask to change the default boot menu
@@ -374,6 +389,8 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         char item[16];
         snprintf(item, 16, "%d", buf[1]);
         mysystem(3, gPathChangeDefault, mac, item);
+        // TODO : check previous command result
+        logClientActivity(mac, LOG_INFO, "menu", "'changed default entry'");
         return 0;
     }
     // log data
@@ -455,11 +472,14 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         // create a temporary file to get our hostname
         snprintf(filename, 255, "/tmp/hostname.pulse2.%s.XXXXXX", smac);
 
+        logClientActivity(mac, LOG_INFO, "boot", "'client asked its hostname'");
+
         if (!(fo = mkstemp(filename))) {        // can't create .inf file
             char *msg = malloc(256);
             snprintf(msg, 256, "can't create %s", filename);
             myLogger(msg);
             free(msg);
+            logClientActivity(mac, LOG_WARNING, "boot", "'failed to send hostname'");
             return 0;
         }
         close(fo);
@@ -479,6 +499,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             sendto(s, name, strlen(name) + 1 , MSG_NOSIGNAL,
                    (struct sockaddr *)si_other, sizeof(*si_other));
             free(name);
+            logClientActivity(mac, LOG_INFO, "boot", "'hostname sent'");
         }
         return 0;
     }
@@ -488,11 +509,14 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         // create a temporary file to get our UUID
         snprintf(filename, 255, "/tmp/uuid.pulse2.%s.XXXXXX", smac);
 
+        logClientActivity(mac, LOG_INFO, "boot", "'client asked its uuid'");
+
         if (!(fo = mkstemp(filename))) {        // can't create .inf file
             char *msg = malloc(256);
             snprintf(msg, 256, "can't create %s", filename);
             myLogger(msg);
             free(msg);
+            logClientActivity(mac, LOG_WARNING, "boot", "'failed to send uuid'");
             return 0;
         }
         close(fo);
@@ -512,6 +536,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             sendto(s, name, strlen(name) + 1 , MSG_NOSIGNAL,
                    (struct sockaddr *)si_other, sizeof(*si_other));
             free(name);
+            logClientActivity(mac, LOG_INFO, "boot", "'UUID sent'");
         }
         return 0;
     }
