@@ -90,12 +90,13 @@ foreach ($db_logs as $log) {
 
     // complete status display
     $led = new LedElement($logStates[$status][1]);
-    $status = $led->value.'&nbsp;'.$logStates[$status][0];
+    $status = $logStates[$status][0];
+    //$status = $led->value.'&nbsp;'.$logStates[$status][0];
 
     $a_level[] = $log['imaging_log_level'];
     $a_date[] = $date;
     $a_target[] = $log['target']['name'];
-    $a_desc[]= $log['detail'];
+    $a_desc[]= $status.') '.$log['detail'];
     $a_states[]= $status;
     $param["uuid"] = $log['target']['uuid'];
     $param["hostname"] = $log['target']['name'];
