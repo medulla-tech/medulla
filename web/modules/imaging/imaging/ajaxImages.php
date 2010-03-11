@@ -50,7 +50,7 @@ $displayMaster = isset($_GET['master']);
 $start = empty($_GET["start"])              ? 0              : $_GET["start"];
 $end = empty($_GET["end"])                  ? $maxperpage    : $_GET["end"];
 $filter = empty($_GET["filter"])            ? ''             : $_GET['filter'];
-$action = !$displayMaster;
+$actions = !$displayMaster;
 
 if ($type == 'group') {
     $all = xmlrpc_getProfileImages($_GET['gid'], $start, $end, $filter);
@@ -156,7 +156,7 @@ if ($actions) {
 
 $l->disableFirstColumnActionLink();
 $l->setItemCount($count);
-$l->setNavBar(new AjaxNavBar($count, $filter));
+$l->setNavBar(new AjaxNavBar($count, $filter, "updateSearchParamform".($actions?'image':'master')));
 $l->start = 0;
 $l->end = $maxperpage;
 $l->display();
