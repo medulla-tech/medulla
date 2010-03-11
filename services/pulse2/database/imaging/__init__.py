@@ -29,7 +29,7 @@ Database class for imaging
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 from pulse2.database.imaging.types import P2ISS, P2IT, P2IM, P2IIK, P2ERR, P2ILL
 
-from sqlalchemy import create_engine, ForeignKey, Integer, MetaData, Table, Column, and_, or_
+from sqlalchemy import create_engine, ForeignKey, Integer, MetaData, Table, Column, and_, or_, desc
 from sqlalchemy.orm import create_session, mapper
 
 import logging
@@ -632,6 +632,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def getImagingLogs4Location(self, location_uuid, start, end, filter):
         session = create_session()
         n = self.__ImagingLogs4Location(session, location_uuid, filter)
+        n = n.order_by(desc(self.imaging_log.c.timestamp))
         if end != -1:
             n = n.offset(int(start)).limit(int(end)-int(start))
         else:
@@ -665,6 +666,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def getImagingLogsOnTargetByIdAndType(self, target_id, type, start, end, filter):
         session = create_session()
         q = self.__ImagingLogsOnTargetByIdAndType(session, target_id, type, filter)
+        q = q.order_by(desc(self.imaging_log.c.timestamp))
         if end != -1:
             q = q.offset(int(start)).limit(int(end)-int(start))
         else:
