@@ -20,6 +20,7 @@
 # along with Pulse 2. If not, see <http://www.gnu.org/licenses/>.
 #
 
+
 """
 This module is dedicated to analyse inventories sent by a Pulse 2 Client.
 The original inventory is sent using one line per kind of
@@ -42,11 +43,12 @@ NUMCPU_RE   = re.compile("^S4:([0-9]+)$") # CPU number
 FEATCPU_RE  = re.compile("^C:(.*)$") # CPU features, comma-separated
 FREQCPU_RE  = re.compile("^F:([0-9]+)$") # CPU frequency
 
+
 class BootInventory:
     """
         Class holding one inventory.
 
-        Two functions of interrest :
+        Two functions of interest :
           - load() => fill this object using data from the client
           - dump() => dump a struct representing the object
 
@@ -67,7 +69,7 @@ class BootInventory:
     # enclosure basic infos
     enclos_info     = {'vendor': '', 'type': ''}
     # memory slot used
-    memslot_info    = { 'size' : 0, 'ff': 0, 'location': '', 'type': '', 'speed': 0 }
+    memslot_info    = {'size' : 0, 'ff': 0, 'location': '', 'type': '', 'speed': 0}
     # number of (logical) CPU, f.e 4 on a core 2 Duo
     numcpu_info     = 0
     # CPu features, to be interpreted (that's a infamous 26 bytes array)
@@ -81,13 +83,26 @@ class BootInventory:
     unprocessed     = []
 
     def __init__(self, data = None):
+        """
+        Object creator
+
+        @param data : the initial inventory data
+        """
         if data != None :
             self.load(data)
 
     def __str__(self):
+        """
+        Return a string version of this object
+        """
         return self.dump().__str__()
 
     def load(self, data):
+        """
+        Load the inventory data nito the object
+
+        @param data : the inventory data
+        """
         current_disk = None # track the disk we are reading
 
         for line in data: # process line per line
@@ -116,8 +131,7 @@ class BootInventory:
                     "vendor": vendor,
                     "device" : device,
                     "class" : cl,
-                    "subclass" : subcl
-                }
+                    "subclass" : subcl}
                 continue
 
             mo = re.match(DISKINFO_RE, line)
@@ -132,8 +146,7 @@ class BootInventory:
                     "H" : h,
                     "S" : s,
                     "size" : sz,
-                    "parts" : dict()
-                }
+                    "parts" : dict()}
                 current_disk = num
                 continue
 
@@ -146,8 +159,7 @@ class BootInventory:
                 self.disk_info[current_disk]['parts'][num] = {
                     'type' : t,
                     'start' : s,
-                    'length' : l
-                }
+                    'length' : l}
                 continue
 
             mo = re.match(BIOSINFO_RE, line)
@@ -210,7 +222,9 @@ class BootInventory:
             self.unprocessed.append(line) # finally, store lines which didn't match
 
     def dump(self):
-
+        """
+        Return a dict with this object values
+        """
         return {
             'mem'       : self.mem_info,
             'bus'       : self.bus_info,
@@ -223,5 +237,4 @@ class BootInventory:
             'featcpu'   : self.featcpu_info,
             'freqcpu'   : self.freqcpu_info,
             'macaddr'   : self.macaddr_info,
-            'ipaddr'    : self.ipaddr_info
-        }
+            'ipaddr'    : self.ipaddr_info}
