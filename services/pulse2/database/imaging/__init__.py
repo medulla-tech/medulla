@@ -1033,7 +1033,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = q.select_from(self.image.join(self.image_on_imaging_server).join(self.imaging_server).join(self.entity).join(self.target, self.target.c.fk_entity == self.entity.c.id).join(self.mastered_on, self.mastered_on.c.fk_image == self.image.c.id).join(self.imaging_log, self.imaging_log.c.id == self.mastered_on.c.fk_imaging_log))
         q = q.filter(self.target.c.uuid == target_uuid) # , or_(self.image.c.is_master == True, and_(self.image.c.is_master == False, )))
         if filter != '':
-            q = q.filter(or_(self.image.c.desc.like('%'+filter+'%'), self.image.c.value.like('%'+filter+'%')))
+            q = q.filter(or_(self.image.c.desc.like('%'+filter+'%'), self.image.c.name.like('%'+filter+'%')))
         if is_master == P2IIK.IS_MASTER_ONLY:
             q = q.filter(self.image.c.is_master == True)
         elif is_master == P2IIK.IS_IMAGE_ONLY:
@@ -1466,7 +1466,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def __TargetImagesQuery(self, session, target_uuid, type, filter):
         q = session.query(Image).add_entity(MenuItem)
         q = q.select_from(self.image.join(self.image_on_imaging_server).join(self.imaging_server).join(self.entity).join(self.target).join(self.image_in_menu).join(self.menu_item))
-        q = q.filter(and_(self.target.c.uuid == target_uuid, or_(self.image.c.desc.like('%'+filter+'%'), self.image.c.value.like('%'+filter+'%'))))
+        q = q.filter(and_(self.target.c.uuid == target_uuid, or_(self.image.c.desc.like('%'+filter+'%'), self.image.c.name.like('%'+filter+'%'))))
         return q
 
     def __TargetImagesNoMaster(self, session, target_uuid, type, filter):
@@ -1483,7 +1483,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def __ImagesInEntityQuery(self, session, entity_uuid, filter):
         q = session.query(Image).add_entity(MenuItem)
         q = q.select_from(self.image.join(self.image_on_imaging_server).join(self.imaging_server).join(self.entity).outerjoin(self.image_in_menu).outerjoin(self.menu_item))
-        q = q.filter(and_(self.entity.c.uuid == entity_uuid, or_(self.image.c.desc.like('%'+filter+'%'), self.image.c.value.like('%'+filter+'%'))))
+        q = q.filter(and_(self.entity.c.uuid == entity_uuid, or_(self.image.c.desc.like('%'+filter+'%'), self.image.c.name.like('%'+filter+'%'))))
         return q
 
     def __ImagesInEntityNoMaster(self, session, target_uuid, type, filter):
