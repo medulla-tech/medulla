@@ -35,7 +35,7 @@ require("modules/pulse2/includes/locations_xmlrpc.inc.php");
 if(!isset($params))
     $params = array();
 
-$p = new PageGenerator(_T("Locations", "imaging"));
+$p = new PageGenerator();
 $sidemenu->setBackgroundImage("modules/imaging/graph/images/section_large.png");
 $p->setSideMenu($sidemenu);
 $p->display();
@@ -54,10 +54,10 @@ if (isset($_POST['bsync'])) {
     $ret = xmlrpc_synchroLocation($_POST['location_uuid']);
     // goto images list
     if ((is_array($ret) and $ret[0] or !is_array($ret) and $ret) and !isXMLRPCError()) {
-        $str = sprintf(_T("Synchronization launched on this location.", "imaging"), $label);
+        $str = sprintf(_T("Synchronization launched on this entity.", "imaging"), $label);
         new NotifyWidgetSuccess($str);
     } elseif (!$ret[0] and !isXMLRPCError()) {
-        new NotifyWidgetFailure(sprintf(_T("Synchronization failed for : %s", "imaging"), implode(', ', $ret[1])));
+        new NotifyWidgetFailure(sprintf(_T("Synchronization failed for entity: %s", "imaging"), implode(', ', $ret[1])));
     }
 }
 

@@ -65,12 +65,13 @@ $t = new TitleElement(_T("Associate an entity to an imaging server", "imaging"))
 $t->display();
 
 // show images list
-$l = new ListInfos($a_label, _T("Label", "imaging"));
+$l = new ListInfos($a_label, _T("Name", "imaging"));
 $l->setParamInfo($list_params);
 $l->addExtraInfo($a_desc, _T("Description", "imaging"));
-$l->addExtraInfo($a_uuid, _T("UUID", "imaging"));
+$l->addExtraInfo($a_uuid, _T("Identifier", "imaging"));
 $l->addActionItemArray($addActions);
 $l->disableFirstColumnActionLink();
+$l->setTableHeaderPadding(1);
 $l->display();
 
 ?>

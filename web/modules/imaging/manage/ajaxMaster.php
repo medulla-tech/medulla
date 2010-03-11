@@ -74,7 +74,7 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
     $t->display();
 
     // show images list
-    $l = new ListInfos($a_label, _T("Label"));
+    $l = new ListInfos($a_label, _T("Label", "imaging"));
     $l->setParamInfo($list_params);
     $l->addExtraInfo($a_desc, _T("Description", "imaging"));
     $l->addExtraInfo($a_date, _T("Created", "imaging"));
@@ -94,6 +94,7 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
         "master_delete", "delete", "master", "imaging", "manage")
     );
 
+    $l->setTableHeaderPadding(1);
     $l->disableFirstColumnActionLink();
     $l->display();
 

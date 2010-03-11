@@ -148,6 +148,7 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
         $l->addActionItemArray($actionsUp);
         $l->addActionItemArray($actionsDown);
         $l->addActionItem(new ActionItem(_T("Edit"), "bootmenu_edit", "edit", "item", "imaging", "manage"));
+        $l->setTableHeaderPadding(1);
         $l->disableFirstColumnActionLink();
         $l->display();
     }

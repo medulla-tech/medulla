@@ -36,13 +36,13 @@ $location = getCurrentLocation();
 
 if (xmlrpc_doesLocationHasImagingServer($location)) {
     list($count, $services) = xmlrpc_getLocationBootServices($location);
-    
+
     // forge params
     $params = getParams();
     $addAction = new ActionPopupItem(_T("Add service to default boot menu", "imaging"), "service_add", "addbootmenu", "master", "imaging", "manage");
     $delAction = new ActionPopupItem(_T("Remove service from default boot menu", "imaging"), "service_del", "delbootmenu", "master", "imaging", "manage");
     $addActions = array();
-    
+
     $a_label = array();
     $a_desc = array();
     $a_in_boot_menu = array();
@@ -58,16 +58,16 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
         } else {
             $addActions[] = $delAction;
         }
-    
+
         $a_label[]= sprintf("%s%s", ($script['is_local']?'':'X) '), $entry['default_name']);
         $a_desc[]= $entry['default_desc'];
         $a_in_boot_menu[]= (isset($entry['menu_item'])? True:False);
     }
-    
-    
+
+
     $t = new TitleElement(_T("Manage services", "imaging"));
     $t->display();
-    
+
     // show images list
     $l = new ListInfos($a_label, _T("Label", "imaging"));
     $l->setParamInfo($list_params);
@@ -79,6 +79,7 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
         new ActionItem(_T("Edit service", "imaging"), 
         "service_edit", "edit", "master", "imaging", "manage")
     );*/
+    $l->setTableHeaderPadding(1);
     $l->disableFirstColumnActionLink();
     $l->display();
 } else {
