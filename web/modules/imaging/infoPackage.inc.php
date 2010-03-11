@@ -176,6 +176,10 @@ if (!empty($submod)) {
     $page->setFile("modules/imaging/imaging/ajaxStatus.php");
     $page->setOptions(array("AJAX" => True, "visible" => False));
     $submod->addPage($page);
+    $page = new Page("ajaxImages");
+    $page->setFile("modules/imaging/imaging/ajaxImages.php");
+    $page->setOptions(array("AJAX" => True, "visible" => False));
+    $submod->addPage($page);
     $page = new Page("ajaxLogs");
     $page->setFile("modules/imaging/imaging/ajaxLogs.php");
     $page->setOptions(array("AJAX" => True, "visible" => False));

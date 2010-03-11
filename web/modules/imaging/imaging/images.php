@@ -203,9 +203,10 @@ function image_edit($type, $images, $masters) {
 }
 
 function image_list($type, $title, $images, $actions=true) {
-
     $params = getParams();
-
+    if (!$actions) {
+        $params['master'] = True;
+    }
 
     // show title
     if($title) {
@@ -213,99 +214,11 @@ function image_list($type, $title, $images, $actions=true) {
         $t->display();
     }
 
-    $addActions = array();
-    $addAction = new ActionPopupItem(_T("Add image to boot menu", "imaging"), "addimage", "addbootmenu", "image", "base", "computers", null, 300, "add");
-    $delAction = new ActionPopupItem(_T("Remove from boot menu", "imaging"), "bootmenu_remove", "delbootmenu", "item", "base", "computers", $type."tabbootmenu", 300, "delete");
-    $emptyAction = new EmptyActionItem();
-    $destroyAction = new ActionPopupItem(_T("Delete the image", "imaging"), "images_delete", "delete", "image", "base", "computers", $type."tabimages", 300, "delete");
-    $showImAction = new ActionPopupItem(_T("Show target using that image", "imaging"), "showtarget", "showtarget", "image", "base", "computers");
-
-    $editActions = array();
-    $editAction = new ActionItem(_T("Edit image", "imaging"), "imgtabs", "edit", "image", "base", "computers", $type."tabimages", "edit");
-
-    // forge params
-    list($count, $images) = $images;
-
-    $i = -1;
-
-    $params['from'] = 'tabimages';
-    $a_desc = array();
-    $a_desc = array();
-    $a_date = array();
-    $a_size = array();
-    $a_inbootmenu = array();
-    $a_destroy = array();
-    $l_im = array();
-    foreach ($images as $image) {
-        $i += 1;
-
-        $name = $image['name'];
-        $list_params[$i] = $params;
-        $list_params[$i]["itemid"] = $image['imaging_uuid'];
-        $list_params[$i]["itemlabel"] = urlencode($name);
-        $list_params[$i]["target_uuid"] = $_GET['target_uuid'];
-
-        // don't show action if image is in bootmenu
-        if(!isset($image['menu_item'])) {
-            $addActions[] = $addAction;
-        } else {
-            $addActions[] = $delAction;
-            $list_params[$i]['mi_itemid'] = $image['menu_item']['imaging_uuid'];
-        }
-
-        if ($_GET['target_uuid'] == $image['mastered_on_target_uuid']) {
-            $editActions[] = $editAction;
-        } else {
-            $editActions[] = $emptyAction;
-        }
-
-        # TODO no label in image!
-        $a_label[] = $name;
-        $a_desc[] = $image['desc'];
-        $a_date[] = _toDate($image['creation_date']);
-        $a_size[] = humanReadable($image['size']);
-        $a_inbootmenu[] = (isset($image['menu_item'])?True:False);
-        $l_im[] = array($image['imaging_uuid'], $_GET['target_uuid'], $type);
-    }
-
-    if (!$actions) {
-        if (count($l_im) != 0) {
-            $ret = xmlrpc_areImagesUsed($l_im);
-            foreach ($images as $image) {
-                if ($ret[$image['imaging_uuid']]) {
-                    $a_destroy[] = $showImAction;
-                } else {
-                    $a_destroy[] = $destroyAction;
-                }
-            }
-        }
-    }
-
-    // show images list
-    $l = new ListInfos($a_label, _T("Label"));
-    $l->setParamInfo($list_params);
-    $l->addExtraInfo($a_desc, _T("Description", "imaging"));
-    $l->addExtraInfo($a_date, _T("Created", "imaging"));
-    $l->addExtraInfo($a_size, _T("Size (compressed)", "imaging"));
-    $l->addExtraInfo($a_inbootmenu, _T("In boot menu", "imaging"));
-    $l->addActionItemArray($addActions);
-/* TODO!    $l->addActionItem(
-        new ActionPopupItem(_T("Create bootable iso", "imaging"),
-        "images_iso", "backup", "image", "base", "computers")
-    );*/
-    // if not in boot menu
-    if ($actions) {
-        $l->addActionItem(
-            new ActionItem(_T("Edit image", "imaging"),
-            "imgtabs", "edit", "image", "base", "computers", $type."tabimages", "edit")
-        );
-        $l->addActionItem($destroyAction);
-    } else {
-        $l->addActionItemArray($editActions);
-        $l->addActionItemArray($a_destroy);
-    }
-    $l->disableFirstColumnActionLink();
-    $l->display();
+    $ajax = new AjaxFilter("modules/imaging/imaging/ajaxImages.php", "container".($actions?'image':'master'), $params, "form".($actions?'image':'master'));
+    //$ajax->setRefresh(10000);
+    $ajax->display();
+    echo '<br/><br/><br/>';
+    $ajax->displayDivToUpdate();
 }
 
 
