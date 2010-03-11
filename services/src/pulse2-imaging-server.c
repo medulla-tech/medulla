@@ -275,13 +275,13 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         char filename[256];
         int buffer_len = 0;
 
-        logClientActivity(mac, LOG_WARNING, "boot", "'client just booted'");
+        logClientActivity(mac, LOG_DEBUG, "menu", "'Boot menu shown'");
         if (analyseresult(mysystem(2, gPathBootClient, mac))) {
             /* Fixme : We Should also send back a NAK */
             return 0;
         }
 
-        logClientActivity(mac, LOG_INFO, "inventory", "'inventory sent'");
+        logClientActivity(mac, LOG_DEBUG, "inventory", "'Hardware Inventory sent'");
         /* write inventory to a temporary file. Must fit in one packet ! */
         snprintf(filename, 255, "/tmp/inventory.pulse2.%s.XXXXXX", smac);
 
@@ -290,7 +290,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             snprintf(msg, 256, "can't create %s", filename);
             myLogger(msg);
             free(msg);
-            logClientActivity(mac, LOG_WARNING, "inventory", "'inventory not received'");
+            logClientActivity(mac, LOG_WARNING, "inventory", "'Hardware Inventory not received'");
             return 0;
         }
         buffer_len = snprintf(buffer, 100 * 1024,
@@ -302,9 +302,9 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
 
         if (analyseresult(mysystem(3, gPathProcessInventory, mac, filename))) {
             // FIXME : we should also send back a NAK
-            logClientActivity(mac, LOG_WARNING, "inventory", "'inventory not injected'");
+            logClientActivity(mac, LOG_WARNING, "inventory", "'Hardware Inventory not injected'");
         } else {
-            logClientActivity(mac, LOG_INFO, "inventory", "'inventory injected'");
+            logClientActivity(mac, LOG_INFO, "inventory", "'Hardware Inventory Updated'");
         }
         unlink(filename);
         return 0;
@@ -325,11 +325,11 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
                  ntohs(si_other->sin_port), mac, hostname);
         myLogger(buff);
         if (analyseresult(mysystem(4, gPathCreateClient, mac, hostname, pass))) {
+            logClientActivity(mac, LOG_WARNING, "menu", "'Client not identified'"); // stupid : I'm not in database !
             strncpy(answ, "KO", 40);
-            logClientActivity(mac, LOG_INFO, "menu", "'identified'");
         } else {
+            logClientActivity(mac, LOG_INFO, "menu", "'Client Identified'");
             strncpy(answ, "OK", 40);
-            logClientActivity(mac, LOG_WARNING, "menu", "'not identified'"); // stupid : I'm not in database !
         }
 
         // FIXME : n time, we should also send back an ACK/ NACK by decommenting the following line
@@ -344,14 +344,14 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         char filename[256];
         snprintf(filename, 255, "/tmp/uuid.pulse2.%s.XXXXXX", smac);
 
-        logClientActivity(mac, LOG_INFO, "backup", "'asked an image UUID'");
+        logClientActivity(mac, LOG_DEBUG, "backup", "'Asked an image UUID'");
 
         if (!(fo = mkstemp(filename))) {        // can't create .inf file
             char *msg = malloc(256);
             snprintf(msg, 256, "can't create %s", filename);
             myLogger(msg);
             free(msg);
-            logClientActivity(mac, LOG_WARNING, "backup", "'failed to obtain an image UUID'");
+            logClientActivity(mac, LOG_WARNING, "backup", "'Failed to obtain an image UUID'");
             return 0;
         }
         close(fo);
@@ -371,7 +371,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             sendto(s, name, strlen(name) + 1 , MSG_NOSIGNAL,
                    (struct sockaddr *)si_other, sizeof(*si_other));
             free(name);
-            logClientActivity(mac, LOG_INFO, "backup", "'obtained an image UUID'");
+            logClientActivity(mac, LOG_INFO, "backup", "'Obtained an image UUID : %s'", name);
         }
         return 0;
     }
@@ -381,7 +381,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         snprintf(uuid, 36 + 1, "%s", buf + 1);
         mysystem(3, gPathEndImage, mac, uuid);
         // TODO : check previous command result
-        logClientActivity(mac, LOG_INFO, "backup", "'backup done'");
+        logClientActivity(mac, LOG_INFO, "backup", "'Image Done'");
         return 0;
     }
     // Ask to change the default boot menu
@@ -390,35 +390,35 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         snprintf(item, 16, "%d", buf[1]);
         mysystem(3, gPathChangeDefault, mac, item);
         // TODO : check previous command result
-        logClientActivity(mac, LOG_INFO, "menu", "'changed default entry'");
+        logClientActivity(mac, LOG_INFO, "menu", "'Toggled default entry'");
         return 0;
     }
     // log data
     if (buf[0] == 0x4C) {       // 0x4C = 'L' as in Log
         switch (buf[1]) {
         case '0':
-            logClientActivity(mac, LOG_INFO, "boot", "'booted'");
+            logClientActivity(mac, LOG_INFO, "boot", "'Booted'");
             break;
         case '1':
             logClientActivity(mac, LOG_INFO, "menu",
-                              "'executing menu entry %d'", buf[2]);
+                              "'Executed menu entry %d'", buf[2]);
             break;
         case '2':
             if (buf[2] == '-') {
                 logClientActivity(mac, LOG_INFO, "restoration",
-                                  "'restoration started (%s)'", &buf[3]);
+                                  "'Started restoration : %s'", &buf[3]);
             } else {
                 logClientActivity(mac, LOG_INFO, "restoration",
-                                  "'restoration started'");
+                                  "'Started restoration'");
             }
             break;
         case '3':
             if (buf[2] == '-') {
                 logClientActivity(mac, LOG_INFO, "restoration",
-                                  "'restoration completed (%s)'", &buf[3]);
+                                  "'Finished restoration : %s'", &buf[3]);
             } else {
                 logClientActivity(mac, LOG_INFO, "restoration",
-                                  "'restoration completed'");
+                                  "'Finished restoration'");
             }
             lasttime = 0;       /* reset MTFTP time barriers */
             lastfile = 0;
@@ -426,16 +426,16 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         case '4':
             if (buf[2] == '-') {
                 logClientActivity(mac, LOG_INFO, "backup",
-                                  "'backup started (%s)'", &buf[3]);
+                                  "'Backup started : %s'", &buf[3]);
             } else {
-                logClientActivity(mac, LOG_INFO, "backup", "'backup started'");
+                logClientActivity(mac, LOG_INFO, "backup", "'Backup started'");
             }
             break;
         case '5':
             if (buf[2] == '-') {
 
                 logClientActivity(mac, LOG_INFO, "backup",
-                                  "'backup completed (%s)'", &buf[3]);
+                                  "'Backup completed : %s'", &buf[3]);
                 // TODO : handle this pserver side
                 //MDV/NR if (sscanf((char*)&buf[3], "Local-%d", &bn) == 1) {
                 //MDV/NR // Local backup
@@ -448,19 +448,19 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
                 //MDV/NR }
             } else {
                 logClientActivity(mac, LOG_INFO, "backup",
-                                  "'backup completed'");
+                                  "'Backup completed'");
             }
             break;
         case '6':
             logClientActivity(mac, LOG_INFO, "postinstall",
-                              "'postinstall started'");
+                              "'Postinstall started'");
             break;
         case '7':
             logClientActivity(mac, LOG_INFO, "postinstall",
-                              "'postinstall completed'");
+                              "'Postinstall completed'");
             break;
         case '8':
-            logClientActivity(mac, LOG_INFO, "error", "'critical error'");
+            logClientActivity(mac, LOG_ERROR, "error", "'critical error'");
             break;
 
         }
