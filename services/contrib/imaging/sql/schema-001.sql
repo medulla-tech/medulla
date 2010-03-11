@@ -430,10 +430,10 @@ INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `valu
 INSERT INTO Menu (id, default_name, fk_name, timeout, background_uri, message, fk_default_item, fk_default_item_WOL, fk_protocol) VALUES (1, "Default Boot Menu", 1, 60, "/##PULSE2_BOOTLOADER_DIR##/##PULSE2_BOOTSPLASH_FILE##", "-- Warning! Your PC is being backed up or restored. Do not reboot !", NULL, NULL, 1);
 INSERT INTO Menu (id, default_name, fk_name, timeout, background_uri, message, fk_default_item, fk_default_item_WOL, fk_protocol) VALUES (2, "Suscribe Boot Menu", 12, 60, "/##PULSE2_BOOTLOADER_DIR##/##PULSE2_BOOTSPLASH_FILE##", "-- Warning! Your PC is being backed up or restored. Do not reboot !", NULL, NULL, 1);
 
-INSERT INTO MenuItem (id, `order`, hidden, hidden_WOL, fk_menu) VALUES (1, 1, 0, 0, 1);
-INSERT INTO MenuItem (id, `order`, hidden, hidden_WOL, fk_menu) VALUES (2, 2, 0, 0, 1);
-INSERT INTO MenuItem (id, `order`, hidden, hidden_WOL, fk_menu) VALUES (3, 1, 0, 0, 2);
-INSERT INTO MenuItem (id, `order`, hidden, hidden_WOL, fk_menu) VALUES (4, 2, 0, 0, 2);
+INSERT INTO MenuItem (id, `order`, hidden, hidden_WOL, fk_menu) VALUES (1, 0, 0, 0, 1);
+INSERT INTO MenuItem (id, `order`, hidden, hidden_WOL, fk_menu) VALUES (2, 1, 0, 0, 1);
+INSERT INTO MenuItem (id, `order`, hidden, hidden_WOL, fk_menu) VALUES (3, 0, 0, 0, 2);
+INSERT INTO MenuItem (id, `order`, hidden, hidden_WOL, fk_menu) VALUES (4, 1, 0, 0, 2);
 
 INSERT INTO BootServiceInMenu (fk_bootservice, fk_menuitem) VALUES (1, 1);
 INSERT INTO BootServiceInMenu (fk_bootservice, fk_menuitem) VALUES (3, 2);
