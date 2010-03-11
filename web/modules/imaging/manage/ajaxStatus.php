@@ -41,7 +41,7 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
 ?>
 
 <br/>
-<h2><?=_T('Server status in entity', 'imaging')?></h2>
+<h2><?=_T('Server status for this entity', 'imaging')?></h2>
 
 <div class="status">
     <div class="status_block">
@@ -64,9 +64,10 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
         ?>
     </div>-->
     <div class="status_block">
-        <h3><?=_T('Imaging stats', 'imaging')?></h3>
-        <p class="stat"><img src="img/machines/icn_machinesList.gif" /> <strong><?=$short_status['rescue'];?></strong>/<?=$short_status['total'];?> clients have a rescue image</p>
-        <p class="stat"><img src="img/common/cd.png" /> <strong><?=$short_status['master'];?></strong> masters are available</p>
+        <h3><?=_T('Stats', 'imaging')?></h3>
+          <p class="stat"><img src="img/machines/icn_machinesList.gif" /> <strong><?=$short_status['rescue'];?></strong>/<?=$short_status['total'];?> <?=_T("clients have a rescue image")?></p>                                                       <p class="stat"><img src="img/common/cd.png" />
+          <strong><?=$short_status['master'];?></strong>
+          <?=_T("masters are available", "imaging")?>
     </div>
 </div>
 
