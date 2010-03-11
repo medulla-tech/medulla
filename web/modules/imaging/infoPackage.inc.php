@@ -188,6 +188,10 @@ if (!empty($submod)) {
     $page->setFile("modules/imaging/imaging/ajaxMaster.php");
     $page->setOptions(array("AJAX" => True, "visible" => False));
     $submod->addPage($page);
+    $page = new Page("ajaxMasterLevel2");
+    $page->setFile("modules/imaging/imaging/ajaxMasterLevel2.php");
+    $page->setOptions(array("AJAX" => True, "visible" => False));
+    $submod->addPage($page);
     $page = new Page("ajaxService");
     $page->setFile("modules/imaging/imaging/ajaxService.php");
     $page->setOptions(array("AJAX" => True, "visible" => False));

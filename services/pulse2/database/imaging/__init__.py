@@ -1046,7 +1046,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def __EntityImages(self, session, loc_id, filter):
         q = session.query(Image).add_column(self.image.c.id)
         q = q.select_from(self.image.join(self.image_on_imaging_server).join(self.imaging_server).join(self.entity))
-        q = q.filter(and_(self.entity.c.uuid == loc_id, self.image.c.is_master == True))
+        q = q.filter(and_(self.entity.c.uuid == loc_id, self.image.c.is_master == True, or_(self.image.c.name.like('%'+filter+'%'), self.image.c.desc.like('%'+filter+'%'))))
         return q
 
     def __PossibleImageAndMenuItem(self, session, bs_ids, menu_id):
