@@ -62,7 +62,18 @@ if (($type == '' && xmlrpc_isComputerRegistered($target_uuid)) || ($type == 'gro
         }
     }
 
-    function service_list($type, $menu, $count, $target_uuid) {
+    function service_list($type, $menu, $count, $target_uuid, $target_name) {
+        $params = getParams();
+        $params['target_uuid'] = $target_uuid;
+        $params['target_type'] = $type;
+        $params['target_name'] = $target_name;
+
+        $ajax = new AjaxFilter("modules/imaging/imaging/ajaxServices.php", "Level2", $params, "Level2");
+        //$ajax->setRefresh(10000);
+        $ajax->display();
+        echo '<br/><br/><br/>';
+        $ajax->displayDivToUpdate();
+        /*
         $params = getParams();
 
         $addActions = array();
@@ -104,14 +115,14 @@ if (($type == '' && xmlrpc_isComputerRegistered($target_uuid)) || ($type == 'gro
         $l->addActionItemArray($addActions);
         $l->disableFirstColumnActionLink();
         $l->display();
-
+         */
     }
     switch($mod) {
         case 'add':
             service_add($type, $menu, $target_uuid);
             break;
         default:
-            service_list($type, $menu, $count, $target_uuid);
+            service_list($type, $menu, $count, $target_uuid, $target_name);
             break;
     }
 

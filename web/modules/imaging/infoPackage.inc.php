@@ -196,6 +196,10 @@ if (!empty($submod)) {
     $page->setFile("modules/imaging/imaging/ajaxService.php");
     $page->setOptions(array("AJAX" => True, "visible" => False));
     $submod->addPage($page);
+    $page = new Page("ajaxServiceLevel2");
+    $page->setFile("modules/imaging/imaging/ajaxServiceLevel2.php");
+    $page->setOptions(array("AJAX" => True, "visible" => False));
+    $submod->addPage($page);
     $page = new Page("ajaxBootmenu");
     $page->setFile("modules/imaging/imaging/ajaxBootmenu.php");
     $page->setOptions(array("AJAX" => True, "visible" => False));
