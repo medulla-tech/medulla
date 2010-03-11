@@ -408,20 +408,29 @@ INSERT INTO SynchroState (label) VALUES ("DONE");
 INSERT INTO SynchroState (label) VALUES ("RUNNING");
 INSERT INTO SynchroState (label) VALUES ("INIT_ERROR");
 
-INSERT INTO Internationalization (id, fk_language, label) VALUES (1, 2, "Menu par défaut");
-INSERT INTO Internationalization (id, fk_language, label) VALUES (2, 2, "Continuer le démarrage normalement");
-INSERT INTO Internationalization (id, fk_language, label) VALUES (3, 2, "Démarrer comme d'habitude");
-INSERT INTO Internationalization (id, fk_language, label) VALUES (4, 2, "Ajouter comme client Pulse 2");
-INSERT INTO Internationalization (id, fk_language, label) VALUES (5, 2, "Enregistrer ce poste auprès du server Pulse 2");
-INSERT INTO Internationalization (id, fk_language, label) VALUES (6, 2, "Créer une image");
-INSERT INTO Internationalization (id, fk_language, label) VALUES (7, 2, "Réaliser une image de ce poste");
-INSERT INTO Internationalization (id, fk_language, label) VALUES (8, 2, "Démarrage sans disque");
-INSERT INTO Internationalization (id, fk_language, label) VALUES (9, 2, "Charger un environnement sans disque et obtenir une invite de commande");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (01, 2, "Menu par défaut");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (02, 2, "Continuer le démarrage normalement");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (03, 2, "Démarrer comme d''habitude");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (04, 2, "Ajouter comme client Pulse 2");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (05, 2, "Enregistrer ce poste auprès du server Pulse 2");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (06, 2, "Créer une image");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (07, 2, "Réaliser une image de ce poste");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (08, 2, "Démarrage sans disque");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (09, 2, "Charger un environnement sans disque et obtenir une invite de commande");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (10, 2, "Test mémoire");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (11, 2, "Réaliser une vérification complète de la mémoire");
-INSERT INTO Internationalization (id, fk_language, label) VALUES (12, 2, "Menu d'inscription d'un ordinateur");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (12, 2, "Menu d''inscription d''un ordinateur");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (13, 2, "Inscrit la date dans C:\\date.txt");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (14, 2, "Copie du fichier sysprep.inf sur C:\\");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (15, 2, "Changement à la fois le SID et le Netbios");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (16, 2, "Éteindre le client apres restoration");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (17, 2, "Shell de debug");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (18, 2, "La seule et unique partition FAT ou EXT2 sera étendue à l''intégralité du disque dur");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (19, 2, "La seule et unique partition NTFS sera étendue à l''intégralité du disque dur");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (20, 2, "Installer le Pack d''agents Pulse 2");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (21, 2, "RAID1 synchro pour chipset ICH5 du 1er disque vers le 2ème");
 
-INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (1, "Continue Normal Startup", "Start as usual", 1, 2, "root (hd0)\r\nchainloader +1");
+INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (1, "Continue Normal Startup", "Start as usual", 1, 2, "root (hd0)\nchainloader +1");
 INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (2, "Register as Pulse 2 Client", "Record this computer in Pulse 2 Server", 3, 4, "identify L=##PULSE2_LANG## P=none\nreboot");
 INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (3, "Create a backup", "Create a backup of this computer", 5, 6, "kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## revosavedir=##PULSE2_MASTERS_DIR## revoinfodir=##PULSE2_COMPUTERS_DIR## revobase=##PULSE2_BASE_DIR## quiet\ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##");
 INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (4, "Diskless Boot", "Load diskless environment then get a prompt", 7, 8, "kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## revodebug revobase=##PULSE2_BASE_DIR## quiet\ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##");
@@ -429,6 +438,16 @@ INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `valu
 
 INSERT INTO Menu (id, default_name, fk_name, timeout, background_uri, message, fk_default_item, fk_default_item_WOL, fk_protocol) VALUES (1, "Default Boot Menu", 1, 60, "/##PULSE2_BOOTLOADER_DIR##/##PULSE2_BOOTSPLASH_FILE##", "-- Warning! Your PC is being backed up or restored. Do not reboot !", NULL, NULL, 1);
 INSERT INTO Menu (id, default_name, fk_name, timeout, background_uri, message, fk_default_item, fk_default_item_WOL, fk_protocol) VALUES (2, "Suscribe Boot Menu", 12, 60, "/##PULSE2_BOOTLOADER_DIR##/##PULSE2_BOOTSPLASH_FILE##", "-- Warning! Your PC is being backed up or restored. Do not reboot !", NULL, NULL, 1);
+
+INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (01, "Date",                 "Write the current date in file C:\\date.txt",                                          NULL, 13, "Mount 1\n\ndate | unix2dos >> /mnt/date.txt\n");
+INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (02, "Sysprep",              "Copy sysprep.inf on C:\\",                                                              NULL, 14, "Mount 1\nCopySysprepInf /revoinfo/sysprep.inf\n");
+INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (03, "SID",                  "Change both SID and Netbios name",                                                     NULL, 15, "Mount 1\nChangeSIDAndName");
+INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (04, "Shutdown",             "Halt client",                                                                          NULL, 16, "halt\n");
+INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (05, "Debug",                "Debug Shell",                                                                          NULL, 17, "sh </dev/console >/dev/console\n");
+INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (06, "Partition extention",  "The first (and only) FAT or EXT2 partition will be extend across the whole disk.",     NULL, 18, "ResizeMax 1\n");
+INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (07, "NTFS Resize",          "The first (and only) NTFS partition will be extend across the whole disk.",            NULL, 19, "NtfsResizeMax 1\n");
+INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (08, "Agent Pack",           "Install the Pulse 2 Agent Pack (VNC, OpenSSH, OCS Inventory and the SSH key).",        NULL, 20, "Mount 1\n\nmkdir -p /mnt/tmp\n\ncp /opt/winutils/setupssh.exe /mnt/tmp\ncp /opt/winutils/tightvncssh.exe /mnt/tmp\ncp /revoinfo/data/id_dsa.pub /mnt\n\necho -en 'cd c:\\tmp\\nsetupssh.exe /S\\ntightvncssh.exe /sp- /silent /norestart\\ndel c:\\tmp\\setupssh.exe' | unix2dos > /mnt/tmp/setup.bat\n\nRegistryAddRunOnce 'c:\tmp\setup.bat'\n");
+INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (09, "ICH 5 sync",           "RAID1 synchronization for ICH5 chipsets, duplicate the first disk on the second one",  NULL, 21, "/opt/bin/dd_rescue -b 10485760 /dev/sda /dev/sdb\n");
 
 INSERT INTO MenuItem (id, `order`, hidden, hidden_WOL, fk_menu) VALUES (1, 0, 0, 0, 1);
 INSERT INTO MenuItem (id, `order`, hidden, hidden_WOL, fk_menu) VALUES (2, 1, 0, 0, 1);
