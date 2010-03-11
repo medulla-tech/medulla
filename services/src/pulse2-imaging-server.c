@@ -460,7 +460,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
                               "'Postinstall completed'");
             break;
         case '8':
-            logClientActivity(mac, LOG_ERROR, "error", "'critical error'");
+            logClientActivity(mac, LOG_ERR, "error", "'critical error'");
             break;
 
         }
