@@ -36,6 +36,7 @@ else
     $type = '';
 
 if ($_POST) {
+    $isopath = "/tmp";
     $label = $_POST['label'];
     $title = $_POST['title'];
     $size = $_POST['media'];
@@ -75,8 +76,9 @@ several files of your media size will be created.</p>
 </td></tr>
 <tr><td><?= _T("Media size", "imaging"); ?></td><td>
 <select name="media" />
-<option value="600">CD (650 Mo)</option>
-<option value="4200">DVD (4.7 Go)</option>
+<option value="681574400">CD (650 Mo)</option>
+<option value="734003200">CD (700 Mo)</option>
+<option value="5046586572">DVD (4.7 Go)</option>
 </select>
 </td></tr></table>
 <br/><br/>
