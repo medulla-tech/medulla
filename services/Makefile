@@ -70,12 +70,8 @@ install-imaging-server:
 	$(INSTALL) -m 755 -o root -g root init.d/pulse2-imaging-server $(DESTDIR)$(INITDIR)
 	$(SED) -i 's!##SBINDIR##!$(SBINDIR)!g' $(DESTDIR)$(INITDIR)/pulse2-imaging-server
 
-	@echo "Installing default material ..."
-	$(INSTALL) -m 755 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(ETCDIR)/pulse2/pulse2-imaging-server
-	$(INSTALL) -m 755 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) conf/pulse2/imaging-server/imaging-server.ini $(ETCDIR)/pulse2/pulse2-imaging-server
-
 	@echo "Installing config files ..."
 	$(INSTALL) -m 755 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(ETCDIR)/pulse2/pulse2-imaging-server
-	$(INSTALL) -m 755 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) conf/pulse2/imaging-server/imaging-server.ini $(ETCDIR)/pulse2/pulse2-imaging-server
+	$(INSTALL) -m 755 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) conf/pulse2/imaging-server/imaging-server.ini $(ETCDIR)/pulse2/imaging-server
 
 .PHONY: src
