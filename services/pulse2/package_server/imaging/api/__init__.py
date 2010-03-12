@@ -67,6 +67,7 @@ class ImagingApi(MyXmlrpc):
         self.myUUIDCache = UUIDCache()
         # FIXME: un-comment me later :)
         # self.check()
+        self.init()
 
     def check(self):
         """
@@ -90,6 +91,31 @@ class ImagingApi(MyXmlrpc):
                                  self.config.imaging_api[optname])
             if not os.path.isfile(fpath):
                 raise ValueError, "File '%s' does not exists. Please check option '%s' in your configuration file." % (fpath, optname)
+
+    def init(self):
+        """
+        Perform package server internals initialization, if needed.
+        For now, we only set the package server default computer register menu.
+        """
+
+        def _cbDefaultMenu(menu):
+            self.logger.debug('Default computer boot menu received.')
+            self.logger.debug(menu)
+            try:
+                imb = ImagingDefaultMenuBuilder(self.config, menu)
+                m = imb.make()
+                m.write()
+                self.logger.info('Default computer boot menu successfully written')
+            except Exception, e:
+                self.logger.exception('Error while setting default computer menu: %s', e)
+        def _errDefaultMenu(error):
+            self.logger.error("Error while setting default computer boot menu: %s" % error)
+
+        self.logger.debug('Starting package server internals initialization')
+        client = self._getXMLRPCClient()
+        func = 'imaging.getDefaultMenuForRegistering'
+        d = client.callRemote(func)
+        d.addCallbacks(_cbDefaultMenu, _errDefaultMenu)
 
     def _getXMLRPCClient(self):
         """
