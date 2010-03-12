@@ -63,7 +63,7 @@ function packages_to_install () {
         then
         PKGS="$PKGS lib${ARCH}python2.4-devel libldap2.3_0-devel"
     fi
-    if [ $RELEASE == "2010.0" ];
+    if [ $RELEASE == "2010.0" -o $RELEASE == "2009.0" ];
         then
         # The python-sqlalchemy lib must be installed manually because we are
         # compatible only with version 0.4, and 2010.0 provides version 0.5.
@@ -72,7 +72,7 @@ function packages_to_install () {
 
     # MySQL
     PKGS="$PKGS mysql mysql-client"
-    if [ $RELEASE == "2010.0" ];
+    if [ $RELEASE == "2010.0" -o $RELEASE == "2009.0" ];
         then
         PKGS="$PKGS python-mysql"
     fi
