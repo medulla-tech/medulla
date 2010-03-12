@@ -51,7 +51,7 @@ NOAUTHNEEDED = ['computerRegister',
                 'imageRegister',
                 'logClientAction',
                 'injectInventory',
-                'getDefaultMenuForSuscription',
+                'getDefaultMenuForRegistering',
                 'linkImagingServerToLocation',
                 'computerChangeDefaultMenuItem']
 
@@ -2208,9 +2208,10 @@ class RpcProxy(RpcProxyI):
         # TODO !
         return [True, True]
 
-    def getDefaultMenuForSuscription(self):
+    def getDefaultMenuForRegistering(self):
         """
-        Called by the Package Server to get the default menu used by computers to subscribe from the database.
+        Called by the Package Server to get the default menu used by computers
+        to subscribe from the database.
 
         @results: give the default menu for subscription (Menu.id == 2)
         @rtype: dict
