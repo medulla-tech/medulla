@@ -58,6 +58,14 @@ pushd $PULSE2/tests/scripts
 ./install.sh
 popd
 
+# Install Pulse 2 imaging client
+svn co http://mds.mandriva.org/svn/mmc-projects/pulse2/client/imaging/trunk pulse2-client-imaging
+export PULSE2IMAGINGCLIENT="$TMPCO/pulse2-client-imaging"
+pushd $PULSE2IMAGINGCLIENT/tests/scripts
+./install.sh
+popd
+
+
 # Call makefile target if specified
 if [ ! -z "$1" ];
     then
