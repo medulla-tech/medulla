@@ -73,7 +73,7 @@ class ImagingDefaultMenuBuilder:
         m.setSplashImage(self.menu['background_uri'])
         m.setMessage(self.menu['message'])
         m.setTimeout(self.menu['timeout'])
-        m.setDefaultItem(self.menu['default_item'])
+        m.setDefaultItem(int(self.menu['default_item']))
         m.setProtocol(self.menu['protocol'])
         for pos, entry in self.menu['bootservices'].items():
             m.addBootServiceEntry(int(pos), entry)
