@@ -325,7 +325,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
                  ntohs(si_other->sin_port), mac, hostname);
         myLogger(buff);
         if (analyseresult(mysystem(4, gPathCreateClient, mac, hostname, pass))) {
-            logClientActivity(mac, LOG_WARNING, "menu", "'Client not identified'"); // stupid : I'm not in database !
+            logClientActivity(mac, LOG_WARNING, "menu", "'Client not Identified'"); // stupid : I'm not in database !
             strncpy(answ, "KO", 40);
         } else {
             logClientActivity(mac, LOG_INFO, "menu", "'Client Identified'");
@@ -489,7 +489,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             sendto(s, name, strlen(name) + 1 , MSG_NOSIGNAL,
                    (struct sockaddr *)si_other, sizeof(*si_other));
             free(name);
-            logClientActivity(mac, LOG_INFO, "boot", "'Obtained its hostname'");
+            logClientActivity(mac, LOG_INFO, "boot", "'Obtained its hostname : %s'", name);
         }
         return 0;
     }
@@ -526,7 +526,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             sendto(s, name, strlen(name) + 1 , MSG_NOSIGNAL,
                    (struct sockaddr *)si_other, sizeof(*si_other));
             free(name);
-            logClientActivity(mac, LOG_INFO, "boot", "'Obtained its UUID'");
+            logClientActivity(mac, LOG_INFO, "boot", "'Obtained its UUID : %s'", name);
         }
         return 0;
     }
