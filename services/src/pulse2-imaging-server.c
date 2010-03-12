@@ -275,7 +275,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         char filename[256];
         int buffer_len = 0;
 
-        logClientActivity(mac, LOG_DEBUG, "menu", "'Boot menu shown'");
+        logClientActivity(mac, LOG_DEBUG, "boot", "'Boot menu shown'");
         if (analyseresult(mysystem(2, gPathBootClient, mac))) {
             /* Fixme : We Should also send back a NAK */
             return 0;
@@ -460,7 +460,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
                               "'Postinstall completed'");
             break;
         case '8':
-            logClientActivity(mac, LOG_ERR, "error", "'critical error'");
+            logClientActivity(mac, LOG_ERR, "error", "'Critical error'");
             break;
 
         }
@@ -472,14 +472,14 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         // create a temporary file to get our hostname
         snprintf(filename, 255, "/tmp/hostname.pulse2.%s.XXXXXX", smac);
 
-        logClientActivity(mac, LOG_INFO, "boot", "'client asked its hostname'");
+        logClientActivity(mac, LOG_INFO, "boot", "'Asked its hostname'");
 
         if (!(fo = mkstemp(filename))) {        // can't create .inf file
             char *msg = malloc(256);
             snprintf(msg, 256, "can't create %s", filename);
             myLogger(msg);
             free(msg);
-            logClientActivity(mac, LOG_WARNING, "boot", "'failed to send hostname'");
+            logClientActivity(mac, LOG_WARNING, "boot", "'Failed to obtain its hostname'");
             return 0;
         }
         close(fo);
@@ -499,7 +499,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             sendto(s, name, strlen(name) + 1 , MSG_NOSIGNAL,
                    (struct sockaddr *)si_other, sizeof(*si_other));
             free(name);
-            logClientActivity(mac, LOG_INFO, "boot", "'hostname sent'");
+            logClientActivity(mac, LOG_INFO, "boot", "'Obtained its hostname'");
         }
         return 0;
     }
@@ -509,14 +509,14 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         // create a temporary file to get our UUID
         snprintf(filename, 255, "/tmp/uuid.pulse2.%s.XXXXXX", smac);
 
-        logClientActivity(mac, LOG_INFO, "boot", "'client asked its uuid'");
+        logClientActivity(mac, LOG_INFO, "boot", "'Asked its UUID'");
 
         if (!(fo = mkstemp(filename))) {        // can't create .inf file
             char *msg = malloc(256);
             snprintf(msg, 256, "can't create %s", filename);
             myLogger(msg);
             free(msg);
-            logClientActivity(mac, LOG_WARNING, "boot", "'failed to send uuid'");
+            logClientActivity(mac, LOG_WARNING, "boot", "'Failed to obtain its UUID'");
             return 0;
         }
         close(fo);
@@ -536,7 +536,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             sendto(s, name, strlen(name) + 1 , MSG_NOSIGNAL,
                    (struct sockaddr *)si_other, sizeof(*si_other));
             free(name);
-            logClientActivity(mac, LOG_INFO, "boot", "'UUID sent'");
+            logClientActivity(mac, LOG_INFO, "boot", "'Obtained its UUID'");
         }
         return 0;
     }
