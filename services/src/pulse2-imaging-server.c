@@ -400,33 +400,27 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             logClientActivity(mac, LOG_INFO, "boot", "'Booted'");
             break;
         case '1':
-            logClientActivity(mac, LOG_INFO, "menu",
-                              "'Executed menu entry %d'", buf[2]);
+            logClientActivity(mac, LOG_INFO, "menu", "'Executed menu entry %d'", buf[2]);
             break;
         case '2':
             if (buf[2] == '-') {
-                logClientActivity(mac, LOG_INFO, "restoration",
-                                  "'Started restoration : %s'", &buf[3]);
+                logClientActivity(mac, LOG_INFO, "restoration", "'Started restoration : %s'", &buf[3]);
             } else {
-                logClientActivity(mac, LOG_INFO, "restoration",
-                                  "'Started restoration'");
+                logClientActivity(mac, LOG_INFO, "restoration", "'Started restoration'");
             }
             break;
         case '3':
             if (buf[2] == '-') {
-                logClientActivity(mac, LOG_INFO, "restoration",
-                                  "'Finished restoration : %s'", &buf[3]);
+                logClientActivity(mac, LOG_INFO, "restoration", "'Finished restoration : %s'", &buf[3]);
             } else {
-                logClientActivity(mac, LOG_INFO, "restoration",
-                                  "'Finished restoration'");
+                logClientActivity(mac, LOG_INFO, "restoration", "'Finished restoration'");
             }
             lasttime = 0;       /* reset MTFTP time barriers */
             lastfile = 0;
             break;
         case '4':
             if (buf[2] == '-') {
-                logClientActivity(mac, LOG_INFO, "backup",
-                                  "'Backup started : %s'", &buf[3]);
+                logClientActivity(mac, LOG_INFO, "backup", "'Backup started : %s'", &buf[3]);
             } else {
                 logClientActivity(mac, LOG_INFO, "backup", "'Backup started'");
             }
@@ -434,8 +428,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         case '5':
             if (buf[2] == '-') {
 
-                logClientActivity(mac, LOG_INFO, "backup",
-                                  "'Backup completed : %s'", &buf[3]);
+                logClientActivity(mac, LOG_INFO, "backup", "'Backup completed : %s'", &buf[3]);
                 // TODO : handle this pserver side
                 //MDV/NR if (sscanf((char*)&buf[3], "Local-%d", &bn) == 1) {
                 //MDV/NR // Local backup
@@ -447,17 +440,14 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
                 //MDV/NR system(command);
                 //MDV/NR }
             } else {
-                logClientActivity(mac, LOG_INFO, "backup",
-                                  "'Backup completed'");
+                logClientActivity(mac, LOG_INFO, "backup", "'Backup completed'");
             }
             break;
         case '6':
-            logClientActivity(mac, LOG_INFO, "postinstall",
-                              "'Postinstall started'");
+            logClientActivity(mac, LOG_INFO, "postinstall", "'Postinstall started'");
             break;
         case '7':
-            logClientActivity(mac, LOG_INFO, "postinstall",
-                              "'Postinstall completed'");
+            logClientActivity(mac, LOG_INFO, "postinstall", "'Postinstall completed'");
             break;
         case '8':
             logClientActivity(mac, LOG_ERR, "error", "'Critical error'");
