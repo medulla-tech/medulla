@@ -181,17 +181,17 @@ fi
 cp $TMPCO/pulse2/services/contrib/imaging-server/exports  /etc/exports
 # Set DHCPD conf
 
+# Launch mmc-agent
+/etc/init.d/mmc-agent force-stop
+rm -f /var/run/mmc-agent.pid
+/etc/init.d/mmc-agent start
+
 # Launch all service of Pulse 2
 echo "Launch Pulse 2's services"
 /etc/init.d/pulse2-package-server restart
 /etc/init.d/pulse2-launchers restart
 /etc/init.d/pulse2-scheduler restart
 /etc/init.d/pulse2-imaging-server restart
-
-# Launch mmc-agent
-/etc/init.d/mmc-agent force-stop
-rm -f /var/run/mmc-agent.pid
-/etc/init.d/mmc-agent start
 
 if [ ! -z $TMPREMOVE ];
     then
