@@ -57,7 +57,7 @@ function packages_to_install () {
     PKGS="$PKGS mysql mysql-client"
     if [ $RELEASE == "2010.0" -o $RELEASE == "2009.0" ];
         then
-        PKGS="$PKGS python-mysql nfs-utils nfs-utils-clients aftfp-server atftp-client dhcp-server rdate"
+        PKGS="$PKGS python-mysql nfs-utils nfs-utils-clients aftfp-server atftp-client dhcp-server rdate cdrkit-genisoimage"
     fi
 }
 
