@@ -65,7 +65,7 @@ function packages_to_install () {
     fi
     if [ $RELEASE == "2009.0" ];
 	then
-	$PKGS="$PKGS lib${ARCH}python2.5-devel libldap2.4_2-devel python-setuptools"
+	PKGS="$PKGS lib${ARCH}python2.5-devel libldap2.4_2-devel python-setuptools"
     fi
     if [ $RELEASE == "2010.0" ]; 
         then
