@@ -40,8 +40,10 @@ fi
 service mmc-agent force-stop || true
 rm -f /var/run/mmc-agent.pid
 
-mmc-helper audit droptables || true
-mmc-helper audit drop | mysql
+if which mmc-helper; then
+    mmc-helper audit droptables || true
+    mmc-helper audit drop | mysql
+fi
 
 rm -fr /etc/mmc*
 rm -f /etc/init.d/mmc-agent $PREFIX/sbin/mmc-agent
