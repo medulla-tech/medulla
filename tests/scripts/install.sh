@@ -55,9 +55,9 @@ fi
 function packages_to_install () {
     # MySQL
     PKGS="$PKGS mysql mysql-client"
-    if [ $RELEASE == "2010.0" ];
+    if [ $RELEASE == "2010.0" -o $RELEASE == "2009.0" ];
         then
-        PKGS="$PKGS python-mysql"
+        PKGS="$PKGS python-mysql nfs-utils nfs-utils-clients aftfp-server atftp-client dhcp-server rdate"
     fi
 }
 
@@ -177,11 +177,16 @@ then
     cat /root/.ssh/id_dsa.pub > /root/.ssh/authorized_keys
 fi
 
+# Set NFS exports
+cp $TMPCO/pulse2/services/contrib/imaging-server/exports  /etc/exports
+# Set DHCPD conf
+
 # Launch all service of Pulse 2
 echo "Launch Pulse 2's services"
 /etc/init.d/pulse2-package-server restart
 /etc/init.d/pulse2-launchers restart
 /etc/init.d/pulse2-scheduler restart
+/etc/init.d/pulse2-imaging-server restart
 
 # Launch mmc-agent
 /etc/init.d/mmc-agent force-stop
