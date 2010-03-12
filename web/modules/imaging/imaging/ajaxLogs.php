@@ -66,6 +66,36 @@ $logStates = array(
     "unknow" => array(_T("Status unknow", "imaging"), "black"),
 );
 
+// Should be keepd syn with services/src/pulse2-imaging-server.c !!!
+$logMessages = array(
+   "Boot menu shown" => _T("Boot menu shown", "imaging"),
+   "Hardware Inventory sent" => _T("Hardware Inventory sent", "imaging"),
+   "Hardware Inventory not received" => _T("Hardware Inventory not received", "imaging"),
+   "Hardware Inventory not injected" => _T("Hardware Inventory not injected", "imaging"),
+   "Hardware Inventory Updated" => _T("Hardware Inventory Updated", "imaging"),
+   "Client Identified" => _T("Client not Identified", "imaging"),
+   "Asked an image UUID" => _T("Asked an image UUID", "imaging"),
+   "Failed to obtain an image UUID" => _T("Failed to obtain an image UUID", "imaging"),
+   "Obtained an image UUID" => _T("Obtained an image UUID", "imaging"),
+   "Image Done" => _T("Image Done", "imaging"),
+   "Toggled default entry" => _T("Toggled default entry", "imaging"),
+   "Booted" => _T("Booted", "imaging"),
+   "Executed menu entry" => _T("Executed menu entry", "imaging"),
+   "Started restoration" => _T("Started restoration", "imaging"),
+   "Finished restoration" => _T("Finished restoration", "imaging"),
+   "Backup started" => _T("Backup started", "imaging"),
+   "Backup completed" => _T("Backup completed", "imaging"),
+   "Postinstall started" => _T("Postinstall started", "imaging"),
+   "Postinstall completed" => _T("Postinstall completed", "imaging"),
+   "Critical error" => _T("Critical error", "imaging"),
+   "Asked its hostname" => _T("Asked its hostname", "imaging"),
+   "Failed to obtain its hostname" => _T("Failed to obtain its hostname", "imaging"),
+   "Obtained its hostname" => _T("Obtained its hostname", "imaging"),
+   "Asked its UUID" => _T("Asked its UUID", "imaging"),
+   "Failed to obtain its UUID" => _T("Failed to obtain its UUID", "imaging"),
+   "Obtained its UUID" => _T("Obtained its UUID", "imaging")
+    );
+
 $a_level = array();
 $a_date = array();
 $a_target = array();
@@ -93,10 +123,38 @@ foreach ($db_logs as $log) {
     $status = $logStates[$status][0];
     //$status = $led->value.'&nbsp;'.$logStates[$status][0];
 
+    /*
+     * $log['detail'] can contain :
+     * - either "message"
+     * - or "message : info"
+     * message will be i18n using logMessages
+     * info will be changed (add <a > ...)
+     */
+    $tmp_splitted_result = split(":",  $log['detail'], 2);
+    if (count($tmp_splitted_result) == 1) {
+        if (array_key_exists($tmp_splitted_result[0], $logMessages)) {
+            $details = $logMessages[$tmp_splitted_result[0]];
+        } else {
+            $details = $tmp_splitted_result[0]; # keep untouched
+        }
+    } elseif (count($tmp_splitted_result) == 2) {
+            $tmp_splitted_result[0] = trim($tmp_splitted_result[0]);
+            $tmp_splitted_result[1] = trim($tmp_splitted_result[1]);
+            if (array_key_exists($tmp_splitted_result[0], $logMessages)) {
+                $details = $logMessages[$tmp_splitted_result[0]];
+                $details .= ' : ';
+                $details .= $tmp_splitted_result[1]; // FIXME : this will be enhanced
+            } else {
+                $details = $tmp_splitted_result[0] . ' : ' . $tmp_splitted_result[1]; # keep untouched
+        }
+    } else { # keeps untranlated
+        $details = $log['detail'];
+    }
+
     $a_level[] = $log['imaging_log_level'];
     $a_date[] = $date;
     $a_target[] = $log['target']['name'];
-    $a_desc[]= $status.') '.$log['detail'];
+    $a_desc[]= $status . ' - ' . $details;
     $a_states[]= $status;
     $param["uuid"] = $log['target']['uuid'];
     $param["hostname"] = $log['target']['name'];
