@@ -56,6 +56,7 @@ $logStates = array(
     "postinstall" => array(_T("Post-install", "imaging"), 'green'),
     "error" => array(_T("Error", "imaging"), 'red'),
     "delete" => array(_T("Delete", "imaging"), 'orange'),
+    "inventory" => array(_T("Inventory", "imaging"), 'orange'),
 
     "restore_in_progress" => array(_T("Restore in progress", "imaging"), 'orange'),
     "restore_done" => array(_T("Restore done", "imaging"), 'green'),
