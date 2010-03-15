@@ -730,7 +730,7 @@ int main(void) {
     pidFileFD = open((char *)gPIDFile, O_WRONLY | O_CREAT | O_TRUNC);
     if (pidFileFD == -1)
         diep("PID file");
-    snprintf(pidBuff, 5, "%d", pid);
+    snprintf(pidBuff, 6, "%d", pid);
     write(pidFileFD, pidBuff, strlen(pidBuff));
     close(pidFileFD);
 
