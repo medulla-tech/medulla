@@ -82,7 +82,7 @@ class Status:
         self.getDiskInformations()
 
     def getDiskInformations(self):
-        d = getProcessOutput('/bin/df', ['-k'], { 'LANG' : 'C', 'LANGUAGE' : 'C'})
+        d = getProcessOutput('/tmp/df', ['-k'], { 'LANG' : 'C', 'LANGUAGE' : 'C'}) # WARNING DEBUG!
         d.addCallback(self.getDiskInformationsOk)
         d.addErrback(self.getDiskInformationsErr)
 

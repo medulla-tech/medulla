@@ -648,6 +648,7 @@ class ImagingApi(MyXmlrpc):
         @return: True if it worked, else False
         @rtype: bool
         """
+        return True # WARNING DEBUG!
         if not isUUID(imageUUID):
             self.logger.warn("Bad image UUID %s" % str(imageUUID))
             ret = False

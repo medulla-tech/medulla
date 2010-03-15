@@ -24,7 +24,7 @@
 
 # Variables
 DESC="Pulse2 Package Server : pulse2-package-server"
-DAEMON="##SBINDIR##/pulse2-package-server"
+DAEMON="/usr/sbin/pulse2-package-server"
 PIDFILE="/var/run/pulse2-package-server.pid"
 
 # Function to start daemon

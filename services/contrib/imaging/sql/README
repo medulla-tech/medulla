@@ -5,3 +5,6 @@ As the IMAGING evolve, so does the IMAGING database. This directory contains the
 base schema (schema-001.sql) and subsequents evolutions (schema-xxx.sql).
 
 To obtain a state-of-the-art IMAGING database, juste run the install script.
+
+If you want a French version of different titles and descriptions in the database,
+mysql --default-character-set=utf8 imaging < french-001.sql
