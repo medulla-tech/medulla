@@ -304,7 +304,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             // FIXME : we should also send back a NAK
             logClientActivity(mac, LOG_WARNING, "inventory", "'Hardware Inventory not injected'");
         } else {
-            logClientActivity(mac, LOG_INFO, "inventory", "'Hardware Inventory Updated'");
+            logClientActivity(mac, LOG_INFO, "inventory", "'Hardware Inventory updated'");
         }
         unlink(filename);
         return 0;
