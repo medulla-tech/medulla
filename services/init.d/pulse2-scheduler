@@ -28,7 +28,7 @@
 
 # Variables
 DESC="Pulse2 Scheduler"
-DAEMON="/usr/sbin/pulse2-scheduler-manager"
+DAEMON="##SBINDIR##/pulse2-scheduler-manager"
 
 # Function to start daemon
 start () {
