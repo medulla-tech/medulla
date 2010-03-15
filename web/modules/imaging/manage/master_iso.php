@@ -52,9 +52,9 @@ if ($_POST) {
         $str .= "</p>";
 
         new NotifyWidgetSuccess($str);
-        header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
+        header("Location: " . urlStrRedirect("imaging/manage/master", $params));
     } elseif ($ret[0]) {
-        header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
+        header("Location: " . urlStrRedirect("imaging/manage/master", $params));
     } else {
         new NotifyWidgetFailure($ret[1]);
     }
