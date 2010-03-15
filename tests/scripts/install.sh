@@ -166,6 +166,9 @@ sed -i "6s/^# host =/host = $IPADDRESS/" /etc/mmc/pulse2/package-server/package-
 sed -i "s/# \[imaging_api\]/\[imaging_api\]/" /etc/mmc/pulse2/package-server/package-server.ini
 UUID=`uuidgen`
 sed -i "s/# uuid = PLEASE_PUT_A_UUID_FOR_THAT_SERVER/uuid = $UUID/" /etc/mmc/pulse2/package-server/package-server.ini
+# Copy quick actions
+mkdir -p /var/lib/pulse2/qactions
+cp $TMPCO/pulse2/services/contrib/msc/quick_actions/* /var/lib/pulse2/qactions/
 
 # Config pkgs.ini
 sed -i "s/server = localhost/server = $IPADDRESS/" /etc/mmc/plugins/pkgs.ini
