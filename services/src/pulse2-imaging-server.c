@@ -332,7 +332,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             strncpy(answ, "OK", 40);
         }
 
-        // FIXME : n time, we should also send back an ACK/ NACK by decommenting the following line
+        // FIXME : in time, we should also send back an ACK/ NACK by decommenting the following line
         // sendto(s, answ, strlen(answ) , MSG_NOSIGNAL, (struct sockaddr *)si_other, sizeof(*si_other));
 
         free(answ);
@@ -370,8 +370,8 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             unlink(filename);
             sendto(s, name, strlen(name) + 1 , MSG_NOSIGNAL,
                    (struct sockaddr *)si_other, sizeof(*si_other));
-            free(name);
             logClientActivity(mac, LOG_INFO, "backup", "'Obtained an image UUID : %s'", name);
+            free(name);
         }
         return 0;
     }
@@ -488,8 +488,8 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             unlink(filename);
             sendto(s, name, strlen(name) + 1 , MSG_NOSIGNAL,
                    (struct sockaddr *)si_other, sizeof(*si_other));
-            free(name);
             logClientActivity(mac, LOG_INFO, "boot", "'Obtained its hostname : %s'", name);
+            free(name);
         }
         return 0;
     }
@@ -525,8 +525,8 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             unlink(filename);
             sendto(s, name, strlen(name) + 1 , MSG_NOSIGNAL,
                    (struct sockaddr *)si_other, sizeof(*si_other));
-            free(name);
             logClientActivity(mac, LOG_INFO, "boot", "'Obtained its UUID : %s'", name);
+            free(name);
         }
         return 0;
     }
