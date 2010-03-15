@@ -1428,9 +1428,19 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def delImageToTarget(self, item_uuid, target_uuid):
         session = create_session()
-        mi = session.query(MenuItem).select_from(self.menu_item.join(self.image_in_menu).join(self.image).join(self.menu).join(self.target))
+        mi = session.query(MenuItem).select_from(self.menu_item \
+                .join(self.image_in_menu, self.menu_item.c.id == self.image_in_menu.c.fk_menuitem) \
+                .join(self.image, self.image.c.id == self.image_in_menu.c.fk_image) \
+                .join(self.menu, self.menu.c.id == self.menu_item.c.fk_menu) \
+                .join(self.target, self.target.c.fk_menu == self.menu.c.id) \
+        )
         mi = mi.filter(and_(self.image.c.id == uuid2id(item_uuid), self.target.c.uuid == target_uuid)).first()
-        iim = session.query(ImageInMenu).select_from(self.image_in_menu.join(self.menu_item).join(self.image).join(self.menu).join(self.target))
+        iim = session.query(ImageInMenu).select_from(self.image_in_menu \
+                .join(self.menu_item, self.menu_item.c.id == self.image_in_menu.c.fk_menuitem) \
+                .join(self.image, self.image.c.id == self.image_in_menu.c.fk_image) \
+                .join(self.menu, self.menu.c.id == self.menu_item.c.fk_menu) \
+                .join(self.target, self.target.c.fk_menu == self.menu.c.id) \
+        )
         iim = iim.filter(and_(self.image.c.id == uuid2id(item_uuid), self.target.c.uuid == target_uuid)).first()
 
         menu = session.query(Menu).filter(self.menu.c.id == mi.fk_menu).first()
