@@ -161,6 +161,7 @@ sed -i "s/# disable = 1/disable = 0/" /etc/mmc/plugins/imaging.ini
 mkdir -p /tmp/package_tmp/put1/test1
 mkdir -p /tmp/package_tmp/put1/test2
 
+# Package server configuration
 sed -i "6s/^# host =/host = $IPADDRESS/" /etc/mmc/pulse2/package-server/package-server.ini
 sed -i "s/# \[imaging_api\]/\[imaging_api\]/" /etc/mmc/pulse2/package-server/package-server.ini
 UUID=`uuidgen`
@@ -168,6 +169,12 @@ sed -i "s/# uuid = PLEASE_PUT_A_UUID_FOR_THAT_SERVER/uuid = $UUID/" /etc/mmc/pul
 
 # Config pkgs.ini
 sed -i "s/server = localhost/server = $IPADDRESS/" /etc/mmc/plugins/pkgs.ini
+
+# Imaging server configuration
+# Hooks directory
+sed -i "s|# hooks_dir = /usr/local|hooks_dir = /usr|" /etc/mmc/pulse2/imaging-server/imaging-server.ini
+# Package Server IP address
+sed -i "s/# host = 127.0.0.1/host = $IPADDRESS/" /etc/mmc/pulse2/imaging-server/imaging-server.ini
 
 # Generate SSH key if not available
 if [ ! -f /root/.ssh/id_dsa ];
@@ -179,7 +186,6 @@ fi
 
 # Set NFS exports
 cp $TMPCO/pulse2/services/contrib/imaging-server/exports  /etc/exports
-# Set DHCPD conf
 
 # Launch mmc-agent
 /etc/init.d/mmc-agent force-stop
