@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: base\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-11 11:56+0100\n"
-"PO-Revision-Date: 2010-03-11 12:04+0100\n"
+"POT-Creation-Date: 2010-03-15 16:55+0100\n"
+"PO-Revision-Date: 2010-03-15 17:12+0100\n"
 "Last-Translator: Cédric Delfosse <cdelfosse@mandriva.com>\n"
 "Language-Team: français <fr@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -937,6 +937,10 @@ msgstr "Sec.:"
 #: modules/base/users/editacl.php:60
 msgid "Select all"
 msgstr "Tout sélectionner"
+
+#: includes/PageGenerator.php:1155
+msgid "Select entity"
+msgstr "Entité sélectionnée"
 
 #: index.php:172
 msgid "Server"
