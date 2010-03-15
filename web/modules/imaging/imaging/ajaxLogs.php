@@ -172,7 +172,7 @@ $l->addExtraInfo($a_target, _T("Target", "imaging"));
 $l->addExtraInfo($a_desc, _T("Message", "imaging"));
 //$l->addExtraInfo($a_states, _T("State", "imaging"));
 $l->addActionItem(
-    new ActionItem(_T("Details"), "imgtabs", "display", "item", "base", "computers", $type."tablogs", "details")
+    new ActionItem(_T("Details"), "imgtabs", "display", "item", "base", "computers", $type."tabimlogs", "details")
 );
 $l->disableFirstColumnActionLink();
 $l->start = 0;

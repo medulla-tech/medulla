@@ -109,7 +109,7 @@ $l->addExtraInfo($a_desc, _T("Message", "imaging"));
 //$l->addExtraInfo($a_states, _T("State", "imaging"));
 
 $l->addActionItem(
-    new ActionItem(_T("Details"), "imgtabs", "display", "item", "base", "computers", "tablogs", "details")
+    new ActionItem(_T("Details"), "imgtabs", "display", "item", "base", "computers", "tabimlogs", "details")
 );
 $l->disableFirstColumnActionLink();
 $l->setParamInfo($list_params);

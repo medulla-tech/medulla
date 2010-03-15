@@ -97,7 +97,7 @@ if (isset($params['uuid'])) {
             "modules/imaging/imaging/images.php", $params);
         $p->addTab("tabservices", _T("Boot services", 'imaging'), _T("Available boot menu services", "imaging"),
             "modules/imaging/imaging/services.php", $params);
-        $p->addTab("tablogs", _T("Imaging log", 'imaging'), "",
+        $p->addTab("tabimlogs", _T("Imaging log", 'imaging'), "",
             "modules/imaging/imaging/logs.php", $params);
         $p->addTab("tabconfigure", _T("Menu configuration", 'imaging'), "",
             "modules/imaging/imaging/configure.php", $params);
@@ -147,7 +147,7 @@ if (isset($params['uuid'])) {
                 "modules/imaging/imaging/images.php", $params);
             $p->addTab("grouptabservices", _T("Boot services", 'imaging'), _T("Available boot menu services", "imaging"),
                 "modules/imaging/imaging/services.php", $params);
-            $p->addTab("grouptablogs", _T("Imaging log", 'imaging'), "",
+            $p->addTab("grouptabimlogs", _T("Imaging log", 'imaging'), "",
                 "modules/imaging/imaging/logs.php", $params);
             $p->addTab("grouptabconfigure", _T("Menu configuration", 'imaging'), "",
                 "modules/imaging/imaging/configure.php", $params);
