@@ -22,15 +22,15 @@
 # General Makefile variables
 PULSE2_OWNER	:= root
 PULSE2_GROUP	:= root
-PREFIX 			:= /usr/local
-VARDIR 			:= /var/lib/pulse2/imaging
+PREFIX 		:= /usr/local
+VARDIR 		:= /var/lib/pulse2/imaging
 VARIMAGINGDIR	:= $(VARDIR)/imaging-server
-HOOKSDIR		:= $(PREFIX)/lib/pulse2/imaging-server/hooks
-SBINDIR 		:= $(PREFIX)/sbin
-INITDIR 		:= /etc/init.d
-ETCDIR 			:= /etc/mmc
-INSTALL			:= $(shell which install)
-SED				:= $(shell which sed)
+HOOKSDIR	:= $(PREFIX)/lib/pulse2/imaging-server/hooks
+SBINDIR 	:= $(PREFIX)/sbin
+INITDIR 	:= /etc/init.d
+ETCDIR 		:= /etc/mmc
+INSTALL		:= $(shell which install)
+SED		:= $(shell which sed)
 
 # main target
 
@@ -58,6 +58,7 @@ install-imaging-server:
 	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(VARDIR)/custom
 	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(VARDIR)/inventories
 	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(VARDIR)/masters
+	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(VARDIR)/isos
 
 	@echo "Installing binaries ..."
 	$(INSTALL) -m 755 -o root -g root src/pulse2-imaging-server $(SBINDIR)/pulse2-imaging-server
