@@ -2,7 +2,7 @@ SET NAMES 'utf8';
 -- charset utf8;
 
 UPDATE BootService SET default_name = "Démarrer normalement" , default_desc = "Démarrage normal" WHERE id = 1;
-UPDATE BootService SET default_name = "Enregistrer un poste dans Pulse2", default_desc = "Enregistrer ce poste sur le serveur Pulse2" WHERE id = 2;
+UPDATE BootService SET default_name = "Enregistrer un poste dans Pulse2", default_desc = "Enregistrer ce poste sur le serveur Pulse2", value = "identify L=fr_FR P=none"  WHERE id = 2;
 UPDATE BootService SET default_name = "Créer une sauvegarde", default_desc = "Créer une sauvegarde pour cet ordinateur" WHERE id = 3;
 UPDATE BootService SET default_name = "Boot sans disque", default_desc = "Charge un environnement sans disque puis donne la main" WHERE id = 4;
 UPDATE BootService SET default_name = "Test de la mémoire", default_desc = "Démarre un test complet de la mémoire" WHERE id = 5;
