@@ -400,7 +400,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             logClientActivity(mac, LOG_INFO, "boot", "'Booted'");
             break;
         case '1':
-            logClientActivity(mac, LOG_INFO, "menu", "'Executed menu entry %d'", buf[2]);
+            logClientActivity(mac, LOG_INFO, "menu", "'Executed menu entry : %d'", buf[2]);
             break;
         case '2':
             if (buf[2] == '-') {
