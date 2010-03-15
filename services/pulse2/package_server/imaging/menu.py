@@ -317,13 +317,13 @@ class ImagingMenu:
         self.protocol = value
 
     def setSplashImage(self, value):
-        if type(value == str):
+        if type(value) == str:
             value = value.decode('utf-8')
         assert(type(value) == unicode)
         self.splashimage = value
 
     def setMessage(self, value):
-        if type(value == str):
+        if type(value) == str:
             value = value.decode('utf-8')
         assert(type(value) == unicode)
         self.message = value
