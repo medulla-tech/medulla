@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# (c) 2007-2009 Mandriva, http://www.mandriva.com
+# (c) 2007-2010 Mandriva, http://www.mandriva.com
 #
 # $Id$
 #
@@ -20,19 +20,18 @@
 # You should have received a copy of the GNU General Public License
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 
-for POT_D in `find . -name "locale" -type d`; do 
+for POT_D in `find . -name "locale" -type d`; do
     POT_D=`dirname "$POT_D"`
     POT_N=`basename "$POT_D"`
     POT="$POT_D/locale/$POT_N.pot"
 
     rm -f ${POT}
     touch ${POT}
-    find "$POT_D" -iname "*.php" -exec xgettext -C -j -o ${POT} --language=PHP --keyword=_T {} \;
+    find "$POT_D" -iname "*.php" -exec xgettext --join-existing -ooutput=${POT} --language=PHP --keyword=_T {} \;
     for name in `find ${POT_D} -type f -name *.po`; do
         echo -n "updating ${name}..."
-        msgmerge --update --add-location --sort-output ${name} ${POT}
+        msgmerge --update --add-location --sort-output --sort-by-file ${name} ${POT}
         echo "done"
     done
 done
 exit 0
-
