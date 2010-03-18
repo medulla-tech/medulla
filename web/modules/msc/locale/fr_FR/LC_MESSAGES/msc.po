@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Pulse 2 - MSC Web Interface 1.2.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-03-18 11:49+0100\n"
-"PO-Revision-Date: 2009-06-17 10:20+0200\n"
+"PO-Revision-Date: 2010-03-18 14:46+0100\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: Français\n"
 "MIME-Version: 1.0\n"
@@ -783,7 +783,7 @@ msgstr "Récupérer un fichier téléchargé"
 #: web/modules/msc/logs/ajaxConsultLogsFilter.php:114
 #: web/modules/msc/logs/ajaxConsultLogsFilter.php:124
 msgid "Group"
-msgstr ""
+msgstr "Groupe"
 
 #: web/modules/msc/msc/launch.php:253
 #, php-format
@@ -1872,7 +1872,7 @@ msgstr "en cours de téléchargement"
 
 #: web/modules/msc/msc/statuscsv.php:91
 msgid "uuid"
-msgstr ""
+msgstr "uuid"
 
 #: web/modules/msc/msc/statuscsv.php:113
 #: web/modules/msc/msc/msctabsstatus.php:128
@@ -1908,15 +1908,3 @@ msgstr "en attente de téléchargement pour la seconde fois"
 #: web/modules/msc/includes/command_history.php:304
 msgid "yes"
 msgstr "oui"
-
-#~ msgid "Transferred files list empty."
-#~ msgstr "La liste des fichiers transférés est vide"
-
-#~ msgid "WOL done"
-#~ msgstr "WOL réalisé"
-
-#~ msgid "WOL failed"
-#~ msgstr "Échec du WOL"
-
-#~ msgid "WOL in progress"
-#~ msgstr "WOL en cours"
