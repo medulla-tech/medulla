@@ -1833,6 +1833,20 @@ class NotifyWidgetWarning extends NotifyWidget {
 }
 
 /**
+ * Display a simple DIV with an error message
+ */
+class ErrorMessage {
+
+    function ErrorMessage($msg) {
+        $this->msg = $msg;
+    }
+
+    function display() {
+        return "<div id=\"errorCode\">" . $this->msg . "</div>";
+    }
+}
+
+/**
  * Create an URL
  *
  * @param $link string accept format like "module/submod/action" or
