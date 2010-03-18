@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-03-18 11:49+0100\n"
-"PO-Revision-Date: 2010-03-15 11:03+0100\n"
+"PO-Revision-Date: 2010-03-18 13:49+0100\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: Pulse 2 developers <pulse2-devel@mandrivalinux.org>\n"
 "MIME-Version: 1.0\n"
@@ -263,9 +263,8 @@ msgstr ""
 "celle-ci."
 
 #: web/modules/imaging/imaging/ajaxLogs.php:77
-#, fuzzy
 msgid "Client Identified"
-msgstr "Client non identifié"
+msgstr "Client identifié"
 
 #: web/modules/imaging/imaging/ajaxLogs.php:78
 msgid "Client not Identified"
@@ -670,7 +669,7 @@ msgstr "Dans le menu de démarrage par défaut"
 #: web/modules/imaging/manage/ajaxLogs.php:51
 #: web/modules/imaging/imaging/ajaxLogs.php:59
 msgid "Inventory"
-msgstr ""
+msgstr "Inventaire"
 
 #: web/modules/imaging/manage/master_iso.php:45
 #: web/modules/imaging/imaging/images_iso.php:50
@@ -1233,14 +1232,14 @@ msgstr "minute"
 #: web/modules/imaging/manage/ajaxConfiguration.php:93
 #: web/modules/imaging/imaging/configure.php:146
 msgid "mtftp"
-msgstr "MTFTP"
+msgstr "mtftp"
 
 #: web/modules/imaging/manage/ajaxConfiguration.php:91
 #: web/modules/imaging/imaging/configure.php:144
 msgid "nfs"
-msgstr "NFS"
+msgstr "nfs"
 
 #: web/modules/imaging/manage/ajaxConfiguration.php:92
 #: web/modules/imaging/imaging/configure.php:145
 msgid "tftp"
-msgstr "TFTP"
+msgstr "tftp"
