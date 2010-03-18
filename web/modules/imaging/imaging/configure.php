@@ -23,6 +23,12 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+/*
+ * This page allows:
+ *  - to register a computer or a profile the imaging module
+ *  - to change the boot menu parameters of a computer or a profile
+ */
+
 
 require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
@@ -115,7 +121,6 @@ if (!$whose && !$menu) {
         }
 
         $f->add(new TitleElement($msg, 3));
-        $f->add(new TitleElement(_T("Please switch to expert mode now if you want to change these parameters.", "imaging"), 3));
     } else {
         $target = $whose[2];
         if ($whose[1] == 2 && $type == '') { #PROFILE
@@ -127,6 +132,8 @@ if (!$whose && !$menu) {
     $f->add(new HiddenTpl("target_uuid"),                    array("value" => $target_uuid,            "hide" => True));
     $f->add(new HiddenTpl("target_name"),                    array("value" => $target_name,            "hide" => True));
     $f->add(new HiddenTpl("type"),                           array("value" => $type,                   "hide" => True));
+
+    $f->add(new TitleElement(_T("Please switch to expert mode now if you want to change these parameters.", "imaging"), 3));
 
     $f->push(new DivExpertMode());
 
