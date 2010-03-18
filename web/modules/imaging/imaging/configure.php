@@ -87,15 +87,13 @@ $target_name = $_GET['target_name'];
 
 $f = new ValidatingForm();
 
-$f->push(new Table());
-
 if ($type == '') {
     if (!xmlrpc_isComputerRegistered($target_uuid)) {
-        $f->add(new TitleElement(sprintf(_T("Register your computer '%s'.", "imaging"), $target_name)));
+        $f->add(new TitleElement(sprintf(_T("Register computer '%s'", "imaging"), $target_name)));
     }
 } else {
     if (!xmlrpc_isProfileRegistered($target_uuid)) {
-        $f->add(new TitleElement(sprintf(_T("Register your profile '%s'.", "imaging"), $target_name)));
+        $f->add(new TitleElement(sprintf(_T("Register profile '%s'", "imaging"), $target_name)));
     }
 }
 if ($type == '') {
@@ -105,12 +103,19 @@ if ($type == '') {
 }
 
 if (!$whose && !$menu) {
-    $f->add(new TitleElement(sprintf(_T("You must define a default menu for the entity before trying to set a menu to that %s.", "imaging"), ($type==''?'computer':'profile')), 3));
+    $f->add(new TitleElement(_T("To register, you must first set a default menu to the entity.", "imaging"), 3));
     $f->display();
 } else {
     $target = null;
     if (!$whose) {
-        $f->add(new TitleElement(sprintf(_T("The default values displayed here come from this %s's entity default menu.", "imaging"), ($type==''?'computer':'profile')), 4));
+        if ($type == '') {
+            $msg = _T("The default values for the imaging parameters will be inherited from the entity that owns this computer.", "imaging");
+        } else {
+            $msg = _T("The default values for the imaging parameters will be inherited from the entity that owns this profile.", "imaging");
+        }
+
+        $f->add(new TitleElement($msg, 3));
+        $f->add(new TitleElement(_T("Please switch to expert mode now if you want to change these parameters.", "imaging"), 3));
     } else {
         $target = $whose[2];
         if ($whose[1] == 2 && $type == '') { #PROFILE
@@ -123,6 +128,7 @@ if (!$whose && !$menu) {
     $f->add(new HiddenTpl("target_name"),                    array("value" => $target_name,            "hide" => True));
     $f->add(new HiddenTpl("type"),                           array("value" => $type,                   "hide" => True));
 
+    $f->push(new DivExpertMode());
 
     $f->add(new TitleElement(sprintf(_T("%s menu parameters", "imaging"), ($type=='' ? _T('Computer', 'imaging') : _T('Profile', 'imaging') ))));
     $f->push(new Table());
@@ -207,8 +213,10 @@ if (!$whose && !$menu) {
     );
     $f->pop();
 
-    $f->addButton("bvalid", _T("Validate"));
-    $f->pop();
+    $f->addValidateButton("bvalid");
+
+    $f->pop(); // Div expert mode
+
     $f->display();
 }
 
