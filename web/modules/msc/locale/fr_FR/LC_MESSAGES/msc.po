@@ -2,13 +2,13 @@
 # Copyright (C) 2008 THE Pulse 2 - MSC Web Interface'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the Pulse 2 - MSC Web Interface package.
 # Nicolas Rueff <nrueff@mandriva.com>, 2007, 2008, 2009.
-# 
-# 
+#
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - MSC Web Interface 1.2.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-10-20 09:31+0200\n"
+"POT-Creation-Date: 2010-03-18 11:49+0100\n"
 "PO-Revision-Date: 2009-06-17 10:20+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: Français\n"
@@ -305,7 +305,7 @@ msgstr "<i>indéfini</i>"
 msgid "<i>whole day</i>"
 msgstr "<i>toute la journée</i>"
 
-#: web/modules/msc/msc/download_file.php:43
+#: web/modules/msc/msc/download_file.php:41
 msgid "A file is already being downloaded."
 msgstr "Un fichier est déjà en cours de téléchargement."
 
@@ -448,7 +448,7 @@ msgstr ""
 msgid "Cancel bundle creation"
 msgstr "Annuler la création de l'ensemble d'applications"
 
-#: web/modules/msc/msc/download_file.php:55
+#: web/modules/msc/msc/download_file.php:53
 msgid ""
 "Click below to start downloading file from this computer. Warning: the "
 "download may last a long time"
@@ -509,7 +509,7 @@ msgstr "Paramètres du script"
 msgid "Command start date"
 msgstr "Date de démarrage de la commande"
 
-#: web/modules/msc/infoPackage.inc.php:161
+#: web/modules/msc/infoPackage.inc.php:158
 msgid "Command status"
 msgstr "Statut de la commande"
 
@@ -543,7 +543,7 @@ msgid "Connection was refused by the other side."
 msgstr "La connexion a été refusée"
 
 #: web/modules/msc/logs/localSidebar.php:27
-#: web/modules/msc/logs/consult.php:33 web/modules/msc/infoPackage.inc.php:43
+#: web/modules/msc/logs/consult.php:33 web/modules/msc/infoPackage.inc.php:50
 msgid "Consolidated view"
 msgstr "Consulter les diffusions"
 
@@ -566,12 +566,12 @@ msgstr "Date de création"
 msgid "Creator"
 msgstr "Créateur"
 
-#: web/modules/msc/infoPackage.inc.php:224
+#: web/modules/msc/infoPackage.inc.php:221
 msgid "Csv's export"
 msgstr "Export csv"
 
-#: web/modules/msc/msc/msctabssinglestatus.php:38
 #: web/modules/msc/msc/ajaxLogsFilter.php:303
+#: web/modules/msc/msc/msctabssinglestatus.php:38
 #: web/modules/msc/includes/command_history.php:37
 msgid "Current State"
 msgstr "État actuel"
@@ -649,12 +649,13 @@ msgstr "Déploiement par proxy local"
 msgid "Deployment interval"
 msgstr "Intervalle de déploiement"
 
-#: web/modules/msc/msc/ajaxPackageFilter.php:116
 #: web/modules/msc/msc/history.php:58 web/modules/msc/msc/history.php:107
 #: web/modules/msc/msc/history.php:113 web/modules/msc/msc/history.php:131
 #: web/modules/msc/msc/logs.php:58 web/modules/msc/msc/logs.php:70
 #: web/modules/msc/msc/logs.php:119 web/modules/msc/msc/logs.php:125
-#: web/modules/msc/msc/logs.php:143 web/modules/msc/msc/ajaxLogsFilter.php:82
+#: web/modules/msc/msc/logs.php:143
+#: web/modules/msc/msc/ajaxPackageFilter.php:116
+#: web/modules/msc/msc/ajaxLogsFilter.php:82
 #: web/modules/msc/msc/ajaxLogsFilter.php:84
 #: web/modules/msc/msc/packages.php:44
 #: web/modules/msc/logs/ajaxLogsFilter.php:68
@@ -679,12 +680,12 @@ msgstr "Terminé"
 msgid "Download file"
 msgstr "Télécharger le fichier"
 
-#: web/modules/msc/infoPackage.inc.php:118
+#: web/modules/msc/infoPackage.inc.php:115
 msgid "Download file from a computer"
 msgstr "Téléchargement de fichier depuis un ordinateur"
 
-#: web/modules/msc/msc/download_file.php:33
-#: web/modules/msc/infoPackage.inc.php:219
+#: web/modules/msc/msc/download_file.php:31
+#: web/modules/msc/infoPackage.inc.php:216
 msgid "Download file page"
 msgstr "Téléchargement de fichiers"
 
@@ -775,7 +776,7 @@ msgstr "Première opération"
 msgid "From computer"
 msgstr "De l'ordinateur"
 
-#: web/modules/msc/infoPackage.inc.php:130
+#: web/modules/msc/infoPackage.inc.php:127
 msgid "Get a downloaded file"
 msgstr "Récupérer un fichier téléchargé"
 
@@ -818,7 +819,7 @@ msgstr "Historique"
 msgid "Host"
 msgstr "Ordinateur"
 
-#: web/modules/msc/infoPackage.inc.php:214
+#: web/modules/msc/infoPackage.inc.php:211
 msgid "IP Addr."
 msgstr "Adresse IP"
 
@@ -864,11 +865,11 @@ msgstr "Lancer une action"
 msgid "Launch Bundle"
 msgstr "Lancer un bundle"
 
-#: web/modules/msc/infoPackage.inc.php:178
+#: web/modules/msc/infoPackage.inc.php:175
 msgid "Launch a command"
 msgstr "Lancer une action"
 
-#: web/modules/msc/infoPackage.inc.php:184
+#: web/modules/msc/infoPackage.inc.php:181
 msgid "Launch a quick action command"
 msgstr "Lancer une action rapide"
 
@@ -896,7 +897,7 @@ msgstr "Sélection des proxys locaux"
 msgid "Logs"
 msgstr "Journaux"
 
-#: web/modules/msc/infoPackage.inc.php:209
+#: web/modules/msc/infoPackage.inc.php:206
 msgid "MAC Addr."
 msgstr "Adresse MAC"
 
@@ -907,39 +908,39 @@ msgstr "Adresse MAC"
 msgid "MMC failed to contact package server %s."
 msgstr "La MMC a échoué à contacter le serveur de package %s."
 
-#: web/modules/msc/infoPackage.inc.php:89
+#: web/modules/msc/infoPackage.inc.php:86
 msgid "MSC bundle tab for a group"
 msgstr "Onglet des ensembles d'applications pour un groupe"
 
-#: web/modules/msc/infoPackage.inc.php:107
+#: web/modules/msc/infoPackage.inc.php:104
 msgid "MSC bundle tab for a machine"
 msgstr "Onglet des ensembles d'applications pour une machine"
 
-#: web/modules/msc/infoPackage.inc.php:95
+#: web/modules/msc/infoPackage.inc.php:92
 msgid "MSC history tab for a group"
 msgstr "Onglet de l'historique pour un groupe"
 
-#: web/modules/msc/infoPackage.inc.php:113
+#: web/modules/msc/infoPackage.inc.php:110
 msgid "MSC history tab for a machine"
 msgstr "Onglet de l'historique pour une machine"
 
-#: web/modules/msc/infoPackage.inc.php:86
+#: web/modules/msc/infoPackage.inc.php:83
 msgid "MSC launch tab for a group"
 msgstr "Onglet de lancement pour un groupe"
 
-#: web/modules/msc/infoPackage.inc.php:104
+#: web/modules/msc/infoPackage.inc.php:101
 msgid "MSC launch tab for a machine"
 msgstr "Onglet de lancement pour une machine"
 
-#: web/modules/msc/infoPackage.inc.php:39
+#: web/modules/msc/infoPackage.inc.php:46
 msgid "MSC logs"
 msgstr "MSC"
 
-#: web/modules/msc/infoPackage.inc.php:92
+#: web/modules/msc/infoPackage.inc.php:89
 msgid "MSC logs tab for a group"
 msgstr "Onglet des journaux pour un groupe"
 
-#: web/modules/msc/infoPackage.inc.php:110
+#: web/modules/msc/infoPackage.inc.php:107
 msgid "MSC logs tab for a machine"
 msgstr "Onglet des journaux pour une machine"
 
@@ -1065,7 +1066,7 @@ msgstr "Le package '%s' est accéssible sur le miroir principal %s"
 msgid "Package size"
 msgstr "Taille du package"
 
-#: web/modules/msc/msc/packages.php:29 web/modules/msc/infoPackage.inc.php:189
+#: web/modules/msc/msc/packages.php:29 web/modules/msc/infoPackage.inc.php:186
 msgid "Packages"
 msgstr "Packages"
 
@@ -1085,7 +1086,7 @@ msgstr "Mise en pause %s %s sur %s"
 msgid "Pause %s %s on this group"
 msgstr "Mettre en pause %s %s sur ce groupe"
 
-#: web/modules/msc/infoPackage.inc.php:149
+#: web/modules/msc/infoPackage.inc.php:146
 msgid "Pause a command"
 msgstr "Mettre une commande en pause"
 
@@ -1093,11 +1094,11 @@ msgstr "Mettre une commande en pause"
 msgid "Paused"
 msgstr "Mis en pause"
 
-#: web/modules/msc/infoPackage.inc.php:199
+#: web/modules/msc/infoPackage.inc.php:196
 msgid "Ping"
 msgstr "Ping"
 
-#: web/modules/msc/infoPackage.inc.php:194
+#: web/modules/msc/infoPackage.inc.php:191
 msgid "Ping and probe"
 msgstr "Ping et Probe"
 
@@ -1114,11 +1115,11 @@ msgstr "Réussite du ping"
 msgid "Ping succeeded, SSH connection failed"
 msgstr "Réussite du ping, échec de la connexion SSH"
 
-#: web/modules/msc/infoPackage.inc.php:204
+#: web/modules/msc/infoPackage.inc.php:201
 msgid "Platform"
 msgstr "Système d'exploitation"
 
-#: web/modules/msc/infoPackage.inc.php:143
+#: web/modules/msc/infoPackage.inc.php:140
 msgid "Play a command"
 msgstr "Jouer une commande"
 
@@ -1206,7 +1207,7 @@ msgstr "Nombre de tentatives restantes"
 msgid "Remote control of :"
 msgstr "Contrôle à distance de : "
 
-#: web/modules/msc/infoPackage.inc.php:124
+#: web/modules/msc/infoPackage.inc.php:121
 msgid "Remove a downloaded file"
 msgstr "Supprimer un fichier téléchargé"
 
@@ -1238,15 +1239,15 @@ msgstr "Scheduler"
 msgid "Script parameters"
 msgstr "Paramètres du script"
 
-#: web/modules/msc/infoPackage.inc.php:33
+#: web/modules/msc/infoPackage.inc.php:41
 msgid "Secure Control"
 msgstr "Contrôle sécurisé"
 
-#: web/modules/msc/infoPackage.inc.php:82
+#: web/modules/msc/infoPackage.inc.php:79
 msgid "Secure control on a group of computers"
 msgstr "Contrôle sécurisé du groupe de machines"
 
-#: web/modules/msc/infoPackage.inc.php:100
+#: web/modules/msc/infoPackage.inc.php:97
 msgid "Secure control on computer"
 msgstr "Contrôle sécurisé de l'ordinateur"
 
@@ -1254,13 +1255,13 @@ msgstr "Contrôle sécurisé de l'ordinateur"
 msgid "Set order"
 msgstr "Définir l'ordre"
 
-#: web/modules/msc/logs/localSidebar.php:31
 #: web/modules/msc/logs/finished.php:33
+#: web/modules/msc/logs/localSidebar.php:31
 msgid "Show all finished task's logs"
 msgstr "Montrer toutes les actions finies"
 
 #: web/modules/msc/logs/localSidebar.php:28
-#: web/modules/msc/infoPackage.inc.php:45
+#: web/modules/msc/infoPackage.inc.php:52
 msgid "Show all logs"
 msgstr "Montrer toutes les actions"
 
@@ -1269,8 +1270,8 @@ msgstr "Montrer toutes les actions"
 msgid "Show all pending task's logs"
 msgstr "Montrer toutes les actions en attente"
 
-#: web/modules/msc/logs/localSidebar.php:30
 #: web/modules/msc/logs/running.php:33
+#: web/modules/msc/logs/localSidebar.php:30
 msgid "Show all running task's logs"
 msgstr "Montrer toutes les actions en cours"
 
@@ -1279,7 +1280,7 @@ msgid "Show all task logs"
 msgstr "Montrer toutes les actions"
 
 #: web/modules/msc/logs/localSidebar.php:32
-#: web/modules/msc/infoPackage.inc.php:53
+#: web/modules/msc/infoPackage.inc.php:61
 msgid "Show custom state task's logs"
 msgstr "Montrer les actions par état"
 
@@ -1287,19 +1288,19 @@ msgstr "Montrer les actions par état"
 msgid "Show custom status task's logs"
 msgstr "Montrer les actions par état"
 
-#: web/modules/msc/infoPackage.inc.php:51
+#: web/modules/msc/infoPackage.inc.php:58
 msgid "Show finished task's logs"
 msgstr "Montrer les actions finies"
 
-#: web/modules/msc/infoPackage.inc.php:172
+#: web/modules/msc/infoPackage.inc.php:169
 msgid "Show package's details"
 msgstr "Montrer les détails pour ce package"
 
-#: web/modules/msc/infoPackage.inc.php:47
+#: web/modules/msc/infoPackage.inc.php:54
 msgid "Show pending task's logs"
 msgstr "Montrer les actions en attente"
 
-#: web/modules/msc/infoPackage.inc.php:49
+#: web/modules/msc/infoPackage.inc.php:56
 msgid "Show running task's logs"
 msgstr "Montrer les actions en cours"
 
@@ -1308,7 +1309,7 @@ msgstr "Montrer les actions en cours"
 msgid "Single advanced launch : action \"%s\" on \"%s\""
 msgstr "Lancement avancé sur poste : action \"%s\" sur \"%s\""
 
-#: web/modules/msc/infoPackage.inc.php:167
+#: web/modules/msc/infoPackage.inc.php:164
 msgid "Single command status"
 msgstr "Statut de la commande"
 
@@ -1358,7 +1359,7 @@ msgstr "Démarrer l'action sur ce groupe"
 msgid "Start date"
 msgstr "Date de démarrage"
 
-#: web/modules/msc/msc/download_file.php:57
+#: web/modules/msc/msc/download_file.php:55
 #, php-format
 msgid "Start download from computer %s"
 msgstr "Démarrer le téléchargement depuis %s"
@@ -1410,7 +1411,7 @@ msgstr "Arrêt%s %s sur %s"
 msgid "Stop %s %s on this group"
 msgstr "Arrêt%s %s sur ce groupe"
 
-#: web/modules/msc/infoPackage.inc.php:155
+#: web/modules/msc/infoPackage.inc.php:152
 msgid "Stop a command"
 msgstr "Stopper une commande"
 
@@ -1419,7 +1420,7 @@ msgstr "Stopper une commande"
 msgid "Stopped"
 msgstr "Arrêté"
 
-#: web/modules/msc/infoPackage.inc.php:136
+#: web/modules/msc/infoPackage.inc.php:133
 msgid "Take control of a computer"
 msgstr "Prendre le contrôle d'un ordinateur"
 
@@ -1469,11 +1470,11 @@ msgstr ""
 "Le nom de l'ordinateur ne correspond pas à celui présent dans l'inventaire."
 
 #: web/modules/msc/msc/download_file_get.php:28
-#: web/modules/msc/msc/download_file.php:45
+#: web/modules/msc/msc/download_file.php:43
 msgid "The download has failed."
 msgstr "Le téléchargement a échoué"
 
-#: web/modules/msc/msc/download_file.php:40
+#: web/modules/msc/msc/download_file.php:38
 msgid "The download is in progress."
 msgstr "Le téléchargement est en cours."
 
@@ -1644,7 +1645,7 @@ msgstr "machines sont stoppées"
 msgid "computers successfully deployed"
 msgstr "machines ont réussi leur déploiement"
 
-#: web/modules/msc/infoPackage.inc.php:59
+#: web/modules/msc/infoPackage.inc.php:67
 msgid "consolidated logs list"
 msgstr "Vue consolidée des diffusions"
 
@@ -1656,8 +1657,8 @@ msgstr "État actuel"
 msgid "current_state"
 msgstr "état"
 
-#: web/modules/msc/msc/msctabssinglestatus.php:38
 #: web/modules/msc/msc/ajaxLogsFilter.php:196
+#: web/modules/msc/msc/msctabssinglestatus.php:38
 #: web/modules/msc/logs/ajaxLogsFilter.php:135
 #: web/modules/msc/includes/command_history.php:41
 msgid "deleted"
@@ -1693,8 +1694,8 @@ msgstr "erreur: cmd_id ou bundle_id doit être renseigné"
 msgid "error : the bundle_id given does not exists in the database."
 msgstr "erreur: l'id de bundle donné n'existe pas dans la base de donnée. "
 
-#: web/modules/msc/msc/msctabssinglestatus.php:38
 #: web/modules/msc/msc/ajaxLogsFilter.php:195
+#: web/modules/msc/msc/msctabssinglestatus.php:38
 #: web/modules/msc/logs/ajaxLogsFilter.php:134
 #: web/modules/msc/includes/command_history.php:40
 msgid "executed"
@@ -1762,9 +1763,9 @@ msgstr "inventorié"
 msgid "is"
 msgstr "est"
 
-#: web/modules/msc/infoPackage.inc.php:56
-#: web/modules/msc/infoPackage.inc.php:229
-#: web/modules/msc/infoPackage.inc.php:234
+#: web/modules/msc/infoPackage.inc.php:64
+#: web/modules/msc/infoPackage.inc.php:226
+#: web/modules/msc/infoPackage.inc.php:231
 msgid "logs list"
 msgstr "liste des logs"
 
@@ -1834,7 +1835,7 @@ msgstr "Date de démarrage"
 msgid "suppressing"
 msgstr "en cours de suppression"
 
-#: web/modules/msc/infoPackage.inc.php:62
+#: web/modules/msc/infoPackage.inc.php:70
 msgid "the state list"
 msgstr "la liste des états"
 
@@ -1846,6 +1847,10 @@ msgstr "titre"
 msgid "total"
 msgstr "total"
 
+#: web/modules/msc/msc/statuscsv.php:123
+msgid "unreachable during execution"
+msgstr "non accéssible durant l'exécution"
+
 #: web/modules/msc/msc/statuscsv.php:125
 msgid "unreachable during suppression"
 msgstr "échoué durant la suppression"
@@ -1854,12 +1859,8 @@ msgstr "échoué durant la suppression"
 msgid "unreachable during upload"
 msgstr "échoué durant le téléchargement"
 
-#: web/modules/msc/msc/statuscsv.php:123
-msgid "unreachable during execution"
-msgstr "non accéssible durant l'exécution"
-
-#: web/modules/msc/msc/msctabssinglestatus.php:38
 #: web/modules/msc/msc/ajaxLogsFilter.php:194
+#: web/modules/msc/msc/msctabssinglestatus.php:38
 #: web/modules/msc/logs/ajaxLogsFilter.php:133
 #: web/modules/msc/includes/command_history.php:39
 msgid "uploaded"

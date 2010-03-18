@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - GLPI Web Interface 1.2.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-10-20 09:30+0200\n"
+"POT-Creation-Date: 2010-03-18 11:49+0100\n"
 "PO-Revision-Date: 2009-05-22 09:55+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French <i18n@mandriva.com>\n"
@@ -80,8 +80,8 @@ msgstr "bande passante"
 msgid "comment"
 msgstr "commentaire"
 
-#: web/modules/glpi/glpi/view_hardware.php:77
 #: web/modules/glpi/glpi/view_part.php:77
+#: web/modules/glpi/glpi/view_hardware.php:77
 msgid "comments"
 msgstr "commentaires"
 
@@ -149,8 +149,8 @@ msgstr "lieux"
 msgid "model"
 msgstr "modèle"
 
-#: web/modules/glpi/glpi/view_hardware.php:76
 #: web/modules/glpi/glpi/view_part.php:76
+#: web/modules/glpi/glpi/view_hardware.php:76
 msgid "name"
 msgstr "nom"
 
@@ -210,7 +210,7 @@ msgstr "spécification par défault"
 msgid "subnet"
 msgstr "sous réseau"
 
-#: web/modules/glpi/glpi/view_hardware.php:87
 #: web/modules/glpi/glpi/view_part.php:83
+#: web/modules/glpi/glpi/view_hardware.php:87
 msgid "type"
 msgstr "type"

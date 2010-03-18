@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-16 17:59+0100\n"
+"POT-Creation-Date: 2010-03-18 11:49+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,1179 +16,1189 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: modules/imaging/includes/includes.php:183
-msgid "Uptime: "
-msgstr ""
-
-#: modules/imaging/includes/includes.php:185
-msgid "day"
-msgstr ""
-
-#: modules/imaging/includes/includes.php:188
-msgid "hour"
-msgstr ""
-
-#: modules/imaging/includes/includes.php:190
-msgid "minute"
-msgstr ""
-
-#: modules/imaging/includes/includes.php:194
-msgid "Memory"
-msgstr ""
-
-#: modules/imaging/includes/includes.php:197
-msgid "Swap"
-msgstr ""
-
-#: modules/imaging/includes/includes.php:209
-msgid "Never"
-msgstr ""
-
-#: modules/imaging/includes/includes.php:212
-#: modules/imaging/includes/includes.php:218
-msgid "As soon as possible"
-msgstr ""
-
-#: modules/imaging/includes/includes.php:220
-msgid "<i>undefined</i>"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:33
-msgid "Imaging service"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:38
-msgid "Imaging"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:42
-msgid "Server status"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:44
-#: modules/imaging/manage/localSidebar.php:31
-msgid "Manage masters"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:46
-#: modules/imaging/manage/master_delete.php:38
-msgid "Delete master"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:49
-msgid "Edit master"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:52
-msgid "Add master"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:55
-#: modules/imaging/manage/master_iso.php:43
-#: modules/imaging/imaging/images_iso.php:48
-msgid "Create iso from master"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:58
-#: modules/imaging/manage/localSidebar.php:34
-msgid "Manage boot services"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:60
-msgid "Edit service"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:63
-msgid "Remove service"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:66
-msgid "Add service"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:70
-#: modules/imaging/manage/localSidebar.php:37
-msgid "Default boot menu"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:72
-msgid "Up service"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:75
-#: modules/imaging/infoPackage.inc.php:78
-msgid "Down service"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:81
-#: modules/imaging/manage/localSidebar.php:40
-msgid "Post-installation scripts"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:83
-#: modules/imaging/infoPackage.inc.php:86
-msgid "Edit post-installation script"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:89
-#: modules/imaging/manage/postinstall_delete.php:62
-msgid "Delete post-installation script"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:92
-msgid "Imaging configuration"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:95
-msgid "Available Imaging Server"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:98
-msgid "Link an Imaging Server"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:101
-msgid "Save an Imaging Server configuration"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:118
-msgid "Register a computer in the imaging module"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:123
-msgid "Imaging on computer"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:126
-#: modules/imaging/infoPackage.inc.php:147 modules/imaging/imaging/tabs.php:94
-#: modules/imaging/imaging/tabs.php:144
-msgid "Boot menu"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:128
-#: modules/imaging/infoPackage.inc.php:149 modules/imaging/imaging/tabs.php:96
-msgid "Images and Masters"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:130
-#: modules/imaging/infoPackage.inc.php:151 modules/imaging/imaging/tabs.php:98
-#: modules/imaging/imaging/tabs.php:148
-msgid "Boot services"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:132
-#: modules/imaging/infoPackage.inc.php:153
-msgid "Imaging Log"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:134
-#: modules/imaging/infoPackage.inc.php:155
-#: modules/imaging/imaging/tabs.php:102 modules/imaging/imaging/tabs.php:152
-msgid "Menu configuration"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:139
-msgid "Register a profile in the imaging module"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:144
-msgid "Imaging on group"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:159
-#: modules/imaging/imaging/bootmenu_remove.php:78
-#: modules/imaging/imaging/ajaxImages.php:70
-msgid "Remove from boot menu"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:163
-msgid "Show target that use that image"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:167
-#: modules/imaging/imaging/images_delete.php:54
-msgid "Delete image"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:171
-msgid "Create iso image"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:212
-msgid "Add a service to a target"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:216
-msgid "Edit parameters of a service on a target"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:219
-msgid "Remove a service from a target"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:223
-msgid "Add a image to a target"
-msgstr ""
-
-#: modules/imaging/infoPackage.inc.php:227
-msgid "Edit parameters of a image on a target"
-msgstr ""
-
-#: modules/imaging/manage/ajaxBootmenu.php:48
-#: modules/imaging/imaging/tabs.php:77 modules/imaging/imaging/tabs.php:132
+#: web/modules/imaging/imaging/configure.php:127
 #, php-format
-msgid "The synchro is running, please wait or reload the page %shere%s"
+msgid "%s menu parameters"
 msgstr ""
 
-#: modules/imaging/manage/ajaxBootmenu.php:50
-#: modules/imaging/imaging/tabs.php:83
-msgid "The registering in the imaging server has failed."
-msgstr ""
-
-#: modules/imaging/manage/ajaxBootmenu.php:56
-msgid ""
-"This location has been modified, when you are done, please press on "
-"\"Synchronize\" so that modifications are updated on the Imaging server."
-msgstr ""
-
-#: modules/imaging/manage/ajaxBootmenu.php:62
-#: modules/imaging/imaging/header.php:38
-msgid "Synchronize"
-msgstr ""
-
-#: modules/imaging/manage/ajaxBootmenu.php:67
-#: modules/imaging/imaging/header.php:43
-msgid "Click on \"Force synchronize\" if you want to force the synchronization"
-msgstr ""
-
-#: modules/imaging/manage/ajaxBootmenu.php:73
-#: modules/imaging/imaging/header.php:49
-msgid "Force synchronize"
-msgstr ""
-
-#: modules/imaging/manage/ajaxBootmenu.php:81
-#: modules/imaging/imaging/bootmenu.php:186
-msgid "Move Up"
-msgstr ""
-
-#: modules/imaging/manage/ajaxBootmenu.php:82
-#: modules/imaging/imaging/bootmenu.php:187
-msgid "Move down"
-msgstr ""
-
-#: modules/imaging/manage/ajaxBootmenu.php:138
-msgid "Default boot menu configuration"
-msgstr ""
-
-#: modules/imaging/manage/ajaxBootmenu.php:141
-#: modules/imaging/manage/master_edit.php:53
-#: modules/imaging/manage/service_edit.php:54
-#: modules/imaging/manage/ajaxMasterLevel2.php:79
-#: modules/imaging/manage/ajaxServiceLevel2.php:77
-#: modules/imaging/imaging/images.php:128
-#: modules/imaging/imaging/bootmenu.php:247
-#: modules/imaging/imaging/ajaxImages.php:132
-#: modules/imaging/imaging/ajaxServices.php:80
-msgid "Label"
-msgstr ""
-
-#: modules/imaging/manage/ajaxBootmenu.php:143
-#: modules/imaging/manage/master_edit.php:57
-#: modules/imaging/manage/service_edit.php:59
-#: modules/imaging/manage/ajaxAvailableImagingServer.php:70
-#: modules/imaging/manage/ajaxMasterLevel2.php:81
-#: modules/imaging/manage/ajaxServiceLevel2.php:79
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:64
-#: modules/imaging/imaging/images.php:132
-#: modules/imaging/imaging/bootmenu.php:249
-#: modules/imaging/imaging/ajaxImages.php:134
-#: modules/imaging/imaging/ajaxServices.php:81
-msgid "Description"
-msgstr ""
-
-#: modules/imaging/manage/ajaxBootmenu.php:144
-#: modules/imaging/imaging/bootmenu.php:250
-msgid "Default"
-msgstr ""
-
-#: modules/imaging/manage/ajaxBootmenu.php:145
-#: modules/imaging/manage/bootmenu_edit.php:86
-#: modules/imaging/manage/master_add.php:97
-#: modules/imaging/manage/service_add.php:96
-#: modules/imaging/imaging/bootmenu.php:130
-#: modules/imaging/imaging/bootmenu.php:251
-#: modules/imaging/imaging/addservice.php:107
-#: modules/imaging/imaging/addimage.php:107
-msgid "Displayed"
-msgstr ""
-
-#: modules/imaging/manage/ajaxBootmenu.php:146
-#: modules/imaging/imaging/bootmenu.php:252
-msgid "Default on WOL"
-msgstr ""
-
-#: modules/imaging/manage/ajaxBootmenu.php:147
-#: modules/imaging/manage/bootmenu_edit.php:96
-#: modules/imaging/manage/master_add.php:101
-#: modules/imaging/manage/service_add.php:100
-#: modules/imaging/imaging/bootmenu.php:140
-#: modules/imaging/imaging/bootmenu.php:253
-#: modules/imaging/imaging/addservice.php:111
-#: modules/imaging/imaging/addimage.php:111
-msgid "Displayed on WOL"
-msgstr ""
-
-#: modules/imaging/manage/ajaxBootmenu.php:150
-#: modules/imaging/imaging/bootmenu.php:256
-msgid "Edit"
-msgstr ""
-
-#: modules/imaging/manage/bootmenu_up.php:37
+#: web/modules/imaging/imaging/tabs.php:72
+#: web/modules/imaging/imaging/tabs.php:79
+#: web/modules/imaging/imaging/tabs.php:91
 #, php-format
-msgid "<strong>%s</strong> moved up in the default boot menu"
+msgid "%s's computer imaging"
 msgstr ""
 
-#: modules/imaging/manage/bootmenu_up.php:40
+#: web/modules/imaging/imaging/tabs.php:127
+#: web/modules/imaging/imaging/tabs.php:142
 #, php-format
-msgid "Failed to move <strong>%s</strong> in the default boot menu"
+msgid "%s's profile imaging"
 msgstr ""
 
-#: modules/imaging/manage/bootmenu_edit.php:68
-#, php-format
-msgid "Edit : %s"
-msgstr ""
-
-#: modules/imaging/manage/bootmenu_edit.php:77
-#: modules/imaging/manage/master_add.php:91
-msgid "Default menu item label"
-msgstr ""
-
-#: modules/imaging/manage/bootmenu_edit.php:81
-#: modules/imaging/manage/master_add.php:95
-#: modules/imaging/manage/service_add.php:94
-#: modules/imaging/imaging/bootmenu.php:125
-#: modules/imaging/imaging/addservice.php:105
-#: modules/imaging/imaging/addimage.php:105
-msgid "Selected by default"
-msgstr ""
-
-#: modules/imaging/manage/bootmenu_edit.php:91
-#: modules/imaging/manage/master_add.php:99
-#: modules/imaging/manage/service_add.php:98
-#: modules/imaging/imaging/bootmenu.php:135
-#: modules/imaging/imaging/addservice.php:109
-#: modules/imaging/imaging/addimage.php:109
-msgid "Selected by default on WOL"
-msgstr ""
-
-#: modules/imaging/manage/bootmenu_edit.php:101
-#: modules/imaging/manage/master_edit.php:76
-#: modules/imaging/manage/service_edit.php:69
-#: modules/imaging/manage/ajaxConfiguration.php:146
-#: modules/imaging/manage/postinstall_edit.php:118
-#: modules/imaging/imaging/images.php:137
-#: modules/imaging/imaging/images.php:186
-#: modules/imaging/imaging/bootmenu.php:145
-#: modules/imaging/imaging/configure.php:210
-msgid "Validate"
-msgstr ""
-
-#: modules/imaging/manage/ajaxMaster.php:39
-#: modules/imaging/manage/ajaxPostInstall.php:43
-msgid "Available masters"
-msgstr ""
-
-#: modules/imaging/manage/master_edit.php:45
-msgid "Edit master : "
-msgstr ""
-
-#: modules/imaging/manage/master_edit.php:68
-#: modules/imaging/imaging/images.php:183
-msgid "Post-installation script"
-msgstr ""
-
-#: modules/imaging/manage/master_edit.php:71
-#: modules/imaging/manage/service_edit.php:64
-msgid "In default bootmenu"
-msgstr ""
-
-#: modules/imaging/manage/master_edit.php:87
-#, php-format
-msgid "Master <strong>%s</strong> modified with success"
-msgstr ""
-
-#: modules/imaging/manage/master_add.php:48
-#, php-format
-msgid "Image <strong>%s</strong> added to default boot menu"
-msgstr ""
-
-#: modules/imaging/manage/master_add.php:81
-#: modules/imaging/imaging/addimage.php:93
-#, php-format
-msgid "Add the image <b>%s</b> to <b>%s</b>"
-msgstr ""
-
-#: modules/imaging/manage/ajaxService.php:38
-msgid "Manage services"
-msgstr ""
-
-#: modules/imaging/manage/service_edit.php:46
-msgid "Edit service : "
-msgstr ""
-
-#: modules/imaging/manage/service_edit.php:79
-#, php-format
-msgid "Service <strong>%s</strong> modified with success"
-msgstr ""
-
-#: modules/imaging/manage/master_iso.php:45
-#: modules/imaging/imaging/images_iso.php:50
-#, php-format
-msgid "Iso of master <strong>%s</strong> has been launched in background."
-msgstr ""
-
-#: modules/imaging/manage/master_iso.php:47
-#: modules/imaging/imaging/images_iso.php:52
-#, php-format
-msgid ""
-"The files will be stored in the directory %s of the server at the end of the "
-"backup."
-msgstr ""
-
-#: modules/imaging/manage/master_iso.php:49
-#: modules/imaging/imaging/images_iso.php:54
-msgid "Please go to the status page to check the iso creation status."
-msgstr ""
-
-#: modules/imaging/manage/master_iso.php:51
-#: modules/imaging/imaging/images_iso.php:56
-msgid "This operation will last according to the amount of data of the master."
-msgstr ""
-
-#: modules/imaging/manage/master_iso.php:65
-#: modules/imaging/imaging/images_iso.php:69
-#, php-format
-msgid "Create iso for <strong>%s</strong>"
-msgstr ""
-
-#: modules/imaging/manage/master_iso.php:67
-#: modules/imaging/manage/ajaxLogs.php:105
-#: modules/imaging/imaging/images_iso.php:72
-msgid "Title"
-msgstr ""
-
-#: modules/imaging/manage/master_iso.php:72
-#: modules/imaging/imaging/images_iso.php:77
-msgid "Media size"
-msgstr ""
-
-#: modules/imaging/manage/master_iso.php:82
-#: modules/imaging/imaging/images_iso.php:87
-msgid "Launch backup"
-msgstr ""
-
-#: modules/imaging/manage/master_iso.php:83
-#: modules/imaging/manage/master_delete.php:42
-#: modules/imaging/manage/postinstall_delete.php:67
-#: modules/imaging/imaging/images_iso.php:88
-#: modules/imaging/imaging/bootmenu_remove.php:83
-#: modules/imaging/imaging/images_delete.php:59
-msgid "Cancel"
-msgstr ""
-
-#: modules/imaging/manage/service_add.php:48
-#, php-format
-msgid "Service <strong>%s</strong> added to default boot menu"
-msgstr ""
-
-#: modules/imaging/manage/service_add.php:80
-#, php-format
-msgid "Add the boot service <b>%s</b> to the default boot menu"
-msgstr ""
-
-#: modules/imaging/manage/ajaxLogs.php:43
-#: modules/imaging/manage/ajaxLogs.php:59
-#: modules/imaging/imaging/ajaxLogs.php:51
-#: modules/imaging/imaging/ajaxLogs.php:67
-msgid "Status unknow"
-msgstr ""
-
-#: modules/imaging/manage/ajaxLogs.php:44
-#: modules/imaging/imaging/ajaxLogs.php:52
-msgid "Boot"
-msgstr ""
-
-#: modules/imaging/manage/ajaxLogs.php:45
-#: modules/imaging/imaging/ajaxLogs.php:53
-msgid "Menu"
-msgstr ""
-
-#: modules/imaging/manage/ajaxLogs.php:46
-#: modules/imaging/imaging/ajaxLogs.php:54
-msgid "Restoration"
-msgstr ""
-
-#: modules/imaging/manage/ajaxLogs.php:47
-#: modules/imaging/imaging/ajaxLogs.php:55
-msgid "Backup"
-msgstr ""
-
-#: modules/imaging/manage/ajaxLogs.php:48
-#: modules/imaging/imaging/ajaxLogs.php:56
-msgid "Post-install"
-msgstr ""
-
-#: modules/imaging/manage/ajaxLogs.php:49
-#: modules/imaging/imaging/ajaxLogs.php:57
-msgid "Error"
-msgstr ""
-
-#: modules/imaging/manage/ajaxLogs.php:50
-#: modules/imaging/manage/postinstall_delete.php:66
-#: modules/imaging/manage/ajaxMasterLevel2.php:95
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:75
-#: modules/imaging/imaging/ajaxLogs.php:58
-#: modules/imaging/imaging/bootmenu.php:257
-msgid "Delete"
-msgstr ""
-
-#: modules/imaging/manage/ajaxLogs.php:51
-#: modules/imaging/imaging/ajaxLogs.php:59
-msgid "Inventory"
-msgstr ""
-
-#: modules/imaging/manage/ajaxLogs.php:53
-#: modules/imaging/imaging/ajaxLogs.php:61
-msgid "Restore in progress"
-msgstr ""
-
-#: modules/imaging/manage/ajaxLogs.php:54
-#: modules/imaging/imaging/ajaxLogs.php:62
-msgid "Restore done"
-msgstr ""
-
-#: modules/imaging/manage/ajaxLogs.php:55
-#: modules/imaging/imaging/ajaxLogs.php:63
-msgid "Restore failed"
-msgstr ""
-
-#: modules/imaging/manage/ajaxLogs.php:56
-#: modules/imaging/imaging/ajaxLogs.php:64
-msgid "Backup in progress"
-msgstr ""
-
-#: modules/imaging/manage/ajaxLogs.php:57
-#: modules/imaging/imaging/ajaxLogs.php:65
-msgid "Backup done"
-msgstr ""
-
-#: modules/imaging/manage/ajaxLogs.php:58
-#: modules/imaging/imaging/ajaxLogs.php:66
-msgid "Backup failed"
-msgstr ""
-
-#: modules/imaging/manage/ajaxLogs.php:107
-#: modules/imaging/imaging/ajaxLogs.php:172
-msgid "Target"
-msgstr ""
-
-#: modules/imaging/manage/ajaxLogs.php:108
-#: modules/imaging/imaging/ajaxLogs.php:173
-msgid "Message"
-msgstr ""
-
-#: modules/imaging/manage/ajaxLogs.php:112
-#: modules/imaging/imaging/ajaxLogs.php:176
-msgid "Details"
-msgstr ""
-
-#: modules/imaging/manage/location.php:57
-msgid "Synchronization launched on this entity."
-msgstr ""
-
-#: modules/imaging/manage/location.php:60
-#, php-format
-msgid "Synchronization failed for entity: %s"
-msgstr ""
-
-#: modules/imaging/manage/ajaxConfiguration.php:37
-msgid "Imaging server configuration"
-msgstr ""
-
-#: modules/imaging/manage/ajaxConfiguration.php:74
-msgid "Default menu parameters"
-msgstr ""
-
-#: modules/imaging/manage/ajaxConfiguration.php:78
-#: modules/imaging/imaging/configure.php:131
-msgid "Default menu label"
-msgstr ""
-
-#: modules/imaging/manage/ajaxConfiguration.php:83
-#: modules/imaging/imaging/configure.php:136
-msgid "Restoration options"
-msgstr ""
-
-#: modules/imaging/manage/ajaxConfiguration.php:91
-#: modules/imaging/imaging/configure.php:144
-msgid "nfs"
-msgstr ""
-
-#: modules/imaging/manage/ajaxConfiguration.php:92
-#: modules/imaging/imaging/configure.php:145
-msgid "tftp"
-msgstr ""
-
-#: modules/imaging/manage/ajaxConfiguration.php:93
-#: modules/imaging/imaging/configure.php:146
-msgid "mtftp"
-msgstr ""
-
-#: modules/imaging/manage/ajaxConfiguration.php:100
-#: modules/imaging/imaging/configure.php:153
+#: web/modules/imaging/manage/ajaxConfiguration.php:100
+#: web/modules/imaging/imaging/configure.php:153
 msgid "(default)"
 msgstr ""
 
-#: modules/imaging/manage/ajaxConfiguration.php:113
-#: modules/imaging/imaging/configure.php:166
-msgid "Restoration type"
+#: web/modules/imaging/includes/includes.php:220
+msgid "<i>undefined</i>"
 msgstr ""
 
-#: modules/imaging/manage/ajaxConfiguration.php:116
-#: modules/imaging/imaging/configure.php:169
-msgid "Restoration: MTFTP maximum waiting (in sec)"
-msgstr ""
-
-#: modules/imaging/manage/ajaxConfiguration.php:121
-#: modules/imaging/imaging/configure.php:174
-msgid "Boot options"
-msgstr ""
-
-#: modules/imaging/manage/ajaxConfiguration.php:124
-#: modules/imaging/imaging/configure.php:177
-msgid "Full path to the XPM displayed at boot"
-msgstr ""
-
-#: modules/imaging/manage/ajaxConfiguration.php:128
-#: modules/imaging/imaging/configure.php:181
-msgid "Message displayed during backup/restoration"
-msgstr ""
-
-#: modules/imaging/manage/ajaxConfiguration.php:132
-msgid "Keyboard mapping (empty/fr)"
-msgstr ""
-
-#: modules/imaging/manage/master_delete.php:40
-#, php-format
-msgid "Are you sure you want to delete <b>%s</b> master ?"
-msgstr ""
-
-#: modules/imaging/manage/master_delete.php:41
-#: modules/imaging/imaging/bootmenu_remove.php:82
-#: modules/imaging/imaging/images_delete.php:58
-msgid "Remove"
-msgstr ""
-
-#: modules/imaging/manage/bootmenu_down.php:37
+#: web/modules/imaging/manage/bootmenu_down.php:37
 #, php-format
 msgid "<strong>%s</strong> moved down in the default boot menu"
 msgstr ""
 
-#: modules/imaging/manage/bootmenu_down.php:40
+#: web/modules/imaging/manage/bootmenu_up.php:37
 #, php-format
-msgid "Failed to move down <strong>%s</strong> in the default boot menu"
+msgid "<strong>%s</strong> moved up in the default boot menu"
 msgstr ""
 
-#: modules/imaging/manage/localSidebar.php:28
-msgid "Imaging server status"
+#: web/modules/imaging/manage/postinstall_edit.php:83
+#, php-format
+msgid "<strong>%s</strong> script %s"
 msgstr ""
 
-#: modules/imaging/manage/localSidebar.php:43
-msgid "Imaging Configuration"
-msgstr ""
-
-#: modules/imaging/manage/ajaxStatus.php:44
-msgid "Server status for this entity"
-msgstr ""
-
-#: modules/imaging/manage/ajaxStatus.php:48
-msgid "Space available on server"
-msgstr ""
-
-#: modules/imaging/manage/ajaxStatus.php:52
-msgid "Load on server"
-msgstr ""
-
-#: modules/imaging/manage/ajaxStatus.php:59
-msgid "Synchronization state"
-msgstr ""
-
-#: modules/imaging/manage/ajaxStatus.php:63
-msgid "Up-to-date"
-msgstr ""
-
-#: modules/imaging/manage/ajaxStatus.php:67
-msgid "Stats"
-msgstr ""
-
-#: modules/imaging/manage/ajaxStatus.php:68
-msgid "clients have a rescue image"
-msgstr ""
-
-#: modules/imaging/manage/ajaxStatus.php:70
-msgid "masters are available"
-msgstr ""
-
-#: modules/imaging/manage/ajaxStatus.php:76
-msgid "Recent activity in entity"
-msgstr ""
-
-#: modules/imaging/manage/postinstall_delete.php:44
+#: web/modules/imaging/manage/postinstall_delete.php:44
 #, php-format
 msgid "<strong>%s</strong> script deleted"
 msgstr ""
 
-#: modules/imaging/manage/postinstall_delete.php:50
+#: web/modules/imaging/manage/postinstall_edit.php:89
+#, php-format
+msgid "<strong>%s</strong> script wasn't %s"
+msgstr ""
+
+#: web/modules/imaging/manage/postinstall_delete.php:50
 #, php-format
 msgid "<strong>%s</strong> script wasn't deleted"
 msgstr ""
 
-#: modules/imaging/manage/postinstall_delete.php:58
-msgid "Cant delete this post-installation script, it's a global script."
+#: web/modules/imaging/infoPackage.inc.php:223
+msgid "Add a image to a target"
 msgstr ""
 
-#: modules/imaging/manage/postinstall_delete.php:64
+#: web/modules/imaging/infoPackage.inc.php:212
+msgid "Add a service to a target"
+msgstr ""
+
+#: web/modules/imaging/imaging/ajaxImages.php:69
+msgid "Add image to boot menu"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxMasterLevel2.php:48
+msgid "Add image to default boot menu"
+msgstr ""
+
+#: web/modules/imaging/infoPackage.inc.php:52
+msgid "Add master"
+msgstr ""
+
+#: web/modules/imaging/infoPackage.inc.php:66
+msgid "Add service"
+msgstr ""
+
+#: web/modules/imaging/imaging/ajaxServices.php:50
+msgid "Add service to boot menu"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxServiceLevel2.php:50
+msgid "Add service to default boot menu"
+msgstr ""
+
+#: web/modules/imaging/imaging/addservice.php:93
+#, php-format
+msgid "Add the boot service <b>%s</b> to <b>%s</b>"
+msgstr ""
+
+#: web/modules/imaging/manage/service_add.php:80
+#, php-format
+msgid "Add the boot service <b>%s</b> to the default boot menu"
+msgstr ""
+
+#: web/modules/imaging/manage/master_add.php:81
+#: web/modules/imaging/imaging/addimage.php:93
+#, php-format
+msgid "Add the image <b>%s</b> to <b>%s</b>"
+msgstr ""
+
+#: web/modules/imaging/imaging/images_delete.php:56
+#, php-format
+msgid "Are you sure you want to delete <b>%s</b> image ?"
+msgstr ""
+
+#: web/modules/imaging/manage/master_delete.php:40
+#, php-format
+msgid "Are you sure you want to delete <b>%s</b> master ?"
+msgstr ""
+
+#: web/modules/imaging/manage/postinstall_delete.php:64
 #, php-format
 msgid "Are you sure you want to delete the <b>%s</b> script ?"
 msgstr ""
 
-#: modules/imaging/manage/ajaxAvailableImagingServer.php:41
+#: web/modules/imaging/imaging/bootmenu_remove.php:81
 #, php-format
-msgid "Link this Imaging Server to the '%s' entity."
+msgid "Are you sure you want to remove <b>%s</b> from the boot menu ?"
 msgstr ""
 
-#: modules/imaging/manage/ajaxAvailableImagingServer.php:64
+#: web/modules/imaging/includes/includes.php:212
+#: web/modules/imaging/includes/includes.php:218
+msgid "As soon as possible"
+msgstr ""
+
+#: web/modules/imaging/imaging/ajaxLogs.php:79
+msgid "Asked an image UUID"
+msgstr ""
+
+#: web/modules/imaging/imaging/ajaxLogs.php:96
+msgid "Asked its UUID"
+msgstr ""
+
+#: web/modules/imaging/imaging/ajaxLogs.php:93
+msgid "Asked its hostname"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxAvailableImagingServer.php:64
 msgid "Associate an entity to an imaging server"
 msgstr ""
 
-#: modules/imaging/manage/ajaxAvailableImagingServer.php:68
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:63
-msgid "Name"
+#: web/modules/imaging/infoPackage.inc.php:95
+msgid "Available Imaging Server"
 msgstr ""
 
-#: modules/imaging/manage/ajaxAvailableImagingServer.php:71
-msgid "Identifier"
+#: web/modules/imaging/imaging/tabs.php:98
+#: web/modules/imaging/imaging/tabs.php:148
+msgid "Available boot menu services"
 msgstr ""
 
-#: modules/imaging/manage/imaging_server_link.php:59
+#: web/modules/imaging/manage/ajaxMaster.php:39
+#: web/modules/imaging/manage/ajaxPostInstall.php:43
+msgid "Available masters"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxLogs.php:47
+#: web/modules/imaging/imaging/ajaxLogs.php:55
+msgid "Backup"
+msgstr ""
+
+#: web/modules/imaging/imaging/ajaxLogs.php:89
+msgid "Backup completed"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxLogs.php:57
+#: web/modules/imaging/imaging/ajaxLogs.php:65
+msgid "Backup done"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxLogs.php:58
+#: web/modules/imaging/imaging/ajaxLogs.php:66
+msgid "Backup failed"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxLogs.php:56
+#: web/modules/imaging/imaging/ajaxLogs.php:64
+msgid "Backup in progress"
+msgstr ""
+
+#: web/modules/imaging/imaging/ajaxLogs.php:88
+msgid "Backup started"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxLogs.php:44
+#: web/modules/imaging/imaging/ajaxLogs.php:52
+msgid "Boot"
+msgstr ""
+
+#: web/modules/imaging/infoPackage.inc.php:126
+#: web/modules/imaging/infoPackage.inc.php:147
+#: web/modules/imaging/imaging/tabs.php:94
+#: web/modules/imaging/imaging/tabs.php:144
+msgid "Boot menu"
+msgstr ""
+
+#: web/modules/imaging/imaging/configure.php:70
 #, php-format
-msgid ""
-"Link between imaging server <strong>%s</strong> and the entity <strong>%s</"
-"strong> succeeded."
+msgid "Boot menu is created for <strong>%s</strong>."
 msgstr ""
 
-#: modules/imaging/manage/imaging_server_link.php:85
+#: web/modules/imaging/imaging/ajaxLogs.php:72
+msgid "Boot menu shown"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxConfiguration.php:121
+#: web/modules/imaging/imaging/configure.php:174
+msgid "Boot options"
+msgstr ""
+
+#: web/modules/imaging/infoPackage.inc.php:130
+#: web/modules/imaging/infoPackage.inc.php:151
+#: web/modules/imaging/imaging/tabs.php:98
+#: web/modules/imaging/imaging/tabs.php:148
+msgid "Boot services"
+msgstr ""
+
+#: web/modules/imaging/imaging/ajaxLogs.php:84
+msgid "Booted"
+msgstr ""
+
+#: web/modules/imaging/manage/master_iso.php:83
+#: web/modules/imaging/manage/master_delete.php:42
+#: web/modules/imaging/manage/postinstall_delete.php:67
+#: web/modules/imaging/imaging/images_iso.php:88
+#: web/modules/imaging/imaging/bootmenu_remove.php:83
+#: web/modules/imaging/imaging/images_delete.php:59
+msgid "Cancel"
+msgstr ""
+
+#: web/modules/imaging/manage/postinstall_delete.php:58
+msgid "Cant delete this post-installation script, it's a global script."
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxBootmenu.php:67
+#: web/modules/imaging/imaging/header.php:43
+msgid "Click on \"Force synchronize\" if you want to force the synchronization"
+msgstr ""
+
+#: web/modules/imaging/imaging/ajaxLogs.php:77
+msgid "Client Identified"
+msgstr ""
+
+#: web/modules/imaging/imaging/ajaxLogs.php:78
+msgid "Client not Identified"
+msgstr ""
+
+#: web/modules/imaging/imaging/configure.php:127
+#: web/modules/imaging/imaging/showtarget.php:50
+msgid "Computer"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxMasterLevel2.php:87
+#: web/modules/imaging/imaging/ajaxImages.php:141
+msgid "Create bootable iso"
+msgstr ""
+
+#: web/modules/imaging/manage/master_iso.php:65
+#: web/modules/imaging/imaging/images_iso.php:69
+#, php-format
+msgid "Create iso for <strong>%s</strong>"
+msgstr ""
+
+#: web/modules/imaging/infoPackage.inc.php:55
+#: web/modules/imaging/manage/master_iso.php:43
+#: web/modules/imaging/imaging/images_iso.php:48
+msgid "Create iso from master"
+msgstr ""
+
+#: web/modules/imaging/infoPackage.inc.php:171
+msgid "Create iso image"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxMasterLevel2.php:82
+#: web/modules/imaging/imaging/ajaxImages.php:135
+msgid "Created"
+msgstr ""
+
+#: web/modules/imaging/imaging/ajaxLogs.php:92
+msgid "Critical error"
+msgstr ""
+
+#: web/modules/imaging/imaging/tabs.php:94
+#: web/modules/imaging/imaging/tabs.php:144
+msgid "Current boot menu"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxBootmenu.php:144
+#: web/modules/imaging/imaging/bootmenu.php:250
+msgid "Default"
+msgstr ""
+
+#: web/modules/imaging/infoPackage.inc.php:70
+#: web/modules/imaging/manage/localSidebar.php:37
+msgid "Default boot menu"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxBootmenu.php:138
+msgid "Default boot menu configuration"
+msgstr ""
+
+#: web/modules/imaging/manage/bootmenu_edit.php:77
+#: web/modules/imaging/manage/master_add.php:91
+msgid "Default menu item label"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxConfiguration.php:78
+#: web/modules/imaging/imaging/configure.php:131
+msgid "Default menu label"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxConfiguration.php:74
+msgid "Default menu parameters"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxBootmenu.php:146
+#: web/modules/imaging/imaging/bootmenu.php:252
+msgid "Default on WOL"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxLogs.php:50
+#: web/modules/imaging/manage/postinstall_delete.php:66
+#: web/modules/imaging/manage/ajaxMasterLevel2.php:95
+#: web/modules/imaging/manage/ajaxPostInstallLevel2.php:75
+#: web/modules/imaging/imaging/ajaxLogs.php:58
+#: web/modules/imaging/imaging/bootmenu.php:257
+msgid "Delete"
+msgstr ""
+
+#: web/modules/imaging/infoPackage.inc.php:167
+#: web/modules/imaging/imaging/images_delete.php:54
+msgid "Delete image"
+msgstr ""
+
+#: web/modules/imaging/infoPackage.inc.php:46
+#: web/modules/imaging/manage/master_delete.php:38
+msgid "Delete master"
+msgstr ""
+
+#: web/modules/imaging/infoPackage.inc.php:89
+#: web/modules/imaging/manage/postinstall_delete.php:62
+msgid "Delete post-installation script"
+msgstr ""
+
+#: web/modules/imaging/imaging/ajaxImages.php:72
+msgid "Delete the image"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxBootmenu.php:143
+#: web/modules/imaging/manage/master_edit.php:57
+#: web/modules/imaging/manage/service_edit.php:59
+#: web/modules/imaging/manage/ajaxAvailableImagingServer.php:70
+#: web/modules/imaging/manage/ajaxMasterLevel2.php:81
+#: web/modules/imaging/manage/ajaxServiceLevel2.php:79
+#: web/modules/imaging/manage/ajaxPostInstallLevel2.php:64
+#: web/modules/imaging/imaging/images.php:132
+#: web/modules/imaging/imaging/bootmenu.php:249
+#: web/modules/imaging/imaging/ajaxImages.php:134
+#: web/modules/imaging/imaging/ajaxServices.php:81
+msgid "Description"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxLogs.php:112
+#: web/modules/imaging/imaging/ajaxLogs.php:176
+msgid "Details"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxBootmenu.php:145
+#: web/modules/imaging/manage/bootmenu_edit.php:86
+#: web/modules/imaging/manage/master_add.php:97
+#: web/modules/imaging/manage/service_add.php:96
+#: web/modules/imaging/imaging/bootmenu.php:130
+#: web/modules/imaging/imaging/bootmenu.php:251
+#: web/modules/imaging/imaging/addservice.php:107
+#: web/modules/imaging/imaging/addimage.php:107
+msgid "Displayed"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxBootmenu.php:147
+#: web/modules/imaging/manage/bootmenu_edit.php:96
+#: web/modules/imaging/manage/master_add.php:101
+#: web/modules/imaging/manage/service_add.php:100
+#: web/modules/imaging/imaging/bootmenu.php:140
+#: web/modules/imaging/imaging/bootmenu.php:253
+#: web/modules/imaging/imaging/addservice.php:111
+#: web/modules/imaging/imaging/addimage.php:111
+msgid "Displayed on WOL"
+msgstr ""
+
+#: web/modules/imaging/manage/imaging_server_link.php:85
 #, php-format
 msgid ""
 "Do you really want to link the Imaging Server '<b>%s</b>' to the entity '<b>%"
 "s</b>'"
 msgstr ""
 
-#: modules/imaging/manage/postinstall_edit.php:83
-#, php-format
-msgid "<strong>%s</strong> script %s"
+#: web/modules/imaging/infoPackage.inc.php:75
+#: web/modules/imaging/infoPackage.inc.php:78
+msgid "Down service"
 msgstr ""
 
-#: modules/imaging/manage/postinstall_edit.php:89
-#, php-format
-msgid "<strong>%s</strong> script wasn't %s"
-msgstr ""
-
-#: modules/imaging/manage/postinstall_edit.php:114
-msgid "Script value"
-msgstr ""
-
-#: modules/imaging/manage/service_del.php:42
-#, php-format
-msgid "Service <strong>%s</strong> removed from default boot menu"
-msgstr ""
-
-#: modules/imaging/manage/service_del.php:56
-#, php-format
-msgid "Remove the boot service <b>%s</b> from the default boot menu"
-msgstr ""
-
-#: modules/imaging/manage/save_configuration.php:60
-#, php-format
-msgid "Imaging server <strong>%s</strong> configuration saved."
-msgstr ""
-
-#: modules/imaging/manage/ajaxMasterLevel2.php:48
-msgid "Add image to default boot menu"
-msgstr ""
-
-#: modules/imaging/manage/ajaxMasterLevel2.php:82
-#: modules/imaging/imaging/ajaxImages.php:135
-msgid "Created"
-msgstr ""
-
-#: modules/imaging/manage/ajaxMasterLevel2.php:83
-#: modules/imaging/imaging/ajaxImages.php:136
-msgid "Size (compressed)"
-msgstr ""
-
-#: modules/imaging/manage/ajaxMasterLevel2.php:84
-msgid "In default boot menu"
-msgstr ""
-
-#: modules/imaging/manage/ajaxMasterLevel2.php:87
-#: modules/imaging/imaging/ajaxImages.php:141
-msgid "Create bootable iso"
-msgstr ""
-
-#: modules/imaging/manage/ajaxMasterLevel2.php:91
-#: modules/imaging/imaging/ajaxImages.php:76
-#: modules/imaging/imaging/ajaxImages.php:148
-msgid "Edit image"
-msgstr ""
-
-#: modules/imaging/manage/ajaxServiceLevel2.php:50
-msgid "Add service to default boot menu"
-msgstr ""
-
-#: modules/imaging/manage/ajaxServiceLevel2.php:51
-msgid "Remove service from default boot menu"
-msgstr ""
-
-#: modules/imaging/manage/ajaxServiceLevel2.php:80
-#: modules/imaging/imaging/ajaxServices.php:82
-msgid "In bootmenu"
-msgstr ""
-
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:67
-msgid "Edit script"
-msgstr ""
-
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:71
+#: web/modules/imaging/manage/ajaxPostInstallLevel2.php:71
 msgid "Duplicate"
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:48
-msgid "Synchronization launched on this target."
+#: web/modules/imaging/manage/ajaxBootmenu.php:150
+#: web/modules/imaging/imaging/bootmenu.php:256
+msgid "Edit"
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:51
+#: web/modules/imaging/manage/bootmenu_edit.php:68
 #, php-format
-msgid "Synchronization failed for : %s"
+msgid "Edit : %s"
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:72 modules/imaging/imaging/tabs.php:79
-#: modules/imaging/imaging/tabs.php:91
-#, php-format
-msgid "%s's computer imaging"
+#: web/modules/imaging/manage/ajaxMasterLevel2.php:91
+#: web/modules/imaging/imaging/ajaxImages.php:76
+#: web/modules/imaging/imaging/ajaxImages.php:148
+msgid "Edit image"
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:94 modules/imaging/imaging/tabs.php:144
-msgid "Current boot menu"
+#: web/modules/imaging/infoPackage.inc.php:49
+msgid "Edit master"
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:98 modules/imaging/imaging/tabs.php:148
-msgid "Available boot menu services"
+#: web/modules/imaging/manage/master_edit.php:45
+msgid "Edit master : "
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:100 modules/imaging/imaging/tabs.php:150
-msgid "Imaging log"
+#: web/modules/imaging/infoPackage.inc.php:227
+msgid "Edit parameters of a image on a target"
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:127 modules/imaging/imaging/tabs.php:142
-#, php-format
-msgid "%s's profile imaging"
+#: web/modules/imaging/infoPackage.inc.php:216
+msgid "Edit parameters of a service on a target"
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:146
-msgid "Masters"
+#: web/modules/imaging/infoPackage.inc.php:83
+#: web/modules/imaging/infoPackage.inc.php:86
+msgid "Edit post-installation script"
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:161
-msgid "Not enough informations"
+#: web/modules/imaging/manage/ajaxPostInstallLevel2.php:67
+msgid "Edit script"
 msgstr ""
 
-#: modules/imaging/imaging/services.php:57
-#: modules/imaging/imaging/addservice.php:53
-#, php-format
-msgid "Service <strong>%s</strong> added to boot menu"
+#: web/modules/imaging/infoPackage.inc.php:60
+msgid "Edit service"
 msgstr ""
 
-#: modules/imaging/imaging/bootmenu_remove.php:62
-#, php-format
-msgid "Menu Item <strong>%s</strong> removed from boot menu"
+#: web/modules/imaging/manage/service_edit.php:46
+msgid "Edit service : "
 msgstr ""
 
-#: modules/imaging/imaging/bootmenu_remove.php:81
-#, php-format
-msgid "Are you sure you want to remove <b>%s</b> from the boot menu ?"
-msgstr ""
-
-#: modules/imaging/imaging/images.php:93
-#: modules/imaging/imaging/addimage.php:53
-#, php-format
-msgid "Image <strong>%s</strong> added to boot menu"
-msgstr ""
-
-#: modules/imaging/imaging/images.php:117
+#: web/modules/imaging/imaging/images.php:117
 msgid "Edition of image"
 msgstr ""
 
-#: modules/imaging/imaging/images.php:139
-msgid "Validate and convert to image"
+#: web/modules/imaging/imaging/bootmenu.php:100
+msgid "Edition of item"
 msgstr ""
 
-#: modules/imaging/imaging/images.php:141
-msgid "Validate and convert to master"
+#: web/modules/imaging/manage/ajaxLogs.php:49
+#: web/modules/imaging/imaging/ajaxLogs.php:57
+msgid "Error"
 msgstr ""
 
-#: modules/imaging/imaging/images_delete.php:41
-#, php-format
-msgid "Image <strong>%s</strong> deleted from the imaging server."
-msgstr ""
-
-#: modules/imaging/imaging/images_delete.php:56
-#, php-format
-msgid "Are you sure you want to delete <b>%s</b> image ?"
-msgstr ""
-
-#: modules/imaging/imaging/ajaxLogs.php:72
-msgid "Boot menu shown"
-msgstr ""
-
-#: modules/imaging/imaging/ajaxLogs.php:73
-msgid "Hardware Inventory sent"
-msgstr ""
-
-#: modules/imaging/imaging/ajaxLogs.php:74
-msgid "Hardware Inventory not received"
-msgstr ""
-
-#: modules/imaging/imaging/ajaxLogs.php:75
-msgid "Hardware Inventory not injected"
-msgstr ""
-
-#: modules/imaging/imaging/ajaxLogs.php:76
-msgid "Hardware Inventory updated"
-msgstr ""
-
-#: modules/imaging/imaging/ajaxLogs.php:77
-msgid "Client Identified"
-msgstr ""
-
-#: modules/imaging/imaging/ajaxLogs.php:78
-msgid "Client not Identified"
-msgstr ""
-
-#: modules/imaging/imaging/ajaxLogs.php:79
-msgid "Asked an image UUID"
-msgstr ""
-
-#: modules/imaging/imaging/ajaxLogs.php:80
-msgid "Failed to obtain an image UUID"
-msgstr ""
-
-#: modules/imaging/imaging/ajaxLogs.php:81
-msgid "Obtained an image UUID"
-msgstr ""
-
-#: modules/imaging/imaging/ajaxLogs.php:82
-msgid "Image Done"
-msgstr ""
-
-#: modules/imaging/imaging/ajaxLogs.php:83
-msgid "Toggled default entry"
-msgstr ""
-
-#: modules/imaging/imaging/ajaxLogs.php:84
-msgid "Booted"
-msgstr ""
-
-#: modules/imaging/imaging/ajaxLogs.php:85
+#: web/modules/imaging/imaging/ajaxLogs.php:85
 msgid "Executed menu entry"
 msgstr ""
 
-#: modules/imaging/imaging/ajaxLogs.php:86
-msgid "Started restoration"
-msgstr ""
-
-#: modules/imaging/imaging/ajaxLogs.php:87
-msgid "Finished restoration"
-msgstr ""
-
-#: modules/imaging/imaging/ajaxLogs.php:88
-msgid "Backup started"
-msgstr ""
-
-#: modules/imaging/imaging/ajaxLogs.php:89
-msgid "Backup completed"
-msgstr ""
-
-#: modules/imaging/imaging/ajaxLogs.php:90
-msgid "Postinstall started"
-msgstr ""
-
-#: modules/imaging/imaging/ajaxLogs.php:91
-msgid "Postinstall completed"
-msgstr ""
-
-#: modules/imaging/imaging/ajaxLogs.php:92
-msgid "Critical error"
-msgstr ""
-
-#: modules/imaging/imaging/ajaxLogs.php:93
-msgid "Asked its hostname"
-msgstr ""
-
-#: modules/imaging/imaging/ajaxLogs.php:94
-msgid "Failed to obtain its hostname"
-msgstr ""
-
-#: modules/imaging/imaging/ajaxLogs.php:95
-msgid "Obtained its hostname"
-msgstr ""
-
-#: modules/imaging/imaging/ajaxLogs.php:96
-msgid "Asked its UUID"
-msgstr ""
-
-#: modules/imaging/imaging/ajaxLogs.php:97
-msgid "Failed to obtain its UUID"
-msgstr ""
-
-#: modules/imaging/imaging/ajaxLogs.php:98
-msgid "Obtained its UUID"
-msgstr ""
-
-#: modules/imaging/imaging/ajaxLogs.php:167
-msgid "Timestamp"
-msgstr ""
-
-#: modules/imaging/imaging/bootmenu.php:56
+#: web/modules/imaging/manage/bootmenu_up.php:40
 #, php-format
-msgid "Item <strong>%s</strong> moved up in the boot menu"
+msgid "Failed to move <strong>%s</strong> in the default boot menu"
 msgstr ""
 
-#: modules/imaging/imaging/bootmenu.php:59
-#: modules/imaging/imaging/bootmenu.php:82
+#: web/modules/imaging/manage/bootmenu_down.php:40
+#, php-format
+msgid "Failed to move down <strong>%s</strong> in the default boot menu"
+msgstr ""
+
+#: web/modules/imaging/imaging/bootmenu.php:59
+#: web/modules/imaging/imaging/bootmenu.php:82
 #, php-format
 msgid "Failed to move item <strong>%s</strong> in the boot menu"
 msgstr ""
 
-#: modules/imaging/imaging/bootmenu.php:79
+#: web/modules/imaging/imaging/ajaxLogs.php:80
+msgid "Failed to obtain an image UUID"
+msgstr ""
+
+#: web/modules/imaging/imaging/ajaxLogs.php:97
+msgid "Failed to obtain its UUID"
+msgstr ""
+
+#: web/modules/imaging/imaging/ajaxLogs.php:94
+msgid "Failed to obtain its hostname"
+msgstr ""
+
+#: web/modules/imaging/imaging/configure.php:80
+#, php-format
+msgid "Failed to synchronize those computers : %s"
+msgstr ""
+
+#: web/modules/imaging/imaging/ajaxLogs.php:87
+msgid "Finished restoration"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxBootmenu.php:73
+#: web/modules/imaging/imaging/header.php:49
+msgid "Force synchronize"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxConfiguration.php:124
+#: web/modules/imaging/imaging/configure.php:177
+msgid "Full path to the XPM displayed at boot"
+msgstr ""
+
+#: web/modules/imaging/imaging/ajaxLogs.php:75
+msgid "Hardware Inventory not injected"
+msgstr ""
+
+#: web/modules/imaging/imaging/ajaxLogs.php:74
+msgid "Hardware Inventory not received"
+msgstr ""
+
+#: web/modules/imaging/imaging/ajaxLogs.php:73
+msgid "Hardware Inventory sent"
+msgstr ""
+
+#: web/modules/imaging/imaging/ajaxLogs.php:76
+msgid "Hardware Inventory updated"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxAvailableImagingServer.php:71
+msgid "Identifier"
+msgstr ""
+
+#: web/modules/imaging/imaging/images.php:93
+#: web/modules/imaging/imaging/addimage.php:53
+#, php-format
+msgid "Image <strong>%s</strong> added to boot menu"
+msgstr ""
+
+#: web/modules/imaging/manage/master_add.php:48
+#, php-format
+msgid "Image <strong>%s</strong> added to default boot menu"
+msgstr ""
+
+#: web/modules/imaging/imaging/images_delete.php:41
+#, php-format
+msgid "Image <strong>%s</strong> deleted from the imaging server."
+msgstr ""
+
+#: web/modules/imaging/imaging/ajaxLogs.php:82
+msgid "Image Done"
+msgstr ""
+
+#: web/modules/imaging/imaging/configure.php:205
+msgid "Image parameters"
+msgstr ""
+
+#: web/modules/imaging/infoPackage.inc.php:128
+#: web/modules/imaging/infoPackage.inc.php:149
+#: web/modules/imaging/imaging/tabs.php:96
+msgid "Images and Masters"
+msgstr ""
+
+#: web/modules/imaging/infoPackage.inc.php:38
+msgid "Imaging"
+msgstr ""
+
+#: web/modules/imaging/manage/localSidebar.php:43
+msgid "Imaging Configuration"
+msgstr ""
+
+#: web/modules/imaging/infoPackage.inc.php:132
+#: web/modules/imaging/infoPackage.inc.php:153
+msgid "Imaging Log"
+msgstr ""
+
+#: web/modules/imaging/infoPackage.inc.php:92
+msgid "Imaging configuration"
+msgstr ""
+
+#: web/modules/imaging/imaging/tabs.php:100
+#: web/modules/imaging/imaging/tabs.php:150
+msgid "Imaging log"
+msgstr ""
+
+#: web/modules/imaging/infoPackage.inc.php:123
+msgid "Imaging on computer"
+msgstr ""
+
+#: web/modules/imaging/infoPackage.inc.php:144
+msgid "Imaging on group"
+msgstr ""
+
+#: web/modules/imaging/manage/save_configuration.php:60
+#, php-format
+msgid "Imaging server <strong>%s</strong> configuration saved."
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxConfiguration.php:37
+msgid "Imaging server configuration"
+msgstr ""
+
+#: web/modules/imaging/manage/localSidebar.php:28
+msgid "Imaging server status"
+msgstr ""
+
+#: web/modules/imaging/infoPackage.inc.php:33
+msgid "Imaging service"
+msgstr ""
+
+#: web/modules/imaging/imaging/ajaxImages.php:137
+msgid "In boot menu"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxServiceLevel2.php:80
+#: web/modules/imaging/imaging/ajaxServices.php:82
+msgid "In bootmenu"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxMasterLevel2.php:84
+msgid "In default boot menu"
+msgstr ""
+
+#: web/modules/imaging/manage/master_edit.php:71
+#: web/modules/imaging/manage/service_edit.php:64
+msgid "In default bootmenu"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxLogs.php:51
+#: web/modules/imaging/imaging/ajaxLogs.php:59
+msgid "Inventory"
+msgstr ""
+
+#: web/modules/imaging/manage/master_iso.php:45
+#: web/modules/imaging/imaging/images_iso.php:50
+#, php-format
+msgid "Iso of master <strong>%s</strong> has been launched in background."
+msgstr ""
+
+#: web/modules/imaging/imaging/bootmenu.php:79
 #, php-format
 msgid "Item <strong>%s</strong> moved down in the boot menu"
 msgstr ""
 
-#: modules/imaging/imaging/bootmenu.php:100
-msgid "Edition of item"
+#: web/modules/imaging/imaging/bootmenu.php:56
+#, php-format
+msgid "Item <strong>%s</strong> moved up in the boot menu"
 msgstr ""
 
-#: modules/imaging/imaging/header.php:31
+#: web/modules/imaging/imaging/configure.php:201
+msgid "Kernel parameters"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxConfiguration.php:132
+msgid "Keyboard mapping (empty/fr)"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxBootmenu.php:141
+#: web/modules/imaging/manage/master_edit.php:53
+#: web/modules/imaging/manage/service_edit.php:54
+#: web/modules/imaging/manage/ajaxMasterLevel2.php:79
+#: web/modules/imaging/manage/ajaxServiceLevel2.php:77
+#: web/modules/imaging/imaging/images.php:128
+#: web/modules/imaging/imaging/bootmenu.php:247
+#: web/modules/imaging/imaging/ajaxImages.php:132
+#: web/modules/imaging/imaging/ajaxServices.php:80
+msgid "Label"
+msgstr ""
+
+#: web/modules/imaging/manage/master_iso.php:82
+#: web/modules/imaging/imaging/images_iso.php:87
+msgid "Launch backup"
+msgstr ""
+
+#: web/modules/imaging/infoPackage.inc.php:98
+msgid "Link an Imaging Server"
+msgstr ""
+
+#: web/modules/imaging/manage/imaging_server_link.php:59
+#, php-format
+msgid ""
+"Link between imaging server <strong>%s</strong> and the entity <strong>%s</"
+"strong> succeeded."
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxAvailableImagingServer.php:41
+#, php-format
+msgid "Link this Imaging Server to the '%s' entity."
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxStatus.php:52
+msgid "Load on server"
+msgstr ""
+
+#: web/modules/imaging/infoPackage.inc.php:58
+#: web/modules/imaging/manage/localSidebar.php:34
+msgid "Manage boot services"
+msgstr ""
+
+#: web/modules/imaging/infoPackage.inc.php:44
+#: web/modules/imaging/manage/localSidebar.php:31
+msgid "Manage masters"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxService.php:38
+msgid "Manage services"
+msgstr ""
+
+#: web/modules/imaging/manage/master_edit.php:87
+#, php-format
+msgid "Master <strong>%s</strong> modified with success"
+msgstr ""
+
+#: web/modules/imaging/imaging/tabs.php:146
+msgid "Masters"
+msgstr ""
+
+#: web/modules/imaging/manage/master_iso.php:72
+#: web/modules/imaging/imaging/images_iso.php:77
+msgid "Media size"
+msgstr ""
+
+#: web/modules/imaging/includes/includes.php:194
+msgid "Memory"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxLogs.php:45
+#: web/modules/imaging/imaging/ajaxLogs.php:53
+msgid "Menu"
+msgstr ""
+
+#: web/modules/imaging/imaging/bootmenu_remove.php:62
+#, php-format
+msgid "Menu Item <strong>%s</strong> removed from boot menu"
+msgstr ""
+
+#: web/modules/imaging/infoPackage.inc.php:134
+#: web/modules/imaging/infoPackage.inc.php:155
+#: web/modules/imaging/imaging/tabs.php:102
+#: web/modules/imaging/imaging/tabs.php:152
+msgid "Menu configuration"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxLogs.php:108
+#: web/modules/imaging/imaging/ajaxLogs.php:173
+msgid "Message"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxConfiguration.php:128
+#: web/modules/imaging/imaging/configure.php:181
+msgid "Message displayed during backup/restoration"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxBootmenu.php:81
+#: web/modules/imaging/imaging/bootmenu.php:186
+msgid "Move Up"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxBootmenu.php:82
+#: web/modules/imaging/imaging/bootmenu.php:187
+msgid "Move down"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxAvailableImagingServer.php:68
+#: web/modules/imaging/manage/ajaxPostInstallLevel2.php:63
+msgid "Name"
+msgstr ""
+
+#: web/modules/imaging/includes/includes.php:209
+msgid "Never"
+msgstr ""
+
+#: web/modules/imaging/imaging/tabs.php:161
+msgid "Not enough informations"
+msgstr ""
+
+#: web/modules/imaging/imaging/ajaxLogs.php:81
+msgid "Obtained an image UUID"
+msgstr ""
+
+#: web/modules/imaging/imaging/ajaxLogs.php:98
+msgid "Obtained its UUID"
+msgstr ""
+
+#: web/modules/imaging/imaging/ajaxLogs.php:95
+msgid "Obtained its hostname"
+msgstr ""
+
+#: web/modules/imaging/manage/master_iso.php:49
+#: web/modules/imaging/imaging/images_iso.php:54
+msgid "Please go to the status page to check the iso creation status."
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxLogs.php:48
+#: web/modules/imaging/imaging/ajaxLogs.php:56
+msgid "Post-install"
+msgstr ""
+
+#: web/modules/imaging/manage/master_edit.php:68
+#: web/modules/imaging/imaging/images.php:183
+msgid "Post-installation script"
+msgstr ""
+
+#: web/modules/imaging/infoPackage.inc.php:81
+#: web/modules/imaging/manage/localSidebar.php:40
+msgid "Post-installation scripts"
+msgstr ""
+
+#: web/modules/imaging/imaging/ajaxLogs.php:91
+msgid "Postinstall completed"
+msgstr ""
+
+#: web/modules/imaging/imaging/ajaxLogs.php:90
+msgid "Postinstall started"
+msgstr ""
+
+#: web/modules/imaging/imaging/configure.php:127
+#: web/modules/imaging/imaging/showtarget.php:50
+msgid "Profile"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxStatus.php:76
+msgid "Recent activity in entity"
+msgstr ""
+
+#: web/modules/imaging/infoPackage.inc.php:118
+msgid "Register a computer in the imaging module"
+msgstr ""
+
+#: web/modules/imaging/infoPackage.inc.php:139
+msgid "Register a profile in the imaging module"
+msgstr ""
+
+#: web/modules/imaging/imaging/configure.php:94
+#, php-format
+msgid "Register your computer '%s'."
+msgstr ""
+
+#: web/modules/imaging/imaging/configure.php:98
+#, php-format
+msgid "Register your profile '%s'."
+msgstr ""
+
+#: web/modules/imaging/manage/master_delete.php:41
+#: web/modules/imaging/imaging/bootmenu_remove.php:82
+#: web/modules/imaging/imaging/images_delete.php:58
+msgid "Remove"
+msgstr ""
+
+#: web/modules/imaging/infoPackage.inc.php:219
+msgid "Remove a service from a target"
+msgstr ""
+
+#: web/modules/imaging/infoPackage.inc.php:159
+#: web/modules/imaging/imaging/bootmenu_remove.php:78
+#: web/modules/imaging/imaging/ajaxImages.php:70
+msgid "Remove from boot menu"
+msgstr ""
+
+#: web/modules/imaging/infoPackage.inc.php:63
+msgid "Remove service"
+msgstr ""
+
+#: web/modules/imaging/imaging/ajaxServices.php:51
+msgid "Remove service from boot menu"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxServiceLevel2.php:51
+msgid "Remove service from default boot menu"
+msgstr ""
+
+#: web/modules/imaging/manage/service_del.php:56
+#, php-format
+msgid "Remove the boot service <b>%s</b> from the default boot menu"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxLogs.php:46
+#: web/modules/imaging/imaging/ajaxLogs.php:54
+msgid "Restoration"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxConfiguration.php:83
+#: web/modules/imaging/imaging/configure.php:136
+msgid "Restoration options"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxConfiguration.php:113
+#: web/modules/imaging/imaging/configure.php:166
+msgid "Restoration type"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxConfiguration.php:116
+#: web/modules/imaging/imaging/configure.php:169
+msgid "Restoration: MTFTP maximum waiting (in sec)"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxLogs.php:54
+#: web/modules/imaging/imaging/ajaxLogs.php:62
+msgid "Restore done"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxLogs.php:55
+#: web/modules/imaging/imaging/ajaxLogs.php:63
+msgid "Restore failed"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxLogs.php:53
+#: web/modules/imaging/imaging/ajaxLogs.php:61
+msgid "Restore in progress"
+msgstr ""
+
+#: web/modules/imaging/infoPackage.inc.php:101
+msgid "Save an Imaging Server configuration"
+msgstr ""
+
+#: web/modules/imaging/manage/postinstall_edit.php:114
+msgid "Script value"
+msgstr ""
+
+#: web/modules/imaging/manage/bootmenu_edit.php:81
+#: web/modules/imaging/manage/master_add.php:95
+#: web/modules/imaging/manage/service_add.php:94
+#: web/modules/imaging/imaging/bootmenu.php:125
+#: web/modules/imaging/imaging/addservice.php:105
+#: web/modules/imaging/imaging/addimage.php:105
+msgid "Selected by default"
+msgstr ""
+
+#: web/modules/imaging/manage/bootmenu_edit.php:91
+#: web/modules/imaging/manage/master_add.php:99
+#: web/modules/imaging/manage/service_add.php:98
+#: web/modules/imaging/imaging/bootmenu.php:135
+#: web/modules/imaging/imaging/addservice.php:109
+#: web/modules/imaging/imaging/addimage.php:109
+msgid "Selected by default on WOL"
+msgstr ""
+
+#: web/modules/imaging/infoPackage.inc.php:42
+msgid "Server status"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxStatus.php:44
+msgid "Server status for this entity"
+msgstr ""
+
+#: web/modules/imaging/imaging/services.php:57
+#: web/modules/imaging/imaging/addservice.php:53
+#, php-format
+msgid "Service <strong>%s</strong> added to boot menu"
+msgstr ""
+
+#: web/modules/imaging/manage/service_add.php:48
+#, php-format
+msgid "Service <strong>%s</strong> added to default boot menu"
+msgstr ""
+
+#: web/modules/imaging/manage/service_edit.php:79
+#, php-format
+msgid "Service <strong>%s</strong> modified with success"
+msgstr ""
+
+#: web/modules/imaging/manage/service_del.php:42
+#, php-format
+msgid "Service <strong>%s</strong> removed from default boot menu"
+msgstr ""
+
+#: web/modules/imaging/imaging/showtarget.php:43
+msgid "Show all targets that use that image in their boot menu"
+msgstr ""
+
+#: web/modules/imaging/infoPackage.inc.php:163
+msgid "Show target that use that image"
+msgstr ""
+
+#: web/modules/imaging/imaging/ajaxImages.php:73
+msgid "Show target using that image"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxMasterLevel2.php:83
+#: web/modules/imaging/imaging/ajaxImages.php:136
+msgid "Size (compressed)"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxStatus.php:48
+msgid "Space available on server"
+msgstr ""
+
+#: web/modules/imaging/imaging/ajaxLogs.php:86
+msgid "Started restoration"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxStatus.php:67
+msgid "Stats"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxLogs.php:43
+#: web/modules/imaging/manage/ajaxLogs.php:59
+#: web/modules/imaging/imaging/ajaxLogs.php:51
+#: web/modules/imaging/imaging/ajaxLogs.php:67
+msgid "Status unknow"
+msgstr ""
+
+#: web/modules/imaging/includes/includes.php:197
+msgid "Swap"
+msgstr ""
+
+#: web/modules/imaging/imaging/tabs.php:51
+#, php-format
+msgid "Synchronization failed for : %s"
+msgstr ""
+
+#: web/modules/imaging/manage/location.php:60
+#, php-format
+msgid "Synchronization failed for entity: %s"
+msgstr ""
+
+#: web/modules/imaging/manage/location.php:57
+msgid "Synchronization launched on this entity."
+msgstr ""
+
+#: web/modules/imaging/imaging/tabs.php:48
+msgid "Synchronization launched on this target."
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxStatus.php:59
+msgid "Synchronization state"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxBootmenu.php:62
+#: web/modules/imaging/imaging/header.php:38
+msgid "Synchronize"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxLogs.php:107
+#: web/modules/imaging/imaging/ajaxLogs.php:172
+msgid "Target"
+msgstr ""
+
+#: web/modules/imaging/imaging/configure.php:198
+msgid "Target options"
+msgstr ""
+
+#: web/modules/imaging/imaging/configure.php:113
+#, php-format
+msgid ""
+"The default values displayed here come from this %s's entity default menu."
+msgstr ""
+
+#: web/modules/imaging/imaging/configure.php:117
+#, php-format
+msgid "The default values displayed here come from this %s's profile menu."
+msgstr ""
+
+#: web/modules/imaging/manage/master_iso.php:47
+#: web/modules/imaging/imaging/images_iso.php:52
+#, php-format
+msgid ""
+"The files will be stored in the directory %s of the server at the end of the "
+"backup."
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxBootmenu.php:50
+#: web/modules/imaging/imaging/tabs.php:83
+msgid "The registering in the imaging server has failed."
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxBootmenu.php:48
+#: web/modules/imaging/imaging/tabs.php:77
+#: web/modules/imaging/imaging/tabs.php:132
+#, php-format
+msgid "The synchro is running, please wait or reload the page %shere%s"
+msgstr ""
+
+#: web/modules/imaging/manage/ajaxBootmenu.php:56
+msgid ""
+"This location has been modified, when you are done, please press on "
+"\"Synchronize\" so that modifications are updated on the Imaging server."
+msgstr ""
+
+#: web/modules/imaging/manage/master_iso.php:51
+#: web/modules/imaging/imaging/images_iso.php:56
+msgid "This operation will last according to the amount of data of the master."
+msgstr ""
+
+#: web/modules/imaging/imaging/header.php:31
 msgid ""
 "This target has been modified, when you are done, please press on "
 "\"Synchronize\" so that modifications are updated on the Imaging server."
 msgstr ""
 
-#: modules/imaging/imaging/addservice.php:93
-#, php-format
-msgid "Add the boot service <b>%s</b> to <b>%s</b>"
+#: web/modules/imaging/imaging/ajaxLogs.php:167
+msgid "Timestamp"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:70
-#, php-format
-msgid "Boot menu is created for <strong>%s</strong>."
+#: web/modules/imaging/manage/master_iso.php:67
+#: web/modules/imaging/manage/ajaxLogs.php:105
+#: web/modules/imaging/imaging/images_iso.php:72
+msgid "Title"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:80
-#, php-format
-msgid "Failed to synchronize those computers : %s"
+#: web/modules/imaging/imaging/ajaxLogs.php:83
+msgid "Toggled default entry"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:94
-#, php-format
-msgid "Register your computer '%s'."
+#: web/modules/imaging/infoPackage.inc.php:72
+msgid "Up service"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:98
-#, php-format
-msgid "Register your profile '%s'."
+#: web/modules/imaging/manage/ajaxStatus.php:63
+msgid "Up-to-date"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:108
+#: web/modules/imaging/includes/includes.php:183
+msgid "Uptime: "
+msgstr ""
+
+#: web/modules/imaging/manage/bootmenu_edit.php:101
+#: web/modules/imaging/manage/master_edit.php:76
+#: web/modules/imaging/manage/service_edit.php:69
+#: web/modules/imaging/manage/ajaxConfiguration.php:146
+#: web/modules/imaging/manage/postinstall_edit.php:118
+#: web/modules/imaging/imaging/images.php:137
+#: web/modules/imaging/imaging/images.php:186
+#: web/modules/imaging/imaging/bootmenu.php:145
+#: web/modules/imaging/imaging/configure.php:210
+msgid "Validate"
+msgstr ""
+
+#: web/modules/imaging/imaging/images.php:139
+msgid "Validate and convert to image"
+msgstr ""
+
+#: web/modules/imaging/imaging/images.php:141
+msgid "Validate and convert to master"
+msgstr ""
+
+#: web/modules/imaging/imaging/configure.php:108
 #, php-format
 msgid ""
 "You must define a default menu for the entity before trying to set a menu to "
 "that %s."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:113
-#, php-format
-msgid ""
-"The default values displayed here come from this %s's entity default menu."
+#: web/modules/imaging/manage/ajaxStatus.php:68
+msgid "clients have a rescue image"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:117
-#, php-format
-msgid "The default values displayed here come from this %s's profile menu."
+#: web/modules/imaging/includes/includes.php:185
+msgid "day"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:127
-#, php-format
-msgid "%s menu parameters"
+#: web/modules/imaging/includes/includes.php:188
+msgid "hour"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:127
-#: modules/imaging/imaging/showtarget.php:50
-msgid "Computer"
+#: web/modules/imaging/manage/ajaxStatus.php:70
+msgid "masters are available"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:127
-#: modules/imaging/imaging/showtarget.php:50
-msgid "Profile"
+#: web/modules/imaging/includes/includes.php:190
+msgid "minute"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:198
-msgid "Target options"
+#: web/modules/imaging/manage/ajaxConfiguration.php:93
+#: web/modules/imaging/imaging/configure.php:146
+msgid "mtftp"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:201
-msgid "Kernel parameters"
+#: web/modules/imaging/manage/ajaxConfiguration.php:91
+#: web/modules/imaging/imaging/configure.php:144
+msgid "nfs"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:205
-msgid "Image parameters"
-msgstr ""
-
-#: modules/imaging/imaging/showtarget.php:43
-msgid "Show all targets that use that image in their boot menu"
-msgstr ""
-
-#: modules/imaging/imaging/ajaxImages.php:69
-msgid "Add image to boot menu"
-msgstr ""
-
-#: modules/imaging/imaging/ajaxImages.php:72
-msgid "Delete the image"
-msgstr ""
-
-#: modules/imaging/imaging/ajaxImages.php:73
-msgid "Show target using that image"
-msgstr ""
-
-#: modules/imaging/imaging/ajaxImages.php:137
-msgid "In boot menu"
-msgstr ""
-
-#: modules/imaging/imaging/ajaxServices.php:50
-msgid "Add service to boot menu"
-msgstr ""
-
-#: modules/imaging/imaging/ajaxServices.php:51
-msgid "Remove service from boot menu"
+#: web/modules/imaging/manage/ajaxConfiguration.php:92
+#: web/modules/imaging/imaging/configure.php:145
+msgid "tftp"
 msgstr ""

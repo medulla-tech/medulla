@@ -62,8 +62,8 @@ msgstr ""
 msgid "comment"
 msgstr ""
 
-#: web/modules/glpi/glpi/view_hardware.php:77
 #: web/modules/glpi/glpi/view_part.php:77
+#: web/modules/glpi/glpi/view_hardware.php:77
 msgid "comments"
 msgstr ""
 
@@ -131,8 +131,8 @@ msgstr ""
 msgid "model"
 msgstr ""
 
-#: web/modules/glpi/glpi/view_hardware.php:76
 #: web/modules/glpi/glpi/view_part.php:76
+#: web/modules/glpi/glpi/view_hardware.php:76
 msgid "name"
 msgstr ""
 
@@ -192,7 +192,7 @@ msgstr ""
 msgid "subnet"
 msgstr ""
 
-#: web/modules/glpi/glpi/view_hardware.php:87
 #: web/modules/glpi/glpi/view_part.php:83
+#: web/modules/glpi/glpi/view_hardware.php:87
 msgid "type"
 msgstr ""

@@ -27,8 +27,8 @@ msgstr ""
 msgid "->"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/save.php:92
 #: web/modules/dyngroup/dyngroup/import_from_file.php:43
+#: web/modules/dyngroup/dyngroup/save.php:91
 #: web/modules/dyngroup/dyngroup/add_groups.php:147
 #, php-format
 msgid "A group already exists with name '%s'"
@@ -94,7 +94,7 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/save.php:135
+#: web/modules/dyngroup/dyngroup/save.php:134
 msgid "Check"
 msgstr ""
 
@@ -214,16 +214,16 @@ msgstr ""
 msgid "Display a groups of computers"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/save.php:154
+#: web/modules/dyngroup/dyngroup/save.php:153
 msgid "Display content"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/display.php:45
+#: web/modules/dyngroup/dyngroup/display.php:44
 #, php-format
 msgid "Display group '%s' content"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/display.php:47
+#: web/modules/dyngroup/dyngroup/display.php:46
 #, php-format
 msgid "Display profile '%s' content"
 msgstr ""
@@ -276,7 +276,7 @@ msgstr ""
 msgid "Edit this profile"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/save.php:135
+#: web/modules/dyngroup/dyngroup/save.php:134
 msgid "Enter boolean operator between groups"
 msgstr ""
 
@@ -292,11 +292,11 @@ msgstr ""
 msgid "Group failed to modify"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/edit_share.php:84
+#: web/modules/dyngroup/dyngroup/edit_share.php:83
 msgid "Group failed to share"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/list.php:30
+#: web/modules/dyngroup/dyngroup/list.php:29
 msgid "Group list"
 msgstr ""
 
@@ -327,7 +327,7 @@ msgstr ""
 msgid "Group successfully modified"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/edit_share.php:76
+#: web/modules/dyngroup/dyngroup/edit_share.php:75
 msgid "Group successfully shared"
 msgstr ""
 
@@ -375,13 +375,13 @@ msgstr ""
 msgid "Modify"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/save.php:72
+#: web/modules/dyngroup/dyngroup/save.php:71
 msgid "Name :"
 msgstr ""
 
 #: web/modules/dyngroup/includes/groups.inc.php:128
-#: web/modules/dyngroup/dyngroup/creator.php:185
 #: web/modules/dyngroup/dyngroup/import_from_file.php:52
+#: web/modules/dyngroup/dyngroup/creator.php:185
 msgid "No"
 msgstr ""
 
@@ -436,7 +436,7 @@ msgstr ""
 msgid "Profile successfully modified"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/list_profiles.php:31
+#: web/modules/dyngroup/dyngroup/list_profiles.php:30
 msgid "Profiles list"
 msgstr ""
 
@@ -461,11 +461,11 @@ msgstr ""
 msgid "Remove a computer from a computers group"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/save_detail.php:29
+#: web/modules/dyngroup/dyngroup/save_detail.php:28
 msgid "Request saver"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/save.php:31
+#: web/modules/dyngroup/dyngroup/save.php:30
 #, php-format
 msgid "Request saver (%s)"
 msgstr ""
@@ -474,7 +474,7 @@ msgstr ""
 msgid "Result profile creation"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/save.php:88
+#: web/modules/dyngroup/dyngroup/save.php:87
 msgid "Save"
 msgstr ""
 
@@ -502,7 +502,7 @@ msgstr ""
 msgid "Share a group of computers"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/edit_share.php:36
+#: web/modules/dyngroup/dyngroup/edit_share.php:35
 #, php-format
 msgid "Share groupe '%s' with"
 msgstr ""
@@ -555,29 +555,29 @@ msgstr ""
 msgid "Static profile creation from import"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/tmpdisplay.php:34
+#: web/modules/dyngroup/dyngroup/tmpdisplay.php:33
 #: web/modules/dyngroup/infoPackage.inc.php:160
 msgid "Temporary result display"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/tmpdisplay.php:32
+#: web/modules/dyngroup/dyngroup/tmpdisplay.php:31
 #, php-format
 msgid "Temporary result display for '%s'"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/save.php:141
+#: web/modules/dyngroup/dyngroup/save.php:140
 #, php-format
 msgid "The boolean equation '%s' is not valid"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/save.php:144
+#: web/modules/dyngroup/dyngroup/save.php:143
 #, php-format
 msgid ""
 "The boolean equation '%s' is not valid.<br/>Not the same number of sub-"
 "requests"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/save.php:147
+#: web/modules/dyngroup/dyngroup/save.php:146
 msgid "The boolean equation is valid"
 msgstr ""
 
@@ -585,12 +585,12 @@ msgstr ""
 msgid "The request is : "
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/save_detail.php:43
+#: web/modules/dyngroup/dyngroup/save_detail.php:42
 #, php-format
 msgid "This request has been saved as %s (id=%s)"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/save_detail.php:45
+#: web/modules/dyngroup/dyngroup/save_detail.php:44
 #, php-format
 msgid "This result has been saved as %s (id=%s)"
 msgstr ""
@@ -603,7 +603,7 @@ msgstr ""
 msgid "Update machine cache"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/update.php:31
+#: web/modules/dyngroup/dyngroup/update.php:30
 msgid "Update machines name cache in dyngroup"
 msgstr ""
 
@@ -612,14 +612,14 @@ msgid "Visible"
 msgstr ""
 
 #: web/modules/dyngroup/includes/groups.inc.php:127
+#: web/modules/dyngroup/dyngroup/import_from_file.php:52
 #: web/modules/dyngroup/dyngroup/creator.php:184
 #: web/modules/dyngroup/dyngroup/creator.php:190
-#: web/modules/dyngroup/dyngroup/import_from_file.php:52
 msgid "Yes"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/save.php:94
-#: web/modules/dyngroup/dyngroup/save.php:96
+#: web/modules/dyngroup/dyngroup/save.php:93
+#: web/modules/dyngroup/dyngroup/save.php:95
 #: web/modules/dyngroup/dyngroup/add_groups.php:141
 msgid "You must specify a group name"
 msgstr ""
@@ -633,32 +633,32 @@ msgstr ""
 msgid "You will remove computer <b>%s</b> from group <b>%s</b>."
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/tmpdisplay.php:55
+#: web/modules/dyngroup/dyngroup/tmpdisplay.php:54
 msgid "back"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/save.php:31
+#: web/modules/dyngroup/dyngroup/save.php:30
 msgid "group"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/save.php:78
+#: web/modules/dyngroup/dyngroup/save.php:77
 msgid "hidden"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/save.php:78
+#: web/modules/dyngroup/dyngroup/save.php:77
 msgid "it should be"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/save.php:31
+#: web/modules/dyngroup/dyngroup/save.php:30
 msgid "profile"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/save.php:74
+#: web/modules/dyngroup/dyngroup/save.php:73
 #: web/modules/dyngroup/dyngroup/ajaxListGroups.php:74
 msgid "query"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/save.php:74
+#: web/modules/dyngroup/dyngroup/save.php:73
 msgid "result"
 msgstr ""
 
@@ -667,7 +667,7 @@ msgstr ""
 msgid "result (%s)"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/save.php:74
+#: web/modules/dyngroup/dyngroup/save.php:73
 msgid "save as"
 msgstr ""
 
@@ -693,11 +693,11 @@ msgstr ""
 msgid "the static profile"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/update.php:36
+#: web/modules/dyngroup/dyngroup/update.php:35
 #, php-format
 msgid "update machine cache : %s machines"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/save.php:78
+#: web/modules/dyngroup/dyngroup/save.php:77
 msgid "visible"
 msgstr ""

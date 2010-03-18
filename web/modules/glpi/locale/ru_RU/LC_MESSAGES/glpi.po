@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: glpi\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-10-20 09:30+0200\n"
+"POT-Creation-Date: 2010-03-18 11:49+0100\n"
 "PO-Revision-Date: 2008-07-25 13:37+0200\n"
 "Last-Translator: Andrzej Skrzypczak <aeskrzypczak@gmail.com>\n"
 "Language-Team:  <pl@li.org>\n"
@@ -82,8 +82,8 @@ msgstr ""
 msgid "comment"
 msgstr "komentarze"
 
-#: web/modules/glpi/glpi/view_hardware.php:77
 #: web/modules/glpi/glpi/view_part.php:77
+#: web/modules/glpi/glpi/view_hardware.php:77
 msgid "comments"
 msgstr "komentarze"
 
@@ -153,8 +153,8 @@ msgstr "lokalizacja"
 msgid "model"
 msgstr ""
 
-#: web/modules/glpi/glpi/view_hardware.php:76
 #: web/modules/glpi/glpi/view_part.php:76
+#: web/modules/glpi/glpi/view_hardware.php:76
 msgid "name"
 msgstr "nazwa"
 
@@ -215,7 +215,7 @@ msgstr ""
 msgid "subnet"
 msgstr ""
 
-#: web/modules/glpi/glpi/view_hardware.php:87
 #: web/modules/glpi/glpi/view_part.php:83
+#: web/modules/glpi/glpi/view_hardware.php:87
 msgid "type"
 msgstr ""

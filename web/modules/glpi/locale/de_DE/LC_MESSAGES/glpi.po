@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-10-20 09:30+0200\n"
+"POT-Creation-Date: 2010-03-18 11:49+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -80,8 +80,8 @@ msgstr ""
 msgid "comment"
 msgstr ""
 
-#: web/modules/glpi/glpi/view_hardware.php:77
 #: web/modules/glpi/glpi/view_part.php:77
+#: web/modules/glpi/glpi/view_hardware.php:77
 msgid "comments"
 msgstr ""
 
@@ -149,8 +149,8 @@ msgstr ""
 msgid "model"
 msgstr ""
 
-#: web/modules/glpi/glpi/view_hardware.php:76
 #: web/modules/glpi/glpi/view_part.php:76
+#: web/modules/glpi/glpi/view_hardware.php:76
 msgid "name"
 msgstr ""
 
@@ -210,7 +210,7 @@ msgstr ""
 msgid "subnet"
 msgstr ""
 
-#: web/modules/glpi/glpi/view_hardware.php:87
 #: web/modules/glpi/glpi/view_part.php:83
+#: web/modules/glpi/glpi/view_hardware.php:87
 msgid "type"
 msgstr ""
