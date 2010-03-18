@@ -184,7 +184,7 @@ class Imaging(Pulse2Api):
         Called by the MMC agent.
         """
         d = self.callRemote("imagingServerStatus")
-        d.addErrback(self.onErrorRaise, "Imaging:imagingServerStatus", None)
+        d.addErrback(self.onError, "Imaging:imagingServerStatus", None, {})
         return d
 
     def imagingServerMastersGet(self): # list of imageData
