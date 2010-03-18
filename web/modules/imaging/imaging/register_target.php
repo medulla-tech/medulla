@@ -27,11 +27,7 @@
 require('modules/base/computers/localSidebar.php');
 require("graph/navbar.inc.php");
 
-if ($type == '') {
-    $p = new PageGenerator();
-} else {
-    $p = new PageGenerator();
-}
+$p = new PageGenerator();
 $p->setSideMenu($sidemenu);
 $p->display();
 
