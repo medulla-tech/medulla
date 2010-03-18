@@ -264,7 +264,9 @@ class RpcProxy(RpcProxyI):
             if gid:
                 # Get all targets corresponding to the computer given group ID
                 target = ComputerGroupManager().get_group_results(ctx, gid, 0, -1, '', True)
-            d = MscDatabase().addCommandQuick(ctx, qas[idcmd]["command"], target, desc, gid)
+            # Use maybeDeferred because addCommandQuick will return an error
+            # code in case of failure
+            d = defer.maybeDeferred(MscDatabase().addCommandQuick, ctx, qas[idcmd]["command"], target, desc, gid)
             d.addCallback(xmlrpcCleanup)
             ret = d
         else:
