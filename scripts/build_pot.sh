@@ -30,7 +30,7 @@ for POT_D in `find . -name "locale" -type d`; do
     find "$POT_D" -iname "*.php" -exec xgettext --join-existing --output=${POT} --language=PHP --keyword=_T {} \;
     for name in `find ${POT_D} -type f -name *.po`; do
         echo -n "updating ${name}..."
-        msgmerge --update --add-location --sort-output ${name} ${POT}
+        msgmerge --update --add-location --sort-output --quiet --no-wrap ${name} ${POT}
         echo "done"
     done
 done
