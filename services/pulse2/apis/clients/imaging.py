@@ -333,7 +333,9 @@ class ImagingApi(Imaging):
     def __init__(self, url=None):
         self.logger = logging.getLogger()
         credit = ''
-        if type(url) == str or type(url) == unicode:
+        if type(url) == unicode:
+            url = url.encode('utf-8')
+        if type(url) == str:
             self.server_addr = url
             if url.find('@') != -1:
                 credit = url.split('/')[2].split('@')
@@ -359,5 +361,7 @@ class ImagingApi(Imaging):
             else:
                 Imaging.__init__(self, credit, self.server_addr)
         else:
-            self.logger.error("Imaging api : cant connect to %s, dont know how to do" % (url))
+            msg = "Imaging api : cant connect to %s, dont know how to do" % url
+            self.logger.error(msg)
+            raise TypeError(msg)
         self.logger.debug("ImagingApi> connected to %s" % (self.server_addr))
