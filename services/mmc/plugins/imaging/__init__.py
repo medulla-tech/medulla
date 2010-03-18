@@ -1029,19 +1029,18 @@ class RpcProxy(RpcProxyI):
         @returns: a dict containing disk usage....
         @rtype: dict
         """
-        url = self.__chooseImagingApiUrl(location)
-        i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
-        # TODO need to be done in async
-        if i != None:
-            def treatResults(results):
+        def processResults(results):
+            assert(type(results) == dict)
+            if results:
                 # add short_status from the database
                 status = ImagingDatabase().getEntityStatus(location)
                 results['short_status'] = status
-                return xmlrpcCleanup(results)
-            d = i.imagingServerStatus()
-            d.addCallback(treatResults)
-            return d
-        return {}
+            return xmlrpcCleanup(results)
+
+        url = self.__chooseImagingApiUrl(location)
+        d = ImagingApi(url).imagingServerStatus()
+        d.addCallback(processResults)
+        return d
 
     ####### IMAGING SERVER
     def getAllNonLinkedImagingServer(self, start = 0, end = -1, filter = ''):
