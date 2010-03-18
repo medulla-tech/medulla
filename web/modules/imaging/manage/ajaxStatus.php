@@ -35,9 +35,10 @@ require("../includes/xmlrpc.inc.php");
 $location = getCurrentLocation();
 if (xmlrpc_doesLocationHasImagingServer($location)) {
     $global_status = xmlrpc_getGlobalStatus($location);
-    $disk_info = format_disk_info($global_status['disk_info']);
-    $health = format_health($global_status['uptime'], $global_status['mem_info']);
-    $short_status = $global_status['short_status'];
+    if (!empty($global_status)) {
+        $disk_info = format_disk_info($global_status['disk_info']);
+        $health = format_health($global_status['uptime'], $global_status['mem_info']);
+        $short_status = $global_status['short_status'];
 ?>
 
 <br/>
@@ -76,11 +77,15 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
 <h2 class="activity"><?=_T('Recent activity in entity', 'imaging')?></h2>
 
 <?
-    $ajax = new AjaxFilter("modules/imaging/manage/ajaxLogs.php", "container_logs", array(), "Logs");
-    //$ajax->setRefresh(10000);
-    $ajax->display();
-    echo "<br/><br/><br/>";
-    $ajax->displayDivToUpdate();
+        $ajax = new AjaxFilter("modules/imaging/manage/ajaxLogs.php", "container_logs", array(), "Logs");
+        //$ajax->setRefresh(10000);
+        $ajax->display();
+        echo "<br/><br/><br/>";
+        $ajax->displayDivToUpdate();
+    } else {
+        $e = new ErrorMessage(_T("Can't connect to the imaging server linked to the selected entity.", "imaging"));
+        print $e->display();
+    }
 } else {
     $ajax = new AjaxFilter(urlStrRedirect("imaging/manage/ajaxAvailableImagingServer"), "container", array('from'=>$_GET['from']));
     $ajax->display();
