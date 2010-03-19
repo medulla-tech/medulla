@@ -54,7 +54,7 @@ class Pulse2Image:
         try:
             fd_grub_file = open(os.path.join(directory, PULSE2_IMAGING_GRUB_FNAME))
         except Exception, e:
-            logging.getLogger().error("Pulse2Image : can't read %s" % (fd_grub_file, e))
+            logging.getLogger().error("Pulse2Image : can't read %s : %s" % (fd_grub_file, e))
             return None
 
         # read grub file
@@ -83,7 +83,7 @@ class Pulse2Image:
                 part_number = int(line_grub_file_part.group(2))
                 start = int(line_grub_file_part.group(3)) * 512
                 end = int(line_grub_file_part.group(4)) * 512
-                len = end - start
+                l = end - start
                 kind = line_grub_file_part.group(5)
                 try:
                     self.disks[hd_number][part_number] = {}
@@ -91,7 +91,7 @@ class Pulse2Image:
                     self.disks[hd_number] = {}
                     self.disks[hd_number][part_number] = {}
                 self.disks[hd_number][part_number]['start'] = start
-                self.disks[hd_number][part_number]['size'] = len
+                self.disks[hd_number][part_number]['size'] = l
                 self.disks[hd_number][part_number]['kind'] = kind
 
             # part line ?
