@@ -115,7 +115,6 @@ CREATE TABLE Entity (
   id INT NOT NULL AUTO_INCREMENT,
   name Text NOT NULL,
   uuid Text NOT NULL,
-  fk_default_menu INT NOT NULL,
   PRIMARY KEY (id)
 );
 
@@ -137,8 +136,10 @@ CREATE TABLE ImagingServer (
   id INT NOT NULL AUTO_INCREMENT,
   name Text NOT NULL,
   url Text NOT NULL,
+  fk_default_menu INT NOT NULL,
   packageserver_uuid Text NOT NULL,
-  recursive Bool NOT NULL DEFAULT 0,
+  recursive Bool NOT NULL DEFAULT 1,
+  associated Bool NOT NULL DEFAULT 1,
   fk_entity INT NOT NULL,
   PRIMARY KEY (id)
 );
@@ -269,7 +270,7 @@ ALTER TABLE MasteredOn                          ADD UNIQUE (fk_image, fk_imaging
 -- ----------------------------------------------------------------------
 -- Add foreign constraints
 -- ----------------------------------------------------------------------
-ALTER TABLE Entity ADD FOREIGN KEY(fk_default_menu)     REFERENCES Menu(id);
+ALTER TABLE ImagingServer ADD FOREIGN KEY(fk_default_menu)     REFERENCES Menu(id);
 
 ALTER TABLE Target ADD FOREIGN KEY(`type`)      REFERENCES TargetType(id);
 ALTER TABLE Target ADD FOREIGN KEY(fk_entity)   REFERENCES Entity(id);
@@ -325,7 +326,7 @@ ALTER TABLE PostInstallScript ADD FOREIGN KEY(fk_desc)  REFERENCES International
 -- ----------------------------------------------------------------------
 -- Add indexes
 -- ----------------------------------------------------------------------
-CREATE INDEX fk_entity_default_menu_idx ON Entity(fk_default_menu);
+CREATE INDEX fk_entity_default_menu_idx ON ImagingServer(fk_default_menu);
 
 CREATE INDEX fk_target_type_idx     ON Target(`type`);
 CREATE INDEX fk_target_entity_idx   ON Target(fk_entity);
@@ -463,8 +464,10 @@ INSERT INTO BootServiceInMenu (fk_bootservice, fk_menuitem) VALUES (2, 4);
 UPDATE Menu SET fk_default_item = 1, fk_default_item_WOL = 1 WHERE id = 1;
 UPDATE Menu SET fk_default_item = 3, fk_default_item_WOL = 3 WHERE id = 2;
 
-INSERT INTO Entity (id, name, uuid, fk_default_menu) VALUES (1, "NEED_ASSOCIATION", "NEED_ASSOCIATION", 1);
+/* This corresponds to our root entity, inventory-side */
+INSERT INTO Entity (id, name, uuid) VALUES (1, "root", "UUID1");
 
+/* Default user */
 INSERT INTO User (id, login) VALUES (1, 'UNKNOWN');
 
 COMMIT;
