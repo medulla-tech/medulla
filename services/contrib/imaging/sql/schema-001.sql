@@ -139,7 +139,7 @@ CREATE TABLE ImagingServer (
   fk_default_menu INT NOT NULL,
   packageserver_uuid Text NOT NULL,
   recursive Bool NOT NULL DEFAULT 1,
-  associated Bool NOT NULL DEFAULT 1,
+  associated Bool NOT NULL DEFAULT 0,
   fk_entity INT NOT NULL,
   PRIMARY KEY (id)
 );
