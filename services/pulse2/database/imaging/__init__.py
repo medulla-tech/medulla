@@ -42,13 +42,13 @@ from pulse2.managers.location import ComputerLocationManager
 
 DATABASEVERSION = 1
 
+
 class ImagingDatabase(DyngroupDatabaseHelper):
     """
     Class to query the Pulse2 imaging database.
 
     DyngroupDatabaseHelper is a Singleton, so is ImagingDatabase
     """
-
 
     def db_check(self):
         self.my_name = "ImagingDatabase"
@@ -65,17 +65,30 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         self.config = config
         db_path = self.makeConnectionPath()
         if db_path.find('?') == -1:
-            db_path = db_path+"?charset=utf8&use_unicode=0"
+            db_path = db_path + "?charset=utf8&use_unicode=0"
         else:
-            db_path = db_path+"&charset=utf8&use_unicode=0"
+            db_path = db_path + "&charset=utf8&use_unicode=0"
         self.db = create_engine(db_path, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize, convert_unicode=True)
         self.metadata = MetaData(self.db)
         if not self.initMappersCatchException():
             return False
         self.metadata.create_all()
         self.r_nomenclatures = {}
-        self.nomenclatures = {'ImagingLogState':ImagingLogState, 'ImagingLogLevel':ImagingLogLevel, 'TargetType':TargetType, 'Protocol':Protocol, 'SynchroState':SynchroState}
-        self.fk_nomenclatures = {'ImagingLog':{'fk_imaging_log_state':'ImagingLogState', 'fk_imaging_log_level':'ImagingLogLevel'}, 'Target':{'type':'TargetType'}, 'Menu':{'fk_protocol':'Protocol', 'fk_synchrostate':'SynchroState'}}
+        self.nomenclatures = {
+            'ImagingLogState': ImagingLogState,
+            'ImagingLogLevel': ImagingLogLevel,
+            'TargetType': TargetType,
+            'Protocol': Protocol,
+            'SynchroState': SynchroState}
+        self.fk_nomenclatures = {
+            'ImagingLog': {
+                'fk_imaging_log_state': 'ImagingLogState',
+                'fk_imaging_log_level': 'ImagingLogLevel'},
+            'Target': {
+                'type': 'TargetType'},
+            'Menu': {
+                'fk_protocol': 'Protocol',
+                'fk_synchrostate': 'SynchroState'}}
         self.__loadNomenclatureTables()
         self.loadDefaults()
         self.is_activated = True
@@ -85,12 +98,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def loadDefaults(self):
         self.default_params = {
-            'default_name':self.config.web_def_default_menu_name,
-            'timeout':self.config.web_def_default_timeout,
-            'background_uri':self.config.web_def_default_background_uri,
-            'message':self.config.web_def_default_message,
-            'protocol':self.config.web_def_default_protocol
-        }
+            'default_name': self.config.web_def_default_menu_name,
+            'timeout': self.config.web_def_default_timeout,
+            'background_uri': self.config.web_def_default_background_uri,
+            'message': self.config.web_def_default_message,
+            'protocol': self.config.web_def_default_protocol}
 
     def initMappers(self):
         """
@@ -124,7 +136,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         mapper(Target, self.target)
         mapper(TargetType, self.target_type)
         mapper(User, self.user)
-
 
     def initTables(self):
         """
@@ -354,20 +365,19 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             return
         className = str(objs[0].__class__).split("'")[1].split('.')[-1]
         nomenclatures = []
-        if self.fk_nomenclatures.has_key(className):
+        if className in self.fk_nomenclatures:
             for i in self.fk_nomenclatures[className]:
                 nomenclatures.append([i, i.replace('fk_', ''), self.nomenclatures[self.fk_nomenclatures[className][i]]])
             for obj in objs:
                 for fk, field, value in nomenclatures:
                     fk_val = getattr(obj, fk)
                     if fk == field:
-                        field = '%s_value'%field
-                    if value.has_key(fk_val):
+                        field = '%s_value' % field
+                    if fk_val in value:
                         setattr(obj, field, value[fk_val])
                     else:
-                        self.logger.warn("nomenclature is missing for %s field %s (value = %s)"%(str(obj), field, str(fk_val)))
-                        setattr(obj, field, "%s:nomenclature does not exists."%(P2ERR.ERR_MISSING_NOMENCLATURE))
-
+                        self.logger.warn("nomenclature is missing for %s field %s (value = %s)" % (str(obj), field, str(fk_val)))
+                        setattr(obj, field, "%s:nomenclature does not exists." % (P2ERR.ERR_MISSING_NOMENCLATURE))
 
     def completeTarget(self, objs):
         """
@@ -661,11 +671,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         elif type == P2IT.PROFILE:
             q = q.filter(self.target.c.type == 2)
         else:
-            self.logger.error("type %s does not exists!"%(type))
+            self.logger.error("type %s does not exists!" % (type))
             # to be sure we don't get anything, this is an error case!
             q = q.filter(self.target.c.type == 0)
         if filter != '':
-            q = q.filter(or_(self.imaging_log.c.detail.like('%'+filter+'%'), self.target.c.name.like('%'+filter+'%')))
+            q = q.filter(or_(self.imaging_log.c.detail.like('%' + filter + '%'), self.target.c.name.like('%' + filter + '%')))
         return q
 
     def getImagingLogsOnTargetByIdAndType(self, target_id, type, start, end, filter):
@@ -673,7 +683,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = self.__ImagingLogsOnTargetByIdAndType(session, target_id, type, filter)
         q = q.order_by(desc(self.imaging_log.c.timestamp))
         if end != -1:
-            q = q.offset(int(start)).limit(int(end)-int(start))
+            q = q.offset(int(start)).limit(int(end) - int(start))
         else:
             q = q.all()
         session.close()
@@ -1736,8 +1746,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         ims = ImagingServer()
         ims.name = name
         ims.url = url
-        ims.fk_entity = 1 # the 'NEED_ASSOCIATION' entity
+        ims.fk_entity = 1 # the 'root' entity
         ims.packageserver_uuid = uuid
+        ims.fk_default_menu = 1 # the default subscribe menu
+        ims.associated = 0 # we are registered, but not yet associated
         session.save(ims)
         session.flush()
         session.close()
@@ -1906,11 +1918,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.save(menu)
         return menu
 
-    def __createEntity(self, session, loc_id, loc_name, menu_id):
+    def __createEntity(self, session, loc_id, loc_name):
         e = Entity()
         e.name = loc_name
         e.uuid = loc_id
-        e.fk_default_menu = menu_id
         session.save(e)
         return e
 
@@ -1918,34 +1929,54 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session = create_session()
         imaging_server = self.getImagingServerByUUID(is_uuid, session)
         if imaging_server == None:
-            raise "%s:No server exists with that uuid (%s)" % (P2ERR.ERR_IMAGING_SERVER_DONT_EXISTS, is_uuid)
-        location = self.__getEntityByUUID(session, loc_id)
-        if location != None:
-            raise "%s:This entity already exists (%s) cant be linked again" % (P2ERR.ERR_ENTITY_ALREADY_EXISTS, loc_id)
+            raise Exception("%s : No server exists with that uuid (%s)" % (P2ERR.ERR_IMAGING_SERVER_DONT_EXISTS, is_uuid))
 
-        # menu = self.__createMenu(session, self.default_params)
+        potential_imaging_server_id = self.__getLinkedImagingServerForEntity(session, loc_id)
+        if potential_imaging_server_id :
+            raise Exception("%s : This entity is already linked to the Imaging Server %s" % (P2ERR.ERR_ENTITY_ALREADY_EXISTS, potential_imaging_server_id))
+
+        location = self.__getEntityByUUID(session, loc_id)
+        if location is None: # entity do not yet exists in database, let's create it !
+            location = self.__createEntity(session, loc_id, loc_name)
+            session.flush()
+
+        # create default imaging server menu
         menu = self.__duplicateDefaultMenu(session)
-        session.flush()
-        location = self.__createEntity(session, loc_id, loc_name, menu.id)
         session.flush()
 
         imaging_server.fk_entity = location.id
+        imaging_server.fk_default_menu = menu.id
+        imaging_server.associated = 1
         session.save_or_update(imaging_server)
         session.flush()
+
         session.close()
         return True
 
+    def __getLinkedImagingServerForEntity(self, session, loc_id):
+        """
+        If this entity is linked to an imaging server, returns it's uuid, if not (or if the entity do not exists), return None
+        """
+        q = session.query(ImagingServer).\
+            select_from(self.imaging_server.join(self.entity)).\
+            filter(self.imaging_server.c.associated == 1).\
+            filter(self.entity.c.uuid == loc_id).\
+            first()
+        if q:
+            return q.name
+        return None
+
     def __AllNonLinkedImagingServer(self, session, filter):
-        q = session.query(ImagingServer).filter(self.imaging_server.c.fk_entity == 1)
+        q = session.query(ImagingServer).filter(self.imaging_server.c.associated == 0)
         if filter and filter != '':
-            q = q.filter(or_(self.imaging_server.c.name.like('%'+filter+'%'), self.imaging_server.c.url.like('%'+filter+'%'), self.imaging_server.c.uuid.like('%'+filter+'%')))
+            q = q.filter(or_(self.imaging_server.c.name.like('%' + filter + '%'), self.imaging_server.c.url.like('%' + filter + '%'), self.imaging_server.c.uuid.like('%' + filter + '%')))
         return q
 
     def getAllNonLinkedImagingServer(self, start, end, filter):
         session = create_session()
         q = self.__AllNonLinkedImagingServer(session, filter)
         if end != -1:
-            q = q.offset(int(start)).limit(int(end)-int(start))
+            q = q.offset(int(start)).limit(int(end) - int(start))
         else:
             q = q.all()
         session.close()
@@ -1960,7 +1991,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def doesLocationHasImagingServer(self, loc_id):
         session = create_session()
-        q = session.query(ImagingServer).select_from(self.imaging_server.join(self.entity)).filter(self.entity.c.uuid == loc_id).count()
+        q = session.query(ImagingServer).select_from(self.imaging_server.join(self.entity)).filter(self.imaging_server.c.associated == 1).filter(self.entity.c.uuid == loc_id).count()
         return (q == 1)
 
     def setImagingServerConfig(self, location, config):
@@ -2107,7 +2138,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def setLocationSynchroState(self, uuid, state):
         session = create_session()
         q2 = session.query(SynchroState).add_entity(Menu)
-        q2 = q2.select_from(self.synchro_state.join(self.menu).join(self.entity, self.entity.c.fk_default_menu == self.menu.c.id))
+        q2 = q2.select_from(
+            self.synchro_state.\
+            join(self.menu).\
+            join(self.imaging_server).\
+            join(self.entity))
         q2 = q2.filter(self.entity.c.uuid == uuid).first()
 
         if q2 :
