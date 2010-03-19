@@ -213,6 +213,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             "ImagingServer",
             self.metadata,
             Column('fk_entity', Integer, ForeignKey('Entity.id')),
+            Column('fk_default_menu', Integer, ForeignKey('Menu.id')),
             autoload = True
         )
 
@@ -470,7 +471,12 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if session == None:
             need_to_close_session = True
             session = create_session()
-        q = session.query(Menu).filter(and_(self.entity.c.fk_default_menu == self.menu.c.id, self.entity.c.uuid == loc_id)).first() # there should always be only one!
+        q = session.query(Menu).\
+            select_from(
+            self.menu.join(self.imaging_server, self.imaging_server.c.fk_default_menu == self.menu.c.id).\
+            join(self.entity)).\
+            filter(self.entity.c.uuid == loc_id).\
+            first() # there should always be only one!
         if need_to_close_session:
             session.close()
         return q
