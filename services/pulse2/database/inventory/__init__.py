@@ -920,10 +920,9 @@ class Inventory(DyngroupDatabaseHelper):
             return None
 
     def addMachine(self, name, ip, mac, netmask, comment = None, location_uuid = None):
-        # if location is not valid, link the computer to the root entity
-        if not (isUUID(location_uuid)):
+        if not (isUUID(location_uuid)): # if location is not valid, raise a ValueError
             logging.getLogger().warn("inventory.addMachine() : tried to add a computer on an invalid entity (%s), linking it to the root entity" % location_uuid)
-            location_uuid = 'UUID1'
+            raise ValueError("inventory.addMachine() : tried to add a computer on an invalid entity (%s), linking it to the root entity" % location_uuid)
 
         assert(isUUID(location_uuid))
 
