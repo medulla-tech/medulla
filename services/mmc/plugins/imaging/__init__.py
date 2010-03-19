@@ -223,7 +223,7 @@ class RpcProxy(RpcProxyI):
 
         @param target_type: the target type can be one of those two :
             1) '' or P2IT.COMPUTER (1) for a computer
-            2) 'group" or P2IT.PROFILE (2) for a profile
+            2) 'group' or P2IT.PROFILE (2) for a profile
         @type target_type: str or int
 
         @param mi_uuid: the menu item to move UUID
@@ -246,7 +246,7 @@ class RpcProxy(RpcProxyI):
 
         @param target_type: the target type can be one of those two :
             1) '' or P2IT.COMPUTER (1) for a computer
-            2) 'group" or P2IT.PROFILE (2) for a profile
+            2) 'group' or P2IT.PROFILE (2) for a profile
         @type target_type: str or int
 
         @param mi_uuid: the menu item to move UUID
@@ -446,7 +446,7 @@ class RpcProxy(RpcProxyI):
 
         @param target_type: the target type can be one of those two :
             1) '' or P2IT.COMPUTER (1) for a computer
-            2) 'group" or P2IT.PROFILE (2) for a profile
+            2) 'group' or P2IT.PROFILE (2) for a profile
         @type target_type: str or int
 
         @returns: a pair :
@@ -483,7 +483,7 @@ class RpcProxy(RpcProxyI):
 
         @param target_type: the target type can be one of those two :
             1) '' or P2IT.COMPUTER (1) for a computer
-            2) 'group" or P2IT.PROFILE (2) for a profile
+            2) 'group' or P2IT.PROFILE (2) for a profile
         @type target_type: str or int
 
         @returns: a pair :
@@ -520,7 +520,7 @@ class RpcProxy(RpcProxyI):
 
         @param target_type: the target type can be one of those two :
             1) '' or P2IT.COMPUTER (1) for a computer
-            2) 'group" or P2IT.PROFILE (2) for a profile
+            2) 'group' or P2IT.PROFILE (2) for a profile
         @type target_type: str or int
 
         @returns: a pair :
@@ -551,7 +551,7 @@ class RpcProxy(RpcProxyI):
 
         @param target_type: the target type can be one of those two :
             1) '' or P2IT.COMPUTER (1) for a computer
-            2) 'group" or P2IT.PROFILE (2) for a profile
+            2) 'group' or P2IT.PROFILE (2) for a profile
         @type target_type: str or int
 
         @returns: a pair :
@@ -799,7 +799,7 @@ class RpcProxy(RpcProxyI):
 
         @param target_type: the target type can be one of those two :
             1) '' or P2IT.COMPUTER (1) for a computer
-            2) 'group" or P2IT.PROFILE (2) for a profile
+            2) 'group' or P2IT.PROFILE (2) for a profile
         @type target_type: str or int
 
         @returns: return a list of two elements :
@@ -828,7 +828,7 @@ class RpcProxy(RpcProxyI):
 
         @param target_type: the target type can be one of those two :
             1) '' or P2IT.COMPUTER (1) for a computer
-            2) 'group" or P2IT.PROFILE (2) for a profile
+            2) 'group' or P2IT.PROFILE (2) for a profile
         @type target_type: str or int
 
         @returns: return a list of two elements :
@@ -865,7 +865,7 @@ class RpcProxy(RpcProxyI):
 
         @param target_type: the target type can be one of those two :
             1) '' or P2IT.COMPUTER (1) for a computer
-            2) 'group" or P2IT.PROFILE (2) for a profile
+            2) 'group' or P2IT.PROFILE (2) for a profile
         @type target_type: str or int
 
         @returns: return a list of two elements :
@@ -1088,11 +1088,11 @@ class RpcProxy(RpcProxyI):
         try:
             ret = db.linkImagingServerToEntity(is_uuid, loc_id, loc_name)
             db.setLocationSynchroState(loc_id, P2ISS.TODO)
-            return [True, ret]
         except Exception, e:
-            logging.getLogger().warn("Imaging.linkImagingServerToLocation : %s" % e)
-            return [False, "Failed to link Imaging Server to Location : %s" % e]
-        return [True]
+            logging.getLogger().warn("Imaging.linkImagingServerToEntity : %s" % e)
+            return [False, "Failed to link Imaging Server to Entity : %s" % e]
+
+        return [True, ret]
 
     def getImagingServerConfig(self, location):
         """
@@ -1161,7 +1161,7 @@ class RpcProxy(RpcProxyI):
 
         @param target_type: the target type can be one of those two :
             1) '' or P2IT.COMPUTER (1) for a computer
-            2) 'group" or P2IT.PROFILE (2) for a profile
+            2) 'group' or P2IT.PROFILE (2) for a profile
         @type target_type: str or int
 
         @returns: true if the target has been registered
@@ -1187,7 +1187,7 @@ class RpcProxy(RpcProxyI):
 
         @param target_type: the target type can be one of those two :
             1) '' or P2IT.COMPUTER (1) for a computer
-            2) 'group" or P2IT.PROFILE (2) for a profile
+            2) 'group' or P2IT.PROFILE (2) for a profile
         @type target_type: str or int
 
         @returns: the synchronization state associated to that target's boot menu,
@@ -1439,7 +1439,7 @@ class RpcProxy(RpcProxyI):
 
         @param target_type: the target type can be one of those two :
             1) '' or P2IT.COMPUTER (1) for a computer
-            2) 'group" or P2IT.PROFILE (2) for a profile
+            2) 'group' or P2IT.PROFILE (2) for a profile
         but as to be the same for all the targets
         @type target_type: str or int
 
@@ -1670,7 +1670,7 @@ class RpcProxy(RpcProxyI):
 
         @param target_type: the target type can be one of those two :
             1) '' or P2IT.COMPUTER (1) for a computer
-            2) 'group" or P2IT.PROFILE (2) for a profile
+            2) 'group' or P2IT.PROFILE (2) for a profile
         @type target_type: str or int
 
         @returns: a couple:
@@ -1695,7 +1695,7 @@ class RpcProxy(RpcProxyI):
 
         @param target_type: the target type can be one of those two :
             1) '' or P2IT.COMPUTER (1) for a computer
-            2) 'group" or P2IT.PROFILE (2) for a profile
+            2) 'group' or P2IT.PROFILE (2) for a profile
         @type target_type: str or int
 
         @returns: a pair:
