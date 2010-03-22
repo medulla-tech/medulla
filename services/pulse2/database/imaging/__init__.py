@@ -467,10 +467,17 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q
 
     def getEntityDefaultMenu(self, loc_id, session = None):
+        """
+        Given an entity <loc_id>, returns its default menu (more precisely, its imaging server default menu)
+
+        @param loc_id the entity UUID
+        @param session (optional) a SQL session to use
+        """
         need_to_close_session = False
         if session == None:
             need_to_close_session = True
             session = create_session()
+        # FIXME : not sure why we have to explicitly specify the relation ...
         q = session.query(Menu).\
             select_from(
             self.menu.join(self.imaging_server, self.imaging_server.c.fk_default_menu == self.menu.c.id).\
