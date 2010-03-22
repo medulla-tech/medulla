@@ -1002,6 +1002,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return [True]
 
     def delServiceToEntity(self, bs_uuid, loc_id):
+        # FIXME : fk_default_menu has moved
+        # FIXME : explicit joins, check why !
         session = create_session()
         mi = session.query(MenuItem).select_from(self.menu_item
                 .join(self.boot_service_in_menu, self.boot_service_in_menu.c.fk_menuitem == self.menu_item.c.id) \
@@ -1375,8 +1377,17 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return mi
 
     def __getImageMenuItem4Entity(self, session, item_uuid, loc_id):
-        mi = session.query(MenuItem).select_from(self.menu_item.join(self.image_in_menu).join(self.image).join(self.menu))
-        mi = mi.filter(and_(self.image.c.id == uuid2id(item_uuid), self.menu.c.id == self.entity.c.fk_default_menu, self.entity.c.uuid == loc_id)).first()
+        """
+        given an item ID and an entity ID, get I don't now what
+        TODO : don't see what has to be done here ...
+        """
+        j = self.menu_item.join(self.image_in_menu).join(self.image).join(self.menu)
+        f = and_(
+            self.image.c.id == uuid2id(item_uuid),
+            self.menu.c.id == self.entity.c.fk_default_menu,
+            self.entity.c.uuid == loc_id)
+        mi = session.query(MenuItem).select_from(j)
+        mi = mi.filter(f).first()
         return mi
 
     def editImageToTarget(self, item_uuid, target_uuid, params):
