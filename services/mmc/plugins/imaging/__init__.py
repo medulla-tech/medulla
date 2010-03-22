@@ -2196,16 +2196,22 @@ class RpcProxy(RpcProxyI):
             ret = db.registerImage(imaging_server_uuid, computer_uuid, image)
             ret = [ret, '']
         except Exception, e:
-            logging.getlogger().exception(e)
+            logging.getLogger().exception(e)
             ret = [False, str(e)]
         return ret
 
-    def injectInventory(self, imaging_server_uuid, computer_uuid, inventory=None):
+    def injectInventory(self, imaging_server_uuid, computer_uuid, inventory):
         """
         Called by the Package Server to inject an inventory.
         """
-        # TODO !
-        return [True, True]
+        db = ImagingDatabase()
+        try:
+            db.injectInventory(imaging_server_uuid, computer_uuid, inventory)
+            ret = [True, True]
+        except Exception, e:
+            logging.getLogger().exception(e)
+            ret = [False, str(e)]
+        return ret
 
     def getDefaultMenuForRegistering(self):
         """

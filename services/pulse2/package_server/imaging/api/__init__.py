@@ -349,7 +349,7 @@ class ImagingApi(MyXmlrpc):
         d.addCallbacks(onSuccess, client.onError, errbackArgs = (func, args, 0))
         return d
 
-    def xmlrpc_injectInventory(self, MACAddress, Inventory):
+    def xmlrpc_injectInventory(self, MACAddress, inventory):
         """
         Method to process the inventory of a computer
 
@@ -363,7 +363,7 @@ class ImagingApi(MyXmlrpc):
             if result and type(result) == dict:
                 client = self._getXMLRPCClient()
                 func = 'imaging.injectInventory'
-                args = (self.config.imaging_api['uuid'], result['uuid'], Inventory)
+                args = (self.config.imaging_api['uuid'], result['uuid'], inventory)
                 d = client.callRemote(func, *args)
                 d.addCallbacks(lambda x: True, client.onError, errbackArgs=(func, args, 0))
                 return d

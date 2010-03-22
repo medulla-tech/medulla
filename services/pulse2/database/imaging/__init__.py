@@ -26,15 +26,16 @@
 Database class for imaging
 """
 
+import logging
+import time
+import datetime
+
+from pulse2.utils import isUUID
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 from pulse2.database.imaging.types import P2ISS, P2IT, P2IM, P2IIK, P2ERR, P2ILL
 
 from sqlalchemy import create_engine, ForeignKey, Integer, MetaData, Table, Column, and_, or_, desc
-from sqlalchemy.orm import create_session, mapper
-
-import logging
-import time
-import datetime
+from sqlalchemy.orm import create_session, mapper, relation
 
 # THAT REQUIRE TO BE IN A MMC SCOPE, NOT IN A PULSE2 ONE
 from pulse2.managers.profile import ComputerProfileManager
@@ -114,6 +115,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         mapper(BootService, self.boot_service)
         mapper(BootServiceInMenu, self.boot_service_in_menu)
         mapper(BootServiceOnImagingServer, self.boot_service_on_imaging_server)
+        mapper(ComputerDisk, self.computer_disk, properties = {
+            'partitions' : relation(ComputerPartition,
+                                    cascade="all,delete-orphan")
+            })
+        mapper(ComputerPartition, self.computer_partition)
         mapper(Entity, self.entity)
         mapper(Image, self.image)
         mapper(ImageInMenu, self.image_in_menu)
@@ -133,7 +139,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         mapper(PostInstallScriptOnImagingServer, self.post_install_script_on_imaging_server)
         mapper(Protocol, self.protocol)
         mapper(SynchroState, self.synchro_state)
-        mapper(Target, self.target)
+        mapper(Target, self.target, properties = {
+            'disks' : relation(ComputerDisk,
+                               cascade="all,delete-orphan")
+            })
         mapper(TargetType, self.target_type)
         mapper(User, self.user)
 
@@ -302,6 +311,18 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             Column('fk_entity', Integer, ForeignKey('Entity.id')),
             Column('fk_menu', Integer, ForeignKey('Menu.id')),
             useexisting=True,
+            autoload = True
+        )
+
+        self.computer_disk = Table(
+            'ComputerDisk',
+            self.metadata,
+            autoload = True
+        )
+
+        self.computer_partition = Table(
+            'ComputerPartition',
+            self.metadata,
             autoload = True
         )
 
@@ -2493,6 +2514,49 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return True
 
+    def injectInventory(self, imaging_server_uuid, computer_uuid, inventory):
+        """
+        Inject a computer inventory into the dabatase.
+        For now only the ComputerDisk and ComputerPartition tables are used.
+        """
+        self.enableLogging(logging.INFO)
+        if not isUUID(imaging_server_uuid):
+            raise TypeError('Bad imaging server UUID: %s'
+                            % imaging_server_uuid)
+        if not isUUID(computer_uuid):
+            raise TypeError('Bad computer UUID: %s' % computer_uuid)
+        session = create_session()
+        session.begin()
+        try:
+            # First remove old computer inventory
+            target = session.query(Target).filter_by(uuid=computer_uuid).one()
+            for current_disk in target.disks:
+                session.delete(current_disk)
+            # Then push a new inventory
+            for disknum in inventory['disk']:
+                disk_info = inventory['disk'][disknum]
+                cd = ComputerDisk()
+                cd.Num = int(disknum)
+                cd.Cyl = int(disk_info['C'])
+                cd.Head = int(disk_info['H'])
+                cd.Sector = int(disk_info['S'])
+                cd.Capacity = int(disk_info['size'])
+                for partnum in disk_info['parts']:
+                    part = disk_info['parts'][partnum]
+                    cp = ComputerPartition()
+                    cp.Num = int(partnum)
+                    cp.Type = part['type']
+                    cp.Length = int(part['length'])
+                    cp.Start = int(part['start'])
+                    cd.partitions.append(cp)
+                target.disks.append(cd)
+            session.save_or_update(target)
+            session.commit()
+        except:
+            session.rollback()
+            raise
+        session.close()
+
 def id2uuid(id):
     return "UUID%d" % id
 def uuid2id(uuid):
@@ -2527,6 +2591,12 @@ class BootServiceInMenu(DBObject):
     pass
 
 class BootServiceOnImagingServer(DBObject):
+    pass
+
+class ComputerDisk(DBObject):
+    pass
+
+class ComputerPartition(DBObject):
     pass
 
 class Entity(DBObject):
