@@ -117,6 +117,14 @@ class Imaging(unittest.TestCase):
         result = SERVER.computersRegister(arg)
         self.assertEqual(['UUID3', 'UUID4'], result)
 
+    def test_04inventory(self):
+        """
+        Inventory injection test
+        """
+        inventory = {'memslot': {'speed': 18756, 'type': '7', 'location': 'DIMM 0', 'ff': 9, 'size': 128}, 'numcpu': 1, 'featcpu': [6, 2, 3, 0, 4, 0, 0, 0, 253, 251, 139, 7, 71, 101, 110, 117, 105, 110, 101, 73, 110, 116, 101, 108], 'mem': {'upper': 128972, 'lower': 636}, 'bus': {'0': {'16': {'device': 4369, 'vendor': 4660, 'class': 3, 'subclass': 0}, '9': {'device': 28688, 'vendor': 32902, 'class': 1, 'subclass': 1}, '24': {'device': 4098, 'vendor': 6900, 'class': 5, 'subclass': 0}, '32': {'device': 33081, 'vendor': 4332, 'class': 2, 'subclass': 0}}}, 'macaddr': '52:54:00:C9:D1:0F', 'ipaddr': {'ip': '192.168.21.201', 'port': 1001}, 'sys': {'uuid': '2F6236FC76ABD2F5D88EF2B2CE720853', 'product': 'Bochs', 'version': '-', 'serial': '-', 'manufacturer': 'Bochs'}, 'bios': {'date': '01/01/2007\n', 'version': 'Bochs', 'vendor': 'Bochs'}, 'freqcpu': 2260807, 'enclos': {'type': '1', 'vendor': 'Bochs'}, 'disk': {'0': {'H': 16, 'C': 1023, 'parts': {'0': {'start': 63, 'length': 530082, 'type': 131}, '1': {'start': 530145, 'length': 530145, 'type': 7}, '2': {'start': 1060290, 'length': 2104515, 'type': 142}, '4': {'start': 3164868, 'length': 530082, 'type': 131}, '5': {'start': 3695013, 'length': 497952, 'type': 131}}, 'S': 63, 'size': 63}}}
+        result = SERVER.injectInventory('00:11:22:33:44:77', inventory)
+        self.assertTrue(result)
+
     def atest_computersMenuSet(self):
         #result = SERVER.computersMenuSet([('UUID17', {})])
         #self.assertEqual(['UUID1'], result)
@@ -165,6 +173,10 @@ class Imaging(unittest.TestCase):
     def atest_imagingSERVERDefaultMenuSet(self):
         result = SERVER.imagingSERVERDefaultMenuSet(menu)
         self.assertEqual(['UUID1'], result)
+
+    def atest_iso(self):
+        iuuid = 'fe71d487-2a90-11df-99a9-5254001c1e49'
+        result = SERVER.imagingServerISOCreate(iuuid, 650 * 1024 * 1024, "Image ISO")
 
 
 if __name__ == '__main__':
