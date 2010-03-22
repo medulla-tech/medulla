@@ -1596,6 +1596,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return count_items
 
     def isLocalBootService(self, mi_uuid, session = None):
+        """
+        Check if MenuItem mi is a local boot service
+        FIXME : This should be fixed - entity.fk_default_menu do not exists anymore - but I reaaly don't see how
+        """
         session_need_to_close = False
         if session == None:
             session_need_to_close = True
@@ -1799,7 +1803,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         ims.url = url
         ims.fk_entity = 1 # the 'root' entity
         ims.packageserver_uuid = uuid
-        ims.fk_default_menu = 1 # the default subscribe menu
+        ims.fk_default_menu = 1 # the default "subscribe" menu, which is shown when an unknown client boots
         ims.associated = 0 # we are registered, but not yet associated
         session.save(ims)
         session.flush()
@@ -1980,11 +1984,17 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return e
 
     def linkImagingServerToEntity(self, is_uuid, loc_id, loc_name):
+        """
+        Attach the entity loc_id, name loc_name, to the imaging server is_uuid
+        """
         session = create_session()
+
+        # checks if IS already exists
         imaging_server = self.getImagingServerByUUID(is_uuid, session)
         if imaging_server == None:
             raise Exception("%s : No server exists with that uuid (%s)" % (P2ERR.ERR_IMAGING_SERVER_DONT_EXISTS, is_uuid))
 
+        # checks if entity is not already linked somewhere else
         potential_imaging_server_id = self.__getLinkedImagingServerForEntity(session, loc_id)
         if potential_imaging_server_id :
             raise Exception("%s : This entity is already linked to the Imaging Server %s" % (P2ERR.ERR_ENTITY_ALREADY_EXISTS, potential_imaging_server_id))
@@ -2159,35 +2169,48 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return False
 
     def getLocationSynchroState(self, uuid):
+        """
+        Attempt to see if a location uuid needs to be synced, or not
+
+        @param uuid the Entity uuid
+        """
+
         session = create_session()
 
+        j = self.synchro_state.join(self.menu).join(self.imaging_server).join(self.entity)
+        f = self.entity.c.uuid == uuid
         q2 = session.query(SynchroState)
-        q2 = q2.select_from(self.synchro_state.join(self.menu).join(self.entity, self.entity.c.fk_default_menu == self.menu.c.id))
-        q2 = q2.filter(self.entity.c.uuid == uuid).first()
+        q2 = q2.select_from(j)
+        q2 = q2.filter(f)
+        q2 = q2.first()
 
-        # temporary : here until we fully work on the entity content when we work on the entity
-        #session.close()
-        #return q2
-
-        if q2.id == 3 or q2.id == 4: # running
+        if q2.label == "RUNNING" or q2.label == "INIT_ERROR": # running
             session.close()
             return q2
-        # in the 2 other cases we have to check the state of the content of this entity
 
+        # in the 2 other cases we have to check the state of the content of this entity
         q1 = session.query(SynchroState)
-        q1 = q1.select_from(self.synchro_state.join(self.menu).join(self.target, self.menu.c.id == self.target.c.fk_menu).join(self.entity, self.entity.c.id == self.target.c.fk_entity))
-        q1 = q1.filter(self.entity.c.uuid == uuid).all()
+        j = self.synchro_state.join(self.menu).join(self.target, self.menu.c.id == self.target.c.fk_menu).join(self.entity, self.entity.c.id == self.target.c.fk_entity)
+        f = self.entity.c.uuid == uuid
+        q1 = q1.select_from(j)
+        q1 = q1.filter(j)
+        q1 = q1.all()
 
         session.close()
 
         a_state = [0, 0]
         for q in q1:
-            if q.id == 3 or q.id == 4: # running
+            if q.label == "RUNNING" or q.id == "INIT_ERROR": # running
                 return q
             a_state[q.id - 1] += 1
         if a_state[0] == 0:
-            return {'id':2, 'label':'DONE'}
-        return {'id':1, 'label':'TODO'}
+            return {
+                'id' : 2,
+                'label' : 'DONE'}
+
+        return {
+            'id' : 1,
+            'label' : 'TODO'}
 
     def setLocationSynchroState(self, uuid, state):
         session = create_session()
