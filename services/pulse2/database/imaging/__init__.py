@@ -477,13 +477,13 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if session == None:
             need_to_close_session = True
             session = create_session()
-        # FIXME : not sure why we have to explicitly specify the relation ...
-        q = session.query(Menu).\
-            select_from(
-            self.menu.join(self.imaging_server, self.imaging_server.c.fk_default_menu == self.menu.c.id).\
-            join(self.entity)).\
-            filter(self.entity.c.uuid == loc_id).\
-            first() # there should always be only one!
+        j = self.menu.join(self.imaging_server).join(self.entity)
+        q = session.query(Menu).select_from(j)
+        q = q.filter(self.entity.c.uuid == loc_id)
+        q = q.first()
+        return q
+
+       #.select_from(self.menu.join(self.imaging_server)).first()
         if need_to_close_session:
             session.close()
         return q
@@ -563,11 +563,16 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return ret
 
     def __getMenusImagingServer(self, session, menu_id):
-        imaging_server = session.query(ImagingServer).select_from(self.imaging_server.outerjoin(self.entity).outerjoin(self.target)).filter(or_(self.entity.c.fk_default_menu == menu_id, self.target.c.fk_menu == menu_id)).first()
+        """
+        Get stuff pointing to menu menu_id
+        """
+        j = self.imaging_server.outerjoin(self.entity).outerjoin(self.target)
+        f = or_(self.imaging_server.c.fk_default_menu == menu_id, self.target.c.fk_menu == menu_id)
+        imaging_server = session.query(ImagingServer).select_from(j).filter(f).first()
         if imaging_server:
             return imaging_server
         else:
-            self.logger.error("cant find any imaging_server for menu '%s'"%(menu_id))
+            self.logger.error("cant find any imaging_server for menu '%s'" % (menu_id))
             return  None
 
     def getMenuContent(self, menu_id, type = P2IM.ALL, start = 0, end = -1, filter = '', session = None):# TODO implement the start/end with a union between q1 and q2
@@ -2533,7 +2538,7 @@ class ImageOnImagingServer(DBObject):
     pass
 
 class ImagingServer(DBObject):
-    to_be_exported = ['id', 'name', 'url', 'packageserver_uuid', 'recursive', 'fk_entity']
+    to_be_exported = ['id', 'name', 'url', 'packageserver_uuid', 'recursive', 'fk_entity', 'fk_default_menu']
 
 class Internationalization(DBObject):
     to_be_exported = ['id', 'label', 'fk_language']
