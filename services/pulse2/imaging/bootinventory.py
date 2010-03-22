@@ -119,8 +119,8 @@ class BootInventory:
 
             mo = re.match(BUS_INFO_RE, line)
             if mo :
-                bus = int(mo.group(1), 16)
-                dev = int(mo.group(2), 16)
+                bus = str(int(mo.group(1), 16))
+                dev = str(int(mo.group(2), 16))
                 vendor = int(mo.group(3), 16)
                 device = int(mo.group(4), 16)
                 cl = int(mo.group(5), 16)
@@ -136,7 +136,7 @@ class BootInventory:
 
             mo = re.match(DISKINFO_RE, line)
             if mo :
-                num = int(mo.group(1), 10)
+                num = str(int(mo.group(1), 10))
                 c = int(mo.group(2), 10)
                 h = int(mo.group(3), 10)
                 s = int(mo.group(4), 10)
@@ -152,7 +152,7 @@ class BootInventory:
 
             mo = re.match(PARTINFO_RE, line)
             if mo :
-                num = int(mo.group(1), 10)
+                num = str(int(mo.group(1), 10))
                 t = int(mo.group(2), 16)
                 s = int(mo.group(3), 10)
                 l = int(mo.group(4), 10)
