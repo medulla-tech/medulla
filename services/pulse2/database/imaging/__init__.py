@@ -2177,6 +2177,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         session = create_session()
 
+        # check if the entity menu as to be synced, by looking at its imaging server menu status
         j = self.synchro_state.join(self.menu).join(self.imaging_server).join(self.entity)
         f = self.entity.c.uuid == uuid
         q2 = session.query(SynchroState)
@@ -2184,16 +2185,16 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q2 = q2.filter(f)
         q2 = q2.first()
 
-        if q2.label == "RUNNING" or q2.label == "INIT_ERROR": # running
+        if q2.label == "RUNNING" or q2.label == "INIT_ERROR": # running => give up
             session.close()
             return q2
 
-        # in the 2 other cases we have to check the state of the content of this entity
+        # same, this time by target (we check the state of the content of this entity)
         q1 = session.query(SynchroState)
-        j = self.synchro_state.join(self.menu).join(self.target, self.menu.c.id == self.target.c.fk_menu).join(self.entity, self.entity.c.id == self.target.c.fk_entity)
+        j = self.synchro_state.join(self.menu).join(self.target).join(self.entity)
         f = self.entity.c.uuid == uuid
         q1 = q1.select_from(j)
-        q1 = q1.filter(j)
+        q1 = q1.filter(f)
         q1 = q1.all()
 
         session.close()
