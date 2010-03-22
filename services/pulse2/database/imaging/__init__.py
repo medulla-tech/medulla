@@ -1387,7 +1387,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             self.menu.c.id == self.entity.c.fk_default_menu,
             self.entity.c.uuid == loc_id)
         mi = session.query(MenuItem).select_from(j)
-        mi = mi.filter(f).first()
+        mi = mi.filter(f)
+        mi = mi.first()
         return mi
 
     def editImageToTarget(self, item_uuid, target_uuid, params):
@@ -1856,12 +1857,15 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def __getDefaultMenu(self, session):
         return session.query(Menu).filter(self.menu.c.id == 1).first()
+
     def __getDefaultMenuItem(self, session, menu_id = 1):
         default_item = session.query(MenuItem).filter(and_(self.menu.c.id == menu_id, self.menu.c.fk_default_item == self.menu_item.c.id)).first()
         default_item_WOL = session.query(MenuItem).filter(and_(self.menu.c.id == menu_id, self.menu.c.fk_default_item_WOL == self.menu_item.c.id)).first()
         return [default_item, default_item_WOL]
+
     def __getDefaultMenuMenuItems(self, session):
         return self.__getMenuItemsInMenu(session, 1)
+
     def __getMenuItemsInMenu(self, session, menu_id):
         return session.query(MenuItem).add_entity(BootServiceInMenu).select_from(self.menu_item.join(self.boot_service_in_menu)).filter(self.menu_item.c.fk_menu == menu_id).all()
 
@@ -1883,7 +1887,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             default_list = self.__getDefaultMenuMenuItems(session)
             mi = self.__getDefaultMenuItem(session)
         ret = []
-        mi_out = [0,0]
+        mi_out = [0, 0]
         for default_menu_item, default_bsim in default_list:
             menu_item = MenuItem()
             menu_item.order = default_menu_item.order
