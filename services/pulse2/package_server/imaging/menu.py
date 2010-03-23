@@ -164,7 +164,7 @@ class ImagingMenu:
         self.dont_check_disk_size = False # check that the target disk is large enough
 
         self.diskless_opts = list() # revo* options put on diskless command line
-        self.linux_opts = list('quiet') # kernel options put on diskless command line
+        self.kernel_opts = list('quiet') # kernel options put on diskless command line
 
         # list of replacements to perform
         # a replacement is using the following structure :
@@ -180,7 +180,7 @@ class ImagingMenu:
             ('##PULSE2_DISKLESS_INITRD##', self.config.imaging_api['diskless_initrd'], 'global'),
             ('##PULSE2_DISKLESS_MEMTEST##', self.config.imaging_api['diskless_memtest'], 'global'),
             ('##PULSE2_DISKLESS_OPTS##', ' '.join(self.diskless_opts), 'global'),
-            ('##PULSE2_LINUX_OPTS##', ' '.join(self.linux_opts), 'global'),
+            ('##PULSE2_KERNEL_OPTS##', ' '.join(self.kernel_opts), 'global'),
             ('##PULSE2_MASTERS_DIR##', self.config.imaging_api['masters_folder'], 'global'),
             ('##PULSE2_POSTINST_DIR##', self.config.imaging_api['postinst_folder'], 'global'),
             ('##PULSE2_COMPUTERS_DIR##', self.config.imaging_api['computers_folder'], 'global'),
@@ -510,7 +510,7 @@ class ImagingImageItem(ImagingItem):
     Hold an imaging menu item for a image to restore
     """
 
-    NFSRESTORE = u"kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_LINUX_OPTS## revosavedir=##PULSE2_MASTERS_DIR## revoinfodir=##PULSE2_COMPUTERS_DIR## revooptdir=##PULSE2_POSTINST_DIR## revobase=##PULSE2_BASE_DIR## revorestorenfs revopost revomac=##MAC## revoimage=##PULSE2_IMAGE_UUID## \ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD## ##PULSE2_DISKLESS_OPTS##\n"
+    NFSRESTORE = u"kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## revosavedir=##PULSE2_MASTERS_DIR## revoinfodir=##PULSE2_COMPUTERS_DIR## revooptdir=##PULSE2_POSTINST_DIR## revobase=##PULSE2_BASE_DIR## revorestorenfs revopost revomac=##MAC## revoimage=##PULSE2_IMAGE_UUID## \ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD## ##PULSE2_DISKLESS_OPTS##\n"
     # FIXME ! TFTP/MTFTP to be implemented
     TFTPRESTORE = NFSRESTORE
     MTFTPRESTORE = NFSRESTORE
