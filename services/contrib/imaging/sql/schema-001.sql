@@ -135,11 +135,11 @@ CREATE TABLE Target (
 -- List the disks of a target
 CREATE TABLE ComputerDisk (
   id INT NOT NULL AUTO_INCREMENT,
-  Num INT DEFAULT '-1',
-  Cyl INT DEFAULT '0',
-  Head INT DEFAULT '0',
-  Sector INT DEFAULT '0',
-  Capacity INT DEFAULT '0',
+  num INT DEFAULT '-1',
+  cyl INT DEFAULT '0',
+  head INT DEFAULT '0',
+  sector INT DEFAULT '0',
+  capacity INT DEFAULT '0',
   fk_target INT NOT NULL,
   PRIMARY KEY (id)
 );
@@ -147,10 +147,10 @@ CREATE TABLE ComputerDisk (
 -- List the partitions of a disk of a target
 CREATE TABLE ComputerPartition (
   id INT NOT NULL AUTO_INCREMENT,
-  Num INT DEFAULT '-1',
-  Type varchar(32) DEFAULT NULL,
-  Length INT DEFAULT '0',
-  Start INT DEFAULT '0',
+  num INT DEFAULT '-1',
+  type varchar(32) DEFAULT NULL,
+  length INT DEFAULT '0',
+  start INT DEFAULT '0',
   fk_disk INT NOT NULL,
   PRIMARY KEY (id)
 );

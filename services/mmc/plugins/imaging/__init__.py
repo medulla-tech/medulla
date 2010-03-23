@@ -2213,6 +2213,13 @@ class RpcProxy(RpcProxyI):
             ret = [False, str(e)]
         return ret
 
+    def getPartitionsToBackupRestore(self, computer_uuid):
+        """
+        Called by the web interface to get the computer disks and partitions
+        to backup and restore.
+        """
+        return ImagingDatabase().getPartitionsToBackupRestore(computer_uuid)
+
     def getDefaultMenuForRegistering(self):
         """
         Called by the Package Server to get the default menu used by computers

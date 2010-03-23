@@ -2338,6 +2338,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             target = target[0]
             target.kernel_parameters = params['target_opt_kernel']
             target.image_parameters = params['target_opt_image']
+            target.exclude_parameters = self._getExcludeString(target, params['target_opt_parts'])
             session.save_or_update(target)
 
         session.flush()
@@ -2538,6 +2539,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return True
 
+    # Computer basic inventory stuff
+
     def injectInventory(self, imaging_server_uuid, computer_uuid, inventory):
         """
         Inject a computer inventory into the dabatase.
@@ -2560,18 +2563,18 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             for disknum in inventory['disk']:
                 disk_info = inventory['disk'][disknum]
                 cd = ComputerDisk()
-                cd.Num = int(disknum)
-                cd.Cyl = int(disk_info['C'])
-                cd.Head = int(disk_info['H'])
-                cd.Sector = int(disk_info['S'])
-                cd.Capacity = int(disk_info['size'])
+                cd.num = int(disknum)
+                cd.cyl = int(disk_info['C'])
+                cd.head = int(disk_info['H'])
+                cd.sector = int(disk_info['S'])
+                cd.capacity = int(disk_info['size'])
                 for partnum in disk_info['parts']:
                     part = disk_info['parts'][partnum]
                     cp = ComputerPartition()
-                    cp.Num = int(partnum)
-                    cp.Type = part['type']
-                    cp.Length = int(part['length'])
-                    cp.Start = int(part['start'])
+                    cp.num = int(partnum)
+                    cp.type = part['type']
+                    cp.length = int(part['length'])
+                    cp.start = int(part['start'])
                     cd.partitions.append(cp)
                 target.disks.append(cd)
             session.save_or_update(target)
@@ -2580,6 +2583,56 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session.rollback()
             raise
         session.close()
+
+    def getPartitionsToBackupRestore(self, computer_uuid):
+        """
+        @return: the computer disks and parts inventory, and flags them as
+        excluded according to Target.exclude_parameters value
+        @rtype: dict
+        """
+        if not isUUID(computer_uuid):
+            raise TypeError('Bad computer UUID: %s' % computer_uuid)
+        session = create_session()
+        target = session.query(Target).filter_by(uuid=computer_uuid).one()
+        excluded = target.exclude_parameters
+        if not excluded:
+            excluded = ''
+        excluded = excluded.split()
+        ret = {}
+        for disk in target.disks:
+            disknum = str(disk.num)
+            ret[disknum] = {}
+            if disknum + ':0' in excluded:
+                ret[disknum]['exclude'] = True
+            for partition in disk.partitions:
+                partnum = str(partition.num)
+                ret[disknum][partnum] = partition.toH()
+                if disknum + ':' + str(partition.num + 1) in excluded:
+                    ret[disknum][partnum]['exclude'] = True
+        session.close()
+        return ret
+
+    def _getExcludeString(self, target, enabled):
+        """
+        @param enabled: list of [disk, part] couples to enable
+        @type enabled: list
+
+        @returns: string to set in the Target.exclude_parameters
+        @rtype: str
+        """
+        excluded = []
+        for disk in target.disks:
+            disknum = disk.num + 1
+            if [disknum, 0] in enabled:
+                # This disk is enabled
+                for partition in disk.partitions:
+                    partnum = partition.num + 1
+                    if not [disknum, partnum] in enabled:
+                        excluded.append(str(disknum -1) + ':' + str(partnum))
+            else:
+                # Disk completely disabled
+                excluded.append(str(disknum - 1) + ':0')
+        return ' '.join(excluded)
 
 def id2uuid(id):
     return "UUID%d" % id
@@ -2618,10 +2671,10 @@ class BootServiceOnImagingServer(DBObject):
     pass
 
 class ComputerDisk(DBObject):
-    pass
+    to_be_exported = ['num']
 
 class ComputerPartition(DBObject):
-    pass
+    to_be_exported = ['num', 'type', 'length']
 
 class Entity(DBObject):
     to_be_exported = ['id', 'name', 'uuid']
