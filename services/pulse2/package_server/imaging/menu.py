@@ -39,8 +39,14 @@ def isMenuStructure(menu):
     ret = True
     logger = logging.getLogger()
     if type(menu) == dict:
-        for k in ['message', 'protocol', 'default_item', 'default_item_WOL',
-                  'timeout', 'background_uri', 'bootservices', 'images']:
+        for k in ['message',
+                  'protocol',
+                  'default_item',
+                  'default_item_WOL',
+                  'timeout',
+                  'background_uri',
+                  'bootservices',
+                  'images']:
             if not k in menu:
                 logger.debug("your menu is missing %s" % (k))
                 ret = False
@@ -140,7 +146,11 @@ class ImagingMenu:
             'highlight': {'fg': 15, 'bg': 3}}
         self.keyboard = None # the menu keymap, None is C
         self.hidden = False # do we hide the menu ?
-        self.debug = False # command line accesss ?
+        self.bootcli = False # command line access at boot time ?
+        self.disklesscli = False # command line access at diskless time ?
+        self.ntblfix = False # NT Bootloader fix
+        self.ethercard = 0 # use this ethernet iface to backup / restore stuff
+        self.dont_check_disk_size = False # check that the target disk is large enough
 
         # list of replacements to perform
         # a replacement is using the following structure :
@@ -219,7 +229,7 @@ class ImagingMenu:
             buf += 'hiddenmenu\n'
 
         # can the user access to the grub command line ?
-        if self.debug:
+        if self.bootcli:
             buf += 'nosecurity\n'
 
         # then write items
@@ -339,7 +349,48 @@ class ImagingMenu:
         assert(value in ['nfs', 'tftp', 'mtftp'])
         self.protocol = value
 
+    def setBootCLI(self, value):
+        """
+        set CLI access on boot (key "E")
+        """
+        assert(type(value) == bool)
+        self.bootcli = value
+
+    def setNTBLFix(self, value):
+        """
+        set NT Boot Loader fix
+        """
+        assert(type(value) == bool)
+        self.ntblfix = value
+
+    def setDisklessCLI(self, value):
+        """
+        do not drop to a shell when mastering
+        """
+        assert(type(value) == bool)
+        self.disklesscli = value
+
+    def setDiskSizeCheck(self, value):
+        """
+        do check disk size when restoring
+        """
+        assert(type(value) == bool)
+        self.dont_check_disk_size = value
+
+    def setEtherCard(self, value):
+        """
+        Set the ethernet restoration interface
+        @param value : the iface number, between 0 (default) and 9
+        """
+        assert(type(value) == int)
+        assert(value >= 0)
+        assert(value <= 9)
+        self.ethercard = value
+
     def setSplashImage(self, value):
+        """
+        Set the background image
+        """
         if type(value) == str:
             value = value.decode('utf-8')
         assert(type(value) == unicode)
