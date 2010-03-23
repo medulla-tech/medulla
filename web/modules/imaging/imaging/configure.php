@@ -33,7 +33,11 @@
 require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
 require_once('modules/imaging/includes/web_def.inc.php');
+require_once('modules/imaging/includes/part-type.inc.php');
 
+if (!isset($is_registering)) {
+    $is_registering = False;
+}
 $params = getParams();
 
 if (isset($_POST["bvalid"])) {
@@ -47,7 +51,6 @@ if (isset($_POST["bvalid"])) {
 
     $label = urldecode($_POST['itemlabel']);
 
-    $params = getParams();
     $params['default_name'] = $_POST['default_m_label'];
     $params['timeout'] = $_POST['rest_wait'];
     $params['background_uri'] = $_POST['boot_xpm'];
@@ -58,6 +61,14 @@ if (isset($_POST["bvalid"])) {
     $params['target_opt_kernel'] = $_POST['target_opt_kernel'];
     $params['target_opt_image'] = $_POST['target_opt_image'];
 
+    $params['target_opt_parts'] = array();
+    if (isset($_POST['check_disk'])) {
+        foreach($_POST['check_disk'] as $disk => $parts) {
+            foreach($parts as $part => $value) {
+                $params['target_opt_parts'][] = array($disk, $part);
+            }
+        }
+    }
     if ($type == '') {
         $ret = xmlrpc_setMyMenuComputer($target_uuid, $params);
         $params['uuid'] = $target_uuid;
@@ -218,7 +229,63 @@ if (!$whose && !$menu) {
         new TrFormElement(_T("Image parameters", "imaging"),
         new InputTpl("target_opt_image")), array("value" => ($target != null?$target['image_parameters']:web_def_image_parameters()))
     );
+
     $f->pop();
+
+    if (($type == '') && (!$is_registering)) {
+        /* Add disks and partitions selector widget for registered computers
+           only, not profiles */
+        $inventory = xmlCall("imaging.getPartitionsToBackupRestore", $target_uuid);
+        if (!empty($inventory)) {
+            $f->add(new TitleElement(_T("Backup/restore disks selection", "imaging")));
+        }
+        ksort($inventory);
+        foreach($inventory as $disk => $parts) {
+            $disk = $disk + 1;
+            $msg = sprintf(_T("Disk number: %d", "imaging"), $disk);
+            $inputvar = "check_disk[$disk][0]";
+            if (isset($parts["exclude"])) {
+                $value = "";
+                unset($parts["exclude"]);
+            } else {
+                $value = "CHECKED";
+            }
+            $divid = "disk_div$disk";
+            $f->push(new DivForModule($msg, "#FFF"));
+            $f->push(new Table());
+            $f->add(new TrFormElement(_T("Enable this disk", "imaging"), new CheckboxTpl($inputvar)),
+                    array("value" => $value,
+                          "extraArg"=>'onclick="toggleVisibility(\''. $divid .'\');"'));
+            $f->pop();
+            $diskdiv = new Div(array("id" => $divid));
+            $diskdiv->setVisibility($value == "CHECKED");
+            $f->push($diskdiv);
+            $f->push(new Table());
+            ksort($parts);
+            foreach($parts as $part) {
+                $partnum = $part['num'] + 1;
+                $type = $parttype[$part['type']];
+                $length = humanSize($part['length']);
+                $msg = sprintf(_T("Partition number: %d", "imaging"),
+                               $partnum);
+                $inputvar = "check_disk[$disk][$partnum]";
+                $text = "$type $length";
+                if (isset($part["exclude"])) {
+                    $value = "";
+                    unset($part["exclude"]);
+                } else {
+                    $value = "CHECKED";
+                }
+                $f->add(new TrFormElement($msg,
+                                          new CheckboxTpl($inputvar, $text)),
+                        array("value" => $value));
+            }
+            $f->pop();
+            $f->pop();
+            $f->pop();
+        }
+    }
+
 
     $f->addValidateButton("bvalid");
 
