@@ -613,14 +613,14 @@ class RpcProxy(RpcProxyI):
             if len(is_used) != 0:
                 # some target have that image in their menu
                 if not db.canRemoveFromMenu(image_uuid):
-                    return [False, "Can't remove %s from some boot menus"%(image_uuid)]
+                    return [False, "Can't remove %s from some boot menus" % (image_uuid)]
 
             # remove from the imaging server
             ims = db.getImageImagingServer(image_uuid)
             i = ImagingApi(ims.url.encode('utf8'))
             if i == None:
-                logger.error("couldn't initialize the ImagingApi to %s"%(ims.url))
-                return [False, "couldn't initialize the ImagingApi to %s"%(ims.url)]
+                logger.error("couldn't initialize the ImagingApi to %s" % (ims.url))
+                return [False, "couldn't initialize the ImagingApi to %s" % (ims.url)]
 
             def treatDel(results, image_uuid, db, logger):
                 if not results:
