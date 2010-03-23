@@ -36,6 +36,7 @@ from pulse2.package_server.imaging.api.client import ImagingXMLRPCClient
 from pulse2.package_server.imaging.cache import UUIDCache
 from pulse2.package_server.imaging.api.status import Status
 from pulse2.package_server.imaging.menu import isMenuStructure, ImagingDefaultMenuBuilder, ImagingComputerMenuBuilder
+from pulse2.package_server.imaging.computer import ImagingComputerConfiguration
 from pulse2.package_server.imaging.iso import ISOImage
 
 from pulse2.utils import isMACAddress, splitComputerPath, macToNode, isUUID, rfc3339Time, humanReadable
@@ -451,6 +452,10 @@ class ImagingApi(MyXmlrpc):
                     imenu = imb.make()
                     imenu.write()
                     ret.append(cuuid)
+                    imc = ImagingComputerConfiguration(self.config,
+                                                       cuuid,
+                                                       menu)
+                    imc.write()
                 except Exception, e:
                     self.logger.exception("Error while setting new menu of computer uuid/mac %s: %s" % (cuuid, e))
                     # FIXME: Rollback to the previous menu
