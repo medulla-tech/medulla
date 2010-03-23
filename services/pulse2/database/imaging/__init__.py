@@ -518,6 +518,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         """
         Given an entity <loc_id>, returns its default menu (more precisely, its imaging server default menu)
 
+        FIXME: this code doesn't handle the case when imaging_server.recursive
+        is True
+
         @param loc_id the entity UUID
         @param session (optional) a SQL session to use
         """
@@ -528,10 +531,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         j = self.menu.join(self.imaging_server).join(self.entity)
         q = session.query(Menu).select_from(j)
         q = q.filter(self.entity.c.uuid == loc_id)
+        q = q.filter(self.imaging_server.c.associated == 1)
         q = q.first()
-        return q
-
-       #.select_from(self.menu.join(self.imaging_server)).first()
         if need_to_close_session:
             session.close()
         return q
