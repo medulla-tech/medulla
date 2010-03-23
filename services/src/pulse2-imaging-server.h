@@ -48,6 +48,7 @@
 #include "iniparser.h"
 
 #define BUFLEN 1532
+#define ERRORSTR "ERROR"
 #define CONFIGURATION_FILE "/etc/mmc/pulse2/imaging-server/imaging-server.ini"
 
 unsigned char gBuff[80];

@@ -372,7 +372,10 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
                    (struct sockaddr *)si_other, sizeof(*si_other));
             logClientActivity(mac, LOG_INFO, "backup", "'obtained an image UUID : %s'", name);
             free(name);
+        } else {
+            sendto(s, ERRORSTR, strlen(ERRORSTR) + 1, MSG_NOSIGNAL, (struct sockaddr *)si_other, sizeof(*si_other));
         }
+
         return 0;
     }
     // after a save
@@ -490,7 +493,10 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
                    (struct sockaddr *)si_other, sizeof(*si_other));
             logClientActivity(mac, LOG_INFO, "boot", "'obtained its hostname : %s'", name);
             free(name);
+        } else {
+            sendto(s, ERRORSTR, strlen(ERRORSTR) + 1, MSG_NOSIGNAL, (struct sockaddr *)si_other, sizeof(*si_other));
         }
+
         return 0;
     }
     // give me my Pulse 2 UUID
@@ -527,7 +533,10 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
                    (struct sockaddr *)si_other, sizeof(*si_other));
             logClientActivity(mac, LOG_INFO, "boot", "'obtained its UUID : %s'", name);
             free(name);
+        } else {
+            sendto(s, ERRORSTR, strlen(ERRORSTR) + 1, MSG_NOSIGNAL, (struct sockaddr *)si_other, sizeof(*si_other));
         }
+
         return 0;
     }
     /* mtftp synchro */
