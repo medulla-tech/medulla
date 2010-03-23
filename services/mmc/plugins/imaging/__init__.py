@@ -1138,13 +1138,12 @@ class RpcProxy(RpcProxyI):
         db = ImagingDatabase()
         menu = db.getEntityDefaultMenu(location)
         menu = menu.toH()
-        # try:
-        if True:
+        try:
             db.setLocationSynchroState(location, P2ISS.TODO)
             db.checkLanguage(location, config['language'])
             return xmlrpcCleanup([db.modifyMenu(menu['imaging_uuid'], config)])
-        #except Exception, e:
-        #    return xmlrpcCleanup([False, e])
+        except Exception, e:
+            return xmlrpcCleanup([False, e])
 
     def doesLocationHasImagingServer(self, loc_id):
         """
