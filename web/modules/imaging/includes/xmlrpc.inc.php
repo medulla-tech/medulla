@@ -297,4 +297,8 @@ function xmlrpc_addPostInstallScript($location, $params) {
     return xmlCall("imaging.addPostInstallScript", array($location, $params));
 }
 
+function xmlrpc_getAllKnownLanguages() {
+    return xmlCall("imaging.get_all_known_languages");
+}
+
 ?>

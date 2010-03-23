@@ -125,6 +125,11 @@ class RpcProxy(RpcProxyI):
         return xmlrpcCleanup(ImagingConfig().web_def_image_parameters)
 
     ###########################################################
+    def get_all_known_languages(self):
+        """ get all the languages defined in the database """
+        return xmlrpcCleanup(map(lambda p: p.toH(), ImagingDatabase().getAllKnownLanguages()))
+
+    ###########################################################
     ###### BOOT MENU (image+boot service on the target)
     def __convertType(self, target_type):
         """ convert type from '' or 'group' to P2IT.COMPUTER and P2IT.PROFILE """
@@ -1130,14 +1135,16 @@ class RpcProxy(RpcProxyI):
             * the error in case of failure
         @rtype: list
         """
-        menu = ImagingDatabase().getEntityDefaultMenu(location)
-        menu = menu.toH()
         db = ImagingDatabase()
-        try:
+        menu = db.getEntityDefaultMenu(location)
+        menu = menu.toH()
+        # try:
+        if True:
             db.setLocationSynchroState(location, P2ISS.TODO)
+            db.checkLanguage(location, config['language'])
             return xmlrpcCleanup([db.modifyMenu(menu['imaging_uuid'], config)])
-        except Exception, e:
-            return xmlrpcCleanup([False, e])
+        #except Exception, e:
+        #    return xmlrpcCleanup([False, e])
 
     def doesLocationHasImagingServer(self, loc_id):
         """

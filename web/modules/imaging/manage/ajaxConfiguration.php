@@ -128,13 +128,37 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
         new TrFormElement(_T("Message displayed during backup/restoration", "imaging"),
         new TextareaTpl("boot_msg")), array("value" => $default_menu['message']) //"Warning ! Your PC is being backed up or restored. Do not reboot !")
     );
+
+    $lang = xmlrpc_getAllKnownLanguages();
+    $lang_choices = array();
+    $lang_values = array();
+
+    $lang_id2uuid = array();
+    foreach ($lang as $l) {
+        $lang_choices[$l['imaging_uuid']] = $l['label'];
+        $lang_values[$l['imaging_uuid']] = $l['imaging_uuid'];
+        $lang_id2uuid[$l['id']] = $l['imaging_uuid'];
+    }
+
+    $language = new SelectItem("language");
+
+    $language->setElements($lang_choices);
+    $language->setElementsVal($lang_values);
+    if ($imaging_server['fk_language']) {
+        $language->setSelected($lang_id2uuid[$imaging_server['fk_language']]);
+    }
     $f->add(
+        new TrFormElement(_T("Restoration type", "imaging"), $language)
+    );
+    $f->pop();
+
+    /*$f->add(
         new TrFormElement(_T("Keyboard mapping (empty/fr)", "imaging"),
         new InputTpl("boot_keyboard")), array("value" => "")
     );
     $f->pop();
 
-    /*$f->add(new TitleElement(_T("Administration options", "imaging")));
+    $f->add(new TitleElement(_T("Administration options", "imaging")));
     $f->push(new Table());
     $f->add(
         new TrFormElement(_T("Password for adding a new client", "imaging"),

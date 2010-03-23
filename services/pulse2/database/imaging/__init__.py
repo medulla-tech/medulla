@@ -80,18 +80,28 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             'ImagingLogLevel': ImagingLogLevel,
             'TargetType': TargetType,
             'Protocol': Protocol,
-            'SynchroState': SynchroState}
+            'SynchroState': SynchroState,
+            'Language': Language
+        }
         self.fk_nomenclatures = {
             'ImagingLog': {
                 'fk_imaging_log_state': 'ImagingLogState',
-                'fk_imaging_log_level': 'ImagingLogLevel'},
+                'fk_imaging_log_level': 'ImagingLogLevel'
+            },
             'Target': {
-                'type': 'TargetType'},
+                'type': 'TargetType'
+            },
             'Menu': {
                 'fk_protocol': 'Protocol',
-                'fk_synchrostate': 'SynchroState'}}
+                'fk_synchrostate': 'SynchroState'
+            },
+            'ImagingServer': {
+                'fk_language': 'Language'
+            },
+        }
         self.__loadNomenclatureTables()
         self.loadDefaults()
+        self.loadLanguage()
         self.is_activated = True
         self.dbversion = self.getImagingDatabaseVersion()
         self.logger.debug("ImagingDatabase finish activation")
@@ -103,7 +113,17 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             'timeout': self.config.web_def_default_timeout,
             'background_uri': self.config.web_def_default_background_uri,
             'message': self.config.web_def_default_message,
-            'protocol': self.config.web_def_default_protocol}
+            'protocol': self.config.web_def_default_protocol
+        }
+
+    def loadLanguage(self):
+        session = create_session()
+        self.languages = {}
+        self.r_languages = {}
+        for i in session.query(Language).all():
+            self.languages[i.id] = i.label
+            self.r_languages[i.label] = i.id
+        session.close()
 
     def initMappers(self):
         """
@@ -223,6 +243,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             self.metadata,
             Column('fk_entity', Integer, ForeignKey('Entity.id')),
             Column('fk_default_menu', Integer, ForeignKey('Menu.id')),
+            Column('fk_language', Integer, ForeignKey('Language.id')),
             autoload = True
         )
 
@@ -425,6 +446,12 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         @rtype: int
         """
         return self.version.select().execute().fetchone()[0]
+
+    def getAllKnownLanguages(self):
+        session = create_session()
+        l = session.query(Language).all()
+        session.close()
+        return l
 
 ###########################################################
     def getTargetsEntity(self, uuids):
@@ -2071,6 +2098,17 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return True
 
+    def checkLanguage(self, location, language):
+        session = create_session()
+        imaging_server = self.getImagingServerByEntityUUID(location, session)
+        lang = session.query(Language).filter(self.language.c.id == uuid2id(language)).first()
+        if imaging_server.fk_language != lang.id:
+            imaging_server.fk_language = lang.id
+            session.save_or_update(imaging_server)
+            session.flush()
+        session.close()
+        return True
+
     # Protocols
     def getAllProtocols(self):
         session = create_session()
@@ -2648,6 +2686,7 @@ def uuid2id(uuid):
 class DBObject(object):
     to_be_exported = ['id', 'name', 'label']
     need_iteration = []
+    i18n = []
     def getUUID(self):
         return id2uuid(self.id)
     def to_h(self):
@@ -2656,6 +2695,10 @@ class DBObject(object):
         ImagingDatabase().completeNomenclatureLabel(self)
         ret = {}
         for i in dir(self):
+            if i in self.i18n:
+
+                pass
+
             if i in self.to_be_exported:
                 ret[i] = getattr(self, i)
             if i in self.need_iteration and level < 1:
@@ -2668,6 +2711,7 @@ class DBObject(object):
 class BootService(DBObject):
     to_be_exported = ['id', 'value', 'default_desc', 'uri', 'is_local', 'default_name']
     need_iteration = ['menu_item']
+    i18n = ['fk_name', 'fk_desc']
 
 class BootServiceInMenu(DBObject):
     pass
@@ -2705,7 +2749,7 @@ class ImageOnImagingServer(DBObject):
     pass
 
 class ImagingServer(DBObject):
-    to_be_exported = ['id', 'name', 'url', 'packageserver_uuid', 'recursive', 'fk_entity', 'fk_default_menu']
+    to_be_exported = ['id', 'name', 'url', 'packageserver_uuid', 'recursive', 'fk_entity', 'fk_default_menu', 'fk_language', 'language']
 
 class Internationalization(DBObject):
     to_be_exported = ['id', 'label', 'fk_language']
@@ -2718,6 +2762,7 @@ class MasteredOn(DBObject):
 
 class Menu(DBObject):
     to_be_exported = ['id', 'default_name', 'fk_name', 'timeout', 'background_uri', 'message', 'ethercard', 'bootcli', 'disklesscli', 'dont_check_disk_size', 'fk_default_item', 'fk_default_item_WOL', 'fk_protocol', 'protocol', 'synchrostate']
+    i18n = ['fk_name']
 
 class MenuItem(DBObject):
     to_be_exported = ['id', 'default_name', 'order', 'hidden', 'hidden_WOL', 'fk_menu', 'fk_name', 'default', 'default_WOL', 'desc']
@@ -2728,6 +2773,7 @@ class Partition(DBObject):
 
 class PostInstallScript(DBObject):
     to_be_exported = ['id', 'default_name', 'value', 'default_desc', 'is_local']
+    i18n = ['fk_name', 'fk_desc']
 
 class PostInstallScriptInImage(DBObject):
     pass

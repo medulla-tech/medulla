@@ -22,7 +22,7 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
- 
+
 /* Get MMC includes */
 require_once("includes/config.inc.php");
 require_once("includes/i18n.inc.php");
@@ -43,19 +43,20 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
         $from = $_POST['from'];
         $loc_name = $_POST['loc_name'];
         $item_uuid = $_POST['itemid'];
-    
+
         $label = urldecode($_POST['itemlabel']);
-    
+
         $params = getParams();
         $params['default_name'] = $_POST['default_m_label'];
         $params['timeout'] = $_POST['rest_wait'];
         $params['background_uri'] = $_POST['boot_xpm'];
         $params['message'] = $_POST['boot_msg'];
         $params['protocol'] = $_POST['rest_type'];
-        
+        $params['language'] = $_POST['language'];
+
         $ret = xmlrpc_setImagingServerConfig($location, $params);
-    
-        // goto images list 
+
+        // goto images list
         if ($ret[0] and !isXMLRPCError()) {
             $str = sprintf(_T("Imaging server <strong>%s</strong> configuration saved.", "imaging"), $label, $loc_id);
             new NotifyWidgetSuccess($str);
@@ -65,5 +66,5 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
     }
 }
 header("Location: " . urlStrRedirect("imaging/manage/configuration", $params));
- 
+
 ?>
