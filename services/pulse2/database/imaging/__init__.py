@@ -36,6 +36,7 @@ from pulse2.database.imaging.types import P2ISS, P2IT, P2IM, P2IIK, P2ERR, P2ILL
 
 from sqlalchemy import create_engine, ForeignKey, Integer, MetaData, Table, Column, and_, or_, desc
 from sqlalchemy.orm import create_session, mapper, relation
+from sqlalchemy.sql.expression import alias as sa_exp_alias
 
 # THAT REQUIRE TO BE IN A MMC SCOPE, NOT IN A PULSE2 ONE
 from pulse2.managers.profile import ComputerProfileManager
@@ -102,6 +103,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         self.__loadNomenclatureTables()
         self.loadDefaults()
         self.loadLanguage()
+        self.loadImagingServerLanguage()
         self.is_activated = True
         self.dbversion = self.getImagingDatabaseVersion()
         self.logger.debug("ImagingDatabase finish activation")
@@ -123,6 +125,18 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         for i in session.query(Language).all():
             self.languages[i.id] = i.label
             self.r_languages[i.label] = i.id
+        session.close()
+
+    def loadImagingServerLanguage(self):
+        session = create_session()
+        self.imagingServer_lang = {}
+        self.imagingServer_entity = {}
+        for i in session.query(ImagingServer).add_entity(Entity).select_from(self.imaging_server.join(self.entity, self.entity.c.id == self.imaging_server.c.fk_entity)).all():
+            self.imagingServer_lang[id2uuid(i[0].id)] = i[0].fk_language
+            # the true one! self.imagingServer_entity[id2uuid(i[0].id)] = i[1].uuid
+            # the working one in our context :
+            self.imagingServer_entity[i[1].uuid] = id2uuid(i[0].id)
+
         session.close()
 
     def initMappers(self):
@@ -251,7 +265,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             "Internationalization",
             self.metadata,
             Column('id', Integer, primary_key=True),
-            Column('fk_language', Integer, ForeignKey('Language.id'), primary_key=True),
+            # Column('fk_language', Integer, ForeignKey('Language.id'), primary_key=True),
+            Column('fk_language', Integer, primary_key=True),
             useexisting=True,
             autoload = True
         )
@@ -553,21 +568,36 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         for bs, mi in list_of_both:
             if mi != None:
                 temporary[bs.id] = mi
-        for bs, bs_id in list_of_bs:
+        for bs, bs_id, name_i18n, desc_i18n in list_of_bs:
+            if name_i18n != None:
+                setattr(bs, 'default_name', name_i18n.label)
+            if desc_i18n != None:
+                setattr(bs, 'default_desc', desc_i18n.label)
             if temporary.has_key(bs_id):
-                setattr(bs, 'menu_item', temporary[bs_id])
+                mi = temporary[bs_id]
+                if name_i18n != None:
+                    setattr(mi, 'default_name', name_i18n.label)
+                if desc_i18n != None:
+                    setattr(mi, 'default_desc', desc_i18n.label)
+                setattr(bs, 'menu_item', mi)
             ret.append(bs)
         return ret
 
     def __mergeBootServiceInMenuItem(self, my_list):
         ret = []
-        for mi, bs, menu, bsois in my_list:
+        for mi, bs, menu, bsois, name_i18n, desc_i18n in my_list:
             if bs != None:
                 setattr(mi, 'boot_service', bs)
             setattr(mi, 'is_local', (bsois != None))
             if menu != None:
                 setattr(mi, 'default', (menu.fk_default_item == mi.id))
                 setattr(mi, 'default_WOL', (menu.fk_default_item_WOL == mi.id))
+            if name_i18n != None:
+                setattr(mi, 'name', name_i18n.label)
+                setattr(bs, 'default_name', name_i18n.label)
+            if desc_i18n != None:
+                setattr(mi, 'desc', desc_i18n.label)
+                setattr(bs, 'default_desc', desc_i18n.label)
             ret.append(mi)
         return ret
 
@@ -644,14 +674,28 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         imaging_server = self.__getMenusImagingServer(session, menu_id)
         is_id = 0
+        lang = 1
         if imaging_server:
             is_id = imaging_server.id
+            lang = imaging_server.fk_language
 
         q = []
         if type == P2IM.ALL or type == P2IM.BOOTSERVICE:
-            q1 = session.query(MenuItem).add_entity(BootService).add_entity(Menu).add_entity(BootServiceOnImagingServer)
-            q1 = q1.select_from(self.menu_item.join(self.boot_service_in_menu).join(self.boot_service).join(self.menu, self.menu_item.c.fk_menu == self.menu.c.id).outerjoin(self.boot_service_on_imaging_server))
+            # WIP i18n
+            I18n1 = sa_exp_alias(self.internationalization)
+            I18n2 = sa_exp_alias(self.internationalization)
+            q1 = session.query(MenuItem)
+            q1 = q1.add_entity(BootService).add_entity(Menu).add_entity(BootServiceOnImagingServer).add_entity(Internationalization, alias=I18n1).add_entity(Internationalization, alias=I18n2)
+            q1 = q1.select_from(self.menu_item \
+                    .join(self.boot_service_in_menu) \
+                    .join(self.boot_service) \
+                    .join(self.menu, self.menu_item.c.fk_menu == self.menu.c.id) \
+                    .outerjoin(I18n1, self.boot_service.c.fk_name == I18n1.c.id) \
+                    .outerjoin(I18n2, self.boot_service.c.fk_desc == I18n2.c.id) \
+                    .outerjoin(self.boot_service_on_imaging_server) \
+            )
             q1 = q1.filter(and_(self.menu_item.c.id.in_(mi_ids), or_(self.boot_service_on_imaging_server.c.fk_boot_service == None, self.boot_service_on_imaging_server.c.fk_imaging_server == is_id)))
+            q1 = q1.filter(and_(I18n1.c.fk_language == lang, I18n2.c.fk_language == lang))
             q1 = q1.order_by(self.menu_item.c.order).all()
             q1 = self.__mergeBootServiceInMenuItem(q1)
             q.extend(q1)
@@ -766,23 +810,42 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     ######################
     def __PossibleBootServices(self, session, target_uuid, filter):
-        q = session.query(BootService).add_column(self.boot_service.c.id)
+        # WIP i18n
+        ims = session.query(ImagingServer).select_from(self.imaging_server.join(self.target, self.target.c.fk_entity == self.imaging_server.c.fk_entity))
+        ims = ims.filter(self.target.c.uuid == target_uuid).first()
+        lang = ims.fk_language
+        I18n1 = sa_exp_alias(self.internationalization)
+        I18n2 = sa_exp_alias(self.internationalization)
+        q = session.query(BootService).add_column(self.boot_service.c.id).add_entity(Internationalization, alias=I18n1).add_entity(Internationalization, alias=I18n2)
         q = q.select_from(self.boot_service \
                 .outerjoin(self.boot_service_on_imaging_server, self.boot_service.c.id == self.boot_service_on_imaging_server.c.fk_boot_service) \
                 .outerjoin(self.imaging_server, self.imaging_server.c.id == self.boot_service_on_imaging_server.c.fk_imaging_server) \
+                .outerjoin(I18n1, self.boot_service.c.fk_name == I18n1.c.id) \
+                .outerjoin(I18n2, self.boot_service.c.fk_desc == I18n2.c.id) \
                 .outerjoin(self.entity).outerjoin(self.target))
         q = q.filter(or_(self.target.c.uuid == target_uuid, self.boot_service_on_imaging_server.c.fk_boot_service == None))
+        q = q.filter(and_(I18n1.c.fk_language == lang, I18n2.c.fk_language == lang))
         if filter != '':
             q = q.filter(or_(self.boot_service.c.default_desc.like('%'+filter+'%'), self.boot_service.c.value.like('%'+filter+'%')))
         return q
 
     def __EntityBootServices(self, session, loc_id, filter):
-        q = session.query(BootService).add_column(self.boot_service.c.id)
+        # WIP i18n
+        lang = 1
+        if self.imagingServer_entity.has_key(loc_id):
+            if self.imagingServer_lang.has_key(self.imagingServer_entity[loc_id]):
+                lang = self.imagingServer_lang[self.imagingServer_entity[loc_id]]
+        I18n1 = sa_exp_alias(self.internationalization)
+        I18n2 = sa_exp_alias(self.internationalization)
+        q = session.query(BootService).add_column(self.boot_service.c.id).add_entity(Internationalization, alias=I18n1).add_entity(Internationalization, alias=I18n2)
         q = q.select_from(self.boot_service \
                 .outerjoin(self.boot_service_on_imaging_server, self.boot_service.c.id == self.boot_service_on_imaging_server.c.fk_boot_service) \
                 .outerjoin(self.imaging_server, self.imaging_server.c.id == self.boot_service_on_imaging_server.c.fk_imaging_server) \
+                .outerjoin(I18n1, self.boot_service.c.fk_name == I18n1.c.id) \
+                .outerjoin(I18n2, self.boot_service.c.fk_desc == I18n2.c.id) \
                 .outerjoin(self.entity))
         q = q.filter(or_(self.entity.c.uuid == loc_id, self.boot_service_on_imaging_server.c.fk_boot_service == None))
+        q = q.filter(and_(I18n1.c.fk_language == lang, I18n2.c.fk_language == lang))
         if filter != '':
             q = q.filter(or_(self.boot_service.c.default_desc.like('%'+filter+'%'), self.boot_service.c.value.like('%'+filter+'%')))
         return q
@@ -954,7 +1017,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return mi
 
     def __editService(self, session, bs_uuid, menu, mi, params):
-        bs = session.query(BootService).filter(self.boot_service.c.id == uuid2id(bs_uuid)).first();
+        bs = session.query(BootService).filter(self.boot_service.c.id == uuid2id(bs_uuid)).first()
         # TODO : what do we do with bs ?
         if menu == None:
             raise '%s:Please create menu before trying to put a bootservice' % (P2ERR.ERR_TARGET_HAS_NO_MENU)
@@ -1101,6 +1164,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if session == None:
             session_need_close = True
             session = create_session()
+        # WIP i18n
         mi = session.query(MenuItem).add_entity(BootService).add_entity(Image).add_entity(Menu)
         mi = mi.select_from(self.menu_item.join(self.menu, self.menu.c.id == self.menu_item.c.fk_menu).outerjoin(self.boot_service_in_menu).outerjoin(self.boot_service).outerjoin(self.image_in_menu).outerjoin(self.image))
         mi = mi.filter(self.menu_item.c.id == uuid2id(mi_uuid)).first()
@@ -1114,7 +1178,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     ######################
     def __PossibleImages(self, session, target_uuid, is_master, filter):
-        # WIP MASTERED
         q = session.query(Image).add_column(self.image.c.id)
         q = q.select_from(self.image.join(self.image_on_imaging_server).join(self.imaging_server).join(self.entity).join(self.target, self.target.c.fk_entity == self.entity.c.id).join(self.mastered_on, self.mastered_on.c.fk_image == self.image.c.id).join(self.imaging_log, self.imaging_log.c.id == self.mastered_on.c.fk_imaging_log))
         q = q.filter(self.target.c.uuid == target_uuid) # , or_(self.image.c.is_master == True, and_(self.image.c.is_master == False, )))
@@ -1146,7 +1209,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q
 
     def getPossibleImagesOrMaster(self, target_uuid, is_master, start, end, filter):
-        # WIP MASTERED
         session = create_session()
         menu = self.getTargetsMenuTUUID(target_uuid)
         q1 = self.__PossibleImages(session, target_uuid, is_master, filter)
@@ -1347,7 +1409,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         # fill the imaging_log
         #   there is way to much fields!
-        # WIP MASTERED
         imaging_log = ImagingLog()
         imaging_log.timestamp = datetime.datetime.fromtimestamp(time.mktime(params['creation_date']))
         imaging_log.detail = params['desc']
@@ -1834,6 +1895,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         ims.fk_default_menu = 1 # the default "subscribe" menu, which is shown when an unknown client boots
         ims.fk_language = 1
         ims.associated = 0 # we are registered, but not yet associated
+        ims.fk_language = 1 # default on english
+        self.imagingServer_lang[uuid] = 1
         session.save(ims)
         session.flush()
         session.close()
@@ -2109,6 +2172,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session.save_or_update(imaging_server)
             session.flush()
         session.close()
+        self.imagingServer_lang[location] = lang.id
         return True
 
     # Protocols
@@ -2699,7 +2763,6 @@ class DBObject(object):
         ret = {}
         for i in dir(self):
             if i in self.i18n:
-
                 pass
 
             if i in self.to_be_exported:
