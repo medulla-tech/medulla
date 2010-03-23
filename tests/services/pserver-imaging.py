@@ -26,10 +26,11 @@ Unit tests for the imaging API of the Pulse 2 Package Server
 import os
 import unittest
 import xmlrpclib
+import copy
+
 from time import gmtime, sleep
 
 from pulse2.utils import reduceMACAddress
-
 from testutils import ipconfig
 
 IPSERVER = ipconfig()
@@ -108,19 +109,27 @@ class Imaging(unittest.TestCase):
         # Wait a bit for the menu to be generated asynchronously
         sleep(5)
         self.assertTrue(os.path.exists('/var/lib/pulse2/imaging/bootmenus/%s' % reduceMACAddress(mac)))
+        # No exclude file should be there
+        self.assertFalse(os.path.exists('/var/lib/pulse2/imaging/computers/%s/exclude' % 'UUID2'))
 
     def test_03registerComputers(self):
         """
         Check mass computers registration
         """
+        menu = copy.deepcopy(MENU)
+        menu['target']['exclude_parameters'] = '0:0'
         arg = [
             ('hostname1', '00:11:22:33:44:dd',
-             { 'uuid' : 'UUID3', 'menu' : { 'UUID3' : MENU }}),
+             { 'uuid' : 'UUID3', 'menu' : { 'UUID3' : menu }}),
             ('hostname2', '00:11:22:33:44:ee',
              { 'uuid' : 'UUID4', 'menu' : { 'UUID4' : MENU }}),
             ]
         result = SERVER.computersRegister(arg)
         self.assertEqual(['UUID3', 'UUID4'], result)
+        # Wait a bit for the menu to be generated asynchronously
+        sleep(5)
+        # Exclude file should be there for UUID3
+        self.assertTrue(os.path.exists('/var/lib/pulse2/imaging/computers/%s/exclude' % 'UUID3'))
 
     def test_04inventory(self):
         """
