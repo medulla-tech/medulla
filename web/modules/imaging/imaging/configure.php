@@ -84,10 +84,17 @@ if (isset($_POST["bvalid"])) {
     $params['hostname'] = $params['target_name'];
     // goto images list
     if ($ret[0] and !isXMLRPCError()) {
-        $str = sprintf(_T("Boot menu is created for <strong>%s</strong>.", "imaging"), $target_name);
+        if ($is_registering) {
+            $str = sprintf(_T("Boot menu is created for <strong>%s</strong>.", "imaging"), $target_name);
+        } else {
+            $str = sprintf(_T("Boot menu modified for <strong>%s</strong>.", "imaging"), $target_name);
+        }
         new NotifyWidgetSuccess($str);
         if ($is_registering) {
             header("Location: ".urlStrRedirect("base/computers/".$type."imgtabs/".$type."tabbootmenu", $params));
+        } else {
+            /* Reload the configure tab to get the synchro button */
+            header("Location: ".urlStrRedirect("base/computers/".$type."imgtabs/".$type."tabconfigure", $params));
         }
     } elseif ($ret[0]) {
         if ($is_registering) {
