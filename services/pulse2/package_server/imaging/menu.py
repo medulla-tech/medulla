@@ -99,7 +99,7 @@ class ImagingDefaultMenuBuilder:
             m.setNTBLFix(self.menu['ntblfix'])
         m.setDisklessCLI(self.menu['disklesscli'])
         m.setDiskSizeCheck(self.menu['dont_check_disk_size'])
-        m.setEtherCard(self.menu['ethercard'])
+        m.setEtherCard(int(self.menu['ethercard']))
         for pos, entry in self.menu['bootservices'].items():
             m.addBootServiceEntry(int(pos), entry)
         for pos, entry in self.menu['images'].items():
