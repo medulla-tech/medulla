@@ -69,7 +69,12 @@ MENU = { 'timeout' : 20,
          'target' : { 'name' : u'...',
                       'kernel_parameters' : u'...',
                       'image_parameters' : u'....',
-                    }
+                      'exclude_parameters' : u'',
+                    },
+         'bootcli' : False,
+         'disklesscli' : False,
+         'dont_check_disk_size' : False,
+         'ethercard' : 0
         }
 MENUS = { 'UUID27' : MENU }
 
