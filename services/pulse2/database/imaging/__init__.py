@@ -1831,6 +1831,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         ims.fk_entity = 1 # the 'root' entity
         ims.packageserver_uuid = uuid
         ims.fk_default_menu = 1 # the default "subscribe" menu, which is shown when an unknown client boots
+        ims.fk_language = 1
         ims.associated = 0 # we are registered, but not yet associated
         session.save(ims)
         session.flush()
