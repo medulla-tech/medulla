@@ -1945,6 +1945,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         menu.background_uri = default_menu.background_uri
         menu.message = default_menu.message
         menu.fk_protocol = default_menu.fk_protocol
+        menu.ethercard = default_menu.ethercard
+        menu.bootcli = default_menu.bootcli
+        menu.disklesscli = default_menu.disklesscli
+        menu.dont_check_disk_size = default_menu.dont_check_disk_size
         menu_items, mi = self.__duplicateDefaultMenuItem(session, loc_id, p_id)
         menu.fk_default_item = mi[0]
         menu.fk_default_item_WOL = mi[1]
@@ -2712,7 +2716,7 @@ class MasteredOn(DBObject):
     to_be_exported = ['fk_image', 'image', 'fk_imaging_log', 'imaging_log']
 
 class Menu(DBObject):
-    to_be_exported = ['id', 'default_name', 'fk_name', 'timeout', 'background_uri', 'message', 'fk_default_item', 'fk_default_item_WOL', 'fk_protocol', 'protocol', 'synchrostate']
+    to_be_exported = ['id', 'default_name', 'fk_name', 'timeout', 'background_uri', 'message', 'ethercard', 'bootcli', 'disklesscli', 'dont_check_disk_size', 'fk_default_item', 'fk_default_item_WOL', 'fk_protocol', 'protocol', 'synchrostate']
 
 class MenuItem(DBObject):
     to_be_exported = ['id', 'default_name', 'order', 'hidden', 'hidden_WOL', 'fk_menu', 'fk_name', 'default', 'default_WOL', 'desc']
