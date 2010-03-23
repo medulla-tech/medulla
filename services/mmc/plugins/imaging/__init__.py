@@ -1721,8 +1721,9 @@ class RpcProxy(RpcProxyI):
 
         try:
             ret, target = db.setMyMenuTarget(uuid, params, target_type)
+            db.changeTargetsSynchroState([uuid], target_type, P2ISS.TODO)
         except Exception, e:
-            return [False, "setMyMenuTarget : %s"%(str(e))]
+            return [False, "setMyMenuTarget : %s" % str(e)]
 
         if not isRegistered:
             logger = logging.getLogger()
