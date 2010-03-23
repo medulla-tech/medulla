@@ -177,9 +177,9 @@ CREATE TABLE Menu (
   background_uri Text DEFAULT '',
   message Text NOT NULL DEFAULT '',
   ethercard INT NOT NULL DEFAULT 0,
-  bootcli BOOL NOT NULL DEFAULT 0,
-  disklesscli BOOL NOT NULL DEFAULT 0,
-  dont_check_disk_size BOOL NOT NULL DEFAULT 0,
+  bootcli TINYINT(1) NOT NULL DEFAULT 0,
+  disklesscli TINYINT(1) NOT NULL DEFAULT 0,
+  dont_check_disk_size TINYINT(1) NOT NULL DEFAULT 0,
   fk_default_item INT,
   fk_default_item_WOL INT,
   fk_protocol INT DEFAULT 1,
@@ -248,10 +248,10 @@ CREATE TABLE Image (
   `desc` Text NOT NULL,
   checksum Text NOT NULL,
   `size` INT NOT NULL,
-  is_master BOOL DEFAULT FALSE,
+  is_master TINYINT(1) DEFAULT FALSE,
   creation_date datetime,
   fk_creator INT NOT NULL,
-  ntblfix BOOL NOT NULL DEFAULT 0,
+  ntblfix TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (id)
 );
 
