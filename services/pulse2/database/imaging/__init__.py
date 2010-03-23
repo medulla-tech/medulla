@@ -2153,6 +2153,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             target.image_parameters = params['target_opt_image']
         else:
             target.image_parameters = self.config.web_def_image_parameters
+        target.exclude_parameters = '' # Always empty when creating a target
         target.fk_entity = entity_id
         target.fk_menu = menu_id
         session.save(target)
@@ -2788,7 +2789,7 @@ class SynchroState(DBObject):
     to_be_exported = ['id', 'label']
 
 class Target(DBObject):
-    to_be_exported = ['id', 'name', 'uuid', 'type', 'fk_entity', 'fk_menu', 'kernel_parameters', 'image_parameters']
+    to_be_exported = ['id', 'name', 'uuid', 'type', 'fk_entity', 'fk_menu', 'kernel_parameters', 'image_parameters', 'exclude_parameters']
 
 class TargetType(DBObject):
     to_be_exported = ['id', 'label']
