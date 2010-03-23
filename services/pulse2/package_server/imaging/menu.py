@@ -48,7 +48,6 @@ def isMenuStructure(menu):
                   'bootservices',
                   'images',
                   'bootcli',
-                  'ntblfix',
                   'disklesscli',
                   'dont_check_disk_size',
                   'ethercard']:
@@ -96,7 +95,8 @@ class ImagingDefaultMenuBuilder:
         m.setDefaultItem(int(self.menu['default_item']))
         m.setProtocol(self.menu['protocol'])
         m.setBootCLI(self.menu['bootcli'])
-        m.setNTBLFix(self.menu['ntblfix'])
+        if 'ntblfix' in self.menu :
+            m.setNTBLFix(self.menu['ntblfix'])
         m.setDisklessCLI(self.menu['disklesscli'])
         m.setDiskSizeCheck(self.menu['dont_check_disk_size'])
         m.setEtherCard(self.menu['ethercard'])
