@@ -436,9 +436,9 @@ INSERT INTO Protocol (label) VALUES ("nfs");
 INSERT INTO Protocol (label) VALUES ("tftp");
 INSERT INTO Protocol (label) VALUES ("mtftp");
 
-INSERT INTO Language (label) VALUES (1, "English");
-INSERT INTO Language (label) VALUES (2, "Français");
-INSERT INTO Language (label) VALUES (3, "Español");
+INSERT INTO Language (id, label) VALUES (1, "English");
+INSERT INTO Language (id, label) VALUES (2, "Français");
+INSERT INTO Language (id, label) VALUES (3, "Español");
 
 INSERT INTO SynchroState (label) VALUES ("TODO");
 INSERT INTO SynchroState (label) VALUES ("DONE");
