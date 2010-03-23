@@ -164,7 +164,7 @@ class ImagingMenu:
         self.dont_check_disk_size = False # check that the target disk is large enough
 
         self.diskless_opts = list() # revo* options put on diskless command line
-        self.kernel_opts = list('quiet') # kernel options put on diskless command line
+        self.kernel_opts = list(['quiet']) # kernel options put on diskless command line
 
         # list of replacements to perform
         # a replacement is using the following structure :
