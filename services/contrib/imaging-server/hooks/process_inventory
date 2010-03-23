@@ -92,7 +92,7 @@ def myCall():
 
     try:
         inventory = pulse2.imaging.bootinventory.BootInventory(data)
-        callFunction(imagingAPI.injectInventory(mac, inventory))
+        callFunction(imagingAPI.injectInventory(mac, inventory.dump()))
     except AttributeError, e:
         logging.getLogger().error('HOOK %s : %s' % (sys.argv[0], e))
         exitcode = ERROR_CLIENT
