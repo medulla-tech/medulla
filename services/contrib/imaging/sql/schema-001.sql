@@ -164,6 +164,7 @@ CREATE TABLE ImagingServer (
   packageserver_uuid Text NOT NULL,
   recursive Bool NOT NULL DEFAULT 1,
   associated Bool NOT NULL DEFAULT 0,
+  fk_language INT NOT NULL DEFAULT 1,
   fk_entity INT NOT NULL,
   PRIMARY KEY (id)
 );
@@ -435,9 +436,9 @@ INSERT INTO Protocol (label) VALUES ("nfs");
 INSERT INTO Protocol (label) VALUES ("tftp");
 INSERT INTO Protocol (label) VALUES ("mtftp");
 
-INSERT INTO Language (label) VALUES ("English");
-INSERT INTO Language (label) VALUES ("Français");
-INSERT INTO Language (label) VALUES ("Español");
+INSERT INTO Language (label) VALUES (1, "English");
+INSERT INTO Language (label) VALUES (2, "Français");
+INSERT INTO Language (label) VALUES (3, "Español");
 
 INSERT INTO SynchroState (label) VALUES ("TODO");
 INSERT INTO SynchroState (label) VALUES ("DONE");
