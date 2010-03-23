@@ -2564,23 +2564,24 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             for current_disk in target.disks:
                 session.delete(current_disk)
             # Then push a new inventory
-            for disknum in inventory['disk']:
-                disk_info = inventory['disk'][disknum]
-                cd = ComputerDisk()
-                cd.num = int(disknum)
-                cd.cyl = int(disk_info['C'])
-                cd.head = int(disk_info['H'])
-                cd.sector = int(disk_info['S'])
-                cd.capacity = int(disk_info['size'])
-                for partnum in disk_info['parts']:
-                    part = disk_info['parts'][partnum]
-                    cp = ComputerPartition()
-                    cp.num = int(partnum)
-                    cp.type = part['type']
-                    cp.length = int(part['length'])
-                    cp.start = int(part['start'])
-                    cd.partitions.append(cp)
-                target.disks.append(cd)
+            if 'disk' in inventory :
+                for disknum in inventory['disk']:
+                    disk_info = inventory['disk'][disknum]
+                    cd = ComputerDisk()
+                    cd.num = int(disknum)
+                    cd.cyl = int(disk_info['C'])
+                    cd.head = int(disk_info['H'])
+                    cd.sector = int(disk_info['S'])
+                    cd.capacity = int(disk_info['size'])
+                    for partnum in disk_info['parts']:
+                        part = disk_info['parts'][partnum]
+                        cp = ComputerPartition()
+                        cp.num = int(partnum)
+                        cp.type = part['type']
+                        cp.length = int(part['length'])
+                        cp.start = int(part['start'])
+                        cd.partitions.append(cp)
+                        target.disks.append(cd)
             session.save_or_update(target)
             session.commit()
         except:
