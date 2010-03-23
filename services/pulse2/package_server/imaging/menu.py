@@ -46,7 +46,13 @@ def isMenuStructure(menu):
                   'timeout',
                   'background_uri',
                   'bootservices',
-                  'images']:
+                  'images',
+                  'bootcli',
+                  'ntblfix',
+                  'disklesscli',
+                  'dont_check_disk_size',
+                  'ethercard']:
+
             if not k in menu:
                 logger.debug("your menu is missing %s" % (k))
                 ret = False
@@ -89,6 +95,11 @@ class ImagingDefaultMenuBuilder:
         m.setTimeout(self.menu['timeout'])
         m.setDefaultItem(int(self.menu['default_item']))
         m.setProtocol(self.menu['protocol'])
+        m.setBootCLI(self.menu['bootcli'])
+        m.setNTBLFix(self.menu['ntblfix'])
+        m.setDisklessCLI(self.menu['disklesscli'])
+        m.setDiskSizeCheck(self.menu['dont_check_disk_size'])
+        m.setEtherCard(self.menu['ethercard'])
         for pos, entry in self.menu['bootservices'].items():
             m.addBootServiceEntry(int(pos), entry)
         for pos, entry in self.menu['images'].items():
@@ -152,6 +163,9 @@ class ImagingMenu:
         self.ethercard = 0 # use this ethernet iface to backup / restore stuff
         self.dont_check_disk_size = False # check that the target disk is large enough
 
+        self.diskless_opts = list() # revo* options put on diskless command line
+        self.linux_opts = list('quiet') # kernel options put on diskless command line
+
         # list of replacements to perform
         # a replacement is using the following structure :
         # key 'from' : the PCRE to look for
@@ -165,6 +179,8 @@ class ImagingMenu:
             ('##PULSE2_DISKLESS_KERNEL##', self.config.imaging_api['diskless_kernel'], 'global'),
             ('##PULSE2_DISKLESS_INITRD##', self.config.imaging_api['diskless_initrd'], 'global'),
             ('##PULSE2_DISKLESS_MEMTEST##', self.config.imaging_api['diskless_memtest'], 'global'),
+            ('##PULSE2_DISKLESS_OPTS##', ' '.join(self.diskless_opts), 'global'),
+            ('##PULSE2_LINUX_OPTS##', ' '.join(self.linux_opts), 'global'),
             ('##PULSE2_MASTERS_DIR##', self.config.imaging_api['masters_folder'], 'global'),
             ('##PULSE2_POSTINST_DIR##', self.config.imaging_api['postinst_folder'], 'global'),
             ('##PULSE2_COMPUTERS_DIR##', self.config.imaging_api['computers_folder'], 'global'),
@@ -231,6 +247,22 @@ class ImagingMenu:
         # can the user access to the grub command line ?
         if self.bootcli:
             buf += 'nosecurity\n'
+
+        # are we dropped to a shell after having booted ?
+        if self.disklesscli:
+            self.diskless_opts.append('revodebug')
+
+        # Shall be fix NT Boot Loaders ?
+        if self.disklesscli:
+            self.diskless_opts.append('revontblfix')
+
+        # Shall be fix check the disk size ?
+        if not self.dont_check_disk_size:
+            self.diskless_opts.append('revonospc')
+
+        # Use a specifix ethernet card
+        if self.ethercard:
+            self.diskless_opts.append('revoeth%d' % self.ethercard)
 
         # then write items
         indices = self.menuitems.keys()
@@ -478,7 +510,7 @@ class ImagingImageItem(ImagingItem):
     Hold an imaging menu item for a image to restore
     """
 
-    NFSRESTORE = u"kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## revosavedir=##PULSE2_MASTERS_DIR## revoinfodir=##PULSE2_COMPUTERS_DIR## revooptdir=##PULSE2_POSTINST_DIR## revobase=##PULSE2_BASE_DIR## revorestorenfs quiet revopost revomac=##MAC## revoimage=##PULSE2_IMAGE_UUID## \ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##\n"
+    NFSRESTORE = u"kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_LINUX_OPTS## revosavedir=##PULSE2_MASTERS_DIR## revoinfodir=##PULSE2_COMPUTERS_DIR## revooptdir=##PULSE2_POSTINST_DIR## revobase=##PULSE2_BASE_DIR## revorestorenfs revopost revomac=##MAC## revoimage=##PULSE2_IMAGE_UUID## \ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD## ##PULSE2_DISKLESS_OPTS##\n"
     # FIXME ! TFTP/MTFTP to be implemented
     TFTPRESTORE = NFSRESTORE
     MTFTPRESTORE = NFSRESTORE
