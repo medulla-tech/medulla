@@ -463,6 +463,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             break;
 
         }
+        sendto(s, ACKSTR, strlen(ACKSTR) + 1, MSG_NOSIGNAL, (struct sockaddr *)si_other, sizeof(*si_other));
         return 0;
     }
     // give me my Pulse 2 name
