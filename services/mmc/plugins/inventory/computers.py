@@ -132,9 +132,9 @@ class InventoryComputers(ComputerI):
 
     def neededParamsAddComputer(self):
         return [
-            ['computerip', 'string', 'computer\'s ip address'],
-            ['computermac', 'string', 'computer\'s mac address'],
-            ['computernet', 'string', 'computer\'s network adress']
+            ['computerip', 'string', 'Computer\'s IP address'],
+            ['computermac', 'string', 'Computer\'s MAC address'],
+            ['computernet', 'string', 'Computer\'s network address']
         ]
 
     def canDelComputer(self):
