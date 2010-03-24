@@ -620,12 +620,12 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def __mergeBootServiceOrImageInMenuItem(self, mis):
         """ warning this one does not work on a list but on a tuple of 3 elements (mi, bs, im) """
-        (menuitem, bootservice, image, menu) = mis # , name_i18n, desc_i18n
+        (menuitem, bootservice, image, menu, name_bs_i18n, desc_bs_i18n) = mis
         if bootservice != None:
-            #if name_i18n != None:
-            #    setattr(bs, 'default_name', name_i18n.label)
-            #if desc_i18n != None:
-            #    setattr(bs, 'default_desc', desc_i18n.label)
+            if name_bs_i18n != None:
+                setattr(bootservice, 'default_name', name_bs_i18n.label)
+            if desc_bs_i18n != None:
+                setattr(bootservice, 'default_desc', desc_bs_i18n.label)
             setattr(menuitem, 'boot_service', bootservice)
         if image != None:
             setattr(menuitem, 'image', image)
@@ -684,7 +684,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             is_id = imaging_server.id
             lang = imaging_server.fk_language
         elif loc_id != None and menu_id == 2: #this is the suscribe menu
-            lang = self.getLocLanguage(session, loc_id)
+            lang = self.__getLocLanguage(session, loc_id)
 
         q = []
         if type == P2IM.ALL or type == P2IM.BOOTSERVICE:
@@ -821,7 +821,13 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         lang = ims.fk_language
         return lang
 
-    def getLocLanguage(self, session, loc_id):
+    def getLocLanguage(self, loc_id):
+        session = create_session()
+        ret = self.__getLocLanguage(session, loc_id)
+        session.close()
+        return ret
+
+    def __getLocLanguage(self, session, loc_id):
         lang = 1
         if self.imagingServer_entity.has_key(loc_id):
             if not self.imagingServer_lang.has_key(self.imagingServer_entity[loc_id]):
@@ -856,7 +862,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def __EntityBootServices(self, session, loc_id, filter):
         # WIP i18n
-        lang = self.getLocLanguage(session, loc_id)
+        lang = self.__getLocLanguage(session, loc_id)
 
         I18n1 = sa_exp_alias(self.internationalization)
         I18n2 = sa_exp_alias(self.internationalization)
@@ -1186,12 +1192,29 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if session == None:
             session_need_close = True
             session = create_session()
-        # WIP i18n TODO
+        # WIP i18n
+        ims = session.query(ImagingServer).select_from(self.menu_item \
+                .outerjoin(self.target, self.target.c.fk_menu == self.menu_item.c.fk_menu) \
+                .outerjoin(self.imaging_server, or_(
+                    self.target.c.fk_entity == self.imaging_server.c.fk_entity, \
+                    self.imaging_server.c.fk_default_menu == self.menu_item.c.fk_menu \
+                )) \
+            ).filter(self.menu_item.c.id == uuid2id(mi_uuid)).first()
+        lang = ims.fk_language
         I18n1 = sa_exp_alias(self.internationalization)
         I18n2 = sa_exp_alias(self.internationalization)
 
         mi = session.query(MenuItem).add_entity(BootService).add_entity(Image).add_entity(Menu)
-        mi = mi.select_from(self.menu_item.join(self.menu, self.menu.c.id == self.menu_item.c.fk_menu).outerjoin(self.boot_service_in_menu).outerjoin(self.boot_service).outerjoin(self.image_in_menu).outerjoin(self.image))
+        mi = mi.add_entity(Internationalization, alias=I18n1).add_entity(Internationalization, alias=I18n2)
+        mi = mi.select_from(self.menu_item \
+                .join(self.menu, self.menu.c.id == self.menu_item.c.fk_menu) \
+                .outerjoin(self.boot_service_in_menu) \
+                .outerjoin(self.boot_service) \
+                .outerjoin(I18n1, and_(self.boot_service.c.fk_name == I18n1.c.id, I18n1.c.fk_language == lang)) \
+                .outerjoin(I18n2, and_(self.boot_service.c.fk_desc == I18n2.c.id, I18n2.c.fk_language == lang)) \
+                .outerjoin(self.image_in_menu) \
+                .outerjoin(self.image) \
+        )
         mi = mi.filter(self.menu_item.c.id == uuid2id(mi_uuid)).first()
         mi = self.__mergeBootServiceOrImageInMenuItem(mi)
         if hasattr(mi, 'boot_service'):
@@ -1719,14 +1742,13 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session_need_to_close = True
             session = create_session()
 
-        # first part : find the Entity the Menu Item belongs to
-        # we go this way : menuitem -> menu -> target -> entity
         mi = session.query(MenuItem).add_entity(Entity)
-        j = self.menu_item.join(self.menu, self.menu_item.c.fk_menu == self.menu.c.id).join(self.target).join(self.entity)
-        mi = mi.select_from(j)
-        f = self.menu_item.c.id == uuid2id(mi_uuid)
-        mi = mi.filter(f)
-        mi = mi.first()
+        mi = mi.select_from(self.menu_item \
+                .join(self.menu, self.menu.c.id == self.menu_item.c.fk_menu) \
+                .outerjoin(self.target) \
+                .outerjoin(self.imaging_server, self.imaging_server.c.fk_default_menu == self.menu.c.id) \
+                .outerjoin(self.entity, or_(self.entity.c.id == self.target.c.fk_entity, self.entity.c.id == self.imaging_server.c.fk_entity)))
+        mi = mi.filter(and_(self.menu_item.c.id == uuid2id(mi_uuid), self.entity.c.id != None)).first()
         loc_id = mi[1].uuid
 
         q = session.query(BootService).add_entity(BootServiceOnImagingServer)
@@ -2562,7 +2584,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def __AllPostInstallScripts(self, session, location, filter, is_count = False):
         # PostInstallScripts are not specific to an Entity
         # WIP i18n
-        lang = self.getLocLanguage(session, location)
+        lang = self.__getLocLanguage(session, location)
         I18n1 = sa_exp_alias(self.internationalization)
         I18n2 = sa_exp_alias(self.internationalization)
 
@@ -2632,7 +2654,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         # WIP i18n
         lang = 1
         if location_id != None:
-            lang = self.getLocLanguage(session, location_id)
+            lang = self.__getLocLanguage(session, location_id)
         else:
             pass
             # this is used internally to delete or edit a PIS
@@ -2668,10 +2690,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if session == None:
             session_need_to_close = True
             session = create_session()
-        # WIP i18n TODO
+        # WIP i18n
         lang = 1
         if location_id != None:
-            lang = self.getLocLanguage(session, location_id)
+            lang = self.__getLocLanguage(session, location_id)
 
         I18n1 = sa_exp_alias(self.internationalization)
         I18n2 = sa_exp_alias(self.internationalization)

@@ -1312,6 +1312,7 @@ class RpcProxy(RpcProxyI):
                 # loc_uuid = None
                 # t_uuid = None
                 menu['images'][order]['post_install_script'] = pis
+        menu['language'] = db.getLocLanguage(location.uuid)
         return menu
 
     def __generateLocationMenu(self, logger, db, loc_uuid):
