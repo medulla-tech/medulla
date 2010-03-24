@@ -52,6 +52,11 @@ function xmlrpc_isComputerRegistered($machine_uuid) {
     }
     return ($_SESSION["imaging.isComputerRegistered_".$machine_uuid] == 1);
 }
+
+function xmlrpc_checkComputerForImaging($computer_uuid) {
+    return xmlCall("imaging.checkComputerForImaging", $computer_uuid);
+}
+
 function xmlrpc_getMyMenuComputer($target_uuid) {
     return xmlCall("imaging.getMyMenuComputer", array($target_uuid));
 }
