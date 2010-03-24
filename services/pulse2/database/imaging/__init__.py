@@ -690,12 +690,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                     .join(self.boot_service_in_menu) \
                     .join(self.boot_service) \
                     .join(self.menu, self.menu_item.c.fk_menu == self.menu.c.id) \
-                    .outerjoin(I18n1, self.boot_service.c.fk_name == I18n1.c.id) \
-                    .outerjoin(I18n2, self.boot_service.c.fk_desc == I18n2.c.id) \
+                    .outerjoin(I18n1, and_(self.boot_service.c.fk_name == I18n1.c.id, I18n1.c.fk_language == lang)) \
+                    .outerjoin(I18n2, and_(self.boot_service.c.fk_desc == I18n2.c.id, I18n2.c.fk_language == lang)) \
                     .outerjoin(self.boot_service_on_imaging_server) \
             )
             q1 = q1.filter(and_(self.menu_item.c.id.in_(mi_ids), or_(self.boot_service_on_imaging_server.c.fk_boot_service == None, self.boot_service_on_imaging_server.c.fk_imaging_server == is_id)))
-            q1 = q1.filter(and_(I18n1.c.fk_language == lang, I18n2.c.fk_language == lang))
             q1 = q1.order_by(self.menu_item.c.order).all()
             q1 = self.__mergeBootServiceInMenuItem(q1)
             q.extend(q1)
@@ -820,11 +819,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = q.select_from(self.boot_service \
                 .outerjoin(self.boot_service_on_imaging_server, self.boot_service.c.id == self.boot_service_on_imaging_server.c.fk_boot_service) \
                 .outerjoin(self.imaging_server, self.imaging_server.c.id == self.boot_service_on_imaging_server.c.fk_imaging_server) \
-                .outerjoin(I18n1, self.boot_service.c.fk_name == I18n1.c.id) \
-                .outerjoin(I18n2, self.boot_service.c.fk_desc == I18n2.c.id) \
+                .outerjoin(I18n1, and_(self.boot_service.c.fk_name == I18n1.c.id, I18n1.c.fk_language == lang)) \
+                .outerjoin(I18n2, and_(self.boot_service.c.fk_desc == I18n2.c.id, I18n2.c.fk_language == lang)) \
                 .outerjoin(self.entity).outerjoin(self.target))
         q = q.filter(or_(self.target.c.uuid == target_uuid, self.boot_service_on_imaging_server.c.fk_boot_service == None))
-        q = q.filter(and_(I18n1.c.fk_language == lang, I18n2.c.fk_language == lang))
         if filter != '':
             q = q.filter(or_(self.boot_service.c.default_desc.like('%'+filter+'%'), self.boot_service.c.value.like('%'+filter+'%')))
         return q
@@ -841,11 +839,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = q.select_from(self.boot_service \
                 .outerjoin(self.boot_service_on_imaging_server, self.boot_service.c.id == self.boot_service_on_imaging_server.c.fk_boot_service) \
                 .outerjoin(self.imaging_server, self.imaging_server.c.id == self.boot_service_on_imaging_server.c.fk_imaging_server) \
-                .outerjoin(I18n1, self.boot_service.c.fk_name == I18n1.c.id) \
-                .outerjoin(I18n2, self.boot_service.c.fk_desc == I18n2.c.id) \
+                .outerjoin(I18n1, and_(self.boot_service.c.fk_name == I18n1.c.id, I18n1.c.fk_language == lang)) \
+                .outerjoin(I18n2, and_(self.boot_service.c.fk_desc == I18n2.c.id, I18n2.c.fk_language == lang)) \
                 .outerjoin(self.entity))
         q = q.filter(or_(self.entity.c.uuid == loc_id, self.boot_service_on_imaging_server.c.fk_boot_service == None))
-        q = q.filter(and_(I18n1.c.fk_language == lang, I18n2.c.fk_language == lang))
         if filter != '':
             q = q.filter(or_(self.boot_service.c.default_desc.like('%'+filter+'%'), self.boot_service.c.value.like('%'+filter+'%')))
         return q
@@ -1893,9 +1890,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         ims.fk_entity = 1 # the 'root' entity
         ims.packageserver_uuid = uuid
         ims.fk_default_menu = 1 # the default "subscribe" menu, which is shown when an unknown client boots
-        ims.fk_language = 1
         ims.associated = 0 # we are registered, but not yet associated
-        ims.fk_language = 1 # default on english
+        ims.fk_language = 1 # default on English
         self.imagingServer_lang[uuid] = 1
         session.save(ims)
         session.flush()
