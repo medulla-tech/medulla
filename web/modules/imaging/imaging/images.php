@@ -73,7 +73,7 @@ if (($type == '' && xmlrpc_isComputerRegistered($target_uuid)) || ($type == 'gro
             break;
     }
 } else {
-    # register the target (computer or profile)
+    /* register the target (computer or profile) */
     $params = array('target_uuid'=>$target_uuid, 'type'=>$type, 'from'=>"services", "target_name"=>$target_name);
     header("Location: " . urlStrRedirect("base/computers/".$type."register_target", $params));
 }
@@ -136,9 +136,9 @@ function image_edit($type, $images, $masters) {
         $f->pop();
         $f->addButton("bvalid", _T("Validate"));
         if ($image['is_master']) {
-            $f->addButton("bconvert_image", _T("Validate and convert to image"));
+            $f->addButton("bconvert_image", _T("Validate and convert to image", "imaging"));
         } else {
-            $f->addButton("bconvert_master", _T("Validate and convert to master"));
+            $f->addButton("bconvert_master", _T("Validate and convert to master", "imaging"));
         }
         $f->pop();
         $f->display();
@@ -165,7 +165,7 @@ function image_edit($type, $images, $masters) {
             if (count($post_installs) == 0) {
                 $params['name'] = $_POST['image_label'];
                 $params['desc'] = $_POST['image_description'];
-                new NotifyWidgetFailure("You must have a Post install script to convert an image into a master.");
+                new NotifyWidgetFailure(_T("You must have a post install script to convert an image into a master.", "imaging"));
                 header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
             }
 
