@@ -73,14 +73,14 @@ foreach ($addParams as $p) {
             array("value" => '')
         );
     }
-    
 }
 
 if (canAssociateComputer2Location()) {
     if (in_array("pulse2", $_SESSION["modulesList"])) {
         require('modules/pulse2/includes/select_location.php');
+        // TODO when edit, should get the locations in GET or POST
         $f->add(
-            new TrFormElement(_("Location"), select_locations(null)), # TODO when edit, should get the locations in GET or POST
+                new TrFormElement(_("Location"), select_locations(null, "location_uuid")),
             array("value" => '')
         );
     }
