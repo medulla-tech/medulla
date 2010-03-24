@@ -126,7 +126,7 @@ class RpcProxy(RpcProxyI):
 
     ###########################################################
     def get_all_known_languages(self):
-        """ get all the languages defined in the database """ 
+        """ get all the languages defined in the database """
         return xmlrpcCleanup(map(lambda p: p.toH(), ImagingDatabase().getAllKnownLanguages()))
 
     ###########################################################
@@ -1824,7 +1824,7 @@ class RpcProxy(RpcProxyI):
                         def treatRegisters(results, uuids = uuids):
                             failures = uuids
                             for l_uuid in results:
-                                uuids.remove(l_uuid)
+                                failures.remove(l_uuid)
                             return failures
 
                         d = i.computersRegister(computers)
