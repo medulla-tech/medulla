@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-24 10:04+0100\n"
-"PO-Revision-Date: 2010-03-24 10:14+0100\n"
+"POT-Creation-Date: 2010-03-24 16:49+0100\n"
+"PO-Revision-Date: 2010-03-24 16:51+0100\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: Pulse 2 developers <pulse2-devel@mandrivalinux.org>\n"
 "MIME-Version: 1.0\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Generator: Lokalize 1.0\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: web/modules/imaging/imaging/configure.php:163
+#: web/modules/imaging/imaging/configure.php:167
 #, php-format
 msgid "%s menu parameters"
 msgstr "Paramètres du menu de %s"
@@ -33,7 +33,7 @@ msgid "%s's profile imaging"
 msgstr "Profil imaging de %s"
 
 #: web/modules/imaging/manage/ajaxConfiguration.php:100
-#: web/modules/imaging/imaging/configure.php:189
+#: web/modules/imaging/imaging/configure.php:193
 msgid "(default)"
 msgstr "(défaut)"
 
@@ -56,7 +56,7 @@ msgstr "<strong>%s</strong> monté dans le menu de démarrage par défaut"
 msgid "<strong>%s</strong> script %s"
 msgstr "<strong>%s</strong> script %s"
 
-#: web/modules/imaging/manage/postinstall_delete.php:44
+#: web/modules/imaging/manage/postinstall_delete.php:45
 #, php-format
 msgid "<strong>%s</strong> script deleted"
 msgstr "Le script <strong>%s</strong> a été supprimé"
@@ -66,7 +66,7 @@ msgstr "Le script <strong>%s</strong> a été supprimé"
 msgid "<strong>%s</strong> script wasn't %s"
 msgstr "<strong>%s</strong> script n'a pas été %s"
 
-#: web/modules/imaging/manage/postinstall_delete.php:50
+#: web/modules/imaging/manage/postinstall_delete.php:51
 #, php-format
 msgid "<strong>%s</strong> script wasn't deleted"
 msgstr "Le script <strong>%s</strong> n'a pas été supprimé"
@@ -129,7 +129,7 @@ msgstr "Êtes vous sur de vouloir supprimer l'image <b>%s</b> ?"
 msgid "Are you sure you want to delete <b>%s</b> master ?"
 msgstr "Êtes vous certain de vouloir supprimer le master <b>%s</b> ?"
 
-#: web/modules/imaging/manage/postinstall_delete.php:64
+#: web/modules/imaging/manage/postinstall_delete.php:65
 #, php-format
 msgid "Are you sure you want to delete the <b>%s</b> script ?"
 msgstr "Êtes-vous sure de vouloir supprimer le script <b>%s</b> ?"
@@ -170,9 +170,12 @@ msgid "Available boot menu services"
 msgstr "Services de démarrage disponibles"
 
 #: web/modules/imaging/manage/ajaxMaster.php:39
-#: web/modules/imaging/manage/ajaxPostInstall.php:43
 msgid "Available masters"
 msgstr "Masters disponibles"
+
+#: web/modules/imaging/manage/ajaxPostInstall.php:43
+msgid "Available post-installation scripts"
+msgstr "Scripts de post-installation disponibles"
 
 #: web/modules/imaging/manage/ajaxLogs.php:47
 #: web/modules/imaging/imaging/ajaxLogs.php:55
@@ -202,7 +205,7 @@ msgstr "Sauvegarde en cours"
 msgid "Backup started"
 msgstr "Sauvegarde démarrée"
 
-#: web/modules/imaging/imaging/configure.php:252
+#: web/modules/imaging/imaging/configure.php:256
 msgid "Backup/restore disks selection"
 msgstr "Sélection des disques à sauvegarder/restaurer"
 
@@ -233,7 +236,7 @@ msgid "Boot menu shown"
 msgstr "Menu de démarrage affiché"
 
 #: web/modules/imaging/manage/ajaxConfiguration.php:121
-#: web/modules/imaging/imaging/configure.php:210
+#: web/modules/imaging/imaging/configure.php:214
 msgid "Boot options"
 msgstr "Options de démarrage"
 
@@ -252,7 +255,7 @@ msgstr "Démarré"
 msgid "Can't connect to the imaging server linked to the selected entity."
 msgstr "Impossible de se connecter au serveur d'imaging associé à l'entité sélectionnée."
 
-#: web/modules/imaging/manage/postinstall_delete.php:67
+#: web/modules/imaging/manage/postinstall_delete.php:68
 #: web/modules/imaging/manage/master_iso.php:83
 #: web/modules/imaging/manage/master_delete.php:42
 #: web/modules/imaging/imaging/bootmenu_remove.php:83
@@ -261,7 +264,7 @@ msgstr "Impossible de se connecter au serveur d'imaging associé à l'entité s�
 msgid "Cancel"
 msgstr "Annuler"
 
-#: web/modules/imaging/manage/postinstall_delete.php:58
+#: web/modules/imaging/manage/postinstall_delete.php:59
 msgid "Cant delete this post-installation script, it's a global script."
 msgstr "Impossible de supprimer ce script de post-installation, il s'agit d'un script global."
 
@@ -278,7 +281,7 @@ msgstr "Client identifié"
 msgid "Client not Identified"
 msgstr "Client non identifié"
 
-#: web/modules/imaging/imaging/configure.php:163
+#: web/modules/imaging/imaging/configure.php:167
 #: web/modules/imaging/imaging/showtarget.php:50
 msgid "Computer"
 msgstr "Ordinateur"
@@ -338,7 +341,7 @@ msgid "Default menu item label"
 msgstr "Étiquette de l'élément du menu par défaut"
 
 #: web/modules/imaging/manage/ajaxConfiguration.php:78
-#: web/modules/imaging/imaging/configure.php:167
+#: web/modules/imaging/imaging/configure.php:171
 msgid "Default menu label"
 msgstr "Étiquette  du menu par défaut"
 
@@ -351,7 +354,7 @@ msgstr "Paramètres du menu par défaut"
 msgid "Default on WOL"
 msgstr "Par défaut sur WOL"
 
-#: web/modules/imaging/manage/postinstall_delete.php:66
+#: web/modules/imaging/manage/postinstall_delete.php:67
 #: web/modules/imaging/manage/ajaxLogs.php:50
 #: web/modules/imaging/manage/ajaxMasterLevel2.php:95
 #: web/modules/imaging/manage/ajaxPostInstallLevel2.php:75
@@ -370,7 +373,7 @@ msgstr "Supprimer l'image"
 msgid "Delete master"
 msgstr "Supprimer le master"
 
-#: web/modules/imaging/manage/postinstall_delete.php:62
+#: web/modules/imaging/manage/postinstall_delete.php:63
 #: web/modules/imaging/infoPackage.inc.php:89
 msgid "Delete post-installation script"
 msgstr "Supprimer le script de post-installation"
@@ -398,7 +401,7 @@ msgstr "Description"
 msgid "Details"
 msgstr "Détails"
 
-#: web/modules/imaging/imaging/configure.php:257
+#: web/modules/imaging/imaging/configure.php:261
 #, php-format
 msgid "Disk number: %d"
 msgstr "Disque numéro: %d"
@@ -496,7 +499,7 @@ msgstr "Éditer l'image"
 msgid "Edition of item"
 msgstr "Éditer l'élément"
 
-#: web/modules/imaging/imaging/configure.php:268
+#: web/modules/imaging/imaging/configure.php:272
 msgid "Enable this disk"
 msgstr "Activé ce disque"
 
@@ -552,7 +555,7 @@ msgid "Force synchronize"
 msgstr "Forcer la synchronisation"
 
 #: web/modules/imaging/manage/ajaxConfiguration.php:124
-#: web/modules/imaging/imaging/configure.php:213
+#: web/modules/imaging/imaging/configure.php:217
 msgid "Full path to the XPM displayed at boot"
 msgstr "Chemin complet vers le fichier XPM affiché au démarrage"
 
@@ -596,7 +599,7 @@ msgstr "L'image <strong>%s</strong> a été supprimée du serveur d'imaging."
 msgid "Image Done"
 msgstr "Image terminée"
 
-#: web/modules/imaging/imaging/configure.php:241
+#: web/modules/imaging/imaging/configure.php:245
 msgid "Image parameters"
 msgstr "Paramètres de l'image"
 
@@ -692,7 +695,7 @@ msgstr "L'élément <strong>%s</strong> a été déplacé vers le bas dans le me
 msgid "Item <strong>%s</strong> moved up in the boot menu"
 msgstr "L'élément <strong>%s</strong> a été déplacé vers le haut dans le menu de démarrage"
 
-#: web/modules/imaging/imaging/configure.php:237
+#: web/modules/imaging/imaging/configure.php:241
 msgid "Kernel parameters"
 msgstr "Paramètres du noyau"
 
@@ -780,13 +783,17 @@ msgstr "L'élément <strong>%s</strong> a été supprimé du menu de démarrage"
 msgid "Menu configuration"
 msgstr "Configuration du menu"
 
+#: web/modules/imaging/manage/ajaxConfiguration.php:151
+msgid "Menu language"
+msgstr "Langage des menus"
+
 #: web/modules/imaging/manage/ajaxLogs.php:108
 #: web/modules/imaging/imaging/ajaxLogs.php:173
 msgid "Message"
 msgstr "Message"
 
 #: web/modules/imaging/manage/ajaxConfiguration.php:128
-#: web/modules/imaging/imaging/configure.php:217
+#: web/modules/imaging/imaging/configure.php:221
 msgid "Message displayed during backup/restoration"
 msgstr "Message affiché pendant les opérations de sauvegarde/restauration"
 
@@ -825,7 +832,7 @@ msgstr "Obtenu son UUID"
 msgid "Obtained its hostname"
 msgstr "Obtenu son hostname"
 
-#: web/modules/imaging/imaging/configure.php:281
+#: web/modules/imaging/imaging/configure.php:285
 #, php-format
 msgid "Partition number: %d"
 msgstr "Partition numéro: %d"
@@ -835,7 +842,7 @@ msgstr "Partition numéro: %d"
 msgid "Please go to the status page to check the iso creation status."
 msgstr "Merci de visiter la page de status pour suivre l'avancement de la création de l'iso."
 
-#: web/modules/imaging/imaging/configure.php:159
+#: web/modules/imaging/imaging/configure.php:163
 msgid "Please switch to expert mode now if you want to change these parameters."
 msgstr "Veuillez passer en mode expert maintenant si vous désirez changer ces paramètres."
 
@@ -862,7 +869,7 @@ msgstr "Post-installation terminée"
 msgid "Postinstall started"
 msgstr "Post-installation commencée"
 
-#: web/modules/imaging/imaging/configure.php:163
+#: web/modules/imaging/imaging/configure.php:167
 #: web/modules/imaging/imaging/showtarget.php:50
 msgid "Profile"
 msgstr "Profile"
@@ -928,18 +935,17 @@ msgid "Restoration"
 msgstr "Restauration"
 
 #: web/modules/imaging/manage/ajaxConfiguration.php:83
-#: web/modules/imaging/imaging/configure.php:172
+#: web/modules/imaging/imaging/configure.php:176
 msgid "Restoration options"
 msgstr "Options de restauration"
 
 #: web/modules/imaging/manage/ajaxConfiguration.php:113
-#: web/modules/imaging/manage/ajaxConfiguration.php:151
-#: web/modules/imaging/imaging/configure.php:202
+#: web/modules/imaging/imaging/configure.php:206
 msgid "Restoration type"
 msgstr "Type de restauration"
 
 #: web/modules/imaging/manage/ajaxConfiguration.php:116
-#: web/modules/imaging/imaging/configure.php:205
+#: web/modules/imaging/imaging/configure.php:209
 msgid "Restoration: MTFTP maximum waiting (in sec)"
 msgstr "Restauration: Attente maximum en TFTP (en secondes)"
 
@@ -1085,20 +1091,24 @@ msgstr "Synchroniser"
 msgid "Target"
 msgstr "Cible"
 
-#: web/modules/imaging/imaging/configure.php:234
+#: web/modules/imaging/imaging/configure.php:238
 msgid "Target options"
 msgstr "Options de la cible"
 
-#: web/modules/imaging/imaging/configure.php:150
+#: web/modules/imaging/imaging/configure.php:138
+msgid "The computer either doesn't have a MAC address, either has more than one MAC address. It can't be registered into the imaging module."
+msgstr "L'ordinateur n'a pas d'adresse MAC, ou a plus d'une adresse MAC. Il ne peut pas être enregistré dans le module d'imaging."
+
+#: web/modules/imaging/imaging/configure.php:154
 #, php-format
 msgid "The default values displayed here come from this %s's profile menu."
 msgstr "Les valeurs par défaut affichées proviennent du menu du profile %s."
 
-#: web/modules/imaging/imaging/configure.php:143
+#: web/modules/imaging/imaging/configure.php:147
 msgid "The default values for the imaging parameters will be inherited from the imaging server that manages the entities of the computers that belongs to this profile."
 msgstr "Les valeurs par défaut des paramètres d'imaging seront héritées de celles du serveur d'imaging qui gère les entités des ordinateurs appartenant à ce profil."
 
-#: web/modules/imaging/imaging/configure.php:141
+#: web/modules/imaging/imaging/configure.php:145
 msgid "The default values for the imaging parameters will be inherited from the imaging server that manages the entity that owns this computer."
 msgstr "Les valeurs par défaut des paramètres d'imaging seront héritées de celles du serveur d'imaging qui gère l'entité auquelle appartient cet ordinateur."
 
@@ -1186,6 +1196,10 @@ msgstr "Valider et convertir en image"
 msgid "Validate and convert to master"
 msgstr "Valider et convertir en master"
 
+#: web/modules/imaging/imaging/images.php:168
+msgid "You must have a post install script to convert an image into a master."
+msgstr "Des scripts de post-installations doivent être disponibles afin de pouvoir transformer une image en master."
+
 #: web/modules/imaging/manage/ajaxStatus.php:69
 msgid "clients have a rescue image"
 msgstr "ordinateurs ont une image de secours"
@@ -1207,16 +1221,16 @@ msgid "minute"
 msgstr "minute"
 
 #: web/modules/imaging/manage/ajaxConfiguration.php:93
-#: web/modules/imaging/imaging/configure.php:182
+#: web/modules/imaging/imaging/configure.php:186
 msgid "mtftp"
 msgstr "mtftp"
 
 #: web/modules/imaging/manage/ajaxConfiguration.php:91
-#: web/modules/imaging/imaging/configure.php:180
+#: web/modules/imaging/imaging/configure.php:184
 msgid "nfs"
 msgstr "nfs"
 
 #: web/modules/imaging/manage/ajaxConfiguration.php:92
-#: web/modules/imaging/imaging/configure.php:181
+#: web/modules/imaging/imaging/configure.php:185
 msgid "tftp"
 msgstr "tftp"
