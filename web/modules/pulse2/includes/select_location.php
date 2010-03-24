@@ -31,13 +31,13 @@ function select_locations($selected, $name = 'locations') {
     $locations = getUserLocations();
     if (is_array($locations)) {
         foreach ($locations as $loc) {
-            $list[$loc['uuid']] = $loc['name'];
+            $list[$loc['uuid']] = $loc['altname'];
         }
     } else {
         $locations = array();
     }
-    $sel->setElements($list);
-    $sel->setElementsVal($list);
+    $sel->setElements(array_values($list));
+    $sel->setElementsVal(array_keys($list));
     $sel->setSelected($selected);
     return $sel;
 }
