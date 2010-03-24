@@ -1711,8 +1711,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def isLocalBootService(self, mi_uuid, session = None):
         """
-        Check if MenuItem mi is a local boot service
-        FIXME : This should be fixed - entity.fk_default_menu do not exists anymore - but I reaaly don't see how
+        Check if MenuItem mi is a local boot service owned by an imaging
+        server, or a global boot service.
         """
         session_need_to_close = False
         if session == None:
@@ -1834,12 +1834,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 .outerjoin(self.image, self.mastered_on.c.fk_image == self.image.c.id) \
         ).filter(and_(self.entity.c.uuid == location, self.target.c.type.in_((P2IT.COMPUTER, P2IT.COMPUTER_IN_PROFILE))))
         q = q.group_by().all()
-        im_total = 0
-        im_rescue = 0
+        im_total = set()
+        im_rescue = set()
         for t, i in q:
-            im_total += 1
-            if i != None:
-                im_rescue += 1
+            # Targets set
+            im_total.add(t)
+            if i != None and not i.is_master:
+                # Targets set with a rescue image
+                im_rescue.add(t)
 
         im_master = session.query(Image).select_from(self.image \
                 .join(self.image_on_imaging_server, self.image_on_imaging_server.c.fk_image == self.image.c.id) \
@@ -1847,7 +1849,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 .join(self.entity, self.entity.c.id == self.imaging_server.c.fk_entity) \
         ).filter(and_(self.entity.c.uuid == location, self.image.c.is_master == 1)).count()
 
-        return {'total': im_total, 'master': im_master, 'rescue': im_rescue}
+        return {'total'  : len(im_total),
+                'rescue' : len(im_rescue),
+                'master' : im_master}
+
 
     def countImagingServerByPackageServerUUID(self, uuid):
         session = create_session()
