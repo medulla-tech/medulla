@@ -22,11 +22,11 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
- 
+
 /*
  * Edit/Duplicate page for post-installation script
  */
- 
+
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 require_once('modules/imaging/includes/includes.php');
@@ -34,8 +34,8 @@ require_once('modules/imaging/includes/xmlrpc.inc.php');
 
 // id of the script
 $script_id = $_GET['itemid'];
-$script = xmlrpc_getPostInstallScript($script_id);
 $location = getCurrentLocation();
+$script = xmlrpc_getPostInstallScript($script_id, $location);
 
 // if task is not defined, we are in edit mode
 if (!isset($task)) {
@@ -70,7 +70,7 @@ if (count($_POST) > 0) {
     $script_name = trim($_POST["postinstall_name"]);
     $script_value = $_POST["postinstall_value"];
     $script_desc = $_POST["postinstall_desc"];
-    
+
     if ($task == "edit"){
         // store new values for script
         $ret = xmlrpc_editPostInstallScript($script_id, array('default_name'=>$script_name, 'default_desc'=>$script_desc, 'value'=>$script_value));
@@ -88,7 +88,7 @@ if (count($_POST) > 0) {
     } else {
         $str = sprintf(_T("<strong>%s</strong> script wasn't %s", "imaging"), $script_name, $action);
         new NotifyWidgetFailure($str);
-    }   
+    }
 }
 
 // Display the script edit form
@@ -103,15 +103,15 @@ $textarea->setCols(50);
 $f->push(new Table());
 $disabled = (!$script['is_local'] && $task == 'edit');
 $f->add(
-    new TrFormElement("Script name", new InputTpl("postinstall_name")), 
+    new TrFormElement("Script name", new InputTpl("postinstall_name")),
     array("value" => $name, "required" => True, 'disabled' => ($disabled?'disabled':''))
 );
 $f->add(
-    new TrFormElement("Script description", $textareadesc), 
+    new TrFormElement("Script description", $textareadesc),
     array("value" => $desc, "required" => True, 'disabled' => ($disabled?'disabled':''))
 );
 $f->add(
-    new TrFormElement(_T("Script value"), $textarea), 
+    new TrFormElement(_T("Script value"), $textarea),
     array("value" => $script['value'], "required" => True, 'disabled' => ($disabled?'disabled':''))
 );
 $f->pop();

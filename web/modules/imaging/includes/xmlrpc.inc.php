@@ -286,8 +286,8 @@ function xmlrpc_getAllPostInstallScripts($location, $start = 0, $end = -1, $filt
     return xmlCall("imaging.getAllPostInstallScripts", array($location, $start, $end, $filter));
 }
 
-function xmlrpc_getPostInstallScript($script_id) {
-    return xmlCall("imaging.getPostInstallScript", array($script_id));
+function xmlrpc_getPostInstallScript($script_id, $loc_id) {
+    return xmlCall("imaging.getPostInstallScript", array($script_id, $loc_id));
 }
 
 function xmlrpc_delPostInstallScript($script_id) {

@@ -22,7 +22,7 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
- 
+
 /*
  * Delete post-installation script popup)
  */
@@ -32,6 +32,7 @@ require_once('modules/imaging/includes/xmlrpc.inc.php');
 
 //$params = getParams();
 $script_id = $_GET['itemid'];
+$location = getCurrentLocation();
 $label = urldecode($_GET['itemlabel']);
 
 if ($_POST) {
@@ -51,8 +52,8 @@ if ($_POST) {
         new NotifyWidgetFailure($str);
     }
 } else {
-    $script = xmlrpc_getPostInstallScript($script_id);
-    
+    $script = xmlrpc_getPostInstallScript($script_id, $location);
+
     if (!$script['is_local']) {
     ?>
     <h2><?= _T("Cant delete this post-installation script, it's a global script.", "imaging") ?></h2>
