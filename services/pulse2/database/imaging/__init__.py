@@ -1717,12 +1717,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session_need_to_close = True
             session = create_session()
 
+        # first part : find the Entity the Menu Item belongs to
+        # we go this way : menuitem -> menu -> target -> entity
         mi = session.query(MenuItem).add_entity(Entity)
-        mi = mi.select_from(self.menu_item \
-                .join(self.menu, self.menu.c.id == self.menu_item.c.fk_menu) \
-                .outerjoin(self.target) \
-                .outerjoin(self.entity, or_(self.entity.c.id == self.target.c.fk_entity, self.entity.c.fk_default_menu == self.menu.c.id)))
-        mi = mi.filter(and_(self.menu_item.c.id == uuid2id(mi_uuid), self.entity.c.id != None)).first()
+        j = self.menu_item.join(self.menu, self.menu_item.c.fk_menu == self.menu.c.id).join(self.target).join(self.entity)
+        mi = mi.select_from(j)
+        f = self.menu_item.c.id == uuid2id(mi_uuid)
+        mi = mi.filter(f)
+        mi = mi.first()
         loc_id = mi[1].uuid
 
         q = session.query(BootService).add_entity(BootServiceOnImagingServer)
