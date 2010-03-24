@@ -128,9 +128,9 @@ if ($type == '') {
 
 if (!$whose && !$menu) {
     if ($type == '') {
-        $msg = _T("To register, you must first set a default menu to the package server that manages the entity of this computer.", "imaging");
+        $msg = _T("To register, you must first set a default menu to the imaging server that manages the entity of this computer.", "imaging");
     } else {
-        $msg = _T("To register, you must first set a default menu to the package server that manages the entities of the computers that belongs to this profile.", "imaging");
+        $msg = _T("To register, you must first set a default menu to the imaging server that manages the entities of the computers that belongs to this profile.", "imaging");
     }
     $f->add(new TitleElement($msg, 3));
     $f->display();
@@ -138,9 +138,9 @@ if (!$whose && !$menu) {
     $target = null;
     if (!$whose) {
         if ($type == '') {
-            $msg = _T("The default values for the imaging parameters will be inherited from the entity that owns this computer.", "imaging");
+            $msg = _T("The default values for the imaging parameters will be inherited from the imaging server that manages the entity that owns this computer.", "imaging");
         } else {
-            $msg = _T("The default values for the imaging parameters will be inherited from the entity that owns this profile.", "imaging");
+            $msg = _T("The default values for the imaging parameters will be inherited from the imaging server that manages the entities of the computers that belongs to this profile.", "imaging");
         }
 
         $f->add(new TitleElement($msg, 3));
