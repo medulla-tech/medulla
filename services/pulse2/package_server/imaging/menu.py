@@ -53,11 +53,11 @@ def isMenuStructure(menu):
                   'ethercard']:
 
             if not k in menu:
-                logger.debug("your menu is missing %s" % (k))
+                logger.error("Menu is missing %s" % (k))
                 ret = False
                 break
     else:
-        logger.debug("your menu is not a dict")
+        logger.error("Menu is not a dict")
         ret = False
     return ret
 
