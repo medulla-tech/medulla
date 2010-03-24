@@ -126,7 +126,7 @@ class RpcProxy(RpcProxyI):
 
     ###########################################################
     def get_all_known_languages(self):
-        """ get all the languages defined in the database """
+        """ get all the languages defined in the database """ 
         return xmlrpcCleanup(map(lambda p: p.toH(), ImagingDatabase().getAllKnownLanguages()))
 
     ###########################################################
@@ -1178,6 +1178,25 @@ class RpcProxy(RpcProxyI):
     def isComputerRegistered(self, machine_uuid):
         """ see isTargetRegister """
         return self.isTargetRegister(machine_uuid, P2IT.COMPUTER)
+
+    def checkComputerForImaging(self, computerUUID):
+        """
+        @return: 0 if the computer can be registered
+        @rtype: int
+        """
+        ctx = self.currentContext
+        macaddress = ComputerManager().getMachineMac(ctx,
+                                                     {'uuid':computerUUID})
+        if len(macaddress) > 1:
+            # More than one MAC address
+            ret = 2
+        elif pulse2.utils.isLinuxMacAddress(macaddress[0]):
+            # Valid MAC address
+            ret = 0
+        else:
+            # No MAC address
+            ret = 1
+        return ret
 
     def isProfileRegistered(self, profile_uuid):
         """ see isTargetRegister """
