@@ -60,7 +60,7 @@ foreach($scripts as $script) {
 }
 
 // show scripts list
-$l = new OptimizedListInfos($a_label, _T("Name"));
+$l = new OptimizedListInfos($a_label, _T("Name", "imaging"));
 $l->addExtraInfo($a_desc, _T("Description", "imaging"));
 $l->setParamInfo($list_params);
 $l->addActionItem(
