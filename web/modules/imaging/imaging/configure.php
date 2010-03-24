@@ -134,6 +134,10 @@ if (!$whose && !$menu) {
     }
     $f->add(new TitleElement($msg, 3));
     $f->display();
+} else if (($type == '') && (xmlrpc_checkComputerForImaging($target_uuid) != 0)) {
+    $msg = _T("The computer either doesn't have a MAC address, either has more than one MAC address. It can't be registered into the imaging module.", "imaging");
+    $f->add(new TitleElement($msg, 3));
+    $f->display();
 } else {
     $target = null;
     if (!$whose) {
