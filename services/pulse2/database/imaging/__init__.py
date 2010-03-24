@@ -620,14 +620,19 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def __mergeBootServiceOrImageInMenuItem(self, mis):
         """ warning this one does not work on a list but on a tuple of 3 elements (mi, bs, im) """
-        (menuitem, bootservice, image, menu) = mis
+        (menuitem, bootservice, image, menu) = mis # , name_i18n, desc_i18n
         if bootservice != None:
+            #if name_i18n != None:
+            #    setattr(bs, 'default_name', name_i18n.label)
+            #if desc_i18n != None:
+            #    setattr(bs, 'default_desc', desc_i18n.label)
             setattr(menuitem, 'boot_service', bootservice)
         if image != None:
             setattr(menuitem, 'image', image)
         if menu != None:
             setattr(menuitem, 'default', (menu.fk_default_item == menuitem.id))
             setattr(menuitem, 'default_WOL', (menu.fk_default_item_WOL == menuitem.id))
+
         return menuitem
 
     def __mergeImageInMenuItem(self, my_list):
@@ -808,11 +813,31 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q
 
     ######################
-    def __PossibleBootServices(self, session, target_uuid, filter):
-        # WIP i18n
+    def getTargetLanguage(self, session, target_uuid):
         ims = session.query(ImagingServer).select_from(self.imaging_server.join(self.target, self.target.c.fk_entity == self.imaging_server.c.fk_entity))
         ims = ims.filter(self.target.c.uuid == target_uuid).first()
         lang = ims.fk_language
+        return lang
+
+    def getLocLanguage(self, session, loc_id):
+        lang = 1
+        if self.imagingServer_entity.has_key(loc_id):
+            if not self.imagingServer_lang.has_key(self.imagingServer_entity[loc_id]):
+                ims = session.query(ImagingServer).select_from(self.imaging_server.join(self.entity, self.entity.c.id == self.imaging_server.c.fk_entity)).filter(self.entity.c.uuid == loc_id).first()
+                self.imagingServer_lang[self.imagingServer_entity[loc_id]] = ims.fk_language
+        else:
+            ims, en = session.query(ImagingServer).add_entity(Entity).select_from(self.imaging_server.join(self.entity, self.entity.c.id == self.imaging_server.c.fk_entity)).filter(self.entity.c.uuid == loc_id).first()
+            self.imagingServer_lang[self.imagingServer_entity[loc_id]] = ims.fk_language
+            # the true one! self.imagingServer_entity[id2uuid(ims.id)] = en.uuid
+            # the working one in our context :
+            self.imagingServer_entity[en.uuid] = id2uuid(ims.id)
+        lang = self.imagingServer_lang[self.imagingServer_entity[loc_id]]
+        return lang
+
+    def __PossibleBootServices(self, session, target_uuid, filter):
+        # WIP i18n
+        lang = self.getTargetLanguage(session, target_uuid)
+
         I18n1 = sa_exp_alias(self.internationalization)
         I18n2 = sa_exp_alias(self.internationalization)
         q = session.query(BootService).add_column(self.boot_service.c.id).add_entity(Internationalization, alias=I18n1).add_entity(Internationalization, alias=I18n2)
@@ -829,10 +854,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def __EntityBootServices(self, session, loc_id, filter):
         # WIP i18n
-        lang = 1
-        if self.imagingServer_entity.has_key(loc_id):
-            if self.imagingServer_lang.has_key(self.imagingServer_entity[loc_id]):
-                lang = self.imagingServer_lang[self.imagingServer_entity[loc_id]]
+        lang = self.getLocLanguage(session, loc_id)
+
         I18n1 = sa_exp_alias(self.internationalization)
         I18n2 = sa_exp_alias(self.internationalization)
         q = session.query(BootService).add_column(self.boot_service.c.id).add_entity(Internationalization, alias=I18n1).add_entity(Internationalization, alias=I18n2)
@@ -1161,7 +1184,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if session == None:
             session_need_close = True
             session = create_session()
-        # WIP i18n
+        # WIP i18n TODO
+        I18n1 = sa_exp_alias(self.internationalization)
+        I18n2 = sa_exp_alias(self.internationalization)
+
         mi = session.query(MenuItem).add_entity(BootService).add_entity(Image).add_entity(Menu)
         mi = mi.select_from(self.menu_item.join(self.menu, self.menu.c.id == self.menu_item.c.fk_menu).outerjoin(self.boot_service_in_menu).outerjoin(self.boot_service).outerjoin(self.image_in_menu).outerjoin(self.image))
         mi = mi.filter(self.menu_item.c.id == uuid2id(mi_uuid)).first()
@@ -2517,12 +2543,19 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def __AllPostInstallScripts(self, session, location, filter, is_count = False):
         # PostInstallScripts are not specific to an Entity
+        # WIP i18n
+        lang = self.getLocLanguage(session, location)
+        I18n1 = sa_exp_alias(self.internationalization)
+        I18n2 = sa_exp_alias(self.internationalization)
+
         q = session.query(PostInstallScript)
         if not is_count:
-            q = q.add_entity(PostInstallScriptOnImagingServer)
+            q = q.add_entity(PostInstallScriptOnImagingServer).add_entity(Internationalization, alias=I18n1).add_entity(Internationalization, alias=I18n2)
             q = q.select_from(self.post_install_script \
                     .outerjoin(self.post_install_script_on_imaging_server, self.post_install_script_on_imaging_server.c.fk_post_install_script == self.post_install_script.c.id) \
                     .outerjoin(self.imaging_server, self.post_install_script_on_imaging_server.c.fk_imaging_server == self.imaging_server.c.id) \
+                    .outerjoin(I18n1, and_(self.post_install_script.c.fk_name == I18n1.c.id, I18n1.c.fk_language == lang)) \
+                    .outerjoin(I18n2, and_(self.post_install_script.c.fk_desc == I18n2.c.id, I18n2.c.fk_language == lang)) \
                     .outerjoin(self.entity))
             q = q.filter(or_(self.post_install_script_on_imaging_server.c.fk_post_install_script == None, self.entity.c.uuid == location))
         q = q.filter(or_(self.post_install_script.c.default_name.like('%'+filter+'%'), self.post_install_script.c.default_desc.like('%'+filter+'%')))
@@ -2530,7 +2563,13 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def __mergePostInstallScriptOnImagingServerInPostInstallScript(self, postinstallscript_list):
         ret = []
-        for postinstallscript, postinstallscript_on_imagingserver in postinstallscript_list:
+        for postinstallscript, postinstallscript_on_imagingserver, name_i18n, desc_i18n in postinstallscript_list:
+            if name_i18n != None:
+            #    setattr(postinstallscript, 'name', name_i18n.label)
+                setattr(postinstallscript, 'default_name', name_i18n.label)
+            if desc_i18n != None:
+            #    setattr(postinstallscript, 'desc', desc_i18n.label)
+                setattr(postinstallscript, 'default_desc', desc_i18n.label)
             setattr(postinstallscript, 'is_local', (postinstallscript_on_imagingserver != None))
             ret.append(postinstallscript)
         return ret
@@ -2572,9 +2611,17 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if session == None:
             session_need_to_close = True
             session = create_session()
+        # WIP i18n TODO
+        lang = 1
+        I18n1 = sa_exp_alias(self.internationalization)
+        I18n2 = sa_exp_alias(self.internationalization)
 
-        q = session.query(PostInstallScript).add_entity(PostInstallScriptOnImagingServer)
-        q = q.select_from(self.post_install_script.outerjoin(self.post_install_script_on_imaging_server))
+        q = session.query(PostInstallScript).add_entity(PostInstallScriptOnImagingServer).add_entity(Internationalization, alias=I18n1).add_entity(Internationalization, alias=I18n2)
+        q = q.select_from(self.post_install_script \
+                .outerjoin(self.post_install_script_on_imaging_server) \
+                .outerjoin(I18n1, and_(self.post_install_script.c.fk_name == I18n1.c.id, I18n1.c.fk_language == lang)) \
+                .outerjoin(I18n2, and_(self.post_install_script.c.fk_desc == I18n2.c.id, I18n2.c.fk_language == lang)) \
+        )
         q = q.filter(self.post_install_script.c.id == uuid2id(pis_uuid)).first()
         q = self.__mergePostInstallScriptOnImagingServerInPostInstallScript([q])
 
@@ -2597,9 +2644,18 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if session == None:
             session_need_to_close = True
             session = create_session()
+        # WIP i18n TODO
+        lang = 1
+        I18n1 = sa_exp_alias(self.internationalization)
+        I18n2 = sa_exp_alias(self.internationalization)
 
-        q = session.query(PostInstallScript).add_entity(Image)
-        q = q.select_from(self.post_install_script.join(self.post_install_script_in_image).join(self.image))
+        q = session.query(PostInstallScript).add_entity(Image).add_entity(Internationalization, alias=I18n1).add_entity(Internationalization, alias=I18n2)
+        q = q.select_from(self.post_install_script \
+                .join(self.post_install_script_in_image) \
+                .join(self.image) \
+                .outerjoin(I18n1, and_(self.post_install_script.c.fk_name == I18n1.c.id, I18n1.c.fk_language == lang)) \
+                .outerjoin(I18n2, and_(self.post_install_script.c.fk_desc == I18n2.c.id, I18n2.c.fk_language == lang)) \
+        )
         q = q.filter(self.image.c.id.in_(ims)).all()
 
         if session_need_to_close:

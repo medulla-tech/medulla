@@ -1274,7 +1274,7 @@ class RpcProxy(RpcProxyI):
         menu, menu_items, h_pis = self.__generateMenusContent(menu, menu_items, None)
         ims = h_pis.keys()
         a_pis = db.getImagesPostInstallScript(ims)
-        for pis, im in a_pis:
+        for pis, im, name_i18n, desc_i18n in a_pis:
             pis = {
                 'id':pis.id,
                 'name':pis.default_name,
@@ -1295,7 +1295,7 @@ class RpcProxy(RpcProxyI):
         menu, menu_items, h_pis = self.__generateMenusContent(menu, menu_items, loc_uuid)
         ims = h_pis.keys()
         a_pis = db.getImagesPostInstallScript(ims)
-        for pis, im in a_pis:
+        for pis, im, name_i18n, desc_i18n in a_pis:
             pis = {
                 'id':pis.id,
                 'name':pis.default_name,
@@ -1395,7 +1395,7 @@ class RpcProxy(RpcProxyI):
 
         ims = h_pis.keys()
         a_pis = db.getImagesPostInstallScript(ims)
-        for pis, im in a_pis:
+        for pis, im, name_i18n, desc_i18n in a_pis:
             pis = {
                 'id':pis.id,
                 'name':pis.default_name,
