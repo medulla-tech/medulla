@@ -499,14 +499,22 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return ret
 
     def __getTargetsMenuQuery(self, session):
-        return session.query(Menu).select_from(self.menu.join(self.target, self.target.c.fk_menu == self.menu.c.id))
+        # WIP i18n
+        return session.query(Menu).add_column(self.internationalization.c.label).select_from(self.menu \
+                .join(self.target, self.target.c.fk_menu == self.menu.c.id) \
+                .join(self.imaging_server, self.target.c.fk_entity == self.imaging_server.c.fk_entity) \
+                .outerjoin(self.internationalization, and_(self.internationalization.c.id == self.menu.c.fk_name, self.internationalization.c.fk_language == self.imaging_server.c.fk_language)) \
+        )
+        #return session.query(Menu).select_from(self.menu.join(self.target, self.target.c.fk_menu == self.menu.c.id))
 
     def getTargetsMenuTID(self, target_id):
         session = create_session()
         q = self.__getTargetsMenuQuery(session)
         q = q.filter(self.target.c.id == target_id).first() # there should always be only one!
+        if q[1] != None:
+            q[0].default_name = q[1]
         session.close()
-        return q
+        return q[0]
 
     def getTargetsMenuTUUID(self, target_id, session = None):
         need_to_close_session = False
@@ -515,19 +523,28 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session = create_session()
         q = self.__getTargetsMenuQuery(session)
         q = q.filter(self.target.c.uuid == target_id).first() # there should always be only one!
+        if q[1] != None:
+            q[0].default_name = q[1]
         if need_to_close_session:
             session.close()
-        return q
+        return q[0]
 
-    def getDefaultSuscribeMenu(self, session = None):
+    def getDefaultSuscribeMenu(self, location, session = None):
+        # WIP i18n
         need_to_close_session = False
         if session == None:
             need_to_close_session = True
             session = create_session()
-        q = session.query(Menu).filter(self.menu.c.id == 2).first()
+        lang = self.__getLocLanguage(session, location.uuid)
+        q = session.query(Menu).add_column(self.internationalization.c.label).select_from(self.menu \
+                .outerjoin(self.internationalization, and_(self.internationalization.c.id == self.menu.c.fk_name, self.internationalization.c.fk_language == lang)) \
+            ).filter(self.menu.c.id == 2).first()
+#        q = session.query(Menu).filter(self.menu.c.id == 2).first()
+        if q[1] != None:
+            q[0].default_name = q[1]
         if need_to_close_session:
             session.close()
-        return q
+        return q[0]
 
     def getEntityDefaultMenu(self, loc_id, session = None):
         """
@@ -543,24 +560,34 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if session == None:
             need_to_close_session = True
             session = create_session()
-        j = self.menu.join(self.imaging_server).join(self.entity)
-        q = session.query(Menu).select_from(j)
+        # WIP i18n
+        j = self.menu.join(self.imaging_server).join(self.entity).outerjoin(self.internationalization, and_(self.internationalization.c.id == self.menu.c.fk_name, self.internationalization.c.fk_language == self.imaging_server.c.fk_language))
+        q = session.query(Menu).add_column(self.internationalization.c.label).select_from(j)
         q = q.filter(self.entity.c.uuid == loc_id)
         q = q.filter(self.imaging_server.c.associated == 1)
         q = q.first()
         if need_to_close_session:
             session.close()
-        return q
+        if q[1] != None:
+            q[0].default_name = q[1]
+        return q[0]
 
     def getTargetMenu(self, uuid, type, session = None):
         need_to_close_session = False
         if session == None:
             need_to_close_session = True
             session = create_session()
-        q = session.query(Menu).select_from(self.menu.join(self.target)).filter(and_(self.target.c.uuid == uuid, self.target.c.type == type)).first() # there should always be only one!
+        # WIP i18n
+        q = session.query(Menu).select_from(self.menu \
+                .join(self.target, self.target.c.fk_menu == self.menu.c.id) \
+                .join(self.imaging_server, self.imaging_server.c.fk_entity == self.target.c.fk_entity) \
+                .outerjoin(self.internationalization, and_(self.internationalization.c.id == self.menu.c.fk_name, self.internationalization.c.fk_language == self.imaging_server.c.fk_language)) \
+            ).filter(and_(self.target.c.uuid == uuid, self.target.c.type == type)).first() # there should always be only one!
         if need_to_close_session:
             session.close()
-        return q
+        if q[1] != None:
+            q[0].default_name = q[1]
+        return q[0]
 
     def __mergeMenuItemInBootService(self, list_of_bs, list_of_both):
         ret = []
@@ -688,7 +715,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         q = []
         if type == P2IM.ALL or type == P2IM.BOOTSERVICE:
-            # WIP i18n
+            # we don't need the i18n trick for the menu name here
             I18n1 = sa_exp_alias(self.internationalization)
             I18n2 = sa_exp_alias(self.internationalization)
             q1 = session.query(MenuItem)
@@ -706,6 +733,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             q1 = self.__mergeBootServiceInMenuItem(q1)
             q.extend(q1)
         if type == P2IM.ALL or type == P2IM.IMAGE:
+            # we don't need the i18n trick for the menu name here
             q2 = session.query(MenuItem).add_entity(Image).add_entity(Menu).select_from(self.menu_item.join(self.image_in_menu).join(self.image).join(self.menu, self.menu_item.c.fk_menu == self.menu.c.id))
             q2 = q2.filter(self.menu_item.c.id.in_(mi_ids)).order_by(self.menu_item.c.order).all()
             q2 = self.__mergeImageInMenuItem(q2)
@@ -843,7 +871,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return lang
 
     def __PossibleBootServices(self, session, target_uuid, filter):
-        # WIP i18n
         lang = self.getTargetLanguage(session, target_uuid)
 
         I18n1 = sa_exp_alias(self.internationalization)
@@ -861,7 +888,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q
 
     def __EntityBootServices(self, session, loc_id, filter):
-        # WIP i18n
         lang = self.__getLocLanguage(session, loc_id)
 
         I18n1 = sa_exp_alias(self.internationalization)
@@ -1192,7 +1218,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if session == None:
             session_need_close = True
             session = create_session()
-        # WIP i18n
         ims = session.query(ImagingServer).select_from(self.menu_item \
                 .outerjoin(self.target, self.target.c.fk_menu == self.menu_item.c.fk_menu) \
                 .outerjoin(self.imaging_server, or_(
@@ -1204,6 +1229,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         I18n1 = sa_exp_alias(self.internationalization)
         I18n2 = sa_exp_alias(self.internationalization)
 
+        # we don't need the i18n trick for the menu name here
         mi = session.query(MenuItem).add_entity(BootService).add_entity(Image).add_entity(Menu)
         mi = mi.add_entity(Internationalization, alias=I18n1).add_entity(Internationalization, alias=I18n2)
         mi = mi.select_from(self.menu_item \
@@ -1959,6 +1985,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return session.query(Entity).filter(self.entity.c.uuid == loc_id).first()
 
     def getMenuByUUID(self, menu_uuid, session = None):
+        # dont need the i18n trick here, we just want to modify some menu internals
         session_need_to_close = False
         if session == None:
             session_need_to_close = True
@@ -2025,8 +2052,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         self.__modifyMenu(menu_uuid, params)
         return True
 
-    def __getDefaultMenu(self, session):
-        return session.query(Menu).filter(self.menu.c.id == 1).first()
+    def __getDefaultMenu(self, session, lang = 1):
+        # WIP i18n
+        ret = session.query(Menu).add_column(self.internationalization.c.label).select_from(self.menu \
+                .outerjoin(self.internationalization, and_(self.internationalization.c.id == self.menu.c.fk_name, self.internationalization.c.fk_language == lang)) \
+            ).filter(self.menu.c.id == 1).first()
+        if ret[1] != None:
+            ret[0].default_name = ret[1]
+        return ret[0]
 
     def __getDefaultMenuItem(self, session, menu_id = 1):
         default_item = session.query(MenuItem).filter(and_(self.menu.c.id == menu_id, self.menu.c.fk_default_item == self.menu_item.c.id)).first()
@@ -2078,8 +2111,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.flush()
         return [ret, mi_out]
 
-    def __duplicateDefaultMenu(self, session):
-        default_menu = self.__getDefaultMenu(session)
+    def __duplicateDefaultMenu(self, session, loc_id):
+        lang = self.__getLocLanguage(session, loc_id)
+        default_menu = self.__getDefaultMenu(session, lang)
         return self.__duplicateMenu(session, default_menu)
 
     def __duplicateMenu(self, session, default_menu, loc_id = None, p_id = None):
@@ -2163,7 +2197,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session.flush()
 
         # create default imaging server menu
-        menu = self.__duplicateDefaultMenu(session)
+        menu = self.__duplicateDefaultMenu(session, loc_id)
         session.flush()
 
         imaging_server.fk_entity = location.id
@@ -2583,7 +2617,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def __AllPostInstallScripts(self, session, location, filter, is_count = False):
         # PostInstallScripts are not specific to an Entity
-        # WIP i18n
         lang = self.__getLocLanguage(session, location)
         I18n1 = sa_exp_alias(self.internationalization)
         I18n2 = sa_exp_alias(self.internationalization)
@@ -2651,7 +2684,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if session == None:
             session_need_to_close = True
             session = create_session()
-        # WIP i18n
         lang = 1
         if location_id != None:
             lang = self.__getLocLanguage(session, location_id)
@@ -2690,7 +2722,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if session == None:
             session_need_to_close = True
             session = create_session()
-        # WIP i18n
         lang = 1
         if location_id != None:
             lang = self.__getLocLanguage(session, location_id)
