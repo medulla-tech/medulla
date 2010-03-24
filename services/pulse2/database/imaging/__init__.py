@@ -659,7 +659,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             self.logger.error("cant find any imaging_server for menu '%s'" % (menu_id))
             return  None
 
-    def getMenuContent(self, menu_id, type = P2IM.ALL, start = 0, end = -1, filter = '', session = None):# TODO implement the start/end with a union between q1 and q2
+    def getMenuContent(self, menu_id, type = P2IM.ALL, start = 0, end = -1, filter = '', session = None, loc_id = None):# TODO implement the start/end with a union between q1 and q2
         session_need_close = False
         if session == None:
             session = create_session()
@@ -683,6 +683,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if imaging_server:
             is_id = imaging_server.id
             lang = imaging_server.fk_language
+        elif loc_id != None and menu_id == 2: #this is the suscribe menu
+            lang = self.getLocLanguage(session, loc_id)
 
         q = []
         if type == P2IM.ALL or type == P2IM.BOOTSERVICE:
@@ -827,10 +829,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 self.imagingServer_lang[self.imagingServer_entity[loc_id]] = ims.fk_language
         else:
             ims, en = session.query(ImagingServer).add_entity(Entity).select_from(self.imaging_server.join(self.entity, self.entity.c.id == self.imaging_server.c.fk_entity)).filter(self.entity.c.uuid == loc_id).first()
-            self.imagingServer_lang[self.imagingServer_entity[loc_id]] = ims.fk_language
             # the true one! self.imagingServer_entity[id2uuid(ims.id)] = en.uuid
             # the working one in our context :
             self.imagingServer_entity[en.uuid] = id2uuid(ims.id)
+            self.imagingServer_lang[self.imagingServer_entity[loc_id]] = ims.fk_language
         lang = self.imagingServer_lang[self.imagingServer_entity[loc_id]]
         return lang
 
@@ -2103,6 +2105,15 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.save(e)
         return e
 
+    def getImagingServerEntity(self, imaging_server_uuid):
+        """
+        get the entity linked to that imaging server
+        """
+        session = create_session()
+        entity = session.query(Entity).select_from(self.entity.join(self.imaging_server, self.imaging_server.c.fk_entity == self.entity.c.id)).filter(self.imaging_server.c.packageserver_uuid == imaging_server_uuid).first()
+        session.close()
+        return entity
+
     def linkImagingServerToEntity(self, is_uuid, loc_id, loc_name):
         """
         Attach the entity loc_id, name loc_name, to the imaging server is_uuid
@@ -2608,13 +2619,19 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return q
 
-    def getPostInstallScript(self, pis_uuid, session = None):
+    def getPostInstallScript(self, pis_uuid, session = None, location_id = None):
         session_need_to_close = False
         if session == None:
             session_need_to_close = True
             session = create_session()
-        # WIP i18n TODO
+        # WIP i18n
         lang = 1
+        if location_id != None:
+            lang = self.getLocLanguage(session, location_id)
+        else:
+            pass
+            # this is used internally to delete or edit a PIS
+            # which mean that the day we manage to edit i18n labels, we have to work here
         I18n1 = sa_exp_alias(self.internationalization)
         I18n2 = sa_exp_alias(self.internationalization)
 
@@ -2641,13 +2658,16 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close
         return True
 
-    def getImagesPostInstallScript(self, ims, session = None):
+    def getImagesPostInstallScript(self, ims, session = None, location_id = None):
         session_need_to_close = False
         if session == None:
             session_need_to_close = True
             session = create_session()
         # WIP i18n TODO
         lang = 1
+        if location_id != None:
+            lang = self.getLocLanguage(session, location_id)
+
         I18n1 = sa_exp_alias(self.internationalization)
         I18n2 = sa_exp_alias(self.internationalization)
 

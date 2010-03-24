@@ -1286,18 +1286,25 @@ class RpcProxy(RpcProxyI):
                 menu['bootservices'][str(mi['order'])] = bs
         return (menu, menu_items, h_pis)
 
-    def __generateDefaultSuscribeMenu(self, logger, db):
+    def __generateDefaultSuscribeMenu(self, logger, db, imaging_server_uuid):
+        location = db.getImagingServerEntity(imaging_server_uuid)
         menu = db.getDefaultSuscribeMenu()
-        menu_items = db.getMenuContent(menu.id, P2IM.ALL, 0, -1, '')
+        menu_items = db.getMenuContent(menu.id, P2IM.ALL, 0, -1, '', None, location.uuid)
         menu = menu.toH()
         menu, menu_items, h_pis = self.__generateMenusContent(menu, menu_items, None)
         ims = h_pis.keys()
-        a_pis = db.getImagesPostInstallScript(ims)
+        a_pis = db.getImagesPostInstallScript(ims, None, location.uuid)
         for pis, im, name_i18n, desc_i18n in a_pis:
+            name = pis.default_name
+            desc = pis.default_desc
+            if name_i18n != None:
+                name = name_i18n
+            if desc_i18n != None:
+                desc = desc_i18n
             pis = {
                 'id':pis.id,
-                'name':pis.default_name,
-                'desc':pis.default_desc,
+                'name':name,
+                'desc':desc,
                 'value':pis.value
             }
             a_targets = h_pis[im.id]
@@ -1313,7 +1320,7 @@ class RpcProxy(RpcProxyI):
         menu = menu.toH()
         menu, menu_items, h_pis = self.__generateMenusContent(menu, menu_items, loc_uuid)
         ims = h_pis.keys()
-        a_pis = db.getImagesPostInstallScript(ims)
+        a_pis = db.getImagesPostInstallScript(ims, None, loc_uuid)
         for pis, im, name_i18n, desc_i18n in a_pis:
             pis = {
                 'id':pis.id,
@@ -1413,17 +1420,25 @@ class RpcProxy(RpcProxyI):
                     distinct_loc[loc_uuid] = [url, {m_uuid:menu}]
 
         ims = h_pis.keys()
-        a_pis = db.getImagesPostInstallScript(ims)
-        for pis, im, name_i18n, desc_i18n in a_pis:
-            pis = {
-                'id':pis.id,
-                'name':pis.default_name,
-                'desc':pis.default_desc,
-                'value':pis.value
-            }
-            a_targets = h_pis[im.id]
-            for loc_uuid, t_uuid, order in a_targets:
-                distinct_loc[loc_uuid][1][t_uuid]['images'][order]['post_install_script'] = pis
+        for loc_uuid in distinct_loc:
+            a_pis = db.getImagesPostInstallScript(ims, None, loc_uuid)
+            for pis, im, name_i18n, desc_i18n in a_pis:
+                name = pis.default_name
+                desc = pis.default_desc
+                if name_i18n != None:
+                    name = name_i18n
+                if desc_i18n != None:
+                    desc = desc_i18n
+
+                pis = {
+                    'id':pis.id,
+                    'name':name,
+                    'desc':desc,
+                    'value':pis.value
+                }
+                a_targets = h_pis[im.id]
+                for loc_uuid, t_uuid, order in a_targets:
+                    distinct_loc[loc_uuid][1][t_uuid]['images'][order]['post_install_script'] = pis
         if target_type == P2IT.PROFILE:
             # merge distinct_loc and distinct_loc_own_menu
             for loc_uuid in distinct_loc_own_menu:
@@ -1928,7 +1943,7 @@ class RpcProxy(RpcProxyI):
         count = db.countAllPostInstallScripts(location, filter)
         return [count, xmlrpcCleanup(ret)]
 
-    def getPostInstallScript(self, pis_uuid):
+    def getPostInstallScript(self, pis_uuid, location_id):
         """
         get the detail of a post install script
 
@@ -1938,7 +1953,7 @@ class RpcProxy(RpcProxyI):
         @returns: a dict with all the detail of the post install script or False if that pis dont exists
         @rtype: dict
         """
-        pis = ImagingDatabase().getPostInstallScript(pis_uuid)
+        pis = ImagingDatabase().getPostInstallScript(pis_uuid, None, location_id)
         if pis:
             return xmlrpcCleanup(pis.toH())
         return xmlrpcCleanup(False)
@@ -2246,17 +2261,20 @@ class RpcProxy(RpcProxyI):
         """
         return ImagingDatabase().getPartitionsToBackupRestore(computer_uuid)
 
-    def getDefaultMenuForRegistering(self):
+    def getDefaultMenuForRegistering(self, imaging_server_uuid):
         """
         Called by the Package Server to get the default menu used by computers
         to subscribe from the database.
+
+        @param imaging_server_uuid: the uuid of the calling imaging server
+        @type imaging_server_uuid: str
 
         @results: give the default menu for subscription (Menu.id == 2)
         @rtype: dict
         """
         db = ImagingDatabase()
         logger = logging.getLogger()
-        menu = self.__generateDefaultSuscribeMenu(logger, db)
+        menu = self.__generateDefaultSuscribeMenu(logger, db, imaging_server_uuid)
         return xmlrpcCleanup(menu)
 
     def computerChangeDefaultMenuItem(self, imaging_server_uuid, computer_uuid, item_number):

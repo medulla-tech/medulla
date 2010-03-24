@@ -115,7 +115,8 @@ class ImagingApi(MyXmlrpc):
         self.logger.debug('Starting package server internals initialization')
         client = self._getXMLRPCClient()
         func = 'imaging.getDefaultMenuForRegistering'
-        d = client.callRemote(func)
+        args = (self.config.imaging_api['uuid'])
+        d = client.callRemote(func, *args)
         d.addCallbacks(_cbDefaultMenu, _errDefaultMenu)
 
     def _getXMLRPCClient(self):
