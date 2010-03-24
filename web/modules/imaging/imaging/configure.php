@@ -127,7 +127,12 @@ if ($type == '') {
 }
 
 if (!$whose && !$menu) {
-    $f->add(new TitleElement(_T("To register, you must first set a default menu to the entity.", "imaging"), 3));
+    if ($type == '') {
+        $msg = _T("To register, you must first set a default menu to the package server that manages the entity of this computer.", "imaging");
+    } else {
+        $msg = _T("To register, you must first set a default menu to the package server that manages the entities of the computers that belongs to this profile.", "imaging");
+    }
+    $f->add(new TitleElement($msg, 3));
     $f->display();
 } else {
     $target = null;
