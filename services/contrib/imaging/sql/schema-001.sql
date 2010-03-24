@@ -447,7 +447,7 @@ INSERT INTO SynchroState (label) VALUES ("INIT_ERROR");
 
 INSERT INTO Internationalization (id, fk_language, label) VALUES (01, 2, "Menu par défaut");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (02, 2, "Continuer le démarrage normalement");
-INSERT INTO Internationalization (id, fk_language, label) VALUES (03, 2, "Démarrer comme d''habitude");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (03, 2, "Démarrer comme d\'habitude");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (04, 2, "Ajouter comme client Pulse 2");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (05, 2, "Enregistrer ce poste auprès du server Pulse 2");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (06, 2, "Créer une image");
@@ -456,15 +456,15 @@ INSERT INTO Internationalization (id, fk_language, label) VALUES (08, 2, "Démar
 INSERT INTO Internationalization (id, fk_language, label) VALUES (09, 2, "Charger un environnement sans disque et obtenir une invite de commande");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (10, 2, "Test mémoire");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (11, 2, "Réaliser une vérification complète de la mémoire");
-INSERT INTO Internationalization (id, fk_language, label) VALUES (12, 2, "Menu d''inscription d''un ordinateur");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (12, 2, "Menu d\'inscription d\'un ordinateur");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (13, 2, "Inscrit la date dans C:\\date.txt");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (14, 2, "Copie du fichier sysprep.inf sur C:\\");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (15, 2, "Changement à la fois le SID et le Netbios");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (16, 2, "Éteindre le client apres restoration");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (17, 2, "Shell de debug");
-INSERT INTO Internationalization (id, fk_language, label) VALUES (18, 2, "La seule et unique partition FAT ou EXT2 sera étendue à l''intégralité du disque dur");
-INSERT INTO Internationalization (id, fk_language, label) VALUES (19, 2, "La seule et unique partition NTFS sera étendue à l''intégralité du disque dur");
-INSERT INTO Internationalization (id, fk_language, label) VALUES (20, 2, "Installer le Pack d''agents Pulse 2");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (18, 2, "La seule et unique partition FAT ou EXT2 sera étendue à l\'intégralité du disque dur");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (19, 2, "La seule et unique partition NTFS sera étendue à l\'intégralité du disque dur");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (20, 2, "Installer le Pack d\'agents Pulse 2");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (21, 2, "RAID1 synchro pour chipset ICH5 du 1er disque vers le 2ème");
 
 INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (1, "Continue Normal Startup", "Start as usual", 2, 3, "root (hd0)\nchainloader +1");
