@@ -1298,9 +1298,9 @@ class RpcProxy(RpcProxyI):
             name = pis.default_name
             desc = pis.default_desc
             if name_i18n != None:
-                name = name_i18n
+                name = name_i18n.label
             if desc_i18n != None:
-                desc = desc_i18n
+                desc = desc_i18n.label
             pis = {
                 'id':pis.id,
                 'name':name,
@@ -1427,9 +1427,9 @@ class RpcProxy(RpcProxyI):
                 name = pis.default_name
                 desc = pis.default_desc
                 if name_i18n != None:
-                    name = name_i18n
+                    name = name_i18n.label
                 if desc_i18n != None:
-                    desc = desc_i18n
+                    desc = desc_i18n.label
 
                 pis = {
                     'id':pis.id,
@@ -1560,6 +1560,7 @@ class RpcProxy(RpcProxyI):
                 else:
                     logger.error("couldn't initialize the ImagingApi to %s"%(url))
 
+        distinct_loc = xmlrpcCleanup(distinct_loc)
         if len(defer_list) == 0:
             return self.__synchroTargetsSecondPart(distinct_loc, target_type, pid)
         else:
