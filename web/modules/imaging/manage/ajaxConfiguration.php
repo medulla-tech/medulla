@@ -148,7 +148,7 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
         $language->setSelected($lang_id2uuid[$imaging_server['fk_language']]);
     }
     $f->add(
-        new TrFormElement(_T("Restoration type", "imaging"), $language)
+        new TrFormElement(_T("Menu language", "imaging"), $language)
     );
     $f->pop();
 
