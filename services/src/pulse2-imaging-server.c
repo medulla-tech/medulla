@@ -382,18 +382,24 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
     if (buf[0] == 0xED) {
         char uuid[36];
         snprintf(uuid, 36 + 1, "%s", buf + 1);
-        mysystem(3, gPathEndImage, mac, uuid);
-        // TODO : check previous command result
-        logClientActivity(mac, LOG_INFO, "backup", "'image done'");
+        if (mysystem(3, gPathEndImage, mac, uuid) == 0) {
+            logClientActivity(mac, LOG_INFO, "backup", "'image done'");
+            sendto(s, ACKSTR, strlen(ACKSTR) + 1, MSG_NOSIGNAL, (struct sockaddr *)si_other, sizeof(*si_other));
+        } else {
+            sendto(s, ERRORSTR, strlen(ERRORSTR) + 1, MSG_NOSIGNAL, (struct sockaddr *)si_other, sizeof(*si_other));
+        }
         return 0;
     }
     // Ask to change the default boot menu
     if (buf[0] == 0xCD) {
         char item[16];
         snprintf(item, 16, "%d", buf[1]);
-        mysystem(3, gPathChangeDefault, mac, item);
-        // TODO : check previous command result
-        logClientActivity(mac, LOG_INFO, "menu", "'toggled default entry'");
+        if (mysystem(3, gPathChangeDefault, mac, item) == 0) {
+            logClientActivity(mac, LOG_INFO, "menu", "'toggled default entry'");
+            sendto(s, ACKSTR, strlen(ACKSTR) + 1, MSG_NOSIGNAL, (struct sockaddr *)si_other, sizeof(*si_other));
+        } else {
+            sendto(s, ERRORSTR, strlen(ERRORSTR) + 1, MSG_NOSIGNAL, (struct sockaddr *)si_other, sizeof(*si_other));
+        }
         return 0;
     }
     // log data
