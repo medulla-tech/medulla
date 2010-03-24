@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-24 10:01+0100\n"
-"PO-Revision-Date: 2010-03-24 10:04+0100\n"
+"POT-Creation-Date: 2010-03-24 10:04+0100\n"
+"PO-Revision-Date: 2010-03-24 10:14+0100\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: Pulse 2 developers <pulse2-devel@mandrivalinux.org>\n"
 "MIME-Version: 1.0\n"
@@ -204,7 +204,7 @@ msgstr "Sauvegarde démarrée"
 
 #: web/modules/imaging/imaging/configure.php:252
 msgid "Backup/restore disks selection"
-msgstr ""
+msgstr "Sélection des disques à sauvegarder/restaurer"
 
 #: web/modules/imaging/manage/ajaxLogs.php:44
 #: web/modules/imaging/imaging/ajaxLogs.php:52
@@ -401,7 +401,7 @@ msgstr "Détails"
 #: web/modules/imaging/imaging/configure.php:257
 #, php-format
 msgid "Disk number: %d"
-msgstr ""
+msgstr "Disque numéro: %d"
 
 #: web/modules/imaging/manage/bootmenu_edit.php:86
 #: web/modules/imaging/manage/master_add.php:97
@@ -498,7 +498,7 @@ msgstr "Éditer l'élément"
 
 #: web/modules/imaging/imaging/configure.php:268
 msgid "Enable this disk"
-msgstr ""
+msgstr "Activé ce disque"
 
 #: web/modules/imaging/manage/ajaxLogs.php:49
 #: web/modules/imaging/imaging/ajaxLogs.php:57
@@ -828,7 +828,7 @@ msgstr "Obtenu son hostname"
 #: web/modules/imaging/imaging/configure.php:281
 #, php-format
 msgid "Partition number: %d"
-msgstr ""
+msgstr "Partition numéro: %d"
 
 #: web/modules/imaging/manage/master_iso.php:49
 #: web/modules/imaging/imaging/images_iso.php:54
@@ -837,7 +837,7 @@ msgstr "Merci de visiter la page de status pour suivre l'avancement de la créat
 
 #: web/modules/imaging/imaging/configure.php:159
 msgid "Please switch to expert mode now if you want to change these parameters."
-msgstr ""
+msgstr "Veuillez passer en mode expert maintenant si vous désirez changer ces paramètres."
 
 #: web/modules/imaging/manage/ajaxLogs.php:48
 #: web/modules/imaging/imaging/ajaxLogs.php:56
@@ -1094,13 +1094,13 @@ msgstr "Options de la cible"
 msgid "The default values displayed here come from this %s's profile menu."
 msgstr "Les valeurs par défaut affichées proviennent du menu du profile %s."
 
-#: web/modules/imaging/imaging/configure.php:141
-msgid "The default values for the imaging parameters will be inherited from the entity that owns this computer."
-msgstr ""
-
 #: web/modules/imaging/imaging/configure.php:143
-msgid "The default values for the imaging parameters will be inherited from the entity that owns this profile."
-msgstr ""
+msgid "The default values for the imaging parameters will be inherited from the imaging server that manages the entities of the computers that belongs to this profile."
+msgstr "Les valeurs par défaut des paramètres d'imaging seront héritées de celles du serveur d'imaging qui gère les entités des ordinateurs appartenant à ce profil."
+
+#: web/modules/imaging/imaging/configure.php:141
+msgid "The default values for the imaging parameters will be inherited from the imaging server that manages the entity that owns this computer."
+msgstr "Les valeurs par défaut des paramètres d'imaging seront héritées de celles du serveur d'imaging qui gère l'entité auquelle appartient cet ordinateur."
 
 #: web/modules/imaging/manage/master_iso.php:47
 #: web/modules/imaging/imaging/images_iso.php:52
@@ -1144,12 +1144,12 @@ msgid "Title"
 msgstr "Titre"
 
 #: web/modules/imaging/imaging/configure.php:133
-msgid "To register, you must first set a default menu to the package server that manages the entities of the computers that belongs to this profile."
-msgstr ""
+msgid "To register, you must first set a default menu to the imaging server that manages the entities of the computers that belongs to this profile."
+msgstr "Avant de pouvoir faire l'enregistrement, un menu par défaut doit d'abord être positionné sur le serveur d'imaging qui gère les entités des ordinateurs appartenant à ce profil."
 
 #: web/modules/imaging/imaging/configure.php:131
-msgid "To register, you must first set a default menu to the package server that manages the entity of this computer."
-msgstr ""
+msgid "To register, you must first set a default menu to the imaging server that manages the entity of this computer."
+msgstr "Avant de pouvoir faire l'enregistrement, un menu par défaut doit d'abord être positionnée sur le serveur d'imaging qui gère l'entité de cet ordinateur."
 
 #: web/modules/imaging/imaging/ajaxLogs.php:83
 msgid "Toggled default entry"
@@ -1220,12 +1220,3 @@ msgstr "nfs"
 #: web/modules/imaging/imaging/configure.php:181
 msgid "tftp"
 msgstr "tftp"
-
-#~ msgid "Keyboard mapping (empty/fr)"
-#~ msgstr "Type de clavier (vide/fr)"
-
-#~ msgid "The default values displayed here come from this %s's entity default menu."
-#~ msgstr "Les valeurs par défaut affichées proviennent du menu par défaut de l'entité %s."
-
-#~ msgid "You must define a default menu for the entity before trying to set a menu to that %s."
-#~ msgstr "Vous devez définir un menu par défaut pour l'entité avant de l'attribuer à ce %s."
