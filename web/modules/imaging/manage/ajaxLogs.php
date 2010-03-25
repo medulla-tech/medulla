@@ -102,15 +102,17 @@ foreach ($db_logs as $log) {
     $a_states[]= $status;
 }
 
-$l = new OptimizedListInfos($a_date, _T("Title", "imaging"));
+$l = new OptimizedListInfos($a_date, _T("Date", "imaging"));
 // $l->addExtraInfo($a_level, _T("Log level", "imaging"));
 $l->addExtraInfo($a_target, _T("Target", "imaging"));
 $l->addExtraInfo($a_desc, _T("Message", "imaging"));
 //$l->addExtraInfo($a_states, _T("State", "imaging"));
 
+/*
 $l->addActionItem(
     new ActionItem(_T("Details"), "imgtabs", "display", "item", "base", "computers", "tabimlogs", "details")
 );
+*/
 $l->disableFirstColumnActionLink();
 $l->setParamInfo($list_params);
 $l->setItemCount($count);
