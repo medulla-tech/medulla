@@ -67,7 +67,7 @@ foreach ($services as $entry) {
         $addActions[] = $delAction;
     }
 
-    $a_label[]= sprintf("%s%s", ($script['is_local']?'':'X) '), $entry['default_name']);
+    $a_label[]= sprintf("%s%s", ($script['is_local']?'':'<img src="modules/imaging/graph/images/service-action.png" style="vertical-align: middle" /> '), $entry['default_name']);
     $a_desc[]= $entry['default_desc'];
     $a_in_boot_menu[]= (isset($entry['menu_item'])? True:False);
 }
@@ -84,7 +84,7 @@ $l->addActionItem(
     new ActionItem(_T("Edit service", "imaging"),
     "service_edit", "edit", "master", "imaging", "manage")
 );*/
-$l->setTableHeaderPadding(1);
+$l->setTableHeaderPadding(19);
 $l->disableFirstColumnActionLink();
 $l->setItemCount($count);
 $l->setNavBar(new AjaxNavBar($count, $filter, "updateSearchParamformLevel2"));

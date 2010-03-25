@@ -51,7 +51,7 @@ list($count, $scripts) = xmlrpc_getAllPostInstallScripts($location, $start, $end
 $a_label = array();
 $a_desc = array();
 foreach($scripts as $script) {
-    $a_label[] = sprintf("%s%s", ($script['is_local']?'':'X) '), $script["default_name"]);
+    $a_label[]= sprintf("%s%s", ($script['is_local']?'':'<img src="modules/imaging/graph/images/service-action.png" style="vertical-align: middle" /> '), $script['default_name']);
     $a_desc[] = $script["default_desc"];
     $l_params = array();
     $l_params["itemid"] = $script['imaging_uuid'];
@@ -76,7 +76,7 @@ $l->addActionItem(
     "postinstall_delete", "delete", "image", "imaging", "manage")
 );
 
-$l->setTableHeaderPadding(1);
+$l->setTableHeaderPadding(19);
 $l->disableFirstColumnActionLink();
 $l->setItemCount($count);
 $l->setNavBar(new AjaxNavBar($count, $filter, "updateSearchParamformLevel2"));
