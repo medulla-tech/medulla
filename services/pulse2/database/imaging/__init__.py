@@ -1673,6 +1673,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 pisiis = session.query(PostInstallScriptInImage).filter(self.post_install_script_in_image.c.fk_image == uuid2id(item_uuid)).all()
                 for p in pisiis:
                     session.delete(p)
+                session.flush()
 
             if params['is_master'] and params.has_key('post_install_script'):
                 pisii = PostInstallScriptInImage()
