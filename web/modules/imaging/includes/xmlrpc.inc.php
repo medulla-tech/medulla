@@ -57,6 +57,10 @@ function xmlrpc_checkComputerForImaging($computer_uuid) {
     return xmlCall("imaging.checkComputerForImaging", $computer_uuid);
 }
 
+function xmlrpc_checkProfileForImaging($computer_uuid) {
+    return xmlCall("imaging.checkProfileForImaging", $computer_uuid);
+}
+
 function xmlrpc_getMyMenuComputer($target_uuid) {
     return xmlCall("imaging.getMyMenuComputer", array($target_uuid));
 }

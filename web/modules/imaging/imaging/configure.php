@@ -138,6 +138,10 @@ if (!$whose && !$menu) {
     $msg = _T("The computer either doesn't have a MAC address, either has more than one MAC address. It can't be registered into the imaging module.", "imaging");
     $f->add(new TitleElement($msg, 3));
     $f->display();
+} else if (($type == 'group') && (xmlrpc_checkProfileForImaging($target_uuid) != 0)) {
+    $msg = _T("The profile can't be registered into the imaging module.", "imaging");
+    $f->add(new TitleElement($msg, 3));
+    $f->display();
 } else {
     $target = null;
     if (!$whose) {
