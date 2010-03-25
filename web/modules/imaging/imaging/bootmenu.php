@@ -156,6 +156,7 @@ function item_edit() {
         }
 
         $bs_uuid = $item['boot_service']['imaging_uuid'];
+        $im_uuid = $item['image']['imaging_uuid'];
 
         $params['default'] = ($_POST['default'] == 'on'?True:False);
         $params['default_WOL'] = ($_POST['default_WOL'] == 'on'?True:False);
@@ -163,7 +164,11 @@ function item_edit() {
         $params['hidden_WOL'] = ($_POST['displayed_WOL'] == 'on'?False:True);
         $params['default_name'] = $_POST['default_name'];
 
-        $ret = xmlrpc_editServiceToTarget($bs_uuid, $target_uuid, $params, $type);
+        if (isset($bs_uuid) && $bs_uuid != '') {
+            $ret = xmlrpc_editServiceToTarget($bs_uuid, $target_uuid, $params, $type);
+        } else {
+            $ret = xmlrpc_editImageToTarget($im_uuid, $target_uuid, $params, $type);
+        }
 
         // goto menu boot list
         header("Location: " . urlStrRedirect("base/computers/".$type."imgtabs", $params));
