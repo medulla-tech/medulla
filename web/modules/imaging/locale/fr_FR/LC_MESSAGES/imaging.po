@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-25 16:02+0100\n"
-"PO-Revision-Date: 2010-03-25 16:03+0100\n"
+"POT-Creation-Date: 2010-03-25 16:38+0100\n"
+"PO-Revision-Date: 2010-03-25 16:41+0100\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: Pulse 2 developers <pulse2-devel@mandrivalinux.org>\n"
 "MIME-Version: 1.0\n"
@@ -264,7 +264,7 @@ msgstr "Impossible de se connecter au serveur d'imaging associé à l'entité s�
 #: web/modules/imaging/manage/master_iso.php:83
 #: web/modules/imaging/manage/master_delete.php:42
 #: web/modules/imaging/imaging/bootmenu_remove.php:83
-#: web/modules/imaging/imaging/images_iso.php:88
+#: web/modules/imaging/imaging/images_iso.php:95
 #: web/modules/imaging/imaging/images_delete.php:59
 msgid "Cancel"
 msgstr "Annuler"
@@ -297,13 +297,12 @@ msgid "Create bootable iso"
 msgstr "Créer une iso bootable"
 
 #: web/modules/imaging/manage/master_iso.php:65
-#: web/modules/imaging/imaging/images_iso.php:69
 #, php-format
 msgid "Create iso for <strong>%s</strong>"
 msgstr "Créer une iso de <strong>%s</strong>"
 
 #: web/modules/imaging/manage/master_iso.php:43
-#: web/modules/imaging/imaging/images_iso.php:48
+#: web/modules/imaging/imaging/images_iso.php:55
 #: web/modules/imaging/infoPackage.inc.php:55
 msgid "Create iso from master"
 msgstr "Créer une iso depuis le master"
@@ -341,7 +340,6 @@ msgid "Default boot menu configuration"
 msgstr "Configuration du menu de démarrage par défaut"
 
 #: web/modules/imaging/manage/bootmenu_edit.php:77
-#: web/modules/imaging/manage/master_add.php:91
 msgid "Default menu item label"
 msgstr "Étiquette de l'élément du menu par défaut"
 
@@ -559,6 +557,11 @@ msgstr "Forcer la synchronisation"
 msgid "Full path to the XPM displayed at boot"
 msgstr "Chemin complet vers le fichier XPM affiché au démarrage"
 
+#: web/modules/imaging/imaging/images_iso.php:76
+#, php-format
+msgid "Generate ISO for <strong>%s</strong>"
+msgstr "Générer une iso de <strong>%s</strong>"
+
 #: web/modules/imaging/includes/logs.inc.php:49
 msgid "Hardware Inventory not injected"
 msgstr "Inventaire matériel non traité"
@@ -680,7 +683,7 @@ msgid "Inventory"
 msgstr "Inventaire"
 
 #: web/modules/imaging/manage/master_iso.php:45
-#: web/modules/imaging/imaging/images_iso.php:50
+#: web/modules/imaging/imaging/images_iso.php:57
 #, php-format
 msgid "Iso of master <strong>%s</strong> has been launched in background."
 msgstr "La création de l'iso du master <strong>%s</strong> a été lancé en tâche en tâche de fond."
@@ -712,7 +715,6 @@ msgid "Label"
 msgstr "Étiquette"
 
 #: web/modules/imaging/manage/master_iso.php:82
-#: web/modules/imaging/imaging/images_iso.php:87
 msgid "Launch backup"
 msgstr "Lancer la sauvegarde"
 
@@ -758,7 +760,7 @@ msgid "Masters"
 msgstr "Masters"
 
 #: web/modules/imaging/manage/master_iso.php:72
-#: web/modules/imaging/imaging/images_iso.php:77
+#: web/modules/imaging/imaging/images_iso.php:84
 msgid "Media size"
 msgstr "Taille du media"
 
@@ -838,9 +840,17 @@ msgid "Partition number: %d"
 msgstr "Partition numéro: %d"
 
 #: web/modules/imaging/manage/master_iso.php:49
-#: web/modules/imaging/imaging/images_iso.php:54
+#: web/modules/imaging/imaging/images_iso.php:61
 msgid "Please go to the status page to check the iso creation status."
 msgstr "Merci de visiter la page de status pour suivre l'avancement de la création de l'iso."
+
+#: web/modules/imaging/imaging/images_iso.php:81
+msgid "Please select media size. If your data exceeds the volume size, several files of your media size will be created."
+msgstr "Veuillez choisir la taille du médium à utiliser. Si le volume des données dépasse la taille du médium choisi, un jeu de média sera créé."
+
+#: web/modules/imaging/imaging/images_iso.php:46
+msgid "Please specify a title for the ISO image file."
+msgstr "Veuillez spécifier un titre pour l'image ISO."
 
 #: web/modules/imaging/imaging/configure.php:167
 msgid "Please switch to expert mode now if you want to change these parameters."
@@ -1040,6 +1050,10 @@ msgstr "Taille (compressée)"
 msgid "Space available on server"
 msgstr "Espace disque disponible sur le serveur"
 
+#: web/modules/imaging/imaging/images_iso.php:94
+msgid "Start ISO generation"
+msgstr "Démarrer la génération de l'image ISO"
+
 #: web/modules/imaging/includes/logs.inc.php:60
 msgid "Started restoration"
 msgstr "Restoration commencée"
@@ -1113,7 +1127,7 @@ msgid "The default values for the imaging parameters will be inherited from the 
 msgstr "Les valeurs par défaut des paramètres d'imaging seront héritées de celles du serveur d'imaging qui gère l'entité auquelle appartient cet ordinateur."
 
 #: web/modules/imaging/manage/master_iso.php:47
-#: web/modules/imaging/imaging/images_iso.php:52
+#: web/modules/imaging/imaging/images_iso.php:59
 #, php-format
 msgid "The files will be stored in the directory %s of the server at the end of the backup."
 msgstr "Les fichiers seront stockés dans le répertoire %s du serveur à la fin de la sauvegarde."
@@ -1139,7 +1153,7 @@ msgid "This location has been modified, when you are done, please press on \"Syn
 msgstr "Cet emplacement a été modifié. Une fois les opérations terminées, appuyez sur le bouton \"Synchroniser\" afin que les modifications soient mises à jour sur le serveur d'imaging."
 
 #: web/modules/imaging/manage/master_iso.php:51
-#: web/modules/imaging/imaging/images_iso.php:56
+#: web/modules/imaging/imaging/images_iso.php:63
 msgid "This operation will last according to the amount of data of the master."
 msgstr "La durée de cette opération dépend du volume de données contenues dans le master."
 
@@ -1153,7 +1167,7 @@ msgid "Timestamp"
 msgstr "Horodatage"
 
 #: web/modules/imaging/manage/master_iso.php:67
-#: web/modules/imaging/imaging/images_iso.php:72
+#: web/modules/imaging/imaging/images_iso.php:79
 msgid "Title"
 msgstr "Titre"
 
