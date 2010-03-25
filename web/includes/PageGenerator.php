@@ -1152,7 +1152,7 @@ class AjaxLocation extends AjaxFilterLocation {
     <div id="Location">
         <span id="searchSpan" class="searchbox">
             <img src="graph/search.gif"/>
-            <span class="locationtext">&nbsp;<?=_T("Select entity", "imaging")?>:&nbsp;</span>
+            <span class="locationtext">&nbsp;<?=_("Select entity")?>:&nbsp;</span>
             <span class="locationfield">
             <?php
             $this->location->display();
