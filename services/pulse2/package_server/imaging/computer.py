@@ -46,7 +46,10 @@ class ImagingComputerConfiguration:
         self.computerUUID = computerUUID
         self.menu = menu
         self.exclude_opts = ''
-        self.setExcludeParameters(self.menu['target']['exclude_parameters'])
+        if 'exclude_parameters' in self.menu['target']:
+            self.setExcludeParameters(self.menu['target']['exclude_parameters'])
+        # else if no exclude_parameters is set, do as if there is no exclude
+        # set.
 
     def setExcludeParameters(self, value):
         """
