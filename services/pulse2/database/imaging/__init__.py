@@ -1256,12 +1256,12 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return mi
 
     ######################
-    def __PossibleImages(self, session, target_uuid, is_master, filter):
+    def __PossibleImages(self, session, target_uuid, is_master, filt):
         q = session.query(Image).add_column(self.image.c.id)
         q = q.select_from(self.image.join(self.image_on_imaging_server).join(self.imaging_server).join(self.entity).join(self.target, self.target.c.fk_entity == self.entity.c.id).join(self.mastered_on, self.mastered_on.c.fk_image == self.image.c.id).join(self.imaging_log, self.imaging_log.c.id == self.mastered_on.c.fk_imaging_log))
         q = q.filter(self.target.c.uuid == target_uuid) # , or_(self.image.c.is_master == True, and_(self.image.c.is_master == False, )))
-        if filter != '':
-            q = q.filter(or_(self.image.c.desc.like('%'+filter+'%'), self.image.c.name.like('%'+filter+'%')))
+        if filt != '':
+            q = q.filter(or_(self.image.c.desc.like('%'+filt+'%'), self.image.c.name.like('%'+filt+'%')))
         if is_master == P2IIK.IS_MASTER_ONLY:
             q = q.filter(self.image.c.is_master == True)
         elif is_master == P2IIK.IS_IMAGE_ONLY:
@@ -1271,10 +1271,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         return q
 
-    def __EntityImages(self, session, loc_id, filter):
+    def __EntityImages(self, session, loc_id, filt):
         q = session.query(Image).add_column(self.image.c.id)
         q = q.select_from(self.image.join(self.image_on_imaging_server).join(self.imaging_server).join(self.entity))
-        q = q.filter(and_(self.entity.c.uuid == loc_id, self.image.c.is_master == True, or_(self.image.c.name.like('%'+filter+'%'), self.image.c.desc.like('%'+filter+'%'))))
+        q = q.filter(and_(self.entity.c.uuid == loc_id, self.image.c.is_master == True, or_(self.image.c.name.like('%'+filt+'%'), self.image.c.desc.like('%'+filt+'%'))))
         return q
 
     def __PossibleImageAndMenuItem(self, session, bs_ids, menu_id):
@@ -1287,10 +1287,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         )).all()
         return q
 
-    def getPossibleImagesOrMaster(self, target_uuid, is_master, start, end, filter):
+    def getPossibleImagesOrMaster(self, target_uuid, is_master, start, end, filt):
         session = create_session()
         menu = self.getTargetsMenuTUUID(target_uuid)
-        q1 = self.__PossibleImages(session, target_uuid, is_master, filter)
+        q1 = self.__PossibleImages(session, target_uuid, is_master, filt)
         q1 = q1.group_by(self.image.c.id)
         if end != -1:
             q1 = q1.offset(int(start)).limit(int(end)-int(start))
@@ -1389,25 +1389,25 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 #        iois = session.query(ImageOnImagingServer).filter(self.image_on_imaging_server.c.fk_image == image_id).first()
 #        image = session.query(Image).filter(self.image.c.id == image_id).first()
 
-    def countPossibleImagesOrMaster(self, target_uuid, type, filter):
+    def countPossibleImagesOrMaster(self, target_uuid, type, filt):
         session = create_session()
-        q = self.__PossibleImages(session, target_uuid, type, filter)
+        q = self.__PossibleImages(session, target_uuid, type, filt)
         q = q.count()
         session.close()
         return q
 
-    def getPossibleImages(self, target_uuid, start, end, filter):
-        return self.getPossibleImagesOrMaster(target_uuid, P2IIK.IS_IMAGE_ONLY, start, end, filter)
+    def getPossibleImages(self, target_uuid, start, end, filt):
+        return self.getPossibleImagesOrMaster(target_uuid, P2IIK.IS_IMAGE_ONLY, start, end, filt)
 
-    def getPossibleMasters(self, target_uuid, start, end, filter):
-        return self.getPossibleImagesOrMaster(target_uuid, P2IIK.IS_MASTER_ONLY, start, end, filter)
+    def getPossibleMasters(self, target_uuid, start, end, filt):
+        return self.getPossibleImagesOrMaster(target_uuid, P2IIK.IS_MASTER_ONLY, start, end, filt)
 
-    def getEntityMasters(self, loc_id, start, end, filter):
+    def getEntityMasters(self, loc_id, start, end, filt):
         session = create_session()
         menu = self.getEntityDefaultMenu(loc_id)
         if menu == None:
             raise "%s:Entity does not have a default menu" % (P2ERR.ERR_ENTITY_HAS_NO_DEFAULT_MENU)
-        q1 = self.__EntityImages(session, loc_id, filter)
+        q1 = self.__EntityImages(session, loc_id, filt)
         q1 = q1.group_by(self.image.c.id)
         if end != -1:
             q1 = q1.offset(int(start)).limit(int(end)-int(start))
@@ -1419,6 +1419,27 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         q = self.__mergeMenuItemInImage(q1, q2)
         return q
+
+    def getEntityMastersByUUID(self, loc_id, uuids):
+        session = create_session()
+        ret = {}
+        q1 = self.__EntityImages(session, loc_id, '')
+        q1 = q1.filter(self.image.c.id.in_(map(lambda u:uuid2id(u), uuids))).all()
+
+        q2 = session.query(PostInstallScript).add_column(self.post_install_script_in_image.c.fk_image)
+        q2 = q2.select_from(self.post_install_script.join(self.post_install_script_in_image))
+        q2 = q2.filter(self.post_install_script_in_image.c.fk_image.in_(map(lambda u:uuid2id(u), uuids))).all()
+        session.close()
+
+        im_pis = {}
+        for pis, im_id in q2:
+            im_pis[im_id] = pis.toH()
+
+        for im, im_id in q1:
+            ret[id2uuid(im_id)] = im.toH()
+            ret[id2uuid(im_id)]['post_install_script'] = im_pis[im_id]
+        return ret
+
 
     def countPossibleImages(self, target_uuid, filter):
         return self.countPossibleImagesOrMaster(target_uuid, P2IIK.IS_IMAGE_ONLY, filter)
@@ -1635,7 +1656,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             ret[item_uuid] = ret1
         return ret
 
-    def editImage(self, item_uuid, target_uuid, params):
+    def editImage(self, item_uuid, params):
         session = create_session()
         im = session.query(Image).filter(self.image.c.id == uuid2id(item_uuid)).first()
         if im == None:
@@ -2897,7 +2918,10 @@ class DBObject(object):
     need_iteration = []
     i18n = []
     def getUUID(self):
-        return id2uuid(self.id)
+        if hasattr(self, 'id'):
+            return id2uuid(self.id)
+        logging.getLogger().warn("try to get %s uuid!"%(type(self)))
+        return False
     def to_h(self):
         return self.toH()
     def toH(self, level = 0):
@@ -2913,7 +2937,8 @@ class DBObject(object):
                 # we don't want to enter in an infinite loop
                 # and generally we don't need more levels
                 ret[i] = getattr(self, i).toH(level+1)
-        ret['imaging_uuid'] = self.getUUID()
+        if hasattr(self, 'id'):
+            ret['imaging_uuid'] = self.getUUID()
         return ret
 
 class BootService(DBObject):

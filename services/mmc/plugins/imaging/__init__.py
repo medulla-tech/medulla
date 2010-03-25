@@ -430,6 +430,23 @@ class RpcProxy(RpcProxyI):
         count = db.countEntityMasters(loc_id, filter)
         return [count, xmlrpcCleanup(ret)]
 
+    def getLocationMastersByUUID(self, loc_id, uuids):
+        """
+        get the masters defined by their uuids for that location)
+
+        @param loc_id: the uuid of the location (field Entity.uuid)
+        @type loc_id: str
+
+        @param uuids: the masters uuids
+        @type uuids: list
+
+        @returns: the masters as a dict master_uuid: master
+        @rtype: dict
+        """
+        db = ImagingDatabase()
+        ret = db.getEntityMastersByUUID(loc_id, uuids)
+        return xmlrpcCleanup(ret)
+
     # EDITION
     def addImageToTarget(self, item_uuid, target_uuid, params, target_type):
         """
@@ -538,10 +555,22 @@ class RpcProxy(RpcProxyI):
         try:
             if db.isImageInMenu(item_uuid, target_uuid, target_type):
                 db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
-            ret = db.editImage(item_uuid, target_uuid, params)
+            ret = db.editImage(item_uuid, params)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
             raise e
+            return xmlrpcCleanup([False, e])
+
+    def editImageLocation(self, item_uuid, loc_id, params):
+        """ same as editImage but for a location """
+        db = ImagingDatabase()
+        try:
+            is_used = db.areImagesUsed([[item_uuid, None, None]])
+            if is_used[item_uuid]:
+                return [False, "cant modify a master if it's used by other targets"]
+            ret = db.editImage(item_uuid, params)
+            return xmlrpcCleanup([True, ret])
+        except Exception, e:
             return xmlrpcCleanup([False, e])
 
     def delImageToTarget(self, item_uuid, target_uuid, target_type):
