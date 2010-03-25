@@ -199,7 +199,7 @@ function image_edit($type, $images, $masters) {
             $params['name'] = $_POST['image_label'];
             $params['desc'] = $_POST['image_description'];
             $params['is_master'] = False;
-            $ret = xmlrpc_editImage($item_uuid, $target_uuid, $params);
+            $ret = xmlrpc_editImage($item_uuid, $target_uuid, $params, $type);
             header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
         }
     }
