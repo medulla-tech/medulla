@@ -1561,7 +1561,12 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return None
 
     def __getImageMenuItem(self, session, item_uuid, target_uuid):
-        mi = session.query(MenuItem).select_from(self.menu_item.join(self.image_in_menu).join(self.image).join(self.menu).join(self.target))
+        mi = session.query(MenuItem).select_from(self.menu_item \
+                .join(self.image_in_menu, self.image_in_menu.c.fk_menuitem == self.menu_item.c.id) \
+                .join(self.image, self.image_in_menu.c.fk_image == self.image.c.id) \
+                .join(self.menu, self.menu_item.c.fk_menu == self.menu.c.id) \
+                .join(self.target, self.menu.c.id == self.target.c.fk_menu) \
+        )
         mi = mi.filter(and_(self.image.c.id == uuid2id(item_uuid), self.target.c.uuid == target_uuid)).first()
         return mi
 
