@@ -1285,9 +1285,9 @@ class RpcProxy(RpcProxyI):
                 }
                 menu['bootservices'][str(mi['order'])] = bs
         # when no default mi has been defined we take the first element of the menu
-        if menu['default_item'] == None:
+        if not menu.has_key('default_item') or menu['default_item'] == None:
             menu['default_item'] = 0
-        if menu['default_item_WOL'] == None:
+        if not menu.has_key('default_item_WOL') or menu['default_item_WOL'] == None:
             menu['default_item_WOL'] = 0
             menu['default_item_wol'] = 0
         return (menu, menu_items, h_pis)
