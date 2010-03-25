@@ -867,11 +867,15 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 ims = session.query(ImagingServer).select_from(self.imaging_server.join(self.entity, self.entity.c.id == self.imaging_server.c.fk_entity)).filter(self.entity.c.uuid == loc_id).first()
                 self.imagingServer_lang[self.imagingServer_entity[loc_id]] = ims.fk_language
         else:
-            ims, en = session.query(ImagingServer).add_entity(Entity).select_from(self.imaging_server.join(self.entity, self.entity.c.id == self.imaging_server.c.fk_entity)).filter(self.entity.c.uuid == loc_id).first()
-            # the true one! self.imagingServer_entity[id2uuid(ims.id)] = en.uuid
-            # the working one in our context :
-            self.imagingServer_entity[en.uuid] = id2uuid(ims.id)
-            self.imagingServer_lang[self.imagingServer_entity[loc_id]] = ims.fk_language
+            q = session.query(ImagingServer).add_entity(Entity).select_from(self.imaging_server.join(self.entity, self.entity.c.id == self.imaging_server.c.fk_entity)).filter(self.entity.c.uuid == loc_id).first()
+            if q != None:
+                ims, en = q
+                # the true one! self.imagingServer_entity[id2uuid(ims.id)] = en.uuid
+                # the working one in our context :
+                self.imagingServer_entity[en.uuid] = id2uuid(ims.id)
+                self.imagingServer_lang[self.imagingServer_entity[loc_id]] = ims.fk_language
+            else:
+                return 1 # default to english
         lang = self.imagingServer_lang[self.imagingServer_entity[loc_id]]
         return lang
 
