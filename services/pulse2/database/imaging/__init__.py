@@ -582,7 +582,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             need_to_close_session = True
             session = create_session()
         # WIP i18n
-        q = session.query(Menu).select_from(self.menu \
+        q = session.query(Menu).add_column(self.internationalization.c.label).select_from(self.menu \
                 .join(self.target, self.target.c.fk_menu == self.menu.c.id) \
                 .join(self.imaging_server, self.imaging_server.c.fk_entity == self.target.c.fk_entity) \
                 .outerjoin(self.internationalization, and_(self.internationalization.c.id == self.menu.c.fk_name, self.internationalization.c.fk_language == self.imaging_server.c.fk_language)) \
