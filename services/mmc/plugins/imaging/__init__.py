@@ -621,7 +621,7 @@ class RpcProxy(RpcProxyI):
                     return [False, "Can't remove %s from some boot menus" % (image_uuid)]
 
             # remove from the imaging server
-            ims = db.getImageImagingServer(image_uuid)
+            im, ims = db.getImageAndImagingServer(image_uuid)
             i = ImagingApi(ims.url.encode('utf8'))
             if i == None:
                 logger.error("couldn't initialize the ImagingApi to %s" % (ims.url))
@@ -640,7 +640,7 @@ class RpcProxy(RpcProxyI):
                 #except Exception, e:
                 #    return xmlrpcCleanup([False, e])
 
-            d = i.imagingServerImageDelete(image_uuid)
+            d = i.imagingServerImageDelete(im.uuid)
             d.addCallback(treatDel, image_uuid, db, logger)
             return d
         #except Exception, e:
