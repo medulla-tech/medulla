@@ -1212,7 +1212,7 @@ class RpcProxy(RpcProxyI):
             # No computer in profile
             ret = 1
         else:
-            if '' in macaddresses:
+            if [''] in macaddresses:
                 # Some computers don't have a MAC address
                 ret = 2
             elif len(uuids) != len(macaddresses):
@@ -1222,9 +1222,23 @@ class RpcProxy(RpcProxyI):
                 ret = 0
                 # Check all MAC addresses
                 for macaddress in macaddresses:
-                    if not pulse2.utils.isLinuxMacAddress(macaddress):
+                    if not pulse2.utils.isLinuxMacAddress(macaddress[0]):
                         ret = 4
                         break
+        if not ret:
+            # Still no error ? Now checks that all the computers belong to the
+            # same entity
+            locations = ComputerLocationManager().getMachinesLocations(uuids)
+            try:
+                locations_uuid = map(lambda l: l['uuid'], locations.values())
+            except IndexError:
+                locations_uuid = []
+            if len(locations_uuid) != len(uuids):
+                # some computers have no location ?
+                ret = 5
+            elif locations_uuid.count(locations_uuid[0]) != len(locations_uuid):
+                # All the computers don't belong to the same location
+                ret = 6
         return ret
 
     def isProfileRegistered(self, profile_uuid):
