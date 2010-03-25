@@ -38,9 +38,16 @@ else
 if ($_POST) {
     $isopath = "/tmp";
     $label = $_POST['label'];
-    $title = $_POST['title'];
+    $title = trim($_POST['title']);
     $size = $_POST['media'];
     $image_uuid = $_POST['itemid'];
+
+    if (empty($title)) {
+        $msg = _T("Please specify a title for the ISO image file.", "imaging");
+        new NotifyWidgetFailure($msg);
+        header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
+        exit(1);
+    }
 
     $ret = xmlrpc_imagingServerISOCreate($image_uuid, $size, $title);
     // goto images list
@@ -66,13 +73,13 @@ if ($_POST) {
 }
 
 ?>
-<h2><?= sprintf(_T("Create iso for <strong>%s</strong>", "imaging"), $label) ?></h2>
+<h2><?= sprintf(_T("Generate ISO for <strong>%s</strong>", "imaging"), $label) ?></h2>
 <form action="<?=urlStr("base/computers/images_iso",$params)?>" method="post">
 <table>
 <tr><td><?= _T('Title', 'imaging'); ?></td><td> <input name="title" type="text" value="" /></td></tr>
 <tr><td colspan="2">
-<p>Please select media size. If your data exceeds the volume size,
-several files of your media size will be created.</p>
+    <p><?= _T("Please select media size. If your data exceeds the volume size, several files of your media size will be created.", "imaging"); ?></p>
+
 </td></tr>
 <tr><td><?= _T("Media size", "imaging"); ?></td><td>
 <select name="media" />
@@ -84,6 +91,6 @@ several files of your media size will be created.</p>
 <br/><br/>
 <input name="label" type="hidden" value="<?=$label;?>" />
 <input name="itemid" type="hidden" value="<?=$id;?>" />
-<input name="bgo" type="submit" class="btnPrimary" value="<?= _T("Launch backup", "imaging"); ?>" />
+<input name="bgo" type="submit" class="btnPrimary" value="<?= _T("Start ISO generation", "imaging"); ?>" />
 <input name="bback" type="submit" class="btnSecondary" value="<?= _("Cancel"); ?>" onclick="new Effect.Fade('popup'); return false;" />
 </form>
