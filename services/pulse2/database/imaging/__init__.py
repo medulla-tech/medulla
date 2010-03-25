@@ -511,9 +511,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session = create_session()
         q = self.__getTargetsMenuQuery(session)
         q = q.filter(self.target.c.id == target_id).first() # there should always be only one!
+        session.close()
+        if q == None: return q
         if q[1] != None:
             q[0].default_name = q[1]
-        session.close()
         return q[0]
 
     def getTargetsMenuTUUID(self, target_id, session = None):
@@ -523,10 +524,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session = create_session()
         q = self.__getTargetsMenuQuery(session)
         q = q.filter(self.target.c.uuid == target_id).first() # there should always be only one!
-        if q[1] != None:
-            q[0].default_name = q[1]
         if need_to_close_session:
             session.close()
+        if q == None: return q
+        if q[1] != None:
+            q[0].default_name = q[1]
         return q[0]
 
     def getDefaultSuscribeMenu(self, location, session = None):
@@ -540,10 +542,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 .outerjoin(self.internationalization, and_(self.internationalization.c.id == self.menu.c.fk_name, self.internationalization.c.fk_language == lang)) \
             ).filter(self.menu.c.id == 2).first()
 #        q = session.query(Menu).filter(self.menu.c.id == 2).first()
-        if q[1] != None:
-            q[0].default_name = q[1]
         if need_to_close_session:
             session.close()
+        if q == None: return q
+        if q[1] != None:
+            q[0].default_name = q[1]
         return q[0]
 
     def getEntityDefaultMenu(self, loc_id, session = None):
@@ -568,6 +571,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = q.first()
         if need_to_close_session:
             session.close()
+        if q == None: return q
         if q[1] != None:
             q[0].default_name = q[1]
         return q[0]
@@ -585,6 +589,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             ).filter(and_(self.target.c.uuid == uuid, self.target.c.type == type)).first() # there should always be only one!
         if need_to_close_session:
             session.close()
+        if q == None: return q
         if q[1] != None:
             q[0].default_name = q[1]
         return q[0]
