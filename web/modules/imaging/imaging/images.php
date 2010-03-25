@@ -67,9 +67,9 @@ if (($type == '' && xmlrpc_isComputerRegistered($target_uuid)) || ($type == 'gro
             break;
         default:
             if (empty($type)) {
-                image_list($type, "Available images");
+                image_list($type, _T("Available images", "imaging"));
             }
-            image_list($type, "Available masters", false);
+            image_list($type, _T("Available masters", "imaging"), false);
             break;
     }
 } else {
@@ -213,7 +213,7 @@ function image_list($type, $title, $actions=true) {
 
     // show title
     if($title) {
-        $t = new TitleElement(_T($title, "imaging"));
+        $t = new TitleElement($title);
         $t->display();
     }
 
