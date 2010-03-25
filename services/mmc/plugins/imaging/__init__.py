@@ -1284,6 +1284,12 @@ class RpcProxy(RpcProxyI):
                     'hidden_WOL' : mi['hidden_WOL']
                 }
                 menu['bootservices'][str(mi['order'])] = bs
+        # when no default mi has been defined we take the first element of the menu
+        if menu['default_item'] == None:
+            menu['default_item'] = 0
+        if menu['default_item_WOL'] == None:
+            menu['default_item_WOL'] = 0
+            menu['default_item_wol'] = 0
         return (menu, menu_items, h_pis)
 
     def __generateDefaultSuscribeMenu(self, logger, db, imaging_server_uuid):
