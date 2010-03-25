@@ -1705,8 +1705,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session.save_or_update(menu)
             session.flush()
 
-        session.delete(mi)
         session.delete(iim)
+        session.delete(mi)
         # TODO when it's not a master and the computer is the only one, what should we do with the image?
         session.flush()
 
