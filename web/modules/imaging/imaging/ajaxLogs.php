@@ -31,6 +31,7 @@ require("../../../includes/session.inc.php");
 require("../../../includes/PageGenerator.php");
 require("../includes/includes.php");
 require_once('../includes/xmlrpc.inc.php');
+require("../includes/logs.inc.php");
 
 $params = getParams();
 
@@ -46,57 +47,6 @@ if(isset($_GET['gid'])) {
     $type = '';
     list($nbLogs, $db_logs) = xmlrpc_getComputerLogs($_GET['uuid'], $start, $end, $filter);
 }
-
-$logStates = array(
-    "unknown" => array(_T("Status unknow", "imaging"), 'black'),
-    "boot" => array(_T("Boot", "imaging"), 'green'),
-    "menu" => array(_T("Menu", "imaging"), 'green'),
-    "restoration" => array(_T("Restoration", "imaging"), 'green'),
-    "backup" => array(_T("Backup", "imaging"), 'green'),
-    "postinstall" => array(_T("Post-install", "imaging"), 'green'),
-    "error" => array(_T("Error", "imaging"), 'red'),
-    "delete" => array(_T("Delete", "imaging"), 'orange'),
-    "inventory" => array(_T("Inventory", "imaging"), 'orange'),
-
-    "restore_in_progress" => array(_T("Restore in progress", "imaging"), 'orange'),
-    "restore_done" => array(_T("Restore done", "imaging"), 'green'),
-    "restore_failed" => array(_T("Restore failed", "imaging"), 'red'),
-    "backup_in_progress" => array(_T("Backup in progress", "imaging"), 'orange'),
-    "backup_done" => array(_T("Backup done", "imaging"), "green"),
-    "backup_failed" => array(_T("Backup failed", "imaging"), "red"),
-    "unknow" => array(_T("Status unknow", "imaging"), "black"),
-);
-
-// Should be keepd syn with services/src/pulse2-imaging-server.c !!!
-$logMessages = array(
-   "boot menu shown" => _T("Boot menu shown", "imaging"),
-   "hardware inventory sent" => _T("Hardware Inventory sent", "imaging"),
-   "hardware inventory not received" => _T("Hardware Inventory not received", "imaging"),
-   "hardware inventory not injected" => _T("Hardware Inventory not injected", "imaging"),
-   "Hardware Inventory Updated" => _T("Hardware Inventory updated", "imaging"),
-   "client identified" => _T("Client Identified", "imaging"),
-   "client not identified" => _T("Client not Identified", "imaging"),
-   "asked an image UUID" => _T("Asked an image UUID", "imaging"),
-   "failed to obtain an image UUID" => _T("Failed to obtain an image UUID", "imaging"),
-   "obtained an image UUID" => _T("Obtained an image UUID", "imaging"),
-   "image done" => _T("Image Done", "imaging"),
-   "toggled default entry" => _T("Toggled default entry", "imaging"),
-   "booted" => _T("Booted", "imaging"),
-   "executed menu entry" => _T("Executed menu entry", "imaging"),
-   "started restoration" => _T("Started restoration", "imaging"),
-   "finished restoration" => _T("Finished restoration", "imaging"),
-   "backup started" => _T("Backup started", "imaging"),
-   "backup completed" => _T("Backup completed", "imaging"),
-   "postinstall started" => _T("Postinstall started", "imaging"),
-   "postinstall completed" => _T("Postinstall completed", "imaging"),
-   "critical error" => _T("Critical error", "imaging"),
-   "asked its hostname" => _T("Asked its hostname", "imaging"),
-   "failed to obtain its hostname" => _T("Failed to obtain its hostname", "imaging"),
-   "obtained its hostname" => _T("Obtained its hostname", "imaging"),
-   "asked its UUID" => _T("Asked its UUID", "imaging"),
-   "failed to obtain its UUID" => _T("Failed to obtain its UUID", "imaging"),
-   "obtained its UUID" => _T("Obtained its UUID", "imaging")
-    );
 
 $a_level = array();
 $a_date = array();
@@ -125,13 +75,9 @@ foreach ($db_logs as $log) {
     $status = $logStates[$status][0];
     //$status = $led->value.'&nbsp;'.$logStates[$status][0];
 
+    $details = translate_details($log['detail']);
+
     /*
-     * $log['detail'] can contain :
-     * - either "message"
-     * - or "message : info"
-     * message will be i18n using logMessages
-     * info will be changed (add <a > ...)
-     */
     $tmp_splitted_result = split(":",  $log['detail'], 2);
     if (count($tmp_splitted_result) == 1) {
         if (array_key_exists($tmp_splitted_result[0], $logMessages)) {
@@ -151,7 +97,7 @@ foreach ($db_logs as $log) {
         }
     } else { # keeps untranlated
         $details = $log['detail'];
-    }
+        }*/
 
     $a_level[] = $log['imaging_log_level'];
     $a_date[] = $date;
@@ -172,10 +118,11 @@ $l->setParamInfo($list_params);
 $l->addExtraInfo($a_target, _T("Target", "imaging"));
 $l->addExtraInfo($a_desc, _T("Message", "imaging"));
 //$l->addExtraInfo($a_states, _T("State", "imaging"));
-$l->addActionItem(
+/*$l->addActionItem(
     new ActionItem(_T("Details"), "imgtabs", "display", "item", "base", "computers", $type."tabimlogs", "details")
-);
+    );*/
 $l->disableFirstColumnActionLink();
+$l->setTableHeaderPadding(1);
 $l->start = 0;
 $l->end = $maxperpage;
 $l->display();

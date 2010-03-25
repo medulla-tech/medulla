@@ -31,6 +31,7 @@ require("../../../includes/session.inc.php");
 require("../../../includes/PageGenerator.php");
 require("../includes/includes.php");
 require("../includes/xmlrpc.inc.php");
+require("../includes/logs.inc.php");
 
 $location = getCurrentLocation();
 
@@ -98,11 +99,11 @@ foreach ($db_logs as $log) {
     $a_level[] = $log['imaging_log_level'];
     $a_date[] = $date;
     $a_target[] = $log['target']['name'];
-    $a_desc[]= $status.') '.$log['detail'];
+    $a_desc[] = $status . ' - ' . $log['detail'];
     $a_states[]= $status;
 }
 
-$l = new OptimizedListInfos($a_date, _T("Date", "imaging"));
+$l = new OptimizedListInfos($a_date, _T("Timestamp", "imaging"));
 // $l->addExtraInfo($a_level, _T("Log level", "imaging"));
 $l->addExtraInfo($a_target, _T("Target", "imaging"));
 $l->addExtraInfo($a_desc, _T("Message", "imaging"));
@@ -113,10 +114,11 @@ $l->addActionItem(
     new ActionItem(_T("Details"), "imgtabs", "display", "item", "base", "computers", "tabimlogs", "details")
 );
 */
-$l->disableFirstColumnActionLink();
 $l->setParamInfo($list_params);
 $l->setItemCount($count);
 $l->setNavBar(new AjaxNavBar($count, $filter, "updateSearchParamLogs"));
+$l->disableFirstColumnActionLink();
+$l->setTableHeaderPadding(1);
 $l->start = 0;
 $l->end = $maxperpage;
 $l->display();
