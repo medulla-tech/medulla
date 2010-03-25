@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-25 15:21+0100\n"
-"PO-Revision-Date: 2010-03-25 15:26+0100\n"
+"POT-Creation-Date: 2010-03-25 16:02+0100\n"
+"PO-Revision-Date: 2010-03-25 16:03+0100\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: Pulse 2 developers <pulse2-devel@mandrivalinux.org>\n"
 "MIME-Version: 1.0\n"
@@ -169,7 +169,12 @@ msgstr "Serveurs d'imaging disponibles"
 msgid "Available boot menu services"
 msgstr "Services de démarrage disponibles"
 
+#: web/modules/imaging/imaging/images.php:70
+msgid "Available images"
+msgstr "Images disponibles"
+
 #: web/modules/imaging/manage/ajaxMaster.php:39
+#: web/modules/imaging/imaging/images.php:72
 msgid "Available masters"
 msgstr "Masters disponibles"
 
@@ -867,7 +872,7 @@ msgstr "Post-installation commencée"
 #: web/modules/imaging/imaging/configure.php:171
 #: web/modules/imaging/imaging/showtarget.php:50
 msgid "Profile"
-msgstr "Profile"
+msgstr "Profil"
 
 #: web/modules/imaging/manage/ajaxStatus.php:77
 msgid "Recent activity in entity"
@@ -879,7 +884,7 @@ msgstr "Enregistrer un ordinateur dans le module d'imaging"
 
 #: web/modules/imaging/infoPackage.inc.php:139
 msgid "Register a profile in the imaging module"
-msgstr "Enregistrer un profile dans le module d'imaging"
+msgstr "Enregistrer un profil dans le module d'imaging"
 
 #: web/modules/imaging/imaging/configure.php:116
 #, php-format
@@ -1097,7 +1102,7 @@ msgstr "L'ordinateur n'a pas d'adresse MAC, ou a plus d'une adresse MAC. Il ne p
 #: web/modules/imaging/imaging/configure.php:158
 #, php-format
 msgid "The default values displayed here come from this %s's profile menu."
-msgstr "Les valeurs par défaut affichées proviennent du menu du profile %s."
+msgstr "Les valeurs par défaut affichées proviennent du menu du profil %s."
 
 #: web/modules/imaging/imaging/configure.php:151
 msgid "The default values for the imaging parameters will be inherited from the imaging server that manages the entities of the computers that belongs to this profile."
