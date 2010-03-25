@@ -515,7 +515,7 @@ class ImagingImageItem(ImagingItem):
     TFTPRESTORE = NFSRESTORE
     MTFTPRESTORE = NFSRESTORE
 
-    POSTINST = 'initinst'
+    POSTINST = 'postinst'
 
     def __init__(self, entry):
         """
@@ -552,20 +552,20 @@ class ImagingImageItem(ImagingItem):
         """
         Write post-installation script if any.
         """
-        initinst = os.path.join(config.imaging_api['base_folder'], config.imaging_api['masters_folder'], self.uuid, self.POSTINST)
+        postinst = os.path.join(config.imaging_api['base_folder'], config.imaging_api['masters_folder'], self.uuid, self.POSTINST)
         if self.post_install_script:
             try:
-                f = file(initinst, 'w+')
+                f = file(postinst, 'w+')
                 f.write(self.post_install_script)
                 f.close()
             except OSError, e:
-                self.logger.error("Can't update post-installation script %s: %s" % (initinst, e))
+                self.logger.error("Can't update post-installation script %s: %s" % (postinst, e))
                 raise
         else:
-            if os.path.exists(initinst):
-                self.logger.debug('Deleting previous post-installation script: %s' % initinst)
+            if os.path.exists(postinst):
+                self.logger.debug('Deleting previous post-installation script: %s' % postinst)
                 try:
-                    os.unlink(initinst)
+                    os.unlink(postinst)
                 except OSError, e:
-                    self.logger.error("Can't delete post-installation script %s: %s" % (initinst, e))
+                    self.logger.error("Can't delete post-installation script %s: %s" % (postinst, e))
                     raise
