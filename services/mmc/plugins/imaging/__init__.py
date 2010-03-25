@@ -1181,7 +1181,7 @@ class RpcProxy(RpcProxyI):
 
     def checkComputerForImaging(self, computerUUID):
         """
-        @return: 0 if the computer can be registered
+        @return: 0 if the computer can be registered into the imaging module
         @rtype: int
         """
         ctx = self.currentContext
@@ -1196,6 +1196,35 @@ class RpcProxy(RpcProxyI):
         else:
             # No MAC address
             ret = 1
+        return ret
+
+    def checkProfileForImaging(self, profileUUID):
+        """
+        @return: 0 if the profile can be registered into the imaging module
+        @rtype: int
+        """
+        ret = 0
+        ctx = self.currentContext
+        uuids = map(lambda c: c.uuid,
+                    ComputerProfileManager().getProfileContent(profileUUID))
+        macaddresses = ComputerManager().getMachineMac(ctx, {'uuids':uuids})
+        if not len(uuids):
+            # No computer in profile
+            ret = 1
+        else:
+            if '' in macaddresses:
+                # Some computers don't have a MAC address
+                ret = 2
+            elif len(uuids) != len(macaddresses):
+                # Some computers have more than one MAC address
+                ret = 3
+            else:
+                ret = 0
+                # Check all MAC addresses
+                for macaddress in macaddresses:
+                    if not pulse2.utils.isLinuxMacAddress(macaddress):
+                        ret = 4
+                        break
         return ret
 
     def isProfileRegistered(self, profile_uuid):
