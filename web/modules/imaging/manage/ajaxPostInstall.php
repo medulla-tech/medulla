@@ -35,52 +35,54 @@ require("../../../includes/session.inc.php");
 require("../../../includes/PageGenerator.php");
 require("../includes/includes.php");
 require('../includes/xmlrpc.inc.php');
+require("../../base/includes/edit.inc.php");
 
 $location = getCurrentLocation();
 
 if (xmlrpc_doesLocationHasImagingServer($location)) {
+    $ret = xmlrpc_getLocationSynchroState($location);
 
-    $t = new TitleElement(_T("Available post-installation scripts", "imaging"));
-    $t->display();
+    if ($ret['id'] == $SYNCHROSTATE_RUNNING) {
+        $a_href_open = "<a href=''>";
+        print sprintf(_T("The synchro is running, please wait or reload the page %shere%s", "imaging"), $a_href_open, '</a>');
+    } elseif ($ret['id'] == $SYNCHROSTATE_INIT_ERROR) {
+        print _T("The registering in the imaging server has failed.", "imaging");
+    } else {
+        if ($ret['id'] == $SYNCHROSTATE_TODO) {
+            # DISPLAY the sync link
 
-    $ajax = new AjaxFilter("modules/imaging/manage/ajaxPostInstallLevel2.php", "Level2", $params, "formLevel2");
-    //$ajax->setRefresh(10000);
-    $ajax->display();
-    echo '<br/><br/><br/>';
-    $ajax->displayDivToUpdate();
-   /*
-    list($count, $scripts) = xmlrpc_getAllPostInstallScripts($location);
+            print "<table><tr><td><font color='red'><b>";
+            print _T('This location has been modified, when you are done, please press on "Synchronize" so that modifications are updated on the Imaging server.', 'imaging');
+            print "</b></font></td><td>";
 
-    $a_label = array();
-    $a_desc = array();
-    $i = 0;
-    foreach($scripts as $script) {
-        $a_label[] = sprintf("%s%s", ($script['is_local']?'':'X) '), $script["default_name"]);
-        $a_desc[] = $script["default_desc"];
-        $list_params[$i]["itemid"] = $script['imaging_uuid'];
-        $list_params[$i]["itemlabel"] = $script["default_name"];
-        $i++;
+            $f = new ValidatingForm();
+            $f->add(new HiddenTpl("location_uuid"),                        array("value" => $location,  "hide" => True));
+
+            $f->addButton("bsync", _T("Synchronize", "imaging"));
+            $f->display();
+            print "</td></tr></table>";
+        } elseif (isExpertMode()) {
+            print "<table><tr><td>";
+            print _T('Click on "Force synchronize" if you want to force the synchronization', 'imaging');
+            print "</td><td>";
+
+            $f = new ValidatingForm();
+            $f->add(new HiddenTpl("location_uuid"),                        array("value" => $location,  "hide" => True));
+
+            $f->addButton("bsync", _T("Force synchronize", "imaging"));
+            $f->display();
+            print "</td></tr></table>";
+        }
+
+        $t = new TitleElement(_T("Available post-installation scripts", "imaging"));
+        $t->display();
+
+        $ajax = new AjaxFilter("modules/imaging/manage/ajaxPostInstallLevel2.php", "Level2", $params, "formLevel2");
+        //$ajax->setRefresh(10000);
+        $ajax->display();
+        echo '<br/><br/><br/>';
+        $ajax->displayDivToUpdate();
     }
-
-    // show scripts list
-    $l = new ListInfos($a_label, _T("Name"));
-    $l->addExtraInfo($a_desc, _T("Description", "imaging"));
-    $l->setParamInfo($list_params);
-    $l->addActionItem(
-        new ActionItem(_T("Edit script", "imaging"),
-        "postinstall_edit", "edit", "image", "imaging", "manage")
-    );
-    $l->addActionItem(
-        new ActionItem(_T("Duplicate", "imaging"),
-        "postinstall_duplicate", "duplicatescript", "image", "imaging", "manage")
-    );
-    $l->addActionItem(
-        new ActionPopupItem(_T("Delete", "imaging"),
-        "postinstall_delete", "delete", "image", "imaging", "manage")
-    );
-    $l->disableFirstColumnActionLink();
-    $l->display();*/
-
 } else {
     $ajax = new AjaxFilter(urlStrRedirect("imaging/manage/ajaxAvailableImagingServer"), "container", array('from'=>$_GET['from']));
     $ajax->display();
