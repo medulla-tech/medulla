@@ -135,6 +135,10 @@ function xmlrpc_getLocationImages($location_id, $start = 0, $end = -1, $filter =
     return xmlCall("imaging.getLocationImages", array($location_id, $start, $end, $filter));
 }
 
+function xmlrpc_getLocationMastersByUUID($location_id, $masters_uuid) {
+    return xmlCall("imaging.getLocationMastersByUUID", array($location_id, $masters_uuid));
+}
+
 function xmlrpc_areImagesUsed($images) {
     return xmlCall("imaging.areImagesUsed", array($images));
 }
@@ -171,6 +175,9 @@ function xmlrpc_editImage($item_uuid, $target_uuid, $params, $type_target) {
     return xmlCall("imaging.editImage", array($item_uuid, $target_uuid, $params, $type_target));
 }
 
+function xmlrpc_editImageLocation($item_uuid, $loc_uuid, $params) {
+    return xmlCall("imaging.editImageLocation", array($item_uuid, $loc_uuid, $params));
+}
 
 /* BootServices */
 function xmlrpc_getPossibleBootServices($id, $start = 0, $end = -1, $filter = '') {

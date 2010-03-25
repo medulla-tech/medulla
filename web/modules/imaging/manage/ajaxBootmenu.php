@@ -118,8 +118,8 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
             }
 
             if ($is_image) { # TODO $entry has now a cache for desc.
-                $a_desc[] = $entry['image']['default_desc'];
-                $default_name = $entry['image']['default_name'];
+                $a_desc[] = $entry['image']['desc'];
+                $default_name = $entry['image']['name'];
                 $kind = 'IM';
             } else {
                 $a_desc[] = $entry['boot_service']['default_desc'];

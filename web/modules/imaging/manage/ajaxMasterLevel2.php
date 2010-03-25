@@ -59,7 +59,7 @@ foreach ($masters as $master) {
     $l_params = array();
     $l_params = $params;
     $l_params["itemid"] = $master['imaging_uuid'];
-    $l_params["itemlabel"] = urlencode($master['desc']);
+    $l_params["itemlabel"] = urlencode($master['name']);
 
     if (!$master['menu_item']) {
         $addActions[] = $addAction;
