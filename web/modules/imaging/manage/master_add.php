@@ -35,7 +35,7 @@ if (isset($_POST["bconfirm"])) {
     $item_uuid = $_POST['itemid'];
     $label = urldecode($_POST['itemlabel']);
 
-    $params['name'] = $_POST['default_mi_label'];
+//    $params['name'] = $_POST['default_mi_label'];
     $params['hidden'] = ($_POST['do_display'] != 'on');
     $params['hidden_WOL'] = ($_POST['do_display_WOL'] != 'on');
     $params['default'] = ($_POST['do_default'] == 'on');
@@ -43,7 +43,7 @@ if (isset($_POST["bconfirm"])) {
 
     $ret = xmlrpc_addImageToLocation($item_uuid, $location, $params);
 
-    // goto images list 
+    // goto images list
     if ($ret[0] and !isXMLRPCError()) {
         $str = sprintf(_T("Image <strong>%s</strong> added to default boot menu", "imaging"), $label);
         new NotifyWidgetSuccess($str);
@@ -58,9 +58,9 @@ if (isset($_POST["bconfirm"])) {
 
 if(isset($_GET['mod']))
     $mod = $_GET['mod'];
-else 
+else
     $mod = "none";
-    
+
 switch($mod) {
     case 'add':
         image_add($type, $target_uuid);
@@ -88,9 +88,9 @@ function image_add($type, $target_uuid) {
     $f->add(new HiddenTpl("gid"),                           array("value" => $_GET['gid'],                   "hide" => True));
     $f->add(new HiddenTpl("uuid"),                          array("value" => $_GET['uuid'],                  "hide" => True));
 
-    $input = new TrFormElement(_T('Default menu item label', 'imaging'),        new InputTpl("default_mi_label"));
+    /*$input = new TrFormElement(_T('Default menu item label', 'imaging'),        new InputTpl("default_mi_label"));
     $f->add($input,                                         array("value" => ''));
-
+     */
 
     $check = new TrFormElement(_T('Selected by default', 'imaging'), new CheckboxTpl("do_default"));
     $f->add($check,                                         array("value" => web_def_image_default() ? "checked" : ""));
