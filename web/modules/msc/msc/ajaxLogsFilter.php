@@ -54,6 +54,7 @@ if ($uuid) {
         list($count, $cmds) = displayLogs(array('uuid'=>$uuid, 'min'=>$start, 'max'=>$start + $maxperpage, 'filt'=>$filter, 'finished'=>$history));
         $areCommands = True;
     }
+    $action = "msctabs";
 } elseif ($gid) { # FIXME: same thing to do on groups
     if ($_GET['cmd_id']) {
         list($count, $cmds) = displayLogs(array('gid'=>$gid, 'b_id'=>$_GET['bundle_id'], 'cmd_id'=>$_GET['cmd_id'], 'min'=>$start, 'max'=>$start + $maxperpage, 'filt'=>$filter, 'finished'=>$history));
@@ -61,6 +62,7 @@ if ($uuid) {
         list($count, $cmds) = displayLogs(array('gid'=>$gid, 'b_id'=>$_GET['bundle_id'], 'min'=>$start, 'max'=>$start + $maxperpage, 'filt'=>$filter, 'finished'=>$history));
         $areCommands = True;
     }
+    $action = "groupmsctabs";
 }
 
 
@@ -98,7 +100,7 @@ if ($areCommands) { // display several commands
         $coh_id = $cmd[1];
         $coh = $cmd[3];
         $cmd = $cmd[0];
-        $p = array('tab'=>$tab, 'hostname'=>$hostname, 'uuid'=>$uuid, 'from'=>'base|computers|'.$_GET['action'].'|'.$tab, 'gid'=>$gid);
+        $p = array('tab'=>$tab, 'hostname'=>$hostname, 'uuid'=>$uuid, 'from'=>'base|computers|'.$action.'|'.$tab, 'gid'=>$gid);
 
         ### gathering command components ###
         if (strlen($cmd['bundle_id']) and !strlen($_GET['cmd_id'])) { // BUNDLE case
@@ -159,7 +161,7 @@ if ($areCommands) { // display several commands
             } else {
                 $a_current[] = $coh['current_state'];
             }
-            $p = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id'], 'tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'from'=>'base|computers|'.$_GET['action'].'|'.$tab, 'gid'=>$gid);
+            $p = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id'], 'tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'from'=>'base|computers|'.$action.'|'.$tab, 'gid'=>$gid);
             if (strlen($cmd['bundle_id'])) {
                 $p['bundle_id'] = $cmd['bundle_id'];
             }
@@ -268,7 +270,7 @@ if ($areCommands) { // display several commands
             } else {
                 $a_current[] = $coh['current_state'];
             }
-            $p = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id'], 'tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$coh['host'], 'from'=>'base|computers|'.$_GET['action'].'|'.$tab, 'gid'=>$gid);
+            $p = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id'], 'tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$coh['host'], 'from'=>'base|computers|'.$action.'|'.$tab, 'gid'=>$gid);
             if (strlen($cmd['bundle_id'])) {
                 $p['bundle_id'] = $cmd['bundle_id'];
             }
