@@ -129,7 +129,7 @@ if (!$actions) {
 }
 
 // show images list
-$l = new OptimizedListInfos($a_label, _T("Label"));
+$l = new OptimizedListInfos($a_label, _T("Label", "imaging"));
 $l->setParamInfo($list_params);
 $l->addExtraInfo($a_desc, _T("Description", "imaging"));
 $l->addExtraInfo($a_date, _T("Created", "imaging"));
