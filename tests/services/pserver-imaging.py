@@ -149,6 +149,20 @@ class Imaging(unittest.TestCase):
         result = SERVER.injectInventory('00:11:22:33:44:ff', inventory)
         self.assertTrue(result)
 
+    def test_05logClientAction(self):
+        """
+        Test for logClientAction XML-RPC call
+        """
+        # Should return False, because this MAC address is unknown
+        result = SERVER.logClientAction('00:0C:29:87:F7:02',
+                                        6, 'boot', 'booted')
+        self.assertFalse(result)
+
+        # Should return True
+        result = SERVER.logClientAction('00:11:22:33:44:ff',
+                                        6, 'boot', 'booted')
+        self.assertTrue(result)
+
     def test_06imageDone(self):
         """
         Register a Pulse 2 image to the MMC agent
