@@ -89,9 +89,18 @@ class Imaging(unittest.TestCase):
         """
         Check package server registration
         """
+        # We shouldn't have a default boot menu, because the package server is
+        # not registered
+        default = '/var/lib/pulse2/imaging/bootmenus/default'
+        self.assertFalse(os.path.exists(default))
         ret = os.system('pulse2-package-server-register-imaging  -n \"Pulse 2 imaging\" -m https://mmc:s3cr3t@localhost:7080')
         self.assertEqual(0, ret)
         self.assertEqual([True, True], MMCAGENT.imaging.linkImagingServerToLocation('UUID1', 'UUID1', 'root'))
+        # Restart package server and wait a bit
+        os.system('/etc/init.d/pulse2-package-server restart')
+        sleep(5)
+        # We should have a default boot menu
+        self.assertTrue(os.path.exists(default))
 
     def test_02registerComputer(self):
         """
@@ -117,6 +126,7 @@ class Imaging(unittest.TestCase):
         Check mass computers registration
         """
         menu = copy.deepcopy(MENU)
+        # Mark some partition as excluded for hostname1
         menu['target']['exclude_parameters'] = '0:0'
         arg = [
             ('hostname1', '00:11:22:33:44:dd',
@@ -139,6 +149,33 @@ class Imaging(unittest.TestCase):
         result = SERVER.injectInventory('00:11:22:33:44:ff', inventory)
         self.assertTrue(result)
 
+    def test_06imageDone(self):
+        """
+        Register a Pulse 2 image to the MMC agent
+        """
+        # Put a sample image
+        os.system('tar xzf ../data/pulse2-image-sample.tar.gz -C /var/lib/pulse2/imaging/masters/')
+        result = SERVER.imageDone('00:11:22:33:44:ff', 'fe71d487-2a90-11df-99a9-5254001c1e49')
+        self.assertTrue(result)
+
+    def test_07generateISO(self):
+        """
+        Check ISO generation
+        """
+        title = "Image ISO"
+        iuuid = 'fe71d487-2a90-11df-99a9-5254001c1e49'
+        result = SERVER.imagingServerISOCreate(iuuid, 650 * 1024 * 1024, title)
+        self.assertTrue(result)
+        # Check that we have an ISO file
+        ret = False
+        for _ in range(10):
+            if os.path.exists(os.path.join('/var/lib/pulse2/imaging/isos',
+                                           title + '-1.iso')):
+                ret = True
+                break
+            sleep(5)
+        self.assertTrue(ret)
+
     def atest_computersMenuSet(self):
         #result = SERVER.computersMenuSet([('UUID17', {})])
         #self.assertEqual(['UUID1'], result)
@@ -149,7 +186,7 @@ class Imaging(unittest.TestCase):
         result = SERVER.logClientAction('mac', 'level', 'phase', 'message')
         self.assertTrue('faultCode' in result and
                         'TypeError' in result['faultCode'])
-        result = SERVER.logClientAction('00:11:22:33:44:55', 'level', 'phase', 'message')
+        result = SERVER.logClientAction('00:11:22:33:44:ff', 'level', 'phase', 'message')
         self.assertTrue(result)
 
     def atest_computerUpdate(self):
@@ -180,17 +217,6 @@ class Imaging(unittest.TestCase):
         result = SERVER.imagingSERVERImageDelete('35f23420-4050-4734-b172-d458915ef17d')
         self.assertFalse(result)
 
-    def atest_imageRegister(self):
-        result = SERVER.imageRegister('30:11:22:33:44:ff', '35f23420-4050-4734-b172-d458915ef17d', False, 'Image 1', 'Mon Mar  1 15:46:43 CET 2010', '/path/?', 12345, tuple(gmtime()), 'cdelfosse')
-        self.assertTrue(result)
-
-    def atest_imagingSERVERDefaultMenuSet(self):
-        result = SERVER.imagingSERVERDefaultMenuSet(menu)
-        self.assertEqual(['UUID1'], result)
-
-    def atest_iso(self):
-        iuuid = 'fe71d487-2a90-11df-99a9-5254001c1e49'
-        result = SERVER.imagingServerISOCreate(iuuid, 650 * 1024 * 1024, "Image ISO")
 
 
 if __name__ == '__main__':
