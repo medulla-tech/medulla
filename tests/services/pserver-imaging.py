@@ -194,7 +194,7 @@ class Imaging(unittest.TestCase):
         """
         check for imagingServerStatus
         """
-        result = SERVER.imagingSERVERStatus()
+        result = SERVER.imagingServerStatus()
         self.assertEqual(dict, type(result))
         self.assertTrue('space_available' in result)
         self.assertTrue('mem_info' in result)
