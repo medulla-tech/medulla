@@ -30,7 +30,7 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='container']/form/table/tbody/tr[2]/td[5]/ul/li[2]/a</td>
+	<td>//div[@id='container']/form/table/tbody/tr[1]/td[5]/ul/li[2]/a</td>
 	<td></td>
 </tr>
 <tr>
@@ -60,7 +60,7 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='container']/form/table/tbody/tr[2]/td[5]/ul/li[2]/a</td>
+	<td>//div[@id='container']/form/table/tbody/tr[1]/td[5]/ul/li[2]/a</td>
 	<td></td>
 </tr>
 <tr>
