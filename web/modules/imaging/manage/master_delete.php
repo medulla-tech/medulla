@@ -24,20 +24,34 @@
  */
 
 include('modules/imaging/includes/includes.php');
-//$params = getParams();
+require_once('modules/imaging/includes/xmlrpc.inc.php');
+
 $id = $_GET['itemid'];
+$location = getCurrentLocation();
 $label = urldecode($_GET['itemlabel']);
 
 if ($_POST) {
-    // delete image
-    // ...
-    header("Location: " . urlStrRedirect("imaging/manage/master"));
+    $id = $_POST['itemid'];
+    $ret = xmlrpc_imagingServerImageDelete($id);
+    if ($ret[0] and !isXMLRPCError()) {
+        $str = sprintf(_T("Image <strong>%s</strong> deleted from the imaging server.", "imaging"), $label);
+        new NotifyWidgetSuccess($str);
+        header("Location: " . urlStrRedirect("imaging/manage/master"));
+    } elseif ($ret[0]) {
+        header("Location: " . urlStrRedirect("imaging/manage/master"));
+    } else {
+        new NotifyWidgetFailure($ret[1]);
+        header("Location: " . urlStrRedirect("imaging/manage/master"));
+    }
 }
+
+// $masters = xmlrpc_getLocationMastersByUUID($location, array($id));
 
 ?>
 <h2><?= _T("Delete master", "imaging") ?></h2>
 <form action="<?=urlStr("imaging/manage/master_delete")?>" method="post">
     <p><? printf(_T("Are you sure you want to delete <b>%s</b> master ?", "imaging"), $label); ?></p>
+    <input name='itemid' type='hidden' value="<?= $id; ?>" />
     <input name='valid' type="submit" class="btnPrimary" value="<?= _T("Remove", "imaging"); ?>" />
     <input name="bback" type="submit" class="btnSecondary" value="<?= _T("Cancel", "imaging"); ?>" onClick="new Effect.Fade('popup'); return false;"/>
 </form>

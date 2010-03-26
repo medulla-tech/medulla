@@ -28,12 +28,6 @@ require("graph/navbar.inc.php");
 require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
 
-#$masters = array(
-#    array('MDV 2008.0', 'Mandriva 2008 Master', '2009-02-25 17:38', '1GB', true),
-#    array('MDV 2009.0', 'Mandriva 2009 Master', '2009-02-25 17:38', '1GB', false),
-#    array('MDV 2010.0', 'Mandriva 2010 Master', '2009-02-25 17:38', '1GB', false),
-#);
-
 $id = $_GET['itemid'];
 $location = getCurrentLocation();
 $masters = xmlrpc_getLocationMastersByUUID($location, array($id));
