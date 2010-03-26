@@ -190,6 +190,18 @@ class Imaging(unittest.TestCase):
             sleep(5)
         self.assertTrue(ret)
 
+    def test_20imagingServerStatus(self):
+        """
+        check for imagingServerStatus
+        """
+        result = SERVER.imagingSERVERStatus()
+        self.assertEqual(dict, type(result))
+        self.assertTrue('space_available' in result)
+        self.assertTrue('mem_info' in result)
+        self.assertTrue('disk_info' in result)
+        self.assertTrue('uptime' in result)
+        self.assertTrue('stats' in result)
+
     def atest_computersMenuSet(self):
         #result = SERVER.computersMenuSet([('UUID17', {})])
         #self.assertEqual(['UUID1'], result)
@@ -207,13 +219,6 @@ class Imaging(unittest.TestCase):
         result = SERVER.computerUpdate('BADMAC')
         self.assertTrue('faultCode' in result and
                         'TypeError' in result['faultCode'])
-    def atest_status(self):
-        result = SERVER.imagingSERVERStatus()
-        self.assertEqual(dict, type(result))
-        self.assertTrue('space_available' in result)
-        self.assertTrue('mem_info' in result)
-        self.assertTrue('uptime' in result)
-        self.assertTrue('stats' in result)
 
     def atest_injectInventory(self):
         pass
