@@ -22,8 +22,8 @@
 
 """
 Pulse 2 Package Server Imaging module registration.
-Need to be known by the MMC
 """
+
 import os
 import sys
 import getopt
@@ -36,7 +36,12 @@ try:
 except ImportError:
     import mmc.support.uuid as uuid
 
+# Error codes
+ERROR_NO_UUID = 1
 ERROR_BAD_ARGUMENT = 2
+ERROR_BAD_CONFIG_PATH = 3
+ERROR_BAD_CONFIG = 4
+ERROR_REGISTRATION_FAILURE = 5
 
 inifile = "/etc/mmc/pulse2/package-server/package-server.ini"
 
@@ -66,74 +71,89 @@ def generate_uuid():
     print uuid.uuid1()
     sys.exit(0)
 
-my_name = None
-mmc_url = None
+if __name__ == '__main__':
+    my_name = None
+    mmc_url = None
 
-try:
-    opts, suivarg = getopt.getopt(sys.argv[1:], "f:n:m:h:u", ["help"])
-except getopt.GetoptError:
-    display_help(ERROR_BAD_ARGUMENT)
-
-for option, argument in opts:
-    if option == "-f": # alternate config file
-        inifile = argument
-    elif option == "-n": # imaging server name NEEDED!
-        my_name = argument
-    elif option == "-m": # MMC url
-        mmc_url = argument
-    elif option == "-u": # MMC url
-        generate_uuid()
-    elif option in ("-h", "--help"):
-        display_help(0)
-    else:
+    try:
+        opts, suivarg = getopt.getopt(sys.argv[1:], "f:n:m:h:u", ["help"])
+    except getopt.GetoptError:
         display_help(ERROR_BAD_ARGUMENT)
 
-failure = False
-if my_name == None:
-    print "ERROR: -n opt is mandatory, please put a name for this imaging server"
-    failure = True
-if mmc_url == None:
-    print "ERROR: -m opt is mandatory, please put the MMC connection url"
-    failure = True
+    for option, argument in opts:
+        if option == "-f": # alternate config file
+            inifile = argument
+        elif option == "-n": # imaging server name NEEDED!
+            my_name = argument
+        elif option == "-m": # MMC url
+            mmc_url = argument
+        elif option == "-u": # MMC url
+            generate_uuid()
+        elif option in ("-h", "--help"):
+            display_help(0)
+        else:
+            display_help(ERROR_BAD_ARGUMENT)
 
-if failure:
-    sys.exit(4)
+    failure = False
+    if my_name == None:
+        print "ERROR: -n opt is mandatory, please put a name for this imaging server"
+        failure = True
+    if mmc_url == None:
+        print "ERROR: -m opt is mandatory, please put the MMC connection url"
+        failure = True
 
-if not os.path.exists(inifile):
-    if os.path.exists("/etc/mmc/pulse2/pserver/package-server.ini"):
-        print "Please move your configuration file from /etc/mmc/pulse2/pserver/package-server.ini to %s, or use the -f option."%(inifile)
-        sys.exit(3)
-    print "File '%s' does not exist." % inifile
-    sys.exit(3)
+    if failure:
+        display_help(ERROR_BAD_ARGUMENT)
 
-config = P2PServerCP()
+    if not os.path.exists(inifile):
+        if os.path.exists("/etc/mmc/pulse2/pserver/package-server.ini"):
+            print "Please move your configuration file from /etc/mmc/pulse2/pserver/package-server.ini to %s, or use the -f option."%(inifile)
+            sys.exit(ERROR_BAD_CONFIG_PATH)
+        print "File '%s' does not exist." % inifile
+        sys.exit(ERROR_BAD_CONFIG_PATH)
 
-try:
-    # TODO need to put the logger handler for root
-    config.setup(inifile)
-except Exception, e:
-    print "ERROR : %s" % e
-    display_help(5)
+    config = P2PServerCP()
 
-config.imaging_api['mount_point'] = config.imaging_api['mount_point'].replace('/', '')
-my_url = "%s://%s:%s/%s" % (config.proto, config.bind, str(config.port), config.imaging_api['mount_point'])
-my_uuid = config.imaging_api['uuid']
+    try:
+        # TODO need to put the logger handler for root
+        config.setup(inifile)
+    except Exception, e:
+        print "ERROR : %s" % e
+        display_help(ERROR_BAD_CONFIG)
 
-if not my_uuid:
-    sys.stderr.write("Error: Please set the uuid option of the imaging_api section of %s\n" % inifile)
-    sys.exit(1)
+    config.imaging_api['mount_point'] = config.imaging_api['mount_point'].replace('/', '')
+    my_url = "%s://%s:%s/%s" % (config.proto, config.bind, str(config.port), config.imaging_api['mount_point'])
+    my_uuid = config.imaging_api['uuid']
 
-print "%s %s" % (my_url, my_uuid)
+    if not my_uuid:
+        sys.stderr.write("Error: Please set the uuid option of the imaging_api section of %s\n" % inifile)
+        sys.exit(ERROR_NO_UUID)
 
-print "connect to %s"%(mmc_url)
-client = xmlrpclib.ServerProxy(mmc_url)
+    print "%s %s" % (my_url, my_uuid)
 
-ret = client.imaging.imagingServerRegister(my_name, my_url, my_uuid)
-if ret[0]:
-    print ret[1]
-elif ret[1]:
-    print ret[1]
-else:
-    print "registering failed."
+    print "connect to %s"%(mmc_url)
+    client = xmlrpclib.ServerProxy(mmc_url)
+
+    try:
+        ret = client.imaging.imagingServerRegister(my_name, my_url, my_uuid)
+    except Exception, e:
+        print "registering failed:", e
+        sys.exit(ERROR_REGISTRATION_FAILURE)
+
+    try:
+        # We should receive a list with two items
+        result, msg = ret
+    except ValueError:
+        print "registering failed, bad XML-RPC response from MMC agent."
+        sys.exit(ERROR_REGISTRATION_FAILURE)
+
+    if result:
+        print msg
+    else:
+        print msg
+        print "registering failed."
+        sys.exit(ERROR_REGISTRATION_FAILURE)
+
+    sys.exit(0)
 
 
