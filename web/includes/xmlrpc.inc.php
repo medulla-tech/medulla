@@ -315,7 +315,7 @@ function xmlCall($method, $params = null) {
         }
         /* Try to find an error handler */
         $result = findErrorHandling($xmlResponse["faultCode"]);
-        if ($result == -1) {
+        if (!is_object($result) and $result == -1) {
             /* We didn't find one */
             $result = new ErrorHandlingItem('');
             $result->setMsg(_("unknown error"));
