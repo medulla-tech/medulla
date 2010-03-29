@@ -31,8 +31,8 @@ if (isset($_POST["bdeluser"])) {
     del_user($user, $_POST["delfiles"]);
     if (!isXMLRPCError()) {
         new NotifyWidgetSuccess(sprintf(_("User %s has been successfully deleted"), $user));
-        header("Location: " . urlStrRedirect("base/users/index" ));
     }
+    header("Location: " . urlStrRedirect("base/users/index" ));
 } else {
     $f = new PopupForm(_("Delete user"));
     $f->addText(sprintf(_("You will delete user <b>%s</b>."),$user));
