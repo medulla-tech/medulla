@@ -35,19 +35,31 @@ $errItem->setAdvice(_("Please be sure you have:
                         "));
 $errObj->add($errItem);
 
-$errItem = new ErrorHandlingItem("ldap.CONSTRAINT_VIOLATION: {'info': 'Password is too young to change', 'desc': 'Constraint violation'}");
+$errItem = new ErrorHandlingItem("No such file or directory: '/home/");
+$errItem->setMsg(_("The user directory does not exist and cannot be removed."));
+$errItem->setAdvice(_("Please do not remove user's files when deleting the user."));
+$errItem->setTraceBackDisplay(False);
+$errObj->add($errItem);
+
+$errItem = new ErrorHandlingItem(": {'info': 'Password fails quality checking policy', 'desc': 'Constraint violation'}");
+$errItem->setMsg(_("Password fails quality checking policy."));
+$errItem->setAdvice(_("The password policy of your account doesn't allow you to modify your password, because your password doesn't met the passwords policies."));
+$errItem->setTraceBackDisplay(False);
+$errObj->add($errItem);
+
+$errItem = new ErrorHandlingItem(": {'info': 'Password is too young to change', 'desc': 'Constraint violation'}");
 $errItem->setMsg(_("Your password is too young to change."));
 $errItem->setAdvice(_("The password policy of your account doesn't allow you to modify your password, because your password is too young to change."));
 $errItem->setTraceBackDisplay(False);
 $errObj->add($errItem);
 
-$errItem = new ErrorHandlingItem("ldap.CONSTRAINT_VIOLATION: {'info': 'Password is in history of old passwords', 'desc': 'Constraint violation'}");
+$errItem = new ErrorHandlingItem(": {'info': 'Password is in history of old passwords', 'desc': 'Constraint violation'}");
 $errItem->setMsg(_("Password is in history of old passwords"));
 $errItem->setAdvice(_("The password policy of your account doesn't allow you to modify your password, because you already had this password previously."));
 $errItem->setTraceBackDisplay(False);
 $errObj->add($errItem);
 
-$errItem = new ErrorHandlingItem("ldap.CONSTRAINT_VIOLATION: {'info': 'Password is not being changed from existing value', 'desc': 'Constraint violation'}");
+$errItem = new ErrorHandlingItem(": {'info': 'Password is not being changed from existing value', 'desc': 'Constraint violation'}");
 $errItem->setMsg(_("Password is not being changed from existing value"));
 $errItem->setAdvice(_("The password policy of your account doesn't allow you to modify your password, because you already had this password previously."));
 $errItem->setTraceBackDisplay(False);
