@@ -100,7 +100,7 @@ function add_user($login, $pass, $firstname, $name, $homedir, $createhomedir, $p
 
 function del_user($login, $files)
 {
-   callPluginFunction("delUser",$login);
+   callPluginFunction("delUser", array($login));
    if ($files=="on") {$fichier=1;} else {$fichier=0;}
    $param=array ($login,$fichier);
    xmlCall("base.delUserFromAllGroups", $login);
