@@ -1175,10 +1175,7 @@ class LdapUserGroupControl:
         userdn = self.searchUserDN(uid)
         r = AF().log(PLUGIN_NAME, AA.BASE_MOD_USER_PASSWORD, [(userdn, AT.USER)])
         if self.config.passwordscheme == "passmod":
-            try:
-                self.l.passwd_s(userdn, None, str(passwd))
-            except ldap.CONSTRAINT_VIOLATION:
-                raise Exception("Password fails quality checking policy")
+            self.l.passwd_s(userdn, None, str(passwd))
         else:
             userpassword = self._generatePassword(passwd)
             self.l.modify_s(userdn, [(ldap.MOD_REPLACE, "userPassword", userpassword)])
