@@ -68,7 +68,7 @@ class ImagingApi(MyXmlrpc):
         self.myUUIDCache = UUIDCache()
         # FIXME: un-comment me later :)
         # self.check()
-        self.init()
+        self._init()
 
     def check(self):
         """
@@ -93,7 +93,7 @@ class ImagingApi(MyXmlrpc):
             if not os.path.isfile(fpath):
                 raise ValueError, "File '%s' does not exists. Please check option '%s' in your configuration file." % (fpath, optname)
 
-    def init(self):
+    def _init(self):
         """
         Perform package server internals initialization, if needed.
         For now, we only set the package server default computer register menu.
@@ -102,13 +102,16 @@ class ImagingApi(MyXmlrpc):
         def _cbDefaultMenu(menu):
             self.logger.debug('Default computer boot menu received.')
             self.logger.debug(menu)
-            try:
-                imb = ImagingDefaultMenuBuilder(self.config, menu)
-                m = imb.make()
-                m.write()
-                self.logger.info('Default computer boot menu successfully written')
-            except Exception, e:
-                self.logger.exception('Error while setting default computer menu: %s', e)
+            if not menu:
+                self.logger.info('Default computer boot menu is empty. Looks like this package server has not been registered.')
+            else:
+                try:
+                    imb = ImagingDefaultMenuBuilder(self.config, menu)
+                    m = imb.make()
+                    m.write()
+                    self.logger.info('Default computer boot menu successfully written')
+                except Exception, e:
+                    self.logger.exception('Error while setting default computer menu: %s', e)
         def _errDefaultMenu(error):
             self.logger.error("Error while setting default computer boot menu: %s" % error)
 
@@ -502,7 +505,7 @@ class ImagingApi(MyXmlrpc):
         client-side
 
         @param mac : The mac address of the client
-        @type menus: MAC Address
+        @type mac: MAC Address
         """
 
         def _getmacCB(result):
