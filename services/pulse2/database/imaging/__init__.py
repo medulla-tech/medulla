@@ -2754,9 +2754,17 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def delPostInstallScript(self, pis_uuid):
         session = create_session()
+        # delete the post install script
         pis = self.getPostInstallScript(pis_uuid, session)
         if not pis.is_local:
             return False
+        # have to remove the post install script on imaging server if it exists
+        pisois = session.query(PostInstallScriptOnImagingServer).filter(self.post_install_script_on_imaging_server.c.fk_post_install_script == uuid2id(pis_uuid)).first()
+        if pisois == None:
+            # we have a local pis and no pisois !
+            return False
+        session.delete(pisois)
+        session.flush()
         session.delete(pis)
         session.flush()
         session.close
