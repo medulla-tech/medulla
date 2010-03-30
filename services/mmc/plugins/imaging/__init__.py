@@ -1366,6 +1366,10 @@ class RpcProxy(RpcProxyI):
 
     def __generateDefaultSuscribeMenu(self, logger, db, imaging_server_uuid):
         location = db.getImagingServerEntity(imaging_server_uuid)
+        if location == None:
+            # Package server has not been registered, we return an empty menu
+            return {}
+
         menu = db.getDefaultSuscribeMenu(location)
         menu_items = db.getMenuContent(menu.id, P2IM.ALL, 0, -1, '', None, location.uuid)
         menu = menu.toH()
