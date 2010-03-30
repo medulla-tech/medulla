@@ -1184,14 +1184,16 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 .join(self.boot_service_in_menu, self.boot_service_in_menu.c.fk_menuitem == self.menu_item.c.id) \
                 .join(self.boot_service, self.boot_service_in_menu.c.fk_bootservice == self.boot_service.c.id) \
                 .join(self.menu, self.menu_item.c.fk_menu == self.menu.c.id) \
-                .join(self.imaging_server, self.imaging_server.c.fk_entity == self.entity.c.id))
-        mi = mi.filter(and_(self.boot_service.c.id == uuid2id(bs_uuid), self.menu.c.id == self.imaging_server.c.fk_default_menu, self.entity.c.uuid == loc_id)).first()
+                .join(self.imaging_server, self.imaging_server.c.fk_default_menu == self.menu.c.id) \
+                .join(self.entity, self.entity.c.id == self.imaging_server.c.fk_entity))
+        mi = mi.filter(and_(self.boot_service.c.id == uuid2id(bs_uuid), self.entity.c.uuid == loc_id)).first()
         bsim = session.query(BootServiceInMenu).select_from(self.boot_service_in_menu \
                 .join(self.menu_item, self.boot_service_in_menu.c.fk_menuitem == self.menu_item.c.id) \
                 .join(self.boot_service, self.boot_service_in_menu.c.fk_bootservice == self.boot_service.c.id) \
                 .join(self.menu, self.menu_item.c.fk_menu == self.menu.c.id) \
-                .join(self.imaging_server, self.imaging_server.c.fk_entity == self.entity.c.id))
-        bsim = bsim.filter(and_(self.boot_service.c.id == uuid2id(bs_uuid), self.menu.c.id == self.imaging_server.c.fk_default_menu, self.entity.c.uuid == loc_id)).first()
+                .join(self.imaging_server, self.imaging_server.c.fk_default_menu == self.menu.c.id) \
+                .join(self.entity, self.entity.c.id == self.imaging_server.c.fk_entity))
+        bsim = bsim.filter(and_(self.boot_service.c.id == uuid2id(bs_uuid), self.entity.c.uuid == loc_id)).first()
         # if mi is the fk_default_item or the fk_default_item_WOL, we need to change that
         menu = session.query(Menu).filter(self.menu.c.id == mi.fk_menu).first()
         need_to_save_menu = False
