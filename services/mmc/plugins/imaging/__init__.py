@@ -661,13 +661,12 @@ class RpcProxy(RpcProxyI):
                     logger.error("The package server failed to delete the image")
                     return [False, "The package server failed to delete the image"]
 
-                #try:
-                if True:
+                try:
                     # remove all the remaining from the database
                     ret = db.imagingServerImageDelete(image_uuid)
                     return xmlrpcCleanup([True, ret])
-                #except Exception, e:
-                #    return xmlrpcCleanup([False, e])
+                except Exception, e:
+                    return xmlrpcCleanup([False, e])
 
             d = i.imagingServerImageDelete(im.uuid)
             d.addCallback(treatDel, image_uuid, db, logger)
@@ -1489,7 +1488,10 @@ class RpcProxy(RpcProxyI):
                 h_targets[target.uuid] = target.toH()
 
             for m_uuid in locations:
-                loc_uuid = "UUID%s"%locations[m_uuid]['id']
+                if locations[m_uuid].has_key('uuid'):
+                    loc_uuid = locations[m_uuid]['uuid']
+                else:
+                    loc_uuid = "UUID%s"%locations[m_uuid]['id']
                 menu_items = db.getBootMenu(m_uuid, 0, -1, '')
                 menu = db.getTargetsMenuTUUID(m_uuid)
                 menu = menu.toH()
