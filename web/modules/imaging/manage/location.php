@@ -63,6 +63,9 @@ if (isset($_POST['bsync'])) {
 
 # needed in the case we have to go back to the good list.
 $params['from'] = $_GET['action'];
+$params['module'] = $_GET['module'];
+$params['submod'] = $_GET['submod'];
+$params['action'] = $_GET['action'];
 
 if (displayLocalisationBar()) {
     $location = getCurrentLocation();
