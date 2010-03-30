@@ -2204,10 +2204,15 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def getImagingServerEntity(self, imaging_server_uuid):
         """
-        get the entity linked to that imaging server
+        Get the entity linked to that imaging server, or None if the imaging
+        server doesn't exist in database or has not been associated to an
+        entity.
         """
         session = create_session()
-        entity = session.query(Entity).select_from(self.entity.join(self.imaging_server, self.imaging_server.c.fk_entity == self.entity.c.id)).filter(self.imaging_server.c.packageserver_uuid == imaging_server_uuid).first()
+        entity = session.query(Entity).\
+                 select_from(self.entity.join(self.imaging_server, self.imaging_server.c.fk_entity == self.entity.c.id)).\
+                 filter(and_(self.imaging_server.c.packageserver_uuid == imaging_server_uuid, self.imaging_server.c.associated == True)).\
+                 first()
         session.close()
         return entity
 
