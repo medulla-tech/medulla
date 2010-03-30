@@ -155,6 +155,7 @@ if (!empty($submod)) {
     $tab = new Tab("grouptabconfigure", _T("Menu configuration", "imaging"));
     $page->addTab($tab);
     $submod->addPage($page);
+
     // actions on computer & groups
     $page = new Page("bootmenu_remove",_T("Remove from boot menu","imaging"));
     $page->setFile("modules/imaging/imaging/bootmenu_remove.php");
@@ -162,11 +163,11 @@ if (!empty($submod)) {
     $submod->addPage($page);
     $page = new Page("showtarget",_T("Show target that use that image","imaging"));
     $page->setFile("modules/imaging/imaging/showtarget.php");
-    $page->setOptions(array("AJAX" => True, "visible" => False));
+    $page->setOptions(array("visible" => False, "noHeader" => True));
     $submod->addPage($page);
     $page = new Page("images_delete",_T("Delete image","imaging"));
     $page->setFile("modules/imaging/imaging/images_delete.php");
-    $page->setOptions(array("AJAX" => True, "visible" => False));
+    $page->setOptions(array("visible" => False, "noHeader" => True));
     $submod->addPage($page);
     $page = new Page("images_iso",_T("Create iso image","imaging"));
     $page->setFile("modules/imaging/imaging/images_iso.php");
@@ -211,22 +212,26 @@ if (!empty($submod)) {
 
     $page = new Page("addservice", _T("Add a service to a target", "msc"));
     $page->setFile("modules/imaging/imaging/addservice.php");
-    $page->setOptions(array("AJAX" => True, "visible" => False));
+    $page->setOptions(array("visible" => False, "noHeader" => True));
     $submod->addPage($page);
     $page = new Page("editservice", _T("Edit parameters of a service on a target", "msc"));
     $page->setFile("modules/imaging/imaging/addservice.php");
-    $page->setOptions(array("AJAX" => True, "visible" => False));
+    $page->setOptions(array("visible" => False, "noHeader" => True));
+    $submod->addPage($page);
     $page = new Page("delservice", _T("Remove a service from a target", "msc"));
     $page->setFile("modules/imaging/imaging/addservice.php");
-    $page->setOptions(array("AJAX" => True, "visible" => False));
+    $page->setOptions(array("visible" => False, "noHeader" => True));
+    $submod->addPage($page);
 
     $page = new Page("addimage", _T("Add a image to a target", "msc"));
     $page->setFile("modules/imaging/imaging/addimage.php");
-    $page->setOptions(array("AJAX" => True, "visible" => False));
+    $page->setOptions(array("visible" => False, "noHeader" => True));
+    $submod->addPage($page);
     $submod->addPage($page);
     $page = new Page("editimage", _T("Edit parameters of a image on a target", "msc"));
     $page->setFile("modules/imaging/imaging/addimage.php");
-    $page->setOptions(array("AJAX" => True, "visible" => False));
+    $page->setOptions(array("visible" => False, "noHeader" => True));
+    $submod->addPage($page);
     $submod->addPage($page);
 
 
