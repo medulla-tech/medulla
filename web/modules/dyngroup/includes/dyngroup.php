@@ -32,7 +32,7 @@ function getAllGroups($params = array()) { # canShow
     # xmlrpc call to get all groups
     $params['I_REALLY_WANT_TO_BE_A_HASH'] = true;
     $groups = __xmlrpc_getallgroups($params);
-    
+
     # foreach to convert into Group
     $ret = array();
     foreach ($groups as $group) {
@@ -118,7 +118,7 @@ class Group {
 
     function reply($start = 0, $end = 10, $filter = '') { return __xmlrpc_requestresult_group($this->id, $start, $end, $filter); }
     function countReply($filter = '') { return __xmlrpc_countrequestresult_group($this->id, $filter); }
-    
+
     function getResult($start = 0, $end = 10, $filter = '') {
         if ($this->isDyn()) {
             if (!$this->isRequest()) { # dynamic group with static results
@@ -127,17 +127,17 @@ class Group {
                 return $this->reply($start, $end, $filter);
             }
         } else { # static group with static result
-            return __xmlrpc_result_group($this->id, $start, $end, $filter); 
+            return __xmlrpc_result_group($this->id, $start, $end, $filter);
         }
     }
-            
+
     function members() { return $this->getResult(0, -1, ''); }
     function countResult($filter = '') { return __xmlrpc_countresult_group($this->id, $filter); }
 
     function setVisibility($visibility) { if ($this->can_modify()) { return __xmlrpc_setvisibility_group($this->id, $visibility); } return False; }
     function canShow() { return __xmlrpc_canshow_group($this->id); }
-    function show() { if ($this->can_modify()) { return __xmlrpc_show_group($this->id); } return False; } 
-    function hide() { if ($this->can_modify()) { return __xmlrpc_hide_group($this->id); } return False; } 
+    function show() { if ($this->can_modify()) { return __xmlrpc_show_group($this->id); } return False; }
+    function hide() { if ($this->can_modify()) { return __xmlrpc_hide_group($this->id); } return False; }
 
     function isProfile() { return False; }
     function isGroup() { return True; }
@@ -159,7 +159,7 @@ class Group {
     function shareWith() { if ($this->can_modify()) { return __xmlrpc_share_with($this->id); } return False; }
     function addShares($share) {
         $sha = array();
-        if ($this->can_modify()) { 
+        if ($this->can_modify()) {
             $sha = array();
             foreach (array_values($share) as $s) {
                 $sha[] = array($s['user']['login'], $s['user']['type']);
@@ -169,7 +169,7 @@ class Group {
         return False;
     }
     function delShares($share) {
-        if ($this->can_modify()) { 
+        if ($this->can_modify()) {
             $sha = array();
             foreach (array_values($share) as $s) {
                 $sha[] = array($s['user']['login'], $s['user']['type']);
@@ -179,7 +179,7 @@ class Group {
         return False;
     }
     function canEdit() {
-        if ($this->can_modify()) { 
+        if ($this->can_modify()) {
             return __xmlrpc_can_edit($this->id);
         }
         return False;
@@ -207,7 +207,13 @@ function __xmlrpc_bool_group($id) { return xmlCall("dyngroup.bool_group", array(
 function __xmlrpc_setbool_group($id, $bool) { return xmlCall("dyngroup.setbool_group", array($id, $bool)); }
 function __xmlrpc_requestresult_group($id, $start, $end, $filter) { return xmlCall("dyngroup.requestresult_group", array($id, $start, $end, $filter)); }
 function __xmlrpc_countrequestresult_group($id, $filter) { return xmlCall("dyngroup.countrequestresult_group", array($id, $filter)); }
-function __xmlrpc_result_group($id, $start, $end, $filter) { return xmlCall("dyngroup.result_group", array($id, $start, $end, $filter)); }
+function __xmlrpc_result_group($id, $start, $end, $filter) {
+    $filter = array('gid' => $id, 'filter' => $filter);
+    $ret = xmlCall("base.getRestrictedComputersList", array($start, $end, $filter, False));
+    function convertComputer($e) {$e = array('hostname'=>$e[1]['cn'][0], 'uuid'=>$e[1]['objectUUID'][0]); return $e;}
+    $ret1 = array_map("convertComputer", array_values($ret));
+    return $ret1;
+}
 function __xmlrpc_countresult_group($id, $filter) { return xmlCall("dyngroup.countresult_group", array($id, $filter)); }
 function __xmlrpc_canshow_group($id) { return xmlCall("dyngroup.canshow_group", array($id)); }
 function __xmlrpc_show_group($id) { return xmlCall("dyngroup.show_group", array($id)); }
@@ -224,7 +230,7 @@ function __xmlrpc_addmembers_to_group($id, $uuids) {
     return $ret;
 }
 function __xmlrpc_delmembers_to_group($id, $uuids) {
-    if (!empty($uuids)) 
+    if (!empty($uuids))
         $ret = xmlCall("dyngroup.delmembers_to_group", array($id, $uuids));
     else
         $ret = True;
