@@ -41,6 +41,7 @@ $submod->setDefaultPage("imaging/manage/index");
 
 $page = new Page("index",_T("Server status","imaging"));
 $submod->addPage($page);
+
 $page = new Page("master",_T("Manage masters","imaging"));
 $submod->addPage($page);
 $page = new Page("master_delete",_T("Delete master","imaging"));
@@ -55,6 +56,7 @@ $submod->addPage($page);
 $page = new Page("master_iso",_T("Create iso from master","imaging"));
 $page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
+
 $page = new Page("service",_T("Manage boot services","imaging"));
 $submod->addPage($page);
 $page = new Page("service_edit",_T("Edit service","imaging"));
@@ -65,8 +67,8 @@ $page->setOptions(array("noHeader" => True, "visible" => False));
 $submod->addPage($page);
 $page = new Page("service_add",_T("Add service","imaging"));
 $page->setOptions(array("noHeader" => True, "visible" => False));
-// $page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
+
 $page = new Page("bootmenu",_T("Default boot menu","imaging"));
 $submod->addPage($page);
 $page = new Page("bootmenu_up",_T("Up service","imaging"));
@@ -78,6 +80,7 @@ $submod->addPage($page);
 $page = new Page("bootmenu_edit",_T("Down service","imaging"));
 $page->setOptions(array("visible" => False));
 $submod->addPage($page);
+
 $page = new Page("postinstall",_T("Post-installation scripts","imaging"));
 $submod->addPage($page);
 $page = new Page("postinstall_edit",_T("Edit post-installation script","imaging"));
@@ -89,7 +92,11 @@ $submod->addPage($page);
 $page = new Page("postinstall_delete",_T("Delete post-installation script","imaging"));
 $page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
+
 $page = new Page("configuration",_T("Imaging configuration","imaging"));
+$submod->addPage($page);
+$page = new Page("save_configuration",_T("Save an Imaging Server configuration","imaging"));
+$page->setOptions(array("visible" => False));
 $submod->addPage($page);
 
 $page = new Page("ajaxAvailableImagingServer",_T("Available Imaging Server","imaging"));
@@ -98,10 +105,6 @@ $submod->addPage($page);
 $page = new Page("imaging_server_link",_T("Link an Imaging Server","imaging"));
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
-$page = new Page("save_configuration",_T("Save an Imaging Server configuration","imaging"));
-$page->setOptions(array("visible" => False));
-$submod->addPage($page);
-
 $mod->addSubmod($submod);
 
 $MMCApp =& MMCApp::getInstance();
@@ -165,14 +168,7 @@ if (!empty($submod)) {
     $page->setFile("modules/imaging/imaging/showtarget.php");
     $page->setOptions(array("visible" => False, "noHeader" => True));
     $submod->addPage($page);
-    $page = new Page("images_delete",_T("Delete image","imaging"));
-    $page->setFile("modules/imaging/imaging/images_delete.php");
-    $page->setOptions(array("visible" => False, "noHeader" => True));
-    $submod->addPage($page);
-    $page = new Page("images_iso",_T("Create iso image","imaging"));
-    $page->setFile("modules/imaging/imaging/images_iso.php");
-    $page->setOptions(array("visible" => False, "noHeader" => True));
-    $submod->addPage($page);
+
     $page = new Page("ajaxStatus");
     $page->setFile("modules/imaging/imaging/ajaxStatus.php");
     $page->setOptions(array("AJAX" => True, "visible" => False));
@@ -227,13 +223,18 @@ if (!empty($submod)) {
     $page->setFile("modules/imaging/imaging/addimage.php");
     $page->setOptions(array("visible" => False, "noHeader" => True));
     $submod->addPage($page);
-    $submod->addPage($page);
     $page = new Page("editimage", _T("Edit parameters of a image on a target", "msc"));
     $page->setFile("modules/imaging/imaging/addimage.php");
     $page->setOptions(array("visible" => False, "noHeader" => True));
     $submod->addPage($page);
+    $page = new Page("images_delete",_T("Delete image","imaging"));
+    $page->setFile("modules/imaging/imaging/images_delete.php");
+    $page->setOptions(array("visible" => False, "noHeader" => True));
     $submod->addPage($page);
-
+    $page = new Page("images_iso",_T("Create iso image","imaging"));
+    $page->setFile("modules/imaging/imaging/images_iso.php");
+    $page->setOptions(array("visible" => False, "noHeader" => True));
+    $submod->addPage($page);
 
     unset($submod);
 }
