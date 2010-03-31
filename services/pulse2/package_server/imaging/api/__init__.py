@@ -27,6 +27,12 @@ import logging
 import os
 import shutil
 
+from time import gmtime
+try:
+    import uuid
+except ImportError:
+    import mmc.support.uuid as uuid
+
 from twisted.internet import defer
 from twisted.internet.defer import maybeDeferred
 
@@ -38,17 +44,11 @@ from pulse2.package_server.imaging.api.status import Status
 from pulse2.package_server.imaging.menu import isMenuStructure, ImagingDefaultMenuBuilder, ImagingComputerMenuBuilder
 from pulse2.package_server.imaging.computer import ImagingComputerConfiguration
 from pulse2.package_server.imaging.iso import ISOImage
+from pulse2.package_server.imaging.archiver import Archiver
 
 from pulse2.utils import isMACAddress, splitComputerPath, macToNode, isUUID, rfc3339Time, humanReadable
 from pulse2.apis import makeURL
 from pulse2.imaging.image import Pulse2Image
-
-from time import gmtime
-try:
-    import uuid
-except ImportError:
-    import mmc.support.uuid as uuid
-
 
 class ImagingApi(MyXmlrpc):
 
@@ -301,6 +301,35 @@ class ImagingApi(MyXmlrpc):
                 return False
             return True
 
+    def xmlrpc_computerUnregister(self, computerUUID, imageList, archive):
+        """
+        Unregister a computer from the imaging service:
+         - move its boot menu into the archive directory
+         - move its home directory into the archive directory
+         - move its backup images into the archive directory
+
+        All this move are done in background in another thread, so that it is
+        not blocking the whole package server.
+
+        @rtype: bool
+        @return: True if the operation succeeded to start
+        """
+        assert(type(imageList) == list)
+        if not isUUID(computerUUID):
+            return False
+        macAddress = self.myUUIDCache.getByUUID(computerUUID)
+        if not macAddress:
+            return False
+        else:
+            macAddress = macAddress['mac']
+        archiver = Archiver(self.config, archive, computerUUID, macAddress,
+                            imageList)
+        ret = archiver.check() and archiver.prepare()
+        if ret:
+            # If all is OK, start archival process in another thread
+            archiver.run()
+        return ret
+
     def xmlrpc_computerPrepareImagingDirectory(self, uuid, imagingData = False):
         """
         Prepare a full imaging folder for client <uuid>
@@ -410,7 +439,7 @@ class ImagingApi(MyXmlrpc):
                 self.logger.warning('Imaging: While processing result %s for %s : %s' % (result, MACAddress, e))
 
         if not isMACAddress(MACAddress):
-            raise TypeError
+            raise TypeError('Bad MAC address: %s' % MACAddress)
 
         # try to extract from our cache
         res = self.myUUIDCache.getByMac(MACAddress)

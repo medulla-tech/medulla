@@ -224,3 +224,22 @@ class UUIDCache(pulse2.utils.Singleton):
         self.config.set(uuid, 'fqdn', fqdn)
         self._flush()
         return True
+
+    def delete(self, uuid):
+        """
+        Delete a computer from the cache.
+
+        @param uuid: the client UUID (mandatory)
+        @type uuid: str
+        """
+        if not pulse2.utils.isUUID(uuid):
+            ret = False
+        else:
+            try:
+                self.config.remove_section(uuid)
+                self._flush()
+                ret = True
+            except Exception, e:
+                self.log.error("Can't delete computer UUID %s from the cache: %s" % e)
+                ret = False
+        return ret
