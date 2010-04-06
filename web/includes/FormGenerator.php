@@ -632,6 +632,11 @@ class SelectItem extends AbstractTpl{
         $this->name=$idElt;
         $this->jsFunc = $jsFunc;
         $this->style = $style;
+        $this->jsFuncParams = null;
+    }
+
+    function setJsFuncParams($params) {
+        $this->jsFuncParams = $params;
     }
 
     function setElements($elt) {
@@ -674,7 +679,11 @@ class SelectItem extends AbstractTpl{
             print " class=\"".$this->style."\"";
         }
         if ($this->jsFunc) {
-            print " onchange=\"".$this->jsFunc."(); return false;\"";
+            print " onchange=\"".$this->jsFunc."(";
+            if ($this->jsFuncParams) {
+                print implode(", ", $this->jsFuncParams);
+            }
+            print "); return false;\"";
         }
         print " name=\"".$this->id."\" id=\"".$this->id."\">\n";
         $this->displayContent($paramArray);
@@ -774,20 +783,20 @@ class DeletableTrFormElement extends FormElement{
         } else {
             $desc = '';
         }
-        
+
         // set hidden form with old_value for each DeletableTrFormElement field
         // set a random old_value if some field has been created
         if($this->new) {
             $old_value = uniqid();
         }
-        else if(isset($arrParam["value"])) { 
-            $old_value = $arrParam["value"]; 
-        } 
-        else { 
-            $old_value = ""; 
+        else if(isset($arrParam["value"])) {
+            $old_value = $arrParam["value"];
+        }
+        else {
+            $old_value = "";
         }
         if(is_object($this->template)) {
-            $field_name = $this->template->name;            
+            $field_name = $this->template->name;
         }
         else if(is_array($this->template)) {
             $field_name = $this->template["name"];
@@ -797,8 +806,8 @@ class DeletableTrFormElement extends FormElement{
         }
         if ($field_name) {
             print '<input type="hidden" name="old_'.$field_name.'" value="'.$old_value.'" />';
-        }        
-        
+        }
+
         print '<tr><td width="40%" ';
         print displayErrorCss($this->cssErrorName);
         print 'style = "text-align: right;">';
@@ -810,7 +819,7 @@ class DeletableTrFormElement extends FormElement{
             print $desc;
         }
         print '</td><td>';
-        
+
         // reald field display
         parent::display($arrParam);
         print '<input name="bdel" type="submit" class="btnSecondary" value="'._("Delete").'" onclick="
@@ -887,7 +896,7 @@ class TrFormElement extends FormElement {
         print '</td><td>';
 
         // set hidden form with old_value for each TrFormElement field
-        if(isset($arrParam["value"])) { 
+        if(isset($arrParam["value"])) {
             // if checkbox
             if ($arrParam["value"] == "checked")
                 $old_value = "on";
@@ -898,7 +907,7 @@ class TrFormElement extends FormElement {
             $old_value = "";
         }
         if(is_object($this->template)) {
-            $field_name = $this->template->name;            
+            $field_name = $this->template->name;
         }
         else if(is_array($this->template)) {
             $field_name = $this->template["name"];
