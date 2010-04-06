@@ -123,6 +123,10 @@ function xmlrpc_imagingServerISOCreate($image_uuid, $size, $title) {
     return xmlCall("imaging.imagingServerISOCreate", array($image_uuid, $size, $title));
 }
 
+function xmlrpc_getTargetImage($id, $type, $itemid) {
+    return xmlCall("imaging.getTargetImage", array($id, $type, $itemid));
+}
+
 function xmlrpc_getComputerImages($id, $start = 0, $end = -1, $filter = '') {
     return xmlCall("imaging.getComputerImages", array($id, $start, $end, $filter));
 }

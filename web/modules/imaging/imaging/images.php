@@ -35,15 +35,8 @@ if (isset($_GET['gid']) && $_GET['gid'] != '') {
     $target_uuid = $_GET['uuid'];
     $target_name = $_GET['hostname'];
 }
+$itemid = $_GET['itemid'];
 
-function getTargetImage($type, $gid, $uuid) {
-    if ($type == 'group') {
-        $all = xmlrpc_getProfileImages($gid);
-    } else {
-        $all = xmlrpc_getComputerImages($uuid);
-    }
-    return $all;
-}
 if (($type == '' && xmlrpc_isComputerRegistered($target_uuid)) || ($type == 'group' && xmlrpc_isProfileRegistered($target_uuid)))  {
 
 
@@ -54,10 +47,7 @@ if (($type == '' && xmlrpc_isComputerRegistered($target_uuid)) || ($type == 'gro
 
     switch($mod) {
         case 'edit':
-            $all = getTargetImage($type, $_GET['gid'], $_GET['uuid']);
-            $images = $all['images'];
-            $masters = $all['masters'];
-            image_edit($type, $images, $masters);
+            image_edit($target_uuid, $type, $itemid);
             break;
         case 'add':
             image_add($type, $target_uuid);
@@ -98,26 +88,106 @@ function image_add($type, $target_uuid) {
     }
 }
 
-function image_edit($type, $images, $masters) {
+class MyListInfos extends ListInfos {
+    function display() {
+        $maxperpage = $conf["global"]["maxperpage"];
+        $conf["global"]["maxperpage"] = count($post_installs);
 
+        $ret = $this->drawTable(0);
+
+        $conf["global"]["maxperpage"] = $maxperpage;
+        return $ret;
+    }
+}
+
+class MySelectItem extends SelectItem {
+    function __toString() {
+        return $this->display();
+    }
+}
+
+function image_edit($target_uuid, $type, $item_uuid) {
     $params = getParams();
-    $id = $_GET['itemid'];
     $target_uuid = $_GET['target_uuid'];
     $label = urldecode($_GET['itemlabel']);
-    $all = array_merge($images[1], $masters[1]);
-    foreach ($all as $m) {
-        if ($m['imaging_uuid'] == $id) {
-            $image = $m;
-            continue;
+
+    list($succed, $image) = xmlrpc_getTargetImage($target_uuid, $type, $item_uuid);
+
+    function get_post_install_scripts($f, $post_install_scripts, $target_uuid) {
+        list($a, $post_installs) = xmlrpc_getAllTargetPostInstallScript($target_uuid);
+        $already_orders = array();
+        $elt = array("id_None" => _T("Not selected", "imaging"));
+        $elt_values = array("id_None"=> "None");
+        $h_pis = array();
+        foreach ($post_install_scripts as $lpis) {
+            $h_pis[$lpis['imaging_uuid']] = $lpis;
+            $already_orders[$lpis['order']] = True;
         }
+        $i = 0;
+        foreach ($post_installs as $pis) {
+            $elt["id_".$i] = "$i";
+            $elt_values["id_".$i] = "$i";
+            $i += 1;
+        }
+        $a_label = array();
+        $a_desc = array();
+        $a_order = array();
+        $a_pis_id = array();
+        foreach ($post_installs as $pis) {
+            $a_pis_id[] = "order_".$pis['imaging_uuid'];
+            $a_label[] = $pis['default_name'];
+            $a_desc[] = $pis['default_desc'];
+
+            $order = new MySelectItem("order_".$pis['imaging_uuid'], "exclusive_orders");
+            $order->setJsFuncParams(array('this'));
+            $order->setElements($elt);
+            $order->setElementsVal($elt_values);
+            if (array_key_exists($pis['imaging_uuid'], $h_pis)) {
+                $order->setSelected($h_pis[$pis['imaging_uuid']]['order']);
+            } else {
+                $order->setSelected("None");
+            }
+            $a_order[] = $order;
+        }
+        $l = new MyListInfos($a_label, _T("Name", "imaging"));
+        $l->addExtraInfo($a_desc, _T("Description", "imaging"));
+        $l->addExtraInfo($a_order, _T("Order", "imaging"));
+
+        $l->disableFirstColumnActionLink();
+
+        $f->add($l);
+
+        print_exclusive_orders_js($a_pis_id);
+        return $f;
     }
-
-
-    if (count($_POST) == 0) {
-        printf("<h3>"._T("Edition of image", "imaging")." : <em>%s</em></h3>", $label);
-
-        // get current values
-        $desc = $image["desc"];
+    function print_exclusive_orders_js($a_pis_id) {
+?>
+    <script type='text/javascript'>
+    <!--
+        function exclusive_orders(self_element) {
+            var all_selects = ['<?= implode("', '", $a_pis_id);  ?>'];
+            for (var i = 0; i < all_selects.length; i++) {
+                var sel = all_selects[i];
+                var elem = document.getElementById(sel);
+                if (self_element.name != elem.name) {
+                    if (self_element.value == elem.value) {
+                        self_element.value = "None";
+                        alert("<?= _T("This values is already taken, please only put one element for each order.", "imaging"); ?>");
+                        break;
+                    }
+                }
+            }
+        }
+    -->
+    </script>
+<?php
+    }
+    function create_form($is_image, $image, $target_uuid, $label, $desc) {
+        if ($is_image) {
+            printf("<h3>"._T("Edition of image", "imaging")." : <em>%s</em></h3>", $label);
+        } else {
+            printf("<h3>"._T("Edition of master", "imaging")." : <em>%s</em></h3>", $label);
+        }
 
         $f = new ValidatingForm();
         $f->add(new HiddenTpl('target_uuid'),                   array("value" => $target_uuid,                   "hide" => True));
@@ -134,68 +204,52 @@ function image_edit($type, $images, $masters) {
         );
 
         $f->pop();
-        $f->addButton("bvalid", _T("Validate"));
+        if (!$is_image) {
+            $f = get_post_install_scripts($f, $image['post_install_scripts'], $target_uuid);
+        }
+        return $f;
+    }
+
+    if (count($_POST) == 0) {
+        $is_master = $image['is_master'];
+        $f = create_form(!$is_master, $image, $target_uuid, $label, $image["desc"]);
+
+        $f->addButton("bvalid", _T("Save"));
         if ($image['is_master']) {
-            $f->addButton("bconvert_image", _T("Validate and convert to image", "imaging"));
+            $f->addButton("bconvert_image", _T("Save (converting to image)", "imaging"));
         } else {
-            $f->addButton("bconvert_master", _T("Validate and convert to master", "imaging"));
+            $f->addButton("bconvert_master", _T("Convert to master", "imaging"));
         }
         $f->pop();
         $f->display();
     } else {
+        $p_order = array();
+        foreach ($_POST as $post_key => $post_value) {
+            if (ereg('order_', $post_key)) {
+                $post_key = str_replace("order_", "", $post_key);
+                $p_order[$post_key] = $post_value;
+            }
+        }
         if (isset($_POST['bvalid'])) {
-            $item_uuid = $id;
             $params['name'] = $_POST['image_label'];
             $params['desc'] = $_POST['image_description'];
+            $params['post_install_scripts'] = $p_order;
+            $params['is_master'] = $image['is_master'];
             $ret = xmlrpc_editImage($item_uuid, $target_uuid, $params, $type);
             // goto images list
             header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
         } elseif (isset($_POST['bconvert_master'])) {
-            $f = new ValidatingForm();
-            $f->push(new Table());
-
-            $f->add(new HiddenTpl("itemid"),                        array("value" => $item_uuid,                     "hide" => True));
-            $f->add(new HiddenTpl("itemlabel"),                     array("value" => $label,                         "hide" => True));
-            $f->add(new HiddenTpl('target_uuid'),                   array("value" => $target_uuid,                   "hide" => True));
-            $f->add(new HiddenTpl('image_label'),                   array("value" => $_POST['image_label'],          "hide" => True));
-            $f->add(new HiddenTpl('image_description'),             array("value" => $_POST['image_description'],    "hide" => True));
-
-            $post_installs = xmlrpc_getAllTargetPostInstallScript($target_uuid);
-            $post_installs = $post_installs[1];
-            if (count($post_installs) == 0) {
-                $params['name'] = $_POST['image_label'];
-                $params['desc'] = $_POST['image_description'];
-                new NotifyWidgetFailure(_T("You must have a post install script to convert an image into a master.", "imaging"));
-                header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
-            }
-
-            $elements = array();
-            $elementsVal = array();
-            foreach ($post_installs as $ps) {
-                $elements[$ps['imaging_uuid']] = $ps['default_name'].' / '.$ps['default_desc'];
-                $elementsVal[$ps['imaging_uuid']] = $ps['imaging_uuid'];
-            }
-
-            $postInstall = new SelectItem("post_install");
-            $postInstall->setElements($elements);
-            $postInstall->setElementsVal($elementsVal);
-            $f->add(
-                new TrFormElement(_T("Post-installation script", "imaging"), $postInstall)
-            );
-            $f->pop();
-            $f->addButton("bvalid_master", _T("Validate"));
+            $f = create_form(False, $image, $target_uuid, $_POST['image_label'], $_POST['image_description']);
+            $f->addButton("bvalid_master", _T("Save"));
             $f->display();
-
         } elseif (isset($_POST['bvalid_master'])) {
-            $item_uuid = $id;
             $params['name'] = $_POST['image_label'];
             $params['desc'] = $_POST['image_description'];
-            $params['post_install_script'] = $_POST['post_install'];
+            $params['post_install_scripts'] = $p_order;
             $params['is_master'] = True;
             $ret = xmlrpc_editImage($item_uuid, $target_uuid, $params, $type);
             header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
         } elseif (isset($_POST['bconvert_image'])) {
-            $item_uuid = $id;
             $params['name'] = $_POST['image_label'];
             $params['desc'] = $_POST['image_description'];
             $params['is_master'] = False;
@@ -207,6 +261,7 @@ function image_edit($type, $images, $masters) {
 
 function image_list($type, $title, $actions=true) {
     $params = getParams();
+    $params['target_uuid'] = $_GET['target_uuid'];
     if (!$actions) {
         $params['master'] = True;
     }
