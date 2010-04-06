@@ -285,13 +285,14 @@ CREATE TABLE BootServiceInMenu (
 -- PostInstallScriptInImage
 CREATE TABLE PostInstallScriptInImage (
   fk_image INT NOT NULL,
-  fk_post_install_script INT NOT NULL
+  fk_post_install_script INT NOT NULL,
+  `order` INT NOT NULL DEFAULT 0
 );
 
 -- ----------------------------------------------------------------------
 -- Add unicity constraints
 -- ----------------------------------------------------------------------
-ALTER TABLE PostInstallScriptInImage            ADD UNIQUE (fk_image, fk_post_install_script);
+ALTER TABLE PostInstallScriptInImage            ADD UNIQUE (fk_image, fk_post_install_script, `order`);
 ALTER TABLE BootServiceOnImagingServer          ADD UNIQUE (fk_boot_service, fk_imaging_server);
 ALTER TABLE PostInstallScriptOnImagingServer    ADD UNIQUE (fk_post_install_script, fk_imaging_server);
 ALTER TABLE ImageOnImagingServer                ADD UNIQUE (fk_image, fk_imaging_server);

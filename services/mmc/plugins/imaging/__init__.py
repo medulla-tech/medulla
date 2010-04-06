@@ -336,6 +336,31 @@ class RpcProxy(RpcProxyI):
         d.addCallback(treatResult)
         return d
 
+    def getTargetImage(self, uuid, target_type, image_uuid):
+        """
+        get one image from the database
+
+        @param uuid: the target uuid
+        @type uuid: str
+
+        @param target_type: 'group' if it's a group, '' if it's a computer
+        @type target_type: str
+
+        @param image_uuid: the image uuid
+        @type image_uuid: str
+
+        @returns: a dict containing all the image information
+        @rtype: dict
+        """
+        #try:
+        if True:
+            db = ImagingDatabase()
+            target_type = self.__convertType(target_type)
+            image = db.getTargetImage(uuid, target_type, image_uuid)
+            return [True, xmlrpcCleanup(image.toH())]
+        #except Exception, e:
+        #    return xmlrpcCleanup([False, e])
+
     def __getTargetImages(self, id, target_type, start = 0, end = -1, filter = ''):
         # be careful the end is used for each list (image and master)
         db = ImagingDatabase()
@@ -1186,6 +1211,32 @@ class RpcProxy(RpcProxyI):
         return ImagingDatabase().doesLocationHasImagingServer(loc_id)
 
     ###### REGISTRATION
+    def delComputerFromImaging(self, uuid):
+        """
+        remove a computer from imaging
+        that mean :
+         * ask the imaging server to remove the computer's menu
+         * ask the imaging server to remove all it's images (not the masters)
+         * remove the images from the database (Image/ImageOnImagingServer/...)
+         * remove the machine from the database (Target/Menu/...)
+         * synchronize the target (ie : if the computer is also in the profile,
+         it now get the profile menu)
+
+        @param uuid: the computer's uuid
+        @type: str
+
+        @returns: true if everything went well
+        @rtype: boolean
+        """
+
+        # xmlrpc_computerUnregister(self, computerUUID, imageList, archive)
+
+        # db.removeAllTargetImage(computerUUID)
+
+        # db.removeTarget(computerUUID, P2IT.COMPUTER)
+
+        return False
+
     def isTargetRegister(self, uuid, target_type):
         """
         check if a target has already been registered or not

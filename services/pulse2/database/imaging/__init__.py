@@ -1664,6 +1664,20 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             ret[item_uuid] = ret1
         return ret
 
+    def __editImage__grepAndStartOrderAtZero(self, post_install_scripts):
+        ret = {}
+        inverted = {}
+        for pisid in post_install_scripts:
+            if post_install_scripts[pisid] != 'None':
+                inverted[post_install_scripts[pisid]] = pisid
+        i = 0
+        my_keys = inverted.keys()
+        my_keys.sort()
+        for order in my_keys:
+            ret[inverted[order]] = i
+            i += 1
+        return ret
+
     def editImage(self, item_uuid, params):
         session = create_session()
         im = session.query(Image).filter(self.image.c.id == uuid2id(item_uuid)).first()
@@ -1676,18 +1690,20 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 setattr(im, p, params[p])
 
         if params.has_key('is_master'):
-            # there should only be one...
-            if params['is_master'] and params.has_key('post_install_script') or not params['is_master']:
+            if params['is_master'] and params.has_key('post_install_scripts') or not params['is_master']:
                 pisiis = session.query(PostInstallScriptInImage).filter(self.post_install_script_in_image.c.fk_image == uuid2id(item_uuid)).all()
                 for p in pisiis:
                     session.delete(p)
                 session.flush()
 
-            if params['is_master'] and params.has_key('post_install_script'):
-                pisii = PostInstallScriptInImage()
-                pisii.fk_image = uuid2id(item_uuid)
-                pisii.fk_post_install_script = uuid2id(params['post_install_script'])
-                session.save(pisii)
+            if params['is_master'] and params.has_key('post_install_scripts'):
+                post_install_scripts = self.__editImage__grepAndStartOrderAtZero(params['post_install_scripts'])
+                for pis in post_install_scripts:
+                    pisii = PostInstallScriptInImage()
+                    pisii.fk_image = uuid2id(item_uuid)
+                    pisii.fk_post_install_script = uuid2id(pis)
+                    pisii.order = post_install_scripts[pis]
+                    session.save(pisii)
 
         if need_to_be_save:
             session.save_or_update(im)
@@ -1782,6 +1798,51 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def countTargetImages(self, target_id, type, filter):
         pass
+
+    def __mergePostInstallScriptI18n(self, postinstallscript_list):
+        ret = []
+        for postinstallscript, order, name_i18n, desc_i18n in postinstallscript_list:
+            if name_i18n != None:
+                setattr(postinstallscript, 'default_name', name_i18n.label)
+            if desc_i18n != None:
+                setattr(postinstallscript, 'default_desc', desc_i18n.label)
+            setattr(postinstallscript, 'order', order)
+            ret.append(postinstallscript)
+        return ret
+
+    def getTargetImage(self, uuid, target_type, image_uuid):
+        session = create_session()
+        q1 = session.query(Image).add_entity(MenuItem) \
+                .select_from(self.image \
+                    .outerjoin(self.image_in_menu, self.image_in_menu.c.fk_image == self.image.c.id) \
+                    .outerjoin(self.menu_item, self.image_in_menu.c.fk_menuitem == self.menu_item.c.id) \
+                    .join(self.mastered_on, self.mastered_on.c.fk_image == self.image.c.id) \
+                    .join(self.imaging_log, self.imaging_log.c.id == self.mastered_on.c.fk_imaging_log) \
+                    .join(self.target, self.target.c.id == self.imaging_log.c.fk_target) \
+                ).filter(and_(self.image.c.id == uuid2id(image_uuid), self.target.c.uuid == uuid, self.target.c.type == target_type)).first()
+        if q1 == None:
+            raise Exception("cant get the image %s for target %s"%(image_uuid, uuid))
+
+        ims = session.query(ImagingServer).select_from(self.imaging_server.join(self.target, self.target.c.fk_entity == self.imaging_server.c.fk_entity)) \
+                .filter(and_(self.target.c.uuid == uuid, self.target.c.type == target_type)).first()
+        lang = ims.fk_language
+
+        I18n1 = sa_exp_alias(self.internationalization)
+        I18n2 = sa_exp_alias(self.internationalization)
+
+        q2 = session.query(PostInstallScript).add_column(self.post_install_script_in_image.c.order).add_entity(Internationalization, alias=I18n1).add_entity(Internationalization, alias=I18n2) \
+                .select_from(self.image \
+                    .join(self.post_install_script_in_image, self.post_install_script_in_image.c.fk_image == self.image.c.id) \
+                    .join(self.post_install_script, self.post_install_script_in_image.c.fk_post_install_script == self.post_install_script.c.id) \
+                    .outerjoin(I18n1, and_(self.post_install_script.c.fk_name == I18n1.c.id, I18n1.c.fk_language == lang)) \
+                    .outerjoin(I18n2, and_(self.post_install_script.c.fk_desc == I18n2.c.id, I18n2.c.fk_language == lang)) \
+                ).filter(self.image.c.id == uuid2id(image_uuid)).all()
+        q2 = self.__mergePostInstallScriptI18n(q2)
+        im, mi = q1
+        q = self.__mergeMenuItemInImage([(im, im.id)], [q1])
+        q = q[0]
+        setattr(q, 'post_install_scripts', q2)
+        return q
 
     ######################
     def getBootServicesOnTargetById(self, target_id, start, end, filter):
@@ -2958,7 +3019,14 @@ class DBObject(object):
             if i in self.need_iteration and level < 1:
                 # we don't want to enter in an infinite loop
                 # and generally we don't need more levels
-                ret[i] = getattr(self, i).toH(level+1)
+                attr = getattr(self, i)
+                if type(attr) == list:
+                    new_attr = []
+                    for a in attr:
+                        new_attr.append(a.toH(level+1))
+                    ret[i] = new_attr
+                else:
+                    ret[i] = attr.toH(level+1)
         if hasattr(self, 'id'):
             ret['imaging_uuid'] = self.getUUID()
         return ret
@@ -2985,7 +3053,7 @@ class Entity(DBObject):
 
 class Image(DBObject):
     to_be_exported = ['id', 'path', 'checksum', 'size', 'desc', 'is_master', 'creation_date', 'fk_creator', 'name', 'is_local', 'uuid', 'mastered_on_target_uuid']
-    need_iteration = ['menu_item']
+    need_iteration = ['menu_item', 'post_install_scripts']
 
 class ImageInMenu(DBObject):
     pass
@@ -3027,11 +3095,11 @@ class Partition(DBObject):
     to_be_exported = ['id', 'filesystem', 'size', 'fk_image']
 
 class PostInstallScript(DBObject):
-    to_be_exported = ['id', 'default_name', 'value', 'default_desc', 'is_local']
+    to_be_exported = ['id', 'default_name', 'value', 'default_desc', 'is_local', 'order']
     i18n = ['fk_name', 'fk_desc']
 
 class PostInstallScriptInImage(DBObject):
-    pass
+    to_be_exported = ['order']
 
 class PostInstallScriptOnImagingServer(DBObject):
     pass
