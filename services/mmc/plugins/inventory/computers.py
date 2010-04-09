@@ -90,17 +90,14 @@ class InventoryComputers(ComputerI):
     def getComputersList(self, ctx, filt = None):
         return self.getRestrictedComputersList(ctx, 0, -1, filt)
 
-    def getRestrictedComputersListLen(self, ctx, filt = {}):
-        if filt == '':
-            filt = {}
-
+    def __restrictLocationsOnImagingServerOrEntity(self, filt, ctx):
         if filt.has_key('imaging_server') and filt['imaging_server'] != '':
             entity_uuid = ComputerProfileImagingManager().getImagingServerEntityUUID(filt['imaging_server'])
             if entity_uuid != None:
                 filt['location'] = entity_uuid
             else:
                 self.logger.warn("can't get the entity that correspond to the imaging server %s"%(filt['imaging_server']))
-                return {}
+                return [False]
 
         if filt.has_key('entity_uuid') and filt['entity_uuid'] != '':
             grep_entity = None
@@ -111,7 +108,16 @@ class InventoryComputers(ComputerI):
                 filt['location'] = [grep_entity]
             else:
                 self.logger.warn("the user '%s' try to filter on an entity he shouldn't access '%s'"%(ctx.userid, filt['entity_uuid']))
-                return {}
+                return [False]
+        return [True, filt]
+
+    def getRestrictedComputersListLen(self, ctx, filt = {}):
+        if filt == '':
+            filt = {}
+
+        filt = self.__restrictLocationsOnImagingServerOrEntity(filt, ctx)
+        if not filt[0]: return 0
+        filt = filt[1]
 
         return self.inventory.countMachinesOnly(ctx, filt)
 
@@ -119,24 +125,9 @@ class InventoryComputers(ComputerI):
         if filt == '':
             filt = {}
 
-        if filt.has_key('imaging_server') and filt['imaging_server'] != '':
-            entity_uuid = ComputerProfileImagingManager().getImagingServerEntityUUID(filt['imaging_server'])
-            if entity_uuid != None:
-                filt['location'] = entity_uuid
-            else:
-                self.logger.warn("can't get the entity that correspond to the imaging server %s"%(filt['imaging_server']))
-                return {}
-
-        if filt.has_key('entity_uuid') and filt['entity_uuid'] != '':
-            grep_entity = None
-            for l in ctx.locations:
-                if l.uuid == filt['entity_uuid']:
-                    grep_entity = l
-            if grep_entity != None:
-                filt['location'] = [grep_entity]
-            else:
-                self.logger.warn("the user '%s' try to filter on an entity he shouldn't access '%s'"%(ctx.userid, filt['entity_uuid']))
-                return {}
+        filt = self.__restrictLocationsOnImagingServerOrEntity(filt, ctx)
+        if not filt[0]: return {}
+        filt = filt[1]
 
         filt['min'] = min
         filt['max'] = max
