@@ -68,6 +68,7 @@ class ComputerProfileManager(Singleton):
         pass
 
     def addComputersToProfile(self, computers_UUID, profile_UUID):
+        " ask to all profile managers "
         ret = True
         for mod in self.components:
             klass = self.components[mod]
@@ -77,6 +78,7 @@ class ComputerProfileManager(Singleton):
         return ret
 
     def delComputersFromProfile(self, computers_UUID, profile_UUID):
+        " ask to all profile managers "
         ret = True
         for mod in self.components:
             klass = self.components[mod]
