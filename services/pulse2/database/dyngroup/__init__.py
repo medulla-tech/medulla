@@ -51,7 +51,7 @@ class DyngroupDatabase(DatabaseHelper):
         self.my_name = "Dyngroup"
         self.configfile = "dyngroup.ini"
         return DatabaseHelper.db_check(self, DATABASEVERSION)
-    
+
     def activate(self, config): ## conffile = None):
         self.logger = logging.getLogger()
         if self.is_activated:
@@ -83,7 +83,7 @@ class DyngroupDatabase(DatabaseHelper):
         mapper(GroupType, self.groupType)
         self.userType = Table("UsersType", self.metadata,autoload = True)
         mapper(UsersType, self.userType)
-        
+
         # Users
         self.users = Table("Users", self.metadata,
                             Column('type', Integer, ForeignKey('UsersType.id')),
@@ -95,8 +95,8 @@ class DyngroupDatabase(DatabaseHelper):
                             Column('FK_users', Integer, ForeignKey('Users.id')),
                             Column('type', Integer, ForeignKey('GroupType.id')),
                             autoload = True)
-        mapper(Groups, self.groups, properties = { 
-                'results' : relation(Results), 
+        mapper(Groups, self.groups, properties = {
+                'results' : relation(Results),
             }
         )
 
@@ -126,13 +126,13 @@ class DyngroupDatabase(DatabaseHelper):
                             Column('FK_groups', Integer, ForeignKey('Groups.id'), primary_key=True),
                             autoload = True)
         mapper(ProfilesPackages, self.profilesPackages)
-        
+
         # ProfilesData
         self.profilesData = Table("ProfilesData", self.metadata,
                             Column('FK_groups', Integer, ForeignKey('Groups.id'), primary_key=True),
                             autoload = True)
         mapper(ProfilesData, self.profilesData)
-        
+
         # Machines
         self.machines = Table("Machines", self.metadata, autoload = True)
         mapper(Machines, self.machines, properties = {
@@ -226,7 +226,7 @@ class DyngroupDatabase(DatabaseHelper):
         s = session.query(UsersType).filter(self.userType.c.id == id).first()
         session.close()
         return s
- 
+
     ####################################
     ## MACHINES ACCESS
 
@@ -241,7 +241,7 @@ class DyngroupDatabase(DatabaseHelper):
         if profile:
             return profile.FK_groups
         return False
-        
+
     def __getMachine(self, uuid, session = None):
         """
         get a machine defined by its UUID
@@ -348,7 +348,7 @@ class DyngroupDatabase(DatabaseHelper):
         q = q.filter(and_(self.groupType.c.value == 'Profile', self.machines.c.uuid == uuid)).first() # a computer can only be in one profile!
         session.close()
         return q
-        
+
     def getProfileContent(self, uuid):
         """
         Get all computers that are in a profile
@@ -358,7 +358,59 @@ class DyngroupDatabase(DatabaseHelper):
         q = q.filter(and_(self.groupType.c.value == 'Profile', self.groups.c.id == uuid)).all()
         session.close()
         return q
-    
+
+    def setProfileImagingServer(self, gid, imaging_uuid):
+        """
+        link the profile to an imaging server
+        """
+        session = create_session()
+        pdata = session.query(ProfilesData).filter(self.profilesData.c.FK_groups == gid).first()
+        if pdata == None:
+            pdata = ProfilesData()
+            pdata.FK_groups = gid
+        pdata.imaging_uuid = imaging_uuid
+        session.save_or_update(pdata)
+        session.flush()
+        session.close()
+        return True
+
+    def getProfileImagingServer(self, gid):
+        """
+        get the imaging server linked to a profile
+        """
+        session = create_session()
+        pdata = session.query(ProfilesData).filter(self.profilesData.c.FK_groups == gid).first()
+        session.close()
+        if pdata == None:
+            return None
+        return pdata.imaging_uuid
+
+    def setProfileEntity(self, gid, entity_uuid):
+        """
+        link the profile to an entity
+        """
+        session = create_session()
+        pdata = session.query(ProfilesData).filter(self.profilesData.c.FK_groups == gid).first()
+        if pdata == None:
+            pdata = ProfilesData()
+            pdata.FK_groups = gid
+        pdata.entity_uuid = entity_uuid
+        session.save_or_update(pdata)
+        session.flush()
+        session.close()
+        return True
+
+    def getProfileEntity(self, gid):
+        """
+        get the entity linked to a profile
+        """
+        session = create_session()
+        pdata = session.query(ProfilesData).filter(self.profilesData.c.FK_groups == gid).first()
+        session.close()
+        if pdata == None:
+            return None
+        return pdata.entity_uuid
+
     ####################################
     ## SHARE ACCESS
 
@@ -376,7 +428,7 @@ class DyngroupDatabase(DatabaseHelper):
         session.flush()
         session.close()
         return share.id
-    
+
     def __changeShare(self, group_id, user_id, visibility):
         """
         modify a share (betwen a group and a user)
@@ -388,7 +440,7 @@ class DyngroupDatabase(DatabaseHelper):
         session.flush()
         session.close()
         return share.id
-        
+
     def __deleteShares(self, group_id, session = None):
         """
         delete all the shares for a group (betwen a group and several users)
@@ -398,7 +450,7 @@ class DyngroupDatabase(DatabaseHelper):
         users = self.__getUsersInGroup(group_id, session)
         for user in users:
             self.__deleteShare(group_id, user.id, session)
-    
+
     def __deleteShare(self, group_id, user_id, session = None):
         """
         delete a share (betwen a group and a user)
@@ -409,13 +461,13 @@ class DyngroupDatabase(DatabaseHelper):
         for share in shares:
             session.delete(share)
             session.flush()
-    
+
         still_linked = session.query(ShareGroup).filter(self.shareGroup.c.FK_users == user_id).count()
         if still_linked == 0:
             user = session.query(Users).get(user_id)
             session.delete(user)
             session.flush()
-    
+
         session.close()
         return still_linked
 
@@ -425,7 +477,7 @@ class DyngroupDatabase(DatabaseHelper):
         (handler for getShareGroup...)
         """
         return self.getShareGroup(id, user_id, session)
-    
+
     def getShareGroup(self, group_id, user_id, session = None):
         """
         get the share item betwen the group and the user (if it exists)
@@ -434,7 +486,7 @@ class DyngroupDatabase(DatabaseHelper):
             session = create_session()
         share = session.query(ShareGroup).filter(self.shareGroup.c.FK_users == user_id).filter(self.shareGroup.c.FK_groups == group_id).first()
         return share
-   
+
     def getShareGroupType(self, id):
         """
         get a share type (can be 0:View or 1:Edit)
@@ -463,7 +515,7 @@ class DyngroupDatabase(DatabaseHelper):
         ret = session.query(ShareGroup).filter(and_(self.shareGroup.c.FK_users == ctx.userid, self.shareGroup.c.FK_groups == id)).first()
         return ret.type == 1
 
- 
+
     ####################################
     ## RESULT ACCESS
 
@@ -480,7 +532,7 @@ class DyngroupDatabase(DatabaseHelper):
         session.flush()
         session.close()
         return result.id
-    
+
     def __deleteResult(self, group_id, machine_id, session = None):
         """
         delete an entry in the result table
@@ -492,16 +544,16 @@ class DyngroupDatabase(DatabaseHelper):
         for result in results:
             session.delete(result)
             session.flush()
-    
+
         still_linked = session.query(Results).filter(self.results.c.FK_machines == machine_id).count()
         if still_linked == 0:
             machine = session.query(Machines).filter(self.machines.c.id == machine_id).first()
             session.delete(machine)
             session.flush()
-    
+
         session.close()
         return still_linked
-    
+
     def __deleteResult4AllGroups(self, machine_id, session = None):
         """
         Delete a computer from the result of all groups
@@ -515,7 +567,7 @@ class DyngroupDatabase(DatabaseHelper):
             session.flush()
             session.close()
         return True
-    
+
     #####################################
     ## GROUP ACCESS
 
@@ -530,9 +582,9 @@ class DyngroupDatabase(DatabaseHelper):
 
     #########################################
     ## PERMISSIONS
- 
+
     #######################################
-    ## UTILITIES 
+    ## UTILITIES
 
     def __merge_join_query(self, select_from, join_tables):
         """
@@ -554,16 +606,16 @@ class DyngroupDatabase(DatabaseHelper):
             else:
                 select_from = select_from.join(table)
         return select_from
-   
+
     ################################
     ## REQUEST / CONTENT / RESULTS
-   
+
     def __insert_into_machines_and_profilesresults(self, connection, computers, groupid):
         """
         use __insert_into_machines_and_results for profiles
         """
         return self.__insert_into_machines_and_results(connection, computers, groupid, 1)
-        
+
     def __insert_into_machines_and_results(self, connection, computers, groupid, type = 0):
         """
         This function is called by reload_group and addmembers_to_group to
@@ -640,7 +692,7 @@ class DyngroupDatabase(DatabaseHelper):
                 else:
                     return False
         return True
-                    
+
     ################################
     ## MEMBERS
 
@@ -680,17 +732,17 @@ class ProfilesData(object):
     def toH(self):
         return {
             'group_id':self.FK_groups,
-            'entity_id':self.entity_id,
-            'imaging_id':self.imaging_id
+            'entity_uuid':self.entity_uuid,
+            'imaging_uuid':self.imaging_uuid
         }
-    
+
 class ProfilesPackages(object):
     def toH(self):
         return {
             'group_id':self.FK_groups,
             'package_id':self.package_id
         }
-    
+
 class ProfilesResults(object):
     def toH(self):
         return {

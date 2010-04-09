@@ -40,8 +40,8 @@ CREATE TABLE ProfilesPackages (
 
 CREATE TABLE ProfilesData (
     FK_groups INT NOT NULL,
-    entity_id INT default NULL,
-    imaging_id INT default NULL, 
+    entity_uuid TEXT default NULL,
+    imaging_uuid TEXT default NULL,
     PRIMARY KEY(FK_groups),
     INDEX profiles_data_ind (FK_groups),
     FOREIGN KEY (FK_groups) REFERENCES Groups(id)
