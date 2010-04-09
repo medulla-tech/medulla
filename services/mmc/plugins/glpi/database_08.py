@@ -22,7 +22,7 @@
 
 """
 This module declare all the necessary stuff to connect to a glpi database in it's
-version 0.8x 
+version 0.8x
 """
 
 # TODO rename location into entity (and locations in location)
@@ -31,7 +31,8 @@ from mmc.plugins.glpi.utilities import complete_ctx
 from pulse2.utils import same_network, unique
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 from pulse2.managers.group import ComputerGroupManager
-from mmc.plugins.glpi.database_utils import decode_latin1, encode_latin1, decode_utf8, encode_utf8, DbTOA, fromUUID, toUUID
+from mmc.plugins.glpi.database_utils import decode_latin1, encode_latin1, decode_utf8, encode_utf8, fromUUID, toUUID, setUUID
+from mmc.plugins.glpi.database_utils import DbTOA
 
 from sqlalchemy import *
 from sqlalchemy.orm import *
@@ -72,7 +73,7 @@ class Glpi08(DyngroupDatabaseHelper):
 
     def glpi_version_new(self):
         return False
-    
+
     def activate(self, config = None):
         self.logger = logging.getLogger()
         DyngroupDatabaseHelper.init(self)
@@ -105,7 +106,7 @@ class Glpi08(DyngroupDatabaseHelper):
 
     def getTableName(self, name):
         return ''.join(map(lambda x:x.capitalize(), name.split('_')))
-    
+
     def initMappers(self):
         """
         Initialize all SQLalchemy mappers needed for the inventory database
@@ -241,12 +242,12 @@ class Glpi08(DyngroupDatabaseHelper):
             autoload = True)
         mapper(Licenses, self.licenses)
 
-        # glpi_softwareversions 
+        # glpi_softwareversions
         self.softwareversions = Table("glpi_softwareversions", self.metadata,
                 Column('softwares_id', Integer, ForeignKey('glpi_softwares.id')),
                 autoload = True)
         mapper(SoftwareVersion, self.softwareversions)
-            
+
         # model
         self.model = Table("glpi_computermodels", self.metadata, autoload = True)
         mapper(Model, self.model)
@@ -830,6 +831,8 @@ class Glpi08(DyngroupDatabaseHelper):
             if len(ret) == 0:
                 ret = []
             session.close()
+
+        ret = map(lambda l: setUUID(l), ret)
         return ret
 
     def __get_all_locations(self):
@@ -862,7 +865,7 @@ class Glpi08(DyngroupDatabaseHelper):
         ret = session.query(Location).filter(self.location.c.id == uuid.replace('UUID', '')).first()
         session.close()
         return ret
-        
+
     def getLocationsList(self, ctx, filt = None):
         """
         Get the list of all entities that user can access
@@ -942,7 +945,7 @@ class Glpi08(DyngroupDatabaseHelper):
         """
         if not self.displayLocalisationBar:
             return True
-        
+
         session = create_session()
         query = session.query(Machine)
         if ctx.userid == "root":
@@ -986,7 +989,7 @@ class Glpi08(DyngroupDatabaseHelper):
         conn = self.getDbConnection()
         query = conn.execute(query).fetchall()
         conn.close()
-                
+
         session.close()
         ret = []
         query.sort(lambda x, y: cmp(x[2], y[2]))
@@ -1128,7 +1131,7 @@ class Glpi08(DyngroupDatabaseHelper):
         locs = {}
         for l in query:
             locs[l.id] = l.entities_id
-        
+
         def __getParent(i):
             if locs.has_key(i):
                 return locs[i]
@@ -1152,7 +1155,7 @@ class Glpi08(DyngroupDatabaseHelper):
             complete_ctx(ctx)
         session = create_session()
         query = session.query(SoftwareVersion).select_from(self.softwareversions.join(self.software))
-            
+
         my_parents_ids = self.getEntitiesParentsAsList(ctx.locationsid)
         query = query.filter(or_(self.software.c.entities_id.in_(ctx.locationsid), and_(self.software.c.is_recursive == 1, self.software.c.entities_id.in_(my_parents_ids))))
         r1 = re.compile('\*')
@@ -1166,7 +1169,7 @@ class Glpi08(DyngroupDatabaseHelper):
         ret = query.group_by(self.softwareversions.c.name).all()
         session.close()
         return ret
-            
+
     def getAllSoftwares(self, ctx, softname = ''):
         """
         @return: all softwares defined in the GLPI database
@@ -1177,7 +1180,7 @@ class Glpi08(DyngroupDatabaseHelper):
         query = session.query(Software)
         my_parents_ids = self.getEntitiesParentsAsList(ctx.locationsid)
         query = query.filter(or_(self.software.c.entities_id.in_(ctx.locationsid), and_(self.software.c.is_recursive == 1, self.software.c.entities_id.in_(my_parents_ids))))
-            
+
         if softname != '':
             query = query.filter(self.software.c.name.like('%'+softname+'%'))
         ret = query.group_by(self.software.c.name).order_by(self.software.c.name).all()
@@ -1597,12 +1600,6 @@ class Glpi08(DyngroupDatabaseHelper):
             return ret.name
         else:
             return ''
-
-def fromUUID(uuid):
-    return int(uuid.replace('UUID', ''))
-
-def toUUID(id):
-    return "UUID%s" % (str(id))
 
 # Class for SQLalchemy mapping
 class Machine(object):

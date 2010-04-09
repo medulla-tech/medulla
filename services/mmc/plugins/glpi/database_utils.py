@@ -62,3 +62,7 @@ def fromUUID(uuid):
 def toUUID(id):
     return "UUID%s" % (str(id))
 
+def setUUID(obj):
+    setattr(obj, 'uuid', toUUID(obj.id))
+    return obj
+

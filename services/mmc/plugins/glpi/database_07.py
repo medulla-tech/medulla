@@ -34,7 +34,8 @@ from mmc.plugins.glpi.utilities import complete_ctx
 from pulse2.utils import same_network, unique, onlyAddNew, grep, grepv
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 from pulse2.managers.group import ComputerGroupManager
-from mmc.plugins.glpi.database_utils import decode_latin1, encode_latin1, decode_utf8, encode_utf8, DbTOA, fromUUID, toUUID
+from mmc.plugins.glpi.database_utils import decode_latin1, encode_latin1, decode_utf8, encode_utf8, fromUUID, toUUID, setUUID
+from mmc.plugins.glpi.database_utils import DbTOA
 
 from ConfigParser import NoOptionError
 
@@ -65,7 +66,7 @@ class Glpi07(DyngroupDatabaseHelper):
         if not hasattr(self, '_glpi_version_new'):
             self._glpi_version_new = (self.glpi_version() >= '0.72')
         return self._glpi_version_new
-    
+
     def try_activation(self, config):
         self.config = config
         dburi = self.makeConnectionPath()
@@ -75,7 +76,7 @@ class Glpi07(DyngroupDatabaseHelper):
         except Exception, e:
             return False
         return True
-        
+
     def activate(self, config = None):
         self.logger = logging.getLogger()
         DyngroupDatabaseHelper.init(self)
@@ -246,7 +247,7 @@ class Glpi07(DyngroupDatabaseHelper):
                     Column('sID', Integer, ForeignKey('glpi_software.ID')),
                     autoload = True)
             mapper(SoftwareVersion, self.softwareversions)
-            
+
         # model
         self.model = Table("glpi_dropdown_model", self.metadata, autoload = True)
         mapper(Model, self.model)
@@ -839,6 +840,7 @@ class Glpi07(DyngroupDatabaseHelper):
             if len(ret) == 0:
                 ret = []
             session.close()
+        ret = map(lambda l:setUUID(l), ret)
         return ret
 
     def __get_all_locations(self):
@@ -871,7 +873,7 @@ class Glpi07(DyngroupDatabaseHelper):
         ret = session.query(Location).filter(self.location.c.ID == uuid.replace('UUID', '')).first()
         session.close()
         return ret
-        
+
     def getLocationsList(self, ctx, filt = None):
         """
         Get the list of all entities that user can access
@@ -951,7 +953,7 @@ class Glpi07(DyngroupDatabaseHelper):
         """
         if not self.displayLocalisationBar:
             return True
-        
+
         session = create_session()
         query = session.query(Machine)
         if ctx.userid == "root":
@@ -1129,7 +1131,7 @@ class Glpi07(DyngroupDatabaseHelper):
         locs = {}
         for l in query:
             locs[l.ID] = l.parentID
-        
+
         def __getParent(i):
             if locs.has_key(i):
                 return locs[i]
@@ -1156,7 +1158,7 @@ class Glpi07(DyngroupDatabaseHelper):
             query = session.query(SoftwareVersion).select_from(self.softwareversions.join(self.software))
         else:
             query = session.query(Licenses).select_from(self.licenses.join(self.software))
-            
+
         if self.glpi_version_new():
             my_parents_ids = self.getEntitiesParentsAsList(ctx.locationsid)
             query = query.filter(or_(self.software.c.FK_entities.in_(ctx.locationsid), and_(self.software.c.recursive == 1, self.software.c.FK_entities.in_(my_parents_ids))))
@@ -1179,8 +1181,8 @@ class Glpi07(DyngroupDatabaseHelper):
         ret = query.all()
         session.close()
         return ret
-            
-    # TODO ! maybe you need to link on machine here, or you need to add some liberties in the previous query 
+
+    # TODO ! maybe you need to link on machine here, or you need to add some liberties in the previous query
     def getAllSoftwares(self, ctx, softname = ''):
         """
         @return: all softwares defined in the GLPI database
@@ -1195,7 +1197,7 @@ class Glpi07(DyngroupDatabaseHelper):
         else:
             query = query.select_from(self.software.join(self.licenses))
             query = query.filter(self.software.c.FK_entities.in_(ctx.locationsid))
-            
+
         if softname != '':
             query = query.filter(self.software.c.name.like('%'+softname+'%'))
         ret = query.group_by(self.software.c.name).order_by(self.software.c.name).all()
@@ -1425,7 +1427,7 @@ class Glpi07(DyngroupDatabaseHelper):
             my_parents_ids = self.getEntitiesParentsAsList(ctx.locationsid)
             query = self.__filter_on_entity(query, ctx, my_parents_ids)
             query = query.filter(or_(self.group.c.FK_entities.in_(ctx.locationsid), and_(self.group.c.recursive == 1, self.group.c.FK_entities.in_(my_parents_ids))))
-        else:   
+        else:
             query = self.__filter_on_entity(query, ctx)
             query = query.filter(self.group.c.FK_entities.in_(ctx.locationsid))
         if filter != '':
@@ -1620,12 +1622,6 @@ class Glpi07(DyngroupDatabaseHelper):
             return ret.name
         else:
             return ''
-
-def fromUUID(uuid):
-    return int(uuid.replace('UUID', ''))
-
-def toUUID(id):
-    return "UUID%s" % (str(id))
 
 # Class for SQLalchemy mapping
 class Machine(object):
