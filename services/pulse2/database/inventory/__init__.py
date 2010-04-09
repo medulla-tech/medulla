@@ -1167,7 +1167,9 @@ class Inventory(DyngroupDatabaseHelper):
         session = create_session()
         q = session.query(self.klass['Entity']).filter(self.table['Entity'].c.id == 1)
         session.close()
-        return q.first()
+        en = q.first()
+        setattr(en, 'uuid', toUUID(en.id))
+        return en
 
     def getUsersInSameLocations(self, userid, locations = None):
         """
