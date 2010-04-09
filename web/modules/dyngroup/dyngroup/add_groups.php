@@ -35,7 +35,9 @@ if ($id) {
     $type = $group->type;
     if (!$name) { $name = $group->getName(); }
     if (!$visibility) { $visibility = $group->canShow(); }
-    $imaging_server = $group->getImagingServer();
+    if ($type == 1) {
+        $imaging_server = $group->getImagingServer();
+    }
     $already_exists = true;
 } else {
     if ($type == 0) {
