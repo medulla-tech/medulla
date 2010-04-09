@@ -399,6 +399,10 @@ class RpcProxy(RpcProxyI):
         ret = DyngroupDatabase().getProfileEntity(gid)
         return xmlrpcCleanup(ret)
 
+    def isProfileAssociatedToImagingServer(self, gid):
+        ims_uuid = self.get_profile_imaging_server(gid)
+        return (ims_uuid != False)
+
 def __onlyIn(query, module):
     for q in query[1]:
         if len(q) == 4:

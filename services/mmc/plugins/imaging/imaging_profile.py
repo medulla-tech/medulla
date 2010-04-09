@@ -33,7 +33,32 @@ from pulse2.database.imaging import ImagingDatabase
 class ImagingProfileImaging(ComputerProfileImagingI):
     def isImagingInProfilePossible(self):
         " check if the root entity is registered "
+        # TODO getRootLocationUUID no longer exists!
         root_entity_uuid = ComputerLocationManager().getRootLocationUUID()
         ret = ImagingDatabase().doesLocationHasImagingServer(root_entity_uuid)
         return ret
+
+    def getAllImagingServers(self, user_id):
+        """
+        get all the imaging server that this user can access
+        """
+        locations = ComputerLocationManager().getUserLocations(user_id)
+        locations = map(lambda l:l['uuid'], locations)
+        r = ImagingDatabase().getEntitiesImagingServer(locations)
+        ret = {}
+        for ims, loc_uuid in r:
+            ims = ims.toH()
+            ret[ims['imaging_uuid']] = ims
+        return ret
+
+    def getImagingServerEntityUUID(self, imaging_uuid):
+        """
+        get the imaging server's entity UUID
+        """
+        db = ImagingDatabase()
+        ims = db.getImagingServerByUUID(imaging_uuid)
+        en = db.getImagingServerEntity(ims.packageserver_uuid)
+        if en != None:
+            return en.uuid
+        return None
 

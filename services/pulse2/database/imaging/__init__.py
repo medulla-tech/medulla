@@ -549,6 +549,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             q[0].default_name = q[1]
         return q[0]
 
+    def getEntitiesImagingServer(self, entities_uuid):
+        session = create_session()
+        q = session.query(ImagingServer).add_column(self.entity.c.uuid)
+        q = q.select_from(self.imaging_server.join(self.entity, self.entity.c.id == self.imaging_server.c.fk_entity))
+        q = q.filter(self.entity.c.uuid.in_(entities_uuid)).all()
+        session.close()
+        return q
+
     def getEntityDefaultMenu(self, loc_id, session = None):
         """
         Given an entity <loc_id>, returns its default menu (more precisely, its imaging server default menu)
@@ -2625,8 +2633,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 # WARNING! here we take the location that is the most represented, it's wrong!
                 # we have to decide how do we do with cross location profiles
                 # TODO!
-                loc_id = locations[m_uuids[0]]['uuid']
-                location_id = loc_id
+                # WARNING! this part is going to change as profiles are attached to an imaging server
+                try:
+                    if len(m_uuids) == 0:
+                        raise Exception("Your profile is empty, in that case we can't get any default menu.")
+                    loc_id = locations[m_uuids[0]]['uuid']
+                    location_id = loc_id
+                except:
+                    raise Exception("Don't know which menu to choose.")
                 default_menu = self.getEntityDefaultMenu(location_id, session)
             else:
                 raise "%s:Don't know that type of target : %s"%(P2ERR.ERR_DEFAULT, type)

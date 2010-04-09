@@ -31,6 +31,7 @@ import sqlalchemy.orm.query
 import logging
 from mmc.support.config import PluginConfig
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext, xmlrpcCleanup
+from mmc.agent import PluginManager
 from pulse2.managers.group import ComputerGroupManager
 from pulse2.managers.location import ComputerLocationManager
 from pulse2.managers.imaging_profile import ComputerProfileImagingManager
@@ -154,6 +155,21 @@ class RpcProxy(RpcProxyI):
         @rtype: boolean
         """
         return ComputerProfileImagingManager().isImagingInProfilePossible()
+
+    def areProfilesPossible(self):
+        """
+        profiles are possible only if the imaging plugin is enable
+        """
+        # maybe we can add something in the configuration of dyngroup to say if we want or not profiles
+        return PluginManager().isEnabled("imaging")
+
+    def getAllImagingServersForProfiles(self):
+        """
+        get all the imaging server that this user can access
+        """
+        ctx = self.currentContext
+        return ComputerProfileImagingManager().getAllImagingServers(ctx.userid)
+
 
 def displayLocalisationBar():
     return xmlrpcCleanup(ComputerLocationManager().displayLocalisationBar())

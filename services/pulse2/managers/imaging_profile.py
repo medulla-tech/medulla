@@ -62,10 +62,30 @@ class ComputerProfileImagingManager(Singleton):
                     return False
         return ret
 
+    def getAllImagingServers(self, user_id):
+        klass = self.components[self.main]
+        return klass().getAllImagingServers(user_id)
+
+    def getImagingServerEntityUUID(self, imaging_uuid):
+        klass = self.components[self.main]
+        return klass().getImagingServerEntityUUID(imaging_uuid)
+
 class ComputerProfileImagingI:
     def isImagingInProfilePossible(self):
         """
         tell if the imaging action is displayed for the profiles
+        """
+        pass
+
+    def getAllImagingServers(self, user_id):
+        """
+        get all the imaging server that this user can access
+        """
+        pass
+
+    def getImagingServerEntityUUID(self, imaging_uuid):
+        """
+        get an imaging server's entity uuid
         """
         pass
 
