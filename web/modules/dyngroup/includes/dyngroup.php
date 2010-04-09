@@ -82,6 +82,10 @@ class Profile extends Group {
         $this->type = 1;
     }
     function create($name, $visibility) { $this->id =  __xmlrpc_create_profile($name, $visibility); return $this->id; }
+    function setEntity($entity_uuid) { return __xmlrpc_set_profile_entity($this->id, $entity_uuid); }
+    function getEntity() { return __xmlrpc_get_profile_entity($this->id); }
+    function setImagingServer($imaging_server_uuid) { return xmlrpc_set_profile_imaging_server($this->id, $imaging_server_uuid); }
+    function getImagingServer() { return xmlrpc_get_profile_imaging_server($this->id); }
     function isProfile() { return True; }
     function isGroup() { return False; }
 }
@@ -207,10 +211,10 @@ function __xmlrpc_bool_group($id) { return xmlCall("dyngroup.bool_group", array(
 function __xmlrpc_setbool_group($id, $bool) { return xmlCall("dyngroup.setbool_group", array($id, $bool)); }
 function __xmlrpc_requestresult_group($id, $start, $end, $filter) { return xmlCall("dyngroup.requestresult_group", array($id, $start, $end, $filter)); }
 function __xmlrpc_countrequestresult_group($id, $filter) { return xmlCall("dyngroup.countrequestresult_group", array($id, $filter)); }
+function convertComputer($e) {$e = array('hostname'=>$e[1]['cn'][0], 'uuid'=>$e[1]['objectUUID'][0]); return $e;}
 function __xmlrpc_result_group($id, $start, $end, $filter) {
     $filter = array('gid' => $id, 'filter' => $filter);
     $ret = xmlCall("base.getRestrictedComputersList", array($start, $end, $filter, False));
-    function convertComputer($e) {$e = array('hostname'=>$e[1]['cn'][0], 'uuid'=>$e[1]['objectUUID'][0]); return $e;}
     $ret1 = array_map("convertComputer", array_values($ret));
     return $ret1;
 }
@@ -247,6 +251,13 @@ function xmlrpc_isprofile($gid) { return xmlCall("dyngroup.isprofile", array($gi
 
 function xmlrpc_getmachineprofile($id) { return xmlCall("dyngroup.getmachineprofile", array($id)); }
 function xmlrpc_getmachinesprofiles($ids) { return xmlCall("dyngroup.getmachinesprofiles", array($ids)); }
+
+function xmlrpc_set_profile_imaging_server($gid, $imaging_server_uuid) { return xmlCall("dyngroup.set_profile_imaging_server", array($gid, $imaging_server_uuid)); }
+function xmlrpc_get_profile_imaging_server($gid) { return xmlCall("dyngroup.get_profile_imaging_server", array($gid)); }
+function __xmlrpc_set_profile_entity($gid, $entity_uuid) { return xmlCall("dyngroup.set_profile_entity", array($gid, $entity_uuid)); }
+function __xmlrpc_get_profile_entity($gid) { return xmlCall("dyngroup.get_profile_entity", array($gid)); }
+
+function xmlrpc_isProfileAssociatedToImagingServer($gid) { return xmlCall("dyngroup.isProfileAssociatedToImagingServer", array($gid)); }
 
 ?>
 

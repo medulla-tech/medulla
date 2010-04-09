@@ -28,12 +28,14 @@ $id = quickGet('id');
 $visibility = quickGet('visible');
 $already_exists = false;
 $type = $_GET['type'];
+$imaging_server = quickGet('imaging_server');
 
 if ($id) {
     $group = getPGobject($id, true);
     $type = $group->type;
     if (!$name) { $name = $group->getName(); }
     if (!$visibility) { $visibility = $group->canShow(); }
+    $imaging_server = $group->getImagingServer();
     $already_exists = true;
 } else {
     if ($type == 0) {
@@ -57,8 +59,8 @@ if (isset($_POST["bdelmachine_x"])) {
     }
 } elseif (isset($_POST['bfiltmachine_x'])) {
     $truncate_limit = getMaxElementsForStaticList();
-    $listOfMachines = getRestrictedComputersList(0, $truncate_limit, array('get'=>array('cn', 'objectUUID'), 'filter'=>$_POST['filter']), False);
-    $count = getRestrictedComputersListLen(array('filter'=>$_POST['filter']));
+    $listOfMachines = getRestrictedComputersList(0, $truncate_limit, array('get'=>array('cn', 'objectUUID'), 'filter'=>$_POST['filter'], 'imaging_server'=>$imaging_server), False);
+    $count = getRestrictedComputersListLen(array('filter'=>$_POST['filter'], 'imaging_server'=>$imaging_server));
     if ($truncate_limit < $count) {
         new NotifyWidgetWarning(sprintf(_T("Computers list has been truncated at %d computers", "dyngroup"), $truncate_limit));
     }
@@ -92,16 +94,17 @@ if (isset($_POST["bdelmachine_x"])) {
 
     $newmem = array_diff_assoc($listN, $listC);
     $delmem = array_diff_assoc($listC, $listN);
-    
+
     if ($group->id) {
         $group->setName($name);
         if ($visibility == 'show') { $group->show(); } else { $group->hide(); }
     } else {
         $group->create($name, ($visibility == 'show'));
+        $group->setImagingServer($imaging_server);
     }
-    
+
     $res = $group->delMembers($delmem) && $group->addMembers($newmem);
-    
+
     if ($res) {
         if ($already_exists) {
             if ($type == 0) {
@@ -158,10 +161,10 @@ if (isset($_POST["bdelmachine_x"])) {
 
     if (!$members) { $members = array(); }
     if (!$listOfMembers) { $listOfMembers = array(); }
-    
+
     $truncate_limit = getMaxElementsForStaticList();
-    $listOfMachines = getRestrictedComputersList(0, $truncate_limit, array('get'=>array('cn', 'objectUUID')), False);
-    $count = getRestrictedComputersListLen();
+    $listOfMachines = getRestrictedComputersList(0, $truncate_limit, array('get'=>array('cn', 'objectUUID'), 'imaging_server'=>$imaging_server), False);
+    $count = getRestrictedComputersListLen(array('imaging_server'=>$imaging_server));
     if ($truncate_limit < $count) {
         new NotifyWidgetWarning(sprintf(_T("Computers list has been truncated at %d computers", "dyngroup"), $truncate_limit));
     }

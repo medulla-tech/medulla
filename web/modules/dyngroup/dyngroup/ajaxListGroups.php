@@ -31,6 +31,7 @@ require_once("../../../modules/dyngroup/includes/querymanager_xmlrpc.php");
 require_once("../../../modules/dyngroup/includes/xmlrpc.php");
 require_once("../../../modules/dyngroup/includes/request.php");
 require("../../../modules/dyngroup/includes/dyngroup.php");*/
+require("modules/pulse2/includes/profiles_xmlrpc.inc.php");
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
@@ -130,7 +131,9 @@ if ($is_gp != 1) {
         $n->addActionItem(new ActionItem(_T("Software deployment on this profile", "dyngroup"),"groupmsctabs","install","computer", "base", "computers"));
     }
     if (in_array("imaging", $_SESSION["supportModList"])) {
-        $n->addActionItem(new ActionItem(_("Imaging management"),"groupimgtabs","imaging","computer", "base", "computers"));
+        if (xmlrpc_isImagingInProfilePossible()) {
+            $n->addActionItem(new ActionItem(_("Imaging management"),"groupimgtabs","imaging","computer", "base", "computers"));
+        }
     }
 }
 $n->addActionItemArray($action_delete);

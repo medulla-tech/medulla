@@ -24,17 +24,20 @@
 /* Add new sidemenu item */
 
 require_once("modules/dyngroup/includes/includes.php");
+require_once("modules/pulse2/includes/profiles_xmlrpc.inc.php");
 
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("All groups", "dyngroup"), "base", "computers",  "list"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Add a group", "dyngroup"), "base", "computers", "computersgroupcreator", "img/machines/icn_addMachines_active.gif", "img/machines/icn_addMachines_ro.gif"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("All profiles", "dyngroup"), "base", "computers",  "list_profiles"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Add a profile", "dyngroup"), "base", "computers", "computersprofilecreator", "img/machines/icn_addMachines_active.gif", "img/machines/icn_addMachines_ro.gif"));
+if (areProfilesPossible()) {
+    $sidemenu->addSideMenuItem(new SideMenuItem(_T("All profiles", "dyngroup"), "base", "computers",  "list_profiles"));
+    $sidemenu->addSideMenuItem(new SideMenuItem(_T("Add a profile", "dyngroup"), "base", "computers", "computersprofilecreator", "img/machines/icn_addMachines_active.gif", "img/machines/icn_addMachines_ro.gif"));
+}
 
 $items = array();
 $groups = getAllGroups(array('canShow'=>true, 'localSidebar'=>true));
 foreach ($groups as $group) {
     $isA = ($group->isDyn() ? (!$group->isRequest() ? _T('the result', 'dyngroup') : _T('the query', 'dyngroup')) : (_T('the static group', 'dyngroup')));
-    
+
     $s = new SideMenuItemNoAclCheck(
              sprintf(_T("(G) Display %s '%s'", "dyngroup"), $isA, $group->getName()),
              "base", "computers", "display&gid=".$group->id."&groupname=".$group->name
@@ -48,7 +51,7 @@ $items = array();
 $profiles = getAllProfiles(array('canShow'=>true));
 foreach ($profiles as $profile) {
     $isA = ($profile->isDyn() ? (!$profile->isRequest() ? _T('the result', 'dyngroup') : _T('the query', 'dyngroup')) : (_T('the static profile', 'dyngroup')));
-    
+
     $s = new SideMenuItemNoAclCheck(
              sprintf(_T("(P) Display %s '%s'", "dyngroup"), $isA, $profile->getName()),
              "base", "computers", "display&gid=".$profile->id."&groupname=".$profile->name
