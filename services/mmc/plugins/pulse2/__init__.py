@@ -19,6 +19,11 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+"""
+Pulse2 mmc-agent plugin
+give a central access to the Managers that can be needed by pulse2 modules
+"""
+
 # SqlAlchemy
 from sqlalchemy.exceptions import SQLError
 import sqlalchemy.orm.query
@@ -28,6 +33,7 @@ from mmc.support.config import PluginConfig
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext, xmlrpcCleanup
 from pulse2.managers.group import ComputerGroupManager
 from pulse2.managers.location import ComputerLocationManager
+from pulse2.managers.imaging_profile import ComputerProfileImagingManager
 
 VERSION = "2.0.0"
 APIVERSION = "0:0:0"
@@ -139,6 +145,15 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return xmlrpcCleanup(ComputerLocationManager().getUserLocations(ctx.userid))
 
+    # Profiles
+    def isImagingInProfilePossible(self):
+        """
+        tell if the profiles can access imaging
+
+        @returns: True if the profiles can access imaging
+        @rtype: boolean
+        """
+        return ComputerProfileImagingManager().isImagingInProfilePossible()
 
 def displayLocalisationBar():
     return xmlrpcCleanup(ComputerLocationManager().displayLocalisationBar())
