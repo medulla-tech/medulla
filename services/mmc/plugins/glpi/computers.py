@@ -107,7 +107,17 @@ class GlpiComputers(ComputerI):
             if type(location) != list and location != None:
                 location = [location]
             filt['ctxlocation'] = location
-        except exceptions.AttributeError:
+            if filt.has_key('entity_uuid') and filt['entity_uuid'] != '':
+                grep_entity = None
+                for l in location:
+                    if l.uuid == filt['entity_uuid']:
+                        grep_entity = l
+                if grep_entity != None:
+                    filt['ctxlocation'] = [grep_entity]
+                else:
+                    self.logger.warn("the user '%s' try to filter on an entity he shouldn't access '%s'"%(ctx.userid, filt['entity_uuid']))
+                    return 0
+        except exceptions.AttributeError, e:
             pass
         return self.glpi.getRestrictedComputersListLen(ctx, filt)
 
@@ -120,6 +130,16 @@ class GlpiComputers(ComputerI):
             if type(location) != list and location != None:
                 location = [location]
             filt['ctxlocation'] = location
+            if filt.has_key('entity_uuid') and filt['entity_uuid'] != '':
+                grep_entity = None
+                for l in location:
+                    if l.uuid == filt['entity_uuid']:
+                        grep_entity = l
+                if grep_entity != None:
+                    filt['ctxlocation'] = [grep_entity]
+                else:
+                    self.logger.warn("the user '%s' try to filter on an entity he shouldn't access '%s'"%(ctx.userid, filt['entity_uuid']))
+                    return {}
         except exceptions.AttributeError, e:
             pass
         return self.glpi.getRestrictedComputersList(ctx, min, max, filt, advanced, justId, toH)
