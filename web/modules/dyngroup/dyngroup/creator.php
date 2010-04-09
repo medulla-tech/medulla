@@ -44,6 +44,7 @@ if (strlen($_GET['subedition']) && $_GET['subedition'] == '1') { $subedition = t
 
 // getting request and id parameters
 $id = idGet();
+$imaging_server = quickGet('imaging_server');
 $group = new Group($id, true);
 $request = quickGet('request');
 if (strlen($request)) {
@@ -58,7 +59,7 @@ if (strlen($request)) {
     $request = new Request();
 }
 
-// a part of the request has to be removed 
+// a part of the request has to be removed
 if ($_GET['action'] == 'computersgroupsubedit' || $_GET['action'] == 'computersgroupcreatesubedit') {
     if (strlen(quickGet('sub_id'))) {
         $sub = $request->getSub(quickGet('sub_id'));
@@ -89,9 +90,9 @@ if (count($modules) == 1) {
         $default = getDefaultModule();
         quickSet('add_req', $default);
     }
-    
+
     print "<table><tr><td>"._T("Choose the module you want to query : ", "dyngroup")."</td>";
-    
+
     foreach ($modules as $name) {
         if ($name == quickGet('add_req')) {
             print "<td>$name</td>";
@@ -100,7 +101,8 @@ if (count($modules) == 1) {
                 urlStr("base/computers/$target", array(
                                                     'add_req'=>$name,
                                                     'request'=>$request->toURL(),
-                                                    'id'=>$id
+                                                    'id'=>$id,
+                                                    'imaging_server'=>$imaging_server
                 )).
                 "'>$name</a></td>";
         }
@@ -129,7 +131,7 @@ if (quickGet('add_req')) {
                 print "<td>$param_name</td>";
             } else {
                 print "<td><a href='".
-                    urlStr("base/computers/$target", array( 'req'=>quickGet('add_req'), 'add_param'=>$param_name, 'request'=>$request->toURL(), 'id'=>$id )).
+                    urlStr("base/computers/$target", array( 'req'=>quickGet('add_req'), 'add_param'=>$param_name, 'request'=>$request->toURL(), 'id'=>$id, 'imaging_server'=>$imaging_server)).
                     "'>$param_name</a></td>";
             }
             $modulo += 1;
@@ -146,6 +148,7 @@ if (quickGet('add_req')) {
 //TODO put in class
 if (quickGet('add_param')) {
     print "<form action='".  urlStr("base/computers/$target", array()).  "' method='POST'><table>";
+    print "<input type='hidden' name='imaging_server' value='$imaging_server'/>";
     // need to be changed in getCriterionType (we don't use the second part of the array...
     $type = getTypeForCriterionInModule(quickGet('req'), quickGet('add_param'));
     print "<tr><td>".quickGet('req')." > ".quickGet('add_param')."</td><td>";
@@ -190,7 +193,7 @@ if (quickGet('add_param')) {
             print "<input type='hidden' value='True' name='value'/><input type='text' readonly value='"._T("Yes", "dyngroup")."'/>";
             print "<input class='btnPrimary' value='"._T("Add", "dyngroup")."' name='Add' type='submit'/>";
             break;
-    } 
+    }
     print "</td><td>";
     print "<input type='hidden' name='req' value='".quickGet('req')."'/>";
     print "<input type='hidden' name='param' value='".quickGet('add_param')."'/>";
@@ -217,9 +220,9 @@ if (!$request->isEmpty())  {  # TODO check ACLs....
     print "<hr/>";
     print "<table>";
     print "<tr><td>";
-    
+
     $b = new Button('base', 'computers', 'creator_step2');
-    $url = urlStr("base/computers/creator_step2", array('id'=>$id, 'request'=>$request->toS(), 'is_group'=>($groupedit?'1':0)));
+    $url = urlStr("base/computers/creator_step2", array('id'=>$id, 'request'=>$request->toS(), 'imaging_server'=>$imaging_server, 'is_group'=>($groupedit?'1':0)));
     print $b->getOnClickButton(_T("Go to save step", "dyngroup"), $url);
 
     print "</td><td>";

@@ -34,6 +34,7 @@ $p->display();
 $id = idGet();
 $group = null;
 if ($id) { $group = getPGobject($id, true); }
+$imaging_server = quickGet('imaging_server');
 $request = quickGet('request');
 if (!$request) { $request = $group->getRequest(); }
 if (!$request) { exit(0); }
@@ -57,7 +58,7 @@ $r->parse($request);
 
 $check = checkBoolEquation($bool, $r, isset($_POST['checkBool']));
 if ($check && isset($_POST['displayTmp'])) {
-    header("Location: " . urlStrRedirect("base/computers/tmpdisplay", array('id'=>$id, 'request'=>urlencode($r->toS()), 'is_group'=>$is_group, 'equ_bool'=>$bool, 'name'=>urlencode($name), 'save_type'=>$save_type, 'visible'=>$visible)));
+    header("Location: " . urlStrRedirect("base/computers/tmpdisplay", array('id'=>$id, 'request'=>urlencode($r->toS()), 'is_group'=>$is_group, 'equ_bool'=>$bool, 'name'=>urlencode($name), 'save_type'=>$save_type, 'visible'=>$visible, 'imaging_server'=>$imaging_server)));
 }
 
 $name_exists = xmlrpc_group_name_exists($name, $group->id);
@@ -67,7 +68,7 @@ if (!isset($_POST['btnPrimary']) || $name_exists || !$check || isset($_POST['che
     // TODO : put in class
     print "<hr/><table><tr>";
     if (hasCorrectAcl("base", "computers", "save")) {
-        print "<form method='POST' action='".urlStr("base/computers/save", array('request'=>$request, 'id'=>$id, 'is_group'=>$is_group)).  "' >".
+        print "<form method='POST' action='".urlStr("base/computers/save", array('request'=>$request, 'id'=>$id, 'is_group'=>$is_group, 'imaging_server'=>$imaging_server)).  "' >".
             "<td>"._T('Name :', 'dyngroup')." <input name='name' type='text' value=\"" . htmlspecialchars($name) . "\" /></td>";
             if ($is_group) {
                 print "<td>"._T('save as', 'dyngroup')." <select name='save_type'><option value='1' ".($save_type == 1 ? 'selected' : '').">"._T("query", "dyngroup")."</option><option value='2' ".($save_type == 2 ? 'selected' : '').">"._T('result', 'dyngroup')."</option></select></td>";
@@ -82,12 +83,12 @@ if (!isset($_POST['btnPrimary']) || $name_exists || !$check || isset($_POST['che
     if (hasCorrectAcl("base", "computers", "tmpdisplay")) {
         drawTemporaryButton();
     }
-    
+
     if (hasCorrectAcl("base", "computers", "save")) {
         print "<td><input name='btnPrimary' value='"._T('Save', 'dyngroup')."' class='btnPrimary' type='submit'/></td>";
     }
     print "</tr></form></table>";
-    if ($name_exists && !isset($_POST['displayTmp'])) { 
+    if ($name_exists && !isset($_POST['displayTmp'])) {
         new NotifyWidgetFailure(sprintf(_T("A group already exists with name '%s'", "dyngroup"), $name));
     } elseif ($name == '' && $check && $id) {
         new NotifyWidgetFailure(_T("You must specify a group name", "dyngroup"));
@@ -107,6 +108,7 @@ if (!isset($_POST['btnPrimary']) || $name_exists || !$check || isset($_POST['che
             $group = new Profile();
         }
         $gid = $group->create($name, $visible);
+        $group->setImagingServer($imaging_server);
     }
 
     $request = $r->toS();
