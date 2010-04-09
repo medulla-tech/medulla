@@ -1133,6 +1133,7 @@ class Inventory(DyngroupDatabaseHelper):
             q = session.query(self.klass['Entity']).filter(self.table['Entity'].c.id == 1).order_by(self.table['Entity'].c.Label)
         level = 1
         for entity in q:
+            setattr(entity, 'uuid', toUUID(entity.id))
             if with_level:
                 ret.append((entity, level))
             else:

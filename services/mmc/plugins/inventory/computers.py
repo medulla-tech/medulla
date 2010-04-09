@@ -27,6 +27,7 @@ Used by the ComputerManager
 from mmc.plugins.base import ComputerI
 from mmc.plugins.inventory.config import InventoryConfig
 from pulse2.database.inventory import Inventory
+from pulse2.managers.imaging_profile import ComputerProfileImagingManager
 import logging
 
 class InventoryComputers(ComputerI):
@@ -92,11 +93,51 @@ class InventoryComputers(ComputerI):
     def getRestrictedComputersListLen(self, ctx, filt = {}):
         if filt == '':
             filt = {}
+
+        if filt.has_key('imaging_server') and filt['imaging_server'] != '':
+            entity_uuid = ComputerProfileImagingManager().getImagingServerEntityUUID(filt['imaging_server'])
+            if entity_uuid != None:
+                filt['location'] = entity_uuid
+            else:
+                self.logger.warn("can't get the entity that correspond to the imaging server %s"%(filt['imaging_server']))
+                return {}
+
+        if filt.has_key('entity_uuid') and filt['entity_uuid'] != '':
+            grep_entity = None
+            for l in ctx.locations:
+                if l.uuid == filt['entity_uuid']:
+                    grep_entity = l
+            if grep_entity != None:
+                filt['location'] = [grep_entity]
+            else:
+                self.logger.warn("the user '%s' try to filter on an entity he shouldn't access '%s'"%(ctx.userid, filt['entity_uuid']))
+                return {}
+
         return self.inventory.countMachinesOnly(ctx, filt)
 
     def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = {}, advanced = True, justId = False, toH = False):
         if filt == '':
             filt = {}
+
+        if filt.has_key('imaging_server') and filt['imaging_server'] != '':
+            entity_uuid = ComputerProfileImagingManager().getImagingServerEntityUUID(filt['imaging_server'])
+            if entity_uuid != None:
+                filt['location'] = entity_uuid
+            else:
+                self.logger.warn("can't get the entity that correspond to the imaging server %s"%(filt['imaging_server']))
+                return {}
+
+        if filt.has_key('entity_uuid') and filt['entity_uuid'] != '':
+            grep_entity = None
+            for l in ctx.locations:
+                if l.uuid == filt['entity_uuid']:
+                    grep_entity = l
+            if grep_entity != None:
+                filt['location'] = [grep_entity]
+            else:
+                self.logger.warn("the user '%s' try to filter on an entity he shouldn't access '%s'"%(ctx.userid, filt['entity_uuid']))
+                return {}
+
         filt['min'] = min
         filt['max'] = max
         if justId:

@@ -27,6 +27,7 @@ from mmc.plugins.base import ComputerI
 from mmc.plugins.glpi.config import GlpiConfig
 from mmc.plugins.glpi.database import Glpi
 from mmc.plugins.glpi.utilities import complete_ctx
+from pulse2.managers.imaging_profile import ComputerProfileImagingManager
 import logging
 import exceptions
 
@@ -107,6 +108,14 @@ class GlpiComputers(ComputerI):
             if type(location) != list and location != None:
                 location = [location]
             filt['ctxlocation'] = location
+            if filt.has_key('imaging_server') and filt['imaging_server'] != '':
+                entity_uuid = ComputerProfileImagingManager().getImagingServerEntityUUID(filt['imaging_server'])
+                if entity_uuid != None:
+                    filt['entity_uuid'] = entity_uuid
+                else:
+                    self.logger.warn("can't get the entity that correspond to the imaging server %s"%(filt['imaging_server']))
+                    return 0
+
             if filt.has_key('entity_uuid') and filt['entity_uuid'] != '':
                 grep_entity = None
                 for l in location:
@@ -130,6 +139,14 @@ class GlpiComputers(ComputerI):
             if type(location) != list and location != None:
                 location = [location]
             filt['ctxlocation'] = location
+            if filt.has_key('imaging_server') and filt['imaging_server'] != '':
+                entity_uuid = ComputerProfileImagingManager().getImagingServerEntityUUID(filt['imaging_server'])
+                if entity_uuid != None:
+                    filt['entity_uuid'] = entity_uuid
+                else:
+                    self.logger.warn("can't get the entity that correspond to the imaging server %s"%(filt['imaging_server']))
+                    return {}
+
             if filt.has_key('entity_uuid') and filt['entity_uuid'] != '':
                 grep_entity = None
                 for l in location:
