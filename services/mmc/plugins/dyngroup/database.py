@@ -21,6 +21,11 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+"""
+Dyngroup database handler
+Add a specific mmc-agent plugin level
+"""
+
 # SqlAlchemy
 from sqlalchemy.orm import create_session
 from sqlalchemy.sql import *
@@ -37,7 +42,7 @@ import re
 
 class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
     """
-    The function defined here are only to use in the mmc because 
+    The function defined here are only to use in the mmc because
     they need ctx objet to work and sometime some mmc helpers
     """
 
@@ -102,7 +107,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         add several shares, creating the users if they don't already exists
         """
-        # often used with visibility = 0 as it's not at the same place that 
+        # often used with visibility = 0 as it's not at the same place that
         # the share is created and that the visibility is set
         group = self.get_group(ctx, id)
         session = create_session()
@@ -118,7 +123,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
     def change_share_visibility(self, ctx, id, login, type, visibility = 0):
         """
         change the visibility flag on a share
-        ie : change the fact that the user defined by it's id and login 
+        ie : change the fact that the user defined by it's id and login
         see the group in the left menu
         """
         group = self.get_group(ctx, id)
@@ -146,7 +151,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
 
     ####################################
     ## RESULT ACCESS
-    
+
     def __deleteResults(self, ctx, group_id, session = None):
         """
         delete all the result objects linked to a group
@@ -157,7 +162,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         machines = self.__getMachines(ctx, group_id, session)
         for machine in machines:
             self.__deleteResult(group_id, machine.id, session)
-    
+
     def __result_group_query(self, ctx, session, id, filter = ''):
         """
         return the list of machines linked to a group (result) defined by the group id
@@ -187,15 +192,15 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         user_id = self.__getOrCreateUser(ctx)
         ug_ids = map(lambda x: x.id, self.__getUsers(getUserGroups(ctx.userid), 1, session)) # get all usergroups ids
-    
+
         group = session.query(Groups).select_from(self.groups.join(self.users, self.groups.c.FK_users == self.users.c.id).outerjoin(self.shareGroup, self.groups.c.id == self.shareGroup.c.FK_groups))
         if ctx.userid == 'root' or ro:
             return group
         return group.filter(or_(self.users.c.login == ctx.userid, self.shareGroup.c.FK_users == user_id, self.shareGroup.c.FK_users.in_(ug_ids)))
-    
+
     def __getGroupByNameInSession(self, ctx, session, name, ro = False):
         """
-        get a group by it's name using the __getGroupInSessionFirstStep function 
+        get a group by it's name using the __getGroupInSessionFirstStep function
         wildcards are allowed
         ie : you will see only the group you can have access!
         """
@@ -206,10 +211,10 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         else:
             group = group.filter(self.groups.c.name == name).first()
         return group
-    
+
     def __getGroupInSession(self, ctx, session, id, ro = False):
         """
-        get a group by it's id using the __getGroupInSessionFirstStep function 
+        get a group by it's id using the __getGroupInSessionFirstStep function
         wildcards are not allowed
         ie : you will see only the group you can have access!
         """
@@ -228,7 +233,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         root_id = self.__getUser('root').id
         if filter_on != None:
             groups = groups.filter(filter_on)
-        
+
         if ctx.userid == 'root' and params.has_key('localSidebar') and params['localSidebar']:
             groups = groups.filter(self.groups.c.FK_users == root_id)
         if params.has_key('canShow'):
@@ -236,7 +241,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
                 groups = groups.filter(self.shareGroup.c.display_in_menu == 1)
             else:
                 groups = groups.filter(self.shareGroup.c.display_in_menu == 0)
-    
+
         try:
             if params['owner']:
                 groups = groups.filter(self.users.c.login == params['owner'])
@@ -248,25 +253,25 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
                 groups = groups.filter(self.groups.c.query != None)
         except KeyError:
             pass
-    
+
         try:
             if params['static']:
                 groups = groups.filter(self.groups.c.query == None)
         except KeyError:
             pass
-    
+
         try:
             if params['filter']:
                  groups = groups.filter(self.groups.c.name.like('%'+params['filter'].encode('utf-8')+'%'))
         except KeyError:
             pass
-    
+
         try:
             if params['name'] != None:
                 groups = groups.filter(self.groups.c.name == params['name'].encode('utf-8'))
         except KeyError:
             pass
-    
+
         return groups.group_by(self.groups.c.id)
 
     def countallgroups(self, ctx, params, type = 0):
@@ -291,7 +296,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         session = create_session()
         groups = self.__allgroups_query(ctx, params, session, type)
-        
+
         min = 0
         try:
             if params['min']:
@@ -309,7 +314,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
 
         ret = groups.order_by(self.groups.c.name).all()
         ret = map(lambda m: setattr(m[0], 'is_owner', m[1] == ctx.userid) or m[0], ret)
-        
+
         session.close()
         return ret
 
@@ -322,8 +327,10 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
                 return False
             else:
                 return True
-        
+
         owner = self.get_group_owner(ctx, id)
+        if owner == False:
+            return True
         grps = self.getallgroups(ctx, {'name':name, 'owner':owner.login})
         for grp in grps:
             if str(grp.id) != str(id):
@@ -367,7 +374,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         user_id = self.__getOrCreateUser(ctx)
         connection = self.getDbConnection()
         trans = connection.begin()
-        # get machines to possibly delete 
+        # get machines to possibly delete
         session = create_session()
         to_delete = map(lambda x: x.id, session.query(Machines).select_from(self.machines.join(self.results)).filter(self.results.c.FK_groups == id))
         session.close()
@@ -395,7 +402,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         session.save_or_update(group)
         session.flush()
         session.close()
-        
+
         # we now need to add an entry in ShareGroup for the creator
         self.__createShare(group.id, user_id, visibility, 1)
         return group.id
@@ -421,7 +428,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         change the visibility on the group for the current user (ctx)
         """
         user_id = self.__getOrCreateUser(ctx)
-        
+
         session = create_session()
         s = self.__getShareGroupInSession(id, user_id, session)
         s.display_in_menu = visibility
@@ -429,7 +436,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         session.flush()
         session.close()
         return True
-                
+
     def request_group(self, ctx, id):
         """
         get the group (defined by it's id) request field
@@ -565,7 +572,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             return (g.type == 1)
         else:
             return False
- 
+
     #########################################
     ## PERMISSIONS
 
@@ -575,11 +582,11 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         user_id = self.__getOrCreateUser(ctx)
         ug_ids = map(lambda x: x.id, self.__getUsers(getUserGroups(ctx.userid), 1, session)) # get all usergroups ids
-    
+
         if ctx.userid == 'root':
             return (None, None)
         return ([[self.users, False, self.users.c.id == self.groups.c.FK_users], [self.shareGroup, True, self.groups.c.id == self.shareGroup.c.FK_groups]], or_(self.users.c.login == ctx.userid, self.shareGroup.c.FK_users == user_id, self.shareGroup.c.FK_users.in_(ug_ids)))
-    
+
     def __get_group_permissions_request_first(self, ctx, session = None):
         """
         assemble the return of __permissions_query to have a couple :
@@ -592,7 +599,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         if join_tables != None:
             select_from = self.__merge_join_query(select_from, join_tables)
         return (select_from, filter_on)
-    
+
     def __get_group_permissions_request(self, ctx, session = None):
         """
         assemble the return of __get_group_permissions_request_first
@@ -603,13 +610,13 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         if filter_on != None:
             groups = groups.filter(filter_on)
         return groups
-  
+
     #######################################
-    ## UTILITIES 
+    ## UTILITIES
 
     ################################
     ## REQUEST / CONTENT / RESULTS
-   
+
     def __getContent(self, ctx, group, queryManager):
         """
         get a group content (machines)
@@ -695,7 +702,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         ret = result.count()
         session.close()
         return ret
-       
+
     def reload_group(self, ctx, id, queryManager):
         """
         update the content of a group (defined by it's id)
