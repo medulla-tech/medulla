@@ -45,7 +45,6 @@ from mmc.plugins.base.computers import ComputerManager
 from pulse2.managers.group import ComputerGroupManager
 from pulse2.managers.profile import ComputerProfileManager
 
-
 VERSION = '2.0.0'
 APIVERSION = '0:0:0'
 REVISION = int('$Rev$'.split(':')[1].strip(' $'))
@@ -369,6 +368,36 @@ class RpcProxy(RpcProxyI):
 
         dyndatabase.updateNewNames(need_update)
         return len(need_update)
+
+    def set_profile_imaging_server(self, gid, imaging_uuid):
+        if not self.isprofile(gid):
+            return False
+        dyndatabase = DyngroupDatabase()
+        ret = dyndatabase.setProfileImagingServer(gid, imaging_uuid)
+        return xmlrpcCleanup(ret)
+
+    def get_profile_imaging_server(self, gid):
+        if gid == '':
+            return False
+        if not self.isprofile(gid):
+            return False
+        ret = DyngroupDatabase().getProfileImagingServer(gid)
+        return xmlrpcCleanup(ret)
+
+    def set_profile_entity(self, gid, entity_uuid):
+        if not self.isprofile(gid):
+            return False
+        dyndatabase = DyngroupDatabase()
+        ret = dyndatabase.setProfileEntity(gid, entity_uuid)
+        return xmlrpcCleanup(ret)
+
+    def get_profile_entity(self, gid):
+        if gid == '':
+            return False
+        if not self.isprofile(gid):
+            return False
+        ret = DyngroupDatabase().getProfileEntity(gid)
+        return xmlrpcCleanup(ret)
 
 def __onlyIn(query, module):
     for q in query[1]:
