@@ -36,7 +36,7 @@ import mmc.plugins.dyngroup
 # PULSE2 modules
 import pulse2.database.dyngroup
 from pulse2.database.dyngroup import Groups, Machines, Results, Users
-
+from pulse2.managers.imaging_profile import ComputerProfileImagingManager
 # Imported last
 import re
 
@@ -711,10 +711,16 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         trans = connection.begin()
         session = create_session()
         group = self.__getGroupInSession(ctx, session, id, False)
+        is_profile = self.isprofile(ctx, id)
+        filt = {}
+        if is_profile:
+            imaging_server = self.getProfileImagingServer(id)
+            # replyToQuery call getRestrictedComputersList which know what to do with 'imaging_server'
+            filt['imaging_server'] = imaging_server
         session.close()
         query = queryManager.getQueryTree(group.query, group.bool)
-        result = mmc.plugins.dyngroup.replyToQuery(ctx, query, group.bool, 0, -1, False, True)
-        if self.isprofile(ctx, id):
+        result = mmc.plugins.dyngroup.replyToQuery(ctx, query, group.bool, 0, -1, False, True, filt)
+        if is_profile:
             if not self.__insert_into_machines_and_profilesresults(connection, result, group.id):
                 trans.rollback()
                 return False
