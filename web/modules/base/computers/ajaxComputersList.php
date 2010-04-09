@@ -47,6 +47,7 @@ if (isset($_GET['location'])) {
 }
 if (isset($_GET['request'])) { $filter['request'] = $_GET['request']; }
 if (isset($_GET['equ_bool'])) { $filter['equ_bool'] = $_GET['equ_bool']; }
+if (isset($_GET['imaging_server'])) { $filter['imaging_server'] = $_GET['imaging_server']; }
 
 if (in_array("dyngroup", $_SESSION["modulesList"])) {
     require_once("modules/pulse2/includes/groups_xmlrpc.inc.php");
