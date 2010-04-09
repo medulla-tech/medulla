@@ -100,7 +100,9 @@ if (isset($_POST["bdelmachine_x"])) {
         if ($visibility == 'show') { $group->show(); } else { $group->hide(); }
     } else {
         $group->create($name, ($visibility == 'show'));
-        $group->setImagingServer($imaging_server);
+        if ($type == 1) {
+            $group->setImagingServer($imaging_server);
+        }
     }
 
     $res = $group->delMembers($delmem) && $group->addMembers($newmem);
