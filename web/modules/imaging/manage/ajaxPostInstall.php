@@ -77,6 +77,9 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
         $t = new TitleElement(_T("Available post-installation scripts", "imaging"));
         $t->display();
 
+        if (! isset($params) ) {
+            $params = array();
+        }
         $ajax = new AjaxFilter("modules/imaging/manage/ajaxPostInstallLevel2.php", "Level2", $params, "formLevel2");
         //$ajax->setRefresh(10000);
         $ajax->display();
