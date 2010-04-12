@@ -28,6 +28,7 @@ global $conf;
 
 ob_start();
 
+require("includes/assert.inc.php");
 require("includes/session.inc.php");
 require("includes/config.inc.php");
 require_once("includes/i18n.inc.php");
@@ -129,6 +130,12 @@ function autoInclude() {
         return;
     }
     
+    
+    /* Warn user once at login if her account is expired. */
+    if (in_array("ppolicy", $_SESSION["supportModList"])) {
+        require_once("modules/ppolicy/default/warnuser.php");
+    }
+
     if (!empty($redirArray[$__module][$__submod][$__action])) {
         require($redirArray[$__module][$__submod][$__action]);
     } else {
