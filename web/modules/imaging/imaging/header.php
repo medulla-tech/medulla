@@ -35,7 +35,7 @@ if ($stateid == $SYNCHROSTATE_TODO) {
     $f->addButton("bsync", _T("Synchronize", "imaging"));
     $f->display();
     print "</td></tr></table>";
-} elseif (($_GET['tab'] == 'tabbootmenu' || $_GET['tab'] == 'grouptabbootmenu') && isExpertMode()) {
+} elseif (isset($_GET['tab']) && ($_GET['tab'] == 'tabbootmenu' || $_GET['tab'] == 'grouptabbootmenu') && isExpertMode()) {
     print "<table><tr><td>";
     print _T('Click on "Force synchronize" if you want to force the synchronization', 'imaging');
     print "</td><td>";
