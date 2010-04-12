@@ -90,7 +90,11 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
         $a_display = array();
         $a_defaultWOL = array();
         $a_displayWOL = array();
+        $list_params = array();
 
+        if (! isset($params)) { // FIXME : if not defined here, perhaps we should drop it ?
+            $params = array();
+        }
         $i = -1;
         foreach ($menu as $entry) {
             $i = $i + 1;
