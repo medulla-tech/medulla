@@ -72,6 +72,9 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
 
         $t = new TitleElement(_T("Manage services", "imaging"));
         $t->display();
+        if (! isset($params)) { // FIXME : $params do not exists ?!
+            $params = array();
+        }
         $ajax = new AjaxFilter("modules/imaging/manage/ajaxServiceLevel2.php", "Level2", $params, "formLevel2");
         //$ajax->setRefresh(10000);
         $ajax->display();
