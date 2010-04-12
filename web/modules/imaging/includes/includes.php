@@ -112,13 +112,12 @@ function print_health() {
 }
 
 function format_disk_info($df) {
-    $incomplete_lines = "";
     $ret = '';
 
     foreach ($df as $disk) {
         //if previous is truncated we add it to the current line
-        if ($incomplete_lines) {
-            $disk = $incomplete_lines ." ". $disk;
+        if (isset($incomplete_lines) and $incomplete_lines != "") {
+            $disk = $incomplete_lines . " " . $disk;
             unset($incomplete_lines);
         }
 
