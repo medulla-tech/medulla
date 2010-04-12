@@ -36,6 +36,12 @@ $location = getCurrentLocation();
 
 list($count, $imaging_server) = xmlrpc_getAllNonLinkedImagingServer();
 
+if ($count == 0) {// we did not received at least one imaging_server
+    $t = new TitleElement(_T("No imaging server available for association.", "imaging"));
+    $t->display();
+    return;
+}
+
 // forge params
 $params = getParams();
 $addAction = new ActionPopupItem(sprintf(_T("Link this Imaging Server to the '%s' entity.", "imaging"), $location), "imaging_server_link", "addbootmenu", "master", "imaging", "manage");
