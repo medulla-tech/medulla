@@ -1,7 +1,8 @@
 <?php
+
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2008 Mandriva, http://www.mandriva.com
+ * (c) 2007-2010 Mandriva, http://www.mandriva.com
  *
  * $Id$
  *
@@ -18,8 +19,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 require ("FormGenerator.php");
@@ -354,6 +354,7 @@ class ListInfos extends HtmlElement {
      *
      */
     function addActionItemArray($objActionItemArray) {
+        assert(is_array($objActionItemArray));
         $this->arrAction[] = &$objActionItemArray;
     }
 
@@ -363,6 +364,7 @@ class ListInfos extends HtmlElement {
      *  @param $arrString an Array String to display
      */
     function addExtraInfo($arrString, $description= "",$width="") {
+        assert(is_array($arrString));
         $this->extraInfo[] = &$arrString;
         $this->description[] = $description;
         $this->col_width[] = $width;
@@ -373,6 +375,7 @@ class ListInfos extends HtmlElement {
      *  @param $arrString an Array of string to be used as parameters for the main action
      */
     function setParamInfo($arrString) {
+        assert(is_array($arrString));
         $this->paramInfo = $arrString;
     }
 
