@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# (c) 2007-2009 Mandriva, http://www.mandriva.com
+# (c) 2007-2010 Mandriva, http://www.mandriva.com
 #
 # $Id$
 #
@@ -29,99 +29,110 @@ DESC="Mandriva Management Console : mmc-agent"
 DAEMON="/usr/sbin/mmc-agent"
 PIDFILE="/var/run/mmc-agent.pid"
 
+test -x $DAEMON || exit 0
+
+RETVAL=0
+
 # Function to start daemon
 start () {
-	echo -n "Starting ${DESC} : "
-	# Start daemon (no need to demonize it)
-	# Do not start it if a pidfile already exist
-        if [ ! -e ${PIDFILE} ]
-	  then
-  	    ${DAEMON} >/dev/null 2>&1
+    echo -n "Starting ${DESC} : "
+    # Start daemon
+    # Do not start it if a PID file already exist
+    if [ ! -e ${PIDFILE} ]
+    then
+        ${DAEMON} >/dev/null 2>&1
   	    # Get return code
-	    RETVAL=$?
-	  else
-	    RETVAL=1
-	fi
-	# If return code is 0, everything went fine
-	if [ ${RETVAL} -eq 0 ]
-	  then
-	    echo "done."
-	  else
-	    echo "failed."
-	fi
-	return ${RETVAL}
+        RETVAL=$?
+    else
+        RETVAL=1
+    fi
+    # If return code is 0, everything went fine
+    if [ ${RETVAL} -eq 0 ]
+    then
+        echo "done."
+    else
+        echo "failed."
+    fi
 }
 
 # Function to stop daemon
 stop () {
-	echo -n $"Stopping ${DESC} : "
-	# Check if the pidfile exists
-	if [ -e ${PIDFILE} ]
-	  then
-	    # If there's one, get the pid and send SIG 15
-	    kill -15 `cat ${PIDFILE}`
-	    # Get return code
-	    RETVAL=$?
-	  # If there's no pidfile, skip kill and define RETVAL as 1
-	  else
-	  RETVAL=1
-	fi	
-	if [ ${RETVAL} -eq 0 ]
-	  then
-	    echo "done."
-	  else
-	    echo "failed."
-	fi
-	return ${RETVAL}
+    echo -n $"Stopping ${DESC} : "
+    # Check if the pidfile exists
+    if [ -e ${PIDFILE} ]
+    then
+        # If there's one, get the pid and send SIG 15
+        kill -15 `cat ${PIDFILE}`
+        # Get return code
+        RETVAL=$?
+        # If there's no pidfile, skip kill and define RETVAL as 1
+    else
+	    RETVAL=1
+    fi
+    if [ $RETVAL -eq 0 ]
+    then
+        echo "done."
+    else
+        echo "failed."
+    fi
 }
 
-# Function to force the daemon to stop
+# Function to force the daemon to stop (SIGKILL)
 force_stop () {
-	echo -n $"Stopping (forced) ${DESC} : "
-	# Check if the pidfile exists
-	if [ -e ${PIDFILE} ]
-	  then
-	    # If there's one, get the pid and send SIG 9
-	    kill -9 `cat ${PIDFILE}`
-	    # Get return code
-	    RETVAL=$?
-	  # If there's no pidfile, skip kill and define RETVAL as 1
-	  else
-	    RETVAL=1
-	fi
-	if [ ${RETVAL} -eq 0 ]
-	  then
-	    echo "done."
-	  else
-	    echo "failed."
-	fi
-	return ${RETVAL}
+    echo -n $"Stopping (forced) ${DESC} : "
+    # Check if the pidfile exists
+    if [ -e ${PIDFILE} ]
+    then
+        # If there's one, get the pid and send SIGKILL
+        kill -9 `cat ${PIDFILE}`
+        # Get return code
+        RETVAL=$?
+    else
+        # If there's no pidfile, skip kill and define RETVAL as 1
+        RETVAL=1
+    fi
+    if [ $RETVAL -eq 0 ]
+    then
+        echo "done."
+    else
+        echo "failed."
+    fi
 }
 
 # Function to restart (run stop, then start)
 restart() {
-	stop
-	sleep 2
-	start
+    stop
+    sleep 2
+    start
+}
+
+# Function to run the service in debug mode
+debug_run() {
+    echo "$0: Starting MMC agent in debug mode ..."
+    ${DAEMON} -d 2>&1
+    echo "$0: Exit status: $?"
+    RETVAL=0
 }
 
 case $1 in
-	start)
-		start
-	;;
-	stop)
-		stop
-	;;
-	force-stop)
-		force_stop
-	;;
-	restart | force-reload)
-		restart
-	;;
-	*)
-
-	echo "Usage: ${0} {start|stop|restart|force-reload}"
-	exit 1
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    force-stop)
+        force_stop
+        ;;
+    restart | force-reload)
+	    restart
+        ;;
+    debug-run)
+        debug_run
+        ;;
+    *)
+        echo "Usage: ${0} {start|stop|restart|force-reload|force-stop|debug-run}"
+        exit 1
 esac
 
-exit ${RETVAL}
+exit $RETVAL
