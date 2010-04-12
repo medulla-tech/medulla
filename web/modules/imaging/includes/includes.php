@@ -179,7 +179,7 @@ function format_health($up, $mem) {
     ($hrs > 1) ? $h = "s" : $h = "";
     ($mins > 1) ? $m = "s" : $m = "";
 
-    $rt .= "<em>"._("Uptime: ")."</em>";
+    $ret .= "<em>"._("Uptime: ")."</em>";
     if ($days > 0) {
             $ret .= $days." "._("day").$d." ";
     }
