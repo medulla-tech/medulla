@@ -32,6 +32,17 @@ require_once("ppolicy.inc.php");
  *
  */
 function _ppolicy_baseEdit($ldapArr, $postArr) {
+
+    # get current values
+    $pwdMinLength = isset($ldapArr["pwdMinLength"][0]) ? $ldapArr["pwdMinLength"][0] : "";
+    $pwdMinAge = isset($ldapArr["pwdMinAge"][0]) ? $ldapArr["pwdMinAge"][0] : "";
+    $pwdMaxAge = isset($ldapArr["pwdMaxAge"][0]) ? $ldapArr["pwdMaxAge"][0] : "";    
+    $pwdInHistory = isset($ldapArr["pwdInHistory"][0]) ? $ldapArr["pwdInHistory"][0] : "";
+    $pwdLockout = isset($ldapArr["pwdLockout"][0]) ? $ldapArr["pwdLockout"][0] : "";
+    $pwdMustChange = isset($ldapArr["pwdMustChange"][0]) ? $ldapArr["pwdMustChange"][0] : "";    
+    $pwdMaxFailure = isset($ldapArr["pwdMaxFailure"][0]) ? $ldapArr["pwdMaxFailure"][0] : "";
+    $pwdLockoutDuration = isset($ldapArr["pwdLockoutDuration"][0]) ? $ldapArr["pwdLockoutDuration"][0] : "";
+
     $f = new DivForModule(_T("Password policy plugin", "ppolicy"), "#FDF");
     
     if ((isset($ldapArr['uid'][0])) && (hasPPolicyObjectClass($ldapArr['uid'][0]))) {
@@ -58,7 +69,7 @@ function _ppolicy_baseEdit($ldapArr, $postArr) {
         $f->add(new TrFormElement(_T("Minimum length", "ppolicy"),
                                   new InputTpl("pwdMinLength",'/^[0-9]*$/'),
                                   array("tooltip" => ppolicyTips("pwdMinLength"))),
-                array("value"=>$ldapArr["pwdMinLength"][0]));
+                array("value"=>$pwdMinLength));
     
         $f->pop();
     }
@@ -67,17 +78,17 @@ function _ppolicy_baseEdit($ldapArr, $postArr) {
 
     $f->add(new TrFormElement(_T("Minimum age (seconds)", "ppolicy"),new InputTpl("pwdMinAge",'/^[0-9]*$/'),
                               array("tooltip" => ppolicyTips("pwdMinAge"))),
-                              array("value"=>$ldapArr["pwdMinAge"][0]));
+                              array("value"=>$pwdMinAge));
 
     $f->add(new TrFormElement(_T("Maximum age (second)", "ppolicy"),new InputTpl("pwdMaxAge",'/^[0-9]*$/'),
 			      array("tooltip" => ppolicyTips("pwdMaxAge"))),
-                              array("value"=>$ldapArr["pwdMaxAge"][0]));
+                              array("value"=>$pwdMaxAge));
             
     $f->pop();
 
     $f->push(new Table());
 
-    if (strcmp($ldapArr["pwdMustChange"][0], 'TRUE') == 0) {
+    if (strcmp($pwdMustChange, 'TRUE') == 0) {
         $pwdMustChange = "checked";
     } else {
         $pwdMustChange = "";
@@ -94,14 +105,14 @@ function _ppolicy_baseEdit($ldapArr, $postArr) {
     $f->add(new TrFormElement(_T("Password history", "ppolicy"),
                               new InputTpl("pwdInHistory",'/^[0-9]*$/'),
                               array("tooltip" => ppolicyTips("pwdInHistory"))),
-            array("value"=>$ldapArr["pwdInHistory"][0]));
+            array("value"=>$pwdInHistory));
 
     $f->pop();
 
 
     $f->push(new Table());
 
-    if (strcmp($ldapArr["pwdLockout"][0],'TRUE') == 0) {
+    if (strcmp($pwdLockout,'TRUE') == 0) {
         $pwdLockout = "checked";
     } else {
         $pwdLockout = "";
@@ -119,11 +130,11 @@ function _ppolicy_baseEdit($ldapArr, $postArr) {
     $f->push(new Table());
     $f->add(new TrFormElement(_("Password maximum failure"),new InputTpl("pwdMaxFailure",'/^[0-9]*$/'),
                               array("tooltip" => ppolicyTips("pwdMaxFailure"))),
-            array("value"=>$ldapArr["pwdMaxFailure"][0]));
+            array("value"=>$pwdMaxFailure));
 
     $f->add(new TrFormElement(_("Lockout duration (seconds)"),new InputTpl("pwdLockoutDuration",'/^[0-9]*$/'),
                               array("tooltip" => ppolicyTips("pwdLockoutDuration"))),
-                              array("value"=>$ldapArr["pwdLockoutDuration"][0]));
+                              array("value"=>$pwdLockoutDuration));
 
     $f->pop();
     $f->pop();
