@@ -1120,6 +1120,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             bs = bs.filter(self.boot_service_in_menu.c.fk_menuitem == uuid2id(mi_uuid)).first()
             if bs.default_name != params['default_name']:
                 bs.default_name = params['default_name']
+                bs.fk_name = 1
                 session.save_or_update(bs)
         mi = self.__getMenuItemByUUID(session, mi_uuid)
         if mi == None:
@@ -2134,6 +2135,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if params.has_key('default_name') and menu.default_name != params['default_name']:
             need_to_be_save = True
             menu.default_name = params['default_name']
+            menu.fk_name = 1
         if params.has_key('timeout') and menu.timeout != params['timeout']:
             need_to_be_save = True
             menu.timeout = params['timeout']
