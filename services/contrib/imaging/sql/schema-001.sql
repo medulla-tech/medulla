@@ -449,7 +449,7 @@ INSERT INTO SynchroState (label) VALUES ("DONE");
 INSERT INTO SynchroState (label) VALUES ("RUNNING");
 INSERT INTO SynchroState (label) VALUES ("INIT_ERROR");
 
-INSERT INTO Internationalization (id, fk_language, label) VALUES (01, 2, "Menu par défaut");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (01, 2, "NOTTRANSLATED");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (02, 2, "Continuer le démarrage normalement");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (03, 2, "Démarrer comme d\'habitude");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (04, 2, "Ajouter comme client Pulse 2");
@@ -470,6 +470,7 @@ INSERT INTO Internationalization (id, fk_language, label) VALUES (18, 2, "La seu
 INSERT INTO Internationalization (id, fk_language, label) VALUES (19, 2, "La seule et unique partition NTFS sera étendue à l\'intégralité du disque dur");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (20, 2, "Installer le Pack d\'agents Pulse 2");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (21, 2, "RAID1 synchro pour chipset ICH5 du 1er disque vers le 2ème");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (22, 2, "Menu par défaut");
 
 INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (1, "Continue Normal Startup", "Start as usual", 2, 3, "root (hd0)\nchainloader +1");
 INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (2, "Register as Pulse 2 Client", "Record this computer in Pulse 2 Server", 4, 5, "identify L=##PULSE2_LANG## P=none\nreboot");
@@ -477,18 +478,18 @@ INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `valu
 INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (4, "Diskless Boot", "Load diskless environment then get a prompt", 8, 9, "kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## revobase=##PULSE2_BASE_DIR## ##PULSE2_DISKLESS_OPTS## revodebug\ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##");
 INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (5, "Memory test", "Run a full memory check", 10, 11, "kernel --type=openbsd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_MEMTEST##");
 
-INSERT INTO Menu (id, default_name, fk_name, timeout, background_uri, message, ethercard, bootcli, disklesscli, dont_check_disk_size, fk_default_item, fk_default_item_WOL, fk_protocol) VALUES (1, "Default Boot Menu", 1, 60, "/##PULSE2_BOOTLOADER_DIR##/##PULSE2_BOOTSPLASH_FILE##", "-- Warning! Your PC is being backed up or restored. Do not reboot !", 0, 0, 0, 0, NULL, NULL, 1);
+INSERT INTO Menu (id, default_name, fk_name, timeout, background_uri, message, ethercard, bootcli, disklesscli, dont_check_disk_size, fk_default_item, fk_default_item_WOL, fk_protocol) VALUES (1, "Default Boot Menu", 22, 60, "/##PULSE2_BOOTLOADER_DIR##/##PULSE2_BOOTSPLASH_FILE##", "-- Warning! Your PC is being backed up or restored. Do not reboot !", 0, 0, 0, 0, NULL, NULL, 1);
 INSERT INTO Menu (id, default_name, fk_name, timeout, background_uri, message, ethercard, bootcli, disklesscli, dont_check_disk_size, fk_default_item, fk_default_item_WOL, fk_protocol) VALUES (2, "Register Boot Menu", 12, 60, "/##PULSE2_BOOTLOADER_DIR##/##PULSE2_BOOTSPLASH_FILE##", "-- Warning! Your PC is being backed up or restored. Do not reboot !", 0, 0, 0, 0, NULL, NULL, 1);
 
-INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (01, "Date",                 "Write the current date in file C:\\date.txt",                                          NULL, 13, "Mount 1\n\ndate | unix2dos >> /mnt/date.txt\n");
-INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (02, "Sysprep",              "Copy sysprep.inf on C:\\",                                                              NULL, 14, "Mount 1\nCopySysprepInf /revoinfo/sysprep.inf\n");
-INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (03, "SID",                  "Change both SID and Netbios name",                                                     NULL, 15, "Mount 1\nChangeSIDAndName");
-INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (04, "Shutdown",             "Halt client",                                                                          NULL, 16, "halt\n");
-INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (05, "Debug",                "Debug Shell",                                                                          NULL, 17, "sh </dev/console >/dev/console\n");
-INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (06, "Partition extention",  "The first (and only) FAT or EXT2 partition will be extend across the whole disk.",     NULL, 18, "ResizeMax 1\n");
-INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (07, "NTFS Resize",          "The first (and only) NTFS partition will be extend across the whole disk.",            NULL, 19, "NtfsResizeMax 1\n");
-INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (08, "Agent Pack",           "Install the Pulse 2 Agent Pack (VNC, OpenSSH, OCS Inventory and the SSH key).",        NULL, 20, "Mount 1\n\nmkdir -p /mnt/tmp\n\ncp /opt/winutils/setupssh.exe /mnt/tmp\ncp /opt/winutils/tightvncssh.exe /mnt/tmp\ncp /revoinfo/data/id_dsa.pub /mnt\n\necho -en 'cd c:\\tmp\\nsetupssh.exe /S\\ntightvncssh.exe /sp- /silent /norestart\\ndel c:\\tmp\\setupssh.exe' | unix2dos > /mnt/tmp/setup.bat\n\nRegistryAddRunOnce 'c:\tmp\setup.bat'\n");
-INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (09, "ICH 5 sync",           "RAID1 synchronization for ICH5 chipsets, duplicate the first disk on the second one",  NULL, 21, "/opt/bin/dd_rescue -b 10485760 /dev/sda /dev/sdb\n");
+INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (01, "Date",                 "Write the current date in file C:\\date.txt",                                          1, 13, "Mount 1\n\ndate | unix2dos >> /mnt/date.txt\n");
+INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (02, "Sysprep",              "Copy sysprep.inf on C:\\",                                                             1, 14, "Mount 1\nCopySysprepInf /revoinfo/sysprep.inf\n");
+INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (03, "SID",                  "Change both SID and Netbios name",                                                     1, 15, "Mount 1\nChangeSIDAndName");
+INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (04, "Shutdown",             "Halt client",                                                                          1, 16, "halt\n");
+INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (05, "Debug",                "Debug Shell",                                                                          1, 17, "sh </dev/console >/dev/console\n");
+INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (06, "Partition extention",  "The first (and only) FAT or EXT2 partition will be extend across the whole disk.",     1, 18, "ResizeMax 1\n");
+INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (07, "NTFS Resize",          "The first (and only) NTFS partition will be extend across the whole disk.",            1, 19, "NtfsResizeMax 1\n");
+INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (08, "Agent Pack",           "Install the Pulse 2 Agent Pack (VNC, OpenSSH, OCS Inventory and the SSH key).",        1, 20, "Mount 1\n\nmkdir -p /mnt/tmp\n\ncp /opt/winutils/setupssh.exe /mnt/tmp\ncp /opt/winutils/tightvncssh.exe /mnt/tmp\ncp /revoinfo/data/id_dsa.pub /mnt\n\necho -en 'cd c:\\tmp\\nsetupssh.exe /S\\ntightvncssh.exe /sp- /silent /norestart\\ndel c:\\tmp\\setupssh.exe' | unix2dos > /mnt/tmp/setup.bat\n\nRegistryAddRunOnce 'c:\tmp\setup.bat'\n");
+INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (09, "ICH 5 sync",           "RAID1 synchronization for ICH5 chipsets, duplicate the first disk on the second one",  1, 21, "/opt/bin/dd_rescue -b 10485760 /dev/sda /dev/sdb\n");
 
 INSERT INTO MenuItem (id, `order`, hidden, hidden_WOL, fk_menu) VALUES (1, 0, 0, 0, 1);
 INSERT INTO MenuItem (id, `order`, hidden, hidden_WOL, fk_menu) VALUES (2, 1, 0, 0, 1);

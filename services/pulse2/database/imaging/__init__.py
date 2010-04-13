@@ -513,7 +513,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = q.filter(self.target.c.id == target_id).first() # there should always be only one!
         session.close()
         if q == None: return q
-        if q[1] != None:
+        if q[1] != None and q[1] != 'NOTTRANSLATED':
             q[0].default_name = q[1]
         return q[0]
 
@@ -527,7 +527,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if need_to_close_session:
             session.close()
         if q == None: return q
-        if q[1] != None:
+        if q[1] != None and q[1] != 'NOTTRANSLATED':
             q[0].default_name = q[1]
         return q[0]
 
@@ -545,7 +545,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if need_to_close_session:
             session.close()
         if q == None: return q
-        if q[1] != None:
+        if q[1] != None and q[1] != 'NOTTRANSLATED':
             q[0].default_name = q[1]
         return q[0]
 
@@ -580,7 +580,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if need_to_close_session:
             session.close()
         if q == None: return q
-        if q[1] != None:
+        if q[1] != None and q[1] != 'NOTTRANSLATED':
             q[0].default_name = q[1]
         return q[0]
 
@@ -598,7 +598,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if need_to_close_session:
             session.close()
         if q == None: return q
-        if q[1] != None:
+        if q[1] != None and q[1] != 'NOTTRANSLATED':
             q[0].default_name = q[1]
         return q[0]
 
@@ -2166,7 +2166,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         ret = session.query(Menu).add_column(self.internationalization.c.label).select_from(self.menu \
                 .outerjoin(self.internationalization, and_(self.internationalization.c.id == self.menu.c.fk_name, self.internationalization.c.fk_language == lang)) \
             ).filter(self.menu.c.id == 1).first()
-        if ret[1] != None:
+        if ret[1] != None and q[1] != 'NOTTRANSLATED':
             ret[0].default_name = ret[1]
         return ret[0]
 
@@ -2264,7 +2264,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         menu.fk_default_item = 0
         menu.fk_default_item_WOL = 0
         menu.fk_synchrostate = 1
-        menu.fk_name = 0
+        menu.fk_name = 1
         session.save(menu)
         return menu
 
@@ -2877,9 +2877,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if pis.default_name != params['default_name']:
             need_to_be_save = True
             pis.default_name = params['default_name']
+            pis.fk_name = 1
         if pis.default_desc != params['default_desc']:
             need_to_be_save = True
             pis.default_desc = params['default_desc']
+            pis.fk_desc = 1
         if pis.value != params['value']:
             need_to_be_save = True
             pis.value = params['value']
@@ -2894,7 +2896,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session = create_session()
         pis = PostInstallScript()
         pis.default_name = params['default_name']
+        pis.fk_name = 1
         pis.default_desc = params['default_desc']
+        pis.fk_desc = 1
         pis.value = params['value']
         session.save(pis)
         session.flush()
