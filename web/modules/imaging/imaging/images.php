@@ -102,7 +102,7 @@ class MyListInfos extends ListInfos {
 
 class MySelectItem extends SelectItem {
     function __toString() {
-        return $this->display();
+        return $this->to_string();
     }
 }
 
