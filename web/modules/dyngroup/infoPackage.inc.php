@@ -47,58 +47,62 @@ if (!empty($submod)) {
         if (isProfilesEnable()) {
             $page = new Page("computersprofilecreator",_T("Computers Profile Creator","dyngroup"));
             $page->setFile("modules/dyngroup/dyngroup/tab.php");
-    
+
             $tab = new Tab("tabdyn", _T("Profile creation's tab from dynamic request", "dyngroup"));
             $page->addTab($tab);
-    
+
             $tab = new Tab("tabsta", _T("Profile creation's tab from machine list", "dyngroup"));
             $page->addTab($tab);
-    
+
             $tab = new Tab("tabfromfile", _T("Profile creation's tab from file import", "dyngroup"));
             $page->addTab($tab);
             $submod->addPage($page);
-    
+
             $page = new Page("computersprofilecreatesubedit",_T("Computers Profile Creator Sub Request Editor","dyngroup"));
             $page->setFile("modules/dyngroup/dyngroup/tab.php");
             $page->setOptions(array("visible"=>False));
-    
+
             $tab = new Tab("tabdyn", _T("Profile creation's tab from dynamic request", "dyngroup"));
             $page->addTab($tab);
-    
+
             $tab = new Tab("tabsta", _T("Profile creation's tab from machine list", "dyngroup"));
             $page->addTab($tab);
-    
+
             $tab = new Tab("tabfromfile", _T("Profile creation's tab from file import", "dyngroup"));
             $page->addTab($tab);
             $submod->addPage($page);
-        
+
             $page = new Page("computersprofilecreatesubdel",_T("Computers Profile Creator Sub Request Delete","dyngroup"));
             $page->setFile("modules/dyngroup/dyngroup/tab.php");
             $page->setOptions(array("visible"=>False));
-    
+
             $tab = new Tab("tabdyn", _T("Profile creation's tab from dynamic request", "dyngroup"));
             $page->addTab($tab);
-    
+
             $tab = new Tab("tabsta", _T("Profile creation's tab from machine list", "dyngroup"));
             $page->addTab($tab);
-    
+
             $tab = new Tab("tabfromfile", _T("Profile creation's tab from file import", "dyngroup"));
             $page->addTab($tab);
             $submod->addPage($page);
-    
+
             $page = new Page("computersprofileedit",_T("Computers Profile Editor","dyngroup"));
             $page->setFile("modules/dyngroup/dyngroup/edithead.php");
             $page->setOptions(array("visible"=>False));
             $submod->addPage($page);
-    
+
             $page = new Page("computersprofilesubedit",_T("Computers Profile Sub Request Editor","dyngroup"));
             $page->setFile("modules/dyngroup/dyngroup/edithead.php");
             $page->setOptions(array("visible"=>False, "noACL"=>True));
             $submod->addPage($page);
-        
+
             $page = new Page("computersprofilesubdel",_T("Computers Profile Sub Request Delete","dyngroup"));
             $page->setFile("modules/dyngroup/dyngroup/edithead.php");
             $page->setOptions(array("visible"=>False, "noACL"=>True));
+            $submod->addPage($page);
+
+            $page = new Page("list_profiles",_T("List all profiles of computers","dyngroup"));
+            $page->setFile("modules/dyngroup/dyngroup/list_profiles.php");
             $submod->addPage($page);
         }
         $page = new Page("computersgroupcreator",_T("Computers Group Creator","dyngroup"));
@@ -127,7 +131,7 @@ if (!empty($submod)) {
         $tab = new Tab("tabfromfile", _T("Static group creation from import's tab", "dyngroup"));
         $page->addTab($tab);
         $submod->addPage($page);
-    
+
         $page = new Page("computersgroupcreatesubdel",_T("Computers Group Creator Sub Request Delete","dyngroup"));
         $page->setFile("modules/dyngroup/dyngroup/tab.php");
         $page->setOptions(array("visible"=>False));
@@ -151,12 +155,12 @@ if (!empty($submod)) {
         $page->setFile("modules/dyngroup/dyngroup/edithead.php");
         $page->setOptions(array("visible"=>False, "noACL"=>True));
         $submod->addPage($page);
-    
+
         $page = new Page("computersgroupsubdel",_T("Computers Group Sub Request Delete","dyngroup"));
         $page->setFile("modules/dyngroup/dyngroup/edithead.php");
         $page->setOptions(array("visible"=>False, "noACL"=>True));
         $submod->addPage($page);
-    
+
         $page = new Page("tmpdisplay",_T("Temporary result display","dyngroup"));
         $page->setFile("modules/dyngroup/dyngroup/tmpdisplay.php");
         $page->setOptions(array("visible"=>False));
@@ -170,6 +174,10 @@ if (!empty($submod)) {
             $page = new Page("computersprofileedit",_T("Computers Profile Editor","dyngroup"));
             $page->setFile("modules/dyngroup/dyngroup/groupshead.php");
             $page->setOptions(array("visible"=>False));
+            $submod->addPage($page);
+
+            $page = new Page("list_profiles",_T("List all profiles of computers","dyngroup"));
+            $page->setFile("modules/dyngroup/dyngroup/list_profiles.php");
             $submod->addPage($page);
         }
         $page = new Page("computersgroupcreator",_T("Computers Group Creator","dyngroup"));
@@ -196,7 +204,7 @@ if (!empty($submod)) {
     $page->setFile("modules/dyngroup/dyngroup/save.php");
     $page->setOptions(array("visible"=>False));
     $submod->addPage($page);
-    
+
     $page = new Page("save",_T("Save a group of computers","dyngroup"));
     $page->setFile("modules/dyngroup/dyngroup/save.php");
     $page->setOptions(array("visible"=>False));
@@ -213,11 +221,7 @@ if (!empty($submod)) {
 
     $page = new Page("ajaxListGroups",_T("List all groups of computers","dyngroup"));
     $page->setFile("modules/dyngroup/dyngroup/ajaxListGroups.php");
-    $page->setOptions(array("visible"=>False, "AJAX" =>True));    
-    $submod->addPage($page);
-
-    $page = new Page("list_profiles",_T("List all profiles of computers","dyngroup"));
-    $page->setFile("modules/dyngroup/dyngroup/list_profiles.php");
+    $page->setOptions(array("visible"=>False, "AJAX" =>True));
     $submod->addPage($page);
 
     $page = new Page("delete_group",_T("Delete a group of computers","dyngroup"));
