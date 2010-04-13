@@ -2504,7 +2504,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q2 = q2.filter(f)
         q2 = q2.first()
 
-        if q2.label == "RUNNING" or q2.label == "INIT_ERROR": # running => give up
+        if q2.label == "RUNNING" or q2.label == "INIT_ERROR" or q2.label == "TODO": # running => give up
             session.close()
             return q2
 
