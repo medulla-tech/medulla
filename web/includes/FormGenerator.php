@@ -655,6 +655,9 @@ class SelectItem extends AbstractTpl{
      * $paramArray can be "null"
      */
     function displayContent($paramArray = null) {
+        print $this->content_to_string($paramArray);
+    }
+    function content_to_string($paramArray = null) {
         if (!isset($this->elementsVal)) {
             $this->elementsVal = $elements;
         }
@@ -663,33 +666,38 @@ class SelectItem extends AbstractTpl{
         if ($paramArray["value"]) {
             $this->setSelected($paramArray["value"]);
         }
+        $ret = '';
         foreach ($this->elements as $key => $item) {
             if ($this->elementsVal[$key] == $this->selected) {
                 $selected="selected";
             } else {
                 $selected= "";
             }
-            print "\t<option value=\"".$this->elementsVal[$key]."\" $selected>$item</option>\n";
+            $ret .= "\t<option value=\"".$this->elementsVal[$key]."\" $selected>$item</option>\n";
         }
+        return $ret;
     }
-    function display($paramArray = null) {
 
-        print "<select";
+    function display($paramArray = null) {
+        print $this->to_string($paramArray);
+    }
+    function to_string($paramArray = null) {
+        $ret = "<select";
         if ($this->style) {
-            print " class=\"".$this->style."\"";
+            $ret .= " class=\"".$this->style."\"";
         }
         if ($this->jsFunc) {
-            print " onchange=\"".$this->jsFunc."(";
+            $ret .= " onchange=\"".$this->jsFunc."(";
             if ($this->jsFuncParams) {
-                print implode(", ", $this->jsFuncParams);
+                $ret .= implode(", ", $this->jsFuncParams);
             }
-            print "); return false;\"";
+            $ret .= "); return false;\"";
         }
-        print " name=\"".$this->id."\" id=\"".$this->id."\">\n";
-        $this->displayContent($paramArray);
-        print "</select>\n";
+        $ret .= " name=\"".$this->id."\" id=\"".$this->id."\">\n";
+        $ret .= $this->content_to_string($paramArray);
+        $ret .= "</select>\n";
+        return $ret;
     }
-
 }
 
 /**
