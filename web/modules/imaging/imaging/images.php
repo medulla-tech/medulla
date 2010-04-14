@@ -170,9 +170,11 @@ function image_edit($target_uuid, $type, $item_uuid) {
                 var sel = all_selects[i];
                 var elem = document.getElementById(sel);
                 if (self_element.name != elem.name) {
-                    if (self_element.value == elem.value) {
+                    if (self_element.value == elem.value && self_element.value != 'None') {
                         self_element.value = "None";
                         alert("<?= _T("This values is already taken, please only put one element for each order.", "imaging"); ?>");
+                        break;
+                    } else if (self_element.value == 'None') {
                         break;
                     }
                 }
