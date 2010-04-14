@@ -254,7 +254,7 @@ class UserPPolicy(ldapUserGroupControl):
         else:
             ret = None
         return ret
-        
+
     def setPPolicyAttribute(self, nameattribute, value):
         """
         Set the value of the given LDAP attribute.
@@ -272,9 +272,10 @@ class UserPPolicy(ldapUserGroupControl):
             elif type(value) == int:
                 value = str(value)
         try:
+            logging.getLogger().debug('Setting %s to %s' % (nameattribute, value))
             self.l.modify_s(self.dn, [(ldap.MOD_REPLACE,nameattribute,value)])
         except ldap.UNDEFINED_TYPE:
-            logging.getLogger().error("Attribute %s isn't defined on ldap" % nameattribute)
+            logging.getLogger().error("Attribute %s isn't defined on LDAP" % nameattribute)
         except ldap.INVALID_SYNTAX:
             logging.getLogger().error("Invalid Syntax from the attribute value of %s on ldap" % nameattribute)
         r.commit()
@@ -310,25 +311,64 @@ class UserPPolicy(ldapUserGroupControl):
             modlist = ldap.modlist.modifyModlist(old, new)
             self.l.modify_s(self.dn, modlist)
             r.commit()
-            
-    def removePPolicyObjectClass(self, uid):
+
+    def removePPolicyObjectClass(self):
         """
         Remove the pwdPolicy objectClass to the current user.
-
         """ 
         r = AF().log(PLUGIN_NAME, AA.PPOLICY_DEL_USER_PPOLICY_CLASS, [(self.dn, AT.USER)])
-        UserPPolicy(uid).removeUserObjectClass(uid, 'pwdPolicy')
+        self.removeUserObjectClass(self.userUid, 'pwdPolicy')
         r.commit()
+
+    def _strpTime(self, value):
+        """
+        Common stripping time value tool
+        """
+        if value.endswith('Z'):
+            # Remove trailing Z
+            value = value[:-1]
+        return calendar.timegm(time.strptime(value, '%Y%m%d%H%M%S'))
 
     def isAccountLocked(self):
         """
         Check if the user account is locked.
-        
+
         @returns: -1 if the user account has been locked permanently, 0 if not, else the lock timestamp
         @rtype: int
         """
-        self.getDetailedUser(self.userUid, operational = True)
-        return
+        user = self.getUserEntry(self.userUid, operational = True)
+        if 'pwdAccountLockedTime' in user:
+            ret = self._strpTime(user['pwdAccountLockedTime'][0])
+        else:
+            ret = 0
+        return ret
+
+    def unlockAccount(self):
+        """
+        Unlock a LDAP account
+        """
+        user = self.getUserEntry(self.userUid, operational = True)
+        if 'pwdAccountLockedTime' in user:
+            new = copy.deepcopy(user)
+            del new['pwdAccountLockedTime']
+            mod = ldap.modlist.modifyModlist(user, new)
+            self.l.modify_s(self.dn, mod)
+
+    def passwordHasBeenReset(self):
+        """
+        @return: True if pwdReset is set (password has been reset)
+        @rtype: bool
+        """
+        user = self.getUserEntry(self.userUid, operational = True)
+        return 'pwdReset' in user and user['pwdReset'] == ['TRUE']
+
+    def passwordMustBeChanged(self):
+        """
+        @return: True if pwdMustChange is set (password must be changed)
+        @rtype: bool
+        """
+        user = self.getUserEntry(self.userUid, operational = True)
+        return 'pwdMustBeChanged' in user
 
     def isAccountInGraceLogin(self):
         """
@@ -369,46 +409,55 @@ class UserPPolicy(ldapUserGroupControl):
 # for default PPolicy management
 def checkPPolicy():
     return PPolicy().checkPPolicy()
-    
+
 def installPPolicy():
     return PPolicy().installPPolicy()
-    
+
 def getPPolicyAttribute(nameAttribute):
     return PPolicy().getAttribute(nameAttribute)
-    
+
 def getAllPPolicyAttributes ():
     return PPolicy().getAttribute()
-    
+
 def setPPolicyAttribute (nameAttribute, value):
     if value == '': value = None
     PPolicy().setAttribute(nameAttribute, value)
-    
+
 def getDefaultPPolicyAttributes ():
     return PPolicy().getDefaultAttributes()
-    
+
 def setPPolicyDefaultConfigAttributes ():
     return PPolicy().setDefaultConfigAttributes()
 
 # for user PPolicy management
 def hasPPolicyObjectClass(uid):
     return UserPPolicy(uid).hasPPolicyObjectClass()
-    
+
 def addPPolicyObjectClass(uid):
     UserPPolicy(uid).addPPolicyObjectClass()
-    
+
 def removePPolicyObjectClass(uid):
     UserPPolicy(uid).removePPolicyObjectClass()
-    
+
 def getUserPPolicyAttribut(uid, nameAttribut):
     if nameAttribut == '': nameAttribut = None
     return UserPPolicy(uid).getPPolicyAttribute(nameAttribut)
-    
+
 def setUserPPolicyAttribut(uid, nameAttribut, value):
     if value == '': value = None
     UserPPolicy(uid).setPPolicyAttribute(nameAttribut, value)
 
 def isAccountLocked(uid):
     return UserPPolicy(uid).isAccountLocked()
+
+def unlockAccount(uid):
+    return UserPPolicy(uid).unlockAccount()
+
+def passwordHasBeenReset(uid):
+    return UserPPolicy(uid).passwordHasBeenReset()
+
+def passwordMustBeChanged(uid):
+    return UserPPolicy(uid).passwordMustBeChanged()
 
 def isAccountInGraceLogin(uid):
     return UserPPolicy(uid).isAccountInGraceLogin()
