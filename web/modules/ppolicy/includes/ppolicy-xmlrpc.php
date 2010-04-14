@@ -76,6 +76,18 @@ function isAccountLocked($uid) {
     return xmlCall("ppolicy.isAccountLocked", array($uid));
 }
 
+function unlockAccount($uid) {
+    xmlCall("ppolicy.unlockAccount", array($uid));
+}
+
+function passwordMustBeChanged($uid) {
+    return xmlCall("ppolicy.passwordMustBeChanged", array($uid));
+}
+
+function passwordHasBeenReset($uid) {
+    return xmlCall("ppolicy.passwordHasBeenReset", array($uid));
+}
+
 function isAccountInGraceLogin($uid) {
     return xmlCall("ppolicy.isAccountInGraceLogin", array($uid));
 }
