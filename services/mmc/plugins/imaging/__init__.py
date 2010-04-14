@@ -1452,8 +1452,9 @@ class RpcProxy(RpcProxyI):
         return menu
 
     def __generateLocationMenu(self, logger, db, loc_uuid):
-        menu = db.getEntityDefaultMenu(loc_uuid)
-        menu_items = db.getMenuContent(menu.id, P2IM.ALL, 0, -1, '')
+        location = db.getEntityByUUID(loc_uuid)
+        menu = db.getDefaultSuscribeMenu(location)
+        menu_items = db.getMenuContent(menu.id, P2IM.ALL, 0, -1, '', None, loc_uuid)
         menu = menu.toH()
         menu, menu_items, h_pis = self.__generateMenusContent(menu, menu_items, loc_uuid)
         ims = h_pis.keys()

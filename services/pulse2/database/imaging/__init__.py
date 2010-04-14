@@ -717,7 +717,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             mi_ids = mi_ids.all()
         mi_ids = map(lambda x:x[1], mi_ids)
 
-        imaging_server = self.__getMenusImagingServer(session, menu_id)
+        if loc_id != None:
+            imaging_server = self.getImagingServerByEntityUUID(loc_id, session)
+        else:
+            imaging_server = self.__getMenusImagingServer(session, menu_id)
         is_id = 0
         lang = 1
         if imaging_server:
@@ -2091,8 +2094,15 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return ims.id
 
-    def __getEntityByUUID(self, session, loc_id):
-        return session.query(Entity).filter(self.entity.c.uuid == loc_id).first()
+    def getEntityByUUID(self, loc_id, session = None):
+        session_need_to_close = False
+        if session == None:
+            session_need_to_close = True
+            session = create_session()
+        ret = session.query(Entity).filter(self.entity.c.uuid == loc_id).first()
+        if session_need_to_close:
+            session.close()
+        return ret
 
     def getMenuByUUID(self, menu_uuid, session = None):
         # dont need the i18n trick here, we just want to modify some menu internals
@@ -2307,7 +2317,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if potential_imaging_server_id :
             raise Exception("%s : This entity is already linked to the Imaging Server %s" % (P2ERR.ERR_ENTITY_ALREADY_EXISTS, potential_imaging_server_id))
 
-        location = self.__getEntityByUUID(session, loc_id)
+        location = self.getEntityByUUID(loc_id, session)
         if location is None: # entity do not yet exists in database, let's create it !
             location = self.__createEntity(session, loc_id, loc_name)
             session.flush()
