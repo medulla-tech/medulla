@@ -140,21 +140,21 @@ function getAcl($uid) {
 }
 
 function setAcl($uid,$aclString) {
-  return xmlCall("base.setUserAcl",array($uid,$aclString));
+    return xmlCall("base.setUserAcl",array($uid,$aclString));
 }
 
 
 function move_home($uid,$newHome) {
-  return xmlCall("base.moveHome",array($uid,$newHome));
+    return xmlCall("base.moveHome",array($uid,$newHome));
 }
 
 function getDetailedUser($uid) {
-  return xmlCall("base.getDetailedUser",$uid);
+    return xmlCall("base.getDetailedUser", $uid);
 }
 
 
 function change_user_main_attr($uid, $newuid, $firstname, $surname) {
-  return xmlCall("base.changeUserMainAttributes",array($uid, $newuid, stripslashes($firstname), stripslashes($surname)));
+    return xmlCall("base.changeUserMainAttributes",array($uid, $newuid, stripslashes($firstname), stripslashes($surname)));
 }
 
 function isEnabled($uid) {

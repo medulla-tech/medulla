@@ -68,7 +68,7 @@ if($_POST) {
     $FH = new FormHandler($_POST);
 } 
 else {
-    $FH = new FormHandler(array());    
+    $FH = new FormHandler(array());
 }
 
 //verify validity of information
@@ -86,14 +86,14 @@ if (isset($_POST["buser"])) {
     $detailArr["cn"][0]=$nlogin;
     $detailArr["givenName"][0]=$firstname;
     $detailArr["sn"][0]=$name;
-    
+
     if(isset($_POST["isBaseDesactive"])) {
         $desactive = $_POST["isBaseDesactive"];
     }
     else {
         $desactive = false;
     }
-    
+
 #    if (strlen($cn) == 0) {
 #        $error.= _("The common name field can't be empty.")." <br/>";
 #        setFormError("cn");
@@ -153,13 +153,18 @@ if (isset($_POST["buser"])) {
         else { //if user exist
             $error.= _("This user already exists.")."<br/>";
         }
-    }    
+    }
 } elseif (isset($_POST["benable"])) {
     $ret = callPluginFunction("enableUser", $_GET["user"]);
     $result = _("User enabled.");
 } elseif (isset($_POST["bdisable"])) {
-    $ret = callPluginFunction("disableUser",$_GET["user"]);
+    $ret = callPluginFunction("disableUser", $_GET["user"]);
     $result = _("User disabled.");
+} elseif (isset($_POST["ldapaccountunlock"])) {
+    if (in_array("ppolicy", $_SESSION["supportModList"])) {
+        require_once("modules/ppolicy/includes/ppolicy-xmlrpc.php");
+        unlockAccount($_GET["user"]);
+    }
 }
 
 
@@ -288,7 +293,7 @@ if (!empty($_GET["user"])) {
             }                
             $result.=_("Attributes updated.")."<br />";
         }
-    }    
+    }
     $detailArr = getDetailedUser($_GET["user"]);
     $enabled = isEnabled($_GET["user"]);
 }
@@ -365,6 +370,16 @@ if ($_GET["action"]=="add") {
     $formElt = new InputTpl("nlogin",'/^[a-zA-Z0-9][A-Za-z0-9_.-]*$/');
 } else {
     $formElt = new HiddenTpl("nlogin");
+}
+
+$ldapAccountLocked = False;
+if (in_array("ppolicy", $_SESSION["supportModList"])) {
+    require_once("modules/ppolicy/includes/ppolicy-xmlrpc.php");
+    if (isset($_GET['user']) && isAccountLocked($_GET["user"]) != 0) {
+        $ldapAccountLocked = True;
+        $em = new ErrorMessage(_("This account is locked by the LDAP directory."));
+        print $em->display();
+    }
 }
 
 $test = new TrFormElement(_("Login"),$formElt);
@@ -510,9 +525,14 @@ callPluginFunction("baseEdit", array($detailArr,$_POST));
 ?>
 
 <input name="buser" type="submit" class="btnPrimary" value="<?= _("Confirm"); ?>" />
+<?
+    if ($ldapAccountLocked) {
+        $unlockButton = new Button();
+        print $unlockButton->getButtonString("ldapaccountunlock",
+                                             _("Unlock LDAP account"));
+    }
+?>
 <input name="breset" type="reset" class="btnSecondary" onclick="window.location.reload( false );" value="<?= _("Cancel"); ?>" />
-
-
 
 </form>
 </div>
