@@ -36,10 +36,12 @@ $filter1 = $_GET["filter"]. '##'.$_GET['location'];
 
 if ($_GET['location']) {
     $filter['packageapi'] = getPApiDetail(base64_decode($_GET['location']));
-//    $_SESSION['PACKAGEAPI'][base64_decode($_GET['location'])];
 }
-if (isset($_GET["start"])) $start = $_GET["start"];
-else $start = 0;
+if (isset($_GET["start"])) {
+    $start = $_GET["start"];
+} else {
+    $start = 0;
+}
 
 $packages = advGetAllPackages($filter, $start, $start + $maxperpage);
 $count = $packages[0];
@@ -49,7 +51,7 @@ $desc = $params = $names = $versions = $size = array();
 $err = array();
 foreach ($packages as $p) {
     $p = $p[0];
-    if ($p['ERR'] && $p['ERR'] == 'PULSE2ERROR_GETALLPACKAGE') {
+    if (isset($p['ERR']) && $p['ERR'] == 'PULSE2ERROR_GETALLPACKAGE') {
         $err[] = sprintf(_T("MMC failed to contact package server %s.", "pkgs"), $p['mirror']);
     } else {
         $names[] = $p['label'];
@@ -59,7 +61,6 @@ foreach ($packages as $p) {
         $params[] = array('p_api'=>$_GET['location'], 'pid'=>base64_encode($p['id']));
     }
 }
-
 if ($err) {
     new NotifyWidgetFailure(implode('<br/>', array_merge($err, array(_T("Please contact your administrator.", "pkgs")))));
 }
@@ -74,11 +75,11 @@ $n->setParamInfo($params);
 $n->start = 0;
 $n->end = $count;
 
-$n->addActionItemArray(new ActionItem(_T("Edit a package", "pkgs"),"edit","edit","pkgs", "pkgs", "pkgs"));
-//$n->addActionItemArray(new ActionItem(_T("Associate files to a package", "pkgs"),"associate_files","associate_files","pkgs", "pkgs", "pkgs"));
-$n->addActionItemArray(new ActionPopupItem(_T("Delete a package", "pkgs"),"delete","delete","pkgs", "pkgs", "pkgs"));
+$n->addActionItem(new ActionItem(_T("Edit a package", "pkgs"),"edit","edit","pkgs", "pkgs", "pkgs"));
+$n->addActionItem(new ActionPopupItem(_T("Delete a package", "pkgs"),"delete","delete","pkgs", "pkgs", "pkgs"));
 
-print "<br/><br/><br/>";
+print "<br/><br/>"; // to go below the location bar : FIXME, really ugly as line height dependent
+
 $n->display();
 
 ?>
