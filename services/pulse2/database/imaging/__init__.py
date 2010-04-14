@@ -2769,10 +2769,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def __mergePostInstallScriptOnImagingServerInPostInstallScript(self, postinstallscript_list):
         ret = []
         for postinstallscript, postinstallscript_on_imagingserver, name_i18n, desc_i18n in postinstallscript_list:
-            if name_i18n != None:
+            if name_i18n != None and name_i18n.label != 'NOTTRANSLATED':
             #    setattr(postinstallscript, 'name', name_i18n.label)
                 setattr(postinstallscript, 'default_name', name_i18n.label)
-            if desc_i18n != None:
+            if desc_i18n != None and desc_i18n.label != 'NOTTRANSLATED':
             #    setattr(postinstallscript, 'desc', desc_i18n.label)
                 setattr(postinstallscript, 'default_desc', desc_i18n.label)
             setattr(postinstallscript, 'is_local', (postinstallscript_on_imagingserver != None))
