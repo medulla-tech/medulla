@@ -145,16 +145,16 @@ static int read_config_file (char *keyWord) {
  * Called by OpenLDAP to check a new password
  */
 int check_password (char *pPasswd, char **ppErrStr, Entry *pEntry) {
-    int i=-1;
     char *pwdMinLength=NULL;
     char final_commandline[256]={0};
     char *dn = strdup(pEntry->e_name.bv_val);
-    do {
-        i++;
-        if(!strcmp(pEntry->e_attrs[i].a_desc->ad_cname.bv_val,"pwdMinLength")) {
-            pwdMinLength=strdup(pEntry->e_attrs[i].a_vals->bv_val);
+
+    Attribute *attr = NULL;
+    for (attr = pEntry->e_attrs; attr; attr = attr->a_next) {
+        if (!strcmp(attr->a_desc->ad_cname.bv_val, "pwdMinLength")) {
+            pwdMinLength=strdup(attr->a_vals->bv_val);
         }
-    } while(pEntry->e_attrs[i].a_next);
+    }
 
     read_config_file("enableDebug");
     read_config_file("passwordHelperPath");
@@ -177,6 +177,9 @@ int check_password (char *pPasswd, char **ppErrStr, Entry *pEntry) {
         sprintf(final_commandline, "%s -u %s -l %s -c", passwordHelperPath, dn, pwdMinLength);
     else
         sprintf(final_commandline, "%s -u %s -c", passwordHelperPath, dn);
+
+    syslog(LOG_NOTICE, "mmc-check-password: Command line: |%s|",
+           final_commandline);
 
     FILE * file = popen(final_commandline, "w");
     fwrite(pPasswd, strlen(pPasswd), 1, file);
