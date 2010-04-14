@@ -74,11 +74,11 @@ $n->setParamInfo($params);
 $n->start = 0;
 $n->end = $count - 1;
 
-$n->addActionItemArray($assoc_list);
-$n->addActionItemArray(new ActionPopupItem(_T("Show mirrors", "pkgs"), "rsync", "info", "pkgs", "pkgs", "pkgs"));
-$n->addActionItemArray(new ActionPopupItem(_T("Delete a package", "pkgs"),"delete","delete","pkgs", "pkgs", "pkgs"));
+$n->addActionItem($assoc_list);
+$n->addActionItem(new ActionPopupItem(_T("Show mirrors", "pkgs"), "rsync", "info", "pkgs", "pkgs", "pkgs"));
+$n->addActionItem(new ActionPopupItem(_T("Delete a package", "pkgs"),"delete","delete","pkgs", "pkgs", "pkgs"));
 
-print "<br/><br/><br/>";
+print "<br/><br/><br/>"; // start display below the location bar, yes it's quiet ugly, so : FIXME !
 $n->display();
 
 ?>
