@@ -50,6 +50,7 @@ from pulse2.utils import isMACAddress, splitComputerPath, macToNode, isUUID, rfc
 from pulse2.apis import makeURL
 from pulse2.imaging.image import Pulse2Image
 
+
 class ImagingApi(MyXmlrpc):
 
     myType = 'Imaging'
@@ -112,6 +113,7 @@ class ImagingApi(MyXmlrpc):
                     self.logger.info('Default computer boot menu successfully written')
                 except Exception, e:
                     self.logger.exception('Error while setting default computer menu: %s', e)
+
         def _errDefaultMenu(error):
             self.logger.error("Error while setting default computer boot menu: %s" % error)
 
@@ -392,6 +394,17 @@ class ImagingApi(MyXmlrpc):
                  successful, else 0.
         @rtype: int
         """
+        def _onSuccess(result):
+            if result and type(result) == list and len(result) == 2:
+                if result[0] == True :
+                    self.logger.info('Imaging: injected inventory for client %s' % (MACAddress))
+                    return True
+                else:
+                    self.logger.warn('Imaging: failed injecting inventory for client %s : %s' % (MACAddress, result[1]))
+                    return False
+            else:
+                self.logger.warn('Imaging: failed injecting inventory for client %s : %s' % (MACAddress, result))
+                return False
 
         def _getmacCB(result):
             if result and type(result) == dict:
@@ -399,11 +412,12 @@ class ImagingApi(MyXmlrpc):
                 func = 'imaging.injectInventory'
                 args = (self.config.imaging_api['uuid'], result['uuid'], inventory)
                 d = client.callRemote(func, *args)
-                d.addCallbacks(lambda x: True, client.onError, errbackArgs=(func, args, 0))
+                d.addCallbacks(_onSuccess, client.onError, errbackArgs=(func, args, 0))
                 return d
             self.logger.warn('Imaging: Failed resolving UUID for client %s : %s' % (MACAddress, result))
             return False
 
+        logging.getLogger().info("WOOT : %s" % inventory)
         if not isMACAddress(MACAddress):
             raise TypeError
         self.logger.debug('Imaging: Starting inventory processing for %s' % (MACAddress))
@@ -424,7 +438,7 @@ class ImagingApi(MyXmlrpc):
         @rtype: int
         """
 
-        def onSuccess(result):
+        def _onSuccess(result):
             if type(result) == dict and "faultCode" in result:
                 self.logger.warning('Imaging: While processing result for %s : %s' % (MACAddress, result['faultTraceback']))
                 return False
@@ -443,15 +457,15 @@ class ImagingApi(MyXmlrpc):
 
         # try to extract from our cache
         res = self.myUUIDCache.getByMac(MACAddress)
-        if res: # fetched from cache
+        if res:  # fetched from cache
             return maybeDeferred(lambda x: x, res)
-        else: # cache fetching failed, try to obtain the real value
+        else:  # cache fetching failed, try to obtain the real value
             self.logger.info('Imaging: Getting computer UUID for %s' % (MACAddress))
             client = self._getXMLRPCClient()
             func = 'imaging.getComputerByMac'
             args = [MACAddress]
             d = client.callRemote(func, *args)
-            d.addCallbacks(onSuccess, client.onError, errbackArgs=(func, args, 0))
+            d.addCallbacks(_onSuccess, client.onError, errbackArgs=(func, args, 0))
             return d
 
     def xmlrpc_computersMenuSet(self, menus):
@@ -540,7 +554,7 @@ class ImagingApi(MyXmlrpc):
         def _getmacCB(result):
             if result and type(result) == dict :
                 computer_uuid = result['uuid']
-                self.logger.warn('Imaging: New image %s for client %s' % (image_uuid, computer_uuid))
+                self.logger.info('Imaging: New image %s for client %s' % (image_uuid, computer_uuid))
                 return image_uuid
 
             self.logger.warn('Imaging: Failed resolving UUID for client %s : %s' % (mac, result))
@@ -586,7 +600,7 @@ class ImagingApi(MyXmlrpc):
         @type num: int
         """
 
-        def onSuccess(result):
+        def _onSuccess(result):
             if type(result) != list and len(result) != 2:
                 self.logger.error('Imaging: Couldn\'t set default entry on %s for %s : %s' % (num, computerUUID, str(result)))
                 ret = False
@@ -612,7 +626,7 @@ class ImagingApi(MyXmlrpc):
                 func = 'imaging.computerChangeDefaultMenuItem'
                 args = (self.config.imaging_api['uuid'], computerUUID, num)
                 d = client.callRemote(func, *args)
-                d.addCallbacks(onSuccess, client.onError, errbackArgs = (func, args, False))
+                d.addCallbacks(_onSuccess, client.onError, errbackArgs = (func, args, False))
                 return d
         return ret
 
@@ -647,7 +661,7 @@ class ImagingApi(MyXmlrpc):
                 # start gathering details about our image
 
                 c_uuid = result['uuid']
-                isMaster = False # by default, an image is private
+                isMaster = False  # by default, an image is private
                 path = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['masters_folder'], imageUUID)
                 image = Pulse2Image(path)
                 size = image.size
