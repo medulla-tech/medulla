@@ -1,7 +1,0 @@
-This script has to be executed inside a MES5 installation (vmware or not).
-It requires some small adjustments to work as it :
- * remove the package msec
- * clear the firewall
- * allow ssh logging as root (and restart the sshd service)
-
-
