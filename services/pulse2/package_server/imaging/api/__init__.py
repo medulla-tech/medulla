@@ -607,7 +607,7 @@ class ImagingApi(MyXmlrpc):
                 self.logger.error('Imaging: Couldn\'t set default entry on %s for %s : %s' % (num, computerUUID, str(result)))
                 ret = False
             else:
-                self.logger.error('Imaging: Couldn\'t set default entry on %s for %s : %s' % (num, computerUUID, str(result)))
+                self.logger.info('Imaging: Successfully set default entry on %s for %s' % (num, computerUUID))
                 ret = True
             return ret
 
@@ -645,7 +645,7 @@ class ImagingApi(MyXmlrpc):
                 self.logger.error('Imaging: Couldn\'t register on the MMC agent the image with UUID %s : %s' % (imageUUID, result[1]))
                 ret = False
             else:
-                self.logger.debug('Imaging: Successfully registered image %s' % imageUUID)
+                self.logger.info('Imaging: Successfully registered image %s' % imageUUID)
                 ret = True
             return ret
 
