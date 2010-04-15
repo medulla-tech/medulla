@@ -87,7 +87,7 @@ int analyseresult(int exitcode) {
  */
     switch (exitcode) {
     case 0:
-        myLogger("Hook succeeded !");
+        /* myLogger("Hook succeeded !"); */ /* Prevent logging : useless in case of success */
         return 0;
     case 1:
         myLogger("Hook failed server side !");
@@ -407,6 +407,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         switch (buf[1]) {
         case '0':
             logClientActivity(mac, LOG_INFO, "boot", "'booted'");
+            return 0; // do not send ACK, it can conflict with the hostname ask
             break;
         case '1':
             logClientActivity(mac, LOG_INFO, "menu", "'executed menu entry : %d'", buf[2]);
