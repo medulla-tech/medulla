@@ -37,13 +37,17 @@ $location = getCurrentLocation();
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
-
 $start = empty($_GET["start"]) || $_GET["start"] == ''    ? 0              : $_GET["start"];
 $end = empty($_GET["end"]) || $_GET["end"] == ''          ? $maxperpage    : $_GET["end"];
 $filter = empty($_GET["filter"])                          ? ''             : $_GET['filter'];
 
 list($count, $masters) = xmlrpc_getLocationImages($location, $start, $end, $filter);
 
+if ($count == 0) {
+    $l = new TitleElement(_T('No master available.', 'imaging'));
+    $l->display();
+    return;
+}
 // forge params
 $addAction = new ActionPopupItem(_T("Add image to default boot menu", "imaging"), "master_add", "addbootmenu", "master", "imaging", "manage");
 $emptyAction = new EmptyActionItem();
