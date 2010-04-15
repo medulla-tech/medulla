@@ -1919,6 +1919,56 @@ class HtmlElement {
 
 }
 
+class ModuleTitleElement extends HtmlElement{
+
+    function ModuleTitleElement($title){
+        $this->title=$title;
+    }
+
+    function display(){
+        print '<br><h1>'.$this->title.'</h1>';
+    }
+}
+
+class TitleElement extends HtmlElement {
+    function TitleElement($title, $level = 2){
+        $this->title=$title;
+        $this->level = $level;
+    }
+    function display(){
+        print '<br/><h'.$this->level.'>'.$this->title.'</h'.$this->level.'>';
+    }
+}
+
+class SelectElement extends HtmlElement{
+
+    function SelectElement($name, $nametab){
+        $this->name = $name;
+        $this->nametab = $nametab;
+    }
+
+    function display() {
+        print '<a href="javascript:void(0);" onclick="checkAll(\''.$this->name.'\',1);checkAll(\''.$this->nametab.'\',1);">'._("Select all").' </a> / ';
+        print '<a href="javascript:void(0);" onclick="checkAll(\''.$this->name.'\',0);checkAll(\''.$this->nametab.'\',0);">'._("Unselect all").'</a><br/>';
+    }
+}
+
+class TrTitleElement extends HtmlElement{
+
+        function TrTitleElement($arrtitles){
+            $this->titles=$arrtitles;
+        }
+
+        function display(){
+            $colsize=100/sizeof($this->titles);
+            print '<tr>';
+            foreach( $this->titles as $value ){
+                    print '<td width="'.$colsize.'%"><b>'.$value.'</b></td>';
+            }
+            print '</tr>';
+        }
+}
+
 class HtmlContainer {
 
     var $elements;

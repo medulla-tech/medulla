@@ -27,56 +27,6 @@ require("modules/base/includes/users.inc.php");
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 
-class ModuleTitleElement extends HtmlElement{
-    
-    function ModuleTitleElement($title){
-        $this->title=$title;
-    }
-    
-    function display(){
-        print '<br><h1>'.$this->title.'</h1>';
-    }
-}
-
-class TitleElement extends HtmlElement{
-    
-    function TitleElement($title){
-        $this->title=$title;
-    }
-    
-    function display(){
-        print '<br><h2>'.$this->title.'</h2>';
-    }
-}
-
-class SelectElement extends HtmlElement{
-    
-    function SelectElement($name, $nametab){
-        $this->name = $name;
-        $this->nametab = $nametab;
-    }
-    
-    function display() {
-        print '<a href="javascript:void(0);" onclick="checkAll(\''.$this->name.'\',1);checkAll(\''.$this->nametab.'\',1);">'._("Select all").' </a> / ';
-        print '<a href="javascript:void(0);" onclick="checkAll(\''.$this->name.'\',0);checkAll(\''.$this->nametab.'\',0);">'._("Unselect all").'</a><br/>';
-    }
-}
-
-class TrTitleElement extends HtmlElement{
-        
-        function TrTitleElement($arrtitles){
-            $this->titles=$arrtitles;
-        }
-        
-        function display(){
-            $colsize=100/sizeof($this->titles);
-            print '<tr>';
-            foreach( $this->titles as $value ){
-                    print '<td width="'.$colsize.'%"><b>'.$value.'</b></td>';
-            }
-            print '</tr>';
-        }
-}
 class TrAclFormElement extends FormElement{
     var $template;
     var $desc;
@@ -92,7 +42,7 @@ class TrAclFormElement extends FormElement{
         }
         $this->tab = False;
     }
-    
+
     function setTab(){
         $this->tab=True;
     }
@@ -110,7 +60,7 @@ class TrAclFormElement extends FormElement{
         else {
             print '<tr><td ';
         }
-       
+
         print displayErrorCss($this->cssErrorName);
         print 'style = "text-align: left;">';
         if ($this->tab)
@@ -146,7 +96,7 @@ class TrAclFormElement extends FormElement{
 }
 
 class AclRadioTpl extends RadioTpl {
-    
+
     function display($arrParam) {
         if (!isset($this->choiceVal)) {
             $this->choiceVal = $this->choices;
@@ -156,7 +106,7 @@ class AclRadioTpl extends RadioTpl {
             $this->selected = $this->choiceVal[0];
         }
         $first=0;
-        foreach ($this->choiceVal as $key => $value) { 
+        foreach ($this->choiceVal as $key => $value) {
             if ($first!=0)
             {
                 print '<td >';
@@ -180,7 +130,7 @@ if (isset($_POST["buser"])) {
     foreach ($_SESSION['supportModList'] as $mod) {
         unset($acl[$mod]);
     }
-    
+
     /* Set POST arrays as empty when not set */
     foreach(array("acl", "aclattr", "acltab") as $postvar) {
         if (!isset($_POST[$postvar])) {
@@ -216,7 +166,7 @@ if (isset($_POST["buser"])) {
 function createAclAttrTemplate($module_name, $aclattr, $form) {
     global $aclArray;
     $rowNum=1;
-    
+
     if (!empty($aclArray[$module_name])) {
         $MMCApp =&MMCApp::getInstance();
         $base = &$MMCApp->getModule($module_name);
@@ -289,7 +239,7 @@ function createRedirectAclTemplate($module_name, $acl, $acltab, $form) {
         }
         $form->pop();
     }
-       
+
 }
 
 $p = new PageGenerator(sprintf(_("Edit ACL of user %s"), $_GET["user"]));
@@ -306,7 +256,7 @@ foreach ($_SESSION["modulesList"] as $key) {
     if ($mod != null) {
         $mod_name = $mod->getDescription();
         if ($redirArray[$key])
-            createRedirectAclTemplate($key,$acl, $acltab,&$f);            
+            createRedirectAclTemplate($key,$acl, $acltab,&$f);
         createAclAttrTemplate($key,$aclattr,&$f);
     }
 
