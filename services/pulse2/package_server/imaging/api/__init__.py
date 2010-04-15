@@ -417,7 +417,6 @@ class ImagingApi(MyXmlrpc):
             self.logger.warn('Imaging: Failed resolving UUID for client %s : %s' % (MACAddress, result))
             return False
 
-        logging.getLogger().info("WOOT : %s" % inventory)
         if not isMACAddress(MACAddress):
             raise TypeError
         self.logger.debug('Imaging: Starting inventory processing for %s' % (MACAddress))
