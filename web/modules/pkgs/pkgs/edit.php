@@ -27,6 +27,9 @@ require("graph/navbar.inc.php");
 
 require_once("modules/pkgs/includes/xmlrpc.php");
 
+// var formating
+$_GET['p_api'] = isset($_GET['p_api']) ? $_GET['p_api'] : "";
+
 $package = array();
 
 if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
@@ -75,7 +78,7 @@ if ($_GET["action"]=="add") {
     $title = _T("Add a package", "pkgs");
     $activeItem = "add";
     $formElt = new DomainInputTpl("id");
-    
+
     $res = getUserPackageApi();
     $list_val = $list = array();
     if (!isset($_SESSION['PACKAGEAPI'])) { $_SESSION['PACKAGEAPI'] = array(); }
@@ -87,6 +90,7 @@ if ($_GET["action"]=="add") {
     $selectpapi = new SelectItem('p_api');
     $selectpapi->setElements($list);
     $selectpapi->setElementsVal($list_val);
+
 } elseif (count($package) == 0 ) {
     $title = _T("Edit a package", "pkgs");
     $activeItem = "index";
@@ -97,7 +101,7 @@ if ($_GET["action"]=="add") {
         $package['reboot'] = $package['do_reboot'];
     }
     $formElt = new HiddenTpl("id");
-    
+
     $selectpapi = new HiddenTpl('p_api');
 } else {
     $formElt = new HiddenTpl("id");
