@@ -32,8 +32,7 @@ void initlog(void) {
  * logging
  */
 
-int myLogger(char *
-msg) {
+int myLogger(char *msg) {
     char cmd[1024];
     snprintf(cmd, 1023, "echo \"`date --rfc-3339=seconds` %.900s\" 1>>%s 2>&1",
              msg, gLogFile);
@@ -126,7 +125,7 @@ int mysystem(int argc, ...) {
     va_end(argv);
 
     snprintf(tmp, 1023,
-             "echo \"`date --rfc-3339=seconds` pulse2-imaging-server %.900s\" 1>>%s 2>&1",
+             "echo \"`date --rfc-3339=seconds` INFO Command %.900s\" 1>>%s 2>&1",
              cmd, gLogFile);
     system(tmp);
     snprintf(tmp, 1023, "%.900s 1>>%s 2>&1", cmd, gLogFile);
@@ -263,7 +262,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
 
     char *buff = malloc(256);
 
-    snprintf(buff, 255, "Packet from %s:%d, MAC Address:%s, Command: %02x",
+    snprintf(buff, 255, "DEBUG Packet from %s:%d, MAC Address:%s, Command: %02x",
              inet_ntoa(si_other->sin_addr), ntohs(si_other->sin_port), mac,
              buf[0]);
     myLogger(buff);
