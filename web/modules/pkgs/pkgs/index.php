@@ -33,15 +33,15 @@ $p->display();
 
 require_once("modules/pkgs/includes/xmlrpc.php");
 
-$ajax = new AjaxFilterLocation(urlStrRedirect("pkgs/pkgs/ajaxPackageList"));
-
 $res = getUserPackageApi();
 $list = array();
 $list_val = array();
-if (!isset($_SESSION['PACKAGEAPI'])) { $_SESSION['PACKAGEAPI'] = array(); }
+if (!isset($_SESSION['PACKAGEAPI'])) {
+    $_SESSION['PACKAGEAPI'] = array();
+}
 $err = array();
 foreach ($res as $mirror) {
-    if ($mirror['ERR'] &&  $mirror['ERR'] == 'PULSE2ERROR_GETUSERPACKAGEAPI') {
+    if (isset($mirror['ERR']) && $mirror['ERR'] == 'PULSE2ERROR_GETUSERPACKAGEAPI') {
         $err[] = sprintf(_T("MMC failed to contact package server %s.", "pkgs"), $mirror['mirror']);
     } else {
         $list_val[$mirror['uuid']] = base64_encode($mirror['uuid']);
@@ -52,7 +52,8 @@ foreach ($res as $mirror) {
 if ($err) {
     new NotifyWidgetFailure(implode('<br/>', array_merge($err, array(_T("Please contact your administrator.", "pkgs")))));
 }
-        
+
+$ajax = new AjaxFilterLocation(urlStrRedirect("pkgs/pkgs/ajaxPackageList"));
 if (isset($_GET['location'])) {
     $ajax->setSelected($list_val[base64_decode($_GET['location'])]);
 }
@@ -67,5 +68,3 @@ $ajax->displayDivToUpdate();
 <style>
     .noborder { border:0px solid blue; }
 </style>
-
-
