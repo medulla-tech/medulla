@@ -29,12 +29,12 @@ require_once('modules/imaging/includes/xmlrpc.inc.php');
 $params = getParams();
 if (isset($_GET['gid']) && $_GET['gid'] != '') {
     $type = 'group';
-    $target_uuid = $_GET['gid'];
-    $target_name = $_GET['groupname'];
+    $target_uuid = isset($_GET['gid']) ? $_GET['gid'] : "";
+        $target_name = isset($_GET['groupname']) ? $_GET['groupname'] : "";
 } else {
     $type = '';
-    $target_uuid = $_GET['uuid'];
-    $target_name = $_GET['hostname'];
+    $target_uuid = isset($_GET['uuid']) ? $_GET['uuid'] : "";
+    $target_name = iset($_GET['hostname']) ? $_GET['hostname'] : "";
 }
 if (isset($params['hostname']) && !isset($target_name)) {
     $target_name = $params['hostname'];
