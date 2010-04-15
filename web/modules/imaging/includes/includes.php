@@ -45,16 +45,6 @@ function getCurrentLocation() {
     return $location;
 }
 
-class TitleElement extends HtmlElement {
-    function TitleElement($title, $level = 2){
-        $this->title=$title;
-        $this->level = $level;
-    }
-    function display(){
-        print '<br/><h'.$this->level.'>'.$this->title.'</h'.$this->level.'>';
-    }
-}
-
 class LedElement extends HtmlElement {
     function LedElement($color){
         $this->color=$color;
