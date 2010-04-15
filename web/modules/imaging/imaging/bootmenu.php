@@ -259,7 +259,9 @@ function item_list() {
     $l->addActionItemArray($actionsUp);
     $l->addActionItemArray($actionsDown);
     $l->addActionItem(new ActionItem(_T("Edit"), "imgtabs", "edit", "item", "base", "computers", $type."tabbootmenu", "edit"));
-    $l->addActionItem(new ActionPopupItem(_T("Delete"), "bootmenu_remove", "delete", "item", "base", "computers", $type."tabbootmenu", 300, "delete"));
+    if ($count > 1) {
+        $l->addActionItem(new ActionPopupItem(_T("Delete"), "bootmenu_remove", "delete", "item", "base", "computers", $type."tabbootmenu", 300, "delete"));
+    }
     $l->disableFirstColumnActionLink();
     $l->display();
 }
