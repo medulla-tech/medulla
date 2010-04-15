@@ -1446,18 +1446,31 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q1 = self.__EntityImages(session, loc_id, '')
         q1 = q1.filter(self.image.c.id.in_(map(lambda u:uuid2id(u), uuids))).all()
 
-        q2 = session.query(PostInstallScript).add_column(self.post_install_script_in_image.c.fk_image)
+        q2 = session.query(PostInstallScript).add_column(self.post_install_script_in_image.c.fk_image).add_column(self.post_install_script_in_image.c.order)
         q2 = q2.select_from(self.post_install_script.join(self.post_install_script_in_image))
         q2 = q2.filter(self.post_install_script_in_image.c.fk_image.in_(map(lambda u:uuid2id(u), uuids))).all()
         session.close()
 
         im_pis = {}
-        for pis, im_id in q2:
-            im_pis[im_id] = pis.toH()
+        for pis, im_id, order in q2:
+            if not im_pis.has_key(im_id):
+                im_pis[im_id] = {}
+            pis = pis.toH()
+            pis['order'] = order
+            im_pis[im_id][order] = pis
+
+        for im_id in im_pis:
+            h_pis = im_pis[im_id]
+            orders = h_pis.keys()
+            orders.sort()
+            a_pis = []
+            for i in orders:
+                a_pis.append(h_pis[i])
+            im_pis[im_id] = a_pis
 
         for im, im_id in q1:
             ret[id2uuid(im_id)] = im.toH()
-            ret[id2uuid(im_id)]['post_install_script'] = im_pis[im_id]
+            ret[id2uuid(im_id)]['post_install_scripts'] = im_pis[im_id]
         return ret
 
 
