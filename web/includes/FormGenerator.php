@@ -663,7 +663,7 @@ class SelectItem extends AbstractTpl{
         }
 
         // if value... set it
-        if ($paramArray["value"]) {
+        if (isset($paramArray["value"])) {
             $this->setSelected($paramArray["value"]);
         }
         $ret = '';
