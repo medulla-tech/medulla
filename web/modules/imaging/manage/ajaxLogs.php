@@ -34,11 +34,18 @@ require("../includes/xmlrpc.inc.php");
 require("../includes/logs.inc.php");
 
 $location = getCurrentLocation();
-
 $maxperpage = $conf["global"]["maxperpage"];
-$filter = empty($_GET["filter"])                ? ''    : $_GET['filter'];
-$start = empty($_GET["start"])                  ? 0     : $_GET["start"];
+$filter = empty($_GET["filter"]) ? '': $_GET['filter'];
+$start = empty($_GET["start"]) ? 0 : $_GET["start"];
 $end = $start + $maxperpage;
+
+list($count, $db_logs) = xmlrpc_getLogs4Location($location, $start, $end, $filter);
+
+if ($count == 0) {
+    $l = new TitleElement(_T("No log available.", "imaging"));
+    $l->display();
+    return;
+}
 
 $logStates = array(
     "unknown" => array(_T("Status unknow", "imaging"), 'black'),
@@ -59,10 +66,6 @@ $logStates = array(
     "backup_failed" => array(_T("Backup failed", "imaging"), "red"),
     "unknow" => array(_T("Status unknow", "imaging"), "black"),
 );
-
-list($count, $db_logs) = xmlrpc_getLogs4Location($location, $start, $end, $filter);
-
-$filter = $_GET["filter"];
 
 $a_desc = array();
 $a_states = array();
@@ -109,11 +112,6 @@ $l->addExtraInfo($a_target, _T("Target", "imaging"));
 $l->addExtraInfo($a_desc, _T("Message", "imaging"));
 //$l->addExtraInfo($a_states, _T("State", "imaging"));
 
-/*
-$l->addActionItem(
-    new ActionItem(_T("Details"), "imgtabs", "display", "item", "base", "computers", "tabimlogs", "details")
-);
-*/
 $l->setParamInfo($list_params);
 $l->setItemCount($count);
 $l->setNavBar(new AjaxNavBar($count, $filter, "updateSearchParamLogs"));
@@ -121,6 +119,7 @@ $l->disableFirstColumnActionLink();
 $l->setTableHeaderPadding(1);
 $l->start = 0;
 $l->end = $maxperpage;
+
 $l->display();
 
 ?>
