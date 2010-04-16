@@ -193,9 +193,9 @@ if [ $DISTRIBUTION == "MandrivaLinux" ]; then
     service mysqld start
 fi
 if [ $DISTRIBUTION == "Debian" ]; then
-    invoke-rc.d mysql stop
+    /etc/init.d/mysql stop
     sed -i "s/^skip-networking/#skip-networking/" /etc/mysql/my.cnf
-    invoke-rc.d mysql start
+    /etc/init.d/mysql start
 fi
 # Wait for MySQL to start
 sleep 5
