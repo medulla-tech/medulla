@@ -213,7 +213,7 @@ if [ $DISTRIBUTION == "MandrivaLinux" ]; then
     sed -i '/.*misc.schema/d' /etc/openldap/slapd.conf
     sed -i 's/@inetLocalMailRecipient,//' /etc/openldap/mandriva-dit-access.conf
 
-    echo "include /etc/openldap/schema/mmc.schema" >> /etc/openldap/schema/local.schema
+    echo "include /etc/openldap/schema/mmc.schema" > /etc/openldap/schema/local.schema
 fi
 if [ $DISTRIBUTION == "Debian" ]; then
     touch /etc/ldap/schema/local.schema
@@ -221,8 +221,8 @@ if [ $DISTRIBUTION == "Debian" ]; then
     grep -q '/etc/ldap/schema/local.schema' /etc/ldap/slapd.conf
     if [ $? -ne 0 ]; then
         sed -i -e '/inetorgperson.schema$/a include /etc/ldap/schema/local.schema' /etc/ldap/slapd.conf
-        echo "include /etc/ldap/schema/mmc.schema" > /etc/ldap/schema/local.schema
     fi
+    echo "include /etc/ldap/schema/mmc.schema" > /etc/ldap/schema/local.schema
 fi
 
 # Setup ppolicy
