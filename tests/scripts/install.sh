@@ -40,11 +40,11 @@ RELEASE=`lsb_release -r -s`
 
 PKGS=
 
-if [ `arch` == "x86_64" ];
-then
-    ARCH=64
-else
-    ARCH=
+ARCH=
+if [ $DISTRIBUTION == "MandrivaLinux" ]; then
+    if [ `arch` == "x86_64" ]; then
+        ARCH=64
+    fi
 fi
 
 function packages_to_install () {
