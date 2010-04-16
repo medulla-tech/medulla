@@ -192,6 +192,7 @@ function _ppolicy_changeUser($FH) {
     if ($FH->getPostValue("ppolicyactivated")) {
         if (!hasPPolicyObjectClass($FH->getPostValue("nlogin"))) {
             addPPolicyObjectClass($FH->getPostValue("nlogin"));
+            $updated = True;
         }
 
         $detailArr = getDetailedUser($FH->getPostValue("nlogin"));
