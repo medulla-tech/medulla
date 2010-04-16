@@ -61,11 +61,13 @@ rm -fr /var/lib/ldap.*
 if [ -f '/etc/mandriva-release' ]; then
     rm -f /usr/lib*/openldap/mmc-check-password.so
     rm -fr /etc/openldap/slapd.conf.*
+    touch /etc/openldap/schema/local.schema
     echo "" > /etc/openldap/schema/local.schema
 fi
 if [ -f '/etc/debian_version' ]; then
     rm -f /usr/lib/ldap/mmc-check-password.so
     rm -fr /etc/ldap/slapd.conf.*
+    touch /etc/ldap/schema/local.schema
     echo "" > /etc/ldap/schema/local.schema
 fi
 
