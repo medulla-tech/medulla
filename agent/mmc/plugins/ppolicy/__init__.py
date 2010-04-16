@@ -377,13 +377,32 @@ class UserPPolicy(ldapUserGroupControl):
         user = self.getUserEntry(self.userUid, operational = True)
         return 'pwdReset' in user and user['pwdReset'] == ['TRUE']
 
-    def passwordMustBeChanged(self):
+    def passwordMustChange(self):
         """
         @return: True if pwdMustChange is set (password must be changed)
         @rtype: bool
         """
         user = self.getUserEntry(self.userUid, operational = True)
-        return 'pwdMustBeChanged' in user
+        return 'pwdMustChange' in user and user['pwdMustChange'] == ['TRUE']
+
+    def userMustChangePassword(self):
+        """
+        if pwdReset is set on the user entry, and ppolicy and pwdMustChange is
+        enabled on the user entry, or pwdMustChange is enabled on the default
+        password policy, the user must change her password.
+
+        @return: True if the user must change her password
+        @rtype: bool
+        """
+        ret = False
+        if self.passwordHasBeenReset():
+            if self.hasPPolicyObjectClass():
+                ret = self.passwordMustChange()
+            else:
+                # Check the default password policy
+                gpwdmbc = PPolicy().getAttribute('pwdMustChange')
+                ret = gpwdmbc == ['TRUE']
+        return ret
 
     def isAccountInGraceLogin(self):
         """
@@ -473,6 +492,9 @@ def passwordHasBeenReset(uid):
 
 def passwordMustBeChanged(uid):
     return UserPPolicy(uid).passwordMustBeChanged()
+
+def userMustChangePassword(uid):
+    return UserPPolicy(uid).userMustChangePassword()
 
 def isAccountInGraceLogin(uid):
     return UserPPolicy(uid).isAccountInGraceLogin()
