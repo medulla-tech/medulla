@@ -193,9 +193,9 @@ if [ $DISTRIBUTION == "MandrivaLinux" ]; then
     service mysqld start
 fi
 if [ $DISTRIBUTION == "Debian" ]; then
-    /etc/init.d/mysql stop
+    invoke-rc.d mysql stop
     sed -i "s/^skip-networking/#skip-networking/" /etc/mysql/my.cnf
-    /etc/init.d/mysql start
+    invoke-rc.d mysql start
 fi
 # Wait for MySQL to start
 sleep 5
@@ -215,13 +215,11 @@ if [ $DISTRIBUTION == "MandrivaLinux" ]; then
 
     echo "include /etc/openldap/schema/mmc.schema" > /etc/openldap/schema/local.schema
 fi
+
 if [ $DISTRIBUTION == "Debian" ]; then
     touch /etc/ldap/schema/local.schema
     cp $TMPCO/mmc-core/agent/contrib/ldap/mmc.schema $TMPCO/mmc-core/agent/contrib/ldap/mail.schema $TMPCO/mmc-core/agent/contrib/ldap/openssh-lpk.schema $TMPCO/mmc-core/agent/contrib/ldap/quota.schema $TMPCO/mmc-core/agent/contrib/ldap/samba.schema $TMPCO/mmc-core/agent/contrib/ldap/dhcp.schema $TMPCO/mmc-core/agent/contrib/ldap/dnszone.schema /etc/ldap/schema/
-    grep -q '/etc/ldap/schema/local.schema' /etc/ldap/slapd.conf
-    if [ $? -ne 0 ]; then
-        sed -i -e '/inetorgperson.schema$/a include /etc/ldap/schema/local.schema' /etc/ldap/slapd.conf
-    fi
+    grep -q '/etc/ldap/schema/local.schema' /etc/ldap/slapd.conf || sed -i -e '/inetorgperson.schema$/a include /etc/ldap/schema/local.schema' /etc/ldap/slapd.conf
     echo "include /etc/ldap/schema/mmc.schema" > /etc/ldap/schema/local.schema
 fi
 
