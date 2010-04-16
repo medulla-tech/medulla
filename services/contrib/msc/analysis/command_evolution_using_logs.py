@@ -21,6 +21,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+"""
+A simple Pulse 2 Launchers log analyzer
+"""
+
 import sys
 import re
 import time
@@ -56,7 +60,19 @@ def create_graph(label_x, label_y, data_x, alldata_y, filename, title, start_dat
         color.green,
         color.magenta,
         color.cyan1,
-        color.orange,
+        color.yellow,
+        color.darkblue,
+        color.darkred,
+        color.darkgreen,
+        color.darkmagenta,
+        color.darkcyan,
+        color.gold,
+        color.lightblue1,
+        color.orangered,
+        color.lightgreen,
+        color.pink,
+        color.lightcyan,
+        color.goldenrod,
     ]
 
     can = canvas.init("%s"%filename)
