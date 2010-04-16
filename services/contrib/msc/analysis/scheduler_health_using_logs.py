@@ -20,11 +20,15 @@
 # along with Pulse 2; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
+"""
+a simple Pulse 2 scheduler log analyser
+"""
 
 import sys
 import re
 import time
-from pychart import *
+from pychart import color, theme, axis, canvas, area, line_style, line_plot, font
+
 
 X_MINOR_TICK_INTERVAL = 600
 X_TICK_INTERVAL = 3600
@@ -37,8 +41,11 @@ DELTA = 30
 
 HEALTH_REGEX = "([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}):[0-9]{2},.*scheduler ([^:]*): HEALTH: (.*)"
 
-def create_graph(label_x, label_y, data_x, alldata_y, filename, title, start_date, end_date, start_y, end_y):
 
+def create_graph(label_x, label_y, data_x, alldata_y, filename, title, start_date, end_date, start_y, end_y):
+    """
+    main func
+    """
     # alter file name (linpng do not seems to like spaces in filenames
 
     filename = filename.replace(' ', '_')
@@ -58,14 +65,13 @@ def create_graph(label_x, label_y, data_x, alldata_y, filename, title, start_dat
         color.orange,
     ]
 
-    can = canvas.init("%s"%filename)
+    can = canvas.init("%s" % filename)
 
     # Draw graph title
-    newtitle = "/hL/20%s"%title
-    left = WIDTH / 2  - font.text_width(newtitle)/2
+    newtitle = "/hL/20%s" % title
+    left = WIDTH / 2  - font.text_width(newtitle) / 2
     can.show(left, HEIGHT + DELTA, newtitle)
 
-    data = zip(data_x)
     int_to_date = lambda x: '/a60{}' + time.strftime("%H:%M", time.localtime(x))
 
     xaxis = axis.X(
@@ -73,8 +79,7 @@ def create_graph(label_x, label_y, data_x, alldata_y, filename, title, start_dat
         label = "/20%s" % label_x,
         label_offset = (0, -DELTA),
         minor_tic_interval = X_MINOR_TICK_INTERVAL,
-        tic_interval = X_TICK_INTERVAL
-    )
+        tic_interval = X_TICK_INTERVAL)
     yaxis = axis.Y(
         label = "/20%s" % label_y,
         label_offset = (-DELTA, 0),
@@ -90,20 +95,17 @@ def create_graph(label_x, label_y, data_x, alldata_y, filename, title, start_dat
         x_range = (start_date, end_date),
         y_range = (start_y, end_y),
         x_grid_interval = X_GRID_INTERVAL,
-        y_grid_interval = (end_y - start_y) / 5
-    )
+        y_grid_interval = (end_y - start_y) / 5)
 
     i = 0
     # Draw a line for each columns
     for title, data_y in alldata_y.iteritems():
         plot = line_plot.T(
             label = title,
-            data = zip(data_x,data_y),
+            data = zip(data_x, data_y),
             line_style = line_style.T(
                 color = colors[i],
-                width = 1
-            )
-        )
+                width = 1))
         ar.add_plot(plot)
         i += 1
 
@@ -111,6 +113,7 @@ def create_graph(label_x, label_y, data_x, alldata_y, filename, title, start_dat
     can.close()
 
     return True
+
 
 def read_logs(logfiles, start_date, stop_date):
     """
@@ -122,50 +125,50 @@ def read_logs(logfiles, start_date, stop_date):
     memory    = {}
 
     # Parse all log files in the directory
-    for file in logfiles:
+    for logfile in logfiles:
 
         try:
-            fh = open(file)
+            fh = open(logfile)
         except IOError:
-            print "can't read %s " % file
+            print "can't read %s " % logfile
             continue
 
-        print "parsing %s ... " % file
-        for line in fh: # Parse each line in the log file
+        print "parsing %s ... " % logfile
+        for line in fh:  # Parse each line in the log file
             # Add the "BALANCE" test to avoid computing regexp if the line doesn't match
             res = re.search(HEALTH_REGEX, line)
 
-            if not res: # give up if line do not match
+            if not res:  # give up if line do not match
                 continue
 
             stamp = int(time.mktime(time.strptime(res.group(1), '%Y-%m-%d %H:%M')))
-            if (stamp < start_date or stamp > stop_date): # give up if time do not match
+            if (stamp < start_date or stamp > stop_date):  # give up if time do not match
                 continue
 
             scheduler = res.group(2)
             dump = eval(res.group(3))
 
-            if dump.has_key('memory'):
-                if not memory.has_key(scheduler):
+            if 'memory' in dump:
+                if not scheduler in memory:
                     memory[scheduler] = {}
-                if not memory[scheduler].has_key(stamp):
+                if not stamp in memory[scheduler]:
                     memory[scheduler][stamp] = {}
                     memory[scheduler][stamp]    = int(dump['memory']['free'])
                 else:
                     memory[scheduler][stamp]   += int(dump['memory']['free'])
 
-            if dump.has_key('loadavg'):
-                if not loadavg.has_key(scheduler):
+            if 'loadavg' in dump:
+                if not scheduler in loadavg:
                     loadavg[scheduler] = {}
-                if not loadavg[scheduler].has_key(stamp):
+                if not stamp in loadavg[scheduler]:
                     loadavg[scheduler][stamp] = int(dump['loadavg']['1min'])
                 else:
                     loadavg[scheduler][stamp] += int(dump['loadavg']['1min'])
 
-            if dump.has_key('fd'):
-                if not fds.has_key(scheduler):
+            if 'fd' in dump:
+                if not scheduler in fds:
                     fds[scheduler] = {}
-                if not fds[scheduler].has_key(stamp):
+                if not stamp in fds[scheduler]:
                     fds[scheduler][stamp] = sum(dump['fd'].values())
                 else:
                     fds[scheduler][stamp] += sum(dump['fd'].values())
@@ -202,9 +205,9 @@ if __name__ == "__main__":
         # Sort scheduler data for pygraph
         for sched in scheduler_list:
             for hour in sched_hours:
-                if not sched_memory.has_key(sched):
+                if not sched in sched_memory:
                     sched_memory[sched] = []
-                if memory[sched].has_key(hour):
+                if hour in memory[sched]:
                     sched_memory[sched].append(memory[sched][hour])
                 else:
                     sched_memory[sched].append(0)
@@ -226,9 +229,9 @@ if __name__ == "__main__":
         # Sort scheduler data for pygraph
         for sched in scheduler_list:
             for hour in sched_hours:
-                if not sched_loads.has_key(sched):
+                if not sched in sched_loads:
                     sched_loads[sched] = []
-                if loads[sched].has_key(hour):
+                if hour in loads[sched]:
                     sched_loads[sched].append(loads[sched][hour])
                 else:
                     sched_loads[sched].append(0)
@@ -250,9 +253,9 @@ if __name__ == "__main__":
         # Sort scheduler data for pygraph
         for sched in scheduler_list:
             for hour in sched_hours:
-                if not sched_fds.has_key(sched):
+                if not sched in sched_fds:
                     sched_fds[sched] = []
-                if fds[sched].has_key(hour):
+                if hour in fds[sched]:
                     sched_fds[sched].append(fds[sched][hour])
                 else:
                     sched_fds[sched].append(0)
