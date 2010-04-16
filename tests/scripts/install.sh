@@ -92,7 +92,7 @@ function packages_to_install () {
     fi
     if [ $DISTRIBUTION == "Debian" ]; then
         if [ $RELEASE == "5.0.4" ]; then
-            PKGS="$PKGS python2.5-dev libldap2-dev python-setuptoolsi python-pylibacl"
+            PKGS="$PKGS python2.5-dev libldap2-dev python-setuptools python-pylibacl"
         fi
     fi
 
