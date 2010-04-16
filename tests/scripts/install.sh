@@ -133,8 +133,11 @@ if [ $DISTRIBUTION == "MandrivaLinux" ]; then
     rpm -q $PKGS
 fi
 if [ $DISTRIBUTION == "Debian" ]; then
+    # don't ask mysql password
+    export DEBIAN_FRONTEND=noninteractive
     apt-get install --yes $PKGS
     dpkg -l $PKGS
+    export DEBIAN_FRONTEND=newt
 fi
 
 if [ -z $TMPCO ];
