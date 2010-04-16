@@ -37,9 +37,9 @@ if [ -z $FORCE ];
     read
 fi
 
-if [ -n $MDV ]; then
+if [ -f '/etc/mandriva-release' ]; then
     service mmc-agent force-stop || true
-elif [ -n $DEB ]; then
+elif [ -f '/etc/debian_release' ]; then
     invoke-rc.d mmc-agent force-stop || true
 fi
 
@@ -58,10 +58,10 @@ rm -fr $PREFIX/share/mmc $PREFIX/lib/mmc
 rm -f $PREFIX/bin/mmc-*
 rm -fr /var/lib/ldap.*
 
-if [ -n $MDV ]; then
+if [ -f '/etc/mandriva-release' ]; then
     rm -f /usr/lib*/openldap/mmc-check-password.so
     rm -fr /etc/openldap/slapd.conf.*
-elif [ -n $DEB ]; then
+elif [ -f '/etc/debian_release' ]; then
     rm -f /usr/lib/ldap/mmc-check-password.so
     rm -fr /etc/ldap/slapd.conf.*
 fi
