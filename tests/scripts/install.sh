@@ -148,6 +148,10 @@ else
     pushd $TMPCO
 fi
 
+if [ $DISTRIBUTION == "Debian" ]; then
+    export NOCHECKPASSWORD=1
+fi
+
 if [ $RELEASE == "2006.0" ];
     then
     export NOCHECKPASSWORD=1
