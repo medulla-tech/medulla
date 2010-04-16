@@ -97,11 +97,6 @@ class PPolicyConfig(PluginConfig):
                 self.ppolicyAttributes[attribute[0]] = False
             else:
                 self.ppolicyAttributes[attribute[0]] = attribute[1]
-        
-        #if self.has_section("user"):
-        #    if self.has_option('user', 'attribute'):
-        #        self.userAttributes = self.get('user', 'attribute').split('|')
-
 
 class PPolicy(ldapUserGroupControl):
 
@@ -288,25 +283,30 @@ class UserPPolicy(ldapUserGroupControl):
         @rtype: boolean
         """
         return "pwdPolicy" in self.getPPolicyAttribute()["objectClass"]
-        
+
     def addPPolicyObjectClass(self):
         """
-        Add the pwdPolicy objectClass to the current user.
+        Add the pwdPolicy and pwdPolicyChecker objectClass to the current user,
+        and set the pwdPolicySubentry attribute to the user DN.
 
         The pwdAttribute is also set to the value 'userPassword'.
         """
         if not self.hasPPolicyObjectClass():
             r = AF().log(PLUGIN_NAME, AA.PPOLICY_ADD_USER_PPOLICY_CLASS, [(self.dn, AT.USER)])
             # Get current user entry
-            s = self.l.search_s(self.dn, ldap.SCOPE_BASE)
+            s = self.l.search_s(self.dn, ldap.SCOPE_BASE,
+                                attrlist = ['+', '*'])
             c, old = s[0]
-
             new = copy.deepcopy(old)
-
             if not "pwdPolicy" in new["objectClass"]:
                 new["objectClass"].append("pwdPolicy")
                 new["pwdAttribute"] = "userPassword"
-
+                new['pwdPolicySubentry'] = self.dn
+            if not 'pwdPolicyChecker' in new['objectClass']:
+                new['objectClass'].append('pwdPolicyChecker')
+            # Set a password checker module if one has been configured
+            if 'pwdcheckmodule' in self.configPPolicy.ppolicyAttributes:
+                new['pwdCheckModule'] = self.configPPolicy.ppolicyAttributes['pwdcheckmodule']
             # Update LDAP
             modlist = ldap.modlist.modifyModlist(old, new)
             self.l.modify_s(self.dn, modlist)
@@ -314,10 +314,25 @@ class UserPPolicy(ldapUserGroupControl):
 
     def removePPolicyObjectClass(self):
         """
-        Remove the pwdPolicy objectClass to the current user.
+        Remove the pwdPolicy and pwdPolicyChecker objectClass from the current
+        user, and the pwdPolicySubentry attribute.
         """ 
         r = AF().log(PLUGIN_NAME, AA.PPOLICY_DEL_USER_PPOLICY_CLASS, [(self.dn, AT.USER)])
+        # Remove pwdPolicy object class
         self.removeUserObjectClass(self.userUid, 'pwdPolicy')
+        # Remove pwdPolicySubentry attribute from current user entry
+        s = self.l.search_s(self.dn, ldap.SCOPE_BASE,
+                            attrlist = ['+', '*'])
+        c, old = s[0]
+        new = copy.deepcopy(old)
+        if 'pwdPolicySubentry' in new:
+            del new['pwdPolicySubentry']
+        # Update LDAP
+        modlist = ldap.modlist.modifyModlist(old, new)
+        self.l.modify_s(self.dn, modlist)
+        # Remove pwdPolicyChecker object class
+        if 'pwdPolicyChecker' in new['objectClass']:
+            self.removeUserObjectClass(self.userUid, 'pwdPolicyChecker')
         r.commit()
 
     def _strpTime(self, value):
