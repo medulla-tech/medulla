@@ -61,9 +61,11 @@ rm -fr /var/lib/ldap.*
 if [ -f '/etc/mandriva-release' ]; then
     rm -f /usr/lib*/openldap/mmc-check-password.so
     rm -fr /etc/openldap/slapd.conf.*
+    echo "" > /etc/openldap/schema/local.schema
 elif [ -f '/etc/debian_release' ]; then
     rm -f /usr/lib/ldap/mmc-check-password.so
     rm -fr /etc/ldap/slapd.conf.*
+    echo "" > /etc/ldap/schema/local.schema
 fi
 
 echo "Uninstallation done"
