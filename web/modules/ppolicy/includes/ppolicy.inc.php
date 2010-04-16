@@ -36,7 +36,7 @@ function getPPolicyAttributesKeys() {
     return array(   "pwdMinLength"          => array(_T("Minimum length", "ppolicy"), "int"),
                     "pwdMinAge"             => array(_T("Minimum age", "ppolicy"), "int"),
                     "pwdMaxAge"             => array(_T("Maximum age", "ppolicy"), "int"),
-                    "pwdMustChange"         => array(_T("Change password on First Connexion", "ppolicy"), "bool"),
+                    "pwdMustChange"         => array(_T("Change password on first connection", "ppolicy"), "bool"),
                     "pwdLockoutDuration"    => array(_T("Lockout duration", "ppolicy"), "int"),
                     "pwdMaxFailure"         => array(_T("Maximum failed", "ppolicy"), "int"),
                     "pwdLockout"            => array(_T("Preventive lockout user", "ppolicy"), "bool"),
