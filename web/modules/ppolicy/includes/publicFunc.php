@@ -35,6 +35,7 @@ function _ppolicy_baseEdit($ldapArr, $postArr) {
 
     # get current values
     $pwdMinLength = isset($ldapArr["pwdMinLength"][0]) ? $ldapArr["pwdMinLength"][0] : "";
+    $pwdCheckQuality = isset($ldapArr["pwdCheckQuality"][0]) ? $ldapArr["pwdCheckQuality"][0] : "";
     $pwdMinAge = isset($ldapArr["pwdMinAge"][0]) ? $ldapArr["pwdMinAge"][0] : "";
     $pwdMaxAge = isset($ldapArr["pwdMaxAge"][0]) ? $ldapArr["pwdMaxAge"][0] : "";
     $pwdGraceAuthNLimit = isset($ldapArr["pwdGraceAuthNLimit"][0]) ? $ldapArr["pwdGraceAuthNLimit"][0] : "";
@@ -83,6 +84,10 @@ function _ppolicy_baseEdit($ldapArr, $postArr) {
                               new InputTpl("pwdMinLength",'/^[0-9]*$/'),
                               array("tooltip" => ppolicyTips("pwdMinLength"))),
             array("value"=>$pwdMinLength));
+    $f->add(new TrFormElement(_T("Password quality check", "ppolicy"),
+                              new InputTpl("pwdCheckQuality",'/^[012]$/'),
+                              array("tooltip" => ppolicyTips("pwdCheckQuality"))),
+            array("value"=>$pwdCheckQuality));
     $f->pop();
 
     $f->push(new Table());

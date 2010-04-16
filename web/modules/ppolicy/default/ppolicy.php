@@ -88,6 +88,12 @@ $f->add(new TrFormElement(_T("Minimum length", "ppolicy"),new InputTpl("gpwdMinL
                           array("tooltip" => ppolicyTips("pwdMinLength"))),
         array("value"=>$detailArr["pwdMinLength"][0]));
 
+$f->add(new TrFormElement(_T("Password quality check", "ppolicy"),new InputTpl("gpwdCheckQuality",'/^[012]$/'),
+                          array("tooltip" => ppolicyTips("pwdCheckQuality"))),
+        array("value"=>$detailArr["pwdCheckQuality"][0]));
+
+
+
 $f->pop();
 $f->push(new Table());
 

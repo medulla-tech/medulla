@@ -35,15 +35,16 @@
 function getPPolicyAttributesKeys() {
     return array(   "pwdMinLength"          => array(_T("Minimum length", "ppolicy"), "int"),
                     "pwdMinAge"             => array(_T("Minimum age", "ppolicy"), "int"),
-                    "pwdMaxAge"             => array(_T("Maximum age", "ppolicy"), "int"), 
-                    "pwdMustChange"         => array(_T("Change password on First Connexion", "ppolicy"), "bool"), 
-                    "pwdLockoutDuration"    => array(_T("Lockout duration", "ppolicy"), "int"), 
-                    "pwdMaxFailure"         => array(_T("Maximum failed", "ppolicy"), "int"), 
-                    "pwdLockout"            => array(_T("Preventive lockout user", "ppolicy"), "bool"), 
+                    "pwdMaxAge"             => array(_T("Maximum age", "ppolicy"), "int"),
+                    "pwdMustChange"         => array(_T("Change password on First Connexion", "ppolicy"), "bool"),
+                    "pwdLockoutDuration"    => array(_T("Lockout duration", "ppolicy"), "int"),
+                    "pwdMaxFailure"         => array(_T("Maximum failed", "ppolicy"), "int"),
+                    "pwdLockout"            => array(_T("Preventive lockout user", "ppolicy"), "bool"),
                     "pwdInHistory"          => array(_T("Password hash history", "ppolicy"), "int"),
                     "pwdGraceAuthNLimit"    => array(_T("Number of grace authentications", "ppolicy"), "int"),
                     "pwdReset"              => array(_T("Reset the password", "ppolicy"), "bool"),
-                    ); 
+                    "pwdCheckQuality"       => array(_T("Password policy quality check"), "int"),
+                    );
 }
 
 function ppolicyTips($attr) {
@@ -57,7 +58,8 @@ function ppolicyTips($attr) {
                   "pwdMaxFailure" => _T("This attribute specifies the number of consecutive failed bind attempts after which the password may not be used to authenticate. If this attribute is not present, or if the value is 0, this policy is not checked, and the value of \"Preventive user lockout\" will be ignored.", "ppolicy"),
                   "pwdLockoutDuration" => _T("This attribute holds the number of seconds that the password cannot be used to authenticate due to too many failed authentication attempts. If this attribute is empty, or if the value is 0 the password cannot be used to authenticate until reset by a password administrator.", "ppolicy"),
                   "pwdGraceAuthNLimit" => _T("This attribute contains the number of times that an expired password may be used to authenticate a user to the directory. If this attribute is not present or if its value is zero, users with expired password will not be allowed to authenticate.", "ppolicy"),
-                  "pwdReset" => _T("This flag allows to mark the password as having being reset by an administrator.", "ppolicy")
+                  "pwdReset" => _T("This flag allows to mark the password as having being reset by an administrator.", "ppolicy"),
+                  "pwdCheckQuality" => _T("This attribute indicates how the password quality will be verified while being modified or added. If this attribute is not present, or if the value is '0', quality checking will not be enforced.  A value of '1' indicates that the server will check the quality, and if the server is unable to check it (due to a hashed password or other reasons) it will be accepted. A value of '2' indicates that the server will check the quality, and if the server is unable to verify it, it will return an error refusing the password.", "ppolicy"),
                   );
     return $tips[$attr];
 }
