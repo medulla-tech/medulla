@@ -37,7 +37,12 @@ if [ -z $FORCE ];
     read
 fi
 
-service mmc-agent force-stop || true
+if [ -n $MDV ]; then
+    service mmc-agent force-stop || true
+elif [ -n $DEB ]; then
+    invoke-rc.d mmc-agent force-stop || true
+fi
+
 rm -f /var/run/mmc-agent.pid
 
 if which mmc-helper; then
@@ -50,10 +55,16 @@ rm -f /etc/init.d/mmc-agent $PREFIX/sbin/mmc-agent
 
 rm -fr $PREFIX/lib/python2.*/site-packages/mmc
 rm -fr $PREFIX/share/mmc $PREFIX/lib/mmc
-rm -f /usr/lib*/openldap/mmc-check-password.so
 rm -f $PREFIX/bin/mmc-*
+rm -fr /var/lib/ldap.*
 
-rm -fr /var/lib/ldap.* /etc/openldap/slapd.conf.*
+if [ -n $MDV ]; then
+    rm -f /usr/lib*/openldap/mmc-check-password.so
+    rm -fr /etc/openldap/slapd.conf.*
+elif [ -n $DEB ]; then
+    rm -f /usr/lib/ldap/mmc-check-password.so
+    rm -fr /etc/ldap/slapd.conf.*
+fi
 
 echo "Uninstallation done"
 exit 0
