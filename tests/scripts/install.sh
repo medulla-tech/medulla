@@ -218,7 +218,7 @@ fi
 if [ $DISTRIBUTION == "Debian" ]; then
     touch /etc/ldap/schema/local.schema
     cp $TMPCO/mmc-core/agent/contrib/ldap/mmc.schema $TMPCO/mmc-core/agent/contrib/ldap/mail.schema $TMPCO/mmc-core/agent/contrib/ldap/openssh-lpk.schema $TMPCO/mmc-core/agent/contrib/ldap/quota.schema /etc/ldap/schema/
-    if [ -z `grep '/etc/ldap/schema/local.schema' /etc/ldap/slapd.conf`]; then
+    if [ -z `grep '/etc/ldap/schema/local.schema' /etc/ldap/slapd.conf` ]; then
         sed -i -e '/inetorgperson.schema$/a include /etc/ldap/schema/local.schema' /etc/ldap/slapd.conf
         echo "include /etc/ldap/schema/mmc.schema" > /etc/ldap/schema/local.schema
     fi
