@@ -176,6 +176,8 @@ function _ppolicy_verifInfo($postArr) {
  * @param $FH FormHandler class of the page
  */
 function _ppolicy_changeUser($FH) {
+    $ppolicyattr = getPPolicyAttributesKeys();
+    global $result;
     if ($FH->getPostValue("ppolicyactivated")) {
         if (!hasPPolicyObjectClass($FH->getPostValue("nlogin"))) {
             addPPolicyObjectClass($FH->getPostValue("nlogin"));
@@ -183,8 +185,7 @@ function _ppolicy_changeUser($FH) {
 
         $detailArr = getDetailedUser($FH->getPostValue("nlogin"));
         _ppolicy_completeUserEntry($detailArr);
-        $ppolicyattr = getPPolicyAttributesKeys();
-
+ 
         $msg = '<br />';
 
         foreach ($ppolicyattr as $key => $info) { // foreach the list of Supported Attributes
@@ -195,8 +196,7 @@ function _ppolicy_changeUser($FH) {
                     if($FH->getValue($key) == "off") {
                         setUserPPolicyAttribut($FH->getPostValue("nlogin"),$key,'FALSE');
                         $action = _('disabled');
-                    }
-                    else {
+                    } else {
                         setUserPPolicyAttribut($FH->getPostValue("nlogin"),$key,'TRUE');
                         $action = _('enabled');
                     }
@@ -211,13 +211,26 @@ function _ppolicy_changeUser($FH) {
         }
 
         if ($msg != '<br />') {
-            global $result;
             $result .= $msg;
         }
     } else {
         /* if ppolicy plugin is unchecked */
         if (hasPPolicyObjectClass($FH->getPostValue("nlogin"))) {
             removePPolicyObjectClass($FH->getPostValue("nlogin"));
+        }
+        /* Handle special pwdReset case, which doesn't require the PPolicy
+           object class */
+        if ($FH->isUpdated('pwdReset')) {
+            if($FH->getValue('pwdReset') == "off") {
+                setUserPPolicyAttribut($FH->getPostValue("nlogin"),
+                                       'pwdReset', 'FALSE');
+                $action = _('disabled');
+            } else {
+                setUserPPolicyAttribut($FH->getPostValue("nlogin"),
+                                       'pwdReset', 'TRUE');
+                $action = _('enabled');
+            }
+            $result .= "<br />- ".$ppolicyattr['pwdReset'][0]." ".$action."<br />";
         }
     }
 }
