@@ -955,6 +955,7 @@ class Glpi07(DyngroupDatabaseHelper):
             return True
 
         session = create_session()
+        # get the number of computers the user have access to
         query = session.query(Machine)
         if ctx.userid == "root":
             query = self.filterOnUUID(query, a_machine_uuid)
@@ -964,12 +965,20 @@ class Glpi07(DyngroupDatabaseHelper):
             query = query.filter(self.location.c.name.in_(a_locations))
             query = self.filterOnUUID(query, a_machine_uuid)
         ret = query.group_by(self.machine.c.ID).all()
+        # get the number of computers that had not been deleted
+        machines_uuid_size = len(a_machine_uuid)
+        all_computers = session.query(Machine)
+        all_computers = self.filterOnUUID(all_computers, a_machine_uuid).all()
+        all_computers = Set(map(lambda m:toUUID(str(m.ID)), all_computers))
+        if len(all_computers) != machines_uuid_size:
+            self.logger.info("some machines have been deleted since that list was generated (%s)"%(str(Set(a_machine_uuid) - all_computers)))
+            machines_uuid_size = len(all_computers)
         size = 1
         if type(ret) == list:
             size = len(ret)
-        if all and size == len(a_machine_uuid):
+        if all and size == machines_uuid_size:
             return True
-        elif (not all) and len(a_machine_uuid) == 0:
+        elif (not all) and machines_uuid_size == 0:
             return True
         elif (not all) and len(ret) > 0:
             return True
