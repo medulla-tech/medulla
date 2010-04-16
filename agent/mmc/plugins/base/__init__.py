@@ -101,10 +101,10 @@ def activate():
 
     # Test if the MMC LDAP schema is available in the directory
     try:
-         schema =  ldapObj.getSchema("lmcUserObject")
-         if len(schema) <= 0:
-             logger.error("MMC schema seems not be include in LDAP directory");
-             return False
+        schema =  ldapObj.getSchema("lmcUserObject")
+        if len(schema) <= 0:
+            logger.error("MMC schema seems not be include in LDAP directory")
+            return False
     except:
         logger.exception("invalid schema")
         return False
@@ -164,7 +164,8 @@ def activate_2():
                             (ComputerManager(), config.computersmethod)]:
         manager.select(method)
         ret = manager.validate()
-        if not ret: break
+        if not ret:
+            break
     return ret
 
 def getModList():
@@ -1884,11 +1885,16 @@ class ldapAuthen:
         return self.result
 
     def getUserEntry(self):
+        """
+        Use the LDAP administrator account to get the user entry, because the
+        user account may now have sufficient rights to read her entry.
+        """
+        lugc = ldapUserGroupControl()
         try:
-            ret = self.l.search_s(self.userdn, ldap.SCOPE_BASE)
+            ret = lugc.l.search_s(self.userdn, ldap.SCOPE_BASE)
         except ldap.NO_SUCH_OBJECT:
-            # If the user is defined in OpenLDAP slapd.conf, we may bind even
-            # if the user has no LDAP entry.
+            # If the user is defined in OpenLDAP slapd.conf, we may bind even
+            # if the user has no LDAP entry.
             ret = None
         return ret
 
