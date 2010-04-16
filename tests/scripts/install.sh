@@ -183,6 +183,13 @@ rm -fr /home/archives; mkdir -p /home/archives
 # Remove default LDAP password policies because the MMC agent will add one
 ldapdelete -x -h 127.0.0.1 -D "uid=LDAP Admin,ou=System Accounts,dc=mandriva,dc=com" -w secret "cn=default,ou=Password Policies,dc=mandriva,dc=com"
 
+# Disable passmod on CS4, because it doesn't work
+if [ $RELEASE == "2006.0" ];
+    then
+    sed -i "s/passwordscheme = passmod/passwordscheme = ssha/" /etc/mmc/plugins/base.ini
+fi
+
+
 # Setup MMC audit framework
 cat >> /etc/mmc/plugins/base.ini << EOF
 
