@@ -88,6 +88,10 @@ function passwordHasBeenReset($uid) {
     return xmlCall("ppolicy.passwordHasBeenReset", array($uid));
 }
 
+function userMustChangePassword($uid) {
+    return xmlCall("ppolicy.userMustChangePassword", array($uid));
+}
+
 function isAccountInGraceLogin($uid) {
     return xmlCall("ppolicy.isAccountInGraceLogin", array($uid));
 }
