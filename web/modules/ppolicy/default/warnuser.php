@@ -29,11 +29,17 @@
 
 require_once("modules/ppolicy/includes/ppolicy-xmlrpc.php");
 
-if (($_SESSION["login"] != "root") && (empty($_SESSION["gracelogin"]))) {
-    if (isAccountInGraceLogin($_SESSION["login"]) != -1) {
+if ($_SESSION["login"] != "root") {
+    if ((empty($_SESSION["gracelogin"]))
+        && (isAccountInGraceLogin($_SESSION["login"]) != -1)) {
         new NotifyWidgetSuccess(_T("Warning you have been logged using grace login mode. Please change your password as soon as possible using the password change page, else your account will be locked.", "ppolicy"));
     }
     $_SESSION["gracelogin"] = 1;
- }
+    if ((empty($_SESSION["userMustChangePassword"]))
+        && (userMustChangePassword($_SESSION["login"]))) {
+        new NotifyWidgetSuccess(_T("Warning your password has been reset by an administrator. Your LDAP account is restricted. Please change your password as soon as possible using the password change page.", "ppolicy"));
+    }
+    $_SESSION["userMustChangePassword"] = 1;
+}
 
 ?>
