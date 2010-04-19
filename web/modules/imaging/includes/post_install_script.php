@@ -65,6 +65,7 @@ function get_post_install_scripts($f, $post_install_scripts, $post_installs) {
     $l->addExtraInfo($a_order, _T("Order", "imaging"));
 
     $l->disableFirstColumnActionLink();
+    $l->setRowsPerPage(count($post_installs));
 
     $f->add($l);
 
