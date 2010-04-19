@@ -34,9 +34,9 @@ class AuditConfig:
         if self.has_section(section):
             self.auditmethod = self.get(section, "method")
             if self.auditmethod == "database":
-                self.auditdbhost = self.get(section, "host")
-                self.auditdbport = self.getint(section, "port")
-                self.auditdbuser = self.get(section, "user")
-                self.auditdbpassword = self.getpassword(section, "password")
-                self.auditdbname = self.get(section, "base")
-                self.auditdbdriver = self.get(section, "driver")
+                self.auditdbhost = self.get(section, "dbhost")
+                self.auditdbport = self.getint(section, "dbport")
+                self.auditdbuser = self.get(section, "dbuser")
+                self.auditdbpassword = self.getpassword(section, "dbpassword")
+                self.auditdbname = self.get(section, "dbname")
+                self.auditdbdriver = self.get(section, "dbdriver")
