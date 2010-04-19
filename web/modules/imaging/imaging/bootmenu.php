@@ -34,7 +34,7 @@ if (isset($_GET['gid']) && $_GET['gid'] != '') {
 } else {
     $type = '';
     $target_uuid = isset($_GET['uuid']) ? $_GET['uuid'] : "";
-    $target_name = iset($_GET['hostname']) ? $_GET['hostname'] : "";
+    $target_name = isset($_GET['hostname']) ? $_GET['hostname'] : "";
 }
 if (isset($params['hostname']) && !isset($target_name)) {
     $target_name = $params['hostname'];
