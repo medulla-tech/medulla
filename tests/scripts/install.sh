@@ -2,7 +2,7 @@
 
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# (c) 2007-2009 Mandriva, http://www.mandriva.com
+# (c) 2007-2010 Mandriva, http://www.mandriva.com
 #
 # $Id$
 #
@@ -33,7 +33,7 @@ then
     echo "urpmi lsb-release"
     echo "apt-get install lsb-release"
     exit 1
-fi	
+fi
 
 DISTRIBUTION=`lsb_release -i -s`
 RELEASE=`lsb_release -r -s`
@@ -265,12 +265,12 @@ cat >> /etc/mmc/plugins/base.ini << EOF
 
 [audit]
 method = database
-host = localhost
-driver = mysql
-port = 3306
-user = audit
-password = audit
-base = audit
+dbhost = localhost
+dbdriver = mysql
+dbport = 3306
+dbuser = audit
+dbpassword = audit
+dbname = audit
 EOF
 
 mmc-helper audit create | mysql
