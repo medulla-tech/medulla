@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-15 08:58+0200\n"
-"PO-Revision-Date: \n"
+"POT-Creation-Date: 2010-04-19 10:16+0200\n"
+"PO-Revision-Date: 2010-04-19 10:19+0200\n"
 "Last-Translator: Mario Fetka <mario.fetka@gmail.com>\n"
 "Language-Team: X-SOURCE TechnikService <info@x-source.de>\n"
 "MIME-Version: 1.0\n"
@@ -13,7 +13,7 @@ msgstr ""
 "X-Poedit-Country: GERMANY\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: modules/base/users/editacl.php:253
+#: modules/base/users/editacl.php:203
 #, php-format
 msgid " (%s module)"
 msgstr " (%s Module)"
@@ -139,7 +139,7 @@ msgstr "Alle Computer"
 msgid "All users"
 msgstr "Alle Benutzer"
 
-#: modules/base/users/editacl.php:225
+#: modules/base/users/editacl.php:175
 msgid "Attribute description"
 msgstr "Attribut Beschreibung"
 
@@ -151,7 +151,7 @@ msgstr "Attribute aktualisiert."
 msgid "Audit"
 msgstr "Prüfung"
 
-#: modules/base/users/editacl.php:263
+#: modules/base/users/editacl.php:213
 msgid "Authorization"
 msgstr "Autorisation"
 
@@ -202,8 +202,8 @@ msgstr "kann nicht zum MMC Agent verbinden"
 msgid "Can't send XML-RPC request to MMC agent"
 msgstr "kann keine XML-RPC-Anfrage an MMC-Agent senden"
 
-#: includes/PageGenerator.php:109 includes/PageGenerator.php:2123
-#: includes/PageGenerator.php:2194 modules/base/groups/members.php:182
+#: includes/PageGenerator.php:109 includes/PageGenerator.php:2173
+#: includes/PageGenerator.php:2244 modules/base/groups/members.php:182
 #: modules/base/groups/delete.php:52 modules/base/users/backup.php:91
 #: modules/base/users/edit.php:535
 msgid "Cancel"
@@ -290,8 +290,8 @@ msgstr "Computer"
 msgid "Computers list"
 msgstr "Computerliste"
 
-#: includes/PageGenerator.php:2119 includes/PageGenerator.php:2190
-#: includes/PageGenerator.php:2216 modules/base/groups/members.php:181
+#: includes/PageGenerator.php:2169 includes/PageGenerator.php:2240
+#: includes/PageGenerator.php:2266 modules/base/groups/members.php:181
 #: modules/base/groups/edit.php:107 modules/base/users/edit.php:527
 msgid "Confirm"
 msgstr "bestätigen"
@@ -396,7 +396,7 @@ msgstr "Beschreibung"
 msgid "Display Name"
 msgstr "Angezeigter Name"
 
-#: modules/base/users/editacl.php:315
+#: modules/base/users/editacl.php:265
 msgid "Download ACL string"
 msgstr "ACL string herunterladen"
 
@@ -408,7 +408,7 @@ msgstr "Datei herunterladen"
 msgid "Edit"
 msgstr "bearbeiten"
 
-#: modules/base/users/editacl.php:295
+#: modules/base/users/editacl.php:245
 #, php-format
 msgid "Edit ACL of user %s"
 msgstr "ACL des Benutzer %s bearbeiten"
@@ -651,7 +651,7 @@ msgstr "Liste"
 msgid "Location"
 msgstr "Ort"
 
-#: modules/ppolicy/includes/publicFunc.php:145
+#: modules/ppolicy/includes/publicFunc.php:156
 msgid "Lockout duration (seconds)"
 msgstr "Lockout Dauer (Sekunden)"
 
@@ -810,7 +810,7 @@ msgstr "Das Passwort ist in der Geschichte des alten Passwörter vorhanden."
 msgid "Password is not being changed from existing value"
 msgstr "Das Passwort wird nicht geändert"
 
-#: modules/ppolicy/includes/publicFunc.php:141
+#: modules/ppolicy/includes/publicFunc.php:152
 msgid "Password maximum failure"
 msgstr "Passwort maximale Fehler"
 
@@ -945,7 +945,7 @@ msgstr "Suchen Aktion"
 msgid "Sec.: "
 msgstr "Sec.:"
 
-#: modules/base/users/editacl.php:60
+#: includes/PageGenerator.php:1951
 msgid "Select all"
 msgstr "alle wählen"
 
@@ -1120,9 +1120,8 @@ msgstr ""
 "werden."
 
 #: modules/base/users/edit.php:380
-#, fuzzy
 msgid "This account is locked by the LDAP directory."
-msgstr "Dieses Objekt existiert bereits in Ihrem LDAP-Verzeichnis."
+msgstr "Dieses Konto wurde vom LDAP-Verzeichnis gesperrt."
 
 #: includes/xmlrpc.inc.php:322
 msgid ""
@@ -1204,9 +1203,9 @@ msgstr "Titel"
 
 #: modules/base/users/edit.php:532
 msgid "Unlock LDAP account"
-msgstr ""
+msgstr "LDAP Konto freigeben"
 
-#: modules/base/users/editacl.php:61
+#: includes/PageGenerator.php:1952
 msgid "Unselect all"
 msgstr "alle abwählen"
 
@@ -1234,7 +1233,7 @@ msgstr "Benutzer %s wurde erfolgreich gelöscht"
 msgid "User %s successfully created<br />"
 msgstr "Benutzer %s wurde erfolgreich erstellt<br />"
 
-#: modules/base/users/editacl.php:202
+#: modules/base/users/editacl.php:152
 msgid "User ACLs successfully modified."
 msgstr "Benutzer ACLs erfolgreich geändert."
 
@@ -1332,11 +1331,11 @@ msgstr ""
 msgid "View details of an action"
 msgstr "Detailansicht einer Aktion"
 
-#: modules/base/users/editacl.php:272
+#: modules/base/users/editacl.php:222
 msgid "Warning no desc found in infoPackage.inc.php :"
 msgstr "Warnung - keine Beschreibung gefunden in infoPackage.inc.php :"
 
-#: modules/base/users/editacl.php:263
+#: modules/base/users/editacl.php:213
 msgid "Web page description"
 msgstr "Webseite Beschreibung"
 
@@ -1394,11 +1393,13 @@ msgstr "danish"
 msgid "day"
 msgstr "day"
 
-#: modules/ppolicy/includes/publicFunc.php:197
+#: modules/ppolicy/includes/publicFunc.php:207
+#: modules/ppolicy/includes/publicFunc.php:231
 msgid "disabled"
 msgstr "deaktiviert"
 
-#: modules/ppolicy/includes/publicFunc.php:201
+#: modules/ppolicy/includes/publicFunc.php:210
+#: modules/ppolicy/includes/publicFunc.php:235
 msgid "enabled"
 msgstr "aktiviert"
 
@@ -1418,7 +1419,7 @@ msgstr "french"
 msgid "german"
 msgstr "deutsch"
 
-#: modules/base/users/editacl.php:225
+#: modules/base/users/editacl.php:175
 msgid "hide"
 msgstr "verstecken"
 
@@ -1464,11 +1465,11 @@ msgstr "Seite"
 msgid "polish"
 msgstr "polish"
 
-#: modules/base/users/editacl.php:225
+#: modules/base/users/editacl.php:175
 msgid "read only"
 msgstr "nur lesen"
 
-#: modules/base/users/editacl.php:225
+#: modules/base/users/editacl.php:175
 msgid "read/write"
 msgstr "lesen/schreiben"
 
@@ -1501,10 +1502,6 @@ msgstr "nicht verfügbar"
 msgid "unknown error"
 msgstr "unbekannter Fehler"
 
-#: modules/ppolicy/includes/publicFunc.php:208
-msgid "updated"
-msgstr "aktualisieren"
-
 #: includes/FormGenerator.php:475
 #: modules/base/includes/AjaxFilterLog.inc.php:173
 msgid "value=\"never\";'>never</a>"
@@ -1518,15 +1515,3 @@ msgstr "value=\"never\";'>never</a>"
 #: includes/FormGenerator.php:217
 msgid "yes"
 msgstr "ja"
-
-#~ msgid "Edit ACL of user"
-#~ msgstr "Benutzer-ACLs bearbeiten"
-
-#~ msgid "Function name"
-#~ msgstr "Funktionsname"
-
-#~ msgid "Telephone Number"
-#~ msgstr "Telefonnummer"
-
-#~ msgid "user %s created<br />"
-#~ msgstr "Benutzer %s erstellt<br />"
