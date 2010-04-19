@@ -60,6 +60,7 @@ install:
 	@echo ""
 	@echo "Creating directories..."
 	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(SBINDIR)
+	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(BINDIR)
 	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(LIBDIR)
 	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(LIBDIRBACKUP)
 	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(ETCDIR)
