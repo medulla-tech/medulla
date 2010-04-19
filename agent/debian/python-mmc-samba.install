@@ -1,7 +1,0 @@
-usr/lib/python2.?/site-packages/mmc/plugins/samba
-etc/mmc/plugins/samba.ini
-usr/lib/mmc/add_machine_script
-usr/lib/mmc/add_change_share_script
-usr/lib/mmc/delete_share_script
-usr/lib/mmc/add_printer_script
-usr/lib/mmc/delete_printer_script

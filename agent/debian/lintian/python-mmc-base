@@ -1,1 +1,0 @@
-python-mmc-base: non-standard-file-perm etc/mmc/plugins/base.ini 0600 != 0644

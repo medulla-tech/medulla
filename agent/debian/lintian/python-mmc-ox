@@ -1,1 +1,0 @@
-python-mmc-ox: non-standard-file-perm etc/mmc/plugins/ox.ini 0600 != 0644

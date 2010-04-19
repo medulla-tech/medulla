@@ -1,1 +1,0 @@
-python-mmc-proxy: non-standard-file-perm etc/mmc/plugins/proxy.ini 0600 != 0644

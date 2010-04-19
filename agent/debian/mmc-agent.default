@@ -1,9 +1,0 @@
-# Defaults for mmc-agent initscript
-# sourced by /etc/init.d/mmc-agent
-# installed at /etc/default/mmc-agent by the maintainer scripts
-
-#
-# This is a POSIX shell fragment
-#
-
-ENABLE=yes

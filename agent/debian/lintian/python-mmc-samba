@@ -1,1 +1,0 @@
-python-mmc-samba: non-standard-file-perm etc/mmc/plugins/samba.ini 0600 != 0644

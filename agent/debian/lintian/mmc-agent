@@ -1,3 +1,0 @@
-mmc-agent: non-standard-file-perm etc/mmc/agent/keys/cacert.pem 0600 != 0644
-mmc-agent: non-standard-file-perm etc/mmc/agent/keys/privkey.pem 0600 != 0644
-mmc-agent: non-standard-file-perm etc/mmc/agent/config.ini 0600 != 0644

@@ -1,9 +1,0 @@
-usr/sbin/mds-report
-usr/lib/python2.?/site-packages/mmc/client.py
-usr/lib/python2.?/site-packages/mmc/support
-usr/lib/python2.?/site-packages/mmc/__init__.py
-usr/lib/python2.?/site-packages/mmc/plugins/__init__.py
-usr/lib/python2.?/site-packages/mmc/plugins/base
-usr/lib/mmc/backup-tools/cdlist
-usr/lib/mmc/backup-tools/backup.sh
-etc/mmc/plugins/base.ini
