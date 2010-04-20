@@ -67,7 +67,7 @@ $f->add(new TrFormElement(_("Client"), new HiddenTpl("interface")),
         array("value" => $log[0]["client-type"]));
 $f->add(new TrFormElement(_("Client hostname"), new HiddenTpl("hostname")),
         array("value" => $log[0]["client-host"]));
-$f->add(new TrFormElement(_("Agent Hostname"), new HiddenTpl("ahostname")),
+$f->add(new TrFormElement(_("Agent hostname"), new HiddenTpl("ahostname")),
         array("value" => $log[0]["agent-host"]));
 
 $i = 1;
