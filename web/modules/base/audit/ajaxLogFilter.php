@@ -22,8 +22,6 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-//require("includes/PageGenerator.php");
-
 require_once("modules/base/includes/logging-xmlrpc.inc.php");
 require("modules/base/includes/AjaxFilterLog.inc.php");
 require_once("includes/auditCodesManager.php");
@@ -119,18 +117,18 @@ $n->setItemCount($nblog);
 $n->start = 0;
 $n->end = $nblog - 1;
 $n->setRowsPerPage($maxperpage);
-$n->addCommitInfo($logcommit,"Commit");
-$n->addExtraInfo($loguser,_T("User", "base"));
-$n->addExtraInfo($logaction,_T("Action", "base"));
-$n->addExtraInfo($logtypeobject,_T("Type", "base"));
-$n->addExtraInfo($logobject,_T("Object Name", "base"));
+$n->addCommitInfo($logcommit, "Commit");
+$n->addExtraInfo($loguser,_("User"));
+$n->addExtraInfo($logaction,_("Event"));
+$n->addExtraInfo($logtypeobject,_("Type"));
+$n->addExtraInfo($logobject,_("Object Name"));
 if ($module == "all") {
-    $n->addExtraInfo($logplug,_T("Plugin", "base"));
+    $n->addExtraInfo($logplug,_("Plugin"));
 }
-$n->addExtraInfo($logcommit,_T("Result", "base"));
+$n->addExtraInfo($logcommit,_("Result"));
 $n->setParamInfo($logparams);
 $n->disableFirstColumnActionLink();
-$n->addActionItem(new ActionItem(_T("View details", "base"),"logview","display","logid"));
+$n->addActionItem(new ActionItem(_("View details"),"logview","display","logid"));
 $n->setName(_T("Logs", "base"));
 $n->display();
 

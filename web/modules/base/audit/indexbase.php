@@ -3,7 +3,7 @@
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com
  *
- * $Id: index.php 382 2008-03-03 15:13:24Z cedric $
+ * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -32,7 +32,7 @@ $ajax = new AjaxFilterLog(urlStrRedirect("base/audit/ajaxLogFilter"),$types,"bas
 $ajax->setsearchbar(urlStrRedirect("base/audit/searchbar"));
 $ajax->display();
 
-$p = new PageGenerator(_("User and Group audit"));
+$p = new PageGenerator(_("User and group audit"));
 $p->setSideMenu($sidemenu);
 $p->display();
 

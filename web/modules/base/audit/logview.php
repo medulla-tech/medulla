@@ -32,7 +32,7 @@ require_once("includes/auditCodesManager.php");
 $auditManager = new AuditCodesManager();
 
 $p = new PageGenerator();
-$p->setTitle("Action details");
+$p->setTitle(_("Event details"));
 if(isset($_GET["logref"])) {
     $item = "index".$_GET["logref"];
 }
@@ -57,9 +57,9 @@ $f = new ValidatingForm(array("class" => $style));
 $f->push(new Table());
 $f->add(new TrFormElement(_("Date"), new HiddenTpl("date")),
         array("value" => $log[0]["date"]));
-$f->add(new TrFormElement(_("User which do the action"), new HiddenTpl("user")),
+$f->add(new TrFormElement(_("User that initiated the event"), new HiddenTpl("user")),
         array("value" => getObjectName($log[0]["user"])." (".$log[0]["user"].")"));
-$f->add(new TrFormElement(_("Action"), new HiddenTpl("action")),
+$f->add(new TrFormElement(_("Event"), new HiddenTpl("action")),
         array("value" => $auditManager->getCode($log[0]["action"])));
 $f->add(new TrFormElement(_("Plugin"), new HiddenTpl("plugin")),
         array("value" => $auditManager->getCode($log[0]["plugin"])));
@@ -71,7 +71,7 @@ $f->add(new TrFormElement(_("Agent Hostname"), new HiddenTpl("ahostname")),
         array("value" => $log[0]["agent-host"]));
 
 $i = 1;
-foreach ($log[0]["objects"] as $obj) {    
+foreach ($log[0]["objects"] as $obj) {
     $f->add(new TrFormElement(_("Object"), new HiddenTpl("obj".$i)),
         array("value" => $obj["object"]));
     $f->add(new TrFormElement(_("Object type"), new HiddenTpl("type".$i)),
@@ -83,7 +83,7 @@ foreach ($log[0]["objects"] as $obj) {
             }
             else {
                 $current_val = "(empty)";
-            }                        
+            }
             $f->add(new TrFormElement(_("Value"), new HiddenTpl("current")), 
                 array("value"=> $current_val));
         }
