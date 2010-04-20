@@ -1,11 +1,10 @@
-
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: base\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-20 16:57+0200\n"
-"PO-Revision-Date: 2010-04-20 17:07+0200\n"
+"POT-Creation-Date: 2010-04-20 18:44+0200\n"
+"PO-Revision-Date: 2010-04-20 18:47+0200\n"
 "Last-Translator: Cédric Delfosse <cdelfosse@mandriva.com>\n"
 "Language-Team: français <fr@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -19,12 +18,6 @@ msgid " (%s module)"
 msgstr " (module %s)"
 
 #: includes/PageGenerator.php:474 includes/PageGenerator.php:689
-#: includes/PageGenerator_flymake.php:474
-#: includes/PageGenerator_flymake.php:689
-#: includes/PageGenerator_flymake_flymake.php:474
-#: includes/PageGenerator_flymake_flymake.php:689
-#: includes/PageGenerator_flymake_flymake_flymake.php:474
-#: includes/PageGenerator_flymake_flymake_flymake.php:689
 #, php-format
 msgid " - Total <b>%s </b>"
 msgstr " - Total <b>%s</b>"
@@ -84,10 +77,7 @@ msgstr "Détail de l'action"
 msgid "Actions"
 msgstr "Actions"
 
-#: includes/FormGenerator.php:530 includes/FormGenerator_flymake.php:530
-#: includes/FormGenerator_flymake_flymake.php:530
-#: includes/FormGenerator_flymake_flymake_flymake.php:530
-#: modules/base/groups/localSidebar.php:29
+#: includes/FormGenerator.php:530 modules/base/groups/localSidebar.php:29
 #: modules/base/users/localSidebar.php:29
 #: modules/base/views/editGroups.tpl.php:76
 msgid "Add"
@@ -113,20 +103,23 @@ msgstr "Ajout d'un ordinateur"
 msgid "Add computer "
 msgstr "Ajout d'un ordinateur "
 
-#: modules/base/groups/edit.php:48
+#: modules/base/groups/edit.php:48 modules/base/includes/auditCodes.php:32
 msgid "Add group"
 msgstr "Ajouter un groupe"
 
-#: includes/favorites.php:149 includes/favorites_flymake.php:149
-#: includes/favorites_flymake_flymake.php:149
-#: includes/favorites_flymake_flymake_flymake.php:149
+#: modules/base/includes/auditCodes.php:44
+msgid "Add organizational unit"
+msgstr "Ajout d'une unité d'organisation"
+
+#: includes/favorites.php:149
 msgid "Add this page to your favorite"
 msgstr "Ajouter cette page à vos favoris"
 
-#: modules/base/users/edit.php:339
+#: modules/base/users/edit.php:339 modules/base/includes/auditCodes.php:27
 msgid "Add user"
 msgstr "Ajout d'un utilisateur"
 
+#: modules/base/includes/auditCodes.php:33
 #: modules/base/views/editGroups.tpl.php:67
 msgid "Add user to group"
 msgstr "Ajouter l'utilisateur au groupe"
@@ -150,6 +143,10 @@ msgstr "Tous les modules"
 #: modules/base/groups/members.php:132
 msgid "All users"
 msgstr "Tous les utilisateurs"
+
+#: modules/base/includes/auditCodes.php:48
+msgid "Attribute"
+msgstr "Attribut"
 
 #: modules/base/users/editacl.php:175
 msgid "Attribute description"
@@ -190,6 +187,10 @@ msgstr ""
 "La sauvegarde du répertoire de l'utilisateur <b>%s</b> a été lancée en "
 "arrière plan."
 
+#: modules/base/includes/auditCodes.php:41
+msgid "Backup user"
+msgstr "Sauvegarde des fichiers de l'utilisateur"
+
 #: modules/base/infoPackage.inc.php:151
 msgid "Backup user files"
 msgstr "Sauvegarde des fichiers de l'utilisateur"
@@ -199,9 +200,7 @@ msgstr "Sauvegarde des fichiers de l'utilisateur"
 msgid "Begin date"
 msgstr "Date de début"
 
-#: includes/xmlrpc.inc.php:222 includes/xmlrpc.inc_flymake.php:222
-#: includes/xmlrpc.inc_flymake_flymake.php:222
-#: includes/xmlrpc.inc_flymake_flymake_flymake.php:222
+#: includes/xmlrpc.inc.php:222
 msgid ""
 "Can't communicate with MMC agent. Please check you're using the right TCP "
 "port and the right protocol."
@@ -209,36 +208,40 @@ msgstr ""
 "Impossible de dialoguer avec l'agent MMC. Vérifiez que vous avez configuré "
 "le bon port TCP et le bon protocole."
 
-#: includes/xmlrpc.inc.php:166 includes/xmlrpc.inc_flymake.php:166
-#: includes/xmlrpc.inc_flymake_flymake.php:166
-#: includes/xmlrpc.inc_flymake_flymake_flymake.php:166
+#: includes/xmlrpc.inc.php:166
 msgid "Can't connect to MMC agent"
 msgstr "Impossible de se connecter à l'agent MMC"
 
-#: includes/xmlrpc.inc.php:179 includes/xmlrpc.inc_flymake.php:179
-#: includes/xmlrpc.inc_flymake_flymake.php:179
-#: includes/xmlrpc.inc_flymake_flymake_flymake.php:179
+#: includes/xmlrpc.inc.php:179
 msgid "Can't send XML-RPC request to MMC agent"
 msgstr "Impossible d'envoyer la requête XML-RPC à l'agent"
 
 #: includes/PageGenerator.php:109 includes/PageGenerator.php:2173
-#: includes/PageGenerator.php:2244 includes/PageGenerator_flymake.php:109
-#: includes/PageGenerator_flymake.php:2173
-#: includes/PageGenerator_flymake.php:2244
-#: includes/PageGenerator_flymake_flymake.php:109
-#: includes/PageGenerator_flymake_flymake.php:2173
-#: includes/PageGenerator_flymake_flymake.php:2244
-#: includes/PageGenerator_flymake_flymake_flymake.php:109
-#: includes/PageGenerator_flymake_flymake_flymake.php:2173
-#: includes/PageGenerator_flymake_flymake_flymake.php:2244
-#: modules/base/groups/members.php:182 modules/base/groups/delete.php:52
-#: modules/base/users/backup.php:91 modules/base/users/edit.php:535
+#: includes/PageGenerator.php:2244 modules/base/groups/members.php:182
+#: modules/base/groups/delete.php:52 modules/base/users/backup.php:91
+#: modules/base/users/edit.php:535
 msgid "Cancel"
 msgstr "Annuler"
+
+#: modules/base/includes/auditCodes.php:31
+msgid "Change group attribute"
+msgstr "Changement d'un attribut d'un groupe"
+
+#: modules/base/includes/auditCodes.php:39
+msgid "Change user Password"
+msgstr "Changement du mot de passe utilisateur"
+
+#: modules/base/includes/auditCodes.php:30
+msgid "Change user attribute"
+msgstr "Changement d'un attribut de l'utilisateur"
 
 #: modules/base/infoPackage.inc.php:156
 msgid "Change user password"
 msgstr "Changement du mot de passe utilisateur"
+
+#: modules/base/includes/auditCodes.php:36
+msgid "Change user primary group"
+msgstr "Changement du groupe primaire de l'utilisateur"
 
 #: modules/base/users/passwd.php:36 modules/base/users/passwd.php:73
 #: modules/base/users/localSidebar.php:34
@@ -277,9 +280,7 @@ msgstr "Commentaires"
 msgid "Common name"
 msgstr "Nom commun"
 
-#: includes/ErrorHandling.php:76 includes/ErrorHandling_flymake.php:76
-#: includes/ErrorHandling_flymake_flymake.php:76
-#: includes/ErrorHandling_flymake_flymake_flymake.php:76
+#: includes/ErrorHandling.php:76
 msgid "Complete Traceback"
 msgstr "Traceback complète"
 
@@ -320,17 +321,8 @@ msgid "Computers list"
 msgstr "Liste des ordinateurs"
 
 #: includes/PageGenerator.php:2169 includes/PageGenerator.php:2240
-#: includes/PageGenerator.php:2266 includes/PageGenerator_flymake.php:2169
-#: includes/PageGenerator_flymake.php:2240
-#: includes/PageGenerator_flymake.php:2266
-#: includes/PageGenerator_flymake_flymake.php:2169
-#: includes/PageGenerator_flymake_flymake.php:2240
-#: includes/PageGenerator_flymake_flymake.php:2266
-#: includes/PageGenerator_flymake_flymake_flymake.php:2169
-#: includes/PageGenerator_flymake_flymake_flymake.php:2240
-#: includes/PageGenerator_flymake_flymake_flymake.php:2266
-#: modules/base/groups/members.php:181 modules/base/groups/edit.php:107
-#: modules/base/users/edit.php:527
+#: includes/PageGenerator.php:2266 modules/base/groups/members.php:181
+#: modules/base/groups/edit.php:107 modules/base/users/edit.php:527
 msgid "Confirm"
 msgstr "Valider"
 
@@ -375,9 +367,7 @@ msgstr "Fin du service"
 msgid "Date"
 msgstr "Date"
 
-#: includes/FormGenerator.php:397 includes/FormGenerator_flymake.php:397
-#: includes/FormGenerator_flymake_flymake.php:397
-#: includes/FormGenerator_flymake_flymake_flymake.php:397
+#: includes/FormGenerator.php:397
 msgid "Day: "
 msgstr "Jour: "
 
@@ -385,10 +375,28 @@ msgstr "Jour: "
 msgid "Default status page"
 msgstr "Page de statut par défaut"
 
-#: includes/FormGenerator.php:833 includes/FormGenerator_flymake.php:833
-#: includes/FormGenerator_flymake_flymake.php:833
-#: includes/FormGenerator_flymake_flymake_flymake.php:833
-#: modules/base/groups/ajaxFilter.php:48 modules/base/users/ajaxFilter.php:84
+#: modules/base/includes/auditCodes.php:40
+msgid "Del group"
+msgstr "Suppression du groupe"
+
+#: modules/base/includes/auditCodes.php:37
+msgid "Del user"
+msgstr "Suppression de l'utilisateur"
+
+#: modules/base/includes/auditCodes.php:38
+msgid "Del user attribute"
+msgstr "Suppression de l'attribut d'un groupe"
+
+#: modules/base/includes/auditCodes.php:35
+msgid "Del user from all group"
+msgstr "Suppression de l'utilisateur de tous les groupes"
+
+#: modules/base/includes/auditCodes.php:34
+msgid "Del user from group"
+msgstr "Suppression de l'utilisateur d'un groupe"
+
+#: includes/FormGenerator.php:833 modules/base/groups/ajaxFilter.php:48
+#: modules/base/users/ajaxFilter.php:84
 #: modules/base/views/editGroups.tpl.php:63
 #: modules/base/views/index.tpl.php:92
 msgid "Delete"
@@ -418,9 +426,7 @@ msgstr "Supprimer un ordinateur"
 msgid "Delete group"
 msgstr "Supprimer le groupe"
 
-#: includes/FormGenerator.php:182 includes/FormGenerator_flymake.php:182
-#: includes/FormGenerator_flymake_flymake.php:182
-#: includes/FormGenerator_flymake_flymake_flymake.php:182
+#: includes/FormGenerator.php:182
 msgid "Delete photo"
 msgstr "Supprimer photo"
 
@@ -435,6 +441,10 @@ msgstr "Supprimer un utilisateur"
 #: modules/base/groups/edit.php:92 modules/base/computers/edit.php:64
 msgid "Description"
 msgstr "Description"
+
+#: modules/base/includes/auditCodes.php:29
+msgid "Disable user"
+msgstr "Désactivation d'un utilisateur"
 
 #: modules/base/computers/trads.php:27
 msgid "Display Name"
@@ -489,6 +499,10 @@ msgstr "Édition des membres"
 msgid "Edit user"
 msgstr "Édition d'un utilisateur"
 
+#: modules/base/includes/auditCodes.php:28
+msgid "Enable user"
+msgstr "Activation d'un utilisateur"
+
 #: modules/base/infoPackage.inc.php:325
 msgid "Enable/Disable user account"
 msgstr "Activer/Désactiver un compte"
@@ -499,22 +513,14 @@ msgid "End date"
 msgstr "Date de fin"
 
 #: includes/commonErrorHandling.php:53
-#: includes/commonErrorHandling_flymake.php:53
-#: includes/commonErrorHandling_flymake_flymake.php:53
-#: includes/commonErrorHandling_flymake_flymake_flymake.php:53
 msgid "Error during authentication process"
 msgstr "Erreur pendant la phase d'authentification"
 
 #: includes/commonErrorHandling.php:58
-#: includes/commonErrorHandling_flymake.php:58
-#: includes/commonErrorHandling_flymake_flymake.php:58
-#: includes/commonErrorHandling_flymake_flymake_flymake.php:58
 msgid "Error while provisioning your account"
 msgstr "Erreur lors de la création ou du paramétrage de votre compte"
 
-#: includes/xmlrpc.inc.php:206 includes/xmlrpc.inc_flymake.php:206
-#: includes/xmlrpc.inc_flymake_flymake.php:206
-#: includes/xmlrpc.inc_flymake_flymake_flymake.php:206
+#: includes/xmlrpc.inc.php:206
 msgid "Error while reading MMC agent XML-RPC response."
 msgstr "Erreur lors de la réception de la réponse XML-RPC de l'agent."
 
@@ -562,6 +568,10 @@ msgstr "Affichage de la photo d'un utilisateur"
 #: modules/base/status/index.php:199
 msgid "Global view"
 msgstr "Vue globale"
+
+#: modules/base/includes/auditCodes.php:47
+msgid "Group"
+msgstr "Groupe"
 
 #: modules/base/includes/groups-xmlrpc.inc.php:91
 #, php-format
@@ -641,9 +651,7 @@ msgstr "Page d'accueil"
 msgid "Home phone number"
 msgstr "Numéro de téléphone personnel"
 
-#: includes/FormGenerator.php:398 includes/FormGenerator_flymake.php:398
-#: includes/FormGenerator_flymake_flymake.php:398
-#: includes/FormGenerator_flymake_flymake_flymake.php:398
+#: includes/FormGenerator.php:398
 msgid "Hour: "
 msgstr "Heure: "
 
@@ -749,9 +757,6 @@ msgid "Logout"
 msgstr "Déconnexion"
 
 #: includes/commonErrorHandling.php:43
-#: includes/commonErrorHandling_flymake.php:43
-#: includes/commonErrorHandling_flymake_flymake.php:43
-#: includes/commonErrorHandling_flymake_flymake_flymake.php:43
 msgid "MMC Agent can't contact your LDAP server"
 msgstr "L'agent MMC ne peut pas contacter le serveur LDAP"
 
@@ -760,27 +765,16 @@ msgid "MMC agent"
 msgstr "Agent MMC"
 
 #: includes/xmlrpc.inc.php:196 includes/xmlrpc.inc.php:221
-#: includes/xmlrpc.inc.php:240 includes/xmlrpc.inc_flymake.php:196
-#: includes/xmlrpc.inc_flymake.php:221 includes/xmlrpc.inc_flymake.php:240
-#: includes/xmlrpc.inc_flymake_flymake.php:196
-#: includes/xmlrpc.inc_flymake_flymake.php:221
-#: includes/xmlrpc.inc_flymake_flymake.php:240
-#: includes/xmlrpc.inc_flymake_flymake_flymake.php:196
-#: includes/xmlrpc.inc_flymake_flymake_flymake.php:221
-#: includes/xmlrpc.inc_flymake_flymake_flymake.php:240
+#: includes/xmlrpc.inc.php:240
 msgid "MMC agent communication problem"
 msgstr "Problème de communication avec l'agent MMC"
 
-#: includes/xmlrpc.inc.php:167 includes/xmlrpc.inc_flymake.php:167
-#: includes/xmlrpc.inc_flymake_flymake.php:167
-#: includes/xmlrpc.inc_flymake_flymake_flymake.php:167
+#: includes/xmlrpc.inc.php:167
 msgid "MMC agent seems to be down or not correctly configured."
 msgstr ""
 "L'agent MMC semble ne pas répondre ou n'est pas correctement configuré."
 
-#: includes/xmlrpc.inc.php:180 includes/xmlrpc.inc_flymake.php:180
-#: includes/xmlrpc.inc_flymake_flymake.php:180
-#: includes/xmlrpc.inc_flymake_flymake_flymake.php:180
+#: includes/xmlrpc.inc.php:180
 msgid "MMC agent seems to be not correctly configured."
 msgstr "L'agent MMC semble ne pas être correctement configuré."
 
@@ -808,9 +802,7 @@ msgstr "Taille du médium"
 msgid "Memory"
 msgstr "Mémoire"
 
-#: includes/FormGenerator.php:398 includes/FormGenerator_flymake.php:398
-#: includes/FormGenerator_flymake_flymake.php:398
-#: includes/FormGenerator_flymake_flymake_flymake.php:398
+#: includes/FormGenerator.php:398
 msgid "Min.: "
 msgstr "Min.: "
 
@@ -826,11 +818,13 @@ msgstr "Numéro de mobile"
 msgid "Module"
 msgstr "Module"
 
-#: includes/FormGenerator.php:397 includes/FormGenerator_flymake.php:397
-#: includes/FormGenerator_flymake_flymake.php:397
-#: includes/FormGenerator_flymake_flymake_flymake.php:397
+#: includes/FormGenerator.php:397
 msgid "Month: "
 msgstr "Mois: "
+
+#: modules/base/includes/auditCodes.php:43
+msgid "Move user home"
+msgstr "Déplacement du répertoire utilisateur"
 
 #: modules/base/users/ajaxFilter.php:78 modules/base/views/index.tpl.php:84
 msgid "Name"
@@ -851,37 +845,16 @@ msgstr "Nouveau mot de passe"
 #: includes/ajaxTools.php:74 includes/ajaxTools.php:82
 #: includes/PageGenerator.php:762 includes/PageGenerator.php:768
 #: includes/PageGenerator.php:821 includes/PageGenerator.php:825
-#: includes/ajaxTools_flymake_flymake.php:74
-#: includes/ajaxTools_flymake_flymake.php:82
-#: includes/PageGenerator_flymake.php:762
-#: includes/PageGenerator_flymake.php:768
-#: includes/PageGenerator_flymake.php:821
-#: includes/PageGenerator_flymake.php:825 includes/ajaxTools_flymake.php:74
-#: includes/ajaxTools_flymake.php:82
-#: includes/PageGenerator_flymake_flymake.php:762
-#: includes/PageGenerator_flymake_flymake.php:768
-#: includes/PageGenerator_flymake_flymake.php:821
-#: includes/PageGenerator_flymake_flymake.php:825
-#: includes/PageGenerator_flymake_flymake_flymake.php:762
-#: includes/PageGenerator_flymake_flymake_flymake.php:768
-#: includes/PageGenerator_flymake_flymake_flymake.php:821
-#: includes/PageGenerator_flymake_flymake_flymake.php:825
-#: includes/ajaxTools_flymake_flymake_flymake.php:74
-#: includes/ajaxTools_flymake_flymake_flymake.php:82
 #: modules/base/includes/AjaxFilterLog.inc.php:111
 #: modules/base/includes/AjaxFilterLog.inc.php:115
 msgid "Next"
 msgstr "Suivant"
 
-#: includes/PageGenerator.php:1002 includes/PageGenerator_flymake.php:1002
-#: includes/PageGenerator_flymake_flymake.php:1002
-#: includes/PageGenerator_flymake_flymake_flymake.php:1002
+#: includes/PageGenerator.php:1002
 msgid "No item available"
 msgstr "Aucun élément disponible"
 
-#: includes/bgps_view.php:64 includes/bgps_view_flymake.php:64
-#: includes/bgps_view_flymake_flymake.php:64
-#: includes/bgps_view_flymake_flymake_flymake.php:64
+#: includes/bgps_view.php:64
 msgid "No job."
 msgstr "Aucune action."
 
@@ -897,15 +870,17 @@ msgstr "Nom de l'objet"
 msgid "Object type"
 msgstr "Type de l'objet"
 
-#: includes/PageGenerator.php:1781 includes/PageGenerator_flymake.php:1781
-#: includes/PageGenerator_flymake_flymake.php:1781
-#: includes/PageGenerator_flymake_flymake_flymake.php:1781
+#: includes/PageGenerator.php:1781
 msgid "Ok"
 msgstr "Ok"
 
 #: modules/base/logview/ajax_showlog.php:44
 msgid "Operation"
 msgstr "Opération"
+
+#: modules/base/includes/auditCodes.php:49
+msgid "Organizational unit"
+msgstr "Unité d'organisation"
 
 #: modules/base/users/edit.php:397 modules/base/infoPackage.inc.php:323
 #: index.php:168
@@ -966,25 +941,19 @@ msgstr ""
 "                        <pre>local4.*       /var/log/ldap.log</pre>\n"
 "                        </p>"
 
-#: includes/xmlrpc.inc.php:207 includes/xmlrpc.inc_flymake.php:207
-#: includes/xmlrpc.inc_flymake_flymake.php:207
-#: includes/xmlrpc.inc_flymake_flymake_flymake.php:207
+#: includes/xmlrpc.inc.php:207
 msgid "Please check network connectivity."
 msgstr "Veuillez vérifier les connexions réseau."
 
 #: includes/commonErrorHandling.php:54 includes/commonErrorHandling.php:59
-#: includes/commonErrorHandling_flymake.php:54
-#: includes/commonErrorHandling_flymake.php:59
-#: includes/commonErrorHandling_flymake_flymake.php:54
-#: includes/commonErrorHandling_flymake_flymake.php:59
-#: includes/commonErrorHandling_flymake_flymake_flymake.php:54
-#: includes/commonErrorHandling_flymake_flymake_flymake.php:59
 msgid "Please contact your administrator."
 msgstr "Veuillez contacter votre administrateur."
 
 #: modules/base/includes/errorHandling.php:40
 msgid "Please do not remove user's files when deleting the user."
-msgstr "Veuillez demander à ne pas supprimer les fichiers de l'utilisateur lors de sa suppression."
+msgstr ""
+"Veuillez demander à ne pas supprimer les fichiers de l'utilisateur lors de "
+"sa suppression."
 
 #: modules/base/users/backup.php:58
 msgid "Please go to the status page to check the backup status."
@@ -1013,23 +982,6 @@ msgstr "Nom préféré à utiliser"
 #: includes/ajaxTools.php:63 includes/ajaxTools.php:69
 #: includes/PageGenerator.php:751 includes/PageGenerator.php:758
 #: includes/PageGenerator.php:813 includes/PageGenerator.php:817
-#: includes/ajaxTools_flymake_flymake.php:63
-#: includes/ajaxTools_flymake_flymake.php:69
-#: includes/PageGenerator_flymake.php:751
-#: includes/PageGenerator_flymake.php:758
-#: includes/PageGenerator_flymake.php:813
-#: includes/PageGenerator_flymake.php:817 includes/ajaxTools_flymake.php:63
-#: includes/ajaxTools_flymake.php:69
-#: includes/PageGenerator_flymake_flymake.php:751
-#: includes/PageGenerator_flymake_flymake.php:758
-#: includes/PageGenerator_flymake_flymake.php:813
-#: includes/PageGenerator_flymake_flymake.php:817
-#: includes/PageGenerator_flymake_flymake_flymake.php:751
-#: includes/PageGenerator_flymake_flymake_flymake.php:758
-#: includes/PageGenerator_flymake_flymake_flymake.php:813
-#: includes/PageGenerator_flymake_flymake_flymake.php:817
-#: includes/ajaxTools_flymake_flymake_flymake.php:63
-#: includes/ajaxTools_flymake_flymake_flymake.php:69
 #: modules/base/includes/AjaxFilterLog.inc.php:103
 #: modules/base/includes/AjaxFilterLog.inc.php:107
 msgid "Previous"
@@ -1073,19 +1025,13 @@ msgstr "Résultat"
 msgid "Return"
 msgstr "Retour"
 
-#: includes/favorites.php:4 includes/favorites_flymake.php:4
-#: includes/favorites_flymake_flymake.php:4
-#: includes/favorites_flymake_flymake_flymake.php:4
+#: includes/favorites.php:4
 msgid "Root user cannot have favorites"
 msgstr "L'utilisateur root ne peut pas avoir de favoris"
 
 #: modules/base/audit/indexsshlpk.php:35
 msgid "SSH public key audit"
 msgstr "Audit du module des clés publiques OpenSSH"
-
-#: modules/base/audit/localSidebar.php:50
-msgid "SSH public keys"
-msgstr "Clés publiques SSH"
 
 #: modules/base/audit/localSidebar.php:34
 msgid "Samba"
@@ -1099,21 +1045,15 @@ msgstr "Audit du module SAMBA"
 msgid "Search action"
 msgstr "Recherche"
 
-#: includes/FormGenerator.php:398 includes/FormGenerator_flymake.php:398
-#: includes/FormGenerator_flymake_flymake.php:398
-#: includes/FormGenerator_flymake_flymake_flymake.php:398
+#: includes/FormGenerator.php:398
 msgid "Sec.: "
 msgstr "Sec.:"
 
-#: includes/PageGenerator.php:1951 includes/PageGenerator_flymake.php:1951
-#: includes/PageGenerator_flymake_flymake.php:1951
-#: includes/PageGenerator_flymake_flymake_flymake.php:1951
+#: includes/PageGenerator.php:1951
 msgid "Select all"
 msgstr "Tout sélectionner"
 
-#: includes/PageGenerator.php:1158 includes/PageGenerator_flymake.php:1158
-#: includes/PageGenerator_flymake_flymake.php:1158
-#: includes/PageGenerator_flymake_flymake_flymake.php:1158
+#: includes/PageGenerator.php:1158
 msgid "Select entity"
 msgstr "Entité sélectionnée"
 
@@ -1129,9 +1069,7 @@ msgstr "Statut du serveur"
 msgid "Show Profile"
 msgstr "Voir le profil"
 
-#: includes/ErrorHandling.php:75 includes/ErrorHandling_flymake.php:75
-#: includes/ErrorHandling_flymake_flymake.php:75
-#: includes/ErrorHandling_flymake_flymake_flymake.php:75
+#: includes/ErrorHandling.php:75
 msgid "Show complete trackback"
 msgstr "Afficher la traceback complète"
 
@@ -1140,9 +1078,6 @@ msgid "Software deployment"
 msgstr "Déploiement de logiciels"
 
 #: includes/commonErrorHandling.php:44
-#: includes/commonErrorHandling_flymake.php:44
-#: includes/commonErrorHandling_flymake_flymake.php:44
-#: includes/commonErrorHandling_flymake_flymake_flymake.php:44
 msgid ""
 "Solve the problem by:\n"
 "                        <ul>\n"
@@ -1156,9 +1091,6 @@ msgstr ""
 "li>        <li>Vérifiez que votre serveur LDAP est lancé</li> </ul> "
 
 #: includes/commonErrorHandling.php:31
-#: includes/commonErrorHandling_flymake.php:31
-#: includes/commonErrorHandling_flymake_flymake.php:31
-#: includes/commonErrorHandling_flymake_flymake_flymake.php:31
 msgid ""
 "Solve the problem by:\n"
 "                        <ul>\n"
@@ -1185,6 +1117,10 @@ msgstr "Statut"
 msgid "Swap"
 msgstr "Espace d'échange"
 
+#: modules/base/includes/auditCodes.php:46
+msgid "System user"
+msgstr "Utilisateur système"
+
 #: modules/base/users/ajaxFilter.php:80
 msgid "Telephone"
 msgstr "Téléphone"
@@ -1194,9 +1130,7 @@ msgstr "Téléphone"
 msgid "Telephone number"
 msgstr "Numéro de téléphone"
 
-#: includes/xmlrpc.inc.php:241 includes/xmlrpc.inc_flymake.php:241
-#: includes/xmlrpc.inc_flymake_flymake.php:241
-#: includes/xmlrpc.inc_flymake_flymake_flymake.php:241
+#: includes/xmlrpc.inc.php:241
 msgid ""
 "The MMC agent didn't give us a session number. Please check the MMC agent "
 "version."
@@ -1242,19 +1176,27 @@ msgstr ""
 msgid ""
 "The password policy of your account doesn't allow you to modify your "
 "password, because you already had this password previously."
-msgstr "La politique des mots de passe de votre compte ne vous permet pas de modifier votre mot de passe, car vous aviez déjà ce mot de passe précédemment."
+msgstr ""
+"La politique des mots de passe de votre compte ne vous permet pas de "
+"modifier votre mot de passe, car vous aviez déjà ce mot de passe "
+"précédemment."
 
 #: modules/base/includes/errorHandling.php:46
 msgid ""
 "The password policy of your account doesn't allow you to modify your "
 "password, because your password doesn't met the passwords policies."
-msgstr "La politique des mots de passe de votre compte ne vous permet pas de modifier votre mot de passe, car il échoue au test de qualité."
+msgstr ""
+"La politique des mots de passe de votre compte ne vous permet pas de "
+"modifier votre mot de passe, car il échoue au test de qualité."
 
 #: modules/base/includes/errorHandling.php:52
 msgid ""
 "The password policy of your account doesn't allow you to modify your "
 "password, because your password is too young to change."
-msgstr "La politique des mots de passe de votre compte ne vous permet pas de modifier votre mot de passe, car votre mot de passe n'a pas atteint la durée de vie minimale requise."
+msgstr ""
+"La politique des mots de passe de votre compte ne vous permet pas de "
+"modifier votre mot de passe, car votre mot de passe n'a pas atteint la durée "
+"de vie minimale requise."
 
 #: modules/base/users/edit.php:244 modules/base/users/edit.php:246
 msgid "The photo is not a JPG file."
@@ -1284,9 +1226,7 @@ msgstr ""
 msgid "This account is locked by the LDAP directory."
 msgstr "Ce compte est bloqué par l'annuaire LDAP."
 
-#: includes/xmlrpc.inc.php:322 includes/xmlrpc.inc_flymake.php:322
-#: includes/xmlrpc.inc_flymake_flymake.php:322
-#: includes/xmlrpc.inc_flymake_flymake_flymake.php:322
+#: includes/xmlrpc.inc.php:322
 msgid ""
 "This exception is unknown. Please contact us to add an error handling on "
 "this error."
@@ -1318,16 +1258,10 @@ msgid "This group will be deleted even though it is not empty"
 msgstr "Ce groupe sera supprimé même si il n'est pas vide"
 
 #: includes/commonErrorHandling.php:30
-#: includes/commonErrorHandling_flymake.php:30
-#: includes/commonErrorHandling_flymake_flymake.php:30
-#: includes/commonErrorHandling_flymake_flymake_flymake.php:30
 msgid "This item already exists in your LDAP directory"
 msgstr "Cette entrée existe déjà dans l'annuaire LDAP"
 
 #: includes/commonErrorHandling.php:64
-#: includes/commonErrorHandling_flymake.php:64
-#: includes/commonErrorHandling_flymake_flymake.php:64
-#: includes/commonErrorHandling_flymake_flymake_flymake.php:64
 msgid "This item do not seems to be in the index"
 msgstr "Cette entrée semble ne pas être indexée"
 
@@ -1336,9 +1270,6 @@ msgid "This operation will last according to the amount of data to backup."
 msgstr "La durée de la sauvegarde dépend du volume d'informations à traiter."
 
 #: includes/commonErrorHandling.php:65
-#: includes/commonErrorHandling_flymake.php:65
-#: includes/commonErrorHandling_flymake_flymake.php:65
-#: includes/commonErrorHandling_flymake_flymake_flymake.php:65
 msgid ""
 "This problem can appear if:\n"
 "                        <ul>\n"
@@ -1353,9 +1284,7 @@ msgstr ""
 msgid "This user already exists."
 msgstr "Cet utilisateur existe déjà."
 
-#: includes/xmlrpc.inc.php:197 includes/xmlrpc.inc_flymake.php:197
-#: includes/xmlrpc.inc_flymake_flymake.php:197
-#: includes/xmlrpc.inc_flymake_flymake_flymake.php:197
+#: includes/xmlrpc.inc.php:197
 msgid ""
 "Timeout when reading data from the MMC agent. Please check network "
 "connectivity and server load."
@@ -1376,9 +1305,7 @@ msgstr "Type"
 msgid "Unlock LDAP account"
 msgstr "Déverrouillage du compte LDAP "
 
-#: includes/PageGenerator.php:1952 includes/PageGenerator_flymake.php:1952
-#: includes/PageGenerator_flymake_flymake.php:1952
-#: includes/PageGenerator_flymake_flymake_flymake.php:1952
+#: includes/PageGenerator.php:1952
 msgid "Unselect all"
 msgstr "Tout désélectionner"
 
@@ -1387,7 +1314,7 @@ msgid "Uptime: "
 msgstr "Démarré depuis: "
 
 #: modules/base/audit/ajaxLogFilter.php:121
-#: modules/base/audit/indexbase.php:30
+#: modules/base/audit/indexbase.php:30 modules/base/includes/auditCodes.php:45
 msgid "User"
 msgstr "Utilisateur"
 
@@ -1418,6 +1345,10 @@ msgstr "Les ACLs de l'utilisateur ont été modifiées avec succès."
 #: modules/base/audit/indexbase.php:37
 msgid "User and group audit"
 msgstr "Audit utilisateurs et groupes"
+
+#: modules/base/includes/auditCodes.php:42
+msgid "User authentication"
+msgstr "Authentification d'un utilisateur"
 
 #: modules/base/users/edit.php:162 modules/base/users/edit.php:189
 msgid "User disabled."
@@ -1494,9 +1425,6 @@ msgid "Value"
 msgstr "Valeur"
 
 #: includes/commonErrorHandling.php:78
-#: includes/commonErrorHandling_flymake.php:78
-#: includes/commonErrorHandling_flymake_flymake.php:78
-#: includes/commonErrorHandling_flymake_flymake_flymake.php:78
 msgid ""
 "Verify that your smbpasswd is correctly configured:\n"
 "                        <ul>\n"
@@ -1527,9 +1455,7 @@ msgstr ""
 msgid "Web page description"
 msgstr "Description de la page web"
 
-#: includes/FormGenerator.php:397 includes/FormGenerator_flymake.php:397
-#: includes/FormGenerator_flymake_flymake.php:397
-#: includes/FormGenerator_flymake_flymake_flymake.php:397
+#: includes/FormGenerator.php:397
 msgid "Year: "
 msgstr "Année:"
 
@@ -1537,9 +1463,7 @@ msgstr "Année:"
 msgid "You are going to change your password"
 msgstr "Vous allez changer votre mot de passe"
 
-#: includes/acl.inc.php:128 includes/acl.inc_flymake_flymake.php:128
-#: includes/acl.inc_flymake.php:128
-#: includes/acl.inc_flymake_flymake_flymake.php:128
+#: includes/acl.inc.php:128
 msgid "You do not have required rights"
 msgstr "Vous n'avez pas les droits requis !"
 
@@ -1572,15 +1496,15 @@ msgstr "Votre mot de passe est trop récent pour être changé"
 msgid "Your session will be closed"
 msgstr "Votre session va être fermée"
 
-#: includes/i18n.inc.php:57 includes/i18n.inc_flymake.php:57
-#: includes/i18n.inc_flymake_flymake.php:57
-#: includes/i18n.inc_flymake_flymake_flymake.php:57
+#: modules/base/includes/auditCodes.php:50
+msgid "base"
+msgstr "base"
+
+#: includes/i18n.inc.php:57
 msgid "brazilian"
 msgstr "brésilien"
 
-#: includes/i18n.inc.php:50 includes/i18n.inc_flymake.php:50
-#: includes/i18n.inc_flymake_flymake.php:50
-#: includes/i18n.inc_flymake_flymake_flymake.php:50
+#: includes/i18n.inc.php:50
 msgid "danish"
 msgstr "danois"
 
@@ -1598,9 +1522,7 @@ msgstr "désactivé"
 msgid "enabled"
 msgstr "activé"
 
-#: includes/i18n.inc.php:49 includes/i18n.inc_flymake.php:49
-#: includes/i18n.inc_flymake_flymake.php:49
-#: includes/i18n.inc_flymake_flymake_flymake.php:49
+#: includes/i18n.inc.php:49
 msgid "english"
 msgstr "anglais"
 
@@ -1608,15 +1530,11 @@ msgstr "anglais"
 msgid "expert mode"
 msgstr "mode expert"
 
-#: includes/i18n.inc.php:53 includes/i18n.inc_flymake.php:53
-#: includes/i18n.inc_flymake_flymake.php:53
-#: includes/i18n.inc_flymake_flymake_flymake.php:53
+#: includes/i18n.inc.php:53
 msgid "french"
 msgstr "français"
 
-#: includes/i18n.inc.php:51 includes/i18n.inc_flymake.php:51
-#: includes/i18n.inc_flymake_flymake.php:51
-#: includes/i18n.inc_flymake_flymake_flymake.php:51
+#: includes/i18n.inc.php:51
 msgid "german"
 msgstr "allemand"
 
@@ -1628,9 +1546,7 @@ msgstr "cacher"
 msgid "hour"
 msgstr "heure"
 
-#: includes/i18n.inc.php:54 includes/i18n.inc_flymake.php:54
-#: includes/i18n.inc_flymake_flymake.php:54
-#: includes/i18n.inc_flymake_flymake_flymake.php:54
+#: includes/i18n.inc.php:54
 msgid "italian"
 msgstr "italien"
 
@@ -1642,43 +1558,25 @@ msgstr "déconnexion"
 msgid "minute"
 msgstr "minute"
 
-#: includes/FormGenerator.php:220 includes/FormGenerator_flymake.php:220
-#: includes/FormGenerator_flymake_flymake.php:220
-#: includes/FormGenerator_flymake_flymake_flymake.php:220
+#: includes/FormGenerator.php:220
 msgid "no"
 msgstr "non"
 
-#: includes/i18n.inc.php:55 includes/i18n.inc_flymake.php:55
-#: includes/i18n.inc_flymake_flymake.php:55
-#: includes/i18n.inc_flymake_flymake_flymake.php:55
+#: includes/i18n.inc.php:55
 msgid "norwegian"
 msgstr "norvégien"
 
 #: includes/FormGenerator.php:469 includes/FormGenerator.php:473
-#: includes/FormGenerator_flymake.php:469
-#: includes/FormGenerator_flymake.php:473
-#: includes/FormGenerator_flymake_flymake.php:469
-#: includes/FormGenerator_flymake_flymake.php:473
-#: includes/FormGenerator_flymake_flymake_flymake.php:469
-#: includes/FormGenerator_flymake_flymake_flymake.php:473
 #: modules/base/includes/AjaxFilterLog.inc.php:167
 #: modules/base/includes/AjaxFilterLog.inc.php:171
 msgid "or <a href='#'"
 msgstr "ou <a href='#'"
 
 #: includes/PageGenerator.php:477 includes/PageGenerator.php:692
-#: includes/PageGenerator_flymake.php:477
-#: includes/PageGenerator_flymake.php:692
-#: includes/PageGenerator_flymake_flymake.php:477
-#: includes/PageGenerator_flymake_flymake.php:692
-#: includes/PageGenerator_flymake_flymake_flymake.php:477
-#: includes/PageGenerator_flymake_flymake_flymake.php:692
 msgid "page"
 msgstr "page"
 
-#: includes/i18n.inc.php:56 includes/i18n.inc_flymake.php:56
-#: includes/i18n.inc_flymake_flymake.php:56
-#: includes/i18n.inc_flymake_flymake_flymake.php:56
+#: includes/i18n.inc.php:56
 msgid "polish"
 msgstr "polonais"
 
@@ -1690,22 +1588,15 @@ msgstr "lecture seule"
 msgid "read/write"
 msgstr "lecture/écriture"
 
-#: includes/i18n.inc.php:58 includes/i18n.inc_flymake.php:58
-#: includes/i18n.inc_flymake_flymake.php:58
-#: includes/i18n.inc_flymake_flymake_flymake.php:58
+#: includes/i18n.inc.php:58
 msgid "russian"
 msgstr "russe"
 
 #: includes/commonErrorHandling.php:77
-#: includes/commonErrorHandling_flymake.php:77
-#: includes/commonErrorHandling_flymake_flymake.php:77
-#: includes/commonErrorHandling_flymake_flymake_flymake.php:77
 msgid "smbpasswd failed to change your password entry"
 msgstr "smbpasswd n'a pas réussi a changé le mot de passe"
 
-#: includes/i18n.inc.php:52 includes/i18n.inc_flymake.php:52
-#: includes/i18n.inc_flymake_flymake.php:52
-#: includes/i18n.inc_flymake_flymake_flymake.php:52
+#: includes/i18n.inc.php:52
 msgid "spanish"
 msgstr "espagnol"
 
@@ -1714,50 +1605,28 @@ msgid "standard mode"
 msgstr "mode standard"
 
 #: includes/PageGenerator.php:473 includes/PageGenerator.php:688
-#: includes/PageGenerator_flymake.php:473
-#: includes/PageGenerator_flymake.php:688
-#: includes/PageGenerator_flymake_flymake.php:473
-#: includes/PageGenerator_flymake_flymake.php:688
-#: includes/PageGenerator_flymake_flymake_flymake.php:473
-#: includes/PageGenerator_flymake_flymake_flymake.php:688
 msgid "to"
 msgstr "à"
 
 #: includes/FormGenerator.php:231 includes/FormGenerator.php:564
-#: includes/FormGenerator.php:612 includes/FormGenerator_flymake.php:231
-#: includes/FormGenerator_flymake.php:564
-#: includes/FormGenerator_flymake.php:612
-#: includes/FormGenerator_flymake_flymake.php:231
-#: includes/FormGenerator_flymake_flymake.php:564
-#: includes/FormGenerator_flymake_flymake.php:612
-#: includes/FormGenerator_flymake_flymake_flymake.php:231
-#: includes/FormGenerator_flymake_flymake_flymake.php:564
-#: includes/FormGenerator_flymake_flymake_flymake.php:612
+#: includes/FormGenerator.php:612
 msgid "unavailable"
 msgstr "indisponible"
 
-#: includes/xmlrpc.inc.php:321 includes/xmlrpc.inc_flymake.php:321
-#: includes/xmlrpc.inc_flymake_flymake.php:321
-#: includes/xmlrpc.inc_flymake_flymake_flymake.php:321
+#: includes/xmlrpc.inc.php:321
 msgid "unknown error"
 msgstr "erreur inconnue"
 
-#: includes/FormGenerator.php:475 includes/FormGenerator_flymake.php:475
-#: includes/FormGenerator_flymake_flymake.php:475
-#: includes/FormGenerator_flymake_flymake_flymake.php:475
+#: includes/FormGenerator.php:475
 #: modules/base/includes/AjaxFilterLog.inc.php:173
 msgid "value=\"never\";'>never</a>"
 msgstr "value=\"jamais\";'>jamais</a>"
 
-#: includes/FormGenerator.php:471 includes/FormGenerator_flymake.php:471
-#: includes/FormGenerator_flymake_flymake.php:471
-#: includes/FormGenerator_flymake_flymake_flymake.php:471
+#: includes/FormGenerator.php:471
 #: modules/base/includes/AjaxFilterLog.inc.php:169
 msgid "value=\"now\";'>now</a>"
 msgstr "value=\"immediat\";'>immediat</a>"
 
-#: includes/FormGenerator.php:217 includes/FormGenerator_flymake.php:217
-#: includes/FormGenerator_flymake_flymake.php:217
-#: includes/FormGenerator_flymake_flymake_flymake.php:217
+#: includes/FormGenerator.php:217
 msgid "yes"
 msgstr "oui"
