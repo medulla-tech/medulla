@@ -3,10 +3,10 @@
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com
  *
- * $Id: ajaxFilter.php 382 2008-03-03 15:13:24Z cedric $
+ * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
- *    
+ *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -87,7 +87,7 @@ if($loglist) {
         if(is_array($log)) {
             $logid[]     = $log["id"];
             /* transform LDAP user uri to a simple string */
-            $loguser[]   = getObjectName($log["user"]);        
+            $loguser[]   = getObjectName($log["user"]);
             $logcommit[] = $log["commit"];
             $logdate[]   = $log["date"];
             $logplug[]   = $auditManager->getCode($log["plugin"]);
@@ -98,10 +98,10 @@ if($loglist) {
                     $logaction[] = $auditManager->getCode($log["action"])." (".getObjectName($log["objects"][1]["object"]).")";
                 else
                     $logaction[] = $auditManager->getCode($log["action"]);
-            } 
+            }
             else {
                 $logobject[]     = " ";
-                $logtypeobject[] = " "; 
+                $logtypeobject[] = " ";
                 $logaction[] = $auditManager->getCode($log["action"]);
             }
             $logparams[$i]["logid"] = $log["id"];
@@ -123,11 +123,12 @@ $n->addExtraInfo($logaction,_("Event"));
 $n->addExtraInfo($logtypeobject,_("Type"));
 $n->addExtraInfo($logobject,_("Object Name"));
 if ($module == "all") {
-    $n->addExtraInfo($logplug,_("Plugin"));
+    $n->addExtraInfo($logplug,_("Module"));
 }
 $n->addExtraInfo($logcommit,_("Result"));
 $n->setParamInfo($logparams);
 $n->disableFirstColumnActionLink();
+$n->setTableHeaderPadding(1);
 $n->addActionItem(new ActionItem(_("View details"),"logview","display","logid"));
 $n->setName(_T("Logs", "base"));
 $n->display();
