@@ -26,9 +26,11 @@ require("localSidebar.php");
 require("graph/navbar.inc.php");
 require("modules/base/includes/AjaxFilterLog.inc.php");
 
-$types = array("object"=>"Object", "type"=>"Type", "action"=>"Action","user"=>"User");
+$types = array("object" => _("Object"), "type" => _("Type"),
+               "action" => _("Action"), "user" => _("User"));
 
-$ajax = new AjaxFilterLog(urlStrRedirect("base/audit/ajaxLogFilter"),$types,"base");
+$ajax = new AjaxFilterLog(urlStrRedirect("base/audit/ajaxLogFilter"),
+                          $types, "base");
 $ajax->setsearchbar(urlStrRedirect("base/audit/searchbar"));
 $ajax->display();
 
