@@ -46,9 +46,12 @@ if(in_array("network", $_SESSION["modulesList"])) {
     $sidemenu->addSideMenuItem(new SideMenuItem(_("Network"), "base","audit","indexnetwork",
     "img/common/logview_active.png", "img/common/logview_inactive.png"));
 }
+
+/* This module doesn't have audit capabilities for now, so disable it
 if(in_array("sshlpk", $_SESSION["modulesList"])) {
     $sidemenu->addSideMenuItem(new SideMenuItem(_("SSH public keys"), "base","audit","indexsshlpk",
     "img/common/logview_active.png", "img/common/logview_inactive.png"));
 }
+*/
 
 ?>
