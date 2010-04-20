@@ -1,3 +1,4 @@
+
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
@@ -7,16 +8,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: userquota\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-15 18:12+0200\n"
-"PO-Revision-Date: 2009-05-22 20:24+0200\n"
+"POT-Creation-Date: 2010-04-20 16:03+0200\n"
+"PO-Revision-Date: 2010-04-20 17:33+0200\n"
 "Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: modules/ppolicy/includes/publicFunc.php:168
+#: modules/ppolicy/includes/publicFunc.php:179
 msgid "\"Maximum age\" must be greater than \"Minimum age\"."
-msgstr "\"Temps maximum\" doit être plus grand que \"Temps minimum\"."
+msgstr "\"Durée maximale\" doit être plus grande que \"Durée minimale\"."
 
 #: modules/ppolicy/includes/auditCodes.php:6
 msgid "Add ppolicy attributes"
@@ -27,7 +28,7 @@ msgid "Attributes have been updated with some errors."
 msgstr "Les attributs ont été mis à jour avec des erreurs."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:39
-msgid "Change password on First Connexion"
+msgid "Change password on first connection"
 msgstr "Changer le mot de passe à la première connexion"
 
 #: modules/ppolicy/includes/auditCodes.php:4
@@ -39,9 +40,9 @@ msgstr "Changer les attributs ppolicy"
 msgid "Default "
 msgstr "Défaut "
 
+#: modules/ppolicy/default/ppolicy.php:78
 #: modules/ppolicy/includes/localSidebar.php:27
 #: modules/ppolicy/infoPackage.inc.php:46
-#: modules/ppolicy/default/ppolicy.php:78
 msgid "Default password policy"
 msgstr "Politique générale des mots de passes"
 
@@ -54,7 +55,7 @@ msgstr "Suppression de l'attribut ppolicy"
 msgid "Delete ppolicy attributes"
 msgstr "Suppression des attributs ppolicy"
 
-#: modules/ppolicy/includes/publicFunc.php:69
+#: modules/ppolicy/includes/publicFunc.php:71
 msgid "Enable a specific password policy for this user"
 msgstr "Définir une politique de mots de passe pour cet utilisateur"
 
@@ -62,51 +63,45 @@ msgstr "Définir une politique de mots de passe pour cet utilisateur"
 msgid "Enable user specific password policy"
 msgstr "Définir une politique de mots de passe pour cet utilisateur"
 
-#: modules/ppolicy/includes/publicFunc.php:107
-#, fuzzy
+#: modules/ppolicy/includes/publicFunc.php:118
 msgid "Force user to change her password on the first connection ?"
-msgstr ""
-"Forcer les utilisateurs à changer leur mot de passe à la première connexion ?"
+msgstr "Forcer l'utilisateur à changer son mot de passe à la première connexion ?"
 
-#: modules/ppolicy/default/ppolicy.php:115
+#: modules/ppolicy/default/ppolicy.php:121
 msgid "Force users to change their passwords on the first connection ?"
 msgstr ""
 "Forcer les utilisateurs à changer leur mot de passe à la première connexion ?"
 
-#: modules/ppolicy/includes/publicFunc.php:64
-#, fuzzy
+#: modules/ppolicy/includes/publicFunc.php:66
 msgid ""
 "If checked, the user must change her password when she first binds to the "
 "LDAP directory after password is set or reset by a password administrator"
-msgstr ""
-"Cette option défini si les utilisateurs doivent changer leur mot de passe "
-"quand il se connectent à l'annuaire après que le mot de passe ait été "
-"modifié par l'administrateur."
+msgstr "Si l'option est activée, l'utilisateur doit changer son mot de passe lorsqu'il se connecte à l'annuaire LDAP pour la première fois après que son mot de passe ait été réinitialisé par l'administrateur."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:40
 msgid "Lockout duration"
 msgstr "Période de bloquage"
 
-#: modules/ppolicy/includes/publicFunc.php:145
-#: modules/ppolicy/default/ppolicy.php:149
+#: modules/ppolicy/default/ppolicy.php:155
+#: modules/ppolicy/includes/publicFunc.php:156
 msgid "Lockout duration (seconds)"
 msgstr "Période de bloquage (secondes)"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:38
 msgid "Maximum age"
-msgstr "Temps maximum"
+msgstr "Durée de vie maximale du mot de passe"
 
-#: modules/ppolicy/includes/publicFunc.php:93
+#: modules/ppolicy/includes/publicFunc.php:99
 msgid "Maximum age (second)"
-msgstr "Temps maximum (secondes)"
+msgstr "Durée de vie maximale du mot de passe (secondes)"
 
-#: modules/ppolicy/default/ppolicy.php:98
+#: modules/ppolicy/default/ppolicy.php:104
 msgid "Maximum age (seconds)"
-msgstr "Temps maximum (secondes)"
+msgstr "Durée de vie maximale du mot de passe (secondes)"
 
 #: modules/ppolicy/default/ppolicy.php:41
 msgid "Maximum age must be more than minimum age."
-msgstr "Le temps maximum doit être plus grand que le temps minimum."
+msgstr "La durée maximale doit être plus grande que la durée minimale."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:41
 msgid "Maximum failed"
@@ -114,23 +109,24 @@ msgstr "Nombre d'échec maximum"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:37
 msgid "Minimum age"
-msgstr "Temps minimum"
+msgstr "Durée de vie minimale"
 
-#: modules/ppolicy/includes/publicFunc.php:89
-#: modules/ppolicy/default/ppolicy.php:94
+#: modules/ppolicy/default/ppolicy.php:100
+#: modules/ppolicy/includes/publicFunc.php:95
 msgid "Minimum age (seconds)"
-msgstr "Temps minimum (secondes)"
+msgstr "Durée de vie minimale (secondes)"
 
-#: modules/ppolicy/includes/publicFunc.php:81
-#: modules/ppolicy/includes/ppolicy.inc.php:36
 #: modules/ppolicy/default/ppolicy.php:87
+#: modules/ppolicy/includes/publicFunc.php:83
+#: modules/ppolicy/includes/ppolicy.inc.php:36
 msgid "Minimum length"
 msgstr "Taille minimum"
 
+#: modules/ppolicy/default/ppolicy.php:108
+#: modules/ppolicy/includes/publicFunc.php:103
 #: modules/ppolicy/includes/ppolicy.inc.php:44
-#: modules/ppolicy/default/ppolicy.php:102
 msgid "Number of grace authentications"
-msgstr ""
+msgstr "Nombre d'authentications autorisées en période de grâce"
 
 #: modules/ppolicy/infoPackage.inc.php:36
 msgid "Password Policy"
@@ -140,31 +136,43 @@ msgstr "Politique des mots de passe"
 msgid "Password hash history"
 msgstr "Hash de l'historique des mots de passe"
 
-#: modules/ppolicy/includes/publicFunc.php:115
-#: modules/ppolicy/default/ppolicy.php:122
+#: modules/ppolicy/default/ppolicy.php:128
+#: modules/ppolicy/includes/publicFunc.php:126
 msgid "Password history"
 msgstr "Historique des mots de passe"
 
-#: modules/ppolicy/includes/publicFunc.php:141
-#: modules/ppolicy/default/ppolicy.php:145
+#: modules/ppolicy/default/ppolicy.php:151
+#: modules/ppolicy/includes/publicFunc.php:152
 msgid "Password maximum failure"
 msgstr "Nombre d'échec maximum"
 
-#: modules/ppolicy/includes/publicFunc.php:46
-msgid "Password policy plugin"
-msgstr "Plugin de la politique des mots de passe"
+#: modules/ppolicy/includes/publicFunc.php:242
+msgid "Password policy attributes updated."
+msgstr "Attributs de politique des mots de passe mis à jour."
 
-#: modules/ppolicy/includes/publicFunc.php:62
-#, fuzzy
+#: modules/ppolicy/includes/publicFunc.php:48
+msgid "Password policy plugin"
+msgstr "Plugin de gestion de la politique des mots de passe"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:46
+msgid "Password policy quality check"
+msgstr "Test de qualité des mots de passe"
+
+#: modules/ppolicy/default/ppolicy.php:91
+#: modules/ppolicy/includes/publicFunc.php:87
+msgid "Password quality check"
+msgstr "Test de qualité des mots de passe"
+
+#: modules/ppolicy/includes/publicFunc.php:64
 msgid "Password reset flag"
-msgstr "Historique des mots de passe"
+msgstr "Drapeau de réinitialisation du mot de passe"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:42
 msgid "Preventive lockout user"
 msgstr "Bloquage préventif de l'utilisateur"
 
-#: modules/ppolicy/includes/publicFunc.php:131
-#: modules/ppolicy/default/ppolicy.php:135
+#: modules/ppolicy/default/ppolicy.php:141
+#: modules/ppolicy/includes/publicFunc.php:142
 msgid "Preventive user lockout ?"
 msgstr "Bloquage préventif de l'utilisateur ?"
 
@@ -172,7 +180,7 @@ msgstr "Bloquage préventif de l'utilisateur ?"
 msgid "Reset the password"
 msgstr "Remise à zéro du mot de passe"
 
-#: modules/ppolicy/includes/ppolicy.inc.php:59
+#: modules/ppolicy/includes/ppolicy.inc.php:60
 msgid ""
 "This attribute contains the number of times that an expired password may be "
 "used to authenticate a user to the directory. If this attribute is not "
@@ -183,7 +191,7 @@ msgstr ""
 "passe expiré. Si cet attribut n'est pas présent ou est égal à 0, les "
 "utilisateurs dont le mot de passe est expiré ne pourrons pas s'authentifier."
 
-#: modules/ppolicy/includes/ppolicy.inc.php:53
+#: modules/ppolicy/includes/ppolicy.inc.php:54
 msgid ""
 "This attribute holds the number of seconds after which a modified password "
 "will expire. If this attribute is not present, or if the value is 0 the "
@@ -193,7 +201,7 @@ msgstr ""
 "modifié expirera. Si cet attribut n'est pas présent ou est égal à 0, le mot "
 "de passe n'expire pas."
 
-#: modules/ppolicy/includes/ppolicy.inc.php:52
+#: modules/ppolicy/includes/ppolicy.inc.php:53
 msgid ""
 "This attribute holds the number of seconds that must elapse between "
 "modifications to the password. If this attribute is not present, 0 seconds "
@@ -205,7 +213,7 @@ msgstr ""
 "temps est fixé à 0 secondes. (i.e. le mot de passe peut être modifié aussi "
 "souvent que désiré)"
 
-#: modules/ppolicy/includes/ppolicy.inc.php:58
+#: modules/ppolicy/includes/ppolicy.inc.php:59
 msgid ""
 "This attribute holds the number of seconds that the password cannot be used "
 "to authenticate due to too many failed authentication attempts. If this "
@@ -218,7 +226,18 @@ msgstr ""
 "égal à 0, le mot de passe ne peut plus être utilisé jusqu'a ce qu'un "
 "administrateur remette à zéro le mot de passe."
 
-#: modules/ppolicy/includes/ppolicy.inc.php:55
+#: modules/ppolicy/includes/ppolicy.inc.php:62
+msgid ""
+"This attribute indicates how the password quality will be verified while "
+"being modified or added. If this attribute is not present, or if the value "
+"is '0', quality checking will not be enforced.  A value of '1' indicates "
+"that the server will check the quality, and if the server is unable to check "
+"it (due to a hashed password or other reasons) it will be accepted. A value "
+"of '2' indicates that the server will check the quality, and if the server "
+"is unable to verify it, it will return an error refusing the password."
+msgstr "Cet attribut indique comment la qualité du mot de passe est testée lors qu'il est ajouté ou modifié. Si cet attribut n'est pas présent, ou sa valeur est '0', le test de qualité n'est pas réalisé. Une valeur de '1' signifie que le serveur LDAP vérifiera sa qualité, et si le serveur ne peut pas le vérifier il sera tout de même accepté. Une valeur de '2' signifie que le serveur vérifiera sa qualité, et si le serveur ne peut pas le vérifier, il renverra une erreur et refusera le mot de passe."
+
+#: modules/ppolicy/includes/ppolicy.inc.php:56
 msgid ""
 "This attribute is used to specify the maximum number of used passwords. If "
 "the attribute is not present, or if its value is 0, used passwords will not "
@@ -229,7 +248,7 @@ msgstr ""
 "utilisés ne seront pas stockés, et donc des mots de passe précédemment "
 "utilisés pourront être re-utilisés."
 
-#: modules/ppolicy/includes/ppolicy.inc.php:57
+#: modules/ppolicy/includes/ppolicy.inc.php:58
 msgid ""
 "This attribute specifies the number of consecutive failed bind attempts "
 "after which the password may not be used to authenticate. If this attribute "
@@ -242,7 +261,7 @@ msgstr ""
 "politique n'est pas appliquée. La valeur de \"Bloquage préventif de "
 "l'utilisateur\" sera ignorée."
 
-#: modules/ppolicy/includes/ppolicy.inc.php:60
+#: modules/ppolicy/includes/ppolicy.inc.php:61
 msgid ""
 "This flag allows to mark the password as having being reset by an "
 "administrator."
@@ -250,7 +269,7 @@ msgstr ""
 "Cette option permet d'indiquer que le mot de passe à été remis à zéro par un "
 "administrateur."
 
-#: modules/ppolicy/includes/ppolicy.inc.php:56
+#: modules/ppolicy/includes/ppolicy.inc.php:57
 msgid ""
 "This flag indicates, when enabled, that the password may not be used to "
 "authenticate after a specified number of consecutive failed bind attempts. "
@@ -262,7 +281,7 @@ msgstr ""
 "l'authentification.Le nombre maximum d'échec consécutifs est spécifié dans "
 "le champ \"Nombre d'échec maximum\""
 
-#: modules/ppolicy/includes/ppolicy.inc.php:54
+#: modules/ppolicy/includes/ppolicy.inc.php:55
 msgid ""
 "This flag specifies whether users must change their passwords when they "
 "first bind to the directory after a password is set or reset by the "
@@ -272,17 +291,21 @@ msgstr ""
 "quand il se connectent à l'annuaire après que le mot de passe ait été "
 "modifié par l'administrateur."
 
-#: modules/ppolicy/default/warnuser.php:34
+#: modules/ppolicy/default/warnuser.php:35
 msgid ""
 "Warning you have been logged using grace login mode. Please change your "
 "password as soon as possible using the password change page, else your "
 "account will be locked."
-msgstr ""
-"Avertissement: vous avez été logué avec le mode de grâce. Changez votre mot "
-"de passe dès que possible en utilisant la page de changement de mot de "
-"passe. Dans le cas contraire, votre compte sera bloqué."
+msgstr "Avertissement: vous avez bien été authentifié, mais votre compte est en période de grâce. Changez votre mot de passe dès que possible en utilisant la page de changement de mot de passe. Dans le cas contraire, votre compte sera bientôt bloqué."
 
-#: modules/ppolicy/includes/publicFunc.php:70
+#: modules/ppolicy/default/warnuser.php:40
+msgid ""
+"Warning your password has been reset by an administrator. Your LDAP account "
+"is restricted. Please change your password as soon as possible using the "
+"password change page."
+msgstr "Attention, votre mot de passe a été réinitialisé par un administrateur. Votre compte LDAP est restreint. Veuillez changer votre mot de passe dès que possible en utilisant la page de changement de mot de passe."
+
+#: modules/ppolicy/includes/publicFunc.php:72
 msgid ""
 "You can enable a specific password policy for this user. If disabled, the "
 "default password policy is enforced."
@@ -290,11 +313,13 @@ msgstr ""
 "Vous pouvez activer une politique des mots de passe spécifique pour cet "
 "utilisateur. Si non actif, la politique générale est utilisée."
 
-#: modules/ppolicy/includes/publicFunc.php:197
+#: modules/ppolicy/includes/publicFunc.php:207
+#: modules/ppolicy/includes/publicFunc.php:231
 msgid "disabled"
 msgstr "désactivé"
 
-#: modules/ppolicy/includes/publicFunc.php:201
+#: modules/ppolicy/includes/publicFunc.php:210
+#: modules/ppolicy/includes/publicFunc.php:235
 msgid "enabled"
 msgstr "activé"
 
@@ -307,13 +332,9 @@ msgstr "à été mis à jour"
 msgid "ppolicy"
 msgstr "ppolicy"
 
-#: modules/ppolicy/includes/ppolicy.inc.php:51
+#: modules/ppolicy/includes/ppolicy.inc.php:52
 msgid ""
 "this attribute contains the minimum number of characters that will be "
 "accepted in a password"
 msgstr ""
 "cet attribut contient le nombre minimum de caractères pour un mot de passe"
-
-#: modules/ppolicy/includes/publicFunc.php:208
-msgid "updated"
-msgstr "mis à jour"
