@@ -24,31 +24,30 @@
 
 $sidemenu = new SideMenu();
 $sidemenu->setClass("audit");
-#$sidemenu->setBackgroundImage("img/users/icn_logview_large.gif");
 
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("All", "base"), "base","audit","indexall", 
+$sidemenu->addSideMenuItem(new SideMenuItem(_("All modules"), "base","audit","indexall",
     "img/common/logview_active.png", "img/common/logview_inactive.png"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Users and Groups", "base"), "base","audit","indexbase", 
+$sidemenu->addSideMenuItem(new SideMenuItem(_("Users and Groups"), "base", "audit","indexbase",
     "img/common/logview_active.png", "img/common/logview_inactive.png"));
 
-if(in_array("samba", $_SESSION["modulesList"])) {    
-    $sidemenu->addSideMenuItem(new SideMenuItem(_T("Samba", "base"), "base","audit","indexsamba", 
+if(in_array("samba", $_SESSION["modulesList"])) {
+    $sidemenu->addSideMenuItem(new SideMenuItem(_("Samba"), "base","audit","indexsamba",
     "img/common/logview_active.png", "img/common/logview_inactive.png"));
 }
 if(in_array("mail", $_SESSION["modulesList"])) {
-    $sidemenu->addSideMenuItem(new SideMenuItem(_T("Mail", "base"), "base","audit","indexmail", 
+    $sidemenu->addSideMenuItem(new SideMenuItem(_("Mail"), "base","audit","indexmail",
     "img/common/logview_active.png", "img/common/logview_inactive.png"));
 }
 if(in_array("proxy", $_SESSION["modulesList"])) {
-    $sidemenu->addSideMenuItem(new SideMenuItem(_T("Proxy", "base"), "base","audit","indexproxy", 
+    $sidemenu->addSideMenuItem(new SideMenuItem(_("Proxy"), "base","audit","indexproxy",
     "img/common/logview_active.png", "img/common/logview_inactive.png"));
 }
 if(in_array("network", $_SESSION["modulesList"])) {
-    $sidemenu->addSideMenuItem(new SideMenuItem(_T("Network", "base"), "base","audit","indexnetwork", 
+    $sidemenu->addSideMenuItem(new SideMenuItem(_("Network"), "base","audit","indexnetwork",
     "img/common/logview_active.png", "img/common/logview_inactive.png"));
 }
 if(in_array("sshlpk", $_SESSION["modulesList"])) {
-    $sidemenu->addSideMenuItem(new SideMenuItem(_T("SSH public keys", "base"), "base","audit","indexsshlpk", 
+    $sidemenu->addSideMenuItem(new SideMenuItem(_("SSH public keys"), "base","audit","indexsshlpk",
     "img/common/logview_active.png", "img/common/logview_inactive.png"));
 }
 
