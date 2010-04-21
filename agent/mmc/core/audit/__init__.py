@@ -21,12 +21,12 @@
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-    Factory used to interact with the Audit module
-    (read/write audit logs)
+Factory used to interact with the Audit module
+(read/write audit logs)
 """
 
 from mmc.support.mmctools import Singleton
-from mmc.core.audit.writers import *
+from mmc.core.audit.writernull import AuditWriterNull
 
 class AuditFactory(Singleton):
 
@@ -51,6 +51,7 @@ class AuditFactory(Singleton):
         @type config: ConfigParser
         """
         if config and config.auditmethod == "database":
+            #from mmc.core.audit.writers import AuditWriterDB
             AuditWriterDB().setConfig(config)
             if init:
                 AuditWriterDB().init(config.auditdbdriver, config.auditdbuser, config.auditdbpassword, config.auditdbhost, config.auditdbport, config.auditdbname)
@@ -58,7 +59,7 @@ class AuditFactory(Singleton):
         else:
             self.logaction = AuditWriterNull()
 
-        return self.logaction        
+        return self.logaction
 
     def getAuditInstance(self):
         """

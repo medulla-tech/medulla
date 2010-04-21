@@ -38,52 +38,8 @@ from sqlalchemy.orm import *
 from mmc.core.audit.classes import *
 from mmc.core.audit.record import *
 from mmc.core.audit.readers import AuditReaderDB
+from mmc.core.audit.writernull import AuditWriterI
 from mmc.support.mmctools import Singleton
-
-
-class AuditWriterI:
-    """
-    Interface for classes that writes record entry to the audit database.
-    """
-
-    def __init__(self):
-        self.logger = logging.getLogger()
-
-    def log(self):
-        """
-        To write a record to the database.
-        """
-        pass
-
-    def setup(self):
-        pass
-
-    def get(self):
-        pass
-
-    def getById(self):
-        pass
-
-    def getLog(self, start, end, plug, user, type, date1, date2, object, action):
-        pass
-
-    def getLogById(self, id):
-        pass
-
-    def getActionType(self):
-        """
-        Return a list of action and type if action=1 it return list of action
-        if type=1 it return a list of type
-
-        @param action: if action=1 the function return a list of action
-        @type action: int
-        @param type: if type=1 the function return a list of action
-        @type type: int
-        """
-        pass
-
-    def commit(self):
-        pass
 
 class AuditWriterDB(Singleton, AuditWriterI):
 
@@ -588,45 +544,3 @@ class AuditWriterDB(Singleton, AuditWriterI):
         session.flush()
     # The database population code is the same for PostgreSQL than MySQL
     _populateTablespostgresV1 = _populateTablesmysqlV1
-
-
-class AuditWriterNull(Singleton, AuditWriterI):
-    
-    """
-    Singleton class for an object that don't record any audit data.
-    It is used when audit has not been configured.
-    """
-
-    def __init__(self):
-        self.logger = logging.getLogger()
-    
-    def init(self,*args):
-        pass
-    
-    def log(self,*args):
-        return self
-    
-    def setup(self,*args):
-        pass
-    
-    def get(self,*args):
-        pass
-    
-    def getById(self,*args):
-        pass
-
-    def getLog(self, start, end, plug, user, type, date1, date2, object, action):
-        pass
-
-    def getLogById(self, id):
-        pass
-
-    def getActionType(self,*args):
-        pass
-
-    def commit(self,*args):
-        pass
-
-    def operation(self, op):
-        self.logger.info("Configured audit database will do nothing")
-        return True
