@@ -54,7 +54,7 @@ class AuditWriterI:
         To write a record to the database.
         """
         pass
-    
+
     def setup(self):
         pass
 
@@ -64,11 +64,17 @@ class AuditWriterI:
     def getById(self):
         pass
 
+    def getLog(self, start, end, plug, user, type, date1, date2, object, action):
+        pass
+
+    def getLogById(self, id):
+        pass
+
     def getActionType(self):
         """
         Return a list of action and type if action=1 it return list of action
         if type=1 it return a list of type
-        
+
         @param action: if action=1 the function return a list of action
         @type action: int
         @param type: if type=1 the function return a list of action
@@ -80,7 +86,7 @@ class AuditWriterI:
         pass
 
 class AuditWriterDB(Singleton, AuditWriterI):
-    
+
     """
     Singleton class for an object that writes audit data to a database.
 
@@ -607,6 +613,12 @@ class AuditWriterNull(Singleton, AuditWriterI):
         pass
     
     def getById(self,*args):
+        pass
+
+    def getLog(self, start, end, plug, user, type, date1, date2, object, action):
+        pass
+
+    def getLogById(self, id):
         pass
 
     def getActionType(self,*args):
