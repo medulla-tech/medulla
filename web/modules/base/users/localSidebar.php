@@ -28,7 +28,7 @@ $sidemenu->setBackgroundImage("img/users/icn_users_large.gif");
 $sidemenu->addSideMenuItem(new SideMenuItem(_("List"), "base","users","index", "img/users/icn_global_active.gif", "img/users/icn_global.gif"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_("Add"), "base","users","add", "img/users/icn_addUser_active.gif", "img/users/icn_addUser.gif"));
 if (in_array("bulkimport", $_SESSION["modulesList"])) {
-    $sidemenu->addSideMenuItem(new SideMenuItem(_T("Bulk import (CSV)"), "base", "users", "bulkimport", "img/users/icn_addUser_active.gif", "img/users/icn_addUser.gif"));
+    $sidemenu->addSideMenuItem(new SideMenuItem(_("Bulk import (CSV)"), "base", "users", "bulkimport", "img/users/icn_addUser_active.gif", "img/users/icn_addUser.gif"));
 }
 if ($_SESSION["login"] != "root") {
     $sidemenu->addSideMenuItem(new SideMenuItem(_("Change your password"), "base","users","passwd", "img/access/icn_global_active.gif", "img/access/icn_global.gif"));
