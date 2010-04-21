@@ -43,15 +43,15 @@ class AuditFactory(Singleton):
                     self.make(None, init)
             else:
                 self.make(config, init)
-    
+
     def make(self, config, init = True):
         """
-        Configure the logging mode database,none,syslog 
+        Configure the logging mode database,none,syslog
         @param config: confile .ini
         @type config: ConfigParser
         """
         if config and config.auditmethod == "database":
-            #from mmc.core.audit.writers import AuditWriterDB
+            from mmc.core.audit.writers import AuditWriterDB
             AuditWriterDB().setConfig(config)
             if init:
                 AuditWriterDB().init(config.auditdbdriver, config.auditdbuser, config.auditdbpassword, config.auditdbhost, config.auditdbport, config.auditdbname)
