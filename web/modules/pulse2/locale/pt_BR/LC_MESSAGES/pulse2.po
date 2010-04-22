@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pulse2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-18 11:49+0100\n"
+"POT-Creation-Date: 2010-04-22 18:27+0200\n"
 "PO-Revision-Date: 2009-04-17 15:08-0300\n"
 "Last-Translator: Andre Paulo Machado <andre.panm@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_br@mail.kde.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "X-Generator: KBabel 1.11.4\n"
 "Plural-Forms: nplurals=2; plural=(n>1);\n"
 
-#: web/modules/pulse2/pulse2/computers_list.php:41
+#: web/modules/pulse2/pulse2/computers_list.php:42
 msgid "All my entities"
 msgstr "Todas as minhas entradas"
 

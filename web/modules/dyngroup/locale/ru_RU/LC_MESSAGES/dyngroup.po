@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: dyngroup\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-18 11:49+0100\n"
+"POT-Creation-Date: 2010-04-22 18:27+0200\n"
 "PO-Revision-Date: 2008-07-25 13:29+0200\n"
 "Last-Translator: Andrzej Skrzypczak <aeskrzypczak@gmail.com>\n"
 "Language-Team:  <pl@li.org>\n"
@@ -31,12 +31,12 @@ msgstr "%s Szukaj %s = %s w module %s"
 msgid "%s) Search %s = (%s) in module %s"
 msgstr "%s Szukaj %s = (%s) w module %s"
 
-#: web/modules/dyngroup/dyngroup/localSidebar.php:39
+#: web/modules/dyngroup/dyngroup/localSidebar.php:42
 #, fuzzy, php-format
 msgid "(G) Display %s '%s'"
 msgstr "Pokaż %s '%s'"
 
-#: web/modules/dyngroup/dyngroup/localSidebar.php:53
+#: web/modules/dyngroup/dyngroup/localSidebar.php:57
 #, fuzzy, php-format
 msgid "(P) Display %s '%s'"
 msgstr "Pokaż %s '%s'"
@@ -45,32 +45,32 @@ msgstr "Pokaż %s '%s'"
 msgid "->"
 msgstr "->"
 
+#: web/modules/dyngroup/dyngroup/add_groups.php:154
 #: web/modules/dyngroup/dyngroup/import_from_file.php:43
-#: web/modules/dyngroup/dyngroup/save.php:91
-#: web/modules/dyngroup/dyngroup/add_groups.php:147
+#: web/modules/dyngroup/dyngroup/save.php:92
 #, php-format
 msgid "A group already exists with name '%s'"
 msgstr "Istnieje już grupa o nazwie '%s'"
 
-#: web/modules/dyngroup/dyngroup/add_groups.php:149
+#: web/modules/dyngroup/dyngroup/add_groups.php:156
 #, fuzzy, php-format
 msgid "A profile already exists with name '%s'"
 msgstr "Istnieje już grupa o nazwie '%s'"
 
+#: web/modules/dyngroup/dyngroup/creator.php:158
+#: web/modules/dyngroup/dyngroup/creator.php:182
+#: web/modules/dyngroup/dyngroup/creator.php:190
+#: web/modules/dyngroup/dyngroup/creator.php:194
 #: web/modules/dyngroup/includes/double.php:36
 #: web/modules/dyngroup/includes/autocomplete.php:29
-#: web/modules/dyngroup/dyngroup/creator.php:155
-#: web/modules/dyngroup/dyngroup/creator.php:179
-#: web/modules/dyngroup/dyngroup/creator.php:187
-#: web/modules/dyngroup/dyngroup/creator.php:191
 msgid "Add"
 msgstr "Dodaj"
 
-#: web/modules/dyngroup/dyngroup/localSidebar.php:29
+#: web/modules/dyngroup/dyngroup/localSidebar.php:30
 msgid "Add a group"
 msgstr "Dodaj grupę"
 
-#: web/modules/dyngroup/dyngroup/localSidebar.php:31
+#: web/modules/dyngroup/dyngroup/localSidebar.php:33
 #, fuzzy
 msgid "Add a profile"
 msgstr "Dodaj wartość"
@@ -83,7 +83,7 @@ msgstr "Dodaj statyczną grupę"
 msgid "Add a value"
 msgstr "Dodaj wartość"
 
-#: web/modules/dyngroup/dyngroup/localSidebar.php:28
+#: web/modules/dyngroup/dyngroup/localSidebar.php:29
 msgid "All groups"
 msgstr "Wszystkie grupy"
 
@@ -91,7 +91,7 @@ msgstr "Wszystkie grupy"
 msgid "All machines"
 msgstr "Wszystkie maszyny"
 
-#: web/modules/dyngroup/dyngroup/localSidebar.php:30
+#: web/modules/dyngroup/dyngroup/localSidebar.php:32
 #, fuzzy
 msgid "All profiles"
 msgstr "Wszystkie grupy"
@@ -102,27 +102,25 @@ msgstr "Wszystkie udziały"
 
 #: web/modules/dyngroup/dyngroup/delete_group.php:44
 #, php-format
-msgid ""
-"Are you sure you want to delete group <b>%s</b>?<br/> (it can be used in an "
-"other group)."
+msgid "Are you sure you want to delete group <b>%s</b>?<br/> (it can be used in an other group)."
 msgstr ""
 
+#: web/modules/dyngroup/dyngroup/remove_machine.php:47
+#: web/modules/dyngroup/dyngroup/delete_group.php:49
 #: web/modules/dyngroup/includes/groups.inc.php:81
 #: web/modules/dyngroup/includes/groups.inc.php:184
-#: web/modules/dyngroup/dyngroup/delete_group.php:49
-#: web/modules/dyngroup/dyngroup/remove_machine.php:47
 msgid "Cancel"
 msgstr "Anuluj"
 
-#: web/modules/dyngroup/dyngroup/save.php:134
+#: web/modules/dyngroup/dyngroup/save.php:136
 msgid "Check"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/creator.php:93
+#: web/modules/dyngroup/dyngroup/creator.php:94
 msgid "Choose the module you want to query : "
 msgstr "Wybierz moduł, który chcesz przeszukać : "
 
-#: web/modules/dyngroup/dyngroup/creator.php:119
+#: web/modules/dyngroup/dyngroup/creator.php:121
 msgid "Choose your field : "
 msgstr "Wybierz pole : "
 
@@ -130,40 +128,40 @@ msgstr "Wybierz pole : "
 msgid "Close"
 msgstr "Zamknij"
 
-#: web/modules/dyngroup/infoPackage.inc.php:104
-#: web/modules/dyngroup/infoPackage.inc.php:175
+#: web/modules/dyngroup/infoPackage.inc.php:108
+#: web/modules/dyngroup/infoPackage.inc.php:183
 #, fuzzy
 msgid "Computers Group Creator"
 msgstr "Twórca grup maszyn"
 
-#: web/modules/dyngroup/infoPackage.inc.php:131
+#: web/modules/dyngroup/infoPackage.inc.php:135
 #, fuzzy
 msgid "Computers Group Creator Sub Request Delete"
 msgstr "Twórca grup maszyn"
 
-#: web/modules/dyngroup/infoPackage.inc.php:117
+#: web/modules/dyngroup/infoPackage.inc.php:121
 #, fuzzy
 msgid "Computers Group Creator Sub Request Editor"
 msgstr "Twórca grup maszyn"
 
-#: web/modules/dyngroup/infoPackage.inc.php:145
-#: web/modules/dyngroup/infoPackage.inc.php:179
+#: web/modules/dyngroup/infoPackage.inc.php:149
+#: web/modules/dyngroup/infoPackage.inc.php:187
 #, fuzzy
 msgid "Computers Group Editor"
 msgstr "Edytor grup maszyn"
 
-#: web/modules/dyngroup/infoPackage.inc.php:155
+#: web/modules/dyngroup/infoPackage.inc.php:159
 #, fuzzy
 msgid "Computers Group Sub Request Delete"
 msgstr "Twórca grup maszyn"
 
-#: web/modules/dyngroup/infoPackage.inc.php:150
+#: web/modules/dyngroup/infoPackage.inc.php:154
 #, fuzzy
 msgid "Computers Group Sub Request Editor"
 msgstr "Edytor grup maszyn"
 
 #: web/modules/dyngroup/infoPackage.inc.php:48
-#: web/modules/dyngroup/infoPackage.inc.php:166
+#: web/modules/dyngroup/infoPackage.inc.php:170
 #, fuzzy
 msgid "Computers Profile Creator"
 msgstr "Twórca grup maszyn"
@@ -179,7 +177,7 @@ msgid "Computers Profile Creator Sub Request Editor"
 msgstr "Twórca grup maszyn"
 
 #: web/modules/dyngroup/infoPackage.inc.php:89
-#: web/modules/dyngroup/infoPackage.inc.php:170
+#: web/modules/dyngroup/infoPackage.inc.php:174
 #, fuzzy
 msgid "Computers Profile Editor"
 msgstr "Edytor grup maszyn"
@@ -194,8 +192,8 @@ msgstr "Twórca grup maszyn"
 msgid "Computers Profile Sub Request Editor"
 msgstr "Edytor grup maszyn"
 
-#: web/modules/dyngroup/dyngroup/add_groups.php:63
-#: web/modules/dyngroup/dyngroup/add_groups.php:166
+#: web/modules/dyngroup/dyngroup/add_groups.php:67
+#: web/modules/dyngroup/dyngroup/add_groups.php:173
 #, fuzzy, php-format
 msgid "Computers list has been truncated at %d computers"
 msgstr "Skrócono listę maszyn do %d maszyn"
@@ -205,11 +203,11 @@ msgstr "Skrócono listę maszyn do %d maszyn"
 msgid "Confirm"
 msgstr "Potwierdź"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:137
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:140
 msgid "Csv export"
 msgstr "Export csv"
 
-#: web/modules/dyngroup/infoPackage.inc.php:248
+#: web/modules/dyngroup/infoPackage.inc.php:252
 msgid "Csv's export"
 msgstr "Export csv"
 
@@ -217,7 +215,7 @@ msgstr "Export csv"
 msgid "Delete"
 msgstr "Usuń"
 
-#: web/modules/dyngroup/infoPackage.inc.php:223
+#: web/modules/dyngroup/infoPackage.inc.php:227
 #, fuzzy
 msgid "Delete a group of computers"
 msgstr "Usuń grupę maszyn"
@@ -227,30 +225,30 @@ msgstr "Usuń grupę maszyn"
 msgid "Delete group"
 msgstr "Usuń grupę"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:64
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:65
 msgid "Delete this group"
 msgstr "Usuń tą grupę"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:66
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:67
 #, fuzzy
 msgid "Delete this profile"
 msgstr "Usuń tą grupę"
 
-#: web/modules/dyngroup/infoPackage.inc.php:205
+#: web/modules/dyngroup/infoPackage.inc.php:213
 #, fuzzy
 msgid "Detailed page of save a group of computers"
 msgstr "Usuń grupę maszyn"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:101
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:102
 msgid "Display"
 msgstr "Pokaż"
 
-#: web/modules/dyngroup/infoPackage.inc.php:185
+#: web/modules/dyngroup/infoPackage.inc.php:193
 #, fuzzy
 msgid "Display a groups of computers"
 msgstr "Wyświetl grupę maszyn"
 
-#: web/modules/dyngroup/dyngroup/save.php:153
+#: web/modules/dyngroup/dyngroup/save.php:155
 msgid "Display content"
 msgstr "Wyświetl zawartość"
 
@@ -264,11 +262,11 @@ msgstr "Wyświetl zawartość grupy '%s'"
 msgid "Display profile '%s' content"
 msgstr "Wyświetl zawartość grupy '%s'"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:105
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:106
 msgid "Display this group's content"
 msgstr "Wyświetl zawartość tej grupy"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:119
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:120
 #, fuzzy
 msgid "Display this profile's content"
 msgstr "Wyświetl zawartość tej grupy"
@@ -277,9 +275,9 @@ msgstr "Wyświetl zawartość tej grupy"
 msgid "Dynamic group creation"
 msgstr "Dynamiczne tworzenie grup"
 
-#: web/modules/dyngroup/infoPackage.inc.php:107
-#: web/modules/dyngroup/infoPackage.inc.php:121
-#: web/modules/dyngroup/infoPackage.inc.php:135
+#: web/modules/dyngroup/infoPackage.inc.php:111
+#: web/modules/dyngroup/infoPackage.inc.php:125
+#: web/modules/dyngroup/infoPackage.inc.php:139
 msgid "Dynamic group creation's tab"
 msgstr "Zakłądka dynamicznego tworzenia grup"
 
@@ -302,26 +300,26 @@ msgstr "Edytuj grupę dynamiczną"
 msgid "Edit a profile"
 msgstr "Dodaj wartość"
 
-#: web/modules/dyngroup/dyngroup/groupshead.php:31
 #: web/modules/dyngroup/dyngroup/edithead.php:46
+#: web/modules/dyngroup/dyngroup/groupshead.php:31
 msgid "Edit a static group"
 msgstr "Edytuj grupę statyczną"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:112
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:113
 msgid "Edit this group"
 msgstr "Edytuj tą grupę"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:126
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:127
 #, fuzzy
 msgid "Edit this profile"
 msgstr "Edytuj grupę statyczną"
 
-#: web/modules/dyngroup/dyngroup/save.php:134
+#: web/modules/dyngroup/dyngroup/save.php:136
 #, fuzzy
 msgid "Enter boolean operator between groups"
 msgstr "Wpisz wartość Boolean między tymi grupami"
 
-#: web/modules/dyngroup/dyngroup/creator.php:223
+#: web/modules/dyngroup/dyngroup/creator.php:226
 msgid "Go to save step"
 msgstr "Idź do zapisywania"
 
@@ -329,7 +327,7 @@ msgstr "Idź do zapisywania"
 msgid "Group creation"
 msgstr "Tworzenie grup"
 
-#: web/modules/dyngroup/dyngroup/add_groups.php:134
+#: web/modules/dyngroup/dyngroup/add_groups.php:141
 msgid "Group failed to modify"
 msgstr "Nie udało się zmodyfikować grupy"
 
@@ -345,13 +343,13 @@ msgstr "Lista grup"
 msgid "Group members"
 msgstr "Członkowie grup"
 
-#: web/modules/dyngroup/includes/groups.inc.php:113
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:88
 #: web/modules/dyngroup/dyngroup/import_from_file.php:49
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:87
+#: web/modules/dyngroup/includes/groups.inc.php:113
 msgid "Group name"
 msgstr "Nazwa grup"
 
-#: web/modules/dyngroup/infoPackage.inc.php:228
+#: web/modules/dyngroup/infoPackage.inc.php:232
 #, fuzzy
 msgid "Group of computers details"
 msgstr "Szczegóły grupy maszyn"
@@ -360,12 +358,12 @@ msgstr "Szczegóły grupy maszyn"
 msgid "Group share"
 msgstr "Udział grupy"
 
-#: web/modules/dyngroup/dyngroup/add_groups.php:114
+#: web/modules/dyngroup/dyngroup/add_groups.php:121
 msgid "Group successfully created"
 msgstr "Udało się utworzyć grupę"
 
+#: web/modules/dyngroup/dyngroup/add_groups.php:115
 #: web/modules/dyngroup/dyngroup/import_from_file.php:40
-#: web/modules/dyngroup/dyngroup/add_groups.php:108
 msgid "Group successfully modified"
 msgstr "Udało się zmodyfikować grupę"
 
@@ -373,7 +371,7 @@ msgstr "Udało się zmodyfikować grupę"
 msgid "Group successfully shared"
 msgstr "Udało się udostępnić grupę"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:78
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:79
 msgid "Hidden"
 msgstr "Ukryta"
 
@@ -381,21 +379,21 @@ msgstr "Ukryta"
 msgid "Hide"
 msgstr "Ukryj"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:133
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:135
 msgid "Imaging management"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:107
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:108
 msgid "Inventory on this group"
 msgstr "Inwentarz tej grupy"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:121
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:122
 #, fuzzy
 msgid "Inventory on this profile"
 msgstr "Inwentarz tej grupy"
 
-#: web/modules/dyngroup/includes/groups.inc.php:114
 #: web/modules/dyngroup/dyngroup/import_from_file.php:55
+#: web/modules/dyngroup/includes/groups.inc.php:114
 msgid "Is the group visible"
 msgstr "Czy grupa jest widoczna"
 
@@ -404,30 +402,31 @@ msgstr "Czy grupa jest widoczna"
 msgid "Is the profile visible"
 msgstr "Czy grupa jest widoczna"
 
-#: web/modules/dyngroup/infoPackage.inc.php:210
-#: web/modules/dyngroup/infoPackage.inc.php:214
+#: web/modules/dyngroup/infoPackage.inc.php:218
+#: web/modules/dyngroup/infoPackage.inc.php:222
 #, fuzzy
 msgid "List all groups of computers"
 msgstr "Lista wszystkich grup maszyn"
 
-#: web/modules/dyngroup/infoPackage.inc.php:219
+#: web/modules/dyngroup/infoPackage.inc.php:104
+#: web/modules/dyngroup/infoPackage.inc.php:179
 #, fuzzy
 msgid "List all profiles of computers"
 msgstr "Lista wszystkich grup maszyn"
 
+#: web/modules/dyngroup/dyngroup/creator.php:184
 #: web/modules/dyngroup/includes/double.php:39
 #: web/modules/dyngroup/includes/autocomplete.php:31
-#: web/modules/dyngroup/dyngroup/creator.php:181
 msgid "Modify"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/save.php:71
+#: web/modules/dyngroup/dyngroup/save.php:72
 msgid "Name :"
 msgstr "Nazwa :"
 
-#: web/modules/dyngroup/includes/groups.inc.php:128
 #: web/modules/dyngroup/dyngroup/import_from_file.php:52
-#: web/modules/dyngroup/dyngroup/creator.php:185
+#: web/modules/dyngroup/dyngroup/creator.php:188
+#: web/modules/dyngroup/includes/groups.inc.php:128
 msgid "No"
 msgstr "Nie"
 
@@ -440,7 +439,7 @@ msgstr "Proszę wybrać typ grupy jaki chcesz utworzyć"
 msgid "Please chose the type of profile you want to create"
 msgstr "Proszę wybrać typ grupy jaki chcesz utworzyć"
 
-#: web/modules/dyngroup/dyngroup/tab.php:39
+#: web/modules/dyngroup/dyngroup/tab.php:55
 #, fuzzy
 msgid "Profile creation"
 msgstr "Tworzenie grup"
@@ -466,7 +465,7 @@ msgstr "Tworzenie grup statycznych"
 msgid "Profile creation's tab from machine list"
 msgstr "Tworzenie grup statycznych"
 
-#: web/modules/dyngroup/dyngroup/add_groups.php:136
+#: web/modules/dyngroup/dyngroup/add_groups.php:143
 #, fuzzy
 msgid "Profile failed to modify"
 msgstr "Nie udało się zmodyfikować grupy"
@@ -476,18 +475,18 @@ msgstr "Nie udało się zmodyfikować grupy"
 msgid "Profile members"
 msgstr "Członkowie grup"
 
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:90
 #: web/modules/dyngroup/includes/groups.inc.php:117
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:89
 #, fuzzy
 msgid "Profile name"
 msgstr "Nazwa grup"
 
-#: web/modules/dyngroup/dyngroup/add_groups.php:116
+#: web/modules/dyngroup/dyngroup/add_groups.php:123
 #, fuzzy
 msgid "Profile successfully created"
 msgstr "Udało się utworzyć grupę"
 
-#: web/modules/dyngroup/dyngroup/add_groups.php:110
+#: web/modules/dyngroup/dyngroup/add_groups.php:117
 #, fuzzy
 msgid "Profile successfully modified"
 msgstr "Udało się zmodyfikować grupę"
@@ -497,8 +496,8 @@ msgstr "Udało się zmodyfikować grupę"
 msgid "Profiles list"
 msgstr "Lista grup"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:115
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:129
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:116
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:130
 msgid "Read log"
 msgstr "Odczytaj log"
 
@@ -516,7 +515,7 @@ msgstr "Usuń maszynę"
 msgid "Remove a computer"
 msgstr "Usuń maszynę"
 
-#: web/modules/dyngroup/infoPackage.inc.php:233
+#: web/modules/dyngroup/infoPackage.inc.php:237
 #, fuzzy
 msgid "Remove a computer from a computers group"
 msgstr "Usuń maszynę z grupy"
@@ -530,15 +529,15 @@ msgstr "Zapisywanie żądań"
 msgid "Request saver (%s)"
 msgstr "Zapisywanie żądań"
 
-#: web/modules/dyngroup/dyngroup/tab.php:40
+#: web/modules/dyngroup/dyngroup/tab.php:56
 msgid "Result profile creation"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/save.php:87
+#: web/modules/dyngroup/dyngroup/save.php:88
 msgid "Save"
 msgstr "Zapisz"
 
-#: web/modules/dyngroup/infoPackage.inc.php:200
+#: web/modules/dyngroup/infoPackage.inc.php:208
 #, fuzzy
 msgid "Save a group of computers"
 msgstr "Zapisz grupę maszyn"
@@ -547,7 +546,7 @@ msgstr "Zapisz grupę maszyn"
 msgid "Search part"
 msgstr "Ścieżka wyszukiwania"
 
-#: web/modules/dyngroup/infoPackage.inc.php:195
+#: web/modules/dyngroup/infoPackage.inc.php:203
 msgid "Second page of result/request group creator"
 msgstr ""
 
@@ -556,11 +555,20 @@ msgstr ""
 msgid "Select the file you want to import"
 msgstr "Wybierz moduł, który chcesz przeszukać : "
 
+#: web/modules/dyngroup/dyngroup/tab.php:83
+msgid "Select the imaging server for this profile."
+msgstr ""
+
+#: web/modules/dyngroup/dyngroup/tab.php:61
+#, fuzzy
+msgid "Select this profile's Imaging Server"
+msgstr "Usuń tą grupę"
+
 #: web/modules/dyngroup/dyngroup/import_from_file.php:67
 msgid "Select what is inside the file"
 msgstr ""
 
-#: web/modules/dyngroup/infoPackage.inc.php:190
+#: web/modules/dyngroup/infoPackage.inc.php:198
 #, fuzzy
 msgid "Share a group of computers"
 msgstr "Udostępnij grupę maszyn"
@@ -570,11 +578,11 @@ msgstr "Udostępnij grupę maszyn"
 msgid "Share groupe '%s' with"
 msgstr "Udostępnij grupę %s"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:113
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:114
 msgid "Share this group"
 msgstr "Udostępnij tą grupę"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:127
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:128
 #, fuzzy
 msgid "Share this profile"
 msgstr "Udostępnij tą grupę"
@@ -583,11 +591,11 @@ msgstr "Udostępnij tą grupę"
 msgid "Show"
 msgstr "Pokaż"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:116
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:117
 msgid "Software deployment on this group"
 msgstr "Wdrażanie oprogramowania w tej grupie"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:130
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:131
 #, fuzzy
 msgid "Software deployment on this profile"
 msgstr "Wdrażanie oprogramowania w tej grupie"
@@ -601,31 +609,31 @@ msgstr "Tworzenie grup statycznych"
 msgid "Static group creation from import"
 msgstr "Tworzenie grup statycznych"
 
-#: web/modules/dyngroup/infoPackage.inc.php:113
-#: web/modules/dyngroup/infoPackage.inc.php:127
-#: web/modules/dyngroup/infoPackage.inc.php:141
+#: web/modules/dyngroup/infoPackage.inc.php:117
+#: web/modules/dyngroup/infoPackage.inc.php:131
+#: web/modules/dyngroup/infoPackage.inc.php:145
 #, fuzzy
 msgid "Static group creation from import's tab"
 msgstr "Zakładka tworzenia grup statycznych"
 
-#: web/modules/dyngroup/infoPackage.inc.php:110
-#: web/modules/dyngroup/infoPackage.inc.php:124
-#: web/modules/dyngroup/infoPackage.inc.php:138
+#: web/modules/dyngroup/infoPackage.inc.php:114
+#: web/modules/dyngroup/infoPackage.inc.php:128
+#: web/modules/dyngroup/infoPackage.inc.php:142
 msgid "Static group creation's tab"
 msgstr "Zakładka tworzenia grup statycznych"
 
-#: web/modules/dyngroup/dyngroup/tab.php:41
+#: web/modules/dyngroup/dyngroup/tab.php:57
 #, fuzzy
 msgid "Static profile creation"
 msgstr "Tworzenie grup statycznych"
 
-#: web/modules/dyngroup/dyngroup/tab.php:42
+#: web/modules/dyngroup/dyngroup/tab.php:58
 #, fuzzy
 msgid "Static profile creation from import"
 msgstr "Tworzenie grup statycznych"
 
 #: web/modules/dyngroup/dyngroup/tmpdisplay.php:33
-#: web/modules/dyngroup/infoPackage.inc.php:160
+#: web/modules/dyngroup/infoPackage.inc.php:164
 msgid "Temporary result display"
 msgstr "Widok tymczasowych wyników"
 
@@ -634,23 +642,21 @@ msgstr "Widok tymczasowych wyników"
 msgid "Temporary result display for '%s'"
 msgstr "Widok tymczasowych wyników"
 
-#: web/modules/dyngroup/dyngroup/save.php:140
+#: web/modules/dyngroup/dyngroup/save.php:142
 #, php-format
 msgid "The boolean equation '%s' is not valid"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/save.php:143
+#: web/modules/dyngroup/dyngroup/save.php:145
 #, php-format
-msgid ""
-"The boolean equation '%s' is not valid.<br/>Not the same number of sub-"
-"requests"
+msgid "The boolean equation '%s' is not valid.<br/>Not the same number of sub-requests"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/save.php:146
+#: web/modules/dyngroup/dyngroup/save.php:148
 msgid "The boolean equation is valid"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/creator.php:206
+#: web/modules/dyngroup/dyngroup/creator.php:209
 msgid "The request is : "
 msgstr "Żądanie to : "
 
@@ -664,11 +670,11 @@ msgstr "Żądanie zostało zapisane jako %s (id=%s)"
 msgid "This result has been saved as %s (id=%s)"
 msgstr "Wynik został zapisany jako %s (id=%s)"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:99
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:100
 msgid "Type"
 msgstr "Typ"
 
-#: web/modules/dyngroup/infoPackage.inc.php:253
+#: web/modules/dyngroup/infoPackage.inc.php:257
 msgid "Update machine cache"
 msgstr ""
 
@@ -676,24 +682,24 @@ msgstr ""
 msgid "Update machines name cache in dyngroup"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:78
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:79
 msgid "Visible"
 msgstr "Widoczna"
 
-#: web/modules/dyngroup/includes/groups.inc.php:127
 #: web/modules/dyngroup/dyngroup/import_from_file.php:52
-#: web/modules/dyngroup/dyngroup/creator.php:184
-#: web/modules/dyngroup/dyngroup/creator.php:190
+#: web/modules/dyngroup/dyngroup/creator.php:187
+#: web/modules/dyngroup/dyngroup/creator.php:193
+#: web/modules/dyngroup/includes/groups.inc.php:127
 msgid "Yes"
 msgstr "Tak"
 
-#: web/modules/dyngroup/dyngroup/save.php:93
-#: web/modules/dyngroup/dyngroup/save.php:95
-#: web/modules/dyngroup/dyngroup/add_groups.php:141
+#: web/modules/dyngroup/dyngroup/add_groups.php:148
+#: web/modules/dyngroup/dyngroup/save.php:94
+#: web/modules/dyngroup/dyngroup/save.php:96
 msgid "You must specify a group name"
 msgstr "Musisz określić nazwę grupy"
 
-#: web/modules/dyngroup/dyngroup/add_groups.php:143
+#: web/modules/dyngroup/dyngroup/add_groups.php:150
 #, fuzzy
 msgid "You must specify a profile name"
 msgstr "Musisz określić nazwę grupy"
@@ -703,7 +709,7 @@ msgstr "Musisz określić nazwę grupy"
 msgid "You will remove computer <b>%s</b> from group <b>%s</b>."
 msgstr "Usuniesz maszynę <b>%s</b> z grupy <b>%s</b>."
 
-#: web/modules/dyngroup/dyngroup/tmpdisplay.php:54
+#: web/modules/dyngroup/dyngroup/tmpdisplay.php:55
 msgid "back"
 msgstr ""
 
@@ -712,11 +718,11 @@ msgstr ""
 msgid "group"
 msgstr "Usuń grupę"
 
-#: web/modules/dyngroup/dyngroup/save.php:77
+#: web/modules/dyngroup/dyngroup/save.php:78
 msgid "hidden"
 msgstr "ukryta"
 
-#: web/modules/dyngroup/dyngroup/save.php:77
+#: web/modules/dyngroup/dyngroup/save.php:78
 msgid "it should be"
 msgstr "powinna być"
 
@@ -724,43 +730,43 @@ msgstr "powinna być"
 msgid "profile"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/save.php:73
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:74
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:75
+#: web/modules/dyngroup/dyngroup/save.php:74
 msgid "query"
 msgstr "zapytanie"
 
-#: web/modules/dyngroup/dyngroup/save.php:73
+#: web/modules/dyngroup/dyngroup/save.php:74
 msgid "result"
 msgstr "wynik"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:74
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:75
 #, php-format
 msgid "result (%s)"
 msgstr "wynik (%s)"
 
-#: web/modules/dyngroup/dyngroup/save.php:73
+#: web/modules/dyngroup/dyngroup/save.php:74
 msgid "save as"
 msgstr "zapisz jako"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:76
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:77
 msgid "static group"
 msgstr "grupa statyczna"
 
-#: web/modules/dyngroup/dyngroup/localSidebar.php:36
-#: web/modules/dyngroup/dyngroup/localSidebar.php:50
+#: web/modules/dyngroup/dyngroup/localSidebar.php:39
+#: web/modules/dyngroup/dyngroup/localSidebar.php:54
 msgid "the query"
 msgstr "zapytanie"
 
-#: web/modules/dyngroup/dyngroup/localSidebar.php:36
-#: web/modules/dyngroup/dyngroup/localSidebar.php:50
+#: web/modules/dyngroup/dyngroup/localSidebar.php:39
+#: web/modules/dyngroup/dyngroup/localSidebar.php:54
 msgid "the result"
 msgstr "wynik"
 
-#: web/modules/dyngroup/dyngroup/localSidebar.php:36
+#: web/modules/dyngroup/dyngroup/localSidebar.php:39
 msgid "the static group"
 msgstr "grupa statyczna"
 
-#: web/modules/dyngroup/dyngroup/localSidebar.php:50
+#: web/modules/dyngroup/dyngroup/localSidebar.php:54
 #, fuzzy
 msgid "the static profile"
 msgstr "grupa statyczna"
@@ -770,7 +776,7 @@ msgstr "grupa statyczna"
 msgid "update machine cache : %s machines"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/save.php:77
+#: web/modules/dyngroup/dyngroup/save.php:78
 msgid "visible"
 msgstr "widoczne"
 

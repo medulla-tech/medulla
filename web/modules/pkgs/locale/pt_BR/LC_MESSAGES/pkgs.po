@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pkgs\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-18 11:49+0100\n"
+"POT-Creation-Date: 2010-04-22 18:27+0200\n"
 "PO-Revision-Date: 2010-01-28 16:21-0200\n"
 "Last-Translator: Sergio Rafael Lemke <sergio@mandriva.com.br>\n"
 "Language-Team: Brazilian Portuguese <cooker-i18n@mandrivalinux.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "X-Generator: Lokalize 1.0\n"
 "Plural-Forms: nplurals=2; plural=(n>1);\n"
 
-#: web/modules/pkgs/pkgs/localSidebar.php:28 web/modules/pkgs/pkgs/edit.php:75
+#: web/modules/pkgs/pkgs/edit.php:78 web/modules/pkgs/pkgs/localSidebar.php:28
 #: web/modules/pkgs/infoPackage.inc.php:44
 msgid "Add a package"
 msgstr "Adicionar um pacote"
@@ -27,7 +27,7 @@ msgstr "Adicionar um pacote"
 msgid "Associate"
 msgstr "Associar"
 
-#: web/modules/pkgs/pkgs/edit.php:173
+#: web/modules/pkgs/pkgs/edit.php:177
 msgid "Associate files"
 msgstr "Associar arquivos"
 
@@ -44,11 +44,11 @@ msgstr "Associar arquivos ao pacote <b>%s (%s)</b>"
 msgid "Associate package"
 msgstr "Associar pacote"
 
-#: web/modules/pkgs/pkgs/edit.php:134
+#: web/modules/pkgs/pkgs/edit.php:138
 msgid "Command : "
 msgstr "Comando : "
 
-#: web/modules/pkgs/pkgs/edit.php:134
+#: web/modules/pkgs/pkgs/edit.php:138
 msgid "Command's name : "
 msgstr "Nome do comando : "
 
@@ -62,17 +62,18 @@ msgstr "Excluir um pacote"
 msgid "Delete this package"
 msgstr "Excluir este pacote"
 
-#: web/modules/pkgs/pkgs/edit.php:130
+#: web/modules/pkgs/pkgs/edit.php:134
 msgid "Description"
 msgstr "Descrição"
 
-#: web/modules/pkgs/pkgs/ajaxPackageList.php:69
+#: web/modules/pkgs/pkgs/ajaxPackageList.php:70
 #: web/modules/pkgs/pkgs/ajaxPendingPackageList.php:70
 msgid "Descriptions"
 msgstr "Descrições"
 
-#: web/modules/pkgs/pkgs/ajaxPackageList.php:77
-#: web/modules/pkgs/pkgs/edit.php:91 web/modules/pkgs/infoPackage.inc.php:46
+#: web/modules/pkgs/pkgs/edit.php:95
+#: web/modules/pkgs/pkgs/ajaxPackageList.php:78
+#: web/modules/pkgs/infoPackage.inc.php:46
 msgid "Edit a package"
 msgstr "Editar um pacote"
 
@@ -90,42 +91,42 @@ msgstr "Falha ao associar os arquivos%s"
 msgid "Files successfully associated with package <b>%s (%s)</b>%s"
 msgstr "Os arquivos foram associados com sucesso ao pacote <b>%s (%s)</b>%s"
 
-#: web/modules/pkgs/pkgs/ajaxPackageList.php:53
 #: web/modules/pkgs/pkgs/index.php:45
+#: web/modules/pkgs/pkgs/ajaxPackageList.php:55
 #, php-format
 msgid "MMC failed to contact package server %s."
 msgstr "MMC falhou ao contactar o servidor de pacotes %s."
 
-#: web/modules/pkgs/pkgs/ajaxPackageList.php:67
+#: web/modules/pkgs/pkgs/ajaxPackageList.php:68
 #: web/modules/pkgs/pkgs/ajaxPendingPackageList.php:68
 msgid "Names"
 msgstr "Nomes"
 
-#: web/modules/pkgs/pkgs/edit.php:142
+#: web/modules/pkgs/pkgs/edit.php:146
 msgid "Need a reboot ?"
 msgstr "Necessita reiniciar ?"
 
-#: web/modules/pkgs/pkgs/edit.php:117
+#: web/modules/pkgs/pkgs/edit.php:121
 msgid "Package API"
 msgstr "API do pacote"
 
-#: web/modules/pkgs/pkgs/edit.php:67
+#: web/modules/pkgs/pkgs/edit.php:70
 msgid "Package failed to save"
 msgstr "Falha ao salvar pacote"
 
-#: web/modules/pkgs/pkgs/edit.php:128
+#: web/modules/pkgs/pkgs/edit.php:132
 msgid "Package label"
 msgstr "Rótulo do pacote"
 
-#: web/modules/pkgs/pkgs/ajaxPackageList.php:70
+#: web/modules/pkgs/pkgs/ajaxPackageList.php:71
 msgid "Package size"
 msgstr "Tamanho do pacote"
 
-#: web/modules/pkgs/pkgs/edit.php:57
+#: web/modules/pkgs/pkgs/edit.php:60
 msgid "Package successfully edited"
 msgstr "Pacote editado com sucesso"
 
-#: web/modules/pkgs/pkgs/edit.php:129
+#: web/modules/pkgs/pkgs/edit.php:133
 msgid "Package version"
 msgstr "Versão do pacote"
 
@@ -134,8 +135,8 @@ msgstr "Versão do pacote"
 msgid "Packages"
 msgstr "Pacotes"
 
-#: web/modules/pkgs/pkgs/localSidebar.php:27
 #: web/modules/pkgs/pkgs/index.php:29
+#: web/modules/pkgs/pkgs/localSidebar.php:27
 msgid "Packages list"
 msgstr "Lista de pacotes"
 
@@ -144,8 +145,8 @@ msgstr "Lista de pacotes"
 msgid "Pending packages list"
 msgstr "Lista de pacotes pendentes"
 
-#: web/modules/pkgs/pkgs/ajaxPackageList.php:64
 #: web/modules/pkgs/pkgs/index.php:53
+#: web/modules/pkgs/pkgs/ajaxPackageList.php:65
 msgid "Please contact your administrator."
 msgstr "Contate seu administrador."
 
@@ -182,7 +183,7 @@ msgstr "Falha ao excluir o pacote"
 msgid "The package has been deleted."
 msgstr "O pacote foi excluído."
 
-#: web/modules/pkgs/pkgs/ajaxPackageList.php:68
+#: web/modules/pkgs/pkgs/ajaxPackageList.php:69
 #: web/modules/pkgs/pkgs/ajaxPendingPackageList.php:69
 msgid "Versions"
 msgstr "Versões"

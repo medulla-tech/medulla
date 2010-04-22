@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-18 11:49+0100\n"
+"POT-Creation-Date: 2010-04-22 18:27+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: web/modules/pkgs/pkgs/localSidebar.php:28 web/modules/pkgs/pkgs/edit.php:75
+#: web/modules/pkgs/pkgs/edit.php:78 web/modules/pkgs/pkgs/localSidebar.php:28
 #: web/modules/pkgs/infoPackage.inc.php:44
 msgid "Add a package"
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 msgid "Associate"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/edit.php:173
+#: web/modules/pkgs/pkgs/edit.php:177
 msgid "Associate files"
 msgstr ""
 
@@ -42,11 +42,11 @@ msgstr ""
 msgid "Associate package"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/edit.php:134
+#: web/modules/pkgs/pkgs/edit.php:138
 msgid "Command : "
 msgstr ""
 
-#: web/modules/pkgs/pkgs/edit.php:134
+#: web/modules/pkgs/pkgs/edit.php:138
 msgid "Command's name : "
 msgstr ""
 
@@ -60,17 +60,18 @@ msgstr ""
 msgid "Delete this package"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/edit.php:130
+#: web/modules/pkgs/pkgs/edit.php:134
 msgid "Description"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/ajaxPackageList.php:69
+#: web/modules/pkgs/pkgs/ajaxPackageList.php:70
 #: web/modules/pkgs/pkgs/ajaxPendingPackageList.php:70
 msgid "Descriptions"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/ajaxPackageList.php:77
-#: web/modules/pkgs/pkgs/edit.php:91 web/modules/pkgs/infoPackage.inc.php:46
+#: web/modules/pkgs/pkgs/edit.php:95
+#: web/modules/pkgs/pkgs/ajaxPackageList.php:78
+#: web/modules/pkgs/infoPackage.inc.php:46
 msgid "Edit a package"
 msgstr ""
 
@@ -88,42 +89,42 @@ msgstr ""
 msgid "Files successfully associated with package <b>%s (%s)</b>%s"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/ajaxPackageList.php:53
 #: web/modules/pkgs/pkgs/index.php:45
+#: web/modules/pkgs/pkgs/ajaxPackageList.php:55
 #, php-format
 msgid "MMC failed to contact package server %s."
 msgstr ""
 
-#: web/modules/pkgs/pkgs/ajaxPackageList.php:67
+#: web/modules/pkgs/pkgs/ajaxPackageList.php:68
 #: web/modules/pkgs/pkgs/ajaxPendingPackageList.php:68
 msgid "Names"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/edit.php:142
+#: web/modules/pkgs/pkgs/edit.php:146
 msgid "Need a reboot ?"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/edit.php:117
+#: web/modules/pkgs/pkgs/edit.php:121
 msgid "Package API"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/edit.php:67
+#: web/modules/pkgs/pkgs/edit.php:70
 msgid "Package failed to save"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/edit.php:128
+#: web/modules/pkgs/pkgs/edit.php:132
 msgid "Package label"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/ajaxPackageList.php:70
+#: web/modules/pkgs/pkgs/ajaxPackageList.php:71
 msgid "Package size"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/edit.php:57
+#: web/modules/pkgs/pkgs/edit.php:60
 msgid "Package successfully edited"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/edit.php:129
+#: web/modules/pkgs/pkgs/edit.php:133
 msgid "Package version"
 msgstr ""
 
@@ -132,8 +133,8 @@ msgstr ""
 msgid "Packages"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/localSidebar.php:27
 #: web/modules/pkgs/pkgs/index.php:29
+#: web/modules/pkgs/pkgs/localSidebar.php:27
 msgid "Packages list"
 msgstr ""
 
@@ -142,8 +143,8 @@ msgstr ""
 msgid "Pending packages list"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/ajaxPackageList.php:64
 #: web/modules/pkgs/pkgs/index.php:53
+#: web/modules/pkgs/pkgs/ajaxPackageList.php:65
 msgid "Please contact your administrator."
 msgstr ""
 
@@ -180,7 +181,7 @@ msgstr ""
 msgid "The package has been deleted."
 msgstr ""
 
-#: web/modules/pkgs/pkgs/ajaxPackageList.php:68
+#: web/modules/pkgs/pkgs/ajaxPackageList.php:69
 #: web/modules/pkgs/pkgs/ajaxPendingPackageList.php:69
 msgid "Versions"
 msgstr ""
