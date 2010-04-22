@@ -27,7 +27,7 @@ require("graph/navbar.inc.php");
 require("modules/base/includes/AjaxFilterLog.inc.php");
 
 $types = array(
-        "object"=>_T("Object", "base"), "type"=>_T("Type", "base"), 
+        "object"=>_T("Object", "base"), "type"=>_T("Type", "base"),
         "action"=>_T("Action","base"),"user"=>_T("User", "base")
         );
 
@@ -35,7 +35,7 @@ $ajax = new AjaxFilterLog(urlStrRedirect("base/audit/ajaxLogFilter"), $types);
 $ajax->setsearchbar(urlStrRedirect("base/audit/searchbar"));
 $ajax->display();
 
-$p = new PageGenerator(_T("All modules audit", "base"));
+$p = new PageGenerator(_("All modules audit"));
 $p->setSideMenu($sidemenu);
 $p->display();
 
