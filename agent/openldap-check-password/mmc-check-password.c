@@ -178,8 +178,10 @@ int check_password (char *pPasswd, char **ppErrStr, Entry *pEntry) {
     else
         sprintf(final_commandline, "%s -u %s -c", passwordHelperPath, dn);
 
-    syslog(LOG_NOTICE, "mmc-check-password: Command line: |%s|",
-           final_commandline);
+    if (debug) {
+        syslog(LOG_NOTICE, "mmc-check-password: Command line: |%s|",
+               final_commandline);
+    }
 
     FILE * file = popen(final_commandline, "w");
     fwrite(pPasswd, strlen(pPasswd), 1, file);
