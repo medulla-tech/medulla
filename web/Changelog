@@ -1,3 +1,13 @@
+mmc-core 3.0.0 (MMC web interface)
+----------------------------------
+
+ * Audit framework
+ * New password Policy module
+ * French translation update (Mandriva)
+ * German translation update (Mario Fetka)
+ * Spanish translation update (Francisco Garcia)
+ * Brazilian Portuguese translation update (Sergio Rafael Lemke)
+
 mmc-web-base 2.3.2
 ------------------
 

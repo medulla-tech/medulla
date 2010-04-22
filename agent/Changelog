@@ -1,3 +1,13 @@
+mmc-core 3.0.0 (MMC agent)
+--------------------------
+
+ * Audit framework
+   * New mmc-helper command to manage the audit database
+ * LDAP TLS support
+ * New Password Policy module
+   * New mmc-password-helper to check and generate password
+   * New openldap-check-password password policy module for OpenLDAP
+
 mmc-agent 2.3.2
 ---------------
 
