@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: base\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-21 18:42+0200\n"
-"PO-Revision-Date: 2010-04-21 18:42+0200\n"
+"POT-Creation-Date: 2010-04-22 11:42+0200\n"
+"PO-Revision-Date: 2010-04-22 11:45+0200\n"
 "Last-Translator: Cédric Delfosse <cdelfosse@mandriva.com>\n"
 "Language-Team: français <fr@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -65,7 +65,7 @@ msgstr ""
 ">\n"
 "Le shell de l'utilisateur est /bin/false."
 
-#: modules/base/audit/indexbase.php:30
+#: modules/base/audit/indexall.php:30 modules/base/audit/indexbase.php:30
 msgid "Action"
 msgstr "Action"
 
@@ -139,6 +139,10 @@ msgstr "Tous les ordinateurs"
 #: modules/base/audit/localSidebar.php:28
 msgid "All modules"
 msgstr "Tous les modules"
+
+#: modules/base/audit/indexall.php:36
+msgid "All modules audit"
+msgstr "Audit de tous les modules"
 
 #: modules/base/groups/members.php:132
 msgid "All users"
@@ -796,7 +800,7 @@ msgstr "Adresse de messagerie"
 
 #: modules/base/audit/indexmail.php:35
 msgid "Mail audit"
-msgstr "Audit module mail"
+msgstr "Audit du module de messagerie"
 
 #: modules/base/users/backup.php:83
 msgid "Media size"
@@ -840,7 +844,7 @@ msgstr "Réseau"
 
 #: modules/base/audit/indexnetwork.php:35
 msgid "Network audit"
-msgstr "Audit réseau"
+msgstr "Audit du module réseau"
 
 #: modules/base/users/passwd.php:66
 msgid "New password"
@@ -862,7 +866,8 @@ msgstr "Aucun élément disponible"
 msgid "No job."
 msgstr "Aucune action."
 
-#: modules/base/audit/logview.php:75 modules/base/audit/indexbase.php:29
+#: modules/base/audit/logview.php:75 modules/base/audit/indexall.php:29
+#: modules/base/audit/indexbase.php:29
 msgid "Object"
 msgstr "Objet"
 
@@ -1300,7 +1305,7 @@ msgstr ""
 msgid "Title"
 msgstr "Titre"
 
-#: modules/base/audit/ajaxLogFilter.php:123
+#: modules/base/audit/ajaxLogFilter.php:123 modules/base/audit/indexall.php:29
 #: modules/base/audit/indexbase.php:29
 msgid "Type"
 msgstr "Type"
@@ -1317,7 +1322,7 @@ msgstr "Tout désélectionner"
 msgid "Uptime: "
 msgstr "Démarré depuis: "
 
-#: modules/base/audit/ajaxLogFilter.php:121
+#: modules/base/audit/ajaxLogFilter.php:121 modules/base/audit/indexall.php:30
 #: modules/base/audit/indexbase.php:30 modules/base/includes/auditCodes.php:45
 msgid "User"
 msgstr "Utilisateur"
