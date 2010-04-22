@@ -29,9 +29,9 @@ require_once("modules/base/includes/logging-xmlrpc.inc.php");
  * module declaration
  */
 $mod = new Module("base");
-$mod->setVersion("2.3.2");
+$mod->setVersion("3.0.0");
 $mod->setRevision('$Rev$');
-$mod->setAPIVersion("7:0:3");
+$mod->setAPIVersion("8:0:4");
 $mod->setDescription(_("User, group and computer management"));
 $mod->setPriority(1);
 

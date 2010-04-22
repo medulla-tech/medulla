@@ -42,10 +42,10 @@ from mmc.core.audit import AuditFactory as AF
 from mmc.plugins.ppolicy.audit import AT, AA, PLUGIN_NAME
 
 
-VERSION = "2.3.2"
+VERSION = "3.0.0"
 APIVERSION = "0:0:0"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
-       
+
 def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION
 def getRevision(): return REVISION

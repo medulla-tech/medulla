@@ -73,7 +73,7 @@ INI = "/etc/mmc/plugins/base.ini"
 modList= None
 
 VERSION = "3.0.0"
-APIVERSION = "7:0:3"
+APIVERSION = "8:0:4"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
 # List of methods that can be called without user authentication
