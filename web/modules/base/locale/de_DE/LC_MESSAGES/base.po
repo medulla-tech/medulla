@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-19 10:16+0200\n"
-"PO-Revision-Date: 2010-04-19 10:19+0200\n"
+"POT-Creation-Date: 2010-04-22 10:02+0200\n"
+"PO-Revision-Date: 2010-04-22 10:03+0200\n"
 "Last-Translator: Mario Fetka <mario.fetka@gmail.com>\n"
 "Language-Team: X-SOURCE TechnikService <info@x-source.de>\n"
 "MIME-Version: 1.0\n"
@@ -69,7 +69,7 @@ msgstr ""
 "                            Sein/Ihr Login-Shell Kommando wird durch /bin/"
 "false ersetzt"
 
-#: modules/base/audit/logview.php:62
+#: modules/base/audit/indexbase.php:30
 msgid "Action"
 msgstr "Aktionen"
 
@@ -107,24 +107,29 @@ msgstr "Computer hinzufügen"
 msgid "Add computer "
 msgstr "Computer hinzufügen"
 
-#: modules/base/groups/edit.php:48
+#: modules/base/groups/edit.php:48 modules/base/includes/auditCodes.php:32
 msgid "Add group"
 msgstr "Gruppe hinzufügen"
+
+#: modules/base/includes/auditCodes.php:44
+msgid "Add organizational unit"
+msgstr "organisatorische Einheit hinzufügen"
 
 #: includes/favorites.php:149
 msgid "Add this page to your favorite"
 msgstr "Fügen Sie diese Seite jetzt zu Ihren Favoriten hinzu."
 
-#: modules/base/users/edit.php:339
+#: modules/base/users/edit.php:339 modules/base/includes/auditCodes.php:27
 msgid "Add user"
 msgstr "Benutzer hinzufügen"
 
+#: modules/base/includes/auditCodes.php:33
 #: modules/base/views/editGroups.tpl.php:67
 msgid "Add user to group"
 msgstr "hinzufügen des Benutzers zur Gruppe"
 
 #: modules/base/audit/logview.php:70
-msgid "Agent Hostname"
+msgid "Agent hostname"
 msgstr "Agent Host-Name"
 
 #: modules/base/infoPackage.inc.php:293
@@ -135,9 +140,17 @@ msgstr "Ajax Teil der Computerliste"
 msgid "All computers"
 msgstr "Alle Computer"
 
+#: modules/base/audit/localSidebar.php:28
+msgid "All modules"
+msgstr "Alle Module"
+
 #: modules/base/groups/members.php:132
 msgid "All users"
 msgstr "Alle Benutzer"
+
+#: modules/base/includes/auditCodes.php:48
+msgid "Attribute"
+msgstr "Attribute"
 
 #: modules/base/users/editacl.php:175
 msgid "Attribute description"
@@ -177,14 +190,22 @@ msgid "Backup of <b>%s</b> user's folder has been launched in background."
 msgstr ""
 "Backup von <b>%s</b> Benutzer-Verzeichnis wurde im Hintergrund gestartet."
 
+#: modules/base/includes/auditCodes.php:41
+msgid "Backup user"
+msgstr "Backup Benutzer"
+
 #: modules/base/infoPackage.inc.php:151
 msgid "Backup user files"
 msgstr "Backup Benutzerdateien"
 
-#: modules/base/audit/ajaxLogFilter.php:51
+#: modules/base/audit/ajaxLogFilter.php:49
 #: modules/base/includes/AjaxFilterLog.inc.php:324
 msgid "Begin date"
 msgstr "Begin Datum"
+
+#: modules/base/users/localSidebar.php:31
+msgid "Bulk import (CSV)"
+msgstr "Massen-Import (CSV)"
 
 #: includes/xmlrpc.inc.php:222
 msgid ""
@@ -209,9 +230,25 @@ msgstr "kann keine XML-RPC-Anfrage an MMC-Agent senden"
 msgid "Cancel"
 msgstr "abbrechen"
 
+#: modules/base/includes/auditCodes.php:31
+msgid "Change group attribute"
+msgstr "Gruppen Attribute ändern"
+
+#: modules/base/includes/auditCodes.php:39
+msgid "Change user Password"
+msgstr "Benutzerpasswort ändern"
+
+#: modules/base/includes/auditCodes.php:30
+msgid "Change user attribute"
+msgstr "Benutzerpattribute ändern"
+
 #: modules/base/infoPackage.inc.php:156
 msgid "Change user password"
 msgstr "Benutzerpasswort ändern"
+
+#: modules/base/includes/auditCodes.php:36
+msgid "Change user primary group"
+msgstr "Primäre Benutzergruppe ändern"
 
 #: modules/base/users/passwd.php:36 modules/base/users/passwd.php:73
 #: modules/base/users/localSidebar.php:34
@@ -324,15 +361,15 @@ msgstr "Erstellen des Home-Verzeichnis auf Dateisystem"
 msgid "Current password"
 msgstr "aktuelles Passwort"
 
-#: includes/auditCodesManager.php:11
+#: includes/auditCodesManager.php:33
 msgid "Daemon start"
 msgstr "Daemon starten"
 
-#: includes/auditCodesManager.php:12
+#: includes/auditCodesManager.php:34
 msgid "Daemon stop"
 msgstr "Daemon stoppen"
 
-#: modules/base/audit/ajaxLogFilter.php:116 modules/base/audit/logview.php:58
+#: modules/base/audit/ajaxLogFilter.php:114 modules/base/audit/logview.php:58
 #: modules/base/logview/ajax_showlog.php:42
 msgid "Date"
 msgstr "Datum"
@@ -344,6 +381,26 @@ msgstr "Tag:"
 #: modules/base/infoPackage.inc.php:65
 msgid "Default status page"
 msgstr "System Status"
+
+#: modules/base/includes/auditCodes.php:40
+msgid "Del group"
+msgstr "Gruppe löschen"
+
+#: modules/base/includes/auditCodes.php:37
+msgid "Del user"
+msgstr "Benutzer löschen"
+
+#: modules/base/includes/auditCodes.php:38
+msgid "Del user attribute"
+msgstr "Benutzer Attribute ändern"
+
+#: modules/base/includes/auditCodes.php:35
+msgid "Del user from all group"
+msgstr "Benutzers aus allen Gruppen löschen"
+
+#: modules/base/includes/auditCodes.php:34
+msgid "Del user from group"
+msgstr "Benutzers aus Gruppen löschen"
 
 #: includes/FormGenerator.php:833 modules/base/groups/ajaxFilter.php:48
 #: modules/base/users/ajaxFilter.php:84
@@ -391,6 +448,10 @@ msgstr "lösche Benutzer"
 #: modules/base/groups/edit.php:92 modules/base/computers/edit.php:64
 msgid "Description"
 msgstr "Beschreibung"
+
+#: modules/base/includes/auditCodes.php:29
+msgid "Disable user"
+msgstr "Benutzer daktivieren"
 
 #: modules/base/computers/trads.php:27
 msgid "Display Name"
@@ -445,11 +506,15 @@ msgstr "Mitglieder bearbeiten"
 msgid "Edit user"
 msgstr "Benutzer bearbeiten"
 
+#: modules/base/includes/auditCodes.php:28
+msgid "Enable user"
+msgstr "Benutzer aktivieren"
+
 #: modules/base/infoPackage.inc.php:325
 msgid "Enable/Disable user account"
 msgstr "Benutzerkonto aktivieren/deaktivieren"
 
-#: modules/base/audit/ajaxLogFilter.php:54
+#: modules/base/audit/ajaxLogFilter.php:52
 #: modules/base/includes/AjaxFilterLog.inc.php:325
 msgid "End date"
 msgstr "End Datum"
@@ -469,6 +534,14 @@ msgstr "Fehler beim Lesen der MMC Agent XML-RPC-Antwort."
 #: main.php:126
 msgid "Error, you don't have correct rights !"
 msgstr "Fehler, Sie haben nicht die erforderlichen Rechte!"
+
+#: modules/base/audit/ajaxLogFilter.php:122 modules/base/audit/logview.php:62
+msgid "Event"
+msgstr "Ereignis"
+
+#: modules/base/audit/logview.php:35
+msgid "Event details"
+msgstr "Details Aktionen"
 
 #: modules/base/logview/ajax_showlog.php:46
 msgid "Extra informations"
@@ -503,6 +576,10 @@ msgstr "Benutzerfoto holen"
 #: modules/base/status/index.php:199
 msgid "Global view"
 msgstr "globale Ansicht"
+
+#: modules/base/includes/auditCodes.php:47
+msgid "Group"
+msgstr "Gruppe"
 
 #: modules/base/includes/groups-xmlrpc.inc.php:91
 #, php-format
@@ -692,6 +769,10 @@ msgstr "abmelden"
 msgid "MMC Agent can't contact your LDAP server"
 msgstr "Der MMC-Agent kann keine Verbindung zu Ihrem LDAP-Server aufbauen."
 
+#: includes/auditCodesManager.php:35
+msgid "MMC agent"
+msgstr "MMC Agent"
+
 #: includes/xmlrpc.inc.php:196 includes/xmlrpc.inc.php:221
 #: includes/xmlrpc.inc.php:240
 msgid "MMC agent communication problem"
@@ -709,7 +790,7 @@ msgstr "MMC-Agent scheint nicht richtig konfiguriert zu sein."
 msgid "MMC rights"
 msgstr "MMC Rechte"
 
-#: modules/base/users/ajaxFilter.php:79
+#: modules/base/users/ajaxFilter.php:79 modules/base/audit/localSidebar.php:38
 msgid "Mail"
 msgstr "E-Mail"
 
@@ -741,13 +822,25 @@ msgstr "Mobilfunknummer"
 msgid "Mobile phone number"
 msgstr "Mobilfunknummer"
 
+#: modules/base/audit/ajaxLogFilter.php:126
+msgid "Module"
+msgstr "Modul"
+
 #: includes/FormGenerator.php:397
 msgid "Month: "
 msgstr "Monat:"
 
+#: modules/base/includes/auditCodes.php:43
+msgid "Move user home"
+msgstr "Benutzerverzeichnis verschieben"
+
 #: modules/base/users/ajaxFilter.php:78 modules/base/views/index.tpl.php:84
 msgid "Name"
 msgstr "Name"
+
+#: modules/base/audit/localSidebar.php:46
+msgid "Network"
+msgstr "Netzwerk"
 
 #: modules/base/audit/indexnetwork.php:35
 msgid "Network audit"
@@ -773,9 +866,13 @@ msgstr "Keine Eintrag vorhanden"
 msgid "No job."
 msgstr "Kein Auftrag."
 
-#: modules/base/audit/logview.php:75
+#: modules/base/audit/logview.php:75 modules/base/audit/indexbase.php:29
 msgid "Object"
 msgstr "Objekt"
+
+#: modules/base/audit/ajaxLogFilter.php:124
+msgid "Object Name"
+msgstr "Objektname"
 
 #: modules/base/audit/logview.php:77
 msgid "Object type"
@@ -788,6 +885,10 @@ msgstr "OK"
 #: modules/base/logview/ajax_showlog.php:44
 msgid "Operation"
 msgstr "Operationen"
+
+#: modules/base/includes/auditCodes.php:49
+msgid "Organizational unit"
+msgstr "Organisationseinheit"
 
 #: modules/base/users/edit.php:397 modules/base/infoPackage.inc.php:323
 #: index.php:168
@@ -803,11 +904,11 @@ msgid "Password is empty."
 msgstr "Passwort ist leer."
 
 #: modules/base/includes/errorHandling.php:57
-msgid "Password is in history of old passwords"
+msgid "Password is in history of old passwords."
 msgstr "Das Passwort ist in der Geschichte des alten Passwörter vorhanden."
 
 #: modules/base/includes/errorHandling.php:63
-msgid "Password is not being changed from existing value"
+msgid "Password is not being changed from existing value."
 msgstr "Das Passwort wird nicht geändert"
 
 #: modules/ppolicy/includes/publicFunc.php:152
@@ -901,6 +1002,10 @@ msgstr "zurück"
 msgid "Primary group"
 msgstr "primäre Gruppe"
 
+#: modules/base/audit/localSidebar.php:42
+msgid "Proxy"
+msgstr "Proxy"
+
 #: modules/base/audit/indexproxy.php:35
 msgid "Proxy audit"
 msgstr "Proxy Prüfung"
@@ -921,6 +1026,10 @@ msgstr "Fernsteuerung"
 msgid "Remove machine from group"
 msgstr "lösche Computer aus Gruppe"
 
+#: modules/base/audit/ajaxLogFilter.php:128
+msgid "Result"
+msgstr "Ergebnis"
+
 #: modules/base/users/passwd.php:74
 msgid "Return"
 msgstr "zurück"
@@ -932,6 +1041,10 @@ msgstr "Root-Benutzer können keine Favoriten haben."
 #: modules/base/audit/indexsshlpk.php:35
 msgid "SSH public key audit"
 msgstr "SSH Public-Key-Prüfung"
+
+#: modules/base/audit/localSidebar.php:34
+msgid "Samba"
+msgstr "Samba"
 
 #: modules/base/audit/indexsamba.php:35
 msgid "Samba audit"
@@ -1020,6 +1133,10 @@ msgstr "Status"
 #: modules/base/status/index.php:119
 msgid "Swap"
 msgstr "Swap"
+
+#: modules/base/includes/auditCodes.php:46
+msgid "System user"
+msgstr "System Benutzer"
 
 #: modules/base/users/ajaxFilter.php:80
 msgid "Telephone"
@@ -1201,6 +1318,11 @@ msgstr ""
 msgid "Title"
 msgstr "Titel"
 
+#: modules/base/audit/ajaxLogFilter.php:123
+#: modules/base/audit/indexbase.php:29
+msgid "Type"
+msgstr "Typ"
+
 #: modules/base/users/edit.php:532
 msgid "Unlock LDAP account"
 msgstr "LDAP Konto freigeben"
@@ -1212,6 +1334,11 @@ msgstr "alle abwählen"
 #: modules/base/status/index.php:101
 msgid "Uptime: "
 msgstr "Laufzeit: "
+
+#: modules/base/audit/ajaxLogFilter.php:121
+#: modules/base/audit/indexbase.php:30 modules/base/includes/auditCodes.php:45
+msgid "User"
+msgstr "Benutzer"
 
 #: modules/base/includes/users-xmlrpc.inc.php:92
 #, php-format
@@ -1237,9 +1364,13 @@ msgstr "Benutzer %s wurde erfolgreich erstellt<br />"
 msgid "User ACLs successfully modified."
 msgstr "Benutzer ACLs erfolgreich geändert."
 
-#: modules/base/audit/indexbase.php:35
-msgid "User and Group audit"
+#: modules/base/audit/indexbase.php:37
+msgid "User and group audit"
 msgstr "Benutzer und Gruppen Prüfung"
+
+#: modules/base/includes/auditCodes.php:42
+msgid "User authentication"
+msgstr "Benutzer Authentifizierung"
 
 #: modules/base/users/edit.php:162 modules/base/users/edit.php:189
 msgid "User disabled."
@@ -1286,13 +1417,13 @@ msgstr "Name"
 msgid "User photo"
 msgstr "Benutzerfoto"
 
+#: modules/base/audit/logview.php:60
+msgid "User that initiated the event"
+msgstr "Benutzer der das Ereignis initiiert"
+
 #: modules/base/infoPackage.inc.php:314
 msgid "User title"
 msgstr "Titel"
-
-#: modules/base/audit/logview.php:60
-msgid "User which do the action"
-msgstr "Benutzer, der Aktion durchführt"
 
 #: modules/base/users/edit.php:108
 msgid "User's name invalid !"
@@ -1306,6 +1437,10 @@ msgstr "User-, Gruppen- und Computer-Management"
 #: modules/base/infoPackage.inc.php:102
 msgid "Users"
 msgstr "Benutzer"
+
+#: modules/base/audit/localSidebar.php:30
+msgid "Users and Groups"
+msgstr "Benutzer und Gruppen"
 
 #: modules/base/audit/logview.php:87
 msgid "Value"
@@ -1326,6 +1461,10 @@ msgstr ""
 "                            <li> Ihr Samba-Server ist nicht richtig "
 "konfiguriert</li>\n"
 "                        </ul>"
+
+#: modules/base/audit/ajaxLogFilter.php:132
+msgid "View details"
+msgstr "Detailansicht"
 
 #: modules/base/infoPackage.inc.php:259
 msgid "View details of an action"
@@ -1380,6 +1519,10 @@ msgstr "Ihr Passwort ist zu jung, um es zu ändern."
 #: logout/index.php:51
 msgid "Your session will be closed"
 msgstr "Ihre Sitzung wird geschlossen"
+
+#: modules/base/includes/auditCodes.php:50
+msgid "base"
+msgstr "Basis"
 
 #: includes/i18n.inc.php:57
 msgid "brazilian"
@@ -1438,10 +1581,6 @@ msgstr "abmelden"
 #: modules/base/status/index.php:111
 msgid "minute"
 msgstr "minute"
-
-#: includes/auditCodesManager.php:13
-msgid "mmc-agent"
-msgstr "mmc-agent"
 
 #: includes/FormGenerator.php:220
 msgid "no"
