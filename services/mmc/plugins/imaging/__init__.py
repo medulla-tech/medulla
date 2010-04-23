@@ -1291,6 +1291,7 @@ class RpcProxy(RpcProxyI):
         uuids = map(lambda c: c.uuid,
                     ComputerProfileManager().getProfileContent(profileUUID))
         macaddresses = ComputerManager().getMachineMac(ctx, {'uuids':uuids})
+        macaddresses = macaddresses.values()
         if not len(uuids):
             # No computer in profile
             ret = 1
