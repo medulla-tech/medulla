@@ -29,12 +29,18 @@ require_once('modules/imaging/includes/post_install_script.php');
 
 if (isset($_GET['gid']) && $_GET['gid'] != '') {
     $type = 'group';
-    $target_uuid = $_GET['gid'];
-    $target_name = $_GET['groupname'];
+    $target_uuid = isset($_GET['gid']) ? $_GET['gid'] : "";
+    $target_name = isset($_GET['groupname']) ? $_GET['groupname'] : "";
 } else {
     $type = '';
-    $target_uuid = $_GET['uuid'];
-    $target_name = $_GET['hostname'];
+    $target_uuid = isset($_GET['uuid']) ? $_GET['uuid'] : "";
+    if (isset($_GET['hostname'])) {
+        $target_name = $_GET['hostname'];
+    } elseif (isset($_GET['target_name'])) {
+        $target_name = $_GET['target_name'];
+    } else {
+        $target_name = '';
+    }
 }
 $itemid = $_GET['itemid'];
 
