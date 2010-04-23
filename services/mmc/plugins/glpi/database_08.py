@@ -1504,6 +1504,25 @@ class Glpi08(DyngroupDatabaseHelper):
         session.close()
         return ret
 
+    def getMachinesMac(self, uuids):
+        """
+        Get several machines mac addresses
+        """
+        session = create_session()
+        query = session.query(Network).add_column(self.machine.c.id).select_from(self.machine.join(self.network))
+        query = self.filterOnUUID(query.filter(self.network.c.itemtype == 'Computer'), uuids)
+        query = query.all()
+        session.close()
+        ret = {}
+        for n, cid in query:
+            cuuid = toUUID(cid)
+            if not ret.has_key(cuuid):
+                ret[cuuid] = []
+            if not n.mac in ret[cuuid]:
+                ret[cuuid].append(n.mac)
+        return ret
+
+
     def getMachineMac(self, uuid):
         """
         Get a machine mac addresses

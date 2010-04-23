@@ -62,7 +62,10 @@ class GlpiComputers(ComputerI):
         return self.glpi.getComputersList(ctx, {'uuid' : params['uuids'] }).values()
 
     def getMachineMac(self, ctx, params):
-        return self.glpi.getMachineMac(params['uuid'])
+        if params.has_key('uuids'):
+            return self.glpi.getMachinesMac(params['uuids'])
+        elif params.has_key('uuid'):
+            return self.glpi.getMachineMac(params['uuid'])
 
     def getMachineIp(self, ctx, filt):
         return self.glpi.getMachineIp(filt['uuid'])
