@@ -175,7 +175,7 @@ msgstr "<b>Aucune</b> machine n'est en cours de déploiement"
 
 #: web/modules/msc/msc/msctabsstatus.php:94
 msgid "<b>No</b> computer is stopped"
-msgstr "<b>Aucune</b> machine n'est arrétée"
+msgstr "<b>Aucune</b> machine n'est arrêtée"
 
 #: web/modules/msc/msc/msctabsstatus.php:89
 msgid "<b>No</b> computer was successfully deployed"
@@ -195,7 +195,7 @@ msgstr "<b>Aucune</b> installation de package n'est en pause"
 
 #: web/modules/msc/msc/msctabsstatus.php:66
 msgid "<b>No</b> package installation is stopped"
-msgstr "<b>Aucune</b> installation de package n'est arrétée"
+msgstr "<b>Aucune</b> installation de package n'est arrêtée"
 
 #: web/modules/msc/msc/msctabsstatus.php:61
 msgid "<b>No</b> package installation was successful"
@@ -215,7 +215,7 @@ msgstr "<b>Une</b> machine est en cours de déploiement"
 
 #: web/modules/msc/msc/msctabsstatus.php:95
 msgid "<b>One</b> computer is stopped"
-msgstr "<b>Une</b> machine est arrétée"
+msgstr "<b>Une</b> machine est arrêtée"
 
 #: web/modules/msc/msc/msctabsstatus.php:90
 msgid "<b>One</b> computer was successfully deployed"
@@ -400,7 +400,7 @@ msgid ""
 "Can't get files URI for package '%s' on fallback mirror %s.\n"
 "Please check that the package and its files have not been modified since the planning of the command."
 msgstr ""
-"Les URI des fichiers du package '%s' n'ont pas pu etre récupérées sur le miroir de secours '%s'.\n"
+"Les URI des fichiers du package '%s' n'ont pas pu être récupérées sur le miroir de secours '%s'.\n"
 "Veuillez vérifier que le package et ses fichiers n'ont pas été modifiés depuis la planification de la commande."
 
 #: web/modules/msc/includes/command_history.php:407
@@ -409,7 +409,7 @@ msgid ""
 "Can't get files URI for package '%s' on mirror %s.\n"
 "Please check that the package and its files have not been modified since the planning of the command."
 msgstr ""
-"Les URI des fichiers du package '%s' n'ont pas pu etre récupérées sur le miroir principal '%s'.\n"
+"Les URI des fichiers du package '%s' n'ont pas pu être récupérées sur le miroir principal '%s'.\n"
 "Veuillez vérifier que le package et ses fichiers n'ont pas été modifiés depuis la planification de la commande."
 
 #: web/modules/msc/includes/bundle_widgets.php:285
@@ -679,7 +679,7 @@ msgstr "Erreur dans le scheduler !"
 
 #: web/modules/msc/includes/command_history.php:396
 msgid "Error while connecting to secure agent on this host. Please check network connectivity, and that the secure agent is installed on this host."
-msgstr "Erreur lors de la connexion à l'agent sécurisé de cette machine.Veuillez vérifier votre réseau, et que l'agent sécurisé est bien installé sur cette machine."
+msgstr "Erreur lors de la connexion à l'agent sécurisé de cette machine. Veuillez vérifier votre réseau, et que l'agent sécurisé est bien installé sur cette machine."
 
 #: web/modules/msc/includes/widgets.inc.php:171
 msgid "Execute action..."
@@ -721,7 +721,7 @@ msgstr "Échec"
 
 #: web/modules/msc/includes/functions.php:42
 msgid "Failed to send WOL request"
-msgstr "La tentative d'envoie de la demande de WOL a échoué"
+msgstr "La tentative d'envoi de la demande de WOL a échoué"
 
 #: web/modules/msc/msc/ajaxDownloadFile.php:88
 msgid "File name"
@@ -838,7 +838,7 @@ msgstr "Taille"
 
 #: web/modules/msc/includes/command_history.php:348
 msgid "List of files to be transfered is empty."
-msgstr "La liste des fichiers à trasferer est vide."
+msgstr "La liste des fichiers à transférer est vide."
 
 #: web/modules/msc/msc/local_proxy.php:216
 msgid "Local Proxy Mode"
@@ -1013,13 +1013,13 @@ msgid ""
 "Package '%s' is NOT available on primary mirror %s\n"
 "Package '%s' is available on fallback mirror %s"
 msgstr ""
-"Le package '%s' n'est pas accéssible sur le miroir principal%s\n"
-"Le package '%s' est accéssible sur le miroirde secours %s"
+"Le package '%s' n'est pas accessible sur le miroir principal%s\n"
+"Le package '%s' est accessible sur le miroir de secours %s"
 
 #: web/modules/msc/includes/command_history.php:415
 #, php-format
 msgid "Package '%s' is available on primary mirror %s"
-msgstr "Le package '%s' est accéssible sur le miroir principal %s"
+msgstr "Le package '%s' est accessible sur le miroir principal %s"
 
 #: web/modules/msc/msc/ajaxPackageFilter.php:105
 msgid "Package size"
@@ -1128,7 +1128,7 @@ msgstr "Actions rapides sur %s"
 #: web/modules/msc/includes/widgets.inc.php:27
 #, php-format
 msgid "Quick action path %s don't exists"
-msgstr "Le répertoire des actions rapide %s n'existe pas"
+msgstr "Le répertoire des actions rapides %s n'existe pas"
 
 #: web/modules/msc/msc/local_proxy.php:67
 msgid "Random (indicate number of proxies) : "
@@ -1148,7 +1148,7 @@ msgstr "Redémarrer le poste après une commande réussie ?"
 
 #: web/modules/msc/includes/functions.php:40
 msgid "Reboot done"
-msgstr "Redémarrage terminée"
+msgstr "Redémarrage terminé"
 
 #: web/modules/msc/includes/functions.php:39
 msgid "Reboot failed"
@@ -1437,7 +1437,7 @@ msgstr "Le groupe sur lequel vous travaillez est vide."
 #: web/modules/msc/includes/command_history.php:406
 #, php-format
 msgid "The package '%s' is not available on any mirror."
-msgstr "Le package '%s' est accéssible sur aucun miroir."
+msgstr "Le package '%s' n'est accessible sur aucun miroir."
 
 #: web/modules/msc/includes/command_history.php:398
 msgid "The script was killed by Pulse 2 (timeout ?)."
@@ -1511,11 +1511,11 @@ msgstr "Version"
 
 #: web/modules/msc/includes/functions.php:41
 msgid "WOL request being sent"
-msgstr "La requete de WOL est en cours de préparation"
+msgstr "La requête de WOL est en cours de préparation"
 
 #: web/modules/msc/includes/functions.php:43
 msgid "WOL request has been sent"
-msgstr "La requete de WOL est partie"
+msgstr "La requête de WOL est partie"
 
 #: web/modules/msc/includes/bundle_widgets.php:346
 msgid "Wake on lan"
@@ -1571,7 +1571,7 @@ msgstr "machines ont échoué lors du déploiement"
 
 #: web/modules/msc/msc/statuscsv.php:108
 msgid "computers out of the valid period"
-msgstr "ordinateurs hors délai"
+msgstr "machines hors délai"
 
 #: web/modules/msc/msc/statuscsv.php:107
 msgid "computers paused"
@@ -1636,7 +1636,7 @@ msgstr "erreur: cmd_id ou bundle_id doit être renseigné"
 
 #: web/modules/msc/msc/msctabsstatus.php:41
 msgid "error : the bundle_id given does not exists in the database."
-msgstr "erreur: l'id de bundle donné n'existe pas dans la base de donnée. "
+msgstr "erreur: l'id de bundle donné n'existe pas dans la base de données. "
 
 #: web/modules/msc/logs/ajaxLogsFilter.php:134
 #: web/modules/msc/includes/command_history.php:40
@@ -1789,7 +1789,7 @@ msgstr "total"
 
 #: web/modules/msc/msc/statuscsv.php:123
 msgid "unreachable during execution"
-msgstr "non accéssible durant l'exécution"
+msgstr "non accessible durant l'exécution"
 
 #: web/modules/msc/msc/statuscsv.php:125
 msgid "unreachable during suppression"

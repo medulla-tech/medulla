@@ -412,11 +412,11 @@ msgstr "Adresse MAC"
 
 #: web/modules/inventory/inventory/i18n_labels.php:94
 msgid "Manuf"
-msgstr "Fabriquant"
+msgstr "Fabricant"
 
 #: web/modules/inventory/inventory/i18n_labels.php:95
 msgid "Manufacturer"
-msgstr "Fabriquant"
+msgstr "Fabricant"
 
 #: web/modules/inventory/inventory/i18n_labels.php:96
 msgid "Media"

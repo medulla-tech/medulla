@@ -131,11 +131,11 @@ msgstr "Créateur de groupe d'ordinateurs"
 
 #: web/modules/dyngroup/infoPackage.inc.php:135
 msgid "Computers Group Creator Sub Request Delete"
-msgstr "Page de suppression d'une sous requête de groupe d'ordinateur"
+msgstr "Page de suppression d'une sous requête de groupe d'ordinateurs"
 
 #: web/modules/dyngroup/infoPackage.inc.php:121
 msgid "Computers Group Creator Sub Request Editor"
-msgstr "Page d'édition d'une sous requête de groupe d'ordinateur"
+msgstr "Page d'édition d'une sous requête de groupe d'ordinateurs"
 
 #: web/modules/dyngroup/infoPackage.inc.php:149
 #: web/modules/dyngroup/infoPackage.inc.php:187
@@ -144,11 +144,11 @@ msgstr "Éditeur de groupe d'ordinateurs"
 
 #: web/modules/dyngroup/infoPackage.inc.php:159
 msgid "Computers Group Sub Request Delete"
-msgstr "Page de suppression d'une sous requête de groupe d'ordinateur"
+msgstr "Page de suppression d'une sous requête de groupe d'ordinateurs"
 
 #: web/modules/dyngroup/infoPackage.inc.php:154
 msgid "Computers Group Sub Request Editor"
-msgstr "Page d'édition d'une sous requête de groupe d'ordinateur"
+msgstr "Page d'édition d'une sous requête de groupe d'ordinateurs"
 
 #: web/modules/dyngroup/infoPackage.inc.php:48
 #: web/modules/dyngroup/infoPackage.inc.php:170
@@ -275,7 +275,7 @@ msgstr "Éditer un groupe dynamique"
 #: web/modules/dyngroup/dyngroup/edithead.php:37
 #: web/modules/dyngroup/dyngroup/edithead.php:48
 msgid "Edit a profile"
-msgstr "Editer un profil"
+msgstr "Éditer un profil"
 
 #: web/modules/dyngroup/dyngroup/edithead.php:46
 #: web/modules/dyngroup/dyngroup/groupshead.php:31
@@ -288,7 +288,7 @@ msgstr "Éditer ce groupe"
 
 #: web/modules/dyngroup/dyngroup/ajaxListGroups.php:127
 msgid "Edit this profile"
-msgstr "Éditer un profil"
+msgstr "Éditer ce profil"
 
 #: web/modules/dyngroup/dyngroup/save.php:136
 msgid "Enter boolean operator between groups"
@@ -428,7 +428,7 @@ msgstr "Onglet de création d'un profil à partir d'un import de fichier"
 #: web/modules/dyngroup/infoPackage.inc.php:68
 #: web/modules/dyngroup/infoPackage.inc.php:82
 msgid "Profile creation's tab from machine list"
-msgstr "Onglet de création d'un profil à partir d'une liste de machine"
+msgstr "Onglet de création d'un profil à partir d'une liste de machines"
 
 #: web/modules/dyngroup/dyngroup/add_groups.php:143
 msgid "Profile failed to modify"
@@ -503,21 +503,19 @@ msgstr "Recherche de composant"
 
 #: web/modules/dyngroup/infoPackage.inc.php:203
 msgid "Second page of result/request group creator"
-msgstr "Deuxième page de la création de groupe requète/résultat"
+msgstr "Deuxième page de la création de groupe requête/résultat"
 
 #: web/modules/dyngroup/dyngroup/import_from_file.php:57
 msgid "Select the file you want to import"
 msgstr "Sélectionnez le fichier que vous désirez importer"
 
 #: web/modules/dyngroup/dyngroup/tab.php:83
-#, fuzzy
 msgid "Select the imaging server for this profile."
-msgstr "Sélectionnez le type de donnée qui se trouve dans le fichier"
+msgstr "Sélectionnez le serveur d'imaging pour ce profil."
 
 #: web/modules/dyngroup/dyngroup/tab.php:61
-#, fuzzy
 msgid "Select this profile's Imaging Server"
-msgstr "Supprimer ce profil"
+msgstr "Sélectionnez le serveur d'imaging pour ce profil."
 
 #: web/modules/dyngroup/dyngroup/import_from_file.php:67
 msgid "Select what is inside the file"
@@ -583,12 +581,12 @@ msgstr "Création d'un profil statique à partir d'un import"
 #: web/modules/dyngroup/dyngroup/tmpdisplay.php:33
 #: web/modules/dyngroup/infoPackage.inc.php:164
 msgid "Temporary result display"
-msgstr "Affichage temporaire du resultat"
+msgstr "Affichage temporaire du résultat"
 
 #: web/modules/dyngroup/dyngroup/tmpdisplay.php:31
 #, php-format
 msgid "Temporary result display for '%s'"
-msgstr "Affichage temporaire du resultat pour '%s'"
+msgstr "Affichage temporaire du résultat pour '%s'"
 
 #: web/modules/dyngroup/dyngroup/save.php:142
 #, php-format
@@ -624,7 +622,7 @@ msgstr "Type"
 
 #: web/modules/dyngroup/infoPackage.inc.php:257
 msgid "Update machine cache"
-msgstr "Mise à jour du cache de machine"
+msgstr "Mise à jour du cache de machines"
 
 #: web/modules/dyngroup/dyngroup/update.php:30
 msgid "Update machines name cache in dyngroup"
