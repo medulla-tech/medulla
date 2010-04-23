@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: base\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-22 10:32+0200\n"
-"PO-Revision-Date: 2010-04-20 16:36-0300\n"
+"POT-Creation-Date: 2010-04-23 09:10+0200\n"
+"PO-Revision-Date: 2010-04-22 15:08-0300\n"
 "Last-Translator: Sergio Rafael Lemke <sergio@mandriva.com.br>\n"
 "Language-Team: Brazilian Portuguese <cooker-i18n@mandrivalinux.org>\n"
 "MIME-Version: 1.0\n"
@@ -71,7 +71,7 @@ msgstr ""
 "Um usuário desabilitado não pode logar nos serviços UNIX. <br/>\n"
 "                            Seu shell de login é substituído por /bin/false"
 
-#: modules/base/audit/indexbase.php:30
+#: modules/base/audit/indexall.php:30 modules/base/audit/indexbase.php:30
 msgid "Action"
 msgstr "Ação"
 
@@ -148,6 +148,10 @@ msgstr "Todos os computadores"
 msgid "All modules"
 msgstr "Todos os usuários"
 
+#: modules/base/audit/indexall.php:36
+msgid "All modules audit"
+msgstr ""
+
 #: modules/base/groups/members.php:132
 msgid "All users"
 msgstr "Todos os usuários"
@@ -183,11 +187,11 @@ msgstr "Becape"
 
 #: modules/base/users/backup.php:38
 msgid "Backup a user's folder"
-msgstr "Becapear uma pasta de usuário"
+msgstr "Cópia(backup) de uma pasta de usuário"
 
 #: modules/base/users/backup.php:52
 msgid "Backup a user's home directory"
-msgstr "Becapear um diretório home de usuário"
+msgstr "Cópia(backup) de um diretório home de usuário"
 
 #: modules/base/users/backup.php:54
 #, php-format
@@ -197,11 +201,11 @@ msgstr "O becape da pasta do usuário <b>%s</b> foi iniciado em segundo plano."
 #: modules/base/includes/auditCodes.php:41
 #, fuzzy
 msgid "Backup user"
-msgstr "Becapear arquivos do usuário"
+msgstr "Cópia(backup) de arquivos do usuário"
 
 #: modules/base/infoPackage.inc.php:151
 msgid "Backup user files"
-msgstr "Becapear arquivos do usuário"
+msgstr "Cópia(backup) de arquivos do usuário"
 
 #: modules/base/audit/ajaxLogFilter.php:49
 #: modules/base/includes/AjaxFilterLog.inc.php:324
@@ -683,11 +687,12 @@ msgid ""
 "If this phrase does not change, you browser is not supported by the MMC "
 "application"
 msgstr ""
-"Se esta frase não se altera, o seu browser não é suportado pela aplicação MMC"
+"Se esta frase não se altera, o seu navegador não é suportado pela aplicação "
+"MMC"
 
 #: modules/base/includes/computers_list.inc.php:32
 msgid "Imaging management"
-msgstr ""
+msgstr "gerenciamento das imagens"
 
 #: modules/base/users/passwd.php:79
 msgid "Invalid current password. Please retry."
@@ -695,7 +700,7 @@ msgstr "Senha atual inválida. Favor tentar novamente."
 
 #: modules/base/includes/users-xmlrpc.inc.php:46
 msgid "Invalid login"
-msgstr "Login inválido"
+msgstr "login inválido"
 
 #: modules/base/includes/computers_list.inc.php:28
 msgid "Inventory"
@@ -883,7 +888,8 @@ msgstr "Nenhum item disponível"
 msgid "No job."
 msgstr "Sem serviços."
 
-#: modules/base/audit/logview.php:75 modules/base/audit/indexbase.php:29
+#: modules/base/audit/logview.php:75 modules/base/audit/indexall.php:29
+#: modules/base/audit/indexbase.php:29
 msgid "Object"
 msgstr "Objeto"
 
@@ -1327,7 +1333,7 @@ msgstr ""
 msgid "Title"
 msgstr "Título"
 
-#: modules/base/audit/ajaxLogFilter.php:123
+#: modules/base/audit/ajaxLogFilter.php:123 modules/base/audit/indexall.php:29
 #: modules/base/audit/indexbase.php:29
 msgid "Type"
 msgstr ""
@@ -1344,7 +1350,7 @@ msgstr "Desmarcar todos"
 msgid "Uptime: "
 msgstr "Tempo desde o boot: "
 
-#: modules/base/audit/ajaxLogFilter.php:121
+#: modules/base/audit/ajaxLogFilter.php:121 modules/base/audit/indexall.php:30
 #: modules/base/audit/indexbase.php:30 modules/base/includes/auditCodes.php:45
 #, fuzzy
 msgid "User"

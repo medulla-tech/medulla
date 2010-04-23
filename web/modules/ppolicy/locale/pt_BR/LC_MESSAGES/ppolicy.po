@@ -5,8 +5,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-22 10:32+0200\n"
-"PO-Revision-Date: 2010-04-20 18:31-0300\n"
+"POT-Creation-Date: 2010-04-23 09:10+0200\n"
+"PO-Revision-Date: 2010-04-22 15:01-0300\n"
+"Last-Translator: Sergio Rafael Lemke <sergio@mandriva.com.br>\n"
 "Language-Team: Brazilian Portuguese <cooker-i18n@mandrivalinux.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -75,6 +76,9 @@ msgid ""
 "If checked, the user must change her password when she first binds to the "
 "LDAP directory after password is set or reset by a password administrator"
 msgstr ""
+"Se marcado, o usuário deverá trocar a senha na primeira vez que se ligar ao "
+"diretório LDAP depois da senha ter sofrido reset ou ser configurada pelo "
+"administrador"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:40
 msgid "Lockout duration"
@@ -99,7 +103,7 @@ msgstr "Idade máxima (segundos)"
 
 #: modules/ppolicy/default/ppolicy.php:41
 msgid "Maximum age must be more than minimum age."
-msgstr "A idade máxima tem que ser mais do que a idade mínima."
+msgstr "A idade máxima tem que ser maior que a idade mínima."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:41
 msgid "Maximum failed"
@@ -124,7 +128,7 @@ msgstr "Comprimento mínimo"
 #: modules/ppolicy/includes/publicFunc.php:103
 #: modules/ppolicy/includes/ppolicy.inc.php:44
 msgid "Number of grace authentications"
-msgstr ""
+msgstr "Número de autenticações no modo grace"
 
 #: modules/ppolicy/infoPackage.inc.php:36
 msgid "Password Policy"
@@ -132,7 +136,7 @@ msgstr "Política de senhas"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:43
 msgid "Password hash history"
-msgstr ""
+msgstr "Histórico hash de senhas"
 
 #: modules/ppolicy/default/ppolicy.php:128
 #: modules/ppolicy/includes/publicFunc.php:126
@@ -142,7 +146,7 @@ msgstr "Histórico de senhas"
 #: modules/ppolicy/default/ppolicy.php:151
 #: modules/ppolicy/includes/publicFunc.php:152
 msgid "Password maximum failure"
-msgstr ""
+msgstr "Quantidade máxima de falhas de senha"
 
 #: modules/ppolicy/includes/publicFunc.php:242
 msgid "Password policy attributes updated."
@@ -167,12 +171,12 @@ msgstr "Bandeira de reset da senha"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:42
 msgid "Preventive lockout user"
-msgstr ""
+msgstr "Trancamento preventivo do usuário"
 
 #: modules/ppolicy/default/ppolicy.php:141
 #: modules/ppolicy/includes/publicFunc.php:142
 msgid "Preventive user lockout ?"
-msgstr ""
+msgstr "Trancamento preventivo do usuário ?"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:45
 msgid "Reset the password"
@@ -185,6 +189,10 @@ msgid ""
 "present or if its value is zero, users with expired password will not be "
 "allowed to authenticate."
 msgstr ""
+"Este atributo contém o número de tentativas que uma senha expirada pode ser "
+"usada para autenticar os usuários ao diretório. Se este atributo não está "
+"presente ou o valor for zero, os usuários com a senha expirada não serão "
+"capazes de se autenticar."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:54
 msgid ""
@@ -192,6 +200,9 @@ msgid ""
 "will expire. If this attribute is not present, or if the value is 0 the "
 "password does not expire."
 msgstr ""
+"Este atributo configura a quantidade de segundos que uma senha alterada "
+"demorará pra expirar. Se este atributo não está presente ou o valor for "
+"zero, a senha não expirará."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:53
 msgid ""
@@ -200,6 +211,10 @@ msgid ""
 "is assumed (i.e. the password may be modified whenever and however often is "
 "desired)."
 msgstr ""
+"Este atributo contém o número de segundos que devem decorrer "
+"entremodificações de senha. Se este atributo não está presente, 0 segundos é "
+"assumido (ex. a senha pode ser alterada quando e como quantas vezesfor "
+"desejado)."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:59
 msgid ""
@@ -208,6 +223,10 @@ msgid ""
 "attribute is empty, or if the value is 0 the password cannot be used to "
 "authenticate until reset by a password administrator."
 msgstr ""
+"Este atributo configura o número de segundos que uma senha não poderá ser "
+"usada depois de muitas tentativas de autenticação falhadas. Se este atributo "
+"estiver vazio, ou o valor for 0 a senha não poderá ser usada para autenticar "
+"até que a senha sofra um reset do administrador."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:62
 msgid ""
@@ -219,6 +238,13 @@ msgid ""
 "of '2' indicates that the server will check the quality, and if the server "
 "is unable to verify it, it will return an error refusing the password."
 msgstr ""
+"Este atributo configura como a qualidade da senha é verificada ao ser "
+"modificada ou adicionada. Se este atributo não estiver presente, ou se o "
+"valor for '0', a checagem de qualidade não será usada. O valor '1' indica "
+"que o servidor vai checar a qualidade, e caso ele seja incapaz de checar "
+"(senha hashed ou qualquer outra razão) ela será aceita. O valor '2' indica "
+"que o servidor vai checar a qualidade, e caso o servidor seja incapaz de "
+"checar, ele retornará um erro recusando a senha."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:56
 msgid ""
@@ -226,6 +252,9 @@ msgid ""
 "the attribute is not present, or if its value is 0, used passwords will not "
 "be stored and thus any previously-used password may be reused."
 msgstr ""
+"Este atributo configura o numero máximo de senhas usadas. Se este atributo "
+"não estiver presente, ou o valor for 0, as senhas usadas não serão "
+"armazenadas e com isso senhas previamente usadas podem ser re-usadas."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:58
 msgid ""
@@ -240,6 +269,8 @@ msgid ""
 "This flag allows to mark the password as having being reset by an "
 "administrator."
 msgstr ""
+"Esta bandeira permite marcar a senha como já tendo sofrido reset por um "
+"administrador."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:57
 msgid ""
@@ -248,6 +279,10 @@ msgid ""
 "The maximum number of consecutive failed bind attempts is specified in the "
 "\"Password maximum failure\" field below."
 msgstr ""
+"Esta bandeira indica, quando habilitada, de que a senha não autenticará "
+"depois de um número determinado de consecutivas falhas de conexão. O numero "
+"máximo de falhas de conexão é configurado no campo \"Quantidade máxima de "
+"falhas de senha\" abaixo."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:55
 msgid ""
@@ -255,6 +290,9 @@ msgid ""
 "first bind to the directory after a password is set or reset by the "
 "administrator."
 msgstr ""
+"Esta bandeira especifica se os usuários devem alterar suas senhas na "
+"primeira conexão ao diretório depois que a senha foi definida ou levou reset "
+"por um administrador."
 
 #: modules/ppolicy/default/warnuser.php:35
 msgid ""
@@ -262,6 +300,9 @@ msgid ""
 "password as soon as possible using the password change page, else your "
 "account will be locked."
 msgstr ""
+"Aviso, você se conectou usando no modo grace. Por favor, altere a sua senha "
+"assim que possível usando a página de alteração de senha ou a sua conta será "
+"trancada."
 
 #: modules/ppolicy/default/warnuser.php:40
 msgid ""
@@ -269,9 +310,9 @@ msgid ""
 "is restricted. Please change your password as soon as possible using the "
 "password change page."
 msgstr ""
-"Aviso, sua senha sofreu um reset do administrador. Sua conta LDAP é "
-"restrita. Por favor, troque a senha assim que possível usando a página de "
-"alteração de senha."
+"Aviso, sua senha sofreu um reset do administrador. Sua conta LDAP é restrita."
+"Por favor, troque a senha assim que possível usando a página de alteração de "
+"senha."
 
 #: modules/ppolicy/includes/publicFunc.php:72
 msgid ""
@@ -289,7 +330,7 @@ msgstr "desabilitado"
 #: modules/ppolicy/includes/publicFunc.php:210
 #: modules/ppolicy/includes/publicFunc.php:235
 msgid "enabled"
-msgstr "hbilitado"
+msgstr "habilitado"
 
 #: modules/ppolicy/default/ppolicy.php:69
 msgid "has been updated"
