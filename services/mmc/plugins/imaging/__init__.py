@@ -1522,7 +1522,10 @@ class RpcProxy(RpcProxyI):
 
             # fill distinct_loc with the computers uuids and the appropriate menu
             for m_uuid in locations:
-                loc_uuid = "UUID%s"%locations[m_uuid]['id']
+                if locations[m_uuid].has_key('uuid'):
+                    loc_uuid = locations[m_uuid]['uuid']
+                else:
+                    loc_uuid = "UUID%s"%locations[m_uuid]['id']
 
                 if distinct_loc.has_key(loc_uuid):
                     distinct_loc[loc_uuid][1][m_uuid] = menu.copy()
