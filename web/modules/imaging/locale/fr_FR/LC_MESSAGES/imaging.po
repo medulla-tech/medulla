@@ -297,7 +297,6 @@ msgid "Computer"
 msgstr "Ordinateur"
 
 #: web/modules/imaging/imaging/images.php:136
-#, fuzzy
 msgid "Convert to master"
 msgstr "Valider et convertir en master"
 
@@ -1242,7 +1241,7 @@ msgstr "La cible a été modifiée. Une fois les opérations terminées, appuyez
 
 #: web/modules/imaging/includes/post_install_script.php:87
 msgid "This values is already taken, please only put one element for each order."
-msgstr ""
+msgstr "Cette valeur est déjà affectée, veuillez s'il vous plait en choisir un autre."
 
 #: web/modules/imaging/manage/ajaxLogs.php:109
 #: web/modules/imaging/imaging/ajaxLogs.php:113
