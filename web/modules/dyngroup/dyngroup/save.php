@@ -108,7 +108,9 @@ if (!isset($_POST['btnPrimary']) || $name_exists || !$check || isset($_POST['che
             $group = new Profile();
         }
         $gid = $group->create($name, $visible);
-        $group->setImagingServer($imaging_server);
+        if (!$is_group) {
+            $group->setImagingServer($imaging_server);
+        }
     }
 
     $request = $r->toS();
