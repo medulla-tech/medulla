@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MDS spanish translation - Base module\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-22 16:13+0200\n"
-"PO-Revision-Date: 2010-04-21 20:26+0100\n"
-"Last-Translator: Francisco Garcia <fgarpe@iberos.org>\n"
+"POT-Creation-Date: 2010-04-27 08:50+0200\n"
+"PO-Revision-Date: 2010-04-24 11:50+0100\n"
+"Last-Translator: Francisco Garcia <fgarcia@iberos.org>\n"
 "Language-Team: Aitire / Juan Asensio Sánchez <info@aitire.es / okelet@gmail."
 "com>\n"
 "MIME-Version: 1.0\n"
@@ -153,18 +153,16 @@ msgid "All modules"
 msgstr "Todos los módulos"
 
 #: modules/base/audit/indexall.php:36
-#, fuzzy
 msgid "All modules audit"
-msgstr "Todos los módulos"
+msgstr "Todos los módulos de auditoría"
 
 #: modules/base/groups/members.php:132
 msgid "All users"
 msgstr "Todos los usuarios"
 
 #: modules/base/includes/auditCodes.php:48
-#, fuzzy
 msgid "Attribute"
-msgstr "Atributos actualizados."
+msgstr "Atributo"
 
 #: modules/base/users/editacl.php:175
 msgid "Attribute description"
@@ -251,7 +249,6 @@ msgid "Change group attribute"
 msgstr "Cambiar atributo del grupo"
 
 #: modules/base/includes/auditCodes.php:39
-#, fuzzy
 msgid "Change user Password"
 msgstr "Cambiar contraseña del usuario"
 
@@ -1371,7 +1368,6 @@ msgid "User ACLs successfully modified."
 msgstr "Las ACLs del usuario han sido modificadas correctamente."
 
 #: modules/base/audit/indexbase.php:37
-#, fuzzy
 msgid "User and group audit"
 msgstr "Auditoría de Usuarios y Grupos"
 
