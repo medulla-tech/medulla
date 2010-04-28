@@ -472,7 +472,7 @@ INSERT INTO Internationalization (id, fk_language, label) VALUES (20, 2, "Instal
 INSERT INTO Internationalization (id, fk_language, label) VALUES (21, 2, "RAID1 synchro pour chipset ICH5 du 1er disque vers le 2ème");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (22, 2, "Menu par défaut");
 
-INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (1, "Continue Normal Startup", "Start as usual", 2, 3, "root (hd0)\nchainloader +1");
+INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (1, "Continue Usual Startup", "Start as usual", 2, 3, "root (hd0)\nchainloader +1");
 INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (2, "Register as Pulse 2 Client", "Record this computer in Pulse 2 Server", 4, 5, "identify L=##PULSE2_LANG## P=none\nreboot");
 INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (3, "Create a backup", "Create a backup of this computer", 6, 7, "kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## revosavedir=##PULSE2_MASTERS_DIR## revoinfodir=##PULSE2_COMPUTERS_DIR## revobase=##PULSE2_BASE_DIR## ##PULSE2_DISKLESS_OPTS##\ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##");
 INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (4, "Diskless Boot", "Load diskless environment then get a prompt", 8, 9, "kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## revobase=##PULSE2_BASE_DIR## ##PULSE2_DISKLESS_OPTS## revodebug\ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##");
