@@ -207,7 +207,7 @@ sleep 5
 if [ $DISTRIBUTION == "MandrivaLinux" ]; then
     rm -f /etc/openldap/schema/*
     touch /etc/openldap/schema/local.schema
-    cp $TMPCO/mmc-core/agent/contrib/ldap/mmc.schema $TMPCO/mmc-core/agent/contrib/ldap/mail.schema $TMPCO/mmc-core/agent/contrib/ldap/openssh-lpk.schema $TMPCO/mmc-core/agent/contrib/ldap/quota.schema /etc/openldap/schema/
+    cp $TMPCO/mmc-core/agent/contrib/ldap/mmc.schema $TMPCO/mmc-core/agent/contrib/ldap/mail.schema $TMPCO/mmc-core/agent/contrib/ldap/openssh-lpk.schema $TMPCO/mmc-core/agent/contrib/ldap/quota.schema $TMPCO/mmc-core/agent/contrib/ldap/dhcp.schema /etc/openldap/schema/
     /usr/share/openldap/scripts/mandriva-dit-setup.sh -d mandriva.com -p secret -y
     sed -i 's/cn=admin/uid=LDAP Admin,ou=System Accounts/' /etc/mmc/plugins/base.ini
 
