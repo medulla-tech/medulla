@@ -219,6 +219,8 @@ if [ $DISTRIBUTION == "MandrivaLinux" ]; then
     sed -i 's/@inetLocalMailRecipient,//' /etc/openldap/mandriva-dit-access.conf
 
     echo "include /etc/openldap/schema/mmc.schema" > /etc/openldap/schema/local.schema
+    echo "include /etc/openldap/schema/dhcp.schema" >> /etc/openldap/schema/local.schema
+
 fi
 
 if [ $DISTRIBUTION == "Debian" ]; then
