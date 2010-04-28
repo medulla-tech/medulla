@@ -214,6 +214,8 @@ if [ $DISTRIBUTION == "MandrivaLinux" ]; then
     sed -i 's!#include.*/etc/openldap/schema/local.schema!include /etc/openldap/schema/local.schema!g' /etc/openldap/slapd.conf
     sed -i '/.*kolab.schema/d' /etc/openldap/slapd.conf
     sed -i '/.*misc.schema/d' /etc/openldap/slapd.conf
+    # Shipped dhcp.schema is too old
+    sed -i '/.*dhcp.schema/d' /etc/openldap/slapd.conf
     sed -i 's/@inetLocalMailRecipient,//' /etc/openldap/mandriva-dit-access.conf
 
     echo "include /etc/openldap/schema/mmc.schema" > /etc/openldap/schema/local.schema
