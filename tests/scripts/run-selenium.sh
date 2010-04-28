@@ -60,10 +60,14 @@ then
 fi
 
 # FIXME: should find a better way
-# Firefox exec path for CS4
 if [ -f /usr/lib/mozilla-firefox-2.0.0.19/mozilla-firefox-bin ];
     then
-        FIREFOX=/usr/lib/mozilla-firefox-2.0.0.19/mozilla-firefox-bin
+    # Firefox exec path for CS4
+    FIREFOX=/usr/lib/mozilla-firefox-2.0.0.19/mozilla-firefox-bin
+elif [ -f /usr/lib/firefox-3.0.18/firefox ];
+    then
+    # Firefox exec path for MES5
+    FIREFOX=/usr/lib/firefox-3.0.18/firefox
 else
     echo "Can't find firefox executable"
     exit 1
