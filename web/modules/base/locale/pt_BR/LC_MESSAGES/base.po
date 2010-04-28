@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: base\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-23 09:10+0200\n"
-"PO-Revision-Date: 2010-04-22 15:08-0300\n"
+"POT-Creation-Date: 2010-04-28 18:26+0200\n"
+"PO-Revision-Date: 2010-04-28 12:14-0300\n"
 "Last-Translator: Sergio Rafael Lemke <sergio@mandriva.com.br>\n"
 "Language-Team: Brazilian Portuguese <cooker-i18n@mandrivalinux.org>\n"
 "MIME-Version: 1.0\n"
@@ -115,7 +115,7 @@ msgstr "Adicionar grupo"
 
 #: modules/base/includes/auditCodes.php:44
 msgid "Add organizational unit"
-msgstr ""
+msgstr "Adicionar unidade organizacional"
 
 #: includes/favorites.php:149
 msgid "Add this page to your favorite"
@@ -131,7 +131,6 @@ msgid "Add user to group"
 msgstr "Adicionar usuário a um grupo"
 
 #: modules/base/audit/logview.php:70
-#, fuzzy
 msgid "Agent hostname"
 msgstr "Hostname do Agente"
 
@@ -144,22 +143,20 @@ msgid "All computers"
 msgstr "Todos os computadores"
 
 #: modules/base/audit/localSidebar.php:28
-#, fuzzy
 msgid "All modules"
-msgstr "Todos os usuários"
+msgstr "Todos os módulos"
 
 #: modules/base/audit/indexall.php:36
 msgid "All modules audit"
-msgstr ""
+msgstr "Auditoria de todos os módulos"
 
 #: modules/base/groups/members.php:132
 msgid "All users"
 msgstr "Todos os usuários"
 
 #: modules/base/includes/auditCodes.php:48
-#, fuzzy
 msgid "Attribute"
-msgstr "Atributos atualizados."
+msgstr "Atributo"
 
 #: modules/base/users/editacl.php:175
 msgid "Attribute description"
@@ -199,9 +196,8 @@ msgid "Backup of <b>%s</b> user's folder has been launched in background."
 msgstr "O becape da pasta do usuário <b>%s</b> foi iniciado em segundo plano."
 
 #: modules/base/includes/auditCodes.php:41
-#, fuzzy
 msgid "Backup user"
-msgstr "Cópia(backup) de arquivos do usuário"
+msgstr "Cópia(backup) do usuário"
 
 #: modules/base/infoPackage.inc.php:151
 msgid "Backup user files"
@@ -214,7 +210,7 @@ msgstr "Data de Inicio"
 
 #: modules/base/users/localSidebar.php:31
 msgid "Bulk import (CSV)"
-msgstr ""
+msgstr "Importação em lote (CSV)"
 
 #: includes/xmlrpc.inc.php:222
 msgid ""
@@ -241,26 +237,23 @@ msgstr "Cancelar"
 
 #: modules/base/includes/auditCodes.php:31
 msgid "Change group attribute"
-msgstr ""
+msgstr "Alterar atributo do grupo"
 
 #: modules/base/includes/auditCodes.php:39
-#, fuzzy
 msgid "Change user Password"
-msgstr "Alterar senha de usuário"
+msgstr "Alterar senha do usuário"
 
 #: modules/base/includes/auditCodes.php:30
-#, fuzzy
 msgid "Change user attribute"
-msgstr "Alterar senha de usuário"
+msgstr "Alterar atributo do usuário"
 
 #: modules/base/infoPackage.inc.php:156
 msgid "Change user password"
 msgstr "Alterar senha de usuário"
 
 #: modules/base/includes/auditCodes.php:36
-#, fuzzy
 msgid "Change user primary group"
-msgstr "Alterar senha de usuário"
+msgstr "Alterar grupo primário do usuário"
 
 #: modules/base/users/passwd.php:36 modules/base/users/passwd.php:73
 #: modules/base/users/localSidebar.php:34
@@ -395,28 +388,24 @@ msgid "Default status page"
 msgstr "Página default de status"
 
 #: modules/base/includes/auditCodes.php:40
-#, fuzzy
 msgid "Del group"
 msgstr "Remover grupo"
 
 #: modules/base/includes/auditCodes.php:37
-#, fuzzy
 msgid "Del user"
 msgstr "Remover usuário"
 
 #: modules/base/includes/auditCodes.php:38
 msgid "Del user attribute"
-msgstr ""
+msgstr "Remover atributo do usuário"
 
 #: modules/base/includes/auditCodes.php:35
-#, fuzzy
 msgid "Del user from all group"
-msgstr "Adicionar usuário a um grupo"
+msgstr "Remover usuário de todos os grupos"
 
 #: modules/base/includes/auditCodes.php:34
-#, fuzzy
 msgid "Del user from group"
-msgstr "Adicionar usuário a um grupo"
+msgstr "Remover usuário do grupo"
 
 #: includes/FormGenerator.php:833 modules/base/groups/ajaxFilter.php:48
 #: modules/base/users/ajaxFilter.php:84
@@ -466,9 +455,8 @@ msgid "Description"
 msgstr "Descrição"
 
 #: modules/base/includes/auditCodes.php:29
-#, fuzzy
 msgid "Disable user"
-msgstr "Remover usuário"
+msgstr "Desabilitar usuário"
 
 #: modules/base/computers/trads.php:27
 msgid "Display Name"
@@ -524,9 +512,8 @@ msgid "Edit user"
 msgstr "Editar usuário"
 
 #: modules/base/includes/auditCodes.php:28
-#, fuzzy
 msgid "Enable user"
-msgstr "Remover usuário"
+msgstr "Habilitar usuário"
 
 #: modules/base/infoPackage.inc.php:325
 msgid "Enable/Disable user account"
@@ -555,12 +542,11 @@ msgstr "Erro, você não tem as permissões corretas !"
 
 #: modules/base/audit/ajaxLogFilter.php:122 modules/base/audit/logview.php:62
 msgid "Event"
-msgstr ""
+msgstr "Evento"
 
 #: modules/base/audit/logview.php:35
-#, fuzzy
 msgid "Event details"
-msgstr "Detalhes da ação"
+msgstr "Detalhes do evento"
 
 #: modules/base/logview/ajax_showlog.php:46
 msgid "Extra informations"
@@ -596,9 +582,8 @@ msgid "Global view"
 msgstr "Visão global"
 
 #: modules/base/includes/auditCodes.php:47
-#, fuzzy
 msgid "Group"
-msgstr "Grupos"
+msgstr "Grupo"
 
 #: modules/base/includes/groups-xmlrpc.inc.php:91
 #, php-format
@@ -789,9 +774,8 @@ msgid "MMC Agent can't contact your LDAP server"
 msgstr "O agente MMC não conseguiu contactar o servidor LDAP"
 
 #: includes/auditCodesManager.php:35
-#, fuzzy
 msgid "MMC agent"
-msgstr "Permissões MMC"
+msgstr "Agente MMC"
 
 #: includes/xmlrpc.inc.php:196 includes/xmlrpc.inc.php:221
 #: includes/xmlrpc.inc.php:240
@@ -844,25 +828,23 @@ msgstr "Número do telefone celular"
 
 #: modules/base/audit/ajaxLogFilter.php:126
 msgid "Module"
-msgstr ""
+msgstr "Módulo"
 
 #: includes/FormGenerator.php:397
 msgid "Month: "
 msgstr "Mês: "
 
 #: modules/base/includes/auditCodes.php:43
-#, fuzzy
 msgid "Move user home"
-msgstr "Obter foto de usuário"
+msgstr "Mover diretório pessoal (/home) do usuário"
 
 #: modules/base/users/ajaxFilter.php:78 modules/base/views/index.tpl.php:84
 msgid "Name"
 msgstr "Nome"
 
 #: modules/base/audit/localSidebar.php:46
-#, fuzzy
 msgid "Network"
-msgstr "Auditoria de rede"
+msgstr "Rede"
 
 #: modules/base/audit/indexnetwork.php:35
 msgid "Network audit"
@@ -894,9 +876,8 @@ msgid "Object"
 msgstr "Objeto"
 
 #: modules/base/audit/ajaxLogFilter.php:124
-#, fuzzy
 msgid "Object Name"
-msgstr "Tipo de objeto"
+msgstr "Nome do objeto"
 
 #: modules/base/audit/logview.php:77
 msgid "Object type"
@@ -912,7 +893,7 @@ msgstr "Operação"
 
 #: modules/base/includes/auditCodes.php:49
 msgid "Organizational unit"
-msgstr ""
+msgstr "Unidade organizacional"
 
 #: modules/base/users/edit.php:397 modules/base/infoPackage.inc.php:323
 #: index.php:168
@@ -1025,9 +1006,8 @@ msgid "Primary group"
 msgstr "Grupo primário"
 
 #: modules/base/audit/localSidebar.php:42
-#, fuzzy
 msgid "Proxy"
-msgstr "Auditoria da Proxy"
+msgstr "Proxy"
 
 #: modules/base/audit/indexproxy.php:35
 msgid "Proxy audit"
@@ -1051,7 +1031,7 @@ msgstr "Remover máquina de grupo"
 
 #: modules/base/audit/ajaxLogFilter.php:128
 msgid "Result"
-msgstr ""
+msgstr "Resultado"
 
 #: modules/base/users/passwd.php:74
 msgid "Return"
@@ -1066,9 +1046,8 @@ msgid "SSH public key audit"
 msgstr "Auditoria da chave SSH pública"
 
 #: modules/base/audit/localSidebar.php:34
-#, fuzzy
 msgid "Samba"
-msgstr "Auditoria do Samba"
+msgstr "Samba"
 
 #: modules/base/audit/indexsamba.php:35
 msgid "Samba audit"
@@ -1159,9 +1138,8 @@ msgid "Swap"
 msgstr "Swap"
 
 #: modules/base/includes/auditCodes.php:46
-#, fuzzy
 msgid "System user"
-msgstr "Remover usuário"
+msgstr "Usuário do sistema"
 
 #: modules/base/users/ajaxFilter.php:80
 msgid "Telephone"
@@ -1336,7 +1314,7 @@ msgstr "Título"
 #: modules/base/audit/ajaxLogFilter.php:123 modules/base/audit/indexall.php:29
 #: modules/base/audit/indexbase.php:29
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 #: modules/base/users/edit.php:532
 msgid "Unlock LDAP account"
@@ -1352,9 +1330,8 @@ msgstr "Tempo desde o boot: "
 
 #: modules/base/audit/ajaxLogFilter.php:121 modules/base/audit/indexall.php:30
 #: modules/base/audit/indexbase.php:30 modules/base/includes/auditCodes.php:45
-#, fuzzy
 msgid "User"
-msgstr "Usuários"
+msgstr "Usuário"
 
 #: modules/base/includes/users-xmlrpc.inc.php:92
 #, php-format
@@ -1380,14 +1357,12 @@ msgid "User ACLs successfully modified."
 msgstr "ACLs de usuário modificadas com sucesso."
 
 #: modules/base/audit/indexbase.php:37
-#, fuzzy
 msgid "User and group audit"
-msgstr "Usuário e Grupo audit"
+msgstr "Auditoria do usuário e grupo"
 
 #: modules/base/includes/auditCodes.php:42
-#, fuzzy
 msgid "User authentication"
-msgstr "Usuário que faz a ação"
+msgstr "Autenticação do usuário"
 
 #: modules/base/users/edit.php:162 modules/base/users/edit.php:189
 msgid "User disabled."
@@ -1436,7 +1411,7 @@ msgstr "Foto do usuário"
 
 #: modules/base/audit/logview.php:60
 msgid "User that initiated the event"
-msgstr ""
+msgstr "Usuário que iniciou o evento"
 
 #: modules/base/infoPackage.inc.php:314
 msgid "User title"
@@ -1456,9 +1431,8 @@ msgid "Users"
 msgstr "Usuários"
 
 #: modules/base/audit/localSidebar.php:30
-#, fuzzy
 msgid "Users and Groups"
-msgstr "Usuário e Grupo audit"
+msgstr "Usuários e Grupos"
 
 #: modules/base/audit/logview.php:87
 msgid "Value"
@@ -1481,9 +1455,8 @@ msgstr ""
 "                        </ul>"
 
 #: modules/base/audit/ajaxLogFilter.php:132
-#, fuzzy
 msgid "View details"
-msgstr "Detalhes da ação"
+msgstr "Ver detalhes"
 
 #: modules/base/infoPackage.inc.php:259
 msgid "View details of an action"
@@ -1540,7 +1513,7 @@ msgstr "Sua sessão será fechada"
 
 #: modules/base/includes/auditCodes.php:50
 msgid "base"
-msgstr ""
+msgstr "base"
 
 #: includes/i18n.inc.php:57
 msgid "brazilian"
