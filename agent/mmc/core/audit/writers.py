@@ -68,7 +68,13 @@ class AuditWriterDB(Singleton, AuditWriterI):
         """
         Connect to the database.
         """
-        db = create_engine(self.config.auditdbdriver + "://" + self.config.auditdbuser + ":" + self.config.auditdbpassword + "@" + self.config.auditdbhost + ":" + str(self.config.auditdbport) + "/" + self.config.auditdbname)
+        dburl = self.config.auditdbdriver + "://" + self.config.auditdbuser + ":" + self.config.auditdbpassword + "@" + self.config.auditdbhost + ":" + str(self.config.auditdbport) + "/" + self.config.auditdbname
+        dboptions = {}
+        if self.config.auditdbdriver == 'mysql':
+            dburl += '?charset=utf8&use_unicode=0'
+            dboptions = { 'pool_recycle' : 3600, 'convert_unicode' : True }
+        db = create_engine(dburl, **dboptions)
+
         self.metadata = MetaData()
         self.metadata.bind = db
         self._initTableVersion()
