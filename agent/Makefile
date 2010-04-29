@@ -41,7 +41,7 @@ SBINFILES = bin/mmc-agent bin/mds-report
 BINFILES = bin/mmc-helper bin/mmc-password-helper
 
 # Extension for backuped configuration files
-BACKUP = .$(shell date +%Y-%m-%d+%H:%M:%S)
+BACKUP := .$(shell date +%Y-%m-%d+%H:%M:%S)
 
 all:
 
@@ -52,7 +52,7 @@ clean:
 	@echo "Nothing to do"
 
 # Install everything
-install: 
+install:
 	@# Install directories
 	@echo ""
 	@echo "Move old configuration files to $(DESTDIR)$(ETCDIR)$(BACKUP)"
