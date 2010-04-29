@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-22 10:02+0200\n"
-"PO-Revision-Date: 2010-04-22 10:03+0200\n"
+"POT-Creation-Date: 2010-04-29 11:56+0200\n"
+"PO-Revision-Date: 2010-04-29 11:57+0200\n"
 "Last-Translator: Mario Fetka <mario.fetka@gmail.com>\n"
 "Language-Team: X-SOURCE TechnikService <info@x-source.de>\n"
 "MIME-Version: 1.0\n"
@@ -69,7 +69,7 @@ msgstr ""
 "                            Sein/Ihr Login-Shell Kommando wird durch /bin/"
 "false ersetzt"
 
-#: modules/base/audit/indexbase.php:30
+#: modules/base/audit/indexall.php:30 modules/base/audit/indexbase.php:30
 msgid "Action"
 msgstr "Aktionen"
 
@@ -143,6 +143,10 @@ msgstr "Alle Computer"
 #: modules/base/audit/localSidebar.php:28
 msgid "All modules"
 msgstr "Alle Module"
+
+#: modules/base/audit/indexall.php:36
+msgid "All modules audit"
+msgstr "Alle Module prüfen"
 
 #: modules/base/groups/members.php:132
 msgid "All users"
@@ -866,7 +870,8 @@ msgstr "Keine Eintrag vorhanden"
 msgid "No job."
 msgstr "Kein Auftrag."
 
-#: modules/base/audit/logview.php:75 modules/base/audit/indexbase.php:29
+#: modules/base/audit/logview.php:75 modules/base/audit/indexall.php:29
+#: modules/base/audit/indexbase.php:29
 msgid "Object"
 msgstr "Objekt"
 
@@ -905,11 +910,11 @@ msgstr "Passwort ist leer."
 
 #: modules/base/includes/errorHandling.php:57
 msgid "Password is in history of old passwords."
-msgstr "Das Passwort ist in der Geschichte des alten Passwörter vorhanden."
+msgstr "Das Passwort ist in der Geschichte der alten Passwörter vorhanden."
 
 #: modules/base/includes/errorHandling.php:63
 msgid "Password is not being changed from existing value."
-msgstr "Das Passwort wird nicht geändert"
+msgstr "Das Passwort wird nicht von dem bestehenden Wert verändert."
 
 #: modules/ppolicy/includes/publicFunc.php:152
 msgid "Password maximum failure"
@@ -1318,7 +1323,7 @@ msgstr ""
 msgid "Title"
 msgstr "Titel"
 
-#: modules/base/audit/ajaxLogFilter.php:123
+#: modules/base/audit/ajaxLogFilter.php:123 modules/base/audit/indexall.php:29
 #: modules/base/audit/indexbase.php:29
 msgid "Type"
 msgstr "Typ"
@@ -1335,7 +1340,7 @@ msgstr "alle abwählen"
 msgid "Uptime: "
 msgstr "Laufzeit: "
 
-#: modules/base/audit/ajaxLogFilter.php:121
+#: modules/base/audit/ajaxLogFilter.php:121 modules/base/audit/indexall.php:30
 #: modules/base/audit/indexbase.php:30 modules/base/includes/auditCodes.php:45
 msgid "User"
 msgstr "Benutzer"
@@ -1594,7 +1599,7 @@ msgstr "norwegian"
 #: modules/base/includes/AjaxFilterLog.inc.php:167
 #: modules/base/includes/AjaxFilterLog.inc.php:171
 msgid "or <a href='#'"
-msgstr "oderr <a href='#'"
+msgstr "oder <a href='#'"
 
 #: includes/PageGenerator.php:477 includes/PageGenerator.php:692
 msgid "page"
@@ -1644,12 +1649,12 @@ msgstr "unbekannter Fehler"
 #: includes/FormGenerator.php:475
 #: modules/base/includes/AjaxFilterLog.inc.php:173
 msgid "value=\"never\";'>never</a>"
-msgstr "value=\"never\";'>never</a>"
+msgstr "value=\"never\";'>nie</a>"
 
 #: includes/FormGenerator.php:471
 #: modules/base/includes/AjaxFilterLog.inc.php:169
 msgid "value=\"now\";'>now</a>"
-msgstr "value=\"never\";'>never</a>"
+msgstr "value=\"now\";'>jetzt</a>"
 
 #: includes/FormGenerator.php:217
 msgid "yes"
