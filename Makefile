@@ -41,7 +41,7 @@ SBINFILES = services/bin/pulse2-package-server services/bin/pulse2-package-serve
 FILESTOINSTALL = web/modules/dyngroup web/modules/msc web/modules/inventory web/modules/glpi web/modules/pkgs web/modules/pulse2 web/modules/imaging
 
 # Extension for backuped configuration files
-BACKUP = .$(shell date +%Y-%m-%d+%H:%M:%S)
+BACKUP := .$(shell date +%Y-%m-%d+%H:%M:%S)
 
 all:
 
