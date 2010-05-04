@@ -56,7 +56,7 @@ if ($_POST) {
 
     if (!$script['is_local']) {
     ?>
-    <h2><?= _T("Cant delete this post-installation script, it's a global script.", "imaging") ?></h2>
+    <h2><?= _T("Can't delete this post-installation script, it's a global script.", "imaging") ?></h2>
     <?
     } else {
     ?>
