@@ -23,12 +23,13 @@
 
 """
 Test module for the Pulse 2 MMC Agent inventory plugin
-An inventory is injected to test its good behavior
+A inventory is injected to test its good behavior
 """
 
 import unittest
 import sys
 import os
+import os.path
 import time
 
 from unittest import TestCase
@@ -56,6 +57,8 @@ password = 's3cr3t'
 client = MMCProxy('https://%s:%s@localhost:7080'%(login, password), False)
 client.base.ldapAuth('root', 'secret')
 
+OCS = '/usr/sbin/ocsinventory-agent'
+
 
 """
 Inventory test class
@@ -64,8 +67,8 @@ Inventory test class
 class class01inventoryReportTest(TestCase):
 
     def test101inventoryExists(self):
-        result = client.inventory.inventoryExists("UUID1")
-        #self.assertEqual(result, True)
+        result = client.inventory.inventoryExists('UUID5')
+        self.assertTrue(result)
 
     def test102hasInventory(self):
         # Load the full inventory to test each part separately
@@ -79,8 +82,12 @@ class class01inventoryReportTest(TestCase):
 Launch of the tests
 """
 
+if not os.path.exists(OCS):
+    print "OCS Inventory Agent is not installed, skipping test"
+    sys.exit(0)
+
 # Launch the inventory agent to report an inventory
-os.system("ocsinventory-agent --server http://localhost:9999")
+os.system(OCS + ' --server http://localhost:9999')
 time.sleep(30)
 
 if mode == "debug":
