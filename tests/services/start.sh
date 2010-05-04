@@ -34,9 +34,44 @@ echo ""
 echo ""
 python statistics.py /usr/sbin/pulse2-scheduler scheduler.py
 
+echo ""
+echo ""
+echo "Statistics of inventory unittest mmcagent-inventory-empty.py"
+echo ""
+echo ""
+python statistics.py /usr/lib/python2.*/site-packages/mmc/plugins/inventory/__init__.py mmcagent-inventory-empty.py
+
+echo ""
+echo ""
+echo "Statistics of dyngroup unittest mmcagent-dyngroup-empty.py"
+echo ""
+echo ""
+python statistics.py /usr/lib/python2.*/site-packages/mmc/plugins/dyngroup/__init__.py mmcagent-dyngroup-empty.py
+
+echo ""
+echo ""
+echo "Statistics of package unittest mmcagent-pkgs-empty.py"
+echo ""
+echo ""
+python statistics.py /usr/lib/python2.*/site-packages/mmc/plugins/pkgs/__init__.py mmcagent-pkgs-empty.py
+
+echo ""
+echo ""
 echo "`date` - Starting Python Pulse 2 tests."
 echo ""
 echo ""
+
+echo ""
+echo ""
+echo "Testing MMC agent plugins on a clean Pulse 2 setup"
+echo ""
+echo ""
+echo "Inventory plugin"
+python mmcagent-inventory-empty.py
+echo "Dyngroup plugin"
+python mmcagent-dyngroup-empty.py
+echo "Dyngroup Pkgs"
+python mmcagent-pkgs-empty.py
 
 echo "Testing Package Server with no package (pserverempty.py)"
 python pserverempty.py
@@ -48,6 +83,14 @@ echo "Testing Scheduler"
 python scheduler.py
 echo "Testing Package Server imaging API"
 python pserver-imaging.py
+
+echo ""
+echo ""
+echo "Testing inventory injection"
+echo ""
+echo ""
+python mmcagent-inventory-inject.py
+
 
 echo ""
 echo ""

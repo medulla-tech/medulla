@@ -32,8 +32,13 @@ from testutils import SupEspLi
 source=sys.argv[1]
 test=sys.argv[2]
 
-function_source="def xmlrpc"
-function_test="result *= *server"
+if 'mmcagent' in test:
+    function_source="def "
+    function_test="result *= *self.client"
+else:
+    function_source="def xmlrpc"
+    function_test="result *= *server"
+
 file_source = source
 file_test = test
 
@@ -61,7 +66,7 @@ for line in file1:
         function_name=""
         linecut=""
         for letter in line:
-            if letter == "_":
+            if letter == "_" or ('mmcagent' in test and 'def' in lin):
                 linecut=line[(len(lin)+1):]
                 break
             else :
