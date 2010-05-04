@@ -32,7 +32,7 @@ if (isset($_GET['request'])) { $param['request'] = urlencode($_GET['request']); 
 if (isset($_GET['equ_bool'])) { $param['equ_bool'] = urlencode($_GET['equ_bool']); }
 if (isset($_GET['imaging_server'])) { $param['imaging_server'] = urlencode($_GET['imaging_server']); }
 
-if (displayLocalisationBar() && isset($_GET['imaging_server']) && $_GET['imaging_server'] == '') {
+if (displayLocalisationBar() && (isset($_GET['imaging_server']) && $_GET['imaging_server'] == '' || !isset($_GET['imaging_server']))) {
     $ajax = new AjaxFilterLocation(urlStrRedirect("base/computers/ajaxComputersList"), "container", 'location', $param);
 
     $list = array();
