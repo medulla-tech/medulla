@@ -2241,7 +2241,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         ret = session.query(Menu).add_column(self.internationalization.c.label).select_from(self.menu \
                 .outerjoin(self.internationalization, and_(self.internationalization.c.id == self.menu.c.fk_name, self.internationalization.c.fk_language == lang)) \
             ).filter(self.menu.c.id == 1).first()
-        if ret[1] != None and q[1] != 'NOTTRANSLATED':
+        if ret[1] != None and ret[1] != 'NOTTRANSLATED':
             ret[0].default_name = ret[1]
         return ret[0]
 
@@ -2312,9 +2312,15 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         menu.bootcli = default_menu.bootcli
         menu.disklesscli = default_menu.disklesscli
         menu.dont_check_disk_size = default_menu.dont_check_disk_size
-        menu_items, mi = self.__duplicateDefaultMenuItem(session, loc_id, p_id)
-        menu.fk_default_item = mi[0]
-        menu.fk_default_item_WOL = mi[1]
+        if p_id != None:
+            # WARNING! now we no longer duplicate the menu! we just put the default to the good values
+            menu_items = []
+            menu.fk_default_item = None
+            menu.fk_default_item_WOL = None
+        else:
+            menu_items, mi = self.__duplicateDefaultMenuItem(session, loc_id, p_id)
+            menu.fk_default_item = mi[0]
+            menu.fk_default_item_WOL = mi[1]
         menu.fk_synchrostate = 1
         session.save(menu)
         session.flush()
