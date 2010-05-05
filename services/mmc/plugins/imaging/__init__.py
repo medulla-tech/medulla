@@ -1590,7 +1590,11 @@ class RpcProxy(RpcProxyI):
                 else:
                     loc_uuid = "UUID%s"%locations[m_uuid]['id']
                 menu_items = db.getBootMenu(m_uuid, target_type, 0, -1, '')
-                menu = db.getTargetsMenuTUUID(m_uuid)
+                profile = ComputerProfileManager().getComputersProfile(m_uuid)
+                if profile != None:
+                    menu = db.getTargetsMenuTUUID(profile.id)
+                else:
+                    menu = db.getTargetsMenuTUUID(m_uuid)
                 menu = menu.toH()
                 menu['target'] = h_targets[m_uuid]
                 menu, menu_items, h_pis = self.__generateMenusContent(menu, menu_items, loc_uuid, m_uuid, h_pis)
