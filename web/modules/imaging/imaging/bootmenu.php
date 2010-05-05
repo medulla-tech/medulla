@@ -273,11 +273,11 @@ function item_list() {
 }
 
 if (($type == '' && xmlrpc_isComputerRegistered($target_uuid)) || ($type == 'group' && xmlrpc_isProfileRegistered($target_uuid)))  {
-
-    if(isset($_GET['mod']))
+    if (isset($_GET['mod'])) {
         $mod = $_GET['mod'];
-    else
+    } else {
         $mod = "none";
+    }
 
     switch($mod) {
         case 'up':
@@ -297,7 +297,6 @@ if (($type == '' && xmlrpc_isComputerRegistered($target_uuid)) || ($type == 'gro
     # register the target (computer or profile)
     $params = array('target_uuid'=>$target_uuid, 'type'=>$type, 'from'=>"services", "target_name"=>$target_name);
     header("Location: " . urlStrRedirect("base/computers/".$type."register_target", $params));
-
 }
 
 ?>
