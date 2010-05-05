@@ -143,10 +143,10 @@ class RpcProxy(RpcProxyI):
             target_type = P2IT.PROFILE
         return target_type
 
-    def __getTargetBootMenu(self, target_id, start = 0, end = -1, filter = ''):
+    def __getTargetBootMenu(self, target_id, type, start = 0, end = -1, filter = ''):
         db = ImagingDatabase()
-        menu = map(lambda l: l.toH(), db.getBootMenu(target_id, start, end, filter))
-        count = db.countBootMenu(target_id, filter)
+        menu = map(lambda l: l.toH(), db.getBootMenu(target_id, type, start, end, filter))
+        count = db.countBootMenu(target_id, type, filter)
         return [count, xmlrpcCleanup(menu)]
 
     def getProfileBootMenu(self, target_id, start = 0, end = -1, filter = ''):
@@ -170,7 +170,7 @@ class RpcProxy(RpcProxyI):
             2) the list delimited by start and end
         @rtype: list
         """
-        return self.__getTargetBootMenu(target_id, start, end, filter)
+        return self.__getTargetBootMenu(target_id, P2IT.PROFILE, start, end, filter)
 
     def getComputerBootMenu(self, target_id, start = 0, end = -1, filter = ''):
         """
@@ -193,7 +193,7 @@ class RpcProxy(RpcProxyI):
             2) the list delimited by start and end
         @rtype: list
         """
-        return self.__getTargetBootMenu(target_id, start, end, filter)
+        return self.__getTargetBootMenu(target_id, P2IT.COMPUTER, start, end, filter)
 
     def getLocationBootMenu(self, loc_id, start = 0, end = -1, filter = ''):
         """
@@ -1552,7 +1552,7 @@ class RpcProxy(RpcProxyI):
                 }
 
             # get the profile menu
-            menu_items = db.getBootMenu(pid, 0, -1, '')
+            menu_items = db.getBootMenu(pid, target_type, 0, -1, '')
             menu = db.getTargetsMenuTUUID(pid)
             menu = menu.toH()
             menu, menu_items, h_pis = self.__generateMenusContent(menu, menu_items, None)
@@ -1589,7 +1589,7 @@ class RpcProxy(RpcProxyI):
                     loc_uuid = locations[m_uuid]['uuid']
                 else:
                     loc_uuid = "UUID%s"%locations[m_uuid]['id']
-                menu_items = db.getBootMenu(m_uuid, 0, -1, '')
+                menu_items = db.getBootMenu(m_uuid, target_type, 0, -1, '')
                 menu = db.getTargetsMenuTUUID(m_uuid)
                 menu = menu.toH()
                 menu['target'] = h_targets[m_uuid]
@@ -1948,6 +1948,7 @@ class RpcProxy(RpcProxyI):
             return [False, "setMyMenuTarget : %s" % str(e)]
 
         if not isRegistered:
+            # send the menu to the good imaging server to register the computer
             logger = logging.getLogger()
             ret = db.changeTargetsSynchroState([uuid], target_type, P2ISS.RUNNING)
             distinct_loc = self.__generateMenus(logger, db, [uuid], target_type)

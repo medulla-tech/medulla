@@ -196,9 +196,14 @@ function item_list() {
     // forge params
     $upAction = new ActionItem(_T("Move Up"), "imgtabs", "up", "item", "base", "computers", $type."tabbootmenu", "up");
     $downAction = new ActionItem(_T("Move down"), "imgtabs", "down", "item", "base", "computers", $type."tabbootmenu", "down");
+    $editAction = new ActionItem(_T("Edit"), "imgtabs", "edit", "item", "base", "computers", $type."tabbootmenu", "edit");
+    $deleteAction = new ActionPopupItem(_T("Delete"), "bootmenu_remove", "delete", "item", "base", "computers", $type."tabbootmenu", 300, "delete");
+
     $emptyAction = new EmptyActionItem();
     $actionUp = array();
     $actionDown = array();
+    $actionEdit = array();
+    $actionDelete = array();
 
     $nbItems = $count;
 
@@ -211,6 +216,7 @@ function item_list() {
     $params['from'] = 'tabbootmenu';
 
     $i = -1;
+    $root_len = 0;
     foreach ($menu as $entry) {
         $i = $i + 1;
         $is_image = False;
@@ -232,7 +238,19 @@ function item_list() {
         $list_params[$i]["itemid"] = $entry['imaging_uuid'];
         $list_params[$i]["itemlabel"] = urlencode($entry['default_name']);
 
-        if($i==0) {
+        $src = '';
+        if ($entry['read_only']) {
+            $actionsDown[] = $emptyAction;
+            $actionsUp[] = $emptyAction;
+            $root_len += 1;
+            $actionEdit[] = $emptyAction;
+            $actionDelete[] = $emptyAction;
+            $src = 'P';
+        } else {
+            $actionEdit[] = $editAction;
+            $actionDelete[] = $deleteAction;
+        }
+        if ($i == $root_len) {
             if ($count == 1) {
                 $actionsDown[] = $emptyAction;
                 $actionsUp[] = $emptyAction;
@@ -240,15 +258,15 @@ function item_list() {
                 $actionsDown[] = $downAction;
                 $actionsUp[] = $emptyAction;
             }
-        } else if($i==$nbItems-1) {
+        } elseif ($i > $root_len && $i == $nbItems-1) {
             $actionsDown[] = $emptyAction;
             $actionsUp[] = $upAction;
-        } else {
+        } elseif ($i > $root_len) {
             $actionsDown[] = $downAction;
             $actionsUp[] = $upAction;
         }
 
-        $a_label[] = sprintf("%s) %s", $kind, $entry['default_name']); # should be replaced by the label in the good language
+        $a_label[] = sprintf("%s%s) %s", $kind, $src, $entry['default_name']); # should be replaced by the label in the good language
         $a_default[] = $entry['default'];
         $a_display[] = ($entry['hidden'] ? False:True);
         $a_defaultWOL[] = $entry['default_WOL'];
@@ -264,9 +282,9 @@ function item_list() {
     $l->addExtraInfo($a_displayWOL, _T("Displayed on WOL", "imaging"));
     $l->addActionItemArray($actionsUp);
     $l->addActionItemArray($actionsDown);
-    $l->addActionItem(new ActionItem(_T("Edit"), "imgtabs", "edit", "item", "base", "computers", $type."tabbootmenu", "edit"));
+    $l->addActionItemArray($actionEdit);
     if ($count > 1) {
-        $l->addActionItem(new ActionPopupItem(_T("Delete"), "bootmenu_remove", "delete", "item", "base", "computers", $type."tabbootmenu", 300, "delete"));
+        $l->addActionItemArray($actionDelete);
     }
     $l->disableFirstColumnActionLink();
     $l->display();

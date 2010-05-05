@@ -1920,18 +1920,51 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return ret
 
     ######################
-    def getBootMenu(self, target_id, start, end, filter):
+    def getBootMenu(self, target_id, type, start, end, filter):
+        menu_items = []
+        if type == P2IT.COMPUTER:
+            profile = ComputerProfileManager().getComputersProfile(target_id)
+            if profile != None:
+                # this should be the profile uuid!
+                menu_root = self.getTargetsMenuTUUID(profile.id)
+                menu_items = self.getMenuContent(menu_root.id, P2IM.ALL, start, end, filter)
+
         menu = self.getTargetsMenuTUUID(target_id)
+
         if menu == None:
-            return []
-        menu_items = self.getMenuContent(menu.id, P2IM.ALL, start, end, filter)
+            return menu_items
+
+        root_len = len(menu_items)
+        for i in range(0, len(menu_items)):
+            setattr(menu_items[i], 'read_only', True)
+
+        menu_items1 = self.getMenuContent(menu.id, P2IM.ALL, start, end, filter)
+
+        if menu_items == []:
+            return menu_items1
+        # need to merge menu_items and menu_items1
+        for mi in menu_items1:
+            mi.default = False
+            mi.default_WOL = False
+            mi.order += root_len
+            menu_items.append(mi)
         return menu_items
 
-    def countBootMenu(self, target_id, filter):
+    def countBootMenu(self, target_id, type, filter):
+        count_items = 0
+        if type == P2IT.COMPUTER:
+            profile = ComputerProfileManager().getComputersProfile(target_id)
+            if profile != None:
+                # this should be the profile uuid!
+                menu_root = self.getTargetsMenuTUUID(profile.id)
+                count_items = self.countMenuContent(menu_root.id, P2IM.ALL, filter)
+
         menu = self.getTargetsMenuTUUID(target_id)
+
         if menu == None:
-            return 0
-        count_items = self.countMenuContent(menu.id, P2IM.ALL, filter)
+            return count_items
+
+        count_items += self.countMenuContent(menu.id, P2IM.ALL, filter)
         return count_items
 
     def getEntityBootMenu(self, loc_id, start, end, filter):
@@ -2633,6 +2666,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return [True]
 
     def setMyMenuTarget(self, uuid, params, type):
+        # WIP : need to create correctly menu when a computer is in a profile
         session = create_session()
         menu = self.getTargetMenu(uuid, type, session)
         location_id = None
@@ -3131,7 +3165,7 @@ class Menu(DBObject):
     i18n = ['fk_name']
 
 class MenuItem(DBObject):
-    to_be_exported = ['id', 'default_name', 'order', 'hidden', 'hidden_WOL', 'fk_menu', 'fk_name', 'default', 'default_WOL', 'desc']
+    to_be_exported = ['id', 'default_name', 'order', 'hidden', 'hidden_WOL', 'fk_menu', 'fk_name', 'default', 'default_WOL', 'desc', 'read_only']
     need_iteration = ['boot_service', 'image']
 
 class Partition(DBObject):
