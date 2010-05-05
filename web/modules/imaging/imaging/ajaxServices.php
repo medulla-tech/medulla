@@ -66,6 +66,8 @@ foreach ($menu as $entry) {
     // don't show action if service is in bootmenu
     if(!isset($entry['menu_item'])) {
         $addActions[] = $addAction;
+    } elseif ($entry['menu_item']['read_only']) {
+        $addActions[] = $emptyAction;
     } else {
         $addActions[] = $delAction;
         $l_params["mi_itemid"] = $entry['menu_item']['imaging_uuid'];

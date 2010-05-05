@@ -945,6 +945,23 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             q1 = q1.all()
         bs_ids = map(lambda bs:bs[1], q1)
         q2 = self.__PossibleBootServiceAndMenuItem(session, bs_ids, menu.id)
+        # WIP
+        profile = ComputerProfileManager().getComputersProfile(target_uuid)
+        if profile != None:
+            # this should be the profile uuid!
+            menu_root = self.getTargetsMenuTUUID(profile.id)
+            q3 = self.__PossibleBootServiceAndMenuItem(session, bs_ids, menu_root.id)
+            q4 = []
+            already = []
+            for bs, mi in q3:
+                setattr(mi, 'read_only', True)
+                q4.append([bs, mi])
+                already.append(bs.id)
+            for bs, mi in q2:
+                if bs.id not in already:
+                    q4.append([bs, mi])
+            q2 = q4
+
         session.close()
 
         q = self.__mergeMenuItemInBootService(q1, q2)
