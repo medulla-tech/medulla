@@ -71,10 +71,20 @@ class GlpiComputers(ComputerI):
         return self.glpi.getMachineIp(filt['uuid'])
 
     def getMachineHostname(self, ctx, filt = None):
-        machines = self.glpi.getRestrictedComputersListLen(ctx, filt)
+        machines = self.glpi.getRestrictedComputersList(ctx, 0, -1, filt)
         ret = []
-        for m in machines:
-            ret.append(m.toH())
+        for x, m in machines.values():
+            if 'hostname' not in m:
+                if type(m['cn']) == list:
+                    m['hostname'] = m['cn'][0]
+                else:
+                    m['hostname'] = m['cn']
+            if 'uuid' not in m:
+                if type(m['objectUUID']) == list:
+                    m['uuid'] = m['objectUUID'][0]
+                else:
+                    m['uuid'] = m['objectUUID']
+            ret.append(m)
         if len(ret) == 1:
             return ret[0]
         return ret
