@@ -1262,6 +1262,43 @@ class RpcProxy(RpcProxyI):
         """ see isTargetRegister """
         return self.isTargetRegister(machine_uuid, P2IT.COMPUTER)
 
+    def canIRegisterThisComputer(self, computerUUID):
+        """
+        look that computer's profile state :
+            * if the computer is already declared => NOK
+                (avoid some useless checks, and don't declare an already registered computer)
+            * if the computer has no profile => OK
+            * if the computer has a profile :
+                * if the profile is registered => OK
+                * if the profile is not registered => NOK
+
+        @param computerUUID: the computer's UUID (Target.uuid)
+        @type computerUUID:str
+
+        @returns: true if the computer can be registered
+        @rtype: boolean
+        """
+        # WIP
+        logger = logging.getLogger()
+        if self.isComputerRegistered(computerUUID):
+            logger.debug("canIRegisterThisComputer %s : %s", computerUUID, "isComputerRegistered")
+            return [False, False]
+
+        profile = ComputerProfileManager().getComputersProfile(computerUUID)
+        if profile == None:
+            logger.debug("canIRegisterThisComputer %s : %s", computerUUID, "profile = None")
+            return [True]
+
+        profile = profile.toH()
+
+        # ... here we take the id because it's what we always take... but it should be the uuid
+        if self.isProfileRegistered(profile['id']):
+            logger.debug("canIRegisterThisComputer %s : %s", computerUUID, "isProfileRegistered")
+            return [True, profile['id']]
+
+        logger.debug("canIRegisterThisComputer %s : %s", computerUUID, "final false")
+        return [False, profile['id']]
+
     def checkComputerForImaging(self, computerUUID):
         """
         @return: 0 if the computer can be registered into the imaging module
@@ -1663,14 +1700,16 @@ class RpcProxy(RpcProxyI):
                                 h_hostnames[computer['uuid']] = computer['hostname']
                         else:
                              h_hostnames[hostnames['uuid']] = hostnames['hostname']
-                        h_macaddress = {}
-                        index = 0
-                        if type(macaddress[0]) == list:
-                            for computer in macaddress:
-                                h_macaddress[to_register.keys()[index]] = computer[0]
-                                index += 1
-                        else:
-                            h_macaddress[to_register.keys()[0]] = macaddress[0]
+                        h_macaddress = macaddress
+                        # WIP : check it's still working with inventory!
+                        #h_macaddress = {}
+                        #index = 0
+                        #if type(macaddress[0]) == list:
+                        #    for computer in macaddress:
+                        #        h_macaddress[to_register.keys()[index]] = computer[0]
+                        #        index += 1
+                        #else:
+                        #    h_macaddress[to_register.keys()[0]] = macaddress[0]
 
                         computers = []
                         for uuid in to_register:
@@ -1679,7 +1718,10 @@ class RpcProxy(RpcProxyI):
                                 continue
                             menu = menus[uuid]
                             imagingData = {'menu':{uuid:menu}, 'uuid':uuid}
-                            computers.append((h_hostnames[uuid], h_macaddress[uuid], imagingData))
+                            mac = h_macaddress[uuid]
+                            if type(mac) == list:
+                                mac = mac[0]
+                            computers.append((h_hostnames[uuid], mac, imagingData))
                         if not h_computers.has_key(url):
                             h_computers[url] = []
                         h_computers[url].extend(computers)
