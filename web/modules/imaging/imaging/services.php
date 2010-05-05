@@ -43,15 +43,13 @@ if (isset($_GET['gid']) && $_GET['gid'] != '') {
 }
 
 if (($type == '' && xmlrpc_isComputerRegistered($target_uuid)) || ($type == 'group' && xmlrpc_isProfileRegistered($target_uuid)))  {
-    list($count, $menu) = xmlrpc_getPossibleBootServices($target_uuid);
-
-    if(isset($_GET['mod']))
+    if (isset($_GET['mod'])) {
         $mod = $_GET['mod'];
-    else
+    } else {
         $mod = "none";
+    }
 
-
-    function service_add($type, $menu, $target_uuid) {
+    function service_add($type, $target_uuid) {
         $params = getParams();
         $item_uuid = $_GET['itemid'];
         $label = urldecode($_GET['itemlabel']);
@@ -68,7 +66,7 @@ if (($type == '' && xmlrpc_isComputerRegistered($target_uuid)) || ($type == 'gro
         }
     }
 
-    function service_list($type, $menu, $count, $target_uuid, $target_name) {
+    function service_list($type, $target_uuid, $target_name) {
         $params = getParams();
         $params['target_uuid'] = $target_uuid;
         $params['target_type'] = $type;
@@ -80,15 +78,15 @@ if (($type == '' && xmlrpc_isComputerRegistered($target_uuid)) || ($type == 'gro
         echo '<br/><br/><br/>';
         $ajax->displayDivToUpdate();
     }
+
     switch($mod) {
         case 'add':
-            service_add($type, $menu, $target_uuid);
+            service_add($type, $target_uuid);
             break;
         default:
-            service_list($type, $menu, $count, $target_uuid, $target_name);
+            service_list($type, $target_uuid, $target_name);
             break;
     }
-
 } else {
     # register the target (computer or profile)
     $params = array('target_uuid'=>$target_uuid, 'type'=>$type, 'from'=>"services", "target_name"=>$target_name);
