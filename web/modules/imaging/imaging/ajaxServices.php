@@ -41,6 +41,7 @@ $target_name = $_GET['target_name'];
 $start = empty($_GET["start"])              ? 0              : $_GET["start"];
 $end = empty($_GET["end"])                  ? $maxperpage    : $_GET["end"];
 $filter = empty($_GET["filter"])            ? ''             : $_GET['filter'];
+$is_in_profile = False;
 
 list($count, $menu) = xmlrpc_getPossibleBootServices($target_uuid, $start, $end, $filter);
 
@@ -55,6 +56,7 @@ $emptyAction = new EmptyActionItem();
 $a_label = array();
 $a_desc = array();
 $a_in_boot_menu = array();
+$a_from_profile = array();
 $params['from'] = 'tabservices';
 
 foreach ($menu as $entry) {
@@ -67,6 +69,7 @@ foreach ($menu as $entry) {
     if(!isset($entry['menu_item'])) {
         $addActions[] = $addAction;
     } elseif ($entry['menu_item']['read_only']) {
+        $is_in_profile = True;
         $addActions[] = $emptyAction;
     } else {
         $addActions[] = $delAction;
@@ -77,11 +80,15 @@ foreach ($menu as $entry) {
     $a_label[]= sprintf("%s%s", ($script['is_local']?'':'X) '), $entry['default_name']);
     $a_desc[]= $entry['default_desc'];
     $a_in_boot_menu[]= (isset($entry['menu_item'])? True:False);
+    $a_from_profile[]= (isset($entry['menu_item'])? ($entry['menu_item']['read_only'] ? True:False):False);
 }
 
 $l = new OptimizedListInfos($a_label, _T("Label", "imaging"));
 $l->addExtraInfo($a_desc, _T("Description", "imaging"));
 $l->addExtraInfo($a_in_boot_menu, _T("In bootmenu", "imaging"));
+if ($is_in_profile) {
+    $l->addExtraInfo($a_from_profile, _T("From profile", "imaging"));
+}
 $l->setParamInfo($list_params);
 $l->addActionItemArray($addActions);
 $l->disableFirstColumnActionLink();
