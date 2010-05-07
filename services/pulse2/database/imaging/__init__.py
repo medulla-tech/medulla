@@ -1324,7 +1324,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         )).all()
         return q
 
-    def getPossibleImagesOrMaster(self, target_uuid, is_master, start, end, filt):
+    def getPossibleImagesOrMaster(self, target_uuid, target_type, is_master, start, end, filt):
         session = create_session()
         menu = self.getTargetsMenuTUUID(target_uuid)
         q1 = self.__PossibleImages(session, target_uuid, is_master, filt)
@@ -1341,6 +1341,31 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
 
         q = self.__mergeMenuItemInImage(q1, q2, q3)
+
+        if is_master == P2IIK.IS_MASTER_ONLY and target_type == P2IT.COMPUTER:
+            profile = ComputerProfileManager().getComputersProfile(target_uuid)
+            if profile != None:
+                puuid = profile.id
+                # WIPWIP
+                menu = self.getTargetsMenuTUUID(puuid)
+                q1 = self.__PossibleImages(session, puuid, is_master, filt)
+                q1 = q1.group_by(self.image.c.id)
+                q1 = q1.all()
+                bs_ids = map(lambda bs:bs[1], q1)
+                q2 = self.__PossibleImageAndMenuItem(session, bs_ids, menu.id)
+
+                in_profile = {}
+                for im, mi in q2:
+                    if mi != None:
+                        in_profile[im.id] = mi
+
+                ret = []
+                for i in q:
+                    if in_profile.has_key(i.id):
+                        setattr(i, 'read_only', True)
+                        setattr(i, 'menu_item', in_profile[i.id])
+                    ret.append(i)
+                q = ret
         return q
 
     def canRemoveFromMenu(self, image_uuid):
@@ -1433,11 +1458,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return q
 
-    def getPossibleImages(self, target_uuid, start, end, filt):
-        return self.getPossibleImagesOrMaster(target_uuid, P2IIK.IS_IMAGE_ONLY, start, end, filt)
+    def getPossibleImages(self, target_uuid, target_type, start, end, filt):
+        return self.getPossibleImagesOrMaster(target_uuid, target_type, P2IIK.IS_IMAGE_ONLY, start, end, filt)
 
-    def getPossibleMasters(self, target_uuid, start, end, filt):
-        return self.getPossibleImagesOrMaster(target_uuid, P2IIK.IS_MASTER_ONLY, start, end, filt)
+    def getPossibleMasters(self, target_uuid, target_type, start, end, filt):
+        return self.getPossibleImagesOrMaster(target_uuid, target_type, P2IIK.IS_MASTER_ONLY, start, end, filt)
 
     def getEntityMasters(self, loc_id, start, end, filt):
         session = create_session()
@@ -3152,7 +3177,7 @@ class Entity(DBObject):
     to_be_exported = ['id', 'name', 'uuid']
 
 class Image(DBObject):
-    to_be_exported = ['id', 'path', 'checksum', 'size', 'desc', 'is_master', 'creation_date', 'fk_creator', 'name', 'is_local', 'uuid', 'mastered_on_target_uuid']
+    to_be_exported = ['id', 'path', 'checksum', 'size', 'desc', 'is_master', 'creation_date', 'fk_creator', 'name', 'is_local', 'uuid', 'mastered_on_target_uuid', 'read_only']
     need_iteration = ['menu_item', 'post_install_scripts']
 
 class ImageInMenu(DBObject):

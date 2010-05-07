@@ -368,10 +368,10 @@ class RpcProxy(RpcProxyI):
     def __getTargetImages(self, id, target_type, start = 0, end = -1, filter = ''):
         # be careful the end is used for each list (image and master)
         db = ImagingDatabase()
-        reti = map(lambda l: l.toH(), db.getPossibleImages(id, start, end, filter))
+        reti = map(lambda l: l.toH(), db.getPossibleImages(id, target_type, start, end, filter))
         counti = db.countPossibleImages(id, filter)
 
-        retm = map(lambda l: l.toH(), db.getPossibleMasters(id, start, end, filter))
+        retm = map(lambda l: l.toH(), db.getPossibleMasters(id, target_type, start, end, filter))
         countm = db.countPossibleMasters(id, filter)
 
         return {
