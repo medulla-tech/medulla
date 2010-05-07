@@ -48,13 +48,13 @@ if (isset($_POST["bconfirm"])) {
 
     $ret = xmlrpc_addServiceToTarget($item_uuid, $target_uuid, $params, $type);
 
-    // goto images list 
+    // goto images list
     if ($ret[0] and !isXMLRPCError()) {
         $str = sprintf(_T("Service <strong>%s</strong> added to boot menu", "imaging"), $label);
         new NotifyWidgetSuccess($str);
-        header("Location: ".urlStrRedirect("base/computers/imgtabs/".$type."tabservices", $params));
+        header("Location: ".urlStrRedirect("base/computers/".$type."imgtabs/".$type."tabservices", $params));
     } elseif ($ret[0]) {
-        header("Location: ".urlStrRedirect("base/computers/imgtabs/".$type."tabservices", $params));
+        header("Location: ".urlStrRedirect("base/computers/".$type."imgtabs/".$type."tabservices", $params));
     } else {
         new NotifyWidgetFailure($ret[1]);
     }
@@ -70,7 +70,7 @@ if(isset($_GET['gid'])) {
 
 if(isset($_GET['mod']))
     $mod = $_GET['mod'];
-else 
+else
     $mod = "none";
 
 switch($mod) {
@@ -110,11 +110,11 @@ function service_add($type, $target_uuid) {
     $f->add($check,                                         array("value" => web_def_service_default_WOL() ? "checked" : ""));
     $check = new TrFormElement(_T('Displayed on WOL', 'imaging'), new CheckboxTpl("do_display_WOL"));
     $f->add($check,                                         array("value" => web_def_service_hidden_WOL() ? "checked" : ""));
-    
+
     $f->addValidateButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();
-    
+
 }
 
 ?>

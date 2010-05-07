@@ -51,6 +51,7 @@ $start = empty($_GET["start"])              ? 0              : $_GET["start"];
 $end = empty($_GET["end"])                  ? $maxperpage    : $_GET["end"];
 $filter = empty($_GET["filter"])            ? ''             : $_GET['filter'];
 $actions = !$displayMaster;
+$is_in_profile = False;
 
 if ($type == 'group') {
     $all = xmlrpc_getProfileImages($_GET['gid'], $start, $end, $filter);
@@ -81,6 +82,7 @@ $a_desc = array();
 $a_desc = array();
 $a_date = array();
 $a_size = array();
+$a_fromprofile = array();
 $a_inbootmenu = array();
 $a_destroy = array();
 $l_im = array();
@@ -94,6 +96,9 @@ foreach ($images as $image) {
     // don't show action if image is in bootmenu
     if(!isset($image['menu_item'])) {
         $addActions[] = $addAction;
+    } elseif ($image['read_only']) {
+        $addActions[] = $emptyAction;
+        $is_in_profile = True;
     } else {
         $addActions[] = $delAction;
         $l_params['mi_itemid'] = $image['menu_item']['imaging_uuid'];
@@ -112,6 +117,7 @@ foreach ($images as $image) {
     $a_date[] = _toDate($image['creation_date']);
     $a_size[] = humanReadable($image['size']);
     $a_inbootmenu[] = (isset($image['menu_item'])?True:False);
+    $a_fromprofile[] = ($image['read_only']?True:False);
     $l_im[] = array($image['imaging_uuid'], $_GET['target_uuid'], $type);
 }
 
@@ -135,6 +141,10 @@ $l->addExtraInfo($a_desc, _T("Description", "imaging"));
 $l->addExtraInfo($a_date, _T("Created", "imaging"));
 $l->addExtraInfo($a_size, _T("Size (compressed)", "imaging"));
 $l->addExtraInfo($a_inbootmenu, _T("In boot menu", "imaging"));
+if ($is_in_profile) {
+    $l->addExtraInfo($a_fromprofile, _T("From profile", "imaging"));
+}
+
 $l->addActionItemArray($addActions);
 
 $l->addActionItem(
