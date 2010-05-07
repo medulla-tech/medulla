@@ -251,7 +251,7 @@ function item_list() {
             $actionDelete[] = $deleteAction;
         }
         if ($i == $root_len) {
-            if ($count == 1) {
+            if ($count == 1 || $root_len = $count - 1) {
                 $actionsDown[] = $emptyAction;
                 $actionsUp[] = $emptyAction;
             } else {
