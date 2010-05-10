@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: userquota\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-20 16:03+0200\n"
-"PO-Revision-Date: 2010-04-20 17:33+0200\n"
-"Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
+"POT-Creation-Date: 2010-05-10 10:03+0200\n"
+"PO-Revision-Date: 2010-05-10 10:04+0200\n"
+"Last-Translator: Nicolas Perrin <nperrin@mandriva.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -79,12 +79,12 @@ msgstr "Si l'option est activée, l'utilisateur doit changer son mot de passe lo
 
 #: modules/ppolicy/includes/ppolicy.inc.php:40
 msgid "Lockout duration"
-msgstr "Période de bloquage"
+msgstr "Période de blocage"
 
 #: modules/ppolicy/default/ppolicy.php:155
 #: modules/ppolicy/includes/publicFunc.php:156
 msgid "Lockout duration (seconds)"
-msgstr "Période de bloquage (secondes)"
+msgstr "Période de blocage (secondes)"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:38
 msgid "Maximum age"
@@ -125,7 +125,7 @@ msgstr "Taille minimum"
 #: modules/ppolicy/includes/publicFunc.php:103
 #: modules/ppolicy/includes/ppolicy.inc.php:44
 msgid "Number of grace authentications"
-msgstr "Nombre d'authentications autorisées en période de grâce"
+msgstr "Nombre d'authentifications autorisées en période de grâce"
 
 #: modules/ppolicy/infoPackage.inc.php:36
 msgid "Password Policy"
@@ -168,12 +168,12 @@ msgstr "Drapeau de réinitialisation du mot de passe"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:42
 msgid "Preventive lockout user"
-msgstr "Bloquage préventif de l'utilisateur"
+msgstr "Blocage préventif de l'utilisateur"
 
 #: modules/ppolicy/default/ppolicy.php:141
 #: modules/ppolicy/includes/publicFunc.php:142
 msgid "Preventive user lockout ?"
-msgstr "Bloquage préventif de l'utilisateur ?"
+msgstr "Blocage préventif de l'utilisateur ?"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:45
 msgid "Reset the password"
@@ -185,10 +185,7 @@ msgid ""
 "used to authenticate a user to the directory. If this attribute is not "
 "present or if its value is zero, users with expired password will not be "
 "allowed to authenticate."
-msgstr ""
-"Cet attribut contient le nombre d'authentifications possible avec un mot de "
-"passe expiré. Si cet attribut n'est pas présent ou est égal à 0, les "
-"utilisateurs dont le mot de passe est expiré ne pourrons pas s'authentifier."
+msgstr "Cet attribut contient le nombre d'authentifications possible avec un mot de passe expiré. Si cet attribut n'est pas présent ou est égal à 0, les utilisateurs dont le mot de passe est expiré ne pourrons pas s'authentifier."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:54
 msgid ""
@@ -196,7 +193,7 @@ msgid ""
 "will expire. If this attribute is not present, or if the value is 0 the "
 "password does not expire."
 msgstr ""
-"Cet attribut contient le nombre de secondes au bout du quel le mot de passe "
+"Cet attribut contient le nombre de secondes au bout duquel le mot de passe "
 "modifié expirera. Si cet attribut n'est pas présent ou est égal à 0, le mot "
 "de passe n'expire pas."
 
@@ -208,9 +205,9 @@ msgid ""
 "desired)."
 msgstr ""
 "Cet attribute contient le nombre de secondes qui doit s'écouler avant de "
-"pourvoir changer le mot de passe. Si cet attribut n'est pas présent, le "
-"temps est fixé à 0 secondes. (i.e. le mot de passe peut être modifié aussi "
-"souvent que désiré)"
+"pouvoir changer le mot de passe. Si cet attribut n'est pas présent, le temps "
+"est fixé à 0 secondes. (i.e. le mot de passe peut être modifié aussi souvent "
+"que désiré)"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:59
 msgid ""
@@ -234,7 +231,14 @@ msgid ""
 "it (due to a hashed password or other reasons) it will be accepted. A value "
 "of '2' indicates that the server will check the quality, and if the server "
 "is unable to verify it, it will return an error refusing the password."
-msgstr "Cet attribut indique comment la qualité du mot de passe est testée lors qu'il est ajouté ou modifié. Si cet attribut n'est pas présent, ou sa valeur est '0', le test de qualité n'est pas réalisé. Une valeur de '1' signifie que le serveur LDAP vérifiera sa qualité, et si le serveur ne peut pas le vérifier il sera tout de même accepté. Une valeur de '2' signifie que le serveur vérifiera sa qualité, et si le serveur ne peut pas le vérifier, il renverra une erreur et refusera le mot de passe."
+msgstr ""
+"Cet attribut indique comment la qualité du mot de passe est testée lors "
+"qu'il est ajouté ou modifié. Si cet attribut n'est pas présent, ou sa valeur "
+"est '0', le test de qualité n'est pas réalisé. Une valeur de '1' signifie "
+"que le serveur LDAP vérifiera sa qualité, et si le serveur ne peut pas le "
+"vérifier il sera tout de même accepté. Une valeur de '2' signifie que le "
+"serveur vérifiera sa qualité, et si le serveur ne peut pas le vérifier, il "
+"renverra une erreur et refusera le mot de passe."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:56
 msgid ""
@@ -257,7 +261,7 @@ msgstr ""
 "Cet attribut défini le nombre maximum d'échec à l'authentification "
 "consécutifs après lequel le mot de passe ne pourra plus être utilisé pour "
 "s'authentifier. Si cet attribut n'est pas présent ou est égal à 0, cette "
-"politique n'est pas appliquée. La valeur de \"Bloquage préventif de "
+"politique n'est pas appliquée. La valeur de \"Blocage préventif de "
 "l'utilisateur\" sera ignorée."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:61
@@ -295,14 +299,21 @@ msgid ""
 "Warning you have been logged using grace login mode. Please change your "
 "password as soon as possible using the password change page, else your "
 "account will be locked."
-msgstr "Avertissement: vous avez bien été authentifié, mais votre compte est en période de grâce. Changez votre mot de passe dès que possible en utilisant la page de changement de mot de passe. Dans le cas contraire, votre compte sera bientôt bloqué."
+msgstr ""
+"Avertissement: vous avez bien été authentifié, mais votre compte est en "
+"période de grâce. Changez votre mot de passe dès que possible en utilisant "
+"la page de changement de mot de passe. Dans le cas contraire, votre compte "
+"sera bientôt bloqué."
 
 #: modules/ppolicy/default/warnuser.php:40
 msgid ""
 "Warning your password has been reset by an administrator. Your LDAP account "
 "is restricted. Please change your password as soon as possible using the "
 "password change page."
-msgstr "Attention, votre mot de passe a été réinitialisé par un administrateur. Votre compte LDAP est restreint. Veuillez changer votre mot de passe dès que possible en utilisant la page de changement de mot de passe."
+msgstr ""
+"Attention, votre mot de passe a été réinitialisé par un administrateur. "
+"Votre compte LDAP est restreint. Veuillez changer votre mot de passe dès que "
+"possible en utilisant la page de changement de mot de passe."
 
 #: modules/ppolicy/includes/publicFunc.php:72
 msgid ""
