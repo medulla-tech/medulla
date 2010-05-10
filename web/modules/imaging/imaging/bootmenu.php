@@ -249,21 +249,21 @@ function item_list() {
         } else {
             $actionEdit[] = $editAction;
             $actionDelete[] = $deleteAction;
-        }
-        if ($i == $root_len) {
-            if ($count == 1 || $root_len = $count - 1) {
+            if ($i == $root_len) {
+                if ($count == 1 || $root_len == $count - 1) {
+                    $actionsDown[] = $emptyAction;
+                    $actionsUp[] = $emptyAction;
+                } else {
+                    $actionsDown[] = $downAction;
+                    $actionsUp[] = $emptyAction;
+                }
+            } elseif ($i > $root_len && $i == $nbItems-1) {
                 $actionsDown[] = $emptyAction;
-                $actionsUp[] = $emptyAction;
-            } else {
+                $actionsUp[] = $upAction;
+            } elseif ($i > $root_len) {
                 $actionsDown[] = $downAction;
-                $actionsUp[] = $emptyAction;
+                $actionsUp[] = $upAction;
             }
-        } elseif ($i > $root_len && $i == $nbItems-1) {
-            $actionsDown[] = $emptyAction;
-            $actionsUp[] = $upAction;
-        } elseif ($i > $root_len) {
-            $actionsDown[] = $downAction;
-            $actionsUp[] = $upAction;
         }
 
         $a_label[] = sprintf("%s%s) %s", $kind, $src, $entry['default_name']); # should be replaced by the label in the good language
