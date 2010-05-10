@@ -228,24 +228,32 @@ function item_list() {
             $a_desc[] = $entry['image']['desc'];
             $entry['default_name'] = $entry['image']['name'];
             $kind = 'IM';
+            if ($entry['read_only']) {
+                $url = '<img src="modules/imaging/graph/images/imaging-action-ro.png" style="vertical-align: middle" alt="'._T('master from the profile', 'imaging').'"/> ';
+            } else {
+                $url = '<img src="modules/imaging/graph/images/imaging-action.png" style="vertical-align: middle" alt="'._T('master', 'imaging').'"/> ';
+            }
         } else {
             $a_desc[] = $entry['boot_service']['default_desc'];
             $entry['default_name'] = $entry['boot_service']['default_name'];
             $kind = 'BS';
+            if ($entry['read_only']) {
+                $url = '<img src="modules/imaging/graph/images/service-action-ro.png" style="vertical-align: middle" alt="'._T('boot service from profile', 'imaging').'"/> ';
+            } else {
+                $url = '<img src="modules/imaging/graph/images/service-action.png" style="vertical-align: middle" alt="'._T('boot service', 'imaging').'"/> ';
+            }
         }
 
         $list_params[$i] = $params;
         $list_params[$i]["itemid"] = $entry['imaging_uuid'];
         $list_params[$i]["itemlabel"] = urlencode($entry['default_name']);
 
-        $src = '';
         if ($entry['read_only']) {
             $actionsDown[] = $emptyAction;
             $actionsUp[] = $emptyAction;
             $root_len += 1;
             $actionEdit[] = $emptyAction;
             $actionDelete[] = $emptyAction;
-            $src = 'P';
         } else {
             $actionEdit[] = $editAction;
             $actionDelete[] = $deleteAction;
@@ -266,7 +274,7 @@ function item_list() {
             }
         }
 
-        $a_label[] = sprintf("%s%s) %s", $kind, $src, $entry['default_name']); # should be replaced by the label in the good language
+        $a_label[] = sprintf("%s%s", $url, $entry['default_name']); # should be replaced by the label in the good language
         $a_default[] = $entry['default'];
         $a_display[] = ($entry['hidden'] ? False:True);
         $a_defaultWOL[] = $entry['default_WOL'];
