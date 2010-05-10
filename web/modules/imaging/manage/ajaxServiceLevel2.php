@@ -67,7 +67,9 @@ foreach ($services as $entry) {
         $addActions[] = $delAction;
     }
 
-    $a_label[]= sprintf("%s%s", (isset($script) && $script['is_local'] ? '' : '<img src="modules/imaging/graph/images/service-action.png" style="vertical-align: middle" /> '), $entry['default_name']);
+    $icon = '<img src="modules/imaging/graph/images/service-action.png" style="vertical-align: middle" /> ';
+
+    $a_label[]= sprintf("%s%s", $icon, $entry['default_name']);
     $a_desc[]= $entry['default_desc'];
     $a_in_boot_menu[]= (isset($entry['menu_item'])? True:False);
 }

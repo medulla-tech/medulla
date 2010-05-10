@@ -48,33 +48,44 @@ $filter = empty($_GET["filter"])                          ? ''             : $_G
 
 list($count, $scripts) = xmlrpc_getAllPostInstallScripts($location, $start, $end, $filter);
 
+$editAction = new ActionItem(_T("Edit script", "imaging"), "postinstall_edit", "edit", "image", "imaging", "manage");
+$deleteAction = new ActionPopupItem(_T("Delete", "imaging"), "postinstall_delete", "delete", "image", "imaging", "manage");
+$emptyAction = new EmptyActionItem();
+
+$a_edit = array();
+$a_delete = array();
 $a_label = array();
 $a_desc = array();
 foreach($scripts as $script) {
-    $a_label[]= sprintf("%s%s", ($script['is_local']?'':'<img src="modules/imaging/graph/images/service-action.png" style="vertical-align: middle" /> '), $script['default_name']);
+
+    if ($script['is_local']) {
+        $url = '<img src="modules/imaging/graph/images/postinst-action.png" style="vertical-align: middle" /> ';
+        $a_edit[] = $editAction;
+        $a_delete[] = $deleteAction;
+    } else {
+        $url = '<img src="modules/imaging/graph/images/postinst-action-ro.png" style="vertical-align: middle" /> ';
+        $a_edit[] = $emptyAction;
+        $a_delete[] = $emptyAction;
+    }
+    $a_label[]= sprintf("%s%s", $url, $script['default_name']);
     $a_desc[] = $script["default_desc"];
     $l_params = array();
     $l_params["itemid"] = $script['imaging_uuid'];
     $l_params["itemlabel"] = $script["default_name"];
     $list_params[] = $l_params;
+
 }
 
 // show scripts list
 $l = new OptimizedListInfos($a_label, _T("Name", "imaging"));
 $l->addExtraInfo($a_desc, _T("Description", "imaging"));
 $l->setParamInfo($list_params);
-$l->addActionItem(
-    new ActionItem(_T("Edit script", "imaging"),
-    "postinstall_edit", "edit", "image", "imaging", "manage")
-);
+$l->addActionItemArray($a_edit);
 $l->addActionItem(
     new ActionItem(_T("Duplicate", "imaging"),
     "postinstall_duplicate", "duplicatescript", "image", "imaging", "manage")
 );
-$l->addActionItem(
-    new ActionPopupItem(_T("Delete", "imaging"),
-    "postinstall_delete", "delete", "image", "imaging", "manage")
-);
+$l->addActionItemArray($a_delete);
 
 $l->setTableHeaderPadding(19);
 $l->disableFirstColumnActionLink();

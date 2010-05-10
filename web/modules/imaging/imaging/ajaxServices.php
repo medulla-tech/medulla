@@ -77,7 +77,8 @@ foreach ($menu as $entry) {
     }
 
     $list_params[]= $l_params;
-    $a_label[]= sprintf("%s%s", ($script['is_local']?'':'X) '), $entry['default_name']);
+    $icon = '<img src="modules/imaging/graph/images/service-action.png" style="vertical-align: middle" /> ';
+    $a_label[]= sprintf("%s%s", $icon, $entry['default_name']);
     $a_desc[]= $entry['default_desc'];
     $a_in_boot_menu[]= (isset($entry['menu_item'])? True:False);
     $a_from_profile[]= (isset($entry['menu_item'])? ($entry['menu_item']['read_only'] ? True:False):False);

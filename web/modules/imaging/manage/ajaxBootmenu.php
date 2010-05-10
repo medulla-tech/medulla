@@ -132,8 +132,11 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
             }
             $list_params[$i]["itemlabel"] = urlencode($default_name);
 
-            $kind .= $entry['imaging_uuid'];
-            $a_label[]= sprintf("%s%s", ($kind == 'IM' ? '':'<img src="modules/imaging/graph/images/service-action.png" style="vertical-align: middle" /> '), $default_name);
+            $a_label[]= sprintf("%s%s", (
+                $kind == 'IM' ?
+                     '<img src="modules/imaging/graph/images/imaging-action.png" style="vertical-align: middle" /> '
+                     :'<img src="modules/imaging/graph/images/service-action.png" style="vertical-align: middle" /> '
+                 ), $default_name);
             $a_default[] = $entry['default'];
             $a_display[] = ($entry['hidden'] ? False:True);
             $a_defaultWOL[] = $entry['default_WOL'];
