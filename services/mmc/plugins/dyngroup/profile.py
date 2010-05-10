@@ -26,7 +26,6 @@ Dyngroup implementation of the profile manager interface
 
 from pulse2.managers.profile import ComputerProfileI
 from mmc.plugins.dyngroup.database import DyngroupDatabase
-from mmc.plugins.dyngroup.qmanager import QueryManager
 
 class DyngroupProfile(ComputerProfileI):
     def getProfileByUUID(self, uuid):
@@ -42,6 +41,9 @@ class DyngroupProfile(ComputerProfileI):
         pass
 
     def delComputersFromProfile(self, computers_UUID, profile_UUID):
+        pass
+
+    def getForbiddenComputersUUID(self):
         pass
 
     # TODO need to be completed

@@ -107,7 +107,8 @@ if (isset($_POST["bdelmachine_x"])) {
         }
     }
 
-    $res = $group->delMembers($delmem) && $group->addMembers($newmem);
+    $ret_add = $group->addMembers($newmem);
+    $res = $group->delMembers($delmem) && $ret_add[0];
 
     if ($res) {
         if ($already_exists) {
@@ -137,10 +138,23 @@ if (isset($_POST["bdelmachine_x"])) {
             }
         }
     } else {
+        $names = array();
+        if (count($ret_add) == 2) {
+            foreach ($ret_add[1] as $uuid) {
+                $member = $listOfMembers[$uuid];
+                $names[] = $member['hostname'];
+                unset($members[$member['hostname']."##".$member['uuid']]);
+                unset($listOfMembers[$uuid]);
+            }
+        }
         if ($type == 0) {
             new NotifyWidgetFailure(_T("Group failed to modify", "dyngroup"));
         } else {
-            new NotifyWidgetFailure(_T("Profile failed to modify", "dyngroup"));
+            if (count($names) > 0) {
+                new NotifyWidgetFailure(sprintf(_T("Profile failed to modify.<br/>Can't add %s", "dyngroup"), implode(', ', $names)));
+            } else {
+                new NotifyWidgetFailure(_T("Profile failed to modify", "dyngroup"));
+            }
         }
     }
 } elseif (isset($_POST["bconfirm"]) and $name == '') {

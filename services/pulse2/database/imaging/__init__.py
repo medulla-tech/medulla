@@ -3115,6 +3115,41 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 excluded.append(str(disknum - 1) + ':0')
         return ' '.join(excluded)
 
+    def getForbiddenComputersUUID(self, profile_UUID = None):
+        """
+        @returns: return all the computers that already have an imaging menu
+        @rtype: list
+        """
+        session = create_session()
+        targets = session.query(Target).select_from(self.target \
+                .join(self.menu, self.target.c.fk_menu == self.menu.c.id) \
+            )
+        if profile_UUID == None:
+            targets = targets.filter(self.target.c.type == P2IT.COMPUTER).all()
+        else:
+            computers = ComputerProfileManager().getProfileContent(profile_UUID)
+            if computers:
+                computers = map(lambda c:c.uuid, computers)
+                targets = targets.filter(and_(self.target.c.type == P2IT.COMPUTER, not self.target.c.uuid.in_(computers)))
+            else:
+                targets = targets.filter(self.target.c.type == P2IT.COMPUTER).all()
+        session.close()
+        ret = map(lambda t:t.uuid, targets)
+        return ret
+
+    def areForbiddebComputers(self, computers_UUID):
+        """
+        @returns: return all the computers from the computer_UUID list that already have an imaging menu
+        @rtype: list
+        """
+        session = create_session()
+        targets = session.query(Target).select_from(self.target \
+                .join(self.menu, self.target.c.fk_menu == self.menu.c.id) \
+            ).filter(and_(self.target.c.uuid.in_(computers_UUID), self.target.c.type == P2IT.COMPUTER)).all()
+        session.close()
+        ret = map(lambda t:t.uuid, targets)
+        return ret
+
 def id2uuid(id):
     return "UUID%d" % id
 def uuid2id(uuid):

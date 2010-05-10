@@ -31,8 +31,13 @@ from pulse2.database.imaging.types import P2IT, P2ISS
 
 class ImagingProfile(ComputerProfileI):
     def addComputersToProfile(self, computers_UUID, profile_UUID):
-        ImagingDatabase().changeTargetsSynchroState([profile_UUID], P2IT.PROFILE, P2ISS.TODO)
+        return ImagingDatabase().changeTargetsSynchroState([profile_UUID], P2IT.PROFILE, P2ISS.TODO)
 
     def delComputersFromProfile(self, computers_UUID, profile_UUID):
-        ImagingDatabase().changeTargetsSynchroState([profile_UUID], P2IT.PROFILE, P2ISS.TODO)
+        return ImagingDatabase().changeTargetsSynchroState([profile_UUID], P2IT.PROFILE, P2ISS.TODO)
 
+    def getForbiddenComputersUUID(self, profile_UUID = None):
+        return ImagingDatabase().getForbiddenComputersUUID(profile_UUID)
+
+    def areForbiddebComputers(self, computer_UUID):
+        return ImagingDatabase().areForbiddebComputers(computer_UUID)

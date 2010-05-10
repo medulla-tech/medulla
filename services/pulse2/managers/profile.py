@@ -94,6 +94,27 @@ class ComputerProfileManager(Singleton):
         klass = self.components[self.main]
         return klass().getProfileContent(uuid)
 
+    def getForbiddenComputersUUID(self, profile_UUID = None):
+        " ask to all profile managers "
+        ret = []
+        for mod in self.components:
+            klass = self.components[mod]
+            if hasattr(klass, 'getForbiddenComputersUUID'):
+                r = klass().getForbiddenComputersUUID(profile_UUID)
+                ret.extend(r)
+        return ret
+
+    def areForbiddebComputers(self, computer_UUID):
+        " ask to all profile managers "
+        ret = []
+        for mod in self.components:
+            klass = self.components[mod]
+            if hasattr(klass, 'areForbiddebComputers'):
+                r = klass().areForbiddebComputers(computer_UUID)
+                ret.extend(r)
+        return ret
+
+
 #    def isdyn_group(self, ctx, gid):
 #        klass = self.components[self.main]
 #        return klass().isdyn_group(ctx, gid)
@@ -135,4 +156,8 @@ class ComputerProfileI:
     def getProfileContent(self, uuid):
         pass
 
+    def getForbiddenComputersUUID(self, profile_UUID = None):
+        return []
 
+    def areForbiddebComputers(self, computer_UUID):
+        return []

@@ -236,11 +236,28 @@ class RpcProxy(RpcProxyI):
 
     def addmembers_to_group(self, id, uuids):
         ctx = self.currentContext
+        # remove all the computers that cant be added to a profile from the list
+        didnt_work = []
+        are_some_to_remove = False
+        if self.isprofile(id):
+            computers = []
+            uuid2key = {}
+            for c in uuids:
+                computers.append(uuids[c]['uuid'])
+                uuid2key[uuids[c]['uuid']] = c
+            didnt_work = ComputerProfileManager().areForbiddebComputers(computers)
+            if len(didnt_work) > 0:
+                logging.getLogger().debug("Can't add the following computers in that profile %s : %s"%(str(id), str(didnt_work)))
+                for i in didnt_work:
+                    if uuid2key[i] in uuids:
+                        are_some_to_remove = True
+                        uuids.pop(uuid2key[i])
+
         ret = DyngroupDatabase().addmembers_to_group(ctx, id, uuids)
         # WIP : call ComputerProfileManager to add machines
         if len(uuids) != 0 and self.isprofile(id):
             ComputerProfileManager().addComputersToProfile(uuids, id)
-        return xmlrpcCleanup(ret)
+        return xmlrpcCleanup([ret and not are_some_to_remove, didnt_work])
 
     def delmembers_to_group(self, id, uuids):
         ctx = self.currentContext
@@ -267,6 +284,10 @@ class RpcProxy(RpcProxyI):
 
         # insert uuid in group with addmembers_to_group
         return self.addmembers_to_group(id, uuids)
+
+    def getForbiddenComputersUUID(self, profile_UUID = None):
+        ret = ComputerProfileManager().getForbiddenComputersUUID(profile_UUID)
+        return ret
 
     def share_with(self, id):
         ctx = self.currentContext
