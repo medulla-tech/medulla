@@ -50,14 +50,16 @@ function item_up() {
     $params = getParams();
     $item_uuid = $_GET['itemid'];
     $label = $_GET['itemlabel'];
-    $uuid = $params['uuid'];
 
     if (isset($_GET['gid'])) {
         $type = 'group';
+        $gid = $params['gid'];
+        $ret = xmlrpc_moveItemUpInMenu($gid, $type, $item_uuid);
     } else {
         $type = '';
+        $uuid = $params['uuid'];
+        $ret = xmlrpc_moveItemUpInMenu($uuid, $type, $item_uuid);
     }
-    $ret = xmlrpc_moveItemUpInMenu($uuid, $type, $item_uuid);
     if ($ret) {
         $str = sprintf(_T("Item <strong>%s</strong> moved up in the boot menu", "imaging"), urldecode($label));
         new NotifyWidgetSuccess($str);
@@ -66,7 +68,7 @@ function item_up() {
         new NotifyWidgetFailure($str);
     }
 
-    header("Location: " . urlStrRedirect("base/computers/imgtabs", $params));
+    header("Location: " . urlStrRedirect("base/computers/".$type."imgtabs", $params));
 }
 
 function item_down() {
@@ -77,10 +79,13 @@ function item_down() {
 
     if (isset($_GET['gid'])) {
         $type = 'group';
+        $gid = $params['gid'];
+        $ret = xmlrpc_moveItemDownInMenu($gid, $type, $item_uuid);
     } else {
         $type = '';
+        $uuid = $params['uuid'];
+        $ret = xmlrpc_moveItemDownInMenu($uuid, $type, $item_uuid);
     }
-    $ret = xmlrpc_moveItemDownInMenu($uuid, $type, $item_uuid);
     if ($ret) {
         $str = sprintf(_T("Item <strong>%s</strong> moved down in the boot menu", "imaging"), urldecode($label));
         new NotifyWidgetSuccess($str);
@@ -89,7 +94,7 @@ function item_down() {
         new NotifyWidgetFailure($str);
     }
 
-    header("Location: " . urlStrRedirect("base/computers/imgtabs", $params));
+    header("Location: " . urlStrRedirect("base/computers/".$type."imgtabs", $params));
 }
 
 function item_edit() {
@@ -194,9 +199,9 @@ function item_list() {
     $params = getParams();
 
     // forge params
-    $upAction = new ActionItem(_T("Move Up"), "imgtabs", "up", "item", "base", "computers", $type."tabbootmenu", "up");
-    $downAction = new ActionItem(_T("Move down"), "imgtabs", "down", "item", "base", "computers", $type."tabbootmenu", "down");
-    $editAction = new ActionItem(_T("Edit"), "imgtabs", "edit", "item", "base", "computers", $type."tabbootmenu", "edit");
+    $upAction = new ActionItem(_T("Move Up"), $type."imgtabs", "up", "item", "base", "computers", $type."tabbootmenu", "up");
+    $downAction = new ActionItem(_T("Move down"), $type."imgtabs", "down", "item", "base", "computers", $type."tabbootmenu", "down");
+    $editAction = new ActionItem(_T("Edit"), $type."imgtabs", "edit", "item", "base", "computers", $type."tabbootmenu", "edit");
     $deleteAction = new ActionPopupItem(_T("Delete"), "bootmenu_remove", "delete", "item", "base", "computers", $type."tabbootmenu", 300, "delete");
 
     $emptyAction = new EmptyActionItem();
