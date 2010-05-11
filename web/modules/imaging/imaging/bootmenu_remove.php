@@ -43,7 +43,7 @@ $item = xmlrpc_getMenuItemByUUID($item_uuid);
 
 $bs_uuid = $item['boot_service']['imaging_uuid'];
 $im_uuid = $item['image']['imaging_uuid'];
-                
+
 if(isset($_GET['gid'])) {
     $type = 'group';
     $target_uuid = $_GET['gid'];
@@ -51,22 +51,22 @@ if(isset($_GET['gid'])) {
     $type = '';
     $target_uuid = $_GET['uuid'];
 }
-    
+
 if (quickGet('valid')) {
     if (isset($bs_uuid)) {
         $ret = xmlrpc_delServiceToTarget($bs_uuid, $target_uuid, $type);
     } else {
         $ret = xmlrpc_delImageToTarget($im_uuid, $target_uuid, $type);
     }
-    if ($ret[0] and !isXMLRPCError()) {                     
-        $str = sprintf(_T("Menu Item <strong>%s</strong> removed from boot menu", "imaging"), $label);             
-        new NotifyWidgetSuccess($str);                      
+    if ($ret[0] and !isXMLRPCError()) {
+        $str = sprintf(_T("Menu Item <strong>%s</strong> removed from boot menu", "imaging"), $label);
+        new NotifyWidgetSuccess($str);
     } elseif (!$ret[0]) {
         new NotifyWidgetFailure($ret[1]);
     }
     $params['mod'] = 'remove_success';
     $params['tab'] = $type.$params['from'];
-    header("Location: " . urlStrRedirect("base/computers/imgtabs", $params));
+    header("Location: " . urlStrRedirect("base/computers/".$type."imgtabs", $params));
 }
 
 // show popup
