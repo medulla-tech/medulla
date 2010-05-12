@@ -67,6 +67,9 @@ class Glpi07(DyngroupDatabaseHelper):
             self._glpi_version_new = (self.glpi_version() >= '0.72')
         return self._glpi_version_new
 
+    def glpi_chosen_version(self):
+        return "0.7"
+
     def try_activation(self, config):
         self.config = config
         dburi = self.makeConnectionPath()

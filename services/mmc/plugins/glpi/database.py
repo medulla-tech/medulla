@@ -87,7 +87,8 @@ class Glpi(DyngroupDatabaseHelper):
             'getAllComments', 'getAllContactNums', 'getAllContacts', 'getAllEntities', 'getAllGroups', 'getAllHostnames', 'getAllLocations', \
             'getAllModels', 'getAllNetworks', 'getAllOs', 'getAllOsSps', 'getAllSoftwares', 'getAllVersion4Software', 'glpi_version_new', 'getMachineByMacAddress', \
             'getMachineByComment', 'getMachineByContact', 'getMachineByContactNum', 'getMachineByEntity', 'getMachineByGroup', 'getMachineByHostname', \
-            'getMachineByLocation', 'getMachineByModel', 'getMachineByNetwork', 'getMachineByOs', 'getMachineByOsSp', 'getMachineBySoftware', 'getMachineBySoftwareAndVersion'
+            'getMachineByLocation', 'getMachineByModel', 'getMachineByNetwork', 'getMachineByOs', 'getMachineByOsSp', 'getMachineBySoftware', 'getMachineBySoftwareAndVersion', \
+            'glpi_chosen_version'
             ]
         for i in methods:
             setattr(self, i, getattr(self.database, i))

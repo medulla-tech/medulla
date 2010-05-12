@@ -22,7 +22,7 @@
 
 """
 Glpi querymanager
-give informations to the dyngroup plugin to be able to build dyngroups 
+give informations to the dyngroup plugin to be able to build dyngroups
 on glpi informations
 """
 
@@ -106,12 +106,12 @@ def getAllSoftwares(ctx, value = ''):
 def getAllSoftwaresAndVersions(ctx, softname = "", version = None):
     ret = []
     if version == None:
-        if Glpi().glpi_version().find('0.8') == 0: # glpi in 0.8
+        if Glpi().glpi_chosen_version().find('0.8') == 0: # glpi in 0.8
             ret = unique(map(lambda x:x.name, Glpi().getAllSoftwares(ctx, softname)))
         else:
             ret = unique(map(lambda x:x.name, Glpi().getAllSoftwares(ctx, softname)))
     else:
-        if Glpi().glpi_version().find('0.8') == 0: # glpi in 0.8
+        if Glpi().glpi_chosen_version().find('0.8') == 0: # glpi in 0.8
             ret = unique(map(lambda x:x.name, Glpi().getAllVersion4Software(ctx, softname, version)))
         else:
             if Glpi().glpi_version_new():
@@ -131,7 +131,7 @@ def getAllContactNums(ctx, value = ''):
     return unique(map(lambda x:x.contact_num, Glpi().getAllContactNums(ctx, value)))
 
 def getAllComments(ctx, value = ''):
-    if Glpi().glpi_version().find('0.8') == 0:
+    if Glpi().glpi_chosen_version().find('0.8') == 0:
         return unique(map(lambda x:x.comment, Glpi().getAllComments(ctx, value)))
     else:
         return unique(map(lambda x:x.comments, Glpi().getAllComments(ctx, value)))
