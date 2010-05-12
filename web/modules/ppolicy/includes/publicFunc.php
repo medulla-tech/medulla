@@ -63,7 +63,7 @@ function _ppolicy_baseEdit($ldapArr, $postArr) {
     $f->add(
             new TrFormElement(_T("Password reset flag", "ppolicy"),
                               new CheckboxTpl("pwdReset"),
-                              array("tooltip" => _T("If checked, the user must change her password when she first binds to the LDAP directory after password is set or reset by a password administrator"))),
+                              array("tooltip" => _T("If checked, the user must change her password when she first binds to the LDAP directory after password is set or reset by a password administrator", "ppolicy"))),
             array("value" => $pwdReset)
             );
 
