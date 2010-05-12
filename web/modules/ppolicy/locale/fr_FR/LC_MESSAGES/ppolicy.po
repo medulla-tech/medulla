@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: userquota\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-05-10 10:03+0200\n"
-"PO-Revision-Date: 2010-05-10 10:04+0200\n"
+"PO-Revision-Date: 2010-05-12 17:31+0200\n"
 "Last-Translator: Nicolas Perrin <nperrin@mandriva.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -268,9 +268,7 @@ msgstr ""
 msgid ""
 "This flag allows to mark the password as having being reset by an "
 "administrator."
-msgstr ""
-"Cette option permet d'indiquer que le mot de passe à été remis à zéro par un "
-"administrateur."
+msgstr "Cette option permet d'indiquer que le mot de passe a été remis à zéro par un administrateur."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:57
 msgid ""
@@ -335,7 +333,7 @@ msgstr "activé"
 
 #: modules/ppolicy/default/ppolicy.php:69
 msgid "has been updated"
-msgstr "à été mis à jour"
+msgstr "a été mis à jour"
 
 #: modules/ppolicy/includes/auditCodes.php:10
 #: modules/ppolicy/includes/auditCodes.php:11
