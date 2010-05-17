@@ -1348,7 +1348,7 @@ class InventoryCreator(Inventory):
             elif len(m) > 1:
                 # If this computer has been registered twice, exit
                 session.close()
-                loggin.getLogger().error("Computer %s seem to appear more than one time in database" % hostname)
+                logging.getLogger().error("Computer %s seem to appear more than one time in database" % hostname)
                 return False
             else:
                 # Get the current computer
@@ -1394,16 +1394,29 @@ class InventoryCreator(Inventory):
                     if len(cols) == 0:
                         continue
                     try:
+                        cutted_cols = {}
+                        # Check if the length of fields is big enough to put the data
+                        for col in cols:
+                            cutted_cols[col] = cols[col]
+                            if hasattr(klass.c, col):
+                                length = getattr(klass.c, col)
+                                if hasattr(length.type, 'length'):
+                                    length = length.type.length
+                                    if len(cols[col]) >= length:
+                                        logging.getLogger().warning("The field %s of the table %s is going to be truncated at %s chars, please report to us."%(col, table, length))
+                                        logging.getLogger().debug("The value %s become %s"%(cols[col], cols[col][0:length]))
+                                        cutted_cols[col] = cols[col][0:length]
+
                         # Look up these columns in the inventory table
-                        id = self.getIdInTable(table, cols, session)
+                        id = self.getIdInTable(table, cutted_cols, session)
                         # Create them if none found
                         if id == None:
                             k = klass()
-                            for col in cols:
+                            for col in cutted_cols:
                                 if type(col) == str or type(col) == unicode:
-                                    setattr(k, col, cols[col])
+                                    setattr(k, col, cutted_cols[col])
                             session.save(k)
-                            # Immediatly flush this new row, because we need an
+                            # Immediately flush this new row, because we need an
                             # id
                             session.flush([k])
                             id = k.id
@@ -1426,7 +1439,7 @@ class InventoryCreator(Inventory):
                                     for col in ncols:
                                         setattr(n, col, ncols[col])
                                     session.save(n)
-                                    # Immediatly flush this new row, because
+                                    # Immediately flush this new row, because
                                     # we need an id
                                     session.flush([n])
                                     nid = n.id
