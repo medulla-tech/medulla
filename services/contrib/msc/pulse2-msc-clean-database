@@ -27,6 +27,7 @@ from sqlalchemy import *
 import sqlalchemy
 import logging
 import datetime
+import getopt
 
 STATES_TO_CLEANUP = ['done', 'failed', 'stop', 'stopped', 'over_timed']
 
@@ -151,23 +152,39 @@ def optimize_tables():
             logger.info("Table %s : optimisation done" % (table)) # FIXME: should check result ...
 
 def usage(argv):
-    print >> sys.stderr, 'Usage: %s <db_conn_string> <days>' % argv[0]
+    print >> sys.stderr, 'Usage: %s --uri=<db_conn_string> --days=<days> [--force]' % argv[0]
+    print >> sys.stderr, 'Purge command older than <day> and whom members\' current state belong to %s' % ', '.join(STATES_TO_CLEANUP)
     print >> sys.stderr, 'Where db_conn_string is a SQLAlchemy connection string, e.g. mysql://user:password@host/database'
     print >> sys.stderr, 'Where days is a positive integer specifying from which age the commands should be purged, e.g. 30 for 30 days'
+    print >> sys.stderr, 'If --force flag is given, purge commands regardless their current state'
     return 1
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        sys.exit(usage(sys.argv))
-
     try:
-        days = int(sys.argv[2])
-        if not days:
-            raise ValueError
-    except:
+        opts, args = getopt.getopt(sys.argv[1:], "", ["uri=", "force", "days="])
+    except getopt.GetoptError, err:
+        print >> sys.stderr, err
         sys.exit(usage(sys.argv))
 
-    mysql_db = create_engine(sys.argv[1])
+    days = 0
+    uri = ''
+    force = False
+    
+    for o, a in opts:
+        if o == '--days':
+            days = int(a)
+        if o == '--uri':
+            uri = a
+        if o == '--force':
+            STATES_TO_CLEANUP = ['wol_in_progress','wol_done','wol_failed','upload_in_progress','upload_done','upload_failed','execution_in_progress','execution_done','execution_failed','delete_in_progress','delete_done','delete_failed','inventory_in_progress','inventory_done','inventory_failed','reboot_in_progress','reboot_done','reboot_failed','halt_in_progress','halt_done','halt_failed','not_reachable','done','pause','paused','stop','stopped','scheduled','re_scheduled','failed','over_timed']
+            
+    if days == 0:
+        sys.exit(usage(sys.argv))
+
+    if uri == '':
+        sys.exit(usage(sys.argv))
+
+    mysql_db = create_engine(uri)
     metadata = MetaData(mysql_db)
 
     version = Table('version',
