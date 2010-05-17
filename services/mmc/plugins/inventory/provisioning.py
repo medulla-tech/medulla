@@ -19,6 +19,9 @@
 # along with Pulse 2; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
+"""
+Module to provide entities to user depending on their profile.
+"""
 
 import os.path
 import imp
@@ -37,7 +40,7 @@ class InventoryProvisionerConfig(ProvisionerConfig):
             PROFILEENTITY = 'profile_entity_'
             for option in self.options(self.section):
                 if option.startswith(PROFILEENTITY):
-                    self.profilesEntity[option.replace(PROFILEENTITY, '')] = self.get(self.section, option)        
+                    self.profilesEntity[option.replace(PROFILEENTITY, '').lower()] = self.get(self.section, option)
 
     def setDefault(self):
         ProvisionerConfig.setDefault(self)
@@ -74,9 +77,13 @@ class InventoryProvisioner(ProvisionerI):
             try:
                 entities = self.config.profilesEntity[profile].split()
             except KeyError:
-                self.logger.info("No entity defined in configuration file for profile '%s'" % profile)
-                self.logger.info("Setting user's entity to empty")
-                entities = []
+                if self.config.profilesEntity.has_key("default"):
+                    entities = self.config.profilesEntity["default"].split()
+                    self.logger.info("Set the default profile to user.")
+                else:
+                    self.logger.info("No entity defined in configuration file for profile '%s'" % profile)
+                    self.logger.info("Setting user's entity to empty")
+                    entities = []
             if profile and entities:
                 tmp = []
                 for entity in entities:
