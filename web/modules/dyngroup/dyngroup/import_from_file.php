@@ -37,7 +37,7 @@ if (isset($groupname) && $groupname != '' && !xmlrpc_group_name_exists($groupnam
     $content = file($_FILES['importfile']['tmp_name']);
     $content = array_map('chop', $content);
     $group->importMembers($elementare, $content);
-    new NotifyWidgetSuccess(_T("Group successfully modified", "dyngroup"));
+    new NotifyWidgetSuccess(_T("Group successfully created", "dyngroup"));
     header("Location: " . urlStrRedirect("base/computers/display", array('gid'=>$group->id)));
 } elseif (xmlrpc_group_name_exists($groupname)) {
     new NotifyWidgetFailure(sprintf(_T("A group already exists with name '%s'", "dyngroup"), $groupname));
