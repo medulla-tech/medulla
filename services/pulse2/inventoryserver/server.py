@@ -234,7 +234,8 @@ class TreatInv(Thread):
 
         except IOError, e:
             self.logger.exception(e)
-            self.logger.error(e.orig)
+            if hasattr(e, 'message') and e.message != '':
+                self.logger.error(e.mesage)
         except Exception, e:
             self.logger.exception(e)
 
