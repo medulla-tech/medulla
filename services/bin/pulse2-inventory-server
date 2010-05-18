@@ -22,9 +22,13 @@
 # MA 02110-1301, USA.
 
 # -*- coding: utf-8; -*-
+"""
+Binary file for the inventory server.
+"""
 
 import os
 import os.path
+from resource import RLIMIT_NOFILE, RLIM_INFINITY, getrlimit
 import sys
 import getopt
 import logging
@@ -60,18 +64,20 @@ def running(daemonize, inifile):
     logger.debug("Logger loaded")
     logger.info("Inventory server version('%s') build('%s')" % (str(getVersion()), str(getRevision())))
 
+    # if we daemonize, we start by that before trying to initialise the service
+    if daemonize:
+        daemon(config, inifile)
+        # No more log to stderr
+        logger.removeHandler(hdlr2)
+
     if InventoryGetService().initialise(config):
-        if daemonize:
-            daemon(config)
-            # No more log to stderr
-            logger.removeHandler(hdlr2)
         InventoryGetService().run()
         ret = 0
     else:
         ret = 1
     return ret
 
-def daemon(config):
+def daemon(config, inifile):
     """
     daemonize pulse2-inventory-server
 
@@ -107,12 +113,39 @@ def daemon(config):
     os.chdir("/")
     os.setsid()
 
+    if (hasattr(os, "devnull")):
+        REDIRECT_TO = os.devnull
+    else:
+        REDIRECT_TO = "/dev/null"
+
+    maxfd = getrlimit(RLIMIT_NOFILE)[1]
+    if maxfd == RLIM_INFINITY:
+        maxfd = 1024
+
+    for fd in range(0, maxfd):
+        try:
+            os.close(fd)
+        except OSError:
+            pass
+
+    os.open(REDIRECT_TO, os.O_RDWR)
+    os.dup2(0, 1)
+    os.dup2(0, 2)
+
+    # initialise the logging again
+    logging.config.fileConfig(inifile)
+    logger = logging.getLogger()
+
+    # When starting, we log to stderr too
+    hdlr2 = logging.StreamHandler()
+    logger.addHandler(hdlr2)
+
     # do second fork
     try:
         pid = os.fork()
         if pid > 0:
             # exit from second parent, print eventual PID before
-            print "Daemon PID %d" % pid
+            logger.debug("Daemon PID %d" % pid)
             os.seteuid(0)
             os.setegid(0)
             os.system("echo " + str(pid) + " > " + pidfile)
