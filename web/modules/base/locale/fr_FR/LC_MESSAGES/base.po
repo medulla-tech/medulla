@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: base\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-22 11:42+0200\n"
-"PO-Revision-Date: 2010-04-22 11:45+0200\n"
+"POT-Creation-Date: 2010-05-10 10:03+0200\n"
+"PO-Revision-Date: 2010-05-18 10:34+0200\n"
 "Last-Translator: Cédric Delfosse <cdelfosse@mandriva.com>\n"
 "Language-Team: français <fr@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -905,12 +905,12 @@ msgid "Password is empty."
 msgstr "Le mot de passe est vide."
 
 #: modules/base/includes/errorHandling.php:57
-msgid "Password is in history of old passwords."
-msgstr "Le mot de passe est dans l'historique des anciens mots de passe."
+msgid "Password is in history of old passwords"
+msgstr "Le mot de passe est dans l'historique des anciens mots de passe"
 
 #: modules/base/includes/errorHandling.php:63
-msgid "Password is not being changed from existing value."
-msgstr "Le mot de passe n'est pas changé de sa valeur actuelle."
+msgid "Password is not being changed from existing value"
+msgstr "Le mot de passe n'est pas changé de sa valeur actuelle"
 
 #: modules/ppolicy/includes/publicFunc.php:152
 msgid "Password maximum failure"
@@ -1603,7 +1603,7 @@ msgstr "russe"
 
 #: includes/commonErrorHandling.php:77
 msgid "smbpasswd failed to change your password entry"
-msgstr "smbpasswd n'a pas réussi a changé le mot de passe"
+msgstr "smbpasswd n'a pas réussi à changer le mot de passe"
 
 #: includes/i18n.inc.php:52
 msgid "spanish"
