@@ -964,7 +964,7 @@ class Glpi08(DyngroupDatabaseHelper):
         machines_uuid_size = len(a_machine_uuid)
         all_computers = session.query(Machine)
         all_computers = self.filterOnUUID(all_computers, a_machine_uuid).all()
-        all_computers = Set(map(lambda m:toUUID(str(m.ID)), all_computers))
+        all_computers = Set(map(lambda m:toUUID(str(m.id)), all_computers))
         if len(all_computers) != machines_uuid_size:
             self.logger.info("some machines have been deleted since that list was generated (%s)"%(str(Set(a_machine_uuid) - all_computers)))
             machines_uuid_size = len(all_computers)
