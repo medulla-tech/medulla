@@ -61,7 +61,6 @@ def isMenuStructure(menu):
         ret = False
     return ret
 
-
 class ImagingDefaultMenuBuilder:
 
     """

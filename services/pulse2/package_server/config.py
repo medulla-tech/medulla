@@ -319,12 +319,22 @@ class P2PServerCP(pulse2.utils.Singleton):
             masters_folder = 'masters'
             # will contain postinstall binaries
             postinst_folder = 'postinst'
+            # will contain archived computer imaging data
+            archives_folder = 'archives'
             # will contain generated ISO images
             isos_folder = '/var/lib/pulse2/imaging/isos'
             # tool used to generate ISO file
             isogen_tool = '/usr/bin/mkisofs'
             # will contain our UUID/MAC Addr cache
             uuid_cache_file = os.path.join(base_folder, 'uuid-cache.txt')
+            # RPC replay file
+            rpc_replay_file = os.path.join(base_folder, 'rpc-replay.pck')
+            # RPC replay loop timer in seconds
+            rpc_loop_timer = 60
+            # RPC to replay at each loop
+            rpc_count = 10
+            # Interval in seconds between two RPCs
+            rpc_interval = 2
             # Package Server UUID
             uuid = ""
 
@@ -360,12 +370,22 @@ class P2PServerCP(pulse2.utils.Singleton):
                 masters_folder = self.cp.get('imaging_api', 'masters_folder')
             if self.cp.has_option('imaging_api', 'postinst_folder'):
                 postinst_folder = self.cp.get('imaging_api', 'postinst_folder')
+            if self.cp.has_option('imaging_api', 'archives_folder'):
+                archives_folder = self.cp.get('imaging_api', 'archives_folder')
             if self.cp.has_option('imaging_api', 'isos_folder'):
                 isos_folder = self.cp.get('imaging_api', 'isos_folder')
             if self.cp.has_option('imaging_api', 'isogen_tool'):
                 isogen_tool = self.cp.get('imaging_api', 'isogen_tool')
             if self.cp.has_option('imaging_api', 'uuid_cache_file'):
                 uuid_cache_file = os.path.join(base_folder, self.cp.get('imaging_api', 'uuid_cache_file'))
+            if self.cp.has_option('imaging_api', 'rpc_replay_file'):
+                rpc_replay_file = os.path.join(base_folder, self.cp.get('imaging_api', 'rpc_replay_file'))
+            if self.cp.has_option('imaging_api', 'rpc_loop_timer'):
+                rpc_loop_timer = os.path.join(base_folder, self.cp.getint('imaging_api', 'rpc_loop_timer'))
+            if self.cp.has_option('imaging_api', 'rpc_count'):
+                rpc_count = os.path.join(base_folder, self.cp.getint('imaging_api', 'rpc_loop_timer'))
+            if self.cp.has_option('imaging_api', 'rpc_interval'):
+                rpc_interval = os.path.join(base_folder, self.cp.getint('imaging_api', 'rpc_interval'))
             if self.cp.has_option("imaging_api", 'uuid'):
                 uuid = self.cp.get("imaging_api", 'uuid')
             if not isUUID(uuid):
@@ -388,11 +408,16 @@ class P2PServerCP(pulse2.utils.Singleton):
                 'inventories_folder': inventories_folder,
                 'masters_folder'    : masters_folder,
                 'postinst_folder'   : postinst_folder,
+                'archives_folder'   : archives_folder,
                 'isos_folder'       : isos_folder,
                 'isogen_tool'       : isogen_tool,
                 'src'               : src,
                 'uuid'              : uuid,
-                'uuid_cache_file'   : uuid_cache_file}
+                'uuid_cache_file'   : uuid_cache_file,
+                'rpc_replay_file'   : rpc_replay_file,
+                'rpc_loop_timer'    : rpc_loop_timer,
+                'rpc_count'         : rpc_count,
+                'rpc_interval'      : rpc_interval}
 
         if self.cp.has_option("main", "package_detect_activate"):
             # WARN this must overide the previously defined activate if it is in the config file

@@ -45,6 +45,7 @@ from pulse2.package_server.imaging.menu import isMenuStructure, ImagingDefaultMe
 from pulse2.package_server.imaging.computer import ImagingComputerConfiguration
 from pulse2.package_server.imaging.iso import ISOImage
 from pulse2.package_server.imaging.archiver import Archiver
+from pulse2.package_server.imaging.rpcreplay import RPCReplay
 
 from pulse2.utils import isMACAddress, splitComputerPath, macToNode, isUUID, rfc3339Time, humanReadable
 from pulse2.apis import makeURL
@@ -118,6 +119,8 @@ class ImagingApi(MyXmlrpc):
             self.logger.error("Error while setting default computer boot menu: %s" % error)
 
         self.logger.debug('Starting package server internals initialization')
+        RPCReplay().init()
+        RPCReplay().firstRun()
         client = self._getXMLRPCClient()
         func = 'imaging.getDefaultMenuForRegistering'
         args = (self.config.imaging_api['uuid'], )
@@ -138,6 +141,7 @@ class ImagingApi(MyXmlrpc):
             PackageServerConfig().mmc_agent['localcert'])
 
     def xmlrpc_getServerDetails(self):
+        # FIXME: I don't know if it is needed
         pass
 
     def xmlrpc_logClientAction(self, mac, level, phase, message):
@@ -162,7 +166,7 @@ class ImagingApi(MyXmlrpc):
                 func = 'imaging.logClientAction'
                 args = (self.config.imaging_api['uuid'], result['uuid'], level, phase, message)
                 d = client.callRemote(func, *args)
-                d.addCallbacks(lambda x : True, client.onError, errbackArgs = (func, args, 0))
+                d.addCallbacks(lambda x : True, RPCReplay().onError, errbackArgs = (func, args, 0))
                 return d
 
             self.logger.warn('Imaging: Failed resolving UUID for client %s : %s' % (mac, result))
