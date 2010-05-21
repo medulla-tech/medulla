@@ -679,13 +679,11 @@ class DyngroupDatabase(DatabaseHelper):
                 session.close()
                 if ret:
                     into_results_old = into_results
-                    print into_results
                     into_results = []
                     ret = map(lambda m:m.FK_machines, ret)
                     for result in into_results_old:
                         if not result['FK_machines'] in ret:
                             into_results.append(result)
-                    print into_results
                 # Insert into ProfilesResults table only if there is something to insert
                 if into_results:
                     connection.execute(self.profilesResults.insert(), into_results)
