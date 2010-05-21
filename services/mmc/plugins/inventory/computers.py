@@ -1,7 +1,7 @@
 
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 #
-# $Id: computers.py 37 2008-04-15 13:21:32Z oroussy $
+# $Id$
 #
 # This file is part of MMC.
 #
@@ -46,11 +46,11 @@ class InventoryComputers(ComputerI):
 
     def getMachineMac(self, ctx, filt): # TODO : need to sort!
         machines = self.inventory.getMachineNetwork(ctx, filt)
-        ret = []
+        ret = {}
         for m in machines:
-            ret.append(map(lambda i: i['MACAddress'], m[1]))
-        if len(ret) == 1:
-            return ret[0]
+            ret[m[2]] = []
+            for net in m[1]:
+                ret[m[2]].append(net['MACAddress'])
         return ret
 
     def getMachineIp(self, ctx, filt): # TODO : need to sort!
