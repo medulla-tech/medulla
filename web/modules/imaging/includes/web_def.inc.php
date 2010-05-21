@@ -21,11 +21,15 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function __web_def_in_session($option) {
-    if (!isset($_SESSION["imaging.".$option])) {
-        $_SESSION["imaging.".$option] = xmlCall("imaging.get_web_def_" . $option);
+function __get_and_store_im($prefix, $option, $function) {
+    if (!isset($_SESSION[$prefix.".".$option])) {
+        $_SESSION[$prefix.".".$option] = xmlCall($prefix.".".$function);
     }
     return $_SESSION["imaging.".$option];
+}
+
+function __web_def_in_session($option) {
+    return __get_and_store_im("imaging", $option, "get_web_def_" . $option);
 }
 
 function web_def_date_fmt() {
