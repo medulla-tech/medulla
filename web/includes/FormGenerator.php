@@ -274,9 +274,10 @@ class InputTpl extends AbstractTpl{
         print '
                     var rege = '.$this->regexp.';
                     if ((rege.exec($(\''.$this->name.'\').value))!=null) {
-                        return true
+                        $(\''.$this->name.'\').setStyle({backgroundColor: \'\'});
+                        return true;
                     } else {
-                        $(\''.$this->name.'\').style.backgroundColor = \'pink\';
+                        $(\''.$this->name.'\').setStyle({backgroundColor: \'pink\'});
                         new Element.scrollTo(\'container_input_'.$this->name.'\');
                         return 0;
                     }
