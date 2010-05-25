@@ -1305,17 +1305,23 @@ class RpcProxy(RpcProxyI):
         @rtype: int
         """
         ctx = self.currentContext
-        macaddress = ComputerManager().getMachineMac(ctx,
-                                                     {'uuid':computerUUID})
+        query = ComputerManager().getMachineMac(ctx, {'uuid':computerUUID})
+        try:
+            macaddress = query[computerUUID]
+        except KeyError:
+            macaddress = []
         if len(macaddress) > 1:
             # More than one MAC address
             ret = 2
+        elif len(macaddress) < 1:
+            # No MAC address
+            ret = 1
         elif pulse2.utils.isLinuxMacAddress(macaddress[0]):
             # Valid MAC address
             ret = 0
         else:
-            # No MAC address
-            ret = 1
+            # Invalid MAC address
+            ret = 3
         return ret
 
     def checkProfileForImaging(self, profileUUID):
