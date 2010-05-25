@@ -46,6 +46,9 @@ list($count, $masters) = xmlrpc_getLocationImages($location, $start, $end, $filt
 if ($count == 0) {
     $l = new TitleElement(_T('No master available.', 'imaging'));
     $l->display();
+    print "<p>" . _T('To define a master, browse to the computers module ' .
+           'click on the imaging icon for the computer you wish to make a master from, then choose &quot;Images and ' .
+           'Masters&quot;, followed by clicking the edit button on a backup image to convert it to a master.', 'imaging') . "</p>";
     return;
 }
 // forge params
