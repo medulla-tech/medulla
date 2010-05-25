@@ -68,8 +68,22 @@ $f->add(
 $addParams = neededParamsAddComputer();
 foreach ($addParams as $p) {
     if ($p[1] == 'string') {
+        /* Protect input fields according to the field type */
+        switch ($p[0]) {
+        case "computerip":
+            $input = new IPInputTpl($p[0]);
+            break;
+        case "computermac":
+            $input = new MACInputTpl($p[0]);
+            break;
+        case "computernet":
+            $input = new IPInputTpl($p[0]);
+            break;
+        default:
+            $input = new IPInputTpl($p[0]);
+        }
         $f->add(
-            new TrFormElement(_($p[2]), new InputTpl($p[0])),
+            new TrFormElement(_($p[2]), $input),
             array("value" => '')
         );
     }
