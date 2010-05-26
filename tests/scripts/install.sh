@@ -129,6 +129,7 @@ fi
 
 packages_to_install
 if [ $DISTRIBUTION == "MandrivaLinux" ]; then
+    urpmi.update -a
     urpmi --auto --no-suggests $PKGS
     rpm -q $PKGS
 fi
