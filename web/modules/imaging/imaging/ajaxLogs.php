@@ -68,7 +68,7 @@ foreach ($db_logs as $log) {
 
     // get status
     if(!array_key_exists($status, $logStates)) {
-        $status = 'unknow';
+        $status = 'unknown';
     }
 
     // complete status display
@@ -77,28 +77,6 @@ foreach ($db_logs as $log) {
     //$status = $led->value.'&nbsp;'.$logStates[$status][0];
 
     $details = translate_details($log['detail']);
-
-    /*
-    $tmp_splitted_result = split(":",  $log['detail'], 2);
-    if (count($tmp_splitted_result) == 1) {
-        if (array_key_exists($tmp_splitted_result[0], $logMessages)) {
-            $details = $logMessages[$tmp_splitted_result[0]];
-        } else {
-            $details = $tmp_splitted_result[0]; # keep untouched
-        }
-    } elseif (count($tmp_splitted_result) == 2) {
-            $tmp_splitted_result[0] = trim($tmp_splitted_result[0]);
-            $tmp_splitted_result[1] = trim($tmp_splitted_result[1]);
-            if (array_key_exists($tmp_splitted_result[0], $logMessages)) {
-                $details = $logMessages[$tmp_splitted_result[0]];
-                $details .= ' : ';
-                $details .= $tmp_splitted_result[1]; // FIXME : this will be enhanced
-            } else {
-                $details = $tmp_splitted_result[0] . ' : ' . $tmp_splitted_result[1]; # keep untouched
-        }
-    } else { # keeps untranlated
-        $details = $log['detail'];
-        }*/
 
     $a_level[] = $log['imaging_log_level'];
     $a_date[] = $date;

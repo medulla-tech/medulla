@@ -22,7 +22,7 @@
  */
 
 $logStates = array(
-    "unknown" => array(_T("Status unknow", "imaging"), 'black'),
+    "unknown" => array(_T("Status unknown", "imaging"), 'black'),
     "boot" => array(_T("Boot", "imaging"), 'green'),
     "menu" => array(_T("Menu", "imaging"), 'green'),
     "restoration" => array(_T("Restoration", "imaging"), 'green'),
@@ -38,7 +38,6 @@ $logStates = array(
     "backup_in_progress" => array(_T("Backup in progress", "imaging"), 'orange'),
     "backup_done" => array(_T("Backup done", "imaging"), "green"),
     "backup_failed" => array(_T("Backup failed", "imaging"), "red"),
-    "unknow" => array(_T("Status unknow", "imaging"), "black"),
 );
 
 // Should be keepd syn with services/src/pulse2-imaging-server.c !!!
