@@ -103,7 +103,7 @@ class ImagingConfig(pulse2.utils.Singleton):
             if self.cp.has_option("package-server", "port"):
                 self.pserver_port = self.cp.getint("package-server", "port")
             if self.cp.has_option("package-server", "mount_point"):
-                self.pserver_mount_point = self.cp.getboolean("package-server", "mount_point")
+                self.pserver_mount_point = self.cp.get("package-server", "mount_point")
             if self.cp.has_option("package-server", "enablessl"):
                 self.pserver_enablessl = self.cp.getboolean("package-server", "enablessl")
             if self.cp.has_option("package-server", "password"):
