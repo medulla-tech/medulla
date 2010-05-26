@@ -78,6 +78,8 @@ $editAction = new ActionItem(_T("Edit image", "imaging"), "imgtabs", "edit", "im
 
 // forge params
 $params['from'] = 'tabimages';
+$list_params = array();
+$a_label = array();
 $a_desc = array();
 $a_desc = array();
 $a_date = array();
