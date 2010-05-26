@@ -53,6 +53,7 @@ $a_date = array();
 $a_target = array();
 $a_desc = array();
 $a_states = array();
+$list_params = array();
 foreach ($db_logs as $log) {
     $param = $params;
 
