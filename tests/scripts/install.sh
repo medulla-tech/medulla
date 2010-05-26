@@ -189,8 +189,14 @@ fi
 
 # Set NFS exports, and restart NFS services
 cp $TMPCO/pulse2/services/contrib/imaging-server/exports /etc/exports
-/etc/init.d/nfs-common restart
-/etc/init.d/nfs-server restart
+if [ $RELEASE != "2006.0" ];
+then
+    /etc/init.d/nfs-common restart
+    /etc/init.d/nfs-server restart
+else
+    /etc/init.d/portmap restart
+    /etc/init.d/nfs restart
+fi
 
 if [ $RELEASE != "2006.0" ];
 then
