@@ -99,6 +99,8 @@ class ImagingDefaultMenuBuilder:
         m.setDisklessCLI(self.menu['disklesscli'])
         m.setDiskSizeCheck(self.menu['dont_check_disk_size'])
         m.setEtherCard(int(self.menu['ethercard']))
+        if 'language' in self.menu:
+            m.setLanguage(int(self.menu['language']))
         for pos, entry in self.menu['bootservices'].items():
             m.addBootServiceEntry(int(pos), entry)
         for pos, entry in self.menu['images'].items():
@@ -130,6 +132,10 @@ class ImagingMenu:
     """
 
     DEFAULT_MENU_FILE = 'default'
+    LANG_CODE = { 1 : 'C',
+                  2 : 'fr_FR' }
+    KEYB_CODE = { 1 : None,
+                  2 : 'fr' }
 
     def __init__(self, config, macaddress = None):
         """
@@ -156,6 +162,7 @@ class ImagingMenu:
             'highlight': {'fg': 15, 'bg': 3}}
         self.keyboard = None # the menu keymap, None is C
         self.hidden = False # do we hide the menu ?
+        self.language = 'C' # Menu language
         self.bootcli = False # command line access at boot time ?
         self.disklesscli = False # command line access at diskless time ?
         self.ntblfix = False # NT Bootloader fix
@@ -164,31 +171,6 @@ class ImagingMenu:
 
         self.diskless_opts = list() # revo* options put on diskless command line
         self.kernel_opts = list(['quiet']) # kernel options put on diskless command line
-
-        # list of replacements to perform
-        # a replacement is using the following structure :
-        # key 'from' : the PCRE to look for
-        # key 'to' : the replacement to perform
-        # key 'when' : when to perform the replacement (only 'global' for now)
-        self.replacements = [
-            ('##PULSE2_LANG##', 'C', 'global'),
-            ('##PULSE2_BOOTLOADER_DIR##', self.config.imaging_api['bootloader_folder'], 'global'),
-            ('##PULSE2_BOOTSPLASH_FILE##', self.config.imaging_api['bootsplash_file'], 'global'),
-            ('##PULSE2_DISKLESS_DIR##', self.config.imaging_api['diskless_folder'], 'global'),
-            ('##PULSE2_DISKLESS_KERNEL##', self.config.imaging_api['diskless_kernel'], 'global'),
-            ('##PULSE2_DISKLESS_INITRD##', self.config.imaging_api['diskless_initrd'], 'global'),
-            ('##PULSE2_DISKLESS_MEMTEST##', self.config.imaging_api['diskless_memtest'], 'global'),
-            ('##PULSE2_DISKLESS_OPTS##', ' '.join(self.diskless_opts), 'global'),
-            ('##PULSE2_KERNEL_OPTS##', ' '.join(self.kernel_opts), 'global'),
-            ('##PULSE2_MASTERS_DIR##', self.config.imaging_api['masters_folder'], 'global'),
-            ('##PULSE2_POSTINST_DIR##', self.config.imaging_api['postinst_folder'], 'global'),
-            ('##PULSE2_COMPUTERS_DIR##', self.config.imaging_api['computers_folder'], 'global'),
-            ('##PULSE2_BASE_DIR##', self.config.imaging_api['base_folder'], 'global')]
-        if self.mac:
-            self.replacements.append(
-                ('##MAC##',
-                 pulse2.utils.reduceMACAddress(self.mac),
-                 'global'))
         self.protocol = 'nfs' # by default
 
     def _applyReplacement(self, string, condition = 'global'):
@@ -202,8 +184,33 @@ class ImagingMenu:
           - linux (linux-fmt MAC addr)
           - win (win-fmt MAC addr)
         """
+        # list of replacements to perform
+        # a replacement is using the following structure :
+        # key 'from' : the PCRE to look for
+        # key 'to' : the replacement to perform
+        # key 'when' : when to perform the replacement (only 'global' for now)
+        replacements = [
+            ('##PULSE2_LANG##', self.language, 'global'),
+            ('##PULSE2_BOOTLOADER_DIR##', self.config.imaging_api['bootloader_folder'], 'global'),
+            ('##PULSE2_BOOTSPLASH_FILE##', self.config.imaging_api['bootsplash_file'], 'global'),
+            ('##PULSE2_DISKLESS_DIR##', self.config.imaging_api['diskless_folder'], 'global'),
+            ('##PULSE2_DISKLESS_KERNEL##', self.config.imaging_api['diskless_kernel'], 'global'),
+            ('##PULSE2_DISKLESS_INITRD##', self.config.imaging_api['diskless_initrd'], 'global'),
+            ('##PULSE2_DISKLESS_MEMTEST##', self.config.imaging_api['diskless_memtest'], 'global'),
+            ('##PULSE2_DISKLESS_OPTS##', ' '.join(self.diskless_opts), 'global'),
+            ('##PULSE2_KERNEL_OPTS##', ' '.join(self.kernel_opts), 'global'),
+            ('##PULSE2_MASTERS_DIR##', self.config.imaging_api['masters_folder'], 'global'),
+            ('##PULSE2_POSTINST_DIR##', self.config.imaging_api['postinst_folder'], 'global'),
+            ('##PULSE2_COMPUTERS_DIR##', self.config.imaging_api['computers_folder'], 'global'),
+            ('##PULSE2_BASE_DIR##', self.config.imaging_api['base_folder'], 'global')]
+        if self.mac:
+            replacements.append(
+                ('##MAC##',
+                 pulse2.utils.reduceMACAddress(self.mac),
+                 'global'))
+
         output = string
-        for replacement in self.replacements:
+        for replacement in replacements:
             f, t, w = replacement
             if w == condition:
                 output = re.sub(f, t, output)
@@ -433,6 +440,20 @@ class ImagingMenu:
         assert(type(value) == unicode)
         self.message = value
 
+    def setLanguage(self, value):
+        """
+        Set menu language, and keyboard map to use
+        """
+        try:
+            self.language = self.LANG_CODE[value]
+        except KeyError:
+            self.language = 'C'
+        if not self.keyboard:
+            # Try to set a default keyboard according to the language
+            try:
+                self.keyboard = self.KEYB_CODE[value]
+            except IndexError:
+                pass
 
 class ImagingItem:
 
