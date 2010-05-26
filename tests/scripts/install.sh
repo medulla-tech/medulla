@@ -54,10 +54,10 @@ fi
 
 function packages_to_install () {
     # MySQL
-    PKGS="$PKGS mysql mysql-client"
+    PKGS="$PKGS mysql mysql-client nfs-utils nfs-utils-clients"
     if [ $RELEASE == "2010.0" -o $RELEASE == "2009.0" ];
         then
-        PKGS="$PKGS python-mysql nfs-utils nfs-utils-clients atftp-server dhcp-server rdate cdrkit-genisoimage ocsinventory-agent"
+        PKGS="$PKGS python-mysql atftp-server dhcp-server rdate cdrkit-genisoimage ocsinventory-agent"
     fi
 }
 
@@ -188,13 +188,16 @@ then
 fi
 
 # Set NFS exports, and restart NFS services
-cp $TMPCO/pulse2/services/contrib/imaging-server/exports  /etc/exports
+cp $TMPCO/pulse2/services/contrib/imaging-server/exports /etc/exports
 /etc/init.d/nfs-common restart
 /etc/init.d/nfs-server restart
 
-# Set ATFTPD root directory
-sed -i "s|ATFTPD_DIRECTORY=\"/var/lib/tftpboot\"|ATFTPD_DIRECTORY=\"/var/lib/pulse2/imaging\"|" /etc/sysconfig/atftpd
-/etc/init.d/atftpd restart
+if [ $RELEASE != "2006.0" ];
+then
+    # Set ATFTPD root directory
+    sed -i "s|ATFTPD_DIRECTORY=\"/var/lib/tftpboot\"|ATFTPD_DIRECTORY=\"/var/lib/pulse2/imaging\"|" /etc/sysconfig/atftpd
+    /etc/init.d/atftpd restart
+fi
 
 # Launch mmc-agent
 /etc/init.d/mmc-agent force-stop
