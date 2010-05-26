@@ -187,8 +187,14 @@ then
     cat /root/.ssh/id_dsa.pub > /root/.ssh/authorized_keys
 fi
 
-# Set NFS exports
+# Set NFS exports, and restart NFS services
 cp $TMPCO/pulse2/services/contrib/imaging-server/exports  /etc/exports
+/etc/init.d/nfs-common restart
+/etc/init.d/nfs-server restart
+
+# Set ATFTPD root directory
+sed -i "s|ATFTPD_DIRECTORY=\"/var/lib/tftpboot\"|ATFTPD_DIRECTORY=\"/var/lib/pulse2/imaging\"|" /etc/sysconfig/atftpd
+/etc/init.d/atftpd restart
 
 # Launch mmc-agent
 /etc/init.d/mmc-agent force-stop
