@@ -20,15 +20,19 @@
 
 
 # General Makefile variables
-DESTDIR = 
-PREFIX = /usr/local
-SBINDIR = $(PREFIX)/sbin
-BINDIR= $(PREFIX)/bin
-LIBDIR = $(PREFIX)/lib/mmc
-ETCDIR = /etc/mmc
-INITDIR = /etc/init.d
+DESTDIR ?=
+PREFIX ?= /usr/local
+SBINDIR ?= $(PREFIX)/sbin
+BINDIR ?= $(PREFIX)/bin
+LIBDIR ?= $(PREFIX)/lib/mmc
+ETCDIR ?= /etc/mmc
+INITDIR ?= /etc/init.d
 INSTALL = $(shell which install)
 SED = $(shell which sed)
+REINPLACE_CMD ?= $(REINPLACE_CMD)
+
+OWNER ?= root
+OGROUP ?= root
 
 # Python specific variables
 PYTHON = $(shell which python)
@@ -59,12 +63,12 @@ install:
 	-[ -d $(DESTDIR)$(ETCDIR) ] && mv -f $(DESTDIR)$(ETCDIR) $(DESTDIR)$(ETCDIR)$(BACKUP)
 	@echo ""
 	@echo "Creating directories..."
-	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(SBINDIR)
-	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(BINDIR)
-	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(LIBDIR)
-	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(LIBDIRBACKUP)
-	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(ETCDIR)
-	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(PYTHON_PREFIX)
+	$(INSTALL) -d -m 755 -o $(OWNER) -g $(OGROUP) $(DESTDIR)$(SBINDIR)
+	$(INSTALL) -d -m 755 -o $(OWNER) -g $(OGROUP) $(DESTDIR)$(BINDIR)
+	$(INSTALL) -d -m 755 -o $(OWNER) -g $(OGROUP) $(DESTDIR)$(LIBDIR)
+	$(INSTALL) -d -m 755 -o $(OWNER) -g $(OGROUP) $(DESTDIR)$(LIBDIRBACKUP)
+	$(INSTALL) -d -m 755 -o $(OWNER) -g $(OGROUP) $(DESTDIR)$(ETCDIR)
+	$(INSTALL) -d -m 755 -o $(OWNER) -g $(OGROUP) $(DESTDIR)$(PYTHON_PREFIX)
 
 	@echo ""
 	@echo "Install python code in $(DESTDIR)$(PYTHON_PREFIX)"
@@ -73,28 +77,26 @@ install:
 	@echo ""
 	@echo "Install LIBDIRBACKUP in $(DESTDIR)$(LIBDIRBACKUP)"
 
-	$(INSTALL) $(LIBFILESBACKUP) -m 755 -o root -g root $(DESTDIR)$(LIBDIRBACKUP)
+	$(INSTALL) -m 755 -o $(OWNER) -g $(OGROUP) $(LIBFILESBACKUP) $(DESTDIR)$(LIBDIRBACKUP)
 
 	@echo ""
 	@echo "Install SBINFILES in $(DESTDIR)$(SBINDIR)"
-	$(INSTALL) $(SBINFILES) -m 755 -o root -g root $(DESTDIR)$(SBINDIR)
+	$(INSTALL) -m 755 -o $(OWNER) -g $(OGROUP) $(SBINFILES) $(DESTDIR)$(SBINDIR)
 
 	@echo ""
 	@echo "Install BINFILES in $(DESTDIR)$(BINDIR)"
-	$(INSTALL) $(BINFILES) -m 755 -o root -g root $(DESTDIR)$(BINDIR)
+	$(INSTALL) -m 755 -o $(OWNER) -g $(OGROUP)  $(BINFILES) $(DESTDIR)$(BINDIR)
 
 	@echo ""
 	@echo "Install CONFILES in $(DESTDIR)$(ETCDIR)"
-	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(ETCDIR)/agent
-	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(ETCDIR)/agent/keys
-	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(ETCDIR)/plugins
-	$(INSTALL) conf/agent/config.ini -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/agent
-	$(INSTALL) conf/agent/keys/* -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/agent/keys
-	$(INSTALL) conf/plugins/* -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/plugins
-	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(INITDIR)
-	$(INSTALL) -m 755 -o root -g root init.d/mmc-agent $(DESTDIR)$(INITDIR)
-	$(SED) -i 's!^path[ \t].*$$!path = $(LIBDIR)/backup-tools!' $(DESTDIR)$(ETCDIR)/plugins/base.ini
-	$(SED) -i 's!##SBINDIR##!$(SBINDIR)!' $(DESTDIR)$(INITDIR)/mmc-agent
+	$(INSTALL) -d -m 755 -o $(OWNER) -g $(OGROUP) $(DESTDIR)$(ETCDIR)/agent
+	$(INSTALL) -d -m 755 -o $(OWNER) -g $(OGROUP) $(DESTDIR)$(ETCDIR)/agent/keys
+	$(INSTALL) -d -m 755 -o $(OWNER) -g $(OGROUP) $(DESTDIR)$(ETCDIR)/plugins
+	$(INSTALL) -m 600 -o $(OWNER) -g $(OGROUP) conf/agent/config.ini $(DESTDIR)$(ETCDIR)/agent
+	$(INSTALL) -m 600 -o $(OWNER) -g $(OGROUP) conf/agent/keys/* $(DESTDIR)$(ETCDIR)/agent/keys
+	$(INSTALL) -m 600 -o $(OWNER) -g $(OGROUP) conf/plugins/* $(DESTDIR)$(ETCDIR)/plugins
+	$(INSTALL) -d -m 755 -o $(OWNER) -g $(OGROUP) $(DESTDIR)$(INITDIR)
+	$(INSTALL) -m 755 -o $(OWNER) -g $(OGROUP) init.d/mmc-agent $(DESTDIR)$(INITDIR)
 
 ifndef NOCHECKPASSWORD
 	$(MAKE) -C openldap-check-password install CC=$(CC) INSTALL=$(INSTALL)
