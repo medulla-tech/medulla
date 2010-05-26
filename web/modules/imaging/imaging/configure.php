@@ -201,7 +201,7 @@ if (!$whose && !$menu) {
             foreach($parts as $part) {
                 $partnum = $part['num'] + 1;
                 $type = $parttype[$part['type']];
-                $length = humanSize($part['length']);
+                $length = humanSize($part['length'] * 512);
                 $msg = sprintf(_T("Partition number: %d", "imaging"),
                                $partnum);
                 $inputvar = "check_disk[$disk][$partnum]";
