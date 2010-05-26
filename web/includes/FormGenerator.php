@@ -344,7 +344,7 @@ class MACInputTpl extends InputTpl {
 class DomainInputTpl extends InputTpl {
 
     function DomainInputTpl($name) {
-        $this->InputTpl($name, '/^([a-z][a-z0-9-]*[a-z0-9]\.){0,10}[a-z][a-z0-9-]*[a-z0-9]$/');
+        $this->InputTpl($name, '/^([a-z0-9][a-z0-9-]*[a-z0-9]\.){0,10}[a-z0-9][a-z0-9-]*[a-z0-9]$/');
     }
 
 }
