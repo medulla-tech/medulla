@@ -134,11 +134,15 @@ if (!$whose && !$menu) {
     }
     $f->add(new TitleElement($msg, 3));
     $f->display();
-} else if (($type == '') && (xmlrpc_checkComputerForImaging($target_uuid) != 0)) {
+} else if (($type == '')
+           && ($is_registering)
+           && (xmlrpc_checkComputerForImaging($target_uuid) != 0)) {
     $msg = _T("The computer either doesn't have a MAC address, either has more than one MAC address. It can't be registered into the imaging module.", "imaging");
     $f->add(new TitleElement($msg, 3));
     $f->display();
-} else if (($type == 'group') && (xmlrpc_checkProfileForImaging($target_uuid) != 0)) {
+} else if (($type == 'group')
+           && ($is_registering)
+           && (xmlrpc_checkProfileForImaging($target_uuid) != 0)) {
     $msg = _T("The profile can't be registered into the imaging module.", "imaging");
     $f->add(new TitleElement($msg, 3));
     $f->display();
@@ -164,7 +168,61 @@ if (!$whose && !$menu) {
     $f->add(new HiddenTpl("target_name"),                    array("value" => $target_name,            "hide" => True));
     $f->add(new HiddenTpl("type"),                           array("value" => $type,                   "hide" => True));
 
-    $f->add(new TitleElement(_T("Please switch to expert mode now if you want to change these parameters.", "imaging"), 3));
+    if (($type == '') && (!$is_registering)) {
+        /* Add disks and partitions selector widget for registered computers
+           only, not profiles */
+        $inventory = xmlCall("imaging.getPartitionsToBackupRestore", $target_uuid);
+        if (!empty($inventory)) {
+            $f->add(new TitleElement(_T("Backup/restore hard disks and partitions selection", "imaging")));
+        }
+        ksort($inventory);
+        foreach($inventory as $disk => $parts) {
+            $disk = $disk + 1;
+            $msg = sprintf(_T("Hard disk number: %d", "imaging"), $disk);
+            $inputvar = "check_disk[$disk][0]";
+            if (isset($parts["exclude"])) {
+                $value = "";
+                unset($parts["exclude"]);
+            } else {
+                $value = "CHECKED";
+            }
+            $divid = "disk_div$disk";
+            $f->push(new DivForModule($msg, "#FFF"));
+            $f->push(new Table());
+            $f->add(new TrFormElement(_T("Select this hard disk", "imaging"), new CheckboxTpl($inputvar)),
+                    array("value" => $value,
+                          "extraArg"=>'onclick="toggleVisibility(\''. $divid .'\');"'));
+            $f->pop();
+            $diskdiv = new Div(array("id" => $divid));
+            $diskdiv->setVisibility($value == "CHECKED");
+            $f->push($diskdiv);
+            $f->push(new Table());
+            ksort($parts);
+            foreach($parts as $part) {
+                $partnum = $part['num'] + 1;
+                $type = $parttype[$part['type']];
+                $length = humanSize($part['length']);
+                $msg = sprintf(_T("Partition number: %d", "imaging"),
+                               $partnum);
+                $inputvar = "check_disk[$disk][$partnum]";
+                $text = "$type $length";
+                if (isset($part["exclude"])) {
+                    $value = "";
+                    unset($part["exclude"]);
+                } else {
+                    $value = "CHECKED";
+                }
+                $f->add(new TrFormElement($msg,
+                                          new CheckboxTpl($inputvar, $text)),
+                        array("value" => $value));
+            }
+            $f->pop();
+            $f->pop();
+            $f->pop();
+        }
+    }
+
+    $f->add(new TitleElement(_T("Please switch to expert mode now if you want to change more parameters.", "imaging"), 3));
 
     $f->push(new DivExpertMode());
 
@@ -251,61 +309,6 @@ if (!$whose && !$menu) {
     );
 
     $f->pop();
-
-    if (($type == '') && (!$is_registering)) {
-        /* Add disks and partitions selector widget for registered computers
-           only, not profiles */
-        $inventory = xmlCall("imaging.getPartitionsToBackupRestore", $target_uuid);
-        if (!empty($inventory)) {
-            $f->add(new TitleElement(_T("Backup/restore disks selection", "imaging")));
-        }
-        ksort($inventory);
-        foreach($inventory as $disk => $parts) {
-            $disk = $disk + 1;
-            $msg = sprintf(_T("Disk number: %d", "imaging"), $disk);
-            $inputvar = "check_disk[$disk][0]";
-            if (isset($parts["exclude"])) {
-                $value = "";
-                unset($parts["exclude"]);
-            } else {
-                $value = "CHECKED";
-            }
-            $divid = "disk_div$disk";
-            $f->push(new DivForModule($msg, "#FFF"));
-            $f->push(new Table());
-            $f->add(new TrFormElement(_T("Enable this disk", "imaging"), new CheckboxTpl($inputvar)),
-                    array("value" => $value,
-                          "extraArg"=>'onclick="toggleVisibility(\''. $divid .'\');"'));
-            $f->pop();
-            $diskdiv = new Div(array("id" => $divid));
-            $diskdiv->setVisibility($value == "CHECKED");
-            $f->push($diskdiv);
-            $f->push(new Table());
-            ksort($parts);
-            foreach($parts as $part) {
-                $partnum = $part['num'] + 1;
-                $type = $parttype[$part['type']];
-                $length = humanSize($part['length']);
-                $msg = sprintf(_T("Partition number: %d", "imaging"),
-                               $partnum);
-                $inputvar = "check_disk[$disk][$partnum]";
-                $text = "$type $length";
-                if (isset($part["exclude"])) {
-                    $value = "";
-                    unset($part["exclude"]);
-                } else {
-                    $value = "CHECKED";
-                }
-                $f->add(new TrFormElement($msg,
-                                          new CheckboxTpl($inputvar, $text)),
-                        array("value" => $value));
-            }
-            $f->pop();
-            $f->pop();
-            $f->pop();
-        }
-    }
-
 
     $f->addValidateButton("bvalid");
 
