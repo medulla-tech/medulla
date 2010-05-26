@@ -1973,6 +1973,7 @@ class RpcProxy(RpcProxyI):
                     imagingData = {'menu':menu, 'uuid':uuid}
                     ctx = self.currentContext
                     MACAddress = ComputerManager().getMachineMac(ctx, {'uuid':uuid})
+                    MACAddress = MACAddress[uuid]
                     def treatRegister(result, location = location, uuid = uuid, db = db):
                         if result:
                             db.changeTargetsSynchroState([uuid], target_type, P2ISS.DONE)
