@@ -244,7 +244,7 @@ class ImagingMenu:
 
         # the key mapping
         if self.keyboard == 'fr':
-            buf += 'keybfr\n'
+            buf += 'kbdfr\n'
 
         # do we hide the menu ? Splash screen will still be displayed
         if self.hidden:
