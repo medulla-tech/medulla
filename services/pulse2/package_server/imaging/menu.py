@@ -94,6 +94,7 @@ class ImagingDefaultMenuBuilder:
         m.setDefaultItem(int(self.menu['default_item']))
         m.setProtocol(self.menu['protocol'])
         m.setBootCLI(self.menu['bootcli'])
+        m.hide(self.menu['hidden_menu'])
         if 'ntblfix' in self.menu :
             m.setNTBLFix(self.menu['ntblfix'])
         m.setDisklessCLI(self.menu['disklesscli'])
@@ -454,6 +455,13 @@ class ImagingMenu:
                 self.keyboard = self.KEYB_CODE[value]
             except IndexError:
                 pass
+
+    def hide(self, flag):
+        """
+        Hide or display menu
+        """
+        assert(type(flag) == bool)
+        self.hidden = flag
 
 class ImagingItem:
 
