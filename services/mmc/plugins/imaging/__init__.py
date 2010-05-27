@@ -2283,8 +2283,8 @@ class RpcProxy(RpcProxyI):
         elif not is_registrated:
             is_pregistrated = db.isTargetRegister(p.getUUID(), P2IT.PROFILE)
             if not is_pregistrated:
-                logger.info("profile %s needs to be registered in %s"%(profile, imaging_server_uuid))
-                # TODO!
+                logger.error("profile %s don't exists in %s"%(profile, imaging_server_uuid))
+                return [False, "profile %s don't exists in %s"%(profile, imaging_server_uuid)]
 
             logger.info("computer %s (%s) needs to be registered in the profile %s" % (hostname, MACAddress, profile))
             ctx = self.currentContext
