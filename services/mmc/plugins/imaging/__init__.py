@@ -2473,6 +2473,10 @@ class RpcProxy(RpcProxyI):
                 except:
                     pass
             db.computerChangeDefaultMenuItem(imaging_server_uuid, computer_uuid, item_number)
+
+            # need to send back the menu to the package server
+            self.__synchroTargets([computer_uuid], P2IT.COMPUTER)
+
         except Exception, e:
             logging.getLogger().exception(e)
             return [False, str(e)]
