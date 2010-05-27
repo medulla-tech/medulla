@@ -30,7 +30,7 @@ from pulse2.database.imaging import ImagingDatabase
 from pulse2.database.imaging.types import P2IT, P2ISS
 
 class ImagingProfile(ComputerProfileI):
-    def addComputersToProfile(self, computers_UUID, profile_UUID):
+    def addComputersToProfile(self, ctx, computers_UUID, profile_UUID):
         # TODO need to put the menu and synchronize
         if ImagingDatabase().isTargetRegister(profile_UUID, P2IT.PROFILE):
             ret1 = ImagingDatabase().putComputersInProfile(profile_UUID, computers_UUID)

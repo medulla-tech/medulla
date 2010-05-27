@@ -231,7 +231,7 @@ class RpcProxy(RpcProxyI):
         ret = DyngroupDatabase().reload_group(ctx, id, queryManager)
         # WIP : call ComputerProfileManager to add machines
         if self.isprofile(id):
-            ComputerProfileManager().addComputersToProfile([1, 2], id) # fake!
+            ComputerProfileManager().addComputersToProfile(ctx, [1, 2], id) # fake!
         return xmlrpcCleanup(ret)
 
     def addmembers_to_group(self, id, uuids):
@@ -253,10 +253,8 @@ class RpcProxy(RpcProxyI):
                         are_some_to_remove = True
                         uuids.pop(uuid2key[i])
 
-        ret = DyngroupDatabase().addmembers_to_group(ctx, id, uuids)
-        # WIP : call ComputerProfileManager to add machines
         if len(uuids) != 0 and self.isprofile(id):
-            ComputerProfileManager().addComputersToProfile(uuids, id)
+            ComputerProfileManager().addComputersToProfile(ctx, uuids, id)
         return xmlrpcCleanup([ret and not are_some_to_remove, didnt_work])
 
     def delmembers_to_group(self, id, uuids):

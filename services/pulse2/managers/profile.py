@@ -50,6 +50,10 @@ class ComputerProfileManager(Singleton):
         return True
 
     ##############################
+    def getProfileByNameImagingServer(self, name, is_uuid):
+        klass = self.components[self.main]
+        return klass().getProfileByNameImagingServer(name, is_uuid)
+
     def getProfileByName(self, name):
         pass
 
@@ -71,13 +75,13 @@ class ComputerProfileManager(Singleton):
     def doesProfileExistsByUUID(self, uuid):
         pass
 
-    def addComputersToProfile(self, computers_UUID, profile_UUID):
+    def addComputersToProfile(self, ctx, computers_UUID, profile_UUID):
         " ask to all profile managers "
         ret = True
         for mod in self.components:
             klass = self.components[mod]
             if hasattr(klass, 'addComputersToProfile'):
-                r = klass().addComputersToProfile(computers_UUID, profile_UUID)
+                r = klass().addComputersToProfile(ctx, computers_UUID, profile_UUID)
                 ret = ret and r
         return ret
 
@@ -136,6 +140,9 @@ class ComputerProfileI:
         """
         pass
 
+    def getProfileByNameImagingServer(self, name, is_uuid):
+        pass
+
     def doesProfileExistsByName(self, name):
         pass
 
@@ -151,7 +158,7 @@ class ComputerProfileI:
     def doesProfileExistsByUUID(self, uuid):
         pass
 
-    def addComputersToProfile(self, computers_UUID, profile_UUID):
+    def addComputersToProfile(self, ctx, computers_UUID, profile_UUID):
         pass
 
     def delComputersFromProfile(self, computers_UUID, profile_UUID):
