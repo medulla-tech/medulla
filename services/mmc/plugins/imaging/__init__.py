@@ -2467,6 +2467,11 @@ class RpcProxy(RpcProxyI):
         db = ImagingDatabase()
         logger = logging.getLogger()
         try:
+            if type(item_number) != int:
+                try:
+                    item_number = int(item_number)
+                except:
+                    pass
             db.computerChangeDefaultMenuItem(imaging_server_uuid, computer_uuid, item_number)
         except Exception, e:
             logging.getLogger().exception(e)
