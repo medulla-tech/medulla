@@ -95,8 +95,8 @@ class ImagingDefaultMenuBuilder:
         m.setProtocol(self.menu['protocol'])
         m.setBootCLI(self.menu['bootcli'])
         m.hide(self.menu['hidden_menu'])
-        if 'ntblfix' in self.menu :
-            m.setNTBLFix(self.menu['ntblfix'])
+        if 'update_nt_boot' in self.menu:
+            m.setNTBLFix(self.menu['update_nt_boot'])
         m.setDisklessCLI(self.menu['disklesscli'])
         m.setDiskSizeCheck(self.menu['dont_check_disk_size'])
         m.setEtherCard(int(self.menu['ethercard']))
@@ -260,7 +260,7 @@ class ImagingMenu:
             self.diskless_opts.append('revodebug')
 
         # Shall be fix NT Boot Loaders ?
-        if self.disklesscli:
+        if self.ntblfix:
             self.diskless_opts.append('revontblfix')
 
         # Shall be fix check the disk size ?
