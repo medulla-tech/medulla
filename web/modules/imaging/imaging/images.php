@@ -135,7 +135,7 @@ function image_edit($target_uuid, $type, $item_uuid) {
         $is_master = $image['is_master'];
         $f = create_form(!$is_master, $image, $target_uuid, $label, $image["desc"]);
 
-        $f->addButton("bvalid", _T("Save"));
+        $f->addButton("bvalid", _T("Save", "imaging"));
         if ($image['is_master']) {
             $f->addButton("bconvert_image", _T("Save (converting to image)", "imaging"));
         } else {
