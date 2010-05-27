@@ -56,9 +56,6 @@ if (($type == '' && (xmlrpc_isComputerRegistered($target_uuid) || xmlrpc_isCompu
         case 'edit':
             image_edit($target_uuid, $type, $itemid);
             break;
-        case 'add':
-            image_add($type, $target_uuid);
-            break;
         case 'convert':
             image_convert();
             break;
@@ -73,26 +70,6 @@ if (($type == '' && (xmlrpc_isComputerRegistered($target_uuid) || xmlrpc_isCompu
     /* register the target (computer or profile) */
     $params = array('target_uuid'=>$target_uuid, 'type'=>$type, 'from'=>"services", "target_name"=>$target_name);
     header("Location: " . urlStrRedirect("base/computers/".$type."register_target", $params));
-}
-
-
-function image_add($type, $target_uuid) {
-
-    $params = getParams();
-    // add to menu
-    $item_uuid = $_GET['itemid'];
-    $label = urldecode($_GET['itemlabel']);
-
-    $ret = xmlrpc_addImageToTarget($item_uuid, $target_uuid);
-
-    if($ret[0]) {
-        // goto images list
-        $str = sprintf(_T("Image <strong>%s</strong> added to boot menu", "imaging"), $label);
-        new NotifyWidgetSuccess($str);
-        header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
-    } else {
-        new NotifyWidgetFailure($ret[1]);
-    }
 }
 
 function image_edit($target_uuid, $type, $item_uuid) {

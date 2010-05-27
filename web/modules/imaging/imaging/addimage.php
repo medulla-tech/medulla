@@ -38,7 +38,7 @@ if (isset($_POST["bconfirm"])) {
     }
 
     $item_uuid = $_POST['itemid'];
-    $label = urldecode($_POST['itemlabel']);
+    $label = stripslashes(urldecode($_POST['itemlabel']));
 
     $params['name'] = $_POST['default_mi_label'];
     $params['hidden'] = ($_POST['do_display'] != 'on');
