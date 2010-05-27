@@ -329,6 +329,16 @@ class DyngroupDatabase(DatabaseHelper):
 
     ####################################
     ## PROFILE ACCESS
+    def getProfileByNameImagingServer(self, name, is_uuid):
+        """
+        Get a profile given it's name and it's imaging server's uuid
+        """
+        session = create_session()
+        q = session.query(Groups).select_from(self.groups.join(self.groupType).join(self.profilesData))
+        q = q.filter(and_(self.groupType.c.value == 'Profile', self.groups.c.name == name, self.profilesData.c.imaging_uuid == is_uuid)).all()
+        session.close()
+        return q
+
     def getProfileByUUID(self, uuid):
         """
         Get a profile given it's uuid
@@ -702,6 +712,12 @@ def uuid2id(uuid):
 
 ##############################################################################################################
 class Groups(object):
+    def getUUID(self):
+        if hasattr(self, 'id'):
+            return self.id
+        logging.getLogger().warn("try to get %s uuid!"%(type(self)))
+        return False
+
     def toH(self):
         ret = {
             'id':self.id,
