@@ -59,6 +59,7 @@ install-imaging-server:
 	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(VARDIR)/inventories
 	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(VARDIR)/masters
 	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(VARDIR)/isos
+	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(VARDIR)/archives
 
 	@echo "Installing binaries ..."
 	$(INSTALL) -m 755 -o root -g root src/pulse2-imaging-server $(SBINDIR)/pulse2-imaging-server
