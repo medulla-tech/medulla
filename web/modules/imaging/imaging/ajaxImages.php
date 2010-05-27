@@ -171,6 +171,7 @@ $l->setItemCount($count);
 $l->setNavBar(new AjaxNavBar($count, $filter, "updateSearchParamform".($actions?'image':'master')));
 $l->start = 0;
 $l->end = $maxperpage;
+$l->setTableHeaderPadding(19);
 $l->display();
 
 ?>

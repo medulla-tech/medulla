@@ -300,6 +300,7 @@ function item_list() {
         $l->addActionItemArray($actionDelete);
     }
     $l->disableFirstColumnActionLink();
+    $l->setTableHeaderPadding(19);
     $l->display();
 }
 

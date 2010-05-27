@@ -97,6 +97,7 @@ $l->setItemCount($count);
 $l->setNavBar(new AjaxNavBar($count, $filter, "updateSearchParamLevel2"));
 $l->start = 0;
 $l->end = $maxperpage;
+$l->setTableHeaderPadding(19);
 $l->display();
 
 ?>
