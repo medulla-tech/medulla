@@ -677,7 +677,7 @@ class ImagingApi(MyXmlrpc):
                 func = 'imaging.imageRegister'
                 args = (self.config.imaging_api['uuid'], c_uuid, imageUUID, isMaster, name, desc, path, size, creationDate, creator)
                 d = client.callRemote(func, *args)
-                d.addCallbacks(_onSuccess, client.onError, errbackArgs = (func, args, False))
+                d.addCallbacks(_onSuccess, RPCReplay().onError, errbackArgs = (func, args, False))
                 return d
 
         if not isUUID(imageUUID):
