@@ -52,7 +52,12 @@ if (isset($_POST["bvalid"])) {
     $label = urldecode($_POST['itemlabel']);
 
     $params['default_name'] = $_POST['default_m_label'];
+    $params['timeout'] = $_POST['default_m_timeout'];
+    $params['hidden_menu'] = $_POST['hidden_menu'];
+    /*
+    rest_wait is MTFTP timeout
     $params['timeout'] = $_POST['rest_wait'];
+    */
     $params['background_uri'] = $_POST['boot_xpm'];
     $params['message'] = $_POST['boot_msg'];
     $params['protocol'] = $_POST['rest_type'];
@@ -200,12 +205,12 @@ if (!$whose && !$menu) {
             ksort($parts);
             foreach($parts as $part) {
                 $partnum = $part['num'] + 1;
-                $type = $parttype[$part['type']];
+                $ptype = $parttype[$part['type']];
                 $length = humanSize($part['length'] * 512);
                 $msg = sprintf(_T("Partition number: %d", "imaging"),
                                $partnum);
                 $inputvar = "check_disk[$disk][$partnum]";
-                $text = "$type $length";
+                $text = "$ptype $length";
                 if (isset($part["exclude"])) {
                     $value = "";
                     unset($part["exclude"]);
@@ -232,6 +237,19 @@ if (!$whose && !$menu) {
     $f->add(
         new TrFormElement(_T('Default menu label', 'imaging'),
         new InputTpl("default_m_label")), array("value" => $menu['default_name'])
+    );
+    $f->add(
+        new TrFormElement(_T('Menu timeout', 'imaging'),
+        new InputTpl("default_m_timeout")), array("value" => $menu['timeout'])
+    );
+    if ($menu['hidden_menu']) {
+        $hmchecked = 'CHECKED';
+    } else {
+        $hmchecked = '';
+    }
+    $f->add(
+        new TrFormElement(_T('Hide menu', 'imaging'),
+        new CheckBoxTpl("hidden_menu")), array("value" => $hmchecked)
     );
     $f->pop();
 
