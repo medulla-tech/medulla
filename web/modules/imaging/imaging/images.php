@@ -44,7 +44,7 @@ if (isset($_GET['gid']) && $_GET['gid'] != '') {
 }
 $itemid = $_GET['itemid'];
 
-if (($type == '' && xmlrpc_isComputerRegistered($target_uuid)) || ($type == 'group' && xmlrpc_isProfileRegistered($target_uuid)))  {
+if (($type == '' && (xmlrpc_isComputerRegistered($target_uuid) || xmlrpc_isComputerInProfileRegistered($target_uuid))) || ($type == 'group' && xmlrpc_isProfileRegistered($target_uuid)))  {
 
 
     if(isset($_GET['mod']))

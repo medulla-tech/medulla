@@ -54,6 +54,17 @@ function xmlrpc_isComputerRegistered($machine_uuid) {
     return ($_SESSION["imaging.isComputerRegistered_".$machine_uuid] == 1);
 }
 
+function xmlrpc_isComputerInProfileRegistered($machine_uuid) {
+    if (!isset($_SESSION["imaging.isComputerInProfileRegistered_".$machine_uuid])) {
+        $ret = xmlCall("imaging.isComputerInProfileRegistered", array($machine_uuid));
+        if ($ret) {
+            $_SESSION["imaging.isComputerInProfileRegistered_".$machine_uuid] = $ret;
+        }
+        return $ret;
+    }
+    return ($_SESSION["imaging.isComputerInProfileRegistered_".$machine_uuid] == 1);
+}
+
 function xmlrpc_canIRegisterThisComputer($target_uuid) {
     return xmlCall("imaging.canIRegisterThisComputer", array($target_uuid));
 }
