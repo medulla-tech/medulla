@@ -31,10 +31,22 @@ from pulse2.database.imaging.types import P2IT, P2ISS
 
 class ImagingProfile(ComputerProfileI):
     def addComputersToProfile(self, computers_UUID, profile_UUID):
-        return ImagingDatabase().changeTargetsSynchroState([profile_UUID], P2IT.PROFILE, P2ISS.TODO)
+        # TODO need to put the menu and synchronize
+        if ImagingDatabase().isTargetRegister(profile_UUID, P2IT.PROFILE):
+            ret1 = ImagingDatabase().putComputersInProfile(profile_UUID, computers_UUID)
+            ret2 = ImagingDatabase().changeTargetsSynchroState([profile_UUID], P2IT.PROFILE, P2ISS.TODO)
+            ret3 = ImagingDatabase().changeTargetsSynchroState(computers_UUID, P2IT.COMPUTER, P2ISS.TODO)
+
+            return ret1 and ret2 and ret3
+        return True
 
     def delComputersFromProfile(self, computers_UUID, profile_UUID):
-        return ImagingDatabase().changeTargetsSynchroState([profile_UUID], P2IT.PROFILE, P2ISS.TODO)
+        # TODO need to remove the menu and the registering
+        if ImagingDatabase().isTargetRegister(profile_UUID, P2IT.PROFILE):
+            ret1 = ImagingDatabase().delComputersFromProfile(profile_UUID, computers_UUID)
+            ret2 = ImagingDatabase().changeTargetsSynchroState([profile_UUID], P2IT.PROFILE, P2ISS.TODO)
+            return ret1 and ret2
+        return True
 
     def getForbiddenComputersUUID(self, profile_UUID = None):
         return ImagingDatabase().getForbiddenComputersUUID(profile_UUID)
