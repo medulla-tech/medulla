@@ -2282,12 +2282,16 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return True
 
     def __modifyMenu(self, menu_uuid, params, session = None):
+        """
+        Modify menu in database according to params dict content
+        """
         session_need_to_close = False
         if session == None:
             session_need_to_close = True
             session = create_session()
         menu = self.getMenuByUUID(menu_uuid, session)
         need_to_be_save = False
+        # FIXME: could be factorized
         if params.has_key('default_name') and menu.default_name != params['default_name']:
             need_to_be_save = True
             menu.default_name = params['default_name']
@@ -2295,6 +2299,13 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if params.has_key('timeout') and menu.timeout != params['timeout']:
             need_to_be_save = True
             menu.timeout = params['timeout']
+        if 'hidden_menu' in params and params['hidden_menu']:
+            params['hidden_menu'] = 1
+        else:
+            params['hidden_menu'] = 0
+        if menu.hidden_menu != params['hidden_menu']:
+            need_to_be_save = True
+            menu.hidden_menu = params['hidden_menu']
         if params.has_key('background_uri') and menu.background_uri != params['background_uri']:
             need_to_be_save = True
             menu.background_uri = params['background_uri']
@@ -2500,7 +2511,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         """
         If this entity is linked to an imaging server, returns it's uuid, if not (or if the entity do not exists), return None
         """
-        q = session.query(ImagingServer).\
+        q = session.query(ImagingServer). \
             select_from(self.imaging_server.join(self.entity)).\
             filter(self.imaging_server.c.associated == 1).\
             filter(self.entity.c.uuid == loc_id).\
@@ -3329,7 +3340,7 @@ class MasteredOn(DBObject):
     to_be_exported = ['fk_image', 'image', 'fk_imaging_log', 'imaging_log']
 
 class Menu(DBObject):
-    to_be_exported = ['id', 'default_name', 'fk_name', 'timeout', 'background_uri', 'message', 'ethercard', 'bootcli', 'disklesscli', 'dont_check_disk_size', 'fk_default_item', 'fk_default_item_WOL', 'fk_protocol', 'protocol', 'synchrostate']
+    to_be_exported = ['id', 'default_name', 'fk_name', 'timeout', 'background_uri', 'message', 'ethercard', 'bootcli', 'disklesscli', 'dont_check_disk_size', 'hidden_menu', 'debug', 'update_nt_boot', 'fk_default_item', 'fk_default_item_WOL', 'fk_protocol', 'protocol', 'synchrostate']
     i18n = ['fk_name']
 
 class MenuItem(DBObject):
