@@ -46,7 +46,7 @@ $logMessages = array(
    "hardware inventory sent" => _T("Hardware Inventory sent", "imaging"),
    "hardware inventory not received" => _T("Hardware Inventory not received", "imaging"),
    "hardware inventory not injected" => _T("Hardware Inventory not injected", "imaging"),
-   "Hardware Inventory Updated" => _T("Hardware Inventory updated", "imaging"),
+   "hardware inventory updated" => _T("Hardware Inventory updated", "imaging"),
    "client identified" => _T("Client Identified", "imaging"),
    "client not identified" => _T("Client not Identified", "imaging"),
    "asked an image UUID" => _T("Asked an image UUID", "imaging"),
@@ -79,6 +79,7 @@ $logMessages = array(
  * info will be changed (add <a > ...)
  */
 function translate_details($str) {
+    global $logMessages;
     $tmp_splitted_result = split(":",  $str, 2);
     if (count($tmp_splitted_result) == 1) {
         if (array_key_exists($tmp_splitted_result[0], $logMessages)) {
