@@ -1,7 +1,7 @@
 #
 # (c) 2008 Mandriva, http://www.mandriva.com/
 #
-# $Id: group.py 5110 2010-01-25 14:26:53Z jpbraun $
+# $Id$
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
 #
@@ -30,6 +30,9 @@ from mmc.plugins.dyngroup.database import DyngroupDatabase
 class DyngroupProfile(ComputerProfileI):
     def getProfileByUUID(self, uuid):
         return DyngroupDatabase().getProfileByUUID(uuid)
+
+    def getProfileImagingServerUUID(self, uuid):
+        return DyngroupDatabase().getProfileImagingServer(uuid)
 
     def getComputersProfile(self, uuid):
         return DyngroupDatabase().getComputersProfile(uuid)

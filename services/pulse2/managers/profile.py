@@ -3,7 +3,7 @@
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # (c) 2007-2010 Mandriva, http://www.mandriva.com/
 #
-# $Id: group.py 3688 2009-02-12 14:34:39Z nrueff $
+# $Id$
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
 #
@@ -59,6 +59,10 @@ class ComputerProfileManager(Singleton):
     def getProfileByUUID(self, uuid):
         klass = self.components[self.main]
         return klass().getProfileByUUID(uuid)
+
+    def getProfileImagingServerUUID(self, uuid):
+        klass = self.components[self.main]
+        return klass().getProfileImagingServerUUID(uuid)
 
     def getComputersProfile(self, uuid):
         klass = self.components[self.main]
@@ -136,6 +140,9 @@ class ComputerProfileI:
         pass
 
     def getProfileByUUID(self, uuid):
+        pass
+
+    def getProfileImagingServerUUID(self, uuid):
         pass
 
     def getComputersProfile(self, uuid):
