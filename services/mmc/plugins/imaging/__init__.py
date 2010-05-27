@@ -2230,6 +2230,18 @@ class RpcProxy(RpcProxyI):
         if imaging_server == None:
             return [False, "Failed to find the imaging server %s" % imaging_server_uuid]
 
+        p = None
+        if profile != '':
+            # we have to register as a profile element
+            is_uuid = imaging_server[0].getUUID()
+            if not is_uuid:
+                return [False, "Failed to find the correct profile (%s) in %s"%(profile, imaging_server_uuid)]
+            p = ComputerProfileManager().getProfileByNameImagingServer(profile, is_uuid)
+            if type(p) == list:
+                if len(p) != 1:
+                    return [False, "Failed to find the correct profile (%s) in %s"%(profile, imaging_server_uuid)]
+                p = p[0]
+
         loc_id = imaging_server[1].uuid
         computer = {
             'computername': hostname, # FIXME : what about domain ?
@@ -2256,7 +2268,8 @@ class RpcProxy(RpcProxyI):
             logger.debug("computer %s (%s) already exists, we dont need to declare it again" % (hostname, MACAddress))
 
         target_type = P2IT.COMPUTER
-        if not db.isTargetRegister(uuid, target_type):
+        is_registrated = db.isTargetRegister(uuid, target_type)
+        if not is_registrated and p == None:
             logger.info("computer %s (%s) needs to be registered" % (hostname, MACAddress))
             params = {
                 'target_name': hostname,
@@ -2267,12 +2280,21 @@ class RpcProxy(RpcProxyI):
             # As it in some way returns a deferred object, it is run in
             # background
             self.synchroComputer(uuid)
+        elif not is_registrated:
+            is_pregistrated = db.isTargetRegister(p.getUUID(), P2IT.PROFILE)
+            if not is_pregistrated:
+                logger.info("profile %s needs to be registered in %s"%(profile, imaging_server_uuid))
+                # TODO!
+
+            logger.info("computer %s (%s) needs to be registered in the profile %s" % (hostname, MACAddress, profile))
+            ctx = self.currentContext
+            ret1 = ComputerProfileManager().addComputersToProfile(ctx, {uuid:{'uuid':uuid, 'hostname':hostname}}, p.getUUID())
+            if not ret1:
+                logger.error("failed to put the computer %s (%s) in the profile %s" % (hostname, MACAddress, profile))
+                return [False, "failed to put the computer %s (%s) in the profile %s" % (hostname, MACAddress, profile)]
+            self.synchroComputer(uuid)
         else:
             logger.debug("computer %s (%s) dont need registration" % (hostname, MACAddress))
-
-        if profile:
-            # TODO
-            pass
 
 #        if entities:
 #            # TODO
