@@ -40,6 +40,13 @@ if (!isset($is_registering)) {
 }
 $params = getParams();
 
+$opts = array('hidden_menu' => _T('Hide menu', 'imaging'),
+              'bootcli' => _T('GRUB command line access', 'imaging'),
+              'dont_check_disk_size' => _T('Do not check hard disk size', 'imaging'),
+              'update_nt_boot' => _T('Update the NT boot loader if the hard disk has changed', 'imaging'),
+              'disklesscli' => _T('Diskless Linux command line access', 'imaging')
+              );
+
 if (isset($_POST["bvalid"])) {
     $type = $_POST["type"];
     $target_uuid = $_POST['target_uuid'];
@@ -53,7 +60,9 @@ if (isset($_POST["bvalid"])) {
 
     $params['default_name'] = $_POST['default_m_label'];
     $params['timeout'] = $_POST['default_m_timeout'];
-    $params['hidden_menu'] = $_POST['hidden_menu'];
+    foreach($opts as $key => $str) {
+        $params[$key] = $_POST[$key];
+    }
     /*
     rest_wait is MTFTP timeout
     $params['timeout'] = $_POST['rest_wait'];
@@ -242,15 +251,16 @@ if (!$whose && !$menu) {
         new TrFormElement(_T('Menu timeout', 'imaging'),
         new InputTpl("default_m_timeout")), array("value" => $menu['timeout'])
     );
-    if ($menu['hidden_menu']) {
-        $hmchecked = 'CHECKED';
-    } else {
-        $hmchecked = '';
+
+    foreach($opts as $key => $str) {
+        if ($menu[$key]) {
+            $value = 'CHECKED';
+        } else {
+            $value = '';
+        }
+        $f->add(new TrFormElement($str, new CheckBoxTpl($key)),
+                array("value" => $value));
     }
-    $f->add(
-        new TrFormElement(_T('Hide menu', 'imaging'),
-        new CheckBoxTpl("hidden_menu")), array("value" => $hmchecked)
-    );
     $f->pop();
 
     $f->add(new TitleElement(_T("Restoration options", "imaging")));
