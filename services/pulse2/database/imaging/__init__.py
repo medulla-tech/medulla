@@ -499,13 +499,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return ret
 
     def __getTargetsMenuQuery(self, session):
-        # WIP i18n
         return session.query(Menu).add_column(self.internationalization.c.label).select_from(self.menu \
                 .join(self.target, self.target.c.fk_menu == self.menu.c.id) \
                 .join(self.imaging_server, self.target.c.fk_entity == self.imaging_server.c.fk_entity) \
                 .outerjoin(self.internationalization, and_(self.internationalization.c.id == self.menu.c.fk_name, self.internationalization.c.fk_language == self.imaging_server.c.fk_language)) \
         )
-        #return session.query(Menu).select_from(self.menu.join(self.target, self.target.c.fk_menu == self.menu.c.id))
 
     def getTargetsMenuTID(self, target_id):
         session = create_session()
@@ -532,7 +530,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q[0]
 
     def getDefaultSuscribeMenu(self, location, session = None):
-        # WIP i18n
         need_to_close_session = False
         if session == None:
             need_to_close_session = True
@@ -541,7 +538,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = session.query(Menu).add_column(self.internationalization.c.label).select_from(self.menu \
                 .outerjoin(self.internationalization, and_(self.internationalization.c.id == self.menu.c.fk_name, self.internationalization.c.fk_language == lang)) \
             ).filter(self.menu.c.id == 2).first()
-#        q = session.query(Menu).filter(self.menu.c.id == 2).first()
         if need_to_close_session:
             session.close()
         if q == None: return q
@@ -571,7 +567,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if session == None:
             need_to_close_session = True
             session = create_session()
-        # WIP i18n
         j = self.menu.join(self.imaging_server).join(self.entity).outerjoin(self.internationalization, and_(self.internationalization.c.id == self.menu.c.fk_name, self.internationalization.c.fk_language == self.imaging_server.c.fk_language))
         q = session.query(Menu).add_column(self.internationalization.c.label).select_from(j)
         q = q.filter(self.entity.c.uuid == loc_id)
@@ -589,7 +584,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if session == None:
             need_to_close_session = True
             session = create_session()
-        # WIP i18n
         q = session.query(Menu).add_column(self.internationalization.c.label).select_from(self.menu \
                 .join(self.target, self.target.c.fk_menu == self.menu.c.id) \
                 .join(self.imaging_server, self.imaging_server.c.fk_entity == self.target.c.fk_entity) \
@@ -945,7 +939,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             q1 = q1.all()
         bs_ids = map(lambda bs:bs[1], q1)
         q2 = self.__PossibleBootServiceAndMenuItem(session, bs_ids, menu.id)
-        # WIP
         profile = ComputerProfileManager().getComputersProfile(target_uuid)
         if profile != None:
             # this should be the profile uuid!
@@ -1020,10 +1013,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def __addMenuDefaults(self, session, menu, mi, params):
         is_menu_modified = False
-        if params.has_key('default') and params['default']:
+        if params.has_key('default') and 'default' in params and params['default']:
             is_menu_modified = True
             menu.fk_default_item = mi.id
-        if params.has_key('default_WOL') and params['default_WOL']:
+        if params.has_key('default_WOL') and 'default_WOL' in params and params['default_WOL']:
             is_menu_modified = True
             menu.fk_default_item_WOL = mi.id
         if is_menu_modified:
@@ -1051,6 +1044,44 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if is_menu_modified:
             session.save_or_update(menu)
         return menu
+
+    def __computerChangeDefaultMenuItem(self, session, menu, mis, item_number):
+        mi = mis[item_number]
+        params = {'default':True}
+        self.__addMenuDefaults(session, menu, mi, params)
+
+    def computerChangeDefaultMenuItem(self, imaging_server_uuid, computer_uuid, item_number):
+        session = create_session()
+
+        profile = ComputerProfileManager().getComputersProfile(computer_uuid)
+        menu = self.getTargetsMenuTUUID(computer_uuid, session)
+        if profile != None:
+            # this should be the profile uuid!
+            menu_root = self.getTargetsMenuTUUID(profile.id, session)
+            mis = session.query(MenuItem).select_from(self.menu_item.join(self.menu, self.menu.c.id == self.menu_item.c.fk_menu))
+            mis = mis.filter(self.menu.c.id == menu_root.id).order_by(self.menu_item.c.order).all()
+            root_len = len(mis)
+            if root_len > item_number:
+                self.__computerChangeDefaultMenuItem(session, menu, mis, item_number)
+            else:
+                mis = session.query(MenuItem).select_from(self.menu_item.join(self.menu, self.menu.c.id == self.menu_item.c.fk_menu))
+                mis = mis.filter(self.menu.c.id == menu.id).order_by(self.menu_item.c.order).all()
+                if len(mis) > item_number:
+                    self.__computerChangeDefaultMenuItem(session, menu, mis, item_number - root_len)
+                else:
+                    session.close()
+                    raise Exception("can't get that element of the menu")
+        else:
+            mis = session.query(MenuItem).select_from(self.menu_item.join(self.menu, self.menu.c.id == self.menu_item.c.fk_menu))
+            mis = mis.filter(self.menu.c.id == menu.id).order_by(self.menu_item.c.order).all()
+            if len(mis) > item_number:
+                self.__computerChangeDefaultMenuItem(session, menu, mis, item_number)
+            else:
+                session.close()
+                raise Exception("can't get that element of the menu")
+        session.flush()
+        session.close()
+        return True
 
     def __addBootServiceInMenu(self, session, mi_id, bs_uuid):
         bsim = BootServiceInMenu()
@@ -1121,10 +1152,15 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.flush()
         return None
 
-    def editServiceToTarget(self, bs_uuid, target_uuid, params):
+    def editServiceToTarget(self, bs_uuid, target_uuid, target_type, params):
         session = create_session()
         menu = self.getTargetsMenuTUUID(target_uuid, session)
         mi = self.__getServiceMenuItem(session, bs_uuid, target_uuid)
+        if target_type == P2IT.PROFILE:
+            for computer in ComputerProfileManager().getProfileContent(target_uuid):
+                cmenu = self.getTargetsMenuTUUID(computer.uuid, session)
+                self.__editService(session, bs_uuid, cmenu, mi, params)
+
         ret = self.__editService(session, bs_uuid, menu, mi, params)
         session.close()
         return ret
@@ -1346,7 +1382,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             profile = ComputerProfileManager().getComputersProfile(target_uuid)
             if profile != None:
                 puuid = profile.id
-                # WIPWIP
                 menu = self.getTargetsMenuTUUID(puuid)
                 q1 = self.__PossibleImages(session, puuid, is_master, filt)
                 q1 = q1.group_by(self.image.c.id)
@@ -1986,10 +2021,18 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             return menu_items1
         # need to merge menu_items and menu_items1
         for mi in menu_items1:
-            mi.default = False
-            mi.default_WOL = False
             mi.order += root_len
             menu_items.append(mi)
+        for i in range(0, len(menu_items)):
+            if menu_items[i].id == menu.fk_default_item:
+                menu_items[i].default = True
+            else:
+                menu_items[i].default = False
+            if menu_items[i].id == menu.fk_default_item_WOL:
+                menu_items[i].default_WOL = True
+            else:
+                menu_items[i].default_WOL = False
+
         return menu_items
 
     def countBootMenu(self, target_id, type, filter):
@@ -2192,6 +2235,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session.close()
         return ret
 
+    def getMenusByID(self, menus_id, session):
+        q = session.query(Menu).filter(self.menu.c.id.in_(menus_id)).all()
+        return q
+
     def getMenuByUUID(self, menu_uuid, session = None):
         # dont need the i18n trick here, we just want to modify some menu internals
         session_need_to_close = False
@@ -2222,6 +2269,17 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if session_need_to_close:
             session.close()
         return q
+
+    def modifyMenus(self, menus_id, params):
+        session = create_session()
+        menus = self.getMenusByID(menus_id, session)
+        for m in menus:
+            for p in ['default_name', 'timeout', 'background_uri', 'message', 'protocol', 'default_item', 'default_item_WOL']:
+                if params.has_key(p):
+                    setattr(m, p, params[p])
+        session.flush()
+        session.close()
+        return True
 
     def __modifyMenu(self, menu_uuid, params, session = None):
         session_need_to_close = False
@@ -2262,7 +2320,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return True
 
     def __getDefaultMenu(self, session, lang = 1):
-        # WIP i18n
         ret = session.query(Menu).add_column(self.internationalization.c.label).select_from(self.menu \
                 .outerjoin(self.internationalization, and_(self.internationalization.c.id == self.menu.c.fk_name, self.internationalization.c.fk_language == lang)) \
             ).filter(self.menu.c.id == 1).first()
@@ -2325,7 +2382,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         default_menu = self.__getDefaultMenu(session, lang)
         return self.__duplicateMenu(session, default_menu)
 
-    def __duplicateMenu(self, session, default_menu, loc_id = None, p_id = None):
+    def __duplicateMenu(self, session, default_menu, loc_id = None, p_id = None, sub = False):
         menu = Menu()
         menu.default_name = default_menu.default_name
         menu.fk_name = default_menu.fk_name
@@ -2337,8 +2394,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         menu.bootcli = default_menu.bootcli
         menu.disklesscli = default_menu.disklesscli
         menu.dont_check_disk_size = default_menu.dont_check_disk_size
-        if p_id != None:
-            # WARNING! now we no longer duplicate the menu! we just put the default to the good values
+        if sub:
+            menu_items = []
+            menu.fk_default_item = default_menu.fk_default_item
+            menu.fk_default_item_WOL = default_menu.fk_default_item_WOL
+        elif p_id != None:
             menu_items = []
             menu.fk_default_item = None
             menu.fk_default_item_WOL = None
@@ -2392,6 +2452,13 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                  select_from(self.entity.join(self.imaging_server, self.imaging_server.c.fk_entity == self.entity.c.id)).\
                  filter(and_(self.imaging_server.c.packageserver_uuid == imaging_server_uuid, self.imaging_server.c.associated == True)).\
                  first()
+
+        if entity == None:
+            entity = session.query(Entity).\
+                    select_from(self.entity.join(self.imaging_server, self.imaging_server.c.fk_entity == self.entity.c.id)).\
+                    filter(and_(self.imaging_server.c.id == uuid2id(imaging_server_uuid), self.imaging_server.c.associated == True)).\
+                    first()
+
         session.close()
         return entity
 
@@ -2591,7 +2658,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         if q:
             return map(lambda x: x[0], q)
-        return False
+        return None
 
     def getLocationSynchroState(self, uuid):
         """
@@ -2679,6 +2746,15 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return True
 
+    def delComputersFromProfile(self, profile_UUID, computers):
+        # need to remove
+        #  the menu
+        #  images
+        #  put master as orphan ?
+        session = create_session()
+        uuids = map(lambda c:c['uuid'], computers.values())
+        return self.delProfileMenuTarget(uuids)
+
     def setProfileMenuTarget(self, uuids, profile_uuid, params):
         session = create_session()
         menu = self.getTargetMenu(profile_uuid, P2IT.PROFILE, session)
@@ -2707,14 +2783,29 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 target = target[0]
                 target.kernel_parameters = params['target_opt_kernel']
                 target.image_parameters = params['target_opt_image']
-                target.fk_menu = menu.id
                 session.save_or_update(target)
         session.flush()
         session.close()
         return [True]
 
+    def putComputersInProfile(self, profile_UUID, computers):
+        session = create_session()
+        menu = self.getTargetMenu(profile_UUID, P2IT.PROFILE, session)
+        imaging_server = ComputerProfileManager().getProfileImagingServerUUID(profile_UUID)
+        entity = self.getImagingServerEntity(imaging_server)
+        location_id = entity.uuid
+        loc = session.query(Entity).filter(self.entity.c.uuid == location_id).first()
+
+        for computer in computers.values():
+            m = self.__duplicateMenu(session, menu, location_id, profile_UUID, True)
+            t = self.__createTarget(session, computer['uuid'], computer['hostname'], P2IT.COMPUTER_IN_PROFILE, loc.id, m.id, {})
+
+        session.flush()
+        session.close()
+
+        return True
+
     def setMyMenuTarget(self, uuid, params, type):
-        # WIP : need to create correctly menu when a computer is in a profile
         session = create_session()
         menu = self.getTargetMenu(uuid, type, session)
         location_id = None
@@ -2728,30 +2819,19 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                     default_menu = self.getTargetMenu(profile.id, P2IT.PROFILE, session)
                 if default_menu == None or not profile:
                     location = ComputerLocationManager().getMachinesLocations([uuid])
-                    loc_id = location[uuid]['uuid']
-                    location_id = loc_id
-                    default_menu = self.getEntityDefaultMenu(loc_id, session)
+                    location_id = location[uuid]['uuid']
+                    default_menu = self.getEntityDefaultMenu(location_id, session)
                 else:
                     p_id = profile.id
-                    loc_id = None
+                    location_id = None
             elif type == P2IT.PROFILE:
-                m_uuids = map(lambda c: c.uuid, ComputerProfileManager().getProfileContent(uuid))
-                locations = ComputerLocationManager().getMachinesLocations(m_uuids)
-                # WARNING! here we take the location that is the most represented, it's wrong!
-                # we have to decide how do we do with cross location profiles
-                # TODO!
-                # WARNING! this part is going to change as profiles are attached to an imaging server
-                try:
-                    if len(m_uuids) == 0:
-                        raise Exception("Your profile is empty, in that case we can't get any default menu.")
-                    loc_id = locations[m_uuids[0]]['uuid']
-                    location_id = loc_id
-                except:
-                    raise Exception("Don't know which menu to choose.")
+                imaging_server = ComputerProfileManager().getProfileImagingServerUUID(uuid)
+                entity = self.getImagingServerEntity(imaging_server)
+                location_id = entity.uuid
                 default_menu = self.getEntityDefaultMenu(location_id, session)
             else:
                 raise "%s:Don't know that type of target : %s"%(P2ERR.ERR_DEFAULT, type)
-            menu = self.__duplicateMenu(session, default_menu, loc_id, p_id)
+            menu = self.__duplicateMenu(session, default_menu, location_id, p_id)
             menu = self.__modifyMenu(id2uuid(menu.id), params, session)
             session.flush()
         else:
@@ -2765,6 +2845,16 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             loc = session.query(Entity).filter(self.entity.c.uuid == location_id).first()
             target = self.__createTarget(session, uuid, params['target_name'], type, loc.id, menu.id, params)
             # TODO : what do we do with target ?
+            if type == P2IT.PROFILE:
+                # need to create the targets for all the computers inside the profile
+                # and then create them an "empty" menu
+                # (ie : a menu with only the default_item* part)
+
+                for computer in ComputerProfileManager().getProfileContent(uuid):
+                   m = self.__duplicateMenu(session, menu, location_id, uuid, True)
+                   t = self.__createTarget(session, computer.uuid, computer.name, P2IT.COMPUTER_IN_PROFILE, loc.id, m.id, params)
+
+                session.flush()
         else:
             target = self.getTargetsByUUID([uuid], session)
             target = target[0]
@@ -2807,12 +2897,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 location = ComputerLocationManager().getMachinesLocations([muuid])
                 loc_id = location[muuid]['uuid']
             else:
-                m_uuids = map(lambda c: c.uuid, ComputerProfileManager().getProfileContent(uuid))
-                locations = ComputerLocationManager().getMachinesLocations(m_uuids)
-                # WARNING! here we take the location that is the most represented, it's wrong!
-                # we have to decide how do we do with cross location profiles
-                # TODO!
-                loc_id = locations[m_uuids[0]]['uuid']
+                loc_id = ComputerProfileManager().getProfileImagingServerUUID(uuid)
             menu = self.getEntityDefaultMenu(loc_id, session)
         if menu == None:
             menu = False
