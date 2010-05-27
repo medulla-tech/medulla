@@ -2299,13 +2299,16 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if params.has_key('timeout') and menu.timeout != params['timeout']:
             need_to_be_save = True
             menu.timeout = params['timeout']
-        if 'hidden_menu' in params and params['hidden_menu']:
-            params['hidden_menu'] = 1
-        else:
-            params['hidden_menu'] = 0
-        if menu.hidden_menu != params['hidden_menu']:
-            need_to_be_save = True
-            menu.hidden_menu = params['hidden_menu']
+
+        for option in ['hidden_menu', 'bootcli', 'dont_check_disk_size',
+                       'update_nt_boot', 'disklesscli']:
+            if option in params and params[option]:
+                params[option] = 1
+            else:
+                params[option] = 0
+            if getattr(menu, option) != params[option]:
+                need_to_be_save = True
+                setattr(menu, option, params[option])
         if params.has_key('background_uri') and menu.background_uri != params['background_uri']:
             need_to_be_save = True
             menu.background_uri = params['background_uri']
