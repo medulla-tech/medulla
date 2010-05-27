@@ -157,6 +157,9 @@ sed -i "s/# method = inventory/method = inventory/" /etc/mmc/plugins/base.ini
 # Configure imaging.ini
 sed -i "s/# disable = 1/disable = 0/" /etc/mmc/plugins/imaging.ini
 
+# Enable profile in dyngroup
+sed -i "s/# profiles_enable = 0/profiles_enable = 1/" /etc/mmc/plugins/dyngroup.ini
+
 # create the temp folder for packages
 mkdir -p /tmp/package_tmp/put1/test1
 mkdir -p /tmp/package_tmp/put1/test2
