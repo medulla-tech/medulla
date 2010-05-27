@@ -280,7 +280,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             return 0;
         }
 
-        logClientActivity(mac, LOG_DEBUG, "inventory", "'hardware inventory sent'");
+        logClientActivity(mac, LOG_DEBUG, "inventory", "'hardware inventory received'");
         /* write inventory to a temporary file. Must fit in one packet ! */
         snprintf(filename, 255, "/tmp/inventory.pulse2.%s.XXXXXX", smac);
 
@@ -301,7 +301,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
 
         if (analyseresult(mysystem(3, gPathProcessInventory, mac, filename))) {
             // FIXME : we should also send back a NAK
-            logClientActivity(mac, LOG_WARNING, "inventory", "'hardware inventory not injected'");
+            logClientActivity(mac, LOG_WARNING, "inventory", "'hardware inventory not updated");
         } else {
             logClientActivity(mac, LOG_INFO, "inventory", "'hardware inventory updated'");
         }
