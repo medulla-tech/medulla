@@ -190,6 +190,28 @@ class Imaging(unittest.TestCase):
             sleep(5)
         self.assertTrue(ret)
 
+    def test_08computerUnregister(self):
+        """
+        Check computer archival
+        """
+        result = SERVER.computerUnregister('UUID4', [], False)
+        self.assertTrue(result)
+        # Wait for the archival background process to be done
+        sleep(5)
+        # No archival done
+        self.assertFalse(os.path.exists('/var/lib/pulse2/imaging/archives/UUID4-1'))
+        # Computer directory no more exists
+        self.assertFalse(os.path.exists('/var/lib/pulse2/imaging/computers/UUID4'))
+        # Unregister with archival
+        result = SERVER.computerUnregister('UUID2', ['fe71d487-2a90-11df-99a9-5254001c1e49'], True)
+        self.assertTrue(result)
+        # Wait for the archival background process to be done
+        sleep(5)
+        # archival done
+        self.assertTrue(os.path.isdir('/var/lib/pulse2/imaging/archives/UUID2-1'))
+        # Computer directory no more exists
+        self.assertFalse(os.path.exists('/var/lib/pulse2/imaging/computers/UUID2'))
+
     def test_20imagingServerStatus(self):
         """
         check for imagingServerStatus
@@ -219,9 +241,6 @@ class Imaging(unittest.TestCase):
         result = SERVER.computerUpdate('BADMAC')
         self.assertTrue('faultCode' in result and
                         'TypeError' in result['faultCode'])
-
-    def atest_injectInventory(self):
-        pass
 
     def atest_02getComputerByMAC(self):
         result = SERVER.getComputerByMac('BADMAC')
