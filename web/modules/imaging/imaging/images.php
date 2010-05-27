@@ -151,9 +151,9 @@ function image_edit($target_uuid, $type, $item_uuid) {
                 $p_order[$post_key] = $post_value;
             }
         }
+        $params['name'] = stripslashes($_POST['image_label']);
+        $params['desc'] = stripslashes($_POST['image_description']);
         if (isset($_POST['bvalid'])) {
-            $params['name'] = $_POST['image_label'];
-            $params['desc'] = $_POST['image_description'];
             $params['post_install_scripts'] = $p_order;
             $params['is_master'] = $image['is_master'];
             $ret = xmlrpc_editImage($item_uuid, $target_uuid, $params, $type);
@@ -164,15 +164,11 @@ function image_edit($target_uuid, $type, $item_uuid) {
             $f->addButton("bvalid_master", _T("Save"));
             $f->display();
         } elseif (isset($_POST['bvalid_master'])) {
-            $params['name'] = $_POST['image_label'];
-            $params['desc'] = $_POST['image_description'];
             $params['post_install_scripts'] = $p_order;
             $params['is_master'] = True;
             $ret = xmlrpc_editImage($item_uuid, $target_uuid, $params, $type);
             header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
         } elseif (isset($_POST['bconvert_image'])) {
-            $params['name'] = $_POST['image_label'];
-            $params['desc'] = $_POST['image_description'];
             $params['is_master'] = False;
             $ret = xmlrpc_editImage($item_uuid, $target_uuid, $params, $type);
             header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
