@@ -75,6 +75,7 @@ MENU = { 'timeout' : 20,
          'bootcli' : False,
          'disklesscli' : False,
          'dont_check_disk_size' : False,
+         'hidden_menu' : False,
          'ethercard' : 0
         }
 MENUS = { 'UUID27' : MENU }
