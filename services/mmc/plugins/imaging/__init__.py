@@ -1341,13 +1341,9 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         uuids = map(lambda c: c.uuid,
                     ComputerProfileManager().getProfileContent(profileUUID))
-        h_macaddresses = ComputerManager().getMachineMac(ctx, {'uuids':uuids})
-        macaddresses = h_macaddresses.values()
-        if not len(uuids):
-            # No computer in profile
-            logger.info("There is no computers in the profile %s"%profileUUID)
-            ret = 1
-        else:
+        if len(uuids):
+            h_macaddresses = ComputerManager().getMachineMac(ctx, {'uuids':uuids})
+            macaddresses = h_macaddresses.values()
             if [''] in macaddresses:
                 # Some computers don't have a MAC address
                 logger.info("Some computers don't have any MAC address in the profile %s"%(profileUUID))
@@ -1373,23 +1369,23 @@ class RpcProxy(RpcProxyI):
                         logger.info("The computer %s don't have a valid MAC address"%uuids[i])
                         ret = 4
                         break
-                    i+=1
-        if not ret:
-            # Still no error ? Now checks that all the computers belong to the
-            # same entity
-            locations = ComputerLocationManager().getMachinesLocations(uuids)
-            try:
-                locations_uuid = map(lambda l: l['uuid'], locations.values())
-            except IndexError:
-                locations_uuid = []
-            if len(locations_uuid) != len(uuids):
-                # some computers have no location ?
-                logger.info("Some computers don't have location in the profile %s"%(profileUUID))
-                ret = 5
-            elif locations_uuid.count(locations_uuid[0]) != len(locations_uuid):
-                # All the computers don't belong to the same location
-                logger.info("All the computers don't belong to the same location (%s)"%(profileUUID))
-                ret = 6
+                    i += 1
+            if not ret:
+                # Still no error ? Now checks that all the computers belong to the
+                # same entity
+                locations = ComputerLocationManager().getMachinesLocations(uuids)
+                try:
+                    locations_uuid = map(lambda l: l['uuid'], locations.values())
+                except IndexError:
+                    locations_uuid = []
+                if len(locations_uuid) != len(uuids):
+                    # some computers have no location ?
+                    logger.info("Some computers don't have location in the profile %s"%(profileUUID))
+                    ret = 5
+                elif locations_uuid.count(locations_uuid[0]) != len(locations_uuid):
+                    # All the computers don't belong to the same location
+                    logger.info("All the computers don't belong to the same location (%s)"%(profileUUID))
+                    ret = 6
         return ret
 
     def isProfileRegistered(self, profile_uuid):
@@ -1970,26 +1966,24 @@ class RpcProxy(RpcProxyI):
                 hostnames = ComputerManager().getMachineHostname(ctx, {'uuids':uuids})
                 macaddress = ComputerManager().getMachineMac(ctx, {'uuids':uuids})
                 h_hostnames = {}
-                if type(hostnames) == list:
-                    for computer in hostnames:
-                        h_hostnames[computer['uuid']] = computer['hostname']
-                else:
-                     h_hostnames[hostnames['uuid']] = hostnames['hostname']
+                if hostnames:
+                    if type(hostnames) == list:
+                        for computer in hostnames:
+                            h_hostnames[computer['uuid']] = computer['hostname']
+                    else:
+                        h_hostnames[hostnames['uuid']] = hostnames['hostname']
                 params['hostnames'] = h_hostnames
                 h_macaddress = {}
                 index = 0
-                if type(macaddress) == list:
-                    for computer in macaddress:
-                        h_macaddress[uuids[index]] = computer[0]
-                        index += 1
-                else:
-                    h_macaddress[uuids[0]] = macaddress
+                for computer in macaddress:
+                    h_macaddress[uuids[index]] = computer[0]
+                    index += 1
 
                 try:
                     params['target_name'] = '' # put the real name!
-                    ret = db.setProfileMenuTarget(uuids, pid, params)
+                    db.setProfileMenuTarget(uuids, pid, params)
                 except Exception, e:
-                    return [False, "setProfileMenuTarget : %s"%(str(e))]
+                    return [False, "setProfileMenuTarget : %s" % (str(e))]
 
                 for loc_uuid in distinct_loc:
                     url = distinct_loc[loc_uuid][0]
