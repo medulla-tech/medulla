@@ -1000,10 +1000,13 @@ class RpcProxy(RpcProxyI):
         return False
 
     ###### LOGS
-    def __getTargetImagingLogs(self, id, target_type, start = 0, end = -1, filter = ''):
+    def __getTargetImagingLogs(self, id, target_types, start = 0, end = -1, filter = ''):
         db = ImagingDatabase()
-        ret = map(lambda l: l.toH(), db.getImagingLogsOnTargetByIdAndType(id, target_type, start, end, filter))
-        count = db.countImagingLogsOnTargetByIdAndType(id, target_type, filter)
+        ret = []
+        count = 0
+        for tt in target_types:
+            ret += map(lambda l: l.toH(), db.getImagingLogsOnTargetByIdAndType(id, tt, start, end, filter))
+            count += db.countImagingLogsOnTargetByIdAndType(id, tt, filter)
         return [count, xmlrpcCleanup(ret)]
 
     def getComputerLogs(self, id, start = 0, end = -1, filter = ''):
@@ -1027,7 +1030,7 @@ class RpcProxy(RpcProxyI):
             2) the list delimited by start and end
         @rtype: list
         """
-        return self.__getTargetImagingLogs(id, P2IT.COMPUTER, start, end, filter)
+        return self.__getTargetImagingLogs(id, [P2IT.COMPUTER, P2IT.COMPUTER_IN_PROFILE], start, end, filter)
 
     def getProfileLogs(self, id, start = 0, end = -1, filter = ''):
         """
@@ -1050,7 +1053,7 @@ class RpcProxy(RpcProxyI):
             2) the list delimited by start and end
         @rtype: list
         """
-        return self.__getTargetImagingLogs(id, P2IT.PROFILE, start, end, filter)
+        return self.__getTargetImagingLogs(id, [P2IT.PROFILE], start, end, filter)
 
     def getLogs4Location(self, location_uuid, start = 0, end = -1, filter = ''):
         """
@@ -2372,7 +2375,8 @@ class RpcProxy(RpcProxyI):
         db = ImagingDatabase()
         if db.countImagingServerByPackageServerUUID(imaging_server_uuid) == 0:
             return [False, "The imaging server UUID you try to access doesn't exist in the imaging database."]
-        if not db.isTargetRegister(computer_uuid, P2IT.COMPUTER):
+        if not db.isTargetRegister(computer_uuid, P2IT.COMPUTER) \
+           and not db.isTargetRegister(computer_uuid, P2IT.COMPUTER_IN_PROFILE):
             return [False, "The computer UUID you try to access doesn't exists in the imaging database."]
 
         try:
@@ -2417,7 +2421,8 @@ class RpcProxy(RpcProxyI):
         db = ImagingDatabase()
         if db.countImagingServerByPackageServerUUID(imaging_server_uuid) == 0:
             return [False, "The imaging server UUID you try to access doesn't exist in the imaging database."]
-        if not db.isTargetRegister(computer_uuid, P2IT.COMPUTER):
+        if not db.isTargetRegister(computer_uuid, P2IT.COMPUTER) \
+           and not db.isTargetRegister(computer_uuid, P2IT.COMPUTER_IN_PROFILE):
             return [False, "The computer UUID (%s) you try to access doesn't exists in the imaging database." % computer_uuid]
 
         try:

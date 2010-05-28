@@ -820,13 +820,18 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     #####################
     def __ImagingLogsOnTargetByIdAndType(self, session, target_id, type, filter):
-        q = session.query(ImagingLog).add_entity(Target).select_from(self.imaging_log.join(self.target)).filter(self.target.c.uuid == target_id)
-        if type == P2IT.COMPUTER:
-            q = q.filter(self.target.c.type == 1)
+        q = session.query(ImagingLog).add_entity(Target).select_from(self.imaging_log.join(self.target))
+        if type in [P2IT.COMPUTER, P2IT.COMPUTER_IN_PROFILE]:
+            q = q.filter(self.target.c.type == type) \
+                .filter(self.target.c.uuid == target_id)
         elif type == P2IT.PROFILE:
-            q = q.filter(self.target.c.type == 2)
+            # Need to get all computers UUID of the profile
+            uuids = map(lambda c: c.uuid,
+                        ComputerProfileManager().getProfileContent(target_id))
+            q = q.filter(self.target.c.type == P2IT.COMPUTER_IN_PROFILE) \
+                .filter(self.target.c.uuid.in_(uuids))
         else:
-            self.logger.error("type %s does not exists!" % (type))
+            self.logger.error("type %s does not exists!" % type)
             # to be sure we don't get anything, this is an error case!
             q = q.filter(self.target.c.type == 0)
         if filter != '':
