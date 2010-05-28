@@ -255,7 +255,7 @@ class RpcProxy(RpcProxyI):
 
         if len(uuids) != 0 and self.isprofile(id):
             ComputerProfileManager().addComputersToProfile(ctx, uuids, id)
-        return xmlrpcCleanup([ret and not are_some_to_remove, didnt_work])
+        return xmlrpcCleanup([not are_some_to_remove, didnt_work])
 
     def delmembers_to_group(self, id, uuids):
         ctx = self.currentContext
