@@ -48,6 +48,13 @@ class MyServer(resource.Resource):
         return self.putChild(mp, klass)
 
 def initialize(config):
+    """
+    Init package server API, and start listening to the network.
+
+    @rtype: bool
+    @return: return False if initialization failed
+    """
+    ret = True
     logger = logging.getLogger()
 
     port = int(config.port)
@@ -127,9 +134,12 @@ def initialize(config):
                 twisted.web.server.Site(server),
                 interface = config.bind
                 )
+        logger.info('package server listening on %s:%d' % (config.bind, port))
     except Exception, e:
         logger.error('can\'t bind to %s:%d' % (config.bind, port))
         logger.error(e)
-        return 1
+        ret = False
 
-    logger.info('package server listening on %s:%d' % (config.bind, port))
+    return ret
+
+

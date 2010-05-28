@@ -27,6 +27,7 @@ import os.path
 import logging
 import time
 import os
+import sys
 
 from pulse2.package_server.config import config_addons
 from pulse2.package_server.common import Common
@@ -286,7 +287,9 @@ class ThreadLauncher(pulse2.utils.Singleton):
                 self.logger.info("Global package mirror thread started")
 
         from pulse2.package_server import thread_webserver
-        thread_webserver.initialize(self.config)
+        if not thread_webserver.initialize(self.config):
+            self.logger.error("Package server XML-RPC service initialization failed, exiting.")
+            sys.exit(1)
         # FIXME: Little sleep because sometimes Python exits before the
         # threads have the time to start
         time.sleep(5)
