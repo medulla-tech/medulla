@@ -36,7 +36,6 @@ else
     $type = '';
 
 if ($_POST) {
-    $isopath = "/tmp";
     $label = $_POST['label'];
     $title = trim($_POST['title']);
     $size = $_POST['media'];
@@ -52,15 +51,18 @@ if ($_POST) {
     $ret = xmlrpc_imagingServerISOCreate($image_uuid, $size, $title);
     // goto images list
     if ($ret[0] and !isXMLRPCError()) {
-        $str = "<h2>"._T("Create iso from master", "imaging")."</h2>";
+        $str = "<h2>"._T("Create ISO image from master", "imaging")."</h2>";
         $str .= "<p>";
-        $str .= sprintf(_T("Iso of master <strong>%s</strong> has been launched in background.", "imaging"), $label);
+        $str .= sprintf(_T("The ISO image generation of master <strong>%s</strong> has been launched in background.", "imaging"), $label);
         $str .= "</p><p>";
-        $str .= sprintf(_T("The files will be stored in the directory %s of the server at the end of the backup.", "imaging"), $isopath); # TODO get the path
+        $str .= _T("The ISO image file will be stored into the imaging server at the end of the backup.", "imaging");
         $str .= "</p><p>";
-        $str .= _T("Please go to the status page to check the iso creation status.", "imaging");
-        $str .= "</p><p>";
-        $str .= _T("This operation will last according to the amount of data of the master.", "imaging");
+        /*
+          FIXME: We don't have this status page
+          $str .= _T("Please go to the status page to check the iso creation status.", "imaging");
+          $str .= "</p><p>";
+        */
+        $str .= _T("This operation will last according to the master size.", "imaging");
         $str .= "</p>";
 
         new NotifyWidgetSuccess($str);
