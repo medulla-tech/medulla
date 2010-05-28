@@ -138,7 +138,7 @@ function image_edit($target_uuid, $type, $item_uuid) {
             header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
         } elseif (isset($_POST['bconvert_master'])) {
             $f = create_form(False, $image, $target_uuid, $_POST['image_label'], $_POST['image_description']);
-            $f->addButton("bvalid_master", _T("Save"));
+            $f->addButton("bvalid_master", _T("Save", "imaging"));
             $f->display();
         } elseif (isset($_POST['bvalid_master'])) {
             $params['post_install_scripts'] = $p_order;
