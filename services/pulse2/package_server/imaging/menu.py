@@ -49,6 +49,7 @@ def isMenuStructure(menu):
                   'images',
                   'bootcli',
                   'disklesscli',
+                  'hidden_menu',
                   'dont_check_disk_size',
                   'ethercard']:
 
