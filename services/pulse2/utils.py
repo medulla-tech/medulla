@@ -421,7 +421,7 @@ def splitComputerPath(path):
     @rtype: tuple
     """
     # Get profile
-    m = re.match("^([a-zA-Z0-9]*):(.*)$", path)
+    m = re.match("^([a-zA-Z0-9-]*):(.*)$", path)
     if m:
         profile = m.group(1)
         tail = m.group(2)
