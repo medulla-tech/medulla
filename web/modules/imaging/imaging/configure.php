@@ -162,6 +162,7 @@ if (!$whose && !$menu) {
     $f->display();
 } else {
     $target = null;
+    $has_profile = False;
     if (!$whose) {
         if ($type == '') {
             $msg = _T("The default values for the imaging parameters will be inherited from the imaging server that manages the entity that owns this computer.", "imaging");
@@ -173,6 +174,7 @@ if (!$whose && !$menu) {
     } else {
         $target = $whose[2];
         if ($whose[1] == 2 && $type == '') { #PROFILE
+            $has_profile = True;
             $f->add(new TitleElement(sprintf(_T("The default values displayed here come from this %s's profile menu.", "imaging"), ($type==''?'computer':'profile')), 4));
         }
     }
@@ -236,87 +238,118 @@ if (!$whose && !$menu) {
         }
     }
 
-    $f->add(new TitleElement(_T("Please switch to expert mode now if you want to change more parameters.", "imaging"), 3));
+    if (!isExpertMode()) {
+        $f->add(new TitleElement(_T("Please switch to expert mode now if you want to change more parameters.", "imaging"), 3));
+    } else {
+        $f->add(new TitleElement(_T("You can switch to standard mode now if you want less parameters.", "imaging"), 3));
+    }
 
     $f->push(new DivExpertMode());
+    if (!$has_profile) {
 
-    $f->add(new TitleElement(sprintf(_T("%s menu parameters", "imaging"), ($type=='' ? _T('Computer', 'imaging') : _T('Profile', 'imaging') ))));
-    $f->push(new Table());
+        $f->add(new TitleElement(sprintf(_T("%s menu parameters", "imaging"), ($type=='' ? _T('Computer', 'imaging') : _T('Profile', 'imaging') ))));
+        $f->push(new Table());
 
-    $f->add(
-        new TrFormElement(_T('Default menu label', 'imaging'),
-        new InputTpl("default_m_label")), array("value" => $menu['default_name'])
-    );
-    $f->add(
-        new TrFormElement(_T('Menu timeout', 'imaging'),
-        new InputTpl("default_m_timeout")), array("value" => $menu['timeout'])
-    );
+        $f->add(
+            new TrFormElement(_T('Default menu label', 'imaging'),
+            new InputTpl("default_m_label")), array("value" => $menu['default_name'])
+        );
+        $f->add(
+            new TrFormElement(_T('Menu timeout', 'imaging'),
+            new InputTpl("default_m_timeout")), array("value" => $menu['timeout'])
+        );
 
-    foreach($opts as $key => $str) {
-        if ($menu[$key]) {
-            $value = 'CHECKED';
-        } else {
-            $value = '';
+        foreach($opts as $key => $str) {
+            if ($menu[$key]) {
+                $value = 'CHECKED';
+            } else {
+                $value = '';
+            }
+            $f->add(new TrFormElement($str, new CheckBoxTpl($key)),
+                    array("value" => $value));
         }
-        $f->add(new TrFormElement($str, new CheckBoxTpl($key)),
-                array("value" => $value));
-    }
-    $f->pop();
+        $f->pop();
 
-    $f->add(new TitleElement(_T("Restoration options", "imaging")));
-    $f->push(new Table());
-    $possible_protocols = web_def_possible_protocols();
-    $default_protocol = web_def_default_protocol();
-    $protocols_choices = array();
-    $protocols_values = array();
+        $f->add(new TitleElement(_T("Restoration options", "imaging")));
+        $f->push(new Table());
+        $possible_protocols = web_def_possible_protocols();
+        $default_protocol = web_def_default_protocol();
+        $protocols_choices = array();
+        $protocols_values = array();
 
-    /* translate possibles protocols */
-    _T('nfs', 'imaging');
-    _T('tftp', 'imaging');
-    _T('mtftp', 'imaging');
-    foreach ($possible_protocols as $p) {
-        if ($p['label']) {
-            if ($p['label'] == $menu['protocol']) {
+        /* translate possibles protocols */
+        _T('nfs', 'imaging');
+        _T('tftp', 'imaging');
+        _T('mtftp', 'imaging');
+        foreach ($possible_protocols as $p) {
+            if ($p['label']) {
+                if ($p['label'] == $menu['protocol']) {
+                    $rest_selected = $p['imaging_uuid'];
+                }
+                if ($p['label'] == $default_protocol) {
+                    $p['label'] = _T($p['label'], 'imaging').' '._T('(default)', 'imaging');
+                }
+                $protocols_choices[$p['imaging_uuid']] = $p['label'];
+                $protocols_values[$p['imaging_uuid']] = $p['imaging_uuid'];
+            }
+        }
+
+        $rest_type = new RadioTpl("rest_type");
+
+        $rest_type->setChoices($protocols_choices);
+        $rest_type->setValues($protocols_values);
+        $rest_type->setSelected($rest_selected);
+        $f->add(
+            new TrFormElement(_T("Restoration type", "imaging"), $rest_type)
+        );
+        $f->add(
+            new TrFormElement(_T("Restoration: MTFTP maximum waiting (in sec)", "imaging"),
+            new InputTpl("rest_wait")), array("value" => $menu['timeout'])
+        );
+        $f->pop();
+
+        $f->add(new TitleElement(_T("Boot options", "imaging")));
+        $f->push(new Table());
+        $f->add(
+            new TrFormElement(_T("Full path to the XPM displayed at boot", "imaging"),
+            new InputTpl("boot_xpm")), array("value" => $menu['background_uri'])
+        );
+        $f->add(
+            new TrFormElement(_T("Message displayed during backup/restoration", "imaging"),
+            new TextareaTpl("boot_msg")), array("value" => $menu['message']) //"Warning ! Your PC is being backed up or restored. Do not reboot !")
+        );
+        /* $f->add(
+            new TrFormElement(_T("Keyboard mapping (empty/fr)", "imaging"),
+            new InputTpl("boot_keyboard")), array("value" => "")
+        ); */
+        $f->pop();
+
+    } else {
+        $f->add(new HiddenTpl("default_m_label"),                    array("value" => $menu['default_name'],            "hide" => True));
+        $f->add(new HiddenTpl("default_m_timeout"),                    array("value" => $menu['timeout'],            "hide" => True));
+
+        $possible_protocols = web_def_possible_protocols();
+        foreach ($possible_protocols as $p) {
+            if ($p['label'] && $p['label'] == $menu['protocol']) {
                 $rest_selected = $p['imaging_uuid'];
+                continue;
             }
-            if ($p['label'] == $default_protocol) {
-                $p['label'] = _T($p['label'], 'imaging').' '._T('(default)', 'imaging');
+        }
+
+        $f->add(new HiddenTpl("rest_type"),           array("value" => $rest_selected,            "hide" => True));
+        $f->add(new HiddenTpl("rest_wait"),           array("value" => $menu['timeout'],          "hide" => True));
+        $f->add(new HiddenTpl("boot_xpm"),            array("value" => $menu['background_uri'],   "hide" => True));
+        $f->add(new HiddenTpl("boot_msg"),            array("value" => $menu['message'],          "hide" => True));
+
+        foreach($opts as $key => $str) {
+            if ($menu[$key]) {
+                $value = 'CHECKED';
+            } else {
+                $value = '';
             }
-            $protocols_choices[$p['imaging_uuid']] = $p['label'];
-            $protocols_values[$p['imaging_uuid']] = $p['imaging_uuid'];
+            $f->add(new HiddenTpl($str),              array("value" => $value,            "hide" => True));
         }
     }
-
-    $rest_type = new RadioTpl("rest_type");
-
-    $rest_type->setChoices($protocols_choices);
-    $rest_type->setValues($protocols_values);
-    $rest_type->setSelected($rest_selected);
-    $f->add(
-        new TrFormElement(_T("Restoration type", "imaging"), $rest_type)
-    );
-    $f->add(
-        new TrFormElement(_T("Restoration: MTFTP maximum waiting (in sec)", "imaging"),
-        new InputTpl("rest_wait")), array("value" => $menu['timeout'])
-    );
-    $f->pop();
-
-    $f->add(new TitleElement(_T("Boot options", "imaging")));
-    $f->push(new Table());
-    $f->add(
-        new TrFormElement(_T("Full path to the XPM displayed at boot", "imaging"),
-        new InputTpl("boot_xpm")), array("value" => $menu['background_uri'])
-    );
-    $f->add(
-        new TrFormElement(_T("Message displayed during backup/restoration", "imaging"),
-        new TextareaTpl("boot_msg")), array("value" => $menu['message']) //"Warning ! Your PC is being backed up or restored. Do not reboot !")
-    );
-/*    $f->add(
-        new TrFormElement(_T("Keyboard mapping (empty/fr)", "imaging"),
-        new InputTpl("boot_keyboard")), array("value" => "")
-    ); */
-    $f->pop();
-
     /* $f->add(new TitleElement(_T("Administration options", "imaging")));
     $f->push(new Table());
     $f->add(
