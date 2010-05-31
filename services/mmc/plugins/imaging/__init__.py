@@ -135,10 +135,14 @@ class RpcProxy(RpcProxyI):
 
     ###########################################################
     ###### BOOT MENU (image+boot service on the target)
-    def __convertType(self, target_type):
+    def __convertType(self, target_type, target_id):
         """ convert type from '' or 'group' to P2IT.COMPUTER and P2IT.PROFILE """
         if target_type == '':
-            target_type = P2IT.COMPUTER
+            profile = ComputerProfileManager().getComputersProfile(target_id)
+            if profile != None:
+                target_type = P2IT.COMPUTER_IN_PROFILE
+            else:
+                target_type = P2IT.COMPUTER
         elif target_type == 'group':
             target_type = P2IT.PROFILE
         return target_type
@@ -242,7 +246,7 @@ class RpcProxy(RpcProxyI):
         @rtype: boolean
         """
         db = ImagingDatabase()
-        target_type = self.__convertType(target_type)
+        target_type = self.__convertType(target_type, target_id)
         db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
         return db.moveItemUpInMenu(target_uuid, mi_uuid)
 
@@ -265,7 +269,7 @@ class RpcProxy(RpcProxyI):
         @rtype: boolean
         """
         db = ImagingDatabase()
-        target_type = self.__convertType(target_type)
+        target_type = self.__convertType(target_type, target_id)
         db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
         return db.moveItemDownInMenu(target_uuid, mi_uuid)
 
@@ -359,7 +363,7 @@ class RpcProxy(RpcProxyI):
         #try:
         if True:
             db = ImagingDatabase()
-            target_type = self.__convertType(target_type)
+            target_type = self.__convertType(target_type, uuid)
             image = db.getTargetImage(uuid, target_type, image_uuid)
             return [True, xmlrpcCleanup(image.toH())]
         #except Exception, e:
@@ -506,7 +510,7 @@ class RpcProxy(RpcProxyI):
         @rtype: list
         """
         db = ImagingDatabase()
-        target_type = self.__convertType(target_type)
+        target_type = self.__convertType(target_type, target_uuid)
         try:
             db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
             ret = db.addImageToTarget(item_uuid, target_uuid, params)
@@ -543,7 +547,7 @@ class RpcProxy(RpcProxyI):
         @rtype: list
         """
         db = ImagingDatabase()
-        target_type = self.__convertType(target_type)
+        target_type = self.__convertType(target_type, target_uuid)
         try:
             db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
             ret = db.editImageToTarget(item_uuid, target_uuid, params)
@@ -580,7 +584,7 @@ class RpcProxy(RpcProxyI):
         @rtype: list
         """
         db = ImagingDatabase()
-        target_type = self.__convertType(target_type)
+        target_type = self.__convertType(target_type, target_uuid)
         try:
             if db.isImageInMenu(item_uuid, target_uuid, target_type):
                 db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
@@ -623,7 +627,7 @@ class RpcProxy(RpcProxyI):
         @rtype: list
         """
         db = ImagingDatabase()
-        target_type = self.__convertType(target_type)
+        target_type = self.__convertType(target_type, target_uuid)
         try:
             db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
             ret = db.delImageToTarget(item_uuid, target_uuid)
@@ -646,10 +650,10 @@ class RpcProxy(RpcProxyI):
         ims = []
         if type(images[0]) == list:
             for im in images:
-                i = [im[0], im[1], self.__convertType(im[2])]
+                i = [im[0], im[1], self.__convertType(im[2], im[1])]
                 ims.append(i)
         else:
-            i = [images[0], images[1], self.__convertType(images[2])]
+            i = [images[0], images[1], self.__convertType(images[2], images[1])]
             ims.append(i)
 
         return db.areImagesUsed(ims)
@@ -870,7 +874,7 @@ class RpcProxy(RpcProxyI):
         @rtype: list
         """
         db = ImagingDatabase()
-        target_type = self.__convertType(target_type)
+        target_type = self.__convertType(target_type, target_uuid)
         try:
             db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
             ret = ImagingDatabase().addServiceToTarget(bs_uuid, target_uuid, params)
@@ -899,7 +903,7 @@ class RpcProxy(RpcProxyI):
         @rtype: list
         """
         db = ImagingDatabase()
-        target_type = self.__convertType(target_type)
+        target_type = self.__convertType(target_type, target_uuid)
         try:
             db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
             ret = ImagingDatabase().delServiceToTarget(bs_uuid, target_uuid)
@@ -936,7 +940,7 @@ class RpcProxy(RpcProxyI):
         @rtype: list
         """
         db = ImagingDatabase()
-        target_type = self.__convertType(target_type)
+        target_type = self.__convertType(target_type, target_uuid)
         if bs_uuid == '':
             return [False, "You are trying to access to editServiceToTarget without any Service ID."]
         if target_uuid == '':
