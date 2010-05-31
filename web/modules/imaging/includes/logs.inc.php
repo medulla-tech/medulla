@@ -22,16 +22,16 @@
  */
 
 $logStates = array(
-    "unknown" => array(_T("Status unknown", "imaging"), 'black'),
-    "boot" => array(_T("Boot", "imaging"), 'green'),
     "menu" => array(_T("Menu", "imaging"), 'green'),
-    "restoration" => array(_T("Restoration", "imaging"), 'green'),
+    "inventory" => array(_T("Inventory", "imaging"), 'orange'),
     "backup" => array(_T("Backup", "imaging"), 'green'),
+    "boot" => array(_T("Boot", "imaging"), 'green'),
+    "restoration" => array(_T("Restoration", "imaging"), 'green'),
     "postinstall" => array(_T("Post-install", "imaging"), 'green'),
     "error" => array(_T("Error", "imaging"), 'red'),
-    "delete" => array(_T("Delete", "imaging"), 'orange'),
-    "inventory" => array(_T("Inventory", "imaging"), 'orange'),
 
+    "unknown" => array(_T("Status unknown", "imaging"), 'black'),
+    "delete" => array(_T("Delete", "imaging"), 'orange'),
     "restore_in_progress" => array(_T("Restore in progress", "imaging"), 'orange'),
     "restore_done" => array(_T("Restore done", "imaging"), 'green'),
     "restore_failed" => array(_T("Restore failed", "imaging"), 'red'),
@@ -43,32 +43,49 @@ $logStates = array(
 // Should be keepd syn with services/src/pulse2-imaging-server.c !!!
 $logMessages = array(
    "boot menu shown" => _T("Boot menu shown", "imaging"),
-   "hardware inventory sent" => _T("Hardware Inventory sent", "imaging"),
-   "hardware inventory not received" => _T("Hardware Inventory not received", "imaging"),
-   "hardware inventory not injected" => _T("Hardware Inventory not injected", "imaging"),
+
+   "hardware inventory received" => _T("Hardware Inventory received", "imaging"),
+   "hardware inventory not stored" => _T("Hardware Inventory not stored", "imaging"),
+   "hardware inventory not updated" => _T("Hardware Inventory not updated", "imaging"),
    "hardware inventory updated" => _T("Hardware Inventory updated", "imaging"),
-   "client identified" => _T("Client Identified", "imaging"),
-   "client not identified" => _T("Client not Identified", "imaging"),
-   "asked an image UUID" => _T("Asked an image UUID", "imaging"),
-   "failed to obtain an image UUID" => _T("Failed to obtain an image UUID", "imaging"),
-   "obtained an image UUID" => _T("Obtained an image UUID", "imaging"),
-   "image done" => _T("Image Done", "imaging"),
-   "toggled default entry" => _T("Toggled default entry", "imaging"),
+
+   "identification request" => _T("Identification Request", "imaging"),
+   "identification success" => _T("Identification Success", "imaging"),
+   "identification failure" => _T("Identification Failure", "imaging"),
+
+   "image UUID request" => _T("Image UUID Request", "imaging"),
+   "failed to create an image UUID" => _T("Failed to create an Image UUID", "imaging"),
+   "image UUID sent" => _T("Image UUID sent", "imaging"),
+   "failed to send image UUID" => _T("Failed to send Image UUID", "imaging"),
+
+   "image signaled as done" => _T("Image Signaled as Done", "imaging"),
+   "failed to mark image as done" => _T("Failed to mark Image as done", "imaging"),
+   "marked image as done" => _T("Marked Image as done", "imaging"),
+
+   "default menu entry change request" => _T("Default Menu Entry Change Request", "imaging"),
+   "default menu entry success" => _T("Default Menu Entry Change Success", "imaging"),
+   "default menu entry failure" => _T("Default Menu Entry Change Failure", "imaging"),
+
    "booted" => _T("Booted", "imaging"),
-   "executed menu entry" => _T("Executed menu entry", "imaging"),
-   "started restoration" => _T("Started restoration", "imaging"),
-   "finished restoration" => _T("Finished restoration", "imaging"),
-   "backup started" => _T("Backup started", "imaging"),
-   "backup completed" => _T("Backup completed", "imaging"),
-   "postinstall started" => _T("Postinstall started", "imaging"),
-   "postinstall completed" => _T("Postinstall completed", "imaging"),
-   "critical error" => _T("Critical error", "imaging"),
-   "asked its hostname" => _T("Asked its hostname", "imaging"),
-   "failed to obtain its hostname" => _T("Failed to obtain its hostname", "imaging"),
-   "obtained its hostname" => _T("Obtained its hostname", "imaging"),
-   "asked its UUID" => _T("Asked its UUID", "imaging"),
-   "failed to obtain its UUID" => _T("Failed to obtain its UUID", "imaging"),
-   "obtained its UUID" => _T("Obtained its UUID", "imaging")
+   "choosen menu entry" => _T("Choosen Menu Entry", "imaging"),
+   "restoration started" => _T("Restoration Started", "imaging"),
+   "restoration finished" => _T("Restoration Finished", "imaging"),
+   "backup started" => _T("Backup Started", "imaging"),
+   "backup finished" => _T("Backup Finished", "imaging"),
+   "postinstall started" => _T("Postinstall Started", "imaging"),
+   "postinstall finished" => _T("Postinstall Finished", "imaging"),
+   "error critical" => _T("Critical error", "imaging"),
+
+   "hostname request" => _T("Hostname Request", "imaging"),
+   "failed to recover hostname" => _T("Failed to recover hostname", "imaging"),
+   "hostname sent" => _T("Hostname Sent", "imaging"),
+   "failed to send hostname" => _T("Failed to send Hostname", "imaging"),
+
+   "computer UUID request" => _T("Computer UUID Request", "imaging"),
+   "failed to recover computer UUID" => _T("Failed to recover Computer UUID", "imaging"),
+   "computer UUID sent" => _T("Computer UUID Sent", "imaging"),
+   "failed to send computer UUID" => _T("Failed to send Computer UUID", "imaging")
+
     );
 
 /**
