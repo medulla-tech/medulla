@@ -387,7 +387,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             logClientActivity(mac,
                               LOG_WARNING,
                               PULSE_LOG_STATE_BACKUP,
-                              "'failed to create an image UUID'");
+                              "'failed to summon an image UUID'");
             return 0;
         }
         close(fo);
@@ -435,7 +435,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         logClientActivity(mac,
                           LOG_DEBUG,
                           PULSE_LOG_STATE_BACKUP,
-                          "'image signaled as done : %s'",
+                          "'end-of-backup request : %s'",
                           uuid);
 
         if (mysystem(3, gPathEndImage, mac, uuid) == 0) {
@@ -448,7 +448,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             logClientActivity(mac,
                               LOG_INFO,
                               PULSE_LOG_STATE_BACKUP,
-                              "'marked image as done : %s'",
+                              "'end-of-backup failure : %s'",
                               uuid);
         } else {
             sendto(s,
@@ -460,7 +460,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             logClientActivity(mac,
                               LOG_WARNING,
                               PULSE_LOG_STATE_BACKUP,
-                              "'failed to mark image as done : %s'",
+                              "'end-of-backup success : %s'",
                               uuid);
         }
         return 0;
@@ -474,14 +474,14 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         logClientActivity(mac,
                           LOG_DEBUG,
                           PULSE_LOG_STATE_MENU,
-                          "'default menu entry change request : %s'",
+                          "'preselected-menu-entry-change request : %s'",
                           item);
 
         if (mysystem(3, gPathChangeDefault, mac, item) == 0) {
             logClientActivity(mac,
                               LOG_INFO,
                               PULSE_LOG_STATE_MENU,
-                              "'default menu entry success : %s'",
+                              "'preselected-menu-entry-change success : %s'",
                               item);
             sendto(s,
                    ACKSTR,
@@ -493,7 +493,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             logClientActivity(mac,
                               LOG_WARNING,
                               PULSE_LOG_STATE_MENU,
-                              "'default menu entry failure' : %s",
+                              "'preselected-menu-entry-change failure' : %s",
                               item);
             sendto(s,
                    ERRORSTR,
@@ -633,7 +633,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             logClientActivity(mac,
                               LOG_WARNING,
                               PULSE_LOG_STATE_BOOT,
-                              "'failed to recover hostname'");
+                              "'failed to obtain a hostname'");
             return 0;
         }
         close(fo);
@@ -668,7 +668,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             logClientActivity(mac,
                               LOG_INFO,
                               PULSE_LOG_STATE_BOOT,
-                              "'failed to send hostname'");
+                              "'failed to send a hostname'");
         }
 
         return 0;
@@ -692,7 +692,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             logClientActivity(mac,
                               LOG_WARNING,
                               PULSE_LOG_STATE_BOOT,
-                              "'failed to recover computer UUID'");
+                              "'failed to recover a computer UUID'");
             return 0;
         }
         close(fo);
@@ -727,7 +727,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             logClientActivity(mac,
                               LOG_WARNING,
                               PULSE_LOG_STATE_BOOT,
-                              "'failed to send computer UUID");
+                              "'failed to send a computer UUID");
         }
 
         return 0;
