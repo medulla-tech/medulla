@@ -54,17 +54,17 @@ $logMessages = array(
    "identification failure" => _T("Identification Failure", "imaging"),
 
    "image UUID request" => _T("Image UUID Request", "imaging"),
-   "failed to create an image UUID" => _T("Failed to create an Image UUID", "imaging"),
+   "failed to summon an image UUID" => _T("Failed to summon an Image UUID", "imaging"),
    "image UUID sent" => _T("Image UUID sent", "imaging"),
-   "failed to send image UUID" => _T("Failed to send Image UUID", "imaging"),
+   "failed to send an image UUID" => _T("Failed to send an Image UUID", "imaging"),
 
-   "image signaled as done" => _T("Image Signaled as Done", "imaging"),
-   "failed to mark image as done" => _T("Failed to mark Image as done", "imaging"),
-   "marked image as done" => _T("Marked Image as done", "imaging"),
+   "end-of-backup request" => _T("End of Backup Request", "imaging"),
+   "end-of-backup failure" => _T("End of Backup Failure", "imaging"),
+   "end-of-backup success" => _T("End of Backup Success", "imaging"),
 
-   "default menu entry change request" => _T("Default Menu Entry Change Request", "imaging"),
-   "default menu entry success" => _T("Default Menu Entry Change Success", "imaging"),
-   "default menu entry failure" => _T("Default Menu Entry Change Failure", "imaging"),
+   "preselected-menu-entry-change request" => _T("Preselected Menu Entry Change Request", "imaging"),
+   "preselected-menu-entry-change success" => _T("Preselected Menu Entry Change Success", "imaging"),
+   "preselected-menu-entry-change failure" => _T("Preselected Menu Entry Change Failure", "imaging"),
 
    "booted" => _T("Booted", "imaging"),
    "choosen menu entry" => _T("Choosen Menu Entry", "imaging"),
@@ -77,14 +77,14 @@ $logMessages = array(
    "error critical" => _T("Critical error", "imaging"),
 
    "hostname request" => _T("Hostname Request", "imaging"),
-   "failed to recover hostname" => _T("Failed to recover hostname", "imaging"),
-   "hostname sent" => _T("Hostname Sent", "imaging"),
-   "failed to send hostname" => _T("Failed to send Hostname", "imaging"),
+   "failed to obtain a hostname" => _T("Failed to obtain a Hostname", "imaging"),
+   "hostname sent" => _T("Hostname sent", "imaging"),
+   "failed to send a hostname" => _T("Failed to send a Hostname", "imaging"),
 
    "computer UUID request" => _T("Computer UUID Request", "imaging"),
-   "failed to recover computer UUID" => _T("Failed to recover Computer UUID", "imaging"),
+   "failed to recover a computer UUID" => _T("Failed to obtain a Computer UUID", "imaging"),
    "computer UUID sent" => _T("Computer UUID Sent", "imaging"),
-   "failed to send computer UUID" => _T("Failed to send Computer UUID", "imaging")
+   "failed to send a computer UUID" => _T("Failed to send a Computer UUID", "imaging")
 
     );
 
