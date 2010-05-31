@@ -96,7 +96,7 @@ def running(inifile, daemonize):
 
 def cleanUp(config):
     logger = logging.getLogger()
-    logger.info('Pulse package server shutting down, cleaning up...')
+    logger.info('Pulse 2 Package Server shutting down, cleaning up...')
 
     # Unlink pidfile if it exists
     if os.path.isfile(config.pidfile):
