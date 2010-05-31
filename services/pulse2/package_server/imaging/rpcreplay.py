@@ -200,8 +200,10 @@ class RPCReplay(Singleton):
         self.count = PackageServerConfig().imaging_api['rpc_count']
         self.interval = PackageServerConfig().imaging_api['rpc_interval']
         self._replaying = False
+        self._delayedCall = None
         self.store = RPCStore()
         self.store.init()
+        reactor.addSystemEventTrigger('before', 'shutdown', self.cancelLoop)
 
     def check(self):
         """
@@ -221,7 +223,12 @@ class RPCReplay(Singleton):
         """
         self.logger.debug('Scheduling next RPC replay in %d seconds'
                           % self.timer)
-        reactor.callLater(self.timer, self._run)
+        self._delayedCall = reactor.callLater(self.timer, self._run)
+
+    def cancelLoop(self):
+        if self._delayedCall:
+            self.logger.debug('Cancelling next RPC replay scheduling')
+            self._delayedCall.cancel()
 
     def onError(self, error, funcname, args, default_return = [], timestamp = None):
         """
