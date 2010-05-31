@@ -448,7 +448,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             logClientActivity(mac,
                               LOG_INFO,
                               PULSE_LOG_STATE_BACKUP,
-                              "'end-of-backup failure : %s'",
+                              "'end-of-backup success : %s'",
                               uuid);
         } else {
             sendto(s,
@@ -460,7 +460,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             logClientActivity(mac,
                               LOG_WARNING,
                               PULSE_LOG_STATE_BACKUP,
-                              "'end-of-backup success : %s'",
+                              "'end-of-backup failure : %s'",
                               uuid);
         }
         return 0;
