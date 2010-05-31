@@ -81,4 +81,13 @@ char *gPIDFile;
 char *gLogFile;
 dictionary *ini;
 
+#define PULSE_LOG_STATE_BOOT "boot"
+#define PULSE_LOG_STATE_MENU "menu"
+#define PULSE_LOG_STATE_RESTO "restoration"
+#define PULSE_LOG_STATE_BACKUP "backup"
+#define PULSE_LOG_STATE_POSTINST "postinst"
+#define PULSE_LOG_STATE_ERROR "error"
+#define PULSE_LOG_STATE_DELETE "delete"
+#define PULSE_LOG_STATE_INVENTORY "inventory"
+
 #endif                          //PULSE_IMAGING_SERVER_H
