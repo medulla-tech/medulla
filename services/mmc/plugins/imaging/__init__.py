@@ -1546,6 +1546,7 @@ class RpcProxy(RpcProxyI):
             a_targets = h_pis[im.id]
             for loc_uuid, t_uuid, order in a_targets:
                 menu['images'][order]['post_install_script'] = pis
+        menu['language'] = db.getLocLanguage(location.uuid)
         return menu
 
     def __generateMenus(self, logger, db, uuids):
@@ -1614,9 +1615,9 @@ class RpcProxy(RpcProxyI):
         menu = self.__generateLocationMenu(logger, db, loc_uuid)
         def treatFailures(result, location_uuid = loc_uuid, menu = menu, logger = logger):
             if result:
-                db.setLocationSynchroState(loc_uuid, P2ISS.DONE)
+                db.setLocationSynchroState(location_uuid, P2ISS.DONE)
             else:
-                db.setLocationSynchroState(loc_uuid, P2ISS.TODO)
+                db.setLocationSynchroState(location_uuid, P2ISS.TODO)
             return result
 
         url = self.__chooseImagingApiUrl(loc_uuid)
