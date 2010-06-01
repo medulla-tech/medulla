@@ -299,7 +299,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             myLogger(msg);
             free(msg);
             logClientActivity(mac,
-                              LOG_ERROR,
+                              LOG_ERR,
                               PULSE_LOG_STATE_INVENTORY,
                               "'hardware inventory not stored'");
             return 0;
@@ -385,7 +385,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             myLogger(msg);
             free(msg);
             logClientActivity(mac,
-                              LOG_ERROR,
+                              LOG_ERR,
                               PULSE_LOG_STATE_BACKUP,
                               "'failed to summon an image UUID'");
             return 0;
@@ -632,7 +632,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             myLogger(msg);
             free(msg);
             logClientActivity(mac,
-                              LOG_ERROR,
+                              LOG_ERR,
                               PULSE_LOG_STATE_BOOT,
                               "'failed to obtain a hostname'");
             return 0;
@@ -692,7 +692,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             myLogger(msg);
             free(msg);
             logClientActivity(mac,
-                              LOG_ERROR,
+                              LOG_ERR,
                               PULSE_LOG_STATE_BOOT,
                               "'failed to recover a computer UUID'");
             return 0;
