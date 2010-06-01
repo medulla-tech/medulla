@@ -299,7 +299,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             myLogger(msg);
             free(msg);
             logClientActivity(mac,
-                              LOG_WARNING,
+                              LOG_ERROR,
                               PULSE_LOG_STATE_INVENTORY,
                               "'hardware inventory not stored'");
             return 0;
@@ -355,9 +355,9 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             strncpy(answ, "KO", 40);
         } else {
             logClientActivity(mac,
-                              LOG_INFO,
+                              LOG_DEBUG,
                               PULSE_LOG_STATE_MENU,
-                              "'identication success'");
+                              "'identification success'");
             strncpy(answ, "OK", 40);
         }
 
@@ -385,7 +385,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             myLogger(msg);
             free(msg);
             logClientActivity(mac,
-                              LOG_WARNING,
+                              LOG_ERROR,
                               PULSE_LOG_STATE_BACKUP,
                               "'failed to summon an image UUID'");
             return 0;
@@ -407,7 +407,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             sendto(s, name, strlen(name) + 1 , MSG_NOSIGNAL,
                    (struct sockaddr *)si_other, sizeof(*si_other));
             logClientActivity(mac,
-                              LOG_INFO,
+                              LOG_DEBUG,
                               PULSE_LOG_STATE_BACKUP,
                               "'image UUID sent : %s'",
                               name);
@@ -446,7 +446,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
                    (struct sockaddr *)si_other,
                    sizeof(*si_other));
             logClientActivity(mac,
-                              LOG_INFO,
+                              LOG_DEBUG,
                               PULSE_LOG_STATE_BACKUP,
                               "'end-of-backup success : %s'",
                               uuid);
@@ -479,7 +479,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
 
         if (mysystem(3, gPathChangeDefault, mac, item) == 0) {
             logClientActivity(mac,
-                              LOG_INFO,
+                              LOG_DEBUG,
                               PULSE_LOG_STATE_MENU,
                               "'preselected-menu-entry-change success : %s'",
                               item);
@@ -510,14 +510,14 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         switch (buf[1]) {
         case '0':
             logClientActivity(mac,
-                              LOG_DEBUG,
+                              LOG_INFO,
                               PULSE_LOG_STATE_BOOT,
                               "'booted'");
             return 0; // do not send ACK, it can conflict with the hostname request
             break;
         case '1':
             logClientActivity(mac,
-                              LOG_DEBUG,
+                              LOG_INFO,
                               PULSE_LOG_STATE_MENU,
                               "'choosen menu entry : %d'",
                               buf[2]);
@@ -525,13 +525,13 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         case '2':
             if (buf[2] == '-') {
                 logClientActivity(mac,
-                                  LOG_DEBUG,
+                                  LOG_INFO,
                                   PULSE_LOG_STATE_RESTO,
                                   "'restoration started : %s'",
                                   &buf[3]);
             } else {
                 logClientActivity(mac,
-                                  LOG_DEBUG,
+                                  LOG_INFO,
                                   PULSE_LOG_STATE_RESTO,
                                   "'restoration started'");
             }
@@ -539,13 +539,13 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         case '3':
             if (buf[2] == '-') {
                 logClientActivity(mac,
-                                  LOG_DEBUG,
+                                  LOG_INFO,
                                   PULSE_LOG_STATE_RESTO,
                                   "'restoration finished : %s'",
                                   &buf[3]);
             } else {
                 logClientActivity(mac,
-                                  LOG_DEBUG,
+                                  LOG_INFO,
                                   PULSE_LOG_STATE_RESTO,
                                   "'restoration finished'");
             }
@@ -555,13 +555,13 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         case '4':
             if (buf[2] == '-') {
                 logClientActivity(mac,
-                                  LOG_DEBUG,
+                                  LOG_INFO,
                                   PULSE_LOG_STATE_BACKUP,
                                   "'backup started : %s'",
                                   &buf[3]);
             } else {
                 logClientActivity(mac,
-                                  LOG_DEBUG,
+                                  LOG_INFO,
                                   PULSE_LOG_STATE_BACKUP,
                                   "'backup started'");
             }
@@ -570,7 +570,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             if (buf[2] == '-') {
 
                 logClientActivity(mac,
-                                  LOG_DEBUG,
+                                  LOG_INFO,
                                   PULSE_LOG_STATE_BACKUP,
                                   "'backup finished : %s'",
                                   &buf[3]);
@@ -586,20 +586,20 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
                 //MDV/NR }
             } else {
                 logClientActivity(mac,
-                                  LOG_DEBUG,
+                                  LOG_INFO,
                                   PULSE_LOG_STATE_BACKUP,
                                   "'backup finished'");
             }
             break;
         case '6':
             logClientActivity(mac,
-                              LOG_DEBUG,
+                              LOG_INFO,
                               PULSE_LOG_STATE_POSTINST,
                               "'postinstall started'");
             break;
         case '7':
             logClientActivity(mac,
-                              LOG_DEBUG,
+                              LOG_INFO,
                               PULSE_LOG_STATE_POSTINST,
                               "'postinstall finished '");
             break;
@@ -614,6 +614,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         sendto(s, ACKSTR, strlen(ACKSTR) + 1, MSG_NOSIGNAL, (struct sockaddr *)si_other, sizeof(*si_other));
         return 0;
     }
+
     // give me my Pulse 2 name
     if (buf[0] == 0x1A) {
         char filename[256];
@@ -631,7 +632,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             myLogger(msg);
             free(msg);
             logClientActivity(mac,
-                              LOG_WARNING,
+                              LOG_ERROR,
                               PULSE_LOG_STATE_BOOT,
                               "'failed to obtain a hostname'");
             return 0;
@@ -653,7 +654,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             sendto(s, name, strlen(name) + 1 , MSG_NOSIGNAL,
                    (struct sockaddr *)si_other, sizeof(*si_other));
             logClientActivity(mac,
-                              LOG_INFO,
+                              LOG_DEBUG,
                               PULSE_LOG_STATE_BOOT,
                               "'hostname sent : %s'",
                               name);
@@ -666,13 +667,14 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
                    (struct sockaddr *)si_other,
                    sizeof(*si_other));
             logClientActivity(mac,
-                              LOG_INFO,
+                              LOG_WARNING,
                               PULSE_LOG_STATE_BOOT,
                               "'failed to send a hostname'");
         }
 
         return 0;
     }
+
     // give me my Pulse 2 UUID
     if (buf[0] == 0x1B) {
         char filename[256];
@@ -690,7 +692,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             myLogger(msg);
             free(msg);
             logClientActivity(mac,
-                              LOG_WARNING,
+                              LOG_ERROR,
                               PULSE_LOG_STATE_BOOT,
                               "'failed to recover a computer UUID'");
             return 0;
@@ -712,7 +714,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             sendto(s, name, strlen(name) + 1 , MSG_NOSIGNAL,
                    (struct sockaddr *)si_other, sizeof(*si_other));
             logClientActivity(mac,
-                              LOG_INFO,
+                              LOG_DEBUG,
                               PULSE_LOG_STATE_BOOT,
                               "'computer UUID sent : %s'",
                               name);
@@ -732,6 +734,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
 
         return 0;
     }
+
     /* mtftp synchro */
     if (buf[0] == 'T') {
         char pnum;
