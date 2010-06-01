@@ -214,7 +214,7 @@ CREATE TABLE Partition (
   id INT NOT NULL AUTO_INCREMENT,
   name Text NOT NULL,
   filesystem Text NOT NULL,
-  `size_sect` INT NOT NULL,
+  size_sect INT NOT NULL,
   start_sect INT NOT NULL,
   fk_image INT NOT NULL,
   PRIMARY KEY (id)
@@ -256,6 +256,14 @@ CREATE TABLE Image (
   creation_date datetime,
   fk_creator INT NOT NULL,
   ntblfix TINYINT(1) NOT NULL DEFAULT 0,
+  fk_state INT NOT NULL,
+  PRIMARY KEY (id)
+);
+
+-- Image State
+CREATE TABLE ImageState (
+  id INT NOT NULL AUTO_INCREMENT,
+  label Text NOT NULL,
   PRIMARY KEY (id)
 );
 
@@ -342,6 +350,7 @@ ALTER TABLE ImageInMenu ADD FOREIGN KEY(fk_image)       REFERENCES Image(id);
 ALTER TABLE ImageInMenu ADD FOREIGN KEY(fk_menuitem)    REFERENCES MenuItem(id);
 
 ALTER TABLE Image ADD FOREIGN KEY(fk_creator) REFERENCES `User`(id);
+ALTER TABLE Image ADD FOREIGN KEY(fk_state)   REFERENCES `ImageState`(id);
 
 ALTER TABLE ImagingLog ADD FOREIGN KEY(fk_imaging_log_state)    REFERENCES ImagingLogState(id);
 ALTER TABLE ImagingLog ADD FOREIGN KEY(fk_imaging_log_level)    REFERENCES ImagingLogLevel(id);
@@ -435,6 +444,14 @@ INSERT INTO ImagingLogLevel (id, label) VALUES (5, "LOG_WARNING");
 INSERT INTO ImagingLogLevel (id, label) VALUES (6, "LOG_NOTICE");
 INSERT INTO ImagingLogLevel (id, label) VALUES (7, "LOG_INFO");
 INSERT INTO ImagingLogLevel (id, label) VALUES (8, "LOG_DEBUG");
+
+/* Default Image States */
+INSERT INTO ImageState (id, label) VALUES (1, "UNKNOWN");
+INSERT INTO ImageState (id, label) VALUES (2, "DONE");
+INSERT INTO ImageState (id, label) VALUES (3, "TODO");
+INSERT INTO ImageState (id, label) VALUES (4, "FAILED");
+INSERT INTO ImageState (id, label) VALUES (5, "EMPTY");
+INSERT INTO ImageState (id, label) VALUES (6, "INPROGRESS");
 
 INSERT INTO Protocol (label) VALUES ("nfs");
 INSERT INTO Protocol (label) VALUES ("tftp");
