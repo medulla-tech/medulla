@@ -32,6 +32,8 @@ PULSE2_IMAGING_EXCLUDE_FNAME = 'exclude'
 PULSE2_IMAGING_GRUB_FNAME = 'conf.txt'
 PULSE2_IMAGING_CONF_FNAME = 'CONF'
 PULSE2_IMAGING_SIZE_FNAME = 'size.txt'
+PULSE2_IMAGING_LOG_FNAME = 'log.txt'
+PULSE2_IMAGING_PROGRESS_FNAME = 'progress.txt'
 
 
 class Pulse2Image:
@@ -50,6 +52,10 @@ class Pulse2Image:
         self.disks = {}
         self.title = ''
         self.desc = ''
+        self.logs = []
+        self.has_error = False
+        self.progress = 0
+        self.current_part = None
 
         # open grub file
         try:
@@ -102,7 +108,6 @@ class Pulse2Image:
                 part_number = int(line_grub_file_part.group(2))
                 self.disks[hd_number][part_number]['line'] = \
                     line_grub_file.rstrip("\n").lstrip("#")
-
         fd_grub_file.close()
 
         # open size file
@@ -118,6 +123,29 @@ class Pulse2Image:
                 self.size = int(line_size_file_part.group(1)) * 1024
         fd_size_file.close()
 
+        # open log file
+        try:
+            fd_log_file = open(os.path.join(directory, PULSE2_IMAGING_LOG_FNAME))
+            for line_log_file in fd_log_file:
+                self.logs.append(line_log_file)
+                line_log_file_error = re.search("^ERROR: ", line_log_file)
+                if not line_log_file_error == None:
+                    self.has_error = True
+            fd_log_file.close()
+        except Exception, e:
+            pass  # harmless
+
+        # open progress file
+        try:
+            fd_prog_file = open(os.path.join(directory, PULSE2_IMAGING_PROGRESS_FNAME))
+            for line_prog_file in fd_prog_file:
+                line_prog_file_split = re.search("^([0-9]+): ([0-9]+)%", line_prog_file)
+                if line_prog_file_split != None:
+                    self.current_part = int(line_prog_file_split.group(1))
+                    self.progress = int(line_prog_file_split.group(2))
+            fd_prog_file.close()
+        except Exception, e:
+            pass  # harmless
 
 def isPulse2Image(folder):
     """

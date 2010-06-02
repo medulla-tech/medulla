@@ -541,6 +541,24 @@ class ImagingApi(MyXmlrpc):
 
     ## Image management
 
+    def xmlrpc_getImageLogs(self, imageUUID):
+        """
+        Send image logs by XMLRPC
+        """
+        if not isUUID(imageUUID):
+            self.logger.error("Bad image UUID %s" % str(imageUUID))
+            return False
+        
+        path = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['masters_folder'], imageUUID)
+        image = Pulse2Image(path)
+        if not image :
+            return False
+
+        return image.logs
+            
+            
+        return ret
+
     def xmlrpc_computerCreateImageDirectory(self, mac):
         """
         Create an image folder for client <mac>
@@ -693,11 +711,16 @@ class ImagingApi(MyXmlrpc):
                 path = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['masters_folder'], imageUUID)
                 image = Pulse2Image(path)
                 if not image:
-                    state = "FAILED"
+                    state = "INVALID"
                     size = 0  # FIXME : use actual size
                     name = "Failed backup of %s" % result['shortname']
                     desc = "%s, %s" % (rfc3339Time(), humanReadable(size))
-                else:
+                elif image.has_error :
+                    state = "FAILED"
+                    size = image.size
+                    name = "Backup of %s" % result['shortname']
+                    desc = "%s, %s" % (rfc3339Time(), humanReadable(size))
+                else :
                     state = "DONE"
                     size = image.size
                     name = "Backup of %s" % result['shortname']
