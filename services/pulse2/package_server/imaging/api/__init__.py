@@ -554,19 +554,47 @@ class ImagingApi(MyXmlrpc):
         @type mac: MAC Address
         """
 
-        def _getmacCB(result):
-            if result and type(result) == dict :
-                computer_uuid = result['uuid']
-                self.logger.info('Imaging: New image %s for client %s' % (image_uuid, computer_uuid))
-                return image_uuid
+        def _onSuccess(result):
+            if type(result) != list and len(result) != 2:
+                self.logger.error('Imaging: Couldn\'t register on the MMC agent the image with UUID %s : %s' % (image_uuid, str(result)))
+                ret = False
+            elif not result[0]:
+                self.logger.error('Imaging: Couldn\'t register on the MMC agent the image with UUID %s : %s' % (image_uuid, result[1]))
+                ret = False
+            else:
+                self.logger.info('Imaging: Successfully registered image %s' % image_uuid)
+                ret = image_uuid
+            return ret
 
-            self.logger.warn('Imaging: Failed resolving UUID for client %s : %s' % (mac, result))
-            return False
+        def _gotMAC(result):
+            """
+            Process result return by xmlrpc_getComputerByMac, BTW should be either False or the required info
+            """
+            if not result:
+                self.logger.error("Can't get computer UUID for MAC address %s" % (mac))
+                os.rmdir(os.path.join(target_folder, image_uuid))
+                return False
+            else:  # start gathering details about our image
+                c_uuid = result['uuid']
+                isMaster = False  # by default, an image is private
+                path = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['masters_folder'], image_uuid)
+                size = 0
+                creationDate = tuple(gmtime())
+                name = "Backup of %s" % result['shortname']
+                desc = "In Progress"
+                creator = ""
+                state = "EMPTY"  # FIXME : define and use consts
 
-        if not isMACAddress(mac):
-            raise TypeError
+                client = self._getXMLRPCClient()
+                func = 'imaging.imageRegister'
+                args = (self.config.imaging_api['uuid'], c_uuid, image_uuid, isMaster, name, desc, path, size, creationDate, creator, state)
+                d = client.callRemote(func, *args)
+                d.addCallbacks(_onSuccess, RPCReplay().onError, errbackArgs = (func, args, False))
+                return d
 
         self.logger.debug('Imaging: Client %s want to create an image' % (mac))
+        if not isMACAddress(mac):
+            raise TypeError
 
         target_folder = os.path.join(PackageServerConfig().imaging_api['base_folder'], PackageServerConfig().imaging_api['masters_folder'])
         # compute our future UUID, using the MAC address as node
@@ -577,7 +605,6 @@ class ImagingApi(MyXmlrpc):
             if not os.path.exists(os.path.join(target_folder, image_uuid)):
                 break
             attempts -= 1
-
         if not attempts:
             self.logger.warn('Imaging: I was not able to create a folder for client %s' % (mac))
             return maybeDeferred(lambda x: x, False)
@@ -590,7 +617,7 @@ class ImagingApi(MyXmlrpc):
 
         # now the folder is created (and exists), if can safely be used
         d = self.xmlrpc_getComputerByMac(mac)
-        d.addCallback(_getmacCB)
+        d.addCallback(_gotMAC)
         return d
 
     def xmlrpc_computerChangeDefaultMenuItem(self, mac, num):
@@ -643,13 +670,13 @@ class ImagingApi(MyXmlrpc):
 
         def _onSuccess(result):
             if type(result) != list and len(result) != 2:
-                self.logger.error('Imaging: Couldn\'t register on the MMC agent the image with UUID %s : %s' % (imageUUID, str(result)))
+                self.logger.error('Imaging: Couldn\'t update on the MMC agent the image with UUID %s : %s' % (imageUUID, str(result)))
                 ret = False
             elif not result[0]:
-                self.logger.error('Imaging: Couldn\'t register on the MMC agent the image with UUID %s : %s' % (imageUUID, result[1]))
+                self.logger.error('Imaging: Couldn\'t update on the MMC agent the image with UUID %s : %s' % (imageUUID, result[1]))
                 ret = False
             else:
-                self.logger.info('Imaging: Successfully registered image %s' % imageUUID)
+                self.logger.info('Imaging: Successfully updated image %s' % imageUUID)
                 ret = True
             return ret
 
@@ -663,19 +690,26 @@ class ImagingApi(MyXmlrpc):
             else:
                 # start gathering details about our image
 
-                c_uuid = result['uuid']
-                isMaster = False  # by default, an image is private
                 path = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['masters_folder'], imageUUID)
                 image = Pulse2Image(path)
-                size = image.size
-                creationDate = tuple(gmtime())
-                name = "Backup of %s" % result['shortname']
-                desc = "%s, %s" % (rfc3339Time(), humanReadable(size))
-                creator = ""
+                if not image:
+                    state = "FAILED"
+                    size = 0  # FIXME : use actual size
+                    name = "Failed backup of %s" % result['shortname']
+                    desc = "%s, %s" % (rfc3339Time(), humanReadable(size))
+                else:
+                    state = "DONE"
+                    size = image.size
+                    name = "Backup of %s" % result['shortname']
+                    desc = "%s, %s" % (rfc3339Time(), humanReadable(size))
+
+                c_uuid = result['uuid']
+                print result
+                updateDate = tuple(gmtime())
 
                 client = self._getXMLRPCClient()
-                func = 'imaging.imageRegister'
-                args = (self.config.imaging_api['uuid'], c_uuid, imageUUID, isMaster, name, desc, path, size, creationDate, creator)
+                func = 'imaging.imageUpdate'
+                args = (self.config.imaging_api['uuid'], c_uuid, imageUUID, name, desc, size, updateDate, state)
                 d = client.callRemote(func, *args)
                 d.addCallbacks(_onSuccess, RPCReplay().onError, errbackArgs = (func, args, False))
                 return d
