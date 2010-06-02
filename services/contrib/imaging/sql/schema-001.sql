@@ -436,14 +436,13 @@ INSERT INTO ImagingLogState (id, label) VALUES (07, "error");
 INSERT INTO ImagingLogState (id, label) VALUES (08, "delete");
 INSERT INTO ImagingLogState (id, label) VALUES (09, "inventory");
 
-INSERT INTO ImagingLogLevel (id, label) VALUES (1, "LOG_EMERG");
-INSERT INTO ImagingLogLevel (id, label) VALUES (2, "LOG_ALERT");
-INSERT INTO ImagingLogLevel (id, label) VALUES (3, "LOG_CRIT");
-INSERT INTO ImagingLogLevel (id, label) VALUES (4, "LOG_ERR");
-INSERT INTO ImagingLogLevel (id, label) VALUES (5, "LOG_WARNING");
-INSERT INTO ImagingLogLevel (id, label) VALUES (6, "LOG_NOTICE");
-INSERT INTO ImagingLogLevel (id, label) VALUES (7, "LOG_INFO");
-INSERT INTO ImagingLogLevel (id, label) VALUES (8, "LOG_DEBUG");
+INSERT INTO ImagingLogLevel (id, label) VALUES (1, "LOG_ALERT");
+INSERT INTO ImagingLogLevel (id, label) VALUES (2, "LOG_CRIT");
+INSERT INTO ImagingLogLevel (id, label) VALUES (3, "LOG_ERR");
+INSERT INTO ImagingLogLevel (id, label) VALUES (4, "LOG_WARNING");
+INSERT INTO ImagingLogLevel (id, label) VALUES (5, "LOG_NOTICE");
+INSERT INTO ImagingLogLevel (id, label) VALUES (6, "LOG_INFO");
+INSERT INTO ImagingLogLevel (id, label) VALUES (7, "LOG_DEBUG");
 
 /* Default Image States */
 INSERT INTO ImageState (id, label) VALUES (1, "UNKNOWN");
