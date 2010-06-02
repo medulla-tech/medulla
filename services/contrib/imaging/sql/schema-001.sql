@@ -453,6 +453,7 @@ INSERT INTO ImageState (id, label) VALUES (3, "TODO");
 INSERT INTO ImageState (id, label) VALUES (4, "FAILED");
 INSERT INTO ImageState (id, label) VALUES (5, "EMPTY");
 INSERT INTO ImageState (id, label) VALUES (6, "INPROGRESS");
+INSERT INTO ImageState (id, label) VALUES (6, "INVALID");
 
 INSERT INTO Protocol (label) VALUES ("nfs");
 INSERT INTO Protocol (label) VALUES ("tftp");
