@@ -82,7 +82,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             'TargetType': TargetType,
             'Protocol': Protocol,
             'SynchroState': SynchroState,
-            'Language': Language
+            'Language': Language,
+            'ImageState' : ImageState
         }
         self.fk_nomenclatures = {
             'ImagingLog': {
@@ -98,6 +99,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             },
             'ImagingServer': {
                 'fk_language': 'Language'
+            },
+            'Image': {
+                'fk_state': 'ImageState'
             },
         }
         self.__loadNomenclatureTables()
@@ -156,6 +160,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         mapper(ComputerPartition, self.computer_partition)
         mapper(Entity, self.entity)
         mapper(Image, self.image)
+        mapper(ImageState, self.image_state)
         mapper(ImageInMenu, self.image_in_menu)
         mapper(ImageOnImagingServer, self.image_on_imaging_server)
         mapper(ImagingServer, self.imaging_server)
@@ -249,6 +254,13 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             "Image",
             self.metadata,
             Column('fk_creator', Integer, ForeignKey('User.id')),
+            Column('fk_state', Integer, ForeignKey('ImageState.id')),
+            autoload = True
+        )
+
+        self.image_state = Table(
+            "ImageState",
+            self.metadata,
             autoload = True
         )
 
@@ -1601,13 +1613,15 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         @return: True on success, else will raise an exception
         @rtype: bool
         """
+
         session = create_session()
         # check no image with the same uuid exists
         c = session.query(Image).filter(self.image.c.uuid == params['uuid']).count()
         if c != 0:
-            self.logger.warn('an image with the same UUID already exists (%s)'%(params['uuid']))
-            raise '%s:An image with the same UUID already exists! (%s)'%(P2ERR.ERR_IMAGE_ALREADY_EXISTS, params['uuid'])
+            self.logger.warn('an image with the same UUID already exists (%s)' % (params['uuid']))
+            raise '%s:An image with the same UUID already exists! (%s)' % (P2ERR.ERR_IMAGE_ALREADY_EXISTS, params['uuid'])
 
+        self.logger.error('WOOT : %s' % "a")
         # create the image item
         image = Image()
         image.name = params['name']
@@ -1617,8 +1631,17 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         image.checksum = params['checksum']
         image.size = params['size']
         image.creation_date = datetime.datetime.fromtimestamp(time.mktime(params['creation_date']))
-        image.fk_creator = 1 # TOBEDONE image['']
+        image.fk_creator = 1  # TOBEDONE image['']
         image.is_master = params['is_master']
+
+        if params['state'] in self.r_nomenclatures['ImageState']:
+            image.fk_state = self.r_nomenclatures['ImageState'][params['state']]
+        elif params['state'] in self.nomenclatures['ImageState']:
+            image.fk_state = params['state']
+        else:  # this state is unknown!
+            self.logger.warn("don't know that imaging log state %s" % (params['state']))
+            image.fk_state = 1  # the UNKNOWN entry
+
         session.save(image)
         session.flush()
 
@@ -1628,7 +1651,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         imaging_log.timestamp = datetime.datetime.fromtimestamp(time.mktime(params['creation_date']))
         imaging_log.detail = params['desc']
         imaging_log.fk_imaging_log_level = P2ILL.LOG_INFO
-        imaging_log.fk_imaging_log_state = 1 # done
+        imaging_log.fk_imaging_log_state = 1  # done
         target = session.query(Target).filter(self.target.c.uuid == computer_uuid).first()
         imaging_log.fk_target = target.id
         session.save(imaging_log)
@@ -1786,24 +1809,33 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return ret
 
     def editImage(self, item_uuid, params):
+
         session = create_session()
         im = session.query(Image).filter(self.image.c.id == uuid2id(item_uuid)).first()
         if im == None:
-            raise "%s:Cant find the image you are trying to edit."%(P2ERR.ERR_DEFAULT)
+            raise "%s:Cant find the image you are trying to edit." % (P2ERR.ERR_DEFAULT)
         need_to_be_save = False
-        for p in ('name', 'desc', 'is_master'):
-            if params.has_key(p) and params[p] != getattr(im, p):
+        for p in ('name', 'desc', 'is_master', 'size'):
+            if p in params and params[p] != getattr(im, p):
                 need_to_be_save = True
                 setattr(im, p, params[p])
+        if 'state' in params :
+            if params['state'] in self.r_nomenclatures['ImageState']:
+                im.fk_state = self.r_nomenclatures['ImageState'][params['state']]
+            elif params['state'] in self.nomenclatures['ImageState']:
+                im.fk_state = params['state']
+            else:  # this state is unknown!
+                self.logger.warn("don't know that imaging log state %s" % (params['state']))
+                im.fk_state = 1  # the UNKNOWN entry
 
-        if params.has_key('is_master'):
-            if params['is_master'] and params.has_key('post_install_scripts') or not params['is_master']:
+        if 'is_master' in params:
+            if params['is_master'] and 'post_install_scripts' in params or not params['is_master']:
                 pisiis = session.query(PostInstallScriptInImage).filter(self.post_install_script_in_image.c.fk_image == uuid2id(item_uuid)).all()
                 for p in pisiis:
                     session.delete(p)
                 session.flush()
 
-            if params['is_master'] and params.has_key('post_install_scripts'):
+            if params['is_master'] and 'post_install_scripts' in params:
                 post_install_scripts = self.__editImage__grepAndStartOrderAtZero(params['post_install_scripts'])
                 for pis in post_install_scripts:
                     pisii = PostInstallScriptInImage()
@@ -2219,11 +2251,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         ims = ImagingServer()
         ims.name = name
         ims.url = url
-        ims.fk_entity = 1 # the 'root' entity
+        ims.fk_entity = 1  # the 'root' entity
         ims.packageserver_uuid = uuid
-        ims.fk_default_menu = 1 # the default "subscribe" menu, which is shown when an unknown client boots
-        ims.associated = 0 # we are registered, but not yet associated
-        ims.fk_language = 1 # default on English
+        ims.fk_default_menu = 1  # the default "subscribe" menu, which is shown when an unknown client boots
+        ims.associated = 0  # we are registered, but not yet associated
+        ims.fk_language = 1  # default on English
         self.imagingServer_lang[uuid] = 1
         session.save(ims)
         session.flush()
@@ -3254,10 +3286,24 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         ret = map(lambda t:t.uuid, targets)
         return ret
 
+    def getImageIDFromImageUUID(self, image_uuid):
+        session = create_session()
+        img = session.query(Image).filter(self.image.c.uuid == image_uuid).first()
+        session.close()
+        if img :
+            return img.id
+        return None
+
+    def getImageUUIDFromImageUUID(self, image_uuid):
+        return id2uuid(self.getImageIDFromImageUUID(image_uuid))
+
 def id2uuid(id):
     return "UUID%d" % id
+
+
 def uuid2id(uuid):
     return uuid.replace("UUID", "")
+
 
 ###########################################################
 class DBObject(object):
@@ -3318,6 +3364,9 @@ class Entity(DBObject):
 class Image(DBObject):
     to_be_exported = ['id', 'path', 'checksum', 'size', 'desc', 'is_master', 'creation_date', 'fk_creator', 'name', 'is_local', 'uuid', 'mastered_on_target_uuid', 'read_only']
     need_iteration = ['menu_item', 'post_install_scripts']
+
+class ImageState(DBObject):
+    to_be_exported = ['id', 'label']
 
 class ImageInMenu(DBObject):
     pass
