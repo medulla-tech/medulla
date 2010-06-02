@@ -66,6 +66,7 @@ def myCall():
 
     try:
         level = int(sys.argv[2])
+        level += 1 # shift log level by one
     except ValueError:
         logging.getLogger().error('HOOK %s : Second arg (%s) do not seems to be an integer' % (sys.argv[0], sys.argv[2]))
         exitcode = ERROR_CLIENT
