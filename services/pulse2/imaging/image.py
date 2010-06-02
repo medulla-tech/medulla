@@ -43,7 +43,8 @@ class Pulse2Image:
         """
         Return Image stats (from conf.txt and others)
         """
-        assert isPulse2Image(directory)
+        if not isPulse2Image(directory):
+            return None
 
         self.size = 0
         self.disks = {}
@@ -71,14 +72,14 @@ class Pulse2Image:
 
             # ptabs line ?
             line_grub_file_part = re.search("^#?ptabs \(hd([0-9]+)\) ", line_grub_file)
-            if line_grub_file_part != None: # got one disk
+            if line_grub_file_part != None:  # got one disk
                 hd_number = int(line_grub_file_part.group(1))
                 self.disks[hd_number] = {}
                 self.disks[hd_number]['line'] = line_grub_file.rstrip("\n").lstrip("#")
 
             # hd line ?
             line_grub_file_part = re.search("^ # \(hd([0-9]+),([0-9]+)\) ([0-9]+) ([0-9]+) ([0-9]+)$", line_grub_file)
-            if line_grub_file_part != None: # got one part (first line ?)
+            if line_grub_file_part != None:  # got one part (first line ?)
                 hd_number = int(line_grub_file_part.group(1))
                 part_number = int(line_grub_file_part.group(2))
                 start = int(line_grub_file_part.group(3)) * 512
@@ -96,7 +97,7 @@ class Pulse2Image:
 
             # part line ?
             line_grub_file_part = re.search("^#? partcopy \(hd([0-9]+),([0-9]+)\) ([0-9]+) PATH/", line_grub_file)
-            if line_grub_file_part != None: # got one part (second line)
+            if line_grub_file_part != None:  # got one part (second line)
                 hd_number = int(line_grub_file_part.group(1))
                 part_number = int(line_grub_file_part.group(2))
                 self.disks[hd_number][part_number]['line'] = \
