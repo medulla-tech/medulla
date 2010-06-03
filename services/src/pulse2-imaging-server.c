@@ -403,7 +403,6 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             fo = open(filename, 'r');
             read(fo, name, 40);
             close(fo);
-            unlink(filename);
             sendto(s, name, strlen(name) + 1 , MSG_NOSIGNAL,
                    (struct sockaddr *)si_other, sizeof(*si_other));
             logClientActivity(mac,
@@ -425,6 +424,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
                               "'failed to send an image UUID'");
         }
 
+        unlink(filename);
         return 0;
     }
 
@@ -650,7 +650,6 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             fo = open(filename, 'r');
             read(fo, name, 256);
             close(fo);
-            unlink(filename);
             sendto(s, name, strlen(name) + 1 , MSG_NOSIGNAL,
                    (struct sockaddr *)si_other, sizeof(*si_other));
             logClientActivity(mac,
@@ -672,6 +671,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
                               "'failed to send a hostname'");
         }
 
+        unlink(filename);
         return 0;
     }
 
@@ -710,7 +710,6 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             fo = open(filename, 'r');
             read(fo, name, 256);
             close(fo);
-            unlink(filename);
             sendto(s, name, strlen(name) + 1 , MSG_NOSIGNAL,
                    (struct sockaddr *)si_other, sizeof(*si_other));
             logClientActivity(mac,
@@ -732,6 +731,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
                               "'failed to send a computer UUID");
         }
 
+        unlink(filename);
         return 0;
     }
 
