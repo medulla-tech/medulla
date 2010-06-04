@@ -109,8 +109,16 @@ if (isset($params['uuid'])) {
             $p->setSideMenu($sidemenu);
             global $stateid;
             $stateid = $ret['id'];
-            $p->addTop(sprintf(_T("%s's computer imaging", 'imaging'), $hostname),
-                "modules/imaging/imaging/header.php");
+
+            # check if we are in a profile
+            $in_profile = xmlrpc_isComputerInProfileRegistered($params['target_uuid']);
+            if ($in_profile) {
+                $p->addTop(sprintf(_T("%s's computer imaging (in profile)", 'imaging'), $hostname),
+                    "modules/imaging/imaging/header.php");
+            } else {
+                $p->addTop(sprintf(_T("%s's computer imaging", 'imaging'), $hostname),
+                    "modules/imaging/imaging/header.php");
+            }
 
             $p->addTab("tabbootmenu", _T("Boot menu", 'imaging'), _T("Current boot menu", "imaging"),
                 "modules/imaging/imaging/bootmenu.php", $params);
