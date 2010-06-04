@@ -25,10 +25,18 @@ require_once("modules/dyngroup/includes/includes.php");
 
 $id = quickGet('gid');
 $group = new Group($id, False);
+$type = quickGet('type');
+if ($type == 1) {
+    $stype = "_profiles";
+    $ltype = 'profile';
+} else {
+    $stype = '';
+    $ltype = 'group';
+}
 
 if (quickGet('valid')) {
     $group->delete();
-    header("Location: " . urlStrRedirect("base/computers/list" ));
+    header("Location: " . urlStrRedirect("base/computers/list$stype" ));
 }
 
 ?>
@@ -37,18 +45,18 @@ if (quickGet('valid')) {
 
 ?>
 
-<form action="<?= urlStr("base/computers/delete_group", array('gid'=>$id)) ?>" method="post">
+<form action="<?= urlStr("base/computers/delete_group", array('gid'=>$id, 'type'=>$type)) ?>" method="post">
 <p>
 
-<?  
-    printf(_T("Are you sure you want to delete group <b>%s</b>?<br/> (it can be used in an other group).", "dyngroup"), $_GET["groupname"]);
+<?
+    printf(_T("Are you sure you want to delete %s <b>%s</b>?<br/> (it can be used in an other group).", "dyngroup"), $ltype, $_GET["groupname"]);
 ?>
 
 </p>
 <input name='valid' type="submit" class="btnPrimary" value="<?= _T("Delete group", "dyngroup"); ?>" />
 <input name="bback" type="submit" class="btnSecondary" value="<?= _T("Cancel", "dyngroup"); ?>" onClick="new Effect.Fade('popup'); return false;"/>
 </form>
-    
+
 
 
 
