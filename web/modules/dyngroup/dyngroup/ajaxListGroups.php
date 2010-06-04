@@ -69,7 +69,7 @@ if ($is_gp != 1) {
 $empty = new EmptyActionItem();
 
 foreach ($list as $group) {
-    $ids[]=  array("id"=>$group->id, "gid"=>$group->id, "groupname"=> $group->name);
+    $ids[]=  array("id"=>$group->id, "gid"=>$group->id, "groupname"=> $group->name, 'type'=>$is_gp);
     $name[]= $group->getName();
     if ($group->isDyn()) {
         $type[]= (!$group->isRequest() ? sprintf(_T('result (%s)', 'dyngroup'), $group->countResult()) : _T('query', 'dyngroup'));
