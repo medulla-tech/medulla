@@ -54,10 +54,13 @@ class ImagingProfile(ComputerProfileI):
         if ImagingDatabase().isTargetRegister(profile_UUID, P2IT.PROFILE):
             # TODO : put all the computers on their own menu
             computers_UUID = map(lambda c:c.uuid, ComputerProfileManager().getProfileContent(profile_UUID))
-            ret1 = ImagingDatabase().delComputersFromProfile(profile_UUID, computers_UUID)
+            computers = {}
+            for uuid in computers_UUID:
+                computers[uuid] = {'uuid':uuid}
+
+            ret1 = ImagingDatabase().delComputersFromProfile(profile_UUID, computers)
             ret2 = ImagingDatabase().changeTargetsSynchroState(computers_UUID, P2IT.COMPUTER, P2ISS.TODO)
             # delete the profile itself
-            # TODO delete the profile (target + menu + menu_items)
             ret3 = ImagingDatabase().delProfile(profile_UUID)
 
             return ret1 and ret2 and ret3

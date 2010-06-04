@@ -147,8 +147,6 @@ class RpcProxy(RpcProxyI):
         if self.isprofile(id):
             grp = DyngroupDatabase().get_group(ctx, id, True)
             profile_UUID = grp.getUUID()
-            computers_UUID = map(lambda c:c.uuid, ComputerProfileManager().getProfileContent(profile_UUID))
-            ret1 = ComputerProfileManager().delComputersFromProfile(computers_UUID, profile_UUID)
             ret2 = ComputerProfileManager().delProfile(profile_UUID)
         return xmlrpcCleanup(DyngroupDatabase().delete_group(ctx, id))
 

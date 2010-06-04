@@ -3025,6 +3025,34 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def delProfile(self, profile_UUID):
         session = create_session()
         # remove all the possible menuitem that only depend on this profile
+        pmis = self.__getAllProfileMenuItem(profile_UUID, session)
+        profile, menu = session.query(Target).add_entity(Menu) \
+                .select_from(self.target.join(self.menu, self.target.c.fk_menu == self.menu.c.id)) \
+                .filter(and_(self.target.c.uuid == profile_UUID, self.target.c.type == P2IT.PROFILE)).one()
+
+        menu.fk_default_item = None
+        menu.fk_default_item_WOL = None
+        session.save_or_update(menu)
+        session.flush()
+
+        for mi, target, bsim, iim in pmis:
+            if bsim != None:
+                session.delete(bsim)
+            if iim != None:
+                session.delete(iim)
+        session.flush()
+
+        for mi, target, bsim, iim in pmis:
+            session.delete(mi)
+        session.flush()
+
+        session.delete(profile)
+        session.flush()
+
+        session.delete(menu)
+        session.flush()
+        session.close()
+        return True
 
     def setProfileMenuTarget(self, uuids, profile_uuid, params):
         session = create_session()
