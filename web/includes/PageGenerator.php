@@ -1,5 +1,4 @@
 <?php
-
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2010 Mandriva, http://www.mandriva.com
@@ -405,12 +404,14 @@ class ListInfos extends HtmlElement {
 
         global $conf;
 
+	$this->maxperpage = (isset($_REQUEST['maxperpage'])) ? $_REQUEST['maxperpage'] : $conf['global']['maxperpage'];
+
         if (!isset($_GET["start"])) {
             if (!isset($_POST["start"])) {
                 $this->start = 0;
 
                 if (count($this->arrInfo) > 0) {
-                    $this->end = $conf["global"]["maxperpage"] - 1;
+                    $this->end = $this->maxperpage - 1;
                 } else {
                     $this->end = 0;
                 }
@@ -419,7 +420,6 @@ class ListInfos extends HtmlElement {
             $this->start = $_GET["start"];
             $this->end = $_GET["end"];
         }
-        $this->maxperpage = $conf["global"]["maxperpage"];
         /* Set a basic navigation bar */
         $this->setNavBar(new SimpleNavBar($this->start, $this->end, count($this->arrInfo), $this->extranavbar));
     }
@@ -466,11 +466,18 @@ class ListInfos extends HtmlElement {
     /**
      *  draw number of page etc...
      */
-    function drawHeader($navbar = 1) {
+        function drawHeader($navbar = 1) {
+        
         $this->displayNavbar($navbar);
         echo "<p class=\"listInfos\">";
-        echo $this->name." <strong>".min(($this->start + 1), count($this->arrInfo))."</strong>\n ";
-        echo _("to")." <strong>".min(($this->end + 1), count($this->arrInfo))."</strong>\n";
+        
+        /* 
+         * Management of the numbers "start" and "end" to display depending on the maxperpage set in the selector 
+         * These numbers are more user-friendly and do not begin with 0
+         */
+        echo $this->name." <strong>".min($this->start + 1, $count) . "</strong>\n ";
+        echo _("to")." <strong>".min($this->end + 1, $count)."</strong>\n";
+
         printf (_(" - Total <b>%s </b>")."\n",count($this->arrInfo));
         /* Display page counter only when possible */
         if ($this->maxperpage >= ($this->end - $this->start)) {
@@ -662,7 +669,7 @@ class OptimizedListInfos extends ListInfos {
             if (!isset($_POST["start"])) {
                 $this->start = 0;
                 if (count($this->arrInfo) > 0) {
-                    $this->end = $conf["global"]["maxperpage"] - 1;
+                    $this->end = (isset($_REQUEST['maxperpage'])) ? ($_REQUEST['maxperpage'] - 1) : ($conf["global"]["maxperpage"] - 1);
                 } else {
                     $this->end = 0;
                 }
@@ -671,7 +678,7 @@ class OptimizedListInfos extends ListInfos {
             $this->start = $_GET["start"];
             $this->end = $_GET["end"];
         }
-        $this->maxperpage = $conf["global"]["maxperpage"];
+        $this->maxperpage = (isset($_REQUEST['maxperpage'])) ? $_REQUEST['maxperpage'] : $conf["global"]["maxperpage"];
         $this->setItemCount(count($this->arrInfo));
         $this->startreal = $this->start;
         $this->endreal = $this->end;
@@ -684,8 +691,14 @@ class OptimizedListInfos extends ListInfos {
         $count = $this->getItemCount();
         $this->displayNavbar($navbar);
         echo "<p class=\"listInfos\">";
-        echo $this->name." <strong>".min(($this->startreal + 1), $count) . "</strong>\n ";
-        echo _("to")." <strong>".min(($this->endreal + 1), $count)."</strong>\n";
+        
+        /* 
+         * Management of the numbers "start" and "end" to display depending on the maxperpage set in the selector 
+         * These numbers are more user-friendly and do not begin with 0
+         */
+        echo $this->name." <strong>".min($this->startreal + 1, $count) . "</strong>\n ";
+        echo _("to")." <strong>".min($this->endreal + 1, $count)."</strong>\n";
+
         printf (_(" - Total <b>%s </b>")."\n", $count);
         /* Display page counter only when possible */
         if ($this->maxperpage >= ($this->endreal - $this->startreal)) {
@@ -733,21 +746,28 @@ class SimpleNavBar extends HtmlElement {
      * @param $curent: the last item index
      * @param $itemcount: total number of item
      * @param $filter: the current list filter
+     * @param $max: max quantity of elements in a page
+     * @param $paginator: boolean which enable the selector of the number of results in a page
      */
-    function SimpleNavBar($curstart, $curend, $itemcount, $extra = "") {
+    function SimpleNavBar($curstart, $curend, $itemcount, $extra = "", $max = "", $paginator = false) {
         global $conf;
-        $this->max = $conf["global"]["maxperpage"];
+        if(isset($max) && $max != "") {
+            $this->max = $max;
+        } else {
+            $this->max = $conf["global"]["maxperpage"];
+        }
         $this->curstart = $curstart;
         $this->curend = $curend;
         $this->itemcount = $itemcount;
         $this->extra = $extra;
+        $this->paginator = $paginator;
     }
 
     function display() {
         echo '<form method="post">';
         echo "<ul class=\"navList\">\n";
 
-        if ($this->curstart == 0)
+        if ($this->curstart == 0 || ($this->curstart - $this->max < 0))
             echo "<li class=\"previousListInactive\">"._("Previous")."</li>\n";
         else {
             $start = $this->curstart - $this->max;
@@ -756,6 +776,11 @@ class SimpleNavBar extends HtmlElement {
             /* FIXME: maybe we can get rid of $_GET["filter"] ? */
             printf("?module=%s&amp;submod=%s&amp;action=%s&amp;start=%d&amp;end=%d&amp;filter=%s%s", $_GET["module"],$_GET["submod"],$_GET["action"],$start, $end, $_GET["filter"], $this->extra);
             echo "\">"._("Previous")."</a></li>\n";
+        }
+
+        if($this->paginator) {
+            // Display the maxperpage selector
+            $this->displaySelectMax();
         }
 
         if (($this->curend + 1) >= $this->itemcount)
@@ -768,39 +793,151 @@ class SimpleNavBar extends HtmlElement {
             echo "\">"._("Next")."</a></li>\n";
         }
 
+        if($this->paginator) {
+            // Display a border at the left of the "Next" link
+            $this->displayNextListBorder();
+        }
+
         echo "</ul>\n";
+    }
+
+    /*
+     * This function displays a selector to choose the maxperpage value
+     * dynamically.
+     * This is useful with AjaxNavBar
+     * @param $jsfunc: optional javascript function which updates ListInfos
+     */
+    function displaySelectMax($jsfunc=null) {
+        global $conf;
+        if(isset($jsfunc)) {
+            $start = $this->curstart;
+
+            echo "<select id=\"maxperpage\" name=\"maxperpage\" onChange=\"updateMaxPerPage(this); return false;\">";
+        } else {
+            echo "<select id=\"maxperpage\" name=\"maxperpage\">";
+        }
+        /* Display the selector and each option of the array set in the config
+           file */
+        foreach($conf["global"]["pagination"] as $quantity) {
+            $selected = '';
+            if ($_REQUEST['maxperpage'] == $quantity)
+                /* Set by default if already selected before */
+                $selected = ' selected="selected"';
+            echo "<option value=\"$quantity\"$selected>$quantity</option>";
+        }
+        echo "</select>";
+
+        /*
+         * Print the script which will launch an update of the ListInfos when
+         * selectMax value changes.
+         * It also synchronizes the value of the two selectors of the widget.
+         * Then it calls the javascript function which do an AJAX update of
+         * the ListInfos.
+         */
+?>
+        <script type="javascript">
+	    updateMaxPerPage = function(elem) {
+            // Get the selector element (the first of the page)
+	        var maxperpageElement = document.getElementById('maxperpage');
+            if(maxperpageElement != undefined) {
+                // Synchronize the value of the two selectors of the page :
+                // the ListInfos widget print two Navbar, so the maxperpage value can be changed in both
+                maxperpageElement.selectedIndex = elem.selectedIndex;
+                var maxperpageValue = elem.value;
+                // Evaluate the end depending on the maxperpage value selected
+                var end = parseInt(maxperpageValue) + parseInt(<?=$start?>) - 1;
+                // Call the function to update the ListInfos
+                <?=$jsfunc?>('<?=$this->filter?>', '<?=$start?>', end);
+            }
+            return false;
+        }
+        </script>
+<?
+
+    }
+
+    /**
+     * This function just print a script which add a border at the left of the "Next" link
+     */
+    function displayNextListBorder() {
+?>
+        <script type="javascript">
+        var nextList = [];
+        var nextListClass = "";
+        if(document.getElementsByClassName("nextListInactive").length > 0) {
+            nextListClass = "nextListInactive";
+        }
+        if(document.getElementsByClassName("nextList").length > 0) {
+            nextListClass = "nextList";
+        }
+        if(nextListClass != "") {
+            nextList = document.getElementsByClassName(nextListClass);
+            nextList[0].style.borderLeft = "solid 1px #CCC";
+            nextList[1].style.borderLeft = "solid 1px #CCC";
+        }
+        </script>
+<?
+    }
+
+}
+
+/**
+ * Class which creates a SimpleNavBar with the paginator always enabled by
+ * default
+ */
+class SimplePaginator extends SimpleNavBar {
+
+    /**
+     * Just call the constructor of SimpleNavBar with "true" value for the
+     * $paginator attribute
+     *
+     * @param $curstart: the first item index to display
+     * @param $curent: the last item index
+     * @param $itemcount: total number of item
+     * @param $filter: the current list filter
+     * @param $max: max quantity of elements in a page
+     */
+    function SimplePaginator($curstart, $curend, $itemcount, $extra = "", $max = "") {
+        $this->SimpleNavBar($curstart, $curend, $itemcount, $extra, $max, true);
     }
 
 }
 
 /**
  *  Display a previous/next navigation bar for ListInfos widget
- *  The AjaxNavNar is useful when an Ajax Filter is set for a ListInfos widget
+ *  The AjaxNavBar is useful when an Ajax Filter is set for a ListInfos widget
  */
 class AjaxNavBar extends SimpleNavBar {
 
     /**
      *
-     * The AjaxNavBar start/end item are get from $_GET["start"] and $_GET["end"]
+     * The AjaxNavBar start/end item are get from $_GET["start"] and
+     * $_GET["end"]
      *
      * @param $itemcount: total number of item
      * @param $filter: the current list filter
      * @param $extra: extra URL parameter to pass the next/list button
      * @param $jsfunc: the name of the javascript function that applies the AJAX filter for the ListInfos widget
+     * @param $max: the max number of elements to display in a page
      */
-    function AjaxNavBar($itemcount, $filter, $jsfunc = "updateSearchParam" ) {
+    function AjaxNavBar($itemcount, $filter, $jsfunc = "updateSearchParam", $max = "", $paginator = false) {
         global $conf;
+
         if (isset($_GET["start"])) {
             $curstart = $_GET["start"];
             $curend = $_GET["end"];
         } else {
             $curstart = 0;
-            if ($itemcount > 0)
-                $curend = $conf["global"]["maxperpage"] - 1;
-            else
+            if ($itemcount > 0){
+                if($max != "") {
+                    $curend = $max -1;
+                } else {
+                    $curend = $conf["global"]["maxperpage"] - 1;
+                }
+            } else
                 $curend = 0;
         }
-        $this->SimpleNavBar($curstart, $curend, $itemcount);
+        $this->SimpleNavBar($curstart, $curend, $itemcount, null, $max, $paginator);
         $this->filter = $filter;
         $this->jsfunc = $jsfunc;
     }
@@ -809,12 +946,17 @@ class AjaxNavBar extends SimpleNavBar {
         echo '<form method="post">';
         echo "<ul class=\"navList\">\n";
 
-        if ($this->curstart == 0)
+        if ($this->curstart == 0 || ($this->curstart - $this->max < 0))
             echo "<li class=\"previousListInactive\">" . _("Previous") . "</li>\n";
         else {
             $start = $this->curstart - $this->max;
             $end = $this->curstart - 1;
-            echo "<li class=\"previousList\"><a href=\"#\" onClick=\"" . $this->jsfunc . "('" . $this->filter . "','$start','$end'); return false;\">" . _("Previous") . "</a></li>\n";
+            echo "<li class=\"previousList\"><a href=\"#\" onClick=\"" . $this->jsfunc . "('" . $this->filter . "','$start','$end', document.getElementById('maxperpage')); return false;\">" . _("Previous") . "</a></li>\n";
+        }
+
+        if($this->paginator) {
+            // Display the maxperpage selector
+            $this->displaySelectMax($this->jsfunc);
         }
 
         if (($this->curend + 1) >= $this->itemcount)
@@ -822,10 +964,33 @@ class AjaxNavBar extends SimpleNavBar {
         else {
             $start = $this->curend + 1;
             $end = $this->curend + $this->max;
-            echo "<li class=\"nextList\"><a href=\"#\" onClick=\"" . $this->jsfunc . "('" . $this->filter . "','$start','$end'); return false;\">" . _("Next") . "</a></li>\n";
+            echo "<li class=\"nextList\"><a href=\"#\" onClick=\"" . $this->jsfunc . "('" . $this->filter . "','$start','$end', document.getElementById('maxperpage')); return false;\">" . _("Next") . "</a></li>\n";
+        }
+
+        if($this->paginator) {
+            // Display a border at the left of the "Next" link
+            $this->displayNextListBorder();
         }
 
         echo "</ul>\n";
+    }
+}
+
+/**
+ * Class which creates an AjaxNavBar with the paginator always enabled by
+ * default
+ */
+class AjaxPaginator extends AjaxNavBar {
+    /**
+     * Just call the constructor of AjaxNavBar with "true" value for the $paginator attribute
+     *
+     * @param $itemcount: total number of item
+     * @param $filter: the current list filter
+     * @param $jsfunc: the name of the javascript function that applies the AJAX filter for the ListInfos widget
+     * @param $max: the max number of elements to display in a page
+     */
+    function AjaxPaginator($itemcount, $filter, $jsfunc = "updateSearchParam", $max = "") {
+        $this->AjaxNavBar($itemcount, $filter, $jsfunc, $max, true);
     }
 
 }
@@ -923,6 +1088,9 @@ if(isset($this->storedfilter)) {
         var refreshtimer<?=$this->formid?> = null;
         var refreshparamtimer<?=$this->formid?> = null;
         var refreshdelay<?=$this->formid?> = <?= $this->refresh ?>;
+        var maxperpage = 10;
+        if(document.getElementById('maxperpage') != undefined)
+            maxperpage = document.getElementById('maxperpage').value;
 
         /**
          * Clear the timers set vith setTimeout
@@ -941,7 +1109,7 @@ if(isset($this->storedfilter)) {
          */
         updateSearch<?=$this->formid?> = function() {
             new Ajax.Updater('<?= $this->divid; ?>',
-            '<?= $this->url; ?>filter='+document.Form<?=$this->formid?>.param.value+'<?= $this->params ?>',
+            '<?= $this->url; ?>filter='+document.Form<?=$this->formid?>.param.value+'&maxperpage='+maxperpage+'<?= $this->params ?>',
             { asynchronous:true, evalScripts: true}
             );
 
@@ -957,14 +1125,16 @@ if ($this->refresh) {
         /**
          * Update div when clicking previous / next
          */
-        updateSearchParam<?=$this->formid?> = function(filter, start, end) {
+        updateSearchParam<?=$this->formid?> = function(filter, start, end, max) {
             clearTimers<?=$this->formid?>();
-            new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+filter+'&start='+start+'&end='+end+'<?= $this->params ?>', { asynchronous:true, evalScripts: true});
+            if(document.getElementById('maxperpage') != undefined)
+                maxperpage = document.getElementById('maxperpage').value;
 
+            new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+filter+'&start='+start+'&end='+end+'&maxperpage='+maxperpage+'<?= $this->params ?>', { asynchronous:true, evalScripts: true});
 <?
 if ($this->refresh) {
 ?>
-            refreshparamtimer<?=$this->formid?> = setTimeout("updateSearchParam<?=$this->formid?>('"+filter+"',"+start+","+end+")", refreshdelay<?=$this->formid?>);
+            refreshparamtimer<?=$this->formid?> = setTimeout("updateSearchParam<?=$this->formid?>('"+filter+"',"+start+","+end+","+maxperpage+")", refreshdelay<?=$this->formid?>);
 <?
 }
 ?>
@@ -1086,7 +1256,11 @@ if(isset($this->storedfilter)) {
         document.Form.param.value = "<?=$this->storedfilter?>";
 <?
 }
-?>
+?> 
+        var maxperpage = 10;
+        if(document.getElementById('maxperpage') != undefined)
+            maxperpage = document.getElementById('maxperpage').value;
+
         /**
         * update div with user
         */
@@ -1094,7 +1268,7 @@ if(isset($this->storedfilter)) {
             launch--;
 
                 if (launch==0) {
-                    new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+document.Form.param.value+'<?= $this->params ?>&<?= $this->paramname ?>='+document.Form.<?= $this->paramname ?>.value, { asynchronous:true, evalScripts: true});
+                    new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+document.Form.param.value+'<?= $this->params ?>&<?= $this->paramname ?>='+document.Form.<?= $this->paramname ?>.value+'&maxperpage='+maxperpage, { asynchronous:true, evalScripts: true});
                 }
             }
 
@@ -1120,7 +1294,12 @@ if(isset($this->storedfilter)) {
                     location = tableau[0];
                 }
             }
-            new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+filter+'<?= $this->params ?>&<?= $this->paramname ?>='+location+'&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
+            if(document.getElementById('maxperpage') != undefined)
+            {
+                maxperpage = document.getElementById('maxperpage').value;
+            }
+
+            new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+filter+'<?= $this->params ?>&<?= $this->paramname ?>='+location+'&start='+start+'&end='+end+'&maxperpage='+maxperpage, { asynchronous:true, evalScripts: true});
             }
 
         /**
@@ -1919,56 +2098,6 @@ class HtmlElement {
 
 }
 
-class ModuleTitleElement extends HtmlElement{
-
-    function ModuleTitleElement($title){
-        $this->title=$title;
-    }
-
-    function display(){
-        print '<br><h1>'.$this->title.'</h1>';
-    }
-}
-
-class TitleElement extends HtmlElement {
-    function TitleElement($title, $level = 2){
-        $this->title=$title;
-        $this->level = $level;
-    }
-    function display(){
-        print '<br/><h'.$this->level.'>'.$this->title.'</h'.$this->level.'>';
-    }
-}
-
-class SelectElement extends HtmlElement{
-
-    function SelectElement($name, $nametab){
-        $this->name = $name;
-        $this->nametab = $nametab;
-    }
-
-    function display() {
-        print '<a href="javascript:void(0);" onclick="checkAll(\''.$this->name.'\',1);checkAll(\''.$this->nametab.'\',1);">'._("Select all").' </a> / ';
-        print '<a href="javascript:void(0);" onclick="checkAll(\''.$this->name.'\',0);checkAll(\''.$this->nametab.'\',0);">'._("Unselect all").'</a><br/>';
-    }
-}
-
-class TrTitleElement extends HtmlElement{
-
-        function TrTitleElement($arrtitles){
-            $this->titles=$arrtitles;
-        }
-
-        function display(){
-            $colsize=100/sizeof($this->titles);
-            print '<tr>';
-            foreach( $this->titles as $value ){
-                    print '<td width="'.$colsize.'%"><b>'.$value.'</b></td>';
-            }
-            print '</tr>';
-        }
-}
-
 class HtmlContainer {
 
     var $elements;
@@ -2312,6 +2441,56 @@ class DivExpertMode extends Div {
         return $str . ' >';
     }
 
+}
+
+class ModuleTitleElement extends HtmlElement{
+
+    function ModuleTitleElement($title){
+        $this->title=$title;
+    }
+
+    function display(){
+        print '<br><h1>'.$this->title.'</h1>';
+    }
+}
+
+class TitleElement extends HtmlElement {
+    function TitleElement($title, $level = 2){
+        $this->title=$title;
+        $this->level = $level;
+    }
+    function display(){
+        print '<br/><h'.$this->level.'>'.$this->title.'</h'.$this->level.'>';
+    }
+}
+
+class SelectElement extends HtmlElement{
+
+    function SelectElement($name, $nametab){
+        $this->name = $name;
+        $this->nametab = $nametab;
+    }
+
+    function display() {
+        print '<a href="javascript:void(0);" onclick="checkAll(\''.$this->name.'\',1);checkAll(\''.$this->nametab.'\',1);">'._("Select all").' </a> / ';
+        print '<a href="javascript:void(0);" onclick="checkAll(\''.$this->name.'\',0);checkAll(\''.$this->nametab.'\',0);">'._("Unselect all").'</a><br/>';
+    }
+}
+
+class TrTitleElement extends HtmlElement{
+
+        function TrTitleElement($arrtitles){
+            $this->titles=$arrtitles;
+        }
+
+        function display(){
+            $colsize=100/sizeof($this->titles);
+            print '<tr>';
+            foreach( $this->titles as $value ){
+                    print '<td width="'.$colsize.'%"><b>'.$value.'</b></td>';
+            }
+            print '</tr>';
+        }
 }
 
 ?>
