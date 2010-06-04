@@ -247,7 +247,7 @@ class RpcProxy(RpcProxyI):
         @rtype: boolean
         """
         db = ImagingDatabase()
-        target_type = self.__convertType(target_type, target_id)
+        target_type = self.__convertType(target_type, target_uuid)
         db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
         return db.moveItemUpInMenu(target_uuid, mi_uuid)
 
@@ -270,7 +270,7 @@ class RpcProxy(RpcProxyI):
         @rtype: boolean
         """
         db = ImagingDatabase()
-        target_type = self.__convertType(target_type, target_id)
+        target_type = self.__convertType(target_type, target_uuid)
         db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
         return db.moveItemDownInMenu(target_uuid, mi_uuid)
 

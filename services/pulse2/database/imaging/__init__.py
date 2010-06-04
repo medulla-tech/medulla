@@ -1085,7 +1085,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         menu = self.getTargetsMenuTUUID(profile_uuid, session)
         mis = session.query(MenuItem).select_from(self.menu_item.join(self.menu, self.menu.c.id == self.menu_item.c.fk_menu))
-        mis = mis.filter(self.menu.c.id == menu_root.id).order_by(self.menu_item.c.order).all()
+        mis = mis.filter(self.menu.c.id == menu.id).order_by(self.menu_item.c.order).all()
 
         mi_id = self.__computerChangeDefaultMenuItem(session, menu, mis, item_number)
 
