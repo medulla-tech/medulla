@@ -83,6 +83,16 @@ function fetchIniFile() {
             $conf["global"]["password"] = $value;
         }
     }
+
+    /* Put the quantities proposed in the selector for the maxperpage value in
+       an array */
+    if(isset($conf["global"]["pagination"])) {
+        $conf["global"]["pagination"] = explode(' ', $conf["global"]["pagination"]);
+    } else {
+        /* Default values */
+        $conf["global"]["pagination"] = array(10, 20, 50, 100);
+    }
+
     /* Set default option for MMC agent access */
     foreach ($conf as $key => $value) {
         if (strstr($key, "server_")) {
@@ -109,8 +119,7 @@ function fetchIniFile() {
             }
         }
     }
-
-
+    
 }
 
 
