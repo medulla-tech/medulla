@@ -1066,6 +1066,32 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         mi = mis[item_number]
         params = {'default':True}
         self.__addMenuDefaults(session, menu, mi, params)
+        return mi.id
+
+    def getProfileComputersDefaultMenuItem(self, profile_uuid, session):
+        uuids = map(lambda c:c.uuid, ComputerProfileManager().getProfileContent(profile_uuid))
+
+        q = session.query(Target).add_entity(Menu)
+        q = q.select_from(self.target.join(self.menu, self.target.c.fk_menu == self.menu.c.id))
+        q = q.filter(self.target.c.uuid.in_(uuids)).all()
+
+        return q
+
+    def profileChangeDefaultMenuItem(self, imaging_server_uuid, profile_uuid, item_number, session = None):
+        session_need_close = False
+        if session == None:
+            session = create_session()
+            session_need_close = True
+
+        menu = self.getTargetsMenuTUUID(profile_uuid, session)
+        mis = session.query(MenuItem).select_from(self.menu_item.join(self.menu, self.menu.c.id == self.menu_item.c.fk_menu))
+        mis = mis.filter(self.menu.c.id == menu_root.id).order_by(self.menu_item.c.order).all()
+
+        mi_id = self.__computerChangeDefaultMenuItem(session, menu, mis, item_number)
+
+        if session_need_close:
+            session.close()
+        return True
 
     def computerChangeDefaultMenuItem(self, imaging_server_uuid, computer_uuid, item_number):
         session = create_session()
@@ -1078,16 +1104,26 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             mis = session.query(MenuItem).select_from(self.menu_item.join(self.menu, self.menu.c.id == self.menu_item.c.fk_menu))
             mis = mis.filter(self.menu.c.id == menu_root.id).order_by(self.menu_item.c.order).all()
             root_len = len(mis)
+            mi_id = None
             if root_len > item_number:
-                self.__computerChangeDefaultMenuItem(session, menu, mis, item_number)
+                mi_id = self.__computerChangeDefaultMenuItem(session, menu, mis, item_number)
             else:
                 mis = session.query(MenuItem).select_from(self.menu_item.join(self.menu, self.menu.c.id == self.menu_item.c.fk_menu))
                 mis = mis.filter(self.menu.c.id == menu.id).order_by(self.menu_item.c.order).all()
                 if len(mis) > item_number:
-                    self.__computerChangeDefaultMenuItem(session, menu, mis, item_number - root_len)
+                    mi_id = self.__computerChangeDefaultMenuItem(session, menu, mis, item_number - root_len)
                 else:
                     session.close()
                     raise Exception("can't get that element of the menu")
+            computers = self.getProfileComputersDefaultMenuItem(profile.getUUID(), session)
+            any_not_back_to_first = False
+            for computer, m in computers:
+                if m.fk_default_item != mi_id:
+                    any_not_back_to_first = True
+
+            if not any_not_back_to_first:
+                self.profileChangeDefaultMenuItem(imaging_server_uuid, profile.uuid, item_number)
+
         else:
             mis = session.query(MenuItem).select_from(self.menu_item.join(self.menu, self.menu.c.id == self.menu_item.c.fk_menu))
             mis = mis.filter(self.menu.c.id == menu.id).order_by(self.menu_item.c.order).all()
@@ -1932,19 +1968,74 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q.filter(self.image.c.is_master == False)
         return q
 
-    def getTargetImages(self, target_id, type, start, end, filter):
-        pass
+    def getTargetImages(self, target_uuid, target_type, start = 0, end = -1, filter = ''):
+        session = create_session()
+        q1 = session.query(Image).add_entity(MenuItem) \
+                .select_from(self.image \
+                    .outerjoin(self.image_in_menu, self.image_in_menu.c.fk_image == self.image.c.id) \
+                    .outerjoin(self.menu_item, self.image_in_menu.c.fk_menuitem == self.menu_item.c.id) \
+                    .join(self.mastered_on, self.mastered_on.c.fk_image == self.image.c.id) \
+                    .join(self.imaging_log, self.imaging_log.c.id == self.mastered_on.c.fk_imaging_log) \
+                    .join(self.target, self.target.c.id == self.imaging_log.c.fk_target) \
+                ).filter(and_(self.target.c.uuid == target_uuid, self.target.c.type == target_type)).all()
+        images_ids = map(lambda r:r[0].id, q1)
 
-    def countTargetImages(self, target_id, type, filter):
-        pass
+        ims = session.query(ImagingServer).select_from(self.imaging_server.join(self.target, self.target.c.fk_entity == self.imaging_server.c.fk_entity)) \
+                .filter(and_(self.target.c.uuid == target_uuid, self.target.c.type == target_type)).first()
+        lang = ims.fk_language
+
+        I18n1 = sa_exp_alias(self.internationalization)
+        I18n2 = sa_exp_alias(self.internationalization)
+
+        q2 = session.query(PostInstallScript).add_column(self.post_install_script_in_image.c.order).add_entity(Internationalization, alias=I18n1).add_entity(Internationalization, alias=I18n2).add_column(self.image.c.id) \
+                .select_from(self.image \
+                    .join(self.post_install_script_in_image, self.post_install_script_in_image.c.fk_image == self.image.c.id) \
+                    .join(self.post_install_script, self.post_install_script_in_image.c.fk_post_install_script == self.post_install_script.c.id) \
+                    .outerjoin(I18n1, and_(self.post_install_script.c.fk_name == I18n1.c.id, I18n1.c.fk_language == lang)) \
+                    .outerjoin(I18n2, and_(self.post_install_script.c.fk_desc == I18n2.c.id, I18n2.c.fk_language == lang)) \
+                ).filter(self.image.c.id.in_(images_ids)).all()
+        q2 = self.__mergePostInstallScriptI18n(q2)
+        h_pis_by_imageid = {}
+        for pis in q2:
+            if not h_pis_by_imageid.has_key(pis.image_id):
+                h_pis_by_imageid[pis.image_id] = []
+            h_pis_by_imageid[pis.image_id].append(pis)
+
+        ret = {}
+        for im, mi in q1:
+            q = self.__mergeMenuItemInImage([(im, im.id)], [[im, mi]])
+            q = q[0]
+            setattr(q, 'post_install_scripts', h_pis_by_imageid[im.id])
+            ret[mi.order] = q
+
+        ret1 = []
+        if end != -1:
+            for i in range(start, end):
+                if ret.has_key(i):
+                    ret1.append(ret[i])
+        else:
+            ret1 = ret
+
+        return ret1
+
+    def countTargetImages(self, target_uuid, target_type, filter):
+        session = create_session()
+        q1 = session.query(Image) \
+                .select_from(self.image \
+                    .join(self.mastered_on, self.mastered_on.c.fk_image == self.image.c.id) \
+                    .join(self.imaging_log, self.imaging_log.c.id == self.mastered_on.c.fk_imaging_log) \
+                    .join(self.target, self.target.c.id == self.imaging_log.c.fk_target) \
+                ).filter(and_(self.target.c.uuid == target_uuid, self.target.c.type == target_type)).count()
+        return q1
 
     def __mergePostInstallScriptI18n(self, postinstallscript_list):
         ret = []
-        for postinstallscript, order, name_i18n, desc_i18n in postinstallscript_list:
+        for postinstallscript, order, name_i18n, desc_i18n, im_id in postinstallscript_list:
             if name_i18n != None:
                 setattr(postinstallscript, 'default_name', name_i18n.label)
             if desc_i18n != None:
                 setattr(postinstallscript, 'default_desc', desc_i18n.label)
+            setattr(postinstallscript, 'image_id', im_id)
             setattr(postinstallscript, 'order', order)
             ret.append(postinstallscript)
         return ret
@@ -1969,7 +2060,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         I18n1 = sa_exp_alias(self.internationalization)
         I18n2 = sa_exp_alias(self.internationalization)
 
-        q2 = session.query(PostInstallScript).add_column(self.post_install_script_in_image.c.order).add_entity(Internationalization, alias=I18n1).add_entity(Internationalization, alias=I18n2) \
+        q2 = session.query(PostInstallScript).add_column(self.post_install_script_in_image.c.order).add_entity(Internationalization, alias=I18n1).add_entity(Internationalization, alias=I18n2).add_column(self.image.c.id) \
                 .select_from(self.image \
                     .join(self.post_install_script_in_image, self.post_install_script_in_image.c.fk_image == self.image.c.id) \
                     .join(self.post_install_script, self.post_install_script_in_image.c.fk_post_install_script == self.post_install_script.c.id) \
@@ -2790,21 +2881,150 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     ######### MENUS
     def delProfileMenuTarget(self, uuids):
         session = create_session()
-        targets = session.query(Target).filter(and_(self.target.c.uuid.in_(uuids), self.target.c.type == P2IT.COMPUTER_IN_PROFILE)).all()
-        for t in targets:
+        targets = session.query(Target).add_entity(Menu)
+        targets = targets.select_from(self.target.join(self.menu, self.target.c.fk_menu == self.menu.c.id))
+        targets = targets.filter(and_(self.target.c.uuid.in_(uuids), self.target.c.type == P2IT.COMPUTER_IN_PROFILE)).all()
+        for t, m in targets:
             session.delete(t)
+            session.delete(m)
         session.flush()
         session.close()
         return True
 
-    def delComputersFromProfile(self, profile_UUID, computers):
-        # need to remove
-        #  the menu
-        #  images
-        #  put master as orphan ?
+    def delProfileComputerMenuItem(self, uuids):
         session = create_session()
-        uuids = map(lambda c:c['uuid'], computers.values())
-        return self.delProfileMenuTarget(uuids)
+
+        mis = session.query(MenuItem).add_entity(BootServiceInMenu).add_entity(ImageInMenu)
+        mis = mis.select_from(self.menu_item \
+                .join(self.menu, self.menu_item.c.fk_menu == self.menu.c.id) \
+                .join(self.target, self.target.c.fk_menu == self.menu.c.id) \
+                .outerjoin(self.boot_service_in_menu, self.boot_service_in_menu.c.fk_menuitem == self.menu_item.c.id) \
+                .outerjoin(self.image_in_menu, self.image_in_menu.c.fk_menuitem == self.menu_item.c.id) \
+            )
+        mis = mis.filter(and_(self.target.c.uuid.in_(uuids), self.target.c.type == P2IT.COMPUTER_IN_PROFILE)).all()
+
+        for mi, bsim, iim in mis:
+            if bsim != None:
+                session.delete(bsim)
+            if iim != None:
+                session.delete(iim)
+            session.delete(mi)
+
+        session.flush()
+        session.close()
+        return True
+
+    def __getAllProfileMenuItem(self, profile_UUID, session):
+        return self.__getAllMenuItem(session, and_(self.target.c.uuid == profile_UUID, self.target.c.type == P2IT.PROFILE))
+
+    def __getAllComputersMenuItem(self, computers_UUID, session):
+        return self.__getAllMenuItem(session, and_(self.target.c.uuid.in_(computers_UUID), self.target.c.type.in_(P2IT.COMPUTER_IN_PROFILE, P2IT.COMPUTER)))
+
+    def __getAllMenuItem(self, session, filt):
+        ret = session.query(MenuItem).add_entity(Target).add_entity(BootServiceInMenu).add_entity(ImageInMenu) \
+                .select_from(self.menu_item \
+                    .join(self.menu, self.menu_item.c.fk_menu == self.menu.c.id) \
+                    .join(self.target, self.target.c.fk_menu == self.menu.c.id) \
+                    .outerjoin(self.boot_service_in_menu, self.boot_service_in_menu.c.fk_menuitem == self.menu_item.c.id) \
+                    .outerjoin(self.image_in_menu, self.image_in_menu.c.fk_menuitem == self.menu_item.c.id) \
+                ).filter(filt).all()
+        return ret
+
+    def __copyMenuInto(self, menu_from, menu_into, session):
+        for i in ('default_name', 'timeout', 'background_uri', 'message', 'ethercard', 'bootcli', 'disklesscli', 'dont_check_disk_size', 'hidden_menu', 'debug', 'update_nt_boot', 'fk_protocol'):
+            setattr(menu_into, i, getattr(menu_from, i))
+        session.save_or_update(menu_into)
+
+    def __copyMenuItemInto(self, mi_from, mi_into, session):
+        for i in ('order', 'hidden', 'hidden_WOL'):
+            setattr(mi_into, i, getattr(mi_from, i))
+        session.save_or_update(mi_into)
+
+    def delComputersFromProfile(self, profile_UUID, computers):
+        # we put the profile's mi before the computer's mi
+        session = create_session()
+        computers_UUID = map(lambda c:c['uuid'], computers.values())
+        # copy the profile part of the menu in their own menu
+        pmenu = self.getTargetMenu(profile_UUID, P2IT.PROFILE, session)
+        pmis = self.__getAllProfileMenuItem(profile_UUID, session)
+        pnb_element = len(pmis)
+        mis = self.__getAllComputersMenuItem(computers_UUID, session)
+
+        h_tid2target = {}
+        for target, tuuid in session.query(Target).add_column(self.target.c.uuid).filter(self.target.c.uuid.in_(computers_UUID)).all():
+            h_tid2target[tuuid] = target
+
+        for mi, target, bsim, iim in mis:
+            mi.order += pnb_element
+            session.save_or_update(mi)
+
+        session.flush()
+
+        a_bsim = []
+        a_iim = []
+        a_target2default_item = []
+        a_target2default_item_WOL = []
+        for tuuid in computers_UUID:
+            target = h_tid2target[tuuid]
+
+            # put the parameter of the profile's menu in the computer menu
+            menu = self.getTargetMenu(tuuid, P2IT.COMPUTER_IN_PROFILE, session)
+            self.__copyMenuInto(pmenu, menu, session)
+
+            # change the computer type, it's no longer a computer_in_profile
+            target.type = P2IT.COMPUTER
+            session.save_or_update(target)
+
+            for mi, target, bsim, iim in pmis:
+                # duplicate menu_item
+                new_mi = MenuItem()
+                new_mi.fk_menu = menu.id
+                self.__copyMenuItemInto(mi, new_mi, session)
+
+                # create a bsim if it's a bsim
+                if bsim != None:
+                    a_bsim.append([new_mi, bsim])
+
+                # create a iim if it's a iim
+                if iim != None:
+                    a_iim.append([new_mi, iim])
+
+                if mi.id == pmenu.fk_default_item:
+                    a_target2default_item.append([menu, new_mi])
+
+                if mi.id == pmenu.fk_default_item_WOL:
+                    a_target2default_item_WOL.append([menu, new_mi])
+
+        session.flush()
+
+        for menu, mi in a_target2default_item:
+            menu.fk_default_item = mi.id
+            session.save_or_update(menu)
+
+        for menu, mi in a_target2default_item_WOL:
+            menu.fk_default_item_WOL = mi.id
+            session.save_or_update(menu)
+
+        for mi, bsim in a_bsim:
+            new_bsim = BootServiceInMenu()
+            new_bsim.fk_menuitem = mi.id
+            new_bsim.fk_bootservice = bsim.fk_bootservice
+            session.save(new_bsim)
+
+        for mi, iim in a_iim:
+            new_iim = ImageInMenu()
+            new_iim.fk_menuitem = mi.id
+            new_iim.fk_image = iim.fk_image
+            session.save(new_iim)
+
+        session.flush()
+        session.close()
+
+        return True
+
+    def delProfile(self, profile_UUID):
+        session = create_session()
+        # remove all the possible menuitem that only depend on this profile
 
     def setProfileMenuTarget(self, uuids, profile_uuid, params):
         session = create_session()

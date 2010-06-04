@@ -95,6 +95,16 @@ class ComputerProfileManager(Singleton):
                 ret = ret and r
         return ret
 
+    def delProfile(self, profile_UUID):
+        " ask to all profile managers to remove the profile "
+        ret = True
+        for mod in self.components:
+            klass = self.components[mod]
+            if hasattr(klass, 'delProfile'):
+                r = klass().delProfile(profile_UUID)
+                ret = ret and r
+        return ret
+
     def isComputerInProfile(self, computer_UUID, profile_UUID):
         pass
 
@@ -162,6 +172,9 @@ class ComputerProfileI:
         pass
 
     def delComputersFromProfile(self, computers_UUID, profile_UUID):
+        pass
+
+    def delProfile(self, profile_UUID):
         pass
 
     def isComputerInProfile(self, computer_UUID, profile_UUID):

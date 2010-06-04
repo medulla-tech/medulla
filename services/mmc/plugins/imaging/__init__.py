@@ -1984,8 +1984,12 @@ class RpcProxy(RpcProxyI):
                 params['hostnames'] = h_hostnames
                 h_macaddress = {}
                 index = 0
+
                 for computer in macaddress:
-                    h_macaddress[uuids[index]] = computer[0]
+                    if len(computer) > 0:
+                        h_macaddress[uuids[index]] = computer[0]
+                    else:
+                        h_macaddress[uuids[index]] = ''
                     index += 1
 
                 try:

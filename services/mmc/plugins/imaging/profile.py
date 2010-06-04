@@ -28,6 +28,7 @@ it only implement the client part
 from pulse2.managers.profile import ComputerProfileI
 from pulse2.database.imaging import ImagingDatabase
 from pulse2.database.imaging.types import P2IT, P2ISS
+from pulse2.managers.profile import ComputerProfileManager
 
 class ImagingProfile(ComputerProfileI):
     def addComputersToProfile(self, ctx, computers_UUID, profile_UUID):
@@ -43,9 +44,23 @@ class ImagingProfile(ComputerProfileI):
     def delComputersFromProfile(self, computers_UUID, profile_UUID):
         # TODO need to remove the menu and the registering
         if ImagingDatabase().isTargetRegister(profile_UUID, P2IT.PROFILE):
+            # put all the computers to their own menu
             ret1 = ImagingDatabase().delComputersFromProfile(profile_UUID, computers_UUID)
             ret2 = ImagingDatabase().changeTargetsSynchroState([profile_UUID], P2IT.PROFILE, P2ISS.TODO)
             return ret1 and ret2
+        return True
+
+    def delProfile(self, profile_UUID):
+        if ImagingDatabase().isTargetRegister(profile_UUID, P2IT.PROFILE):
+            # TODO : put all the computers on their own menu
+            computers_UUID = map(lambda c:c.uuid, ComputerProfileManager().getProfileContent(profile_UUID))
+            ret1 = ImagingDatabase().delComputersFromProfile(profile_UUID, computers_UUID)
+            ret2 = ImagingDatabase().changeTargetsSynchroState(computers_UUID, P2IT.COMPUTER, P2ISS.TODO)
+            # delete the profile itself
+            # TODO delete the profile (target + menu + menu_items)
+            ret3 = ImagingDatabase().delProfile(profile_UUID)
+
+            return ret1 and ret2 and ret3
         return True
 
     def getForbiddenComputersUUID(self, profile_UUID = None):
