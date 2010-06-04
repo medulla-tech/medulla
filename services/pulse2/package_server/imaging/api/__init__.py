@@ -548,15 +548,13 @@ class ImagingApi(MyXmlrpc):
         if not isUUID(imageUUID):
             self.logger.error("Bad image UUID %s" % str(imageUUID))
             return False
-        
+
         path = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['masters_folder'], imageUUID)
         image = Pulse2Image(path)
-        if not image :
-            return False
-
-        return image.logs
-            
-            
+        if not image:
+            ret = False
+        else:
+            ret = image.logs
         return ret
 
     def xmlrpc_computerCreateImageDirectory(self, mac):
