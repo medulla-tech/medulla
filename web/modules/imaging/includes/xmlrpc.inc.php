@@ -42,6 +42,10 @@ function xmlrpc_setMyMenuProfile($target_uuid, $params) {
 }
 
 function xmlrpc_isComputerRegistered($machine_uuid) {
+    if (isset($_SESSION["imaging.isComputerInProfileRegistered_".$machine_uuid])) {
+        # we check because if we pass to computer_in_profile, there is chances we are no more in computer
+        unset($_SESSION["imaging.isComputerRegistered_".$machine_uuid]);
+    }
     # we call as long as it's not registered, but once it is,
     # we can store that information in the session.
     if (!isset($_SESSION["imaging.isComputerRegistered_".$machine_uuid])) {
@@ -55,6 +59,11 @@ function xmlrpc_isComputerRegistered($machine_uuid) {
 }
 
 function xmlrpc_isComputerInProfileRegistered($machine_uuid) {
+    if (isset($_SESSION["imaging.isComputerRegistered_".$machine_uuid])) {
+        # we check because if we pass to computer, there is chances that we are no more in computer_in_profile!
+        unset($_SESSION["imaging.isComputerInProfileRegistered_".$machine_uuid]);
+    }
+
     if (!isset($_SESSION["imaging.isComputerInProfileRegistered_".$machine_uuid])) {
         $ret = xmlCall("imaging.isComputerInProfileRegistered", array($machine_uuid));
         if ($ret) {
