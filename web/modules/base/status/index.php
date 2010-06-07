@@ -85,7 +85,7 @@ function print_disk_info() {
 
 function print_health() {
     $up = xmlCall("base.getUptime");
-    $up = trim($up[0]);
+    $up = trim($up);
     list($up) = explode(" ", $up);
 
     $days = (int) ($up / (24*60*60));
