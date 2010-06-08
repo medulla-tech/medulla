@@ -36,7 +36,7 @@ import mmc.plugins.dyngroup
 # PULSE2 modules
 import pulse2.database.dyngroup
 from pulse2.database.dyngroup import Groups, Machines, Results, Users
-from pulse2.managers.imaging_profile import ComputerProfileImagingManager
+from pulse2.managers.imaging import ComputerImagingManager
 # Imported last
 import re
 

@@ -3,7 +3,7 @@
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # (c) 2007-2010 Mandriva, http://www.mandriva.com/
 #
-# $Id: group.py 3688 2009-02-12 14:34:39Z nrueff $
+# $Id$
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
 #
@@ -26,11 +26,11 @@
 Imaging implementation of the imaging in profile manager interface
 """
 
-from pulse2.managers.imaging_profile import ComputerProfileImagingI
+from pulse2.managers.imaging import ComputerImagingI
 from pulse2.managers.location import ComputerLocationManager
 from pulse2.database.imaging import ImagingDatabase
 
-class ImagingProfileImaging(ComputerProfileImagingI):
+class ComputerImagingImaging(ComputerImagingI):
     def isImagingInProfilePossible(self):
         " check if the root entity is registered "
         return True

@@ -27,7 +27,7 @@ Used by the ComputerManager
 from mmc.plugins.base import ComputerI
 from mmc.plugins.inventory.config import InventoryConfig
 from pulse2.database.inventory import Inventory
-from pulse2.managers.imaging_profile import ComputerProfileImagingManager
+from pulse2.managers.imaging import ComputerImagingManager
 import logging
 
 class InventoryComputers(ComputerI):
@@ -92,7 +92,7 @@ class InventoryComputers(ComputerI):
 
     def __restrictLocationsOnImagingServerOrEntity(self, filt, ctx):
         if filt.has_key('imaging_server') and filt['imaging_server'] != '':
-            entity_uuid = ComputerProfileImagingManager().getImagingServerEntityUUID(filt['imaging_server'])
+            entity_uuid = ComputerImagingManager().getImagingServerEntityUUID(filt['imaging_server'])
             if entity_uuid != None:
                 filt['location'] = entity_uuid
             else:

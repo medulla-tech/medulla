@@ -33,10 +33,10 @@ from mmc.support.mmctools import xmlrpcCleanup
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 from mmc.plugins.imaging.config import ImagingConfig
 from mmc.plugins.imaging.profile import ImagingProfile
-from mmc.plugins.imaging.imaging_profile import ImagingProfileImaging
+from mmc.plugins.imaging.imaging import ComputerImagingImaging
 from mmc.plugins.base.computers import ComputerManager
 from pulse2.managers.profile import ComputerProfileManager
-from pulse2.managers.imaging_profile import ComputerProfileImagingManager
+from pulse2.managers.imaging import ComputerImagingManager
 from pulse2.managers.location import ComputerLocationManager
 from pulse2.database.imaging import ImagingDatabase
 from pulse2.database.imaging.types import P2IT, P2ISS, P2IM
@@ -91,7 +91,7 @@ def activate():
     # register ImagingProfile in ComputerProfileManager but only as a client
     ComputerProfileManager().register("imaging", ImagingProfile)
 
-    ComputerProfileImagingManager().register("imaging", ImagingProfileImaging)
+    ComputerImagingManager().register("imaging", ComputerImagingImaging)
 
     return True
 
@@ -1313,6 +1313,10 @@ class RpcProxy(RpcProxyI):
 
         logger.debug("canIRegisterThisComputer %s : %s", computerUUID, "final false")
         return [False, profile['id']]
+
+
+    def delComputersImaging(self, computers_UUID):
+        pass
 
     def checkComputerForImaging(self, computerUUID):
         """

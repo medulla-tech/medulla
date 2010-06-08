@@ -34,7 +34,7 @@ from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext, xmlr
 from mmc.agent import PluginManager
 from pulse2.managers.group import ComputerGroupManager
 from pulse2.managers.location import ComputerLocationManager
-from pulse2.managers.imaging_profile import ComputerProfileImagingManager
+from pulse2.managers.imaging import ComputerImagingManager
 
 VERSION = "2.0.0"
 APIVERSION = "0:0:0"
@@ -154,7 +154,7 @@ class RpcProxy(RpcProxyI):
         @returns: True if the profiles can access imaging
         @rtype: boolean
         """
-        return ComputerProfileImagingManager().isImagingInProfilePossible()
+        return ComputerImagingManager().isImagingInProfilePossible()
 
     def areProfilesPossible(self):
         """
@@ -168,7 +168,7 @@ class RpcProxy(RpcProxyI):
         get all the imaging server that this user can access
         """
         ctx = self.currentContext
-        return ComputerProfileImagingManager().getAllImagingServers(ctx.userid)
+        return ComputerImagingManager().getAllImagingServers(ctx.userid)
 
 
 def displayLocalisationBar():

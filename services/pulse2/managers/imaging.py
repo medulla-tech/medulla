@@ -3,7 +3,7 @@
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # (c) 2007-2010 Mandriva, http://www.mandriva.com/
 #
-# $Id: group.py 3688 2009-02-12 14:34:39Z nrueff $
+# $Id$
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
 #
@@ -30,7 +30,7 @@ provide methods to work with profile in the imaging module
 import logging
 from pulse2.utils import Singleton
 
-class ComputerProfileImagingManager(Singleton):
+class ComputerImagingManager(Singleton):
     components = {}
     main = 'imaging'
 
@@ -70,7 +70,7 @@ class ComputerProfileImagingManager(Singleton):
         klass = self.components[self.main]
         return klass().getImagingServerEntityUUID(imaging_uuid)
 
-class ComputerProfileImagingI:
+class ComputerImagingI:
     def isImagingInProfilePossible(self):
         """
         tell if the imaging action is displayed for the profiles

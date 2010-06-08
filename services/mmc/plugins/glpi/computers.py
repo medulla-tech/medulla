@@ -27,7 +27,7 @@ from mmc.plugins.base import ComputerI
 from mmc.plugins.glpi.config import GlpiConfig
 from mmc.plugins.glpi.database import Glpi
 from mmc.plugins.glpi.utilities import complete_ctx
-from pulse2.managers.imaging_profile import ComputerProfileImagingManager
+from pulse2.managers.imaging import ComputerImagingManager
 import logging
 import exceptions
 
@@ -115,7 +115,7 @@ class GlpiComputers(ComputerI):
 
     def __restrictLocationsOnImagingServerOrEntity(self, filt, location, ctx):
         if filt.has_key('imaging_server') and filt['imaging_server'] != '':
-            entity_uuid = ComputerProfileImagingManager().getImagingServerEntityUUID(filt['imaging_server'])
+            entity_uuid = ComputerImagingManager().getImagingServerEntityUUID(filt['imaging_server'])
             if entity_uuid != None:
                 filt['entity_uuid'] = entity_uuid
             else:
