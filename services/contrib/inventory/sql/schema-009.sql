@@ -24,7 +24,6 @@ START TRANSACTION;
 
 -- Too short fields
 ALTER TABLE `Drive` CHANGE `VolumeName` `VolumeName` VARCHAR(32) DEFAULT NULL;
-ALTER TABLE `Memory` CHANGE `Frequency` `Frequency` VARCHAR(32) DEFAULT NULL;
 
 -- Missing indexes: see http://pulse2.mandriva.org/ticket/444
 CREATE INDEX machine ON hasRegistry(machine);

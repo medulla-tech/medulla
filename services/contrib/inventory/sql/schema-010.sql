@@ -20,6 +20,10 @@
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
 
+START TRANSACTION;
+
+-- Too short fields
+ALTER TABLE `Memory` CHANGE `Frequency` `Frequency` VARCHAR(32) DEFAULT NULL;
 
 -- Update Table for Xml Improving
 
@@ -81,5 +85,8 @@ CREATE TABLE hasInventoryDebugLog (
 --
 -- Database version
 --
+
 TRUNCATE Version;
 INSERT INTO Version VALUES( '10' );
+
+COMMIT;
