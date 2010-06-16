@@ -22,6 +22,11 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+"""
+Define classes to help implementing the database access in all the
+pulse2 modules.
+"""
+
 from pulse2.utils import Singleton
 from pulse2.database.sqlalchemy_tests import checkSqlalchemy
 from sqlalchemy.exceptions import SQLError
@@ -126,3 +131,46 @@ class DatabaseHelper(Singleton):
             logging.getLogger().warn(e)
             return False
         return True
+
+###########################################################
+def id2uuid(id):
+    return "UUID%d" % id
+
+def uuid2id(uuid):
+    return uuid.replace("UUID", "")
+
+###########################################################
+class DBObject(object):
+    to_be_exported = ['id', 'name', 'label']
+    need_iteration = []
+    i18n = []
+    def getUUID(self):
+        if hasattr(self, 'id'):
+            return id2uuid(self.id)
+        logging.getLogger().warn("try to get %s uuid!"%(type(self)))
+        return False
+    def to_h(self):
+        return self.toH()
+    def toH(self, level = 0):
+        ret = {}
+        for i in dir(self):
+            if i in self.i18n:
+                pass
+
+            if i in self.to_be_exported:
+                ret[i] = getattr(self, i)
+            if i in self.need_iteration and level < 1:
+                # we don't want to enter in an infinite loop
+                # and generally we don't need more levels
+                attr = getattr(self, i)
+                if type(attr) == list:
+                    new_attr = []
+                    for a in attr:
+                        new_attr.append(a.toH(level+1))
+                    ret[i] = new_attr
+                else:
+                    ret[i] = attr.toH(level+1)
+        if hasattr(self, 'id'):
+            ret['db_uuid'] = self.getUUID()
+        return ret
+

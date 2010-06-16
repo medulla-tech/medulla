@@ -33,6 +33,7 @@ import datetime
 from pulse2.utils import isUUID
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 from pulse2.database.imaging.types import P2ISS, P2IT, P2IM, P2IIK, P2ERR, P2ILL
+from pulse2.database import database_helper
 
 from sqlalchemy import create_engine, ForeignKey, Integer, MetaData, Table, Column, and_, or_, desc
 from sqlalchemy.orm import create_session, mapper, relation
@@ -3558,37 +3559,10 @@ def uuid2id(uuid):
 
 
 ###########################################################
-class DBObject(object):
-    to_be_exported = ['id', 'name', 'label']
-    need_iteration = []
-    i18n = []
-    def getUUID(self):
-        if hasattr(self, 'id'):
-            return id2uuid(self.id)
-        logging.getLogger().warn("try to get %s uuid!"%(type(self)))
-        return False
-    def to_h(self):
-        return self.toH()
+class DBObject(database_helper.DBObject):
     def toH(self, level = 0):
         ImagingDatabase().completeNomenclatureLabel(self)
-        ret = {}
-        for i in dir(self):
-            if i in self.i18n:
-                pass
-
-            if i in self.to_be_exported:
-                ret[i] = getattr(self, i)
-            if i in self.need_iteration and level < 1:
-                # we don't want to enter in an infinite loop
-                # and generally we don't need more levels
-                attr = getattr(self, i)
-                if type(attr) == list:
-                    new_attr = []
-                    for a in attr:
-                        new_attr.append(a.toH(level+1))
-                    ret[i] = new_attr
-                else:
-                    ret[i] = attr.toH(level+1)
+        ret = database_helper.DBObject.toH(self, level)
         if hasattr(self, 'id'):
             ret['imaging_uuid'] = self.getUUID()
         return ret
