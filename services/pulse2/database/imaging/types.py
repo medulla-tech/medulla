@@ -3,7 +3,7 @@
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # (c) 2007-2009 Mandriva, http://www.mandriva.com/
 #
-# $Id: config.py 4804 2009-11-20 10:02:33Z oroussy $
+# $Id$
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
 #
@@ -39,6 +39,7 @@ class Pulse2ImagingTypes:
     COMPUTER = 1
     PROFILE = 2
     COMPUTER_IN_PROFILE = 3
+    ALL_COMPUTERS = 4
 P2IT = Pulse2ImagingTypes
 
 

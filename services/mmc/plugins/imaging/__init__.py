@@ -1316,7 +1316,17 @@ class RpcProxy(RpcProxyI):
 
 
     def delComputersImaging(self, computers_UUID):
-        pass
+        """
+        @param computers_UUID: list of computers uuids
+        @type computers_UUID: list
+
+        @returns: a couple of :
+            0 : a boolean state
+            1 : the list of uuids of the target that failed to unregister
+        @rtype: list
+        """
+        ret = ComputerImagingManager().computersUnregister(computers_UUID)
+        return ret
 
     def checkComputerForImaging(self, computerUUID):
         """

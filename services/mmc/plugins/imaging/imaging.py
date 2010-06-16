@@ -29,6 +29,8 @@ Imaging implementation of the imaging in profile manager interface
 from pulse2.managers.imaging import ComputerImagingI
 from pulse2.managers.location import ComputerLocationManager
 from pulse2.database.imaging import ImagingDatabase
+from pulse2.database.imaging.types import P2IT
+import logging
 
 class ComputerImagingImaging(ComputerImagingI):
     def isImagingInProfilePossible(self):
@@ -62,4 +64,28 @@ class ComputerImagingImaging(ComputerImagingI):
         if en != None:
             return en.uuid
         return None
+
+    def computersUnregister(self, computers_UUID):
+        """
+        unregister all the computers from the list
+        """
+        db = ImagingDatabase()
+        logger = logging.getLogger()
+
+        # get the computers
+        ret = db.isTargetRegister(computers_UUID, P2IT.ALL_COMPUTERS)
+        if not ret[0]:
+            for uuid in ret[1]:
+                logger.info("%s is not registered, it can be unregister"%uuid)
+                try:
+                    computers_UUID.pop(computers_UUID.index(uuid))
+                except ValueError, e:
+                    pass
+
+        # send a request to the pserver to unregister them
+        # if they manage to unregister, unregister from the DB
+            # remove the menu + menuitem
+            # remove the computer
+        # return the status of the whole thing
+
 

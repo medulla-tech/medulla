@@ -2714,17 +2714,21 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session_need_to_close = True
             session = create_session()
 
+        if target_type == P2IT.ALL_COMPUTERS:
+            filt = self.target.c.type.in_(P2IT.COMPUTERS, P2IT.COMPUTERS_IN_PROFILE)
+        else:
+            filt = and_(self.target.c.type == target_type)
         ret = False
         if type(uuid) == list:
             ret = {}
-            q = session.query(Target).filter(and_(self.target.c.uuid.in_(uuid), self.target.c.type == target_type)).all()
+            q = session.query(Target).filter(and_(self.target.c.uuid.in_(uuid), filt)).all()
             for target in q:
                 ret[target.uuid] = True
             for l_uuid in uuid:
                 if not ret.has_key(l_uuid):
                     ret[l_uuid] = False
         else:
-            q = session.query(Target).filter(and_(self.target.c.uuid == uuid, self.target.c.type == target_type)).first()
+            q = session.query(Target).filter(and_(self.target.c.uuid == uuid, filt)).first()
             ret = (q != None)
 
         if session_need_to_close:
