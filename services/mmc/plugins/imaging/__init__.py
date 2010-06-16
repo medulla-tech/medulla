@@ -34,10 +34,12 @@ from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 from mmc.plugins.imaging.config import ImagingConfig
 from mmc.plugins.imaging.profile import ImagingProfile
 from mmc.plugins.imaging.imaging import ComputerImagingImaging
+from mmc.plugins.imaging.pulse import ImagingPulse2Manager
 from mmc.plugins.base.computers import ComputerManager
 from pulse2.managers.profile import ComputerProfileManager
 from pulse2.managers.imaging import ComputerImagingManager
 from pulse2.managers.location import ComputerLocationManager
+from pulse2.managers.pulse import Pulse2Manager
 from pulse2.database.imaging import ImagingDatabase
 from pulse2.database.imaging.types import P2IT, P2ISS, P2IM
 from pulse2.apis.clients.imaging import ImagingApi
@@ -92,6 +94,8 @@ def activate():
     ComputerProfileManager().register("imaging", ImagingProfile)
 
     ComputerImagingManager().register("imaging", ComputerImagingImaging)
+
+    Pulse2Manager().register('imaging', ImagingPulse2Manager)
 
     return True
 
@@ -1161,6 +1165,8 @@ class RpcProxy(RpcProxyI):
         db = ImagingDatabase()
         try:
             ret = db.linkImagingServerToEntity(is_uuid, loc_id, loc_name)
+            my_is = db.getImagingServerByUUID(is_uuid)
+            Pulse2Manager().putPackageServerEntity(my_is.packageserver_uuid, loc_id)
             db.setLocationSynchroState(loc_id, P2ISS.TODO)
         except Exception, e:
             logging.getLogger().warn("Imaging.linkImagingServerToEntity : %s" % e)
