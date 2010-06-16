@@ -30,8 +30,8 @@ import unittest
 import urllib2
 import sys
 import string
-from os import system,getcwd,chdir,popen,path
-from testutils import generation_Pserver,SupEsp,ipconfig
+from os import system, getcwd, chdir, popen
+from testutils import generation_Pserver, SupEsp, ipconfig
 from time import sleep
 from tempfile import mkdtemp
 
@@ -277,12 +277,7 @@ else:
     direct='/var/lib/pulse2/packages/test'
     system ("/etc/init.d/pulse2-package-server restart")
 
-
-if not path.exists ("/tmp/log/"):
-    mkdir ("/tmp/log/")
-
 sleep(10)
-
 
 if mode=="debug":
     success=[]
@@ -298,7 +293,7 @@ if mode=="debug":
         print "One or more test are failed or have an unexpected error"
     else:
         print "All function work"
-    
+
     print "Pserver\'s test has run %s test" %(nb)
 else:
 
