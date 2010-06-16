@@ -35,6 +35,10 @@ from mmc.agent import PluginManager
 from pulse2.managers.group import ComputerGroupManager
 from pulse2.managers.location import ComputerLocationManager
 from pulse2.managers.imaging import ComputerImagingManager
+from pulse2.database.pulse.config import Pulse2DatabaseConfig
+from pulse2.database.pulse import Pulse2Database
+from pulse2.managers.pulse import Pulse2Manager
+from mmc.plugins.pulse2.pulse import Pulse2Pulse2Manager
 
 VERSION = "2.0.0"
 APIVERSION = "0:0:0"
@@ -50,6 +54,11 @@ def activate():
     if config.disable:
         logger.warning("Plugin pulse2: disabled by configuration.")
         return False
+    if not Pulse2Database().activate(config):
+        logger.warning("Plugin pulse2: an error occurred during the database initialization")
+        return False
+
+    Pulse2Manager().register('pulse2', Pulse2Pulse2Manager)
     updateQueryClass()
     return True
 
@@ -105,14 +114,22 @@ def create_method(m):
         return ret
     return method
 
-class Pulse2Config(PluginConfig):
+class Pulse2Config(PluginConfig, Pulse2DatabaseConfig):
     location = None
+    def __init__(self, name = 'pulse2', conffile = None):
+        if not hasattr(self, 'initdone'):
+            PluginConfig.__init__(self, name, conffile)
+            Pulse2DatabaseConfig.__init__(self)
+            self.initdone = True
+
     def readConf(self):
         """
         Read the module configuration
         """
         PluginConfig.readConf(self)
         self.disable = self.getboolean("main", "disable")
+        Pulse2DatabaseConfig.setup(self, self.conffile)
+
         if self.has_option("main", "location"):
             self.location = self.get("main", "location")
 

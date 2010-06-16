@@ -2354,6 +2354,23 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return ims.id
 
+    def updateImagingServer(self, uuid, params = {}):
+        session = create_session()
+        ims = self.getImagingServerByUUID(uuid, session)
+        need_to_be_save = False
+        for param in params:
+            if hasattr(ims, param):
+                if getattr(ims, param) != params[param]:
+                    setattr(ims, param, params[param])
+                    need_to_be_save = True
+            else:
+                self.logger.debug("trying to update something that don't exists in ImagingServer")
+        if need_to_be_save:
+            session.save_or_update(ims)
+            session.flush()
+        session.close()
+        return True
+
     def getEntityByUUID(self, loc_id, session = None):
         session_need_to_close = False
         if session == None:

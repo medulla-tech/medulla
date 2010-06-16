@@ -26,7 +26,7 @@ from pulse2.utils import Singleton, Pulse2ConfigParser
 
 class DatabaseConfig(Singleton):
     dbsection = "database"
-    
+
     dbdriver = 'mysql'
     dbhost = "127.0.0.1"
     dbname = None
@@ -48,7 +48,7 @@ class DatabaseConfig(Singleton):
         # Load configuration file
         self.cp = Pulse2ConfigParser()
         self.cp.read(config_file)
-                                
+
         if self.cp.has_section(self.dbsection):
             if self.cp.has_option(self.dbsection, "dbdriver"):
                 self.dbdriver = self.cp.get(self.dbsection, "dbdriver")
@@ -65,7 +65,7 @@ class DatabaseConfig(Singleton):
 
             if self.cp.has_option(self.dbsection, "dbdebug"):
                 self.dbdebug = self.cp.get(self.dbsection, "dbdebug")
-                        
+
             if self.cp.has_option(self.dbsection, "dbpoolrecycle"):
                 self.dbpoolrecycle = self.cp.getint(self.dbsection, "dbpoolrecycle")
 
