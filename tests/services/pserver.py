@@ -62,6 +62,36 @@ serverMA = xmlrpclib.ServerProxy('%s://%s:9990/rpc' %(protocol,ipserver))
 serverP = xmlrpclib.ServerProxy('%s://%s:9990/package_api_get1' %(protocol,ipserver))
 serverS = xmlrpclib.ServerProxy('%s://%s:9990/scheduler_api' %(protocol,ipserver))
 
+def checkValues(val1, val2):
+    """
+    Check equality between wanted result and package server return values. It
+    is needed because lists in package server return values order is not
+    important, but the Python list equality operator will fail
+
+    @rtype: bool
+    """
+    ret = False
+    if type(val1) == type(val2):
+        # Check the first value only (it is ok in for test context)
+        if type(val1) == list and type(val2) == list:
+            val1 = val1[0]
+            val2 = val2[0]
+        # It should contain dicts
+        if type(val1) == dict and type(val2) == dict:
+            # The dicts must own the same keys
+            if val1.keys() == val2.keys():
+                for key in val1:
+                    value1 = val1[key]
+                    value2 = val2[key]
+                    # Order lists, so that they can match
+                    if type(value1) == list and type(value2) == list:
+                        value1.sort()
+                        value2.sort()
+                    ret = value1 == value2
+                    if not ret:
+                        break
+    return ret
+
 class class01testMirror (unittest.TestCase):
     """
     Test's class of Mirror's module
@@ -125,37 +155,40 @@ class class03testPackages_get (unittest.TestCase):
         self.assertEqual (result,[])
 
     def test302getAllPackages (self):
-        result=serverP.getAllPackages({'mountpoint': '/mirror1', 'server': ipserver, 'protocol': protocol, 'uuid': 'UUID/mirror1', 'port': '9990'})
+        result = serverP.getAllPackages({'mountpoint': '/mirror1', 'server': ipserver, 'protocol': protocol, 'uuid': 'UUID/mirror1', 'port': '9990'})
         SupEsp(result)
-        self.assertEqual (result,[{'postCommandSuccess': {'command': '', 'name': ''}, 'files': [{'path': '/test', 'name': 'install.bat', 'id': '7885517b39317add6a1d362968b01774'}, {'path': '/test', 'name': 'MD5SUMS', 'id': '5d3ff03e396aa072f5cae2b2ddcd88b9'}], 'installInit': {'command': '', 'name': ''}, 'description': 'Ceci est le package de test', 'preCommand': {'command': '', 'name': ''}, 'basepath': direct, 'reboot': '1', 'label': 'TestPackage', 'version': '2.0.0.9', 'command': {'command': './install.bat', 'name': 'commande'}, 'postCommandFailure': {'command': '', 'name': ''}, 'id': 'test', 'size': PKGSIZE}])
+        self.assertTrue(checkValues(result, [{'postCommandSuccess': {'command': '', 'name': ''}, 'files': [{'path': '/test', 'name': 'install.bat', 'id': '7885517b39317add6a1d362968b01774'}, {'path': '/test', 'name': 'MD5SUMS', 'id': '5d3ff03e396aa072f5cae2b2ddcd88b9'}], 'installInit': {'command': '', 'name': ''}, 'description': 'Ceci est le package de test', 'preCommand': {'command': '', 'name': ''}, 'basepath': direct, 'reboot': '1', 'label': 'TestPackage', 'version': '2.0.0.9', 'command': {'command': './install.bat', 'name': 'commande'}, 'postCommandFailure': {'command': '', 'name': ''}, 'id': 'test', 'size': PKGSIZE}]))
 
     def test303getLocalPackagePath (self):
         result=serverP.getLocalPackagePath ("test")
-        self.assertEqual (result,directory_temp)
+        self.assertEqual(result, directory_temp)
 
     def test304getLocalPackagesPath (self):
-       result=serverP.getLocalPackagesPath(["test","test"])
-       self.assertEqual (result,[directory_temp,directory_temp])
+       result=serverP.getLocalPackagesPath(["test", "test"])
+       self.assertEqual(result, [directory_temp, directory_temp])
 
     def test305getPackageDetail (self):
-        result=serverP.getPackageDetail("test")
+        result = serverP.getPackageDetail("test")
         SupEsp(result)
-        self.assertEqual (result,{'postCommandSuccess': {'command': '', 'name': ''}, 'files': [{'path': '/test', 'name': 'install.bat', 'id': '7885517b39317add6a1d362968b01774'}, {'path': '/test', 'name': 'MD5SUMS', 'id': '5d3ff03e396aa072f5cae2b2ddcd88b9'}], 'installInit': {'command': '', 'name': ''}, 'description': 'Ceci est le package de test', 'preCommand': {'command': '', 'name': ''}, 'basepath': direct, 'reboot': '1', 'label': 'TestPackage', 'version': '2.0.0.9', 'command': {'command': './install.bat', 'name': 'commande'}, 'postCommandFailure': {'command': '', 'name': ''}, 'id': 'test', 'size': PKGSIZE})
+        self.assertTrue(checkValues(result,{'postCommandSuccess': {'command': '', 'name': ''}, 'files': [{'path': '/test', 'name': 'install.bat', 'id': '7885517b39317add6a1d362968b01774'}, {'path': '/test', 'name': 'MD5SUMS', 'id': '5d3ff03e396aa072f5cae2b2ddcd88b9'}], 'installInit': {'command': '', 'name': ''}, 'description': 'Ceci est le package de test', 'preCommand': {'command': '', 'name': ''}, 'basepath': direct, 'reboot': '1', 'label': 'TestPackage', 'version': '2.0.0.9', 'command': {'command': './install.bat', 'name': 'commande'}, 'postCommandFailure': {'command': '', 'name': ''}, 'id': 'test', 'size': PKGSIZE}))
 
     def test306getPackagesDetail (self):
-        result = serverP.getPackagesDetail(["test","test"])
+        result = serverP.getPackagesDetail(["test", "test"])
         SupEsp(result)
-        self.assertEqual (result,[{'postCommandSuccess': {'command': '', 'name': ''}, 'files': [{'path': '/test', 'name': 'install.bat', 'id': '7885517b39317add6a1d362968b01774'}, {'path': '/test', 'name': 'MD5SUMS', 'id': '5d3ff03e396aa072f5cae2b2ddcd88b9'}], 'installInit': {'command': '', 'name': ''}, 'description': 'Ceci est le package de test', 'preCommand': {'command': '', 'name': ''}, 'basepath': direct, 'reboot': '1', 'label': 'TestPackage', 'version': '2.0.0.9', 'command': {'command': './install.bat', 'name': 'commande'}, 'postCommandFailure': {'command': '', 'name': ''}, 'id': 'test', 'size': PKGSIZE},{'postCommandSuccess': {'command': '', 'name': ''}, 'files': [{'path': '/test', 'name': 'install.bat', 'id': '7885517b39317add6a1d362968b01774'}, {'path': '/test', 'name': 'MD5SUMS', 'id': '5d3ff03e396aa072f5cae2b2ddcd88b9'}], 'installInit': {'command': '', 'name': ''}, 'description': 'Ceci est le package de test', 'preCommand': {'command': '', 'name': ''}, 'basepath': direct, 'reboot': '1', 'label': 'TestPackage', 'version': '2.0.0.9', 'command': {'command': './install.bat', 'name': 'commande'}, 'postCommandFailure': {'command': '', 'name': ''}, 'id': 'test', 'size': PKGSIZE}])
+        self.assertTrue(checkValues(result,[{'postCommandSuccess': {'command': '', 'name': ''}, 'files': [{'path': '/test', 'name': 'install.bat', 'id': '7885517b39317add6a1d362968b01774'}, {'path': '/test', 'name': 'MD5SUMS', 'id': '5d3ff03e396aa072f5cae2b2ddcd88b9'}], 'installInit': {'command': '', 'name': ''}, 'description': 'Ceci est le package de test', 'preCommand': {'command': '', 'name': ''}, 'basepath': direct, 'reboot': '1', 'label': 'TestPackage', 'version': '2.0.0.9', 'command': {'command': './install.bat', 'name': 'commande'}, 'postCommandFailure': {'command': '', 'name': ''}, 'id': 'test', 'size': PKGSIZE},{'postCommandSuccess': {'command': '', 'name': ''}, 'files': [{'path': '/test', 'name': 'install.bat', 'id': '7885517b39317add6a1d362968b01774'}, {'path': '/test', 'name': 'MD5SUMS', 'id': '5d3ff03e396aa072f5cae2b2ddcd88b9'}], 'installInit': {'command': '', 'name': ''}, 'description': 'Ceci est le package de test', 'preCommand': {'command': '', 'name': ''}, 'basepath': direct, 'reboot': '1', 'label': 'TestPackage', 'version': '2.0.0.9', 'command': {'command': './install.bat', 'name': 'commande'}, 'postCommandFailure': {'command': '', 'name': ''}, 'id': 'test', 'size': PKGSIZE}]))
 
     def test307getPackageCommand (self):
-        result=serverP.getPackageCommand("test")
+        result = serverP.getPackageCommand("test")
         SupEsp(result)
-        self.assertEqual (result,{'command': './install.bat', 'name': 'commande'})
+        self.assertEqual(result, {'command': './install.bat', 'name': 'commande'})
 
     def test308getPackageFiles (self):
-        result=serverP.getPackageFiles("test")
+        result = serverP.getPackageFiles("test")
+        result.sort()
         SupEsp(result)
-        self.assertEqual (result,[{'path': '/test', 'name': 'install.bat', 'id': '7885517b39317add6a1d362968b01774'}, {'path': '/test', 'name': 'MD5SUMS', 'id': '5d3ff03e396aa072f5cae2b2ddcd88b9'}])
+        wanted = [{'path': '/test', 'name': 'install.bat', 'id': '7885517b39317add6a1d362968b01774'}, {'path': '/test', 'name': 'MD5SUMS', 'id': '5d3ff03e396aa072f5cae2b2ddcd88b9'}]
+        wanted.sort()
+        self.assertEqual(result, wanted)
 
     def test309getPackageInstallInit (self):
         result=serverP.getPackageInstallInit("test")
@@ -197,7 +230,7 @@ class class03testPackages_get (unittest.TestCase):
     def test317getServerDetails (self):
         result=serverP.getServerDetails()
         SupEsp(result)
-        self.assertEqual (result,[{'postCommandSuccess': {'command': '', 'name': ''}, 'files': [{'path': '/test', 'name': 'install.bat', 'id': '7885517b39317add6a1d362968b01774'}, {'path': '/test', 'name': 'MD5SUMS', 'id': '5d3ff03e396aa072f5cae2b2ddcd88b9'}], 'installInit': {'command': '', 'name': ''}, 'description': 'Ceci est le package de test', 'preCommand': {'command': '', 'name': ''}, 'basepath': direct, 'reboot': '1', 'label': 'TestPackage', 'version': '2.0.0.9', 'command': {'command': './install.bat', 'name': 'commande'}, 'postCommandFailure': {'command': '', 'name': ''}, 'id': 'test', 'size': PKGSIZE}])
+        self.assertTrue(checkValues(result, [{'postCommandSuccess': {'command': '', 'name': ''}, 'files': [{'path': '/test', 'name': 'install.bat', 'id': '7885517b39317add6a1d362968b01774'}, {'path': '/test', 'name': 'MD5SUMS', 'id': '5d3ff03e396aa072f5cae2b2ddcd88b9'}], 'installInit': {'command': '', 'name': ''}, 'description': 'Ceci est le package de test', 'preCommand': {'command': '', 'name': ''}, 'basepath': direct, 'reboot': '1', 'label': 'TestPackage', 'version': '2.0.0.9', 'command': {'command': './install.bat', 'name': 'commande'}, 'postCommandFailure': {'command': '', 'name': ''}, 'id': 'test', 'size': PKGSIZE}]))
 
     def test318getPackageVersion (self):
         result=serverP.getPackageVersion("test")
