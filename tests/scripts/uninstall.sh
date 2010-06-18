@@ -45,6 +45,7 @@ fi
 # DROP databases
 if [ -f /usr/bin/mysqladmin ];
     then
+    echo "drop database if exists pulse2" | mysql
     echo "drop database if exists msc" | mysql
     echo "drop database if exists dyngroup" | mysql
     echo "drop database if exists inventory" | mysql
