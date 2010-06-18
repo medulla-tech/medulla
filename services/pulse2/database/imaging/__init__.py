@@ -1385,17 +1385,25 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     ######################
     def __PossibleImages(self, session, target_uuid, is_master, filt):
         q = session.query(Image).add_column(self.image.c.id)
-        q = q.select_from(self.image.join(self.image_on_imaging_server).join(self.imaging_server).join(self.entity).join(self.target, self.target.c.fk_entity == self.entity.c.id).join(self.mastered_on, self.mastered_on.c.fk_image == self.image.c.id).join(self.imaging_log, self.imaging_log.c.id == self.mastered_on.c.fk_imaging_log))
-        q = q.filter(self.target.c.uuid == target_uuid) # , or_(self.image.c.is_master == True, and_(self.image.c.is_master == False, )))
+        q = q.select_from(
+            self.image.\
+            join(self.image_state).\
+            join(self.image_on_imaging_server).\
+            join(self.imaging_server).\
+            join(self.entity).\
+            join(self.target, self.target.c.fk_entity == self.entity.c.id).\
+            join(self.mastered_on, self.mastered_on.c.fk_image == self.image.c.id).\
+            join(self.imaging_log, self.imaging_log.c.id == self.mastered_on.c.fk_imaging_log)
+        )
+        q = q.filter(self.target.c.uuid == target_uuid)  # , or_(self.image.c.is_master == True, and_(self.image.c.is_master == False, )))
         if filt != '':
-            q = q.filter(or_(self.image.c.desc.like('%'+filt+'%'), self.image.c.name.like('%'+filt+'%')))
+            q = q.filter(or_(self.image.c.desc.like('%%%s%%' % filt), self.image.c.name.like('%%%s%%' % filt)))
         if is_master == P2IIK.IS_MASTER_ONLY:
             q = q.filter(self.image.c.is_master == True)
         elif is_master == P2IIK.IS_IMAGE_ONLY:
             q = q.filter(and_(self.image.c.is_master == False, self.target.c.id == self.imaging_log.c.fk_target))
         elif is_master == P2IIK.IS_BOTH:
             pass
-
         return q
 
     def __EntityImages(self, session, loc_id, filt):
@@ -1420,13 +1428,13 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q1 = self.__PossibleImages(session, target_uuid, is_master, filt)
         q1 = q1.group_by(self.image.c.id)
         if end != -1:
-            q1 = q1.offset(int(start)).limit(int(end)-int(start))
+            q1 = q1.offset(int(start)).limit(int(end) - int(start))
         else:
             q1 = q1.all()
-        bs_ids = map(lambda bs:bs[1], q1)
+        bs_ids = map(lambda bs: bs[1], q1)
         q2 = self.__PossibleImageAndMenuItem(session, bs_ids, menu.id)
 
-        im_ids = map(lambda im:im[0].id, q1)
+        im_ids = map(lambda im: im[0].id, q1)
         q3 = session.query(Target).add_entity(MasteredOn).select_from(self.target.join(self.imaging_log).join(self.mastered_on)).filter(self.mastered_on.c.fk_image.in_(im_ids)).all()
         session.close()
 
@@ -1440,7 +1448,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 q1 = self.__PossibleImages(session, puuid, is_master, filt)
                 q1 = q1.group_by(self.image.c.id)
                 q1 = q1.all()
-                bs_ids = map(lambda bs:bs[1], q1)
+                bs_ids = map(lambda bs: bs[1], q1)
                 q2 = self.__PossibleImageAndMenuItem(session, bs_ids, menu.id)
 
                 in_profile = {}
@@ -1450,7 +1458,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
                 ret = []
                 for i in q:
-                    if in_profile.has_key(i.id):
+                    if i.id in in_profile:
                         setattr(i, 'read_only', True)
                         setattr(i, 'menu_item', in_profile[i.id])
                     ret.append(i)
@@ -1460,10 +1468,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def canRemoveFromMenu(self, image_uuid):
         session = create_session()
         mis = session.query(MenuItem).select_from(self.menu_item \
-                .join(self.image_in_menu, self.menu_item.c.id == self.image_in_menu.c.fk_menuitem) \
-                .join(self.image, self.image.c.id == self.image_in_menu.c.fk_image) \
-                .join(self.menu, self.menu.c.id == self.menu_item.c.fk_menu) \
-                .join(self.target, self.target.c.fk_menu == self.menu.c.id) \
+            .join(self.image_in_menu, self.menu_item.c.id == self.image_in_menu.c.fk_menuitem) \
+            .join(self.image, self.image.c.id == self.image_in_menu.c.fk_image) \
+            .join(self.menu, self.menu.c.id == self.menu_item.c.fk_menu) \
+            .join(self.target, self.target.c.fk_menu == self.menu.c.id) \
         )
         mis = mis.filter(and_(self.image.c.id == uuid2id(image_uuid), self.target.c.type.in_((P2IT.COMPUTER, P2IT.PROFILE)))).group_by(self.menu_item.c.id).all()
 
@@ -1658,7 +1666,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             self.logger.warn('an image with the same UUID already exists (%s)' % (params['uuid']))
             raise '%s:An image with the same UUID already exists! (%s)' % (P2ERR.ERR_IMAGE_ALREADY_EXISTS, params['uuid'])
 
-        self.logger.error('WOOT : %s' % "a")
         # create the image item
         image = Image()
         image.name = params['name']
@@ -3605,7 +3612,7 @@ class Entity(DBObject):
     to_be_exported = ['id', 'name', 'uuid']
 
 class Image(DBObject):
-    to_be_exported = ['id', 'path', 'checksum', 'size', 'desc', 'is_master', 'creation_date', 'fk_creator', 'name', 'is_local', 'uuid', 'mastered_on_target_uuid', 'read_only']
+    to_be_exported = ['id', 'path', 'checksum', 'size', 'desc', 'is_master', 'creation_date', 'fk_creator', 'name', 'is_local', 'uuid', 'mastered_on_target_uuid', 'read_only', 'fk_state']
     need_iteration = ['menu_item', 'post_install_scripts']
 
 class ImageState(DBObject):
