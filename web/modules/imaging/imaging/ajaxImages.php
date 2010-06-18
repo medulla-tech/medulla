@@ -23,8 +23,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#require_once('modules/imaging/includes/includes.php');
-#require_once('modules/imaging/includes/xmlrpc.inc.php');
+//require_once('modules/imaging/includes/includes.php');
+//require_once('modules/imaging/includes/xmlrpc.inc.php');
 require("../../../includes/config.inc.php");
 require("../../../includes/i18n.inc.php");
 require("../../../includes/acl.inc.php");
@@ -87,6 +87,8 @@ $a_size = array();
 $a_fromprofile = array();
 $a_inbootmenu = array();
 $a_destroy = array();
+$a_logs = array();
+$a_info = array();
 $l_im = array();
 foreach ($images as $image) {
     $name = $image['name'];
@@ -118,8 +120,9 @@ foreach ($images as $image) {
     $a_desc[] = $image['desc'];
     $a_date[] = _toDate($image['creation_date']);
     $a_size[] = humanReadable($image['size']);
-    $a_inbootmenu[] = (isset($image['menu_item'])?True:False);
-    $a_fromprofile[] = ($image['read_only']?True:False);
+    $a_inbootmenu[] = (isset($image['menu_item']) ? True : False);
+    $a_fromprofile[] = ($image['read_only'] ? True : False);
+    $a_info []= sprintf("Plop: %s", $image['fk_status']);
     $l_im[] = array($image['imaging_uuid'], $_GET['target_uuid'], $type);
 }
 
@@ -153,6 +156,11 @@ $l->addActionItem(
         new ActionPopupItem(_T("Create bootable iso", "imaging"),
         "images_iso", "backup", "image", "base", "computers")
 );
+
+$l->addActionItem(
+    new ActionPopupItem(_T("Show Image Informations", "imaging"), "showimage", "showimage", "image", "base", "computers")
+    );
+//$showLogsAction = new ActionItem(_T("Show Logs", "imaging"), "showlogs", "edit", "image", "base", "computers", $type."tabimages", "edit");
 
 // if not in boot menu
 if ($actions) {

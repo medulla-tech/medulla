@@ -78,28 +78,22 @@ foreach ($db_logs as $log) {
 
     $details = translate_details($log['detail']);
 
-    $a_level[] = $log['imaging_log_level'];
     $a_date[] = $date;
     $a_target[] = $log['target']['name'];
-    $a_desc[]= $status . ' - ' . $details;
+    $a_desc[]= "<span class='" . $log['imaging_log_level'] . "'>" . $status . ' - ' . $details . "</span>";
     $a_states[]= $status;
     $param["uuid"] = $log['target']['uuid'];
     $param["hostname"] = $log['target']['name'];
 
     $list_params[]= $param;
 }
-
 $l = new OptimizedListInfos($a_date, _T("Timestamp", "imaging"));
 $l->setItemCount($nbLogs);
 $l->setNavBar(new AjaxNavBar($nbLogs, $filter));
 $l->setParamInfo($list_params);
-// $l->addExtraInfo($a_level, _T("Log level", "imaging"));
 $l->addExtraInfo($a_target, _T("Target", "imaging"));
 $l->addExtraInfo($a_desc, _T("Message", "imaging"));
-//$l->addExtraInfo($a_states, _T("State", "imaging"));
-/*$l->addActionItem(
-    new ActionItem(_T("Details"), "imgtabs", "display", "item", "base", "computers", $type."tabimlogs", "details")
-    );*/
+$l->addExtraInfo($a_states, _T("State", "imaging"));
 $l->disableFirstColumnActionLink();
 $l->setTableHeaderPadding(1);
 $l->start = 0;
