@@ -28,9 +28,9 @@ import unittest
 import xmlrpclib
 import copy
 
-from time import gmtime, sleep
+from time import sleep
 
-from pulse2.utils import reduceMACAddress
+from pulse2.utils import reduceMACAddress, isUUID
 from testutils import ipconfig
 
 IPSERVER = ipconfig()
@@ -39,6 +39,8 @@ SERVER = xmlrpclib.ServerProxy('%s://%s:9990/imaging_api'
                                % (PROTOCOL, IPSERVER))
 MMCAGENT = xmlrpclib.ServerProxy('%s://mmc:s3cr3t@%s:7080'
                                  % (PROTOCOL, '127.0.0.1'))
+
+IMAGE_UUID = None
 
 MENU = { 'timeout' : 20,
          'background_uri' : u'/##PULSE2_F_DISKLESS##/##PULSE2_F_BOOTSPLASH##',
@@ -164,22 +166,30 @@ class Imaging(unittest.TestCase):
                                         6, 'boot', 'booted')
         self.assertTrue(result)
 
-    def test_06imageDone(self):
+    def test_06computerCreateImageDirectory(self):
         """
-        Register a Pulse 2 image to the MMC agent
+        Create a directory to store a Pulse 2 image
+        """
+        result = SERVER.computerCreateImageDirectory('00:11:22:33:44:ff')
+        self.assertTrue(isUUID(result))
+        self.assertTrue(os.path.exists('/var/lib/pulse2/imaging/masters/%s' % result))
+        IMAGE_UUID = result
+
+    def test_08imageDone(self):
+        """
+        Tell that the image is done
         """
         # Put a sample image
-        os.system('tar xzf ../data/pulse2-image-sample.tar.gz -C /var/lib/pulse2/imaging/masters/')
-        result = SERVER.imageDone('00:11:22:33:44:ff', 'fe71d487-2a90-11df-99a9-5254001c1e49')
+        os.system('tar xzf ../data/pulse2-image-sample.tar.gz -C /var/lib/pulse2/imaging/masters/' + IMAGE_UUID)
+        result = SERVER.imageDone('00:11:22:33:44:ff', IMAGE_UUID)
         self.assertTrue(result)
 
-    def test_07generateISO(self):
+    def test_09generateISO(self):
         """
         Check ISO generation
         """
         title = "Image ISO"
-        iuuid = 'fe71d487-2a90-11df-99a9-5254001c1e49'
-        result = SERVER.imagingServerISOCreate(iuuid, 650 * 1024 * 1024, title)
+        result = SERVER.imagingServerISOCreate(IMAGE_UUID, 650 * 1024 * 1024, title)
         self.assertTrue(result)
         # Check that we have an ISO file
         ret = False
@@ -191,7 +201,7 @@ class Imaging(unittest.TestCase):
             sleep(5)
         self.assertTrue(ret)
 
-    def test_08computerUnregister(self):
+    def test_10computerUnregister(self):
         """
         Check computer archival
         """
@@ -204,7 +214,7 @@ class Imaging(unittest.TestCase):
         # Computer directory no more exists
         self.assertFalse(os.path.exists('/var/lib/pulse2/imaging/computers/UUID4'))
         # Unregister with archival
-        result = SERVER.computerUnregister('UUID2', ['fe71d487-2a90-11df-99a9-5254001c1e49'], True)
+        result = SERVER.computerUnregister('UUID2', [IMAGE_UUID], True)
         self.assertTrue(result)
         # Wait for the archival background process to be done
         sleep(5)
