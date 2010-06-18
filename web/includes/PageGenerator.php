@@ -466,17 +466,17 @@ class ListInfos extends HtmlElement {
     /**
      *  draw number of page etc...
      */
-        function drawHeader($navbar = 1) {
-        
+    function drawHeader($navbar = 1) {
+
         $this->displayNavbar($navbar);
         echo "<p class=\"listInfos\">";
-        
-        /* 
-         * Management of the numbers "start" and "end" to display depending on the maxperpage set in the selector 
+
+        /*
+         * Management of the numbers "start" and "end" to display depending on the maxperpage set in the selector
          * These numbers are more user-friendly and do not begin with 0
          */
-        echo $this->name." <strong>".min($this->start + 1, $count) . "</strong>\n ";
-        echo _("to")." <strong>".min($this->end + 1, $count)."</strong>\n";
+        echo $this->name." <strong>".min($this->start + 1, count($this->arrInfo)) . "</strong>\n ";
+        echo _("to")." <strong>".min($this->end + 1, count($this->arrInfo))."</strong>\n";
 
         printf (_(" - Total <b>%s </b>")."\n",count($this->arrInfo));
         /* Display page counter only when possible */
