@@ -28,7 +28,7 @@ A simple Pulse 2 Launchers log analyzer
 import sys
 import re
 import time
-from pychart import *
+from pychart import color, theme, axis, canvas, area, line_style, line_plot, font
 
 X_MINOR_TICK_INTERVAL = 600
 X_TICK_INTERVAL = 3600
@@ -42,7 +42,11 @@ DELTA = 30
 BALANCE_REGEX = "([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}):[0-9]{2},.*launcher ([^:]*): BALANCE: (.*)"
 HEALTH_REGEX = "([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}):[0-9]{2},.*launcher ([^:]*): HEALTH: (.*)"
 
+
 def create_graph(label_x, label_y, data_x, alldata_y, filename, title, start_date, end_date, start_y, end_y):
+    """
+    main func
+    """
 
     # alter file name (linpng do not seems to like spaces in filenames
 
@@ -75,14 +79,13 @@ def create_graph(label_x, label_y, data_x, alldata_y, filename, title, start_dat
         color.goldenrod,
     ]
 
-    can = canvas.init("%s"%filename)
+    can = canvas.init("%s" % filename)
 
     # Draw graph title
-    newtitle = "/hL/20%s"%title
-    left = WIDTH / 2  - font.text_width(newtitle)/2
+    newtitle = "/hL/20%s" % title
+    left = WIDTH / 2  - font.text_width(newtitle) / 2
     can.show(left, HEIGHT + DELTA, newtitle)
 
-    data = zip(data_x)
     int_to_date = lambda x: '/a60{}' + time.strftime("%H:%M", time.localtime(x))
 
     xaxis = axis.X(
@@ -90,8 +93,7 @@ def create_graph(label_x, label_y, data_x, alldata_y, filename, title, start_dat
         label = "/20%s" % label_x,
         label_offset = (0, -DELTA),
         minor_tic_interval = X_MINOR_TICK_INTERVAL,
-        tic_interval = X_TICK_INTERVAL
-    )
+        tic_interval = X_TICK_INTERVAL)
     yaxis = axis.Y(
         label = "/20%s" % label_y,
         label_offset = (-DELTA, 0),
@@ -115,12 +117,10 @@ def create_graph(label_x, label_y, data_x, alldata_y, filename, title, start_dat
     for title, data_y in alldata_y.iteritems():
         plot = line_plot.T(
             label = title,
-            data = zip(data_x,data_y),
+            data = zip(data_x, data_y),
             line_style = line_style.T(
                 color = colors[i],
-                width = 1
-            )
-        )
+                width = 1))
         ar.add_plot(plot)
         i += 1
 
@@ -128,6 +128,7 @@ def create_graph(label_x, label_y, data_x, alldata_y, filename, title, start_dat
     can.close()
 
     return True
+
 
 def read_logs(logfiles, start_date, stop_date):
     """
@@ -150,18 +151,18 @@ def read_logs(logfiles, start_date, stop_date):
             continue
 
         print "parsing %s ... " % file
-        for line in fh: # Parse each line in the log file
+        for line in fh:  # Parse each line in the log file
             # Add the "BALANCE" test to avoid computing regexp if the line doesn't match
             res = re.search(BALANCE_REGEX, line)
 
-            if not res: # try another regex
+            if not res:  # try another regex
                 res = re.search(HEALTH_REGEX, line)
 
-            if not res: # give up if line do not match
+            if not res:  # give up if line do not match
                 continue
 
             stamp = int(time.mktime(time.strptime(res.group(1), '%Y-%m-%d %H:%M')))
-            if (stamp < start_date or stamp > stop_date): # give up if time do not match
+            if (stamp < start_date or stamp > stop_date):  # give up if time do not match
                 continue
 
             launcher = res.group(2)
