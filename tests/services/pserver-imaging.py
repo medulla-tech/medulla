@@ -80,13 +80,13 @@ MENU = { 'timeout' : 20,
         }
 MENUS = { 'UUID27' : MENU }
 
+IMAGE_UUID = None
+
 class Imaging(unittest.TestCase):
 
     """
     Tests for the Imaging API of the package server.
     """
-
-    IMAGE_UUID = None
 
     def test_01registerPackageServer(self):
         """
@@ -173,15 +173,16 @@ class Imaging(unittest.TestCase):
         result = SERVER.computerCreateImageDirectory('00:11:22:33:44:ff')
         self.assertTrue(isUUID(result))
         self.assertTrue(os.path.exists('/var/lib/pulse2/imaging/masters/%s' % result))
-        self.IMAGE_UUID = result
+        global IMAGE_UUID
+        IMAGE_UUID = result
 
     def test_08imageDone(self):
         """
         Tell that the image is done
         """
         # Put a sample image
-        os.system('tar xzf ../data/pulse2-image-sample.tar.gz -C /var/lib/pulse2/imaging/masters/' + self.IMAGE_UUID)
-        result = SERVER.imageDone('00:11:22:33:44:ff', self.IMAGE_UUID)
+        os.system('tar xzf ../data/pulse2-image-sample.tar.gz -C /var/lib/pulse2/imaging/masters/' + IMAGE_UUID)
+        result = SERVER.imageDone('00:11:22:33:44:ff', IMAGE_UUID)
         self.assertTrue(result)
 
     def test_09generateISO(self):
@@ -189,7 +190,7 @@ class Imaging(unittest.TestCase):
         Check ISO generation
         """
         title = "Image ISO"
-        result = SERVER.imagingServerISOCreate(self.IMAGE_UUID, 650 * 1024 * 1024, title)
+        result = SERVER.imagingServerISOCreate(IMAGE_UUID, 650 * 1024 * 1024, title)
         self.assertTrue(result)
         # Check that we have an ISO file
         ret = False
@@ -214,7 +215,7 @@ class Imaging(unittest.TestCase):
         # Computer directory no more exists
         self.assertFalse(os.path.exists('/var/lib/pulse2/imaging/computers/UUID4'))
         # Unregister with archival
-        result = SERVER.computerUnregister('UUID2', [self.IMAGE_UUID], True)
+        result = SERVER.computerUnregister('UUID2', [IMAGE_UUID], True)
         self.assertTrue(result)
         # Wait for the archival background process to be done
         sleep(5)
