@@ -29,6 +29,7 @@ imaging plugin
 import logging
 from twisted.internet import defer
 
+from mmc.agent import PluginManager
 from mmc.support.mmctools import xmlrpcCleanup
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 from mmc.plugins.imaging.config import ImagingConfig
@@ -99,6 +100,16 @@ def activate():
 
     return True
 
+def activate_2():
+    """
+    Check that the MMC pulse2 plugin is enabled
+    """
+    if not PluginManager().isEnabled('pulse2'):
+        ret = False
+        logging.getLogger().error("Plugin imaging: plugin is disabled because the pulse2 plugin is not available")
+    else:
+        ret = True
+    return ret
 
 class ContextMaker(ContextMakerI):
 
