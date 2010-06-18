@@ -103,8 +103,14 @@ echo "My IP address is $IPADDRESS"
 export MYSQL_HOST=localhost
 export MYSQL_USER=root
 export MYSQL_PWD=
-# Create database msc and configure msc.init
 
+# Create database pulse2
+pushd $TMPCO/pulse2/services/contrib/pulse2/sql/
+export MYSQL_BASE=pulse2
+./install.sh
+popd
+
+# Create database msc and configure msc.ini
 pushd $TMPCO/pulse2/services/contrib/msc/sql/
 export MYSQL_BASE=msc
 ./install.sh
@@ -112,8 +118,9 @@ sed -i "s/#\[main\]/\[main\]/" /etc/mmc/plugins/msc.ini
 sed -i "s/# disable = 0/disable = 0/" /etc/mmc/plugins/msc.ini
 sed -i "s/# mserver = 127.0.0.1/mserver = $IPADDRESS/" /etc/mmc/plugins/msc.ini
 sed -i "/\[scheduler_api\]/{n; s/host = 127.0.0.1/host = $IPADDRESS/}" /etc/mmc/plugins/msc.ini
+popd
 
-# Create database dyngroup and configure dyngroup.init
+# Create database dyngroup and configure dyngroup.ini
 pushd $TMPCO/pulse2/services/contrib/dyngroup/sql/
 export MYSQL_BASE=dyngroup
 ./install.sh
@@ -121,7 +128,7 @@ sed -i "s/# default_module = /default_module = inventory/" /etc/mmc/plugins/dyng
 sed -i "s/activate = 0/activate = 1/" /etc/mmc/plugins/dyngroup.ini
 popd
 
-# Create database inventory and configure inventory.init
+# Create database inventory and configure inventory.ini
 pushd $TMPCO/pulse2/services/contrib/inventory/sql/
 export MYSQL_BASE=inventory
 ./install.sh
@@ -132,7 +139,7 @@ sed -i "s/# double =/double =/" /etc/mmc/plugins/inventory.ini
 sed -i "s/# halfstatic =/halfstatic =/" /etc/mmc/plugins/inventory.ini
 popd
 
-# Create database inventory and configure inventory.init
+# Create database imaging and configure imaging.ini
 pushd $TMPCO/pulse2/services/contrib/imaging/sql/
 export MYSQL_BASE=imaging
 ./install.sh
@@ -146,6 +153,8 @@ IDENTIFIED BY 'mmc' WITH GRANT OPTION;
 GRANT ALL PRIVILEGES ON inventory.* TO 'mmc'@'localhost'
 IDENTIFIED BY 'mmc' WITH GRANT OPTION;
 GRANT ALL PRIVILEGES ON imaging.* TO 'mmc'@'localhost'
+IDENTIFIED BY 'mmc' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON pulse2.* TO 'mmc'@'localhost'
 IDENTIFIED BY 'mmc' WITH GRANT OPTION;
 FLUSH PRIVILEGES
 EOF
