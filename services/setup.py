@@ -59,6 +59,7 @@ setup(
         "pulse2.database.inventory",
         "pulse2.database.msc",
         "pulse2.database.msc.orm",
+        "pulse2.database.pulse",
         "pulse2.imaging",
         "pulse2.imaging_server",
         "pulse2.inventoryserver",
