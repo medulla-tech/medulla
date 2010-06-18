@@ -40,8 +40,6 @@ SERVER = xmlrpclib.ServerProxy('%s://%s:9990/imaging_api'
 MMCAGENT = xmlrpclib.ServerProxy('%s://mmc:s3cr3t@%s:7080'
                                  % (PROTOCOL, '127.0.0.1'))
 
-IMAGE_UUID = None
-
 MENU = { 'timeout' : 20,
          'background_uri' : u'/##PULSE2_F_DISKLESS##/##PULSE2_F_BOOTSPLASH##',
          'name' : u'Default Boot Menu',
@@ -87,6 +85,8 @@ class Imaging(unittest.TestCase):
     """
     Tests for the Imaging API of the package server.
     """
+
+    IMAGE_UUID = None
 
     def test_01registerPackageServer(self):
         """
@@ -173,15 +173,15 @@ class Imaging(unittest.TestCase):
         result = SERVER.computerCreateImageDirectory('00:11:22:33:44:ff')
         self.assertTrue(isUUID(result))
         self.assertTrue(os.path.exists('/var/lib/pulse2/imaging/masters/%s' % result))
-        IMAGE_UUID = result
+        self.IMAGE_UUID = result
 
     def test_08imageDone(self):
         """
         Tell that the image is done
         """
         # Put a sample image
-        os.system('tar xzf ../data/pulse2-image-sample.tar.gz -C /var/lib/pulse2/imaging/masters/' + IMAGE_UUID)
-        result = SERVER.imageDone('00:11:22:33:44:ff', IMAGE_UUID)
+        os.system('tar xzf ../data/pulse2-image-sample.tar.gz -C /var/lib/pulse2/imaging/masters/' + self.IMAGE_UUID)
+        result = SERVER.imageDone('00:11:22:33:44:ff', self.IMAGE_UUID)
         self.assertTrue(result)
 
     def test_09generateISO(self):
@@ -189,7 +189,7 @@ class Imaging(unittest.TestCase):
         Check ISO generation
         """
         title = "Image ISO"
-        result = SERVER.imagingServerISOCreate(IMAGE_UUID, 650 * 1024 * 1024, title)
+        result = SERVER.imagingServerISOCreate(self.IMAGE_UUID, 650 * 1024 * 1024, title)
         self.assertTrue(result)
         # Check that we have an ISO file
         ret = False
@@ -214,7 +214,7 @@ class Imaging(unittest.TestCase):
         # Computer directory no more exists
         self.assertFalse(os.path.exists('/var/lib/pulse2/imaging/computers/UUID4'))
         # Unregister with archival
-        result = SERVER.computerUnregister('UUID2', [IMAGE_UUID], True)
+        result = SERVER.computerUnregister('UUID2', [self.IMAGE_UUID], True)
         self.assertTrue(result)
         # Wait for the archival background process to be done
         sleep(5)
