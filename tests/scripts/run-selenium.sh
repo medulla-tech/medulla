@@ -83,7 +83,7 @@ rm -f /root/.mozilla/firefox/*.default/cookies.sqlite
 
 set +e
 # See: http://seleniumhq.org/docs/05_selenium_rc.html#server-options
-$JAVA -jar $MMCCORE/tests/libs/selenium-server.jar -userExtensions $MMCCORE/tests/libs/user-extensions.js -htmlSuite "*firefox $FIREFOX" "http://localhost/" "./$TESTS" "$RESULTDIR/result.html"
+$JAVA -jar $MMCCORE/tests/libs/selenium-server.jar -userExtensions $MMCCORE/tests/libs/user-extensions.js -timeout 3600 -htmlSuite "*firefox $FIREFOX" "http://localhost/" "./$TESTS" "$RESULTDIR/result.html"
 RET=$?
 set -e
 
