@@ -9,11 +9,6 @@
 <tr><td rowspan="1" colspan="3">001_delete_packages</td></tr>
 </thead><tbody>
 <tr>
-	<td>setTimeout</td>
-	<td>600000</td>
-	<td></td>
-</tr>
-<tr>
 	<td>waitForTextPresent</td>
 	<td>Group name</td>
 	<td></td>
