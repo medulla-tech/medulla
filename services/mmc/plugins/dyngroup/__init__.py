@@ -257,8 +257,12 @@ class RpcProxy(RpcProxyI):
                         are_some_to_remove = True
                         uuids.pop(uuid2key[i])
 
-        if len(uuids) != 0 and self.isprofile(id):
-            ComputerProfileManager().addComputersToProfile(ctx, uuids, id)
+        if len(uuids) != 0:
+            if self.isprofile(id):
+                ComputerProfileManager().addComputersToProfile(ctx, uuids, id)
+            else:
+                ret = DyngroupDatabase().addmembers_to_group(ctx, id, uuids)
+                return [ret]
         return xmlrpcCleanup([not are_some_to_remove, didnt_work])
 
     def delmembers_to_group(self, id, uuids):
