@@ -1123,7 +1123,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                     any_not_back_to_first = True
 
             if not any_not_back_to_first:
-                self.profileChangeDefaultMenuItem(imaging_server_uuid, profile.uuid, item_number)
+                self.profileChangeDefaultMenuItem(imaging_server_uuid, profile.getUUID(), item_number)
 
         else:
             mis = session.query(MenuItem).select_from(self.menu_item.join(self.menu, self.menu.c.id == self.menu_item.c.fk_menu))
@@ -1971,13 +1971,18 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q.filter(self.image.c.is_master == False)
         return q
 
-    def __ImagesInEntityIsMaster(self, session, target_uuid, type, filter):
-        q = self.__ImagesInEntityQuery(session, target_uuid, type, filter)
+    def __ImagesInEntityIsMaster(self, session, target_uuid, type, filt):
+        q = self.__ImagesInEntityQuery(session, target_uuid, type, filt)
         q.filter(self.image.c.is_master == False)
         return q
 
-    def getTargetImages(self, target_uuid, target_type, start = 0, end = -1, filter = ''):
+    def getTargetImages(self, target_uuid, target_type, start = 0, end = -1, filt = ''):
         session = create_session()
+        if target_type == P2IT.ALL_COMPUTERS:
+            filt1 = and_(self.target.c.uuid == target_uuid, self.target.c.type.in_(P2IT.COMPUTERS, P2IT.COMPUTERS_IN_PROFILE))
+        else:
+            filt1 = and_(self.target.c.uuid == target_uuid, self.target.c.type == target_type)
+
         q1 = session.query(Image).add_entity(MenuItem) \
                 .select_from(self.image \
                     .outerjoin(self.image_in_menu, self.image_in_menu.c.fk_image == self.image.c.id) \
@@ -1985,11 +1990,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                     .join(self.mastered_on, self.mastered_on.c.fk_image == self.image.c.id) \
                     .join(self.imaging_log, self.imaging_log.c.id == self.mastered_on.c.fk_imaging_log) \
                     .join(self.target, self.target.c.id == self.imaging_log.c.fk_target) \
-                ).filter(and_(self.target.c.uuid == target_uuid, self.target.c.type == target_type)).all()
+                ).filter(filt1).all()
         images_ids = map(lambda r:r[0].id, q1)
 
         ims = session.query(ImagingServer).select_from(self.imaging_server.join(self.target, self.target.c.fk_entity == self.imaging_server.c.fk_entity)) \
-                .filter(and_(self.target.c.uuid == target_uuid, self.target.c.type == target_type)).first()
+                .filter(filt1).first()
         lang = ims.fk_language
 
         I18n1 = sa_exp_alias(self.internationalization)
