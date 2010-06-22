@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-06-22 11:06+0200\n"
-"PO-Revision-Date: 2010-06-22 11:20+0200\n"
+"PO-Revision-Date: 2010-06-22 19:05+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: Pulse 2 developers <pulse2-i18n@mandrivalinux.org>\n"
 "MIME-Version: 1.0\n"
@@ -1249,7 +1249,7 @@ msgstr "Le fichier de l'image ISO sera stockée sur le serveur d'imaging à la f
 #: web/modules/imaging/imaging/images_iso.php:56
 #, php-format
 msgid "The ISO image generation of master <strong>%s</strong> has been launched in background."
-msgstr "La génération de l'image IOS du master <strong>%s</strong> a été lancée en tâche de fond."
+msgstr "La génération de l'image ISO du master <strong>%s</strong> a été lancée en tâche de fond."
 
 #: web/modules/imaging/imaging/configure.php:154
 msgid "The computer either doesn't have a MAC address, either has more than one MAC address. It can't be registered into the imaging module."
