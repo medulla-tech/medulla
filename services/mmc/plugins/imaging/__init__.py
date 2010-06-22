@@ -1685,6 +1685,9 @@ class RpcProxy(RpcProxyI):
         if target_type == P2IT.PROFILE:
             pid = uuids[0]
             l_uuids = map(lambda c: c.uuid, ComputerProfileManager().getProfileContent(pid))
+            if len(l_uuids) == 0:
+                ret = db.changeTargetsSynchroState(uuids, target_type, P2ISS.DONE)
+                return [True]
 
         distinct_loc = self.__generateMenus(logger, db, l_uuids)
 
