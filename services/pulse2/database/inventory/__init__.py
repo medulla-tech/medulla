@@ -214,8 +214,11 @@ class Inventory(DyngroupDatabaseHelper):
                 query = query.filter(self.machine.c.Name.like("%" + pattern['filter'] + "%"))
             if 'uuid' in pattern:
                 query = query.filter(self.machine.c.id == fromUUID(pattern['uuid']))
-            if 'uuids' in pattern and type(pattern['uuids']) == list and len(pattern['uuids']) > 0:
-                query = query.filter(self.machine.c.id.in_(map(lambda m:fromUUID(m), pattern['uuids'])))
+            if 'uuids' in pattern and type(pattern['uuids']) == list:
+                if len(pattern['uuids']) > 0:
+                    query = query.filter(self.machine.c.id.in_(map(lambda m:fromUUID(m), pattern['uuids'])))
+                else:
+                    query = query.filter("1 = 0")
             if 'location' in pattern and pattern['location']:
                 query = query.filter(self.table['Entity'].c.id == fromUUID(pattern['location']))
             if 'request' in pattern:
@@ -864,9 +867,12 @@ class Inventory(DyngroupDatabaseHelper):
             query = query.filter(Machine.c.Name.like('%'+params['filter']+'%'))
         if params.has_key('uuid') and params['uuid'] != '':
             query = query.filter(Machine.c.id==fromUUID(params['uuid']))
-        if params.has_key('uuids') and len(params['uuids']):
-            uuids = map(lambda m: fromUUID(m), params['uuids'])
-            query = query.filter(Machine.c.id.in_(uuids))
+        if params.has_key('uuids'):
+            if type(params['uuids']) == list and len(params['uuids']) > 0:
+                uuids = map(lambda m: fromUUID(m), params['uuids'])
+                query = query.filter(Machine.c.id.in_(uuids))
+            else:
+                query = query.filter("1 = 0")
         if params.has_key('gid') and params['gid'] != '':
             if ComputerGroupManager().isrequest_group(ctx, params['gid']):
                 machines = map(lambda m: fromUUID(m), ComputerGroupManager().requestresult_group(ctx, params['gid'], 0, -1, ''))
