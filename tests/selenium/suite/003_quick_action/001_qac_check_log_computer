@@ -41,7 +41,7 @@
 <tr>
 	<td>verifyText</td>
 	<td>//div[@id='section']/div[3]/table[2]/tbody/tr[2]/td[2]</td>
-	<td>Mandriva Test : echo test</td>
+	<td>Mandriva Test : UTF-8 flow</td>
 </tr>
 <tr>
 	<td>verifyElementPresent</td>

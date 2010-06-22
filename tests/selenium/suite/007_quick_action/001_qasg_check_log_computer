@@ -27,7 +27,7 @@
 <tr>
 	<td>verifyText</td>
 	<td>//div[@id='container']/form/table/tbody/tr[1]/td[1]</td>
-	<td>Mandriva Test : echo test</td>
+	<td>Mandriva Test : UTF-8 flow</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
