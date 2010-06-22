@@ -69,11 +69,6 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>breset</td>
-	<td></td>
-</tr>
-<tr>
 	<td>waitForTextPresent</td>
 	<td>Names</td>
 	<td></td>
