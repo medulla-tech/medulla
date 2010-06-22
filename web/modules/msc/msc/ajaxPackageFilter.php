@@ -49,6 +49,7 @@ $label->display();
 
 $a_packages = array();
 $a_pversions = array();
+$a_sizes = array();
 $a_css = array();
 $params = array();
 
