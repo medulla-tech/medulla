@@ -1606,6 +1606,9 @@ class RpcProxy(RpcProxyI):
             profile = ComputerProfileManager().getComputersProfile(m_uuid)
             if profile != None:
                 menu = db.getTargetsMenuTUUID(profile.id)
+                m_menu = db.getTargetsMenuTUUID(m_uuid)
+                menu.fk_default_item = m_menu.fk_default_item
+                menu.fk_default_item_WOL = m_menu.fk_default_item_WOL
             else:
                 menu = db.getTargetsMenuTUUID(m_uuid)
             menu = menu.toH()
@@ -2590,7 +2593,11 @@ class RpcProxy(RpcProxyI):
             db.computerChangeDefaultMenuItem(imaging_server_uuid, computer_uuid, item_number)
 
             # need to send back the menu to the package server
-            self.__synchroTargets([computer_uuid], P2IT.COMPUTER)
+            profile = ComputerProfileManager().getComputersProfile(computer_uuid)
+            if profile != None:
+                self.__synchroTargets([computer_uuid], P2IT.COMPUTER_IN_PROFILE)
+            else:
+                self.__synchroTargets([computer_uuid], P2IT.COMPUTER)
 
         except Exception, e:
             logging.getLogger().exception(e)
