@@ -456,7 +456,6 @@ INSERT INTO ImageState (id, label) VALUES (6, "INPROGRESS");
 INSERT INTO ImageState (id, label) VALUES (7, "INVALID");
 
 INSERT INTO Protocol (label) VALUES ("nfs");
-INSERT INTO Protocol (label) VALUES ("tftp");
 INSERT INTO Protocol (label) VALUES ("mtftp");
 
 INSERT INTO Language (id, label) VALUES (1, "English");
