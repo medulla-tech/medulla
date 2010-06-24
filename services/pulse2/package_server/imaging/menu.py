@@ -103,6 +103,8 @@ class ImagingDefaultMenuBuilder:
         m.setEtherCard(int(self.menu['ethercard']))
         if 'language' in self.menu:
             m.setLanguage(int(self.menu['language']))
+        if 'rawmode' in self.menu:
+            m.setRawMode(self.menu['rawmode'])
         for pos, entry in self.menu['bootservices'].items():
             m.addBootServiceEntry(int(pos), entry)
         for pos, entry in self.menu['images'].items():
@@ -174,6 +176,7 @@ class ImagingMenu:
         self.diskless_opts = list() # revo* options put on diskless command line
         self.kernel_opts = list(['quiet']) # kernel options put on diskless command line
         self.protocol = 'nfs' # by default
+        self.rawmode = '' # raw mode backup
 
     def _applyReplacement(self, string, condition = 'global'):
         """
@@ -204,7 +207,8 @@ class ImagingMenu:
             ('##PULSE2_MASTERS_DIR##', self.config.imaging_api['masters_folder'], 'global'),
             ('##PULSE2_POSTINST_DIR##', self.config.imaging_api['postinst_folder'], 'global'),
             ('##PULSE2_COMPUTERS_DIR##', self.config.imaging_api['computers_folder'], 'global'),
-            ('##PULSE2_BASE_DIR##', self.config.imaging_api['base_folder'], 'global')]
+            ('##PULSE2_BASE_DIR##', self.config.imaging_api['base_folder'], 'global'),
+            ('##PULSE2_REVO_RAW##', self.rawmode, 'global')]
         if self.mac:
             replacements.append(
                 ('##MAC##',
@@ -456,6 +460,14 @@ class ImagingMenu:
                 self.keyboard = self.KEYB_CODE[value]
             except IndexError:
                 pass
+
+    def setRawMode(self, value):
+        """
+        Set raw backup mode
+        """
+        assert(type(value) == bool)
+        if value:
+            self.rawmode = 'revoraw'
 
     def hide(self, flag):
         """
