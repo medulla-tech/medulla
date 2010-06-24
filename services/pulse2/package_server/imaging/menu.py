@@ -539,11 +539,13 @@ class ImagingImageItem(ImagingItem):
     Hold an imaging menu item for a image to restore
     """
 
-    NFSRESTORE = u"kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## revosavedir=##PULSE2_MASTERS_DIR## revoinfodir=##PULSE2_COMPUTERS_DIR## revooptdir=##PULSE2_POSTINST_DIR## revobase=##PULSE2_BASE_DIR## revorestorenfs revopost revomac=##MAC## revoimage=##PULSE2_IMAGE_UUID## \ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD## ##PULSE2_DISKLESS_OPTS##\n"
-    # FIXME ! TFTP/MTFTP to be implemented
-    TFTPRESTORE = NFSRESTORE
-    MTFTPRESTORE = NFSRESTORE
 
+    CMDLINE = u"kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## revosavedir=##PULSE2_MASTERS_DIR## revoinfodir=##PULSE2_COMPUTERS_DIR## revooptdir=##PULSE2_POSTINST_DIR## revobase=##PULSE2_BASE_DIR## ##PROTOCOL## revopost revomac=##MAC## revoimage=##PULSE2_IMAGE_UUID## \ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD## ##PULSE2_DISKLESS_OPTS##\n"
+    PROTOCOL = {
+        'nfs'   : 'revorestorenfs',
+        'tftp'  : '',
+        'mtftp' : 'revorestoremtftp'
+        }
     POSTINST = 'postinst'
 
     def __init__(self, entry):
@@ -569,12 +571,9 @@ class ImagingImageItem(ImagingItem):
         buf = 'title %s\n' % self.title
         if self.desc:
             buf += 'desc %s\n' % self.desc
-        if protocol == 'tftp':
-            buf += self.TFTPRESTORE
-        elif protocol == 'mtftp':
-            buf += self.MTFTPRESTORE
-        else:
-            buf += self.NFSRESTORE
+        if protocol not in self.PROTOCOL:
+            protocol = 'nfs'
+        buf += self.CMDLINE.replace('##PROTOCOL##', self.PROTOCOL[protocol])
         return self._applyReplacement(buf, network)
 
     def write(self, config):
