@@ -37,7 +37,7 @@ def isMenuStructure(menu):
     @rtype: bool
     """
     ret = True
-    logger = logging.getLogger()
+    logger = logging.getLogger('imaging')
     if type(menu) == dict:
         for k in ['message',
                   'protocol',
@@ -77,7 +77,7 @@ class ImagingDefaultMenuBuilder:
 
         @return the object
         """
-        self.logger = logging.getLogger()
+        self.logger = logging.getLogger('imaging')
         if not isMenuStructure(menu):
             raise TypeError('Bad menu structure')
         self.menu = menu
@@ -148,7 +148,7 @@ class ImagingMenu:
         @param config: a ImagingConfig object
         @param macaddress: the client MAC Address
         """
-        self.logger = logging.getLogger()
+        self.logger = logging.getLogger('imaging')
         self.config = config # the server configuration
         if macaddress:
             assert pulse2.utils.isMACAddress(macaddress)
@@ -306,7 +306,7 @@ class ImagingMenu:
             try:
                 os.rename(filename, backupname)
             except Exception, e: # can make a backup : give up !
-                logging.getLogger().error("While backuping boot menu %s as %s : %s" % (filename, backupname, e))
+                self.logger.error("While backuping boot menu %s as %s : %s" % (filename, backupname, e))
                 return False
 
         try:
@@ -321,16 +321,16 @@ class ImagingMenu:
                 self.logger.debug('Successfully wrote boot menu for unregistered computers into file %s' % filename)
         except Exception, e:
             if self.mac:
-                logging.getLogger().error("While writing boot menu for %s : %s" % (self.mac, e))
+                self.logger.error("While writing boot menu for %s : %s" % (self.mac, e))
             else:
-                logging.getLogger().error("While writing default boot menu : %s" % e)
+                self.logger.error("While writing default boot menu : %s" % e)
             return False
 
         if os.path.exists(backupname):
             try:
                 os.unlink(backupname)
             except Exception, e:
-                logging.getLogger().warn("While removing backup %s of %s : %s" % (backupname, filename, e))
+                self.logger.warn("While removing backup %s of %s : %s" % (backupname, filename, e))
         return True
 
     def setTimeout(self, value):
@@ -487,7 +487,7 @@ class ImagingItem:
         @param entry: menu item in dict format
         @type entry: dict
         """
-        self.logger = logging.getLogger()
+        self.logger = logging.getLogger('imaging')
         self._convertEntry(entry)
         self.title = entry['name'] # the item title
         self.desc = entry['desc'] # the item desc
