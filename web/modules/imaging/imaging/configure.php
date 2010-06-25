@@ -126,7 +126,7 @@ $target_name = $_GET['target_name'];
 $f = new ValidatingForm();
 
 if ($type == '') {
-    if (!xmlrpc_isComputerRegistered($target_uuid)) {
+    if (!xmlrpc_isComputerRegistered($target_uuid) && !xmlrpc_isComputerInProfileRegistered($target_uuid) ) {
         $f->add(new TitleElement(sprintf(_T("Register computer '%s'", "imaging"), $target_name)));
     }
 } else {
