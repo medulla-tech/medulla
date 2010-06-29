@@ -126,6 +126,7 @@ CREATE TABLE Target (
   kernel_parameters Text,
   image_parameters Text,
   exclude_parameters Text,
+  raw_mode TINYINT(1) NOT NULL DEFAULT 0,
   `type` INT NOT NULL,
   fk_entity INT NOT NULL,
   fk_menu INT NOT NULL,
