@@ -103,8 +103,8 @@ class ImagingDefaultMenuBuilder:
         m.setEtherCard(int(self.menu['ethercard']))
         if 'language' in self.menu:
             m.setLanguage(int(self.menu['language']))
-        if 'rawmode' in self.menu:
-            m.setRawMode(self.menu['rawmode'])
+        if 'raw_mode' in self.menu:
+            m.setRawMode(self.menu['raw_mode'])
         for pos, entry in self.menu['bootservices'].items():
             m.addBootServiceEntry(int(pos), entry)
         for pos, entry in self.menu['images'].items():
