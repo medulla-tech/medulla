@@ -83,6 +83,9 @@ if (isset($_POST["bvalid"])) {
             }
         }
     }
+
+    $params['target_opt_raw_mode'] = $_POST['target_opt_raw_mode'];
+
     if ($type == '') {
         $ret = xmlrpc_setMyMenuComputer($target_uuid, $params);
         $params['uuid'] = $target_uuid;
@@ -367,6 +370,18 @@ if (!$whose && !$menu) {
     $f->add(
         new TrFormElement(_T("Image parameters", "imaging"),
         new InputTpl("target_opt_image")), array("value" => ($target != null?$target['image_parameters']:web_def_image_parameters()))
+    );
+
+    /* Make checkbox to force raw backup mode */
+    if (($target != null) && (!empty($target['raw_mode']))) {
+        $rawmode = "CHECKED";
+    } else {
+        $rawmode = "";
+    }
+    $f->add(
+        new TrFormElement(_T("Force raw backup mode", "imaging"),
+        new CheckboxTpl("target_opt_raw_mode")),
+        array("value" => $rawmode)
     );
 
     $f->pop();
