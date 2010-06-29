@@ -2779,6 +2779,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         else:
             target.image_parameters = self.config.web_def_image_parameters
         target.exclude_parameters = '' # Always empty when creating a target
+        if 'target_opt_raw_mode' in params and params['target_opt_raw_mode']:
+            target.raw_mode = 1
         target.fk_entity = entity_id
         target.fk_menu = menu_id
         session.save(target)
@@ -3194,6 +3196,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             target.kernel_parameters = params['target_opt_kernel']
             target.image_parameters = params['target_opt_image']
             target.exclude_parameters = self._getExcludeString(target, params['target_opt_parts'])
+            if 'target_opt_raw_mode' in params and params['target_opt_raw_mode']:
+                target.raw_mode = 1
+            else:
+                target.raw_mode = 0
             session.save_or_update(target)
 
         session.flush()
@@ -3679,7 +3685,7 @@ class SynchroState(DBObject):
     to_be_exported = ['id', 'label']
 
 class Target(DBObject):
-    to_be_exported = ['id', 'name', 'uuid', 'type', 'fk_entity', 'fk_menu', 'kernel_parameters', 'image_parameters', 'exclude_parameters']
+    to_be_exported = ['id', 'name', 'uuid', 'type', 'fk_entity', 'fk_menu', 'kernel_parameters', 'image_parameters', 'exclude_parameters', 'raw_mode']
 
 class TargetType(DBObject):
     to_be_exported = ['id', 'label']
