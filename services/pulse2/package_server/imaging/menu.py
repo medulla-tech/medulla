@@ -103,8 +103,6 @@ class ImagingDefaultMenuBuilder:
         m.setEtherCard(int(self.menu['ethercard']))
         if 'language' in self.menu:
             m.setLanguage(int(self.menu['language']))
-        if 'raw_mode' in self.menu:
-            m.setRawMode(self.menu['raw_mode'])
         for pos, entry in self.menu['bootservices'].items():
             m.addBootServiceEntry(int(pos), entry)
         for pos, entry in self.menu['images'].items():
@@ -126,7 +124,10 @@ class ImagingComputerMenuBuilder(ImagingDefaultMenuBuilder):
 
     def make(self):
         self.logger.debug('Building menu structure for computer mac %s' % self.macaddress)
-        return ImagingDefaultMenuBuilder.make(self, self.macaddress)
+        computerMenu = ImagingDefaultMenuBuilder.make(self, self.macaddress)
+        if 'raw_mode' in self.menu['target']:
+            computerMenu.setRawMode(self.menu['target']['raw_mode'])
+        return computerMenu
 
 
 class ImagingMenu:
