@@ -3436,14 +3436,16 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         I18n1 = sa_exp_alias(self.internationalization)
         I18n2 = sa_exp_alias(self.internationalization)
 
-        q = session.query(PostInstallScript).add_entity(Image).add_entity(Internationalization, alias=I18n1).add_entity(Internationalization, alias=I18n2)
+        q = session.query(PostInstallScript).add_entity(Image).add_entity(Internationalization, alias=I18n1).add_entity(Internationalization, alias=I18n2).add_column(self.post_install_script_in_image.c.order)
         q = q.select_from(self.post_install_script \
                 .join(self.post_install_script_in_image) \
                 .join(self.image) \
                 .outerjoin(I18n1, and_(self.post_install_script.c.fk_name == I18n1.c.id, I18n1.c.fk_language == lang)) \
                 .outerjoin(I18n2, and_(self.post_install_script.c.fk_desc == I18n2.c.id, I18n2.c.fk_language == lang)) \
         )
-        q = q.filter(self.image.c.id.in_(ims)).all()
+        q = q.filter(self.image.c.id.in_(ims))
+        q = q.order_by(self.image.c.id, self.post_install_script_in_image.c.order)
+        q = q.all()
 
         if session_need_to_close:
             session.close()

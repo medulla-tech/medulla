@@ -1424,7 +1424,7 @@ class ImagingRpcProxy(RpcProxyI):
         menu, menu_items, h_pis = generateMenusContent(menu, menu_items, None)
         ims = h_pis.keys()
         a_pis = db.getImagesPostInstallScript(ims, None, location.uuid)
-        for pis, im, name_i18n, desc_i18n in a_pis:
+        for pis, im, name_i18n, desc_i18n, pis_order in a_pis:
             name = pis.default_name
             desc = pis.default_desc
             if name_i18n != None:
@@ -1435,13 +1435,16 @@ class ImagingRpcProxy(RpcProxyI):
                 'id':pis.id,
                 'name':name,
                 'desc':desc,
-                'value':pis.value
+                'value':pis.value,
+                'order':pis_order
             }
             a_targets = h_pis[im.id]
             for loc_uuid, t_uuid, order in a_targets:
                 # loc_uuid = None
                 # t_uuid = None
-                menu['images'][order]['post_install_script'] = pis
+                if not menu['images'][order].has_key('post_install_script'):
+                    menu['images'][order]['post_install_script'] = []
+                menu['images'][order]['post_install_script'].append(pis)
         menu['language'] = db.getLocLanguage(location.uuid)
         return menu
 
@@ -1453,16 +1456,19 @@ class ImagingRpcProxy(RpcProxyI):
         menu, menu_items, h_pis = generateMenusContent(menu, menu_items, loc_uuid)
         ims = h_pis.keys()
         a_pis = db.getImagesPostInstallScript(ims, None, loc_uuid)
-        for pis, im, name_i18n, desc_i18n in a_pis:
+        for pis, im, name_i18n, desc_i18n, pis_order in a_pis:
             pis = {
                 'id':pis.id,
                 'name':pis.default_name,
                 'desc':pis.default_desc,
-                'value':pis.value
+                'value':pis.value,
+                'order':pis_order
             }
             a_targets = h_pis[im.id]
             for loc_uuid, t_uuid, order in a_targets:
-                menu['images'][order]['post_install_script'] = pis
+                if not menu['images'][order].has_key('post_install_script'):
+                    menu['images'][order]['post_install_script'] = []
+                menu['images'][order]['post_install_script'].append(pis)
         menu['language'] = db.getLocLanguage(location.uuid)
         return menu
 
@@ -2520,7 +2526,7 @@ def generateMenus(logger, db, uuids):
     ims = h_pis.keys()
     for loc_uuid in distinct_loc:
         a_pis = db.getImagesPostInstallScript(ims, None, loc_uuid)
-        for pis, im, name_i18n, desc_i18n in a_pis:
+        for pis, im, name_i18n, desc_i18n, pis_order in a_pis:
             name = pis.default_name
             desc = pis.default_desc
             if name_i18n != None:
@@ -2532,11 +2538,14 @@ def generateMenus(logger, db, uuids):
                 'id':pis.id,
                 'name':name,
                 'desc':desc,
-                'value':pis.value
+                'value':pis.value,
+                'order':pis_order
             }
             a_targets = h_pis[im.id]
             for loc_uuid, t_uuid, order in a_targets:
-                distinct_loc[loc_uuid][1][t_uuid]['images'][order]['post_install_script'] = pis
+                if not distinct_loc[loc_uuid][1][t_uuid]['images'][order].has_key('post_install_script'):
+                    distinct_loc[loc_uuid][1][t_uuid]['images'][order]['post_install_script'] = []
+                distinct_loc[loc_uuid][1][t_uuid]['images'][order]['post_install_script'].append(pis)
     return distinct_loc
 
 
