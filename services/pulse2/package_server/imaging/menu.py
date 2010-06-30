@@ -29,6 +29,7 @@ import os.path
 import os
 import logging
 import time
+import shutil
 
 
 def isMenuStructure(menu):
@@ -559,7 +560,9 @@ class ImagingImageItem(ImagingItem):
         'tftp'  : '',
         'mtftp' : 'revorestoremtftp'
         }
-    POSTINST = 'postinst'
+
+    POSTINST = '%02d_postinst'
+    POSTINSTDIR = 'postinst.d'
 
     def __init__(self, entry):
         """
@@ -569,7 +572,8 @@ class ImagingImageItem(ImagingItem):
         self.uuid = entry['uuid']
         assert(type(self.uuid) == unicode)
         if 'post_install_script' in entry:
-            self.post_install_script = entry['post_install_script']['value']
+            assert(type(entry['post_install_script']) == list)
+            self.post_install_script = entry['post_install_script']
         else:
             self.post_install_script = None
 
@@ -591,22 +595,38 @@ class ImagingImageItem(ImagingItem):
 
     def write(self, config):
         """
-        Write post-installation script if any.
+        Write post-installation scripts if any.
         """
-        postinst = os.path.join(config.imaging_api['base_folder'], config.imaging_api['masters_folder'], self.uuid, self.POSTINST)
+        # First: remove old post-installation directory if there is one
+        postinstdir = os.path.join(config.imaging_api['base_folder'], config.imaging_api['masters_folder'], self.uuid, self.POSTINSTDIR)
+        if os.path.exists(postinstdir):
+            self.logger.debug('Deleting previous post-installation directory: %s' % postinstdir)
+            try:
+                shutil.rmtree(postinstdir)
+            except OSError, e:
+                self.logger.error("Can't delete post-installation directory %s: %s" % (postinstdir, e))
+                raise
+        # Then populate the post-installation script directory if needed
         if self.post_install_script:
             try:
-                f = file(postinst, 'w+')
-                f.write(self.post_install_script)
-                f.close()
+                os.mkdir(postinstdir)
+                self.logger.debug('Directory successfully created: %s' % postinstdir)
             except OSError, e:
-                self.logger.error("Can't update post-installation script %s: %s" % (postinst, e))
+                self.logger.error("Can't create post-installation script folder %s: %s" % (postinstdir, e))
                 raise
-        else:
-            if os.path.exists(postinst):
-                self.logger.debug('Deleting previous post-installation script: %s' % postinst)
+
+            order = 0
+            for script in self.post_install_script:
+                postinst = os.path.join(postinstdir, self.POSTINST % order)
                 try:
-                    os.unlink(postinst)
+                    f = file(postinst, 'w+')
+                    # FIXME: any specific encoding to use ?
+                    f.write(script['value'])
+                    f.close()
+                    self.logger.debug('Successfully wrote script: %s' % postinst)
                 except OSError, e:
-                    self.logger.error("Can't delete post-installation script %s: %s" % (postinst, e))
+                    self.logger.error("Can't update post-installation script %s: %s" % (postinst, e))
                     raise
+                order += 1
+        else:
+            self.logger.debug('No post-installation script to write')
