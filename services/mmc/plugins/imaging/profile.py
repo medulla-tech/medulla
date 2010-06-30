@@ -25,20 +25,24 @@ Imaging implementation of the profile manager interface
 it only implement the client part
 """
 
+from mmc.plugins.imaging.functions import synchroComputers
 from pulse2.managers.profile import ComputerProfileI
 from pulse2.database.imaging import ImagingDatabase
 from pulse2.database.imaging.types import P2IT, P2ISS
 from pulse2.managers.profile import ComputerProfileManager
 
 class ImagingProfile(ComputerProfileI):
-    def addComputersToProfile(self, ctx, computers_UUID, profile_UUID):
+    def addComputersToProfile(self, ctx, computers, profile_UUID):
         # TODO need to put the menu and synchronize
         if ImagingDatabase().isTargetRegister(profile_UUID, P2IT.PROFILE):
-            ret1 = ImagingDatabase().putComputersInProfile(profile_UUID, computers_UUID)
+            ret1 = ImagingDatabase().putComputersInProfile(profile_UUID, computers)
             ret2 = ImagingDatabase().changeTargetsSynchroState([profile_UUID], P2IT.PROFILE, P2ISS.TODO)
-            ret3 = ImagingDatabase().changeTargetsSynchroState(computers_UUID, P2IT.COMPUTER, P2ISS.TODO)
+            ret3 = ImagingDatabase().changeTargetsSynchroState(computers, P2IT.COMPUTER, P2ISS.TODO)
 
-            return ret1 and ret2 and ret3
+            computers_UUID = map(lambda c:c['uuid'], computers.values())
+            ret4 = synchroComputers(ctx, computers_UUID, P2IT.COMPUTER_IN_PROFILE)
+
+            return ret1 and ret2 and ret3 and ret4
         return True
 
     def delComputersFromProfile(self, computers_UUID, profile_UUID):

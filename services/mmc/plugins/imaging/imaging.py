@@ -26,10 +26,13 @@
 Imaging implementation of the imaging in profile manager interface
 """
 
+from twisted.internet import defer
+
 from pulse2.managers.imaging import ComputerImagingI
 from pulse2.managers.location import ComputerLocationManager
 from pulse2.database.imaging import ImagingDatabase
 from pulse2.database.imaging.types import P2IT
+from pulse2.apis.clients.imaging import ImagingApi
 import logging
 
 class ComputerImagingImaging(ComputerImagingI):
@@ -83,9 +86,50 @@ class ComputerImagingImaging(ComputerImagingI):
                     pass
 
         # send a request to the pserver to unregister them
-        # if they manage to unregister, unregister from the DB
-            # remove the menu + menuitem
-            # remove the computer
-        # return the status of the whole thing
+        location = db.getTargetsEntity(computers_UUID)
+        print location
+        location = location[0]
+
+        url = self.__chooseImagingApiUrl(location[0].uuid)
+        print url
+        i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
+
+        def treatUnregister(results):
+            print "treatUnregister"
+            print results
+            return True
+
+        def sendResult(results):
+            print "sendResult"
+            print results
+            # if they manage to unregister, unregister from the DB
+                # remove the menu + menuitem
+                # remove the computer
+            # return the status of the whole thing
+            return True
+
+        if i != None:
+            dl = []
+            for computerUUID in computers_UUID:
+                print computerUUID
+                # get the list of image uuid
+                imageList = db.getTargetImages(computerUUID, P2IT.ALL_COMPUTERS)
+                imageList = map(lambda i:i.getUUID(), imageList)
+                print imageList
+
+                # get the archive path
+                archive = '/tmp/%s'%computerUUID
+
+                d = i.computersUnregister(computerUUID, imageList, archive)
+                d.addCallback(treatUnregister)
+                dl.append(d)
+
+            defer_list = defer.DeferredList(dl)
+            defer_list.addCallback(sendResult)
+            return defer_list
+        else:
+            logger.info("couldn't initialize the ImagingApi to %s"%(url))
+
+        return False
 
 

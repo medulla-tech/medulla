@@ -1979,7 +1979,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def getTargetImages(self, target_uuid, target_type, start = 0, end = -1, filt = ''):
         session = create_session()
         if target_type == P2IT.ALL_COMPUTERS:
-            filt1 = and_(self.target.c.uuid == target_uuid, self.target.c.type.in_(P2IT.COMPUTERS, P2IT.COMPUTERS_IN_PROFILE))
+            filt1 = and_(self.target.c.uuid == target_uuid, self.target.c.type.in_(P2IT.COMPUTER, P2IT.COMPUTER_IN_PROFILE))
         else:
             filt1 = and_(self.target.c.uuid == target_uuid, self.target.c.type == target_type)
 
@@ -2738,6 +2738,54 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q
 
     ######### REGISTRATION
+    def setTargetRegisteredInPackageServer(self, uuid, target_type):
+        session = create_session()
+
+        if target_type == P2IT.ALL_COMPUTERS:
+            filt = self.target.c.type.in_(P2IT.COMPUTER, P2IT.COMPUTER_IN_PROFILE)
+        else:
+            filt = and_(self.target.c.type == target_type)
+        if type(uuid) != list:
+            uuid = [uuid]
+        q = session.query(Target).filter(and_(self.target.c.uuid.in_(uuid), filt)).all()
+        for t in q:
+            t.is_registered_in_package_server = 1
+            session.save_or_update(t)
+        session.flush()
+        session.close()
+        return True
+
+    def isTargetRegisterInPackageServer(self, uuid, target_type, session = None):
+        session_need_to_close = False
+        if session == None:
+            session_need_to_close = True
+            session = create_session()
+
+        ret = False
+        if target_type == P2IT.ALL_COMPUTERS:
+            filt = self.target.c.type.in_(P2IT.COMPUTER, P2IT.COMPUTER_IN_PROFILE)
+        else:
+            filt = and_(self.target.c.type == target_type)
+
+        if type(uuid) == list:
+            ret = {}
+            q = session.query(Target).filter(and_(self.target.c.uuid.in_(uuid), filt)).all()
+            for target in q:
+                ret[target.uuid] = (target.is_registered_in_package_server == 1)
+            for l_uuid in uuid:
+                if not ret.has_key(l_uuid):
+                    ret[l_uuid] = False
+        else:
+            q = session.query(Target).filter(and_(self.target.c.uuid == uuid, filt)).first()
+            if q != None:
+                ret = (ret.is_registered_in_package_server == 1)
+            else:
+                ret = False
+
+        if session_need_to_close:
+            session.close()
+        return ret
+
     def isTargetRegister(self, uuid, target_type, session = None):
         session_need_to_close = False
         if session == None:
@@ -2745,7 +2793,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session = create_session()
 
         if target_type == P2IT.ALL_COMPUTERS:
-            filt = self.target.c.type.in_(P2IT.COMPUTERS, P2IT.COMPUTERS_IN_PROFILE)
+            filt = self.target.c.type.in_(P2IT.COMPUTER, P2IT.COMPUTER_IN_PROFILE)
         else:
             filt = and_(self.target.c.type == target_type)
         ret = False
@@ -3685,7 +3733,7 @@ class SynchroState(DBObject):
     to_be_exported = ['id', 'label']
 
 class Target(DBObject):
-    to_be_exported = ['id', 'name', 'uuid', 'type', 'fk_entity', 'fk_menu', 'kernel_parameters', 'image_parameters', 'exclude_parameters', 'raw_mode']
+    to_be_exported = ['id', 'name', 'uuid', 'type', 'fk_entity', 'fk_menu', 'kernel_parameters', 'image_parameters', 'exclude_parameters', 'is_registered_in_package_server', 'raw_mode']
 
 class TargetType(DBObject):
     to_be_exported = ['id', 'label']

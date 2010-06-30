@@ -329,6 +329,7 @@ class Imaging(Pulse2Api):
 class ImagingApi(Imaging):
 # need to get a PackageApiManager, it will manage a PackageApi for each mirror
 # defined in the conf file.
+    log_entrance = []
 
     def __init__(self, url=None):
         self.logger = logging.getLogger()
@@ -365,3 +366,21 @@ class ImagingApi(Imaging):
             self.logger.error(msg)
             raise TypeError(msg)
         self.logger.debug("ImagingApi> connected to %s" % (self.server_addr))
+
+        # done as a debugging facility, add or remove function names from log_entrance
+        # to see what's happening
+        for m in self.log_entrance:
+            if not hasattr(self, m):
+                self.logger.debug("the method %s is not defined, check the log_entrance you specified")
+            else:
+                setattr(self, "__%s"%m, getattr(self, m))
+                def temp(*attr):
+                    if hasattr(self, 'name'):
+                        self.logger.debug("%s.%s(%s)"%(self.name, m, str(attr)))
+                    else:
+                        self.logger.debug("%s %s"%(m, str(attr)))
+                    true_method = getattr(self, "__%s"%m)
+                    return true_method(*attr)
+
+                setattr(self, m, temp)
+
