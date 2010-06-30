@@ -128,6 +128,7 @@ CREATE TABLE Target (
   exclude_parameters Text,
   raw_mode TINYINT(1) NOT NULL DEFAULT 0,
   `type` INT NOT NULL,
+  is_registered_in_package_server TINYINT(1) NOT NULL DEFAULT 0,
   fk_entity INT NOT NULL,
   fk_menu INT NOT NULL,
   PRIMARY KEY (id)
