@@ -764,7 +764,7 @@ class SimpleNavBar extends HtmlElement {
         # number of pages
         $this->nbpages = ceil($this->itemcount / $this->max);
         # number of current page
-        $this->curpage = ($this->curend + 1) / $this->max;
+        $this->curpage = floor(($this->curend + 1) / $this->max);
     }
 
     function display() {
