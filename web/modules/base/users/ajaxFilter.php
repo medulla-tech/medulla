@@ -26,7 +26,11 @@ require("modules/base/includes/users.inc.php");
 require_once("modules/base/includes/logging-xmlrpc.inc.php");
 
 global $conf;
-$maxperpage = $conf["global"]["maxperpage"];
+if(isset($_REQUEST['maxperpage'])) {
+    $maxperpage = $_REQUEST['maxperpage'];
+} else {
+    $maxperpage = $conf["global"]["maxperpage"];
+}
 
 $filter = $_GET["filter"];
 if (isset($_GET["start"])) $start = $_GET["start"];
@@ -66,7 +70,7 @@ for ($idx = 0; $idx < count($users); $idx++) {
 // $arrUser is the list of all Users
 $n = new UserInfos($arrUser, _("Login"));
 $n->setItemCount($usercount);
-$n->setNavBar(new AjaxNavBar($usercount, $filter));
+$n->setNavBar(new AjaxPaginator($usercount, $filter, "updateSearchParam",  $maxperpage));
 
 $n->start = 0;
 $n->end = $usercount - 1;

@@ -761,6 +761,10 @@ class SimpleNavBar extends HtmlElement {
         $this->itemcount = $itemcount;
         $this->extra = $extra;
         $this->paginator = $paginator;
+        # number of pages
+        $this->nbpages = ceil($this->itemcount / $this->max);
+        # number of current page
+        $this->curpage = ($this->curend + 1) / $this->max;
     }
 
     function display() {
@@ -809,12 +813,13 @@ class SimpleNavBar extends HtmlElement {
      */
     function displaySelectMax($jsfunc=null) {
         global $conf;
+        echo '<span class="pagination">'._('Pagination').': ';
         if(isset($jsfunc)) {
             $start = $this->curstart;
 
-            echo "<select id=\"maxperpage\" name=\"maxperpage\" onChange=\"updateMaxPerPage(this); return false;\">";
+            echo "<select id=\"maxperpage\" name=\"maxperpage\" onChange=\"updateMaxPerPage(this); return false;\" class=\"pagination\">";
         } else {
-            echo "<select id=\"maxperpage\" name=\"maxperpage\">";
+            echo "<select id=\"maxperpage\" name=\"maxperpage\" class=\"pagination\">";
         }
         /* Display the selector and each option of the array set in the config
            file */
@@ -825,7 +830,7 @@ class SimpleNavBar extends HtmlElement {
                 $selected = ' selected="selected"';
             echo "<option value=\"$quantity\"$selected>$quantity</option>";
         }
-        echo "</select>";
+        echo "</select></span>";
 
         /*
          * Print the script which will launch an update of the ListInfos when
@@ -877,6 +882,77 @@ class SimpleNavBar extends HtmlElement {
         }
         </script>
 <?
+    }
+    
+    function displayGotoPageField() {
+        echo '<script type="text/javascript">
+            gotoPage = function(input) {
+                page = input.value;
+                if (page <= '.$this->nbpages.') { 
+                    end = ('.$this->max.' * page);
+                    start = end - '.$this->max.';
+                    end -= 1;
+                    cur =  ('.$this->curend.' + 1) / 10;
+                    '.$this->jsfunc.'("'.$this->filter.'", start, end, document.getElementById("maxperpage"));
+                }
+            }
+        </script>';
+        echo '<span class="pagination">'._("Go to page").': <input type="input" size="2" onchange="gotoPage(this)" /></span>';
+    }
+    
+    function displayPagesNumbers() {
+        # pages links 
+        # show all pages
+        if ($this->nbpages <= 10) {
+            if($this->nbpages > 1) {
+                echo '<span class="pagination">';
+                for($i=1; $i<=$this->nbpages; $i++) {
+                    echo $this->makePageLink($i);
+                }
+                echo '</span>';
+            }
+        }
+        # show start/end pages and current page
+        else {
+            echo '<span class="pagination">';        
+            for($i=1; $i<=3; $i++) {
+                echo $this->makePageLink($i);
+            }
+            if($this->curpage >= 3 and $this->curpage < 5) {
+                if ($this->curpage == 3) $this->curpage += 1;
+                for($i=$this->curpage;$i<=$this->curpage+1;$i++) {
+                    echo $this->makePageLink($i);
+                }
+            }
+            else if ($this->curpage > 4 and $this->curpage < $this->nbpages-3) {
+                echo '.. ';
+                for($i=$this->curpage-1;$i<=$this->curpage+1;$i++) {
+                    echo $this->makePageLink($i);
+                }
+            }
+            echo '.. ';
+            if ($this->curpage <= $this->nbpages-2 and $this->curpage >= $this->nbpages-3) {
+                for($i=$this->nbpages-4; $i<=$this->nbpages-3; $i++) {
+                    echo $this->makePageLink($i);
+                }
+            }
+            for($i=$this->nbpages-2; $i<=$this->nbpages; $i++) {
+                echo $this->makePageLink($i);
+            }
+            echo '</span>';            
+        }   
+    }
+    
+    function makePageLink($page) {
+        $end = ($this->max * $page);
+        $start = $end - $this->max;
+        $end -= 1;
+        if ($page == $this->curpage) {
+            return '<span>'.$page.'</span> ';
+        }
+        else {
+            return '<a href="#" onclick="'.$this->jsfunc.'(\''.$this->filter.'\',\''.$start.'\',\''.$end.'\', document.getElementById(\'maxperpage\')); return false;">'.$page.'</a> ';
+        }
     }
 
 }
@@ -946,6 +1022,17 @@ class AjaxNavBar extends SimpleNavBar {
         echo '<form method="post">';
         echo "<ul class=\"navList\">\n";
 
+        if($this->paginator) {
+            // Display the maxperpage selector
+            $this->displaySelectMax($this->jsfunc);
+        }
+                        
+        // show goto page field
+        if ($this->nbpages > 20) {
+            $this->displayGotoPageField();
+        }
+
+        # previous link
         if ($this->curstart == 0 || ($this->curstart - $this->max < 0))
             echo "<li class=\"previousListInactive\">" . _("Previous") . "</li>\n";
         else {
@@ -953,12 +1040,11 @@ class AjaxNavBar extends SimpleNavBar {
             $end = $this->curstart - 1;
             echo "<li class=\"previousList\"><a href=\"#\" onClick=\"" . $this->jsfunc . "('" . $this->filter . "','$start','$end', document.getElementById('maxperpage')); return false;\">" . _("Previous") . "</a></li>\n";
         }
-
-        if($this->paginator) {
-            // Display the maxperpage selector
-            $this->displaySelectMax($this->jsfunc);
-        }
-
+        
+        // display pages numbers
+        $this->displayPagesNumbers();        
+        
+        # next link
         if (($this->curend + 1) >= $this->itemcount)
             echo "<li class=\"nextListInactive\">"._("Next")."</li>\n";
         else {
@@ -967,8 +1053,8 @@ class AjaxNavBar extends SimpleNavBar {
             echo "<li class=\"nextList\"><a href=\"#\" onClick=\"" . $this->jsfunc . "('" . $this->filter . "','$start','$end', document.getElementById('maxperpage')); return false;\">" . _("Next") . "</a></li>\n";
         }
 
-        if($this->paginator) {
-            // Display a border at the left of the "Next" link
+        // Display a border at the left of the "Next" link
+        if ($this->nbpages > 1) {
             $this->displayNextListBorder();
         }
 
@@ -1006,6 +1092,7 @@ class AjaxFilter extends HtmlElement {
     /**
      * @param $url: URL called by the javascript updated. The URL gets the filter in $_GET["filter"]
      * @param $divid: div ID which is updated by the URL output
+     * @param $formid: change the form id (usefull for multiple Ajaxfilter in one page)
      */
     function AjaxFilter($url, $divid = "container", $params = array(), $formid = "") {
         if (strpos($url, "?") === False)

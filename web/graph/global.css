@@ -687,6 +687,10 @@ ul.navList li {
 	list-style-type: none;
 }
 
+li.previousList {
+	margin-left: 20px;
+}
+
 li.previousList a {
 	padding: 0 10px 0 12px;
 	margin: 0;
@@ -696,7 +700,7 @@ li.previousList a {
 }
 
 li.previousList a:hover {
-	background-image: url("../img/common/icn_previous_ro.gif");
+	background-image: url("../img/common/icn_previous_ro.gif");	
 }
 
 li.previousListInactive {
@@ -705,6 +709,7 @@ li.previousListInactive {
 	background-image: url("../img/common/icn_previous_inactive.gif");
 	background-repeat: no-repeat;
 	border-right: solid 1px #CCC;
+	margin-left: 20px;
 }
 
 li.nextList a {
@@ -738,6 +743,19 @@ ul.action li {
 	color: #999;
 	display: inline;
 	list-style-type: none;
+}
+
+span.pagination {
+    font-size: 9px;
+    color: #999;
+    margin-right: 2px;
+}
+
+span.pagination input, span.pagination select {
+    border: 1px solid #888;
+    font-size: 9px;    
+    color: #777;
+    background: white;    
 }
 
 /* ---------------------------------------- */

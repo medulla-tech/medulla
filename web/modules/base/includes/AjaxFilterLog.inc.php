@@ -87,11 +87,12 @@ class AjaxLogNavBar extends SimpleNavBar {
             $this->curend = $_GET["end"];
         } else {
             $this->curstart = 0;            
-            if ($itemcount > 0)
-                $this->curend = $maxperpage - 1;
+            if ($this->itemcount > 0)
+                $this->curend = $this->max - 1;
             else 
                 $this->curend = 0;
         }
+        $this->SimpleNavBar($this->curstart, $this->curend, $this->itemcount, null, $this->max);
         $this->filter = $filter;
         $this->jsfunc = $jsfunc;
     }
@@ -99,6 +100,12 @@ class AjaxLogNavBar extends SimpleNavBar {
     function display() {
         echo '<form method="post">';
         echo "<ul class=\"navList\">\n";
+        
+        // show goto page field
+        if ($this->nbpages > 20) {
+            $this->displayGotoPageField();
+        }
+        
         if ($this->curstart == 0)
             echo "<li class=\"previousListInactive\">" . _("Previous") . "</li>\n";
         else {
@@ -107,6 +114,9 @@ class AjaxLogNavBar extends SimpleNavBar {
             echo "<li class=\"previousList\"><a href=\"#\" onClick=\"" . $this->jsfunc . "('" . $this->filter . "','$start','$end'); return false;\">" . _("Previous") . "</a></li>\n";
         }
 
+        // display pages numbers
+        $this->displayPagesNumbers();
+
         if (($this->curend + 1) >= $this->itemcount)
             echo "<li class=\"nextListInactive\">"._("Next")."</li>\n";
         else {
@@ -114,6 +124,11 @@ class AjaxLogNavBar extends SimpleNavBar {
             $end = $this->curend + $this->max;
             echo "<li class=\"nextList\"><a href=\"#\" onClick=\"" . $this->jsfunc . "('" . $this->filter . "','$start','$end'); return false;\">" . _("Next") . "</a></li>\n";
         }
+        
+        // Display a border at the left of the "Next" link
+        if ($this->nbpages > 1) {
+            $this->displayNextListBorder();
+        }        
 
         echo "</ul>\n";
     }
