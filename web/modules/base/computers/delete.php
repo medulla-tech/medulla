@@ -26,14 +26,19 @@ require_once("modules/base/includes/computers.inc.php");
 
 if (isset($_POST["bconfirm"])) {
     $uuid = $_POST["objectUUID"];
-    delComputer($uuid);
+    $backup = ($_POST["backup"]?True:False);
+    delComputer($uuid, $backup);
     if (!isXMLRPCError()) new NotifyWidgetSuccess(_("The computer has been deleted."));
     header("Location: " . urlStrRedirect("base/computers/index"));
 } else {
     $uuid = urldecode($_GET["objectUUID"]);
     $f = new PopupForm(_("Delete this computer"));
+    $f->push(new Table());
+
+    $f->add(new TrFormElement(_("Do you want a backup to be done ?"), new CheckBoxTpl("backup")), array("value" => ''));
     $hidden = new HiddenTpl("objectUUID");
     $f->add($hidden, array("value" => $uuid, "hide" => True));
+    $f->pop();
     $f->addValidateButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();

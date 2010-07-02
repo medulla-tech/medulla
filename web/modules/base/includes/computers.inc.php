@@ -4,8 +4,8 @@ function addComputer($params) {
     return xmlCall("base.addComputer", $params);
 }
 
-function delComputer($params) {
-    return xmlCall("base.delComputer", $params);
+function delComputer($params, $backup) {
+    return xmlCall("base.delComputer", array($params, $backup));
 }
 
 function neededParamsAddComputer() {

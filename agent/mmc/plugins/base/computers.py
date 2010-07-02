@@ -55,7 +55,7 @@ class ComputerI:
         """
         pass
 
-    def delComputer(self, ctx, params):
+    def delComputer(self, ctx, uuid, backup):
         """
         Del a computer
         """
@@ -182,15 +182,15 @@ class ComputerManager(Singleton):
                         r = ret
         return r
 
-    def delComputer(self, ctx, params):
+    def delComputer(self, ctx, uuid, backup):
         for plugin in self.components:
             klass = self.components[plugin]
             instance = klass()
             if klass().canDelComputer():
                 try:
-                    instance.delComputer(ctx, params)
+                    instance.delComputer(ctx, uuid, backup)
                 except TypeError:
-                    instance.delComputer(params)
+                    instance.delComputer(uuid, backup)
 
     def neededParamsAddComputer(self):
         try:

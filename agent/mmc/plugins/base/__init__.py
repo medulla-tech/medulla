@@ -136,7 +136,7 @@ def activate():
     # Issue a warning if the default user group doesn't exist
     if not ldapObj.existGroup(ldapObj.defaultUserGroup):
         logger.warning("The default user group %s does not exist. Please create it before adding new users." % ldapObj.defaultUserGroup)
-    
+
     # Register authenticators
     AuthenticationManager().register("baseldap", BaseLdapAuthenticator)
     AuthenticationManager().register("externalldap", ExternalLdapAuthenticator)
@@ -146,7 +146,7 @@ def activate():
 
     # Register computer list manager
     #ComputerManager().register("baseldap", Computers)
-    
+
     return True
 
 def activate_2():
@@ -235,7 +235,7 @@ def getDefaultUserGroup():
 def getUserDefaultPrimaryGroup():
     return ldapUserGroupControl().defaultUserGroup
 
-def getUserPrimaryGroup(uid):    
+def getUserPrimaryGroup(uid):
     return ldapUserGroupControl().getUserPrimaryGroup(uid)
 
 def getUserSecondaryGroups(uid):
@@ -412,19 +412,19 @@ def getAllGroupsFromUser(uid):
 def getUserDN(uid):
     ldapObj = ldapUserGroupControl()
     return ldapObj.searchUserDN(uid)
-    
+
 def getLog(*args):
     return AF().getLog(*args)
-    
+
 def getLogById(*args):
     return AF().getLogById(*args)
-    
+
 def getActionType(*args):
     return AF().getActionType(*args)
-    
+
 def hasAuditWorking():
     """
-    Returns True if the audit module is enabled 
+    Returns True if the audit module is enabled
     """
     config = BasePluginConfig("base")
     if (config.auditmethod != 'none'):
@@ -535,7 +535,7 @@ class LdapUserGroupControl:
 
         @returns: if method is crypt, return a random two character string, else return a random twenty character string
         @rtype: str
-        
+
         """
         if method == "crypt":
             length = 2
@@ -808,7 +808,7 @@ class LdapUserGroupControl:
 
         @param primaryGroup: primary group of the user. If empty or None, default to defaultUserGroup
         @type primaryGroup: str
-   
+
         @param createHomeDir: Flag telling if the user home directory is
                               created on the filesystem
         @type createHomeDir: bool
@@ -844,7 +844,7 @@ class LdapUserGroupControl:
         # Build a UTF-8 representation of the unicode strings
         lastN = str(lastN.encode("utf-8"))
         firstN = str(firstN.encode("utf-8"))
-        
+
         # Create insertion array in ldap dir
         # FIXME: document shadow attributes choice
         user_info = {'loginShell':'/bin/bash',
@@ -1098,7 +1098,7 @@ class LdapUserGroupControl:
 
         @param attrVal: attribute value
         @type  attrVal: object
-        
+
         @param log: log action or not
         @type  log: boolean
         """
@@ -1108,8 +1108,8 @@ class LdapUserGroupControl:
         if attr == "jpegPhoto":
             attrValue = None
         else:
-            attrValue = attrVal            
-        
+            attrValue = attrVal
+
         if attrVal:
             if log:
                 r = AF().log(PLUGIN_NAME, AA.BASE_MOD_USER_ATTR, [(userdn, AT.USER), (attr,AT.ATTRIBUTE)], attrValue)
@@ -1145,7 +1145,7 @@ class LdapUserGroupControl:
 
          @param attrVal: attribute value
          @type  attrVal: object
-         
+
         @param log: log action or not
         @type  log: boolean
         """
@@ -1169,7 +1169,7 @@ class LdapUserGroupControl:
 
         @param uid: user id
         @type  uid: str
-        
+
         @param passwd: non encrypted password
         @type  passwd: str
         """
@@ -1180,7 +1180,7 @@ class LdapUserGroupControl:
         else:
             userpassword = self._generatePassword(passwd)
             self.l.modify_s(userdn, [(ldap.MOD_REPLACE, "userPassword", userpassword)])
-            
+
         # Run ChangeUserPassword hook
         self.runHook("base.changeuserpassword", uid, passwd)
         r.commit()
@@ -1364,7 +1364,7 @@ class LdapUserGroupControl:
     def getDetailedGroupById(self, id, base = None):
         """
         Return raw ldap info on a group
-        
+
         @param uid: gidNumber
         @type uid: int
 
@@ -1652,9 +1652,9 @@ class LdapUserGroupControl:
 
         return maxuid
 
-    def removeUserObjectClass(self, uid, className):    
+    def removeUserObjectClass(self, uid, className):
         # Create LDAP path
-        cn = 'uid=' + uid + ', ' + self.baseUsersDN        
+        cn = 'uid=' + uid + ', ' + self.baseUsersDN
         attrs= []
         attrib = self.l.search_s(cn, ldap.SCOPE_BASE)
 
@@ -1680,7 +1680,7 @@ class LdapUserGroupControl:
     def removeGroupObjectClass(self, group, className):
         # Create LDAP path
         group = group.encode("utf-8")
-        cn = 'cn=' + group + ', ' + self.baseGroupsDN                
+        cn = 'cn=' + group + ', ' + self.baseGroupsDN
         attrs= []
         attrib = self.l.search_s(cn, ldap.SCOPE_BASE)
 
@@ -1698,7 +1698,7 @@ class LdapUserGroupControl:
             for k in newattrs.keys():
                 if k.lower()==entry.lower():
                     del newattrs[k] #delete it
-                    
+
         # Apply modification
         mlist = ldap.modlist.modifyModlist(attrs, newattrs)
         self.l.modify_s(cn, mlist)
@@ -1763,10 +1763,10 @@ class LdapUserGroupControl:
     def moveHome(self,uid,newHome):
         """
         Move an home directory.
-        
+
         @param uid: user name
         @type uid: str
-         
+
         @param newHome: new home path
         ex: /home/coin
         @type newHome: str
@@ -1800,7 +1800,7 @@ class LdapUserGroupControl:
             self.l.add_s(addrdn, attributes)
             r.commit()
         except ldap.ALREADY_EXISTS:
-            r.commit()        
+            r.commit()
 
 ldapUserGroupControl = LdapUserGroupControl
 ###########################################################################################
@@ -1810,8 +1810,8 @@ ldapUserGroupControl = LdapUserGroupControl
 class BaseLdapAuthenticator(AuthenticatorI):
 
     def __init__(self, conffile = INI, name = "baseldap"):
-        AuthenticatorI.__init__(self, conffile, name)    
-    
+        AuthenticatorI.__init__(self, conffile, name)
+
     def authenticate(self, user, password):
         ldapObj = ldapAuthen(user, password)
         ret = AuthenticationToken()
@@ -2094,7 +2094,7 @@ class Computers(ldapUserGroupControl, ComputerI):
         ldapUserGroupControl.__init__(self, conffile)
         config = BasePluginConfig("base")
         self.baseComputersDN = config.baseComputersDN
-        
+
     def getComputer(self, ctx, filt = None):
         """
         """
@@ -2114,16 +2114,16 @@ class Computers(ldapUserGroupControl, ComputerI):
         @type filter: str
 
         @return: LDAP results
-        @rtype: 
+        @rtype:
         """
         # in ldap we only filter on names for the moment
-        filt = filt['name'] 
+        filt = filt['name']
         if filt:
             filt = "*" + filt + "*"
         else:
             filt = "*"
         search = self.l.search_s(self.baseComputersDN, ldap.SCOPE_SUBTREE, "(&(objectClass=computerObject)(|(cn=%s)(displayName=%s)))" % (filt, filt), None)
-        return search        
+        return search
 
     def getComputerCount(self, ctx, params):
         """
@@ -2133,9 +2133,9 @@ class Computers(ldapUserGroupControl, ComputerI):
 
     def getRestrictedComputersListLen(self, ctx, filt):
         """
-        """        
+        """
         return len(self.getComputersList(filt))
-        
+
     def getRestrictedComputersList(self, ctx, min, max, filt, advanced):
         """
         we can't do that directly in ldap, so we do it in python, just to return less xml...
@@ -2153,7 +2153,7 @@ class Computers(ldapUserGroupControl, ComputerI):
 
     def canAddComputer(self):
         return True
-        
+
     def addComputer(self, ctx, params):
         """
         Add a computer in the main computer list
@@ -2163,7 +2163,7 @@ class Computers(ldapUserGroupControl, ComputerI):
 
         @param comment: a comment for the computer list
         @type comment: str
-        
+
         @return: the machine uuuid
         @rtype: str
         """
@@ -2186,14 +2186,14 @@ class Computers(ldapUserGroupControl, ComputerI):
 
     def canDelComputer(self):
         return True
-        
-    def delComputer(self, ctx, uuid):
+
+    def delComputer(self, ctx, uuid, backup):
         """
         Remove a computer, given its uuid
         """
         dn = "objectUUID=" + uuid + "," + self.baseComputersDN
         return self.l.delete_s(dn)
-    
+
 class ContextMaker(ContextMakerI):
 
     """
@@ -2243,21 +2243,21 @@ class RpcProxy(RpcProxyI):
 
     def canAssociateComputer2Location(self):
         return ComputerManager().canAssociateComputer2Location()
-        
+
     def addComputer(self, params):
         ctx = self.currentContext
         ComputerManager().addComputer(ctx, params)
-        
+
     def neededParamsAddComputer(self):
         return ComputerManager().neededParamsAddComputer()
 
     def canDelComputer(self):
         return ComputerManager().canDelComputer()
-    
-    def delComputer(self, params):
+
+    def delComputer(self, uuid, backup):
         ctx = self.currentContext
-        ComputerManager().delComputer(ctx, params)
-    
+        ComputerManager().delComputer(ctx, uuid, backup)
+
     def getComputer(self, filt = None):
         ctx = self.currentContext
         return xmlrpcCleanup(ComputerManager().getComputer(ctx, filt))
@@ -2269,7 +2269,7 @@ class RpcProxy(RpcProxyI):
     def getMachineIp(self, filt = None):
         ctx = self.currentContext
         return xmlrpcCleanup(ComputerManager().getMachineIp(ctx, filt))
-        
+
     def getComputersName(self, filt = None):
         ctx = self.currentContext
         ret = ComputerManager().getComputersList(ctx, filt)
@@ -2287,7 +2287,7 @@ class RpcProxy(RpcProxyI):
         ret = map(lambda x:ret[x][1]['cn'][0], ret)
         ret.sort(lambda x, y: cmp(x.lower(), y.lower()))
         return xmlrpcCleanup(ret)
-    
+
     def getRestrictedComputersListLen(self, filt = None):
         ctx = self.currentContext
         return xmlrpcCleanup(ComputerManager().getRestrictedComputersListLen(ctx, filt))
@@ -2295,7 +2295,7 @@ class RpcProxy(RpcProxyI):
     def getRestrictedComputersList(self, min = 0, max = -1, filt = None, advanced = True):
         ctx = self.currentContext
         return xmlrpcCleanup(ComputerManager().getRestrictedComputersList(ctx, min, max, filt, advanced))
-    
+
     def getComputerCount(self, filt = None):
         ctx = self.currentContext
         return ComputerManager().getComputerCount(ctx, filt)
@@ -2303,7 +2303,7 @@ class RpcProxy(RpcProxyI):
     def getComputersListHeaders(self):
         ctx = self.currentContext
         return ComputerManager().getComputersListHeaders(ctx)
-    
+
 
 ################################################################################
 ###### LOG VIEW CLASS
