@@ -543,18 +543,26 @@ class ImagingApi(MyXmlrpc):
 
     def xmlrpc_getImageLogs(self, imageUUID):
         """
-        Send image logs by XMLRPC
-        """
-        if not isUUID(imageUUID):
-            self.logger.error("Bad image UUID %s" % str(imageUUID))
-            return False
+        Send the backup logs of an image.
+        The content of the log.txt file of the image folder is returned.
 
-        path = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['masters_folder'], imageUUID)
-        image = Pulse2Image(path)
-        if not image:
-            ret = False
+        @param imageUUID: image UUID from which logs are wanted
+        @type imageUUID: str
+
+        @rtype: list
+        @return: list of str with the image logs, or an empty list on error
+        """
+        ret = ''
+        if not isUUID(imageUUID):
+            self.logger.error('Bad image UUID %s' % str(imageUUID))
         else:
-            ret = image.logs
+            path = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['masters_folder'], imageUUID)
+            try:
+                image = Pulse2Image(path)
+                ret = image.logs
+            except Exception, e:
+                self.logger.error("Can't get backup logs of image with UUID %s: %s" % (imageUUID, str(e)))
+        assert(type(ret) == list)
         return ret
 
     def xmlrpc_computerCreateImageDirectory(self, mac):
