@@ -86,8 +86,8 @@ function xmlrpc_checkProfileForImaging($computer_uuid) {
     return xmlCall("imaging.checkProfileForImaging", $computer_uuid);
 }
 
-function xmlrpc_delComputersImaging($computers_UUID) {
-    return xmlCall("imaging.delComputersImaging", $computers_UUID);
+function xmlrpc_delComputersImaging($computers_UUID, $backup) {
+    return xmlCall("imaging.delComputersImaging", array($computers_UUID, $backup));
 }
 
 function xmlrpc_getMyMenuComputer($target_uuid) {

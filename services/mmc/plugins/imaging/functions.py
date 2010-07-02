@@ -1243,10 +1243,13 @@ class ImagingRpcProxy(RpcProxyI):
         return [False, profile['id']]
 
 
-    def delComputersImaging(self, computers_UUID):
+    def delComputersImaging(self, computers_UUID, backup):
         """
         @param computers_UUID: list of computers uuids
         @type computers_UUID: list
+
+        @param backup: do we do a backup or not
+        @type backup: bool
 
         @returns: a couple of :
             0 : a boolean state
@@ -1255,7 +1258,7 @@ class ImagingRpcProxy(RpcProxyI):
         """
         if type(computers_UUID) != list:
             computers_UUID = [computers_UUID]
-        ret = computersUnregister(computers_UUID)
+        ret = computersUnregister(computers_UUID, backup)
         return ret
 
     def checkComputerForImaging(self, computerUUID):
@@ -2542,7 +2545,7 @@ def generateMenus(logger, db, uuids):
     return distinct_loc
 
 
-def computersUnregister(computers_UUID):
+def computersUnregister(computers_UUID, backup):
     """
     unregister all the computers from the list
 
@@ -2587,8 +2590,7 @@ def computersUnregister(computers_UUID):
         for res1, result in results:
             (res, uuid) = result
             # if they manage to unregister, unregister from the DB
-           # if res:
-            if True: # we need to test!
+            if res:
                 # remove the menu + menuitem
                 # remove the computer
                 ret = db.unregisterTargets(uuid)
@@ -2616,10 +2618,7 @@ def computersUnregister(computers_UUID):
                 imageList = db.getTargetImages(computerUUID, P2IT.ALL_COMPUTERS)
                 imageList = map(lambda i:i.uuid, imageList)
 
-                # get the archive path
-                archive = '/tmp/%s'%computerUUID
-
-                d = i.computerUnregister(computerUUID, imageList, archive)
+                d = i.computerUnregister(computerUUID, imageList, backup)
                 d.addCallback(treatUnregister, computerUUID)
                 dl.append(d)
 

@@ -32,10 +32,12 @@ from mmc.agent import PluginManager
 from mmc.support.mmctools import ContextMakerI, SecurityContext
 from mmc.plugins.imaging.config import ImagingConfig
 from mmc.plugins.imaging.profile import ImagingProfile
+from mmc.plugins.imaging.computer import InventoryComputers
 from mmc.plugins.imaging.imaging import ComputerImagingImaging
 from mmc.plugins.imaging.pulse import ImagingPulse2Manager
 from mmc.plugins.imaging.functions import ImagingRpcProxy
 from pulse2.managers.profile import ComputerProfileManager
+from mmc.plugins.base.computers import ComputerManager
 from pulse2.managers.imaging import ComputerImagingManager
 from pulse2.managers.pulse import Pulse2Manager
 from pulse2.database.imaging import ImagingDatabase
@@ -91,6 +93,8 @@ def activate():
     ComputerImagingManager().register("imaging", ComputerImagingImaging)
 
     Pulse2Manager().register('imaging', ImagingPulse2Manager)
+
+    ComputerManager().register('imaging', InventoryComputers)
 
     return True
 

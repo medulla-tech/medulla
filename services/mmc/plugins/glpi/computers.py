@@ -207,7 +207,7 @@ class GlpiComputers(ComputerI):
     def canDelComputer(self):
         return False
 
-    def delComputer(self, ctx, uuid):
+    def delComputer(self, ctx, uuid, backend):
         """
         Remove a computer, given its uuid
         """

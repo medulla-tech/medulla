@@ -172,7 +172,7 @@ class InventoryComputers(ComputerI):
     def canDelComputer(self):
         return True
 
-    def delComputer(self, ctx, uuid):
+    def delComputer(self, ctx, uuid, backup):
         return self.inventory.delMachine(uuid)
 
     def getComputerByMac(self, mac):
