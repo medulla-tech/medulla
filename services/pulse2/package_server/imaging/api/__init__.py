@@ -541,7 +541,7 @@ class ImagingApi(MyXmlrpc):
 
     ## Image management
 
-    def xmlrpc_getImageLogs(self, imageUUID):
+    def xmlrpc_imageGetLogs(self, imageUUID):
         """
         Send the backup logs of an image.
         The content of the log.txt file of the image folder is returned.
