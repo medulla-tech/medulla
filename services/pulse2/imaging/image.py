@@ -43,11 +43,14 @@ class Pulse2Image:
 
     def __init__(self, directory):
         """
-        Return Image stats (from conf.txt and others)
+        Read image information (from conf.txt and others)
+
+        @raise Exception: exception raised when image element is missing
         """
         if not isPulse2Image(directory):
-            return None
+            raise Exception('No Pulse 2 imaging in directory %s' % directory)
 
+        self.directory = directory
         self.size = 0
         self.disks = {}
         self.title = ''
@@ -57,12 +60,23 @@ class Pulse2Image:
         self.progress = 0
         self.current_part = None
 
+        self._readGRUB()
+        self._readSize()
+        self._readLog()
+        self._readProgress()
+
+    def _readGRUB(self):
+        """
+        Read GRUB file.
+
+        FIXME: why do we need to read the GRUB FILE ?
+        """
         # open grub file
         try:
-            fd_grub_file = open(os.path.join(directory, PULSE2_IMAGING_GRUB_FNAME))
+            fd_grub_file = file(os.path.join(self.directory, PULSE2_IMAGING_GRUB_FNAME))
         except Exception, e:
             logging.getLogger().error("Pulse2Image : can't read %s : %s" % (fd_grub_file, e))
-            return None
+            raise e
 
         # read grub file
         for line_grub_file in fd_grub_file:
@@ -110,12 +124,16 @@ class Pulse2Image:
                     line_grub_file.rstrip("\n").lstrip("#")
         fd_grub_file.close()
 
+    def _readSize(self):
+        """
+        Read image size file
+        """
         # open size file
         try:
-            fd_size_file = open(os.path.join(directory, PULSE2_IMAGING_SIZE_FNAME))
+            fd_size_file = open(os.path.join(self.directory, PULSE2_IMAGING_SIZE_FNAME))
         except Exception, e:
             logging.getLogger().error("Pulse2Image : can't read %s : %s" % (fd_size_file, e))
-            return None
+            raise e
 
         for line_size_file in fd_size_file:
             line_size_file_part = re.search("^([0-9]+)", line_size_file)
@@ -123,35 +141,64 @@ class Pulse2Image:
                 self.size = int(line_size_file_part.group(1)) * 1024
         fd_size_file.close()
 
+    def _readLog(self):
+        """
+        Read image log file
+        """
         # open log file
         try:
-            fd_log_file = open(os.path.join(directory, PULSE2_IMAGING_LOG_FNAME))
+            fd_log_file = open(os.path.join(self.directory, PULSE2_IMAGING_LOG_FNAME))
             for line_log_file in fd_log_file:
                 self.logs.append(line_log_file)
                 line_log_file_error = re.search("^ERROR: ", line_log_file)
                 if not line_log_file_error == None:
                     self.has_error = True
             fd_log_file.close()
-        except Exception, e:
+        except OSError, e:
             pass  # harmless
+
+    def _readProgress(self):
+        """
+        Read image backup progress file
+        """
 
         # open progress file
         try:
-            fd_prog_file = open(os.path.join(directory, PULSE2_IMAGING_PROGRESS_FNAME))
+            fd_prog_file = open(os.path.join(self.directory, PULSE2_IMAGING_PROGRESS_FNAME))
             for line_prog_file in fd_prog_file:
                 line_prog_file_split = re.search("^([0-9]+): ([0-9]+)%", line_prog_file)
                 if line_prog_file_split != None:
                     self.current_part = int(line_prog_file_split.group(1))
                     self.progress = int(line_prog_file_split.group(2))
             fd_prog_file.close()
-        except Exception, e:
+        except OSError, e:
             pass  # harmless
+
+
+class Pulse2ImageList:
+    """
+    Class that lists the available Pulse 2 images on the imaging server
+    """
+
+    def __init__(self, config):
+        self.imagesdir = config.imaging_api['masters']
+
+    def get(self):
+        """
+        @rtype: list
+        @returns: list of images
+        """
+        ret = []
+        for entry in os.listdir(self.imagesdir):
+            if isPulse2Image(entry):
+                ret.append(Pulse2Image(entry))
+        return ret
+
 
 def isPulse2Image(folder):
     """
-    Return true if directory is an LRS image
+    Return true if directory is a Pulse 2 image
     """
-
     if os.path.isdir(folder):
         should_contain = [
             'log.txt',
