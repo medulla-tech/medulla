@@ -424,9 +424,11 @@ CREATE INDEX fk_post_install_script_in_image_post_install_script_idx    ON PostI
 -- ----------------------------------------------------------------------
 -- Insert data
 -- ----------------------------------------------------------------------
-INSERT INTO TargetType (label) VALUES ("computer");
-INSERT INTO TargetType (label) VALUES ("profile");
-INSERT INTO TargetType (label) VALUES ("computer_in_profile");
+INSERT INTO TargetType (id, label) VALUES (01, "computer");
+INSERT INTO TargetType (id, label) VALUES (02, "profile");
+INSERT INTO TargetType (id, label) VALUES (03, "computer_in_profile");
+-- WARNING the 04 is a fake type used in the code!
+INSERT INTO TargetType (id, label) VALUES (05, "deleted_computer");
 
 INSERT INTO ImagingLogState (id, label) VALUES (01, "unknown");
 INSERT INTO ImagingLogState (id, label) VALUES (02, "boot");

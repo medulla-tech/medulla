@@ -40,6 +40,7 @@ class Pulse2ImagingTypes:
     PROFILE = 2
     COMPUTER_IN_PROFILE = 3
     ALL_COMPUTERS = 4
+    DELETED_COMPUTER = 5
 P2IT = Pulse2ImagingTypes
 
 
