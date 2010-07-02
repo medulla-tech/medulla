@@ -552,7 +552,7 @@ class ImagingApi(MyXmlrpc):
         @rtype: list
         @return: list of str with the image logs, or an empty list on error
         """
-        ret = ''
+        ret = []
         if not isUUID(imageUUID):
             self.logger.error('Bad image UUID %s' % str(imageUUID))
         else:
