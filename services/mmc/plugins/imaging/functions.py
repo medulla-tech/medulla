@@ -534,7 +534,6 @@ class ImagingRpcProxy(RpcProxyI):
             ret = db.editImage(item_uuid, params)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
-            raise e
             return xmlrpcCleanup([False, e])
 
     def editImageLocation(self, item_uuid, loc_id, params):
