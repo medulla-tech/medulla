@@ -2541,14 +2541,11 @@ def computersUnregister(computers_UUID):
      it now get the profile menu)
 
     """
-    print "computersUnregister(computers_UUID):"
-    print computers_UUID
     db = ImagingDatabase()
     logger = logging.getLogger()
 
     # get the computers
     ret = db.isTargetRegister(computers_UUID, P2IT.ALL_COMPUTERS)
-    print ret
     for uuid in ret:
         if not ret[uuid]:
             logger.info("%s is not registered, it can be unregister"%uuid)
@@ -2556,11 +2553,9 @@ def computersUnregister(computers_UUID):
                 computers_UUID.pop(computers_UUID.index(uuid))
             except ValueError, e:
                 pass
-    print computers_UUID
 
     # send a request to the pserver to unregister them
     location = db.getTargetsEntity(computers_UUID)
-    print location
 
     h_location = {}
     for en, target in location:
@@ -2568,7 +2563,6 @@ def computersUnregister(computers_UUID):
         if not h_location.has_key(en_uuid):
             h_location[en_uuid] = [en, []]
         h_location[en_uuid][1].append(target)
-    print h_location
 
     def treatUnregister(results, uuid, *attr):
          return [results, uuid]
@@ -2576,7 +2570,6 @@ def computersUnregister(computers_UUID):
     def treatUnregisterStage2(results, *attr):
         db = ImagingDatabase()
         failure = []
-        print results
         for res1, result in results:
             (res, uuid) = result
             # if they manage to unregister, unregister from the DB
@@ -2591,8 +2584,6 @@ def computersUnregister(computers_UUID):
                 failure.append([uuid, "PSERVER"])
 
         # return the status of the whole thing
-        print "treatUnregisterStage2"
-        print failure
         if len(failure) > 0:
             return [False, failure]
         return [True]
@@ -2602,17 +2593,14 @@ def computersUnregister(computers_UUID):
         (en, targets) = h_location[en_uuid]
 
         url = chooseImagingApiUrl(en_uuid)
-        print url
         i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
 
         if i != None:
             for computer in targets:
                 computerUUID = computer.uuid
-                print computerUUID
                 # get the list of image uuid
                 imageList = db.getTargetImages(computerUUID, P2IT.ALL_COMPUTERS)
                 imageList = map(lambda i:i.uuid, imageList)
-                print imageList
 
                 # get the archive path
                 archive = '/tmp/%s'%computerUUID

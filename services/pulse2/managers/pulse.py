@@ -65,13 +65,10 @@ class Pulse2Manager(Singleton):
         return klass().getPackageServerEntity(ps_uuid, e_uuid)
 
     def putPackageServerEntity(self, ps_uuid, e_uuid):
-        print "putPackageServerEntity !!!!"
         ret = True
         for mod in self.components:
-            print "mod %s"%mod
             klass = self.components[mod]
             if hasattr(klass, 'putPackageServerEntity'):
-                print "ok"
                 r = klass().putPackageServerEntity(ps_uuid, e_uuid)
                 ret = ret and r
         return ret

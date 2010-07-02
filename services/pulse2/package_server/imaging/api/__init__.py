@@ -725,7 +725,6 @@ class ImagingApi(MyXmlrpc):
                     desc = "%s, %s" % (rfc3339Time(), humanReadable(size))
 
                 c_uuid = result['uuid']
-                print result
                 updateDate = tuple(gmtime())
 
                 client = self._getXMLRPCClient()
