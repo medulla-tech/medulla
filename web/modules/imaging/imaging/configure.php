@@ -404,7 +404,7 @@ if (!$whose && !$menu) {
     $f->pop();
 
     $f->addValidateButton("bvalid");
-    if ($type == '' && ($whose && $whose[0] == $target['uuid'])) {
+    if ($type == '' && !$has_profile && ($whose && $whose[0] == $target['uuid'])) {
         $f->addButton("bunregister", _T("Unregister this computer", 'imaging'), 'btnSecondary');
     }
 
