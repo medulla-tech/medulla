@@ -150,13 +150,13 @@ class Imaging(Pulse2Api):
         d.addErrback(self.onErrorRaise, "Imaging:computerBackupImagesGet", uuid)
         return d
 
-    def computerBackupImageLogGet(self, uuid, imageId):
+    def imageGetLogs(self, imageUUID):
         """
-        Get the imaging log of a computer backup image.
+        Get the imaging logs of a computer backup image.
         Called by the MMC agent.
         """
-        d = self.callRemote("computerBackupImageLogGet", uuid, imageId)
-        d.addErrback(self.onErrorRaise, "Imaging:computerBackupImageLogGet", [uuid, imageId])
+        d = self.callRemote('imageGetLogs', imageUUID)
+        d.addErrback(self.onError, "Imaging:imageGetLogs", [imageUUID])
         return d
 
     def computerImageIsoBuild(self, uuid, imageId):
