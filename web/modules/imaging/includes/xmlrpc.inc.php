@@ -86,6 +86,10 @@ function xmlrpc_checkProfileForImaging($computer_uuid) {
     return xmlCall("imaging.checkProfileForImaging", $computer_uuid);
 }
 
+function xmlrpc_delComputersImaging($computers_UUID) {
+    return xmlCall("imaging.delComputersImaging", $computers_UUID);
+}
+
 function xmlrpc_getMyMenuComputer($target_uuid) {
     return xmlCall("imaging.getMyMenuComputer", array($target_uuid));
 }
@@ -344,6 +348,10 @@ function xmlrpc_addPostInstallScript($location, $params) {
 
 function xmlrpc_getAllKnownLanguages() {
     return xmlCall("imaging.get_all_known_languages");
+}
+
+function xmlrpc_getPartitionsToBackupRestore($target_uuid) {
+    return xmlCall("imaging.getPartitionsToBackupRestore", $target_uuid);
 }
 
 ?>

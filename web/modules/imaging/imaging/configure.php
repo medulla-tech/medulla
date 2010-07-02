@@ -35,7 +35,7 @@ require_once('modules/imaging/includes/xmlrpc.inc.php');
 require_once('modules/imaging/includes/web_def.inc.php');
 require_once('modules/imaging/includes/part-type.inc.php');
 
-if (!isset($is_registering)) {
+if (!isset($is_registering) || $is_registering == '') {
     $is_registering = False;
 }
 $params = getParams();
@@ -122,6 +122,23 @@ if (isset($_POST["bvalid"])) {
     }
 }
 
+if (isset($_POST["bunregister"])) {
+    $type = $_POST["type"];
+    $target_uuid = $_POST['target_uuid'];
+    $target_name = $_POST['target_name'];
+    $params['target_uuid'] = $target_uuid;
+    $params['target_name'] = $target_name;
+
+    $ret = xmlrpc_delComputersImaging(array($target_uuid, ));
+    if ($ret[0] and !isXMLRPCError()) {
+        new NotifyWidgetSuccess(sprintf(_T("The computer %s has correctly been unregistered from imaging", 'imaging'), $target_name));
+        unset($_SESSION["imaging.isComputerRegistered_".$target_uuid]);
+        header("Location: ".urlStrRedirect("base/computers/register_target", $params));
+    } else {
+        new NotifyWidgetFailure(sprintf(_T("Failed to unregistered the computer %s", 'imaging'), $target_name));
+    }
+}
+
 $type = $_GET["type"];
 $target_uuid = $_GET['target_uuid'];
 $target_name = $_GET['target_name'];
@@ -190,7 +207,7 @@ if (!$whose && !$menu) {
     if (($type == '') && (!$is_registering)) {
         /* Add disks and partitions selector widget for registered computers
            only, not profiles */
-        $inventory = xmlCall("imaging.getPartitionsToBackupRestore", $target_uuid);
+        $inventory = xmlrpc_getPartitionsToBackupRestore($target_uuid);
         if (!empty($inventory)) {
             $f->add(new TitleElement(_T("Backup/restore hard disks and partitions selection", "imaging")));
         }
@@ -387,6 +404,9 @@ if (!$whose && !$menu) {
     $f->pop();
 
     $f->addValidateButton("bvalid");
+    if ($type == '' && ($whose && $whose[0] == $target['uuid'])) {
+        $f->addButton("bunregister", _T("Unregister this computer", 'imaging'), 'btnSecondary');
+    }
 
     $f->pop(); // Div expert mode
 
