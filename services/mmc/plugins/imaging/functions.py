@@ -577,6 +577,21 @@ class ImagingRpcProxy(RpcProxyI):
         except Exception, e:
             return xmlrpcCleanup([False, e])
 
+    def imageGetLogs(self, itemUUID):
+        """
+        @return: a deferred resulting to image logs as a list of string
+        @rtype: Deferred
+        """
+        db = ImagingDatabase()
+        image, ims = db.getImageAndImagingServer(itemUUID)
+        api = ImagingApi(ims.url.encode('utf8'))
+        if api != None:
+            deferred = api.imageGetLogs(image.uuid)
+            deferred.addCallback(lambda x: x)
+        else:
+            deferred = []
+        return deferred
+
     def areImagesUsed(self, images): #image_uuid, target_uuid = None, target_type = None):
         """
         tell if the images are used by someone else than the target
