@@ -1167,32 +1167,6 @@ class ImagingRpcProxy(RpcProxyI):
         return ImagingDatabase().doesLocationHasImagingServer(loc_id)
 
     ###### REGISTRATION
-    def delComputerFromImaging(self, uuid):
-        """
-        remove a computer from imaging
-        that mean :
-         * ask the imaging server to remove the computer's menu
-         * ask the imaging server to remove all it's images (not the masters)
-         * remove the images from the database (Image/ImageOnImagingServer/...)
-         * remove the machine from the database (Target/Menu/...)
-         * synchronize the target (ie : if the computer is also in the profile,
-         it now get the profile menu)
-
-        @param uuid: the computer's uuid
-        @type: str
-
-        @returns: true if everything went well
-        @rtype: boolean
-        """
-
-        # xmlrpc_computerUnregister(self, computerUUID, imageList, archive)
-
-        # db.removeAllTargetImage(computerUUID)
-
-        # db.removeTarget(computerUUID, P2IT.COMPUTER)
-
-        return False
-
     def isTargetRegister(self, uuid, target_type):
         """
         check if a target has already been registered or not
@@ -1265,7 +1239,9 @@ class ImagingRpcProxy(RpcProxyI):
             1 : the list of uuids of the target that failed to unregister
         @rtype: list
         """
-        ret = ComputerImagingManager().computersUnregister(computers_UUID)
+        if type(computers_UUID) != list:
+            computers_UUID = [computers_UUID]
+        ret = computersUnregister(computers_UUID)
         return ret
 
     def checkComputerForImaging(self, computerUUID):
@@ -1638,6 +1614,9 @@ class ImagingRpcProxy(RpcProxyI):
         """
         db = ImagingDatabase()
         isRegistered = db.isTargetRegister(uuid, target_type)
+        #if (target_type == P2IT.COMPUTER or target_type == P2IT.COMPUTER_IN_PROFILE or target_type == P2IT.ALL_COMPUTERS) and db.isTargetRegister(uuid, P2IT.DELETED_COMPUTER):
+        #    pass
+
         if not isRegistered and target_type == P2IT.COMPUTER and db.isTargetRegister(uuid, P2IT.COMPUTER_IN_PROFILE):
             # if the computer change from a profile to it's own registering,
             # we remove the COMPUTER_IN_PROFILE target and register a COMPUTER one
@@ -2549,3 +2528,103 @@ def generateMenus(logger, db, uuids):
     return distinct_loc
 
 
+def computersUnregister(computers_UUID):
+    """
+    unregister all the computers from the list
+
+    remove a computer from imaging means :
+     * ask the imaging server to remove the computer's menu
+     * ask the imaging server to remove all it's images (not the masters)
+     * remove the images from the database (Image/ImageOnImagingServer/...)
+     * remove the machine from the database (Target/Menu/...)
+     * synchronize the target (ie : if the computer is also in the profile,
+     it now get the profile menu)
+
+    """
+    print "computersUnregister(computers_UUID):"
+    print computers_UUID
+    db = ImagingDatabase()
+    logger = logging.getLogger()
+
+    # get the computers
+    ret = db.isTargetRegister(computers_UUID, P2IT.ALL_COMPUTERS)
+    print ret
+    for uuid in ret:
+        if not ret[uuid]:
+            logger.info("%s is not registered, it can be unregister"%uuid)
+            try:
+                computers_UUID.pop(computers_UUID.index(uuid))
+            except ValueError, e:
+                pass
+    print computers_UUID
+
+    # send a request to the pserver to unregister them
+    location = db.getTargetsEntity(computers_UUID)
+    print location
+
+    h_location = {}
+    for en, target in location:
+        en_uuid = en.getUUID()
+        if not h_location.has_key(en_uuid):
+            h_location[en_uuid] = [en, []]
+        h_location[en_uuid][1].append(target)
+    print h_location
+
+    def treatUnregister(results, uuid, *attr):
+         return [results, uuid]
+
+    def treatUnregisterStage2(results, *attr):
+        db = ImagingDatabase()
+        failure = []
+        print results
+        for res1, result in results:
+            (res, uuid) = result
+            # if they manage to unregister, unregister from the DB
+           # if res:
+            if True: # we need to test!
+                # remove the menu + menuitem
+                # remove the computer
+                ret = db.unregisterTargets(uuid)
+                if not ret:
+                    failure.append([uuid, "DATABASE"])
+            else:
+                failure.append([uuid, "PSERVER"])
+
+        # return the status of the whole thing
+        print "treatUnregisterStage2"
+        print failure
+        if len(failure) > 0:
+            return [False, failure]
+        return [True]
+
+    dl = []
+    for en_uuid in h_location:
+        (en, targets) = h_location[en_uuid]
+
+        url = chooseImagingApiUrl(en_uuid)
+        print url
+        i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
+
+        if i != None:
+            for computer in targets:
+                computerUUID = computer.uuid
+                print computerUUID
+                # get the list of image uuid
+                imageList = db.getTargetImages(computerUUID, P2IT.ALL_COMPUTERS)
+                imageList = map(lambda i:i.uuid, imageList)
+                print imageList
+
+                # get the archive path
+                archive = '/tmp/%s'%computerUUID
+
+                d = i.computerUnregister(computerUUID, imageList, archive)
+                d.addCallback(treatUnregister, computerUUID)
+                dl.append(d)
+
+        else:
+            logger.info("couldn't initialize the ImagingApi to %s"%(url))
+
+        defer_list = defer.DeferredList(dl)
+        defer_list.addCallback(treatUnregisterStage2)
+        return defer_list
+    return False

@@ -1942,6 +1942,93 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return None
 
+    def unregisterTargets(self, targets_uuid):
+        session = create_session()
+        if type(targets_uuid) != list:
+            targets_uuid = [targets_uuid]
+
+        for target_uuid in targets_uuid:
+            self.logger.info("Going to unregister target %s"%target_uuid)
+            mis = session.query(MenuItem).select_from(self.menu_item \
+                .join(self.menu, self.menu.c.id == self.menu_item.c.fk_menu) \
+                .join(self.target, self.target.c.fk_menu == self.menu.c.id) \
+            )
+            mis = mis.filter(self.target.c.uuid == target_uuid).all()
+            mis_id = map(lambda mi:mi.id, mis)
+
+            iims = session.query(ImageInMenu).select_from(self.image_in_menu \
+                .join(self.menu_item, self.menu_item.c.id == self.image_in_menu.c.fk_menuitem) \
+                .join(self.menu, self.menu.c.id == self.menu_item.c.fk_menu) \
+                .join(self.target, self.target.c.fk_menu == self.menu.c.id) \
+            )
+            iims = iims.filter(and_(self.menu_item.c.id.in_(mis_id), self.target.c.uuid == target_uuid)).all()
+
+            bsims = session.query(BootServiceInMenu).select_from(self.boot_service_in_menu \
+                .join(self.menu_item, self.menu_item.c.id == self.boot_service_in_menu.c.fk_menuitem) \
+                .join(self.menu, self.menu.c.id == self.menu_item.c.fk_menu) \
+                .join(self.target, self.target.c.fk_menu == self.menu.c.id) \
+            )
+            bsims = bsims.filter(and_(self.menu_item.c.id.in_(mis_id), self.target.c.uuid == target_uuid)).all()
+
+            # TODO : get all i18n to remove orphans!
+
+            for iim in iims:
+                self.logger.debug("Remove ImageInMenu %s %s"%(str(iim.fk_menuitem), str(iim.fk_image)))
+                session.delete(iim)
+
+            for bsim in bsims:
+                self.logger.debug("Remove BootServiceInMenu %s %s"%(str(bsim.fk_menuitem), str(bsim.fk_bootservice)))
+                session.delete(bsim)
+
+            session.flush()
+
+            menu = session.query(Menu).select_from(self.menu.join(self.target, self.target.c.fk_menu == self.menu.c.id)).filter(self.target.c.uuid == target_uuid).first()
+
+            self.logger.debug("Changing type and menu for Target %s"%str(target_uuid))
+            deleted_uuid = "DELETED %s"%target_uuid
+            count = session.query(Target).filter(self.target.c.uuid == deleted_uuid).count()
+            index = 0
+            while count != 0:
+                index += 1
+                deleted_uuid = "DELETED %s %s"%(str(index), target_uuid)
+                count = session.query(Target).filter(self.target.c.uuid == deleted_uuid).count()
+
+            target = session.query(Target).filter(self.target.c.uuid == target_uuid).first()
+            target.fk_menu = 1 # we put it to the default 1 menu because we need it to be on something
+            target.type = P2IT.DELETED_COMPUTER
+            target.uuid = deleted_uuid
+            session.save_or_update(target)
+            session.flush()
+
+            menu.fk_default_item = 1
+            menu.fk_default_item_WOL = 1
+            session.save_or_update(menu)
+            session.flush()
+
+            for mi in mis:
+                self.logger.debug("Remove MenuItem %s"%(str(mi.id)))
+                session.delete(mi)
+            session.flush()
+
+            session.delete(menu)
+            session.flush()
+
+            # now we need to drop all the images (not the masters)
+            images = session.query(Image).add_entity(ImagingLog).add_entity(MasteredOn).select_from(self.image \
+                    .join(self.mastered_on, self.mastered_on.c.fk_image == self.image.c.id)
+                    .join(self.imaging_log, self.mastered_on.c.fk_imaging_log == self.imaging_log.c.id)
+                    .join(self.target, self.imaging_log.c.fk_target == self.target.c.id)
+            )
+            images = images.filter(and_(self.target.c.uuid == target_uuid, self.image.c.is_master == 0)).all()
+            for image in images:
+                self.logger.debug("Remove Image %s"%(str(image.id)))
+                session.delete(image)
+            session.flush()
+
+        session.close()
+        return True
+
+
     ######################
     def __TargetImagesQuery(self, session, target_uuid, type, filter):
         q = session.query(Image).add_entity(MenuItem)

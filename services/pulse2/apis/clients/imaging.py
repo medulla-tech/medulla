@@ -97,14 +97,14 @@ class Imaging(Pulse2Api):
         d.addErrback(self.onErrorRaise, "Imaging:computerCreateImageDirectory", [MACAddress])
         return d
 
-    def computerUnregister(self, uuid, archive=True):
+    def computerUnregister(self, uuid, imageList, archive=True):
         """
         Remove computer data from the Imaging Server.
         The computer must be registered again to use imaging.
         If archive is True, the computer imaging data are stored in an archive directory, else it is wiped out.
         """
-        d = self.callRemote("computerUnregister", uuid, archive)
-        d.addErrback(self.onErrorRaise, "Imaging:computerUnregister", [uuid, archive])
+        d = self.callRemote("computerUnregister", uuid, imageList, archive)
+        d.addErrback(self.onErrorRaise, "Imaging:computerUnregister", [uuid, imageList, archive])
         return d
 
     # Computer Menu management

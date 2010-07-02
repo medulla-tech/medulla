@@ -70,18 +70,6 @@ class ComputerImagingManager(Singleton):
         klass = self.components[self.main]
         return klass().getImagingServerEntityUUID(imaging_uuid)
 
-    def computersUnregister(self, computers_UUID):
-        "check in all the managers, if none of them have a computersUnregister method, return False "
-        ret = False
-        for mod in self.components:
-            klass = self.components[mod]
-            if hasattr(klass, 'computersUnregister'):
-                ret = True
-                r = klass().computersUnregister(computers_UUID)
-                if not r:
-                    return False
-        return ret
-
 class ComputerImagingI:
     def isImagingInProfilePossible(self):
         """
@@ -98,12 +86,5 @@ class ComputerImagingI:
     def getImagingServerEntityUUID(self, imaging_uuid):
         """
         get an imaging server's entity uuid
-        """
-        pass
-
-
-    def computersUnregister(self, computers_UUID):
-        """
-        unregister all the computers from the list
         """
         pass
