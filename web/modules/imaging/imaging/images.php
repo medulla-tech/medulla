@@ -53,6 +53,9 @@ if (($type == '' && (xmlrpc_isComputerRegistered($target_uuid) || xmlrpc_isCompu
         $mod = "none";
 
     switch($mod) {
+        case 'log':
+            image_logs($itemid);
+            break;
         case 'edit':
             image_edit($target_uuid, $type, $itemid);
             break;
@@ -173,7 +176,16 @@ function image_list($type, $title, $actions=true) {
     $ajax->displayDivToUpdate();
 }
 
-
+/**
+ * Display backup log of a Pulse 2 image
+ */
+function image_logs($itemid) {
+    $t = new TitleElement(_T("Image backup logs", "imaging"));
+    $t->display();
+    $logs = xmlrpc_imageGetLogs($itemid);
+    $logwidget = new ImageLogs($logs);
+    $logwidget->display();
+}
 ?>
 
 <!-- inject styles -->

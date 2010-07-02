@@ -76,6 +76,8 @@ $showImAction = new ActionPopupItem(_T("Show target using that image", "imaging"
 $editActions = array();
 $editAction = new ActionItem(_T("Edit image", "imaging"), "imgtabs", "edit", "image", "base", "computers", $type."tabimages", "edit");
 
+$logAction = new ActionItem(_T("View image log", "imaging"), "imgtabs", "logfile", "image", "base", "computers", $type."tabimages", "log");
+
 // forge params
 $params['from'] = 'tabimages';
 $list_params = array();
@@ -168,9 +170,11 @@ if ($actions) {
         new ActionItem(_T("Edit image", "imaging"),
         "imgtabs", "edit", "image", "base", "computers", $type."tabimages", "edit")
     );
+    $l->addActionItem($logAction);
     $l->addActionItem($destroyAction);
 } else {
     $l->addActionItemArray($editActions);
+    $l->addActionItem($logAction);
     $l->addActionItemArray($a_destroy);
 }
 

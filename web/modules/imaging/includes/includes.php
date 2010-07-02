@@ -205,7 +205,7 @@ function _toDate($a, $noneIsAsap = False) {
 
     } elseif ($noneIsAsap && !$a) {
         return _T('As soon as possible', 'msc');
-    } else { # can't guess if we talk about a date or something else :/
+    } else { // can't guess if we talk about a date or something else :/
         return _T('<i>undefined</i>', 'msc');
     }
 }
@@ -216,6 +216,36 @@ function humanReadable($num, $unit='B', $base=1024) {
             return sprintf("%3.1f %s%s", $num, $i, $unit);
         }
         $num /= $base;
+    }
+}
+
+/*
+ * Widget that display an image backup log
+ */
+class ImageLogs extends HtmlElement {
+
+    /* Logs to display */
+    var $logs;
+
+    function ImageLogs($logs) {
+        assert(is_array($logs));
+        $this->logs = $logs;
+    }
+
+    function display() {
+        $lines = array();
+        foreach($this->logs as $line => $msg) {
+            if (strpos($msg, "===") === 0) {
+                $msg = "<b>" . "$msg" . "</b>";
+            }
+            $lines[] = sprintf("<span class=\"linenumber\">%04d:</span>", $line) . " " . $msg;
+        }
+
+        $l = new ListInfos($lines, _T("Backup log messages", "imaging"));
+        $l->setCssClass("imagelogs");
+        $l->setRowsPerPage(count($lines));
+        $l->setNavBar(False);
+        $l->display(0, 1);
     }
 }
 

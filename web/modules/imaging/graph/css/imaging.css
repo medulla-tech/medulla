@@ -45,3 +45,13 @@ li.deleteimage a {
 .LOG_DEBUG { 
   color: lightgray;
 }
+
+td.imagelogs {
+    font-family: monospace;
+    font-size: small;
+}
+
+.linenumber {
+    font-family: monospace;
+    color: gray;
+}
