@@ -41,14 +41,19 @@ class Pulse2Image:
     This is a Pulse 2 Image
     """
 
-    def __init__(self, directory):
+    def __init__(self, directory, raises = True):
         """
-        Read image information (from conf.txt and others)
+        Read image information (from conf.txt and others).
+
+        @param directory: directory where the Pulse 2 image is stored
+        @type directory: str
+        @param raises: if true, an exception is raised if the image is invalid
+        @type raises: bool
 
         @raise Exception: exception raised when image element is missing
         """
-        if not isPulse2Image(directory):
-            raise Exception('No Pulse 2 imaging in directory %s' % directory)
+        if not isPulse2Image(directory) and raises:
+            raise Exception('Not a valid Pulse 2 image in directory %s' % directory)
 
         self.directory = directory
         self.size = 0
@@ -60,8 +65,12 @@ class Pulse2Image:
         self.progress = 0
         self.current_part = None
 
-        self._readGRUB()
-        self._readSize()
+        try:
+            self._readGRUB()
+            self._readSize()
+        except Exception, e:
+            if raises:
+                raise e
         self._readLog()
         self._readProgress()
 

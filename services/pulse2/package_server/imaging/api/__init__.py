@@ -558,7 +558,7 @@ class ImagingApi(MyXmlrpc):
         else:
             path = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['masters_folder'], imageUUID)
             try:
-                image = Pulse2Image(path)
+                image = Pulse2Image(path, False)
                 ret = image.logs
             except Exception, e:
                 self.logger.error("Can't get backup logs of image with UUID %s: %s" % (imageUUID, str(e)))
