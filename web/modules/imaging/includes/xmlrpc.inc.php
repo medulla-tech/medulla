@@ -269,6 +269,10 @@ function xmlrpc_getProfileLogs($id, $start = 0, $end = -1, $filter = '') {
     return xmlCall("imaging.getProfileLogs", array($id, $start, $end, $filter));
 }
 
+function xmlrpc_imageGetLogs($itemid) {
+    return xmlCall("imaging.imageGetLogs", $itemid);
+}
+
 // server informations
 
 function xmlrpc_getGlobalStatus($location) {
