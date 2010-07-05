@@ -1,10 +1,9 @@
 <?
 
 /*
- * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2009 Mandriva, http://www.mandriva.com
+ * (c) 2009-2010 Mandriva, http://www.mandriva.com
  *
- * $Id: launch.php 3946 2009-03-24 09:02:53Z cdelfosse $
+ * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -227,6 +226,8 @@ class ImageLogs extends HtmlElement {
     /* Logs to display */
     var $logs;
 
+    var $errstr = "ERROR:";
+
     function ImageLogs($logs) {
         assert(is_array($logs));
         $this->logs = $logs;
@@ -234,11 +235,19 @@ class ImageLogs extends HtmlElement {
 
     function display() {
         $lines = array();
+        $errlines = array();
         foreach($this->logs as $line => $msg) {
             if (strpos($msg, "===") === 0) {
                 $msg = "<b>" . "$msg" . "</b>";
+            }  else if(strpos($msg, $this->errstr) === 0) {
+                $msg = "<span id=\"err$line\" class=\"LOG_ERR\">" . "$msg" . "</span>";
+                $errlines[] = $line;
             }
             $lines[] = sprintf("<span class=\"linenumber\">%04d:</span>", $line) . " " . $msg;
+        }
+
+        foreach($errlines as $line) {
+            print "<p class =\"LOG_ERR\" onClick=\"javascript:new Element.scrollTo('err202');\">Click here to scroll to error on line $line.</p>";
         }
 
         $l = new ListInfos($lines, _T("Backup log messages", "imaging"));
