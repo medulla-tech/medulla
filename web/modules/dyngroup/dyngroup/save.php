@@ -135,7 +135,7 @@ if (!isset($_POST['btnPrimary']) || $name_exists || !$check || isset($_POST['che
 
 
 function drawBoolEquation($equ_bool) {
-    print "</tr><tr><td colspan='2'>"._T("Enter boolean operator between groups", "dyngroup")." <input value='$equ_bool' name='equ_bool' type='input'/><input name='checkBool' value='"._T('Check', 'dyngroup')."' type='submit'/></td>";
+    print "</tr><tr><td colspan='2'>"._T("Specify a boolean operator between sub-requests", "dyngroup")." <input value='$equ_bool' name='equ_bool' type='input'/><input name='checkBool' value='"._T('Check', 'dyngroup')."' type='submit'/></td>";
 }
 
 function checkBoolEquation($bool, $r, $display_success) {
