@@ -62,9 +62,9 @@ class ComputerImagingManager(Singleton):
                     return False
         return ret
 
-    def getAllImagingServers(self, user_id):
+    def getAllImagingServers(self, user_id, associated):
         klass = self.components[self.main]
-        return klass().getAllImagingServers(user_id)
+        return klass().getAllImagingServers(user_id, associated)
 
     def getImagingServerEntityUUID(self, imaging_uuid):
         klass = self.components[self.main]
@@ -77,7 +77,7 @@ class ComputerImagingI:
         """
         pass
 
-    def getAllImagingServers(self, user_id):
+    def getAllImagingServers(self, user_id, associated):
         """
         get all the imaging server that this user can access
         """

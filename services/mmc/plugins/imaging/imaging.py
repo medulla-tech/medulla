@@ -39,13 +39,13 @@ class ComputerImagingImaging(ComputerImagingI):
         #ret = ImagingDatabase().doesLocationHasImagingServer(root_entity_uuid)
         #return ret
 
-    def getAllImagingServers(self, user_id):
+    def getAllImagingServers(self, user_id, is_associated):
         """
         get all the imaging server that this user can access
         """
         locations = ComputerLocationManager().getUserLocations(user_id)
         locations = map(lambda l:l['uuid'], locations)
-        r = ImagingDatabase().getEntitiesImagingServer(locations)
+        r = ImagingDatabase().getEntitiesImagingServer(locations, is_associated)
         ret = {}
         for ims, loc_uuid in r:
             ims = ims.toH()

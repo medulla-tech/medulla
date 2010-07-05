@@ -180,12 +180,12 @@ class RpcProxy(RpcProxyI):
         # maybe we can add something in the configuration of dyngroup to say if we want or not profiles
         return PluginManager().isEnabled("imaging")
 
-    def getAllImagingServersForProfiles(self):
+    def getAllImagingServersForProfiles(self, associated = False):
         """
         get all the imaging server that this user can access
         """
         ctx = self.currentContext
-        return ComputerImagingManager().getAllImagingServers(ctx.userid)
+        return ComputerImagingManager().getAllImagingServers(ctx.userid, associated)
 
 
 def displayLocalisationBar():

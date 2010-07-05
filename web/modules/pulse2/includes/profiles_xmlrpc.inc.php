@@ -3,7 +3,7 @@
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2010 Mandriva, http://www.mandriva.com/
  *
- * $Id: xmlrpc.inc.php 3296 2008-12-08 16:24:07Z nrueff $
+ * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -38,8 +38,8 @@ function areProfilesPossible() {
     return __get_and_store("pulse2", "areProfilesPossible", "areProfilesPossible");
 }
 
-function xmlrpc_getAllImagingServersForProfiles() {
-    return xmlCall("pulse2.getAllImagingServersForProfiles");
+function xmlrpc_getAllImagingServersForProfiles($is_associated = false) {
+    return xmlCall("pulse2.getAllImagingServersForProfiles", array($is_associated));
 }
 
 ?>

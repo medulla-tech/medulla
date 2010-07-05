@@ -67,7 +67,7 @@ if ($type == 0) {
         $f->add(new HiddenTpl("id"), array("value" => $gid, "hide" => True));
         $f->push(new Table());
 
-        $imss = xmlrpc_getAllImagingServersForProfiles();
+        $imss = xmlrpc_getAllImagingServersForProfiles(true);
         $elt = array();
         $elt_values = array();
         foreach ($imss as $uuid => $imaging_server) {
@@ -83,8 +83,8 @@ if ($type == 0) {
             new TrFormElement(_T("Select the imaging server for this profile.", "dyngroup"), $imss)
         );
 
-    $f->pop();
-    $f->addValidateButton("bvalid");
+        $f->pop();
+        $f->addValidateButton("bvalid");
 
         $p->display();
         $f->display();

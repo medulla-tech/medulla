@@ -558,11 +558,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             q[0].default_name = q[1]
         return q[0]
 
-    def getEntitiesImagingServer(self, entities_uuid):
+    def getEntitiesImagingServer(self, entities_uuid, is_associated):
         session = create_session()
         q = session.query(ImagingServer).add_column(self.entity.c.uuid)
         q = q.select_from(self.imaging_server.join(self.entity, self.entity.c.id == self.imaging_server.c.fk_entity))
-        q = q.filter(self.entity.c.uuid.in_(entities_uuid)).all()
+        filt = self.entity.c.uuid.in_(entities_uuid)
+        if is_associated:
+            filt = and_(filt, self.imaging_server.c.associated == 1)
+        q = q.filter(filt).all()
         session.close()
         return q
 
