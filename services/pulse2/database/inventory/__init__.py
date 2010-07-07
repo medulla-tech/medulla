@@ -1178,6 +1178,47 @@ class Inventory(DyngroupDatabaseHelper):
         setattr(en, 'uuid', toUUID(en.id))
         return en
 
+    def getLocationsFromPathString(self, location_paths):
+        """
+        """
+        session = create_session()
+        ens = []
+        for loc_path in location_paths:
+            root_id = 1
+            parent_id = root_id
+            root = True
+            for name in loc_path:
+                filt = and_(self.table['Entity'].c.parentId == parent_id, self.table['Entity'].c.Label == name)
+                if root:
+                    filt = and_(filt, self.table['Entity'].c.id == root_id)
+                    root = False
+                else:
+                    filt = and_(filt, self.table['Entity'].c.id != root_id)
+                q = session.query(self.klass['Entity']).filter(filt).all()
+                if len(q) != 1:
+                    ens.append(False)
+                    continue
+                parent_id = q[0].id
+            ens.append(toUUID(str(parent_id)))
+        session.close()
+        return ens
+
+    def getLocationParentPath(self, loc_uuid):
+        """
+        """
+        session = create_session()
+        path = []
+        en_id = fromUUID(loc_uuid)
+        en = session.query(self.klass['Entity']).filter(self.table['Entity'].c.id == en_id).first()
+        parent_id = en.parentId
+
+        while parent_id != en_id:
+            en_id = parent_id
+            en = session.query(self.klass['Entity']).filter(self.table['Entity'].c.id == parent_id).first()
+            path.append(toUUID(en.id))
+            parent_id = en.parentId
+        return path
+
     def getUsersInSameLocations(self, userid, locations = None):
         """
         Returns all the users id that share the same locations than the given

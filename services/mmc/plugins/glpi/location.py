@@ -66,4 +66,10 @@ class GlpiLocation(ComputerLocationI):
 
     def getMachinesLocations(self, machine_uuids):
         return Glpi().getMachinesLocations(machine_uuids)
-            
+
+    def getLocationsFromPathString(self, location_path):
+        return Glpi().getLocationsFromPathString(location_path)
+
+    def getLocationParentPath(self, loc_uuid):
+        raise Exception("getLocationParentPath need to be implemented in glpi backend!")
+

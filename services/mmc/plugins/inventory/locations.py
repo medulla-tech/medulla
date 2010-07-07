@@ -57,6 +57,13 @@ class InventoryLocation(ComputerLocationI):
     def getMachinesLocations(self, machine_uuids):
         return Inventory().getComputersLocations(machine_uuids)
 
+    def getLocationsFromPathString(self, location_path):
+        return Inventory().getLocationsFromPathString(location_path)
+
+    def getLocationParentPath(self, loc_uuid):
+        return Inventory().getLocationParentPath(loc_uuid)
+
+
 def convertLocations(hloc):
     location = hloc[0]
     level = hloc[1]

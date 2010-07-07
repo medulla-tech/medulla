@@ -938,6 +938,21 @@ class Glpi08(DyngroupDatabaseHelper):
         session.close()
         return ret
 
+    def getLocationsFromPathString(self, location_path):
+        """
+        """
+        session = create_session()
+        ens = []
+        for loc_path in location_path:
+            loc_path = " > ".join(loc_path)
+            q = session.query(Location).filter(self.location.c.completename == loc_path).all()
+            if len(q) != 1:
+                ens.append(False)
+            else:
+                ens.append(toUUID(str(q.id)))
+        session.close()
+        return ens
+
     def doesUserHaveAccessToMachines(self, ctx, a_machine_uuid, all = True):
         """
         Check if the user has correct permissions to access more than one or to all machines
