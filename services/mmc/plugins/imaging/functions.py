@@ -303,14 +303,13 @@ class ImagingRpcProxy(RpcProxyI):
         @returns: a dict containing all the image information
         @rtype: dict
         """
-        #try:
-        if True:
+        try:
             db = ImagingDatabase()
             target_type = self.__convertType(target_type, uuid)
             image = db.getTargetImage(uuid, target_type, image_uuid)
             return [True, xmlrpcCleanup(image.toH())]
-        #except Exception, e:
-        #    return xmlrpcCleanup([False, e])
+        except Exception, e:
+            return xmlrpcCleanup([False, e])
 
     def __getTargetImages(self, id, target_type, start = 0, end = -1, filter = ''):
         # be careful the end is used for each list (image and master)
@@ -1959,11 +1958,24 @@ class ImagingRpcProxy(RpcProxyI):
         imaging_server = imaging_server[0]
         if imaging_server == None:
             return [False, "Failed to find the imaging server %s" % imaging_server_uuid]
+        loc_id = imaging_server[1].uuid
+        imaging_server = imaging_server[0]
 
         p = None
+        if entity:
+            loc_path = entity.split('/')
+            loc_path.pop(0)
+            entity = ComputerLocationManager().getLocationsFromPathString([loc_path])
+            en_uuid = entity[0]
+            if not en_uuid:
+                logger.error("the entity passed to this function doesn't exists %s"%(entity))
+            else:
+                loc_id = en_uuid
+                imaging_server = db.getImagingServerByEntityUUID(loc_id)
         if profile != '':
+            # if entities: we need to get the profile from this entity!
             # we have to register as a profile element
-            is_uuid = imaging_server[0].getUUID()
+            is_uuid = imaging_server.getUUID()
             if not is_uuid:
                 return [False, "Failed to find the correct profile (%s) in %s"%(profile, imaging_server_uuid)]
             p = ComputerProfileManager().getProfileByNameImagingServer(profile, is_uuid)
@@ -1972,7 +1984,6 @@ class ImagingRpcProxy(RpcProxyI):
                     return [False, "Failed to find the correct profile (%s) in %s"%(profile, imaging_server_uuid)]
                 p = p[0]
 
-        loc_id = imaging_server[1].uuid
         computer = {
             'computername': hostname, # FIXME : what about domain ?
             'computerdescription': '',
@@ -2026,9 +2037,6 @@ class ImagingRpcProxy(RpcProxyI):
         else:
             logger.debug("computer %s (%s) dont need registration" % (hostname, MACAddress))
 
-#        if entities:
-#            # TODO
-#            pass
         return [True, uuid]
 
     def imagingServerRegister(self, name, url, uuid):
@@ -2336,7 +2344,6 @@ def synchroTargets(ctx, uuids, target_type):
             for uuid in to_register:
                 if db.isTargetRegister(uuid, P2IT.COMPUTER):
                     logger.debug("computer %s is already registered as a P2IT.COMPUTER"%(uuid))
-                    continue
                 menu = menus[uuid]
                 imagingData = {'menu':{uuid:menu}, 'uuid':uuid}
                 mac = h_macaddress[uuid]
@@ -2480,6 +2487,8 @@ def generateMenusContent(menu, menu_items, loc_uuid, target_uuid = None, h_pis =
     return (menu, menu_items, h_pis)
 
 def generateMenus(logger, db, uuids):
+    logger = logging.getLogger()
+    logger.debug("generateMenus for %s"%(str(uuids)))
     # get target location
     distinct_loc = {}
     distinct_loc_own_menu = {}
@@ -2502,7 +2511,9 @@ def generateMenus(logger, db, uuids):
             loc_uuid = "UUID%s"%locations[m_uuid]['id']
         menu_items = db.getBootMenu(m_uuid, P2IT.COMPUTER, 0, -1, '')
         profile = ComputerProfileManager().getComputersProfile(m_uuid)
+        logger.debug("computer %s"%(m_uuid))
         if profile != None:
+            logger.debug("\tis in profile %s"%(str(profile.id)))
             menu = db.getTargetsMenuTUUID(profile.id)
             m_menu = db.getTargetsMenuTUUID(m_uuid)
             menu.fk_default_item = m_menu.fk_default_item

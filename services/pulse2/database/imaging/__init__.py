@@ -583,9 +583,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if session == None:
             need_to_close_session = True
             session = create_session()
+        imaging_server = self.getImagingServerByEntityUUID(loc_id, session)
+
         j = self.menu.join(self.imaging_server).join(self.entity).outerjoin(self.internationalization, and_(self.internationalization.c.id == self.menu.c.fk_name, self.internationalization.c.fk_language == self.imaging_server.c.fk_language))
         q = session.query(Menu).add_column(self.internationalization.c.label).select_from(j)
-        q = q.filter(self.entity.c.uuid == loc_id)
+        q = q.filter(self.imaging_server.c.id == imaging_server.id)
         q = q.filter(self.imaging_server.c.associated == 1)
         q = q.first()
         if need_to_close_session:
@@ -801,10 +803,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
 ###########################################################
     def getEntityUrl(self, location_uuid):
-        session = create_session()
-        # there should be just one imaging server per entity
-        q = session.query(ImagingServer).select_from(self.imaging_server.join(self.entity)).filter(self.entity.c.uuid == location_uuid).first()
-        session.close()
+        q = self.getImagingServerByEntityUUID(location_uuid)
         if q == None:
             return None
         return q.url
@@ -2421,12 +2420,46 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session.close()
         return q
 
+    def getLinkedEntityByEntityUUID(self, uuid, session = None):
+        session_need_to_close = False
+        if session == None:
+            session_need_to_close = True
+            session = create_session()
+        q = session.query(Entity).select_from(self.imaging_server.join(self.entity)).filter(self.entity.c.uuid == uuid).first()
+        if q == None:
+            parent_path = ComputerLocationManager().getLocationParentPath(uuid)
+            q = session.query(Entity).add_column(self.entity.c.uuid).select_from(self.imaging_server.join(self.entity)) \
+                .filter(and_(self.entity.c.uuid.in_(parent_path), self.imaging_server.c.recursive == 1, self.imaging_server.c.associated == 1)) \
+                .all()
+            h_temp = {}
+            for entity, en_uuid in q:
+                h_temp[en_uuid] = entity
+            for en_uuid in parent_path:
+                if h_temp.has_key(en_uuid):
+                    q = h_temp[en_uuid]
+                    continue
+        if session_need_to_close:
+            session.close()
+        return q
+
     def getImagingServerByEntityUUID(self, uuid, session = None):
         session_need_to_close = False
         if session == None:
             session_need_to_close = True
             session = create_session()
         q = session.query(ImagingServer).select_from(self.imaging_server.join(self.entity)).filter(self.entity.c.uuid == uuid).first()
+        if q == None:
+            parent_path = ComputerLocationManager().getLocationParentPath(uuid)
+            q = session.query(ImagingServer).add_column(self.entity.c.uuid).select_from(self.imaging_server.join(self.entity)) \
+                .filter(and_(self.entity.c.uuid.in_(parent_path), self.imaging_server.c.recursive == 1, self.imaging_server.c.associated == 1)) \
+                .all()
+            h_temp = {}
+            for imaging_server, en_uuid in q:
+                h_temp[en_uuid] = imaging_server
+            for en_uuid in parent_path:
+                if h_temp.has_key(en_uuid):
+                    q = h_temp[en_uuid]
+                    continue
         if session_need_to_close:
             session.close()
         return q
@@ -3319,7 +3352,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             if location_id == None:
                 location = ComputerLocationManager().getMachinesLocations([uuid])
                 location_id = location[uuid]['uuid']
-            loc = session.query(Entity).filter(self.entity.c.uuid == location_id).first()
+            loc = self.getLinkedEntityByEntityUUID(location_id)
             target = self.__createTarget(session, uuid, params['target_name'], type, loc.id, menu.id, params)
             # TODO : what do we do with target ?
             if type == P2IT.PROFILE:
