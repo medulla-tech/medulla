@@ -81,7 +81,7 @@ class ComputerLocationManager(Singleton):
             klass = self.components[self.main]
             return klass().getUsersInSameLocations(userid)
         except KeyError:
-            return None        
+            return None
 
     def getMachinesInLocation(self, location, a_profile = []):
         try:
@@ -89,7 +89,7 @@ class ComputerLocationManager(Singleton):
             return klass().getMachinesInLocation(location, a_profile)
         except KeyError:
             return None
-        
+
     def getLocationsForMachine(self, machine_uuid, a_profile = []):
         try:
             klass = self.components[self.main]
@@ -102,8 +102,8 @@ class ComputerLocationManager(Singleton):
             klass = self.components[self.main]
             return klass().getLocationsCount()
         except KeyError:
-            return None        
-        
+            return None
+
     def doesUserHaveAccessToMachine(self, ctx, machine_uuid):
         try:
             klass = self.components[self.main]
@@ -125,11 +125,26 @@ class ComputerLocationManager(Singleton):
         except KeyError:
             return True
 
+    def getLocationsFromPathString(self, location_path):
+        try:
+            klass = self.components[self.main]
+            return klass().getLocationsFromPathString(location_path)
+        except KeyError:
+            return True
+
+    def getLocationParentPath(self, loc_uuid):
+        try:
+            klass = self.components[self.main]
+            return klass().getLocationParentPath(loc_uuid)
+        except KeyError:
+            return True
+
+
 class ComputerLocationI(Singleton):
     def displayLocalisationBar(self):
         """ return True if the module want to display the location bar in computers lists """
         return False
-        
+
     def getUserProfile(self, userid):
         """ return the linked profiles for one user """
         pass
@@ -141,7 +156,7 @@ class ComputerLocationI(Singleton):
     def getMachinesInLocation(self, location, a_profile = []): # TODO implement and use in glpi module
         """ should return the machines that are in the specified location with the good profiles (or any) """
         pass
-    
+
     def getLocationsForMachine(self, machine_uuid, a_profile = []): # TODO implement and use in glpi module
         """ should return the locations in which this machine is """
         pass
@@ -160,5 +175,13 @@ class ComputerLocationI(Singleton):
 
     def getMachinesLocations(self, machine_uuids):
         """ should return the location in which the machines are as a dict {machine_uuid:location} """
+        pass
+
+    def getLocationsFromPathString(self, location_path):
+        """ should return the locations that correspond to that path """
+        pass
+
+    def getLocationParentPath(self, loc_uuid):
+        """ return an array containing all the parent uuids of this location """
         pass
 
