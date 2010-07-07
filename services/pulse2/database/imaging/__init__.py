@@ -2069,7 +2069,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def getTargetImages(self, target_uuid, target_type, start = 0, end = -1, filt = ''):
         session = create_session()
         if target_type == P2IT.ALL_COMPUTERS:
-            filt1 = and_(self.target.c.uuid == target_uuid, self.target.c.type.in_(P2IT.COMPUTER, P2IT.COMPUTER_IN_PROFILE))
+            filt1 = and_(self.target.c.uuid == target_uuid, self.target.c.type.in_([P2IT.COMPUTER, P2IT.COMPUTER_IN_PROFILE]))
         else:
             filt1 = and_(self.target.c.uuid == target_uuid, self.target.c.type == target_type)
 
@@ -2832,7 +2832,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session = create_session()
 
         if target_type == P2IT.ALL_COMPUTERS:
-            filt = self.target.c.type.in_(P2IT.COMPUTER, P2IT.COMPUTER_IN_PROFILE)
+            filt = self.target.c.type.in_([P2IT.COMPUTER, P2IT.COMPUTER_IN_PROFILE])
         else:
             filt = and_(self.target.c.type == target_type)
         if type(uuid) != list:
@@ -2853,7 +2853,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         ret = False
         if target_type == P2IT.ALL_COMPUTERS:
-            filt = self.target.c.type.in_(P2IT.COMPUTER, P2IT.COMPUTER_IN_PROFILE)
+            filt = self.target.c.type.in_([P2IT.COMPUTER, P2IT.COMPUTER_IN_PROFILE])
         else:
             filt = and_(self.target.c.type == target_type)
 
@@ -2883,7 +2883,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session = create_session()
 
         if target_type == P2IT.ALL_COMPUTERS:
-            filt = self.target.c.type.in_(P2IT.COMPUTER, P2IT.COMPUTER_IN_PROFILE)
+            filt = self.target.c.type.in_([P2IT.COMPUTER, P2IT.COMPUTER_IN_PROFILE])
         else:
             filt = and_(self.target.c.type == target_type)
         ret = False
@@ -3092,7 +3092,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return self.__getAllMenuItem(session, and_(self.target.c.uuid == profile_UUID, self.target.c.type == P2IT.PROFILE))
 
     def __getAllComputersMenuItem(self, computers_UUID, session):
-        return self.__getAllMenuItem(session, and_(self.target.c.uuid.in_(computers_UUID), self.target.c.type.in_(P2IT.COMPUTER_IN_PROFILE, P2IT.COMPUTER)))
+        return self.__getAllMenuItem(session, and_(self.target.c.uuid.in_(computers_UUID), self.target.c.type.in_([P2IT.COMPUTER_IN_PROFILE, P2IT.COMPUTER])))
 
     def __getAllMenuItem(self, session, filt):
         ret = session.query(MenuItem).add_entity(Target).add_entity(BootServiceInMenu).add_entity(ImageInMenu) \
@@ -3299,7 +3299,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                     location_id = None
             elif type == P2IT.PROFILE:
                 imaging_server = ComputerProfileManager().getProfileImagingServerUUID(uuid)
+                if not imaging_server:
+                    raise "%s:Can't get this profile's imaging_server%s"%(P2ERR.ERR_DEFAULT,uuid)
                 entity = self.getImagingServerEntity(imaging_server)
+                if entity == None:
+                    raise "%s:Can't get the entity associated to this imaging server %s"%(P2ERR.ERR_DEFAULT,imaging_server.id)
                 location_id = entity.uuid
                 default_menu = self.getEntityDefaultMenu(location_id, session)
             else:
@@ -3374,7 +3378,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 location = ComputerLocationManager().getMachinesLocations([muuid])
                 loc_id = location[muuid]['uuid']
             else:
-                loc_id = ComputerProfileManager().getProfileImagingServerUUID(uuid)
+                imaging_server = ComputerProfileManager().getProfileImagingServerUUID(uuid)
+                entity = self.getImagingServerEntity(imaging_server)
+                loc_id = entity.uuid
+
             menu = self.getEntityDefaultMenu(loc_id, session)
         if menu == None:
             menu = False
