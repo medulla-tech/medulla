@@ -430,7 +430,14 @@ def splitComputerPath(path):
         tail = path
 
     # Split entity path and computer FQDN
-    entities, fqdn = '/'.split(tail)
+    a_tail = tail.split('/')
+    if len(a_tail) > 1:
+        a_tail.pop(0)
+        fqdn = a_tail.pop(len(a_tail)-1)
+        entities = '/%s'%('/'.join(a_tail))
+    else:
+        fqdn = a_tail[0]
+        entities = ''
 
     if entities and entities != '/':
         if not entities.startswith('/'):
