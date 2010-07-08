@@ -160,9 +160,12 @@ def process_on_client(proposed_scheduler_name, computer, function, *args):
         mydeffered.addCallback(parseResult).addErrback(parseError)
         return mydeffered
 
-    mydeffered = SchedulerApi().getScheduler(computer[1]['objectUUID'][0])
-    mydeffered.addCallback(runResult).addErrback(lambda reason: reason)
-    return mydeffered
+    try:
+        mydeffered = SchedulerApi().getScheduler(computer[1]['objectUUID'][0])
+        mydeffered.addCallback(runResult).addErrback(lambda reason: reason)
+        return mydeffered
+    except AttributeError, e:
+        return runResult(MscConfig().default_scheduler)
 
 def pauseCommands(scheduler, command_ids):
     """
