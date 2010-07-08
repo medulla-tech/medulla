@@ -1659,6 +1659,10 @@ class ImagingRpcProxy(RpcProxyI):
             else:
                 uuids = [uuid]
 
+            if len(uuids) == 0:
+                db.changeTargetsSynchroState([uuid], target_type, P2ISS.DONE)
+                return [True]
+
             distinct_loc = generateMenus(logger, db, uuids)
 
             if target_type == P2IT.COMPUTER:
@@ -1995,7 +1999,12 @@ class ImagingRpcProxy(RpcProxyI):
         uuid = None
         db_computer = ComputerManager().getComputerByMac(MACAddress)
         if db_computer != None:
-            uuid = db_computer['uuid']
+            if type(db_computer) == dict:
+                uuid = db_computer['uuid']
+            elif hasattr(db_computer, 'getUUID'):
+                uuid = db_computer.getUUID()
+            elif hasattr(db_computer, 'uuid'):
+                uuid = db_computer.uuid
         if uuid == None or type(uuid) == list and len(uuid) == 0:
             logger.info("the computer %s (%s) does not exist in the backend, trying to add it" % (hostname, MACAddress))
             # the computer does not exists, so we create it
@@ -2016,7 +2025,10 @@ class ImagingRpcProxy(RpcProxyI):
                 'target_name': hostname,
             }
             # Set the computer menu
-            db.setMyMenuTarget(uuid, params, target_type) # FIXME : are not we supposed to deal with the return value ?
+            try:
+                db.setMyMenuTarget(uuid, params, target_type) # FIXME : are not we supposed to deal with the return value ?
+            except Exception, e:
+                return xmlrpcCleanup([False, str(e)])
             # Tell the MMC agent to synchronize the menu
             # As it in some way returns a deferred object, it is run in
             # background
@@ -2024,8 +2036,8 @@ class ImagingRpcProxy(RpcProxyI):
         elif not is_registrated:
             is_pregistrated = db.isTargetRegister(p.getUUID(), P2IT.PROFILE)
             if not is_pregistrated:
-                logger.error("profile %s don't exists in %s"%(profile, imaging_server_uuid))
-                return [False, "profile %s don't exists in %s"%(profile, imaging_server_uuid)]
+                logger.error("profile %s don't exists in %s or is not registerd in imaging"%(profile, imaging_server_uuid))
+                return [False, "profile %s don't exists in %s or is not registerd in imaging"%(profile, imaging_server_uuid)]
 
             logger.info("computer %s (%s) needs to be registered in the profile %s" % (hostname, MACAddress, profile))
             ctx = self.currentContext
