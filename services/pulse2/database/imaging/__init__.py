@@ -584,6 +584,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             need_to_close_session = True
             session = create_session()
         imaging_server = self.getImagingServerByEntityUUID(loc_id, session)
+        if type(imaging_server) == list and len(imaging_server) == 0:
+            raise Exception("can't get any default menu for this entity %s"%loc_id)
 
         j = self.menu.join(self.imaging_server).join(self.entity).outerjoin(self.internationalization, and_(self.internationalization.c.id == self.menu.c.fk_name, self.internationalization.c.fk_language == self.imaging_server.c.fk_language))
         q = session.query(Menu).add_column(self.internationalization.c.label).select_from(j)
