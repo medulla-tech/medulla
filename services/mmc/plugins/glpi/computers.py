@@ -216,5 +216,12 @@ class GlpiComputers(ComputerI):
 
 
     def getComputerByMac(self, mac):
-        return self.glpi.getMachineByMacAddress('imaging_module', mac)
+        ret = self.glpi.getMachineByMacAddress('imaging_module', mac)
+        if type(ret) == list:
+            if len(ret) != 0:
+                return ret[0]
+            else:
+                return None
+        return ret
+
 

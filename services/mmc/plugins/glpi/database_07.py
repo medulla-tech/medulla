@@ -957,9 +957,24 @@ class Glpi07(DyngroupDatabaseHelper):
             if len(q) != 1:
                 ens.append(False)
             else:
-                ens.append(toUUID(str(q.id)))
+                ens.append(toUUID(str(q[0].id)))
         session.close()
         return ens
+
+    def getLocationParentPath(self, loc_uuid):
+        session = create_session()
+        path = []
+        en_id = fromUUID(loc_uuid)
+        en = session.query(Location).filter(self.location.c.id == en_id).first()
+        parent_id = en.parentID
+
+        while parent_id != 0:
+            en_id = parent_id
+            en = session.query(Location).filter(self.location.c.id == parent_id).first()
+            path.append(toUUID(en.id))
+            parent_id = en.parentId
+        path.append('UUID0')
+        return path
 
     def doesUserHaveAccessToMachines(self, ctx, a_machine_uuid, all = True):
         """

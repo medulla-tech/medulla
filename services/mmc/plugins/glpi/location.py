@@ -71,5 +71,5 @@ class GlpiLocation(ComputerLocationI):
         return Glpi().getLocationsFromPathString(location_path)
 
     def getLocationParentPath(self, loc_uuid):
-        raise Exception("getLocationParentPath need to be implemented in glpi backend!")
+        return Glpi().getLocationParentPath(loc_uuid)
 
