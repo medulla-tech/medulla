@@ -2017,16 +2017,61 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session.delete(menu)
             session.flush()
 
-            # now we need to drop all the images (not the masters)
+            # now we need to drop all the images and the masters linked to nothing
+            masters_linked = session.query(Image).select_from(self.image \
+                    .join(self.image_in_menu, self.image_in_menu.c.fk_image == self.image.c.id) \
+                    .join(self.menu_item, self.image_in_menu.c.fk_menuitem == self.menu_item.c.id) \
+                    .join(self.target, self.target.c.fk_menu == self.menu_item.c.fk_menu) \
+                ).filter(and_(self.target.c.uuid != deleted_uuid, self.image.c.is_master == 1)).all()
+            masters_id_linked = map(lambda m:m.id, masters_linked)
+            if len(masters_id_linked) == 0:
+                filt_master = and_(self.image.c.is_master == 1)
+            else:
+                filt_master = and_(self.image.c.is_master == 1,not self.image.c.id.in_(masters_id_linked))
+
             images = session.query(Image).add_entity(ImagingLog).add_entity(MasteredOn).select_from(self.image \
                     .join(self.mastered_on, self.mastered_on.c.fk_image == self.image.c.id)
                     .join(self.imaging_log, self.mastered_on.c.fk_imaging_log == self.imaging_log.c.id)
                     .join(self.target, self.imaging_log.c.fk_target == self.target.c.id)
             )
-            images = images.filter(and_(self.target.c.uuid == target_uuid, self.image.c.is_master == 0)).all()
-            for image in images:
+            images = images.filter(
+                    and_(
+                        self.target.c.uuid == deleted_uuid,
+                        or_(
+                            self.image.c.is_master == 0,
+                            filt_master
+                        )
+                    )
+                ).all()
+
+            images_id = map(lambda m:m[0].id, images)
+
+            post_install_script_in_image = session.query(PostInstallScriptInImage) \
+                    .filter(self.post_install_script_in_image.c.fk_image.in_(images_id)).all()
+
+            image_on_imaging_server = session.query(ImageOnImagingServer) \
+                    .filter(self.image_on_imaging_server.c.fk_image.in_(images_id)).all()
+
+            for pisim in post_install_script_in_image:
+                self.logger.debug("Remove post_install_script_in_image %s %s"%(str(pisim.fk_image), str(pisim.fk_post_install_script)))
+                session.delete(pisim)
+
+            for iois in image_on_imaging_server:
+                self.logger.debug("Remove image_on_imaging_server %s %s"%(str(iois.fk_image), str(iois.fk_imaging_server)))
+                session.delete(iois)
+
+            to_delete = []
+            for image, imaging_log, mastered_on in images:
+                self.logger.debug("Remove mastered on %s %s"%(str(mastered_on.fk_image), str(mastered_on.fk_imaging_log)))
+                session.delete(mastered_on)
                 self.logger.debug("Remove Image %s"%(str(image.id)))
-                session.delete(image)
+                to_delete.append(image)
+                self.logger.debug("Remove imaging log %s"%(str(imaging_log.id)))
+                to_delete.append(imaging_log)
+            session.flush()
+
+            for item in to_delete:
+                session.delete(item)
             session.flush()
 
         session.close()
@@ -2065,6 +2110,23 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def __ImagesInEntityIsMaster(self, session, target_uuid, type, filt):
         q = self.__ImagesInEntityQuery(session, target_uuid, type, filt)
         q.filter(self.image.c.is_master == False)
+        return q
+
+    def getTargetOwnImages(self, target_uuid, target_type):
+        session = create_session()
+        if target_type == P2IT.ALL_COMPUTERS:
+            filt1 = and_(self.target.c.uuid == target_uuid, self.target.c.type.in_([P2IT.COMPUTER, P2IT.COMPUTER_IN_PROFILE]))
+        else:
+            filt1 = and_(self.target.c.uuid == target_uuid, self.target.c.type == target_type)
+
+        q = session.query(Image) \
+                .select_from(self.image \
+                    .join(self.mastered_on, self.image.c.id == self.mastered_on.c.fk_image) \
+                    .join(self.imaging_log, self.imaging_log.c.id == self.mastered_on.c.fk_imaging_log) \
+                    .join(self.target, self.target.c.id == self.imaging_log.c.fk_target)
+                ).filter(filt1).all()
+
+        session.close()
         return q
 
     def getTargetImages(self, target_uuid, target_type, start = 0, end = -1, filt = ''):
@@ -2109,7 +2171,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         for im, mi in q1:
             q = self.__mergeMenuItemInImage([(im, im.id)], [[im, mi]])
             q = q[0]
-            setattr(q, 'post_install_scripts', h_pis_by_imageid[im.id])
+            if h_pis_by_imageid.has_key(im.id):
+                setattr(q, 'post_install_scripts', h_pis_by_imageid[im.id])
             ret[mi.order] = q
 
         ret1 = []
