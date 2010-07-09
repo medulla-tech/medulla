@@ -2638,7 +2638,7 @@ def computersUnregister(computers_UUID, backup):
             for computer in targets:
                 computerUUID = computer.uuid
                 # get the list of image uuid
-                imageList = db.getTargetImages(computerUUID, P2IT.ALL_COMPUTERS)
+                imageList = db.getTargetOwnImages(computerUUID, P2IT.ALL_COMPUTERS)
                 imageList = map(lambda i:i.uuid, imageList)
 
                 d = i.computerUnregister(computerUUID, imageList, backup)
