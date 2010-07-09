@@ -48,7 +48,15 @@ if (isset($_POST['bsync'])) {
         $str = sprintf(_T("Synchronization launched on this target.", "imaging"), $label);
         new NotifyWidgetSuccess($str);
     } elseif (!$ret[0] and !isXMLRPCError()) {
-        new NotifyWidgetFailure(sprintf(_T("Synchronization failed for : %s", "imaging"), implode(', ', $ret[1])));
+         unset($_SESSION["imaging.isComputerInProfileRegistered_".$params['uuid']]);
+         unset($_SESSION["imaging.isComputerRegistered_".$params['uuid']]);
+         if (!xmlrpc_isComputerInProfileRegistered($params['uuid']) && !xmlrpc_isComputerRegistered($params['uuid'])) {
+            new NotifyWidgetFailure(sprintf(_T("This computer is no longer registered : %s", "imaging"), $params['uuid']));
+            header("Location: ".urlStrRedirect("base/computers/index", $params));
+            exit;
+         } else {
+            new NotifyWidgetFailure(sprintf(_T("Synchronization failed for : %s", "imaging"), implode(', ', $ret[1])));
+         }
     }
 }
 
