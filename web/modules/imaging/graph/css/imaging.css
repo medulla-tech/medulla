@@ -21,29 +21,29 @@ li.deleteimage a {
         color: #FFF;
 }
 
-.LOG_EMERG { 
+.LOG_EMERG {
   color: red;
 }
-.LOG_ALERT { 
+.LOG_ALERT {
   color: red;
 }
-.LOG_CRIT { 
+.LOG_CRIT {
   color: red;
 }
-.LOG_ERR { 
+.LOG_ERR {
   color: red;
 }
-.LOG_WARNING { 
+.LOG_WARNING {
   color: orange;
 }
-.LOG_NOTICE { 
+.LOG_NOTICE {
   color: navy;
 }
-.LOG_INFO { 
+.LOG_INFO {
   color: black;
 }
-.LOG_DEBUG { 
-  color: lightgray;
+.LOG_DEBUG {
+  color: gray;
 }
 
 td.imagelogs {
