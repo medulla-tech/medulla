@@ -228,6 +228,24 @@ class ImageLogs extends HtmlElement {
 
     var $errstr = "ERROR:";
 
+    var $colors = array(
+        'daemon.debug'=>'LOG_DEBUG',
+        'daemon.notice'=>'LOG_NOTICE',
+        'daemon.info'=>'LOG_INFO',
+        'daemon.warn'=>'LOG_WARNING',
+        'daemon.err'=>'LOG_ERR',
+        'syslog.debug'=>'LOG_DEBUG',
+        'syslog.notice'=>'LOG_NOTICE',
+        'syslog.info'=>'LOG_INFO',
+        'syslog.warn'=>'LOG_WARNING',
+        'syslog.err'=>'LOG_ERR',
+        'user.debug'=>'LOG_DEBUG',
+        'user.notice'=>'LOG_NOTICE',
+        'user.info'=>'LOG_INFO',
+        'user.warn'=>'LOG_WARNING',
+        'user.err'=>'LOG_ERR',
+    );
+
     function ImageLogs($logs) {
         assert(is_array($logs));
         $this->logs = $logs;
@@ -242,6 +260,12 @@ class ImageLogs extends HtmlElement {
             }  else if(strpos($msg, $this->errstr) === 0) {
                 $msg = "<span id=\"err$line\" class=\"LOG_ERR\">" . "$msg" . "</span>";
                 $errlines[] = $line;
+            }
+            foreach ($this->colors as $pattern=>$color) {
+                if (strpos($msg, $pattern) > 0) {
+                    $msg = "<span id=\"err$line\" class=\"$color\">" . "$msg" . "</span>";
+                    continue;
+                }
             }
             $lines[] = sprintf("<span class=\"linenumber\">%04d:</span>", $line) . " " . $msg;
         }
