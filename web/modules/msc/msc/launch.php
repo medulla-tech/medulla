@@ -62,7 +62,7 @@ function start_a_command($proxy = array()) {
     $submod = $path[1];
     $page = $path[2];
     $params = array();
-    foreach (array('start_script', 'clean_on_success', 'do_reboot', 'do_wol', 'next_connection_delay','max_connection_attempt', 'do_inventory', 'ltitle', 'parameters', 'papi', 'maxbw', 'deployment_intervals', 'max_clients_per_proxy') as $param) {
+    foreach (array('start_script', 'clean_on_success', 'do_reboot', 'do_wol', 'next_connection_delay','max_connection_attempt', 'do_inventory', 'ltitle', 'parameters', 'papi', 'maxbw', 'deployment_intervals', 'max_clients_per_proxy', 'launchAction') as $param) {
         $params[$param] = $post[$param];
     }
     $halt_to = array();
@@ -160,7 +160,7 @@ function check_date($post) {
 function check_for_real($s, $e) {
     $start = preg_split("/[ :-]/", $s);
     $end   = preg_split("/[ :-]/", $e);
-    
+
     for ($i = 0; $i < 6; $i++) {
         if ($start[$i] > $end[$i]) {
             return False;
@@ -260,41 +260,83 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     $f->add(new HiddenTpl("pid"),   array("value" => $pid,          "hide" => True));
     $f->add(new HiddenTpl("papi"),  array("value" => quick_get("papi"), "hide" => True));
     $f->add(new HiddenTpl("from"),  array("value" => $from,         "hide" => True));
-    $f->add(new TrFormElement(_T('Command name', 'msc'),                                new InputTpl('ltitle')), array("value" => $name));
-    $f->add(new TrFormElement(_T('Script parameters', 'msc'),                           new InputTpl('parameters')), array("value" => quick_get('parameters')));
-    $f->add(new TrFormElement(_T('Start "Wake On Lan" query if connection fails', 'msc'), new CheckboxTpl("do_wol")), array("value" => (quick_get('do_wol', True) == 'on' ? 'checked' : '')));
-    
-    
+
+    $action = quick_get('launchAction');
+    if (isset($action) && $action != '') {
+        $f->add(new HiddenTpl('launchAction'),  array("value" => quick_get('launchAction'),         "hide" => True));
+    }
+
     $start_script = 'on';
     $clean_on_success = 'on';
     if (quick_get('failure') == '1') {
         $start_script = quick_get('start_script', True);
         $clean_on_success = quick_get('clean_on_success', True);
     }
-    $f->add(new TrFormElement(_T('Start script', 'msc'),                                new CheckboxTpl("start_script")), array("value" => $start_script == 'on' ? 'checked' : ''));
-    $f->add(new TrFormElement(_T('Delete files after a successful execution', 'msc'),   new CheckboxTpl("clean_on_success")), array("value" => $clean_on_success == 'on' ? 'checked' : ''));
-    $f->add(new TrFormElement(_T('Do an inventory after a successful execution', 'msc'),new CheckboxTpl("do_inventory")), array("value" => quick_get('do_inventory', True) == 'on' ? 'checked' : ''));
-    $f->add(new TrFormElement(_T('Halt client after', 'msc'), new CheckboxTpl("issue_halt_to_done", _T("done", "msc"))), array("value" => quick_get('issue_halt_to_done', True) == 'on' ? 'checked' : ''));
-    /*$f->add(new TrFormElement('', new CheckboxTpl("issue_halt_to_failed", _T("failed", "msc"))), array("value" => $_GET['issue_halt_to_failed'] == 'on' ? 'checked' : ''));
-    $f->add(new TrFormElement('', new CheckboxTpl("issue_halt_to_over_time", _T("over time", "msc"))), array("value" => $_GET['issue_halt_to_over_time'] == 'on' ? 'checked' : ''));
-    $f->add(new TrFormElement('', new CheckboxTpl("issue_halt_to_out_of_interval", _T("out of interval", "msc"))), array("value" => $_GET['issue_halt_to_out_of_interval'] == 'on' ? 'checked' : ''));*/
 
-    $do_reboot = quick_get('do_reboot', True);
-    if (web_def_show_reboot()) {
-        $f->add(new TrFormElement(_T('Reboot client', 'msc'), new CheckboxTpl("do_reboot")), array("value" => $do_reboot == 'on' ? 'checked' : ''));
+    if (web_def_show_reboot() && quick_get('hide_do_reboot') != 1) {
+        $_POST['hide_do_reboot'] = 0;
+        $_GET['hide_do_reboot'] = 0;
     } else {
-        $f->add(new HiddenTpl("do_reboot"), array("value" => $do_reboot, "hide" => True));
+        $_POST['hide_do_reboot'] = 1;
+        $_GET['hide_do_reboot'] = 1;
     }
 
-    $f->add(new TrFormElement(_T('Maximum number of connection attempt', 'msc'),        new InputTpl("max_connection_attempt")), array("value" => quick_get('max_connection_attempt')));
-    $f->add(new TrFormElement(_T('Delay between two connections (minutes)', 'msc'),     new InputTpl("next_connection_delay")), array("value" => quick_get('next_connection_delay')));
-    $f->add(new TrFormElement(_T('The command may start after', 'msc'),                 new DynamicDateTpl('start_date')), array('ask_for_now' => 1, "value"=>quick_get('start_date')));
-    $f->add(new TrFormElement(_T('The command must stop before', 'msc'),                new DynamicDateTpl('end_date')), array('ask_for_never' => 1, "value"=>quick_get('end_date')));
-    $f->add(new TrFormElement(_T('Deployment interval', 'msc'),                         new InputTpl('deployment_intervals')), array("value" => quick_get('deployment_intervals')));
     $max_bw = quick_get('maxbw');
     if (!isset($max_bw) || $max_bw == '') { $max_bw = web_def_maxbw(); }
-    $f->add(new TrFormElement(_T('Max bandwidth (b/s)', 'msc'),                         new NumericInputTpl('maxbw')), array("value" => $max_bw));
-    if (web_force_mode()) {
+
+    $type_input = 0;
+    $type_checkbox = 1;
+    $type_date = 2;
+    $type_numeric = 3;
+    $parameters = array(
+        'ltitle'=>array($type_input, _T('Command name', 'msc'), $name),
+        'parameters'=>array($type_input, _T('Script parameters', 'msc'), quick_get('parameters')),
+        'do_wol'=>array($type_checkbox, _T('Start "Wake On Lan" query if connection fails', 'msc'), quick_get('do_wol', True)),
+        'start_script'=>array($type_checkbox, _T('Start script', 'msc'), $start_script),
+        'clean_on_success'=>array($type_checkbox, _T('Delete files after a successful execution', 'msc'), $clean_on_success),
+        'do_inventory'=>array($type_checkbox, _T('Do an inventory after a successful execution', 'msc'), quick_get('do_inventory', True)),
+        "issue_halt_to_done"=>array($type_checkbox, _T('Halt client after', 'msc'), quick_get('issue_halt_to_done', True), _T("done", "msc")),
+#        "issue_halt_to_failed"=>array($type_checkbox, '', $_GET['issue_halt_to_failed'], _T("failed", "msc")),
+#        "issue_halt_to_over_time"=>array($type_checkbox, '', $_GET['issue_halt_to_over_time'], _T("over time", "msc")),
+#        "issue_halt_to_out_of_interval"=>array($type_checkbox, '', $_GET['issue_halt_to_out_of_interval'], _T("out of interval", "msc")),
+        'do_reboot'=>array($type_checkbox, _T('Reboot client', 'msc'), quick_get('do_reboot', True)),
+        'max_connection_attempt'=>array($type_input, _T('Maximum number of connection attempt', 'msc'), quick_get('max_connection_attempt')),
+        'next_connection_delay'=>array($type_input, _T('Delay between two connections (minutes)', 'msc'), quick_get('next_connection_delay')),
+        'start_date'=>array($type_date, _T('The command may start after', 'msc'), quick_get('start_date'), array('ask_for_now' => 1)),
+        'end_date'=>array($type_date, _T('The command must stop before', 'msc'), quick_get('end_date'), array('ask_for_never' => 1)),
+        'deployment_intervals'=>array($type_input, _T('Deployment interval', 'msc'), quick_get('deployment_intervals')),
+        'maxbw'=>array($type_numeric, _T('Max bandwidth (b/s)', 'msc'), $max_bw),
+
+    );
+    $macro_hide = array(
+        'issue_halt_to_done'=>'issue_halt',
+        'issue_halt_to_failed'=>'issue_halt',
+        'issue_halt_to_over_time'=>'issue_halt',
+        'issue_halt_to_out_of_interval'=>'issue_halt',
+    );
+
+    foreach ($parameters as $p=>$value) {
+        if (quick_get('hide_'.$p) || (isset($macro_hide[$p]) && quick_get('hide_'.$macro_hide[$p]))) {
+            $f->add(new HiddenTpl($p), array("value" => $parameters[$p][2], "hide" => True));
+        } else {
+            if ($parameters[$p][0] == $type_input) {
+                $f->add(new TrFormElement($parameters[$p][1], new InputTpl($p)), array("value" => $parameters[$p][2]));
+            } elseif ($parameters[$p][0] == $type_checkbox) {
+                if (count($parameters[$p] == 4)) {
+                    $f->add(new TrFormElement($parameters[$p][1], new CheckboxTpl($p, $parameters[$p][3])), array("value" => $parameters[$p][2] == 'on' ? 'checked' : ''));
+                } else {
+                    $f->add(new TrFormElement($parameters[$p][1], new CheckboxTpl($p)), array("value" => $parameters[$p][2] == 'on' ? 'checked' : ''));
+                }
+            } elseif ($parameters[$p][0] == $type_date) {
+                $parameters[$p][3]['value'] = $parameters[$p][2];
+                $f->add(new TrFormElement($parameters[$p][1], new DynamicDateTpl($p)), $parameters[$p][3]);
+            } elseif ($parameters[$p][0] == $type_numeric) {
+                $f->add(new TrFormElement($parameters[$p][1], new NumericInputTpl($p)), array("value" => $parameters[$p][2]));
+            }
+        }
+    }
+
+    if (web_force_mode() || quick_get('hide_copy_mode')) {
         $f->add(new HiddenTpl("copy_mode"),         array("value" => web_def_mode(), "hide" => True));
     } else {
         $rb = new RadioTpl("copy_mode");
@@ -305,7 +347,7 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     }
 
     /* Only display local proxy button on a group and if allowed */
-    if (isset($_GET['gid']) && strlen($_GET['gid']) && web_allow_local_proxy()) {
+    if (isset($_GET['gid']) && strlen($_GET['gid']) && web_allow_local_proxy() && !quick_get('hide_local_proxy')) {
         $f->add(new TrFormElement(_T('Deploy using a local proxy', 'msc'),
                                   new CheckboxTpl("local_proxy")), array("value" => ''));
     }
@@ -327,10 +369,10 @@ if (!isset($_GET['badvanced']) && $_GET['uuid'] && !isset($_POST['launchAction']
                            );
     $msc_host = new RenderedMSCHost($machine);
     $msc_host->ajaxDisplay();
-    
+
     $msc_actions = new RenderedMSCActions(msc_script_list_file(), $machine->hostname, array('uuid'=>$_GET['uuid']));
     $msc_actions->display();
-    
+
     $ajax = new AjaxFilter(urlStrRedirect("base/computers/ajaxPackageFilter"), "container", array("uuid" => $machine->uuid, "hostname" => $machine->hostname));
     $ajax->display();
     $ajax->displayDivToUpdate();

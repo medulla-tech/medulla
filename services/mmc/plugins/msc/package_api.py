@@ -36,6 +36,7 @@ from sqlalchemy.orm import create_session
 from mmc.plugins.msc import MscConfig
 from mmc.plugins.msc.database import MscDatabase
 from mmc.plugins.msc.mirror_api import MirrorApi
+from mmc.plugins.msc.qaction import qa_list_files
 
 from pulse2.managers.group import ComputerGroupManager
 import pulse2.apis.clients.package_get_api
@@ -140,11 +141,11 @@ class SendBundleCommand:
                 p_api, pid, _ = self.porders[p]
                 if p_api == self.p_api:
                     self.p_api_pids.append(pid)
-            
+
             d = PackageGetA(self.p_api).getPackagesDetail(self.p_api_pids)
             d.addCallbacks(self.setPackagesDetail, self.onError)
         else:
-            self.createBundle()        
+            self.createBundle()
 
     def setPackagesDetail(self, packages):
         for i in range(len(self.p_api_pids)):
@@ -178,7 +179,7 @@ class SendBundleCommand:
             pinfos = self.packages[pid]
             ppath = self.ppaths[pid]
             params = self.params.copy()
-            
+
             if int(order) == int(self.first_order):
                 params['do_wol'] = self.do_wol
             else:
@@ -190,8 +191,8 @@ class SendBundleCommand:
             else:
                 params['do_inventory'] = 'off'
                 params['issue_halt_to'] = ''
-            
-            # override possible choice of do_reboot from the gui by the one declared in the package 
+
+            # override possible choice of do_reboot from the gui by the one declared in the package
             # (in bundle mode, the gui does not offer enough choice to say when to reboot)
             params['do_reboot'] = pinfos['do_reboot']
             cmd = prepareCommand(pinfos, params)
@@ -209,7 +210,7 @@ class SendBundleCommand:
             add.addCallbacks(self.sendResult, self.onError)
         else:
             self.onError("Error while creating the bundle")
- 
+
 def prepareCommand(pinfos, params):
     """
     @param pinfos: getPackageDetail dict content
@@ -276,8 +277,11 @@ def prepareCommand(pinfos, params):
             localtime[5]
         )
 
-    ret['files'] = map(lambda hm: hm['id']+'##'+hm['path']+'/'+hm['name'], pinfos['files'])
-    return ret    
+    if pinfos['files'] != None:
+        ret['files'] = map(lambda hm: hm['id']+'##'+hm['path']+'/'+hm['name'], pinfos['files'])
+    else:
+        ret['files'] = ''
+    return ret
 
 
 class SendPackageCommand:
@@ -301,8 +305,24 @@ class SendPackageCommand:
         return self.deferred.callback(id_command)
 
     def send(self):
-        d = PackageGetA(self.p_api).getPackageDetail(self.pid)
-        d.addCallbacks(self.setPackage, self.onError)
+        if (self.pid == None or self.pid == '') and self.params.has_key('launchAction'):
+            # this is a QA passing by the advanced page
+            idcmd = self.params['launchAction']
+            result, qas = qa_list_files()
+            if result and idcmd in qas:
+                self.params['command'] = qas[idcmd]['command']
+            else:
+                logging.getLogger().warn("Failed to get the QA %s"%(idcmd))
+
+            self.pinfos = {
+                    "files":None,
+                    "command":{"command":self.params['command']}
+            }
+            self.pid = None
+            self.setRoot('')
+        else:
+            d = PackageGetA(self.p_api).getPackageDetail(self.pid)
+            d.addCallbacks(self.setPackage, self.onError)
 
     def setPackage(self, package):
         if not package:
@@ -314,7 +334,7 @@ class SendPackageCommand:
 
     def setRoot(self, root):
         logging.getLogger().debug(root)
-        if not root:
+        if self.pid != None and self.pid != '' and not root:
             return self.onError("Can't get path for package %s" % self.pid)
         self.root = root
         # Prepare command parameters for database insertion
@@ -436,7 +456,7 @@ class GetPackagesUuidFiltered:
 
     def uuidFilter2(self, package_apis):
         self.package_apis = package_apis
-        # warn as we do pop in package retrival but we want to keep the packages 
+        # warn as we do pop in package retrival but we want to keep the packages
         # in the good order, we need to reverse the package api list order
         self.package_apis.reverse()
         d = MirrorApi().getMirror(self.machine)

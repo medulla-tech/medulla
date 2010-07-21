@@ -43,7 +43,7 @@ from pulse2.managers.group import ComputerGroupManager
 from pulse2.managers.location import ComputerLocationManager
 from mmc.plugins.msc.database import MscDatabase
 from mmc.plugins.msc.config import MscConfig
-from mmc.plugins.msc.qaction import qa_list_files
+from mmc.plugins.msc.qaction import qa_list_files, qa_detailled_info
 from mmc.plugins.msc.machines import Machines, Machine
 from mmc.plugins.msc.download import MscDownloadedFiles, MscDownloadProcess
 from mmc.plugins.dyngroup.database import DyngroupDatabase
@@ -119,6 +119,9 @@ def getRepositoryPath():
 ##
 def msc_script_list_file():
     return qa_list_files()
+
+def msc_script_detailled_info(file):
+    return xmlrpcCleanup(qa_detailled_info(file))
 
 ##
 # exec
@@ -292,6 +295,7 @@ class RpcProxy(RpcProxyI):
         #get_group_results(self, ctx, gid, min, max, filter):
         if gid:
             target = ComputerGroupManager().get_group_results(ctx, gid, 0, -1, '', True)
+
         g = mmc.plugins.msc.package_api.SendPackageCommand(ctx, p_api, pid, target, params, mode, gid, proxies = proxy)
         g.deferred = defer.Deferred()
         g.send()

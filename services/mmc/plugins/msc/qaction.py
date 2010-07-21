@@ -40,7 +40,7 @@ class Qaction:
         ret = {}
         for k in self.result:
             ret[k] = self.result[k]
-        
+
         ret['fullfilename'] = self.fullfilename
         ret['filename'] = self.filename
         ret['titleen'] = self.result['title']
@@ -50,7 +50,7 @@ class Qaction:
     def _parse(self):
         f = open(self.fullfilename, 'r')
         p1 = re.compile('=')
-    
+
         for line in f:
             kw = p1.split(line)
             if len(kw) == 2:
@@ -59,7 +59,7 @@ class Qaction:
                 ind = kw[0]
                 kw.remove(ind)
                 self.result[ind] = '='.join(kw)
-    
+
         f.close()
 
 def qa_list_files():
@@ -70,10 +70,19 @@ def qa_list_files():
     result = {}
     d = dircache.listdir(path)
     d = d[:]
-    
+
     for filename in dircache.listdir(path):
         if filename != '..' and filename != '.' and os.path.exists(os.path.join(path, filename)) and re.compile('\.msc$').search(filename):
             result[filename] = Qaction(filename).read()
 
     return [True, result]
+
+def qa_detailled_info(filename):
+    path = MscConfig().qactionspath
+    if not os.path.exists(os.path.join(path, filename)):
+        return [False, "This quick action don't exists!", filename]
+
+    qa = Qaction(filename)
+    qa = qa.read()
+    return [True, qa]
 
