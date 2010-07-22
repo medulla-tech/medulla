@@ -56,6 +56,7 @@ import re
 import os
 from time import struct_time, gmtime, strftime
 import inspect
+import posixpath
 
 # python 2.3 fallback for set() in xmlrpcleanup
 try:
@@ -430,14 +431,7 @@ def splitComputerPath(path):
         tail = path
 
     # Split entity path and computer FQDN
-    a_tail = tail.split('/')
-    if len(a_tail) > 1:
-        a_tail.pop(0)
-        fqdn = a_tail.pop(len(a_tail)-1)
-        entities = '/%s'%('/'.join(a_tail))
-    else:
-        fqdn = a_tail[0]
-        entities = ''
+    entities, fqdn = posixpath.split(tail)
 
     if entities and entities != '/':
         if not entities.startswith('/'):
