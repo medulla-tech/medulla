@@ -79,7 +79,7 @@ foreach ($services as $entry) {
 $l = new OptimizedListInfos($a_label, _T("Label", "imaging"));
 $l->setParamInfo($list_params);
 $l->addExtraInfo($a_desc, _T("Description", "imaging"));
-$l->addExtraInfo($a_in_boot_menu, _T("In bootmenu", "imaging"));
+$l->addExtraInfo($a_in_boot_menu, _T("In boot menu", "imaging"));
 $l->addActionItemArray($addActions);
 /* should we be able to to that ?!
 $l->addActionItem(
