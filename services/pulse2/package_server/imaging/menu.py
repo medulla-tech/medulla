@@ -30,7 +30,7 @@ import os
 import logging
 import time
 import shutil
-
+import stat
 
 def isMenuStructure(menu):
     """
@@ -615,14 +615,21 @@ class ImagingImageItem(ImagingItem):
                 self.logger.error("Can't create post-installation script folder %s: %s" % (postinstdir, e))
                 raise
 
-            order = 0
+            order = 1  # keep 0 for later use
             for script in self.post_install_script:
                 postinst = os.path.join(postinstdir, self.POSTINST % order)
                 try:
+                    # write header
                     f = file(postinst, 'w+')
+                    f.write('#!/bin/sh\n')
+                    f.write('\n')
+                    f.write('echo "==> postinstall script #%d : %s"\n' % (order, script['name']))
+                    f.write('set -v\n')
+                    f.write('\n')
                     # FIXME: any specific encoding to use ?
                     f.write(script['value'])
                     f.close()
+                    os.chmod(postinst, stat.S_IRUSR | stat.S_IXUSR)
                     self.logger.debug('Successfully wrote script: %s' % postinst)
                 except OSError, e:
                     self.logger.error("Can't update post-installation script %s: %s" % (postinst, e))
