@@ -39,11 +39,11 @@ $login = "";
 if (isset($_POST["bConnect"])) {
     $login = $_POST["username"];
     $pass = $_POST["password"];
-    
+
     /* Session creation */
     $ip = ereg_replace('\.','',$_SERVER["REMOTE_ADDR"]);
     $sessionid = md5 (time() . $ip . mt_rand());
-    
+
     session_destroy();
     session_id($sessionid);
     session_start();
@@ -241,7 +241,7 @@ if (isset($error)) {
   </tr>
 <?
 
-if (is_file("license.php")) {
+if (isCommunityVersion() && is_file("license.php")) {
     require("license.php");
 }
 

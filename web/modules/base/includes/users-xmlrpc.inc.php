@@ -22,7 +22,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-function check_auth($login, $pass) {    
+function check_auth($login, $pass) {
     $param = array();
     $param[] = $login;
     $param[] = prepare_string($pass);
@@ -33,21 +33,36 @@ function auth_user ($login, $pass)
 {
     global $conf;
     global $error;
-    
+
     if (($login == "") || ($pass == "")) return false;
 
     $param = array();
     $param[] = $login;
     $param[] = prepare_string($pass);
-    
-    $ret = xmlCall("base.ldapAuth",$param);    
+
+    $ret = xmlCall("base.ldapAuth",$param);
     if ($ret != "1") {
         if (!isXMLRPCError()) {
             $error = _("Invalid login");
         }
         return false;
     }
-    
+
+    $subscription = getSubscriptionInformation(true);
+    if ($subscription['is_subsscribed']) {
+        $msg = array();
+        if ($subscription['too_much_users']) {
+            $msg[] = _("users");
+        }
+        if ($subscription['too_much_computers']) {
+            $msg[] = _("computers");
+        }
+        $warn = array(sprintf(_('WARNING: The number of registered %s is exceeding your license.'), implode($msg, ' and ')));
+        $warn[] = _('Please contact your administrator for more information. If you are an administrator, please go to the license status page for more information.');
+
+        new NotifyWidgetWarning(implode($warn, '<br/>'));
+    }
+
     return true;
 }
 
@@ -61,7 +76,7 @@ function get_users() {
     $resTab = array();
     /* FIXME: argh ! */
     foreach ($tab as $tmpTab)
-        $resTab[] = $tmpTab["uid"];    
+        $resTab[] = $tmpTab["uid"];
     return $resTab;
 }
 
@@ -179,6 +194,18 @@ function changeUserTelephoneNumbers($uid, $numbers) {
     foreach($numbers as $number) if (strlen($number)) $update[] = $number;
     if (empty($update)) $update = null;
     xmlCall("base.changeUserAttributes", array($uid, "telephoneNumber", $update));
+}
+
+function getSubscriptionInformation($is_dynamic) {
+    return xmlCall("base.getSubscriptionInformation", array($is_dynamic));
+}
+
+function isCommunityVersion() {
+    try {
+        return xmlCall('base.isCommunityVersion');
+    } catch (Exception $e) {
+        return true;
+    }
 }
 
 ?>

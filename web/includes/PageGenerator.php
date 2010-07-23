@@ -691,9 +691,9 @@ class OptimizedListInfos extends ListInfos {
         $count = $this->getItemCount();
         $this->displayNavbar($navbar);
         echo "<p class=\"listInfos\">";
-        
-        /* 
-         * Management of the numbers "start" and "end" to display depending on the maxperpage set in the selector 
+
+        /*
+         * Management of the numbers "start" and "end" to display depending on the maxperpage set in the selector
          * These numbers are more user-friendly and do not begin with 0
          */
         echo $this->name." <strong>".min($this->startreal + 1, $count) . "</strong>\n ";
@@ -883,12 +883,12 @@ class SimpleNavBar extends HtmlElement {
         </script>
 <?
     }
-    
+
     function displayGotoPageField() {
         echo '<script type="text/javascript">
             gotoPage = function(input) {
                 page = input.value;
-                if (page <= '.$this->nbpages.') { 
+                if (page <= '.$this->nbpages.') {
                     end = ('.$this->max.' * page);
                     start = end - '.$this->max.';
                     end -= 1;
@@ -899,9 +899,9 @@ class SimpleNavBar extends HtmlElement {
         </script>';
         echo '<span class="pagination">'._("Go to page").': <input type="input" size="2" onchange="gotoPage(this)" /></span>';
     }
-    
+
     function displayPagesNumbers() {
-        # pages links 
+        # pages links
         # show all pages
         if ($this->nbpages <= 10) {
             if($this->nbpages > 1) {
@@ -914,7 +914,7 @@ class SimpleNavBar extends HtmlElement {
         }
         # show start/end pages and current page
         else {
-            echo '<span class="pagination">';        
+            echo '<span class="pagination">';
             for($i=1; $i<=3; $i++) {
                 echo $this->makePageLink($i);
             }
@@ -939,10 +939,10 @@ class SimpleNavBar extends HtmlElement {
             for($i=$this->nbpages-2; $i<=$this->nbpages; $i++) {
                 echo $this->makePageLink($i);
             }
-            echo '</span>';            
-        }   
+            echo '</span>';
+        }
     }
-    
+
     function makePageLink($page) {
         $end = ($this->max * $page);
         $start = $end - $this->max;
@@ -1026,7 +1026,7 @@ class AjaxNavBar extends SimpleNavBar {
             // Display the maxperpage selector
             $this->displaySelectMax($this->jsfunc);
         }
-                        
+
         // show goto page field
         if ($this->nbpages > 20) {
             $this->displayGotoPageField();
@@ -1040,10 +1040,10 @@ class AjaxNavBar extends SimpleNavBar {
             $end = $this->curstart - 1;
             echo "<li class=\"previousList\"><a href=\"#\" onClick=\"" . $this->jsfunc . "('" . $this->filter . "','$start','$end', document.getElementById('maxperpage')); return false;\">" . _("Previous") . "</a></li>\n";
         }
-        
+
         // display pages numbers
-        $this->displayPagesNumbers();        
-        
+        $this->displayPagesNumbers();
+
         # next link
         if (($this->curend + 1) >= $this->itemcount)
             echo "<li class=\"nextListInactive\">"._("Next")."</li>\n";
@@ -1343,7 +1343,7 @@ if(isset($this->storedfilter)) {
         document.Form.param.value = "<?=$this->storedfilter?>";
 <?
 }
-?> 
+?>
         var maxperpage = 10;
         if(document.getElementById('maxperpage') != undefined)
             maxperpage = document.getElementById('maxperpage').value;
@@ -2487,7 +2487,15 @@ class Table extends HtmlContainer {
 
     function Table($options = array()) {
         $this->HtmlContainer();
+        $this->tr_style = '';
+        $this->td_style = '';
         $this->options = $options;
+        if (isset($options['tr_style'])) { $this->tr_style = $options['tr_style']; }
+        if (isset($options['td_style'])) { $this->td_style = $options['td_style']; }
+    }
+
+    function setLines($lines) {
+        $this->lines = $lines;
     }
 
     function begin() {
@@ -2496,6 +2504,20 @@ class Table extends HtmlContainer {
 
     function end() {
         return "</table>";
+    }
+
+    function content() {
+        $str = '';
+        foreach ($this->lines as $line) {
+            $str .= sprintf("<tr%s><td%s>%s</td></tr>", $this->tr_style, $this->td_style, implode(sprintf('</td><td%s>', $this->td_style), $line));
+        }
+        return $str;
+    }
+
+    function display() {
+        print $this->begin();
+        print $this->content();
+        print $this->end();
     }
 
 }

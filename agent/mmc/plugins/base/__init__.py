@@ -34,6 +34,7 @@ from mmc.plugins.base.provisioning import ProvisioningManager
 from mmc.plugins.base.externalldap import ExternalLdapAuthenticator, ExternalLdapProvisioner
 from mmc.plugins.base.ldapconnect import LDAPConnection
 from mmc.support.uuid import uuid1
+from mmc.support.mmctools import Singleton
 
 from mmc.support import mmctools
 from mmc.support.mmctools import cSort, rchown, copytree
@@ -136,6 +137,9 @@ def activate():
     # Issue a warning if the default user group doesn't exist
     if not ldapObj.existGroup(ldapObj.defaultUserGroup):
         logger.warning("The default user group %s does not exist. Please create it before adding new users." % ldapObj.defaultUserGroup)
+
+    # Plug the subscription system
+    SubscriptionManager().init(config)
 
     # Register authenticators
     AuthenticationManager().register("baseldap", BaseLdapAuthenticator)
@@ -431,6 +435,12 @@ def hasAuditWorking():
         return True
     else:
         return False
+
+def getSubscriptionInformation(is_dynamic = False):
+    return xmlrpcCleanup(SubscriptionManager().getInformations(is_dynamic))
+
+def isCommunityVersion():
+    return xmlrpcCleanup(SubscriptionManager().isCommunity())
 
 # Status methods
 from mmc.plugins.base.status import getLdapRootDN, getDisksInfos, getMemoryInfos, getUptime, listProcess
@@ -2125,6 +2135,9 @@ class Computers(ldapUserGroupControl, ComputerI):
         search = self.l.search_s(self.baseComputersDN, ldap.SCOPE_SUBTREE, "(&(objectClass=computerObject)(|(cn=%s)(displayName=%s)))" % (filt, filt), None)
         return search
 
+    def getTotalComputerCount(self):
+        return 0
+
     def getComputerCount(self, ctx, params):
         """
         Never return the number of computers, we are in a LDAP, so we can't acces to a limited host list
@@ -2383,3 +2396,58 @@ class LogView:
                     ret = res
                     break
         return ret
+
+
+class SubscriptionManager(Singleton):
+    def init(self, config):
+        self.config = config
+        self.config.readSubscriptionConf()
+        self.logging = logging.getLogger()
+
+    def getInformations(self, dynamic = False):
+        if not self.config.is_subscribe_done:
+            return { 'is_subsscribed': False }
+        ret = {
+            'is_subsscribed':True,
+            'product_name':self.config.subs_product_name,
+            'vendor_name':self.config.subs_vendor_name,
+            'vendor_mail':self.config.subs_vendor_mail,
+            'customer_name':self.config.subs_customer_name,
+            'customer_mail':self.config.subs_customer_mail,
+            'comment':self.config.subs_comment,
+            'users':self.config.subs_users,
+            'computers':self.config.subs_computers,
+            'support_mail':self.config.subs_support_mail,
+            'support_phone':self.config.subs_support_phone,
+            'support_comment':self.config.subs_support_comment
+        }
+        if dynamic:
+            # we add the number of user and computers we have right now
+            users = searchUserAdvanced()
+            ret['installed_users'] = len(users)
+            ret['too_much_users'] = (ret['installed_users'] > ret['users'])
+            ret['installed_computers'] = ComputerManager().getTotalComputerCount()
+            ret['too_much_computers'] = (ret['installed_computers'] > ret['computers'])
+        return ret
+
+    def checkUsers(self):
+        if self.config.subs_users == 0:
+            return True
+        users = searchUserAdvanced()
+        if len(users) < self.config.subs_users:
+            return True
+        return False
+
+    def checkComputers(self):
+        if self.config.subs_computers == 0:
+            return True
+        if ComputerManager().getTotalComputerCount() < self.config.subs_computers:
+            return True
+        return False
+
+    def checkAll(self):
+        return self.checkUsers() and self.checkComputers()
+
+    def isCommunity(self):
+        return not self.config.is_subscribe_done
+

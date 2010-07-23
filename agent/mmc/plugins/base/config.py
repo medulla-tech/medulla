@@ -26,9 +26,10 @@ Configuration class for the MMC base plugin.
 
 from mmc.support.config import PluginConfig
 from mmc.plugins.base.ldapconnect import LDAPConnectionConfig
+from mmc.plugins.base.subscription import SubscriptionConfig
 from mmc.core.audit.config import AuditConfig
 
-class BasePluginConfig(PluginConfig, LDAPConnectionConfig, AuditConfig):
+class BasePluginConfig(PluginConfig, LDAPConnectionConfig, AuditConfig, SubscriptionConfig):
 
     def readConf(self):
         PluginConfig.readConf(self)
@@ -57,7 +58,7 @@ class BasePluginConfig(PluginConfig, LDAPConnectionConfig, AuditConfig):
 
         self.baseDN = self.getdn('ldap', 'baseDN')
         self.baseUsersDN = self.getdn('ldap', 'baseUsersDN')
-            
+
         # Where LDAP computer objects are stored
         # For now we ignore if the option does not exist, because it breaks
         # all existing intallations

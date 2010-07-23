@@ -25,7 +25,7 @@
 # description: MMC agent
 
 # Variables
-DESC="Mandriva Management Console : mmc-agent" 
+DESC="Mandriva Management Console : mmc-agent"
 DAEMON="/usr/sbin/mmc-agent"
 PIDFILE="/var/run/mmc-agent.pid"
 

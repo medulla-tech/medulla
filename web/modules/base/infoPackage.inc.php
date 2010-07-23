@@ -64,7 +64,10 @@ $submod->setPriority(10000);
 
 $page = new Page("index",_("Default status page"));
 $page->setFile("modules/base/status/index.php");
+$submod->addPage($page);
 
+$page = new Page("support",_("Support page"));
+$page->setFile("modules/base/status/support.php");
 $submod->addPage($page);
 
 $mod->addSubmod($submod);
@@ -134,7 +137,7 @@ $page->setFile("modules/base/users/loguser.php",
 $submod->addPage($page);
 
 $page = new Page("logview",_("Action details"));
-$page->setFile("modules/base/users/logview.php", 
+$page->setFile("modules/base/users/logview.php",
                    array("AJAX" =>False,"visible"=>False));
 $submod->addPage($page);
 
@@ -152,7 +155,7 @@ $page = new Page("backup",_("Backup user files"));
 $page->setFile("modules/base/users/backup.php",
                array("noHeader"=>True,"visible"=>False));
 $submod->addPage($page);
-                              
+
 $page = new Page("passwd",_("Change user password"));
 if ($_SESSION["login"]=='root') {
     $page->setOptions(array("visible"=>False));
@@ -217,12 +220,12 @@ if (has_audit_working()) {
     $page = new Page("indexbase",_T("Users and Groups", "base"));
     $page->setFile("modules/base/audit/indexbase.php", array("AJAX" =>False,"visible"=>True));
     $submod->addPage($page);
-    
+
     if(in_array("samba", $_SESSION["modulesList"])) {
         $page = new Page("indexsamba",_T("Samba", "base"));
         $page->setFile("modules/base/audit/indexsamba.php", array("AJAX" =>False,"visible"=>True));
         $submod->addPage($page);
-    }    
+    }
 
     if(in_array("mail", $_SESSION["modulesList"])) {
         $page = new Page("indexmail",_T("Mail", "base"));
@@ -247,7 +250,7 @@ if (has_audit_working()) {
         $page->setFile("modules/base/audit/indexproxy.php", array("AJAX" =>False,"visible"=>True));
         $submod->addPage($page);
     }
-    
+
     $page = new Page("searchbar");
     $page->setFile("modules/base/includes/searchbar.php", array("AJAX" =>True,"visible"=>False));
     $submod->addPage($page);
