@@ -98,6 +98,13 @@ class ComputerI:
         """
         pass
 
+    def getTotalComputerCount(self):
+        """
+        Get the computer full count (not depending of
+        the user context)
+        """
+        pass
+
     def getRestrictedComputersListLen(self, ctx, params):
         """
         Get a limited computer list size
@@ -234,6 +241,11 @@ class ComputerManager(Singleton):
         klass = self.components[self.main]
         instance = klass()
         return instance.getComputerCount(ctx, filt)
+
+    def getTotalComputerCount(self):
+        klass = self.components[self.main]
+        instance = klass()
+        return instance.getTotalComputerCount()
 
     def getRestrictedComputersListLen(self, ctx, filt = None, advanced = True):
         klass = self.components[self.main]
