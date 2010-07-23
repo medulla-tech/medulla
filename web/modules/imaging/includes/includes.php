@@ -271,7 +271,7 @@ class ImageLogs extends HtmlElement {
         }
 
         foreach($errlines as $line) {
-            print "<p class =\"LOG_ERR\" onClick=\"javascript:new Element.scrollTo('err202');\">Click here to scroll to error on line $line.</p>";
+            print "<p class =\"LOG_ERR\" onClick=\"javascript:new Element.scrollTo('err$line');\">Click here to scroll to error on line $line.</p>";
         }
 
         $l = new ListInfos($lines, _T("Backup log messages", "imaging"));
