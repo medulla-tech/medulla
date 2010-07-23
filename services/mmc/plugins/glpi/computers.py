@@ -166,6 +166,9 @@ class GlpiComputers(ComputerI):
             pass
         return self.glpi.getRestrictedComputersList(ctx, min, max, filt, advanced, justId, toH)
 
+    def getTotalComputerCount(self):
+        return self.glpi.getTotalComputerCount()
+
     def getComputerCount(self, ctx, filt = None):
         if filt == None or filt == '':
             filt = {}

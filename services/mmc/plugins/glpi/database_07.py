@@ -642,6 +642,14 @@ class Glpi07(DyngroupDatabaseHelper):
         session.close()
         return ret
 
+    def getTotalComputerCount(self):
+        session = create_session()
+        query = session.query(Machine)
+        query = self.__filter_on(query)
+        c = query.count()
+        session.close()
+        return c
+
     def getComputerCount(self, ctx, filt = None):
         """
         Same as getRestrictedComputersListLen

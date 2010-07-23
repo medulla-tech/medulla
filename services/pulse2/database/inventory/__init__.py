@@ -268,6 +268,12 @@ class Inventory(DyngroupDatabaseHelper):
         else:
             return query.group_by(self.machine.c.id)
 
+    def getTotalComputerCount(self):
+        session = create_session()
+        c = session.query(Machine).count()
+        session.close()
+        return c
+
     def getMachinesOnly(self, ctx, pattern = None):
         """
         Return all available machines

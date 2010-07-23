@@ -77,7 +77,7 @@ class Glpi(DyngroupDatabaseHelper):
             'getAllModels', 'getAllNetworks', 'getAllOs', 'getAllOsSps', 'getAllSoftwares', 'getAllVersion4Software', 'glpi_version_new', 'getMachineByMacAddress', \
             'getMachineByComment', 'getMachineByContact', 'getMachineByContactNum', 'getMachineByEntity', 'getMachineByGroup', 'getMachineByHostname', \
             'getMachineByLocation', 'getMachineByModel', 'getMachineByNetwork', 'getMachineByOs', 'getMachineByOsSp', 'getMachineBySoftware', 'getMachineBySoftwareAndVersion', \
-            'glpi_chosen_version', 'getLocationsFromPathString', 'getLocationParentPath'
+            'glpi_chosen_version', 'getLocationsFromPathString', 'getLocationParentPath', 'getTotalComputerCount'
             ]
         for i in methods:
             setattr(self, i, getattr(self.database, i))

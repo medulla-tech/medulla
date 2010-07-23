@@ -141,6 +141,9 @@ class InventoryComputers(ComputerI):
             else:
                 return self.inventory.getComputersOptimized(ctx, filt)
 
+    def getTotalComputerCount(self):
+        return self.inventory.getTotalComputerCount()
+
     def getComputerCount(self, ctx, filt = None):
         return self.getRestrictedComputersListLen(ctx, filt)
 
