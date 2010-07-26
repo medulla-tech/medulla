@@ -202,9 +202,11 @@ function getSubscriptionInformation($is_dynamic) {
     return xmlCall("base.getSubscriptionInformation", array($is_dynamic));
 }
 
+
 function isCommunityVersion() {
+    global $conf;
     try {
-        return xmlCall('base.isCommunityVersion');
+        return $conf["global"]["community"];
     } catch (Exception $e) {
         return true;
     }

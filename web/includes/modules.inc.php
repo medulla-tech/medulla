@@ -86,13 +86,16 @@ function fetchIniFile() {
 
     /* Put the quantities proposed in the selector for the maxperpage value in
        an array */
-    if(isset($conf["global"]["pagination"])) {
+    if (isset($conf["global"]["pagination"])) {
         $conf["global"]["pagination"] = explode(' ', $conf["global"]["pagination"]);
     } else {
         /* Default values */
         $conf["global"]["pagination"] = array(10, 20, 50, 100);
     }
 
+    if (!isset($conf["global"]["community"])) {
+        $conf["global"]["community"] = True;
+    }
     /* Set default option for MMC agent access */
     foreach ($conf as $key => $value) {
         if (strstr($key, "server_")) {
@@ -119,7 +122,7 @@ function fetchIniFile() {
             }
         }
     }
-    
+
 }
 
 
@@ -133,7 +136,7 @@ function includeInfoPackage($dirA) {
             require_once("$path/infoPackage.inc.php");
         }
     }
-    
+
     $MMCApp =& MMCApp::getInstance();
     $MMCApp->process();
 }
@@ -174,7 +177,7 @@ function autoGenerateNavbar() {
             foreach($submod->getPages() as $page) {
                 $add = $page->hasAccessAndVisible($mod, $submod);
                 if ($add) break;
-            }            
+            }
             if ($add) $prio = insert_without_delete($prio,$submod->getPriority(),$submod);
         }
     }
