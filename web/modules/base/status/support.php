@@ -105,7 +105,7 @@ $lines[]= array($labels['computers'], sprintf("<p%s>%s / %s</p>", $user_style, $
 
 $table = new Table();
 $table->setLines($lines);
-$table->display();
+$table->displayTable(true);
 
 
 ?>

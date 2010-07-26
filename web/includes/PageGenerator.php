@@ -2506,7 +2506,7 @@ class Table extends HtmlContainer {
         return "</table>";
     }
 
-    function content() {
+    function getContent() {
         $str = '';
         foreach ($this->lines as $line) {
             $str .= sprintf("<tr%s><td%s>%s</td></tr>", $this->tr_style, $this->td_style, implode(sprintf('</td><td%s>', $this->td_style), $line));
@@ -2514,9 +2514,11 @@ class Table extends HtmlContainer {
         return $str;
     }
 
-    function display() {
+    function displayTable($displayContent = False) {
         print $this->begin();
-        print $this->content();
+        if ($displayContent) {
+            print $this->getContent();
+        }
         print $this->end();
     }
 
