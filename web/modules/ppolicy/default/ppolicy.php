@@ -35,18 +35,18 @@ $ppolicyattr = getPPolicyAttributesKeys();
 if (isset($_POST["bppolicy"])) {
     /* Check form content */
     $error = "";
-    if ( $_POST["gpwdMinAge"] != 0 && $_POST["gpwdMaxAge"] != 0 && 
-         $_POST["gpwdMinAge"] != null && $_POST["gpwdMaxAge"] != null && 
+    if ( $_POST["gpwdMinAge"] != 0 && $_POST["gpwdMaxAge"] != 0 &&
+         $_POST["gpwdMinAge"] != null && $_POST["gpwdMaxAge"] != null &&
          $_POST["gpwdMinAge"] > $_POST["gpwdMaxAge"] ) {
         $error .= _T("Maximum age must be more than minimum age.", "ppolicy")."<br />";
     }
-    
+
     /* Notify errors */
     if ($error) {
         new NotifyWidgetFailure($error);
     } else {
         $result = '';
-    
+
         /* Set values */
         foreach ($ppolicyattr as $key=>$info) { /* foreach supported attributes */
             if ($info[1]=="bool") { 
@@ -66,8 +66,7 @@ if (isset($_POST["bppolicy"])) {
         }
 
         if ($result) {
-            $result .= _T("has been updated", "ppolicy")."<br />";   
-            $result .= "- -<br />"._T("Attributes have been updated with some errors.", "ppolicy")."<br />";
+            $result .= _T("has been updated", "ppolicy")."<br />";
             new NotifyWidgetSuccess($result);
         }
     }
@@ -144,7 +143,7 @@ $f->add(new TrFormElement(_T("Preventive user lockout ?", "ppolicy"), new Checkb
 $f->pop();
 
 $lockoutdiv = new Div(array("id" => "lockoutdiv"));
-$lockoutdiv->setVisibility($pwdLockout);  
+$lockoutdiv->setVisibility($pwdLockout);
 $f->push($lockoutdiv);
 
 $f->push(new Table());
