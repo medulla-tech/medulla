@@ -40,10 +40,12 @@ if ($subscription['is_subsscribed']) {
     if ($subscription['too_much_computers']) {
         $msg[] = _("computers");
     }
-    $warn = array(sprintf(_('WARNING: The number of registered %s is exceeding your license.'), implode($msg, ' and ')));
-    $warn[] = _('Please contact your administrator for more information. If you are an administrator, please go to the license status page for more information.');
+    if (count($warn) > 0) {
+        $warn = array(sprintf(_('WARNING: The number of registered %s is exceeding your license.'), implode($msg, ' and ')));
+        $warn[] = _('Please contact your administrator for more information. If you are an administrator, please go to the license status page for more information.');
 
-    print sprintf("<div id=\"warningCode\">%s</div><br/>", implode($warn, '<br/>'));
+        print sprintf("<div id=\"warningCode\">%s</div><br/>", implode($warn, '<br/>'));
+    }
 }
 
 $labels = array(
