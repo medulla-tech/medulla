@@ -34,6 +34,33 @@ function displayErrorCss($name) {
 }
 
 
+/**
+ *  astract class template
+ */
+class AbstractTpl extends HtmlElement {
+    var $name;
+    /**
+     *  display abstract Element
+     *  $arrParam accept ["value"]
+     */
+    function display($arrParam) {
+    }
+
+    /**
+     *  Read Only display function
+     */
+    function displayRo($arrParam) {
+        print $arrParam["value"];
+        print '<input type="hidden" value="'.$arrParam["value"].'" name="'.$this->name.'" />';
+    }
+
+    function displayHide($arrParam) {
+        print '<div style="color: #C00;">' . _("unavailable") . '</div>';
+        print '<input type="hidden" value="'.$arrParam["value"].'" name="'.$this->name.'" />';
+    }
+}
+
+
 class TextareaTpl extends AbstractTpl {
     var $name;
     var $rows;
@@ -587,32 +614,6 @@ class MultipleInputTpl extends AbstractTpl {
     }
 
 
-}
-
-/**
- *  astract class template
- */
-class AbstractTpl extends HtmlElement {
-    var $name;
-    /**
-     *  display abstract Element
-     *  $arrParam accept ["value"]
-     */
-    function display($arrParam) {
-    }
-
-    /**
-     *  Read Only display function
-     */
-    function displayRo($arrParam) {
-        print $arrParam["value"];
-        print '<input type="hidden" value="'.$arrParam["value"].'" name="'.$this->name.'" />';
-    }
-
-    function displayHide($arrParam) {
-        print '<div style="color: #C00;">' . _("unavailable") . '</div>';
-        print '<input type="hidden" value="'.$arrParam["value"].'" name="'.$this->name.'" />';
-    }
 }
 
 /**
