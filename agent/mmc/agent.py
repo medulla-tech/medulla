@@ -130,8 +130,10 @@ class MmcServer(xmlrpc.XMLRPC,object):
             s.loggedin
         except AttributeError:
             s.loggedin = False
+            # Set session expire timeout
+            s.sessionTimeout = self.config.sessiontimeout
 
-        # Check authorization using HTTP Basic
+        # Check authorization using HTTP Basic
         cleartext_token = self.config.login + ":" + self.config.password
         token = request.getUser() + ":" + request.getPassword()
         if token != cleartext_token:
@@ -416,7 +418,7 @@ def agentService(config, conffile, daemonize):
         startService(config, logger, pm.plugins)
     except Exception, e:
         # This is a catch all for all the exception that can happened
-        logger.exception("Program exception:")
+        logger.exception("Program exception: " + str(e))
         return 1
 
     # Become a daemon
@@ -509,6 +511,13 @@ def readConfig(config):
     # HTTP authentication login/password
     config.login = config.get("main", "login")
     config.password = config.getpassword("main", "password")
+
+    # RPC session timeout
+    try:
+        config.sessiontimeout = config.getint("main", "sessiontimeout")
+    except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
+        # Use default session timeout
+        config.sessiontimeout = server.Session.sessionTimeout
 
     # SSL stuff
     try:
