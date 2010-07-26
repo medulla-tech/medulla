@@ -78,7 +78,7 @@ APIVERSION = "8:0:4"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
 # List of methods that can be called without user authentication
-NOAUTHNEEDED = ['authenticate', 'ldapAuth']
+NOAUTHNEEDED = ['authenticate', 'ldapAuth', 'isCommunityVersion']
 
 def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION
@@ -2426,7 +2426,10 @@ class SubscriptionManager(Singleton):
             users = searchUserAdvanced()
             ret['installed_users'] = len(users)
             ret['too_much_users'] = (ret['installed_users'] > ret['users'])
-            ret['installed_computers'] = ComputerManager().getTotalComputerCount()
+            if ComputerManager().isActivated():
+                ret['installed_computers'] = ComputerManager().getTotalComputerCount()
+            else:
+                ret['installed_computers'] = 0
             ret['too_much_computers'] = (ret['installed_computers'] > ret['computers'])
         return ret
 

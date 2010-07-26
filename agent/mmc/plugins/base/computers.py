@@ -147,6 +147,10 @@ class ComputerManager(Singleton):
     def getManagerName(self):
         return self.main
 
+    def isActivated(self):
+        return (self.main != 'none')
+
+
     def register(self, name, klass):
         self.logger.debug("Registering computer manager %s / %s" % (name, str(klass)))
         self.components[name] = klass
