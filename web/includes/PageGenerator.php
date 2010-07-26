@@ -918,10 +918,10 @@ class SimpleNavBar extends HtmlElement {
             for($i=1; $i<=3; $i++) {
                 echo $this->makePageLink($i);
             }
-            if($this->curpage >= 3 and $this->curpage < 5) {
-                if ($this->curpage == 3) $this->curpage += 1;
-                for($i=$this->curpage;$i<=$this->curpage+1;$i++) {
-                    echo $this->makePageLink($i);
+            if($this->curpage > 2 and $this->curpage < 5) {
+                for($i=$this->curpage;$i<=$this->curpage+2;$i++) {
+                    if ($i > 3)
+                        echo $this->makePageLink($i);
                 }
             }
             else if ($this->curpage > 4 and $this->curpage < $this->nbpages-3) {
