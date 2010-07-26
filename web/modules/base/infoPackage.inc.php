@@ -24,6 +24,7 @@
 
 require_once("modules/base/includes/computers.inc.php");
 require_once("modules/base/includes/logging-xmlrpc.inc.php");
+require_once("modules/base/includes/users-xmlrpc.inc.php");
 
 /**
  * module declaration
@@ -66,9 +67,11 @@ $page = new Page("index",_("Default status page"));
 $page->setFile("modules/base/status/index.php");
 $submod->addPage($page);
 
-$page = new Page("support",_("Support page"));
-$page->setFile("modules/base/status/support.php");
-$submod->addPage($page);
+if (! isCommunityVersion(true)) {
+    $page = new Page("support",_("Support page"));
+    $page->setFile("modules/base/status/support.php");
+    $submod->addPage($page);
+}
 
 $mod->addSubmod($submod);
 

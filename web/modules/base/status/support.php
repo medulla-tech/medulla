@@ -22,7 +22,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require("modules/base/includes/users-xmlrpc.inc.php");
+require_once("modules/base/includes/users-xmlrpc.inc.php");
 
 require("graph/navbar.inc.php");
 require("includes/statusSidebar.inc.php");

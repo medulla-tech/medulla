@@ -203,10 +203,14 @@ function getSubscriptionInformation($is_dynamic) {
 }
 
 
-function isCommunityVersion() {
+function isCommunityVersion($xmlrpc = False) {
     global $conf;
     try {
-        return $conf["global"]["community"];
+        if ($xmlrpc) {
+            return xmlCall("base.isCommunityVersion");
+        } else {
+            return $conf["global"]["community"];
+        }
     } catch (Exception $e) {
         return true;
     }
