@@ -236,6 +236,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
 
         if ctx.userid == 'root' and params.has_key('localSidebar') and params['localSidebar']:
             groups = groups.filter(self.groups.c.FK_users == root_id)
+
         if params.has_key('canShow'):
             if params['canShow']:
                 groups = groups.filter(self.shareGroup.c.display_in_menu == 1)
@@ -584,7 +585,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         ug_ids = map(lambda x: x.id, self.__getUsers(getUserGroups(ctx.userid), 1, session)) # get all usergroups ids
 
         if ctx.userid == 'root':
-            return (None, None)
+            return ([[self.users, False, self.users.c.id == self.groups.c.FK_users], [self.shareGroup, True, self.groups.c.id == self.shareGroup.c.FK_groups]], None)
         return ([[self.users, False, self.users.c.id == self.groups.c.FK_users], [self.shareGroup, True, self.groups.c.id == self.shareGroup.c.FK_groups]], or_(self.users.c.login == ctx.userid, self.shareGroup.c.FK_users == user_id, self.shareGroup.c.FK_users.in_(ug_ids)))
 
     def __get_group_permissions_request_first(self, ctx, session = None):
