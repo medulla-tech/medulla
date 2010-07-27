@@ -143,11 +143,12 @@ if (isset($params['uuid'])) {
     }
 } elseif (isset($params['gid'])) {
     $_GET['type'] = 'group';
+    $params['groupname'] = $_GET['groupname'];
     $_GET['target_uuid'] = $params['gid'];
-    $_GET['target_name'] = $params['hostname'];
+    $_GET['target_name'] = $params['groupname'];
     $params['type'] = 'group';
     $params['target_uuid'] = $params['gid'];
-    $params['target_name'] = $params['hostname'];
+    $params['target_name'] = $params['groupname'];
 
     require("modules/dyngroup/includes/includes.php");
     $group = new Group($_GET['gid'], true);
@@ -177,6 +178,7 @@ if (isset($params['uuid'])) {
             $stateid = $ret['id'];
 
             $params['groupname'] = $group->getName();
+            $params['target_name'] = $params['groupname'];
             $p->addTop(sprintf(_T("%s's profile imaging", 'imaging'), $group->getName()),
                 "modules/imaging/imaging/header.php");
             $p->addTab("grouptabbootmenu", _T("Boot menu", 'imaging'), _T("Current boot menu", "imaging"),
