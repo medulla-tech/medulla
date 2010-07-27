@@ -38,6 +38,7 @@ from pulse2.database import database_helper
 from sqlalchemy import create_engine, ForeignKey, Integer, MetaData, Table, Column, and_, or_, desc
 from sqlalchemy.orm import create_session, mapper, relation
 from sqlalchemy.sql.expression import alias as sa_exp_alias
+from sqlalchemy.exceptions import InvalidRequestError
 
 # THAT REQUIRE TO BE IN A MMC SCOPE, NOT IN A PULSE2 ONE
 from pulse2.managers.profile import ComputerProfileManager
@@ -3732,10 +3733,18 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                         target.disks.append(cd)
             session.save_or_update(target)
             session.commit()
+        except InvalidRequestError, e:
+            session.rollback()
+            if e.message == 'No rows returned for one()':
+                self.logger.warn("Can't get the computer %s, we can't inject an inventory. This happen when the computer exists in the backend but is not declared in the imaging."%(computer_uuid))
+                return [False, "Can't get the computer %s, we can't inject an inventory. This happen when the computer exists in the backend but is not declared in the imaging."%(computer_uuid)]
+            else:
+                raise
         except:
             session.rollback()
             raise
         session.close()
+        return [True, True]
 
     def getPartitionsToBackupRestore(self, computer_uuid):
         """

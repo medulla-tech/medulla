@@ -1999,12 +1999,22 @@ class ImagingRpcProxy(RpcProxyI):
         uuid = None
         db_computer = ComputerManager().getComputerByMac(MACAddress)
         if db_computer != None:
+            db_computer_name = ''
             if type(db_computer) == dict:
                 uuid = db_computer['uuid']
+                if db_computer.has_key('hostname'):
+                    db_computer_name = db_computer['hostname']
+                elif db_computer.has_key('name'):
+                    db_computer_name = db_computer['name']
             elif hasattr(db_computer, 'getUUID'):
                 uuid = db_computer.getUUID()
+                db_computer_name = db_computer.name
             elif hasattr(db_computer, 'uuid'):
                 uuid = db_computer.uuid
+                db_computer_name = db_computer.name
+            if db_computer_name != hostname:
+                logger.error("The hostname you gave is not the one in the database! (%s, %s)"%(db_computer_name, hostname))
+                return [False, "The hostname you gave is not the one we already have in the database (%s, %s)"%(db_computer_name, hostname)]
         if uuid == None or type(uuid) == list and len(uuid) == 0:
             logger.info("the computer %s (%s) does not exist in the backend, trying to add it" % (hostname, MACAddress))
             # the computer does not exists, so we create it
@@ -2015,7 +2025,7 @@ class ImagingRpcProxy(RpcProxyI):
             else:
                 logger.debug("The computer %s (%s) has been successfully added to the inventory database" % (hostname, MACAddress))
         else:
-            logger.debug("computer %s (%s) already exists, we dont need to declare it again" % (hostname, MACAddress))
+            logger.debug("computer %s (%s) already exists, we don't need to declare it again" % (hostname, MACAddress))
 
         target_type = P2IT.COMPUTER
         is_registrated = db.isTargetRegister(uuid, target_type)
@@ -2242,8 +2252,7 @@ class ImagingRpcProxy(RpcProxyI):
         """
         db = ImagingDatabase()
         try:
-            db.injectInventory(imaging_server_uuid, computer_uuid, inventory)
-            ret = [True, True]
+            ret = db.injectInventory(imaging_server_uuid, computer_uuid, inventory)
         except Exception, e:
             logging.getLogger().exception(e)
             ret = [False, str(e)]
