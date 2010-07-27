@@ -182,7 +182,7 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
         );
         $f->add(
             new TrFormElement(_T("Restoration: MTFTP maximum waiting (in sec)", "imaging"),
-            new InputTpl("rest_wait")), array("value" => $default_menu['timeout'])
+            new InputTpl("rest_wait")), array("value" => $default_menu['mtftp_restore_timeout'])
         );
         $f->pop();
 

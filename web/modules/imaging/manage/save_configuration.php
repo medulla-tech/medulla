@@ -48,11 +48,12 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
 
         $params = getParams();
         $params['default_name'] = $_POST['default_m_label'];
-        $params['timeout'] = $_POST['rest_wait'];
+        $params['timeout'] = $_POST['default_m_timeout'];
         $params['background_uri'] = $_POST['boot_xpm'];
         $params['message'] = $_POST['boot_msg'];
         $params['protocol'] = $_POST['rest_type'];
         $params['language'] = $_POST['language'];
+        $params['mtftp_restore_timeout'] = $_POST['rest_wait'];
 
         $ret = xmlrpc_setImagingServerConfig($location, $params);
 
