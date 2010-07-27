@@ -35,6 +35,7 @@ require_once('modules/imaging/includes/xmlrpc.inc.php');
 require_once('modules/imaging/includes/web_def.inc.php');
 require_once('modules/imaging/includes/part-type.inc.php');
 
+$is_unregistering = False;
 if (!isset($is_registering) || $is_registering == '') {
     $is_registering = False;
 }
@@ -139,6 +140,7 @@ if (isset($_POST["bunregister2"])) {
     } else {
         new NotifyWidgetFailure(sprintf(_T("Failed to unregistered the computer %s", 'imaging'), $target_name));
     }
+    $is_unregistering = True;
 }
 
 if (isset($_POST["bunregister"])) {
@@ -163,7 +165,6 @@ if (isset($_POST["bunregister"])) {
     $f->addButton("cancel", _T("Cancel", "imaging"), 'btnSecondary');
     $f->display();
 } else {
-
     $type = $_GET["type"];
     $target_uuid = $_GET['target_uuid'];
     $target_name = $_GET['target_name'];
@@ -229,7 +230,7 @@ if (isset($_POST["bunregister"])) {
         $f->add(new HiddenTpl("target_name"),                    array("value" => $target_name,            "hide" => True));
         $f->add(new HiddenTpl("type"),                           array("value" => $type,                   "hide" => True));
 
-        if (($type == '') && (!$is_registering)) {
+        if (($type == '') && (!$is_registering) && (!$is_unregistering)) {
             /* Add disks and partitions selector widget for registered computers
                only, not profiles */
             $inventory = xmlrpc_getPartitionsToBackupRestore($target_uuid);

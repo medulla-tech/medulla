@@ -355,7 +355,7 @@ function xmlrpc_getAllKnownLanguages() {
 }
 
 function xmlrpc_getPartitionsToBackupRestore($target_uuid) {
-    return xmlCall("imaging.getPartitionsToBackupRestore", $target_uuid);
+    return xmlCall("imaging.getPartitionsToBackupRestore", array($target_uuid));
 }
 
 ?>
