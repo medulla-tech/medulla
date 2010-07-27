@@ -159,6 +159,14 @@ IDENTIFIED BY 'mmc' WITH GRANT OPTION;
 FLUSH PRIVILEGES
 EOF
 
+# Basic installation of GLPI
+pushd /var/www/html
+wget -N https://forge.indepnet.net/attachments/download/597/glpi-0.72.4.tar.gz
+tar xzf glpi-0.72.4.tar.gz
+chown -R apache.apache glpi
+rm glpi-0.72.4.tar.gz
+popd
+
 # configure base.ini
 sed -i "s/# \[computers\]/\[computers\]/" /etc/mmc/plugins/base.ini
 sed -i "s/# method = inventory/method = inventory/" /etc/mmc/plugins/base.ini
