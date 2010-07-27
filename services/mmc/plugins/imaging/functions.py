@@ -1563,8 +1563,11 @@ class ImagingRpcProxy(RpcProxyI):
 
         if len(pids) != 0:
             d2 = self.__synchroTargets(pids, P2IT.PROFILE)
-            d2.addCallback(treatProfiles)
-            dl.append(d2)
+            if type(d2) == list and d2[0]:
+                pass
+            else:
+                d2.addCallback(treatProfiles)
+                dl.append(d2)
 
         # synchro the location
         def treatLocation(results):
