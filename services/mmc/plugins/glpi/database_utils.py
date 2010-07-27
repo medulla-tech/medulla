@@ -26,6 +26,7 @@ This module just give access to small functions needed by both 0.7 and 0.8 backe
 
 from pulse2.utils import grepv
 import exceptions
+import logging
 
 def encode_utf8(self, s): return s
 def encode_latin1(self, s):
@@ -63,6 +64,11 @@ def toUUID(id):
     return "UUID%s" % (str(id))
 
 def setUUID(obj):
-    setattr(obj, 'uuid', toUUID(obj.id))
+    if hasattr(obj, 'id'):
+        setattr(obj, 'uuid', toUUID(obj.id))
+    elif hasattr(obj, 'ID'):
+        setattr(obj, 'uuid', toUUID(obj.ID))
+    else:
+        logging.getLogger().error("Can't get id for %s => no UUID"%(str(obj)))
     return obj
 

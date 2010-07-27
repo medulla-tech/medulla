@@ -973,12 +973,12 @@ class Glpi07(DyngroupDatabaseHelper):
         session = create_session()
         path = []
         en_id = fromUUID(loc_uuid)
-        en = session.query(Location).filter(self.location.c.id == en_id).first()
+        en = session.query(Location).filter(self.location.c.ID == en_id).first()
         parent_id = en.parentID
 
         while parent_id != 0:
             en_id = parent_id
-            en = session.query(Location).filter(self.location.c.id == parent_id).first()
+            en = session.query(Location).filter(self.location.c.ID == parent_id).first()
             path.append(toUUID(en.id))
             parent_id = en.parentId
         path.append('UUID0')
