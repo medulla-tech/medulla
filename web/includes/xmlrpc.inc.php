@@ -67,7 +67,7 @@ function openSocket($proto, $conf) {
     if (($proto != "ssl://")
         || ($conf[$_SESSION["agent"]]["verifypeer"] != 1)
         || !function_exists("stream_socket_client")) {
-        /* 
+        /*
            Not a SSL connection,
            or simple SSL connection without client certificate and server
            certificate check
@@ -104,7 +104,7 @@ function isXMLRPCError() {
  * Make a XML-RPC call
  * If the global variable $errorStatus is not zero, the XML-RPC call is not
  * done, and this function returns nothing.
- * 
+ *
  * @param $method name of the method
  * @param $params array with param
  * @return the XML-RPC call result
@@ -127,7 +127,7 @@ function xmlCall($method, $params = null) {
         $conf["global"]["login"] = "mmc";
         $conf["global"]["password"] = "s3cr3t";
     }
-    
+
     $output_options = array( "output_type" => "xml", "verbosity" => "pretty", "escaping" => array("markup"), "version" => "xmlrpc", "encoding" => "UTF-8" );
 
     $request = xmlrpc_encode_request($method, $params, $output_options);
@@ -167,8 +167,8 @@ function xmlCall($method, $params = null) {
         $errObj->setAdvice(_("MMC agent seems to be down or not correctly configured.") . '<br/> Error: '. $errNo . ' - '. $errString);
         $errObj->setTraceBackDisplay(false);
         $errObj->setSize(400);
-        $errObj->process('');        
-        $errorStatus = 1;        
+        $errObj->process('');
+        $errorStatus = 1;
         return FALSE;
     }
 
@@ -180,8 +180,8 @@ function xmlCall($method, $params = null) {
         $errObj->setAdvice(_("MMC agent seems to be not correctly configured."));
         $errObj->setTraceBackDisplay(false);
         $errObj->setSize(400);
-        $errObj->process('');        
-        $errorStatus = 1;        
+        $errObj->process('');
+        $errorStatus = 1;
         return FALSE;
     }
     fflush($sock);
@@ -199,7 +199,7 @@ function xmlCall($method, $params = null) {
             $errObj->setSize(400);
             $errObj->process('');
             $errorStatus = 1;
-            return FALSE;            
+            return FALSE;
         }
         if ($ret === False) {
             $errObj = new ErrorHandlingItem('');
@@ -246,17 +246,17 @@ function xmlCall($method, $params = null) {
             return False;
         }
     }
-    
+
     /* Process the XML response */
     $xmlResponse = substr($xmlResponse, $pos + 4);
-    /* 
+    /*
        Test if the XMLRPC result is a boolean value set to False.
        If it is the case, xmlrpc_decode will return an empty string.
        So we need to test this special case.
 
        Looks like this bug is fixed in latest PHP version. At least it works
        with PHP 5.2.0.
-    */    
+    */
     $booleanFalse = "<?xml version='1.0'?>\n<methodResponse>\n<params>\n<param>\n<value><boolean>0</boolean></value>\n</param>\n</params>\n</methodResponse>\n";
     if ($xmlResponse == $booleanFalse) $xmlResponse = False;
     else {
@@ -271,7 +271,7 @@ function xmlCall($method, $params = null) {
             $xmlResponse = $xmlResponseTmp;
         }
     }
-    
+
     /* If debug is on, print the XML-RPC call and result */
     if ($conf["debug"]["level"]!=0) {
         $str = '<div id="debugCode">';
@@ -295,14 +295,14 @@ function xmlCall($method, $params = null) {
         } else {
             $str .= "result : ".$xmlResponse;
         }
-        $str .= '</div>';        
+        $str .= '</div>';
         echo $str;
     }
-    
+
     /* If the XML-RPC server sent a fault, display an error */
     if ((is_array($xmlResponse) && (isset($xmlResponse["faultCode"])))) {
         if ($xmlResponse["faultCode"] == "8003") {
-            /* 
+            /*
               Fault 8003 means the session with the XML-RPC server has expired.
               So we make the current PHP session expire, so that the user is
               redirected to the login page.
@@ -320,8 +320,8 @@ function xmlCall($method, $params = null) {
             $result = new ErrorHandlingItem('');
             $result->setMsg(_("unknown error"));
             $result->setAdvice(_("This exception is unknown. Please contact us to add an error handling on this error."));
-        }        
-        $result->process($xmlResponse);        
+        }
+        $result->process($xmlResponse);
         $errorStatus = 1;
         $errorDesc = $xmlResponse["faultCode"];
         return False;
