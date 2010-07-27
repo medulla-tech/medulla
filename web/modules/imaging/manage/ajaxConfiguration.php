@@ -106,14 +106,48 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
         );
         $f->pop();*/
 
+        $lang = xmlrpc_getAllKnownLanguages();
+        $lang_choices = array();
+        $lang_values = array();
+
+        $lang_id2uuid = array();
+        foreach ($lang as $l) {
+            $lang_choices[$l['imaging_uuid']] = $l['label'];
+            $lang_values[$l['imaging_uuid']] = $l['imaging_uuid'];
+            $lang_id2uuid[$l['id']] = $l['imaging_uuid'];
+        }
+
+        $language = new SelectItem("language");
+
+        $language->setElements($lang_choices);
+        $language->setElementsVal($lang_values);
+        if ($imaging_server['fk_language']) {
+            $language->setSelected($lang_id2uuid[$imaging_server['fk_language']]);
+        }
+        $f->push(new Table());
+        $f->add(
+            new TrFormElement(_T("Menu language", "imaging"), $language)
+        );
+        $f->pop();
+
+        $f->push(new DivExpertMode());
+
+
         $f->add(new TitleElement(_T("Default menu parameters", "imaging")));
         $f->push(new Table());
 
         $f->add(
             new TrFormElement(_T('Default menu label', 'imaging'),
-            new InputTpl("default_m_label")), array("value" => $default_menu['default_name'])
+                              new InputTpl("default_m_label")),
+            array("value" => $default_menu['default_name'])
+        );
+        $f->add(
+                new TrFormElement(_T('Default menu timeout', 'imaging'),
+                                  new InputTpl("default_m_timeout")),
+                array("value" => $default_menu['timeout'])
         );
         $f->pop();
+
 
         $f->add(new TitleElement(_T("Restoration options", "imaging")));
         $f->push(new Table());
@@ -124,7 +158,6 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
 
         /* translate possibles protocols */
         _T('nfs', 'imaging');
-        _T('tftp', 'imaging');
         _T('mtftp', 'imaging');
         foreach ($possible_protocols as $p) {
             if ($p['label']) {
@@ -164,28 +197,9 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
             new TextareaTpl("boot_msg")), array("value" => $default_menu['message']) //"Warning ! Your PC is being backed up or restored. Do not reboot !")
         );
 
-        $lang = xmlrpc_getAllKnownLanguages();
-        $lang_choices = array();
-        $lang_values = array();
-
-        $lang_id2uuid = array();
-        foreach ($lang as $l) {
-            $lang_choices[$l['imaging_uuid']] = $l['label'];
-            $lang_values[$l['imaging_uuid']] = $l['imaging_uuid'];
-            $lang_id2uuid[$l['id']] = $l['imaging_uuid'];
-        }
-
-        $language = new SelectItem("language");
-
-        $language->setElements($lang_choices);
-        $language->setElementsVal($lang_values);
-        if ($imaging_server['fk_language']) {
-            $language->setSelected($lang_id2uuid[$imaging_server['fk_language']]);
-        }
-        $f->add(
-            new TrFormElement(_T("Menu language", "imaging"), $language)
-        );
         $f->pop();
+
+        $f->pop(); /* Closes expert mode div */
 
         /*$f->add(
             new TrFormElement(_T("Keyboard mapping (empty/fr)", "imaging"),
