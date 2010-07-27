@@ -177,6 +177,7 @@ CREATE TABLE Menu (
   default_name Text NOT NULL,
   fk_name INT,
   timeout INT,
+  mtftp_restore_timeout INT NOT NULL DEFAULT 0,
   background_uri Text DEFAULT '',
   message Text NOT NULL DEFAULT '',
   ethercard INT NOT NULL DEFAULT 0,

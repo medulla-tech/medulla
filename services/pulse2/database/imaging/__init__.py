@@ -2667,6 +2667,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             if proto and menu.fk_protocol != proto.id:
                 need_to_be_save = True
                 menu.fk_protocol = proto.id
+        if params.has_key('mtftp_restore_timeout') and menu.mtftp_restore_timeout != params['mtftp_restore_timeout']:
+            need_to_be_save = True
+            menu.mtftp_restore_timeout = params['mtftp_restore_timeout']
 
         if need_to_be_save:
             session.save_or_update(menu)
@@ -3903,7 +3906,7 @@ class MasteredOn(DBObject):
     to_be_exported = ['fk_image', 'image', 'fk_imaging_log', 'imaging_log']
 
 class Menu(DBObject):
-    to_be_exported = ['id', 'default_name', 'fk_name', 'timeout', 'background_uri', 'message', 'ethercard', 'bootcli', 'disklesscli', 'dont_check_disk_size', 'hidden_menu', 'debug', 'update_nt_boot', 'fk_default_item', 'fk_default_item_WOL', 'fk_protocol', 'protocol', 'synchrostate']
+    to_be_exported = ['id', 'default_name', 'fk_name', 'timeout', 'mtftp_restore_timeout', 'background_uri', 'message', 'ethercard', 'bootcli', 'disklesscli', 'dont_check_disk_size', 'hidden_menu', 'debug', 'update_nt_boot', 'fk_default_item', 'fk_default_item_WOL', 'fk_protocol', 'protocol', 'synchrostate']
     i18n = ['fk_name']
 
 class MenuItem(DBObject):

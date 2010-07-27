@@ -74,6 +74,7 @@ if (isset($_POST["bvalid"])) {
     $params['target_uuid'] = $target_uuid;
     $params['target_opt_kernel'] = $_POST['target_opt_kernel'];
     $params['target_opt_image'] = $_POST['target_opt_image'];
+    $params['mtftp_restore_timeout'] = $_POST['rest_wait'];
 
     $params['target_opt_parts'] = array();
     if (isset($_POST['check_disk'])) {
@@ -348,7 +349,7 @@ if (isset($_POST["bunregister"])) {
             );
             $f->add(
                 new TrFormElement(_T("Restoration: MTFTP maximum waiting (in sec)", "imaging"),
-                new InputTpl("rest_wait")), array("value" => $menu['timeout'])
+                new InputTpl("rest_wait")), array("value" => $menu['mtftp_restore_timeout'])
             );
             $f->pop();
 
