@@ -207,7 +207,10 @@ function isCommunityVersion($xmlrpc = False) {
     global $conf;
     try {
         if ($xmlrpc) {
-            return xmlCall("base.isCommunityVersion");
+            if (!isset($_SESSION["base.isCommunityVersion"])) {
+                $_SESSION["base.isCommunityVersion"] = xmlCall("base.isCommunityVersion");
+            }
+            return $_SESSION["base.isCommunityVersion"];
         } else {
             return $conf["global"]["community"];
         }
