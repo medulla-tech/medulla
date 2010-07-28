@@ -2103,10 +2103,25 @@ class ImagingRpcProxy(RpcProxyI):
         @rtype: list
         """
         assert pulse2.utils.isMACAddress(mac)
-        computer = ComputerManager().getComputerByMac(mac)
-        if not computer:
+        db_computer = ComputerManager().getComputerByMac(mac)
+        if not db_computer:
             return [False, "imaging.getComputerByMac() : I was unable to find a computer corresponding to the MAC address %s" % mac]
-        return [True, {'uuid': computer['uuid'], 'mac': mac, 'shortname': computer['hostname'], 'fqdn': computer['hostname']}]
+
+        if type(db_computer) == dict:
+            uuid = db_computer['uuid']
+            if db_computer.has_key('hostname'):
+                db_computer_name = db_computer['hostname']
+            elif db_computer.has_key('name'):
+                db_computer_name = db_computer['name']
+        elif hasattr(db_computer, 'getUUID'):
+            uuid = db_computer.getUUID()
+            db_computer_name = db_computer.name
+        elif hasattr(db_computer, 'uuid'):
+            uuid = db_computer.uuid
+            db_computer_name = db_computer.name
+        else:
+            return [False, "imaging.getComputerByMac() : I was unable to find the good informations about the computer having %s as a mac address" % mac]
+        return [True, {'uuid': uuid, 'mac': mac, 'shortname': db_computer_name, 'fqdn': db_computer_name}]
 
     def logClientAction(self, imaging_server_uuid, computer_uuid, level, phase, message):
         """
