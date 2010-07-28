@@ -573,7 +573,7 @@ class DyngroupDatabase(DatabaseHelper):
             open_session = True
             session = create_session()
         session.execute(self.results.delete(self.results.c.FK_machines == machine_id))
-        session.execute(self.results.delete(self.profilesResults.c.FK_machines == machine_id))
+        session.execute(self.profilesResults.delete(self.profilesResults.c.FK_machines == machine_id))
         if open_session:
             session.flush()
             session.close()
