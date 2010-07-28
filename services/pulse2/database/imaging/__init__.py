@@ -1478,7 +1478,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             .join(self.menu, self.menu.c.id == self.menu_item.c.fk_menu) \
             .join(self.target, self.target.c.fk_menu == self.menu.c.id) \
         )
-        mis = mis.filter(and_(self.image.c.id == uuid2id(image_uuid), self.target.c.type.in_((P2IT.COMPUTER, P2IT.PROFILE)))).group_by(self.menu_item.c.id).all()
+        mis = mis.filter(and_(self.image.c.id == uuid2id(image_uuid), self.target.c.type.in_([P2IT.COMPUTER, P2IT.PROFILE]))).group_by(self.menu_item.c.id).all()
 
         for mi in mis:
             menu = session.query(Menu).filter(self.menu.c.id == mi.fk_menu).first()
@@ -2420,7 +2420,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 .outerjoin(self.imaging_log, self.imaging_log.c.fk_target == self.target.c.id) \
                 .outerjoin(self.mastered_on, self.mastered_on.c.fk_imaging_log == self.imaging_log.c.id) \
                 .outerjoin(self.image, self.mastered_on.c.fk_image == self.image.c.id) \
-        ).filter(and_(self.entity.c.uuid == location, self.target.c.type.in_((P2IT.COMPUTER, P2IT.COMPUTER_IN_PROFILE))))
+        ).filter(and_(self.entity.c.uuid == location, self.target.c.type.in_([P2IT.COMPUTER, P2IT.COMPUTER_IN_PROFILE])))
         q = q.group_by().all()
         im_total = set()
         im_rescue = set()
@@ -2939,6 +2939,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             filt = and_(self.target.c.type == target_type)
         if type(uuid) != list:
             uuid = [uuid]
+        if len(uuid) == 0:
+            self.logger.debug("setTargetRegisteredInPackageServer couldn't get target for %s"%(str(uuid)))
+            session.close()
+            return True
         q = session.query(Target).filter(and_(self.target.c.uuid.in_(uuid), filt)).all()
         for t in q:
             t.is_registered_in_package_server = 1
@@ -3037,7 +3041,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = q.select_from(self.target.join(self.menu).join(self.entity, self.target.c.fk_entity == self.entity.c.id))
         q = q.filter(and_(
                 self.entity.c.uuid == loc_id, \
-                self.menu.c.fk_synchrostate.in_((P2ISS.TODO, P2ISS.INIT_ERROR)), \
+                self.menu.c.fk_synchrostate.in_([P2ISS.TODO, P2ISS.INIT_ERROR]), \
                 self.target.c.type == target_type \
             )).group_by(self.target.c.id).all()
 
@@ -3089,7 +3093,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         # check if the entity menu as to be synced, by looking at its imaging server menu status
         j = self.synchro_state.join(self.menu).join(self.imaging_server).join(self.entity)
-        f = self.entity.c.uuid == uuid
+        f = and_(self.entity.c.uuid == uuid, self.imaging_server.c.associated == 1)
         q2 = session.query(SynchroState)
         q2 = q2.select_from(j)
         q2 = q2.filter(f)
@@ -3100,9 +3104,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             return q2
 
         # same, this time by target (we check the state of the content of this entity)
-        q1 = session.query(SynchroState)
+        q1 = session.query(SynchroState).add_entity(Target)
         j = self.synchro_state.join(self.menu).join(self.target).join(self.entity)
-        f = self.entity.c.uuid == uuid
+        f = and_(self.entity.c.uuid == uuid, self.target.c.type.in_([P2IT.COMPUTER, P2IT.PROFILE, P2IT.COMPUTER_IN_PROFILE]))
         q1 = q1.select_from(j)
         q1 = q1.filter(f)
         q1 = q1.all()
@@ -3110,8 +3114,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
 
         a_state = [0, 0]
-        for q in q1:
-            if q.label == "RUNNING" or q.id == "INIT_ERROR": # running
+        for q, target in q1:
+            self.logger.debug("getLocationSynchroState target %s is in state %s"%(target.uuid, q.label))
+            if q.label == "RUNNING" or q.label == "INIT_ERROR": # running
                 return q
             a_state[q.id - 1] += 1
         if a_state[0] == 0:
@@ -3124,6 +3129,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             'label' : 'TODO'}
 
     def setLocationSynchroState(self, uuid, state):
+        self.logger.debug(">>> setLocationSynchroState %s %s"%(uuid, str(state)))
         session = create_session()
         q2 = session.query(SynchroState).add_entity(Menu)
         q2 = q2.select_from(
@@ -3131,7 +3137,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             join(self.menu).\
             join(self.imaging_server).\
             join(self.entity))
-        q2 = q2.filter(self.entity.c.uuid == uuid).first()
+        q2 = q2.filter(and_(self.entity.c.uuid == uuid, self.imaging_server.c.associated == 1)).first()
 
         if q2 :
             synchro_state, menu = q2
