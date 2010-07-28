@@ -912,7 +912,7 @@ class Glpi07(DyngroupDatabaseHelper):
 
     def getMachinesLocations(self, machine_uuids):
         session = create_session()
-        q = session.query(Location).add_column(self.machine.c.id).select_from(self.location.join(self.machine)).filter(self.machine.c.id.in_(map(fromUUID, machine_uuids))).all()
+        q = session.query(Location).add_column(self.machine.c.ID).select_from(self.location.join(self.machine)).filter(self.machine.c.ID.in_(map(fromUUID, machine_uuids))).all()
         session.close()
         ret = {}
         for loc, mid in q:
@@ -1572,7 +1572,7 @@ class Glpi07(DyngroupDatabaseHelper):
         Get several machines mac addresses
         """
         session = create_session()
-        query = session.query(Network).add_column(self.machine.c.id).select_from(self.machine.join(self.network))
+        query = session.query(Network).add_column(self.machine.c.ID).select_from(self.machine.join(self.network))
         query = self.filterOnUUID(query.filter(self.network.c.device_type == 1), uuids)
         query = query.all()
         session.close()
