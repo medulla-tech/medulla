@@ -31,7 +31,7 @@ from pulse2.managers.group import ComputerGroupManager
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 from pulse2.database.utilities import unique, handle_deconnect, DbObject
 from pulse2.database.inventory.mapping import OcsMapping
-from pulse2.utils import same_network, Singleton, isUUID
+from pulse2.utils import same_network, Singleton, isUUID, xmlrpcCleanup
 
 from sqlalchemy import *
 from sqlalchemy.orm import *
@@ -770,6 +770,9 @@ class Inventory(DyngroupDatabaseHelper):
         for grp in grp_by:
             result = result.group_by(grp)
         result = result.order_by(haspartTable.c.machine).order_by(desc("inventoryid")).order_by(haspartTable.c.inventory)
+        # if needed, filter by date and limit the first date
+        if(params.has_key('date')) and params['date'] != '':
+                result.order_by(desc(self.klass['Inventory'].Date))
         session.close()
         if result:
             # Build the result as a simple dictionary
@@ -835,11 +838,25 @@ class Inventory(DyngroupDatabaseHelper):
                 result = result.add_column(getattr(nomTable.c, nom))
                 grp_by.append(nomTable.c.id)
 
-        result = result.select_from(select_from).filter(self.inventory.c.Last == 1)
+        # Apply a filter on the inventory's date if needed
+        if params.has_key('date') and params['date'] != '':
+            result = result.select_from(select_from).filter(self.klass['Inventory'].Date <= params['date'])
+        elif params.has_key('inventoryId') and params['inventoryId'] != '':
+            result = result.select_from(select_from).filter(self.klass['Inventory'].id == params['inventoryId'])
+        else:
+            result = result.select_from(select_from).filter(self.inventory.c.Last == 1)
         # Filter on the entities the user has the right to see
         result = result.filter(self.table['hasEntity'].c.entity.in_(ctx.locationsid))
         # Apply other filters
         result = self.__filterQuery(ctx, result, params)
+
+        # Apply a filter on the software ProductName if asked in parameters (the filter is loaded from a config file)
+        if params.has_key('software_filter') and params['software_filter'] == True and part == 'Software':
+            # Get the list of software filters
+            software_filter = self.config.getSoftwareFilter()
+            for softFilter in software_filter:
+                # Filter the query result foreach software filter
+                result = result.filter(not_(partKlass.ProductName.like(softFilter)))
 
         # this can't be put in __filterQuer because it's not a generic filter on Machine...
         if params.has_key('where') and params['where'] != '':
@@ -1244,6 +1261,285 @@ class Inventory(DyngroupDatabaseHelper):
             ret = map(lambda u: u.uid, q)
         # Always append the given userid
         ret.append(userid)
+        return ret
+
+    def getInventoryHistory(self, days, only_new, pattern, max, min):
+        """
+        Returns the last inventories since n days, and for each inventory, the machine concerned
+        @param days: number of days to look back for the inventories
+        @type days: int
+        @rtype: [(String, Date, boolean), ...]
+        @return: a tuple with last inventories since n days with their machines
+        """
+        session = create_session()
+        from sqlalchemy.sql import func
+        min = int(min)
+        max = int(max)
+        if only_new:
+            # Select only the old machines
+            results_old = session.query(Machine). \
+                      select_from(self.table['hasInventory'].join(self.machine).join(self.table['Inventory'])). \
+                      filter(func.to_days(func.now()) - func.to_days(self.klass['Inventory'].Date) > days). \
+                      all()
+            old_machines_id = []
+            for res in results_old:
+                old_machines_id.append(res.id)
+            # Select all machines which are not in old machines
+            results = session.query(self.klass['Inventory']).add_entity(Machine). \
+                      select_from(self.table['hasInventory'].join(self.table['Inventory']).join(self.machine)). \
+                      filter(and_(not_(Machine.id.in_(old_machines_id)), and_((func.to_days(func.now()) - func.to_days(self.klass['Inventory'].Date)) <= days, Machine.Name.like('%' + pattern + '%')) )). \
+                      order_by(self.klass['Inventory'].id.desc())[min:max]
+        else:
+            results = session.query(self.klass['Inventory']).add_entity(Machine). \
+                      select_from(self.table['hasInventory'].join(self.machine).join(self.table['Inventory'])). \
+                      filter(and_((func.to_days(func.now()) - func.to_days(self.klass['Inventory'].Date)) <= days, Machine.Name.like('%' + pattern + '%'))). \
+                      order_by(self.klass['Inventory'].id.desc())[min:max]
+
+        ret = []
+        for res in results:
+            if only_new:
+                newMachine = True
+            else:
+                # check if there was an inventory for this tuple before n days
+                newMachine = (session.query(self.klass['hasInventory']). \
+                             select_from(self.table['hasInventory'].join(self.machine).join(self.inventory)). \
+                             filter(and_(self.klass['hasInventory'].machine == res[1].id, func.to_days(self.klass['Inventory'].Date) < func.to_days(func.now()) - days)). \
+                             count()) == 0
+            ret.append((res[1].Name, res[0].Date, newMachine))
+        session.close()
+        return ret
+
+    def countInventoryHistory(self, days, only_new, pattern):
+        """
+        Return the number of inventories for the parameters given
+        """
+        session = create_session()
+        from sqlalchemy.sql import func
+        if only_new:
+            # Select only the old machines
+            results_old = session.query(Machine). \
+                      select_from(self.table['hasInventory'].join(self.machine).join(self.table['Inventory'])). \
+                      filter(func.to_days(func.now()) - func.to_days(self.klass['Inventory'].Date) > days). \
+                      all()
+            old_machines_id = []
+            for res in results_old:
+                old_machines_id.append(res.id)
+            # Select all machines which are not in old machines
+            count = session.query(self.klass['Inventory']).add_entity(Machine). \
+                      select_from(self.table['hasInventory'].join(self.table['Inventory']).join(self.machine)). \
+                      filter(and_(not_(Machine.id.in_(old_machines_id)), and_((func.to_days(func.now()) - func.to_days(self.klass['Inventory'].Date)) <= days, Machine.Name.like('%' + pattern + '%')) )). \
+                      order_by(self.klass['Inventory'].id.desc()).count()
+        else:
+            count = session.query(self.klass['Inventory']).add_entity(Machine). \
+                      select_from(self.table['hasInventory'].join(self.machine).join(self.table['Inventory'])). \
+                      filter(and_((func.to_days(func.now()) - func.to_days(self.klass['Inventory'].Date)) <= days, Machine.Name.like('%' + pattern + '%'))). \
+                      order_by(self.klass['Inventory'].id.desc()).count()
+
+        session.close()
+        return count
+
+    def getTypeOfAttribute(self, klass, attr):
+        """
+        Load the table, the column, and return the type
+        """
+        table = self.table[klass]
+        column = getattr(table.c, attr)
+        return column.type
+
+    def getComputerInventoryFull(self, ctx, params):
+        """
+        Return the full and last (before a given date) inventory of a machine
+
+        @param uuid: uuid of the machine to get inventory
+        @param date: date before which search
+        @param name: the name of the machine to get inventory
+        @type params: dict
+
+        @return: Returns a dictionary where each key is an inventory part name
+        @rtype: dict
+        """
+        ret = {}
+        for part in self.config.getInventoryParts():
+            if part != 'Entity':
+                ret[part] = self.getLastMachineInventoryPart(ctx, part, params)
+        return ret
+
+    def getComputerInventoryHistory(self, ctx, params):
+        """
+        Return the list of inventories of a given machine
+
+        @param uuid: uuid of the machine to get inventories
+        @type params: dict
+
+        @return: Return a list of all the inventory history of the machine
+        @rtype: list
+        """
+        ret = []
+        machineId = ""
+        if params.has_key('uuid'):
+            uuid = params['uuid']
+            machineId = fromUUID(uuid)
+        if params.has_key('name'):
+            name = params['name']
+        if params.has_key('min'):
+            min = params['min']
+        else:
+            min = 0
+        if params.has_key('max'):
+            max = params['max']
+        else:
+            max = 10
+
+        session = create_session()
+        results = session.query(self.klass['Inventory']). \
+                select_from(self.table['hasInventory'].join(self.table['Inventory']).join(self.machine)). \
+                filter(Machine.id == machineId). \
+                order_by(self.klass['Inventory'].id.desc())[min:max]
+        session.close()
+
+        for res in results:
+            ret.append((res.id, res.Date))
+        return ret
+
+    def countComputerInventoryHistory(self, ctx, params):
+        """
+        Return the number of inventories of a given machine
+
+        @param uuid: uuid of the machine to get inventories
+        @type params: dict
+
+        @return: Return a list of all the inventory history of the machine
+        @rtype: list
+        """
+        machineId = ""
+        if params.has_key('uuid'):
+            uuid = params['uuid']
+            machineId = fromUUID(uuid)
+        if params.has_key('name'):
+            name = params['name']
+
+        session = create_session()
+        count = session.query(self.klass['Inventory']). \
+                select_from(self.table['hasInventory'].join(self.table['Inventory']).join(self.machine)). \
+                filter(Machine.id == machineId). \
+                order_by(self.klass['Inventory'].id.desc()). \
+                count()
+        session.close()
+
+        return count
+
+    def getComputerInventoryDiff(self, ctx, params):
+        """
+        Returns the differences between an inventory of the given machine and the previous inventory
+
+        @param uuid: uuid of the machine
+        @param inventory: id of the inventory to compare with the previous one
+        @type params:dict
+
+        @return: Return a list with the added and the removed elements, sorted by inventory part
+        @rtype: list
+        """
+        machineId = ""
+        current_inventory_id = ""
+
+        if params.has_key('uuid'):
+            uuid = params['uuid']
+            # Get the machine ID from the uuid given in the parameters to get all infos about the machine
+            machineId = fromUUID(uuid)
+        else:
+            return [{}, {}]
+        if params.has_key('inventoryId'):
+            current_inventory_id = params['inventoryId']
+        else:
+            return [{}, {}]
+
+        from time import strftime
+        current_date = strftime("%Y-%m-%d")
+        current_time = strftime("%H:%M:%S")
+
+        session = create_session()
+
+        # First, get the Date and the Time of the current_inventory
+        try:
+            result = session.query(self.klass['Inventory']). \
+                    select_from(self.table['Inventory']). \
+                    filter(self.klass['Inventory'].id == current_inventory_id). \
+                    one()
+            current_date = result.Date
+            current_time = result.Time
+        except Exception, e:
+            self.logger.error("Unable to get the current inventory Date or Time for the following reason : \n%s"%(str(e)))
+            return [{}, {}]
+
+        # Then, send a query to get the previous inventory before the date and time get above for this machine
+
+        try:
+            result = session.query(self.klass['Inventory']). \
+                    select_from(self.table['hasInventory'].join(self.machine).join(self.table['Inventory'])). \
+                    filter(Machine.id == machineId). \
+                    filter(self.klass['Inventory'].Date <= current_date). \
+                    filter(self.klass['Inventory'].Time < current_time). \
+                    order_by(self.klass['Inventory'].id.desc())
+            if result.count() < 1:
+                raise Exception("No inventory was made before this one.")
+            else:
+                previous_inventory_id = result.first().id
+
+        except Exception, e:
+            self.logger.error("Unable to get the previous inventory for the following reason : \n%s"%(str(e)))
+            return [{}, {}]
+
+        session.close()
+
+        previous_inventory = {}
+        current_inventory = {}
+        added_elements = {}
+        removed_elements = {}
+
+        # Loop in all the parts of the Inventory (except "Entity") to get the inventory part for a given inventory Id
+        for part in self.config.getInventoryParts():
+            if part != 'Entity':
+                # Set the previous inventory Id in the params list
+                params['inventoryId'] = previous_inventory_id
+                # Call the method to get the relevant inventory part
+                machine_previous_inventory_part = self.getLastMachineInventoryPart(ctx, part, params)
+                # Extract the inventory part from the tuple if not empty
+                if machine_previous_inventory_part != []:
+                    previous_inventory[part] = machine_previous_inventory_part[0][1]
+                else:
+                    previous_inventory[part] = []
+
+                # Set the current inventory Id in the params list
+                params['inventoryId'] = current_inventory_id
+                # Call the method to get the relevant inventory part
+                machine_current_inventory_part = self.getLastMachineInventoryPart(ctx, part, params)
+                # Extract the inventory part from the tuple if not empty
+                if machine_previous_inventory_part != []:
+                    current_inventory[part] = machine_current_inventory_part[0][1]
+                else:
+                    current_inventory[part] = []
+
+                added_elements[part] = []
+                removed_elements[part] = []
+                # Loop in the current inventory part to test for each element if it was in the previous inventory
+                for current_elem in current_inventory[part]:
+                    new = True
+                    for previous_elem in previous_inventory[part]:
+                        new = new and current_elem['id'] != previous_elem['id']
+                    # If there is a new element, add it in the returned tuple
+                    if new:
+                        added_elements[part].append(current_elem)
+
+                # Loop in the previous inventory part to test for each element if it disappears in the current inventory
+                for previous_elem in previous_inventory[part]:
+                    removed = True
+                    for current_elem in current_inventory[part]:
+                        removed = removed and previous_elem['id'] != current_elem['id']
+                    # If the element is not in the current inventory, add it in the rerturned tuple
+                    if removed:
+                        removed_elements[part].append(previous_elem)
+
+        ret = [added_elements, removed_elements]
         return ret
 
 def toUUID(id): # TODO : change this method to get a value from somewhere in the db, depending on a config param
