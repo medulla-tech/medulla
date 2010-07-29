@@ -22,7 +22,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-# MMC
+"""
+Configuration class for MMC agent inventory plugin
+"""
+
 from pulse2.database.config import DatabaseConfig
 
 class InventoryDatabaseConfigSkel(DatabaseConfig):
@@ -30,6 +33,7 @@ class InventoryDatabaseConfigSkel(DatabaseConfig):
     list = {}
     double = {}
     halfstatic = {}
+    extended = {}
     def getInventoryParts(self):
         """
         @return: Return all available inventory parts
@@ -71,7 +75,6 @@ class InventoryDatabaseConfig(InventoryDatabaseConfigSkel):
     halfstatic = {
             'Registry/Value/display name' : ['string', 'Path', 'DisplayName']
     }
-    
     expert_mode = {}
     graph = {}
     display = [['cn', 'Computer Name'], ['displayName', 'Description']]
@@ -96,8 +99,8 @@ class InventoryDatabaseConfig(InventoryDatabaseConfigSkel):
         if self.cp.has_section("computers"):
             if self.cp.has_option("computers", "display"):
                 self.display = map(lambda x: x.split('::'), self.cp.get("computers", "display").split('||'))
-    
-    
+
+
             # Registry::Path::path||Registry::Value::srvcomment::Path==srvcomment
             if self.cp.has_option("computers", "content") and not self.cp.get("computers", "content") == '':
                 for c in map(lambda x: x.split('::'), self.cp.get("computers", "content").split('||')):
@@ -113,7 +116,7 @@ class InventoryDatabaseConfig(InventoryDatabaseConfigSkel):
                     # Software/ProductName||Hardware/ProcessorType||Hardware/OperatingSystem||Drive/TotalSpace
                     for l in simple.split('||'):
                         self.list[l] = ['string'] # TODO also int...
-    
+
             if self.cp.has_option('querymanager', 'double'):
                 double = self.cp.get('querymanager', 'double')
                 self.double = {}
@@ -123,7 +126,7 @@ class InventoryDatabaseConfig(InventoryDatabaseConfigSkel):
                         name, vals = l.split('::')
                         val1, val2 = vals.split('##')
                         self.double[name] = [[val1, 'string'], [val2, 'string']]
-    
+
             if self.cp.has_option('querymanager', 'halfstatic'):
                 halfstatic = self.cp.get('querymanager', 'halfstatic')
                 self.halfstatic = {}
@@ -134,11 +137,15 @@ class InventoryDatabaseConfig(InventoryDatabaseConfigSkel):
                         k, v = vals.split('##')
                         self.halfstatic[name] = ['string', k, v]
 
+            if self.cp.has_option('querymanager', 'extended'):
+                extended = self.cp.get('querymanager', 'extended')
+                self.extended = {}
+                if extended != '':
+                    for l in extended.split('||'):
+                        self.extended[l] = ['string']
+
 
 def desArrayIfUnic(x):
     if len(x) == 1:
         return x[0]
     return x
-
-                                
-
