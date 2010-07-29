@@ -234,6 +234,21 @@ option2 = plop      </screen></para>
 
             <entry>0</entry>
           </row>
+
+          <row>
+            <entry>software_filter</entry>
+
+            <entry>Allows to exclude softwares in the inventory
+              software views according to their names, using a SQL
+	      expression. For example: %KB% allows to filter all
+	      softwares containing KB in their name. Multiple filters
+              can be set using commas.</entry>
+
+            <entry>yes</entry>
+
+            <entry></entry>
+          </row>
+
         </tbody>
       </tgroup>
     </table>
