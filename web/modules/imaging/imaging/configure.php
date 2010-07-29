@@ -181,9 +181,14 @@ if (isset($_POST["bunregister"])) {
         }
     }
     if ($type == '') {
-        list($whose, $menu) = xmlrpc_getMyMenuComputer($target_uuid);
+        $ret = xmlrpc_getMyMenuComputer($target_uuid);
     } else {
-        list($whose, $menu) = xmlrpc_getMyMenuProfile($target_uuid);
+        $ret = xmlrpc_getMyMenuProfile($target_uuid);
+    }
+    if (!$ret[0] && $ret[1] == 'ERROR') {
+        $err_msg = getPulse2ErrorString($ret[2], $ret[3]);
+    } else {
+        list($whose, $menu) = $ret;
     }
 
     if (!$whose && !$menu) {

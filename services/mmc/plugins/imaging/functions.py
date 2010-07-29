@@ -28,6 +28,7 @@ imaging plugin
 
 import logging
 from twisted.internet import defer
+import re
 
 #from mmc.agent import PluginManager
 from mmc.support.mmctools import xmlrpcCleanup
@@ -38,11 +39,11 @@ from mmc.plugins.imaging.config import ImagingConfig
 #from mmc.plugins.imaging.pulse import ImagingPulse2Manager
 from mmc.plugins.base.computers import ComputerManager
 from pulse2.managers.profile import ComputerProfileManager
-from pulse2.managers.imaging import ComputerImagingManager
+# from pulse2.managers.imaging import ComputerImagingManager
 from pulse2.managers.location import ComputerLocationManager
 from pulse2.managers.pulse import Pulse2Manager
 from pulse2.database.imaging import ImagingDatabase
-from pulse2.database.imaging.types import P2IT, P2ISS, P2IM
+from pulse2.database.imaging.types import P2IT, P2ISS, P2IM, P2ERR
 from pulse2.apis.clients.imaging import ImagingApi
 import pulse2.utils
 
@@ -1606,7 +1607,13 @@ class ImagingRpcProxy(RpcProxyI):
             * the menu as a dict
         @rtype: list
         """
-        ret = ImagingDatabase().getMyMenuTarget(uuid, target_type)
+        try:
+            ret = ImagingDatabase().getMyMenuTarget(uuid, target_type)
+        except Exception, e:
+            if re.match("can't get any default menu for this entity ", e.message):
+                return [False, 'ERROR', P2ERR.ERR_NEED_IMAGING_SERVER_REGISTRATION, "You first need to register your imaging server."]
+            else:
+                raise e
         if ret[1]:
             ret[1] = ret[1].toH()
         return ret

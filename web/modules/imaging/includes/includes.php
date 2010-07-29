@@ -31,6 +31,26 @@ global $SYNCHROSTATE_RUNNING;
 global $SYNCHROSTATE_INIT_ERROR;
 list($SYNCHROSTATE_UNKNOWN, $SYNCHROSTATE_TODO, $SYNCHROSTATE_SYNCHRO, $SYNCHROSTATE_RUNNING, $SYNCHROSTATE_INIT_ERROR) = array(0, 1, 2, 3, 4);
 
+$errors = array(
+    1000 => _T("There was an error (this is a default message).", "imaging"), // $ERR_DEFAULT
+    1001 => _T("The nomenclature is missing.", "imaging"), // $ERR_MISSING_NOMENCLATURE
+    1003 => _T("This imaging server don't exists.", "imaging"), // $ERR_IMAGING_SERVER_DONT_EXISTS
+    1004 => _T("This entity already exists.", "imaging"), // $ERR_ENTITY_ALREADY_EXISTS
+    1005 => _T("You asked for an unexisting menu item.", "imaging"), // $ERR_UNEXISTING_MENUITEM
+    1006 => _T("This target has no menu.", "imaging"), // $ERR_TARGET_HAS_NO_MENU
+    1007 => _T("This entity has no default menu, you first need to set one.", "imaging"), // $ERR_ENTITY_HAS_NO_DEFAULT_MENU
+    1008 => _T("This image already exists.", "imaging"), // $ERR_IMAGE_ALREADY_EXISTS
+    1009 => _T("This computer already exists.", "imaging"), // $ERR_COMPUTER_ALREADY_EXISTS
+    1010 => _T("You need to register this computer's imaging server to be able to use imaging.", "imaging"), // $ERR_NEED_IMAGING_SERVER_REGISTRATION
+);
+
+function getPulse2ErrorString($ERR_CODE, $DEFAULT_STRING) {
+    if (in_array($ERR_CODE, $errors)) {
+        return $errors[$ERR_CODE];
+    }
+    return $DEFAULT_STRING;
+}
+
 function getCurrentLocation() {
 
     $location = false;
