@@ -55,5 +55,8 @@ class InventoryConfig(InventoryDatabaseConfig):
                 self.expert_mode[i] = []
 
     def getSoftwareFilter(self):
-        self.software_filter = self.cp.get("main", "software_filter").split(',')
+        try:
+            self.software_filter = self.cp.get("main", "software_filter").split(',')
+        except:
+            pass
         return self.software_filter
