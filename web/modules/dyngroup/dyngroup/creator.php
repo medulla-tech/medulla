@@ -22,7 +22,6 @@
  */
 
 require_once("modules/dyngroup/includes/includes.php");
-
 $groupedit = True;
 if (strpos($_GET['action'], 'profile') !== false) { $groupedit = False; }
 if ($edition) {
@@ -59,7 +58,7 @@ if (strlen($request)) {
     $request = new Request();
 }
 
-// a part of the request has to be removed
+// a part of the request has to be removed 
 if ($_GET['action'] == 'computersgroupsubedit' || $_GET['action'] == 'computersgroupcreatesubedit') {
     if (strlen(quickGet('sub_id'))) {
         $sub = $request->getSub(quickGet('sub_id'));
@@ -74,9 +73,25 @@ if ($_GET['action'] == 'computersgroupsubdel' || $_GET['action'] == 'computersgr
 }
 
 // a new part has to be added to the request
+// if the part is extended, check the validity of data or parse the date
 if (quickGet('req') && quickGet('param')) {
-    $sub = new SubRequest(quickGet('req'), quickGet('param'), quickGet('value'), quickGet('value2'));
-    $request->addSub($sub);
+    $correct = true;
+    if(quickGet('type_extended')) {
+        switch(quickGet('type_extended')) {
+        case 'date':
+            // Keep only the date in YYYY-mm-dd format
+            quickSet('value', substr(quickGet('value'), 0, 10));
+            break;
+        case 'int':
+            // Check if the value of the input is a number
+            $correct = preg_match("#^[0-9]+$#", quickGet('value'));
+            break; 
+        }
+    }
+    if($correct) {
+        $sub = new SubRequest(quickGet('req'), quickGet('param'), quickGet('value'), quickGet('value2'), quickGet('operator'));
+        $request->addSub($sub);
+    }
 }
 
 // select the module in which a part of the request must be launch
@@ -90,9 +105,9 @@ if (count($modules) == 1) {
         $default = getDefaultModule();
         quickSet('add_req', $default);
     }
-
+    
     print "<table><tr><td>"._T("Choose the module you want to query : ", "dyngroup")."</td>";
-
+    
     foreach ($modules as $name) {
         if ($name == quickGet('add_req')) {
             print "<td>$name</td>";
@@ -151,8 +166,42 @@ if (quickGet('add_param')) {
     print "<input type='hidden' name='imaging_server' value='$imaging_server'/>";
     // need to be changed in getCriterionType (we don't use the second part of the array...
     $type = getTypeForCriterionInModule(quickGet('req'), quickGet('add_param'));
+    $extended = getExtended(quickGet('req'), quickGet('add_param'));
     print "<tr><td>".quickGet('req')." > ".quickGet('add_param')."</td><td>";
-    switch ($type) { #$param[0]) {
+    if(strlen($extended)) {
+
+        // Insert a hidden input which contains the type of data
+        print "<input type='hidden' name='type_extended' value='" . $extended . "' />";
+
+        // Display an option list to chose the comparison operator
+        $operators = array('=', '<', '>', '!=');
+        $listbox = new SelectItem("operator");
+        $listbox->setElements($operators);
+        $listbox->setElementsVal($operators);
+
+        print _T("Comparison operator : ");
+        $listbox->display();
+
+        print "</td><td>";
+
+        switch($extended) {
+        // Execute a regexp that checks the right type 
+        case 'int':
+            // Nothing to do for the moment.
+            break;
+        // Display a calendar widget instead of an input
+        case 'date':
+            include("modules/base/includes/AjaxFilterLog.inc.php");
+            $dateWidget = new LogDynamicDateTpl("value", _("Date"));
+            $dateWidget->display();
+            print "</td><td>";
+            print "<input class='btnPrimary' value='"._T("Add", "dyngroup")."' name='Add' type='submit'/>";
+            print "</td><td>";
+            break;
+        }
+    }
+    if($extended != "date") {
+        switch ($type) { #$param[0]) {
         case 'string':
             print "<input name='value' type='text'></input>";
             print "<input class='btnPrimary' value='"._T("Add", "dyngroup")."' name='Add' type='submit'/>";
@@ -193,6 +242,7 @@ if (quickGet('add_param')) {
             print "<input type='hidden' value='True' name='value'/><input type='text' readonly value='"._T("Yes", "dyngroup")."'/>";
             print "<input class='btnPrimary' value='"._T("Add", "dyngroup")."' name='Add' type='submit'/>";
             break;
+        } 
     }
     print "</td><td>";
     print "<input type='hidden' name='req' value='".quickGet('req')."'/>";
@@ -220,7 +270,7 @@ if (!$request->isEmpty())  {  # TODO check ACLs....
     print "<hr/>";
     print "<table>";
     print "<tr><td>";
-
+    
     $b = new Button('base', 'computers', 'creator_step2');
     $url = urlStr("base/computers/creator_step2", array('id'=>$id, 'request'=>$request->toS(), 'imaging_server'=>$imaging_server, 'is_group'=>($groupedit?'1':0)));
     print $b->getOnClickButton(_T("Go to save step", "dyngroup"), $url);

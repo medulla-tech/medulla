@@ -57,4 +57,7 @@ function checkBoolean($bool) {
     return myXmlCall("dyngroup.checkBoolean", array($bool));
 }
 
+function getExtended($moduleName, $criterion) {
+    return myXmlCall("dyngroup.getExtended", array($moduleName, $criterion));
+}
 ?>

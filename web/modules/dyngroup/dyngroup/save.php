@@ -52,7 +52,6 @@ if (!$bool && $group) {
         $bool = $group->getBool();
     }
 }
-
 $r = new Request();
 $r->parse($request);
 
@@ -83,12 +82,12 @@ if (!isset($_POST['btnPrimary']) || $name_exists || !$check || isset($_POST['che
     if (hasCorrectAcl("base", "computers", "tmpdisplay")) {
         drawTemporaryButton();
     }
-
+    
     if (hasCorrectAcl("base", "computers", "save")) {
         print "<td><input name='btnPrimary' value='"._T('Save', 'dyngroup')."' class='btnPrimary' type='submit'/></td>";
     }
     print "</tr></form></table>";
-    if ($name_exists && !isset($_POST['displayTmp'])) {
+    if ($name_exists && !isset($_POST['displayTmp'])) { 
         new NotifyWidgetFailure(sprintf(_T("A group already exists with name '%s'", "dyngroup"), $name));
     } elseif ($name == '' && $check && $id) {
         new NotifyWidgetFailure(_T("You must specify a group name", "dyngroup"));

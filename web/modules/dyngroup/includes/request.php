@@ -119,21 +119,28 @@ class Request {
 }
 
 class SubRequest {
-    function SubRequest($module = null, $criterion = null, $value = null, $value2 = null) {
+    function SubRequest($module = null, $criterion = null, $value = null, $value2 = null, $operator = null) {
         $this->sep_plural = array('>', '<');
         $this->module = $module;
         $this->crit = $criterion;
         $this->val = $value;
+        $this->operator = (($operator == null) ? "=" : $operator);
         if ($value2) {
             $this->val = array($value, $value2);
         }
         $this->id = null;
     }
     function toS() {
+        // Set the right comparison operator depending on the attribute of the subrequest
+        // The operator has to follow the good syntax, else the QueryManager won't work
+        $comparison_operator = "=="; // '==' is the comparison operator by default 
+        if($this->operator != '=')
+            $comparison_operator .= $this->operator;
+
         if (is_array($this->val)) {
-            return $this->id."==".$this->module."::".$this->crit."==".$this->sep_plural[0].implode(', ', $this->val).$this->sep_plural[1];
+            return $this->id."==".$this->module."::".$this->crit. $comparison_operator .$this->sep_plural[0].implode(', ', $this->val).$this->sep_plural[1];
         } else {
-            return $this->id."==".$this->module."::".$this->crit."==".$this->val;
+            return $this->id."==".$this->module."::".$this->crit. $comparison_operator .$this->val;
         }
     }
     function toURL() {
@@ -144,15 +151,28 @@ class SubRequest {
     }
     function display() {
         if (is_array($this->val)) {
-            return sprintf(_T("%s) Search %s = (%s) in module %s", "dyngroup"), $this->id, $this->crit, implode(', ', $this->val), $this->module);
+            return sprintf(_T("%s) Search %s %s (%s) in module %s", "dyngroup"), $this->id, $this->operator, $this->crit, implode(', ', $this->val), $this->module);
         } else {
-            return sprintf(_T("%s) Search %s = %s in module %s", "dyngroup"), $this->id, $this->crit, $this->val, $this->module);
+            return sprintf(_T("%s) Search %s %s %s in module %s", "dyngroup"), $this->id, $this->operator, $this->crit, $this->val, $this->module);
         }
     }
+
     function parse($str) {
         $a = explode('::', $str);
         $b = explode('==', $a[0]);
-        $c = explode('==', $a[1]);
+        
+        if(!preg_match("#==>.+<$#", $a[1])) { // If the request isn't a double criterion request
+            // Search the operator string in the second part of the request string
+            preg_match("#==(<|>|!=)?#", $a[1], $comparison_operator);
+        }
+        else {
+            $comparison_operator = array('==');
+        }
+        // Set the operator attribute of the instance : the last char of the matched string
+        $this->operator = substr($comparison_operator[0], -1);
+        // Explode the request with the operator to find the criterion and the value
+
+        $c = explode($comparison_operator[0], $a[1]);
         $this->id = $b[0];
         $this->module = $b[1];
         $this->crit = $c[0];
