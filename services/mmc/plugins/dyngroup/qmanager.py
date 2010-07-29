@@ -21,6 +21,10 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+"""
+QueryManager implementation.
+"""
+
 import mmc.support.mmctools
 import logging
 import glob
@@ -49,9 +53,12 @@ class QueryManager(Singleton):
 
         # list[ possibilities ]
         self.queryPossibilities = {}
+        # extended possibilites
+        self.extendedPossibilities = {}
         for pluginName in self.queryablePlugins:
             module = self.queryablePlugins[pluginName]
             self.queryPossibilities[pluginName] = self._getPluginQueryPossibilities(module)
+            self.extendedPossibilities[pluginName] = self._getPluginExtendedPossibilities(module)
 
     def _getQueryablePlugins(self):
         """
@@ -84,12 +91,19 @@ class QueryManager(Singleton):
         func = getattr(pluginModule, 'queryPossibilities')
         return func()
 
+    def _getPluginExtendedPossibilities(self, pluginModule):
+        func = getattr(pluginModule, 'extendedPossibilities')
+        return func()
+
     def _getPluginReplyToQuery(self, ctx, pluginModule, query):
         func = getattr(pluginModule, 'query')
         return func(ctx, query[0], query[1])
 
     def getQueryPossibilities(self, ctx):
         return self.queryPossibilities
+
+    def getExtendedPossibilities(self, ctx):
+        return self.extendedPossibilities
 
     def getPossiblesModules(self, ctx):
         return self.queryPossibilities.keys()
@@ -119,6 +133,29 @@ class QueryManager(Singleton):
         if value2 == None:
             return [ret[0], ret[1](ctx, value1)]
         return [ret[0], ret[1](ctx, value1, value2)]
+
+    def getExtended(self, moduleName, criterion):
+        """
+        Return the type of a given criterion for a module.
+        Extended criterions are criterions from which we know the type.
+
+        @rtype: str
+        @return: type of a given criterion for a module
+        """
+        from sqlalchemy.databases.mysql import *
+        retType = ""
+        try:
+            possibilities = self.extendedPossibilities[moduleName][criterion]
+            ret = possibilities[1]
+            if isinstance(ret, MSDate):
+                retType = "date"
+            elif isinstance(ret, MSMediumInteger):
+                retType = "int"
+
+        except Exception, e:
+            self.logger.error(e)
+            self.logger.error("Not an extended criterion")
+        return retType
 
     def replyToQuery(self, ctx, query, bool = None, min = 0, max = 10):
         return self._replyToQuery(ctx, query, bool)[int(min):int(max)]
@@ -271,6 +308,7 @@ class QueryManager(Singleton):
         p2 = re.compile('::')
         p3 = re.compile('==')
         p4 = re.compile(', ')
+        p5 = '(^>.+<$)'
         p_sep_plural = '(^>|<$)' # multiple entries are surounded by > and <
 
         queries = p1.split(query)
@@ -279,7 +317,8 @@ class QueryManager(Singleton):
             a = p2.split(q)
             b = p3.split(a[0])
             c = p3.split(a[1])
-            c[1] = re.sub(p_sep_plural, '', c[1])
+            if re.search(p5, c[1]) != None:
+                c[1] = re.sub(p_sep_plural, '', c[1])
             val = p4.split(c[1])
             if len(val) == 1:
                 val = val[0]

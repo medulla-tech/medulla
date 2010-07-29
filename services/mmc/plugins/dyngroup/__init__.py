@@ -430,6 +430,13 @@ class RpcProxy(RpcProxyI):
         ims_uuid = self.get_profile_imaging_server(gid)
         return (ims_uuid != False)
 
+    def getExtended(self, moduleName, criterion):
+        if not isDynamicEnable():
+            return ""
+        else:
+            return queryManager.getExtended(moduleName, criterion)
+
+
 def __onlyIn(query, module):
     for q in query[1]:
         if len(q) == 4:

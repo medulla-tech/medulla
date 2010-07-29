@@ -20,6 +20,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+"""
+QueryManager API for dyngroup
+"""
+
 import logging
 
 from mmc.plugins.dyngroup.database import DyngroupDatabase
@@ -34,6 +38,9 @@ def queryPossibilities():
     ret = {}
     ret['groupname'] = ['list', getAllGroupName]
     return ret
+
+def extendedPossibilities():
+    return ""
 
 def query(ctx, criterion, value):
     logging.getLogger().info(ctx)
