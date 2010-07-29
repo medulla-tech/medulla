@@ -258,8 +258,15 @@ class CheckboxTpl extends AbstractTpl{
         print '<div style="color: #C00;">' . _("unavailable") . '</div>';
         print '<input type="hidden" value="'.$value.'" name="'.$this->name.'" />';
     }
-}
 
+    function check($checked) {
+        if($checked)
+            $this->options["value"] = "checked";
+        else
+            $this->options["value"] = "";
+    }
+
+}
 
 /**
  * simple input template
