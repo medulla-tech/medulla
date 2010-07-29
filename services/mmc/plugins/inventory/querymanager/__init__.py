@@ -20,9 +20,13 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+"""
+QueryManager APO for inventory
+"""
+
 import re
 import logging
-from mmc.plugins.inventory import getValues, getValuesFuzzy, getValuesWhere, getValueFuzzyWhere, getMachinesBy
+from mmc.plugins.inventory import getValues, getValuesFuzzy, getValuesWhere, getValueFuzzyWhere, getMachinesBy, getTypeOfAttribute
 from mmc.plugins.inventory.tables_def import PossibleQueries
 
 def activate():
@@ -35,6 +39,14 @@ def queryPossibilities():
         for possible in PossibleQueries().possibleQueries(type):
             ret[possible] = [type, funcGet(possible, type)]
     return ret
+
+def extendedPossibilities():
+    ret = {}
+    p1 = re.compile('/')
+    for possible in PossibleQueries().possibleQueries('extended'):
+        ret[possible] = ['extended', funcGet(possible, 'extended')]
+    return ret
+
 
 def query(criterion, value):
     p1 = re.compile('/')
@@ -70,4 +82,9 @@ def funcGet(couple, type = 'list'):
         except ValueError:
             logging.getLogger().warning("%s cant be used as a 'halfstatic' value, please check the syntax of the config file."%(couple))
             pass
+    elif type == 'extended':
+        # Get the table and column name from the parameter
+        table, col = re.compile('/').split(couple)
+        # Return the type of this column
+        return getTypeOfAttribute(table, col)
 
