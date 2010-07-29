@@ -23,6 +23,8 @@
  */
 
 require_once("modules/inventory/includes/xmlrpc.php");
+require_once("modules/inventory/includes/html.php");
+require_once("modules/base/includes/AjaxFilterLog.inc.php");
 
 
 $params = array("from" => 'base%2computers%2Finvtabs');
@@ -33,7 +35,7 @@ foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab', 'part') 
         $params[$get] = $value;
     }
 }
-$ajax = new AjaxFilter(urlStrRedirect("inventory/inventory/ajaxViewPart"), "container", $params);
+$ajax = new AjaxFilterInventory(urlStrRedirect("inventory/inventory/ajaxViewPart"), "container", $params);
 
 /*$url = 'modules/inventory/inventory/ajaxViewPart.php?from=base%2Fcomputers%2Finvtabs';
 foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab', 'part') as $get) {

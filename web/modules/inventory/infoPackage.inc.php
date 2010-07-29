@@ -38,8 +38,10 @@ $mod->setPriority(700);
 $submod = new SubModule("inventory");
 $submod->setDescription(_T("Inventory", "inventory"));
 $submod->setImg('modules/inventory/graph/img/inventory');
-$submod->setDefaultPage("inventory/inventory/index");
+$submod->setDefaultPage("inventory/inventory/incoming");
 
+$page = new Page("incoming", _T("Incoming", "inventory"));
+$submod->addPage($page);
 $page = new Page("index",_T("Bios","inventory"));
 $submod->addPage($page);
 $page = new Page("hardware",_T("Hardware","inventory"));
@@ -99,6 +101,10 @@ $submod->addPage($page);
 
 $page = new Page("ajaxViewPart");
 $page->setFile("modules/inventory/inventory/ajaxViewPart.php", array("AJAX" =>True,"visible"=>False));
+$submod->addPage($page);
+
+$page = new Page("ajaxIncoming");
+$page->setFile("modules/inventory/inventory/ajaxIncoming.php", array("AJAX" =>True, "visible"=>False));
 $submod->addPage($page);
 
 $page = new Page("header", _T('Header', "inventory"));
@@ -177,6 +183,12 @@ if (!empty($submod)) {
     
     $tab = new Tab("tab4",  _T("Registry tab for a computer", "inventory"));
     $page->addTab($tab);
+
+    $submod->addPage($page);
+
+    $page = new Page("invdiff", _T("Differences between two inventories", "inventory"));
+    $page->setFile("modules/inventory/inventory/inventory_diff.php");
+    $page->setOptions(array("visible"=>False));
 
     $submod->addPage($page);
     

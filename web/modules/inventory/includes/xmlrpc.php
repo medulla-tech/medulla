@@ -60,5 +60,23 @@ function inventoryExists($uuid) {
     return xmlCall("inventory.inventoryExists", array($uuid));
 }
 
+function getInventoryHistory($days, $only_new, $pattern, $max, $min) {
+    return xmlCall("inventory.getInventoryHistory", array($days, $only_new, $pattern, $max, $min));
+}
 
+function countInventoryHistory($days, $only_new, $pattern) {
+    return xmlCall("inventory.countInventoryHistory", array($days, $only_new, $pattern));
+}
+
+function getMachineInventoryHistory($params) {
+    return xmlCall("inventory.getMachineInventoryHistory", array($params));
+}
+
+function countMachineInventoryHistory($params) {
+    return xmlCall("inventory.countMachineInventoryHistory", array($params));
+}
+
+function getMachineInventoryDiff($params) {
+    return xmlCall("inventory.getMachineInventoryDiff", array($params));
+}
 ?>

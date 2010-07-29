@@ -23,7 +23,8 @@
  */
 
 require_once("modules/inventory/includes/xmlrpc.php");
-
+require_once("modules/inventory/includes/html.php");
+require_once("modules/base/includes/AjaxFilterLog.inc.php");
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 
@@ -37,8 +38,7 @@ foreach (array('uuid', 'hostname', 'gid', 'groupname', 'tab') as $get) {
     }
     $params[$get] = $value;
 }
-$ajax = new AjaxFilter(urlStrRedirect("inventory/inventory/ajaxViewPart"), "container", $params);
-
+$ajax = new AjaxFilterInventory(urlStrRedirect("inventory/inventory/ajaxViewPart"), "container", $params);
 $titles = array('index' => _T('Bios list', 'inventory'),
                 'hardware' => _T('Hardware and OS information list', 'inventory'),
                 'software' => _T('Software list', 'inventory'),

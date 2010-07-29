@@ -21,23 +21,38 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
+session_start();
 require_once("modules/inventory/includes/xmlrpc.php");
 require_once("modules/base/includes/edit.inc.php");
-
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 
 $filter = $_GET["filter"];
 $from = $_GET['from'];
+
+// Get the date set into the calendar
+if($_GET['date'] == _T('Date')) {
+    $date = "";
+} else {
+    $date = $_GET['date'];
+    // Put the date in a session to save it
+    $_SESSION['__inventoryDate'] = $date;
+}
+
+// Check the status of the software_filter checkbox if in the Software page
+if(isset($_GET['software_filter']) && $_GET['part'] == 'Software')
+    $software_filter = $_GET['software_filter'] == 'true';
+else
+    $software_filter = "";
+
 if (isset($_GET["start"])) $start = $_GET["start"];
 else $start = 0;
 
 if ($_GET['uuid'] != '') {
     $table = $_GET['part'];
     $graph = getInventoryGraph($table);
-    $inv = getLastMachineInventoryPart($table, array('uuid'=>$_GET["uuid"], 'filter'=>$filter, 'min'=>$start, 'max'=>($start + $maxperpage)));
-    $count = countLastMachineInventoryPart($table, array('uuid'=>$_GET["uuid"], 'filter'=>$filter));
+    $inv = getLastMachineInventoryPart($table, array('uuid'=>$_GET["uuid"], 'filter'=>$filter, 'min'=>$start, 'max'=>($start + $maxperpage), 'date'=>$date, 'software_filter'=>$software_filter));
+    $count = countLastMachineInventoryPart($table, array('uuid'=>$_GET["uuid"], 'filter'=>$filter, 'date'=>$date, 'software_filter'=>$software_filter));
     
     /* display everything else in separated tables */
     $n = null;
@@ -107,8 +122,8 @@ if ($_GET['uuid'] != '') {
     ?><a href='<?= urlStr("inventory/inventory/csv", array('table'=>$table, 'uuid'=>$_GET["uuid"])) ?>'><img src='modules/inventory/graph/csv.png' alt='export csv'/></a><?php
 } else {
     $display = $_GET['part'];
-    $machines = getLastMachineInventoryPart($display, array('gid'=>$_GET["gid"], 'filter'=>$filter, 'min'=>$start, 'max'=>($start + $maxperpage)));
-    $count = countLastMachineInventoryPart($display, array('gid'=>$_GET["gid"], 'filter'=>$filter));
+    $machines = getLastMachineInventoryPart($display, array('gid'=>$_GET["gid"], 'filter'=>$filter, 'min'=>$start, 'max'=>($start + $maxperpage), 'date'=>$date, 'software_filter'=>$software_filter));
+    $count = countLastMachineInventoryPart($display, array('gid'=>$_GET["gid"], 'filter'=>$filter, 'date'=>$date, 'software_filter'=>$software_filter));
 
     $result = array();
     $index = 0;

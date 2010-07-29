@@ -21,6 +21,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+session_start();
+
 class RenderedImage extends HtmlElement {
 
     function RenderedImage($url, $alt = '', $style = '') {
@@ -43,6 +45,156 @@ class RenderedLink extends HtmlElement {
     function display() {
         print '<a href="'.$this->link.'">'.$this->content.'</a>';
     }
+}
+
+/**
+ * Define a class that render a widget with a calendar integrated for the inventory parts
+ * It has a checkbox to filter the softwares
+ * It saves the date set in a session to remember it when changing the page
+ */
+class AjaxFilterInventory extends AjaxFilter {
+
+    function AjaxFilterInventory($url, $divid = "container", $params = array(), $formid = "") {
+        $this->AjaxFilter($url, $divid, $params, $formid);
+        // Get the date saved in the session
+        if(isset($_SESSION['__inventoryDate']))
+            $defaultDate = $_SESSION['__inventoryDate'];
+        // Or put the default string "Date" in the field
+        else
+            $defaultDate = _T("Date");
+
+        // Save the part to later know if we are in the Software page ($params['part'] is changed by the AjaxFilter class)
+        $this->part = $params['part'];
+        // Add a calendar at the default date (from the session or "Date"
+        $this->date = new LogDynamicDateTpl("date", $defaultDate, false);
+    }
+
+    function setsearchbar($url){
+        $this->urlsearch=$url;
+    }
+    
+    function display(){
+        
+?>
+<form name="Form<?=$this->formid?>" id="Form<?=$this->formid?>" action="#" onsubmit="return false;">
+    <div id="loader">
+        <img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/>
+    </div>
+    <div id="searchSpan<?=$this->formid?>" class="searchboxlog">
+        <span class="searchfieldfilter">
+<?php
+        $this->date->setSize(15);
+        $this->date->display(array("update_search"=>True));
+
+        // Display the checkbox to allow to filter the softwares
+        if($this->part == 'Software') {
+            $checkbox = new CheckboxTpl("software_filter");
+            $checkbox->display(array("value"=>"checked"));
+            echo "Filter softwares";
+        }
+?>
+        
+        <span class="searchtools">
+            <span id="searchfilter">
+                <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" /> <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param<?=$this->formid?>" onkeyup="pushSearch<?=$this->formid?>(); return false;" />
+                <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
+                onclick="document.getElementById('param<?=$this->formid?>').value =''; pushSearch<?=$this->formid?>(); return false;" />
+                </span>
+            </span>    
+            <img src="img/common/reload.png" style="vertical-align: middle; margin-left: 10px; margin-right: 10px;" onclick="pushSearch(); return false;" title="<?php echo _("Refresh")?>" />
+        </span>&nbsp;
+        </span>
+    </div>
+    <script type="text/javascript">
+    
+<?
+if(!$this->formid) {
+?>
+        document.getElementById('param<?=$this->formid?>').focus();
+<?
+}
+if(isset($this->storedfilter)) {
+?>
+        document.Form<?=$this->formid?>.param.value = "<?=$this->storedfilter?>";
+<?
+}
+?>
+
+
+        var refreshtimer<?=$this->formid?> = null;
+        var refreshparamtimer<?=$this->formid?> = null;
+        var refreshdelay<?=$this->formid?> = <?= $this->refresh ?>;
+        // Get the state of the software_value checkbox
+        var software_filter = "";
+        if(document.Form<?=$this->formid?>.software_filter != undefined){
+            software_filter = document.Form<?=$this->formid?>.software_filter.checked;
+        }
+
+        /**
+         * Clear the timers set vith setTimeout
+         */
+        clearTimers<?=$this->formid?> = function() {
+            if (refreshtimer<?=$this->formid?> != null) {
+                clearTimeout(refreshtimer<?=$this->formid?>);
+            }
+            if (refreshparamtimer<?=$this->formid?> != null) {
+                clearTimeout(refreshparamtimer<?=$this->formid?>);
+            }
+        }
+
+        /**
+         * Update div
+         */
+        updateSearch<?=$this->formid?> = function() {
+            new Ajax.Updater('<?= $this->divid; ?>',
+            '<?= $this->url; ?>filter='+document.Form<?=$this->formid?>.param.value+'&date='+document.Form<?=$this->formid?>.date.value+'<?=$this->params?>&software_filter='+software_filter,
+            { asynchronous:true, evalScripts: true}
+            );
+
+<?
+if ($this->refresh) {
+?>
+            //refreshtimer<?=$this->formid?> = setTimeout("updateSearch<?=$this->formid?>()", refreshdelay<?=$this->formid?>)
+<?
+}
+?>
+        }
+
+        /**
+         * Update div when clicking previous / next
+         */
+            updateSearchParam<?=$this->formid?> = function(filter, start, end) {
+            clearTimers<?=$this->formid?>();
+            new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+filter+'&start='+start+'&end='+end+'&date='+document.Form<?=$this->formid?>.date.value+'<?= $this->params ?>&software_filter='+software_filter, { asynchronous:true, evalScripts: true});
+     
+<?
+if ($this->refresh) {
+?>
+            refreshparamtimer<?=$this->formid?> = setTimeout("updateSearchParam<?=$this->formid?>('"+filter+"',"+start+","+end+")", refreshdelay<?=$this->formid?>);
+<?
+}
+?>
+        }
+
+        /**
+         * wait 500ms and update search
+         */
+        pushSearch<?=$this->formid?> = function() {
+            clearTimers<?=$this->formid?>();
+            refreshtimer<?=$this->formid?> = setTimeout("updateSearch<?=$this->formid?>()", 500);
+            // Refresh the state of the software_filter checkbox
+            if(document.Form<?=$this->formid?>.software_filter != undefined) {
+                software_filter = document.Form<?=$this->formid?>.software_filter.checked;
+            }
+        }
+
+        pushSearch<?=$this->formid?>();
+
+    </script>
+
+</form>
+<?        
+          }
 }
 
 ?>

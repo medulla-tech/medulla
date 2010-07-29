@@ -55,6 +55,10 @@ foreach (array('Software', 'Network', 'Controller', 'Registry') as $tab) {
     $i++;
 }
 
+$tab = 'History';
+$i++;
+$p->addTab($prefix."tab$i", _T($tab, 'inventory'), "", "modules/inventory/inventory/history.php", array('uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname'], 'part'=>$tab, 'gid'=>$gid, 'groupname'=>$groupname));
+
 $p->display();
 
 ?>
