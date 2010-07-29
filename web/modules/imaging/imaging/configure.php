@@ -409,28 +409,34 @@ if (isset($_POST["bunregister"])) {
         );
         $f->pop();*/
 
-        $f->add(new TitleElement(_T("Target options", "imaging")));
-        $f->push(new Table());
-        $f->add(
-            new TrFormElement(_T("Kernel parameters", "imaging"),
-            new InputTpl("target_opt_kernel")), array("value" => ($target != null?$target['kernel_parameters']:web_def_kernel_parameters()))
-        );
-        $f->add(
-            new TrFormElement(_T("Image parameters", "imaging"),
-            new InputTpl("target_opt_image")), array("value" => ($target != null?$target['image_parameters']:web_def_image_parameters()))
-        );
+        if ($type == '') {
+            $f->add(new TitleElement(_T("Target options", "imaging")));
+            $f->push(new Table());
+            $f->add(
+                new TrFormElement(_T("Kernel parameters", "imaging"),
+                new InputTpl("target_opt_kernel")), array("value" => ($target != null?$target['kernel_parameters']:web_def_kernel_parameters()))
+            );
+            $f->add(
+                new TrFormElement(_T("Image parameters", "imaging"),
+                new InputTpl("target_opt_image")), array("value" => ($target != null?$target['image_parameters']:web_def_image_parameters()))
+            );
 
-        /* Make checkbox to force raw backup mode */
-        if (($target != null) && (!empty($target['raw_mode']))) {
-            $rawmode = "CHECKED";
+            /* Make checkbox to force raw backup mode */
+            if (($target != null) && (!empty($target['raw_mode']))) {
+                $rawmode = "CHECKED";
+            } else {
+                $rawmode = "";
+            }
+            $f->add(
+                new TrFormElement(_T("Force raw backup mode", "imaging"),
+                new CheckboxTpl("target_opt_raw_mode")),
+                array("value" => $rawmode)
+            );
         } else {
-            $rawmode = "";
+            $f->add(new HiddenTpl('target_opt_kernel'),       array("value" => ($target != null?$target['kernel_parameters']:web_def_kernel_parameters()),            "hide" => True));
+            $f->add(new HiddenTpl('target_opt_image'),        array("value" => ($target != null?$target['image_parameters']:web_def_image_parameters()),              "hide" => True));
+            $f->add(new HiddenTpl('target_opt_raw_mode'),     array("value" => ($target != null?$target['raw_mode']:''),                                              "hide" => True));
         }
-        $f->add(
-            new TrFormElement(_T("Force raw backup mode", "imaging"),
-            new CheckboxTpl("target_opt_raw_mode")),
-            array("value" => $rawmode)
-        );
 
         $f->pop();
 
