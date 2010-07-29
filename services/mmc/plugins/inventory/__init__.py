@@ -19,6 +19,11 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+
+"""
+Pulse 2 MMC agent inventory plugin
+"""
+
 # Helpers
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 from mmc.support.mmctools import xmlrpcCleanup
@@ -52,21 +57,21 @@ def activate():
     if config.disable:
         logger.warning("Plugin inventory: disabled by configuration.")
         return False
-                                
+
     # When this module is used by the MMC agent, the global inventory variable is shared.
     # This means an Inventory instance is not created each time a XML-RPC call is done.
     if not InventoryLocation().init(config): # does Inventory().activate() (which does the Inventory().db_check())
         return False
-        
+
     logger.info("Plugin inventory: Inventory database version is %d" % Inventory().dbversion)
 
     ComputerManager().register("inventory", InventoryComputers)
     ProvisioningManager().register('inventory', InventoryProvisioner)
     ComputerLocationManager().register('inventory', InventoryLocation)
-        
+
     PossibleQueries().init(config)
     return True
-            
+
 
 class ContextMaker(ContextMakerI):
     def getContext(self):
@@ -86,13 +91,30 @@ class RpcProxy(RpcProxyI):
 #        uuid = name # TODO : get uuid from name, or something like that...
 #        ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid)
         return xmlrpcCleanup(Inventory().getLastMachineInventoryPart(ctx, part, params))
-      
+
     def getLastMachineInventoryFull(self, params):
         ctx = self.currentContext
 #        if not ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid):
 #            return False
         return xmlrpcCleanup(Inventory().getLastMachineInventoryFull(ctx, params))
- 
+
+    def getMachineInventoryFull(self, params):
+        ctx = self.currentContext
+        return xmlrpcCleanup(Inventory().getComputerInventoryFull(ctx, params))
+
+    def getMachineInventoryHistory(self, params):
+        ctx = self.currentContext
+        return xmlrpcCleanup(Inventory().getComputerInventoryHistory(ctx, params))
+
+    def countMachineInventoryHistory(self, params):
+        ctx = self.currentContext
+        return Inventory().countComputerInventoryHistory(ctx, params)
+
+    def getMachineInventoryDiff(self, params):
+        ctx = self.currentContext
+        # Use xmlrpcCleanup to clean all None values
+        return xmlrpcCleanup(Inventory().getComputerInventoryDiff(ctx, params))
+
     def getAllMachinesInventoryColumn(self, part, column, pattern = {}):
         ctx = self.currentContext
         ret = self.getLastMachineInventoryPart(part, pattern)
@@ -113,7 +135,7 @@ class RpcProxy(RpcProxyI):
     def getMachines(self, pattern = None):
         ctx = self.currentContext
         return xmlrpcCleanup(Inventory().getMachines(ctx, pattern))
-    
+
     def inventoryExists(self, uuid):
         ctx = self.currentContext
         if uuid == '':
@@ -121,26 +143,26 @@ class RpcProxy(RpcProxyI):
 #        if not ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid):
 #            return False
         return xmlrpcCleanup(Inventory().inventoryExists(ctx, uuid))
-               
+
     def getInventoryEM(self, col):
         conf = InventoryConfig()
         return conf.expert_mode[col]
-    
+
     def getInventoryGraph(self, col):
         conf = InventoryConfig()
         return conf.graph[col]
-    
+
     def getMachinesBy(self, table, field, value):
         ctx = self.currentContext
         return xmlrpcCleanup(map(lambda m: ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, m[0]), Inventory().getMachinesBy(ctx, table, field, value)))
-    
+
     def getMachinesByDict(self, table, params):
         ctx = self.currentContext
         return xmlrpcCleanup(map(lambda m: ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, m[0]), Inventory().getMachinesByDict(ctx, table, params)))
-    
+
     def getValues(self, table, field):
         return Inventory().getValues(table, field)
-    
+
     def getValuesWhere(self, table, field1, value1, field2):
         return Inventory().getValuesWhere(table, field1, value1, field2)
 
@@ -149,7 +171,8 @@ class RpcProxy(RpcProxyI):
 
     def getValuesFuzzy(self, table, field, fuzzy_value):
         return Inventory().getValuesFuzzy(table, field, fuzzy_value)
-    
+
+
 def getValues(table, field):
     return Inventory().getValues(table, field)
 
@@ -161,8 +184,19 @@ def getValuesFuzzy(table, field, fuzzy_value):
 
 def getValueFuzzyWhere(table, field1, value1, field2, fuzzy_value):
     return Inventory().getValueFuzzyWhere(table, field1, value1, field2, fuzzy_value)
-    
+
 def getMachinesBy(table, field, value):
     # TODO : ctx is missing....
     ctx = None
     return Inventory().getMachinesBy(ctx, table, field, value)
+
+def getInventoryHistory(days, only_new, pattern, max, min):
+    # Use xmlrpcCleanup to clean the date values
+    return xmlrpcCleanup(Inventory().getInventoryHistory(days, only_new, pattern, max, min))
+
+def countInventoryHistory(days, only_new, pattern):
+    return Inventory().countInventoryHistory(days, only_new, pattern)
+
+def getTypeOfAttribute(klass, attr):
+    return Inventory().getTypeOfAttribute(klass, attr)
+
