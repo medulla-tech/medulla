@@ -31,7 +31,8 @@ class InventoryConfig(InventoryDatabaseConfig):
     disable = True
     expert_mode = {}
     graph = {}
-    
+    software_filter = []
+
     def init(self, name = 'inventory', conffile = None):
         self.dbsection = "inventory"
         self.name = name
@@ -53,4 +54,6 @@ class InventoryConfig(InventoryDatabaseConfig):
             except:
                 self.expert_mode[i] = []
 
-
+    def getSoftwareFilter(self):
+        self.software_filter = self.cp.get("main", "software_filter").split(',')
+        return self.software_filter
