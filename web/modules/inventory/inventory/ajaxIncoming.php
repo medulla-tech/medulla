@@ -81,6 +81,7 @@ $l->setItemCount($count);
 $l->setNavBar(new AjaxNavBar($count, $filter));
 // Item counter label
 $l->setName(_T("Elements"));
+$l->setTableHeaderPadding(0);
 $l->start = 0;
 $l->end = count($machines);
 $l->display();
