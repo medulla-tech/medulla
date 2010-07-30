@@ -57,6 +57,12 @@ def queryPossibilities():
     logging.getLogger().info('queryPossibilities %s'%(str(ret)))
     return ret
 
+def extendedPossibilities():
+    """
+    GLPI plugin has no extended possibilities
+    """
+    return {}
+
 def query(ctx, criterion, value):
     logging.getLogger().info(ctx)
     logging.getLogger().info(criterion)
