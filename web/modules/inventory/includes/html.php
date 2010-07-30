@@ -21,8 +21,6 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-session_start();
-
 class RenderedImage extends HtmlElement {
 
     function RenderedImage($url, $alt = '', $style = '') {
@@ -72,9 +70,9 @@ class AjaxFilterInventory extends AjaxFilter {
     function setsearchbar($url){
         $this->urlsearch=$url;
     }
-    
+
     function display(){
-        
+
 ?>
 <form name="Form<?=$this->formid?>" id="Form<?=$this->formid?>" action="#" onsubmit="return false;">
     <div id="loader">
@@ -93,20 +91,20 @@ class AjaxFilterInventory extends AjaxFilter {
             echo "Filter softwares";
         }
 ?>
-        
+
         <span class="searchtools">
             <span id="searchfilter">
                 <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" /> <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param<?=$this->formid?>" onkeyup="pushSearch<?=$this->formid?>(); return false;" />
                 <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
                 onclick="document.getElementById('param<?=$this->formid?>').value =''; pushSearch<?=$this->formid?>(); return false;" />
                 </span>
-            </span>    
+            </span>
             <img src="img/common/reload.png" style="vertical-align: middle; margin-left: 10px; margin-right: 10px;" onclick="pushSearch(); return false;" title="<?php echo _("Refresh")?>" />
         </span>&nbsp;
         </span>
     </div>
     <script type="text/javascript">
-    
+
 <?
 if(!$this->formid) {
 ?>
@@ -166,7 +164,7 @@ if ($this->refresh) {
             updateSearchParam<?=$this->formid?> = function(filter, start, end) {
             clearTimers<?=$this->formid?>();
             new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+filter+'&start='+start+'&end='+end+'&date='+document.Form<?=$this->formid?>.date.value+'<?= $this->params ?>&software_filter='+software_filter, { asynchronous:true, evalScripts: true});
-     
+
 <?
 if ($this->refresh) {
 ?>
@@ -193,7 +191,7 @@ if ($this->refresh) {
     </script>
 
 </form>
-<?        
+<?
           }
 }
 
