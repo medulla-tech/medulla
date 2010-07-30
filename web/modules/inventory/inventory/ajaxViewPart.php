@@ -21,7 +21,7 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-session_start();
+
 require_once("modules/inventory/includes/xmlrpc.php");
 require_once("modules/base/includes/edit.inc.php");
 global $conf;
