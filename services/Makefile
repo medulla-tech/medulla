@@ -46,34 +46,35 @@ $(SUBDIRS):
 
 clean: $(SUBDIRS)
 	for i in $^; do $(MAKE) -C $$i clean; done
+	rm -rf build
 
 install: subdirs install-imaging-server
 
 install-imaging-server:
 	@echo ""
 	@echo "Creating directories ..."
-	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(VARDIR)
-	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(VARDIR)/bootmenus
-	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(VARDIR)/computers
-	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(VARDIR)/custom
-	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(VARDIR)/inventories
-	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(VARDIR)/masters
-	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(VARDIR)/isos
-	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(VARDIR)/archives
+	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(DESTDIR)/$(VARDIR)
+	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(DESTDIR)/$(VARDIR)/bootmenus
+	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(DESTDIR)/$(VARDIR)/computers
+	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(DESTDIR)/$(VARDIR)/custom
+	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(DESTDIR)/$(VARDIR)/inventories
+	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(DESTDIR)/$(VARDIR)/masters
+	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(DESTDIR)/$(VARDIR)/isos
+	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(DESTDIR)/$(VARDIR)/archives
 
 	@echo "Installing binaries ..."
-	$(INSTALL) -m 755 -o root -g root src/pulse2-imaging-server $(SBINDIR)/pulse2-imaging-server
+	$(INSTALL) -m 755 -o root -g root src/pulse2-imaging-server $(DESTDIR)/$(SBINDIR)/pulse2-imaging-server
 
 	@echo "Installing hooks ..."
-	$(INSTALL) -m 755 -o root -g root -d $(HOOKSDIR)
-	$(INSTALL) -m 755 -o root -g root contrib/imaging-server/hooks/* $(HOOKSDIR)/
+	$(INSTALL) -m 755 -o root -g root -d $(DESTDIR)/$(HOOKSDIR)
+	$(INSTALL) -m 755 -o root -g root contrib/imaging-server/hooks/* $(DESTDIR)/$(HOOKSDIR)/
 
 	@echo "Installing init files ..."
 	$(INSTALL) -m 755 -o root -g root init.d/pulse2-imaging-server $(DESTDIR)$(INITDIR)
 	$(SED) -i 's!##SBINDIR##!$(SBINDIR)!g' $(DESTDIR)$(INITDIR)/pulse2-imaging-server
 
 	@echo "Installing config files ..."
-	$(INSTALL) -m 755 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(ETCDIR)/pulse2/imaging-server
-	$(INSTALL) -m 755 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) conf/pulse2/imaging-server/imaging-server.ini $(ETCDIR)/pulse2/imaging-server
+	$(INSTALL) -m 755 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(DESTDIR)/$(ETCDIR)/pulse2/imaging-server
+	$(INSTALL) -m 600 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) conf/pulse2/imaging-server/imaging-server.ini $(DESTDIR)/$(ETCDIR)/pulse2/imaging-server
 
 .PHONY: src

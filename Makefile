@@ -46,13 +46,16 @@ BACKUP := .$(shell date +%Y-%m-%d+%H:%M:%S)
 all:
 
 # Cleaning target
-clean: clean_mo
+clean: clean_mo clean_services
 	@echo ""
 	@echo "Cleaning sources..."
 	@echo "Nothing to do"
 
 clean_mo:
 	sh scripts/clean_mo.sh
+
+clean_services:
+	$(MAKE) -C services clean
 
 build_mo:
 	sh scripts/build_mo.sh
