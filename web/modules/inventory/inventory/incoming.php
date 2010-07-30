@@ -1,25 +1,24 @@
 <?
 
 /**
- * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+ * (c) 2010 Mandriva, http://www.mandriva.com
  *
  * $Id$
  *
- * This file is part of LMC.
+ * This file is part of Mandriva Management Console (MMC).
  *
- * LMC is free software; you can redistribute it and/or modify
+ * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * LMC is distributed in the hope that it will be useful,
+ * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                                  
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with LMC; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once("modules/inventory/includes/xmlrpc.php");
@@ -49,7 +48,7 @@ $listbox = new SelectItem("period", "validateForm");
 $listbox->setElements(array_keys($periodList));
 $listbox->setElementsVal(array_values($periodList));
 // Check the value to put by default in the list
-if(isset($_POST['period'])) 
+if(isset($_POST['period']))
     $listbox->setSelected($_POST['period']);
 else
     $listbox->setSelected(7); // must match with the default value in ajaxIncoming.php (7 for a week here)
@@ -64,8 +63,8 @@ if(isset($_POST['only_new'])) {
     $checkbox->check($_POST['only_new']);
 }
 
-$checkboxTr = new TrFormElement(_T("Only new machines"), $checkbox,
-    array("tooltip"=>_T("Load only the machines which were new when the inventory was made"))
+$checkboxTr = new TrFormElement(_T("Only new computers"), $checkbox,
+    array("tooltip"=>_T("Load only the computers which were new when the inventory was made"))
 );
 
 $form->add($listboxTr);
@@ -79,7 +78,7 @@ $form->display();
 $ajax = new AjaxFilter(urlStrRedirect("inventory/inventory/ajaxIncoming"), "container", $params);
 // Call this Ajax updater every 10sec
 //$ajax->setRefresh(10000);
-// Display the AjaxFilter 
+// Display the AjaxFilter
 $ajax->display();
 
 // Display the PageGenerator
