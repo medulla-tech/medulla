@@ -33,13 +33,13 @@ $maxperpage = $conf["global"]["maxperpage"];
 $filter = $_GET["filter"];
 
 // Get the number of page to start with (0 by default)
-if(isset($_GET['start'])) 
+if(isset($_GET['start']))
     $start = $_GET['start'];
 else
     $start = 0;
 
 // Get the period (in number of days) asked by the user (30 by default)
-if(isset($_GET['period'])) 
+if(isset($_GET['period']))
     $period = $_GET['period'];
 else
     $period = 7;
@@ -53,7 +53,7 @@ else
 // Calls the function that get the number of inventories
 $count = countInventoryHistory($period, $only_new, $filter);
 // Calls the function that get the history of inventories
-$incoming = getInventoryHistory($period, $only_new, $filter, ($start + $maxperpage), $start); 
+$incoming = getInventoryHistory($period, $only_new, $filter, ($start + $maxperpage), $start);
 
 // Create an array with the machine names
 $machines = array();
@@ -64,18 +64,18 @@ $new_machines = array();
 
 foreach($incoming as $inc) {
     $machines[] = $inc[0];
-    
+
     $inventories[] = _toDate($inc[1]);
 
     $new_machines[] = $inc[2];
 }
 
 // Create the listinfos widget, the first column is the machine name
-$l = new OptimizedListInfos($machines, _T("Machine name"));
+$l = new OptimizedListInfos($machines, _T("Computer name"));
 // Add the second column, which is the inventory date
 $l->addExtraInfo($inventories, _T("Inventory Date"));
 // Add the third column, which is the boolean "new_machine"
-$l->addExtraInfo($new_machines, _T("New Machine"));
+$l->addExtraInfo($new_machines, _T("New computer"));
 // Navbar for an Ajax widget
 $l->setItemCount($count);
 $l->setNavBar(new AjaxNavBar($count, $filter));
