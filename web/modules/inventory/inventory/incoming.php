@@ -58,17 +58,13 @@ $listboxTr = new TrFormElement(_T("Period"), $listbox);
 
 // Create a checkbox element
 $checkbox = new CheckboxTpl("only_new", null, "validateForm");
-// Check it if already checked before submit
-if(isset($_POST['only_new'])) {
-    $checkbox->check($_POST['only_new']);
-}
 
 $checkboxTr = new TrFormElement(_T("Only new computers"), $checkbox,
-    array("tooltip"=>_T("Load only the computers which were new when the inventory was made"))
-);
+                                array("tooltip"=>_T("Load only the computers which were new when the inventory was made")));
 
 $form->add($listboxTr);
-$form->add($checkboxTr);
+$form->add($checkboxTr,
+           array("value" => isset($_POST["only_new"]) ? "checked" : ""));
 
 $form->pop();
 // Display the form
