@@ -45,7 +45,7 @@ foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab', 'part', 
 }
 
 // Generate the page
-$p = new PageGenerator(_T("Inventories differences"));
+$p = new PageGenerator(_T("Inventory changes"));
 $p->setSideMenu($sidemenu);
 
 // Call the method to get the differences for a machine and an inventory
@@ -63,8 +63,8 @@ foreach($added_elems as $part=>$added_part) {
     if(!empty($added_part)) {
         // Loop through each element of the part
         foreach($added_part as $elem) {
-            
-            # Loop through elems to change arrays into dates
+
+            // Loop through elems to change arrays into dates
             foreach($elem as $k=>$v) {
                 if(is_array($v)) {
                     $elem[$k] = _toDate($v);
@@ -75,6 +75,7 @@ foreach($added_elems as $part=>$added_part) {
             $list = new ListInfos(array_keys($elem), _T("Element"));
             $list->addExtraInfo(array_values($elem), _T("Values"));
             $list->setName(_T($part));
+            $list->setTableHeaderPadding(0);
             // Append the ListInfo in an array, to display all ListInfos together at the end of the page loading
             $added_part_lists[] = $list;
         }
@@ -87,8 +88,8 @@ foreach($removed_elems as $part=>$removed_part) {
     if(!empty($removed_part)) {
         // Loop through each element of the part
         foreach($removed_part as $elem) {
-            
-            # Loop through elems to change arrays into dates
+
+            // Loop through elems to change arrays into dates
             foreach($elem as $k=>$v) {
                 if(is_array($v)) {
                     $elem[$k] = _toDate($v);
@@ -99,6 +100,7 @@ foreach($removed_elems as $part=>$removed_part) {
             $list = new ListInfos(array_keys($elem), _T("Element"));
             $list->addExtraInfo(array_values($elem), _T("Values"));
             $list->setName(_T($part));
+            $list->setTableHeaderPadding(0);
             // Append the ListInfo in an array, to display all ListInfos together at the end of the page loading
             $removed_part_lists[] = $list;
         }
