@@ -970,6 +970,7 @@ class Inventory(DyngroupDatabaseHelper):
             session.save_or_update(inv)
         i = InventoryTable()
         i.Last = 1
+        i.Date, i.Time = str(datetime.datetime.today()).split(" ")
         session.save(i)
         session.flush()
         net = self.klass['Network']
