@@ -55,11 +55,13 @@ function getCurrentLocation() {
 
     $location = false;
 
-    if(isset($_GET["location"]))
+    if (isset($_GET["location"])) {
         $_SESSION["location"] = $_GET["location"];
+    }
 
-    if(isset($_SESSION["location"]))
+    if (isset($_SESSION["location"])) {
         $location = $_SESSION["location"];
+    }
 
     return $location;
 }

@@ -1388,7 +1388,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return mi
 
     ######################
-    def __PossibleImages(self, session, target_uuid, is_master, filt):
+    def __PossibleImages(self, session, target_uuid, is_master, filt = ''):
         q = session.query(Image).add_column(self.image.c.id)
         q = q.select_from(
             self.image.\
@@ -1813,8 +1813,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return session.query(Image).add_entity(Target).select_from(self.image \
                 .join(self.image_in_menu, self.image.c.id == self.image_in_menu.c.fk_image) \
                 .join(self.menu_item, self.menu_item.c.id == self.image_in_menu.c.fk_menuitem) \
-                .join(self.menu, self.menu.c.id == self.menu_item.c.fk_menu) \
-                .join(self.target, self.target.c.fk_menu == self.menu.c.id) \
+                .join(self.target, self.target.c.fk_menu == self.menu_item.c.fk_menu) \
+        )
+
+    def __queryImageInImagingServerMenu(self, session):
+        return session.query(Image).add_entity(ImagingServer).select_from(self.image \
+                .join(self.image_in_menu, self.image.c.id == self.image_in_menu.c.fk_image) \
+                .join(self.menu_item, self.menu_item.c.id == self.image_in_menu.c.fk_menuitem) \
+                .join(self.imaging_server, self.imaging_server.c.fk_default_menu == self.menu_item.c.fk_menu) \
         )
 
     def isImageInMenu(self, item_uuid, target_uuid = None, target_type = None):
@@ -1831,6 +1837,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session = create_session()
         ret = {}
         for item_uuid, target_uuid, target_type in images:
+            # check in targets
             q = self.__queryImageInMenu(session)
             if target_uuid != None and target_type != None:
                 q = q.filter(and_(self.image.c.id == uuid2id(item_uuid), or_(self.target.c.uuid != target_uuid, self.target.c.type != target_type))).all()
@@ -1840,6 +1847,13 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             for im, target in q:
                 target = target.toH()
                 ret1.append([target['uuid'], target['type'], target['name']])
+
+            # check in imaging server (they can also have a reference in the boot menu)
+            q = self.__queryImageInImagingServerMenu(session)
+            q = q.filter(self.image.c.id == uuid2id(item_uuid)).all()
+            for im, ims in q:
+                ims = ims.toH()
+                ret1.append([ims['imaging_uuid'], -1, ims['name']])
             ret[item_uuid] = ret1
         return ret
 
@@ -2019,15 +2033,20 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session.flush()
 
             # now we need to drop all the images and the masters linked to nothing
-            masters_linked = session.query(Image).select_from(self.image \
-                    .join(self.image_in_menu, self.image_in_menu.c.fk_image == self.image.c.id) \
-                    .join(self.menu_item, self.image_in_menu.c.fk_menuitem == self.menu_item.c.id) \
-                    .join(self.target, self.target.c.fk_menu == self.menu_item.c.fk_menu) \
-                ).filter(and_(self.target.c.uuid != deleted_uuid, self.image.c.is_master == 1)).all()
-            masters_id_linked = map(lambda m:m.id, masters_linked)
+            imids = map(lambda x: x[1], self.__PossibleImages(session, deleted_uuid, P2IIK.IS_BOTH))
+
+            masters_linked = self.__queryImageInMenu(session)
+            masters_id_linked = map(lambda x: x[0].id, masters_linked.filter(and_(self.target.c.uuid != deleted_uuid, self.image.c.is_master == 1, self.image.c.id.in_(imids))).all())
+
+            masters_linked_2_is = self.__queryImageInImagingServerMenu(session)
+            masters_linked_2_is = map(lambda x: x[0].id, masters_linked_2_is.filter(self.image.c.id.in_(imids)).all())
+
+            masters_id_linked.extend(masters_linked_2_is)
+
             if len(masters_id_linked) == 0:
                 filt_master = and_(self.image.c.is_master == 1)
             else:
+                self.logger.debug("Those masters are still linked, they are not going to be removed : %s"%(str(masters_id_linked)))
                 filt_master = and_(self.image.c.is_master == 1,not self.image.c.id.in_(masters_id_linked))
 
             images = session.query(Image).add_entity(ImagingLog).add_entity(MasteredOn).select_from(self.image \
@@ -3037,12 +3056,17 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session_need_to_close = True
             session = create_session()
 
+        if target_type == P2IT.ALL_COMPUTERS:
+            filter_type = self.target.c.type.in_([P2IT.COMPUTER, P2IT.COMPUTER_IN_PROFILE])
+        else:
+            filter_type = and_(self.target.c.type == target_type)
+
         q = session.query(Target).add_entity(SynchroState)
         q = q.select_from(self.target.join(self.menu).join(self.entity, self.target.c.fk_entity == self.entity.c.id))
         q = q.filter(and_(
                 self.entity.c.uuid == loc_id, \
                 self.menu.c.fk_synchrostate.in_([P2ISS.TODO, P2ISS.INIT_ERROR]), \
-                self.target.c.type == target_type \
+                filter_type \
             )).group_by(self.target.c.id).all()
 
         if session_need_to_close:
