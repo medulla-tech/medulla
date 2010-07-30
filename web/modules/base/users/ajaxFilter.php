@@ -22,9 +22,6 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require("modules/base/includes/users.inc.php");
-require_once("modules/base/includes/logging-xmlrpc.inc.php");
-
 global $conf;
 if(isset($_REQUEST['maxperpage'])) {
     $maxperpage = $_REQUEST['maxperpage'];
