@@ -540,7 +540,7 @@ class ImagingRpcProxy(RpcProxyI):
         """ same as editImage but for a location """
         db = ImagingDatabase()
         try:
-            is_used = db.areImagesUsed([[item_uuid, None, None]])
+            is_used = db.areImagesUsed([[item_uuid, loc_id, -1]])
             if is_used[item_uuid]:
                 return [False, "cant modify a master if it's used by other targets"]
             ret = db.editImage(item_uuid, params)

@@ -1614,7 +1614,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         for im, im_id in q1:
             ret[id2uuid(im_id)] = im.toH()
-            ret[id2uuid(im_id)]['post_install_scripts'] = im_pis[im_id]
+            if im_pis.has_key(im_id):
+                ret[id2uuid(im_id)]['post_install_scripts'] = im_pis[im_id]
         return ret
 
 
@@ -1839,7 +1840,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         for item_uuid, target_uuid, target_type in images:
             # check in targets
             q = self.__queryImageInMenu(session)
-            if target_uuid != None and target_type != None:
+            if target_uuid != None and target_type != None and target_type != -1:
                 q = q.filter(and_(self.image.c.id == uuid2id(item_uuid), or_(self.target.c.uuid != target_uuid, self.target.c.type != target_type))).all()
             else:
                 q = q.filter(self.image.c.id == uuid2id(item_uuid)).all()
@@ -1850,7 +1851,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
             # check in imaging server (they can also have a reference in the boot menu)
             q = self.__queryImageInImagingServerMenu(session)
-            q = q.filter(self.image.c.id == uuid2id(item_uuid)).all()
+            if target_uuid != None and target_type == -1:
+                q = q.filter(and_(self.image.c.id == uuid2id(item_uuid), self.imaging_server.c.id != uuid2id(target_uuid))).all()
+            else:
+                q = q.filter(self.image.c.id == uuid2id(item_uuid)).all()
             for im, ims in q:
                 ims = ims.toH()
                 ret1.append([ims['imaging_uuid'], -1, ims['name']])
