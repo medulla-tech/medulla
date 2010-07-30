@@ -220,9 +220,10 @@ class ImageTpl extends AbstractTpl {
  */
 class CheckboxTpl extends AbstractTpl{
 
-    function CheckboxTpl($name, $rightlabel = null) {
+    function CheckboxTpl($name, $rightlabel = null, $jsFunc = null) {
         $this->name = $name;
         $this->rightlabel = $rightlabel;
+        $this->jsFunc = $jsFunc;
     }
 
     /**
@@ -234,7 +235,11 @@ class CheckboxTpl extends AbstractTpl{
         if (!isset($arrParam['extraArg'])) {
             $arrParam["extraArg"] = '';
         }
-        print '<input '.$arrParam["value"].' name="'.$this->name.'" id="'.$this->name.'" type="checkbox" class="checkbox" '.$arrParam["extraArg"].' />';
+        print '<input '.$arrParam["value"].' name="'.$this->name.'" id="'.$this->name.'" type="checkbox" class="checkbox" '.$arrParam["extraArg"];
+        if($this->jsFunc) {
+            print " onchange=\"" . $this->jsFunc . "(); return false;\"";
+        }
+        print ' />';
         if (isset($this->rightlabel)) print $this->rightlabel . "\n<br/>\n";
     }
 
@@ -265,7 +270,6 @@ class CheckboxTpl extends AbstractTpl{
         else
             $this->options["value"] = "";
     }
-
 }
 
 /**
