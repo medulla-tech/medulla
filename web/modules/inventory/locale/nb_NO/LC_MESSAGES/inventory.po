@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-22 18:27+0200\n"
+"POT-Creation-Date: 2010-07-25 06:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,6 +26,14 @@ msgstr ""
 msgid "%s's inventory"
 msgstr ""
 
+#: web/modules/inventory/inventory/inventory_diff.php:114
+msgid "<h3>Added elements</h3>"
+msgstr ""
+
+#: web/modules/inventory/inventory/inventory_diff.php:123
+msgid "<h3>Removed elements</h3>"
+msgstr ""
+
 #: web/modules/inventory/inventory/infos.php:33
 msgid "Additionnal informations"
 msgstr ""
@@ -38,9 +46,9 @@ msgstr ""
 msgid "Availability"
 msgstr ""
 
-#: web/modules/inventory/inventory/localSidebar.php:28
 #: web/modules/inventory/inventory/i18n_labels.php:27
-#: web/modules/inventory/infoPackage.inc.php:43
+#: web/modules/inventory/inventory/localSidebar.php:29
+#: web/modules/inventory/infoPackage.inc.php:45
 msgid "Bios"
 msgstr ""
 
@@ -48,11 +56,11 @@ msgstr ""
 msgid "Bios list"
 msgstr ""
 
-#: web/modules/inventory/infoPackage.inc.php:145
+#: web/modules/inventory/infoPackage.inc.php:151
 msgid "Bios tab for a computer in a group"
 msgstr ""
 
-#: web/modules/inventory/infoPackage.inc.php:127
+#: web/modules/inventory/infoPackage.inc.php:133
 msgid "Bios tab for a group"
 msgstr ""
 
@@ -124,19 +132,23 @@ msgstr ""
 msgid "Company"
 msgstr ""
 
+#: web/modules/inventory/inventory/i18n_labels.php:93
 #: web/modules/inventory/inventory/csv.php:67
 #: web/modules/inventory/inventory/csv.php:107
-#: web/modules/inventory/inventory/i18n_labels.php:93
 msgid "Computer"
+msgstr ""
+
+#: web/modules/inventory/inventory/ajaxIncoming.php:74
+msgid "Computer name"
 msgstr ""
 
 #: web/modules/inventory/inventory/i18n_labels.php:45
 msgid "Connector"
 msgstr ""
 
-#: web/modules/inventory/inventory/localSidebar.php:32
 #: web/modules/inventory/inventory/i18n_labels.php:46
-#: web/modules/inventory/infoPackage.inc.php:49
+#: web/modules/inventory/inventory/localSidebar.php:33
+#: web/modules/inventory/infoPackage.inc.php:51
 msgid "Controller"
 msgstr ""
 
@@ -144,15 +156,15 @@ msgstr ""
 msgid "Controller list"
 msgstr ""
 
-#: web/modules/inventory/infoPackage.inc.php:175
+#: web/modules/inventory/infoPackage.inc.php:181
 msgid "Controller tab for a computer"
 msgstr ""
 
-#: web/modules/inventory/infoPackage.inc.php:154
+#: web/modules/inventory/infoPackage.inc.php:160
 msgid "Controller tab for a computer in a group"
 msgstr ""
 
-#: web/modules/inventory/infoPackage.inc.php:136
+#: web/modules/inventory/infoPackage.inc.php:142
 msgid "Controller tab for a group"
 msgstr ""
 
@@ -164,7 +176,7 @@ msgstr ""
 msgid "CpuVendor"
 msgstr ""
 
-#: web/modules/inventory/infoPackage.inc.php:92
+#: web/modules/inventory/infoPackage.inc.php:94
 msgid "Csv's export"
 msgstr ""
 
@@ -181,6 +193,8 @@ msgid "DNS"
 msgstr ""
 
 #: web/modules/inventory/inventory/i18n_labels.php:52
+#: web/modules/inventory/inventory/ajaxViewPart.php:34
+#: web/modules/inventory/includes/html.php:62
 msgid "Date"
 msgstr ""
 
@@ -200,6 +214,10 @@ msgstr ""
 msgid "Device"
 msgstr ""
 
+#: web/modules/inventory/infoPackage.inc.php:189
+msgid "Differences between two inventories"
+msgstr ""
+
 #: web/modules/inventory/inventory/i18n_labels.php:57
 msgid "Disk"
 msgstr ""
@@ -208,9 +226,9 @@ msgstr ""
 msgid "DiskSize"
 msgstr ""
 
-#: web/modules/inventory/inventory/localSidebar.php:36
 #: web/modules/inventory/inventory/i18n_labels.php:59
-#: web/modules/inventory/infoPackage.inc.php:52
+#: web/modules/inventory/inventory/localSidebar.php:37
+#: web/modules/inventory/infoPackage.inc.php:54
 msgid "Drive"
 msgstr ""
 
@@ -228,6 +246,15 @@ msgstr ""
 
 #: web/modules/inventory/inventory/i18n_labels.php:62
 msgid "Driver"
+msgstr ""
+
+#: web/modules/inventory/inventory/inventory_diff.php:75
+#: web/modules/inventory/inventory/inventory_diff.php:100
+msgid "Element"
+msgstr ""
+
+#: web/modules/inventory/inventory/ajaxIncoming.php:83
+msgid "Elements"
 msgstr ""
 
 #: web/modules/inventory/inventory/i18n_labels.php:63
@@ -295,14 +322,14 @@ msgid "Gateway"
 msgstr ""
 
 #: web/modules/inventory/inventory/graphs.php:35
-#: web/modules/inventory/infoPackage.inc.php:84
-#: web/modules/inventory/infoPackage.inc.php:88
+#: web/modules/inventory/infoPackage.inc.php:86
+#: web/modules/inventory/infoPackage.inc.php:90
 msgid "Graphique"
 msgstr ""
 
-#: web/modules/inventory/inventory/localSidebar.php:29
 #: web/modules/inventory/inventory/i18n_labels.php:78
-#: web/modules/inventory/infoPackage.inc.php:45
+#: web/modules/inventory/inventory/localSidebar.php:30
+#: web/modules/inventory/infoPackage.inc.php:47
 msgid "Hardware"
 msgstr ""
 
@@ -310,15 +337,15 @@ msgstr ""
 msgid "Hardware and OS information list"
 msgstr ""
 
-#: web/modules/inventory/infoPackage.inc.php:166
+#: web/modules/inventory/infoPackage.inc.php:172
 msgid "Hardware tab for a computer"
 msgstr ""
 
-#: web/modules/inventory/infoPackage.inc.php:142
+#: web/modules/inventory/infoPackage.inc.php:148
 msgid "Hardware tab for a computer in a group"
 msgstr ""
 
-#: web/modules/inventory/infoPackage.inc.php:124
+#: web/modules/inventory/infoPackage.inc.php:130
 msgid "Hardware tab for a group"
 msgstr ""
 
@@ -330,7 +357,7 @@ msgstr ""
 msgid "Head"
 msgstr ""
 
-#: web/modules/inventory/infoPackage.inc.php:104
+#: web/modules/inventory/infoPackage.inc.php:110
 msgid "Header"
 msgstr ""
 
@@ -342,14 +369,23 @@ msgstr ""
 msgid "IP"
 msgstr ""
 
-#: web/modules/inventory/inventory/ajaxViewPart.php:181
-#: web/modules/inventory/infoPackage.inc.php:79
+#: web/modules/inventory/inventory/localSidebar.php:28
+#: web/modules/inventory/infoPackage.inc.php:43
+msgid "Incoming"
+msgstr ""
+
+#: web/modules/inventory/inventory/incoming.php:38
+msgid "Incoming Inventories"
+msgstr ""
+
+#: web/modules/inventory/inventory/ajaxViewPart.php:196
+#: web/modules/inventory/infoPackage.inc.php:81
 msgid "Informations"
 msgstr ""
 
-#: web/modules/inventory/inventory/localSidebar.php:37
 #: web/modules/inventory/inventory/i18n_labels.php:83
-#: web/modules/inventory/infoPackage.inc.php:54
+#: web/modules/inventory/inventory/localSidebar.php:38
+#: web/modules/inventory/infoPackage.inc.php:56
 msgid "Input"
 msgstr ""
 
@@ -358,9 +394,19 @@ msgid "Input device list"
 msgstr ""
 
 #: web/modules/inventory/inventory/i18n_labels.php:84
+#: web/modules/inventory/inventory/history.php:80
 #: web/modules/inventory/infoPackage.inc.php:33
 #: web/modules/inventory/infoPackage.inc.php:39
 msgid "Inventory"
+msgstr ""
+
+#: web/modules/inventory/inventory/history.php:75
+#: web/modules/inventory/inventory/ajaxIncoming.php:76
+msgid "Inventory Date"
+msgstr ""
+
+#: web/modules/inventory/inventory/inventory_diff.php:48
+msgid "Inventory changes"
 msgstr ""
 
 #: web/modules/inventory/inventory/view.php:48
@@ -368,11 +414,11 @@ msgstr ""
 msgid "Inventory of %s"
 msgstr ""
 
-#: web/modules/inventory/infoPackage.inc.php:121
+#: web/modules/inventory/infoPackage.inc.php:127
 msgid "Inventory on a group of computers"
 msgstr ""
 
-#: web/modules/inventory/infoPackage.inc.php:162
+#: web/modules/inventory/infoPackage.inc.php:168
 msgid "Inventory on a single computer"
 msgstr ""
 
@@ -384,8 +430,32 @@ msgstr ""
 msgid "KEY"
 msgstr ""
 
+#: web/modules/inventory/inventory/incoming.php:46
+msgid "Last month"
+msgstr ""
+
+#: web/modules/inventory/inventory/incoming.php:46
+msgid "Last quarter"
+msgstr ""
+
+#: web/modules/inventory/inventory/incoming.php:46
+msgid "Last semester"
+msgstr ""
+
+#: web/modules/inventory/inventory/incoming.php:46
+msgid "Last week"
+msgstr ""
+
+#: web/modules/inventory/inventory/incoming.php:46
+msgid "Last year"
+msgstr ""
+
 #: web/modules/inventory/inventory/i18n_labels.php:87
 msgid "Length"
+msgstr ""
+
+#: web/modules/inventory/inventory/incoming.php:63
+msgid "Load only the computers which were new when the inventory was made"
 msgstr ""
 
 #: web/modules/inventory/inventory/i18n_labels.php:88
@@ -420,9 +490,9 @@ msgstr ""
 msgid "Media"
 msgstr ""
 
-#: web/modules/inventory/inventory/localSidebar.php:38
 #: web/modules/inventory/inventory/i18n_labels.php:97
-#: web/modules/inventory/infoPackage.inc.php:56
+#: web/modules/inventory/inventory/localSidebar.php:39
+#: web/modules/inventory/infoPackage.inc.php:58
 msgid "Memory"
 msgstr ""
 
@@ -446,9 +516,9 @@ msgstr ""
 msgid "Modem"
 msgstr ""
 
-#: web/modules/inventory/inventory/localSidebar.php:39
 #: web/modules/inventory/inventory/i18n_labels.php:102
-#: web/modules/inventory/infoPackage.inc.php:58
+#: web/modules/inventory/inventory/localSidebar.php:40
+#: web/modules/inventory/infoPackage.inc.php:60
 msgid "Monitor"
 msgstr ""
 
@@ -460,9 +530,9 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: web/modules/inventory/inventory/localSidebar.php:31
 #: web/modules/inventory/inventory/i18n_labels.php:104
-#: web/modules/inventory/infoPackage.inc.php:47
+#: web/modules/inventory/inventory/localSidebar.php:32
+#: web/modules/inventory/infoPackage.inc.php:49
 msgid "Network"
 msgstr ""
 
@@ -470,20 +540,24 @@ msgstr ""
 msgid "Network card and configuration list"
 msgstr ""
 
-#: web/modules/inventory/infoPackage.inc.php:172
+#: web/modules/inventory/infoPackage.inc.php:178
 msgid "Network tab for a computer"
 msgstr ""
 
-#: web/modules/inventory/infoPackage.inc.php:151
+#: web/modules/inventory/infoPackage.inc.php:157
 msgid "Network tab for a computer in a group"
 msgstr ""
 
-#: web/modules/inventory/infoPackage.inc.php:133
+#: web/modules/inventory/infoPackage.inc.php:139
 msgid "Network tab for a group"
 msgstr ""
 
 #: web/modules/inventory/inventory/i18n_labels.php:105
 msgid "NetworkType"
+msgstr ""
+
+#: web/modules/inventory/inventory/ajaxIncoming.php:78
+msgid "New computer"
 msgstr ""
 
 #: web/modules/inventory/inventory/i18n_labels.php:106
@@ -498,13 +572,21 @@ msgstr ""
 msgid "OSSerialNumber"
 msgstr ""
 
+#: web/modules/inventory/inventory/incoming.php:62
+msgid "Only new computers"
+msgstr ""
+
 #: web/modules/inventory/inventory/i18n_labels.php:109
 msgid "OperatingSystem"
 msgstr ""
 
-#: web/modules/inventory/inventory/pci.php:27
 #: web/modules/inventory/inventory/i18n_labels.php:110
+#: web/modules/inventory/inventory/pci.php:27
 msgid "Pci"
+msgstr ""
+
+#: web/modules/inventory/inventory/incoming.php:57
+msgid "Period"
 msgstr ""
 
 #: web/modules/inventory/inventory/i18n_labels.php:111
@@ -515,9 +597,9 @@ msgstr ""
 msgid "PointType"
 msgstr ""
 
-#: web/modules/inventory/inventory/localSidebar.php:40
 #: web/modules/inventory/inventory/i18n_labels.php:113
-#: web/modules/inventory/infoPackage.inc.php:60
+#: web/modules/inventory/inventory/localSidebar.php:41
+#: web/modules/inventory/infoPackage.inc.php:62
 msgid "Port"
 msgstr ""
 
@@ -529,9 +611,9 @@ msgstr ""
 msgid "PortType"
 msgstr ""
 
-#: web/modules/inventory/inventory/localSidebar.php:41
 #: web/modules/inventory/inventory/i18n_labels.php:115
-#: web/modules/inventory/infoPackage.inc.php:62
+#: web/modules/inventory/inventory/localSidebar.php:42
+#: web/modules/inventory/infoPackage.inc.php:64
 msgid "Printer"
 msgstr ""
 
@@ -571,6 +653,10 @@ msgstr ""
 msgid "RamTotal"
 msgstr ""
 
+#: web/modules/inventory/includes/html.php:102
+msgid "Refresh"
+msgstr ""
+
 #: web/modules/inventory/inventory/i18n_labels.php:123
 msgid "RegisteredCompany"
 msgstr ""
@@ -579,8 +665,8 @@ msgstr ""
 msgid "RegisteredName"
 msgstr ""
 
-#: web/modules/inventory/inventory/localSidebar.php:33
-#: web/modules/inventory/infoPackage.inc.php:72
+#: web/modules/inventory/inventory/localSidebar.php:34
+#: web/modules/inventory/infoPackage.inc.php:74
 msgid "Registry"
 msgstr ""
 
@@ -588,15 +674,15 @@ msgstr ""
 msgid "Registry keys/values list"
 msgstr ""
 
-#: web/modules/inventory/infoPackage.inc.php:178
+#: web/modules/inventory/infoPackage.inc.php:184
 msgid "Registry tab for a computer"
 msgstr ""
 
-#: web/modules/inventory/infoPackage.inc.php:157
+#: web/modules/inventory/infoPackage.inc.php:163
 msgid "Registry tab for a computer in a group"
 msgstr ""
 
-#: web/modules/inventory/infoPackage.inc.php:139
+#: web/modules/inventory/infoPackage.inc.php:145
 msgid "Registry tab for a group"
 msgstr ""
 
@@ -616,8 +702,8 @@ msgstr ""
 msgid "Size"
 msgstr ""
 
-#: web/modules/inventory/inventory/slot.php:27
 #: web/modules/inventory/inventory/i18n_labels.php:129
+#: web/modules/inventory/inventory/slot.php:27
 msgid "Slot"
 msgstr ""
 
@@ -645,9 +731,9 @@ msgstr ""
 msgid "SmbVersion"
 msgstr ""
 
-#: web/modules/inventory/inventory/localSidebar.php:30
 #: web/modules/inventory/inventory/i18n_labels.php:136
-#: web/modules/inventory/infoPackage.inc.php:70
+#: web/modules/inventory/inventory/localSidebar.php:31
+#: web/modules/inventory/infoPackage.inc.php:72
 msgid "Software"
 msgstr ""
 
@@ -655,21 +741,21 @@ msgstr ""
 msgid "Software list"
 msgstr ""
 
-#: web/modules/inventory/infoPackage.inc.php:169
+#: web/modules/inventory/infoPackage.inc.php:175
 msgid "Software tab for a computer"
 msgstr ""
 
-#: web/modules/inventory/infoPackage.inc.php:148
+#: web/modules/inventory/infoPackage.inc.php:154
 msgid "Software tab for a computer in a group"
 msgstr ""
 
-#: web/modules/inventory/infoPackage.inc.php:130
+#: web/modules/inventory/infoPackage.inc.php:136
 msgid "Software tab for a group"
 msgstr ""
 
-#: web/modules/inventory/inventory/localSidebar.php:42
 #: web/modules/inventory/inventory/i18n_labels.php:137
-#: web/modules/inventory/infoPackage.inc.php:64
+#: web/modules/inventory/inventory/localSidebar.php:43
+#: web/modules/inventory/infoPackage.inc.php:66
 msgid "Sound"
 msgstr ""
 
@@ -697,9 +783,9 @@ msgstr ""
 msgid "State"
 msgstr ""
 
-#: web/modules/inventory/inventory/localSidebar.php:43
 #: web/modules/inventory/inventory/i18n_labels.php:143
-#: web/modules/inventory/infoPackage.inc.php:66
+#: web/modules/inventory/inventory/localSidebar.php:44
+#: web/modules/inventory/infoPackage.inc.php:68
 msgid "Storage"
 msgstr ""
 
@@ -755,9 +841,14 @@ msgstr ""
 msgid "VRAMSize"
 msgstr ""
 
-#: web/modules/inventory/inventory/view.php:79
 #: web/modules/inventory/inventory/i18n_labels.php:156
+#: web/modules/inventory/inventory/view.php:79
 msgid "Value"
+msgstr ""
+
+#: web/modules/inventory/inventory/inventory_diff.php:76
+#: web/modules/inventory/inventory/inventory_diff.php:101
+msgid "Values"
 msgstr ""
 
 #: web/modules/inventory/inventory/i18n_labels.php:157
@@ -772,14 +863,18 @@ msgstr ""
 msgid "Video card list"
 msgstr ""
 
-#: web/modules/inventory/inventory/localSidebar.php:44
-#: web/modules/inventory/infoPackage.inc.php:68
+#: web/modules/inventory/inventory/localSidebar.php:45
+#: web/modules/inventory/infoPackage.inc.php:70
 msgid "VideoCard"
 msgstr ""
 
-#: web/modules/inventory/inventory/ajaxViewPart.php:180
-#: web/modules/inventory/infoPackage.inc.php:75
+#: web/modules/inventory/inventory/ajaxViewPart.php:195
+#: web/modules/inventory/infoPackage.inc.php:77
 msgid "View"
+msgstr ""
+
+#: web/modules/inventory/inventory/history.php:66
+msgid "View differences since previous inventory"
 msgstr ""
 
 #: web/modules/inventory/inventory/i18n_labels.php:159
