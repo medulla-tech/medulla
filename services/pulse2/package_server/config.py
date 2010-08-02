@@ -381,11 +381,11 @@ class P2PServerCP(pulse2.utils.Singleton):
             if self.cp.has_option('imaging_api', 'rpc_replay_file'):
                 rpc_replay_file = os.path.join(base_folder, self.cp.get('imaging_api', 'rpc_replay_file'))
             if self.cp.has_option('imaging_api', 'rpc_loop_timer'):
-                rpc_loop_timer = os.path.join(base_folder, self.cp.getint('imaging_api', 'rpc_loop_timer'))
+                rpc_loop_timer = self.cp.getint('imaging_api', 'rpc_loop_timer')
             if self.cp.has_option('imaging_api', 'rpc_count'):
-                rpc_count = os.path.join(base_folder, self.cp.getint('imaging_api', 'rpc_loop_timer'))
+                rpc_count = self.cp.getint('imaging_api', 'rpc_count')
             if self.cp.has_option('imaging_api', 'rpc_interval'):
-                rpc_interval = os.path.join(base_folder, self.cp.getint('imaging_api', 'rpc_interval'))
+                rpc_interval = self.cp.getint('imaging_api', 'rpc_interval')
             if self.cp.has_option("imaging_api", 'uuid'):
                 uuid = self.cp.get("imaging_api", 'uuid')
             if not isUUID(uuid):
