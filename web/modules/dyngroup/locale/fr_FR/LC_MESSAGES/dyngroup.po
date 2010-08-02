@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - Dyngroup Web Interface 1.2.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-01 23:39+0200\n"
+"POT-Creation-Date: 2010-07-25 06:52+0200\n"
 "PO-Revision-Date: 2010-06-22 11:25+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French <i18n@mandriva.com>\n"
@@ -19,15 +19,15 @@ msgstr ""
 msgid "%s's details"
 msgstr "Détails de %s"
 
-#: web/modules/dyngroup/includes/request.php:149
+#: web/modules/dyngroup/includes/request.php:156
 #, php-format
-msgid "%s) Search %s = %s in module %s"
-msgstr "%s) Recherche %s = %s dans le module %s"
+msgid "%s) Search %s %s %s in module %s"
+msgstr "%s) Recherche %s %s %s dans le module %s"
 
-#: web/modules/dyngroup/includes/request.php:147
+#: web/modules/dyngroup/includes/request.php:154
 #, php-format
-msgid "%s) Search %s = (%s) in module %s"
-msgstr "%s) Recherche %s = (%s) dans le module %s"
+msgid "%s) Search %s %s (%s) in module %s"
+msgstr "%s) Recherche %s %s (%s) dans le module %s"
 
 #: web/modules/dyngroup/dyngroup/localSidebar.php:42
 #, php-format
@@ -43,7 +43,7 @@ msgstr "(P) Afficher %s '%s'"
 msgid "->"
 msgstr "->"
 
-#: web/modules/dyngroup/dyngroup/save.php:92
+#: web/modules/dyngroup/dyngroup/save.php:91
 #: web/modules/dyngroup/dyngroup/add_groups.php:168
 #: web/modules/dyngroup/dyngroup/import_from_file.php:43
 #, php-format
@@ -55,10 +55,11 @@ msgstr "Un groupe portant le nom '%s' existe déjà"
 msgid "A profile already exists with name '%s'"
 msgstr "Un profil portant le nom '%s' existe déjà"
 
-#: web/modules/dyngroup/dyngroup/creator.php:158
-#: web/modules/dyngroup/dyngroup/creator.php:182
-#: web/modules/dyngroup/dyngroup/creator.php:190
-#: web/modules/dyngroup/dyngroup/creator.php:194
+#: web/modules/dyngroup/dyngroup/creator.php:198
+#: web/modules/dyngroup/dyngroup/creator.php:207
+#: web/modules/dyngroup/dyngroup/creator.php:231
+#: web/modules/dyngroup/dyngroup/creator.php:239
+#: web/modules/dyngroup/dyngroup/creator.php:243
 #: web/modules/dyngroup/includes/autocomplete.php:29
 #: web/modules/dyngroup/includes/double.php:36
 msgid "Add"
@@ -108,21 +109,25 @@ msgstr "Etes-vous sûr de bien vouloir supprimer le %s <b>%s</b>?<br/> (il est p
 msgid "Cancel"
 msgstr "Annuler"
 
-#: web/modules/dyngroup/dyngroup/save.php:138
+#: web/modules/dyngroup/dyngroup/save.php:137
 msgid "Check"
 msgstr "Vérifier"
 
-#: web/modules/dyngroup/dyngroup/creator.php:94
+#: web/modules/dyngroup/dyngroup/creator.php:109
 msgid "Choose the module you want to query : "
 msgstr "Sélectionnez le module que vous désirez requêter : "
 
-#: web/modules/dyngroup/dyngroup/creator.php:121
+#: web/modules/dyngroup/dyngroup/creator.php:136
 msgid "Choose your field : "
 msgstr "Sélectionnez votre champ : "
 
 #: web/modules/dyngroup/dyngroup/details.php:50
 msgid "Close"
 msgstr "Fermer"
+
+#: web/modules/dyngroup/dyngroup/creator.php:182
+msgid "Comparison operator : "
+msgstr "Opérateur de comparaison : "
 
 #: web/modules/dyngroup/infoPackage.inc.php:108
 #: web/modules/dyngroup/infoPackage.inc.php:183
@@ -195,6 +200,10 @@ msgstr "Export CSV"
 msgid "Csv's export"
 msgstr "Export CSV"
 
+#: web/modules/dyngroup/dyngroup/creator.php:195
+msgid "Date"
+msgstr "Date"
+
 #: web/modules/dyngroup/includes/request.php:112
 msgid "Delete"
 msgstr "Supprimer"
@@ -228,7 +237,7 @@ msgstr "Montrer"
 msgid "Display a groups of computers"
 msgstr "Montrer un groupe d'ordinateurs"
 
-#: web/modules/dyngroup/dyngroup/save.php:157
+#: web/modules/dyngroup/dyngroup/save.php:156
 msgid "Display content"
 msgstr "Voir le contenu"
 
@@ -290,7 +299,7 @@ msgstr "Éditer ce groupe"
 msgid "Edit this profile"
 msgstr "Éditer ce profil"
 
-#: web/modules/dyngroup/dyngroup/creator.php:226
+#: web/modules/dyngroup/dyngroup/creator.php:276
 msgid "Go to save step"
 msgstr "Sauvegarder"
 
@@ -380,17 +389,17 @@ msgstr "Lister tous les groupes d'ordinateurs"
 msgid "List all profiles of computers"
 msgstr "Lister tous les profils d'ordinateurs"
 
-#: web/modules/dyngroup/dyngroup/creator.php:184
+#: web/modules/dyngroup/dyngroup/creator.php:233
 #: web/modules/dyngroup/includes/autocomplete.php:31
 #: web/modules/dyngroup/includes/double.php:39
 msgid "Modify"
 msgstr "Modifier"
 
-#: web/modules/dyngroup/dyngroup/save.php:72
+#: web/modules/dyngroup/dyngroup/save.php:71
 msgid "Name :"
 msgstr "Nom :"
 
-#: web/modules/dyngroup/dyngroup/creator.php:188
+#: web/modules/dyngroup/dyngroup/creator.php:237
 #: web/modules/dyngroup/dyngroup/import_from_file.php:52
 #: web/modules/dyngroup/includes/groups.inc.php:128
 msgid "No"
@@ -490,7 +499,7 @@ msgstr "Sauvegarde de requête (%s)"
 msgid "Result profile creation"
 msgstr "Résultat de la création du profil"
 
-#: web/modules/dyngroup/dyngroup/save.php:88
+#: web/modules/dyngroup/dyngroup/save.php:87
 msgid "Save"
 msgstr "Sauvegarder"
 
@@ -551,7 +560,7 @@ msgstr "Déploiement de logiciels sur ce groupe"
 msgid "Software deployment on this profile"
 msgstr "Déploiement de logiciels sur ce profil"
 
-#: web/modules/dyngroup/dyngroup/save.php:138
+#: web/modules/dyngroup/dyngroup/save.php:137
 msgid "Specify a boolean operator between sub-requests"
 msgstr "Spécifier un opérateur booléen entre les sous requètes"
 
@@ -593,21 +602,21 @@ msgstr "Affichage temporaire du résultat"
 msgid "Temporary result display for '%s'"
 msgstr "Affichage temporaire du résultat pour '%s'"
 
-#: web/modules/dyngroup/dyngroup/save.php:144
+#: web/modules/dyngroup/dyngroup/save.php:143
 #, php-format
 msgid "The boolean equation '%s' is not valid"
 msgstr "L'équation booléenne '%s' est invalide"
 
-#: web/modules/dyngroup/dyngroup/save.php:147
+#: web/modules/dyngroup/dyngroup/save.php:146
 #, php-format
 msgid "The boolean equation '%s' is not valid.<br/>Not the same number of sub-requests"
 msgstr "L'équation booléenne '%s' est invalide.<br/>Pas le même nombre de sous-requêtes"
 
-#: web/modules/dyngroup/dyngroup/save.php:150
+#: web/modules/dyngroup/dyngroup/save.php:149
 msgid "The boolean equation is valid"
 msgstr "L'équation booléenne est valide"
 
-#: web/modules/dyngroup/dyngroup/creator.php:209
+#: web/modules/dyngroup/dyngroup/creator.php:259
 msgid "The request is : "
 msgstr "La requête est : "
 
@@ -637,15 +646,15 @@ msgstr "Mise à jour du cache des noms d'ordinateurs dans dyngroup"
 msgid "Visible"
 msgstr "Visible"
 
-#: web/modules/dyngroup/dyngroup/creator.php:187
-#: web/modules/dyngroup/dyngroup/creator.php:193
+#: web/modules/dyngroup/dyngroup/creator.php:236
+#: web/modules/dyngroup/dyngroup/creator.php:242
 #: web/modules/dyngroup/dyngroup/import_from_file.php:52
 #: web/modules/dyngroup/includes/groups.inc.php:127
 msgid "Yes"
 msgstr "Oui"
 
-#: web/modules/dyngroup/dyngroup/save.php:94
-#: web/modules/dyngroup/dyngroup/save.php:96
+#: web/modules/dyngroup/dyngroup/save.php:93
+#: web/modules/dyngroup/dyngroup/save.php:95
 #: web/modules/dyngroup/dyngroup/add_groups.php:162
 msgid "You must specify a group name"
 msgstr "Le nom du groupe est obligatoire"
@@ -667,11 +676,11 @@ msgstr "retour"
 msgid "group"
 msgstr "groupe"
 
-#: web/modules/dyngroup/dyngroup/save.php:78
+#: web/modules/dyngroup/dyngroup/save.php:77
 msgid "hidden"
 msgstr "caché"
 
-#: web/modules/dyngroup/dyngroup/save.php:78
+#: web/modules/dyngroup/dyngroup/save.php:77
 msgid "it should be"
 msgstr "le groupe sera"
 
@@ -679,12 +688,12 @@ msgstr "le groupe sera"
 msgid "profile"
 msgstr "profil"
 
-#: web/modules/dyngroup/dyngroup/save.php:74
+#: web/modules/dyngroup/dyngroup/save.php:73
 #: web/modules/dyngroup/dyngroup/ajaxListGroups.php:75
 msgid "query"
 msgstr "requête"
 
-#: web/modules/dyngroup/dyngroup/save.php:74
+#: web/modules/dyngroup/dyngroup/save.php:73
 msgid "result"
 msgstr "résultat"
 
@@ -693,7 +702,7 @@ msgstr "résultat"
 msgid "result (%s)"
 msgstr "résultat (%s)"
 
-#: web/modules/dyngroup/dyngroup/save.php:74
+#: web/modules/dyngroup/dyngroup/save.php:73
 msgid "save as"
 msgstr "sauver en tant que"
 
@@ -724,6 +733,6 @@ msgstr "le profil statique"
 msgid "update machine cache : %s machines"
 msgstr "mise à jour du cache des noms de ordinateurs : %s ordinateurs"
 
-#: web/modules/dyngroup/dyngroup/save.php:78
+#: web/modules/dyngroup/dyngroup/save.php:77
 msgid "visible"
 msgstr "visible"
