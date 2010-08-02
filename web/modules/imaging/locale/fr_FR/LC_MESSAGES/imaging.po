@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-25 06:52+0200\n"
+"POT-Creation-Date: 2010-07-25 10:48+0200\n"
 "PO-Revision-Date: 2010-06-22 19:05+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: Pulse 2 developers <pulse2-i18n@mandrivalinux.org>\n"
@@ -15,6 +15,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Lokalize 1.0\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: web/modules/imaging/imaging/bootmenu.php:288
+msgid "\"Preselected choice\" and \"Preselected choice on WOL\" values will be used to set the default imaging client menu item to run, if no choice is made by the user on the client side prior to the menu timeout."
+msgstr "Les valeurs de \"Choix pre-séléctionné\" et \"Choix pre-séléctionné pour le WOL\" seront utilisées pour déterminer les valeurs du boot menu qui seront lancées par défaut si aucun choix n'est fait par l'utilisateur avant que le timeout du menu passe."
 
 #: web/modules/imaging/imaging/configure.php:301
 #, php-format
@@ -343,7 +347,6 @@ msgid "Current boot menu"
 msgstr "Menu de démarrage actuel"
 
 #: web/modules/imaging/manage/ajaxBootmenu.php:151
-#: web/modules/imaging/imaging/bootmenu.php:292
 msgid "Default"
 msgstr "Par défaut"
 
@@ -374,7 +377,6 @@ msgid "Default menu timeout"
 msgstr "Timeout du menu par défaut"
 
 #: web/modules/imaging/manage/ajaxBootmenu.php:153
-#: web/modules/imaging/imaging/bootmenu.php:294
 msgid "Default on WOL"
 msgstr "Par défaut sur WOL"
 
@@ -419,7 +421,7 @@ msgstr "Supprimer l'image"
 #: web/modules/imaging/imaging/ajaxImages.php:147
 #: web/modules/imaging/imaging/ajaxServices.php:88
 #: web/modules/imaging/imaging/images.php:102
-#: web/modules/imaging/imaging/bootmenu.php:291
+#: web/modules/imaging/imaging/bootmenu.php:297
 msgid "Description"
 msgstr "Description"
 
@@ -434,7 +436,7 @@ msgstr "Accès en ligne de commande au linux diskless"
 #: web/modules/imaging/imaging/addimage.php:107
 #: web/modules/imaging/imaging/addservice.php:107
 #: web/modules/imaging/imaging/bootmenu.php:141
-#: web/modules/imaging/imaging/bootmenu.php:293
+#: web/modules/imaging/imaging/bootmenu.php:300
 msgid "Displayed"
 msgstr "Affiché"
 
@@ -445,7 +447,7 @@ msgstr "Affiché"
 #: web/modules/imaging/imaging/addimage.php:111
 #: web/modules/imaging/imaging/addservice.php:111
 #: web/modules/imaging/imaging/bootmenu.php:151
-#: web/modules/imaging/imaging/bootmenu.php:295
+#: web/modules/imaging/imaging/bootmenu.php:303
 msgid "Displayed on WOL"
 msgstr "Affiché sur WOL"
 
@@ -821,7 +823,7 @@ msgstr "Paramètres du noyau"
 #: web/modules/imaging/imaging/ajaxImages.php:145
 #: web/modules/imaging/imaging/ajaxServices.php:87
 #: web/modules/imaging/imaging/images.php:98
-#: web/modules/imaging/imaging/bootmenu.php:289
+#: web/modules/imaging/imaging/bootmenu.php:295
 msgid "Label"
 msgstr "Libellé"
 
@@ -959,6 +961,10 @@ msgstr "Pas assez d'informations"
 msgid "Not selected"
 msgstr "Non sélectionné"
 
+#: web/modules/imaging/imaging/bootmenu.php:291
+msgid "Once the operation triggered by a choice is successfull, the preselected choice will default to the first item of the boot menu."
+msgstr "Une fois que l'opération associée à un choix est un succés, le choix pre-séléctionné sera remis par défaut sur le premier élément du menu de boot."
+
 #: web/modules/imaging/includes/post_install_script.php:65
 msgid "Order"
 msgstr "Ordre"
@@ -1018,6 +1024,14 @@ msgstr "Demande de modification de l'entrée présélectionnée"
 #: web/modules/imaging/includes/logs.inc.php:66
 msgid "Preselected Menu Entry Change Success"
 msgstr "Réussite du changement de l'entrée de menu présélectionnée"
+
+#: web/modules/imaging/imaging/bootmenu.php:298
+msgid "Preselected choice"
+msgstr "Choix pre-séléctionné"
+
+#: web/modules/imaging/imaging/bootmenu.php:301
+msgid "Preselected choice on WOL"
+msgstr "Choix pre-séléctionné pour le WOL"
 
 #: web/modules/imaging/imaging/configure.php:301
 #: web/modules/imaging/imaging/showtarget.php:54
@@ -1349,6 +1363,10 @@ msgstr "L'enregistrement dans le serveur d'imaging a échoué."
 msgid "The synchro is running, please wait or reload the page %shere%s"
 msgstr "La synchronisation est en cours, merci de patienter ou de recharger la page %sici%s"
 
+#: web/modules/imaging/imaging/bootmenu.php:293
+msgid "Then for each computer, once the operation triggered by a choice is successfull, the preselected choice will default to the first item of the boot menu."
+msgstr "Alors, pour chaque ordinateur, une fois l'opération associée à ce choix terminée avec succés, le choix pre-séléctionné sera remis par défaut sur la première entrée du menu de boot."
+
 #: web/modules/imaging/includes/includes.php:35
 msgid "There was an error (this is a default message)."
 msgstr "Une erreur est arrivée (ceci est un message par défaut)."
@@ -1466,6 +1484,10 @@ msgstr "Valider"
 #: web/modules/imaging/imaging/ajaxImages.php:79
 msgid "View image log"
 msgstr "Voir les logs de l'image"
+
+#: web/modules/imaging/imaging/bootmenu.php:293
+msgid "When you modify the \"Preselected choice\" or \"Preselected choice on WOL\" values on a profile, those values will be set on all the boot menu of the computers owned by the profile."
+msgstr "Quand vous modifiez la valeur \"Choix pre-séléctionné\" ou \"Choix pre-séléctionné pour le WOL\" sur un profil, ces valeurs seront définies pour tous les menus de boot des ordinateurs contenus dans ce profil."
 
 #: web/modules/imaging/imaging/configure.php:152
 msgid "You are going to unregister this computer from the imaging module, are you sure you want to do that?"
