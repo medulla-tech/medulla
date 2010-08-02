@@ -284,14 +284,22 @@ function item_list() {
         $a_display[] = ($entry['hidden'] ? False:True);
         $a_defaultWOL[] = $entry['default_WOL'];
         $a_displayWOL[] = ($entry['hidden_WOL'] ? False:True);
-
+    }
+    $firstp = "<p>" . _T("\"Preselected choice\" and \"Preselected choice on WOL\" values will be used to set the default imaging client menu item to run, if no choice is made by the user on the client side prior to the menu timeout.", "imaging") . "</p>";
+    /* Build tooltip text on column name */
+    if ($type == "") {
+        $text = $firstp . "<p>" . _T("Once the operation triggered by a choice is successfull, the preselected choice will default to the first item of the boot menu.", "imaging") . "</p>";
+    } else {
+        $text = $firstp . "<p>" . _T("When you modify the \"Preselected choice\" or \"Preselected choice on WOL\" values on a profile, those values will be set on all the boot menu of the computers owned by the profile.", "imaging") . "</p>" . "<p>" . _T("Then for each computer, once the operation triggered by a choice is successfull, the preselected choice will default to the first item of the boot menu.", "imaging") . "</p>";
     }
     $l = new ListInfos($a_label, _T("Label"));
     $l->setParamInfo($list_params);
     $l->addExtraInfo($a_desc, _T("Description", "imaging"));
-    $l->addExtraInfo($a_default, _T("Default", "imaging"));
+    $l->addExtraInfo($a_default, _T("Preselected choice", "imaging")
+                     , "", $text);
     $l->addExtraInfo($a_display, _T("Displayed", "imaging"));
-    $l->addExtraInfo($a_defaultWOL, _T("Default on WOL", "imaging"));
+    $l->addExtraInfo($a_defaultWOL, _T("Preselected choice on WOL", "imaging")
+                     , "", $text);
     $l->addExtraInfo($a_displayWOL, _T("Displayed on WOL", "imaging"));
     $l->addActionItemArray($actionsUp);
     $l->addActionItemArray($actionsDown);
