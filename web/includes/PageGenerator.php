@@ -308,7 +308,8 @@ class ListInfos extends HtmlElement {
     var $end, $start;
 
     var $description; /**< list of description (not an obligation) */
-    var $col_width; /**can specify column width
+    var $col_width; /**< Contains the columns width */
+    var $tooltip; /**< Contains the tooltip for column label */
 
     /**
      * constructor
@@ -321,6 +322,8 @@ class ListInfos extends HtmlElement {
         $this->extranavbar = $extranavbar;
         $this->initVar();
         $this->col_width = array();
+        $this->tooltip = array();
+        $this->tooltip[] = "";
         $this->firstColumnActionLink = True;
         $this->_addInfo = array();
     }
@@ -361,12 +364,16 @@ class ListInfos extends HtmlElement {
     /**
      *  add an array String to display
      *  @param $arrString an Array String to display
+     *  @param description Table column name
+     *  @param width Table column width
+     *  @param tooltip Tooltip to display on the column name
      */
-    function addExtraInfo($arrString, $description= "",$width="") {
+    function addExtraInfo($arrString, $description= "", $width="", $tooltip = "") {
         assert(is_array($arrString));
         $this->extraInfo[] = &$arrString;
         $this->description[] = $description;
         $this->col_width[] = $width;
+        $this->tooltip[] = $tooltip;
     }
 
     /**
@@ -537,7 +544,16 @@ class ListInfos extends HtmlElement {
                 $first = True;
 
             } else {
-                echo "<td style=\"$width_styl\"><span style=\"color: #777;\">$desc</span></td>";
+                /* Draw table header line */
+                /* Add a tooltip to the column name if there is one set */
+                if (!empty($this->tooltip[$key])) {
+                    $tooltipbegin = "<a href=\"#\" class=\"tooltip\">";
+                    $tooltipend = "<span>" . $this->tooltip[$key] . "</span></a>";
+                } else {
+                    $tooltipbegin = "";
+                    $tooltipend = "";
+                }
+                echo "<td style=\"$width_styl\"><span style=\"color: #777;\">$tooltipbegin$desc$tooltipend</span></td>";
             }
         }
 
@@ -2487,6 +2503,7 @@ class Table extends HtmlContainer {
 
     function Table($options = array()) {
         $this->HtmlContainer();
+        $this->lines = array();
         $this->tr_style = '';
         $this->td_style = '';
         $this->options = $options;
