@@ -576,6 +576,9 @@ class ImagingApi(MyXmlrpc):
 
         @param mac : The mac address of the client
         @type mac: MAC Address
+
+        @return: the created folder UUID, or boolean False if it fails
+        @rtype: str
         """
 
         def _onSuccess(result):
@@ -614,7 +617,7 @@ class ImagingApi(MyXmlrpc):
                 args = (self.config.imaging_api['uuid'], c_uuid, image_uuid, isMaster, name, desc, path, size, creationDate, creator, state)
                 d = client.callRemote(func, *args)
                 d.addCallbacks(_onSuccess, RPCReplay().onError, errbackArgs = (func, args, False))
-                return d
+                return image_uuid
 
         self.logger.debug('Imaging: Client %s want to create an image' % (mac))
         if not isMACAddress(mac):
@@ -740,7 +743,7 @@ class ImagingApi(MyXmlrpc):
                 args = (self.config.imaging_api['uuid'], c_uuid, imageUUID, name, desc, size, updateDate, state)
                 d = client.callRemote(func, *args)
                 d.addCallbacks(_onSuccess, RPCReplay().onError, errbackArgs = (func, args, False))
-                return d
+                return True
 
         if not isUUID(imageUUID):
             self.logger.error("Bad image UUID %s" % str(imageUUID))
