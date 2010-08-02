@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-25 10:48+0200\n"
+"POT-Creation-Date: 2010-07-25 12:47+0200\n"
 "PO-Revision-Date: 2010-06-22 19:05+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: Pulse 2 developers <pulse2-i18n@mandrivalinux.org>\n"
@@ -1261,12 +1261,12 @@ msgstr "Échec de la synchronisation pour : %s"
 
 #: web/modules/imaging/manage/location.php:60
 #, php-format
-msgid "Synchronization failed for entity: %s"
-msgstr "Échec de la synchronisation pour l'entité: %s"
+msgid "Synchronization failed for package server: %s"
+msgstr "Échec de la synchronisation pour le package serveur : %s"
 
 #: web/modules/imaging/manage/location.php:57
-msgid "Synchronization launched on this entity."
-msgstr "Synchronisation démarrée sur cette entité."
+msgid "Synchronization launched on this package server."
+msgstr "Synchronisation démarrée sur ce package serveur."
 
 #: web/modules/imaging/imaging/tabs.php:48
 msgid "Synchronization launched on this target."
@@ -1554,3 +1554,9 @@ msgstr "nfs"
 #: web/modules/imaging/imaging/configure.php:333
 msgid "tftp"
 msgstr "tftp"
+
+#~ msgid "Synchronization failed for entity: %s"
+#~ msgstr "Échec de la synchronisation pour l'entité: %s"
+
+#~ msgid "Synchronization launched on this entity."
+#~ msgstr "Synchronisation démarrée sur cette entité."
