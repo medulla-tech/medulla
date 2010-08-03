@@ -59,7 +59,7 @@ def activate():
     if config.disabled:
         logger.warning("Plugin ppolicy: disabled by configuration.")
         return False
-    
+
     ppolicySchema = ['pwdPolicy', 'device']
 
     for objectClass in ppolicySchema:
@@ -70,7 +70,7 @@ def activate():
 
     # Register default password policy into the LDAP if it does not exist
     PPolicy().installPPolicy()
-    
+
     return True
 
 
@@ -103,24 +103,27 @@ class PPolicy(ldapUserGroupControl):
     """
     Class for objects that manages the default LDAP password policy.
     """
- 
+
     def __init__(self, conffile = None):
         ldapUserGroupControl.__init__(self, conffile)
         self.configPPolicy = PPolicyConfig("ppolicy", conffile)
-                   
+
     def checkPPolicy(self):
         '''
         Check the presence of Password Policy
-        
+
         @returns: True if it exists
         @rtype: bool
         '''
+        ret = False
         try:
-            self.l.search_s(self.configPPolicy.ppolicydefaultdn, ldap.SCOPE_BASE)
-            return True
+            self.l.search_s(self.configPPolicy.ppolicydefaultdn,
+                            ldap.SCOPE_BASE)
+            ret = True
         except ldap.NO_SUCH_OBJECT:
-            return False
-        
+            pass
+        return ret
+
     def installPPolicy(self):
         """
         Set the default password policies in LDAP if not available.
@@ -133,7 +136,7 @@ class PPolicy(ldapUserGroupControl):
                 self.logger.info("Created OU " + self.configPPolicy.ppolicydn)
             except ldap.ALREADY_EXISTS:
                 pass
-                
+
             attrs = {}
             attrs['objectClass'] = ['pwdPolicy', 'device']
             attrs['cn'] = self.configPPolicy.ppolicydefault
@@ -146,7 +149,7 @@ class PPolicy(ldapUserGroupControl):
             attributes = modlist.addModlist(attrs)
             self.l.add_s(self.configPPolicy.ppolicydefaultdn, attributes)
             self.logger.info("Default password policy registered at: %s" % self.configPPolicy.ppolicydefaultdn)
-        
+
     def getAttribute(self, nameattribute = None):
         """
         Get the given attribute value of the default password policies.
@@ -191,7 +194,7 @@ class PPolicy(ldapUserGroupControl):
         except ldap.INVALID_SYNTAX:
             logging.getLogger().error("Invalid Syntax from the attribute value of %s on ldap" % nameattribute)
         r.commit()
-        
+
     def getDefaultAttributes (self):
         """
         Returns the list of LDAP password policies attributes.
@@ -203,7 +206,7 @@ class PPolicy(ldapUserGroupControl):
         for k in self.configPPolicy.ppolicyAttributes:
             ret.append(k)
         return ret
-    
+
     def setDefaultConfigAttributes (self):
         """
         Set all the password policies attributes to the value specified in the
@@ -218,7 +221,7 @@ class UserPPolicy(ldapUserGroupControl):
     """
     Class for objects that manage user password policies attributes.
     """
-    
+
     def __init__(self, uid, conffile = None):
         """
         Class constructor.
@@ -230,7 +233,7 @@ class UserPPolicy(ldapUserGroupControl):
         self.configPPolicy = PPolicyConfig("ppolicy", conffile)
         self.userUid = uid
         self.dn = 'uid=' + uid + ',' + self.baseUsersDN
-    
+
     def getPPolicyAttribute(self, name = None):
         """
         Get value of the given LDAP attribute.
@@ -316,7 +319,7 @@ class UserPPolicy(ldapUserGroupControl):
         """
         Remove the pwdPolicy and pwdPolicyChecker objectClass from the current
         user, and the pwdPolicySubentry attribute.
-        """ 
+        """
         r = AF().log(PLUGIN_NAME, AA.PPOLICY_DEL_USER_PPOLICY_CLASS, [(self.dn, AT.USER)])
         # Remove pwdPolicy object class
         self.removeUserObjectClass(self.userUid, 'pwdPolicy')
