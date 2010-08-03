@@ -204,9 +204,9 @@ class MmcServer(xmlrpc.XMLRPC,object):
             reactor.callFromThread(deferred.callback, result)
 
         def _cbFailure(failure, deferred, start):
-            _printExecutionTime(start)            
+            _printExecutionTime(start)
             reactor.callFromThread(deferred.errback, failure)
-            
+
         def _putResult(deferred, f, session, args, kwargs):
             self.logger.debug("Using thread #%s for %s" % (threading.currentThread().getName().split("-")[2], f.__name__))
             # Attach current user session to the thread
@@ -226,7 +226,7 @@ class MmcServer(xmlrpc.XMLRPC,object):
                 else:
                     _printExecutionTime(start)
                     reactor.callFromThread(deferred.callback, result)
-            
+
         function = args[0]
         context = args[1]
         args = args[2:]
@@ -370,7 +370,7 @@ def daemon(config):
 
 def agentService(config, conffile, daemonize):
     config = readConfig(config)
-    
+
     # If umask = 0077, created files will be rw for effective user only
     # If umask = 0007, they will be rw for effective user and group only
     os.umask(config.umask)
@@ -440,7 +440,7 @@ def cleanUp(config):
 
     # Unlink pidfile if it exists
     if os.path.isfile(config.pidfile):
-        os.seteuid(0)            
+        os.seteuid(0)
         os.setegid(0)
         os.unlink(config.pidfile)
 
@@ -451,7 +451,7 @@ class MMCHTTPChannel(http.HTTPChannel):
     We inherit from http.HTTPChannel to log incoming connections when the MMC
     agent is in DEBUG mode, and to log connection errors.
     """
-    
+
     def connectionMade(self):
         logger = logging.getLogger()
         logger.debug("Connection from %s" % (self.transport.getPeer().host,))
@@ -461,7 +461,7 @@ class MMCHTTPChannel(http.HTTPChannel):
         if not reason.check(twisted.internet.error.ConnectionDone):
             logger = logging.getLogger()
             logger.error(reason)
-        http.HTTPChannel.connectionLost(self, reason)        
+        http.HTTPChannel.connectionLost(self, reason)
 
 class MMCSite(server.Site):
     protocol = MMCHTTPChannel
@@ -474,7 +474,7 @@ def startService(config, logger, mod):
         reactor.listenSSL(config.port, MMCSite(r), interface = config.host, contextFactory = sslContext)
     else:
         logger.warning("SSL is disabled by configuration.")
-        reactor.listenTCP(config.port, server.Site(r), interface = config.host)        
+        reactor.listenTCP(config.port, server.Site(r), interface = config.host)
     # Add event handler before shutdown
     reactor.addSystemEventTrigger('before', 'shutdown', cleanUp, config)
     logger.info("Listening to XML-RPC requests")
@@ -485,7 +485,7 @@ def readConfig(config):
 
     @param config: a MMCConfigParser object reading the agent conf file
     @type config: MMCConfigParser
-    
+
     @return: MMCConfigParser object with extra attributes set
     @rtype: MMCConfigParser
     """
@@ -563,7 +563,7 @@ class PluginManager(Singleton):
     This singleton class imports available MMC plugins, activates them, and
     keeps track of all enabled plugins.
     """
-    
+
     pluginDirectory = 'plugins/'
     # Will contains the enabled plugins name and corresponding python
     # module objects
@@ -676,7 +676,7 @@ class PluginManager(Singleton):
             if plugin == "base" and not "base" in mod:
                 self.logger.error("MMC agent can't run without the base plugin. Exiting.")
                 return 4
-        
+
         # store enabled plugins
         self.plugins = mod
 
@@ -696,5 +696,5 @@ class PluginManager(Singleton):
         # Set module list
         setModList = getattr(mod["base"], "setModList")
         setModList(modList)
-    
+
         return 0
