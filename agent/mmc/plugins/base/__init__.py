@@ -739,7 +739,7 @@ class LdapUserGroupControl:
         u = self.getDetailedUser(login)
         try:
             ret = "L" in u["sambaAcctFlags"][0]
-        except KeyError, IndexError:
+        except (KeyError, IndexError):
             ret = False
         return ret
 
