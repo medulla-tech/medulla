@@ -23,7 +23,6 @@
     client menu handling classes
 """
 
-import pulse2.utils
 import re
 import os.path
 import os
@@ -31,6 +30,9 @@ import logging
 import time
 import shutil
 import stat
+
+import pulse2.utils
+from pulse2.package_server.config import P2PServerCP as PackageServerConfig
 
 def isMenuStructure(menu):
     """
@@ -637,3 +639,71 @@ class ImagingImageItem(ImagingItem):
                 order += 1
         else:
             self.logger.debug('No post-installation script to write')
+
+
+def changeDefaultMenuItem(macaddress, value):
+    """
+    Change the default menu item of a computer.
+
+    This method directly changes the content of the boot menu file of a
+    computer. It should be used only when the MMC-agent can't be reached.
+
+    @param macaddress: computer MAC address
+    @type macaddress: str
+
+    @param value: defaut item value
+    @type value: int
+
+    @return: True if success, else False
+    @rtype: bool
+    """
+    config = PackageServerConfig()
+    logger = logging.getLogger('imaging')
+    filename = os.path.join(config.imaging_api['base_folder'],
+                            config.imaging_api['bootmenus_folder'],
+                            pulse2.utils.reduceMACAddress(macaddress))
+    logger.debug('Changing default boot menu item of computer MAC %s'
+                 % macaddress)
+    newlines = ''
+    try:
+        for line in file(filename):
+            if line.startswith('default '):
+                if line == 'default 0\n':
+                    self.logger.debug('Default item is already 0, nothing to do.')
+                    return True
+                # Change default menu item
+                newlines += 'default %d\n' % value
+            else:
+                newlines += line
+    except OSError, e:
+        logger.error('Error while reading computer bootmenu file %s: %s' %
+                          (filename, str(e)))
+        logger.error('This computer default menu item can\'t be changed')
+        newlines = ''
+    if newlines:
+        backupname = "%s.backup" % filename
+        try:
+            os.rename(filename, backupname)
+        except OSError, e: # can make a backup : give up !
+            logger.error("While backuping boot menu %s as %s : %s"
+                         % (filename, backupname, e))
+            return False
+        # Write new boot menu
+        try:
+            fid = file(filename, 'w+b')
+            fid.write(newlines)
+            fid.close()
+            logger.debug('Successfully wrote boot menu for computer MAC %s into file %s' % (macaddress, filename))
+        except IOError, e:
+            logger.error("While writing boot menu for %s : %s"
+                         % (macaddress, e))
+            return False
+        # Remove boot menu backup
+        try:
+            os.unlink(backupname)
+        except OSError, e:
+            logger.warn("While removing backup %s of %s : %s"
+                        % (backupname, filename, e))
+        return True
+    return False
+        

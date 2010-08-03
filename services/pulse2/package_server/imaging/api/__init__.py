@@ -41,7 +41,7 @@ from pulse2.package_server.xmlrpc import MyXmlrpc
 from pulse2.package_server.imaging.api.client import ImagingXMLRPCClient
 from pulse2.package_server.imaging.cache import UUIDCache
 from pulse2.package_server.imaging.api.status import Status
-from pulse2.package_server.imaging.menu import isMenuStructure, ImagingDefaultMenuBuilder, ImagingComputerMenuBuilder
+from pulse2.package_server.imaging.menu import isMenuStructure, ImagingDefaultMenuBuilder, ImagingComputerMenuBuilder, changeDefaultMenuItem
 from pulse2.package_server.imaging.computer import ImagingComputerConfiguration
 from pulse2.package_server.imaging.iso import ISOImage
 from pulse2.package_server.imaging.archiver import Archiver
@@ -577,8 +577,8 @@ class ImagingApi(MyXmlrpc):
         @param mac : The mac address of the client
         @type mac: MAC Address
 
-        @return: the created folder UUID, or boolean False if it fails
-        @rtype: str
+        @return: True if the folder
+        @rtype: bool
         """
 
         def _onSuccess(result):
@@ -659,15 +659,26 @@ class ImagingApi(MyXmlrpc):
 
         def _onSuccess(result):
             if type(result) != list and len(result) != 2:
-                self.logger.error('Imaging: Couldn\'t set default entry on %s for %s : %s' % (num, computerUUID, str(result)))
+                self.logger.error('Couldn\'t set default entry on %s for %s : %s' % (num, computerUUID, str(result)))
                 ret = False
             elif not result[0]:
-                self.logger.error('Imaging: Couldn\'t set default entry on %s for %s : %s' % (num, computerUUID, str(result)))
+                self.logger.error('Couldn\'t set default entry on %s for %s : %s' % (num, computerUUID, str(result)))
                 ret = False
             else:
-                self.logger.info('Imaging: Successfully set default entry on %s for %s' % (num, computerUUID))
+                self.logger.info('Successfully set default entry on %s for %s' % (num, computerUUID))
                 ret = True
             return ret
+
+        def _onError(error, funcname, args, default_return):
+            # Storing RPC so that it can be replayed lated
+            RPCReplay().onError(error, funcname, args, default_return)
+            # Manually update the computer boot menu
+            self.logger.warning('MMC agent can\'t be contacted: updating default menu item to the first "manually"')
+            if changeDefaultMenuItem(mac, 0):
+                self.logger.warning('Update done')
+            else:
+                self.logger.error('Update failed')
+            return default_return
 
         if not isMACAddress(mac):
             self.logger.error("Bad computer MAC %s" % str(mac))
@@ -683,7 +694,7 @@ class ImagingApi(MyXmlrpc):
                 func = 'imaging.computerChangeDefaultMenuItem'
                 args = (self.config.imaging_api['uuid'], computerUUID, num)
                 d = client.callRemote(func, *args)
-                d.addCallbacks(_onSuccess, client.onError, errbackArgs = (func, args, False))
+                d.addCallbacks(_onSuccess, _onError, errbackArgs = (func, args, True))
                 return d
         return ret
 
