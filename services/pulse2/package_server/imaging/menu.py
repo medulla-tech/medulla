@@ -668,8 +668,8 @@ def changeDefaultMenuItem(macaddress, value):
     try:
         for line in file(filename):
             if line.startswith('default '):
-                if line == 'default 0\n':
-                    self.logger.debug('Default item is already 0, nothing to do.')
+                if line == 'default %d\n' % value:
+                    logger.debug('Default item is already set to %d, nothing to do.' % value)
                     return True
                 # Change default menu item
                 newlines += 'default %d\n' % value
@@ -706,4 +706,3 @@ def changeDefaultMenuItem(macaddress, value):
                         % (backupname, filename, e))
         return True
     return False
-        
