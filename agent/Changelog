@@ -1,3 +1,9 @@
+mmc-core 3.0.1 (MMC agent)
+--------------------------
+
+ * MMC agent session timeout is now configurable.
+ * Add a subscription and support information system
+
 mmc-core 3.0.0 (MMC agent)
 --------------------------
 

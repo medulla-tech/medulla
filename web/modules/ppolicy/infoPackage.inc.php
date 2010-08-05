@@ -31,10 +31,10 @@ require_once("modules/ppolicy/includes/ppolicy.inc.php");
 
 
 $mod = new Module("ppolicy");
-$mod->setVersion("3.0.0");
+$mod->setVersion("3.0.1");
 $mod->setRevision('$Rev$');
 $mod->setDescription(_T("Password Policy", "ppolicy"));
-$mod->setAPIVersion("0:0:0");
+$mod->setAPIVersion("0:1:0");
 $mod->setPriority(600);
 
 /* Get the base module instance reference */

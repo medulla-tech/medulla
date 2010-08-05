@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: base\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-10 10:03+0200\n"
-"PO-Revision-Date: 2010-05-18 10:34+0200\n"
+"POT-Creation-Date: 2010-08-05 09:46+0200\n"
+"PO-Revision-Date: 2010-08-05 09:58+0200\n"
 "Last-Translator: Cédric Delfosse <cdelfosse@mandriva.com>\n"
 "Language-Team: français <fr@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,10 +17,14 @@ msgstr ""
 msgid " (%s module)"
 msgstr " (module %s)"
 
-#: includes/PageGenerator.php:474 includes/PageGenerator.php:689
+#: includes/PageGenerator.php:488 includes/PageGenerator.php:718
 #, php-format
 msgid " - Total <b>%s </b>"
 msgstr " - Total <b>%s</b>"
+
+#: modules/base/status/support.php:34
+msgid " and "
+msgstr " et "
 
 #: modules/base/users/backup.php:74
 #, php-format
@@ -69,7 +73,7 @@ msgstr ""
 msgid "Action"
 msgstr "Action"
 
-#: modules/base/infoPackage.inc.php:136
+#: modules/base/infoPackage.inc.php:142
 msgid "Action details"
 msgstr "Détail de l'action"
 
@@ -77,7 +81,7 @@ msgstr "Détail de l'action"
 msgid "Actions"
 msgstr "Actions"
 
-#: includes/FormGenerator.php:530 modules/base/groups/localSidebar.php:29
+#: includes/FormGenerator.php:569 modules/base/groups/localSidebar.php:29
 #: modules/base/users/localSidebar.php:29
 #: modules/base/views/editGroups.tpl.php:76
 msgid "Add"
@@ -87,11 +91,11 @@ msgstr "Ajout"
 msgid "Add a computer"
 msgstr "Ajouter un ordinateur"
 
-#: modules/base/infoPackage.inc.php:181
+#: modules/base/infoPackage.inc.php:187
 msgid "Add a group"
 msgstr "Ajouter un groupe"
 
-#: modules/base/infoPackage.inc.php:120
+#: modules/base/infoPackage.inc.php:126
 msgid "Add a user"
 msgstr "Ajout d'un utilisateur"
 
@@ -99,7 +103,7 @@ msgstr "Ajout d'un utilisateur"
 msgid "Add computer"
 msgstr "Ajout d'un ordinateur"
 
-#: modules/base/infoPackage.inc.php:278
+#: modules/base/infoPackage.inc.php:284
 msgid "Add computer "
 msgstr "Ajout d'un ordinateur "
 
@@ -128,7 +132,7 @@ msgstr "Ajouter l'utilisateur au groupe"
 msgid "Agent hostname"
 msgstr "Nom d'hôte de l'agent"
 
-#: modules/base/infoPackage.inc.php:293
+#: modules/base/infoPackage.inc.php:299
 msgid "Ajax part of computers list"
 msgstr "Partie ajaxifiée de la liste des ordinateurs"
 
@@ -160,7 +164,7 @@ msgstr "Description de l'attribut"
 msgid "Attributes updated."
 msgstr "Attributs mis à jour."
 
-#: modules/base/infoPackage.inc.php:208
+#: modules/base/infoPackage.inc.php:214
 msgid "Audit"
 msgstr "Audit"
 
@@ -172,7 +176,7 @@ msgstr "Autorisation"
 msgid "Background jobs"
 msgstr "Actions en arrière plan"
 
-#: modules/base/users/ajaxFilter.php:85 modules/base/views/index.tpl.php:93
+#: modules/base/users/ajaxFilter.php:86 modules/base/views/index.tpl.php:93
 msgid "Backup"
 msgstr "Sauvegarde"
 
@@ -195,12 +199,12 @@ msgstr ""
 msgid "Backup user"
 msgstr "Sauvegarde des fichiers de l'utilisateur"
 
-#: modules/base/infoPackage.inc.php:151
+#: modules/base/infoPackage.inc.php:157
 msgid "Backup user files"
 msgstr "Sauvegarde des fichiers de l'utilisateur"
 
 #: modules/base/audit/ajaxLogFilter.php:49
-#: modules/base/includes/AjaxFilterLog.inc.php:324
+#: modules/base/includes/AjaxFilterLog.inc.php:339
 msgid "Begin date"
 msgstr "Date de début"
 
@@ -224,8 +228,8 @@ msgstr "Impossible de se connecter à l'agent MMC"
 msgid "Can't send XML-RPC request to MMC agent"
 msgstr "Impossible d'envoyer la requête XML-RPC à l'agent"
 
-#: includes/PageGenerator.php:109 includes/PageGenerator.php:2173
-#: includes/PageGenerator.php:2244 modules/base/groups/members.php:182
+#: includes/PageGenerator.php:108 includes/PageGenerator.php:2405
+#: includes/PageGenerator.php:2476 modules/base/groups/members.php:182
 #: modules/base/groups/delete.php:52 modules/base/users/backup.php:91
 #: modules/base/users/edit.php:535
 msgid "Cancel"
@@ -243,7 +247,7 @@ msgstr "Changement du mot de passe utilisateur"
 msgid "Change user attribute"
 msgstr "Changement d'un attribut de l'utilisateur"
 
-#: modules/base/infoPackage.inc.php:156
+#: modules/base/infoPackage.inc.php:162
 msgid "Change user password"
 msgstr "Changement du mot de passe utilisateur"
 
@@ -280,13 +284,25 @@ msgstr "Client"
 msgid "Client hostname"
 msgstr "Nom d'hôte du client"
 
+#: modules/base/status/support.php:57 modules/base/status/support.php:62
+msgid "Comment"
+msgstr "Commentaire"
+
 #: modules/base/groups/ajaxFilter.php:43
 msgid "Comments"
 msgstr "Commentaires"
 
-#: modules/base/users/edit.php:479 modules/base/infoPackage.inc.php:320
+#: modules/base/users/edit.php:479 modules/base/infoPackage.inc.php:326
 msgid "Common name"
 msgstr "Nom commun"
+
+#: modules/base/status/support.php:56
+msgid "Company administrator mail"
+msgstr "Adresse mail de l'administrateur de la société"
+
+#: modules/base/status/support.php:55
+msgid "Company name"
+msgstr "Nom de la société"
 
 #: includes/ErrorHandling.php:76
 msgid "Complete Traceback"
@@ -296,7 +312,7 @@ msgstr "Traceback complète"
 msgid "Computer Name"
 msgstr "Nom de l'ordinateur"
 
-#: modules/base/computers/index.php:28 modules/base/infoPackage.inc.php:275
+#: modules/base/computers/index.php:28 modules/base/infoPackage.inc.php:281
 msgid "Computer list"
 msgstr "Liste des ordinateurs"
 
@@ -320,7 +336,7 @@ msgstr "Adresse MAC de l'ordinateur"
 msgid "Computer's network address"
 msgstr "Adresse du réseau de l'ordinateur"
 
-#: modules/base/infoPackage.inc.php:270
+#: modules/base/infoPackage.inc.php:276
 msgid "Computers"
 msgstr "Ordinateurs"
 
@@ -328,8 +344,8 @@ msgstr "Ordinateurs"
 msgid "Computers list"
 msgstr "Liste des ordinateurs"
 
-#: includes/PageGenerator.php:2169 includes/PageGenerator.php:2240
-#: includes/PageGenerator.php:2266 modules/base/groups/members.php:181
+#: includes/PageGenerator.php:2401 includes/PageGenerator.php:2472
+#: includes/PageGenerator.php:2498 modules/base/groups/members.php:181
 #: modules/base/groups/edit.php:107 modules/base/users/edit.php:527
 msgid "Confirm"
 msgstr "Valider"
@@ -338,7 +354,7 @@ msgstr "Valider"
 msgid "Confirm password"
 msgstr "Confirmation du mot de passe"
 
-#: modules/base/users/passwd.php:68 modules/base/infoPackage.inc.php:324
+#: modules/base/users/passwd.php:68 modules/base/infoPackage.inc.php:330
 msgid "Confirm your password"
 msgstr "Confirmez votre mot de passe"
 
@@ -375,11 +391,11 @@ msgstr "Fin du service"
 msgid "Date"
 msgstr "Date"
 
-#: includes/FormGenerator.php:397
+#: includes/FormGenerator.php:436
 msgid "Day: "
 msgstr "Jour: "
 
-#: modules/base/infoPackage.inc.php:65
+#: modules/base/infoPackage.inc.php:66
 msgid "Default status page"
 msgstr "Page de statut par défaut"
 
@@ -403,22 +419,22 @@ msgstr "Suppression de l'utilisateur de tous les groupes"
 msgid "Del user from group"
 msgstr "Suppression de l'utilisateur d'un groupe"
 
-#: includes/FormGenerator.php:833 modules/base/groups/ajaxFilter.php:48
-#: modules/base/users/ajaxFilter.php:84
+#: includes/FormGenerator.php:846 modules/base/groups/ajaxFilter.php:48
+#: modules/base/users/ajaxFilter.php:85
 #: modules/base/views/editGroups.tpl.php:63
 #: modules/base/views/index.tpl.php:92
 msgid "Delete"
 msgstr "Suppression"
 
-#: modules/base/infoPackage.inc.php:288
+#: modules/base/infoPackage.inc.php:294
 msgid "Delete a computer"
 msgstr "Supprimer un ordinateur"
 
-#: modules/base/infoPackage.inc.php:184
+#: modules/base/infoPackage.inc.php:190
 msgid "Delete a group"
 msgstr "Supprimer un groupe"
 
-#: modules/base/infoPackage.inc.php:146
+#: modules/base/infoPackage.inc.php:152
 msgid "Delete a user"
 msgstr "Supprimer un utilisateur"
 
@@ -434,11 +450,11 @@ msgstr "Supprimer un ordinateur"
 msgid "Delete group"
 msgstr "Supprimer le groupe"
 
-#: includes/FormGenerator.php:182
+#: includes/FormGenerator.php:209
 msgid "Delete photo"
 msgstr "Supprimer photo"
 
-#: modules/base/computers/delete.php:34
+#: modules/base/computers/delete.php:35
 msgid "Delete this computer"
 msgstr "Supprimer cet ordinateur"
 
@@ -458,6 +474,10 @@ msgstr "Désactivation d'un utilisateur"
 msgid "Display Name"
 msgstr "Nom affiché"
 
+#: modules/base/computers/delete.php:38
+msgid "Do you want a backup to be done ?"
+msgstr "Souhaitez-vous qu'une sauvegarde des données soit faite ?"
+
 #: modules/base/users/editacl.php:265
 msgid "Download ACL string"
 msgstr "Télécharger la chaîne de l'ACL"
@@ -466,7 +486,7 @@ msgstr "Télécharger la chaîne de l'ACL"
 msgid "Download file"
 msgstr "Téléchargement de fichiers"
 
-#: modules/base/users/ajaxFilter.php:82 modules/base/views/index.tpl.php:89
+#: modules/base/users/ajaxFilter.php:83 modules/base/views/index.tpl.php:89
 msgid "Edit"
 msgstr "Édition"
 
@@ -475,7 +495,7 @@ msgstr "Édition"
 msgid "Edit ACL of user %s"
 msgstr "Édition des ACLs de l'utilisateur %s"
 
-#: modules/base/infoPackage.inc.php:127
+#: modules/base/infoPackage.inc.php:133
 msgid "Edit ACL permissions on a user"
 msgstr "Éditez les ACL d'un utilisateur"
 
@@ -483,15 +503,15 @@ msgstr "Éditez les ACL d'un utilisateur"
 msgid "Edit a computer"
 msgstr "Édition d'un ordinateur "
 
-#: modules/base/infoPackage.inc.php:198
+#: modules/base/infoPackage.inc.php:204
 msgid "Edit a group"
 msgstr "Éditer un groupe"
 
-#: modules/base/infoPackage.inc.php:123
+#: modules/base/infoPackage.inc.php:129
 msgid "Edit a user"
 msgstr "Édition d'un utilisateur"
 
-#: modules/base/infoPackage.inc.php:284
+#: modules/base/infoPackage.inc.php:290
 msgid "Edit computer "
 msgstr "Édition d'un ordinateur "
 
@@ -511,12 +531,12 @@ msgstr "Édition d'un utilisateur"
 msgid "Enable user"
 msgstr "Activation d'un utilisateur"
 
-#: modules/base/infoPackage.inc.php:325
+#: modules/base/infoPackage.inc.php:331
 msgid "Enable/Disable user account"
 msgstr "Activer/Désactiver un compte"
 
 #: modules/base/audit/ajaxLogFilter.php:52
-#: modules/base/includes/AjaxFilterLog.inc.php:325
+#: modules/base/includes/AjaxFilterLog.inc.php:340
 msgid "End date"
 msgstr "Date de fin"
 
@@ -548,11 +568,11 @@ msgstr "Détails de l'évènement"
 msgid "Extra informations"
 msgstr "Informations supplémentaires"
 
-#: modules/base/infoPackage.inc.php:52
+#: modules/base/infoPackage.inc.php:53
 msgid "Favorites page"
 msgstr "Favoris"
 
-#: modules/base/users/edit.php:436 modules/base/infoPackage.inc.php:318
+#: modules/base/users/edit.php:436 modules/base/infoPackage.inc.php:324
 msgid "Fax number"
 msgstr "Numéro de fax"
 
@@ -569,13 +589,17 @@ msgstr ""
 msgid "GLPI Inventory"
 msgstr "Inventaire GLPI"
 
-#: modules/base/infoPackage.inc.php:162
+#: modules/base/infoPackage.inc.php:168
 msgid "Get user photo"
 msgstr "Affichage de la photo d'un utilisateur"
 
 #: modules/base/status/index.php:199
 msgid "Global view"
 msgstr "Vue globale"
+
+#: includes/PageGenerator.php:916
+msgid "Go to page"
+msgstr "Aller à la page"
 
 #: modules/base/includes/auditCodes.php:47
 msgid "Group"
@@ -606,11 +630,11 @@ msgstr "Le groupe %s a été ajouté avec succès"
 msgid "Group %s successfully modified"
 msgstr "Le groupe %s a été modifié avec succès"
 
-#: modules/base/groups/index.php:31 modules/base/infoPackage.inc.php:178
+#: modules/base/groups/index.php:31 modules/base/infoPackage.inc.php:184
 msgid "Group list"
 msgstr "Liste des groupes"
 
-#: modules/base/groups/members.php:156 modules/base/infoPackage.inc.php:194
+#: modules/base/groups/members.php:156 modules/base/infoPackage.inc.php:200
 msgid "Group members"
 msgstr "Membres du groupe"
 
@@ -631,7 +655,7 @@ msgstr "Groupe modifié avec succès"
 #: modules/base/views/roGroups.tpl.php:48
 #: modules/base/views/editGroups.tpl.php:54
 #: modules/base/views/norightGroups.tpl.php:45
-#: modules/base/infoPackage.inc.php:173
+#: modules/base/infoPackage.inc.php:179
 msgid "Groups"
 msgstr "Groupes"
 
@@ -651,15 +675,15 @@ msgstr "Page principale"
 msgid "Home directory"
 msgstr "Répertoire de l'utilisateur"
 
-#: modules/base/infoPackage.inc.php:44 modules/base/infoPackage.inc.php:46
+#: modules/base/infoPackage.inc.php:45 modules/base/infoPackage.inc.php:47
 msgid "Home page"
 msgstr "Page d'accueil"
 
-#: modules/base/users/edit.php:440 modules/base/infoPackage.inc.php:319
+#: modules/base/users/edit.php:440 modules/base/infoPackage.inc.php:325
 msgid "Home phone number"
 msgstr "Numéro de téléphone personnel"
 
-#: includes/FormGenerator.php:398
+#: includes/FormGenerator.php:437
 msgid "Hour: "
 msgstr "Heure: "
 
@@ -690,7 +714,7 @@ msgstr "Inventaire"
 msgid "LDAP Configuration"
 msgstr "Configuration LDAP"
 
-#: modules/base/infoPackage.inc.php:79
+#: modules/base/infoPackage.inc.php:85
 msgid "LDAP log"
 msgstr "Journal LDAP"
 
@@ -718,12 +742,16 @@ msgstr "Nom de famille"
 msgid "Launch backup"
 msgstr "Lancement de la sauvegarde"
 
+#: modules/base/status/support.php:29
+msgid "License and support informations"
+msgstr "Informations sur les licences et le support"
+
 #: modules/base/groups/localSidebar.php:28
 #: modules/base/users/localSidebar.php:28
 msgid "List"
 msgstr "Liste"
 
-#: modules/base/computers/edit.php:83
+#: modules/base/computers/edit.php:97
 msgid "Location"
 msgstr "Lieu"
 
@@ -731,11 +759,11 @@ msgstr "Lieu"
 msgid "Lockout duration (seconds)"
 msgstr "Durée du verrouillage (en secondes)"
 
-#: modules/base/infoPackage.inc.php:74
+#: modules/base/infoPackage.inc.php:80
 msgid "Log view"
 msgstr "Journaux"
 
-#: modules/base/users/ajaxFilter.php:87
+#: modules/base/users/ajaxFilter.php:88
 msgid "Logged Actions"
 msgstr "Actions enregistrées"
 
@@ -743,11 +771,11 @@ msgstr "Actions enregistrées"
 msgid "Logged actions"
 msgstr "Actions enregistrées"
 
-#: modules/base/infoPackage.inc.php:131
+#: modules/base/infoPackage.inc.php:137
 msgid "Logged user actions"
 msgstr "Actions de l'utilisateur enregistrées"
 
-#: modules/base/users/ajaxFilter.php:67 modules/base/users/edit.php:385
+#: modules/base/users/ajaxFilter.php:68 modules/base/users/edit.php:385
 #: modules/base/views/index.tpl.php:78 index.php:160
 msgid "Login"
 msgstr "Identifiant"
@@ -756,7 +784,7 @@ msgstr "Identifiant"
 msgid "Login failed"
 msgstr "Échec de la connexion"
 
-#: modules/base/users/edit.php:476 modules/base/infoPackage.inc.php:312
+#: modules/base/users/edit.php:476 modules/base/infoPackage.inc.php:318
 msgid "Login shell"
 msgstr "Interpréteur de commande"
 
@@ -786,15 +814,15 @@ msgstr ""
 msgid "MMC agent seems to be not correctly configured."
 msgstr "L'agent MMC semble ne pas être correctement configuré."
 
-#: modules/base/users/ajaxFilter.php:83 modules/base/views/index.tpl.php:91
+#: modules/base/users/ajaxFilter.php:84 modules/base/views/index.tpl.php:91
 msgid "MMC rights"
 msgstr "Droits MMC"
 
-#: modules/base/users/ajaxFilter.php:79 modules/base/audit/localSidebar.php:38
+#: modules/base/users/ajaxFilter.php:80 modules/base/audit/localSidebar.php:38
 msgid "Mail"
 msgstr "Courriel"
 
-#: modules/base/users/edit.php:419 modules/base/infoPackage.inc.php:315
+#: modules/base/users/edit.php:419 modules/base/infoPackage.inc.php:321
 msgid "Mail address"
 msgstr "Adresse de messagerie"
 
@@ -810,7 +838,7 @@ msgstr "Taille du médium"
 msgid "Memory"
 msgstr "Mémoire"
 
-#: includes/FormGenerator.php:398
+#: includes/FormGenerator.php:437
 msgid "Min.: "
 msgstr "Min.: "
 
@@ -818,7 +846,7 @@ msgstr "Min.: "
 msgid "Mobile number"
 msgstr "Numéro de mobile"
 
-#: modules/base/infoPackage.inc.php:317
+#: modules/base/infoPackage.inc.php:323
 msgid "Mobile phone number"
 msgstr "Numéro de mobile"
 
@@ -826,7 +854,7 @@ msgstr "Numéro de mobile"
 msgid "Module"
 msgstr "Module"
 
-#: includes/FormGenerator.php:397
+#: includes/FormGenerator.php:436
 msgid "Month: "
 msgstr "Mois: "
 
@@ -834,7 +862,7 @@ msgstr "Mois: "
 msgid "Move user home"
 msgstr "Déplacement du répertoire utilisateur"
 
-#: modules/base/users/ajaxFilter.php:78 modules/base/views/index.tpl.php:84
+#: modules/base/users/ajaxFilter.php:79 modules/base/views/index.tpl.php:84
 msgid "Name"
 msgstr "Nom"
 
@@ -851,14 +879,14 @@ msgid "New password"
 msgstr "Nouveau mot de passe"
 
 #: includes/ajaxTools.php:74 includes/ajaxTools.php:82
-#: includes/PageGenerator.php:762 includes/PageGenerator.php:768
-#: includes/PageGenerator.php:821 includes/PageGenerator.php:825
-#: modules/base/includes/AjaxFilterLog.inc.php:111
-#: modules/base/includes/AjaxFilterLog.inc.php:115
+#: includes/PageGenerator.php:807 includes/PageGenerator.php:813
+#: includes/PageGenerator.php:1065 includes/PageGenerator.php:1069
+#: modules/base/includes/AjaxFilterLog.inc.php:121
+#: modules/base/includes/AjaxFilterLog.inc.php:125
 msgid "Next"
 msgstr "Suivant"
 
-#: includes/PageGenerator.php:1002
+#: includes/PageGenerator.php:1275
 msgid "No item available"
 msgstr "Aucun élément disponible"
 
@@ -879,7 +907,7 @@ msgstr "Nom de l'objet"
 msgid "Object type"
 msgstr "Type de l'objet"
 
-#: includes/PageGenerator.php:1781
+#: includes/PageGenerator.php:2063
 msgid "Ok"
 msgstr "Ok"
 
@@ -891,7 +919,11 @@ msgstr "Opération"
 msgid "Organizational unit"
 msgstr "Unité d'organisation"
 
-#: modules/base/users/edit.php:397 modules/base/infoPackage.inc.php:323
+#: includes/PageGenerator.php:832
+msgid "Pagination"
+msgstr "Pagination"
+
+#: modules/base/users/edit.php:397 modules/base/infoPackage.inc.php:329
 #: index.php:168
 msgid "Password"
 msgstr "Mot de passe"
@@ -954,6 +986,13 @@ msgstr ""
 msgid "Please check network connectivity."
 msgstr "Veuillez vérifier les connexions réseau."
 
+#: modules/base/status/support.php:45
+#: modules/base/includes/users-xmlrpc.inc.php:62
+msgid ""
+"Please contact your administrator for more information. If you are an "
+"administrator, please go to the license status page for more information."
+msgstr "Veuillez contacter votre administrateur pour plus d'informations. Si vous êtes un administrateur, consulter la page de statut des licences pour plus d'informations."
+
 #: includes/commonErrorHandling.php:54 includes/commonErrorHandling.php:59
 msgid "Please contact your administrator."
 msgstr "Veuillez contacter votre administrateur."
@@ -984,15 +1023,15 @@ msgstr ""
 msgid "Plugin"
 msgstr "Plugin"
 
-#: modules/base/users/edit.php:484 modules/base/infoPackage.inc.php:321
+#: modules/base/users/edit.php:484 modules/base/infoPackage.inc.php:327
 msgid "Preferred name to be used"
 msgstr "Nom préféré à utiliser"
 
 #: includes/ajaxTools.php:63 includes/ajaxTools.php:69
-#: includes/PageGenerator.php:751 includes/PageGenerator.php:758
-#: includes/PageGenerator.php:813 includes/PageGenerator.php:817
-#: modules/base/includes/AjaxFilterLog.inc.php:103
-#: modules/base/includes/AjaxFilterLog.inc.php:107
+#: includes/PageGenerator.php:791 includes/PageGenerator.php:798
+#: includes/PageGenerator.php:1053 includes/PageGenerator.php:1057
+#: modules/base/includes/AjaxFilterLog.inc.php:110
+#: modules/base/includes/AjaxFilterLog.inc.php:114
 msgid "Previous"
 msgstr "Précédent"
 
@@ -1001,6 +1040,18 @@ msgstr "Précédent"
 #: modules/base/views/norightGroups.tpl.php:41
 msgid "Primary group"
 msgstr "Groupe primaire"
+
+#: modules/base/status/support.php:52
+msgid "Product name"
+msgstr "Nom du produit"
+
+#: modules/base/status/support.php:53
+msgid "Product vendor"
+msgstr "Fournisseur du produit"
+
+#: modules/base/status/support.php:54
+msgid "Product vendor mail"
+msgstr "Adresse mail du fournisseur"
 
 #: modules/base/audit/localSidebar.php:42
 msgid "Proxy"
@@ -1014,9 +1065,17 @@ msgstr "Audit du module proxy"
 msgid "Read log"
 msgstr "Consulter le journal"
 
-#: modules/base/includes/AjaxFilterLog.inc.php:365
+#: modules/base/includes/AjaxFilterLog.inc.php:380
 msgid "Refresh"
 msgstr "Rafraîchir"
+
+#: modules/base/status/support.php:59
+msgid "Registered computers"
+msgstr "Ordinateurs enregistrés"
+
+#: modules/base/status/support.php:58
+msgid "Registered users"
+msgstr "Utilisateurs enregistrés"
 
 #: modules/base/includes/computers_list.inc.php:34
 msgid "Remote control"
@@ -1054,15 +1113,15 @@ msgstr "Audit du module SAMBA"
 msgid "Search action"
 msgstr "Recherche"
 
-#: includes/FormGenerator.php:398
+#: includes/FormGenerator.php:437
 msgid "Sec.: "
 msgstr "Sec.:"
 
-#: includes/PageGenerator.php:1951
+#: includes/PageGenerator.php:2603
 msgid "Select all"
 msgstr "Tout sélectionner"
 
-#: includes/PageGenerator.php:1158
+#: includes/PageGenerator.php:1440
 msgid "Select entity"
 msgstr "Entité sélectionnée"
 
@@ -1118,9 +1177,21 @@ msgstr ""
 "Certains utilisateurs n'ont pas pu être enlevés de ce groupe car ce groupe "
 "est leur groupe primaire."
 
-#: modules/base/infoPackage.inc.php:60
+#: modules/base/infoPackage.inc.php:61
 msgid "Status"
 msgstr "Statut"
+
+#: modules/base/status/support.php:60
+msgid "Support mail address"
+msgstr "Adresse de messagerie du support"
+
+#: modules/base/infoPackage.inc.php:71
+msgid "Support page"
+msgstr "Page support"
+
+#: modules/base/status/support.php:61
+msgid "Support phone number"
+msgstr "Numéro de téléphone du support"
 
 #: modules/base/status/index.php:119
 msgid "Swap"
@@ -1130,12 +1201,12 @@ msgstr "Espace d'échange"
 msgid "System user"
 msgstr "Utilisateur système"
 
-#: modules/base/users/ajaxFilter.php:80
+#: modules/base/users/ajaxFilter.php:81
 msgid "Telephone"
 msgstr "Téléphone"
 
 #: modules/base/users/edit.php:426 modules/base/users/edit.php:428
-#: modules/base/infoPackage.inc.php:316
+#: modules/base/infoPackage.inc.php:322
 msgid "Telephone number"
 msgstr "Numéro de téléphone"
 
@@ -1147,7 +1218,7 @@ msgstr ""
 "L'agent MMC n'a pas fourni de numéro de session. Veuillez vérifier la "
 "version de l'agent MMC."
 
-#: modules/base/computers/delete.php:30
+#: modules/base/computers/delete.php:31
 msgid "The computer has been deleted."
 msgstr "Cet ordinateur a été supprimé"
 
@@ -1314,7 +1385,7 @@ msgstr "Type"
 msgid "Unlock LDAP account"
 msgstr "Déverrouillage du compte LDAP "
 
-#: includes/PageGenerator.php:1952
+#: includes/PageGenerator.php:2604
 msgid "Unselect all"
 msgstr "Tout désélectionner"
 
@@ -1327,7 +1398,7 @@ msgstr "Démarré depuis: "
 msgid "User"
 msgstr "Utilisateur"
 
-#: modules/base/includes/users-xmlrpc.inc.php:92
+#: modules/base/includes/users-xmlrpc.inc.php:109
 #, php-format
 msgid ""
 "User %s created but password is not valid regarding your password policies."
@@ -1342,7 +1413,7 @@ msgstr ""
 msgid "User %s has been successfully deleted"
 msgstr "L'utilisateur %s a été supprimé avec succès"
 
-#: modules/base/includes/users-xmlrpc.inc.php:96
+#: modules/base/includes/users-xmlrpc.inc.php:113
 #, php-format
 msgid "User %s successfully created<br />"
 msgstr "L'utilisateur %s a été créé avec succès<br />"
@@ -1367,15 +1438,15 @@ msgstr "Utilisateur désactivé."
 msgid "User enabled."
 msgstr "Utilisateur activé."
 
-#: modules/base/infoPackage.inc.php:310
+#: modules/base/infoPackage.inc.php:316
 msgid "User firstname"
 msgstr "Prénom de l'utilisateur"
 
-#: modules/base/infoPackage.inc.php:309
+#: modules/base/infoPackage.inc.php:315
 msgid "User groups"
 msgstr "Groupes de l'utilisateur"
 
-#: modules/base/infoPackage.inc.php:311
+#: modules/base/infoPackage.inc.php:317
 msgid "User home directory"
 msgstr "Répertoire de l'utilisateur"
 
@@ -1384,7 +1455,7 @@ msgid "User is disabled, if checked"
 msgstr "Utilisateur désactivé, si cochée"
 
 #: modules/base/users/index.php:31 modules/base/views/index.tpl.php:43
-#: modules/base/infoPackage.inc.php:107
+#: modules/base/infoPackage.inc.php:113
 msgid "User list"
 msgstr "Liste des utilisateurs"
 
@@ -1392,15 +1463,15 @@ msgstr "Liste des utilisateurs"
 msgid "User log"
 msgstr "Journal de l'utilisateur"
 
-#: modules/base/infoPackage.inc.php:307
+#: modules/base/infoPackage.inc.php:313
 msgid "User login"
 msgstr "Identifiant de l'utilisateur"
 
-#: modules/base/infoPackage.inc.php:308
+#: modules/base/infoPackage.inc.php:314
 msgid "User name"
 msgstr "Nom de l'utilisateur"
 
-#: modules/base/infoPackage.inc.php:306
+#: modules/base/infoPackage.inc.php:312
 msgid "User photo"
 msgstr "Photo de l'utilisateur"
 
@@ -1408,7 +1479,7 @@ msgstr "Photo de l'utilisateur"
 msgid "User that initiated the event"
 msgstr "Utilisateur ayant déclenché l'évènement"
 
-#: modules/base/infoPackage.inc.php:314
+#: modules/base/infoPackage.inc.php:320
 msgid "User title"
 msgstr "Titre de l'utilisateur"
 
@@ -1416,12 +1487,12 @@ msgstr "Titre de l'utilisateur"
 msgid "User's name invalid !"
 msgstr "Nom de l'utilisateur invalide !"
 
-#: modules/base/infoPackage.inc.php:35
+#: modules/base/infoPackage.inc.php:36
 msgid "User, group and computer management"
 msgstr "Gestion utilisateur, groupe et ordinateur"
 
-#: modules/base/users/ajaxFilter.php:89 modules/base/views/index.tpl.php:95
-#: modules/base/infoPackage.inc.php:102
+#: modules/base/users/ajaxFilter.php:90 modules/base/views/index.tpl.php:95
+#: modules/base/infoPackage.inc.php:108
 msgid "Users"
 msgstr "Utilisateurs"
 
@@ -1450,9 +1521,15 @@ msgstr ""
 msgid "View details"
 msgstr "Voir les détails"
 
-#: modules/base/infoPackage.inc.php:259
+#: modules/base/infoPackage.inc.php:265
 msgid "View details of an action"
 msgstr "Voir les détails d'une action"
+
+#: modules/base/status/support.php:44
+#: modules/base/includes/users-xmlrpc.inc.php:61
+#, php-format
+msgid "WARNING: The number of registered %s is exceeding your license."
+msgstr "ATTENTION: Le nombre d'%s enregistrés dépasse votre souscription."
 
 #: modules/base/users/editacl.php:222
 msgid "Warning no desc found in infoPackage.inc.php :"
@@ -1464,7 +1541,7 @@ msgstr ""
 msgid "Web page description"
 msgstr "Description de la page web"
 
-#: includes/FormGenerator.php:397
+#: includes/FormGenerator.php:436
 msgid "Year: "
 msgstr "Année:"
 
@@ -1512,6 +1589,11 @@ msgstr "base"
 #: includes/i18n.inc.php:57
 msgid "brazilian"
 msgstr "brésilien"
+
+#: modules/base/status/support.php:41
+#: modules/base/includes/users-xmlrpc.inc.php:58
+msgid "computers"
+msgstr "ordinateurs"
 
 #: includes/i18n.inc.php:50
 msgid "danish"
@@ -1567,7 +1649,7 @@ msgstr "déconnexion"
 msgid "minute"
 msgstr "minute"
 
-#: includes/FormGenerator.php:220
+#: includes/FormGenerator.php:252
 msgid "no"
 msgstr "non"
 
@@ -1575,13 +1657,13 @@ msgstr "non"
 msgid "norwegian"
 msgstr "norvégien"
 
-#: includes/FormGenerator.php:469 includes/FormGenerator.php:473
-#: modules/base/includes/AjaxFilterLog.inc.php:167
-#: modules/base/includes/AjaxFilterLog.inc.php:171
+#: includes/FormGenerator.php:508 includes/FormGenerator.php:512
+#: modules/base/includes/AjaxFilterLog.inc.php:182
+#: modules/base/includes/AjaxFilterLog.inc.php:186
 msgid "or <a href='#'"
 msgstr "ou <a href='#'"
 
-#: includes/PageGenerator.php:477 includes/PageGenerator.php:692
+#: includes/PageGenerator.php:491 includes/PageGenerator.php:721
 msgid "page"
 msgstr "page"
 
@@ -1613,12 +1695,12 @@ msgstr "espagnol"
 msgid "standard mode"
 msgstr "mode standard"
 
-#: includes/PageGenerator.php:473 includes/PageGenerator.php:688
+#: includes/PageGenerator.php:486 includes/PageGenerator.php:716
 msgid "to"
 msgstr "à"
 
-#: includes/FormGenerator.php:231 includes/FormGenerator.php:564
-#: includes/FormGenerator.php:612
+#: includes/FormGenerator.php:58 includes/FormGenerator.php:263
+#: includes/FormGenerator.php:603
 msgid "unavailable"
 msgstr "indisponible"
 
@@ -1626,16 +1708,21 @@ msgstr "indisponible"
 msgid "unknown error"
 msgstr "erreur inconnue"
 
-#: includes/FormGenerator.php:475
-#: modules/base/includes/AjaxFilterLog.inc.php:173
+#: modules/base/status/support.php:38
+#: modules/base/includes/users-xmlrpc.inc.php:55
+msgid "users"
+msgstr "utilisateurs"
+
+#: includes/FormGenerator.php:514
+#: modules/base/includes/AjaxFilterLog.inc.php:188
 msgid "value=\"never\";'>never</a>"
 msgstr "value=\"jamais\";'>jamais</a>"
 
-#: includes/FormGenerator.php:471
-#: modules/base/includes/AjaxFilterLog.inc.php:169
+#: includes/FormGenerator.php:510
+#: modules/base/includes/AjaxFilterLog.inc.php:184
 msgid "value=\"now\";'>now</a>"
 msgstr "value=\"immediat\";'>immediat</a>"
 
-#: includes/FormGenerator.php:217
+#: includes/FormGenerator.php:249
 msgid "yes"
 msgstr "oui"

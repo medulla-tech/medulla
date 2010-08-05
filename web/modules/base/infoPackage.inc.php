@@ -30,9 +30,9 @@ require_once("modules/base/includes/users-xmlrpc.inc.php");
  * module declaration
  */
 $mod = new Module("base");
-$mod->setVersion("3.0.0");
+$mod->setVersion("3.0.1");
 $mod->setRevision('$Rev$');
-$mod->setAPIVersion("8:0:4");
+$mod->setAPIVersion("9:0:5");
 $mod->setDescription(_("User, group and computer management"));
 $mod->setPriority(1);
 

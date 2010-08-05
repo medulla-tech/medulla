@@ -1,3 +1,10 @@
+mmc-core 3.0.1 (MMC web interface)
+----------------------------------
+
+ * List widget improvement: configurable pagination, tooltips on column name
+ * New page that displays subscription and support informations
+ * Bug fixes
+
 mmc-core 3.0.0 (MMC web interface)
 ----------------------------------
 
