@@ -3,724 +3,741 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-22 18:27+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"POT-Creation-Date: 2010-08-08 06:53+0200\n"
+"PO-Revision-Date: 2010-08-08 07:03+0100\n"
+"Last-Translator: Mario Fetka <mario.fetka@gmail.com>\n"
+"Language-Team: Mario Fetka <mario.fetka@gmail.com>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: German\n"
+"X-Poedit-Country: AUSTRIA\n"
 
 #: web/modules/dyngroup/dyngroup/details.php:32
 #, php-format
 msgid "%s's details"
-msgstr ""
+msgstr "%s's Details"
 
-#: web/modules/dyngroup/includes/request.php:149
+#: web/modules/dyngroup/includes/request.php:156
 #, php-format
-msgid "%s) Search %s = %s in module %s"
-msgstr ""
+msgid "%s) Search %s %s %s in module %s"
+msgstr "%s) Suche %s %s %s in Modul %s"
 
-#: web/modules/dyngroup/includes/request.php:147
+#: web/modules/dyngroup/includes/request.php:154
 #, php-format
-msgid "%s) Search %s = (%s) in module %s"
-msgstr ""
+msgid "%s) Search %s %s (%s) in module %s"
+msgstr "%s) Suche %s %s (%s) in Modul %s"
 
 #: web/modules/dyngroup/dyngroup/localSidebar.php:42
 #, php-format
 msgid "(G) Display %s '%s'"
-msgstr ""
+msgstr "(G) Anzeige  %s '%s'"
 
 #: web/modules/dyngroup/dyngroup/localSidebar.php:57
 #, php-format
 msgid "(P) Display %s '%s'"
-msgstr ""
+msgstr "(P) Anzeige %s '%s'"
 
 #: web/modules/dyngroup/includes/double.php:57
 msgid "->"
-msgstr ""
+msgstr "->"
 
-#: web/modules/dyngroup/dyngroup/add_groups.php:154
+#: web/modules/dyngroup/dyngroup/save.php:91
 #: web/modules/dyngroup/dyngroup/import_from_file.php:43
-#: web/modules/dyngroup/dyngroup/save.php:92
+#: web/modules/dyngroup/dyngroup/add_groups.php:168
 #, php-format
 msgid "A group already exists with name '%s'"
-msgstr ""
+msgstr "Eine Gruppe mit dem Namen existiert bereits '%s'"
 
-#: web/modules/dyngroup/dyngroup/add_groups.php:156
+#: web/modules/dyngroup/dyngroup/add_groups.php:170
 #, php-format
 msgid "A profile already exists with name '%s'"
-msgstr ""
+msgstr "Ein Profil mit dem Namen existiert bereits '%s'"
 
-#: web/modules/dyngroup/dyngroup/creator.php:158
-#: web/modules/dyngroup/dyngroup/creator.php:182
-#: web/modules/dyngroup/dyngroup/creator.php:190
-#: web/modules/dyngroup/dyngroup/creator.php:194
+#: web/modules/dyngroup/dyngroup/creator.php:198
+#: web/modules/dyngroup/dyngroup/creator.php:207
+#: web/modules/dyngroup/dyngroup/creator.php:231
+#: web/modules/dyngroup/dyngroup/creator.php:239
+#: web/modules/dyngroup/dyngroup/creator.php:243
 #: web/modules/dyngroup/includes/double.php:36
 #: web/modules/dyngroup/includes/autocomplete.php:29
 msgid "Add"
-msgstr ""
+msgstr "Hinzufügen"
 
 #: web/modules/dyngroup/dyngroup/localSidebar.php:30
 msgid "Add a group"
-msgstr ""
+msgstr "Gruppe hinzufügen"
 
 #: web/modules/dyngroup/dyngroup/localSidebar.php:33
 msgid "Add a profile"
-msgstr ""
+msgstr "Profil hinzufügen"
 
 #: web/modules/dyngroup/dyngroup/groupshead.php:29
 msgid "Add a static group"
-msgstr ""
+msgstr "statische Gruppe hinzufügen"
 
 #: web/modules/dyngroup/includes/autocomplete.php:38
 msgid "Add a value"
-msgstr ""
+msgstr "Wert hinzufügen"
 
 #: web/modules/dyngroup/dyngroup/localSidebar.php:29
 msgid "All groups"
-msgstr ""
+msgstr "Alle Gruppen"
 
 #: web/modules/dyngroup/includes/groups.inc.php:138
 msgid "All machines"
-msgstr ""
+msgstr "Alle Maschinen"
 
 #: web/modules/dyngroup/dyngroup/localSidebar.php:32
 msgid "All profiles"
-msgstr ""
+msgstr "Alle Profile"
 
 #: web/modules/dyngroup/includes/groups.inc.php:33
 msgid "All share entities"
-msgstr ""
+msgstr "Alle Verteilten Datensätze"
 
-#: web/modules/dyngroup/dyngroup/delete_group.php:44
+#: web/modules/dyngroup/dyngroup/delete_group.php:52
 #, php-format
-msgid "Are you sure you want to delete group <b>%s</b>?<br/> (it can be used in an other group)."
-msgstr ""
+msgid "Are you sure you want to delete %s <b>%s</b>?<br/> (it can be used in an other group)."
+msgstr "Sind Sie sicher, dass Sie %s löschen <b> %s </ b>? <br/> (Es kann in einer anderen Gruppe verwendet werden)."
 
+#: web/modules/dyngroup/dyngroup/delete_group.php:57
 #: web/modules/dyngroup/dyngroup/remove_machine.php:47
-#: web/modules/dyngroup/dyngroup/delete_group.php:49
 #: web/modules/dyngroup/includes/groups.inc.php:81
 #: web/modules/dyngroup/includes/groups.inc.php:184
 msgid "Cancel"
-msgstr ""
+msgstr "Stornieren"
 
-#: web/modules/dyngroup/dyngroup/save.php:136
+#: web/modules/dyngroup/dyngroup/save.php:137
 msgid "Check"
-msgstr ""
+msgstr "Überprüfen"
 
-#: web/modules/dyngroup/dyngroup/creator.php:94
+#: web/modules/dyngroup/dyngroup/creator.php:109
 msgid "Choose the module you want to query : "
-msgstr ""
+msgstr "Wählen Sie das Modul, das Sie abfragen möchten:"
 
-#: web/modules/dyngroup/dyngroup/creator.php:121
+#: web/modules/dyngroup/dyngroup/creator.php:136
 msgid "Choose your field : "
-msgstr ""
+msgstr "Wählen Sie Ihren Bereich:"
 
 #: web/modules/dyngroup/dyngroup/details.php:50
 msgid "Close"
-msgstr ""
+msgstr "Schließen"
+
+#: web/modules/dyngroup/dyngroup/creator.php:182
+msgid "Comparison operator : "
+msgstr "Vergleichsoperator:"
 
 #: web/modules/dyngroup/infoPackage.inc.php:108
 #: web/modules/dyngroup/infoPackage.inc.php:183
 msgid "Computers Group Creator"
-msgstr ""
+msgstr "Computer Gruppen Erzeugung"
 
 #: web/modules/dyngroup/infoPackage.inc.php:135
 msgid "Computers Group Creator Sub Request Delete"
-msgstr ""
+msgstr "Computer Gruppen Erzeugung Unter Anforderung löschen"
 
 #: web/modules/dyngroup/infoPackage.inc.php:121
 msgid "Computers Group Creator Sub Request Editor"
-msgstr ""
+msgstr "Computer Gruppen Erzeugung Unter Anforderung Editor"
 
 #: web/modules/dyngroup/infoPackage.inc.php:149
 #: web/modules/dyngroup/infoPackage.inc.php:187
 msgid "Computers Group Editor"
-msgstr ""
+msgstr "Computer Gruppen Editor"
 
 #: web/modules/dyngroup/infoPackage.inc.php:159
 msgid "Computers Group Sub Request Delete"
-msgstr ""
+msgstr "Computer Gruppen Unter Anforderung löschen"
 
 #: web/modules/dyngroup/infoPackage.inc.php:154
 msgid "Computers Group Sub Request Editor"
-msgstr ""
+msgstr "Computer Gruppen Unter Anforderung Editor"
 
 #: web/modules/dyngroup/infoPackage.inc.php:48
 #: web/modules/dyngroup/infoPackage.inc.php:170
 msgid "Computers Profile Creator"
-msgstr ""
+msgstr "Computer Profil Erzeugung"
 
 #: web/modules/dyngroup/infoPackage.inc.php:75
 msgid "Computers Profile Creator Sub Request Delete"
-msgstr ""
+msgstr "Computer Profil Erzeugung Unter Anforderung löschen"
 
 #: web/modules/dyngroup/infoPackage.inc.php:61
 msgid "Computers Profile Creator Sub Request Editor"
-msgstr ""
+msgstr "Computer Profil Erzeugung Unter Anforderung Editor"
 
 #: web/modules/dyngroup/infoPackage.inc.php:89
 #: web/modules/dyngroup/infoPackage.inc.php:174
 msgid "Computers Profile Editor"
-msgstr ""
+msgstr "Computer Profil Editor"
 
 #: web/modules/dyngroup/infoPackage.inc.php:99
 msgid "Computers Profile Sub Request Delete"
-msgstr ""
+msgstr "Computer Profil Unter Anforderung löschen"
 
 #: web/modules/dyngroup/infoPackage.inc.php:94
 msgid "Computers Profile Sub Request Editor"
-msgstr ""
+msgstr "Computer Profil Unter Anforderung Editor"
 
 #: web/modules/dyngroup/dyngroup/add_groups.php:67
-#: web/modules/dyngroup/dyngroup/add_groups.php:173
+#: web/modules/dyngroup/dyngroup/add_groups.php:187
 #, php-format
 msgid "Computers list has been truncated at %d computers"
-msgstr ""
+msgstr "Computers Liste wurde bei %d Computern abgeschnitten"
 
 #: web/modules/dyngroup/includes/groups.inc.php:80
 #: web/modules/dyngroup/includes/groups.inc.php:183
 msgid "Confirm"
-msgstr ""
+msgstr "Bestätigen"
 
 #: web/modules/dyngroup/dyngroup/ajaxListGroups.php:140
 msgid "Csv export"
-msgstr ""
+msgstr "CSV-Export"
 
 #: web/modules/dyngroup/infoPackage.inc.php:252
 msgid "Csv's export"
-msgstr ""
+msgstr "CSV's exportieren"
+
+#: web/modules/dyngroup/dyngroup/creator.php:195
+msgid "Date"
+msgstr "Datum"
 
 #: web/modules/dyngroup/includes/request.php:112
 msgid "Delete"
-msgstr ""
+msgstr "Löschen"
 
 #: web/modules/dyngroup/infoPackage.inc.php:227
 msgid "Delete a group of computers"
-msgstr ""
+msgstr "Löschen eine Gruppe von Computern"
 
-#: web/modules/dyngroup/dyngroup/delete_group.php:35
-#: web/modules/dyngroup/dyngroup/delete_group.php:48
+#: web/modules/dyngroup/dyngroup/delete_group.php:43
+#: web/modules/dyngroup/dyngroup/delete_group.php:56
 msgid "Delete group"
-msgstr ""
+msgstr "Gruppe löschen"
 
 #: web/modules/dyngroup/dyngroup/ajaxListGroups.php:65
 msgid "Delete this group"
-msgstr ""
+msgstr "Diese Gruppe löschen"
 
 #: web/modules/dyngroup/dyngroup/ajaxListGroups.php:67
 msgid "Delete this profile"
-msgstr ""
+msgstr "Dieses Profil löschen"
 
 #: web/modules/dyngroup/infoPackage.inc.php:213
 msgid "Detailed page of save a group of computers"
-msgstr ""
+msgstr "Detaillierte Seite von speichere eine Gruppe von Computern"
 
 #: web/modules/dyngroup/dyngroup/ajaxListGroups.php:102
 msgid "Display"
-msgstr ""
+msgstr "Anzeige"
 
 #: web/modules/dyngroup/infoPackage.inc.php:193
 msgid "Display a groups of computers"
-msgstr ""
+msgstr "Zeigt eine Gruppe von Computern"
 
-#: web/modules/dyngroup/dyngroup/save.php:155
+#: web/modules/dyngroup/dyngroup/save.php:156
 msgid "Display content"
-msgstr ""
+msgstr "Inhalte anzeigen"
 
 #: web/modules/dyngroup/dyngroup/display.php:44
 #, php-format
 msgid "Display group '%s' content"
-msgstr ""
+msgstr "Zeige Inhalt  von Gruppe '%s'"
 
 #: web/modules/dyngroup/dyngroup/display.php:46
 #, php-format
 msgid "Display profile '%s' content"
-msgstr ""
+msgstr "Zeige Inhalt von Profil '%s'"
 
 #: web/modules/dyngroup/dyngroup/ajaxListGroups.php:106
 msgid "Display this group's content"
-msgstr ""
+msgstr "Zeige Inhalt von dieser Gruppe"
 
 #: web/modules/dyngroup/dyngroup/ajaxListGroups.php:120
 msgid "Display this profile's content"
-msgstr ""
+msgstr "Zeige Inhalt von diesem Profil "
 
 #: web/modules/dyngroup/dyngroup/tab.php:35
 msgid "Dynamic group creation"
-msgstr ""
+msgstr "Dynamische Gruppe Generierung"
 
 #: web/modules/dyngroup/infoPackage.inc.php:111
 #: web/modules/dyngroup/infoPackage.inc.php:125
 #: web/modules/dyngroup/infoPackage.inc.php:139
 msgid "Dynamic group creation's tab"
-msgstr ""
+msgstr "Dynamische Gruppe Generierung Registerkarte"
 
 #: web/modules/dyngroup/infoPackage.inc.php:29
 msgid "Dyngroup"
-msgstr ""
+msgstr "Dynamische Gruppe"
 
 #: web/modules/dyngroup/includes/request.php:111
 msgid "Edit"
-msgstr ""
+msgstr "Bearbeiten"
 
 #: web/modules/dyngroup/dyngroup/edithead.php:34
 msgid "Edit a dynamic group"
-msgstr ""
+msgstr "dynamische Gruppe bearbeiten"
 
 #: web/modules/dyngroup/dyngroup/edithead.php:37
 #: web/modules/dyngroup/dyngroup/edithead.php:48
 msgid "Edit a profile"
-msgstr ""
+msgstr "Profil bearbeiten"
 
 #: web/modules/dyngroup/dyngroup/edithead.php:46
 #: web/modules/dyngroup/dyngroup/groupshead.php:31
 msgid "Edit a static group"
-msgstr ""
+msgstr "statische Gruppe bearbeiten"
 
 #: web/modules/dyngroup/dyngroup/ajaxListGroups.php:113
 msgid "Edit this group"
-msgstr ""
+msgstr "diese Gruppe bearbeiten"
 
 #: web/modules/dyngroup/dyngroup/ajaxListGroups.php:127
 msgid "Edit this profile"
-msgstr ""
+msgstr "dieses Profil bearbeiten"
 
-#: web/modules/dyngroup/dyngroup/save.php:136
-msgid "Enter boolean operator between groups"
-msgstr ""
-
-#: web/modules/dyngroup/dyngroup/creator.php:226
+#: web/modules/dyngroup/dyngroup/creator.php:276
 msgid "Go to save step"
-msgstr ""
+msgstr "Gehen Sie zu Schritt speichern"
 
 #: web/modules/dyngroup/dyngroup/tab.php:34
 msgid "Group creation"
-msgstr ""
+msgstr "Gruppe erstellen"
 
-#: web/modules/dyngroup/dyngroup/add_groups.php:141
+#: web/modules/dyngroup/dyngroup/add_groups.php:151
 msgid "Group failed to modify"
-msgstr ""
+msgstr "Gruppe nicht geändern"
 
 #: web/modules/dyngroup/dyngroup/edit_share.php:83
 msgid "Group failed to share"
-msgstr ""
+msgstr "Gruppe verteilen fehlerhaft"
 
 #: web/modules/dyngroup/dyngroup/list.php:29
 msgid "Group list"
-msgstr ""
+msgstr "Gruppenliste"
 
 #: web/modules/dyngroup/includes/groups.inc.php:115
 msgid "Group members"
-msgstr ""
+msgstr "Gruppen Mitglieder"
 
 #: web/modules/dyngroup/dyngroup/ajaxListGroups.php:88
 #: web/modules/dyngroup/dyngroup/import_from_file.php:49
 #: web/modules/dyngroup/includes/groups.inc.php:113
 msgid "Group name"
-msgstr ""
+msgstr "Gruppen Name"
 
 #: web/modules/dyngroup/infoPackage.inc.php:232
 msgid "Group of computers details"
-msgstr ""
+msgstr "Computer Gruppen Details"
 
 #: web/modules/dyngroup/includes/groups.inc.php:56
 msgid "Group share"
-msgstr ""
+msgstr "Gruppe verteilen"
 
-#: web/modules/dyngroup/dyngroup/add_groups.php:121
-msgid "Group successfully created"
-msgstr ""
-
-#: web/modules/dyngroup/dyngroup/add_groups.php:115
 #: web/modules/dyngroup/dyngroup/import_from_file.php:40
+#: web/modules/dyngroup/dyngroup/add_groups.php:122
+msgid "Group successfully created"
+msgstr "Gruppe erfolgreich erstellt"
+
+#: web/modules/dyngroup/dyngroup/add_groups.php:116
 msgid "Group successfully modified"
-msgstr ""
+msgstr "Gruppe erfolgreich geändert"
 
 #: web/modules/dyngroup/dyngroup/edit_share.php:75
 msgid "Group successfully shared"
-msgstr ""
+msgstr "Gruppe erfolgreich verteilt"
 
 #: web/modules/dyngroup/dyngroup/ajaxListGroups.php:79
 msgid "Hidden"
-msgstr ""
+msgstr "Versteckt"
 
 #: web/modules/dyngroup/dyngroup/details.php:56
 msgid "Hide"
-msgstr ""
+msgstr "Verstecken"
 
 #: web/modules/dyngroup/dyngroup/ajaxListGroups.php:135
 msgid "Imaging management"
-msgstr ""
+msgstr "Imaging-Verwaltung"
 
 #: web/modules/dyngroup/dyngroup/ajaxListGroups.php:108
 msgid "Inventory on this group"
-msgstr ""
+msgstr "Bestand in dieser Gruppe"
 
 #: web/modules/dyngroup/dyngroup/ajaxListGroups.php:122
 msgid "Inventory on this profile"
-msgstr ""
+msgstr "Bestand in diesem Profil"
 
 #: web/modules/dyngroup/dyngroup/import_from_file.php:55
 #: web/modules/dyngroup/includes/groups.inc.php:114
 msgid "Is the group visible"
-msgstr ""
+msgstr "Ist die Gruppe sichtbar"
 
 #: web/modules/dyngroup/includes/groups.inc.php:118
 msgid "Is the profile visible"
-msgstr ""
+msgstr "Ist das Profil sichtbar"
 
 #: web/modules/dyngroup/infoPackage.inc.php:218
 #: web/modules/dyngroup/infoPackage.inc.php:222
 msgid "List all groups of computers"
-msgstr ""
+msgstr "Liste aller Computern Gruppen"
 
 #: web/modules/dyngroup/infoPackage.inc.php:104
 #: web/modules/dyngroup/infoPackage.inc.php:179
 msgid "List all profiles of computers"
-msgstr ""
+msgstr "Liste aller Computer Profile"
 
-#: web/modules/dyngroup/dyngroup/creator.php:184
+#: web/modules/dyngroup/dyngroup/creator.php:233
 #: web/modules/dyngroup/includes/double.php:39
 #: web/modules/dyngroup/includes/autocomplete.php:31
 msgid "Modify"
-msgstr ""
+msgstr "Modifizieren"
 
-#: web/modules/dyngroup/dyngroup/save.php:72
+#: web/modules/dyngroup/dyngroup/save.php:71
 msgid "Name :"
-msgstr ""
+msgstr "Name:"
 
 #: web/modules/dyngroup/dyngroup/import_from_file.php:52
-#: web/modules/dyngroup/dyngroup/creator.php:188
+#: web/modules/dyngroup/dyngroup/creator.php:237
 #: web/modules/dyngroup/includes/groups.inc.php:128
 msgid "No"
-msgstr ""
+msgstr "Nicht"
 
 #: web/modules/dyngroup/dyngroup/header.php:28
 msgid "Please chose the type of group you want to create"
-msgstr ""
+msgstr "Bitte wählen Sie die Art der Gruppe die Sie erstellen möchten"
 
 #: web/modules/dyngroup/dyngroup/header.php:26
 msgid "Please chose the type of profile you want to create"
-msgstr ""
+msgstr "Bitte wählen Sie die Art des Prifils das Sie erstellen möchten"
 
 #: web/modules/dyngroup/dyngroup/tab.php:55
 msgid "Profile creation"
-msgstr ""
+msgstr "Profilerstellung"
 
 #: web/modules/dyngroup/infoPackage.inc.php:51
 #: web/modules/dyngroup/infoPackage.inc.php:65
 #: web/modules/dyngroup/infoPackage.inc.php:79
 msgid "Profile creation's tab from dynamic request"
-msgstr ""
+msgstr "Profil Erzeugung Registerkarte aus dynamischen Anfrage"
 
 #: web/modules/dyngroup/infoPackage.inc.php:57
 #: web/modules/dyngroup/infoPackage.inc.php:71
 #: web/modules/dyngroup/infoPackage.inc.php:85
 msgid "Profile creation's tab from file import"
-msgstr ""
+msgstr "Profil Erzeugung Registerkarte aus einer Datei importieren"
 
 #: web/modules/dyngroup/infoPackage.inc.php:54
 #: web/modules/dyngroup/infoPackage.inc.php:68
 #: web/modules/dyngroup/infoPackage.inc.php:82
 msgid "Profile creation's tab from machine list"
-msgstr ""
+msgstr "Profil Erzeugung Registerkarte Liste von Maschine"
 
-#: web/modules/dyngroup/dyngroup/add_groups.php:143
+#: web/modules/dyngroup/dyngroup/add_groups.php:156
 msgid "Profile failed to modify"
-msgstr ""
+msgstr "Profil wurde nicht geändern"
+
+#: web/modules/dyngroup/dyngroup/add_groups.php:154
+#, php-format
+msgid "Profile failed to modify.<br/>Can't add %s"
+msgstr "Profil wurde nicht geändern. <br/> Kann %s nicht hinzufügen"
 
 #: web/modules/dyngroup/includes/groups.inc.php:119
 msgid "Profile members"
-msgstr ""
+msgstr "Profil Mitglieder"
 
 #: web/modules/dyngroup/dyngroup/ajaxListGroups.php:90
 #: web/modules/dyngroup/includes/groups.inc.php:117
 msgid "Profile name"
-msgstr ""
+msgstr "Profilname"
 
-#: web/modules/dyngroup/dyngroup/add_groups.php:123
+#: web/modules/dyngroup/dyngroup/add_groups.php:124
 msgid "Profile successfully created"
-msgstr ""
+msgstr "Profil erfolgreich erstellt"
 
-#: web/modules/dyngroup/dyngroup/add_groups.php:117
+#: web/modules/dyngroup/dyngroup/add_groups.php:118
 msgid "Profile successfully modified"
-msgstr ""
+msgstr "Profil erfolgreich geändert"
 
 #: web/modules/dyngroup/dyngroup/list_profiles.php:30
 msgid "Profiles list"
-msgstr ""
+msgstr "Profil Liste"
 
 #: web/modules/dyngroup/dyngroup/ajaxListGroups.php:116
 #: web/modules/dyngroup/dyngroup/ajaxListGroups.php:130
 msgid "Read log"
-msgstr ""
+msgstr "Protokoll lesen"
 
 #: web/modules/dyngroup/dyngroup/details.php:53
 msgid "Regenerate"
-msgstr ""
+msgstr "Regenerieren"
 
 #: web/modules/dyngroup/dyngroup/remove_machine.php:46
 msgid "Remove Computer"
-msgstr ""
+msgstr "Computer entfernen"
 
 #: web/modules/dyngroup/dyngroup/remove_machine.php:36
 msgid "Remove a computer"
-msgstr ""
+msgstr "Computer entfernen"
 
 #: web/modules/dyngroup/infoPackage.inc.php:237
 msgid "Remove a computer from a computers group"
-msgstr ""
+msgstr "Computers aus Computer Gruppe entfernen"
 
 #: web/modules/dyngroup/dyngroup/save_detail.php:28
 msgid "Request saver"
-msgstr ""
+msgstr "Anfragenverwalter"
 
 #: web/modules/dyngroup/dyngroup/save.php:30
 #, php-format
 msgid "Request saver (%s)"
-msgstr ""
+msgstr "Anfragenverwalter (%s)"
 
 #: web/modules/dyngroup/dyngroup/tab.php:56
 msgid "Result profile creation"
-msgstr ""
+msgstr "Ergebnis Profil-Erstellung"
 
-#: web/modules/dyngroup/dyngroup/save.php:88
+#: web/modules/dyngroup/dyngroup/save.php:87
 msgid "Save"
-msgstr ""
+msgstr "speichern"
 
 #: web/modules/dyngroup/infoPackage.inc.php:208
 msgid "Save a group of computers"
-msgstr ""
+msgstr "Computer Gruppe speichern"
 
 #: web/modules/dyngroup/includes/request.php:108
 msgid "Search part"
-msgstr ""
+msgstr "Suchen Teil"
 
 #: web/modules/dyngroup/infoPackage.inc.php:203
 msgid "Second page of result/request group creator"
-msgstr ""
+msgstr "Zweite Seite des Ergebnisses / Anfrage Gruppen Ersteller"
 
 #: web/modules/dyngroup/dyngroup/import_from_file.php:57
 msgid "Select the file you want to import"
-msgstr ""
+msgstr "Wählen Sie die gewünschte Datei zu importieren"
 
 #: web/modules/dyngroup/dyngroup/tab.php:83
 msgid "Select the imaging server for this profile."
-msgstr ""
+msgstr "Wählen Sie die Imaging-Server für dieses Profil."
 
 #: web/modules/dyngroup/dyngroup/tab.php:61
 msgid "Select this profile's Imaging Server"
-msgstr ""
+msgstr "Wählen Sie dieses Profil Imaging Server"
 
 #: web/modules/dyngroup/dyngroup/import_from_file.php:67
 msgid "Select what is inside the file"
-msgstr ""
+msgstr "Wählen Sie, was in der Datei ist"
 
 #: web/modules/dyngroup/infoPackage.inc.php:198
 msgid "Share a group of computers"
-msgstr ""
+msgstr "Computer Gruppe bereitstellen"
 
 #: web/modules/dyngroup/dyngroup/edit_share.php:35
 #, php-format
 msgid "Share groupe '%s' with"
-msgstr ""
+msgstr "Verteile Gruppe '%s' mit"
 
 #: web/modules/dyngroup/dyngroup/ajaxListGroups.php:114
 msgid "Share this group"
-msgstr ""
+msgstr "Verteile diese Gruppe"
 
 #: web/modules/dyngroup/dyngroup/ajaxListGroups.php:128
 msgid "Share this profile"
-msgstr ""
+msgstr "Verteile dieses Profil"
 
 #: web/modules/dyngroup/dyngroup/details.php:58
 msgid "Show"
-msgstr ""
+msgstr "Zeige"
 
 #: web/modules/dyngroup/dyngroup/ajaxListGroups.php:117
 msgid "Software deployment on this group"
-msgstr ""
+msgstr "Softwareverteilung über diese Gruppe"
 
 #: web/modules/dyngroup/dyngroup/ajaxListGroups.php:131
 msgid "Software deployment on this profile"
-msgstr ""
+msgstr "Softwareverteilung über dieses Profil"
+
+#: web/modules/dyngroup/dyngroup/save.php:137
+msgid "Specify a boolean operator between sub-requests"
+msgstr "Geben Sie einen Booleschen Operator zwischen Sub-Zugriffe an"
 
 #: web/modules/dyngroup/dyngroup/tab.php:36
 msgid "Static group creation"
-msgstr ""
+msgstr "Statische Gruppe Erzeugung"
 
 #: web/modules/dyngroup/dyngroup/tab.php:37
 msgid "Static group creation from import"
-msgstr ""
+msgstr "Statische Gruppe Erzeugung Import"
 
 #: web/modules/dyngroup/infoPackage.inc.php:117
 #: web/modules/dyngroup/infoPackage.inc.php:131
 #: web/modules/dyngroup/infoPackage.inc.php:145
 msgid "Static group creation from import's tab"
-msgstr ""
+msgstr "Statische Gruppen Erzeugung von Import Registerkarte"
 
 #: web/modules/dyngroup/infoPackage.inc.php:114
 #: web/modules/dyngroup/infoPackage.inc.php:128
 #: web/modules/dyngroup/infoPackage.inc.php:142
 msgid "Static group creation's tab"
-msgstr ""
+msgstr "Statische Gruppe Erzeugung Registerkarte"
 
 #: web/modules/dyngroup/dyngroup/tab.php:57
 msgid "Static profile creation"
-msgstr ""
+msgstr "Statische Profil Erzeugung"
 
 #: web/modules/dyngroup/dyngroup/tab.php:58
 msgid "Static profile creation from import"
-msgstr ""
+msgstr "Statische Profil Erzeugung von Import"
 
 #: web/modules/dyngroup/dyngroup/tmpdisplay.php:33
 #: web/modules/dyngroup/infoPackage.inc.php:164
 msgid "Temporary result display"
-msgstr ""
+msgstr "Temporäre Ergebnisse anzeigen"
 
 #: web/modules/dyngroup/dyngroup/tmpdisplay.php:31
 #, php-format
 msgid "Temporary result display for '%s'"
-msgstr ""
+msgstr "Temporäre Ergebnis-Anzeige für '%s'"
 
-#: web/modules/dyngroup/dyngroup/save.php:142
+#: web/modules/dyngroup/dyngroup/save.php:143
 #, php-format
 msgid "The boolean equation '%s' is not valid"
-msgstr ""
+msgstr "Die boolesche Gleichung '%s' ist nicht gültig"
 
-#: web/modules/dyngroup/dyngroup/save.php:145
+#: web/modules/dyngroup/dyngroup/save.php:146
 #, php-format
 msgid "The boolean equation '%s' is not valid.<br/>Not the same number of sub-requests"
-msgstr ""
+msgstr "Die boolesche Gleichung '%s' ist nicht gültig. <br/> Nicht die gleiche Anzahl von Sub-Zugriffe"
 
-#: web/modules/dyngroup/dyngroup/save.php:148
+#: web/modules/dyngroup/dyngroup/save.php:149
 msgid "The boolean equation is valid"
-msgstr ""
+msgstr "Die boolesche Gleichung ist gültig"
 
-#: web/modules/dyngroup/dyngroup/creator.php:209
+#: web/modules/dyngroup/dyngroup/creator.php:259
 msgid "The request is : "
-msgstr ""
+msgstr "Der Antrag lautet:"
 
 #: web/modules/dyngroup/dyngroup/save_detail.php:42
 #, php-format
 msgid "This request has been saved as %s (id=%s)"
-msgstr ""
+msgstr "Dieser Antrag wurde als %s gespeichert (id =%s)"
 
 #: web/modules/dyngroup/dyngroup/save_detail.php:44
 #, php-format
 msgid "This result has been saved as %s (id=%s)"
-msgstr ""
+msgstr "Dieses Ergebnis wurde in %s gespeichert (id =%s)"
 
 #: web/modules/dyngroup/dyngroup/ajaxListGroups.php:100
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 #: web/modules/dyngroup/infoPackage.inc.php:257
 msgid "Update machine cache"
-msgstr ""
+msgstr "Aktualisiere Maschinen Zwischenspeicher"
 
 #: web/modules/dyngroup/dyngroup/update.php:30
 msgid "Update machines name cache in dyngroup"
-msgstr ""
+msgstr "Aktualisiere Maschinen Zwischenspeicher in dyngroup"
 
 #: web/modules/dyngroup/dyngroup/ajaxListGroups.php:79
 msgid "Visible"
-msgstr ""
+msgstr "Sichtbar"
 
 #: web/modules/dyngroup/dyngroup/import_from_file.php:52
-#: web/modules/dyngroup/dyngroup/creator.php:187
-#: web/modules/dyngroup/dyngroup/creator.php:193
+#: web/modules/dyngroup/dyngroup/creator.php:236
+#: web/modules/dyngroup/dyngroup/creator.php:242
 #: web/modules/dyngroup/includes/groups.inc.php:127
 msgid "Yes"
-msgstr ""
+msgstr "Ja"
 
-#: web/modules/dyngroup/dyngroup/add_groups.php:148
-#: web/modules/dyngroup/dyngroup/save.php:94
-#: web/modules/dyngroup/dyngroup/save.php:96
+#: web/modules/dyngroup/dyngroup/save.php:93
+#: web/modules/dyngroup/dyngroup/save.php:95
+#: web/modules/dyngroup/dyngroup/add_groups.php:162
 msgid "You must specify a group name"
-msgstr ""
+msgstr "Sie müssen einen Gruppennamen angeben"
 
-#: web/modules/dyngroup/dyngroup/add_groups.php:150
+#: web/modules/dyngroup/dyngroup/add_groups.php:164
 msgid "You must specify a profile name"
-msgstr ""
+msgstr "Sie müssen einen Profilnamen angeben"
 
 #: web/modules/dyngroup/dyngroup/remove_machine.php:43
 #, php-format
 msgid "You will remove computer <b>%s</b> from group <b>%s</b>."
-msgstr ""
+msgstr "Sie entfernen Computer <b>%s</b> aus der Gruppe <b>%s</b>."
 
 #: web/modules/dyngroup/dyngroup/tmpdisplay.php:55
 msgid "back"
-msgstr ""
+msgstr "zurück"
 
 #: web/modules/dyngroup/dyngroup/save.php:30
 msgid "group"
-msgstr ""
+msgstr "Gruppe"
 
-#: web/modules/dyngroup/dyngroup/save.php:78
+#: web/modules/dyngroup/dyngroup/save.php:77
 msgid "hidden"
-msgstr ""
+msgstr "versteckt"
 
-#: web/modules/dyngroup/dyngroup/save.php:78
+#: web/modules/dyngroup/dyngroup/save.php:77
 msgid "it should be"
-msgstr ""
+msgstr "Es sollte"
 
 #: web/modules/dyngroup/dyngroup/save.php:30
 msgid "profile"
-msgstr ""
+msgstr "Profil"
 
 #: web/modules/dyngroup/dyngroup/ajaxListGroups.php:75
-#: web/modules/dyngroup/dyngroup/save.php:74
+#: web/modules/dyngroup/dyngroup/save.php:73
 msgid "query"
-msgstr ""
+msgstr "Abfrage"
 
-#: web/modules/dyngroup/dyngroup/save.php:74
+#: web/modules/dyngroup/dyngroup/save.php:73
 msgid "result"
-msgstr ""
+msgstr "Ergebnis"
 
 #: web/modules/dyngroup/dyngroup/ajaxListGroups.php:75
 #, php-format
 msgid "result (%s)"
-msgstr ""
+msgstr "Ergebnis (%s)"
 
-#: web/modules/dyngroup/dyngroup/save.php:74
+#: web/modules/dyngroup/dyngroup/save.php:73
 msgid "save as"
-msgstr ""
+msgstr "Speichern unter"
 
 #: web/modules/dyngroup/dyngroup/ajaxListGroups.php:77
 msgid "static group"
-msgstr ""
+msgstr "statische Gruppe"
 
 #: web/modules/dyngroup/dyngroup/localSidebar.php:39
 #: web/modules/dyngroup/dyngroup/localSidebar.php:54
 msgid "the query"
-msgstr ""
+msgstr "die Abfrage"
 
 #: web/modules/dyngroup/dyngroup/localSidebar.php:39
 #: web/modules/dyngroup/dyngroup/localSidebar.php:54
 msgid "the result"
-msgstr ""
+msgstr "das Ergebnis"
 
 #: web/modules/dyngroup/dyngroup/localSidebar.php:39
 msgid "the static group"
-msgstr ""
+msgstr "die statische Gruppe"
 
 #: web/modules/dyngroup/dyngroup/localSidebar.php:54
 msgid "the static profile"
-msgstr ""
+msgstr "die statische Profil"
 
 #: web/modules/dyngroup/dyngroup/update.php:35
 #, php-format
 msgid "update machine cache : %s machines"
-msgstr ""
+msgstr " Aktualisiere Maschinen Zwischenspeicher :%s Maschinen"
 
-#: web/modules/dyngroup/dyngroup/save.php:78
+#: web/modules/dyngroup/dyngroup/save.php:77
 msgid "visible"
-msgstr ""
+msgstr "sichtbar"
+
