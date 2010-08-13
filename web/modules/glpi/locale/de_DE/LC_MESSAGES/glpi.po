@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-08 06:53+0200\n"
+"POT-Creation-Date: 2010-08-13 10:13+0200\n"
 "PO-Revision-Date: 2010-04-12 13:33+0100\n"
 "Last-Translator: Mario Fetka <mario.fetka@gmail.com>\n"
 "Language-Team: mario.fetka@gmail.com <mario.fetka@gmail.com>\n"
@@ -82,8 +82,8 @@ msgstr "Bandbreite"
 msgid "comment"
 msgstr "Kommentar"
 
-#: web/modules/glpi/glpi/view_hardware.php:77
 #: web/modules/glpi/glpi/view_part.php:77
+#: web/modules/glpi/glpi/view_hardware.php:77
 msgid "comments"
 msgstr "Bemerkungen"
 
@@ -151,8 +151,8 @@ msgstr "Standort"
 msgid "model"
 msgstr "Modell"
 
-#: web/modules/glpi/glpi/view_hardware.php:76
 #: web/modules/glpi/glpi/view_part.php:76
+#: web/modules/glpi/glpi/view_hardware.php:76
 msgid "name"
 msgstr "Name"
 
@@ -212,7 +212,215 @@ msgstr "specif_default"
 msgid "subnet"
 msgstr "Subnetz"
 
-#: web/modules/glpi/glpi/view_hardware.php:87
 #: web/modules/glpi/glpi/view_part.php:83
+#: web/modules/glpi/glpi/view_hardware.php:87
 msgid "type"
 msgstr "Typ"
+
+#, fuzzy
+#~ msgid "%s's content inventory"
+#~ msgstr "%s's Inventar (%s)"
+
+#, fuzzy
+#~ msgid "%s's inventory"
+#~ msgstr "%s's Inventar (%s)"
+
+#, fuzzy
+#~ msgid "(default)"
+#~ msgstr "specif_default"
+
+#, fuzzy
+#~ msgid "Add"
+#~ msgstr "Festplatte"
+
+#, fuzzy
+#~ msgid "Application"
+#~ msgstr "Standort"
+
+#, fuzzy
+#~ msgid "BiosVersion"
+#~ msgstr "os_version"
+
+#, fuzzy
+#~ msgid "BuyValue"
+#~ msgstr "Wert"
+
+#, fuzzy
+#~ msgid "Caption"
+#~ msgstr "Standort"
+
+#, fuzzy
+#~ msgid "ChipSerial"
+#~ msgstr "seriell"
+
+#, fuzzy
+#~ msgid "Comments"
+#~ msgstr "Bemerkungen"
+
+#, fuzzy
+#~ msgid "Controller list"
+#~ msgstr "Controller"
+
+#, fuzzy
+#~ msgid "Creation"
+#~ msgstr "Bezeichnung"
+
+#, fuzzy
+#~ msgid "Description"
+#~ msgstr "Bezeichnung"
+
+#, fuzzy
+#~ msgid "Descriptions"
+#~ msgstr "Bezeichnung"
+
+#, fuzzy
+#~ msgid "Display content"
+#~ msgstr "Display Standorte"
+
+#, fuzzy
+#~ msgid "Displayed on WOL"
+#~ msgstr "Display Standorte"
+
+#, fuzzy
+#~ msgid "Drive"
+#~ msgstr "Laufwerk"
+
+#, fuzzy
+#~ msgid "Driver"
+#~ msgstr "Laufwerk"
+
+#, fuzzy
+#~ msgid "Elements"
+#~ msgstr "Bemerkungen"
+
+#, fuzzy
+#~ msgid "File name"
+#~ msgstr "Name"
+
+#, fuzzy
+#~ msgid "Frequency"
+#~ msgstr "frequence"
+
+#, fuzzy
+#~ msgid "Gateway"
+#~ msgstr "Gateway"
+
+#, fuzzy
+#~ msgid "Group creation"
+#~ msgstr "Standort"
+
+#, fuzzy
+#~ msgid "HardwareVersion"
+#~ msgstr "Hardware"
+
+#, fuzzy
+#~ msgid "Informations"
+#~ msgstr "Standort"
+
+#, fuzzy
+#~ msgid "Inventory changes"
+#~ msgstr "Inventar (glpi) der Maschine"
+
+#, fuzzy
+#~ msgid "Inventory done"
+#~ msgstr "Inventar (glpi) der Maschine"
+
+#, fuzzy
+#~ msgid "Inventory failed"
+#~ msgstr "Inventar (glpi) der Maschine"
+
+#, fuzzy
+#~ msgid "Inventory of %s"
+#~ msgstr "%s's Inventar (%s)"
+
+#, fuzzy
+#~ msgid "Inventory on a group of computers"
+#~ msgstr "Inventar (glpi) der Gruppen von Maschinen"
+
+#, fuzzy
+#~ msgid "Inventory on this group"
+#~ msgstr "Inventar (glpi) der Gruppen von Maschinen"
+
+#, fuzzy
+#~ msgid "Inventory on this profile"
+#~ msgstr "Inventar (glpi) der Maschine"
+
+#, fuzzy
+#~ msgid "Location"
+#~ msgstr "Standort"
+
+#, fuzzy
+#~ msgid "Max bandwidth (b/s)"
+#~ msgstr "Bandbreite"
+
+#, fuzzy
+#~ msgid "Model"
+#~ msgstr "Modell"
+
+#, fuzzy
+#~ msgid "My commands"
+#~ msgstr "Bemerkungen"
+
+#, fuzzy
+#~ msgid "NetworkType"
+#~ msgstr "Netzwerk"
+
+#, fuzzy
+#~ msgid "Pci"
+#~ msgstr "PCI"
+
+#, fuzzy
+#~ msgid "Printer"
+#~ msgstr "Schnittstelle"
+
+#, fuzzy
+#~ msgid "ProcessorCount"
+#~ msgstr "Prozessor"
+
+#, fuzzy
+#~ msgid "ProcessorType"
+#~ msgstr "Prozessor"
+
+#, fuzzy
+#~ msgid "Reserved bandwidth"
+#~ msgstr "Bandbreite"
+
+#, fuzzy
+#~ msgid "Restoration"
+#~ msgstr "Bezeichnung"
+
+#, fuzzy
+#~ msgid "Root entity"
+#~ msgstr "Einheit"
+
+#, fuzzy
+#~ msgid "Serial"
+#~ msgstr "seriell"
+
+#, fuzzy
+#~ msgid "SmbSerial"
+#~ msgstr "seriell"
+
+#, fuzzy
+#~ msgid "SmbVersion"
+#~ msgstr "os_version"
+
+#, fuzzy
+#~ msgid "SubnetMask"
+#~ msgstr "Subnetz"
+
+#, fuzzy
+#~ msgid "Values"
+#~ msgstr "Wert"
+
+#, fuzzy
+#~ msgid "Version"
+#~ msgstr "os_version"
+
+#, fuzzy
+#~ msgid "Versions"
+#~ msgstr "os_version"
+
+#, fuzzy
+#~ msgid "action"
+#~ msgstr "Standort"

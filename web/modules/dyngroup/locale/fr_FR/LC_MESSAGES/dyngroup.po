@@ -6,10 +6,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - Dyngroup Web Interface 1.2.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-25 06:52+0200\n"
+"POT-Creation-Date: 2010-08-13 10:13+0200\n"
 "PO-Revision-Date: 2010-06-22 11:25+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French <i18n@mandriva.com>\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -43,9 +44,9 @@ msgstr "(P) Afficher %s '%s'"
 msgid "->"
 msgstr "->"
 
+#: web/modules/dyngroup/dyngroup/import_from_file.php:43
 #: web/modules/dyngroup/dyngroup/save.php:91
 #: web/modules/dyngroup/dyngroup/add_groups.php:168
-#: web/modules/dyngroup/dyngroup/import_from_file.php:43
 #, php-format
 msgid "A group already exists with name '%s'"
 msgstr "Un groupe portant le nom '%s' existe déjà"
@@ -55,13 +56,13 @@ msgstr "Un groupe portant le nom '%s' existe déjà"
 msgid "A profile already exists with name '%s'"
 msgstr "Un profil portant le nom '%s' existe déjà"
 
+#: web/modules/dyngroup/includes/double.php:36
+#: web/modules/dyngroup/includes/autocomplete.php:29
 #: web/modules/dyngroup/dyngroup/creator.php:198
 #: web/modules/dyngroup/dyngroup/creator.php:207
 #: web/modules/dyngroup/dyngroup/creator.php:231
 #: web/modules/dyngroup/dyngroup/creator.php:239
 #: web/modules/dyngroup/dyngroup/creator.php:243
-#: web/modules/dyngroup/includes/autocomplete.php:29
-#: web/modules/dyngroup/includes/double.php:36
 msgid "Add"
 msgstr "Ajouter"
 
@@ -102,10 +103,10 @@ msgstr "Partager avec"
 msgid "Are you sure you want to delete %s <b>%s</b>?<br/> (it can be used in an other group)."
 msgstr "Etes-vous sûr de bien vouloir supprimer le %s <b>%s</b>?<br/> (il est possible qu'il soit utilisé dans un autre groupe)."
 
-#: web/modules/dyngroup/dyngroup/remove_machine.php:47
-#: web/modules/dyngroup/dyngroup/delete_group.php:57
 #: web/modules/dyngroup/includes/groups.inc.php:81
 #: web/modules/dyngroup/includes/groups.inc.php:184
+#: web/modules/dyngroup/dyngroup/delete_group.php:57
+#: web/modules/dyngroup/dyngroup/remove_machine.php:47
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -286,8 +287,8 @@ msgstr "Éditer un groupe dynamique"
 msgid "Edit a profile"
 msgstr "Éditer un profil"
 
-#: web/modules/dyngroup/dyngroup/edithead.php:46
 #: web/modules/dyngroup/dyngroup/groupshead.php:31
+#: web/modules/dyngroup/dyngroup/edithead.php:46
 msgid "Edit a static group"
 msgstr "Éditer un groupe statique"
 
@@ -323,9 +324,9 @@ msgstr "Liste des groupes"
 msgid "Group members"
 msgstr "Membres du groupe"
 
+#: web/modules/dyngroup/includes/groups.inc.php:113
 #: web/modules/dyngroup/dyngroup/import_from_file.php:49
 #: web/modules/dyngroup/dyngroup/ajaxListGroups.php:88
-#: web/modules/dyngroup/includes/groups.inc.php:113
 msgid "Group name"
 msgstr "Nom du groupe"
 
@@ -337,8 +338,8 @@ msgstr "Détails du groupe d'ordinateurs"
 msgid "Group share"
 msgstr "Partage du groupe"
 
-#: web/modules/dyngroup/dyngroup/add_groups.php:122
 #: web/modules/dyngroup/dyngroup/import_from_file.php:40
+#: web/modules/dyngroup/dyngroup/add_groups.php:122
 msgid "Group successfully created"
 msgstr "Groupe créé avec succès"
 
@@ -370,8 +371,8 @@ msgstr "Montrer l'inventaire de ce groupe"
 msgid "Inventory on this profile"
 msgstr "Montrer l'inventaire de ce profile"
 
-#: web/modules/dyngroup/dyngroup/import_from_file.php:55
 #: web/modules/dyngroup/includes/groups.inc.php:114
+#: web/modules/dyngroup/dyngroup/import_from_file.php:55
 msgid "Is the group visible"
 msgstr "Ce groupe est-il visible"
 
@@ -389,9 +390,9 @@ msgstr "Lister tous les groupes d'ordinateurs"
 msgid "List all profiles of computers"
 msgstr "Lister tous les profils d'ordinateurs"
 
-#: web/modules/dyngroup/dyngroup/creator.php:233
-#: web/modules/dyngroup/includes/autocomplete.php:31
 #: web/modules/dyngroup/includes/double.php:39
+#: web/modules/dyngroup/includes/autocomplete.php:31
+#: web/modules/dyngroup/dyngroup/creator.php:233
 msgid "Modify"
 msgstr "Modifier"
 
@@ -399,9 +400,9 @@ msgstr "Modifier"
 msgid "Name :"
 msgstr "Nom :"
 
-#: web/modules/dyngroup/dyngroup/creator.php:237
-#: web/modules/dyngroup/dyngroup/import_from_file.php:52
 #: web/modules/dyngroup/includes/groups.inc.php:128
+#: web/modules/dyngroup/dyngroup/import_from_file.php:52
+#: web/modules/dyngroup/dyngroup/creator.php:237
 msgid "No"
 msgstr "Non"
 
@@ -448,8 +449,8 @@ msgstr "Erreur à la modification du profil.<br/>Impossible d'ajouter %s"
 msgid "Profile members"
 msgstr "Membres du profil"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:90
 #: web/modules/dyngroup/includes/groups.inc.php:117
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:90
 msgid "Profile name"
 msgstr "Nom du profil"
 
@@ -592,8 +593,8 @@ msgstr "Création d'un profil statique"
 msgid "Static profile creation from import"
 msgstr "Création d'un profil statique à partir d'un import"
 
-#: web/modules/dyngroup/infoPackage.inc.php:164
 #: web/modules/dyngroup/dyngroup/tmpdisplay.php:33
+#: web/modules/dyngroup/infoPackage.inc.php:164
 msgid "Temporary result display"
 msgstr "Affichage temporaire du résultat"
 
@@ -646,10 +647,10 @@ msgstr "Mise à jour du cache des noms d'ordinateurs dans dyngroup"
 msgid "Visible"
 msgstr "Visible"
 
+#: web/modules/dyngroup/includes/groups.inc.php:127
+#: web/modules/dyngroup/dyngroup/import_from_file.php:52
 #: web/modules/dyngroup/dyngroup/creator.php:236
 #: web/modules/dyngroup/dyngroup/creator.php:242
-#: web/modules/dyngroup/dyngroup/import_from_file.php:52
-#: web/modules/dyngroup/includes/groups.inc.php:127
 msgid "Yes"
 msgstr "Oui"
 
@@ -736,3 +737,479 @@ msgstr "mise à jour du cache des noms de ordinateurs : %s ordinateurs"
 #: web/modules/dyngroup/dyngroup/save.php:77
 msgid "visible"
 msgstr "visible"
+
+#, fuzzy
+#~ msgid "%s's profile imaging"
+#~ msgstr "Résultat de la création du profil"
+
+#, fuzzy
+#~ msgid "Add a package"
+#~ msgstr "Ajouter une valeur"
+
+#, fuzzy
+#~ msgid "All my entities"
+#~ msgstr "Partager avec"
+
+#, fuzzy
+#~ msgid "Are you sure you want to delete <b>%s</b> image ?"
+#~ msgstr "Etes-vous sûr de bien vouloir supprimer le %s <b>%s</b>?<br/> (il est possible qu'il soit utilisé dans un autre groupe)."
+
+#, fuzzy
+#~ msgid "Are you sure you want to delete <b>%s</b> master ?"
+#~ msgstr "Etes-vous sûr de bien vouloir supprimer le %s <b>%s</b>?<br/> (il est possible qu'il soit utilisé dans un autre groupe)."
+
+#, fuzzy
+#~ msgid "Are you sure you want to delete the <b>%s</b> script ?"
+#~ msgstr "Etes-vous sûr de bien vouloir supprimer le %s <b>%s</b>?<br/> (il est possible qu'il soit utilisé dans un autre groupe)."
+
+#, fuzzy
+#~ msgid "Are you sure you want to remove <b>%s</b> from the boot menu ?"
+#~ msgstr "Etes-vous sûr de bien vouloir supprimer le %s <b>%s</b>?<br/> (il est possible qu'il soit utilisé dans un autre groupe)."
+
+#, fuzzy
+#~ msgid "Available Imaging Server"
+#~ msgstr "Sélectionnez le serveur d'imaging pour ce profil."
+
+#, fuzzy
+#~ msgid "Bios list"
+#~ msgstr "Liste des profils"
+
+#, fuzzy
+#~ msgid "Bios tab for a computer in a group"
+#~ msgstr "Enlever un ordinateur d'un groupe"
+
+#, fuzzy
+#~ msgid "BuyDate"
+#~ msgstr "Date"
+
+#, fuzzy
+#~ msgid "Cancel bundle creation"
+#~ msgstr "Résultat de la création du profil"
+
+#, fuzzy
+#~ msgid "CardType"
+#~ msgstr "Type"
+
+#, fuzzy
+#~ msgid "Computer"
+#~ msgstr "Enlever l'ordinateur"
+
+#, fuzzy
+#~ msgid "Computer UUID Request"
+#~ msgstr "Page de suppression d'une sous requête de groupe d'ordinateurs"
+
+#, fuzzy
+#~ msgid "Computer name"
+#~ msgstr "Nom du groupe"
+
+#, fuzzy
+#~ msgid "Computers list"
+#~ msgstr "Éditeur de profil d'ordinateurs"
+
+#, fuzzy
+#~ msgid "Controller list"
+#~ msgstr "Liste des profils"
+
+#, fuzzy
+#~ msgid "Controller tab for a computer in a group"
+#~ msgstr "Enlever un ordinateur d'un groupe"
+
+#, fuzzy
+#~ msgid "Creation"
+#~ msgstr "Création d'un groupe"
+
+#, fuzzy
+#~ msgid "Delete done"
+#~ msgstr "Supprimer"
+
+#, fuzzy
+#~ msgid "Delete failed"
+#~ msgstr "Supprimer ce profil"
+
+#, fuzzy
+#~ msgid "Delete file"
+#~ msgstr "Supprimer ce profil"
+
+#, fuzzy
+#~ msgid "Delete image"
+#~ msgstr "Supprimer le groupe"
+
+#, fuzzy
+#~ msgid "Delete in progress"
+#~ msgstr "Supprimer ce profil"
+
+#, fuzzy
+#~ msgid "Delete master"
+#~ msgstr "Supprimer le groupe"
+
+#, fuzzy
+#~ msgid "Delete the image"
+#~ msgstr "Supprimer ce profil"
+
+#, fuzzy
+#~ msgid "Delete this package"
+#~ msgstr "Supprimer ce profil"
+
+#, fuzzy
+#~ msgid "Details"
+#~ msgstr "Détails de %s"
+
+#, fuzzy
+#~ msgid "Display locations"
+#~ msgstr "Voir le contenu"
+
+#, fuzzy
+#~ msgid "Displayed"
+#~ msgstr "Montrer"
+
+#, fuzzy
+#~ msgid "Displayed on WOL"
+#~ msgstr "Voir le contenu"
+
+#, fuzzy
+#~ msgid "Drive list"
+#~ msgstr "Liste des profils"
+
+#, fuzzy
+#~ msgid "DriveType"
+#~ msgstr "Type"
+
+#, fuzzy
+#~ msgid "Edit : %s"
+#~ msgstr "Éditer"
+
+#, fuzzy
+#~ msgid "Edit a package"
+#~ msgstr "Éditer un profil"
+
+#, fuzzy
+#~ msgid "Edit master"
+#~ msgstr "Éditer un groupe statique"
+
+#, fuzzy
+#~ msgid "Edit script"
+#~ msgstr "Éditer ce groupe"
+
+#, fuzzy
+#~ msgid "Edit service"
+#~ msgstr "Éditer ce profil"
+
+#, fuzzy
+#~ msgid "Edition of image"
+#~ msgstr "Éditer ce profil"
+
+#, fuzzy
+#~ msgid "Edition of item"
+#~ msgstr "Éditer ce profil"
+
+#, fuzzy
+#~ msgid "File name"
+#~ msgstr "Nom du profil"
+
+#, fuzzy
+#~ msgid "From computer"
+#~ msgstr "Enlever un ordinateur"
+
+#, fuzzy
+#~ msgid "From profile"
+#~ msgstr "profil"
+
+#, fuzzy
+#~ msgid "Group"
+#~ msgstr "groupe"
+
+#, fuzzy
+#~ msgid "Hardware tab for a computer"
+#~ msgstr "Partager un groupe d'ordinateurs"
+
+#, fuzzy
+#~ msgid "Hide menu"
+#~ msgstr "Cacher"
+
+#, fuzzy
+#~ msgid "Imaging Log"
+#~ msgstr "Management de l'imaging"
+
+#, fuzzy
+#~ msgid "Imaging log"
+#~ msgstr "Management de l'imaging"
+
+#, fuzzy
+#~ msgid "Imaging on computer"
+#~ msgstr "Enlever un ordinateur"
+
+#, fuzzy
+#~ msgid "Imaging server"
+#~ msgstr "Management de l'imaging"
+
+#, fuzzy
+#~ msgid "Imaging service"
+#~ msgstr "Management de l'imaging"
+
+#, fuzzy
+#~ msgid "Inventory (GLPI) on a groups of machines"
+#~ msgstr "Montrer l'inventaire de ce groupe"
+
+#, fuzzy
+#~ msgid "Inventory (GLPI) on machine"
+#~ msgstr "Montrer l'inventaire de ce profile"
+
+#, fuzzy
+#~ msgid "Inventory Date"
+#~ msgstr "Montrer l'inventaire de ce profile"
+
+#, fuzzy
+#~ msgid "Inventory changes"
+#~ msgstr "Montrer l'inventaire de ce groupe"
+
+#, fuzzy
+#~ msgid "Inventory done"
+#~ msgstr "Montrer l'inventaire de ce profile"
+
+#, fuzzy
+#~ msgid "Inventory failed"
+#~ msgstr "Montrer l'inventaire de ce profile"
+
+#, fuzzy
+#~ msgid "Inventory in progress"
+#~ msgstr "Montrer l'inventaire de ce profile"
+
+#, fuzzy
+#~ msgid "Inventory of %s"
+#~ msgstr "Montrer l'inventaire de ce groupe"
+
+#, fuzzy
+#~ msgid "Inventory on a group of computers"
+#~ msgstr "Sauvegarder un groupe d'ordinateurs"
+
+#, fuzzy
+#~ msgid "Inventory on a single computer"
+#~ msgstr "Montrer l'inventaire de ce groupe"
+
+#, fuzzy
+#~ msgid "Local proxies"
+#~ msgstr "Tous les profils"
+
+#, fuzzy
+#~ msgid "Location"
+#~ msgstr "Création d'un groupe"
+
+#, fuzzy
+#~ msgid "Machine"
+#~ msgstr "Tous les ordinateurs"
+
+#, fuzzy
+#~ msgid "Name"
+#~ msgstr "Nom :"
+
+#, fuzzy
+#~ msgid "Names"
+#~ msgstr "Nom :"
+
+#, fuzzy
+#~ msgid "Network tab for a computer"
+#~ msgstr "Enlever un ordinateur"
+
+#, fuzzy
+#~ msgid "Network tab for a computer in a group"
+#~ msgstr "Enlever un ordinateur d'un groupe"
+
+#, fuzzy
+#~ msgid "New computer"
+#~ msgstr "Enlever un ordinateur"
+
+#, fuzzy
+#~ msgid "Package failed to save"
+#~ msgstr "Erreur à la modification des partages du groupe"
+
+#, fuzzy
+#~ msgid "Package successfully edited"
+#~ msgstr "Profil créé avec succès"
+
+#, fuzzy
+#~ msgid "Packages list"
+#~ msgstr "Liste des profils"
+
+#, fuzzy
+#~ msgid "Pause %s %s on this group"
+#~ msgstr "Partager ce groupe"
+
+#, fuzzy
+#~ msgid "Please switch to expert mode now if you want to change more parameters."
+#~ msgstr "Choisissez le type de profil que vous voulez créer"
+
+#, fuzzy
+#~ msgid "PointType"
+#~ msgstr "Type"
+
+#, fuzzy
+#~ msgid "Port list"
+#~ msgstr "Liste des profils"
+
+#, fuzzy
+#~ msgid "PortType"
+#~ msgstr "Type"
+
+#, fuzzy
+#~ msgid "Possible actions"
+#~ msgstr "Création d'un profil"
+
+#, fuzzy
+#~ msgid "Printer list"
+#~ msgstr "Liste des profils"
+
+#, fuzzy
+#~ msgid "Profile"
+#~ msgstr "profil"
+
+#, fuzzy
+#~ msgid "Ready"
+#~ msgstr "Lire les journaux"
+
+#, fuzzy
+#~ msgid "Register computer '%s'"
+#~ msgstr "Enlever un ordinateur"
+
+#, fuzzy
+#~ msgid "Register profile '%s'"
+#~ msgstr "Voir le contenu du profil '%s'"
+
+#, fuzzy
+#~ msgid "Registry tab for a computer"
+#~ msgstr "Enlever un ordinateur"
+
+#, fuzzy
+#~ msgid "Registry tab for a computer in a group"
+#~ msgstr "Enlever un ordinateur d'un groupe"
+
+#, fuzzy
+#~ msgid "Remove a service from a target"
+#~ msgstr "Enlever un ordinateur d'un groupe"
+
+#, fuzzy
+#~ msgid "Remove from boot menu"
+#~ msgstr "Enlever l'ordinateur"
+
+#, fuzzy
+#~ msgid "Remove service"
+#~ msgstr "Enlever l'ordinateur"
+
+#, fuzzy
+#~ msgid "Restoration"
+#~ msgstr "Résultat de la création du profil"
+
+#, fuzzy
+#~ msgid "Secure control on a group of computers"
+#~ msgstr "Partager un groupe d'ordinateurs"
+
+#, fuzzy
+#~ msgid "Secure control on computer"
+#~ msgstr "Partager un groupe d'ordinateurs"
+
+#, fuzzy
+#~ msgid "Select the directory you want for this package"
+#~ msgstr "Sélectionnez le fichier que vous désirez importer"
+
+#, fuzzy
+#~ msgid "Select this hard disk"
+#~ msgstr "Supprimer ce profil"
+
+#, fuzzy
+#~ msgid "SmbType"
+#~ msgstr "Type"
+
+#, fuzzy
+#~ msgid "Software list"
+#~ msgstr "Liste des profils"
+
+#, fuzzy
+#~ msgid "Software tab for a computer"
+#~ msgstr "Partager un groupe d'ordinateurs"
+
+#, fuzzy
+#~ msgid "Software tab for a computer in a group"
+#~ msgstr "Enlever un ordinateur d'un groupe"
+
+#, fuzzy
+#~ msgid "Software tab for a group"
+#~ msgstr "Déploiement de logiciels sur ce groupe"
+
+#, fuzzy
+#~ msgid "Sound list"
+#~ msgstr "Liste des groupes"
+
+#, fuzzy
+#~ msgid "Start action on this group"
+#~ msgstr "Déploiement de logiciels sur ce groupe"
+
+#, fuzzy
+#~ msgid "Start download from computer %s"
+#~ msgstr "Partager un groupe d'ordinateurs"
+
+#, fuzzy
+#~ msgid "Stop %s %s on this group"
+#~ msgstr "Montrer l'inventaire de ce groupe"
+
+#, fuzzy
+#~ msgid "Take control of a computer"
+#~ msgstr "Sauvegarder un groupe d'ordinateurs"
+
+#, fuzzy
+#~ msgid "Take control of this computer"
+#~ msgstr "Sauvegarder un groupe d'ordinateurs"
+
+#, fuzzy
+#~ msgid "The registering in the imaging server has failed."
+#~ msgstr "Sélectionnez le serveur d'imaging pour ce profil."
+
+#, fuzzy
+#~ msgid "WOL request has been sent"
+#~ msgstr "Cette requête a été sauvée en tant que %s (id=%s)"
+
+#, fuzzy
+#~ msgid "Workgroup"
+#~ msgstr "groupe"
+
+#, fuzzy
+#~ msgid "boot service from profile"
+#~ msgstr "le profil statique"
+
+#, fuzzy
+#~ msgid "computers failed to deploy"
+#~ msgstr "Éditeur de profil d'ordinateurs"
+
+#, fuzzy
+#~ msgid "computers stopped"
+#~ msgstr "Éditeur de groupe d'ordinateurs"
+
+#, fuzzy
+#~ msgid "computers successfully deployed"
+#~ msgstr "Groupe créé avec succès"
+
+#, fuzzy
+#~ msgid "deleted"
+#~ msgstr "Supprimer"
+
+#, fuzzy
+#~ msgid "hdd"
+#~ msgstr "Ajouter"
+
+#, fuzzy
+#~ msgid "location"
+#~ msgstr "Création d'un groupe"
+
+#, fuzzy
+#~ msgid "logs list"
+#~ msgstr "Liste des profils"
+
+#, fuzzy
+#~ msgid "master from the profile"
+#~ msgstr "Partager ce profil"
+
+#, fuzzy
+#~ msgid "the state list"
+#~ msgstr "le profil statique"
+
+#, fuzzy
+#~ msgid "yes"
+#~ msgstr "Oui"

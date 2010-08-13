@@ -8,10 +8,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-25 06:52+0200\n"
+"POT-Creation-Date: 2010-08-13 10:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -132,9 +133,9 @@ msgstr ""
 msgid "Company"
 msgstr ""
 
-#: web/modules/inventory/inventory/i18n_labels.php:93
 #: web/modules/inventory/inventory/csv.php:67
 #: web/modules/inventory/inventory/csv.php:107
+#: web/modules/inventory/inventory/i18n_labels.php:93
 msgid "Computer"
 msgstr ""
 
@@ -192,9 +193,9 @@ msgstr ""
 msgid "DNS"
 msgstr ""
 
+#: web/modules/inventory/includes/html.php:62
 #: web/modules/inventory/inventory/i18n_labels.php:52
 #: web/modules/inventory/inventory/ajaxViewPart.php:34
-#: web/modules/inventory/includes/html.php:62
 msgid "Date"
 msgstr ""
 

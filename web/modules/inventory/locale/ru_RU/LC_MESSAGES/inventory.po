@@ -7,10 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: inventory\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-25 06:52+0200\n"
+"POT-Creation-Date: 2010-08-13 10:13+0200\n"
 "PO-Revision-Date: 2008-07-25 14:11+0200\n"
 "Last-Translator: Andrzej Skrzypczak <aeskrzypczak@gmail.com>\n"
 "Language-Team:  <pl@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -136,9 +137,9 @@ msgstr "Komentarze"
 msgid "Company"
 msgstr "Firma"
 
-#: web/modules/inventory/inventory/i18n_labels.php:93
 #: web/modules/inventory/inventory/csv.php:67
 #: web/modules/inventory/inventory/csv.php:107
+#: web/modules/inventory/inventory/i18n_labels.php:93
 msgid "Computer"
 msgstr ""
 
@@ -200,9 +201,9 @@ msgstr "Cyl"
 msgid "DNS"
 msgstr "DNS"
 
+#: web/modules/inventory/includes/html.php:62
 #: web/modules/inventory/inventory/i18n_labels.php:52
 #: web/modules/inventory/inventory/ajaxViewPart.php:34
-#: web/modules/inventory/includes/html.php:62
 msgid "Date"
 msgstr "Data"
 
@@ -935,26 +936,438 @@ msgid "back"
 msgstr "cofnij"
 
 #, fuzzy
-#~ msgid "Controller tab for a machine"
+#~ msgid "%s's inventory (%s)"
+#~ msgstr "inwentarz %s"
+
+#, fuzzy
+#~ msgid "Add"
+#~ msgstr "MacAdr "
+
+#, fuzzy
+#~ msgid "All machines"
+#~ msgstr "Maszyna"
+
+#, fuzzy
+#~ msgid "Available images"
+#~ msgstr "Dostępność"
+
+#, fuzzy
+#~ msgid "Available masters"
+#~ msgstr "Dostępność"
+
+#, fuzzy
+#~ msgid "Command"
+#~ msgstr "Komentarze"
+
+#, fuzzy
+#~ msgid "Command status"
+#~ msgstr "Komentarze"
+
+#, fuzzy
+#~ msgid "Computers list"
+#~ msgstr "Kontroler"
+
+#, fuzzy
+#~ msgid "Creation"
+#~ msgstr "Nagłówek"
+
+#, fuzzy
+#~ msgid "Creation date"
+#~ msgstr "Nagłówek"
+
+#, fuzzy
+#~ msgid "Csv export"
+#~ msgstr "Export csv"
+
+#, fuzzy
+#~ msgid "Delete a group of computers"
+#~ msgstr "Inwentarz grupy maszyn"
+
+#, fuzzy
+#~ msgid "Descriptions"
+#~ msgstr "Opis"
+
+#, fuzzy
+#~ msgid "Detailed page of save a group of computers"
+#~ msgstr "Inwentarz grupy maszyn"
+
+#, fuzzy
+#~ msgid "Display a groups of computers"
+#~ msgstr "Inwentarz grupy maszyn"
+
+#, fuzzy
+#~ msgid "Down service"
+#~ msgstr "Urządzenie"
+
+#, fuzzy
+#~ msgid "Download file from a computer"
 #~ msgstr "Zakładka Kontrolera"
+
+#, fuzzy
+#~ msgid "Duplicate"
+#~ msgstr "Aplikacja"
+
+#, fuzzy
+#~ msgid "Execute file"
+#~ msgstr "RozmiarWykonywalny"
+
+#, fuzzy
+#~ msgid "Execution failed"
+#~ msgstr "RozmiarWykonywalny"
+
+#, fuzzy
+#~ msgid "First operation at"
+#~ msgstr "Pierwszy widok"
+
+#, fuzzy
+#~ msgid "From computer"
+#~ msgstr "Zakładka sieci"
+
+#, fuzzy
+#~ msgid "GLPI controller tab"
+#~ msgstr "Kontroler"
 
 #~ msgid "General"
 #~ msgstr "Ogólne"
 
+#, fuzzy
+#~ msgid "Group creation"
+#~ msgstr "Lokalizacja"
+
+#, fuzzy
+#~ msgid "Group list"
+#~ msgstr "Dźwięk"
+
+#, fuzzy
+#~ msgid "Hardware Inventory updated"
+#~ msgstr "Inwentarz"
+
 #~ msgid "Informations supplementaires"
 #~ msgstr "Informacje dodatkowe"
 
+#, fuzzy
+#~ msgid "Inventory (GLPI) on a groups of machines"
+#~ msgstr "Inwentarz grupy maszyn"
+
+#, fuzzy
+#~ msgid "Inventory (GLPI) on machine"
+#~ msgstr "Inwentarz"
+
+#, fuzzy
+#~ msgid "Inventory done"
+#~ msgstr "Inwentarz"
+
+#, fuzzy
+#~ msgid "Inventory failed"
+#~ msgstr "Inwentarz"
+
+#, fuzzy
+#~ msgid "Inventory in progress"
+#~ msgstr "Inwentarz"
+
+#, fuzzy
+#~ msgid "Inventory on this group"
+#~ msgstr "Inwentarz"
+
+#, fuzzy
+#~ msgid "Inventory on this profile"
+#~ msgstr "Inwentarz"
+
+#, fuzzy
+#~ msgid "List all groups of computers"
+#~ msgstr "Inwentarz grupy maszyn"
+
+#, fuzzy
+#~ msgid "List all profiles of computers"
+#~ msgstr "Inwentarz grupy maszyn"
+
+#, fuzzy
+#~ msgid "MAC Addr."
+#~ msgstr "MACAdres"
+
+#, fuzzy
+#~ msgid "MSC bundle tab for a group"
+#~ msgstr "Zakładka Kontrolera"
+
+#, fuzzy
+#~ msgid "MSC bundle tab for a machine"
+#~ msgstr "Zakładka Kontrolera"
+
+#, fuzzy
+#~ msgid "MSC history tab for a group"
+#~ msgstr "Zakładka rejestru"
+
+#, fuzzy
+#~ msgid "MSC history tab for a machine"
+#~ msgstr "Zakładka rejestru"
+
+#, fuzzy
+#~ msgid "MSC launch tab for a group"
+#~ msgstr "Zakładka oprogramowania"
+
+#, fuzzy
+#~ msgid "MSC launch tab for a machine"
+#~ msgstr "Zakładka oprogramowania"
+
+#, fuzzy
+#~ msgid "MSC logs tab for a group"
+#~ msgstr "Zakładka rejestru"
+
+#, fuzzy
+#~ msgid "MSC logs tab for a machine"
+#~ msgstr "Zakładka rejestru"
+
 #~ msgid "Machine"
 #~ msgstr "Maszyna"
+
+#, fuzzy
+#~ msgid "Media size"
+#~ msgstr "Media"
+
+#, fuzzy
+#~ msgid "Mode"
+#~ msgstr "Model"
+
+#, fuzzy
+#~ msgid "Name :"
+#~ msgstr "Nazwa"
+
+#, fuzzy
+#~ msgid "Names"
+#~ msgstr "Nazwa"
 
 #, fuzzy
 #~ msgid "Network tab for a machine"
 #~ msgstr "Zakładka sieci"
 
 #, fuzzy
-#~ msgid "Registry tab for a machine"
+#~ msgid "Not enough informations"
+#~ msgstr "Informacje"
+
+#, fuzzy
+#~ msgid "Package version"
+#~ msgstr "WersjaSprzętu"
+
+#, fuzzy
+#~ msgid "Profiles list"
+#~ msgstr "Drukarka"
+
+#, fuzzy
+#~ msgid "Progression"
+#~ msgstr "WersjaProduktu"
+
+#, fuzzy
+#~ msgid "Register a computer in the imaging module"
 #~ msgstr "Zakładka rejestru"
 
 #, fuzzy
-#~ msgid "Software tab for a machine"
+#~ msgid "Register computer '%s'"
+#~ msgstr "Zakładka rejestru"
+
+#, fuzzy
+#~ msgid "Remove Computer"
+#~ msgstr "Zakładka sieci"
+
+#, fuzzy
+#~ msgid "Remove a computer"
+#~ msgstr "Zakładka sieci"
+
+#, fuzzy
+#~ msgid "Remove a computer from a computers group"
+#~ msgstr "Zakładka sieci"
+
+#, fuzzy
+#~ msgid "Restoration"
+#~ msgstr "Rozdzielczość"
+
+#, fuzzy
+#~ msgid "Restoration options"
+#~ msgstr "Opis"
+
+#, fuzzy
+#~ msgid "Restoration type"
+#~ msgstr "Rozdzielczość"
+
+#, fuzzy
+#~ msgid "Save a group of computers"
+#~ msgstr "Inwentarz grupy maszyn"
+
+#, fuzzy
+#~ msgid "Secure control on a group of computers"
+#~ msgstr "Inwentarz grupy maszyn"
+
+#, fuzzy
+#~ msgid "Secure control on computer"
+#~ msgstr "Zakładka Kontrolera"
+
+#, fuzzy
+#~ msgid "Share a group of computers"
+#~ msgstr "Inwentarz grupy maszyn"
+
+#, fuzzy
+#~ msgid "Share this group"
 #~ msgstr "Zakładka oprogramowania"
+
+#, fuzzy
+#~ msgid "Show Image Informations"
+#~ msgstr "Informacje"
+
+#, fuzzy
+#~ msgid "Software deployment on this group"
+#~ msgstr "Zakładka oprogramowania"
+
+#, fuzzy
+#~ msgid "Start action on this group"
+#~ msgstr "Zakładka oprogramowania"
+
+#, fuzzy
+#~ msgid "Start download from computer %s"
+#~ msgstr "Zakładka oprogramowania"
+
+#, fuzzy
+#~ msgid "Start inventory"
+#~ msgstr "inwentarz %s"
+
+#, fuzzy
+#~ msgid "Start inventory agent"
+#~ msgstr "Inwentarz"
+
+#, fuzzy
+#~ msgid "Start script"
+#~ msgstr "StandardowyOpis"
+
+#, fuzzy
+#~ msgid "Start the script"
+#~ msgstr "StandardowyOpis"
+
+#, fuzzy
+#~ msgid "Stats"
+#~ msgstr "Stan"
+
+#, fuzzy
+#~ msgid "Status"
+#~ msgstr "Stan"
+
+#, fuzzy
+#~ msgid "Swap"
+#~ msgstr "ObszarWymiany"
+
+#, fuzzy
+#~ msgid "Take control of a computer"
+#~ msgstr "Zakładka Kontrolera"
+
+#, fuzzy
+#~ msgid "Take control of this computer"
+#~ msgstr "Zakładka Kontrolera"
+
+#, fuzzy
+#~ msgid "Timestamp"
+#~ msgstr "Czas"
+
+#, fuzzy
+#~ msgid "Unavailable computer"
+#~ msgstr "Zakładka sieci"
+
+#, fuzzy
+#~ msgid "Unregister this computer"
+#~ msgstr "Zakładka rejestru"
+
+#, fuzzy
+#~ msgid "Up service"
+#~ msgstr "Urządzenie"
+
+#, fuzzy
+#~ msgid "Versions"
+#~ msgstr "Wersja"
+
+#, fuzzy
+#~ msgid "action"
+#~ msgstr "Nagłówek"
+
+#, fuzzy
+#~ msgid "comment"
+#~ msgstr "Komentarze"
+
+#, fuzzy
+#~ msgid "comments"
+#~ msgstr "Komentarze"
+
+#, fuzzy
+#~ msgid "designation"
+#~ msgstr "Opis"
+
+#, fuzzy
+#~ msgid "drive"
+#~ msgstr "Napęd"
+
+#, fuzzy
+#~ msgid "frequence"
+#~ msgstr "Częstotliwość"
+
+#, fuzzy
+#~ msgid "gateway"
+#~ msgstr "Brama"
+
+#, fuzzy
+#~ msgid "group"
+#~ msgstr "Grupa robocza"
+
+#, fuzzy
+#~ msgid "has"
+#~ msgstr "Rama"
+
+#, fuzzy
+#~ msgid "interface"
+#~ msgstr "Drukarka"
+
+#, fuzzy
+#~ msgid "invent."
+#~ msgstr "Inwentarz"
+
+#, fuzzy
+#~ msgid "inventoried"
+#~ msgstr "Inwentarz"
+
+#, fuzzy
+#~ msgid "is"
+#~ msgstr "Bios"
+
+#, fuzzy
+#~ msgid "location"
+#~ msgstr "Lokalizacja"
+
+#, fuzzy
+#~ msgid "logs list"
+#~ msgstr "Lista %s"
+
+#, fuzzy
+#~ msgid "model"
+#~ msgstr "Model"
+
+#, fuzzy
+#~ msgid "os"
+#~ msgstr "Bios"
+
+#, fuzzy
+#~ msgid "os_version"
+#~ msgstr "WerjsBiosu"
+
+#, fuzzy
+#~ msgid "pci"
+#~ msgstr "Pci"
+
+#, fuzzy
+#~ msgid "processor"
+#~ msgstr "TypProcesora"
+
+#, fuzzy
+#~ msgid "serial"
+#~ msgstr "Numer"
+
+#, fuzzy
+#~ msgid "subnet"
+#~ msgstr "MaskaPodsieci"
+
+#, fuzzy
+#~ msgid "total"
+#~ msgstr "Ram"

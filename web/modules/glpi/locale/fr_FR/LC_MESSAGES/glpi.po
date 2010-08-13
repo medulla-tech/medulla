@@ -8,10 +8,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - GLPI Web Interface 1.2.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-18 11:49+0100\n"
+"POT-Creation-Date: 2010-08-13 10:13+0200\n"
 "PO-Revision-Date: 2009-05-22 09:55+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French <i18n@mandriva.com>\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -214,3 +215,211 @@ msgstr "sous réseau"
 #: web/modules/glpi/glpi/view_hardware.php:87
 msgid "type"
 msgstr "type"
+
+#, fuzzy
+#~ msgid "%s's content inventory"
+#~ msgstr "Inventaire de %s (%s)"
+
+#, fuzzy
+#~ msgid "%s's inventory"
+#~ msgstr "Inventaire de %s (%s)"
+
+#, fuzzy
+#~ msgid "(default)"
+#~ msgstr "spécification par défault"
+
+#, fuzzy
+#~ msgid "Add"
+#~ msgstr "Disque dur"
+
+#, fuzzy
+#~ msgid "Application"
+#~ msgstr "lieux"
+
+#, fuzzy
+#~ msgid "BiosVersion"
+#~ msgstr "Version de l'OS"
+
+#, fuzzy
+#~ msgid "BuyValue"
+#~ msgstr "Valeur"
+
+#, fuzzy
+#~ msgid "Caption"
+#~ msgstr "lieux"
+
+#, fuzzy
+#~ msgid "ChipSerial"
+#~ msgstr "numéro de série"
+
+#, fuzzy
+#~ msgid "Comments"
+#~ msgstr "commentaires"
+
+#, fuzzy
+#~ msgid "Controller list"
+#~ msgstr "Contrôleur"
+
+#, fuzzy
+#~ msgid "Creation"
+#~ msgstr "désignation"
+
+#, fuzzy
+#~ msgid "Description"
+#~ msgstr "désignation"
+
+#, fuzzy
+#~ msgid "Descriptions"
+#~ msgstr "désignation"
+
+#, fuzzy
+#~ msgid "Display content"
+#~ msgstr "Montrer les lieux"
+
+#, fuzzy
+#~ msgid "Displayed on WOL"
+#~ msgstr "Montrer les lieux"
+
+#, fuzzy
+#~ msgid "Drive"
+#~ msgstr "Lecteur"
+
+#, fuzzy
+#~ msgid "Driver"
+#~ msgstr "Lecteur"
+
+#, fuzzy
+#~ msgid "Elements"
+#~ msgstr "commentaires"
+
+#, fuzzy
+#~ msgid "File name"
+#~ msgstr "nom"
+
+#, fuzzy
+#~ msgid "Frequency"
+#~ msgstr "fréquence"
+
+#, fuzzy
+#~ msgid "Gateway"
+#~ msgstr "passerelle"
+
+#, fuzzy
+#~ msgid "Group creation"
+#~ msgstr "lieux"
+
+#, fuzzy
+#~ msgid "HardwareVersion"
+#~ msgstr "Matériel"
+
+#, fuzzy
+#~ msgid "Informations"
+#~ msgstr "lieux"
+
+#, fuzzy
+#~ msgid "Inventory changes"
+#~ msgstr "Inventaire (GLPI) de la machine"
+
+#, fuzzy
+#~ msgid "Inventory done"
+#~ msgstr "Inventaire (GLPI) de la machine"
+
+#, fuzzy
+#~ msgid "Inventory failed"
+#~ msgstr "Inventaire (GLPI) de la machine"
+
+#, fuzzy
+#~ msgid "Inventory of %s"
+#~ msgstr "Inventaire de %s (%s)"
+
+#, fuzzy
+#~ msgid "Inventory on a group of computers"
+#~ msgstr "Inventaire (GLPI) sur un groupe de machines"
+
+#, fuzzy
+#~ msgid "Inventory on this group"
+#~ msgstr "Inventaire (GLPI) sur un groupe de machines"
+
+#, fuzzy
+#~ msgid "Inventory on this profile"
+#~ msgstr "Inventaire (GLPI) de la machine"
+
+#, fuzzy
+#~ msgid "Location"
+#~ msgstr "lieux"
+
+#, fuzzy
+#~ msgid "Max bandwidth (b/s)"
+#~ msgstr "bande passante"
+
+#, fuzzy
+#~ msgid "Model"
+#~ msgstr "modèle"
+
+#, fuzzy
+#~ msgid "My commands"
+#~ msgstr "commentaires"
+
+#, fuzzy
+#~ msgid "NetworkType"
+#~ msgstr "Réseau"
+
+#, fuzzy
+#~ msgid "Pci"
+#~ msgstr "Autre"
+
+#, fuzzy
+#~ msgid "Printer"
+#~ msgstr "interface"
+
+#, fuzzy
+#~ msgid "ProcessorCount"
+#~ msgstr "Processeur"
+
+#, fuzzy
+#~ msgid "ProcessorType"
+#~ msgstr "Processeur"
+
+#, fuzzy
+#~ msgid "Reserved bandwidth"
+#~ msgstr "bande passante"
+
+#, fuzzy
+#~ msgid "Restoration"
+#~ msgstr "désignation"
+
+#, fuzzy
+#~ msgid "Root entity"
+#~ msgstr "entité"
+
+#, fuzzy
+#~ msgid "Serial"
+#~ msgstr "numéro de série"
+
+#, fuzzy
+#~ msgid "SmbSerial"
+#~ msgstr "numéro de série"
+
+#, fuzzy
+#~ msgid "SmbVersion"
+#~ msgstr "Version de l'OS"
+
+#, fuzzy
+#~ msgid "SubnetMask"
+#~ msgstr "sous réseau"
+
+#, fuzzy
+#~ msgid "Values"
+#~ msgstr "Valeur"
+
+#, fuzzy
+#~ msgid "Version"
+#~ msgstr "Version de l'OS"
+
+#, fuzzy
+#~ msgid "Versions"
+#~ msgstr "Version de l'OS"
+
+#, fuzzy
+#~ msgid "action"
+#~ msgstr "lieux"

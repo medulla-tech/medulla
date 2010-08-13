@@ -7,10 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: glpi\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-18 11:49+0100\n"
+"POT-Creation-Date: 2010-08-13 10:13+0200\n"
 "PO-Revision-Date: 2009-04-17 16:44-0300\n"
 "Last-Translator: Andre Paulo Machado <andre.panm@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_br@mail.kde.org>\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -215,3 +216,211 @@ msgstr "subnet"
 #: web/modules/glpi/glpi/view_hardware.php:87
 msgid "type"
 msgstr "tipo"
+
+#, fuzzy
+#~ msgid "%s's content inventory"
+#~ msgstr "Inventário (%s) de %s "
+
+#, fuzzy
+#~ msgid "%s's inventory"
+#~ msgstr "Inventário (%s) de %s "
+
+#, fuzzy
+#~ msgid "(default)"
+#~ msgstr "specif_default"
+
+#, fuzzy
+#~ msgid "Add"
+#~ msgstr "hdd"
+
+#, fuzzy
+#~ msgid "Application"
+#~ msgstr "localização"
+
+#, fuzzy
+#~ msgid "BiosVersion"
+#~ msgstr "versão_so"
+
+#, fuzzy
+#~ msgid "BuyValue"
+#~ msgstr "Valor"
+
+#, fuzzy
+#~ msgid "Caption"
+#~ msgstr "localização"
+
+#, fuzzy
+#~ msgid "ChipSerial"
+#~ msgstr "serial"
+
+#, fuzzy
+#~ msgid "Comments"
+#~ msgstr "comentários"
+
+#, fuzzy
+#~ msgid "Controller list"
+#~ msgstr "Controlador"
+
+#, fuzzy
+#~ msgid "Creation"
+#~ msgstr "designação"
+
+#, fuzzy
+#~ msgid "Description"
+#~ msgstr "designação"
+
+#, fuzzy
+#~ msgid "Descriptions"
+#~ msgstr "designação"
+
+#, fuzzy
+#~ msgid "Display content"
+#~ msgstr "Mostrar locais"
+
+#, fuzzy
+#~ msgid "Displayed on WOL"
+#~ msgstr "Mostrar locais"
+
+#, fuzzy
+#~ msgid "Drive"
+#~ msgstr "drive"
+
+#, fuzzy
+#~ msgid "Driver"
+#~ msgstr "drive"
+
+#, fuzzy
+#~ msgid "Elements"
+#~ msgstr "comentários"
+
+#, fuzzy
+#~ msgid "File name"
+#~ msgstr "nome"
+
+#, fuzzy
+#~ msgid "Frequency"
+#~ msgstr "frquência"
+
+#, fuzzy
+#~ msgid "Gateway"
+#~ msgstr "gateway"
+
+#, fuzzy
+#~ msgid "Group creation"
+#~ msgstr "localização"
+
+#, fuzzy
+#~ msgid "HardwareVersion"
+#~ msgstr "Hardware"
+
+#, fuzzy
+#~ msgid "Informations"
+#~ msgstr "localização"
+
+#, fuzzy
+#~ msgid "Inventory changes"
+#~ msgstr "Inventário (GLPI) na máquina"
+
+#, fuzzy
+#~ msgid "Inventory done"
+#~ msgstr "Inventário (GLPI) na máquina"
+
+#, fuzzy
+#~ msgid "Inventory failed"
+#~ msgstr "Inventário (GLPI) na máquina"
+
+#, fuzzy
+#~ msgid "Inventory of %s"
+#~ msgstr "Inventário (%s) de %s "
+
+#, fuzzy
+#~ msgid "Inventory on a group of computers"
+#~ msgstr "Inventário (GLPI) em um grupo de máquinas"
+
+#, fuzzy
+#~ msgid "Inventory on this group"
+#~ msgstr "Inventário (GLPI) em um grupo de máquinas"
+
+#, fuzzy
+#~ msgid "Inventory on this profile"
+#~ msgstr "Inventário (GLPI) na máquina"
+
+#, fuzzy
+#~ msgid "Location"
+#~ msgstr "localização"
+
+#, fuzzy
+#~ msgid "Max bandwidth (b/s)"
+#~ msgstr "Largura de banda"
+
+#, fuzzy
+#~ msgid "Model"
+#~ msgstr "modelo"
+
+#, fuzzy
+#~ msgid "My commands"
+#~ msgstr "comentários"
+
+#, fuzzy
+#~ msgid "NetworkType"
+#~ msgstr "Rede"
+
+#, fuzzy
+#~ msgid "Pci"
+#~ msgstr "pci"
+
+#, fuzzy
+#~ msgid "Printer"
+#~ msgstr "interface"
+
+#, fuzzy
+#~ msgid "ProcessorCount"
+#~ msgstr "processador"
+
+#, fuzzy
+#~ msgid "ProcessorType"
+#~ msgstr "processador"
+
+#, fuzzy
+#~ msgid "Reserved bandwidth"
+#~ msgstr "Largura de banda"
+
+#, fuzzy
+#~ msgid "Restoration"
+#~ msgstr "designação"
+
+#, fuzzy
+#~ msgid "Root entity"
+#~ msgstr "entrada"
+
+#, fuzzy
+#~ msgid "Serial"
+#~ msgstr "serial"
+
+#, fuzzy
+#~ msgid "SmbSerial"
+#~ msgstr "serial"
+
+#, fuzzy
+#~ msgid "SmbVersion"
+#~ msgstr "versão_so"
+
+#, fuzzy
+#~ msgid "SubnetMask"
+#~ msgstr "subnet"
+
+#, fuzzy
+#~ msgid "Values"
+#~ msgstr "Valor"
+
+#, fuzzy
+#~ msgid "Version"
+#~ msgstr "versão_so"
+
+#, fuzzy
+#~ msgid "Versions"
+#~ msgstr "versão_so"
+
+#, fuzzy
+#~ msgid "action"
+#~ msgstr "localização"

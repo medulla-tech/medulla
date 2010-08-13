@@ -9,16 +9,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - Packages Web Interface 1.2.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-22 18:27+0200\n"
+"POT-Creation-Date: 2010-08-13 10:13+0200\n"
 "PO-Revision-Date: 2009-05-22 10:07+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French <i18n@mandriva.com>\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: web/modules/pkgs/pkgs/edit.php:78 web/modules/pkgs/pkgs/localSidebar.php:28
+#: web/modules/pkgs/pkgs/localSidebar.php:28 web/modules/pkgs/pkgs/edit.php:78
 #: web/modules/pkgs/infoPackage.inc.php:44
 msgid "Add a package"
 msgstr "Ajouter un package"
@@ -71,9 +72,8 @@ msgstr "Description"
 msgid "Descriptions"
 msgstr "Descriptions"
 
-#: web/modules/pkgs/pkgs/edit.php:95
 #: web/modules/pkgs/pkgs/ajaxPackageList.php:78
-#: web/modules/pkgs/infoPackage.inc.php:46
+#: web/modules/pkgs/pkgs/edit.php:95 web/modules/pkgs/infoPackage.inc.php:46
 msgid "Edit a package"
 msgstr "Éditer un package"
 
@@ -91,8 +91,8 @@ msgstr "L'association de fichiers a échoué %s"
 msgid "Files successfully associated with package <b>%s (%s)</b>%s"
 msgstr "Les fichiers ont été associés avec le package <b>%s (%s)</b> avec succès.%s"
 
-#: web/modules/pkgs/pkgs/index.php:45
 #: web/modules/pkgs/pkgs/ajaxPackageList.php:55
+#: web/modules/pkgs/pkgs/index.php:45
 #, php-format
 msgid "MMC failed to contact package server %s."
 msgstr "Le MMC a échoué à contacter le package serveur %s."
@@ -135,8 +135,8 @@ msgstr "Version du package"
 msgid "Packages"
 msgstr "Packages"
 
-#: web/modules/pkgs/pkgs/index.php:29
 #: web/modules/pkgs/pkgs/localSidebar.php:27
+#: web/modules/pkgs/pkgs/index.php:29
 msgid "Packages list"
 msgstr "Liste des packages"
 
@@ -145,8 +145,8 @@ msgstr "Liste des packages"
 msgid "Pending packages list"
 msgstr "Liste des packages en attente"
 
-#: web/modules/pkgs/pkgs/index.php:53
 #: web/modules/pkgs/pkgs/ajaxPackageList.php:65
+#: web/modules/pkgs/pkgs/index.php:53
 msgid "Please contact your administrator."
 msgstr "Veuillez contacter votre administrateur."
 
@@ -187,3 +187,231 @@ msgstr "Le package a été supprimé."
 #: web/modules/pkgs/pkgs/ajaxPendingPackageList.php:69
 msgid "Versions"
 msgstr "Versions"
+
+#, fuzzy
+#~ msgid "Add a profile"
+#~ msgstr "Ajouter un package"
+
+#, fuzzy
+#~ msgid "Add a value"
+#~ msgstr "Ajouter un package"
+
+#, fuzzy
+#~ msgid "BiosVersion"
+#~ msgstr "Versions"
+
+#, fuzzy
+#~ msgid "Command"
+#~ msgstr "Commande : "
+
+#, fuzzy
+#~ msgid "Command expiry date"
+#~ msgstr "Commande : "
+
+#, fuzzy
+#~ msgid "Command line to run"
+#~ msgstr "Nom de la commande : "
+
+#, fuzzy
+#~ msgid "Command name"
+#~ msgstr "Nom de la commande : "
+
+#, fuzzy
+#~ msgid "Command parameters"
+#~ msgstr "Nom de la commande : "
+
+#, fuzzy
+#~ msgid "Command start date"
+#~ msgstr "Commande : "
+
+#, fuzzy
+#~ msgid "Command status"
+#~ msgstr "Commande : "
+
+#, fuzzy
+#~ msgid "Delete failed"
+#~ msgstr "Supprimer un package"
+
+#, fuzzy
+#~ msgid "Delete file"
+#~ msgstr "Supprimer ce package"
+
+#, fuzzy
+#~ msgid "Delete image"
+#~ msgstr "Supprimer un package"
+
+#, fuzzy
+#~ msgid "Delete in progress"
+#~ msgstr "Supprimer ce package"
+
+#, fuzzy
+#~ msgid "Delete master"
+#~ msgstr "Supprimer un package"
+
+#, fuzzy
+#~ msgid "Delete the image"
+#~ msgstr "Supprimer ce package"
+
+#, fuzzy
+#~ msgid "Delete this group"
+#~ msgstr "Supprimer ce package"
+
+#, fuzzy
+#~ msgid "Delete this profile"
+#~ msgstr "Supprimer ce package"
+
+#, fuzzy
+#~ msgid "Edit a profile"
+#~ msgstr "Éditer un package"
+
+#, fuzzy
+#~ msgid "Edit a static group"
+#~ msgstr "Éditer un package"
+
+#, fuzzy
+#~ msgid "Edit image"
+#~ msgstr "Éditer un package"
+
+#, fuzzy
+#~ msgid "Edition of image"
+#~ msgstr "Éditer un package"
+
+#, fuzzy
+#~ msgid "ExpandedDescription"
+#~ msgstr "Description"
+
+#, fuzzy
+#~ msgid "ExtendedDescription"
+#~ msgstr "Description"
+
+#, fuzzy
+#~ msgid "Group failed to share"
+#~ msgstr "La sauvegarde du package a échoué"
+
+#, fuzzy
+#~ msgid "Group successfully created"
+#~ msgstr "Le package a été correctement édité"
+
+#, fuzzy
+#~ msgid "Group successfully modified"
+#~ msgstr "Le package a été correctement édité"
+
+#, fuzzy
+#~ msgid "Group successfully shared"
+#~ msgstr "Le package a été correctement édité"
+
+#, fuzzy
+#~ msgid "HardwareVersion"
+#~ msgstr "Versions"
+
+#, fuzzy
+#~ msgid "Name"
+#~ msgstr "Noms"
+
+#, fuzzy
+#~ msgid "Name :"
+#~ msgstr "Noms"
+
+#, fuzzy
+#~ msgid "Package"
+#~ msgstr "Packages"
+
+#, fuzzy
+#~ msgid "ProductVersion"
+#~ msgstr "Versions"
+
+#, fuzzy
+#~ msgid "Profile successfully created"
+#~ msgstr "Le package a été correctement édité"
+
+#, fuzzy
+#~ msgid "Profile successfully modified"
+#~ msgstr "Le package a été correctement édité"
+
+#, fuzzy
+#~ msgid "Profiles list"
+#~ msgstr "Liste des packages"
+
+#, fuzzy
+#~ msgid "Restoration"
+#~ msgstr "Description"
+
+#, fuzzy
+#~ msgid "Restoration options"
+#~ msgstr "Descriptions"
+
+#, fuzzy
+#~ msgid "Select the file you want to import"
+#~ msgstr "Sélectionnez le répertoire correspondant à ce package"
+
+#, fuzzy
+#~ msgid "Select the imaging server for this profile."
+#~ msgstr "Sélectionnez le répertoire correspondant à ce package"
+
+#, fuzzy
+#~ msgid "Select this hard disk"
+#~ msgstr "Supprimer ce package"
+
+#, fuzzy
+#~ msgid "Server status"
+#~ msgstr "Montrer l'état de synchronisation des miroirs"
+
+#, fuzzy
+#~ msgid "Show all logs"
+#~ msgstr "Montrer tous les packages"
+
+#, fuzzy
+#~ msgid "Show all pending task's logs"
+#~ msgstr "Montrer tous les packages"
+
+#, fuzzy
+#~ msgid "Show all task logs"
+#~ msgstr "Montrer tous les packages"
+
+#, fuzzy
+#~ msgid "Show package's details"
+#~ msgstr "Montrer tous les packages"
+
+#, fuzzy
+#~ msgid "Show pending task's logs"
+#~ msgstr "Montrer les packages en attente"
+
+#, fuzzy
+#~ msgid "SmbVersion"
+#~ msgstr "Versions"
+
+#, fuzzy
+#~ msgid "StandardDescription"
+#~ msgstr "Description"
+
+#, fuzzy
+#~ msgid "Synchronization failed for package server: %s"
+#~ msgstr "Le MMC a échoué à contacter le package serveur %s."
+
+#, fuzzy
+#~ msgid "The file has been deleted."
+#~ msgstr "Le package a été supprimé."
+
+#, fuzzy
+#~ msgid "The package '%s' is not available on any mirror."
+#~ msgstr "Le package %s (%s) n'est pas associé"
+
+#, fuzzy
+#~ msgid "Version"
+#~ msgstr "Versions"
+
+#, fuzzy
+#~ msgid "computers successfully deployed"
+#~ msgstr "Le package a été correctement édité"
+
+#, fuzzy
+#~ msgid "designation"
+#~ msgstr "Description"
+
+#, fuzzy
+#~ msgid "logs list"
+#~ msgstr "Liste des packages"
+
+#, fuzzy
+#~ msgid "os_version"
+#~ msgstr "Versions"

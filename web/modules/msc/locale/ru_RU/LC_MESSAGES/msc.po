@@ -7,10 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: msc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-22 18:27+0200\n"
+"POT-Creation-Date: 2010-08-13 10:13+0200\n"
 "PO-Revision-Date: 2008-07-25 15:06+0200\n"
 "Last-Translator: Andrzej Skrzypczak <aeskrzypczak@gmail.com>\n"
 "Language-Team:  <pl@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -322,6 +323,8 @@ msgid "Actions in bundle"
 msgstr ""
 
 #: web/modules/msc/msc/start_command.php:167
+#: web/modules/msc/msc/start_quick_action.php:139
+#: web/modules/msc/msc/start_quick_action.php:142
 msgid "Advanced"
 msgstr "Zaawansowane"
 
@@ -440,11 +443,11 @@ msgstr "inwent."
 msgid "Close window"
 msgstr ""
 
-#: web/modules/msc/logs/ajaxConsultLogsFilter.php:149
-#: web/modules/msc/logs/ajaxLogsFilter.php:131
+#: web/modules/msc/msc/package_detail.php:36
 #: web/modules/msc/msc/ajaxLogsFilter.php:191
 #: web/modules/msc/msc/ajaxLogsFilter.php:300
-#: web/modules/msc/msc/package_detail.php:36
+#: web/modules/msc/logs/ajaxLogsFilter.php:131
+#: web/modules/msc/logs/ajaxConsultLogsFilter.php:149
 msgid "Command"
 msgstr "Polecenie"
 
@@ -472,9 +475,9 @@ msgstr "Czas wygaśnięcia polecenia"
 msgid "Command line to run"
 msgstr "Nastepne uruchomienie polecenia"
 
+#: web/modules/msc/msc/launch.php:292
 #: web/modules/msc/includes/command_history.php:110
 #: web/modules/msc/includes/command_history.php:285
-#: web/modules/msc/msc/launch.php:263
 msgid "Command name"
 msgstr "Nazwa polecenia"
 
@@ -520,14 +523,13 @@ msgstr ""
 msgid "Connection was refused by the other side."
 msgstr ""
 
-#: web/modules/msc/logs/consult.php:33
 #: web/modules/msc/logs/localSidebar.php:27
-#: web/modules/msc/infoPackage.inc.php:50
+#: web/modules/msc/logs/consult.php:33 web/modules/msc/infoPackage.inc.php:50
 msgid "Consolidated view"
 msgstr ""
 
+#: web/modules/msc/msc/launch.php:346
 #: web/modules/msc/includes/bundle_widgets.php:371
-#: web/modules/msc/msc/launch.php:304
 msgid "Copy Mode"
 msgstr "Tryb kopiowania"
 
@@ -551,9 +553,9 @@ msgstr "Data utworzenia"
 msgid "Csv's export"
 msgstr "Export csv"
 
-#: web/modules/msc/includes/command_history.php:37
 #: web/modules/msc/msc/ajaxLogsFilter.php:305
 #: web/modules/msc/msc/msctabssinglestatus.php:38
+#: web/modules/msc/includes/command_history.php:37
 #, fuzzy
 msgid "Current State"
 msgstr "obecny_stan"
@@ -586,7 +588,7 @@ msgstr "Opóźnienie między połączeniami"
 msgid "Delay between two connections"
 msgstr "Opóźnienie między 2 połączeniami"
 
-#: web/modules/msc/msc/launch.php:290
+#: web/modules/msc/msc/launch.php:304
 #, fuzzy
 msgid "Delay between two connections (minutes)"
 msgstr "Opóźnienie między połączeniami"
@@ -609,8 +611,8 @@ msgstr "Usuwanie nieudane"
 msgid "Delete file"
 msgstr "Usuwanie nieudane"
 
+#: web/modules/msc/msc/launch.php:296
 #: web/modules/msc/includes/bundle_widgets.php:348
-#: web/modules/msc/msc/launch.php:275
 msgid "Delete files after a successful execution"
 msgstr "Usuń pliki po zakończeniu wykonywania"
 
@@ -628,31 +630,32 @@ msgstr "Usuwanie trwa"
 msgid "Deploy <b>%s v.%s</b><br/> on <b>%s</b>"
 msgstr "Wdroż  <b>%s w.%s</b><br/> na <b>%s</b>"
 
+#: web/modules/msc/msc/launch.php:351
 #: web/modules/msc/includes/bundle_widgets.php:376
-#: web/modules/msc/msc/launch.php:309
 msgid "Deploy using a local proxy"
 msgstr ""
 
+#: web/modules/msc/msc/launch.php:307
 #: web/modules/msc/includes/bundle_widgets.php:361
 #: web/modules/msc/includes/command_history.php:288
-#: web/modules/msc/msc/launch.php:293
 msgid "Deployment interval"
 msgstr ""
 
-#: web/modules/msc/logs/ajaxLogsFilter.php:68
-#: web/modules/msc/logs/ajaxLogsFilter.php:69 web/modules/msc/msc/logs.php:58
-#: web/modules/msc/msc/logs.php:70 web/modules/msc/msc/logs.php:119
-#: web/modules/msc/msc/logs.php:125 web/modules/msc/msc/logs.php:143
-#: web/modules/msc/msc/packages.php:44
-#: web/modules/msc/msc/ajaxLogsFilter.php:84
-#: web/modules/msc/msc/ajaxLogsFilter.php:86
 #: web/modules/msc/msc/history.php:58 web/modules/msc/msc/history.php:107
 #: web/modules/msc/msc/history.php:113 web/modules/msc/msc/history.php:131
-#: web/modules/msc/msc/ajaxPackageFilter.php:116
+#: web/modules/msc/msc/logs.php:58 web/modules/msc/msc/logs.php:70
+#: web/modules/msc/msc/logs.php:119 web/modules/msc/msc/logs.php:125
+#: web/modules/msc/msc/logs.php:143
+#: web/modules/msc/msc/ajaxPackageFilter.php:117
+#: web/modules/msc/msc/ajaxLogsFilter.php:84
+#: web/modules/msc/msc/ajaxLogsFilter.php:86
+#: web/modules/msc/msc/packages.php:44
+#: web/modules/msc/logs/ajaxLogsFilter.php:68
+#: web/modules/msc/logs/ajaxLogsFilter.php:69
 msgid "Details"
 msgstr "Szczegóły"
 
-#: web/modules/msc/msc/launch.php:276
+#: web/modules/msc/msc/launch.php:297
 #, fuzzy
 msgid "Do an inventory after a successful execution"
 msgstr "Usuń pliki po zakończeniu wykonywania"
@@ -676,8 +679,8 @@ msgstr "Wysyłanie nieudane"
 msgid "Download file from a computer"
 msgstr ""
 
-#: web/modules/msc/infoPackage.inc.php:216
 #: web/modules/msc/msc/download_file.php:31
+#: web/modules/msc/infoPackage.inc.php:216
 msgid "Download file page"
 msgstr ""
 
@@ -685,8 +688,8 @@ msgstr ""
 msgid "Downloading"
 msgstr ""
 
-#: web/modules/msc/logs/ajaxLogsFilter.php:126
 #: web/modules/msc/msc/ajaxLogsFilter.php:293
+#: web/modules/msc/logs/ajaxLogsFilter.php:126
 msgid "End date"
 msgstr "Data zakończenia"
 
@@ -748,6 +751,10 @@ msgstr "Kod zakońćzenia to: %s"
 msgid "Failed"
 msgstr ""
 
+#: web/modules/msc/msc/start_quick_action.php:102
+msgid "Failed to retrieve this quick action."
+msgstr ""
+
 #: web/modules/msc/includes/functions.php:42
 msgid "Failed to send WOL request"
 msgstr ""
@@ -779,8 +786,8 @@ msgstr ""
 msgid "Group Advanced launch : action \"%s\" on \"%s\""
 msgstr "Zaawansowana akcja uruchamiania  \"%s\" na \"%s\""
 
+#: web/modules/msc/msc/launch.php:298
 #: web/modules/msc/includes/bundle_widgets.php:351
-#: web/modules/msc/msc/launch.php:277
 msgid "Halt client after"
 msgstr ""
 
@@ -844,8 +851,8 @@ msgstr ""
 msgid "Last operation at"
 msgstr "Data utworzenia"
 
+#: web/modules/msc/msc/ajaxPackageFilter.php:116
 #: web/modules/msc/msc/packages.php:43
-#: web/modules/msc/msc/ajaxPackageFilter.php:115
 msgid "Launch"
 msgstr "Uruchom"
 
@@ -853,8 +860,8 @@ msgstr "Uruchom"
 msgid "Launch Actions"
 msgstr "Akcje Uruchaiania"
 
-#: web/modules/msc/includes/bundle_widgets.php:217
 #: web/modules/msc/msc/tabs.php:47 web/modules/msc/msc/tabs.php:64
+#: web/modules/msc/includes/bundle_widgets.php:217
 #, fuzzy
 msgid "Launch Bundle"
 msgstr "Uruchom"
@@ -895,9 +902,9 @@ msgstr "Logi"
 msgid "MAC Addr."
 msgstr "Adr MAC"
 
+#: web/modules/msc/msc/ajaxPackageFilter.php:82
 #: web/modules/msc/includes/bundle_widgets.php:169
 #: web/modules/msc/includes/bundle_widgets.php:198
-#: web/modules/msc/msc/ajaxPackageFilter.php:81
 #, php-format
 msgid "MMC failed to contact package server %s."
 msgstr ""
@@ -952,14 +959,14 @@ msgstr "Zakładka logów MSC"
 msgid "Machine"
 msgstr "Akcje Uruchaiania"
 
+#: web/modules/msc/msc/launch.php:308
 #: web/modules/msc/includes/bundle_widgets.php:362
-#: web/modules/msc/msc/launch.php:296
 #, fuzzy
 msgid "Max bandwidth (b/s)"
 msgstr "Maksymalna przepustowość"
 
+#: web/modules/msc/msc/launch.php:303
 #: web/modules/msc/includes/bundle_widgets.php:357
-#: web/modules/msc/msc/launch.php:289
 msgid "Maximum number of connection attempt"
 msgstr "Maksymalna liczba prób połączenia"
 
@@ -973,8 +980,8 @@ msgstr "Maksymalna liczba prób połączenia"
 msgid "Mode"
 msgstr "tryb"
 
-#: web/modules/msc/includes/command_history.php:258
 #: web/modules/msc/msc/local_proxy.php:207
+#: web/modules/msc/includes/command_history.php:258
 #, fuzzy
 msgid "Multiple"
 msgstr "Tytuł polecenia"
@@ -995,9 +1002,9 @@ msgstr "Tytuł polecenia"
 msgid "My commands"
 msgstr "Odtwórz polecenie"
 
+#: web/modules/msc/msc/package_detail.php:39
 #: web/modules/msc/includes/command_history.php:48
 #: web/modules/msc/includes/command_history.php:132
-#: web/modules/msc/msc/package_detail.php:39
 msgid "Name"
 msgstr "Nazwa"
 
@@ -1018,8 +1025,8 @@ msgstr ""
 msgid "No proxy"
 msgstr ""
 
-#: web/modules/msc/includes/command_history.php:263
 #: web/modules/msc/msc/msctabsstatus.php:174
+#: web/modules/msc/includes/command_history.php:263
 #, fuzzy
 msgid "None"
 msgstr "Zrobione"
@@ -1053,9 +1060,9 @@ msgstr ""
 msgid "Other/N.A."
 msgstr "Inne / N/D"
 
-#: web/modules/msc/logs/ajaxConsultLogsFilter.php:102
+#: web/modules/msc/msc/ajaxPackageFilter.php:104
 #: web/modules/msc/msc/packages.php:40
-#: web/modules/msc/msc/ajaxPackageFilter.php:103
+#: web/modules/msc/logs/ajaxConsultLogsFilter.php:102
 msgid "Package"
 msgstr "Opakowanie"
 
@@ -1071,17 +1078,17 @@ msgstr ""
 msgid "Package '%s' is available on primary mirror %s"
 msgstr ""
 
-#: web/modules/msc/msc/ajaxPackageFilter.php:105
+#: web/modules/msc/msc/ajaxPackageFilter.php:106
 msgid "Package size"
 msgstr "Rozmiwa opakowania"
 
-#: web/modules/msc/infoPackage.inc.php:186 web/modules/msc/msc/packages.php:29
+#: web/modules/msc/msc/packages.php:29 web/modules/msc/infoPackage.inc.php:186
 msgid "Packages"
 msgstr "Pakiety"
 
-#: web/modules/msc/logs/ajaxConsultLogsFilter.php:49
-#: web/modules/msc/logs/ajaxLogsFilter.php:66
 #: web/modules/msc/msc/ajaxLogsFilter.php:79
+#: web/modules/msc/logs/ajaxLogsFilter.php:66
+#: web/modules/msc/logs/ajaxConsultLogsFilter.php:49
 msgid "Pause"
 msgstr "Pauza"
 
@@ -1144,12 +1151,12 @@ msgstr ""
 msgid "Please confirm file deletion"
 msgstr ""
 
-#: web/modules/msc/msc/start_quick_action.php:67
+#: web/modules/msc/msc/start_quick_action.php:137
 msgid "Please confirm you really want to perform this action"
 msgstr "Potwierdź, czy napewno chcesz wykonać tą akcję"
 
+#: web/modules/msc/msc/ajaxPackageFilter.php:101
 #: web/modules/msc/includes/bundle_widgets.php:149
-#: web/modules/msc/msc/ajaxPackageFilter.php:100
 msgid "Please contact your administrator."
 msgstr ""
 
@@ -1194,7 +1201,7 @@ msgstr ""
 msgid "Ready"
 msgstr ""
 
-#: web/modules/msc/msc/launch.php:284
+#: web/modules/msc/msc/launch.php:302
 #, fuzzy
 msgid "Reboot client"
 msgstr "Usuwanie nieudane"
@@ -1258,7 +1265,7 @@ msgstr "Zaplanowane na"
 msgid "Scheduler"
 msgstr "Zaplanowane na"
 
-#: web/modules/msc/msc/launch.php:264
+#: web/modules/msc/msc/launch.php:293
 #, fuzzy
 msgid "Script parameters"
 msgstr "Parametry polecenia"
@@ -1341,8 +1348,8 @@ msgstr "Zaawansowana akcja uruchamiania  \"%s\" na \"%s\""
 msgid "Single command status"
 msgstr "Stan polecenia"
 
-#: web/modules/msc/includes/command_history.php:260
 #: web/modules/msc/msc/local_proxy.php:207
+#: web/modules/msc/includes/command_history.php:260
 msgid "Single with fallback"
 msgstr ""
 
@@ -1360,15 +1367,15 @@ msgstr "Tytuł polecenia"
 msgid "Something goes wrong while checking client identity."
 msgstr ""
 
-#: web/modules/msc/logs/ajaxConsultLogsFilter.php:48
-#: web/modules/msc/logs/ajaxLogsFilter.php:65
 #: web/modules/msc/msc/ajaxLogsFilter.php:78
+#: web/modules/msc/logs/ajaxLogsFilter.php:65
+#: web/modules/msc/logs/ajaxConsultLogsFilter.php:48
 msgid "Start"
 msgstr "Start"
 
+#: web/modules/msc/msc/launch.php:294
 #: web/modules/msc/includes/command_history.php:117
 #: web/modules/msc/includes/command_history.php:300
-#: web/modules/msc/msc/launch.php:265
 msgid "Start \"Wake On Lan\" query if connection fails"
 msgstr "Uruchom zapytanie \"Wake On Lan\" jeżeli nie uda się połączyć"
 
@@ -1382,8 +1389,8 @@ msgstr "Uruchom akcję %s na hoście %s"
 msgid "Start action on this group"
 msgstr "Uruchom akcję %s na hoście %s"
 
-#: web/modules/msc/logs/ajaxLogsFilter.php:128
 #: web/modules/msc/msc/ajaxLogsFilter.php:295
+#: web/modules/msc/logs/ajaxLogsFilter.php:128
 msgid "Start date"
 msgstr "Data uruchomienia"
 
@@ -1404,7 +1411,7 @@ msgstr "Rozpocznij inwentaryzację"
 msgid "Start inventory agent"
 msgstr "Rozpocznij agenta inwentaryzacji"
 
-#: web/modules/msc/msc/launch.php:274
+#: web/modules/msc/msc/launch.php:295
 #, fuzzy
 msgid "Start script"
 msgstr "Rozpocznik skrypt"
@@ -1418,16 +1425,16 @@ msgstr "Rozpocznik skrypt"
 msgid "State"
 msgstr "Start"
 
+#: web/modules/msc/msc/ajaxDownloadFile.php:90
+#: web/modules/msc/msc/ajaxLogsFilter.php:81
 #: web/modules/msc/logs/ajaxConsultLogsFilter.php:51
 #: web/modules/msc/logs/ajaxConsultLogsFilter.php:52
-#: web/modules/msc/msc/ajaxLogsFilter.php:81
-#: web/modules/msc/msc/ajaxDownloadFile.php:90
 msgid "Status"
 msgstr "Stan"
 
-#: web/modules/msc/logs/ajaxConsultLogsFilter.php:50
-#: web/modules/msc/logs/ajaxLogsFilter.php:67
 #: web/modules/msc/msc/ajaxLogsFilter.php:80
+#: web/modules/msc/logs/ajaxLogsFilter.php:67
+#: web/modules/msc/logs/ajaxConsultLogsFilter.php:50
 msgid "Stop"
 msgstr "Stop"
 
@@ -1471,12 +1478,12 @@ msgstr ""
 msgid "Target plateform is %s"
 msgstr ""
 
-#: web/modules/msc/msc/launch.php:291
+#: web/modules/msc/msc/launch.php:305
 #, fuzzy
 msgid "The command may start after"
 msgstr "Data uruchomienia polecenia"
 
-#: web/modules/msc/msc/launch.php:292
+#: web/modules/msc/msc/launch.php:306
 #, fuzzy
 msgid "The command must stop before"
 msgstr "Data uruchomienia polecenia"
@@ -1493,8 +1500,8 @@ msgstr ""
 msgid "The current host name doesn't match the host name from the inventory database."
 msgstr ""
 
-#: web/modules/msc/msc/download_file.php:43
 #: web/modules/msc/msc/download_file_get.php:28
+#: web/modules/msc/msc/download_file.php:43
 msgid "The download has failed."
 msgstr ""
 
@@ -1507,9 +1514,9 @@ msgstr "W trakcie wysyłania"
 msgid "The file has been deleted."
 msgstr ""
 
+#: web/modules/msc/msc/history.php:110 web/modules/msc/msc/history.php:135
 #: web/modules/msc/msc/logs.php:73 web/modules/msc/msc/logs.php:122
-#: web/modules/msc/msc/logs.php:147 web/modules/msc/msc/history.php:110
-#: web/modules/msc/msc/history.php:135
+#: web/modules/msc/msc/logs.php:147
 msgid "The group you are working on is empty."
 msgstr ""
 
@@ -1576,15 +1583,15 @@ msgstr "Twórca poleceń użytkownika"
 msgid "Validity period"
 msgstr ""
 
+#: web/modules/msc/msc/package_detail.php:40
 #: web/modules/msc/includes/command_history.php:49
 #: web/modules/msc/includes/command_history.php:133
-#: web/modules/msc/msc/package_detail.php:40
 msgid "Value"
 msgstr "Wartość"
 
-#: web/modules/msc/msc/packages.php:41
+#: web/modules/msc/msc/ajaxPackageFilter.php:105
 #: web/modules/msc/msc/package_detail.php:36
-#: web/modules/msc/msc/ajaxPackageFilter.php:104
+#: web/modules/msc/msc/packages.php:41
 msgid "Version"
 msgstr "Wersja"
 
@@ -1618,8 +1625,8 @@ msgstr "Nie masz uprawnień by skorzystać z tego polecenia"
 msgid "Your start and end dates are not coherent, please check them.<br/>"
 msgstr ""
 
-#: web/modules/msc/msc/msctabsstop.php:113
 #: web/modules/msc/msc/msctabspause.php:111
+#: web/modules/msc/msc/msctabsstop.php:113
 #, fuzzy
 msgid "action"
 msgstr "Akcje Uruchaiania"
@@ -1629,8 +1636,8 @@ msgstr "Akcje Uruchaiania"
 msgid "are"
 msgstr ""
 
-#: web/modules/msc/includes/bundle_widgets.php:305
 #: web/modules/msc/msc/start_command.php:161
+#: web/modules/msc/includes/bundle_widgets.php:305
 msgid "awake"
 msgstr "budź"
 
@@ -1643,8 +1650,8 @@ msgstr "budź"
 msgid "bit/s"
 msgstr ""
 
-#: web/modules/msc/msc/msctabsstop.php:115
 #: web/modules/msc/msc/msctabspause.php:113
+#: web/modules/msc/msc/msctabsstop.php:115
 #, fuzzy
 msgid "bundle"
 msgstr "Uruchom"
@@ -1691,10 +1698,10 @@ msgstr "obecny_stan"
 msgid "current_state"
 msgstr "obecny_stan"
 
-#: web/modules/msc/logs/ajaxLogsFilter.php:135
-#: web/modules/msc/includes/command_history.php:41
 #: web/modules/msc/msc/ajaxLogsFilter.php:198
 #: web/modules/msc/msc/msctabssinglestatus.php:38
+#: web/modules/msc/logs/ajaxLogsFilter.php:135
+#: web/modules/msc/includes/command_history.php:41
 msgid "deleted"
 msgstr "usunięto"
 
@@ -1702,9 +1709,9 @@ msgstr "usunięto"
 msgid "disable"
 msgstr ""
 
+#: web/modules/msc/msc/launch.php:298
 #: web/modules/msc/includes/bundle_widgets.php:351
 #: web/modules/msc/includes/command_history.php:277
-#: web/modules/msc/msc/launch.php:277
 #, fuzzy
 msgid "done"
 msgstr "Zrobione"
@@ -1730,10 +1737,10 @@ msgstr ""
 msgid "error : the bundle_id given does not exists in the database."
 msgstr ""
 
-#: web/modules/msc/logs/ajaxLogsFilter.php:134
-#: web/modules/msc/includes/command_history.php:40
 #: web/modules/msc/msc/ajaxLogsFilter.php:197
 #: web/modules/msc/msc/msctabssinglestatus.php:38
+#: web/modules/msc/logs/ajaxLogsFilter.php:134
+#: web/modules/msc/includes/command_history.php:40
 msgid "executed"
 msgstr "wykonano"
 
@@ -1785,8 +1792,8 @@ msgstr ""
 msgid "host"
 msgstr "Host"
 
-#: web/modules/msc/includes/bundle_widgets.php:307
 #: web/modules/msc/msc/start_command.php:163
+#: web/modules/msc/includes/bundle_widgets.php:307
 msgid "invent."
 msgstr "inwent."
 
@@ -1835,13 +1842,13 @@ msgstr ""
 msgid "over_time"
 msgstr ""
 
+#: web/modules/msc/msc/launch.php:343
 #: web/modules/msc/includes/bundle_widgets.php:368
-#: web/modules/msc/msc/launch.php:301
 msgid "push"
 msgstr "pchnij"
 
+#: web/modules/msc/msc/launch.php:343
 #: web/modules/msc/includes/bundle_widgets.php:368
-#: web/modules/msc/msc/launch.php:301
 msgid "push / pull"
 msgstr "pchnij / pobierz"
 
@@ -1903,10 +1910,10 @@ msgstr "błąd podczas zatrzymywania"
 msgid "unreachable during upload"
 msgstr "błąd podczas wysyłania"
 
-#: web/modules/msc/logs/ajaxLogsFilter.php:133
-#: web/modules/msc/includes/command_history.php:39
 #: web/modules/msc/msc/ajaxLogsFilter.php:196
 #: web/modules/msc/msc/msctabssinglestatus.php:38
+#: web/modules/msc/logs/ajaxLogsFilter.php:133
+#: web/modules/msc/includes/command_history.php:39
 msgid "uploaded"
 msgstr "wysłano"
 
@@ -1961,43 +1968,603 @@ msgstr "Bajtów"
 #~ msgid "%a %d %b %Y %T"
 #~ msgstr "%a %d %b %Y %T"
 
+#, fuzzy
+#~ msgid "%s menu parameters"
+#~ msgstr "Parametry polecenia"
+
+#, fuzzy
+#~ msgid "%s's computer imaging"
+#~ msgstr "bezpieczna kontrola grupy %s"
+
+#, fuzzy
+#~ msgid "%s's computer imaging (in profile)"
+#~ msgstr "bezpieczna kontrola grupy %s"
+
+#, fuzzy
+#~ msgid "%s's content inventory"
+#~ msgstr "Rozpocznij inwentaryzację"
+
+#, fuzzy
+#~ msgid "%s's details"
+#~ msgstr "Szczegóły"
+
+#, fuzzy
+#~ msgid "%s's inventory"
+#~ msgstr "Rozpocznij inwentaryzację"
+
 #~ msgid "%s's machine secure control"
 #~ msgstr "bezpiecznakontrola maszyny %s"
+
+#, fuzzy
+#~ msgid "Add a package"
+#~ msgstr "Opakowanie"
+
+#, fuzzy
+#~ msgid "Add the image <b>%s</b> to <b>%s</b>"
+#~ msgstr "Wdroż  <b>%s w.%s</b><br/> na <b>%s</b>"
+
+#, fuzzy
+#~ msgid "Additionnal informations"
+#~ msgstr "Nie wystarczające informacje"
+
+#, fuzzy
+#~ msgid "All machines"
+#~ msgstr "Akcje Uruchaiania"
+
+#, fuzzy
+#~ msgid "Backup done"
+#~ msgstr "Usuwanie zakończone"
+
+#, fuzzy
+#~ msgid "Backup failed"
+#~ msgstr "Usuwanie nieudane"
+
+#, fuzzy
+#~ msgid "Backup in progress"
+#~ msgstr "Usuwanie trwa"
+
+#, fuzzy
+#~ msgid "Bios tab for a computer in a group"
+#~ msgstr "Zakładka logów MSC"
+
+#, fuzzy
+#~ msgid "Bios tab for a group"
+#~ msgstr "Zakładka logów MSC"
+
+#, fuzzy
+#~ msgid "BiosVersion"
+#~ msgstr "Wersja"
+
+#, fuzzy
+#~ msgid "Booted"
+#~ msgstr "Usuwanie nieudane"
+
+#, fuzzy
+#~ msgid "BuyDate"
+#~ msgstr "Data"
+
+#, fuzzy
+#~ msgid "BuyValue"
+#~ msgstr "Wartość"
+
+#, fuzzy
+#~ msgid "Caption"
+#~ msgstr "Data utworzenia"
+
+#, fuzzy
+#~ msgid "Command : "
+#~ msgstr "Polecenie"
 
 #~ msgid "Command title"
 #~ msgstr "Tytuł polecenia"
 
 #, fuzzy
+#~ msgid "Command's name : "
+#~ msgstr "Nazwa polecenia"
+
+#, fuzzy
+#~ msgid "Comments"
+#~ msgstr "Polecenie"
+
+#, fuzzy
+#~ msgid "Computer name"
+#~ msgstr "nie udało się wdrożyć na komputerach"
+
+#, fuzzy
+#~ msgid "Computers Group Creator"
+#~ msgstr "nie udało się wdrożyć na komputerach"
+
+#, fuzzy
+#~ msgid "Computers Group Editor"
+#~ msgstr "nie udało się wdrożyć na komputerach"
+
+#, fuzzy
+#~ msgid "Computers Profile Creator"
+#~ msgstr "nie udało się wdrożyć na komputerach"
+
+#, fuzzy
+#~ msgid "Computers Profile Editor"
+#~ msgstr "nie udało się wdrożyć na komputerach"
+
+#, fuzzy
+#~ msgid "Computers list"
+#~ msgstr "nie udało się wdrożyć na komputerach"
+
+#, fuzzy
+#~ msgid "Controller tab for a computer"
+#~ msgstr "Bezpieczna kontrola maszyny "
+
+#, fuzzy
+#~ msgid "Controller tab for a computer in a group"
+#~ msgstr "Zakładka wykonywania MSC"
+
+#, fuzzy
+#~ msgid "Controller tab for a group"
+#~ msgstr "Zakładka wykonywania MSC"
+
+#, fuzzy
+#~ msgid "Create iso from master"
+#~ msgstr "Data utworzenia"
+
+#, fuzzy
+#~ msgid "Create iso image"
+#~ msgstr "Data utworzenia"
+
+#, fuzzy
+#~ msgid "Created"
+#~ msgstr "Data utworzenia"
+
+#, fuzzy
+#~ msgid "Csv export"
+#~ msgstr "Export csv"
+
+#, fuzzy
+#~ msgid "Current boot menu"
+#~ msgstr "obecny_stan"
+
+#, fuzzy
+#~ msgid "Default menu parameters"
+#~ msgstr "Parametry polecenia"
+
+#, fuzzy
 #~ msgid "Delay betwen connections (minuts)"
 #~ msgstr "Opóźnienie między połączeniami"
+
+#, fuzzy
+#~ msgid "Delete"
+#~ msgstr "usunięto"
+
+#, fuzzy
+#~ msgid "Delete a group of computers"
+#~ msgstr "Bezpieczna kontrola całej grupy maszyn "
+
+#, fuzzy
+#~ msgid "Delete a package"
+#~ msgstr "Usuwanie trwa"
+
+#, fuzzy
+#~ msgid "Delete group"
+#~ msgstr "Usuwanie zakończone"
+
+#, fuzzy
+#~ msgid "Delete image"
+#~ msgstr "Usuwanie nieudane"
+
+#, fuzzy
+#~ msgid "Delete master"
+#~ msgstr "Usuwanie nieudane"
+
+#, fuzzy
+#~ msgid "Delete the image"
+#~ msgstr "Usuwanie nieudane"
+
+#, fuzzy
+#~ msgid "Delete this group"
+#~ msgstr "Usuwanie trwa"
+
+#, fuzzy
+#~ msgid "Delete this package"
+#~ msgstr "Usuwanie trwa"
+
+#, fuzzy
+#~ msgid "Delete this profile"
+#~ msgstr "Usuwanie nieudane"
+
+#, fuzzy
+#~ msgid "Detailed page of save a group of computers"
+#~ msgstr "Bezpieczna kontrola całej grupy maszyn "
+
+#, fuzzy
+#~ msgid "Differences between two inventories"
+#~ msgstr "Opóźnienie między 2 połączeniami"
+
+#, fuzzy
+#~ msgid "Display a groups of computers"
+#~ msgstr "Bezpieczna kontrola całej grupy maszyn "
+
+#, fuzzy
+#~ msgid "Edit : %s"
+#~ msgstr "Kod zakońćzenia to: %s"
+
+#, fuzzy
+#~ msgid "Edit script"
+#~ msgstr "Rozpocznik skrypt"
+
+#, fuzzy
+#~ msgid "Edit service : "
+#~ msgstr "Kod zakońćzenia to: %s"
+
+#, fuzzy
+#~ msgid "Edit this group"
+#~ msgstr "Zatrzymaj akcje %s na hoście %s"
+
+#, fuzzy
+#~ msgid "ExecutableSize"
+#~ msgstr "Wykonaj plik"
+
+#, fuzzy
+#~ msgid "First apparition"
+#~ msgstr "Data utworzenia"
+
+#, fuzzy
+#~ msgid "GRUB command line access"
+#~ msgstr "Wykonanie zakończone"
+
+#, fuzzy
+#~ msgid "Group creation"
+#~ msgstr "Data utworzenia"
+
+#, fuzzy
+#~ msgid "Group failed to modify"
+#~ msgstr "nie udało się wdrożyć na komputerach"
+
+#, fuzzy
+#~ msgid "Group successfully created"
+#~ msgstr "zakończono wdrażanie na komputerach"
+
+#, fuzzy
+#~ msgid "Group successfully modified"
+#~ msgstr "zakończono wdrażanie na komputerach"
+
+#, fuzzy
+#~ msgid "Group successfully shared"
+#~ msgstr "zakończono wdrażanie na komputerach"
+
+#, fuzzy
+#~ msgid "Hardware Inventory not stored"
+#~ msgstr "Inwentaryzacja w trakcie"
+
+#, fuzzy
+#~ msgid "Hardware Inventory received"
+#~ msgstr "Inwentaryzacja nieudana"
+
+#, fuzzy
+#~ msgid "Hardware Inventory updated"
+#~ msgstr "Inwentaryzacja nieudana"
+
+#, fuzzy
+#~ msgid "Hardware tab for a computer"
+#~ msgstr "Bezpieczna kontrola maszyny "
+
+#, fuzzy
+#~ msgid "Hardware tab for a group"
+#~ msgstr "Zakładka wykonywania MSC"
+
+#, fuzzy
+#~ msgid "HardwareVersion"
+#~ msgstr "Wersja"
+
+#, fuzzy
+#~ msgid "Image parameters"
+#~ msgstr "Parametry polecenia"
+
+#, fuzzy
+#~ msgid "Imaging server"
+#~ msgstr "Tytuł polecenia"
+
+#, fuzzy
+#~ msgid "Incoming Inventories"
+#~ msgstr "Inwentaryzacja nieudana"
+
+#, fuzzy
+#~ msgid "Informations"
+#~ msgstr "Nie wystarczające informacje"
+
+#, fuzzy
+#~ msgid "Inventory"
+#~ msgstr "Inwentaryzacja zakończona"
+
+#, fuzzy
+#~ msgid "Inventory (GLPI) on machine"
+#~ msgstr "Inwentaryzacja zakończona"
+
+#, fuzzy
+#~ msgid "Inventory Date"
+#~ msgstr "Inwentaryzacja nieudana"
+
+#, fuzzy
+#~ msgid "Inventory changes"
+#~ msgstr "Inwentaryzacja zakończona"
+
+#, fuzzy
+#~ msgid "Inventory of %s"
+#~ msgstr "Inwentaryzacja zakończona"
+
+#, fuzzy
+#~ msgid "Inventory on a group of computers"
+#~ msgstr "Bezpieczna kontrola całej grupy maszyn "
+
+#, fuzzy
+#~ msgid "Inventory on a single computer"
+#~ msgstr "Inwentaryzacja nieudana"
+
+#, fuzzy
+#~ msgid "Inventory on this group"
+#~ msgstr "Zatrzymaj akcje %s na hoście %s"
+
+#, fuzzy
+#~ msgid "Inventory on this profile"
+#~ msgstr "Inwentaryzacja w trakcie"
+
+#, fuzzy
+#~ msgid "Kernel parameters"
+#~ msgstr "Parametry polecenia"
+
+#, fuzzy
+#~ msgid "Launch backup"
+#~ msgstr "Uruchom"
+
+#, fuzzy
+#~ msgid "List all groups of computers"
+#~ msgstr "Bezpieczna kontrola całej grupy maszyn "
+
+#, fuzzy
+#~ msgid "List all profiles of computers"
+#~ msgstr "Bezpieczna kontrola maszyny "
+
+#, fuzzy
+#~ msgid "Location"
+#~ msgstr "Akcje Uruchaiania"
+
+#, fuzzy
+#~ msgid "MACAddress"
+#~ msgstr "Adr MAC"
 
 #~ msgid "MSC"
 #~ msgstr "MSC"
 
 #, fuzzy
+#~ msgid "MacAddr"
+#~ msgstr "Adr MAC"
+
+#, fuzzy
 #~ msgid "Maximum number of clients per local proxy"
 #~ msgstr "Maksymalna liczba prób połączenia"
 
+#, fuzzy
+#~ msgid "Message displayed during backup/restoration"
+#~ msgstr "błąd podczas zatrzymywania"
+
+#, fuzzy
+#~ msgid "Model"
+#~ msgstr "tryb"
+
+#, fuzzy
+#~ msgid "Modem"
+#~ msgstr "tryb"
+
 #~ msgid "N/A"
 #~ msgstr "N/D"
+
+#, fuzzy
+#~ msgid "Name :"
+#~ msgstr "Nazwa"
+
+#, fuzzy
+#~ msgid "Names"
+#~ msgstr "Nazwa"
+
+#, fuzzy
+#~ msgid "Network tab for a computer"
+#~ msgstr "Bezpieczna kontrola maszyny "
+
+#, fuzzy
+#~ msgid "Network tab for a group"
+#~ msgstr "Zakładka Histori MSC"
+
+#, fuzzy
+#~ msgid "No"
+#~ msgstr "Zrobione"
+
+#, fuzzy
+#~ msgid "No master available."
+#~ msgstr "Tka szybko, jak tylko możliwe"
+
+#, fuzzy
+#~ msgid "Package API"
+#~ msgstr "Opakowanie"
+
+#, fuzzy
+#~ msgid "Package label"
+#~ msgstr "Rozmiwa opakowania"
+
+#, fuzzy
+#~ msgid "Package successfully edited"
+#~ msgstr "zakończono wdrażanie na komputerach"
+
+#, fuzzy
+#~ msgid "Package version"
+#~ msgstr "Rozmiwa opakowania"
+
+#, fuzzy
+#~ msgid "Packages list"
+#~ msgstr "Pakiety"
 
 #, fuzzy
 #~ msgid "Processing interval"
 #~ msgstr "Wykonanie zakończone"
 
 #, fuzzy
+#~ msgid "ProductVersion"
+#~ msgstr "Wersja"
+
+#, fuzzy
+#~ msgid "Profile failed to modify"
+#~ msgstr "nie udało się wdrożyć na komputerach"
+
+#, fuzzy
+#~ msgid "Profile successfully created"
+#~ msgstr "zakończono wdrażanie na komputerach"
+
+#, fuzzy
+#~ msgid "Profile successfully modified"
+#~ msgstr "zakończono wdrażanie na komputerach"
+
+#, fuzzy
 #~ msgid "Reboot client after a successful deletion"
 #~ msgstr "Usuń pliki po zakończeniu wykonywania"
+
+#, fuzzy
+#~ msgid "Registry tab for a computer"
+#~ msgstr "Zakładka Histori MSC"
+
+#, fuzzy
+#~ msgid "Registry tab for a computer in a group"
+#~ msgstr "Zakładka Histori MSC"
+
+#, fuzzy
+#~ msgid "Registry tab for a group"
+#~ msgstr "Zakładka Histori MSC"
+
+#, fuzzy
+#~ msgid "Remove a computer"
+#~ msgstr "Bezpieczna kontrola maszyny "
+
+#, fuzzy
+#~ msgid "Restoration"
+#~ msgstr "Data utworzenia"
+
+#, fuzzy
+#~ msgid "Restoration Started"
+#~ msgstr "Data utworzenia"
+
+#, fuzzy
+#~ msgid "Restoration options"
+#~ msgstr "Data utworzenia"
+
+#, fuzzy
+#~ msgid "Restoration type"
+#~ msgstr "Data utworzenia"
+
+#, fuzzy
+#~ msgid "Restore done"
+#~ msgstr "Usuwanie zakończone"
+
+#, fuzzy
+#~ msgid "Restore failed"
+#~ msgstr "Usuwanie nieudane"
+
+#, fuzzy
+#~ msgid "Restore in progress"
+#~ msgstr "Usuwanie trwa"
+
+#, fuzzy
+#~ msgid "Root entity"
+#~ msgstr "Usuwanie nieudane"
+
+#, fuzzy
+#~ msgid "Save a group of computers"
+#~ msgstr "Bezpieczna kontrola całej grupy maszyn "
+
+#, fuzzy
+#~ msgid "Script value"
+#~ msgstr "Parametry polecenia"
+
+#, fuzzy
+#~ msgid "See pending packages"
+#~ msgstr "Pokaż logi zadań oczekujących"
+
+#, fuzzy
+#~ msgid "Server status"
+#~ msgstr "status %s"
+
+#, fuzzy
+#~ msgid "Share a group of computers"
+#~ msgstr "Bezpieczna kontrola całej grupy maszyn "
+
+#, fuzzy
+#~ msgid "Share this group"
+#~ msgstr "Uruchom akcję %s na hoście %s"
+
+#, fuzzy
+#~ msgid "Show Image Informations"
+#~ msgstr "Nie wystarczające informacje"
+
+#, fuzzy
+#~ msgid "Show all packages"
+#~ msgstr "Pokaż logi wszystkich zadań"
+
+#, fuzzy
+#~ msgid "SmbVersion"
+#~ msgstr "Wersja"
+
+#, fuzzy
+#~ msgid "Software deployment on this group"
+#~ msgstr "Uruchom akcję %s na hoście %s"
+
+#, fuzzy
+#~ msgid "Software tab for a computer"
+#~ msgstr "Bezpieczna kontrola maszyny "
+
+#, fuzzy
+#~ msgid "Software tab for a group"
+#~ msgstr "Zakładka logów MSC"
+
+#, fuzzy
+#~ msgid "StandardDescription"
+#~ msgstr "Rozpocznik skrypt"
 
 #, fuzzy
 #~ msgid "Start script ?"
 #~ msgstr "Rozpocznik skrypt"
 
+#, fuzzy
+#~ msgid "Stats"
+#~ msgstr "Stan"
+
+#, fuzzy
+#~ msgid "Status unknow"
+#~ msgstr "Stan"
+
+#, fuzzy
+#~ msgid "Status unknown"
+#~ msgstr "Stan"
+
 #~ msgid "These packages can be installed on machine \"%s\""
 #~ msgstr "Te pakiety można zainstalować na maszynie \"%s\""
 
+#, fuzzy
+#~ msgid "This imaging server don't exists."
+#~ msgstr "Scieżka szybkiej akcji na %s nie isntnieje"
+
 #~ msgid "Transferred files list empty."
 #~ msgstr "Lista przeniesionych plików jest pusta"
+
+#, fuzzy
+#~ msgid "TypeMachine"
+#~ msgstr "Akcje Uruchaiania"
+
+#, fuzzy
+#~ msgid "Unregister this computer"
+#~ msgstr "Bezpieczna kontrola maszyny "
+
+#, fuzzy
+#~ msgid "Values"
+#~ msgstr "Wartość"
+
+#, fuzzy
+#~ msgid "Versions"
+#~ msgstr "Wersja"
 
 #, fuzzy
 #~ msgid "WOL failed"
@@ -2008,8 +2575,32 @@ msgstr "Bajtów"
 #~ msgstr "Usuwanie trwa"
 
 #, fuzzy
-#~ msgid "do_inventory"
-#~ msgstr "Rozpocznij inwentaryzację"
+#~ msgid "Yes"
+#~ msgstr "Bajtów"
+
+#, fuzzy
+#~ msgid "bandwidth"
+#~ msgstr "Maksymalna przepustowość"
+
+#, fuzzy
+#~ msgid "comments"
+#~ msgstr "Odtwórz polecenie"
+
+#, fuzzy
+#~ msgid "designation"
+#~ msgstr "Data utworzenia"
+
+#, fuzzy
+#~ msgid "location"
+#~ msgstr "Akcje Uruchaiania"
+
+#, fuzzy
+#~ msgid "os"
+#~ msgstr "Host"
+
+#, fuzzy
+#~ msgid "os_version"
+#~ msgstr "Wersja"
 
 #~ msgid "p/p"
 #~ msgstr "p/p"

@@ -7,10 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: glpi\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-18 11:49+0100\n"
+"POT-Creation-Date: 2010-08-13 10:13+0200\n"
 "PO-Revision-Date: 2008-07-25 13:37+0200\n"
 "Last-Translator: Andrzej Skrzypczak <aeskrzypczak@gmail.com>\n"
 "Language-Team:  <pl@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -219,3 +220,147 @@ msgstr ""
 #: web/modules/glpi/glpi/view_hardware.php:87
 msgid "type"
 msgstr ""
+
+#, fuzzy
+#~ msgid "%s's content inventory"
+#~ msgstr "Inwentarz %s (GLPI)"
+
+#, fuzzy
+#~ msgid "%s's inventory"
+#~ msgstr "Inwentarz %s (GLPI)"
+
+#, fuzzy
+#~ msgid "Add"
+#~ msgstr "Dodaj"
+
+#, fuzzy
+#~ msgid "Application"
+#~ msgstr "lokalizacja"
+
+#, fuzzy
+#~ msgid "BiosVersion"
+#~ msgstr "wersja_systemu"
+
+#, fuzzy
+#~ msgid "BuyValue"
+#~ msgstr "Wartość"
+
+#, fuzzy
+#~ msgid "Caption"
+#~ msgstr "lokalizacja"
+
+#, fuzzy
+#~ msgid "ChipSerial"
+#~ msgstr "numer"
+
+#, fuzzy
+#~ msgid "Comments"
+#~ msgstr "komentarze"
+
+#, fuzzy
+#~ msgid "Controller list"
+#~ msgstr "Kontroler"
+
+#, fuzzy
+#~ msgid "Creation"
+#~ msgstr "lokalizacja"
+
+#, fuzzy
+#~ msgid "Display content"
+#~ msgstr "Pokaż lokalizacje"
+
+#, fuzzy
+#~ msgid "Displayed on WOL"
+#~ msgstr "Pokaż lokalizacje"
+
+#, fuzzy
+#~ msgid "Elements"
+#~ msgstr "komentarze"
+
+#, fuzzy
+#~ msgid "File name"
+#~ msgstr "nazwa"
+
+#, fuzzy
+#~ msgid "Group creation"
+#~ msgstr "lokalizacja"
+
+#, fuzzy
+#~ msgid "HardwareVersion"
+#~ msgstr "Sprzęt"
+
+#, fuzzy
+#~ msgid "Informations"
+#~ msgstr "lokalizacja"
+
+#, fuzzy
+#~ msgid "Inventory changes"
+#~ msgstr "Inwentarz (GLPI) na maszynie"
+
+#, fuzzy
+#~ msgid "Inventory done"
+#~ msgstr "Inwentarz (GLPI) na maszynie"
+
+#, fuzzy
+#~ msgid "Inventory failed"
+#~ msgstr "Inwentarz (GLPI) na maszynie"
+
+#, fuzzy
+#~ msgid "Inventory of %s"
+#~ msgstr "Inwentarz %s (GLPI)"
+
+#, fuzzy
+#~ msgid "Inventory on a group of computers"
+#~ msgstr "Inwentarz (GLPI) na grupie maszyn"
+
+#, fuzzy
+#~ msgid "Inventory on this group"
+#~ msgstr "Inwentarz (GLPI) na grupie maszyn"
+
+#, fuzzy
+#~ msgid "Inventory on this profile"
+#~ msgstr "Inwentarz (GLPI) na maszynie"
+
+#, fuzzy
+#~ msgid "Location"
+#~ msgstr "lokalizacja"
+
+#, fuzzy
+#~ msgid "My commands"
+#~ msgstr "komentarze"
+
+#, fuzzy
+#~ msgid "NetworkType"
+#~ msgstr "Sieć"
+
+#, fuzzy
+#~ msgid "Restoration"
+#~ msgstr "lokalizacja"
+
+#, fuzzy
+#~ msgid "Serial"
+#~ msgstr "numer"
+
+#, fuzzy
+#~ msgid "SmbSerial"
+#~ msgstr "numer"
+
+#, fuzzy
+#~ msgid "SmbVersion"
+#~ msgstr "wersja_systemu"
+
+#, fuzzy
+#~ msgid "Values"
+#~ msgstr "Wartość"
+
+#, fuzzy
+#~ msgid "Version"
+#~ msgstr "wersja_systemu"
+
+#, fuzzy
+#~ msgid "Versions"
+#~ msgstr "wersja_systemu"
+
+#, fuzzy
+#~ msgid "action"
+#~ msgstr "lokalizacja"

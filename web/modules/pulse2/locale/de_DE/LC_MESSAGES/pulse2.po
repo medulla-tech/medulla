@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-08 06:53+0200\n"
+"POT-Creation-Date: 2010-08-13 10:13+0200\n"
 "PO-Revision-Date: 2010-08-08 07:21+0100\n"
 "Last-Translator: Mario Fetka <mario.fetka@gmail.com>\n"
 "Language-Team: Mario Fetka <mario.fetka@gmail.com>\n"
@@ -39,3 +39,82 @@ msgstr "Pulse2"
 msgid "Root entity"
 msgstr "Haupt Eintrag"
 
+#, fuzzy
+#~ msgid "All share entities"
+#~ msgstr "Alle meine Einheiten"
+
+#, fuzzy
+#~ msgid "Bios list"
+#~ msgstr "Comupter Liste"
+
+#, fuzzy
+#~ msgid "Boot menu"
+#~ msgstr "Haupt Eintrag"
+
+#, fuzzy
+#~ msgid "Computer"
+#~ msgstr "Comupter Liste"
+
+#, fuzzy
+#~ msgid "Computer UUID Request"
+#~ msgstr "Comupter Liste"
+
+#, fuzzy
+#~ msgid "Computer UUID Sent"
+#~ msgstr "Comupter Liste"
+
+#, fuzzy
+#~ msgid "Computer name"
+#~ msgstr "Comupter Liste"
+
+#, fuzzy
+#~ msgid "Computers Group Editor"
+#~ msgstr "Comupter Liste"
+
+#, fuzzy
+#~ msgid "Computers Profile Creator"
+#~ msgstr "Comupter Liste"
+
+#, fuzzy
+#~ msgid "Computers Profile Editor"
+#~ msgstr "Comupter Liste"
+
+#, fuzzy
+#~ msgid "Computers in this command"
+#~ msgstr "Comupter Liste"
+
+#, fuzzy
+#~ msgid "Controller list"
+#~ msgstr "Comupter Liste"
+
+#, fuzzy
+#~ msgid "Monitor list"
+#~ msgstr "Comupter Liste"
+
+#, fuzzy
+#~ msgid "Port list"
+#~ msgstr "Comupter Liste"
+
+#, fuzzy
+#~ msgid "Printer list"
+#~ msgstr "Comupter Liste"
+
+#, fuzzy
+#~ msgid "Reboot client"
+#~ msgstr "Haupt Eintrag"
+
+#, fuzzy
+#~ msgid "computers paused"
+#~ msgstr "Comupter Liste"
+
+#, fuzzy
+#~ msgid "computers stopped"
+#~ msgstr "Comupter Liste"
+
+#, fuzzy
+#~ msgid "entity"
+#~ msgstr "Haupt Eintrag"
+
+#, fuzzy
+#~ msgid "logs list"
+#~ msgstr "Comupter Liste"

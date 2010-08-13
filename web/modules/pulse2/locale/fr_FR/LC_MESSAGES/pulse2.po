@@ -8,10 +8,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - Pulse2 Web Interface 1.2.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-22 18:27+0200\n"
+"POT-Creation-Date: 2010-08-13 10:13+0200\n"
 "PO-Revision-Date: 2009-05-22 10:08+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French <i18n@mandriva.com>\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -36,3 +37,83 @@ msgstr "Pulse2"
 #: web/modules/pulse2/includes/locations_xmlrpc.inc.php:31
 msgid "Root entity"
 msgstr "Entité racine"
+
+#, fuzzy
+#~ msgid "All share entities"
+#~ msgstr "Toutes mes entités"
+
+#, fuzzy
+#~ msgid "Bios list"
+#~ msgstr "Liste des ordinateurs"
+
+#, fuzzy
+#~ msgid "Boot menu"
+#~ msgstr "Entité racine"
+
+#, fuzzy
+#~ msgid "Computer"
+#~ msgstr "Liste des ordinateurs"
+
+#, fuzzy
+#~ msgid "Computer UUID Request"
+#~ msgstr "Liste des ordinateurs"
+
+#, fuzzy
+#~ msgid "Computer UUID Sent"
+#~ msgstr "Liste des ordinateurs"
+
+#, fuzzy
+#~ msgid "Computer name"
+#~ msgstr "Liste des ordinateurs"
+
+#, fuzzy
+#~ msgid "Computers Group Editor"
+#~ msgstr "Liste des ordinateurs"
+
+#, fuzzy
+#~ msgid "Computers Profile Creator"
+#~ msgstr "Liste des ordinateurs"
+
+#, fuzzy
+#~ msgid "Computers Profile Editor"
+#~ msgstr "Liste des ordinateurs"
+
+#, fuzzy
+#~ msgid "Computers in this command"
+#~ msgstr "Liste des ordinateurs"
+
+#, fuzzy
+#~ msgid "Controller list"
+#~ msgstr "Liste des ordinateurs"
+
+#, fuzzy
+#~ msgid "Monitor list"
+#~ msgstr "Liste des ordinateurs"
+
+#, fuzzy
+#~ msgid "Port list"
+#~ msgstr "Liste des ordinateurs"
+
+#, fuzzy
+#~ msgid "Printer list"
+#~ msgstr "Liste des ordinateurs"
+
+#, fuzzy
+#~ msgid "Reboot client"
+#~ msgstr "Entité racine"
+
+#, fuzzy
+#~ msgid "computers paused"
+#~ msgstr "Liste des ordinateurs"
+
+#, fuzzy
+#~ msgid "computers stopped"
+#~ msgstr "Liste des ordinateurs"
+
+#, fuzzy
+#~ msgid "entity"
+#~ msgstr "Entité racine"
+
+#, fuzzy
+#~ msgid "logs list"
+#~ msgstr "Liste des ordinateurs"

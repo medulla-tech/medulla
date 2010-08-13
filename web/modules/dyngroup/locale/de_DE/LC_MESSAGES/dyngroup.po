@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-08 06:53+0200\n"
+"POT-Creation-Date: 2010-08-13 10:13+0200\n"
 "PO-Revision-Date: 2010-08-08 07:03+0100\n"
 "Last-Translator: Mario Fetka <mario.fetka@gmail.com>\n"
 "Language-Team: Mario Fetka <mario.fetka@gmail.com>\n"
@@ -47,8 +47,8 @@ msgstr "(P) Anzeige %s '%s'"
 msgid "->"
 msgstr "->"
 
-#: web/modules/dyngroup/dyngroup/save.php:91
 #: web/modules/dyngroup/dyngroup/import_from_file.php:43
+#: web/modules/dyngroup/dyngroup/save.php:91
 #: web/modules/dyngroup/dyngroup/add_groups.php:168
 #, php-format
 msgid "A group already exists with name '%s'"
@@ -59,13 +59,13 @@ msgstr "Eine Gruppe mit dem Namen existiert bereits '%s'"
 msgid "A profile already exists with name '%s'"
 msgstr "Ein Profil mit dem Namen existiert bereits '%s'"
 
+#: web/modules/dyngroup/includes/double.php:36
+#: web/modules/dyngroup/includes/autocomplete.php:29
 #: web/modules/dyngroup/dyngroup/creator.php:198
 #: web/modules/dyngroup/dyngroup/creator.php:207
 #: web/modules/dyngroup/dyngroup/creator.php:231
 #: web/modules/dyngroup/dyngroup/creator.php:239
 #: web/modules/dyngroup/dyngroup/creator.php:243
-#: web/modules/dyngroup/includes/double.php:36
-#: web/modules/dyngroup/includes/autocomplete.php:29
 msgid "Add"
 msgstr "Hinzufügen"
 
@@ -106,10 +106,10 @@ msgstr "Alle Verteilten Datensätze"
 msgid "Are you sure you want to delete %s <b>%s</b>?<br/> (it can be used in an other group)."
 msgstr "Sind Sie sicher, dass Sie %s löschen <b> %s </ b>? <br/> (Es kann in einer anderen Gruppe verwendet werden)."
 
-#: web/modules/dyngroup/dyngroup/delete_group.php:57
-#: web/modules/dyngroup/dyngroup/remove_machine.php:47
 #: web/modules/dyngroup/includes/groups.inc.php:81
 #: web/modules/dyngroup/includes/groups.inc.php:184
+#: web/modules/dyngroup/dyngroup/delete_group.php:57
+#: web/modules/dyngroup/dyngroup/remove_machine.php:47
 msgid "Cancel"
 msgstr "Stornieren"
 
@@ -290,8 +290,8 @@ msgstr "dynamische Gruppe bearbeiten"
 msgid "Edit a profile"
 msgstr "Profil bearbeiten"
 
-#: web/modules/dyngroup/dyngroup/edithead.php:46
 #: web/modules/dyngroup/dyngroup/groupshead.php:31
+#: web/modules/dyngroup/dyngroup/edithead.php:46
 msgid "Edit a static group"
 msgstr "statische Gruppe bearbeiten"
 
@@ -327,9 +327,9 @@ msgstr "Gruppenliste"
 msgid "Group members"
 msgstr "Gruppen Mitglieder"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:88
-#: web/modules/dyngroup/dyngroup/import_from_file.php:49
 #: web/modules/dyngroup/includes/groups.inc.php:113
+#: web/modules/dyngroup/dyngroup/import_from_file.php:49
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:88
 msgid "Group name"
 msgstr "Gruppen Name"
 
@@ -374,8 +374,8 @@ msgstr "Bestand in dieser Gruppe"
 msgid "Inventory on this profile"
 msgstr "Bestand in diesem Profil"
 
-#: web/modules/dyngroup/dyngroup/import_from_file.php:55
 #: web/modules/dyngroup/includes/groups.inc.php:114
+#: web/modules/dyngroup/dyngroup/import_from_file.php:55
 msgid "Is the group visible"
 msgstr "Ist die Gruppe sichtbar"
 
@@ -393,9 +393,9 @@ msgstr "Liste aller Computern Gruppen"
 msgid "List all profiles of computers"
 msgstr "Liste aller Computer Profile"
 
-#: web/modules/dyngroup/dyngroup/creator.php:233
 #: web/modules/dyngroup/includes/double.php:39
 #: web/modules/dyngroup/includes/autocomplete.php:31
+#: web/modules/dyngroup/dyngroup/creator.php:233
 msgid "Modify"
 msgstr "Modifizieren"
 
@@ -403,9 +403,9 @@ msgstr "Modifizieren"
 msgid "Name :"
 msgstr "Name:"
 
+#: web/modules/dyngroup/includes/groups.inc.php:128
 #: web/modules/dyngroup/dyngroup/import_from_file.php:52
 #: web/modules/dyngroup/dyngroup/creator.php:237
-#: web/modules/dyngroup/includes/groups.inc.php:128
 msgid "No"
 msgstr "Nicht"
 
@@ -452,8 +452,8 @@ msgstr "Profil wurde nicht geändern. <br/> Kann %s nicht hinzufügen"
 msgid "Profile members"
 msgstr "Profil Mitglieder"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:90
 #: web/modules/dyngroup/includes/groups.inc.php:117
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:90
 msgid "Profile name"
 msgstr "Profilname"
 
@@ -650,10 +650,10 @@ msgstr "Aktualisiere Maschinen Zwischenspeicher in dyngroup"
 msgid "Visible"
 msgstr "Sichtbar"
 
+#: web/modules/dyngroup/includes/groups.inc.php:127
 #: web/modules/dyngroup/dyngroup/import_from_file.php:52
 #: web/modules/dyngroup/dyngroup/creator.php:236
 #: web/modules/dyngroup/dyngroup/creator.php:242
-#: web/modules/dyngroup/includes/groups.inc.php:127
 msgid "Yes"
 msgstr "Ja"
 
@@ -692,8 +692,8 @@ msgstr "Es sollte"
 msgid "profile"
 msgstr "Profil"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:75
 #: web/modules/dyngroup/dyngroup/save.php:73
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:75
 msgid "query"
 msgstr "Abfrage"
 
@@ -741,3 +741,478 @@ msgstr " Aktualisiere Maschinen Zwischenspeicher :%s Maschinen"
 msgid "visible"
 msgstr "sichtbar"
 
+#, fuzzy
+#~ msgid "%s's profile imaging"
+#~ msgstr "Ergebnis Profil-Erstellung"
+
+#, fuzzy
+#~ msgid "Add a package"
+#~ msgstr "Wert hinzufügen"
+
+#, fuzzy
+#~ msgid "All my entities"
+#~ msgstr "Alle Verteilten Datensätze"
+
+#, fuzzy
+#~ msgid "Are you sure you want to delete <b>%s</b> image ?"
+#~ msgstr "Sind Sie sicher, dass Sie %s löschen <b> %s </ b>? <br/> (Es kann in einer anderen Gruppe verwendet werden)."
+
+#, fuzzy
+#~ msgid "Are you sure you want to delete <b>%s</b> master ?"
+#~ msgstr "Sind Sie sicher, dass Sie %s löschen <b> %s </ b>? <br/> (Es kann in einer anderen Gruppe verwendet werden)."
+
+#, fuzzy
+#~ msgid "Are you sure you want to delete the <b>%s</b> script ?"
+#~ msgstr "Sind Sie sicher, dass Sie %s löschen <b> %s </ b>? <br/> (Es kann in einer anderen Gruppe verwendet werden)."
+
+#, fuzzy
+#~ msgid "Are you sure you want to remove <b>%s</b> from the boot menu ?"
+#~ msgstr "Sind Sie sicher, dass Sie %s löschen <b> %s </ b>? <br/> (Es kann in einer anderen Gruppe verwendet werden)."
+
+#, fuzzy
+#~ msgid "Available Imaging Server"
+#~ msgstr "Wählen Sie dieses Profil Imaging Server"
+
+#, fuzzy
+#~ msgid "Bios list"
+#~ msgstr "Profil Liste"
+
+#, fuzzy
+#~ msgid "Bios tab for a computer in a group"
+#~ msgstr "Computers aus Computer Gruppe entfernen"
+
+#, fuzzy
+#~ msgid "BuyDate"
+#~ msgstr "Datum"
+
+#, fuzzy
+#~ msgid "Cancel bundle creation"
+#~ msgstr "Ergebnis Profil-Erstellung"
+
+#, fuzzy
+#~ msgid "CardType"
+#~ msgstr "Typ"
+
+#, fuzzy
+#~ msgid "Computer"
+#~ msgstr "Computer entfernen"
+
+#, fuzzy
+#~ msgid "Computer UUID Request"
+#~ msgstr "Computer Gruppen Unter Anforderung löschen"
+
+#, fuzzy
+#~ msgid "Computer name"
+#~ msgstr "Gruppen Name"
+
+#, fuzzy
+#~ msgid "Computers list"
+#~ msgstr "Computer Profil Editor"
+
+#, fuzzy
+#~ msgid "Controller list"
+#~ msgstr "Profil Liste"
+
+#, fuzzy
+#~ msgid "Controller tab for a computer in a group"
+#~ msgstr "Computers aus Computer Gruppe entfernen"
+
+#, fuzzy
+#~ msgid "Creation"
+#~ msgstr "Gruppe erstellen"
+
+#, fuzzy
+#~ msgid "Delete done"
+#~ msgstr "Löschen"
+
+#, fuzzy
+#~ msgid "Delete failed"
+#~ msgstr "Dieses Profil löschen"
+
+#, fuzzy
+#~ msgid "Delete file"
+#~ msgstr "Dieses Profil löschen"
+
+#, fuzzy
+#~ msgid "Delete image"
+#~ msgstr "Gruppe löschen"
+
+#, fuzzy
+#~ msgid "Delete in progress"
+#~ msgstr "Dieses Profil löschen"
+
+#, fuzzy
+#~ msgid "Delete master"
+#~ msgstr "Gruppe löschen"
+
+#, fuzzy
+#~ msgid "Delete the image"
+#~ msgstr "Dieses Profil löschen"
+
+#, fuzzy
+#~ msgid "Delete this package"
+#~ msgstr "Dieses Profil löschen"
+
+#, fuzzy
+#~ msgid "Details"
+#~ msgstr "%s's Details"
+
+#, fuzzy
+#~ msgid "Display locations"
+#~ msgstr "Inhalte anzeigen"
+
+#, fuzzy
+#~ msgid "Displayed"
+#~ msgstr "Anzeige"
+
+#, fuzzy
+#~ msgid "Displayed on WOL"
+#~ msgstr "Inhalte anzeigen"
+
+#, fuzzy
+#~ msgid "Drive list"
+#~ msgstr "Profil Liste"
+
+#, fuzzy
+#~ msgid "DriveType"
+#~ msgstr "Typ"
+
+#, fuzzy
+#~ msgid "Edit : %s"
+#~ msgstr "Bearbeiten"
+
+#, fuzzy
+#~ msgid "Edit a package"
+#~ msgstr "Profil bearbeiten"
+
+#, fuzzy
+#~ msgid "Edit master"
+#~ msgstr "statische Gruppe bearbeiten"
+
+#, fuzzy
+#~ msgid "Edit script"
+#~ msgstr "diese Gruppe bearbeiten"
+
+#, fuzzy
+#~ msgid "Edit service"
+#~ msgstr "dieses Profil bearbeiten"
+
+#, fuzzy
+#~ msgid "Edition of image"
+#~ msgstr "dieses Profil bearbeiten"
+
+#, fuzzy
+#~ msgid "Edition of item"
+#~ msgstr "dieses Profil bearbeiten"
+
+#, fuzzy
+#~ msgid "File name"
+#~ msgstr "Profilname"
+
+#, fuzzy
+#~ msgid "From computer"
+#~ msgstr "Computer entfernen"
+
+#, fuzzy
+#~ msgid "From profile"
+#~ msgstr "Profil"
+
+#, fuzzy
+#~ msgid "Group"
+#~ msgstr "Gruppe"
+
+#, fuzzy
+#~ msgid "Hardware tab for a computer"
+#~ msgstr "Computer Gruppe bereitstellen"
+
+#, fuzzy
+#~ msgid "Hide menu"
+#~ msgstr "Verstecken"
+
+#, fuzzy
+#~ msgid "Imaging Log"
+#~ msgstr "Imaging-Verwaltung"
+
+#, fuzzy
+#~ msgid "Imaging log"
+#~ msgstr "Imaging-Verwaltung"
+
+#, fuzzy
+#~ msgid "Imaging on computer"
+#~ msgstr "Computer entfernen"
+
+#, fuzzy
+#~ msgid "Imaging server"
+#~ msgstr "Imaging-Verwaltung"
+
+#, fuzzy
+#~ msgid "Imaging service"
+#~ msgstr "Imaging-Verwaltung"
+
+#, fuzzy
+#~ msgid "Inventory (GLPI) on a groups of machines"
+#~ msgstr "Bestand in dieser Gruppe"
+
+#, fuzzy
+#~ msgid "Inventory (GLPI) on machine"
+#~ msgstr "Bestand in diesem Profil"
+
+#, fuzzy
+#~ msgid "Inventory Date"
+#~ msgstr "Bestand in diesem Profil"
+
+#, fuzzy
+#~ msgid "Inventory changes"
+#~ msgstr "Bestand in dieser Gruppe"
+
+#, fuzzy
+#~ msgid "Inventory done"
+#~ msgstr "Bestand in diesem Profil"
+
+#, fuzzy
+#~ msgid "Inventory failed"
+#~ msgstr "Bestand in diesem Profil"
+
+#, fuzzy
+#~ msgid "Inventory in progress"
+#~ msgstr "Bestand in diesem Profil"
+
+#, fuzzy
+#~ msgid "Inventory of %s"
+#~ msgstr "Bestand in dieser Gruppe"
+
+#, fuzzy
+#~ msgid "Inventory on a group of computers"
+#~ msgstr "Computer Gruppe speichern"
+
+#, fuzzy
+#~ msgid "Inventory on a single computer"
+#~ msgstr "Bestand in dieser Gruppe"
+
+#, fuzzy
+#~ msgid "Local proxies"
+#~ msgstr "Alle Profile"
+
+#, fuzzy
+#~ msgid "Location"
+#~ msgstr "Gruppe erstellen"
+
+#, fuzzy
+#~ msgid "Machine"
+#~ msgstr "Alle Maschinen"
+
+#, fuzzy
+#~ msgid "Name"
+#~ msgstr "Name:"
+
+#, fuzzy
+#~ msgid "Names"
+#~ msgstr "Name:"
+
+#, fuzzy
+#~ msgid "Network tab for a computer"
+#~ msgstr "Computer entfernen"
+
+#, fuzzy
+#~ msgid "Network tab for a computer in a group"
+#~ msgstr "Computers aus Computer Gruppe entfernen"
+
+#, fuzzy
+#~ msgid "New computer"
+#~ msgstr "Computer entfernen"
+
+#, fuzzy
+#~ msgid "Package failed to save"
+#~ msgstr "Gruppe verteilen fehlerhaft"
+
+#, fuzzy
+#~ msgid "Package successfully edited"
+#~ msgstr "Profil erfolgreich erstellt"
+
+#, fuzzy
+#~ msgid "Packages list"
+#~ msgstr "Profil Liste"
+
+#, fuzzy
+#~ msgid "Pause %s %s on this group"
+#~ msgstr "Verteile diese Gruppe"
+
+#, fuzzy
+#~ msgid "Please switch to expert mode now if you want to change more parameters."
+#~ msgstr "Bitte wählen Sie die Art des Prifils das Sie erstellen möchten"
+
+#, fuzzy
+#~ msgid "PointType"
+#~ msgstr "Typ"
+
+#, fuzzy
+#~ msgid "Port list"
+#~ msgstr "Profil Liste"
+
+#, fuzzy
+#~ msgid "PortType"
+#~ msgstr "Typ"
+
+#, fuzzy
+#~ msgid "Possible actions"
+#~ msgstr "Profilerstellung"
+
+#, fuzzy
+#~ msgid "Printer list"
+#~ msgstr "Profil Liste"
+
+#, fuzzy
+#~ msgid "Profile"
+#~ msgstr "Profil"
+
+#, fuzzy
+#~ msgid "Ready"
+#~ msgstr "Protokoll lesen"
+
+#, fuzzy
+#~ msgid "Register computer '%s'"
+#~ msgstr "Computer entfernen"
+
+#, fuzzy
+#~ msgid "Register profile '%s'"
+#~ msgstr "Zeige Inhalt von Profil '%s'"
+
+#, fuzzy
+#~ msgid "Registry tab for a computer"
+#~ msgstr "Computer entfernen"
+
+#, fuzzy
+#~ msgid "Registry tab for a computer in a group"
+#~ msgstr "Computers aus Computer Gruppe entfernen"
+
+#, fuzzy
+#~ msgid "Remove a service from a target"
+#~ msgstr "Computers aus Computer Gruppe entfernen"
+
+#, fuzzy
+#~ msgid "Remove from boot menu"
+#~ msgstr "Computer entfernen"
+
+#, fuzzy
+#~ msgid "Remove service"
+#~ msgstr "Computer entfernen"
+
+#, fuzzy
+#~ msgid "Restoration"
+#~ msgstr "Ergebnis Profil-Erstellung"
+
+#, fuzzy
+#~ msgid "Secure control on a group of computers"
+#~ msgstr "Computer Gruppe bereitstellen"
+
+#, fuzzy
+#~ msgid "Secure control on computer"
+#~ msgstr "Computer Gruppe bereitstellen"
+
+#, fuzzy
+#~ msgid "Select the directory you want for this package"
+#~ msgstr "Wählen Sie die gewünschte Datei zu importieren"
+
+#, fuzzy
+#~ msgid "Select this hard disk"
+#~ msgstr "Dieses Profil löschen"
+
+#, fuzzy
+#~ msgid "SmbType"
+#~ msgstr "Typ"
+
+#, fuzzy
+#~ msgid "Software list"
+#~ msgstr "Profil Liste"
+
+#, fuzzy
+#~ msgid "Software tab for a computer"
+#~ msgstr "Computer Gruppe bereitstellen"
+
+#, fuzzy
+#~ msgid "Software tab for a computer in a group"
+#~ msgstr "Computers aus Computer Gruppe entfernen"
+
+#, fuzzy
+#~ msgid "Software tab for a group"
+#~ msgstr "Softwareverteilung über diese Gruppe"
+
+#, fuzzy
+#~ msgid "Sound list"
+#~ msgstr "Gruppenliste"
+
+#, fuzzy
+#~ msgid "Start action on this group"
+#~ msgstr "Softwareverteilung über diese Gruppe"
+
+#, fuzzy
+#~ msgid "Start download from computer %s"
+#~ msgstr "Computer Gruppe bereitstellen"
+
+#, fuzzy
+#~ msgid "Stop %s %s on this group"
+#~ msgstr "Bestand in dieser Gruppe"
+
+#, fuzzy
+#~ msgid "Take control of a computer"
+#~ msgstr "Computer Gruppe speichern"
+
+#, fuzzy
+#~ msgid "Take control of this computer"
+#~ msgstr "Computer Gruppe speichern"
+
+#, fuzzy
+#~ msgid "The registering in the imaging server has failed."
+#~ msgstr "Wählen Sie die Imaging-Server für dieses Profil."
+
+#, fuzzy
+#~ msgid "WOL request has been sent"
+#~ msgstr "Dieser Antrag wurde als %s gespeichert (id =%s)"
+
+#, fuzzy
+#~ msgid "Workgroup"
+#~ msgstr "Gruppe"
+
+#, fuzzy
+#~ msgid "boot service from profile"
+#~ msgstr "die statische Profil"
+
+#, fuzzy
+#~ msgid "computers failed to deploy"
+#~ msgstr "Computer Profil Editor"
+
+#, fuzzy
+#~ msgid "computers stopped"
+#~ msgstr "Computer Gruppen Editor"
+
+#, fuzzy
+#~ msgid "computers successfully deployed"
+#~ msgstr "Gruppe erfolgreich erstellt"
+
+#, fuzzy
+#~ msgid "deleted"
+#~ msgstr "Löschen"
+
+#, fuzzy
+#~ msgid "hdd"
+#~ msgstr "Hinzufügen"
+
+#, fuzzy
+#~ msgid "location"
+#~ msgstr "Gruppe erstellen"
+
+#, fuzzy
+#~ msgid "logs list"
+#~ msgstr "Profil Liste"
+
+#, fuzzy
+#~ msgid "master from the profile"
+#~ msgstr "Verteile dieses Profil"
+
+#, fuzzy
+#~ msgid "the state list"
+#~ msgstr "die statische Profil"
+
+#, fuzzy
+#~ msgid "yes"
+#~ msgstr "Ja"
