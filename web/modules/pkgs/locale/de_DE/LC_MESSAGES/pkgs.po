@@ -3,185 +3,190 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-22 18:27+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"POT-Creation-Date: 2010-08-08 06:53+0200\n"
+"PO-Revision-Date: 2010-08-08 07:45+0100\n"
+"Last-Translator: Mario Fetka <mario.fetka@gmail.com>\n"
+"Language-Team: Mario Fetka <mario.fetka@gmail.com>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: German\n"
+"X-Poedit-Country: AUSTRIA\n"
+"X-Poedit-SourceCharset: utf-8\n"
 
-#: web/modules/pkgs/pkgs/edit.php:78 web/modules/pkgs/pkgs/localSidebar.php:28
+#: web/modules/pkgs/pkgs/localSidebar.php:28
+#: web/modules/pkgs/pkgs/edit.php:78
 #: web/modules/pkgs/infoPackage.inc.php:44
 msgid "Add a package"
-msgstr ""
+msgstr "Hinzufügen eines Pakets"
 
 #: web/modules/pkgs/pkgs/associate_files.php:115
 msgid "Associate"
-msgstr ""
+msgstr "Assoziieren"
 
 #: web/modules/pkgs/pkgs/edit.php:177
 msgid "Associate files"
-msgstr ""
+msgstr "Dateien Assoziieren"
 
 #: web/modules/pkgs/infoPackage.inc.php:49
 msgid "Associate files to a package"
-msgstr ""
+msgstr "Dateien zu einem Paket Assoziieren"
 
 #: web/modules/pkgs/pkgs/associate_files.php:74
 #, php-format
 msgid "Associate files to package <b>%s (%s)</b>"
-msgstr ""
+msgstr "Dateien Assoziieren in Paket <b>%s (%s)</b>"
 
 #: web/modules/pkgs/pkgs/ajaxPendingPackageList.php:52
 msgid "Associate package"
-msgstr ""
+msgstr "Paket Assoziieren"
 
 #: web/modules/pkgs/pkgs/edit.php:138
 msgid "Command : "
-msgstr ""
+msgstr "Command:"
 
 #: web/modules/pkgs/pkgs/edit.php:138
 msgid "Command's name : "
-msgstr ""
+msgstr "Command Name:"
 
-#: web/modules/pkgs/pkgs/ajaxPackageList.php:79
 #: web/modules/pkgs/pkgs/ajaxPendingPackageList.php:79
+#: web/modules/pkgs/pkgs/ajaxPackageList.php:79
 #: web/modules/pkgs/infoPackage.inc.php:59
 msgid "Delete a package"
-msgstr ""
+msgstr "Paket löschen"
 
 #: web/modules/pkgs/pkgs/remove.php:42
 msgid "Delete this package"
-msgstr ""
+msgstr "dieses Paket löschen"
 
 #: web/modules/pkgs/pkgs/edit.php:134
 msgid "Description"
-msgstr ""
+msgstr "Beschreibung"
 
-#: web/modules/pkgs/pkgs/ajaxPackageList.php:70
 #: web/modules/pkgs/pkgs/ajaxPendingPackageList.php:70
+#: web/modules/pkgs/pkgs/ajaxPackageList.php:70
 msgid "Descriptions"
-msgstr ""
+msgstr "Beschreibungen"
 
-#: web/modules/pkgs/pkgs/edit.php:95
 #: web/modules/pkgs/pkgs/ajaxPackageList.php:78
+#: web/modules/pkgs/pkgs/edit.php:95
 #: web/modules/pkgs/infoPackage.inc.php:46
 msgid "Edit a package"
-msgstr ""
+msgstr "Edit einem Paket"
 
 #: web/modules/pkgs/pkgs/associate_files.php:67
 msgid "Failed to associate files"
-msgstr ""
+msgstr "Dateiassoziierung fehlgeschlagen"
 
 #: web/modules/pkgs/pkgs/associate_files.php:64
 #, php-format
 msgid "Failed to associate files%s"
-msgstr ""
+msgstr "Dateiassoziierung fehlgeschlagen %s"
 
 #: web/modules/pkgs/pkgs/associate_files.php:57
 #, php-format
 msgid "Files successfully associated with package <b>%s (%s)</b>%s"
-msgstr ""
+msgstr "Dateien erfolgreich Verbinden mit Paket <b>t%s (%s)</b> %s"
 
 #: web/modules/pkgs/pkgs/index.php:45
 #: web/modules/pkgs/pkgs/ajaxPackageList.php:55
 #, php-format
 msgid "MMC failed to contact package server %s."
-msgstr ""
+msgstr "MMC konnte sich nicht mit dem Paket-Server %s verbinden"
 
-#: web/modules/pkgs/pkgs/ajaxPackageList.php:68
 #: web/modules/pkgs/pkgs/ajaxPendingPackageList.php:68
+#: web/modules/pkgs/pkgs/ajaxPackageList.php:68
 msgid "Names"
-msgstr ""
+msgstr "Namen"
 
 #: web/modules/pkgs/pkgs/edit.php:146
 msgid "Need a reboot ?"
-msgstr ""
+msgstr "Braucht einen Neustart?"
 
 #: web/modules/pkgs/pkgs/edit.php:121
 msgid "Package API"
-msgstr ""
+msgstr "Paket API"
 
 #: web/modules/pkgs/pkgs/edit.php:70
 msgid "Package failed to save"
-msgstr ""
+msgstr "Paket speicher fehlgeschlagen"
 
 #: web/modules/pkgs/pkgs/edit.php:132
 msgid "Package label"
-msgstr ""
+msgstr "Paket Beschriftung"
 
 #: web/modules/pkgs/pkgs/ajaxPackageList.php:71
 msgid "Package size"
-msgstr ""
+msgstr "Paket Größe"
 
 #: web/modules/pkgs/pkgs/edit.php:60
 msgid "Package successfully edited"
-msgstr ""
+msgstr "Paket erfolgreich bearbeitet"
 
 #: web/modules/pkgs/pkgs/edit.php:133
 msgid "Package version"
-msgstr ""
+msgstr "Paket Version"
 
 #: web/modules/pkgs/infoPackage.inc.php:32
 #: web/modules/pkgs/infoPackage.inc.php:38
 msgid "Packages"
-msgstr ""
+msgstr "Pakete"
 
 #: web/modules/pkgs/pkgs/index.php:29
 #: web/modules/pkgs/pkgs/localSidebar.php:27
 msgid "Packages list"
-msgstr ""
+msgstr "Pakete Liste"
 
-#: web/modules/pkgs/pkgs/localSidebar.php:29
 #: web/modules/pkgs/pkgs/pending.php:29
+#: web/modules/pkgs/pkgs/localSidebar.php:29
 msgid "Pending packages list"
-msgstr ""
+msgstr "noch nicht erledigt Pakete Liste"
 
 #: web/modules/pkgs/pkgs/index.php:53
 #: web/modules/pkgs/pkgs/ajaxPackageList.php:65
 msgid "Please contact your administrator."
-msgstr ""
+msgstr "Bitte wenden Sie sich an Ihren Administrator."
 
 #: web/modules/pkgs/infoPackage.inc.php:52
 msgid "See pending packages"
-msgstr ""
+msgstr "noch nicht erledigt Pakete anzeigen"
 
 #: web/modules/pkgs/pkgs/associate_files.php:94
 msgid "Select the directory you want for this package"
-msgstr ""
+msgstr "Wählen Sie das gewünschte Verzeichnis für dieses Paket"
 
 #: web/modules/pkgs/infoPackage.inc.php:42
 msgid "Show all packages"
-msgstr ""
+msgstr "Alle Pakete anzeigen"
 
 #: web/modules/pkgs/infoPackage.inc.php:55
 msgid "Show mirror status"
-msgstr ""
+msgstr "Spiegel-Status anzeigen"
 
 #: web/modules/pkgs/pkgs/ajaxPendingPackageList.php:78
 msgid "Show mirrors"
-msgstr ""
+msgstr "Spiegel anzeigen"
 
 #: web/modules/pkgs/pkgs/rsync.php:32
 #, php-format
 msgid "The package %s (%s) is not associated"
-msgstr ""
+msgstr "Das Paket %s (%s) ist nicht verbunden"
 
 #: web/modules/pkgs/pkgs/remove.php:34
 msgid "The package failed to delete"
-msgstr ""
+msgstr "Das Paket konnte nicht gelöscht werden"
 
 #: web/modules/pkgs/pkgs/remove.php:33
 msgid "The package has been deleted."
-msgstr ""
+msgstr "Das Paket wurde gelöscht."
 
-#: web/modules/pkgs/pkgs/ajaxPackageList.php:69
 #: web/modules/pkgs/pkgs/ajaxPendingPackageList.php:69
+#: web/modules/pkgs/pkgs/ajaxPackageList.php:69
 msgid "Versions"
-msgstr ""
+msgstr "Versionen"
+
