@@ -3,214 +3,216 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-18 11:49+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"POT-Creation-Date: 2010-08-08 06:53+0200\n"
+"PO-Revision-Date: 2010-04-12 13:33+0100\n"
+"Last-Translator: Mario Fetka <mario.fetka@gmail.com>\n"
+"Language-Team: mario.fetka@gmail.com <mario.fetka@gmail.com>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: German\n"
+"X-Poedit-Country: AUSTRIA\n"
 
 #: web/modules/glpi/glpi/tabs.php:49
 #, php-format
 msgid "%s's inventory (%s)"
-msgstr ""
+msgstr "%s's Inventar (%s)"
 
 #: web/modules/glpi/glpi/view_hardware.php:54
 msgid "<br/>license number : "
-msgstr ""
+msgstr "<br/>Lizenz-Nummer:"
 
 #: web/modules/glpi/glpi/tabs.php:56
 msgid "Controller"
-msgstr ""
+msgstr "Controller"
 
 #: web/modules/glpi/infoPackage.inc.php:35
 msgid "Display locations"
-msgstr ""
+msgstr "Display Standorte"
 
 #: web/modules/glpi/infoPackage.inc.php:55
 #: web/modules/glpi/infoPackage.inc.php:70
 msgid "GLPI controller tab"
-msgstr ""
+msgstr "Glpi Controller Registerkarte"
 
 #: web/modules/glpi/infoPackage.inc.php:49
 #: web/modules/glpi/infoPackage.inc.php:64
 msgid "GLPI hardware tab"
-msgstr ""
+msgstr "Glpi Registerkarte \"Hardware\""
 
 #: web/modules/glpi/infoPackage.inc.php:52
 #: web/modules/glpi/infoPackage.inc.php:67
 msgid "GLPI network tab"
-msgstr ""
+msgstr "Glpi Registerkarte \"Netzwerk\""
 
 #: web/modules/glpi/glpi/tabs.php:52
 msgid "Hardware"
-msgstr ""
+msgstr "Hardware"
 
 #: web/modules/glpi/infoPackage.inc.php:45
 msgid "Inventory (GLPI) on a groups of machines"
-msgstr ""
+msgstr "Inventar (glpi) der Gruppen von Maschinen"
 
 #: web/modules/glpi/infoPackage.inc.php:60
 msgid "Inventory (GLPI) on machine"
-msgstr ""
+msgstr "Inventar (glpi) der Maschine"
 
 #: web/modules/glpi/glpi/tabs.php:56
 msgid "Network"
-msgstr ""
+msgstr "Netzwerk"
 
 #: web/modules/glpi/glpi/view_hardware.php:70
 msgid "Properties"
-msgstr ""
+msgstr "Eigenschaften"
 
 #: web/modules/glpi/glpi/view_hardware.php:71
 msgid "Value"
-msgstr ""
+msgstr "Wert"
 
 #: web/modules/glpi/glpi/view_part.php:87
 msgid "bandwidth"
-msgstr ""
+msgstr "Bandbreite"
 
 #: web/modules/glpi/glpi/view_part.php:90
 msgid "comment"
-msgstr ""
+msgstr "Kommentar"
 
-#: web/modules/glpi/glpi/view_part.php:77
 #: web/modules/glpi/glpi/view_hardware.php:77
+#: web/modules/glpi/glpi/view_part.php:77
 msgid "comments"
-msgstr ""
+msgstr "Bemerkungen"
 
 #: web/modules/glpi/glpi/view_hardware.php:88
 msgid "contact"
-msgstr ""
+msgstr "Kontakt"
 
 #: web/modules/glpi/glpi/view_part.php:84
 msgid "designation"
-msgstr ""
+msgstr "Bezeichnung"
 
 #: web/modules/glpi/glpi/view_part.php:96
 msgid "drive"
-msgstr ""
+msgstr "Laufwerk"
 
 #: web/modules/glpi/glpi/view_hardware.php:89
 msgid "entity"
-msgstr ""
+msgstr "Einheit"
 
 #: web/modules/glpi/glpi/view_part.php:86
 msgid "frequence"
-msgstr ""
+msgstr "frequence"
 
 #: web/modules/glpi/glpi/view_part.php:81
 msgid "gateway"
-msgstr ""
+msgstr "Gateway"
 
 #: web/modules/glpi/glpi/view_part.php:97
 msgid "gfxcard"
-msgstr ""
+msgstr "Grafikkarte"
 
 #: web/modules/glpi/glpi/view_part.php:94
 msgid "hdd"
-msgstr ""
+msgstr "Festplatte"
 
 #: web/modules/glpi/glpi/view_part.php:95
 msgid "iface"
-msgstr ""
+msgstr "iface"
 
 #: web/modules/glpi/glpi/view_part.php:78
 msgid "ifaddr"
-msgstr ""
+msgstr "ifaddr"
 
 #: web/modules/glpi/glpi/view_part.php:79
 msgid "ifmac"
-msgstr ""
+msgstr "ifmac"
 
 #: web/modules/glpi/glpi/view_part.php:89
 msgid "interface"
-msgstr ""
+msgstr "Schnittstelle"
 
 #: web/modules/glpi/glpi/view_part.php:88
 msgid "is_writer"
-msgstr ""
+msgstr "is_writer"
 
 #: web/modules/glpi/glpi/view_hardware.php:54
 msgid "license id : "
-msgstr ""
+msgstr "Lizenz-ID:"
 
 #: web/modules/glpi/glpi/view_hardware.php:85
 msgid "location"
-msgstr ""
+msgstr "Standort"
 
 #: web/modules/glpi/glpi/view_hardware.php:86
 msgid "model"
-msgstr ""
+msgstr "Modell"
 
-#: web/modules/glpi/glpi/view_part.php:76
 #: web/modules/glpi/glpi/view_hardware.php:76
+#: web/modules/glpi/glpi/view_part.php:76
 msgid "name"
-msgstr ""
+msgstr "Name"
 
 #: web/modules/glpi/glpi/view_part.php:80
 msgid "netmask"
-msgstr ""
+msgstr "Netzmaske"
 
 #: web/modules/glpi/glpi/view_hardware.php:79
 msgid "os"
-msgstr ""
+msgstr "os"
 
 #: web/modules/glpi/glpi/view_hardware.php:84
 msgid "os_license"
-msgstr ""
+msgstr "os_license"
 
 #: web/modules/glpi/glpi/view_hardware.php:83
 msgid "os_license_id"
-msgstr ""
+msgstr "os_license_id"
 
 #: web/modules/glpi/glpi/view_hardware.php:82
 msgid "os_license_number"
-msgstr ""
+msgstr "os_license_number"
 
 #: web/modules/glpi/glpi/view_hardware.php:81
 msgid "os_sp"
-msgstr ""
+msgstr "os_sp"
 
 #: web/modules/glpi/glpi/view_hardware.php:80
 msgid "os_version"
-msgstr ""
+msgstr "os_version"
 
 #: web/modules/glpi/glpi/view_part.php:99
 msgid "pci"
-msgstr ""
+msgstr "PCI"
 
 #: web/modules/glpi/glpi/view_part.php:92
 msgid "processor"
-msgstr ""
+msgstr "Prozessor"
 
 #: web/modules/glpi/glpi/view_part.php:93
 msgid "ram"
-msgstr ""
+msgstr "Ram"
 
 #: web/modules/glpi/glpi/view_hardware.php:78
 msgid "serial"
-msgstr ""
+msgstr "seriell"
 
 #: web/modules/glpi/glpi/view_part.php:98
 msgid "sndcard"
-msgstr ""
+msgstr "Soundkarte"
 
 #: web/modules/glpi/glpi/view_part.php:85
 msgid "specif_default"
-msgstr ""
+msgstr "specif_default"
 
 #: web/modules/glpi/glpi/view_part.php:82
 msgid "subnet"
-msgstr ""
+msgstr "Subnetz"
 
-#: web/modules/glpi/glpi/view_part.php:83
 #: web/modules/glpi/glpi/view_hardware.php:87
+#: web/modules/glpi/glpi/view_part.php:83
 msgid "type"
-msgstr ""
+msgstr "Typ"
