@@ -637,6 +637,8 @@ class ImagingImageItem(ImagingItem):
                     f = file(postinst, 'w+')
                     f.write('#!/bin/sh\n')
                     f.write('\n')
+                    f.write('. /opt/lib/libpostinst.sh')
+                    f.write('\n')
                     f.write('echo "==> postinstall script #%d : %s"\n' % (order, script['name']))
                     f.write('set -v\n')
                     f.write('\n')
