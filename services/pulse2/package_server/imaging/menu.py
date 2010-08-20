@@ -24,7 +24,6 @@
 """
 
 import re
-import os.path
 import os
 import logging
 import time
@@ -33,6 +32,7 @@ import stat
 
 import pulse2.utils
 from pulse2.package_server.config import P2PServerCP as PackageServerConfig
+
 
 def isMenuStructure(menu):
     """
@@ -64,6 +64,7 @@ def isMenuStructure(menu):
         logger.error("Menu is not a dict")
         ret = False
     return ret
+
 
 class ImagingDefaultMenuBuilder:
 
@@ -140,10 +141,10 @@ class ImagingMenu:
     """
 
     DEFAULT_MENU_FILE = 'default'
-    LANG_CODE = { 1 : 'C',
-                  2 : 'fr_FR' }
-    KEYB_CODE = { 1 : None,
-                  2 : 'fr' }
+    LANG_CODE = {1 : 'C',
+                 2 : 'fr_FR'}
+    KEYB_CODE = {1 : None,
+                 2 : 'fr'}
 
     def __init__(self, config, macaddress = None):
         """
@@ -153,34 +154,34 @@ class ImagingMenu:
         @param macaddress: the client MAC Address
         """
         self.logger = logging.getLogger('imaging')
-        self.config = config # the server configuration
+        self.config = config  # the server configuration
         if macaddress:
             assert pulse2.utils.isMACAddress(macaddress)
-        self.mac = macaddress # the client MAC Address
+        self.mac = macaddress  # the client MAC Address
 
         # menu items
         self.menuitems = {}
-        self.timeout = 0 # the menu timeout
-        self.default_item = 0 # the menu default entry
-        self.default_item_wol = 0 # the menu default entry on WOL
-        self.splashimage = None # the menu splashimage
+        self.timeout = 0  # the menu timeout
+        self.default_item = 0  # the menu default entry
+        self.default_item_wol = 0  # the menu default entry on WOL
+        self.splashimage = None  # the menu splashimage
         self.message = None
-        self.colors = { # menu colors
+        self.colors = {  # menu colors
             'normal': {'fg': 7, 'bg': 1},
             'highlight': {'fg': 15, 'bg': 3}}
-        self.keyboard = None # the menu keymap, None is C
-        self.hidden = False # do we hide the menu ?
-        self.language = 'C' # Menu language
-        self.bootcli = False # command line access at boot time ?
-        self.disklesscli = False # command line access at diskless time ?
-        self.ntblfix = False # NT Bootloader fix
-        self.ethercard = 0 # use this ethernet iface to backup / restore stuff
-        self.dont_check_disk_size = False # check that the target disk is large enough
+        self.keyboard = None  # the menu keymap, None is C
+        self.hidden = False  # do we hide the menu ?
+        self.language = 'C'  # Menu language
+        self.bootcli = False  # command line access at boot time ?
+        self.disklesscli = False  # command line access at diskless time ?
+        self.ntblfix = False  # NT Bootloader fix
+        self.ethercard = 0  # use this ethernet iface to backup / restore stuff
+        self.dont_check_disk_size = False  # check that the target disk is large enough
 
-        self.diskless_opts = list() # revo* options put on diskless command line
-        self.kernel_opts = list(['quiet']) # kernel options put on diskless command line
-        self.protocol = 'nfs' # by default
-        self.rawmode = '' # raw mode backup
+        self.diskless_opts = list()  # revo* options put on diskless command line
+        self.kernel_opts = list(['quiet'])  # kernel options put on diskless command line
+        self.protocol = 'nfs'  # by default
+        self.rawmode = ''  # raw mode backup
 
     def _applyReplacement(self, string, condition = 'global'):
         """
@@ -309,7 +310,7 @@ class ImagingMenu:
         if os.path.exists(filename):
             try:
                 os.rename(filename, backupname)
-            except Exception, e: # can make a backup : give up !
+            except Exception, e:  # can make a backup : give up !
                 self.logger.error("While backuping boot menu %s as %s : %s" % (filename, backupname, e))
                 return False
 
@@ -445,6 +446,9 @@ class ImagingMenu:
         self.splashimage = value
 
     def setMessage(self, value):
+        """
+        Set the warn message
+        """
         if type(value) == str:
             value = value.decode('utf-8')
         assert(type(value) == unicode)
@@ -480,6 +484,7 @@ class ImagingMenu:
         assert(type(flag) == bool)
         self.hidden = flag
 
+
 class ImagingItem:
 
     """
@@ -493,8 +498,8 @@ class ImagingItem:
         """
         self.logger = logging.getLogger('imaging')
         self._convertEntry(entry)
-        self.title = entry['name'] # the item title
-        self.desc = entry['desc'] # the item desc
+        self.title = entry['name']  # the item title
+        self.desc = entry['desc']  # the item desc
         assert(type(self.title) == unicode)
         assert(type(self.desc) == unicode)
         self.uuid = None
@@ -525,6 +530,12 @@ class ImagingItem:
         """
         pass
 
+    def getLogger(self):
+        """
+        return internal logger
+        """
+        return self.logger
+
 
 class ImagingBootServiceItem(ImagingItem):
 
@@ -533,8 +544,11 @@ class ImagingBootServiceItem(ImagingItem):
     """
 
     def __init__(self, entry):
+        """
+        @param entry : a ImagingItem
+        """
         ImagingItem.__init__(self, entry)
-        self.value = entry['value'] # the GRUB command line
+        self.value = entry['value']  # the GRUB command line
         assert(type(self.value) == unicode)
 
     def getEntry(self, protocol, network = True):
@@ -555,13 +569,11 @@ class ImagingImageItem(ImagingItem):
     Hold an imaging menu item for a image to restore
     """
 
-
     CMDLINE = u"kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## ##PULSE2_DISKLESS_OPTS## revosavedir=##PULSE2_MASTERS_DIR## revoinfodir=##PULSE2_COMPUTERS_DIR## revooptdir=##PULSE2_POSTINST_DIR## revobase=##PULSE2_BASE_DIR## ##PROTOCOL## revopost revomac=##MAC## revoimage=##PULSE2_IMAGE_UUID## \ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##\n"
     PROTOCOL = {
         'nfs'   : 'revorestorenfs',
         'tftp'  : '',
-        'mtftp' : 'revorestoremtftp'
-        }
+        'mtftp' : 'revorestoremtftp'}
 
     POSTINST = '%02d_postinst'
     POSTINSTDIR = 'postinst.d'
@@ -684,7 +696,7 @@ def changeDefaultMenuItem(macaddress, value):
         backupname = "%s.backup" % filename
         try:
             os.rename(filename, backupname)
-        except OSError, e: # can make a backup : give up !
+        except OSError, e:  # can make a backup : give up !
             logger.error("While backuping boot menu %s as %s : %s"
                          % (filename, backupname, e))
             return False
