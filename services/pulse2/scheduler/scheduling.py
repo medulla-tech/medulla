@@ -62,6 +62,7 @@ from pulse2.scheduler.tracking.proxy import LocalProxiesUsageTracking
 from pulse2.scheduler.tracking.commands import CommandsOnHostTracking
 from pulse2.scheduler.tracking.wol import WOLTracking
 from pulse2.scheduler.tracking.preempt import Pulse2Preempt
+from pulse2.utils import extractExceptionMessage
 
 ToBeStarted = Pulse2Preempt()
 handle_deconnect()
@@ -885,7 +886,7 @@ def preemptTasks(scheduler_name):
             deffered = twisted.internet.defer.Deferred()
             deffered.addCallback(pulse2.scheduler.scheduling.runCommand)
             deffered.addErrback(MscDatabase().antiPoolOverflowErrorback)
-            deffered.addErrback(lambda reason: logging.getLogger().error('scheduler "%s": PREEMPT/START: While running command %s : %s'  % (SchedulerConfig().name, command, reason.value)))
+            deffered.addErrback(lambda reason: logging.getLogger().error('scheduler "%s": PREEMPT/START: While running command %s : %s'  % (SchedulerConfig().name, command, pulse2.utils.extractExceptionMessage(reason))))
             deffered.callback(command)
             deffereds.append(deffered)
 
@@ -945,7 +946,7 @@ def cleanStatesAllRunningIds(ids):
     deffered_list = twisted.internet.defer.DeferredList(deffereds)
     deffered_list.addCallbacks(
         __treatBadStateCommandsOnHost,
-        lambda reason: logging.getLogger().error('scheduler "%s": FUT: error %s'  % (SchedulerConfig().name, reason.value))
+        lambda reason: logging.getLogger().error('scheduler "%s": FUT: error %s'  % (SchedulerConfig().name, pulse2.utils.extractExceptionMessage(reason)))
     )
     return deffered_list
 
@@ -1002,7 +1003,7 @@ def getRunningCommandsOnHostFromLaunchers(scheduler_name):
     deffered_list = twisted.internet.defer.DeferredList(deffereds)
     deffered_list.addCallbacks(
         __treatRunningCommandsOnHostFromLaunchers,
-        lambda reason: logging.getLogger().error('scheduler "%s": FPT: error %s'  % (SchedulerConfig().name, reason.value))
+        lambda reason: logging.getLogger().error('scheduler "%s": FPT: error %s'  % (SchedulerConfig().name, pulse2.utils.extractExceptionMessage(reason)))
     )
     return deffered_list
 
@@ -2460,27 +2461,11 @@ def runGiveUpPhase(myCommandOnHostID):
     return None
 
 def gotErrorInError(reason, myCommandOnHostID):
-    if hasattr(reason, "value"):
-        message = reason.value
-    elif hasattr(reason, "__repr__"):
-        message = repr(reason)
-    elif hasattr(reason, "__str__"):
-        message = str(reason)
-    else:
-        message = "unknown failure"
-    logging.getLogger().error("command_on_host #%s: got an error within an error: %s" % (myCommandOnHostID, message))
+    logging.getLogger().error("command_on_host #%s: got an error within an error: %s" % (myCommandOnHostID, pulse2.utils.extractExceptionMessage(reason)))
     return runGiveUpPhase(myCommandOnHostID)
 
 def gotErrorInResult(reason, myCommandOnHostID):
-    if hasattr(reason, "value"):
-        message = reason.value
-    elif hasattr(reason, "__repr__"):
-        message = repr(reason)
-    elif hasattr(reason, "__str__"):
-        message = str(reason)
-    else:
-        message = "unknown failure"
-    logging.getLogger().error("command_on_host #%s: got an error within an result: %s" % (myCommandOnHostID, message))
+    logging.getLogger().error("command_on_host #%s: got an error within an result: %s" % (myCommandOnHostID, pulse2.utils.extractExceptionMessage(reason)))
     return runGiveUpPhase(myCommandOnHostID)
 
 def updateHistory(id, state = None, error_code = PULSE2_SUCCESS_ERROR, stdout = '', stderr = ''):
