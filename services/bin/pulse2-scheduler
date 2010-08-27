@@ -155,22 +155,32 @@ def awakeAnalyseCommands():
     logging.getLogger().info('scheduler "%s": ANALYSE: Analysing database' % (SchedulerConfig().name))
     # as startAllCommands() may crash before giving a deferred (MySQL down for example),
     # we build a deferred chain
-    pulse2.scheduler.scheduling.startAnalyseCommands(SchedulerConfig().name
-    ).addErrback(MscDatabase().antiPoolOverflowErrorback # self-explicit
+    try:
+        d = pulse2.scheduler.scheduling.startAnalyseCommands(SchedulerConfig().name)
+    except Exception, reason:
+        logging.getLogger().error('scheduler "%s": ANALYSE: Before analysing database : %s' % (SchedulerConfig().name, pulse2.utils.extractExceptionMessage(reason)))
+        scheduleAnalyseCommands()
+        return
+    d.addErrback(MscDatabase().antiPoolOverflowErrorback # self-explicit
     ).addCallbacks( # deferred handling
         lambda result: logging.getLogger().info('scheduler "%s": ANALYSE: Finished analysing database' % (SchedulerConfig().name)),
-        lambda reason: logging.getLogger().error('scheduler "%s": ANALYSE: While analysing database : %s'  % (SchedulerConfig().name, pulse2.utils.extractExceptionMessage(reason)))
+        lambda reason: logging.getLogger().error('scheduler "%s": ANALYSE: While analysing database : %s' % (SchedulerConfig().name, pulse2.utils.extractExceptionMessage(reason)))
     ).addBoth( # loop scheduling
         lambda nothing : scheduleAnalyseCommands() # lambda used to "silently" intercept return arg
     )
 
 def awakeStartCommands():
     logging.getLogger().info('scheduler "%s": START: Analysing database' % (SchedulerConfig().name))
-    pulse2.scheduler.scheduling.startAllCommands(SchedulerConfig().name
-    ).addErrback(MscDatabase().antiPoolOverflowErrorback # self-explicit
+    try:
+        d = pulse2.scheduler.scheduling.startAllCommands(SchedulerConfig().name)
+    except Exception, reason:
+        logging.getLogger().error('scheduler "%s": START: Before analysing database : %s' % (SchedulerConfig().name, pulse2.utils.extractExceptionMessage(reason)))
+        scheduleStartCommands()
+        return
+    d.addErrback(MscDatabase().antiPoolOverflowErrorback # self-explicit
     ).addCallbacks( # deferred handling
         lambda result: logging.getLogger().info('scheduler "%s": START: Finished analysing database' % (SchedulerConfig().name)),
-        lambda reason: logging.getLogger().error('scheduler "%s": START: While analysing database : %s'  % (SchedulerConfig().name, pulse2.utils.extractExceptionMessage(reason)))
+        lambda reason: logging.getLogger().error('scheduler "%s": START: While analysing database : %s' % (SchedulerConfig().name, pulse2.utils.extractExceptionMessage(reason)))
     ).addBoth( # loop scheduling
         lambda nothing : scheduleStartCommands() # lambda used to "silently" intercept return arg
     )
@@ -179,11 +189,16 @@ def awakeStopCommands():
     logging.getLogger().info('scheduler "%s": STOP: Analysing database' % (SchedulerConfig().name))
     # as stopElapsedCommands() may crash before giving a deferred (MySQL down for example),
     # we build a deferred chain
-    pulse2.scheduler.scheduling.stopElapsedCommands(SchedulerConfig().name
-    ).addErrback(MscDatabase().antiPoolOverflowErrorback # self-explicit
+    try:
+        d = pulse2.scheduler.scheduling.stopElapsedCommands(SchedulerConfig().name)
+    except Exception, reason:
+        logging.getLogger().error('scheduler "%s": STOP: Before analysing database : %s' % (SchedulerConfig().name, pulse2.utils.extractExceptionMessage(reason)))
+        scheduleStopCommands()
+        return
+    d.addErrback(MscDatabase().antiPoolOverflowErrorback # self-explicit
     ).addCallbacks( # deferred handling
         lambda result: logging.getLogger().info('scheduler "%s": STOP: Finished analysing database' % (SchedulerConfig().name)),
-        lambda reason: logging.getLogger().error('scheduler "%s": STOP: While analysing database : %s'  % (SchedulerConfig().name, pulse2.utils.extractExceptionMessage(reason)))
+        lambda reason: logging.getLogger().error('scheduler "%s": STOP: While analysing database : %s' % (SchedulerConfig().name, pulse2.utils.extractExceptionMessage(reason)))
     ).addBoth( # loop scheduling
         lambda nothing : scheduleStopCommands() # lambda used to "silently" intercept return arg
     )
@@ -192,11 +207,16 @@ def awakeFixUnprocessedTasks():
     logging.getLogger().info('scheduler %s: FUT: Analysing database' % (SchedulerConfig().name))
     # as cleanStates() may crash before giving a deferred (MySQL down for example),
     # we build a deferred chain
-    pulse2.scheduler.scheduling.fixUnprocessedTasks(SchedulerConfig().name
-    ).addErrback(MscDatabase().antiPoolOverflowErrorback # self-explicit
+    try:
+        d = pulse2.scheduler.scheduling.fixUnprocessedTasks(SchedulerConfig().name)
+    except Exception, reason:
+        logging.getLogger().error('scheduler "%s": FUT: Before analysing database : %s' % (SchedulerConfig().name, pulse2.utils.extractExceptionMessage(reason)))
+        scheduleFixUnprocessedTasks()
+        return
+    d.addErrback(MscDatabase().antiPoolOverflowErrorback # self-explicit
     ).addCallbacks( # deferred handling
         lambda result: logging.getLogger().info('scheduler "%s": FUT: Finished analysing database' % (SchedulerConfig().name)),
-        lambda reason: logging.getLogger().error('scheduler "%s": FUT: While analysing database : %s'  % (SchedulerConfig().name, pulse2.utils.extractExceptionMessage(reason)))
+        lambda reason: logging.getLogger().error('scheduler "%s": FUT: While analysing database : %s' % (SchedulerConfig().name, pulse2.utils.extractExceptionMessage(reason)))
     ).addBoth( # loop scheduling
         lambda nothing : scheduleFixUnprocessedTasks() # lambda used to "silently" intercept return arg
     )
@@ -205,18 +225,28 @@ def awakeFixProcessingTasks():
     logging.getLogger().info('scheduler %s: FPT: Analysing database' % (SchedulerConfig().name))
     # as cleanStates() may crash before giving a deferred (MySQL down for example),
     # we build a deferred chain
-    pulse2.scheduler.scheduling.fixProcessingTasks(SchedulerConfig().name
-    ).addErrback(MscDatabase().antiPoolOverflowErrorback # self-explicit
+    try:
+        d = pulse2.scheduler.scheduling.fixProcessingTasks(SchedulerConfig().name)
+    except Exception, reason:
+        logging.getLogger().error('scheduler "%s": FPT: Before analysing database : %s' % (SchedulerConfig().name, pulse2.utils.extractExceptionMessage(reason)))
+        scheduleFixProcessingTasks()
+        return
+    d.addErrback(MscDatabase().antiPoolOverflowErrorback # self-explicit
     ).addCallbacks( # deferred handling
         lambda result: logging.getLogger().info('scheduler "%s": FPT: Finished analysing database' % (SchedulerConfig().name)),
-        lambda reason: logging.getLogger().error('scheduler "%s": FPT: While analysing database : %s'  % (SchedulerConfig().name, pulse2.utils.extractExceptionMessage(reason)))
+        lambda reason: logging.getLogger().error('scheduler "%s": FPT: While analysing database : %s' % (SchedulerConfig().name, pulse2.utils.extractExceptionMessage(reason)))
     ).addBoth( # loop scheduling
         lambda nothing : scheduleFixProcessingTasks()
     )
 
 def awakePreemptStartedCommands():
-    pulse2.scheduler.scheduling.preemptTasks(SchedulerConfig().name
-    ).addErrback(MscDatabase().antiPoolOverflowErrorback # self-explicit
+    try:
+        d = pulse2.scheduler.scheduling.preemptTasks(SchedulerConfig().name)
+    except Exception, reason:
+        logging.getLogger().error('scheduler "%s": PREEMPT/START: Before preempting : %s'  % (SchedulerConfig().name, pulse2.utils.extractExceptionMessage(reason)))
+        schedulePreemptStartedCommands()
+        return
+    d.addErrback(MscDatabase().antiPoolOverflowErrorback # self-explicit
     # everything got commented out : logging is useless, it would burn space for nothing; see logging in preemptTasks
     #MDV/NR ).addCallbacks( # deferred handling
         #MDV/NR lambda result: logging.getLogger().info('scheduler "%s": PREEMPT/START: Finished preempting' % (SchedulerConfig().name)),
