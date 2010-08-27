@@ -59,7 +59,7 @@ from pulse2.scheduler.xmlrpc import SchedulerSite
 from pulse2.database.msc import MscDatabase
 from pulse2.scheduler.assign_algo import MGAssignAlgoManager
 from pulse2.scheduler.health import getHealth, checkStatus, startLoopTS, stopLoopTS, logLoopTS, preemptLoopTS
-from pulse2.utils import xmlrpcCleanup
+from pulse2.utils import xmlrpcCleanup, extractExceptionMessage
 
 import pulse2.xmlrpc
 
@@ -159,7 +159,7 @@ def awakeAnalyseCommands():
     ).addErrback(MscDatabase().antiPoolOverflowErrorback # self-explicit
     ).addCallbacks( # deferred handling
         lambda result: logging.getLogger().info('scheduler "%s": ANALYSE: Finished analysing database' % (SchedulerConfig().name)),
-        lambda reason: logging.getLogger().error('scheduler "%s": ANALYSE: While analysing database : %s'  % (SchedulerConfig().name, reason.value))
+        lambda reason: logging.getLogger().error('scheduler "%s": ANALYSE: While analysing database : %s'  % (SchedulerConfig().name, pulse2.utils.extractExceptionMessage(reason)))
     ).addBoth( # loop scheduling
         lambda nothing : scheduleAnalyseCommands() # lambda used to "silently" intercept return arg
     )
@@ -170,7 +170,7 @@ def awakeStartCommands():
     ).addErrback(MscDatabase().antiPoolOverflowErrorback # self-explicit
     ).addCallbacks( # deferred handling
         lambda result: logging.getLogger().info('scheduler "%s": START: Finished analysing database' % (SchedulerConfig().name)),
-        lambda reason: logging.getLogger().error('scheduler "%s": START: While analysing database : %s'  % (SchedulerConfig().name, reason.value))
+        lambda reason: logging.getLogger().error('scheduler "%s": START: While analysing database : %s'  % (SchedulerConfig().name, pulse2.utils.extractExceptionMessage(reason)))
     ).addBoth( # loop scheduling
         lambda nothing : scheduleStartCommands() # lambda used to "silently" intercept return arg
     )
@@ -183,7 +183,7 @@ def awakeStopCommands():
     ).addErrback(MscDatabase().antiPoolOverflowErrorback # self-explicit
     ).addCallbacks( # deferred handling
         lambda result: logging.getLogger().info('scheduler "%s": STOP: Finished analysing database' % (SchedulerConfig().name)),
-        lambda reason: logging.getLogger().error('scheduler "%s": STOP: While analysing database : %s'  % (SchedulerConfig().name, reason.value))
+        lambda reason: logging.getLogger().error('scheduler "%s": STOP: While analysing database : %s'  % (SchedulerConfig().name, pulse2.utils.extractExceptionMessage(reason)))
     ).addBoth( # loop scheduling
         lambda nothing : scheduleStopCommands() # lambda used to "silently" intercept return arg
     )
@@ -196,7 +196,7 @@ def awakeFixUnprocessedTasks():
     ).addErrback(MscDatabase().antiPoolOverflowErrorback # self-explicit
     ).addCallbacks( # deferred handling
         lambda result: logging.getLogger().info('scheduler "%s": FUT: Finished analysing database' % (SchedulerConfig().name)),
-        lambda reason: logging.getLogger().error('scheduler "%s": FUT: While analysing database : %s'  % (SchedulerConfig().name, reason.value))
+        lambda reason: logging.getLogger().error('scheduler "%s": FUT: While analysing database : %s'  % (SchedulerConfig().name, pulse2.utils.extractExceptionMessage(reason)))
     ).addBoth( # loop scheduling
         lambda nothing : scheduleFixUnprocessedTasks() # lambda used to "silently" intercept return arg
     )
@@ -209,7 +209,7 @@ def awakeFixProcessingTasks():
     ).addErrback(MscDatabase().antiPoolOverflowErrorback # self-explicit
     ).addCallbacks( # deferred handling
         lambda result: logging.getLogger().info('scheduler "%s": FPT: Finished analysing database' % (SchedulerConfig().name)),
-        lambda reason: logging.getLogger().error('scheduler "%s": FPT: While analysing database : %s'  % (SchedulerConfig().name, reason.value))
+        lambda reason: logging.getLogger().error('scheduler "%s": FPT: While analysing database : %s'  % (SchedulerConfig().name, pulse2.utils.extractExceptionMessage(reason)))
     ).addBoth( # loop scheduling
         lambda nothing : scheduleFixProcessingTasks()
     )
@@ -220,7 +220,7 @@ def awakePreemptStartedCommands():
     # everything got commented out : logging is useless, it would burn space for nothing; see logging in preemptTasks
     #MDV/NR ).addCallbacks( # deferred handling
         #MDV/NR lambda result: logging.getLogger().info('scheduler "%s": PREEMPT/START: Finished preempting' % (SchedulerConfig().name)),
-        #MDV/NR lambda reason: logging.getLogger().error('scheduler "%s": PREEMPT/START: While preempting : %s'  % (SchedulerConfig().name, reason.value))
+        #MDV/NR lambda reason: logging.getLogger().error('scheduler "%s": PREEMPT/START: While preempting : %s'  % (SchedulerConfig().name, pulse2.utils.extractExceptionMessage(reason)))
     ).addBoth( # loop scheduling
         lambda nothing : schedulePreemptStartedCommands() # lambda used to "silently" intercept return arg
     )
