@@ -21,6 +21,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+"""
+This is the scheduler core, where the magic happend
+Well, or at least try to ...
+"""
 # Big modules
 import logging
 import time
@@ -2456,11 +2460,27 @@ def runGiveUpPhase(myCommandOnHostID):
     return None
 
 def gotErrorInError(reason, myCommandOnHostID):
-    logging.getLogger().error("command_on_host #%s: got an error within an error: %s" % (myCommandOnHostID, reason.value))
+    if hasattr(reason, "value"):
+        message = reason.value
+    elif hasattr(reason, "__repr__"):
+        message = repr(reason)
+    elif hasattr(reason, "__str__"):
+        message = str(reason)
+    else:
+        message = "unknown failure"
+    logging.getLogger().error("command_on_host #%s: got an error within an error: %s" % (myCommandOnHostID, message))
     return runGiveUpPhase(myCommandOnHostID)
 
 def gotErrorInResult(reason, myCommandOnHostID):
-    logging.getLogger().error("command_on_host #%s: got an error within an result: %s" % (myCommandOnHostID, reason))
+    if hasattr(reason, "value"):
+        message = reason.value
+    elif hasattr(reason, "__repr__"):
+        message = repr(reason)
+    elif hasattr(reason, "__str__"):
+        message = str(reason)
+    else:
+        message = "unknown failure"
+    logging.getLogger().error("command_on_host #%s: got an error within an result: %s" % (myCommandOnHostID, message))
     return runGiveUpPhase(myCommandOnHostID)
 
 def updateHistory(id, state = None, error_code = PULSE2_SUCCESS_ERROR, stdout = '', stderr = ''):
