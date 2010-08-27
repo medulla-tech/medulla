@@ -277,6 +277,19 @@ def grepv(string, list):
     return [item for item in list if not expr.search(item)]
 
 
+def extractExceptionMessage(exception):
+    message = ''
+    if hasattr(exception, "value"):
+        message = exception.value
+    elif hasattr(exception, "__repr__"):
+        message = repr(exception)
+    elif hasattr(exception, "__str__"):
+        message = str(exception)
+    else:
+        message = "unknown exception encountered"
+    return message
+
+
 def whoami():
     return inspect.stack()[1][3]
 
