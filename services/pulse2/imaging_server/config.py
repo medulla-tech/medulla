@@ -60,7 +60,7 @@ class ImagingConfig(pulse2.utils.Singleton):
     pserver_verifypeer = False
 
     # [hooks] section
-    hooks_dir = "/usr/local/lib/pulse2/imaging-server/hooks"
+    hooks_dir = "/usr/lib/pulse2/imaging-server/hooks"
     create_client_path = os.path.join(hooks_dir, "create_client")
     client_update_path = os.path.join(hooks_dir, "update_client")
     process_inventory_path = os.path.join(hooks_dir, "process_inventory")
