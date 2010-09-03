@@ -139,6 +139,11 @@ option2 = plop      </screen></para>
             <entry>yes</entry>
           </row>
           <row>
+            <entry>imaging_api</entry>
+            <entry></entry>
+            <entry>yes</entry>
+          </row>
+          <row>
             <entry>mirror:XX</entry>
             <entry></entry>
             <entry>yes</entry>
@@ -479,6 +484,189 @@ option2 = plop      </screen></para>
       </tgroup>
     </table>
   </section>
+
+  <section>
+
+    <title>« imaging_api » section</title>
+
+    <para>This section define options for the imaging AP).</para>
+
+    <table>
+      <title>Available options for the "imaging_api" section</title>
+      <tgroup cols="4">
+        <thead>
+          <row>
+            <entry>Option name</entry>
+            <entry>Description</entry>
+            <entry>Optional</entry>
+            <entry>Default value</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry>mount_point</entry>
+            <entry>The API mount point</entry>
+            <entry>yes</entry>
+            <entry>/imaging_api</entry>
+          </row>
+          <row>
+            <entry>uuid</entry>
+            <entry>The package server UUID. You can use the uuidgen
+            command to compute one.</entry>
+            <entry>no</entry>
+            <entry></entry>
+          </row>
+          <row>
+            <entry>base_folder</entry>
+            <entry>Base folder where Pulse 2 imaging sub directories
+            are contained.</entry>
+            <entry>yes</entry>
+            <entry>/var/lib/pulse2/imaging</entry>
+          </row>
+          <row>
+            <entry>bootloader_folder</entry>
+            <entry>Where bootloader (and bootsplash) is stored,
+            relative to "base_folder"</entry>
+            <entry>yes</entry>
+            <entry>bootloader</entry>
+          </row>
+          <row>
+            <entry>cdrom_bootloader</entry>
+            <entry>The CD-ROM boot loader file. It is used to create
+            bootable restoration CD/DVD.</entry>
+            <entry>yes</entry>
+            <entry>cd_boot</entry>
+          </row>
+          <row>
+            <entry>bootsplash_file</entry>
+            <entry>The imaging menu (GRUB menu) backgroung image, in
+            XPM format.</entry>
+            <entry>yes</entry>
+            <entry>bootsplash.xpm</entry>
+          </row>
+          <row>
+            <entry>bootmenus_folder</entry>
+            <entry>Where boot menus are generated / being served,
+            relative to "base_folder"</entry>
+            <entry>yes</entry>
+            <entry>bootmenus</entry>
+          </row>
+          <row>
+            <entry>diskless_folder</entry>
+            <entry>Where kernel, initrd and other official diskless
+            tools are stored, relative to "base_folder"</entry>
+            <entry>yes</entry>
+            <entry>diskless</entry>
+          </row>
+          <row>
+            <entry>diskless_kernel</entry>
+            <entry>Name of the diskless kernel to run, relative to "diskless_folder"</entry>
+            <entry>yes</entry>
+            <entry>kernel</entry>
+          </row>
+          <row>
+            <entry>diskless_initrd</entry>
+            <entry>Name of the diskless initrd to boot (core), relative to "diskless_folder"</entry>
+            <entry>yes</entry>
+            <entry>initrd</entry>
+          </row>
+          <row>
+            <entry>diskless_initrdcd</entry>
+            <entry>Name of the diskless initrd to boot (add on to boot
+            on CD), relative to "diskless_folder"</entry>
+            <entry>yes</entry>
+            <entry>initrdcd</entry>
+          </row>
+          <row>
+            <entry>diskless_memtest</entry>
+            <entry>Diskless memtest too, relative to "diskless_folder"</entry>
+            <entry>yes</entry>
+            <entry>initrdcd</entry>
+          </row>
+          <row>
+            <entry>inventories_folder</entry>
+            <entry>Where inventories are stored / retrieved, relative
+              to "base_folder"</entry>
+            <entry>yes</entry>
+            <entry>inventories</entry>
+          </row>
+          <row>
+            <entry>computers_folder</entry>
+            <entry>Where additionnal material (hdmap, exclude) are
+	      stored / retrieved, relative to "base_folder"</entry>
+            <entry>yes</entry>
+            <entry>computers</entry>
+          </row>
+          <row>
+            <entry>masters_folder</entry>
+            <entry>Where images are stored, relative to "base_folder"</entry>
+            <entry>yes</entry>
+            <entry>masters</entry>
+          </row>
+          <row>
+            <entry>postinst_folder</entry>
+            <entry>Where postinst tools are stored, relative to
+	      "base_folder"</entry>
+            <entry>yes</entry>
+            <entry>postinst</entry>
+          </row>
+          <row>
+            <entry>archives_folder</entry>
+            <entry>Will contain archived computer imaging data,
+	      relative to "base_folder"</entry>
+            <entry>yes</entry>
+            <entry>archives</entry>
+          </row>
+          <row>
+            <entry>isos_folder</entry>
+            <entry>Will contain generated ISO images</entry>
+            <entry>yes</entry>
+            <entry>/var/lib/pulse2/imaging/isos</entry>
+          </row>
+          <row>
+            <entry>isogen_tool</entry>
+            <entry>tool used to generate ISO file</entry>
+            <entry>yes</entry>
+            <entry>/usr/bin/mkisofs</entry>
+          </row>
+          <row>
+            <entry>rpc_replay_file</entry>
+            <entry>File contained in "base_folder" where failed
+            XML-RPC calls from the package server to the central MMC
+            agent are stored.</entry>
+            <entry>yes</entry>
+            <entry>rpc-replay.pck</entry>
+          </row>
+          <row>
+            <entry>rpc_loop_timer</entry>
+            <entry>RPC replay loop timer in seconds. The XML-RPC are
+            sent again to the central MMC agent at each loop.</entry>
+            <entry>yes</entry>
+            <entry>60</entry>
+          </row>
+          <row>
+            <entry>rpc_count</entry>
+            <entry>RPC to replay at each loop.</entry>
+            <entry>yes</entry>
+            <entry>10</entry>
+          </row>
+          <row>
+            <entry>rpc_interval</entry>
+            <entry>Interval in seconds between two RPCs</entry>
+            <entry>yes</entry>
+            <entry>2</entry>
+          </row>
+          <row>
+            <entry>uuid_cache_file</entry>
+            <entry>Our UUID cache *inside* "base_folder"</entry>
+            <entry>yes</entry>
+            <entry>uuid-cache.txt</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
+
   <section>
     <title>« mirror:XX » section</title>
     <para>This section define options for the mirror api implementation.</para>
