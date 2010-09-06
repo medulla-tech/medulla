@@ -29,17 +29,3 @@ attributetype ( 1.3.6.1.4.1.40098.1.1.12.3 NAME 'lmcPrinterAllowed'
 objectclass ( 1.3.6.1.4.1.40098.1.2.1.19.1 NAME 'lmcUserObject' AUXILIARY
         DESC 'Objectclass for LMC user settings '
 	MAY  ( lmcACL $ lmcPrefMode $ lmcPrinterAllowed ))
-
-
-# Group policy
-attributetype ( 1.3.6.1.4.1.40098.1.1.12.20 NAME 'ACL'
-        DESC 'string with form aclname=value to manage right access'
-	EQUALITY caseIgnoreIA5Match
-	SUBSTR caseIgnoreSubstringsMatch
-        SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
-
-# Objectclass
-objectclass ( 1.3.6.1.4.1.40098.1.2.1.19.3 NAME 'GroupPolicy'
-        SUP top
-        MUST ( cn )
-	MAY ( ACL $ member ) )
