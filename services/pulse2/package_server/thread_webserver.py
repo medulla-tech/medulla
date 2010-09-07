@@ -112,7 +112,9 @@ def initialize(config):
             })
             logger.info("Package Server initialized with imaging API")
         except Exception, e:
-            logger.error("Imaging error: " + str(e))
+            logger.exception("Imaging error: %s" % e)
+            logger.error("Error while initializing the imaging API")
+            logger.error("Package Server will run WITHOUT the imaging API")
 
     desc = Description(services)
     server.register(desc, '/desc')

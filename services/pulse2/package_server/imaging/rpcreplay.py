@@ -52,7 +52,11 @@ class RPCStore(Singleton):
         self.logger = logging.getLogger('imaging')
         self.logger.debug('Initializing imaging RPC replay file')
         self.filename = PackageServerConfig().imaging_api['rpc_replay_file']
-        self._initStateFile()
+        try:
+            self._initStateFile()
+        except Exception, e:
+            self.logger.error('Can\'t initialize the RPC store file: %s. If the file looks corrupted, just delete it and restart the service.' % self.filename)
+            raise e
 
     def _initStateFile(self):
         """
