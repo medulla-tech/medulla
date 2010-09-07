@@ -815,7 +815,7 @@ void readConfig(char *config_file_path) {
 
     // Parse HOOKS section //
     tmp = iniparser_getstring(ini, "hooks:hooks_dir",
-                              "/usr/local/lib/pulse2/imaging-server/hooks");
+                              "/usr/lib/pulse2/imaging-server/hooks");
     snprintf(gDirHooks, 256, "%s", tmp);
     syslog(LOG_DEBUG, "[hooks] hooks_dir = %s", gDirHooks);
 
