@@ -74,7 +74,8 @@ class DatabaseHelper(Singleton):
 
     def makeConnectionPath(self):
         """
-        Build and return the db connection path according to the plugin configuration
+        Build and return the db connection path according to the plugin
+        configuration.
 
         @rtype: str
         """
@@ -85,8 +86,13 @@ class DatabaseHelper(Singleton):
         else:
             port = ""
         url = "%s://%s:%s@%s%s/%s" % (self.config.dbdriver, self.config.dbuser, self.config.dbpasswd, self.config.dbhost, port, self.config.dbname)
-        if self.config.dbsslenable:
-            url = url + "?ssl_ca=%s&ssl_key=%s&ssl_cert=%s" % (self.config.dbsslca, self.config.dbsslkey, self.config.dbsslcert)
+        if self.config.dbdriver == 'mysql':
+            # See http://www.sqlalchemy.org/docs/05/reference/dialects/mysql.html#character-sets
+            # charset=utf8 will convert all data to UTF-8, even if tables are
+            # stored in Latin-1
+            url += '?charset=utf8&use_unicode=0'
+            if self.config.dbsslenable:
+                url = url + "&ssl_ca=%s&ssl_key=%s&ssl_cert=%s" % (self.config.dbsslca, self.config.dbsslkey, self.config.dbsslcert)
         return url
 
     def enableLogging(self, level = None):
