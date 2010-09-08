@@ -2723,7 +2723,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return self.__getMenuItemsInMenu(session, 1)
 
     def __getMenuItemsInMenu(self, session, menu_id):
-        return session.query(MenuItem).add_entity(BootServiceInMenu).select_from(self.menu_item.join(self.boot_service_in_menu)).filter(self.menu_item.c.fk_menu == menu_id).all()
+        return session.query(MenuItem).add_entity(BootServiceInMenu).add_entity(ImageInMenu) \
+                .select_from(self.menu_item.outerjoin(self.boot_service_in_menu).outerjoin(self.image_in_menu)) \
+                .filter(self.menu_item.c.fk_menu == menu_id).all()
 
     def __duplicateDefaultMenuItem(self, session, loc_id = None, p_id = None):
         # warning ! can't be an image !
@@ -2744,7 +2746,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             mi = self.__getDefaultMenuItem(session)
         ret = []
         mi_out = [0, 0]
-        for default_menu_item, default_bsim in default_list:
+        for default_menu_item, default_bsim, default_iim in default_list:
             menu_item = MenuItem()
             menu_item.order = default_menu_item.order
             menu_item.hidden = default_menu_item.hidden
@@ -2757,10 +2759,16 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 mi_out[0] = menu_item.id
             if mi[1].id == default_menu_item.id:
                 mi_out[1] = menu_item.id
-            bsim = BootServiceInMenu()
-            bsim.fk_menuitem = menu_item.id
-            bsim.fk_bootservice = default_bsim.fk_bootservice
-            session.save(bsim)
+            if default_bsim != None:
+                bsim = BootServiceInMenu()
+                bsim.fk_menuitem = menu_item.id
+                bsim.fk_bootservice = default_bsim.fk_bootservice
+                session.save(bsim)
+            if default_iim != None:
+                iim = ImageInMenu()
+                iim.fk_menuitem = menu_item.id
+                iim.fk_image = default_iim.fk_image
+                session.save(iim)
         session.flush()
         return [ret, mi_out]
 
