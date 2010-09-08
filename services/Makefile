@@ -31,13 +31,23 @@ INITDIR 	:= /etc/init.d
 ETCDIR 		:= /etc/mmc
 INSTALL		:= $(shell which install)
 SED		:= $(shell which sed)
+3RDPARTY_FOLDER	:= 3rd_party
+BUILD_FOLDER	:= build
+
+# WOL stuff
+WOL_VERSION	:= 0.7.1
+WOL_URI		:= http://downloads.sourceforge.net/project/wake-on-lan/wol/$(WOL_VERSION)
+WOL_FOLDER	:= wol-$(WOL_VERSION)
+WOL_TARBALL	:= $(WOL_FOLDER).tar.gz
 
 # main target
 
-BUILD_FOLDER = build/
+BUILD_FOLDER = build
 SUBDIRS = src
 
 .PHONY: subdirs $(SUBDIRS)
+
+all: subdirs wol
 
 subdirs: $(SUBDIRS)
 
@@ -46,9 +56,18 @@ $(SUBDIRS):
 
 clean: $(SUBDIRS)
 	for i in $^; do $(MAKE) -C $$i clean; done
-	rm -rf build
+ 
+wol-clean:
+	-$(MAKE) clean -C $(BUILD_FOLDER)/$(WOL_FOLDER)
 
 install: subdirs install-imaging-server
+
+wol:
+	[ -e $(3RDPARTY_FOLDER)/$(WOL_TARBALL) ] || wget $(WOL_URI)/$(WOL_TARBALL) -P $(3RDPARTY_FOLDER)
+	[ -d $(BUILD_FOLDER)/$(WOL_FOLDER) ] || tar zxf $(3RDPARTY_FOLDER)/$(WOL_TARBALL) -C $(BUILD_FOLDER)
+	[ -f $(BUILD_FOLDER)/$(WOL_FOLDER)/Makefile ] || (cd $(BUILD_FOLDER)/$(WOL_FOLDER) && CC="$(CC)" ./configure)
+	$(MAKE) -C $(BUILD_FOLDER)/$(WOL_FOLDER) CC=$(CC)
+	cp -a $(BUILD_FOLDER)/$(WOL_FOLDER)/src/wol bin/pulse2-wol
 
 install-imaging-server:
 	@echo ""
