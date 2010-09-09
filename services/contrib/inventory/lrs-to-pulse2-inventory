@@ -71,6 +71,7 @@ if __name__ == "__main__":
     entity = Table("Entity", metadata, autoload = True)
     hasentity = Table("hasEntity", metadata, autoload = True)
     hashardware = Table("hasHardware", metadata, autoload = True)
+    hasentity = Table("hasEntity", metadata, autoload = True)
 
     entity_id = 1
     if get_entity:
@@ -107,23 +108,41 @@ if __name__ == "__main__":
     ## ) B ON (invmac1 = invmac2 AND invid1 < invid2)
     ## WHERE invid2 IS NULL;
 
-    A = select([inventory.c.id, machine.c.id], and_(machine.c.id == hashardware.c.machine, hashardware.c.inventory == inventory.c.id), use_labels = True).alias()
-    B = select([inventory.c.id, machine.c.id], and_(machine.c.id == hashardware.c.machine, hashardware.c.inventory == inventory.c.id), use_labels = True).alias()
-    q = select([A.c.Inventory_id], from_obj=[
-        A.outerjoin(B, and_(A.c.Machine_id == B.c.Machine_id, A.c.Inventory_id < B.c.Inventory_id))
-        ]).where(B.c.Inventory_id == None)
+    A = select([inventory.c.id, machine.c.id],
+               and_(machine.c.id == hashardware.c.machine,
+                    hashardware.c.inventory == inventory.c.id),
+               use_labels = True) \
+               .alias()
+    B = select([inventory.c.id, machine.c.id],
+               and_(machine.c.id == hashardware.c.machine,
+                    hashardware.c.inventory == inventory.c.id),
+               use_labels = True) \
+               .alias()
+    q = select([A.c.Inventory_id],
+               from_obj=[A.outerjoin(B,
+                                     and_(A.c.Machine_id == B.c.Machine_id,
+                                          A.c.Inventory_id < B.c.Inventory_id))
+                         ]) \
+                         .where(B.c.Inventory_id == None)
 
     # Query built. Now just combine it with a SQL update
     connection.execute(inventory.update(inventory.c.id.in_(q),
                                         values = { 'Last' : '1' }),
                        Last = 1)
 
-    # Third: we bind all Machine to the root entity
-    computers = select([inventory.c.id, machine.c.id], and_(machine.c.id == hashardware.c.machine, hashardware.c.inventory == inventory.c.id, inventory.c.Last == 1)).execute().fetchall()
+    # Third: we bind all Machine not linked to an entity to the root entity
+    computers = select([inventory.c.id, machine.c.id],
+                       and_(machine.c.id == hashardware.c.machine,
+                            hashardware.c.inventory == inventory.c.id,
+                            inventory.c.Last == 1,
+                            not_(machine.c.id.in_(select([hasentity.c.machine])))
+                            )
+                       ).execute().fetchall()
 
-    into_hasentity = []
-    for computer in computers:
-        into_hasentity.append({'machine' : computer[1], 'entity' : entity_id, 'inventory': computer[0]})
-    connection.execute(hasentity.insert(), into_hasentity)
+    if computers:
+        into_hasentity = []
+        for computer in computers:
+            into_hasentity.append({'machine' : computer[1], 'entity' : entity_id, 'inventory': computer[0]})
+        connection.execute(hasentity.insert(), into_hasentity)
 
     sys.exit(0)
