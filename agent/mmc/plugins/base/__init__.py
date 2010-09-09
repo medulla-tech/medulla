@@ -283,7 +283,7 @@ def delUser(uiduser, home):
     return ldapObj.delUser(uiduser, home)
 
 def delGroup(cngroup):
-    ldapUserGroupControl().delGroup(cngroup)
+    return ldapUserGroupControl().delGroup(cngroup)
 
 # return a list of member
 # return an array
@@ -1292,9 +1292,19 @@ class LdapUserGroupControl:
         @type group: str
         """
         groupdn = 'cn=' + group + ',' + self.baseGroupsDN
-        r = AF().log(PLUGIN_NAME, AA.BASE_DEL_GROUP, [(groupdn, AT.GROUP)])
-        self.l.delete_s(groupdn)
-        r.commit()
+        # get gidNumber for group
+        result = self.l.search_s(groupdn, ldap.SCOPE_BASE)
+        c, attrs = result[0] 
+        gid = attrs['gidNumber'][0]
+        # check if some users have this group as primary group
+        result = self.l.search_s(self.baseUsersDN, ldap.SCOPE_SUBTREE, 'gidNumber=' + gid)
+        if len(result) > 0:
+            return 2
+        else:
+            r = AF().log(PLUGIN_NAME, AA.BASE_DEL_GROUP, [(groupdn, AT.GROUP)])
+            self.l.delete_s(groupdn)
+            r.commit()
+            return 0
 
     def getEntry(self, dn):
         """

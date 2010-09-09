@@ -27,9 +27,23 @@ require("modules/base/includes/groups.inc.php");
 
 if (isset($_POST["bconfirm"])) {
     $group = $_POST["groupname"];
-    callPluginFunction("delGroup", array($group), True);
+    $ret = callPluginFunction("delGroup", array($group), True);
     if (!isXMLRPCError()) {
-        new NotifyWidgetSuccess(sprintf(_("Group %s deleted"), $group));
+        # get code/result messages for each module
+        foreach($ret as $module) {
+            if ($module['code'] > 0) {
+                $err .= $module['info'];
+            }
+            else {
+                $info .= $module['info'];
+            }
+        }
+        # display popup
+        if(isset($err))
+            new NotifyWidgetFailure($err);
+        else if(isset($info))
+            new NotifyWidgetSuccess($info);
+            
         header("Location: " . urlStrRedirect("base/groups/index"));
     }
 } else {

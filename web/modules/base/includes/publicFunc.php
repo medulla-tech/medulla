@@ -45,7 +45,14 @@ function _base_changeUserPrimaryGroup($uid, $group) {
 }
 
 function _base_delGroup($group) {
-    xmlCall("base.delGroup", $group);
+    $ret = xmlCall("base.delGroup", $group);
+    if($ret == 2) {
+        $msg = sprintf(_("Group %s can't be deleted.<br/>%s is the primary group of some users."), $group, $group);
+    }
+    else {
+        $msg = sprintf(_("Group %s successfully deleted."), $group);
+    }
+    return array("code" => $ret, "info" => $msg);    
 }
 
 function _base_completeUserEntry(&$entry) {
