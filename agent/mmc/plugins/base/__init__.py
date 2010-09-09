@@ -50,7 +50,6 @@ from mmc.plugins.base.audit import AA, AT, PLUGIN_NAME
 import ldap
 import ldif
 import crypt
-import sha
 import base64
 import random
 import string
@@ -67,6 +66,14 @@ import xmlrpclib
 from time import mktime, strptime, strftime, localtime
 from ConfigParser import NoSectionError, NoOptionError
 from twisted.internet import defer
+
+# hashlib is only available in python >= 2.5 
+try: 
+    import hashlib 
+    _digest = hashlib.sha1 
+except ImportError: 
+    import sha 
+    _digest = sha.sha 
 
 # global definition for ldapUserGroupControl
 INI = "/etc/mmc/plugins/base.ini"
@@ -580,7 +587,7 @@ class LdapUserGroupControl:
         if scheme == "crypt":
             userpassword = "{crypt}" + crypt.crypt(password, salt)
         else:
-            ctx = sha.new(password)
+            ctx = _digest.new(password)
             ctx.update(salt)
             userpassword = "{SSHA}" + base64.encodestring(ctx.digest() + salt)
         return userpassword
