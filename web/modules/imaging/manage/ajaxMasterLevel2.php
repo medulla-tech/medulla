@@ -61,6 +61,11 @@ $a_desc = array();
 $a_date = array();
 $a_size = array();
 $a_is_in_menu = array();
+$a_destroy = array();
+$l_im = array();
+
+$destroyAction = new ActionPopupItem(_T("Delete", "imaging"), "master_delete", "delete", "master", "imaging", "manage");
+$showImAction = new ActionPopupItem(_T("Show target using that image", "imaging"), "showtarget", "showtarget", "image", "base", "computers");
 
 foreach ($masters as $master) {
     $l_params = array();
@@ -81,7 +86,20 @@ foreach ($masters as $master) {
     $a_date[] = _toDate($master['creation_date']);
     $a_size[] = humanReadable($master['size']);
     $a_is_in_menu[] = ($master['menu_item']?True:False);
+    $l_im[] = array($master['imaging_uuid'], null, null);
 }
+
+if (count($l_im) != 0) {
+    $ret = xmlrpc_areImagesUsed($l_im);
+    foreach ($masters as $image) {
+        if ($ret[$image['imaging_uuid']]) {
+            $a_destroy[] = $showImAction;
+        } else {
+            $a_destroy[] = $destroyAction;
+        }
+    }
+}
+
 
 // show images list
 $l = new OptimizedListInfos($a_label, _T("Label", "imaging"));
@@ -99,10 +117,8 @@ $l->addActionItem(
     new ActionItem(_T("Edit image", "imaging"),
     "master_edit", "edit", "master", "imaging", "manage")
 );
-$l->addActionItem(
-    new ActionPopupItem(_T("Delete", "imaging"),
-    "master_delete", "delete", "master", "imaging", "manage")
-);
+
+$l->addActionItemArray($a_destroy);
 
 $l->setTableHeaderPadding(1);
 $l->disableFirstColumnActionLink();
@@ -114,3 +130,7 @@ $l->display();
 
 
 ?>
+
+<!-- inject styles -->
+<link rel="stylesheet" href="modules/imaging/graph/css/imaging.css" type="text/css" media="screen" />
+
