@@ -107,10 +107,15 @@ if (isset($_POST["bdeluser_x"])) {
     $members = get_members($group);
 } else {
     $members = get_members($group);
-    $users = get_users();
+    # get an array with all user's attributes
+    $users = get_users(true);
 }
 
-$diff = array_diff($users, $members);
+$diff = array();
+foreach ($users as $user) {
+    if (!in_array($user['uid'], $members))
+        $diff[] = $user;
+}
 
 if (count($forbidden)) {
     new NotifyWidgetWarning(_("Some users can't be removed from this group because this group is their primary group."));
@@ -132,12 +137,9 @@ $p->display();
         <h3><?= _("All users");?></h3>
     <select multiple size="15" class="list" name="users[]">
 <?php
-foreach ($diff as $idx => $user) {
-    if ($user == "") {
-        unset($users[$idx]);
-        continue;
-    }
-    echo "<option value=\"".$user."\">".$user."</option>\n";
+foreach ($diff as $user) {
+    $name = formatUsername($user);
+    echo "<option value=\"". $user['uid'] ."\">". $name ."</option>\n";
 }
 ?>
     </select>
@@ -156,13 +158,14 @@ foreach ($diff as $idx => $user) {
       <h3><?= _("Group members"); ?></h3>
     <select multiple size="15" class="list" name="members[]">
 <?php
-foreach ($members as $idx => $member) {
-    if ($member == "") {
-        unset($members[$idx]);
-        continue;
+foreach ($members as $member) {
+    foreach ($users as $user) {
+        if ($user['uid'] == $member) {
+            $name = formatUsername($user);
+            break;
+        }
     }
-
-    echo "<option value=\"".$member."\">".$member."</option>\n";
+    echo "<option value=\"".$member."\">". $name ."</option>\n";
 }
 ?>
     </select>
@@ -181,3 +184,14 @@ foreach ($members as $idx => $member) {
 <input type="submit" name="bconfirm" class="btnPrimary" value="<?= _("Confirm"); ?>" />
 <input type="submit" name="breset" class="btnSecondary" value="<?= _("Cancel"); ?>" />
 </form>
+
+<?php
+
+function formatUsername($user) {
+    if ($user['givenName'] != $user['uid'])
+        return $user['givenName'] . " " . $user['sn'] . " (" . $user['uid'] . ")";
+    else
+        return $user['uid'];
+}
+
+?>

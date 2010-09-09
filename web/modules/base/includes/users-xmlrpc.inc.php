@@ -73,13 +73,18 @@ function auth_user ($login, $pass)
  * @return list of users in an array of ldap users
  * @param &$error referenced error String
  */
-function get_users() {
+function get_users($full = false) {
     $tab = xmlCall("base.getUsersLdap",null);
-    $resTab = array();
-    /* FIXME: argh ! */
-    foreach ($tab as $tmpTab)
-        $resTab[] = $tmpTab["uid"];
-    return $resTab;
+    if ($full) {
+        return $tab;
+    }
+    else {
+        $resTab = array();
+        /* FIXME: argh ! */
+        foreach ($tab as $tmpTab)
+            $resTab[] = $tmpTab["uid"];
+        return $resTab;
+    }
 }
 
 /**
