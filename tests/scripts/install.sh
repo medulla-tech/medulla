@@ -182,7 +182,7 @@ fi
 popd
 
 # Download and setup SQLAlchemy 0.4.8
-wget "http://downloads.sourceforge.net/project/sqlalchemy/sqlalchemy/0.4.8/SQLAlchemy-0.4.8.tar.gz?use_mirror=switch"
+wget "http://switch.dl.sourceforge.net/project/sqlalchemy/sqlalchemy/0.4.8/SQLAlchemy-0.4.8.tar.gz"
 tar xzf SQLAlchemy-0.4.8.tar.gz
 pushd SQLAlchemy-0.4.8
 python setup.py install
