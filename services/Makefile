@@ -56,6 +56,8 @@ $(SUBDIRS):
 
 clean: $(SUBDIRS)
 	for i in $^; do $(MAKE) -C $$i clean; done
+	rm -rf build/*
+	rm -f bin/pulse2-wol
  
 wol-clean:
 	-$(MAKE) clean -C $(BUILD_FOLDER)/$(WOL_FOLDER)
