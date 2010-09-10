@@ -73,8 +73,12 @@ function auth_user ($login, $pass)
  * @return list of users in an array of ldap users
  * @param &$error referenced error String
  */
-function get_users($full = false) {
-    $tab = xmlCall("base.getUsersLdap",null);
+function get_users($full = false, $filter = null) {
+
+    if ($filter == "") $filter = null;
+    else $filter = "*".$filter . "*";
+
+    $tab = xmlCall("base.getUsersLdap", $filter);
     if ($full) {
         return $tab;
     }

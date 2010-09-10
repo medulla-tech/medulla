@@ -1293,9 +1293,11 @@ class LdapUserGroupControl:
         """
         groupdn = 'cn=' + group + ',' + self.baseGroupsDN
         # get gidNumber for group
-        result = self.l.search_s(groupdn, ldap.SCOPE_BASE)
+        ldapObj = ldapUserGroupControl()
+        gid = ldapobj.getDetailedGroup(group)['gidNumber'][0]
+        """result = self.l.search_s(groupdn, ldap.SCOPE_BASE)
         c, attrs = result[0] 
-        gid = attrs['gidNumber'][0]
+        gid = attrs['gidNumber'][0]"""
         # check if some users have this group as primary group
         result = self.l.search_s(self.baseUsersDN, ldap.SCOPE_SUBTREE, 'gidNumber=' + gid)
         if len(result) > 0:
@@ -1348,6 +1350,32 @@ class LdapUserGroupControl:
         return newattrs
 
     getDetailedUser = getUserEntry
+    
+    def getUserEntryById(self, id, base = None):
+        """
+        Search a user entry and returns the raw LDAP entry content of a user.
+
+        @param id: user uidNumber
+        @type id: int
+
+        @param base: LDAP base scope where to look for
+        @type base: str
+
+        @return: full raw ldap array (dictionnary of lists)
+        @type: dict
+        """
+        if not base: base = self.baseUsersDN
+        ret = self.search("uidNumber=" + str(id), base)
+        newattrs = {}
+        if ret:
+            for result in ret:
+                c, attrs = result[0]
+                newattrs = copy.deepcopy(attrs)
+                break
+
+        return newattrs      
+
+    getDetailedUserById = getUserEntryById
 
     def searchUserDN(self, uid):
         """
