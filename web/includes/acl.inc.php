@@ -95,39 +95,29 @@ function hasCorrectModuleAcl($module) {
 }
 
 function getDefaultPage() {
-    $base = "";
+
+    $MMCApp =& MMCApp::getInstance();
+
+    # get first page in acl list which is not a popup
     if (isset($_SESSION["acl"])) {
-        foreach(array_keys($_SESSION["acl"]) as $key => $value) {
-            if ($value != "") {
-                $base = $value;
-                break;
+        foreach($_SESSION["acl"] as $module => $modinfo) {
+            foreach($modinfo as $submod => $submodinfo) {
+                foreach($submodinfo as $page => $pageinfo) {
+                    # check page is not a popup
+                    if ($MMCApp->_modules[$module]->_submod[$submod]->_pages[$page]->_options['noHeader'] != 1) {
+                        # get url
+                        $url = "main.php?module=$module&submod=$submod&action=$page";
+                        # stop foreach loops
+                        break 3;
+                    }
+                }
             }
         }
     }
+    
+    if (!isset($url)) return "index.php?error=".urlencode(_("You do not have required rights"));
 
-    $submod = "";
-    if ((strlen($base)) && (isset($_SESSION["acl"][$base]))) {
-        foreach(array_keys($_SESSION["acl"][$base]) as $key => $value) {
-            if ($value != "") {
-                $submod = $value;
-                break;
-            }
-        }
-    }
-
-    $action = "";
-    if ((strlen($submod)) && (isset($_SESSION["acl"][$base][$submod]))) {
-        foreach(array_keys($_SESSION["acl"][$base][$submod]) as $key => $value) {
-            if ($value != "") {
-                $action = $value;
-                break;
-            }
-        }
-    }
-
-    if (!$base) return "index.php?error=".urlencode(_("You do not have required rights"));
-
-    return "main.php?module=$base&submod=$submod&action=$action";
+    return $url;
 }
 
 ?>
