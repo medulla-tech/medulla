@@ -29,7 +29,7 @@ import mmctools
 
 import ldap
 import re
-from ConfigParser import ConfigParser, NoOptionError, NoSectionError
+from ConfigParser import ConfigParser, NoOptionError, NoSectionError, InterpolationError
 
 
 class ConfigException(Exception):
@@ -46,6 +46,18 @@ class MMCConfigParser(ConfigParser):
 
     def __init__(self):
         ConfigParser.__init__(self)
+
+    def _interpolate(self, section, option, value, d):
+        try:
+            value = ConfigParser._interpolate(self, section, option, value, d)
+        except InterpolationError:
+            if '%(baseDN)s' in value:
+                from mmc.plugins.base import BasePluginConfig
+                config = BasePluginConfig("base")
+                value = value.replace('%(baseDN)s', config.baseDN)
+            else:
+                raise InterpolationError
+        return value
 
     def getdn(self, section, option):
         """
