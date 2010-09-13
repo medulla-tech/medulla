@@ -94,6 +94,12 @@ function autoInclude() {
                         
         // store the filter
         $_SESSION[$module."_".$submod."_".$action."_".$tab."_filter"] = $_GET['filter'];
+        // store pagination info
+        $_SESSION[$module."_".$submod."_".$action."_".$tab."_max"] = $_GET['maxperpage'];
+        if(isset($_GET['start']))
+            $_SESSION[$module."_".$submod."_".$action."_".$tab."_start"] = $_GET['start'];
+        if(isset($_GET['end']))
+            $_SESSION[$module."_".$submod."_".$action."_".$tab."_end"] = $_GET['end'];
         
         unset($module);
         unset($submod);

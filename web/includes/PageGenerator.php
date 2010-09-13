@@ -1146,6 +1146,15 @@ class AjaxFilter extends HtmlElement {
         if(isset($_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_filter"])) {
             $this->storedfilter = $_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_filter"];
         }
+        if(isset($_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_max"])) {
+            $this->storedmax = $_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_max"];
+        }
+        if(isset($_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_start"])) {
+            $this->storedstart = $_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_start"];
+        }
+        if(isset($_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_end"])) {
+            $this->storedend = $_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_end"];
+        }                        
     }
 
     /**
@@ -1186,12 +1195,17 @@ if(isset($this->storedfilter)) {
 <?
 }
 ?>
-
-
         var refreshtimer<?=$this->formid?> = null;
         var refreshparamtimer<?=$this->formid?> = null;
         var refreshdelay<?=$this->formid?> = <?= $this->refresh ?>;
-        var maxperpage = 10;
+        var maxperpage = 10;      
+<?
+if (isset($this->storedmax)) {
+?>
+        maxperpage = <?=$this->storedmax?>;
+<?
+}
+?>      
         if(document.getElementById('maxperpage') != undefined)
             maxperpage = document.getElementById('maxperpage').value;
 
@@ -1210,9 +1224,16 @@ if(isset($this->storedfilter)) {
         /**
          * Update div
          */
+        <?php
+        $url = $this->url."filter='+document.Form".$this->formid.".param.value+'&maxperpage='+maxperpage+'".$this->params;
+        if (isset($this->storedstart) && isset($this->storedend)) {
+            $url .= "&start=".$this->storedstart."&end=".$this->storedend;
+        }
+        ?>
+                 
         updateSearch<?=$this->formid?> = function() {
             new Ajax.Updater('<?= $this->divid; ?>',
-            '<?= $this->url; ?>filter='+document.Form<?=$this->formid?>.param.value+'&maxperpage='+maxperpage+'<?= $this->params ?>',
+            '<?=$url?>',
             { asynchronous:true, evalScripts: true}
             );
 
