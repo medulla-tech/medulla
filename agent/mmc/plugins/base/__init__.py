@@ -1294,7 +1294,7 @@ class LdapUserGroupControl:
         groupdn = 'cn=' + group + ',' + self.baseGroupsDN
         # get gidNumber for group
         ldapObj = ldapUserGroupControl()
-        gid = ldapobj.getDetailedGroup(group)['gidNumber'][0]
+        gid = ldapObj.getDetailedGroup(group)['gidNumber'][0]
         """result = self.l.search_s(groupdn, ldap.SCOPE_BASE)
         c, attrs = result[0] 
         gid = attrs['gidNumber'][0]"""
