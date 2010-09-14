@@ -472,6 +472,8 @@ class DateTpl extends InputTpl {
 class DynamicDateTpl extends InputTpl {
     function DynamicDateTpl($name) {
         $this->name = $name;
+        $this->size = "";
+        $this->fieldType = "";
     }
     function display($arrParam) {
         $e = new InputTpl($this->name);
