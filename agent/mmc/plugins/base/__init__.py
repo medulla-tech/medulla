@@ -1295,9 +1295,6 @@ class LdapUserGroupControl:
         # get gidNumber for group
         ldapObj = ldapUserGroupControl()
         gid = ldapObj.getDetailedGroup(group)['gidNumber'][0]
-        """result = self.l.search_s(groupdn, ldap.SCOPE_BASE)
-        c, attrs = result[0] 
-        gid = attrs['gidNumber'][0]"""
         # check if some users have this group as primary group
         result = self.l.search_s(self.baseUsersDN, ldap.SCOPE_SUBTREE, 'gidNumber=' + gid)
         if len(result) > 0:
