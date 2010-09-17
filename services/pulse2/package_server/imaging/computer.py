@@ -51,6 +51,10 @@ class ImagingComputerConfiguration:
         self.exclude_opts = ''
         if 'exclude_parameters' in self.menu['target']:
             self.setExcludeParameters(self.menu['target']['exclude_parameters'])
+        if 'hostname' in self.menu['target']:
+            self.setHostname(self.menu['target']['hostname'])
+        else:
+            self.setHostname(computerUUID)
         # else if no exclude_parameters is set, do as if there is no exclude
         # set.
 
