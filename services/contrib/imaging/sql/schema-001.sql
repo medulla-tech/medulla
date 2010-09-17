@@ -137,11 +137,11 @@ CREATE TABLE Target (
 -- List the disks of a target
 CREATE TABLE ComputerDisk (
   id INT NOT NULL AUTO_INCREMENT,
-  num INT DEFAULT '-1',
-  cyl INT DEFAULT '0',
-  head INT DEFAULT '0',
-  sector INT DEFAULT '0',
-  capacity INT DEFAULT '0',
+  num BIGINT DEFAULT '-1',
+  cyl BIGINT DEFAULT '0',
+  head BIGINT DEFAULT '0',
+  sector BIGINT DEFAULT '0',
+  capacity BIGINT DEFAULT '0',
   fk_target INT NOT NULL,
   PRIMARY KEY (id)
 );
@@ -151,8 +151,8 @@ CREATE TABLE ComputerPartition (
   id INT NOT NULL AUTO_INCREMENT,
   num INT DEFAULT '-1',
   type varchar(32) DEFAULT NULL,
-  length INT DEFAULT '0',
-  start INT DEFAULT '0',
+  length BIGINT DEFAULT '0',
+  start BIGINT DEFAULT '0',
   fk_disk INT NOT NULL,
   PRIMARY KEY (id)
 );
@@ -217,8 +217,8 @@ CREATE TABLE Partition (
   id INT NOT NULL AUTO_INCREMENT,
   name Text NOT NULL,
   filesystem Text NOT NULL,
-  size_sect INT NOT NULL,
-  start_sect INT NOT NULL,
+  size_sect BIGINT NOT NULL,
+  start_sect BIGINT NOT NULL,
   fk_image INT NOT NULL,
   PRIMARY KEY (id)
 );
@@ -254,7 +254,7 @@ CREATE TABLE Image (
   uuid Text NOT NULL,
   `desc` Text NOT NULL,
   checksum Text NOT NULL,
-  `size` INT NOT NULL,
+  `size` BIGINT NOT NULL,
   is_master TINYINT(1) DEFAULT FALSE,
   creation_date datetime,
   fk_creator INT NOT NULL,
