@@ -34,8 +34,9 @@ class ImagingComputerConfiguration:
     """
 
     EXCLUDE_FILE = 'exclude'
+    HOSTNAME_FILE = 'hostname'
 
-    def __init__(self, config, computerUUID, menu):
+    def __init__(self, config, computerUUID, menu, hostname):
         """
         @param config: the package server config
         @param computerUUID: the computer UUID
@@ -44,6 +45,7 @@ class ImagingComputerConfiguration:
         self.logger = logging.getLogger('imaging')
         self.config = config
         self.computerUUID = computerUUID
+        self.hostname = hostname
         self.menu = menu
         self.exclude_opts = ''
         if 'exclude_parameters' in self.menu['target']:
@@ -92,4 +94,20 @@ class ImagingComputerConfiguration:
                     ret = False
             else:
                 self.logger.debug('Nothing to do for the computer exclude file')
+
+        filename = os.path.join(self.config.imaging_api['base_folder'],
+                                self.config.imaging_api['computers_folder'],
+                                self.computerUUID,
+                                self.HOSTNAME_FILE)
+
+        if ret :
+            self.logger.debug('Preparing to write hostname file for computer UUID %s into file %s' % (self.computerUUID, filename))
+            try:
+                fid = open(filename, 'w+b')
+                fid.write(self.exclude_opts)
+                fid.close()
+                self.logger.debug('Succeeded')
+            except Exception, e:
+                self.logger.error("While writing hostname file for %s : %s" % (self.computerUUID, e))
+                ret = False
         return ret
