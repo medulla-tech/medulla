@@ -240,7 +240,7 @@ if (isset($_POST["bunregister"])) {
                only, not profiles */
             $inventory = xmlrpc_getPartitionsToBackupRestore($target_uuid);
             if (!empty($inventory)) {
-                $f->add(new TitleElement(_T("Backup/restore hard disks and partitions selection", "imaging")));
+                $f->add(new TitleElement(_T("Hard disks and partitions selection to backup", "imaging")));
             }
             ksort($inventory);
             foreach($inventory as $disk => $parts) {
