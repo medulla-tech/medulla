@@ -1,2 +1,0 @@
-* Require libssl-dev
-* Must be compiled with gcc-3.3, and static: please use the SVN Makefile.lrs (see current folder)
