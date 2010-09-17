@@ -27,6 +27,7 @@ Only exclude file are handled.
 import logging
 import os.path
 
+
 class ImagingComputerConfiguration:
 
     """
@@ -36,7 +37,7 @@ class ImagingComputerConfiguration:
     EXCLUDE_FILE = 'exclude'
     HOSTNAME_FILE = 'hostname'
 
-    def __init__(self, config, computerUUID, menu, hostname):
+    def __init__(self, config, computerUUID, menu):
         """
         @param config: the package server config
         @param computerUUID: the computer UUID
@@ -45,7 +46,7 @@ class ImagingComputerConfiguration:
         self.logger = logging.getLogger('imaging')
         self.config = config
         self.computerUUID = computerUUID
-        self.hostname = hostname
+        self.hostname = ''
         self.menu = menu
         self.exclude_opts = ''
         if 'exclude_parameters' in self.menu['target']:
@@ -61,6 +62,15 @@ class ImagingComputerConfiguration:
         """
         assert(type(value) == str)
         self.exclude_opts = value
+
+    def setHostname(self, value):
+        """
+        Set the hostname
+        @param value: string of hostname
+        @type value: str
+        """
+        assert(type(value) == str)
+        self.hostname = value
 
     def write(self):
         """
@@ -104,7 +114,7 @@ class ImagingComputerConfiguration:
             self.logger.debug('Preparing to write hostname file for computer UUID %s into file %s' % (self.computerUUID, filename))
             try:
                 fid = open(filename, 'w+b')
-                fid.write(self.exclude_opts)
+                fid.write(self.hostname)
                 fid.close()
                 self.logger.debug('Succeeded')
             except Exception, e:
