@@ -3797,7 +3797,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if not isUUID(computer_uuid):
             raise TypeError('Bad computer UUID: %s' % computer_uuid)
         session = create_session()
-        target = session.query(Target).filter_by(uuid=computer_uuid).one()
+        try:
+            target = session.query(Target).filter_by(uuid=computer_uuid).one()
+        except InvalidRequestError:
+            return []
         excluded = target.exclude_parameters
         if not excluded:
             excluded = ''
