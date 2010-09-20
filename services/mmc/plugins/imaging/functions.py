@@ -1647,7 +1647,10 @@ class ImagingRpcProxy(RpcProxyI):
             # if the computer change from a profile to it's own registering,
             # we remove the COMPUTER_IN_PROFILE target and register a COMPUTER one
             try:
-                db.delProfileMenuTarget(uuid)
+                if type(uuid) != list:
+                    db.delProfileMenuTarget([uuid])
+                else:
+                    db.delProfileMenuTarget(uuid)
             except Exception, e:
                 return [False, "delProfileMenuTarget : %s"%(str(e))]
 
