@@ -311,7 +311,7 @@ class shDebugProcessProtocol(shProcessProtocol):
 
 def launch(cmd, param):
     logger = logging.getLogger()
-    logger.info("support.mmctools.launch(\""+str(cmd)+","+str(param)+"\")")
+    logger.debug("support.mmctools.launch(\""+str(cmd)+","+str(param)+"\")")
     shProcess = shProcessProtocol(cmd)
     logger = logging.getLogger()
     reactor.spawnProcess(shProcess, cmd, param,os.environ)
