@@ -29,9 +29,15 @@ $type = quickGet('type');
 if ($type == 1) {
     $stype = "_profiles";
     $ltype = 'profile';
+    $title = _T("Delete profile", "dyngroup");
+    $popup = _T("Are you sure you want to delete profile <b>%s</b>?<br/>", "dyngroup");
+    $delete = _T("Delete profile", "dyngroup");
 } else {
     $stype = '';
     $ltype = 'group';
+    $title = _T("Delete group", "dyngroup");
+    $popup = _T("Are you sure you want to delete group <b>%s</b>?<br/> (it can be used in an other group).", "dyngroup");
+    $delete = _T("Delete group", "dyngroup");
 }
 
 if (quickGet('valid')) {
@@ -40,24 +46,17 @@ if (quickGet('valid')) {
 }
 
 ?>
-<h2><?= _T("Delete group", "dyngroup") ?></h2>
-<?php
 
-?>
+<h2><?= $title ?></h2>
 
 <form action="<?= urlStr("base/computers/delete_group", array('gid'=>$id, 'type'=>$type)) ?>" method="post">
 <p>
 
 <?
-    printf(_T("Are you sure you want to delete %s <b>%s</b>?<br/> (it can be used in an other group).", "dyngroup"), $ltype, $_GET["groupname"]);
+    printf($popup, $_GET["groupname"]);
 ?>
 
 </p>
-<input name='valid' type="submit" class="btnPrimary" value="<?= _T("Delete group", "dyngroup"); ?>" />
+<input name='valid' type="submit" class="btnPrimary" value="<?= $delete ?>" />
 <input name="bback" type="submit" class="btnSecondary" value="<?= _T("Cancel", "dyngroup"); ?>" onClick="new Effect.Fade('popup'); return false;"/>
 </form>
-
-
-
-
-
