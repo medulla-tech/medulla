@@ -31,10 +31,8 @@ function existGroup($group) {
 
 function get_groups(&$error) {
   $groups = xmlCall("base.getGroupsLdap",null);
-
   sort($groups);
   reset($groups);
-
   return $groups;
 }
 
@@ -44,7 +42,6 @@ function get_default_group() {
 
 
 function search_groups($filter = null) {
-
     if ($filter == "") $filter = null;
     else $filter = "*".$filter . "*";
     $groups = xmlCall("base.getGroupsLdap",$filter);

@@ -25,6 +25,7 @@ class FormHandler {
 
     var $post_data;
     var $data;
+    var $arr;
 
     function FormHandler($data) {
         /*echo "<pre>";
@@ -107,6 +108,29 @@ class FormHandler {
     /* Remove value from original $_POST array */
     function delPostValue($field) {
         unset($this->post_data[$field]);
+    }
+    
+    
+    function setArr($arr) {
+        $this->arr = $arr;
+    }    
+    
+    /* get value from ldapArr or form post */
+    function getArrayOrPostValue($field, $type = "string") {
+        if(isset($this->arr[$field][0])) {
+            $value = $this->arr[$field][0];
+        }
+        else if($this->getPostValue($field)) {
+            $value = $this->getPostValue($field);
+        }
+        else {
+            if($type == "string")
+                $value = "";
+            else if($type == "array")
+                $value = array("");
+        }
+
+        return $value;
     }
 
 }

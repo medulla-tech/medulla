@@ -41,8 +41,10 @@ class DisabledInputTpl extends AbstractTpl{
 
 class LinkTrFormElement extends TrFormElement{
         
-        function display($link=array(),$arrParam = array()) {
+        function display($arrParam = array()) {
+                
             if (empty($arrParam)) $arrParam = $this->options;
+            
             if (!isset($this->cssErrorName)) $this->cssErrorName = $this->template->name;
 
             print '<tr><td width="40%" ';
@@ -56,7 +58,7 @@ class LinkTrFormElement extends TrFormElement{
                 print $this->desc;
             }
             print '</td><td>';
-            print "<a href=\"".$link["value"]."\">".$link["name"];
+            print "<a href=\"".$arrParam["value"]."\">".$arrParam["name"];
             print "</a>";
             if (isset($arrParam["extra"])) {
                 print "&nbsp;" . $arrParam["extra"];
