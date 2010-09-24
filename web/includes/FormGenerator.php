@@ -532,78 +532,6 @@ class DynamicDateTpl extends InputTpl {
     }
 }
 
-class MembersTpl extends AbstractTpl {
-
-    function MembersTpl($name) {
-        $this->name = $name;
-        $this->memberTitle = _("Member of");
-        $this->availableTitle = _("Available");
-    }
-    
-    function setTitle($member, $available) {
-        $this->memberTitle = $member;
-        $this->availableTitle = $available;
-    }
-    
-    function display($arrParam) {
-        $memberOf = $arrParam['memberOf'];
-        $available = $arrParam['available'];
-        $available = array_diff($available, $memberOf);
-
-        echo '<style>
-            div.list {
-                float: left;
-            }
-            div.list select {
-                width: 200px;
-            }
-            </style>';
-            
-        echo '<script type="text/javascript">
-            swapMember = function(from, to) {
-                options = Array();
-                for(i=0; i<$(from).options.length; i++) {
-                    if($(from).options[i].selected) {
-                        options.push($(from).options[i]);
-                    }
-                }
-                for(i=0; i<options.length; i++) {
-                    $(to).add(options[i], null);
-                }
-            }
-        </script>';
-
-        echo '<div id="'.$this->name.'">
-        <div class="list">        
-            <h3>'.$this->memberTitle.'</h3>
-            <select multiple="multiple" name="old_'.$this->name.'[]" style="display: none">';
-        foreach($memberOf as $value => $label) {
-            echo '<option value="'.$value.'">'.$label.'</option>';
-        }
-        echo '</select>            
-            <select id="members" multiple="multiple" size="10" name="'.$this->name.'[]">';
-        foreach($memberOf as $value => $label) {
-            echo '<option value="'.$value.'">'.$label.'</option>';
-        }
-        echo '</select>
-        </div>
-        <div class="list">
-            <img type="image" name="baddmember" style="padding: 5px;" src="img/common/icn_arrowleft.gif" value="<--" onclick="swapMember(\'available\', \'members\');" /><br/>
-            <img type="image" name="bdelmember" style="padding: 5px;" src="img/common/icn_arrowright.gif" value = "-->" onclick="swapMember(\'members\', \'available\');" />
-        </div>
-        <div class="list">
-            <h3>'.$this->availableTitle.'</h3>
-            <select id="available" multiple="multiple" size="10">';
-        foreach($available as $value => $label) {
-            echo '<option value="'.$value.'">'.$label.'</option>';
-        }
-        echo '</select>
-        </div>
-        </div>';
-    }
-
-}
-
 class MultipleInputTpl extends AbstractTpl {
 
     function MultipleInputTpl($name,$desc='', $new=false) {
@@ -748,18 +676,19 @@ class SelectItem extends AbstractTpl{
         if (!isset($this->elementsVal)) {
             $this->elementsVal = $this->elements;
         }
+
         // if value... set it
         if (isset($paramArray["value"])) {
             $this->setSelected($paramArray["value"]);
         }
         $ret = '';
-        foreach ($this->elements as $key => $value) {
-            if ($value == $this->selected) {
-                $selected = 'selected="selected"';
+        foreach ($this->elements as $key => $item) {
+            if ($this->elementsVal[$key] == $this->selected) {
+                $selected='selected="selected"';
             } else {
-                $selected = "";
+                $selected="";
             }
-            $ret .= '<option value="'.$this->elementsVal[$key].'" '.$selected.'>'.$value.'</option>';
+            $ret .= "\t<option value=\"".$this->elementsVal[$key]."\" $selected>$item</option>\n";
         }
         return $ret;
     }
