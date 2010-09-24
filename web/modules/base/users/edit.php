@@ -265,13 +265,17 @@ if (!empty($_GET["user"])) {
             /* Secondary groups management */
             $old = getUserSecondaryGroups($_POST['nlogin']);
             $new = $FH->getPostValue('groupsselected');
-            foreach (array_diff($old, $new) as $group) {
-                del_member($group, $_POST['nlogin']);
-                callPluginFunction("delUserFromGroup", array($_POST['nlogin'], $group));
-            }
-            foreach (array_diff($new, $old) as $group) {
-                add_member($group, $_POST['nlogin']);
-                callPluginFunction("addUserToGroup", array($_POST['nlogin'], $group));
+            if(!$old) $old = array();
+            if(!$new) $new = array();
+            if($old != $new) {
+                foreach (array_diff($old, $new) as $group) {
+                    del_member($group, $_POST['nlogin']);
+                    callPluginFunction("delUserFromGroup", array($_POST['nlogin'], $group));
+                }
+                foreach (array_diff($new, $old) as $group) {
+                    add_member($group, $_POST['nlogin']);
+                    callPluginFunction("addUserToGroup", array($_POST['nlogin'], $group));
+                }
             }
             
             // If we change the password of an already existing user

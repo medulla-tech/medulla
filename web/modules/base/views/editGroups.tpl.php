@@ -60,7 +60,7 @@ sort($secondary);
             }
             ?>
         </select>
-        <input name="buser" type="submit" class="btnPrimary" value="<?= _("Delete"); ?>" onclick="delEltInSelectBox(); return false;"/>
+        <input name="bdelgroups" type="submit" class="btnPrimary" value="<?= _("Delete"); ?>" onclick="delEltInSelectBox(); return false;"/>
 
     </td>
     </tr>
@@ -73,7 +73,7 @@ sort($secondary);
             <li>B</li>
         </ul>
     </div>
-    <input name="buser" type="submit" class="btnPrimary" value="<?= _("Add"); ?>" onclick="addElt($F('autocomplete')); return false;"/>
+    <input name="baddgroup" type="submit" class="btnPrimary" value="<?= _("Add"); ?>" onclick="addElt($F('autocomplete')); return false;"/>
     </td></tr>
     </table>
 
