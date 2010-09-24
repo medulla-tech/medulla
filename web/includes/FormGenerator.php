@@ -674,7 +674,7 @@ class SelectItem extends AbstractTpl{
     }
     function content_to_string($paramArray = null) {
         if (!isset($this->elementsVal)) {
-            $this->elementsVal = $elements;
+            $this->elementsVal = $this->elements;
         }
 
         // if value... set it
@@ -684,9 +684,9 @@ class SelectItem extends AbstractTpl{
         $ret = '';
         foreach ($this->elements as $key => $item) {
             if ($this->elementsVal[$key] == $this->selected) {
-                $selected="selected";
+                $selected='selected="selected"';
             } else {
-                $selected= "";
+                $selected="";
             }
             $ret .= "\t<option value=\"".$this->elementsVal[$key]."\" $selected>$item</option>\n";
         }
