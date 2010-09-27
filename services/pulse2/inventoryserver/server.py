@@ -75,7 +75,8 @@ class InventoryServer:
             self.logger.warn("Could not get any QUERY section in inventory from %s"%(from_ip))
             query = 'FAILS'
         try:
-            deviceid = re.search(r'<DEVICEID>([\w-]+)</DEVICEID>', content).group(1)
+            if query != 'UPDATE':
+                deviceid = re.search(r'<DEVICEID>([\w-]+)</DEVICEID>', content).group(1)
         except AttributeError, e:
             self.logger.warn("Could not get any DEVICEID section in inventory from %s"%(from_ip))
             self.logger.debug("no DEVICEID in %s"%(content))

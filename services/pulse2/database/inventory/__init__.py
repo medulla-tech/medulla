@@ -1684,7 +1684,12 @@ class InventoryCreator(Inventory):
         if k == 0:
             return False
 
-        date = date.split(' ')
+        dates = date.split(' ')
+        if len(dates) != 2:
+            dates = date.split('-')
+            date = "%s-%s-%s %s:%s:%s"%(dates[0], dates[1], dates[2], dates[3], dates[4], dates[5])
+            dates = date.split(' ')
+        date = dates
 
         session = create_session()
         transaction = session.create_transaction()
