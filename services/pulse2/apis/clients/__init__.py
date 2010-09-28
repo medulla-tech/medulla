@@ -2,7 +2,7 @@
 #
 # (c) 2007-2010 Mandriva, http://www.mandriva.com/
 #
-# $Id: config.py 4808 2009-11-23 16:04:04Z oroussy $
+# $Id$
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
 #
@@ -40,6 +40,7 @@ class Pulse2Api(twisted.web.xmlrpc.Proxy):
         @param credentials: XML-RPC HTTP BASIC credentials = login:password
         @type credentials: str
         """
+        url = str(url)
         twisted.web.xmlrpc.Proxy.__init__(self, url, None, None)
         self.SSLClientContext = None
         self.logger = logging.getLogger()
