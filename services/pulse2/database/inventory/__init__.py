@@ -142,6 +142,9 @@ class Inventory(DyngroupDatabaseHelper):
             # Map the python class to the SQL table
             mapper(eval(hasitem), self.table[hasitem])
 
+        # hasInventory don't exists, so we pass by hasNetwork and use the inventory field
+        # which mean you have to take care, you can have more than one hasNetwork by Inventory!
+        # you always have to group_by inventory when you use hasNetwork
         self.table['hasInventory'] = self.table['hasNetwork']
         self.klass['hasInventory'] = self.klass['hasNetwork']
 
@@ -1281,6 +1284,7 @@ class Inventory(DyngroupDatabaseHelper):
             results_old = session.query(Machine). \
                       select_from(self.table['hasInventory'].join(self.machine).join(self.table['Inventory'])). \
                       filter(func.to_days(func.now()) - func.to_days(self.klass['Inventory'].Date) > days). \
+                      group_by(self.machine.c.id). \
                       all()
             old_machines_id = []
             for res in results_old:
@@ -1289,12 +1293,14 @@ class Inventory(DyngroupDatabaseHelper):
             results = session.query(self.klass['Inventory']).add_entity(Machine). \
                       select_from(self.table['hasInventory'].join(self.table['Inventory']).join(self.machine)). \
                       filter(and_(not_(Machine.id.in_(old_machines_id)), and_((func.to_days(func.now()) - func.to_days(self.klass['Inventory'].Date)) <= days, Machine.Name.like('%' + pattern + '%')) )). \
-                      order_by(self.klass['Inventory'].id.desc())[min:max]
+                      order_by(self.klass['Inventory'].id.desc()).group_by(self.klass['Inventory'].id). \
+                      offset(min).limit(max - min)
         else:
             results = session.query(self.klass['Inventory']).add_entity(Machine). \
                       select_from(self.table['hasInventory'].join(self.machine).join(self.table['Inventory'])). \
                       filter(and_((func.to_days(func.now()) - func.to_days(self.klass['Inventory'].Date)) <= days, Machine.Name.like('%' + pattern + '%'))). \
-                      order_by(self.klass['Inventory'].id.desc())[min:max]
+                      order_by(self.klass['Inventory'].id.desc()).group_by(self.klass['Inventory'].id). \
+                      offset(min).limit(max - min)
 
         ret = []
         for res in results:
@@ -1303,7 +1309,7 @@ class Inventory(DyngroupDatabaseHelper):
             else:
                 # check if there was an inventory for this tuple before n days
                 newMachine = (session.query(self.klass['hasInventory']). \
-                             select_from(self.table['hasInventory'].join(self.machine).join(self.inventory)). \
+                             select_from(self.table['hasInventory'].join(self.machine).join(self.table['Inventory'])). \
                              filter(and_(self.klass['hasInventory'].machine == res[1].id, func.to_days(self.klass['Inventory'].Date) < func.to_days(func.now()) - days)). \
                              count()) == 0
             ret.append((res[1].Name, res[0].Date, newMachine))
@@ -1321,20 +1327,23 @@ class Inventory(DyngroupDatabaseHelper):
             results_old = session.query(Machine). \
                       select_from(self.table['hasInventory'].join(self.machine).join(self.table['Inventory'])). \
                       filter(func.to_days(func.now()) - func.to_days(self.klass['Inventory'].Date) > days). \
+                      group_by(self.machine.c.id). \
                       all()
             old_machines_id = []
             for res in results_old:
                 old_machines_id.append(res.id)
             # Select all machines which are not in old machines
-            count = session.query(self.klass['Inventory']).add_entity(Machine). \
+            count = session.query(self.klass['Inventory']).add_entity(Machine).add_column(self.klass['Inventory'].id). \
                       select_from(self.table['hasInventory'].join(self.table['Inventory']).join(self.machine)). \
                       filter(and_(not_(Machine.id.in_(old_machines_id)), and_((func.to_days(func.now()) - func.to_days(self.klass['Inventory'].Date)) <= days, Machine.Name.like('%' + pattern + '%')) )). \
-                      order_by(self.klass['Inventory'].id.desc()).count()
+                      order_by(self.klass['Inventory'].id.desc()).group_by(self.klass['Inventory'].id).all()
+            count = session.query(self.klass['Inventory']).filter(self.klass['Inventory'].id.in_(map(lambda l:l[2], count))).count()
         else:
-            count = session.query(self.klass['Inventory']).add_entity(Machine). \
+            count = session.query(self.klass['Inventory']).add_entity(Machine).add_column(self.klass['Inventory'].id). \
                       select_from(self.table['hasInventory'].join(self.machine).join(self.table['Inventory'])). \
                       filter(and_((func.to_days(func.now()) - func.to_days(self.klass['Inventory'].Date)) <= days, Machine.Name.like('%' + pattern + '%'))). \
-                      order_by(self.klass['Inventory'].id.desc()).count()
+                      order_by(self.klass['Inventory'].id.desc()).group_by(self.klass['Inventory'].id).all()
+            count = session.query(self.klass['Inventory']).filter(self.klass['Inventory'].id.in_(map(lambda l:l[2], count))).count()
 
         session.close()
         return count
@@ -1395,7 +1404,9 @@ class Inventory(DyngroupDatabaseHelper):
         results = session.query(self.klass['Inventory']). \
                 select_from(self.table['hasInventory'].join(self.table['Inventory']).join(self.machine)). \
                 filter(Machine.id == machineId). \
-                order_by(self.klass['Inventory'].id.desc())[min:max]
+                order_by(self.klass['Inventory'].id.desc()). \
+                group_by(self.klass['Inventory'].id). \
+                offset(min).limit(max - min)
         session.close()
 
         for res in results:
@@ -1423,8 +1434,8 @@ class Inventory(DyngroupDatabaseHelper):
         count = session.query(self.klass['Inventory']). \
                 select_from(self.table['hasInventory'].join(self.table['Inventory']).join(self.machine)). \
                 filter(Machine.id == machineId). \
-                order_by(self.klass['Inventory'].id.desc()). \
-                count()
+                group_by(self.klass['Inventory'].id)
+        count = session.query(self.klass['Inventory']).filter(self.klass['Inventory'].id.in_(map(lambda l:l.id, count))).count()
         session.close()
 
         return count
