@@ -1686,6 +1686,8 @@ class InventoryCreator(Inventory):
 
         dates = date.split(' ')
         if len(dates) != 2:
+            # Fix needed for MAC OS OCS inventory agent, which is using a
+            # different time stamp format
             dates = date.split('-')
             date = "%s-%s-%s %s:%s:%s"%(dates[0], dates[1], dates[2], dates[3], dates[4], dates[5])
             dates = date.split(' ')
