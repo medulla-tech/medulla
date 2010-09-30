@@ -24,6 +24,7 @@ START TRANSACTION;
 
 -- Too short fields
 ALTER TABLE `Memory` CHANGE `Frequency` `Frequency` VARCHAR(32) DEFAULT NULL;
+ALTER TABLE `Bios` CHANGE `Chipset` `Chipset` VARCHAR(255) DEFAULT NULL;
 
 -- Update Table for Xml Improving
 
