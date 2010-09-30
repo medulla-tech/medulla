@@ -99,6 +99,7 @@ class MscConfig(MscDatabaseConfig):
     web_vnc_view_only = True
     web_vnc_network_connectivity = "lan"
     web_vnc_allow_user_control = False
+    web_vnc_port = "5900"
 
     # Probe behavior
     web_probe_order =  "ping_ssh"
@@ -287,6 +288,8 @@ class MscConfig(MscDatabaseConfig):
             self.web_vnc_network_connectivity = self.cp.get("web", "vnc_network_connectivity")
         if self.cp.has_option("web", "vnc_allow_user_control"):
             self.web_vnc_allow_user_control = self.cp.getboolean("web", "vnc_allow_user_control")
+        if self.cp.has_option("web", "vnc_port"):
+            self.web_vnc_port = self.cp.get("web", "vnc_port")
 
         if self.cp.has_option("web", "probe_order"):
             self.web_probe_order = self.cp.get("web", "probe_order")

@@ -215,7 +215,7 @@ class RpcProxy(RpcProxyI):
             computer[1]['fullname']
         except KeyError:
             computer[1]['fullname'] = computer[1]['cn'][0]
-        return xmlrpcCleanup(mmc.plugins.msc.client.scheduler.tcp_sproxy(scheduler, computer, requestor_ip, "5900"))
+        return xmlrpcCleanup(mmc.plugins.msc.client.scheduler.tcp_sproxy(scheduler, computer, requestor_ip, MscConfig().web_vnc_port))
 
     def pa_adv_countAllPackages(self, filt):
         ctx = self.currentContext
