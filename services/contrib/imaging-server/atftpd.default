@@ -2,5 +2,5 @@
 # simply put as "atftpd" in /etc/default (debian systems)
 
 USE_INETD=false
-OPTIONS="--pcre /etc/mmc/pulse2/atftp/pcre.conf --logfile /var/log/mmc/atftpd.log --user pulse2.pulse2 /var/lib/pulse2/imaging"
+OPTIONS="--daemon --pcre /etc/mmc/pulse2/atftp/pcre.conf --logfile /var/log/mmc/atftpd.log --user pulse2.pulse2 /var/lib/pulse2/imaging"
 
