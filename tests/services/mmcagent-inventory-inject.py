@@ -57,39 +57,52 @@ password = 's3cr3t'
 client = MMCProxy('https://%s:%s@localhost:7080'%(login, password), False)
 client.base.ldapAuth('root', 'secret')
 
-OCS = '/usr/sbin/ocsinventory-agent'
-
-
-"""
-Inventory test class
-"""
 
 class class01inventoryReportTest(TestCase):
 
-    def test101inventoryExists(self):
+    """
+    Inventory test class
+    """
+
+    def test101inventoryInject(self):
+        OCS = '/usr/sbin/ocsinventory-agent'
+        if not os.path.exists(OCS):
+            print "OCS Inventory Agent is not installed, skipping test"
+            sys.exit(0)
+        # Launch the inventory agent to report an inventory
+        os.system(OCS + ' --server=http://127.0.0.1:9999')
+        time.sleep(20)
         result = client.inventory.inventoryExists('UUID5')
         self.assertTrue(result)
 
-    def test102hasInventory(self):
+    def atest103hasInventory(self):
         # Load the full inventory to test each part separately
         inventory = client.inventory.getLastMachineInventoryFull({})
-        # Assert that the inventory is not empty for the parts which are necessarly used
+        # Assert that the inventory is not empty for the parts which are
+        # necessarly used
         for part in inventory:
             if part == 'Hardware' or part == 'Software':
                 self.assertNotEqual(inventory[part], [])
 
-"""
-Launch of the tests
-"""
+    def test104ubuntuInject(self):
+        """
+        Inject an Ubuntu UTF-8 inventory containing latin-1 chars
+        """
+        os.system('gunzip -c ../data/ocs-ubuntu-10.04-lts.xml.gz | $PULSE2/services/contrib/Ocsinventory_local.pl -u http://127.0.0.1:9999 --stdin')
+        time.sleep(20)
+        result = client.inventory.inventoryExists('UUID6')
+        self.assertTrue(result)
 
-if not os.path.exists(OCS):
-    print "OCS Inventory Agent is not installed, skipping test"
-    sys.exit(0)
+    def test104macosxInject(self):
+        """
+        Inject a MAC OS X inventory
+        """
+        os.system('gunzip -c ../data/ocs-os-x-10.4.xml.gz | $PULSE2/services/contrib/Ocsinventory_local.pl -u http://127.0.0.1:9999 --stdin')
+        time.sleep(20)
+        result = client.inventory.inventoryExists('UUID7')
+        self.assertTrue(result)
 
-# Launch the inventory agent to report an inventory
-os.system(OCS + ' --server http://localhost:9999')
-time.sleep(30)
-
+# Launch of the tests
 if mode == "debug":
     nb = 0
     success = []
