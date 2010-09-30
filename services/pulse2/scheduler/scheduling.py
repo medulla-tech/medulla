@@ -1315,11 +1315,19 @@ def _chooseUploadMode(myCoH, myC, myT):
         mirror = mirrors[0]
         fbmirror = mirrors[1]
 
-        ma = pulse2.apis.clients.mirror.Mirror(mirror)
+        credentials, mirror = extractCredentials(mirror)
+        ma = pulse2.apis.clients.mirror.Mirror(credentials, mirror)
         d = ma.isAvailable(myC.package_id)
         d.addCallback(_cbRunPushPullPhaseTestMainMirror, mirror, fbmirror, client, myC, myCoH)
 
     return d
+
+def extractCredentials(mirror):
+    if not '@' in mirror:
+        return ('', mirror)
+    mirror = mirror.replace('http://', '')
+    credentials, mirror = mirror.split("@")
+    return (credentials, 'http://%s'%mirror)
 
 def _cbRunPushPullPhaseTestMainMirror(result, mirror, fbmirror, client, myC, myCoH):
     if result:
@@ -1339,7 +1347,8 @@ def _cbRunPushPullPhaseTestFallbackMirror(result, mirror, fbmirror, client, myC,
     if fbmirror != mirror:
         # Test the fallback mirror only if the URL is the different than the
         # primary mirror
-        ma = pulse2.apis.clients.mirror.Mirror(fbmirror)
+        credentials, mirror = extractCredentials(mirror)
+        ma = pulse2.apis.clients.mirror.Mirror(credentials, fbmirror)
         d = ma.isAvailable(myC.package_id)
         d.addCallback(_cbRunPushPullPhase, mirror, fbmirror, client, myC, myCoH, True)
         return d
@@ -1489,7 +1498,9 @@ def _runPushPullPhase(mirror, fbmirror, client, myC, myCoH, useFallback = False)
     else:
         updateHistory(myCoH.getId(), 'upload_in_progress', PULSE2_PSERVER_ISAVAILABLE_MIRROR, '%s\n%s' % (myC.package_id, mirror))
     logging.getLogger().debug("command_on_host #%s: Package '%s' is available on %s" % (myCoH.getId(), myC.package_id, mirror))
-    ma = pulse2.apis.clients.mirror.Mirror(mirror)
+
+    credentials, mirror = extractCredentials(mirror)
+    ma = pulse2.apis.clients.mirror.Mirror(credentials, mirror)
     fids = []
     for line in myC.files.split("\n"):
         fids.append(line.split('##')[0])
