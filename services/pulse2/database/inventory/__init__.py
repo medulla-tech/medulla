@@ -1312,7 +1312,9 @@ class Inventory(DyngroupDatabaseHelper):
                              select_from(self.table['hasInventory'].join(self.machine).join(self.table['Inventory'])). \
                              filter(and_(self.klass['hasInventory'].machine == res[1].id, func.to_days(self.klass['Inventory'].Date) < func.to_days(func.now()) - days)). \
                              count()) == 0
-            ret.append((res[1].Name, res[0].Date, newMachine))
+            # Combine Date and Time field
+            timestamp = datetime.datetime.combine(res[0].Date, res[0].Time)
+            ret.append((res[1].Name, timestamp, newMachine))
         session.close()
         return ret
 
