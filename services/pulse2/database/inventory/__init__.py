@@ -510,7 +510,8 @@ class Inventory(DyngroupDatabaseHelper):
         """
         ret = {}
         for part in self.config.getInventoryParts():
-            ret[part] = self.getLastMachineInventoryPart(ctx, part, params)
+            if part != 'Entity':
+                ret[part] = self.getLastMachineInventoryPart(ctx, part, params)
         return ret
 
     def getMachinesByDict(self, ctx, table, params):
@@ -1372,6 +1373,8 @@ class Inventory(DyngroupDatabaseHelper):
         """
         ret = {}
         for part in self.config.getInventoryParts():
+            # Skip Entity table which is not part of an inventory, and breaks
+            # SQL query in getLastMachineInventoryPart
             if part != 'Entity':
                 ret[part] = self.getLastMachineInventoryPart(ctx, part, params)
         return ret
