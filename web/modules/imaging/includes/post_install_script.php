@@ -61,6 +61,7 @@ function get_post_install_scripts($f, $post_install_scripts, $post_installs) {
         $a_order[] = $order;
     }
     $l = new MyListInfos($a_label, _T("Name", "imaging"));
+    $l->setPostInstallCount(count($post_installs));
     $l->addExtraInfo($a_desc, _T("Description", "imaging"));
     $l->addExtraInfo($a_order, _T("Order", "imaging"));
 
@@ -97,10 +98,17 @@ function print_exclusive_orders_js($a_pis_id) {
 <?php
 }
 
+global $conf;
 class MyListInfos extends ListInfos {
+    function setPostInstallCount($value) {
+        $this->post_install_count = $value;
+    }
+
     function display() {
-        $maxperpage = $conf["global"]["maxperpage"];
-        $conf["global"]["maxperpage"] = count($post_installs);
+        if (isset($this->post_install_count)) {
+            $maxperpage = $conf["global"]["maxperpage"];
+            $conf["global"]["maxperpage"] = $this->post_install_count;
+        }
 
         $ret = $this->drawTable(0);
 

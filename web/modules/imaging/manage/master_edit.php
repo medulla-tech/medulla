@@ -39,8 +39,6 @@ if(count($_POST) == 0) {
     $master = $masters[$id];
     $label = $master['name'];
     $desc = $master['desc'];
-    if($masters[$id][4] == 'yes')
-        $in_bootmenu = 'CHECKED';
 
     $p = new PageGenerator(_T("Edit master : ", "imaging").$label);
     $sidemenu->forceActiveItem("master");
@@ -63,13 +61,12 @@ if(count($_POST) == 0) {
     $f->pop();
 
     list($count, $post_installs) = xmlrpc_getAllPostInstallScripts($location);
-    $f = get_post_install_scripts($f, $master['post_install_scripts'], $post_installs);
+    if (isset($master['post_install_scripts'])) {
+        $f = get_post_install_scripts($f, $master['post_install_scripts'], $post_installs);
+    } else {
+        $f = get_post_install_scripts($f, array(), $post_installs);
+    }
 
-    /*$f->add(
-        new TrFormElement(_T("In default bootmenu", "imaging"),
-        new CheckboxTpl("bootmenu")),
-        array("value" => $in_bootmenu)
-    );*/
     $f->addButton("bvalid", _T("Validate"));
     $f->display();
 } else {
