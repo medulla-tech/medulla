@@ -73,7 +73,7 @@ foreach($incoming as $inc) {
 // Create the listinfos widget, the first column is the machine name
 $l = new OptimizedListInfos($machines, _T("Computer name"));
 // Add the second column, which is the inventory date
-$l->addExtraInfo($inventories, _T("Inventory Date"));
+$l->addExtraInfo($inventories, _T("Inventory date"));
 // Add the third column, which is the boolean "new_machine"
 $l->addExtraInfo($new_machines, _T("New computer"));
 // Navbar for an Ajax widget
