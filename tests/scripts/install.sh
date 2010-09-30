@@ -236,6 +236,7 @@ echo "Launch Pulse 2's services"
 /etc/init.d/pulse2-launchers restart
 /etc/init.d/pulse2-scheduler restart
 /etc/init.d/pulse2-imaging-server restart
+/etc/init.d/pulse2-inventory-server restart
 
 if [ ! -z $TMPREMOVE ];
     then

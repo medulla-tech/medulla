@@ -41,6 +41,7 @@ fi
 [ -f /etc/init.d/pulse2-launchers ] && /etc/init.d/pulse2-launchers stop || true
 [ -f /etc/init.d/pulse2-package-server ] && /etc/init.d/pulse2-package-server stop || true
 [ -f /etc/init.d/pulse2-imaging-server ] && /etc/init.d/pulse2-imaging-server stop || true
+[ -f /etc/init.d/pulse2-inventory-server ] && /etc/init.d/pulse2-inventory-server stop || true
 
 # DROP databases
 if [ -f /usr/bin/mysqladmin ];
