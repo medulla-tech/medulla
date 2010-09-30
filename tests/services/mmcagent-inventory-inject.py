@@ -75,7 +75,7 @@ class class01inventoryReportTest(TestCase):
         result = client.inventory.inventoryExists('UUID5')
         self.assertTrue(result)
 
-    def atest103hasInventory(self):
+    def test103hasInventory(self):
         # Load the full inventory to test each part separately
         inventory = client.inventory.getLastMachineInventoryFull({})
         # Assert that the inventory is not empty for the parts which are
