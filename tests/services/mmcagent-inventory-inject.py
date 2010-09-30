@@ -72,7 +72,7 @@ class class01inventoryReportTest(TestCase):
         # Launch the inventory agent to report an inventory
         os.system(OCS + ' --server=http://127.0.0.1:9999')
         time.sleep(20)
-        result = client.inventory.inventoryExists('UUID5')
+        result = client.inventory.inventoryExists('UUID3')
         self.assertTrue(result)
 
     def test103hasInventory(self):
@@ -90,7 +90,7 @@ class class01inventoryReportTest(TestCase):
         """
         os.system('gunzip -c ../data/ocs-ubuntu-10.04-lts.xml.gz | $PULSE2/services/contrib/Ocsinventory_local.pl -u http://127.0.0.1:9999 --stdin')
         time.sleep(20)
-        result = client.inventory.inventoryExists('UUID6')
+        result = client.inventory.inventoryExists('UUID4')
         self.assertTrue(result)
 
     def test104macosxInject(self):
@@ -99,7 +99,7 @@ class class01inventoryReportTest(TestCase):
         """
         os.system('gunzip -c ../data/ocs-os-x-10.4.xml.gz | $PULSE2/services/contrib/Ocsinventory_local.pl -u http://127.0.0.1:9999 --stdin')
         time.sleep(20)
-        result = client.inventory.inventoryExists('UUID7')
+        result = client.inventory.inventoryExists('UUID5')
         self.assertTrue(result)
 
 # Launch of the tests
