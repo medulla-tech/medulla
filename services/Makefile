@@ -96,6 +96,8 @@ install-imaging-server:
 
 	@echo "Installing config files ..."
 	$(INSTALL) -m 755 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(DESTDIR)/$(ETCDIR)/pulse2/imaging-server
+	$(INSTALL) -m 755 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(DESTDIR)/$(ETCDIR)/pulse2/atftpd
 	$(INSTALL) -m 600 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) conf/pulse2/imaging-server/imaging-server.ini $(DESTDIR)/$(ETCDIR)/pulse2/imaging-server
+	$(INSTALL) -m 600 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) conf/pulse2/atftpd/pcre.conf $(DESTDIR)/$(ETCDIR)/pulse2/atftpd
 
 .PHONY: src
