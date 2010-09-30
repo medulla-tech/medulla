@@ -1,6 +1,7 @@
 #!/usr/bin/python
+# -*- coding: utf-8; -*-
 #
-# (c) 2008 Mandriva, http://www.mandriva.com/
+# (c) 2008-2010 Mandriva, http://www.mandriva.com/
 #
 # $Id$
 #
@@ -17,11 +18,8 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Pulse 2; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-# MA 02110-1301, USA.
+# along with Pulse 2.  If not, see <http://www.gnu.org/licenses/>.
 
-# -*- coding: utf-8; -*-
 """
 Binary file for the inventory server.
 """
@@ -54,21 +52,21 @@ def running(daemonize, inifile):
     # Create log dir if it doesn't exist
     os.system('mkdir -p /var/log/mmc')
 
-    logging.config.fileConfig(inifile)
-    logger = logging.getLogger()
-
-    # When starting, we log to stderr too
-    hdlr2 = logging.StreamHandler()
-    logger.addHandler(hdlr2)
-
-    logger.debug("Logger loaded")
-    logger.info("Inventory server version('%s') build('%s')" % (str(getVersion()), str(getRevision())))
-
     # if we daemonize, we start by that before trying to initialise the service
     if daemonize:
         daemon(config, inifile)
-        # No more log to stderr
-        logger.removeHandler(hdlr2)
+
+    # Load logging configuration after daemonization, else inventory server
+    # may crash
+    logging.config.fileConfig(inifile)
+    logger = logging.getLogger()
+    # Log to stderr when not in daemon mode
+    if not daemonize:
+        hdlr2 = logging.StreamHandler()
+        logger.addHandler(hdlr2)
+
+    logger.debug("Logger loaded")
+    logger.info("Inventory server version('%s') build('%s')" % (str(getVersion()), str(getRevision())))
 
     if InventoryGetService().initialise(config):
         InventoryGetService().run()
@@ -86,7 +84,7 @@ def daemon(config, inifile):
     """
     pidfile = config.pidfile
 
-    # Test if mmcagent has been already launched in daemon mode
+    # Test if pulse2-inventory-server has been already launched in daemon mode
     if os.path.isfile(pidfile):
         print pidfile+" pid already exist. Maybe pulse2-inventory-server is already running\n"
         print "use /etc/init.d script to stop and relaunch it"
@@ -132,20 +130,11 @@ def daemon(config, inifile):
     os.dup2(0, 1)
     os.dup2(0, 2)
 
-    # initialise the logging again
-    logging.config.fileConfig(inifile)
-    logger = logging.getLogger()
-
-    # When starting, we log to stderr too
-    hdlr2 = logging.StreamHandler()
-    logger.addHandler(hdlr2)
-
     # do second fork
     try:
         pid = os.fork()
         if pid > 0:
-            # exit from second parent, print eventual PID before
-            logger.debug("Daemon PID %d" % pid)
+            # exit from second parent
             os.seteuid(0)
             os.setegid(0)
             os.system("echo " + str(pid) + " > " + pidfile)
