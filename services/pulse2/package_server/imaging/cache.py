@@ -46,7 +46,11 @@ class UUIDCache(pulse2.utils.Singleton):
 
     def __init__(self):
         pulse2.utils.Singleton.__init__(self)
-        self.cachePath = pulse2.package_server.config.P2PServerCP().imaging_api['uuid_cache_file']
+        if 'uuid_cache_file' in pulse2.package_server.config.P2PServerCP().imaging_api:
+            self.cachePath = pulse2.package_server.config.P2PServerCP().imaging_api['uuid_cache_file']
+        else:
+            self.cachePath = "/tmp/uuid_cache"
+
         self.log.info("Using %s as UUID Cache File" % self.cachePath)
         if not os.path.isfile(self.cachePath):
             try:
@@ -211,12 +215,28 @@ class UUIDCache(pulse2.utils.Singleton):
         @rtype: boolean
         """
 
+        # sanity check
         if not pulse2.utils.isMACAddress(mac):
             return False
         if not pulse2.utils.isUUID(uuid):
             return False
+
+        # normalization
         fqdn = shortname + '.' + domain
         mac = pulse2.utils.normalizeMACAddress(mac)
+
+        # check that if the UUID is already known, it's MAC is the same as our
+        answer = self.getByUUID(uuid)
+        if answer and answer['mac'] != mac :
+            self.log.warn("Cachefault on %s/%s (mac already known : %s), updating" % (uuid, mac, answer['mac']))
+            self.delete(uuid)
+
+        # check that if the MAC is already known, it's UUID is the same as our
+        answer = self.getByMac(mac)
+        if answer and answer['uuid'] != uuid :
+            self.log.warn("Cachefault on %s/%s (uuid already known : %s), updating" % (uuid, mac, answer['uuid']))
+            self.delete(answer['uuid'])
+
         if not self.config.has_section(uuid):
             self.config.add_section(uuid)
         self.config.set(uuid, 'mac', mac)
