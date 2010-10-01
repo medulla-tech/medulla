@@ -75,7 +75,7 @@ class class01inventoryReportTest(TestCase):
         result = client.inventory.inventoryExists('UUID3')
         self.assertTrue(result)
 
-    def test103hasInventory(self):
+    def test102hasInventory(self):
         # Load the full inventory to test each part separately
         inventory = client.inventory.getLastMachineInventoryFull({})
         # Assert that the inventory is not empty for the parts which are
@@ -84,7 +84,7 @@ class class01inventoryReportTest(TestCase):
             if part == 'Hardware' or part == 'Software':
                 self.assertNotEqual(inventory[part], [])
 
-    def test104ubuntuInject(self):
+    def test103ubuntuInject(self):
         """
         Inject an Ubuntu UTF-8 inventory containing latin-1 chars
         """
