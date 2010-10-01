@@ -32,6 +32,7 @@ import time
 import pulse2.utils
 import pulse2.package_server.config
 
+
 class UUIDCache(pulse2.utils.Singleton):
     """
     This is a object-cache for UUID/MAC conversion stuff.
@@ -48,7 +49,7 @@ class UUIDCache(pulse2.utils.Singleton):
     def __init__(self):
         pulse2.utils.Singleton.__init__(self)
         self.cachePath = pulse2.package_server.config.P2PServerCP().imaging_api['uuid_cache_file']
-        self.cacheLifetime =  pulse2.package_server.config.P2PServerCP().imaging_api['uuid_cache_lifetime']
+        self.cacheLifetime = pulse2.package_server.config.P2PServerCP().imaging_api['uuid_cache_lifetime']
 
         self.log.info("Using %s as UUID Cache File" % self.cachePath)
         if not os.path.isfile(self.cachePath):
@@ -124,7 +125,7 @@ class UUIDCache(pulse2.utils.Singleton):
                     else:
                         fqdn = ''
                     if self.config.has_option(section, 'updated'):
-                        updated = self.config.getint(section, 'updated')
+                        updated = int(self.config.get(section, 'updated'))
                     else:
                         updated = 0
                     if int(time.time()) - updated > self.cacheLifetime:
@@ -135,8 +136,7 @@ class UUIDCache(pulse2.utils.Singleton):
                         'mac'       : mac,
                         'shortname' : shortname,
                         'fqdn'      : fqdn,
-                        'updated'   : updated
-                        }
+                        'updated'   : updated}
         return False
 
     def getByShortName(self, name):
@@ -168,7 +168,7 @@ class UUIDCache(pulse2.utils.Singleton):
                     else:
                         fqdn = ''
                     if self.config.has_option(section, 'updated'):
-                        updated = self.config.getint(section, 'updated')
+                        updated = int(self.config.get(section, 'updated'))
                     else:
                         updated = 0
                     if int(time.time() - updated) > self.cacheLifetime:
@@ -179,8 +179,7 @@ class UUIDCache(pulse2.utils.Singleton):
                         'mac'       : mac,
                         'shortname' : shortname,
                         'fqdn'      : fqdn,
-                        'updated'   : updated
-                        }
+                        'updated'   : updated}
         return False
 
     def getByUUID(self, uuid):
@@ -215,7 +214,7 @@ class UUIDCache(pulse2.utils.Singleton):
             else:
                 fqdn = ''
             if self.config.has_option(uuid, 'updated'):
-                updated = self.config.getint(uuid, 'updated')
+                updated = int(self.config.get(uuid, 'updated'))
             else:
                 updated = 0
             if int(time.time()) - updated > self.cacheLifetime:
@@ -226,8 +225,7 @@ class UUIDCache(pulse2.utils.Singleton):
                 'mac'       : mac,
                 'shortname' : shortname,
                 'fqdn'      : fqdn,
-                'updated'    : updated
-                }
+                'updated'    : updated}
         return False
 
     def get(self, uuid):
