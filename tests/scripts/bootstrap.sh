@@ -73,6 +73,8 @@ if [ ! -z "$1" ];
     set +e
     make "$1"
     RET=$?
+    # Print Pulse 2 logs on stdout
+    $MMCCORE/tests/scripts/print-mmc-log.sh
     set -e
     popd
 else
