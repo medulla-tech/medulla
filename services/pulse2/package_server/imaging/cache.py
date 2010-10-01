@@ -27,6 +27,7 @@ Caching related functions / objects
 import logging
 import ConfigParser
 import os.path
+import time
 
 import pulse2.utils
 import pulse2.package_server.config
@@ -46,10 +47,8 @@ class UUIDCache(pulse2.utils.Singleton):
 
     def __init__(self):
         pulse2.utils.Singleton.__init__(self)
-        if 'uuid_cache_file' in pulse2.package_server.config.P2PServerCP().imaging_api:
-            self.cachePath = pulse2.package_server.config.P2PServerCP().imaging_api['uuid_cache_file']
-        else:
-            self.cachePath = "/tmp/uuid_cache"
+        self.cachePath = pulse2.package_server.config.P2PServerCP().imaging_api['uuid_cache_file']
+        self.cacheLifetime = 300
 
         self.log.info("Using %s as UUID Cache File" % self.cachePath)
         if not os.path.isfile(self.cachePath):
@@ -118,13 +117,25 @@ class UUIDCache(pulse2.utils.Singleton):
                     uuid = section
                     if self.config.has_option(section, 'shortname'):
                         shortname = self.config.get(section, 'shortname')
+                    else:
+                        shortname = ''
                     if self.config.has_option(section, 'fullname'):
                         fqdn = self.config.get(section, 'fullname')
+                    else:
+                        fqdn = ''
+                    if self.config.has_option(section, 'updated'):
+                        updated = self.config.getint(section, 'updated')
+                    else:
+                        updated = 0
+                    if int(time.time()) - updated > self.cacheLifetime:
+                        self.log.debug("Cachefault on %s/%s (expired), ignoring" % (uuid, mac))
+                        return False
                     return {
                         'uuid'      : uuid,
                         'mac'       : mac,
                         'shortname' : shortname,
-                        'fqdn'      : fqdn
+                        'fqdn'      : fqdn,
+                        'updated'   : updated
                         }
         return False
 
@@ -150,13 +161,25 @@ class UUIDCache(pulse2.utils.Singleton):
                     uuid = section
                     if self.config.has_option(section, 'mac'):
                         mac = self.config.get(section, 'mac')
+                    else:
+                        mac = ''
                     if self.config.has_option(section, 'fullname'):
                         fqdn = self.config.get(section, 'fullname')
+                    else:
+                        fqdn = ''
+                    if self.config.has_option(section, 'updated'):
+                        updated = self.config.getint(section, 'updated')
+                    else:
+                        updated = 0
+                    if int(time.time() - updated) > self.cacheLifetime:
+                        self.log.debug("Cachefault on %s/%s (expired), ignoring" % (uuid, mac))
+                        return False
                     return {
                         'uuid'      : uuid,
                         'mac'       : mac,
                         'shortname' : shortname,
-                        'fqdn'      : fqdn
+                        'fqdn'      : fqdn,
+                        'updated'   : updated
                         }
         return False
 
@@ -181,15 +204,29 @@ class UUIDCache(pulse2.utils.Singleton):
         if self.config.has_section(uuid):
             if self.config.has_option(uuid, 'mac'):
                 mac = self.config.get(uuid, 'mac')
+            else:
+                mac = ''
             if self.config.has_option(uuid, 'shortname'):
                 shortname = self.config.get(uuid, 'shortname')
+            else:
+                shortname = ''
             if self.config.has_option(uuid, 'fullname'):
                 fqdn = self.config.get(uuid, 'fullname')
+            else:
+                fqdn = ''
+            if self.config.has_option(uuid, 'updated'):
+                updated = self.config.getint(uuid, 'updated')
+            else:
+                updated = 0
+            if int(time.time()) - updated > self.cacheLifetime:
+                self.log.debug("Cachefault on %s/%s (expired), ignoring" % (uuid, mac))
+                return False
             return {
                 'uuid'      : uuid,
                 'mac'       : mac,
                 'shortname' : shortname,
-                'fqdn'      : fqdn
+                'fqdn'      : fqdn,
+                'updated'    : updated
                 }
         return False
 
@@ -224,6 +261,7 @@ class UUIDCache(pulse2.utils.Singleton):
         # normalization
         fqdn = shortname + '.' + domain
         mac = pulse2.utils.normalizeMACAddress(mac)
+        updated = int(time.time())
 
         # check that if the UUID is already known, it's MAC is the same as our
         answer = self.getByUUID(uuid)
@@ -242,6 +280,7 @@ class UUIDCache(pulse2.utils.Singleton):
         self.config.set(uuid, 'mac', mac)
         self.config.set(uuid, 'shortname', shortname)
         self.config.set(uuid, 'fqdn', fqdn)
+        self.config.set(uuid, 'updated', updated)
         self._flush()
         return True
 
