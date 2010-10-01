@@ -44,7 +44,7 @@ class UUIDCache(pulse2.utils.Singleton):
     """
 
     log = logging.getLogger('imaging')
-    config = ConfigParser.ConfigParser()
+    config = ConfigParser.RawConfigParser()
 
     def __init__(self):
         pulse2.utils.Singleton.__init__(self)
@@ -125,7 +125,7 @@ class UUIDCache(pulse2.utils.Singleton):
                     else:
                         fqdn = ''
                     if self.config.has_option(section, 'updated'):
-                        updated = int(self.config.get(section, 'updated'))
+                        updated = self.config.getint(section, 'updated')
                     else:
                         updated = 0
                     if int(time.time()) - updated > self.cacheLifetime:
@@ -168,7 +168,7 @@ class UUIDCache(pulse2.utils.Singleton):
                     else:
                         fqdn = ''
                     if self.config.has_option(section, 'updated'):
-                        updated = int(self.config.get(section, 'updated'))
+                        updated = self.config.getint(section, 'updated')
                     else:
                         updated = 0
                     if int(time.time() - updated) > self.cacheLifetime:
@@ -214,7 +214,7 @@ class UUIDCache(pulse2.utils.Singleton):
             else:
                 fqdn = ''
             if self.config.has_option(uuid, 'updated'):
-                updated = int(self.config.get(uuid, 'updated'))
+                updated = self.config.getint(uuid, 'updated')
             else:
                 updated = 0
             if int(time.time()) - updated > self.cacheLifetime:
