@@ -48,7 +48,7 @@ class UUIDCache(pulse2.utils.Singleton):
     def __init__(self):
         pulse2.utils.Singleton.__init__(self)
         self.cachePath = pulse2.package_server.config.P2PServerCP().imaging_api['uuid_cache_file']
-        self.cacheLifetime = 300
+        self.cacheLifetime =  pulse2.package_server.config.P2PServerCP().imaging_api['uuid_cache_lifetime']
 
         self.log.info("Using %s as UUID Cache File" % self.cachePath)
         if not os.path.isfile(self.cachePath):

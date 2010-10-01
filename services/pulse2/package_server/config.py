@@ -40,7 +40,6 @@ from pulse2.utils import isUUID
 if sys.platform != "win32":
     import pwd
     import grp
-    import string
     from pulse2.utils import Pulse2ConfigParser
 
 
@@ -141,7 +140,7 @@ class P2PServerCP(pulse2.utils.Singleton):
                 self.cp = ConfigParser.ConfigParser()
             self.cp.read(config_file)
 
-        if self.cp.has_option("main", "bind"): # TODO remove in a future version
+        if self.cp.has_option("main", "bind"):  # TODO remove in a future version
             logging.getLogger().warning("'bind' is obslete, please replace it in your config file by 'host'")
             self.bind = self.cp.get("main", 'bind')
         elif self.cp.has_option('main', 'host'):
@@ -198,7 +197,7 @@ class P2PServerCP(pulse2.utils.Singleton):
             if not os.path.isfile(self.cacert):
                 raise Exception('can\'t read SSL certificate "%s"' % (self.cacert))
                 return False
-            if self.verifypeer: # we need twisted.internet.ssl.Certificate to activate certs
+            if self.verifypeer:  # we need twisted.internet.ssl.Certificate to activate certs
                 import twisted.internet.ssl
                 if not hasattr(twisted.internet.ssl, "Certificate"):
                     raise Exception('I need at least Python Twisted 2.5 to handle peer checking')
@@ -279,7 +278,7 @@ class P2PServerCP(pulse2.utils.Singleton):
                 if not os.path.isfile(self.mmc_agent['cacert']):
                     raise Exception('can\'t read SSL certificate "%s"' % (self.mmc_agent['cacert']))
                     return False
-                if self.mmc_agent['verifypeer']: # we need twisted.internet.ssl.Certificate to activate certs
+                if self.mmc_agent['verifypeer']:  # we need twisted.internet.ssl.Certificate to activate certs
                     import twisted.internet.ssl
                     if not hasattr(twisted.internet.ssl, "Certificate"):
                         raise Exception('I need at least Python Twisted 2.5 to handle peer checking')
@@ -325,6 +324,8 @@ class P2PServerCP(pulse2.utils.Singleton):
             isogen_tool = '/usr/bin/mkisofs'
             # will contain our UUID/MAC Addr cache
             uuid_cache_file = os.path.join(base_folder, 'uuid-cache.txt')
+            # our UUID/MAC Addr cache lifetime
+            uuid_cache_lifetime = 300
             # RPC replay file
             rpc_replay_file = os.path.join(base_folder, 'rpc-replay.pck')
             # RPC replay loop timer in seconds
@@ -374,6 +375,8 @@ class P2PServerCP(pulse2.utils.Singleton):
                 isogen_tool = self.cp.get('imaging_api', 'isogen_tool')
             if self.cp.has_option('imaging_api', 'uuid_cache_file'):
                 uuid_cache_file = os.path.join(base_folder, self.cp.get('imaging_api', 'uuid_cache_file'))
+            if self.cp.has_option('imaging_api', 'uuid_cache_lifetime'):
+                uuid_cache_lifetime = os.path.join(base_folder, self.cp.getint('imaging_api', 'uuid_cache_lifetime'))
             if self.cp.has_option('imaging_api', 'rpc_replay_file'):
                 rpc_replay_file = os.path.join(base_folder, self.cp.get('imaging_api', 'rpc_replay_file'))
             if self.cp.has_option('imaging_api', 'rpc_loop_timer'):
@@ -388,31 +391,32 @@ class P2PServerCP(pulse2.utils.Singleton):
                 raise TypeError("'%s' is not an valid UUID : in my config file, section [imaging_api], set a correct uuid." % uuid)
 
             self.imaging_api = {
-                'mount_point'       : imaging_mp,
-                'base_folder'       : base_folder,
-                'bootloader_folder' : bootloader_folder,
-                'bootsplash_file'   : bootsplash_file,
-                'bootmenus_folder'  : bootmenus_folder,
-                'cdrom_bootloader'  : cdrom_bootloader,
-                'diskless_folder'   : diskless_folder,
-                'diskless_kernel'   : diskless_kernel,
-                'diskless_initrd'   : diskless_initrd,
-                'diskless_initrdcd' : diskless_initrdcd,
-                'diskless_memtest'  : diskless_memtest,
-                'computers_folder'  : computers_folder,
-                'inventories_folder': inventories_folder,
-                'masters_folder'    : masters_folder,
-                'postinst_folder'   : postinst_folder,
-                'archives_folder'   : archives_folder,
-                'isos_folder'       : isos_folder,
-                'isogen_tool'       : isogen_tool,
-                'src'               : src,
-                'uuid'              : uuid,
-                'uuid_cache_file'   : uuid_cache_file,
-                'rpc_replay_file'   : rpc_replay_file,
-                'rpc_loop_timer'    : rpc_loop_timer,
-                'rpc_count'         : rpc_count,
-                'rpc_interval'      : rpc_interval}
+                'mount_point'         : imaging_mp,
+                'base_folder'         : base_folder,
+                'bootloader_folder'   : bootloader_folder,
+                'bootsplash_file'     : bootsplash_file,
+                'bootmenus_folder'    : bootmenus_folder,
+                'cdrom_bootloader'    : cdrom_bootloader,
+                'diskless_folder'     : diskless_folder,
+                'diskless_kernel'     : diskless_kernel,
+                'diskless_initrd'     : diskless_initrd,
+                'diskless_initrdcd'   : diskless_initrdcd,
+                'diskless_memtest'    : diskless_memtest,
+                'computers_folder'    : computers_folder,
+                'inventories_folder'  : inventories_folder,
+                'masters_folder'      : masters_folder,
+                'postinst_folder'     : postinst_folder,
+                'archives_folder'     : archives_folder,
+                'isos_folder'         : isos_folder,
+                'isogen_tool'         : isogen_tool,
+                'src'                 : src,
+                'uuid'                : uuid,
+                'uuid_cache_file'     : uuid_cache_file,
+                'uuid_cache_lifetime' : uuid_cache_lifetime,
+                'rpc_replay_file'     : rpc_replay_file,
+                'rpc_loop_timer'      : rpc_loop_timer,
+                'rpc_count'           : rpc_count,
+                'rpc_interval'        : rpc_interval}
 
         if self.cp.has_option("main", "package_detect_activate"):
             # WARN this must overide the previously defined activate if it is in the config file
