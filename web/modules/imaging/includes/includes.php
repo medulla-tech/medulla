@@ -132,7 +132,7 @@ function format_disk_info($df) {
             unset($incomplete_lines);
         }
 
-        if (preg_match("/^\/dev\/mapper\/data-snap/", $disk) || preg_match("/^[ ]+/", $disk)) {
+        if (preg_match("/^\/dev\/mapper\/data-snap/", $disk) || preg_match("/^[ ]+/", $disk) || preg_match("/^Filesystem/", $disk)) {
             continue;
         }
 
