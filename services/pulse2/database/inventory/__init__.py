@@ -1730,7 +1730,7 @@ class InventoryCreator(Inventory):
             # this computer
             result = session.query(InventoryTable).\
                 select_from(
-                    self.inventory.join(self.table['hasHardware']).join(self.machine)
+                    self.inventory.join(self.table['hasEntity']).join(self.machine)
                 ).\
                 filter(self.machine.c.Name == hostname)
 
