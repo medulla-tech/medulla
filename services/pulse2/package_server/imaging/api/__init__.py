@@ -751,7 +751,8 @@ class ImagingApi(MyXmlrpc):
 
                 client = self._getXMLRPCClient()
                 func = 'imaging.imageUpdate'
-                args = (self.config.imaging_api['uuid'], c_uuid, imageUUID, name, desc, size, updateDate, state)
+                # size converted to float to bypass xmlrpc limitations
+                args = (self.config.imaging_api['uuid'], c_uuid, imageUUID, name, desc, float(size), updateDate, state)
                 d = client.callRemote(func, *args)
                 d.addCallbacks(_onSuccess, RPCReplay().onError, errbackArgs = (func, args, False))
                 return True
