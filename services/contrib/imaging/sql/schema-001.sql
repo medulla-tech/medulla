@@ -27,6 +27,8 @@
 SET storage_engine=INNODB;
 SET GLOBAL character_set_server=UTF8;
 SET SESSION character_set_server=UTF8;
+SET NAMES 'utf8';
+
 
 START TRANSACTION;
 
