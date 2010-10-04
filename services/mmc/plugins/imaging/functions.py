@@ -2395,6 +2395,11 @@ def synchroTargets(ctx, uuids, target_type):
                     logger.debug("computer %s is already registered as a P2IT.COMPUTER"%(uuid))
                 menu = menus[uuid]
                 imagingData = {'menu':{uuid:menu}, 'uuid':uuid}
+
+                if not uuid in h_macaddress:
+                    logger.warn("synchroTargets() : computer %s do not have a MAC address" % (uuid))
+                    continue
+
                 mac = h_macaddress[uuid]
                 if type(mac) == list:
                     mac = mac[0]
