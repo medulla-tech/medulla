@@ -159,11 +159,6 @@ $l->addActionItem(
         "images_iso", "backup", "image", "base", "computers")
 );
 
-$l->addActionItem(
-    new ActionPopupItem(_T("Show Image Informations", "imaging"), "showimage", "showimage", "image", "base", "computers")
-    );
-//$showLogsAction = new ActionItem(_T("Show Logs", "imaging"), "showlogs", "edit", "image", "base", "computers", $type."tabimages", "edit");
-
 // if not in boot menu
 if ($actions) {
     $l->addActionItem(
