@@ -558,7 +558,9 @@ class ListInfos extends HtmlElement {
         }
 
         if (count($this->arrAction)!=0) { //if we have actions
-            $width_styl = $this->col_width[count($this->col_width)-1];
+            if (!empty($this->col_width)) {
+                $width_styl = $this->col_width[count($this->col_width) - 1];
+            }
             $width_styl = isset($width_styl) ? sprintf('width: %s;', $width_styl) : '';
             echo "<td style=\"text-align: right; $width_styl\"><span style=\"color: #AAA;\" >Actions</span></td>";
         }
