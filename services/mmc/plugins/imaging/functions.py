@@ -2250,7 +2250,7 @@ class ImagingRpcProxy(RpcProxyI):
             'desc': desc,
             'uuid': image_uuid,
             'checksum': '',
-            'size': size,
+            'size': int(size),
             'update_date': update_date,
             'state': state}
         db = ImagingDatabase()
