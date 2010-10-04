@@ -486,7 +486,7 @@ def humanReadable(num, unit = "B", base = 1024):
     port of my famous "human readable" formating function
     """
 
-    assert type(num) in [float, int]
+    assert type(num) in [float, int, long]
     assert type(unit) in [str]
     assert type(base) in [int]
 
