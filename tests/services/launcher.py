@@ -62,7 +62,7 @@ class class01sync_push_inventoryTest(TestCase):
 
     def test102sync_remote_inventory(self):
         result=server.sync_remote_inventory(0,{'protocol':'ssh','host':ipserver,'uuid':uuid})
-        self.assertEqual ( result, [127, result[1], ''])
+        self.assertEqual ( result, [1, result[1], ''])
 
 
 class class02sync_deleteTest(TestCase):
