@@ -43,23 +43,53 @@ if (!xmlrpc_doesLocationHasImagingServer($location)) {
 }
 
 $ret = xmlrpc_getLocationSynchroState($location);
+# result is an array of dicts
+# each dict contains 3 keys :
+# item: the element id
+# id : the sync id
+# label : the sync label
+#
+# first item is the entity status ("item" key is empty)
 
-if ($ret['id'] == $SYNCHROSTATE_RUNNING) {
-    $a_href_open = "<a href=''>";
-    print sprintf(_T("The synchro is running, please wait or reload the page %shere%s", "imaging"), $a_href_open, '</a>');
-    exit();
+$running_on = array();
+$initerror_on = array();
+$todo_on = array();
+
+foreach ($ret as $r) {
+    $item = $r['item'];
+    if ($item == '') {
+        $item = _T("the entity itself", "imaging");
+    }
+    
+    if ($r['id'] == $SYNCHROSTATE_RUNNING) {
+        array_push($running_on, $item);
+    }
+    if ($r['id'] == $SYNCHROSTATE_INIT_ERROR) {
+        array_push($initerror_on, $item);
+    }
+    if ($r['id'] == $SYNCHROSTATE_TODO) {
+        array_push($todo_on, $item);
+    }
 }
 
-if ($ret['id'] == $SYNCHROSTATE_INIT_ERROR) {
+if (count($running_on) > 0) {
+    $a_href_open = "<a href=''>";
+    print_r($_GET);
+#    print sprintf(_T("The synchro is still running on %s, please wait or reload the page %shere%s", "imaging"), join($running_on, ', '), $a_href_open, '</a>');
+    print sprintf(_T("The synchro is still running, please wait or reload the page %shere%s", "imaging"), $a_href_open, '</a>');
+}
+
+if (count($initerror_on) > 0) {
     print _T("The registering in the imaging server has failed.", "imaging");
     exit();
 }
 
-if ($ret['id'] == $SYNCHROSTATE_TODO) {
+if (count($todo_on) > 0) {
     # DISPLAY the sync link
 
     print "<table><tr><td><font color='red'><b>";
-    print _T('This location has been modified, when you are done, please press on "Synchronize" so that modifications are updated on the Imaging server.', 'imaging');
+#    print sprintf(_T('The menu has been modified on %s, when you are done, please press on "Synchronize" so that modifications are updated on the Imaging server.', 'imaging'), join($todo_on, ', '));
+    print sprintf(_T('The menu has been modified, when you are done, please press on "Synchronize" so that modifications are updated on the Imaging server.', 'imaging'));
     print "</b></font></td><td>";
 
     $f = new ValidatingForm();
@@ -80,4 +110,5 @@ if ($ret['id'] == $SYNCHROSTATE_TODO) {
     $f->display();
     print "</td></tr></table>";
 }
+
 ?>
