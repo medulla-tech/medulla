@@ -206,6 +206,7 @@ if ($areCommands) { // display several commands
     $n->addActionItemArray($a_status);
 } else { // display only one command
     $proxies = array();
+    $a_client = array();
     foreach ($cmds as $cmd) {
 
         $coh_id = $cmd[1];
