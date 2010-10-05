@@ -34,77 +34,86 @@ require("../includes/xmlrpc.inc.php");
 require("../../base/includes/edit.inc.php");
 
 $location = getCurrentLocation();
-if (xmlrpc_doesLocationHasImagingServer($location)) {
-    $ret = xmlrpc_getLocationSynchroState($location);
 
-    if ($ret['id'] == $SYNCHROSTATE_RUNNING) {
-        $a_href_open = "<a href=''>";
-        print sprintf(_T("The synchro is running, please wait or reload the page %shere%s", "imaging"), $a_href_open, '</a>');
-    } elseif ($ret['id'] == $SYNCHROSTATE_INIT_ERROR) {
-        print _T("The registering in the imaging server has failed.", "imaging");
-    } else {
-        if ($ret['id'] == $SYNCHROSTATE_TODO) {
-            # DISPLAY the sync link
+if (!xmlrpc_doesLocationHasImagingServer($location)) {
+    # choose the imaging server we want to associate to that entity
+    $ajax = new AjaxFilter(urlStrRedirect("imaging/manage/ajaxAvailableImagingServer"), "container", array('from'=>$_GET['from']));
+    $ajax->display();
+    print "<br/><br/><br/>";
+    $ajax->displayDivToUpdate();
+    exit();    
+}
 
-            print "<table><tr><td><font color='red'><b>";
-            print _T('This location has been modified, when you are done, please press on "Synchronize" so that modifications are updated on the Imaging server.', 'imaging');
-            print "</b></font></td><td>";
+$ret = xmlrpc_getLocationSynchroState($location);
 
-            $f = new ValidatingForm();
-            $f->add(new HiddenTpl("location_uuid"),                        array("value" => $location,  "hide" => True));
+if ($ret['id'] == $SYNCHROSTATE_RUNNING) {
+    $a_href_open = "<a href=''>";
+    print sprintf(_T("The synchro is running, please wait or reload the page %shere%s", "imaging"), $a_href_open, '</a>');
+} elseif ($ret['id'] == $SYNCHROSTATE_INIT_ERROR) {
+    print _T("The registering in the imaging server has failed.", "imaging");
+} else {
+    if ($ret['id'] == $SYNCHROSTATE_TODO) {
+        # DISPLAY the sync link
 
-            $f->addButton("bsync", _T("Synchronize", "imaging"));
-            $f->display();
-            print "</td></tr></table>";
-        } elseif (isExpertMode()) {
-            print "<table><tr><td>";
-            print _T('Click on "Force synchronize" if you want to force the synchronization', 'imaging');
-            print "</td><td>";
+        print "<table><tr><td><font color='red'><b>";
+        print _T('This location has been modified, when you are done, please press on "Synchronize" so that modifications are updated on the Imaging server.', 'imaging');
+        print "</b></font></td><td>";
 
-            $f = new ValidatingForm();
-            $f->add(new HiddenTpl("location_uuid"),                        array("value" => $location,  "hide" => True));
+        $f = new ValidatingForm();
+        $f->add(new HiddenTpl("location_uuid"),                        array("value" => $location,  "hide" => True));
 
-            $f->addButton("bsync", _T("Force synchronize", "imaging"));
-            $f->display();
-            print "</td></tr></table>";
-        }
+        $f->addButton("bsync", _T("Synchronize", "imaging"));
+        $f->display();
+        print "</td></tr></table>";
+    } elseif (isExpertMode()) {
+        print "<table><tr><td>";
+        print _T('Click on "Force synchronize" if you want to force the synchronization', 'imaging');
+        print "</td><td>";
 
-        $global_status = xmlrpc_getGlobalStatus($location);
-        if (!empty($global_status)) {
-            $disk_info = format_disk_info($global_status['disk_info']);
-            $health = format_health($global_status['uptime'], $global_status['mem_info']);
-            $short_status = $global_status['short_status'];
+        $f = new ValidatingForm();
+        $f->add(new HiddenTpl("location_uuid"),                        array("value" => $location,  "hide" => True));
+
+        $f->addButton("bsync", _T("Force synchronize", "imaging"));
+        $f->display();
+        print "</td></tr></table>";
+    }
+
+    $global_status = xmlrpc_getGlobalStatus($location);
+    if (!empty($global_status)) {
+        $disk_info = format_disk_info($global_status['disk_info']);
+        $health = format_health($global_status['uptime'], $global_status['mem_info']);
+        $short_status = $global_status['short_status'];
 ?>
 
 <br/>
 <h2><?=_T('Server status for this entity', 'imaging')?></h2>
 
 <div class="status">
-    <div class="status_block">
-        <h3><?=_T('Space available on server', 'imaging')?></h3>
-        <?=$disk_info;?>
-    </div>
-    <div class="status_block">
-        <h3><?=_T('Load on server', 'imaging')?></h3>
-        <?=$health;?>
-    </div>
+<div class="status_block">
+    <h3><?=_T('Space available on server', 'imaging')?></h3>
+    <?=$disk_info;?>
+</div>
+<div class="status_block">
+    <h3><?=_T('Load on server', 'imaging')?></h3>
+    <?=$health;?>
+</div>
 </div>
 
 <div class="status">
-    <!--<div class="status_block">
-        <h3 style="display: inline"><?=_T('Synchronization state', 'imaging')?> : </h3>
-        <?
-        $led = new LedElement('green');
-        $led->display();
-        echo "&nbsp;"._T("Up-to-date", "imaging");
-        ?>
-    </div>-->
-    <div class="status_block">
-        <h3><?=_T('Stats', 'imaging')?></h3>
-          <p class="stat"><img src="img/machines/icn_machinesList.gif" /> <strong><?=$short_status['rescue'];?></strong>/<?=$short_status['total'];?> <?=_T("client(s) have rescue image(s)", "imaging")?></p>                                                       <p class="stat"><img src="img/common/cd.png" />
-          <strong><?=$short_status['master'];?></strong>
-          <?=_T("masters are available", "imaging")?>
-    </div>
+<!--<div class="status_block">
+    <h3 style="display: inline"><?=_T('Synchronization state', 'imaging')?> : </h3>
+    <?
+    $led = new LedElement('green');
+    $led->display();
+    echo "&nbsp;"._T("Up-to-date", "imaging");
+    ?>
+</div>-->
+<div class="status_block">
+    <h3><?=_T('Stats', 'imaging')?></h3>
+      <p class="stat"><img src="img/machines/icn_machinesList.gif" /> <strong><?=$short_status['rescue'];?></strong>/<?=$short_status['total'];?> <?=_T("client(s) have rescue image(s)", "imaging")?></p>                                                       <p class="stat"><img src="img/common/cd.png" />
+      <strong><?=$short_status['master'];?></strong>
+      <?=_T("masters are available", "imaging")?>
+</div>
 </div>
 
 <div class="spacer"></div>
@@ -112,20 +121,14 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
 <h2 class="activity"><?=_T('Recent activity in entity', 'imaging')?></h2>
 
 <?
-            $ajax = new AjaxFilter("modules/imaging/manage/ajaxLogs.php", "container_logs", array(), "Logs");
-            //$ajax->setRefresh(10000);
-            $ajax->display();
-            echo "<br/><br/><br/>";
-            $ajax->displayDivToUpdate();
-        } else {
-            $e = new ErrorMessage(_T("Can't connect to the imaging server linked to the selected entity.", "imaging"));
-            print $e->display();
-        }
+        $ajax = new AjaxFilter("modules/imaging/manage/ajaxLogs.php", "container_logs", array(), "Logs");
+        //$ajax->setRefresh(10000);
+        $ajax->display();
+        echo "<br/><br/><br/>";
+        $ajax->displayDivToUpdate();
+    } else {
+        $e = new ErrorMessage(_T("Can't connect to the imaging server linked to the selected entity.", "imaging"));
+        print $e->display();
     }
-} else {
-    $ajax = new AjaxFilter(urlStrRedirect("imaging/manage/ajaxAvailableImagingServer"), "container", array('from'=>$_GET['from']));
-    $ajax->display();
-    print "<br/><br/><br/>";
-    $ajax->displayDivToUpdate();
 }
 ?>

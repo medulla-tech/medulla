@@ -33,137 +33,134 @@ require("../includes/includes.php");
 require('../includes/xmlrpc.inc.php');
 require("../../base/includes/edit.inc.php");
 
-global $SYNCHROSTATE_SYNCHRO;
-global $SYNCHROSTATE_TODO;
-global $SYNCHROSTATE_RUNNING;
-global $SYNCHROSTATE_INIT_ERROR;
-
 $location = getCurrentLocation();
 
-if (xmlrpc_doesLocationHasImagingServer($location)) {
-    $ret = xmlrpc_getLocationSynchroState($location);
-
-    if ($ret['id'] == $SYNCHROSTATE_RUNNING) {
-        $a_href_open = "<a href=''>";
-        print sprintf(_T("The synchro is running, please wait or reload the page %shere%s", "imaging"), $a_href_open, '</a>');
-    } elseif ($ret['id'] == $SYNCHROSTATE_INIT_ERROR) {
-        print _T("The registering in the imaging server has failed.", "imaging");
-    } else {
-        if ($ret['id'] == $SYNCHROSTATE_TODO) {
-            # DISPLAY the sync link
-
-            print "<table><tr><td><font color='red'><b>";
-            print _T('This location has been modified, when you are done, please press on "Synchronize" so that modifications are updated on the Imaging server.', 'imaging');
-            print "</b></font></td><td>";
-
-            $f = new ValidatingForm();
-            $f->add(new HiddenTpl("location_uuid"),                        array("value" => $location,  "hide" => True));
-
-            $f->addButton("bsync", _T("Synchronize", "imaging"));
-            $f->display();
-            print "</td></tr></table>";
-        } elseif (isExpertMode()) {
-            print "<table><tr><td>";
-            print _T('Click on "Force synchronize" if you want to force the synchronization', 'imaging');
-            print "</td><td>";
-
-            $f = new ValidatingForm();
-            $f->add(new HiddenTpl("location_uuid"),                        array("value" => $location,  "hide" => True));
-
-            $f->addButton("bsync", _T("Force synchronize", "imaging"));
-            $f->display();
-            print "</td></tr></table>";
-        }
-
-
-        list($count, $menu) = xmlrpc_getLocationBootMenu($location);
-
-        $upAction = new ActionItem(_T("Move Up"), "bootmenu_up", "up", "item", "imaging", "manage");
-        $downAction = new ActionItem(_T("Move down"), "bootmenu_down", "down", "item", "imaging", "manage");
-        $emptyAction = new EmptyActionItem();
-        $actionUp = array();
-        $actionDown = array();
-
-        $a_label = array();
-        $a_desc = array();
-        $a_default = array();
-        $a_display = array();
-        $a_defaultWOL = array();
-        $a_displayWOL = array();
-        $list_params = array();
-
-        if (! isset($params)) { // FIXME : if not defined here, perhaps we should drop it ?
-            $params = array();
-        }
-        $i = -1;
-        foreach ($menu as $entry) {
-            $i = $i + 1;
-            $is_image = False;
-            if (isset($entry['image'])) {
-                $is_image = True;
-            }
-            $list_params[$i] = $params;
-            $list_params[$i]["itemid"] = $entry['imaging_uuid'];
-
-            if ($i==0) {
-                if ($count == 1) {
-                    $actionsDown[] = $emptyAction;
-                    $actionsUp[] = $emptyAction;
-                } else {
-                    $actionsDown[] = $downAction;
-                    $actionsUp[] = $emptyAction;
-                }
-            } elseif ($i==$count-1) {
-                $actionsDown[] = $emptyAction;
-                $actionsUp[] = $upAction;
-            } else {
-                $actionsDown[] = $downAction;
-                $actionsUp[] = $upAction;
-            }
-
-            if ($is_image) { # TODO $entry has now a cache for desc.
-                $a_desc[] = $entry['image']['desc'];
-                $default_name = $entry['image']['name'];
-                $kind = 'IM';
-            } else {
-                $a_desc[] = $entry['boot_service']['default_desc'];
-                $default_name = $entry['boot_service']['default_name'];
-                $kind = 'BS';
-            }
-            $list_params[$i]["itemlabel"] = urlencode($default_name);
-
-            $a_label[]= sprintf("%s%s", (
-                $kind == 'IM' ?
-                     '<img src="modules/imaging/graph/images/imaging-action.png" style="vertical-align: middle" /> '
-                     :'<img src="modules/imaging/graph/images/service-action.png" style="vertical-align: middle" /> '
-                 ), $default_name);
-            $a_default[] = $entry['default'];
-            $a_display[] = ($entry['hidden'] ? False:True);
-            $a_defaultWOL[] = $entry['default_WOL'];
-            $a_displayWOL[] = ($entry['hidden_WOL'] ? False:True);
-        }
-        $t = new TitleElement(_T("Default boot menu configuration", "imaging"));
-        $t->display();
-
-        $l = new ListInfos($a_label, _T("Label", "imaging"));
-        $l->setParamInfo($list_params);
-        $l->addExtraInfo($a_desc, _T("Description", "imaging"));
-        $l->addExtraInfo($a_default, _T("Default", "imaging"));
-        $l->addExtraInfo($a_display, _T("Displayed", "imaging"));
-        $l->addExtraInfo($a_defaultWOL, _T("Default on WOL", "imaging"));
-        $l->addExtraInfo($a_displayWOL, _T("Displayed on WOL", "imaging"));
-        $l->addActionItemArray($actionsUp);
-        $l->addActionItemArray($actionsDown);
-        $l->addActionItem(new ActionItem(_T("Edit"), "bootmenu_edit", "edit", "item", "imaging", "manage"));
-        $l->setTableHeaderPadding(19);
-        $l->disableFirstColumnActionLink();
-        $l->display();
-    }
-} else {
+if (!xmlrpc_doesLocationHasImagingServer($location)) {
+    # choose the imaging server we want to associate to that entity
     $ajax = new AjaxFilter(urlStrRedirect("imaging/manage/ajaxAvailableImagingServer"), "container", array('from'=>$_GET['from']));
     $ajax->display();
     print "<br/><br/><br/>";
     $ajax->displayDivToUpdate();
+    exit();
+}
+
+$ret = xmlrpc_getLocationSynchroState($location);
+
+if ($ret['id'] == $SYNCHROSTATE_RUNNING) {
+    $a_href_open = "<a href=''>";
+    print sprintf(_T("The synchro is running, please wait or reload the page %shere%s", "imaging"), $a_href_open, '</a>');
+} elseif ($ret['id'] == $SYNCHROSTATE_INIT_ERROR) {
+    print _T("The registering in the imaging server has failed.", "imaging");
+} else {
+    if ($ret['id'] == $SYNCHROSTATE_TODO) {
+        # DISPLAY the sync link
+
+        print "<table><tr><td><font color='red'><b>";
+        print _T('This location has been modified, when you are done, please press on "Synchronize" so that modifications are updated on the Imaging server.', 'imaging');
+        print "</b></font></td><td>";
+
+        $f = new ValidatingForm();
+        $f->add(new HiddenTpl("location_uuid"),                        array("value" => $location,  "hide" => True));
+
+        $f->addButton("bsync", _T("Synchronize", "imaging"));
+        $f->display();
+        print "</td></tr></table>";
+    } elseif (isExpertMode()) {
+        print "<table><tr><td>";
+        print _T('Click on "Force synchronize" if you want to force the synchronization', 'imaging');
+        print "</td><td>";
+
+        $f = new ValidatingForm();
+        $f->add(new HiddenTpl("location_uuid"),                        array("value" => $location,  "hide" => True));
+
+        $f->addButton("bsync", _T("Force synchronize", "imaging"));
+        $f->display();
+        print "</td></tr></table>";
+    }
+
+
+    list($count, $menu) = xmlrpc_getLocationBootMenu($location);
+
+    $upAction = new ActionItem(_T("Move Up"), "bootmenu_up", "up", "item", "imaging", "manage");
+    $downAction = new ActionItem(_T("Move down"), "bootmenu_down", "down", "item", "imaging", "manage");
+    $emptyAction = new EmptyActionItem();
+    $actionUp = array();
+    $actionDown = array();
+
+    $a_label = array();
+    $a_desc = array();
+    $a_default = array();
+    $a_display = array();
+    $a_defaultWOL = array();
+    $a_displayWOL = array();
+    $list_params = array();
+
+    if (! isset($params)) { // FIXME : if not defined here, perhaps we should drop it ?
+        $params = array();
+    }
+    $i = -1;
+    foreach ($menu as $entry) {
+        $i = $i + 1;
+        $is_image = False;
+        if (isset($entry['image'])) {
+            $is_image = True;
+        }
+        $list_params[$i] = $params;
+        $list_params[$i]["itemid"] = $entry['imaging_uuid'];
+
+        if ($i==0) {
+            if ($count == 1) {
+                $actionsDown[] = $emptyAction;
+                $actionsUp[] = $emptyAction;
+            } else {
+                $actionsDown[] = $downAction;
+                $actionsUp[] = $emptyAction;
+            }
+        } elseif ($i==$count-1) {
+            $actionsDown[] = $emptyAction;
+            $actionsUp[] = $upAction;
+        } else {
+            $actionsDown[] = $downAction;
+            $actionsUp[] = $upAction;
+        }
+
+        if ($is_image) { # TODO $entry has now a cache for desc.
+            $a_desc[] = $entry['image']['desc'];
+            $default_name = $entry['image']['name'];
+            $kind = 'IM';
+        } else {
+            $a_desc[] = $entry['boot_service']['default_desc'];
+            $default_name = $entry['boot_service']['default_name'];
+            $kind = 'BS';
+        }
+        $list_params[$i]["itemlabel"] = urlencode($default_name);
+
+        $a_label[]= sprintf("%s%s", (
+            $kind == 'IM' ?
+                 '<img src="modules/imaging/graph/images/imaging-action.png" style="vertical-align: middle" /> '
+                 :'<img src="modules/imaging/graph/images/service-action.png" style="vertical-align: middle" /> '
+             ), $default_name);
+        $a_default[] = $entry['default'];
+        $a_display[] = ($entry['hidden'] ? False:True);
+        $a_defaultWOL[] = $entry['default_WOL'];
+        $a_displayWOL[] = ($entry['hidden_WOL'] ? False:True);
+    }
+    $t = new TitleElement(_T("Default boot menu configuration", "imaging"));
+    $t->display();
+
+    $l = new ListInfos($a_label, _T("Label", "imaging"));
+    $l->setParamInfo($list_params);
+    $l->addExtraInfo($a_desc, _T("Description", "imaging"));
+    $l->addExtraInfo($a_default, _T("Default", "imaging"));
+    $l->addExtraInfo($a_display, _T("Displayed", "imaging"));
+    $l->addExtraInfo($a_defaultWOL, _T("Default on WOL", "imaging"));
+    $l->addExtraInfo($a_displayWOL, _T("Displayed on WOL", "imaging"));
+    $l->addActionItemArray($actionsUp);
+    $l->addActionItemArray($actionsDown);
+    $l->addActionItem(new ActionItem(_T("Edit"), "bootmenu_edit", "edit", "item", "imaging", "manage"));
+    $l->setTableHeaderPadding(19);
+    $l->disableFirstColumnActionLink();
+    $l->display();
 }
 
 
