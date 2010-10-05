@@ -70,6 +70,7 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
         new NotifyWidgetFailure(_T("Package failed to save", "pkgs"));
     }
 }
+
 $p_api_id = base64_decode($_GET['p_api']);
 
 
@@ -173,7 +174,8 @@ foreach ($cmds as $p) {
 }
 
 $f->pop();
-if ($_GET["action"]=="add") {
+
+if ($_GET["action"] == "add") {
     $f->addButton('bassoc', _T("Associate files", "pkgs"), "btnPrimary");
 } else {
     $f->addValidateButton("bcreate");

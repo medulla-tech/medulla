@@ -37,15 +37,20 @@ $mode = quickGet('mode');
 $level = 0;
 if ($mode == "creation") { $level = 1; }
 
-if (isset($_POST["bassoc"])) {
+if (isset($_POST["bassoc"]) || isset($_POST["bempty"])) {
     $cbx = array();
-    foreach ($_POST as $post => $v) {
-        if (preg_match("/cbx_/", $post) > 0) {
-            $cbx[] = preg_replace("/cbx_/", "", $post);
+    if (!isset($_POST["bempty"])) {
+        /* Get selected directory only if the user don't want to create an
+           empty package */
+        /* FIXME: maybe this cbx stuff is no more needed ? */
+        foreach ($_POST as $post => $v) {
+            if (preg_match("/cbx_/", $post) > 0) {
+                $cbx[] = preg_replace("/cbx_/", "", $post);
+            }
         }
-    }
-    if (isset($_POST['rdo_files'])) {
-        $cbx[] = $_POST['rdo_files'];
+        if (isset($_POST['rdo_files'])) {
+            $cbx[] = $_POST['rdo_files'];
+        }
     }
     $ret = associatePackages($p_api_id, $pid, $cbx, $level);
     if (!isXMLRPCError() and is_array($ret)) {
@@ -113,6 +118,7 @@ $f->add($hidden, array("value" => $pversion, "hide" => True));
 
 $f->pop();
 $f->addButton("bassoc", _T("Associate", 'pkgs'));
+$f->addButton('bempty', _T("Create an empty package", "pkgs"), "btnPrimary");
 $f->display();
 
 
