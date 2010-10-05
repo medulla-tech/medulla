@@ -22,10 +22,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-######
 require_once("modules/pkgs/includes/xmlrpc.php");
 require_once("modules/msc/includes/package_api.php");
-require_once("modules/pkgs/graph/index.css");
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
@@ -65,9 +63,11 @@ foreach ($packages as $p) {
     $params[] = array('p_api'=>$_GET['location'], 'pid'=>base64_encode($p['id']), 'from'=>'pending', 'plabel'=>base64_encode($p['label']), 'pversion'=>base64_encode($p['version']), 'mode'=>'edit', 'why'=>$p['why']);
 }
 
-$n = new OptimizedListInfos($names, _T("Names", "pkgs"));
-$n->addExtraInfo($versions, _T("Versions", "pkgs"));
-$n->addExtraInfo($desc, _T("Descriptions", "pkgs"));
+$n = new OptimizedListInfos($names, _T("Package name", "pkgs"));
+$n->setCssClass("package");
+$n->disableFirstColumnActionLink();
+$n->addExtraInfo($desc, _T("Description", "pkgs"));
+$n->addExtraInfo($versions, _T("Version", "pkgs"));
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter1));
 $n->setParamInfo($params);
