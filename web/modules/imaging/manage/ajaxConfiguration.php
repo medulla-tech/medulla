@@ -44,9 +44,6 @@ if (!xmlrpc_doesLocationHasImagingServer($location)) {
     exit();
 }
 
-$t = new TitleElement(_T("Imaging server configuration", "imaging"));
-$t->display();
-
 $ret = xmlrpc_getLocationSynchroState($location);
 
 if ($ret['id'] == $SYNCHROSTATE_RUNNING) {
@@ -80,6 +77,9 @@ if ($ret['id'] == $SYNCHROSTATE_RUNNING) {
         $f->display();
         print "</td></tr></table>";
     }
+
+    $t = new TitleElement(_T("Imaging server configuration", "imaging"));
+    $t->display();
 
     $config = xmlrpc_getImagingServerConfig($location);
     $imaging_server = $config[0];
