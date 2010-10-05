@@ -55,9 +55,9 @@ class PackageParserXML:
         try:
             if os.path.exists(file):
                 xml = minidom.parse(file)
-            else: 
+            else:
                 xml = minidom.parseString(file)
-                    
+
             # parsing routines
             self.logger = logging.getLogger()
             root = xml.getElementsByTagName('package')
@@ -84,12 +84,12 @@ class PackageParserXML:
                 desc = tmp.firstChild.wholeText
             else:
                 desc = ""
-    
+
             cmd = root.getElementsByTagName('commands')[0]
             reboot = 0
             if cmd.hasAttribute('reboot'):
                 reboot = cmd.getAttribute('reboot')
-    
+
             cmds = {}
             for c in ['installInit', 'preCommand', 'command', 'postCommandSuccess', 'postCommandFailure']:
                 tmp = cmd.getElementsByTagName(c)
@@ -102,7 +102,7 @@ class PackageParserXML:
                     cmds[c] = {'command':command, 'name':ncmd}
                 else:
                     cmds[c] = ''
-    
+
             p = Package()
             p.init(
                 pid,
@@ -122,52 +122,90 @@ class PackageParserXML:
             logging.getLogger().error(e)
             p = None
 
-        # TODO load files :
-        #root.each_element('//files/file') do |file_node|
-        #    p.specifiedFiles << {
-        #        'id'=>file_node.attributes['fid'],
-        #        'checksum'=>file_node.attributes['md5sum'],
-        #        'size'=>file_node.attributes['size'],
-        #        'filename'=>file_node.elements['./text()'].to_s
-        #    }
-        #end
         return p
 
     def to_xml(self, package):
-        s = """
-<package id="%s">
-    <name>%s</name>
-    <version>
-        <numeric>%s</numeric>
-        <label>%s</label>
-    </version>
-    <description>%s</description>
-    <commands reboot="%s">
-        <preCommand name="%s">%s</preCommand>
-        <installInit name="%s">%s</installInit>
-        <command name="%s">%s</command>
-        <postCommandSuccess name="%s">%s</postCommandSuccess>
-        <postCommandFailure name="%s">%s</postCommandFailure>
-    </commands>
-</package>
-        """ % (package.id, package.label, str(package.version), str(package.version), package.description, package.reboot, package.precmd.name, package.precmd.command, package.initcmd.name, package.initcmd.command, package.cmd.name, package.cmd.command, package.postcmd_ok.name, package.postcmd_ok.command, package.postcmd_ko.name, package.postcmd_ko.command)
+        """
+        create XML document for the package
+        """
 
-        # TODO add files informations
-        #if not package.files.nil? and package.files.size > 0 then
-        #    files = root.add_element('files')
-        #    package.files.each do |f|
-        #        file = files.add_element('file')
-        #        file.text = f.path + '/' + f.name
-        #        # TODO add size, md5sum, id...
-        #    end
-        #end
+        imp = minidom.getDOMImplementation('')
+        # Create document type
+        dt = imp.createDocumentType('package', '', '')
+        dt.internalSubset = self.doctype()
 
-        tmp = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n%s%s" % (self.doctype(), s)
-        return tmp.encode("utf-8")
+        # Create XML document with this document type
+        doc = imp.createDocument('', 'package', dt)
+
+        docr = doc.documentElement
+        pid = doc.createAttribute('id')
+        pid.value = package.id
+        docr.setAttributeNode(pid)
+
+        name = doc.createElement('name')
+        name.appendChild(doc.createTextNode(package.label))
+        docr.appendChild(name)
+
+        version = doc.createElement('version')
+        numeric = doc.createElement('numeric')
+        numeric.appendChild(doc.createTextNode(str(package.version)))
+        label = doc.createElement('label')
+        label.appendChild(doc.createTextNode(str(package.version)))
+        version.appendChild(numeric)
+        version.appendChild(label)
+        docr.appendChild(version)
+
+        description = doc.createElement('description')
+        description.appendChild(doc.createTextNode(package.description))
+        docr.appendChild(description)
+
+        commands = doc.createElement('commands')
+        reboot = doc.createAttribute('reboot')
+        reboot.value = str(package.reboot)
+        commands.setAttributeNode(reboot)
+
+        precommand = doc.createElement('preCommand')
+        precommandname = doc.createAttribute('name')
+        precommandname.value = package.precmd.name
+        precommand.setAttributeNode(precommandname)
+        precommand.appendChild(doc.createTextNode(package.precmd.command))
+
+        installinit = doc.createElement('installInit')
+        installinitname = doc.createAttribute('name')
+        installinitname.value = package.initcmd.name
+        installinit.setAttributeNode(installinitname)
+        installinit.appendChild(doc.createTextNode(package.initcmd.command))
+
+        command = doc.createElement('command')
+        commandname = doc.createAttribute('name')
+        commandname.value = package.cmd.name
+        command.setAttributeNode(commandname)
+        command.appendChild(doc.createTextNode(package.cmd.command))
+
+        postsuccess = doc.createElement('postCommandSuccess')
+        postsuccessname = doc.createAttribute('name')
+        postsuccessname.value = package.postcmd_ok.name
+        postsuccess.setAttributeNode(postsuccessname)
+        postsuccess.appendChild(doc.createTextNode(package.postcmd_ok.command))
+
+        postfailure = doc.createElement('postCommandFailure')
+        postfailurename = doc.createAttribute('name')
+        postfailurename.value = package.postcmd_ko.name
+        postfailure.setAttributeNode(postfailurename)
+        postfailure.appendChild(doc.createTextNode(package.postcmd_ko.command))
+
+        commands.appendChild(precommand)
+        commands.appendChild(installinit)
+        commands.appendChild(command)
+        commands.appendChild(postsuccess)
+        commands.appendChild(postfailure)
+
+        docr.appendChild(commands)
+
+        return doc.toprettyxml(encoding = 'utf-8')
 
     def doctype(self):
         return """
-<!DOCTYPE package [
     <!ELEMENT package (name,version,description?,commands,files?)>
     <!ATTLIST package id ID #REQUIRED>
 
@@ -195,7 +233,6 @@ class PackageParserXML:
     <!ATTLIST file fid ID #IMPLIED>
     <!ATTLIST file md5sum CDATA "">
     <!ATTLIST file size CDATA "">
-]>
 """
 
 
