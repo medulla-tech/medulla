@@ -35,6 +35,7 @@ from pulse2.utils import same_network, Singleton, isUUID, xmlrpcCleanup
 
 from sqlalchemy import *
 from sqlalchemy.orm import *
+import sqlalchemy.databases
 
 import datetime
 import re
@@ -1778,11 +1779,19 @@ class InventoryCreator(Inventory):
                             cutted_cols[col] = cols[col]
                             if hasattr(klass.c, col):
                                 length = getattr(klass.c, col)
+
+                                if isinstance(length.type, sqlalchemy.databases.mysql.MSInteger):
+                                    try:
+                                        int(cols[col])
+                                    except ValueError:
+                                        logging.getLogger().warning("The field %s of the table %s is going to be set to ZERO, please report to us." % (col, table))
+                                        logging.getLogger().debug("The value |%s| become |0|" % (cols[col]))
+                                        cutted_cols[col] = '0'
                                 if hasattr(length.type, 'length'):
                                     length = length.type.length
                                     if len(cols[col]) >= length:
                                         logging.getLogger().warning("The field %s of the table %s is going to be truncated at %s chars, please report to us."%(col, table, length))
-                                        logging.getLogger().debug("The value %s become %s"%(cols[col], cols[col][0:length]))
+                                        logging.getLogger().debug("The value |%s| become |%s|"%(cols[col], cols[col][0:length]))
                                         cutted_cols[col] = cols[col][0:length]
 
                         # Look up these columns in the inventory table
