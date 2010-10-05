@@ -122,7 +122,7 @@ if __name__ == '__main__':
         display_help(ERROR_BAD_CONFIG)
 
     config.imaging_api['mount_point'] = config.imaging_api['mount_point'].replace('/', '')
-    my_url = "%s://%s:%s/%s" % (config.proto, config.bind, str(config.port), config.imaging_api['mount_point'])
+    my_url = "%s://%s:%s/%s" % (config.proto, config.public_ip, str(config.port), config.imaging_api['mount_point'])
     my_uuid = config.imaging_api['uuid']
 
     if not my_uuid:

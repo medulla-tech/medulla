@@ -55,6 +55,7 @@ class P2PServerCP(pulse2.utils.Singleton):
     # [main] section
     bind = ''
     port = 9990
+    public_ip = bind
     enablessl = True
     verifypeer = False
     username = ''
@@ -141,12 +142,16 @@ class P2PServerCP(pulse2.utils.Singleton):
             self.cp.read(config_file)
 
         if self.cp.has_option("main", "bind"):  # TODO remove in a future version
-            logging.getLogger().warning("'bind' is obslete, please replace it in your config file by 'host'")
+            logging.getLogger().warning("'bind' is obsolete, please replace it in your config file by 'host'")
             self.bind = self.cp.get("main", 'bind')
         elif self.cp.has_option('main', 'host'):
             self.bind = self.cp.get("main", 'host')
         if self.cp.has_option('main', 'port'):
             self.port = self.cp.getint("main", 'port')
+        if self.cp.has_option('main', 'public_ip'):
+            self.public_ip = self.cp.get("main", 'public_ip')
+        else:
+            self.public_ip = self.bind
 
         if sys.platform != "win32":
             if self.cp.has_section('daemon'):
@@ -490,14 +495,14 @@ def config_addons(conf):
 
 def add_access(mirror_params, conf):
     mirror_params['port'] = conf.port
-    mirror_params['server'] = conf.bind
+    mirror_params['server'] = conf.public_ip
     mirror_params['file_access_path'] = "%s_files" % (mirror_params['mount_point'])
-    mirror_params['file_access_uri'] = conf.bind
+    mirror_params['file_access_uri'] = conf.public_ip
     mirror_params['file_access_port'] = conf.port
     return mirror_params
 
 
 def add_server(mirror_params, conf):
     mirror_params['port'] = conf.port
-    mirror_params['server'] = conf.bind
+    mirror_params['server'] = conf.public_ip
     return mirror_params

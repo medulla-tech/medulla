@@ -65,38 +65,38 @@ def initialize(config):
         for mirror_params in config.mirrors:
             m_api = Mirror(mirror_params['mount_point'], mirror_params['mount_point'])
             server.register(m_api, mirror_params['mount_point'])
-            services.append({'type':'mirror', 'mp':mirror_params['mount_point'], 'server':config.bind, 'port':config.port, 'proto':config.proto, 'src':mirror_params['src'], 'mirror_mp': '%s_files'%(mirror_params['mount_point']), 'mirror_url':'%s://%s:%s%s_files'%(config.proto, config.bind, config.port, mirror_params['mount_point']), 'url':'%s://%s:%s%s'%(config.proto, config.bind, config.port, mirror_params['mount_point'])})
+            services.append({'type':'mirror', 'mp':mirror_params['mount_point'], 'server':config.public_ip, 'port':config.port, 'proto':config.proto, 'src':mirror_params['src'], 'mirror_mp': '%s_files'%(mirror_params['mount_point']), 'mirror_url':'%s://%s:%s%s_files'%(config.proto, config.public_ip, config.port, mirror_params['mount_point']), 'url':'%s://%s:%s%s'%(config.proto, config.public_ip, config.port, mirror_params['mount_point'])})
             server.register(static.File(mirror_params['src']), mirror_params['mount_point']+'_files')
-            services.append({'type':'mirror_files', 'mp':mirror_params['mount_point']+'_files', 'server':config.bind, 'port':config.port, 'proto':config.proto, 'src':mirror_params['src']})
+            services.append({'type':'mirror_files', 'mp':mirror_params['mount_point']+'_files', 'server':config.public_ip, 'port':config.port, 'proto':config.proto, 'src':mirror_params['src']})
 
     if len(config.package_api_get) > 0:
         for mirror_params in config.package_api_get:
             p_api = PackageApiGet(mirror_params['mount_point'], mirror_params['mount_point'])
             server.register(p_api, mirror_params['mount_point'])
-            services.append({'type':'package_api_get', 'mp':mirror_params['mount_point'], 'server':config.bind, 'port':config.port, 'proto':config.proto, 'src':mirror_params['src'], 'url':'%s://%s:%s%s'%(config.proto, config.bind, config.port, mirror_params['mount_point'])})
+            services.append({'type':'package_api_get', 'mp':mirror_params['mount_point'], 'server':config.public_ip, 'port':config.port, 'proto':config.proto, 'src':mirror_params['src'], 'url':'%s://%s:%s%s'%(config.proto, config.public_ip, config.port, mirror_params['mount_point'])})
 
     if len(config.package_api_put) > 0:
         for mirror_params in config.package_api_put:
             p_api = PackageApiPut(mirror_params['mount_point'], mirror_params['mount_point'], mirror_params['tmp_input_dir'])
             server.register(p_api, mirror_params['mount_point'])
-            services.append({'type':'package_api_put', 'mp':mirror_params['mount_point'], 'server':config.bind, 'port':config.port, 'proto':config.proto, 'src':mirror_params['src'], 'url':'%s://%s:%s%s'%(config.proto, config.bind, config.port, mirror_params['mount_point'])})
+            services.append({'type':'package_api_put', 'mp':mirror_params['mount_point'], 'server':config.public_ip, 'port':config.port, 'proto':config.proto, 'src':mirror_params['src'], 'url':'%s://%s:%s%s'%(config.proto, config.public_ip, config.port, mirror_params['mount_point'])})
 
     if config.user_package_api.has_key('mount_point'):
         mirror = UserPackageApi(services, config.user_package_api['mount_point'], config.up_assign_algo)
         server.register(mirror, config.user_package_api['mount_point'])
-        services.append({'type':'user_package_api', 'mp':config.user_package_api['mount_point'], 'server':config.bind, 'port':config.port, 'proto':config.proto})
+        services.append({'type':'user_package_api', 'mp':config.user_package_api['mount_point'], 'server':config.public_ip, 'port':config.port, 'proto':config.proto})
 
     if config.mirror_api.has_key('mount_point'):
         mirror = MirrorApi(services, config.mirror_api['mount_point'], config.mm_assign_algo)
         server.register(mirror, config.mirror_api['mount_point'])
-        services.append({'type':'mirror_api', 'mp':config.mirror_api['mount_point'], 'server':config.bind, 'port':config.port, 'proto':config.proto})
+        services.append({'type':'mirror_api', 'mp':config.mirror_api['mount_point'], 'server':config.public_ip, 'port':config.port, 'proto':config.proto})
     else:
         logger.warn('package server initialized without mirror api')
 
     if config.scheduler_api.has_key('mount_point'):
         scheduler = SchedulerApi(config.scheduler_api['mount_point'], config.scheduler_api)
         server.register(scheduler, config.scheduler_api['mount_point'])
-        services.append({'type':'scheduler_api', 'mp':config.scheduler_api['mount_point'], 'server':config.bind, 'port':config.port, 'proto':config.proto})
+        services.append({'type':'scheduler_api', 'mp':config.scheduler_api['mount_point'], 'server':config.public_ip, 'port':config.port, 'proto':config.proto})
         logger.info("package server initialized with scheduler api")
 
     if config.imaging_api:
@@ -106,7 +106,7 @@ def initialize(config):
             services.append({
                 'type'   : 'imaging',
                 'mp'     : config.imaging_api['mount_point'],
-                'server' : config.bind,
+                'server' : config.public_ip,
                 'port'   : config.port,
                 'proto'  : config.proto
             })
