@@ -3135,9 +3135,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q2 = q2.filter(f)
         q2 = q2.first()
 
-        if q2.label == "RUNNING" or q2.label == "INIT_ERROR" or q2.label == "TODO": # running => give up
-            session.close()
-            return q2
+        ret = []
+
+        ret.append(
+            {
+                'id'    : q2.id,
+                'label' : q2.label,
+                'item'  : ""}         # no item : this is the location menu
+            )
 
         # same, this time by target (we check the state of the content of this entity)
         q1 = session.query(SynchroState).add_entity(Target)
@@ -3147,22 +3152,18 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q1 = q1.filter(f)
         q1 = q1.all()
 
-        session.close()
-
-        a_state = [0, 0]
         for q, target in q1:
             self.logger.debug("getLocationSynchroState target %s is in state %s"%(target.uuid, q.label))
-            if q.label == "RUNNING" or q.label == "INIT_ERROR": # running
-                return q
-            a_state[q.id - 1] += 1
-        if a_state[0] == 0:
-            return {
-                'id' : 2,
-                'label' : 'DONE'}
+            
+            ret.append(
+                {
+                    'id'    : q.id,
+                    'label' : q.label,
+                    'item'  : target.uuid}
+                )
 
-        return {
-            'id' : 1,
-            'label' : 'TODO'}
+        session.close()
+        return ret
 
     def setLocationSynchroState(self, uuid, state):
         self.logger.debug(">>> setLocationSynchroState %s %s"%(uuid, str(state)))
@@ -3777,7 +3778,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session.commit()
         except InvalidRequestError, e:
             session.rollback()
-            if e.message == 'No rows returned for one()':
+            if hasattr(e, 'message'):
+                if e.message == 'No rows returned for one()':
+                    self.logger.warn("Can't get the computer %s, we can't inject an inventory. This happen when the computer exists in the backend but is not declared in the imaging."%(computer_uuid))
+                    return [False, "Can't get the computer %s, we can't inject an inventory. This happen when the computer exists in the backend but is not declared in the imaging."%(computer_uuid)]
+            elif e == 'No rows returned for one()':
                 self.logger.warn("Can't get the computer %s, we can't inject an inventory. This happen when the computer exists in the backend but is not declared in the imaging."%(computer_uuid))
                 return [False, "Can't get the computer %s, we can't inject an inventory. This happen when the computer exists in the backend but is not declared in the imaging."%(computer_uuid)]
             else:
