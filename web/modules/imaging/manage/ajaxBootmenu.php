@@ -49,34 +49,39 @@ $ret = xmlrpc_getLocationSynchroState($location);
 if ($ret['id'] == $SYNCHROSTATE_RUNNING) {
     $a_href_open = "<a href=''>";
     print sprintf(_T("The synchro is running, please wait or reload the page %shere%s", "imaging"), $a_href_open, '</a>');
-} elseif ($ret['id'] == $SYNCHROSTATE_INIT_ERROR) {
+    exit();
+}
+
+if ($ret['id'] == $SYNCHROSTATE_INIT_ERROR) {
     print _T("The registering in the imaging server has failed.", "imaging");
-} else {
-    if ($ret['id'] == $SYNCHROSTATE_TODO) {
-        # DISPLAY the sync link
+    exit();
+}
 
-        print "<table><tr><td><font color='red'><b>";
-        print _T('This location has been modified, when you are done, please press on "Synchronize" so that modifications are updated on the Imaging server.', 'imaging');
-        print "</b></font></td><td>";
+if ($ret['id'] == $SYNCHROSTATE_TODO) {
+    # DISPLAY the sync link
 
-        $f = new ValidatingForm();
-        $f->add(new HiddenTpl("location_uuid"),                        array("value" => $location,  "hide" => True));
+    print "<table><tr><td><font color='red'><b>";
+    print _T('This location has been modified, when you are done, please press on "Synchronize" so that modifications are updated on the Imaging server.', 'imaging');
+    print "</b></font></td><td>";
 
-        $f->addButton("bsync", _T("Synchronize", "imaging"));
-        $f->display();
-        print "</td></tr></table>";
-    } elseif (isExpertMode()) {
-        print "<table><tr><td>";
-        print _T('Click on "Force synchronize" if you want to force the synchronization', 'imaging');
-        print "</td><td>";
+    $f = new ValidatingForm();
+    $f->add(new HiddenTpl("location_uuid"),                        array("value" => $location,  "hide" => True));
 
-        $f = new ValidatingForm();
-        $f->add(new HiddenTpl("location_uuid"),                        array("value" => $location,  "hide" => True));
+    $f->addButton("bsync", _T("Synchronize", "imaging"));
+    $f->display();
+    print "</td></tr></table>";
+} elseif (isExpertMode()) {
+    print "<table><tr><td>";
+    print _T('Click on "Force synchronize" if you want to force the synchronization', 'imaging');
+    print "</td><td>";
 
-        $f->addButton("bsync", _T("Force synchronize", "imaging"));
-        $f->display();
-        print "</td></tr></table>";
-    }
+    $f = new ValidatingForm();
+    $f->add(new HiddenTpl("location_uuid"),                        array("value" => $location,  "hide" => True));
+
+    $f->addButton("bsync", _T("Force synchronize", "imaging"));
+    $f->display();
+    print "</td></tr></table>";
+}
 
 
     list($count, $menu) = xmlrpc_getLocationBootMenu($location);
@@ -161,7 +166,5 @@ if ($ret['id'] == $SYNCHROSTATE_RUNNING) {
     $l->setTableHeaderPadding(19);
     $l->disableFirstColumnActionLink();
     $l->display();
-}
-
 
 ?>
