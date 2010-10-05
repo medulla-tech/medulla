@@ -32,6 +32,7 @@ import time
 import pulse2.utils
 import pulse2.package_server.config
 
+# FIXME : shouldn't this cache be updated by the object itself ?
 
 class UUIDCache(pulse2.utils.Singleton):
     """
@@ -130,7 +131,8 @@ class UUIDCache(pulse2.utils.Singleton):
                         updated = 0
                     if int(time.time()) - updated > self.cacheLifetime:
                         self.log.debug("Cachefault on %s/%s (expired), ignoring" % (uuid, mac))
-                        return False
+                        # do not break the flow
+                        # return False
                     return {
                         'uuid'      : uuid,
                         'mac'       : mac,
@@ -173,7 +175,8 @@ class UUIDCache(pulse2.utils.Singleton):
                         updated = 0
                     if int(time.time() - updated) > self.cacheLifetime:
                         self.log.debug("Cachefault on %s/%s (expired), ignoring" % (uuid, mac))
-                        return False
+                        # do not break the flow
+                        # return False
                     return {
                         'uuid'      : uuid,
                         'mac'       : mac,
@@ -219,7 +222,8 @@ class UUIDCache(pulse2.utils.Singleton):
                 updated = 0
             if int(time.time()) - updated > self.cacheLifetime:
                 self.log.debug("Cachefault on %s/%s (expired), ignoring" % (uuid, mac))
-                return False
+                # do not break the flow
+                # return False
             return {
                 'uuid'      : uuid,
                 'mac'       : mac,
