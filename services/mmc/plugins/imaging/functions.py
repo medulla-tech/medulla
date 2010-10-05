@@ -1401,7 +1401,7 @@ class ImagingRpcProxy(RpcProxyI):
         if not self.doesLocationHasImagingServer(uuid):
             return {'id': 0}
         ret = ImagingDatabase().getLocationSynchroState(uuid)
-        if type(ret) != dict:
+        if type(ret) != list:
             ret = ret.toH()
         return xmlrpcCleanup(ret)
 
