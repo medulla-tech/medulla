@@ -1457,7 +1457,7 @@ class Inventory(DyngroupDatabaseHelper):
         @rtype: list
         """
         machineId = ""
-        current_inventory_id = ""
+        current_inventory_id = None
 
         if params.has_key('uuid'):
             uuid = params['uuid']
@@ -1466,7 +1466,7 @@ class Inventory(DyngroupDatabaseHelper):
         else:
             return [{}, {}]
         if params.has_key('inventoryId'):
-            current_inventory_id = params['inventoryId']
+            current_inventory_id = int(params['inventoryId'])
         else:
             return [{}, {}]
 
@@ -1507,6 +1507,8 @@ class Inventory(DyngroupDatabaseHelper):
             return [{}, {}]
 
         session.close()
+        self.logger.debug('Comparing inventory id %d and %d'
+                          % (current_inventory_id, previous_inventory_id))
 
         previous_inventory = {}
         current_inventory = {}
@@ -1530,15 +1532,16 @@ class Inventory(DyngroupDatabaseHelper):
                 params['inventoryId'] = current_inventory_id
                 # Call the method to get the relevant inventory part
                 machine_current_inventory_part = self.getLastMachineInventoryPart(ctx, part, params)
-                # Extract the inventory part from the tuple if not empty
-                if machine_previous_inventory_part != []:
+                # Extract the inventory part from the tuple
+                try:
                     current_inventory[part] = machine_current_inventory_part[0][1]
-                else:
+                except IndexError:
                     current_inventory[part] = []
 
                 added_elements[part] = []
                 removed_elements[part] = []
-                # Loop in the current inventory part to test for each element if it was in the previous inventory
+                # Loop in the current inventory part to test for each element
+                # if it was in the previous inventory
                 for current_elem in current_inventory[part]:
                     new = True
                     for previous_elem in previous_inventory[part]:
@@ -1547,12 +1550,14 @@ class Inventory(DyngroupDatabaseHelper):
                     if new:
                         added_elements[part].append(current_elem)
 
-                # Loop in the previous inventory part to test for each element if it disappears in the current inventory
+                # Loop in the previous inventory part to test for each element
+                # if it disappears in the current inventory
                 for previous_elem in previous_inventory[part]:
                     removed = True
                     for current_elem in current_inventory[part]:
                         removed = removed and previous_elem['id'] != current_elem['id']
-                    # If the element is not in the current inventory, add it in the rerturned tuple
+                    # If the element is not in the current inventory, add it
+                    # in the returned tuple
                     if removed:
                         removed_elements[part].append(previous_elem)
 
