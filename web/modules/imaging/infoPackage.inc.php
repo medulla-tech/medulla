@@ -168,6 +168,10 @@ if (!empty($submod)) {
     $page->setFile("modules/imaging/imaging/showtarget.php");
     $page->setOptions(array("visible" => False, "noHeader" => True));
     $submod->addPage($page);
+    $page = new Page("showsyncstatus",_T("Show sync status","imaging"));
+    $page->setFile("modules/imaging/imaging/showsyncstatus.php");
+    $page->setOptions(array("visible" => False, "noHeader" => True));
+    $submod->addPage($page);
 
     $page = new Page("ajaxStatus");
     $page->setFile("modules/imaging/imaging/ajaxStatus.php");
