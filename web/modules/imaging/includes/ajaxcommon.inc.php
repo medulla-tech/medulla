@@ -75,8 +75,8 @@ foreach ($ret as $r) {
 if (count($running_on) > 0) {
     $a_href_open = "<a href=''>";
     print_r($_GET);
-#    print sprintf(_T("The synchro is still running on %s, please wait or reload the page %shere%s", "imaging"), join($running_on, ', '), $a_href_open, '</a>');
-    print sprintf(_T("The synchro is still running, please wait or reload the page %shere%s", "imaging"), $a_href_open, '</a>');
+    print sprintf(_T("The synchro is still in progress for the following items : %s. Please wait or reload the page %shere%s", "imaging"), join($running_on, ', '), $a_href_open, '</a>');
+#    print sprintf(_T("The synchro is still running, please wait or reload the page %shere%s", "imaging"), $a_href_open, '</a>');
 }
 
 if (count($initerror_on) > 0) {
@@ -88,8 +88,8 @@ if (count($todo_on) > 0) {
     # DISPLAY the sync link
 
     print "<table><tr><td><font color='red'><b>";
-#    print sprintf(_T('The menu has been modified on %s, when you are done, please press on "Synchronize" so that modifications are updated on the Imaging server.', 'imaging'), join($todo_on, ', '));
-    print sprintf(_T('The menu has been modified, when you are done, please press on "Synchronize" so that modifications are updated on the Imaging server.', 'imaging'));
+    print sprintf(_T('The menu needs to be synchronized for the following items : %s. When you are done, please press on "Synchronize" so that modifications are updated on the Imaging server.', 'imaging'), join($todo_on, ', '));
+#    print sprintf(_T('The menu has been modified, when you are done, please press on "Synchronize" so that modifications are updated on the Imaging server.', 'imaging'));
     print "</b></font></td><td>";
 
     $f = new ValidatingForm();
