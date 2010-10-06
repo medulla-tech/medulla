@@ -2502,6 +2502,14 @@ def synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid):
             logger.error("couldn't initialize the ImagingApi to %s"%(url))
 
         l_menus = distinct_loc[location_uuid][1]
+        macaddress = ComputerManager().getMachineMac(ctx, {'uuids' : l_menus.keys()})
+
+        for uuid in l_menus.keys():
+            mac = macaddress[uuid]
+            if type(mac) == list:
+                mac = mac[0]
+            l_menus[uuid]['target']['macaddress'] = mac
+
         d = i.computersMenuSet(l_menus)
         d.addCallback(treatFailures, location_uuid, url)
         dl.append(d)
