@@ -358,4 +358,12 @@ function xmlrpc_getPartitionsToBackupRestore($target_uuid) {
     return xmlCall("imaging.getPartitionsToBackupRestore", array($target_uuid));
 }
 
+/* computers */
+function xmlrpc_getComputerByMac($mac) {
+    return xmlCall("imaging.getComputerByMac", array($mac));
+}
+
+function xmlrpc_getComputerByUUID($uuid) {
+    return xmlCall("imaging.getComputerByUUID", array($uuid));
+}
 ?>
