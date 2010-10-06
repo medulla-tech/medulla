@@ -126,11 +126,26 @@ class OcsMapping(Singleton):
 
         inventory = {}
         for tablename in self.tables:
+            in_network = tablename == u'NETWORKS'
             try:
                 dbtablename = self.tables[tablename][0]
                 inventory[dbtablename] = []
                 for tag in xml.getElementsByTagName(tablename):
                     entry = {}
+                    if in_network:
+                        # Skip lo interface and network device with a 127.x.x.x
+                        # address.
+                        try:
+                            netif = tag.getElementsByTagName('DESCRIPTION')[0].childNodes[0].nodeValue
+                        except:
+                            netif = ''
+                        try:
+                            ip = tag.getElementsByTagName('IPADDRESS')[0].childNodes[0].nodeValue
+                        except:
+                            ip = ''
+                        if netif == 'lo' or ip.startswith('127.'):
+                            self.logger.debug('Skipping computer local interface from inventory')
+                            continue
                     for fieldname in self.tables[tablename][1]:
                         try:
                             field = tag.getElementsByTagName(fieldname)[0]
