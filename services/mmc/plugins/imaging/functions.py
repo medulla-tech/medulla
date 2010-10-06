@@ -2133,6 +2133,40 @@ class ImagingRpcProxy(RpcProxyI):
             return [False, "imaging.getComputerByMac() : I was unable to find the good informations about the computer having %s as a mac address" % mac]
         return [True, {'uuid': uuid, 'mac': mac, 'shortname': db_computer_name, 'fqdn': db_computer_name}]
 
+    def getComputerByUUID(self, uuid):
+        """
+        Called by the package server, to obtain a computer MAC/shortname/fqdn in exchange of uuid
+
+        @param uuid: the computer uuid
+        @type uuid: str
+
+        @results: a pair:
+            * True if succeed or False otherwise
+            * the error in case of failure else the computer as a dict
+        @rtype: list
+        """
+        assert pulse2.utils.isUUID(uuid)
+        ctx = self.currentContext
+        db_computer = ComputerManager().getComputer(ctx, {'uuid': uuid})
+        if not db_computer:
+            return [False, "imaging.getComputerByUUID() : I was unable to find a computer corresponding to the UUID %s" % uuid]
+
+        if type(db_computer) == dict:
+            uuid = db_computer['uuid']
+            if db_computer.has_key('hostname'):
+                db_computer_name = db_computer['hostname']
+            elif db_computer.has_key('name'):
+                db_computer_name = db_computer['name']
+        elif hasattr(db_computer, 'getUUID'):
+            uuid = db_computer.getUUID()
+            db_computer_name = db_computer.name
+        elif hasattr(db_computer, 'uuid'):
+            uuid = db_computer.uuid
+            db_computer_name = db_computer.name
+        else:
+            return [False, "imaging.getComputerByUUID() : I was unable to find the good informations about the computer having %s as UUID" % uuid]
+        return [True, {'uuid': uuid, 'mac': db_computer['MACAddress'], 'shortname': db_computer_name, 'fqdn': db_computer_name}]
+
     def logClientAction(self, imaging_server_uuid, computer_uuid, level, phase, message):
         """
         Called by the package server, to log some info on imaging
