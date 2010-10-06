@@ -490,25 +490,26 @@ class ImagingApi(MyXmlrpc):
             if not isMenuStructure(menu):
                 self.logger.error("Invalid menu structure for computer UUID %s" % cuuid)
                 continue
-            macaddress = self.myUUIDCache.getByUUID(cuuid)
-            if macaddress == False:
-                self.logger.error("Can't get MAC address for UUID %s" % cuuid)
-                continue
-            else:
-                try:
-                    macaddress = macaddress['mac']
-                    self.logger.debug('Setting menu for computer UUID/MAC %s/%s' % (cuuid, macaddress))
-                    imb = ImagingComputerMenuBuilder(self.config, macaddress, menu)
-                    imenu = imb.make()
-                    imenu.write()
-                    ret.append(cuuid)
-                    imc = ImagingComputerConfiguration(self.config,
-                                                       cuuid,
-                                                       menu)
-                    imc.write()
-                except Exception, e:
-                    self.logger.exception("Error while setting new menu of computer uuid/mac %s: %s" % (cuuid, e))
-                    # FIXME: Rollback to the previous menu
+
+            res = self.myUUIDCache.getByUUID(cuuid)
+            if res == False:
+                self.logger.warn("Updating MAC address for UUID %s" % cuuid)
+                self.myUUIDCache.set(menu['target']['uuid'], menu['target']['macaddress'], menu['target']['name'], '')  # FIXME : domainname '' is probably a wrong idea
+                res = self.myUUIDCache.getByUUID(cuuid)
+            try:
+                macaddress = res['mac']
+                self.logger.debug('Setting menu for computer UUID/MAC %s/%s' % (cuuid, macaddress))
+                imb = ImagingComputerMenuBuilder(self.config, macaddress, menu)
+                imenu = imb.make()
+                imenu.write()
+                ret.append(cuuid)
+                imc = ImagingComputerConfiguration(self.config,
+                                                   cuuid,
+                                                   menu)
+                imc.write()
+            except Exception, e:
+                self.logger.exception("Error while setting new menu of computer uuid/mac %s: %s" % (cuuid, e))
+                # FIXME: Rollback to the previous menu
         return ret
 
     def xmlrpc_imagingServerDefaultMenuSet(self, menu):
