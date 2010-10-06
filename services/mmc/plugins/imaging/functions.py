@@ -2353,63 +2353,85 @@ def synchroComputers(ctx, uuids, ctype = P2IT.COMPUTER):
     return xmlrpcCleanup(ret)
 
 def synchroTargets(ctx, uuids, target_type):
+
+    # initialize stuff
     logger = logging.getLogger()
     db = ImagingDatabase()
+
+    # store the fact that we are attempting a sync
     ret = db.changeTargetsSynchroState(uuids, target_type, P2ISS.RUNNING)
-    pid = None
-    l_uuids = uuids
+
+    # Load up l_uuids with the required info (computer within profile OR given computers)
     if target_type == P2IT.PROFILE:
         pid = uuids[0]
         l_uuids = map(lambda c: c.uuid, ComputerProfileManager().getProfileContent(pid))
-        if len(l_uuids) == 0:
-            ret = db.changeTargetsSynchroState(uuids, target_type, P2ISS.DONE)
-            return [True]
+    else:
+        pid = None
+        l_uuids = uuids
 
+    # give up if it appears that no menu as to be synced
+    if len(l_uuids) == 0:
+        ret = db.changeTargetsSynchroState(uuids, target_type, P2ISS.DONE)
+        return [True]
+
+    # gather the required menus
     distinct_loc = generateMenus(logger, db, l_uuids)
 
     defer_list = []
     h_computers = {}
     registered = db.isTargetRegisterInPackageServer(l_uuids, P2IT.ALL_COMPUTERS)
+
+    # loop over each return location
     for loc_uuid in distinct_loc:
-        url = distinct_loc[loc_uuid][0]
-        menus = distinct_loc[loc_uuid][1]
+        # extract menus and url for our location
+        (url, menus) = distinct_loc[loc_uuid][0:2]
+
+        # store into to_register the list of menus to register
         to_register = {}
         for uuid in menus:
             if not registered[uuid]:
                 to_register[uuid] = menus[uuid]
 
-        if len(to_register.keys()) != 0:
-            hostnames = ComputerManager().getMachineHostname(ctx, {'uuids':to_register.keys()})
-            macaddress = ComputerManager().getMachineMac(ctx, {'uuids':to_register.keys()})
-            h_hostnames = {}
-            if type(hostnames) == list:
-                for computer in hostnames:
-                    h_hostnames[computer['uuid']] = computer['hostname']
-            else:
-                 h_hostnames[hostnames['uuid']] = hostnames['hostname']
-            h_macaddress = macaddress
+        # drop location processing if there is no menu to register
+        if len(to_register.keys()) == 0:
+            continue
 
-            computers = []
-            for uuid in to_register:
-                if db.isTargetRegister(uuid, P2IT.COMPUTER):
-                    logger.debug("computer %s is already registered as a P2IT.COMPUTER"%(uuid))
-                menu = menus[uuid]
-                imagingData = {'menu':{uuid:menu}, 'uuid':uuid}
+        # store into h_hostnames hostnames of computers to register
+        h_hostnames = {}
+        hostnames = ComputerManager().getMachineHostname(ctx, {'uuids' : to_register.keys()})
+        if type(hostnames) == list:
+            for computer in hostnames:
+                h_hostnames[computer['uuid']] = computer['hostname']
+        else:
+            h_hostnames[hostnames['uuid']] = hostnames['hostname']
 
-                if not uuid in h_macaddress:
-                    logger.warn("synchroTargets() : computer %s do not have a MAC address" % (uuid))
-                    continue
+        # store into h_macaddress the MAC addr of computers to register
+        macaddress = ComputerManager().getMachineMac(ctx, {'uuids' : to_register.keys()})
+        h_macaddress = macaddress
 
-                mac = h_macaddress[uuid]
-                if type(mac) == list:
-                    mac = mac[0]
-                computers.append((h_hostnames[uuid], mac, imagingData))
-            if not h_computers.has_key(url):
-                h_computers[url] = []
-            h_computers[url].extend(computers)
+        # then try to build a list of computer with menus, hostname, mac addr and so on
+        computers = []
+        for uuid in to_register:
+            if db.isTargetRegister(uuid, P2IT.COMPUTER):
+                logger.debug("computer %s is already registered as a P2IT.COMPUTER" % (uuid))
+            menu = menus[uuid]
+            imagingData = {'menu' : {uuid : menu}, 'uuid' : uuid}
 
+            if not uuid in h_macaddress:
+                logger.warn("synchroTargets() : computer %s do not have a MAC address" % (uuid))
+                continue
+
+            mac = h_macaddress[uuid]
+            if type(mac) == list:
+                mac = mac[0]
+            computers.append((h_hostnames[uuid], mac, imagingData))
+
+        if not url in h_computers:
+            h_computers[url] = []
+        h_computers[url].extend(computers)
+
+    # if there are some new computers in the profile, register them
     if len(h_computers.keys()) != 0:
-        # some new computers are in the profile
         for url in h_computers:
             computers = h_computers[url]
             i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
@@ -2429,7 +2451,6 @@ def synchroTargets(ctx, uuids, target_type):
                 defer_list.append(d)
             else:
                 logger.error("couldn't initialize the ImagingApi to %s"%(url))
-
 
     distinct_loc = xmlrpcCleanup(distinct_loc)
     if len(defer_list) == 0:
