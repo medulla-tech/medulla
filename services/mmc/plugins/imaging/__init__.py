@@ -116,5 +116,5 @@ class ContextMaker(ContextMakerI):
         s.userid = self.userid
         return s
 
-class RpcProxy(ImagingRpcProxy): pass
-
+class RpcProxy(ImagingRpcProxy):
+    pass

@@ -28,6 +28,7 @@ from mmc.plugins.base import ComputerI
 from mmc.plugins.inventory.config import InventoryConfig
 from pulse2.database.inventory import Inventory
 from pulse2.managers.imaging import ComputerImagingManager
+import pulse2.utils
 import logging
 
 class InventoryComputers(ComputerI):
@@ -171,6 +172,9 @@ class InventoryComputers(ComputerI):
             ['computermac', 'string', 'Computer\'s MAC address'],
             ['computernet', 'string', 'Computer\'s network address']
         ]
+
+    def checkComputerName(self, name):
+        return pulse2.utils.checkComputerName(name)
 
     def canDelComputer(self):
         return True

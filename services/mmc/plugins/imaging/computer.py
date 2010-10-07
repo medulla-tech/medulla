@@ -31,6 +31,7 @@ It's only used for the computer deletion
 
 from mmc.plugins.base import ComputerI
 from mmc.plugins.imaging.functions import computersUnregister
+import pulse2.utils
 import logging
 
 class InventoryComputers(ComputerI):
@@ -39,6 +40,9 @@ class InventoryComputers(ComputerI):
 
     def canDelComputer(self):
         return True
+
+    def checkComputerName(self, name):
+        return pulse2.utils.checkComputerName(name)
 
     def delComputer(self, ctx, uuid, backup):
         return computersUnregister([uuid], backup)
