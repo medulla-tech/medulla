@@ -2306,6 +2306,9 @@ class RpcProxy(RpcProxyI):
     def neededParamsAddComputer(self):
         return ComputerManager().neededParamsAddComputer()
 
+    def checkComputerName(self, name):
+        return ComputerManager().checkComputerName(name)
+
     def canDelComputer(self):
         return ComputerManager().canDelComputer()
 

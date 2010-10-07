@@ -49,6 +49,19 @@ class ComputerI:
         """
         pass
 
+    def checkComputerName(self, name):
+        """
+        Ask to all plugins that can add computer if the given name is a valid
+        computer name.
+
+        @param name: computer name to check
+        @type name: str
+
+        @returns: whether the computer name is valid or not
+        @rtype: bool
+        """
+        pass
+
     def canDelComputer(self):
         """
         Does this module handle removal of computers
@@ -192,6 +205,17 @@ class ComputerManager(Singleton):
                     if plugin == self.main:
                         r = ret
         return r
+
+    def checkComputerName(self, name):
+        ret = True
+        for plugin in self.components:
+            self.logger.debug(plugin)
+            klass = self.components[plugin]
+            instance = klass()
+            if instance.canAddComputer() and not instance.checkComputerName(name):
+                ret = False
+                break
+        return ret
 
     def delComputer(self, ctx, uuid, backup):
         for plugin in self.components:
