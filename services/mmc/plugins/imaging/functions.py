@@ -2029,9 +2029,39 @@ class ImagingRpcProxy(RpcProxyI):
             elif hasattr(db_computer, 'uuid'):
                 uuid = db_computer.uuid
                 db_computer_name = db_computer.name
-            if db_computer_name != hostname:
+            if db_computer_name.lower() != hostname.lower():
                 logger.error("The hostname you gave is not the one in the database! (%s, %s)"%(db_computer_name, hostname))
                 return [False, "The hostname you gave is not the one we already have in the database (%s, %s)"%(db_computer_name, hostname)]
+
+        # If a computer with this name already exists, check that the MAC
+        # address is also matching
+        ctx = self.currentContext
+        db_computer = ComputerManager().getMachineMac(ctx, { 'hostname' : hostname })
+        if db_computer:
+            if len(db_computer) > 1:
+                err = "More than one computer in database with hostname %s. Aborting !" % hostname
+                logger.error(err)
+                return [False, err]
+            else:
+                # Checking if MAC address match
+                uuid = db_computer.keys()[0]
+                logger.debug("A computer (uuid = %s) with a corresponding hostname already exists in the database, checking its MAC addresses" % uuid)
+                hasMAC = False
+                if db_computer.values()[0] == [u'']:
+                    # No MAC address ? We consider we have a match
+                    hasMAC = True
+                else:
+                    for mac in db_computer.values()[0]:
+                        if mac.lower() == MACAddress.lower():
+                            hasMAC = True
+                            break
+                if not hasMAC:
+                    err = "A computer (uuid = %s) with this hostname already exists, but the MAC address doesn't match: %s not in %s" % (uuid, MACAddress, str(db_computer.values()[0]))
+                    logger.error(err)
+                    return [False, err]
+                else:
+                    logger.debug("The computer (uuid = %s) is matching with its hostname and one of its MAC addresses (%s)" % (uuid, db_computer.values()[0]))
+
         if uuid == None or type(uuid) == list and len(uuid) == 0:
             logger.info("the computer %s (%s) does not exist in the backend, trying to add it" % (hostname, MACAddress))
             # the computer does not exists, so we create it
@@ -2067,7 +2097,6 @@ class ImagingRpcProxy(RpcProxyI):
                 return [False, "profile %s don't exists in %s or is not registerd in imaging"%(profile, imaging_server_uuid)]
 
             logger.info("computer %s (%s) needs to be registered in the profile %s" % (hostname, MACAddress, profile))
-            ctx = self.currentContext
             ret1 = ComputerProfileManager().addComputersToProfile(ctx, {uuid:{'uuid':uuid, 'hostname':hostname}}, p.getUUID())
             if not ret1:
                 logger.error("failed to put the computer %s (%s) in the profile %s" % (hostname, MACAddress, profile))
