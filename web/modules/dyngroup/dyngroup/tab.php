@@ -77,7 +77,6 @@ if ($type == 0) {
         $imss = new SelectItem("imaging_server");
         $imss->setElements($elt);
         $imss->setElementsVal($elt_values);
-        $imss->setSelected($ims);
 
         $f->add(
             new TrFormElement(_T("Select the imaging server for this profile.", "dyngroup"), $imss)
