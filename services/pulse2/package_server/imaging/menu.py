@@ -274,7 +274,7 @@ class ImagingMenu:
             self.diskless_opts.append('revontblfix')
 
         # Shall be fix check the disk size ?
-        if not self.dont_check_disk_size:
+        if self.dont_check_disk_size:
             self.diskless_opts.append('revonospc')
 
         # Use a specifix ethernet card
