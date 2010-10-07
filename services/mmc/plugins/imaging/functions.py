@@ -1610,7 +1610,11 @@ class ImagingRpcProxy(RpcProxyI):
         try:
             ret = ImagingDatabase().getMyMenuTarget(uuid, target_type)
         except Exception, e:
-            if re.match("can't get any default menu for this entity ", e.message):
+            try:
+                emsg = e.message
+            except AttributeError:
+                emsg = str(e)
+            if re.match("can't get any default menu for this entity ", emsg):
                 return [False, 'ERROR', P2ERR.ERR_NEED_IMAGING_SERVER_REGISTRATION, "You first need to register your imaging server."]
             else:
                 raise e
