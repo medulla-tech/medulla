@@ -472,6 +472,27 @@ def splitComputerPath(path):
     return (profile, entities, hostname, domain)
 
 
+def checkComputerName(name):
+    """
+    Check computer name for Pulse 2.
+    It internally uses the splitComputerPath method.
+
+    @param name: computer name to check
+    @type name: str
+
+    @returns: whether the computer name is valid or not
+    @rtype: bool
+    """
+    ret = True
+    try:
+        if ':' in name or '/' in name:
+            raise TypeError
+        splitComputerPath(name)
+    except TypeError:
+        ret = False
+    return ret
+
+
 def rfc3339Time(ref = False):
     """
     Return a RFC 3339 string representing the time @ref
