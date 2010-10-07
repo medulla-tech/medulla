@@ -27,11 +27,17 @@ require("localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/base/includes/computers.inc.php");
 
+$errstr = "";
 if (isset($_POST["bcreate"])) {
-    addComputer($_POST);
-    if (!isXMLRPCError()) {
-        new NotifyWidgetSuccess(_("Computer successfully added"));
-        header("Location: " . urlStrRedirect("base/computers/index"));
+    if (checkComputerName($_POST["computername"])) {
+        addComputer($_POST);
+        if (!isXMLRPCError()) {
+            new NotifyWidgetSuccess(_("Computer successfully added"));
+            header("Location: " . urlStrRedirect("base/computers/index"));
+        }
+    } else {
+        $err = new ErrorMessage(_("Invalid computer name."));
+        $errstr = $err->display();
     }
 }
 
@@ -46,14 +52,29 @@ $p->setTitle($title);
 $p->setSideMenu($sidemenu);
 $p->display();
 
+print $errstr;
+
+$formfields = array("computername", "computerdescription");
+
 $f = new ValidatingForm();
 $f->push(new Table());
 
 if ($_GET["action"]=="add") {
-    $formElt = new DomainInputTpl("computername");
+    if (in_array("pulse2", $_SESSION["modulesList"])) {
+        /*
+           Be more permissive for Pulse 2 computer name, as it will be checked
+           internally.
+         */
+        $formElt = new InputTpl("computername");
+    } else {
+        $formElt = new DomainInputTpl("computername");
+    }
 } else {
     $formElt = new HiddenTpl("computername");
 }
+
+$computername = isset($_POST["computername"]) ? $_POST["computername"] : '';
+$computerdescription = isset($_POST["computerdescription"]) ? $_POST["computerdescription"] : '';
 
 $f->add(
         new TrFormElement(_("Computer name"), $formElt),
@@ -82,9 +103,10 @@ foreach ($addParams as $p) {
         default:
             $input = new IPInputTpl($p[0]);
         }
+        $value = isset($_POST[$p[0]]) ? $_POST[$p[0]] : '';
         $f->add(
             new TrFormElement(_($p[2]), $input),
-            array("value" => '')
+            array("value" => $value)
         );
     }
 }
@@ -92,10 +114,11 @@ foreach ($addParams as $p) {
 if (canAssociateComputer2Location()) {
     if (in_array("pulse2", $_SESSION["modulesList"])) {
         require('modules/pulse2/includes/select_location.php');
-        // TODO when edit, should get the locations in GET or POST
+        $value = isset($_POST["location_uuid"]) ? $_POST["location_uuid"] : '';
         $f->add(
-                new TrFormElement(_("Location"), select_locations(null, "location_uuid")),
-            array("value" => '')
+                new TrFormElement(_("Location"),
+                                  select_locations(null, "location_uuid")),
+                array("value" => $value)
         );
     }
 }
