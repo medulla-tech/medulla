@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-13 10:13+0200\n"
+"POT-Creation-Date: 2010-10-08 09:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -100,14 +100,19 @@ msgstr ""
 msgid "All share entities"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/delete_group.php:52
+#: web/modules/dyngroup/dyngroup/delete_group.php:39
 #, php-format
-msgid "Are you sure you want to delete %s <b>%s</b>?<br/> (it can be used in an other group)."
+msgid "Are you sure you want to delete group <b>%s</b>?<br/> (it can be used in an other group)."
+msgstr ""
+
+#: web/modules/dyngroup/dyngroup/delete_group.php:33
+#, php-format
+msgid "Are you sure you want to delete profile <b>%s</b>?<br/>"
 msgstr ""
 
 #: web/modules/dyngroup/includes/groups.inc.php:81
 #: web/modules/dyngroup/includes/groups.inc.php:184
-#: web/modules/dyngroup/dyngroup/delete_group.php:57
+#: web/modules/dyngroup/dyngroup/delete_group.php:61
 #: web/modules/dyngroup/dyngroup/remove_machine.php:47
 msgid "Cancel"
 msgstr ""
@@ -215,9 +220,14 @@ msgstr ""
 msgid "Delete a group of computers"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/delete_group.php:43
-#: web/modules/dyngroup/dyngroup/delete_group.php:56
+#: web/modules/dyngroup/dyngroup/delete_group.php:38
+#: web/modules/dyngroup/dyngroup/delete_group.php:40
 msgid "Delete group"
+msgstr ""
+
+#: web/modules/dyngroup/dyngroup/delete_group.php:32
+#: web/modules/dyngroup/dyngroup/delete_group.php:34
+msgid "Delete profile"
 msgstr ""
 
 #: web/modules/dyngroup/dyngroup/ajaxListGroups.php:65
@@ -522,7 +532,7 @@ msgstr ""
 msgid "Select the file you want to import"
 msgstr ""
 
-#: web/modules/dyngroup/dyngroup/tab.php:83
+#: web/modules/dyngroup/dyngroup/tab.php:82
 msgid "Select the imaging server for this profile."
 msgstr ""
 
