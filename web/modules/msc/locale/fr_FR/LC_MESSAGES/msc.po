@@ -1,17 +1,16 @@
 # translation of msc.po to Français
 # Copyright (C) 2008 THE Pulse 2 - MSC Web Interface'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the Pulse 2 - MSC Web Interface package.
-# Nicolas Rueff <nrueff@mandriva.com>, 2007, 2008, 2009.
-#
+# Nicolas Rueff <nrueff@mandriva.com>, 2007, 2008, 2009, 2010.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - MSC Web Interface 1.2.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-13 10:13+0200\n"
-"PO-Revision-Date: 2010-06-23 09:38+0200\n"
+"POT-Creation-Date: 2010-10-08 09:20+0200\n"
+"PO-Revision-Date: 2010-10-08 10:19+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
-"Language-Team: Français\n"
+"Language-Team: Pulse 2 developers <pulse2-devel@mandrivalinux.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,8 +44,12 @@ msgstr "%s <i>(pas de paramètre supplémentaire donné)</i>"
 
 #: web/modules/msc/includes/widgets.inc.php:84
 #, php-format
-msgid "%s host is not defined in the MSC module, or you don't have permissions to access it"
-msgstr "L'ordinateur \"%s\" n'est pas défini dans le module MSC, ou vous n'avez pas la permission d'y accéder"
+msgid ""
+"%s host is not defined in the MSC module, or you don't have permissions to "
+"access it"
+msgstr ""
+"L'ordinateur \"%s\" n'est pas défini dans le module MSC, ou vous n'avez pas "
+"la permission d'y accéder"
 
 #: web/modules/msc/logs/ajaxLogsFilter.php:94
 #, php-format
@@ -82,7 +85,7 @@ msgstr "(dont %s ont déjà tenté)"
 msgid "(with %s being unreachable)"
 msgstr "(dont %s sont injoignables)"
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:239
+#: web/modules/msc/msc/ajaxLogsFilter.php:240
 #, php-format
 msgid ", using proxy %s"
 msgstr ", utilisant le proxy %s"
@@ -328,23 +331,39 @@ msgstr "Commandes de tous les utilisateurs"
 
 #: web/modules/msc/includes/command_history.php:410
 #, php-format
-msgid "An error occurred when trying to contact the fallback mirror '%s' : the connection was refused."
-msgstr "Une erreur s'est produite lors de la tentative de contact du miroir de secours '%s' : la connexion a été refusée"
+msgid ""
+"An error occurred when trying to contact the fallback mirror '%s' : the "
+"connection was refused."
+msgstr ""
+"Une erreur s'est produite lors de la tentative de contact du miroir de "
+"secours '%s' : la connexion a été refusée"
 
 #: web/modules/msc/includes/command_history.php:412
 #, php-format
-msgid "An error occurred when trying to contact the fallback mirror '%s' : the mountpoint doesn't exists."
-msgstr "Une erreur s'est produite lors de la tentative de contact du miroir de secours '%s' : le point de montage n'existe pas"
+msgid ""
+"An error occurred when trying to contact the fallback mirror '%s' : the "
+"mountpoint doesn't exists."
+msgstr ""
+"Une erreur s'est produite lors de la tentative de contact du miroir de "
+"secours '%s' : le point de montage n'existe pas"
 
 #: web/modules/msc/includes/command_history.php:409
 #, php-format
-msgid "An error occurred when trying to contact the mirror '%s' : the connection was refused."
-msgstr "Une erreur s'est produite lors de la tentative de contact du miroir principal '%s' : la connexion a été refusée"
+msgid ""
+"An error occurred when trying to contact the mirror '%s' : the connection "
+"was refused."
+msgstr ""
+"Une erreur s'est produite lors de la tentative de contact du miroir "
+"principal '%s' : la connexion a été refusée"
 
 #: web/modules/msc/includes/command_history.php:411
 #, php-format
-msgid "An error occurred when trying to contact the mirror '%s' : the mountpoint doesn't exists."
-msgstr "Une erreur s'est produite lors de la tentative de contact du miroir principal '%s' : le point de montage n'existe pas"
+msgid ""
+"An error occurred when trying to contact the mirror '%s' : the mountpoint "
+"doesn't exists."
+msgstr ""
+"Une erreur s'est produite lors de la tentative de contact du miroir "
+"principal '%s' : le point de montage n'existe pas"
 
 #: web/modules/msc/includes/command_history.php:499
 #: web/modules/msc/includes/command_history.php:505
@@ -368,22 +387,26 @@ msgstr "Ensemble d'applications #%s"
 #: web/modules/msc/msc/msctabsstatus.php:50
 #, php-format
 msgid "Bundle '%s' state concerning <b>%s</b> commands on <b>%s</b> computers"
-msgstr "État du bundle '%s' concernant <b>%s</b> commandes sur <b>%s</b> machines"
+msgstr ""
+"État du bundle '%s' concernant <b>%s</b> commandes sur <b>%s</b> machines"
 
 #: web/modules/msc/msc/msctabsstatus.php:49
 #, php-format
 msgid "Bundle '%s' state concerning <b>%s</b> commands on <b>one</b> computer"
-msgstr "État du bundle '%s' concernant <b>%s</b> commandes sur <b>une</b> machine"
+msgstr ""
+"État du bundle '%s' concernant <b>%s</b> commandes sur <b>une</b> machine"
 
 #: web/modules/msc/msc/msctabsstatus.php:47
 #, php-format
 msgid "Bundle '%s' state concerning <b>one</b> command on <b>%s</b> computers"
-msgstr "État du bundle '%s' concernant <b>une</b> commande sur <b>%s</b> machines"
+msgstr ""
+"État du bundle '%s' concernant <b>une</b> commande sur <b>%s</b> machines"
 
 #: web/modules/msc/msc/msctabsstatus.php:46
 #, php-format
 msgid "Bundle '%s' state concerning <b>one</b> command on <b>one</b> computer"
-msgstr "État du bundle '%s' concernant <b>une</b> commande sur <b>une</b> machine"
+msgstr ""
+"État du bundle '%s' concernant <b>une</b> commande sur <b>une</b> machine"
 
 #: web/modules/msc/includes/bundle_widgets.php:345
 msgid "Bundle title"
@@ -401,19 +424,25 @@ msgstr "Ne peut accéder au bundle pour l'id demandé"
 #, php-format
 msgid ""
 "Can't get files URI for package '%s' on fallback mirror %s.\n"
-"Please check that the package and its files have not been modified since the planning of the command."
+"Please check that the package and its files have not been modified since the "
+"planning of the command."
 msgstr ""
-"Les URI des fichiers du package '%s' n'ont pas pu être récupérées sur le miroir de secours '%s'.\n"
-"Veuillez vérifier que le package et ses fichiers n'ont pas été modifiés depuis la planification de la commande."
+"Les URI des fichiers du package '%s' n'ont pas pu être récupérées sur le "
+"miroir de secours '%s'.\n"
+"Veuillez vérifier que le package et ses fichiers n'ont pas été modifiés "
+"depuis la planification de la commande."
 
 #: web/modules/msc/includes/command_history.php:407
 #, php-format
 msgid ""
 "Can't get files URI for package '%s' on mirror %s.\n"
-"Please check that the package and its files have not been modified since the planning of the command."
+"Please check that the package and its files have not been modified since the "
+"planning of the command."
 msgstr ""
-"Les URI des fichiers du package '%s' n'ont pas pu être récupérées sur le miroir principal '%s'.\n"
-"Veuillez vérifier que le package et ses fichiers n'ont pas été modifiés depuis la planification de la commande."
+"Les URI des fichiers du package '%s' n'ont pas pu être récupérées sur le "
+"miroir principal '%s'.\n"
+"Veuillez vérifier que le package et ses fichiers n'ont pas été modifiés "
+"depuis la planification de la commande."
 
 #: web/modules/msc/includes/bundle_widgets.php:285
 #: web/modules/msc/includes/bundle_widgets.php:387
@@ -422,10 +451,14 @@ msgid "Cancel bundle creation"
 msgstr "Annuler la création de l'ensemble d'applications"
 
 #: web/modules/msc/msc/download_file.php:53
-msgid "Click below to start downloading file from this computer. Warning: the download may last a long time"
-msgstr "Cliquer sur le bouton ci-dessous pour démarrer le téléchargement de fichier depuis cet ordinateur. Attention: le téléchargement peut prendre du temps."
+msgid ""
+"Click below to start downloading file from this computer. Warning: the "
+"download may last a long time"
+msgstr ""
+"Cliquer sur le bouton ci-dessous pour démarrer le téléchargement de fichier "
+"depuis cet ordinateur. Attention: le téléchargement peut prendre du temps."
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:302
+#: web/modules/msc/msc/ajaxLogsFilter.php:303
 msgid "Client"
 msgstr "Client"
 
@@ -435,7 +468,7 @@ msgstr "Fermer la fenêtre"
 
 #: web/modules/msc/msc/package_detail.php:36
 #: web/modules/msc/msc/ajaxLogsFilter.php:191
-#: web/modules/msc/msc/ajaxLogsFilter.php:300
+#: web/modules/msc/msc/ajaxLogsFilter.php:301
 #: web/modules/msc/logs/ajaxLogsFilter.php:131
 #: web/modules/msc/logs/ajaxConsultLogsFilter.php:149
 msgid "Command"
@@ -495,14 +528,16 @@ msgid "Connection failed !"
 msgstr "Échec de la connexion"
 
 #: web/modules/msc/msc/ajaxPing.php:33
-msgid "Connection was refused by the other side while trying to ping the machine"
+msgid ""
+"Connection was refused by the other side while trying to ping the machine"
 msgstr "La connexion a été refusée lors de la tentative de ping de la machine"
 
 #: web/modules/msc/msc/ajaxPingProbe.php:37
 #: web/modules/msc/msc/ajaxPingProbe.php:50
 #: web/modules/msc/msc/ajaxPingProbe.php:63
 #: web/modules/msc/msc/ajaxPingProbe.php:72
-msgid "Connection was refused by the other side while trying to probe the machine"
+msgid ""
+"Connection was refused by the other side while trying to probe the machine"
 msgstr "La connexion a été refusée lors de la tentative de probe de la machine"
 
 #: web/modules/msc/msc/vnc_client.php:33
@@ -537,7 +572,7 @@ msgstr "Créateur"
 msgid "Csv's export"
 msgstr "Export csv"
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:305
+#: web/modules/msc/msc/ajaxLogsFilter.php:306
 #: web/modules/msc/msc/msctabssinglestatus.php:38
 #: web/modules/msc/includes/command_history.php:37
 msgid "Current State"
@@ -660,7 +695,7 @@ msgstr "Téléchargement de fichiers"
 msgid "Downloading"
 msgstr "Téléchargement en cours"
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:293
+#: web/modules/msc/msc/ajaxLogsFilter.php:294
 #: web/modules/msc/logs/ajaxLogsFilter.php:126
 msgid "End date"
 msgstr "Date de fin"
@@ -681,8 +716,13 @@ msgid "Error scheduler-side !"
 msgstr "Erreur dans le scheduler !"
 
 #: web/modules/msc/includes/command_history.php:396
-msgid "Error while connecting to secure agent on this host. Please check network connectivity, and that the secure agent is installed on this host."
-msgstr "Erreur lors de la connexion à l'agent sécurisé de cette machine. Veuillez vérifier votre réseau, et que l'agent sécurisé est bien installé sur cette machine."
+msgid ""
+"Error while connecting to secure agent on this host. Please check network "
+"connectivity, and that the secure agent is installed on this host."
+msgstr ""
+"Erreur lors de la connexion à l'agent sécurisé de cette machine. Veuillez "
+"vérifier votre réseau, et que l'agent sécurisé est bien installé sur cette "
+"machine."
 
 #: web/modules/msc/includes/widgets.inc.php:171
 msgid "Execute action..."
@@ -929,7 +969,7 @@ msgstr "Nombre de tentatives de connexions"
 msgid "Maximum number of simultaneous connections to a proxy"
 msgstr "Nombre maximal de connexions simultanées sur un proxy"
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:298
+#: web/modules/msc/msc/ajaxLogsFilter.php:299
 msgid "Mode"
 msgstr "Mode"
 
@@ -938,12 +978,12 @@ msgstr "Mode"
 msgid "Multiple"
 msgstr "Multiple"
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:246
+#: web/modules/msc/msc/ajaxLogsFilter.php:247
 #, php-format
 msgid "Multiple, client mode%s"
 msgstr "Multiple, mode client%s"
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:248
+#: web/modules/msc/msc/ajaxLogsFilter.php:249
 msgid "Multiple, server mode"
 msgstr "Multiple, mode serveur"
 
@@ -983,8 +1023,8 @@ msgstr "Aucune"
 msgid "None (Local Proxy Client)"
 msgstr "Aucun (Client de Proxy Local)"
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:243
-#: web/modules/msc/msc/ajaxLogsFilter.php:255
+#: web/modules/msc/msc/ajaxLogsFilter.php:244
+#: web/modules/msc/msc/ajaxLogsFilter.php:256
 msgid "Normal"
 msgstr "Normal"
 
@@ -1111,7 +1151,7 @@ msgstr "Veuillez contacter votre administrateur."
 msgid "Possible actions"
 msgstr "Actions possibles"
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:306
+#: web/modules/msc/msc/ajaxLogsFilter.php:307
 msgid "Progression"
 msgstr "Progression"
 
@@ -1284,18 +1324,20 @@ msgstr "Statut de la commande"
 msgid "Single with fallback"
 msgstr "Simple avec redondance"
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:251
+#: web/modules/msc/msc/ajaxLogsFilter.php:252
 #, php-format
 msgid "Single, client mode%s"
 msgstr "Simple, mode client%s"
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:253
+#: web/modules/msc/msc/ajaxLogsFilter.php:254
 msgid "Single, server mode"
 msgstr "Simple, mode serveur"
 
 #: web/modules/msc/includes/command_history.php:401
 msgid "Something goes wrong while checking client identity."
-msgstr "Il s'est passé quelque chose d'inattendu lors de la vérification de l'identité du poste client."
+msgstr ""
+"Il s'est passé quelque chose d'inattendu lors de la vérification de "
+"l'identité du poste client."
 
 #: web/modules/msc/msc/ajaxLogsFilter.php:78
 #: web/modules/msc/logs/ajaxLogsFilter.php:65
@@ -1318,7 +1360,7 @@ msgstr "Démarrer l'action sur l'ordinateur %s"
 msgid "Start action on this group"
 msgstr "Démarrer l'action sur ce groupe"
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:295
+#: web/modules/msc/msc/ajaxLogsFilter.php:296
 #: web/modules/msc/logs/ajaxLogsFilter.php:128
 msgid "Start date"
 msgstr "Date de démarrage"
@@ -1411,16 +1453,27 @@ msgid "The command must stop before"
 msgstr "La commande doit s'arrêter avant"
 
 #: web/modules/msc/includes/command_history.php:403
-msgid "The current host IP address doesn't match the IP address from the inventory database."
-msgstr "L'adresse IP de l'ordinateur ne correspond pas à celle présente dans l'inventaire."
+msgid ""
+"The current host IP address doesn't match the IP address from the inventory "
+"database."
+msgstr ""
+"L'adresse IP de l'ordinateur ne correspond pas à celle présente dans "
+"l'inventaire."
 
 #: web/modules/msc/includes/command_history.php:404
-msgid "The current host MAC address doesn't match the MAC address from the inventory database."
-msgstr "L'adresse MAC de l'ordinateur ne correspond pas à celle présente dans l'inventaire."
+msgid ""
+"The current host MAC address doesn't match the MAC address from the "
+"inventory database."
+msgstr ""
+"L'adresse MAC de l'ordinateur ne correspond pas à celle présente dans "
+"l'inventaire."
 
 #: web/modules/msc/includes/command_history.php:402
-msgid "The current host name doesn't match the host name from the inventory database."
-msgstr "Le nom de l'ordinateur ne correspond pas à celui présent dans l'inventaire."
+msgid ""
+"The current host name doesn't match the host name from the inventory "
+"database."
+msgstr ""
+"Le nom de l'ordinateur ne correspond pas à celui présent dans l'inventaire."
 
 #: web/modules/msc/msc/download_file_get.php:28
 #: web/modules/msc/msc/download_file.php:43
@@ -1542,7 +1595,9 @@ msgstr "Vous n'avez pas le droit de consulter cette commande"
 
 #: web/modules/msc/msc/launch.php:44
 msgid "Your start and end dates are not coherent, please check them.<br/>"
-msgstr "Vos dates de début et de fin ne sont pas cohérentes, veuillez les vérifier.<br/>"
+msgstr ""
+"Vos dates de début et de fin ne sont pas cohérentes, veuillez les vérifier."
+"<br/>"
 
 #: web/modules/msc/msc/msctabspause.php:111
 #: web/modules/msc/msc/msctabsstop.php:113
@@ -1677,8 +1732,12 @@ msgstr "échoué durant le téléchargement"
 
 #: web/modules/msc/includes/widgets.inc.php:66
 #, php-format
-msgid "group \"%s\" is not defined in the MSC module, or you don't have permissions to access it"
-msgstr "le groupe \"%s\" n'est pas défini dans le module MSC, ou vous n'avez pas la permission d'y accéder"
+msgid ""
+"group \"%s\" is not defined in the MSC module, or you don't have permissions "
+"to access it"
+msgstr ""
+"le groupe \"%s\" n'est pas défini dans le module MSC, ou vous n'avez pas la "
+"permission d'y accéder"
 
 #: web/modules/msc/includes/command_history.php:44
 msgid "halted"

@@ -3,21 +3,21 @@
 # This file is distributed under the same license as the Pulse 2 - MMC Web Inventory package.
 # , fuzzy
 # Olivier Roussy <oroussy@mandriva.com>, 2008.
+# Nicolas Rueff <nrueff@mandriva.com>, 2008, 2009, 2010.
 #
-#
-# Nicolas Rueff <nrueff@mandriva.com>, 2008, 2009.
 msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - Inventory Web Interface 1.2.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-13 10:13+0200\n"
-"PO-Revision-Date: 2009-05-22 09:56+0200\n"
+"POT-Creation-Date: 2010-10-08 09:20+0200\n"
+"PO-Revision-Date: 2010-10-08 09:40+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
-"Language-Team: French <i18n@mandriva.com>\n"
+"Language-Team: Pulse 2 developers <pulse2-devel@mandrivalinux.org>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: web/modules/inventory/inventory/tabs.php:40
 #, php-format
@@ -404,13 +404,16 @@ msgid "Inventory"
 msgstr "Inventaire"
 
 #: web/modules/inventory/inventory/history.php:75
-#: web/modules/inventory/inventory/ajaxIncoming.php:76
 msgid "Inventory Date"
 msgstr "Date de l'inventaire"
 
 #: web/modules/inventory/inventory/inventory_diff.php:48
 msgid "Inventory changes"
 msgstr "Changement dans l'inventaire"
+
+#: web/modules/inventory/inventory/ajaxIncoming.php:76
+msgid "Inventory date"
+msgstr "Date d'inventaire"
 
 #: web/modules/inventory/inventory/view.php:48
 #, php-format
