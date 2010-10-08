@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - Inventory Web Interface 1.1.0rc1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-13 10:13+0200\n"
+"POT-Creation-Date: 2010-10-08 09:20+0200\n"
 "PO-Revision-Date: 2008-06-17 09:57+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: English/USA <en@li.org>\n"
@@ -402,12 +402,15 @@ msgid "Inventory"
 msgstr ""
 
 #: web/modules/inventory/inventory/history.php:75
-#: web/modules/inventory/inventory/ajaxIncoming.php:76
 msgid "Inventory Date"
 msgstr ""
 
 #: web/modules/inventory/inventory/inventory_diff.php:48
 msgid "Inventory changes"
+msgstr ""
+
+#: web/modules/inventory/inventory/ajaxIncoming.php:76
+msgid "Inventory date"
 msgstr ""
 
 #: web/modules/inventory/inventory/view.php:48
