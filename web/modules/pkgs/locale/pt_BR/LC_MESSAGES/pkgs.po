@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pkgs\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-13 10:13+0200\n"
+"POT-Creation-Date: 2010-10-08 09:20+0200\n"
 "PO-Revision-Date: 2010-01-28 16:21-0200\n"
 "Last-Translator: Sergio Rafael Lemke <sergio@mandriva.com.br>\n"
 "Language-Team: Brazilian Portuguese <cooker-i18n@mandrivalinux.org>\n"
@@ -19,16 +19,16 @@ msgstr ""
 "X-Generator: Lokalize 1.0\n"
 "Plural-Forms: nplurals=2; plural=(n>1);\n"
 
-#: web/modules/pkgs/pkgs/localSidebar.php:28 web/modules/pkgs/pkgs/edit.php:78
+#: web/modules/pkgs/pkgs/localSidebar.php:28 web/modules/pkgs/pkgs/edit.php:79
 #: web/modules/pkgs/infoPackage.inc.php:44
 msgid "Add a package"
 msgstr "Adicionar um pacote"
 
-#: web/modules/pkgs/pkgs/associate_files.php:115
+#: web/modules/pkgs/pkgs/associate_files.php:120
 msgid "Associate"
 msgstr "Associar"
 
-#: web/modules/pkgs/pkgs/edit.php:177
+#: web/modules/pkgs/pkgs/edit.php:179
 msgid "Associate files"
 msgstr "Associar arquivos"
 
@@ -36,22 +36,27 @@ msgstr "Associar arquivos"
 msgid "Associate files to a package"
 msgstr "Associar arquivos a um pacote"
 
-#: web/modules/pkgs/pkgs/associate_files.php:74
+#: web/modules/pkgs/pkgs/associate_files.php:79
 #, php-format
 msgid "Associate files to package <b>%s (%s)</b>"
 msgstr "Associar arquivos ao pacote <b>%s (%s)</b>"
 
-#: web/modules/pkgs/pkgs/ajaxPendingPackageList.php:52
+#: web/modules/pkgs/pkgs/ajaxPendingPackageList.php:50
 msgid "Associate package"
 msgstr "Associar pacote"
 
-#: web/modules/pkgs/pkgs/edit.php:138
+#: web/modules/pkgs/pkgs/edit.php:139
 msgid "Command : "
 msgstr "Comando : "
 
-#: web/modules/pkgs/pkgs/edit.php:138
+#: web/modules/pkgs/pkgs/edit.php:139
 msgid "Command's name : "
 msgstr "Nome do comando : "
+
+#: web/modules/pkgs/pkgs/associate_files.php:121
+#, fuzzy
+msgid "Create an empty package"
+msgstr "Excluir um pacote"
 
 #: web/modules/pkgs/pkgs/ajaxPackageList.php:79
 #: web/modules/pkgs/pkgs/ajaxPendingPackageList.php:79
@@ -63,50 +68,42 @@ msgstr "Excluir um pacote"
 msgid "Delete this package"
 msgstr "Excluir este pacote"
 
-#: web/modules/pkgs/pkgs/edit.php:134
+#: web/modules/pkgs/pkgs/ajaxPackageList.php:69
+#: web/modules/pkgs/pkgs/ajaxPendingPackageList.php:69
+#: web/modules/pkgs/pkgs/edit.php:135
 msgid "Description"
 msgstr "Descrição"
 
-#: web/modules/pkgs/pkgs/ajaxPackageList.php:70
-#: web/modules/pkgs/pkgs/ajaxPendingPackageList.php:70
-msgid "Descriptions"
-msgstr "Descrições"
-
 #: web/modules/pkgs/pkgs/ajaxPackageList.php:78
-#: web/modules/pkgs/pkgs/edit.php:95 web/modules/pkgs/infoPackage.inc.php:46
+#: web/modules/pkgs/pkgs/edit.php:96 web/modules/pkgs/infoPackage.inc.php:46
 msgid "Edit a package"
 msgstr "Editar um pacote"
 
-#: web/modules/pkgs/pkgs/associate_files.php:67
+#: web/modules/pkgs/pkgs/associate_files.php:72
 msgid "Failed to associate files"
 msgstr "Falha ao associar arquivos"
 
-#: web/modules/pkgs/pkgs/associate_files.php:64
+#: web/modules/pkgs/pkgs/associate_files.php:69
 #, php-format
 msgid "Failed to associate files%s"
 msgstr "Falha ao associar os arquivos%s"
 
-#: web/modules/pkgs/pkgs/associate_files.php:57
+#: web/modules/pkgs/pkgs/associate_files.php:62
 #, php-format
 msgid "Files successfully associated with package <b>%s (%s)</b>%s"
 msgstr "Os arquivos foram associados com sucesso ao pacote <b>%s (%s)</b>%s"
 
-#: web/modules/pkgs/pkgs/ajaxPackageList.php:55
+#: web/modules/pkgs/pkgs/ajaxPackageList.php:53
 #: web/modules/pkgs/pkgs/index.php:45
 #, php-format
 msgid "MMC failed to contact package server %s."
 msgstr "MMC falhou ao contactar o servidor de pacotes %s."
 
-#: web/modules/pkgs/pkgs/ajaxPackageList.php:68
-#: web/modules/pkgs/pkgs/ajaxPendingPackageList.php:68
-msgid "Names"
-msgstr "Nomes"
-
-#: web/modules/pkgs/pkgs/edit.php:146
+#: web/modules/pkgs/pkgs/edit.php:147
 msgid "Need a reboot ?"
 msgstr "Necessita reiniciar ?"
 
-#: web/modules/pkgs/pkgs/edit.php:121
+#: web/modules/pkgs/pkgs/edit.php:122
 msgid "Package API"
 msgstr "API do pacote"
 
@@ -114,8 +111,14 @@ msgstr "API do pacote"
 msgid "Package failed to save"
 msgstr "Falha ao salvar pacote"
 
-#: web/modules/pkgs/pkgs/edit.php:132
+#: web/modules/pkgs/pkgs/edit.php:133
 msgid "Package label"
+msgstr "Rótulo do pacote"
+
+#: web/modules/pkgs/pkgs/ajaxPackageList.php:66
+#: web/modules/pkgs/pkgs/ajaxPendingPackageList.php:66
+#, fuzzy
+msgid "Package name"
 msgstr "Rótulo do pacote"
 
 #: web/modules/pkgs/pkgs/ajaxPackageList.php:71
@@ -126,7 +129,7 @@ msgstr "Tamanho do pacote"
 msgid "Package successfully edited"
 msgstr "Pacote editado com sucesso"
 
-#: web/modules/pkgs/pkgs/edit.php:133
+#: web/modules/pkgs/pkgs/edit.php:134
 msgid "Package version"
 msgstr "Versão do pacote"
 
@@ -145,7 +148,7 @@ msgstr "Lista de pacotes"
 msgid "Pending packages list"
 msgstr "Lista de pacotes pendentes"
 
-#: web/modules/pkgs/pkgs/ajaxPackageList.php:65
+#: web/modules/pkgs/pkgs/ajaxPackageList.php:63
 #: web/modules/pkgs/pkgs/index.php:53
 msgid "Please contact your administrator."
 msgstr "Contate seu administrador."
@@ -154,7 +157,7 @@ msgstr "Contate seu administrador."
 msgid "See pending packages"
 msgstr "Ver pacotes pendentes"
 
-#: web/modules/pkgs/pkgs/associate_files.php:94
+#: web/modules/pkgs/pkgs/associate_files.php:99
 msgid "Select the directory you want for this package"
 msgstr "Selecione o diretório que deseja para este pacote"
 
@@ -183,9 +186,10 @@ msgstr "Falha ao excluir o pacote"
 msgid "The package has been deleted."
 msgstr "O pacote foi excluído."
 
-#: web/modules/pkgs/pkgs/ajaxPackageList.php:69
-#: web/modules/pkgs/pkgs/ajaxPendingPackageList.php:69
-msgid "Versions"
+#: web/modules/pkgs/pkgs/ajaxPackageList.php:70
+#: web/modules/pkgs/pkgs/ajaxPendingPackageList.php:70
+#, fuzzy
+msgid "Version"
 msgstr "Versões"
 
 #, fuzzy
@@ -260,6 +264,9 @@ msgstr "Versões"
 #~ msgid "Delete this profile"
 #~ msgstr "Excluir este pacote"
 
+#~ msgid "Descriptions"
+#~ msgstr "Descrições"
+
 #, fuzzy
 #~ msgid "Edit a profile"
 #~ msgstr "Editar um pacote"
@@ -310,6 +317,9 @@ msgstr "Versões"
 
 #, fuzzy
 #~ msgid "Name :"
+#~ msgstr "Nomes"
+
+#~ msgid "Names"
 #~ msgstr "Nomes"
 
 #, fuzzy
@@ -396,8 +406,7 @@ msgstr "Versões"
 #~ msgid "The package '%s' is not available on any mirror."
 #~ msgstr "O pacote %s (%s) não está associado"
 
-#, fuzzy
-#~ msgid "Version"
+#~ msgid "Versions"
 #~ msgstr "Versões"
 
 #, fuzzy

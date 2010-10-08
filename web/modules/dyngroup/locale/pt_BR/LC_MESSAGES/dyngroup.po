@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: dyngroup\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-13 10:13+0200\n"
+"POT-Creation-Date: 2010-10-08 09:20+0200\n"
 "PO-Revision-Date: 2009-05-04 10:36-0300\n"
 "Last-Translator: Andre Paulo Machado <andre.panm@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_br@mail.kde.org>\n"
@@ -103,14 +103,19 @@ msgstr "Todos os grupos"
 msgid "All share entities"
 msgstr "Todas as entradas compartilhadas"
 
-#: web/modules/dyngroup/dyngroup/delete_group.php:52
+#: web/modules/dyngroup/dyngroup/delete_group.php:39
 #, fuzzy, php-format
-msgid "Are you sure you want to delete %s <b>%s</b>?<br/> (it can be used in an other group)."
+msgid "Are you sure you want to delete group <b>%s</b>?<br/> (it can be used in an other group)."
+msgstr "Tem certeza que deseja remover o grupo <b>%s</b>? <br/> (ele pode estar sendo usado em outro grupo)."
+
+#: web/modules/dyngroup/dyngroup/delete_group.php:33
+#, fuzzy, php-format
+msgid "Are you sure you want to delete profile <b>%s</b>?<br/>"
 msgstr "Tem certeza que deseja remover o grupo <b>%s</b>? <br/> (ele pode estar sendo usado em outro grupo)."
 
 #: web/modules/dyngroup/includes/groups.inc.php:81
 #: web/modules/dyngroup/includes/groups.inc.php:184
-#: web/modules/dyngroup/dyngroup/delete_group.php:57
+#: web/modules/dyngroup/dyngroup/delete_group.php:61
 #: web/modules/dyngroup/dyngroup/remove_machine.php:47
 msgid "Cancel"
 msgstr "Cancelar"
@@ -225,10 +230,16 @@ msgstr "Excluir"
 msgid "Delete a group of computers"
 msgstr "Excluir um grupo de computadores"
 
-#: web/modules/dyngroup/dyngroup/delete_group.php:43
-#: web/modules/dyngroup/dyngroup/delete_group.php:56
+#: web/modules/dyngroup/dyngroup/delete_group.php:38
+#: web/modules/dyngroup/dyngroup/delete_group.php:40
 msgid "Delete group"
 msgstr "Excluir grupo"
+
+#: web/modules/dyngroup/dyngroup/delete_group.php:32
+#: web/modules/dyngroup/dyngroup/delete_group.php:34
+#, fuzzy
+msgid "Delete profile"
+msgstr "Excluir este grupo"
 
 #: web/modules/dyngroup/dyngroup/ajaxListGroups.php:65
 msgid "Delete this group"
@@ -550,7 +561,7 @@ msgstr "Segunda página da criação de grupo resultado/consulta"
 msgid "Select the file you want to import"
 msgstr "Selecione o arquivo que deseja importar"
 
-#: web/modules/dyngroup/dyngroup/tab.php:83
+#: web/modules/dyngroup/dyngroup/tab.php:82
 #, fuzzy
 msgid "Select the imaging server for this profile."
 msgstr "Selecione o que está dentro do arquivo"
@@ -787,10 +798,6 @@ msgstr "visível"
 #~ msgstr "Todas as entradas compartilhadas"
 
 #, fuzzy
-#~ msgid "Are you sure you want to delete <b>%s</b> image ?"
-#~ msgstr "Tem certeza que deseja remover o grupo <b>%s</b>? <br/> (ele pode estar sendo usado em outro grupo)."
-
-#, fuzzy
 #~ msgid "Are you sure you want to delete <b>%s</b> master ?"
 #~ msgstr "Tem certeza que deseja remover o grupo <b>%s</b>? <br/> (ele pode estar sendo usado em outro grupo)."
 
@@ -856,10 +863,6 @@ msgstr "visível"
 
 #, fuzzy
 #~ msgid "Delete failed"
-#~ msgstr "Excluir este grupo"
-
-#, fuzzy
-#~ msgid "Delete file"
 #~ msgstr "Excluir este grupo"
 
 #, fuzzy
