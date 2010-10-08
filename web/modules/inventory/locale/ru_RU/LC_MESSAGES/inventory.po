@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: inventory\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-13 10:13+0200\n"
+"POT-Creation-Date: 2010-10-08 09:20+0200\n"
 "PO-Revision-Date: 2008-07-25 14:11+0200\n"
 "Last-Translator: Andrzej Skrzypczak <aeskrzypczak@gmail.com>\n"
 "Language-Team:  <pl@li.org>\n"
@@ -417,7 +417,6 @@ msgid "Inventory"
 msgstr "Inwentarz"
 
 #: web/modules/inventory/inventory/history.php:75
-#: web/modules/inventory/inventory/ajaxIncoming.php:76
 #, fuzzy
 msgid "Inventory Date"
 msgstr "Inwentarz"
@@ -425,6 +424,11 @@ msgstr "Inwentarz"
 #: web/modules/inventory/inventory/inventory_diff.php:48
 #, fuzzy
 msgid "Inventory changes"
+msgstr "Inwentarz"
+
+#: web/modules/inventory/inventory/ajaxIncoming.php:76
+#, fuzzy
+msgid "Inventory date"
 msgstr "Inwentarz"
 
 #: web/modules/inventory/inventory/view.php:48
