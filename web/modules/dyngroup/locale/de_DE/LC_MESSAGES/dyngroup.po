@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-13 10:13+0200\n"
+"POT-Creation-Date: 2010-10-08 09:20+0200\n"
 "PO-Revision-Date: 2010-08-08 07:03+0100\n"
 "Last-Translator: Mario Fetka <mario.fetka@gmail.com>\n"
 "Language-Team: Mario Fetka <mario.fetka@gmail.com>\n"
@@ -101,14 +101,19 @@ msgstr "Alle Profile"
 msgid "All share entities"
 msgstr "Alle Verteilten Datensätze"
 
-#: web/modules/dyngroup/dyngroup/delete_group.php:52
-#, php-format
-msgid "Are you sure you want to delete %s <b>%s</b>?<br/> (it can be used in an other group)."
+#: web/modules/dyngroup/dyngroup/delete_group.php:39
+#, fuzzy, php-format
+msgid "Are you sure you want to delete group <b>%s</b>?<br/> (it can be used in an other group)."
+msgstr "Sind Sie sicher, dass Sie %s löschen <b> %s </ b>? <br/> (Es kann in einer anderen Gruppe verwendet werden)."
+
+#: web/modules/dyngroup/dyngroup/delete_group.php:33
+#, fuzzy, php-format
+msgid "Are you sure you want to delete profile <b>%s</b>?<br/>"
 msgstr "Sind Sie sicher, dass Sie %s löschen <b> %s </ b>? <br/> (Es kann in einer anderen Gruppe verwendet werden)."
 
 #: web/modules/dyngroup/includes/groups.inc.php:81
 #: web/modules/dyngroup/includes/groups.inc.php:184
-#: web/modules/dyngroup/dyngroup/delete_group.php:57
+#: web/modules/dyngroup/dyngroup/delete_group.php:61
 #: web/modules/dyngroup/dyngroup/remove_machine.php:47
 msgid "Cancel"
 msgstr "Stornieren"
@@ -216,10 +221,16 @@ msgstr "Löschen"
 msgid "Delete a group of computers"
 msgstr "Löschen eine Gruppe von Computern"
 
-#: web/modules/dyngroup/dyngroup/delete_group.php:43
-#: web/modules/dyngroup/dyngroup/delete_group.php:56
+#: web/modules/dyngroup/dyngroup/delete_group.php:38
+#: web/modules/dyngroup/dyngroup/delete_group.php:40
 msgid "Delete group"
 msgstr "Gruppe löschen"
+
+#: web/modules/dyngroup/dyngroup/delete_group.php:32
+#: web/modules/dyngroup/dyngroup/delete_group.php:34
+#, fuzzy
+msgid "Delete profile"
+msgstr "Dieses Profil löschen"
 
 #: web/modules/dyngroup/dyngroup/ajaxListGroups.php:65
 msgid "Delete this group"
@@ -523,7 +534,7 @@ msgstr "Zweite Seite des Ergebnisses / Anfrage Gruppen Ersteller"
 msgid "Select the file you want to import"
 msgstr "Wählen Sie die gewünschte Datei zu importieren"
 
-#: web/modules/dyngroup/dyngroup/tab.php:83
+#: web/modules/dyngroup/dyngroup/tab.php:82
 msgid "Select the imaging server for this profile."
 msgstr "Wählen Sie die Imaging-Server für dieses Profil."
 
@@ -754,10 +765,6 @@ msgstr "sichtbar"
 #~ msgstr "Alle Verteilten Datensätze"
 
 #, fuzzy
-#~ msgid "Are you sure you want to delete <b>%s</b> image ?"
-#~ msgstr "Sind Sie sicher, dass Sie %s löschen <b> %s </ b>? <br/> (Es kann in einer anderen Gruppe verwendet werden)."
-
-#, fuzzy
 #~ msgid "Are you sure you want to delete <b>%s</b> master ?"
 #~ msgstr "Sind Sie sicher, dass Sie %s löschen <b> %s </ b>? <br/> (Es kann in einer anderen Gruppe verwendet werden)."
 
@@ -827,10 +834,6 @@ msgstr "sichtbar"
 
 #, fuzzy
 #~ msgid "Delete failed"
-#~ msgstr "Dieses Profil löschen"
-
-#, fuzzy
-#~ msgid "Delete file"
 #~ msgstr "Dieses Profil löschen"
 
 #, fuzzy

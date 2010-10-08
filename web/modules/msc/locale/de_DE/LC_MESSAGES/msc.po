@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-13 10:13+0200\n"
+"POT-Creation-Date: 2010-10-08 09:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -81,7 +81,7 @@ msgstr ""
 msgid "(with %s being unreachable)"
 msgstr ""
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:239
+#: web/modules/msc/msc/ajaxLogsFilter.php:240
 #, php-format
 msgid ", using proxy %s"
 msgstr ""
@@ -420,7 +420,7 @@ msgstr ""
 msgid "Click below to start downloading file from this computer. Warning: the download may last a long time"
 msgstr ""
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:302
+#: web/modules/msc/msc/ajaxLogsFilter.php:303
 msgid "Client"
 msgstr ""
 
@@ -430,7 +430,7 @@ msgstr ""
 
 #: web/modules/msc/msc/package_detail.php:36
 #: web/modules/msc/msc/ajaxLogsFilter.php:191
-#: web/modules/msc/msc/ajaxLogsFilter.php:300
+#: web/modules/msc/msc/ajaxLogsFilter.php:301
 #: web/modules/msc/logs/ajaxLogsFilter.php:131
 #: web/modules/msc/logs/ajaxConsultLogsFilter.php:149
 msgid "Command"
@@ -532,7 +532,7 @@ msgstr ""
 msgid "Csv's export"
 msgstr ""
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:305
+#: web/modules/msc/msc/ajaxLogsFilter.php:306
 #: web/modules/msc/msc/msctabssinglestatus.php:38
 #: web/modules/msc/includes/command_history.php:37
 msgid "Current State"
@@ -655,7 +655,7 @@ msgstr ""
 msgid "Downloading"
 msgstr ""
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:293
+#: web/modules/msc/msc/ajaxLogsFilter.php:294
 #: web/modules/msc/logs/ajaxLogsFilter.php:126
 msgid "End date"
 msgstr ""
@@ -924,7 +924,7 @@ msgstr ""
 msgid "Maximum number of simultaneous connections to a proxy"
 msgstr ""
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:298
+#: web/modules/msc/msc/ajaxLogsFilter.php:299
 msgid "Mode"
 msgstr ""
 
@@ -933,12 +933,12 @@ msgstr ""
 msgid "Multiple"
 msgstr ""
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:246
+#: web/modules/msc/msc/ajaxLogsFilter.php:247
 #, php-format
 msgid "Multiple, client mode%s"
 msgstr ""
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:248
+#: web/modules/msc/msc/ajaxLogsFilter.php:249
 msgid "Multiple, server mode"
 msgstr ""
 
@@ -978,8 +978,8 @@ msgstr ""
 msgid "None (Local Proxy Client)"
 msgstr ""
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:243
-#: web/modules/msc/msc/ajaxLogsFilter.php:255
+#: web/modules/msc/msc/ajaxLogsFilter.php:244
+#: web/modules/msc/msc/ajaxLogsFilter.php:256
 msgid "Normal"
 msgstr ""
 
@@ -1104,7 +1104,7 @@ msgstr ""
 msgid "Possible actions"
 msgstr ""
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:306
+#: web/modules/msc/msc/ajaxLogsFilter.php:307
 msgid "Progression"
 msgstr ""
 
@@ -1277,12 +1277,12 @@ msgstr ""
 msgid "Single with fallback"
 msgstr ""
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:251
+#: web/modules/msc/msc/ajaxLogsFilter.php:252
 #, php-format
 msgid "Single, client mode%s"
 msgstr ""
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:253
+#: web/modules/msc/msc/ajaxLogsFilter.php:254
 msgid "Single, server mode"
 msgstr ""
 
@@ -1311,7 +1311,7 @@ msgstr ""
 msgid "Start action on this group"
 msgstr ""
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:295
+#: web/modules/msc/msc/ajaxLogsFilter.php:296
 #: web/modules/msc/logs/ajaxLogsFilter.php:128
 msgid "Start date"
 msgstr ""
