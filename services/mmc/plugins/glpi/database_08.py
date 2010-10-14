@@ -65,6 +65,7 @@ class Glpi08(DyngroupDatabaseHelper):
         try:
             glpi_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
         except Exception, e:
+            logging.getLogger().error(e)
             return False
         return True
 
