@@ -84,5 +84,11 @@ UPDATE ShareGroup, Groups SET ShareGroup.display_in_menu = Groups.display_in_men
 INSERT INTO ShareGroup (FK_groups, FK_users, display_in_menu, type) SELECT id, FK_users, display_in_menu, 1 FROM Groups;
 ALTER TABLE Groups DROP COLUMN display_in_menu;
 
+-- Some new indexes to speedup dyngroup queries
+CREATE INDEX dyngroup_results_fk_machine_idx on Results (FK_machine);
+CREATE INDEX dyngroup_groups_fk_user_idx on Groups (FK_user);
+CREATE INDEX dyngroup_sharegroup_fk_group_idx on ShareGroup (FK_group);
+CREATE INDEX dyngroup_sharegroup_fk_user_idx on ShareGroup (FK_user);
+
 UPDATE version set Number = 3;
 
