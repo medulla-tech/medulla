@@ -98,6 +98,7 @@ class ImagingDefaultMenuBuilder:
         m.setTimeout(self.menu['timeout'])
         m.setDefaultItem(int(self.menu['default_item']))
         m.setProtocol(self.menu['protocol'])
+        m.setMTFTPTimeout(self.menu['mtftp_restore_timeout'])
         m.setBootCLI(self.menu['bootcli'])
         m.hide(self.menu['hidden_menu'])
         if 'update_nt_boot' in self.menu:
@@ -182,6 +183,7 @@ class ImagingMenu:
         self.kernel_opts = list(['quiet'])  # kernel options put on diskless command line
         self.protocol = 'nfs'  # by default
         self.rawmode = ''  # raw mode backup
+        self.mtftp_timeout = '10' # MTFTP wait timeout
 
     def _applyReplacement(self, string, condition = 'global'):
         """
@@ -213,7 +215,9 @@ class ImagingMenu:
             ('##PULSE2_POSTINST_DIR##', self.config.imaging_api['postinst_folder'], 'global'),
             ('##PULSE2_COMPUTERS_DIR##', self.config.imaging_api['computers_folder'], 'global'),
             ('##PULSE2_BASE_DIR##', self.config.imaging_api['base_folder'], 'global'),
-            ('##PULSE2_REVO_RAW##', self.rawmode, 'global')]
+            ('##PULSE2_REVO_RAW##', self.rawmode, 'global'),
+            ('##REVOWAIT##', self.mtftp_timeout, 'global')
+            ]
         if self.mac:
             replacements.append(
                 ('##MAC##',
@@ -477,6 +481,12 @@ class ImagingMenu:
         if value:
             self.rawmode = 'revoraw'
 
+    def setMTFTPTimeout(self, value):
+        """
+        Set MTFTP wait timeout
+        """
+        self.mtftp_timeout = str(value)
+
     def hide(self, flag):
         """
         Hide or display menu
@@ -598,13 +608,16 @@ class ImagingImageItem(ImagingItem):
 
         @return: the entry, in a GRUB compatible format.
         """
-        assert(protocol in ['nfs', 'tftp', 'mtftp'])
         buf = 'title %s\n' % self.title
         if self.desc:
             buf += 'desc %s\n' % self.desc
         if protocol not in self.PROTOCOL:
             protocol = 'nfs'
-        buf += self.CMDLINE.replace('##PROTOCOL##', self.PROTOCOL[protocol])
+        replacement = self.PROTOCOL[protocol]
+        # Add REVOWAIT on kernel command line for MTFTP
+        if protocol == 'mtftp':
+            replacement +=  ' ' + 'revowait=##REVOWAIT##'
+        buf += self.CMDLINE.replace('##PROTOCOL##', replacement)
         return self._applyReplacement(buf, network)
 
     def write(self, config):
