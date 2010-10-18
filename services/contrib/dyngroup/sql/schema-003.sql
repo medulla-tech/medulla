@@ -85,10 +85,10 @@ INSERT INTO ShareGroup (FK_groups, FK_users, display_in_menu, type) SELECT id, F
 ALTER TABLE Groups DROP COLUMN display_in_menu;
 
 -- Some new indexes to speedup dyngroup queries
-CREATE INDEX dyngroup_results_fk_machine_idx on Results (FK_machine);
-CREATE INDEX dyngroup_groups_fk_user_idx on Groups (FK_user);
-CREATE INDEX dyngroup_sharegroup_fk_group_idx on ShareGroup (FK_group);
-CREATE INDEX dyngroup_sharegroup_fk_user_idx on ShareGroup (FK_user);
+CREATE INDEX dyngroup_results_fk_machine_idx on Results (FK_machines);
+CREATE INDEX dyngroup_groups_fk_user_idx on Groups (FK_users);
+CREATE INDEX dyngroup_sharegroup_fk_group_idx on ShareGroup (FK_groups);
+CREATE INDEX dyngroup_sharegroup_fk_user_idx on ShareGroup (FK_users);
 
 UPDATE version set Number = 3;
 
