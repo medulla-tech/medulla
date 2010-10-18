@@ -2782,6 +2782,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         menu.default_name = default_menu.default_name
         menu.fk_name = default_menu.fk_name
         menu.timeout = default_menu.timeout
+        menu.mtftp_restore_timeout = default_menu.mtftp_restore_timeout
         menu.background_uri = default_menu.background_uri
         menu.message = default_menu.message
         menu.fk_protocol = default_menu.fk_protocol
@@ -3250,7 +3251,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return ret
 
     def __copyMenuInto(self, menu_from, menu_into, session):
-        for i in ('default_name', 'timeout', 'background_uri', 'message', 'ethercard', 'bootcli', 'disklesscli', 'dont_check_disk_size', 'hidden_menu', 'debug', 'update_nt_boot', 'fk_protocol'):
+        for i in ('default_name', 'timeout', 'background_uri', 'message', 'ethercard', 'bootcli', 'disklesscli', 'dont_check_disk_size', 'hidden_menu', 'debug', 'update_nt_boot', 'fk_protocol', 'mtftp_restore_timeout'):
             setattr(menu_into, i, getattr(menu_from, i))
         session.save_or_update(menu_into)
 
