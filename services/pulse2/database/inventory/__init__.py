@@ -1022,6 +1022,7 @@ class Inventory(DyngroupDatabaseHelper):
     def delMachine(self, uuid):
         uuid = fromUUID(uuid)
         session = create_session()
+        to_delete_inv = {}
         for item in self.config.getInventoryParts():
             tk = self.klass[item]
             tt = self.table[item]
@@ -1034,8 +1035,10 @@ class Inventory(DyngroupDatabaseHelper):
             ls = session.query(lk).filter(lt.c.machine == uuid)
             for l in ls:
                 i = session.query(InventoryTable).filter(self.inventory.c.id == l.inventory).first()
-                session.delete(i)
+                to_delete_inv[i.id] = i
                 session.delete(l)
+        for k in to_delete_inv:
+            session.delete(to_delete_inv[k])
         m = session.query(Machine).filter(self.machine.c.id == uuid).first()
         session.delete(m)
         session.flush()
