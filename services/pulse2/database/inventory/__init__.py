@@ -1035,7 +1035,10 @@ class Inventory(DyngroupDatabaseHelper):
             ls = session.query(lk).filter(lt.c.machine == uuid)
             for l in ls:
                 i = session.query(InventoryTable).filter(self.inventory.c.id == l.inventory).first()
-                to_delete_inv[i.id] = i
+                if i == None:
+                    self.logger.error('delMachine : try to remove a None Inventory! (%s)'%uuid)
+                else:
+                    to_delete_inv[i.id] = i
                 session.delete(l)
         for k in to_delete_inv:
             session.delete(to_delete_inv[k])
