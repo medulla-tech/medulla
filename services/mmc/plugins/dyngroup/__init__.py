@@ -234,8 +234,8 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         ret = DyngroupDatabase().reload_group(ctx, id, queryManager)
         # WIP : call ComputerProfileManager to add machines
-        if self.isprofile(id):
-            ComputerProfileManager().addComputersToProfile(ctx, [1, 2], id) # fake!
+#        if self.isprofile(id):
+#            ComputerProfileManager().addComputersToProfile(ctx, [1, 2], id) # fake!
         return xmlrpcCleanup(ret)
 
     def addmembers_to_group(self, id, uuids):
