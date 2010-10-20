@@ -742,12 +742,14 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         session.close()
         connection = self.getDbConnection()
         trans = connection.begin()
+        if type(uuids) == dict:
+            uuids = uuids.values()
         if self.isprofile(ctx, id):
-            if not self.__insert_into_machines_and_profilesresults(connection, uuids.values(), group.id):
+            if not self.__insert_into_machines_and_profilesresults(connection, uuids, group.id):
                 trans.rollback()
                 return False
         else:
-            self.__insert_into_machines_and_results(connection, uuids.values(), group.id)
+            self.__insert_into_machines_and_results(connection, uuids, group.id)
         trans.commit()
         return True
 
