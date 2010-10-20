@@ -1022,30 +1022,31 @@ class Inventory(DyngroupDatabaseHelper):
     def delMachine(self, uuid):
         uuid = fromUUID(uuid)
         session = create_session()
-        to_delete_inv = {}
+        connection = self.getDbConnection()
+        trans = connection.begin()
+
+        m = session.query(Machine).filter(self.machine.c.id == uuid).first()
+        i = session.query(InventoryTable).select_from(self.inventory.join(self.table['hasInventory'])).filter(self.table['hasInventory'].c.machine == m.id).first()
         for item in self.config.getInventoryParts():
-            tk = self.klass[item]
-            tt = self.table[item]
-            lk = self.klass['has'+item]
+#            tk = self.klass[item]
+#            tt = self.table[item]
+#            lk = self.klass['has'+item]
             lt = self.table['has'+item]
 # TODO : check if more than one machine use this entry
 #            ts = session.query(tk).select_from(tt.join(lt)).filter(lt.c.machine == uuid)
 #            for t in ts:
 #                session.delete(t)
-            ls = session.query(lk).filter(lt.c.machine == uuid)
-            for l in ls:
-                i = session.query(InventoryTable).filter(self.inventory.c.id == l.inventory).first()
-                if i == None:
-                    self.logger.error('delMachine : try to remove a None Inventory! (%s)'%uuid)
-                else:
-                    to_delete_inv[i.id] = i
-                session.delete(l)
-        for k in to_delete_inv:
-            session.delete(to_delete_inv[k])
-        m = session.query(Machine).filter(self.machine.c.id == uuid).first()
+            connection.execute(lt.delete(lt.c.machine == uuid))
+
+        if i == None:
+            self.logger.error('delMachine : try to remove a None Inventory! (%s)'%uuid)
+        else:
+            session.delete(i)
         session.delete(m)
+
         session.flush()
         session.close()
+        trans.commit()
         return True
 
     # User management method
