@@ -498,13 +498,15 @@ class ImagingApi(MyXmlrpc):
                 res = self.myUUIDCache.getByUUID(cuuid)
             try:
                 macaddress = res['mac']
-                self.logger.debug('Setting menu for computer UUID/MAC %s/%s' % (cuuid, macaddress))
+                hostname = res['shortname']
+                self.logger.debug('Setting menu for computer UUID/MAC/hostname %s/%s/%s' % (cuuid, macaddress, hostname))
                 imb = ImagingComputerMenuBuilder(self.config, macaddress, menu)
                 imenu = imb.make()
                 imenu.write()
                 ret.append(cuuid)
                 imc = ImagingComputerConfiguration(self.config,
                                                    cuuid,
+                                                   hostname,
                                                    menu)
                 imc.write()
             except Exception, e:

@@ -20,8 +20,9 @@
 # along with Pulse 2.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-Write imaging configuration for computers.
-Only exclude file are handled.
+Write imaging configuration for computers:
+ - exclude files
+ - hostname files
 """
 
 import logging
@@ -37,26 +38,23 @@ class ImagingComputerConfiguration:
     EXCLUDE_FILE = 'exclude'
     HOSTNAME_FILE = 'hostname'
 
-    def __init__(self, config, computerUUID, menu):
+    def __init__(self, config, computerUUID, hostname, menu):
         """
         @param config: the package server config
         @param computerUUID: the computer UUID
+        @param hostname: the computer host name
         @param menu: the computer parameters to apply
         """
         self.logger = logging.getLogger('imaging')
         self.config = config
         self.computerUUID = computerUUID
-        self.hostname = ''
         self.menu = menu
         self.exclude_opts = ''
         if 'exclude_parameters' in self.menu['target']:
             self.setExcludeParameters(self.menu['target']['exclude_parameters'])
-        if 'hostname' in self.menu['target']:
-            self.setHostname(self.menu['target']['hostname'])
-        else:
-            self.setHostname(computerUUID)
         # else if no exclude_parameters is set, do as if there is no exclude
         # set.
+        self.setHostname(hostname)
 
     def setExcludeParameters(self, value):
         """
@@ -78,7 +76,19 @@ class ImagingComputerConfiguration:
 
     def write(self):
         """
+        Write the computer configuration files
+
+        @rtype: bool
+        @return: False if a failure occured, else True
+        """
+        return self._writeExcludeFile() and self._writeHostnameFile()
+
+    def _writeExcludeFile(self):
+        """
         Write the exclude file
+
+        @rtype: bool
+        @return: False if a failure occured, else True
         """
         ret = True
         filename = os.path.join(self.config.imaging_api['base_folder'],
@@ -109,19 +119,27 @@ class ImagingComputerConfiguration:
             else:
                 self.logger.debug('Nothing to do for the computer exclude file')
 
+        return ret
+
+    def _writeHostnameFile(self):
+        """
+        Write the hostname file.
+
+        @rtype: bool
+        @return: False if a failure occured, else True
+        """
         filename = os.path.join(self.config.imaging_api['base_folder'],
                                 self.config.imaging_api['computers_folder'],
                                 self.computerUUID,
                                 self.HOSTNAME_FILE)
-
-        if ret :
-            self.logger.debug('Preparing to write hostname file for computer UUID %s into file %s' % (self.computerUUID, filename))
-            try:
-                fid = open(filename, 'w+b')
-                fid.write(self.hostname)
-                fid.close()
-                self.logger.debug('Succeeded')
-            except Exception, e:
-                self.logger.error("While writing hostname file for %s : %s" % (self.computerUUID, e))
-                ret = False
+        self.logger.debug('Preparing to write hostname file for computer UUID %s into file %s' % (self.computerUUID, filename))
+        ret = True
+        try:
+            fid = open(filename, 'w+b')
+            fid.write(self.hostname)
+            fid.close()
+            self.logger.debug('Succeeded')
+        except Exception, e:
+            self.logger.error("While writing hostname file for %s : %s" % (self.computerUUID, e))
+            ret = False
         return ret
