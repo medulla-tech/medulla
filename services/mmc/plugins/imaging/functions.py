@@ -1650,13 +1650,8 @@ class ImagingRpcProxy(RpcProxyI):
         if not isRegistered and target_type == P2IT.COMPUTER and db.isTargetRegister(uuid, P2IT.COMPUTER_IN_PROFILE):
             # if the computer change from a profile to it's own registering,
             # we remove the COMPUTER_IN_PROFILE target and register a COMPUTER one
-            try:
-                if type(uuid) != list:
-                    db.delProfileMenuTarget([uuid])
-                else:
-                    db.delProfileMenuTarget(uuid)
-            except Exception, e:
-                return [False, "delProfileMenuTarget : %s"%(str(e))]
+            target_type = P2IT.COMPUTER_IN_PROFILE
+            isRegistered = True
 
         try:
             ret, target = db.setMyMenuTarget(uuid, params, target_type)

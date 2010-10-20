@@ -213,6 +213,7 @@ if (isset($_POST["bunregister"])) {
         $f->display();
     } else {
         $target = null;
+        $real_target = null;
         $has_profile = False;
         if (!$whose) {
             if ($type == '') {
@@ -225,6 +226,9 @@ if (isset($_POST["bunregister"])) {
         } else {
             $target = $whose[2];
             if ($whose[1] == 2 && $type == '') { #PROFILE
+                if (count($whose) > 3) {
+                    $real_target = $whose[3];
+                }
                 $has_profile = True;
                 $f->add(new TitleElement(sprintf(_T("The default values displayed here come from this %s's profile menu.", "imaging"), ($type==''?'computer':'profile')), 4));
             }
@@ -412,21 +416,41 @@ if (isset($_POST["bunregister"])) {
         if ($type == '') {
             $f->add(new TitleElement(_T("Target options", "imaging")));
             $f->push(new Table());
+            $local_kernel_parameters = web_def_kernel_parameters();
+            $local_image_parameters = web_def_image_parameters();
+            if (isset($real_target)) {
+                if ($real_target != null) {
+                    $local_kernel_parameters = $real_target['kernel_parameters'];
+                    $local_image_parameters = $real_target['image_parameters'];
+                }
+                /* Make checkbox to force raw backup mode */
+                if (($real_target != null) && (!empty($real_target['raw_mode']))) {
+                    $rawmode = "CHECKED";
+                } else {
+                    $rawmode = "";
+                }
+            } else {
+                if ($target != null) {
+                    $local_kernel_parameters = $target['kernel_parameters'];
+                    $local_image_parameters = $target['image_parameters'];
+                }
+                /* Make checkbox to force raw backup mode */
+                if (($target != null) && (!empty($target['raw_mode']))) {
+                    $rawmode = "CHECKED";
+                } else {
+                    $rawmode = "";
+                }
+            }
+
             $f->add(
                 new TrFormElement(_T("Kernel parameters", "imaging"),
-                new InputTpl("target_opt_kernel")), array("value" => ($target != null?$target['kernel_parameters']:web_def_kernel_parameters()))
+                new InputTpl("target_opt_kernel")), array("value" => $local_kernel_parameters)
             );
             $f->add(
                 new TrFormElement(_T("Image parameters", "imaging"),
-                new InputTpl("target_opt_image")), array("value" => ($target != null?$target['image_parameters']:web_def_image_parameters()))
+                new InputTpl("target_opt_image")), array("value" => $local_image_parameters)
             );
 
-            /* Make checkbox to force raw backup mode */
-            if (($target != null) && (!empty($target['raw_mode']))) {
-                $rawmode = "CHECKED";
-            } else {
-                $rawmode = "";
-            }
             $f->add(
                 new TrFormElement(_T("Force raw backup mode", "imaging"),
                 new CheckboxTpl("target_opt_raw_mode")),

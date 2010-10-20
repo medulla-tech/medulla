@@ -3155,7 +3155,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         for q, target in q1:
             self.logger.debug("getLocationSynchroState target %s is in state %s"%(target.uuid, q.label))
-            
+
             ret.append(
                 {
                     'id'    : q.id,
@@ -3510,12 +3510,13 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 profile = ComputerProfileManager().getComputersProfile(uuid)
                 muuid = uuid
                 if profile:
+                    orig_target = self.getTargetsByUUID([uuid])
                     uuid = profile.id # WARNING we must pass in UUIDs!
 
         # if profile is registered, get the profile menu and finish
         if uuid and self.isTargetRegister(uuid, P2IT.PROFILE, session):
             target = self.getTargetsByUUID([uuid])
-            whose = [uuid, P2IT.PROFILE, target[0].toH()]
+            whose = [uuid, P2IT.PROFILE, target[0].toH(), orig_target[0].toH()]
             menu = self.getTargetMenu(uuid, P2IT.PROFILE, session)
         # else get the entity menu
         else:
