@@ -314,6 +314,16 @@ class Inventory(DyngroupDatabaseHelper):
         session.close()
         return ret
 
+    def isComputerNameAvailable(self, ctx, locationUUID, name):
+        """
+        Returns true if there is already a computer with that name
+        for the moment, it's global (no entity)
+        """
+        root_ctx = InventoryContext()
+        root_ctx.userid = 'root'
+        ret = self.countMachinesOnly(root_ctx, {'hostname':name})
+        return (ret == 0)
+
     def optimizedQuery(self, ctx, filt):
         """
         @returns: a list of couples (UUID, hostname)

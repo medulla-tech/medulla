@@ -176,6 +176,9 @@ class InventoryComputers(ComputerI):
     def checkComputerName(self, name):
         return pulse2.utils.checkComputerName(name)
 
+    def isComputerNameAvailable(self, ctx, locationUUID, name):
+        return self.inventory.isComputerNameAvailable(ctx, locationUUID, name)
+
     def canDelComputer(self):
         return True
 

@@ -228,3 +228,6 @@ class GlpiComputers(ComputerI):
         return ret
 
 
+    def isComputerNameAvailable(self, ctx, locationUUID, name):
+        return self.glpi.isComputerNameAvailable(ctx, locationUUID, name)
+

@@ -1671,6 +1671,9 @@ class Glpi08(DyngroupDatabaseHelper):
         else:
             return ''
 
+    def isComputerNameAvailable(self, ctx, locationUUID, name):
+        raise Exception("need to be implemented when we would be able to add computers")
+
 # Class for SQLalchemy mapping
 class Machine(object):
     def getUUID(self):
