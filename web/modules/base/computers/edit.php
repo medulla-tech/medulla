@@ -30,10 +30,15 @@ require_once("modules/base/includes/computers.inc.php");
 $errstr = "";
 if (isset($_POST["bcreate"])) {
     if (checkComputerName($_POST["computername"])) {
-        addComputer($_POST);
-        if (!isXMLRPCError()) {
-            new NotifyWidgetSuccess(_("Computer successfully added"));
-            header("Location: " . urlStrRedirect("base/computers/index"));
+        if (isComputerNameAvailable($_POST["location_uuid"], $_POST["computername"])) {
+            addComputer($_POST);
+            if (!isXMLRPCError()) {
+                new NotifyWidgetSuccess(_("Computer successfully added"));
+                header("Location: " . urlStrRedirect("base/computers/index"));
+            }
+        } else {
+            $err = new ErrorMessage(_("The computer name is already taken."));
+            $errstr = $err->display();
         }
     } else {
         $err = new ErrorMessage(_("Invalid computer name."));

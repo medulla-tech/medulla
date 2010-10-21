@@ -67,13 +67,13 @@ from time import mktime, strptime, strftime, localtime
 from ConfigParser import NoSectionError, NoOptionError
 from twisted.internet import defer
 
-# hashlib is only available in python >= 2.5 
-try: 
-    import hashlib 
-    _digest = hashlib.sha1 
-except ImportError: 
-    import sha 
-    _digest = sha.sha 
+# hashlib is only available in python >= 2.5
+try:
+    import hashlib
+    _digest = hashlib.sha1
+except ImportError:
+    import sha
+    _digest = sha.sha
 
 # global definition for ldapUserGroupControl
 INI = "/etc/mmc/plugins/base.ini"
@@ -1347,7 +1347,7 @@ class LdapUserGroupControl:
         return newattrs
 
     getDetailedUser = getUserEntry
-    
+
     def getUserEntryById(self, id, base = None):
         """
         Search a user entry and returns the raw LDAP entry content of a user.
@@ -1370,7 +1370,7 @@ class LdapUserGroupControl:
                 newattrs = copy.deepcopy(attrs)
                 break
 
-        return newattrs      
+        return newattrs
 
     getDetailedUserById = getUserEntryById
 
@@ -2308,6 +2308,10 @@ class RpcProxy(RpcProxyI):
 
     def checkComputerName(self, name):
         return ComputerManager().checkComputerName(name)
+
+    def isComputerNameAvailable(self, locationUUID, name):
+        ctx = self.currentContext
+        return ComputerManager().isComputerNameAvailable(ctx, locationUUID, name)
 
     def canDelComputer(self):
         return ComputerManager().canDelComputer()
