@@ -1423,6 +1423,8 @@ class Glpi07(DyngroupDatabaseHelper):
 
     def getAllLocations(self, ctx, filt = ''):
         """ @return: all hostnames defined in the GLPI database """
+        if not hasattr(ctx, 'locationsid'):
+            complete_ctx(ctx)
         session = create_session()
         query = session.query(Locations).select_from(self.locations.join(self.machine))
         query = self.__filter_on(query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0))
