@@ -3497,6 +3497,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def getMyMenuTarget(self, uuid, type):
         session = create_session()
         muuid = False
+        orig_target = None
         if type == P2IT.COMPUTER:
             # if registered, get the computer menu and finish
             if self.isTargetRegister(uuid, type, session):
@@ -3516,7 +3517,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         # if profile is registered, get the profile menu and finish
         if uuid and self.isTargetRegister(uuid, P2IT.PROFILE, session):
             target = self.getTargetsByUUID([uuid])
-            whose = [uuid, P2IT.PROFILE, target[0].toH(), orig_target[0].toH()]
+            whose = [uuid, P2IT.PROFILE, target[0].toH()]
+            if orig_target != None:
+                whose.append(orig_target[0].toH())
             menu = self.getTargetMenu(uuid, P2IT.PROFILE, session)
         # else get the entity menu
         else:
