@@ -2071,6 +2071,9 @@ class ImagingRpcProxy(RpcProxyI):
 
         target_type = P2IT.COMPUTER
         is_registrated = db.isTargetRegister(uuid, target_type)
+
+        def sendResult(results, uuid): return [True, uuid]
+
         if not is_registrated and p == None:
             logger.info("computer %s (%s) needs to be registered" % (hostname, MACAddress))
             params = {
@@ -2084,7 +2087,8 @@ class ImagingRpcProxy(RpcProxyI):
             # Tell the MMC agent to synchronize the menu
             # As it in some way returns a deferred object, it is run in
             # background
-            self.synchroComputer(uuid)
+            d = self.synchroComputer(uuid)
+            d.addCallback(sendResult, uuid)
         elif not is_registrated:
             is_pregistrated = db.isTargetRegister(p.getUUID(), P2IT.PROFILE)
             if not is_pregistrated:
@@ -2092,15 +2096,21 @@ class ImagingRpcProxy(RpcProxyI):
                 return [False, "profile %s don't exists in %s or is not registerd in imaging"%(profile, imaging_server_uuid)]
 
             logger.info("computer %s (%s) needs to be registered in the profile %s" % (hostname, MACAddress, profile))
-            ret1 = ComputerProfileManager().addComputersToProfile(ctx, {uuid:{'uuid':uuid, 'hostname':hostname}}, p.getUUID())
-            if not ret1:
-                logger.error("failed to put the computer %s (%s) in the profile %s" % (hostname, MACAddress, profile))
-                return [False, "failed to put the computer %s (%s) in the profile %s" % (hostname, MACAddress, profile)]
-            self.synchroComputer(uuid)
+
+            def treatAddComputersToProfile(result, uuid = uuid, hostname = hostname, MACAddress = MACAddress, profile = profile):
+                if not result:
+                    logger.error("failed to put the computer %s (%s) in the profile %s" % (hostname, MACAddress, profile))
+                    return defer.returnValue([False, "failed to put the computer %s (%s) in the profile %s" % (hostname, MACAddress, profile)])
+                d = self.synchroComputer(uuid)
+                d.addCallback(sendResult, uuid)
+                return d
+            d = ComputerProfileManager().addComputersToProfile(ctx, {uuid:{'uuid':uuid, 'hostname':hostname}}, p.getUUID())
+            d.addCallback(treatAddComputersToProfile)
         else:
             logger.debug("computer %s (%s) dont need registration" % (hostname, MACAddress))
+            d = defer.returnValue([True, uuid])
 
-        return [True, uuid]
+        return d
 
     def imagingServerRegister(self, name, url, uuid):
         """
@@ -2525,7 +2535,6 @@ def synchroTargets(ctx, uuids, target_type):
         defer_list = defer.DeferredList(defer_list)
         defer_list.addCallback(sendResult)
         return defer_list
-
 
 def synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid):
     logger = logging.getLogger()

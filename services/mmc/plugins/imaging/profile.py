@@ -30,6 +30,7 @@ from pulse2.managers.profile import ComputerProfileI
 from pulse2.database.imaging import ImagingDatabase
 from pulse2.database.imaging.types import P2IT, P2ISS
 from pulse2.managers.profile import ComputerProfileManager
+from twisted.internet import defer
 
 class ImagingProfile(ComputerProfileI):
     def addComputersToProfile(self, ctx, computers, profile_UUID):
@@ -40,10 +41,12 @@ class ImagingProfile(ComputerProfileI):
             ret3 = ImagingDatabase().changeTargetsSynchroState(computers, P2IT.COMPUTER, P2ISS.TODO)
 
             computers_UUID = map(lambda c:c['uuid'], computers.values())
-            ret4 = synchroComputers(ctx, computers_UUID, P2IT.COMPUTER_IN_PROFILE)
 
-            return ret1 and ret2 and ret3 and ret4
-        return True
+            def treatResult(result, ret): return result and ret
+            d = synchroComputers(ctx, computers_UUID, P2IT.COMPUTER_IN_PROFILE)
+            d.addCallBack(treatResult, ret1 and ret2 and ret3)
+            return d
+        return defer.resturnValue(True)
 
     def delComputersFromProfile(self, computers_UUID, profile_UUID):
         # TODO need to remove the menu and the registering

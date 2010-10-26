@@ -29,6 +29,7 @@ provide methods to work with profile association with computers
 
 import logging
 from pulse2.utils import Singleton
+from twisted.internet import defer
 
 class ComputerProfileManager(Singleton):
     components = {}
@@ -78,12 +79,21 @@ class ComputerProfileManager(Singleton):
     def addComputersToProfile(self, ctx, computers_UUID, profile_UUID):
         " ask to all profile managers "
         ret = True
+        def treatDeferList(result):
+            ret = True
+            for r in result:
+                ret = ret and r
+            return ret
+
+        dl = []
         for mod in self.components:
             klass = self.components[mod]
             if hasattr(klass, 'addComputersToProfile'):
-                r = klass().addComputersToProfile(ctx, computers_UUID, profile_UUID)
-                ret = ret and r
-        return ret
+                d = defer.maybeDeferred(klass().addComputersToProfile(ctx, computers_UUID, profile_UUID))
+                dl.append(d)
+        deferred = defer.DeferredList(dl)
+        deferred.addCallback(treatDeferList)
+        return deferred
 
     def delComputersFromProfile(self, computers_UUID, profile_UUID):
         " ask to all profile managers "
