@@ -44,7 +44,7 @@ class ImagingProfile(ComputerProfileI):
 
             def treatResult(result, ret): return result and ret
             d = synchroComputers(ctx, computers_UUID, P2IT.COMPUTER_IN_PROFILE)
-            d.addCallBack(treatResult, ret1 and ret2 and ret3)
+            d.addCallback(treatResult, ret1 and ret2 and ret3)
             return d
         return defer.resturnValue(True)
 
