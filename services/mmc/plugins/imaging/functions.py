@@ -1469,22 +1469,34 @@ class ImagingRpcProxy(RpcProxyI):
         logger = logging.getLogger()
         db = ImagingDatabase()
         ret = db.setLocationSynchroState(loc_uuid, P2ISS.RUNNING)
-        menu = self.__generateLocationMenu(logger, db, loc_uuid)
-        def treatFailures(result, location_uuid = loc_uuid, menu = menu, logger = logger):
-            if result:
-                db.setLocationSynchroState(location_uuid, P2ISS.DONE)
-            else:
-                db.setLocationSynchroState(location_uuid, P2ISS.TODO)
-            return result
 
-        url = chooseImagingApiUrl(loc_uuid)
-        i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
-        if i == None:
-            # do fail
-            logger.error("couldn't initialize the ImagingApi to %s"%(url))
-        d = i.imagingServerDefaultMenuSet(menu)
-        d.addCallback(treatFailures)
-        return d
+        try:
+            menu = self.__generateLocationMenu(logger, db, loc_uuid)
+            def cb_fail(error, location_uuid = loc_uuid, menu = menu, logger = logger):
+                db.setLocationSynchroState(location_uuid, P2ISS.TODO)
+                logger.error("couldn't run imagingServerDefaultMenuSet for location %s (in the errback)"%(location_uuid))
+                return False
+
+            def treatFailures(result, location_uuid = loc_uuid, menu = menu, logger = logger):
+                if result:
+                    db.setLocationSynchroState(location_uuid, P2ISS.DONE)
+                else:
+                    db.setLocationSynchroState(location_uuid, P2ISS.TODO)
+                return result
+
+            url = chooseImagingApiUrl(loc_uuid)
+            i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
+            if i == None: # do fail
+                db.setLocationSynchroState(loc_uuid, P2ISS.TODO)
+                logger.error("couldn't initialize the ImagingApi to %s"%(url))
+                return defer.returnValue(False)
+            d = i.imagingServerDefaultMenuSet(menu)
+            d.addCallback(treatFailures).addErrback(cb_fail)
+            return d
+        finally:
+            logger.error("couldn't run imagingServerDefaultMenuSet for location %s"%(loc_uuid))
+            db.setLocationSynchroState(loc_uuid, P2ISS.TODO)
+        return defer.returnValue(False)
 
     def __synchroTargets(self, uuids, target_type, ctx = None):
         """
