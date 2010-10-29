@@ -298,6 +298,15 @@ def whosdaddy():
     return inspect.stack()[2][3]
 
 
+def printStack():
+    stack = inspect.stack()
+    a_stack = []
+    for i in range(1, len(stack)-1):
+        a_stack.append(stack[i][3])
+    a_stack.reverse()
+    return " > ".join(a_stack)
+
+
 def isCiscoMacAddress(mac_addr):
     """
     Check that the given MAC adress is a cisco-formatted MAC Address.
@@ -525,3 +534,4 @@ def humanReadable(num, unit = "B", base = 1024):
                 ret = "%.1f %s%s" % (num, i, unit)
                 break
     return ret
+
