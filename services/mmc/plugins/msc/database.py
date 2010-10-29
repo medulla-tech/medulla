@@ -21,6 +21,13 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+"""
+
+MSC Database module
+Needed to access all the msc database information
+
+"""
+
 # standard modules
 import re
 
@@ -154,7 +161,9 @@ class MscDatabase(msc.MscDatabase):
         """
         Get all targets network information
         """
+        start_time = time.time()
         computers = ComputerManager().getComputersNetwork(ctx, {"uuids" : targets})
+        middle_time = time.time()
         # Rebuild the targets list, and get computers data
         tmp = []
         targetsdata = []
@@ -166,6 +175,8 @@ class MscDatabase(msc.MscDatabase):
             tmp.append([computer[1]['objectUUID'][0], hostname])
             targetsdata.append(self.prepareTarget(computer, group_id))
         targets = tmp[:]
+        end_time = time.time()
+        self.logger.debug("msc.database.getComputersData took %ss to get network data and %ss to treat it"%(middle_time-start_time, end_time-middle_time))
         return tmp, targetsdata
 
     def addCommands(self, ctx, session, targets, commands, group_id = None):
