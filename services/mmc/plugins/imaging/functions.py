@@ -1714,6 +1714,7 @@ class ImagingRpcProxy(RpcProxyI):
                     return d
                 else:
                     logger.error("couldn't initialize the ImagingApi to %s"%(url))
+                    db.changeTargetsSynchroState([uuid], target_type, P2ISS.TODO)
                     return [False, ""]
             elif target_type == P2IT.PROFILE:
                 pid = uuid
@@ -1746,6 +1747,8 @@ class ImagingRpcProxy(RpcProxyI):
                     params['target_name'] = '' # put the real name!
                     db.setProfileMenuTarget(uuids, pid, params)
                 except Exception, e:
+                    logger.error("failed to setProfileMenuTarget for computers in profile %s"%(pid))
+                    db.changeTargetsSynchroState(uuids, P2IT.COMPUTER_IN_PROFILE, P2ISS.TODO)
                     return [False, "setProfileMenuTarget : %s" % (str(e))]
 
                 for loc_uuid in distinct_loc:
@@ -1775,6 +1778,7 @@ class ImagingRpcProxy(RpcProxyI):
                         defer_list.append(d)
                     else:
                         logger.error("couldn't initialize the ImagingApi to %s"%(url))
+                        db.changeTargetsSynchroState(menus.keys(), P2IT.COMPUTER_IN_PROFILE, P2ISS.TODO)
                         return [False, ""]
 
                 def sendResult(results, pid = pid, db = db):
