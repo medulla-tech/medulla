@@ -60,7 +60,8 @@ ids = sys.argv[2].split(',')
 hist_data = select([
         history_table.c.fk_commands_on_host,
         history_table.c.date,
-        history_table.c.state
+        history_table.c.state,
+        history_table.c.error_code
     ]
     ).select_from(
         history_table.join(coh_table)
@@ -87,7 +88,8 @@ class deployStats:
         "stage1",
         "stage2",
         "stage3",
-        "stage4"
+        "stage4",
+        "bundle_error"
     ]
 
     __internal_data = dict()
@@ -121,8 +123,8 @@ laststates = dict()
 print "date;%s;" % ';'.join(deploy_stats.getkeys())
 
 for d in hist_data:
-    # d is like this: (6445L, '1223597787.8313', 'upload_done')
-    (fk, epoch, operation) = d
+    # d is like this: (6445L, '1223597787.8313', 'upload_done', 0)
+    (fk, epoch, operation, error_code) = d
 
     truncated_epoch = int(float(epoch)/60)*60
     #truncated_epoch = int(float(epoch)/1)*1
@@ -130,9 +132,15 @@ for d in hist_data:
     if not fk in laststates.keys():
         laststates[fk] = None
 
+    if operation == 'upload_in_progress' and error_code in [4508, 4509]: # mirror probe, ignore
+        continue
+        
+    if operation == None and error_code == 3001 : # broken bundle ?
+        operation = 'bundle_failed'
+        
     if laststates[fk] == operation:
         print "ANOMALY: %s for %s " % (operation, fk)
-        pass
+        continue
     else:
         if operation == 'upload_in_progress':
             deploy_stats.remove('upload_error', fk)
@@ -177,6 +185,8 @@ for d in hist_data:
         elif operation == 'reboot_failed':
             deploy_stats.remove('rebooting', fk)
             deploy_stats.add('reboot_error', fk)
+        elif operation == 'bundle_failed':
+            deploy_stats.add('bundle_error', fk)
 
         if truncated_epoch != lastepoch:
             print "%s;%s;" % (
