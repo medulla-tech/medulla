@@ -30,6 +30,7 @@ Needed to access all the msc database information
 
 # standard modules
 import re
+import time
 
 # SqlAlchemy
 from sqlalchemy import *
