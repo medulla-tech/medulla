@@ -587,7 +587,7 @@ class LdapUserGroupControl:
         if scheme == "crypt":
             userpassword = "{crypt}" + crypt.crypt(password, salt)
         else:
-            ctx = _digest.new(password)
+            ctx = _digest(password)
             ctx.update(salt)
             userpassword = "{SSHA}" + base64.encodestring(ctx.digest() + salt)
         return userpassword
