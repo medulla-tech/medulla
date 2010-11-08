@@ -89,7 +89,7 @@ class ComputerProfileManager(Singleton):
         for mod in self.components:
             klass = self.components[mod]
             if hasattr(klass, 'addComputersToProfile'):
-                d = defer.maybeDeferred(klass().addComputersToProfile(ctx, computers_UUID, profile_UUID))
+                d = defer.maybeDeferred(klass().addComputersToProfile, ctx, computers_UUID, profile_UUID)
                 dl.append(d)
         deferred = defer.DeferredList(dl)
         deferred.addCallback(treatDeferList)
