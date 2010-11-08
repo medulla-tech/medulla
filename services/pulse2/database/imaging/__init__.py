@@ -3108,7 +3108,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def __getSynchroStates(self, uuids, target_type, session):
         q = session.query(SynchroState).add_entity(Menu)
         q = q.select_from(self.synchro_state.join(self.menu).join(self.target, self.menu.c.id == self.target.c.fk_menu))
-        q = q.filter(and_(self.target.c.uuid.in_(uuids), self.target.c.type == target_type)).all()
+        if target_type == P2IT.ALL_COMPUTERS:
+            q = q.filter(and_(self.target.c.uuid.in_(uuids), self.target.c.type.in_(P2IT.COMPUTER, P2IT.COMPUTER_IN_PROFILE))).all()
+        else:
+            q = q.filter(and_(self.target.c.uuid.in_(uuids), self.target.c.type == target_type)).all()
         return q
 
     def getTargetsSynchroState(self, uuids, target_type):
