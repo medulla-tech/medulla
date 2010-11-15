@@ -100,6 +100,12 @@ class ComputerI:
         """
         pass
 
+    def getComputersNetwork(self, ctx, filt):
+        """
+        Get the computers network
+        """
+        pass
+
     def getMachineMac(self, ctx, params):
         """
         Get the computers mac adresses
