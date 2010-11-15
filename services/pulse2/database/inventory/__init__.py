@@ -729,8 +729,8 @@ class Inventory(DyngroupDatabaseHelper):
         net = self.getLastMachineInventoryPart(ctx, 'Network', params)
         ret = []
         for item in net:
-            (ifmac, ifaddr, netmask) = orderIpAdresses(item[1])
-            ret.append([item[0], {'IP':ifaddr, 'MACAddress':ifmac, 'SubnetMask':netmask }, item[2]])
+            (ifmac, ifaddr, netmask, ids) = orderIpAdresses(item[1])
+            ret.append([item[0], {'IP':ifaddr, 'MACAddress':ifmac, 'SubnetMask':netmask, 'networkUuids':map(lambda x: toUUID(x), ids) }, item[2]])
         return ret
 
     def getMachineNetwork(self, ctx, params):
@@ -1636,7 +1636,7 @@ class Machine(object):
                 ret[1]['subnetMask'] = ''
             else:
                 net = net[0]
-                (ret[1]['macAddress'], ret[1]['ipHostNumber'], ret[1]['subnetMask']) = orderIpAdresses(net[1])
+                (ret[1]['macAddress'], ret[1]['ipHostNumber'], ret[1]['subnetMask'],  ret[1]['networkUuids']) = orderIpAdresses(net[1])
         return ret
 
     def toCustom(self, get):
@@ -1654,6 +1654,7 @@ def orderIpAdresses(netiface):
     ret_ifmac = []
     ret_ifaddr = []
     ret_netmask = []
+    ret_ids = []
     idx_good = 0
     for iface in netiface:
         logging.getLogger().debug(iface)
@@ -1664,6 +1665,7 @@ def orderIpAdresses(netiface):
                 ret_ifmac.append(iface['MACAddress'])
                 ret_ifaddr.append(iface['IP'])
                 ret_netmask.append(iface['SubnetMask'])
+                ret_ids.append(iface['id'])
             else:
                 if same_network(iface['IP'], iface['Gateway'], iface['SubnetMask']):
                     idx_good += 1
@@ -1671,12 +1673,14 @@ def orderIpAdresses(netiface):
                     ret_ifmac.insert(0, iface['MACAddress'])
                     ret_ifaddr.insert(0, iface['IP'])
                     ret_netmask.insert(0, iface['SubnetMask'])
+                    ret_ids.insert(0, iface['id'])
                 else:
                     logging.getLogger().debug("not same net")
                     ret_ifmac.insert(idx_good, iface['MACAddress'])
                     ret_ifaddr.insert(idx_good, iface['IP'])
                     ret_netmask.insert(idx_good, iface['SubnetMask'])
-    return (ret_ifmac, ret_ifaddr, ret_netmask)
+                    ret_ids.insert(idx_good, iface['id'])
+    return (ret_ifmac, ret_ifaddr, ret_netmask, ret_ids)
 
 class InventoryTable(object):
     pass

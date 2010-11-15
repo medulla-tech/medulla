@@ -1272,10 +1272,11 @@ class ImagingRpcProxy(RpcProxyI):
             macaddress = query[computerUUID]
         except KeyError:
             macaddress = []
-        if len(macaddress) > 1:
-            # More than one MAC address
-            ret = 2
-        elif len(macaddress) < 1:
+        # if we have more than one mac address, we ask the user to chose which NIC he wants
+        #if len(macaddress) > 1:
+        #    # More than one MAC address
+        #    ret = 2
+        if len(macaddress) < 1:
             # No MAC address
             ret = 1
         elif pulse2.utils.isLinuxMacAddress(macaddress[0]):

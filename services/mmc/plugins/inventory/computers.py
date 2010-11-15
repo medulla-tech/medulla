@@ -81,10 +81,12 @@ class InventoryComputers(ComputerI):
                 tmp[1]['ipHostNumber'] = ''
                 tmp[1]['macAddress'] = ''
                 tmp[1]['subnetMask'] = ''
+                tmp[1]['networkUuids'] = ''
             else:
                 tmp[1]['ipHostNumber'] = item[1]['IP']
                 tmp[1]['macAddress'] = item[1]['MACAddress']
                 tmp[1]['subnetMask'] = item[1]['SubnetMask']
+                tmp[1]['networkUuids'] = item[1]['networkUuids']
             ret.append(tmp)
         return ret
 

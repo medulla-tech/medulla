@@ -133,6 +133,7 @@ CREATE TABLE Target (
   is_registered_in_package_server TINYINT(1) NOT NULL DEFAULT 0,
   fk_entity INT NOT NULL,
   fk_menu INT NOT NULL,
+  nic_uuid Text,
   PRIMARY KEY (id)
 );
 

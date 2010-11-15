@@ -34,6 +34,7 @@ require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
 require_once('modules/imaging/includes/web_def.inc.php');
 require_once('modules/imaging/includes/part-type.inc.php');
+require_once('modules/imaging/includes/post_install_script.php');
 
 $is_unregistering = False;
 if (!isset($is_registering) || $is_registering == '') {
@@ -59,6 +60,8 @@ if (isset($_POST["bvalid"])) {
 
     $label = urldecode($_POST['itemlabel']);
 
+    $choose_network = $_POST["choose_network"];
+
     $params['default_name'] = $_POST['default_m_label'];
     $params['timeout'] = $_POST['default_m_timeout'];
     foreach($opts as $key => $str) {
@@ -76,6 +79,9 @@ if (isset($_POST["bvalid"])) {
     $params['target_opt_kernel'] = $_POST['target_opt_kernel'];
     $params['target_opt_image'] = $_POST['target_opt_image'];
     $params['mtftp_restore_timeout'] = $_POST['rest_wait'];
+    if ($choose_network != Null && $choose_network != '') {
+        $params["choose_network"] = $choose_network;
+    }
 
     $params['target_opt_parts'] = array();
     if (isset($_POST['check_disk'])) {
@@ -289,6 +295,26 @@ if (isset($_POST["bunregister"])) {
                 }
                 $f->pop();
                 $f->pop();
+                $f->pop();
+            }
+        }
+
+        if ($type == '') {
+            $networks = xmlCall('base.getComputersNetwork', array(array('uuid'=>$_GET["target_uuid"])));
+            $networks = $networks[0][1];
+
+            if (is_array($networks) && count($networks) > 1) {
+                $f->push(new Table());
+                $macs_choice = new MySelectItem("choose_network", 'exclusive_orders');
+                $elements = array();
+                $values = array();
+                foreach (range(0, count($networks['macAddress'])-1) as $i) {
+                    $elements[] = sprintf("%s / %s", $networks['ipHostNumber'][$i], $networks['macAddress'][$i]);
+                    $values[] = $networks['networkUuids'][$i]; # sprintf("v : %s/%s", $networks['ipHostNumber'][$i], $networks['macAddress'][$i]);
+                }
+                $macs_choice->setElements($elements);
+                $macs_choice->setElementsVal($values);
+                $f->add(new TrFormElement(_T("Choose the mac address you want to use", "imaging"), $macs_choice));
                 $f->pop();
             }
         }

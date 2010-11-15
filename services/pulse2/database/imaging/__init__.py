@@ -3046,6 +3046,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         target.uuid = uuid
         target.name = name
         target.type = type
+        if 'choose_network' in params:
+            target.nic_uuid = params['choose_network']
+        if 'nic_uuid' in params:
+            target.nic_uuid = params['nic_uuid']
         if params.has_key('target_opt_kernel'):
             target.kernel_parameters = params['target_opt_kernel']
         else:
@@ -4000,7 +4004,7 @@ class SynchroState(DBObject):
     to_be_exported = ['id', 'label']
 
 class Target(DBObject):
-    to_be_exported = ['id', 'name', 'uuid', 'type', 'fk_entity', 'fk_menu', 'kernel_parameters', 'image_parameters', 'exclude_parameters', 'is_registered_in_package_server', 'raw_mode']
+    to_be_exported = ['id', 'name', 'uuid', 'type', 'fk_entity', 'fk_menu', 'kernel_parameters', 'image_parameters', 'exclude_parameters', 'is_registered_in_package_server', 'raw_mode', 'nic_uuid']
 
 class TargetType(DBObject):
     to_be_exported = ['id', 'label']
