@@ -142,7 +142,7 @@ class QueryManager(Singleton):
         @rtype: str
         @return: type of a given criterion for a module
         """
-        from sqlalchemy.databases.mysql import *
+        from sqlalchemy.databases.mysql import MSDate, MSMediumInteger
         retType = ""
         try:
             possibilities = self.extendedPossibilities[moduleName][criterion]
