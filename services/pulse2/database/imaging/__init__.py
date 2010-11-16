@@ -3066,6 +3066,23 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.save(target)
         return target
 
+    def getTargetNICuuid(self, uuid, session = None):
+        session_need_to_close = False
+        if session == None:
+            session_need_to_close = True
+            session = create_session()
+
+        filt = None
+        if type(uuid) == list:
+            filt = self.target.c.uuid.in_(uuid)
+        else:
+            filt = (self.target.c.uuid == uuid)
+        ret = session.query(Target).filter(filt).all()
+
+        if session_need_to_close:
+            session.close()
+        return map(lambda x: x.nic_uuid, ret)
+
     ######### SYNCHRO
     def getTargetsThatNeedSynchroInEntity(self, loc_id, target_type, session = None):
         session_need_to_close = False
