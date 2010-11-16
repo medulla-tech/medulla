@@ -79,7 +79,7 @@ if (isset($_POST["bdelmachine_x"])) {
             $listOfMembers[$ma[1]] = array('hostname'=>$ma[0], 'uuid'=>$ma[1]);
         }
     }
-} elseif (isset($_POST["bconfirm"]) and $name != '' and !xmlrpc_group_name_exists($name, $id)) {
+} elseif (isset($_POST["bconfirm"]) and $name != '' and (($type == 0 and !xmlrpc_group_name_exists($name, $id)) or ($type == 1 and !xmlrpc_profile_name_exists($name, $id)))) {
     $listOfCurMembers = $group->members();
     $curmem = array();
     foreach ($listOfCurMembers as $member) {
@@ -163,12 +163,10 @@ if (isset($_POST["bdelmachine_x"])) {
     } else {
         new NotifyWidgetFailure(_T("You must specify a profile name", "dyngroup"));
     }
-} elseif (isset($_POST["bconfirm"]) and xmlrpc_group_name_exists($name, $id)) {
-    if ($type == 0) {
-        new NotifyWidgetFailure(sprintf(_T("A group already exists with name '%s'", "dyngroup"), $name));
-    } else {
-        new NotifyWidgetFailure(sprintf(_T("A profile already exists with name '%s'", "dyngroup"), $name));
-    }
+} elseif (isset($_POST["bconfirm"]) and $type == 0 and xmlrpc_group_name_exists($name, $id)) {
+    new NotifyWidgetFailure(sprintf(_T("A group already exists with name '%s'", "dyngroup"), $name));
+} elseif (isset($_POST["bconfirm"]) and $type != 0 and xmlrpc_profile_name_exists($name, $id)) {
+    new NotifyWidgetFailure(sprintf(_T("A profile already exists with name '%s'", "dyngroup"), $name));
 } else {
     $list = $group->members();
     $members = array();

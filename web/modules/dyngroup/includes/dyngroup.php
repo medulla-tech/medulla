@@ -247,6 +247,7 @@ function __xmlrpc_add_share($id, $share) { return xmlCall("dyngroup.add_share", 
 function __xmlrpc_del_share($id, $share) { return xmlCall("dyngroup.del_share", array($id, $share)); }
 function __xmlrpc_can_edit($id) { return xmlCall("dyngroup.can_edit", array($id)); }
 function xmlrpc_group_name_exists($name, $gid = null) { return xmlCall("dyngroup.group_name_exists", array($name, $gid)); }
+function xmlrpc_profile_name_exists($name, $gid = null) { return xmlCall("dyngroup.profile_name_exists", array($name, $gid)); }
 function xmlrpc_isprofile($gid) { return xmlCall("dyngroup.isprofile", array($gid)); }
 
 function xmlrpc_getmachineprofile($id) { return xmlCall("dyngroup.getmachineprofile", array($id)); }

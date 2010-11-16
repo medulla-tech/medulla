@@ -319,12 +319,15 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         session.close()
         return ret
 
-    def groupNameExists(self, ctx, name, id = None):
+    def groupNameExists(self, ctx, name, id = None, isProfile = False):
         """
         return True if a group with this name exists and does not have the same id
         """
+        type = 0
+        if isProfile:
+            type = 1
         if id == None or id == '':
-            if self.countallgroups(ctx, {'name':name, 'owner':ctx.userid}) == 0:
+            if self.countallgroups(ctx, {'name':name, 'owner':ctx.userid}, type) == 0:
                 return False
             else:
                 return True
@@ -332,7 +335,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         owner = self.get_group_owner(ctx, id)
         if owner == False:
             return True
-        grps = self.getallgroups(ctx, {'name':name, 'owner':owner.login})
+        grps = self.getallgroups(ctx, {'name':name, 'owner':owner.login}, type)
         for grp in grps:
             if str(grp.id) != str(id):
                 return True
