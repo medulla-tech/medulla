@@ -98,7 +98,7 @@ if (isset($params['uuid'])) {
         $ret = xmlrpc_getComputerSynchroState($params['target_uuid']);
         if (isset($_POST["bresetsynchrostate"])) {
             if (xmlrpc_resetSynchroState($params['uuid'], '')) {
-                new NotifyWidgetSuccess(sprintf(_T("Synchronisation state for %s (%s) succeed", "imaging"), $params['target_name'], $params['uuid']));
+                new NotifyWidgetSuccess(sprintf(_T("Reset synchronisation state for %s (%s) succeed", "imaging"), $params['target_name'], $params['uuid']));
                 header("Location: ".urlStrRedirect("base/computers/imgtabs", $params));
             } else {
                 new NotifyWidgetFailure(sprintf(_T("Failed to reset synchronise state.", "imaging")));
@@ -186,7 +186,7 @@ if (isset($params['uuid'])) {
 
         if (isset($_POST["bresetsynchrostate"])) {
             if (xmlrpc_resetSynchroState($params['target_uuid'], $params['type'])) {
-                new NotifyWidgetSuccess(sprintf(_T("Synchronisation state for %s (%s) succeed", "imaging"), $params['target_name'], $params['target_uuid']));
+                new NotifyWidgetSuccess(sprintf(_T("Reset synchronisation state for %s (%s) succeed", "imaging"), $params['target_name'], $params['target_uuid']));
                 header("Location: ".urlStrRedirect("base/computers/imgtabs", $params));
             } else {
                 new NotifyWidgetFailure(sprintf(_T("Failed to reset synchronise state.", "imaging")));
