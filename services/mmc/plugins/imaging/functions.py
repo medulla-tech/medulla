@@ -1349,6 +1349,31 @@ class ImagingRpcProxy(RpcProxyI):
         return self.isTargetRegister(profile_uuid, P2IT.PROFILE)
 
     ###### Synchronisation
+    def resetSynchroState(self, uuid, target_type):
+        """
+        reset the target synchronisation state (used in case the synchro failed to go
+        back to a stable state (TODO or DONE)
+
+        @param uuid: the target's UUID (Target.uuid)
+        @type uuid: str
+        @param target_type: the target type can be one of those two :
+            1) '' or P2IT.COMPUTER (1) for a computer
+            2) 'group' or P2IT.PROFILE (2) for a profile
+        @type target_type: str or int
+
+        @returns: the reset status (True if ok, False if not)
+        @rtype: boolean
+        """
+        db = ImagingDatabase()
+        target_type = self.__convertType(target_type, uuid)
+        try:
+            ret = db.changeTargetsSynchroState([uuid], target_type, P2ISS.TODO)
+            return ret
+        except Exception, e:
+            self.logger.warn("Error while resetSynchroState %s"%(uuid))
+            self.logger.warn(e)
+        return False
+
     def getTargetSynchroState(self, uuid, target_type):
         """
         get the synchronization state of a target
