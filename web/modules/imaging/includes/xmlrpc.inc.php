@@ -110,6 +110,10 @@ function xmlrpc_getLocationBootMenu($id) {
 }
 
 
+function xmlrpc_resetSynchroState($tid, $type) {
+    return xmlCall("imaging.resetSynchroState", array($tid, $type));
+}
+
 function xmlrpc_getComputerSynchroState($id) {
     return xmlCall("imaging.getComputerSynchroState", array($id));
 }

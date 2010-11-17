@@ -96,6 +96,14 @@ if (isset($params['uuid'])) {
         }
     } else {
         $ret = xmlrpc_getComputerSynchroState($params['target_uuid']);
+        if (isset($_POST["bresetsynchrostate"])) {
+            if (xmlrpc_resetSynchroState($params['uuid'], '')) {
+                new NotifyWidgetSuccess(sprintf(_T("Synchronisation state for %s (%s) succeed", "imaging"), $params['target_name'], $params['uuid']));
+                header("Location: ".urlStrRedirect("base/computers/imgtabs", $params));
+            } else {
+                new NotifyWidgetFailure(sprintf(_T("Failed to reset synchronise state.", "imaging")));
+            }
+        }
 
         if ($ret['id'] == $SYNCHROSTATE_RUNNING) {
             $p = new PageGenerator(sprintf(_T("%s's computer imaging", 'imaging'), $hostname));
@@ -103,7 +111,21 @@ if (isset($params['uuid'])) {
             $p->setSideMenu($sidemenu);
             $p->display();
             $a_href_open = "<a href=''>";
-            print sprintf(_T("The synchro is running, please wait or reload the page %shere%s", "imaging"), $a_href_open, '</a>');
+
+            $msg = sprintf(_T("The synchro is currently running, please wait or reload the page %shere%s.<br/>", "imaging"), $a_href_open, '</a>');
+            $t1 = new TitleElement($msg, 3);
+            $t1->display();
+            $msg = sprintf(_T("If the synchro runs since more than 5 minutes, please reset the synchro state of this computer's menu.", "imaging"));
+            $t2 = new TitleElement($msg, 3);
+            $t2->display();
+
+            $f = new ValidatingForm();
+            $f->add(new HiddenTpl("target_uuid"),                    array("value" => $target_uuid,            "hide" => True));
+            $f->add(new HiddenTpl("target_name"),                    array("value" => $target_name,            "hide" => True));
+            $f->add(new HiddenTpl("type"),                           array("value" => $type,                   "hide" => True));
+            $f->addButton("bresetsynchrostate", _T("Reset Synchro state", "imaging"));
+            $f->display();
+
         } elseif ($ret['id'] == $SYNCHROSTATE_INIT_ERROR) {
             $p = new PageGenerator(sprintf(_T("%s's computer imaging", 'imaging'), $hostname));
             $sidemenu->forceActiveItem("index");
@@ -162,13 +184,36 @@ if (isset($params['uuid'])) {
     } else {
         $ret = xmlrpc_getProfileSynchroState($params['target_uuid']);
 
-         if ($ret['id'] == $SYNCHROSTATE_RUNNING) {
+        if (isset($_POST["bresetsynchrostate"])) {
+            if (xmlrpc_resetSynchroState($params['target_uuid'], $params['type'])) {
+                new NotifyWidgetSuccess(sprintf(_T("Synchronisation state for %s (%s) succeed", "imaging"), $params['target_name'], $params['target_uuid']));
+                header("Location: ".urlStrRedirect("base/computers/imgtabs", $params));
+            } else {
+                new NotifyWidgetFailure(sprintf(_T("Failed to reset synchronise state.", "imaging")));
+            }
+        }
+
+        if ($ret['id'] == $SYNCHROSTATE_RUNNING) {
             $p = new PageGenerator(sprintf(_T("%s's profile imaging", 'imaging'), $group->getName()));
             $sidemenu->forceActiveItem("index");
             $p->setSideMenu($sidemenu);
             $p->display();
             $a_href_open = "<a href=''>";
-            print sprintf(_T("The synchro is running, please wait or reload the page %shere%s", "imaging"), $a_href_open, '</a>');
+
+            $msg = sprintf(_T("The synchro is currently running, please wait or reload the page %shere%s.<br/>", "imaging"), $a_href_open, '</a>');
+            $t1 = new TitleElement($msg, 3);
+            $t1->display();
+            $msg = sprintf(_T("If the synchro runs since more than 5 minutes, please reset the synchro state of this computer's menu.", "imaging"));
+            $t2 = new TitleElement($msg, 3);
+            $t2->display();
+
+            $f = new ValidatingForm();
+            $f->add(new HiddenTpl("gid"),                    array("value" => $params['target_uuid'],            "hide" => True));
+            $f->add(new HiddenTpl("groupname"),                    array("value" => $params['target_name'],            "hide" => True));
+            $f->add(new HiddenTpl("type"),                           array("value" => $params['type'],                   "hide" => True));
+            $f->addButton("bresetsynchrostate", _T("Reset Synchro state", "imaging"));
+            $f->display();
+
         } else {
             # do nothing special if $SYNCHROSTATE_DONE
             $p = new TabbedPageGenerator();
