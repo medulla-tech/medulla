@@ -299,7 +299,7 @@ if (isset($_POST["bunregister"])) {
             }
         }
 
-        if ($type == '') {
+        if ($is_registering && $type == '') {
             $networks = xmlCall('base.getComputersNetwork', array(array('uuid'=>$_GET["target_uuid"])));
             $networks = $networks[0][1];
 
