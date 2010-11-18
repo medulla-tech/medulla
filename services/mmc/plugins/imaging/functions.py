@@ -1736,7 +1736,10 @@ class ImagingRpcProxy(RpcProxyI):
                             db.changeTargetsSynchroState([uuid], target_type, P2ISS.INIT_ERROR)
                             return [False, 'P2ISS.INIT_ERROR']
 
-                    d = i.computerRegister(params['target_name'], MACAddress[0], imagingData)
+                    MACAddress = MACAddress[0]
+                    if type(MACAddress) == list:
+                        MACAddress = MACAddress[0]
+                    d = i.computerRegister(params['target_name'], MACAddress, imagingData)
                     d.addCallback(treatRegister)
                     return d
                 else:
@@ -1765,7 +1768,10 @@ class ImagingRpcProxy(RpcProxyI):
 
                 for computer in macaddress:
                     if len(computer) > 0:
-                        h_macaddress[uuids[index]] = computer[0]
+                        if type(computer[0]) == list and len(computer[0]) == 1:
+                            h_macaddress[uuids[index]] = computer[0][0]
+                        else:
+                            h_macaddress[uuids[index]] = computer[0]
                     else:
                         h_macaddress[uuids[index]] = ''
                     index += 1
@@ -2568,8 +2574,10 @@ def synchroTargets(ctx, uuids, target_type):
                 continue
 
             mac = h_macaddress[uuid]
-            if type(mac) == list:
+            if (type(mac) == list or type(mac) == tuple) and len(mac) == 1:
                 mac = mac[0]
+                if (type(mac) == list or type(mac) == tuple) and len(mac) == 1:
+                    mac = mac[0]
             computers.append((h_hostnames[uuid], mac, imagingData))
 
         if not url in h_computers:

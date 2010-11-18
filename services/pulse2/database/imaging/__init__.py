@@ -4021,7 +4021,8 @@ class SynchroState(DBObject):
     to_be_exported = ['id', 'label']
 
 class Target(DBObject):
-    to_be_exported = ['id', 'name', 'uuid', 'type', 'fk_entity', 'fk_menu', 'kernel_parameters', 'image_parameters', 'exclude_parameters', 'is_registered_in_package_server', 'raw_mode', 'nic_uuid']
+    # nic_uuid is not necessary outside of the imaging DB
+    to_be_exported = ['id', 'name', 'uuid', 'type', 'fk_entity', 'fk_menu', 'kernel_parameters', 'image_parameters', 'exclude_parameters', 'is_registered_in_package_server', 'raw_mode']
 
 class TargetType(DBObject):
     to_be_exported = ['id', 'label']
