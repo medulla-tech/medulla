@@ -132,6 +132,8 @@ install: build_mo build_services
 	$(SED) -i 's!##SBINDIR##!$(SBINDIR)!' $(DESTDIR)$(INITDIR)/pulse2-scheduler
 	$(INSTALL) -m 755 -o root -g root services/init.d/pulse2-launchers $(DESTDIR)$(INITDIR)
 	$(SED) -i 's!##SBINDIR##!$(SBINDIR)!' $(DESTDIR)$(INITDIR)/pulse2-launchers
+	$(INSTALL) -m 755 -o root -g root services/init.d/pulse2-imaging-server
+	$(SED) -i 's!##SBINDIR##!$(SBINDIR)!' $(DESTDIR)$(INITDIR)/pulse2-imaging-server
 
 	@echo ""
 	@echo "Install additionnal tools in $(DESTDIR)$(SBINDIR)"
