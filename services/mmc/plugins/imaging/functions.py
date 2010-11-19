@@ -2486,6 +2486,8 @@ def chooseMacAddress(ctx, uuid, macs):
     return mac
 
 def getJustOneMacPerComputer(ctx, macs):
+    # if we don't know what to do with it we just send it back as it came
+    ret = macs
     if type(macs) == list:
         ret = []
         for computer in macs:
