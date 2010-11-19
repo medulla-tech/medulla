@@ -35,7 +35,7 @@ from pulse2.managers.location import ComputerLocationManager
 from mmc.plugins.glpi.location import GlpiLocation
 import logging
 
-VERSION = "2.0.0"
+VERSION = "1.3.0"
 APIVERSION = "0:0:0"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 

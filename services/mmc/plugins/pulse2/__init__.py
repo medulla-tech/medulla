@@ -40,7 +40,7 @@ from pulse2.database.pulse import Pulse2Database
 from pulse2.managers.pulse import Pulse2Manager
 from mmc.plugins.pulse2.pulse import Pulse2Pulse2Manager
 
-VERSION = "2.0.0"
+VERSION = "1.3.0"
 APIVERSION = "0:0:0"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 

@@ -2,7 +2,7 @@
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # (c) 2007-2008 Mandriva
 #
-# $Id: __init__.py 86 2008-06-05 12:29:00Z oroussy $
+# $Id$
 #
 # This file is part of MMC.
 #
@@ -29,7 +29,7 @@ from mmc.plugins.pkgs.user_packageapi_api import UserPackageApiApi
 from mmc.plugins.pkgs.config import PkgsConfig
 
 
-VERSION = "2.0.0"
+VERSION = "1.3.0"
 APIVERSION = "0:0:0"
 REVISION = int("$Rev: 86 $".split(':')[1].strip(' $'))
 

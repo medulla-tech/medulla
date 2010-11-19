@@ -40,7 +40,7 @@ from mmc.plugins.inventory.provisioning import InventoryProvisioner
 from mmc.plugins.inventory.locations import InventoryLocation
 from mmc.plugins.inventory.tables_def import PossibleQueries
 
-VERSION = "2.0.0"
+VERSION = "1.3.0"
 APIVERSION = "0:0:0"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 

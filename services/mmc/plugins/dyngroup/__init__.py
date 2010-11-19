@@ -45,7 +45,7 @@ from mmc.plugins.base.computers import ComputerManager
 from pulse2.managers.group import ComputerGroupManager
 from pulse2.managers.profile import ComputerProfileManager
 
-VERSION = '2.0.0'
+VERSION = '1.3.0'
 APIVERSION = '0:0:0'
 REVISION = int('$Rev$'.split(':')[1].strip(' $'))
 queryManager = None

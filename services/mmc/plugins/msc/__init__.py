@@ -58,7 +58,7 @@ import mmc.plugins.msc.client.scheduler
 # ORM mappings
 import pulse2.database.msc.orm.commands_on_host
 
-VERSION = '2.0.0'
+VERSION = '1.3.0'
 APIVERSION = '0:0:0'
 REVISION = int('$Rev$'.split(':')[1].strip(' $'))
 

@@ -42,7 +42,7 @@ from pulse2.managers.imaging import ComputerImagingManager
 from pulse2.managers.pulse import Pulse2Manager
 from pulse2.database.imaging import ImagingDatabase
 
-VERSION = "0.1"
+VERSION = "1.3.0"
 APIVERSION = "0:0:0"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
