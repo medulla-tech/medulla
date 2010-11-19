@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-17 23:29+0100\n"
-"PO-Revision-Date: 2010-10-08 09:40+0200\n"
+"POT-Creation-Date: 2010-11-19 15:18+0100\n"
+"PO-Revision-Date: 2010-11-19 15:16+0100\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: Pulse 2 developers <pulse2-devel@mandrivalinux.org>\n"
 "MIME-Version: 1.0\n"
@@ -183,8 +183,8 @@ msgstr "Masters disponibles"
 msgid "Available post-installation scripts"
 msgstr "Scripts de post-installation disponibles"
 
-#: web/modules/imaging/manage/ajaxLogs.php:55
 #: web/modules/imaging/includes/logs.inc.php:27
+#: web/modules/imaging/manage/ajaxLogs.php:55
 msgid "Backup"
 msgstr "Sauvegarde"
 
@@ -196,18 +196,18 @@ msgstr "Sauvegarde terminée"
 msgid "Backup Started"
 msgstr "Sauvegarde démarrée"
 
-#: web/modules/imaging/manage/ajaxLogs.php:65
 #: web/modules/imaging/includes/logs.inc.php:39
+#: web/modules/imaging/manage/ajaxLogs.php:65
 msgid "Backup done"
 msgstr "Sauvegarde terminée"
 
-#: web/modules/imaging/manage/ajaxLogs.php:66
 #: web/modules/imaging/includes/logs.inc.php:40
+#: web/modules/imaging/manage/ajaxLogs.php:66
 msgid "Backup failed"
 msgstr "Échec de la sauvegarde"
 
-#: web/modules/imaging/manage/ajaxLogs.php:64
 #: web/modules/imaging/includes/logs.inc.php:38
+#: web/modules/imaging/manage/ajaxLogs.php:64
 msgid "Backup in progress"
 msgstr "Sauvegarde en cours"
 
@@ -215,15 +215,15 @@ msgstr "Sauvegarde en cours"
 msgid "Backup log messages"
 msgstr "Logs du backup"
 
-#: web/modules/imaging/manage/ajaxLogs.php:52
 #: web/modules/imaging/includes/logs.inc.php:28
+#: web/modules/imaging/manage/ajaxLogs.php:52
 msgid "Boot"
 msgstr "Démarrage"
 
-#: web/modules/imaging/infoPackage.inc.php:129
-#: web/modules/imaging/infoPackage.inc.php:150
 #: web/modules/imaging/imaging/tabs.php:153
 #: web/modules/imaging/imaging/tabs.php:229
+#: web/modules/imaging/infoPackage.inc.php:129
+#: web/modules/imaging/infoPackage.inc.php:150
 msgid "Boot menu"
 msgstr "Menu de démarrage"
 
@@ -246,10 +246,10 @@ msgstr "Menu de démarrage affiché"
 msgid "Boot options"
 msgstr "Options de démarrage"
 
-#: web/modules/imaging/infoPackage.inc.php:133
-#: web/modules/imaging/infoPackage.inc.php:154
 #: web/modules/imaging/imaging/tabs.php:157
 #: web/modules/imaging/imaging/tabs.php:233
+#: web/modules/imaging/infoPackage.inc.php:133
+#: web/modules/imaging/infoPackage.inc.php:154
 msgid "Boot services"
 msgstr "Services de démarrage"
 
@@ -268,15 +268,15 @@ msgstr "Impossible de supprimer ce script de post-installation, il s'agit d'un s
 #: web/modules/imaging/manage/postinstall_delete.php:68
 #: web/modules/imaging/manage/master_iso.php:83
 #: web/modules/imaging/manage/master_delete.php:56
-#: web/modules/imaging/imaging/configure.php:171
 #: web/modules/imaging/imaging/bootmenu_remove.php:83
 #: web/modules/imaging/imaging/images_iso.php:97
+#: web/modules/imaging/imaging/configure.php:171
 #: web/modules/imaging/imaging/images_delete.php:59
 msgid "Cancel"
 msgstr "Annuler"
 
 #: web/modules/imaging/imaging/configure.php:317
-msgid "Choose the mac address you want to use"
+msgid "Choose the MAC address you want to use"
 msgstr "Veuillez choisir l'adresse MAC que vous désirez utiliser"
 
 #: web/modules/imaging/includes/logs.inc.php:70
@@ -319,8 +319,8 @@ msgstr "Créer une iso bootable"
 msgid "Create iso for <strong>%s</strong>"
 msgstr "Créer une iso de <strong>%s</strong>"
 
-#: web/modules/imaging/infoPackage.inc.php:56
 #: web/modules/imaging/manage/master_iso.php:43
+#: web/modules/imaging/infoPackage.inc.php:56
 msgid "Create iso from master"
 msgstr "Créer une iso depuis le master"
 
@@ -346,8 +346,8 @@ msgstr "Menu de démarrage actuel"
 msgid "Default"
 msgstr "Par défaut"
 
-#: web/modules/imaging/infoPackage.inc.php:72
 #: web/modules/imaging/manage/localSidebar.php:37
+#: web/modules/imaging/infoPackage.inc.php:72
 msgid "Default boot menu"
 msgstr "Menu de démarrage par défaut"
 
@@ -376,27 +376,27 @@ msgstr "Timeout du menu par défaut"
 msgid "Default on WOL"
 msgstr "Par défaut sur WOL"
 
-#: web/modules/imaging/manage/ajaxLogs.php:58
+#: web/modules/imaging/includes/logs.inc.php:34
 #: web/modules/imaging/manage/postinstall_delete.php:67
+#: web/modules/imaging/manage/ajaxLogs.php:58
 #: web/modules/imaging/manage/ajaxMasterLevel2.php:67
 #: web/modules/imaging/manage/ajaxPostInstallLevel2.php:52
-#: web/modules/imaging/includes/logs.inc.php:34
 #: web/modules/imaging/imaging/bootmenu.php:205
 msgid "Delete"
 msgstr "Supprimer"
 
-#: web/modules/imaging/infoPackage.inc.php:234
 #: web/modules/imaging/imaging/images_delete.php:54
+#: web/modules/imaging/infoPackage.inc.php:234
 msgid "Delete image"
 msgstr "Supprimer l'image"
 
-#: web/modules/imaging/infoPackage.inc.php:47
 #: web/modules/imaging/manage/master_delete.php:51
+#: web/modules/imaging/infoPackage.inc.php:47
 msgid "Delete master"
 msgstr "Supprimer le master"
 
-#: web/modules/imaging/infoPackage.inc.php:92
 #: web/modules/imaging/manage/postinstall_delete.php:63
+#: web/modules/imaging/infoPackage.inc.php:92
 msgid "Delete post-installation script"
 msgstr "Supprimer le script de post-installation"
 
@@ -404,17 +404,17 @@ msgstr "Supprimer le script de post-installation"
 msgid "Delete the image"
 msgstr "Supprimer l'image"
 
-#: web/modules/imaging/manage/ajaxMasterLevel2.php:107
-#: web/modules/imaging/manage/ajaxPostInstallLevel2.php:81
-#: web/modules/imaging/manage/service_edit.php:59
-#: web/modules/imaging/manage/ajaxServiceLevel2.php:81
-#: web/modules/imaging/manage/master_edit.php:57
-#: web/modules/imaging/manage/ajaxBootmenu.php:98
-#: web/modules/imaging/manage/ajaxAvailableImagingServer.php:76
 #: web/modules/imaging/includes/post_install_script.php:65
+#: web/modules/imaging/manage/service_edit.php:59
+#: web/modules/imaging/manage/ajaxMasterLevel2.php:107
+#: web/modules/imaging/manage/ajaxServiceLevel2.php:81
+#: web/modules/imaging/manage/ajaxPostInstallLevel2.php:81
+#: web/modules/imaging/manage/ajaxBootmenu.php:98
+#: web/modules/imaging/manage/master_edit.php:57
+#: web/modules/imaging/manage/ajaxAvailableImagingServer.php:76
+#: web/modules/imaging/imaging/images.php:102
 #: web/modules/imaging/imaging/ajaxImages.php:147
 #: web/modules/imaging/imaging/ajaxServices.php:88
-#: web/modules/imaging/imaging/images.php:102
 #: web/modules/imaging/imaging/bootmenu.php:297
 msgid "Description"
 msgstr "Description"
@@ -540,8 +540,8 @@ msgstr "Requête de fin de sauvegarde"
 msgid "End of Backup Success"
 msgstr "Succès de fin de sauvegarde"
 
-#: web/modules/imaging/manage/ajaxLogs.php:57
 #: web/modules/imaging/includes/logs.inc.php:31
+#: web/modules/imaging/manage/ajaxLogs.php:57
 msgid "Error"
 msgstr "Erreur"
 
@@ -718,9 +718,9 @@ msgstr "Logs de l'image de backup"
 msgid "Image parameters"
 msgstr "Paramètres de l'image"
 
+#: web/modules/imaging/imaging/tabs.php:155
 #: web/modules/imaging/infoPackage.inc.php:131
 #: web/modules/imaging/infoPackage.inc.php:152
-#: web/modules/imaging/imaging/tabs.php:155
 msgid "Images and Masters"
 msgstr "Images et masters"
 
@@ -792,8 +792,8 @@ msgstr "Dans le menu de démarrage par défaut"
 msgid "In default bootmenu"
 msgstr "Dans le menu de démarrage par défaut"
 
-#: web/modules/imaging/manage/ajaxLogs.php:59
 #: web/modules/imaging/includes/logs.inc.php:26
+#: web/modules/imaging/manage/ajaxLogs.php:59
 msgid "Inventory"
 msgstr "Inventaire"
 
@@ -816,14 +816,14 @@ msgstr "L'élément <strong>%s</strong> a été déplacé vers le haut dans le m
 msgid "Kernel parameters"
 msgstr "Paramètres du noyau"
 
-#: web/modules/imaging/manage/ajaxMasterLevel2.php:105
 #: web/modules/imaging/manage/service_edit.php:54
+#: web/modules/imaging/manage/ajaxMasterLevel2.php:105
 #: web/modules/imaging/manage/ajaxServiceLevel2.php:79
-#: web/modules/imaging/manage/master_edit.php:53
 #: web/modules/imaging/manage/ajaxBootmenu.php:96
+#: web/modules/imaging/manage/master_edit.php:53
+#: web/modules/imaging/imaging/images.php:98
 #: web/modules/imaging/imaging/ajaxImages.php:145
 #: web/modules/imaging/imaging/ajaxServices.php:87
-#: web/modules/imaging/imaging/images.php:98
 #: web/modules/imaging/imaging/bootmenu.php:295
 msgid "Label"
 msgstr "Libellé"
@@ -850,13 +850,13 @@ msgstr "Associer ce serveur d'imaging à l'entité '%s'."
 msgid "Load on server"
 msgstr "Charge du serveur"
 
-#: web/modules/imaging/infoPackage.inc.php:60
 #: web/modules/imaging/manage/localSidebar.php:34
+#: web/modules/imaging/infoPackage.inc.php:60
 msgid "Manage boot services"
 msgstr "Gérer les services de démarrage"
 
-#: web/modules/imaging/infoPackage.inc.php:45
 #: web/modules/imaging/manage/localSidebar.php:31
+#: web/modules/imaging/infoPackage.inc.php:45
 msgid "Manage masters"
 msgstr "Gérer les masters"
 
@@ -882,8 +882,8 @@ msgstr "Taille du media"
 msgid "Memory"
 msgstr "Mémoire"
 
-#: web/modules/imaging/manage/ajaxLogs.php:53
 #: web/modules/imaging/includes/logs.inc.php:25
+#: web/modules/imaging/manage/ajaxLogs.php:53
 msgid "Menu"
 msgstr "Menu"
 
@@ -892,10 +892,10 @@ msgstr "Menu"
 msgid "Menu Item <strong>%s</strong> removed from boot menu"
 msgstr "L'élément <strong>%s</strong> a été supprimé du menu de démarrage"
 
-#: web/modules/imaging/infoPackage.inc.php:137
-#: web/modules/imaging/infoPackage.inc.php:158
 #: web/modules/imaging/imaging/tabs.php:161
 #: web/modules/imaging/imaging/tabs.php:237
+#: web/modules/imaging/infoPackage.inc.php:137
+#: web/modules/imaging/infoPackage.inc.php:158
 msgid "Menu configuration"
 msgstr "Configuration du menu"
 
@@ -927,9 +927,9 @@ msgstr "Monter"
 msgid "Move down"
 msgstr "Descendre"
 
+#: web/modules/imaging/includes/post_install_script.php:63
 #: web/modules/imaging/manage/ajaxPostInstallLevel2.php:80
 #: web/modules/imaging/manage/ajaxAvailableImagingServer.php:74
-#: web/modules/imaging/includes/post_install_script.php:63
 msgid "Name"
 msgstr "Nom"
 
@@ -991,13 +991,13 @@ msgstr "Veuillez spécifier un titre pour l'image ISO."
 msgid "Please switch to expert mode now if you want to change more parameters."
 msgstr "Veuillez passer en mode expert maintenant si vous désirez changer plus de paramètres."
 
-#: web/modules/imaging/manage/ajaxLogs.php:56
 #: web/modules/imaging/includes/logs.inc.php:30
+#: web/modules/imaging/manage/ajaxLogs.php:56
 msgid "Post-install"
 msgstr "Script de Post-installation"
 
-#: web/modules/imaging/infoPackage.inc.php:84
 #: web/modules/imaging/manage/localSidebar.php:40
+#: web/modules/imaging/infoPackage.inc.php:84
 msgid "Post-installation scripts"
 msgstr "Scripts de post-installation"
 
@@ -1066,9 +1066,9 @@ msgstr "Supprimer"
 msgid "Remove a service from a target"
 msgstr "Supprimer un service d'une cible"
 
-#: web/modules/imaging/infoPackage.inc.php:163
-#: web/modules/imaging/imaging/ajaxImages.php:71
 #: web/modules/imaging/imaging/bootmenu_remove.php:78
+#: web/modules/imaging/imaging/ajaxImages.php:71
+#: web/modules/imaging/infoPackage.inc.php:163
 msgid "Remove from boot menu"
 msgstr "Enlever du menu de démarrage"
 
@@ -1100,8 +1100,8 @@ msgstr "Remise à zero de l'état de la synchronisation"
 msgid "Reset synchronisation state for %s (%s) succeed"
 msgstr "Remise à zero de l'état de la synchronisation pour réussie pour : %s (%s)"
 
-#: web/modules/imaging/manage/ajaxLogs.php:54
 #: web/modules/imaging/includes/logs.inc.php:29
+#: web/modules/imaging/manage/ajaxLogs.php:54
 msgid "Restoration"
 msgstr "Restauration"
 
@@ -1128,18 +1128,18 @@ msgstr "Type de restauration"
 msgid "Restoration: MTFTP maximum waiting (in sec)"
 msgstr "Restauration: Attente maximum en TFTP (en secondes)"
 
-#: web/modules/imaging/manage/ajaxLogs.php:62
 #: web/modules/imaging/includes/logs.inc.php:36
+#: web/modules/imaging/manage/ajaxLogs.php:62
 msgid "Restore done"
 msgstr "Restauration terminée"
 
-#: web/modules/imaging/manage/ajaxLogs.php:63
 #: web/modules/imaging/includes/logs.inc.php:37
+#: web/modules/imaging/manage/ajaxLogs.php:63
 msgid "Restore failed"
 msgstr "Échec de la restauration"
 
-#: web/modules/imaging/manage/ajaxLogs.php:61
 #: web/modules/imaging/includes/logs.inc.php:35
+#: web/modules/imaging/manage/ajaxLogs.php:61
 msgid "Restore in progress"
 msgstr "Restauration en cours"
 
@@ -1190,8 +1190,8 @@ msgstr "Statut du serveur"
 msgid "Server status for this entity"
 msgstr "Statut du serveur pour cette entité"
 
-#: web/modules/imaging/imaging/services.php:61
 #: web/modules/imaging/imaging/addservice.php:53
+#: web/modules/imaging/imaging/services.php:61
 #, php-format
 msgid "Service <strong>%s</strong> added to boot menu"
 msgstr "Le service <strong>%s</strong> a été ajouté au menu de démarrage"
@@ -1463,11 +1463,11 @@ msgstr "Corrige le boot loader NT dans le cas où la géométrie du disque a ét
 msgid "Uptime: "
 msgstr "Durée de fonctionnement: "
 
-#: web/modules/imaging/manage/postinstall_edit.php:118
 #: web/modules/imaging/manage/bootmenu_edit.php:101
-#: web/modules/imaging/manage/ajaxConfiguration.php:173
 #: web/modules/imaging/manage/service_edit.php:69
+#: web/modules/imaging/manage/ajaxConfiguration.php:173
 #: web/modules/imaging/manage/master_edit.php:70
+#: web/modules/imaging/manage/postinstall_edit.php:118
 #: web/modules/imaging/imaging/bootmenu.php:156
 msgid "Validate"
 msgstr "Valider"
@@ -1549,567 +1549,3 @@ msgstr "tftp"
 #: web/modules/imaging/includes/ajaxcommon.inc.php:61
 msgid "the entity itself"
 msgstr "l'entité elle-même"
-
-#, fuzzy
-#~ msgid "%s status"
-#~ msgstr "Statut du serveur"
-
-#, fuzzy
-#~ msgid "%s's computer secure control"
-#~ msgstr "Module d'imaging pour l'ordinateur %s (appartenant à un profil)"
-
-#, fuzzy
-#~ msgid "%s's inventory"
-#~ msgstr "Inventaire"
-
-#, fuzzy
-#~ msgid "<i>as soon as possible</i>"
-#~ msgstr "Dès que possible"
-
-#, fuzzy
-#~ msgid "<i>forever</i>"
-#~ msgstr "<i>indéfini</i>"
-
-#, fuzzy
-#~ msgid "<i>none</i>"
-#~ msgstr "<i>indéfini</i>"
-
-#, fuzzy
-#~ msgid "<i>not available</i>"
-#~ msgstr "Aucun master disponible."
-
-#, fuzzy
-#~ msgid "<i>not set</i>"
-#~ msgstr "<i>indéfini</i>"
-
-#, fuzzy
-#~ msgid "Add a profile"
-#~ msgstr "Venant du profil"
-
-#, fuzzy
-#~ msgid "Additionnal informations"
-#~ msgstr "Pas assez d'informations"
-
-#, fuzzy
-#~ msgid "All profiles"
-#~ msgstr "Venant du profil"
-
-#, fuzzy
-#~ msgid "Application"
-#~ msgstr "Dupliquer"
-
-#, fuzzy
-#~ msgid "Are you sure you want to delete %s <b>%s</b>?<br/> (it can be used in an other group)."
-#~ msgstr "Êtes-vous sûr de vouloir supprimer le master <b>%s</b> ?"
-
-#, fuzzy
-#~ msgid "Availability"
-#~ msgstr "Images disponibles"
-
-#, fuzzy
-#~ msgid "Bios tab for a computer in a group"
-#~ msgstr "Enregistrer un ordinateur dans le module d'imaging"
-
-#, fuzzy
-#~ msgid "Command parameters"
-#~ msgstr "Paramètres de l'image"
-
-#, fuzzy
-#~ msgid "Computer name"
-#~ msgstr "Ordinateur"
-
-#, fuzzy
-#~ msgid "Computers Group Sub Request Delete"
-#~ msgstr "Demande de Computer UUID"
-
-#, fuzzy
-#~ msgid "Computers Group Sub Request Editor"
-#~ msgstr "Demande de Computer UUID"
-
-#, fuzzy
-#~ msgid "Computers list"
-#~ msgstr "Ordinateur"
-
-#, fuzzy
-#~ msgid "Connection failed !"
-#~ msgstr "Échec de la restauration"
-
-#, fuzzy
-#~ msgid "Creation"
-#~ msgstr "Créé"
-
-#, fuzzy
-#~ msgid "Creation date"
-#~ msgstr "Créer une image iso"
-
-#, fuzzy
-#~ msgid "Creator"
-#~ msgstr "Créé"
-
-#, fuzzy
-#~ msgid "Current State"
-#~ msgstr "Menu de démarrage actuel"
-
-#, fuzzy
-#~ msgid "Current proxy"
-#~ msgstr "Menu de démarrage actuel"
-
-#, fuzzy
-#~ msgid "Current state"
-#~ msgstr "Menu de démarrage actuel"
-
-#, fuzzy
-#~ msgid "Delete a package"
-#~ msgstr "Supprimer l'image"
-
-#, fuzzy
-#~ msgid "Delete done"
-#~ msgstr "Supprimer"
-
-#, fuzzy
-#~ msgid "Delete failed"
-#~ msgstr "Échec de la restauration"
-
-#, fuzzy
-#~ msgid "Delete file"
-#~ msgstr "Supprimer l'image"
-
-#, fuzzy
-#~ msgid "Delete group"
-#~ msgstr "Supprimer l'image"
-
-#, fuzzy
-#~ msgid "Delete in progress"
-#~ msgstr "Restauration en cours"
-
-#, fuzzy
-#~ msgid "Delete this group"
-#~ msgstr "Supprimer l'image"
-
-#, fuzzy
-#~ msgid "Delete this package"
-#~ msgstr "Supprimer l'image"
-
-#, fuzzy
-#~ msgid "Delete this profile"
-#~ msgstr "Supprimer l'image"
-
-#, fuzzy
-#~ msgid "Deploy <b>%s v.%s</b><br/> on <b>%s</b>"
-#~ msgstr "Ajouter l'image <b>%s</b> à <b>%s</b>"
-
-#, fuzzy
-#~ msgid "Descriptions"
-#~ msgstr "Description"
-
-#, fuzzy
-#~ msgid "Device"
-#~ msgstr "Descendre le service"
-
-#, fuzzy
-#~ msgid "Display"
-#~ msgstr "Affiché"
-
-#, fuzzy
-#~ msgid "Display content"
-#~ msgstr "Affiché"
-
-#, fuzzy
-#~ msgid "Display locations"
-#~ msgstr "Affiché sur WOL"
-
-#, fuzzy
-#~ msgid "Display profile '%s' content"
-#~ msgstr "Enregistrement du profil '%s'."
-
-#, fuzzy
-#~ msgid "Edit a package"
-#~ msgstr "Éditer l'image"
-
-#, fuzzy
-#~ msgid "Edit a profile"
-#~ msgstr "Éditer l'élément"
-
-#, fuzzy
-#~ msgid "Edit a static group"
-#~ msgstr "Éditer le master"
-
-#, fuzzy
-#~ msgid "Edit this group"
-#~ msgstr "Éditer le script"
-
-#, fuzzy
-#~ msgid "Edit this profile"
-#~ msgstr "Éditer l'élément"
-
-#, fuzzy
-#~ msgid "Execute command line ?"
-#~ msgstr "Accès à la ligne de commande GRUB"
-
-#, fuzzy
-#~ msgid "Execution done"
-#~ msgstr "Restauration terminée"
-
-#, fuzzy
-#~ msgid "Execution failed"
-#~ msgstr "Échec de la restauration"
-
-#, fuzzy
-#~ msgid "Execution in progress"
-#~ msgstr "Restauration en cours"
-
-#, fuzzy
-#~ msgid "Exit code : %s"
-#~ msgstr "Éditer: %s"
-
-#, fuzzy
-#~ msgid "ExpandedDescription"
-#~ msgstr "Description"
-
-#, fuzzy
-#~ msgid "ExtendedDescription"
-#~ msgstr "Description"
-
-#, fuzzy
-#~ msgid "Failed to send WOL request"
-#~ msgstr "N'a pas pu envoyer de nom d'hôte"
-
-#, fuzzy
-#~ msgid "First operation at"
-#~ msgstr "Restauration commencée"
-
-#, fuzzy
-#~ msgid "From computer"
-#~ msgstr "Ordinateur"
-
-#, fuzzy
-#~ msgid "Halt done"
-#~ msgstr "Sauvegarde terminée"
-
-#, fuzzy
-#~ msgid "Halt failed"
-#~ msgstr "Échec de la sauvegarde"
-
-#, fuzzy
-#~ msgid "Halt in progress"
-#~ msgstr "Sauvegarde en cours"
-
-#, fuzzy
-#~ msgid "Hardware tab for a computer"
-#~ msgstr "Inventaire matériel mis à jour"
-
-#, fuzzy
-#~ msgid "Hardware tab for a group"
-#~ msgstr "Inventaire matériel mis à jour"
-
-#, fuzzy
-#~ msgid "Hide"
-#~ msgstr "Cacher le menu de démarrage"
-
-#, fuzzy
-#~ msgid "Imaging management"
-#~ msgstr "Serveur d'imaging"
-
-#, fuzzy
-#~ msgid "Informations"
-#~ msgstr "Voir les informations sur l'image"
-
-#, fuzzy
-#~ msgid "Inventory Date"
-#~ msgstr "Inventaire"
-
-#, fuzzy
-#~ msgid "Inventory changes"
-#~ msgstr "Inventaire"
-
-#, fuzzy
-#~ msgid "Inventory done"
-#~ msgstr "Inventaire"
-
-#, fuzzy
-#~ msgid "Inventory failed"
-#~ msgstr "Échec de la restauration"
-
-#, fuzzy
-#~ msgid "Inventory in progress"
-#~ msgstr "Restauration en cours"
-
-#, fuzzy
-#~ msgid "Inventory of %s"
-#~ msgstr "Inventaire"
-
-#, fuzzy
-#~ msgid "Inventory on this profile"
-#~ msgstr "master venant du profil"
-
-#, fuzzy
-#~ msgid "Is the profile visible"
-#~ msgstr "Enregistrement du profil '%s'."
-
-#, fuzzy
-#~ msgid "Last operation at"
-#~ msgstr "Restauration commencée"
-
-#, fuzzy
-#~ msgid "Launch"
-#~ msgstr "Lancer la sauvegarde"
-
-#, fuzzy
-#~ msgid "Launch Bundle"
-#~ msgstr "Lancer la sauvegarde"
-
-#, fuzzy
-#~ msgid "Launch a command"
-#~ msgstr "Lancer la sauvegarde"
-
-#, fuzzy
-#~ msgid "Location"
-#~ msgstr "Restauration"
-
-#, fuzzy
-#~ msgid "MMC failed to contact package server %s."
-#~ msgstr "Échec de la synchronisation pour le package serveur : %s"
-
-#~ msgid "Manage post-installation scripts"
-#~ msgstr "Gestion des scripts de post-installation"
-
-#, fuzzy
-#~ msgid "Media"
-#~ msgstr "Taille du media"
-
-#, fuzzy
-#~ msgid "Name :"
-#~ msgstr "Nom"
-
-#, fuzzy
-#~ msgid "Names"
-#~ msgstr "Nom"
-
-#, fuzzy
-#~ msgid "Network card and configuration list"
-#~ msgstr "Configuration du menu"
-
-#, fuzzy
-#~ msgid "New computer"
-#~ msgstr "Ordinateur"
-
-#, fuzzy
-#~ msgid "Only new computers"
-#~ msgstr "Images sur un ordinateur"
-
-#, fuzzy
-#~ msgid "Please chose the type of group you want to create"
-#~ msgstr "Veuillez passer en mode expert maintenant si vous désirez changer plus de paramètres."
-
-#, fuzzy
-#~ msgid "Please chose the type of profile you want to create"
-#~ msgstr "Veuillez passer en mode expert maintenant si vous désirez changer plus de paramètres."
-
-#, fuzzy
-#~ msgid "Profile creation"
-#~ msgstr "Profil"
-
-#, fuzzy
-#~ msgid "Profile members"
-#~ msgstr "Profil"
-
-#, fuzzy
-#~ msgid "Profile name"
-#~ msgstr "Profil"
-
-#, fuzzy
-#~ msgid "Profiles list"
-#~ msgstr "Profil"
-
-#, fuzzy
-#~ msgid "Quick action path %s don't exists"
-#~ msgstr "Ce serveur d'imaging n'existe pas."
-
-#, fuzzy
-#~ msgid "Reboot done"
-#~ msgstr "Restauration terminée"
-
-#, fuzzy
-#~ msgid "Reboot failed"
-#~ msgstr "Échec de la restauration"
-
-#, fuzzy
-#~ msgid "Reboot in progress"
-#~ msgstr "Restauration en cours"
-
-#, fuzzy
-#~ msgid "Registry tab for a computer"
-#~ msgstr "Suppression de cet ordinateur de l'imaging"
-
-#, fuzzy
-#~ msgid "Registry tab for a computer in a group"
-#~ msgstr "Enregistrer un ordinateur dans le module d'imaging"
-
-#, fuzzy
-#~ msgid "Remove Computer"
-#~ msgstr "Ordinateur"
-
-#, fuzzy
-#~ msgid "Remove a computer"
-#~ msgstr "Enregistrement de l'ordinateur '%s'."
-
-#, fuzzy
-#~ msgid "Remove a computer from a computers group"
-#~ msgstr "Supprimer un service d'une cible"
-
-#, fuzzy
-#~ msgid "Resolution"
-#~ msgstr "Restauration"
-
-#, fuzzy
-#~ msgid "Result profile creation"
-#~ msgstr "Restauration"
-
-#, fuzzy
-#~ msgid "Root entity"
-#~ msgstr "Menu de démarrage"
-
-#, fuzzy
-#~ msgid "Script parameters"
-#~ msgstr "Paramètres du noyau"
-
-#, fuzzy
-#~ msgid "Select the imaging server for this profile."
-#~ msgstr "L'enregistrement dans le serveur d'imaging a échoué."
-
-#, fuzzy
-#~ msgid "Select this profile's Imaging Server"
-#~ msgstr "Serveurs d'imaging disponibles"
-
-#, fuzzy
-#~ msgid "Share this profile"
-#~ msgstr "master venant du profil"
-
-#~ msgid "Show Image Informations"
-#~ msgstr "Voir les informations sur l'image"
-
-#, fuzzy
-#~ msgid "Single, server mode"
-#~ msgstr "Serveur d'imaging"
-
-#, fuzzy
-#~ msgid "StandardDescription"
-#~ msgstr "Description"
-
-#, fuzzy
-#~ msgid "Start inventory"
-#~ msgstr "Inventaire"
-
-#, fuzzy
-#~ msgid "Start script"
-#~ msgstr "Éditer le script"
-
-#, fuzzy
-#~ msgid "Status"
-#~ msgstr "Statistiques"
-
-#, fuzzy
-#~ msgid "SwapSpace"
-#~ msgstr "Partition d'échange (swap)"
-
-#~ msgid "Synchronization failed for entity: %s"
-#~ msgstr "Échec de la synchronisation pour l'entité: %s"
-
-#~ msgid "Synchronization launched on this entity."
-#~ msgstr "Synchronisation démarrée sur cette entité."
-
-#, fuzzy
-#~ msgid "Take control of this computer"
-#~ msgstr "Suppression de cet ordinateur de l'imaging"
-
-#, fuzzy
-#~ msgid "Target plateform is %s"
-#~ msgstr "Options de la cible"
-
-#, fuzzy
-#~ msgid "Time"
-#~ msgstr "Horodatage"
-
-#, fuzzy
-#~ msgid "Unavailable computer"
-#~ msgstr "Masters disponibles"
-
-#, fuzzy
-#~ msgid "Unavailable group"
-#~ msgstr "Images disponibles"
-
-#, fuzzy
-#~ msgid "Upload failed"
-#~ msgstr "Échec de la sauvegarde"
-
-#, fuzzy
-#~ msgid "Upload in progress"
-#~ msgstr "Sauvegarde en cours"
-
-#, fuzzy
-#~ msgid "Validity period"
-#~ msgstr "Valider"
-
-#, fuzzy
-#~ msgid "Work in progress"
-#~ msgstr "Restauration en cours"
-
-#, fuzzy
-#~ msgid "are"
-#~ msgstr "Cible"
-
-#, fuzzy
-#~ msgid "current state"
-#~ msgstr "Menu de démarrage actuel"
-
-#, fuzzy
-#~ msgid "deleted"
-#~ msgstr "Supprimer"
-
-#, fuzzy
-#~ msgid "designation"
-#~ msgstr "Restauration"
-
-#, fuzzy
-#~ msgid "failed"
-#~ msgstr "Échec de la sauvegarde"
-
-#, fuzzy
-#~ msgid "failed during suppression"
-#~ msgstr "Message affiché pendant les opérations de sauvegarde/restauration"
-
-#, fuzzy
-#~ msgid "invent."
-#~ msgstr "Inventaire"
-
-#, fuzzy
-#~ msgid "inventoried"
-#~ msgstr "Inventaire"
-
-#, fuzzy
-#~ msgid "location"
-#~ msgstr "Restauration"
-
-#, fuzzy
-#~ msgid "never"
-#~ msgstr "Jamais"
-
-#, fuzzy
-#~ msgid "profile"
-#~ msgstr "Profil"
-
-#, fuzzy
-#~ msgid "rebooted"
-#~ msgstr "Démarré"
-
-#, fuzzy
-#~ msgid "specif_default"
-#~ msgstr "(défaut)"
-
-#, fuzzy
-#~ msgid "the static profile"
-#~ msgstr "service de démarrage venant du profil"
-
-#, fuzzy
-#~ msgid "title"
-#~ msgstr "Titre"
