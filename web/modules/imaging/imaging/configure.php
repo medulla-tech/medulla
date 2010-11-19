@@ -314,7 +314,7 @@ if (isset($_POST["bunregister"])) {
                 }
                 $macs_choice->setElements($elements);
                 $macs_choice->setElementsVal($values);
-                $f->add(new TrFormElement(_T("Choose the mac address you want to use", "imaging"), $macs_choice));
+                $f->add(new TrFormElement(_T("Choose the MAC address you want to use", "imaging"), $macs_choice));
                 $f->pop();
             }
         }
