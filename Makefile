@@ -36,7 +36,7 @@ PYTHON = $(shell which python)
 PYTHON_PREFIX = $(shell $(PYTHON) -c "import sys; print sys.prefix")
 
 # List of files to install
-SBINFILES = services/bin/pulse2-package-server services/bin/pulse2-package-server-register-imaging services/contrib/msc/pulse2-msc-clean-database services/contrib/inventory/pulse2-inventory-clean-database services/bin/pulse2-inventory-server services/bin/pulse2-scheduler services/bin/pulse2-scheduler-manager services/bin/pulse2-launcher services/bin/pulse2-launchers-manager services/bin/pulse2-output-wrapper services/bin/pulse2-ping services/bin/pulse2-wol services/bin/pulse2-tcp-sproxy services/bin/pulse2-imaging-server
+SBINFILES = services/bin/pulse2-package-server services/bin/pulse2-package-server-register-imaging services/contrib/msc/pulse2-msc-clean-database services/contrib/inventory/pulse2-inventory-clean-database services/bin/pulse2-inventory-server services/bin/pulse2-scheduler services/bin/pulse2-scheduler-manager services/bin/pulse2-launcher services/bin/pulse2-launchers-manager services/bin/pulse2-output-wrapper services/bin/pulse2-ping services/bin/pulse2-wol services/bin/pulse2-tcp-sproxy
 
 FILESTOINSTALL = web/modules/dyngroup web/modules/msc web/modules/inventory web/modules/glpi web/modules/pkgs web/modules/pulse2 web/modules/imaging
 
