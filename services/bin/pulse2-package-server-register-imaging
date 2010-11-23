@@ -27,9 +27,10 @@ Pulse 2 Package Server Imaging module registration.
 import os
 import sys
 import getopt
-import xmlrpclib
+from twisted.internet import reactor
 
 from pulse2.package_server.config import P2PServerCP
+from pulse2.apis.clients import Pulse2Api
 
 try:
     import uuid
@@ -58,10 +59,15 @@ def display_help(code):
     print "With :"
     print "    -m http://...            : MMC Agent URL (mandatory)"
     print "    -n 'My Imaging Server'   : Imaging server name (mandatory)"
+    print "    -c 'cacert:localcert     : Verify peer with those certs"
     print "    -f                       : Alternate configuration file (%s)" % inifile
     print "    -u                       : Ask to Generate an UUID"
     print "    -h --help                : Display this help"
     sys.exit(code)
+
+
+class RegisterImagingApi(Pulse2Api):
+    name = 'registerrImagingApi'
 
 def generate_uuid():
     """
@@ -74,6 +80,9 @@ def generate_uuid():
 if __name__ == '__main__':
     my_name = None
     mmc_url = None
+    verify_peer = None
+    cacert = None
+    localcert = None
 
     try:
         opts, suivarg = getopt.getopt(sys.argv[1:], "f:n:m:h:u", ["help"])
@@ -91,6 +100,9 @@ if __name__ == '__main__':
             generate_uuid()
         elif option in ("-h", "--help"):
             display_help(0)
+        elif option in ("-c"):
+            verify_peer = True
+            cacert, localcert = argument.split(":")
         else:
             display_help(ERROR_BAD_ARGUMENT)
 
@@ -132,28 +144,32 @@ if __name__ == '__main__':
     print "%s %s" % (my_url, my_uuid)
 
     print "connect to %s"%(mmc_url)
-    client = xmlrpclib.ServerProxy(mmc_url)
+    client = RegisterImagingApi('', mmc_url, verify_peer, cacert, localcert)
+
+    def register_callBack(ret):
+        try:
+            # We should receive a list with two items
+            result, msg = ret
+        except ValueError:
+            print "registering failed, bad XML-RPC response from MMC agent."
+            sys.exit(ERROR_REGISTRATION_FAILURE)
+
+        if result:
+            print msg
+        else:
+            print msg
+            print "registering failed."
+            sys.exit(ERROR_REGISTRATION_FAILURE)
+
+        reactor.stop()
 
     try:
-        ret = client.imaging.imagingServerRegister(my_name, my_url, my_uuid)
+        ret = client.callRemote("imaging.imagingServerRegister", my_name, my_url, my_uuid)
+        ret.addCallback(register_callBack)
     except Exception, e:
         print "registering failed:", e
         sys.exit(ERROR_REGISTRATION_FAILURE)
 
-    try:
-        # We should receive a list with two items
-        result, msg = ret
-    except ValueError:
-        print "registering failed, bad XML-RPC response from MMC agent."
-        sys.exit(ERROR_REGISTRATION_FAILURE)
-
-    if result:
-        print msg
-    else:
-        print msg
-        print "registering failed."
-        sys.exit(ERROR_REGISTRATION_FAILURE)
-
+    reactor.run()
     sys.exit(0)
-
 
