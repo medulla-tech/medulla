@@ -367,12 +367,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         self.computer_disk = Table(
             'ComputerDisk',
             self.metadata,
+            Column('fk_target', Integer, ForeignKey('Target.id')),
             autoload = True
         )
 
         self.computer_partition = Table(
             'ComputerPartition',
             self.metadata,
+            Column('fk_computer_disk', Integer, ForeignKey('ComputerDisk.id')),
             autoload = True
         )
 
