@@ -85,7 +85,7 @@ if __name__ == '__main__':
     localcert = None
 
     try:
-        opts, suivarg = getopt.getopt(sys.argv[1:], "f:n:m:h:u", ["help"])
+        opts, suivarg = getopt.getopt(sys.argv[1:], "f:n:m:h:uc:", ["help"])
     except getopt.GetoptError:
         display_help(ERROR_BAD_ARGUMENT)
 
