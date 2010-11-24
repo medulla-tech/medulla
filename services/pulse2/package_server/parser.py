@@ -66,7 +66,7 @@ class PackageParserXML:
             root = root[0]
             pid = root.getAttribute('id')
             tmp = root.getElementsByTagName('name')[0]
-            name = tmp.firstChild.wholeText
+            name = tmp.firstChild.wholeText.strip()
             version = root.getElementsByTagName('version')[0]
             tmp = version.getElementsByTagName('numeric')[0]
             if tmp.firstChild != None:
@@ -75,13 +75,13 @@ class PackageParserXML:
                 v_num = 0
             tmp = version.getElementsByTagName('label')[0]
             if tmp.firstChild != None:
-                v_txt = tmp.firstChild.wholeText
+                v_txt = tmp.firstChild.wholeText.strip()
             else:
                 v_txt = "0"
             tmp = root.getElementsByTagName('description')
             if len(tmp) == 1 and tmp[0].firstChild != None:
                 tmp = tmp[0]
-                desc = tmp.firstChild.wholeText
+                desc = tmp.firstChild.wholeText.strip()
             else:
                 desc = ""
 
@@ -94,7 +94,7 @@ class PackageParserXML:
             for c in ['installInit', 'preCommand', 'command', 'postCommandSuccess', 'postCommandFailure']:
                 tmp = cmd.getElementsByTagName(c)
                 if len(tmp) == 1 and tmp[0].firstChild != None:
-                    command = tmp[0].firstChild.wholeText
+                    command = tmp[0].firstChild.wholeText.strip()
                     if tmp[0].hasAttribute('name'):
                         ncmd = tmp[0].getAttribute('name')
                     else:
