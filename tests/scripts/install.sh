@@ -46,19 +46,25 @@ RELEASE=`lsb_release -r -s`
 
 PKGS=
 
-if [ `arch` == "x86_64" ];
-then
-    ARCH=64
-else
-    ARCH=
+ARCH=
+if [ $DISTRIBUTION == "MandrivaLinux" ]; then
+    if [ `arch` == "x86_64" ];
+    then
+	ARCH=64
+    fi
 fi
 
 function packages_to_install () {
-    # MySQL
-    PKGS="$PKGS mysql mysql-client nfs-utils nfs-utils-clients"
-    if [ $RELEASE == "2010.0" -o $RELEASE == "2009.0" ];
+    if [ $DISTRIBUTION == "MandrivaLinux" ]; then
+        # MySQL
+	PKGS="$PKGS mysql mysql-client nfs-utils nfs-utils-clients"
+	if [ $RELEASE == "2010.0" -o $RELEASE == "2009.0" ];
         then
-        PKGS="$PKGS python-mysql atftp-server dhcp-server rdate cdrkit-genisoimage ocsinventory-agent php-mysql"
+            PKGS="$PKGS python-mysql atftp-server dhcp-server rdate cdrkit-genisoimage ocsinventory-agent php-mysql"
+	fi
+    fi
+    if [ $DISTRIBUTION == "Debian" ]; then
+	PKGS="mysql-server mysql-client nfs-kernel-server python-mysqldb atftpd atftp uuid-runtime dhcp3-server-ldap"
     fi
 }
 
@@ -78,8 +84,17 @@ if [ -z $FORCE ];
 fi
 
 packages_to_install
-urpmi --auto --no-suggests $PKGS
-rpm -q $PKGS
+if [ $DISTRIBUTION == "MandrivaLinux" ]; then
+    urpmi --auto --no-suggests $PKGS
+    rpm -q $PKGS
+fi
+if [ $DISTRIBUTION == "Debian" ]; then
+    # don't ask mysql password
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get install --yes $PKGS
+    dpkg -l $PKGS
+    export DEBIAN_FRONTEND=newt
+fi
 
 if [ -z $TMPCO ];
     then
@@ -161,12 +176,14 @@ FLUSH PRIVILEGES
 EOF
 
 # Basic installation of GLPI
-pushd /var/www/html
-wget -N https://forge.indepnet.net/attachments/download/597/glpi-0.72.4.tar.gz
-tar xzf glpi-0.72.4.tar.gz
-chown -R apache.apache glpi
-rm glpi-0.72.4.tar.gz
-popd
+if [ $DISTRIBUTION == "MandrivaLinux" ]; then
+    pushd /var/www/html
+    wget -N https://forge.indepnet.net/attachments/download/597/glpi-0.72.4.tar.gz
+    tar xzf glpi-0.72.4.tar.gz
+    chown -R apache.apache glpi
+    rm glpi-0.72.4.tar.gz
+    popd
+fi
 
 # configure base.ini
 sed -i "s/# \[computers\]/\[computers\]/" /etc/mmc/plugins/base.ini
@@ -210,20 +227,22 @@ fi
 
 # Set NFS exports, and restart NFS services
 cp $TMPCO/pulse2/services/contrib/imaging-server/exports /etc/exports
-if [ $RELEASE != "2006.0" ];
-then
-    /etc/init.d/nfs-common restart
-    /etc/init.d/nfs-server restart
-else
-    /etc/init.d/portmap restart
-    /etc/init.d/nfs restart
-fi
+if [ $DISTRIBUTION == "MandrivaLinux" ]; then
+    if [ $RELEASE != "2006.0" ];
+    then
+	/etc/init.d/nfs-common restart
+	/etc/init.d/nfs-server restart
+    else
+	/etc/init.d/portmap restart
+	/etc/init.d/nfs restart
+    fi
 
-if [ $RELEASE != "2006.0" ];
-then
+    if [ $RELEASE != "2006.0" ];
+    then
     # Set ATFTPD root directory
-    sed -i "s|ATFTPD_DIRECTORY=\"/var/lib/tftpboot\"|ATFTPD_DIRECTORY=\"/var/lib/pulse2/imaging\"|" /etc/sysconfig/atftpd
-    /etc/init.d/atftpd restart
+	sed -i "s|ATFTPD_DIRECTORY=\"/var/lib/tftpboot\"|ATFTPD_DIRECTORY=\"/var/lib/pulse2/imaging\"|" /etc/sysconfig/atftpd
+	/etc/init.d/atftpd restart
+    fi
 fi
 
 # Launch mmc-agent
