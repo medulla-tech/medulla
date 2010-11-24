@@ -33,10 +33,11 @@ then
     exit 1
 fi
 
-if [ ! -f "/bin/lsb_release" ];
+if [ ! -f `which lsb_release` ];
 then
     echo "Please install lsb_release."
     echo "urpmi lsb-release"
+    echo "apt-get install lsb-release"
     exit 1
 fi
 
