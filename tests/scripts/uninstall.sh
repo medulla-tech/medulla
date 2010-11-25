@@ -44,7 +44,7 @@ fi
 [ -f /etc/init.d/pulse2-inventory-server ] && /etc/init.d/pulse2-inventory-server stop || true
 
 # DROP databases
-if [ -f /usr/bin/mysqladmin ];
+if [ -f /usr/bin/mysql ];
     then
     echo "drop database if exists pulse2" | mysql
     echo "drop database if exists msc" | mysql
