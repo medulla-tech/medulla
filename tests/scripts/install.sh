@@ -64,7 +64,7 @@ function packages_to_install () {
 	fi
     fi
     if [ $DISTRIBUTION == "Debian" ]; then
-	PKGS="mysql-server mysql-client nfs-kernel-server python-mysqldb atftpd atftp uuid-runtime dhcp3-server-ldap"
+	PKGS="mysql-server mysql-client nfs-kernel-server python-mysqldb atftpd atftp uuid-runtime dhcp3-server-ldap mkisofs"
     fi
 }
 
