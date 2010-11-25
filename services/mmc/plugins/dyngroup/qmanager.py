@@ -142,14 +142,14 @@ class QueryManager(Singleton):
         @rtype: str
         @return: type of a given criterion for a module
         """
-        from sqlalchemy.databases.mysql import MSDate, MSMediumInteger
+        from sqlalchemy.databases.mysql import MSDate, MSInteger
         retType = ""
         try:
             possibilities = self.extendedPossibilities[moduleName][criterion]
             ret = possibilities[1]
             if isinstance(ret, MSDate):
                 retType = "date"
-            elif isinstance(ret, MSMediumInteger):
+            elif isinstance(ret, MSInteger):
                 retType = "int"
 
         except Exception, e:
