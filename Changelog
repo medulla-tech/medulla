@@ -1,0 +1,9 @@
+Pulse 2 1.3.0
+=============
+
+ * The new imaging module allows bare-metal backup and recovery under
+   Windows or GNU/Linux
+ * Profile system for computers
+ * New features in the MMC web interface for our native	inventory backend
+ * Support for GLPI backend version 0.72.x and latest 0.78 version
+ * More details at http://pulse2.mandriva.org/milestone/1.3.0
