@@ -3,6 +3,7 @@ mmc-core 3.0.1 (MMC agent)
 
  * MMC agent session timeout is now configurable.
  * Add a subscription and support information system
+ * More details at http://mds.mandriva.org/milestone/MMC-CORE%203.0.1
 
 mmc-core 3.0.0 (MMC agent)
 --------------------------
