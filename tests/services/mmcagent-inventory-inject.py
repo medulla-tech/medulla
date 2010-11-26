@@ -64,21 +64,6 @@ class class01inventoryReportTest(TestCase):
     Inventory test class
     """
 
-    def test101inventoryInject(self):
-        ocs = None
-        for cmd in ['/usr/sbin/ocsinventory-agent',
-                    '/usr/bin/ocsinventory-agent']:
-            if os.path.exists(cmd):
-                ocs = cmd
-        if not ocs:
-            print "OCS Inventory Agent is not installed, skipping test"
-            sys.exit(0)
-        # Launch the inventory agent to report an inventory
-        os.system(ocs + ' --server=http://127.0.0.1:9999')
-        time.sleep(60)
-        result = client.inventory.inventoryExists('UUID3')
-        self.assertTrue(result)
-
     def test102hasInventory(self):
         # Load the full inventory to test each part separately
         inventory = client.inventory.getLastMachineInventoryFull({})
@@ -94,7 +79,7 @@ class class01inventoryReportTest(TestCase):
         """
         os.system('gunzip -c ../data/ocs-ubuntu-10.04-lts.xml.gz | $PULSE2/services/contrib/Ocsinventory_local.pl -u http://127.0.0.1:9999 --stdin')
         time.sleep(60)
-        result = client.inventory.inventoryExists('UUID4')
+        result = client.inventory.inventoryExists('UUID3')
         self.assertTrue(result)
 
     def test104macosxInject(self):
@@ -103,7 +88,7 @@ class class01inventoryReportTest(TestCase):
         """
         os.system('gunzip -c ../data/ocs-os-x-10.4.xml.gz | $PULSE2/services/contrib/Ocsinventory_local.pl -u http://127.0.0.1:9999 --stdin')
         time.sleep(60)
-        result = client.inventory.inventoryExists('UUID5')
+        result = client.inventory.inventoryExists('UUID4')
         self.assertTrue(result)
 
 # Launch of the tests
