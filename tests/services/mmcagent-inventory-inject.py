@@ -65,12 +65,16 @@ class class01inventoryReportTest(TestCase):
     """
 
     def test101inventoryInject(self):
-        OCS = '/usr/sbin/ocsinventory-agent'
-        if not os.path.exists(OCS):
+        ocs = None
+        for cmd in ['/usr/sbin/ocsinventory-agent',
+                    '/usr/bin/ocsinventory-agent']:
+            if os.path.exists(cmd):
+                ocs = cmd
+        if not ocs:
             print "OCS Inventory Agent is not installed, skipping test"
             sys.exit(0)
         # Launch the inventory agent to report an inventory
-        os.system(OCS + ' --server=http://127.0.0.1:9999')
+        os.system(ocs + ' --server=http://127.0.0.1:9999')
         time.sleep(60)
         result = client.inventory.inventoryExists('UUID3')
         self.assertTrue(result)
