@@ -157,7 +157,7 @@ class MmcServer(xmlrpc.XMLRPC,object):
                 self.logger.warning("Function can't be called because the user is not logged in")
                 raise Fault(8003, "Can't use MMC agent server because you are not logged in")
             else:
-                if not self._needAuth(functionPath):
+                if not s.loggedin and not self._needAuth(functionPath):
                     # Provide a security context when a method which doesn't
                     # require a user authentication is called
                     s = request.getSession()
