@@ -2476,8 +2476,7 @@ class SubscriptionManager(Singleton):
         }
         if dynamic:
             # we add the number of user and computers we have right now
-            users = searchUserAdvanced()
-            ret['installed_users'] = len(users)
+            ret['installed_users'], _ = searchUserAdvanced()
             ret['too_much_users'] = (ret['installed_users'] > ret['users'])
             if ComputerManager().isActivated():
                 ret['installed_computers'] = ComputerManager().getTotalComputerCount()
