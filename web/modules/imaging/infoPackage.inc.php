@@ -28,8 +28,8 @@
  */
 
 $mod = new Module("imaging");
-$mod->setVersion("1.0.0");
-$mod->setRevision('$Rev 0$');
+$mod->setVersion("1.3.0");
+$mod->setRevision('$Rev$');
 $mod->setDescription(_T("Imaging service","imaging"));
 $mod->setAPIVersion("0:0:0");
 $mod->setPriority(600);

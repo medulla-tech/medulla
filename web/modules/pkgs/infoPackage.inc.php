@@ -27,7 +27,7 @@
  */
 // hide msc module for the moment
 $mod = new Module("pkgs");
-$mod->setVersion("2.0.0");
+$mod->setVersion("1.3.0");
 $mod->setRevision('$Rev$');
 $mod->setDescription(_T("Packages", "pkgs"));
 $mod->setAPIVersion("0:0:0");

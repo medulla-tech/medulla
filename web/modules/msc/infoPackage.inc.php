@@ -36,7 +36,7 @@ $submod = & $base->getSubmod('computers');
 /* Set up MSC pages only when the computers module is available */
 if (!empty($submod)) {
     $mod = new Module("msc");
-    $mod->setVersion("2.0.0");
+    $mod->setVersion("1.3.0");
     $mod->setRevision('$Rev$');
     $mod->setDescription(_T("Secure Control", "msc"));
     $mod->setAPIVersion("0:0:0");
@@ -57,7 +57,7 @@ if (!empty($submod)) {
     $submodmsc->addPage($page);
     $page = new Page("finished", _T('Show finished task\'s logs', 'msc'));
     $submodmsc->addPage($page);
-    
+
     $page = new Page("custom", _T('Show custom state task\'s logs', 'msc'));
     $submodmsc->addPage($page);
 
@@ -222,12 +222,12 @@ if (!empty($submod)) {
     $page->setOptions(array("visible"=>False, "noHeader"=>True));
     $page->setFile("modules/msc/msc/statuscsv.php");
     $submod->addPage($page);
-    
+
     $page = new Page("ajaxLogsFilter", _T('logs list', 'msc'));
     $page->setFile("modules/msc/msc/ajaxLogsFilter.php");
     $page->setOptions(array("visible"=>False, "AJAX"=> True));
     $submod->addPage($page);
-    
+
     $page = new Page("ajaxPackageFilter", _T('logs list', 'msc'));
     $page->setFile("modules/msc/msc/ajaxPackageFilter.php");
     $page->setOptions(array("visible"=>False, "AJAX"=> True));

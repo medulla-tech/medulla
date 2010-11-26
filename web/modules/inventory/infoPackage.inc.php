@@ -28,7 +28,7 @@
  */
 
 $mod = new Module("inventory");
-$mod->setVersion("2.0.0");
+$mod->setVersion("1.3.0");
 $mod->setRevision('$Rev$');
 $mod->setDescription(_T("Inventory", "inventory"));
 $mod->setAPIVersion("0:0:0");
