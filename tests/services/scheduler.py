@@ -21,6 +21,10 @@
 # You should have received a copy of the GNU General Public License
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 
+"""
+Test module for the Pulse 2 scheduler
+"""
+
 import sys
 import xmlrpclib
 import unittest
@@ -28,10 +32,6 @@ import unittest
 from tempfile import mkdtemp
 from testutils import generation_Launcher, generation_Commands, generation_Machine
 from os import removedirs, remove, getcwd, system
-
-"""
-Test module for the Pulse 2 scheduler
-"""
 
 ipserver='localhost' # Address of pulse2 scheduler
 uuid='UUID1' # Client UUID
@@ -54,8 +54,6 @@ del(sys.argv[1:])
 server = xmlrpclib.ServerProxy('%s://username:password@%s:8000/' % (protocol, ipserver))
 
 connectionC=generation_Commands(dbdriver,dbhost,dbport)
-
-connectionM=generation_Machine(dbdriver,dbhost,dbport)
 
 class class01schedulerTest(unittest.TestCase):
     """
@@ -178,16 +176,6 @@ class class03supressionTest(unittest.TestCase):
         c.execute(""" DELETE FROM target WHERE id="1" """)
         c.close()
 
-    def test303supdbMachine(self):
-        m=connectionM.connect()
-        m.execute(""" DELETE FROM Inventory WHERE id="1" """)
-        m.execute(""" DELETE FROM Machine WHERE id="1" """)
-        m.execute(""" DELETE FROM Network WHERE id="1" """)
-        m.execute(""" DELETE FROM hasCustom WHERE machine="1" """)
-        m.execute(""" DELETE FROM hasEntity WHERE machine="1" """)
-        m.execute(""" DELETE FROM hasNetwork WHERE machine="1" """)
-        m.close()
-
 
 system ("/etc/init.d/pulse2-scheduler restart")
 
@@ -205,8 +193,7 @@ if mode=="debug":
         print "One or more test are failed or have an unexpected error"
     else:
         print "All function work"
-    
+
     print "Pserver\'s test has run %s test" %(nb)
 else:
-
     unittest.main()
