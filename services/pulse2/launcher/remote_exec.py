@@ -55,6 +55,7 @@ def remote_push(command_id, client, files_list, mode, wrapper_timeout):
         real_files_list = files_list
 
         if not LauncherConfig().is_rsync_available:
+            logging.getLogger().warn('Can\'t do remote push because rsync is not available')
             return False
         # Build "exec" command
         real_command  = [LauncherConfig().rsync_path]
