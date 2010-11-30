@@ -1267,15 +1267,12 @@ class ImagingRpcProxy(RpcProxyI):
         @rtype: int
         """
         ctx = self.currentContext
-        query = ComputerManager().getMachineMac(ctx, {'uuid':computerUUID})
+        query = ComputerManager().getComputersNetwork(ctx, {'uuid':computerUUID})
         try:
-            macaddress = query[computerUUID]
+            macaddress = query[0][1]['macAddress']
         except KeyError:
             macaddress = []
         # if we have more than one mac address, we ask the user to chose which NIC he wants
-        #if len(macaddress) > 1:
-        #    # More than one MAC address
-        #    ret = 2
         if len(macaddress) < 1:
             # No MAC address
             ret = 1
