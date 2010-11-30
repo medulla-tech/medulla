@@ -726,7 +726,7 @@ class Glpi07(DyngroupDatabaseHelper):
             nets = self.getMachinesNetwork(uuids)
             for uuid in ret:
                 try:
-                    (ret[uuid][1]['macAddress'], ret[uuid][1]['ipHostNumber'], ret[uuid][1]['subnetMask'], ret[uuid][1]['domain']) = self.orderIpAdresses(uuid, names[uuid], nets[uuid])
+                    (ret[uuid][1]['macAddress'], ret[uuid][1]['ipHostNumber'], ret[uuid][1]['subnetMask'], ret[uuid][1]['domain'], ret[uuid][1]['networkUuids']) = self.orderIpAdresses(uuid, names[uuid], nets[uuid])
                     if ret[uuid][1]['domain'] != '':
                         ret[uuid][1]['fullname'] = ret[uuid][1]['cn'][0]+'.'+ret[uuid][1]['domain'][0]
                     else:
@@ -755,7 +755,7 @@ class Glpi07(DyngroupDatabaseHelper):
             'objectUUID': [uuid]
         }
         if advanced:
-            (ret['macAddress'], ret['ipHostNumber'], ret['subnetMask'], domain) = self.orderIpAdresses(uuid, machine.name, self.getMachineNetwork(uuid))
+            (ret['macAddress'], ret['ipHostNumber'], ret['subnetMask'], domain, ret['networkUuids']) = self.orderIpAdresses(uuid, machine.name, self.getMachineNetwork(uuid))
             if domain == None:
                 domain = ''
             elif domain != '':
@@ -1604,6 +1604,7 @@ class Glpi07(DyngroupDatabaseHelper):
         ret_ifaddr = []
         ret_netmask = []
         ret_domain = []
+        ret_networkUuids = []
         idx_good = 0
         failure = [True, True]
         for iface in netiface:
@@ -1612,6 +1613,7 @@ class Glpi07(DyngroupDatabaseHelper):
                     ret_ifmac.append(iface['ifmac'])
                     ret_ifaddr.append(iface['ifaddr'])
                     ret_netmask.append(iface['netmask'])
+                    ret_networkUuids.append(iface['uuid'])
                     if 'domain' in iface:
                         ret_domain.append(iface['domain'])
                     else:
@@ -1622,6 +1624,7 @@ class Glpi07(DyngroupDatabaseHelper):
                         ret_ifmac.insert(0, iface['ifmac'])
                         ret_ifaddr.insert(0, iface['ifaddr'])
                         ret_netmask.insert(0, iface['netmask'])
+                        ret_networkUuids.insert(0, iface['uuid'])
                         if 'domain' in iface:
                             ret_domain.insert(0, iface['domain'])
                         else:
@@ -1631,6 +1634,7 @@ class Glpi07(DyngroupDatabaseHelper):
                         ret_ifmac.insert(idx_good, iface['ifmac'])
                         ret_ifaddr.insert(idx_good, iface['ifaddr'])
                         ret_netmask.insert(idx_good, iface['netmask'])
+                        ret_networkUuids.insert(idx_good, iface['uuid'])
                         if 'domain' in iface:
                             ret_domain.insert(idx_good, iface['domain'])
                         else:
@@ -1642,7 +1646,7 @@ class Glpi07(DyngroupDatabaseHelper):
                 self.logger.warn("Computer %s (uuid:%s) does not have any gateway"%(hostname, uuid))
             else:
                 self.logger.warn("Computer %s (uuid:%s) does not have any gateway in it's network"%(hostname, uuid))
-        return (ret_ifmac, ret_ifaddr, ret_netmask, ret_domain)
+        return (ret_ifmac, ret_ifaddr, ret_netmask, ret_domain, ret_networkUuids)
 
     def getMachineIp(self, uuid):
         """
@@ -1752,6 +1756,7 @@ class UserProfile(object):
 class Network(object):
     def toH(self):
         return {
+            'uuid':toUUID(self.ID),
             'name': self.name,
             'ifaddr': self.ifaddr,
             'ifmac': self.ifmac,
@@ -1762,6 +1767,7 @@ class Network(object):
 
     def to_a(self):
         return [
+            ['uuid', toUUID(self.ID)],
             ['name', self.name],
             ['ifaddr', self.ifaddr],
             ['ifmac', self.ifmac],
