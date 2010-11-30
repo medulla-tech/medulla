@@ -208,7 +208,7 @@ if (isset($_POST["bunregister"])) {
     } else if (($type == '')
                && ($is_registering)
                && (xmlrpc_checkComputerForImaging($target_uuid) != 0)) {
-        $msg = _T("The computer either doesn't have a MAC address, either has more than one MAC address. It can't be registered into the imaging module.", "imaging");
+        $msg = _T("The computer either doesn't have a MAC address, either has more than one MAC address or the only NIC doesn't have any network mask. It can't be registered into the imaging module.", "imaging");
         $f->add(new TitleElement($msg, 3));
         $f->display();
     } else if (($type == 'group')
