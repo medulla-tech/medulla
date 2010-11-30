@@ -303,19 +303,23 @@ if (isset($_POST["bunregister"])) {
             $networks = xmlCall('base.getComputersNetwork', array(array('uuid'=>$_GET["target_uuid"])));
             $networks = $networks[0][1];
 
-            if (is_array($networks) && count($networks) > 1) {
-                $f->push(new Table());
-                $macs_choice = new MySelectItem("choose_network", 'exclusive_orders');
-                $elements = array();
-                $values = array();
-                foreach (range(0, count($networks['macAddress'])-1) as $i) {
-                    $elements[] = sprintf("%s / %s", $networks['ipHostNumber'][$i], $networks['macAddress'][$i]);
-                    $values[] = $networks['networkUuids'][$i]; # sprintf("v : %s/%s", $networks['ipHostNumber'][$i], $networks['macAddress'][$i]);
+            if (is_array($networks) && count($networks) > 1 and isset($networks['macAddress'])) {
+                if (count($networks['macAddress']) > 1) {
+                    $f->push(new Table());
+                    $macs_choice = new MySelectItem("choose_network", 'exclusive_orders');
+                    $elements = array();
+                    $values = array();
+                    foreach (range(0, count($networks['macAddress'])-1) as $i) {
+                        $elements[] = sprintf("%s / %s", $networks['ipHostNumber'][$i], $networks['macAddress'][$i]);
+                        $values[] = $networks['networkUuids'][$i]; # sprintf("v : %s/%s", $networks['ipHostNumber'][$i], $networks['macAddress'][$i]);
+                    }
+                    $macs_choice->setElements($elements);
+                    $macs_choice->setElementsVal($values);
+                    $f->add(new TrFormElement(_T("Choose the MAC address you want to use", "imaging"), $macs_choice));
+                    $f->pop();
+                } elseif (count($networks['macAddress']) == 1) {
+                    $f->add(new HiddenTpl("choose_network"),           array("value" => $networks['networkUuids'][0],            "hide" => True));
                 }
-                $macs_choice->setElements($elements);
-                $macs_choice->setElementsVal($values);
-                $f->add(new TrFormElement(_T("Choose the MAC address you want to use", "imaging"), $macs_choice));
-                $f->pop();
             }
         }
 
