@@ -45,7 +45,7 @@ foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab', 'part', 
 }
 
 // Generate the page
-$p = new PageGenerator(_T("Inventory changes"));
+$p = new PageGenerator(_T("Inventory changes", "inventory"));
 $p->setSideMenu($sidemenu);
 
 // Call the method to get the differences for a machine and an inventory
@@ -72,8 +72,8 @@ foreach($added_elems as $part=>$added_part) {
             }
 
             // Create a ListInfos to display the infos of the element in a list
-            $list = new ListInfos(array_keys($elem), _T("Element"));
-            $list->addExtraInfo(array_values($elem), _T("Values"));
+            $list = new ListInfos(array_keys($elem), _T("Element", "inventory"));
+            $list->addExtraInfo(array_values($elem), _T("Value", "inventory"));
             $list->setName(_T($part));
             $list->setTableHeaderPadding(0);
             // Append the ListInfo in an array, to display all ListInfos together at the end of the page loading
@@ -97,8 +97,8 @@ foreach($removed_elems as $part=>$removed_part) {
             }
 
             // Create a ListInfos to display the infos of the element in a list
-            $list = new ListInfos(array_keys($elem), _T("Element"));
-            $list->addExtraInfo(array_values($elem), _T("Values"));
+            $list = new ListInfos(array_keys($elem), _T("Element", "inventory"));
+            $list->addExtraInfo(array_values($elem), _T("Value", "inventory"));
             $list->setName(_T($part));
             $list->setTableHeaderPadding(0);
             // Append the ListInfo in an array, to display all ListInfos together at the end of the page loading
@@ -111,7 +111,7 @@ foreach($removed_elems as $part=>$removed_part) {
 $p->display();
 
 // Display the added elements (without navbar)
-print(_T("<h3>Added elements</h3>"));
+print("<h3>" . _T("Added elements", "inventory") . "</h3>");
 foreach($added_part_lists as $list) {
     print('<h4>' . $list->name . '</h4>');
     $list->display($navbar = 0, $header = 0);
@@ -120,7 +120,7 @@ foreach($added_part_lists as $list) {
 print "<br/><br/><br/>";
 
 // Display the removed elements (without navbar)
-print(_T("<h3>Removed elements</h3>"));
+print("<h3>" . _T("Removed elements", "inventory") . "</h3>");
 foreach($removed_part_lists as $list) {
     print('<h4>' . $list->name . '</h4>');
     $list->display($navbar = 0, $header = 0);

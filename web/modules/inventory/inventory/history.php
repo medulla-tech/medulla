@@ -63,7 +63,7 @@ foreach($inventory_history as $inventory) {
     $inventoriesDates[] = substr(_toDate($inventory[1]),0, 10);
     // Add the details link (unless we are on the last line)
     if($i < count($inventory_history) - 1) {
-        $detailsButtons[] = new ActionItem(_("View differences since previous inventory"), "invdiff", "display");
+        $detailsButtons[] = new ActionItem(_T("View differences since previous inventory", "inventory"), "invdiff", "display");
     } else {
         $detailsButtons[] = new EmptyActionItem();
     }
@@ -72,12 +72,12 @@ foreach($inventory_history as $inventory) {
 }
 
 // Create a ListInfos that will display the inventories dates
-$list = new ListInfos($inventoriesDates, _T("Inventory Date"));
+$list = new ListInfos($inventoriesDates, _T("Inventory Date", "inventory"));
 
 // Add extra params in the "details" link
 $list->setParamInfo($detailsParams);
 $list->disableFirstColumnActionLink();
-$list->setName(_T("Inventory"));
+$list->setName(_T("Inventory", "inventory"));
 $list->addActionItemArray($detailsButtons);
 $list->setTableHeaderPadding(0);
 $list->start = 0;
