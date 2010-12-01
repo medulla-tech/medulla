@@ -24,6 +24,6 @@
 
 _("Computer's IP address");
 _("Computer's MAC address");
-_("Computer's network address");
+_("Computer's netmask address");
 
 ?>
