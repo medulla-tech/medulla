@@ -100,9 +100,6 @@ msgid "Add a user"
 msgstr "Ajout d'un utilisateur"
 
 #: modules/base/computers/localSidebar.php:10
-#: modules/base/computers/localSidebar_flymake.php:10
-#: modules/base/computers/localSidebar_flymake_flymake.php:10
-#: modules/base/computers/localSidebar_flymake_flymake_flymake.php:10
 msgid "Add computer"
 msgstr "Ajout d'un ordinateur"
 
@@ -140,9 +137,6 @@ msgid "Ajax part of computers list"
 msgstr "Partie ajaxifiée de la liste des ordinateurs"
 
 #: modules/base/computers/localSidebar.php:7
-#: modules/base/computers/localSidebar_flymake.php:7
-#: modules/base/computers/localSidebar_flymake_flymake.php:7
-#: modules/base/computers/localSidebar_flymake_flymake_flymake.php:7
 msgid "All computers"
 msgstr "Tous les ordinateurs"
 
@@ -315,9 +309,6 @@ msgid "Complete Traceback"
 msgstr "Traceback complète"
 
 #: modules/base/computers/trads.php:26
-#: modules/base/computers/trads_flymake.php:26
-#: modules/base/computers/trads_flymake_flymake.php:26
-#: modules/base/computers/trads_flymake_flymake_flymake.php:26
 msgid "Computer Name"
 msgstr "Nom de l'ordinateur"
 
@@ -464,9 +455,6 @@ msgid "Delete photo"
 msgstr "Supprimer photo"
 
 #: modules/base/computers/delete.php:35
-#: modules/base/computers/delete_flymake.php:35
-#: modules/base/computers/delete_flymake_flymake.php:35
-#: modules/base/computers/delete_flymake_flymake_flymake.php:35
 msgid "Delete this computer"
 msgstr "Supprimer cet ordinateur"
 
@@ -483,16 +471,10 @@ msgid "Disable user"
 msgstr "Désactivation d'un utilisateur"
 
 #: modules/base/computers/trads.php:27
-#: modules/base/computers/trads_flymake.php:27
-#: modules/base/computers/trads_flymake_flymake.php:27
-#: modules/base/computers/trads_flymake_flymake_flymake.php:27
 msgid "Display Name"
 msgstr "Nom affiché"
 
 #: modules/base/computers/delete.php:38
-#: modules/base/computers/delete_flymake.php:38
-#: modules/base/computers/delete_flymake_flymake.php:38
-#: modules/base/computers/delete_flymake_flymake_flymake.php:38
 msgid "Do you want a backup to be done ?"
 msgstr "Souhaitez-vous qu'une sauvegarde des données soit faite ?"
 
@@ -1251,9 +1233,6 @@ msgstr ""
 "version de l'agent MMC."
 
 #: modules/base/computers/delete.php:31
-#: modules/base/computers/delete_flymake.php:31
-#: modules/base/computers/delete_flymake_flymake.php:31
-#: modules/base/computers/delete_flymake_flymake_flymake.php:31
 msgid "The computer has been deleted."
 msgstr "Cet ordinateur a été supprimé"
 
