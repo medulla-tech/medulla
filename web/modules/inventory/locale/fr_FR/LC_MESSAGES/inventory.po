@@ -9,14 +9,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - Inventory Web Interface 1.2.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-08 09:20+0200\n"
-"PO-Revision-Date: 2010-10-08 09:40+0200\n"
+"POT-Creation-Date: 2010-12-01 17:31+0100\n"
+"PO-Revision-Date: 2010-12-01 17:43+0100\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: Pulse 2 developers <pulse2-devel@mandrivalinux.org>\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: web/modules/inventory/inventory/tabs.php:40
@@ -30,12 +30,8 @@ msgid "%s's inventory"
 msgstr "Inventaire de %s"
 
 #: web/modules/inventory/inventory/inventory_diff.php:114
-msgid "<h3>Added elements</h3>"
-msgstr "<h3>Eléments ajoutés</h3>"
-
-#: web/modules/inventory/inventory/inventory_diff.php:123
-msgid "<h3>Removed elements</h3>"
-msgstr "<h3>Eléments supprimés</h3>"
+msgid "Added elements"
+msgstr "Éléments ajoutés"
 
 #: web/modules/inventory/inventory/infos.php:33
 msgid "Additionnal informations"
@@ -368,6 +364,10 @@ msgstr "Entête"
 msgid "HighMem"
 msgstr "Mémoire haute"
 
+#: web/modules/inventory/inventory/tabs.php:60
+msgid "History"
+msgstr "Historique"
+
 #: web/modules/inventory/inventory/i18n_labels.php:82
 msgid "IP"
 msgstr "IP"
@@ -586,8 +586,8 @@ msgstr "Seulement les nouveaux ordinateurs"
 msgid "OperatingSystem"
 msgstr "Système d'exploitation"
 
-#: web/modules/inventory/inventory/i18n_labels.php:110
 #: web/modules/inventory/inventory/pci.php:27
+#: web/modules/inventory/inventory/i18n_labels.php:110
 msgid "Pci"
 msgstr "Pci"
 
@@ -691,6 +691,10 @@ msgstr "Onglet registre pour un ordinateur dans un groupe"
 #: web/modules/inventory/infoPackage.inc.php:145
 msgid "Registry tab for a group"
 msgstr "Onglet registre pour un groupe"
+
+#: web/modules/inventory/inventory/inventory_diff.php:123
+msgid "Removed elements"
+msgstr "Éléments supprimés"
 
 #: web/modules/inventory/inventory/i18n_labels.php:125
 msgid "Resolution"
@@ -847,15 +851,12 @@ msgstr "Utilisateur"
 msgid "VRAMSize"
 msgstr "Taille de la VRAM"
 
-#: web/modules/inventory/inventory/i18n_labels.php:156
 #: web/modules/inventory/inventory/view.php:79
-msgid "Value"
-msgstr "Valeur"
-
+#: web/modules/inventory/inventory/i18n_labels.php:156
 #: web/modules/inventory/inventory/inventory_diff.php:76
 #: web/modules/inventory/inventory/inventory_diff.php:101
-msgid "Values"
-msgstr "Valeurs"
+msgid "Value"
+msgstr "Valeur"
 
 #: web/modules/inventory/inventory/i18n_labels.php:157
 msgid "Vendor"
@@ -902,447 +903,3 @@ msgstr "Date de fonctionnement"
 #: web/modules/inventory/inventory/graphs.php:47
 msgid "back"
 msgstr "retour"
-
-#, fuzzy
-#~ msgid "%s's inventory (%s)"
-#~ msgstr "Inventaire de %s"
-
-#, fuzzy
-#~ msgid "Add"
-#~ msgstr "Adresse MAC"
-
-#, fuzzy
-#~ msgid "Available images"
-#~ msgstr "Disponibilité"
-
-#, fuzzy
-#~ msgid "Available masters"
-#~ msgstr "Disponibilité"
-
-#, fuzzy
-#~ msgid "Command"
-#~ msgstr "Commentaires"
-
-#, fuzzy
-#~ msgid "Command name"
-#~ msgstr "Nom de l'ordinateur"
-
-#, fuzzy
-#~ msgid "Command status"
-#~ msgstr "Commentaires"
-
-#, fuzzy
-#~ msgid "Computer UUID Sent"
-#~ msgstr "Nom de l'ordinateur"
-
-#, fuzzy
-#~ msgid "Computers list"
-#~ msgstr "Machine"
-
-#, fuzzy
-#~ msgid "Creation"
-#~ msgstr "Légende"
-
-#, fuzzy
-#~ msgid "Creation date"
-#~ msgstr "Légende"
-
-#, fuzzy
-#~ msgid "Csv export"
-#~ msgstr "Export au format CSV"
-
-#, fuzzy
-#~ msgid "Delay between two connections"
-#~ msgstr "Différences entre deux inventaires"
-
-#, fuzzy
-#~ msgid "Delete a group of computers"
-#~ msgstr "Inventaire d'un groupe de machines"
-
-#, fuzzy
-#~ msgid "Descriptions"
-#~ msgstr "Description"
-
-#, fuzzy
-#~ msgid "Detailed page of save a group of computers"
-#~ msgstr "Inventaire d'un groupe de machines"
-
-#, fuzzy
-#~ msgid "Display a groups of computers"
-#~ msgstr "Inventaire d'un groupe de machines"
-
-#, fuzzy
-#~ msgid "Down service"
-#~ msgstr "Périphérique"
-
-#, fuzzy
-#~ msgid "Download file from a computer"
-#~ msgstr "Onglet contrôleur pour un ordinateur"
-
-#, fuzzy
-#~ msgid "Duplicate"
-#~ msgstr "Application"
-
-#, fuzzy
-#~ msgid "Execute file"
-#~ msgstr "Taille de l'exécutable"
-
-#, fuzzy
-#~ msgid "Execution failed"
-#~ msgstr "Taille de l'exécutable"
-
-#, fuzzy
-#~ msgid "First operation at"
-#~ msgstr "Première apparition"
-
-#, fuzzy
-#~ msgid "From computer"
-#~ msgstr "Nouvel ordinateur"
-
-#, fuzzy
-#~ msgid "GLPI controller tab"
-#~ msgstr "Liste des contrôleurs"
-
-#, fuzzy
-#~ msgid "Group creation"
-#~ msgstr "Localisation"
-
-#, fuzzy
-#~ msgid "Group list"
-#~ msgstr "Liste des cartes son"
-
-#, fuzzy
-#~ msgid "Group name"
-#~ msgstr "Nom de l'ordinateur"
-
-#, fuzzy
-#~ msgid "Hardware Inventory updated"
-#~ msgstr "Date de l'inventaire"
-
-#, fuzzy
-#~ msgid "Imaging on computer"
-#~ msgstr "Seulement les nouveaux ordinateurs"
-
-#, fuzzy
-#~ msgid "Inventory (GLPI) on a groups of machines"
-#~ msgstr "Inventaire d'un groupe de machines"
-
-#, fuzzy
-#~ msgid "Inventory (GLPI) on machine"
-#~ msgstr "Changement dans l'inventaire"
-
-#, fuzzy
-#~ msgid "Inventory done"
-#~ msgstr "Date de l'inventaire"
-
-#, fuzzy
-#~ msgid "Inventory failed"
-#~ msgstr "Date de l'inventaire"
-
-#, fuzzy
-#~ msgid "Inventory in progress"
-#~ msgstr "Changement dans l'inventaire"
-
-#, fuzzy
-#~ msgid "Inventory on this group"
-#~ msgstr "Inventaire de %s"
-
-#, fuzzy
-#~ msgid "Inventory on this profile"
-#~ msgstr "Inventaire de %s"
-
-#, fuzzy
-#~ msgid "List all groups of computers"
-#~ msgstr "Inventaire d'un groupe de machines"
-
-#, fuzzy
-#~ msgid "List all profiles of computers"
-#~ msgstr "Inventaire d'un groupe de machines"
-
-#, fuzzy
-#~ msgid "MAC Addr."
-#~ msgstr "Adresse MAC"
-
-#, fuzzy
-#~ msgid "MSC bundle tab for a group"
-#~ msgstr "Onglet contrôleur pour un groupe"
-
-#, fuzzy
-#~ msgid "MSC history tab for a group"
-#~ msgstr "Onglet registre pour un groupe"
-
-#, fuzzy
-#~ msgid "MSC history tab for a machine"
-#~ msgstr "Onglet registre pour un ordinateur"
-
-#, fuzzy
-#~ msgid "MSC launch tab for a group"
-#~ msgstr "Onglet logiciel pour un groupe"
-
-#, fuzzy
-#~ msgid "MSC logs tab for a group"
-#~ msgstr "Onglet BIOS pour un groupe"
-
-#, fuzzy
-#~ msgid "Machine"
-#~ msgstr "Type de machine"
-
-#, fuzzy
-#~ msgid "Media size"
-#~ msgstr "Média"
-
-#, fuzzy
-#~ msgid "Menu configuration"
-#~ msgstr "Listes des cartes réseau et de leur configuration"
-
-#, fuzzy
-#~ msgid "Mode"
-#~ msgstr "Modèle"
-
-#, fuzzy
-#~ msgid "Name :"
-#~ msgstr "Nom"
-
-#, fuzzy
-#~ msgid "Names"
-#~ msgstr "Nom"
-
-#, fuzzy
-#~ msgid "Not enough informations"
-#~ msgstr "Informations additionnelles"
-
-#, fuzzy
-#~ msgid "Package version"
-#~ msgstr "Version du matériel"
-
-#, fuzzy
-#~ msgid "Profiles list"
-#~ msgstr "Liste des imprimantes"
-
-#, fuzzy
-#~ msgid "Progression"
-#~ msgstr "Version du produit"
-
-#, fuzzy
-#~ msgid "Register a computer in the imaging module"
-#~ msgstr "Onglet registre pour un ordinateur dans un groupe"
-
-#, fuzzy
-#~ msgid "Register computer '%s'"
-#~ msgstr "Onglet registre pour un ordinateur"
-
-#, fuzzy
-#~ msgid "Remove Computer"
-#~ msgstr "Machine"
-
-#, fuzzy
-#~ msgid "Remove a computer"
-#~ msgstr "Nouvel ordinateur"
-
-#, fuzzy
-#~ msgid "Remove a computer from a computers group"
-#~ msgstr "Onglet réseau pour un ordinateur dans un groupe"
-
-#, fuzzy
-#~ msgid "Restoration"
-#~ msgstr "Résolution"
-
-#, fuzzy
-#~ msgid "Restoration options"
-#~ msgstr "Description"
-
-#, fuzzy
-#~ msgid "Restoration type"
-#~ msgstr "Résolution"
-
-#, fuzzy
-#~ msgid "Save a group of computers"
-#~ msgstr "Inventaire d'un groupe de machines"
-
-#, fuzzy
-#~ msgid "Secure control on a group of computers"
-#~ msgstr "Inventaire d'un groupe de machines"
-
-#, fuzzy
-#~ msgid "Secure control on computer"
-#~ msgstr "Onglet contrôleur pour un ordinateur"
-
-#, fuzzy
-#~ msgid "Share a group of computers"
-#~ msgstr "Inventaire d'un groupe de machines"
-
-#, fuzzy
-#~ msgid "Share this group"
-#~ msgstr "Onglet logiciel pour un groupe"
-
-#, fuzzy
-#~ msgid "Show Image Informations"
-#~ msgstr "Informations"
-
-#, fuzzy
-#~ msgid "Software deployment on this group"
-#~ msgstr "Onglet logiciel pour un groupe"
-
-#, fuzzy
-#~ msgid "Start action on this group"
-#~ msgstr "Onglet logiciel pour un groupe"
-
-#, fuzzy
-#~ msgid "Start download from computer %s"
-#~ msgstr "Onglet logiciel pour un ordinateur"
-
-#, fuzzy
-#~ msgid "Start inventory"
-#~ msgstr "Inventaire de %s"
-
-#, fuzzy
-#~ msgid "Start inventory agent"
-#~ msgstr "Changement dans l'inventaire"
-
-#, fuzzy
-#~ msgid "Start script"
-#~ msgstr "Description standard"
-
-#, fuzzy
-#~ msgid "Start the script"
-#~ msgstr "Description standard"
-
-#, fuzzy
-#~ msgid "Stats"
-#~ msgstr "État"
-
-#, fuzzy
-#~ msgid "Status"
-#~ msgstr "État"
-
-#, fuzzy
-#~ msgid "Swap"
-#~ msgstr "Taille du swap"
-
-#, fuzzy
-#~ msgid "Take control of a computer"
-#~ msgstr "Onglet contrôleur pour un ordinateur"
-
-#, fuzzy
-#~ msgid "Take control of this computer"
-#~ msgstr "Onglet contrôleur pour un ordinateur"
-
-#, fuzzy
-#~ msgid "Timestamp"
-#~ msgstr "Heure"
-
-#, fuzzy
-#~ msgid "Unavailable computer"
-#~ msgstr "Seulement les nouveaux ordinateurs"
-
-#, fuzzy
-#~ msgid "Unregister this computer"
-#~ msgstr "Onglet registre pour un ordinateur"
-
-#, fuzzy
-#~ msgid "Up service"
-#~ msgstr "Périphérique"
-
-#, fuzzy
-#~ msgid "Versions"
-#~ msgstr "Version"
-
-#, fuzzy
-#~ msgid "action"
-#~ msgstr "Légende"
-
-#, fuzzy
-#~ msgid "comment"
-#~ msgstr "Commentaires"
-
-#, fuzzy
-#~ msgid "comments"
-#~ msgstr "Commentaires"
-
-#, fuzzy
-#~ msgid "computers paused"
-#~ msgstr "Nom de l'ordinateur"
-
-#, fuzzy
-#~ msgid "computers stopped"
-#~ msgstr "Nom de l'ordinateur"
-
-#, fuzzy
-#~ msgid "designation"
-#~ msgstr "Description"
-
-#, fuzzy
-#~ msgid "drive"
-#~ msgstr "Disque"
-
-#, fuzzy
-#~ msgid "frequence"
-#~ msgstr "Fréquence"
-
-#, fuzzy
-#~ msgid "gateway"
-#~ msgstr "Passerelle"
-
-#, fuzzy
-#~ msgid "group"
-#~ msgstr "Groupe de travail"
-
-#, fuzzy
-#~ msgid "has"
-#~ msgstr "Chassis"
-
-#, fuzzy
-#~ msgid "interface"
-#~ msgstr "Imprimante"
-
-#, fuzzy
-#~ msgid "invent."
-#~ msgstr "Inventaire"
-
-#, fuzzy
-#~ msgid "inventoried"
-#~ msgstr "Inventaire"
-
-#, fuzzy
-#~ msgid "is"
-#~ msgstr "Bios"
-
-#, fuzzy
-#~ msgid "location"
-#~ msgstr "Localisation"
-
-#, fuzzy
-#~ msgid "logs list"
-#~ msgstr "Liste des BIOS"
-
-#, fuzzy
-#~ msgid "model"
-#~ msgstr "Modèle"
-
-#, fuzzy
-#~ msgid "os"
-#~ msgstr "Bios"
-
-#, fuzzy
-#~ msgid "os_version"
-#~ msgstr "Version du bios"
-
-#, fuzzy
-#~ msgid "pci"
-#~ msgstr "Pci"
-
-#, fuzzy
-#~ msgid "processor"
-#~ msgstr "Type de processeur"
-
-#, fuzzy
-#~ msgid "serial"
-#~ msgstr "Numéro de serie"
-
-#, fuzzy
-#~ msgid "subnet"
-#~ msgstr "Masque du sous-réseau"
-
-#, fuzzy
-#~ msgid "total"
-#~ msgstr "Taille de la RAM"
