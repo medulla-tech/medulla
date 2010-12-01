@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: base\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-19 18:13+0100\n"
-"PO-Revision-Date: 2010-11-19 18:20+0100\n"
+"POT-Creation-Date: 2010-12-01 16:12+0100\n"
+"PO-Revision-Date: 2010-12-01 16:55+0100\n"
 "Last-Translator: Cédric Delfosse <cdelfosse@mandriva.com>\n"
 "Language-Team: français <fr@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -100,6 +100,9 @@ msgid "Add a user"
 msgstr "Ajout d'un utilisateur"
 
 #: modules/base/computers/localSidebar.php:10
+#: modules/base/computers/localSidebar_flymake.php:10
+#: modules/base/computers/localSidebar_flymake_flymake.php:10
+#: modules/base/computers/localSidebar_flymake_flymake_flymake.php:10
 msgid "Add computer"
 msgstr "Ajout d'un ordinateur"
 
@@ -137,6 +140,9 @@ msgid "Ajax part of computers list"
 msgstr "Partie ajaxifiée de la liste des ordinateurs"
 
 #: modules/base/computers/localSidebar.php:7
+#: modules/base/computers/localSidebar_flymake.php:7
+#: modules/base/computers/localSidebar_flymake_flymake.php:7
+#: modules/base/computers/localSidebar_flymake_flymake_flymake.php:7
 msgid "All computers"
 msgstr "Tous les ordinateurs"
 
@@ -284,7 +290,7 @@ msgstr "Client"
 msgid "Client hostname"
 msgstr "Nom d'hôte du client"
 
-#: modules/base/status/support.php:57 modules/base/status/support.php:62
+#: modules/base/status/support.php:55 modules/base/status/support.php:60
 msgid "Comment"
 msgstr "Commentaire"
 
@@ -296,11 +302,11 @@ msgstr "Commentaires"
 msgid "Common name"
 msgstr "Nom commun"
 
-#: modules/base/status/support.php:56
+#: modules/base/status/support.php:54
 msgid "Company administrator mail"
 msgstr "Adresse mail de l'administrateur de la société"
 
-#: modules/base/status/support.php:55
+#: modules/base/status/support.php:53
 msgid "Company name"
 msgstr "Nom de la société"
 
@@ -309,6 +315,9 @@ msgid "Complete Traceback"
 msgstr "Traceback complète"
 
 #: modules/base/computers/trads.php:26
+#: modules/base/computers/trads_flymake.php:26
+#: modules/base/computers/trads_flymake_flymake.php:26
+#: modules/base/computers/trads_flymake_flymake_flymake.php:26
 msgid "Computer Name"
 msgstr "Nom de l'ordinateur"
 
@@ -333,8 +342,8 @@ msgid "Computer's MAC address"
 msgstr "Adresse MAC de l'ordinateur"
 
 #: modules/base/includes/computers-i18n.php:27
-msgid "Computer's network address"
-msgstr "Adresse du réseau de l'ordinateur"
+msgid "Computer's netmask address"
+msgstr "Masque réseau de l'ordinateur"
 
 #: modules/base/infoPackage.inc.php:276
 msgid "Computers"
@@ -455,6 +464,9 @@ msgid "Delete photo"
 msgstr "Supprimer photo"
 
 #: modules/base/computers/delete.php:35
+#: modules/base/computers/delete_flymake.php:35
+#: modules/base/computers/delete_flymake_flymake.php:35
+#: modules/base/computers/delete_flymake_flymake_flymake.php:35
 msgid "Delete this computer"
 msgstr "Supprimer cet ordinateur"
 
@@ -471,10 +483,16 @@ msgid "Disable user"
 msgstr "Désactivation d'un utilisateur"
 
 #: modules/base/computers/trads.php:27
+#: modules/base/computers/trads_flymake.php:27
+#: modules/base/computers/trads_flymake_flymake.php:27
+#: modules/base/computers/trads_flymake_flymake_flymake.php:27
 msgid "Display Name"
 msgstr "Nom affiché"
 
 #: modules/base/computers/delete.php:38
+#: modules/base/computers/delete_flymake.php:38
+#: modules/base/computers/delete_flymake_flymake.php:38
+#: modules/base/computers/delete_flymake_flymake_flymake.php:38
 msgid "Do you want a backup to be done ?"
 msgstr "Souhaitez-vous qu'une sauvegarde des données soit faite ?"
 
@@ -613,7 +631,9 @@ msgstr "Le groupe %s existe déjà"
 #: modules/base/includes/publicFunc.php:50
 #, php-format
 msgid "Group %s can't be deleted.<br/>%s is the primary group of some users."
-msgstr "Le groupe %s ne peut pas être supprimé.<br/>%s est le groupe primaire de certains utilisateurs."
+msgstr ""
+"Le groupe %s ne peut pas être supprimé.<br/>%s est le groupe primaire de "
+"certains utilisateurs."
 
 #: modules/base/includes/groups-xmlrpc.inc.php:105
 #, php-format
@@ -995,7 +1015,7 @@ msgstr ""
 msgid "Please check network connectivity."
 msgstr "Veuillez vérifier les connexions réseau."
 
-#: modules/base/status/support.php:45
+#: modules/base/status/support.php:44
 #: modules/base/includes/users-xmlrpc.inc.php:62
 msgid ""
 "Please contact your administrator for more information. If you are an "
@@ -1053,15 +1073,15 @@ msgstr "Précédent"
 msgid "Primary group"
 msgstr "Groupe primaire"
 
-#: modules/base/status/support.php:52
+#: modules/base/status/support.php:50
 msgid "Product name"
 msgstr "Nom du produit"
 
-#: modules/base/status/support.php:53
+#: modules/base/status/support.php:51
 msgid "Product vendor"
 msgstr "Fournisseur du produit"
 
-#: modules/base/status/support.php:54
+#: modules/base/status/support.php:52
 msgid "Product vendor mail"
 msgstr "Adresse mail du fournisseur"
 
@@ -1081,11 +1101,11 @@ msgstr "Consulter le journal"
 msgid "Refresh"
 msgstr "Rafraîchir"
 
-#: modules/base/status/support.php:59
+#: modules/base/status/support.php:57
 msgid "Registered computers"
 msgstr "Ordinateurs enregistrés"
 
-#: modules/base/status/support.php:58
+#: modules/base/status/support.php:56
 msgid "Registered users"
 msgstr "Utilisateurs enregistrés"
 
@@ -1193,7 +1213,7 @@ msgstr ""
 msgid "Status"
 msgstr "Statut"
 
-#: modules/base/status/support.php:60
+#: modules/base/status/support.php:58
 msgid "Support mail address"
 msgstr "Adresse de messagerie du support"
 
@@ -1201,7 +1221,7 @@ msgstr "Adresse de messagerie du support"
 msgid "Support page"
 msgstr "Page support"
 
-#: modules/base/status/support.php:61
+#: modules/base/status/support.php:59
 msgid "Support phone number"
 msgstr "Numéro de téléphone du support"
 
@@ -1231,6 +1251,9 @@ msgstr ""
 "version de l'agent MMC."
 
 #: modules/base/computers/delete.php:31
+#: modules/base/computers/delete_flymake.php:31
+#: modules/base/computers/delete_flymake_flymake.php:31
+#: modules/base/computers/delete_flymake_flymake_flymake.php:31
 msgid "The computer has been deleted."
 msgstr "Cet ordinateur a été supprimé"
 
@@ -1541,11 +1564,18 @@ msgstr "Voir les détails"
 msgid "View details of an action"
 msgstr "Voir les détails d'une action"
 
-#: modules/base/status/support.php:44
 #: modules/base/includes/users-xmlrpc.inc.php:61
 #, php-format
 msgid "WARNING: The number of registered %s is exceeding your license."
 msgstr "ATTENTION: Le nombre d'%s enregistrés dépasse votre souscription."
+
+#: modules/base/status/support.php:41
+msgid "WARNING: The number of registered computers is exceeding your license."
+msgstr "ATTENTION: Le nombre d'ordinateurs enregistrés dépasse votre souscription."
+
+#: modules/base/status/support.php:38
+msgid "WARNING: The number of registered users is exceeding your license."
+msgstr "ATTENTION: Le nombre d'utilisateurs enregistrés dépasse votre souscription."
 
 #: modules/base/users/editacl.php:222
 msgid "Warning no desc found in infoPackage.inc.php :"
@@ -1606,7 +1636,6 @@ msgstr "base"
 msgid "brazilian"
 msgstr "brésilien"
 
-#: modules/base/status/support.php:41
 #: modules/base/includes/users-xmlrpc.inc.php:58
 msgid "computers"
 msgstr "ordinateurs"
@@ -1724,7 +1753,6 @@ msgstr "indisponible"
 msgid "unknown error"
 msgstr "erreur inconnue"
 
-#: modules/base/status/support.php:38
 #: modules/base/includes/users-xmlrpc.inc.php:55
 msgid "users"
 msgstr "utilisateurs"
