@@ -172,7 +172,7 @@ class InventoryComputers(ComputerI):
         return [
             ['computerip', 'string', 'Computer\'s IP address'],
             ['computermac', 'string', 'Computer\'s MAC address'],
-            ['computernet', 'string', 'Computer\'s network address']
+            ['computernet', 'string', 'Computer\'s netmask address']
         ]
 
     def checkComputerName(self, name):
