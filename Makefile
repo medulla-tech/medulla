@@ -20,7 +20,7 @@
 
 
 # General Makefile variables
-DESTDIR = 
+DESTDIR =
 PREFIX = /usr/local
 SBINDIR = $(PREFIX)/sbin
 LIBDIR = $(PREFIX)/lib/mmc
@@ -74,7 +74,7 @@ clean_mo:
 	sh scripts/clean_mo.sh
 
 build_mo:
-	sh scripts/build_mo.sh
+	sh scripts/build_mo.sh .
 
 build_pot:
 	sh scripts/build_pot.sh
