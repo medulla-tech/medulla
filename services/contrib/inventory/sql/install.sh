@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCHEMA_NAME=schema
-SCHEMA_MAXVERSION=10
+SCHEMA_MAXVERSION=11
 
 if [ ! -n "${MYSQL_HOST+x}" ]; then
     echo 'Enter MYSQL host (default : "localhost", or $MYSQL_DATABASE if defined)' && read

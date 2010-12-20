@@ -1,5 +1,5 @@
 --
--- (c) 2008 Mandriva, http://www.mandriva.com/
+-- (c) 2010 Mandriva, http://www.mandriva.com/
 --
 -- $Id$
 --
@@ -16,13 +16,12 @@
 -- GNU General Public License for more details.
 --
 -- You should have received a copy of the GNU General Public License
--- along with Pulse 2; if not, write to the Free Software
--- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
--- MA 02110-1301, USA.
+-- along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 
 START TRANSACTION;
 
 -- Too short fields
 ALTER TABLE `Bios` CHANGE `Chipset` `Chipset` VARCHAR(255) DEFAULT NULL;
+ALTER TABLE `Drive` CHANGE `FileSystem` `FileSystem` VARCHAR(255) DEFAULT NULL;
 
 COMMIT;
