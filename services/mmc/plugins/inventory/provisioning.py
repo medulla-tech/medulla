@@ -25,7 +25,6 @@ Module to provide entities to user depending on their profile.
 
 import os.path
 import imp
-from distutils.sysconfig import get_python_lib
 
 from mmc.plugins.base.provisioning import ProvisionerConfig, ProvisionerI
 from pulse2.database.inventory import Inventory
@@ -95,7 +94,7 @@ class InventoryProvisioner(ProvisionerI):
                             self.logger.info("The user '%s' doesn't have an attribute '%s'" % (uid, attr))
                     elif entity.startswith('plugin:'):
                         plugin = entity.replace('plugin:', '')
-                        searchpath = os.path.join(get_python_lib(), 'mmc', 'plugins', 'inventory', 'provisioning_plugins')
+                        searchpath = os.path.join(os.path.dirname(__file__), 'provisioning_plugins')
                         try:
                             f, p, d = imp.find_module(plugin, [searchpath])
                             mod = imp.load_module(plugin, f, p, d)
