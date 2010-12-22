@@ -1,9 +1,10 @@
+# -*- coding: utf-8; -*-
 #
-# (c) 2008 Mandriva, http://www.mandriva.com/
+# (c) 2010 Mandriva, http://www.mandriva.com
 #
 # $Id$
 #
-# This file is part of Pulse 2, http://pulse2.mandriva.org
+# This file is part of Pulse 2.
 #
 # Pulse 2 is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,11 +17,10 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Pulse 2; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-# MA 02110-1301, USA.
+# along with Pulse 2.  If not, see <http://www.gnu.org/licenses/>.
+
 """
-Module to provide entities to user depending on their profile.
+Module to link entities to users depending on their profile.
 """
 
 import os.path
@@ -79,6 +79,7 @@ class InventoryProvisioner(ProvisionerI):
                 if self.config.profilesEntity.has_key("default"):
                     entities = self.config.profilesEntity["default"].split()
                     self.logger.info("Set the default profile to user.")
+                    profile = 'default'
                 else:
                     self.logger.info("No entity defined in configuration file for profile '%s'" % profile)
                     self.logger.info("Setting user's entity to empty")
