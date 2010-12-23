@@ -696,7 +696,6 @@ profile_entity_tech = %pulse2entity%
 profile_entity_manager = plugin:network_to_entity
 profile_entity_none =
 profile_entity_default = entityA
-profile_entity_ = entityA
     </screen>
 
     <para>In this example, the root user is never provisioned. The LDAP
@@ -719,16 +718,10 @@ profile_entity_ = entityA
 
     <para>The users with the "none" profile are linked to no entity.</para>
 
-    <para>The users with none of the profiles described in the configuration
+    <para>The users with no profile (the pulse2profile field is empty or don't
+    exist) or with none of the profiles described in the configuration
     file are set to the "default" profile (be carefull, default is now a
     keyword).</para>
-
-    <para>The users with no profile (the pulse2profile field is empty or don't
-    exist) are set to profile_entity_ .</para>
-
-    <para>If profile_entity_ is not set, a user that doesn't have any profile
-    (for example the pulse2profile attribute of her/his entry is empty), or
-    that has an undefined profile, will be linked to no entity.</para>
 
     <section>
       <title>"network_to_entity" provisioning plugin</title>
