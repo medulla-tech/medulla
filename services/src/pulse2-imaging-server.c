@@ -208,7 +208,7 @@ int getentry(char *file, char *pktmac) {
             if (sscanf(buf, "%19s%*s%32s", mac, name) == 2) {
                 if (!strncasecmp(mac, pktmac, 17)) {
                     // return the name in the global buffer
-                    strcpy((char *)gBuff, name);
+                    strncpy((char *)gBuff, name, 80);
                     fclose(fi);
                     return 1;
                 }
@@ -229,7 +229,7 @@ unsigned char *getmac(struct in_addr addr) {
     char straddr[80];
     int l;
 
-    strcpy(straddr, inet_ntoa(addr));
+    strncpy(straddr, inet_ntoa(addr), 15);
     l = strlen(straddr);
     straddr[l] = ' ';
     straddr[l + 1] = '\0';
@@ -351,6 +351,10 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         char *ptr, pass[256], hostname[256], buff[256];
         char *answ = malloc(40);
 
+        bzero(pass, sizeof(pass));
+        bzero(hostname, sizeof(hostname));
+        bzero(buff, sizeof(buff));
+
         logClientActivity(mac,
                           LOG_DEBUG,
                           PULSE_LOG_STATE_MENU,
@@ -360,8 +364,8 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
 
         ptr = strrchr((char *)buf + 3, ':');
         *ptr = 0;
-        strcpy(pass, ptr + 1);
-        strcpy(hostname, (char *)buf + 3);
+        strncpy(pass, ptr + 1, sizeof(pass));
+        strncpy(hostname, (char *)buf + 3, sizeof(hostname));
         snprintf(buff, 255, "Identification from %s:%d (%s) as %s",
                  inet_ntoa(si_other->sin_addr),
                  ntohs(si_other->sin_port), mac, hostname);
@@ -803,8 +807,8 @@ void readConfig(char *config_file_path) {
 
     if (ini == NULL) {
         char msg[256];
-        sprintf(msg, "cannot parse file %s", config_file_path);
-        syslog(LOG_ERR, msg);
+        snprintf(msg, 1000, "cannot parse file %.900s", config_file_path);
+        syslog(LOG_ERR, "%s", msg);
         diep(msg);
     }
     // Parse MAIN section //
@@ -920,8 +924,8 @@ int main(void) {
     if (pid) {
         char *msg = malloc(256);
         bzero(msg, 256);
-        sprintf(msg, "daemonization succedeed, PID is %d", pid);
-        syslog(LOG_INFO, msg);
+        snprintf(msg, 1000, "daemonization succedeed, PID is %d", pid);
+        syslog(LOG_INFO, "%s", msg);
     } else {
         diep("daemon");
     }
