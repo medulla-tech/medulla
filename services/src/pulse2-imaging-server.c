@@ -95,7 +95,7 @@ void diep(char *s) {
     } else {
         puts(s);
     }
-    syslog(LOG_ERR, s);
+    syslog(LOG_ERR, "%s", s);
     exit(1);
 }
 
