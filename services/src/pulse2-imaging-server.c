@@ -48,7 +48,7 @@ int myLogger(char *msg) {
     // prepare logging message
     snprintf(buffer, sizeof(buffer)-1, "%s %s", timebuffer, msg);
 
-    fi = fopen("/tmp/woot.log", "a");
+    fi = fopen(gLogFile, "a");
     if (!fi)
         return 0;
     fwrite(buffer, sizeof(buffer), 1, fi);
