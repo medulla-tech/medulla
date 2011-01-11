@@ -33,10 +33,29 @@ void initlog(void) {
  */
 
 int myLogger(char *msg) {
-    char cmd[1024];
-    snprintf(cmd, 1023, "echo \"`date --rfc-3339=seconds` %.900s\" 1>>%s 2>&1",
-             msg, gLogFile);
-    return (system(cmd));
+    time_t rawtime;
+    struct tm * timeinfo;
+    char timebuffer[24];
+    char buffer[1024];
+    FILE *fi;
+
+    bzero(buffer, sizeof(buffer));
+    // gather timestamp
+    time(&rawtime);
+    timeinfo = localtime (&rawtime);
+    strftime(timebuffer, sizeof(timebuffer), "%Y-%m-%d %H:%M:%S,000", timeinfo);
+
+    // prepare logging message
+    snprintf(buffer, sizeof(buffer)-1, "%s %s", timebuffer, msg);
+
+    fi = fopen("/tmp/woot.log", "a");
+    if (!fi)
+        return 0;
+    fwrite(buffer, sizeof(buffer), 1, fi);
+    fwrite("\n", sizeof("\n"), 1, fi);
+    fclose(fi);
+
+    return 0;
 }
 
 void hex2char(char *ptr, char *val) {
