@@ -46,13 +46,12 @@ int myLogger(char *msg) {
     strftime(timebuffer, sizeof(timebuffer), "%Y-%m-%d %H:%M:%S,000", timeinfo);
 
     // prepare logging message
-    snprintf(buffer, sizeof(buffer)-1, "%s %s", timebuffer, msg);
+    snprintf(buffer, sizeof(buffer), "%s %.900s\n", timebuffer, msg);
 
     fi = fopen(gLogFile, "a");
     if (!fi)
         return 0;
     fwrite(buffer, sizeof(buffer), 1, fi);
-    fwrite("\n", sizeof("\n"), 1, fi);
     fclose(fi);
 
     return 0;
