@@ -132,6 +132,9 @@ int mysystem(int argc, ...) {
     int retval = 0;
     va_list argv;
 
+    bzero(cmd, sizeof(cmd));
+    bzero(tmp, sizeof(tmp));
+
     va_start(argv, argc);
     while (argc--) {
         if (count)
@@ -143,12 +146,10 @@ int mysystem(int argc, ...) {
     }
     va_end(argv);
 
-    snprintf(tmp, 1023,
-             "echo \"`date --rfc-3339=seconds` INFO Command %.900s\" 1>>%s 2>&1",
-             cmd, gLogFile);
-    system(tmp);
-    snprintf(tmp, 1023, "%.900s 1>>%s 2>&1", cmd, gLogFile);
+    snprintf(tmp, 1023, "Command %.900s", cmd);
+    myLogger(tmp);
 
+    snprintf(tmp, 1023, "%.900s 1>>%s 2>&1", cmd, gLogFile);
     /* we now take care of the error code : */
     retval = WEXITSTATUS(system(tmp));
     return retval;
