@@ -35,8 +35,6 @@ setup(
     maintainer = "Cedric Delfosse",
     maintainer_email = "cdelfosse@mandriva.com",
     packages = [
-        "mmc",
-        "mmc.plugins",
         "mmc.plugins.dyngroup",
         "mmc.plugins.dyngroup.querymanager",
         "mmc.plugins.glpi",
