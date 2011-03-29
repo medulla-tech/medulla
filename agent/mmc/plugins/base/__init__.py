@@ -44,6 +44,7 @@ from mmc.support.mmctools import cleanFilter
 from mmc.support.mmctools import xmlrpcCleanup
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 
+from mmc.core.version import scmRevision
 from mmc.core.audit import AuditFactory as AF
 from mmc.plugins.base.audit import AA, AT, PLUGIN_NAME
 
@@ -82,7 +83,7 @@ modList= None
 
 VERSION = "3.0.1"
 APIVERSION = "9:0:5"
-REVISION = int("$Rev$".split(':')[1].strip(' $'))
+REVISION = scmRevision("$Rev$")
 
 # List of methods that can be called without user authentication
 NOAUTHNEEDED = ['authenticate', 'ldapAuth', 'isCommunityVersion']

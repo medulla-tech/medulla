@@ -38,13 +38,14 @@ import calendar
 from ldap import modlist
 from mmc.plugins.base import ldapUserGroupControl
 from mmc.support.config import PluginConfig
+from mmc.core.version import scmRevision
 from mmc.core.audit import AuditFactory as AF
 from mmc.plugins.ppolicy.audit import AT, AA, PLUGIN_NAME
 
 
 VERSION = "3.0.1"
 APIVERSION = "0:1:0"
-REVISION = int("$Rev$".split(':')[1].strip(' $'))
+REVISION = scmRevision("$Rev$")
 
 def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION
