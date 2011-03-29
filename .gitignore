@@ -1,0 +1,5 @@
+*.pyc
+*~
+*.mo
+agent/build/
+web/confs/apache/mmc.conf
