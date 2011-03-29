@@ -72,7 +72,9 @@ install:
 
 	@echo ""
 	@echo "Install python code in $(DESTDIR)$(PYTHON_PREFIX)"
-	$(PYTHON) setup.py install --no-compile --prefix $(DESTDIR)$(PYTHON_PREFIX)
+	# Use --root only if $DESTDIR is not empty
+	# Use --prefix only if $PYTHON_PREFIX != /usr (see https://bugs.launchpad.net/ubuntu/+source/python2.6/+bug/362570)
+	$(PYTHON) setup.py install --no-compile $(if $(DESTDIR),--root $(DESTDIR)) $(if $(filter-out /usr,$(PYTHON_PREFIX)), --prefix $(PYTHON_PREFIX))
 
 	@echo ""
 	@echo "Install LIBDIRBACKUP in $(DESTDIR)$(LIBDIRBACKUP)"
