@@ -24,35 +24,39 @@
 import os
 import os.path
 import sys
-import getopt
+from optparse import OptionParser
 from mmc.support.config import MMCConfigParser
 
 import mmc.agent
 
-if __name__ == "__main__":
-    inifile = "/etc/mmc/agent/config.ini"
-    try:
-        opts, suivarg = getopt.getopt(sys.argv[1:], "f:d")
-    except getopt.GetoptError:
-        sys.exit(2)
-    daemonize = True
-    for option, argument in opts:
-        if option == "-f":
-            inifile = argument
-        elif option == "-d":
-            daemonize = False
+dft_inifile = "/etc/mmc/agent/config.ini"
 
-    if not os.path.exists(inifile):
-        print "File '%s' does not exist." % inifile
+if __name__ == "__main__":
+
+    # Use optparse module to parse options
+    parser = OptionParser()
+
+    # Declare options
+    parser.add_option("-d", "--no-daemon", dest="daemonize", default=True, action="store_false",
+                      help="Do not daemonize")
+    parser.add_option("-f", "--inifile", dest="inifile", default=dft_inifile,
+                      help="Path to configuration file", metavar="INIFILE")
+
+    # Parse arguments
+    (options, args) = parser.parse_args()
+
+    # Check config file
+    if not os.path.exists(options.inifile):
+        print "File '%s' does not exist." % options.inifile
 	sys.exit(3)
  
     # Load configuration file
     try:
         cp = MMCConfigParser()
-        cp.read(inifile)
+        cp.read(options.inifile)
     except Exception, e:
         print str(e)
         sys.exit(3)
     
     # Start the daemon main loop
-    sys.exit(mmc.agent.agentService(cp, inifile, daemonize))
+    sys.exit(mmc.agent.agentService(cp, options.inifile, options.daemonize))
