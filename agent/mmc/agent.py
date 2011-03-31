@@ -36,6 +36,7 @@ except ImportError:
 
 from mmc.client import makeSSLContext
 from mmc.support.mmctools import Singleton
+from mmc.core.version import scmRevision
 from mmc.core.audit import AuditFactory
 
 import imp
@@ -308,7 +309,7 @@ class MmcServer(xmlrpc.XMLRPC,object):
                 session.contexts[mod] = context
 
     def getRevision(self):
-        return int("$Rev$".split(':')[1].strip(' $'))
+        return scmRevision("$Rev$")
 
     def getVersion(self):
         return VERSION
