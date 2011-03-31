@@ -1,3 +1,10 @@
+mmc 3.1
+-------
+
+ * Merge MMC Agent and MMC web interface versions (web interface ChangeLog
+   in web/Changelog
+ * Migrate to autotools
+
 mmc-core 3.0.1 (MMC agent)
 --------------------------
 
