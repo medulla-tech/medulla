@@ -17,18 +17,12 @@
 # You should have received a copy of the GNU General Public License
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 #
-# Author(s):
+# Author(s)
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-ACLOCAL_AMFLAGS = -I m4
-DISTCHECK_CONFIGURE_FLAGS=--disable-conf-backup
+SUBDIRS = confs
 
-SUBDIRS  = agent web
+datapaths = graph img includes jsframework logout modules \
+	index.php main_content.php main.php version.php license.php
 
-sysconfdirwarning:
-	@if test "${sysconfdir}" != "/etc"; then \
-	  echo '###'; \
-	  echo '### $${sysconfdir} evaluates to '${sysconfdir}': this is probably not what you want !'; \
-	  echo '### You may want to launch ./configure --sysconfdir=/etc.'; \
-	  echo '###'; \
-	fi
+nobase_pkgdata_DATA = $(shell find $(datapaths) -type f)

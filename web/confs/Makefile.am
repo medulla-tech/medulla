@@ -17,18 +17,22 @@
 # You should have received a copy of the GNU General Public License
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 #
-# Author(s):
+# Author(s)
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-ACLOCAL_AMFLAGS = -I m4
-DISTCHECK_CONFIGURE_FLAGS=--disable-conf-backup
+pkgsysconfdir = ${sysconfdir}/mmc
+nobase_pkgsysconf_DATA = mmc.ini apache/mmc.conf
 
-SUBDIRS  = agent web
+edit = sed \
+        -e 's|@bindir[@]|$(bindir)|g' \
+        -e 's|@sbindir[@]|$(sbindir)|g' \
+        -e 's|@pkgdatadir[@]|$(pkgdatadir)|g' \
+        -e 's|@prefix[@]|$(prefix)|g' \
+        -e 's|@sysconfdir[@]|$(sysconfdir)|g'
 
-sysconfdirwarning:
-	@if test "${sysconfdir}" != "/etc"; then \
-	  echo '###'; \
-	  echo '### $${sysconfdir} evaluates to '${sysconfdir}': this is probably not what you want !'; \
-	  echo '### You may want to launch ./configure --sysconfdir=/etc.'; \
-	  echo '###'; \
-	fi
+apache/mmc.conf: apache/mmc.conf.tmpl Makefile
+	rm -f $@ $@.tmp
+	srcdir=''; \
+	  test -f ./$@.tmpl || srcdir=$(srcdir)/; \
+	  $(edit) $${srcdir}$@.tmpl > $@.tmp
+	mv $@.tmp $@

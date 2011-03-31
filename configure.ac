@@ -40,6 +40,16 @@ AC_PROG_INSTALL
 dnl Check for Python
 AM_PATH_PYTHON([2.5])
 
+# gettext: prepare the translation directories.
+AM_PO_SUBDIRS
+if test "x$USE_NLS" = "xyes"; then
+   AC_CHECK_PROG(HAVE_MSGFMT, msgfmt,yes,no)
+
+   if test "x$HAVE_MSGFMT" = "xno"; then
+          AC_MSG_ERROR([msgfmt not found. You need to install the 'gettext' package, or pass --enable-nls=no to configure.])
+   fi
+fi
+
 dnl check for libraries
 
 dnl Check for Python modules
@@ -111,6 +121,11 @@ AC_CONFIG_FILES([agent/Makefile])
 AC_CONFIG_FILES([agent/bin/Makefile])
 AC_CONFIG_FILES([agent/backup-tools/Makefile])
 AC_CONFIG_FILES([agent/openldap-check-password/Makefile])
+AC_CONFIG_FILES([web/Makefile])
+AC_CONFIG_FILES([web/confs/Makefile])
 
 dnl write all stuff
 AC_OUTPUT
+
+dnl Warn user sysconfdir is not /etc, if necessary.
+make sysconfdirwarning

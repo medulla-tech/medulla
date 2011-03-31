@@ -1,8 +1,8 @@
 ### Add an alias /mmc on www server root
-Alias /mmc ###DATADIR###
+Alias /mmc @pkgdatadir@
 
 ### Allow access to lmc web directory to everyone 
-<Directory ###DATADIR###>
+<Directory @pkgdatadir@>
     AllowOverride None
     Order allow,deny
     allow from all
