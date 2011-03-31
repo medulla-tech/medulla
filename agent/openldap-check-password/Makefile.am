@@ -23,7 +23,7 @@
 ldapconfdir = @ldapconfdir@
 ldaplibdir = @ldaplibdir@
 
-ldapconf_DATA = mmc-check-password.conf
+dist_ldapconf_DATA = mmc-check-password.conf
 
 ldapconf_LTLIBRARIES = mmc-check-password.la
 
