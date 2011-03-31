@@ -25,12 +25,15 @@
  * mmc-check-password.c: OpenLDAP password checker module
  */
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include <portable.h>
 #include <slap.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <syslog.h>
 
 #ifndef CONFIG_FILE
 #define CONFIG_FILE "/etc/openldap/mmc-check-password.conf"

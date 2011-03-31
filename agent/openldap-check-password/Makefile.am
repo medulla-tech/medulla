@@ -1,7 +1,4 @@
-# -*- coding: utf-8; -*-
-#
-# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# (c) 2007-2009 Mandriva, http://www.mandriva.com
+# (c) 2011 Mandriva, http://www.mandriva.com
 #
 # $Id$
 #
@@ -19,19 +16,16 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Author(s)
+#   Jean Parpaillon <jparpaillon@mandriva.com>
+#
+ldapconfdir = @ldapconfdir@
+ldaplibdir = @ldaplibdir@
 
-from distutils.core import setup
+ldapconf_DATA = mmc-check-password.conf
 
-setup(
-    name = 'mmc-agent',
-    version = '3.0.0',
-    description = 'XML-RPC agent for Mandriva Management Console',
-    license = 'GPL',
-    url = "http://www.mandriva.com",
-    author = "Cedric Delfosse",
-    author_email = "cdelfosse@mandriva.com",
-    maintainer = "Cedric Delfosse",
-    maintainer_email = "cdelfosse@mandriva.com",
-    packages = ["mmc", "mmc.support", "mmc.plugins", "mmc.plugins.base",
-                "mmc.plugins.ppolicy", "mmc.core", "mmc.core.audit"],
-)
+ldapconf_LTLIBRARIES = mmc-check-password.la
+
+mmc_check_password_la_SOURCES = mmc-check-password.c
+mmc_check_password_la_LDFLAGS = -module
