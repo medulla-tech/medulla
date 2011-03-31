@@ -24,8 +24,15 @@ SUBDIRS = confs
 
 datapaths = graph img includes jsframework logout modules \
 	index.php main_content.php main.php version.php license.php
-datafiles = $(shell find $(patsubst %,$(srcdir)/%,$(datapaths)) -type f)
+datafiles = $(shell find $(patsubst %,$(srcdir)/%,$(datapaths)) -type f ! -name '*.po')
+pofiles = $(shell cd $(srcdir) && find -name '*.po')
+mofiles = $(patsubst %.po,%.mo,$(pofiles))
 
-nobase_pkgdata_DATA = $(datafiles)
+nobase_pkgdata_DATA = $(datafiles) $(mofiles)
 
-EXTRA_DIST = $(datafiles)
+EXTRA_DIST = $(datafiles) $(pofiles)
+CLEANFILES = $(mofiles)
+
+%.mo: %.po
+	$(MKDIR_P) $(@D)
+	$(MSGFMT) $< -o $@
