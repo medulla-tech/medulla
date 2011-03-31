@@ -23,6 +23,10 @@
 pkgsysconfdir = ${sysconfdir}/mmc
 nobase_pkgsysconf_DATA = mmc.ini apache/mmc.conf
 
+EXTRA_DIST = mmc.ini apache/mmc.conf.in
+
+CLEANFILES = apache/mmc.conf
+
 edit = sed \
         -e 's|@bindir[@]|$(bindir)|g' \
         -e 's|@sbindir[@]|$(sbindir)|g' \
@@ -30,9 +34,12 @@ edit = sed \
         -e 's|@prefix[@]|$(prefix)|g' \
         -e 's|@sysconfdir[@]|$(sysconfdir)|g'
 
-apache/mmc.conf: apache/mmc.conf.tmpl Makefile
+apache/mmc.conf: Makefile
 	rm -f $@ $@.tmp
+	$(MKDIR_P) $(@D)
 	srcdir=''; \
-	  test -f ./$@.tmpl || srcdir=$(srcdir)/; \
-	  $(edit) $${srcdir}$@.tmpl > $@.tmp
+	  test -f ./$@.in || srcdir=$(srcdir)/; \
+	  $(edit) $${srcdir}$@.in >$@.tmp
 	mv $@.tmp $@
+
+apache/mmc.conf: $(srcdir)/apache/mmc.conf.in

@@ -38,8 +38,6 @@ mmcconffiles = \
 	conf/agent/config.ini conf/agent/plugins/base.ini conf/agent/ppolicy.ini \
 	conf/agent/keys/cacert.pem conf/agent/keys/localcert.pem
 
-EXTRA_DIST = $(conffiles)
-
 if ENABLE_CONF_BACKUP
 # Extension for beckup'd configuration files
 confbackup = yes
