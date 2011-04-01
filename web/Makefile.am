@@ -24,7 +24,11 @@ SUBDIRS = confs
 
 datapaths = graph img includes jsframework logout modules \
 	index.php main_content.php main.php version.php license.php
-datafiles = $(shell find $(patsubst %,$(srcdir)/%,$(datapaths)) -type f ! -name '*.po')
+datafiles = $(shell find $(patsubst %,$(srcdir)/%,$(datapaths)) \
+	-type f \
+	! -name '*.po' \
+	! -name '*.mo' \
+	! -path '*/.svn/*')
 pofiles = $(shell cd $(srcdir) && find -name '*.po')
 mofiles = $(patsubst %.po,%.mo,$(pofiles))
 
