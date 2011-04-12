@@ -73,7 +73,7 @@ dnl --disable-conf-backup
 dnl   Disable backup configuration file
 dnl
 AC_ARG_ENABLE([conf-backup],
-              [AS_HELP_STRING([--disable-backup-conf],
+              [AS_HELP_STRING([--disable-conf-backup],
                               [Disable configuration files backup, if any @<:@default=enable@:>@])],
               [],
               [enable_conf_backup="yes"])
@@ -121,6 +121,7 @@ AC_CONFIG_FILES([agent/Makefile])
 AC_CONFIG_FILES([agent/bin/Makefile])
 AC_CONFIG_FILES([agent/backup-tools/Makefile])
 AC_CONFIG_FILES([agent/init.d/Makefile])
+AC_CONFIG_FILES([agent/conf/Makefile])
 AC_CONFIG_FILES([agent/openldap-check-password/Makefile])
 AC_CONFIG_FILES([web/Makefile])
 AC_CONFIG_FILES([web/confs/Makefile])
