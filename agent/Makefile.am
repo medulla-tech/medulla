@@ -20,7 +20,7 @@
 # Author(s)
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-SUBDIRS = backup-tools bin
+SUBDIRS = backup-tools bin init.d
 if ENABLE_CHECK_PASSWORD
 SUBDIRS += openldap-check-password
 endif
@@ -29,9 +29,6 @@ pythonmodules = mmc mmc.support mmc.plugins mmc.plugins.base mmc.plugins.ppolicy
 	mmc.core mmc.core.audit
 # Expands Python modules list with found *.py files in each module given in pythonmodules
 nobase_python_PYTHON = $(wildcard $(patsubst %,%/*.py ,$(subst .,/,$(pythonmodules))))
-
-initdir = $(sysconfdir)/init.d
-dist_init_SCRIPTS = init.d/mmc-agent
 
 mmcconfdir = $(sysconfdir)/mmc
 mmcconffiles = \
