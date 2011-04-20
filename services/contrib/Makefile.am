@@ -20,7 +20,10 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-SUBDIRS = msc inventory imaging-server
+SUBDIRS = msc inventory imaging-server dyngroup imaging nagios package-server pulse2
 
 inventoryconfdir = $(sysconfdir)/mmc/pulse2/inventory-server
 dist_inventoryconf_DATA = OcsNGMap.xml
+
+EXTRA_DIST = Ocsinventory_local.pl Ocsinventory_local.pl.README pulse2_stats.py \
+	test-xmlrpc.py test-xmlrpc.examples test-xmlrpc.php health2csv.py

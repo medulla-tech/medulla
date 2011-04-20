@@ -21,3 +21,20 @@
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
 SUBDIRS = hooks
+
+MAINTAINERCLEANFILES = pci.ids README.pci.ids
+
+EXTRA_DIST = dhcpd.conf pci.ids README.exports README.pci.ids README.tftp-server \
+	atftpd.default exports README.dhcpd.conf
+
+pciidsurl = http://pciids.sourceforge.net/v2.2/pci.ids.bz2
+
+configure: pci.ids
+
+pci.ids:
+	wget $(pciidsurl)
+	bunzip2 pci.ids.bz2
+	( echo "Taken from $(pciidsurl)."; \
+	  echo "Last update : $(shell date +%Y-%m-%d)" ) > README.pci.ids
+
+.PHONY = configure

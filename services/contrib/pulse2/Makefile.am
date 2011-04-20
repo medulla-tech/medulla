@@ -20,10 +20,4 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-dist_sbin_SCRIPTS = pulse2-inventory-clean-database
-
-EXTRA_DIST = pulse2-inventory-clean-database.README lrs-to-pulse2-inventory \
-	pulse2-inventory-populate-root-entity.py README \
-	sql/install.sh sql/schema-002.sql sql/schema-004.sql sql/schema-006.sql \
-	sql/schema-008.sql sql/schema-010.sql sql/schema-001.sql sql/schema-003.sql \
-	sql/schema-005.sql sql/schema-007.sql sql/schema-009.sql sql/schema-011.sql
+EXTRA_DIST = sql/install.sh sql/schema-001.sql sql/README

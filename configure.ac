@@ -97,6 +97,11 @@ AC_CONFIG_FILES([services/contrib/msc/Makefile])
 AC_CONFIG_FILES([services/contrib/inventory/Makefile])
 AC_CONFIG_FILES([services/contrib/imaging-server/Makefile])
 AC_CONFIG_FILES([services/contrib/imaging-server/hooks/Makefile])
+AC_CONFIG_FILES([services/contrib/dyngroup/Makefile])
+AC_CONFIG_FILES([services/contrib/imaging/Makefile])
+AC_CONFIG_FILES([services/contrib/nagios/Makefile])
+AC_CONFIG_FILES([services/contrib/package-server/Makefile])
+AC_CONFIG_FILES([services/contrib/pulse2/Makefile])
 AC_CONFIG_FILES([services/conf/Makefile])
 AC_CONFIG_FILES([services/init.d/Makefile])
 AC_CONFIG_FILES([services/src/Makefile])
@@ -107,7 +112,6 @@ dnl write all stuff
 AC_OUTPUT
 
 dnl Fetch 3rd-party sources
-dnl Look for sources in /usr/src first
 make -C services/3rd_party configure
 
 dnl Warn user sysconfdir is not /etc, if necessary.
