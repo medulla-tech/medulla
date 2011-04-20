@@ -20,10 +20,13 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
+imagingstatedir = $(localstatedir)/pulse2/imaging
+imagingdirs = bootmenus computers custom inventories masters isos archives
+
 mmcconfdir = $(sysconfdir)/mmc
 mmcconffiles = \
 	pulse2/package-server/package-server.ini pulse2/inventory-server/inventory-server.ini \
-	pulse2/scheduler/scheduler.ini pulse2/launchers/launchers.ini 
+	pulse2/scheduler/scheduler.ini pulse2/launchers/launchers.ini pulse2/atftpd/pcre.conf
 
 certpaths = \
 	pulse2/package-server/keys/ pulse2/inventory-server/keys/ pulse2/scheduler/keys/ \
@@ -56,6 +59,9 @@ install-data-local:
 	  dirname=`dirname $$file`; \
 	  $(MKDIR_P) $(DESTDIR)$(mmcconfdir)/$$dirname; \
 	  $(install_sh) -m 600 $(srcdir)/$$file $(DESTDIR)$(mmcconfdir)/$$dirname/; \
+	done
+	for dir in $(imagingdirs); do \
+	  $(mkinstalldirs) $(DESTDIR)$(imagingstatedir)/$$dir; \
 	done
 
 uninstall-local:
