@@ -91,6 +91,7 @@ AM_CONDITIONAL([ENABLE_WOL], [test "$enable_wol" = "yes"])
 dnl files to generate with automake
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([services/Makefile])
+AC_CONFIG_FILES([services/bin/Makefile])
 AC_CONFIG_FILES([services/conf/Makefile])
 AC_CONFIG_FILES([services/init.d/Makefile])
 AC_CONFIG_FILES([services/src/Makefile])
