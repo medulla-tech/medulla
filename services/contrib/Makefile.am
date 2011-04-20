@@ -20,4 +20,7 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-SUBDIRS = conf init.d src 3rd_party bin contrib
+SUBDIRS = msc inventory imaging-server
+
+inventoryconfdir = $(sysconfdir)/mmc/pulse2/inventory-server
+dist_inventoryconf_DATA = OcsNGMap.xml

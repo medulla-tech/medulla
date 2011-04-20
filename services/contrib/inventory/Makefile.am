@@ -20,4 +20,6 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-SUBDIRS = conf init.d src 3rd_party bin contrib
+dist_sbin_SCRIPTS = pulse2-inventory-clean-database
+
+EXTRA_DIST = pulse2-inventory-clean-database.README

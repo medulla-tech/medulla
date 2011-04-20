@@ -1,6 +1,7 @@
 *.pyc
 *~
 *.mo
+*.o
 Makefile.in
 aclocal.m4
 Makefile
@@ -32,3 +33,5 @@ services/init.d/pulse2-launchers
 services/init.d/pulse2-package-server
 services/init.d/pulse2-scheduler
 services/src/.deps/
+services/src/pulse2-imaging-server
+

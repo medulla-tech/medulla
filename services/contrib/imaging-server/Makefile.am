@@ -20,4 +20,4 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-SUBDIRS = conf init.d src 3rd_party bin contrib
+SUBDIRS = hooks
