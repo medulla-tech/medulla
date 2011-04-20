@@ -5,6 +5,8 @@ Makefile.in
 aclocal.m4
 Makefile
 web/Makefile
+services/Makefile
+services/src/Makefile
 autom4te.cache/
 config.guess
 config.log
@@ -22,3 +24,11 @@ m4/lt~obsolete.m4
 missing
 py-compile
 depcomp
+services/3rd_party/wol-src
+services/3rd_party/pulse2-wol
+services/init.d/pulse2-imaging-server
+services/init.d/pulse2-inventory-server
+services/init.d/pulse2-launchers
+services/init.d/pulse2-package-server
+services/init.d/pulse2-scheduler
+services/src/.deps/

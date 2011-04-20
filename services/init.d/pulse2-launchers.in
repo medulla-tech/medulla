@@ -29,7 +29,7 @@
 
 # Variables
 DESC="Pulse2 launchers"
-DAEMON="##SBINDIR##/pulse2-launchers-manager"
+DAEMON="@sbindir@/pulse2-launchers-manager"
 
 # Function to start daemon
 start () {

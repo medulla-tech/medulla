@@ -20,19 +20,4 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-ACLOCAL_AMFLAGS = -I m4
-DISTCHECK_CONFIGURE_FLAGS=--disable-conf-backup
-
-SUBDIRS = web services
-
-backupext = .$(shell date +%Y-%m-%d+%H:%M:%S)
-
-sysconfdirwarning:
-	@if test "${sysconfdir}" != "/etc"; then \
-	  echo '###'; \
-	  echo '### $${sysconfdir} evaluates to '${sysconfdir}': this is probably not what you want !'; \
-	  echo '### You may want to launch ./configure --sysconfdir=/etc.'; \
-	  echo '###'; \
-	fi
-
-.PHONY = sysconfdirwarning
+SUBDIRS = conf init.d src 3rd_party

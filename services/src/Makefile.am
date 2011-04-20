@@ -20,19 +20,10 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-ACLOCAL_AMFLAGS = -I m4
-DISTCHECK_CONFIGURE_FLAGS=--disable-conf-backup
+sbin_PROGRAMS = pulse2-imaging-server
 
-SUBDIRS = web services
-
-backupext = .$(shell date +%Y-%m-%d+%H:%M:%S)
-
-sysconfdirwarning:
-	@if test "${sysconfdir}" != "/etc"; then \
-	  echo '###'; \
-	  echo '### $${sysconfdir} evaluates to '${sysconfdir}': this is probably not what you want !'; \
-	  echo '### You may want to launch ./configure --sysconfdir=/etc.'; \
-	  echo '###'; \
-	fi
-
-.PHONY = sysconfdirwarning
+pulse2_imaging_server_SOURCES = dictionary.c dictionary.h \
+	iniparser.c iniparser.h \
+	pulse2-imaging-server.c pulse2-imaging-server.h \
+	strlib.c strlib.h
+pulse2_imaging_server_CFLAGS = -02 -Wall -Wextra -std=gnu99

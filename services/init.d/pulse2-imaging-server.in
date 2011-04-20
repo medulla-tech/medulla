@@ -1,9 +1,9 @@
 #!/bin/bash
 # -*- coding: utf-8; -*-
 #
-# (c) 2007-2008 Mandriva, http://www.mandriva.com/
+# (c) 2007-2010 Mandriva, http://www.mandriva.com/
 #
-# $Id: pulse2-inventoryserver 30 2008-02-08 16:40:54Z nrueff $
+# $Id$
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
 #
@@ -25,16 +25,16 @@
 
 # Redhat based distributions specific
 # chkconfig: 345 99 60
-# description: Pulse2 Inventory Server
+# description: Pulse2 Imaging Server
 
 # Variables
-DESC="Pulse2 inventoryserver"
-DAEMON="/usr/sbin/pulse2-inventory-server"
+DESC="Pulse 2 Imaging Server"
+DAEMON="@sbindir@/pulse2-imaging-server"
 
 # Function to start daemon
 start () {
         echo -n "Starting ${DESC} : "
-    if [ -f /var/run/pulse2-inventory-server.pid ]; then
+    if [ -f /var/run/pulse2-imaging-server.pid ]; then
         echo "already running"
         return 0
     fi
@@ -52,13 +52,13 @@ start () {
 
 # Function to stop daemon
 stop () {
-        echo -n $"Stopping ${DESC} : "
-    if [ ! -f /var/run/pulse2-inventory-server.pid ]; then
+    echo -n $"Stopping ${DESC} : "
+    if [ ! -f /var/run/pulse2-imaging-server.pid ]; then
         echo "no pid"
         return 0
     fi
-    kill -9 `cat /var/run/pulse2-inventory-server.pid`
-    rm -f /var/run/pulse2-inventory-server.pid
+    kill -9 `cat /var/run/pulse2-imaging-server.pid`
+    rm -f /var/run/pulse2-imaging-server.pid
     # If return code is 0, everything went fine
         RETVAL=$?
     if [ ${RETVAL} -eq 0 ]

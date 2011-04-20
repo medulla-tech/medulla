@@ -1,50 +1,46 @@
-#!/bin/sh
+#!/bin/bash
 #
-# Copyright (C) 2006, Adam Cecile for Linbox FAS
+# (c) 2007-2008 Mandriva, http://www.mandriva.com/
 #
-# This program is free software; you can redistribute it and/or modify
+# $Id: pulse2-launcher 22 2008-01-14 14:52:22Z nrueff $
+#
+# This file is part of Pulse 2, http://pulse2.mandriva.org
+#
+# Pulse 2 is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
 #
-# This program is distributed in the hope that it will be useful,
+# Pulse 2 is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
+# along with Pulse 2; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
 
 
 # Redhat based distributions specific
 # chkconfig: 345 99 60
-# description: MMC agent
+# description: Pulse2 Launchers
 
 # Variables
-DESC="Pulse2 Package Server : pulse2-package-server"
-DAEMON="##SBINDIR##/pulse2-package-server"
-PIDFILE="/var/run/pulse2-package-server.pid"
+DESC="Pulse2 Scheduler"
+DAEMON="@sbindir@/pulse2-scheduler-manager"
 
 # Function to start daemon
 start () {
     echo -n "Starting ${DESC} : "
-    # Start daemon (no need to demonize it)
-    # Do not start it if a pidfile already exist
-    if [ ! -e ${PIDFILE} ]
-    then
-        ${DAEMON} >/dev/null 2>&1
-        # Get return code
-        RETVAL=$?
-    else
-        RETVAL=1
-    fi
+    # Start manager
+    ${DAEMON} start >/dev/null 2>&1
+    RETVAL=$?
     # If return code is 0, everything went fine
     if [ ${RETVAL} -eq 0 ]
-    then
+      then
         echo "done."
-    else
+      else
         echo "failed."
     fi
     return ${RETVAL}
@@ -53,22 +49,14 @@ start () {
 # Function to stop daemon
 stop () {
     echo -n $"Stopping ${DESC} : "
-    # Check if the pidfile exists
-    if [ -e ${PIDFILE} ]
-    then
-        # If there's one, get the pid and send SIG 15
-        kill -15 `cat ${PIDFILE}`
-        # Get return code
-        RETVAL=$?
-        rm -f $PIDFILE
-        # If there's not pidfile, skipp kill and define RETVAL as 1
-    else
-        RETVAL=1
-    fi
+    # Stop manager
+    ${DAEMON} stop >/dev/null 2>&1
+    # If return code is 0, everything went fine
+    RETVAL=$?
     if [ ${RETVAL} -eq 0 ]
-    then
+      then
         echo "done."
-    else
+      else
         echo "failed."
     fi
     return ${RETVAL}
@@ -77,7 +65,7 @@ stop () {
 # Function to restart (run stop, then start)
 restart() {
     stop
-    sleep 2
+    sleep 1
     start
 }
 

@@ -77,12 +77,36 @@ AC_ARG_ENABLE([conf-backup],
               [enable_conf_backup="yes"])
 AM_CONDITIONAL([ENABLE_CONF_BACKUP], [test "$enable_conf_backup" = "yes"])
 
+dnl
+dnl --disable-wol
+dnl   Fetch and compile wake-on-lan tool (3rd party)
+dnl
+AC_ARG_ENABLE([wol],
+              [AS_HELP_STRING([--disable-wol],
+                              [Disable wake-on-lan tool (3rd party) @<:@default=enable@:>@])],
+              [],
+              [enable_wol="yes"])
+AM_CONDITIONAL([ENABLE_WOL], [test "$enable_wol" = "yes"])
+
 dnl files to generate with automake
 AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([services/Makefile])
+AC_CONFIG_FILES([services/conf/Makefile])
+AC_CONFIG_FILES([services/init.d/Makefile])
+AC_CONFIG_FILES([services/src/Makefile])
+AC_CONFIG_FILES([services/3rd_party/Makefile])
 AC_CONFIG_FILES([web/Makefile])
 
 dnl write all stuff
 AC_OUTPUT
 
+dnl Fetch 3rd-party sources
+dnl Look for sources in /usr/src first
+make -C services/3rd_party configure
+
 dnl Warn user sysconfdir is not /etc, if necessary.
 make sysconfdirwarning
+
+echo "###"
+echo "### End of pulse2 configuration"
+echo "###"
