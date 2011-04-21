@@ -40,7 +40,9 @@ configure_wol: $(wol_src)/Makefile
 
 $(wol_src)/Makefile: $(wol_src)
 	cd $(@D) && \
-	  ./configure `$(topsrcdir)/config.status --config` --disable-option-checking
+	  opts=`$(abs_top_builddir)/config.status --config | sed "s/'\([^']*\)'/\1/g"`; \
+	  opts=`echo $$opts | sed -e 's/--srcdir=\S\+//'`; \
+	  ./configure $$opts --disable-option-checking
 
 $(wol_src): $(wol_archive)
 	rm -rf $@
@@ -57,6 +59,7 @@ $(wol_archive):
 	fi
 
 pulse2-wol: $(wol_src)/src/wol
+	rm -f $@
 	mv $< $@
 
 $(wol_src)/src/wol:
