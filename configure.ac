@@ -36,7 +36,15 @@ AC_PROG_CC
 AC_PROG_MAKE_SET
 AC_PROG_LN_S
 AC_PROG_LIBTOOL
-AC_PROG_INSTALL
+
+dnl Check for GNU install (for file backup)
+AC_MSG_CHECKING([for GNU install])
+if $INSTALL --version | grep -q 'GNU coreutils'; then
+   AC_MSG_RESULT([yes])
+else
+   AC_MSG_ERROR([Could not find GNU install])
+fi
+
 dnl Check for Python
 AM_PATH_PYTHON([2.5])
 

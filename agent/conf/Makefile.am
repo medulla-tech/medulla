@@ -21,33 +21,12 @@
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
 mmcconfdir = $(sysconfdir)/mmc
-mmcconffiles = \
+nobase_mmcconf_DATA = \
 	agent/config.ini plugins/base.ini plugins/ppolicy.ini \
 	agent/keys/cacert.pem agent/keys/localcert.pem
 
-EXTRA_DIST = $(mmcconffiles)
+EXTRA_DIST = $(nobase_mmcconf_DATA)
 
 if ENABLE_CONF_BACKUP
-# Extension for beckup'd configuration files
-confbackup = yes
-backupext = .$(shell date +%Y-%m-%d+%H:%M:%S)
+INSTALL += --backup=numbered
 endif
-
-# exec'ed after install-data
-
-# If ENABLE_CONF_BACKUP, backup configuration files
-# and install conf files
-install-data-local:
-	if [ "x$(confbackup)" = "xyes" -a -d "$(DESTDIR)$(mmcconfdir)" ]; then \
-	  mv -f "$(DESTDIR)$(mmcconfdir)" "$(DESTDIR)$(mmcconfdir)$(backupext)"; \
-	fi
-	for path in $(mmcconffiles); do \
-	  dirname=`dirname $$path`; \
-	  $(MKDIR_P) $(DESTDIR)$(mmcconfdir)/$$dirname; \
-	  $(install_sh) -m 600 $(srcdir)/$$path $(DESTDIR)$(mmcconfdir)/$$dirname/; \
-	done
-
-uninstall-local:
-	for path in $(mmcconffiles); do \
-	  rm -f $(DESTDIR)$(mmcconfdir)/$$path; \
-	done
