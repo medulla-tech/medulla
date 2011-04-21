@@ -58,6 +58,13 @@ if [ -z "$(which libtool)" ]; then
     exit 1
 fi
 
+# Test if autoconf >= 2.62
+eval `autoconf --version | sed '1!d; s/^.*\([0-9]\+\)\.\([0-9]\+\)$/major=\1 minor=\2/'`
+if ! test -n "$major" -a -n "$minor" -a $major -eq 2 -a $minor -ge 62; then
+    echo "autoconf >= 2.62 is required"
+    exit 2
+fi
+
 # Run the actual process:
 if test -f $(dirname $0)/configure.ac; then
     (
