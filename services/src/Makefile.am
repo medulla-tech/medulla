@@ -26,4 +26,4 @@ pulse2_imaging_server_SOURCES = dictionary.c dictionary.h \
 	iniparser.c iniparser.h \
 	pulse2-imaging-server.c pulse2-imaging-server.h \
 	strlib.c strlib.h
-pulse2_imaging_server_CFLAGS = -02 -Wall -Wextra -std=gnu99
+pulse2_imaging_server_CFLAGS = -O2 -Wall -Wextra -std=gnu99
