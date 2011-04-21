@@ -20,12 +20,21 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-SUBDIRS = pulse2 plugins
+pulseconfdir = $(sysconfdir)/mmc/pulse2
 
-imagingstatedir = $(localstatedir)/pulse2/imaging
-imagingdirs = bootmenus computers custom inventories masters isos archives
+certpaths = \
+	package-server/keys inventory-server/keys scheduler/keys \
+	launchers/keys
+certca = $(patsubst %,%/cacert.pem,$(certpaths))
+certpriv = $(patsubst %,%/privkey.pem,$(certpaths))
 
-install-data-local:
-	for dir in $(imagingdirs); do \
-	  $(mkinstalldirs) $(DESTDIR)$(imagingstatedir)/$$dir; \
-	done
+nobase_pulseconf_DATA = \
+	package-server/package-server.ini inventory-server/inventory-server.ini \
+	scheduler/scheduler.ini launchers/launchers.ini atftpd/pcre.conf \
+	$(certca) $(certpriv)
+
+EXTRA_DIST = $(nobase_pulseconf_DATA)
+
+if ENABLE_CONF_BACKUP
+INSTALL += --backup=numbered
+endif

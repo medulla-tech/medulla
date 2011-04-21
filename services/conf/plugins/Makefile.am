@@ -20,12 +20,10 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-SUBDIRS = pulse2 plugins
+if ENABLE_CONF_BACKUP
+INSTALL += --backup=numbered
+endif
 
-imagingstatedir = $(localstatedir)/pulse2/imaging
-imagingdirs = bootmenus computers custom inventories masters isos archives
-
-install-data-local:
-	for dir in $(imagingdirs); do \
-	  $(mkinstalldirs) $(DESTDIR)$(imagingstatedir)/$$dir; \
-	done
+pluginsconfdir = $(sysconfdir)/mmc/plugins
+dist_pluginsconf_DATA = msc.ini glpi.ini pkgs.ini dyngroup.ini imaging.ini \
+	inventory.ini pulse2.ini
