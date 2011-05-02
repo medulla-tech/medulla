@@ -64,6 +64,7 @@ dnl Check for Python modules
 AX_PYTHON_MODULE([sqlalchemy], [1])
 AX_PYTHON_MODULE([MySQLdb], [1])
 AX_PYTHON_MODULE([twisted.web], [1])
+AX_PYTHON_MODULE([mmc], [1])
 
 dnl check for headers
 AC_HEADER_STDC
@@ -79,7 +80,7 @@ dnl --disable-conf-backup
 dnl   Disable backup configuration file
 dnl
 AC_ARG_ENABLE([conf-backup],
-              [AS_HELP_STRING([--disable-backup-conf],
+              [AS_HELP_STRING([--disable-conf-backup],
                               [Disable configuration files backup, if any @<:@default=enable@:>@])],
               [],
               [enable_conf_backup="yes"])
@@ -102,14 +103,19 @@ AC_CONFIG_FILES([services/Makefile])
 AC_CONFIG_FILES([services/bin/Makefile])
 AC_CONFIG_FILES([services/contrib/Makefile])
 AC_CONFIG_FILES([services/contrib/msc/Makefile])
+AC_CONFIG_FILES([services/contrib/msc/sql/Makefile])
 AC_CONFIG_FILES([services/contrib/inventory/Makefile])
+AC_CONFIG_FILES([services/contrib/inventory/sql/Makefile])
 AC_CONFIG_FILES([services/contrib/imaging-server/Makefile])
 AC_CONFIG_FILES([services/contrib/imaging-server/hooks/Makefile])
 AC_CONFIG_FILES([services/contrib/dyngroup/Makefile])
+AC_CONFIG_FILES([services/contrib/dyngroup/sql/Makefile])
 AC_CONFIG_FILES([services/contrib/imaging/Makefile])
+AC_CONFIG_FILES([services/contrib/imaging/sql/Makefile])
 AC_CONFIG_FILES([services/contrib/nagios/Makefile])
 AC_CONFIG_FILES([services/contrib/package-server/Makefile])
 AC_CONFIG_FILES([services/contrib/pulse2/Makefile])
+AC_CONFIG_FILES([services/contrib/pulse2/sql/Makefile])
 AC_CONFIG_FILES([services/conf/Makefile])
 AC_CONFIG_FILES([services/conf/plugins/Makefile])
 AC_CONFIG_FILES([services/conf/pulse2/Makefile])

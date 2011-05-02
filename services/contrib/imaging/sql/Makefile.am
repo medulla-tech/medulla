@@ -20,4 +20,7 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-SUBDIRS = sql
+sqldir = $(pkgdatadir)/sql/imaging
+dist_sql_SCRIPTS = install.sh
+dist_sql_DATA = README \
+	schema-001.sql

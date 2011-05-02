@@ -20,4 +20,6 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-SUBDIRS = sql
+sqldir = $(pkgdatadir)/sql/pulse2
+dist_sql_SCRIPTS = install.sh
+dist_sql_DATA = schema-001.sql README

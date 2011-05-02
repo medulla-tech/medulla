@@ -20,10 +20,11 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
+SUBDIRS = sql
+
 EXTRA_DIST = \
 	lrsgznbd/Makefile lrsgznbd/lrsgznbd.c lrsgznbd/lrsgznbd.sh \
 	revadmin/getID.c revadmin/gethwinfo.c \
-	sql/install.sh sql/schema-001.sql sql/README \
 	sysprep/sysprep-wg.inf sysprep/sysprep-name.inf sysprep/sysprep-domain.inf \
 	skel/COPYNUM skel/symlinks skel/header.lst \
 	template/COPYNUM template/header.lst

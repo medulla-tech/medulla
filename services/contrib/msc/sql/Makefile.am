@@ -20,4 +20,22 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-SUBDIRS = sql
+sqldir = $(pkgdatadir)/sql/msc
+dist_sql_SCRIPTS = install.sh
+dist_sql_DATA = clean-db.sql purge-old-rows.sql README \
+	schema-001.sql \
+	schema-002.sql \
+	schema-003.sql \
+	schema-004.sql \
+	schema-005.sql \
+	schema-006.sql \
+	schema-007.sql \
+	schema-008.sql \
+	schema-009.sql \
+	schema-010.sql \
+	schema-011.sql \
+	schema-012.sql \
+	schema-013.sql \
+	schema-014.sql \
+	schema-015.sql \
+	schema-016.sql

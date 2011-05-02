@@ -20,6 +20,8 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
+SUBDIRS = sql
+
 dist_sbin_SCRIPTS = pulse2-msc-clean-database
 
 EXTRA_DIST = pulse2-msc-clean-database.README \
@@ -34,12 +36,4 @@ EXTRA_DIST = pulse2-msc-clean-database.README \
 	quick_actions/007wake_on_lan.msc \
 	quick_actions/103mdv_test_demux.msc \
 	quick_actions/102mdv_test_blocking.msc \
-	quick_actions/006run_inventory_win32.msc \
-	sql/schema-008.sql sql/schema-014.sql sql/schema-013.sql \
-	sql/schema-011.sql sql/install.sh sql/clean-db.sql \
-	sql/schema-015.sql sql/schema-001.sql sql/schema-010.sql \
-	sql/schema-012.sql sql/schema-004.sql sql/schema-007.sql \
-	sql/schema-002.sql sql/schema-005.sql sql/schema-003.sql \
-	sql/purge-old-rows.sql sql/schema-016.sql sql/README \
-	sql/schema-006.sql sql/schema-009.sql
-
+	quick_actions/006run_inventory_win32.msc

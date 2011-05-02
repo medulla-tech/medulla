@@ -20,4 +20,9 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-SUBDIRS = sql
+sqldir = $(pkgdatadir)/sql/dyngroup
+dist_sql_SCRIPTS = install.sh
+dist_sql_DATA = clean-db.sql \
+	schema-001.sql \
+	schema-002.sql \
+	schema-003.sql

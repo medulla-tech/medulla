@@ -20,4 +20,4 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-EXTRA_DIST = sql/install.sh sql/schema-001.sql sql/README
+SUBDIRS = sql
