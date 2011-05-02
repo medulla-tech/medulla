@@ -1,7 +1,8 @@
 #!/bin/bash
 
+MODULE_NAME=dyngroup
 SCHEMA_NAME=schema
-SCHEMA_MAXVERSION=3
+SCHEMA_MAXVERSION=1
 
 if [ ! -n "${MYSQL_HOST+x}" ]; then
     echo 'Enter MYSQL host (default : "localhost", or $MYSQL_DATABASE if defined)' && read
@@ -10,9 +11,9 @@ if [ ! -n "${MYSQL_HOST+x}" ]; then
 fi
 
 if [ ! -n "${MYSQL_BASE+x}" ]; then
-    echo 'Enter MYSQL database (default : "dyngroup", or $MYSQL_BASE if defined)' && read
+    echo 'Enter MYSQL database (default : "'${MODULE_NAME}'", or $MYSQL_BASE if defined)' && read
     [ ! -z $REPLY ] && MYSQL_BASE=$REPLY
-    [ -z $MYSQL_BASE ] && MYSQL_BASE='dyngroup'
+    [ -z $MYSQL_BASE ] && MYSQL_BASE="${MODULE_NAME}"
 fi
 
 if [ ! -n "${MYSQL_USER+x}" ]; then
@@ -31,7 +32,7 @@ trap "rm -f MYSQL_CNF" EXIT
 echo "[client]" >> $MYSQL_CNF
 echo "password=$MYSQL_PWD" >> $MYSQL_CNF
 
-MYSQL_CMD="mysql --defaults-extra-file=$MYSQL_CNF --batch --silent --user $MYSQL_USER --host $MYSQL_HOST"
+MYSQL_CMD="mysql --defaults-extra-file=$MYSQL_CNF --batch --skip-column-names --silent --user $MYSQL_USER --host $MYSQL_HOST"
 
 $MYSQL_CMD $MYSQL_BASE -e "select 1;" 2>/dev/null >/dev/null
 
@@ -43,17 +44,17 @@ if [ "$?" -ne 0 ]; then # try to create database
     fi
     DB_VERSION=0
 else # try to recover db version
-     DB_VERSION=`$MYSQL_CMD $MYSQL_BASE -e "select Number from version;" | head -1 | tr -d -c [0-9]`
-    if [ "$?" -ne 0 ]; then
-        echo "error recovering database version; please check access rights"
-        exit 1
-    fi
+    DB_VERSION=`$MYSQL_CMD $MYSQL_BASE -e "select Number from Version;" 2> /dev/null || echo 0`
 fi
 
 [ "$(($DB_VERSION))" -ge "$SCHEMA_MAXVERSION" ] && echo "Already up to date (v.$DB_VERSION)" && exit
 
 for i in `seq --format=%03.f $(($DB_VERSION + 1)) $SCHEMA_MAXVERSION`; do
     $MYSQL_CMD $MYSQL_BASE < $SCHEMA_NAME-$i.sql
+    if [ "$?" -ne 0 ]; then
+        echo "error creating/updating database; please check schema $SCHEMA_NAME-$i.sql"
+        exit 1
+    fi
 done
 
 echo "Update to v.$SCHEMA_MAXVERSION succeeded"
