@@ -1,0 +1,110 @@
+#!/usr/bin/env python
+
+# -*- coding: utf-8; -*-
+#
+# (c) 2011 Mandriva, http://www.mandriva.com/
+#
+# Author(s):
+#   Jean Parpaillon <jparpaillon@mandriva.com>
+#
+# $Id$
+#
+# This file is part of Pulse 2, http://pulse2.mandriva.org
+#
+# Pulse 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Pulse 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Pulse 2.  If not, see <http://www.gnu.org/licenses/>.
+import os, sys
+import readline, getpass
+from subprocess import call
+from optparse import OptionParser
+import logging
+
+log = logging.getLogger('pulse2-setup')
+
+def read_opt(prompt, default=None, passwd=False):
+    if default is not None:
+        prompt += ' (default=%s)' % default
+    prompt = 'INPUT    - ' + prompt + ': '
+    if passwd:
+        s = getpass.getpass(prompt)
+    else:
+        s = raw_input(prompt)
+    if len(s)==0 and default is not None:
+        s = default
+    return s
+
+class SetupApp(object):
+    sqldirs = ['/usr/local/share/pulse2/sql', '/usr/share/pulse2/sql']
+
+    def __init__(self):
+        self.sqldir = None
+        self.init_paths()
+
+    def init_paths(self):
+        # Look for SQL snippets in sqldirs. Use the first available
+        for path in self.sqldirs:
+            if os.path.isdir(path):
+                self.sqldir = path
+                log.debug("Load SQL snippets from %s" % path)
+                break
+        if self.sqldir is None:
+            log.error('Can not find SQL snippets dir amongst (%s)' % self.sqldirs)
+            sys.exit(1)
+
+    def init_db(self):
+        """ Create databases and associated schemas
+        """
+        modules = [ m for m in os.listdir(self.sqldir) 
+                    if os.path.isdir(os.path.join(self.sqldir, m)) ]
+
+        env = os.environ
+        if not 'MYSQL_HOST' in env:
+            env['MYSQL_HOST'] = read_opt('Database host', 'localhost')
+        if not 'MYSQL_USER' in env:
+            env['MYSQL_USER'] = read_opt('Database admin user', 'root')
+        if not 'MYSQL_PWD' in env:
+            env['MYSQL_PWD'] = read_opt('Database admin password', default='', passwd=True)
+
+        for module in modules:
+            log.debug("Init database for module %s" % module)
+            env['MYSQL_BASE'] = module
+            binpath = os.path.join(self.sqldir, module, 'install.sh')
+            ret = call(binpath, env=env)
+            if ret<>0:
+                log.error('Can not initialize database for module: %s' % module)
+
+    def run(self):
+        """ Run setup 
+        """
+        log.info("Run setup")
+        self.init_db()
+
+if __name__ == '__main__':
+    parser = OptionParser()
+    parser.add_option("-d", "--debug", action="store_true", dest="debug", default=False,
+                      help="Print debug messages")
+
+    # Parse and analyse args
+    (options, args) = parser.parse_args()
+    if options.debug:
+        level = logging.DEBUG
+    else:
+        level = logging.INFO
+
+    # Init logger
+    format = '%(levelname)-8s - %(message)s'
+    logging.basicConfig(level=level, format=format)
+
+    # Run the setup app
+    app = SetupApp()
+    app.run()
