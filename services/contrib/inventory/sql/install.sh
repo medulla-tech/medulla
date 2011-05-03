@@ -1,8 +1,9 @@
 #!/bin/bash
 
 MODULE_NAME=inventory
+BASEDIR=`dirname $0`
 SCHEMA_NAME=schema
-SCHEMA_MAXVERSION=1
+SCHEMA_MAXVERSION=10
 
 if [ ! -n "${MYSQL_HOST+x}" ]; then
     echo 'Enter MYSQL host (default : "localhost", or $MYSQL_DATABASE if defined)' && read
@@ -44,13 +45,17 @@ if [ "$?" -ne 0 ]; then # try to create database
     fi
     DB_VERSION=0
 else # try to recover db version
-    DB_VERSION=`$MYSQL_CMD $MYSQL_BASE -e "select Number from Version;" 2> /dev/null || echo 0`
+    DB_VERSION=`$MYSQL_CMD $MYSQL_BASE -e "select Number from Version;" 2> /dev/null`
+    if test -z "$DB_VERSION"; then
+	echo "Error: unable to get database version"
+	exit 1
+    fi
 fi
 
 [ "$(($DB_VERSION))" -ge "$SCHEMA_MAXVERSION" ] && echo "Already up to date (v.$DB_VERSION)" && exit
 
 for i in `seq --format=%03.f $(($DB_VERSION + 1)) $SCHEMA_MAXVERSION`; do
-    $MYSQL_CMD $MYSQL_BASE < $SCHEMA_NAME-$i.sql
+    $MYSQL_CMD $MYSQL_BASE < $BASEDIR/$SCHEMA_NAME-$i.sql
     if [ "$?" -ne 0 ]; then
         echo "error creating/updating database; please check schema $SCHEMA_NAME-$i.sql"
         exit 1
