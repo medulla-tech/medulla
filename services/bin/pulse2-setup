@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 # -*- coding: utf-8; -*-
 #
 # (c) 2011 Mandriva, http://www.mandriva.com/
@@ -25,8 +24,11 @@
 # along with Pulse 2.  If not, see <http://www.gnu.org/licenses/>.
 import os, sys
 import readline, getpass
+import string
+from random import choice
 from subprocess import call
 from optparse import OptionParser
+import sqlalchemy as sa
 import logging
 
 log = logging.getLogger('pulse2-setup')
@@ -43,39 +45,47 @@ def read_opt(prompt, default=None, passwd=False):
         s = default
     return s
 
+def gen_password(size=10):
+    return ''.join([choice(string.letters + string.digits) for _ in range(size)])
+
 class SetupApp(object):
-    sqldirs = ['/usr/local/share/pulse2/sql', '/usr/share/pulse2/sql']
+    def __init__(self, datadir, confdir):
+        self.config = {}
 
-    def __init__(self):
-        self.sqldir = None
-        self.init_paths()
+        # Check datadir contains sql snippets
+        self.sqldir = os.path.join(datadir, 'sql')
+        if not os.path.isdir(self.sqldir):
+            log.error('Can not find SQL snippets in %s' % self.sqldir)
 
-    def init_paths(self):
-        # Look for SQL snippets in sqldirs. Use the first available
-        for path in self.sqldirs:
-            if os.path.isdir(path):
-                self.sqldir = path
-                log.debug("Load SQL snippets from %s" % path)
-                break
-        if self.sqldir is None:
-            log.error('Can not find SQL snippets dir amongst (%s)' % self.sqldirs)
-            sys.exit(1)
+        # Get DB connection informations
+        self.config['dbhost'] = read_opt('Database host', 'localhost')
+        self.config['dbadminuser'] = read_opt('Database admin user', 'root')
+        self.config['dbadminpwd'] = read_opt('Database admin password', default='', passwd=True)
 
-    def init_db(self):
+        # Create connection to DB and check it
+        url = 'mysql://%s:%s@%s/mysql?use_unicode=1&charset=utf8' % (self.config['dbadminuser'],
+                                                                self.config['dbadminpwd'],
+                                                                self.config['dbhost'])
+        self.engine = sa.create_engine(url)
+        try:
+            conn = self.engine.connect()
+        except sa.exc.OperationalError, e:
+            log.error(u"Impossible de se connecter à la base de données")
+            log.debug(str(e))
+            exit(1)
+
+        # Get db modules list
+        self.dbmodules = [ m for m in os.listdir(self.sqldir) 
+                           if os.path.isdir(os.path.join(self.sqldir, m)) ]
+
+    def init_schemas(self):
         """ Create databases and associated schemas
         """
-        modules = [ m for m in os.listdir(self.sqldir) 
-                    if os.path.isdir(os.path.join(self.sqldir, m)) ]
-
         env = os.environ
-        if not 'MYSQL_HOST' in env:
-            env['MYSQL_HOST'] = read_opt('Database host', 'localhost')
-        if not 'MYSQL_USER' in env:
-            env['MYSQL_USER'] = read_opt('Database admin user', 'root')
-        if not 'MYSQL_PWD' in env:
-            env['MYSQL_PWD'] = read_opt('Database admin password', default='', passwd=True)
-
-        for module in modules:
+        env['MYSQL_HOST'] = self.config['dbhost']
+        env['MYSQL_USER'] = self.config['dbadminuser']
+        env['MYSQL_PWD'] = self.config['dbadminpwd']
+        for module in self.dbmodules:
             log.debug("Init database for module %s" % module)
             env['MYSQL_BASE'] = module
             binpath = os.path.join(self.sqldir, module, 'install.sh')
@@ -83,16 +93,53 @@ class SetupApp(object):
             if ret<>0:
                 log.error('Can not initialize database for module: %s' % module)
 
+    def init_config(self):
+        # Set DB user and password for all modules
+        self.config['dbuser'] = read_opt('Database Pulse2 user', 'mmc')
+        self.config['dbpwd'] = read_opt('Database Pulse2 password', passwd=True, default='<generated>')
+        if self.config['dbpwd']=='<generated>':
+            self.config['dbpwd'] = gen_password()
+            log.debug('Generated password: %s' % self.config['dbpwd'])
+
+        conn = self.engine.connect()
+        try:
+            # Do not know how to check if user exists, then try and catch
+            conn.execute('CREATE USER %s@%s', self.config['dbuser'], 'localhost')
+            log.info('Creates user %s' % self.config['dbuser'])
+        except sa.exc.OperationalError, e:
+            if e.orig[0]==1396:
+                # This error means 'user exists'
+                log.debug('User already exists: %s' % self.config['dbuser'])
+            else:
+                raise e
+
+        # Set password
+        log.info('Updating user password')
+        conn.execute('SET PASSWORD FOR %s@%s = PASSWORD(%s)', self.config['dbuser'], 'localhost', self.config['dbpwd'])
+
+        # Grant rights
+        for module in self.dbmodules:
+            log.info('Grant rights on db %s' % module)
+            conn.execute('GRANT ALL on `%s`.* to %s@%s', module, self.config['dbuser'], 'localhost')
+
+        conn.execute('FLUSH PRIVILEGES')
+        conn.close()
+
     def run(self):
         """ Run setup 
         """
         log.info("Run setup")
-        self.init_db()
+        #self.init_schemas()
+        self.init_config()
 
 if __name__ == '__main__':
     parser = OptionParser()
     parser.add_option("-d", "--debug", action="store_true", dest="debug", default=False,
                       help="Print debug messages")
+    parser.add_option("--pkgdatadir", action="store", dest="pkgdatadir", default='/usr/share/pulse2',
+                      help="Path to pulse2 datadir (default: /usr/share/pulse2)")
+    parser.add_option("--confdir", action="store", dest="confdir", default='/etc/mmc',
+                      help="Path to pulse2 conf dir (default: /etc/mmc)")
 
     # Parse and analyse args
     (options, args) = parser.parse_args()
@@ -106,5 +153,5 @@ if __name__ == '__main__':
     logging.basicConfig(level=level, format=format)
 
     # Run the setup app
-    app = SetupApp()
+    app = SetupApp(datadir=options.pkgdatadir, confdir=options.confdir)
     app.run()
