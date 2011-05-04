@@ -31,6 +31,7 @@ certpriv = $(patsubst %,%/privkey.pem,$(certpaths))
 nobase_pulseconf_DATA = \
 	package-server/package-server.ini inventory-server/inventory-server.ini \
 	scheduler/scheduler.ini launchers/launchers.ini atftpd/pcre.conf \
+	imaging-server/imaging-server.ini \
 	$(certca) $(certpriv)
 
 EXTRA_DIST = $(nobase_pulseconf_DATA)
