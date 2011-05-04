@@ -28,6 +28,7 @@ import string
 from random import choice
 from subprocess import call
 from optparse import OptionParser
+from ConfigParser import ConfigParser
 import sqlalchemy as sa
 import logging
 
@@ -48,9 +49,36 @@ def read_opt(prompt, default=None, passwd=False):
 def gen_password(size=10):
     return ''.join([choice(string.letters + string.digits) for _ in range(size)])
 
+class FailsafeConfigParser(ConfigParser):
+
+    def set(self, section, option, value):
+        if not self.has_section(section):
+            self.add_section(section)
+        super(FailsafeConfigParser, self).set(section, option, value)
+
+    def write_path(self, path):
+        dirname = os.path.dirname(path)
+        if not os.path.isdir(dirname):
+            os.makedirs(dirname)
+        try:
+            f = open(path, 'rw')
+            self.write(f)
+        except IOError, e:
+            log.error("Can not write file: %s" % path)
+            sys.exit(1)
+        finally:
+            f.close()
+        
 class SetupApp(object):
     def __init__(self, datadir, confdir):
         self.config = {}
+        self.datadir = datadir
+        self.confdir = confdir
+
+        # Check if we run as root
+        if os.getuid()<>0:
+            log.error("Please run this application as root")
+            sys.exit(2)
 
         # Check datadir contains sql snippets
         self.sqldir = os.path.join(datadir, 'sql')
@@ -72,11 +100,29 @@ class SetupApp(object):
         except sa.exc.OperationalError, e:
             log.error(u"Impossible de se connecter à la base de données")
             log.debug(str(e))
-            exit(1)
+            sys.exit(1)
 
         # Get db modules list
         self.dbmodules = [ m for m in os.listdir(self.sqldir) 
                            if os.path.isdir(os.path.join(self.sqldir, m)) ]
+
+        # Load conf files, if existing
+        # self.confs will contain path->ConfigParser objects dictionary
+        # path is relative to confdir, as in confpaths list above
+        self.confs = {}
+        self.confpaths = ['plugins/pkgs.ini', 'plugins/imaging.ini', 'plugins/glpi.ini',
+                          'plugins/base.ini', 'plugins/dyngroup.ini', 'plugins/inventory.ini', 
+                          'plugins/pulse2.ini', 'plugins/msc.ini', 'pulse2/inventory-server/inventory-server.ini', 
+                          'pulse2/launchers/launchers.ini', 'pulse2/package-server/package-server.ini', 
+                          'pulse2/scheduler/scheduler.ini']
+        for path in self.confpaths:
+            fpath = os.path.join(self.confdir, path)
+            cp = FailsafeConfigParser()
+            if cp.read(fpath):
+                log.debug("Read config file: %s" % fpath)
+            else:
+                log.debug("Creating config file: %s" % fpath)
+            self.confs[path] = cp
 
     def init_schemas(self):
         """ Create databases and associated schemas
@@ -94,7 +140,7 @@ class SetupApp(object):
                 log.error('Can not initialize database for module: %s' % module)
 
     def init_config(self):
-        # Set DB user and password for all modules
+        # Get DB user and password for all modules
         self.config['dbuser'] = read_opt('Database Pulse2 user', 'mmc')
         pwd = read_opt('Database Pulse2 password', passwd=True, default='<generated>')
         if pwd=='<generated>':
@@ -123,11 +169,11 @@ class SetupApp(object):
             else:
                 raise e
 
-        # Set password
+        # Set password in DB
         log.info('Updating user password')
         conn.execute('SET PASSWORD FOR %s@%s = PASSWORD(%s)', self.config['dbuser'], 'localhost', self.config['dbpwd'])
 
-        # Grant rights
+        # Grant rights in DB
         for module in self.dbmodules:
             log.info('Grant rights on db %s' % module)
             conn.execute('GRANT ALL on `%s`.* to %s@%s', module, self.config['dbuser'], 'localhost')
@@ -135,11 +181,14 @@ class SetupApp(object):
         conn.execute('FLUSH PRIVILEGES')
         conn.close()
 
+        # Set user and password in conf files
+        
+
     def run(self):
         """ Run setup 
         """
         log.info("Run setup")
-        #self.init_schemas()
+        self.init_schemas()
         self.init_config()
 
 if __name__ == '__main__':
