@@ -96,10 +96,20 @@ class SetupApp(object):
     def init_config(self):
         # Set DB user and password for all modules
         self.config['dbuser'] = read_opt('Database Pulse2 user', 'mmc')
-        self.config['dbpwd'] = read_opt('Database Pulse2 password', passwd=True, default='<generated>')
-        if self.config['dbpwd']=='<generated>':
-            self.config['dbpwd'] = gen_password()
-            log.debug('Generated password: %s' % self.config['dbpwd'])
+        pwd = read_opt('Database Pulse2 password', passwd=True, default='<generated>')
+        if pwd=='<generated>':
+            # If return default value, generates a random password
+            pwd = gen_password()
+            log.debug('Generated password: %s' % pwd)
+        else:
+            # Else ask for password confirmation
+            pwd2 = read_opt('Database Pulse2 password (confirm)', passwd=True)
+            while pwd<>pwd2:
+                log.info("Passwords do not match. Try again.")
+                pwd = read_opt('Database Pulse2 password', passwd=True)
+                pwd2 = read_opt('Database Pulse2 password (confirm)', passwd=True)
+        
+        self.config['dbpwd'] = pwd
 
         conn = self.engine.connect()
         try:
