@@ -22,7 +22,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with Pulse 2.  If not, see <http://www.gnu.org/licenses/>.
-import os, sys
+import os, sys, stat
 import readline, getpass
 import string
 from random import choice
@@ -49,26 +49,184 @@ def read_opt(prompt, default=None, passwd=False):
 def gen_password(size=10):
     return ''.join([choice(string.letters + string.digits) for _ in range(size)])
 
-class FailsafeConfigParser(ConfigParser):
+class Pulse2ConfigParser(ConfigParser):
+    clsnames = [ 'PluginsPkgConfig', 'PluginsImagingConfig', 'PluginsGlpiConfig',
+                 'PluginsBaseConfig', 'PluginsDyngroupConfig', 'PluginsInventoryConfig',
+                 'PluginsPulse2Config', 'PluginsMscConfig', 'InventoryServerConfig', 
+                 'LaunchersConfig', 'PackageServerConfig', 'SchedulerConfig',
+                 'ImagingServerConfig' ]
+    path = None
+    defaults = {}
+    mode = stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP
 
-    def set(self, section, option, value):
-        if not self.has_section(section):
-            self.add_section(section)
-        super(FailsafeConfigParser, self).set(section, option, value)
+    def __init__(self, confdir):
+        ConfigParser.__init__(self)
+        self.confdir = confdir
+        self._populate(self.__class__.defaults)
+        self._load()
+
+    def _load(self):
+        """ Load config file, if any
+        """
+        fpath = os.path.join(self.confdir, self.path)
+        if self.read(fpath):
+            log.debug("Load config file %s" % fpath)
+        else:
+            log.debug("No such file %s. Will create it." % fpath)
+
+    def _populate(self, d):
+        for (name, section) in d.iteritems():
+            if not self.has_section(name):
+                self.add_section(name)
+            for (opt, value) in section.iteritems():
+                self.set(name, opt, value)
 
     def write_path(self, path):
         dirname = os.path.dirname(path)
         if not os.path.isdir(dirname):
             os.makedirs(dirname)
         try:
-            f = open(path, 'rw')
+            f = open(path, 'w')
             self.write(f)
+            os.chmod(path, self.mode)
+            log.info("Wrote configuration file: %s" % path)
         except IOError, e:
             log.error("Can not write file: %s" % path)
+            log.debug(str(e))
             sys.exit(1)
         finally:
             f.close()
+
+    def commit(self):
+        self.write_path(os.path.join(self.confdir, self.path))
+
+class LoggingConfig(Pulse2ConfigParser):
+    log_path = None
+
+    def __init__(self, *args, **kwargs):
+        Pulse2ConfigParser.__init__(self, *args, **kwargs)
         
+        # Add logging module configuration
+        d = {'loggers': {'keys': 'root'},
+             'handlers': {'keys': 'hand01'},
+             'formatters': {'keys': 'form01'},
+             'logger_root': {'level': 'NOTSET',
+                             'handlers': 'hand01'},
+             'handler_hand01': {'class': 'FileHandler',
+                                'level': 'INFO',
+                                'formatter': 'form01',
+                                'args': (os.path.join('/var/log/mmc', self.log_path), )},
+             'formatter_form01': {'format': '%(asctime)s %(levelname)s %(message)s'}}
+        self._populate(d)
+
+class PluginsPkgConfig(Pulse2ConfigParser):
+    path = 'plugins/pkgs.ini'
+    defaults = {'main': {'disable': 0},
+                'user_package_api': {}}
+
+class PluginsImagingConfig(Pulse2ConfigParser):
+    path = 'plugins/imaging.ini'
+    defaults = {'main': {'disable': 0},
+                'database': {'dbdriver': 'mysql',
+                             'dbhost': 'localhost',
+                             'dbport': 3306,
+                             'dbname': 'imaging',
+                             'dbuser': 'mmc',
+                             'dbpasswd': 'mmc'},
+                'web': {}}
+
+class PluginsGlpiConfig(Pulse2ConfigParser):
+    path = 'plugins/glpi.ini'
+    defaults = {'main': {'disable': 1},
+                'querymanager': {}}
+
+class PluginsBaseConfig(Pulse2ConfigParser):
+    path = 'plugins/base.ini'
+
+class PluginsDyngroupConfig(Pulse2ConfigParser):
+    path = 'plugins/dyngroup.ini'
+    defaults = {'main': {'disable': 0, 
+                         'dynamic_enable': 1},
+                'database': {'dbdriver': 'mysql',
+                             'dbhost': 'localhost',
+                             'dbport': 3306,
+                             'dbname': 'dyngroup',
+                             'dbuser': 'mmc',
+                             'dbpasswd': 'mmc'},
+                'querymanager': {'activate': 1}}
+
+class PluginsInventoryConfig(Pulse2ConfigParser):
+    path = 'plugins/inventory.ini'
+    defaults = {'main': {'disable': 0},
+                'inventory': {'dbdriver': 'mysql',
+                              'dbhost': 'localhost',
+                              'dbname': 'inventory',
+                              'dbuser': 'mmc',
+                              'dbpasswd': 'mmc'},
+                'computer': {},
+                'expert_mode': {},
+                'graph': {}}
+
+class PluginsPulse2Config(Pulse2ConfigParser):
+    path = 'plugins/pulse2.ini'
+    defaults = {'main': {'disable': 0},
+                'database': {'dbdriver': 'mysql',
+                             'dbhost': 'localhost',
+                             'dbname': 'pulse2',
+                             'dbuser': 'mmc',
+                             'dbpasswd': 'mmc'}}
+
+class PluginsMscConfig(Pulse2ConfigParser):
+    path = 'plugins/msc.ini'
+    defaults = {'main': {'disable': 0},
+                'msc': {'dbdriver': 'mysql',
+                        'dbhost': 'localhost',
+                        'dbname': 'msc',
+                        'dbuser': 'mmc',
+                        'dbpasswd': 'mmc'}}
+
+class InventoryServerConfig(LoggingConfig):
+    path = 'pulse2/inventory-server/inventory-server.ini'
+    log_path = 'pulse2-inventory-server.log'
+    defaults = {'main': {'disable': 0},
+                'database': {'dbdriver': 'mysql',
+                             'dbhost': 'localhost',
+                             'dbname': 'inventory',
+                             'dbuser': 'mmc',
+                             'dbpasswd': 'mmc'},
+                'computer': {},
+                'expert_mode': {},
+                'graph': {}}
+
+class LaunchersConfig(LoggingConfig):
+    path = 'pulse2/launchers/launchers.ini'
+    log_path = 'pulse2-launchers.log'
+    
+class PackageServerConfig(LoggingConfig):
+    path = 'pulse2/package-server/package-server.ini'
+    log_path = 'pulse2-package-server.log'
+
+class SchedulerConfig(LoggingConfig):
+    path = 'pulse2/scheduler/scheduler.ini'
+    log_path = 'pulse2-scheduler.log'
+    defaults = {'scheduler': {'id': 'scheduler_01'},
+                'database': {'dbdriver': 'mysql',
+                             'dbhost': 'localhost',
+                             'dbname': 'msc',
+                             'dbuser': 'mmc',
+                             'dbpasswd': 'mmc'},
+                'computer': {},
+                'expert_mode': {},
+                'graph': {}}
+
+class ImagingServerConfig(LoggingConfig):
+    path = 'pulse2/imaging-server/imaging-server.ini'
+    log_path = 'pulse2-imaging-server.log'
+
+    defaults = {'main': {},
+                'daemon': {},
+                'hooks': {}}
+
 class SetupApp(object):
     def __init__(self, datadir, confdir):
         self.config = {}
@@ -86,7 +244,8 @@ class SetupApp(object):
             log.error('Can not find SQL snippets in %s' % self.sqldir)
 
         # Get DB connection informations
-        self.config['dbhost'] = read_opt('Database host', 'localhost')
+        # Do not ask for dbhost, do not handle distant DB for the moment
+        self.config['dbhost'] = 'localhost'
         self.config['dbadminuser'] = read_opt('Database admin user', 'root')
         self.config['dbadminpwd'] = read_opt('Database admin password', default='', passwd=True)
 
@@ -110,19 +269,9 @@ class SetupApp(object):
         # self.confs will contain path->ConfigParser objects dictionary
         # path is relative to confdir, as in confpaths list above
         self.confs = {}
-        self.confpaths = ['plugins/pkgs.ini', 'plugins/imaging.ini', 'plugins/glpi.ini',
-                          'plugins/base.ini', 'plugins/dyngroup.ini', 'plugins/inventory.ini', 
-                          'plugins/pulse2.ini', 'plugins/msc.ini', 'pulse2/inventory-server/inventory-server.ini', 
-                          'pulse2/launchers/launchers.ini', 'pulse2/package-server/package-server.ini', 
-                          'pulse2/scheduler/scheduler.ini']
-        for path in self.confpaths:
-            fpath = os.path.join(self.confdir, path)
-            cp = FailsafeConfigParser()
-            if cp.read(fpath):
-                log.debug("Read config file: %s" % fpath)
-            else:
-                log.debug("Creating config file: %s" % fpath)
-            self.confs[path] = cp
+        for clsname in Pulse2ConfigParser.clsnames:
+            cls = globals()[clsname]
+            self.confs[cls.path] = cls(self.confdir)
 
     def init_schemas(self):
         """ Create databases and associated schemas
@@ -181,8 +330,59 @@ class SetupApp(object):
         conn.execute('FLUSH PRIVILEGES')
         conn.close()
 
-        # Set user and password in conf files
+        #
+        # Set db user and password in conf files
+        #
         
+        # dyngroup db
+        self.confs['plugins/dyngroup.ini'].set('database', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/dyngroup.ini'].set('database', 'dbuser', self.config['dbuser'])
+        self.confs['plugins/dyngroup.ini'].set('database', 'dbpasswd', self.config['dbpwd'])
+
+        # imaging db
+        self.confs['plugins/imaging.ini'].set('database', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/imaging.ini'].set('database', 'dbuser', self.config['dbuser'])
+        self.confs['plugins/imaging.ini'].set('database', 'dbpasswd', self.config['dbpwd'])
+
+        # inventory db (plugin)
+        self.confs['plugins/inventory.ini']\
+            .set('inventory', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/inventory.ini']\
+            .set('inventory', 'dbuser', self.config['dbuser'])
+        self.confs['plugins/inventory.ini']\
+            .set('inventory', 'dbpasswd', self.config['dbpwd'])
+
+        # inventory db (server)
+        self.confs['pulse2/inventory-server/inventory-server.ini']\
+            .set('database', 'dbhost', self.config['dbhost'])
+        self.confs['pulse2/inventory-server/inventory-server.ini']\
+            .set('database', 'dbuser', self.config['dbuser'])
+        self.confs['pulse2/inventory-server/inventory-server.ini']\
+            .set('database', 'dbpasswd', self.config['dbpwd'])
+
+        # msc db (plugin)
+        self.confs['plugins/msc.ini'].set('msc', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/msc.ini'].set('msc', 'dbuser', self.config['dbuser'])
+        self.confs['plugins/msc.ini'].set('msc', 'dbpasswd', self.config['dbpwd'])        
+        
+        # msc db (scheduler)
+        self.confs['pulse2/scheduler/scheduler.ini']\
+            .set('database', 'dbhost', self.config['dbhost'])
+        self.confs['pulse2/scheduler/scheduler.ini']\
+            .set('database', 'dbuser', self.config['dbuser'])
+        self.confs['pulse2/scheduler/scheduler.ini']\
+            .set('database', 'dbpasswd', self.config['dbpwd'])
+
+        # pulse2
+        self.confs['plugins/pulse2.ini'].set('database', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/pulse2.ini'].set('database', 'dbuser', self.config['dbuser'])
+        self.confs['plugins/pulse2.ini'].set('database', 'dbpasswd', self.config['dbpwd'])
+
+    def commit(self):
+        """ Write down all config files
+        """
+        for (path, conf) in self.confs.iteritems():
+            conf.commit()
 
     def run(self):
         """ Run setup 
@@ -190,6 +390,7 @@ class SetupApp(object):
         log.info("Run setup")
         self.init_schemas()
         self.init_config()
+        self.commit()
 
 if __name__ == '__main__':
     parser = OptionParser()
