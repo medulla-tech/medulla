@@ -1,0 +1,53 @@
+#!/bin/sh
+
+set -e
+
+tmpconf=$(mktemp)
+tmpdir=$(mktemp -d)
+
+_exit() {
+    rm -fr $tmpdir $tmpconf
+}
+
+trap _exit EXIT
+
+usage() {
+    echo "Usage: mmc-add-schema /path/to/mmc.schema /path/to/ldap/schema"
+}
+
+if [ $# -ne 2 ]; then
+    usage
+    exit 0
+fi
+
+if [ `id -u` != 0 ]; then
+    echo "Must be run as root"
+    exit 1
+fi
+
+schemapath=$1
+if [ ! -e $schemapath ]; then
+    echo "Can not read: $schemapath"
+    exit 1
+fi
+destdir=$2
+if [ ! -d $destdir ]; then
+    echo "Not a valid directory: $destdir"
+    exit 1
+fi
+
+destpath=$destdir/`basename $schemapath`
+
+mkdir -p $destdir
+cp $schemapath $destpath
+
+echo "include $destpath" > $tmpconf
+
+slaptest -f $tmpconf -F $tmpdir
+
+schemaldif=$tmpdir/cn\=config/cn\=schema/cn\={0}mmc.ldif
+sed -i -e 's/^dn:.*$/dn: cn=mmc,cn=schema,cn=config/; s/^cn:.*$/cn: mmc/; /^structuralObjectClass:.*$/d; /^entryUUID:.*$/d; /^creatorsName:.*$/d; /^createTimestamp:.*$/d; /^entryCSN:.*$/d; /^modifiersName:.*$/d; /^modifyTimestamp:.*$/d' $schemaldif
+
+ldapadd -Y EXTERNAL -H ldapi:/// -f $schemaldif
+
+exit 0

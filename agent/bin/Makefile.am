@@ -20,5 +20,5 @@
 # Author(s)
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-dist_sbin_SCRIPTS = mmc-agent mds-report
+dist_sbin_SCRIPTS = mmc-agent mds-report mmc-add-schema
 dist_bin_SCRIPTS = mmc-helper mmc-password-helper

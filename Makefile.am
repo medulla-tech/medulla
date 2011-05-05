@@ -25,6 +25,8 @@ DISTCHECK_CONFIGURE_FLAGS=--disable-conf-backup
 
 SUBDIRS  = agent web
 
+ldapcontribdir = $(docdir)/contrib/ldap
+
 sysconfdirwarning:
 	@if test "${sysconfdir}" != "/etc"; then \
 	  echo '###'; \
@@ -32,3 +34,13 @@ sysconfdirwarning:
 	  echo '### You may want to launch ./configure --sysconfdir=/etc.'; \
 	  echo '###'; \
 	fi
+
+install-data-hook:
+	@echo '###'
+	@echo '### MMC LDAP schema must be added to your LDAP directory in order for'
+	@echo '### mmc-agent to run.'
+	@echo '### If using dynamic backend (from OpenLDAP 2.3), schema must be converted'
+	@echo '### in LDIF format.'
+	@echo '### You can use "mmc-add-schema" to convert and add the schema.'
+	@echo '### Schema file is available in: $(ldapcontribdir)'
+	@echo '###'
