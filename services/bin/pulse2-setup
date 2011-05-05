@@ -31,23 +31,31 @@ from optparse import OptionParser
 from ConfigParser import ConfigParser
 import sqlalchemy as sa
 import logging
+import ldap
 
 log = logging.getLogger('pulse2-setup')
 
-def read_opt(prompt, default=None, passwd=False):
+def read_opt(prompt, default=None):
     if default is not None:
-        prompt += ' (default=%s)' % default
+        prompt += ' (default: %s)' % default
     prompt = 'INPUT    - ' + prompt + ': '
-    if passwd:
-        s = getpass.getpass(prompt)
-    else:
-        s = raw_input(prompt)
+    s = raw_input(prompt)
     if len(s)==0 and default is not None:
         s = default
     return s
 
 def gen_password(size=10):
     return ''.join([choice(string.letters + string.digits) for _ in range(size)])
+
+def read_passwd(prompt):
+    match = False
+    while not match:
+        pwd = getpass.getpass('INPUT    - ' + prompt + ': ')
+        pwd2 = getpass.getpass('INPUT    - ' + prompt + ' (confirm): ')
+        match = pwd==pwd2
+        if not match:
+            log.info('Paswords do not match. Retry.')
+    return pwd
 
 class Pulse2ConfigParser(ConfigParser):
     clsnames = [ 'PluginsPkgConfig', 'PluginsImagingConfig', 'PluginsGlpiConfig',
@@ -142,6 +150,16 @@ class PluginsGlpiConfig(Pulse2ConfigParser):
 
 class PluginsBaseConfig(Pulse2ConfigParser):
     path = 'plugins/base.ini'
+    defaults = {'backup-tools': {'path': '/usr/lib/mmc/backup-tools',
+                                 'destpath': '/home/archives'},
+                'ldap': {'ldapurl': 'ldap://localhost:389',
+                         'basedn': 'dc=mandriva,dc=com',
+                         'rootname': 'cn=admin,%(basedn)s',
+                         'password': 'secret',
+                         'baseusersdn': 'ou=Users,%(basedn)s',
+                         'basegroupsdn': 'ou=Groups,%(basedn)s',
+                         'userhomeaction': 1,
+                         'logfile': '/var/log/ldap.log'}}
 
 class PluginsDyngroupConfig(Pulse2ConfigParser):
     path = 'plugins/dyngroup.ini'
@@ -243,24 +261,6 @@ class SetupApp(object):
         if not os.path.isdir(self.sqldir):
             log.error('Can not find SQL snippets in %s' % self.sqldir)
 
-        # Get DB connection informations
-        # Do not ask for dbhost, do not handle distant DB for the moment
-        self.config['dbhost'] = 'localhost'
-        self.config['dbadminuser'] = read_opt('Database admin user', 'root')
-        self.config['dbadminpwd'] = read_opt('Database admin password', default='', passwd=True)
-
-        # Create connection to DB and check it
-        url = 'mysql://%s:%s@%s/mysql?use_unicode=1&charset=utf8' % (self.config['dbadminuser'],
-                                                                self.config['dbadminpwd'],
-                                                                self.config['dbhost'])
-        self.engine = sa.create_engine(url)
-        try:
-            conn = self.engine.connect()
-        except sa.exc.OperationalError, e:
-            log.error(u"Impossible de se connecter à la base de données")
-            log.debug(str(e))
-            sys.exit(1)
-
         # Get db modules list
         self.dbmodules = [ m for m in os.listdir(self.sqldir) 
                            if os.path.isdir(os.path.join(self.sqldir, m)) ]
@@ -273,9 +273,73 @@ class SetupApp(object):
             cls = globals()[clsname]
             self.confs[cls.path] = cls(self.confdir)
 
-    def init_schemas(self):
+    def init_ldap(self):
+        invalids = ['ldapurl', 'ldapbasedn', 'ldapadmindn', 'ldappasswd']
+        while len(invalids):
+            if 'ldapurl' in invalids:
+                self.config['ldapurl'] = read_opt('LDAP uri', 'ldap://localhost:389')
+            if 'ldapbasedn' in invalids:
+                self.config['ldapbasedn'] = read_opt('LDAP base DN', 'dc=mandriva,dc=com')
+            if 'ldapadmindn' in invalids:
+                self.config['ldapadmindn'] = read_opt('LDAP admin DN', 'cn=admin,%s' % self.config['ldapbasedn'])
+            if 'ldappasswd' in invalids:
+                self.config['ldappasswd'] = read_passwd('LDAP admin password')
+
+            # Check parameters
+            conn = ldap.initialize(self.config['ldapurl'])
+            try:
+                invalids = []
+                conn.simple_bind_s(self.config['ldapadmindn'], self.config['ldappasswd'])
+            except ldap.INVALID_CREDENTIALS, e:
+                invalids += ['ldapbasedn', 'ldapadmindn', 'ldappasswd']
+                log.error("Invalid credentials, check base DN, admin DN and password.")
+                log.debug(str(e))
+            except ldap.SERVER_DOWN, e:
+                invalids += ['ldapurl']
+                log.error("Incorrect server")
+                log.debug(str(e))
+            except ldap.UNWILLING_TO_PERFORM, e:
+                invalids += ['ldappasswd']
+                log.error("Empty password not supported")
+                log.debug(str(e))
+        log.info("Connection to LDAP succesfull.")
+
+        # Check mmc schema is installed
+        log.info("Check for MMC schema")
+        (dn, schema) = ldap.schema.urlfetch(self.config['ldapurl'])
+        if schema.get_obj(ldap.schema.ObjectClass, 'lmcUserObject') is None:
+            log.error('MMC schema can not be found in LDAP directory.')
+            log.error('Exiting...')
+            sys.exit(1)
+
+        # Populate base plugin conf file
+        self.confs['plugins/base.ini'].set('ldap', 'ldapurl', self.config['ldapurl'])
+        self.confs['plugins/base.ini'].set('ldap', 'rootname', self.config['ldapadmindn'])
+        self.confs['plugins/base.ini'].set('ldap', 'password', self.config['ldappasswd'])
+        
+    def init_db(self):
         """ Create databases and associated schemas
         """
+        invalid = True
+        while invalid:
+            # Get DB connection informations
+            # Do not ask for dbhost, do not handle distant DB for the moment
+            self.config['dbhost'] = 'localhost'
+            self.config['dbadminuser'] = read_opt('Database admin user', 'root')
+            self.config['dbadminpwd'] = read_passwd('Database admin password')
+
+            # Create connection to DB and check it
+            url = 'mysql://%s:%s@%s/mysql' % (self.config['dbadminuser'],
+                                              self.config['dbadminpwd'],
+                                              self.config['dbhost'])
+            self.engine = sa.create_engine(url)
+            try:
+                conn = self.engine.connect()
+                invalid = False
+            except sa.exc.OperationalError, e:
+                log.error(u"Impossible de se connecter à la base de données")
+                log.debug(str(e))
+
         env = os.environ
         env['MYSQL_HOST'] = self.config['dbhost']
         env['MYSQL_USER'] = self.config['dbadminuser']
@@ -288,8 +352,8 @@ class SetupApp(object):
             if ret<>0:
                 log.error('Can not initialize database for module: %s' % module)
 
-    def init_config(self):
         # Get DB user and password for all modules
+        log.info("Setup db credentials")
         self.config['dbuser'] = 'mmc'
         self.config['dbpwd'] = gen_password()
 
@@ -375,8 +439,8 @@ class SetupApp(object):
         """ Run setup 
         """
         log.info("Run setup")
-        self.init_schemas()
-        self.init_config()
+        self.init_db()
+        self.init_ldap()
         self.commit()
 
 if __name__ == '__main__':
