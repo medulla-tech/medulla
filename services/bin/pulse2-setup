@@ -159,7 +159,8 @@ class PluginsBaseConfig(Pulse2ConfigParser):
                          'baseusersdn': 'ou=Users,%(basedn)s',
                          'basegroupsdn': 'ou=Groups,%(basedn)s',
                          'userhomeaction': 1,
-                         'logfile': '/var/log/ldap.log'}}
+                         'logfile': '/var/log/ldap.log'},
+                'computers': {'method': 'inventory'}}
 
 class PluginsDyngroupConfig(Pulse2ConfigParser):
     path = 'plugins/dyngroup.ini'
@@ -181,9 +182,9 @@ class PluginsInventoryConfig(Pulse2ConfigParser):
                               'dbname': 'inventory',
                               'dbuser': 'mmc',
                               'dbpasswd': 'mmc'},
-                'computer': {},
                 'expert_mode': {},
-                'graph': {}}
+                'graph': {},
+                'computers': {}}
 
 class PluginsPulse2Config(Pulse2ConfigParser):
     path = 'plugins/pulse2.ini'
@@ -212,7 +213,7 @@ class InventoryServerConfig(LoggingConfig):
                              'dbname': 'inventory',
                              'dbuser': 'mmc',
                              'dbpasswd': 'mmc'},
-                'computer': {},
+                'computers': {},
                 'expert_mode': {},
                 'graph': {}}
 
@@ -376,7 +377,8 @@ class SetupApp(object):
         # Grant rights in DB
         for module in self.dbmodules:
             log.info('Grant rights on db %s' % module)
-            conn.execute('GRANT ALL on `%s`.* to %s@%s', module, self.config['dbuser'], 'localhost')
+            # Put db name without sqlalchemy quoting: it was surrounded by `''
+            conn.execute('GRANT ALL on `%s`.* to %%s@%%s' % module, self.config['dbuser'], 'localhost')
 
         conn.execute('FLUSH PRIVILEGES')
         conn.close()
@@ -429,6 +431,19 @@ class SetupApp(object):
         self.confs['plugins/pulse2.ini'].set('database', 'dbuser', self.config['dbuser'])
         self.confs['plugins/pulse2.ini'].set('database', 'dbpasswd', self.config['dbpwd'])
 
+    def init_misc(self):
+        # Choose glpi or inventory backend, and check config files coherency
+        # TODO: ask for the user. For the moment, choose inventory
+        self.confs['plugins/glpi.ini'].set('main', 'disable', 1)
+        self.confs['plugins/inventory.ini'].set('main', 'disable', 0)
+        self.confs['plugins/base.ini'].set('computers', 'method', 'inventory')
+        
+        # Create backup dir
+        path = self.confs['plugins/base.ini'].get('backup-tools', 'destpath')
+        if not os.path.isdir(path):
+            log.info("Creating directory: %s" % path)
+            os.makedirs(path)
+
     def commit(self):
         """ Write down all config files
         """
@@ -441,6 +456,7 @@ class SetupApp(object):
         log.info("Run setup")
         self.init_db()
         self.init_ldap()
+        self.init_misc()
         self.commit()
 
 if __name__ == '__main__':
