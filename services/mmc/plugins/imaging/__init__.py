@@ -28,6 +28,7 @@ imaging plugin
 
 import logging
 
+from mmc.core.version import scmRevision
 from mmc.agent import PluginManager
 from mmc.support.mmctools import ContextMakerI, SecurityContext
 from mmc.plugins.imaging.config import ImagingConfig
@@ -44,7 +45,7 @@ from pulse2.database.imaging import ImagingDatabase
 
 VERSION = "1.3.0"
 APIVERSION = "0:0:0"
-REVISION = int("$Rev$".split(':')[1].strip(' $'))
+REVISION = scmRevision("$Rev$")
 
 NOAUTHNEEDED = ['computerRegister',
                 'imagingServerRegister',

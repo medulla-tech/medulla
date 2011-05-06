@@ -35,6 +35,7 @@ import os
 from twisted.internet import defer
 
 # Helpers
+from mmc.core.version import scmRevision
 from mmc.support.mmctools import xmlrpcCleanup
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 
@@ -60,7 +61,7 @@ import pulse2.database.msc.orm.commands_on_host
 
 VERSION = '1.3.0'
 APIVERSION = '0:0:0'
-REVISION = int('$Rev$'.split(':')[1].strip(' $'))
+REVISION = scmRevision('$Rev$')
 
 def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION

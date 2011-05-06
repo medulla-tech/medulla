@@ -24,6 +24,7 @@ MMC GLPI Backend plugin
 It provide an API to access informations in the GLPI database.
 """
 
+from mmc.core.version import scmRevision
 from mmc.support.mmctools import xmlrpcCleanup, RpcProxyI, ContextMakerI, SecurityContext
 from mmc.plugins.base.computers import ComputerManager
 from mmc.plugins.base.provisioning import ProvisioningManager
@@ -37,7 +38,7 @@ import logging
 
 VERSION = "1.3.0"
 APIVERSION = "0:0:0"
-REVISION = int("$Rev$".split(':')[1].strip(' $'))
+REVISION = scmRevision("$Rev$")
 
 def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION

@@ -26,6 +26,7 @@ It provide an API to work with the informations in the Dyngroup database.
 It also provide access to the QueryManager API
 """
 
+from mmc.core.version import scmRevision
 from mmc.support.mmctools import xmlrpcCleanup
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 
@@ -47,7 +48,7 @@ from pulse2.managers.profile import ComputerProfileManager
 
 VERSION = '1.3.0'
 APIVERSION = '0:0:0'
-REVISION = int('$Rev$'.split(':')[1].strip(' $'))
+REVISION = scmRevision('$Rev$')
 queryManager = None
 config = None
 

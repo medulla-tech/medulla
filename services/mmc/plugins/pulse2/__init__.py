@@ -29,6 +29,7 @@ from sqlalchemy.exceptions import SQLError
 import sqlalchemy.orm.query
 
 import logging
+from mmc.core.version import scmRevision
 from mmc.support.config import PluginConfig
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext, xmlrpcCleanup
 from mmc.agent import PluginManager
@@ -42,7 +43,7 @@ from mmc.plugins.pulse2.pulse import Pulse2Pulse2Manager
 
 VERSION = "1.3.0"
 APIVERSION = "0:0:0"
-REVISION = int("$Rev$".split(':')[1].strip(' $'))
+REVISION = scmRevision("$Rev$")
 
 def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION
