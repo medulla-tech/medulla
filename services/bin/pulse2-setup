@@ -202,7 +202,9 @@ class PluginsMscConfig(Pulse2ConfigParser):
                         'dbhost': 'localhost',
                         'dbname': 'msc',
                         'dbuser': 'mmc',
-                        'dbpasswd': 'mmc'}}
+                        'dbpasswd': 'mmc',
+                        'qactionpath': '/var/lib/pulse2/qactions',
+                        'repopath': '/var/lib/pulse2/packages'}}
 
 class InventoryServerConfig(LoggingConfig):
     path = 'pulse2/inventory-server/inventory-server.ini'
@@ -438,11 +440,13 @@ class SetupApp(object):
         self.confs['plugins/inventory.ini'].set('main', 'disable', 0)
         self.confs['plugins/base.ini'].set('computers', 'method', 'inventory')
         
-        # Create backup dir
-        path = self.confs['plugins/base.ini'].get('backup-tools', 'destpath')
-        if not os.path.isdir(path):
-            log.info("Creating directory: %s" % path)
-            os.makedirs(path)
+        # Ensure various dirs are created
+        for path in [ self.confs['plugins/base.ini'].get('backup-tools', 'destpath'),
+                      self.confs['plugins/msc.ini'].get('msc', 'qactionpath'),
+                      self.confs['plugins/msc.ini'].get('msc', 'repopath') ]:
+            if not os.path.isdir(path):
+                log.info("Creating directory: %s" % path)
+                os.makedirs(path)
 
     def commit(self):
         """ Write down all config files
