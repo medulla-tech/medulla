@@ -28,14 +28,12 @@ pulse2 modules.
 """
 
 from pulse2.utils import Singleton
-from pulse2.database.sqlalchemy_tests import checkSqlalchemy
+from pulse2.database.sqlalchemy_tests import checkSqlalchemy, SA_MAJOR, SA_MINOR
 from sqlalchemy.exceptions import SQLError
 from sqlalchemy.exceptions import NoSuchTableError
 
 import logging
 NB_DB_CONN_TRY = 2
-SA_MAJOR = 0
-SA_MINOR = 4
 
 class DatabaseHelper(Singleton):
     is_activated = False
