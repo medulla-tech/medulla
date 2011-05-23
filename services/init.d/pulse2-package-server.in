@@ -15,8 +15,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
-
+### BEGIN INIT INFO
+# Provides:          pulse2-package-server
+# Required-Start:    $network mysql
+# Required-Stop:     $network mysql
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start and stop pulse2 package server
+# Description:       Start and stop pulse2 package server
+### END INIT INFO
 
 # Redhat based distributions specific
 # chkconfig: 345 99 60
