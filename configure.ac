@@ -21,13 +21,16 @@ dnl autoconf version
 AC_PREREQ(2.59)
 
 dnl autoconf initialization
-AC_INIT([pulse2], [1.3.1], [http://www.mandriva.com])
+define([project], [pulse2])
+define([gitversion], esyscmd([sh -c "which git > /dev/null && git describe | sed -e 's/]project[-\([^-]\+\)//' | tr -d '\n' || true"]))dnl
+AC_INIT(project, [1.3.1]gitversion, [http://www.mandriva.com])
+AC_DEFINE(GITVERSION, "gitversion", [Git version])
 
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 
-AM_INIT_AUTOMAKE([-Wno-portability])
+AM_INIT_AUTOMAKE([1.9 tar-ustar -Wno-portability])
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES(yes)])
 AC_CONFIG_MACRO_DIR([m4])
 
