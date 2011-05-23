@@ -46,7 +46,7 @@ $(wol_src)/Makefile: $(wol_src)
 
 $(wol_src): $(wol_archive)
 	rm -rf $@
-	tmpdir=$(shell mktemp -d --tmpdir=.); \
+	tmpdir=$(shell mktemp -d -p ./); \
 	  tar xfC $< $$tmpdir; \
 	  mv $$tmpdir/* $@; \
 	  rm -r $$tmpdir
