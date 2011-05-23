@@ -29,6 +29,7 @@ import time
 import os
 import sys
 
+from mmc.core.version import scmRevision
 from pulse2.package_server.config import config_addons
 from pulse2.package_server.common import Common
 from pulse2.package_server.common.serializer import PkgsRsyncStateSerializer
@@ -39,7 +40,7 @@ from twisted.internet import task
 from twisted.internet import utils
 from twisted.internet import defer
 
-REVISION = int("$Rev$".split(':')[1].strip(' $'))
+REVISION = scmRevision("$Rev$")
 VERSION = "1.3.0"
 
 

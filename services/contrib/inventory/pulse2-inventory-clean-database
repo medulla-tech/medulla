@@ -354,10 +354,6 @@ if __name__ == "__main__":
     if len(sys.argv) != 2:
         sys.exit(usage(sys.argv))
 
-    if not sqlalchemy.__version__.startswith('0.4'):
-        print "Wrong version of SqlAlchemy found, please install a 0.4 version !"
-        sys.exit(1)
-
     mysql_db = create_engine(sys.argv[1])
     metadata = MetaData(mysql_db)
 

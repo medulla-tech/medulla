@@ -283,7 +283,8 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         session = create_session()
         groups = self.__allgroups_query(ctx, params, session, type)
-        s = select([func.count(text('*'))]).select_from(groups.compile().alias('foo'))
+        # TODO: sqlalechemy migration
+        s = select([func.count(text('*'))]).select_from(groups.alias('foo'))
         result = session.execute(s)
         session.close()
         return result.fetchone()[0]
@@ -297,6 +298,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         session = create_session()
         groups = self.__allgroups_query(ctx, params, session, type)
+        groups = groups.order_by(self.groups.c.name)
 
         min = 0
         try:
@@ -313,7 +315,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         except KeyError:
             pass
 
-        ret = groups.order_by(self.groups.c.name).all()
+        ret = groups.all()
         ret = map(lambda m: setattr(m[0], 'is_owner', m[1] == ctx.userid) or m[0], ret)
 
         session.close()

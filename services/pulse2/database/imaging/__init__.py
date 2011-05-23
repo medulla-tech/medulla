@@ -2518,7 +2518,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if q == None:
             parent_path = ComputerLocationManager().getLocationParentPath(uuid)
             q = session.query(Entity).add_column(self.entity.c.uuid).select_from(self.imaging_server.join(self.entity)) \
-                .filter(and_(self.entity.c.uuid.in_(parent_path), self.imaging_server.c.recursive == 1, self.imaging_server.c.associated == 1)) \
+                .filter(and_(self.entity.c.uuid.in_( (parent_path,) ), self.imaging_server.c.recursive == 1, self.imaging_server.c.associated == 1)) \
                 .all()
             h_temp = {}
             for entity, en_uuid in q:
@@ -2540,7 +2540,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if q == None:
             parent_path = ComputerLocationManager().getLocationParentPath(uuid)
             q = session.query(ImagingServer).add_column(self.entity.c.uuid).select_from(self.imaging_server.join(self.entity)) \
-                .filter(and_(self.entity.c.uuid.in_(parent_path), self.imaging_server.c.recursive == 1, self.imaging_server.c.associated == 1)) \
+                .filter(and_(self.entity.c.uuid.in_( (parent_path,) ), self.imaging_server.c.recursive == 1, self.imaging_server.c.associated == 1)) \
                 .all()
             h_temp = {}
             for imaging_server, en_uuid in q:
@@ -3130,7 +3130,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = session.query(SynchroState).add_entity(Menu)
         q = q.select_from(self.synchro_state.join(self.menu).join(self.target, self.menu.c.id == self.target.c.fk_menu))
         if target_type == P2IT.ALL_COMPUTERS:
-            q = q.filter(and_(self.target.c.uuid.in_(uuids), self.target.c.type.in_(P2IT.COMPUTER, P2IT.COMPUTER_IN_PROFILE))).all()
+            q = q.filter(and_(self.target.c.uuid.in_(uuids), self.target.c.type.in_( (P2IT.COMPUTER, P2IT.COMPUTER_IN_PROFILE) ))).all()
         else:
             q = q.filter(and_(self.target.c.uuid.in_(uuids), self.target.c.type == target_type)).all()
         return q

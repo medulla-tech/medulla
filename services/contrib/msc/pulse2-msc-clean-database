@@ -49,7 +49,7 @@ def query_bundles_to_delete(commands, commands_on_host, creation_timestamp):
         if msc_dbversion > 13:
             # The not finished bundles are those that own commands where all
             # commands_on_host state are not in the done or failed state
-            not_finished_bundles = select([commands.c.fk_bundle], and_(commands_on_host.c.fk_commands == commands.c.id, not_(commands_on_host.c.current_state.in_(*STATES_TO_CLEANUP)), commands.c.fk_bundle != None), distinct = True)
+            not_finished_bundles = select([commands.c.fk_bundle], and_(commands_on_host.c.fk_commands == commands.c.id, not_(commands_on_host.c.current_state.in_(STATES_TO_CLEANUP)), commands.c.fk_bundle != None), distinct = True)
             # Get the finished bundles with commands that haven't expired
             finished_bundles_not_expired = select([commands.c.fk_bundle], and_(not_(commands.c.fk_bundle.in_(not_finished_bundles)), commands.c.creation_date >= creation_timestamp), distinct = True)
             # The finished and expired bundles are those that are finished, and
@@ -58,7 +58,7 @@ def query_bundles_to_delete(commands, commands_on_host, creation_timestamp):
         else:
             # The not finished bundles are those that own commands where all
             # commands_on_host state are not in the done or failed state
-            not_finished_bundles = select([commands.c.bundle_id], and_(commands_on_host.c.fk_commands == commands.c.id, not_(commands_on_host.c.current_state.in_(*STATES_TO_CLEANUP)), commands.c.bundle_id != None), distinct = True)
+            not_finished_bundles = select([commands.c.bundle_id], and_(commands_on_host.c.fk_commands == commands.c.id, not_(commands_on_host.c.current_state.in_(STATES_TO_CLEANUP)), commands.c.bundle_id != None), distinct = True)
             # Get the finished bundles with commands that haven't expired
             finished_bundles_not_expired = select([commands.c.bundle_id], and_(not_(commands.c.bundle_id.in_(not_finished_bundles)), commands.c.creation_date >= creation_timestamp), distinct = True)
             # The finished and expired bundles are those that are finished, and
@@ -95,10 +95,10 @@ def query_commands_to_delete(commands, commands_on_host, creation_timestamp):
     """
     if sqlalchemy.__version__.startswith('0.3'):
         if msc_dbversion > 13:
-            not_finished_commands = select([commands.c.id], and_(commands_on_host.c.fk_commands == commands.c.id, not_(commands_on_host.c.current_state.in_(*STATES_TO_CLEANUP)), commands.c.fk_bundle == None, commands.c.creation_date < creation_timestamp), distinct = True)
+            not_finished_commands = select([commands.c.id], and_(commands_on_host.c.fk_commands == commands.c.id, not_(commands_on_host.c.current_state.in_(STATES_TO_CLEANUP)), commands.c.fk_bundle == None, commands.c.creation_date < creation_timestamp), distinct = True)
             to_delete = select([commands.c.id], and_(not_(commands.c.id.in_(not_finished_commands)), commands.c.fk_bundle == None, commands.c.creation_date < creation_timestamp), distinct = True)
         else:
-            not_finished_commands = select([commands.c.id], and_(commands_on_host.c.fk_commands == commands.c.id, not_(commands_on_host.c.current_state.in_(*STATES_TO_CLEANUP)), commands.c.bundle_id == None, commands.c.creation_date < creation_timestamp), distinct = True)
+            not_finished_commands = select([commands.c.id], and_(commands_on_host.c.fk_commands == commands.c.id, not_(commands_on_host.c.current_state.in_(STATES_TO_CLEANUP)), commands.c.bundle_id == None, commands.c.creation_date < creation_timestamp), distinct = True)
             to_delete = select([commands.c.id], and_(not_(commands.c.id.in_(not_finished_commands)), commands.c.bundle_id == None, commands.c.creation_date < creation_timestamp), distinct = True)
     else:
         if msc_dbversion > 13:
@@ -116,14 +116,9 @@ def run_query(msg, connection, query):
     logger.info('Count of deleted rows: %ld' % ret.rowcount)
 
 def msc_delete(connection, bundles_to_delete, commands_to_delete, bundle, commands, target, commands_on_host, commands_history):
-    if sqlalchemy.__version__.startswith('0.3'):
-        in_coh_op = commands_on_host.c.fk_commands.in_(*commands_to_delete)
-        in_c_op = commands.c.id.in_(*commands_to_delete)
-        in_b_op = bundle.c.id.in_(*bundles_to_delete)
-    else:
-        in_coh_op = commands_on_host.c.fk_commands.in_(commands_to_delete)
-        in_c_op = commands.c.id.in_(commands_to_delete)
-        in_b_op = bundle.c.id.in_(bundles_to_delete)
+    in_coh_op = commands_on_host.c.fk_commands.in_(commands_to_delete)
+    in_c_op = commands.c.id.in_(commands_to_delete)
+    in_b_op = bundle.c.id.in_(bundles_to_delete)
 
     query = commands_history.delete(commands_history.c.fk_commands_on_host.in_(select([commands_on_host.c.id], in_coh_op)))
     run_query('Purging commands_history table', connection, query)

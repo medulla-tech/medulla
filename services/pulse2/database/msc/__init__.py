@@ -419,11 +419,11 @@ class MscDatabase(DatabaseHelper):
         if int(type) == 0: # all
             pass
         elif int(type) == 1: # pending
-            ret = ret.filter(self.commands_on_host.c.current_state.in_('upload_failed', 'execution_failed', 'delete_failed', 'inventory_failed', 'not_reachable', 'pause', 'stop', 'stopped', 'scheduled'))
+            ret = ret.filter(self.commands_on_host.c.current_state.in_( ('upload_failed', 'execution_failed', 'delete_failed', 'inventory_failed', 'not_reachable', 'pause', 'stop', 'stopped', 'scheduled') ))
         elif int(type) == 2: # running
-            ret = ret.filter(self.commands_on_host.c.current_state.in_('upload_in_progress', 'upload_done', 'execution_in_progress', 'execution_done', 'delete_in_progress', 'delete_done', 'inventory_in_progress', 'inventory_done'))
+            ret = ret.filter(self.commands_on_host.c.current_state.in_( ('upload_in_progress', 'upload_done', 'execution_in_progress', 'execution_done', 'delete_in_progress', 'delete_done', 'inventory_in_progress', 'inventory_done') ))
         elif int(type) == 3: # finished
-            ret = ret.filter(self.commands_on_host.c.current_state.in_('done', 'failed', 'over_timed'))
+            ret = ret.filter(self.commands_on_host.c.current_state.in_( ('done', 'failed', 'over_timed') ))
         c = ret.count()
         session.close()
         return c
@@ -436,14 +436,14 @@ class MscDatabase(DatabaseHelper):
         if int(type) == 0: # all
             pass
         elif int(type) == 1: # pending
-            ret = ret.filter(self.commands_on_host.c.current_state.in_('upload_failed', 'execution_failed', 'delete_failed', 'inventory_failed', 'not_reachable', 'pause', 'stop', 'stopped', 'scheduled'))
+            ret = ret.filter(self.commands_on_host.c.current_state.in_( ('upload_failed', 'execution_failed', 'delete_failed', 'inventory_failed', 'not_reachable', 'pause', 'stop', 'stopped', 'scheduled') ))
         elif int(type) == 2: # running
-            ret = ret.filter(self.commands_on_host.c.current_state.in_('upload_in_progress', 'upload_done', 'execution_in_progress', 'execution_done', 'delete_in_progress', 'delete_done', 'inventory_in_progress', 'inventory_done'))
+            ret = ret.filter(self.commands_on_host.c.current_state.in_( ('upload_in_progress', 'upload_done', 'execution_in_progress', 'execution_done', 'delete_in_progress', 'delete_done', 'inventory_in_progress', 'inventory_done') ))
         elif int(type) == 3: # finished
-            ret = ret.filter(self.commands_on_host.c.current_state.in_('done', 'failed', 'over_timed'))
+            ret = ret.filter(self.commands_on_host.c.current_state.in_( ('done', 'failed', 'over_timed') ))
+        ret = ret.order_by(desc(self.commands_on_host.c.id))
         ret = ret.offset(int(min))
         ret = ret.limit(int(max)-int(min))
-        ret = ret.order_by(desc(self.commands_on_host.c.id))
         l = []
         for x in ret.all():
             bundle = x[3]
@@ -503,7 +503,7 @@ class MscDatabase(DatabaseHelper):
                 
         session = create_session()
         size1 = session.query(Commands).filter(filtering2_1).filter(self.commands.c.fk_bundle == None).count() or 0
-        size2 = select(['bid'], True, select([self.commands.c.fk_bundle.label('bid')], and_(filtering2_2, self.commands.c.fk_bundle != None)).group_by('bid').alias('BIDS') ).alias('C').count() or 0
+        size2 = select(['bid'], True, select([self.commands.c.fk_bundle.label('bid')], and_(filtering2_2, self.commands.c.fk_bundle != None)).group_by('bid').alias('BIDS') ).alias('C').count()
  
         conn = self.getDbConnection()
         size2 = conn.execute(size2).fetchone()
@@ -688,7 +688,7 @@ class MscDatabase(DatabaseHelper):
                     # Check that the bundle has all its commands_on_host set
                     # to state done or failed.
                     session = create_session()
-                    count_query = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.fk_bundle == fk_bundle).filter(not_(self.commands_on_host.c.current_state.in_('done', 'failed', 'over_timed'))).count()
+                    count_query = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.fk_bundle == fk_bundle).filter(not_(self.commands_on_host.c.current_state.in_( ('done', 'failed', 'over_timed') ))).count()
                     session.close()
                     if count_query > 0:
                         # Some CoH are not in the done or failed states, so
@@ -698,7 +698,7 @@ class MscDatabase(DatabaseHelper):
                     # Check that the bundle has all its commands_on_host set
                     # to state done or failed.
                     session = create_session()
-                    count_query = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.fk_bundle == fk_bundle).filter(not_(self.commands_on_host.c.current_state.in_('done', 'failed', 'over_timed'))).count()
+                    count_query = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.fk_bundle == fk_bundle).filter(not_(self.commands_on_host.c.current_state.in_( ('done', 'failed', 'over_timed') ))).count()
                     session.close()
                     if count_query == 0:
                         # Some CoH are not in the done or failed states, so
