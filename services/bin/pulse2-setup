@@ -109,6 +109,7 @@ class Pulse2ConfigParser(ConfigParser):
         self.write_path(os.path.join(self.confdir, self.path))
 
 class LoggingConfig(Pulse2ConfigParser):
+    log_dir = '/var/log/mmc'
     log_path = None
 
     def __init__(self, *args, **kwargs):
@@ -123,7 +124,7 @@ class LoggingConfig(Pulse2ConfigParser):
              'handler_hand01': {'class': 'FileHandler',
                                 'level': 'INFO',
                                 'formatter': 'form01',
-                                'args': (os.path.join('/var/log/mmc', self.log_path), )},
+                                'args': (os.path.join(self.log_dir, self.log_path), )},
              'formatter_form01': {'format': '%(asctime)s %(levelname)s %(message)s'}}
         self._populate(d)
 
@@ -443,7 +444,8 @@ class SetupApp(object):
         # Ensure various dirs are created
         for path in [ self.confs['plugins/base.ini'].get('backup-tools', 'destpath'),
                       self.confs['plugins/msc.ini'].get('msc', 'qactionpath'),
-                      self.confs['plugins/msc.ini'].get('msc', 'repopath') ]:
+                      self.confs['plugins/msc.ini'].get('msc', 'repopath'),
+                      LoggingConfig.log_dir ]:
             if not os.path.isdir(path):
                 log.info("Creating directory: %s" % path)
                 os.makedirs(path)
