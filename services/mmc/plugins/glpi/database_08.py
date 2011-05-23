@@ -442,9 +442,9 @@ class Glpi08(DyngroupDatabaseHelper):
 
     def computersMapping(self, computers, invert = False):
         if not invert:
-            return Machine.c.id.in_(map(lambda x:fromUUID(x), computers))
+            return Machine.id.in_(map(lambda x:fromUUID(x), computers))
         else:
-            return Machine.c.id.not_(in_(map(lambda x:fromUUID(x), computers)))
+            return Machine.id.not_(in_(map(lambda x:fromUUID(x), computers)))
 
     def mappingTable(self, ctx, query):
         """
@@ -1052,7 +1052,7 @@ class Glpi08(DyngroupDatabaseHelper):
         k = getattr(self, device_type)
         klass = self.klass[device_type]
         session = create_session()
-        query = session.query(klass).filter(k.c.id == did).first()
+        query = session.query(klass).filter(k.id == did).first()
         session.close()
         ret = query.to_a()
         ret.append(['type', device_type.replace('device', '')])

@@ -396,9 +396,9 @@ class Inventory(DyngroupDatabaseHelper):
 
     def computersMapping(self, computers, invert = False):
         if not invert:
-            return Machine.c.id.in_(map(lambda x:fromUUID(x), computers))
+            return Machine.id.in_(map(lambda x:fromUUID(x), computers))
         else:
-            return not_(Machine.c.id.in_(map(lambda x:fromUUID(x), computers)))
+            return not_(Machine.id.in_(map(lambda x:fromUUID(x), computers)))
 
     def mappingTable(self, ctx, query):
         q = query[2].split('/')
@@ -900,15 +900,15 @@ class Inventory(DyngroupDatabaseHelper):
 
     def __filterQuery(self, ctx, query, params):
         if params.has_key('hostname') and params['hostname'] != '':
-            query = query.filter(Machine.c.Name==params['hostname'])
+            query = query.filter(Machine.Name==params['hostname'])
         if params.has_key('filter') and params['filter'] != '':
-            query = query.filter(Machine.c.Name.like('%'+params['filter']+'%'))
+            query = query.filter(Machine.Name.like('%'+params['filter']+'%'))
         if params.has_key('uuid') and params['uuid'] != '':
-            query = query.filter(Machine.c.id==fromUUID(params['uuid']))
+            query = query.filter(Machine.id==fromUUID(params['uuid']))
         if params.has_key('uuids'):
             if type(params['uuids']) == list and len(params['uuids']) > 0:
                 uuids = map(lambda m: fromUUID(m), params['uuids'])
-                query = query.filter(Machine.c.id.in_(uuids))
+                query = query.filter(Machine.id.in_(uuids))
             else:
                 query = query.filter("1 = 0")
         if params.has_key('gid') and params['gid'] != '':

@@ -181,7 +181,7 @@ def stopCommand(scheduler, command_id):
         # FIXME: handle error
         return False
     session = create_session()
-    ret = session.query(CommandsOnHost, Target).filter(CommandsOnHost.c.id == command_id).first()
+    ret = session.query(CommandsOnHost, Target).filter(CommandsOnHost.id == command_id).first()
     session.close()
     if ret:
         mydeffered = getProxy(__select_scheduler(ret[0].scheduler)).callRemote(
@@ -238,7 +238,7 @@ def startCommand(scheduler, command_id):
         # FIXME: handle error
         return False
     session = create_session()
-    ret = session.query(CommandsOnHost, Target).filter(CommandsOnHost.c.id == command_id).first()
+    ret = session.query(CommandsOnHost, Target).filter(CommandsOnHost.id == command_id).first()
     session.close()
     if ret:
         mydeffered = getProxy(__select_scheduler(ret[0].scheduler)).callRemote(

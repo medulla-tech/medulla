@@ -162,7 +162,7 @@ class Commands(object):
         Returns the list of commands_on_host linked to this command
         """
         session = sqlalchemy.create_session()
-        myCommandOnHosts = session.query(CommandsOnHost).filter(CommandsOnHost.c.fk_commands == self.getId())
+        myCommandOnHosts = session.query(CommandsOnHost).filter(CommandsOnHost.fk_commands == self.getId())
         session.close()
         return myCommandOnHosts.all()
 
