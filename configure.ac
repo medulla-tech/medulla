@@ -76,6 +76,17 @@ AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
 
 dnl
+dnl --disable-conf
+dnl   Disable configuration files installation
+dnl
+AC_ARG_ENABLE([conf],
+              [AS_HELP_STRING([--disable-conf],
+                              [Disable configuration files installation @<:@default=enable@:>@])],
+              [],
+              [enable_conf="yes"])
+AM_CONDITIONAL([ENABLE_CONF], [test "$enable_conf" = "yes"])
+
+dnl
 dnl --disable-conf-backup
 dnl   Disable backup configuration file
 dnl

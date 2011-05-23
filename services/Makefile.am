@@ -20,7 +20,10 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-SUBDIRS = conf init.d src 3rd_party bin contrib
+SUBDIRS = init.d src 3rd_party bin contrib
+if ENABLE_CONF
+SUBDIRS += conf
+endif
 
 pythonmodules = mmc mmc.plugins mmc.plugins.dyngroup mmc.plugins.dyngroup.querymanager \
 	mmc.plugins.glpi mmc.plugins.glpi.querymanager mmc.plugins.imaging \
