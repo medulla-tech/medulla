@@ -223,6 +223,7 @@ class InventoryServerConfig(LoggingConfig):
 class LaunchersConfig(LoggingConfig):
     path = 'pulse2/launchers/launchers.ini'
     log_path = 'pulse2-launchers.log'
+    defaults = {'wol': {'wol_path': '/usr/sbin/pulse2-wol'}}
     
 class PackageServerConfig(LoggingConfig):
     path = 'pulse2/package-server/package-server.ini'
@@ -250,10 +251,11 @@ class ImagingServerConfig(LoggingConfig):
                 'hooks': {}}
 
 class SetupApp(object):
-    def __init__(self, datadir, confdir):
+    def __init__(self, datadir, confdir, batch=False):
         self.config = {}
         self.datadir = datadir
         self.confdir = confdir
+        self.batch = batch
 
         # Check if we run as root
         if os.getuid()<>0:
@@ -277,17 +279,32 @@ class SetupApp(object):
             cls = globals()[clsname]
             self.confs[cls.path] = cls(self.confdir)
 
+    def read_opt(self, name, default):
+        if self.batch:
+            return default
+        else:
+            return read_opt(name, default)
+    
+    def read_passwd(self, name, default=None):
+        if self.batch:
+            if default is not None:
+                return default
+            else:
+                return gen_password()
+        else:
+            return read_passwd(name)
+
     def init_ldap(self):
         invalids = ['ldapurl', 'ldapbasedn', 'ldapadmindn', 'ldappasswd']
         while len(invalids):
             if 'ldapurl' in invalids:
-                self.config['ldapurl'] = read_opt('LDAP uri', 'ldap://localhost:389')
+                self.config['ldapurl'] = self.read_opt('LDAP uri', 'ldap://localhost:389')
             if 'ldapbasedn' in invalids:
-                self.config['ldapbasedn'] = read_opt('LDAP base DN', 'dc=mandriva,dc=com')
+                self.config['ldapbasedn'] = self.read_opt('LDAP base DN', 'dc=mandriva,dc=com')
             if 'ldapadmindn' in invalids:
-                self.config['ldapadmindn'] = read_opt('LDAP admin DN', 'cn=admin,%s' % self.config['ldapbasedn'])
+                self.config['ldapadmindn'] = self.read_opt('LDAP admin DN', 'cn=admin,%s' % self.config['ldapbasedn'])
             if 'ldappasswd' in invalids:
-                self.config['ldappasswd'] = read_passwd('LDAP admin password')
+                self.config['ldappasswd'] = self.read_passwd('LDAP admin password', 'secret')
 
             # Check parameters
             conn = ldap.initialize(self.config['ldapurl'])
@@ -329,8 +346,8 @@ class SetupApp(object):
             # Get DB connection informations
             # Do not ask for dbhost, do not handle distant DB for the moment
             self.config['dbhost'] = 'localhost'
-            self.config['dbadminuser'] = read_opt('Database admin user', 'root')
-            self.config['dbadminpwd'] = read_passwd('Database admin password')
+            self.config['dbadminuser'] = self.read_opt('Database admin user', 'root')
+            self.config['dbadminpwd'] = self.read_passwd('Database admin password', '')
 
             # Create connection to DB and check it
             url = 'mysql://%s:%s@%s/mysql' % (self.config['dbadminuser'],
@@ -450,6 +467,16 @@ class SetupApp(object):
                 log.info("Creating directory: %s" % path)
                 os.makedirs(path)
 
+        # Check some paths are corrects
+        wol_path_ok = False
+        while not wol_path_ok:
+            wol_path = self.read_opt('Wake-on-lan tool path', '/usr/sbin/pulse2-wol')
+            self.confs['pulse2/launchers/launchers.ini'].set('wol', 'wol_path', wol_path)
+            if os.path.exists(wol_path):
+                wol_path_ok = True
+            else:
+                log.error('Can not find %s' % wol_path)
+
     def commit(self):
         """ Write down all config files
         """
@@ -469,6 +496,8 @@ if __name__ == '__main__':
     parser = OptionParser()
     parser.add_option("-d", "--debug", action="store_true", dest="debug", default=False,
                       help="Print debug messages")
+    parser.add_option("-b", "--batch", action="store_true", dest="batch", default=False,
+                      help="Do not ask any question")
     parser.add_option("--pkgdatadir", action="store", dest="pkgdatadir", default='/usr/share/pulse2',
                       help="Path to pulse2 datadir (default: /usr/share/pulse2)")
     parser.add_option("--confdir", action="store", dest="confdir", default='/etc/mmc',
@@ -486,5 +515,5 @@ if __name__ == '__main__':
     logging.basicConfig(level=level, format=format)
 
     # Run the setup app
-    app = SetupApp(datadir=options.pkgdatadir, confdir=options.confdir)
+    app = SetupApp(datadir=options.pkgdatadir, confdir=options.confdir, batch=options.batch)
     app.run()
