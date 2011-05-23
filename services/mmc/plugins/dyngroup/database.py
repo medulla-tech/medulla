@@ -283,11 +283,9 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         session = create_session()
         groups = self.__allgroups_query(ctx, params, session, type)
-        # TODO: sqlalechemy migration
-        s = select([func.count(text('*'))]).select_from(groups.alias('foo'))
-        result = session.execute(s)
+        ret = groups.count()
         session.close()
-        return result.fetchone()[0]
+        return ret
 
     def getallgroups(self, ctx, params, type = 0):
         """

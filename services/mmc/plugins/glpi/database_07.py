@@ -605,11 +605,9 @@ class Glpi07(DyngroupDatabaseHelper):
         if query == None:
             return 0
         query = query.group_by([self.machine.c.name, self.machine.c.domain])
-        # The alias is needed for MySQL
-        s = select([func.count(text('*'))]).select_from(query.compile().alias('foo'))
-        result = session.execute(s)
+        ret = query.count()
         session.close()
-        return result.fetchone()[0]
+        return ret
 
     def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = None, advanced = True, justId = False, toH = False):
         """

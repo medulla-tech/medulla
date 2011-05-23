@@ -750,11 +750,9 @@ class Inventory(DyngroupDatabaseHelper):
         result, grp_by = self.__lastMachineInventoryPartQuery(session, ctx, part, params)
         for grp in grp_by:
             result = result.group_by(grp)
-        # The alias is needed for MySQL
-        s = select([func.count(text('*'))]).select_from(result.compile().alias('foo'))
-        result = session.execute(s)
+        ret = result.count()
         session.close()
-        return result.fetchone()[0]
+        return ret
 
     def getLastMachineInventoryPart(self, ctx, part, params):
         return self.__getLastMachineInventoryPart(part, params, ctx)
