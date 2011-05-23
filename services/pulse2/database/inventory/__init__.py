@@ -778,16 +778,18 @@ class Inventory(DyngroupDatabaseHelper):
         haspartTable = self.table["has" + part]
         result, grp_by = self.__lastMachineInventoryPartQuery(session, ctx, part, params)
 
-        if params.has_key('min') and params.has_key('max'):
-            result = result.offset(int(params['min']))
-            result = result.limit(int(params['max']) - int(params['min']))
-
         for grp in grp_by:
             result = result.group_by(grp)
+
         result = result.order_by(haspartTable.c.machine).order_by(desc("inventoryid")).order_by(haspartTable.c.inventory)
         # if needed, filter by date and limit the first date
         if(params.has_key('date')) and params['date'] != '':
                 result.order_by(desc(self.klass['Inventory'].Date))
+
+        if params.has_key('min') and params.has_key('max'):
+            result = result.offset(int(params['min']))
+            result = result.limit(int(params['max']) - int(params['min']))
+
         session.close()
         if result:
             # Build the result as a simple dictionary

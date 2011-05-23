@@ -399,9 +399,9 @@ class MscDatabase(DatabaseHelper):
             ret = ret.filter(self.commands_on_host.c.current_state == current_state)
         if filt != '':
             ret = ret.filter(or_(self.commands_on_host.c.host.like('%'+filt+'%'), self.commands.c.title.like('%'+filt+'%')))
+        ret = ret.order_by(desc(self.commands_on_host.c.id))
         ret = ret.offset(int(min))
         ret = ret.limit(int(max)-int(min))
-        ret = ret.order_by(desc(self.commands_on_host.c.id))
         l = []
         for x in ret.all():
             bundle = x[3]
@@ -488,9 +488,9 @@ class MscDatabase(DatabaseHelper):
             #.filter(self.commands.c.creator == ctx.userid)
             if filt != '':
                 query = query.filter(self.commands.c.title.like('%'+filt+'%'))
+            query = query.order_by(asc(self.commands_on_host.c.next_launch_date))
             query = query.offset(int(min))
             query = query.limit(int(max)-int(min))
-            query = query.order_by(asc(self.commands_on_host.c.next_launch_date))
             ret = query.all()
             session.close()
             return map(lambda x: (x[0].toH(), x[1], x[2]), ret)
