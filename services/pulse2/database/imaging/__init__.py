@@ -1031,7 +1031,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if params.has_key('order'):
             mi.order = params['order']
         mi.fk_menu = menu_id
-        session.save_or_update(mi)
+        session.add(mi)
         return mi
 
     def __addMenuDefaults(self, session, menu, mi, params):
@@ -1043,7 +1043,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             is_menu_modified = True
             menu.fk_default_item_WOL = mi.id
         if is_menu_modified:
-            session.save_or_update(menu)
+            session.add(menu)
         return menu
 
     def __editMenuDefaults(self, session, menu, mi, params):
@@ -1065,7 +1065,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             menu.fk_default_item_WOL = None
 
         if is_menu_modified:
-            session.save_or_update(menu)
+            session.add(menu)
         return menu
 
     def __computerChangeDefaultMenuItem(self, session, menu, mis, item_number):
@@ -1236,7 +1236,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             if bs.default_name != params['default_name']:
                 bs.default_name = params['default_name']
                 bs.fk_name = 1
-                session.save_or_update(bs)
+                session.add(bs)
         mi = self.__getMenuItemByUUID(session, mi_uuid)
         if mi == None:
             raise '%s:This MenuItem does not exists'%(P2ERR.ERR_UNEXISTING_MENUITEM)
@@ -1290,7 +1290,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                     return [False, "cant find any other mi"]
             menu.fk_default_item_WOL = first_mi.id
         if need_to_save_menu:
-            session.save_or_update(menu)
+            session.add(menu)
             session.flush()
         session.delete(bsim)
         session.flush()
@@ -1339,7 +1339,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                     return [False, "cant find any other mi"]
             menu.fk_default_item_WOL = first_mi.id
         if need_to_save_menu:
-            session.save_or_update(menu)
+            session.add(menu)
             session.flush()
 
         session.delete(bsim)
@@ -1912,7 +1912,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                     session.save(pisii)
 
         if need_to_be_save:
-            session.save_or_update(im)
+            session.add(im)
         session.flush()
         session.close()
         return im.id
@@ -1954,7 +1954,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                     return [False, "cant find any other mi"]
             menu.fk_default_item_WOL = first_mi.id
         if need_to_save_menu:
-            session.save_or_update(menu)
+            session.add(menu)
             session.flush()
 
         session.delete(iim)
@@ -2020,12 +2020,12 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             target.fk_menu = 1 # we put it to the default 1 menu because we need it to be on something
             target.type = P2IT.DELETED_COMPUTER
             target.uuid = deleted_uuid
-            session.save_or_update(target)
+            session.add(target)
             session.flush()
 
             menu.fk_default_item = 1
             menu.fk_default_item_WOL = 1
-            session.save_or_update(menu)
+            session.add(menu)
             session.flush()
 
             for mi in mis:
@@ -2404,8 +2404,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             ord = mod_mi[0].order
             mod_mi[0].order = mod_mi[1].order
             mod_mi[1].order = ord
-            session.save_or_update(mod_mi[0])
-            session.save_or_update(mod_mi[1])
+            session.add(mod_mi[0])
+            session.add(mod_mi[1])
             session.flush()
             session.close()
         else:
@@ -2590,7 +2590,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             else:
                 self.logger.debug("trying to update something that don't exists in ImagingServer")
         if need_to_be_save:
-            session.save_or_update(ims)
+            session.add(ims)
             session.flush()
         session.close()
         return True
@@ -2696,7 +2696,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             menu.mtftp_restore_timeout = params['mtftp_restore_timeout']
 
         if need_to_be_save:
-            session.save_or_update(menu)
+            session.add(menu)
         if session_need_to_close:
             session.flush()
             session.close()
@@ -2807,7 +2807,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.flush()
         for menu_item in menu_items:
             menu_item.fk_menu = menu.id
-            session.save_or_update(menu_item)
+            session.add(menu_item)
         return menu
 
     def __createMenu(self, session, params):
@@ -2886,7 +2886,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         imaging_server.fk_entity = location.id
         imaging_server.fk_default_menu = menu.id
         imaging_server.associated = 1
-        session.save_or_update(imaging_server)
+        session.add(imaging_server)
         session.flush()
 
         session.close()
@@ -2948,7 +2948,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         lang = session.query(Language).filter(self.language.c.id == uuid2id(language)).first()
         if imaging_server.fk_language != lang.id:
             imaging_server.fk_language = lang.id
-            session.save_or_update(imaging_server)
+            session.add(imaging_server)
             session.flush()
         session.close()
         self.imagingServer_lang[location] = lang.id
@@ -2978,7 +2978,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = session.query(Target).filter(and_(self.target.c.uuid.in_(uuid), filt)).all()
         for t in q:
             t.is_registered_in_package_server = 1
-            session.save_or_update(t)
+            session.add(t)
         session.flush()
         session.close()
         return True
@@ -3204,7 +3204,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if q2 :
             synchro_state, menu = q2
             menu.fk_synchrostate = state
-            session.save_or_update(menu)
+            session.add(menu)
         else :
             logging.getLogger().warn("Imaging.setLocationSynchroState : failed to set synchro_state")
 
@@ -3217,7 +3217,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         synchro_states = self.__getSynchroStates(uuids, target_type, session)
         for synchro_state, menu in synchro_states:
             menu.fk_synchrostate = state
-            session.save_or_update(menu)
+            session.add(menu)
         session.flush()
         session.close()
         return True
@@ -3277,12 +3277,12 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def __copyMenuInto(self, menu_from, menu_into, session):
         for i in ('default_name', 'timeout', 'background_uri', 'message', 'ethercard', 'bootcli', 'disklesscli', 'dont_check_disk_size', 'hidden_menu', 'debug', 'update_nt_boot', 'fk_protocol', 'mtftp_restore_timeout'):
             setattr(menu_into, i, getattr(menu_from, i))
-        session.save_or_update(menu_into)
+        session.add(menu_into)
 
     def __copyMenuItemInto(self, mi_from, mi_into, session):
         for i in ('order', 'hidden', 'hidden_WOL'):
             setattr(mi_into, i, getattr(mi_from, i))
-        session.save_or_update(mi_into)
+        session.add(mi_into)
 
     def delComputersFromProfile(self, profile_UUID, computers):
         # we put the profile's mi before the computer's mi
@@ -3300,7 +3300,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         for mi, target, bsim, iim in mis:
             mi.order += pnb_element
-            session.save_or_update(mi)
+            session.add(mi)
 
         session.flush()
 
@@ -3317,7 +3317,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
             # change the computer type, it's no longer a computer_in_profile
             target.type = P2IT.COMPUTER
-            session.save_or_update(target)
+            session.add(target)
 
             for mi, target, bsim, iim in pmis:
                 # duplicate menu_item
@@ -3343,11 +3343,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         for menu, mi in a_target2default_item:
             menu.fk_default_item = mi.id
-            session.save_or_update(menu)
+            session.add(menu)
 
         for menu, mi in a_target2default_item_WOL:
             menu.fk_default_item_WOL = mi.id
-            session.save_or_update(menu)
+            session.add(menu)
 
         for mi, bsim in a_bsim:
             new_bsim = BootServiceInMenu()
@@ -3376,7 +3376,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         menu.fk_default_item = None
         menu.fk_default_item_WOL = None
-        session.save_or_update(menu)
+        session.add(menu)
         session.flush()
 
         for mi, target, bsim, iim in pmis:
@@ -3426,7 +3426,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 target = target[0]
                 target.kernel_parameters = params['target_opt_kernel']
                 target.image_parameters = params['target_opt_image']
-                session.save_or_update(target)
+                session.add(target)
         session.flush()
         session.close()
         return [True]
@@ -3512,7 +3512,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 target.raw_mode = 1
             else:
                 target.raw_mode = 0
-            session.save_or_update(target)
+            session.add(target)
 
         session.flush()
         session.close()
@@ -3739,7 +3739,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             pis.value = params['value']
 
         if need_to_be_save:
-            session.save_or_update(pis)
+            session.add(pis)
             session.flush()
         session.close()
         return True
@@ -3803,7 +3803,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                         cp.start = int(part['start'])
                         cd.partitions.append(cp)
                         target.disks.append(cd)
-            session.save_or_update(target)
+            session.add(target)
             session.commit()
         except InvalidRequestError, e:
             session.rollback()

@@ -403,7 +403,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         group.name = name.encode('utf-8')
         group.FK_users = user_id
         group.type = type
-        session.save_or_update(group)
+        session.add(group)
         session.flush()
         session.close()
 
@@ -420,7 +420,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         group = self.__get_group_permissions_request(ctx, session).filter(self.groups.c.id == id).first()
         if group:
             group.name = name.encode('utf-8')
-            session.save_or_update(group)
+            session.add(group)
             session.flush()
             session.close()
             return True
@@ -436,7 +436,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         session = create_session()
         s = self.__getShareGroupInSession(id, user_id, session)
         s.display_in_menu = visibility
-        session.save_or_update(s)
+        session.add(s)
         session.flush()
         session.close()
         return True
@@ -456,7 +456,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         session = create_session()
         group = self.__get_group_permissions_request(ctx, session).filter(self.groups.c.id == gid).first()
         group.query = request.encode('utf-8')
-        session.save_or_update(group)
+        session.add(group)
         session.flush()
         session.close()
 
@@ -486,7 +486,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         session = create_session()
         group = self.__get_group_permissions_request(ctx, session).filter(self.groups.c.id == id).first()
         group.bool = bool
-        session.save_or_update(group)
+        session.add(group)
         session.flush()
         session.close()
         return group.id
@@ -509,7 +509,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         session = create_session()
         s = self.__getShareGroupInSession(id, user_id, session)
         s.display_in_menu = 1
-        session.save_or_update(s)
+        session.add(s)
         session.flush()
         session.close()
         return s.id
@@ -522,7 +522,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         session = create_session()
         s = self.__getShareGroupInSession(id, user_id, session)
         s.display_in_menu = 0
-        session.save_or_update(s)
+        session.add(s)
         session.flush()
         session.close()
         return s.id

@@ -44,7 +44,7 @@ class CommandsHistory(object):
     def flush(self):
         """ Handle SQL flushing """
         session = sqlalchemy.orm.create_session()
-        session.save_or_update(self)
+        session.add(self)
         session.flush()
         session.close()
 

@@ -28,6 +28,7 @@ SA_MAJOR = 0
 SA_MINOR = 4
 
 def checkSqlalchemy():
+    return True
     try:
         import sqlalchemy
         a_version = sqlalchemy.__version__.split('.')

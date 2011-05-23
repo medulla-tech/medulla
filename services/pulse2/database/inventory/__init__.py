@@ -982,7 +982,7 @@ class Inventory(DyngroupDatabaseHelper):
         query = session.query(InventoryTable).select_from(self.inventory.join(self.table['hasNetwork']).join(self.machine)).filter(self.machine.c.Name == name)
         for inv in query:
             inv.Last = 0
-            session.save_or_update(inv)
+            session.add(inv)
         i = InventoryTable()
         i.Last = 1
         i.Date, i.Time = str(datetime.datetime.today()).split(" ")
@@ -1763,7 +1763,7 @@ class InventoryCreator(Inventory):
 
             for inv in result:
                 inv.Last = 0
-                session.save_or_update(inv)
+                session.add(inv)
 
             # Create a new empty inventory, and flag it as the last
             i = InventoryTable()

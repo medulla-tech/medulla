@@ -182,7 +182,7 @@ class DyngroupDatabase(DatabaseHelper):
             user = Users()
             user.login = user_id
             user.type = t
-            session.save_or_update(user)
+            session.add(user)
             session.flush()
         session.close()
         return user.id
@@ -262,7 +262,7 @@ class DyngroupDatabase(DatabaseHelper):
             machine = Machines()
             machine.uuid = uuid
             machine.name = name
-            session.save_or_update(machine)
+            session.add(machine)
             session.flush()
         session.close()
         return machine.id
@@ -379,7 +379,7 @@ class DyngroupDatabase(DatabaseHelper):
             pdata = ProfilesData()
             pdata.FK_groups = gid
         pdata.imaging_uuid = imaging_uuid
-        session.save_or_update(pdata)
+        session.add(pdata)
         session.flush()
         session.close()
         return True
@@ -405,7 +405,7 @@ class DyngroupDatabase(DatabaseHelper):
             pdata = ProfilesData()
             pdata.FK_groups = gid
         pdata.entity_uuid = entity_uuid
-        session.save_or_update(pdata)
+        session.add(pdata)
         session.flush()
         session.close()
         return True
@@ -434,7 +434,7 @@ class DyngroupDatabase(DatabaseHelper):
         share.FK_users = user_id
         share.display_in_menu = visibility
         share.type = type_id
-        session.save_or_update(share)
+        session.add(share)
         session.flush()
         session.close()
         return share.id
@@ -446,7 +446,7 @@ class DyngroupDatabase(DatabaseHelper):
         session = create_session()
         share = self.getShareGroup(group_id, user_id)
         share.display_in_menu = visibility
-        session.save_or_update(share)
+        session.add(share)
         session.flush()
         session.close()
         return share.id
@@ -538,7 +538,7 @@ class DyngroupDatabase(DatabaseHelper):
         result = Results()
         result.FK_groups = group_id
         result.FK_machines = machine_id
-        session.save_or_update(result)
+        session.add(result)
         session.flush()
         session.close()
         return result.id
