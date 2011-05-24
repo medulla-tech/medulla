@@ -408,36 +408,45 @@ class SetupApp(object):
         self.config['dbpasswd'] = self.defaults['dbpasswd']
 
         conn = self.engine.connect()
-        try:
-            # Do not know how to check if user exists, then try and catch
-            conn.execute('CREATE USER %s@%s', self.config['dbuser'], '%')
-            log.info('Creates user %s' % self.config['dbuser'])
-        except sa.exc.OperationalError, e:
-            if e.orig[0]==1396:
-                # This error means 'user exists'
-                log.debug('User already exists: %s' % self.config['dbuser'])
-            elif e.orig[0]==1044:
-                log.error('Access denied: please check user \'%s\' has grant rights.' % self.config['dbuser'])
-                sys.exit(2)
-            else:
-                raise e
 
-        # Set password in DB
-        log.info('Updating user password')
-        conn.execute('SET PASSWORD FOR %s@%s = PASSWORD(%s)', self.config['dbuser'], '%', self.config['dbpasswd'])
+        hosts = ['localhost', '127.0.0.1']
+        if self.config['dbhost'] not in hosts:
+            # Distant DB, we don't know from where it is accessed...
+            hosts.append('%')
 
-        # Grant rights in DB
-        try:
-            for module in self.dbmodules:
-                log.info('Grant rights on db %s' % module)
-                # Put db name without sqlalchemy quoting: it was surrounded by `''
-                conn.execute('GRANT ALL on `%s`.* to %%s@%%s' % module, self.config['dbuser'], '%')
-        except sa.exc.OperationalError, e:
-            if e.orig[0]==1044:
-                log.error('Access denied: please check user \'%s\' has grant rights.' % self.config['dbuser'])
-                sys.exit(2)
-            else:
-                raise e
+        for host in hosts:
+            try:
+                # Do not know how to check if user exists, then try and catch
+                conn.execute('CREATE USER %s@%s', self.config['dbuser'], host)
+                log.info('Creates user %s@%s' % (self.config['dbuser'], host))
+            except sa.exc.OperationalError, e:
+                if e.orig[0]==1396:
+                    # This error means 'user exists'
+                    log.debug('User already exists: %s@%s' % (self.config['dbuser'], host))
+                elif e.orig[0]==1044:
+                    log.error('Access denied: please check user \'%s\'@\'%s\' has grant rights.' % (self.config['dbuser'], 
+                                                                                                    self.config['dbhost']))
+                    sys.exit(2)
+                else:
+                    raise e
+
+            # Set password in DB
+            log.info('Updating user password: \'%s\'@\'%s\'' % (self.config['dbuser'], host))
+            conn.execute('SET PASSWORD FOR %s@%s = PASSWORD(%s)', self.config['dbuser'], host, self.config['dbpasswd'])
+
+            # Grant rights in DB
+            try:
+                for module in self.dbmodules:
+                    log.info('Grant rights on db %s' % module)
+                    # Put db name without sqlalchemy quoting: it was surrounded by `''
+                    conn.execute('GRANT ALL on `%s`.* to %%s@%%s' % module, self.config['dbuser'], host)
+            except sa.exc.OperationalError, e:
+                if e.orig[0]==1044:
+                    log.error('Access denied: please check user \'%s\'@\'%s\' has grant rights.' % (self.config['dbuser'], 
+                                                                                                    self.config['dbhost']))
+                    sys.exit(2)
+                else:
+                    raise e
 
         conn.execute('FLUSH PRIVILEGES')
         conn.close()
