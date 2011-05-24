@@ -44,7 +44,7 @@ def read_opt(prompt, default=None):
         s = default
     return s
 
-def gen_password(size=10):
+def gen_passwd(size=10):
     return ''.join([choice(string.letters + string.digits) for _ in range(size)])
 
 def read_passwd(prompt, check=False):
@@ -294,7 +294,7 @@ class SetupApp(object):
             if default is not None:
                 return default
             else:
-                return gen_password()
+                return gen_passwd()
         else:
             return read_passwd(name)
 
