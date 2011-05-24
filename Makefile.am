@@ -50,6 +50,6 @@ prereqs-deb:
 	apt-get update
 	apt-get install python-all lsb-release python-sqlalchemy python-mysqldb \
 	  python-twisted-web perl-modules libsys-syslog-perl openssh-client iputils-ping rsync \
-	  mysql-server php5-gd
+	  mysql-server php5-gd php5-xmlrpc
 
 .PHONY = sysconfdirwarning prereqs prereqs-deb prereqs-urpmi
