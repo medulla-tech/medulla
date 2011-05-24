@@ -344,8 +344,7 @@ class SetupApp(object):
         invalid = True
         while invalid:
             # Get DB connection informations
-            # Do not ask for dbhost, do not handle distant DB for the moment
-            self.config['dbhost'] = 'localhost'
+            self.config['dbhost'] = self.read_opt('Database host', 'localhost')
             self.config['dbadminuser'] = self.read_opt('Database admin user', 'root')
             self.config['dbadminpwd'] = self.read_passwd('Database admin password', '')
 
@@ -381,24 +380,34 @@ class SetupApp(object):
         conn = self.engine.connect()
         try:
             # Do not know how to check if user exists, then try and catch
-            conn.execute('CREATE USER %s@%s', self.config['dbuser'], 'localhost')
+            conn.execute('CREATE USER %s@%s', self.config['dbuser'], '%')
             log.info('Creates user %s' % self.config['dbuser'])
         except sa.exc.OperationalError, e:
             if e.orig[0]==1396:
                 # This error means 'user exists'
                 log.debug('User already exists: %s' % self.config['dbuser'])
+            elif e.orig[0]==1044:
+                log.error('Access denied: please check user \'%s\' has grant rights.' % self.config['dbuser'])
+                sys.exit(2)
             else:
                 raise e
 
         # Set password in DB
         log.info('Updating user password')
-        conn.execute('SET PASSWORD FOR %s@%s = PASSWORD(%s)', self.config['dbuser'], 'localhost', self.config['dbpwd'])
+        conn.execute('SET PASSWORD FOR %s@%s = PASSWORD(%s)', self.config['dbuser'], '%', self.config['dbpwd'])
 
         # Grant rights in DB
-        for module in self.dbmodules:
-            log.info('Grant rights on db %s' % module)
-            # Put db name without sqlalchemy quoting: it was surrounded by `''
-            conn.execute('GRANT ALL on `%s`.* to %%s@%%s' % module, self.config['dbuser'], 'localhost')
+        try:
+            for module in self.dbmodules:
+                log.info('Grant rights on db %s' % module)
+                # Put db name without sqlalchemy quoting: it was surrounded by `''
+                conn.execute('GRANT ALL on `%s`.* to %%s@%%s' % module, self.config['dbuser'], '%')
+        except sa.exc.OperationalError, e:
+            if e.orig[0]==1044:
+                log.error('Access denied: please check user \'%s\' has grant rights.' % self.config['dbuser'])
+                sys.exit(2)
+            else:
+                raise e
 
         conn.execute('FLUSH PRIVILEGES')
         conn.close()
