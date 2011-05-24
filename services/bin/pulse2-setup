@@ -252,6 +252,7 @@ class ImagingServerConfig(LoggingConfig):
 
 class SetupApp(object):
     def __init__(self, datadir, confdir, batch=False):
+        self.defaults = {}
         self.config = {}
         self.datadir = datadir
         self.confdir = confdir
@@ -294,17 +295,43 @@ class SetupApp(object):
         else:
             return read_passwd(name)
 
+    def load_defaults(self):
+        """ Load default values from config files objects
+        Values are set from existing config files or default values in *Config classes.
+
+        Note 1: db admin credentials are not stored in any file, except host.
+        Note 2: current version does not support diffenriated db host or credentials. All 
+          db must be on the same host. Default value are taken from plugins/pulse2.ini file.
+        """
+        self.defaults['ldapurl'] = self.confs['plugins/base.ini'].get('ldap', 'ldapurl')
+        self.defaults['ldapbasedn'] = self.confs['plugins/base.ini'].get('ldap', 'basedn')        
+        self.defaults['ldapadmindn'] = self.confs['plugins/base.ini'].get('ldap', 'rootname')
+        self.defaults['ldappasswd'] = self.confs['plugins/base.ini'].get('ldap', 'password')
+
+        self.defaults['dbhost'] = self.confs['plugins/pulse2.ini'].get('database', 'dbhost')
+        self.defaults['dbadminuser'] = 'root'
+        self.defaults['dbadminpasswd'] = ''
+        self.defaults['dbuser'] = self.confs['plugins/pulse2.ini'].get('database', 'dbuser')
+        passwd = self.confs['plugins/pulse2.ini'].get('database', 'dbpasswd')
+        if passwd==PluginsPulse2Config.defaults['database']['dbpasswd']:
+            # If passwd in config file is the default (weak) one, prefer generating a random one
+            self.defaults['dbpasswd'] = gen_passwd()
+        else:
+            self.defaults['dbpasswd'] = self.confs['plugins/pulse2.ini'].get('database', 'dbpasswd')
+
+        self.defaults['wol'] = self.confs['pulse2/launchers/launchers.ini'].get('wol', 'wol_path')
+
     def init_ldap(self):
         invalids = ['ldapurl', 'ldapbasedn', 'ldapadmindn', 'ldappasswd']
         while len(invalids):
             if 'ldapurl' in invalids:
-                self.config['ldapurl'] = self.read_opt('LDAP uri', 'ldap://localhost:389')
+                self.config['ldapurl'] = self.read_opt('LDAP uri', self.defaults['ldapurl'])
             if 'ldapbasedn' in invalids:
-                self.config['ldapbasedn'] = self.read_opt('LDAP base DN', 'dc=mandriva,dc=com')
+                self.config['ldapbasedn'] = self.read_opt('LDAP base DN', self.defaults['ldapbasedn'])
             if 'ldapadmindn' in invalids:
-                self.config['ldapadmindn'] = self.read_opt('LDAP admin DN', 'cn=admin,%s' % self.config['ldapbasedn'])
+                self.config['ldapadmindn'] = self.read_opt('LDAP admin DN', self.defaults['ldapadmindn'])
             if 'ldappasswd' in invalids:
-                self.config['ldappasswd'] = self.read_passwd('LDAP admin password', 'secret')
+                self.config['ldappasswd'] = self.read_passwd('LDAP admin password', self.defaults['ldappasswd'])
 
             # Check parameters
             conn = ldap.initialize(self.config['ldapurl'])
@@ -344,13 +371,13 @@ class SetupApp(object):
         invalid = True
         while invalid:
             # Get DB connection informations
-            self.config['dbhost'] = self.read_opt('Database host', 'localhost')
-            self.config['dbadminuser'] = self.read_opt('Database admin user', 'root')
-            self.config['dbadminpwd'] = self.read_passwd('Database admin password', '')
+            self.config['dbhost'] = self.read_opt('Database host', self.defaults['dbhost'])
+            self.config['dbadminuser'] = self.read_opt('Database admin user', self.defaults['dbadminuser'])
+            self.config['dbadminpasswd'] = self.read_passwd('Database admin password', self.defaults['dbadminpasswd'])
 
             # Create connection to DB and check it
             url = 'mysql://%s:%s@%s/mysql' % (self.config['dbadminuser'],
-                                              self.config['dbadminpwd'],
+                                              self.config['dbadminpasswd'],
                                               self.config['dbhost'])
             self.engine = sa.create_engine(url)
             try:
@@ -363,7 +390,7 @@ class SetupApp(object):
         env = os.environ
         env['MYSQL_HOST'] = self.config['dbhost']
         env['MYSQL_USER'] = self.config['dbadminuser']
-        env['MYSQL_PWD'] = self.config['dbadminpwd']
+        env['MYSQL_PWD'] = self.config['dbadminpasswd']
         for module in self.dbmodules:
             log.debug("Init database for module %s" % module)
             env['MYSQL_BASE'] = module
@@ -374,8 +401,8 @@ class SetupApp(object):
 
         # Get DB user and password for all modules
         log.info("Setup db credentials")
-        self.config['dbuser'] = 'mmc'
-        self.config['dbpwd'] = gen_password()
+        self.config['dbuser'] = self.defaults['dbuser']
+        self.config['dbpasswd'] = self.defaults['dbpasswd']
 
         conn = self.engine.connect()
         try:
@@ -394,7 +421,7 @@ class SetupApp(object):
 
         # Set password in DB
         log.info('Updating user password')
-        conn.execute('SET PASSWORD FOR %s@%s = PASSWORD(%s)', self.config['dbuser'], '%', self.config['dbpwd'])
+        conn.execute('SET PASSWORD FOR %s@%s = PASSWORD(%s)', self.config['dbuser'], '%', self.config['dbpasswd'])
 
         # Grant rights in DB
         try:
@@ -419,12 +446,12 @@ class SetupApp(object):
         # dyngroup db
         self.confs['plugins/dyngroup.ini'].set('database', 'dbhost', self.config['dbhost'])
         self.confs['plugins/dyngroup.ini'].set('database', 'dbuser', self.config['dbuser'])
-        self.confs['plugins/dyngroup.ini'].set('database', 'dbpasswd', self.config['dbpwd'])
+        self.confs['plugins/dyngroup.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
 
         # imaging db
         self.confs['plugins/imaging.ini'].set('database', 'dbhost', self.config['dbhost'])
         self.confs['plugins/imaging.ini'].set('database', 'dbuser', self.config['dbuser'])
-        self.confs['plugins/imaging.ini'].set('database', 'dbpasswd', self.config['dbpwd'])
+        self.confs['plugins/imaging.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
 
         # inventory db (plugin)
         self.confs['plugins/inventory.ini']\
@@ -432,7 +459,7 @@ class SetupApp(object):
         self.confs['plugins/inventory.ini']\
             .set('inventory', 'dbuser', self.config['dbuser'])
         self.confs['plugins/inventory.ini']\
-            .set('inventory', 'dbpasswd', self.config['dbpwd'])
+            .set('inventory', 'dbpasswd', self.config['dbpasswd'])
 
         # inventory db (server)
         self.confs['pulse2/inventory-server/inventory-server.ini']\
@@ -440,12 +467,12 @@ class SetupApp(object):
         self.confs['pulse2/inventory-server/inventory-server.ini']\
             .set('database', 'dbuser', self.config['dbuser'])
         self.confs['pulse2/inventory-server/inventory-server.ini']\
-            .set('database', 'dbpasswd', self.config['dbpwd'])
+            .set('database', 'dbpasswd', self.config['dbpasswd'])
 
         # msc db (plugin)
         self.confs['plugins/msc.ini'].set('msc', 'dbhost', self.config['dbhost'])
         self.confs['plugins/msc.ini'].set('msc', 'dbuser', self.config['dbuser'])
-        self.confs['plugins/msc.ini'].set('msc', 'dbpasswd', self.config['dbpwd'])        
+        self.confs['plugins/msc.ini'].set('msc', 'dbpasswd', self.config['dbpasswd'])        
         
         # msc db (scheduler)
         self.confs['pulse2/scheduler/scheduler.ini']\
@@ -453,12 +480,12 @@ class SetupApp(object):
         self.confs['pulse2/scheduler/scheduler.ini']\
             .set('database', 'dbuser', self.config['dbuser'])
         self.confs['pulse2/scheduler/scheduler.ini']\
-            .set('database', 'dbpasswd', self.config['dbpwd'])
+            .set('database', 'dbpasswd', self.config['dbpasswd'])
 
         # pulse2
         self.confs['plugins/pulse2.ini'].set('database', 'dbhost', self.config['dbhost'])
         self.confs['plugins/pulse2.ini'].set('database', 'dbuser', self.config['dbuser'])
-        self.confs['plugins/pulse2.ini'].set('database', 'dbpasswd', self.config['dbpwd'])
+        self.confs['plugins/pulse2.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
 
     def init_misc(self):
         # Choose glpi or inventory backend, and check config files coherency
@@ -479,7 +506,7 @@ class SetupApp(object):
         # Check some paths are corrects
         wol_path_ok = False
         while not wol_path_ok:
-            wol_path = self.read_opt('Wake-on-lan tool path', '/usr/sbin/pulse2-wol')
+            wol_path = self.read_opt('Wake-on-lan tool path', self.defaults['wol'])
             self.confs['pulse2/launchers/launchers.ini'].set('wol', 'wol_path', wol_path)
             if os.path.exists(wol_path):
                 wol_path_ok = True
@@ -495,6 +522,9 @@ class SetupApp(object):
     def run(self):
         """ Run setup 
         """
+        log.info("Load defaults values from existing config")
+        self.load_defaults()
+
         log.info("Run setup")
         self.init_db()
         self.init_ldap()
