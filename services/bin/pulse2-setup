@@ -515,7 +515,7 @@ class SetupApp(object):
                 log.info("Creating directory: %s" % path)
                 os.makedirs(path)
 
-        # Check some paths are corrects
+        # Check wol tool path
         wol_path_ok = False
         while not wol_path_ok:
             wol_path = self.read_opt('Wake-on-lan tool path', self.defaults['wol'])
@@ -524,6 +524,16 @@ class SetupApp(object):
                 wol_path_ok = True
             else:
                 log.error('Can not find %s' % wol_path)
+
+        # Check root user has a DSA key
+        log.info('Check for root user DSA key pair')
+        dsa_key_path = '/root/.ssh/id_dsa'
+        if not os.path.exists(dsa_key_path):
+            log.info('Creating a DSA key pair for user root')
+            ret = call("/usr/bin/ssh-keygen -t dsa -N '' -f %s" % dsa_key_path, shell=True)
+            if ret<>0:
+                log.error('Can not create DSA key pair for user root')
+                sys.exit(1)
 
     def commit(self):
         """ Write down all config files
