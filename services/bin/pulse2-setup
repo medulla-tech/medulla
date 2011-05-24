@@ -47,14 +47,17 @@ def read_opt(prompt, default=None):
 def gen_password(size=10):
     return ''.join([choice(string.letters + string.digits) for _ in range(size)])
 
-def read_passwd(prompt):
+def read_passwd(prompt, check=False):
     match = False
     while not match:
         pwd = getpass.getpass('INPUT    - ' + prompt + ': ')
-        pwd2 = getpass.getpass('INPUT    - ' + prompt + ' (confirm): ')
-        match = pwd==pwd2
-        if not match:
-            log.info('Paswords do not match. Retry.')
+        if check:
+            pwd2 = getpass.getpass('INPUT    - ' + prompt + ' (confirm): ')
+            match = pwd==pwd2
+            if not match:
+                log.info('Paswords do not match. Retry.')
+        else:
+            match = True
     return pwd
 
 class Pulse2ConfigParser(ConfigParser):
