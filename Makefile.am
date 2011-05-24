@@ -35,4 +35,21 @@ sysconfdirwarning:
 	  echo '###'; \
 	fi
 
-.PHONY = sysconfdirwarning
+prereqs:
+	if [ -x /usr/bin/apt-get ]; then \
+	  $(MAKE) prereqs-deb; \
+	elif [ -x /usr/sbin/urpmi ]; then \
+	  $(MAKE) prereqs-urpmi; \
+	fi
+
+prereqs-urpmi:
+	urpmi lsb-release python-sqlalchemy python-twisted php-gd perl-Unix-Syslog openssh-clients \
+	  iputils rsync mysql
+
+prereqs-deb:
+	apt-get update
+	apt-get install python-all lsb-release python-sqlalchemy python-mysqldb \
+	  python-twisted-web perl-modules libsys-syslog-perl openssh-client iputils-ping rsync \
+	  mysql-server php5-gd
+
+.PHONY = sysconfdirwarning prereqs prereqs-deb prereqs-urpmi
