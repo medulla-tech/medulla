@@ -441,17 +441,17 @@ class Inventory(DyngroupDatabaseHelper):
             value = query[3]
             if value.startswith('>') and not invert or value.startswith('<') and invert:
                 value = value.replace('>', '').replace('<', '')
-                return and_(getattr(partKlass.c, field) > value, self.inventory.c.Last == 1)
+                return and_(getattr(partKlass, field) > value, self.inventory.c.Last == 1)
             elif value.startswith('>') and invert or value.startswith('<') and not invert:
                 value = value.replace('>', '').replace('<', '')
-                return and_(getattr(partKlass.c, field) < value, self.inventory.c.Last == 1)
+                return and_(getattr(partKlass, field) < value, self.inventory.c.Last == 1)
             elif invert:
-                return and_(getattr(partKlass.c, field) != value, self.inventory.c.Last == 1)
+                return and_(getattr(partKlass, field) != value, self.inventory.c.Last == 1)
             else:
                 if re.compile('\*').search(value):
                     value = re.compile('\*').sub('%', value)
-                    return and_(getattr(partKlass.c, field).like(value), self.inventory.c.Last == 1)
-                return and_(getattr(partKlass.c, field) == value, self.inventory.c.Last == 1)
+                    return and_(getattr(partKlass, field).like(value), self.inventory.c.Last == 1)
+                return and_(getattr(partKlass, field) == value, self.inventory.c.Last == 1)
 
         elif PossibleQueries().possibleQueries('halfstatic').has_key(query[2]): # halfstatic search
             if table == 'Machine':
@@ -463,31 +463,31 @@ class Inventory(DyngroupDatabaseHelper):
             hs = PossibleQueries().possibleQueries('halfstatic')[query[2]]
             condition = 1
             if self.config.getInventoryNoms(table) == None:
-                condition = (getattr(partKlass.c, hs[1]) == hs[2])
+                condition = (getattr(partKlass, hs[1]) == hs[2])
             else:
                 noms = self.config.getInventoryNoms(table)
                 try:
                     noms.index(hs[1])
                     nomTableName = 'nom%s%s' % (table, hs[1])
                     nomKlass = self.klass[nomTableName]
-                    if hasattr(nomKlass.c, hs[1]):
-                        condition = (getattr(nomKlass.c, hs[1]) == hs[2])
+                    if hasattr(nomKlass, hs[1]):
+                        condition = (getattr(nomKlass, hs[1]) == hs[2])
                 except ValueError, e:
-                    condition = (getattr(partKlass.c, hs[1]) == hs[2])
+                    condition = (getattr(partKlass, hs[1]) == hs[2])
 
             if value.startswith('>') and not invert or value.startswith('<') and invert:
                 value = value.replace('>', '').replace('<', '')
-                return and_(getattr(partKlass.c, field) > value, condition, self.inventory.c.Last == 1)
+                return and_(getattr(partKlass, field) > value, condition, self.inventory.c.Last == 1)
             elif value.startswith('>') and invert or value.startswith('<') and not invert:
                 value = value.replace('>', '').replace('<', '')
-                return and_(getattr(partKlass.c, field) < value, condition, self.inventory.c.Last == 1)
+                return and_(getattr(partKlass, field) < value, condition, self.inventory.c.Last == 1)
             elif invert:
-                return and_(getattr(partKlass.c, field) != value, condition, self.inventory.c.Last == 1)
+                return and_(getattr(partKlass, field) != value, condition, self.inventory.c.Last == 1)
             else:
                 if re.compile('\*').search(value):
                     value = re.compile('\*').sub('%', value)
-                    return and_(getattr(partKlass.c, field).like(value), condition, self.inventory.c.Last == 1)
-                return and_(getattr(partKlass.c, field) == value, condition, self.inventory.c.Last == 1)
+                    return and_(getattr(partKlass, field).like(value), condition, self.inventory.c.Last == 1)
+                return and_(getattr(partKlass, field) == value, condition, self.inventory.c.Last == 1)
 
     def getMachines(self, ctx, pattern = None):
         """
@@ -543,15 +543,15 @@ class Inventory(DyngroupDatabaseHelper):
             value = params[field]
             if p1.search(value):
                 value = p1.sub('%', value)
-                filters.append(getattr(partKlass.c, field).like(value))
+                filters.append(getattr(partKlass, field).like(value))
             elif p2.search(value):
                 value = p2.sub('', value)
-                filters.append(getattr(partKlass.c, field) < value)
+                filters.append(getattr(partKlass, field) < value)
             elif p3.search(value):
                 value = p3.sub('', value)
-                filters.append(getattr(partKlass.c, field) > value)
+                filters.append(getattr(partKlass, field) > value)
             else:
-                filters.append(getattr(partKlass.c, field) == value)
+                filters.append(getattr(partKlass, field) == value)
 
         session = create_session()
         query = session.query(Machine).\
@@ -592,9 +592,9 @@ class Inventory(DyngroupDatabaseHelper):
         import re
         p1 = re.compile('\*')
         if p1.search(value):
-            result = result.filter(getattr(partKlass.c, field).like(p1.sub('%', value)))
+            result = result.filter(getattr(partKlass, field).like(p1.sub('%', value)))
         else:
-            result = result.filter(getattr(partKlass.c, field) == value)
+            result = result.filter(getattr(partKlass, field) == value)
 
         result = result.group_by(self.machine.c.Name).\
             group_by(haspartTable.c.machine).\
@@ -625,7 +625,7 @@ class Inventory(DyngroupDatabaseHelper):
             partKlass = self.klass[table]
             partTable = self.table[table]
 
-        result = session.query(partKlass).add_column(getattr(partKlass.c, field)).limit(MAX_REQ_NUM)
+        result = session.query(partKlass).add_column(getattr(partKlass, field)).limit(MAX_REQ_NUM)
         session.close()
 
         if result:
@@ -646,7 +646,7 @@ class Inventory(DyngroupDatabaseHelper):
             partKlass = self.klass[table]
             partTable = self.table[table]
 
-        result = session.query(partKlass).add_column(getattr(partKlass.c, field)).filter(getattr(partKlass.c, field).like('%'+fuzzy_value+'%')).limit(MAX_REQ_NUM).all()
+        result = session.query(partKlass).add_column(getattr(partKlass, field)).filter(getattr(partKlass, field).like('%'+fuzzy_value+'%')).limit(MAX_REQ_NUM).all()
         session.close()
 
         if result:
@@ -665,7 +665,7 @@ class Inventory(DyngroupDatabaseHelper):
             partKlass = self.klass[table]
         session = create_session()
         result = self.__getValuesWhereQuery(table, field1, value1, field2, session)
-        result = result.filter(getattr(partKlass.c, field2).like('%'+fuzzy_value+'%')).limit(MAX_REQ_NUM)
+        result = result.filter(getattr(partKlass, field2).like('%'+fuzzy_value+'%')).limit(MAX_REQ_NUM)
         session.close()
 
         if result:
@@ -697,7 +697,7 @@ class Inventory(DyngroupDatabaseHelper):
         else:
             partKlass = self.klass[table]
             partTable = self.table[table]
-        query = session.query(partKlass).add_column(getattr(partKlass.c, field2))
+        query = session.query(partKlass).add_column(getattr(partKlass, field2))
         filterDone = False
 
         if self.config.getInventoryNoms(table) != None:
@@ -705,7 +705,7 @@ class Inventory(DyngroupDatabaseHelper):
                 hasTable = self.table['has%s'%(table)]
                 nomTableName = 'nom%s%s' % (table, nom)
                 nomKlass = self.klass[nomTableName]
-                if hasattr(nomKlass.c, field1):
+                if hasattr(nomKlass, field1):
                     nomTable = self.table[nomTableName]
                     query = query.select_from(partTable.join(hasTable).join(nomTable))
                     query = query.filter(self.__filterOn(nomKlass, field1, value1))
@@ -721,9 +721,9 @@ class Inventory(DyngroupDatabaseHelper):
         self.logger.debug("%s %s"%(field, value))
         if p1.search(value):
             value = p1.sub('%', value)
-            return getattr(partKlass.c, field).like(value)
+            return getattr(partKlass, field).like(value)
         else:
-            return getattr(partKlass.c, field) == value
+            return getattr(partKlass, field) == value
 
     def getMachinesNetworkSorted(self, ctx, params):
         net = self.getLastMachineInventoryPart(ctx, 'Network', params)
@@ -977,7 +977,7 @@ class Inventory(DyngroupDatabaseHelper):
         session = create_session()
         m = Machine()
         m.Name = name
-        session.save(m)
+        session.add(m)
         # TODO need to put all other Last to 0
         query = session.query(InventoryTable).select_from(self.inventory.join(self.table['hasNetwork']).join(self.machine)).filter(self.machine.c.Name == name)
         for inv in query:
@@ -986,7 +986,7 @@ class Inventory(DyngroupDatabaseHelper):
         i = InventoryTable()
         i.Last = 1
         i.Date, i.Time = str(datetime.datetime.today()).split(" ")
-        session.save(i)
+        session.add(i)
         session.flush()
         net = self.klass['Network']
         hasNet = self.klass['hasNetwork']
@@ -994,26 +994,26 @@ class Inventory(DyngroupDatabaseHelper):
         n.MACAddress = mac
         n.IP = ip
         n.SubnetMask = netmask
-        session.save(n)
+        session.add(n)
         session.flush()
         h = hasNet()
         h.machine = m.id
         h.network = n.id
         h.inventory = i.id
-        session.save(h)
+        session.add(h)
         session.flush()
         if comment != None:
             custom = self.klass['Custom']
             hasCustom = self.klass['hasCustom']
             c = custom()
             c.Comments = comment
-            session.save(c)
+            session.add(c)
             session.flush()
             h = hasCustom()
             h.machine = m.id
             h.custom = c.id
             h.inventory = i.id
-            session.save(h)
+            session.add(h)
             session.flush()
 
         if location_uuid != None:
@@ -1024,7 +1024,7 @@ class Inventory(DyngroupDatabaseHelper):
                 hl.machine = m.id
                 hl.entity = query.id
                 hl.inventory = i.id
-                session.save(hl)
+                session.add(hl)
                 session.flush()
         session.close()
         return toUUID(m.id)
@@ -1084,7 +1084,7 @@ class Inventory(DyngroupDatabaseHelper):
         except Exception:
             u = UserTable()
             u.uid = userid
-            session.save(u)
+            session.add(u)
             session.flush()
 
         # Create/get entities
@@ -1098,7 +1098,7 @@ class Inventory(DyngroupDatabaseHelper):
                 except Exception:
                     e = self.klass['Entity']()
                     e.Label = entity
-                    session.save(e)
+                    session.add(e)
                     session.flush()
             elist.append(e)
         # Look for the user to entities mappings that need to be added or
@@ -1123,7 +1123,7 @@ class Inventory(DyngroupDatabaseHelper):
             ue = UserEntitiesTable()
             ue.fk_User = u.id
             ue.fk_Entity = entity.id
-            session.save(ue)
+            session.add(ue)
         session.commit()
         session.close()
 
@@ -1137,7 +1137,7 @@ class Inventory(DyngroupDatabaseHelper):
         except Exception:
             e = self.klass['Entity']()
             e.Label = name
-            session.save(e)
+            session.add(e)
             session.flush()
         session.close()
 
@@ -1737,14 +1737,14 @@ class InventoryCreator(Inventory):
         date = dates
 
         session = create_session()
-        transaction = session.create_transaction()
+        session.begin()
         try:
             m = self.getMachinesOnly(self.ctx, {'hostname': hostname}) # TODO uuids!
             if len(m) == 0:
                 # If this computer is not in the Machine table, add it
                 m = Machine()
                 m.Name = hostname
-                session.save(m)
+                session.add(m)
             elif len(m) > 1:
                 # If this computer has been registered twice, exit
                 session.close()
@@ -1769,16 +1769,17 @@ class InventoryCreator(Inventory):
             i = InventoryTable()
             i.Date, i.Time = date
             i.Last = 1
-            session.save(i)
+            session.add(i)
             session.flush()
 
             # Loop on all inventory parts
-            for table in inventory:
-                content = inventory[table]
+            for table, entries_list in inventory.items():
+                # table: bios, controller, etc.
+                # content: list of entries
                 tname = table.lower()
 
                 # This part of inventory is empty, so skip it
-                if len(content) == 0:
+                if len(entries_list) == 0:
                     continue
 
                 klass = self.klass[table]
@@ -1789,41 +1790,41 @@ class InventoryCreator(Inventory):
                 # keep track of already inserted datas for this table
                 already_inserted = []
                 # loop on all inventory part columns
-                for cols in content:
+                for entry in entries_list:
                     # skip if empty
-                    if len(cols) == 0:
+                    if len(entry) == 0:
                         continue
                     try:
-                        cutted_cols = {}
+                        trunc_entry = {}
                         # Check if the length of fields is big enough to put the data
-                        for col in cols:
-                            cutted_cols[col] = cols[col]
-                            if hasattr(klass.c, col):
-                                length = getattr(klass.c, col)
+                        for field in entry:
+                            trunc_entry[field] = entry[field]
+                            if hasattr(klass, field):
+                                attr = getattr(klass, field)
 
-                                if isinstance(length.type, sqlalchemy.databases.mysql.MSInteger):
+                                if isinstance(attr, sqlalchemy.types.Integer):
                                     try:
-                                        int(cols[col])
+                                        int(entry[field])
                                     except ValueError:
-                                        logging.getLogger().warning("The field %s of the table %s is going to be set to ZERO, please report to us." % (col, table))
-                                        logging.getLogger().debug("The value |%s| become |0|" % (cols[col]))
-                                        cutted_cols[col] = '0'
-                                if hasattr(length.type, 'length'):
-                                    length = length.type.length
-                                    if len(cols[col]) >= length:
-                                        logging.getLogger().warning("The field %s of the table %s is going to be truncated at %s chars, please report to us."%(col, table, length))
-                                        logging.getLogger().debug("The value |%s| become |%s|"%(cols[col], cols[col][0:length]))
-                                        cutted_cols[col] = cols[col][0:length]
+                                        logging.getLogger().warning("The field %s of the table %s is going to be set to ZERO, please report to us." % (field, table))
+                                        logging.getLogger().debug("The value |%s| become |0|" % (entry[field]))
+                                        trunc_entry[field] = '0'
+                                if hasattr(attr, 'length'):
+                                    length = attr.length
+                                    if len(entry[field]) >= length:
+                                        logging.getLogger().warning("The field %s of the table %s is going to be truncated at %s chars, please report to us."%(field, table, length))
+                                        logging.getLogger().debug("The value |%s| become |%s|"%(entry[field], entry[field][0:length]))
+                                        trunc_entry[field] = entry[field][0:length]
 
                         # Look up these columns in the inventory table
-                        id = self.getIdInTable(table, cutted_cols, session)
+                        id = self.getIdInTable(table, trunc_entry, session)
                         # Create them if none found
                         if id == None:
                             k = klass()
-                            for col in cutted_cols:
-                                if type(col) == str or type(col) == unicode:
-                                    setattr(k, col, cutted_cols[col])
-                            session.save(k)
+                            for field in trunc_entry:
+                                if type(field) == str or type(field) == unicode:
+                                    setattr(k, field, trunc_entry[field])
+                            session.add(k)
                             # Immediately flush this new row, because we need an
                             # id
                             session.flush([k])
@@ -1836,17 +1837,17 @@ class InventoryCreator(Inventory):
                                 nomKlass = self.klass[nomName]
                                 nomTable = self.table[nomName]
 
-                                ncols = {}
-                                for col in cols:
-                                    if type(col) == tuple and col[0] == nomName:
-                                        ncols[col[1]] = cols[col]
+                                new_entry = {}
+                                for field in entry:
+                                    if type(field) == tuple and field[0] == nomName:
+                                        new_entry[field[1]] = entry[field]
 
-                                nid = self.getIdInTable(nomName, ncols, session)
+                                nid = self.getIdInTable(nomName, new_entry, session)
                                 if nid == None:
                                     n = nomKlass()
-                                    for col in ncols:
-                                        setattr(n, col, ncols[col])
-                                    session.save(n)
+                                    for field in new_entry:
+                                        setattr(n, field, new_entry[field])
+                                    session.add(n)
                                     # Immediately flush this new row, because
                                     # we need an id
                                     session.flush([n])
@@ -1866,7 +1867,7 @@ class InventoryCreator(Inventory):
                             # We will flush the new rows for the 'has' tables
                             # at the end, because it's faster to do it in one
                             # shot
-                            session.save(hk)
+                            session.add(hk)
                             already_inserted.append(params)
                     except UnicodeDecodeError, e: # just for test
                         pass
@@ -1876,12 +1877,12 @@ class InventoryCreator(Inventory):
                 # closes for block
             # closes for block on inventory parts
             session.flush()
+            session.commit()
         except Exception, e:
-            transaction.rollback()
+            session.rollback()
             session.close()
             logging.getLogger().exception(e)
             raise e
 
-        transaction.commit()
         session.close()
         return True
