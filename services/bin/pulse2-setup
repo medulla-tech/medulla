@@ -365,6 +365,7 @@ class SetupApp(object):
 
         # Populate base plugin conf file
         self.confs['plugins/base.ini'].set('ldap', 'ldapurl', self.config['ldapurl'])
+        self.confs['plugins/base.ini'].set('ldap', 'basedn', self.config['ldapbasedn'])
         self.confs['plugins/base.ini'].set('ldap', 'rootname', self.config['ldapadmindn'])
         self.confs['plugins/base.ini'].set('ldap', 'password', self.config['ldappasswd'])
         
