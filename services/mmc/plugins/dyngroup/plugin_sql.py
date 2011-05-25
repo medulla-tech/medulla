@@ -19,6 +19,10 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+"""
+Mapping between SA and SQL ?
+"""
+
 from sqlalchemy import *
 
 class SqlPlugin:
