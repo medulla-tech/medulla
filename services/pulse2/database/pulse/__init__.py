@@ -175,7 +175,7 @@ class Pulse2Database(DyngroupDatabaseHelper):
         pse = PackageServerEntity()
         pse.package_server_uuid = ps_uuid
         pse.entity_uuid = e_uuid
-        session.save(pse)
+        session.add(pse)
         session.flush()
         session.close()
         return pse

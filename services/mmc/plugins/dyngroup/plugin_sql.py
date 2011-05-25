@@ -91,7 +91,7 @@ class SqlPlugin:
         if datum != None:
             if user == None or datum.user == None or user == datum.user:
                 datum.value = val
-                self.session.save(datum)
+                self.session.add(datum)
             else:
                 raise Exception("user don't have good rigths")
         else:
@@ -99,7 +99,7 @@ class SqlPlugin:
             datum.k = key
             datum.value = val
             datum.user = user
-            self.session.save(datum)
+            self.session.add(datum)
         self.session.flush()
         return val
 

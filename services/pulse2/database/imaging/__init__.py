@@ -1146,7 +1146,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         bsim = BootServiceInMenu()
         bsim.fk_menuitem = mi_id
         bsim.fk_bootservice = uuid2id(bs_uuid)
-        session.save(bsim)
+        session.add(bsim)
         session.flush()
         return bsim
 
@@ -1154,7 +1154,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         imim = ImageInMenu()
         imim.fk_menuitem = mi_id
         imim.fk_image = uuid2id(im_uuid)
-        session.save(imim)
+        session.add(imim)
         session.flush()
         return imim
 
@@ -1541,7 +1541,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             if len(targets[i]) > 0:
                 self.changeTargetsSynchroState(targets[i], i, P2ISS.TODO)
 
-        session.save(il)
+        session.add(il)
         session.delete(mo)
         session.delete(iois)
         session.flush()
@@ -1692,7 +1692,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             self.logger.warn("don't know that imaging log state %s" % (params['state']))
             image.fk_state = 1  # the UNKNOWN entry
 
-        session.save(image)
+        session.add(image)
         session.flush()
 
         # fill the imaging_log
@@ -1704,21 +1704,21 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         imaging_log.fk_imaging_log_state = 1  # done
         target = session.query(Target).filter(self.target.c.uuid == computer_uuid).first()
         imaging_log.fk_target = target.id
-        session.save(imaging_log)
+        session.add(imaging_log)
         session.flush()
 
         # Mastered on
         mastered_on = MasteredOn()
         mastered_on.fk_image = image.id
         mastered_on.fk_imaging_log = imaging_log.id
-        session.save(mastered_on)
+        session.add(mastered_on)
 
         # link the image to the imaging_server
         ims = session.query(ImagingServer).filter(self.imaging_server.c.packageserver_uuid == imaging_server_uuid).first()
         ioims = ImageOnImagingServer()
         ioims.fk_image = image.id
         ioims.fk_imaging_server = ims.id
-        session.save(ioims)
+        session.add(ioims)
 
         # link the image to the machine
         # DONT PUT IN THE MENU BY DEFAULT
@@ -1743,7 +1743,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         target = session.query(Target).filter(self.target.c.uuid == item_uuid).first()
         imaging_log.fk_target = target.id
-        session.save(imaging_log)
+        session.add(imaging_log)
         session.flush()
         session.close()
         return True
@@ -1909,7 +1909,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                     pisii.fk_image = uuid2id(item_uuid)
                     pisii.fk_post_install_script = uuid2id(pis)
                     pisii.order = post_install_scripts[pis]
-                    session.save(pisii)
+                    session.add(pisii)
 
         if need_to_be_save:
             session.add(im)
@@ -2573,7 +2573,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         ims.associated = 0  # we are registered, but not yet associated
         ims.fk_language = 1  # default on English
         self.imagingServer_lang[uuid] = 1
-        session.save(ims)
+        session.add(ims)
         session.flush()
         session.close()
         return ims.id
@@ -2752,7 +2752,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             menu_item.hidden = default_menu_item.hidden
             menu_item.hidden_WOL = default_menu_item.hidden_WOL
             menu_item.fk_menu = 1 # default Menu, need to be change as soon as we have the menu id!
-            session.save(menu_item)
+            session.add(menu_item)
             ret.append(menu_item)
             session.flush()
             if mi[0].id == default_menu_item.id:
@@ -2763,12 +2763,12 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 bsim = BootServiceInMenu()
                 bsim.fk_menuitem = menu_item.id
                 bsim.fk_bootservice = default_bsim.fk_bootservice
-                session.save(bsim)
+                session.add(bsim)
             if default_iim != None:
                 iim = ImageInMenu()
                 iim.fk_menuitem = menu_item.id
                 iim.fk_image = default_iim.fk_image
-                session.save(iim)
+                session.add(iim)
         session.flush()
         return [ret, mi_out]
 
@@ -2803,7 +2803,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             menu.fk_default_item = mi[0]
             menu.fk_default_item_WOL = mi[1]
         menu.fk_synchrostate = 1
-        session.save(menu)
+        session.add(menu)
         session.flush()
         for menu_item in menu_items:
             menu_item.fk_menu = menu.id
@@ -2827,14 +2827,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         menu.fk_default_item_WOL = 0
         menu.fk_synchrostate = 1
         menu.fk_name = 1
-        session.save(menu)
+        session.add(menu)
         return menu
 
     def __createEntity(self, session, loc_id, loc_name):
         e = Entity()
         e.name = loc_name
         e.uuid = loc_id
-        session.save(e)
+        session.add(e)
         return e
 
     def getImagingServerEntity(self, imaging_server_uuid):
@@ -2937,7 +2937,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session = create_session()
         imaging_server = self.getImagingServerByEntityUUID(location, session)
         # modify imaging_server
-        # session.save(imaging_server)
+        # session.add(imaging_server)
         # session.flush()
         session.close()
         return True
@@ -3063,7 +3063,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             target.raw_mode = 1
         target.fk_entity = entity_id
         target.fk_menu = menu_id
-        session.save(target)
+        session.add(target)
         return target
 
     def getTargetNICuuid(self, uuid, session = None):
@@ -3353,13 +3353,13 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             new_bsim = BootServiceInMenu()
             new_bsim.fk_menuitem = mi.id
             new_bsim.fk_bootservice = bsim.fk_bootservice
-            session.save(new_bsim)
+            session.add(new_bsim)
 
         for mi, iim in a_iim:
             new_iim = ImageInMenu()
             new_iim.fk_menuitem = mi.id
             new_iim.fk_image = iim.fk_image
-            session.save(new_iim)
+            session.add(new_iim)
 
         session.flush()
         session.close()
@@ -3752,14 +3752,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         pis.default_desc = params['default_desc']
         pis.fk_desc = 1
         pis.value = params['value']
-        session.save(pis)
+        session.add(pis)
         session.flush()
         # link it to the location because it's a local script
         imaging_server = self.getImagingServerByEntityUUID(loc_id, session)
         pisois = PostInstallScriptOnImagingServer()
         pisois.fk_post_install_script = pis.id
         pisois.fk_imaging_server = imaging_server.id
-        session.save(pisois)
+        session.add(pisois)
         session.flush()
         session.close()
         return True

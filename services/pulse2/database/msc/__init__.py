@@ -178,7 +178,7 @@ class MscDatabase(DatabaseHelper):
         bdl = Bundle()
         bdl.title = title
         bdl.do_reboot = 'disable'
-        session.save(bdl)
+        session.add(bdl)
         session.flush()
         return bdl
 
@@ -215,7 +215,7 @@ class MscDatabase(DatabaseHelper):
         cmd.order_in_bundle = order_in_bundle
         cmd.proxy_mode = proxy_mode # FIXME: we may add some code to check everything is OK
         cmd.state = 'active'
-        session.save(cmd)
+        session.add(cmd)
         session.flush()
         return cmd
 
