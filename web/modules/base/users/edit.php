@@ -419,7 +419,7 @@ $test->display(array("value"=> $user_givenName));
 $test = new TrFormElement(_("Title"),new InputTpl("title"));
 $test->display(array("value"=> $user_title));
 
-$email = new InputTpl("mail",'/^([A-Za-z0-9._%-]+@[A-Za-z0-9.-]+){0,1}$/');
+$email = new InputTpl("mail",'/^([A-Za-z0-9._%-+]+@[A-Za-z0-9.-]+){0,1}$/');
 $test = new TrFormElement(_("Mail address"), $email);
 $test->setCssError("mail");
 $test->display(array("value"=> $user_mail));
