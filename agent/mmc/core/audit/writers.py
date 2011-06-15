@@ -341,7 +341,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         """
         @returns: the wanted audit database version for this code to works
         """
-        return 1
+        return 2
 
     def checkVersion(self, version):
         return version == self.getUptodateVersion()
