@@ -379,7 +379,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
     
         self.source_table = Table("source", self.metadata,
                            Column("id", Integer, primary_key=True),
-                           Column("hostname", String(20), nullable=False),
+                           Column("hostname", String(32), nullable=False),
                            mysql_engine='InnoDB'
                            )
     
@@ -394,7 +394,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         self.initiator_table=Table("initiator", self.metadata,
                             Column("id", Integer, primary_key=True),
                             Column("application", String(64), nullable=False),
-                            Column("hostname", String(20), nullable=False),
+                            Column("hostname", String(32), nullable=False),
                             mysql_engine='InnoDB'
                             )
 
@@ -463,7 +463,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
     
         self.source_table = Table("source", self.metadata,
                            Column("id", Integer, primary_key=True),
-                           Column("host", String(20), nullable=False)
+                           Column("hostname", String(32), nullable=False)
                            )
     
         self.param_table=Table("parameters", self.metadata,
@@ -476,7 +476,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         self.initiator_table=Table("initiator", self.metadata,
                             Column("id", Integer, primary_key=True),
                             Column("application", String(64), nullable=False),
-                            Column("host", String(20))
+                            Column("hostname", String(32))
                             )
 
         self.type_table=Table("type", self.metadata,
