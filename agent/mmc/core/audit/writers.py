@@ -360,9 +360,9 @@ class AuditWriterDB(Singleton, AuditWriterI):
         session.save(v)
         session.flush()
 
-    def _initTablesmysqlV1(self):
+    def _initTablesmysqlV2(self):
         """
-        Init MySQL table for audit database version 1
+        Init MySQL table for audit database version 2
         """
         self.module_table = Table("module", self.metadata,
                             Column("id", Integer, primary_key=True),
@@ -445,10 +445,10 @@ class AuditWriterDB(Singleton, AuditWriterI):
                             mysql_engine='InnoDB'
                             )
 
-    def _initTablespostgresV1(self):
+    def _initTablespostgresV2(self):
         """
         FIXME: to check
-        PostgreSQL db tables for audit database version 1
+        PostgreSQL db tables for audit database version 2
         """        
         self.module_table = Table("module", self.metadata,
                             Column("id", Integer, primary_key=True),
@@ -521,9 +521,9 @@ class AuditWriterDB(Singleton, AuditWriterI):
                              ForeignKeyConstraint(('event_id', 'module_id'), ('event.id', 'event.module_id'))
                             )
 
-    def _initMappersmysqlV1(self):
+    def _initMappersmysqlV2(self):
         """
-        Init all mappers for audit database version 1
+        Init all mappers for audit database version 2
         """
         mapper(Event, self.event_table)
         mapper(Module, self.module_table)
@@ -537,11 +537,11 @@ class AuditWriterDB(Singleton, AuditWriterI):
         mapper(Record, self.record_table, properties = {'param_log' : relation(Parameters, backref='parameters'), 'obj_log' : relation(Object, secondary=self.object_log_table, lazy=False)})
         mapper(Parameters, self.param_table)
     # The SA mapper for PostgreSQL is the same than MySQL
-    _initMapperspostgresV1 = _initMappersmysqlV1
+    _initMapperspostgresV2 = _initMappersmysqlV2
 
-    def _populateTablesmysqlV1(self):
+    def _populateTablesmysqlV2(self):
         """
-        Populate table for audit database version 1
+        Populate table for audit database version 2
         """
         t = Type()
         t.type = 'USER'
@@ -549,4 +549,4 @@ class AuditWriterDB(Singleton, AuditWriterI):
         session.save(t)
         session.flush()
     # The database population code is the same for PostgreSQL than MySQL
-    _populateTablespostgresV1 = _populateTablesmysqlV1
+    _populateTablespostgresV2 = _populateTablesmysqlV2
