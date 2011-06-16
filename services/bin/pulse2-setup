@@ -182,13 +182,13 @@ class SrvImagingServer(Service):
     name = 'pulse2-imaging-server'
 
     def is_enable(self):
-        return self.config['imaging.service.enable'] in ['y', 'Y']
+        return self.config['imaging.service.enable']
 
 class SrvInventoryserver(Service):
     name = 'pulse2-inventory-server'
 
     def is_enable(self):
-        return self.config['inventory.service.enable'] in ['y', 'Y']
+        return self.config['inventory.service.enable']
 
 class SrvLauncher(Service):
     name = 'pulse2-launchers'
@@ -197,7 +197,7 @@ class SrvPkgServer(Service):
     name = 'pulse2-package-server'
 
     def is_enable(self):
-        return self.config['package.service.enable'] in ['y', 'Y']
+        return self.config['package.service.enable']
 
 class SrvScheduler(Service):
     name = 'pulse2-scheduler'
@@ -373,6 +373,7 @@ class LaunchersConfig(LoggingConfig):
 class PackageServerConfig(LoggingConfig):
     path = 'pulse2/package-server/package-server.ini'
     log_path = 'pulse2-package-server.log'
+    defaults = {'main': {'host': '0.0.0.0'}}
 
 class SchedulerConfig(LoggingConfig):
     path = 'pulse2/scheduler/scheduler.ini'
