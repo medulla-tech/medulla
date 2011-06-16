@@ -60,6 +60,6 @@ prereqs-deb:
 	apt-get update
 	apt-get install python-all lsb-release python-sqlalchemy python-mysqldb \
 	  python-ldap python-openssl libapache2-mod-php5 php5-xmlrpc php5-gd \
-	  apache2-mpm-prefork
+	  apache2-mpm-prefork ldap-utils slapd
 
 .PHONY = sysconfdirwarning prereqs prereqs-deb prereqs-urpmi
