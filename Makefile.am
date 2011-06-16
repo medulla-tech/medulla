@@ -44,3 +44,22 @@ install-data-hook:
 	@echo '### You can use "mmc-add-schema" to convert and add the schema.'
 	@echo '### Schema file is available in: $(ldapcontribdir)'
 	@echo '###'
+
+prereqs:
+	if [ -x /usr/bin/apt-get ]; then \
+	  $(MAKE) prereqs-deb; \
+	elif [ -x /usr/sbin/urpmi ]; then \
+	  $(MAKE) prereqs-urpmi; \
+	fi
+
+prereqs-urpmi:
+	urpmi lsb-release python-sqlalchemy python-twisted php-gd perl-Unix-Syslog openssh-clients \
+	  iputils rsync mysql
+
+prereqs-deb:
+	apt-get update
+	apt-get install python-all lsb-release python-sqlalchemy python-mysqldb \
+	  python-ldap python-openssl libapache2-mod-php5 php5-xmlrpc php5-gd \
+	  apache2-mpm-prefork
+
+.PHONY = sysconfdirwarning prereqs prereqs-deb prereqs-urpmi
