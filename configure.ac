@@ -152,4 +152,4 @@ dnl write all stuff
 AC_OUTPUT
 
 dnl Warn user sysconfdir is not /etc, if necessary.
-make sysconfdirwarning
+make confwarning

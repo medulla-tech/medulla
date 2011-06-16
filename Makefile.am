@@ -27,11 +27,21 @@ SUBDIRS  = agent web
 
 ldapcontribdir = $(docdir)/contrib/ldap
 
+confwarning: sysconfdirwarning localstatedirwarning
+
 sysconfdirwarning:
 	@if test "${sysconfdir}" != "/etc"; then \
 	  echo '###'; \
 	  echo '### $${sysconfdir} evaluates to '${sysconfdir}': this is probably not what you want !'; \
 	  echo '### You may want to launch ./configure --sysconfdir=/etc.'; \
+	  echo '###'; \
+	fi
+
+localstatedirwarning:
+	@if test "${localstatedir}" != "/var"; then \
+	  echo '###'; \
+	  echo '### $${localstatedir} evaluates to '${localstatedir}': this is probably not what you want !'; \
+	  echo '### You may want to launch ./configure --localstatedir=/var.'; \
 	  echo '###'; \
 	fi
 
@@ -62,4 +72,4 @@ prereqs-deb:
 	  python-ldap python-openssl libapache2-mod-php5 php5-xmlrpc php5-gd \
 	  apache2-mpm-prefork ldap-utils slapd
 
-.PHONY = sysconfdirwarning prereqs prereqs-deb prereqs-urpmi
+.PHONY = confwarning localstatedirwarning sysconfdirwarning prereqs prereqs-deb prereqs-urpmi
