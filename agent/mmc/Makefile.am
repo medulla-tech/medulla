@@ -25,4 +25,4 @@ pythonmodules = support plugins plugins.base plugins.ppolicy \
 
 # Expands Python modules list with found *.py files in each module given in pythonmodules
 mmcpythondir = $(pythondir)/$(notdir $(realpath $(srcdir)))
-nobase_mmcpython_PYTHON = $(wildcard $(patsubst %,$(srcdir)/%/*.py ,$(subst .,/,$(pythonmodules))))
+nobase_mmcpython_PYTHON = $(wildcard *.py $(patsubst %,$(srcdir)/%/*.py ,$(subst .,/,$(pythonmodules))))
