@@ -179,8 +179,8 @@ class AuditWriterDB(Singleton, AuditWriterI):
                 return False
         elif op == 'init':
             if self.databaseExists():
-                self.logger.error('Database already exist')
-                return False
+                self.logger.info('Database already exist')
+                return True
             self.logger.info('Creating audit tables as requested')
             self.logger.info('Using database schema version %d' % self.getUptodateVersion())
             self._initTables()
@@ -356,8 +356,8 @@ class AuditWriterDB(Singleton, AuditWriterI):
         session.execute(self.version_table.delete())
         session.close()
         v = Version()
-        v.Number = version
-        session.save(v)
+        v.number = version
+        session.add(v)
         session.flush()
 
     def _initTablesmysqlV2(self):
@@ -546,7 +546,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         t = Type()
         t.type = 'USER'
         session = create_session()
-        session.save(t)
+        session.add(t)
         session.flush()
     # The database population code is the same for PostgreSQL than MySQL
     _populateTablespostgresV2 = _populateTablesmysqlV2
