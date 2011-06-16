@@ -63,7 +63,7 @@ class MmcServer(xmlrpc.XMLRPC,object):
     """
     MMC Server implemented as a XML-RPC server.
 
-    config file : /etc/mmc/agent/config.ini
+    config file : @sysconfdir@/agent/config.ini
 
     Create a twisted XMLRPC server, load plugins in
     "plugins/" directory

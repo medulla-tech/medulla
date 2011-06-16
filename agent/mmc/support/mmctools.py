@@ -25,6 +25,8 @@
 Tool and utility classes and methods for MMC
 """
 
+from mmc.site import mmcconfdir
+
 from twisted.internet import defer, reactor
 import os
 import os.path
@@ -394,7 +396,7 @@ def shlaunchBackground(cmd, desc = None, progressFunc = None, endFunc = None):
     reactor.spawnProcess(shProcess, "/bin/sh", ['/bin/sh','-c',cmd],env=os.environ)
 
 
-def getConfigParser(module, path = "/etc/mmc/plugins/"):
+def getConfigParser(module, path = mmcconfdir + "/plugins/"):
     """return a configParser for a plugins"""
     config = ConfigParser.ConfigParser()
     inifile = os.path.join(path, module) + ".ini"
@@ -402,7 +404,7 @@ def getConfigParser(module, path = "/etc/mmc/plugins/"):
     config.readfp(fp, inifile)
     return config
 
-def getConfigFile(module, path = "/etc/mmc/plugins/"):
+def getConfigFile(module, path = mmcconfdir + "/plugins/"):
     """Return the path of the default config file for a plugin"""
     return os.path.join(path, module) + ".ini"
 

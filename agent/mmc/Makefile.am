@@ -23,6 +23,27 @@
 pythonmodules = support plugins plugins.base plugins.ppolicy \
 	core core.audit
 
+all-local: site.py
+
 # Expands Python modules list with found *.py files in each module given in pythonmodules
 mmcpythondir = $(pythondir)/$(notdir $(realpath $(srcdir)))
 nobase_mmcpython_PYTHON = $(wildcard *.py $(patsubst %,$(srcdir)/%/*.py ,$(subst .,/,$(pythonmodules))))
+
+EXTRA_DIST = site.py.in
+CLEANFILES = site.py
+
+edit = sed \
+        -e 's|@bindir[@]|$(bindir)|g' \
+        -e 's|@sbindir[@]|$(sbindir)|g' \
+        -e 's|@pkgdatadir[@]|$(pkgdatadir)|g' \
+        -e 's|@prefix[@]|$(prefix)|g' \
+        -e 's|@sysconfdir[@]|$(sysconfdir)|g'
+
+site.py: Makefile
+	rm -f $@ $@.tmp
+	$(MKDIR_P) $(@D)
+	srcdir=''; \
+	  test -f ./$@.in || srcdir=$(srcdir)/; \
+	  $(edit) $${srcdir}$@.in >$@.tmp
+	mv $@.tmp $@
+site.py: $(srcdir)/site.py.in

@@ -24,11 +24,12 @@
 import ldap
 import xmlrpclib
 
+from mmc.site import mmcconfdir
 from mmc.plugins.base.ldapconnect import *
 from mmc.plugins.base.auth import *
 from mmc.plugins.base.provisioning import *
 
-INI = "/etc/mmc/plugins/base.ini"
+INI = mmcconfdir + "/plugins/base.ini"
 
 class ExternalLdapAuthenticatorConfig(AuthenticatorConfig, LDAPConnectionConfig):
     """

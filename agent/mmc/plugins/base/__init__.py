@@ -44,6 +44,7 @@ from mmc.support.mmctools import cleanFilter
 from mmc.support.mmctools import xmlrpcCleanup
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 
+from mmc.site import mmcconfdir
 from mmc.core.version import scmRevision
 from mmc.core.audit import AuditFactory as AF
 from mmc.plugins.base.audit import AA, AT, PLUGIN_NAME
@@ -77,7 +78,7 @@ except ImportError:
     _digest = sha.sha
 
 # global definition for ldapUserGroupControl
-INI = "/etc/mmc/plugins/base.ini"
+INI = mmcconfdir + "/plugins/base.ini"
 
 modList= None
 
@@ -304,7 +305,7 @@ def getUserGroups(pattern):
     return ldapObj.getUserGroups(pattern)
 
 # backup fonction
-def backupUser(user, media, login, configFile = "/etc/mmc/plugins/base.ini"):
+def backupUser(user, media, login, configFile = mmcconfdir + "/plugins/base.ini"):
     config = BasePluginConfig("base")
     cmd = os.path.join(config.backuptools, "backup.sh")
     ldapObj = ldapUserGroupControl()
