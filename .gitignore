@@ -10,6 +10,7 @@ agent/Makefile
 agent/backup-tools/Makefile
 agent/bin/Makefile
 agent/openldap-check-password/.deps/
+agent/init.d/mmc-agent
 autom4te.cache/
 config.guess
 config.log
