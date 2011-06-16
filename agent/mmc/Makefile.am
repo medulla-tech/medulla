@@ -17,13 +17,12 @@
 # You should have received a copy of the GNU General Public License
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 #
-# Author(s)
+# Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-SUBDIRS = backup-tools bin init.d contrib mmc
-if ENABLE_CHECK_PASSWORD
-SUBDIRS += openldap-check-password
-endif
-if ENABLE_CONF
-SUBDIRS += conf
-endif
+pythonmodules = support plugins plugins.base plugins.ppolicy \
+	core core.audit
+
+# Expands Python modules list with found *.py files in each module given in pythonmodules
+mmcpythondir = $(pythondir)/$(notdir $(realpath $(srcdir)))
+nobase_mmcpython_PYTHON = $(wildcard $(patsubst %,$(srcdir)/%/*.py ,$(subst .,/,$(pythonmodules))))

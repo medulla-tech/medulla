@@ -138,6 +138,7 @@ dnl files to generate with automake
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([agent/Makefile])
 AC_CONFIG_FILES([agent/bin/Makefile])
+AC_CONFIG_FILES([agent/mmc/Makefile])
 AC_CONFIG_FILES([agent/backup-tools/Makefile])
 AC_CONFIG_FILES([agent/init.d/Makefile])
 AC_CONFIG_FILES([agent/conf/Makefile])
