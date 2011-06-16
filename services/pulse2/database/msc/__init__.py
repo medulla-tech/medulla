@@ -22,6 +22,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+"""
+Provides access to MSC database
+"""
+
 # standard modules
 import time
 
@@ -941,7 +945,7 @@ class MscDatabase(DatabaseHelper):
         ret = self.__filterOnStatus(ctx, query, state)
         session.close()
         if max != -1: ret = ret[min:max]
-        return map(lambda coh: {'uuid':coh.target_uuid, 'host':coh.host, 'start_date':coh.start_date, 'end_date':coh.end_date, 'current_state':coh.current_state}, ret)
+        return map(lambda coh: {'coh_id':coh.id, 'uuid':coh.target_uuid, 'host':coh.host, 'start_date':coh.start_date, 'end_date':coh.end_date, 'current_state':coh.current_state}, ret)
     
     def getCommandOnGroupStatus(self, ctx, cmd_id):# TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         session = create_session()
@@ -956,7 +960,7 @@ class MscDatabase(DatabaseHelper):
         ret = self.__filterOnStatus(ctx, query, state)
         session.close()
         if max != -1: ret = ret[min:max]
-        return map(lambda coh: {'uuid':coh.target_uuid, 'host':coh.host, 'start_date':coh.start_date, 'end_date':coh.end_date, 'current_state':coh.current_state}, ret)
+        return map(lambda coh: {'coh_id': coh.id, 'uuid':coh.target_uuid, 'host':coh.host, 'start_date':coh.start_date, 'end_date':coh.end_date, 'current_state':coh.current_state}, ret)
         
     def getCommandOnBundleStatus(self, ctx, fk_bundle):
         session = create_session()
