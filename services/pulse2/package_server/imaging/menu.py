@@ -99,12 +99,16 @@ class ImagingDefaultMenuBuilder:
         m.setDefaultItem(int(self.menu['default_item']))
         m.setProtocol(self.menu['protocol'])
         m.setMTFTPTimeout(self.menu['mtftp_restore_timeout'])
+        self.logger.debug('bootcli: %s' % self.menu['bootcli'])
         m.setBootCLI(self.menu['bootcli'])
         m.hide(self.menu['hidden_menu'])
         if 'update_nt_boot' in self.menu:
             m.setNTBLFix(self.menu['update_nt_boot'])
+        self.logger.debug('disklesscli: %s' % self.menu['disklesscli'])
         m.setDisklessCLI(self.menu['disklesscli'])
+        self.logger.debug('dont_check_disk_size: %s' % self.menu['dont_check_disk_size'])
         m.setDiskSizeCheck(self.menu['dont_check_disk_size'])
+        self.logger.debug('ethercard: %s' % self.menu['ethercard'])
         m.setEtherCard(int(self.menu['ethercard']))
         if 'language' in self.menu:
             m.setLanguage(int(self.menu['language']))
@@ -406,28 +410,28 @@ class ImagingMenu:
         """
         set CLI access on boot (key "E")
         """
-        assert(type(value) == bool)
+        value = bool(value)
         self.bootcli = value
 
     def setNTBLFix(self, value):
         """
         set NT Boot Loader fix
         """
-        assert(type(value) == bool)
+        value = bool(value)
         self.ntblfix = value
 
     def setDisklessCLI(self, value):
         """
         do not drop to a shell when mastering
         """
-        assert(type(value) == bool)
+        value = bool(value)
         self.disklesscli = value
 
     def setDiskSizeCheck(self, value):
         """
         do check disk size when restoring
         """
-        assert(type(value) == bool)
+        value = bool(value)
         self.dont_check_disk_size = value
 
     def setEtherCard(self, value):
@@ -477,7 +481,7 @@ class ImagingMenu:
         """
         Set raw backup mode
         """
-        assert(type(value) == bool)
+        value = bool(value)
         if value:
             self.rawmode = 'revoraw'
 
@@ -491,7 +495,7 @@ class ImagingMenu:
         """
         Hide or display menu
         """
-        assert(type(flag) == bool)
+        flag = bool(flag)
         self.hidden = flag
 
 
