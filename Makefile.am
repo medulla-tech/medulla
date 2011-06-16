@@ -27,11 +27,21 @@ SUBDIRS = web services
 
 backupext = .$(shell date +%Y-%m-%d+%H:%M:%S)
 
+confwarning: sysconfdirwarning localstatedirwarning
+
 sysconfdirwarning:
 	@if test "${sysconfdir}" != "/etc"; then \
 	  echo '###'; \
 	  echo '### $${sysconfdir} evaluates to '${sysconfdir}': this is probably not what you want !'; \
 	  echo '### You may want to launch ./configure --sysconfdir=/etc.'; \
+	  echo '###'; \
+	fi
+
+localstatedirwarning:
+	@if test "${localstatedir}" != "/var"; then \
+	  echo '###'; \
+	  echo '### $${localstatedir} evaluates to '${localstatedir}': this is probably not what you want !'; \
+	  echo '### You may want to launch ./configure --localstatedir=/var.'; \
 	  echo '###'; \
 	fi
 

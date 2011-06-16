@@ -78,4 +78,4 @@ if test -f $(dirname $0)/configure.ac; then
         )
 fi
 
-$(dirname $0)/configure $@
+exit 0

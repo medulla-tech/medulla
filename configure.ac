@@ -145,7 +145,7 @@ dnl Fetch 3rd-party sources
 make -C services/3rd_party configure
 
 dnl Warn user sysconfdir is not /etc, if necessary.
-make sysconfdirwarning
+make confwarning
 
 echo "###"
 echo "### End of pulse2 configuration"
