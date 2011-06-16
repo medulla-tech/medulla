@@ -121,7 +121,7 @@ class AuditRecordDB(AuditRecord):
             if bdmodule == None:
                 bdmodule = Module()
                 bdmodule.name = module
-                session.save(bdmodule)
+                session.add(bdmodule)
                 session.flush()
 
             # get event object from database
@@ -131,7 +131,7 @@ class AuditRecordDB(AuditRecord):
                 bdevent = Event()
                 bdevent.module_id = bdmodule.id
                 bdevent.name = event
-                session.save(bdevent)
+                session.add(bdevent)
                 session.flush()
 
             # get initiator object
@@ -141,7 +141,7 @@ class AuditRecordDB(AuditRecord):
                 bdinitiator = Initiator()
                 bdinitiator.application = initiator[1]
                 bdinitiator.hostname = initiator[0]
-                session.save(bdinitiator)
+                session.add(bdinitiator)
                 session.flush()
 
             # get source object
@@ -150,7 +150,7 @@ class AuditRecordDB(AuditRecord):
             if bdsource == None:
                 bdsource = Source()
                 bdsource.hostname = source
-                session.save(bdsource)
+                session.add(bdsource)
                 session.flush()
 
             # get user type
@@ -158,7 +158,7 @@ class AuditRecordDB(AuditRecord):
             if utype == None:
                 utype = Type()
                 utype.type = self.user[1]
-                session.save(utype)
+                session.add(utype)
                 session.flush()
 
             # get user object
@@ -167,7 +167,7 @@ class AuditRecordDB(AuditRecord):
                 bduser = Object()
                 bduser.uri = self.user[0]
                 bduser.type_id = utype.id
-                session.save(bduser)
+                session.add(bduser)
                 session.flush()
 
             # Fill in record to emit
@@ -180,7 +180,7 @@ class AuditRecordDB(AuditRecord):
             # Set result status to undone
             self.record.result = False
             # Insert Object_Log
-            session.save(self.record)
+            session.add(self.record)
             session.flush()
 
             parentobj = None
@@ -192,7 +192,7 @@ class AuditRecordDB(AuditRecord):
                     if bdtype == None:
                         bdtype = Type()
                         bdtype.type = j
-                        session.save(bdtype)
+                        session.add(bdtype)
                         session.flush()
 
                     # Get or insert object
@@ -202,13 +202,13 @@ class AuditRecordDB(AuditRecord):
                         obj.uri = i
                         obj.type_id = bdtype.id
                         obj.parent = parentobj
-                        session.save(obj)
+                        session.add(obj)
                         session.flush()
                     
                     bdobjectlog = Object_Log()
                     bdobjectlog.object_id = obj.id
                     bdobjectlog.record_id = self.record.id
-                    session.save(bdobjectlog)
+                    session.add(bdobjectlog)
                     session.flush()
                     
                     # Keep a reference to this object, because it may be
@@ -221,20 +221,20 @@ class AuditRecordDB(AuditRecord):
                     if type(current) == tuple or type(current) == list :
                         for i in current:            
                              cv = Current_Value(bdobjectlog, i)
-                             session.save(cv)
+                             session.add(cv)
                     else:
                         cv = Current_Value(bdobjectlog, current)
-                        session.save(cv)
+                        session.add(cv)
 
                 # Insert previous value        
                 if previous != None:
                     if type(previous) == tuple or type(previous) == list:
                         for i in previous:             
                              pv = Previous_Value(bdobjectlog, i)
-                             session.save(pv)      
+                             session.add(pv)      
                     else:          
                         pv = Previous_Value(bdobjectlog, previous)
-                        session.save(pv)  
+                        session.add(pv)  
 
             # relations on log_parameters        
             if param != None:
@@ -247,7 +247,7 @@ class AuditRecordDB(AuditRecord):
                         p = Parameters(i, str(param[i]))
                         self.record.param_log.append(p)
 
-            session.save_or_update(self.record)
+            session.add(self.record)
             session.commit()
         except:
             session.rollback()
@@ -263,7 +263,7 @@ class AuditRecordDB(AuditRecord):
         session = create_session()
         session.begin()
         try:            
-            session.save_or_update(self.record)
+            session.add(self.record)
             session.commit()
         except:
             session.rollback()
