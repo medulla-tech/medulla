@@ -115,6 +115,8 @@ dnl files to generate with automake
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([services/Makefile])
 AC_CONFIG_FILES([services/bin/Makefile])
+AC_CONFIG_FILES([services/mmc/Makefile])
+AC_CONFIG_FILES([services/pulse2/Makefile])
 AC_CONFIG_FILES([services/contrib/Makefile])
 AC_CONFIG_FILES([services/contrib/msc/Makefile])
 AC_CONFIG_FILES([services/contrib/msc/sql/Makefile])
