@@ -149,6 +149,9 @@ class TreatInv(Thread):
 
     def treatinv(self, deviceid, from_ip, cont):
         content = cont[0]
+        self.logger.debug('### BEGIN INVENTORY')
+        self.logger.debug('%s' % cont)
+        self.logger.debug('### END INVENTORY')        
 
         try:
             start_date = time.time()
@@ -164,7 +167,7 @@ class TreatInv(Thread):
                 return False
 
             try:
-                encoding = re.search(r' encoding="([^"]+)"', content).group(1)
+                encoding = re.search(r' encoding=["\']([^"\']+)["\']', content).group(1)
             except AttributeError, e:
                 self.logger.warn("Could not get any encoding in inventory from %s"%(from_ip))
 
