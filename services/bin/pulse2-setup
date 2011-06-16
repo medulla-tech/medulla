@@ -44,6 +44,29 @@ def read_opt(prompt, default=None):
         s = default
     return s
 
+def read_bool(prompt, default):
+    if default is True:
+        prompt += ' (Y/n)'
+    else:
+        prompt += ' (y/N)'
+    prompt = 'INPUT    - ' + prompt + ': '
+    correct = False
+    ret = default
+    while not correct:
+        s = raw_input(prompt)
+        if len(s)==0:
+            break
+
+        if s in ['y', 'Y']:
+            correct = True
+            ret = True
+        elif s in ['n', 'N']:
+            correct = True
+            ret = False
+        else:
+            log.info('Incorrect value. Retry.')
+    return ret
+
 def gen_passwd(size=10):
     return ''.join([choice(string.letters + string.digits) for _ in range(size)])
 
@@ -55,10 +78,129 @@ def read_passwd(prompt, check=False):
             pwd2 = getpass.getpass('INPUT    - ' + prompt + ' (confirm): ')
             match = pwd==pwd2
             if not match:
-                log.info('Paswords do not match. Retry.')
+                log.info('Passwords do not match. Retry.')
         else:
             match = True
     return pwd
+
+initscripts = [ 'mmc-agent', 'pulse2-imaging-server', 'pulse2-inventory-server',
+                'pulse2-launchers', 'pulse2-package-server', 'pulse2-scheduler' ]
+
+class DistroHandler(object):
+    def enable_srv(self, name):
+        ret = call("/bin/ln -fs ../init.d/%(name)s /etc/rc2.d/S20%(name)s" % {'name': name}, 
+                   shell=True)
+        return ret==0
+
+    def disable_srv(self, name):
+        ret = call("/bin/rm -f /etc/rc2.d/S20%(name)s" % {'name': name},
+                   shell=True)
+        return ret==0
+
+    def start_srv(self, name):
+        ret = call("/etc/rc2.d/S20%(name)s start" % {'name': name}, shell=True)
+        return ret==0
+
+    def stop_srv(self, name):
+        ret = call("/etc/rc2.d/S20%(name)s stop" % {'name': name}, shell=True)
+        return ret==0
+
+class DebianHandler(DistroHandler):
+    def enable_srv(self, name):
+        ret = call("/usr/sbin/update-rc.d %(name)s defaults" % {'name': name}, 
+                   shell=True)
+        return ret== 0
+
+    def disable_srv(self, name):
+        ret = call("/usr/sbin/update-rc.d -f %(name)s remove" % {'name': name},
+                   shell=True)
+        return ret==0
+
+    def start_srv(self, name):
+        ret = call("/usr/sbin/invoke-rc.d %(name)s start" % {'name': name}, 
+                   shell=True)
+        return ret==0
+
+    def stop_srv(self, name):
+        ret = call("/usr/sbin/invoke-rc.d %(name)s stop" % {'name': name}, 
+                   shell=True)
+        return ret==0
+
+def get_distro_handler():
+    if os.path.exists('/usr/sbin/update-rc.d'):
+        return DebianHandler()
+    else:
+        return DistroHandler()
+
+class Service(object):
+    name = None
+    clsnames = [ 'SrvMmcAgent', 'SrvImagingServer', 'SrvInventoryserver',
+                 'SrvLauncher', 'SrvPkgServer', 'SrvScheduler' ]
+
+    def __init__(self, handler, config):
+        self.config = config
+        self.handler = handler
+
+    def is_enable(self):
+        return True
+
+    def update_rc(self):
+        if self.is_enable():
+            self.enable_srv()
+        else:
+            self.disable_srv()
+
+    def enable_srv(self):
+        log.info('Enabling service: %s' % self.name)
+        if not self.handler.enable_srv(self.name):
+            log.error('Can not enable service: %s' % self.name)
+            sys.exit(1)
+
+    def disable_srv(self):
+        log.info('Disabling service: %s' % self.name)
+        if not self.handler.disable_srv(self.name):
+            log.error('Can not disable service: %s' % self.name)
+            sys.exit(1)
+
+    def restart(self, fatal=False):
+        log.info('Stopping service: %s' % self.name)
+        self.handler.stop_srv(self.name)
+        if self.is_enable():
+            log.info('Starting service: %s' % self.name)
+            if not self.handler.start_srv(self.name):
+                log.warn('Can not start service: %s' % self.name)
+                if fatal:
+                    sys.exit(1)
+
+class SrvMmcAgent(Service):
+    name = 'mmc-agent'
+
+    def restart(self, *args, **kwargs):
+        super(SrvMmcAgent, self).restart(fatal=True)
+
+class SrvImagingServer(Service):
+    name = 'pulse2-imaging-server'
+
+    def is_enable(self):
+        return self.config['imaging.service.enable'] in ['y', 'Y']
+
+class SrvInventoryserver(Service):
+    name = 'pulse2-inventory-server'
+
+    def is_enable(self):
+        return self.config['inventory.service.enable'] in ['y', 'Y']
+
+class SrvLauncher(Service):
+    name = 'pulse2-launchers'
+
+class SrvPkgServer(Service):
+    name = 'pulse2-package-server'
+
+    def is_enable(self):
+        return self.config['package.service.enable'] in ['y', 'Y']
+
+class SrvScheduler(Service):
+    name = 'pulse2-scheduler'
 
 class Pulse2ConfigParser(ConfigParser):
     clsnames = [ 'PluginsPkgConfig', 'PluginsImagingConfig', 'PluginsGlpiConfig',
@@ -254,8 +396,11 @@ class ImagingServerConfig(LoggingConfig):
                 'hooks': {}}
 
 class SetupApp(object):
+    defaults = {'imaging.service.enable': True,
+                'inventory.service.enable': True,
+                'package.service.enable': True}
+
     def __init__(self, datadir, confdir, batch=False):
-        self.defaults = {}
         self.config = {}
         self.datadir = datadir
         self.confdir = confdir
@@ -283,12 +428,25 @@ class SetupApp(object):
             cls = globals()[clsname]
             self.confs[cls.path] = cls(self.confdir)
 
+        # Creates Services objects
+        self.services = []
+        distro_handler = get_distro_handler()
+        for clsname in Service.clsnames:
+            cls = globals()[clsname]
+            self.services.append(cls(distro_handler, self.config))
+
     def read_opt(self, name, default):
         if self.batch:
             return default
         else:
             return read_opt(name, default)
     
+    def read_bool(self, name, default):
+        if self.batch:
+            return default
+        else:
+            return read_bool(name, default)
+
     def read_passwd(self, name, default=None):
         if self.batch:
             if default is not None:
@@ -323,6 +481,16 @@ class SetupApp(object):
             self.defaults['dbpasswd'] = self.confs['plugins/pulse2.ini'].get('database', 'dbpasswd')
 
         self.defaults['wol'] = self.confs['pulse2/launchers/launchers.ini'].get('wol', 'wol_path')
+
+    def read_config(self):
+        """ Read some global config values
+        """
+        self.config['inventory.service.enable'] = self.read_bool('Enable inventory server', 
+                                                                 self.defaults['inventory.service.enable'])
+        self.config['imaging.service.enable'] = self.read_bool('Enable imaging server', 
+                                                               self.defaults['imaging.service.enable'])
+        self.config['package.service.enable'] = self.read_bool('Enable package server (proxy)', 
+                                                               self.defaults['package.service.enable'])
 
     def init_ldap(self):
         invalids = ['ldapurl', 'ldapbasedn', 'ldapadmindn', 'ldappasswd']
@@ -536,6 +704,14 @@ class SetupApp(object):
                 log.error('Can not create DSA key pair for user root')
                 sys.exit(1)
 
+        # Update services
+        for srv in self.services:
+            srv.update_rc()
+
+    def restart_services(self):
+        for srv in self.services:
+            srv.restart()
+                
     def commit(self):
         """ Write down all config files
         """
@@ -547,12 +723,15 @@ class SetupApp(object):
         """
         log.info("Load defaults values from existing config")
         self.load_defaults()
+        self.read_config()
 
         log.info("Run setup")
         self.init_db()
         self.init_ldap()
         self.init_misc()
         self.commit()
+
+        self.restart_services()
 
 if __name__ == '__main__':
     parser = OptionParser()
