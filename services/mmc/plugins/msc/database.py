@@ -249,7 +249,7 @@ class MscDatabase(msc.MscDatabase):
                 ret.append(cobj.getId())
 
                 r = session.execute(self.target.insert(), targets_to_insert)
-                first_target_id = r.cursor.lastrowid
+                first_target_id = r.lastrowid
                 for atarget, target_name, ascheduler in zip(targets_to_insert, targets_name, schedulers):
                     order_in_proxy = None
                     max_clients_per_proxy = 0
@@ -360,11 +360,12 @@ class MscDatabase(msc.MscDatabase):
                 targets_to_insert.append(targetsdata[i])
 
             session = create_session()
+            session.begin()
             cmd = self.createCommand(session, package_id, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, ctx.userid, title, do_halt, do_reboot, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, fk_bundle, order_in_bundle, proxies, proxy_mode)
             session.flush()
 
             r = session.execute(self.target.insert(), targets_to_insert)
-            first_target_id = r.cursor.lastrowid
+            first_target_id = r.lastrowid
             for atarget, target_name, ascheduler in zip(targets_to_insert, targets_name, schedulers):
                 order_in_proxy = None
                 max_clients_per_proxy = 0
