@@ -77,6 +77,17 @@ AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
 
 dnl
+dnl --disable-python
+dnl   Do not install Python files
+dnl
+AC_ARG_ENABLE([python],
+              [AS_HELP_STRING([--disable-python],
+                              [Do not install Python files @<:@default=enable@:>@])],
+              [],
+              [enable_python="yes"])
+AM_CONDITIONAL([ENABLE_PYTHON], [test "$enable_python" = "yes"])
+
+dnl
 dnl --disable-conf
 dnl   Disable configuration files installation
 dnl
