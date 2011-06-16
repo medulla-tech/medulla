@@ -359,7 +359,7 @@ class MscDatabase(msc.MscDatabase):
                 targetsdata[i] = self.blacklistTargetHostname(targetsdata[i])
                 targets_to_insert.append(targetsdata[i])
 
-            session = create_session(transactional = True)
+            session = create_session()
             cmd = self.createCommand(session, package_id, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, ctx.userid, title, do_halt, do_reboot, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, fk_bundle, order_in_bundle, proxies, proxy_mode)
             session.flush()
 

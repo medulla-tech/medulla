@@ -169,7 +169,7 @@ class SendBundleCommand:
         if title == None or title == '':
             title = get_default_bundle_name(len(self.porders))
         # Insert bundle object
-        self.session = create_session(transactional = True)
+        self.session = create_session()
         bundle = MscDatabase().createBundle(title, self.session)
         bundle_id = bundle.id
 
