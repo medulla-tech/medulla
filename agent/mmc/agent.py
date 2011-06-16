@@ -643,7 +643,9 @@ class PluginManager(Singleton):
             f, p, d = imp.find_module(plugin, ['plugins'])
 
             try:
+                self.logger.debug("Trying to load plugin %s" % plugin)
                 mod[plugin] = imp.load_module(plugin, f, p, d)
+                self.logger.debug("Plugin loaded: %s" % plugin)
             except Exception,e:
                 self.logger.exception(e)
                 self.logger.error('Plugin '+ plugin+ " raise an exception.\n"+ plugin+ " not loaded.")
@@ -659,6 +661,7 @@ class PluginManager(Singleton):
 
             # If is active
             try:
+                self.logger.debug("Trying to activate plugin %s" % plugin)
                 if (func()):
                     version = 'API version: '+str(getattr(mod[plugin], "getApiVersion")())+' build(' +str(getattr(mod[plugin], "getRevision")())+')'
                     self.logger.info('Plugin ' + plugin + ' loaded, ' + version)
