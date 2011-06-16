@@ -755,8 +755,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                     .join(self.boot_service_in_menu) \
                     .join(self.boot_service) \
                     .join(self.menu, self.menu_item.c.fk_menu == self.menu.c.id) \
-                    .outerjoin(I18n1, and_(self.boot_service.c.fk_name == I18n1.id, I18n1.fk_language == lang)) \
-                    .outerjoin(I18n2, and_(self.boot_service.c.fk_desc == I18n2.id, I18n2.fk_language == lang)) \
+                    .outerjoin(I18n1, and_(self.boot_service.c.fk_name == I18n1.c.id, I18n1.c.fk_language == lang)) \
+                    .outerjoin(I18n2, and_(self.boot_service.c.fk_desc == I18n2.c.id, I18n2.c.fk_language == lang)) \
                     .outerjoin(self.boot_service_on_imaging_server) \
             )
             q1 = q1.filter(and_(self.menu_item.c.id.in_(mi_ids), or_(self.boot_service_on_imaging_server.c.fk_boot_service == None, self.boot_service_on_imaging_server.c.fk_imaging_server == is_id)))
@@ -916,8 +916,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = q.select_from(self.boot_service \
                 .outerjoin(self.boot_service_on_imaging_server, self.boot_service.c.id == self.boot_service_on_imaging_server.c.fk_boot_service) \
                 .outerjoin(self.imaging_server, self.imaging_server.c.id == self.boot_service_on_imaging_server.c.fk_imaging_server) \
-                .outerjoin(I18n1, and_(self.boot_service.c.fk_name == I18n1.id, I18n1.fk_language == lang)) \
-                .outerjoin(I18n2, and_(self.boot_service.c.fk_desc == I18n2.id, I18n2.fk_language == lang)) \
+                .outerjoin(I18n1, and_(self.boot_service.c.fk_name == I18n1.c.id, I18n1.c.fk_language == lang)) \
+                .outerjoin(I18n2, and_(self.boot_service.c.fk_desc == I18n2.c.id, I18n2.c.fk_language == lang)) \
                 .outerjoin(self.entity).outerjoin(self.target))
         q = q.filter(or_(self.target.c.uuid == target_uuid, self.boot_service_on_imaging_server.c.fk_boot_service == None))
         if filter != '':
@@ -933,8 +933,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = q.select_from(self.boot_service \
                 .outerjoin(self.boot_service_on_imaging_server, self.boot_service.c.id == self.boot_service_on_imaging_server.c.fk_boot_service) \
                 .outerjoin(self.imaging_server, self.imaging_server.c.id == self.boot_service_on_imaging_server.c.fk_imaging_server) \
-                .outerjoin(I18n1, and_(self.boot_service.c.fk_name == I18n1.id, I18n1.fk_language == lang)) \
-                .outerjoin(I18n2, and_(self.boot_service.c.fk_desc == I18n2.id, I18n2.fk_language == lang)) \
+                .outerjoin(I18n1, and_(self.boot_service.c.fk_name == I18n1.c.id, I18n1.c.fk_language == lang)) \
+                .outerjoin(I18n2, and_(self.boot_service.c.fk_desc == I18n2.c.id, I18n2.c.fk_language == lang)) \
                 .outerjoin(self.entity))
         q = q.filter(or_(self.entity.c.uuid == loc_id, self.boot_service_on_imaging_server.c.fk_boot_service == None))
         if filter != '':
@@ -1373,8 +1373,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 .join(self.menu, self.menu.c.id == self.menu_item.c.fk_menu) \
                 .outerjoin(self.boot_service_in_menu) \
                 .outerjoin(self.boot_service) \
-                .outerjoin(I18n1, and_(self.boot_service.c.fk_name == I18n1.id, I18n1.fk_language == lang)) \
-                .outerjoin(I18n2, and_(self.boot_service.c.fk_desc == I18n2.id, I18n2.fk_language == lang)) \
+                .outerjoin(I18n1, and_(self.boot_service.c.fk_name == I18n1.c.id, I18n1.c.fk_language == lang)) \
+                .outerjoin(I18n2, and_(self.boot_service.c.fk_desc == I18n2.c.id, I18n2.c.fk_language == lang)) \
                 .outerjoin(self.image_in_menu) \
                 .outerjoin(self.image) \
         )
@@ -2181,8 +2181,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 .select_from(self.image \
                     .join(self.post_install_script_in_image, self.post_install_script_in_image.c.fk_image == self.image.c.id) \
                     .join(self.post_install_script, self.post_install_script_in_image.c.fk_post_install_script == self.post_install_script.c.id) \
-                    .outerjoin(I18n1, and_(self.post_install_script.c.fk_name == I18n1.id, I18n1.fk_language == lang)) \
-                    .outerjoin(I18n2, and_(self.post_install_script.c.fk_desc == I18n2.id, I18n2.fk_language == lang)) \
+                    .outerjoin(I18n1, and_(self.post_install_script.c.fk_name == I18n1.c.id, I18n1.c.fk_language == lang)) \
+                    .outerjoin(I18n2, and_(self.post_install_script.c.fk_desc == I18n2.c.id, I18n2.c.fk_language == lang)) \
                 ).filter(self.image.c.id.in_(images_ids)).all()
         q2 = self.__mergePostInstallScriptI18n(q2)
         h_pis_by_imageid = {}
@@ -2255,8 +2255,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 .select_from(self.image \
                     .join(self.post_install_script_in_image, self.post_install_script_in_image.c.fk_image == self.image.c.id) \
                     .join(self.post_install_script, self.post_install_script_in_image.c.fk_post_install_script == self.post_install_script.c.id) \
-                    .outerjoin(I18n1, and_(self.post_install_script.c.fk_name == I18n1.id, I18n1.fk_language == lang)) \
-                    .outerjoin(I18n2, and_(self.post_install_script.c.fk_desc == I18n2.id, I18n2.fk_language == lang)) \
+                    .outerjoin(I18n1, and_(self.post_install_script.c.fk_name == I18n1.c.id, I18n1.c.fk_language == lang)) \
+                    .outerjoin(I18n2, and_(self.post_install_script.c.fk_desc == I18n2.c.id, I18n2.c.fk_language == lang)) \
                 ).filter(self.image.c.id == uuid2id(image_uuid)).all()
         q2 = self.__mergePostInstallScriptI18n(q2)
         im, mi = q1
@@ -3597,8 +3597,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             q = q.select_from(self.post_install_script \
                     .outerjoin(self.post_install_script_on_imaging_server, self.post_install_script_on_imaging_server.c.fk_post_install_script == self.post_install_script.c.id) \
                     .outerjoin(self.imaging_server, self.post_install_script_on_imaging_server.c.fk_imaging_server == self.imaging_server.c.id) \
-                    .outerjoin(I18n1, and_(self.post_install_script.c.fk_name == I18n1.id, I18n1.fk_language == lang)) \
-                    .outerjoin(I18n2, and_(self.post_install_script.c.fk_desc == I18n2.id, I18n2.fk_language == lang)) \
+                    .outerjoin(I18n1, and_(self.post_install_script.c.fk_name == I18n1.c.id, I18n1.c.fk_language == lang)) \
+                    .outerjoin(I18n2, and_(self.post_install_script.c.fk_desc == I18n2.c.id, I18n2.c.fk_language == lang)) \
                     .outerjoin(self.entity))
             q = q.filter(or_(self.post_install_script_on_imaging_server.c.fk_post_install_script == None, self.entity.c.uuid == location))
         q = q.filter(or_(self.post_install_script.c.default_name.like('%'+filter+'%'), self.post_install_script.c.default_desc.like('%'+filter+'%')))
@@ -3667,8 +3667,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = session.query(PostInstallScript).add_entity(PostInstallScriptOnImagingServer).add_entity(Internationalization, alias=I18n1).add_entity(Internationalization, alias=I18n2)
         q = q.select_from(self.post_install_script \
                 .outerjoin(self.post_install_script_on_imaging_server) \
-                .outerjoin(I18n1, and_(self.post_install_script.c.fk_name == I18n1.id, I18n1.fk_language == lang)) \
-                .outerjoin(I18n2, and_(self.post_install_script.c.fk_desc == I18n2.id, I18n2.fk_language == lang)) \
+                .outerjoin(I18n1, and_(self.post_install_script.c.fk_name == I18n1.c.id, I18n1.c.fk_language == lang)) \
+                .outerjoin(I18n2, and_(self.post_install_script.c.fk_desc == I18n2.c.id, I18n2.c.fk_language == lang)) \
         )
         q = q.filter(self.post_install_script.c.id == uuid2id(pis_uuid)).first()
         q = self.__mergePostInstallScriptOnImagingServerInPostInstallScript([q])
@@ -3711,8 +3711,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = q.select_from(self.post_install_script \
                 .join(self.post_install_script_in_image) \
                 .join(self.image) \
-                .outerjoin(I18n1, and_(self.post_install_script.c.fk_name == I18n1.id, I18n1.fk_language == lang)) \
-                .outerjoin(I18n2, and_(self.post_install_script.c.fk_desc == I18n2.id, I18n2.fk_language == lang)) \
+                .outerjoin(I18n1, and_(self.post_install_script.c.fk_name == I18n1.c.id, I18n1.c.fk_language == lang)) \
+                .outerjoin(I18n2, and_(self.post_install_script.c.fk_desc == I18n2.c.id, I18n2.c.fk_language == lang)) \
         )
         q = q.filter(self.image.c.id.in_(ims))
         q = q.order_by(self.image.c.id, self.post_install_script_in_image.c.order)
