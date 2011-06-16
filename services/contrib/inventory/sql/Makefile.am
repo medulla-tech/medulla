@@ -20,7 +20,7 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-sqldir = $(pkgdatadir)/sql/inventory
+sqldir = $(datadir)/mmc/sql/inventory
 dist_sql_SCRIPTS = install.sh
 dist_sql_DATA = \
 	schema-001.sql \

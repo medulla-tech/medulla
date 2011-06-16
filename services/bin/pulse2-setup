@@ -740,8 +740,8 @@ if __name__ == '__main__':
                       help="Print debug messages")
     parser.add_option("-b", "--batch", action="store_true", dest="batch", default=False,
                       help="Do not ask any question")
-    parser.add_option("--pkgdatadir", action="store", dest="pkgdatadir", default='/usr/share/pulse2',
-                      help="Path to pulse2 datadir (default: /usr/share/pulse2)")
+    parser.add_option("--pkgdatadir", action="store", dest="pkgdatadir", default='/usr/share/mmc',
+                      help="Path to pulse2 datadir (default: /usr/share/mmc)")
     parser.add_option("--confdir", action="store", dest="confdir", default='/etc/mmc',
                       help="Path to pulse2 conf dir (default: /etc/mmc)")
 
