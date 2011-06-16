@@ -59,7 +59,7 @@ start () {
 
 # Function to stop daemon
 stop () {
-    echo -n $"Stopping ${DESC} : "
+    echo -n "Stopping ${DESC} : "
     # Check if the pidfile exists
     if [ -e ${PIDFILE} ]
     then
