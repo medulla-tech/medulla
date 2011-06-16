@@ -66,7 +66,7 @@ if test -f $(dirname $0)/configure.ac; then
         $ACLOCAL -I m4
         libtoolize -c
         #autoheader
-        $AUTOMAKE --add-missing
+        $AUTOMAKE --add-missing --copy
         autoconf
         )
 fi
