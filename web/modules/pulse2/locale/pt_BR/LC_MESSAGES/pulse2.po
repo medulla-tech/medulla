@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: pulse2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-08-13 10:13+0200\n"
-"PO-Revision-Date: 2009-04-17 15:08-0300\n"
-"Last-Translator: Andre Paulo Machado <andre.panm@gmail.com>\n"
+"PO-Revision-Date: 2011-02-24 11:32-0300\n"
+"Last-Translator: Leonardo Coelho <leonardoc@mandriva.com.br>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_br@mail.kde.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
@@ -32,7 +32,7 @@ msgstr "Seleção de localização em um computador"
 
 #: web/modules/pulse2/infoPackage.inc.php:33
 msgid "Pulse2"
-msgstr ""
+msgstr "Pulse2"
 
 #: web/modules/pulse2/includes/locations_xmlrpc.inc.php:31
 msgid "Root entity"

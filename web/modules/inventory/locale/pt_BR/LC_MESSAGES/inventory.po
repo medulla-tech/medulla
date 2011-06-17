@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: inventory\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-10-08 09:20+0200\n"
-"PO-Revision-Date: 2009-04-22 14:38-0300\n"
-"Last-Translator: Andre Paulo Machado <andre.panm@gmail.com>\n"
+"PO-Revision-Date: 2011-02-24 11:07-0300\n"
+"Last-Translator: Leonardo Coelho <leonardoc@mandriva.com.br>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_br@mail.kde.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
@@ -17,6 +17,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
 "Plural-Forms: nplurals=2; plural=(n>1);\n"
+"X-Poedit-Language: Portuguese\n"
+"X-Poedit-Country: BRAZIL\n"
 
 #: web/modules/inventory/inventory/tabs.php:40
 #, php-format
@@ -30,11 +32,11 @@ msgstr "inventário de %s"
 
 #: web/modules/inventory/inventory/inventory_diff.php:114
 msgid "<h3>Added elements</h3>"
-msgstr ""
+msgstr "<h3>Componentes Adicionados</h3>"
 
 #: web/modules/inventory/inventory/inventory_diff.php:123
 msgid "<h3>Removed elements</h3>"
-msgstr ""
+msgstr "<h3>Componentes Removidos</h3>"
 
 #: web/modules/inventory/inventory/infos.php:33
 msgid "Additionnal informations"
@@ -141,9 +143,8 @@ msgid "Computer"
 msgstr "Computador"
 
 #: web/modules/inventory/inventory/ajaxIncoming.php:74
-#, fuzzy
 msgid "Computer name"
-msgstr "Computador"
+msgstr "Nome do Computador"
 
 #: web/modules/inventory/inventory/i18n_labels.php:45
 msgid "Connector"
@@ -219,7 +220,7 @@ msgstr "Dispositivo"
 
 #: web/modules/inventory/infoPackage.inc.php:189
 msgid "Differences between two inventories"
-msgstr ""
+msgstr "Diferenças entre dois inventários"
 
 #: web/modules/inventory/inventory/i18n_labels.php:57
 msgid "Disk"
@@ -254,12 +255,11 @@ msgstr "Controlador"
 #: web/modules/inventory/inventory/inventory_diff.php:75
 #: web/modules/inventory/inventory/inventory_diff.php:100
 msgid "Element"
-msgstr ""
+msgstr "Componente"
 
 #: web/modules/inventory/inventory/ajaxIncoming.php:83
-#, fuzzy
 msgid "Elements"
-msgstr "Comentários"
+msgstr "Componentes"
 
 #: web/modules/inventory/inventory/i18n_labels.php:63
 msgid "ExecutableSize"
@@ -375,13 +375,12 @@ msgstr "IP"
 
 #: web/modules/inventory/inventory/localSidebar.php:28
 #: web/modules/inventory/infoPackage.inc.php:43
-#, fuzzy
 msgid "Incoming"
-msgstr "Informações"
+msgstr "Entrada"
 
 #: web/modules/inventory/inventory/incoming.php:38
 msgid "Incoming Inventories"
-msgstr ""
+msgstr "Entrada de Inventários "
 
 #: web/modules/inventory/inventory/ajaxViewPart.php:196
 #: web/modules/inventory/infoPackage.inc.php:81
@@ -406,19 +405,16 @@ msgid "Inventory"
 msgstr "Inventário"
 
 #: web/modules/inventory/inventory/history.php:75
-#, fuzzy
 msgid "Inventory Date"
-msgstr "Inventário"
+msgstr "Data do Inventário"
 
 #: web/modules/inventory/inventory/inventory_diff.php:48
-#, fuzzy
 msgid "Inventory changes"
-msgstr "Inventário"
+msgstr "Alterações do Inventário"
 
 #: web/modules/inventory/inventory/ajaxIncoming.php:76
-#, fuzzy
 msgid "Inventory date"
-msgstr "Inventário"
+msgstr "Data do Inventário"
 
 #: web/modules/inventory/inventory/view.php:48
 #, php-format
@@ -443,23 +439,23 @@ msgstr "CHAVE"
 
 #: web/modules/inventory/inventory/incoming.php:46
 msgid "Last month"
-msgstr ""
+msgstr "Último Mês"
 
 #: web/modules/inventory/inventory/incoming.php:46
 msgid "Last quarter"
-msgstr ""
+msgstr "Último Trimestre"
 
 #: web/modules/inventory/inventory/incoming.php:46
 msgid "Last semester"
-msgstr ""
+msgstr "Último Semestre"
 
 #: web/modules/inventory/inventory/incoming.php:46
 msgid "Last week"
-msgstr ""
+msgstr "Última Semana"
 
 #: web/modules/inventory/inventory/incoming.php:46
 msgid "Last year"
-msgstr ""
+msgstr "Último Ano"
 
 #: web/modules/inventory/inventory/i18n_labels.php:87
 msgid "Length"
@@ -467,7 +463,7 @@ msgstr "Tamanho"
 
 #: web/modules/inventory/inventory/incoming.php:63
 msgid "Load only the computers which were new when the inventory was made"
-msgstr ""
+msgstr "Carrega apenas os computadores que eram novos quando o inventario foi feito"
 
 #: web/modules/inventory/inventory/i18n_labels.php:88
 msgid "Location"
@@ -568,9 +564,8 @@ msgid "NetworkType"
 msgstr "Tipo de Rede"
 
 #: web/modules/inventory/inventory/ajaxIncoming.php:78
-#, fuzzy
 msgid "New computer"
-msgstr "Computador"
+msgstr "Novo Computador"
 
 #: web/modules/inventory/inventory/i18n_labels.php:106
 msgid "Num"
@@ -586,7 +581,7 @@ msgstr "Número Serial do SO"
 
 #: web/modules/inventory/inventory/incoming.php:62
 msgid "Only new computers"
-msgstr ""
+msgstr "Apenas Novos Computadores"
 
 #: web/modules/inventory/inventory/i18n_labels.php:109
 msgid "OperatingSystem"
@@ -598,9 +593,8 @@ msgid "Pci"
 msgstr "PCI"
 
 #: web/modules/inventory/inventory/incoming.php:57
-#, fuzzy
 msgid "Period"
-msgstr "Versão"
+msgstr "Período"
 
 #: web/modules/inventory/inventory/i18n_labels.php:111
 msgid "Phone"
@@ -668,7 +662,7 @@ msgstr "Total de RAM"
 
 #: web/modules/inventory/includes/html.php:102
 msgid "Refresh"
-msgstr ""
+msgstr "Atualizar"
 
 #: web/modules/inventory/inventory/i18n_labels.php:123
 msgid "RegisteredCompany"
@@ -861,9 +855,8 @@ msgstr "Valor"
 
 #: web/modules/inventory/inventory/inventory_diff.php:76
 #: web/modules/inventory/inventory/inventory_diff.php:101
-#, fuzzy
 msgid "Values"
-msgstr "Valor"
+msgstr "Valores"
 
 #: web/modules/inventory/inventory/i18n_labels.php:157
 msgid "Vendor"
@@ -889,7 +882,7 @@ msgstr "Exibir"
 
 #: web/modules/inventory/inventory/history.php:66
 msgid "View differences since previous inventory"
-msgstr ""
+msgstr "Ver diferenças desde o ultimo inventario"
 
 #: web/modules/inventory/inventory/i18n_labels.php:159
 msgid "VolumeName"
