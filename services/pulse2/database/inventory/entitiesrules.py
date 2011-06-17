@@ -24,6 +24,8 @@
 import logging
 import re
 
+from mmc.site import mmcconfdir
+
 class EntitiesRules:
 
     """
@@ -33,7 +35,7 @@ class EntitiesRules:
     It allows the inventory server to assign a computer to an entity.
     """
 
-    def __init__(self, conffile = '/etc/mmc/pulse2/inventory-server/entities-rules'):
+    def __init__(self, conffile = mmcconfdir + '/pulse2/inventory-server/entities-rules'):
         self.logger = logging.getLogger()
         self.conf = conffile
         self.rules = []

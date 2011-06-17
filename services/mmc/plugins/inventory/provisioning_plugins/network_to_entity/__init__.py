@@ -22,6 +22,7 @@
 
 import logging
 
+from mmc.site import mmcconfdir
 from mmc.plugins.inventory.provisioning_plugins import PluginEntitiesI
 from pulse2.database.inventory.entitiesrules import EntitiesRules
 
@@ -31,7 +32,7 @@ class PluginEntities(PluginEntitiesI):
         self.logger = logging.getLogger()
 
     def get(self, authtoken):
-        nr = NetworkRules('/etc/mmc/plugins/provisioning-inventory')
+        nr = NetworkRules(mmcconfdir + '/plugins/provisioning-inventory')
         self.logger.debug('HTTP headers contains:')
         self.logger.debug(authtoken.session.http_headers)
         ret = nr.compute(authtoken)

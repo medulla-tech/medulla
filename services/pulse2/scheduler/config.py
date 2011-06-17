@@ -33,6 +33,8 @@ import string       # for atoi
 import logging      # logging stuff
 import os.path      # for file checking
 
+from mmc.site import mmcconfdir
+
 # Others Pulse2 Stuff
 import pulse2.utils
 from pulse2.xmlrpc import isTwistedEnoughForLoginPass
@@ -80,13 +82,13 @@ class SchedulerConfig(pulse2.utils.Singleton):
     checkstatus_period = 900
     clean_states_time = 3600
     active_clean_states =  '' # possible states are : stop run
-    cacert = "/etc/mmc/pulse2/scheduler/keys/cacert.pem"
+    cacert = mmcconfdir + "/pulse2/scheduler/keys/cacert.pem"
     client_check = None
     dbencoding = 'utf-8'
     enablessl = True
     incertitude_factor = .2
     initial_wait = 2
-    localcert = "/etc/mmc/pulse2/scheduler/keys/privkey.pem"
+    localcert = mmcconfdir + "/pulse2/scheduler/keys/privkey.pem"
     lock_processed_commands = False
     loghealth_period = 60
     host = "127.0.0.1"

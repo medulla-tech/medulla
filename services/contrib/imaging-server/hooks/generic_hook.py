@@ -31,7 +31,9 @@ import logging.config
 import pulse2.apis.clients.imaging
 import pulse2.imaging_server.config
 
-CONFIG_FILE = '/etc/mmc/pulse2/imaging-server/imaging-server.ini' #: config file location
+from mmc.site import mmcconfdir
+
+CONFIG_FILE = mmcconfdir + '/pulse2/imaging-server/imaging-server.ini' #: config file location
 
 # default error code
 ERROR_OK = 0        #: no error

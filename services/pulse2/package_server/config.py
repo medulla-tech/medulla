@@ -26,6 +26,7 @@ The module define the config option needed by the package server and all
 it's API modules.
 """
 
+from mmc.site import mmcconfdir
 
 # Misc
 import ConfigParser
@@ -47,8 +48,8 @@ class P2PServerCP(pulse2.utils.Singleton):
     """
     Class to hold configuration directives
     """
-    cacert = '/etc/mmc/pulse2/package-server/keys/cacert.pem'
-    localcert = '/etc/mmc/pulse2/package-server/keys/privkey.pem'
+    cacert = mmcconfdir + '/pulse2/package-server/keys/cacert.pem'
+    localcert = mmcconfdir + '/pulse2/package-server/keys/privkey.pem'
 
     # default values
 
@@ -262,8 +263,8 @@ class P2PServerCP(pulse2.utils.Singleton):
                 'password' : 's3cr3t',
                 'enablessl' : True,
                 'verifypeer' : False,
-                'cacert' : "/etc/mmc/pulse2/package-server/keys/cacert.pem",
-                'localcert' : "/etc/mmc/pulse2/package-server/keys/privkey.pem"}
+                'cacert' : mmcconfdir + "/pulse2/package-server/keys/cacert.pem",
+                'localcert' : mmcconfdir + "/pulse2/package-server/keys/privkey.pem"}
             if self.cp.has_option('mmc_agent', 'host'):
                 self.mmc_agent['host'] = self.cp.get('mmc_agent', 'host')
             if self.cp.has_option('mmc_agent', 'port'):

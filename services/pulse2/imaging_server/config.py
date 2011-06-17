@@ -26,6 +26,7 @@ Configuration class for the Pulse 2 Imaging Service.
 """
 
 # Misc
+from mmc.site import mmcconfdir
 import pulse2.utils
 import os.path      # for os.path.join()
 import pwd          # for getpwnam
@@ -55,8 +56,8 @@ class ImagingConfig(pulse2.utils.Singleton):
     pserver_enablessl = True
     pserver_username = "username"
     pserver_password = "password"
-    pserver_cacert = "/etc/mmc/pulse2/imaging-server/keys/cacert.pem"
-    pserver_localcert = "/etc/mmc/pulse2/imaging-server/keys/privkey.pem"
+    pserver_cacert = mmcconfdir + "/pulse2/imaging-server/keys/cacert.pem"
+    pserver_localcert = mmcconfdir + "/pulse2/imaging-server/keys/privkey.pem"
     pserver_verifypeer = False
 
     # [hooks] section

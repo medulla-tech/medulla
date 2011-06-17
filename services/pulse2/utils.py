@@ -74,6 +74,7 @@ try:
 except ImportError:
     import mmc.support.uuid as uuid
 
+from mmc.site import mmcconfdir
 
 class Singleton(object):
     """
@@ -254,7 +255,7 @@ def onlyAddNew(obj, value):
     return obj
 
 
-def getConfigFile(module, path = "/etc/mmc/plugins/"):
+def getConfigFile(module, path = mmcconfdir + "/plugins/"):
     """Return the path of the default config file for a plugin"""
     return os.path.join(path, module) + ".ini"
 

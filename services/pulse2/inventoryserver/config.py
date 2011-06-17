@@ -30,6 +30,7 @@ import grp
 import string
 import os.path
 
+from mmc.site import mmcconfdir
 from pulse2.database.inventory.config import InventoryDatabaseConfig
 
 class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
@@ -40,11 +41,11 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
     # main section
     bind = ''
     port = 9999
-    ocsmapping = '/etc/mmc/pulse2/inventory-server/OcsNGMap.xml'
+    ocsmapping = mmcconfdir + '/pulse2/inventory-server/OcsNGMap.xml'
     enablessl = False
     verifypeer = False
-    cacert = '/etc/mmc/pulse2/inventory-server/keys/cacert.pem'
-    localcert = '/etc/mmc/pulse2/inventory-server/keys/privkey.pem'
+    cacert = mmcconfdir + '/pulse2/inventory-server/keys/cacert.pem'
+    localcert = mmcconfdir + '/pulse2/inventory-server/keys/privkey.pem'
 
     hostname = ['Hardware', 'Host']
 
