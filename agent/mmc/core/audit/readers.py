@@ -128,12 +128,16 @@ class AuditReaderDB:
                 for idobj in obj:
                     orobj = or_(orobj,self.parent.object_log_table.c.object_id==idobj.id)
                 object_log = self.session.query(Object_Log).filter(orobj).all()
-                orobjlog = or_(self.parent.record_table.c.id==object_log[0].record_id)
-                for idobjectlog in object_log:
-                    orobjlog = or_(orobjlog,self.parent.record_table.c.id==idobjectlog.record_id)
-                ql = qlog.filter(orobjlog)
-                #ql = qlog.filter(self.parent.object_table.c.uri.like("%"+object+"%")).join("obj_log")            
-                qlog = ql
+                if object_log:
+                    orobjlog = or_(self.parent.record_table.c.id==object_log[0].record_id)
+                    for idobjectlog in object_log:
+                        orobjlog = or_(orobjlog,self.parent.record_table.c.id==idobjectlog.record_id)
+                        ql = qlog.filter(orobjlog)
+                        #ql = qlog.filter(self.parent.object_table.c.uri.like("%"+object+"%")).join("obj_log")
+                    qlog = ql
+                else:
+                    self.session.close()
+                    return None
             else:
                 self.session.close()
                 return None
