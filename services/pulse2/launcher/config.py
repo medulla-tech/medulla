@@ -145,27 +145,27 @@ class LauncherConfig(pulse2.utils.Singleton):
         if type == 'str':
             if self.cp.has_option(section, key):
                 setattr(self, attrib, self.cp.get(section, key))
-                log.info("launcher %s: section %s, option %s set to '%s'" % (self.name, section, key, getattr(self, attrib)))
+                log.debug("launcher %s: section %s, option %s set to '%s'" % (self.name, section, key, getattr(self, attrib)))
             else:
-                log.warn("launcher %s: section %s, option %s not set, using default value '%s'" % (self.name, section, key, getattr(self, attrib)))
+                log.debug("launcher %s: section %s, option %s not set, using default value '%s'" % (self.name, section, key, getattr(self, attrib)))
         elif type == 'bool':
             if self.cp.has_option(section, key):
                 setattr(self, attrib, self.cp.getboolean(section, key))
-                log.info("launcher %s: section %s, option %s set to %s" % (self.name, section, key, getattr(self, attrib)))
+                log.debug("launcher %s: section %s, option %s set to %s" % (self.name, section, key, getattr(self, attrib)))
             else:
-                log.warn("launcher %s: section %s, option %s not set, using default value %s" % (self.name, section, key, getattr(self, attrib)))
+                log.debug("launcher %s: section %s, option %s not set, using default value %s" % (self.name, section, key, getattr(self, attrib)))
         elif type == 'int':
             if self.cp.has_option(section, key):
                 setattr(self, attrib, self.cp.getint(section, key))
-                log.info("launcher %s: section %s, option %s set to %s" % (self.name, section, key, getattr(self, attrib)))
+                log.debug("launcher %s: section %s, option %s set to %s" % (self.name, section, key, getattr(self, attrib)))
             else:
-                log.warn("launcher %s: section %s, option %s not set, using default value %s" % (self.name, section, key, getattr(self, attrib)))
+                log.debug("launcher %s: section %s, option %s not set, using default value %s" % (self.name, section, key, getattr(self, attrib)))
         elif type == 'pass':
             if self.cp.has_option(section, key):
                 setattr(self, attrib, self.cp.getpassword(section, key))
-                log.info("launcher %s: section %s, option %s set using given value" % (self.name, section, key))
+                log.debug("launcher %s: section %s, option %s set using given value" % (self.name, section, key))
             else:
-                log.warn("launcher %s: section %s, option %s not set, using default value" % (self.name, section, key))
+                log.debug("launcher %s: section %s, option %s not set, using default value" % (self.name, section, key))
 
     def presetup(self, config_file):
         """
