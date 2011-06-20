@@ -27,6 +27,9 @@ SUBDIRS = web services
 
 backupext = .$(shell date +%Y-%m-%d+%H:%M:%S)
 
+dist-hook:
+	rm -rf `find $(distdir) -name .svn`
+
 confwarning: sysconfdirwarning localstatedirwarning
 
 sysconfdirwarning:
