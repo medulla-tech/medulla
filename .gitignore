@@ -29,4 +29,6 @@ missing
 py-compile
 depcomp
 agent/mmc/site.py
+web/confs/mmc.ini
+web/site.php
 

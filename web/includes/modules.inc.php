@@ -24,6 +24,8 @@
 ?>
 <?php
 
+define('__ROOT__', dirname(dirname(__FILE__)));
+require_once(__ROOT__."/site.php");
 require_once("ModulesGenerator.php");
 
 /**
@@ -62,7 +64,7 @@ function fetchModulesList($dir) {
  */
 function fetchIniFile() {
     global $conf;
-    $INI = "/etc/mmc/mmc.ini";
+    $INI = __sysconfdir__."/mmc/mmc.ini";
     $conf = array();
     if (is_readable($INI)) {
         $conf = array_merge_recursive(parse_ini_file($INI, TRUE),$conf);

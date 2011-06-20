@@ -23,7 +23,10 @@
 SUBDIRS = confs
 
 datapaths = graph img includes jsframework logout modules \
-	index.php main_content.php main.php version.php license.php
+	index.php main_content.php main.php version.php license.php site.php
+
+all-local: site.php
+
 datafiles = $(shell find $(patsubst %,$(srcdir)/%,$(datapaths)) \
 	-type f \
 	! -name '*.po' \
@@ -34,9 +37,26 @@ mofiles = $(patsubst %.po,%.mo,$(pofiles))
 
 nobase_pkgdata_DATA = $(datafiles) $(mofiles)
 
-EXTRA_DIST = $(datafiles) $(pofiles)
-CLEANFILES = $(mofiles)
+EXTRA_DIST = $(datafiles) $(pofiles) site.php.in
+CLEANFILES = $(mofiles) site.php
 
 %.mo: %.po
 	$(MKDIR_P) $(@D)
 	$(MSGFMT) $< -o $@
+
+edit = sed \
+        -e 's|@bindir[@]|$(bindir)|g' \
+        -e 's|@sbindir[@]|$(sbindir)|g' \
+        -e 's|@pkgdatadir[@]|$(pkgdatadir)|g' \
+        -e 's|@prefix[@]|$(prefix)|g' \
+        -e 's|@localstatedir[@]|$(localstatedir)|g' \
+        -e 's|@sysconfdir[@]|$(sysconfdir)|g'
+
+site.php: Makefile
+	rm -f $@ $@.tmp
+	$(MKDIR_P) $(@D)
+	srcdir=''; \
+	  test -f ./$@.in || srcdir=$(srcdir)/; \
+	  $(edit) $${srcdir}$@.in >$@.tmp
+	mv $@.tmp $@
+site.php: $(srcdir)/site.php.in
