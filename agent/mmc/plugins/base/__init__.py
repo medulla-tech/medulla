@@ -44,7 +44,7 @@ from mmc.support.mmctools import cleanFilter
 from mmc.support.mmctools import xmlrpcCleanup
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 
-from mmc.site import mmcconfdir
+from mmc.site import mmcconfdir, localstatedir
 from mmc.core.version import scmRevision
 from mmc.core.audit import AuditFactory as AF
 from mmc.plugins.base.audit import AA, AT, PLUGIN_NAME
@@ -2382,7 +2382,7 @@ class LogView:
     LogView class. Provide accessor to show log content
     """
 
-    def __init__(self, logfile = '/var/log/ldap.log', pattern=None):
+    def __init__(self, logfile = localstatedir + '/log/ldap.log', pattern=None):
         config = PluginConfig("base")
         try: self.logfile = config.get("ldap", "logfile")
         except (NoSectionError, NoOptionError): self.logfile = logfile

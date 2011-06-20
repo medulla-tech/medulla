@@ -35,7 +35,7 @@
 # Variables
 DESC="Mandriva Management Console : mmc-agent"
 DAEMON="@sbindir@/mmc-agent"
-PIDFILE="/var/run/mmc-agent.pid"
+PIDFILE="@localstatedir@/run/mmc-agent.pid"
 
 test -x $DAEMON || exit 0
 

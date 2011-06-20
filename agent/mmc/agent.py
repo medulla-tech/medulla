@@ -34,6 +34,7 @@ try:
 except ImportError:
     from twisted.protocols import http
 
+from mmc.site import localstatedir
 from mmc.client import makeSSLContext
 from mmc.support.mmctools import Singleton
 from mmc.core.version import scmRevision
@@ -316,10 +317,10 @@ class MmcServer(xmlrpc.XMLRPC,object):
 
     def log(self, fileprefix, content):
         """
-        @param fileprefix: Write log file in /var/log/mmc/mmc-fileprefix.log
+        @param fileprefix: Write log file in @localstatedir@/log/mmc/mmc-fileprefix.log
         @param content: string to record in log file
         """
-        f = open('/var/log/mmc/mmc-' + fileprefix + '.log', 'a')
+        f = open(localstatedir + '/log/mmc/mmc-' + fileprefix + '.log', 'a')
         f.write(time.asctime() + ': ' + content + "\n")
         f.close()
 
@@ -388,7 +389,7 @@ def agentService(config, conffile, daemonize):
 
     # Create log dir if it doesn't exist
     try:
-        os.mkdir("/var/log/mmc")
+        os.mkdir(localstatedir + "/log/mmc")
     except OSError, (errno, strerror):
         # Raise exception if error is not "File exists"
         if errno != 17:
