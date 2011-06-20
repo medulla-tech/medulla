@@ -27,6 +27,9 @@ SUBDIRS  = agent web
 
 ldapcontribdir = $(docdir)/contrib/ldap
 
+dist-hook:
+	rm -rf `find $(distdir) -name .svn`
+
 confwarning: sysconfdirwarning localstatedirwarning
 
 sysconfdirwarning:
