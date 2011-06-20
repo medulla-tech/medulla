@@ -32,20 +32,21 @@ require("includes/session.inc.php");
 
 includeInfoPackage(fetchModulesList($conf["global"]["rootfsmodules"]));
 
-echo "<h2>MMC components version</h2>";
-echo '<h3>MMC agent: version ' . $_SESSION["modListVersion"]['ver'] . ' / revision '.$_SESSION["modListVersion"]['rev'].'</h3>';
+echo "<h2>" . _T("MMC components version", "base") . "</h2>";
+echo "<h3>" . _T("MMC agent: version", "base") . $_SESSION["modListVersion"]['ver'] . " / " . T_("revision", "base") . " " . $_SESSION["modListVersion"]['rev'] . "</h3>";
 foreach ($_SESSION["supportModList"] as $modName) {
-    echo "<b>$modName plugin</b><br/>";
+    echo "<b>$modName " . _T("plugin", "base") . "</b><br/>";
     $apirev = xmlCall($modName.".getApiVersion",null);
     $apiver = xmlCall($modName.".getVersion",null);
-    echo "agent: version $apiver / API ".$apirev. " / revision ".xmlCall($modName.".getRevision",null)."<br/>";
+    $rev = xmlCall($modName.".getRevision", null);
+    echo _T("agent: version", "base") . " " . $apiver . " / " . _T("API", "base") . $apirev. " / " . _T("revision", "base") . " " . $rev . "<br/>";
     if (in_array($modName, $_SESSION["modulesList"])) {
-        echo "web: version ".$__version[$modName] .  " / API  ".$__apiversion[$modName]." / revision ".$__revision[$modName]."<br/>";  
+        echo _T("web: version", "base") . " " . $__version[$modName] . " / " . _T("API", "base") . $__apiversion[$modName] . " / " . _T("revision", "base") . " " . $__revision[$modName] . "<br/>";  
         if ($__apiversion[$modName] != $apirev) {
-            echo '<div style="color : #D00;">Warning: API numbers mismatch</div>';
+            echo '<div style="color : #D00;">' . _T("Warning: API numbers mismatch", "base") . '</div>';
         }
     } else {
-        echo '<div style="color : #D00;">web: plugin is not installed</div>';
+        echo '<div style="color : #D00;">' . _T("web: plugin is not installed", "base") . '</div>';
     }
     echo "<br/>";
 }
