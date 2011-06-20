@@ -39,6 +39,8 @@ import stat         # for owner checking
 import pulse2.utils
 from pulse2.xmlrpc import isTwistedEnoughForLoginPass
 
+log = logging.getLogger()
+
 class LauncherConfig(pulse2.utils.Singleton):
     """
     Singleton Class to hold configuration directives
@@ -143,27 +145,27 @@ class LauncherConfig(pulse2.utils.Singleton):
         if type == 'str':
             if self.cp.has_option(section, key):
                 setattr(self, attrib, self.cp.get(section, key))
-                logging.getLogger().info("launcher %s: section %s, option %s set to '%s'" % (self.name, section, key, getattr(self, attrib)))
+                log.info("launcher %s: section %s, option %s set to '%s'" % (self.name, section, key, getattr(self, attrib)))
             else:
-                logging.getLogger().warn("launcher %s: section %s, option %s not set, using default value '%s'" % (self.name, section, key, getattr(self, attrib)))
+                log.warn("launcher %s: section %s, option %s not set, using default value '%s'" % (self.name, section, key, getattr(self, attrib)))
         elif type == 'bool':
             if self.cp.has_option(section, key):
                 setattr(self, attrib, self.cp.getboolean(section, key))
-                logging.getLogger().info("launcher %s: section %s, option %s set to %s" % (self.name, section, key, getattr(self, attrib)))
+                log.info("launcher %s: section %s, option %s set to %s" % (self.name, section, key, getattr(self, attrib)))
             else:
-                logging.getLogger().warn("launcher %s: section %s, option %s not set, using default value %s" % (self.name, section, key, getattr(self, attrib)))
+                log.warn("launcher %s: section %s, option %s not set, using default value %s" % (self.name, section, key, getattr(self, attrib)))
         elif type == 'int':
             if self.cp.has_option(section, key):
                 setattr(self, attrib, self.cp.getint(section, key))
-                logging.getLogger().info("launcher %s: section %s, option %s set to %s" % (self.name, section, key, getattr(self, attrib)))
+                log.info("launcher %s: section %s, option %s set to %s" % (self.name, section, key, getattr(self, attrib)))
             else:
-                logging.getLogger().warn("launcher %s: section %s, option %s not set, using default value %s" % (self.name, section, key, getattr(self, attrib)))
+                log.warn("launcher %s: section %s, option %s not set, using default value %s" % (self.name, section, key, getattr(self, attrib)))
         elif type == 'pass':
             if self.cp.has_option(section, key):
                 setattr(self, attrib, self.cp.getpassword(section, key))
-                logging.getLogger().info("launcher %s: section %s, option %s set using given value" % (self.name, section, key))
+                log.info("launcher %s: section %s, option %s set using given value" % (self.name, section, key))
             else:
-                logging.getLogger().warn("launcher %s: section %s, option %s not set, using default value" % (self.name, section, key))
+                log.warn("launcher %s: section %s, option %s not set, using default value" % (self.name, section, key))
 
     def presetup(self, config_file):
         """
@@ -258,12 +260,12 @@ class LauncherConfig(pulse2.utils.Singleton):
             group += "r%s"%(exe)
         self.rsync_set_chmod = 'u=rw%s%s%s'%(exe, group, other)
 
-        logging.getLogger().debug("config metavalue 'rsync_set_chmod' = %s"%(self.rsync_set_chmod))
+        log.debug("config metavalue 'rsync_set_chmod' = %s"%(self.rsync_set_chmod))
 
         # [daemon] section parsing (parsing ofr user, group, and umask is done above in presetup)
         if self.cp.has_section("daemon"):
             if self.cp.has_option('daemon', 'pid_path'):
-                logging.getLogger().warning("'pid_path' is deprecated, please replace it in your config file by 'pidfile'")
+                log.warning("'pid_path' is deprecated, please replace it in your config file by 'pidfile'")
                 self.setoption('daemon', 'pid_path', 'pid_path')
             else:
                 self.setoption('daemon', 'pidfile', 'pid_path')
@@ -283,10 +285,10 @@ class LauncherConfig(pulse2.utils.Singleton):
             if self.cp.has_option("tcp_sproxy", "tcp_sproxy_port_range"):
                 range = map(lambda x: int(x), self.cp.get("tcp_sproxy", "tcp_sproxy_port_range").split('-'))
                 if len(range) != 2:
-                    logging.getLogger().info("'tcp_sproxy_port_range' not formated as expected, using default value, please check your config file ")
+                    log.info("'tcp_sproxy_port_range' not formated as expected, using default value, please check your config file ")
                 else:
                     (self.tcp_sproxy_port_range_start, self.tcp_sproxy_port_range_end) = range
-        logging.getLogger().info("launcher %s: section %s, option %s set to %d-%d" % (self.name, 'tcp_sproxy', 'tcp_sproxy_port_range', self.tcp_sproxy_port_range_start, self.tcp_sproxy_port_range_end))
+        log.info("launcher %s: section %s, option %s set to %d-%d" % (self.name, 'tcp_sproxy', 'tcp_sproxy_port_range', self.tcp_sproxy_port_range_start, self.tcp_sproxy_port_range_end))
 
         # Parse "smart_cleaner" section
         self.setoption('smart_cleaner', 'smart_cleaner_path', 'smart_cleaner_path')
@@ -305,23 +307,23 @@ class LauncherConfig(pulse2.utils.Singleton):
                     if not isTwistedEnoughForLoginPass():
                         if username != '':
                             if username != 'username':
-                                logging.getLogger().warning("your version of twisted is not high enough to use login (%s/username)"%(section))
+                                log.warning("your version of twisted is not high enough to use login (%s/username)"%(section))
                             username = ''
                         if password != '':
                             if password != 'password':
-                                logging.getLogger().warning("your version of twisted is not high enough to use password (%s/password)"%(section))
+                                log.warning("your version of twisted is not high enough to use password (%s/password)"%(section))
                             password = ''
 
                     awake_incertitude_factor = self.getvaluedefaulted(section, 'awake_incertitude_factor', .2, 'float')
                     if awake_incertitude_factor > .5:
-                        logging.getLogger().warning("in %s, awake_incertitude_factor greater than .5, setting it to .5" % (section))
+                        log.warning("in %s, awake_incertitude_factor greater than .5, setting it to .5" % (section))
                         awake_incertitude_factor = .5
                     if awake_incertitude_factor < 0:
-                        logging.getLogger().warning("in %s, awake_incertitude_factor lower than 0, setting it to 0" % (section))
+                        log.warning("in %s, awake_incertitude_factor lower than 0, setting it to 0" % (section))
                         awake_incertitude_factor = 0
                     awake_time = self.getvaluedefaulted(section, 'awake_time', 600, 'int')
                     if awake_time < 60:
-                        logging.getLogger().warning("in %s, awake_time lower than 60, setting it to 60" % (section))
+                        log.warning("in %s, awake_time lower than 60, setting it to 60" % (section))
                         awake_time = 60
 
                     self.schedulers[section] = {
@@ -337,7 +339,7 @@ class LauncherConfig(pulse2.utils.Singleton):
                     if self.first_scheduler == None:
                         self.first_scheduler = section
                 except ConfigParser.NoOptionError, error:
-                    logging.getLogger().warn("launcher %s: section %s do not seems to be correct (%s), please fix the configuration file" % (self.name, section, error))
+                    log.warn("launcher %s: section %s do not seems to be correct (%s), please fix the configuration file" % (self.name, section, error))
 
         # Parse "launcher_XXXX" sections
         for section in self.cp.sections():
@@ -348,11 +350,11 @@ class LauncherConfig(pulse2.utils.Singleton):
                     if not isTwistedEnoughForLoginPass():
                         if username != '':
                             if username != 'username':
-                                logging.getLogger().warning("your version of twisted is not high enough to use login (%s/username)"%(section))
+                                log.warning("your version of twisted is not high enough to use login (%s/username)"%(section))
                             username = ''
                         if password != '':
                             if password != 'password':
-                                logging.getLogger().warning("your version of twisted is not high enough to use password (%s/password)"%(section))
+                                log.warning("your version of twisted is not high enough to use password (%s/password)"%(section))
                             password = ''
 
                     self.launchers[section] = {
@@ -392,17 +394,17 @@ class LauncherConfig(pulse2.utils.Singleton):
 
                         maxslots = (os.sysconf('SC_OPEN_MAX') - 50) / 2 # "should work in most case" formulae
                         if self.launchers[section]['slots'] > maxslots:
-                            logging.getLogger().warn("launcher %s: section %s, slots capped to %s instead of %s regarding the max FD (%s)" % (self.name, section, maxslots, self.launchers[section]['slots'], os.sysconf('SC_OPEN_MAX')))
+                            log.warn("launcher %s: section %s, slots capped to %s instead of %s regarding the max FD (%s)" % (self.name, section, maxslots, self.launchers[section]['slots'], os.sysconf('SC_OPEN_MAX')))
                             self.launchers[section]['slots'] = maxslots
 
                 except ConfigParser.NoOptionError, e:
-                    logging.getLogger().warn("launcher %s: section %s do not seems to be correct (%s), please fix the configuration file" % (self.name, section, e))
+                    log.warn("launcher %s: section %s do not seems to be correct (%s), please fix the configuration file" % (self.name, section, e))
 
         # check for a few binaries availability
         if self.conf_or_default('rsync'):
             rsync_version = os.popen("%s --version"%(self.rsync_path), 'r').read().split('\n')[0].split(' ')[3].split('.')
             if len(rsync_version) != 3:
-                logging.getLogger().warn("launcher %s: can't find RSYNC (looking for rsync version), disabling all rsync-related stuff" % (self.name))
+                log.warn("launcher %s: can't find RSYNC (looking for rsync version), disabling all rsync-related stuff" % (self.name))
                 self.is_rsync_available = False
             else:
                 if rsync_version[0] < 2 or rsync_version[0] == 2 and rsync_version[1] < 6: # version < 2.6.0 => dont work
@@ -424,10 +426,10 @@ class LauncherConfig(pulse2.utils.Singleton):
 
         if not os.access(conf, os.X_OK):
             if not os.access(default, os.X_OK):
-                logging.getLogger().warn("launcher %s: can't find %s (looking for %s nor the default value %s), disabling all %s-related stuff" % (self.name, label, conf, default, type))
+                log.warn("launcher %s: can't find %s (looking for %s nor the default value %s), disabling all %s-related stuff" % (self.name, label, conf, default, type))
                 setattr(self, "is_%s_available"%(type.replace("_", "")), False)
             else:
-                logging.getLogger().warn("launcher %s: can't find %s (looking for %s) but by using the default value" % (self.name, label, conf))
+                log.warn("launcher %s: can't find %s (looking for %s) but by using the default value" % (self.name, label, conf))
                 setattr(self, "is_%s_available"%(type.replace("_", "")), True)
                 setattr(self, "%s_path"%(type), default)
         else:
@@ -451,21 +453,21 @@ class LauncherConfig(pulse2.utils.Singleton):
                     keyfile = self.cp.get('ssh', option)
                     self.ssh_keys[keyname] = keyfile
                     if checkKeyPerm(keyfile):
-                        logging.getLogger().info("launcher %s: added ssh key '%s' to keyring as key '%s'" % (self.name, keyfile, keyname))
+                        log.info("launcher %s: added ssh key '%s' to keyring as key '%s'" % (self.name, keyfile, keyname))
                         has_sshkey = True
                     else:
                         del self.ssh_keys[keyname]
-                        logging.getLogger().warn("launcher %s: didn't added ssh key '%s' to keyring as key '%s'" % (self.name, keyfile, keyname))
+                        log.warn("launcher %s: didn't added ssh key '%s' to keyring as key '%s'" % (self.name, keyfile, keyname))
         if not checkKeyPerm(self.ssh_keys['default']):
             keyfile = self.ssh_keys['default']
             if has_sshkey:
                 del self.ssh_keys['default']
                 if self.ssh_defaultkey == 'default':
                     self.ssh_defaultkey = self.ssh_keys.keys()[0]
-                    logging.getLogger().warning("launcher %s: the default ssh key '%s' is not valid, set '%s' as default (you should specify it with ssh_defaultkey)" % (self.name, keyfile, self.ssh_defaultkey))
+                    log.warning("launcher %s: the default ssh key '%s' is not valid, set '%s' as default (you should specify it with ssh_defaultkey)" % (self.name, keyfile, self.ssh_defaultkey))
             else:
                 del self.ssh_keys['default']
-                logging.getLogger().error("launcher %s: the default ssh key '%s' is not valid" % (self.name, keyfile))
+                log.error("launcher %s: the default ssh key '%s' is not valid" % (self.name, keyfile))
 
     def getvaluedefaulted(self, section, option, default, type = 'str'):
         """ parse value using the given type """
@@ -490,34 +492,34 @@ class LauncherConfig(pulse2.utils.Singleton):
         paths = [self.launcher_path, self.ping_path, self.wrapper_path, self.wol_path]
         sshkeys = self.ssh_keys.values()
         if len(sshkeys) == 0:
-            logging.getLogger().error("Configuration error: no ssh key has been defined")
+            log.error("Configuration error: no ssh key has been defined")
             raise Exception("Configuration error: no ssh key has been defined")
         paths.extend(sshkeys)
         for path in paths:
             if not os.path.exists(path):
-                logging.getLogger().error("Configuration error: path %s does not exists" % path)
+                log.error("Configuration error: path %s does not exists" % path)
                 raise Exception("Configuration error: path %s does not exists" % path)
 
 def checkKeyPerm(keyfile):
     try:
         if not os.path.exists(keyfile):
-            logging.getLogger().warn("launcher %s: the ssh key file %s does not exists" % (LauncherConfig().name, keyfile))
+            log.warn("launcher %s: the ssh key file %s does not exists" % (LauncherConfig().name, keyfile))
             return False
         stats = os.stat(keyfile)
     except:
-        logging.getLogger().warn("launcher %s: something goes wrong while performing stat() on %s !" % (LauncherConfig().name, keyfile))
+        log.warn("launcher %s: something goes wrong while performing stat() on %s !" % (LauncherConfig().name, keyfile))
         return False
 
     if stats.st_uid != os.getuid():
-        logging.getLogger().debug("launcher %s: ssh key '%s' owner is %s, my uid is %s, dropping the key from the keyring" % (LauncherConfig().name, keyfile, stats.st_uid, os.getuid()))
+        log.debug("launcher %s: ssh key '%s' owner is %s, my uid is %s, dropping the key from the keyring" % (LauncherConfig().name, keyfile, stats.st_uid, os.getuid()))
         return False
 
     if stats.st_uid != os.geteuid():
-        logging.getLogger().debug("launcher %s: ssh key '%s' owner is %s, my euid is %s, dropping the key from the keyring" % (LauncherConfig().name, keyfile, stats.st_uid, os.geteuid()))
+        log.debug("launcher %s: ssh key '%s' owner is %s, my euid is %s, dropping the key from the keyring" % (LauncherConfig().name, keyfile, stats.st_uid, os.geteuid()))
         return False
 
     if stat.S_IMODE(os.stat(keyfile).st_mode) & ~(stat.S_IRUSR | stat.S_IWUSR): # check if perm are at most rw-------
-        logging.getLogger().debug("launcher %s: ssh key '%s' perms are not *exactly* rw-------, dropping the key from the keyring" % (LauncherConfig().name, keyfile))
+        log.debug("launcher %s: ssh key '%s' perms are not *exactly* rw-------, dropping the key from the keyring" % (LauncherConfig().name, keyfile))
         return False
 
     return True
