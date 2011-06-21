@@ -319,7 +319,8 @@ class PluginsBaseConfig(Pulse2ConfigParser):
                           'dbdriver': 'mysql',
                           'dbuser': 'audit',
                           'dbpassword': 'mmc',
-                          'dbname': 'audit'}}
+                          'dbname': 'audit',
+                          'dbport': 3306}}
 
 class PluginsDyngroupConfig(Pulse2ConfigParser):
     path = 'plugins/dyngroup.ini'
@@ -552,7 +553,7 @@ class SetupApp(object):
         self.confs['plugins/base.ini'].set('ldap', 'basedn', self.config['ldapbasedn'])
         self.confs['plugins/base.ini'].set('ldap', 'rootname', self.config['ldapadmindn'])
         self.confs['plugins/base.ini'].set('ldap', 'password', self.config['ldappasswd'])
-        
+
     def init_db(self):
         """ Create databases and associated schemas
         """
@@ -699,6 +700,7 @@ class SetupApp(object):
             baseconf.set('audit', 'dbhost', self.config['dbhost'])
             baseconf.set('audit', 'dbuser', self.config['dbuser'])
             baseconf.set('audit', 'dbpassword', self.config['dbpasswd'])
+            baseconf.commit()
 
             binpath = path_lookup('mmc-helper')
             if binpath is None:
