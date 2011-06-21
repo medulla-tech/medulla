@@ -25,6 +25,8 @@ DISTCHECK_CONFIGURE_FLAGS=--disable-conf-backup
 
 SUBDIRS  = agent web
 
+EXTRA_DIST = m4
+
 ldapcontribdir = $(docdir)/contrib/ldap
 
 dist-hook:
