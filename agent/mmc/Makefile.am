@@ -38,6 +38,7 @@ edit = sed \
         -e 's|@pkgdatadir[@]|$(pkgdatadir)|g' \
         -e 's|@prefix[@]|$(prefix)|g' \
         -e 's|@localstatedir[@]|$(localstatedir)|g' \
+        -e 's|@mmcconfdir[@]|$(mmcconfdir)|g' \
         -e 's|@sysconfdir[@]|$(sysconfdir)|g'
 
 site.py: Makefile

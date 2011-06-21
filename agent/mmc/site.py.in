@@ -23,5 +23,10 @@
 """
 Contains site global values
 """
-mmcconfdir = '@sysconfdir@/mmc'
+bindir = '@bindir@'
+sbindir = '@sbindir@'
+pkgdatadir = '@pkgdatadir@'
+prefix = '@prefix@'
 localstatedir = '@localstatedir@'
+mmcconfdir = '@sysconfdir@/mmc'
+sysconfdir = '@sysconfdir@'
