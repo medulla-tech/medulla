@@ -30,11 +30,12 @@ import twisted.internet.reactor
 import logging
 import logging.config
 
+from mmc.site import mmcconfdir
 import pulse2.apis.clients.imaging
 import pulse2.imaging_server.config
 import pulse2.imaging.bootinventory
 
-CONFIG_FILE = '/etc/mmc/pulse2/imaging-server/imaging-server.ini' #: config file location
+CONFIG_FILE = mmcconfdir + '/pulse2/imaging-server/imaging-server.ini' #: config file location
 
 # default error code
 ERROR_OK = 0        #: no error

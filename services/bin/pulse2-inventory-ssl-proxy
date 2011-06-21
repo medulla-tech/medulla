@@ -28,6 +28,7 @@ import sys
 import getopt
 import logging
 import logging.config
+from mmc.site import mmcconfdir
 from pulse2.proxyssl.config import Pulse2InventoryProxyConfig
 from pulse2.proxyssl import initialise, run
 
@@ -104,7 +105,7 @@ def daemon(config):
 
 
 if __name__ == "__main__":
-    inifile = "/etc/mmc/pulse2/inventoryserver.ini"
+    inifile = mmcconfdir + "/pulse2/inventoryserver.ini"
     try:
         opts, suivarg = getopt.getopt(sys.argv[1:], "f:d")
     except getopt.GetoptError:

@@ -41,6 +41,7 @@ except ImportError:
     from twisted.protocols import http
 
 # Other stuff
+from mmc.site import mmcconfdir
 from mmc.core.version import scmRevision
 from pulse2.launcher.config import LauncherConfig
 from pulse2.utils import xmlrpcCleanup
@@ -380,9 +381,11 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
 
 def main():
     parser = optparse.OptionParser()
-    parser.add_option("-c", "--config-file", help='path to the config file', default='/etc/mmc/pulse2/launchers/launchers.ini')
+    parser.add_option("-c", "--config-file", help='path to the config file', 
+                      default=mmcconfdir + '/pulse2/launchers/launchers.ini')
     parser.add_option("-i", "--id", help='id of this launcher')
-    parser.add_option("-l", "--log-config-file", help="path to the logging config file", default = "/etc/mmc/pulse2/launchers/launchers.ini")
+    parser.add_option("-l", "--log-config-file", help="path to the logging config file", 
+                      default = mmcconfdir + "/pulse2/launchers/launchers.ini")
     (options, args) = parser.parse_args()
 
     if not os.path.exists(options.config_file):

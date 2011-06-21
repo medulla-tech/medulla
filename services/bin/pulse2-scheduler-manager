@@ -46,6 +46,7 @@ time_to_wait_for_start = 2
 time_to_wait_for_stop = 2
 check_count_stop = 300
 
+from mmc.site import mmcconfdir
 from pulse2.scheduler.config import SchedulerConfig
 
 def start_scheduler(config):
@@ -324,7 +325,8 @@ if __name__ == "__main__":
             return 1
 
     parser = optparse.OptionParser()
-    parser.add_option("-c", "--config-file", help='path to the config file', default='/etc/mmc/pulse2/scheduler/scheduler.ini')
+    parser.add_option("-c", "--config-file", help='path to the config file', 
+                      default=mmcconfdir + '/pulse2/scheduler/scheduler.ini')
     parser.add_option("-o", "--id", help='id of this scheduler')
     (options, args) = parser.parse_args()
 

@@ -54,6 +54,7 @@ import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
 
 # Other stuff
+from mmc.site import mmcconfdir
 from mmc.core.version import scmRevision
 from pulse2.scheduler.config import SchedulerConfig, SchedulerDatabaseConfig
 from pulse2.scheduler.xmlrpc import SchedulerSite
@@ -458,7 +459,7 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
 
 def main():
     parser = optparse.OptionParser()
-    parser.add_option("-c", "--config-file", help='path to the config file', default='/etc/mmc/pulse2/scheduler/scheduler.ini')
+    parser.add_option("-c", "--config-file", help='path to the config file', default=mmcconfdir + '/pulse2/scheduler/scheduler.ini')
     (options, args) = parser.parse_args()
 
     if not os.path.exists(options.config_file):

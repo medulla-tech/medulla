@@ -46,11 +46,12 @@
 #include <netinet/in.h>
 
 #include "iniparser.h"
+#include "site.h"
 
 #define BUFLEN 1532
 #define ERRORSTR "ERROR"
 #define ACKSTR "ACK"
-#define CONFIGURATION_FILE "/etc/mmc/pulse2/imaging-server/imaging-server.ini"
+#define CONFIGURATION_FILE "SYSCONFDIR" "/mmc/pulse2/imaging-server/imaging-server.ini"
 
 unsigned char gBuff[80];
 

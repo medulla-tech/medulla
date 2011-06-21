@@ -44,6 +44,7 @@ import errno
 time_to_wait = 2 # first stage: check of it is alive / dead after having being run /stopped for time_to_wait seconds
 check_count = 5 # second stage: attempts to obtain a good result (check_count tries) to a XMLRPC call
 
+from mmc.site import mmcconfdir
 from pulse2.launcher.config import LauncherConfig
 
 def start_launcher(name, config):
@@ -223,7 +224,7 @@ def get_pidfile(config, name):
 
 if __name__ == "__main__":
     parser = optparse.OptionParser()
-    parser.add_option("-c", "--config-file", help='path to the config file', default='/etc/mmc/pulse2/launchers/launchers.ini')
+    parser.add_option("-c", "--config-file", help='path to the config file', default=mmcconfdir + '/pulse2/launchers/launchers.ini')
     parser.add_option("-o", "--id", help='id of this launcher')
     (options, args) = parser.parse_args()
 

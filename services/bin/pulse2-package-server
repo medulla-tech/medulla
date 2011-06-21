@@ -33,6 +33,7 @@ import logging.config
 import twisted
 import twisted.copyright
 
+from mmc.site import mmcconfdir
 from pulse2.package_server import ThreadLauncher, init_logger_debug, getVersion, getRevision
 from pulse2.package_server.config import P2PServerCP
 
@@ -152,7 +153,7 @@ def daemon(config):
         sys.exit(1)
 
 if __name__ == "__main__":
-    inifile = "/etc/mmc/pulse2/package-server/package-server.ini"
+    inifile = mmcconfdir + "/pulse2/package-server/package-server.ini"
     try:
         opts, suivarg = getopt.getopt(sys.argv[1:], "f:d")
     except getopt.GetoptError:
@@ -165,9 +166,6 @@ if __name__ == "__main__":
             daemonize = False
 
     if not os.path.exists(inifile):
-        if os.path.exists("/etc/mmc/pulse2/pserver/package-server.ini"):
-                print "Please move your configuration file from /etc/mmc/pulse2/pserver/package-server.ini to %s, or use the -f option."%(inifile)
-                sys.exit(3)
         print "File '%s' does not exist." % inifile
         sys.exit(3)
 
