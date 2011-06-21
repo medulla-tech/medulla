@@ -43,7 +43,7 @@ def getVersion():  return VERSION
 def getRevision(): return REVISION
 
 def running(daemonize, inifile):
- config = Pulse2OcsserverConfigParser()
+    config = Pulse2OcsserverConfigParser()
     config.setup(inifile)
 
     # Set umask and effective UID and GID values
@@ -53,7 +53,7 @@ def running(daemonize, inifile):
 
     # Create log dir if it doesn't exist
     # TODO: should parse conf to know where are logs, if any
-    os.system('mkdir -p %/log/mmc' % localstatedir)
+    os.system('mkdir -p %s/log/mmc' % localstatedir)
 
     # if we daemonize, we start by that before trying to initialise the service
     if daemonize:

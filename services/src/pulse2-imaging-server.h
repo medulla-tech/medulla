@@ -51,7 +51,7 @@
 #define BUFLEN 1532
 #define ERRORSTR "ERROR"
 #define ACKSTR "ACK"
-#define CONFIGURATION_FILE "SYSCONFDIR" "/mmc/pulse2/imaging-server/imaging-server.ini"
+#define CONFIGURATION_FILE EXPAND_CONF("/mmc/pulse2/imaging-server/imaging-server.ini")
 
 unsigned char gBuff[80];
 
