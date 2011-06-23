@@ -36,7 +36,7 @@ $p->display();
 <div id="container">
 </div>
 
-<h2><?= _("Search action"); ?></h2>
+<h2><?php echo  _("Search action"); ?></h2>
 
 <div class="fixheight"></div>
 <div style="height: 400px; overflow: auto;" id="logupdater"></div>

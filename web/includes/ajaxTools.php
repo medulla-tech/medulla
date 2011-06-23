@@ -116,7 +116,7 @@ if (strstr($action,'?')===False) {
             launch--;
 
                 if (launch==0) {
-                    new Ajax.Updater('container','<?= $action ?>&filter='+document.Form.param.value, { asynchronous:true, evalScripts: true});
+                    new Ajax.Updater('container','<?php echo  $action ?>&filter='+document.Form.param.value, { asynchronous:true, evalScripts: true});
                 }
             }
 
@@ -125,7 +125,7 @@ if (strstr($action,'?')===False) {
         */
 
         function updateSearchParam(filter, start, end) {
-            new Ajax.Updater('container','<?= $action ?>&filter='+filter+'&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
+            new Ajax.Updater('container','<?php echo  $action ?>&filter='+filter+'&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
             }
 
         /**

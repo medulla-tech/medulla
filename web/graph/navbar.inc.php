@@ -100,9 +100,9 @@ if ($_SESSION["login"]=='root') {
 
 <style type="text/css">
 #navbar ul li#fav { 				width: 70px; }
-                #navbar ul li#fav a {         background: url("img/navbar/fav<?= $favact?>.png") no-repeat transparent;
+                #navbar ul li#fav a {         background: url("img/navbar/fav<?php echo  $favact?>.png") no-repeat transparent;
                                         background-position: 50% 10px;}
-                #navbar ul li#fav a:hover {   background: url("img/navbar/fav<?= $favact?>.png") no-repeat transparent;
+                #navbar ul li#fav a:hover {   background: url("img/navbar/fav<?php echo  $favact?>.png") no-repeat transparent;
                                         background-position: 50% 10px	}
 
 </style>
@@ -114,7 +114,7 @@ if ($_SESSION["login"]=='root') {
 <div id="popup" class="popup" style="display: none;">
     <div style="float:right"><a href="#" onclick="getStyleObject('popup').display='none'; return false;"><img src="img/common/icn_close.png" alt ="[x]"/></a></div>
     <div id="__popup_container">
-        <?= _("If this phrase does not change, you browser is not supported by the MMC application"); ?>
+        <?php echo  _("If this phrase does not change, you browser is not supported by the MMC application"); ?>
     </div>
 
 </div>

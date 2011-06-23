@@ -30,7 +30,7 @@
   <td>
   <div id="licence">
 
-<?= _("<p>
+<?php echo  _("<p>
 The community version of this product is distributed in the hope that it
 will be useful, but <strong>without any warranty</strong>; without even the implied
 warranty of merchantability of fitness for a particular purpose. See the
@@ -50,7 +50,7 @@ if (isset($_SESSION["lang"])) {
 ?>
 
 <p>
-<a href="<?= $url; ?>"><?= _("Click here to get more information about our support and maintenance subscription plan."); ?></a>
+<a href="<?php echo  $url; ?>"><?php echo  _("Click here to get more information about our support and maintenance subscription plan."); ?></a>
 </p>
  </div>
 

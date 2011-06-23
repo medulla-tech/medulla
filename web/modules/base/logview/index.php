@@ -32,13 +32,13 @@ displayInputLiveSearch(urlStrRedirect('base/logview/setsearch'));
 <div id="container">
 </div>
 
-<h2><?= _("LDAP operations log view"); ?></h2>
+<h2><?php echo  _("LDAP operations log view"); ?></h2>
 
 <div class="fixheight"></div>
 <div style="height: 400px; overflow: auto;" id="logupdater"></div>
 
 <script>
-    new Ajax.PeriodicalUpdater('logupdater','<?= urlStrRedirect('base/logview/show') ?>','2',{evalScripts: true});
-    new Ajax.Updater('container','<?= urlStrRedirect('base/logview/setsearch') ?>');
+    new Ajax.PeriodicalUpdater('logupdater','<?php echo  urlStrRedirect('base/logview/show') ?>','2',{evalScripts: true});
+    new Ajax.Updater('container','<?php echo  urlStrRedirect('base/logview/setsearch') ?>');
 </script>
 

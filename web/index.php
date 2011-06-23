@@ -157,7 +157,7 @@ if (isset($error)) {
 
 		<form action="<?php echo $root; ?>index.php" method="post" name="loginForm" id="loginForm" target="_self">
 
-			<p><?= _("Login");?> :<br>
+			<p><?php echo  _("Login");?> :<br>
 			<input name="username" type="text" class="textfield" id="username" size="18"
 <?php
 			echo "value=\"$login\"";
@@ -165,11 +165,11 @@ if (isset($error)) {
 			/>
 			</p>
 
-			<p><?= _("Password");?> :<br>
+			<p><?php echo  _("Password");?> :<br>
 			<input name="password" type="password" class="textfield" id="password" size="18">
 			</p>
 
-                        <p> <?= _("Server");?> :<br>
+                        <p> <?php echo  _("Server");?> :<br>
 			<?php
 
                         global $conf;
@@ -192,7 +192,7 @@ if (isset($error)) {
 
                         ?>
                         <br/>
-                        <?= _("Language");?>: <br />
+                        <?php echo  _("Language");?>: <br />
 
                         <?php
 
@@ -224,7 +224,7 @@ if (isset($error)) {
 
                         ?>
 
-			<input name="bConnect" type="submit" class="btnPrimary" value="<?= _("Connect");?>" /></p>
+			<input name="bConnect" type="submit" class="btnPrimary" value="<?php echo  _("Connect");?>" /></p>
 
         </form>
 

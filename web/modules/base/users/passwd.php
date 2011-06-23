@@ -47,7 +47,7 @@ if (isset($_POST["bchpasswd"]) && ($_POST["curpass"] != "") && ($_POST["newpass"
 ?>
 
 <form action="<?php echo "main.php?module=base&submod=users&action=index"; ?>" method="post">
-<input type="submit" name="bback" class="btnPrimary" value="<?= _("Change your user's password") ?>" />
+<input type="submit" name="bback" class="btnPrimary" value="<?php echo  _("Change your user's password") ?>" />
 </form>
 
 <?php
@@ -57,21 +57,21 @@ else
 ?>
 <form action="<?php echo "main.php?module=base&submod=users&action=passwd"; ?>" method="post">
 <p>
-<?= _("You are going to change your password") ?>
+<?php echo  _("You are going to change your password") ?>
 </p>
 
 <table cellspacing="0">
-<tr><td><?= _("Current password") ?></td>
+<tr><td><?php echo  _("Current password") ?></td>
     <td><input name="curpass" type="password" class="textfield" size="23" /></td></tr>
-<tr><td><?= _("New password") ?></td>
+<tr><td><?php echo  _("New password") ?></td>
     <td><input name="newpass" type="password" class="textfield" size="23" /></td></tr>
-<tr><td><?= _("Confirm your password") ?></td>
+<tr><td><?php echo  _("Confirm your password") ?></td>
     <td><input name="confpass" type="password" class="textfield" size="23" /></td></tr>
 </table>
 
 <input name="user" type="hidden" value="<?php echo $user; ?>" />
-<input name="bchpasswd" type="submit" class="btnPrimary" value="<?= _("Change your password") ?>" />
-<input name="bback" type="submit" class="btnSecondary" value="<?= _("Return") ?>" />
+<input name="bchpasswd" type="submit" class="btnPrimary" value="<?php echo  _("Change your password") ?>" />
+<input name="bback" type="submit" class="btnSecondary" value="<?php echo  _("Return") ?>" />
 <?php
 if (isset($_POST["bchpasswd"]))
 {

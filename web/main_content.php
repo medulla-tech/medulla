@@ -164,7 +164,7 @@ ul {
 
 
 
-<h2><?= _("Home")?></h2>
+<h2><?php echo  _("Home")?></h2>
 
 <div class="fixheight"></div>
 <?php
@@ -186,7 +186,7 @@ function display_submod($submod,$mod) {
         return;
     }
     echo '<div class="submod">';
-    ?> <img src="<?= $submod->_img?>_select.png" alt="" style="float:right;" /><?php
+    ?> <img src="<?php echo  $submod->_img?>_select.png" alt="" style="float:right;" /><?php
     /*if (!$submod->_visibility) { //if submod not visible
         return;
     }*/
@@ -209,7 +209,7 @@ function display_mod($mod) {
 
 ?>
     <div class="module">
-        <h2><?= $mod->getDescription(); ?></h2>
+        <h2><?php echo  $mod->getDescription(); ?></h2>
         <?php foreach (getSorted($mod->getSubmodules()) as $submod) {
             display_submod($submod,$mod);
         }

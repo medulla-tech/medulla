@@ -868,9 +868,9 @@ class SimpleNavBar extends HtmlElement {
                 maxperpageElement.selectedIndex = elem.selectedIndex;
                 var maxperpageValue = elem.value;
                 // Evaluate the end depending on the maxperpage value selected
-                var end = parseInt(maxperpageValue) + parseInt(<?=$start?>) - 1;
+                var end = parseInt(maxperpageValue) + parseInt(<?php echo $start?>) - 1;
                 // Call the function to update the ListInfos
-                <?=$jsfunc?>('<?=$this->filter?>', '<?=$start?>', end);
+                <?php echo $jsfunc?>('<?php echo $this->filter?>', '<?php echo $start?>', end);
             }
             return false;
         }
@@ -1172,15 +1172,15 @@ class AjaxFilter extends HtmlElement {
         $root = $conf["global"]["root"];
 
 ?>
-<form name="Form<?=$this->formid?>" id="Form<?=$this->formid?>" action="#" onsubmit="return false;">
+<form name="Form<?php echo $this->formid?>" id="Form<?php echo $this->formid?>" action="#" onsubmit="return false;">
 
-    <div id="loader<?=$this->formid?>">
+    <div id="loader<?php echo $this->formid?>">
         <img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/>
     </div>
-    <div id="searchSpan<?=$this->formid?>" class="searchbox" style="float: right;">
-    <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" /> <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param<?=$this->formid?>" onkeyup="pushSearch<?=$this->formid?>(); return false;" />
+    <div id="searchSpan<?php echo $this->formid?>" class="searchbox" style="float: right;">
+    <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" /> <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param<?php echo $this->formid?>" onkeyup="pushSearch<?php echo $this->formid?>(); return false;" />
     <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
-    onclick="document.getElementById('param<?=$this->formid?>').value =''; pushSearch<?=$this->formid?>(); return false;" />
+    onclick="document.getElementById('param<?php echo $this->formid?>').value =''; pushSearch<?php echo $this->formid?>(); return false;" />
     </span>
     </div>
 
@@ -1188,23 +1188,23 @@ class AjaxFilter extends HtmlElement {
 <?
 if(!$this->formid) {
 ?>
-        document.getElementById('param<?=$this->formid?>').focus();
+        document.getElementById('param<?php echo $this->formid?>').focus();
 <?
 }
 if(isset($this->storedfilter)) {
 ?>
-        document.Form<?=$this->formid?>.param.value = "<?=$this->storedfilter?>";
+        document.Form<?php echo $this->formid?>.param.value = "<?php echo $this->storedfilter?>";
 <?
 }
 ?>
-        var refreshtimer<?=$this->formid?> = null;
-        var refreshparamtimer<?=$this->formid?> = null;
-        var refreshdelay<?=$this->formid?> = <?= $this->refresh ?>;
+        var refreshtimer<?php echo $this->formid?> = null;
+        var refreshparamtimer<?php echo $this->formid?> = null;
+        var refreshdelay<?php echo $this->formid?> = <?php echo  $this->refresh ?>;
         var maxperpage = 10;      
 <?
 if (isset($this->storedmax)) {
 ?>
-        maxperpage = <?=$this->storedmax?>;
+        maxperpage = <?php echo $this->storedmax?>;
 <?
 }
 ?>      
@@ -1214,12 +1214,12 @@ if (isset($this->storedmax)) {
         /**
          * Clear the timers set vith setTimeout
          */
-        clearTimers<?=$this->formid?> = function() {
-            if (refreshtimer<?=$this->formid?> != null) {
-                clearTimeout(refreshtimer<?=$this->formid?>);
+        clearTimers<?php echo $this->formid?> = function() {
+            if (refreshtimer<?php echo $this->formid?> != null) {
+                clearTimeout(refreshtimer<?php echo $this->formid?>);
             }
-            if (refreshparamtimer<?=$this->formid?> != null) {
-                clearTimeout(refreshparamtimer<?=$this->formid?>);
+            if (refreshparamtimer<?php echo $this->formid?> != null) {
+                clearTimeout(refreshparamtimer<?php echo $this->formid?>);
             }
         }
 
@@ -1233,16 +1233,16 @@ if (isset($this->storedmax)) {
         }
         ?>
                  
-        updateSearch<?=$this->formid?> = function() {
-            new Ajax.Updater('<?= $this->divid; ?>',
-            '<?=$url?>',
+        updateSearch<?php echo $this->formid?> = function() {
+            new Ajax.Updater('<?php echo  $this->divid; ?>',
+            '<?php echo $url?>',
             { asynchronous:true, evalScripts: true}
             );
 
 <?
 if ($this->refresh) {
 ?>
-            refreshtimer<?=$this->formid?> = setTimeout("updateSearch<?=$this->formid?>()", refreshdelay<?=$this->formid?>)
+            refreshtimer<?php echo $this->formid?> = setTimeout("updateSearch<?php echo $this->formid?>()", refreshdelay<?php echo $this->formid?>)
 <?
 }
 ?>
@@ -1251,16 +1251,16 @@ if ($this->refresh) {
         /**
          * Update div when clicking previous / next
          */
-        updateSearchParam<?=$this->formid?> = function(filter, start, end, max) {
-            clearTimers<?=$this->formid?>();
+        updateSearchParam<?php echo $this->formid?> = function(filter, start, end, max) {
+            clearTimers<?php echo $this->formid?>();
             if(document.getElementById('maxperpage') != undefined)
                 maxperpage = document.getElementById('maxperpage').value;
 
-            new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+filter+'&start='+start+'&end='+end+'&maxperpage='+maxperpage+'<?= $this->params ?>', { asynchronous:true, evalScripts: true});
+            new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?>filter='+filter+'&start='+start+'&end='+end+'&maxperpage='+maxperpage+'<?php echo  $this->params ?>', { asynchronous:true, evalScripts: true});
 <?
 if ($this->refresh) {
 ?>
-            refreshparamtimer<?=$this->formid?> = setTimeout("updateSearchParam<?=$this->formid?>('"+filter+"',"+start+","+end+","+maxperpage+")", refreshdelay<?=$this->formid?>);
+            refreshparamtimer<?php echo $this->formid?> = setTimeout("updateSearchParam<?php echo $this->formid?>('"+filter+"',"+start+","+end+","+maxperpage+")", refreshdelay<?php echo $this->formid?>);
 <?
 }
 ?>
@@ -1269,12 +1269,12 @@ if ($this->refresh) {
         /**
          * wait 500ms and update search
          */
-        pushSearch<?=$this->formid?> = function() {
-            clearTimers<?=$this->formid?>();
-            refreshtimer<?=$this->formid?> = setTimeout("updateSearch<?=$this->formid?>()", 500);
+        pushSearch<?php echo $this->formid?> = function() {
+            clearTimers<?php echo $this->formid?>();
+            refreshtimer<?php echo $this->formid?> = setTimeout("updateSearch<?php echo $this->formid?>()", 500);
         }
 
-        pushSearch<?=$this->formid?>();
+        pushSearch<?php echo $this->formid?>();
 
     </script>
 
@@ -1379,7 +1379,7 @@ class AjaxFilterLocation extends AjaxFilter {
 <?
 if(isset($this->storedfilter)) {
 ?>
-        document.Form.param.value = "<?=$this->storedfilter?>";
+        document.Form.param.value = "<?php echo $this->storedfilter?>";
 <?
 }
 ?>
@@ -1394,7 +1394,7 @@ if(isset($this->storedfilter)) {
             launch--;
 
                 if (launch==0) {
-                    new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+document.Form.param.value+'<?= $this->params ?>&<?= $this->paramname ?>='+document.Form.<?= $this->paramname ?>.value+'&maxperpage='+maxperpage, { asynchronous:true, evalScripts: true});
+                    new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?>filter='+document.Form.param.value+'<?php echo  $this->params ?>&<?php echo  $this->paramname ?>='+document.Form.<?php echo  $this->paramname ?>.value+'&maxperpage='+maxperpage, { asynchronous:true, evalScripts: true});
                 }
             }
 
@@ -1425,7 +1425,7 @@ if(isset($this->storedfilter)) {
                 maxperpage = document.getElementById('maxperpage').value;
             }
 
-            new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+filter+'<?= $this->params ?>&<?= $this->paramname ?>='+location+'&start='+start+'&end='+end+'&maxperpage='+maxperpage, { asynchronous:true, evalScripts: true});
+            new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?>filter='+filter+'<?php echo  $this->params ?>&<?php echo  $this->paramname ?>='+location+'&start='+start+'&end='+end+'&maxperpage='+maxperpage, { asynchronous:true, evalScripts: true});
             }
 
         /**
@@ -1460,7 +1460,7 @@ class AjaxLocation extends AjaxFilterLocation {
     <div id="Location">
         <span id="searchSpan" class="searchbox">
             <img src="graph/search.gif"/>
-            <span class="locationtext">&nbsp;<?=_("Select entity")?>:&nbsp;</span>
+            <span class="locationtext">&nbsp;<?php echo _("Select entity")?>:&nbsp;</span>
             <span class="locationfield">
             <?php
             $this->location->display();
@@ -1478,7 +1478,7 @@ class AjaxLocation extends AjaxFilterLocation {
         function updateSearchLocation() {
             launch--;
             if (launch==0) {
-                new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?><?= $this->params ?>&<?= $this->paramname ?>='+document.FormLocation.<?= $this->paramname ?>.value, { asynchronous:true, evalScripts: true});
+                new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?><?php echo  $this->params ?>&<?php echo  $this->paramname ?>='+document.FormLocation.<?php echo  $this->paramname ?>.value, { asynchronous:true, evalScripts: true});
                 }
         }
         /**

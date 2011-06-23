@@ -37,10 +37,10 @@ sort($secondary);
    <table cellspacing="0">
     <tr>
      <td width="40%" style="text-align:right">
-      <?= _("Primary group"); ?>
+      <?php echo  _("Primary group"); ?>
      </td>
      <td>
-      <input type="text" id="primary_autocomplete" name="primary_autocomplete" value="<?= $primary; ?>" class="textfield" size="23" onkeypress="return validOnEnter(this, event);" />
+      <input type="text" id="primary_autocomplete" name="primary_autocomplete" value="<?php echo  $primary; ?>" class="textfield" size="23" onkeypress="return validOnEnter(this, event);" />
       <div id="primary_autocomplete_choices" class="autocomplete">
        <ul>
         <li>A</li>
@@ -51,7 +51,7 @@ sort($secondary);
     </tr>
    </table>
    <table cellspacing="0">
-    <tr><td width="40%" style="text-align:right; vertical-align: top;"><?= _("Groups"); ?> </td><td>
+    <tr><td width="40%" style="text-align:right; vertical-align: top;"><?php echo  _("Groups"); ?> </td><td>
         <select multiple="multiple" size="10" class="list" name="groupsselected[]" id="select">
             <?php
             foreach ($secondary as $group)
@@ -60,11 +60,11 @@ sort($secondary);
             }
             ?>
         </select>
-        <input name="bdelgroups" type="submit" class="btnPrimary" value="<?= _("Delete"); ?>" onclick="delEltInSelectBox(); return false;"/>
+        <input name="bdelgroups" type="submit" class="btnPrimary" value="<?php echo  _("Delete"); ?>" onclick="delEltInSelectBox(); return false;"/>
 
     </td>
     </tr>
-    <tr><td style="text-align:right;"><?= _("Add user to group");?></td><td>
+    <tr><td style="text-align:right;"><?php echo  _("Add user to group");?></td><td>
 
     <input type="text" id="autocomplete" name="autocomplete" class="textfield" size="23" onkeypress="return validOnEnter(this,event);" />
     <div id="autocomplete_choices" class="autocomplete">
@@ -73,7 +73,7 @@ sort($secondary);
             <li>B</li>
         </ul>
     </div>
-    <input name="baddgroup" type="submit" class="btnPrimary" value="<?= _("Add"); ?>" onclick="addElt($F('autocomplete')); return false;"/>
+    <input name="baddgroup" type="submit" class="btnPrimary" value="<?php echo  _("Add"); ?>" onclick="addElt($F('autocomplete')); return false;"/>
     </td></tr>
     </table>
 
@@ -88,7 +88,7 @@ sort($secondary);
                 echo "groups.push('" . htmlentities($group[0], ENT_QUOTES) . "');\n";
             }
         ?>
-        new Ajax.Autocompleter('autocomplete','autocomplete_choices','modules/base/users/ajaxAutocompleteGroup.php?uid=<?= $user_uid; ?>', {paramName: "value"});
+        new Ajax.Autocompleter('autocomplete','autocomplete_choices','modules/base/users/ajaxAutocompleteGroup.php?uid=<?php echo  $user_uid; ?>', {paramName: "value"});
         new Ajax.Autocompleter('primary_autocomplete','primary_autocomplete_choices','modules/base/users/ajaxAutocompleteGroup.php', {paramName: "value"});
 
         function validOnEnter(field,event) {
@@ -109,7 +109,7 @@ sort($secondary);
                 $('autocomplete').value = '';
             }
             else {
-                window.alert("<?= _("This group doesn't exist"); ?>");
+                window.alert("<?php echo  _("This group doesn't exist"); ?>");
             }
         }
 
