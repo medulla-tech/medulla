@@ -32,22 +32,22 @@ require("../includes/ajaxcommon.inc.php");
 ?>
 
 <br/>
-<h2><?php echo _T('Server status for this entity', 'imaging')?></h2>
+<h2><?php echo _T('Server status for this entity', 'imaging') ?></h2>
 
 <div class="status">
 <div class="status_block">
-    <h3><?php echo _T('Space available on server', 'imaging')?></h3>
-    <?php echo $disk_info;?>
+    <h3><?php echo _T('Space available on server', 'imaging') ?></h3>
+    <?php echo $disk_info; ?>
 </div>
 <div class="status_block">
-    <h3><?php echo _T('Load on server', 'imaging')?></h3>
-    <?php echo $health;?>
+    <h3><?php echo _T('Load on server', 'imaging') ?></h3>
+    <?php echo $health; ?>
 </div>
 </div>
 
 <div class="status">
 <!--<div class="status_block">
-    <h3 style="display: inline"><?php echo _T('Synchronization state', 'imaging')?> : </h3>
+    <h3 style="display: inline"><?php echo _T('Synchronization state', 'imaging') ?> : </h3>
     <?
     $led = new LedElement('green');
     $led->display();
@@ -55,16 +55,16 @@ require("../includes/ajaxcommon.inc.php");
     ?>
 </div>-->
 <div class="status_block">
-    <h3><?php echo _T('Stats', 'imaging')?></h3>
-      <p class="stat"><img src="img/machines/icn_machinesList.gif" /> <strong><?php echo $short_status['rescue'];?></strong>/<?php echo $short_status['total'];?> <?php echo _T("client(s) have rescue image(s)", "imaging")?></p>                                                       <p class="stat"><img src="img/common/cd.png" />
-      <strong><?php echo $short_status['master'];?></strong>
-      <?php echo _T("masters are available", "imaging")?>
+    <h3><?php echo _T('Stats', 'imaging') ?></h3>
+      <p class="stat"><img src="img/machines/icn_machinesList.gif" /> <strong><?php echo $short_status['rescue']; ?></strong>/<?php echo $short_status['total']; ?> <?php echo _T("client(s) have rescue image(s)", "imaging") ?></p>                                                       <p class="stat"><img src="img/common/cd.png" />
+      <strong><?php echo $short_status['master']; ?></strong>
+      <?php echo _T("masters are available", "imaging") ?>
 </div>
 </div>
 
 <div class="spacer"></div>
 
-<h2 class="activity"><?php echo _T('Recent activity in entity', 'imaging')?></h2>
+<h2 class="activity"><?php echo _T('Recent activity in entity', 'imaging') ?></h2>
 
 <?
         $ajax = new AjaxFilter("modules/imaging/manage/ajaxLogs.php", "container_logs", array(), "Logs");

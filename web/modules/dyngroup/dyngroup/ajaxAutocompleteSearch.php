@@ -42,7 +42,7 @@ if (strlen($search) > 2) {
 
 print '<ul>';
 foreach($res as $items) {
-    ?> <li><?php echo  $items?></li> <?php 
+    ?> <li><?php echo  $items ?></li> <?php 
 }
 print '</ul>';
 

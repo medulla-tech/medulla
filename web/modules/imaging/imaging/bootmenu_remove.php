@@ -77,7 +77,7 @@ $params['bs_uuid'] = $bs_uuid;
 ?>
 <h2><?php echo  _T("Remove from boot menu", "imaging") ?></h2>
 
-<form action="<?php echo urlStr("base/computers/bootmenu_remove",$params)?>" method="post">
+<form action="<?php echo urlStr("base/computers/bootmenu_remove",$params) ?>" method="post">
     <p><?php printf(_T("Are you sure you want to remove <b>%s</b> from the boot menu ?", "imaging"), $label); ?></p>
     <input name='valid' type="submit" class="btnPrimary" value="<?php echo  _T("Remove", "imaging"); ?>" />
     <input name="bback" type="submit" class="btnSecondary" value="<?php echo  _T("Cancel", "imaging"); ?>" onClick="new Effect.Fade('popup'); return false;"/>

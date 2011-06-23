@@ -30,7 +30,7 @@ function drawGroupShare($nonmemb, $members, $listOfMembers, $diff, $gid, $name) 
 <tr>
  <td style="border: none;">
   <div class="list">
-    <h3><?php echo  _T("All share entities", "dyngroup");?></h3>
+    <h3><?php echo  _T("All share entities", "dyngroup"); ?></h3>
     <select multiple size="15" class="list" name="nonmemb[]">
     <?php
     foreach ($diff as $idx => $user) {
@@ -124,8 +124,8 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
 <table style="border: none;" cellspacing="0">
 <tr><td><?php echo  $label_name; ?></td><td></td><td><input name="name" value="<?php echo  $name ?>" type="text"/></td></tr>
 <tr><td><?php echo  $label_visible; ?></td><td></td><td>
-    <input name='visible' value='show' <?php if ($visibility == 'show') { echo 'checked'; }?> type='radio'/><?php echo  _T('Yes', 'dyngroup') ?>, 
-    <input name='visible' value='hide' <?php if ($visibility != 'show') { echo 'checked'; }?> type='radio'/><?php echo  _T('No', 'dyngroup') ?>
+    <input name='visible' value='show' <?php if ($visibility == 'show') { echo 'checked'; } ?> type='radio'/><?php echo  _T('Yes', 'dyngroup') ?>, 
+    <input name='visible' value='hide' <?php if ($visibility != 'show') { echo 'checked'; } ?> type='radio'/><?php echo  _T('No', 'dyngroup') ?>
 </td></tr>
 <!-- add all group inupts -->
 </table>
@@ -135,7 +135,7 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
 <tr>
  <td style="border: none;">
   <div class="list">
-    <h3><?php echo  _T("All machines", "dyngroup");?></h3>
+    <h3><?php echo  _T("All machines", "dyngroup"); ?></h3>
     <input name='filter' type='text' value='<?php echo  $filter ?>'/>
     <input type="image" name="bfiltmachine" style="padding: 5px;" src="img/common/icn_show.gif" value = "-->"/>
     <br/><br/>

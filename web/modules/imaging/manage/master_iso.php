@@ -61,7 +61,7 @@ if ($_POST) {
 }
 
 ?>
-<form action="<?php echo urlStr("imaging/manage/master_iso")?>" method="post">
+<form action="<?php echo urlStr("imaging/manage/master_iso") ?>" method="post">
 <h2><?php echo  sprintf(_T("Create iso for <strong>%s</strong>", "imaging"), $label) ?></h2>
 <table>
 <tr><td><?php echo  _T('Title', 'imaging'); ?></td><td> <input name="title" type="text" value="" /></td></tr>
@@ -77,8 +77,8 @@ several files of your media size will be created.</p>
 </select>
 </td></tr></table>
 <br/><br/>
-<input name="label" type="hidden" value="<?php echo $label?>" />
-<input name="itemid" type="hidden" value="<?php echo $id;?>" />
+<input name="label" type="hidden" value="<?php echo $label ?>" />
+<input name="itemid" type="hidden" value="<?php echo $id; ?>" />
 <input name="bgo" type="submit" class="btnPrimary" value="<?php echo  _T("Launch backup", "imaging"); ?>" />
 <input name="bback" type="submit" class="btnSecondary" value="<?php echo  _("Cancel"); ?>" onclick="new Effect.Fade('popup'); return false;" />
 </form>

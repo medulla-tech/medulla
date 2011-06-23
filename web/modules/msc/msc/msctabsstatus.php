@@ -147,7 +147,7 @@ function export_csv($cmd_id, $bundle_id, $state) {
 
 ?>
 <table width='100%'> <tr><td colspan='3'>
-<h3><?php echo  $title?>&nbsp;
+<h3><?php echo  $title ?>&nbsp;
 </h3></td><td>
 <a href='<?php echo  urlStr("base/computers/statuscsv", array('cmd_id'=>$cmd_id, 'bundle_id'=>$_GET['bundle_id'])) ?>'><img src='modules/msc/graph/csv.png' alt='export csv'/></a>
 </td></tr>

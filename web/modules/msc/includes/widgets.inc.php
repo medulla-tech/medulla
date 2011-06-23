@@ -316,7 +316,7 @@ class AjaxFilterCommands extends AjaxFilter {
 <?
 if(isset($this->storedfilter)) {
 ?>
-        document.Form<?php echo $this->formid?>.param.value = "<?php echo $this->storedfilter?>";
+        document.Form<?php echo $this->formid ?>.param.value = "<?php echo $this->storedfilter ?>";
 <?
 }    
 ?>
@@ -447,7 +447,7 @@ class AjaxFilterCommandsStates extends AjaxFilter {
 <?
 if(isset($this->storedfilter)) {
 ?>
-        document.Form<?php echo $this->formid?>.param.value = "<?php echo $this->storedfilter?>";
+        document.Form<?php echo $this->formid ?>.param.value = "<?php echo $this->storedfilter ?>";
 <?
 }    
 ?>

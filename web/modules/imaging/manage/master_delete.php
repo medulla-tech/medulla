@@ -49,7 +49,7 @@ if ($_POST) {
 
 ?>
 <h2><?php echo  _T("Delete master", "imaging") ?></h2>
-<form action="<?php echo urlStr("imaging/manage/master_delete")?>" method="post">
+<form action="<?php echo urlStr("imaging/manage/master_delete") ?>" method="post">
     <p><?php printf(_T("Are you sure you want to delete <b>%s</b> master ?", "imaging"), $label); ?></p>
     <input name='itemid' type='hidden' value="<?php echo  $id; ?>" />
     <input name='valid' type="submit" class="btnPrimary" value="<?php echo  _T("Remove", "imaging"); ?>" />

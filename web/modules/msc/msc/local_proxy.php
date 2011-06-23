@@ -64,18 +64,18 @@ function enableLocalProxyForm() {
     changeObjectDisplay('container_input_proxy_number', 'none');
 }
 </script>
-<input type="radio" name="local_proxy_selection_mode" value="semi_auto" onClick="javascript:disableLocalProxyForm();" <?php echo  $this->local_proxy_selection_mode == "manual" ? "" : "checked";?>><?php echo  _T("Random (indicate number of proxies) : ", "msc");?>
+<input type="radio" name="local_proxy_selection_mode" value="semi_auto" onClick="javascript:disableLocalProxyForm();" <?php echo  $this->local_proxy_selection_mode == "manual" ? "" : "checked"; ?>><?php echo  _T("Random (indicate number of proxies) : ", "msc"); ?>
 <?
 $num = new MyNumericInputTpl("proxy_number");
 $num->display(array('value' => $this->proxy_number));
 ?>
 <br />
-<input type="radio" name="local_proxy_selection_mode" value="manual" onClick="javascript:enableLocalProxyForm();" <?php echo  $this->local_proxy_selection_mode == "manual" ? "checked" : "";?>><?php echo  _T("Or designate the proxies manually below : ", "msc");?></input>
+<input type="radio" name="local_proxy_selection_mode" value="manual" onClick="javascript:enableLocalProxyForm();" <?php echo  $this->local_proxy_selection_mode == "manual" ? "checked" : ""; ?>><?php echo  _T("Or designate the proxies manually below : ", "msc"); ?></input>
     <table style="border: none;" cellspacing="0" id='localproxytable'>
     <tr>
      <td style="border: none;">
       <div class="list">
-        <h3><?php echo  _T("Computers in this command", "msc");?></h3>
+        <h3><?php echo  _T("Computers in this command", "msc"); ?></h3>
         <select multiple size="15" class="list" name="machines[]">
         <?php
         foreach ($this->diff as $idx => $machine) {

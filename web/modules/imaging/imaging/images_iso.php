@@ -76,7 +76,7 @@ if ($_POST) {
 
 ?>
 <h2><?php echo  sprintf(_T("Generate ISO for <strong>%s</strong>", "imaging"), $label) ?></h2>
-<form action="<?php echo urlStr("base/computers/images_iso",$params)?>" method="post">
+<form action="<?php echo urlStr("base/computers/images_iso",$params) ?>" method="post">
 <table>
 <tr><td><?php echo  _T('Title', 'imaging'); ?></td><td> <input name="title" type="text" value="" /></td></tr>
 <tr><td colspan="2">
@@ -91,8 +91,8 @@ if ($_POST) {
 </select>
 </td></tr></table>
 <br/><br/>
-<input name="label" type="hidden" value="<?php echo $label;?>" />
-<input name="itemid" type="hidden" value="<?php echo $id;?>" />
+<input name="label" type="hidden" value="<?php echo $label; ?>" />
+<input name="itemid" type="hidden" value="<?php echo $id; ?>" />
 <input name="bgo" type="submit" class="btnPrimary" value="<?php echo  _T("Start ISO generation", "imaging"); ?>" />
 <input name="bback" type="submit" class="btnSecondary" value="<?php echo  _("Cancel"); ?>" onclick="new Effect.Fade('popup'); return false;" />
 </form>
