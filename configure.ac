@@ -26,6 +26,10 @@ define([gitversion], esyscmd([sh -c "which git > /dev/null && git describe 2> /d
 AC_INIT(project, [3.0.2]gitversion, [http://www.mandriva.com])
 AC_DEFINE(GITVERSION, "gitversion", [Git version])
 
+AC_CANONICAL_BUILD
+AC_CANONICAL_HOST
+AC_CANONICAL_TARGET
+
 AM_INIT_AUTOMAKE([-Wno-portability])
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES(yes)])
 AC_CONFIG_MACRO_DIR([m4])
