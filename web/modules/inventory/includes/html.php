@@ -74,11 +74,11 @@ class AjaxFilterInventory extends AjaxFilter {
     function display(){
 
 ?>
-<form name="Form<?=$this->formid?>" id="Form<?=$this->formid?>" action="#" onsubmit="return false;">
+<form name="Form<?php echo $this->formid?>" id="Form<?php echo $this->formid?>" action="#" onsubmit="return false;">
     <div id="loader">
         <img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/>
     </div>
-    <div id="searchSpan<?=$this->formid?>" class="searchboxlog">
+    <div id="searchSpan<?php echo $this->formid?>" class="searchboxlog">
         <span class="searchfieldfilter">
 <?php
         $this->date->setSize(15);
@@ -94,9 +94,9 @@ class AjaxFilterInventory extends AjaxFilter {
 
         <span class="searchtools">
             <span id="searchfilter">
-                <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" /> <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param<?=$this->formid?>" onkeyup="pushSearch<?=$this->formid?>(); return false;" />
+                <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" /> <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param<?php echo $this->formid?>" onkeyup="pushSearch<?php echo $this->formid?>(); return false;" />
                 <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
-                onclick="document.getElementById('param<?=$this->formid?>').value =''; pushSearch<?=$this->formid?>(); return false;" />
+                onclick="document.getElementById('param<?php echo $this->formid?>').value =''; pushSearch<?php echo $this->formid?>(); return false;" />
                 </span>
             </span>
             <img src="img/common/reload.png" style="vertical-align: middle; margin-left: 10px; margin-right: 10px;" onclick="pushSearch(); return false;" title="<?php echo _("Refresh")?>" />
@@ -108,51 +108,51 @@ class AjaxFilterInventory extends AjaxFilter {
 <?
 if(!$this->formid) {
 ?>
-        document.getElementById('param<?=$this->formid?>').focus();
+        document.getElementById('param<?php echo $this->formid?>').focus();
 <?
 }
 if(isset($this->storedfilter)) {
 ?>
-        document.Form<?=$this->formid?>.param.value = "<?=$this->storedfilter?>";
+        document.Form<?php echo $this->formid?>.param.value = "<?php echo $this->storedfilter?>";
 <?
 }
 ?>
 
 
-        var refreshtimer<?=$this->formid?> = null;
-        var refreshparamtimer<?=$this->formid?> = null;
-        var refreshdelay<?=$this->formid?> = <?= $this->refresh ?>;
+        var refreshtimer<?php echo $this->formid?> = null;
+        var refreshparamtimer<?php echo $this->formid?> = null;
+        var refreshdelay<?php echo $this->formid?> = <?php echo  $this->refresh ?>;
         // Get the state of the software_value checkbox
         var software_filter = "";
-        if(document.Form<?=$this->formid?>.software_filter != undefined){
-            software_filter = document.Form<?=$this->formid?>.software_filter.checked;
+        if(document.Form<?php echo $this->formid?>.software_filter != undefined){
+            software_filter = document.Form<?php echo $this->formid?>.software_filter.checked;
         }
 
         /**
          * Clear the timers set vith setTimeout
          */
-        clearTimers<?=$this->formid?> = function() {
-            if (refreshtimer<?=$this->formid?> != null) {
-                clearTimeout(refreshtimer<?=$this->formid?>);
+        clearTimers<?php echo $this->formid?> = function() {
+            if (refreshtimer<?php echo $this->formid?> != null) {
+                clearTimeout(refreshtimer<?php echo $this->formid?>);
             }
-            if (refreshparamtimer<?=$this->formid?> != null) {
-                clearTimeout(refreshparamtimer<?=$this->formid?>);
+            if (refreshparamtimer<?php echo $this->formid?> != null) {
+                clearTimeout(refreshparamtimer<?php echo $this->formid?>);
             }
         }
 
         /**
          * Update div
          */
-        updateSearch<?=$this->formid?> = function() {
-            new Ajax.Updater('<?= $this->divid; ?>',
-            '<?= $this->url; ?>filter='+document.Form<?=$this->formid?>.param.value+'&date='+document.Form<?=$this->formid?>.date.value+'<?=$this->params?>&software_filter='+software_filter,
+        updateSearch<?php echo $this->formid?> = function() {
+            new Ajax.Updater('<?php echo  $this->divid; ?>',
+            '<?php echo  $this->url; ?>filter='+document.Form<?php echo $this->formid?>.param.value+'&date='+document.Form<?php echo $this->formid?>.date.value+'<?php echo $this->params?>&software_filter='+software_filter,
             { asynchronous:true, evalScripts: true}
             );
 
 <?
 if ($this->refresh) {
 ?>
-            //refreshtimer<?=$this->formid?> = setTimeout("updateSearch<?=$this->formid?>()", refreshdelay<?=$this->formid?>)
+            //refreshtimer<?php echo $this->formid?> = setTimeout("updateSearch<?php echo $this->formid?>()", refreshdelay<?php echo $this->formid?>)
 <?
 }
 ?>
@@ -161,14 +161,14 @@ if ($this->refresh) {
         /**
          * Update div when clicking previous / next
          */
-            updateSearchParam<?=$this->formid?> = function(filter, start, end) {
-            clearTimers<?=$this->formid?>();
-            new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+filter+'&start='+start+'&end='+end+'&date='+document.Form<?=$this->formid?>.date.value+'<?= $this->params ?>&software_filter='+software_filter, { asynchronous:true, evalScripts: true});
+            updateSearchParam<?php echo $this->formid?> = function(filter, start, end) {
+            clearTimers<?php echo $this->formid?>();
+            new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?>filter='+filter+'&start='+start+'&end='+end+'&date='+document.Form<?php echo $this->formid?>.date.value+'<?php echo  $this->params ?>&software_filter='+software_filter, { asynchronous:true, evalScripts: true});
 
 <?
 if ($this->refresh) {
 ?>
-            refreshparamtimer<?=$this->formid?> = setTimeout("updateSearchParam<?=$this->formid?>('"+filter+"',"+start+","+end+")", refreshdelay<?=$this->formid?>);
+            refreshparamtimer<?php echo $this->formid?> = setTimeout("updateSearchParam<?php echo $this->formid?>('"+filter+"',"+start+","+end+")", refreshdelay<?php echo $this->formid?>);
 <?
 }
 ?>
@@ -177,16 +177,16 @@ if ($this->refresh) {
         /**
          * wait 500ms and update search
          */
-        pushSearch<?=$this->formid?> = function() {
-            clearTimers<?=$this->formid?>();
-            refreshtimer<?=$this->formid?> = setTimeout("updateSearch<?=$this->formid?>()", 500);
+        pushSearch<?php echo $this->formid?> = function() {
+            clearTimers<?php echo $this->formid?>();
+            refreshtimer<?php echo $this->formid?> = setTimeout("updateSearch<?php echo $this->formid?>()", 500);
             // Refresh the state of the software_filter checkbox
-            if(document.Form<?=$this->formid?>.software_filter != undefined) {
-                software_filter = document.Form<?=$this->formid?>.software_filter.checked;
+            if(document.Form<?php echo $this->formid?>.software_filter != undefined) {
+                software_filter = document.Form<?php echo $this->formid?>.software_filter.checked;
             }
         }
 
-        pushSearch<?=$this->formid?>();
+        pushSearch<?php echo $this->formid?>();
 
     </script>
 

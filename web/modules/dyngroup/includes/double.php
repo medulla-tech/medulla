@@ -43,9 +43,9 @@ class DoubleAutocomplete {
     function display() {
     ?>
 
-    <td style="text-align:right;"><?= $this->field1;?> : </td>
+    <td style="text-align:right;"><?php echo  $this->field1;?> : </td>
     <td>
-        <input type="text" id="autocomplete" name="value" class="textfield" size="23" value="<?=$this->val?>" /> 
+        <input type="text" id="autocomplete" name="value" class="textfield" size="23" value="<?php echo $this->val?>" /> 
         <div id="autocomplete_choices" class="autocomplete">
             <ul>
                 <li>A</li>
@@ -54,14 +54,14 @@ class DoubleAutocomplete {
         </div>
     </td>
     <td id='secondButton'>
-        <input name="next" type="button" class="btnPrimary" value="<?= _T("->", "dyngroup"); ?>" onClick="addSlave('autocomplete'); return false;"/>
+        <input name="next" type="button" class="btnPrimary" value="<?php echo  _T("->", "dyngroup"); ?>" onClick="addSlave('autocomplete'); return false;"/>
     </td>
     </tr>
     </table>
      
     <div id='secondPart' style='visibility:hidden;'>
         <table><tr>
-        <td id='secondPart1' style="text-align:right;"><?= $this->field2;?> : </td>
+        <td id='secondPart1' style="text-align:right;"><?php echo  $this->field2;?> : </td>
         <td id='secondPart2'>
             <input type="text" id="autocomplete2" name="value2" class="textfield" size="23" /> 
             <div id="autocomplete2_choices" class="autocomplete">
@@ -72,7 +72,7 @@ class DoubleAutocomplete {
             </div>
         </td>
         <td id='secondPart3'>
-            <input name="buser" type="submit" class="btnPrimary" value="<?= $this->b_label; ?>" />   
+            <input name="buser" type="submit" class="btnPrimary" value="<?php echo  $this->b_label; ?>" />   
         </td>
         </tr></table>
     </div>
@@ -87,7 +87,7 @@ class DoubleAutocomplete {
 
             /* slave */
             new Ajax.Autocompleter('autocomplete2','autocomplete2_choices',
-                'main.php?module=base&submod=computers&action=ajaxAutocompleteSearch&modulename=<?= $this->module ?>&criterion=<?= $this->criterion ?>&value1='+value, {paramName: "value"});
+                'main.php?module=base&submod=computers&action=ajaxAutocompleteSearch&modulename=<?php echo  $this->module ?>&criterion=<?php echo  $this->criterion ?>&value1='+value, {paramName: "value"});
                 
             var secondPart = document.getElementById('secondPart');
 
@@ -107,7 +107,7 @@ class DoubleAutocomplete {
             include_once("modules/dyngroup/includes/xmlrpc.php");
         ?>
         new Ajax.Autocompleter('autocomplete','autocomplete_choices',
-            'main.php?module=base&submod=computers&action=ajaxAutocompleteSearch&modulename=<?= $this->module ?>&criterion=<?= $this->criterion ?>', {paramName: "value"});
+            'main.php?module=base&submod=computers&action=ajaxAutocompleteSearch&modulename=<?php echo  $this->module ?>&criterion=<?php echo  $this->criterion ?>', {paramName: "value"});
     -->
     </script>
     <?php

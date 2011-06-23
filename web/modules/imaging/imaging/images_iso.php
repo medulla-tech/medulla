@@ -75,15 +75,15 @@ if ($_POST) {
 }
 
 ?>
-<h2><?= sprintf(_T("Generate ISO for <strong>%s</strong>", "imaging"), $label) ?></h2>
-<form action="<?=urlStr("base/computers/images_iso",$params)?>" method="post">
+<h2><?php echo  sprintf(_T("Generate ISO for <strong>%s</strong>", "imaging"), $label) ?></h2>
+<form action="<?php echo urlStr("base/computers/images_iso",$params)?>" method="post">
 <table>
-<tr><td><?= _T('Title', 'imaging'); ?></td><td> <input name="title" type="text" value="" /></td></tr>
+<tr><td><?php echo  _T('Title', 'imaging'); ?></td><td> <input name="title" type="text" value="" /></td></tr>
 <tr><td colspan="2">
-    <p><?= _T("Please select media size. If your data exceeds the volume size, several files of your media size will be created.", "imaging"); ?></p>
+    <p><?php echo  _T("Please select media size. If your data exceeds the volume size, several files of your media size will be created.", "imaging"); ?></p>
 
 </td></tr>
-<tr><td><?= _T("Media size", "imaging"); ?></td><td>
+<tr><td><?php echo  _T("Media size", "imaging"); ?></td><td>
 <select name="media" />
 <option value="681574400">CD (650 Mo)</option>
 <option value="734003200">CD (700 Mo)</option>
@@ -91,8 +91,8 @@ if ($_POST) {
 </select>
 </td></tr></table>
 <br/><br/>
-<input name="label" type="hidden" value="<?=$label;?>" />
-<input name="itemid" type="hidden" value="<?=$id;?>" />
-<input name="bgo" type="submit" class="btnPrimary" value="<?= _T("Start ISO generation", "imaging"); ?>" />
-<input name="bback" type="submit" class="btnSecondary" value="<?= _("Cancel"); ?>" onclick="new Effect.Fade('popup'); return false;" />
+<input name="label" type="hidden" value="<?php echo $label;?>" />
+<input name="itemid" type="hidden" value="<?php echo $id;?>" />
+<input name="bgo" type="submit" class="btnPrimary" value="<?php echo  _T("Start ISO generation", "imaging"); ?>" />
+<input name="bback" type="submit" class="btnSecondary" value="<?php echo  _("Cancel"); ?>" onclick="new Effect.Fade('popup'); return false;" />
 </form>

@@ -119,7 +119,7 @@ if ($_GET['uuid'] != '') {
         $n->end = $maxperpage;
         $n->display();
     }
-    ?><a href='<?= urlStr("inventory/inventory/csv", array('table'=>$table, 'uuid'=>$_GET["uuid"])) ?>'><img src='modules/inventory/graph/csv.png' alt='export csv'/></a><?php
+    ?><a href='<?php echo  urlStr("inventory/inventory/csv", array('table'=>$table, 'uuid'=>$_GET["uuid"])) ?>'><img src='modules/inventory/graph/csv.png' alt='export csv'/></a><?php
 } else {
     $display = $_GET['part'];
     $machines = getLastMachineInventoryPart($display, array('gid'=>$_GET["gid"], 'filter'=>$filter, 'min'=>$start, 'max'=>($start + $maxperpage), 'date'=>$date, 'software_filter'=>$software_filter));
@@ -202,7 +202,7 @@ if ($_GET['uuid'] != '') {
         $n->end = $maxperpage;
         $n->display();
     }
-    ?><a href='<?= urlStr("inventory/inventory/csv", array('table'=>$display, 'gid'=>$_GET["gid"], 'filter' => $_GET['filter'])) ?>'><img src='modules/inventory/graph/csv.png' alt='export csv'/></a><?php
+    ?><a href='<?php echo  urlStr("inventory/inventory/csv", array('table'=>$display, 'gid'=>$_GET["gid"], 'filter' => $_GET['filter'])) ?>'><img src='modules/inventory/graph/csv.png' alt='export csv'/></a><?php
 }
 
 ?>

@@ -24,13 +24,13 @@
 function drawGroupShare($nonmemb, $members, $listOfMembers, $diff, $gid, $name) {
 ?>
 <form action="<?php echo $_SERVER["REQUEST_URI"]; ?>" method="post">
-<input name="name" value="<?= $name ?>" type="hidden" />
+<input name="name" value="<?php echo  $name ?>" type="hidden" />
 <div id="grouplist">
 <table style="border: none;" cellspacing="0">
 <tr>
  <td style="border: none;">
   <div class="list">
-    <h3><?= _T("All share entities", "dyngroup");?></h3>
+    <h3><?php echo  _T("All share entities", "dyngroup");?></h3>
     <select multiple size="15" class="list" name="nonmemb[]">
     <?php
     foreach ($diff as $idx => $user) {
@@ -53,7 +53,7 @@ function drawGroupShare($nonmemb, $members, $listOfMembers, $diff, $gid, $name) 
  </td>
  <td style="border: none;">
   <div class="list" style="padding-left: 10px;">
-    <h3><?= _T("Group share", "dyngroup"); ?></h3>
+    <h3><?php echo  _T("Group share", "dyngroup"); ?></h3>
     <select multiple size="15" class="list" name="members[]">
     <?php
     foreach ($members as $idx => $member) {
@@ -76,9 +76,9 @@ function drawGroupShare($nonmemb, $members, $listOfMembers, $diff, $gid, $name) 
 <input type="hidden" name="lnonmemb" value="<?php echo base64_encode(serialize($nonmemb)); ?>" />
 <input type="hidden" name="lmembers" value="<?php echo base64_encode(serialize($members)); ?>" />
 <input type="hidden" name="lsmembers" value="<?php echo base64_encode(serialize($listOfMembers)); ?>" />
-<input type="hidden" name="id" value="<?= $gid ?>" />
-<input type="submit" name="bconfirm" class="btnPrimary" value="<?= _("Confirm"); ?>" />
-<input type="submit" name="breset" class="btnSecondary" value="<?= _("Cancel"); ?>" />
+<input type="hidden" name="id" value="<?php echo  $gid ?>" />
+<input type="submit" name="bconfirm" class="btnPrimary" value="<?php echo  _("Confirm"); ?>" />
+<input type="submit" name="breset" class="btnSecondary" value="<?php echo  _("Cancel"); ?>" />
 </form>
 
 <style type="text/css">
@@ -122,10 +122,10 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
 
 <form action="<?php echo $_SERVER["REQUEST_URI"]; ?>" method="post">
 <table style="border: none;" cellspacing="0">
-<tr><td><?= $label_name; ?></td><td></td><td><input name="name" value="<?= $name ?>" type="text"/></td></tr>
-<tr><td><?= $label_visible; ?></td><td></td><td>
-    <input name='visible' value='show' <?php if ($visibility == 'show') { echo 'checked'; }?> type='radio'/><?= _T('Yes', 'dyngroup') ?>, 
-    <input name='visible' value='hide' <?php if ($visibility != 'show') { echo 'checked'; }?> type='radio'/><?= _T('No', 'dyngroup') ?>
+<tr><td><?php echo  $label_name; ?></td><td></td><td><input name="name" value="<?php echo  $name ?>" type="text"/></td></tr>
+<tr><td><?php echo  $label_visible; ?></td><td></td><td>
+    <input name='visible' value='show' <?php if ($visibility == 'show') { echo 'checked'; }?> type='radio'/><?php echo  _T('Yes', 'dyngroup') ?>, 
+    <input name='visible' value='hide' <?php if ($visibility != 'show') { echo 'checked'; }?> type='radio'/><?php echo  _T('No', 'dyngroup') ?>
 </td></tr>
 <!-- add all group inupts -->
 </table>
@@ -135,8 +135,8 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
 <tr>
  <td style="border: none;">
   <div class="list">
-    <h3><?= _T("All machines", "dyngroup");?></h3>
-    <input name='filter' type='text' value='<?= $filter ?>'/>
+    <h3><?php echo  _T("All machines", "dyngroup");?></h3>
+    <input name='filter' type='text' value='<?php echo  $filter ?>'/>
     <input type="image" name="bfiltmachine" style="padding: 5px;" src="img/common/icn_show.gif" value = "-->"/>
     <br/><br/>
     <select multiple size="13" class="list" name="machines[]">
@@ -158,7 +158,7 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
  </td>
  <td style="border: none;">
   <div class="list" style="padding-left: 10px;">
-    <h3><?= $label_members; ?></h3>
+    <h3><?php echo  $label_members; ?></h3>
     <select multiple size="15" class="list" name="members[]">
     <?php
     foreach ($members as $idx => $member) {
@@ -175,13 +175,13 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
 </table>
 </div>
 
-<input type="hidden" name="type" value="<?= $type; ?>" />
+<input type="hidden" name="type" value="<?php echo  $type; ?>" />
 <input type="hidden" name="lmachines" value="<?php echo base64_encode(serialize($machines)); ?>" />
 <input type="hidden" name="lmembers" value="<?php echo base64_encode(serialize($members)); ?>" />
 <input type="hidden" name="lsmembers" value="<?php echo base64_encode(serialize($listOfMembers)); ?>" />
-<input type="hidden" name="id" value="<?= $gid ?>" />
-<input type="submit" name="bconfirm" class="btnPrimary" value="<?= _("Confirm"); ?>" />
-<input type="submit" name="breset" class="btnSecondary" value="<?= _("Cancel"); ?>" />
+<input type="hidden" name="id" value="<?php echo  $gid ?>" />
+<input type="submit" name="bconfirm" class="btnPrimary" value="<?php echo  _("Confirm"); ?>" />
+<input type="submit" name="breset" class="btnSecondary" value="<?php echo  _("Cancel"); ?>" />
 </form>
 
 <style type="text/css">

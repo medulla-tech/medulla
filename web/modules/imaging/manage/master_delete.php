@@ -48,10 +48,10 @@ if ($_POST) {
 // $masters = xmlrpc_getLocationMastersByUUID($location, array($id));
 
 ?>
-<h2><?= _T("Delete master", "imaging") ?></h2>
-<form action="<?=urlStr("imaging/manage/master_delete")?>" method="post">
+<h2><?php echo  _T("Delete master", "imaging") ?></h2>
+<form action="<?php echo urlStr("imaging/manage/master_delete")?>" method="post">
     <p><?php printf(_T("Are you sure you want to delete <b>%s</b> master ?", "imaging"), $label); ?></p>
-    <input name='itemid' type='hidden' value="<?= $id; ?>" />
-    <input name='valid' type="submit" class="btnPrimary" value="<?= _T("Remove", "imaging"); ?>" />
-    <input name="bback" type="submit" class="btnSecondary" value="<?= _T("Cancel", "imaging"); ?>" onClick="new Effect.Fade('popup'); return false;"/>
+    <input name='itemid' type='hidden' value="<?php echo  $id; ?>" />
+    <input name='valid' type="submit" class="btnPrimary" value="<?php echo  _T("Remove", "imaging"); ?>" />
+    <input name="bback" type="submit" class="btnSecondary" value="<?php echo  _T("Cancel", "imaging"); ?>" onClick="new Effect.Fade('popup'); return false;"/>
 </form>

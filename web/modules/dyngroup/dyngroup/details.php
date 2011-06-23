@@ -29,7 +29,7 @@ if ($group->isDyn()) {
     $group = $group->toDyn();
 }
 
-?> <h2><?= sprintf(_T("%s's details", 'dyngroup'), $group->getName()) ?></h2> <?php
+?> <h2><?php echo  sprintf(_T("%s's details", 'dyngroup'), $group->getName()) ?></h2> <?php
 
 if ($_GET['bregen'] || $_POST['bregen']) {
     $group->reload();
@@ -46,8 +46,8 @@ if ($_GET['bhide'] || $_POST['bhide']) {
 
 //$group->prettyDisplay();
 
-?> <form action="<?= urlStr("base/computers/details", array('id'=>$id)) ?>" method="post"> <?php  
-?> <input name="bback" type="submit" class="btnPrimary" value="<?= _T("Close", "dyngroup") ?>" onClick="new Effect.Fade('popup'); return false;"/> <?
+?> <form action="<?php echo  urlStr("base/computers/details", array('id'=>$id)) ?>" method="post"> <?php  
+?> <input name="bback" type="submit" class="btnPrimary" value="<?php echo  _T("Close", "dyngroup") ?>" onClick="new Effect.Fade('popup'); return false;"/> <?
 
 if ($group->isDyn() && $group->isGroup()) {
     print '<input name="bregen" type="submit" class="btnSecondary" value="'._T("Regenerate", "dyngroup").'"/>';

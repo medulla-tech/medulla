@@ -65,13 +65,13 @@ class RenderedMSCBundleChoice {
     function display_start() {
 ?>
 <form method="post">
-<input name='name' value='<?= $this->name ?>' type='hidden'/>
+<input name='name' value='<?php echo  $this->name ?>' type='hidden'/>
 <div id="grouplist">
 <table style="border: none;" cellspacing="0">
 <tr>
  <td style="border: none;">
   <div class="list">
-    <h3><?= $this->title_left; ?></h3>
+    <h3><?php echo  $this->title_left; ?></h3>
     <select multiple size="15" class="list" name="nonmemb[]">
     <?php
     foreach ($this->diff as $idx => $value) {
@@ -90,7 +90,7 @@ class RenderedMSCBundleChoice {
  </td>
  <td style="border: none;">
   <div class="list" style="padding-left: 10px;">
-    <h3><?= $this->title_right; ?></h3>
+    <h3><?php echo  $this->title_right; ?></h3>
     <select multiple size="15" class="list" name="members[]">
     <?php
     foreach ($this->members as $idx => $member) {
@@ -115,7 +115,7 @@ class RenderedMSCBundleChoice {
 
     function display_end() {
 ?>
-<input type="submit" name="bsort_bundle" class="btnPrimary" value="<?= _T("Set order", "msc"); ?>" />
+<input type="submit" name="bsort_bundle" class="btnPrimary" value="<?php echo  _T("Set order", "msc"); ?>" />
 </form>
 
 <style type="text/css">

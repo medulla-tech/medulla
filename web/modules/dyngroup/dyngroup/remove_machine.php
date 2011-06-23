@@ -33,18 +33,18 @@ if (quickGet('valid')) {
     header("Location: " . urlStrRedirect("base/computers/display", array('gid'=>$gid)));
 }
 
-?> <h2><?= _T("Remove a computer", "dyngroup") ?></h2> <?php
+?> <h2><?php echo  _T("Remove a computer", "dyngroup") ?></h2> <?php
 
 ?>
 
-<form action="<?= urlStr("base/computers/remove_machine", array('gid'=>$gid, 'hostname'=>$machine, 'objectUUID'=>$uuid)) ?>" method="post">
+<form action="<?php echo  urlStr("base/computers/remove_machine", array('gid'=>$gid, 'hostname'=>$machine, 'objectUUID'=>$uuid)) ?>" method="post">
 <p>
 <?
     printf(_T("You will remove computer <b>%s</b> from group <b>%s</b>.", "dyngroup"), $machine, $group->getName());
 ?>
 </p>
-<input name='valid' type="submit" class="btnPrimary" value="<?= _T("Remove Computer", "dyngroup"); ?>" />
-<input name="bback" type="submit" class="btnSecondary" value="<?= _T("Cancel", "dyngroup"); ?>" onClick="new Effect.Fade('popup'); return false;"/>
+<input name='valid' type="submit" class="btnPrimary" value="<?php echo  _T("Remove Computer", "dyngroup"); ?>" />
+<input name="bback" type="submit" class="btnSecondary" value="<?php echo  _T("Cancel", "dyngroup"); ?>" onClick="new Effect.Fade('popup'); return false;"/>
 </form>
 
 

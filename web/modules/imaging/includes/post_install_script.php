@@ -78,14 +78,14 @@ function print_exclusive_orders_js($a_pis_id) {
     <script type='text/javascript'>
     <!--
         function exclusive_orders(self_element) {
-            var all_selects = ['<?= implode("', '", $a_pis_id);  ?>'];
+            var all_selects = ['<?php echo  implode("', '", $a_pis_id);  ?>'];
             for (var i = 0; i < all_selects.length; i++) {
                 var sel = all_selects[i];
                 var elem = document.getElementById(sel);
                 if (self_element.name != elem.name) {
                     if (self_element.value == elem.value && self_element.value != 'None') {
                         self_element.value = "None";
-                        alert("<?= _T("This values is already taken, please only put one element for each order.", "imaging"); ?>");
+                        alert("<?php echo  _T("This values is already taken, please only put one element for each order.", "imaging"); ?>");
                         break;
                     } else if (self_element.value == 'None') {
                         break;

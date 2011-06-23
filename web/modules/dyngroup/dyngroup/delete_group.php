@@ -47,9 +47,9 @@ if (quickGet('valid')) {
 
 ?>
 
-<h2><?= $title ?></h2>
+<h2><?php echo  $title ?></h2>
 
-<form action="<?= urlStr("base/computers/delete_group", array('gid'=>$id, 'type'=>$type)) ?>" method="post">
+<form action="<?php echo  urlStr("base/computers/delete_group", array('gid'=>$id, 'type'=>$type)) ?>" method="post">
 <p>
 
 <?
@@ -57,6 +57,6 @@ if (quickGet('valid')) {
 ?>
 
 </p>
-<input name='valid' type="submit" class="btnPrimary" value="<?= $delete ?>" />
-<input name="bback" type="submit" class="btnSecondary" value="<?= _T("Cancel", "dyngroup"); ?>" onClick="new Effect.Fade('popup'); return false;"/>
+<input name='valid' type="submit" class="btnPrimary" value="<?php echo  $delete ?>" />
+<input name="bback" type="submit" class="btnSecondary" value="<?php echo  _T("Cancel", "dyngroup"); ?>" onClick="new Effect.Fade('popup'); return false;"/>
 </form>

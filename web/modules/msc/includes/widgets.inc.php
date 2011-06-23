@@ -311,12 +311,12 @@ class AjaxFilterCommands extends AjaxFilter {
         document.getElementById('param').focus();
         var refreshtimer = null;
         var refreshparamtimer = null;
-        var refreshdelay = <?= $this->refresh ?>;
+        var refreshdelay = <?php echo  $this->refresh ?>;
 
 <?
 if(isset($this->storedfilter)) {
 ?>
-        document.Form<?=$this->formid?>.param.value = "<?=$this->storedfilter?>";
+        document.Form<?php echo $this->formid?>.param.value = "<?php echo $this->storedfilter?>";
 <?
 }    
 ?>
@@ -336,7 +336,7 @@ if(isset($this->storedfilter)) {
          * Update div
          */
         function updateSearch() {
-            new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+document.Form.param.value+'<?= $this->params ?>&<?= $this->paramname ?>='+document.Form.<?= $this->paramname ?>.value, { asynchronous:true, evalScripts: true});
+            new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?>filter='+document.Form.param.value+'<?php echo  $this->params ?>&<?php echo  $this->paramname ?>='+document.Form.<?php echo  $this->paramname ?>.value, { asynchronous:true, evalScripts: true});
 
 <?
 if ($this->refresh) {
@@ -352,7 +352,7 @@ if ($this->refresh) {
          */
         function updateSearchParam(filter, start, end) {
             clearTimers();
-            new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+filter+'<?= $this->params ?>&<?= $this->paramname ?>='+document.Form.<?= $this->paramname ?>.value+'&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
+            new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?>filter='+filter+'<?php echo  $this->params ?>&<?php echo  $this->paramname ?>='+document.Form.<?php echo  $this->paramname ?>.value+'&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
 
 <?
 if ($this->refresh) {
@@ -442,12 +442,12 @@ class AjaxFilterCommandsStates extends AjaxFilter {
         document.getElementById('param').focus();
         var refreshtimer = null;
         var refreshparamtimer = null;
-        var refreshdelay = <?= $this->refresh ?>;
+        var refreshdelay = <?php echo  $this->refresh ?>;
 
 <?
 if(isset($this->storedfilter)) {
 ?>
-        document.Form<?=$this->formid?>.param.value = "<?=$this->storedfilter?>";
+        document.Form<?php echo $this->formid?>.param.value = "<?php echo $this->storedfilter?>";
 <?
 }    
 ?>
@@ -468,7 +468,7 @@ if(isset($this->storedfilter)) {
          */
         function updateSearch() {
             clearTimers();
-            new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+document.Form.param.value+'<?= $this->params ?>&<?= $this->paramname1 ?>='+document.Form.<?= $this->paramname1 ?>.value+'&<?= $this->paramname2 ?>='+document.Form.<?= $this->paramname2 ?>.value, { asynchronous:true, evalScripts: true});
+            new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?>filter='+document.Form.param.value+'<?php echo  $this->params ?>&<?php echo  $this->paramname1 ?>='+document.Form.<?php echo  $this->paramname1 ?>.value+'&<?php echo  $this->paramname2 ?>='+document.Form.<?php echo  $this->paramname2 ?>.value, { asynchronous:true, evalScripts: true});
 
 <?
 if ($this->refresh) {
@@ -483,9 +483,9 @@ if ($this->refresh) {
          *
          */
         function updateStates() {
-            var ind = document.getElementById('<?= $this->paramname2; ?>');
+            var ind = document.getElementById('<?php echo  $this->paramname2; ?>');
             var val = ind.options[ind.selectedIndex].value;
-            new Ajax.Updater('<?= $this->paramname2; ?>', '<?= urlStrRedirect('msc/logs/state_list', array('paramname2'=>$this->paramname2)); ?>&<?= $this->paramname1 ?>='+document.Form.<?= $this->paramname1 ?>.value+'&selected='+document.Form.<?= $this->paramname2 ?>.value, {asynchronous:true, evalScripts: true });
+            new Ajax.Updater('<?php echo  $this->paramname2; ?>', '<?php echo  urlStrRedirect('msc/logs/state_list', array('paramname2'=>$this->paramname2)); ?>&<?php echo  $this->paramname1 ?>='+document.Form.<?php echo  $this->paramname1 ?>.value+'&selected='+document.Form.<?php echo  $this->paramname2 ?>.value, {asynchronous:true, evalScripts: true });
             refreshtimer = setTimeout("updateSearch()", 500);
         }
 
@@ -494,7 +494,7 @@ if ($this->refresh) {
          */
         function updateSearchParam(filter, start, end) {
             clearTimers();
-            new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+filter+'<?= $this->params ?>&<?= $this->paramname1 ?>='+document.Form.<?= $this->paramname1 ?>.value+'&<?= $this->paramname2 ?>='+document.Form.<?= $this->paramname2 ?>.value+'&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
+            new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?>filter='+filter+'<?php echo  $this->params ?>&<?php echo  $this->paramname1 ?>='+document.Form.<?php echo  $this->paramname1 ?>.value+'&<?php echo  $this->paramname2 ?>='+document.Form.<?php echo  $this->paramname2 ?>.value+'&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
 
 <?
 if ($this->refresh) {

@@ -35,16 +35,16 @@ class Autocomplete {
     function display() {
     ?>
 
-    <td style="text-align:right;"><?= _T("Add a value", "dyngroup");?></td><td>
+    <td style="text-align:right;"><?php echo  _T("Add a value", "dyngroup");?></td><td>
 
-    <input type="text" id="autocomplete" name="value" class="textfield" size="23" value="<?=$this->val?>" /> 
+    <input type="text" id="autocomplete" name="value" class="textfield" size="23" value="<?php echo $this->val?>" /> 
     <div id="autocomplete_choices" class="autocomplete">
         <ul>
             <li>A</li>
             <li>B</li>
         </ul>
     </div>
-    <input name="buser" type="submit" class="btnPrimary" value="<?= $this->b_label; ?>"/> 
+    <input name="buser" type="submit" class="btnPrimary" value="<?php echo  $this->b_label; ?>"/> 
     </td></tr>
     </table>
     
@@ -53,7 +53,7 @@ class Autocomplete {
     <!--
         var groups = new Array();
         new Ajax.Autocompleter('autocomplete','autocomplete_choices',
-            'main.php?module=base&submod=computers&action=ajaxAutocompleteSearch&modulename=<?= $this->module ?>&criterion=<?= $this->criterion ?>', {paramName: "value", frequency: 2.0});
+            'main.php?module=base&submod=computers&action=ajaxAutocompleteSearch&modulename=<?php echo  $this->module ?>&criterion=<?php echo  $this->criterion ?>', {paramName: "value", frequency: 2.0});
     -->
     </script>
     <?php
