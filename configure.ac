@@ -21,9 +21,9 @@ dnl autoconf version
 AC_PREREQ(2.59)
 
 dnl autoconf initialization
-define([project], [mmc])
+define([project], [mmc-core])
 define([gitversion], esyscmd([sh -c "which git > /dev/null && git describe | sed -e 's/]project[-\([^-]\+\)//' | tr -d '\n' || true"]))dnl
-AC_INIT(project, [3.0.1]gitversion, [http://www.mandriva.com])
+AC_INIT(project, [3.0.2]gitversion, [http://www.mandriva.com])
 AC_DEFINE(GITVERSION, "gitversion", [Git version])
 
 AC_CANONICAL_BUILD
@@ -63,12 +63,6 @@ fi
 
 dnl check for libraries
 
-dnl Check for Python modules
-AX_PYTHON_MODULE([sqlalchemy], [1])
-AX_PYTHON_MODULE([MySQLdb], [1])
-AX_PYTHON_MODULE([ldap], [1])
-AX_PYTHON_MODULE([OpenSSL], [1])
-
 dnl check for headers
 AC_HEADER_STDC
 # TODO: check for slap.h header
@@ -89,6 +83,26 @@ AC_ARG_ENABLE([python],
               [],
               [enable_python="yes"])
 AM_CONDITIONAL([ENABLE_PYTHON], [test "$enable_python" = "yes"])
+
+dnl
+dnl --disable-python-check
+dnl   Do not check python modules on configure
+dnl
+AC_ARG_ENABLE([python-check],
+              [AS_HELP_STRING([--disable-python-check],
+                              [Do not check python modules on configure @<:@default=enable@:>@])],
+              [],
+              [enable_python_check="yes"])
+AM_CONDITIONAL([ENABLE_PYTHON_CHECK], [test "$enable_python_check" = "yes"])
+
+dnl Check for Python modules
+if test "x$enable_python_check" = "xyes"; then
+    AX_PYTHON_MODULE([sqlalchemy], [1])
+    AX_PYTHON_MODULE([MySQLdb], [1])
+    AX_PYTHON_MODULE([ldap], [1])
+    AX_PYTHON_MODULE([OpenSSL], [1])
+fi
+
 
 dnl
 dnl --disable-conf
