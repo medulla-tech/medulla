@@ -17,65 +17,14 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 
 set -e
 
 $(dirname $0)/clean.sh
 
-#
-# check tools version number -- we require >= 1.10
-#
-find_tools() {
-    tool=$1
-
-    if [ -s "$(which $tool-1.10)" ]; then
-        TOOL=$tool-1.10
-    elif [ -s "$(which $tool)" ]; then
-        major=`$tool --version | grep $tool | awk {'print \$4'} | awk -F '.' {'print \$1'}`
-        minor=`$tool --version | grep $tool | awk {'print \$4'} | awk -F '.' {'print \$2'}`
-        if test "$major" -gt 1; then
-            TOOL=$tool
-        elif test "$major" -eq 1 -a "$minor" -ge 10; then
-            TOOL=$tool
-        else
-            echo "Required: $tool version >= 1.10" >&2
-            exit 1
-        fi
-    else
-        echo "Required: $tool version >= 1.10" >&2
-        exit 1
-    fi
-
-    echo "$TOOL"
-}
-
-# Find required tools:
-ACLOCAL=$(find_tools aclocal)
-AUTOMAKE=$(find_tools automake)
-if [ -z "$(which libtool)" ]; then
-    echo "Required: libtool"
-    exit 1
-fi
-
-# Test if autoconf >= 2.62
-eval `autoconf --version | sed '1!d; s/^.*\([0-9]\+\)\.\([0-9]\+\)$/major=\1 minor=\2/'`
-if ! test -n "$major" -a -n "$minor" -a $major -eq 2 -a $minor -ge 62; then
-    echo "autoconf >= 2.62 is required"
-    exit 2
-fi
-
-# Run the actual process:
-if test -f $(dirname $0)/configure.ac; then
-    (
-        cd $(dirname $0)
-        echo "Regenerating autoconf files"
-        $ACLOCAL -I m4
-        libtoolize -c
-        #autoheader
-        $AUTOMAKE --add-missing --copy
-        autoconf
-        )
-fi
+# Replace old stuff with the new intelligent autoreconf
+# http://www.gnu.org/s/libtool/manual/automake/Error-required-file-ltmain_002esh-not-found.html
+autoreconf --install
 
 exit 0
