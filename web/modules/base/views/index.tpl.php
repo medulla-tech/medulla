@@ -40,7 +40,7 @@
     </script>
 </form>
 
-<h2><?php echo  _("User list");?></h2>
+<h2><?php echo  _("User list"); ?></h2>
 
 <div class="fixheight"></div>
 <div id="userContainer">

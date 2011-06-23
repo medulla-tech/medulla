@@ -377,7 +377,7 @@ class AjaxFilterLog extends AjaxFilter {
             </select>    
             <span id="searchfilter">
             </span>    
-            <img src="img/common/reload.png" style="vertical-align: middle; margin-left: 10px; margin-right: 10px;" onclick="pushSearch(); return false;" title="<?php echo _("Refresh")?>" />
+            <img src="img/common/reload.png" style="vertical-align: middle; margin-left: 10px; margin-right: 10px;" onclick="pushSearch(); return false;" title="<?php echo _("Refresh") ?>" />
         </span>
     </span>&nbsp;
     </div>

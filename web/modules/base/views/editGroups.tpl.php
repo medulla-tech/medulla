@@ -64,7 +64,7 @@ sort($secondary);
 
     </td>
     </tr>
-    <tr><td style="text-align:right;"><?php echo  _("Add user to group");?></td><td>
+    <tr><td style="text-align:right;"><?php echo  _("Add user to group"); ?></td><td>
 
     <input type="text" id="autocomplete" name="autocomplete" class="textfield" size="23" onkeypress="return validOnEnter(this,event);" />
     <div id="autocomplete_choices" class="autocomplete">

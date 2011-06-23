@@ -104,7 +104,7 @@ callPluginFunction("baseGroupEdit", array($detailArr, $_POST));
 <input name="badd" type="submit" class="btnPrimary" value="<?php echo  _("Create"); ?>" />
 <?php } else { ?>
 <input name="groupname" type="hidden" value="<?php echo  $groupname; ?>" />
-<input name="bmodify" type="submit" class="btnPrimary" value="<?php echo  _("Confirm");?>" /> 
+<input name="bmodify" type="submit" class="btnPrimary" value="<?php echo  _("Confirm"); ?>" /> 
 <?php
 }
 

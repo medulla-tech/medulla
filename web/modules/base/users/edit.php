@@ -465,7 +465,7 @@ $test->display(array("value" => $checked));
 
 ?>
 </table>
-<div id="expertMode" <?displayExpertCss();?>>
+<div id="expertMode" <?displayExpertCss(); ?>>
 <table cellspacing="0">
 <?php
 
@@ -488,10 +488,10 @@ $test->display(array("value"=> $user_cn));
 $test = new TrFormElement(_("Preferred name to be used"),new InputTpl("displayName"),
 			  array("tooltip" => _("This field is used by SAMBA (and other LDAP clients) to display user name."))
 			  );
-$test->display(array("value"=> $user_displayName));?>
+$test->display(array("value"=> $user_displayName)); ?>
 
 <tr><td style="text-align: right;"><?php print "UID : ".$detailArr["uidNumber"][0]; ?></td>
-<td><?php print "GID : ".$detailArr["gidNumber"][0];?></td></tr>
+<td><?php print "GID : ".$detailArr["gidNumber"][0]; ?></td></tr>
 
 </table>
 </div>

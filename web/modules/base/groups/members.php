@@ -134,7 +134,7 @@ $p->display();
 <table style="border: none;" cellspacing="0">
 <tr><td style="border: none;">
   <div class="list">
-        <h3><?php echo  _("All users");?></h3>
+        <h3><?php echo  _("All users"); ?></h3>
     <select multiple size="15" class="list" name="users[]">
 <?php
 foreach ($diff as $user) {
