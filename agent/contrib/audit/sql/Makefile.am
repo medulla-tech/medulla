@@ -20,7 +20,7 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-sqldir = $(pkgdatadir)/sql/audit
+sqldir = $(datadir)/mmc/sql/audit
 dist_sql_SCRIPTS = install.sh
 dist_sql_DATA = \
 	schema-2.sql

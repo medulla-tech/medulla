@@ -20,5 +20,5 @@
 # Author(s)
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-backupdir = $(pkglibdir)/backup-tools
+backupdir = $(libdir)/mmc/backup-tools
 dist_backup_SCRIPTS = cdlist backup.sh
