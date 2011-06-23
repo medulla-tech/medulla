@@ -430,6 +430,6 @@ class AjaxFilterLog extends AjaxFilter {
     </script>
 
 </form>
-<?        
+<?php        
           }
 }

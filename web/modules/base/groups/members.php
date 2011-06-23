@@ -128,7 +128,7 @@ $p->display();
 
 ?>
 
-<form action="<? echo $_SERVER["REQUEST_URI"]; ?>" method="post">
+<form action="<?php echo $_SERVER["REQUEST_URI"]; ?>" method="post">
 
 <div id="grouplist">
 <table style="border: none;" cellspacing="0">

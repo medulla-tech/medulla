@@ -46,7 +46,7 @@ if (isset($_POST["bchpasswd"]) && ($_POST["curpass"] != "") && ($_POST["newpass"
 
 ?>
 
-<form action="<? echo "main.php?module=base&submod=users&action=index"; ?>" method="post">
+<form action="<?php echo "main.php?module=base&submod=users&action=index"; ?>" method="post">
 <input type="submit" name="bback" class="btnPrimary" value="<?= _("Change your user's password") ?>" />
 </form>
 
@@ -55,7 +55,7 @@ if (isset($_POST["bchpasswd"]) && ($_POST["curpass"] != "") && ($_POST["newpass"
 else
 {
 ?>
-<form action="<? echo "main.php?module=base&submod=users&action=passwd"; ?>" method="post">
+<form action="<?php echo "main.php?module=base&submod=users&action=passwd"; ?>" method="post">
 <p>
 <?= _("You are going to change your password") ?>
 </p>

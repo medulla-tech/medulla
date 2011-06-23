@@ -490,8 +490,8 @@ $test = new TrFormElement(_("Preferred name to be used"),new InputTpl("displayNa
 			  );
 $test->display(array("value"=> $user_displayName));?>
 
-<tr><td style="text-align: right;"><? print "UID : ".$detailArr["uidNumber"][0]; ?></td>
-<td><? print "GID : ".$detailArr["gidNumber"][0];?></td></tr>
+<tr><td style="text-align: right;"><?php print "UID : ".$detailArr["uidNumber"][0]; ?></td>
+<td><?php print "GID : ".$detailArr["gidNumber"][0];?></td></tr>
 
 </table>
 </div>

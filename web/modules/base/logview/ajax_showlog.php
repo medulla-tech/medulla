@@ -1,4 +1,4 @@
-<? if ($_SESSION['__notify'])  { ?>
+<?php if ($_SESSION['__notify'])  { ?>
 <script>
     window.location= 'main.php'
 </script>
