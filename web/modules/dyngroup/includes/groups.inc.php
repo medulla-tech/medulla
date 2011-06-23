@@ -23,7 +23,7 @@
 
 function drawGroupShare($nonmemb, $members, $listOfMembers, $diff, $gid, $name) {
 ?>
-<form action="<? echo $_SERVER["REQUEST_URI"]; ?>" method="post">
+<form action="<?php echo $_SERVER["REQUEST_URI"]; ?>" method="post">
 <input name="name" value="<?= $name ?>" type="hidden" />
 <div id="grouplist">
 <table style="border: none;" cellspacing="0">
@@ -120,12 +120,12 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
     }
 ?>
 
-<form action="<? echo $_SERVER["REQUEST_URI"]; ?>" method="post">
+<form action="<?php echo $_SERVER["REQUEST_URI"]; ?>" method="post">
 <table style="border: none;" cellspacing="0">
 <tr><td><?= $label_name; ?></td><td></td><td><input name="name" value="<?= $name ?>" type="text"/></td></tr>
 <tr><td><?= $label_visible; ?></td><td></td><td>
-    <input name='visible' value='show' <? if ($visibility == 'show') { echo 'checked'; }?> type='radio'/><?= _T('Yes', 'dyngroup') ?>, 
-    <input name='visible' value='hide' <? if ($visibility != 'show') { echo 'checked'; }?> type='radio'/><?= _T('No', 'dyngroup') ?>
+    <input name='visible' value='show' <?php if ($visibility == 'show') { echo 'checked'; }?> type='radio'/><?= _T('Yes', 'dyngroup') ?>, 
+    <input name='visible' value='hide' <?php if ($visibility != 'show') { echo 'checked'; }?> type='radio'/><?= _T('No', 'dyngroup') ?>
 </td></tr>
 <!-- add all group inupts -->
 </table>

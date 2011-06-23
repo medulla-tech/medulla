@@ -262,9 +262,9 @@ if ($local_proxy_selection_mode != "manual") {
 <script lang=javascript>
 disableLocalProxyForm(); // table is disabled when entering the page
 </script></script>
-    <? } elseif ($local_proxy_selection_mode == "manual") { ?>
+    <?php } elseif ($local_proxy_selection_mode == "manual") { ?>
 <script lang=javascript>
 enableLocalProxyForm(); // table is disabled when entering the page
 </script></script>
-    <? }
+    <?php }
 ?>

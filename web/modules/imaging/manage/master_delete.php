@@ -50,7 +50,7 @@ if ($_POST) {
 ?>
 <h2><?= _T("Delete master", "imaging") ?></h2>
 <form action="<?=urlStr("imaging/manage/master_delete")?>" method="post">
-    <p><? printf(_T("Are you sure you want to delete <b>%s</b> master ?", "imaging"), $label); ?></p>
+    <p><?php printf(_T("Are you sure you want to delete <b>%s</b> master ?", "imaging"), $label); ?></p>
     <input name='itemid' type='hidden' value="<?= $id; ?>" />
     <input name='valid' type="submit" class="btnPrimary" value="<?= _T("Remove", "imaging"); ?>" />
     <input name="bback" type="submit" class="btnSecondary" value="<?= _T("Cancel", "imaging"); ?>" onClick="new Effect.Fade('popup'); return false;"/>

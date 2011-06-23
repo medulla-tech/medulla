@@ -46,7 +46,7 @@ if ($_GET['bhide'] || $_POST['bhide']) {
 
 //$group->prettyDisplay();
 
-?> <form action="<?= urlStr("base/computers/details", array('id'=>$id)) ?>" method="post"> <?  
+?> <form action="<?= urlStr("base/computers/details", array('id'=>$id)) ?>" method="post"> <?php  
 ?> <input name="bback" type="submit" class="btnPrimary" value="<?= _T("Close", "dyngroup") ?>" onClick="new Effect.Fade('popup'); return false;"/> <?
 
 if ($group->isDyn() && $group->isGroup()) {
