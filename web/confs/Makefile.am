@@ -30,7 +30,7 @@ CLEANFILES = mmc.ini apache/mmc.conf
 edit = sed \
         -e 's|@bindir[@]|$(bindir)|g' \
         -e 's|@sbindir[@]|$(sbindir)|g' \
-        -e 's|@pkgdatadir[@]|$(pkgdatadir)|g' \
+        -e 's|@datadir[@]|$(datadir)|g' \
         -e 's|@prefix[@]|$(prefix)|g' \
         -e 's|@localstatedir[@]|$(localstatedir)|g' \
         -e 's|@sysconfdir[@]|$(sysconfdir)|g'
