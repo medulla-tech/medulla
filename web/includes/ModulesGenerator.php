@@ -405,7 +405,10 @@ class Module {
         // STAY FOR COMPATIBILITY REASON
         global $__revision;
 	$tmp = split(" ", $rev);
-	$rev = $tmp[1];
+	if (count($tmp)>1)
+	  $rev = $tmp[1];
+	else
+	  $rev = 0;
         $__revision[$this->getName()]=$rev;
 
         $this->_revision = $rev;
