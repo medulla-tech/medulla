@@ -47,7 +47,7 @@ CLEANFILES = $(mofiles) site.php
 edit = sed \
         -e 's|@bindir[@]|$(bindir)|g' \
         -e 's|@sbindir[@]|$(sbindir)|g' \
-        -e 's|@pkgdatadir[@]|$(pkgdatadir)|g' \
+        -e 's|@pkgdatadir[@]|$(datadir)/mmc|g' \
         -e 's|@prefix[@]|$(prefix)|g' \
         -e 's|@localstatedir[@]|$(localstatedir)|g' \
         -e 's|@sysconfdir[@]|$(sysconfdir)|g'
