@@ -64,6 +64,21 @@ from pulse2.scheduler.tracking.wol import WOLTracking
 from pulse2.scheduler.tracking.preempt import Pulse2Preempt
 from pulse2.utils import extractExceptionMessage
 
+# Regex compilers
+re_file_prot = re.compile('^file://')
+re_http_prot = re.compile('^http://')
+re_https_prot = re.compile('^https://')
+re_smb_prot = re.compile('^smb://')
+re_ftp_prot = re.compile('^ftp://')
+re_nfs_prot = re.compile('^nfs://')
+re_ssh_prot = re.compile('^ssh://')
+re_rsync_prot = re.compile('^rsync://')
+
+re_abs_path = re.compile('^/')
+re_basename = re.compile('^/[^/]*/(.*)$')
+re_rel_path = re.compile('^/(.*)$')
+re_file_prot_path = re.compile('^file://(.*)$')
+
 ToBeStarted = Pulse2Preempt()
 handle_deconnect()
 
@@ -1298,7 +1313,7 @@ def _chooseUploadMode(myCoH, myC, myT):
     # first attempt to guess is mirror is local (push) or remove (pull) or through a proxy
     if myCoH.isProxyClient(): # proxy client
         d = _runProxyClientPhase(client, myC, myCoH)
-    elif re.compile('^file://').match(myT.mirrors): # local mirror starts by "file://" : prepare a remote_push
+    elif re_file_prot.match(myT.mirrors): # local mirror starts by "file://" : prepare a remote_push
         d = _runPushPhase(client, myC, myCoH, myT)
     else: # remote push/pull
 
@@ -1402,8 +1417,8 @@ def _runProxyClientPhase(client, myC, myCoH):
     files_list = []
     for file in myC.files.split("\n"):
         fname = file.split('##')[1]
-        if re.compile('^/').search(fname):
-            fname = re.compile('^/[^/]*/(.*)$').search(fname).group(1) # keeps last compontent of path
+        if re_abs_path.search(fname):
+            fname = re_basename.search(fname).group(1) # keeps last compontent of path
         files_list.append(fname)
 
     # prepare deffereds
@@ -1450,9 +1465,9 @@ def _runPushPhase(client, myC, myCoH, myT):
     files_list = list()
     for file in myC.files.split("\n"):
         fname = file.split('##')[1]
-        if re.compile('^/').search(fname):
-            fname = re.compile('^/(.*)$').search(fname).group(1)
-        files_list.append(os.path.join(re.compile('^file://(.*)$').search(myT.mirrors).group(1), fname)) # get folder on mirror
+        if re_abs_path.search(fname):
+            fname = re_rel_path.search(fname).group(1)
+        files_list.append(os.path.join(re_file_prot_path.search(myT.mirrors).group(1), fname)) # get folder on mirror
 
     # prepare deffereds
     if SchedulerConfig().mode == 'sync':
@@ -1525,17 +1540,17 @@ def _cbRunPushPullPhasePushPull(result, mirror, fbmirror, client, myC, myCoH, us
     choosen_mirror = mirror
     if not False in files_list and not '' in files_list:
         # build a dict with the protocol and the files uris
-        if re.compile('^http://').match(choosen_mirror) or re.compile('^https://').match(choosen_mirror): # HTTP download
+        if re_http_prot.match(choosen_mirror) or re_https_prot.match(choosen_mirror): # HTTP download
             file_uris = {'protocol': 'wget', 'files': files_list}
-        elif re.compile('^smb://').match(choosen_mirror): # TODO: NET download
+        elif re_smb_prot.match(choosen_mirror): # TODO: NET download
             pass
-        elif re.compile('^ftp://').match(choosen_mirror): # FIXME: check that wget may handle FTP as HTTP
+        elif re_ftp_prot.match(choosen_mirror): # FIXME: check that wget may handle FTP as HTTP
             file_uris = {'protocol': 'wget', 'files': files_list}
-        elif re.compile('^nfs://').match(choosen_mirror): # TODO: NFS download
+        elif re_nfs_prot.match(choosen_mirror): # TODO: NFS download
             pass
-        elif re.compile('^ssh://').match(choosen_mirror): # TODO: SSH download
+        elif re_ssh_prot.match(choosen_mirror): # TODO: SSH download
             pass
-        elif re.compile('^rsync://').match(choosen_mirror): # TODO: RSYNC download
+        elif re_rsync_prot.match(choosen_mirror): # TODO: RSYNC download
             pass
         else: # do nothing
             pass
@@ -1736,7 +1751,7 @@ def runDeletePhase(myCommandOnHostID):
         return twisted.internet.defer.fail(Exception("Not enough information about client to perform deletion")).addErrback(parseDeleteError, myCommandOnHostID, decrement_attempts_left = True, error_code = PULSE2_TARGET_NOTENOUGHINFO_ERROR).addErrback(gotErrorInError, myCommandOnHostID)
 
     # if we are here, deletion has either previously failed or never be done
-    if re.compile('^file://').match(myT.mirrors): # delete from remote push
+    if re_file_prot.match(myT.mirrors): # delete from remote push
         files_list = map(lambda(a): a.split('/').pop(), myC.files.split("\n"))
 
         myCoH.setDeleteInProgress()
@@ -1776,7 +1791,7 @@ def runDeletePhase(myCommandOnHostID):
     else: # delete from remote pull
         mirrors = myT.mirrors.split('||')
         mirror = mirrors[0] # TODO: handle when several mirrors are available
-        if re.compile('^http://').match(mirror) or re.compile('^https://').match(mirror): # HTTP download
+        if re_http_prot.match(mirror) or re_https_prot.match(mirror): # HTTP download
             files_list = map(lambda(a): a.split('/').pop(), myC.files.split("\n"))
 
             myCoH.setDeleteInProgress()
@@ -1813,15 +1828,15 @@ def runDeletePhase(myCommandOnHostID):
             else:
                 return runGiveUpPhase(myCommandOnHostID)
             return mydeffered
-        elif re.compile('^smb://').match(mirror): # TODO: NET download
+        elif re_smb_prot.match(mirror): # TODO: NET download
             pass
-        elif re.compile('^ftp://').match(mirror): # TODO: FTP download
+        elif re_ftp_prot.match(mirror): # TODO: FTP download
             pass
-        elif re.compile('^nfs://').match(mirror): # TODO: NFS download
+        elif re_nfs_prot.match(mirror): # TODO: NFS download
             pass
-        elif re.compile('^ssh://').match(mirror): # TODO: SSH download
+        elif re_ssh_prot.match(mirror): # TODO: SSH download
             pass
-        elif re.compile('^rsync://').match(mirror): # TODO: RSYNC download
+        elif re_rsync_prot.match(mirror): # TODO: RSYNC download
             pass
         else: # do nothing
             pass
