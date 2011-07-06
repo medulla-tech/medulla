@@ -51,7 +51,17 @@ from pulse2.database.msc.orm.target import Target
 from pulse2.database.utilities import handle_deconnect
 
 # our modules
-from pulse2.consts import PULSE2_BUNDLE_MISSING_MANDATORY_ERROR,PULSE2_POST_HALT_STATES,PULSE2_POST_INVENTORY_STATES, PULSE2_PROGRESSING_STATES, PULSE2_PROXY_WAITINGFORDEAD_ERROR, PULSE2_PSERVER_FMIRRORFAILED_404_ERROR, PULSE2_PSERVER_FMIRRORFAILED_CONNREF_ERROR, PULSE2_PSERVER_GETFILEURIFROMPACKAGE_ERROR, PULSE2_PSERVER_GETFILEURIFROMPACKAGE_F_ERROR, PULSE2_PSERVER_ISAVAILABLE_FALLBACK, PULSE2_PSERVER_ISAVAILABLE_MIRROR, PULSE2_PSERVER_MIRRORFAILED_404_ERROR, PULSE2_PSERVER_MIRRORFAILED_CONNREF_ERROR, PULSE2_PSERVER_PACKAGEISUNAVAILABLE_ERROR, PULSE2_RUNNING_STATES, PULSE2_STAGE_DONE, PULSE2_STAGE_FAILED, PULSE2_STAGE_IGNORED, PULSE2_STAGES, PULSE2_STAGE_TODO, PULSE2_STAGE_WORK_IN_PROGRESS, PULSE2_STATE_PREFIXES, PULSE2_SUCCESS_ERROR, PULSE2_TARGET_NOTENOUGHINFO_ERROR, PULSE2_TERMINATED_STATES, PULSE2_UNKNOWN_ERROR, PULSE2_UNPREEMPTABLE_STATES
+from pulse2.consts import PULSE2_BUNDLE_MISSING_MANDATORY_ERROR,PULSE2_POST_HALT_STATES
+from pulse2.consts import PULSE2_POST_INVENTORY_STATES, PULSE2_PROGRESSING_STATES
+from pulse2.consts import PULSE2_PROXY_WAITINGFORDEAD_ERROR, PULSE2_PSERVER_FMIRRORFAILED_404_ERROR
+from pulse2.consts import PULSE2_PSERVER_FMIRRORFAILED_CONNREF_ERROR, PULSE2_PSERVER_GETFILEURIFROMPACKAGE_ERROR
+from pulse2.consts import PULSE2_PSERVER_GETFILEURIFROMPACKAGE_F_ERROR, PULSE2_PSERVER_ISAVAILABLE_FALLBACK
+from pulse2.consts import PULSE2_PSERVER_ISAVAILABLE_MIRROR, PULSE2_PSERVER_MIRRORFAILED_404_ERROR
+from pulse2.consts import PULSE2_PSERVER_MIRRORFAILED_CONNREF_ERROR, PULSE2_PSERVER_PACKAGEISUNAVAILABLE_ERROR
+from pulse2.consts import PULSE2_RUNNING_STATES, PULSE2_STAGE_DONE, PULSE2_STAGE_FAILED, PULSE2_STAGE_IGNORED
+from pulse2.consts import PULSE2_STAGES, PULSE2_STAGE_TODO, PULSE2_STAGE_WORK_IN_PROGRESS, PULSE2_STATE_PREFIXES
+from pulse2.consts import PULSE2_SUCCESS_ERROR, PULSE2_TARGET_NOTENOUGHINFO_ERROR, PULSE2_TERMINATED_STATES
+from pulse2.consts import PULSE2_UNKNOWN_ERROR, PULSE2_UNPREEMPTABLE_STATES
 from pulse2.scheduler.config import SchedulerConfig
 from pulse2.scheduler.launchers_driving import callOnBestLauncher, callOnLauncher, getLaunchersBalance, probeClient
 import pulse2.scheduler.network
@@ -63,6 +73,10 @@ from pulse2.scheduler.tracking.commands import CommandsOnHostTracking
 from pulse2.scheduler.tracking.wol import WOLTracking
 from pulse2.scheduler.tracking.preempt import Pulse2Preempt
 from pulse2.utils import extractExceptionMessage
+import pulse2.cache
+
+log = logging.getLogger()
+scheduler_cache = getCache('scheduler')
 
 # Regex compilers
 re_file_prot = re.compile('^file://')
@@ -86,8 +100,7 @@ def gatherStuff():
     """ handy function to gather widely used objects """
     session = sqlalchemy.orm.create_session()
     database = MscDatabase()
-    logger = logging.getLogger()
-    return (session, database, logger)
+    return (session, database, log)
 
 def gatherCoHStuff(idCommandOnHost):
     """ same as gatherStuff(), this time for a particular CommandOnHost """
@@ -96,13 +109,13 @@ def gatherCoHStuff(idCommandOnHost):
     myCommandOnHost = session.query(CommandsOnHost).get(idCommandOnHost)
     if type(myCommandOnHost) != CommandsOnHost:
         session.close()
-        logging.getLogger().error("trying to gather CoH on an inexisting CoH '%s' !! (Maybe you are currently cleaning the database?)"%(str(idCommandOnHost)))
+        log.error("trying to gather CoH on an inexisting CoH '%s' !! (Maybe you are currently cleaning the database?)"%(str(idCommandOnHost)))
         return (None, None, None)
     myCommand = session.query(Commands).get(myCommandOnHost.getIdCommand())
     myTarget = session.query(Target).get(myCommandOnHost.getIdTarget())
     session.close()
     if type(myCommand) != Commands or type(myTarget) != Target:
-        logging.getLogger().error("trying to gather CoH on an inexisting CoH '%s' !! (Maybe you are currently cleaning the database?)"%(str(idCommandOnHost)))
+        log.error("trying to gather CoH on an inexisting CoH '%s' !! (Maybe you are currently cleaning the database?)"%(str(idCommandOnHost)))
         return (None, None, None)
     return (myCommandOnHost, myCommand, myTarget)
 
@@ -125,7 +138,7 @@ def isLastToInventoryInBundle(myCommandOnHostID):
 
     session.close()
     if nb != 1:
-        logging.getLogger().debug("isLastToInventoryInBundle on #%s : still %s coh in the same bundle to do" % (str(myCommandOnHostID), str(nb-1)))
+        log.debug("isLastToInventoryInBundle on #%s : still %s coh in the same bundle to do" % (str(myCommandOnHostID), str(nb-1)))
         return False
     return True
 
@@ -148,7 +161,7 @@ def isLastToHaltInBundle(myCommandOnHostID):
 
     session.close()
     if nb > 1:
-        logging.getLogger().debug("isLastToHaltInBundle on #%s : still %s coh in the same bundle to do" % (str(myCommandOnHostID), str(nb-1)))
+        log.debug("isLastToHaltInBundle on #%s : still %s coh in the same bundle to do" % (str(myCommandOnHostID), str(nb-1)))
         return False
     return True
 
@@ -191,14 +204,14 @@ def getDependancies(myCommandOnHostID):
 
 
     if len(coh_unfinishable_deps) > 0: # at least one dep will never be complete, give up
-        logging.getLogger().debug("command_on_host #%s: was waiting on %s, all of them beeing unfinishable" % (myCoH.getId(), coh_unfinishable_deps))
+        log.debug("command_on_host #%s: was waiting on %s, all of them beeing unfinishable" % (myCoH.getId(), coh_unfinishable_deps))
         return 'dead'
 
     if len(coh_relevant_deps) > 0: # at least one dep should be completed, wait
-        logging.getLogger().debug("command_on_host #%s: was waiting on %s, to be completed" % (myCoH.getId(), coh_relevant_deps))
+        log.debug("command_on_host #%s: was waiting on %s, to be completed" % (myCoH.getId(), coh_relevant_deps))
         return 'wait'
 
-    logging.getLogger().debug("command_on_host #%s: was waiting on %s, all of them beeing completed" % (myCoH.getId(), coh_finished_deps))
+    log.debug("command_on_host #%s: was waiting on %s, all of them beeing completed" % (myCoH.getId(), coh_finished_deps))
     return 'run'
 
 def localProxyUploadStatus(myCommandOnHostID):
@@ -218,7 +231,7 @@ def localProxyUploadStatus(myCommandOnHostID):
     # as for now, if we previously found a proxy, use it
     # commented out: may break the split proxy model
     #if myCoH.getUsedProxy() != None:
-    #    logging.getLogger().debug("scheduler %s: keeping coh #%s as local proxy for #%s" % (SchedulerConfig().name, myCoH.getUsedProxy(), myCommandOnHostID))
+    #    log.debug("scheduler %s: keeping coh #%s as local proxy for #%s" % (SchedulerConfig().name, myCoH.getUsedProxy(), myCommandOnHostID))
     #    return 'keeping'
 
     # see what to do next
@@ -228,7 +241,7 @@ def localProxyUploadStatus(myCommandOnHostID):
     elif proxy_mode == 'split':
         return localProxyAttemptSplitMode(myCommandOnHostID)
     else:
-        logging.getLogger().debug("scheduler %s: command #%s seems to be wrong (bad priorities ?)" % (SchedulerConfig().name, myC.id))
+        log.debug("scheduler %s: command #%s seems to be wrong (bad priorities ?)" % (SchedulerConfig().name, myC.id))
         return 'dead'
 
 def localProxyAttemptQueueMode(myCommandOnHostID):
@@ -273,31 +286,31 @@ def localProxyAttemptQueueMode(myCommandOnHostID):
         if best_ready_proxy_server_coh != None:                         # ... and a proxy seems ready => PROXY CLIENT MODE
             (current_client_number, max_client_number) = getClientUsageForProxy(best_ready_proxy_server_coh)
             if current_client_number < max_client_number:
-                logging.getLogger().debug("scheduler %s: found coh #%s as local proxy for #%s" % (SchedulerConfig().name, best_ready_proxy_server_coh, myCommandOnHostID))
+                log.debug("scheduler %s: found coh #%s as local proxy for #%s" % (SchedulerConfig().name, best_ready_proxy_server_coh, myCommandOnHostID))
                 return best_ready_proxy_server_coh
             else:
-                logging.getLogger().debug("scheduler %s: found coh #%s as local proxy for #%s, but proxy is full (%d clients), so I'm waiting" % (SchedulerConfig().name, best_ready_proxy_server_coh, myCommandOnHostID, current_client_number))
+                log.debug("scheduler %s: found coh #%s as local proxy for #%s, but proxy is full (%d clients), so I'm waiting" % (SchedulerConfig().name, best_ready_proxy_server_coh, myCommandOnHostID, current_client_number))
                 return 'waiting'
         elif potential_proxy_server_coh != None:                        # ... and one may become ready => WAITING
-            logging.getLogger().debug("scheduler %s: coh #%s still waiting for a local proxy to use" % (SchedulerConfig().name, myCommandOnHostID))
+            log.debug("scheduler %s: coh #%s still waiting for a local proxy to use" % (SchedulerConfig().name, myCommandOnHostID))
             return 'waiting'
         else:                                                           # ... but all seems dead => ERROR
-            logging.getLogger().debug("scheduler %s: coh #%s won't likely be able to use a local proxy" % (SchedulerConfig().name, myCommandOnHostID))
+            log.debug("scheduler %s: coh #%s won't likely be able to use a local proxy" % (SchedulerConfig().name, myCommandOnHostID))
             return 'dead'
     else:                                                               # I'm a server: I MAY use a proxy ...
         if best_ready_proxy_server_coh != None:                         # ... and a proxy seems ready => PROXY CLIENT MODE
             (current_client_number, max_client_number) = getClientUsageForProxy(best_ready_proxy_server_coh)
             if current_client_number < max_client_number:
-                logging.getLogger().debug("scheduler %s: found coh #%s as local proxy for #%s" % (SchedulerConfig().name, best_ready_proxy_server_coh, myCommandOnHostID))
+                log.debug("scheduler %s: found coh #%s as local proxy for #%s" % (SchedulerConfig().name, best_ready_proxy_server_coh, myCommandOnHostID))
                 return best_ready_proxy_server_coh
             else:
-                logging.getLogger().debug("scheduler %s: found coh #%s as local proxy for #%s, but proxy is full (%d clients), so I'm waiting" % (SchedulerConfig().name, best_ready_proxy_server_coh, myCommandOnHostID, current_client_number))
+                log.debug("scheduler %s: found coh #%s as local proxy for #%s, but proxy is full (%d clients), so I'm waiting" % (SchedulerConfig().name, best_ready_proxy_server_coh, myCommandOnHostID, current_client_number))
                 return 'waiting'
         elif potential_proxy_server_coh:                                # ... but a better candidate may become ready => WAITING
-            logging.getLogger().debug("scheduler %s: coh #%s still waiting to know if is is local proxy client or server" % (SchedulerConfig().name, myCommandOnHostID))
+            log.debug("scheduler %s: coh #%s still waiting to know if is is local proxy client or server" % (SchedulerConfig().name, myCommandOnHostID))
             return 'waiting'
         else:                                                           # ... and other best candidates seems dead => PROXY SERVER MODE
-            logging.getLogger().debug("scheduler %s: coh #%s become local proxy server" % (SchedulerConfig().name, myCommandOnHostID))
+            log.debug("scheduler %s: coh #%s become local proxy server" % (SchedulerConfig().name, myCommandOnHostID))
             return 'server'
 
 def localProxyAttemptSplitMode(myCommandOnHostID):
@@ -316,15 +329,15 @@ def localProxyAttemptSplitMode(myCommandOnHostID):
         # ret val is an uuid
         final_uuid = LocalProxiesUsageTracking().take_one(alive_proxies.keys(), myC.getId())
         if not final_uuid: # not free proxy, wait
-            logging.getLogger().debug("scheduler %s: coh #%s wait for a local proxy for to be usable" % (SchedulerConfig().name, myCommandOnHostID))
+            log.debug("scheduler %s: coh #%s wait for a local proxy for to be usable" % (SchedulerConfig().name, myCommandOnHostID))
             return 'waiting'
         else: # take a proxy in alive proxies
             final_proxy = alive_proxies[final_uuid]
-            logging.getLogger().debug("scheduler %s: coh #%s found coh #%s as local proxy, taking one slot (%d left)" % (SchedulerConfig().name, myCommandOnHostID, final_proxy, LocalProxiesUsageTracking().how_much_left_for(final_uuid, myC.getId())))
+            log.debug("scheduler %s: coh #%s found coh #%s as local proxy, taking one slot (%d left)" % (SchedulerConfig().name, myCommandOnHostID, final_proxy, LocalProxiesUsageTracking().how_much_left_for(final_uuid, myC.getId())))
             return final_proxy
 
     def __processProbe(result, uuid, proxy):
-        logging.getLogger().debug("scheduler %s: coh #%s probed on %s, got %s" % (SchedulerConfig().name, proxy, uuid, result))
+        log.debug("scheduler %s: coh #%s probed on %s, got %s" % (SchedulerConfig().name, proxy, uuid, result))
         return (result, uuid, proxy)
 
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
@@ -363,10 +376,10 @@ def localProxyAttemptSplitMode(myCommandOnHostID):
 
         if len(available_proxy) == 0: # not proxy seems ready ?
             if len(temp_dysfunc_proxy) == 0: # and others seems dead
-                logging.getLogger().debug("scheduler %s: coh #%s won't likely be able to use a local proxy" % (SchedulerConfig().name, myCommandOnHostID))
+                log.debug("scheduler %s: coh #%s won't likely be able to use a local proxy" % (SchedulerConfig().name, myCommandOnHostID))
                 return 'dead'
             else:
-                logging.getLogger().debug("scheduler %s: coh #%s wait for a local proxy to be ready" % (SchedulerConfig().name, myCommandOnHostID))
+                log.debug("scheduler %s: coh #%s wait for a local proxy to be ready" % (SchedulerConfig().name, myCommandOnHostID))
                 return 'waiting'
 
         deffered_list = list()
@@ -387,7 +400,7 @@ def localProxyAttemptSplitMode(myCommandOnHostID):
         return dl
 
     else:                                                               # I'm a server: let's upload
-        logging.getLogger().debug("scheduler %s: coh #%s become local proxy server" % (SchedulerConfig().name, myCommandOnHostID))
+        log.debug("scheduler %s: coh #%s become local proxy server" % (SchedulerConfig().name, myCommandOnHostID))
         return 'server'
 
 def getClientUsageForProxy(proxyCommandOnHostID):
@@ -441,13 +454,13 @@ def getProxyModeForCommand(myCommandOnHostID):
     if len(spotted_priorities) == 0:
         return False
     elif len(spotted_priorities) == 1: # only one priority for all => split mode
-        logging.getLogger().debug("scheduler %s: command #%s is in split proxy mode" % (SchedulerConfig().name, myC.id))
+        log.debug("scheduler %s: command #%s is in split proxy mode" % (SchedulerConfig().name, myC.id))
         return 'split'
     elif len(spotted_priorities) == reduce(lambda x, y: x+y, spotted_priorities.values()): # one priority per proxy => queue mode
-        logging.getLogger().debug("scheduler %s: command #%s is in queue proxy mode" % (SchedulerConfig().name, myC.id))
+        log.debug("scheduler %s: command #%s is in queue proxy mode" % (SchedulerConfig().name, myC.id))
         return 'queue'
     else: # other combinations are errors
-        logging.getLogger().debug("scheduler %s: can'f guess proxy mode for command #%s" % (SchedulerConfig().name, myC.id))
+        log.debug("scheduler %s: can'f guess proxy mode for command #%s" % (SchedulerConfig().name, myC.id))
         return False
 
 def localProxyMayContinue(myCommandOnHostID):
@@ -467,7 +480,7 @@ def localProxyMayContinue(myCommandOnHostID):
     # to prevent race condition, not check is perform to count only our clients but everybody client
 
     if myCoH.isLocalProxy(): # proxy server, way for clients to be done
-        logging.getLogger().debug("scheduler %s: checking if we may continue coh #%s" % (SchedulerConfig().name, myCommandOnHostID))
+        log.debug("scheduler %s: checking if we may continue coh #%s" % (SchedulerConfig().name, myCommandOnHostID))
         our_client_count = 0
         if myC.hasToUseQueueProxy():
             session = sqlalchemy.orm.create_session()
@@ -482,7 +495,7 @@ def localProxyMayContinue(myCommandOnHostID):
                 filter(database.commands_on_host.c.current_state != 'done').\
                 filter(database.commands_on_host.c.current_state != 'over_timed').\
                 count()
-            logging.getLogger().debug("scheduler %s: found %s coh to be uploaded in command #%s" % (SchedulerConfig().name, our_client_count, myC.id))
+            log.debug("scheduler %s: found %s coh to be uploaded in command #%s" % (SchedulerConfig().name, our_client_count, myC.id))
             session.close()
         elif myC.hasToUseSplitProxy():
             session = sqlalchemy.orm.create_session()
@@ -498,23 +511,23 @@ def localProxyMayContinue(myCommandOnHostID):
                 filter(database.commands_on_host.c.current_state != 'done').\
                 filter(database.commands_on_host.c.current_state != 'over_timed').\
                 count()
-            logging.getLogger().debug("scheduler %s: found %s coh to be uploaded in command #%s" % (SchedulerConfig().name, our_client_count, myC.id))
+            log.debug("scheduler %s: found %s coh to be uploaded in command #%s" % (SchedulerConfig().name, our_client_count, myC.id))
             session.close()
         # proxy tracking update
         if our_client_count != 0:
             LocalProxiesUsageTracking().create_proxy(myT.getUUID(), myCoH.getMaxClientsPerProxy(), myC.getId())
-            logging.getLogger().debug("scheduler %s: (re-)adding %s (#%s) to proxy pool" % (SchedulerConfig().name, myT.getUUID(), myC.getId()))
+            log.debug("scheduler %s: (re-)adding %s (#%s) to proxy pool" % (SchedulerConfig().name, myT.getUUID(), myC.getId()))
         else:
             LocalProxiesUsageTracking().delete_proxy(myT.getUUID(), myC.getId())
-            logging.getLogger().debug("scheduler %s: (re-)removing %s (#%s) from proxy pool" % (SchedulerConfig().name, myT.getUUID(), myC.getId()))
+            log.debug("scheduler %s: (re-)removing %s (#%s) from proxy pool" % (SchedulerConfig().name, myT.getUUID(), myC.getId()))
         return our_client_count == 0
     else:
         return True
 
 def startAnalyseCommands(scheduler_name):
-    logger = logging.getLogger()
-
-    return twisted.internet.threads.deferToThread(gatherIdsToAnalyse, scheduler_name).addCallback(analyseCommands)
+    d = twisted.internet.threads.deferToThread(gatherIdsToAnalyse, scheduler_name)
+    d.addCallback(analyseCommands)
+    return d
 
 def gatherIdsToAnalyse(scheduler_name):
 
@@ -613,17 +626,15 @@ def analyseCommands(commands_to_analyse):
                         this_is_a_weird_command = True
 
         if this_is_a_weird_command :
-            logging.getLogger().warn('scheduler "%s": report for %s' % (SchedulerConfig().name, '\n'.join(report)))
-            logging.getLogger().warn('Scheduler: Stopping command_on_host #%s' % (id))
+            log.warn('scheduler "%s": report for %s' % (SchedulerConfig().name, '\n'.join(report)))
+            log.warn('Scheduler: Stopping command_on_host #%s' % (id))
             myCoH.setStateStopped()
 
 def startAllCommands(scheduler_name, commandIDs = []):
-    logger = logging.getLogger()
-
     if commandIDs:
-        logger.debug('scheduler "%s": START: Starting commands %s' % (scheduler_name, commandIDs))
+        log.debug('scheduler "%s": START: Starting commands %s' % (scheduler_name, commandIDs))
     else:
-        logger.debug('scheduler "%s": START: Starting all commands' % scheduler_name)
+        log.debug('scheduler "%s": START: Starting all commands' % scheduler_name)
     return twisted.internet.threads.deferToThread(gatherIdsToStart, scheduler_name, commandIDs).addCallback(sortCommands)
 
 def gatherIdsToStart(scheduler_name, commandIDs = []):
@@ -704,10 +715,10 @@ def sortCommands(commands_to_perform):
             ids_list += ids
 
         if len(ids_list) == 0:
-            logging.getLogger().info('scheduler "%s": START: Starting no command' % (SchedulerConfig().name))
+            log.info('scheduler "%s": START: Starting no command' % (SchedulerConfig().name))
             return True
 
-        logging.getLogger().debug("scheduler %s: START: Sorting the following commands: %s" % (SchedulerConfig().name, ids_list))
+        log.debug("scheduler %s: START: Sorting the following commands: %s" % (SchedulerConfig().name, ids_list))
         try: # this code is not well tested: let's protect it :D
             # tocome_distribution is a dict, keys are the current group names, values are the ids (array) of commands to launch
             current_distribution = dict()
@@ -760,11 +771,11 @@ def sortCommands(commands_to_perform):
                         if len(tocome_distribution[group]):
                             ids_list.append(tocome_distribution[group].pop(0))
             random.shuffle(ids_list)
-            logging.getLogger().debug("scheduler %s: START: Commands sorted: %s" % (SchedulerConfig().name, ids_list))
+            log.debug("scheduler %s: START: Commands sorted: %s" % (SchedulerConfig().name, ids_list))
         except: # hum, something goes weird, try to get ids_list anyway
-            logging.getLogger().debug("scheduler %s: START: Something goes wrong while sorting commands, keeping list untouched" % (SchedulerConfig().name))
+            log.debug("scheduler %s: START: Something goes wrong while sorting commands, keeping list untouched" % (SchedulerConfig().name))
 
-        logging.getLogger().info('scheduler "%s": START: %d commands to start' % (SchedulerConfig().name, len(ids_list)))
+        log.info('scheduler "%s": START: %d commands to start' % (SchedulerConfig().name, len(ids_list)))
         ToBeStarted.put(ids_list)
         return True
 
@@ -850,9 +861,10 @@ def getCommandsToNeutralize(scheduler_name):
     return ret
 
 def stopElapsedCommands(scheduler_name):
-    logger = logging.getLogger()
-    logger.debug('scheduler "%s": STOP: Stopping all commands' % scheduler_name)
-    return twisted.internet.threads.deferToThread(gatherIdsToStop, scheduler_name).addCallback(stopCommandsOnHosts)
+    log.debug('scheduler "%s": STOP: Stopping all commands' % scheduler_name)
+    d = twisted.internet.threads.deferToThread(gatherIdsToStop, scheduler_name)
+    d.addCallback(stopCommandsOnHosts)
+    return d
 
 def gatherIdsToStop(scheduler_name):
     # gather candidates to stop:
@@ -878,17 +890,17 @@ def gatherIdsToStop(scheduler_name):
         (myCoH, myC, myT) = gatherCoHStuff(id)
         if myCoH == None:
             continue
-        logging.getLogger().debug("Scheduler: Over Timed command_on_host #%s" % (id))
+        log.debug("Scheduler: Over Timed command_on_host #%s" % (id))
         myCoH.setStateOverTimed()
 
     return ids
 
 def fixUnprocessedTasks(scheduler_name):
-    logging.getLogger().debug('scheduler "%s": FUT: Starting analysis' % scheduler_name)
+    log.debug('scheduler "%s": FUT: Starting analysis' % scheduler_name)
     return twisted.internet.threads.deferToThread(getRunningCommandsOnHostInDB, scheduler_name, None).addCallback(cleanStatesAllRunningIds)
 
 def fixProcessingTasks(scheduler_name):
-    logging.getLogger().debug('scheduler "%s": FPT: Starting analysis' % scheduler_name)
+    log.debug('scheduler "%s": FPT: Starting analysis' % scheduler_name)
     # using lambda as deferToThread do not accept DeferredList
     return twisted.internet.threads.deferToThread(lambda woot: woot, scheduler_name).addCallback(getRunningCommandsOnHostFromLaunchers).addCallback(stopCommandsOnHosts)
 
@@ -896,16 +908,17 @@ def preemptTasks(scheduler_name):
     deffereds = list()
     commands = Pulse2Preempt().get(SchedulerConfig().preempt_amount)
     if len(commands) :
-        logging.getLogger().debug('scheduler "%s": PREEMPT/START: Starting preemption for %d commands' % (scheduler_name, len(commands)))
+        log.debug('scheduler "%s": PREEMPT/START: Starting preemption for %d commands' % (scheduler_name, len(commands)))
         for command in commands :
             deffered = twisted.internet.defer.Deferred()
             deffered.addCallback(pulse2.scheduler.scheduling.runCommand)
             deffered.addErrback(MscDatabase().antiPoolOverflowErrorback)
-            deffered.addErrback(lambda reason: logging.getLogger().error('scheduler "%s": PREEMPT/START: While running command %s : %s'  % (SchedulerConfig().name, command, pulse2.utils.extractExceptionMessage(reason))))
+            deffered.addErrback(lambda reason: log.error('scheduler "%s": PREEMPT/START: While running command %s : %s'  % (SchedulerConfig().name, command, pulse2.utils.extractExceptionMessage(reason))))
             deffered.callback(command)
             deffereds.append(deffered)
 
-    return twisted.internet.defer.DeferredList(deffereds, consumeErrors = True) # deferred handling; consumeErrors set to prevent any unhandled exception
+    # deferred handling; consumeErrors set to prevent any unhandled exception
+    return twisted.internet.defer.DeferredList(deffereds, consumeErrors = True) 
 
 def cleanStatesAllRunningIds(ids):
     """
@@ -933,9 +946,9 @@ def cleanStatesAllRunningIds(ids):
     def __treatBadStateCommandsOnHost(result, ids = ids):
         fails = []
         if len(ids) > 0:
-            logging.getLogger().debug('scheduler "%s": FUT: Looking if the following tasks are still running  : %s' % (SchedulerConfig().name, str(ids)))
+            log.debug('scheduler "%s": FUT: Looking if the following tasks are still running  : %s' % (SchedulerConfig().name, str(ids)))
         else:
-            logging.getLogger().debug('scheduler "%s": FUT: No task should be running' % (SchedulerConfig().name))
+            log.debug('scheduler "%s": FUT: No task should be running' % (SchedulerConfig().name))
         for id in ids:
             found = False
             for running_ids in result: # one tuple per launcher
@@ -946,7 +959,7 @@ def cleanStatesAllRunningIds(ids):
                     continue
             if not found:
                 fails.append(id)
-                logging.getLogger().warn('scheduler "%s": FUT: Forcing the following command to STOP state: %s' % (SchedulerConfig().name, id))
+                log.warn('scheduler "%s": FUT: Forcing the following command to STOP state: %s' % (SchedulerConfig().name, id))
         for id in fails:
             (myCoH, myC, myT) = gatherCoHStuff(id)
             myCoH.setStateStopped()
@@ -961,7 +974,7 @@ def cleanStatesAllRunningIds(ids):
     deffered_list = twisted.internet.defer.DeferredList(deffereds)
     deffered_list.addCallbacks(
         __treatBadStateCommandsOnHost,
-        lambda reason: logging.getLogger().error('scheduler "%s": FUT: error %s'  % (SchedulerConfig().name, pulse2.utils.extractExceptionMessage(reason)))
+        lambda reason: log.error('scheduler "%s": FUT: error %s'  % (SchedulerConfig().name, pulse2.utils.extractExceptionMessage(reason)))
     )
     return deffered_list
 
@@ -994,9 +1007,9 @@ def getRunningCommandsOnHostFromLaunchers(scheduler_name):
                 for id in running_ids[1]:
                     launchers_running_ids.append(id)
         if len(launchers_running_ids) > 0:
-            logging.getLogger().debug('scheduler "%s": FPT: Launchers are running coh %s'  % (SchedulerConfig().name, str(launchers_running_ids)))
+            log.debug('scheduler "%s": FPT: Launchers are running coh %s'  % (SchedulerConfig().name, str(launchers_running_ids)))
         else:
-            logging.getLogger().debug('scheduler "%s": FPT: Launchers are not running any coh'  % (SchedulerConfig().name))
+            log.debug('scheduler "%s": FPT: Launchers are not running any coh'  % (SchedulerConfig().name))
 
         # get the states of launchers_running_ids
         fails = []
@@ -1004,7 +1017,7 @@ def getRunningCommandsOnHostFromLaunchers(scheduler_name):
             if id not in getRunningCommandsOnHostInDB(scheduler_name, launchers_running_ids):
                 fails.append(id)
         if len(fails) > 0:
-            logging.getLogger().info('scheduler "%s": FPT: Forcing the following commands to STOP : %s' % (SchedulerConfig().name, str(fails)))
+            log.info('scheduler "%s": FPT: Forcing the following commands to STOP : %s' % (SchedulerConfig().name, str(fails)))
             # start stopping commands on launcher
         return fails
 
@@ -1018,30 +1031,29 @@ def getRunningCommandsOnHostFromLaunchers(scheduler_name):
     deffered_list = twisted.internet.defer.DeferredList(deffereds)
     deffered_list.addCallbacks(
         __treatRunningCommandsOnHostFromLaunchers,
-        lambda reason: logging.getLogger().error('scheduler "%s": FPT: error %s'  % (SchedulerConfig().name, pulse2.utils.extractExceptionMessage(reason)))
+        lambda reason: log.error('scheduler "%s": FPT: error %s'  % (SchedulerConfig().name, pulse2.utils.extractExceptionMessage(reason)))
     )
     return deffered_list
 
 def stopCommandsOnHosts(ids):
     deffereds = [] # will hold all deferred
     if len(ids) > 0:
-        logging.getLogger().info('scheduler "%s": STOP: %d commands to stop' % (SchedulerConfig().name, len(ids)))
+        log.info('scheduler "%s": STOP: %d commands to stop' % (SchedulerConfig().name, len(ids)))
         for launcher in SchedulerConfig().launchers_uri.values():
             deffered = callOnLauncher(None, launcher, 'term_processes', ids)
             if deffered:
                 deffereds.append(deffered)
     else:
-        logging.getLogger().info('scheduler "%s": STOP: Stopping no command' % (SchedulerConfig().name))
+        log.info('scheduler "%s": STOP: Stopping no command' % (SchedulerConfig().name))
     return deffereds
 
 def stopCommand(myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     if myCoH == None:
         return False
-    logger = logging.getLogger()
-    logger.info("going to terminate command_on_host #%s from command #%s" % (myCoH.getId(), myCoH.getIdCommand()))
-    logger.debug("command_on_host state is %s" % myCoH.toH())
-    logger.debug("command state is %s" % myC.toH())
+    log.info("going to terminate command_on_host #%s from command #%s" % (myCoH.getId(), myCoH.getIdCommand()))
+    log.debug("command_on_host state is %s" % myCoH.toH())
+    log.debug("command state is %s" % myC.toH())
     for launcher in SchedulerConfig().launchers_uri.values():
         callOnLauncher(None, launcher, 'term_process', myCommandOnHostID)
     return True
@@ -1050,12 +1062,11 @@ def startCommand(myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     if myCoH == None:
         return False
-    logger = logging.getLogger()
     if myCoH.scheduler not in [SchedulerConfig().name, '', None]:
-        logger.warn("attempt to start command_on_host #%s from command #%s using the wrong scheduler" % (myCoH.getId(), myCoH.getIdCommand()))
+        log.warn("attempt to start command_on_host #%s from command #%s using the wrong scheduler" % (myCoH.getId(), myCoH.getIdCommand()))
         return False
 
-    logger.info("Starting command_on_host #%s from command #%s" % (myCoH.getId(), myCoH.getIdCommand()))
+    log.info("Starting command_on_host #%s from command #%s" % (myCoH.getId(), myCoH.getIdCommand()))
     runCommand(myCommandOnHostID)
     return True
 
@@ -1070,11 +1081,13 @@ def runCommand(myCommandOnHostID):
         Just a simple start point, chain-load on WOL Phase, using a deferred
     """
     if checkAndFixCommand(myCommandOnHostID):
-        if SchedulerConfig().lock_processed_commands and not CommandsOnHostTracking().preempt(myCommandOnHostID): return
-        logging.getLogger().info("command_on_host #%s: Preempting" % myCommandOnHostID)
+        if SchedulerConfig().lock_processed_commands and \
+                not CommandsOnHostTracking().preempt(myCommandOnHostID): 
+            return
+        log.info("command_on_host #%s: Preempting" % myCommandOnHostID)
         return runWOLPhase(myCommandOnHostID)
     else:
-        logging.getLogger().info("command_on_host #%s: NOT preempting" % myCommandOnHostID)
+        log.info("command_on_host #%s: NOT preempting" % myCommandOnHostID)
 
 def checkAndFixCommand(myCommandOnHostID):
     """
@@ -1085,8 +1098,6 @@ def checkAndFixCommand(myCommandOnHostID):
          - command is a little invalid, neutralize it, return False
          - command IS completely messed-up, return False
     """
-    logger = logging.getLogger()
-
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
 
     # a simple database checkup
@@ -1096,7 +1107,12 @@ def checkAndFixCommand(myCommandOnHostID):
     # give up if target can't be retrieved
     if not myT.hasEnoughInfoToConnect():
         myCoH.setStateFailed()
-        updateHistory(myCommandOnHostID, None, PULSE2_TARGET_NOTENOUGHINFO_ERROR, '', 'Not enough information to establish a connection') # FIXME : error classe is wrong !
+        # FIXME : error classe is wrong !
+        updateHistory(myCommandOnHostID, 
+                      None, 
+                      PULSE2_TARGET_NOTENOUGHINFO_ERROR, 
+                      '', 
+                      'Not enough information to establish a connection') 
         return False
 
     # give up if command not in interval
@@ -1104,25 +1120,33 @@ def checkAndFixCommand(myCommandOnHostID):
         return False
 
     if myC.isPartOfABundle():
-        logger.debug("command_on_host #%s: part of bundle %s, order %s " % (myCoH.getId(), myC.getBundleId(), myC.getOrderInBundle()))
+        log.debug("command_on_host #%s: part of bundle %s, order %s " % \
+                      (myCoH.getId(), myC.getBundleId(), myC.getOrderInBundle()))
         deps_status = getDependancies(myCommandOnHostID)
         # give up if bundle and can't guess dependancies
         if type(deps_status) == bool and not deps_status:
-            logger.debug("command_on_host #%s: failed to get dependencies" % (myCoH.getId()))
+            log.debug("command_on_host #%s: failed to get dependencies" % \
+                          (myCoH.getId()))
             return False
         # give up if bundle and some dependancies remain
         if deps_status == "dead":
             myCoH.setStateFailed()
-            updateHistory(myCommandOnHostID, None, PULSE2_BUNDLE_MISSING_MANDATORY_ERROR, '', 'Bundle stopped since a mandatory part could not be done') # FIXME : error classe is wrong !
+            # FIXME : error classe is wrong !
+            updateHistory(myCommandOnHostID, 
+                          None, 
+                          PULSE2_BUNDLE_MISSING_MANDATORY_ERROR, 
+                          '', 
+                          'Bundle stopped since a mandatory part could not be done')
             return False # give up, some deps have failed
         if deps_status == "wait":
             return False # wait, some deps has to be done
         if deps_status != "run":
             return False # weird, should not append
 
-    logger.debug("going to do command_on_host #%s from command #%s" % (myCoH.getId(), myCoH.getIdCommand()))
-    logger.debug("command_on_host state is %s" % myCoH.toH())
-    logger.debug("command state is %s" % myC.toH())
+        log.debug("going to do command_on_host #%s from command #%s" % \
+                      (myCoH.getId(), myCoH.getIdCommand()))
+    log.debug("command_on_host state is %s" % myCoH.toH())
+    log.debug("command state is %s" % myC.toH())
     myCoH.setStartDate()
     return True
 
@@ -1137,19 +1161,24 @@ def runWOLPhase(myCommandOnHostID):
             2 => ping OK, ssh OK => don't do WOL
         """
         if result == 2:
-            logger.info("command_on_host #%s: do not wol (target already up)" % myCommandOnHostID)
+            log.info("command_on_host #%s: do not wol (target already up)" % \
+                         myCommandOnHostID)
             # FIXME: state will be 'wol_ignored' when implemented in database
-            updateHistory(myCommandOnHostID, None, PULSE2_SUCCESS_ERROR, "skipped: host already up", "")
+            updateHistory(myCommandOnHostID, 
+                          None, 
+                          PULSE2_SUCCESS_ERROR, 
+                          "skipped: host already up", 
+                          "")
             myCoH.setWOLIgnored()
             myCoH.setStateScheduled()
             WOLTracking().unlockwol(myCommandOnHostID)
             return runUploadPhase(myCommandOnHostID)
-        logger.info("command_on_host #%s: do wol (target not up)" % myCommandOnHostID)
+        log.info("command_on_host #%s: do wol (target not up)" % myCommandOnHostID)
         return performWOLPhase(myCommandOnHostID)
 
     def _eb(reason):
-        logger.warn("command_on_host #%s: while probing: %s" % (myCommandOnHostID, reason))
-        logger.info("command_on_host #%s: do wol (target not up)" % myCommandOnHostID)
+        log.warn("command_on_host #%s: while probing: %s" % (myCommandOnHostID, reason))
+        log.info("command_on_host #%s: do wol (target not up)" % myCommandOnHostID)
         return performWOLPhase(myCommandOnHostID)
 
     # check for WOL condition in order to give up if needed
@@ -1157,18 +1186,23 @@ def runWOLPhase(myCommandOnHostID):
     if myCoH == None:
         return runGiveUpPhase(myCommandOnHostID)
 
-    logger = logging.getLogger()
-    logger.info("command_on_host #%s: WOL phase" % myCommandOnHostID)
+    log.info("command_on_host #%s: WOL phase" % myCommandOnHostID)
 
     if myCoH.isWOLRunning():            # WOL in progress
         if myCoH.getLastWOLAttempt() != None: # WOL *really* progress, hem
             delta = datetime.datetime.now()-myCoH.getLastWOLAttempt()
-            if (delta.days * 60 * 60 * 24 + delta.seconds) < (SchedulerConfig().max_wol_time + 60): # still within the wait period, we should wait a little more
+            if (delta.days * 60 * 60 * 24 + delta.seconds) < (SchedulerConfig().max_wol_time + 60): 
+                # still within the wait period, we should wait a little more
                 return runGiveUpPhase(myCommandOnHostID)
-            elif WOLTracking().iswollocked(myCommandOnHostID): # WOL XMLRPC still in progress, give up
+            elif WOLTracking().iswollocked(myCommandOnHostID): 
+                # WOL XMLRPC still in progress, give up
                 return runGiveUpPhase(myCommandOnHostID)
-            else: # we already pass the delay from at least 300 seconds AND either the scheduler was restarted or the lock was released, let's continue
-                logging.getLogger().warn("command_on_host #%s: WOL should have been set as done !" % (myCommandOnHostID))
+            else: 
+                # we already pass the delay from at least 300 seconds AND 
+                # either the scheduler was restarted or the lock was released, 
+                # let's continue
+                log.warn("command_on_host #%s: WOL should have been set as done !" % \
+                             (myCommandOnHostID))
                 myCoH.setWOLDone()
                 myCoH.setStateScheduled()
                 return runUploadPhase(myCommandOnHostID)
@@ -1176,27 +1210,31 @@ def runWOLPhase(myCommandOnHostID):
             # return None to avoid some possible race conditions
             return runGiveUpPhase(myCommandOnHostID)
 
-        logger.info("command_on_host #%s: WOL still running" % myCommandOnHostID)
+        log.info("command_on_host #%s: WOL still running" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
 
     if myCoH.isWOLIgnored(): # wol has already been ignored, jump to next stage
-        logger.info("command_on_host #%s: wol ignored" % myCoH.getId())
+        log.info("command_on_host #%s: wol ignored" % myCoH.getId())
         return runUploadPhase(myCommandOnHostID)
     if myCoH.isWOLDone(): # wol has already already done, jump to next stage
-        logger.info("command_on_host #%s: wol done" % myCoH.getId())
+        log.info("command_on_host #%s: wol done" % myCoH.getId())
         return runUploadPhase(myCommandOnHostID)
     if not myCoH.isWOLImminent():       # nothing to do right now, give out
-        logger.info("command_on_host #%s: not the right time to WOL" % myCoH.getId())
+        log.info("command_on_host #%s: not the right time to WOL" % myCoH.getId())
         return runGiveUpPhase(myCommandOnHostID)
     if not myC.hasToWOL(): # don't have to WOL
-        logger.info("command_on_host #%s: do not wol" % myCoH.getId())
+        log.info("command_on_host #%s: do not wol" % myCoH.getId())
         myCoH.setWOLIgnored()
         myCoH.setStateScheduled()
         return runUploadPhase(myCommandOnHostID)
-    if not myT.hasEnoughInfoToWOL(): # not enough information to perform WOL: ignoring phase but writting this in DB
-        logger.warn("command_on_host #%s: wol couldn't be performed; not enough information in target table" % myCoH.getId())
+    if not myT.hasEnoughInfoToWOL(): 
+        # not enough information to perform WOL: ignoring phase but writting this in DB
+        log.warn("command_on_host #%s: wol couldn't be performed; not enough information in target table" % myCoH.getId())
         # FIXME: state will be 'wol_ignored' when implemented in database
-        updateHistory(myCommandOnHostID, 'wol_failed', PULSE2_TARGET_NOTENOUGHINFO_ERROR, " skipped : not enough information in target table")
+        updateHistory(myCommandOnHostID, 
+                      'wol_failed', 
+                      PULSE2_TARGET_NOTENOUGHINFO_ERROR, 
+                      " skipped : not enough information in target table")
         myCoH.setWOLIgnored()
         myCoH.setStateScheduled()
         return runUploadPhase(myCommandOnHostID)
@@ -1243,25 +1281,25 @@ def runUploadPhase(myCommandOnHostID):
         Handle first Phase: upload time
     """
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    logging.getLogger().info("command_on_host #%s: copy phase" % myCommandOnHostID)
+    log.info("command_on_host #%s: copy phase" % myCommandOnHostID)
     if myCoH == None:
         return runGiveUpPhase(myCommandOnHostID)
 
     # check for upload condition in order to give up if needed
     if myCoH.isUploadRunning(): # upload still running, immediately returns
-        logging.getLogger().info("command_on_host #%s: still running" % myCoH.getId())
+        log.info("command_on_host #%s: still running" % myCoH.getId())
         return runGiveUpPhase(myCommandOnHostID)
     if myCoH.isUploadIgnored(): # upload has already been ignored, jump to next stage
-        logging.getLogger().info("command_on_host #%s: upload ignored" % myCoH.getId())
+        log.info("command_on_host #%s: upload ignored" % myCoH.getId())
         return runExecutionPhase(myCoH.getId())
     if myCoH.isUploadDone(): # upload has already already done, jump to next stage
-        logging.getLogger().info("command_on_host #%s: upload done" % myCoH.getId())
+        log.info("command_on_host #%s: upload done" % myCoH.getId())
         return runExecutionPhase(myCoH.getId())
     if not myCoH.isUploadImminent(): # nothing to do right now, give out
-        logging.getLogger().info("command_on_host #%s: nothing to upload right now" % myCoH.getId())
+        log.info("command_on_host #%s: nothing to upload right now" % myCoH.getId())
         return runGiveUpPhase(myCommandOnHostID)
     if not myC.hasSomethingToUpload(): # nothing to upload here, jump to next stage
-        logging.getLogger().info("command_on_host #%s: nothing to upload" % myCoH.getId())
+        log.info("command_on_host #%s: nothing to upload" % myCoH.getId())
         myCoH.setUploadIgnored()
         myCoH.setStateScheduled()
         return runExecutionPhase(myCoH.getId())
@@ -1283,50 +1321,68 @@ def runUploadPhase(myCommandOnHostID):
 
 def _cbChooseUploadMode(result, myCoH, myC, myT):
     if result == 'waiting':
-        logging.getLogger().info("command_on_host #%s: waiting for a local proxy" % myCoH.getId())
+        log.info("command_on_host #%s: waiting for a local proxy" % myCoH.getId())
         myCoH.setUploadToDo()
         myCoH.setStateScheduled()
         return runGiveUpPhase(myCoH.getId())
     elif result == 'dead':
-        logging.getLogger().warn("command_on_host #%s: waiting for a local proxy which will never be ready !" % myCoH.getId())
+        log.warn("command_on_host #%s: waiting for a local proxy which will never be ready !" % myCoH.getId())
         updateHistory(myCoH.getId(), 'upload_failed', PULSE2_PROXY_WAITINGFORDEAD_ERROR, '', 'Waiting for a local proxy which will never be ready')
         if not myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), True): # better decrement attemps; proxy seems dead
             return runFailedPhase(myCoH.getId())
         return runGiveUpPhase(myCoH.getId())
     elif result == 'server':
-        logging.getLogger().info("command_on_host #%s: becoming local proxy server" % myCoH.getId())
+        log.info("command_on_host #%s: becoming local proxy server" % myCoH.getId())
         myCoH.setUsedProxy(myCoH.getId()) # special case: this way we know we were server
     elif result == 'keeping':
-        logging.getLogger().info("command_on_host #%s: keeping previously acquiered local proxy settings" % myCoH.getId())
+        log.info("command_on_host #%s: keeping previously acquiered local proxy settings" % myCoH.getId())
     else:
-        logging.getLogger().info("command_on_host #%s: becoming local proxy client" % myCoH.getId())
+        log.info("command_on_host #%s: becoming local proxy client" % myCoH.getId())
         myCoH.setUsedProxy(result)
     return _chooseUploadMode(myCoH, myC, myT)
 
 def _chooseUploadMode(myCoH, myC, myT):
-    logger = logging.getLogger()
     # check if we have enough informations to reach the client
-    client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('transfert'), 'group': getClientGroup(myT)}
+    client = { 'host': chooseClientIP(myT), 
+               'uuid': myT.getUUID(), 
+               'maxbw': myC.maxbw, 
+               'client_check': getClientCheck(myT), 
+               'server_check': getServerCheck(myT), 
+               'action': getAnnounceCheck('transfert'), 
+               'group': getClientGroup(myT)}
     if not client['host']: # We couldn't get an IP address for the target host
-        return twisted.internet.defer.fail(Exception("Not enough information about client to perform upload")).addErrback(parsePushError, myCoH.getId(), decrement_attempts_left = True, error_code = PULSE2_TARGET_NOTENOUGHINFO_ERROR).addErrback(gotErrorInError, myCoH.getId())
+        err = twisted.internet.defer.fail(Exception("Not enough information about client to perform upload"))
+        err.addErrback(parsePushError, myCoH.getId(), decrement_attempts_left = True, error_code = PULSE2_TARGET_NOTENOUGHINFO_ERROR)
+        err.addErrback(gotErrorInError, myCoH.getId())
+        return err
 
     # first attempt to guess is mirror is local (push) or remove (pull) or through a proxy
-    if myCoH.isProxyClient(): # proxy client
+    if myCoH.isProxyClient(): 
+        # proxy client
         d = _runProxyClientPhase(client, myC, myCoH)
-    elif re_file_prot.match(myT.mirrors): # local mirror starts by "file://" : prepare a remote_push
+    elif re_file_prot.match(myT.mirrors): 
+        # local mirror starts by "file://" : prepare a remote_push
         d = _runPushPhase(client, myC, myCoH, myT)
     else: # remote push/pull
 
-        try: # mirror is formated like this: https://localhost:9990/mirror1||https://localhost:9990/mirror1
+        try: 
+            # mirror is formated like this: 
+            # https://localhost:9990/mirror1||https://localhost:9990/mirror1
             mirrors = myT.mirrors.split('||')
         except:
-            logger.warn("command_on_host #%s: target.mirror do not seems to be as expected, got '%s', skipping command" % (myCoH.getId(), myT.mirrors))
-            return twisted.internet.defer.fail(Exception("Mirror uri %s is not well-formed" % myT.mirrors)).addErrback(parsePushError, myCoH.getId(), decrement_attempts_left = True).addErrback(gotErrorInError, myCoH.getId())
+            log.warn("command_on_host #%s: target.mirror do not seems to be as expected, got '%s', skipping command" % (myCoH.getId(), myT.mirrors))
+            err = twisted.internet.defer.fail(Exception("Mirror uri %s is not well-formed" % myT.mirrors))
+            err.addErrback(parsePushError, myCoH.getId(), decrement_attempts_left = True)
+            err.addErrback(gotErrorInError, myCoH.getId())
+            return err
 
         # Check mirrors
         if len(mirrors) != 2:
-            logger.warn("command_on_host #%s: we need two mirrors ! '%s'" % (myCoH.getId(), myT.mirrors))
-            return twisted.internet.defer.fail(Exception("Mirror uri %s do not contains two mirrors" % myT.mirrors)).addErrback(parsePushError, myCoH.getId(), decrement_attempts_left = True).addErrback(gotErrorInError, myCoH.getId())
+            log.warn("command_on_host #%s: we need two mirrors ! '%s'" % (myCoH.getId(), myT.mirrors))
+            err = twisted.internet.defer.fail(Exception("Mirror uri %s do not contains two mirrors" % myT.mirrors))
+            err.addErrback(parsePushError, myCoH.getId(), decrement_attempts_left = True)
+            err.addErrback(gotErrorInError, myCoH.getId())
+            return err
         mirror = mirrors[0]
         fbmirror = mirrors[1]
 
@@ -1379,7 +1435,7 @@ def _cbRunPushPullPhase(result, mirror, fbmirror, client, myC, myCoH, useFallbac
                 updateHistory(myCoH.getId(), 'upload_failed', PULSE2_PSERVER_FMIRRORFAILED_CONNREF_ERROR, '', result[2])
             elif result[1] == PULSE2_ERR_404:
                 updateHistory(myCoH.getId(), 'upload_failed', PULSE2_PSERVER_FMIRRORFAILED_404_ERROR, '', result[2])
-            logging.getLogger().warn("command_on_host #%s: Package '%s' is not available on any mirror" % (myCoH.getId(), myC.package_id))
+            log.warn("command_on_host #%s: Package '%s' is not available on any mirror" % (myCoH.getId(), myC.package_id))
             updateHistory(myCoH.getId(), 'upload_failed', PULSE2_PSERVER_PACKAGEISUNAVAILABLE_ERROR, '', myC.package_id)
             if not myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), True): # better decrement attemps, as package can't be found
                 return runFailedPhase(myCoH.getId())
@@ -1388,7 +1444,7 @@ def _cbRunPushPullPhase(result, mirror, fbmirror, client, myC, myCoH, useFallbac
             # The package is available on a mirror, start upload phase
             return _runPushPullPhase(mirror, fbmirror, client, myC, myCoH, useFallback)
     else:
-        logging.getLogger().warn("command_on_host #%s: Package '%s' is not available on any mirror" % (myCoH.getId(), myC.package_id))
+        log.warn("command_on_host #%s: Package '%s' is not available on any mirror" % (myCoH.getId(), myC.package_id))
         updateHistory(myCoH.getId(), 'upload_failed', PULSE2_PSERVER_PACKAGEISUNAVAILABLE_ERROR, '', myC.package_id)
         if not myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), True): # better decrement attemps, as package can't be found
             return runFailedPhase(myCoH.getId())
@@ -1512,7 +1568,7 @@ def _runPushPullPhase(mirror, fbmirror, client, myC, myCoH, useFallback = False)
         mirror = fbmirror
     else:
         updateHistory(myCoH.getId(), 'upload_in_progress', PULSE2_PSERVER_ISAVAILABLE_MIRROR, '%s\n%s' % (myC.package_id, mirror))
-    logging.getLogger().debug("command_on_host #%s: Package '%s' is available on %s" % (myCoH.getId(), myC.package_id, mirror))
+    log.debug("command_on_host #%s: Package '%s' is available on %s" % (myCoH.getId(), myC.package_id, mirror))
 
     credentials, mirror = extractCredentials(mirror)
     ma = pulse2.apis.clients.mirror.Mirror(credentials, mirror)
@@ -1558,14 +1614,14 @@ def _cbRunPushPullPhasePushPull(result, mirror, fbmirror, client, myC, myCoH, us
     # from here, either file_uris is a dict with a bunch of uris, or it is void in which case we give up
     if (not file_uris) or (len(file_uris['files']) == 0):
         if useFallback:
-            logging.getLogger().warn("command_on_host #%s: can't get files URI from fallback mirror, skipping command" % (myCoH.getId()))
+            log.warn("command_on_host #%s: can't get files URI from fallback mirror, skipping command" % (myCoH.getId()))
             updateHistory(myCoH.getId(), 'upload_failed', PULSE2_PSERVER_GETFILEURIFROMPACKAGE_F_ERROR, '', "%s\n%s" % (myC.package_id, fbmirror))
             # the getFilesURI call failed on the fallback. We have a serious
             # problem and we better decrement attempts
             if not myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), True):
                 return runFailedPhase(myCoH.getId())
         elif not fbmirror or fbmirror == mirror:
-            logging.getLogger().warn("command_on_host #%s: can't get files URI from mirror %s, and not fallback mirror to try" % (myCoH.getId(), mirror))
+            log.warn("command_on_host #%s: can't get files URI from mirror %s, and not fallback mirror to try" % (myCoH.getId(), mirror))
             updateHistory(myCoH.getId(), 'upload_failed', PULSE2_PSERVER_GETFILEURIFROMPACKAGE_ERROR, '', "%s\n%s" % (myC.package_id, mirror))
             # the getFilesURI call failed on the only mirror we have. We have a serious
             # problem and we better decrement attempts
@@ -1573,7 +1629,7 @@ def _cbRunPushPullPhasePushPull(result, mirror, fbmirror, client, myC, myCoH, us
                 return runFailedPhase(myCoH.getId())
         else:
             # Use the fallback mirror
-            logging.getLogger().warn("command_on_host #%s: can't get files URI from mirror %s, trying with fallback mirror %s" % (myCoH.getId(), mirror, fbmirror))
+            log.warn("command_on_host #%s: can't get files URI from mirror %s, trying with fallback mirror %s" % (myCoH.getId(), mirror, fbmirror))
             _cbRunPushPullPhaseTestFallbackMirror(None, mirror, fbmirror, client, myC, myCoH)
         return
 
@@ -1617,31 +1673,30 @@ def _cbRunPushPullPhasePushPull(result, mirror, fbmirror, client, myC, myCoH, us
 def runExecutionPhase(myCommandOnHostID):
     # Second step : execute file
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    logger = logging.getLogger()
-    logger.info("command_on_host #%s: execution phase" % myCommandOnHostID)
+    log.info("command_on_host #%s: execution phase" % myCommandOnHostID)
     if myCoH == None:
         return runGiveUpPhase(myCommandOnHostID)
     if myCoH.isExecutionRunning(): # execution still running, immediately returns
-        logger.info("command_on_host #%s: still running" % myCommandOnHostID)
+        log.info("command_on_host #%s: still running" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
     if myCoH.isExecutionDone(): # execution has already been done, jump to next stage
-        logger.info("command_on_host #%s: execution done" % myCommandOnHostID)
+        log.info("command_on_host #%s: execution done" % myCommandOnHostID)
         return runDeletePhase(myCommandOnHostID)
     if myCoH.isExecutionIgnored(): # execution has already been ignored, jump to next stage
-        logger.info("command_on_host #%s: execution ignored" % myCommandOnHostID)
+        log.info("command_on_host #%s: execution ignored" % myCommandOnHostID)
         return runDeletePhase(myCommandOnHostID)
     if not myCoH.isExecutionImminent(): # nothing to do right now, give out
-        logger.info("command_on_host #%s: nothing to execute right now" % myCommandOnHostID)
+        log.info("command_on_host #%s: nothing to execute right now" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
     if not myC.hasSomethingToExecute(): # nothing to execute here, jump to next stage
-        logger.info("command_on_host #%s: nothing to execute" % myCommandOnHostID)
+        log.info("command_on_host #%s: nothing to execute" % myCommandOnHostID)
         myCoH.setExecutionIgnored()
         myCoH.setStateScheduled()
         return runDeletePhase(myCommandOnHostID)
 
     if myC.hasToUseProxy():
         if not localProxyMayContinue(myCommandOnHostID):
-            logger.info("command_on_host #%s: execution postponed, waiting for some clients" % myCommandOnHostID)
+            log.info("command_on_host #%s: execution postponed, waiting for some clients" % myCommandOnHostID)
             myCoH.setStateScheduled()
             return runGiveUpPhase(myCommandOnHostID)
 
@@ -1724,24 +1779,23 @@ def runExecutionPhase(myCommandOnHostID):
 def runDeletePhase(myCommandOnHostID):
     # Third step : delete file
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    logger = logging.getLogger()
-    logger.info("command_on_host #%s: delete phase" % myCommandOnHostID)
+    log.info("command_on_host #%s: delete phase" % myCommandOnHostID)
     if myCoH == None:
         return runGiveUpPhase(myCommandOnHostID)
     if myCoH.isDeleteRunning(): # delete still running, immediately returns
-        logging.getLogger().info("command_on_host #%s: still deleting" % myCommandOnHostID)
+        log.info("command_on_host #%s: still deleting" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
     if myCoH.isDeleteDone(): # delete has already be done, jump to next stage
-        logger.info("command_on_host #%s: delete done" % myCommandOnHostID)
+        log.info("command_on_host #%s: delete done" % myCommandOnHostID)
         return runInventoryPhase(myCommandOnHostID)
     if myCoH.isDeleteIgnored(): # delete has already be ignored, jump to next stage
-        logger.info("command_on_host #%s: delete ignored" % myCommandOnHostID)
+        log.info("command_on_host #%s: delete ignored" % myCommandOnHostID)
         return runInventoryPhase(myCommandOnHostID)
     if not myCoH.isDeleteImminent(): # nothing to do right now, give out
-        logger.info("command_on_host #%s: nothing to delete right now" % myCommandOnHostID)
+        log.info("command_on_host #%s: nothing to delete right now" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
     if not myC.hasSomethingToDelete(): # nothing to delete here, jump to next stage
-        logger.info("command_on_host #%s: nothing to delete" % myCommandOnHostID)
+        log.info("command_on_host #%s: nothing to delete" % myCommandOnHostID)
         myCoH.setDeleteIgnored()
         myCoH.setStateScheduled()
         return runInventoryPhase(myCommandOnHostID)
@@ -1848,29 +1902,28 @@ def runDeletePhase(myCommandOnHostID):
 def runInventoryPhase(myCommandOnHostID):
     # Run inventory if needed
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    logger = logging.getLogger()
-    logger.info("command_on_host #%s: inventory phase" % myCommandOnHostID)
+    log.info("command_on_host #%s: inventory phase" % myCommandOnHostID)
     if myCoH == None:
         return runGiveUpPhase(myCommandOnHostID)
     if myCoH.isInventoryRunning(): # inventory still running, immediately returns
-        logger.info("command_on_host #%s: still inventoriing" % myCoH.getId())
+        log.info("command_on_host #%s: still inventoriing" % myCoH.getId())
         return runGiveUpPhase(myCommandOnHostID)
     if myCoH.isInventoryIgnored(): # inventory has already been ignored, jump to next stage
-        logger.info("command_on_host #%s: inventory ignored" % myCoH.getId())
+        log.info("command_on_host #%s: inventory ignored" % myCoH.getId())
         return runRebootPhase(myCommandOnHostID)
     if myCoH.isInventoryDone(): # inventory has already already done, jump to next stage
-        logger.info("command_on_host #%s: inventory done" % myCoH.getId())
+        log.info("command_on_host #%s: inventory done" % myCoH.getId())
         return runRebootPhase(myCommandOnHostID)
     if myC.isPartOfABundle() and not isLastToInventoryInBundle(myCommandOnHostID): # there is still a coh in the same bundle that has to launch inventory, jump to next stage
-        logger.info("command_on_host #%s: another coh from the same bundle will launch the inventory" % myCommandOnHostID)
+        log.info("command_on_host #%s: another coh from the same bundle will launch the inventory" % myCommandOnHostID)
         myCoH.setInventoryIgnored()
         myCoH.setStateScheduled()
         return runRebootPhase(myCommandOnHostID)
     if not myCoH.isInventoryImminent(): # nothing to do right now, give out
-        logger.info("command_on_host #%s: nothing to inventory right now" % myCoH.getId())
+        log.info("command_on_host #%s: nothing to inventory right now" % myCoH.getId())
         return runGiveUpPhase(myCommandOnHostID)
     if not myC.hasToRunInventory(): # no inventory to perform, jump to next stage
-        logger.info("command_on_host #%s: nothing to inventory" % myCoH.getId())
+        log.info("command_on_host #%s: nothing to inventory" % myCoH.getId())
         myCoH.setInventoryIgnored()
         myCoH.setStateScheduled()
         return runRebootPhase(myCommandOnHostID)
@@ -1916,24 +1969,23 @@ def runInventoryPhase(myCommandOnHostID):
 def runRebootPhase(myCommandOnHostID):
     # Run reboot if needed
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    logger = logging.getLogger()
-    logger.info("command_on_host #%s: reboot phase" % myCommandOnHostID)
+    log.info("command_on_host #%s: reboot phase" % myCommandOnHostID)
     if myCoH == None:
         return runGiveUpPhase(myCommandOnHostID)
     if myCoH.isRebootRunning(): # reboot still running, immediately returns
-        logger.info("command_on_host #%s: still rebooting" % myCoH.getId())
+        log.info("command_on_host #%s: still rebooting" % myCoH.getId())
         return runGiveUpPhase(myCommandOnHostID)
     if myCoH.isRebootIgnored(): # reboot has already been ignored, jump to next stage
-        logger.info("command_on_host #%s: reboot ignored" % myCoH.getId())
+        log.info("command_on_host #%s: reboot ignored" % myCoH.getId())
         return runHaltOnDone(myCommandOnHostID)
     if myCoH.isRebootDone(): # reboot has already been done, jump to next stage
-        logger.info("command_on_host #%s: reboot done" % myCoH.getId())
+        log.info("command_on_host #%s: reboot done" % myCoH.getId())
         return runHaltOnDone(myCommandOnHostID)
     if not myCoH.isRebootImminent(): # nothing to do right now, give out
-        logger.info("command_on_host #%s: do not reboot right now" % myCoH.getId())
+        log.info("command_on_host #%s: do not reboot right now" % myCoH.getId())
         return runGiveUpPhase(myCommandOnHostID)
     if not myC.hasToReboot(): # no reboot to perform, jump to next stage
-        logger.info("command_on_host #%s: do not reboot" % myCoH.getId())
+        log.info("command_on_host #%s: do not reboot" % myCoH.getId())
         myCoH.setRebootIgnored()
         myCoH.setStateScheduled()
         return runHaltOnDone(myCommandOnHostID)
@@ -1977,49 +2029,46 @@ def runRebootPhase(myCommandOnHostID):
     return mydeffered
 
 def runHaltOnDone(myCommandOnHostID): # supposed to be called at the very end of the process
-    logger = logging.getLogger()
-    logger.info("command_on_host #%s: halt-on-done phase" % myCommandOnHostID)
+    log.info("command_on_host #%s: halt-on-done phase" % myCommandOnHostID)
     return runHaltPhase(myCommandOnHostID, 'done')
 
 def runHaltOnFailed(myCommandOnHostID): # supposed to be called when the command is trashed
-    logger = logging.getLogger()
-    logger.info("command_on_host #%s: halt-on-failed phase" % myCommandOnHostID)
+    log.info("command_on_host #%s: halt-on-failed phase" % myCommandOnHostID)
     return runHaltPhase(myCommandOnHostID, 'failed')
 
 def runHaltPhase(myCommandOnHostID, condition):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    logger = logging.getLogger()
-    logger.info("command_on_host #%s: halt phase" % myCommandOnHostID)
+    log.info("command_on_host #%s: halt phase" % myCommandOnHostID)
     if myCoH == None:
         return runGiveUpPhase(myCommandOnHostID)
     if myCoH.isHaltRunning(): # halt still running, immediately returns
-        logging.getLogger().info("command_on_host #%s: still halting" % myCommandOnHostID)
+        log.info("command_on_host #%s: still halting" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
     if myCoH.isHaltIgnored(): # halt has already be ignored, jump to next stage
-        logger.info("command_on_host #%s: halt ignored" % myCommandOnHostID)
+        log.info("command_on_host #%s: halt ignored" % myCommandOnHostID)
         return runDonePhase(myCommandOnHostID)
     if myCoH.isHaltDone(): # halt has already be done, jump to next stage
-        logger.info("command_on_host #%s: halt done" % myCommandOnHostID)
+        log.info("command_on_host #%s: halt done" % myCommandOnHostID)
         return runDonePhase(myCommandOnHostID)
     if myC.isPartOfABundle() and not isLastToHaltInBundle(myCommandOnHostID): # there is still a coh in the same bundle that has to halt, jump to next stage
-        logger.info("command_on_host #%s: another coh from the same bundle will do the halt" % myCommandOnHostID)
+        log.info("command_on_host #%s: another coh from the same bundle will do the halt" % myCommandOnHostID)
         myCoH.setHaltIgnored()
         return runDonePhase(myCommandOnHostID)
     if not myCoH.isHaltImminent(): # nothing to do right now, give out
-        logger.info("command_on_host #%s: do not halt right now" % myCoH.getId())
+        log.info("command_on_host #%s: do not halt right now" % myCoH.getId())
         return runGiveUpPhase(myCommandOnHostID)
     if not myC.hasToHalt(): # do not run halt
-        logger.info("command_on_host #%s: halt ignored" % myCommandOnHostID)
+        log.info("command_on_host #%s: halt ignored" % myCommandOnHostID)
         myCoH.setHaltIgnored()
         myCoH.setStateScheduled()
         return runDonePhase(myCommandOnHostID)
     if condition == 'done' and not myC.hasToHaltIfDone(): # halt on done and we do not have to halt on done
-        logger.info("command_on_host #%s: halt-on-done ignored" % myCommandOnHostID)
+        log.info("command_on_host #%s: halt-on-done ignored" % myCommandOnHostID)
         myCoH.setHaltIgnored()
         myCoH.setStateScheduled()
         return runDonePhase(myCommandOnHostID)
     if condition == 'failed' and not myC.hasToHaltIfFailed(): # halt on failed and we do not have to halt on failure
-        logger.info("command_on_host #%s: halt-on-failed ignored" % myCommandOnHostID)
+        log.info("command_on_host #%s: halt-on-failed ignored" % myCommandOnHostID)
         myCoH.setHaltIgnored()
         myCoH.setStateScheduled()
         return runDonePhase(myCommandOnHostID)
@@ -2066,7 +2115,7 @@ def parseWOLAttempt(attempt_result, myCommandOnHostID):
 
     def setstate(myCommandOnHostID, stdout, stderr):
         (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-        logging.getLogger().info("command_on_host #%s: WOL done and done waiting" % (myCommandOnHostID))
+        log.info("command_on_host #%s: WOL done and done waiting" % (myCommandOnHostID))
         if myCoH == None:
             return runGiveUpPhase(myCommandOnHostID)
         updateHistory(myCommandOnHostID, 'wol_done', PULSE2_SUCCESS_ERROR, stdout, stderr)
@@ -2081,7 +2130,7 @@ def parseWOLAttempt(attempt_result, myCommandOnHostID):
     try:
         (exitcode, stdout, stderr) = attempt_result
     except TypeError,e: # xmlrpc call failed
-        logging.getLogger().error("command_on_host #%s: WOL request seems to have failed ?!" % (myCommandOnHostID))
+        log.error("command_on_host #%s: WOL request seems to have failed ?!" % (myCommandOnHostID))
 
         myCoH.setStateScheduled()
         myCoH.setWOLToDo()
@@ -2090,7 +2139,7 @@ def parseWOLAttempt(attempt_result, myCommandOnHostID):
         return runGiveUpPhase(myCommandOnHostID)
 
     myCoH.setLastWOLAttempt()
-    logging.getLogger().info("command_on_host #%s: WOL done, now waiting %s seconds for the computer to wake up" % (myCommandOnHostID,SchedulerConfig().max_wol_time))
+    log.info("command_on_host #%s: WOL done, now waiting %s seconds for the computer to wake up" % (myCommandOnHostID,SchedulerConfig().max_wol_time))
     twisted.internet.reactor.callLater(SchedulerConfig().max_wol_time, setstate, myCommandOnHostID, stdout, stderr)
     return runGiveUpPhase(myCommandOnHostID)
 
@@ -2099,13 +2148,13 @@ def parsePushResult((exitcode, stdout, stderr), myCommandOnHostID):
     if myCoH == None:
         return runGiveUpPhase(myCommandOnHostID)
     if exitcode == PULSE2_SUCCESS_ERROR: # success
-        logging.getLogger().info("command_on_host #%s: push done (exitcode == 0)" % myCommandOnHostID)
+        log.info("command_on_host #%s: push done (exitcode == 0)" % myCommandOnHostID)
         updateHistory(myCommandOnHostID, 'upload_done', exitcode, stdout, stderr)
         if myCoH.switchToUploadDone():
             return runExecutionPhase(myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
     else: # failure: immediately give up
-        logging.getLogger().info("command_on_host #%s: push failed (exitcode != 0)" % myCommandOnHostID)
+        log.info("command_on_host #%s: push failed (exitcode != 0)" % myCommandOnHostID)
         updateHistory(myCommandOnHostID, 'upload_failed', exitcode, stdout, stderr)
         if not myCoH.switchToUploadFailed(myC.getNextConnectionDelay()):
             return runFailedPhase(myCommandOnHostID)
@@ -2123,16 +2172,16 @@ def parsePullResult((exitcode, stdout, stderr), myCommandOnHostID):
         # see if we can unload a proxy
         # no ret val
         LocalProxiesUsageTracking().untake(proxy_uuid, myC.getId())
-        logging.getLogger().debug("scheduler %s: coh #%s used coh #%s as local proxy, releasing one slot (%d left)" % (SchedulerConfig().name, myCommandOnHostID, proxy_coh_id, LocalProxiesUsageTracking().how_much_left_for(proxy_uuid, myC.getId())))
+        log.debug("scheduler %s: coh #%s used coh #%s as local proxy, releasing one slot (%d left)" % (SchedulerConfig().name, myCommandOnHostID, proxy_coh_id, LocalProxiesUsageTracking().how_much_left_for(proxy_uuid, myC.getId())))
 
     if exitcode == PULSE2_SUCCESS_ERROR: # success
-        logging.getLogger().info("command_on_host #%s: pull done (exitcode == 0)" % myCommandOnHostID)
+        log.info("command_on_host #%s: pull done (exitcode == 0)" % myCommandOnHostID)
         updateHistory(myCommandOnHostID, 'upload_done', exitcode, stdout, stderr)
         if myCoH.switchToUploadDone():
             return runExecutionPhase(myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
     else: # failure: immediately give up
-        logging.getLogger().info("command_on_host #%s: pull failed (exitcode != 0)" % myCommandOnHostID)
+        log.info("command_on_host #%s: pull failed (exitcode != 0)" % myCommandOnHostID)
         updateHistory(myCommandOnHostID, 'upload_failed', exitcode, stdout, stderr)
         if not myCoH.switchToUploadFailed(myC.getNextConnectionDelay()):
             return runFailedPhase(myCommandOnHostID)
@@ -2143,13 +2192,13 @@ def parseExecutionResult((exitcode, stdout, stderr), myCommandOnHostID):
     if myCoH == None:
         return runGiveUpPhase(myCommandOnHostID)
     if exitcode == PULSE2_SUCCESS_ERROR: # success
-        logging.getLogger().info("command_on_host #%s: execution done (exitcode == 0)" % (myCommandOnHostID))
+        log.info("command_on_host #%s: execution done (exitcode == 0)" % (myCommandOnHostID))
         updateHistory(myCommandOnHostID, 'execution_done', exitcode, stdout, stderr)
         if myCoH.switchToExecutionDone():
             return runDeletePhase(myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
     else: # failure: immediately give up
-        logging.getLogger().info("command_on_host #%s: execution failed (exitcode != 0)" % (myCommandOnHostID))
+        log.info("command_on_host #%s: execution failed (exitcode != 0)" % (myCommandOnHostID))
         updateHistory(myCommandOnHostID, 'execution_failed', exitcode, stdout, stderr)
         if not myCoH.switchToExecutionFailed(myC.getNextConnectionDelay()):
             return runFailedPhase(myCommandOnHostID)
@@ -2160,13 +2209,13 @@ def parseDeleteResult((exitcode, stdout, stderr), myCommandOnHostID):
     if myCoH == None:
         return runGiveUpPhase(myCommandOnHostID)
     if exitcode == PULSE2_SUCCESS_ERROR: # success
-        logging.getLogger().info("command_on_host #%s: delete done (exitcode == 0)" % (myCommandOnHostID))
+        log.info("command_on_host #%s: delete done (exitcode == 0)" % (myCommandOnHostID))
         updateHistory(myCommandOnHostID, 'delete_done', exitcode, stdout, stderr)
         if myCoH.switchToDeleteDone():
             return runInventoryPhase(myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
     else: # failure: immediately give up
-        logging.getLogger().info("command_on_host #%s: delete failed (exitcode != 0)" % (myCommandOnHostID))
+        log.info("command_on_host #%s: delete failed (exitcode != 0)" % (myCommandOnHostID))
         updateHistory(myCommandOnHostID, 'delete_failed', exitcode, stdout, stderr)
         if not myCoH.switchToDeleteFailed(myC.getNextConnectionDelay()):
             return runFailedPhase(myCommandOnHostID)
@@ -2177,13 +2226,13 @@ def parseInventoryResult((exitcode, stdout, stderr), myCommandOnHostID):
     if myCoH == None:
         return runGiveUpPhase(myCommandOnHostID)
     if exitcode == PULSE2_SUCCESS_ERROR: # success
-        logging.getLogger().info("command_on_host #%s: inventory done (exitcode == 0)" % (myCommandOnHostID))
+        log.info("command_on_host #%s: inventory done (exitcode == 0)" % (myCommandOnHostID))
         updateHistory(myCommandOnHostID, 'inventory_done', exitcode, stdout, stderr)
         if myCoH.switchToInventoryDone():
             return runRebootPhase(myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
     else: # failure: immediately give up
-        logging.getLogger().info("command_on_host #%s: inventory failed (exitcode != 0)" % (myCommandOnHostID))
+        log.info("command_on_host #%s: inventory failed (exitcode != 0)" % (myCommandOnHostID))
         updateHistory(myCommandOnHostID, 'inventory_failed', exitcode, stdout, stderr)
         if not myCoH.switchToInventoryFailed(myC.getNextConnectionDelay()):
             return runFailedPhase(myCommandOnHostID)
@@ -2193,15 +2242,14 @@ def parseRebootResult((exitcode, stdout, stderr), myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     if myCoH == None:
         return runGiveUpPhase(myCommandOnHostID)
-    logger = logging.getLogger()
     if exitcode == PULSE2_SUCCESS_ERROR: # success
-        logging.getLogger().info("command_on_host #%s: reboot done (exitcode == 0)" % (myCommandOnHostID))
+        log.info("command_on_host #%s: reboot done (exitcode == 0)" % (myCommandOnHostID))
         updateHistory(myCommandOnHostID, 'reboot_done', exitcode, stdout, stderr)
         if myCoH.switchToRebootDone():
             return runHaltOnDone(myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
     else: # failure: immediately give up
-        logging.getLogger().info("command_on_host #%s: reboot failed (exitcode != 0)" % (myCommandOnHostID))
+        log.info("command_on_host #%s: reboot failed (exitcode != 0)" % (myCommandOnHostID))
         updateHistory(myCommandOnHostID, 'reboot_failed', exitcode, stdout, stderr)
         if not myCoH.switchToRebootFailed(myC.getNextConnectionDelay()):
             return runFailedPhase(myCommandOnHostID)
@@ -2211,15 +2259,14 @@ def parseHaltResult((exitcode, stdout, stderr), myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     if myCoH == None:
         return runGiveUpPhase(myCommandOnHostID)
-    logger = logging.getLogger()
     if exitcode == PULSE2_SUCCESS_ERROR: # success
-        logging.getLogger().info("command_on_host #%s: halt done (exitcode == 0)" % (myCommandOnHostID))
+        log.info("command_on_host #%s: halt done (exitcode == 0)" % (myCommandOnHostID))
         updateHistory(myCommandOnHostID, 'halt_done', exitcode, stdout, stderr)
         if myCoH.switchToHaltDone():
             return runDonePhase(myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
     else: # failure: immediately give up
-        logging.getLogger().info("command_on_host #%s: halt failed (exitcode != 0)" % (myCommandOnHostID))
+        log.info("command_on_host #%s: halt failed (exitcode != 0)" % (myCommandOnHostID))
         updateHistory(myCommandOnHostID, 'halt_failed', exitcode, stdout, stderr)
         if myCoH.switchToHaltFailed(myC.getNextConnectionDelay()):
             return runFailedPhase(myCommandOnHostID)
@@ -2231,12 +2278,12 @@ def parsePushOrder(taken_in_account, myCommandOnHostID):
         return runGiveUpPhase(myCommandOnHostID)
     if taken_in_account: # success
         updateHistory(myCommandOnHostID, 'upload_in_progress')
-        logging.getLogger().info("command_on_host #%s: push order taken in account" % myCommandOnHostID)
+        log.info("command_on_host #%s: push order taken in account" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
     else: # failed: launcher seems to have rejected it
         myCoH.setUploadToDo()
         myCoH.setStateScheduled()
-        logging.getLogger().warn("command_on_host #%s: push order not taken in account" % myCommandOnHostID)
+        log.warn("command_on_host #%s: push order not taken in account" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
 
 def parsePullOrder(taken_in_account, myCommandOnHostID):
@@ -2245,12 +2292,12 @@ def parsePullOrder(taken_in_account, myCommandOnHostID):
         return runGiveUpPhase(myCommandOnHostID)
     if taken_in_account: # success
         updateHistory(myCommandOnHostID, 'upload_in_progress')
-        logging.getLogger().info("command_on_host #%s: pull order taken in account" % myCommandOnHostID)
+        log.info("command_on_host #%s: pull order taken in account" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
     else: # failed: launcher seems to have rejected it
         myCoH.setUploadToDo()
         myCoH.setStateScheduled()
-        logging.getLogger().warn("command_on_host #%s: pull order not taken in account" % myCommandOnHostID)
+        log.warn("command_on_host #%s: pull order not taken in account" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
 
 def parseExecutionOrder(taken_in_account, myCommandOnHostID):
@@ -2259,12 +2306,12 @@ def parseExecutionOrder(taken_in_account, myCommandOnHostID):
         return runGiveUpPhase(myCommandOnHostID)
     if taken_in_account: # success
         updateHistory(myCommandOnHostID, 'execution_in_progress')
-        logging.getLogger().info("command_on_host #%s: execution order taken in account" % myCommandOnHostID)
+        log.info("command_on_host #%s: execution order taken in account" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
     else: # failed: launcher seems to have rejected it
         myCoH.setExecutionToDo()
         myCoH.setStateScheduled()
-        logging.getLogger().warn("command_on_host #%s: execution order not taken in account" % myCommandOnHostID)
+        log.warn("command_on_host #%s: execution order not taken in account" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
 
 def parseDeleteOrder(taken_in_account, myCommandOnHostID):
@@ -2273,12 +2320,12 @@ def parseDeleteOrder(taken_in_account, myCommandOnHostID):
         return runGiveUpPhase(myCommandOnHostID)
     if taken_in_account: # success
         updateHistory(myCommandOnHostID, 'delete_in_progress')
-        logging.getLogger().info("command_on_host #%s: delete order taken in account" % myCommandOnHostID)
+        log.info("command_on_host #%s: delete order taken in account" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
     else: # failed: launcher seems to have rejected it
         myCoH.setDeleteToDo()
         myCoH.setStateScheduled()
-        logging.getLogger().warn("command_on_host #%s: delete order not taken in account" % myCommandOnHostID)
+        log.warn("command_on_host #%s: delete order not taken in account" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
 
 def parseInventoryOrder(taken_in_account, myCommandOnHostID):
@@ -2287,12 +2334,12 @@ def parseInventoryOrder(taken_in_account, myCommandOnHostID):
         return runGiveUpPhase(myCommandOnHostID)
     if taken_in_account: # success
         updateHistory(myCommandOnHostID, 'inventory_in_progress')
-        logging.getLogger().info("command_on_host #%s: inventory order taken in account" % myCommandOnHostID)
+        log.info("command_on_host #%s: inventory order taken in account" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
     else: # failed: launcher seems to have rejected it
         myCoH.setInventoryToDo()
         myCoH.setStateScheduled()
-        logging.getLogger().warn("command_on_host #%s: inventory order not taken in account" % myCommandOnHostID)
+        log.warn("command_on_host #%s: inventory order not taken in account" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
 
 def parseRebootOrder(taken_in_account, myCommandOnHostID):
@@ -2301,12 +2348,12 @@ def parseRebootOrder(taken_in_account, myCommandOnHostID):
         return runGiveUpPhase(myCommandOnHostID)
     if taken_in_account: # success
         updateHistory(myCommandOnHostID, 'reboot_in_progress')
-        logging.getLogger().info("command_on_host #%s: reboot order taken in account" % myCommandOnHostID)
+        log.info("command_on_host #%s: reboot order taken in account" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
     else: # failed: launcher seems to have rejected it
         myCoH.setRebootToDo()
         myCoH.setStateScheduled()
-        logging.getLogger().warn("command_on_host #%s: reboot order not taken in account" % myCommandOnHostID)
+        log.warn("command_on_host #%s: reboot order not taken in account" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
 
 def parseHaltOrder(taken_in_account, myCommandOnHostID):
@@ -2315,12 +2362,12 @@ def parseHaltOrder(taken_in_account, myCommandOnHostID):
         return runGiveUpPhase(myCommandOnHostID)
     if taken_in_account: # success
         updateHistory(myCommandOnHostID, 'halt_in_progress')
-        logging.getLogger().info("command_on_host #%s: halt order taken in account" % myCommandOnHostID)
+        log.info("command_on_host #%s: halt order taken in account" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
     else: # failed: launcher seems to have rejected it
         myCoH.setHaltToDo()
         myCoH.setStateScheduled()
-        logging.getLogger().warn("command_on_host #%s: halt order not taken in account" % myCommandOnHostID)
+        log.warn("command_on_host #%s: halt order not taken in account" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
 
 def parseWOLError(reason, myCommandOnHostID, decrement_attempts_left = False, error_code = PULSE2_UNKNOWN_ERROR):
@@ -2329,7 +2376,7 @@ def parseWOLError(reason, myCommandOnHostID, decrement_attempts_left = False, er
        error_code : by default we consider un unknwo error was raised (PULSE2_UNKNOWN_ERROR)
     """
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    logging.getLogger().warn("command_on_host #%s: WOL failed" % myCommandOnHostID)
+    log.warn("command_on_host #%s: WOL failed" % myCommandOnHostID)
     if myCoH == None:
         WOLTracking().unlockwol(myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
@@ -2346,7 +2393,7 @@ def parsePushError(reason, myCommandOnHostID, decrement_attempts_left = False, e
        error_code : by default we consider un unknwo error was raised (PULSE2_UNKNOWN_ERROR)
     """
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    logging.getLogger().warn("command_on_host #%s: push failed, unattented reason: %s" % (myCommandOnHostID, reason))
+    log.warn("command_on_host #%s: push failed, unattented reason: %s" % (myCommandOnHostID, reason))
     if myCoH == None:
         return runGiveUpPhase(myCommandOnHostID)
     updateHistory(myCommandOnHostID, 'upload_failed', error_code, '', reason.getErrorMessage())
@@ -2361,7 +2408,7 @@ def parsePullError(reason, myCommandOnHostID, decrement_attempts_left = False, e
     """
     # something goes really wrong: immediately give up
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    logging.getLogger().warn("command_on_host #%s: pull failed, unattented reason: %s" % (myCommandOnHostID, reason))
+    log.warn("command_on_host #%s: pull failed, unattented reason: %s" % (myCommandOnHostID, reason))
     if myCoH == None:
         return runGiveUpPhase(myCommandOnHostID)
 
@@ -2372,7 +2419,7 @@ def parsePullError(reason, myCommandOnHostID, decrement_attempts_left = False, e
         # see if we can unload a proxy
         # no ret val
         LocalProxiesUsageTracking().untake(proxy_uuid, myC.getId())
-        logging.getLogger().debug("scheduler %s: coh #%s used coh #%s as local proxy, releasing one slot (%d left)" % (SchedulerConfig().name, myCommandOnHostID, proxy_coh_id, LocalProxiesUsageTracking().how_much_left_for(proxy_uuid, myC.getId())))
+        log.debug("scheduler %s: coh #%s used coh #%s as local proxy, releasing one slot (%d left)" % (SchedulerConfig().name, myCommandOnHostID, proxy_coh_id, LocalProxiesUsageTracking().how_much_left_for(proxy_uuid, myC.getId())))
 
     updateHistory(myCommandOnHostID, 'upload_failed', error_code, '', reason.getErrorMessage())
     if not myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), decrement_attempts_left):
@@ -2386,7 +2433,7 @@ def parseExecutionError(reason, myCommandOnHostID, decrement_attempts_left = Fal
     """
     # something goes really wrong: immediately give up
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    logging.getLogger().warn("command_on_host #%s: execution failed, unattented reason: %s" % (myCommandOnHostID, reason))
+    log.warn("command_on_host #%s: execution failed, unattented reason: %s" % (myCommandOnHostID, reason))
     if myCoH == None:
         return runGiveUpPhase(myCommandOnHostID)
     updateHistory(myCommandOnHostID, 'execution_failed', error_code, '', reason.getErrorMessage())
@@ -2402,7 +2449,7 @@ def parseDeleteError(reason, myCommandOnHostID, decrement_attempts_left = False,
     """
     # something goes really wrong: immediately give up
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    logging.getLogger().warn("command_on_host #%s: delete failed, unattented reason: %s" % (myCommandOnHostID, reason))
+    log.warn("command_on_host #%s: delete failed, unattented reason: %s" % (myCommandOnHostID, reason))
     if myCoH == None:
         return runGiveUpPhase(myCommandOnHostID)
     updateHistory(myCommandOnHostID, 'delete_failed', error_code, '', reason.getErrorMessage())
@@ -2418,8 +2465,7 @@ def parseInventoryError(reason, myCommandOnHostID, decrement_attempts_left = Fal
     """
     # something goes really wrong: immediately give up
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    logger = logging.getLogger()
-    logger.warn("command_on_host #%s: inventory failed, unattented reason: %s" % (myCommandOnHostID, reason))
+    log.warn("command_on_host #%s: inventory failed, unattented reason: %s" % (myCommandOnHostID, reason))
     if myCoH == None:
         return runGiveUpPhase(myCommandOnHostID)
     updateHistory(myCommandOnHostID, 'inventory_failed', error_code, '', reason.getErrorMessage())
@@ -2435,8 +2481,7 @@ def parseRebootError(reason, myCommandOnHostID, decrement_attempts_left = False,
     """
     # something goes really wrong: immediately give up
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    logger = logging.getLogger()
-    logger.warn("command_on_host #%s: reboot failed, unattented reason: %s" % (myCommandOnHostID, reason))
+    log.warn("command_on_host #%s: reboot failed, unattented reason: %s" % (myCommandOnHostID, reason))
     if myCoH == None:
         return runGiveUpPhase(myCommandOnHostID)
     updateHistory(myCommandOnHostID, 'reboot_failed', error_code, '', reason.getErrorMessage())
@@ -2452,8 +2497,7 @@ def parseHaltError(reason, myCommandOnHostID, decrement_attempts_left = False, e
     """
     # something goes really wrong: immediately give up
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    logger = logging.getLogger()
-    logger.warn("command_on_host #%s: halt failed, unattented reason: %s" % (myCommandOnHostID, reason))
+    log.warn("command_on_host #%s: halt failed, unattented reason: %s" % (myCommandOnHostID, reason))
     if myCoH == None:
         return runGiveUpPhase(myCommandOnHostID)
     updateHistory(myCommandOnHostID, 'halt_failed', error_code, '', reason.getErrorMessage())
@@ -2465,7 +2509,7 @@ def parseHaltError(reason, myCommandOnHostID, decrement_attempts_left = False, e
 def runDonePhase(myCommandOnHostID):
     # Last step : end file
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    logging.getLogger().info("command_on_host #%s: end (done) phase" % myCommandOnHostID)
+    log.info("command_on_host #%s: end (done) phase" % myCommandOnHostID)
     if myCoH == None:
         return runGiveUpPhase(myCommandOnHostID)
     myCoH.setStateDone()
@@ -2474,24 +2518,24 @@ def runDonePhase(myCommandOnHostID):
 def runFailedPhase(myCommandOnHostID):
     # Last step : end file
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    logging.getLogger().info("command_on_host #%s: end (failed) phase" % myCommandOnHostID)
+    log.info("command_on_host #%s: end (failed) phase" % myCommandOnHostID)
     if myCoH == None:
         return runGiveUpPhase(myCommandOnHostID)
     myCoH.setStateFailed()
     return runGiveUpPhase(myCommandOnHostID)
 
 def runGiveUpPhase(myCommandOnHostID):
-    logging.getLogger().info("command_on_host #%s: Releasing" % myCommandOnHostID)
+    log.info("command_on_host #%s: Releasing" % myCommandOnHostID)
     if SchedulerConfig().lock_processed_commands:
         CommandsOnHostTracking().release(myCommandOnHostID)
     return None
 
 def gotErrorInError(reason, myCommandOnHostID):
-    logging.getLogger().error("command_on_host #%s: got an error within an error: %s" % (myCommandOnHostID, pulse2.utils.extractExceptionMessage(reason)))
+    log.error("command_on_host #%s: got an error within an error: %s" % (myCommandOnHostID, pulse2.utils.extractExceptionMessage(reason)))
     return runGiveUpPhase(myCommandOnHostID)
 
 def gotErrorInResult(reason, myCommandOnHostID):
-    logging.getLogger().error("command_on_host #%s: got an error within an result: %s" % (myCommandOnHostID, pulse2.utils.extractExceptionMessage(reason)))
+    log.error("command_on_host #%s: got an error within an result: %s" % (myCommandOnHostID, pulse2.utils.extractExceptionMessage(reason)))
     return runGiveUpPhase(myCommandOnHostID)
 
 def updateHistory(id, state = None, error_code = PULSE2_SUCCESS_ERROR, stdout = '', stderr = ''):

@@ -40,12 +40,14 @@ import pulse2.utils
 from pulse2.xmlrpc import isTwistedEnoughForLoginPass
 from pulse2.database.msc.config import MscDatabaseConfig
 
+log = logging.getLogger()
+
 class SchedulerDatabaseConfig(MscDatabaseConfig):
     dbname = "msc"
     dbsection = "database"
 
     def __setup_fallback(self, mscconffile):
-        logging.getLogger().info("Reading configuration file (database config): %s" % mscconffile)
+        log.info("Reading configuration file (database config): %s" % mscconffile)
         self.dbsection = "msc"
         MscDatabaseConfig.setup(self, mscconffile)
 
@@ -53,13 +55,13 @@ class SchedulerDatabaseConfig(MscDatabaseConfig):
         mscconffile = pulse2.utils.getConfigFile("msc")
         if os.path.exists(conffile):
             try:
-                logging.getLogger().info("Trying to read configuration file (database config): %s" % conffile)
+                log.info("Trying to read configuration file (database config): %s" % conffile)
                 MscDatabaseConfig.setup(self, conffile)
             except Exception, e:
-                logging.getLogger().warn("Configuration file: %s does not contain any database config : %s" % (conffile, e))
+                log.warn("Configuration file: %s does not contain any database config : %s" % (conffile, e))
                 self.__setup_fallback(mscconffile)
             if not self.cp.has_section("database"):
-                logging.getLogger().warn("Configuration file: %s does not contain any database config" % conffile)
+                log.warn("Configuration file: %s does not contain any database config" % conffile)
                 self.__setup_fallback(mscconffile)
         elif os.path.exists(mscconffile):
             self.__setup_fallback(mscconffile)
@@ -125,27 +127,27 @@ class SchedulerConfig(pulse2.utils.Singleton):
         if type == 'str':
             if self.cp.has_option(section, key):
                 setattr(self, attrib, self.cp.get(section, key))
-                logging.getLogger().info("scheduler %s: section %s, option %s set to '%s'" % (self.name, section, key, getattr(self, attrib)))
+                log.debug("scheduler %s: section %s, option %s set to '%s'" % (self.name, section, key, getattr(self, attrib)))
             else:
-                logging.getLogger().warn("scheduler %s: section %s, option %s not set, using default value '%s'" % (self.name, section, key, getattr(self, attrib)))
+                log.debug("scheduler %s: section %s, option %s not set, using default value '%s'" % (self.name, section, key, getattr(self, attrib)))
         elif type == 'bool':
             if self.cp.has_option(section, key):
                 setattr(self, attrib, self.cp.getboolean(section, key))
-                logging.getLogger().info("scheduler %s: section %s, option %s set to %s" % (self.name, section, key, getattr(self, attrib)))
+                log.debug("scheduler %s: section %s, option %s set to %s" % (self.name, section, key, getattr(self, attrib)))
             else:
-                logging.getLogger().warn("scheduler %s: section %s, option %s not set, using default value %s" % (self.name, section, key, getattr(self, attrib)))
+                log.debug("scheduler %s: section %s, option %s not set, using default value %s" % (self.name, section, key, getattr(self, attrib)))
         if type == 'int':
             if self.cp.has_option(section, key):
                 setattr(self, attrib, self.cp.getint(section, key))
-                logging.getLogger().info("scheduler %s: section %s, option %s set to %s" % (self.name, section, key, getattr(self, attrib)))
+                log.debug("scheduler %s: section %s, option %s set to %s" % (self.name, section, key, getattr(self, attrib)))
             else:
-                logging.getLogger().warn("scheduler %s: section %s, option %s not set, using default value %s" % (self.name, section, key, getattr(self, attrib)))
+                log.debug("scheduler %s: section %s, option %s not set, using default value %s" % (self.name, section, key, getattr(self, attrib)))
         elif type == 'pass':
             if self.cp.has_option(section, key):
                 setattr(self, attrib, self.cp.getpassword(section, key))
-                logging.getLogger().info("scheduler %s: section %s, option %s set using given value" % (self.name, section, key))
+                log.debug("scheduler %s: section %s, option %s set using given value" % (self.name, section, key))
             else:
-                logging.getLogger().warn("scheduler %s: section %s, option %s not set, using default value" % (self.name, section, key))
+                log.debug("scheduler %s: section %s, option %s not set, using default value" % (self.name, section, key))
 
     def presetup(self, config_file):
         """
@@ -183,17 +185,17 @@ class SchedulerConfig(pulse2.utils.Singleton):
 
         self.setoption("scheduler", "analyse_hour", "analyse_hour")
         if len(self.analyse_hour) == 0: # no option given
-            logging.getLogger().info("analyse loop disabled as requested")
+            log.info("analyse loop disabled as requested")
             self.active_analyse_hour = False
         else:
             try:
                 splitted = self.analyse_hour.split(':')
                 assert len(splitted) == 3 # only accept "HH:MM:SS"
                 self.analyse_hour = (int(splitted[0]) * 60 + int(splitted[1])) * 60 + int(splitted[2])
-                logging.getLogger().info("analyse loop enabled, will run every day at %s" % ":".join(splitted))
+                log.info("analyse loop enabled, will run every day at %s" % ":".join(splitted))
                 self.active_analyse_hour = True
             except:
-                logging.getLogger().warning("can't parse analyse_hour (read %s, expecting 'HH:MM:SS'), neutralysing analyse loop" % (self.analyse_hour))
+                log.warning("can't parse analyse_hour (read %s, expecting 'HH:MM:SS'), neutralysing analyse loop" % (self.analyse_hour))
                 self.active_analyse_hour = False
 
         self.setoption("scheduler", "clean_states_time", "clean_states_time", 'int')
@@ -239,7 +241,7 @@ class SchedulerConfig(pulse2.utils.Singleton):
                     return False
 
         if self.cp.has_option("scheduler", "listen"): # TODO remove in a future version
-            logging.getLogger().warning("'listen' is obsolete, please replace it in your config file by 'host'")
+            log.warning("'listen' is obsolete, please replace it in your config file by 'host'")
             self.setoption("scheduler", "listen", "host")
         else:
             self.setoption("scheduler", "host", "host")
@@ -250,11 +252,11 @@ class SchedulerConfig(pulse2.utils.Singleton):
         if not isTwistedEnoughForLoginPass():
             if self.username != '':
                 if self.username != 'username':
-                    logging.getLogger().warning("your version of twisted is not high enough to use login (scheduler/username)")
+                    log.warning("your version of twisted is not high enough to use login (scheduler/username)")
                 self.username = ''
             if self.password != '':
                 if self.password != 'password':
-                    logging.getLogger().warning("your version of twisted is not high enough to use password (scheduler/password)")
+                    log.warning("your version of twisted is not high enough to use password (scheduler/password)")
                 self.password = ''
 
         self.setoption("scheduler", "mode", "mode")
@@ -268,24 +270,24 @@ class SchedulerConfig(pulse2.utils.Singleton):
             for token in self.cp.get("scheduler", "client_check").split(','):
                 (key, val) = token.split('=')
                 self.client_check[key] = val
-            logging.getLogger().info("scheduler %s: section %s, option %s set using given value" % (self.name, 'client_check', self.client_check))
+            log.info("scheduler %s: section %s, option %s set using given value" % (self.name, 'client_check', self.client_check))
         if self.cp.has_option("scheduler", "server_check"):
             self.server_check = {}
             for token in self.cp.get("scheduler", "server_check").split(','):
                 (key, val) = token.split('=')
                 self.server_check[key] = val
-            logging.getLogger().info("scheduler %s: section %s, option %s set using given value" % (self.name, 'server_check', self.server_check))
+            log.info("scheduler %s: section %s, option %s set using given value" % (self.name, 'server_check', self.server_check))
         if self.cp.has_option("scheduler", "announce_check"):
             self.announce_check = {}
             for token in self.cp.get("scheduler", "announce_check").split(','):
                 (key, val) = token.split('=')
                 self.announce_check[key] = val
-            logging.getLogger().info("scheduler %s: section %s, option %s set using given value" % (self.name, 'server_check', self.server_check))
+            log.info("scheduler %s: section %s, option %s set using given value" % (self.name, 'server_check', self.server_check))
 
         # [daemon] section parsing (parsing ofr user, group, and umask is done above in presetup)
         if self.cp.has_section("daemon"):
             if self.cp.has_option('daemon', 'pid_path'):
-                logging.getLogger().warning("'pid_path' is deprecated, please replace it in your config file by 'pidfile'")
+                log.warning("'pid_path' is deprecated, please replace it in your config file by 'pidfile'")
                 self.setoption('daemon', 'pid_path', 'pid_path')
             else:
                 self.setoption('daemon', 'pidfile', 'pid_path')
@@ -297,10 +299,10 @@ class SchedulerConfig(pulse2.utils.Singleton):
                 password = self.cp.getpassword(section, "password")
                 if not isTwistedEnoughForLoginPass():
                     if username != '':
-                        logging.getLogger().warning("your version of twisted is not high enough to use login (%s/username)"%(section))
+                        log.warning("your version of twisted is not high enough to use login (%s/username)"%(section))
                         username = ''
                     if password != '':
-                        logging.getLogger().warning("your version of twisted is not high enough to use password (%s/password)"%(section))
+                        log.warning("your version of twisted is not high enough to use password (%s/password)"%(section))
                         password = ''
 
                 self.launchers[section] = {
