@@ -1755,11 +1755,15 @@ class InventoryCreator(Inventory):
                 m = m[0]
             # Set last inventory flag to 0 for already existing inventory for
             # this computer
+            # Added by SkyAdmin: also check location (entity) to prevent hostname
+            # duplication with different users
+            entity = inventory['Entity'][0]['Label']
             result = session.query(InventoryTable).\
                 select_from(
-                    self.inventory.join(self.table['hasEntity']).join(self.machine)
+                    self.inventory.join(self.table['hasEntity']).join(self.machine).join(self.table['Entity'])
                 ).\
-                filter(self.machine.c.Name == hostname)
+                filter(self.machine.c.Name == hostname).\
+                filter(self.table['Entity'].c.Label == entity)
 
             for inv in result:
                 inv.Last = 0
