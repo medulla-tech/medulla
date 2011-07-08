@@ -73,10 +73,8 @@ from pulse2.scheduler.tracking.commands import CommandsOnHostTracking
 from pulse2.scheduler.tracking.wol import WOLTracking
 from pulse2.scheduler.tracking.preempt import Pulse2Preempt
 from pulse2.utils import extractExceptionMessage
-import pulse2.cache
 
 log = logging.getLogger()
-scheduler_cache = getCache('scheduler')
 
 # Regex compilers
 re_file_prot = re.compile('^file://')
