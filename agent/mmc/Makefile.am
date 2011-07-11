@@ -28,6 +28,7 @@ all-local: site.py
 # Expands Python modules list with found *.py files in each module given in pythonmodules
 mmcpythondir = $(pythondir)/$(notdir $(realpath $(srcdir)))
 nobase_mmcpython_PYTHON = $(wildcard *.py $(patsubst %,$(srcdir)/%/*.py ,$(subst .,/,$(pythonmodules))))
+nodist_mmcpython_PYTHON = site.py
 
 EXTRA_DIST = site.py.in
 CLEANFILES = site.py
@@ -48,4 +49,3 @@ site.py: Makefile
 	  test -f ./$@.in || srcdir=$(srcdir)/; \
 	  $(edit) $${srcdir}$@.in >$@.tmp
 	mv $@.tmp $@
-site.py: $(srcdir)/site.py.in
