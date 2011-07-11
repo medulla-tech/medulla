@@ -21,8 +21,7 @@
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
 mmcconfdir = $(sysconfdir)/mmc
-nobase_dist_mmcconf_DATA = \
-	plugins/ppolicy.ini \
+nobase_dist_mmcconf_DATA = plugins/ppolicy.ini \
 	agent/keys/cacert.pem agent/keys/localcert.pem
 nobase_nodist_mmcconf_DATA = agent/config.ini plugins/base.ini
 
@@ -39,12 +38,13 @@ edit = sed \
         -e 's|@libdir[@]|$(libdir)|g'
 
 plugins/base.ini agent/config.ini: Makefile
+	test "$@ = plugins/base.ini" && \
+    	  test -f /etc/mandriva-release && \
+	    sed -i 's!log/ldap.log!log/ldap/ldap.log!g' $${srcdir}$@.in; \
+	    sed -i 's!ou=Groups\b!ou=Group!g;s!ou=Users\b!ou=People!g' $${srcdir}$@.in
 	rm -f $@ $@.tmp
 	$(MKDIR_P) $(@D)
 	srcdir=''; \
 	  test -f ./$@.in || srcdir=$(srcdir)/; \
 	  $(edit) $${srcdir}$@.in >$@.tmp
 	mv $@.tmp $@
-
-plugins/base.ini: $(srcdir)/plugins/base.ini.in
-agent/config.ini: $(srcdir)/agent/config.ini.in
