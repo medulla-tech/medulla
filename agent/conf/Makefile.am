@@ -25,7 +25,8 @@ nobase_mmcconf_DATA = \
 	agent/config.ini plugins/base.ini plugins/ppolicy.ini \
 	agent/keys/cacert.pem agent/keys/localcert.pem
 
-EXTRA_DIST = $(nobase_mmcconf_DATA)
+EXTRA_DIST = agent/config.ini.in plugins/base.ini.in plugins/ppolicy.ini \
+	     agent/keys/cacert.pem agent/keys/localcert.pem
 CLEANFILES = plugins/base.ini agent/config.ini
 
 if ENABLE_CONF_BACKUP
