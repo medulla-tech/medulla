@@ -34,9 +34,9 @@ ldapurl = ldap://127.0.0.1:389
 # LDAP base DN
 baseDN = dc=mandriva, dc=com
 # Users location in the LDAP
-baseUsersDN = ou=People, %(basedn)s
+baseUsersDN = ou=Users, %(basedn)s
 # Groups location in the LDAP
-baseGroupsDN = ou=Group, %(basedn)s
+baseGroupsDN = ou=Groups, %(basedn)s
 # LDAP manager
 rootName = cn=admin, %(basedn)s
 password = secret
@@ -54,7 +54,7 @@ uidStart = 10000
 # group gid number start
 gidStart = 10000
 # LDAP log file path
-logfile = /var/log/ldap/ldap.log
+logfile = /var/log/ldap.log
 # FDS log file path
 # logfile = /opt/fedora-ds/slapd-hostname/logs/access
 
