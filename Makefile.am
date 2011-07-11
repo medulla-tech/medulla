@@ -27,7 +27,7 @@ SUBDIRS  = agent web
 
 EXTRA_DIST = m4
 
-ldapcontribdir = $(docdir)/contrib/ldap
+ldapcontribdir = $(datarootdir)/doc/python-mmc-base/contrib/ldap
 
 dist-hook:
 	rm -rf `find $(distdir) -name .svn`
