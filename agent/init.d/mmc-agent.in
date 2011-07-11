@@ -73,9 +73,9 @@ stop () {
         kill -15 `cat ${PIDFILE}`
         # Get return code
         RETVAL=$?
-        # If there's no pidfile, skip kill and define RETVAL as 1
+        # If there's no pidfile, skip kill, return 0
     else
-	    RETVAL=1
+	RETVAL=0
     fi
     if [ $RETVAL -eq 0 ]
     then
@@ -96,8 +96,8 @@ force_stop () {
         # Get return code
         RETVAL=$?
     else
-        # If there's no pidfile, skip kill and define RETVAL as 1
-        RETVAL=1
+        # If there's no pidfile, skip kill, return 0
+        RETVAL=0
     fi
     if [ $RETVAL -eq 0 ]
     then
