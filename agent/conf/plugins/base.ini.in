@@ -18,13 +18,13 @@ ldapurl = ldap://127.0.0.1:389
 #           connection (recommended)
 #ldapverifypeer = demand
 # Client certicates to use (default are empty) for LDAPS or TLS connections:
-# For example: /etc/ssl/certs
+# For example: @sysconfdir@/ssl/certs
 #cacertdir =
-# For example: /etc/mmc/certs/demoCA/cacert.pem
+# For example: @sysconfdir@/mmc/certs/demoCA/cacert.pem
 #cacert =
-# For example: /etc/mmc/certs/client.cert
+# For example: @sysconfdir@/mmc/certs/client.cert
 #localcert =
-# For example: /etc/mmc/certs/client.key
+# For example: @sysconfdir@/mmc/certs/client.key
 #localkey =
 # Accepted ciphers
 # Use this for more security: TLSv1+SHA1+AES+DH:CAMELLIA:!NULL:!ADH
@@ -71,7 +71,7 @@ passwordscheme = passmod
 
 [backup-tools]
 # Path of the backup tools
-path = /usr/lib/mmc/backup-tools
+path = @libdir@/mmc/backup-tools
 # Where are put the archives
 destpath = /home/archives
 

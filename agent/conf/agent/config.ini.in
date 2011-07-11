@@ -12,8 +12,8 @@ password = s3cr3t
 #maxthreads = 20
 # SSL support
 enablessl = 1
-localcert = /etc/mmc/agent/keys/localcert.pem
-cacert = /etc/mmc/agent/keys/cacert.pem
+localcert = @sysconfdir@/mmc/agent/keys/localcert.pem
+cacert = @sysconfdir@/mmc/agent/keys/cacert.pem
 # Certificate check
 # verifypeer = 0
 # Path to the file containing the Certificate Authority (PEM format)
@@ -25,11 +25,11 @@ cacert = /etc/mmc/agent/keys/cacert.pem
 user = root
 group = root
 umask = 0077
-pidfile= /var/run/mmc-agent.pid
+pidfile= @localstatedir@/run/mmc-agent.pid
 # user = mmc
 # group = mmc
 # umask = 0007
-# pidfile= /var/run/mmc-agent.pid
+# pidfile= @localstatedir@/run/mmc-agent.pid
 
 [loggers]
 keys=root
@@ -48,7 +48,7 @@ handlers=hand01
 class=FileHandler
 level=INFO
 formatter=form01
-args=("/var/log/mmc/mmc-agent.log",)
+args=("@localstatedir@/log/mmc/mmc-agent.log",)
 
 [handler_hand02]
 class=StreamHandler

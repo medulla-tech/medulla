@@ -26,7 +26,24 @@ nobase_mmcconf_DATA = \
 	agent/keys/cacert.pem agent/keys/localcert.pem
 
 EXTRA_DIST = $(nobase_mmcconf_DATA)
+CLEANFILES = plugins/base.ini agent/config.ini
 
 if ENABLE_CONF_BACKUP
 INSTALL += --backup=numbered
 endif
+
+edit = sed \
+        -e 's|@sysconfdir[@]|$(sysconfdir)|g' \
+	-e 's|@localstatedir[@]|$(localstatedir)|g' \
+        -e 's|@libdir[@]|$(libdir)|g'
+
+plugins/base.ini agent/config.ini: Makefile
+	rm -f $@ $@.tmp
+	$(MKDIR_P) $(@D)
+	srcdir=''; \
+	  test -f ./$@.in || srcdir=$(srcdir)/; \
+	  $(edit) $${srcdir}$@.in >$@.tmp
+	mv $@.tmp $@
+
+plugins/base.ini: $(srcdir)/plugins/base.ini.in
+agent/config.ini: $(srcdir)/agent/config.ini.in
