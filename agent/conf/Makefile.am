@@ -21,13 +21,13 @@
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
 mmcconfdir = $(sysconfdir)/mmc
-nobase_mmcconf_DATA = \
-	agent/config.ini plugins/base.ini plugins/ppolicy.ini \
+nobase_dist_mmcconf_DATA = \
+	plugins/ppolicy.ini \
 	agent/keys/cacert.pem agent/keys/localcert.pem
+nobase_nodist_mmcconf_DATA = agent/config.ini plugins/base.ini
 
-EXTRA_DIST = agent/config.ini.in plugins/base.ini.in plugins/ppolicy.ini \
-	     agent/keys/cacert.pem agent/keys/localcert.pem
-CLEANFILES = plugins/base.ini agent/config.ini
+EXTRA_DIST = agent/config.ini.in plugins/base.ini.in
+CLEANFILES = agent/config.ini plugins/base.ini
 
 if ENABLE_CONF_BACKUP
 INSTALL += --backup=numbered
