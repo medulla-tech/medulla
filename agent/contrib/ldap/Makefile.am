@@ -20,7 +20,7 @@
 # Author(s)
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-ldapcontribdir = $(datarootdir)/doc/mmc/contrib/ldap
-dist_ldapcontrib_DATA = dhcp.schema mail.schema nsswitch.conf pam_ldap.conf quota.schema  slapd.conf \
+ldapcontribdir = $(datarootdir)/doc/python-mmc-base/contrib/ldap
+dist_ldapcontrib_DATA = dhcp.schema mail.schema nsswitch.conf pam_ldap.conf quota.schema slapd.conf \
 	slapd.conf.samba dnszone.schema mmc.schema printer.schema samba.schema slapd.conf.mmc-samba-ox \
-	slapd.conf.userquota
+	slapd.conf.userquota zarafa.schema ppolicy.schema
