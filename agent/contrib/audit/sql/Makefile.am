@@ -20,7 +20,7 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-sqldir = $(datadir)/mmc/sql/audit
+
+sqldir = $(datarootdir)/doc/python-mmc-base/contrib/audit/sql
 dist_sql_SCRIPTS = install.sh
-dist_sql_DATA = \
-	schema-2.sql
+dist_sql_DATA = schema-2.sql
