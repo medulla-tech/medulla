@@ -30,12 +30,12 @@ datafiles = $(shell find $(patsubst %,$(srcdir)/%,$(datapaths)) \
 	-type f \
 	! -name '*.po' \
 	! -name '*.mo' \
-	! -path '*/.svn/*') \
-	site.php
+	! -path '*/.svn/*')
 pofiles = $(shell cd $(srcdir) && find -name '*.po')
 mofiles = $(patsubst %.po,%.mo,$(pofiles))
 
 nobase_mmcdata_DATA = $(datafiles) $(mofiles)
+nodist_mmcdata_DATA = site.php
 
 EXTRA_DIST = $(datafiles) $(pofiles) site.php.in
 CLEANFILES = $(mofiles) site.php
@@ -59,4 +59,3 @@ site.php: Makefile
 	  test -f ./$@.in || srcdir=$(srcdir)/; \
 	  $(edit) $${srcdir}$@.in >$@.tmp
 	mv $@.tmp $@
-site.php: $(srcdir)/site.php.in
