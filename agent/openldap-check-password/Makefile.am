@@ -23,6 +23,8 @@
 ldapconfdir = @ldapconfdir@
 ldaplibdir = @ldaplibdir@
 
+AM_CFLAGS = -I/usr/include/openldap/slapd/ -I/usr/include/openldap/include
+
 dist_ldapconf_DATA = mmc-check-password.conf
 
 ldapconf_LTLIBRARIES = mmc-check-password.la
