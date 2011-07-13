@@ -23,7 +23,7 @@ AC_PREREQ(2.59)
 dnl autoconf initialization
 define([project], [mmc-core])
 define([gitversion], esyscmd([sh -c "which git > /dev/null && git describe 2> /dev/null | sed -e 's/]project[-\([^-]\+\)//' | tr -d '\n' || true"]))dnl
-AC_INIT(project, [3.0.2]gitversion, [http://www.mandriva.com])
+AC_INIT(project, [3.0.2]gitversion, [http://mds.mandriva.org])
 AC_DEFINE(GITVERSION, "gitversion", [Git version])
 
 AC_CANONICAL_BUILD
@@ -31,6 +31,7 @@ AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 
 AM_INIT_AUTOMAKE([-Wno-portability])
+AM_CONFIG_HEADER(config.h) 
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES(yes)])
 AC_CONFIG_MACRO_DIR([m4])
 
@@ -60,18 +61,6 @@ if test "x$USE_NLS" = "xyes"; then
           AC_MSG_ERROR([msgfmt not found. You need to install the 'gettext' package, or pass --enable-nls=no to configure.])
    fi
 fi
-
-dnl check for libraries
-
-dnl check for headers
-AC_HEADER_STDC
-# TODO: check for slap.h header
-
-dnl Add strictness options to the compiler
-CFLAGS="$CFLAGS -Wall -Werror"
-AC_SUBST(CFLAGS)
-AC_SUBST(CPPFLAGS)
-AC_SUBST(LDFLAGS)
 
 dnl
 dnl --disable-python
@@ -137,6 +126,20 @@ AC_ARG_ENABLE([check-password],
               [],
               [enable_check_password="no"])
 AM_CONDITIONAL([ENABLE_CHECK_PASSWORD], [test "$enable_check_password" = "yes"])
+
+dnl Check for headers
+if test "x$enable_check_password" = "xyes"; then
+	dnl check for headers
+	AC_HEADER_STDC
+	dnl Add strictness options to the compiler
+	CFLAGS="$CFLAGS -Wall -Werror"
+	AC_SUBST(CFLAGS)
+	AC_SUBST(CPPFLAGS)
+	AC_SUBST(LDFLAGS)
+	# check for slap.h / portable.h headers
+	#AC_CHECK_HEADERS([openldap/include/portable.h],,AC_MSG_ERROR(mmc-check-password requires portable.h))
+	#AC_CHECK_HEADERS([openldap/slapd/slap.h],,AC_MSG_ERROR(mmc-check-password requires slap.h))
+fi
 
 dnl
 dnl --with-ldap-confdir
