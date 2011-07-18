@@ -20,8 +20,7 @@
 # Author(s)
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-initdir = $(sysconfdir)/init.d
-init_SCRIPTS = mmc-agent
+nodist_init_SCRIPTS = mmc-agent
 
 EXTRA_DIST = mmc-agent.in
 

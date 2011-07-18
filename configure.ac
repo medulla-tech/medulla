@@ -165,6 +165,18 @@ AC_ARG_WITH([ldap-libdir],
 	    [ldapconfdir="${libdir}/ldap"])
 AC_SUBST([ldaplibdir])
 
+dnl
+dnl --with-initdir
+dnl   Set path to init scripts directory
+dnl   Default to SYSCONFDIR/init.d
+dnl
+AC_ARG_WITH([initdir],
+            [AS_HELP_STRING([--with-initdir],
+                            [path to init scripts direcory @<:@default=SYSCONFDIR/init.d@:>@])],
+            [initdir="$withval"],
+	    [initdir="${sysconfdir}/init.d"])
+AC_SUBST([initdir])
+
 dnl files to generate with automake
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([agent/Makefile])
