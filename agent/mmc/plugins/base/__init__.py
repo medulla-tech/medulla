@@ -602,6 +602,8 @@ class LdapUserGroupControl:
         self.skelDir = "/etc/skel"
         self.defaultUserGroup = None
         self.defaultHomeDir = "/home"
+        self.defaultShellEnable = "/bin/bash"
+        self.defaultShellDisable = "/bin/false"
         self.uidStart = 10000
         self.gidStart = 10000
 
@@ -635,6 +637,10 @@ class LdapUserGroupControl:
         try: self.uidStart = self.config.getint("ldap", "uidStart")
         except: pass
         try: self.gidStart = self.config.getint("ldap", "gidStart")
+        except: pass
+        try: self.defaultShellEnable = self.config.getint("ldap", "defaultShellEnable")
+        except: pass
+        try: self.defaultShellDisable = self.config.getint("ldap", "defaultShellDisable")
         except: pass
 
         try:
@@ -691,7 +697,7 @@ class LdapUserGroupControl:
 
     def enableUser(self, login):
         """
-        Enable user by setting his/her shell to /bin/bash
+        Enable user by setting his/her shell to defaultShellEnable (default /bin/bash)
 
         @param login: login of the user
         @type login: str
@@ -702,8 +708,7 @@ class LdapUserGroupControl:
         s = self.l.search_s(dn, ldap.SCOPE_BASE)
         c, old = s[0]
         new = old.copy()
-        # FIXME: should not be hardcoded but put in a conf file
-        new[attr] = "/bin/bash"
+        new[attr] = self.defaultShellEnable
         modlist = ldap.modlist.modifyModlist(old, new)
         self.l.modify_s(dn, modlist)
         r.commit()
@@ -711,7 +716,7 @@ class LdapUserGroupControl:
 
     def disableUser(self, login):
         """
-        Disable user by setting his/her shell to /bin/false
+        Disable user by setting his/her shell to defaultShellDisable (default /bin/false)
 
         @param login: login of the user
         @type login: str
@@ -722,7 +727,7 @@ class LdapUserGroupControl:
         s = self.l.search_s(dn, ldap.SCOPE_BASE)
         c, old = s[0]
         new = old.copy()
-        new["loginShell"] = "/bin/false" # FIXME: should not be hardcoded but put in a conf file
+        new["loginShell"] = self.defaultShellDisable
         modlist = ldap.modlist.modifyModlist(old, new)
         self.l.modify_s(dn, modlist)
         r.commit()
@@ -731,12 +736,12 @@ class LdapUserGroupControl:
     def isEnabled(self, login):
         """
         Return True if the user is enabled, else False.
-        A user is enabled if his/her shell is not /bin/false.
+        A user is enabled if his/her shell is not defaultShellDisable
         A user is also disabled if the user has no loginShell attribute.
         """
         u = self.getDetailedUser(login)
         try:
-            return u["loginShell"] != ["/bin/false"]
+            return u["loginShell"] != [self.defaultShellDisable]
         except KeyError:
             return False
 
@@ -851,6 +856,9 @@ class LdapUserGroupControl:
                     raise Exception('group error: already exist or cannot instanciate')
         gidNumber = int(self.getDetailedGroup(primaryGroup)["gidNumber"][0])
 
+        # Get the loginShell
+        shell = self.defaultShellEnable
+
         # Put default value in firstN and lastN
         if not firstN: firstN = uid
         if not lastN: lastN = uid
@@ -866,7 +874,7 @@ class LdapUserGroupControl:
 
         # Create insertion array in ldap dir
         # FIXME: document shadow attributes choice
-        user_info = {'loginShell':'/bin/bash',
+        user_info = {'loginShell':shell,
                      'uidNumber':str(uidNumber),
                      'gidnumber':str(gidNumber),
                      'objectclass':['inetOrgPerson','posixAccount','shadowAccount','top','person'],
@@ -1561,7 +1569,7 @@ class LdapUserGroupControl:
                 enabled = 0
                 try:
                     shell = entry[1]["loginShell"][0]
-                    if shell != "/bin/false": enabled = 1
+                    if shell != self.defaultShellDisable: enabled = 1
                 except KeyError:
                     pass
                 localArr["enabled"] = enabled

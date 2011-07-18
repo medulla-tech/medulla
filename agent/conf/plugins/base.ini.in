@@ -49,6 +49,10 @@ skelDir = /etc/skel
 defaultUserGroup = Domain Users
 # Default home directory for users
 defaultHomeDir = /home
+# Default shell for enabled users
+defaultShellEnable = /bin/bash
+# Default shell for disabled users
+defaultShellDisable = /bin/false
 # user uid number start
 uidStart = 10000
 # group gid number start
