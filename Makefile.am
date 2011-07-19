@@ -30,7 +30,7 @@ EXTRA_DIST = m4
 ldapcontribdir = $(datarootdir)/doc/python-mmc-base/contrib/ldap
 
 dist-hook:
-	rm -rf `find $(distdir) -name .svn`
+	rm -rf `find $(distdir) -name .svn -or -name *.po~`
 
 confwarning: sysconfdirwarning localstatedirwarning
 
