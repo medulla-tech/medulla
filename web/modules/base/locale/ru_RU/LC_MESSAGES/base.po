@@ -2,13 +2,15 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # 
+## Translators:
+#   <i.sence.i@gmail.com>, 2011.
 # Vitaly Kolomeytsev <nvalka@gmail.com>, 2008.
 msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://mds.mandriva.org/\n"
-"POT-Creation-Date: 2011-01-30 08:12+0100\n"
-"PO-Revision-Date: 2011-06-17 10:08+0000\n"
+"POT-Creation-Date: 2011-02-08 13:33+0100\n"
+"PO-Revision-Date: 2011-07-26 09:45+0000\n"
 "Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
 "Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/mds/team/ru_RU/)\n"
 "MIME-Version: 1.0\n"
@@ -39,15 +41,18 @@ msgstr "завершить сеанс"
 
 #: graph/navbar.inc.php:50 logout/index.php:49 logout/index.php:54
 msgid "Logout"
-msgstr "c4dc3ea4c90f4b486e51ac5101ac949b_tr"
+msgstr ""
 
 #: graph/navbar.inc.php:63 main_content.php:167
 msgid "Home"
 msgstr "Главная"
 
 #: graph/navbar.inc.php:117
-msgid "If this phrase does not change, you browser is not supported by the MMC application"
-msgstr "Если эта фраза не исчезает, то значит ваш браузер не поддерживается MMC"
+msgid ""
+"If this phrase does not change, you browser is not supported by the MMC "
+"application"
+msgstr ""
+"Если эта фраза не исчезает, то значит ваш браузер не поддерживается MMC"
 
 #: main.php:134
 msgid "Error, you don't have correct rights !"
@@ -63,8 +68,12 @@ msgid "Login failed"
 msgstr "Ошибка входа в систему"
 
 #: index.php:91
-msgid "You have been logged out because the session between the MMC web interface and the MMC agent expired."
-msgstr "Вы были отсоединены, потому что сессия между web-интерфейсом MMC и MMC-агентом истекла."
+msgid ""
+"You have been logged out because the session between the MMC web interface "
+"and the MMC agent expired."
+msgstr ""
+"Вы были отсоединены, потому что сессия между web-интерфейсом MMC и "
+"MMC-агентом истекла."
 
 #: index.php:160 modules/base/users/edit.php:389
 #: modules/base/users/ajaxFilter.php:68 modules/base/views/index.tpl.php:78
@@ -90,7 +99,7 @@ msgstr "Подключиться"
 
 #: modules/ppolicy/includes/publicFunc.php:152
 msgid "Password maximum failure"
-msgstr ""
+msgstr "Превышено количество вводов пароля"
 
 #: modules/ppolicy/includes/publicFunc.php:156
 msgid "Lockout duration (seconds)"
@@ -125,8 +134,11 @@ msgid "Edit group"
 msgstr "Изменить группу"
 
 #: modules/base/groups/edit.php:72
-msgid "The group name can only contain letters and numeric, and must begin with a letter"
-msgstr "Имя группы может содержать только буквы и цифры и должно начинаться с буквы"
+msgid ""
+"The group name can only contain letters and numeric, and must begin with a "
+"letter"
+msgstr ""
+"Имя группы может содержать только буквы и цифры и должно начинаться с буквы"
 
 #: modules/base/groups/edit.php:89
 msgid "Group name"
@@ -181,8 +193,12 @@ msgid "Group successfully modified"
 msgstr "Группа успешно изменена"
 
 #: modules/base/groups/members.php:121
-msgid "Some users can't be removed from this group because this group is their primary group."
-msgstr "Некторые пользователи не могут быть удалены из этой группы, так как она является для них основной"
+msgid ""
+"Some users can't be removed from this group because this group is their "
+"primary group."
+msgstr ""
+"Некторые пользователи не могут быть удалены из этой группы, так как она "
+"является для них основной"
 
 #: modules/base/groups/members.php:124
 #, php-format
@@ -229,64 +245,72 @@ msgstr "Добавить"
 
 #: modules/base/status/support.php:29
 msgid "License and support informations"
-msgstr ""
+msgstr "Информация о лицензии и поддержке"
 
 #: modules/base/status/support.php:34
 msgid " and "
-msgstr ""
+msgstr " и "
 
 #: modules/base/status/support.php:38
 msgid "WARNING: The number of registered users is exceeding your license."
 msgstr ""
+"ВНИМАНИЕ: количество зарегистрированных пользователей превышает вашу "
+"лицензию."
 
 #: modules/base/status/support.php:41
 msgid "WARNING: The number of registered computers is exceeding your license."
 msgstr ""
+"ВНИМАНИЕ: количество зарегистрированных коспьютеров превышает вашу лицензию."
 
 #: modules/base/status/support.php:44
 #: modules/base/includes/users-xmlrpc.inc.php:62
-msgid "Please contact your administrator for more information. If you are an administrator, please go to the license status page for more information."
+msgid ""
+"Please contact your administrator for more information. If you are an "
+"administrator, please go to the license status page for more information."
 msgstr ""
+"Пожалуйста, свяжитесь с вашим администратором, чтобы олучить больше "
+"информации. Если вы администратор, пожалуйста, перейдите на страницу "
+"состояния лицензии, чтобы получить больше информации."
 
 #: modules/base/status/support.php:50
 msgid "Product name"
-msgstr ""
+msgstr "Название продукта"
 
 #: modules/base/status/support.php:51
 msgid "Product vendor"
-msgstr ""
+msgstr "Производитель продукта"
 
 #: modules/base/status/support.php:52
 msgid "Product vendor mail"
-msgstr ""
+msgstr "Электронная почта производителя продукта"
 
 #: modules/base/status/support.php:53
 msgid "Company name"
-msgstr ""
+msgstr "Название компании"
 
 #: modules/base/status/support.php:54
 msgid "Company administrator mail"
-msgstr ""
+msgstr "Электронная почта администратора компании"
 
 #: modules/base/status/support.php:55 modules/base/status/support.php:60
 msgid "Comment"
-msgstr ""
+msgstr "Комментарии"
 
 #: modules/base/status/support.php:56
 msgid "Registered users"
-msgstr ""
+msgstr "Зарегистрарованные пользователи"
 
 #: modules/base/status/support.php:57
 msgid "Registered computers"
-msgstr ""
+msgstr "Зарегистрированные компьютеры"
 
 #: modules/base/status/support.php:58
 msgid "Support mail address"
-msgstr ""
+msgstr "Электронная почта поддержки"
 
 #: modules/base/status/support.php:59
 msgid "Support phone number"
-msgstr ""
+msgstr "Телефонный номер поддержки"
 
 #: modules/base/status/index.php:101
 msgid "Uptime: "
@@ -434,7 +458,9 @@ msgstr "Поле основной группы не может быть пуст
 #: modules/base/users/edit.php:120
 #, php-format
 msgid "The group %s does not exist, and so can't be set as primary group."
-msgstr "Группа %s не существует и поэтому не может быть установлена в качестве основоной."
+msgstr ""
+"Группа %s не существует и поэтому не может быть установлена в качестве "
+"основоной."
 
 #: modules/base/users/edit.php:131
 msgid "Password is empty."
@@ -539,7 +565,7 @@ msgid ""
 "A disabled user can't log in any UNIX services. <br/>\n"
 "                            Her/his login shell command is replaced by /bin/false"
 msgstr ""
-"Отключенные пользователи не смогут воспользоваться какими либо UNIX-сервисами. <br/>\n"
+"Отключенные пользователи не смогут воспользоваться какими-либо UNIX-сервисами. <br/>\n"
 "                            Его/Ее командная оболочка будет заменена на /bin/false"
 
 #: modules/base/users/edit.php:472 modules/base/views/index.tpl.php:87
@@ -559,16 +585,23 @@ msgid "Common name"
 msgstr "Общее имя"
 
 #: modules/base/users/edit.php:484
-msgid "This field is used by some LDAP clients (for example Thunderbird address book) to display user entries."
-msgstr "Это поле используется некоторыми клиентами LDAP (к примеру адресная книга Thunderbird) для показа записей пользователя."
+msgid ""
+"This field is used by some LDAP clients (for example Thunderbird address "
+"book) to display user entries."
+msgstr ""
+"Это поле используется некоторыми клиентами LDAP (к примеру адресная книга "
+"Thunderbird) для показа записей пользователя."
 
 #: modules/base/users/edit.php:488 modules/base/infoPackage.inc.php:327
 msgid "Preferred name to be used"
 msgstr "Будет использовано предпочтительное имя"
 
 #: modules/base/users/edit.php:489
-msgid "This field is used by SAMBA (and other LDAP clients) to display user name."
-msgstr "Это поле используеться SAMBA (и другими LDAP-клиентами) для отображения имени пользователя."
+msgid ""
+"This field is used by SAMBA (and other LDAP clients) to display user name."
+msgstr ""
+"Это поле используется SAMBA (и другими LDAP-клиентами) для отображения имени"
+" пользователя."
 
 #: modules/base/users/edit.php:536
 msgid "Unlock LDAP account"
@@ -618,20 +651,30 @@ msgstr "Резервное копирование домашней папки п
 #: modules/base/users/backup.php:54
 #, php-format
 msgid "Backup of <b>%s</b> user's folder has been launched in background."
-msgstr "Резервное копированиепапки папки пользователя <b>%s</b> запущено в фоновом режиме."
+msgstr ""
+"Резервное копированиепапки папки пользователя <b>%s</b> запущено в фоновом "
+"режиме."
 
 #: modules/base/users/backup.php:56
 #, php-format
-msgid "The files will be stored in the directory %s of the server at the end of the backup."
-msgstr "Файлы будут сохранены в каталоге %s на сервере, по окончании резервного копирования."
+msgid ""
+"The files will be stored in the directory %s of the server at the end of the"
+" backup."
+msgstr ""
+"Файлы будут сохранены в каталоге %s на сервере, по окончании резервного "
+"копирования."
 
 #: modules/base/users/backup.php:58
 msgid "Please go to the status page to check the backup status."
-msgstr "Пожалуйста перейдите на страницу состояния, для проверки состояния резервного копирования."
+msgstr ""
+"Пожалуйста перейдите на страницу состояния, для проверки состояния "
+"резервного копирования."
 
 #: modules/base/users/backup.php:60
 msgid "This operation will last according to the amount of data to backup."
-msgstr "Продолжительность этой операции зависит от объема данных заданных для резервного копирования."
+msgstr ""
+"Продолжительность этой операции зависит от объема данных заданных для "
+"резервного копирования."
 
 #: modules/base/users/backup.php:74
 #, php-format
@@ -640,8 +683,12 @@ msgstr "Домашний каталог %s будет заархивирован
 
 #: modules/base/users/backup.php:79
 #, php-format
-msgid "Please select media size. If your data exceeds the volume size, several files of your media size will be created."
-msgstr "Пожалуйста укажите размер тома. Если данные привысят размер тома, то будет создано несколько томов."
+msgid ""
+"Please select media size. If your data exceeds the volume size, several "
+"files of your media size will be created."
+msgstr ""
+"Пожалуйста, укажите размер тома. Если данные привысят размер тома, то будет "
+"создано несколько томов."
 
 #: modules/base/users/backup.php:83
 msgid "Media size"
@@ -696,11 +743,11 @@ msgstr "Компьютер успешно добавлен"
 
 #: modules/base/computers/edit.php:40
 msgid "The computer name is already taken."
-msgstr ""
+msgstr "Имя компьютера уже занято."
 
 #: modules/base/computers/edit.php:44
 msgid "Invalid computer name."
-msgstr ""
+msgstr "Недоступное имя компьютера"
 
 #: modules/base/computers/edit.php:51
 msgid "Add a computer"
@@ -712,7 +759,7 @@ msgstr "Изменить компьютер"
 
 #: modules/base/computers/edit.php:85
 msgid "Computer name"
-msgstr "4586743cb79bed181996b137d0043b67_tr"
+msgstr ""
 
 #: modules/base/computers/edit.php:124
 msgid "Location"
@@ -732,7 +779,7 @@ msgstr "Удалить этот компьютер"
 
 #: modules/base/computers/delete.php:38
 msgid "Do you want a backup to be done ?"
-msgstr ""
+msgstr "Вы хотите выполнить резервное копирование?"
 
 #: modules/base/computers/localSidebar.php:7
 msgid "All computers"
@@ -752,7 +799,7 @@ msgstr "Аудит Samba"
 
 #: modules/base/audit/list.php:30
 msgid "Logged actions"
-msgstr "9c6ffde59de7a137e64411242f01247d_tr"
+msgstr ""
 
 #: modules/base/audit/list.php:39
 msgid "Search action"
@@ -906,11 +953,11 @@ msgstr "Дополнительная информация"
 
 #: modules/base/includes/users-xmlrpc.inc.php:46
 msgid "Invalid login"
-msgstr "Неверный пользователь"
+msgstr "Неверное имя пользователя"
 
 #: modules/base/includes/users-xmlrpc.inc.php:55
 msgid "users"
-msgstr "5623945b8c7b8edaf5520a3f934c569a_tr"
+msgstr ""
 
 #: modules/base/includes/users-xmlrpc.inc.php:58
 msgid "computers"
@@ -919,12 +966,16 @@ msgstr "Компьютеры"
 #: modules/base/includes/users-xmlrpc.inc.php:61
 #, php-format
 msgid "WARNING: The number of registered %s is exceeding your license."
-msgstr ""
+msgstr "ВНИМАНИЕ: Количество зарегистрированных %s превышает вашу лицензию."
 
 #: modules/base/includes/users-xmlrpc.inc.php:118
 #, php-format
-msgid "User %s created but password is not valid regarding your password policies.<br/><strong>You must change the user password.</strong><br />"
-msgstr "Пользователь %s был создан, но пароль не отвечает вашим требованиям безопасности.<br/><strong>Вы должны изменить пароль.</strong><br />"
+msgid ""
+"User %s created but password is not valid regarding your password "
+"policies.<br/><strong>You must change the user password.</strong><br />"
+msgstr ""
+"Пользователь %s был создан, но пароль не отвечает вашим требованиям "
+"безопасности.<br/><strong>Вы должны изменить пароль.</strong><br />"
 
 #: modules/base/includes/users-xmlrpc.inc.php:122
 #, php-format
@@ -979,11 +1030,13 @@ msgstr "Удалить компьютер из группы"
 #, php-format
 msgid "Group %s can't be deleted.<br/>%s is the primary group of some users."
 msgstr ""
+"Группа %s не может быть удалена.<br/>Группа %s является основной для "
+"некоторых пользователей."
 
 #: modules/base/includes/publicFunc.php:53
 #, php-format
 msgid "Group %s successfully deleted."
-msgstr ""
+msgstr "Группа %s успешно удалена."
 
 #: modules/base/includes/errorHandling.php:28
 msgid "LDAP log file does not exist."
@@ -1002,14 +1055,15 @@ msgstr ""
 "Пожалуйста, убедитесь в том, что:\n"
 "                        <p>Эта строка есть в файле /etc/ldap/slapd.conf или /etc/openldap/slapd.conf:\n"
 "                        <pre>loglevel        256</pre></p>\n"
-"                        <p>и эта строка в файле /etc/syslog.conf:\n"
+"                        <p>и эта строка есть в файле /etc/syslog.conf:\n"
 "                        <pre>local4.*       /var/log/ldap.log</pre>\n"
 "                        </p>\n"
 "                        "
 
 #: modules/base/includes/errorHandling.php:39
 msgid "The user directory does not exist and cannot be removed."
-msgstr "Директория пользователя не существует и поэтому не может быть удалена."
+msgstr ""
+"Директория пользователя не существует и поэтому не может быть удалена."
 
 #: modules/base/includes/errorHandling.php:40
 msgid "Please do not remove user's files when deleting the user."
@@ -1020,16 +1074,24 @@ msgid "Password fails quality checking policy."
 msgstr "Пароль не прошел проверку на качество."
 
 #: modules/base/includes/errorHandling.php:46
-msgid "The password policy of your account doesn't allow you to modify your password, because your password doesn't met the passwords policies."
-msgstr "Политика паролей вашего аккаунта не позволяет вам изменить пароль, так как он не удовлетворяет политике."
+msgid ""
+"The password policy of your account doesn't allow you to modify your "
+"password, because your password doesn't met the passwords policies."
+msgstr ""
+"Политика паролей вашего аккаунта не позволяет вам изменить пароль, так как "
+"он не удовлетворяет политике."
 
 #: modules/base/includes/errorHandling.php:51
 msgid "Your password is too young to change."
 msgstr "Ваш пороль слишком молод для изменения"
 
 #: modules/base/includes/errorHandling.php:52
-msgid "The password policy of your account doesn't allow you to modify your password, because your password is too young to change."
-msgstr "Политика паролей вашего аккаунта не позволяет вам изменить пароль, так как прошло мало времени с его создания/изменения."
+msgid ""
+"The password policy of your account doesn't allow you to modify your "
+"password, because your password is too young to change."
+msgstr ""
+"Политика паролей вашего аккаунта не позволяет вам изменить пароль, так как "
+"прошло мало времени с его создания/изменения."
 
 #: modules/base/includes/errorHandling.php:57
 msgid "Password is in history of old passwords"
@@ -1037,8 +1099,12 @@ msgstr "Пароль в истории старых паролей"
 
 #: modules/base/includes/errorHandling.php:58
 #: modules/base/includes/errorHandling.php:64
-msgid "The password policy of your account doesn't allow you to modify your password, because you already had this password previously."
-msgstr "Политика паролей вашего аккаунта не позволяет вам изменить пароль, так как он совпадает с ранее установленным."
+msgid ""
+"The password policy of your account doesn't allow you to modify your "
+"password, because you already had this password previously."
+msgstr ""
+"Политика паролей вашего аккаунта не позволяет вам изменить пароль, так как "
+"он совпадает с ранее установленным."
 
 #: modules/base/includes/errorHandling.php:63
 msgid "Password is not being changed from existing value"
@@ -1086,11 +1152,11 @@ msgstr "IP-адрес компьютера"
 
 #: modules/base/includes/computers-i18n.php:26
 msgid "Computer's MAC address"
-msgstr "MAC-адрес компьютера:"
+msgstr "MAC-адрес компьютера"
 
 #: modules/base/includes/computers-i18n.php:27
 msgid "Computer's netmask address"
-msgstr ""
+msgstr "Адрес маски сети компьютера"
 
 #: modules/base/includes/auditCodes.php:28
 msgid "Enable user"
@@ -1123,7 +1189,7 @@ msgstr "Удалить пользователя из всех групп"
 
 #: modules/base/includes/auditCodes.php:36
 msgid "Change user primary group"
-msgstr "Изменить первичную группу пользователя"
+msgstr "Изменить основную группу пользователя"
 
 #: modules/base/includes/auditCodes.php:37
 msgid "Del user"
@@ -1163,7 +1229,7 @@ msgstr "Системный пользователь"
 
 #: modules/base/includes/auditCodes.php:47
 msgid "Group"
-msgstr "Группы"
+msgstr "Группа"
 
 #: modules/base/includes/auditCodes.php:48
 msgid "Attribute"
@@ -1175,7 +1241,7 @@ msgstr "Организационная единица"
 
 #: modules/base/includes/auditCodes.php:50
 msgid "base"
-msgstr ""
+msgstr "база"
 
 #: modules/base/includes/groups-xmlrpc.inc.php:91
 #, php-format
@@ -1195,7 +1261,7 @@ msgstr "Основная группа"
 
 #: modules/base/views/editGroups.tpl.php:112
 msgid "This group doesn't exist"
-msgstr "Этой группы не существует"
+msgstr "Эта группа не существует"
 
 #: modules/base/infoPackage.inc.php:36
 msgid "User, group and computer management"
@@ -1219,7 +1285,7 @@ msgstr "Общая страница состояния"
 
 #: modules/base/infoPackage.inc.php:71
 msgid "Support page"
-msgstr ""
+msgstr "Страница поддержки"
 
 #: modules/base/infoPackage.inc.php:80
 msgid "Log view"
@@ -1259,7 +1325,7 @@ msgstr "Резервирование файлов пользователя"
 
 #: modules/base/infoPackage.inc.php:162
 msgid "Change user password"
-msgstr "cef3952db548138cef7e3e8fbe6ffb4e_tr"
+msgstr ""
 
 #: modules/base/infoPackage.inc.php:168
 msgid "Get user photo"
@@ -1287,7 +1353,7 @@ msgstr "Показать подробности действия"
 
 #: modules/base/infoPackage.inc.php:276
 msgid "Computers"
-msgstr "30324f8d4c689361d473c74c57462dcf_tr"
+msgstr ""
 
 #: modules/base/infoPackage.inc.php:284
 msgid "Add computer "
@@ -1364,8 +1430,12 @@ msgstr ""
 "</p>"
 
 #: license.php:53
-msgid "Click here to get more information about our support and maintenance subscription plan."
-msgstr "Нажмите здесь для получения информации о правилах подписки на нашу поддержку и обслуживание."
+msgid ""
+"Click here to get more information about our support and maintenance "
+"subscription plan."
+msgstr ""
+"Нажмите здесь для получения информации о правилах подписки на нашу поддержку"
+" и обслуживание."
 
 #: includes/commonErrorHandling.php:30
 msgid "This item already exists in your LDAP directory"
@@ -1409,11 +1479,11 @@ msgstr "Ошибка в процессе аутентификации"
 
 #: includes/commonErrorHandling.php:54 includes/commonErrorHandling.php:59
 msgid "Please contact your administrator."
-msgstr "Пожалуйста обратитесь к вашему системному администратору."
+msgstr "Пожалуйста, обратитесь к вашему системному администратору."
 
 #: includes/commonErrorHandling.php:58
 msgid "Error while provisioning your account"
-msgstr "Ошибра при обработке вашего аккаунта"
+msgstr "Ошибка при обработке вашего аккаунта"
 
 #: includes/commonErrorHandling.php:64
 msgid "This item do not seems to be in the index"
@@ -1453,7 +1523,7 @@ msgstr ""
 
 #: includes/xmlrpc.inc.php:166
 msgid "Can't connect to MMC agent"
-msgstr "Не могу соединиться с MMC-agent"
+msgstr "Не возможно соединиться с агентом MMC"
 
 #: includes/xmlrpc.inc.php:167
 msgid "MMC agent seems to be down or not correctly configured."
@@ -1461,20 +1531,24 @@ msgstr "Кажеться MMC agent выключен или некоректно 
 
 #: includes/xmlrpc.inc.php:179
 msgid "Can't send XML-RPC request to MMC agent"
-msgstr "Невозможно послать XML-RPC - запрос для MMC-agent"
+msgstr "Невозможно послать XML-RPC-запрос для агента MMC"
 
 #: includes/xmlrpc.inc.php:180
 msgid "MMC agent seems to be not correctly configured."
-msgstr "Возможно MMC-agent не верно настроен."
+msgstr "Возможно агент MMC не верно настроен."
 
 #: includes/xmlrpc.inc.php:196 includes/xmlrpc.inc.php:221
 #: includes/xmlrpc.inc.php:240
 msgid "MMC agent communication problem"
-msgstr "Проблема соединения MMC-agent"
+msgstr "Проблема соединения агента MMC"
 
 #: includes/xmlrpc.inc.php:197
-msgid "Timeout when reading data from the MMC agent. Please check network connectivity and server load."
-msgstr "Истекло время при попытке чтения данных с агента MMC. Проверьте сеть и нагрузку на сервер."
+msgid ""
+"Timeout when reading data from the MMC agent. Please check network "
+"connectivity and server load."
+msgstr ""
+"Истекло время при попытке чтения данных с агента MMC. Проверьте сеть и "
+"нагрузку на сервер."
 
 #: includes/xmlrpc.inc.php:206
 msgid "Error while reading MMC agent XML-RPC response."
@@ -1485,20 +1559,31 @@ msgid "Please check network connectivity."
 msgstr "Проверьте сетевое соединение."
 
 #: includes/xmlrpc.inc.php:222
-msgid "Can't communicate with MMC agent. Please check you're using the right TCP port and the right protocol."
-msgstr "Невозможно соединиться с MMC-agent. Пожалуйста проверте, верно ли вы указали TCP-порт и протокол."
+msgid ""
+"Can't communicate with MMC agent. Please check you're using the right TCP "
+"port and the right protocol."
+msgstr ""
+"Невозможно соединиться с агентом MMC. Пожалуйста, проверте, верно ли вы "
+"указали TCP-порт и протокол."
 
 #: includes/xmlrpc.inc.php:241
-msgid "The MMC agent didn't give us a session number. Please check the MMC agent version."
-msgstr "MMC-agent не предоставил нам номер сеанса. Проверьте версию MMC-agent."
+msgid ""
+"The MMC agent didn't give us a session number. Please check the MMC agent "
+"version."
+msgstr ""
+"Агент MMC не предоставил нам номер сеанса. Проверьте версию MMC-агента."
 
 #: includes/xmlrpc.inc.php:321
 msgid "unknown error"
 msgstr "неизвестная ошибка"
 
 #: includes/xmlrpc.inc.php:322
-msgid "This exception is unknown. Please contact us to add an error handling on this error."
-msgstr "Неизвестное исключение. Пожалуйста свяжитель с нами для добавления обработки этой ошибки."
+msgid ""
+"This exception is unknown. Please contact us to add an error handling on "
+"this error."
+msgstr ""
+"Неизвестное исключение. Пожалуйста, свяжитель с нами для добавления "
+"обработки этой ошибки."
 
 #: includes/i18n.inc.php:49
 msgid "english"
@@ -1563,11 +1648,11 @@ msgstr "страница"
 
 #: includes/PageGenerator.php:834
 msgid "Pagination"
-msgstr ""
+msgstr "Нумерация"
 
 #: includes/PageGenerator.php:918
 msgid "Go to page"
-msgstr ""
+msgstr "Перейти на страницу"
 
 #: includes/PageGenerator.php:1298
 msgid "No item available"
@@ -1575,11 +1660,11 @@ msgstr "Нет доступных элементов"
 
 #: includes/PageGenerator.php:1463
 msgid "Select entity"
-msgstr "Выберите сущность"
+msgstr "Выберите объект"
 
 #: includes/PageGenerator.php:2086
 msgid "Ok"
-msgstr "Ok"
+msgstr "OК"
 
 #: includes/PageGenerator.php:2626
 msgid "Select all"

@@ -2,14 +2,15 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # 
+## Translators:
 # Sergio Rafael Lemke <sergio@mandriva.com.br>, 2010.
 # Wanderlei Antonio Cavassin <cavassin@mandriva.com>, 2007.
 msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://mds.mandriva.org/\n"
-"POT-Creation-Date: 2011-01-30 08:12+0100\n"
-"PO-Revision-Date: 2011-06-17 10:08+0000\n"
+"POT-Creation-Date: 2011-02-08 13:33+0100\n"
+"PO-Revision-Date: 2011-07-26 09:45+0000\n"
 "Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +21,8 @@ msgstr ""
 
 #: graph/header.inc.php:210
 msgid "Form cannot be submit. Input errors are highlighted in red."
-msgstr "O formulário não pôde ser submetido. Os erros estão destacados em vermelho."
+msgstr ""
+"O formulário não pôde ser submetido. Os erros estão destacados em vermelho."
 
 #: graph/navbar.inc.php:40
 msgid "standard mode"
@@ -40,15 +42,19 @@ msgstr "logout"
 
 #: graph/navbar.inc.php:50 logout/index.php:49 logout/index.php:54
 msgid "Logout"
-msgstr "c4dc3ea4c90f4b486e51ac5101ac949b_tr"
+msgstr ""
 
 #: graph/navbar.inc.php:63 main_content.php:167
 msgid "Home"
 msgstr "Home"
 
 #: graph/navbar.inc.php:117
-msgid "If this phrase does not change, you browser is not supported by the MMC application"
-msgstr "Se esta frase não se altera, o seu navegador não é suportado pela aplicação MMC"
+msgid ""
+"If this phrase does not change, you browser is not supported by the MMC "
+"application"
+msgstr ""
+"Se esta frase não se altera, o seu navegador não é suportado pela aplicação "
+"MMC"
 
 #: main.php:134
 msgid "Error, you don't have correct rights !"
@@ -64,8 +70,12 @@ msgid "Login failed"
 msgstr "Login falhou"
 
 #: index.php:91
-msgid "You have been logged out because the session between the MMC web interface and the MMC agent expired."
-msgstr "Você foi desconectado porque a sessão entre a interface web MMC e o agente MMC expirou."
+msgid ""
+"You have been logged out because the session between the MMC web interface "
+"and the MMC agent expired."
+msgstr ""
+"Você foi desconectado porque a sessão entre a interface web MMC e o agente "
+"MMC expirou."
 
 #: index.php:160 modules/base/users/edit.php:389
 #: modules/base/users/ajaxFilter.php:68 modules/base/views/index.tpl.php:78
@@ -126,8 +136,12 @@ msgid "Edit group"
 msgstr "Editar grupo"
 
 #: modules/base/groups/edit.php:72
-msgid "The group name can only contain letters and numeric, and must begin with a letter"
-msgstr "O nome do grupo pode conter somente letras e números, e deve começar com uma letra"
+msgid ""
+"The group name can only contain letters and numeric, and must begin with a "
+"letter"
+msgstr ""
+"O nome do grupo pode conter somente letras e números, e deve começar com uma"
+" letra"
 
 #: modules/base/groups/edit.php:89
 msgid "Group name"
@@ -182,8 +196,12 @@ msgid "Group successfully modified"
 msgstr "Grupo modificado com sucesso"
 
 #: modules/base/groups/members.php:121
-msgid "Some users can't be removed from this group because this group is their primary group."
-msgstr "Alguns usuários não podem ser removidos deste grupo porque é o seu grupo primário."
+msgid ""
+"Some users can't be removed from this group because this group is their "
+"primary group."
+msgstr ""
+"Alguns usuários não podem ser removidos deste grupo porque é o seu grupo "
+"primário."
 
 #: modules/base/groups/members.php:124
 #, php-format
@@ -246,7 +264,9 @@ msgstr ""
 
 #: modules/base/status/support.php:44
 #: modules/base/includes/users-xmlrpc.inc.php:62
-msgid "Please contact your administrator for more information. If you are an administrator, please go to the license status page for more information."
+msgid ""
+"Please contact your administrator for more information. If you are an "
+"administrator, please go to the license status page for more information."
 msgstr ""
 
 #: modules/base/status/support.php:50
@@ -560,16 +580,23 @@ msgid "Common name"
 msgstr "Nome comum"
 
 #: modules/base/users/edit.php:484
-msgid "This field is used by some LDAP clients (for example Thunderbird address book) to display user entries."
-msgstr "Este campo é usado por alguns clientes LDAP (por exemplo, o livro de endereços do Thunderbird) para mostrar entradas de usuários."
+msgid ""
+"This field is used by some LDAP clients (for example Thunderbird address "
+"book) to display user entries."
+msgstr ""
+"Este campo é usado por alguns clientes LDAP (por exemplo, o livro de "
+"endereços do Thunderbird) para mostrar entradas de usuários."
 
 #: modules/base/users/edit.php:488 modules/base/infoPackage.inc.php:327
 msgid "Preferred name to be used"
 msgstr "Nome de preferência para ser usado"
 
 #: modules/base/users/edit.php:489
-msgid "This field is used by SAMBA (and other LDAP clients) to display user name."
-msgstr "Este campo é usado pelo SAMBA (e outros clientes LDAP) para mostrar o nome do usuário."
+msgid ""
+"This field is used by SAMBA (and other LDAP clients) to display user name."
+msgstr ""
+"Este campo é usado pelo SAMBA (e outros clientes LDAP) para mostrar o nome "
+"do usuário."
 
 #: modules/base/users/edit.php:536
 msgid "Unlock LDAP account"
@@ -623,8 +650,12 @@ msgstr "O becape da pasta do usuário <b>%s</b> foi iniciado em segundo plano."
 
 #: modules/base/users/backup.php:56
 #, php-format
-msgid "The files will be stored in the directory %s of the server at the end of the backup."
-msgstr "Os arquivos serão armazenados no diretório %s do servidor no final do backup."
+msgid ""
+"The files will be stored in the directory %s of the server at the end of the"
+" backup."
+msgstr ""
+"Os arquivos serão armazenados no diretório %s do servidor no final do "
+"backup."
 
 #: modules/base/users/backup.php:58
 msgid "Please go to the status page to check the backup status."
@@ -641,8 +672,12 @@ msgstr "Diretório home %s será arquivado."
 
 #: modules/base/users/backup.php:79
 #, php-format
-msgid "Please select media size. If your data exceeds the volume size, several files of your media size will be created."
-msgstr "Favor selecionar o tamanho da mídia. Se os seus dados ultrapassarem o tamanho de um volume, vários arquivos serão criados."
+msgid ""
+"Please select media size. If your data exceeds the volume size, several "
+"files of your media size will be created."
+msgstr ""
+"Favor selecionar o tamanho da mídia. Se os seus dados ultrapassarem o "
+"tamanho de um volume, vários arquivos serão criados."
 
 #: modules/base/users/backup.php:83
 msgid "Media size"
@@ -713,7 +748,7 @@ msgstr "Editar um computador"
 
 #: modules/base/computers/edit.php:85
 msgid "Computer name"
-msgstr "4586743cb79bed181996b137d0043b67_tr"
+msgstr ""
 
 #: modules/base/computers/edit.php:124
 msgid "Location"
@@ -753,7 +788,7 @@ msgstr "Auditoria do Samba"
 
 #: modules/base/audit/list.php:30
 msgid "Logged actions"
-msgstr "9c6ffde59de7a137e64411242f01247d_tr"
+msgstr ""
 
 #: modules/base/audit/list.php:39
 msgid "Search action"
@@ -911,7 +946,7 @@ msgstr "login inválido"
 
 #: modules/base/includes/users-xmlrpc.inc.php:55
 msgid "users"
-msgstr "5623945b8c7b8edaf5520a3f934c569a_tr"
+msgstr ""
 
 #: modules/base/includes/users-xmlrpc.inc.php:58
 msgid "computers"
@@ -924,8 +959,12 @@ msgstr ""
 
 #: modules/base/includes/users-xmlrpc.inc.php:118
 #, php-format
-msgid "User %s created but password is not valid regarding your password policies.<br/><strong>You must change the user password.</strong><br />"
-msgstr "Usuário %s criado mas a senha não é válida em relação a sua política de segurança de senhas. <br/><strong>Você deve alterar a senha.</strong><br />"
+msgid ""
+"User %s created but password is not valid regarding your password "
+"policies.<br/><strong>You must change the user password.</strong><br />"
+msgstr ""
+"Usuário %s criado mas a senha não é válida em relação a sua política de "
+"segurança de senhas. <br/><strong>Você deve alterar a senha.</strong><br />"
 
 #: modules/base/includes/users-xmlrpc.inc.php:122
 #, php-format
@@ -1021,16 +1060,24 @@ msgid "Password fails quality checking policy."
 msgstr "Senha falha na politica de checagem de qualidade."
 
 #: modules/base/includes/errorHandling.php:46
-msgid "The password policy of your account doesn't allow you to modify your password, because your password doesn't met the passwords policies."
-msgstr "A política de senha da sua conta não permite que você modifique a suasenha, pois ela não segue a política de senhas."
+msgid ""
+"The password policy of your account doesn't allow you to modify your "
+"password, because your password doesn't met the passwords policies."
+msgstr ""
+"A política de senha da sua conta não permite que você modifique a suasenha, "
+"pois ela não segue a política de senhas."
 
 #: modules/base/includes/errorHandling.php:51
 msgid "Your password is too young to change."
 msgstr "Sua senha é muito recente para ser alterada."
 
 #: modules/base/includes/errorHandling.php:52
-msgid "The password policy of your account doesn't allow you to modify your password, because your password is too young to change."
-msgstr "A política de senha da sua conta não permite que você modifique a suasenha, pois ela é recente demais."
+msgid ""
+"The password policy of your account doesn't allow you to modify your "
+"password, because your password is too young to change."
+msgstr ""
+"A política de senha da sua conta não permite que você modifique a suasenha, "
+"pois ela é recente demais."
 
 #: modules/base/includes/errorHandling.php:57
 msgid "Password is in history of old passwords"
@@ -1038,8 +1085,12 @@ msgstr ""
 
 #: modules/base/includes/errorHandling.php:58
 #: modules/base/includes/errorHandling.php:64
-msgid "The password policy of your account doesn't allow you to modify your password, because you already had this password previously."
-msgstr "A política de senha da sua conta não permite que você modifique a suasenha, pois você já tinha essa senha anteriormente."
+msgid ""
+"The password policy of your account doesn't allow you to modify your "
+"password, because you already had this password previously."
+msgstr ""
+"A política de senha da sua conta não permite que você modifique a suasenha, "
+"pois você já tinha essa senha anteriormente."
 
 #: modules/base/includes/errorHandling.php:63
 msgid "Password is not being changed from existing value"
@@ -1260,7 +1311,7 @@ msgstr "Cópia(backup) de arquivos do usuário"
 
 #: modules/base/infoPackage.inc.php:162
 msgid "Change user password"
-msgstr "cef3952db548138cef7e3e8fbe6ffb4e_tr"
+msgstr ""
 
 #: modules/base/infoPackage.inc.php:168
 msgid "Get user photo"
@@ -1288,7 +1339,7 @@ msgstr "Ver detalhes de uma ação"
 
 #: modules/base/infoPackage.inc.php:276
 msgid "Computers"
-msgstr "30324f8d4c689361d473c74c57462dcf_tr"
+msgstr ""
 
 #: modules/base/infoPackage.inc.php:284
 msgid "Add computer "
@@ -1365,8 +1416,12 @@ msgstr ""
 "</p>"
 
 #: license.php:53
-msgid "Click here to get more information about our support and maintenance subscription plan."
-msgstr "Clique aqui para obter mais informações sobre a assinatura de planos de suporte e manutenção."
+msgid ""
+"Click here to get more information about our support and maintenance "
+"subscription plan."
+msgstr ""
+"Clique aqui para obter mais informações sobre a assinatura de planos de "
+"suporte e manutenção."
 
 #: includes/commonErrorHandling.php:30
 msgid "This item already exists in your LDAP directory"
@@ -1474,8 +1529,12 @@ msgid "MMC agent communication problem"
 msgstr "Problema de comunicação com o agente MMC"
 
 #: includes/xmlrpc.inc.php:197
-msgid "Timeout when reading data from the MMC agent. Please check network connectivity and server load."
-msgstr "Tempo excedido na leitura dos dados do agente MMC. Por favor, verifique a conectividade de rede e a carga do servidor."
+msgid ""
+"Timeout when reading data from the MMC agent. Please check network "
+"connectivity and server load."
+msgstr ""
+"Tempo excedido na leitura dos dados do agente MMC. Por favor, verifique a "
+"conectividade de rede e a carga do servidor."
 
 #: includes/xmlrpc.inc.php:206
 msgid "Error while reading MMC agent XML-RPC response."
@@ -1486,20 +1545,32 @@ msgid "Please check network connectivity."
 msgstr "Por favor, verifique a conectabilidade da rede."
 
 #: includes/xmlrpc.inc.php:222
-msgid "Can't communicate with MMC agent. Please check you're using the right TCP port and the right protocol."
-msgstr "Não foi possível comunicar-se com o agente MMC. Favor verificar se você está usando a porta TCP e o protocolo corretos."
+msgid ""
+"Can't communicate with MMC agent. Please check you're using the right TCP "
+"port and the right protocol."
+msgstr ""
+"Não foi possível comunicar-se com o agente MMC. Favor verificar se você está"
+" usando a porta TCP e o protocolo corretos."
 
 #: includes/xmlrpc.inc.php:241
-msgid "The MMC agent didn't give us a session number. Please check the MMC agent version."
-msgstr "O agente MMC não forneceu um número de sessão. Favor verificar a versão do agente MMC."
+msgid ""
+"The MMC agent didn't give us a session number. Please check the MMC agent "
+"version."
+msgstr ""
+"O agente MMC não forneceu um número de sessão. Favor verificar a versão do "
+"agente MMC."
 
 #: includes/xmlrpc.inc.php:321
 msgid "unknown error"
 msgstr "erro desconhecido"
 
 #: includes/xmlrpc.inc.php:322
-msgid "This exception is unknown. Please contact us to add an error handling on this error."
-msgstr "Esta exceção é desconhecida. Favor nos contactar para adicionar um tratamento específico para este erro."
+msgid ""
+"This exception is unknown. Please contact us to add an error handling on "
+"this error."
+msgstr ""
+"Esta exceção é desconhecida. Favor nos contactar para adicionar um "
+"tratamento específico para este erro."
 
 #: includes/i18n.inc.php:49
 msgid "english"

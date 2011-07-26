@@ -2,11 +2,12 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # 
+## Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://mds.mandriva.org/\n"
-"POT-Creation-Date: 2011-01-30 08:12+0100\n"
+"POT-Creation-Date: 2011-02-08 13:33+0100\n"
 "PO-Revision-Date: 2011-06-17 10:08+0000\n"
 "Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
 "Language-Team: Spanish (Spain) (http://transifex.mandriva.com/projects/p/mds/team/es_ES/)\n"
@@ -25,16 +26,25 @@ msgid "Password reset flag"
 msgstr "Bandera de reseteo de contraseña"
 
 #: modules/ppolicy/includes/publicFunc.php:66
-msgid "If checked, the user must change her password when she first binds to the LDAP directory after password is set or reset by a password administrator"
-msgstr "Si marcado, el usuario debe cambiar su contraseña la primera vez que conecte con el directorio LDAP despues de que su contraseña haya sido establecida o reseteada por un administrador"
+msgid ""
+"If checked, the user must change her password when she first binds to the "
+"LDAP directory after password is set or reset by a password administrator"
+msgstr ""
+"Si marcado, el usuario debe cambiar su contraseña la primera vez que conecte"
+" con el directorio LDAP despues de que su contraseña haya sido establecida o"
+" reseteada por un administrador"
 
 #: modules/ppolicy/includes/publicFunc.php:71
 msgid "Enable a specific password policy for this user"
 msgstr "Habilitar política específica de contraseñas para este usuario"
 
 #: modules/ppolicy/includes/publicFunc.php:72
-msgid "You can enable a specific password policy for this user. If disabled, the default password policy is enforced."
-msgstr "Puede habilitar una política de contraseñas para este usuario. Si está deshabilitado se fuerza la política de contraseñas por defecto."
+msgid ""
+"You can enable a specific password policy for this user. If disabled, the "
+"default password policy is enforced."
+msgstr ""
+"Puede habilitar una política de contraseñas para este usuario. Si está "
+"deshabilitado se fuerza la política de contraseñas por defecto."
 
 #: modules/ppolicy/includes/publicFunc.php:83
 #: modules/ppolicy/includes/ppolicy.inc.php:36
@@ -164,48 +174,133 @@ msgid "Password policy quality check"
 msgstr "Política de comprobación de calidad de las contraseñas"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:52
-msgid "this attribute contains the minimum number of characters that will be accepted in a password"
-msgstr "Este atributo contiene el número mínimo de caracteres que debe tener una contraseña para ser aceptada"
+msgid ""
+"this attribute contains the minimum number of characters that will be "
+"accepted in a password"
+msgstr ""
+"Este atributo contiene el número mínimo de caracteres que debe tener una "
+"contraseña para ser aceptada"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:53
-msgid "This attribute holds the number of seconds that must elapse between modifications to the password. If this attribute is not present, 0 seconds is assumed (i.e. the password may be modified whenever and however often is desired)."
-msgstr "Este atributo contiene el número de segundos que deben transcurrir entre las modificaciones de la contraseña. Si este atributo no está presente se asumen 0 segundos (la contraseña puede ser modificada en cualquier momento y con la frecuencia que se desee)"
+msgid ""
+"This attribute holds the number of seconds that must elapse between "
+"modifications to the password. If this attribute is not present, 0 seconds "
+"is assumed (i.e. the password may be modified whenever and however often is "
+"desired)."
+msgstr ""
+"Este atributo contiene el número de segundos que deben transcurrir entre las"
+" modificaciones de la contraseña. Si este atributo no está presente se "
+"asumen 0 segundos (la contraseña puede ser modificada en cualquier momento y"
+" con la frecuencia que se desee)"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:54
-msgid "This attribute holds the number of seconds after which a modified password will expire. If this attribute is not present, or if the value is 0 the password does not expire."
-msgstr "Este atributo contiene el número de segundos tras los cuales una contraseña modificada expirará. Si este atributo no está presente, o si el valor es cero la contraseña no expira."
+msgid ""
+"This attribute holds the number of seconds after which a modified password "
+"will expire. If this attribute is not present, or if the value is 0 the "
+"password does not expire."
+msgstr ""
+"Este atributo contiene el número de segundos tras los cuales una contraseña "
+"modificada expirará. Si este atributo no está presente, o si el valor es "
+"cero la contraseña no expira."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:55
-msgid "This flag specifies whether users must change their passwords when they first bind to the directory after a password is set or reset by the administrator."
-msgstr "Este indicador especifica si los usuarios deben cambiar sus contraseñas cuando autentican por primera vez en el directorio después de que su contraseña sea establecida o reiniciada por un administrador."
+msgid ""
+"This flag specifies whether users must change their passwords when they "
+"first bind to the directory after a password is set or reset by the "
+"administrator."
+msgstr ""
+"Este indicador especifica si los usuarios deben cambiar sus contraseñas "
+"cuando autentican por primera vez en el directorio después de que su "
+"contraseña sea establecida o reiniciada por un administrador."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:56
-msgid "This attribute is used to specify the maximum number of used passwords. If the attribute is not present, or if its value is 0, used passwords will not be stored and thus any previously-used password may be reused."
-msgstr "Este atributo es usado para especificar el número máximo de contraseñas usadas. Si este atributo no está presente, o si su valor es 0, las contraseñas usadas no serán almacenadas y por lo tanto cualquier contraseña utilizada anteriormente podrá ser reutilizada."
+msgid ""
+"This attribute is used to specify the maximum number of used passwords. If "
+"the attribute is not present, or if its value is 0, used passwords will not "
+"be stored and thus any previously-used password may be reused."
+msgstr ""
+"Este atributo es usado para especificar el número máximo de contraseñas "
+"usadas. Si este atributo no está presente, o si su valor es 0, las "
+"contraseñas usadas no serán almacenadas y por lo tanto cualquier contraseña "
+"utilizada anteriormente podrá ser reutilizada."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:57
-msgid "This flag indicates, when enabled, that the password may not be used to authenticate after a specified number of consecutive failed bind attempts. The maximum number of consecutive failed bind attempts is specified in the \"Password maximum failure\" field below."
-msgstr "Este indicador especifíca, cuando se encuentra habilitado, que la contraseña no puede ser usada para autenticar despues de un número especificado de fallos consecutivos en la autenticación. El número máximo de intentos fallidos de autenticación se especifica en el campo situado más abajo \"Máximo número de fallos en la contraseña\". "
+msgid ""
+"This flag indicates, when enabled, that the password may not be used to "
+"authenticate after a specified number of consecutive failed bind attempts. "
+"The maximum number of consecutive failed bind attempts is specified in the "
+"\"Password maximum failure\" field below."
+msgstr ""
+"Este indicador especifíca, cuando se encuentra habilitado, que la contraseña"
+" no puede ser usada para autenticar despues de un número especificado de "
+"fallos consecutivos en la autenticación. El número máximo de intentos "
+"fallidos de autenticación se especifica en el campo situado más abajo "
+"\"Máximo número de fallos en la contraseña\". "
 
 #: modules/ppolicy/includes/ppolicy.inc.php:58
-msgid "This attribute specifies the number of consecutive failed bind attempts after which the password may not be used to authenticate. If this attribute is not present, or if the value is 0, this policy is not checked, and the value of \"Preventive user lockout\" will be ignored."
-msgstr "Este atributo especifica el número de fallos de autenticación consecutivos que se deben producir hasta que la contraseña no pueda ser usada para autenticar. Si este atributo no está presente, o si su valor es cero, esta política no será comprobada, y el valor de \"Bloqueo preventivo de usuario\" será ignorado."
+msgid ""
+"This attribute specifies the number of consecutive failed bind attempts "
+"after which the password may not be used to authenticate. If this attribute "
+"is not present, or if the value is 0, this policy is not checked, and the "
+"value of \"Preventive user lockout\" will be ignored."
+msgstr ""
+"Este atributo especifica el número de fallos de autenticación consecutivos "
+"que se deben producir hasta que la contraseña no pueda ser usada para "
+"autenticar. Si este atributo no está presente, o si su valor es cero, esta "
+"política no será comprobada, y el valor de \"Bloqueo preventivo de usuario\""
+" será ignorado."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:59
-msgid "This attribute holds the number of seconds that the password cannot be used to authenticate due to too many failed authentication attempts. If this attribute is empty, or if the value is 0 the password cannot be used to authenticate until reset by a password administrator."
-msgstr "Este atributo contiene el número de segundos durante los cuales una contraseña no podrá ser usada para autenticar debido a demasiados intentos de autenticación fallidos. Si este atributo no está presente, o si su valor es cero la contraseña no podrá ser utilizada hasta que sea reseteada por un administrador."
+msgid ""
+"This attribute holds the number of seconds that the password cannot be used "
+"to authenticate due to too many failed authentication attempts. If this "
+"attribute is empty, or if the value is 0 the password cannot be used to "
+"authenticate until reset by a password administrator."
+msgstr ""
+"Este atributo contiene el número de segundos durante los cuales una "
+"contraseña no podrá ser usada para autenticar debido a demasiados intentos "
+"de autenticación fallidos. Si este atributo no está presente, o si su valor "
+"es cero la contraseña no podrá ser utilizada hasta que sea reseteada por un "
+"administrador."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:60
-msgid "This attribute contains the number of times that an expired password may be used to authenticate a user to the directory. If this attribute is not present or if its value is zero, users with expired password will not be allowed to authenticate."
-msgstr "Este atributo contiene el número de veces que una contraseña que ha expirado se puede usar para autenticar a un usuario en el directorio. Si este atributo no está presente o si su valor es cero, los usuarios con una contraseña que ha expirado no podrán autenticar. "
+msgid ""
+"This attribute contains the number of times that an expired password may be "
+"used to authenticate a user to the directory. If this attribute is not "
+"present or if its value is zero, users with expired password will not be "
+"allowed to authenticate."
+msgstr ""
+"Este atributo contiene el número de veces que una contraseña que ha expirado"
+" se puede usar para autenticar a un usuario en el directorio. Si este "
+"atributo no está presente o si su valor es cero, los usuarios con una "
+"contraseña que ha expirado no podrán autenticar. "
 
 #: modules/ppolicy/includes/ppolicy.inc.php:61
-msgid "This flag allows to mark the password as having being reset by an administrator."
-msgstr "Este indicador permite marcar la contraseña como que tiene que ser reiniciada por un administrador."
+msgid ""
+"This flag allows to mark the password as having being reset by an "
+"administrator."
+msgstr ""
+"Este indicador permite marcar la contraseña como que tiene que ser "
+"reiniciada por un administrador."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:62
-msgid "This attribute indicates how the password quality will be verified while being modified or added. If this attribute is not present, or if the value is '0', quality checking will not be enforced.  A value of '1' indicates that the server will check the quality, and if the server is unable to check it (due to a hashed password or other reasons) it will be accepted. A value of '2' indicates that the server will check the quality, and if the server is unable to verify it, it will return an error refusing the password."
-msgstr "Este atributo indica como será verificada la calidad de la contraseña en el momento de ser modificada o creada. Si este atributo no está presente, o si su valor es '0', no se forzará la comprobación de calidad de la contraseña. El varo '1' indica al servidor que debe comprobar la calidad. y si el servidor no puede comprobarla (por el tipo de cifrado o cualquier otra razón) esta será aceptada. El valor '2' indica al servidor de debe comprobar la calidad, y si el servidor no es capaz de comprobarla este devolverá un error rehusando la contraseña."
+msgid ""
+"This attribute indicates how the password quality will be verified while "
+"being modified or added. If this attribute is not present, or if the value "
+"is '0', quality checking will not be enforced.  A value of '1' indicates "
+"that the server will check the quality, and if the server is unable to check"
+" it (due to a hashed password or other reasons) it will be accepted. A value"
+" of '2' indicates that the server will check the quality, and if the server "
+"is unable to verify it, it will return an error refusing the password."
+msgstr ""
+"Este atributo indica como será verificada la calidad de la contraseña en el "
+"momento de ser modificada o creada. Si este atributo no está presente, o si "
+"su valor es '0', no se forzará la comprobación de calidad de la contraseña. "
+"El varo '1' indica al servidor que debe comprobar la calidad. y si el "
+"servidor no puede comprobarla (por el tipo de cifrado o cualquier otra "
+"razón) esta será aceptada. El valor '2' indica al servidor de debe comprobar"
+" la calidad, y si el servidor no es capaz de comprobarla este devolverá un "
+"error rehusando la contraseña."
 
 #: modules/ppolicy/includes/localSidebar.php:27
 #: modules/ppolicy/infoPackage.inc.php:46
@@ -239,14 +334,27 @@ msgstr "Duración máxima (segundos)"
 
 #: modules/ppolicy/default/ppolicy.php:120
 msgid "Force users to change their passwords on the first connection ?"
-msgstr "Forzar a los usuarios a cambiar la contraseña en la primera conexión ?"
+msgstr ""
+"Forzar a los usuarios a cambiar la contraseña en la primera conexión ?"
 
 #: modules/ppolicy/default/warnuser.php:35
-msgid "Warning you have been logged using grace login mode. Please change your password as soon as possible using the password change page, else your account will be locked."
-msgstr "Aviso, se ha autenticado usando el tiempo de gracia en la autenticación. Por favor cambie su contraseña lo antes posible usando la página de cambio de contraseña, sino lo hace su cuenta será bloqueada."
+msgid ""
+"Warning you have been logged using grace login mode. Please change your "
+"password as soon as possible using the password change page, else your "
+"account will be locked."
+msgstr ""
+"Aviso, se ha autenticado usando el tiempo de gracia en la autenticación. Por"
+" favor cambie su contraseña lo antes posible usando la página de cambio de "
+"contraseña, sino lo hace su cuenta será bloqueada."
 
 #: modules/ppolicy/default/warnuser.php:40
-msgid "Warning your password has been reset by an administrator. Your LDAP account is restricted. Please change your password as soon as possible using the password change page."
-msgstr "Aviso, su contraseña ha sido cambiada por un administrador. Su cuenta LDAP se encuentra restringida. Por favor, cambie su contraseña lo antes posible usando la página de cambio de contraseñas."
+msgid ""
+"Warning your password has been reset by an administrator. Your LDAP account "
+"is restricted. Please change your password as soon as possible using the "
+"password change page."
+msgstr ""
+"Aviso, su contraseña ha sido cambiada por un administrador. Su cuenta LDAP "
+"se encuentra restringida. Por favor, cambie su contraseña lo antes posible "
+"usando la página de cambio de contraseñas."
 
 

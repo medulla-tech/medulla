@@ -2,12 +2,13 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # 
+## Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://mds.mandriva.org/\n"
-"POT-Creation-Date: 2011-01-30 08:12+0100\n"
-"PO-Revision-Date: 2011-07-13 13:38+0000\n"
+"POT-Creation-Date: 2011-02-08 13:33+0100\n"
+"PO-Revision-Date: 2011-07-26 10:03+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -25,7 +26,9 @@ msgid "Password reset flag"
 msgstr ""
 
 #: modules/ppolicy/includes/publicFunc.php:66
-msgid "If checked, the user must change her password when she first binds to the LDAP directory after password is set or reset by a password administrator"
+msgid ""
+"If checked, the user must change her password when she first binds to the "
+"LDAP directory after password is set or reset by a password administrator"
 msgstr ""
 
 #: modules/ppolicy/includes/publicFunc.php:71
@@ -33,7 +36,9 @@ msgid "Enable a specific password policy for this user"
 msgstr ""
 
 #: modules/ppolicy/includes/publicFunc.php:72
-msgid "You can enable a specific password policy for this user. If disabled, the default password policy is enforced."
+msgid ""
+"You can enable a specific password policy for this user. If disabled, the "
+"default password policy is enforced."
 msgstr ""
 
 #: modules/ppolicy/includes/publicFunc.php:83
@@ -164,47 +169,87 @@ msgid "Password policy quality check"
 msgstr ""
 
 #: modules/ppolicy/includes/ppolicy.inc.php:52
-msgid "this attribute contains the minimum number of characters that will be accepted in a password"
+msgid ""
+"this attribute contains the minimum number of characters that will be "
+"accepted in a password"
 msgstr ""
 
 #: modules/ppolicy/includes/ppolicy.inc.php:53
-msgid "This attribute holds the number of seconds that must elapse between modifications to the password. If this attribute is not present, 0 seconds is assumed (i.e. the password may be modified whenever and however often is desired)."
+msgid ""
+"This attribute holds the number of seconds that must elapse between "
+"modifications to the password. If this attribute is not present, 0 seconds "
+"is assumed (i.e. the password may be modified whenever and however often is "
+"desired)."
 msgstr ""
 
 #: modules/ppolicy/includes/ppolicy.inc.php:54
-msgid "This attribute holds the number of seconds after which a modified password will expire. If this attribute is not present, or if the value is 0 the password does not expire."
+msgid ""
+"This attribute holds the number of seconds after which a modified password "
+"will expire. If this attribute is not present, or if the value is 0 the "
+"password does not expire."
 msgstr ""
 
 #: modules/ppolicy/includes/ppolicy.inc.php:55
-msgid "This flag specifies whether users must change their passwords when they first bind to the directory after a password is set or reset by the administrator."
+msgid ""
+"This flag specifies whether users must change their passwords when they "
+"first bind to the directory after a password is set or reset by the "
+"administrator."
 msgstr ""
 
 #: modules/ppolicy/includes/ppolicy.inc.php:56
-msgid "This attribute is used to specify the maximum number of used passwords. If the attribute is not present, or if its value is 0, used passwords will not be stored and thus any previously-used password may be reused."
+msgid ""
+"This attribute is used to specify the maximum number of used passwords. If "
+"the attribute is not present, or if its value is 0, used passwords will not "
+"be stored and thus any previously-used password may be reused."
 msgstr ""
 
 #: modules/ppolicy/includes/ppolicy.inc.php:57
-msgid "This flag indicates, when enabled, that the password may not be used to authenticate after a specified number of consecutive failed bind attempts. The maximum number of consecutive failed bind attempts is specified in the \"Password maximum failure\" field below."
+msgid ""
+"This flag indicates, when enabled, that the password may not be used to "
+"authenticate after a specified number of consecutive failed bind attempts. "
+"The maximum number of consecutive failed bind attempts is specified in the "
+"\"Password maximum failure\" field below."
 msgstr ""
 
 #: modules/ppolicy/includes/ppolicy.inc.php:58
-msgid "This attribute specifies the number of consecutive failed bind attempts after which the password may not be used to authenticate. If this attribute is not present, or if the value is 0, this policy is not checked, and the value of \"Preventive user lockout\" will be ignored."
+msgid ""
+"This attribute specifies the number of consecutive failed bind attempts "
+"after which the password may not be used to authenticate. If this attribute "
+"is not present, or if the value is 0, this policy is not checked, and the "
+"value of \"Preventive user lockout\" will be ignored."
 msgstr ""
 
 #: modules/ppolicy/includes/ppolicy.inc.php:59
-msgid "This attribute holds the number of seconds that the password cannot be used to authenticate due to too many failed authentication attempts. If this attribute is empty, or if the value is 0 the password cannot be used to authenticate until reset by a password administrator."
+msgid ""
+"This attribute holds the number of seconds that the password cannot be used "
+"to authenticate due to too many failed authentication attempts. If this "
+"attribute is empty, or if the value is 0 the password cannot be used to "
+"authenticate until reset by a password administrator."
 msgstr ""
 
 #: modules/ppolicy/includes/ppolicy.inc.php:60
-msgid "This attribute contains the number of times that an expired password may be used to authenticate a user to the directory. If this attribute is not present or if its value is zero, users with expired password will not be allowed to authenticate."
+msgid ""
+"This attribute contains the number of times that an expired password may be "
+"used to authenticate a user to the directory. If this attribute is not "
+"present or if its value is zero, users with expired password will not be "
+"allowed to authenticate."
 msgstr ""
 
 #: modules/ppolicy/includes/ppolicy.inc.php:61
-msgid "This flag allows to mark the password as having being reset by an administrator."
+msgid ""
+"This flag allows to mark the password as having being reset by an "
+"administrator."
 msgstr ""
 
 #: modules/ppolicy/includes/ppolicy.inc.php:62
-msgid "This attribute indicates how the password quality will be verified while being modified or added. If this attribute is not present, or if the value is '0', quality checking will not be enforced.  A value of '1' indicates that the server will check the quality, and if the server is unable to check it (due to a hashed password or other reasons) it will be accepted. A value of '2' indicates that the server will check the quality, and if the server is unable to verify it, it will return an error refusing the password."
+msgid ""
+"This attribute indicates how the password quality will be verified while "
+"being modified or added. If this attribute is not present, or if the value "
+"is '0', quality checking will not be enforced.  A value of '1' indicates "
+"that the server will check the quality, and if the server is unable to check"
+" it (due to a hashed password or other reasons) it will be accepted. A value"
+" of '2' indicates that the server will check the quality, and if the server "
+"is unable to verify it, it will return an error refusing the password."
 msgstr ""
 
 #: modules/ppolicy/includes/localSidebar.php:27
@@ -242,11 +287,17 @@ msgid "Force users to change their passwords on the first connection ?"
 msgstr ""
 
 #: modules/ppolicy/default/warnuser.php:35
-msgid "Warning you have been logged using grace login mode. Please change your password as soon as possible using the password change page, else your account will be locked."
+msgid ""
+"Warning you have been logged using grace login mode. Please change your "
+"password as soon as possible using the password change page, else your "
+"account will be locked."
 msgstr ""
 
 #: modules/ppolicy/default/warnuser.php:40
-msgid "Warning your password has been reset by an administrator. Your LDAP account is restricted. Please change your password as soon as possible using the password change page."
+msgid ""
+"Warning your password has been reset by an administrator. Your LDAP account "
+"is restricted. Please change your password as soon as possible using the "
+"password change page."
 msgstr ""
 
 
