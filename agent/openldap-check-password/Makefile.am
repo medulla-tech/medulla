@@ -28,7 +28,7 @@ AM_CFLAGS = -I/usr/include/openldap/slapd/ -I/usr/include/openldap/include
 dist_ldapconf_DATA = mmc-check-password.conf
 dist_bin_SCRIPTS = mmc-password-helper
 
-ldapconf_LTLIBRARIES = mmc-check-password.la
+ldaplib_LTLIBRARIES = mmc-check-password.la
 
 mmc_check_password_la_SOURCES = mmc-check-password.c
 mmc_check_password_la_LDFLAGS = -module
