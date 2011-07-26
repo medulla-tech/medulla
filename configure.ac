@@ -161,8 +161,8 @@ dnl
 AC_ARG_WITH([ldap-libdir],
             [AS_HELP_STRING([--with-ldap-libdir],
                             [path to ldap plugins direcory @<:@default=LIBDIR/ldap@:>@])],
-            [ldapconfdir="$withval"],
-	    [ldapconfdir="${libdir}/ldap"])
+            [ldaplibdir="$withval"],
+	    [ldaplibdir="${libdir}/ldap"])
 AC_SUBST([ldaplibdir])
 
 dnl
