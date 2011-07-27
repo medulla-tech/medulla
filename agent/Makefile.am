@@ -30,3 +30,9 @@ endif
 if ENABLE_PYTHON
 SUBDIRS += mmc
 endif
+
+docs:
+	epydoc mmc
+
+pyflakes:
+	pyflakes . bin/*
