@@ -54,6 +54,8 @@ import grp
 import string
 import threading
 
+log = logging.getLogger()
+
 sys.path.append("plugins")
 
 Fault = xmlrpclib.Fault
@@ -74,7 +76,6 @@ class MmcServer(xmlrpc.XMLRPC,object):
         xmlrpc.XMLRPC.__init__(self)
         self.modules = modules
         self.config = config
-        self.logger = logging.getLogger()
 
     def _splitFunctionPath(self, functionPath):
         if '.' in functionPath:
@@ -97,7 +98,7 @@ class MmcServer(xmlrpc.XMLRPC,object):
             else:
                 ret = getattr(self, func)
         except AttributeError:
-            self.logger.error(functionPath + ' not found')
+            log.error(functionPath + ' not found')
             raise Fault("NO_SUCH_FUNCTION", "No such function " + functionPath)
         return ret
 
@@ -139,7 +140,7 @@ class MmcServer(xmlrpc.XMLRPC,object):
         cleartext_token = self.config.login + ":" + self.config.password
         token = request.getUser() + ":" + request.getPassword()
         if token != cleartext_token:
-            self.logger.error("Invalid login / password for HTTP basic authentication")
+            log.error("Invalid login / password for HTTP basic authentication")
             request.setResponseCode(http.UNAUTHORIZED)
             self._cbRender(
                 xmlrpc.Fault(http.UNAUTHORIZED, "Unauthorized: invalid credentials to connect to the MMC agent, basic HTTP authentication is required"),
@@ -148,15 +149,15 @@ class MmcServer(xmlrpc.XMLRPC,object):
             return server.NOT_DONE_YET
 
         if not s.loggedin:
-            self.logger.debug("RPC method call from unauthenticated user: %s" % functionPath + str(args))
+            log.debug("RPC method call from unauthenticated user: %s" % functionPath + str(args))
             # Save the first sent HTTP headers, as they contain some
             # informations
             s.http_headers = request.received_headers.copy()
         else:
-            self.logger.debug("RPC method call from user %s: %s" % (s.userid, functionPath + str(args)))
+            log.debug("RPC method call from user %s: %s" % (s.userid, functionPath + str(args)))
         try:
             if not s.loggedin and self._needAuth(functionPath):
-                self.logger.warning("Function can't be called because the user is not logged in")
+                log.warning("Function can't be called because the user is not logged in")
                 raise Fault(8003, "Can't use MMC agent server because you are not logged in")
             else:
                 if not s.loggedin and not self._needAuth(functionPath):
@@ -168,7 +169,7 @@ class MmcServer(xmlrpc.XMLRPC,object):
                         self._associateContext(request, s, s.userid)
                     except Exception, e:
                         s.loggedin = False
-                        self.logger.exception(e)
+                        log.exception(e)
                         f = Fault(8004, "MMC agent can't provide a security context")
                         self._cbRender(f, request)
                         return server.NOT_DONE_YET
@@ -199,7 +200,7 @@ class MmcServer(xmlrpc.XMLRPC,object):
         to a Deferred object.
         """
         def _printExecutionTime(start):
-            self.logger.debug("Execution time: %f" % (time.time() - start))
+            log.debug("Execution time: %f" % (time.time() - start))
 
         def _cbSuccess(result, deferred, start):
             _printExecutionTime(start)
@@ -210,7 +211,7 @@ class MmcServer(xmlrpc.XMLRPC,object):
             reactor.callFromThread(deferred.errback, failure)
 
         def _putResult(deferred, f, session, args, kwargs):
-            self.logger.debug("Using thread #%s for %s" % (threading.currentThread().getName().split("-")[2], f.__name__))
+            log.debug("Using thread #%s for %s" % (threading.currentThread().getName().split("-")[2], f.__name__))
             # Attach current user session to the thread
             threading.currentThread().session = session
             start = time.time()
@@ -248,7 +249,7 @@ class MmcServer(xmlrpc.XMLRPC,object):
                     self._associateContext(request, s, s.userid)
                 except Exception, e:
                     s.loggedin = False
-                    self.logger.exception(e)
+                    log.exception(e)
                     f = Fault(8004, "MMC agent can't provide a security context for this account")
                     self._cbRender(f, request)
                     return
@@ -267,9 +268,9 @@ class MmcServer(xmlrpc.XMLRPC,object):
             pass
         try:
             if s.loggedin:
-                self.logger.debug('Result for ' + s.userid + ", " + str(functionPath) + ": " + str(result))
+                log.debug('Result for ' + s.userid + ", " + str(functionPath) + ": " + str(result))
             else:
-                self.logger.debug('Result for unauthenticated user, ' + str(functionPath) + ": " + str(result))
+                log.debug('Result for unauthenticated user, ' + str(functionPath) + ": " + str(result))
             s = xmlrpclib.dumps(result, methodresponse=1)
         except Exception, e:
             f = Fault(self.FAILURE, "can't serialize output: " + str(e))
@@ -279,7 +280,7 @@ class MmcServer(xmlrpc.XMLRPC,object):
         request.finish()
 
     def _ebRender(self, failure, functionPath, args, request):
-        self.logger.error("Error during render " + functionPath + ": " + failure.getTraceback())
+        log.error("Error during render " + functionPath + ": " + failure.getTraceback())
         # Prepare a Fault result to return
         result = {}
         result['faultString'] = functionPath + " " + str(args)
@@ -306,7 +307,7 @@ class MmcServer(xmlrpc.XMLRPC,object):
             cm = contextMaker(request, session, userid)
             context = cm.getContext()
             if context:
-                self.logger.debug("Attaching module '%s' context to user session" % mod)
+                log.debug("Attaching module '%s' context to user session" % mod)
                 session.contexts[mod] = context
 
     def getRevision(self):
@@ -381,11 +382,10 @@ def agentService(config, conffile, daemonize):
 
     # Initialize logging object
     logging.config.fileConfig(conffile)
-    logger = logging.getLogger()
 
     # When starting mmcServer, we log to stderr too
     hdlr2 = logging.StreamHandler()
-    logger.addHandler(hdlr2)
+    log.addHandler(hdlr2)
 
     # Create log dir if it doesn't exist
     try:
@@ -399,13 +399,13 @@ def agentService(config, conffile, daemonize):
     # Changing path to probe and load plugins
     os.chdir(os.path.dirname(globals()["__file__"]))
 
-    logger.info("mmc-agent %s starting..." % VERSION)
-    logger.info("Using Python %s" % sys.version.split("\n")[0])
-    logger.info("Using Python Twisted %s" % twisted.copyright.version)
+    log.info("mmc-agent %s starting..." % VERSION)
+    log.info("Using Python %s" % sys.version.split("\n")[0])
+    log.info("Using Python Twisted %s" % twisted.copyright.version)
 
-    logger.debug("Running as euid = %d, egid = %d" % (os.geteuid(), os.getegid()))
+    log.debug("Running as euid = %d, egid = %d" % (os.geteuid(), os.getegid()))
     if config.multithreading:
-        logger.info("Multi-threading enabled, max threads pool size is %d" % config.maxthreads)
+        log.info("Multi-threading enabled, max threads pool size is %d" % config.maxthreads)
         reactor.suggestThreadPoolSize(config.maxthreads)
 
     # Start audit system
@@ -420,14 +420,14 @@ def agentService(config, conffile, daemonize):
         startService(config, logger, pm.plugins)
     except Exception, e:
         # This is a catch all for all the exception that can happened
-        logger.exception("Program exception: " + str(e))
+        log.exception("Program exception: " + str(e))
         return 1
 
     # Become a daemon
     if daemonize:
         daemon(config)
         # No more log to stderr
-        logger.removeHandler(hdlr2)
+        log.removeHandler(hdlr2)
 
     l.commit()
     reactor.run()
@@ -436,8 +436,7 @@ def cleanUp(config):
     """
     function call before shutdown of reactor
     """
-    logger = logging.getLogger()
-    logger.info('mmc-agent shutting down, cleaning up...')
+    log.info('mmc-agent shutting down, cleaning up...')
     l = AuditFactory().log(u'MMC-AGENT', u'MMC_AGENT_SERVICE_STOP')
 
     # Unlink pidfile if it exists
@@ -455,14 +454,12 @@ class MMCHTTPChannel(http.HTTPChannel):
     """
 
     def connectionMade(self):
-        logger = logging.getLogger()
-        logger.debug("Connection from %s" % (self.transport.getPeer().host,))
+        log.debug("Connection from %s" % (self.transport.getPeer().host,))
         http.HTTPChannel.connectionMade(self)
 
     def connectionLost(self, reason):
         if not reason.check(twisted.internet.error.ConnectionDone):
-            logger = logging.getLogger()
-            logger.error(reason)
+            log.error(reason)
         http.HTTPChannel.connectionLost(self, reason)
 
 class MMCSite(server.Site):
@@ -473,13 +470,15 @@ def startService(config, logger, mod):
     r = MmcServer(mod, config)
     if config.enablessl:
         sslContext = makeSSLContext(config.verifypeer, config.cacert, config.localcert)
-        reactor.listenSSL(config.port, MMCSite(r), interface = config.host, contextFactory = sslContext)
+        reactor.listenSSL(config.port, MMCSite(r), 
+                          interface=config.host, 
+                          contextFactory=sslContext)
     else:
-        logger.warning("SSL is disabled by configuration.")
+        log.warning("SSL is disabled by configuration.")
         reactor.listenTCP(config.port, server.Site(r), interface = config.host)
     # Add event handler before shutdown
     reactor.addSystemEventTrigger('before', 'shutdown', cleanUp, config)
-    logger.info("Listening to XML-RPC requests")
+    log.info("Listening to XML-RPC requests")
 
 def readConfig(config):
     """
@@ -491,14 +490,12 @@ def readConfig(config):
     @return: MMCConfigParser object with extra attributes set
     @rtype: MMCConfigParser
     """
-    logger = logging.getLogger()
-
     # TCP/IP stuff
     try:
         config.host = config.get("main", "host")
         config.port = config.getint("main", "port")
     except Exception,e:
-        logger.error(e)
+        log.error(e)
         return 1
 
     if config.has_section("daemon"):
@@ -573,7 +570,6 @@ class PluginManager(Singleton):
 
     def __init__(self):
         Singleton.__init__(self)
-        self.logger = logging.getLogger()
 
     def isEnabled(self, plugin):
         """
@@ -625,7 +621,7 @@ class PluginManager(Singleton):
         modList = []
         plugins = self.getAvailablePlugins()
         if not "base" in plugins:
-            self.logger.error("Plugin 'base' is not available. Please install it.")
+            log.error("Plugin 'base' is not available. Please install it.")
             return 1
         else:
             # Set base plugin as the first plugin to load
@@ -639,53 +635,53 @@ class PluginManager(Singleton):
             plugins.append("pulse2")
 
         # Load plugins
-        self.logger.info("Importing available MMC plugins")
+        log.info("Importing available MMC plugins")
         for plugin in plugins:
             f, p, d = imp.find_module(plugin, ['plugins'])
 
             try:
-                self.logger.debug("Trying to load plugin %s" % plugin)
+                log.debug("Trying to load plugin %s" % plugin)
                 mod[plugin] = imp.load_module(plugin, f, p, d)
-                self.logger.debug("Plugin loaded: %s" % plugin)
+                log.debug("Plugin loaded: %s" % plugin)
             except Exception,e:
-                self.logger.exception(e)
-                self.logger.error('Plugin '+ plugin+ " raise an exception.\n"+ plugin+ " not loaded.")
+                log.exception(e)
+                log.error('Plugin '+ plugin+ " raise an exception.\n"+ plugin+ " not loaded.")
                 continue
 
             # If module has no activate function
             try:
                 func = getattr(mod[plugin], "activate")
             except:
-                self.logger.error('File '+ plugin+ ' is not a MMC plugin.')
+                log.error('File '+ plugin+ ' is not a MMC plugin.')
                 del mod[plugin]
                 continue
 
             # If is active
             try:
-                self.logger.debug("Trying to activate plugin %s" % plugin)
+                log.debug("Trying to activate plugin %s" % plugin)
                 if (func()):
                     version = 'API version: '+str(getattr(mod[plugin], "getApiVersion")())+' build(' +str(getattr(mod[plugin], "getRevision")())+')'
-                    self.logger.info('Plugin ' + plugin + ' loaded, ' + version)
+                    log.info('Plugin ' + plugin + ' loaded, ' + version)
                     modList.append(str(plugin))
                 else:
                     # If we can't activate it
-                    self.logger.info('Plugin '+plugin+' not loaded.')
+                    log.info('Plugin '+plugin+' not loaded.')
                     del mod[plugin]
             except Exception, e:
-                self.logger.error('Error while trying to load plugin ' + plugin)
-                self.logger.exception(e)
+                log.error('Error while trying to load plugin ' + plugin)
+                log.exception(e)
                 del mod[plugin]
                 # We do no exit but go on when another plugin than base fail
 
             # Check that "base" plugin was loaded
             if plugin == "base" and not "base" in mod:
-                self.logger.error("MMC agent can't run without the base plugin. Exiting.")
+                log.error("MMC agent can't run without the base plugin. Exiting.")
                 return 4
 
         # store enabled plugins
         self.plugins = mod
 
-        self.logger.info("MMC plugins activation stage 2")
+        log.info("MMC plugins activation stage 2")
         for plugin in plugins:
             if self.isEnabled(plugin):
                 try:
@@ -694,8 +690,8 @@ class PluginManager(Singleton):
                     func = None
                 if func:
                     if not func():
-                        self.logger.error("Error in activation stage 2 for plugin '%s'" % plugin)
-                        self.logger.error("Please check your MMC agent configuration and log")
+                        log.error("Error in activation stage 2 for plugin '%s'" % plugin)
+                        log.error("Please check your MMC agent configuration and log")
                         return 4
 
         # Set module list
