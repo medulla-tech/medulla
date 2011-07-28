@@ -79,6 +79,12 @@ if [ `id -u` != 0 ]; then
     exit 1
 fi
 
+if [ -z `which ldapadd` ]; then
+    echo "Please install ldapadd tool :"
+    echo "- ldap-utils package on Debian"
+    exit 1
+fi
+
 schemapath=$1
 if [ ! -e $schemapath ]; then
     echo "No such file or directory: $schemapath"
