@@ -23,6 +23,7 @@
 """
 XML-RPC server implementation of the MMC agent.
 """
+from resource import RLIMIT_NOFILE, RLIM_INFINITY, getrlimit
 
 import twisted.internet.error
 import twisted.copyright
@@ -351,24 +352,47 @@ def daemon(config):
         sys.exit(1)
 
     # decouple from parent environment
-    os.close(sys.stdin.fileno())
-    os.close(sys.stdout.fileno())
-    os.close(sys.stderr.fileno())
     os.chdir("/")
     os.setsid()
+
+    maxfd = getrlimit(RLIMIT_NOFILE)[1]
+    if maxfd == RLIM_INFINITY:
+        maxfd = 1024
+
+    for fd in range(0, maxfd):
+        # These fd are twisted pipes
+        # TODO: make a clean code to be sure nothing is opened before this function
+        if fd not in (6,7):
+            try:
+                os.close(fd)
+            except OSError:
+                pass
+
+    if (hasattr(os, "devnull")):
+        REDIRECT_TO = os.devnull
+    else:
+        REDIRECT_TO = "/dev/null"
+
+    os.open(REDIRECT_TO, os.O_RDWR)
+    os.dup2(0, 1)
+    os.dup2(0, 2)
 
     # do second fork
     try:
         pid = os.fork()
         if pid > 0:
             # exit from second parent, print eventual PID before
-            print "Daemon PID %d" % pid
             os.seteuid(0)
             os.setegid(0)
-            os.system("echo " + str(pid) + " > " + config.pidfile)
+            f = open(config.pidfile, 'w')
+            try:
+                f.write(str(pid))
+            except IOError, ioe:
+                log.error('Can not write pidfile: %s' % config.pidfile)
+            finally:
+                f.close()
             sys.exit(0)
     except OSError, e:
-        print >>sys.stderr, "fork #2 failed: %d (%s)" % (e.errno, e.strerror)
         sys.exit(1)
 
 def agentService(config, conffile, daemonize):
@@ -380,12 +404,17 @@ def agentService(config, conffile, daemonize):
     os.setegid(config.egid)
     os.seteuid(config.euid)
 
+    # Daemonize early
+    if daemonize:
+        daemon(config)
+
     # Initialize logging object
     logging.config.fileConfig(conffile)
 
-    # When starting mmcServer, we log to stderr too
-    hdlr2 = logging.StreamHandler()
-    log.addHandler(hdlr2)
+    # In foreground mode, log to stderr
+    if not daemonize:
+        hdlr2 = logging.StreamHandler()
+        log.addHandler(hdlr2)
 
     # Create log dir if it doesn't exist
     try:
@@ -417,17 +446,11 @@ def agentService(config, conffile, daemonize):
     if code: return code
 
     try:
-        startService(config, logger, pm.plugins)
+        startService(config, pm.plugins)
     except Exception, e:
         # This is a catch all for all the exception that can happened
         log.exception("Program exception: " + str(e))
         return 1
-
-    # Become a daemon
-    if daemonize:
-        daemon(config)
-        # No more log to stderr
-        log.removeHandler(hdlr2)
 
     l.commit()
     reactor.run()
@@ -465,7 +488,7 @@ class MMCHTTPChannel(http.HTTPChannel):
 class MMCSite(server.Site):
     protocol = MMCHTTPChannel
 
-def startService(config, logger, mod):
+def startService(config, mod):
     # Starting XMLRPC server
     r = MmcServer(mod, config)
     if config.enablessl:
