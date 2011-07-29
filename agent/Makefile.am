@@ -31,8 +31,8 @@ if ENABLE_PYTHON
 SUBDIRS += mmc
 endif
 
-docs:
+docs: Makefile
 	epydoc mmc
 
-pyflakes:
+pyflakes: Makefile
 	pyflakes . bin/*
