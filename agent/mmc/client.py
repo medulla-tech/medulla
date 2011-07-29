@@ -20,153 +20,133 @@
 # You should have received a copy of the GNU General Public License
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
 """
-Set of classes to connect to a MMC server, and do XML-RPC requests.
+MMC Synchronous Client.
 
-Example:
+MMC use a modify XMLRPC implementation which use cookies and authentification.
+This module provides a function called MMCProxy that returned a xmlrpc.Server
+object, which use a modified Transport (called here MMCSafeTransport).
 
-def cb(result):
-    print result
-    reactor.stop()
-
-proxy = MMCProxy("https://127.0.0.1:7080/XMLRPC", "mmc", "s3cr3t")
-proxy.callRemote("base.ldapAuth", "root", "passpass").addCallbacks(cb)
-reactor.run()
+Cookies are stored as a LWPCookieJar in "/tmp/mmc-cookies".
 """
-
-import xmlrpclib
+import os
+import stat
 import logging
 
-from twisted.web.xmlrpc import Proxy, QueryProtocol, payloadTemplate
+import xmlrpclib
+from urlparse import urlparse, urlunparse
+from base64 import encodestring
+from cookielib import LWPCookieJar
+from urllib2 import Request as CookieRequest
 
-try:
-    from twisted.web.xmlrpc import QueryFactory
-except ImportError:
-    from twisted.web.xmlrpc import _QueryFactory
-    QueryFactory = _QueryFactory 
-from twisted.internet import reactor, defer, ssl
+log = logging.getLogger()
 
-def makeSSLContext(verifypeer, cacert, localcert, log = True):
+COOKIES_FILE = '/tmp/mmc-cookies'
+
+class MMCProxy(xmlrpclib.ServerProxy, object):
+    """ This subclass ServerProxy to handle login and specific MMC
+    cookies mechanism.
+    Can authenticate automatically if username and passwd are provided.
+    If MMC server return Fault 8003, we identify with base.ldapAuth method.
     """
-    Make the SSL context for the server, according to the parameters
+    def __init__(self, uri, username=None, passwd=None, verbose=False):
+        url = urlparse(uri)
+        mmcTransport = MMCSafeTransport(url.username, url.password)
+        xmlrpclib.ServerProxy.__init__(self, uri, transport=mmcTransport)
+        self.username = username
+        self.passwd = passwd
+        self.authenticating = False
 
-    @returns: a SSL context
-    @rtype: twisted.internet.ssl.ContextFactory
+class CookieResponse:
     """
-    logger = logging.getLogger()    
-    if verifypeer:
-        fd = open(localcert)
-        localCertificate = ssl.PrivateCertificate.loadPEM(fd.read())
-        fd.close()
-        fd = open(cacert)
-        caCertificate = ssl.Certificate.loadPEM(fd.read())
-        fd.close()
-        ctx = localCertificate.options(caCertificate)
-        ctx.verify = True
-        ctx.verifyDepth = 9
-        ctx.requireCertification = True
-        ctx.verifyOnce = True
-        ctx.enableSingleUseKeys = True
-        ctx.enableSessions = True
-        ctx.fixBrokenPeers = False
-        if log:
-            logger.debug("CA certificate informations: %s" % cacert)
-            logger.debug(caCertificate.inspect())
-            logger.debug("MMC agent certificate: %s" % localcert)
-            logger.debug(localCertificate.inspect())
-    else:
-        if log:
-            logger.warning("SSL enabled, but peer verification is disabled.")
-        ctx = ssl.DefaultOpenSSLContextFactory(localcert, cacert)
-    return ctx
+    Adapter for the LWPCookieJar.extract_cookies
+    """
+    def __init__(self, headers):
+        self.headers = headers
 
-class MMCQueryProtocol(QueryProtocol):
+    def info(self):
+        return self.headers
 
-    def connectionMade(self):
-        self.sendCommand('POST', self.factory.path)
-        self.sendHeader('User-Agent', 'Twisted/XMLRPClib')
-        self.sendHeader('Host', self.factory.host)
-        self.sendHeader('Content-type', 'text/xml')
-        self.sendHeader('Content-length', str(len(self.factory.payload)))
-        if self.factory.user:
-            auth = '%s:%s' % (self.factory.user, self.factory.password)
-            auth = auth.encode('base64').strip()
-            self.sendHeader('Authorization', 'Basic %s' % (auth,))
-        if self.factory.session:
-            # Put MMC session cookie
-            self.sendHeader('Cookie', self.factory.session)
-        self.endHeaders()
-        self.transport.write(self.factory.payload)
+class MMCSafeTransport(xmlrpclib.SafeTransport):
+    """
+    Standard synchronous Transport for the MMC agent.
+    MMC agent provides a slightly modified XMLRPC interface.
+    Each xmlrpc request has to contains a modified header containing a
+    valid session ID and authentication information.
+    """
+    user_agent = 'AdminProxy'
 
-    def lineReceived(self, line):
-        QueryProtocol.lineReceived(self, line)
-        if line:
-            if line.startswith("Set-Cookie: "):
-                value = line.split()[1]
-                self.factory.session = value
+    def __init__(self, username, passwd, use_datetime=0):
+        """ This method returns an XMLRPC client which supports
+        basic authentication through cookies.
+        """
+        self.credentials = (username, passwd)
+        # See xmlrpc.Transport Class
+        self._use_datetime = use_datetime
 
-class MMCQueryFactory(QueryFactory):
+    def send_basic_auth(self, connection):
+        """ Include HTTPS Basic Authentication data in a header
+        """
+        auth = encodestring("%s:%s" % self.credentials).strip()
+        auth = 'Basic %s' %(auth,)
+        connection.putheader('Authorization', auth)
 
-    protocol = MMCQueryProtocol
+    def send_cookie_auth(self, connection):
+        """ Include Cookie Authentication data in a header
+        """
+        cj = LWPCookieJar()
+        cj.load(COOKIES_FILE, ignore_discard=True, ignore_expires=True)
 
-    def __init__(self, path, host, method, user=None, password=None, *args):
-        self.path, self.host = path, host
-        self.user, self.password = user, password
-        self.method = method
-        self.payload = payloadTemplate % (method, xmlrpclib.dumps(args))
-        self.deferred = defer.Deferred()
-        if method == "base.ldapAuth":
-            self.deferred.addCallback(self.getSession)
+        for cookie in cj:
+            connection.putheader('Cookie', '%s=%s' % (cookie.name, cookie.value))
 
-    def getSession(self, value):
-        self.parent.session = self.session
-        return value
-                   
-class MMCProxy(Proxy):
+    ## override the send_host hook to also send authentication info
+    def send_host(self, connection, host):
+        """
+        This method override the send_host method of SafeTransport to send
+        authentication and cookie info.
+        """
+        xmlrpclib.SafeTransport.send_host(self, connection, host)
+        if os.path.exists(COOKIES_FILE):
+            self.send_cookie_auth(connection)
+        elif self.credentials != ():
+            self.send_basic_auth(connection)
 
-    def __init__(self, url, user=None, password=None):
-        Proxy.__init__(self, url, user, password)
-        self.session = None
-        self.SSLClientContext = None
+    def request(self, host, handler, request_body, verbose=0):
+        # issue XML-RPC request
+        h = self.make_connection(host)
+        if verbose:
+            h.set_debuglevel(1)
 
-    def setSSLClientContext(self, SSLClientContext):
-        self.SSLClientContext = SSLClientContext
+        self.send_request(h, handler, request_body)
+        self.send_host(h, host)
+        self.send_user_agent(h)
 
-    def callRemote(self, method, *args):
-        factory = MMCQueryFactory(self.path, self.host, method, self.user,
-            self.password, *args)
-        factory.parent = self
-        factory.session = self.session
-        if self.secure:
-            from twisted.internet import ssl
-            if not self.SSLClientContext:
-                self.SSLClientContext = ssl.ClientContextFactory()
-            reactor.connectSSL(self.host, self.port or 443,
-                               factory, self.SSLClientContext)
-        else:
-            reactor.connectTCP(self.host, self.port or 80, factory)
-        return factory.deferred
+        self.send_content(h, request_body)
 
-class XmlrpcSslProxy(Proxy):
+        errcode, errmsg, headers = h.getreply()
+        # Creating cookie jar
+        cresponse = CookieResponse(headers)
+        crequest = CookieRequest('https://' + host + '/')
+        if '<methodName>base.ldapAuth</methodName>' in request_body:
+            cj = LWPCookieJar()
+            cj.extract_cookies(cresponse, crequest)
+            if len(cj):
+                cj.save(COOKIES_FILE, ignore_discard=True, ignore_expires=True)
+                os.chmod(COOKIES_FILE, stat.S_IRUSR | stat.S_IWUSR)
 
-    def __init__(self, url, user=None, password=None):
-        Proxy.__init__(self, url, user, password)
-        self.SSLClientContext = None
+        if errcode != 200:
+            raise xmlrpclib.ProtocolError(
+                host + handler,
+                errcode, errmsg,
+                headers
+                )
 
-    def setSSLClientContext(self, SSLClientContext):
-        self.SSLClientContext = SSLClientContext
+        self.verbose = verbose
 
-    def callRemote(self, method, *args):
-        factory = self.queryFactory(
-            self.path, self.host, method, self.user,
-            self.password, self.allowNone, args)
-        if self.secure:
-            if not self.SSLClientContext:
-                self.SSLClientContext = ssl.ClientContextFactory()
-            reactor.connectSSL(self.host, self.port or 443,
-                               factory, self.SSLClientContext)
-        else:
-            reactor.connectTCP(self.host, self.port or 80, factory)
-        return factory.deferred
-    
+        try:
+            sock = h._conn.sock
+        except AttributeError:
+            sock = None
+
+        return self._parse_response(h.getfile(), sock)

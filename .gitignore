@@ -31,4 +31,5 @@ depcomp
 agent/mmc/site.py
 web/confs/mmc.ini
 web/site.php
-
+agent/conf/agent/config.ini
+agent/conf/plugins/base.ini
