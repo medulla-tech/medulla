@@ -33,7 +33,6 @@ from mmc.plugins.base.auth import AuthenticationManager, AuthenticatorI, Authent
 from mmc.plugins.base.provisioning import ProvisioningManager
 from mmc.plugins.base.externalldap import ExternalLdapAuthenticator, ExternalLdapProvisioner
 from mmc.plugins.base.ldapconnect import LDAPConnection
-from mmc.support.uuid import uuid1
 from mmc.support.mmctools import Singleton
 
 from mmc.support import mmctools
@@ -49,6 +48,7 @@ from mmc.core.version import scmRevision
 from mmc.core.audit import AuditFactory as AF
 from mmc.plugins.base.audit import AA, AT, PLUGIN_NAME
 
+from uuid import uuid1
 import ldap
 import ldif
 import crypt
@@ -69,13 +69,8 @@ from time import mktime, strptime, strftime, localtime
 from ConfigParser import NoSectionError, NoOptionError
 from twisted.internet import defer
 
-# hashlib is only available in python >= 2.5
-try:
-    import hashlib
-    _digest = hashlib.sha1
-except ImportError:
-    import sha
-    _digest = sha.sha
+import hashlib
+_digest = hashlib.sha1
 
 # global definition for ldapUserGroupControl
 INI = mmcconfdir + "/plugins/base.ini"
