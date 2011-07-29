@@ -32,7 +32,7 @@ require("includes/FormHandler.php");
 
 /**
  * Resize a jpg file if it is greater than $maxwidth or $maxheight
- * 
+ *
  * @returns: the file name of the resized JPG file
  */
 function resizeJpg($source, $maxwidth, $maxheight) {
@@ -54,7 +54,7 @@ function resizeJpg($source, $maxwidth, $maxheight) {
         imagedestroy($newimage);
     } else {
         /* No resize needed */
-        $ret = $source; 
+        $ret = $source;
     }
     return $ret;
 }
@@ -66,7 +66,7 @@ global $error;
 // Class managing $_POST array
 if($_POST) {
     $FH = new FormHandler($_POST);
-} 
+}
 else {
     $FH = new FormHandler(array());
 }
@@ -114,7 +114,7 @@ if (isset($_POST["buser"])) {
     if (!strlen($primary)) {
         setFormError("primary_autocomplete");
         $error.= _("The primary group field can't be empty.")."<br />";
-    } 
+    }
     else if (!existGroup($primary)) {
         setFormError("primary_autocomplete");
         $error.= sprintf(_("The group %s does not exist, and so can't be set as primary group."), $primary) . "<br />";
@@ -125,13 +125,13 @@ if (isset($_POST["buser"])) {
 
     //if this user does not exist (not editing a user)
     if (!$error&&($_GET["action"]=="add")) {
-        
+
         if (!exist_user($nlogin)) {
             if ($pass == '') {//if we not precise a password
                 $error.= _("Password is empty.")."<br/>"; //refuse addition
                 setFormError("pass");
             } else {  //if no problem
-                $createHomeDir = isset($_POST["createHomeDir"]);                
+                $createHomeDir = isset($_POST["createHomeDir"]);
                 $ret = add_user($nlogin, $pass, $firstname, $name, $homedir, $createHomeDir, $_POST["primary_autocomplete"]);
                 $result = $ret["info"];
                 # password doesn't match the pwd policies
@@ -142,9 +142,9 @@ if (isset($_POST["buser"])) {
                 else {
                     $FH->setValue("randomSmbPwd", 0);
                 }
-                if (strlen($_POST['mail']) > 0) 
+                if (strlen($_POST['mail']) > 0)
                     changeUserAttributes($nlogin, "mail", $_POST["mail"]);
-		        if (strlen($loginShell) > 0) 
+		        if (strlen($loginShell) > 0)
 		            changeUserAttributes($nlogin, "loginShell", $loginShell);
                 $_GET["user"]=$nlogin;
                 $newuser=true;
@@ -174,13 +174,13 @@ if (isset($_POST["buser"])) {
 if (!empty($_GET["user"])) {
 
     if (!$error) {
-    
+
         global $result;
-        
+
         if ($FH->isUpdated("deletephoto")) {
             changeUserAttributes($_POST["nlogin"], "jpegPhoto", null);
         }
-        else if (isset($_POST["buser"])) { //if we submit modification        
+        else if (isset($_POST["buser"])) { //if we submit modification
 
             // Change user attributes
             if($FH->isUpdated('isBaseDesactive')) {
@@ -192,7 +192,7 @@ if (!empty($_GET["user"])) {
                     changeUserAttributes($nlogin, 'loginShell', '/bin/bash');
                     $result .= _("User enabled.")."<br />";
                 }
-            }            
+            }
             if ($FH->isUpdated("homeDir"))
                 move_home($nlogin, $_POST["homeDir"]);
             if($FH->isUpdated('telephoneNumber'))
@@ -206,14 +206,14 @@ if (!empty($_GET["user"])) {
             if($FH->isUpdated('homePhone'))
                 changeUserAttributes($nlogin, "homePhone", $_POST["homePhone"]);
             if($FH->isUpdated('cn'))
-                changeUserAttributes($nlogin, "cn", $_POST["cn"]);        
+                changeUserAttributes($nlogin, "cn", $_POST["cn"]);
             if($FH->isUpdated('mail'))
                 changeUserAttributes($nlogin, "mail", $_POST["mail"]);
             if($FH->isUpdated('displayName'))
                 changeUserAttributes($nlogin, "displayName", $_POST["displayName"]);
 
             /* Change photo */
-            if (!empty($_FILES["photofilename"]["name"])) {            
+            if (!empty($_FILES["photofilename"]["name"])) {
                 if (strtolower(substr($_FILES["photofilename"]["name"], -3)) == "jpg") {
                     $pfile = $_FILES["photofilename"]["tmp_name"];
                     $size = getimagesize($pfile);
@@ -222,8 +222,8 @@ if (!empty($_GET["user"])) {
                         $maxheight = 320;
                         if (in_array("gd", get_loaded_extensions())) {
                             /* Resize file if GD extension is installed */
-                            $pfile = resizeJpg($_FILES["photofilename"]["tmp_name"], 
-                                    $maxwidth, $maxheight);                         
+                            $pfile = resizeJpg($_FILES["photofilename"]["tmp_name"],
+                                    $maxwidth, $maxheight);
                         }
                         list($width, $height) = getimagesize($pfile);
                         if (($width <= $maxwidth) && ($height <= $maxheight)) {
@@ -231,26 +231,26 @@ if (!empty($_GET["user"])) {
                             $obj->scalar = "";
                             $obj->xmlrpc_type = "base64";
                             $f = fopen($pfile, "r");
-                            while (!feof($f)) $obj->scalar .= fread($f, 4096);  
+                            while (!feof($f)) $obj->scalar .= fread($f, 4096);
                             fclose($f);
                             unlink($pfile);
                             changeUserAttributes($nlogin, "jpegPhoto", $obj, False);
-                        } 
+                        }
                         else {
-                            $error .= sprintf(_("The photo is too big. The max size is %s x %s."), 
+                            $error .= sprintf(_("The photo is too big. The max size is %s x %s."),
                                 $maxwidth, $maxheight) . "<br/>";
                         }
-                    } 
+                    }
                     else $error .= _("The photo is not a JPG file.") . "<br/>";
-                } 
+                }
                 else $error .= _("The photo is not a JPG file.") . "<br/>";
-            }	 
+            }
 
             if($FH->isUpdated('firstname') or $FH->isUpdated('name'))
                 change_user_main_attr($_GET["user"], $nlogin, $firstname, $name);
 
             if (!$FH->getPostValue("groupsselected")) $FH->setPostValue("groupsselected", array());
-            
+
             // Create/modify user in all enabled MMC modules
             callPluginFunction("changeUser", array($FH));
 
@@ -258,7 +258,7 @@ if (!empty($_GET["user"])) {
             $primaryGroup = getUserPrimaryGroup($_POST['nlogin']);
             if ($_POST["primary_autocomplete"] != $primaryGroup) {
                 /* Update the primary group */
-                callPluginFunction("changeUserPrimaryGroup", array($_POST['nlogin'], 
+                callPluginFunction("changeUserPrimaryGroup", array($_POST['nlogin'],
                     $_POST["primary_autocomplete"], $primaryGroup));
             }
 
@@ -277,24 +277,31 @@ if (!empty($_GET["user"])) {
                     callPluginFunction("addUserToGroup", array($_POST['nlogin'], $group));
                 }
             }
-            
+
             // If we change the password of an already existing user
             if (($_POST["pass"] == $_POST["confpass"]) && ($_POST["pass"] != "") && ($_GET["action"] != "add")) {
                 $ret = callPluginFunction("changeUserPasswd", array(array($_GET["user"], prepare_string($_POST["pass"]))));
                 if(isXMLRPCError()) {
                     foreach($ret as $info) {
-                        $result .= "<strong>"._("Password not updated");
-                        $result .= " "._($info)."</strong><br/>";
+                        // if the faultCode is in the form :
+                        // {'info': 'Password fails quality checking policy',
+                        // 'desc': 'Constraint violation'}
+                        // keep only the 'info' part
+                        if(preg_match("/{'info': '([^']*)/", $info, $match)) {
+                            $info = $match[1];
+                        }
+                        $result .= "<strong>"._("Password not updated")."</strong><br />";
+                        $result .= "<strong>"._($info)."</strong><br/>";
                     }
                     # set errorStatus to 0 in order to make next xmlcalls
                     global $errorStatus;
                     $errorStatus = 0;
-                } 
+                }
                 else {
                     //update result display
                     $result .= _("Password updated.")."<br />";
                 }
-            }                
+            }
             $result.=_("Attributes updated.")."<br />";
         }
     }
