@@ -21,7 +21,7 @@
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
 pythonmodules = support plugins plugins.base plugins.ppolicy \
-	core core.audit
+	core core.audit client
 
 all-local: site.py
 

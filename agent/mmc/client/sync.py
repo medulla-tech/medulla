@@ -28,6 +28,18 @@ This module provides a function called MMCProxy that returned a xmlrpc.Server
 object, which use a modified Transport (called here MMCSafeTransport).
 
 Cookies are stored as a LWPCookieJar in "/tmp/mmc-cookies".
+
+Example:
+import logging
+import mmc.client.sync
+
+log = logging.getLogger()
+logging.basicConfig(level=logging.DEBUG)
+
+proxy = sync.Proxy('https://mmc:s3cr3t@localhost:7080')
+
+proxy.base.ldapAuth('root', 'secret')
+print proxy.dyngroup.getallgroups({})
 """
 import os
 import stat
@@ -43,7 +55,7 @@ log = logging.getLogger()
 
 COOKIES_FILE = '/tmp/mmc-cookies'
 
-class MMCProxy(xmlrpclib.ServerProxy, object):
+class Proxy(xmlrpclib.ServerProxy, object):
     """ This subclass ServerProxy to handle login and specific MMC
     cookies mechanism.
     Can authenticate automatically if username and passwd are provided.
