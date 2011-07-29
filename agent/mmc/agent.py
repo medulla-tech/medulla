@@ -36,7 +36,7 @@ except ImportError:
     from twisted.protocols import http
 
 from mmc.site import localstatedir
-from mmc.client import makeSSLContext
+from mmc.ssl import makeSSLContext
 from mmc.support.mmctools import Singleton
 from mmc.core.version import scmRevision
 from mmc.core.audit import AuditFactory
