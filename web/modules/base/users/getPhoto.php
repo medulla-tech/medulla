@@ -7,11 +7,11 @@ $uid = $_GET["uid"];
 $data = "";
 if ($uid) {
     $infos = getDetailedUser($uid);
-    if (!isXMLRPCError()) $data = $infos["jpegPhoto"][0]->scalar;
+    if (!isXMLRPCError() && isset($infos["jpegPhoto"])) $data = $infos["jpegPhoto"][0]->scalar;
 }
 if (!$data) {
   $f = fopen("img/users/icn_users_large.gif", "r");
-  while (!feof($f)) $data .= fread($f, 4096);  
+  while (!feof($f)) $data .= fread($f, 4096);
   fclose($f);
 }
 
