@@ -28,10 +28,7 @@ import os
 import shutil
 
 from time import gmtime
-try:
-    import uuid
-except ImportError:
-    import mmc.support.uuid as uuid
+import uuid
 
 from twisted.internet import defer
 from twisted.internet.defer import maybeDeferred

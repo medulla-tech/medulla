@@ -26,7 +26,7 @@ It provides methods to modify packages.
 """
 
 from pulse2.apis.clients import Pulse2Api
-from mmc.support.uuid import uuid1
+from uuid import uuid1
 
 class PackagePutA(Pulse2Api):
     def __init__(self, *attr):

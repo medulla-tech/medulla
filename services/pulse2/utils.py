@@ -69,10 +69,7 @@ try:
 except ImportError:
     mxDateTime = None
 
-try:
-    import uuid
-except ImportError:
-    import mmc.support.uuid as uuid
+import uuid
 
 from mmc.site import mmcconfdir
 
