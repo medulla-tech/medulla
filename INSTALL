@@ -12,6 +12,7 @@ Pre-requisites
 ==============
 
 mmc-core needs the following to be installed and run:
+- gettext
 - php5, with the following modules:
   - xmlrpc
   - gd
@@ -20,6 +21,7 @@ mmc-core needs the following to be installed and run:
   - mysqldb
   - openssl
   - ldap
+  - twisted web
 - a web server with the following extensions:
   - php5
 
