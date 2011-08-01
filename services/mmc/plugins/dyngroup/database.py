@@ -25,6 +25,7 @@
 Dyngroup database handler
 Add a specific mmc-agent plugin level
 """
+import logging
 
 # SqlAlchemy
 from sqlalchemy.orm import create_session
@@ -39,6 +40,8 @@ from pulse2.database.dyngroup import Groups, Machines, Results, Users
 from pulse2.managers.imaging import ComputerImagingManager
 # Imported last
 import re
+
+log = logging.getLogger()
 
 class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
     """
@@ -313,8 +316,17 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         except KeyError:
             pass
 
-        ret = groups.all()
-        ret = map(lambda m: setattr(m[0], 'is_owner', m[1] == ctx.userid) or m[0], ret)
+        log.debug('### Query: %s' % groups)
+        result = groups.all()
+        ret = []
+        for m in result:
+            # be very defensive, as I don't know what is in these objects
+            # TODO: know what's in...
+            if hasattr(m[0], 'is_owner'):
+                setattr(m[0], 'is_owner', m[1]==ctx.userid)
+                ret.append(m[0])
+            else:
+                ret.append(m[0])
 
         session.close()
         return ret
@@ -584,12 +596,26 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         get all the parts to build a query to get only the group which the user can have access
         """
-        user_id = self.__getOrCreateUser(ctx)
-        ug_ids = map(lambda x: x.id, self.__getUsers(getUserGroups(ctx.userid), 1, session)) # get all usergroups ids
+        join_tables = [[self.users, False, self.users.c.id==self.groups.c.FK_users], 
+                       [self.shareGroup, True, self.groups.c.id==self.shareGroup.c.FK_groups]]
+        filters = None
 
-        if ctx.userid == 'root':
-            return ([[self.users, False, self.users.c.id == self.groups.c.FK_users], [self.shareGroup, True, self.groups.c.id == self.shareGroup.c.FK_groups]], None)
-        return ([[self.users, False, self.users.c.id == self.groups.c.FK_users], [self.shareGroup, True, self.groups.c.id == self.shareGroup.c.FK_groups]], or_(self.users.c.login == ctx.userid, self.shareGroup.c.FK_users == user_id, self.shareGroup.c.FK_users.in_(ug_ids)))
+        if ctx.userid<>'root':
+            # Filter on user groups
+            user_id = self.__getOrCreateUser(ctx)
+            filters = [ self.users.c.login==ctx.userid, 
+                        self.shareGroup.c.FK_users==user_id ]
+
+            # get all usergroups ids
+            ug_ids = []
+            for user in self.__getUsers(getUserGroups(ctx.userid), 1, session):
+                ug_ids.append(user.id)            
+            if ug_ids:
+                filters.append(self.shareGroup.c.FK_users.in_(ug_ids))
+
+            filters = or_(*filters)
+
+        return (join_tables, filters)
 
     def __get_group_permissions_request_first(self, ctx, session = None):
         """
