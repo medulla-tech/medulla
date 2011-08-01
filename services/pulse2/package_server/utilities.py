@@ -26,12 +26,12 @@
     Pulse2 Modules
 """
 
-import md5
+import hashlib
 import sys
 
 def sumfile(fobj):
     '''Returns an md5 hash for an object with read() method.'''
-    m = md5.new()
+    m = hashlib.new('md5')
     while True:
         d = fobj.read(8096)
         if not d:
@@ -53,4 +53,4 @@ def md5file(fname):
     return ret
 
 def md5sum(str):
-    return md5.md5(str).hexdigest()
+    return hashlib.md5(str).hexdigest()

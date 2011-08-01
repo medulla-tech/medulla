@@ -30,7 +30,7 @@ import stat
 import time
 import re
 import shutil
-import md5
+import hashlib
 import logging
 import random
 from pulse2.package_server.types import Mirror, Command, A_Packages, Package, AFiles, File, Machine, User
@@ -41,6 +41,8 @@ from pulse2.package_server.utilities import md5file
 from pulse2.package_server.common.serializer import PkgsRsyncStateSerializer
 
 class Common(pulse2.utils.Singleton):
+    """  Base class
+    """
 
     MD5SUMS = "MD5SUMS"
     CONFXML = "conf.xml"
@@ -706,7 +708,7 @@ class Common(pulse2.utils.Singleton):
                         try:
                             filepath = os.path.join(root, name)
                             f = file(filepath, "rb")
-                            md5sums.append([filepath[len(dirname)+1:], md5.md5(f.read()).hexdigest()])
+                            md5sums.append([filepath[len(dirname)+1:], hashlib.md5(f.read()).hexdigest()])
                             f.close()
                         except IOError, e:
                             self.logger.warn("Error while reading %s: %s" % (filepath, e))
