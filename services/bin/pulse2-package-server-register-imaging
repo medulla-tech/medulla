@@ -68,6 +68,8 @@ def display_help(code):
 
 
 class RegisterImagingApi(Pulse2Api):
+    """ An API
+    """
     name = 'registerrImagingApi'
 
 def generate_uuid():
@@ -84,6 +86,9 @@ if __name__ == '__main__':
     verify_peer = None
     cacert = None
     localcert = None
+
+    if len(sys.argv)==1:
+        display_help(0)
 
     try:
         opts, suivarg = getopt.getopt(sys.argv[1:], "f:n:m:h:uc:", ["help"])
