@@ -28,10 +28,14 @@ class FormHandler {
     var $arr;
 
     function FormHandler($data) {
-        /*echo "<pre>";
+       /* echo "<pre>";
         print_r($data);
         echo '</pre>';*/
+        // the raw $_POST data
         $this->post_data = $data;
+        // the LDAP array
+        $this->arr = array();
+        // mixed array
         $this->data = array();
         $this->sanitize();
         /*echo "<pre>";
@@ -66,8 +70,17 @@ class FormHandler {
 
     /* Get updated value */
     function getValue($field) {
-        if(isset($this->data[$field]))
+        if(isset($this->data[$field])) {
+            // Be sure to return an empty array
+            // if there is only an empty string in the array
+            // Needed for MultipleInput fields
+            if (is_array($this->data[$field])) {
+                if (count($this->data[$field]) == 1 && !$this->data[$field][0]) {
+                    return array();
+                }
+            }
             return $this->data[$field];
+        }
         else
             return false;
     }
@@ -109,26 +122,48 @@ class FormHandler {
     function delPostValue($field) {
         unset($this->post_data[$field]);
     }
-    
-    
+
     function setArr($arr) {
         $this->arr = $arr;
-    }    
-    
-    /* get value from ldapArr or form post */
+    }
+
+    /*
+     * Get value from $_POST or from the user LDAP detail
+     * This is usefull in case of error in the user edit form
+     * POST value is returned before the LDAP value (wanted/actual)
+     */
     function getArrayOrPostValue($field, $type = "string") {
-        if(isset($this->arr[$field][0])) {
-            $value = $this->arr[$field][0];
-        }
-        else if($this->getPostValue($field)) {
-            $value = $this->getPostValue($field);
+
+        /*print_r($field);
+        echo "<br />";*/
+
+        if ($type == "array") {
+            $value = array('');
+            if($this->getPostValue($field)) {
+                /*print_r($this->getPostValue($field));
+                echo "<br />";*/
+                $value = $this->getPostValue($field);
+            }
+            else if(isset($this->arr[$field])) {
+                $value = $this->arr[$field];
+                /*print_r($this->arr[$field]);
+                echo "<br />";*/
+            }
         }
         else {
-            if($type == "string")
-                $value = "";
-            else if($type == "array")
-                $value = array("");
+            $value = "";
+            if($this->getPostValue($field)) {
+                $value = $this->getPostValue($field);
+            }
+            else if(isset($this->arr[$field][0])) {
+                $value = $this->arr[$field][0];
+            }
         }
+
+        /*echo "<br />";
+        print_r($value);
+        echo "<br />";
+        echo "<br />";*/
 
         return $value;
     }
