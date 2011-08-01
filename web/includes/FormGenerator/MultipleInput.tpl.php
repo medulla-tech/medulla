@@ -43,7 +43,10 @@ if (isset($_POST[$name])) {
 
 if (isset($_POST['del'])) {
     if (count($arr)>1) {
-       unset($arr[$_POST['del']]);
+        unset($arr[$_POST['del']]);
+    }
+    else if (count($arr) == 1) {
+        $arr[$_POST['del']] = '';
     }
 } else {
     $arr[]= '';
