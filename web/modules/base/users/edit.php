@@ -32,8 +32,8 @@ require("includes/FormHandler.php");
 
 global $result;
 global $error;
-$detailArr = array();
 
+$detailArr = array();
 // Class managing $_POST array
 if($_POST) {
     $FH = new FormHandler($_POST);
@@ -49,6 +49,8 @@ switch($_GET["action"]) {
         break;
     case "edit":
         $mode = "edit";
+        $uid = $_GET["user"];
+        $FH->setArr(getDetailedUser($uid));
         if ($_POST) verify_infos($FH, $mode);
         break;
     default:
@@ -61,23 +63,23 @@ function verify_infos($FH, $mode) {
     global $error;
 
     // verify validity with plugin function
-    callPluginFunction("verifInfo", array($FH->getPostValues(), $mode));
+    callPluginFunction("verifInfo", array($FH, $mode));
 
     //if this user does not exist (not editing a user)
     if (!$error && $mode == "add") {
 
 
         $uid = $FH->getPostValue("uid");
-        
+
         if (!exist_user($uid)) {
 
             if($FH->getPostValue("createHomeDir"))
                 $createHomeDir = true;
             else
                 $createHomeDir = false;
-                
+
             $ret = add_user($uid, $FH->getPostValue("pass"), $FH->getPostValue("firstname"), $FH->getPostValue("name"), $FH->getPostValue("homeDir"), $createHomeDir, $FH->getPostValue("primary_autocomplete"));
-            
+
             $result = $ret["info"];
             # password doesn't match the pwd policies
             # set randomSmbPwd for samba plugin
@@ -87,9 +89,9 @@ function verify_infos($FH, $mode) {
             else {
                 $FH->setValue("randomSmbPwd", 0);
             }
-            if (strlen($FH->getPostValue('mail')) > 0) 
+            if (strlen($FH->getPostValue('mail')) > 0)
                 changeUserAttributes($uid, "mail", $FH->getPostValue("mail"));
-	        if (strlen($FH->getPostValue('loginShell')) > 0) 
+	        if (strlen($FH->getPostValue('loginShell')) > 0)
 	            changeUserAttributes($uid, "loginShell", $FH->getPostValue('loginShell'));
 
             $_GET["user"] = $uid;
@@ -125,9 +127,9 @@ if (!empty($_GET["user"])) {
 
         global $result;
         $uid = $FH->getPostValue("uid");
-        
+
         if ($FH->isUpdated("deletephoto")) {
-            changeUserAttributes($_POST["uid"], "jpegPhoto", null);
+            changeUserAttributes($uid, "jpegPhoto", null);
         }
         else if (isset($_POST["buser"])) { //if we submit modification
 
@@ -155,7 +157,7 @@ if (!empty($_GET["user"])) {
             if($FH->isUpdated('homePhone'))
                 changeUserAttributes($uid, "homePhone", $_POST["homePhone"]);
             if($FH->isUpdated('cn'))
-                changeUserAttributes($uid, "cn", $_POST["cn"]);        
+                changeUserAttributes($uid, "cn", $_POST["cn"]);
             if($FH->isUpdated('mail'))
                 changeUserAttributes($uid, "mail", $_POST["mail"]);
             if($FH->isUpdated('displayName'))
@@ -208,15 +210,13 @@ if (!empty($_GET["user"])) {
                 $primaryGroup = getUserPrimaryGroup($uid);
                 if ($FH->getValue("primary") != $primaryGroup) {
                     /* Update the primary group */
-                    callPluginFunction("changeUserPrimaryGroup", array($uid, 
+                    callPluginFunction("changeUserPrimaryGroup", array($uid,
                     $FH->getValue("primary"), $primaryGroup));
                 }
             }
 
-            print_r($_POST);
-
             /* Secondary groups management */
-            if($FH->isUpdated("secondary")) {
+            /*if($FH->isUpdated("secondary")) {
                 $old = getUserSecondaryGroups($uid);
                 $new = $FH->getValue('secondary');
                 foreach (array_diff($old, $new) as $group) {
@@ -227,8 +227,8 @@ if (!empty($_GET["user"])) {
                     add_member($group, $uid);
                     callPluginFunction("addUserToGroup", array($uid, $group));
                 }
-            }
-            
+            }*/
+
             // If we change the password of an already existing user
             if (($_POST["pass"] == $_POST["confpass"]) && ($_POST["pass"] != "") && ($_GET["action"] != "add")) {
                 $ret = callPluginFunction("changeUserPasswd", array(array($_GET["user"], prepare_string($_POST["pass"]))));
@@ -256,14 +256,13 @@ if (!empty($_GET["user"])) {
             $result.=_("Attributes updated.")."<br />";
         }
     }
-    $detailArr = getDetailedUser($_GET["user"]);
 
     // Fetch uid/gid if we create a user
     if ($_GET["action"] == "add") {
         $detailArr["uidNumber"][0] = maxUID() + 1;
         $detailArr["gidNumber"][0] = maxGID() + 1;
     }
-    
+
     $enabled = isEnabled($_GET["user"]);
 }
 
@@ -273,8 +272,6 @@ if (!empty($_GET["user"])) {
         $result = sprintf(_("User %s has been successfully created."), $_GET["user"]);
     }
 }*/
-
-$FH->setArr($detailArr);
 
 //display result message
 if (isset($result)&&!isXMLRPCError()) {
@@ -298,6 +295,8 @@ if ($mode == "add") {
 } else {
     $title = _("Edit user");
     $activeItem = "index";
+    $uid = $_GET["user"];
+    $FH->setArr(getDetailedUser($uid));
 }
 
 $p = new PageGenerator($title);
@@ -336,7 +335,7 @@ if (isset($newuser) && !isXMLRPCError()) {
 
 /**
  * Resize a jpg file if it is greater than $maxwidth or $maxheight
- * 
+ *
  * @returns: the file name of the resized JPG file
  */
 function resizeJpg($source, $maxwidth, $maxheight) {
@@ -358,7 +357,7 @@ function resizeJpg($source, $maxwidth, $maxheight) {
         imagedestroy($newimage);
     } else {
         /* No resize needed */
-        $ret = $source; 
+        $ret = $source;
     }
     return $ret;
 }
