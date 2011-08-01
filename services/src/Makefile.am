@@ -26,23 +26,4 @@ pulse2_imaging_server_SOURCES = dictionary.c dictionary.h \
 	iniparser.c iniparser.h site.h \
 	pulse2-imaging-server.c pulse2-imaging-server.h \
 	strlib.c strlib.h
-pulse2_imaging_server_CFLAGS = -O2 -Wall -Wextra -std=gnu99
-
-edit = sed \
-        -e 's|@bindir[@]|$(bindir)|g' \
-        -e 's|@sbindir[@]|$(sbindir)|g' \
-        -e 's|@pkgdatadir[@]|$(pkgdatadir)|g' \
-        -e 's|@prefix[@]|$(prefix)|g' \
-        -e 's|@sysconfdir[@]|$(sysconfdir)|g'
-
-pulse2-imaging-server.h: site.h
-
-site.h: Makefile
-	rm -f $@ $@.tmp
-	$(MKDIR_P) $(@D)
-	srcdir=''; \
-	  test -f ./$@.in || srcdir=$(srcdir)/; \
-	  $(edit) $${srcdir}$@.in >$@.tmp
-	mv $@.tmp $@
-
-site.h: site.h.in
+pulse2_imaging_server_CFLAGS = -O2 -Wall -Wextra -std=gnu99 -DSYSCONFDIR=\"$(sysconfdir)\"
