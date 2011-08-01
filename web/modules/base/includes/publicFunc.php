@@ -64,25 +64,20 @@ function _base_completeUserEntry(&$entry) {
     }
 }
 
-function _base_verifInfo($postArr, $mode) {
+function _base_verifInfo($FH, $mode) {
 
     global $error;
 
-    $nlogin = $postArr["uid"];
-    $name = $postArr["name"];
-    $firstname = $postArr["givenName"];
-    $pass = $postArr["pass"];
-    $confpass = $postArr["confpass"];
-    $homedir = $postArr["homeDir"];
-    $loginShell = $postArr["loginShell"];
-    $cn = $postArr["cn"];
-
-    if(isset($postArr["isBaseDesactive"])) {
-        $desactive = $postArr["isBaseDesactive"];
-    }
-    else {
-        $desactive = false;
-    }
+    $uid = $FH->getPostValue("uid");
+    $name = $FH->getPostValue("name");
+    $firstname = $FH->getPostValue("givenName");
+    $pass = $FH->getPostValue("pass");
+    $confpass = $FH->getPostValue("confpass");
+    $homedir = $FH->getPostValue("homeDir");
+    $loginShell = $FH->getPostValue("loginShell");
+    $cn = $FH->getPostValue("cn");
+    $desactive = $FH->getPostValue("isBaseDesactive");
+    $primary = $FH->getPostValue("primary");
 
     if ($mode == "add" && $pass == '') {
         $error.= _("Password is empty.")."<br/>";
@@ -94,13 +89,12 @@ function _base_verifInfo($postArr, $mode) {
         setFormError("pass");
     }
 
-    if (!preg_match("/^[a-zA-Z0-9][A-Za-z0-9_.-]*$/", $nlogin)) {
+    if (!preg_match("/^[a-zA-Z0-9][A-Za-z0-9_.-]*$/", $uid)) {
         $error.= _("User's name invalid !")."<br/>";
         setFormError("login");
     }
 
     /* Check that the primary group name exists */
-    $primary = $postArr["primary"];
     if (!strlen($primary)) {
         setFormError("primary");
         $error.= _("The primary group field can't be empty.")."<br />";
