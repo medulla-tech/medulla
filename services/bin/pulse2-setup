@@ -25,6 +25,7 @@
 import os, sys, stat
 import readline, getpass
 import string
+import uuid
 from random import choice
 from subprocess import call
 from optparse import OptionParser
@@ -210,6 +211,10 @@ class SrvScheduler(Service):
     name = 'pulse2-scheduler'
 
 class Pulse2ConfigParser(ConfigParser):
+    """ Values are setted that way:
+    - load the config file
+    - then populate with default values if not set from the file
+    """
     clsnames = [ 'PluginsPkgConfig', 'PluginsImagingConfig', 'PluginsGlpiConfig',
                  'PluginsBaseConfig', 'PluginsDyngroupConfig', 'PluginsInventoryConfig',
                  'PluginsPulse2Config', 'PluginsMscConfig', 'InventoryServerConfig', 
@@ -283,7 +288,7 @@ class LoggingConfig(Pulse2ConfigParser):
 class PluginsPkgConfig(Pulse2ConfigParser):
     path = 'plugins/pkgs.ini'
     defaults = {'main': {'disable': 0},
-                'user_package_api': {}}
+                'user_package_api': {'server': '127.0.0.1'}}
 
 class PluginsImagingConfig(Pulse2ConfigParser):
     path = 'plugins/imaging.ini'
@@ -364,7 +369,9 @@ class PluginsMscConfig(Pulse2ConfigParser):
                         'dbuser': 'mmc',
                         'dbpasswd': 'mmc',
                         'qactionpath': '/var/lib/pulse2/qactions',
-                        'repopath': '/var/lib/pulse2/packages'}}
+                        'repopath': '/var/lib/pulse2/packages'},
+                'scheduler_api': {'host': '127.0.0.1'},
+                'package_api': {'mserver': '127.0.0.1'}}
 
 class InventoryServerConfig(LoggingConfig):
     path = 'pulse2/inventory-server/inventory-server.ini'
@@ -387,7 +394,13 @@ class LaunchersConfig(LoggingConfig):
 class PackageServerConfig(LoggingConfig):
     path = 'pulse2/package-server/package-server.ini'
     log_path = 'pulse2-package-server.log'
-    defaults = {'main': {'host': '0.0.0.0'}}
+    defaults = {'main': {'host': '0.0.0.0',
+                         'tmp_input_dir': '/tmp/packages/default'},
+                'imaging_api': {'uuid': ''},
+                'mmc-agent': {'host': '127.0.0.1',
+                              'port': '7080',
+                              'username': 'mmc',
+                              'password': 's3cr3t'}}
 
 class SchedulerConfig(LoggingConfig):
     path = 'pulse2/scheduler/scheduler.ini'
@@ -408,7 +421,8 @@ class ImagingServerConfig(LoggingConfig):
 
     defaults = {'main': {},
                 'daemon': {},
-                'hooks': {}}
+                'hooks': {},
+                'package-server': {'host': '127.0.0.1'}}
 
 class SetupApp(object):
     defaults = {'imaging.service.enable': True,
@@ -630,7 +644,9 @@ class SetupApp(object):
 
             # Grant rights in DB
             try:
-                for module in self.dbmodules:
+                dbs = self.dbmodules
+                dbs.append('audit')
+                for module in dbs:
                     log.info('Grant rights on db %s' % module)
                     # Put db name without sqlalchemy quoting: it was surrounded by `''
                     conn.execute('GRANT ALL on `%s`.* to %%s@%%s' % module, self.config['dbuser'], host)
@@ -723,6 +739,7 @@ class SetupApp(object):
         for path in [ self.confs['plugins/base.ini'].get('backup-tools', 'destpath'),
                       self.confs['plugins/msc.ini'].get('msc', 'qactionpath'),
                       self.confs['plugins/msc.ini'].get('msc', 'repopath'),
+                      self.confs['pulse2/package-server/package-server.ini'].get('main', 'tmp_input_dir'),
                       LoggingConfig.log_dir ]:
             if not os.path.isdir(path):
                 log.info("Creating directory: %s" % path)
@@ -752,10 +769,34 @@ class SetupApp(object):
         for srv in self.services:
             srv.update_rc()
 
+        # Setup package server
+        log.info('Generate uuid for package server')
+        _uuid = self.confs['pulse2/package-server/package-server.ini'].get('imaging_api', 'uuid')
+        if _uuid is '':
+            _uuid = str(uuid.uuid4())
+            self.confs['pulse2/package-server/package-server.ini'].set('imaging_api', 'uuid', _uuid)
+
     def restart_services(self):
         for srv in self.services:
             srv.restart()
-                
+
+    def post_restart(self):
+        # Register imaging server, if necessary
+        if self.config['imaging.service.enable']:
+            binpath = path_lookup('pulse2-package-server-register-imaging')
+            ps_conf = self.confs['pulse2/package-server/package-server.ini']
+            basecmd = binpath + ' -m https://%s:%s@%s:%s ' % (ps_conf.get('mmc-agent', 'username'), 
+                                                             ps_conf.get('mmc-agent', 'password'),
+                                                             ps_conf.get('mmc-agent', 'host'),
+                                                             ps_conf.get('mmc-agent', 'port'))
+            if call(basecmd + '--check', shell=True)<>0:
+                # This uuid is not registered
+                log.info('Registering imaging server')
+                if call(cmd + '--name \'Local imaging server\'', shell=True)<>0:
+                    log.error('Can not register imaging server')
+            else:
+                log.info('Imaging server already registered')
+
     def commit(self):
         """ Write down all config files
         """
@@ -776,6 +817,8 @@ class SetupApp(object):
         self.commit()
 
         self.restart_services()
+
+        self.post_restart()
 
 if __name__ == '__main__':
     parser = OptionParser()
