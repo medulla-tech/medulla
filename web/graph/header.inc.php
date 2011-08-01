@@ -207,7 +207,7 @@ function validateForm() {
         }
     });
     if (resultbad!=0) {
-        alert('<?= _("Form cannot be submit. Input errors are highlighted in red.") ?>');
+        alert('<?php echo  _("Form cannot be submit. Input errors are highlighted in red.") ?>');
         return false;
     } else {
         return true;

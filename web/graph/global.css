@@ -60,8 +60,9 @@ Notes:
 /*
 <?php
 
+require_once("../site.php");
 require("../includes/modules.inc.php");
-includeLocalCss(fetchModulesList("/usr/share/linbox/webface/samba/modules/"));
+includeLocalCss(fetchModulesList($prefix . "/share/linbox/webface/samba/modules/"));
 
 ?>
 */

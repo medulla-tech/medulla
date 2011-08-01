@@ -38,7 +38,7 @@ function _base_disableUser($uid) {
 
 function _base_changeUserPasswd($paramsArr) {
     return xmlCall("base.changeUserPasswd", $paramsArr);
-} 
+}
 
 function _base_changeUserPrimaryGroup($uid, $group) {
     return xmlCall("base.changeUserPrimaryGroup", array($uid, $group));
@@ -52,7 +52,7 @@ function _base_delGroup($group) {
     else {
         $msg = sprintf(_("Group %s successfully deleted."), $group);
     }
-    return array("code" => $ret, "info" => $msg);    
+    return array("code" => $ret, "info" => $msg);
 }
 
 function _base_completeUserEntry(&$entry) {
@@ -104,7 +104,7 @@ function _base_verifInfo($postArr, $mode) {
     if (!strlen($primary)) {
         setFormError("primary");
         $error.= _("The primary group field can't be empty.")."<br />";
-    } 
+    }
     else if (!existGroup($primary)) {
         setFormError("primary");
         $error.= sprintf(_("The group %s does not exist, and so can't be set as primary group."), $primary) . "<br />";
@@ -177,23 +177,23 @@ function _base_baseEdit($FH, $mode) {
         array("value"=> $FH->getArrayOrPostValue("title"))
     );
 
-    $email = new InputTpl("mail",'/^([A-Za-z0-9._%-]+@[A-Za-z0-9.-]+){0,1}$/');    
+    $email = new InputTpl("mail",'/^([A-Za-z0-9._%-]+@[A-Za-z0-9.-]+){0,1}$/');
     $f->add(
         new TrFormElement(_("Mail address"), $email),
         array("value"=> $FH->getArrayOrPostValue("mail"))
     );
-    
+
     $f->pop();
 
     $phoneregexp = "/^[a-zA-Z0-9(-/ ]*$/";
 
     $tn = new MultipleInputTpl("telephoneNumber",_("Telephone number"));
-    $tn->setRegexp($phoneregexp);    
+    $tn->setRegexp($phoneregexp);
     $f->add(
         new FormElement(_("Telephone number"), $tn),
         $FH->getArrayOrPostValue("telephoneNumber", "array")
     );
-    
+
     $f->push(new Table());
 
     $f->add(
@@ -212,7 +212,7 @@ function _base_baseEdit($FH, $mode) {
     );
 
 
-    $checked = "checked";    
+    $checked = "checked";
     if ($FH->getArrayOrPostValue("loginShell") != '/bin/false')
         $checked = "";
     $f->add(
@@ -222,7 +222,7 @@ function _base_baseEdit($FH, $mode) {
             ),
         array("value" => $checked)
     );
-        
+
     /* Primary group */
     $groupsTpl = new SelectItem("primary");
     $all_groups = search_groups();
@@ -236,14 +236,14 @@ function _base_baseEdit($FH, $mode) {
     }
     else if($mode == "edit") {
         $primary = getUserPrimaryGroup($uid);
-    }    
+    }
     $f->add(
         new TrFormElement(_("Primary group"), $groupsTpl),
         array("value" => $primary)
     );
 
-    /* Secondary groups */    
-    $groupsTpl = new MembersTpl("secondary");
+    /* Secondary groups */
+    /*$groupsTpl = new MembersTpl("secondary");
     $groupsTpl->setTitle(_("User groups"), _("All groups"));
     // get the user's groups
     $user_groups = getUserSecondaryGroups($uid);
@@ -258,12 +258,12 @@ function _base_baseEdit($FH, $mode) {
     $f->add(
         new TrFormElement(_("Secondary groups"), $groupsTpl),
         array("memberOf" => $member, "available" => $available)
-    );
+    );*/
 
     $f->pop();
     $f->push(new DivExpertMode());
     $f->push(new Table());
-    
+
     $f->add(
         new TrFormElement(_("Home directory"), new InputTpl("homeDir")),
         array("value" => $FH->getArrayOrPostValue("homeDir"))
@@ -297,7 +297,7 @@ function _base_baseEdit($FH, $mode) {
         new TrFormElement(_("UID"), new HiddenTpl("uidNumber")),
         array("value"=> $FH->getArrayOrPostValue("uidNumber"))
     );
-    
+
     $f->add(
         new TrFormElement(_("GID"), new HiddenTpl("gidNumber")),
         array("value"=> $FH->getArrayOrPostValue("uidNumber"))

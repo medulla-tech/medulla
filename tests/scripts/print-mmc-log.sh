@@ -1,7 +1,8 @@
-# -*- coding: utf-8; -*-
+#!/bin/bash -e
+
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# (c) 2007-2009 Mandriva, http://www.mandriva.com
+# (c) 2007-2010 Mandriva, http://www.mandriva.com
 #
 # $Id$
 #
@@ -20,18 +21,28 @@
 # You should have received a copy of the GNU General Public License
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 
-from distutils.core import setup
+# Print on stdout all MMC related logs
 
-setup(
-    name = 'mmc-agent',
-    version = '3.0.0',
-    description = 'XML-RPC agent for Mandriva Management Console',
-    license = 'GPL',
-    url = "http://www.mandriva.com",
-    author = "Cedric Delfosse",
-    author_email = "cdelfosse@mandriva.com",
-    maintainer = "Cedric Delfosse",
-    maintainer_email = "cdelfosse@mandriva.com",
-    packages = ["mmc", "mmc.support", "mmc.plugins", "mmc.plugins.base",
-                "mmc.plugins.ppolicy", "mmc.core", "mmc.core.audit"],
-)
+export LANG=C
+export LC_ALL=C
+
+echo
+echo "= LOG FILES DUMP ="
+echo
+
+DIR="/var/log/mmc/* /var/log/syslog"
+
+for f in $DIR;
+do
+    echo "====="
+    if [ -f $f ];
+	then
+	echo $f
+	echo "="
+	cat $f
+    else
+	echo "$f does not exist"
+    fi
+done
+
+exit 0

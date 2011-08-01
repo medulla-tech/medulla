@@ -257,7 +257,7 @@ function xmlCall($method, $params = null) {
        Looks like this bug is fixed in latest PHP version. At least it works
        with PHP 5.2.0.
     */
-    $booleanFalse = "<?xml version='1.0'?>\n<methodResponse>\n<params>\n<param>\n<value><boolean>0</boolean></value>\n</param>\n</params>\n</methodResponse>\n";
+    $booleanFalse = "<?xml version='1.0' ?>\n<methodResponse>\n<params>\n<param>\n<value><boolean>0</boolean></value>\n</param>\n</params>\n</methodResponse>\n";
     if ($xmlResponse == $booleanFalse) $xmlResponse = False;
     else {
         $xmlResponseTmp = xmlrpc_decode($xmlResponse, "UTF-8");

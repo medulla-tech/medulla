@@ -19,6 +19,14 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
+### BEGIN INIT INFO
+# Provides:          mmc-agent
+# Required-Start:    $remote_fs slapd
+# Required-Stop:     slapd
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: MMC agent
+### END INIT INFO
 
 # Redhat based distributions specific
 # chkconfig: 345 99 60
@@ -26,51 +34,71 @@
 
 # Variables
 DESC="Mandriva Management Console : mmc-agent"
-DAEMON="/usr/sbin/mmc-agent"
-PIDFILE="/var/run/mmc-agent.pid"
+DAEMON="@sbindir@/mmc-agent"
+PIDFILE="@localstatedir@/run/mmc-agent.pid"
 
 test -x $DAEMON || exit 0
 
 RETVAL=0
 
+# Return PID of already running mmc-agent, if any
+# If not, return 0
+get_running_pid() {
+    local pid=0
+    if [ -e ${PIDFILE} ]
+    then
+	if ps --no-headers `cat ${PIDFILE}` > /dev/null
+	then
+	    # PIDFILE content correspond to a pid
+	    pid=`cat ${PIDFILE}`
+	else
+	    # PIDFILE content is errorneous, 
+	    # remove the file
+	    rm -f ${PIDFILE}
+	fi
+    fi
+
+    echo $pid
+}
+
 # Function to start daemon
 start () {
     echo -n "Starting ${DESC} : "
-    # Start daemon
-    # Do not start it if a PID file already exist
-    if [ ! -e ${PIDFILE} ]
+    pid=$(get_running_pid)
+    # Start daemon if not running
+    if [ $pid -eq 0 ]
     then
         ${DAEMON} >/dev/null 2>&1
-  	    # Get return code
         RETVAL=$?
+        # If return code is 0, everything went fine
+	if [ ${RETVAL} -eq 0 ]
+	then
+            echo "done."
+	else
+            echo "failed."
+	fi
     else
-        RETVAL=1
-    fi
-    # If return code is 0, everything went fine
-    if [ ${RETVAL} -eq 0 ]
-    then
-        echo "done."
-    else
-        echo "failed."
+	echo "already running."
+        RETVAL=0
     fi
 }
 
 # Function to stop daemon
 stop () {
-    echo -n $"Stopping ${DESC} : "
-    # Check if the pidfile exists
-    if [ -e ${PIDFILE} ]
+    echo -n "Stopping ${DESC} : "
+    pid=$(get_running_pid)
+    if [ $pid -ne 0 ]
     then
         # If there's one, get the pid and send SIG 15
-        kill -15 `cat ${PIDFILE}`
+        kill -15 $pid
         # Get return code
         RETVAL=$?
-        # If there's no pidfile, skip kill and define RETVAL as 1
     else
-	    RETVAL=1
+	RETVAL=0
     fi
     if [ $RETVAL -eq 0 ]
     then
+	rm -f ${PIDFILE}
         echo "done."
     else
         echo "failed."
@@ -79,20 +107,19 @@ stop () {
 
 # Function to force the daemon to stop (SIGKILL)
 force_stop () {
-    echo -n $"Stopping (forced) ${DESC} : "
-    # Check if the pidfile exists
-    if [ -e ${PIDFILE} ]
+    echo -n "Stopping (forced) ${DESC} : "
+    pid=$(get_running_pid)
+    if [ $pid -ne 0 ]
     then
-        # If there's one, get the pid and send SIGKILL
-        kill -9 `cat ${PIDFILE}`
+        kill -9 $pid
         # Get return code
         RETVAL=$?
     else
-        # If there's no pidfile, skip kill and define RETVAL as 1
-        RETVAL=1
+        RETVAL=0
     fi
     if [ $RETVAL -eq 0 ]
     then
+	rm -f ${PIDFILE}
         echo "done."
     else
         echo "failed."

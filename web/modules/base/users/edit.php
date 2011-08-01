@@ -37,7 +37,7 @@ $detailArr = array();
 // Class managing $_POST array
 if($_POST) {
     $FH = new FormHandler($_POST);
-} 
+}
 else {
     $FH = new FormHandler(array());
 }
@@ -65,7 +65,8 @@ function verify_infos($FH, $mode) {
 
     //if this user does not exist (not editing a user)
     if (!$error && $mode == "add") {
-        
+
+
         $uid = $FH->getPostValue("uid");
         
         if (!exist_user($uid)) {
@@ -121,14 +122,14 @@ function verify_infos($FH, $mode) {
 if (!empty($_GET["user"])) {
 
     if (!$error) {
-    
+
         global $result;
         $uid = $FH->getPostValue("uid");
         
         if ($FH->isUpdated("deletephoto")) {
             changeUserAttributes($_POST["uid"], "jpegPhoto", null);
         }
-        else if (isset($_POST["buser"])) { //if we submit modification        
+        else if (isset($_POST["buser"])) { //if we submit modification
 
             // Change user attributes
             if($FH->isUpdated('isBaseDesactive')) {
@@ -140,7 +141,7 @@ if (!empty($_GET["user"])) {
                     changeUserAttributes($uid, 'loginShell', '/bin/bash');
                     $result .= _("User enabled.")."<br />";
                 }
-            }            
+            }
             if ($FH->isUpdated("homeDir"))
                 move_home($uid, $_POST["homeDir"]);
             if($FH->isUpdated('telephoneNumber'))
@@ -161,7 +162,7 @@ if (!empty($_GET["user"])) {
                 changeUserAttributes($uid, "displayName", $_POST["displayName"]);
 
             /* Change photo */
-            if (!empty($_FILES["photofilename"]["name"])) {            
+            if (!empty($_FILES["photofilename"]["name"])) {
                 if (strtolower(substr($_FILES["photofilename"]["name"], -3)) == "jpg") {
                     $pfile = $_FILES["photofilename"]["tmp_name"];
                     $size = getimagesize($pfile);
@@ -170,8 +171,8 @@ if (!empty($_GET["user"])) {
                         $maxheight = 320;
                         if (in_array("gd", get_loaded_extensions())) {
                             /* Resize file if GD extension is installed */
-                            $pfile = resizeJpg($_FILES["photofilename"]["tmp_name"], 
-                                    $maxwidth, $maxheight);                         
+                            $pfile = resizeJpg($_FILES["photofilename"]["tmp_name"],
+                                    $maxwidth, $maxheight);
                         }
                         list($width, $height) = getimagesize($pfile);
                         if (($width <= $maxwidth) && ($height <= $maxheight)) {
@@ -179,26 +180,26 @@ if (!empty($_GET["user"])) {
                             $obj->scalar = "";
                             $obj->xmlrpc_type = "base64";
                             $f = fopen($pfile, "r");
-                            while (!feof($f)) $obj->scalar .= fread($f, 4096);  
+                            while (!feof($f)) $obj->scalar .= fread($f, 4096);
                             fclose($f);
                             unlink($pfile);
                             changeUserAttributes($uid, "jpegPhoto", $obj, False);
-                        } 
+                        }
                         else {
-                            $error .= sprintf(_("The photo is too big. The max size is %s x %s."), 
+                            $error .= sprintf(_("The photo is too big. The max size is %s x %s."),
                                 $maxwidth, $maxheight) . "<br/>";
                         }
-                    } 
+                    }
                     else $error .= _("The photo is not a JPG file.") . "<br/>";
-                } 
+                }
                 else $error .= _("The photo is not a JPG file.") . "<br/>";
-            }	 
+            }
 
             if($FH->isUpdated('firstname') or $FH->isUpdated('name'))
                 change_user_main_attr($_GET["user"], $uid, $firstname, $name);
 
             if (!$FH->getPostValue("groupsselected")) $FH->setPostValue("groupsselected", array());
-            
+
             // Create/modify user in all enabled MMC modules
             callPluginFunction("changeUser", array($FH));
 
@@ -233,18 +234,25 @@ if (!empty($_GET["user"])) {
                 $ret = callPluginFunction("changeUserPasswd", array(array($_GET["user"], prepare_string($_POST["pass"]))));
                 if(isXMLRPCError()) {
                     foreach($ret as $info) {
-                        $result .= "<strong>"._("Password not updated");
-                        $result .= " "._($info)."</strong><br/>";
+                        // if the faultCode is in the form :
+                        // {'info': 'Password fails quality checking policy',
+                        // 'desc': 'Constraint violation'}
+                        // keep only the 'info' part
+                        if(preg_match("/{'info': '([^']*)/", $info, $match)) {
+                            $info = $match[1];
+                        }
+                        $result .= "<strong>"._("Password not updated")."</strong><br />";
+                        $result .= "<strong>"._($info)."</strong><br/>";
                     }
                     # set errorStatus to 0 in order to make next xmlcalls
                     global $errorStatus;
                     $errorStatus = 0;
-                } 
+                }
                 else {
                     //update result display
                     $result .= _("Password updated.")."<br />";
                 }
-            }                
+            }
             $result.=_("Attributes updated.")."<br />";
         }
     }
@@ -305,7 +313,7 @@ $p->display();
 callPluginFunction("baseEdit", array($FH, $mode));
 
 ?>
-    <input name="buser" type="submit" class="btnPrimary" value="<?= _("Confirm"); ?>" />
+    <input name="buser" type="submit" class="btnPrimary" value="<?php echo _("Confirm"); ?>" />
 <?
     if ($ldapAccountLocked) {
         $unlockButton = new Button();

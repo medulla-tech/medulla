@@ -53,7 +53,7 @@ if ($uid) $primary = getUserPrimaryGroup($uid);
 print '<ul>';
 foreach($groups as $items) {
     if ($items[0] != $primary) {
-    ?> <li><?= $items[0]?><span class="informal"><br><?= $items[1];?></span></li>
+    ?> <li><?php echo  $items[0] ?><span class="informal"><br><?php echo  $items[1]; ?></span></li>
     <?php
     }
 }

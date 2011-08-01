@@ -46,10 +46,10 @@ if (isset($_POST["delog"])) {
 }
 
 ?>
-<h2><?= _("Logout") ?></h2>
+<h2><?php echo  _("Logout") ?></h2>
 
-<p><?= _("Your session will be closed") ?></p>
+<p><?php echo  _("Your session will be closed") ?></p>
 
 <form method="post" action="logout/index.php">
-<input type="submit" name="delog" class="btnPrimary" value="<?= _("Logout") ?>" />
+<input type="submit" name="delog" class="btnPrimary" value="<?php echo  _("Logout") ?>" />
 </form>

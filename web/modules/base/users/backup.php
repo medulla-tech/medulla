@@ -35,7 +35,7 @@ if (isset($_POST["bback"])) {
 }
 ?>
 
-<h2><?= _("Backup a user's folder") ?></h2>
+<h2><?php echo  _("Backup a user's folder") ?></h2>
 
 <?php
 if (isset($_GET["user"])) {
@@ -80,15 +80,15 @@ else {
     ?>
 </p>
 
-<?= _("Media size"); ?>
+<?php echo  _("Media size"); ?>
 <select name="media" />
 <option value="600">CD (650 Mo)</option>
 <option value="4200">DVD (4.7 Go)</option>
 </select>
 <br><br>
 <input name="user" type="hidden" value="<?php echo $user; ?>" />
-<input name="bgo" type="submit" class="btnPrimary" value="<?= _("Launch backup"); ?>" />
-<input name="bback" type="submit" class="btnSecondary" value="<?= _("Cancel"); ?>" onclick="new Effect.Fade('popup'); return false;" />
+<input name="bgo" type="submit" class="btnPrimary" value="<?php echo  _("Launch backup"); ?>" />
+<input name="bback" type="submit" class="btnSecondary" value="<?php echo  _("Cancel"); ?>" onclick="new Effect.Fade('popup'); return false;" />
 </form>
 <?php
 }

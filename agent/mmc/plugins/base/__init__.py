@@ -33,7 +33,6 @@ from mmc.plugins.base.auth import AuthenticationManager, AuthenticatorI, Authent
 from mmc.plugins.base.provisioning import ProvisioningManager
 from mmc.plugins.base.externalldap import ExternalLdapAuthenticator, ExternalLdapProvisioner
 from mmc.plugins.base.ldapconnect import LDAPConnection
-from mmc.support.uuid import uuid1
 from mmc.support.mmctools import Singleton
 
 from mmc.support import mmctools
@@ -44,9 +43,12 @@ from mmc.support.mmctools import cleanFilter
 from mmc.support.mmctools import xmlrpcCleanup
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 
+from mmc.site import mmcconfdir, localstatedir
+from mmc.core.version import scmRevision
 from mmc.core.audit import AuditFactory as AF
 from mmc.plugins.base.audit import AA, AT, PLUGIN_NAME
 
+from uuid import uuid1
 import ldap
 import ldif
 import crypt
@@ -67,22 +69,17 @@ from time import mktime, strptime, strftime, localtime
 from ConfigParser import NoSectionError, NoOptionError
 from twisted.internet import defer
 
-# hashlib is only available in python >= 2.5 
-try: 
-    import hashlib 
-    _digest = hashlib.sha1 
-except ImportError: 
-    import sha 
-    _digest = sha.sha 
+import hashlib
+_digest = hashlib.sha1
 
 # global definition for ldapUserGroupControl
-INI = "/etc/mmc/plugins/base.ini"
+INI = mmcconfdir + "/plugins/base.ini"
 
 modList= None
 
-VERSION = "3.0.1"
+VERSION = "3.0.2"
 APIVERSION = "9:0:5"
-REVISION = int("$Rev$".split(':')[1].strip(' $'))
+REVISION = scmRevision("$Rev$")
 
 # List of methods that can be called without user authentication
 NOAUTHNEEDED = ['authenticate', 'ldapAuth', 'isCommunityVersion']
@@ -303,7 +300,7 @@ def getUserGroups(pattern):
     return ldapObj.getUserGroups(pattern)
 
 # backup fonction
-def backupUser(user, media, login, configFile = "/etc/mmc/plugins/base.ini"):
+def backupUser(user, media, login, configFile = mmcconfdir + "/plugins/base.ini"):
     config = BasePluginConfig("base")
     cmd = os.path.join(config.backuptools, "backup.sh")
     ldapObj = ldapUserGroupControl()
@@ -587,7 +584,7 @@ class LdapUserGroupControl:
         if scheme == "crypt":
             userpassword = "{crypt}" + crypt.crypt(password, salt)
         else:
-            ctx = _digest.new(password)
+            ctx = _digest(password)
             ctx.update(salt)
             userpassword = "{SSHA}" + base64.encodestring(ctx.digest() + salt)
         return userpassword
@@ -600,6 +597,8 @@ class LdapUserGroupControl:
         self.skelDir = "/etc/skel"
         self.defaultUserGroup = None
         self.defaultHomeDir = "/home"
+        self.defaultShellEnable = "/bin/bash"
+        self.defaultShellDisable = "/bin/false"
         self.uidStart = 10000
         self.gidStart = 10000
 
@@ -633,6 +632,10 @@ class LdapUserGroupControl:
         try: self.uidStart = self.config.getint("ldap", "uidStart")
         except: pass
         try: self.gidStart = self.config.getint("ldap", "gidStart")
+        except: pass
+        try: self.defaultShellEnable = self.config.getint("ldap", "defaultShellEnable")
+        except: pass
+        try: self.defaultShellDisable = self.config.getint("ldap", "defaultShellDisable")
         except: pass
 
         try:
@@ -689,7 +692,7 @@ class LdapUserGroupControl:
 
     def enableUser(self, login):
         """
-        Enable user by setting his/her shell to /bin/bash
+        Enable user by setting his/her shell to defaultShellEnable (default /bin/bash)
 
         @param login: login of the user
         @type login: str
@@ -700,8 +703,7 @@ class LdapUserGroupControl:
         s = self.l.search_s(dn, ldap.SCOPE_BASE)
         c, old = s[0]
         new = old.copy()
-        # FIXME: should not be hardcoded but put in a conf file
-        new[attr] = "/bin/bash"
+        new[attr] = self.defaultShellEnable
         modlist = ldap.modlist.modifyModlist(old, new)
         self.l.modify_s(dn, modlist)
         r.commit()
@@ -709,7 +711,7 @@ class LdapUserGroupControl:
 
     def disableUser(self, login):
         """
-        Disable user by setting his/her shell to /bin/false
+        Disable user by setting his/her shell to defaultShellDisable (default /bin/false)
 
         @param login: login of the user
         @type login: str
@@ -720,7 +722,7 @@ class LdapUserGroupControl:
         s = self.l.search_s(dn, ldap.SCOPE_BASE)
         c, old = s[0]
         new = old.copy()
-        new["loginShell"] = "/bin/false" # FIXME: should not be hardcoded but put in a conf file
+        new["loginShell"] = self.defaultShellDisable
         modlist = ldap.modlist.modifyModlist(old, new)
         self.l.modify_s(dn, modlist)
         r.commit()
@@ -729,12 +731,12 @@ class LdapUserGroupControl:
     def isEnabled(self, login):
         """
         Return True if the user is enabled, else False.
-        A user is enabled if his/her shell is not /bin/false.
+        A user is enabled if his/her shell is not defaultShellDisable
         A user is also disabled if the user has no loginShell attribute.
         """
         u = self.getDetailedUser(login)
         try:
-            return u["loginShell"] != ["/bin/false"]
+            return u["loginShell"] != [self.defaultShellDisable]
         except KeyError:
             return False
 
@@ -849,6 +851,9 @@ class LdapUserGroupControl:
                     raise Exception('group error: already exist or cannot instanciate')
         gidNumber = int(self.getDetailedGroup(primaryGroup)["gidNumber"][0])
 
+        # Get the loginShell
+        shell = self.defaultShellEnable
+
         # Put default value in firstN and lastN
         if not firstN: firstN = uid
         if not lastN: lastN = uid
@@ -864,7 +869,7 @@ class LdapUserGroupControl:
 
         # Create insertion array in ldap dir
         # FIXME: document shadow attributes choice
-        user_info = {'loginShell':'/bin/bash',
+        user_info = {'loginShell':shell,
                      'uidNumber':str(uidNumber),
                      'gidnumber':str(gidNumber),
                      'objectclass':['inetOrgPerson','posixAccount','shadowAccount','top','person'],
@@ -1347,7 +1352,7 @@ class LdapUserGroupControl:
         return newattrs
 
     getDetailedUser = getUserEntry
-    
+
     def getUserEntryById(self, id, base = None):
         """
         Search a user entry and returns the raw LDAP entry content of a user.
@@ -1370,7 +1375,7 @@ class LdapUserGroupControl:
                 newattrs = copy.deepcopy(attrs)
                 break
 
-        return newattrs      
+        return newattrs
 
     getDetailedUserById = getUserEntryById
 
@@ -1559,7 +1564,7 @@ class LdapUserGroupControl:
                 enabled = 0
                 try:
                     shell = entry[1]["loginShell"][0]
-                    if shell != "/bin/false": enabled = 1
+                    if shell != self.defaultShellDisable: enabled = 1
                 except KeyError:
                     pass
                 localArr["enabled"] = enabled
@@ -2306,6 +2311,13 @@ class RpcProxy(RpcProxyI):
     def neededParamsAddComputer(self):
         return ComputerManager().neededParamsAddComputer()
 
+    def checkComputerName(self, name):
+        return ComputerManager().checkComputerName(name)
+
+    def isComputerNameAvailable(self, locationUUID, name):
+        ctx = self.currentContext
+        return ComputerManager().isComputerNameAvailable(ctx, locationUUID, name)
+
     def canDelComputer(self):
         return ComputerManager().canDelComputer()
 
@@ -2316,6 +2328,10 @@ class RpcProxy(RpcProxyI):
     def getComputer(self, filt = None):
         ctx = self.currentContext
         return xmlrpcCleanup(ComputerManager().getComputer(ctx, filt))
+
+    def getComputersNetwork(self, filt = None):
+        ctx = self.currentContext
+        return xmlrpcCleanup(ComputerManager().getComputersNetwork(ctx, filt))
 
     def getMachineMac(self, filt = None):
         ctx = self.currentContext
@@ -2369,7 +2385,7 @@ class LogView:
     LogView class. Provide accessor to show log content
     """
 
-    def __init__(self, logfile = '/var/log/ldap.log', pattern=None):
+    def __init__(self, logfile = localstatedir + '/log/ldap.log', pattern=None):
         config = PluginConfig("base")
         try: self.logfile = config.get("ldap", "logfile")
         except (NoSectionError, NoOptionError): self.logfile = logfile
@@ -2465,8 +2481,7 @@ class SubscriptionManager(Singleton):
         }
         if dynamic:
             # we add the number of user and computers we have right now
-            users = searchUserAdvanced()
-            ret['installed_users'] = len(users)
+            ret['installed_users'], _ = searchUserAdvanced()
             ret['too_much_users'] = (ret['installed_users'] > ret['users'])
             if ComputerManager().isActivated():
                 ret['installed_computers'] = ComputerManager().getTotalComputerCount()

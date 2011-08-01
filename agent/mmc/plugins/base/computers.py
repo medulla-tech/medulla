@@ -49,6 +49,38 @@ class ComputerI:
         """
         pass
 
+    def checkComputerName(self, name):
+        """
+        Ask to all plugins that can add computer if the given name is a valid
+        computer name.
+
+        @param name: computer name to check
+        @type name: str
+
+        @returns: whether the computer name is valid or not
+        @rtype: bool
+        """
+        pass
+
+    def isComputerNameAvailable(self, ctx, locationUUID, name):
+        """
+        Ask if the hostname is already used in that entity to know if it's a duplicate
+        or not
+
+        @param ctx: the context
+        @type:
+
+        @param locationUUID: the entity uuid
+        @type: str
+
+        @param name: the computer name to check
+        @type: str
+
+        @returns: True is the hostname is available
+        @rtype: bool
+        """
+        pass
+
     def canDelComputer(self):
         """
         Does this module handle removal of computers
@@ -65,6 +97,12 @@ class ComputerI:
     def getComputer(self, ctx, params):
         """
         Get only one computer
+        """
+        pass
+
+    def getComputersNetwork(self, ctx, filt):
+        """
+        Get the computers network
         """
         pass
 
@@ -192,6 +230,28 @@ class ComputerManager(Singleton):
                     if plugin == self.main:
                         r = ret
         return r
+
+    def checkComputerName(self, name):
+        ret = True
+        for plugin in self.components:
+            self.logger.debug(plugin)
+            klass = self.components[plugin]
+            instance = klass()
+            if instance.canAddComputer() and not instance.checkComputerName(name):
+                ret = False
+                break
+        return ret
+
+    def isComputerNameAvailable(self, ctx, locationUUID, name):
+        ret = True
+        for plugin in self.components:
+            self.logger.debug(plugin)
+            klass = self.components[plugin]
+            instance = klass()
+            if instance.canAddComputer() and not instance.isComputerNameAvailable(ctx, locationUUID, name):
+                ret = False
+                break
+        return ret
 
     def delComputer(self, ctx, uuid, backup):
         for plugin in self.components:

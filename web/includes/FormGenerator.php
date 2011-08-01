@@ -568,7 +568,7 @@ class MultipleInputTpl extends AbstractTpl {
             print $this->desc;
         }
         print '</td><td>';
-        print '<input name="buser" type="submit" class="btnPrimary" value="'._("Add").'" onclick="
+        print '<input name="b'.$this->name.'" type="submit" class="btnPrimary" value="'._("Add").'" onclick="
         new Ajax.Updater(\''.$this->name.'\',\'includes/FormGenerator/MultipleInput.tpl.php\',
         { evalScripts: true, parameters: Form.serialize($(\'edit\'))+\'&amp;minputname='.$this->name.'&amp;desc='.urlencode($this->desc) . '&amp;regexp='.rawurlencode($this->regexp).'\' }); return false;"/>';
         print '</td></tr>';

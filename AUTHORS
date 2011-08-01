@@ -1,0 +1,145 @@
+The fields are:
+    name (N)
+    institution (I)
+    description (D)
+    years (Y)
+
+N: Core developpers
+
+N: Nicolas Rueff
+I: Mandriva
+E: nrueff@mandriva.com
+D:
+Y:
+
+N: Jean Parpaillon
+I: Mandriva
+E: jparpaillon@mandriva.com
+D: Team leader
+Y: 2011
+
+N: Contributors
+
+N: Matthieu Vogelweith
+I:
+E:
+D: bug reports, suggests new features, 802.1X and Radius test
+Y:
+
+N: Josef Boleininger
+I:
+E:
+D: DNS/DHCP patches, Kerberos patches
+Y:
+
+N: Vincent Guardiola
+I:
+E:
+D: Mandriva CS4 VMware image
+Y:
+
+N: Adam Cécile
+I: Mandriva
+E: acecile@mandriva.com
+D: build system and Debian packaging, Windows tools packaging
+Y:
+
+N: Oden Eriksson
+I: 
+E: 
+D: Mandriva CS4 and 2008 RPM packages
+Y:
+
+N: Nicolas Eisen
+I: 
+E:
+D: Password policy module
+Y:
+
+N: Translations
+
+N: Alejandro Escobar
+I: 
+E:
+D: Spanish
+Y:
+
+N: Juan Asensio Sánchez
+I: 
+E:
+D: Spanish
+Y:
+
+N: Atle Johansen
+I:
+E:
+D: Norwegian
+Y: 
+
+N: Wanderlei Antonio Cavassin
+I:
+E:
+D: Brazilian Portuguese
+Y:
+
+N: Cédric Delfosse
+I: Mandriva
+E:
+D: French
+Y:
+
+N: Vitaly Kolomeytsev
+I: 
+E: 
+D: Russian
+Y:
+
+N: Daniele Ferro
+I:
+E:
+D: Italian
+Y:
+
+N: Former developpers
+
+N: Cédric Delfosse
+I: Mandriva
+E: cdelfosse@mandriva.com
+D:
+Y: 
+
+N: Olivier Roussy
+I: Mandriva
+E: oroussy@mandriva.com
+D:
+Y:
+
+N: Damien Chrisment
+I: Mandriva
+E: 
+D: Former team leader
+Y:
+
+N: Sébastien Lefebvre
+I: Mandriva
+E: 
+D: Former team leader
+Y:
+
+N: Julien Blache
+I: Mandriva
+E:
+D: Wrote the first MMC version
+Y:
+
+N: Jérôme Wax
+I:
+E:
+D: wrote the current MMC framework
+Y:
+
+N: Nicolas Noirbent
+I:
+E:
+D: Pulse 2 modules
+Y:

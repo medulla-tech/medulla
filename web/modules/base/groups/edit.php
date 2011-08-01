@@ -66,10 +66,10 @@ $p->display();
 
 ?>
 
-<? if ($_GET["action"] == "add") { ?>
+<?php if ($_GET["action"] == "add") { ?>
 
 <p>
-<?= _("The group name can only contain letters and numeric, and must begin with a letter"); ?>
+<?php echo  _("The group name can only contain letters and numeric, and must begin with a letter"); ?>
 </p>
 
 <?
@@ -100,11 +100,11 @@ $tr->display(array("value" => $groupdesc));
 callPluginFunction("baseGroupEdit", array($detailArr, $_POST));
 ?>
 
-<? if ($_GET["action"] == "add")  { ?>
-<input name="badd" type="submit" class="btnPrimary" value="<?= _("Create"); ?>" />
-<? } else { ?>
-<input name="groupname" type="hidden" value="<?= $groupname; ?>" />
-<input name="bmodify" type="submit" class="btnPrimary" value="<?= _("Confirm");?>" /> 
+<?php if ($_GET["action"] == "add")  { ?>
+<input name="badd" type="submit" class="btnPrimary" value="<?php echo  _("Create"); ?>" />
+<?php } else { ?>
+<input name="groupname" type="hidden" value="<?php echo  $groupname; ?>" />
+<input name="bmodify" type="submit" class="btnPrimary" value="<?php echo  _("Confirm"); ?>" /> 
 <?php
 }
 

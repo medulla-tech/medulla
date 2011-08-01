@@ -203,24 +203,24 @@ $p->displayTitle();
 
 <div class="right">
   <div class="statusPad">
-    <h2 class="statusPad"><?= _("Server status") ?></h2>
+    <h2 class="statusPad"><?php echo  _("Server status") ?></h2>
     <?php print_health(); ?>
   </div>
 
  <div class="statusPad">
-    <h2 class="statusPad"><?= _("LDAP Configuration") ?></h2>
+    <h2 class="statusPad"><?php echo  _("LDAP Configuration") ?></h2>
     <?php print_ldap_conf(); ?>
   </div>
 </div>
 
 <div class="left">
   <div class="statusPad">
-    <h2 class="statusPad"><?= _("Hard drive partitions") ?></h2>
+    <h2 class="statusPad"><?php echo  _("Hard drive partitions") ?></h2>
     <?php print_disk_info(); ?>
   </div>
   
   <div class="statusPad">
-    <h2 class="statusPad"><?=  _("Background jobs") ?></h2>
+    <h2 class="statusPad"><?php echo   _("Background jobs") ?></h2>
     <div id="bgps"> </div>
     <script type="text/javascript">
         new Ajax.PeriodicalUpdater('bgps','includes/bgps_view.php', {asynchronous: true, frequency: 2});

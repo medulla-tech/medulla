@@ -4,6 +4,14 @@ function addComputer($params) {
     return xmlCall("base.addComputer", $params);
 }
 
+function checkComputerName($name) {
+    return xmlCall("base.checkComputerName", array($name));
+}
+
+function isComputerNameAvailable($locationUUID, $name) {
+    return xmlCall("base.isComputerNameAvailable", array($locationUUID, $name));
+}
+
 function delComputer($params, $backup) {
     return xmlCall("base.delComputer", array($params, $backup));
 }

@@ -179,8 +179,8 @@ class AuditWriterDB(Singleton, AuditWriterI):
                 return False
         elif op == 'init':
             if self.databaseExists():
-                self.logger.error('Database already exist')
-                return False
+                self.logger.info('Database already exist')
+                return True
             self.logger.info('Creating audit tables as requested')
             self.logger.info('Using database schema version %d' % self.getUptodateVersion())
             self._initTables()
@@ -341,7 +341,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         """
         @returns: the wanted audit database version for this code to works
         """
-        return 1
+        return 2
 
     def checkVersion(self, version):
         return version == self.getUptodateVersion()
@@ -356,13 +356,13 @@ class AuditWriterDB(Singleton, AuditWriterI):
         session.execute(self.version_table.delete())
         session.close()
         v = Version()
-        v.Number = version
-        session.save(v)
+        v.number = version
+        session.add(v)
         session.flush()
 
-    def _initTablesmysqlV1(self):
+    def _initTablesmysqlV2(self):
         """
-        Init MySQL table for audit database version 1
+        Init MySQL table for audit database version 2
         """
         self.module_table = Table("module", self.metadata,
                             Column("id", Integer, primary_key=True),
@@ -379,7 +379,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
     
         self.source_table = Table("source", self.metadata,
                            Column("id", Integer, primary_key=True),
-                           Column("hostname", String(20), nullable=False),
+                           Column("hostname", String(32), nullable=False),
                            mysql_engine='InnoDB'
                            )
     
@@ -394,7 +394,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         self.initiator_table=Table("initiator", self.metadata,
                             Column("id", Integer, primary_key=True),
                             Column("application", String(64), nullable=False),
-                            Column("hostname", String(20), nullable=False),
+                            Column("hostname", String(32), nullable=False),
                             mysql_engine='InnoDB'
                             )
 
@@ -445,10 +445,10 @@ class AuditWriterDB(Singleton, AuditWriterI):
                             mysql_engine='InnoDB'
                             )
 
-    def _initTablespostgresV1(self):
+    def _initTablespostgresV2(self):
         """
         FIXME: to check
-        PostgreSQL db tables for audit database version 1
+        PostgreSQL db tables for audit database version 2
         """        
         self.module_table = Table("module", self.metadata,
                             Column("id", Integer, primary_key=True),
@@ -463,7 +463,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
     
         self.source_table = Table("source", self.metadata,
                            Column("id", Integer, primary_key=True),
-                           Column("host", String(20), nullable=False)
+                           Column("hostname", String(32), nullable=False)
                            )
     
         self.param_table=Table("parameters", self.metadata,
@@ -476,7 +476,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         self.initiator_table=Table("initiator", self.metadata,
                             Column("id", Integer, primary_key=True),
                             Column("application", String(64), nullable=False),
-                            Column("host", String(20))
+                            Column("hostname", String(32))
                             )
 
         self.type_table=Table("type", self.metadata,
@@ -521,9 +521,9 @@ class AuditWriterDB(Singleton, AuditWriterI):
                              ForeignKeyConstraint(('event_id', 'module_id'), ('event.id', 'event.module_id'))
                             )
 
-    def _initMappersmysqlV1(self):
+    def _initMappersmysqlV2(self):
         """
-        Init all mappers for audit database version 1
+        Init all mappers for audit database version 2
         """
         mapper(Event, self.event_table)
         mapper(Module, self.module_table)
@@ -537,16 +537,16 @@ class AuditWriterDB(Singleton, AuditWriterI):
         mapper(Record, self.record_table, properties = {'param_log' : relation(Parameters, backref='parameters'), 'obj_log' : relation(Object, secondary=self.object_log_table, lazy=False)})
         mapper(Parameters, self.param_table)
     # The SA mapper for PostgreSQL is the same than MySQL
-    _initMapperspostgresV1 = _initMappersmysqlV1
+    _initMapperspostgresV2 = _initMappersmysqlV2
 
-    def _populateTablesmysqlV1(self):
+    def _populateTablesmysqlV2(self):
         """
-        Populate table for audit database version 1
+        Populate table for audit database version 2
         """
         t = Type()
         t.type = 'USER'
         session = create_session()
-        session.save(t)
+        session.add(t)
         session.flush()
     # The database population code is the same for PostgreSQL than MySQL
-    _populateTablespostgresV1 = _populateTablesmysqlV1
+    _populateTablespostgresV2 = _populateTablesmysqlV2

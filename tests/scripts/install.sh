@@ -81,9 +81,9 @@ function packages_to_install () {
         fi
         if [ $RELEASE == "2009.0" ];
         then
-        PKGS="$PKGS lib${ARCH}python2.5-devel libldap2.4_2-devel python-setuptools"
+        PKGS="$PKGS lib${ARCH}python2.5-devel libldap2.4_2-devel python-setuptools python-sqlalchemy"
         fi
-        if [ $RELEASE == "2010.0" ]; 
+        if [ $RELEASE == "2010.0" ];
             then
             # The python-sqlalchemy lib must be installed manually because we are
             # compatible only with version 0.4, and 2010.0 provides version 0.5.
@@ -91,8 +91,8 @@ function packages_to_install () {
         fi
     fi
     if [ $DISTRIBUTION == "Debian" ]; then
-        if [ $RELEASE == "5.0.4" ]; then
-            PKGS="$PKGS python2.5-dev libldap2-dev python-setuptools python-pylibacl"
+        if [ $RELEASE == "5.0.6" ]; then
+            PKGS="$PKGS python2.5-dev libldap2-dev python-setuptools python-pylibacl python-sqlalchemy"
         fi
     fi
 
@@ -181,12 +181,17 @@ if [ $DISTRIBUTION == "Debian" ]; then
 fi
 popd
 
-# Download and setup SQLAlchemy 0.4.8
-wget "http://switch.dl.sourceforge.net/project/sqlalchemy/sqlalchemy/0.4.8/SQLAlchemy-0.4.8.tar.gz"
-tar xzf SQLAlchemy-0.4.8.tar.gz
-pushd SQLAlchemy-0.4.8
-python setup.py install
-popd
+if [ $DISTRIBUTION == "MandrivaLinux" ]; then
+    if [ $RELEASE == "2010.0" ];
+    then
+        # Download and setup SQLAlchemy 0.4.8
+	wget "http://switch.dl.sourceforge.net/project/sqlalchemy/sqlalchemy/0.4.8/SQLAlchemy-0.4.8.tar.gz"
+	tar xzf SQLAlchemy-0.4.8.tar.gz
+	pushd SQLAlchemy-0.4.8
+	python setup.py install
+	popd
+    fi
+fi
 
 popd
 

@@ -119,7 +119,7 @@ if (empty($_SESSION["supportModList"])) { //if supportModList not available
 
 foreach ($_SESSION["supportModList"] as $mod) { //bind all supported mod list for
                                                 //dgettext function and _T() alias
-    bindtextdomain ($mod, "./modules/$mod/locale");
+    bindtextdomain ($mod, dirname(__FILE__)."/../modules/$mod/locale");
 }
 
 textdomain ("base"); //define default domain for gettext and _() alias

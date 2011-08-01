@@ -1,0 +1,115 @@
+Installation Instructions
+*************************
+
+Copyright (C) 2011 Mandriva, http://www.mandriva.com
+
+   Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.  This file is offered as-is,
+without warranty of any kind.
+
+Pre-requisites
+==============
+
+mmc-core needs the following to be installed and run:
+- php5, with the following modules:
+  - xmlrpc
+  - gd
+- python >= 2.5, with following modules:
+  - sqlalchemy >= 0.5
+  - mysqldb
+  - openssl
+  - ldap
+- a web server with the following extensions:
+  - php5
+
+Furthermore, the following services must be configured:
+- ldap, validated with slapd
+- mysql
+
+In case you get these sources from the scm, you need the following
+to generate the build system:
+- autoconf (tested with 2.68)
+- automake (tested with 2.11)
+- libtool
+
+Quick installation
+==================
+
+If you get the code from scm:
+$ ./autogen.sh
+
+Then
+$ ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var
+$ make
+$ sudo make install
+
+Install mmc LDAP schema.
+- With a slapd using slapd.conf:
+  $ sudo cp /usr/share/doc/mmc/contrib/ldap/mmc.schema /etc/ldap/schema/
+- With a slapd using LDAP based configuration:
+  $ sudo mmc-add-schema /usr/share/doc/mmc/contrib/ldap/mmc.schema /etc/ldap/schema/
+
+Enable mmc in your web server. There is a sample conf file for Apache2, so you
+can do:
+$ sudo ln -s /etc/mmc/apache/mmc.conf /etc/apache2/conf.d/
+
+`configure' Invocation
+======================
+
+   `configure' recognizes the following options to control how it
+operates.
+
+`--help'
+`-h'
+     Print a summary of all of the options to `configure', and exit.
+
+`--help=short'
+`--help=recursive'
+     Print a summary of the options unique to this package's
+     `configure', and exit.  The `short' variant lists options used
+     only in the top level, while the `recursive' variant lists options
+     also present in any nested packages.
+
+`--version'
+`-V'
+     Print the version of Autoconf used to generate the `configure'
+     script, and exit.
+
+`--cache-file=FILE'
+     Enable the cache: use and save the results of the tests in FILE,
+     traditionally `config.cache'.  FILE defaults to `/dev/null' to
+     disable caching.
+
+`--config-cache'
+`-C'
+     Alias for `--cache-file=config.cache'.
+
+`--quiet'
+`--silent'
+`-q'
+     Do not print messages saying which checks are being made.  To
+     suppress all normal output, redirect it to `/dev/null' (any error
+     messages will still be shown).
+
+`--srcdir=DIR'
+     Look for the package's source code in directory DIR.  Usually
+     `configure' can determine that directory automatically.
+
+`--prefix=DIR'
+     Use DIR as the installation prefix.  *note Installation Names::
+     for more details, including other options available for fine-tuning
+     the installation locations.
+
+`--no-create'
+`-n'
+     Run the configure checks, but stop before creating any output
+     files.
+
+`--disable-conf'
+     Do not install conf files. On a first install, you may not use this
+     option as configuration files are required.
+
+`--disable-conf-backup'
+     Do not backup configuration files if they are already installed.
+     Default is to create backup files like *.~N~

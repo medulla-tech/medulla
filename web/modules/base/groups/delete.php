@@ -51,17 +51,17 @@ if (isset($_POST["bconfirm"])) {
 }
 ?>
 
-<h2><?= _("Delete group"); ?> <?php echo $group; ?></h2>
+<h2><?php echo  _("Delete group"); ?> <?php echo $group; ?></h2>
 
 <p>
-<?= _("You will delete group"); ?> <strong><?php echo $group; ?></strong>.
+<?php echo  _("You will delete group"); ?> <strong><?php echo $group; ?></strong>.
 </p>
 <p>
-<?= _("This group will be deleted even though it is not empty"); ?>
+<?php echo  _("This group will be deleted even though it is not empty"); ?>
 </p>
 
 <form action="main.php?module=base&submod=groups&action=delete" method="post">
 <input type="hidden" name="groupname" value="<?php echo $group; ?>" />
-<input type="submit" name="bconfirm" class="btnPrimary" value="<?= _("Delete group"); ?>" />
-<input type="submit" name="bback" class="btnSecondary" value="<?= _("Cancel"); ?>" onclick="new Effect.Fade('popup'); return false;" />
+<input type="submit" name="bconfirm" class="btnPrimary" value="<?php echo  _("Delete group"); ?>" />
+<input type="submit" name="bback" class="btnSecondary" value="<?php echo  _("Cancel"); ?>" onclick="new Effect.Fade('popup'); return false;" />
 </form>

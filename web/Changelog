@@ -4,6 +4,7 @@ mmc-core 3.0.1 (MMC web interface)
  * List widget improvement: configurable pagination, tooltips on column name
  * New page that displays subscription and support informations
  * Bug fixes
+ * More details at http://mds.mandriva.org/milestone/MMC-CORE%203.0.1
 
 mmc-core 3.0.0 (MMC web interface)
 ----------------------------------

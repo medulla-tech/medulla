@@ -1,0 +1,125 @@
+#!/bin/sh
+
+tmpconf=$(mktemp)
+tmpdir=$(mktemp -d)
+
+_exit() {
+    rm -f $tmpconf
+    rm -rf $tmpdir
+}
+
+trap _exit EXIT
+
+usage() {
+    echo "Usage: "
+    echo "  * mmc-add-schema /path/to/mmc.schema /path/to/ldap/schema"
+    echo "     Add the given schema"
+    echo "  * mmc-add-schema /path/to/dir/ /path/to/ldap/schema"
+    echo "     Add all .schema files in dir"
+}
+
+test_schema() {
+    schema=$1
+    res=$(ldapsearch -Y EXTERNAL -H ldapi:/// -b cn=schema,cn=config -LLL '(&(objectclass=olcSchemaConfig)(cn=*'$schema'))' cn 2> /dev/null)
+    if [ -n "$res" ]; then
+	return 1
+    else
+	return 0
+    fi
+}
+
+add_schema() {
+    origpath=$1
+    origlist=$2
+    destdir=$3
+    schema=$(basename $origpath .schema)
+
+    echo -n "Adding schema for inclusion: $schema... "
+    if ! test_schema $schema; then
+	echo "already there"
+	return 1
+    fi
+
+    destpath=$destdir/$schema.schema
+    cp $origpath $destpath
+
+    cat $origlist > $tmpconf
+    echo "include $destpath" >> $tmpconf
+
+    # Parse the ldif file
+    out=$(slaptest -f $tmpconf -F $tmpdir 2>&1)
+    if [ $? != 0 ]; then
+	echo "error while parsing schema"
+	echo $out
+	return 0
+    fi
+
+    # Include schema
+    schemaldif=$tmpdir/cn\=config/cn\=schema/cn\={*}${schema}.ldif
+    sed -i -e 's/^dn:.*$/dn: cn='${schema}',cn=schema,cn=config/; s/^cn:.*$/cn: '${schema}'/; /^structuralObjectClass:.*$/d; /^entryUUID:.*$/d; /^creatorsName:.*$/d; /^createTimestamp:.*$/d; /^entryCSN:.*$/d; /^modifiersName:.*$/d; /^modifyTimestamp:.*$/d' $schemaldif
+
+    out=$(ldapadd -Y EXTERNAL -H ldapi:/// -f $schemaldif 2>&1)
+    if [ $? != 0 ]; then
+	echo "error while adding schema"
+	echo $out
+	return 0
+    fi
+
+    echo "ok"
+    return 1
+}
+
+if [ $# -ne 2 ]; then
+    usage
+    exit 0
+fi
+
+if [ `id -u` != 0 ]; then
+    echo "Must be run as root"
+    exit 1
+fi
+
+if [ -z `which ldapadd` ]; then
+    echo "Please install ldapadd tool :"
+    echo "- ldap-utils package on Debian"
+    exit 1
+fi
+
+schemapath=$1
+if [ ! -e $schemapath ]; then
+    echo "No such file or directory: $schemapath"
+    exit 1
+fi
+
+if echo $schemapath | grep -q '.schema$' && [ -f $schemapath ]; then
+    schemalist=$schemapath
+elif [ -d $schemapath ]; then
+    schemalist=${schemapath}/*.schema
+else
+    echo "'$schemapath' must be a dir or end with .schema. Exiting."
+    exit 1
+fi
+
+destdir=$2
+if [ ! -d $destdir ]; then
+    echo "Not a valid directory: $destdir"
+    exit 1
+fi
+# Remove final /
+destdir=$(echo $destdir | sed -e 's#/$##')
+
+mkdir -p $destdir
+
+# Get original schemas list
+origschemas=$(ldapsearch -Y EXTERNAL -H ldapi:/// -b cn=schema,cn=config -LLL '(objectclass=olcSchemaConfig)' cn 2> /dev/null | sed -e '/^cn/!d; /cn: schema/d; s/^.*}//')
+origlist=$tmpdir/origlist.ldif
+for schema in $origschemas; do
+    echo "include $destdir/$schema.schema" >> $origlist
+done
+
+# Add new schemas in ldif file
+for origpath in $schemalist; do
+    add_schema $origpath $origlist $destdir
+done
+
+exit 0

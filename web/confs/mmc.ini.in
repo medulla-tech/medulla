@@ -11,7 +11,7 @@ password = s3cr3t
 root = /mmc/
 
 ; Filesystem path where the MMC web modules are installed
-rootfsmodules = /usr/share/mmc/modules/
+rootfsmodules = @pkgdatadir@/modules/
 
 ; Available pagination steps
 pagination = 10 20 50 100
