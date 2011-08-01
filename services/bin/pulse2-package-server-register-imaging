@@ -28,6 +28,7 @@ import os
 import sys
 import getopt
 from twisted.internet import reactor
+import logging
 
 from mmc.site import mmcconfdir
 from pulse2.package_server.config import P2PServerCP
@@ -47,12 +48,12 @@ ERROR_REGISTRATION_FAILURE = 5
 
 inifile = mmcconfdir + "/pulse2/package-server/package-server.ini"
 
-def display_help(code):
+log = logging.getLogger()
+
+def display_help():
     """
     Display command line help and exit using specified code
     """
-    if code == ERROR_BAD_ARGUMENT:
-        sys.stderr.write("ERROR: Bad command line arguments\n")
     print "Usage :"
     print "    register                 : pulse2-package-server-register-imaging -m MMC_AGENT_URL -n NAME"
     print "    generate an UUID         : pulse2-package-server-register-imaging -u"
@@ -64,8 +65,8 @@ def display_help(code):
     print "    -f                       : Alternate configuration file (%s)" % inifile
     print "    -u                       : Ask to Generate an UUID"
     print "    -h --help                : Display this help"
-    sys.exit(code)
-
+    print "    -q --quiet               : Be quiet"
+    print "    -V --verbose             : Be more verbose"
 
 class RegisterImagingApi(Pulse2Api):
     """ An API
@@ -76,9 +77,7 @@ def generate_uuid():
     """
     Generate (and display) an uuid, telling the user where to pu it
     """
-    print "Here is your UUID :"
     print uuid.uuid1()
-    sys.exit(0)
 
 if __name__ == '__main__':
     my_name = None
@@ -86,45 +85,58 @@ if __name__ == '__main__':
     verify_peer = None
     cacert = None
     localcert = None
+    loglevel = logging.INFO
 
     if len(sys.argv)==1:
-        display_help(0)
+        display_help()
+        sys.exit(0)
 
     try:
-        opts, suivarg = getopt.getopt(sys.argv[1:], "f:n:m:h:uc:", ["help"])
+        opts, suivarg = getopt.getopt(sys.argv[1:], "f:n:m:h:uc:qV", 
+                                      ["help", "quiet", "verbose"])
     except getopt.GetoptError:
-        display_help(ERROR_BAD_ARGUMENT)
+        display_help()
+        sys.exit(ERROR_BAD_ARGUMENT)
 
     for option, argument in opts:
-        if option == "-f": # alternate config file
+        if option in ('-q', '--quiet'):
+            loglevel = logging.ERROR
+        elif option in ('-V', '--verbose'):
+            loglevel = logging.DEBUG
+        elif option == "-f": # alternate config file
             inifile = argument
         elif option == "-n": # imaging server name NEEDED!
             my_name = argument
         elif option == "-m": # MMC url
             mmc_url = argument
-        elif option == "-u": # MMC url
+        elif option == "-u":
             generate_uuid()
+            sys.exit(0)
         elif option in ("-h", "--help"):
-            display_help(0)
+            display_help()
+            sys.exit(0)
         elif option in ("-c"):
             verify_peer = True
             cacert, localcert = argument.split(":")
         else:
-            display_help(ERROR_BAD_ARGUMENT)
+            display_help()
+            sys.exit(ERROR_BAD_ARGUMENT)
+
+    logging.basicConfig(format='%(levelname)s - %(message)s', level=loglevel)
 
     failure = False
     if my_name == None:
-        print "ERROR: -n opt is mandatory, please put a name for this imaging server"
+        log.error("-n opt is mandatory, please put a name for this imaging server")
         failure = True
     if mmc_url == None:
-        print "ERROR: -m opt is mandatory, please put the MMC connection url"
+        log.error("-m opt is mandatory, please put the MMC connection url")
         failure = True
 
     if failure:
-        display_help(ERROR_BAD_ARGUMENT)
+        sys.exit(ERROR_BAD_ARGUMENT)
 
     if not os.path.exists(inifile):
-        print "File '%s' does not exist." % inifile
+        log.error("File '%s' does not exist." % inifile)
         sys.exit(ERROR_BAD_CONFIG_PATH)
 
     config = P2PServerCP()
@@ -133,20 +145,22 @@ if __name__ == '__main__':
         # TODO need to put the logger handler for root
         config.setup(inifile)
     except Exception, e:
-        print "ERROR : %s" % e
+        log.error(e)
         display_help(ERROR_BAD_CONFIG)
 
     config.imaging_api['mount_point'] = config.imaging_api['mount_point'].replace('/', '')
-    my_url = "%s://%s:%s/%s" % (config.proto, config.public_ip, str(config.port), config.imaging_api['mount_point'])
+    my_url = "%s://%s:%s/%s" % (config.proto, config.public_ip, 
+                                str(config.port), 
+                                config.imaging_api['mount_point'])
     my_uuid = config.imaging_api['uuid']
 
     if not my_uuid:
-        sys.stderr.write("Error: Please set the uuid option of the imaging_api section of %s\n" % inifile)
+        log.error("Please set the uuid option of the imaging_api section of %s\n" % inifile)
         sys.exit(ERROR_NO_UUID)
 
-    print "%s %s" % (my_url, my_uuid)
-
-    print "connect to %s"%(mmc_url)
+    log.debug("Connecting from: %s" % my_url)
+    log.debug("UUID: %s" % my_uuid)
+    log.debug("Connecting to: %s"%(mmc_url))
     client = RegisterImagingApi('', mmc_url, verify_peer, cacert, localcert)
 
     def register_callBack(ret):
@@ -154,23 +168,24 @@ if __name__ == '__main__':
             # We should receive a list with two items
             result, msg = ret
         except ValueError:
-            print "registering failed, bad XML-RPC response from MMC agent."
+            log.error("Registration failed, bad XML-RPC response from MMC agent.")
             sys.exit(ERROR_REGISTRATION_FAILURE)
 
         if result:
-            print msg
+            log.info(msg)
         else:
-            print msg
-            print "registering failed."
+            log.info(msg)
+            log.error("Registration failed.")
             sys.exit(ERROR_REGISTRATION_FAILURE)
 
+        # TODO: Not sure it is really needed
         reactor.stop()
 
     try:
         ret = client.callRemote("imaging.imagingServerRegister", my_name, my_url, my_uuid)
         ret.addCallback(register_callBack)
     except Exception, e:
-        print "registering failed:", e
+        log.error("Registration failed: %s" % e)
         sys.exit(ERROR_REGISTRATION_FAILURE)
 
     reactor.run()
