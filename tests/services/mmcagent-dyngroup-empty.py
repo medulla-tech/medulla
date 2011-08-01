@@ -30,7 +30,7 @@ import unittest
 import sys
 
 from unittest import TestCase
-from testutils import MMCProxy
+from mmc.client import sync
 
 # Set options to use to run the tests
 makefile = False
@@ -47,7 +47,7 @@ if "makefile" in sys.argv:
 login = 'mmc'
 password = 's3cr3t'
 
-client = MMCProxy('https://%s:%s@localhost:7080'%(login, password), False)
+client = sync.Proxy('https://%s:%s@localhost:7080'%(login, password), False)
 client.base.ldapAuth('root', 'secret')
 
 """

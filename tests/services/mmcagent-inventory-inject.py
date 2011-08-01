@@ -33,7 +33,7 @@ import os.path
 import time
 
 from unittest import TestCase
-from testutils import MMCProxy
+from mmc.client import sync
 
 
 # Set options to use to run the tests
@@ -54,7 +54,7 @@ Connect to the MMC agent using the MMCProxy class defined above
 login = 'mmc'
 password = 's3cr3t'
 
-client = MMCProxy('https://%s:%s@localhost:7080'%(login, password), False)
+client = sync.Proxy('https://%s:%s@localhost:7080'%(login, password), False)
 client.base.ldapAuth('root', 'secret')
 
 

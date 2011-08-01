@@ -35,7 +35,8 @@ import logging
 import re
 
 # our stuff
-from mmc.client import makeSSLContext, XmlrpcSslProxy
+import mmc.client.async
+from mmc.ssl import makeSSLContext
 from mmc.plugins.msc.config import MscConfig
 from mmc.plugins.msc.scheduler_api import SchedulerApi
 from mmc.plugins.msc.database import MscDatabase
@@ -57,7 +58,7 @@ def getProxy(schedulerConfig):
         if schedulerConfig['verifypeer']:
             # We have to build the SSL context to include launcher certificates
             ctx = makeSSLContext(schedulerConfig['verifypeer'], schedulerConfig['cacert'], schedulerConfig['localcert'], False)
-            ret = XmlrpcSslProxy(url)
+            ret = async.Proxy(url)
             ret.setSSLClientContext(ctx)
         else:
             ret = twisted.web.xmlrpc.Proxy(url)

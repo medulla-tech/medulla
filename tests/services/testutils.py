@@ -24,18 +24,11 @@
 """
 Little common utility functions used by some tests.
 """
-
+import sys
 from os import makedirs, chdir, popen
+
 from xml.dom.minidom import Document
 from sqlalchemy import create_engine
-
-from xmlrpclib import SafeTransport, Server, ProtocolError
-from urllib2 import Request as CookieRequest
-from cookielib import LWPCookieJar
-from os.path import exists
-from base64 import encodestring
-
-import sys
 
 def generation_Pserver(directory):
     """
@@ -224,127 +217,3 @@ def SupEsp (obj):
         lobj[0]=lobj[0].strip()
         obj=lobj[0]
         return obj
-
-"""
-MMC Synchronous Client.
-
-MMC use a modify XMLRPC implementation which use cookies and authentification.
-This module provides a function called MMCProxy that returned a xmlrpc.Server
-object, which use a modified Transport (called here MMCSafeTransport).
-
-Cookies are stored as a LWPCookieJar in "/tmp/cookies".
-"""
-
-def MMCProxy (server_uri, verbose = False):
-    """
-    This method returns a xmlrpc.Server object with an appropriate Transport
-    object to interact with the MMC.
-    """
-
-    # Convert http://login:password@host:port to (login, password)
-    auth = tuple(server_uri.rsplit('@')[0][8:].split(':',1))
-    return Server(server_uri, transport=MMCSafeTransport(auth), verbose=verbose)
-
-class MMCSafeTransport(SafeTransport):
-    """
-    Standard synchronous Transport for the MMC agent.
-    MMC agent provides a slightly modified XMLRPC interface.
-    Each xmlrpc request has to contains a modified header containing a
-    valid session ID and authentication information.
-    """
-
-    user_agent = 'AdminProxy'
-
-    def __init__(self, auth= (), use_datetime = 0):
-        """
-        This method returns an XMLRPC client which supports
-        basic authentication through cookies.
-        """
-        self.cookiefile = '/tmp/cookies'
-
-        self.credentials = auth
-        # See xmlrpc.Transport Class
-        self._use_datetime = use_datetime
-
-    def send_basic_auth(self, connection):
-        """Include HTTPS Basic Authentication data in a header"""
-
-        auth = encodestring("%s:%s"%self.credentials).strip()
-        auth = 'Basic %s' %(auth,)
-        connection.putheader('Authorization',auth)
-
-    def send_cookie_auth(self, connection):
-        """Include Cookie Authentication data in a header"""
-
-        cj = LWPCookieJar()
-        cj.load(self.cookiefile, ignore_discard=True, ignore_expires=True)
-
-        for cookie in cj:
-            connection.putheader('Cookie', '%s=%s' % (cookie.name, cookie.value))
-
-    ## override the send_host hook to also send authentication info
-    def send_host(self, connection, host):
-        """
-        This method override the send_host method of SafeTransport to send
-        authentication and cookie info.
-        """
-        SafeTransport.send_host(self, connection, host)
-        if exists(self.cookiefile):
-            self.send_cookie_auth(connection)
-        elif self.credentials != ():
-            self.send_basic_auth(connection)
-
-    def request(self, host, handler, request_body, verbose=0):
-
-        class CookieResponse:
-            """
-            Adaptater for the LWPCookieJar.extract_cookies
-            """
-            def __init__(self, headers):
-                self.headers = headers
-            def info(self):
-                return self.headers
-
-        crequest = CookieRequest('https://'+host+'/')
-
-        # issue XML-RPC request
-        h = self.make_connection(host)
-        if verbose:
-            h.set_debuglevel(1)
-
-        self.send_request(h, handler, request_body)
-        self.send_host(h, host)
-        self.send_user_agent(h)
-
-        self.send_content(h, request_body)
-
-        errcode, errmsg, headers = h.getreply()
-        cresponse = CookieResponse(headers)
-
-        # Creating cookie jar when needed
-        if '<methodName>base.ldapAuth</methodName>' in request_body:
-            cj = LWPCookieJar()
-            cj.extract_cookies(cresponse, crequest)
-            if len(cj) >0 and self.cookiefile != None:
-                cj.save(self.cookiefile, ignore_discard=True, ignore_expires=True)
-
-        if errcode != 200:
-            raise ProtocolError(
-                host + handler,
-                errcode, errmsg,
-                headers
-                )
-
-        self.verbose = verbose
-
-        try:
-            sock = h._conn.sock
-        except AttributeError:
-            sock = None
-
-        result = self._parse_response(h.getfile(), sock)
-        if isinstance(result, tuple) and isinstance(result[0], dict) and 'faultCode' in result[0]:
-            errcode = result[0]['faultCode']
-            raise RuntimeError(errcode)
-        return result
-
