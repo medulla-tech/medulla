@@ -30,16 +30,11 @@ import logging
 from twisted.internet import defer
 import re
 
-#from mmc.agent import PluginManager
 from mmc.support.mmctools import xmlrpcCleanup
 from mmc.support.mmctools import RpcProxyI #, ContextMakerI, SecurityContext
 from mmc.plugins.imaging.config import ImagingConfig
-#from mmc.plugins.imaging.profile import ImagingProfile
-#from mmc.plugins.imaging.imaging import ComputerImagingImaging
-#from mmc.plugins.imaging.pulse import ImagingPulse2Manager
 from mmc.plugins.base.computers import ComputerManager
 from pulse2.managers.profile import ComputerProfileManager
-# from pulse2.managers.imaging import ComputerImagingManager
 from pulse2.managers.location import ComputerLocationManager
 from pulse2.managers.pulse import Pulse2Manager
 from pulse2.database.imaging import ImagingDatabase
@@ -2180,9 +2175,23 @@ class ImagingRpcProxy(RpcProxyI):
         """
         db = ImagingDatabase()
         if db.countImagingServerByPackageServerUUID(uuid) != 0:
-            return [False, "The UUID you try to declare (%s) already exists in the database, please check you know what you are doing." % (uuid)]
+            return [False, "Already existing UUID: %s" % (uuid)]
         db.registerImagingServer(name, url, uuid)
         return [True, "Your Imaging Server has been correctly registered. You can now associate it to the correct entity in the MMC."]
+
+    def isImagingServerRegistered(self, uuid):
+        """
+        Return True if the given uuid is already registered for an imaging server,
+        False otherwise.
+
+        @param uuid: an imaging server uuid
+        @type uuid: str
+
+        @returns: True or False
+        @rtype: boolean
+        """
+        db = ImagingDatabase()
+        return db.countImagingServerByPackageServerUUID(uuid)<>0
 
     def getComputerByMac(self, mac):
         """

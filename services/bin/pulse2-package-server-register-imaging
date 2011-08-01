@@ -26,20 +26,15 @@ Pulse 2 Package Server Imaging module registration.
 
 import os
 import sys
-import getopt
-from twisted.internet import reactor
+import uuid
+from optparse import OptionParser
 import logging
 
 from mmc.site import mmcconfdir
+from mmc.client import sync
 from pulse2.package_server.config import P2PServerCP
-from pulse2.apis.clients import Pulse2Api
 
-try:
-    import uuid
-except ImportError:
-    import mmc.support.uuid as uuid
-
-# Error codes
+# Return codes
 ERROR_NO_UUID = 1
 ERROR_BAD_ARGUMENT = 2
 ERROR_BAD_CONFIG_PATH = 3
@@ -50,144 +45,150 @@ inifile = mmcconfdir + "/pulse2/package-server/package-server.ini"
 
 log = logging.getLogger()
 
-def display_help():
+class BaseAction(object):
+    """ Generic methods for an xmlrpc based action
     """
-    Display command line help and exit using specified code
-    """
-    print "Usage :"
-    print "    register                 : pulse2-package-server-register-imaging -m MMC_AGENT_URL -n NAME"
-    print "    generate an UUID         : pulse2-package-server-register-imaging -u"
-    print "    show help                : pulse2-package-server-register-imaging -h"
-    print "With :"
-    print "    -m http://...            : MMC Agent URL (mandatory)"
-    print "    -n 'My Imaging Server'   : Imaging server name (mandatory)"
-    print "    -c 'cacert:localcert     : Verify peer with those certs"
-    print "    -f                       : Alternate configuration file (%s)" % inifile
-    print "    -u                       : Ask to Generate an UUID"
-    print "    -h --help                : Display this help"
-    print "    -q --quiet               : Be quiet"
-    print "    -V --verbose             : Be more verbose"
+    def __init__(self, options):
+        self.cacert = None
+        self.localcert = None
 
-class RegisterImagingApi(Pulse2Api):
-    """ An API
-    """
-    name = 'registerrImagingApi'
+        if self._check_options(options) is False:
+            sys.exit(ERROR_BAD_ARGUMENT)
+
+        if options.inifile:
+            if not os.path.exists(options.inifile):
+                log.error('No such file: %s' % options.inifile)
+                sys.exit(ERROR_BAD_CONFIG_PATH)
+
+        self.config = P2PServerCP()
+        try:
+            self.config.setup(options.inifile)
+        except Exception, e:
+            log.error('Error parsing conf file: %s' % e)
+            sys.exit(ERROR_BAD_CONFIG)
+
+        # Some magic ?
+        self.config.imaging_api['mount_point'] = self.config.imaging_api['mount_point'].replace('/', '')
+        
+        self.client_url = "%s://%s:%s/%s" % (self.config.proto, 
+                                             self.config.public_ip, 
+                                             str(self.config.port), 
+                                             self.config.imaging_api['mount_point'])
+
+        self.uuid = self.config.imaging_api['uuid']
+        if not self.uuid:
+            log.error("No uuid in config file: %s" % inifile)
+            sys.exit(ERROR_NO_UUID)
+
+        log.debug("Connecting from: %s" % self.client_url)
+        log.debug("Connecting to: %s" % options.mmc_url)
+        self.proxy = sync.Proxy(options.mmc_url)
+
+    def _check_options(self, options):
+        ret = True
+        if not options.mmc_url:
+            log.error('Missing option: --mmc-agent-url')
+            ret = False
+        if options.certificates:
+            certs = options.certificates.split(':')
+            if len(certs)<>2:
+                log.error('Bad option: --certificates argument must be \'cacert:localcert\'')
+                ret = False
+            else:
+                self.cacert = certs[0]
+                self.localcert = certs[1]
+        return ret
+
+    def run(self):
+        raise NotImplemented
+
+class CheckAction(BaseAction):
+    def run(self):
+        ret = self.proxy.imaging.isImagingServerRegistered(self.uuid)
+        if ret is True:
+            return 0
+        else:
+            return ERROR_REGISTRATION_FAILURE
+
+class RegisterAction(BaseAction):
+    def __init__(self, options):
+        super(RegisterAction, self).__init__(options)
+        self.name = options.name
+
+    def _check_options(self, options):
+        ret = super(RegisterAction, self)._check_options(options)
+        if not options.name:
+            log.error('Missing option: --name')
+            ret = False
+        return ret
+
+    def run(self):
+        (code, msg) =  self.proxy.imaging.imagingServerRegister(self.name, 
+                                                                self.client_url, 
+                                                                self.uuid)
+        if code:
+            log.info('Registration succeeded')
+            return 0
+        else:
+            log.error('Registration failed: %s' % msg)
+            return ERROR_REGISTRATION_FAILURE
 
 def generate_uuid():
     """
-    Generate (and display) an uuid, telling the user where to pu it
+    Generate an uuid
     """
     print uuid.uuid1()
 
 if __name__ == '__main__':
-    my_name = None
-    mmc_url = None
-    verify_peer = None
-    cacert = None
-    localcert = None
-    loglevel = logging.INFO
+    retcode = 0
 
     if len(sys.argv)==1:
         display_help()
         sys.exit(0)
 
-    try:
-        opts, suivarg = getopt.getopt(sys.argv[1:], "f:n:m:h:uc:qV", 
-                                      ["help", "quiet", "verbose"])
-    except getopt.GetoptError:
-        display_help()
-        sys.exit(ERROR_BAD_ARGUMENT)
+    # Declare options
+    parser = OptionParser()
+    parser.add_option("-m", "--mmc-agent-url", dest="mmc_url", metavar="URL",
+                      help="MMC Agent URL")
+    parser.add_option("-n", "--name", dest="name", metavar="NAME",
+                      help="Imaging server name (mandatory)")
+    parser.add_option("-c", "--certificates", dest="certificates", metavar="cacert:localcert",
+                      help="Verify peer with those certs")
+    parser.add_option("-i", "--inifile", dest="inifile", metavar="FILE", default=inifile,
+                      help="Alternate configuration file")
+    parser.add_option("-u", "--uuid", dest="generate", default=False, action="store_true",
+                      help="Generate an UUID")
+    parser.add_option("-C", "--check", dest="check", default=False, action="store_true",
+                      help="Check if UUID is already registered")
+    parser.add_option("-q", "--quiet", dest="quiet", default=False, action="store_true",
+                      help="Be quiet")
+    parser.add_option("-V", "--verbose", dest="verbose", default=False, action="store_true",
+                      help="Be more verbose")
+    (options, args) = parser.parse_args()
 
-    for option, argument in opts:
-        if option in ('-q', '--quiet'):
-            loglevel = logging.ERROR
-        elif option in ('-V', '--verbose'):
-            loglevel = logging.DEBUG
-        elif option == "-f": # alternate config file
-            inifile = argument
-        elif option == "-n": # imaging server name NEEDED!
-            my_name = argument
-        elif option == "-m": # MMC url
-            mmc_url = argument
-        elif option == "-u":
-            generate_uuid()
-            sys.exit(0)
-        elif option in ("-h", "--help"):
-            display_help()
-            sys.exit(0)
-        elif option in ("-c"):
-            verify_peer = True
-            cacert, localcert = argument.split(":")
-        else:
-            display_help()
-            sys.exit(ERROR_BAD_ARGUMENT)
+    if options.check and options.generate:
+        parser.error('Options -C and -u are mutually exclusive')
+    if options.quiet and options.verbose:
+        parser.error('Options -V and -q are mutually exclusive')
 
+    # Logging options
+    loglevel = logging.INFO
+    if options.quiet:
+        loglevel = logging.ERROR
+    if options.verbose:
+        loglevel = logging.DEBUG
     logging.basicConfig(format='%(levelname)s - %(message)s', level=loglevel)
 
-    failure = False
-    if my_name == None:
-        log.error("-n opt is mandatory, please put a name for this imaging server")
-        failure = True
-    if mmc_url == None:
-        log.error("-m opt is mandatory, please put the MMC connection url")
-        failure = True
+    # Handle generate action
+    if options.generate:
+        generate_uuid()
+        sys.exit(0)
 
-    if failure:
-        sys.exit(ERROR_BAD_ARGUMENT)
+    # For the rest, it is handled by *Actions
+    if options.check:
+        action = CheckAction(options)
+    else:
+        action = RegisterAction(options)
 
-    if not os.path.exists(inifile):
-        log.error("File '%s' does not exist." % inifile)
-        sys.exit(ERROR_BAD_CONFIG_PATH)
-
-    config = P2PServerCP()
-
-    try:
-        # TODO need to put the logger handler for root
-        config.setup(inifile)
-    except Exception, e:
-        log.error(e)
-        display_help(ERROR_BAD_CONFIG)
-
-    config.imaging_api['mount_point'] = config.imaging_api['mount_point'].replace('/', '')
-    my_url = "%s://%s:%s/%s" % (config.proto, config.public_ip, 
-                                str(config.port), 
-                                config.imaging_api['mount_point'])
-    my_uuid = config.imaging_api['uuid']
-
-    if not my_uuid:
-        log.error("Please set the uuid option of the imaging_api section of %s\n" % inifile)
-        sys.exit(ERROR_NO_UUID)
-
-    log.debug("Connecting from: %s" % my_url)
-    log.debug("UUID: %s" % my_uuid)
-    log.debug("Connecting to: %s"%(mmc_url))
-    client = RegisterImagingApi('', mmc_url, verify_peer, cacert, localcert)
-
-    def register_callBack(ret):
-        try:
-            # We should receive a list with two items
-            result, msg = ret
-        except ValueError:
-            log.error("Registration failed, bad XML-RPC response from MMC agent.")
-            sys.exit(ERROR_REGISTRATION_FAILURE)
-
-        if result:
-            log.info(msg)
-        else:
-            log.info(msg)
-            log.error("Registration failed.")
-            sys.exit(ERROR_REGISTRATION_FAILURE)
-
-        # TODO: Not sure it is really needed
-        reactor.stop()
-
-    try:
-        ret = client.callRemote("imaging.imagingServerRegister", my_name, my_url, my_uuid)
-        ret.addCallback(register_callBack)
-    except Exception, e:
-        log.error("Registration failed: %s" % e)
-        sys.exit(ERROR_REGISTRATION_FAILURE)
-
-    reactor.run()
-    sys.exit(0)
-
+    ret = action.run()
+    sys.exit(ret)

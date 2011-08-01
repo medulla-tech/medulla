@@ -49,6 +49,7 @@ REVISION = scmRevision("$Rev$")
 
 NOAUTHNEEDED = ['computerRegister',
                 'imagingServerRegister',
+                'isImagingServerRegistered',
                 'getComputerByMac',
                 'imageRegister',
                 'imageUpdate',
