@@ -368,6 +368,8 @@ html>body #sidebar ul li a { width: auto; }
 	width: 90%;
 	display: block;
 	border: 1px solid #0E0;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
 }
 
 #errorCode {
@@ -380,8 +382,8 @@ html>body #sidebar ul li a { width: auto; }
 	width: 90%;
 	display: block;
 	border: 1px solid #E00;
-        -moz-border-radius: 10px;
-
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
 }
 
 #warningCode {
@@ -394,8 +396,8 @@ html>body #sidebar ul li a { width: auto; }
 	width: 90%;
 	display: block;
 	border: 1px solid #840;
-        -moz-border-radius: 10px;
-
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
 }
 
 .error {
