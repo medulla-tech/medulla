@@ -21,7 +21,9 @@
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
 pkgsysconfdir = ${sysconfdir}/mmc
+if ENABLE_CONF
 nobase_pkgsysconf_DATA = mmc.ini apache/mmc.conf
+endif
 
 EXTRA_DIST = mmc.ini.in apache/mmc.conf.in
 
