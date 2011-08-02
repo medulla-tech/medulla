@@ -20,10 +20,10 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ * $Id$ 
+ *
  */
-?>
-<?php
-/* $Id$ */
 
 $root = $conf["global"]["root"];
 $css = $root."graph";
@@ -78,7 +78,14 @@ cbox=document.getElementsByTagName('INPUT');
   }
 }
 
-
+// select all select with class 'list' options in the page
+// usefull to run before post a form with
+// selects in it.
+function selectAll() {
+    $$("select.list option").each(function(e) {
+        e.selected = true;
+    });
+}
 
 function getStyleObject(objectId) {
     // cross-browser function to get an object's style object given its id
@@ -209,6 +216,7 @@ function validateForm() {
     } else {
         return true;
     }
+    return false;
 }
 
 -->
