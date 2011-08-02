@@ -20,7 +20,10 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-SUBDIRS = pulse2 plugins
+SUBDIRS = 
+if ENABLE_CONF
+SUBDIRS += pulse2 plugins
+endif
 
 imagingstatedir = $(localstatedir)/pulse2/imaging
 imagingdirs = bootmenus computers custom inventories masters isos archives
