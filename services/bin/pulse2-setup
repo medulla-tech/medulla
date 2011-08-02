@@ -23,6 +23,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Pulse 2.  If not, see <http://www.gnu.org/licenses/>.
 import os, sys, stat
+import re
 import readline, getpass
 import string
 import uuid
@@ -33,6 +34,8 @@ from ConfigParser import ConfigParser
 import sqlalchemy as sa
 import logging
 import ldap
+from pulse2.utils import get_default_ip
+from pulse2.site import examplesdir
 
 log = logging.getLogger('pulse2-setup')
 
@@ -90,6 +93,26 @@ def read_passwd(prompt, check=False):
         else:
             match = True
     return pwd
+
+re_ip4 = re.compile(r'([0-9]{1,3})(\.([0-9]{1,3})){3}')
+def read_ip(prompt, default):
+    """ TODO: IPv6
+    """
+    prompt += ' (default: ' + default + ')'
+    prompt = 'INPUT    - ' + prompt + ': '
+    correct = False
+    ret = default
+    while not correct:
+        s = raw_input(prompt)
+        if len(s)==0:
+            break
+
+        if re_ip4.match(s):
+            correct = True
+            ret = s
+        else:
+            log.info('Incorrect value. Retry.')
+    return ret
 
 initscripts = [ 'mmc-agent', 'pulse2-imaging-server', 'pulse2-inventory-server',
                 'pulse2-launchers', 'pulse2-package-server', 'pulse2-scheduler' ]
@@ -221,14 +244,21 @@ class Pulse2ConfigParser(ConfigParser):
                  'LaunchersConfig', 'PackageServerConfig', 'SchedulerConfig',
                  'ImagingServerConfig' ]
     path = None
-    defaults = {}
+    # If defaults is None, try to read default values from config file in
+    # examplesdir
+    defaults = None
     mode = stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP
 
-    def __init__(self, confdir):
+    def __init__(self, confdir, reset=False):
         ConfigParser.__init__(self)
         self.confdir = confdir
-        self._populate(self.__class__.defaults)
-        self._load()
+        if self.defaults is None:
+            self._load_defaults()
+        else:
+            self._populate(self.__class__.defaults)
+        if not reset:
+            # If not resetting conf, load existing
+            self._load()
 
     def _load(self):
         """ Load config file, if any
@@ -238,6 +268,15 @@ class Pulse2ConfigParser(ConfigParser):
             log.debug("Load config file %s" % fpath)
         else:
             log.debug("No such file %s. Will create it." % fpath)
+
+    def _load_defaults(self):
+        """ Load defaults values from config file in examplesdir
+        """
+        fpath = os.path.join(examplesdir, self.path)
+        if self.read(fpath):
+            log.debug("Load default config file: %s" % fpath)
+        else:
+            log.debug("No default config file %s." % fpath)
 
     def _populate(self, d):
         for (name, section) in d.iteritems():
@@ -287,24 +326,12 @@ class LoggingConfig(Pulse2ConfigParser):
 
 class PluginsPkgConfig(Pulse2ConfigParser):
     path = 'plugins/pkgs.ini'
-    defaults = {'main': {'disable': 0},
-                'user_package_api': {'server': '127.0.0.1'}}
 
 class PluginsImagingConfig(Pulse2ConfigParser):
     path = 'plugins/imaging.ini'
-    defaults = {'main': {'disable': 0},
-                'database': {'dbdriver': 'mysql',
-                             'dbhost': 'localhost',
-                             'dbport': 3306,
-                             'dbname': 'imaging',
-                             'dbuser': 'mmc',
-                             'dbpasswd': 'mmc'},
-                'web': {}}
 
 class PluginsGlpiConfig(Pulse2ConfigParser):
     path = 'plugins/glpi.ini'
-    defaults = {'main': {'disable': 1},
-                'querymanager': {}}
 
 class PluginsBaseConfig(Pulse2ConfigParser):
     path = 'plugins/base.ini'
@@ -312,12 +339,22 @@ class PluginsBaseConfig(Pulse2ConfigParser):
                                  'destpath': '/home/archives'},
                 'ldap': {'ldapurl': 'ldap://localhost:389',
                          'basedn': 'dc=mandriva,dc=com',
-                         'rootname': 'cn=admin,%(basedn)s',
-                         'password': 'secret',
                          'baseusersdn': 'ou=Users,%(basedn)s',
                          'basegroupsdn': 'ou=Groups,%(basedn)s',
-                         'userhomeaction': 1,
-                         'logfile': '/var/log/ldap.log'},
+                         'rootname': 'cn=admin,%(basedn)s',
+                         'password': 'secret',
+                         'userHomeAction': 1,
+                         'skelDir': '/etc/skel',
+                         'defaultUserGroup': 'Domain Users',
+                         'defaultHomeDir': '/home',
+                         'defaultShellEnable': '/bin/bash',
+                         'defaultShellDisable': '/bin/false',
+                         'uidStart': '10000',
+                         'gidStart': '10000',
+                         'logfile': '/var/log/ldap.log',
+                         'passwordscheme': 'passmod'},
+                'backup-tools': {'path': '/usr/lib/mmc/backup-tools',
+                                 'destpath': '/home/archives'},
                 'computers': {'method': 'inventory'},
                 'audit': {'method': 'database',
                           'dbhost': 'localhost',
@@ -329,111 +366,47 @@ class PluginsBaseConfig(Pulse2ConfigParser):
 
 class PluginsDyngroupConfig(Pulse2ConfigParser):
     path = 'plugins/dyngroup.ini'
-    defaults = {'main': {'disable': 0, 
-                         'dynamic_enable': 1},
-                'database': {'dbdriver': 'mysql',
-                             'dbhost': 'localhost',
-                             'dbport': 3306,
-                             'dbname': 'dyngroup',
-                             'dbuser': 'mmc',
-                             'dbpasswd': 'mmc'},
-                'querymanager': {'activate': 1}}
 
 class PluginsInventoryConfig(Pulse2ConfigParser):
     path = 'plugins/inventory.ini'
-    defaults = {'main': {'disable': 0},
-                'inventory': {'dbdriver': 'mysql',
-                              'dbhost': 'localhost',
-                              'dbname': 'inventory',
-                              'dbuser': 'mmc',
-                              'dbpasswd': 'mmc'},
-                'expert_mode': {},
-                'graph': {},
-                'computers': {}}
 
 class PluginsPulse2Config(Pulse2ConfigParser):
     path = 'plugins/pulse2.ini'
-    defaults = {'main': {'disable': 0},
-                'database': {'dbdriver': 'mysql',
-                             'dbhost': 'localhost',
-                             'dbname': 'pulse2',
-                             'dbuser': 'mmc',
-                             'dbpasswd': 'mmc'}}
 
 class PluginsMscConfig(Pulse2ConfigParser):
     path = 'plugins/msc.ini'
-    defaults = {'main': {'disable': 0},
-                'msc': {'dbdriver': 'mysql',
-                        'dbhost': 'localhost',
-                        'dbname': 'msc',
-                        'dbuser': 'mmc',
-                        'dbpasswd': 'mmc',
-                        'qactionpath': '/var/lib/pulse2/qactions',
-                        'repopath': '/var/lib/pulse2/packages'},
-                'scheduler_api': {'host': '127.0.0.1'},
-                'package_api': {'mserver': '127.0.0.1'}}
 
 class InventoryServerConfig(LoggingConfig):
     path = 'pulse2/inventory-server/inventory-server.ini'
     log_path = 'pulse2-inventory-server.log'
-    defaults = {'main': {'disable': 0},
-                'database': {'dbdriver': 'mysql',
-                             'dbhost': 'localhost',
-                             'dbname': 'inventory',
-                             'dbuser': 'mmc',
-                             'dbpasswd': 'mmc'},
-                'computers': {},
-                'expert_mode': {},
-                'graph': {}}
 
 class LaunchersConfig(LoggingConfig):
     path = 'pulse2/launchers/launchers.ini'
     log_path = 'pulse2-launchers.log'
-    defaults = {'wol': {'wol_path': '/usr/sbin/pulse2-wol'}}
     
 class PackageServerConfig(LoggingConfig):
     path = 'pulse2/package-server/package-server.ini'
     log_path = 'pulse2-package-server.log'
-    defaults = {'main': {'host': '0.0.0.0',
-                         'tmp_input_dir': '/tmp/packages/default'},
-                'imaging_api': {'uuid': ''},
-                'mmc-agent': {'host': '127.0.0.1',
-                              'port': '7080',
-                              'username': 'mmc',
-                              'password': 's3cr3t'}}
 
 class SchedulerConfig(LoggingConfig):
     path = 'pulse2/scheduler/scheduler.ini'
     log_path = 'pulse2-scheduler.log'
-    defaults = {'scheduler': {'id': 'scheduler_01'},
-                'database': {'dbdriver': 'mysql',
-                             'dbhost': 'localhost',
-                             'dbname': 'msc',
-                             'dbuser': 'mmc',
-                             'dbpasswd': 'mmc'},
-                'computer': {},
-                'expert_mode': {},
-                'graph': {}}
 
 class ImagingServerConfig(LoggingConfig):
     path = 'pulse2/imaging-server/imaging-server.ini'
     log_path = 'pulse2-imaging-server.log'
-
-    defaults = {'main': {},
-                'daemon': {},
-                'hooks': {},
-                'package-server': {'host': '127.0.0.1'}}
 
 class SetupApp(object):
     defaults = {'imaging.service.enable': True,
                 'inventory.service.enable': True,
                 'package.service.enable': True}
 
-    def __init__(self, datadir, confdir, batch=False):
+    def __init__(self, datadir, confdir, batch=False, reset=False):
         self.config = {}
         self.datadir = datadir
         self.confdir = confdir
         self.batch = batch
+        self.reset = reset
 
         # Check if we run as root
         if os.getuid()<>0:
@@ -454,7 +427,7 @@ class SetupApp(object):
         self.confs = {}
         for clsname in Pulse2ConfigParser.clsnames:
             cls = globals()[clsname]
-            self.confs[cls.path] = cls(self.confdir)
+            self.confs[cls.path] = cls(self.confdir, self.reset)
 
         # Creates Services objects
         self.services = []
@@ -484,6 +457,15 @@ class SetupApp(object):
         else:
             return read_passwd(name)
 
+    def read_ip(self, name, default=None):
+        if self.batch:
+            if default is not None:
+                return default
+            else:
+                return get_default_ip()
+        else:
+            return read_ip(name, default)
+
     def load_defaults(self):
         """ Load default values from config files objects
         Values are set from existing config files or default values in *Config classes.
@@ -502,7 +484,7 @@ class SetupApp(object):
         self.defaults['dbadminpasswd'] = ''
         self.defaults['dbuser'] = self.confs['plugins/pulse2.ini'].get('database', 'dbuser')
         passwd = self.confs['plugins/pulse2.ini'].get('database', 'dbpasswd')
-        if passwd==PluginsPulse2Config.defaults['database']['dbpasswd']:
+        if passwd=='mmc':
             # If passwd in config file is the default (weak) one, prefer generating a random one
             self.defaults['dbpasswd'] = gen_passwd()
         else:
@@ -522,6 +504,8 @@ class SetupApp(object):
                                                                self.defaults['imaging.service.enable'])
         self.config['package.service.enable'] = self.read_bool('Enable package server (proxy)', 
                                                                self.defaults['package.service.enable'])
+        self.config['server.ip.external'] = self.read_ip('Server external IP address', 
+                                                         get_default_ip())
 
     def init_ldap(self):
         invalids = ['ldapurl', 'ldapbasedn', 'ldapadmindn', 'ldappasswd']
@@ -729,6 +713,13 @@ class SetupApp(object):
             baseconf.remove_section('audit')
 
     def init_misc(self):
+        # Setup server IP address
+        conf = self.confs['pulse2/launchers/launchers.ini']
+        conf.set('tcp_sproxy', 'tcp_sproxy_host', self.config['server.ip.external'])
+
+        conf = self.confs['pulse2/package-server/package-server.ini']
+        conf.set('public_ip', self.config['server.ip.external'])
+
         # Choose glpi or inventory backend, and check config files coherency
         # TODO: ask for the user. For the moment, choose inventory
         self.confs['plugins/glpi.ini'].set('main', 'disable', 1)
@@ -737,8 +728,9 @@ class SetupApp(object):
         
         # Ensure various dirs are created
         for path in [ self.confs['plugins/base.ini'].get('backup-tools', 'destpath'),
-                      self.confs['plugins/msc.ini'].get('msc', 'qactionpath'),
                       self.confs['plugins/msc.ini'].get('msc', 'repopath'),
+                      self.confs['plugins/msc.ini'].get('msc', 'qactionspath'),
+                      self.confs['plugins/msc.ini'].get('msc', 'download_directory_path'),
                       self.confs['pulse2/package-server/package-server.ini'].get('main', 'tmp_input_dir'),
                       LoggingConfig.log_dir ]:
             if not os.path.isdir(path):
@@ -771,10 +763,13 @@ class SetupApp(object):
 
         # Setup package server
         log.info('Generate uuid for package server')
-        _uuid = self.confs['pulse2/package-server/package-server.ini'].get('imaging_api', 'uuid')
-        if _uuid is '':
+        conf = self.confs['pulse2/package-server/package-server.ini']
+        _uuid = None
+        if conf.has_option('imaging_api', 'uuid'):
+            _uuid = conf.get('imaging_api', 'uuid')
+        if not _uuid:
             _uuid = str(uuid.uuid4())
-            self.confs['pulse2/package-server/package-server.ini'].set('imaging_api', 'uuid', _uuid)
+        conf.set('imaging_api', 'uuid', _uuid)
 
     def restart_services(self):
         for srv in self.services:
@@ -785,14 +780,18 @@ class SetupApp(object):
         if self.config['imaging.service.enable']:
             binpath = path_lookup('pulse2-package-server-register-imaging')
             ps_conf = self.confs['pulse2/package-server/package-server.ini']
-            basecmd = binpath + ' -m https://%s:%s@%s:%s ' % (ps_conf.get('mmc-agent', 'username'), 
-                                                             ps_conf.get('mmc-agent', 'password'),
-                                                             ps_conf.get('mmc-agent', 'host'),
-                                                             ps_conf.get('mmc-agent', 'port'))
-            if call(basecmd + '--check', shell=True)<>0:
+            basecmd = binpath + ' -m https://%s:%s@%s:%s ' % (ps_conf.get('mmc_agent', 'username'), 
+                                                             ps_conf.get('mmc_agent', 'password'),
+                                                             ps_conf.get('mmc_agent', 'host'),
+                                                             ps_conf.get('mmc_agent', 'port'))
+            cmd = basecmd + '--check'
+            log.debug('Call: %s' % cmd)
+            if call(cmd, shell=True)<>0:
                 # This uuid is not registered
                 log.info('Registering imaging server')
-                if call(cmd + '--name \'Local imaging server\'', shell=True)<>0:
+                cmd = basecmd + '--name \'Local imaging server\''
+                log.debug('Call: %s' % cmd)
+                if call(cmd, shell=True)<>0:
                     log.error('Can not register imaging server')
             else:
                 log.info('Imaging server already registered')
@@ -826,6 +825,8 @@ if __name__ == '__main__':
                       help="Print debug messages")
     parser.add_option("-b", "--batch", action="store_true", dest="batch", default=False,
                       help="Do not ask any question")
+    parser.add_option("-R", "--reset", action="store_true", dest="reset", default=False,
+                      help="Reset configuration")
     parser.add_option("--pkgdatadir", action="store", dest="pkgdatadir", default='/usr/share/mmc',
                       help="Path to pulse2 datadir (default: /usr/share/mmc)")
     parser.add_option("--confdir", action="store", dest="confdir", default='/etc/mmc',
@@ -843,5 +844,5 @@ if __name__ == '__main__':
     logging.basicConfig(level=level, format=format)
 
     # Run the setup app
-    app = SetupApp(datadir=options.pkgdatadir, confdir=options.confdir, batch=options.batch)
+    app = SetupApp(datadir=options.pkgdatadir, confdir=options.confdir, batch=options.batch, reset=options.reset)
     app.run()
