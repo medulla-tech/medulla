@@ -28,7 +28,15 @@ endif
 imagingstatedir = $(localstatedir)/pulse2/imaging
 imagingdirs = bootmenus computers custom inventories masters isos archives
 
+examplesdir = @examplesdir@
+
 install-data-local:
 	for dir in $(imagingdirs); do \
 	  $(mkinstalldirs) $(DESTDIR)$(imagingstatedir)/$$dir; \
+	done
+	$(MKDIR_P) $(DESTDIR)$(examplesdir)
+	for path in `find $(srcdir)/pulse2 $(srcdir)/plugins -name '*.ini'`; do \
+	  destpath=`echo $$path | sed 's#'$(srcdir)'/##'`; \
+	  $(MKDIR_P) $(DESTDIR)$(examplesdir)/`dirname $$destpath`; \
+	  $(INSTALL_DATA) $$path $(DESTDIR)$(examplesdir)/$$destpath; \
 	done

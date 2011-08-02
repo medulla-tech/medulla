@@ -37,6 +37,32 @@ pythonmodules = apis apis.clients database database.dyngroup \
 	scheduler.assign_algo.ip_class scheduler.cache \
 	scheduler.tracking
 
+all-local: site.py
+
 # Expands Python modules list with found *.py files in each module given in pythonmodules
 modpythondir = $(pythondir)/$(notdir $(realpath $(srcdir)))
 nobase_modpython_PYTHON = $(wildcard $(srcdir)/*.py $(patsubst %,$(srcdir)/%/*.py ,$(subst .,/,$(pythonmodules))))
+nodist_modpython_PYTHON = site.py
+
+examplesdir = @examplesdir@
+
+EXTRA_DIST = site.py.in
+CLEANFILES = site.py
+
+edit = sed \
+        -e 's|@bindir[@]|$(bindir)|g' \
+        -e 's|@sbindir[@]|$(sbindir)|g' \
+        -e 's|@pkgdatadir[@]|$(pkgdatadir)|g' \
+        -e 's|@prefix[@]|$(prefix)|g' \
+        -e 's|@localstatedir[@]|$(localstatedir)|g' \
+        -e 's|@mmcconfdir[@]|$(mmcconfdir)|g' \
+        -e 's|@examplesdir[@]|$(examplesdir)|g' \
+        -e 's|@sysconfdir[@]|$(sysconfdir)|g'
+
+site.py: Makefile
+	rm -f $@ $@.tmp
+	$(MKDIR_P) $(@D)
+	srcdir=''; \
+	  test -f ./$@.in || srcdir=$(srcdir)/; \
+	  $(edit) $${srcdir}$@.in >$@.tmp
+	mv $@.tmp $@

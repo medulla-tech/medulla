@@ -111,6 +111,19 @@ AC_ARG_ENABLE([wol],
               [enable_wol="yes"])
 AM_CONDITIONAL([ENABLE_WOL], [test "$enable_wol" = "yes"])
 
+
+dnl
+dnl --with-examples-dir
+dnl   Set path to configuration files examples dir
+dnl   Default to DOCDIR/examples
+dnl
+AC_ARG_WITH([examples-dir],
+            [AS_HELP_STRING([--with-examples-dir],
+                            [path to configuration files examples dir @<:@default=DOCDIR/examples@:>@])],
+            [examplesdir="$withval"],
+	    [examplesdir="${docdir}/examples"])
+AC_SUBST([examplesdir])
+
 dnl files to generate with automake
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([services/Makefile])
