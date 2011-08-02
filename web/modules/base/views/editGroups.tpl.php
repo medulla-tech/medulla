@@ -150,12 +150,5 @@ sort($secondary);
             }
         }
 
-       function selectAll() {
-            var len = document.getElementById('select').options.length;
-            for(var i = 0 ; i<len; i++) {
-                document.getElementById('select').options[i].selected = true;
-            }
-       }
-
     -->
     </script>
