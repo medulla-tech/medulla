@@ -233,12 +233,15 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         (select_from, filter_on) = self.__get_group_permissions_request_first(ctx, session)
         groups = session.query(Groups).add_column(self.users.c.login).select_from(select_from).filter(self.groups.c.type == type)
-        root_id = self.__getUser('root').id
+        root_user = self.__getUser('root')
         if filter_on != None:
             groups = groups.filter(filter_on)
 
-        if ctx.userid == 'root' and params.has_key('localSidebar') and params['localSidebar']:
-            groups = groups.filter(self.groups.c.FK_users == root_id)
+        if ctx.userid == 'root' \
+                and params.has_key('localSidebar') \
+                and params['localSidebar'] \
+                and root_user:
+            groups = groups.filter(self.groups.c.FK_users == root_user.id)
 
         if params.has_key('canShow'):
             if params['canShow']:
