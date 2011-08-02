@@ -25,14 +25,14 @@ if ENABLE_CONF
 SUBDIRS += pulse2 plugins
 endif
 
-imagingstatedir = $(localstatedir)/pulse2/imaging
+imagingstatedir = $(localstatedir)/lib/pulse2/imaging
 imagingdirs = bootmenus computers custom inventories masters isos archives
 
 examplesdir = @examplesdir@
 
 install-data-local:
 	for dir in $(imagingdirs); do \
-	  $(mkinstalldirs) $(DESTDIR)$(imagingstatedir)/$$dir; \
+	  $(MKDIR_P) $(DESTDIR)$(imagingstatedir)/$$dir; \
 	done
 	$(MKDIR_P) $(DESTDIR)$(examplesdir)
 	for path in `find $(srcdir)/pulse2 $(srcdir)/plugins -name '*.ini'`; do \
