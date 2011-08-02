@@ -50,7 +50,7 @@ Install mmc LDAP schema.
 - With a slapd using slapd.conf:
   $ sudo cp /usr/share/doc/mmc/contrib/ldap/mmc.schema /etc/ldap/schema/
 - With a slapd using LDAP based configuration:
-  $ sudo mmc-add-schema /usr/share/doc/mmc/contrib/ldap/mmc.schema /etc/ldap/schema/
+  $ sudo mmc-add-schema /usr/share/doc/python-mmc-base/contrib/ldap/mmc.schema /etc/ldap/schema/
 
 Enable mmc in your web server. There is a sample conf file for Apache2, so you
 can do:
