@@ -2032,7 +2032,7 @@ class NotifyWidget {
      * private internal function
      */
     function getImgLevel() {
-        if ($this->getLevel()!=0) {
+        if ($this->getLevel() != 0) {
             return "img/common/icn_alert.gif";
         }
 

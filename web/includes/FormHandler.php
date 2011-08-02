@@ -28,7 +28,7 @@ class FormHandler {
     var $arr;
 
     function FormHandler($data) {
-       /* echo "<pre>";
+        /*echo "<pre>";
         print_r($data);
         echo '</pre>';*/
         // the raw $_POST data
