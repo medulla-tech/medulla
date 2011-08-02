@@ -46,6 +46,8 @@ However a Pulse 2 stored MAC Address is always following the IEEE 802.3
 'Unix' convention, with capital letters : 12:34:56:78:90:AB
 
 """
+import socket, struct
+import fcntl
 
 # to build Pulse2ConfigParser on top of ConfigParser()
 from ConfigParser import ConfigParser
@@ -533,3 +535,35 @@ def humanReadable(num, unit = "B", base = 1024):
                 break
     return ret
 
+###
+### Network interfaces related tools
+###
+def get_ip_address(ifname):
+    """ TODO: IPv6
+    """
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    return socket.inet_ntoa(fcntl.ioctl(
+        s.fileno(),
+        0x8915,  # SIOCGIFADDR
+        struct.pack('256s', ifname[:15])
+    )[20:24])
+
+def get_default_netif():
+    """ Read the default interface directly from /proc.
+    """
+    fh = open("/proc/net/route")
+    try:
+        for line in fh:
+            fields = line.strip().split()
+            if fields[1] != '00000000' or not int(fields[3], 16) & 2:
+                continue
+
+            return fields[0]
+    finally:
+        fh.close()
+
+def get_default_ip():
+    """ Return the IP of first netif with a default gateway
+    """
+    netif = get_default_netif()
+    return get_ip_address(netif)
