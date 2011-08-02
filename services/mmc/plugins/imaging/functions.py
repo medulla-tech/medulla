@@ -1511,8 +1511,9 @@ class ImagingRpcProxy(RpcProxyI):
             d = i.imagingServerDefaultMenuSet(menu)
             d.addCallback(treatFailures).addErrback(cb_fail)
             return d
-        finally:
-            logger.error("couldn't run imagingServerDefaultMenuSet for location %s"%(loc_uuid))
+        except Exception, e:
+            logger.error("Error trying to set default menu (location: %s): %s" % \
+                             (loc_uuid, e))
             db.setLocationSynchroState(loc_uuid, P2ISS.TODO)
         return defer.returnValue(False)
 
