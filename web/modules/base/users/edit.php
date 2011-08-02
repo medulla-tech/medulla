@@ -66,10 +66,10 @@ $redirect = false;
 if ($_POST) {
     $uid = $_POST['uid'];
     /* Check sent data */
-    callPluginFunction("verifInfo", array($FH, $mode));
+    $ret = callPluginFunction("verifInfo", array($FH, $mode));
     if (!$error) {
         /* Add or edit user attributes */
-        callPluginFunction("changeUser", array($FH, $mode));
+        $ret = callPluginFunction("changeUser", array($FH, $mode));
         /* Primary group management */
         if($FH->isUpdated("primary")) {
             $primaryGroup = getUserPrimaryGroup($uid);
@@ -86,9 +86,9 @@ if ($_POST) {
             }
         }
         /* Secondary groups management */
-        /*if($FH->isUpdated("secondary")) {
+        if($FH->isUpdated("memberOf_secondary")) {
             $old = getUserSecondaryGroups($uid);
-            $new = $FH->getValue('secondary');
+            $new = $FH->getValue('memberOf_secondary');
             foreach (array_diff($old, $new) as $group) {
                 del_member($group, $uid);
                 callPluginFunction("delUserFromGroup", array($uid, $group));
@@ -97,7 +97,7 @@ if ($_POST) {
                 add_member($group, $uid);
                 callPluginFunction("addUserToGroup", array($uid, $group));
             }
-        }*/
+        }
         /* Password change management */
         if ($mode == 'edit' && $FH->getValue('pass')) {
             $ret = callPluginFunction("changeUserPasswd",
@@ -147,22 +147,28 @@ if ($_POST) {
                 }
             }
         }
-        $redirect = false;
+        
+        /*if(!$error)
+            $redirect = true;
+        else*/
+            $redirect = false;
     }
 }
 
-// display error messages
-if (isset($error)) {
-    new NotifyWidgetFailure($error);
+// prepare the result popup
+$resultPopup = new NotifyWidget();
+// add error messages
+if ($error) {
+    $resultPopup->add('<div id="errorCode">' . $error . '</div>');
+    $resultPopup->setLevel(5);
 }
-// display result messages
-/*if (isset($result) && !isXMLRPCError()) {
-    new NotifyWidgetSuccess($result);
-}*/
+// add info messages
+if ($result) {
+    $resultPopup->add('<div id="validCode">' . $result . '</div>');
+}
 // in case of modification/creation success, redirect to the index
 if ($redirect)
     header('Location: ' . urlStrRedirect("base/users/index"));
-
 
 $p = new PageGenerator($title);
 $sidemenu->forceActiveItem($activeItem);
@@ -184,6 +190,7 @@ $p->display();
         }
     }
     // check if all modules are disabled
+    // TODO
     $disabledAccount = false;
     // call all plugins edit function
     callPluginFunction("baseEdit", array($FH, $mode));
