@@ -718,7 +718,7 @@ class SetupApp(object):
         conf.set('tcp_sproxy', 'tcp_sproxy_host', self.config['server.ip.external'])
 
         conf = self.confs['pulse2/package-server/package-server.ini']
-        conf.set('public_ip', self.config['server.ip.external'])
+        conf.set('main', 'public_ip', self.config['server.ip.external'])
 
         # Choose glpi or inventory backend, and check config files coherency
         # TODO: ask for the user. For the moment, choose inventory
