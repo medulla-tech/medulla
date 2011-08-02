@@ -629,6 +629,90 @@ class MultipleInputTpl extends AbstractTpl {
 
 }
 
+class MembersTpl extends AbstractTpl {
+
+    function MembersTpl($idElt) {
+        $this->id = $idElt;
+        $this->titleLeft = "";
+        $this->titleRight = "";        
+    }
+    
+    function setTitle($titleLeft, $titleRight) {
+        $this->titleLeft = $titleLeft;
+        $this->titleRight = $titleRight;                
+    }
+    
+    function display($arrParam) {
+    
+        if(is_array($arrParam['memberOf']))
+            $this->memberOf = $arrParam['memberOf'];
+        else {
+            echo 'MembersTpl: memberOf is not an array.';
+            return 1;
+        }   
+        if(is_array($arrParam['available']))
+            $this->available = $arrParam['available'];
+        else {
+            echo 'MembersTpl: available is not an array.';
+            return 1;        
+        }
+    
+        echo '
+<div id="' . $this->id . '">
+    <table style="border: none;" cellspacing="0">
+    <tr>
+        <td style="border: none;">
+        <div class="list">
+            <h3>' . $this->titleLeft . '</h3>
+            <input type="hidden" name="old_memberOf_' . $this->id .'[]" value="' . $this->memberOf . '" />
+            <select multiple size="15" class="list" name="memberOf_' . $this->id .'[]" id="memberOf_' . $this->id .'">';
+        foreach ($this->memberOf as $id=>$name)
+            echo '<option value="' . $id . '">' . $name . '</option>';
+        echo '
+            </select>
+            <br />
+        </div>
+        </td>
+        <td style="border: none;">
+        <div>
+            <a href="#" onclick="switch_' . $this->id .'(\'available\', \'memberOf\'); return false;">
+                <img style="padding: 5px;" src="img/common/icn_arrowleft.gif" value="<--" />
+            </a>
+            <br/>
+            <a href="#" onclick="switch_' . $this->id .'(\'memberOf\', \'available\'); return false;">
+                <img style="padding: 5px;" src="img/common/icn_arrowright.gif" value = "-->" />
+            </a>
+        </div>
+        </td>
+        <td style="border: none;">
+        <div class="list" style="padding-left: 10px;">
+        <h3>' . $this->titleRight . '</h3>
+            <select multiple size="15" class="list" name="available[]" id="available_' . $this->id .'">';
+        foreach ($this->available as $id=>$name)
+            echo '<option value="' . $id . '">' . $name . '</option>';
+        echo '
+            </select>
+            <br />
+        </div>
+        <div class="clearer"></div>
+        </td>
+    </tr>
+    </table>
+</div>
+<script type="text/javascript">
+    switch_' . $this->id .' = function(from, to) {
+        var toAdd = $$("#"+from+"_' . $this->id . ' option").findAll(
+            function(ele) { return ele.selected }
+        );
+        var len = toAdd.length;
+        for(var i=0; i<len; i++) {
+            $(to+"_' . $this->id . '").options.add(toAdd[i]);
+        }
+    };
+</script>';
+    }
+}
+
 /**
  *  display select html tags with specified
  *  entry, autoselect.
