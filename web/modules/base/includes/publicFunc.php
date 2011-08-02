@@ -69,6 +69,7 @@ function _base_verifInfo($FH, $mode) {
 
     global $error;
 
+    $base_errors = "";
     $uid = $FH->getPostValue("uid");
     $name = $FH->getPostValue("name");
     $firstname = $FH->getPostValue("givenName");
@@ -81,33 +82,38 @@ function _base_verifInfo($FH, $mode) {
     $primary = $FH->getPostValue("primary");
 
     if ($mode == "add" && userExists($uid)) {
-        $error .= sprintf(_("The user %s already exists."), $uid)."<br/>";
+        $base_errors .= sprintf(_("The user %s already exists."), $uid)."<br/>";
     }
 
     if ($mode == "add" && $pass == '') {
-        $error .= _("Password is empty.")."<br/>";
+        $base_errors .= _("Password is empty.")."<br/>";
         setFormError("pass");
     }
 
     if ($pass != $confpass) {
-        $error .= _("The confirmation password does not match the new password.")." <br/>";
+        $base_errors .= _("The confirmation password does not match the new password.")." <br/>";
         setFormError("pass");
+        setFormError("confpass");        
     }
 
     if (!preg_match("/^[a-zA-Z0-9][A-Za-z0-9_.-]*$/", $uid)) {
-        $error .= _("User's name invalid !")."<br/>";
+        $base_errors .= _("User's name invalid !")."<br/>";
         setFormError("login");
     }
 
     /* Check that the primary group name exists */
     if (!strlen($primary)) {
+        $base_errors .= _("The primary group field can't be empty.")."<br />";    
         setFormError("primary");
-        $error .= _("The primary group field can't be empty.")."<br />";
     }
     else if (!existGroup($primary)) {
+        $base_errors .= sprintf(_("The group %s does not exist, and so can't be set as primary group."), $primary) . "<br />";
         setFormError("primary");
-        $error .= sprintf(_("The group %s does not exist, and so can't be set as primary group."), $primary) . "<br />";
     }
+    
+    $error .= $base_errors;
+
+    return $base_errors ? 1 : 0;
 
 }
 
@@ -120,7 +126,8 @@ function _base_changeUser($FH, $mode) {
 
     global $result;
     global $error;
-
+    
+    $base_errors = "";
     $uid = $FH->getPostValue("uid");
 
     if ($mode == "add") {
@@ -214,14 +221,14 @@ function _base_changeUser($FH, $mode) {
 
                     }
                     else {
-                        $error .= sprintf(_("The photo is too big. The max size is %s x %s.
+                        $base_errors .= sprintf(_("The photo is too big. The max size is %s x %s.
                             Install php gd extention to resize the photo automatically."),
                             $maxwidth, $maxheight) . "<br/>";
                     }
                 }
-                else $error .= _("The photo is not a JPG file.") . "<br/>";
+                else $base_errors .= _("The photo is not a JPG file.") . "<br/>";
             }
-            else $error .= _("The photo is not a JPG file.") . "<br/>";
+            else $base_errors .= _("The photo is not a JPG file.") . "<br/>";
         }
 
         if($FH->isUpdated('firstname') or $FH->isUpdated('name'))
@@ -233,6 +240,10 @@ function _base_changeUser($FH, $mode) {
         $result .= _("User attributes updated.")."<br />";
 
     }
+    
+    $error .= $base_errors;
+    
+    return $base_errors ? 1 : 0;
 }
 
 /**
@@ -248,7 +259,7 @@ function _base_baseEdit($FH, $mode) {
     $f->push(new Table());
 
     if ($mode == "add") {
-        $loginTpl = new InputTpl("uid",'/^[a-zA-Z0-9][A-Za-z0-9_.-]*$/');
+        $loginTpl = new InputTpl("uid",'/^[a-zA-Z0-9][A-Za-z0-9_.\-]*$/');
     } else {
         $loginTpl = new HiddenTpl("uid");
     }
@@ -296,7 +307,7 @@ function _base_baseEdit($FH, $mode) {
         array("value"=> $FH->getArrayOrPostValue("title"))
     );
 
-    $email = new InputTpl("mail",'/^([A-Za-z0-9._-%+]+@[A-Za-z0-9.-]+){0,1}$/');
+    $email = new InputTpl("mail",'/^([A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+){0,1}$/');
     $f->add(
         new TrFormElement(_("Mail address"), $email),
         array("value"=> $FH->getArrayOrPostValue("mail"))
@@ -304,7 +315,7 @@ function _base_baseEdit($FH, $mode) {
 
     $f->pop();
 
-    $phoneregexp = "/^[a-zA-Z0-9(-/ ]*$/";
+    $phoneregexp = "/^[a-zA-Z0-9(/ \-]*$/";
 
     $tn = new MultipleInputTpl("telephoneNumber",_("Telephone number"));
     $tn->setRegexp($phoneregexp);
@@ -361,22 +372,25 @@ function _base_baseEdit($FH, $mode) {
     );
 
     /* Secondary groups */
-    /*$groupsTpl = new MembersTpl("secondary");
-    $groupsTpl->setTitle(_("User groups"), _("All groups"));
+    $groupsTpl = new MembersTpl("secondary");
+    $groupsTpl->setTitle(_("User's groups"), _("All groups"));
     // get the user's groups
     $user_groups = getUserSecondaryGroups($uid);
     $member = array();
     foreach($user_groups as $group) {
         $member[$group] = $group;
     }
+    // get all groups
     $available = array();
     foreach($groups as $group) {
-        $available[$group] = $group;
+        if (!in_array($group, $member))
+            $available[$group] = $group;
     }
+    
     $f->add(
         new TrFormElement(_("Secondary groups"), $groupsTpl),
         array("memberOf" => $member, "available" => $available)
-    );*/
+    );
 
     $f->pop();
     $f->push(new DivExpertMode());
