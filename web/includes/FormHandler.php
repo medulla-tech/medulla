@@ -130,6 +130,7 @@ class FormHandler {
     /*
      * Get value from $_POST or from the user LDAP detail
      * This is usefull in case of error in the user edit form
+     * So we don't lost the user input
      * POST value is returned before the LDAP value (wanted/actual)
      */
     function getArrayOrPostValue($field, $type = "string") {

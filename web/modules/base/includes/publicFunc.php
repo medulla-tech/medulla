@@ -1,7 +1,7 @@
 <?php
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2008 Mandriva, http://www.mandriva.com
+ * (c) 2007-2011 Mandriva, http://www.mandriva.com
  *
  * $Id$
  *
@@ -22,18 +22,14 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-function _base_infoUser($userObjClass) {
-    if (array_search("posixAccount", $userObjClass)!==false) {
-        print "posix ";
-    }
+require("modules/base/includes/users.inc.php");
+
+function _base_enableUser($paramsArr) {
+    return xmlCall("base.enableUser", $paramsArr);
 }
 
-function _base_enableUser($uid) {
-    xmlCall("base.enableUser", array($uid));
-}
-
-function _base_disableUser($uid) {
-    xmlCall("base.disableUser", array($uid));
+function _base_disableUser($paramsArr) {
+    return xmlCall("base.disableUser", $paramsArr);
 }
 
 function _base_changeUserPasswd($paramsArr) {
@@ -64,6 +60,11 @@ function _base_completeUserEntry(&$entry) {
     }
 }
 
+/**
+ * Function called before changing user attributes
+ * @param $FH FormHandler of the page
+ * @param $mode add or edit mode
+ */
 function _base_verifInfo($FH, $mode) {
 
     global $error;
@@ -79,48 +80,172 @@ function _base_verifInfo($FH, $mode) {
     $desactive = $FH->getPostValue("isBaseDesactive");
     $primary = $FH->getPostValue("primary");
 
+    if ($mode == "add" && userExists($uid)) {
+        $error .= sprintf(_("The user %s already exists."), $uid)."<br/>";
+    }
+
     if ($mode == "add" && $pass == '') {
-        $error.= _("Password is empty.")."<br/>";
+        $error .= _("Password is empty.")."<br/>";
         setFormError("pass");
     }
 
     if ($pass != $confpass) {
-        $error.= _("The confirmation password does not match the new password.")." <br/>";
+        $error .= _("The confirmation password does not match the new password.")." <br/>";
         setFormError("pass");
     }
 
     if (!preg_match("/^[a-zA-Z0-9][A-Za-z0-9_.-]*$/", $uid)) {
-        $error.= _("User's name invalid !")."<br/>";
+        $error .= _("User's name invalid !")."<br/>";
         setFormError("login");
     }
 
     /* Check that the primary group name exists */
     if (!strlen($primary)) {
         setFormError("primary");
-        $error.= _("The primary group field can't be empty.")."<br />";
+        $error .= _("The primary group field can't be empty.")."<br />";
     }
     else if (!existGroup($primary)) {
         setFormError("primary");
-        $error.= sprintf(_("The group %s does not exist, and so can't be set as primary group."), $primary) . "<br />";
+        $error .= sprintf(_("The group %s does not exist, and so can't be set as primary group."), $primary) . "<br />";
+    }
+
+}
+
+/**
+ * Function called for changing user attributes
+ * @param $FH FormHandler of the page
+ * @param $mode add or edit mode
+ */
+function _base_changeUser($FH, $mode) {
+
+    global $result;
+    global $error;
+
+    $uid = $FH->getPostValue("uid");
+
+    if ($mode == "add") {
+        if($FH->getPostValue("createHomeDir") == "on")
+            $createHomeDir = true;
+        else
+            $createHomeDir = false;
+
+        # create the user
+        $ret = add_user($uid,
+            $FH->getPostValue("pass"),
+            $FH->getPostValue("firstname"),
+            $FH->getPostValue("name"),
+            $FH->getPostValue("homeDir"),
+            $createHomeDir,
+            $FH->getPostValue("primary")
+        );
+        $result .= $ret["info"];
+        # password doesn't match the pwd policies
+        # set randomSmbPwd for samba plugin
+        if($ret["code"] == 5) {
+            $FH->setValue("randomSmbPwd", 1);
+        }
+        else {
+            $FH->setValue("randomSmbPwd", 0);
+        }
+        # add mail attribute
+        if ($FH->getPostValue('mail'))
+            changeUserAttributes($uid, "mail", $FH->getPostValue("mail"));
+        if ($FH->getPostValue('loginShell'))
+            changeUserAttributes($uid, "loginShell", $FH->getPostValue('loginShell'));
+
+    }
+    else {
+        // Change user attributes
+        if ($FH->isUpdated("deletephoto")) {
+            changeUserAttributes($uid, "jpegPhoto", null);
+        }
+        if($FH->isUpdated('isBaseDesactive')) {
+            if ($FH->getValue('isBaseDesactive') == "on") {
+                changeUserAttributes($uid, 'loginShell', '/bin/false');
+                $result .= _("User disabled.")."<br />";
+            }
+            else {
+                changeUserAttributes($uid, 'loginShell', '/bin/bash');
+                $result .= _("User enabled.")."<br />";
+            }
+        }
+        if ($FH->isUpdated("homeDir"))
+            move_home($uid, $FH->getValue("homeDir"));
+        if($FH->isUpdated('telephoneNumber'))
+            changeUserTelephoneNumbers($uid, $FH->getValue("telephoneNumber"));
+        if($FH->isUpdated('title'))
+            changeUserAttributes($uid, "title", $FH->getValue("title"));
+        if($FH->isUpdated('mobile'))
+            changeUserAttributes($uid, "mobile", $FH->getValue("mobile"));
+        if($FH->isUpdated('facsimileTelephoneNumber'))
+            changeUserAttributes($uid, "facsimileTelephoneNumber", $FH->getValue("facsimileTelephoneNumber"));
+        if($FH->isUpdated('homePhone'))
+            changeUserAttributes($uid, "homePhone", $FH->getValue("homePhone"));
+        if($FH->isUpdated('cn'))
+            changeUserAttributes($uid, "cn", $FH->getValue("cn"));
+        if($FH->isUpdated('mail'))
+            changeUserAttributes($uid, "mail", $FH->getValue("mail"));
+        if($FH->isUpdated('displayName'))
+            changeUserAttributes($uid, "displayName", $FH->getValue("displayName"));
+
+        /* Change photo */
+        if (!empty($_FILES["photofilename"]["name"])) {
+            if (strtolower(substr($_FILES["photofilename"]["name"], -3)) == "jpg") {
+                $pfile = $_FILES["photofilename"]["tmp_name"];
+                $size = getimagesize($pfile);
+                if ($size["mime"] == "image/jpeg") {
+                    $maxwidth = 320;
+                    $maxheight = 320;
+                    if (in_array("gd", get_loaded_extensions())) {
+                        /* Resize file if GD extension is installed */
+                        $pfile = resizeJpg($_FILES["photofilename"]["tmp_name"],
+                                $maxwidth, $maxheight);
+                    }
+                    list($width, $height) = getimagesize($pfile);
+                    if (($width <= $maxwidth) && ($height <= $maxheight)) {
+                        $obj = new Trans();
+                        $obj->scalar = "";
+                        $obj->xmlrpc_type = "base64";
+                        $f = fopen($pfile, "r");
+                        while (!feof($f)) $obj->scalar .= fread($f, 4096);
+                        fclose($f);
+                        unlink($pfile);
+                        changeUserAttributes($uid, "jpegPhoto", $obj, False);
+
+                    }
+                    else {
+                        $error .= sprintf(_("The photo is too big. The max size is %s x %s.
+                            Install php gd extention to resize the photo automatically."),
+                            $maxwidth, $maxheight) . "<br/>";
+                    }
+                }
+                else $error .= _("The photo is not a JPG file.") . "<br/>";
+            }
+            else $error .= _("The photo is not a JPG file.") . "<br/>";
+        }
+
+        if($FH->isUpdated('firstname') or $FH->isUpdated('name'))
+            change_user_main_attr($uid, $uid, $firstname, $name);
+
+        if (!$FH->getPostValue("groupsselected"))
+            $FH->setPostValue("groupsselected", array());
+
+        $result .= _("User attributes updated.")."<br />";
+
     }
 }
 
+/**
+ * Form on user edit page
+ * @param $FH FormHandler of the page
+ * @param $mode add or edit mode
+ */
 function _base_baseEdit($FH, $mode) {
 
     $uid = $FH->getArrayOrPostValue("uid");
 
     $f = new DivForModule(_T("Base plugin","base"), "#F4F4F4");
     $f->push(new Table());
-
-    $ldapAccountLocked = False;
-    if (in_array("ppolicy", $_SESSION["supportModList"])) {
-        require_once("modules/ppolicy/includes/ppolicy-xmlrpc.php");
-        if (isset($_GET['user']) && isAccountLocked($_GET["user"]) != 0) {
-            $ldapAccountLocked = True;
-            $em = new ErrorMessage(_("This account is locked by the LDAP directory."));
-            print $em->display();
-        }
-    }
 
     if ($mode == "add") {
         $loginTpl = new InputTpl("uid",'/^[a-zA-Z0-9][A-Za-z0-9_.-]*$/');
@@ -171,7 +296,7 @@ function _base_baseEdit($FH, $mode) {
         array("value"=> $FH->getArrayOrPostValue("title"))
     );
 
-    $email = new InputTpl("mail",'/^([A-Za-z0-9._%-]+@[A-Za-z0-9.-]+){0,1}$/');
+    $email = new InputTpl("mail",'/^([A-Za-z0-9._-%+]+@[A-Za-z0-9.-]+){0,1}$/');
     $f->add(
         new TrFormElement(_("Mail address"), $email),
         array("value"=> $FH->getArrayOrPostValue("mail"))
@@ -187,7 +312,6 @@ function _base_baseEdit($FH, $mode) {
         new FormElement(_("Telephone number"), $tn),
         $FH->getArrayOrPostValue("telephoneNumber", "array")
     );
-
     $f->push(new Table());
 
     $f->add(
@@ -301,6 +425,35 @@ function _base_baseEdit($FH, $mode) {
     $f->pop();
     $f->pop();
     $f->display();
+}
+
+/**
+ * Resize a jpg file if it is greater than $maxwidth or $maxheight
+ *
+ * @returns: the file name of the resized JPG file
+ */
+function resizeJpg($source, $maxwidth, $maxheight) {
+    list($width, $height) = getimagesize($source);
+    if (($width > $maxwidth) || ($height > $maxheight)) {
+        if ($width > $height) {
+            $newwidth = $maxwidth;
+            $newheight = $newwidth * $height / $width;
+        } else {
+            $newheight = $maxheight;
+            $newwidth = $newheight * $width / $height;
+        }
+        $image = imagecreatefromjpeg($source);
+        $newimage = imagecreatetruecolor($newwidth, $newheight);
+        imagecopyresized($newimage, $image, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
+        $ret = tempnam("/notexist", ".jpg");
+        imagejpeg($newimage, $ret);
+        imagedestroy($image);
+        imagedestroy($newimage);
+    } else {
+        /* No resize needed */
+        $ret = $source;
+    }
+    return $ret;
 }
 
 ?>

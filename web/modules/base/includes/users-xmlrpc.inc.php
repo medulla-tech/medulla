@@ -149,7 +149,7 @@ function getUserSecondaryGroups($uid) {
     return xmlCall("base.getUserSecondaryGroups",array($uid));
 }
 
-function exist_user($uid) {
+function userExists($uid) {
   return xmlCall("base.existUser",$uid);
 }
 
