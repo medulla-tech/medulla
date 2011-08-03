@@ -157,6 +157,10 @@ function getHomeDir($uid, $homedir) {
     return xmlCall("base.getHomeDir", array($uid, $homedir));
 }
 
+function getDefaultShells() {
+    return xmlCall("base.getDefaultShells");
+}
+
 function maxUID() {
   return xmlCall("base.maxUID",null);
 }

@@ -259,6 +259,9 @@ def existGroup(groupName):
 def getHomeDir(uid, homeDir):
     return ldapUserGroupControl().getHomeDir(uid, homeDir)
 
+def getDefaultShells():
+    return ldapUserGroupControl().getDefaultShells()
+
 def createUser(login, passwd, firstname, surname, homedir, createHomeDir = True, primaryGroup = None):
     return ldapUserGroupControl().addUser(login, passwd, firstname, surname, homedir, createHomeDir, primaryGroup)
 
@@ -950,6 +953,10 @@ class LdapUserGroupControl:
             if ahome in home:
                 return True
         return False
+        
+    def getDefaultShells(self):
+        return {'enabledShell': self.defaultShellEnable,
+            'disabledShell': self.defaultShellDisable }
         
     def getHomeDir(self, uid, homeDir = None):
         """

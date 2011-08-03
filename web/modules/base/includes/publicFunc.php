@@ -178,12 +178,13 @@ function _base_changeUser($FH, $mode) {
     
     // common stuff to add/edit mode
     if($FH->isUpdated('isBaseDesactive')) {
+        $shells = getDefaultShells();
         if ($FH->getValue('isBaseDesactive') == "on") {
-            changeUserAttributes($uid, 'loginShell', '/bin/false');
+            changeUserAttributes($uid, 'loginShell', $shells['disabledShell']);
             $result .= _("User disabled.")."<br />";
         }
         else {
-            changeUserAttributes($uid, 'loginShell', '/bin/bash');
+            changeUserAttributes($uid, 'loginShell', $shells['enabledShell']);
             $result .= _("User enabled.")."<br />";
         }
     }
