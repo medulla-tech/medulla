@@ -41,6 +41,12 @@ $errItem->setAdvice(_("Please do not remove user's files when deleting the user.
 $errItem->setTraceBackDisplay(False);
 $errObj->add($errItem);
 
+$errItem = new ErrorHandlingItem("/home/.* already exists.");
+$errItem->setMsg(_("The user home directory already exists."));
+$errItem->setAdvice(_("Set the home directory in a different location (in expert mode) or delete the directory before creating the user."));
+$errItem->setTraceBackDisplay(False);
+$errObj->add($errItem);
+
 $errItem = new ErrorHandlingItem(": {'info': 'Password fails quality checking policy', 'desc': 'Constraint violation'}");
 $errItem->setMsg(_("Password fails quality checking policy."));
 $errItem->setAdvice(_("The password policy of your account doesn't allow you to modify your password, because your password doesn't met the passwords policies."));

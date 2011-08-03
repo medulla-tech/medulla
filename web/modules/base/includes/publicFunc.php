@@ -108,7 +108,7 @@ function _base_verifInfo($FH, $mode) {
     
     /* Check that the homeDir does not exists */
     if($FH->getPostValue("createHomeDir") == "on") {
-    
+        getHomeDir($uid, $FH->getValue("homeDir"));
     }
     
     $error .= $base_errors;
@@ -159,16 +159,21 @@ function _base_changeUser($FH, $mode) {
         if ($FH->getPostValue('mail'))
             changeUserAttributes($uid, "mail", $FH->getPostValue("mail"));
         if ($FH->getPostValue('loginShell'))
-            changeUserAttributes($uid, "loginShell", $FH->getPostValue('loginShell'));
+            changeUserAttributes($uid, "loginShell", 
+                $FH->getPostValue('loginShell'));
 
     }
     else {
         // edit mode
-        if ($FH->isUpdated("deletephoto")) {
+        if ($FH->getPostValue("deletephoto")) {
             changeUserAttributes($uid, "jpegPhoto", null);
+            $result .= _("User photo deleted.")."<br />";
         }
-        if ($FH->isUpdated("homeDir"))
-            move_home($uid, $FH->getValue("homeDir"));        
+        if ($FH->isUpdated("homeDir")) {
+            move_home($uid, $FH->getValue("homeDir"));
+            $result .= sprintf(_("Home user directory moved to %s.", 
+                $FH->getValue("homeDir")))."<br />";
+        }
     }
     
     // common stuff to add/edit mode
@@ -282,7 +287,7 @@ function _base_baseEdit($FH, $mode) {
 
     $f->add(
         new TrFormElement(_("Photo"), new ImageTpl("jpegPhoto")),
-        array("value" => $uid, "action" => $mode)
+        array("value" => $FH->getArrayOrPostValue("jpegPhoto"), "action" => $mode)
     );
 
     $f->add(

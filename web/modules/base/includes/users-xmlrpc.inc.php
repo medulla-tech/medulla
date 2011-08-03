@@ -153,6 +153,10 @@ function userExists($uid) {
   return xmlCall("base.existUser",$uid);
 }
 
+function getHomeDir($uid, $homedir) {
+    return xmlCall("base.getHomeDir", array($uid, $homedir));
+}
+
 function maxUID() {
   return xmlCall("base.maxUID",null);
 }

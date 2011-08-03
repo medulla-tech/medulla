@@ -256,7 +256,9 @@ def createGroup(groupName):
 def existGroup(groupName):
     return ldapUserGroupControl().existGroup(groupName)
 
-# create a user
+def getHomeDir(uid, homeDir):
+    return ldapUserGroupControl().getHomeDir(uid, homeDir)
+
 def createUser(login, passwd, firstname, surname, homedir, createHomeDir = True, primaryGroup = None):
     return ldapUserGroupControl().addUser(login, passwd, firstname, surname, homedir, createHomeDir, primaryGroup)
 
@@ -834,11 +836,9 @@ class LdapUserGroupControl:
         """
         ident = 'uid=' + uid + ',' + self.baseUsersDN
         r = AF().log(PLUGIN_NAME, AA.BASE_ADD_USER, [(ident, AT.USER)])
-        # Make a homeDir string if none was given
-        if not homeDir: homeDir = os.path.join(self.defaultHomeDir, uid)
-        if not self.isAuthorizedHome(os.path.realpath(homeDir)):
-            raise Exception(homeDir+"is not an authorized home dir.")
-
+        
+        # Get the homeDir path
+        homeDir = self.getHomeDir(uid, homeDir)
         uidNumber = self.maxUID() + 1
 
         # Get a gid number
@@ -950,6 +950,25 @@ class LdapUserGroupControl:
             if ahome in home:
                 return True
         return False
+        
+    def getHomeDir(self, uid, homeDir = None):
+        """
+        Check if home directory can be created
+        Returns path
+        
+        @param home: the home directory path.
+        @type home: str
+        """
+        
+        # Make a home string if none was given
+        if not homeDir: homeDir = os.path.join(self.defaultHomeDir, uid)
+        if not self.isAuthorizedHome(os.path.realpath(homeDir)):
+            raise Exception(homeDir + " is not an authorized home dir.")
+        # Return homedir path
+        if not os.path.exists(homeDir):
+            return homeDir
+        else:
+            raise Exception(homeDir + " already exists.")
 
     def addGroup(self, cn):
         """
