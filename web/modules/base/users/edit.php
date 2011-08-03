@@ -86,9 +86,9 @@ if ($_POST) {
             }
         }
         /* Secondary groups management */
-        if($FH->isUpdated("memberOf_secondary")) {
+        if($FH->isUpdated("secondary")) {
             $old = getUserSecondaryGroups($uid);
-            $new = $FH->getValue('memberOf_secondary');
+            $new = $FH->getValue('secondary');
             foreach (array_diff($old, $new) as $group) {
                 del_member($group, $uid);
                 callPluginFunction("delUserFromGroup", array($uid, $group));
