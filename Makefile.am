@@ -23,7 +23,7 @@
 ACLOCAL_AMFLAGS = -I m4
 DISTCHECK_CONFIGURE_FLAGS=--disable-conf-backup
 
-SUBDIRS = web services
+SUBDIRS = web services doc
 
 backupext = .$(shell date +%Y-%m-%d+%H:%M:%S)
 
