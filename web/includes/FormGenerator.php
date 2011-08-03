@@ -197,20 +197,32 @@ class RadioTpl extends AbstractTpl {
 class ImageTpl extends AbstractTpl {
 
     function ImageTpl($name) {
-        $this->name=$name;
+        $this->name = $name;
     }
 
     function display($arrParam) {
-        if(!isset($arrParam["extraArg"])) {
-            $arrParam["extraArg"] = "";
-        }
-        print '<img src="main.php?module=base&submod=users&action=getPhoto&uid=' . $arrParam["value"] .'" '.$arrParam["extraArg"].' style="border-width: 1px; border-style: solid" />';
-    print '</td></tr><tr><td>&nbsp;</td><td><input name="photofilename" type="file" size="23" />';
-    if ($arrParam["action"] == "edit") print '<input name="deletephoto" type="submit" value="' . _("Delete photo") . '"/>';
+
+        if ($arrParam['value'])
+            $img = "data:image/jpeg;base64," . base64_encode($arrParam['value']->scalar);
+        else
+            $img = "img/users/icn_users_large.gif";
+        echo '
+                <img src=' . $img .' style="border-width: 1px; border-style: solid" />
+            </td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td><input name="photofilename" type="file" size="23" />';
+        if ($arrParam["action"] == "edit") 
+            echo '<input name="deletephoto" type="submit" value="' . _("Delete photo") . '"/>';
     }
 
     function displayRo($arrParam) {
-        print '<img src="main.php?module=base&submod=users&action=getPhoto&uid=' . $arrParam["value"] .'" '.$arrParam["extraArg"].' style="border-width: 1px; border-style: solid" />';
+        if ($arrParam['value'])
+            $img = "data:image/jpeg;base64," . base64_encode($arrParam['value']->scalar);
+        else
+            $img = "img/users/icn_users_large.gif";
+        echo '<img src=' . $img .' style="border-width: 1px; border-style: solid" />';
     }
 
 }
@@ -1025,7 +1037,7 @@ class TrFormElement extends FormElement {
         else {
             $field_name = "";
         }
-        if ($field_name) {
+        if ($field_name && is_string($old_value)) {
             print '<input type="hidden" name="old_'.$field_name.'" value="'.$old_value.'" />';
         }
 

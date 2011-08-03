@@ -34,6 +34,8 @@ require("includes/FormHandler.php");
 global $result;
 # error messages
 global $error;
+# xmlrpc status
+global $errorStatus;
 
 // Class managing $_POST array
 if($_POST) {
@@ -61,13 +63,15 @@ switch($_GET["action"]) {
         break;
 }
 
+print_r($mode);
+
 $redirect = false;
 // if data is sent
 if ($_POST) {
-    $uid = $_POST['uid'];
+    $uid = $FH->getPostValue('uid');
     /* Check sent data */
     $ret = callPluginFunction("verifInfo", array($FH, $mode));
-    if (!$error) {
+    if (!$error && !isXMLRPCError()) {
         /* Add or edit user attributes */
         $ret = callPluginFunction("changeUser", array($FH, $mode));
         /* Primary group management */
@@ -149,9 +153,7 @@ if ($_POST) {
         }
         
         /*if(!$error)
-            $redirect = true;
-        else*/
-            $redirect = false;
+            $redirect = true;*/
     }
 }
 
@@ -169,6 +171,9 @@ if ($result) {
 // in case of modification/creation success, redirect to the index
 if ($redirect)
     header('Location: ' . urlStrRedirect("base/users/index"));
+
+// in case of failure, set errorStatus to 0 in order to display the edit form
+$errorStatus = 0;
 
 $p = new PageGenerator($title);
 $sidemenu->forceActiveItem($activeItem);
