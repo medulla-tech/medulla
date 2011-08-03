@@ -1,0 +1,43 @@
+.TH PULSE2-TCP-SPROXY 1
+.SH NAME
+pulse2-tcp-sproxy \- Connect a client and a server thought us
+.SH SYNOPSIS
+.B pulse2-tcp-sproxy
+.RI 
+.I from-ip
+.I to-ip
+.I to-port
+.I ssh-options-comma-separated
+.I start-port
+.I end-port
+.I establish-delay
+.I connect-delay
+.I session-length
+.SH DESCRIPTION
+pulse2-tcp-sproxy is a tool of Pulse2. 
+.TP
+The idea behind this stuff: we want to connect
+ - a client ($fromIp)
+ - a server ($toIp:$toPort)
+ - thought us
+.TP
+The server must (and may only) listen on localhost. In an ideal world the client would connect to $toIp:$toPort, in a paranoid world (our) the client would connect on us and been forwarded thourght ssh to 127.0.0.1:$toPort
+.TP
+We first start by looking for 2 locally free port:
+ - $proxyport on which we will bind,
+ - $localport on which we will bind ssh,
+then we fork() and:
+ - establish an ssh session from us to $toIp,
+ - ask ssh to forward TCP traffic from 127.0.0.1:$localport to 127.0.0.1:$toPort
+ - start to forward all traffic comming from $fromIp on $proxyport to 127.0.0.1:$localport
+.SH AUTHOR
+Pulse2 was written by Mandriva-Linbox
+.SH COPYRIGHT
+.TP
+(c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+.TP
+(c) 2007-2008 Mandriva, http://www.mandriva.com
+.TP
+Pulse2 is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+.TP
+Some proxy code is based on tcpproxy (c)opyright 1999 by dan goldwater, dgold@zblob.com

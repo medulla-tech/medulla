@@ -1,0 +1,46 @@
+.TH PULSE2-WOL 1
+.SH NAME
+pulse2-wol \- Wakes up magic packet compliant machines
+.SH SYNOPSIS
+.B pulse2-wol
+.RI [ option ]... " MAC-ADDRESS" ...
+.SH DESCRIPTION
+pulse2-wol is a tool of Pulse2. Wake On LAN client - wakes up magic packet compliant machines.
+.TP
+Each MAC-ADDRESS is written as x:x:x:x:x:x, where x is a hexadecimal number between 0 and ff which represents one byte of the address, which is in network byte order (big endian).
+.SH OPTIONS
+.TP
+.B \-h, \-\-help
+Display the internal help message and exit
+.TP
+.B \-V, \-\-version
+Output version information and exit
+.TP
+.B \-v, \-\-verbose
+Verbose output
+.TP
+.B \-w, \-\-wait=NUM
+Wait
+.I NUM
+millisecs after sending
+.TP
+.B \-i, \-\-ipaddr=IPADDR
+Broadcast to this ip addr
+.TP
+.B \-p, \-\-port=NUM
+Broadcast to this udp port
+.TP
+.B \-f, \-\-file=FILE
+Read addresses from
+.I FILE
+.SH AUTHOR
+Pulse2 was written by Mandriva-Linbox
+.SH COPYRIGHT
+.TP
+(c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+.TP
+(c) 2007-2008 Mandriva, http://www.mandriva.com
+.TP
+Pulse2 is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+.SH REPORTING BUGS
+Report bugs to <krennwallner@aon.at>

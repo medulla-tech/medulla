@@ -1,0 +1,85 @@
+.TH PULSE2-OUTPUT-WRAPPER 1
+.SH NAME
+pulse2-output-wrapper \- A (not so) simple command line wrapper.
+.SH SYNOPSIS
+.B pulse2-output-wrapper
+.RI [ options ]
+.SH DESCRIPTION
+pulse2-output-wrapper is a tool of Pulse2. It is a (not so) simple command line wrapper. This tool expect a command line, run it, output stdout and stderr in a demuxable-way, and give-up with the command line exit code.
+.TP
+Output lines are formatted like this: <timestamp><space><tag><column><space><output line>, with <tag>:
+ * W: the wrapper line, using PULSE2_WRAPPER_ARG_SEPARATOR_STR as separator
+ * C: the command line, using PULSE2_WRAPPER_ARG_SEPARATOR_STR as separator
+ * O: something on stdout
+ * E: something on stderr
+ * X: the exit code
+.TP
+Lines are always parsed to be fully utf-8 compliant
+.SH OPTIONS
+.TP
+.B \-\-examples
+Show some examples (or see in the below section)
+.TP
+.B \-\-exec-server-side
+--exec arg is executed on server
+.TP
+.B \-\-exec-client-side
+--exec arg is executed on client using --thru to handle the connection
+.TP
+.B \-\-no-wrap
+ Do not wrap output
+.TP
+.B \-\-only-stdout
+Only write stdout on the output
+.TP
+.B \-\-remove-empty-lines
+Do not write empty lines
+.TP
+.B \-\-exec=
+The command to be executed (on the client or on the server, see below), arg separator is '·'
+.TP
+.B \-\-thru=
+The command to wrap the command to execute (if executed on client, see below) and to wrap the client-check, arg separator is '·', must respect the SSH syntax
+.TP
+.B \-\-check-path=
+ The 'checker' path (on the client) [default: /usr/bin/pulse2-client-check.sh]
+.TP
+.B \-\-action=
+Tell to the client we are going to perform a particular action, f.e. 'INVENTORY', 'REBOOT'
+.TP
+.B \-\-check-server-side=
+Ask the client to show us some information for further check, f.e. IP=1.2.3.4 will ask the client to display IP, which will be compared against 1.2.3.4 by the wrapper
+.TP
+.B \-\-check-client-side=
+Ask the client to check for some informations, f.e. IP=1.2.3.4 will ask the client if ots IP is 1.2.3.4
+.TP
+.B \-\-max-log-size=
+Keeps the only first bytes of the output
+.TP
+.B \-\-max-exec-time=
+Kill command above this number of seconds
+.TP
+.B \-\-version
+Display version number
+.TP
+.B \-\-help
+Show the internal help message and exit
+.SH EXAMPLES
+Here are some useful examples:
+ + a simple "ls /home" client side:
+   pulse2_output_wrapper --exec ls·/home --thru ssh·root@client
+ + same, cheking IP client-side:
+   pulse2_output_wrapper --exec ls·/home --thru ssh·root@client --check-client-side IP=1.2.3.4
+ + a simple "rsync /home" server side:
+   pulse2_output_wrapper --exec rsync·/home·root@client:/home
+ + same, cheking IP client-side:
+   pulse2_output_wrapper --exec rsync·/home·root@client:/home --exec-server-side --thru ssh·root@client --check-client-side IP=1.2.3.4
+.SH AUTHOR
+Pulse2 was written by Mandriva-Linbox
+.SH COPYRIGHT
+.TP
+(c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+.TP
+(c) 2007-2008 Mandriva, http://www.mandriva.com
+.TP
+Pulse2 is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.

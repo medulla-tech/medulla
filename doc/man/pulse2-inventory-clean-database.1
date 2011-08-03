@@ -1,0 +1,43 @@
+.TH PULSE2-INVENTORY-CLEAN-DATABASE 1
+.SH NAME
+pulse2-inventory-clean-database \- Clean up Pulse2 inventory database
+.SH SYNOPSIS
+.B pulse2-inventory-clean-database
+.RI " "db_conn_string
+.SH DESCRIPTION
+pulse2-inventory-clean-database is a tool of Pulse2. This command cleans up the Pulse2 inventory database.
+.TP
+The inventory tables we wish to purge are organized like this:
+ - peripheral tables: Network, Bios etc ...
+ - computer table: Machine
+ - inventories table: Inventory
+ - and link tables: has* (hasNetwok, hasBios), which link for ex.
+.BR
+Component, Inventory and Machine through hasComponent
+.TP
+Purge is done like this:
+ - purge lines in Inventory where Last != 1
+ - purge lines in Inventory not linked to at least something from mandatory tables
+ - purge lines in Machine not linked to at least something from mandatory tables
+ - purge lines in hasSomething linked to an inexistant Inventory
+ - purge lines in hasSomething linked to an inexistant Machine
+ - purge lines in hasSomething linked to an inexistant Something
+ - purge lines in Inventory not linked to at least one hasSomething
+ - purge lines in Machine not linked to at least one hasSomething
+ - purge lines in Something not linked to at least one hasSomething
+ - and a little table optimization
+.SH OPTIONS
+.TP
+.B db_conn_string
+SQLAlchemy connection string, e.g. mysql://user:password@host/database
+.SH AUTHOR
+Pulse2 was written by Mandriva-Linbox
+.SH COPYRIGHT
+.TP
+(c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+.TP
+(c) 2007-2008 Mandriva, http://www.mandriva.com
+.TP
+Pulse2 is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+.SH SEE ALSO
+.BR pulse2-msc-clean-database (1).

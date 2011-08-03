@@ -1,0 +1,24 @@
+.TH PULSE2-MSC-CLEAN-DATABASE 1
+.SH NAME
+pulse2-msc-clean-database \- Clean Pulse2 MSC database
+.SH SYNOPSIS
+.B pulse2-msc-clean-database
+.RI " "db_conn_string " "days
+.SH DESCRIPTION
+pulse2-msc-clean-database is a tool of Pulse2, which cleans the MSC database.
+.SH OPTIONS
+.TP
+.B db_conn_string
+SQLAlchemy connection string, e.g. mysql://user:password@host/database
+.TP
+.B days
+positive integer specifying from which age the commands should be purged, e.g. 30 for 30 days
+.SH AUTHOR
+Pulse2 was written by Mandriva-Linbox
+.SH COPYRIGHT
+.TP
+(c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+.TP
+(c) 2007-2008 Mandriva, http://www.mandriva.com
+.TP
+Pulse2 is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
