@@ -155,6 +155,7 @@ AC_CONFIG_FILES([services/3rd_party/Makefile])
 AC_CONFIG_FILES([web/Makefile])
 AC_CONFIG_FILES([doc/Makefile])
 AC_CONFIG_FILES([doc/man/Makefile])
+AC_CONFIG_FILES([doc/user/Makefile])
 
 dnl write all stuff
 AC_OUTPUT
