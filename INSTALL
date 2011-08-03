@@ -40,7 +40,53 @@ $ make
 $ sudo make install
 
 The `pulse2-setup' tool can then be used to provision databases,
-setup and check configuration files, etc.
+setup and check configuration files, etc. If you plan to use imaging 
+service, please read the following section, as pulse2-setup does not 
+handle with its configuration.
+
+Quick imaging client installation
+============================
+
+Imaging client can run only on i386 compliant machines. It is not run
+directly on the server, but served through the network to i386 machines.
+For your convenience, prebuilt binaries are available, so that you can
+install it on a server which is not i386.
+
+Once you have downloaded prebuilt binaries as
+pulse2-imaging-client-<version>_i386.tar.gz, simply run the following, as root:
+$ tar xfC pulse2-imaging-client-<version>_i386.tar.gz /
+
+All files are extracted in /var/lib/pulse2/imaging/ dir.
+
+As to serve the imaging client to the machines, you must then configure the
+following network services.
+
+NFS
+---
+
+In `/etc/exports' file, add the following lines:
+/var/lib/pulse2/imaging/computers *(async,rw,no_root_squash,subtree_check)
+/var/lib/pulse2/imaging/masters *(async,rw,no_root_squash,subtree_check)
+/var/lib/pulse2/imaging/postinst *(async,ro,no_root_squash,subtree_check)
+
+Then reload the new NFS configuration, as root:
+$ exportfs -r -a
+
+DHCP
+----
+
+The DHCP server on your network must be configured to serve bootload through
+PXE protocol. You can find an example file for dhcp3 server in
+`/usr/share/doc/pulse2/contrib/dhcp/dhcpd.conf'.
+
+TFTP
+----
+
+Bootloader and kernel are served to the client with TFTP protocol.
+We recommend using the atftpd server.
+
+You must configure the TFTP server to use as base directory:
+`/var/lib/pulse2/imaging'.
 
 `configure' Invocation
 ======================

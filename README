@@ -36,6 +36,10 @@ The following options can be used:
     - existing configuration files, if any
     - if not, working default values
 
+`--reset'
+`-R'
+    Reset all Pulse2 configuration and start from default values.
+
 `--pkgdatadir=DIR'
     Look into DIR for sql snippets and so on. Default to /usr/share/pulse2
 
