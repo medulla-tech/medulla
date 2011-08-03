@@ -53,11 +53,20 @@ class MMCConfigParser(ConfigParser):
         except InterpolationError:
             if '%(baseDN)s' in value:
                 from mmc.plugins.base import BasePluginConfig
-                config = BasePluginConfig("base")
+                config = PluginConfigFactory.new(BasePluginConfig, "base")
                 value = value.replace('%(baseDN)s', config.baseDN)
             else:
                 raise InterpolationError
         return value
+
+    def safe_get(self, section, option, default=None):
+        """
+        Returns a default value if the option does not exist
+        """
+        try:
+            return self.get(section, option)
+        except (NoOptionError, NoSectionError):
+            return default
 
     def getdn(self, section, option):
         """
@@ -86,13 +95,10 @@ class MMCConfigParser(ConfigParser):
             ret = value
         return ret
 
-
 class PluginConfig(MMCConfigParser):
-
     """
     Class to hold a MMC agent plugin configuration
     """
-
     USERDEFAULT = "userdefault"
     HOOKS = "hooks"
 
@@ -135,3 +141,32 @@ class PluginConfig(MMCConfigParser):
         fails.
         """
         pass
+
+class PluginConfigFactory(object):
+    """
+    For each plugin, we need to have only ONE config instance.
+    This is useful, for example so that the Admin-Configuration plugin
+    can change the config at run time, and every classes using the a PluginConfig will get the new values without restarting.
+    So, every PluginConfig (or a derivated) instance should be created this way
+    """
+    instances = {}
+    @staticmethod
+    def new(cls, name, *args, **kwargs):
+        """
+        If no instance of a class (with this name) has not already
+        been created, create it and keep it in the dict.
+        If one already exist, just return it.
+        """
+        if not name in PluginConfigFactory.instances:
+            PluginConfigFactory.instances[name] = cls(name, *args, **kwargs)
+        return PluginConfigFactory.instances[name]
+
+    @staticmethod
+    def get(name):
+        """
+        Returns the PluginConfig instance that was
+        created with this name.
+        If it doesn't exist, raise an error because that should never
+        happen.
+        """
+        return PluginConfigFactory.instances.get(name)

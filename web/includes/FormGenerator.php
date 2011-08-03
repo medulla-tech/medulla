@@ -710,7 +710,9 @@ class SelectItem extends AbstractTpl{
         }
         $ret .= " name=\"".$this->id."\" id=\"".$this->id."\">\n";
         $ret .= $this->content_to_string($paramArray);
-        $ret .= "</select>\n";
+        $ret .= "</select>\n
+<script>hideAndShowElement('method computers', 'glpi-show.inventory-show.'); return false;</script>
+";
         return $ret;
     }
 }
@@ -891,6 +893,8 @@ class TrFormElement extends FormElement {
         $this->template=&$tpl;
         $this->tooltip = False;
         $this->firstColWidth = "40%";
+	$this->style = null;	/* css style */
+        $this->class = null;	/* html class for the tr element */
         foreach ($extraInfo as $key => $value) {
             $this->$key = $value;
         }
@@ -904,7 +908,12 @@ class TrFormElement extends FormElement {
         if (empty($arrParam)) $arrParam = $this->options;
         if (!isset($this->cssErrorName)) $this->cssErrorName = $this->template->name;
 
-        printf('<tr><td class="label" width="%s" ', $this->firstColWidth);
+        printf('<tr');
+	if ($this->class !== null)
+	    printf(' class="%s"', $this->class);
+	if ($this->style !== null)
+	    printf(' style="%s"', $this->style);
+	printf('><td class="label" width="%s" ', $this->firstColWidth);
         print displayErrorCss($this->cssErrorName);
         print 'style = "text-align: right;">';
 
@@ -947,7 +956,6 @@ class TrFormElement extends FormElement {
             print "&nbsp;" . $arrParam["extra"];
         }
         print "</td></tr>";
-
     }
 
     function displayRo($arrParam) {
@@ -967,6 +975,18 @@ class TrFormElement extends FormElement {
         parent::displayRo($arrParam);
 
         print '</td></tr>';
+    }
+
+    function setClass($className) {
+        $this->class = $className;
+    }
+
+    function getClass() {
+      return $this->class;
+    }
+
+    function setStyle($style) {
+        $this->style = $style;
     }
 }
 

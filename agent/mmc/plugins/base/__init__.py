@@ -26,7 +26,7 @@ Contains the base plugin for the MMC agent.
 """
 
 from mmc.support.errorObj import errorMessage
-from mmc.support.config import PluginConfig
+from mmc.support.config import PluginConfig, PluginConfigFactory
 from mmc.plugins.base.config import BasePluginConfig
 from mmc.plugins.base.computers import ComputerManager, ComputerI
 from mmc.plugins.base.auth import AuthenticationManager, AuthenticatorI, AuthenticationToken
@@ -118,7 +118,7 @@ def activate():
         logger.error("Skeleton directory %s does not exist or is not a directory" % ldapObj.skelDir)
         return False
 
-    config = BasePluginConfig("base")
+    config = PluginConfigFactory.new(BasePluginConfig, "base")
     if not os.path.isdir(config.backupdir):
         logger.error("Backup directory %s does not exist or is not a directory" % config.backupdir)
         return False
@@ -165,7 +165,7 @@ def activate_2():
     This function configures and validates all the manager object.
     """
     ret = True
-    config = BasePluginConfig("base")
+    config = PluginConfigFactory.new(BasePluginConfig, "base")
 
     for manager, method in [(AuthenticationManager(), config.authmethod),
                             (ProvisioningManager(), config.provmethod),
@@ -301,7 +301,7 @@ def getUserGroups(pattern):
 
 # backup fonction
 def backupUser(user, media, login, configFile = mmcconfdir + "/plugins/base.ini"):
-    config = BasePluginConfig("base")
+    config = PluginConfigFactory.new(BasePluginConfig, "base")
     cmd = os.path.join(config.backuptools, "backup.sh")
     ldapObj = ldapUserGroupControl()
     homedir = ldapObj.getDetailedUser(user)["homeDirectory"][0]
@@ -434,7 +434,7 @@ def hasAuditWorking():
     """
     Returns True if the audit module is enabled
     """
-    config = BasePluginConfig("base")
+    config = PluginConfigFactory.new(BasePluginConfig, "base")
     if (config.auditmethod != 'none'):
         return True
     else:
@@ -611,7 +611,7 @@ class LdapUserGroupControl:
         if conffile: configFile = conffile
         else: configFile = INI
         self.conffile = configFile
-        self.config = BasePluginConfig("base", self.conffile)
+        self.config = PluginConfigFactory.new(BasePluginConfig, "base", self.conffile)
 
         self.logger = logging.getLogger()
 
@@ -1910,7 +1910,7 @@ class ldapAuthen:
         If there are any error, self.result is False and a ldap
         exception will be raised.
         """
-        config = BasePluginConfig("base", conffile)
+        config = PluginConfigFactory.new(BasePluginConfig, "base", conffile)
         conn = LDAPConnection(config)
         l = conn.get()
 
@@ -2149,7 +2149,7 @@ class Computers(ldapUserGroupControl, ComputerI):
 
     def __init__(self, conffile = None):
         ldapUserGroupControl.__init__(self, conffile)
-        config = BasePluginConfig("base")
+        config = PluginConfigFactory.new(BasePluginConfig, "base")
         self.baseComputersDN = config.baseComputersDN
 
     def getComputer(self, ctx, filt = None):

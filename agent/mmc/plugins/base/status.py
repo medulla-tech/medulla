@@ -27,13 +27,14 @@ Methods for the MMC status page.
 from time import time
 
 from mmc.plugins.base.config import BasePluginConfig
+from mmc.support.config import PluginConfigFactory
 from mmc.support.mmctools import shlaunchDeferred, ProcessScheduler
 
 def getLdapRootDN():
     """
     Returns the LDAP root DN.
     """
-    config = BasePluginConfig('base')
+    config = PluginConfigFactory.new(BasePluginConfig, 'base')
     return {'LDAP root': config.baseDN}
 
 def getDisksInfos():
