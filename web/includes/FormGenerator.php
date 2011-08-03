@@ -644,10 +644,10 @@ class MembersTpl extends AbstractTpl {
     
     function display($arrParam) {
     
-        if(is_array($arrParam['memberOf']))
-            $this->memberOf = $arrParam['memberOf'];
+        if(is_array($arrParam['member']))
+            $this->member = $arrParam['member'];
         else {
-            echo 'MembersTpl: memberOf is not an array.';
+            echo 'MembersTpl: member is not an array.';
             return 1;
         }   
         if(is_array($arrParam['available']))
@@ -658,15 +658,16 @@ class MembersTpl extends AbstractTpl {
         }
     
         echo '
-<div id="' . $this->id . '">
     <table style="border: none;" cellspacing="0">
     <tr>
         <td style="border: none;">
         <div class="list">
-            <h3>' . $this->titleLeft . '</h3>
-            <input type="hidden" name="old_memberOf_' . $this->id .'[]" value="' . $this->memberOf . '" />
-            <select multiple size="15" class="list" name="memberOf_' . $this->id .'[]" id="memberOf_' . $this->id .'">';
-        foreach ($this->memberOf as $id=>$name)
+            <h3>' . $this->titleLeft . '</h3>';
+        foreach ($this->member as $id=>$name)        
+            echo '<input type="hidden" name="old_' . $this->id .'[]" value="' . $name . '" />';
+        echo '
+            <select multiple size="15" class="list" name="' . $this->id .'[]" id="' . $this->id .'">';
+        foreach ($this->member as $id=>$name)
             echo '<option value="' . $id . '">' . $name . '</option>';
         echo '
             </select>
@@ -675,11 +676,11 @@ class MembersTpl extends AbstractTpl {
         </td>
         <td style="border: none;">
         <div>
-            <a href="#" onclick="switch_' . $this->id .'(\'available\', \'memberOf\'); return false;">
+            <a href="#" onclick="switch_' . $this->id .'(\'available_'.$this->id.'\', \''.$this->id.'\'); return false;">
                 <img style="padding: 5px;" src="img/common/icn_arrowleft.gif" value="<--" />
             </a>
             <br/>
-            <a href="#" onclick="switch_' . $this->id .'(\'memberOf\', \'available\'); return false;">
+            <a href="#" onclick="switch_' . $this->id .'(\''.$this->id.'\', \'available_'.$this->id.'\'); return false;">
                 <img style="padding: 5px;" src="img/common/icn_arrowright.gif" value = "-->" />
             </a>
         </div>
@@ -687,7 +688,7 @@ class MembersTpl extends AbstractTpl {
         <td style="border: none;">
         <div class="list" style="padding-left: 10px;">
         <h3>' . $this->titleRight . '</h3>
-            <select multiple size="15" class="list" name="available[]" id="available_' . $this->id .'">';
+            <select multiple size="15" class="list" name="available_' . $this->id .'[]" id="available_' . $this->id .'">';
         foreach ($this->available as $id=>$name)
             echo '<option value="' . $id . '">' . $name . '</option>';
         echo '
@@ -698,18 +699,17 @@ class MembersTpl extends AbstractTpl {
         </td>
     </tr>
     </table>
-</div>
-<script type="text/javascript">
-    switch_' . $this->id .' = function(from, to) {
-        var toAdd = $$("#"+from+"_' . $this->id . ' option").findAll(
-            function(ele) { return ele.selected }
-        );
-        var len = toAdd.length;
-        for(var i=0; i<len; i++) {
-            $(to+"_' . $this->id . '").options.add(toAdd[i]);
-        }
-    };
-</script>';
+    <script type="text/javascript">
+        switch_' . $this->id .' = function(from, to) {
+            var toAdd = $$("#"+from+" option").findAll(
+                function(ele) { return ele.selected }
+            );
+            var len = toAdd.length;
+            for(var i=0; i<len; i++) {
+                $(to).options.add(toAdd[i]);
+            }
+        };
+    </script>';
     }
 }
 
