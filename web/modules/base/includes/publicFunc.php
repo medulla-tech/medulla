@@ -71,14 +71,9 @@ function _base_verifInfo($FH, $mode) {
 
     $base_errors = "";
     $uid = $FH->getPostValue("uid");
-    $name = $FH->getPostValue("name");
-    $firstname = $FH->getPostValue("givenName");
     $pass = $FH->getPostValue("pass");
     $confpass = $FH->getPostValue("confpass");
     $homedir = $FH->getPostValue("homeDir");
-    $loginShell = $FH->getPostValue("loginShell");
-    $cn = $FH->getPostValue("cn");
-    $desactive = $FH->getPostValue("isBaseDesactive");
     $primary = $FH->getPostValue("primary");
 
     if ($mode == "add" && userExists($uid)) {
@@ -111,6 +106,11 @@ function _base_verifInfo($FH, $mode) {
         setFormError("primary");
     }
     
+    /* Check that the homeDir does not exists */
+    if($FH->getPostValue("createHomeDir") == "on") {
+    
+    }
+    
     $error .= $base_errors;
 
     return $base_errors ? 1 : 0;
@@ -131,6 +131,7 @@ function _base_changeUser($FH, $mode) {
     $uid = $FH->getPostValue("uid");
 
     if ($mode == "add") {
+        // add mode
         if($FH->getPostValue("createHomeDir") == "on")
             $createHomeDir = true;
         else
@@ -139,8 +140,8 @@ function _base_changeUser($FH, $mode) {
         # create the user
         $ret = add_user($uid,
             $FH->getPostValue("pass"),
-            $FH->getPostValue("firstname"),
-            $FH->getPostValue("name"),
+            $FH->getPostValue("givenName"),
+            $FH->getPostValue("sn"),
             $FH->getPostValue("homeDir"),
             $createHomeDir,
             $FH->getPostValue("primary")
@@ -162,84 +163,76 @@ function _base_changeUser($FH, $mode) {
 
     }
     else {
-        // Change user attributes
+        // edit mode
         if ($FH->isUpdated("deletephoto")) {
             changeUserAttributes($uid, "jpegPhoto", null);
         }
-        if($FH->isUpdated('isBaseDesactive')) {
-            if ($FH->getValue('isBaseDesactive') == "on") {
-                changeUserAttributes($uid, 'loginShell', '/bin/false');
-                $result .= _("User disabled.")."<br />";
-            }
-            else {
-                changeUserAttributes($uid, 'loginShell', '/bin/bash');
-                $result .= _("User enabled.")."<br />";
-            }
-        }
         if ($FH->isUpdated("homeDir"))
-            move_home($uid, $FH->getValue("homeDir"));
-        if($FH->isUpdated('telephoneNumber'))
-            changeUserTelephoneNumbers($uid, $FH->getValue("telephoneNumber"));
-        if($FH->isUpdated('title'))
-            changeUserAttributes($uid, "title", $FH->getValue("title"));
-        if($FH->isUpdated('mobile'))
-            changeUserAttributes($uid, "mobile", $FH->getValue("mobile"));
-        if($FH->isUpdated('facsimileTelephoneNumber'))
-            changeUserAttributes($uid, "facsimileTelephoneNumber", $FH->getValue("facsimileTelephoneNumber"));
-        if($FH->isUpdated('homePhone'))
-            changeUserAttributes($uid, "homePhone", $FH->getValue("homePhone"));
-        if($FH->isUpdated('cn'))
-            changeUserAttributes($uid, "cn", $FH->getValue("cn"));
-        if($FH->isUpdated('mail'))
-            changeUserAttributes($uid, "mail", $FH->getValue("mail"));
-        if($FH->isUpdated('displayName'))
-            changeUserAttributes($uid, "displayName", $FH->getValue("displayName"));
+            move_home($uid, $FH->getValue("homeDir"));        
+    }
+    
+    // common stuff to add/edit mode
+    if($FH->isUpdated('isBaseDesactive')) {
+        if ($FH->getValue('isBaseDesactive') == "on") {
+            changeUserAttributes($uid, 'loginShell', '/bin/false');
+            $result .= _("User disabled.")."<br />";
+        }
+        else {
+            changeUserAttributes($uid, 'loginShell', '/bin/bash');
+            $result .= _("User enabled.")."<br />";
+        }
+    }
+        
+    if($FH->isUpdated('telephoneNumber'))
+        changeUserTelephoneNumbers($uid, $FH->getValue("telephoneNumber"));
 
-        /* Change photo */
-        if (!empty($_FILES["photofilename"]["name"])) {
-            if (strtolower(substr($_FILES["photofilename"]["name"], -3)) == "jpg") {
-                $pfile = $_FILES["photofilename"]["tmp_name"];
-                $size = getimagesize($pfile);
-                if ($size["mime"] == "image/jpeg") {
-                    $maxwidth = 320;
-                    $maxheight = 320;
-                    if (in_array("gd", get_loaded_extensions())) {
-                        /* Resize file if GD extension is installed */
-                        $pfile = resizeJpg($_FILES["photofilename"]["tmp_name"],
-                                $maxwidth, $maxheight);
-                    }
-                    list($width, $height) = getimagesize($pfile);
-                    if (($width <= $maxwidth) && ($height <= $maxheight)) {
-                        $obj = new Trans();
-                        $obj->scalar = "";
-                        $obj->xmlrpc_type = "base64";
-                        $f = fopen($pfile, "r");
-                        while (!feof($f)) $obj->scalar .= fread($f, 4096);
-                        fclose($f);
-                        unlink($pfile);
-                        changeUserAttributes($uid, "jpegPhoto", $obj, False);
+    if($FH->isUpdated('givenName') or $FH->isUpdated('sn'))
+        change_user_main_attr($uid, $uid, $FH->getValue('givenName'), $FH->getValue('sn'));
+        
+    foreach(array('title', 'mobile', 'facsimileTelephoneNumber', 'homePhone',
+        'cn', 'mail', 'displayName') as $attr) {
+        if ($FH->isUpdated($attr))
+            changeUserAttributes($uid, $attr, $FH->getValue($attr));
+    }
 
-                    }
-                    else {
-                        $base_errors .= sprintf(_("The photo is too big. The max size is %s x %s.
-                            Install php gd extention to resize the photo automatically."),
-                            $maxwidth, $maxheight) . "<br/>";
-                    }
+    /* Change photo */
+    if (!empty($_FILES["photofilename"]["name"])) {
+        if (strtolower(substr($_FILES["photofilename"]["name"], -3)) == "jpg") {
+            $pfile = $_FILES["photofilename"]["tmp_name"];
+            $size = getimagesize($pfile);
+            if ($size["mime"] == "image/jpeg") {
+                $maxwidth = 320;
+                $maxheight = 320;
+                if (in_array("gd", get_loaded_extensions())) {
+                    /* Resize file if GD extension is installed */
+                    $pfile = resizeJpg($_FILES["photofilename"]["tmp_name"],
+                            $maxwidth, $maxheight);
                 }
-                else $base_errors .= _("The photo is not a JPG file.") . "<br/>";
+                list($width, $height) = getimagesize($pfile);
+                if (($width <= $maxwidth) && ($height <= $maxheight)) {
+                    $obj = new Trans();
+                    $obj->scalar = "";
+                    $obj->xmlrpc_type = "base64";
+                    $f = fopen($pfile, "r");
+                    while (!feof($f)) $obj->scalar .= fread($f, 4096);
+                    fclose($f);
+                    unlink($pfile);
+                    changeUserAttributes($uid, "jpegPhoto", $obj, False);
+
+                }
+                else {
+                    $base_errors .= sprintf(_("The photo is too big. The max size is %s x %s.
+                        Install php gd extention to resize the photo automatically."),
+                        $maxwidth, $maxheight) . "<br/>";
+                }
             }
             else $base_errors .= _("The photo is not a JPG file.") . "<br/>";
         }
-
-        if($FH->isUpdated('firstname') or $FH->isUpdated('name'))
-            change_user_main_attr($uid, $uid, $firstname, $name);
-
-        if (!$FH->getPostValue("groupsselected"))
-            $FH->setPostValue("groupsselected", array());
-
-        $result .= _("User attributes updated.")."<br />";
-
+        else $base_errors .= _("The photo is not a JPG file.") . "<br/>";
     }
+
+    if ($mode == "edit")
+        $result .= _("User attributes updated.")."<br />";
     
     $error .= $base_errors;
     
@@ -293,7 +286,7 @@ function _base_baseEdit($FH, $mode) {
     );
 
     $f->add(
-        new TrFormElement(_("Last name"), new InputTpl("name")),
+        new TrFormElement(_("Last name"), new InputTpl("sn")),
         array("value"=> $FH->getArrayOrPostValue("sn"))
     );
 
@@ -375,7 +368,10 @@ function _base_baseEdit($FH, $mode) {
     $groupsTpl = new MembersTpl("secondary");
     $groupsTpl->setTitle(_("User's groups"), _("All groups"));
     // get the user's groups
-    $user_groups = getUserSecondaryGroups($uid);
+    if ($mode == 'edit')
+        $user_groups = getUserSecondaryGroups($uid);
+    else
+        $user_groups = array();
     $member = array();
     foreach($user_groups as $group) {
         $member[$group] = $group;
