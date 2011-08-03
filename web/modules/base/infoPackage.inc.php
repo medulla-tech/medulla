@@ -310,22 +310,21 @@ if (hasComputerManagerWorking()) {
  */
 
 $mod->addACL("jpegPhoto",_("User photo"));
-$mod->addACL("nlogin",_("User login"));
-$mod->addACL("name", _("User name"));
-$mod->addACL("groups",_("User groups"));
-$mod->addACL("firstname",_("User firstname"));
+$mod->addACL("uid",_("User login"));
+$mod->addACL("sn", _("User name"));
+$mod->addACL("givenName",_("User firstname"));
 $mod->addACL("homeDir",_("User home directory"));
 $mod->addACL("loginShell",_("Login shell"));
-
 $mod->addACL("title",_("User title"));
 $mod->addACL("mail",_("Mail address"));
 $mod->addACL("telephoneNumber",_("Telephone number"));
 $mod->addACL("mobile",_("Mobile phone number"));
 $mod->addACL("facsimileTelephoneNumber",_("Fax number"));
 $mod->addACL("homePhone",_("Home phone number"));
+$mod->addACL("primary",_("Primary group"));
+$mod->addACL("secondary",_("Secondary groups"));
 $mod->addACL("cn",_("Common name"));
 $mod->addACL("displayName",_("Preferred name to be used"));
-
 $mod->addACL("pass",_("Password"));
 $mod->addACL("confpass",_("Confirm your password"));
 $mod->addACL("isBaseDesactive",_("Enable/Disable user account"));

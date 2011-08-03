@@ -1607,3 +1607,9 @@ a.tooltip:hover img{
     margin-left: -4px;
     font-weight: none;
 }
+
+ul.roACL {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}

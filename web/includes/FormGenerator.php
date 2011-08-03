@@ -616,25 +616,6 @@ class MultipleInputTpl extends AbstractTpl {
         print '<tr><td width="40%" style="text-align:right;">'.$this->desc.'</td>';
         print '<td style="color: rgb(204, 0, 0);">' . _('unavailable') . '</td></tr>';
         print '</table>';
-        print '<div style="display:none">';
-        print '<table>';
-        foreach ($arrParam as $key => $param) {
-            $test = new DeletableTrFormElement($this->desc,
-                                               new InputTpl($this->name.'['.$key.']',$this->regexp),
-                                               array('key'=>$key,
-                                                     'name'=> $this->name)
-                                               );
-            $test->setCssError($this->name.$key);
-            $test->displayHide(array("value"=>$param));
-        }
-        if (count($arrParam) == 0) {
-            print '<tr><td width="40%" style="text-align:right;">';
-            print $this->desc;
-            print '</td><td>';
-            print '</td></tr>';
-        }
-        print '</table>';
-        print '</div>';
         print '</div>';
     }
 
@@ -643,8 +624,8 @@ class MultipleInputTpl extends AbstractTpl {
 
 class MembersTpl extends AbstractTpl {
 
-    function MembersTpl($idElt) {
-        $this->id = $idElt;
+    function MembersTpl($name) {
+        $this->name = $name;
         $this->titleLeft = "";
         $this->titleRight = "";        
     }
@@ -677,13 +658,13 @@ class MembersTpl extends AbstractTpl {
             <h3>' . $this->titleLeft . '</h3>';
         if ($this->member) {
             foreach ($this->member as $id=>$name)
-                echo '<input type="hidden" name="old_' . $this->id .'[]" value="' . $name . '" />';
+                echo '<input type="hidden" name="old_' . $this->name .'[]" value="' . $name . '" />';
         }
         else {
-            echo '<input type="hidden" name="old_' . $this->id .'[]" value="" />';
+            echo '<input type="hidden" name="old_' . $this->name .'[]" value="" />';
         }
         echo '
-            <select multiple size="15" class="list" name="' . $this->id .'[]" id="' . $this->id .'">';
+            <select multiple size="15" class="list" name="' . $this->name .'[]" id="' . $this->name .'">';
         foreach ($this->member as $id=>$name)
             echo '<option value="' . $id . '">' . $name . '</option>';
         echo '
@@ -693,11 +674,11 @@ class MembersTpl extends AbstractTpl {
         </td>
         <td style="border: none;">
         <div>
-            <a href="#" onclick="switch_' . $this->id .'(\'available_'.$this->id.'\', \''.$this->id.'\'); return false;">
+            <a href="#" onclick="switch_' . $this->name .'(\'available_'.$this->name.'\', \''.$this->name.'\'); return false;">
                 <img style="padding: 5px;" src="img/common/icn_arrowleft.gif" value="<--" />
             </a>
             <br/>
-            <a href="#" onclick="switch_' . $this->id .'(\''.$this->id.'\', \'available_'.$this->id.'\'); return false;">
+            <a href="#" onclick="switch_' . $this->name .'(\''.$this->name.'\', \'available_'.$this->name.'\'); return false;">
                 <img style="padding: 5px;" src="img/common/icn_arrowright.gif" value = "-->" />
             </a>
         </div>
@@ -705,7 +686,7 @@ class MembersTpl extends AbstractTpl {
         <td style="border: none;">
         <div class="list" style="padding-left: 10px;">
         <h3>' . $this->titleRight . '</h3>
-            <select multiple size="15" class="list" name="available_' . $this->id .'[]" id="available_' . $this->id .'">';
+            <select multiple size="15" class="list" name="available_' . $this->name .'[]" id="available_' . $this->name .'">';
         foreach ($this->available as $id=>$name)
             echo '<option value="' . $id . '">' . $name . '</option>';
         echo '
@@ -717,7 +698,7 @@ class MembersTpl extends AbstractTpl {
     </tr>
     </table>
     <script type="text/javascript">
-        switch_' . $this->id .' = function(from, to) {
+        switch_' . $this->name .' = function(from, to) {
             var toAdd = $$("#"+from+" option").findAll(
                 function(ele) { return ele.selected }
             );
@@ -727,6 +708,21 @@ class MembersTpl extends AbstractTpl {
             }
         };
     </script>';
+    }
+    
+    function displayRo($arrParam) {
+    
+        if(is_array($arrParam['member']))
+            $this->member = $arrParam['member'];
+        else {
+            echo 'MembersTpl: member is not an array.';
+            return 1;
+        }
+        
+        echo '<ul class="roACL">';
+        foreach ($this->member as $id => $name)
+            echo '<li>' . $name . '</li>';
+        echo '</ul>';
     }
 }
 

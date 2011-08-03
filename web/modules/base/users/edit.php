@@ -63,8 +63,6 @@ switch($_GET["action"]) {
         break;
 }
 
-print_r($mode);
-
 $redirect = false;
 // if data is sent
 if ($_POST) {
