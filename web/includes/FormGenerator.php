@@ -616,10 +616,26 @@ class MultipleInputTpl extends AbstractTpl {
         print '<tr><td width="40%" style="text-align:right;">'.$this->desc.'</td>';
         print '<td style="color: rgb(204, 0, 0);">' . _('unavailable') . '</td></tr>';
         print '</table>';
+        print '<div style="display:none">';
+        print '<table>';
+        foreach ($arrParam as $key => $param) {
+            $test = new DeletableTrFormElement($this->desc,
+                new InputTpl($this->name.'['.$key.']',$this->regexp),
+                array('key'=>$key, 'name'=> $this->name)
+            );
+            $test->setCssError($this->name.$key);
+            $test->displayHide(array("value"=>$param));
+        }
+        if (count($arrParam) == 0) {
+            print '<tr><td width="40%" style="text-align:right;">';
+            print $this->desc;
+            print '</td><td>';
+            print '</td></tr>';
+        }
+        print '</table>';
+        print '</div>';      
         print '</div>';
     }
-
-
 }
 
 class MembersTpl extends AbstractTpl {
@@ -720,9 +736,29 @@ class MembersTpl extends AbstractTpl {
         }
         
         echo '<ul class="roACL">';
-        foreach ($this->member as $id => $name)
+        foreach ($this->member as $id => $name) {
+            echo '<input type="hidden" name="old_' . $this->name .'[]" value="' . $name . '" />';
+            echo '<input type="hidden" name="' . $this->name .'[]" value="' . $name . '" />';
             echo '<li>' . $name . '</li>';
+        }
         echo '</ul>';
+    }
+    
+    function displayHide($arrParam) {
+
+        if(is_array($arrParam['member']))
+            $this->member = $arrParam['member'];
+        else {
+            echo 'MembersTpl: member is not an array.';
+            return 1;
+        }
+        
+        foreach ($this->member as $id => $name) {
+            echo '<input type="hidden" name="old_' . $this->name .'[]" value="' . $name . '" />';
+            echo '<input type="hidden" name="' . $this->name .'[]" value="' . $name . '" />';
+        }
+        
+        echo '<div style="color: #C00;">' . _("unavailable") . '</div>';
     }
 }
 

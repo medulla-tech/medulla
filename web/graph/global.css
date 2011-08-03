@@ -1613,3 +1613,11 @@ ul.roACL {
     margin: 0;
     padding: 0;
 }
+
+.hiACL {
+    color: #C00;
+}
+
+.roACL {
+    color: #666;
+}
