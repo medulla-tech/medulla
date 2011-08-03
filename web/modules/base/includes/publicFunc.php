@@ -389,7 +389,7 @@ function _base_baseEdit($FH, $mode) {
     
     $f->add(
         new TrFormElement(_("Secondary groups"), $groupsTpl),
-        array("memberOf" => $member, "available" => $available)
+        array("member" => $member, "available" => $available)
     );
 
     $f->pop();
