@@ -40,9 +40,9 @@ class InventoryConfig(InventoryDatabaseConfig):
         else: self.conffile = conffile
 
         InventoryDatabaseConfig.setup(self, self.conffile)
-        self.setup(self.conffile)
+        self.setup()
 
-    def setup(self, conf_file):
+    def setup(self):
         self.disable = self.cp.getboolean("main", "disable")
         for i in getInventoryParts():
             try:
