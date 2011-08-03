@@ -450,10 +450,6 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
     def xmlrpc_completed_halt(self, launcher, (exitcode, stdout, stderr), id):
         return xmlrpcCleanup(pulse2.scheduler.launcher.completed_halt(launcher, (exitcode, stdout, stderr), id))
 
-    def xmlrpc_get_pubkey(self, launcher, key_name):
-        return xmlrpcCleanup(pulse2.scheduler.launchers_driving.getPubKey(launcher, key_name))
-    def xmlrpc_remote_exec(self, launcher, path):
-        return xmlrpcCleanup(pulse2.scheduler.launchers_driving.getPubKey(launcher, path))
     def xmlrpc_get_health(self):
         return xmlrpcCleanup(getHealth())
 
