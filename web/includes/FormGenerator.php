@@ -663,8 +663,13 @@ class MembersTpl extends AbstractTpl {
         <td style="border: none;">
         <div class="list">
             <h3>' . $this->titleLeft . '</h3>';
-        foreach ($this->member as $id=>$name)        
-            echo '<input type="hidden" name="old_' . $this->id .'[]" value="' . $name . '" />';
+        if ($this->member) {
+            foreach ($this->member as $id=>$name)
+                echo '<input type="hidden" name="old_' . $this->id .'[]" value="' . $name . '" />';
+        }
+        else {
+            echo '<input type="hidden" name="old_' . $this->id .'[]" value="" />';
+        }
         echo '
             <select multiple size="15" class="list" name="' . $this->id .'[]" id="' . $this->id .'">';
         foreach ($this->member as $id=>$name)
