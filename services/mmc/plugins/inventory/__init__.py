@@ -26,7 +26,6 @@ Pulse 2 MMC agent inventory plugin
 
 # Helpers
 from mmc.core.version import scmRevision
-from mmc.support.config import PluginConfigFactory
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 from mmc.support.mmctools import xmlrpcCleanup
 from mmc.plugins.base.computers import ComputerManager
@@ -53,8 +52,7 @@ def getRevision(): return REVISION
 
 def activate():
     logger = logging.getLogger()
-    config = PluginConfigFactory.new(InventoryConfig, 'inventory')
-    print('Instance of inventory config in activate is %s' % config)
+    config = InventoryConfig()
     config.init("inventory")
     logger.debug("Inventory %s"%str(config.disable))
     if config.disable:
@@ -74,12 +72,6 @@ def activate():
 
     PossibleQueries().init(config)
     return True
-
-def deactivate():
-    """
-    Unload and disable the module.
-    """
-    pass
 
 
 class ContextMaker(ContextMakerI):
@@ -154,11 +146,11 @@ class RpcProxy(RpcProxyI):
         return xmlrpcCleanup(Inventory().inventoryExists(ctx, uuid))
 
     def getInventoryEM(self, col):
-        conf = PluginConfigFactory.new(InventoryConfig, 'inventory')
+        conf = InventoryConfig()
         return conf.expert_mode[col]
 
     def getInventoryGraph(self, col):
-        conf = PluginConfigFactory.new(InventoryConfig, 'inventory')
+        conf = InventoryConfig()
         return conf.graph[col]
 
     def getMachinesBy(self, table, field, value):
