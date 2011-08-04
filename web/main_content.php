@@ -209,7 +209,7 @@ function display_mod($mod) {
 
 ?>
     <div class="module">
-        <h2><?php echo  $mod->getDescription(); ?></h2>
+        <h3><?php echo  $mod->getDescription(); ?></h3>
         <?php foreach (getSorted($mod->getSubmodules()) as $submod) {
             display_submod($submod,$mod);
         }
