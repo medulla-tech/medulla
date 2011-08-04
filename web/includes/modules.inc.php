@@ -35,25 +35,24 @@ require_once("ModulesGenerator.php");
  * @return an array of String with a list of dirs
  */
 function fetchModulesList($dir) {
+
     $ret = array();
     $registerList = array();
-    if (is_dir($dir)) {
-        if ($dh = opendir($dir)) {
-            while (($file = readdir($dh)) !== false) {
-                $support = array_search($file,$_SESSION["supportModList"]) !== false;
-                $aclright = hasCorrectModuleAcl($file);
-                if (file_exists("$dir$file/infoPackage.inc.php") && $support && $aclright) {
-                    $ret[] = "$dir$file";
-                    $registerList[] = "$file";
-                }
+    
+    if (isset($_SESSION["supportModList"])) {
+        foreach($_SESSION["supportModList"] as $module) {
+            if (file_exists($dir.$module.'/infoPackage.inc.php') &&
+                hasCorrectModuleAcl($module)) {
+                    $ret[] = $dir.$module;
+                    $registerList[] = $module;
             }
-            closedir($dh);
         }
+        sort($ret);
+        sort($registerList);
     }
-    sort($ret);
-    sort($registerList);
+    
     /* register modulesList in $_SESSION */
-    $_SESSION["modulesList"]=$registerList;
+    $_SESSION["modulesList"] = $registerList;
     return $ret;
 }
 
@@ -245,29 +244,22 @@ function isNoHeader($pModules,$pSubmod,$pAction) {
  * The plugins are looked up according to their priority, and in reverse order if $reverse = True
  */
 function callPluginFunction($function, $paramArr = null, $reverse = False) {
-    $list = $_SESSION["modulesList"];
 
-    $MMCApp =& MMCApp::getInstance();
     /* Fetch and order available plugins for the current logged user */
-    foreach(getSorted($MMCApp->getModules()) as $key => $mod) {
-        if (array_search($mod->getName(), $list) !== FALSE) {
-            $ordered_list[] = $mod->getName();
-        }
-    }
-
-    $list = $ordered_list;
+    $list = $_SESSION["modulesList"];
     if ($reverse) $list = array_reverse($list);
 
     /*
       If the user try to change his/her password, we do it for each available
       module, and we bypass all ACL check
     */
-    if (($function == "changeUserPasswd")||($function == "baseEdit")) {
+    if (($function == "changeUserPasswd") || ($function == "baseEdit")) {
         /* Change password for all modules, even those where the user has no right. */
         $list = $_SESSION["supportModList"];
         global $conf;
         foreach($list as $module) {
-            if (!function_exists("_" . $module . "_" . "changeUserPasswd")) includePublicFunc(array($conf["global"]["rootfsmodules"] . "/$module"));
+            if (!function_exists("_" . $module . "_" . "changeUserPasswd"))
+                includePublicFunc(array($conf["global"]["rootfsmodules"] . "/$module"));
         }
     }
 
@@ -282,8 +274,6 @@ function callPluginFunction($function, $paramArr = null, $reverse = False) {
                 $result[$item] = $errorDesc;
                 break;
             }
-        } else {
-            // print "Call : \"".$functionName."\" not exist<br />";
         }
     }
 

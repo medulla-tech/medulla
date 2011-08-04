@@ -44,8 +44,9 @@ function autoInclude() {
     global $conf;
     global $filter;
 
-    includeInfoPackage(fetchModulesList($conf["global"]["rootfsmodules"]));
-    includePublicFunc(fetchModulesList($conf["global"]["rootfsmodules"]));
+    $modules = fetchModulesList($conf["global"]["rootfsmodules"]);
+    includeInfoPackage($modules);
+    includePublicFunc($modules);
 
     if (isset($_GET["module"])) {
         $__module = $_GET["module"];
@@ -137,7 +138,6 @@ function autoInclude() {
         echo "</script>\n";
         return;
     }
-    
     
     /* Warn user once at login if her account is expired. */
     if (in_array("ppolicy", $_SESSION["supportModList"])) {

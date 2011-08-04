@@ -112,16 +112,11 @@ if ($_SESSION["lang"] == "C") {
     setlocale(LC_ALL, $_SESSION['lang'] . ".UTF-8");
 }
 
-if (empty($_SESSION["supportModList"])) { //if supportModList not available
-					      //ex: not logged
-	$_SESSION["supportModList"] = array();
-}
-
-foreach ($_SESSION["supportModList"] as $mod) { //bind all supported mod list for
-                                                //dgettext function and _T() alias
+// bind all supported mod list for gettext function and _T() alias
+foreach ($_SESSION["supportModList"] as $mod)
     bindtextdomain ($mod, dirname(__FILE__)."/../modules/$mod/locale");
-}
 
-textdomain ("base"); //define default domain for gettext and _() alias
+//define default domain for gettext and _() alias
+textdomain ("base"); 
 
 ?>

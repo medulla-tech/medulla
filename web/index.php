@@ -67,7 +67,14 @@ if (isset($_POST["bConnect"])) {
         setcookie('lang', $_POST['lang'], time() + 3600 * 24 * 30);
 
         list($_SESSION["acl"], $_SESSION["acltab"], $_SESSION["aclattr"]) = createAclArray(getAcl($login));
-        $_SESSION["supportModList"] = xmlCall("base.getModList",null);
+
+        /* Register agent module list */
+        $_SESSION["supportModList"] = array();
+        $list = xmlCall("base.getModList", null);
+        if (is_array($list)) {
+            sort($list);
+            $_SESSION["supportModList"] = $list;
+        }
 
         /* Register module version */
         $_SESSION["modListVersion"]['rev'] = xmlCall("getRevision",null);
