@@ -2327,7 +2327,7 @@ class Form extends HtmlContainer {
 
     function Form($options = array()) {
         $this->HtmlContainer();
-        if (!isset($options["method"])) $options["method"] = "post";
+        if (!isset($options["method"])) $options["method"] = "POST";
         $this->options = $options;
         $this->buttons = array();
         $this->summary = NULL;

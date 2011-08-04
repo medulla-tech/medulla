@@ -178,7 +178,8 @@ $sidemenu->forceActiveItem($activeItem);
 $p->setSideMenu($sidemenu);
 $p->display();
 // create the form
-$f = new ValidatingForm();
+$f = new ValidatingForm(array('method' => 'POST', 
+    'enctype' => 'multipart/form-data'));
 // add submit button
 $f->addValidateButton("buser");
 // check if account is locked by ppolicy
