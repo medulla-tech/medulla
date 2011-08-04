@@ -35,9 +35,10 @@ class AuditFactory(Singleton):
         if not hasattr(self, 'logaction'):
             if config == None:
                 from mmc.plugins.base import BasePluginConfig
+                from mmc.support.config import PluginConfigFactory
                 try:
                     # Read the configuration
-                    self.make(BasePluginConfig('base'), init)
+                    self.make(PluginConfigFactory.new(BasePluginConfig, 'base'), init)
                 except IOError:
                     # Fallback on default configuration
                     self.make(None, init)

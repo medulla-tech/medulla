@@ -631,6 +631,91 @@ class PluginManager(Singleton):
             ret.append(item.split("/")[1])
         return ret
 
+    def loadPlugin(self, name, force=False):
+        """
+        Load a plugin with the given name.
+
+        To start one single module after the agent startup, use startPlugin()
+        instead
+
+        @returns: 4 on fatal error (mmc agent should not start without that
+        plugin), 0 on non-fatal failure, and the module itself if
+        the load was successful
+        """
+        log.debug('loading %s' % (name,))
+        f, p, d = imp.find_module(name, ['plugins'])
+
+        try:
+            log.debug("Trying to load plugin %s" % name)
+            plugin = imp.load_module(name, f, p, d)
+            log.debug("Plugin loaded: %s" % name)
+        except Exception,e:
+            log.exception(e)
+            log.error('Plugin '+ name+ " raise an exception.\n"+ name+ " not loaded.")
+            return 0
+
+        # If module has no activate function
+        try:
+            # if not force:
+            #     func = getattr(plugin, "activate")
+            # else:
+                # log.debug('Forcing plugin startup')
+                # try:
+            # func = getattr(plugin, "activateForced")
+        # except AttributeError:
+            # log.debug('Trying to force startup of plugin %s but no "activateForced" method found\nFalling back to the normale activate method' % (name,))
+            func = getattr(plugin, "activate")
+        except AttributeError:
+            log.error('File '+ name+ ' is not a MMC plugin.')
+            plugin = None
+            return 0
+
+        # If is active
+        try:
+            if (func()):
+                version = 'API version: '+str(getattr(plugin, "getApiVersion")())+' build(' +str(getattr(plugin, "getRevision")())+')'
+                log.info('Plugin ' + name + ' loaded, ' + version)
+                # self.modList.append(str(name))
+            else:
+                # If we can't activate it
+                log.info('Plugin '+name+' not loaded.')
+                plugin = None
+        except Exception, e:
+            log.error('Error while trying to load plugin ' + name)
+            log.exception(e)
+            plugin = None
+            # We do no exit but go on when another plugin than base fail
+
+        # Check that "base" plugin was loaded
+        if name == "base" and not plugin:
+            log.error("MMC agent can't run without the base plugin. Exiting.")
+            return 4
+        return plugin
+
+    def startPlugin(self, name):
+        """
+        Force a plugin load.
+        Even if the configuration indicates the plugin is disabled,
+        we load it and add it to the loaded list.
+
+        Use it to start a plugin after the mmc agent startup, dynamically.
+
+        This tries to call the activateForced method of the plugin (for example to
+        ignore the disable = 1 configuration option)
+        """
+        if name in self.getEnabledPluginNames() or name in self.plugins:
+            logger.warning('Trying to start an already loaded plugin: %s' % (name,))
+            return 0
+        res = self.loadPlugin(name, force=True)
+        if res == 0:
+            return 0
+        elif res is not None and not isinstance(res, int):
+            self.plugins[name] = res
+            getattr(self.plugins["base"], "setModList")([name for name in self.plugins.keys()])
+        elif res == 4:
+            return 4
+        return res
+
     def loadPlugins(self):
         """
         Find and load available MMC plugins
@@ -641,7 +726,7 @@ class PluginManager(Singleton):
         # Find available plugins
         mod = {}
         sys.path.append("plugins")
-        modList = []
+        # self.modList = []
         plugins = self.getAvailablePlugins()
         if not "base" in plugins:
             log.error("Plugin 'base' is not available. Please install it.")
@@ -660,45 +745,12 @@ class PluginManager(Singleton):
         # Load plugins
         log.info("Importing available MMC plugins")
         for plugin in plugins:
-            f, p, d = imp.find_module(plugin, ['plugins'])
-
-            try:
-                log.debug("Trying to load plugin %s" % plugin)
-                mod[plugin] = imp.load_module(plugin, f, p, d)
-                log.debug("Plugin loaded: %s" % plugin)
-            except Exception,e:
-                log.exception(e)
-                log.error('Plugin '+ plugin+ " raise an exception.\n"+ plugin+ " not loaded.")
+            res = self.loadPlugin(plugin)
+            if res == 0:
                 continue
-
-            # If module has no activate function
-            try:
-                func = getattr(mod[plugin], "activate")
-            except:
-                log.error('File '+ plugin+ ' is not a MMC plugin.')
-                del mod[plugin]
-                continue
-
-            # If is active
-            try:
-                log.debug("Trying to activate plugin %s" % plugin)
-                if (func()):
-                    version = 'API version: '+str(getattr(mod[plugin], "getApiVersion")())+' build(' +str(getattr(mod[plugin], "getRevision")())+')'
-                    log.info('Plugin ' + plugin + ' loaded, ' + version)
-                    modList.append(str(plugin))
-                else:
-                    # If we can't activate it
-                    log.info('Plugin '+plugin+' not loaded.')
-                    del mod[plugin]
-            except Exception, e:
-                log.error('Error while trying to load plugin ' + plugin)
-                log.exception(e)
-                del mod[plugin]
-                # We do no exit but go on when another plugin than base fail
-
-            # Check that "base" plugin was loaded
-            if plugin == "base" and not "base" in mod:
-                log.error("MMC agent can't run without the base plugin. Exiting.")
+            elif res is not None and not isinstance(res, int):
+                mod[plugin] = res
+            elif res == 4:
                 return 4
 
         # store enabled plugins
@@ -718,7 +770,27 @@ class PluginManager(Singleton):
                         return 4
 
         # Set module list
-        setModList = getattr(mod["base"], "setModList")
-        setModList(modList)
-
+        getattr(self.plugins["base"], "setModList")([name for name in self.plugins.keys()])
         return 0
+
+    def stopPlugin(self, name):
+        """
+        Stops a plugin.
+
+        @rtype: boolean
+        returns: True on success, False if the module is not loaded.
+        """
+        if not name in self.plugins:
+            return False
+        plugin = self.plugins[name]
+        try:
+            deactivate = getattr(plugin, 'deactivate')
+        except AttributeError:
+            log.info('Plugin %s has no deactivate function' % (name,))
+        else:
+            log.info('Deactivating plugin %s' % (name,))
+            deactivate()
+        del self.plugins[name]
+        getattr(self.plugins["base"], "setModList")([name for name in self.plugins.keys()])
+        return True
+

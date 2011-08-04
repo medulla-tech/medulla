@@ -1,0 +1,22 @@
+form.audit_nok {
+    background: #f4e5e5;
+    border: 2px solid #C53A3A;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;    
+}
+
+form.audit_ok {
+    background: #EAFDEA;
+    border: 2px solid #28892B;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;    
+}
+
+form.audit_ok td.label, form.audit_nok td.label {
+    font-weight: bold;
+    color: #444;
+}
+
+form.audit_ok td.label:after, form.audit_nok td.label:after {
+    content: " :";
+}
