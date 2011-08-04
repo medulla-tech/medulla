@@ -2143,14 +2143,14 @@ class NotifyWidgetWarning extends NotifyWidget {
 /**
  * Display a simple DIV with an error message
  */
-class ErrorMessage {
+class ErrorMessage extends HtmlElement {
 
     function ErrorMessage($msg) {
         $this->msg = $msg;
     }
 
     function display() {
-        return "<div id=\"errorCode\">" . $this->msg . "</div>";
+        print '<div class="errorCode">' . $this->msg . '</div>';
     }
 }
 
@@ -2438,7 +2438,7 @@ class ValidatingForm extends Form {
     function ValidatingForm($options = array()) {
         $this->Form($options);
         $this->options["id"] = "edit";
-        $this->options["onsubmit"] = "return validateForm();";
+        $this->options["onsubmit"] = "selectAll(); return validateForm();";
     }
 
     function end() {

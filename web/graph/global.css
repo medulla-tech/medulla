@@ -357,7 +357,7 @@ html>body #sidebar ul li a { width: auto; }
 /*    Debug presentation and colorization   */
 /* ---------------------------------------- */
 
-#validCode {
+#validCode, .validCode {
 	font-size: 12px;
 	text-decoration: none;
 	padding: 12px 8px 12px 8px;
@@ -371,7 +371,7 @@ html>body #sidebar ul li a { width: auto; }
         -webkit-border-radius: 5px;
 }
 
-#errorCode {
+#errorCode, .errorCode {
 	font-size: 12px;
 	text-decoration: none;
 	padding: 12px 8px 12px 8px;
@@ -381,8 +381,13 @@ html>body #sidebar ul li a { width: auto; }
 	width: 90%;
 	display: block;
 	border: 1px solid #E00;
-        -moz-border-radius: 5px;
-        -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+}
+
+form .errorCode {
+    margin: 1em;
+    width: auto;
 }
 
 #warningCode {

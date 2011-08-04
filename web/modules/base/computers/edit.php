@@ -27,7 +27,7 @@ require("localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/base/includes/computers.inc.php");
 
-$errstr = "";
+$err = false;
 if (isset($_POST["bcreate"])) {
     if (checkComputerName($_POST["computername"])) {
         if (isComputerNameAvailable($_POST["location_uuid"], $_POST["computername"])) {
@@ -38,11 +38,9 @@ if (isset($_POST["bcreate"])) {
             }
         } else {
             $err = new ErrorMessage(_("The computer name is already taken."));
-            $errstr = $err->display();
         }
     } else {
         $err = new ErrorMessage(_("Invalid computer name."));
-        $errstr = $err->display();
     }
 }
 
@@ -57,7 +55,7 @@ $p->setTitle($title);
 $p->setSideMenu($sidemenu);
 $p->display();
 
-print $errstr;
+if ($err) $err->display();
 
 $formfields = array("computername", "computerdescription");
 

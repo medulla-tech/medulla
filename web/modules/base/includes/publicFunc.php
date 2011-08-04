@@ -439,8 +439,8 @@ function _base_baseEdit($FH, $mode) {
 
     $f->pop();
     $f->pop();
-    $f->pop();
-    $f->display();
+
+    return $f;
 }
 
 /**

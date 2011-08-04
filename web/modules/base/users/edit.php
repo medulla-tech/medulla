@@ -149,9 +149,8 @@ if ($_POST) {
                 }
             }
         }
-        
-        /*if(!$error)
-            $redirect = true;*/
+        if(!$error)
+            $redirect = true;
     }
 }
 
@@ -159,12 +158,12 @@ if ($_POST) {
 $resultPopup = new NotifyWidget();
 // add error messages
 if ($error) {
-    $resultPopup->add('<div id="errorCode">' . $error . '</div>');
+    $resultPopup->add('<div class="errorCode">' . $error . '</div>');
     $resultPopup->setLevel(5);
 }
 // add info messages
 if ($result) {
-    $resultPopup->add('<div id="validCode">' . $result . '</div>');
+    $resultPopup->add('<div class="validCode">' . $result . '</div>');
 }
 // in case of modification/creation success, redirect to the index
 if ($redirect)
@@ -173,50 +172,45 @@ if ($redirect)
 // in case of failure, set errorStatus to 0 in order to display the edit form
 $errorStatus = 0;
 
+// edit form page starts here
 $p = new PageGenerator($title);
 $sidemenu->forceActiveItem($activeItem);
 $p->setSideMenu($sidemenu);
 $p->display();
+// create the form
+$f = new ValidatingForm();
+// add submit button
+$f->addValidateButton("buser");
+// check if account is locked by ppolicy
+$lockedAccount = false;
+if (in_array("ppolicy", $_SESSION["supportModList"])) {
+    require_once("modules/ppolicy/includes/ppolicy-xmlrpc.php");
+    if ($uid && isAccountLocked($uid) != 0) {
+        $lockedAccount = true;
+        $em = new ErrorMessage(_("This account is locked by the LDAP directory."));
+        $f->push($em);
+    }
+}
+// check if all modules are disabled
+// TODO
+$disabledAccount = false;
+if($mode == 'edit') {
+    if ($lockedAccount)
+        $f->addButton("unlockAccount", _("Unlock account"), "btnSecondary");
+    if ($disabledAccount)
+        $f->addButton("enableAccount", _("Enable account"), "btnSecondary");
+    else
+        $f->addButton("disableAccount", _("Disable account"), "btnSecondary");
+}
+// add reset form button
+$f->addCancelButton("breset");
+// add all modules forms to the edit form
+$modules = callPluginFunction("baseEdit", array($FH, $mode));
+foreach($modules as $module => $editForm) {
+    $f->push($editForm);
+    $f->pop();
+}
+// display the form
+$f->display();
 
 ?>
-<form id="edit" enctype="multipart/form-data" method="post" onsubmit="selectAll(); return validateForm();">
-
-    <?php
-    // check if account is locked by ppolicy
-    $lockedAccount = false;
-    if (in_array("ppolicy", $_SESSION["supportModList"])) {
-        require_once("modules/ppolicy/includes/ppolicy-xmlrpc.php");
-        if ($uid && isAccountLocked($uid) != 0) {
-            $lockedAccount = true;
-            $em = new ErrorMessage(_("This account is locked by the LDAP directory."));
-            print $em->display();
-        }
-    }
-    // check if all modules are disabled
-    // TODO
-    $disabledAccount = false;
-    // call all plugins edit function
-    callPluginFunction("baseEdit", array($FH, $mode));
-    ?>
-
-    <input name="buser" type="submit" class="btnPrimary" value="<?php echo _("Confirm"); ?>" />
-
-    <?php
-
-    if($mode == 'edit') {
-        $lockButton = new Button();
-        if ($lockedAccount) {
-            print $lockButton->getButtonString("unlockAccount",_("Unlock account"));
-        }
-        $disableButton = new Button();
-        if ($disabledAccount) {
-            print $disableButton->getButtonString("enableAccount",_("Enable account"));
-        }
-        else {
-            print $disableButton->getButtonString("disableAccount",_("Disable account"));
-        }
-    }
-    ?>
-
-    <input name="breset" type="reset" class="btnSecondary" onclick="window.location.reload( false );" value="<?=_('Cancel')?>" />
-</form>
