@@ -62,7 +62,6 @@ Notes:
 
 require_once("../site.php");
 require("../includes/modules.inc.php");
-includeLocalCss(fetchModulesList($prefix . "/share/linbox/webface/samba/modules/"));
 
 ?>
 */
