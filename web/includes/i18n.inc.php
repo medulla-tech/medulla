@@ -113,8 +113,9 @@ if ($_SESSION["lang"] == "C") {
 }
 
 // bind all supported mod list for gettext function and _T() alias
-foreach ($_SESSION["supportModList"] as $mod)
-    bindtextdomain ($mod, dirname(__FILE__)."/../modules/$mod/locale");
+if(isset($_SESSION["supportModList"]))
+    foreach ($_SESSION["supportModList"] as $mod)
+        bindtextdomain ($mod, dirname(__FILE__)."/../modules/$mod/locale");
 
 //define default domain for gettext and _() alias
 textdomain ("base"); 
