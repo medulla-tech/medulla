@@ -671,7 +671,7 @@ class MembersTpl extends AbstractTpl {
     <tr>
         <td style="border: none;">
         <div class="list">
-            <h3>' . $this->titleLeft . '</h3>';
+        <h4>' . $this->titleLeft . '</h4>';
         if ($this->member) {
             foreach ($this->member as $id=>$name)
                 echo '<input type="hidden" name="old_' . $this->name .'[]" value="' . $name . '" />';
@@ -701,7 +701,7 @@ class MembersTpl extends AbstractTpl {
         </td>
         <td style="border: none;">
         <div class="list" style="padding-left: 10px;">
-        <h3>' . $this->titleRight . '</h3>
+        <h4>' . $this->titleRight . '</h4>
             <select multiple size="15" class="list" name="available_' . $this->name .'[]" id="available_' . $this->name .'">';
         foreach ($this->available as $id=>$name)
             echo '<option value="' . $id . '">' . $name . '</option>';

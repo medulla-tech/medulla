@@ -646,7 +646,7 @@ html>body #section {
 }
 
 #section h1, h2, h3, h4, h5, h6 {
-	font-family: Lucida, Geneva, Helvetica, Arial, sans-serif;
+	font-family: Verdana, Geneva, Helvetica, Arial, sans-serif;
 	color: #666;
 	font-weight: normal;
 	padding: 0 0 10px 0;
@@ -655,6 +655,8 @@ html>body #section {
 }
 
 #section h2 { font-size: 17px; }
+#section form h3 { font-size: 14px; }
+#section form h4 { font-size: 13px; }
 
 #configPad {
 	color: #666;

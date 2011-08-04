@@ -254,7 +254,7 @@ function _base_baseEdit($FH, $mode) {
 
     $uid = $FH->getArrayOrPostValue("uid");
 
-    $f = new DivForModule(_T("Base plugin","base"), "#F4F4F4");
+    $f = new DivForModule(_T("User attributes", "base"), "#F4F4F4");
     $f->push(new Table());
 
     if ($mode == "add") {
