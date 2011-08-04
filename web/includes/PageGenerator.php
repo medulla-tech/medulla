@@ -1998,7 +1998,7 @@ class NotifyWidget {
      * private internal function
      */
     function getSize() {
-        if ($_SESSION['__notify_size']) {
+        if (isset($_SESSION['__notify_size']) && $_SESSION['__notify_size']) {
             return $_SESSION['__notify_size'];
         } else {
             return 300; //default value
@@ -2021,7 +2021,7 @@ class NotifyWidget {
      * private internal function
      */
     function getLevel() {
-        if ($_SESSION['__notify_level']) {
+        if (isset($_SESSION['__notify_level']) && $_SESSION['__notify_level']) {
             return $_SESSION['__notify_level'];
         } else {
             return 0; //default level is 0
