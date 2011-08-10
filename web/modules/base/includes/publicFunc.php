@@ -363,7 +363,11 @@ function _base_baseEdit($FH, $mode) {
         $primary = getUserDefaultPrimaryGroup();
     }
     else if($mode == "edit") {
-        $primary = getUserPrimaryGroup($uid);
+        /* In case of error, display the POST values */
+        if ($FH->isUpdated("primary"))
+            $primary = $FH->getValue("primary");
+        else
+            $primary = getUserPrimaryGroup($uid);
     }
     $f->add(
         new TrFormElement(_("Primary group"), $groupsTpl),
@@ -374,8 +378,13 @@ function _base_baseEdit($FH, $mode) {
     $groupsTpl = new MembersTpl("secondary");
     $groupsTpl->setTitle(_("User's groups"), _("All groups"));
     // get the user's groups
-    if ($mode == 'edit')
-        $user_groups = getUserSecondaryGroups($uid);
+    if ($mode == 'edit') {
+        /* In case of error, display the POST values */
+        if ($FH->isUpdated("secondary"))
+            $user_groups = $FH->getValue("secondary");
+        else
+            $user_groups = getUserSecondaryGroups($uid);
+    }
     else
         $user_groups = array();
     $member = array();
