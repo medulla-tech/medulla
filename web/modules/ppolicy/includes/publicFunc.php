@@ -51,6 +51,22 @@ function _ppolicy_baseEdit($FH, $mode) {
     }
 
     $f->push(new Table());
+
+    if ($mode == "edit") {
+        $pwdLock = false;
+        if(isAccountLocked($uid) != "0") {
+            $pwdLock = true;
+            // Display an error message on top of the page
+            $em = new ErrorMessage(_T("Password policy management", "ppolicy") . ' : ' .
+                _T("This account is locked by the LDAP directory.", "ppolicy"));
+            $em->display();
+        }
+        $f->add(new TrFormElement(_T("Lock account", "ppolicy"),
+            new CheckboxTpl("pwdLock"), array("tooltip" => _T("If checked, permanently lock the user account", "ppolicy"))),
+            array("value" => $pwdLock ? "checked" : "")
+        );
+    }
+    
     $f->add(new TrFormElement(_T("Password reset flag", "ppolicy"),
         new CheckboxTpl("pwdReset"), array("tooltip" => _T("If checked, the user must change her password when she first binds to the LDAP directory after password is set or reset by a password administrator", "ppolicy"))),
         array("value" => $pwdReset ? "checked" : "")
@@ -187,12 +203,22 @@ function _ppolicy_changeUser($FH, $mode) {
     $ppolicyattr = getPPolicyAttributesKeys();
     $updated = False;
     
+    if ($mode == "edit") {
+        if ($FH->isUpdated("pwdLock")) {
+            if ($FH->getValue("pwdLock") == "on")
+                lockAccount($uid);
+            else
+                unlockAccount($uid);
+        }
+    }    
+    
     if ($FH->getPostValue("ppolicyactivated")) {
+    
         if (!hasPPolicyObjectClass($uid)) {
             addPPolicyObjectClass($uid);
             $updated = True;
         }
-
+        
         $detailArr = getDetailedUser($uid);
         _ppolicy_completeUserEntry($detailArr);
         foreach ($ppolicyattr as $key => $info) { // foreach the list of Supported Attributes

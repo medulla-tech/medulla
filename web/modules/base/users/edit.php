@@ -150,12 +150,6 @@ if ($_POST) {
                 }
                 $result = sprintf(_("User %s enabled."), $uid);
             }
-            if ($FH->getPostValue('unlockAccount')) {
-                if (in_array("ppolicy", $_SESSION["supportModList"])) {
-                    require_once("modules/ppolicy/includes/ppolicy-xmlrpc.php");
-                    unlockAccount($uid);
-                }
-            }
         }
         if(!$error) {
             $redirect = true;
@@ -201,22 +195,11 @@ $f = new ValidatingForm(array('method' => 'POST',
     'enctype' => 'multipart/form-data'));
 // add submit button
 $f->addValidateButton("buser");
-// check if account is locked by ppolicy
-$lockedAccount = false;
-if (in_array("ppolicy", $_SESSION["supportModList"])) {
-    require_once("modules/ppolicy/includes/ppolicy-xmlrpc.php");
-    if ($uid && isAccountLocked($uid) != 0) {
-        $lockedAccount = true;
-        $em = new ErrorMessage(_("This account is locked by the LDAP directory."));
-        $f->push($em);
-    }
-}
+
 // check if all modules are disabled
 // TODO
 $disabledAccount = false;
 if($mode == 'edit') {
-    if ($lockedAccount)
-        $f->addButton("unlockAccount", _("Unlock account"), "btnSecondary");
     if ($disabledAccount)
         $f->addButton("enableAccount", _("Enable account"), "btnSecondary");
     else

@@ -357,10 +357,20 @@ class UserPPolicy(ldapUserGroupControl):
         """
         user = self.getUserEntry(self.userUid, operational = True)
         if 'pwdAccountLockedTime' in user:
-            ret = self._strpTime(user['pwdAccountLockedTime'][0])
+            try:
+                ret = self._strpTime(user['pwdAccountLockedTime'][0])
+            except ValueError:
+                ret = -1
         else:
             ret = 0
         return ret
+
+    def lockAccount(self):
+        """
+        Lock a LDAP account
+        """
+        # man slapo-ppolicy
+        self.setPPolicyAttribute('pwdAccountLockedTime', '000001010000Z')
 
     def unlockAccount(self):
         """
@@ -488,6 +498,9 @@ def setUserPPolicyAttribut(uid, nameAttribut, value):
 def isAccountLocked(uid):
     return UserPPolicy(uid).isAccountLocked()
 
+def lockAccount(uid):
+    return UserPPolicy(uid).lockAccount()
+    
 def unlockAccount(uid):
     return UserPPolicy(uid).unlockAccount()
 

@@ -76,6 +76,10 @@ function isAccountLocked($uid) {
     return xmlCall("ppolicy.isAccountLocked", array($uid));
 }
 
+function lockAccount($uid) {
+    xmlCall("ppolicy.lockAccount", array($uid));
+}
+
 function unlockAccount($uid) {
     xmlCall("ppolicy.unlockAccount", array($uid));
 }
