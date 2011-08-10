@@ -39,7 +39,15 @@ global $errorStatus;
 
 // Class managing $_POST array
 if($_POST) {
-    $FH = new FormHandler($_POST);
+    // In case of errors get the last
+    // form and update its values with
+    // new values
+    if (isset($_SESSION['editUserFH'])) {
+        $FH = unserialize($_SESSION['editUserFH']);
+        $FH->updateValues(new FormHandler($_POST));
+    }
+    else
+        $FH = new FormHandler($_POST);
 }
 else {
     $FH = new FormHandler(array());
@@ -149,8 +157,18 @@ if ($_POST) {
                 }
             }
         }
-        if(!$error)
+        if(!$error) {
             $redirect = true;
+            /* Form submission ok
+               Remove any editUserForm from SESSION */
+            if (isset($_SESSION['editUserFH']))
+                unset($_SESSION['editUserFH']);
+        }
+    }
+    else {
+        /* In case of error, store the FormHandler
+           in session */
+        $_SESSION['editUserFH'] = serialize($FH);
     }
 }
 
@@ -165,9 +183,10 @@ if ($error) {
 if ($result) {
     $resultPopup->add('<div class="validCode">' . $result . '</div>');
 }
-// in case of modification/creation success, redirect to the index
+// in case of modification/creation success, redirect to the edit page
 if ($redirect)
-    header('Location: ' . urlStrRedirect("base/users/index"));
+    header('Location: ' . urlStrRedirect("base/users/edit", 
+        array("user" => $uid)));
 
 // in case of failure, set errorStatus to 0 in order to display the edit form
 $errorStatus = 0;

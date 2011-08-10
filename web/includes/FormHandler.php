@@ -1,7 +1,7 @@
-<?
+<?php
 
 /**
- * (c) 2010 Mandriva, http://www.mandriva.com
+ * (c) 2011 Mandriva, http://www.mandriva.com
  *
  * $Id$
  *
@@ -43,7 +43,9 @@ class FormHandler {
         echo '</pre>';*/
     }
 
-    /* Create array with updated fields from $_POST */
+    /* Create array with updated fields from $_POST
+       If the field_name != old_field_name store
+       the new value in $this->data */
     function sanitize() {
         // get all updated fields
         foreach($this->post_data as $name => $value) {
@@ -65,15 +67,15 @@ class FormHandler {
 
     /* Check if field has changed */
     function isUpdated($field) {
-        return (isset($this->data[$field]));
+        return isset($this->data[$field]);
     }
 
     /* Get updated value */
     function getValue($field) {
         if(isset($this->data[$field])) {
-            // Be sure to return an empty array
-            // if there is only an empty string in the array
-            // Needed for MultipleInput fields
+            /* Be sure to return an empty array
+               if there is only an empty string in the array.
+               Needed for MultipleInput fields */
             if (is_array($this->data[$field])) {
                 if (count($this->data[$field]) == 1 && !$this->data[$field][0]) {
                     return array();
@@ -83,6 +85,17 @@ class FormHandler {
         }
         else
             return false;
+    }
+    
+    /* Update values from another FH
+       In case of error, the second, third... $_POST
+       in mixed with the first $FH stored in session
+       so we know exactly what has been changed */
+    function updateValues($FH) {
+        foreach($FH->getValues() as $field => $value) {
+            $this->setValue($field, $value);
+            $this->setPostValue($field, $value);
+        }
     }
 
     /* Get all updated values */
@@ -128,27 +141,20 @@ class FormHandler {
     }
 
     /*
-     * Get value from $_POST or from the user LDAP detail
+     * Get value from $_POST or from the user LDAP detailled array
      * This is usefull in case of error in the user edit form
      * So we don't lost the user input
      * POST value is returned before the LDAP value (wanted/actual)
      */
     function getArrayOrPostValue($field, $type = "string") {
 
-        /*print_r($field);
-        echo "<br />";*/
-
         if ($type == "array") {
             $value = array('');
             if($this->getPostValue($field)) {
-                /*print_r($this->getPostValue($field));
-                echo "<br />";*/
                 $value = $this->getPostValue($field);
             }
             else if(isset($this->arr[$field])) {
                 $value = $this->arr[$field];
-                /*print_r($this->arr[$field]);
-                echo "<br />";*/
             }
         }
         else {
@@ -160,11 +166,6 @@ class FormHandler {
                 $value = $this->arr[$field][0];
             }
         }
-
-        /*echo "<br />";
-        print_r($value);
-        echo "<br />";
-        echo "<br />";*/
 
         return $value;
     }
