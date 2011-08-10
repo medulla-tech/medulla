@@ -18,11 +18,11 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 require("modules/base/includes/users.inc.php");
+require("includes/languages.php");
 
 function _base_enableUser($paramsArr) {
     return xmlCall("base.enableUser", $paramsArr);
@@ -196,7 +196,7 @@ function _base_changeUser($FH, $mode) {
         change_user_main_attr($uid, $uid, $FH->getValue('givenName'), $FH->getValue('sn'));
         
     foreach(array('title', 'mobile', 'facsimileTelephoneNumber', 'homePhone',
-        'cn', 'mail', 'displayName') as $attr) {
+        'cn', 'mail', 'displayName', 'preferredLanguage') as $attr) {
         if ($FH->isUpdated($attr))
             changeUserAttributes($uid, $attr, $FH->getValue($attr));
     }
@@ -339,6 +339,15 @@ function _base_baseEdit($FH, $mode) {
         array("value" => $FH->getArrayOrPostValue("homePhone"))
     );
 
+    $languages = new SelectItem("preferredLanguage");
+    $labels = array(_("Choose language")) + array_values(getLanguages());
+    $values = array("") + array_keys(getLanguages());
+    $languages->setElements($labels);
+    $languages->setElementsVal($values);
+    $f->add(
+        new TrFormElement(_("Preferred language"), $languages),
+        array("value" => $FH->getArrayOrPostValue("preferredLanguage"))
+    );
 
     $checked = "checked";
     if ($FH->getArrayOrPostValue("loginShell") != '/bin/false')
