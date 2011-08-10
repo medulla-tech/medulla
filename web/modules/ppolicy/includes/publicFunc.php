@@ -2,7 +2,7 @@
 
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2010 Mandriva, http://www.mandriva.com
+ * (c) 2007-2011 Mandriva, http://www.mandriva.com
  *
  * $Id$
  *
@@ -28,50 +28,39 @@ require_once("ppolicy-xmlrpc.php");
 require_once("ppolicy.inc.php");
 
 /**
- * Add form on edit user page
- *
+ * Form on user edit page
+ * @param $FH FormHandler of the page
+ * @param $mode add or edit mode
  */
-function _ppolicy_baseEdit($ldapArr, $postArr) {
+function _ppolicy_baseEdit($FH, $mode) {
 
-    # get current values
-    $pwdMinLength = isset($ldapArr["pwdMinLength"][0]) ? $ldapArr["pwdMinLength"][0] : "";
-    $pwdCheckQuality = isset($ldapArr["pwdCheckQuality"][0]) ? $ldapArr["pwdCheckQuality"][0] : "";
-    $pwdMinAge = isset($ldapArr["pwdMinAge"][0]) ? $ldapArr["pwdMinAge"][0] : "";
-    $pwdMaxAge = isset($ldapArr["pwdMaxAge"][0]) ? $ldapArr["pwdMaxAge"][0] : "";
-    $pwdGraceAuthNLimit = isset($ldapArr["pwdGraceAuthNLimit"][0]) ? $ldapArr["pwdGraceAuthNLimit"][0] : "";
-    $pwdInHistory = isset($ldapArr["pwdInHistory"][0]) ? $ldapArr["pwdInHistory"][0] : "";
-    $pwdLockout = isset($ldapArr["pwdLockout"][0]) ? $ldapArr["pwdLockout"][0] : "";
-    $pwdMustChange = isset($ldapArr["pwdMustChange"][0]) ? $ldapArr["pwdMustChange"][0] : "";
-    $pwdMaxFailure = isset($ldapArr["pwdMaxFailure"][0]) ? $ldapArr["pwdMaxFailure"][0] : "";
-    $pwdLockoutDuration = isset($ldapArr["pwdLockoutDuration"][0]) ? $ldapArr["pwdLockoutDuration"][0] : "";
+    $f = new DivForModule(_T("Password policy management", "ppolicy"), "#FDF");
 
-    $f = new DivForModule(_T("Password policy plugin", "ppolicy"), "#FDF");
-
-    $hasPPolicy = "";
-    $pwdReset = "";
-
-    if (isset($ldapArr['uid'][0])) {
-        if (hasPPolicyObjectClass($ldapArr['uid'][0])) {
-            $hasPPolicy = "checked";
+    // default values
+    $hasPPolicy = false;
+    $pwdReset = false;
+    
+    if ($mode == "edit") {
+        $uid =  $FH->getArrayOrPostValue('uid');
+        if (hasPPolicyObjectClass($uid)) {
+            $hasPPolicy = true;
         }
-        if (passwordHasBeenReset($ldapArr['uid'][0])) {
-            $pwdReset = "checked";
-        }
+        if (passwordHasBeenReset($uid)) {
+            $pwdReset = true;
+        }        
     }
 
     $f->push(new Table());
-    $f->add(
-            new TrFormElement(_T("Password reset flag", "ppolicy"),
-                              new CheckboxTpl("pwdReset"),
-                              array("tooltip" => _T("If checked, the user must change her password when she first binds to the LDAP directory after password is set or reset by a password administrator", "ppolicy"))),
-            array("value" => $pwdReset)
-            );
+    $f->add(new TrFormElement(_T("Password reset flag", "ppolicy"),
+        new CheckboxTpl("pwdReset"), array("tooltip" => _T("If checked, the user must change her password when she first binds to the LDAP directory after password is set or reset by a password administrator", "ppolicy"))),
+        array("value" => $pwdReset ? "checked" : "")
+    );
 
-    $f->add(
-        new TrFormElement(_T("Enable a specific password policy for this user", "ppolicy"), new CheckboxTpl("ppolicyactivated"),
-			      array("tooltip" => _T("You can enable a specific password policy for this user. If disabled, the default password policy is enforced.", "ppolicy"))),
-        array("value"=>$hasPPolicy, "extraArg"=>'onclick="toggleVisibility(\'ppolicydiv\');"')
-        );
+    $f->add(new TrFormElement(_T("Enable a specific password policy for this user", "ppolicy"), 
+        new CheckboxTpl("ppolicyactivated"), array("tooltip" => _T("You can enable a specific password policy for this user. If disabled, the default password policy is enforced.", "ppolicy"))),
+        array("value" => $hasPPolicy ? "checked" : "", 
+            "extraArg"=>'onclick="toggleVisibility(\'ppolicydiv\');"')
+    );
     $f->pop();
 
     $ppolicydiv = new Div(array("id" => "ppolicydiv"));
@@ -80,68 +69,58 @@ function _ppolicy_baseEdit($ldapArr, $postArr) {
 
     /* Password Policies Attributes List Section */
     $f->push(new Table());
+    
     $f->add(new TrFormElement(_T("Minimum length", "ppolicy"),
-                              new InputTpl("pwdMinLength",'/^[0-9]*$/'),
-                              array("tooltip" => ppolicyTips("pwdMinLength"))),
-            array("value"=>$pwdMinLength));
+        new InputTpl("pwdMinLength",'/^[0-9]*$/'),
+            array("tooltip" => ppolicyTips("pwdMinLength"))),
+        array("value" => $FH->getArrayOrPostValue("pwdMinLength"))
+    );
     $f->add(new TrFormElement(_T("Password quality check", "ppolicy"),
-                              new InputTpl("pwdCheckQuality",'/^[012]$/'),
-                              array("tooltip" => ppolicyTips("pwdCheckQuality"))),
-            array("value"=>$pwdCheckQuality));
-    $f->pop();
+        new InputTpl("pwdCheckQuality",'/^[012]$/'),
+            array("tooltip" => ppolicyTips("pwdCheckQuality"))),
+        array("value" => $FH->getArrayOrPostValue("pwdCheckQuality"))
+    );
+    $f->add(new TrFormElement(_T("Minimum age (seconds)", "ppolicy"),
+        new InputTpl("pwdMinAge",'/^[0-9]*$/'),
+            array("tooltip" => ppolicyTips("pwdMinAge"))),
+        array("value" => $FH->getArrayOrPostValue("pwdMinAge"))
+    );
+    $f->add(new TrFormElement(_T("Maximum age (second)", "ppolicy"),
+        new InputTpl("pwdMaxAge",'/^[0-9]*$/'),
+            array("tooltip" => ppolicyTips("pwdMaxAge"))),
+        array("value" => $FH->getArrayOrPostValue("pwdMaxAge"))
+    );
+    $f->add(new TrFormElement(_T("Number of grace authentications", "ppolicy"),
+        new InputTpl("pwdGraceAuthNLimit",'/^[0-9]*$/'),
+            array("tooltip" => ppolicyTips("pwdGraceAuthNLimit"))),
+        array("value" => $FH->getArrayOrPostValue("pwdGraceAuthNLimit"))
+    );
 
-    $f->push(new Table());
-
-    $f->add(new TrFormElement(_T("Minimum age (seconds)", "ppolicy"),new InputTpl("pwdMinAge",'/^[0-9]*$/'),
-                              array("tooltip" => ppolicyTips("pwdMinAge"))),
-                              array("value"=>$pwdMinAge));
-
-    $f->add(new TrFormElement(_T("Maximum age (second)", "ppolicy"),new InputTpl("pwdMaxAge",'/^[0-9]*$/'),
-			      array("tooltip" => ppolicyTips("pwdMaxAge"))),
-                              array("value"=>$pwdMaxAge));
-
-    $f->add(new TrFormElement(_T("Number of grace authentications", "ppolicy"),new InputTpl("pwdGraceAuthNLimit",'/^[0-9]*$/'),
-                              array("tooltip" => ppolicyTips("pwdGraceAuthNLimit"))),
-            array("value"=>$pwdGraceAuthNLimit));
-
-
-    $f->pop();
-
-    $f->push(new Table());
-
-    if (strcmp($pwdMustChange, 'TRUE') == 0) {
-        $pwdMustChange = "checked";
-    } else {
-        $pwdMustChange = "";
-    }
-
-    $f->add(new TrFormElement(_T("Force user to change her password on the first connection ?", "ppolicy"), new CheckboxTpl("pwdMustChange"),
-                              array("tooltip" => ppolicyTips("pwdMustChange"))),
-            array("value" => $pwdMustChange));
-    $f->pop();
-
-
-    $f->push(new Table());
-
+    $pwdMustChange = false;
+    if ($FH->getArrayOrPostValue("pwdMustChange") == 'TRUE' ||
+        $FH->getArrayOrPostValue("pwdMustChange") == 'on')
+        $pwdMustChange = true;
+    $f->add(new TrFormElement(_T("Force user to change her password on the first connection ?", "ppolicy"), 
+        new CheckboxTpl("pwdMustChange"),
+            array("tooltip" => ppolicyTips("pwdMustChange"))),
+        array("value" => $pwdMustChange ? "checked" : "")
+    );
+            
     $f->add(new TrFormElement(_T("Password history", "ppolicy"),
-                              new InputTpl("pwdInHistory",'/^[0-9]*$/'),
-                              array("tooltip" => ppolicyTips("pwdInHistory"))),
-            array("value"=>$pwdInHistory));
+        new InputTpl("pwdInHistory",'/^[0-9]*$/'),
+            array("tooltip" => ppolicyTips("pwdInHistory"))),
+        array("value" => $FH->getArrayOrPostValue("pwdInHistory"))
+    );
 
-    $f->pop();
-
-
-    $f->push(new Table());
-
-    if (strcmp($pwdLockout,'TRUE') == 0) {
-        $pwdLockout = "checked";
-    } else {
-        $pwdLockout = "";
-    }
-
-    $f->add(new TrFormElement(_T("Preventive user lockout ?", "ppolicy"), new CheckboxTpl("pwdLockout"),
-                              array("tooltip" => ppolicyTips("pwdLockout"))),
-            array("value" => $pwdLockout,"extraArg"=>'onclick="toggleVisibility(\'lockoutdiv\');"'));
+    $pwdLockout = false;
+    if ($FH->getArrayOrPostValue("pwdLockout") == 'TRUE' ||
+        $FH->getArrayOrPostValue("pwdLockout") == 'on')
+        $pwdLockout = true;
+    $f->add(new TrFormElement(_T("Preventive user lockout ?", "ppolicy"),
+        new CheckboxTpl("pwdLockout"),
+            array("tooltip" => ppolicyTips("pwdLockout"))),
+        array("value" => $pwdLockout ? "checked" : "",
+            "extraArg"=>'onclick="toggleVisibility(\'lockoutdiv\');"'));
     $f->pop();
 
     $lockoutdiv = new Div(array("id" => "lockoutdiv"));
@@ -149,53 +128,72 @@ function _ppolicy_baseEdit($ldapArr, $postArr) {
     $f->push($lockoutdiv);
 
     $f->push(new Table());
-    $f->add(new TrFormElement(_("Password maximum failure"),new InputTpl("pwdMaxFailure",'/^[0-9]*$/'),
-                              array("tooltip" => ppolicyTips("pwdMaxFailure"))),
-            array("value"=>$pwdMaxFailure));
+    
+    $f->add(new TrFormElement(_("Password maximum failure"),
+        new InputTpl("pwdMaxFailure",'/^[0-9]*$/'),
+            array("tooltip" => ppolicyTips("pwdMaxFailure"))),
+        array("value" => $FH->getArrayOrPostValue("pwdMaxFailure"))
+    );
 
-    $f->add(new TrFormElement(_("Lockout duration (seconds)"),new InputTpl("pwdLockoutDuration",'/^[0-9]*$/'),
-                              array("tooltip" => ppolicyTips("pwdLockoutDuration"))),
-                              array("value"=>$pwdLockoutDuration));
+    $f->add(new TrFormElement(_("Lockout duration (seconds)"),
+        new InputTpl("pwdLockoutDuration",'/^[0-9]*$/'),
+            array("tooltip" => ppolicyTips("pwdLockoutDuration"))),
+        array("value" => $FH->getArrayOrPostValue("pwdLockoutDuration"))
+    );
 
     $f->pop();
     $f->pop();
     $f->pop();
 
-    $f->display();
+    return $f;
 }
 
 
 /**
- * Check ppolicy information
- * @param $postArr $_POST array of the page
+ * Function called before changing user attributes
+ * @param $FH FormHandler of the page
+ * @param $mode add or edit mode
  */
-function _ppolicy_verifInfo($postArr) {
-    if (isset($postArr["ppolicyactivated"])) {
-        /* check Valide attributes rules */
-        if ( $postArr["pwdMinAge"] != null && $postArr["pwdMaxAge"] != null &&              /* if attributes exists */
-             $postArr["pwdMinAge"] != 0 && $postArr["pwdMaxAge"] != 0 &&                    /* if attributes are not deactivated */
-             $postArr["pwdMinAge"] > $postArr["pwdMaxAge"] ) {                              /* if they have authorized values */
-            global $error;
-            $error .= _T("\"Maximum age\" must be greater than \"Minimum age\".", "ppolicy") . "<br />";
-            setFormError("ppolicy");
+function _ppolicy_verifInfo($FH, $mode) {
+
+    global $error;
+    
+    $ppolicy_errors = "";
+
+    if ($FH->getPostValue("ppolicyactivated")) {
+        if ($FH->isUpdated("pwdMaxAge") or $FH->isUpdated("pwdMinAge")) {
+            $max = $FH->getPostValue("pwdMaxAge");
+            $min = $FH->getPostValue("pwdMinAge");
+            if ($min && $max && $min > $max) {
+                $ppolicy_errors = _T('"Maximum age" must be greater than "Minimum age".', 'ppolicy') . "<br />";
+                setFormError("pwdMinAge");
+            }
         }
     }
+    
+    $error .= $ppolicy_errors;
+
+    return $ppolicy_errors ? 1 : 0;
 }
 
 /**
- * function call when you submit change on a user
- * @param $FH FormHandler class of the page
+ * Function called for changing user attributes
+ * @param $FH FormHandler of the page
+ * @param $mode add or edit mode
  */
-function _ppolicy_changeUser($FH) {
+function _ppolicy_changeUser($FH, $mode) {
+
+    $uid = $FH->getPostValue("uid");
     $ppolicyattr = getPPolicyAttributesKeys();
     $updated = False;
+    
     if ($FH->getPostValue("ppolicyactivated")) {
-        if (!hasPPolicyObjectClass($FH->getPostValue("nlogin"))) {
-            addPPolicyObjectClass($FH->getPostValue("nlogin"));
+        if (!hasPPolicyObjectClass($uid)) {
+            addPPolicyObjectClass($uid);
             $updated = True;
         }
 
-        $detailArr = getDetailedUser($FH->getPostValue("nlogin"));
+        $detailArr = getDetailedUser($uid);
         _ppolicy_completeUserEntry($detailArr);
         foreach ($ppolicyattr as $key => $info) { // foreach the list of Supported Attributes
             // check if the value has been updated
@@ -203,44 +201,47 @@ function _ppolicy_changeUser($FH) {
                 // checkboxes
                 if ($info[1] == "bool") {
                     if($FH->getValue($key) == "off") {
-                        setUserPPolicyAttribut($FH->getPostValue("nlogin"),$key,'FALSE');
+                        setUserPPolicyAttribut($uid,$key,'FALSE');
                         $action = _('disabled');
                     } else {
-                        setUserPPolicyAttribut($FH->getPostValue("nlogin"),$key,'TRUE');
+                        setUserPPolicyAttribut($uid,$key,'TRUE');
                         $action = _('enabled');
                     }
                 }
                 // other ppolicy attributes
                 else {
-                    setUserPPolicyAttribut($FH->getPostValue("nlogin"), $key, $FH->getValue($key));
+                    setUserPPolicyAttribut($uid, $key, $FH->getValue($key));
                 }
                 $updated = True;
             }
         }
     } else {
         /* if ppolicy plugin is unchecked */
-        if (hasPPolicyObjectClass($FH->getPostValue("nlogin"))) {
-            removePPolicyObjectClass($FH->getPostValue("nlogin"));
+        if (hasPPolicyObjectClass($uid)) {
+            removePPolicyObjectClass($uid);
         }
         /* Handle special pwdReset case, which doesn't require the PPolicy
            object class */
         if ($FH->isUpdated('pwdReset')) {
             if($FH->getValue('pwdReset') == "off") {
-                setUserPPolicyAttribut($FH->getPostValue("nlogin"),
+                setUserPPolicyAttribut($uid,
                                        'pwdReset', 'FALSE');
                 $action = _('disabled');
             } else {
-                setUserPPolicyAttribut($FH->getPostValue("nlogin"),
+                setUserPPolicyAttribut($uid,
                                        'pwdReset', 'TRUE');
                 $action = _('enabled');
             }
             $updated = True;
         }
     }
+    
     if ($updated) {
         global $result;
-        $result .= "<br/>". _T("Password policy attributes updated.", "ppolicy") ."<br>";
+        $result .= _T("Password policy attributes updated.", "ppolicy") . "<br />";
     }
+    
+    return 0;
 }
 
 function _ppolicy_completeUserEntry(&$entry) {
