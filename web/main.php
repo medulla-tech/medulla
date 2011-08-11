@@ -69,7 +69,7 @@ function autoInclude() {
     /* Check filter info */
     // we must be in a ajax call
     if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) and
-       $_SERVER['HTTP_X_REQUESTED_WITH'] == "XMLHttpRequest" and 
+       $_SERVER['HTTP_X_REQUESTED_WITH'] == "XMLHttpRequest" and
        isset($_GET['filter'])) {
         // get the page who called us
         preg_match('/module=([^&]+)/', $_SERVER["HTTP_REFERER"], $matches);
@@ -81,20 +81,20 @@ function autoInclude() {
         if(isset($matches[1]))
             $submod = $matches[1];
         else
-            $submod = "default";            
+            $submod = "default";
         preg_match('/action=([^&]+)/', $_SERVER["HTTP_REFERER"], $matches);
         if(isset($matches[1]))
             $action = $matches[1];
         else
-            $action = "default";            
+            $action = "default";
         preg_match('/tab=([^&]+)/', $_SERVER["HTTP_REFERER"], $matches);
         if(isset($matches[1]))
             $tab = $matches[1];
         else
             $tab = "default";
-                        
+
         // store the filter
-        if(isset($_GET['start']))
+        if(isset($_GET['filter']))
             $_SESSION[$module."_".$submod."_".$action."_".$tab."_filter"] = $_GET['filter'];
         // store pagination info
         if(isset($_GET['maxperpage']))
@@ -103,7 +103,7 @@ function autoInclude() {
             $_SESSION[$module."_".$submod."_".$action."_".$tab."_start"] = $_GET['start'];
         if(isset($_GET['end']))
             $_SESSION[$module."_".$submod."_".$action."_".$tab."_end"] = $_GET['end'];
-        
+
         unset($module);
         unset($submod);
         unset($action);
@@ -138,7 +138,7 @@ function autoInclude() {
         echo "</script>\n";
         return;
     }
-    
+
     /* Warn user once at login if her account is expired. */
     if (in_array("ppolicy", $_SESSION["supportModList"])) {
         require_once("modules/ppolicy/default/warnuser.php");
@@ -158,7 +158,7 @@ function autoInclude() {
     if (!isNoHeader($__module, $__submod, $__action)) {
         require_once("graph/footer.inc.php");
     }
-   
+
 }
 
 
