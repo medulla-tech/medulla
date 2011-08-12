@@ -35,3 +35,4 @@ services/init.d/pulse2-scheduler
 services/src/.deps/
 services/src/pulse2-imaging-server
 services/pulse2/site.py
+doc/DocumentConverter.py

@@ -162,6 +162,7 @@ AC_OUTPUT
 
 dnl Fetch 3rd-party sources
 make -C services/3rd_party configure
+make -C doc DocumentConverter.py
 
 dnl Warn user sysconfdir is not /etc, if necessary.
 make confwarning

@@ -22,6 +22,12 @@
 #
 SUBDIRS = man user
 
+EXTRA_DIST = DocuementConverter.py
+MAINTAINERCLEANFILES = DocumentConverter.py
+
+DocumentConverter.py:
+	wget -O $@ http://www.artofsolving.com/files/DocumentConverter.py
+
 ###
 ### TODO: Old rules, to be automake'd
 ###
@@ -45,3 +51,5 @@ tar: build
 
 clean-local:
 	rm -fr build
+
+.PHONY: html tar

@@ -23,3 +23,27 @@
 doc_DATA = \
 	Pulse2-User-Manual-FR.pdf \
 	Pulse2-User-Manual-EN.pdf
+
+MAINTAINERCLEANFILES = \
+	Pulse2-User-Manual-FR.pdf \
+	Pulse2-User-Manual-EN.pdf
+
+odt2pdf = $(PYTHON) $(top_srcdir)/doc/DocumentConverter.py
+
+%.pdf: %.odt
+	$(MAKE) start_lo
+	$(odt2pdf) $< $@
+
+start_lo:
+	if ! netstat -napt 2>&1 | grep -q soffice.bin; then \
+	  soffice -accept="socket,port=8100;urp;" -headless -nofirststartwizard; \
+	  sleep 5; \
+	fi
+
+kill_lo:
+	pid=$(shell netstat -napt 2>&1 | awk '/soffice.bin/ { print $$7 }' | sed -e 's#/.*$$##'); \
+	  if test -n "$$pid"; then \
+	    kill $$pid; \
+	  fi
+
+.PHONY: start_lo kill_lo
