@@ -18,9 +18,10 @@ properly:
   - sqlalchemy
   - mysqldb
 - OpenSSH client
-- iptutils (ping)
+- iputils (ping)
 - perl, with the following modules:
   - syslog
+- gettext
 - NFS server (for imaging)
 
 Furthermore, the following services must be accessible, either on the local
