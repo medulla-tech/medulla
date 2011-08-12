@@ -429,6 +429,69 @@ enablessl = 1
             <entry>yes</entry>
             <entry>0</entry>
           </row>
+          <row>
+            <entry>web_def_local_proxy_mode</entry>
+            <entry>Default proxy mode, defaut "multiple", other possible value "single".</entry>
+            <entry>yes</entry>
+            <entry>multiple</entry>
+          </row>
+          <row>
+            <entry>web_def_max_clients_per_proxy</entry>
+            <entry>Max number of clients per proxy in proxy mode.</entry>
+            <entry>yes</entry>
+            <entry>10</entry>
+          </row>
+          <row>
+            <entry>web_def_proxy_number</entry>
+            <entry>Number of auto-selected proxy in semi-auto mode.</entry>
+            <entry>yes</entry>
+            <entry>2</entry>
+          </row>
+          <row>
+            <entry>web_def_proxy_selection_mode</entry>
+            <entry>Default mode (semi_auto / manual).</entry>
+            <entry>yes</entry>
+            <entry>semi_auto</entry>
+          </row>
+          <row>
+            <entry>vnc_show_icon</entry>
+            <entry>May the VNC applet used ? (this setting simply (en/dis)able the display of the VNC action button)</entry>
+            <entry>yes</entry>
+            <entry>True</entry>
+          </row>
+          <row>
+            <entry>vnc_view_only</entry>
+            <entry>Allow user to interact with remote desktop</entry>
+            <entry>yes</entry>
+            <entry>False</entry>
+          </row>
+          <row>
+            <entry>vnc_network_connectivity</entry>
+            <entry>Use the following VNC client pre-defined rules,
+	     currently available profiles:
+	     <itemizedlist>
+	       <listitem>fiber: for high speed local networks (low latency, 10 Mb/s per connection)</listitem>
+	       <listitem>lan: for 100 Mb local networks (low latency, 3 Mb/s per connection)</listitem>
+	       <listitem>cable: for high-end broadband links (high latency, 400 kb/s per connection)</listitem>
+	       <listitem>dsl: for low-end broadband links (high latency, 120 kb/s per connection)</listitem>
+	       <listitem>isdn: (high latency, 75 kb/s)</listitem>
+	     </itemizedlist>
+	    </entry>
+            <entry>yes</entry>
+            <entry>lan</entry>
+          </row>
+          <row>
+            <entry>vnc_allow_user_control</entry>
+            <entry>Display applet control to user</entry>
+            <entry>yes</entry>
+            <entry>False</entry>
+          </row>
+          <row>
+            <entry>vnc_port</entry>
+            <entry>The port to use to connect to a VNC</entry>
+            <entry>yes</entry>
+            <entry>5900</entry>
+          </row>
         </tbody>
       </tgroup>
     </table>
