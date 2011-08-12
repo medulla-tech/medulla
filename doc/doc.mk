@@ -20,12 +20,36 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-doc_DATA = \
-	Pulse2-User-Manual-FR.pdf \
-	Pulse2-User-Manual-EN.pdf
+od2pdf = $(PYTHON) $(top_srcdir)/doc/DocumentConverter.py
 
-MAINTAINERCLEANFILES = \
-	Pulse2-User-Manual-FR.pdf \
-	Pulse2-User-Manual-EN.pdf
+%.pdf: %.odt
+%.pdf: %.odg
+	$(MAKE) start_lo
+	$(od2pdf) $< $@
 
-include $(srcdir)/../doc.mk
+%.png: %.pdf
+	convert $< $@
+
+start_lo:
+	if ! netstat -napt 2>&1 | grep -q soffice.bin; then \
+	  soffice -accept="socket,port=8100;urp;" -headless -nofirststartwizard; \
+	  sleep 5; \
+	fi
+
+kill_lo:
+	pid=$(shell netstat -napt 2>&1 | awk '/soffice.bin/ { print $$7 }' | sed -e 's#/.*$$##'); \
+	  if test -n "$$pid"; then \
+	    kill $$pid; \
+	  fi
+
+%.html: %.xml docbook-xhtml.xsl
+	xsltproc --nonet --output $@ $(top_srcdir)/doc/docbook-xhtml.xsl $<
+
+DocumentConverter.py:
+	wget -O $@ http://www.artofsolving.com/files/DocumentConverter.py
+
+tar:
+	$(MAKE) distdir distdir=build
+	cd build && tar czf ../pulse2-doc.tar.gz .
+
+.PHONY: start_lo kill_lo

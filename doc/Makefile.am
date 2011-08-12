@@ -22,34 +22,50 @@
 #
 SUBDIRS = man user
 
-EXTRA_DIST = DocuementConverter.py
-MAINTAINERCLEANFILES = DocumentConverter.py
+docsrc = \
+	dev/imaging/en/workflow.xml \
+	dev/imaging/en/client_content.xml \
+	dev/imaging/en/pmrpc.xml \
+	dev/imaging/en/image_content.xml \
+	dev/inventory/en/database_documentation.xml \
+	dev/msc/en/database_documentation.xml \
+	dev/dyngroup/en/database_documentation.xml \
+	user/msc/en/pulse2_client_check_explained.xml \
+	user/msc/en/pulse2_deployment_error_codes_explained.xml \
+	user/msc/fr/pulse2_deployment_error_codes_explained.xml \
+	conf/en/mmc-python-plugin-glpi-configuration.xml \
+	conf/en/mmc-python-plugin-inventory-configuration.xml \
+	conf/en/pulse2-inventory-server-configuration.xml \
+	conf/en/pulse2-package-server-configuration.xml \
+	conf/en/mmc-python-plugin-imaging-configuration.xml \
+	conf/en/mmc-python-plugin-msc-configuration.xml \
+	conf/en/pulse2-scheduler-configuration.xml \
+	conf/en/pulse2-launcher-configuration.xml \
+	conf/en/mmc-python-plugin-dyngroup-configuration.xml \
+	conf/en/pulse2-imaging-server-configuration.xml \
+	conf/en/mmc-python-plugin-pkgs-configuration.xml \
+	conf/en/mmc-python-plugin-pulse2-configuration.xml
 
-DocumentConverter.py:
-	wget -O $@ http://www.artofsolving.com/files/DocumentConverter.py
 
-###
-### TODO: Old rules, to be automake'd
-###
-PULSE2_FOLDERS=conf dev install user
+docpng = \
+	dev/inventory/en/database_schema.png \
+	dev/msc/en/database_schema.png \
+	dev/dyngroup/en/database_schema.png \
+	user/msc/en/Deploy_using_MSC-Push_Pull-EN.png \
+	user/msc/en/Deploy_using_MSC-Local_Proxy-EN.png \
+	user/msc/en/Deploy_using_MSC-Push-EN.png \
+	user/msc/en/Deploy_using_MSC-EN.png \
+	user/msc/fr/Deploy_using_MSC-Local_Proxy-FR.png \
+	user/msc/fr/Deploy_using_MSC-Push-FR.png \
+	user/msc/fr/Deploy_using_MSC-Push_Pull-FR.png \
+	user/msc/fr/Deploy_using_MSC-FR.png
 
-html:
-	mkdir build
-	cp -r $(PULSE2_FOLDERS) build
-	-find build -name .svn -exec rm -fr {} \;
-	for f in `find build -name \*xml`; do \
-		echo $$f; \
-		xmlto -o `dirname $$f` -m param.html.xsl xhtml-nochunks $$f; \
-		rm -f $$f; \
-		tidy -utf8 $${f%.xml}.html > $${f%.xml}.prehtml; \
-		./mandrify $${f%.xml}.prehtml $${f%.xml}.html; \
-		rm -f $${f%.xml}.prehtml; \
-	done
+dochtml = $(patsubst %.xml,%.html,$(docsrc))
 
-tar: build
-	(cd build; tar czf ../pulse2-doc.tar.gz $(PULSE2_FOLDERS))
+nobase_doc_DATA = $(dochtml)
 
-clean-local:
-	rm -fr build
+EXTRA_DIST = DocumentConverter.py $(dochtml) $(docpng)
 
-.PHONY: html tar
+MAINTAINERCLEANFILES = DocumentConverter.py $(dochtml)
+
+include $(top_srcdir)/doc/doc.mk
