@@ -22,7 +22,7 @@ AC_PREREQ(2.59)
 
 dnl autoconf initialization
 define([project], [pulse2])
-define([gitversion], esyscmd([sh -c "which git > /dev/null && git describe | sed -e 's/]project[-\([^-]\+\)//' | tr -d '\n' || true"]))dnl
+define([gitversion], esyscmd([sh -c "which git > /dev/null 2>&1 && git describe | sed -e 's/]project[-\([^-]\+\)//' | tr -d '\n' || true"]))dnl
 AC_INIT(project, [1.3.1]gitversion, [http://www.mandriva.com])
 AC_DEFINE(GITVERSION, "gitversion", [Git version])
 
