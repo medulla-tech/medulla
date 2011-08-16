@@ -132,11 +132,7 @@ def activate():
     for ou in ous:
         head, path = ou.split(",", 1)
         ouName = head.split("=")[1]
-        try:
-            ldapObj.addOu(ouName, path)
-            logger.info("Created OU " + ou)
-        except ldap.ALREADY_EXISTS:
-            pass
+        ldapObj.addOu(ouName, path)
 
     # Issue a warning if the default user group doesn't exist
     if not ldapObj.existGroup(ldapObj.defaultUserGroup):
