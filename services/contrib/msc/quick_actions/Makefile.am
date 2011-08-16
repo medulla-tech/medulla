@@ -20,20 +20,16 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-SUBDIRS = sql quick_actions
+qadir = $(localstatedir)/lib/pulse2/qactions
+qa_DATA = \
+	001reboot.msc \
+	002shutdown.msc \
+	006run_inventory_win32.msc \
+	007wake_on_lan.msc
 
-dist_sbin_SCRIPTS = pulse2-msc-clean-database
-
-EXTRA_DIST = pulse2-msc-clean-database.README \
-	analysis/command_evolution_from_coh_table.py \
-	analysis/scheduler_health_using_logs.py \
-	analysis/command_evolution_using_logs.py \
-	analysis/command_evolution_from_history_table.py \
-	quick_actions/104mdv_test_sleep_1minute.msc \
-	quick_actions/001reboot.msc \
-	quick_actions/101mdv_test_utf8.msc \
-	quick_actions/002shutdown.msc \
-	quick_actions/007wake_on_lan.msc \
-	quick_actions/103mdv_test_demux.msc \
-	quick_actions/102mdv_test_blocking.msc \
-	quick_actions/006run_inventory_win32.msc
+qaexamplesdir = $(docdir)/qactions
+qaexamples_DATA = \
+	101mdv_test_utf8.msc \
+	102mdv_test_blocking.msc \
+	103mdv_test_demux.msc \
+	104mdv_test_sleep_1minute.msc
