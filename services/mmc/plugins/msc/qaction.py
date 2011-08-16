@@ -21,16 +21,23 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+"""
+Qaction represents a qaction file
+"""
+
 import re
 import os
 import logging
 import dircache
 from mmc.plugins.msc.config import MscConfig
 
+log = logging.getLogger()
+
 class Qaction:
     keywords = ['command', 'titlefr', 'titleuk']
+    r_qaction = re.compile(r'^\s*(?P<key>\S+)\s*=\s*(?P<value>.*)$')
+
     def __init__(self, filename):
-        self.logger = logging.getLogger()
         self.filename = filename
         self.fullfilename = os.path.join(MscConfig().qactionspath, filename)
         self.result = {}
@@ -49,17 +56,13 @@ class Qaction:
 
     def _parse(self):
         f = open(self.fullfilename, 'r')
-        p1 = re.compile('=')
 
         for line in f:
-            kw = p1.split(line)
-            if len(kw) == 2:
-                self.result[kw[0]] = kw[1]
-            elif len(kw) >= 3 and kw[0] in self.keywords:
-                ind = kw[0]
-                kw.remove(ind)
-                self.result[ind] = '='.join(kw)
-
+            m = self.r_qaction.match(line)
+            if m:
+                self.result[m.group('key')] = m.group('value')
+            else:
+                log.debug('Ignore qaction line: %s' % line)
         f.close()
 
 def qa_list_files():
