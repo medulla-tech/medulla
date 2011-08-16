@@ -270,7 +270,9 @@ def remote_delete(command_id, client, files_list, mode, wrapper_timeout):
         # Build "exec" command
         # The permissions need to be modified, else the directory can't be
         # deleted.
-        real_command = ['chown', 'SYSTEM.SYSTEM', '"%s"' % target_path, ';']
+        real_command = ['if', 'id', 'SYSTEM', '>', '/dev/null', ';', 'then']
+        real_command += ['chown', 'SYSTEM.SYSTEM', '"%s"' % target_path, ';']
+        real_command += ['fi', ';']
 
         if LauncherConfig().is_smart_cleaner_available:
             real_command += ['if', '[', '-x', LauncherConfig().smart_cleaner_path, ']', ';']
