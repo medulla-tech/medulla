@@ -839,7 +839,7 @@ class LdapUserGroupControl:
         """
         ident = 'uid=' + uid + ',' + self.baseUsersDN
         r = AF().log(PLUGIN_NAME, AA.BASE_ADD_USER, [(ident, AT.USER)])
-        
+
         # Get the homeDir path
         homeDir = self.getHomeDir(uid, homeDir)
         uidNumber = self.maxUID() + 1
@@ -953,20 +953,20 @@ class LdapUserGroupControl:
             if ahome in home:
                 return True
         return False
-        
+
     def getDefaultShells(self):
         return {'enabledShell': self.defaultShellEnable,
             'disabledShell': self.defaultShellDisable }
-        
+
     def getHomeDir(self, uid, homeDir = None):
         """
         Check if home directory can be created
         Returns path
-        
+
         @param home: the home directory path.
         @type home: str
         """
-        
+
         # Make a home string if none was given
         if not homeDir: homeDir = os.path.join(self.defaultHomeDir, uid)
         if not self.isAuthorizedHome(os.path.realpath(homeDir)):
@@ -1881,6 +1881,7 @@ class LdapUserGroupControl:
 
         try:
             self.l.add_s(addrdn, attributes)
+            self.logger.info("Created OU " + addrdn)
             r.commit()
         except ldap.ALREADY_EXISTS:
             r.commit()
@@ -2536,4 +2537,3 @@ class SubscriptionManager(Singleton):
 
     def isCommunity(self):
         return not self.config.is_subscribe_done
-
