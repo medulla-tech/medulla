@@ -79,6 +79,9 @@ edit = sed -e 's|@installername[@]|$(installer_name)|g'
 
 all: $(agents_pack)
 
+path:
+	@echo $(agents_pack)
+
 $(agents_pack): $(sfxmod) sfx.conf base.7z $(key)  
 	$(7z) a base.7z $(key)
 	cat $(sfxmod) sfx.conf base.7z > $@
@@ -101,7 +104,7 @@ $(key):
 	  false; \
 	fi
 
-sfx.conf: sfx.conf.in Makefile
+sfx.conf: sfx.conf.in win32.mk
 	$(edit) < $< > $@
 
 $(sfxmod):

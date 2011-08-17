@@ -1,3 +1,4 @@
+#!/bin/sh -e
 # (c) 2011 Mandriva, http://www.mandriva.com
 #
 # $Id$
@@ -20,24 +21,33 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-clientsdir = $(localstatedir)/lib/pulse2/clients/win32
-clients_SCRIPTS = build.sh
-clients_DATA = sfx.conf.in win32.mk 7zsd.sfx \
-	remote-desktop-agent.reg remote-desktop-agent-vnc2.reg
+topdir=$(dirname $0)
 
-EXTRA_DIST = win32.mk.in
-CLEANFILES = win32.mk
+usage ()
+{
+    echo "$0: path_to_key.pub"
+}
 
-edit = sed \
-	-e 's|@VERSION[@]|$(VERSION)|g' \
-        -e 's|@localstatedir[@]|$(localstatedir)|g'
+abspath ()
+{
+    path=$1
+    dir=$(cd $(dirname ${path}) && pwd)
+    name=$(basename ${path})
+    echo ${dir}/${name}
+}
 
-win32.mk: Makefile
-	rm -f $@ $@.tmp
-	$(MKDIR_P) $(@D)
-	srcdir=''; \
-	  test -f ./$@.in || srcdir=$(srcdir)/; \
-	  $(edit) $${srcdir}$@.in >$@.tmp
-	mv $@.tmp $@
+if [ $# != 1 ]; then
+    usage
+    exit 0
+fi
 
-win32.mk: win32.mk.in
+key=$(abspath $1)
+
+make -C ${topdir} -f win32.mk KEY_PATH=${key}
+
+if [ "${topdir}" != "$(pwd)" ]; then
+    packpath=$(make -s -C ${topdir} -f win32.mk path)
+    cp ${topdir}/${packpath} .
+fi
+
+exit 0

@@ -45,3 +45,12 @@ The following options can be used:
 
 `--confdir=DIR'
    Path to configuration directory. Default to /etc/mmc
+
+Pulse2 clients
+==============
+
+* Win32:
+  A complete win32 client agent pack can be built with the script 
+  /var/lib/pulse2/clients/win32/build.sh
+
+  It takes as only argument path to the ssh public key to include into the pack.
