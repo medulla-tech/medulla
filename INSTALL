@@ -11,7 +11,7 @@ without warranty of any kind.
 Pre-requisites
 ==============
 
-The following tools are needed in order for Pule2 to install and run
+The following tools are needed in order for Pulse2 to install and run
 properly:
 - mmc-core framework
 - python >= 2.5, with the following modules:
@@ -23,6 +23,7 @@ properly:
   - syslog
 - gettext
 - NFS server (for imaging)
+- 7z (for win32 client generation)
 
 Furthermore, the following services must be accessible, either on the local
 machine or through the network:
