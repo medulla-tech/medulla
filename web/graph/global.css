@@ -710,7 +710,7 @@ li.previousList a {
 }
 
 li.previousList a:hover {
-	background-image: url("../img/common/icn_previous_ro.gif");	
+	background-image: url("../img/common/icn_previous_ro.gif");
 }
 
 li.previousListInactive {
@@ -763,9 +763,9 @@ span.pagination {
 
 span.pagination input, span.pagination select {
     border: 1px solid #888;
-    font-size: 9px;    
+    font-size: 9px;
     color: #777;
-    background: white;    
+    background: white;
 }
 
 /* ---------------------------------------- */
@@ -1027,6 +1027,16 @@ li.empty a {
 	border-top: 0px;
 }
 
+
+#section table.membersTpl {
+    width: auto;
+}
+
+#section table.membersTpl td {
+    border: none;
+    padding-left: 0px;
+}
+
 .none {
 
 	border-width: 0 0 0px 0;
@@ -1235,7 +1245,7 @@ select {
         color: #CCC;
 }
 
-.textfield {
+.textfield, select {
 	font: 13px Arial, verdana, sans-serif;
 	margin-top: 0px;
 	margin-bottom: 0px;
@@ -1307,7 +1317,7 @@ select {
     background-color: #EEE;
     width: 95%;
 }
- 
+
 .searchtools {
     position: absolute;
     right: 7%;
@@ -1350,7 +1360,7 @@ select {
 #Location {
     padding: 0px;
     padding-top: 5px;
-    padding-bottom: 5px;    
+    padding-bottom: 5px;
 }
 
 #Location #searchSpan {

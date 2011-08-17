@@ -675,11 +675,10 @@ class MembersTpl extends AbstractTpl {
         }
 
         echo '
-    <table style="border: none;" cellspacing="0">
+    <table class="membersTpl">
     <tr>
-        <td style="border: none;">
-        <div class="list">
-        <h4>' . $this->titleLeft . '</h4>';
+        <td class="membersTplMembers">
+            <h4>' . $this->titleLeft . '</h4>';
         if ($this->member) {
             foreach ($this->member as $id=>$name)
                 echo '<input type="hidden" name="old_' . $this->name .'[]" value="' . $name . '" />';
@@ -693,11 +692,8 @@ class MembersTpl extends AbstractTpl {
             echo '<option value="' . $id . '">' . $name . '</option>';
         echo '
             </select>
-            <br />
-        </div>
         </td>
-        <td style="border: none;">
-        <div>
+        <td class="membersTplSwitchs">
             <a href="#" onclick="switch_' . $this->name .'(\'available_'.$this->name.'\', \''.$this->name.'\'); return false;">
                 <img style="padding: 5px;" src="img/common/icn_arrowleft.gif" value="<--" />
             </a>
@@ -705,19 +701,14 @@ class MembersTpl extends AbstractTpl {
             <a href="#" onclick="switch_' . $this->name .'(\''.$this->name.'\', \'available_'.$this->name.'\'); return false;">
                 <img style="padding: 5px;" src="img/common/icn_arrowright.gif" value = "-->" />
             </a>
-        </div>
         </td>
-        <td style="border: none;">
-        <div class="list" style="padding-left: 10px;">
-        <h4>' . $this->titleRight . '</h4>
+        <td class="membersTplAvailable">
+            <h4>' . $this->titleRight . '</h4>
             <select multiple size="15" class="list" name="available_' . $this->name .'[]" id="available_' . $this->name .'">';
         foreach ($this->available as $id=>$name)
             echo '<option value="' . $id . '">' . $name . '</option>';
         echo '
             </select>
-            <br />
-        </div>
-        <div class="clearer"></div>
         </td>
     </tr>
     </table>
