@@ -16,6 +16,19 @@
     </copyright>
     <revhistory>
       <revision>
+        <revnumber>1.3.1</revnumber>
+        <date>2011-08-17</date>
+        <authorinitials>JP</authorinitials>
+        <revdescription>
+          <itemizedlist>
+            <listitem>
+              <para>Update default ssh key from /root/.ssh/id_dsa.pub
+              to /root/.ssh/id_dsa.pub</para>
+            </listitem>
+          </itemizedlist>
+        </revdescription>
+      </revision>
+      <revision>
         <revnumber>1.2.4</revnumber>
         <date>2009-09-21</date>
         <authorinitials>CD</authorinitials>
