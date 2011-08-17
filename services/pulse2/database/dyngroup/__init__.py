@@ -242,29 +242,30 @@ class DyngroupDatabase(DatabaseHelper):
             return profile.FK_groups
         return False
 
-    def __getMachine(self, uuid, session = None):
+    def __getMachine(self, uuid, session=None):
         """
         get a machine defined by its UUID
         """
-        if not session:
-            session = create_session()
-        machine = session.query(Machines).filter(self.machines.c.uuid == uuid).first()
+        _session = session or create_session()
+        machine = _session.query(Machines).filter(self.machines.c.uuid == uuid).first()
+        if session is None:
+            _session.close()
         return machine
 
-    def __getOrCreateMachine(self, uuid, name, session = None):
+    def __getOrCreateMachine(self, uuid, name, session=None):
         """
         get a machine defined by its UUID if it exists, else create it
         """
-        if not session:
-            session = create_session()
-        machine = self.__getMachine(uuid, session)
+        _session = session or create_session()
+        machine = self.__getMachine(uuid, _session)
         if not machine:
             machine = Machines()
             machine.uuid = uuid
             machine.name = name
             session.add(machine)
             session.flush()
-        session.close()
+        if session is None:
+            _session.close()
         return machine.id
 
     def __updateMachinesTable(self, connection, uuids = []):
@@ -291,9 +292,9 @@ class DyngroupDatabase(DatabaseHelper):
         @returns: True if the machine has been successfully deleted
         """
         ret = False
-        m = self.__getMachine(uuid)
+        session = create_session()
+        m = self.__getMachine(uuid, session)
         if m:
-            session = create_session()
             session.begin()
             try:
                 mid = m.id
@@ -315,6 +316,7 @@ class DyngroupDatabase(DatabaseHelper):
         ret = {}
         for m in session.query(Machines):
             ret[m.uuid] = m.name
+        session.close()
         return ret
 
     def updateNewNames(self, machines):
@@ -451,34 +453,35 @@ class DyngroupDatabase(DatabaseHelper):
         session.close()
         return share.id
 
-    def __deleteShares(self, group_id, session = None):
+    def __deleteShares(self, group_id, session=None):
         """
         delete all the shares for a group (betwen a group and several users)
         """
-        if not session:
-            session = create_session()
-        users = self.__getUsersInGroup(group_id, session)
+        _session = session or create_session()
+        users = self.__getUsersInGroup(group_id, _session)
         for user in users:
-            self.__deleteShare(group_id, user.id, session)
+            self.__deleteShare(group_id, user.id, _session)
+        if session is None:
+            _session.close()
 
-    def __deleteShare(self, group_id, user_id, session = None):
+    def __deleteShare(self, group_id, user_id, session=None):
         """
         delete a share (betwen a group and a user)
         """
-        if not session:
-            session = create_session()
-        shares = session.query(ShareGroup).filter(self.shareGroup.c.FK_users == user_id).filter(self.shareGroup.c.FK_groups == group_id).all()
+        _session = session or create_session()
+        shares = _session.query(ShareGroup).filter(self.shareGroup.c.FK_users == user_id).filter(self.shareGroup.c.FK_groups == group_id).all()
         for share in shares:
-            session.delete(share)
-            session.flush()
+            _session.delete(share)
+            _session.flush()
 
-        still_linked = session.query(ShareGroup).filter(self.shareGroup.c.FK_users == user_id).count()
+        still_linked = _session.query(ShareGroup).filter(self.shareGroup.c.FK_users == user_id).count()
         if still_linked == 0:
-            user = session.query(Users).get(user_id)
-            session.delete(user)
-            session.flush()
+            user = _session.query(Users).get(user_id)
+            _session.delete(user)
+            _session.flush()
 
-        session.close()
+        if session is None:
+            _session.close()
         return still_linked
 
     def __getShareGroupInSession(self, id, user_id, session):
@@ -488,13 +491,14 @@ class DyngroupDatabase(DatabaseHelper):
         """
         return self.getShareGroup(id, user_id, session)
 
-    def getShareGroup(self, group_id, user_id, session = None):
+    def getShareGroup(self, group_id, user_id, session=None):
         """
         get the share item betwen the group and the user (if it exists)
         """
-        if not session:
-            session = create_session()
-        share = session.query(ShareGroup).filter(self.shareGroup.c.FK_users == user_id).filter(self.shareGroup.c.FK_groups == group_id).first()
+        _session = session or create_session()
+        share = _session.query(ShareGroup).filter(self.shareGroup.c.FK_users == user_id).filter(self.shareGroup.c.FK_groups == group_id).first()
+        if session is None:
+            _session.close()
         return share
 
     def getShareGroupType(self, id):
