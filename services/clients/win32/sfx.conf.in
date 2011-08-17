@@ -1,0 +1,4 @@
+;!@Install@!UTF-8! 
+SetEnvironment="ArchiveDir=%%S"
+RunProgram="@installername@ /A=%ArchiveDir%"
+;!@InstallEnd@!
