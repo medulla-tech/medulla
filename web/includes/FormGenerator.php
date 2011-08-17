@@ -213,7 +213,7 @@ class ImageTpl extends AbstractTpl {
         <tr>
             <td>&nbsp;</td>
             <td><input name="photofilename" type="file" size="23" />';
-        if ($arrParam["action"] == "edit") 
+        if ($arrParam["action"] == "edit")
             echo '<input name="deletephoto" type="submit" value="' . _("Delete photo") . '"/>';
     }
 
@@ -395,6 +395,14 @@ class DomainInputTpl extends InputTpl {
 
     function DomainInputTpl($name) {
         $this->InputTpl($name, '/^([a-z0-9][a-z0-9-]*[a-z0-9]\.){0,10}[a-z0-9][a-z0-9-]*[a-z0-9]$/');
+    }
+
+}
+
+class MailInputTpl extends InputTpl {
+
+    function MailInputTpl($name) {
+        $this->InputTpl($name, '/^([A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+){0,1}$/');
     }
 
 }
@@ -633,7 +641,7 @@ class MultipleInputTpl extends AbstractTpl {
             print '</td></tr>';
         }
         print '</table>';
-        print '</div>';      
+        print '</div>';
         print '</div>';
     }
 }
@@ -643,29 +651,29 @@ class MembersTpl extends AbstractTpl {
     function MembersTpl($name) {
         $this->name = $name;
         $this->titleLeft = "";
-        $this->titleRight = "";        
+        $this->titleRight = "";
     }
-    
+
     function setTitle($titleLeft, $titleRight) {
         $this->titleLeft = $titleLeft;
-        $this->titleRight = $titleRight;                
+        $this->titleRight = $titleRight;
     }
-    
+
     function display($arrParam) {
-    
+
         if(is_array($arrParam['member']))
             $this->member = $arrParam['member'];
         else {
             echo 'MembersTpl: member is not an array.';
             return 1;
-        }   
+        }
         if(is_array($arrParam['available']))
             $this->available = $arrParam['available'];
         else {
             echo 'MembersTpl: available is not an array.';
-            return 1;        
+            return 1;
         }
-    
+
         echo '
     <table style="border: none;" cellspacing="0">
     <tr>
@@ -725,16 +733,16 @@ class MembersTpl extends AbstractTpl {
         };
     </script>';
     }
-    
+
     function displayRo($arrParam) {
-    
+
         if(is_array($arrParam['member']))
             $this->member = $arrParam['member'];
         else {
             echo 'MembersTpl: member is not an array.';
             return 1;
         }
-        
+
         echo '<ul class="roACL">';
         foreach ($this->member as $id => $name) {
             echo '<input type="hidden" name="old_' . $this->name .'[]" value="' . $name . '" />';
@@ -743,7 +751,7 @@ class MembersTpl extends AbstractTpl {
         }
         echo '</ul>';
     }
-    
+
     function displayHide($arrParam) {
 
         if(is_array($arrParam['member']))
@@ -752,12 +760,12 @@ class MembersTpl extends AbstractTpl {
             echo 'MembersTpl: member is not an array.';
             return 1;
         }
-        
+
         foreach ($this->member as $id => $name) {
             echo '<input type="hidden" name="old_' . $this->name .'[]" value="' . $name . '" />';
             echo '<input type="hidden" name="' . $this->name .'[]" value="' . $name . '" />';
         }
-        
+
         echo '<div style="color: #C00;">' . _("unavailable") . '</div>';
     }
 }
