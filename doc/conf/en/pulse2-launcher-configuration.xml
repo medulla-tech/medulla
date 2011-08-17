@@ -356,7 +356,7 @@ option2 = plop</screen></para>
         <tbody>
           <row>
             <entry>default_key</entry>
-            <entry>The default SSHv2 key to use, the config code will look for an "ssh_&lt;default_key&gt;" entry in the config file.<para>ssh_* are ssh keys, * her names, f.ex. by using sshkey_default = /root/.ssh/id_dsa, /root/.ssh/id_dsa will be known as the 'default' key.</para></entry>
+            <entry>The default SSHv2 key to use, the config code will look for an "ssh_&lt;default_key&gt;" entry in the config file.<para>ssh_* are ssh keys, * her names, f.ex. by using sshkey_default = /root/.ssh/id_rsa, /root/.ssh/id_rsa will be known as the 'default' key.</para></entry>
             <entry>yes</entry>
             <entry>string</entry>
             <entry>default</entry>
@@ -401,7 +401,7 @@ option2 = plop</screen></para>
             <entry>The "default" ssh key path.</entry>
             <entry>yes</entry>
             <entry>path</entry>
-            <entry>/root/.ssh/id_dsa</entry>
+            <entry>/root/.ssh/id_rsa</entry>
           </row>
           <row>
             <entry>sshkey_XXXX</entry>

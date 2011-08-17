@@ -81,7 +81,7 @@ class LauncherConfig(pulse2.utils.Singleton):
     ssh_defaultkey = 'default'
     ssh_forward_key = 'let'
     ssh_keys = {
-        'default': '/root/.ssh/id_dsa'
+        'default': '/root/.ssh/id_rsa'
     }
     ssh_options = [ \
         'LogLevel=ERROR',

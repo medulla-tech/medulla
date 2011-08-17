@@ -747,14 +747,14 @@ class SetupApp(object):
             else:
                 log.error('Can not find %s' % wol_path)
 
-        # Check root user has a DSA key
-        log.info('Check for root user DSA key pair')
-        dsa_key_path = '/root/.ssh/id_dsa'
-        if not os.path.exists(dsa_key_path):
-            log.info('Creating a DSA key pair for user root')
-            ret = call("/usr/bin/ssh-keygen -t dsa -N '' -f %s" % dsa_key_path, shell=True)
+        # Check root user has an RSA key
+        log.info('Check for root user RSA key pair')
+        key_path = '/root/.ssh/id_rsa'
+        if not os.path.exists(key_path):
+            log.info('Creating a RSA key pair for user root')
+            ret = call("/usr/bin/ssh-keygen -t rsa -N '' -f %s" % key_path, shell=True)
             if ret<>0:
-                log.error('Can not create DSA key pair for user root')
+                log.error('Can not create RSA key pair for user root')
                 sys.exit(1)
 
         # Update services

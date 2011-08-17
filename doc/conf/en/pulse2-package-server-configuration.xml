@@ -302,7 +302,7 @@ option2 = plop      </screen></para>
       </tgroup>
     </table>
     <para>package_mirror_command_options_ssh_options can be for exemple :</para>
-    <screen>IdentityFile=/root/.ssh/id_dsa StrictHostKeyChecking=no Batchmode=yes PasswordAuthentication=no ServerAliveInterval=10 CheckHostIP=no ConnectTimeout=10</screen>
+    <screen>IdentityFile=/root/.ssh/id_rsa StrictHostKeyChecking=no Batchmode=yes PasswordAuthentication=no ServerAliveInterval=10 CheckHostIP=no ConnectTimeout=10</screen>
     <para></para>
   </section>
   <section>
