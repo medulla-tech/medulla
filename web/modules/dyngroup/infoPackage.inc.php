@@ -22,10 +22,11 @@
  */
 
 require_once("modules/dyngroup/includes/includes.php");
+require_once("modules/pulse2/version.php");
 
 $mod = new Module("dyngroup");
-$mod->setVersion("1.3.0");
-$mod->setRevision('$Rev$');
+$mod->setVersion(VERSION);
+$mod->setRevision(REVISION);
 $mod->setDescription(_T("Dyngroup", "dyngroup"));
 $mod->setAPIVersion("0:0:0");
 $mod->setPriority(700);

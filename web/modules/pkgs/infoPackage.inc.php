@@ -25,10 +25,12 @@
 /**
  * module declaration
  */
+require_once("modules/pulse2/version.php");
+
 // hide msc module for the moment
 $mod = new Module("pkgs");
-$mod->setVersion("1.3.0");
-$mod->setRevision('$Rev$');
+$mod->setVersion(VERSION);
+$mod->setRevision(REVISION);
 $mod->setDescription(_T("Packages", "pkgs"));
 $mod->setAPIVersion("0:0:0");
 $mod->setPriority(800);

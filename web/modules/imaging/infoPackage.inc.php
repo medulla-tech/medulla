@@ -26,10 +26,11 @@
 /**
  * module declaration
  */
+require_once("modules/pulse2/version.php");
 
 $mod = new Module("imaging");
-$mod->setVersion("1.3.0");
-$mod->setRevision('$Rev$');
+$mod->setVersion(VERSION);
+$mod->setRevision(REVISION);
 $mod->setDescription(_T("Imaging service","imaging"));
 $mod->setAPIVersion("0:0:0");
 $mod->setPriority(600);

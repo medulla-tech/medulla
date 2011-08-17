@@ -25,6 +25,8 @@
 /**
  * module declaration
  */
+require_once("modules/pulse2/version.php");
+
 $MMCApp =& MMCApp::getInstance();
 
 /* Get the base module instance */
@@ -36,8 +38,8 @@ $submod = & $base->getSubmod('computers');
 /* Set up MSC pages only when the computers module is available */
 if (!empty($submod)) {
     $mod = new Module("msc");
-    $mod->setVersion("1.3.0");
-    $mod->setRevision('$Rev$');
+    $mod->setVersion(VERSION);
+    $mod->setRevision(REVISION);
     $mod->setDescription(_T("Secure Control", "msc"));
     $mod->setAPIVersion("0:0:0");
     $mod->setPriority(700);
