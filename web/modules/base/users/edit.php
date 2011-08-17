@@ -39,18 +39,10 @@ global $errorStatus;
 
 // Class managing $_POST array
 if($_POST) {
-    // In case of errors get the last
-    // form and update its values with
-    // new values
-    if (isset($_SESSION['editUserFH'])) {
-        $FH = unserialize($_SESSION['editUserFH']);
-        $FH->updateValues(new FormHandler($_POST));
-    }
-    else
-        $FH = new FormHandler($_POST);
+    $FH = new FormHandler("editUserFH", $_POST);
 }
 else {
-    $FH = new FormHandler(array());
+    $FH = new FormHandler("editUserFH", array());
 }
 
 switch($_GET["action"]) {
@@ -153,16 +145,11 @@ if ($_POST) {
         }
         if(!$error) {
             $redirect = true;
-            /* Form submission ok
-               Remove any editUserForm from SESSION */
-            if (isset($_SESSION['editUserFH']))
-                unset($_SESSION['editUserFH']);
+            $FH->isError(false);
         }
     }
     else {
-        /* In case of error, store the FormHandler
-           in session */
-        $_SESSION['editUserFH'] = serialize($FH);
+        $FH->isError(true);
     }
 }
 
@@ -179,7 +166,7 @@ if ($result) {
 }
 // in case of modification/creation success, redirect to the edit page
 if ($redirect)
-    header('Location: ' . urlStrRedirect("base/users/edit", 
+    header('Location: ' . urlStrRedirect("base/users/edit",
         array("user" => $uid)));
 
 // in case of failure, set errorStatus to 0 in order to display the edit form
@@ -191,7 +178,7 @@ $sidemenu->forceActiveItem($activeItem);
 $p->setSideMenu($sidemenu);
 $p->display();
 // create the form
-$f = new ValidatingForm(array('method' => 'POST', 
+$f = new ValidatingForm(array('method' => 'POST',
     'enctype' => 'multipart/form-data'));
 // add submit button
 $f->addValidateButton("buser");
