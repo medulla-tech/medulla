@@ -110,6 +110,7 @@ if (isset($_GET["agentsessionexpired"])) {
 	<meta http-equiv="imagetoolbar" content="false" />
 	<meta name="Description" content="" />
 	<meta name="Keywords" content="" />
+	<link rel="icon" href="img/common/favicon.ico" />
         <script src="jsframework/lib/prototype.js" type="text/javascript"></script>
         <script src="jsframework/src/scriptaculous.js" type="text/javascript"></script>
 </head>
