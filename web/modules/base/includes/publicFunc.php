@@ -76,8 +76,14 @@ function _base_verifInfo($FH, $mode) {
     $homedir = $FH->getPostValue("homeDir");
     $primary = $FH->getPostValue("primary");
 
-    if ($mode == "add" && userExists($uid)) {
+    if (!preg_match("/^[a-zA-Z0-9][A-Za-z0-9_.-]*$/", $uid)) {
+        $base_errors .= _("User's name invalid !")."<br/>";
+        setFormError("uid");
+    }
+
+    if ($mode == "add" && $uid && userExists($uid)) {
         $base_errors .= sprintf(_("The user %s already exists."), $uid)."<br/>";
+        setFormError("uid");
     }
 
     if ($mode == "add" && $pass == '') {
@@ -88,29 +94,24 @@ function _base_verifInfo($FH, $mode) {
     if ($pass != $confpass) {
         $base_errors .= _("The confirmation password does not match the new password.")." <br/>";
         setFormError("pass");
-        setFormError("confpass");        
-    }
-
-    if (!preg_match("/^[a-zA-Z0-9][A-Za-z0-9_.-]*$/", $uid)) {
-        $base_errors .= _("User's name invalid !")."<br/>";
-        setFormError("login");
+        setFormError("confpass");
     }
 
     /* Check that the primary group name exists */
     if (!strlen($primary)) {
-        $base_errors .= _("The primary group field can't be empty.")."<br />";    
+        $base_errors .= _("The primary group field can't be empty.")."<br />";
         setFormError("primary");
     }
     else if (!existGroup($primary)) {
         $base_errors .= sprintf(_("The group %s does not exist, and so can't be set as primary group."), $primary) . "<br />";
         setFormError("primary");
     }
-    
+
     /* Check that the homeDir does not exists */
-    if($FH->getPostValue("createHomeDir") == "on") {
+    if($FH->getPostValue("createHomeDir") == "on" && $uid) {
         getHomeDir($uid, $FH->getValue("homeDir"));
     }
-    
+
     $error .= $base_errors;
 
     return $base_errors ? 1 : 0;
@@ -126,7 +127,7 @@ function _base_changeUser($FH, $mode) {
 
     global $result;
     global $error;
-    
+
     $base_errors = "";
     $uid = $FH->getPostValue("uid");
 
@@ -159,7 +160,7 @@ function _base_changeUser($FH, $mode) {
         if ($FH->getPostValue('mail'))
             changeUserAttributes($uid, "mail", $FH->getPostValue("mail"));
         if ($FH->getPostValue('loginShell'))
-            changeUserAttributes($uid, "loginShell", 
+            changeUserAttributes($uid, "loginShell",
                 $FH->getPostValue('loginShell'));
 
     }
@@ -171,11 +172,11 @@ function _base_changeUser($FH, $mode) {
         }
         if ($FH->isUpdated("homeDir")) {
             move_home($uid, $FH->getValue("homeDir"));
-            $result .= sprintf(_("Home user directory moved to %s.", 
+            $result .= sprintf(_("Home user directory moved to %s.",
                 $FH->getValue("homeDir")))."<br />";
         }
     }
-    
+
     // common stuff to add/edit mode
     if($FH->isUpdated('isBaseDesactive')) {
         $shells = getDefaultShells();
@@ -188,13 +189,13 @@ function _base_changeUser($FH, $mode) {
             $result .= _("User enabled.")."<br />";
         }
     }
-        
+
     if($FH->isUpdated('telephoneNumber'))
         changeUserTelephoneNumbers($uid, $FH->getValue("telephoneNumber"));
 
     if($FH->isUpdated('givenName') or $FH->isUpdated('sn'))
         change_user_main_attr($uid, $uid, $FH->getValue('givenName'), $FH->getValue('sn'));
-        
+
     foreach(array('title', 'mobile', 'facsimileTelephoneNumber', 'homePhone',
         'cn', 'mail', 'displayName', 'preferredLanguage') as $attr) {
         if ($FH->isUpdated($attr))
@@ -239,9 +240,9 @@ function _base_changeUser($FH, $mode) {
 
     if ($mode == "edit")
         $result .= _("User attributes updated.")."<br />";
-    
+
     $error .= $base_errors;
-    
+
     return $base_errors ? 1 : 0;
 }
 
@@ -306,9 +307,8 @@ function _base_baseEdit($FH, $mode) {
         array("value"=> $FH->getArrayOrPostValue("title"))
     );
 
-    $email = new InputTpl("mail",'/^([A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+){0,1}$/');
     $f->add(
-        new TrFormElement(_("Mail address"), $email),
+        new TrFormElement(_("Mail address"), new MailInputTpl("mail")),
         array("value"=> $FH->getArrayOrPostValue("mail"))
     );
 
@@ -322,6 +322,7 @@ function _base_baseEdit($FH, $mode) {
         new FormElement(_("Telephone number"), $tn),
         $FH->getArrayOrPostValue("telephoneNumber", "array")
     );
+
     $f->push(new Table());
 
     $f->add(
@@ -387,15 +388,15 @@ function _base_baseEdit($FH, $mode) {
     $groupsTpl = new MembersTpl("secondary");
     $groupsTpl->setTitle(_("User's groups"), _("All groups"));
     // get the user's groups
-    if ($mode == 'edit') {
-        /* In case of error, display the POST values */
-        if ($FH->isUpdated("secondary"))
-            $user_groups = $FH->getValue("secondary");
-        else
+    /* In case of error, display the POST values */
+    if ($FH->getPostValue("secondary"))
+            $user_groups = $FH->getPostValue("secondary");
+    else {
+        if ($mode == 'edit')
             $user_groups = getUserSecondaryGroups($uid);
+        else
+            $user_groups = array();
     }
-    else
-        $user_groups = array();
     $member = array();
     foreach($user_groups as $group) {
         $member[$group] = $group;
@@ -406,7 +407,7 @@ function _base_baseEdit($FH, $mode) {
         if (!in_array($group, $member))
             $available[$group] = $group;
     }
-    
+
     $f->add(
         new TrFormElement(_("Secondary groups"), $groupsTpl),
         array("member" => $member, "available" => $available)
