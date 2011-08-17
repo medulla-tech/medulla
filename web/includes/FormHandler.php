@@ -27,16 +27,30 @@ class FormHandler {
     var $data;
     var $arr;
 
-    function FormHandler($data) {
+    function FormHandler($name, $data) {
         /*echo "<pre>";
         print_r($data);
         echo '</pre>';*/
+        $this->name = $name;
+
+        if (!$data)
+            $this->isError(false);
+
+        // get the old posted data in case of
+        // error
+        if(isset($_SESSION[$this->name])) {
+            $oldFH = unserialize($_SESSION[$this->name]);
+            $this->data = $oldFH->data;
+        }
+        else {
+            // mixed array
+            $this->data = array();
+        }
+
         // the raw $_POST data
         $this->post_data = $data;
         // the LDAP array
         $this->arr = array();
-        // mixed array
-        $this->data = array();
         $this->sanitize();
         /*echo "<pre>";
         print_r($this->data);
@@ -65,6 +79,16 @@ class FormHandler {
         }
     }
 
+    function isError($state) {
+        if ($state) {
+            $_SESSION[$this->name] = serialize($this);
+        }
+        else {
+            if (isset($_SESSION[$this->name]))
+                unset($_SESSION[$this->name]);
+        }
+    }
+
     /* Check if field has changed */
     function isUpdated($field) {
         return isset($this->data[$field]);
@@ -85,17 +109,6 @@ class FormHandler {
         }
         else
             return false;
-    }
-    
-    /* Update values from another FH
-       In case of error, the second, third... $_POST
-       in mixed with the first $FH stored in session
-       so we know exactly what has been changed */
-    function updateValues($FH) {
-        foreach($FH->getValues() as $field => $value) {
-            $this->setValue($field, $value);
-            $this->setPostValue($field, $value);
-        }
     }
 
     /* Get all updated values */
