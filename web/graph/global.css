@@ -1185,6 +1185,7 @@ form {
 
 select {
     font-size: 11px;
+    min-width: 150px;
 }
 
 .btnPrimary {
