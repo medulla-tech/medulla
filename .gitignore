@@ -35,6 +35,8 @@ services/init.d/pulse2-scheduler
 services/src/.deps/
 services/src/pulse2-imaging-server
 services/pulse2/site.py
+services/clients/win32/win32.mk
+services/pulse2/version.py
 doc/DocumentConverter.py
 doc/conf/en/mmc-python-plugin-dyngroup-configuration.html
 doc/conf/en/mmc-python-plugin-glpi-configuration.html

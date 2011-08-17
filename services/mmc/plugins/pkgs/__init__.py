@@ -21,7 +21,6 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
-from mmc.core.version import scmRevision
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 
 from mmc.plugins.msc.package_api import PackageGetA
@@ -29,14 +28,11 @@ from mmc.plugins.pkgs.package_put_api import PackagePutA
 from mmc.plugins.pkgs.user_packageapi_api import UserPackageApiApi
 from mmc.plugins.pkgs.config import PkgsConfig
 
+from pulse2.version import getVersion, getRevision
 
-VERSION = "1.3.0"
 APIVERSION = "0:0:0"
-REVISION = scmRevision("$Rev: 86 $")
 
-def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION
-def getRevision(): return REVISION
 
 def activate():
     logger = logging.getLogger()

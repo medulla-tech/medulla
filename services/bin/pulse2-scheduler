@@ -55,7 +55,7 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 
 # Other stuff
 from mmc.site import mmcconfdir
-from mmc.core.version import scmRevision
+from pulse2.version import getVersion, getRevision
 from pulse2.scheduler.config import SchedulerConfig, SchedulerDatabaseConfig
 from pulse2.scheduler.xmlrpc import SchedulerSite
 from pulse2.database.msc import MscDatabase
@@ -68,12 +68,6 @@ import pulse2.xmlrpc
 # Logging
 import logging
 import logging.config
-
-VERSION = "1.3.0"
-REVISION = scmRevision("$Rev$")
-
-def getVersion():  return VERSION
-def getRevision(): return REVISION
 
 def get_next_delay(base, subject_to_incertitude = False):
     ret = base                  # next delay in "base" seconds,

@@ -24,7 +24,6 @@ MMC GLPI Backend plugin
 It provide an API to access informations in the GLPI database.
 """
 
-from mmc.core.version import scmRevision
 from mmc.support.mmctools import xmlrpcCleanup, RpcProxyI, ContextMakerI, SecurityContext
 from mmc.plugins.base.computers import ComputerManager
 from mmc.plugins.base.provisioning import ProvisioningManager
@@ -34,15 +33,14 @@ from mmc.plugins.glpi.computers import GlpiComputers
 from mmc.plugins.glpi.provisioning import GlpiProvisioner
 from pulse2.managers.location import ComputerLocationManager
 from mmc.plugins.glpi.location import GlpiLocation
+
+from pulse2.version import getVersion, getRevision
+
 import logging
 
-VERSION = "1.3.0"
 APIVERSION = "0:0:0"
-REVISION = scmRevision("$Rev$")
 
-def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION
-def getRevision(): return REVISION
 
 def activate():
     config = GlpiConfig("glpi")

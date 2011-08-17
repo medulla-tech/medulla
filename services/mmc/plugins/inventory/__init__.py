@@ -25,7 +25,6 @@ Pulse 2 MMC agent inventory plugin
 """
 
 # Helpers
-from mmc.core.version import scmRevision
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 from mmc.support.mmctools import xmlrpcCleanup
 from mmc.plugins.base.computers import ComputerManager
@@ -41,14 +40,11 @@ from mmc.plugins.inventory.provisioning import InventoryProvisioner
 from mmc.plugins.inventory.locations import InventoryLocation
 from mmc.plugins.inventory.tables_def import PossibleQueries
 
-VERSION = "1.3.0"
+from pulse2.version import getVersion, getRevision
+
 APIVERSION = "0:0:0"
-REVISION = scmRevision("$Rev$")
 
-def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION
-def getRevision(): return REVISION
-
 
 def activate():
     logger = logging.getLogger()

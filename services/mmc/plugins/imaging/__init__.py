@@ -28,7 +28,6 @@ imaging plugin
 
 import logging
 
-from mmc.core.version import scmRevision
 from mmc.agent import PluginManager
 from mmc.support.mmctools import ContextMakerI, SecurityContext
 from mmc.plugins.imaging.config import ImagingConfig
@@ -42,10 +41,9 @@ from mmc.plugins.base.computers import ComputerManager
 from pulse2.managers.imaging import ComputerImagingManager
 from pulse2.managers.pulse import Pulse2Manager
 from pulse2.database.imaging import ImagingDatabase
+from pulse2.version import getVersion, getRevision
 
-VERSION = "1.3.0"
 APIVERSION = "0:0:0"
-REVISION = scmRevision("$Rev$")
 
 NOAUTHNEEDED = ['computerRegister',
                 'imagingServerRegister',
@@ -59,18 +57,8 @@ NOAUTHNEEDED = ['computerRegister',
                 'linkImagingServerToLocation',
                 'computerChangeDefaultMenuItem']
 
-
-def getVersion():
-    return VERSION
-
-
 def getApiVersion():
     return APIVERSION
-
-
-def getRevision():
-    return REVISION
-
 
 def activate():
     """

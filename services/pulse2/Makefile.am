@@ -37,7 +37,7 @@ pythonmodules = apis apis.clients database database.dyngroup \
 	scheduler.assign_algo.ip_class scheduler.cache \
 	scheduler.tracking
 
-all-local: site.py
+all-local: site.py version.py
 
 # Expands Python modules list with found *.py files in each module given in pythonmodules
 modpythondir = $(pythondir)/$(notdir $(realpath $(srcdir)))
@@ -46,8 +46,9 @@ nodist_modpython_PYTHON = site.py
 
 examplesdir = @examplesdir@
 
-EXTRA_DIST = site.py.in
+EXTRA_DIST = site.py.in version.py.in
 CLEANFILES = site.py
+DISTCLEANFILES = version.py
 
 edit = sed \
         -e 's|@bindir[@]|$(bindir)|g' \

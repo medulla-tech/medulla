@@ -29,7 +29,6 @@ from sqlalchemy.exceptions import SQLError
 import sqlalchemy.orm.query
 
 import logging
-from mmc.core.version import scmRevision
 from mmc.support.config import PluginConfig
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext, xmlrpcCleanup
 from mmc.agent import PluginManager
@@ -41,13 +40,11 @@ from pulse2.database.pulse import Pulse2Database
 from pulse2.managers.pulse import Pulse2Manager
 from mmc.plugins.pulse2.pulse import Pulse2Pulse2Manager
 
-VERSION = "1.3.0"
-APIVERSION = "0:0:0"
-REVISION = scmRevision("$Rev$")
+from pulse2.version import getVersion, getRevision
 
-def getVersion(): return VERSION
+APIVERSION = "0:0:0"
+
 def getApiVersion(): return APIVERSION
-def getRevision(): return REVISION
 
 def activate():
     config = Pulse2Config("pulse2")

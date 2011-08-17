@@ -29,7 +29,6 @@ import time
 import os
 import sys
 
-from mmc.core.version import scmRevision
 from pulse2.package_server.config import config_addons
 from pulse2.package_server.common import Common
 from pulse2.package_server.common.serializer import PkgsRsyncStateSerializer
@@ -40,17 +39,7 @@ from twisted.internet import task
 from twisted.internet import utils
 from twisted.internet import defer
 
-REVISION = scmRevision("$Rev$")
-VERSION = "1.3.0"
-
-
-def getRevision():
-    return REVISION
-
-
-def getVersion():
-    return VERSION
-
+from pulse2.version import getVersion, getRevision
 
 class ThreadPackageHelper(Thread):
     def __init__(self, config):
