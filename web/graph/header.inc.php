@@ -31,7 +31,6 @@ $css = $root."graph";
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Mandriva Management Console</title>
@@ -40,8 +39,8 @@ $css = $root."graph";
     <meta http-equiv="imagetoolbar" content="false" />
     <meta name="Description" content="" />
     <meta name="Keywords" content="" />
+    <link rel="icon" href="img/common/favicon.ico" />
     <script src="jsframework/lib/prototype.js" type="text/javascript"></script>
-
     <script src="jsframework/src/scriptaculous.js" type="text/javascript"></script>
     <script src="jsframework/common.js" type="text/javascript"></script>
 <?php
