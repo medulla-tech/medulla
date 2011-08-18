@@ -31,145 +31,6 @@ if ($acl_error) {
   print "<div id=\"errorCode\">$acl_error</div>";
 }
 
-/* inclusion header HTML */
-require("graph/navbar.inc.php");
-?>
-
-<!-- Définition de styles locaux à cette page -->
-<style type="text/css">
-<!--
-
-#section, #sectionTopRight, #sectionBottomLeft {
-        margin: 0 0 0 17px;
-}
-
-#sectionTopRight {
-        border-left: none;
-}
-
-#sectionTopLeft {
-    height: 9px;
-        padding: 0;
-        margin: 0;
-        background: url("<?php echo $root; ?>img/common/sectionTopLeft.gif") no-repeat top left transparent;
-}
-
-div.membarfree {
-        border-right: 1px solid #27537C;
-        height: 12px;
-        background: url("<?php echo $root; ?>img/main/bg_status_blue.gif") repeat-x left top transparent;
-        padding: 0;
-        margin: 0;
-}
-
-div.membarused {
-        border: none;
-        background: red;
-        height: 12px;
-        background: url("<?php echo $root; ?>img/main/bg_status_orange.gif") repeat-x right top transparent;
-        overflow: hidden;
-        float: left;
-        padding: 0;
-        display: inline;
-}
-
-div.membarcache {
-        height: 12px;
-        background: url("<?php echo $root; ?>img/main/bg_status_green.gif") repeat-x right top transparent;
-        float: left;
-        padding: 0;
-        margin: 0;
-}
-
-*html div.membarused { margin: 0 -4px 0 0; } /* pour IE/PC */
-*html div.membarcache { margin: 0 -4px 0 0; } /* pour IE/PC */
-
-div.left {
-        color: #666;
-        background-color: #F0F4F7;
-        border: solid 1px #CCC;
-        float: right;
-        width: 400px;
-        padding: 10px;
-        display: block;
-        margin: 0;
-        position: relative;
-}
-
-div.right {
-        color: #666;
-        background-color: #F0F4F7;
-        border: solid 1px #CCC;
-        margin-right: 445px;
-        padding: 10px;
-        display: block;
-        position: relative;
-}
-
-#accueilPad {
-        overflow: auto;
-}
-
-#accueilPad h2,
-#statusPad h2,
-#accueilPad td {
-        text-align: center;
-}
-
-#accueilPad h2,
-#statusPad h2 {
-	font-size: 14px;
-}
-
-#accueilPad table {
-	color: #666;
-	border: none;
-	border-width: 0px;
-	width: auto;
-}
-
-#accueilPad td {
-	border: none;
-	border-width: none;
-	padding: 0px;
-}
-
-form { padding-top: 10px; }
-
-
-.submod {
-    background-color: #E5E5E5;
-    margin: 0.7em;
-    padding: 0.7em;
-    -moz-border-radius: 5px;
-}
-
-.module {
-    float: left;
-    background-color: #EEE;
-    margin: 0.7em;
-    padding: 0.7em;
-    -moz-border-radius: 10px;
-    width: 180px;
-}
-
-ul {
-    margin: 0.5em;
-    padding: 0.5em;
-}
-
--->
-</style>
-
-
-
-
-<h2><?php echo  _("Home") ?></h2>
-
-<div class="fixheight"></div>
-<?php
-
-
 function display_page($page,$submod,$mod) {
     if ($page->getDescription() && $page->isVisible()) {
         $url = urlStr($mod->getName()."/".$submod->getName()."/".$page->_action);
@@ -208,8 +69,8 @@ function display_mod($mod) {
     }
 
 ?>
-    <div class="module">
-        <h3><?php echo  $mod->getDescription(); ?></h3>
+    <div class="module" id="<?php echo $mod->getName(); ?>">
+        <h3 class="handle"><?php echo $mod->getDescription(); ?></h3>
         <?php foreach (getSorted($mod->getSubmodules()) as $submod) {
             display_submod($submod,$mod);
         }
@@ -218,13 +79,191 @@ function display_mod($mod) {
 <?php
 }
 
-        $MMCApp =& MMCApp::getInstance();
+$MMCApp =& MMCApp::getInstance();
+$modules = getSorted($MMCApp->getModules());
+$nb_modules = count($modules);
 
-        foreach(getSorted($MMCApp->getModules()) as $key => $mod) {
-            display_mod($mod);
-        }
+/* inclusion header HTML */
+require("graph/navbar.inc.php");
 
 ?>
-<div style="clear: both;">
+
+<style type="text/css">
+<!--
+
+#section, #sectionTopRight, #sectionBottomLeft { margin: 0 0 0 17px; }
+#sectionTopRight { border-left: none; }
+#sectionTopLeft {
+    height: 9px;
+    padding: 0;
+    margin: 0;
+    background: url("<?php echo $root; ?>img/common/sectionTopLeft.gif") no-repeat top left transparent;
+}
+
+.module {
+    float: left;
+    background-color: #EEE;
+    padding: 5px;
+    margin: 5px;
+    margin-bottom: 10px;
+    width: 180px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+}
+
+.submod {
+    background-color: #E5E5E5;
+    padding: 5px;
+    margin: 10px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+}
+
+ul {
+    margin: 0.5em;
+    padding: 0.5em;
+}
+
+#home .home-column {
+    float: left;
+    width: 200px;
+    border: 1px solid transparent;
+    background: white;
+    min-height: 100px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+#home .module .handle {
+    cursor: move;
+}
+
+-->
+</style>
+    <h2><?php echo  _("Home") ?></h2>
+    <div id="home">
+        <?php
+        foreach($modules as $key => $mod) {
+            display_mod($mod);
+        }
+        ?>
+    </div>
+    <div style="clear: both;"></div>
 </div>
-</div>
+
+<script src="jsframework/cookiejar.js"></script>
+<script type="text/javascript">
+
+    Event.observe(window, 'load', function() {
+
+        load = function() {
+            try {
+                settings = mmcookie.get('home-settings');
+                saved_modules = 0;
+                for(zone in settings)
+                    for(module in settings[zone])
+                        saved_modules++;
+                // if there is more or less modules loaded
+                // invalidate the settings
+                if (modules.length != saved_modules)
+                    settings = false;
+            }
+            catch (err) {
+                mmcookie.remove('home-settings');
+                settings = false;
+            }
+            if (!settings) {
+                // create default settings
+                settings = {};
+                // store column info
+                for(var c=0; c<cols; c++)
+                    settings['home-column_'+c] = {};
+                // add each module in a column
+                for(var m=0, c=0; m<modules.length; m++, c++) {
+                    settings['home-column_'+c][modules[m].id] = modules[m].id;
+                    // don't fill the first column
+                    // base module can be very high
+                    if (c == cols-1)
+                        c = 0;
+                }
+                // save the settings
+                mmcookie.put('home-settings', settings);
+            }
+            // apply the settings
+            zone_no = 0;
+            for(zone in settings) {
+                // create che columns
+                var z = new Element('div', {'class': 'home-column', 'id': 'home-column_'+zone_no});
+                // add modules in columns
+                for(module in settings[zone])
+                    z.appendChild(modules.find(function(m) { return m.id == module; }));
+                // display the column
+                home.appendChild(z);
+                zone_no++;
+            }
+            // add more columns if needed
+            if(Object.keys(settings).length < cols) {
+                for(var i=Object.keys(settings).length; i<cols; i++) {
+                    var z = new Element('div', {'class': 'home-column', 'id': 'home-column_'+i});
+                    home.appendChild(z);
+                }
+            }
+        }
+
+        save = function() {
+            new_settings = {};
+            sortables.each(function (z) {
+                $$('#'+z.id+' .module').each(function(m) {
+                    if (!new_settings[z.id])
+                        new_settings[z.id] = {};
+                    new_settings[z.id][m.id] = m.id;
+                });
+            });
+            mmcookie.put('home-settings', new_settings);
+        }
+
+        var settings = false;
+        var mmcookie = new CookieJar({
+            expires: 604800, // one week
+            path: '/mmc/'
+        });
+        var home = $('home');
+        var modules = $$('.module');
+        // calculate the number of columns for the screen
+        var cols = Math.floor($('home').offsetWidth / 210);
+        // load the modules in the columns
+        load();
+        // make the modules sortable
+        var sortables = $$('.home-column');
+        sortables.each(function (sortable) {
+          Sortable.create(sortable, {
+            containment: sortables,
+            constraint: false,
+            tag: 'div',
+            only: 'module',
+            dropOnEmpty: true,
+            handle: 'handle',
+            hoverclass: 'module-hover',
+          });
+          $$('.handle').each(function(m) {
+            m.observe("mousedown", function(m) {
+                sortables.each(function (s) {
+                    s.style.border = "1px solid #ccc";
+                    s.style.background = "#FFFAFA";
+                });
+            });
+          });
+          $$('.handle').each(function(m) {
+            m.observe("mouseup", function(m) {
+                save();
+                sortables.each(function (s) {
+                    s.style.border = "1px solid transparent";
+                    s.style.background = "white";
+                });
+            });
+          });
+        });
+    });
+</script>
