@@ -682,6 +682,7 @@ html>body #section {
 p.listInfos {
 	font-size: 9px;
 	color: #999;
+	padding: 0px;
 }
 
 ul.navList {
@@ -1024,8 +1025,10 @@ li.empty a {
 }
 
 #section table.listinfos {
-	border: 1px solid #CCCCCC;
-	border-top: 0px;
+    border: 1px solid #CCCCCC;
+    border-top: 0px;
+    margin-bottom: 0.5em;
+    margin-top: 0.5em;
 }
 
 
