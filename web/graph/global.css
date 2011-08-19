@@ -766,6 +766,7 @@ span.pagination input, span.pagination select {
     font-size: 9px;
     color: #777;
     background: white;
+    min-width: 0px;
 }
 
 /* ---------------------------------------- */
@@ -1192,6 +1193,8 @@ form {
 	padding: 0;
 	margin: 0;
 }
+
+
 
 select {
     font-size: 11px;
