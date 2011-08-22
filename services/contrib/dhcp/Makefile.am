@@ -22,3 +22,5 @@
 #
 contribdir = $(docdir)/contrib/dhcp
 contrib_DATA = dhcpd.conf
+
+EXTRA_DIST = dhcpd.conf
