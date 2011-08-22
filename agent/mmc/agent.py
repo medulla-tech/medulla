@@ -404,10 +404,6 @@ def agentService(config, conffile, daemonize):
     os.setegid(config.egid)
     os.seteuid(config.euid)
 
-    # Daemonize early
-    if daemonize:
-        daemon(config)
-
     # Initialize logging object
     logging.config.fileConfig(conffile)
 
@@ -452,6 +448,12 @@ def agentService(config, conffile, daemonize):
         log.exception("Program exception: " + str(e))
         return 1
 
+    # Become a daemon
+    if daemonize:
+        daemon(config)
+        # No more log to stderr
+        logger.removeHandler(hdlr2)
+
     l.commit()
     reactor.run()
 
@@ -493,8 +495,8 @@ def startService(config, mod):
     r = MmcServer(mod, config)
     if config.enablessl:
         sslContext = makeSSLContext(config.verifypeer, config.cacert, config.localcert)
-        reactor.listenSSL(config.port, MMCSite(r), 
-                          interface=config.host, 
+        reactor.listenSSL(config.port, MMCSite(r),
+                          interface=config.host,
                           contextFactory=sslContext)
     else:
         log.warning("SSL is disabled by configuration.")
@@ -793,4 +795,3 @@ class PluginManager(Singleton):
         del self.plugins[name]
         getattr(self.plugins["base"], "setModList")([name for name in self.plugins.keys()])
         return True
-
