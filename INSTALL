@@ -30,6 +30,13 @@ machine or through the network:
 - MySQL
 - DHCP server (for imaging purpose)
 
+If you build Pulse2 from scm repository, you will also need the following tools
+(not needed if you use the .tar.gz archive):
+- autoconf
+- automake
+- xsltproc
+- docbook xsl
+
 Quick installation
 ==================
 

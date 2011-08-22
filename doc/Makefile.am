@@ -64,7 +64,7 @@ dochtml = $(patsubst %.xml,%.html,$(docsrc))
 
 nobase_doc_DATA = $(dochtml)
 
-EXTRA_DIST = DocumentConverter.py $(dochtml) $(docpng)
+EXTRA_DIST = DocumentConverter.py $(dochtml) $(docpng) $(docsrc)
 
 MAINTAINERCLEANFILES = DocumentConverter.py $(dochtml)
 
