@@ -41,12 +41,12 @@ all-local: site.py version.py
 
 # Expands Python modules list with found *.py files in each module given in pythonmodules
 modpythondir = $(pythondir)/$(notdir $(realpath $(srcdir)))
-nobase_modpython_PYTHON = $(wildcard $(srcdir)/*.py $(patsubst %,$(srcdir)/%/*.py ,$(subst .,/,$(pythonmodules))))
-nodist_modpython_PYTHON = site.py
+nobase_modpython_DATA = $(wildcard $(srcdir)/*.py $(patsubst %,$(srcdir)/%/*.py ,$(subst .,/,$(pythonmodules))))
+nodist_modpython_DATA = site.py
 
 examplesdir = @examplesdir@
 
-EXTRA_DIST = site.py.in version.py.in
+EXTRA_DIST = site.py.in version.py.in $(nobase_modpython_DATA)
 CLEANFILES = site.py
 DISTCLEANFILES = version.py
 
@@ -67,3 +67,5 @@ site.py: Makefile
 	  test -f ./$@.in || srcdir=$(srcdir)/; \
 	  $(edit) $${srcdir}$@.in >$@.tmp
 	mv $@.tmp $@
+
+site.py: site.py.in

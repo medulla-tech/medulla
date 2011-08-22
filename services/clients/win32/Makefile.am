@@ -40,7 +40,7 @@ dist_clients_SCRIPTS = build.sh
 clients_DATA = sfx.conf.in win32.mk 7zsd.sfx \
 	remote-desktop-agent.reg remote-desktop-agent-vnc2.reg
 
-doc_DATA = README.win32
+dist_doc_DATA = README.win32
 
 EXTRA_DIST = \
 	build.sh \
@@ -48,14 +48,25 @@ EXTRA_DIST = \
 	sfx.conf.in \
 	7zsd.sfx \
 	remote-desktop-agent.reg \
-	remote-desktop-agent-vnc2.reg
+	remote-desktop-agent-vnc2.reg \
 	$(installernsi) \
 	$(installerdata)
 
-CLEANFILES = win32.mk
+CLEANFILES = win32.mk $(installer)
 
 $(installer): $(installernsi) $(installerdata)
+	if test "$(builddir)" != "$(srcdir)"; then \
+	  for dep in $(installerdata); do \
+	    mkdir -p `dirname $$dep`; \
+	    cp $(srcdir)/$$dep $$dep; \
+	  done; \
+	fi
 	makensis $<
+	if test "$(builddir)" != "$(srcdir)"; then \
+	  for dep in $(installerdata); do \
+	    rm -f $$dep; \
+	  done; \
+	fi
 
 edit = sed \
 	-e 's|@VERSION[@]|$(VERSION)|g' \
