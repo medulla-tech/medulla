@@ -28,4 +28,6 @@ MAINTAINERCLEANFILES = \
 	Pulse2-User-Manual-FR.pdf \
 	Pulse2-User-Manual-EN.pdf
 
+EXTRA_DIST = $(doc_DATA)
+
 include $(srcdir)/../doc.mk

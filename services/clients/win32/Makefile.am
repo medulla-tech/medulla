@@ -21,11 +21,18 @@
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
 clientsdir = $(localstatedir)/lib/pulse2/clients/win32
-clients_SCRIPTS = build.sh
+dist_clients_SCRIPTS = build.sh
 clients_DATA = sfx.conf.in win32.mk 7zsd.sfx \
 	remote-desktop-agent.reg remote-desktop-agent-vnc2.reg
 
-EXTRA_DIST = win32.mk.in
+EXTRA_DIST = \
+	build.sh \
+	win32.mk.in \
+	sfx.conf.in \
+	7zsd.sfx \
+	remote-desktop-agent.reg \
+	remote-desktop-agent-vnc2.reg
+
 CLEANFILES = win32.mk
 
 edit = sed \

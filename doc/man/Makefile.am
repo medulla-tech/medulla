@@ -35,3 +35,5 @@ man_MANS = \
 	pulse2-scheduler-manager.1 \
 	pulse2-tcp-sproxy.1 \
 	pulse2-wol.1
+
+EXTRA_DIST = $(man_MANS)

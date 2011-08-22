@@ -40,3 +40,9 @@ install-data-local:
 	  $(MKDIR_P) $(DESTDIR)$(examplesdir)/`dirname $$destpath`; \
 	  $(INSTALL_DATA) $$path $(DESTDIR)$(examplesdir)/$$destpath; \
 	done
+
+uninstall-local:
+	for path in `find $(srcdir)/pulse2 $(srcdir)/plugins -name '*.ini'`; do \
+	  destpath=`echo $$path | sed 's#'$(srcdir)'/##'`; \
+	  rm -f $(DESTDIR)$(examplesdir)/$$destpath; \
+	done
