@@ -1,0 +1,257 @@
+; Copyright (C) 2007-2009 Adam Cécile for Mandriva
+; http://www.mandriva.com/
+;
+; This file is part of Pulse 2, http://pulse2.mandriva.org
+;
+; Pulse 2 is free software; you can redistribute it and/or modify
+; it under the terms of the GNU General Public License as published by
+; the Free Software Foundation; either version 2 of the License, or
+; (at your option) any later version.
+;
+; Pulse 2 is distributed in the hope that it will be useful,
+; but WITHOUT ANY WARRANTY; without even the implied warranty of
+; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+; GNU General Public License for more details.
+;
+; You should have received a copy of the GNU General Public License
+; along with Pulse 2; if not, write to the Free Software
+; Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+; MA 02110-1301, USA.
+
+
+; Basic defines
+!define PRODUCT_NAME "Mandriva Pulse2 Win32 Agents"
+!define PRODUCT_VERSION "@VERSION@"
+!define PRODUCT_PUBLISHER "Mandriva S.A."
+!define PRODUCT_WEB_SITE "http://www.mandriva.com"
+
+; Agents defines
+!define SSH_AGENT_NAME "pulse2-secure-agent"
+!define SSH_AGENT_VERSION "2.0.2"
+!define SSH_AGENT_EXE "${SSH_AGENT_NAME}-${SSH_AGENT_VERSION}.exe"
+!define VNC_AGENT_NAME "pulse2-rda-agent"
+!define VNC_AGENT_VERSION "1.3.9"
+!define VNC_AGENT_EXE "${VNC_AGENT_NAME}-${VNC_AGENT_VERSION}.exe"
+!define VNC2_AGENT_NAME "pulse2-rda-agent"
+!define VNC2_AGENT_VERSION "2.0.2"
+!define VNC2_AGENT_EXE "${VNC2_AGENT_NAME}-${VNC2_AGENT_VERSION}.exe"
+!define INVENTORY_AGENT_NAME "inventory-agent"
+!define INVENTORY_AGENT_VERSION "4.0.4.6"
+!define INVENTORY_AGENT_EXE "${INVENTORY_AGENT_NAME}-${INVENTORY_AGENT_VERSION}.exe"
+!define INVENTORY2_AGENT_NAME "inventory-agent"
+!define INVENTORY2_AGENT_VERSION "4.0.6.1.1"
+!define INVENTORY2_AGENT_EXE "${INVENTORY2_AGENT_NAME}-${INVENTORY2_AGENT_VERSION}.exe"
+
+; Useful modules
+!include "MUI.nsh"
+!include "LogicLib.nsh"
+!include "WinVer.nsh"
+!include "Sections.nsh"
+!include "FileFunc.nsh"
+!include "libs\ServiceLib.nsh"
+!include "libs\StrRep.nsh"
+
+; Get command line parameters and values
+!insertmacro GetParameters
+!insertmacro GetOptions
+
+; Variable to store from where the 7sfx archive has been run
+Var /GLOBAL ARCHIVE_DIR
+
+; MUI settings
+!define MUI_ABORTWARNING
+!define MUI_WELCOMEPAGE_TITLE_3LINES
+!define MUI_HEADERIMAGE
+!define MUI_HEADERIMAGE_RIGHT
+!define MUI_ICON "artwork\install.ico"
+!define MUI_HEADERIMAGE_BITMAP "artwork\header.bmp"
+!define MUI_WELCOMEFINISHPAGE_BITMAP "artwork\wizard.bmp"
+
+; Installer pages
+!insertmacro MUI_PAGE_WELCOME
+!insertmacro MUI_PAGE_COMPONENTS
+; Custom page to deal with inventory options
+Page custom InventoryOptions
+!insertmacro MUI_PAGE_INSTFILES
+!insertmacro MUI_LANGUAGE "English"
+
+; Reserve file for options
+ReserveFile "inventoryoptions.ini"
+!insertmacro MUI_RESERVEFILE_INSTALLOPTIONS
+
+Name "${PRODUCT_NAME} (${PRODUCT_VERSION})"
+OutFile "pulse2-win32-agents-installer-${PRODUCT_VERSION}.exe"
+ShowInstDetails show
+
+Section "Secure Agent" SSH
+  DetailPrint "Secure Agent Installation...."
+  DetailPrint "------------------------------------------------------"
+  StrCpy $0 "$EXEDIR\${SSH_AGENT_EXE} /S"
+  ${IfNot} ${FileExists} "$EXEDIR\id_dsa.pub"
+    ${IfNot} ${FileExists} "$EXEDIR\id_rsa.pub"
+      ${If} ${FileExists} "$ARCHIVE_DIR\id_dsa.pub"
+        DetailPrint "Copying $ARCHIVE_DIR\id_dsa.pub to $EXEDIR\id_dsa.pub"
+        CopyFiles "$ARCHIVE_DIR\id_dsa.pub" "$EXEDIR\id_dsa.pub"
+      ${Else}
+        ${If} ${FileExists} "$ARCHIVE_DIR\id_rsa.pub"
+          DetailPrint "Copying $ARCHIVE_DIR\id_rsa.pub to $EXEDIR\id_rsa.pub"
+          CopyFiles "$ARCHIVE_DIR\id_rsa.pub" "$EXEDIR\id_rsa.pub"
+        ${Else}
+          MessageBox MB_OK|MB_ICONEXCLAMATION "id_dsa.pub/id_rsa.pub not found ! $\nPlease copy it to current directory before installing."
+          Abort
+        ${EndIf}
+      ${EndIf}
+    ${EndIf}
+  ${EndIf}
+  DetailPrint "Running $0"
+  nsExec::ExecToLog $0
+  DetailPrint ""
+  DetailPrint ""
+SectionEnd
+
+Section "Remote Desktop Agent" VNC
+  DetailPrint "Remote Desktop Agent Installation...."
+  DetailPrint "------------------------------------------------------"
+  ${If} ${AtLeastWinVista}
+    StrCpy $0 "$EXEDIR\${VNC2_AGENT_EXE} /S"
+  ${Else}
+    StrCpy $0 "$EXEDIR\${VNC_AGENT_EXE} /sp- /verysilent"
+  ${EndIf}
+  DetailPrint "Running $0"
+  nsExec::ExecToLog $0
+  ${If} ${AtLeastWinVista}
+    ${If} ${FileExists} "$EXEDIR\remote-desktop-agent-vnc2.reg"
+      DetailPrint "Merging custom registry settings"
+      StrCpy $0 "regedit /S remote-desktop-agent-vnc2.reg"
+      DetailPrint "Running $0"
+      nsExec::ExecToLog $0
+    ${EndIF}
+  ${Else}
+    ${If} ${FileExists} "$EXEDIR\remote-desktop-agent.reg"
+      DetailPrint "Merging custom registry settings"
+      StrCpy $0 "regedit /S remote-desktop-agent.reg"
+      DetailPrint "Running $0"
+      nsExec::ExecToLog $0
+    ${EndIf}
+  ${EndIf}
+  ${IfNot} ${AtLeastWinVista}
+    DetailPrint "Registering service"
+    StrCpy $0 "$PROGRAMFILES\TightVNC\WinVNC.exe -install"
+    DetailPrint "Running $0"
+    nsExec::ExecToLog $0
+  ${EndIf}
+  ${If} ${AtLeastWinVista}
+    StrCpy $1 "tvnserver"
+  ${Else}
+    StrCpy $1 "winvnc"
+  ${EndIf}
+  !insertmacro SERVICE "status" $1 ""
+  Pop $0
+  ${IfNot} $0 == "stopped"
+    DetailPrint "Stopping Remote Desktop Agent service"
+    !insertmacro SERVICE "stop" $1 ""
+    Sleep 1000
+  ${EndIf}
+  DetailPrint "Starting Remote Desktop Agent service"
+  !insertmacro SERVICE "start" $1 ""
+  Sleep 1000
+  ; Run service helper (trayicon for current session)
+  ReadRegStr $0 HKLM "SYSTEM\CurrentControlSet\Services\$1" "ImagePath"
+  ${If} ${AtLeastWinVista}
+    ; Remove "-service" from command line
+    ${StrReplace} $2 "-service" " " $0
+    ; New VNC systray icon doesn't background itself
+    ; Let's help it with a bit of windows shell magic...
+    StrCpy $1 `cmd.exe /C start "" $2 -controlservice -slave`
+  ${Else}
+    StrCpy $1 "$0helper"
+  ${EndIf}
+  DetailPrint "Starting Remote Desktop Agent service helper for current session"
+  DetailPrint "Running $1"
+  nsExec::ExecToLog $1
+  DetailPrint ""
+  DetailPrint ""
+SectionEnd
+
+Section "Inventory Agent" Inventory
+  DetailPrint "Inventory Agent Installation...."
+  DetailPrint "------------------------------------------------------"
+  ReadINIStr $0 "$PLUGINSDIR\inventoryoptions.ini" "Field 3" "State"
+  ${If} $0 == ""
+    MessageBox MB_OK|MB_ICONEXCLAMATION "Pulse2 Inventory server IP address is empty! $\n\
+Please fill the field with the right IP address."
+    Abort
+  ${EndIf}
+  ReadINIStr $1 "$PLUGINSDIR\inventoryoptions.ini" "Field 5" "State"
+  ${If} $1 == ""
+    MessageBox MB_OK|MB_ICONEXCLAMATION "Pulse2 Inventory server port is empty! $\n\
+Please fill the field with the right port."
+    Abort
+  ${EndIf}
+  ${If} ${AtLeastWinVista}
+    StrCpy $0 "$EXEDIR\${INVENTORY2_AGENT_EXE} /S /NP /NOSPLASH /NOTAG /SERVER:$0 /PNUM:$1"
+  ${Else}
+    StrCpy $0 "$EXEDIR\${INVENTORY_AGENT_EXE} /S /NP /NOSPLASH /SERVER:$0 /PNUM:$1"
+  ${EndIf}
+  DetailPrint "Running $0"
+  nsExec::ExecToLog $0
+  Delete "$EXEDIR\OcsAgentSetup.log"
+  ${If} ${AtLeastWinVista}
+    DetailPrint "Creating registry key for inventory at logon time"
+    ReadRegStr $0 HKLM "SYSTEM\CurrentControlSet\Services\OCS INVENTORY" "ImagePath"
+    ${GetParent} $0 $1
+    ReadINIStr $2 "$PLUGINSDIR\inventoryoptions.ini" "Field 3" "State"
+    ReadINIStr $3 "$PLUGINSDIR\inventoryoptions.ini" "Field 5" "State"
+    WriteRegStr "HKLM" "SOFTWARE\Microsoft\Windows\CurrentVersion\Run" "OCS-Inventory agent" '$1\OCSInventory.exe" /SERVER:$2 /PNUM:$3 /NP /NOTAG /DEBUG'
+  ${EndIf}
+  ; Start an inventory
+  DetailPrint "Creating initial inventory"
+  ReadRegStr $0 HKLM "SYSTEM\CurrentControlSet\Services\OCS INVENTORY" "ImagePath"
+  ${GetParent} $0 $1
+  ReadINIStr $2 "$PLUGINSDIR\inventoryoptions.ini" "Field 3" "State"
+  ReadINIStr $3 "$PLUGINSDIR\inventoryoptions.ini" "Field 5" "State"
+  StrCpy $4 '$1\OCSInventory.exe" /SERVER:$2 /PNUM:$3 /NP /NOTAG'
+  DetailPrint "Runnning $4"
+  nsExec::ExecToLog $4
+  DetailPrint ""
+  DetailPrint ""
+SectionEnd
+
+!insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
+  !insertmacro MUI_DESCRIPTION_TEXT ${SSH} "Secure Agent"
+  !insertmacro MUI_DESCRIPTION_TEXT ${VNC} "Remote Desktop Agent"
+  !insertmacro MUI_DESCRIPTION_TEXT ${Inventory} "Inventory Agent"
+!insertmacro MUI_FUNCTION_DESCRIPTION_END
+
+Function .onInit
+  ; NT4 or later
+  ${IfNot} ${IsNT}
+    MessageBox MB_OK|MB_ICONEXCLAMATION "You cannot install $(^Name) unless you're running Windows NT later."
+    Quit
+  ${EndIf}
+  ${GetParameters} $R0
+  ; Handle /A option
+  ${GetOptions} $R0 "/A=" $0
+  StrCpy $ARCHIVE_DIR $0
+  ; Required for custom pages
+  !insertmacro MUI_INSTALLOPTIONS_EXTRACT "inventoryoptions.ini"
+  ; Forbid ssh installation if the installer is missing
+  ${IfNot} ${FileExists} ${SSH_AGENT_EXE}
+    SectionSetFlags ${SSH} ${SF_RO}
+  ${EndIf}
+  ; Forbid vnc installation if the installer is missing
+  ${IfNot} ${FileExists} ${VNC_AGENT_EXE}
+    SectionSetFlags ${VNC} ${SF_RO}
+  ${EndIf}
+  ; Forbid inventory installation if the installer is missing
+  ${IfNot} ${FileExists} ${INVENTORY_AGENT_EXE}
+    SectionSetFlags ${Inventory} ${SF_RO}
+  ${EndIf}
+FunctionEnd
+
+Function InventoryOptions
+  ${If} ${SectionIsSelected} ${Inventory} 
+    !insertmacro MUI_HEADER_TEXT "Mandriva Pulse2 inventory server IP address" "Configure Pulse2 inventory server IP address (and port if needed)."
+    !insertmacro MUI_INSTALLOPTIONS_DISPLAY "inventoryoptions.ini"
+  ${EndIf}
+FunctionEnd

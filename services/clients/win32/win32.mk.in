@@ -57,7 +57,7 @@ inv2_version = 4.0.6.1.1
 inv2_name = inventory-agent-$(inv2_version).exe
 inv2_url = $(base_url)/inventory-agent/$(inv2_name)
 
-installer_version = 1.3.0
+installer_version = $(agents_version)
 installer_name = pulse2-win32-agents-$(installer_version).exe
 installer_url = $(base_url)/pulse2-win32-agents-installer/$(installer_name)
 

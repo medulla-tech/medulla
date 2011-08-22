@@ -1,0 +1,24 @@
+Pulse2
+---------------------
+
+Pulse 2 helps organizations ranging from a few computers to 100 000+
+heterogeneous computers to inventory, maintain, update and take full
+control on their IT assets. It has been designed to handle 100 000+
+computers spread on many sites.  It supports heterogeneous platforms
+such as MS Windows, GNU/Linux (Mandriva, Redhat, Debian, Ubuntu.,
+etc.), Mac OSX, HP-UX, IBM AIX and Solaris systems.
+
+Pulse2 win32 client
+---------------------
+
+The package integrates different tools to provide a complete Pulse2 client
+under various Windows operating systems.
+
+Tools:
+- cygwin environment with bash, etc.
+- openssh
+- TightVNC server
+- OCS inventory
+
+Supported Windows versions:
+- MS Windows 2000, XP, 2003, Vista, 2008, 7

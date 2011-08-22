@@ -21,9 +21,26 @@
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
 clientsdir = $(localstatedir)/lib/pulse2/clients/win32
+
+installer = pulse2-win32-agents-installer-$(VERSION).exe
+installernsi = pulse2-win32-agents-installer.nsi
+installerdata = \
+	artwork/header.bmp \
+	artwork/uninstall.ico \
+	artwork/wizard.bmp \
+	artwork/install.ico \
+	libs/StrRep.nsh \
+	libs/ServiceLib.nsh \
+	inventoryoptions.ini
+
+if ENABLE_NSIS
+clients_SCRIPTS = $(installer)
+endif
 dist_clients_SCRIPTS = build.sh
 clients_DATA = sfx.conf.in win32.mk 7zsd.sfx \
 	remote-desktop-agent.reg remote-desktop-agent-vnc2.reg
+
+doc_DATA = README.win32
 
 EXTRA_DIST = \
 	build.sh \
@@ -32,8 +49,13 @@ EXTRA_DIST = \
 	7zsd.sfx \
 	remote-desktop-agent.reg \
 	remote-desktop-agent-vnc2.reg
+	$(installernsi) \
+	$(installerdata)
 
 CLEANFILES = win32.mk
+
+$(installer): $(installernsi) $(installerdata)
+	makensis $<
 
 edit = sed \
 	-e 's|@VERSION[@]|$(VERSION)|g' \

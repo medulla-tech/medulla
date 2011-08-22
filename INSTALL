@@ -24,6 +24,7 @@ properly:
 - gettext
 - NFS server (for imaging)
 - 7z (for win32 client generation)
+- NSIS (for building win32 agent pack, can be disabled)
 
 Furthermore, the following services must be accessible, either on the local
 machine or through the network:

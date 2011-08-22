@@ -2,6 +2,7 @@
 *~
 *.mo
 *.o
+*.exe
 Makefile.in
 aclocal.m4
 Makefile
@@ -63,3 +64,4 @@ doc/dev/msc/en/database_documentation.html
 doc/user/msc/en/pulse2_client_check_explained.html
 doc/user/msc/en/pulse2_deployment_error_codes_explained.html
 doc/user/msc/fr/pulse2_deployment_error_codes_explained.html
+services/clients/win32/pulse2-win32-agents-installer.nsi
