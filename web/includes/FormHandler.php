@@ -73,6 +73,9 @@ class FormHandler {
 
             if(isset($this->post_data['old_'.$name])) {
                 if($this->post_data['old_'.$name] != $this->post_data[$name]) {
+                    // remove empty strings from array
+                    if(is_array($value))
+                        $value = array_filter($value);
                     $this->data[$name] = $value;
                 }
             }
@@ -96,17 +99,8 @@ class FormHandler {
 
     /* Get updated value */
     function getValue($field) {
-        if(isset($this->data[$field])) {
-            /* Be sure to return an empty array
-               if there is only an empty string in the array.
-               Needed for MultipleInput fields */
-            if (is_array($this->data[$field])) {
-                if (count($this->data[$field]) == 1 && !$this->data[$field][0]) {
-                    return array();
-                }
-            }
+        if(isset($this->data[$field]))
             return $this->data[$field];
-        }
         else
             return false;
     }
