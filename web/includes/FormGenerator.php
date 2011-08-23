@@ -563,6 +563,7 @@ class MultipleInputTpl extends AbstractTpl {
         $this->desc = stripslashes($desc);
         $this->regexp = '/.*/';
         $this->new = $new;
+        $this->tooltip = False;
     }
 
     function setRegexp($regexp) {
@@ -577,7 +578,8 @@ class MultipleInputTpl extends AbstractTpl {
                                                new InputTpl($this->name.'['.$key.']',$this->regexp),
                                                array('key' => $key,
                                                      'name' => $this->name,
-                                                     'new' => $this->new
+                                                     'new' => $this->new,
+                                                     "tooltip" => $this->tooltip
                                                      )
                                                );
             $test->setCssError($this->name . $key);
@@ -585,7 +587,12 @@ class MultipleInputTpl extends AbstractTpl {
         }
         print '<tr><td width="40%" style="text-align:right;">';
         if (count($arrParam) == 0) {
-            print $this->desc;
+            //if we got a tooltip, we show it
+            if ($this->tooltip) {
+                print "<a href=\"#\" class=\"tooltip\">".$this->desc."<span>".$this->tooltip."</span></a>";
+            } else {
+                print $this->desc;
+            }
         }
         print '</td><td>';
         print '<input name="b'.$this->name.'" type="submit" class="btnPrimary" value="'._("Add").'" onclick="
@@ -859,10 +866,12 @@ class FormElement extends HtmlElement {
     var $cssErrorName;
     var $tooltip;
 
-    function FormElement($desc,$tpl) {
+    function FormElement($desc, $tpl, $extraInfo = array()) {
         $this->desc = $desc;
         $this->template = &$tpl;
-        $this->tooltip = False;
+        foreach ($extraInfo as $key => $value) {
+            $this->template->$key = $value;
+        }
     }
 
     function setCssError($name) {
@@ -1025,7 +1034,7 @@ class TrFormElement extends FormElement {
         $this->template=&$tpl;
         $this->tooltip = False;
         $this->firstColWidth = "40%";
-	$this->style = null;	/* css style */
+    	$this->style = null;	/* css style */
         $this->class = null;	/* html class for the tr element */
         foreach ($extraInfo as $key => $value) {
             $this->$key = $value;
