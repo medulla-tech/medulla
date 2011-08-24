@@ -22,6 +22,7 @@ mmc-core needs the following to be installed and run:
   - openssl
   - ldap
   - twisted web
+  - multiprocessing (included in Python from 2.6)
 - a web server with the following extensions:
   - php5
 
