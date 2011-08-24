@@ -25,11 +25,12 @@ import os
 import os.path
 import sys
 from optparse import OptionParser
+from mmc.site import sysconfdir
 from mmc.support.config import MMCConfigParser
 
 import mmc.agent
 
-dft_inifile = "/etc/mmc/agent/config.ini"
+dft_inifile = sysconfdir + "/mmc/agent/config.ini"
 
 if __name__ == "__main__":
 
