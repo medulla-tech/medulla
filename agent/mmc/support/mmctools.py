@@ -39,6 +39,11 @@ from time import time, struct_time
 import datetime
 import logging
 from twisted.internet import protocol
+import fcntl
+import array
+import struct
+import socket
+import platform
 
 # python 2.3 fallback for set() in xmlrpcleanup
 # also try sqlalchemy.util Sets
@@ -173,6 +178,41 @@ def xmlrpcCleanup(data):
         ret = data
     return ret
 
+def localifs():
+    """
+    Used to get a list of the up interfaces and associated IP addresses
+    on this machine (linux only).
+
+    Returns:
+        List of interface tuples.  Each tuple consists of
+        (interface name, interface IP)
+    """
+
+    SIOCGIFCONF = 0x8912
+    MAXBYTES = 8096
+
+    arch = platform.architecture()[0]
+
+    if arch == '32bit':
+        var1 = 32
+        var2 = 32
+    elif arch == '64bit':
+        var1 = 16
+        var2 = 40
+    else:
+        raise OSError("Unknown architecture: %s" % arch)
+
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    names = array.array('B', '\0' * MAXBYTES)
+    outbytes = struct.unpack('iL', fcntl.ioctl(
+        sock.fileno(),
+        SIOCGIFCONF,
+        struct.pack('iL', MAXBYTES, names.buffer_info()[0])
+        ))[0]
+
+    namestr = names.tostring()
+    return [(namestr[i:i+var1].split('\0', 1)[0], socket.inet_ntoa(namestr[i+20:i+24])) \
+            for i in xrange(0, outbytes, var2)]
 
 class Singleton(object):
     def __new__(type, *args):
@@ -541,7 +581,7 @@ class ContextProviderI:
 
     def __init__(self):
         self.context = None
-  
+
     def setContext(self, context):
         """
         Set the current context
