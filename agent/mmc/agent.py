@@ -24,6 +24,7 @@
 XML-RPC server implementation of the MMC agent.
 """
 from resource import RLIMIT_NOFILE, RLIM_INFINITY, getrlimit
+import multiprocessing as mp
 
 import twisted.internet.error
 import twisted.copyright
@@ -326,149 +327,213 @@ class MmcServer(xmlrpc.XMLRPC,object):
         f.write(time.asctime() + ': ' + content + "\n")
         f.close()
 
-
-def daemon(config):
+class MMCApp(object):
+    """ Represent the MMCApp
     """
-    daemonize mmc-agent
+    def __init__(self, config, options):
+        self.config = readConfig(config)
+        self.conffile = options.inifile
+        self.daemon = options.daemonize
 
-    @param config: MMCConfigParser object
-    @type config: MMCConfigParser
-    """
-    # Test if mmcagent has been already launched in daemon mode
-    if os.path.isfile(config.pidfile):
-        print config.pidfile+" pid already exist. Maybe mmc-agent is already running\n"
-        print "use /etc/init.d script to stop and relaunch it"
-        sys.exit(0)
+        # Shared return state, so that father can know if children goes wrong
+        if self.daemon:
+            self._shared_state = mp.Value('i', 0)
 
-    # do the UNIX double-fork magic, see Stevens' "Advanced
-    # Programming in the UNIX Environment" for details (ISBN 0201563177)
-    try:
-        pid = os.fork()
-        if pid > 0:
-            # exit first parent
+        if self.daemon:
+            self.lock = mp.Lock()
+            
+    def getState(self):
+        if self.daemon:
+            return self._shared_state.value
+
+    def setState(self, s):
+        if self.daemon:
+            self._shared_state.value = s
+    state = property(getState, setState)
+
+    def daemonize(self):
+        # Test if mmcagent has been already launched in daemon mode
+        if os.path.isfile(self.config.pidfile):
+            print self.config.pidfile + " pid already exist. Maybe mmc-agent is already running\n"
             sys.exit(0)
-    except OSError, e:
-        print >>sys.stderr, "fork #1 failed: %d (%s)" % (e.errno, e.strerror)
-        sys.exit(1)
 
-    # decouple from parent environment
-    os.chdir("/")
-    os.setsid()
+        # do the UNIX double-fork magic, see Stevens' "Advanced
+        # Programming in the UNIX Environment" for details (ISBN 0201563177)
+        try:
+            pid = os.fork()
+            if pid > 0:
+                # Wait for initialization before exiting
+                self.lock.acquire()
+                # exit first parent and return 
+                sys.exit(self.state)
+        except OSError, e:
+            print >>sys.stderr, "fork #1 failed: %d (%s)" % (e.errno, e.strerror)
+            sys.exit(1)
 
-    maxfd = getrlimit(RLIMIT_NOFILE)[1]
-    if maxfd == RLIM_INFINITY:
-        maxfd = 1024
+        # decouple from parent environment
+        os.chdir("/")
+        os.setsid()
 
-    for fd in range(0, maxfd):
-        # These fd are twisted pipes
-        # TODO: make a clean code to be sure nothing is opened before this function
-        if fd not in (6,7):
-            try:
-                os.close(fd)
-            except OSError:
-                pass
+        maxfd = getrlimit(RLIMIT_NOFILE)[1]
+        if maxfd == RLIM_INFINITY:
+            maxfd = 1024
 
-    if (hasattr(os, "devnull")):
-        REDIRECT_TO = os.devnull
-    else:
-        REDIRECT_TO = "/dev/null"
+        for fd in range(0, maxfd):
+            # fd 6 and 7 are twisted pipes
+            # TODO: make a clean code to be sure nothing is opened before this function
+            if fd not in (6, 7):
+                try:
+                    os.close(fd)
+                except OSError:
+                    pass
 
-    os.open(REDIRECT_TO, os.O_RDWR)
-    os.dup2(0, 1)
-    os.dup2(0, 2)
+        if (hasattr(os, "devnull")):
+            REDIRECT_TO = os.devnull
+        else:
+            REDIRECT_TO = "/dev/null"
 
-    # do second fork
-    try:
-        pid = os.fork()
-        if pid > 0:
-            # exit from second parent, print eventual PID before
+        os.open(REDIRECT_TO, os.O_RDWR)
+        os.dup2(0, 1)
+        os.dup2(0, 2)
+
+        # do second fork
+        try:
+            pid = os.fork()
+            if pid > 0:
+                # exit from second parent, print eventual PID before
+                os.seteuid(0)
+                os.setegid(0)
+                self.writepid(pid)
+                sys.exit(0)
+        except OSError, e:
+            self.state = 1
+            self.lock.release()
+            sys.exit(1)
+
+    def writePid(self, pid):
+        f = open(self.config.pidfile, 'w')
+        try:
+            f.write(str(pid))
+        except IOError, ioe:
+            log.error('Can not write pidfile: %s' % self.config.pidfile)
+        finally:
+            f.close()
+
+    def cleanPid(self):
+        if os.path.exists(self.config.pidfile):
             os.seteuid(0)
             os.setegid(0)
-            f = open(config.pidfile, 'w')
-            try:
-                f.write(str(pid))
-            except IOError, ioe:
-                log.error('Can not write pidfile: %s' % config.pidfile)
-            finally:
-                f.close()
-            sys.exit(0)
-    except OSError, e:
-        sys.exit(1)
+            os.unlink(self.config.pidfile)
 
-def agentService(config, conffile, daemonize):
-    config = readConfig(config)
+    def run(self):
+        # If umask = 0077, created files will be rw for effective user only
+        # If umask = 0007, they will be rw for effective user and group only
+        os.umask(self.config.umask)
+        os.setegid(self.config.egid)
+        os.seteuid(self.config.euid)
 
-    # If umask = 0077, created files will be rw for effective user only
-    # If umask = 0007, they will be rw for effective user and group only
-    os.umask(config.umask)
-    os.setegid(config.egid)
-    os.seteuid(config.euid)
+        # Daemonize early
+        if self.daemon:
+            self.lock.acquire()
+            self.daemonize()
 
-    # Daemonize early
-    if daemonize:
-        daemon(config)
+        # Do all kind of initialization
+        try:
+            ret = self.initialize()
+        finally:
+            # Tell the father how to return, and let him return (release)
+            if self.daemon:
+                self.cleanPid()
+                self.state = ret
+                self.lock.release()
 
-    # Initialize logging object
-    logging.config.fileConfig(conffile)
+        if ret:
+            return ret
 
-    # In foreground mode, log to stderr
-    if not daemonize:
-        hdlr2 = logging.StreamHandler()
-        log.addHandler(hdlr2)
+        reactor.run()
 
-    # Create log dir if it doesn't exist
-    try:
-        os.mkdir(localstatedir + "/log/mmc")
-    except OSError, (errno, strerror):
-        # Raise exception if error is not "File exists"
-        if errno != 17:
-            raise
-        else: pass
+    def initialize(self):
+        # Initialize logging object
+        logging.config.fileConfig(self.conffile)
 
-    # Changing path to probe and load plugins
-    os.chdir(os.path.dirname(globals()["__file__"]))
+        # In foreground mode, log to stderr
+        if not self.daemon:
+            hdlr2 = logging.StreamHandler()
+            hdlr2.setFormatter(logging.Formatter("%(levelname)s %(message)s"))
+            log.addHandler(hdlr2)
 
-    log.info("mmc-agent %s starting..." % VERSION)
-    log.info("Using Python %s" % sys.version.split("\n")[0])
-    log.info("Using Python Twisted %s" % twisted.copyright.version)
+        # Create log dir if it doesn't exist
+        try:
+            os.mkdir(localstatedir + "/log/mmc")
+        except OSError, (errno, strerror):
+            # Raise exception if error is not "File exists"
+            if errno != 17:
+                raise
+            else:
+                pass
 
-    log.debug("Running as euid = %d, egid = %d" % (os.geteuid(), os.getegid()))
-    if config.multithreading:
-        log.info("Multi-threading enabled, max threads pool size is %d" % config.maxthreads)
-        reactor.suggestThreadPoolSize(config.maxthreads)
+        # Changing path to probe and load plugins
+        os.chdir(os.path.dirname(globals()["__file__"]))
 
-    # Start audit system
-    l = AuditFactory().log(u'MMC-AGENT', u'MMC_AGENT_SERVICE_START')
+        log.info("mmc-agent %s starting..." % VERSION)
+        log.info("Using Python %s" % sys.version.split("\n")[0])
+        log.info("Using Python Twisted %s" % twisted.copyright.version)
+        
+        log.debug("Running as euid = %d, egid = %d" % (os.geteuid(), os.getegid()))
+        if self.config.multithreading:
+            log.info("Multi-threading enabled, max threads pool size is %d" \
+                     % self.config.maxthreads)
+            reactor.suggestThreadPoolSize(self.config.maxthreads)
 
-    # Ask PluginManager to load MMC plugins
-    pm = PluginManager()
-    code = pm.loadPlugins()
-    if code: return code
+        # Start audit system
+        l = AuditFactory().log(u'MMC-AGENT', u'MMC_AGENT_SERVICE_START')
 
-    try:
-        startService(config, pm.plugins)
-    except Exception, e:
-        # This is a catch all for all the exception that can happened
-        log.exception("Program exception: " + str(e))
-        return 1
+        # Ask PluginManager to load MMC plugins
+        pm = PluginManager()
+        code = pm.loadPlugins()
+        if code:
+            return code
 
-    l.commit()
-    reactor.run()
+        try:
+            self.startService(pm.plugins)
+        except Exception, e:
+            # This is a catch all for all the exception that can happened
+            log.exception("Program exception: " + str(e))
+            return 1
 
-def cleanUp(config):
-    """
-    function call before shutdown of reactor
-    """
-    log.info('mmc-agent shutting down, cleaning up...')
-    l = AuditFactory().log(u'MMC-AGENT', u'MMC_AGENT_SERVICE_STOP')
+        l.commit()
 
-    # Unlink pidfile if it exists
-    if os.path.isfile(config.pidfile):
-        os.seteuid(0)
-        os.setegid(0)
-        os.unlink(config.pidfile)
+        return 0
 
-    l.commit()
+    def startService(self, mod):
+        # Starting XMLRPC server
+        r = MmcServer(mod, self.config)
+        if self.config.enablessl:
+            sslContext = makeSSLContext(self.config.verifypeer, self.config.cacert,
+                                        self.config.localcert)
+            reactor.listenSSL(self.config.port, MMCSite(r), 
+                              interface=self.config.host, 
+                              contextFactory=sslContext)
+        else:
+            log.warning("SSL is disabled by configuration.")
+            reactor.listenTCP(self.config.port, server.Site(r), interface=self.config.host)
+
+        # Add event handler before shutdown
+        reactor.addSystemEventTrigger('before', 'shutdown', self.cleanUp)
+        log.info("Listening to XML-RPC requests on %s:%s" \
+                 % (self.config.host, self.config.port))
+
+    def cleanUp(self):
+        """
+        function call before shutdown of reactor
+        """
+        log.info('mmc-agent shutting down, cleaning up...')
+        l = AuditFactory().log(u'MMC-AGENT', u'MMC_AGENT_SERVICE_STOP')
+
+        # Unlink pidfile if it exists
+        self.cleanPid()
+
+        l.commit()
 
 class MMCHTTPChannel(http.HTTPChannel):
     """
@@ -487,21 +552,6 @@ class MMCHTTPChannel(http.HTTPChannel):
 
 class MMCSite(server.Site):
     protocol = MMCHTTPChannel
-
-def startService(config, mod):
-    # Starting XMLRPC server
-    r = MmcServer(mod, config)
-    if config.enablessl:
-        sslContext = makeSSLContext(config.verifypeer, config.cacert, config.localcert)
-        reactor.listenSSL(config.port, MMCSite(r), 
-                          interface=config.host, 
-                          contextFactory=sslContext)
-    else:
-        log.warning("SSL is disabled by configuration.")
-        reactor.listenTCP(config.port, server.Site(r), interface = config.host)
-    # Add event handler before shutdown
-    reactor.addSystemEventTrigger('before', 'shutdown', cleanUp, config)
-    log.info("Listening to XML-RPC requests")
 
 def readConfig(config):
     """

@@ -59,5 +59,6 @@ if __name__ == "__main__":
         print str(e)
         sys.exit(3)
     
-    # Start the daemon main loop
-    sys.exit(mmc.agent.agentService(cp, options.inifile, options.daemonize))
+    # Start the application
+    app = mmc.agent.MMCApp(cp, options)
+    sys.exit(app.run())
