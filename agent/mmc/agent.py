@@ -24,6 +24,7 @@
 XML-RPC server implementation of the MMC agent.
 """
 from resource import RLIMIT_NOFILE, RLIM_INFINITY, getrlimit
+import signal
 import multiprocessing as mp
 
 import twisted.internet.error
@@ -354,7 +355,7 @@ class MMCApp(object):
     def daemonize(self):
         # Test if mmcagent has been already launched in daemon mode
         if os.path.isfile(self.config.pidfile):
-            print self.config.pidfile + " pid already exist. Maybe mmc-agent is already running\n"
+            print  "%s already exist. Maybe mmc-agent is already running\n" % self.config.pidfile
             sys.exit(0)
 
         # do the UNIX double-fork magic, see Stevens' "Advanced
@@ -373,6 +374,18 @@ class MMCApp(object):
         # decouple from parent environment
         os.chdir("/")
         os.setsid()
+        os.umask(0)
+
+        # do second fork
+        try:
+            pid = os.fork()
+            if pid > 0:
+                # exit from second parent
+                sys.exit(0)
+        except OSError, e:
+            self.state = 1
+            self.lock.release()
+            sys.exit(1)
 
         maxfd = getrlimit(RLIMIT_NOFILE)[1]
         if maxfd == RLIM_INFINITY:
@@ -396,33 +409,48 @@ class MMCApp(object):
         os.dup2(0, 1)
         os.dup2(0, 2)
 
-        # do second fork
-        try:
-            pid = os.fork()
-            if pid > 0:
-                # exit from second parent, print eventual PID before
-                os.seteuid(0)
-                os.setegid(0)
-                self.writepid(pid)
-                sys.exit(0)
-        except OSError, e:
-            self.state = 1
-            self.lock.release()
-            sys.exit(1)
+        # write pidfile
+        self.writePid()
 
-    def writePid(self, pid):
+    def kill(self):
+        pid = self.readPid()
+        if pid is None:
+            print "Can not find a running mmc-agent."
+            return 1
+
+        try:
+            os.kill(pid, signal.SIGTERM)
+        except Exception, e:
+            print "Can not terminate running mmc-agent: %s" % e
+            return 1
+
+        return 0
+
+    def readPid(self):
+        """ Try to read pid of running mmc-agent in pidfile
+        Return the pid or None in case of failure
+        """
+        try:
+            if os.path.exists(self.config.pidfile):
+                f = open(self.config.pidfile, 'r')
+                try:
+                    line = f.readline()
+                    return int(line.strip())
+                finally:
+                    f.close()
+        except:
+            return None
+
+    def writePid(self):
+        pid = os.getpid()
         f = open(self.config.pidfile, 'w')
         try:
-            f.write(str(pid))
-        except IOError, ioe:
-            log.error('Can not write pidfile: %s' % self.config.pidfile)
+            f.write('%s\n' % pid)
         finally:
             f.close()
 
     def cleanPid(self):
         if os.path.exists(self.config.pidfile):
-            os.seteuid(0)
-            os.setegid(0)
             os.unlink(self.config.pidfile)
 
     def run(self):
@@ -443,11 +471,11 @@ class MMCApp(object):
         finally:
             # Tell the father how to return, and let him return (release)
             if self.daemon:
-                self.cleanPid()
                 self.state = ret
                 self.lock.release()
 
         if ret:
+            self.cleanPid()
             return ret
 
         reactor.run()
@@ -529,11 +557,9 @@ class MMCApp(object):
         """
         log.info('mmc-agent shutting down, cleaning up...')
         l = AuditFactory().log(u'MMC-AGENT', u'MMC_AGENT_SERVICE_STOP')
-
-        # Unlink pidfile if it exists
-        self.cleanPid()
-
         l.commit()
+
+        self.cleanPid()
 
 class MMCHTTPChannel(http.HTTPChannel):
     """

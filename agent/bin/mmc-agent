@@ -30,7 +30,7 @@ from mmc.support.config import MMCConfigParser
 
 import mmc.agent
 
-dft_inifile = sysconfdir + "/mmc/agent/config.ini"
+dft_inifile = os.path.join(sysconfdir, "mmc", "agent", "config.ini")
 
 if __name__ == "__main__":
 
@@ -42,6 +42,8 @@ if __name__ == "__main__":
                       help="Do not daemonize")
     parser.add_option("-f", "--inifile", dest="inifile", default=dft_inifile,
                       help="Path to configuration file", metavar="INIFILE")
+    parser.add_option("-k", "--kill", dest="kill", default=False, action="store_true",
+                      help="Kill running daemon, if any")
 
     # Parse arguments
     (options, args) = parser.parse_args()
@@ -61,4 +63,8 @@ if __name__ == "__main__":
     
     # Start the application
     app = mmc.agent.MMCApp(cp, options)
-    sys.exit(app.run())
+    if options.kill:
+        ret = app.kill()
+    else:
+        ret = app.run()
+    sys.exit(ret)
