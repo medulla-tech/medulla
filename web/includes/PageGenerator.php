@@ -201,8 +201,8 @@ class ActionItem {
                 $urlChunk = "&amp;" . $this->paramString."=" . rawurlencode($obj);
             }
             $str= "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action . $urlChunk ."\">";
-            $str.= "$obj";
-            $str.=" </a>";
+            $str.= trim($obj);
+            $str.= "</a>";
             return $str;
         } else {
             $str= "<a title=\"".$this->desc."\" href=\"#\">";
@@ -520,7 +520,7 @@ class ListInfos extends HtmlElement {
         }
         echo $firstAction->encapsulate($this->arrInfo[$idx], $this->paramInfo[$idx]);
         if (isset($this->_addInfo[$idx])) {
-            print $this->_addInfo[$idx];
+            print " " . $this->_addInfo[$idx];
         }
         echo "</td>";
     }
@@ -1156,7 +1156,7 @@ class AjaxFilter extends HtmlElement {
         }
         if(isset($_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_end"])) {
             $this->storedend = $_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_end"];
-        }                        
+        }
     }
 
     /**
@@ -1200,14 +1200,14 @@ if(isset($this->storedfilter)) {
         var refreshtimer<?php echo $this->formid ?> = null;
         var refreshparamtimer<?php echo $this->formid ?> = null;
         var refreshdelay<?php echo $this->formid ?> = <?php echo  $this->refresh ?>;
-        var maxperpage = 10;      
+        var maxperpage = 10;
 <?
 if (isset($this->storedmax)) {
 ?>
         maxperpage = <?php echo $this->storedmax ?>;
 <?
 }
-?>      
+?>
         if(document.getElementById('maxperpage') != undefined)
             maxperpage = document.getElementById('maxperpage').value;
 
@@ -1232,7 +1232,7 @@ if (isset($this->storedmax)) {
             $url .= "&start=".$this->storedstart."&end=".$this->storedend;
         }
         ?>
-                 
+
         updateSearch<?php echo $this->formid ?> = function() {
             new Ajax.Updater('<?php echo  $this->divid; ?>',
             '<?php echo $url ?>',

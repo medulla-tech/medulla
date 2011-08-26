@@ -1,8 +1,8 @@
-<?
+<?php
 
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2010 Mandriva, http://www.mandriva.com
+ * (c) 2007-2011 Mandriva, http://www.mandriva.com
  *
  * $Id$
  *
@@ -22,9 +22,16 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* ppolicy sidebar definition included by the base/users local sidebar */
+require("modules/base/users/localSidebar.php");
+require("graph/navbar.inc.php");
 
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Password policies", "ppolicy"), "base", "users", "indexppolicy", "img/config/icn_global_active.gif", "img/config/icn_global.gif"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Add a password policy", "ppolicy"), "base", "users", "addppolicy", "img/config/icn_global_active.gif", "img/config/icn_global.gif"));
+$ajax = new AjaxFilter(urlStrRedirect("base/users/ajaxPPoliciesFilter"));
+$ajax->display();
+
+$p = new PageGenerator(_T("Password policies list"));
+$p->setSideMenu($sidemenu);
+$p->display();
+
+$ajax->displayDivToUpdate();
 
 ?>

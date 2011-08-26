@@ -24,24 +24,32 @@
 
 /* Definition of all the ppolicy module XML-RPC calls */
 
-function checkPPolicy() {
-    return xmlCall("ppolicy.checkPPolicy",array());
+function checkPPolicy($ppolicy) {
+    return xmlCall("ppolicy.checkPPolicy",array($ppolicy));
 }
 
-function installPPolicy() {
-    xmlCall("ppolicy.installPPolicy",array());
+function installPPolicy($ppolicy) {
+    return xmlCall("ppolicy.installPPolicy",array($ppolicy));
 }
 
-function getPPolicyAttribute($name) {
-    return xmlCall("ppolicy.getPPolicyAttribute",array($name));
+function delPPolicy($ppolicy) {
+    return xmlCall("ppolicy.delPPolicy",array($ppolicy));
 }
 
-function getAllPPolicyAttributes() {
-    return xmlCall("ppolicy.getAllPPolicyAttributes",array());
+function listPPolicy($filter) {
+    return xmlCall("ppolicy.listPPolicy", array($filter));
 }
 
-function setPPolicyAttribute($name, $value) {
-    xmlCall("ppolicy.setPPolicyAttribute",array($name,$value));
+function getPPolicyAttribute($name, $ppolicy) {
+    return xmlCall("ppolicy.getPPolicyAttribute",array($name, $ppolicy));
+}
+
+function getAllPPolicyAttributes($ppolicy) {
+    return xmlCall("ppolicy.getAllPPolicyAttributes",array($ppolicy));
+}
+
+function setPPolicyAttribute($name, $value, $ppolicy) {
+    return xmlCall("ppolicy.setPPolicyAttribute",array($name, $value, $ppolicy));
 }
 
 function getDefaultPPolicyAttributes() {
@@ -49,7 +57,7 @@ function getDefaultPPolicyAttributes() {
 }
 
 function setPPolicyDefaultConfigAttributes() {
-    xmlCall("ppolicy.setPPolicyDefaultConfigAttributes",array());
+    return xmlCall("ppolicy.setPPolicyDefaultConfigAttributes",array());
 }
 
 function hasPPolicyObjectClass ($uid) {
@@ -57,11 +65,11 @@ function hasPPolicyObjectClass ($uid) {
 }
 
 function addPPolicyObjectClass ($uid) {
-    xmlCall("ppolicy.addPPolicyObjectClass",array($uid));
+    return xmlCall("ppolicy.addPPolicyObjectClass",array($uid));
 }
 
 function removePPolicyObjectClass ($uid) {
-    xmlCall("ppolicy.removePPolicyObjectClass",array($uid));
+    return xmlCall("ppolicy.removePPolicyObjectClass",array($uid));
 }
 
 function getUserPPolicyAttribut($uid,$name) {
@@ -69,7 +77,7 @@ function getUserPPolicyAttribut($uid,$name) {
 }
 
 function setUserPPolicyAttribut($uid,$name,$value) {
-    xmlCall("ppolicy.setUserPPolicyAttribut",array($uid,$name,$value));
+    return xmlCall("ppolicy.setUserPPolicyAttribut",array($uid,$name,$value));
 }
 
 function isAccountLocked($uid) {
@@ -77,11 +85,11 @@ function isAccountLocked($uid) {
 }
 
 function lockAccount($uid) {
-    xmlCall("ppolicy.lockAccount", array($uid));
+    return xmlCall("ppolicy.lockAccount", array($uid));
 }
 
 function unlockAccount($uid) {
-    xmlCall("ppolicy.unlockAccount", array($uid));
+    return xmlCall("ppolicy.unlockAccount", array($uid));
 }
 
 function passwordMustBeChanged($uid) {

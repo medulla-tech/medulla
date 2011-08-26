@@ -157,6 +157,32 @@ class PPolicy(ldapUserGroupControl):
             self.l.add_s(ppolicyDN, attributes)
             self.logger.info("Password policy registered at: %s" % ppolicyDN)
 
+    def delPPolicy(self, ppolicyName):
+        """
+        Remove a password policy entry from LDAP
+        Disallow to remove the default password policy
+        """
+        if ppolicyName == self.configPPolicy.ppolicydefault:
+            return False
+
+        if self.checkPPolicy(ppolicyName):
+            ppolicyDN = "cn=" + ppolicyName + "," + self.configPPolicy.ppolicydn
+            self.delRecursiveEntry(ppolicyDN)
+            return True
+
+        return False
+
+    def listPPolicy(self, filt = ''):
+        """
+        Get ppolicy list from directory
+
+        @rtype: list
+        """
+        filt = filt.strip()
+        if not filt: filt = "*"
+        else: filt = "*" + filt + "*"
+        return self.l.search_s(self.configPPolicy.ppolicydn, ldap.SCOPE_SUBTREE, "(&(objectClass=pwdPolicy)(cn=%s))" % filt)
+
     def getAttribute(self, nameattribute = None, ppolicyName = None):
         """
         Get the given attribute value of the default password policies.
@@ -476,11 +502,17 @@ def checkPPolicy(ppolicyName = None):
 def installPPolicy(ppolicyName = None):
     return PPolicy().installPPolicy(ppolicyName)
 
+def delPPolicy(ppolicyName):
+    return PPolicy().delPPolicy(ppolicyName)
+
+def listPPolicy(filt = ''):
+    return PPolicy().listPPolicy(filt)
+
 def getPPolicyAttribute(nameAttribute, ppolicyName = None):
     return PPolicy().getAttribute(nameAttribute, ppolicyName)
 
 def getAllPPolicyAttributes (ppolicyName = None):
-    return PPolicy().getAttribute(ppolicyName)
+    return PPolicy().getAttribute(None, ppolicyName)
 
 def setPPolicyAttribute (nameAttribute, value, ppolicyName = None):
     if value == '': value = None

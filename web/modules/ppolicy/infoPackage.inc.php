@@ -39,12 +39,33 @@ $mod->setPriority(600);
 
 /* Get the base module instance reference */
 $base = &$MMCApp->getModule('base');
-/* Get the computers sub-module instance reference */
+/* Get the users sub-module instance reference */
 $users = &$base->getSubmod('users');
 
 /* Add the page to the module */
-$page = new Page("ppolicy", _T("Default password policy", "ppolicy"));
-$page->setFile("modules/ppolicy/default/ppolicy.php");
+$page = new Page("indexppolicy",_T("Password policies", "ppolicy"));
+$page->setFile("modules/ppolicy/default/index.php");
+$users->addPage($page);
+
+$page = new Page("addppolicy",_T("Add a password policy", "ppolicy"));
+$page->setFile("modules/ppolicy/default/add.php");
+$users->addPage($page);
+
+$page = new Page("editppolicy",_T("Edit a password policy", "ppolicy"));
+$page->setFile("modules/ppolicy/default/edit.php");
+$page->setOptions(array("visible" => False));
+$users->addPage($page);
+
+$page = new Page("deleteppolicy",_T("Delete a password policy", "ppolicy"));
+$page->setFile("modules/ppolicy/default/delete.php",
+    array("noHeader" => True, "visible" => False)
+);
+$users->addPage($page);
+
+$page = new Page("ajaxPPoliciesFilter");
+$page->setFile("modules/ppolicy/default/ajaxPPoliciesFilter.php",
+    array("AJAX" => True, "visible" => False)
+);
 $users->addPage($page);
 
 /* Declare variable to will can set hiden it */
