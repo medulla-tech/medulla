@@ -780,7 +780,7 @@ class PluginManager(Singleton):
         ignore the disable = 1 configuration option)
         """
         if name in self.getEnabledPluginNames() or name in self.plugins:
-            logger.warning('Trying to start an already loaded plugin: %s' % (name,))
+            log.warning('Trying to start an already loaded plugin: %s' % (name,))
             return 0
         res = self.loadPlugin(name, force=True)
         if res == 0:
