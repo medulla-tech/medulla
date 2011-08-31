@@ -22,7 +22,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
-from ConfigParser import *
+from ConfigParser import ConfigParser, NoSectionError, NoOptionError
 from mmc.support.mmctools import Singleton
 from mmc.support.config import MMCConfigParser
 
@@ -32,12 +32,12 @@ class AuthenticationManager(Singleton):
     Classes that are able to authenticate users by implementing the
     AuthenticatorI interface must register to this class.
     """
-    
+
     components = []
 
     def __init__(self):
         Singleton.__init__(self)
-        self.logger = logging.getLogger()    
+        self.logger = logging.getLogger()
 
     def register(self, name, klass):
         """
@@ -144,7 +144,7 @@ class AuthenticatorConfig(MMCConfigParser):
                 pass
             except NoOptionError:
                 pass
-        
+
     def setDefault(self):
         self.authonly = None
         self.mandatory = True
@@ -179,7 +179,7 @@ class AuthenticatorI:
         Should be implemented by the subclass, as this default method always
         returns False.
         The method should check that the authenticator will work.
-        
+
         @return: True if the authenticator can be used, else False
         """
         return False

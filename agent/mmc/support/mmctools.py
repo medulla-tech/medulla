@@ -37,7 +37,6 @@ import re
 from new import instancemethod
 from time import time, struct_time
 import datetime
-import logging
 from twisted.internet import protocol
 import fcntl
 import array
@@ -355,7 +354,6 @@ def launch(cmd, param):
     logger = logging.getLogger()
     logger.debug("support.mmctools.launch(\""+str(cmd)+","+str(param)+"\")")
     shProcess = shProcessProtocol(cmd)
-    logger = logging.getLogger()
     reactor.spawnProcess(shProcess, cmd, param,os.environ)
     while not shProcess.done:
         reactor.iterate()

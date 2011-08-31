@@ -356,7 +356,6 @@ def existUser(uid):
 
 #change main UserAttributes
 def changeUserMainAttributes(uid,newuid,name,surname):
-    l = logging.getLogger()
     ldapObj = ldapUserGroupControl()
     gecos = name + " " + surname
     gecos = delete_diacritics(gecos)
@@ -1044,7 +1043,6 @@ class LdapUserGroupControl:
         @param group: new primary group
         @type uid: unicode
         """
-        userdn = self.searchUserDN(uid)
         gidNumber = self.getDetailedGroup(group)["gidNumber"][0]
         currentPrimary = self.getUserPrimaryGroup(uid)
         try:
@@ -2001,7 +1999,7 @@ class GpoManager:
         """
         try:
             self.l.addOu(self.l.gpoDN)
-        except ldap.ALREADY_EXISTS, e:
+        except ldap.ALREADY_EXISTS:
             # The Ou already exists
             pass
 
@@ -2011,10 +2009,10 @@ class GpoManager:
         """
         try:
             self.l.addOu(self.service, self.l.gpoDN)
-        except ldap.ALREADY_EXISTS, e:
+        except ldap.ALREADY_EXISTS:
             # The Ou already exists
             pass
-        except ldap.STRONG_AUTH_REQUIRED, e:
+        except ldap.STRONG_AUTH_REQUIRED:
             # We have this error if we try to write into a replicat
             # Just ignore
             pass

@@ -23,11 +23,12 @@
 
 import ldap
 import xmlrpclib
+from ConfigParser import NoOptionError
 
 from mmc.site import mmcconfdir
-from mmc.plugins.base.ldapconnect import *
-from mmc.plugins.base.auth import *
-from mmc.plugins.base.provisioning import *
+from mmc.plugins.base.ldapconnect import LDAPConnectionConfig, LDAPConnection
+from mmc.plugins.base.auth import AuthenticatorConfig, AuthenticatorI, AuthenticationToken
+from mmc.plugins.base.provisioning import ProvisionerConfig, ProvisionerI
 
 INI = mmcconfdir + "/plugins/base.ini"
 
@@ -35,19 +36,19 @@ class ExternalLdapAuthenticatorConfig(AuthenticatorConfig, LDAPConnectionConfig)
     """
     Read and store the configuration of ExternalLdapAuthenticator objects.
     """
-    
+
     def readConf(self):
         AuthenticatorConfig.readConf(self)
         for option in ["suffix", "attr"]:
-            self.__dict__[option] = self.get(self.section, option)        
+            self.__dict__[option] = self.get(self.section, option)
         try:
             self.__dict__["bindname"] = self.getdn(self.section, "bindname")
         except NoOptionError:
-            pass                
+            pass
         try:
             self.__dict__["bindpasswd"] = self.getpassword(self.section, "bindpasswd")
         except NoOptionError:
-            pass                
+            pass
         self.ldapurls = self.get(self.section, "ldapurl").split()
         try:
             self.filter = self.get(self.section, "filter")
@@ -64,7 +65,7 @@ class ExternalLdapAuthenticator(AuthenticatorI):
     """
     This authenticator connects to a LDAP server to authenticate users.
     """
-    
+
     def __init__(self, conffile = INI, name = "externalldap"):
         AuthenticatorI.__init__(self, conffile, name, ExternalLdapAuthenticatorConfig)
 
@@ -101,7 +102,7 @@ class ExternalLdapAuthenticator(AuthenticatorI):
         """
         connected = False
         for ldapurl in self.config.ldapurls:
-            try:                
+            try:
                 self.logger.debug("Connecting to %s" % ldapurl)
                 self.config.ldapurl = ldapurl
                 conn = LDAPConnection(self.config)
@@ -141,7 +142,7 @@ class ExternalLdapAuthenticator(AuthenticatorI):
 
     def ldapBind(self, l, userdn, password):
         if isinstance(password, xmlrpclib.Binary):
-            password = str(password)        
+            password = str(password)
         self.logger.debug("Binding with dn: %s %s" % (userdn, password))
         l.simple_bind_s(userdn, password)
 
@@ -150,7 +151,7 @@ class ExternalLdapProvisionerConfig(ProvisionerConfig):
     """
     Read and store the configuration of ExternalLdapProvisioner objects.
     """
-    
+
     def readConf(self):
         ProvisionerConfig.readConf(self)
         for attr in ["uid", "givenName", "sn"]:
@@ -161,7 +162,7 @@ class ExternalLdapProvisionerConfig(ProvisionerConfig):
             if self.has_option(self.section, "profile_group_mapping"):
                 self.profileGroupMapping = self.getboolean(self.section, "profile_group_mapping")
             if self.has_option(self.section, "profile_group_prefix"):
-                self.profileGroupPrefix = self.get(self.section, "profile_group_prefix")            
+                self.profileGroupPrefix = self.get(self.section, "profile_group_prefix")
             PROFILEACL = "profile_acl_"
             for option in self.options(self.section):
                 if option.startswith(PROFILEACL):
@@ -180,7 +181,7 @@ class ExternalLdapProvisioner(ProvisionerI):
     This provisioner creates user accounts thanks to user informations given
     by ExternalLdapAuthenticator objects.
     """
-    
+
     def __init__(self, conffile = INI, name = "externalldap"):
         ProvisionerI.__init__(self, conffile, name, ExternalLdapProvisionerConfig)
 
