@@ -37,7 +37,6 @@ reactor.run()
 """
 
 import xmlrpclib
-import logging
 
 from twisted.web import xmlrpc
 from twisted.internet import reactor, defer, ssl
@@ -63,7 +62,7 @@ class Proxy(xmlrpc.Proxy):
         else:
             reactor.connectTCP(self.host, self.port or 80, factory)
         return factory.deferred
-    
+
 class MMCQueryProtocol(xmlrpc.QueryProtocol):
 
     def connectionMade(self):
@@ -105,4 +104,3 @@ class MMCQueryFactory(xmlrpc._QueryFactory):
     def getSession(self, value):
         self.parent.session = self.session
         return value
-

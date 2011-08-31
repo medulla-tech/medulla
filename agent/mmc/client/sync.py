@@ -46,7 +46,7 @@ import stat
 import logging
 
 import xmlrpclib
-from urlparse import urlparse, urlunparse
+from urlparse import urlparse
 from base64 import encodestring
 from cookielib import LWPCookieJar
 from urllib2 import Request as CookieRequest
