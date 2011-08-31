@@ -25,15 +25,15 @@
 Contains classes that read records for the audit system
 """
 
-from sqlalchemy import *
-from classes import *
+from sqlalchemy import and_, or_, desc
+from mmc.core.audit.classes import Record, Module, Object, Object_Log, Event, Parameters, Initiator, Type, Source, Previous_Value, Current_Value
 
 class AuditReaderDB:
 
     def __init__(self, parent, session):
         self.session = session
         self.parent = parent
-        
+
     def getLog(self, start, end, plug, user, type, date1, date2, object, action):
         """
             @param start: start of search
@@ -53,27 +53,27 @@ class AuditReaderDB:
             @type date1: string
             @type date2: string
             @type object: string
-            @type action: string 
-        """        
+            @type action: string
+        """
         qlog = self.session.query(Record)
-        
+
         #
         # Filter by module
-        #        
+        #
         if plug != 0:
             plugin = self.session.query(Module).filter(self.parent.module_table.c.name.like("%"+plug+"%")).first()
-            if plugin != None:        
-                
+            if plugin != None:
+
                 ql = qlog.filter(self.parent.record_table.c.module_id==plugin.id)
                 qlog = ql
             else:
                 self.session.close()
                 return None
-        
+
         #
         # Filter by date
-        #        
-        if (date1 != 0) and (date2 != 0):            
+        #
+        if (date1 != 0) and (date2 != 0):
             ql = qlog.filter(and_(self.parent.record_table.c.date>=date1,self.parent.record_table.c.date<=date2))
             qlog = ql
         elif (date1 != 0):
@@ -84,8 +84,8 @@ class AuditReaderDB:
             qlog = ql
         #
         # Filter by user
-        #        
-        if user != 0:        
+        #
+        if user != 0:
             # type_id: 1 => USER
             # type_id: 2 => SYSTEMUSER
             object_user = self.session.query(Object).filter(
@@ -95,17 +95,17 @@ class AuditReaderDB:
                         self.parent.object_table.c.type_id==2,
                     ),
                     self.parent.object_table.c.uri.like("%"+user+"%"),
-                )).first()                
+                )).first()
             if object_user==None:
                 self.session.close()
                 return None
-            else:               
+            else:
                ql = qlog.filter(self.parent.record_table.c.user_id==object_user.id)
                qlog = ql
 
         #
         # Filter by event
-        #        
+        #
         if action != 0:
             action = self.session.query(Event).filter(self.parent.event_table.c.name.like("%"+action+"%")).all()
             if action != []:
@@ -116,11 +116,11 @@ class AuditReaderDB:
                 qlog = ql
             else:
                 return None
-        
-        
+
+
         #
         # Filter by object
-        #                
+        #
         if object != 0:
             obj= self.session.query(Object).filter(self.parent.object_table.c.uri.like("%"+object+"%")).all()
             if obj != []:
@@ -143,38 +143,38 @@ class AuditReaderDB:
                 return None
         #
         # Filter by type
-        #               
+        #
         if type != 0:
             typ = self.session.query(Type).filter(self.parent.type_table.c.type.like("%"+type+"%")).first()
-            if typ != None:              
+            if typ != None:
                 ql = qlog.filter(self.parent.object_table.c.type_id==typ.id).join("obj_log")
                 qlog = ql
             else:
                 self.session.close()
                 return None
-        logcount = qlog.count() 
-                     
+        logcount = qlog.count()
+
         return [logcount, self.getArrayLogs(qlog.order_by(desc(self.parent.record_table.c.id)).limit(end-start).offset(start))]
-    
+
     def getLogById(self,id):
         """
-        Return a log dict 
-        @param id: id in log table 
+        Return a log dict
+        @param id: id in log table
         @type id: int
         """
         qlog = self.session.query(Record).filter(self.parent.record_table.c.id==id)
         return self.getArrayLogs(qlog)
-    
+
     def getArrayLogs(self,qlog):
         """
         return an array of log
         @param qlog: list of Log
         @type qlog: list
         """
-        
+
         self.logresult=[]
-        
-        for record in qlog:                
+
+        for record in qlog:
             laction = self.session.query(Event).filter(and_(self.parent.event_table.c.id==record.event_id, self.parent.event_table.c.module_id==record.module_id)).first()
             lparam = self.session.query(Parameters).filter(self.parent.param_table.c.record_id == record.id).all()
             lplugin = self.session.query(Module).filter(self.parent.module_table.c.id == record.module_id).first()
@@ -190,38 +190,38 @@ class AuditReaderDB:
                     parameters.__setitem__(str(param.param_name),str(param.param_value))
 
             llistobj=[]
-            if listobj != None:                
-                for objects in listobj:          
-                          
+            if listobj != None:
+                for objects in listobj:
+
                     lobject = self.session.query(Object).filter(self.parent.object_table.c.id == objects.object_id).first()
                     ltype = self.session.query(Type).filter(self.parent.type_table.c.id == lobject.type_id).first()
-                    
+
                     #
                     #    Object is an LDAP Attribute
-                    #        
+                    #
                     #if lobject.type_id==2:
                     lpattr = self.session.query(Previous_Value).filter(self.parent.previous_value_table.c.object_log_id==objects.id).all()
                     #
                     # Put attr in array !
                     #
-                    
+
                     pattr=[]
-                    for p in lpattr:    
+                    for p in lpattr:
                         pattr.append(p.value)
-                    
+
                     lcattr = self.session.query(Current_Value).filter(self.parent.current_value_table.c.object_log_id==objects.id).all()
-                    
+
                     cattr=[]
-                    for c in lcattr:    
+                    for c in lcattr:
                         cattr.append(c.value)
-                    
-                    llistobj.append({"object":str(lobject.uri), "type":str(ltype.type), "previous":pattr,"current":cattr})        
+
+                    llistobj.append({"object":str(lobject.uri), "type":str(ltype.type), "previous":pattr,"current":cattr})
                 #else:
                  #   llistobj.append({})
                     #llistobj.append({"object":str(lobject.uri), "type":str(ltype.type)})
             #
             #    Final array
-            #                        
+            #
             self.logresult.append({
                 "id":str(record.id),
                 "date":str(record.date),
@@ -229,7 +229,7 @@ class AuditReaderDB:
                 "user":luser.uri,
                 "action":laction.name,
                 "plugin":lplugin.name,
-                "client-type":lclient.application, 
+                "client-type":lclient.application,
                 "client-host":lclient.hostname,
                 "agent-host":lagent.hostname,
                 "objects":llistobj,
@@ -237,11 +237,11 @@ class AuditReaderDB:
             })
         self.session.close()
         return self.logresult
-        
-    def __str__(self):     
+
+    def __str__(self):
         for i in self.logresult:
             print i
-        
+
     def getActionType(self,action,type):
         """
         Return a list of action or type it depends on action value or type

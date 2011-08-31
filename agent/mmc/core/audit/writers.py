@@ -28,15 +28,14 @@ import socket
 import sys
 import os
 import pwd
-import logging
 import threading
 
 # SqlAlchemy
-from sqlalchemy import *
-from sqlalchemy.orm import *
+from sqlalchemy.orm import create_session, mapper, relation
+from sqlalchemy import Table, Column, Integer, ForeignKey, String, Boolean, Unicode, DateTime, ForeignKeyConstraint, MetaData, create_engine, func
 
-from mmc.core.audit.classes import *
-from mmc.core.audit.record import *
+from mmc.core.audit.classes import Record, Module, Object, Object_Log, Event, Parameters, Initiator, Type, Source, Previous_Value, Current_Value, Version
+from mmc.core.audit.record import AuditRecordDB
 from mmc.core.audit.readers import AuditReaderDB
 from mmc.core.audit.writernull import AuditWriterI
 from mmc.support.mmctools import Singleton
@@ -87,7 +86,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
 
         @param driver: driver name mysql (postgres,sqlite)
         @type driver: string
-        @param user: username for the database connexion 
+        @param user: username for the database connexion
         @type user: string
         @param passwd: password of the database user
         @type passwd: string
@@ -214,14 +213,14 @@ class AuditWriterDB(Singleton, AuditWriterI):
                     print record["date"]+"\t"+record["user"].ljust(50)+"\t"+record["action"].ljust(25)+"\t"+record["plugin"].ljust(15)+"\t"+str(record["commit"])
             else:
                 self.logger.info('No audit record in the database.')
-            return True            
+            return True
         elif op == 'purge':
             pass
         elif op == 'archive':
             pass
         else:
             return False
-        
+
         return True
 
     def log(self, module, event, objects = [], current=None , previous=None, parameters = {}):
@@ -231,7 +230,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         @param context: current context object, should contain the current
                         user id, etc.
         @type context: Twisted session object
-        
+
         @param module: module name
         @type module: str
 
@@ -244,7 +243,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         @param current: current attribute value saved in database
         @type current: string
 
-        @param previous: previous attribute value stored in Ldap 
+        @param previous: previous attribute value stored in Ldap
         @type previous: string
 
         @param parameters: list of parameters (get with the locals() builtin)
@@ -270,7 +269,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         initiator = (host, useragent)
         source = socket.getfqdn()
         return AuditRecordDB(self, module, event, user, objects, parameters, initiator, source, current, previous)
-    
+
     def getLog(self, start, end, plug, user, type, date1, date2, object, action):
         """
         Allow to get all log
@@ -294,25 +293,25 @@ class AuditWriterDB(Singleton, AuditWriterI):
         @type date1: string
         @type date2: string
         @type object: string
-        @type action: string 
+        @type action: string
         """
         session = create_session()
         return AuditReaderDB(self, session).getLog(start, end, plug, user, type, date1, date2, object, action)
-        
+
     def getLogById(self, id):
         """
         Allow to get a log by id in database
         @param id: id number in database
         @type id: int
-        return a dict of a log 
+        return a dict of a log
         """
         session = create_session()
         return AuditReaderDB(self, session).getLogById(id)
-    
+
     def getActionType(self, action, type):
         session = create_session()
         return AuditReaderDB(self, session).getActionType(action, type)
-            
+
     def _initTableVersion(self):
         """
         Create the audit database version table
@@ -320,7 +319,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         self.version_table = Table('version', self.metadata,
                                    Column('number', Integer, primary_key = True)
                                    )
-    
+
     def databaseExists(self):
         """
         Return true if the audit database exists, i.e. the version table exists
@@ -370,19 +369,19 @@ class AuditWriterDB(Singleton, AuditWriterI):
                             mysql_engine='InnoDB'
                             )
 
-        self.event_table = Table("event", self.metadata, 
+        self.event_table = Table("event", self.metadata,
                             Column("id", Integer, primary_key=True, autoincrement=True),
                             Column("module_id", Integer, ForeignKey('module.id')),
                             Column("name", Unicode(50), nullable=False),
                             mysql_engine='InnoDB'
                             )
-    
+
         self.source_table = Table("source", self.metadata,
                            Column("id", Integer, primary_key=True),
                            Column("hostname", String(32), nullable=False),
                            mysql_engine='InnoDB'
                            )
-    
+
         self.param_table=Table("parameters", self.metadata,
                             Column("id", Integer, primary_key=True),
                             Column("param_name", String(50)),
@@ -390,7 +389,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
                             Column("record_id", Integer, ForeignKey('record.id')),
                             mysql_engine='InnoDB'
                             )
-    
+
         self.initiator_table=Table("initiator", self.metadata,
                             Column("id", Integer, primary_key=True),
                             Column("application", String(64), nullable=False),
@@ -418,21 +417,21 @@ class AuditWriterDB(Singleton, AuditWriterI):
                             Column("record_id", Integer, ForeignKey('record.id')),
                             mysql_engine='InnoDB'
                             )
-                            
+
         self.previous_value_table=Table("previous_value", self.metadata,
                             Column("id", Integer, primary_key=True),
                             Column("object_log_id", Integer, ForeignKey('object_log.id')),
                             Column("value", String(1024)),
                             mysql_engine='InnoDB'
                             )
-                            
+
         self.current_value_table=Table("current_value", self.metadata,
                             Column("id", Integer, primary_key=True),
                             Column("object_log_id", Integer, ForeignKey('object_log.id')),
                             Column("value", String(1024)),
                             mysql_engine='InnoDB'
                             )
-    
+
         self.record_table=Table("record", self.metadata,
                             Column("id", Integer, primary_key=True),
                             Column("date", DateTime , default=func.now(), nullable=False),
@@ -449,30 +448,30 @@ class AuditWriterDB(Singleton, AuditWriterI):
         """
         FIXME: to check
         PostgreSQL db tables for audit database version 2
-        """        
+        """
         self.module_table = Table("module", self.metadata,
                             Column("id", Integer, primary_key=True),
                             Column("name", String(15), nullable=False)
                             )
 
-        self.event_table = Table("event", self.metadata, 
+        self.event_table = Table("event", self.metadata,
                             Column("id", Integer, primary_key=True, autoincrement=True),
                             Column("module_id", Integer, ForeignKey('module.id')),
                             Column("name", String(50), nullable=False)
                             )
-    
+
         self.source_table = Table("source", self.metadata,
                            Column("id", Integer, primary_key=True),
                            Column("hostname", String(32), nullable=False)
                            )
-    
+
         self.param_table=Table("parameters", self.metadata,
                             Column("id", Integer, primary_key=True),
                             Column("param_name", String(50)),
                             Column("param_value", String(1024)),
                             Column("record_id", Integer, ForeignKey('log.id'))
                             )
-    
+
         self.initiator_table=Table("initiator", self.metadata,
                             Column("id", Integer, primary_key=True),
                             Column("application", String(64), nullable=False),
@@ -496,19 +495,19 @@ class AuditWriterDB(Singleton, AuditWriterI):
                             Column("object_id", Integer, ForeignKey('object.id')),
                             Column("record_id", Integer, ForeignKey('log.id'))
                             )
-                            
+
         self.previous_value_table=Table("previous_value", self.metadata,
                             Column("id", Integer, primary_key=True),
                             Column("object_log_id", Integer, ForeignKey('object_log.id')),
                             Column("value", String(1024))
                             )
-                            
+
         self.current_value_table=Table("current_value", self.metadata,
                             Column("id", Integer, primary_key=True),
                             Column("object_log_id", Integer, ForeignKey('object_log.id')),
                             Column("value", String(1024))
                             )
-    
+
         self.record_table=Table("record", self.metadata,
                              Column("id", Integer, primary_key=True),
                              Column("date", DateTime, default=func.now(), nullable=False),

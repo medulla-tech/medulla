@@ -26,24 +26,24 @@ Contains classes that define records for the audit system
 
 import logging
 
-from sqlalchemy import *
 from sqlalchemy.orm import create_session
-from classes import *
+from sqlalchemy import and_
+from mmc.core.audit.classes import Record, Module, Object, Object_Log, Event, Parameters, Initiator, Type, Source, Previous_Value, Current_Value
 
 class AuditRecord:
 
     """
     Base class for a audit record object
     """
-    
+
     def __init__(self, module, event, user, objects, param, initiator, source, current, previous):
         """
         Create a AuditRecord instance which contains all information that will
         be logged into database.
-        
+
         @param module: module name
         @type module: string
-        @param event: event name 
+        @param event: event name
         @type event: string
         @param user: user name
         @type user: string
@@ -52,7 +52,7 @@ class AuditRecord:
         @param client: tuple which represent client (clienthost, clienttype)
         @type client: tuple
         @param param: parameters
-        @type param: dict 
+        @type param: dict
         @param agent: represent agent hostname
         @type agent: string
         """
@@ -72,11 +72,11 @@ class AuditRecord:
         # list of couple (object, type)
         self.objects=objects
         assert(type(self.objects) == list)
-        # 
+        #
         self.initiator = initiator
         assert(type(self.initiator) == tuple)
         assert(len(self.initiator) == 2)
-        # 
+        #
         self.source = source
         assert(type(source) == str)
         # list of string list
@@ -92,9 +92,9 @@ class AuditRecordDB(AuditRecord):
     """
 
     def __init__(self, parent, module, event, user, objects, param, initiator, source, current, previous):
-        """ 
-        Insert New log in database 
-        @param action: action name 
+        """
+        Insert New log in database
+        @param action: action name
         @type action: string
         @param module: module name
         @type action: string
@@ -107,14 +107,14 @@ class AuditRecordDB(AuditRecord):
         @param client: tuple which represent client (clienthost, clienttype)
         @type client: tuple
         @param param: parameters
-        @type param: dict 
+        @type param: dict
         @param agent: represent agent hostname
         @type agent: string
         """
         AuditRecord.__init__(self, module, event, user, objects, param, initiator, source, current, previous)
         session = create_session()
         session.begin()
-        try:        
+        try:
             # get module object from database
             bdmodule = session.query(Module).filter(parent.module_table.c.name==module).first()
             # insert module object in database if it is not available
@@ -204,13 +204,13 @@ class AuditRecordDB(AuditRecord):
                         obj.parent = parentobj
                         session.add(obj)
                         session.flush()
-                    
+
                     bdobjectlog = Object_Log()
                     bdobjectlog.object_id = obj.id
                     bdobjectlog.record_id = self.record.id
                     session.add(bdobjectlog)
                     session.flush()
-                    
+
                     # Keep a reference to this object, because it may be
                     # the parent of the next object to store
                     parentobj = obj.id
@@ -219,24 +219,24 @@ class AuditRecordDB(AuditRecord):
                 # Insert current value
                 if current != None:
                     if type(current) == tuple or type(current) == list :
-                        for i in current:            
+                        for i in current:
                              cv = Current_Value(bdobjectlog, i)
                              session.add(cv)
                     else:
                         cv = Current_Value(bdobjectlog, current)
                         session.add(cv)
 
-                # Insert previous value        
+                # Insert previous value
                 if previous != None:
                     if type(previous) == tuple or type(previous) == list:
-                        for i in previous:             
+                        for i in previous:
                              pv = Previous_Value(bdobjectlog, i)
-                             session.add(pv)      
-                    else:          
+                             session.add(pv)
+                    else:
                         pv = Previous_Value(bdobjectlog, previous)
-                        session.add(pv)  
+                        session.add(pv)
 
-            # relations on log_parameters        
+            # relations on log_parameters
             if param != None:
                 for i in param:
                     if type(i)==list:
@@ -254,7 +254,7 @@ class AuditRecordDB(AuditRecord):
             logging.getLogger().error("Error with the audit database connection")
             raise
         session.close()
-        
+
     def commit(self):
         """
         Valid the log and set the result attribute to True if event succeeds
@@ -262,7 +262,7 @@ class AuditRecordDB(AuditRecord):
         self.record.result = True
         session = create_session()
         session.begin()
-        try:            
+        try:
             session.add(self.record)
             session.commit()
         except:
