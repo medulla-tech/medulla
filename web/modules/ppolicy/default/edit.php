@@ -42,11 +42,6 @@ else {
 if ($_GET["action"] == "addppolicy") {
     $mode = "add";
     $title = _T("Add a password policy", "ppolicy");
-    // Prefill with default values
-    if (!$_POST) {
-        $FH->setArr(getAllPPolicyAttributes("default"));
-        $FH->setPostValue("cn", " ");
-    }
 }
 else {
     $mode = "edit";

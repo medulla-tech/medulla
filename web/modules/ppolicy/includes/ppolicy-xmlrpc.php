@@ -74,10 +74,6 @@ function getUserPPolicy ($uid) {
     return xmlCall("ppolicy.getUserPPolicy",array($uid));
 }
 
-function addUserPPolicy ($uid, $ppolicy = null) {
-    return xmlCall("ppolicy.addUserPPolicy",array($uid, $ppolicy));
-}
-
 function updateUserPPolicy ($uid, $ppolicy = null) {
     return xmlCall("ppolicy.updateUserPPolicy",array($uid, $ppolicy));
 }
@@ -124,6 +120,10 @@ function isAccountInGraceLogin($uid) {
 
 function isPasswordExpired($uid) {
     return xmlCall("ppolicy.isPasswordExpired", array($uid));
+}
+
+function updateGroupPPolicy($group, $ppolicy) {
+    return xmlCall("ppolicy.updateGroupPPolicy", array($group, $ppolicy));
 }
 
 ?>

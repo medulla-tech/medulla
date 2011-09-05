@@ -40,6 +40,7 @@ function _ppolicy_baseEdit($FH, $mode) {
     $hasPPolicy = false;
     $pwdReset = false;
     $ppolicyName = "";
+    $default = getDefaultPPolicyName();
 
     if ($mode == "edit") {
         $uid =  $FH->getArrayOrPostValue('uid');
@@ -83,7 +84,7 @@ function _ppolicy_baseEdit($FH, $mode) {
                 $desc = $pp[1]['description'][0];
             else
                 $desc = $name;
-            if ($name == getDefaultPPolicyName()) {
+            if ($name == $default) {
                 $name = "";
                 $desc = _T($desc, "ppolicy");
             }
@@ -137,16 +138,11 @@ function _ppolicy_changeUser($FH, $mode) {
     if ($FH->isUpdated("ppolicyname")) {
         $ppolicyName = $FH->getValue("ppolicyname");
         if ($ppolicyName) {
-            if (!hasUserPPolicy($uid)) {
-                addUserPPolicy($uid, $ppolicyName);
-            }
-            else {
-                updateUserPPolicy($uid, $ppolicyName);
-            }
+            updateUserPPolicy($uid, $ppolicyName);
             $result .= _T(sprintf("Password policy %s applied.", $ppolicyName), "ppolicy") . "<br />";
         }
         else {
-            removeUserPPolicy($uid, $ppolicyName);
+            removeUserPPolicy($uid);
             $result .= _T(sprintf("Password policy %s removed.", $ppolicyName), "ppolicy") . "<br />";
         }
     }
@@ -163,6 +159,54 @@ function _ppolicy_changeUser($FH, $mode) {
     }
 
     return 0;
+}
+
+/**
+ * Function called when editing a group
+ */
+function _ppolicy_baseGroupEdit($ldapArr, $postArr) {
+
+    if (!isset($ldapArr["cn"][0])) return;
+
+    $default = getDefaultPPolicyName();
+
+    $f = new DivForModule(_T("Password policy management", "ppolicy"), "#FDF");
+
+    $f->push(new Table());
+
+    $ppolicyList = listPPolicy();
+    if (count($ppolicyList) > 1) {
+        $ppolicyTpl = new SelectItem("ppolicyname");
+        foreach($ppolicyList as $pp) {
+            $name = $pp[1]['cn'][0];
+            if (isset($pp[1]['description'][0]))
+                $desc = $pp[1]['description'][0];
+            else
+                $desc = $name;
+            if ($name == $default) {
+                $name = "";
+                $desc = _T($desc, "ppolicy");
+            }
+
+            $values[$desc] = $name;
+        }
+        $ppolicyTpl->setElements(array_keys($values));
+        $ppolicyTpl->setElementsVal(array_values($values));
+        $f->add(new TrFormElement(_T("Apply a password policy for all group users", "ppolicy"),
+            $ppolicyTpl, array("tooltip" => _T("If not set the default password policy is enforced.", "ppolicy"))),
+            array("value" => $ppolicyName)
+        );
+    }
+
+    $f->pop();
+    $f->display();
+}
+
+function _ppolicy_changeGroup($postArr) {
+    $group = $postArr["groupname"];
+    if (isset($postArr["ppolicyname"])) {
+        updateGroupPPolicy($group, $postArr["ppolicyname"]);
+    }
 }
 
 ?>
