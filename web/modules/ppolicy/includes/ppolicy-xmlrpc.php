@@ -60,16 +60,26 @@ function setPPolicyDefaultConfigAttributes() {
     return xmlCall("ppolicy.setPPolicyDefaultConfigAttributes",array());
 }
 
-function hasPPolicyObjectClass ($uid) {
-    return xmlCall("ppolicy.hasPPolicyObjectClass",array($uid));
+/* ppolicy user */
+
+function hasUserPPolicy ($uid) {
+    return xmlCall("ppolicy.hasUserPPolicy",array($uid));
 }
 
-function addPPolicyObjectClass ($uid) {
-    return xmlCall("ppolicy.addPPolicyObjectClass",array($uid));
+function getUserPPolicy ($uid) {
+    return xmlCall("ppolicy.getUserPPolicy",array($uid));
 }
 
-function removePPolicyObjectClass ($uid) {
-    return xmlCall("ppolicy.removePPolicyObjectClass",array($uid));
+function addUserPPolicy ($uid, $ppolicy = null) {
+    return xmlCall("ppolicy.addUserPPolicy",array($uid, $ppolicy));
+}
+
+function updateUserPPolicy ($uid, $ppolicy = null) {
+    return xmlCall("ppolicy.updateUserPPolicy",array($uid, $ppolicy));
+}
+
+function removeUserPPolicy ($uid) {
+    return xmlCall("ppolicy.removeUserPPolicy",array($uid));
 }
 
 function getUserPPolicyAttribut($uid,$name) {
