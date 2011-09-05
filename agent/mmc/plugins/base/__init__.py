@@ -291,9 +291,9 @@ def getMembers(cngroup):
 
 # change password for account and
 # for sambaAccount via smbpasswd
-def changeUserPasswd(uiduser,passwd):
+def changeUserPasswd(uid, passwd, oldpasswd = None, bind = False):
     ldapObj = ldapUserGroupControl()
-    return ldapObj.changeUserPasswd(uiduser,passwd)
+    return ldapObj.changeUserPasswd(uid, passwd, oldpasswd, bind)
 
 # return all users of a specific group
 def getUserGroups(pattern):
@@ -1205,23 +1205,33 @@ class LdapUserGroupControl:
             self.l.modify_s(groupdn, [(ldap.MOD_DELETE, attr, 'none')])
         return 0
 
-    def changeUserPasswd(self, uid, passwd):
+    def changeUserPasswd(self, uid, passwd, oldpasswd = None, bind = False):
         """
         Change LDAP user password (userPassword field)
 
         @param uid: user id
         @type  uid: str
-
         @param passwd: non encrypted password
         @type  passwd: str
+        @param bind: bind as user
+        @type  bind: bool
         """
         userdn = self.searchUserDN(uid)
         r = AF().log(PLUGIN_NAME, AA.BASE_MOD_USER_PASSWORD, [(userdn, AT.USER)])
+
+        # bind the ldap with the user
+        if bind:
+            ldapConn = LDAPConnection(self.config).get()
+            ldapConn.simple_bind_s(userdn, str(oldpasswd))
+        # bind the ldap with admin user
+        else:
+            ldapConn = self.l
+
         if self.config.passwordscheme == "passmod":
-            self.l.passwd_s(userdn, None, str(passwd))
+            ldapConn.passwd_s(userdn, None, str(passwd))
         else:
             userpassword = self._generatePassword(passwd)
-            self.l.modify_s(userdn, [(ldap.MOD_REPLACE, "userPassword", userpassword)])
+            ldapConn.modify_s(userdn, [(ldap.MOD_REPLACE, "userPassword", userpassword)])
 
         # Run ChangeUserPassword hook
         self.runHook("base.changeuserpassword", uid, passwd)

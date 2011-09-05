@@ -38,10 +38,10 @@ $p->setSideMenu($sidemenu);
 $p->display();
 
 if (isset($_POST["bchpasswd"]) && ($_POST["curpass"] != "") && ($_POST["newpass"] != "") && ($_POST["newpass"] == $_POST["confpass"]) && (check_auth($_SESSION['login'], $_POST["curpass"], $error))) {
-    callPluginFunction("changeUserPasswd", array(array($user, prepare_string($_POST["newpass"]))));
+    callPluginFunction("changeUserPasswd", array(array($user, prepare_string($_POST["newpass"]), prepare_string($_POST["curpass"]), True)));
     if (!isXMLRPCError()) {
         $n = new NotifyWidgetSuccess(_("Your password has been changed."));
-    } 
+    }
     header("Location: " . urlStrRedirect("base/users/index"));
 
 ?>
