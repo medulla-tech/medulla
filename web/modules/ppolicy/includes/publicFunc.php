@@ -83,7 +83,7 @@ function _ppolicy_baseEdit($FH, $mode) {
                 $desc = $pp[1]['description'][0];
             else
                 $desc = $name;
-            if ($name == "default") {
+            if ($name == getDefaultPPolicyName()) {
                 $name = "";
                 $desc = _T($desc, "ppolicy");
             }

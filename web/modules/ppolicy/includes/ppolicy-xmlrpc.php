@@ -32,6 +32,10 @@ function addPPolicy($ppolicy, $desc = "") {
     return xmlCall("ppolicy.addPPolicy",array($ppolicy, $desc));
 }
 
+function getDefaultPPolicy() {
+    return xmlCall("ppolicy.getDefaultPPolicy", array());
+}
+
 function removePPolicy($ppolicy) {
     return xmlCall("ppolicy.removePPolicy",array($ppolicy));
 }

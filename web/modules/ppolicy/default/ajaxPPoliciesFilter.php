@@ -34,19 +34,20 @@ $delActions = array();
 $ppolicies = array();
 
 foreach(listPPolicy($filter) as $dn => $entry) {
-    if (isset($entry[1]["description"][0]))
-        $text = '(' . $entry[1]["description"][0] . ')';
-    else
-        $text = '';
     $name = $entry[1]["cn"][0];
-    if ($name == "default") {
+    $desc = '';
+    if (isset($entry[1]["description"][0]))
+        $desc = $entry[1]["description"][0];
+    # don't allow to remove the default password policy
+    if ($name == getDefaultPPolicyName()) {
+        $desc = _T($desc, "ppolicy");
         $editActions[] = new ActionItem(_T("Edit password policy", "ppolicy"),"editppolicy","edit","ppolicy", "base", "users");
         $delActions[] = new EmptyActionItem();
     } else {
         $editActions[] = new ActionItem(_T("Edit password policy", "ppolicy"),"editppolicy","edit","ppolicy", "base", "users");
         $delActions[] = new ActionPopupItem(_T("Delete password policy", "ppolicy"),"deleteppolicy","delete","ppolicy", "base", "users");
     }
-    $ppolicies[$name] = $text;
+    $ppolicies[$name] = '(' . $desc . ')';
 }
 
 $n = new ListInfos(array_keys($ppolicies), _T("Password policies", "ppolicy"));

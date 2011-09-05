@@ -66,6 +66,11 @@ function ppolicyTips($attr) {
     return $tips[$attr];
 }
 
+function getDefaultPPolicyName() {
+    $ppolicy = getDefaultPPolicy();
+    return $ppolicy[1]['cn'][0];
+}
+
 $x = "Default password policy";
 
 ?>

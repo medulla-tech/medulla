@@ -175,6 +175,12 @@ class PPolicy(ldapUserGroupControl):
 
         return False
 
+    def getDefaultPPolicy(self):
+        """
+        Return the default ppolicy entry
+        """
+        return self.getPPolicy(self.configPPolicy.ppolicydefault)
+
     def getPPolicy(self, ppolicyName):
         """
         Return a ppolicy entry
@@ -539,6 +545,12 @@ class UserPPolicy(ldapUserGroupControl):
 # for PPolicys management
 def checkPPolicy(ppolicyName = None):
     return PPolicy().checkPPolicy(ppolicyName)
+
+def getDefaultPPolicy():
+    return PPolicy().getDefaultPPolicy()
+
+def getPPolicy(ppolicyName):
+    return PPolicy().getPPolicy(ppolicyName)
 
 def addPPolicy(ppolicyName = None, ppolicyDesc = None):
     return PPolicy().addPPolicy(ppolicyName, ppolicyDesc)
