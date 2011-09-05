@@ -70,7 +70,7 @@ def activate():
             return False
 
     # Register default password policy into the LDAP if it does not exist
-    PPolicy().installPPolicy()
+    PPolicy().addPPolicy()
 
     return True
 
@@ -128,7 +128,7 @@ class PPolicy(ldapUserGroupControl):
             pass
         return ret
 
-    def installPPolicy(self, ppolicyName = None):
+    def addPPolicy(self, ppolicyName = None, ppolicyDesc = None):
         """
         Set a password policy in LDAP if not available.
         """
@@ -136,6 +136,7 @@ class PPolicy(ldapUserGroupControl):
 
             if not ppolicyName:
                 ppolicyName = self.configPPolicy.ppolicydefault
+                ppolicyDesc = "Default password policy"
                 ppolicyDN = self.configPPolicy.ppolicydefaultdn
                 head, path = self.configPPolicy.ppolicydn.split(",", 1)
                 ouName = head.split("=")[1]
@@ -146,6 +147,8 @@ class PPolicy(ldapUserGroupControl):
             attrs = {}
             attrs['objectClass'] = ['pwdPolicy', 'device']
             attrs['cn'] = ppolicyName
+            if ppolicyDesc:
+                arrts['description'] = ppolicyDesc
             # set default attributes
             for k in self.configPPolicy.ppolicyAttributes :
                 if type(self.configPPolicy.ppolicyAttributes[k]) == bool:
@@ -157,7 +160,7 @@ class PPolicy(ldapUserGroupControl):
             self.l.add_s(ppolicyDN, attributes)
             self.logger.info("Password policy registered at: %s" % ppolicyDN)
 
-    def delPPolicy(self, ppolicyName):
+    def removePPolicy(self, ppolicyName):
         """
         Remove a password policy entry from LDAP
         Disallow to remove the default password policy
@@ -537,11 +540,11 @@ class UserPPolicy(ldapUserGroupControl):
 def checkPPolicy(ppolicyName = None):
     return PPolicy().checkPPolicy(ppolicyName)
 
-def installPPolicy(ppolicyName = None):
-    return PPolicy().installPPolicy(ppolicyName)
+def addPPolicy(ppolicyName = None, ppolicyDesc = None):
+    return PPolicy().addPPolicy(ppolicyName, ppolicyDesc)
 
-def delPPolicy(ppolicyName):
-    return PPolicy().delPPolicy(ppolicyName)
+def removePPolicy(ppolicyName):
+    return PPolicy().removePPolicy(ppolicyName)
 
 def listPPolicy(filt = ''):
     return PPolicy().listPPolicy(filt)

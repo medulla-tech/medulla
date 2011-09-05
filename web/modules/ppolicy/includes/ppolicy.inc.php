@@ -29,9 +29,10 @@
  *      - variable type
  *
  * It's use to work on right variable among $_POST array.
- * It doesn't set form's input field ! 
+ * It doesn't set form's input field !
  *
  */
+
 function getPPolicyAttributesKeys() {
     return array(   "pwdMinLength"          => array(_T("Minimum length", "ppolicy"), "int"),
                     "pwdMinAge"             => array(_T("Minimum age", "ppolicy"), "int"),
@@ -44,6 +45,7 @@ function getPPolicyAttributesKeys() {
                     "pwdGraceAuthNLimit"    => array(_T("Number of grace authentications", "ppolicy"), "int"),
                     "pwdReset"              => array(_T("Reset the password", "ppolicy"), "bool"),
                     "pwdCheckQuality"       => array(_T("Password policy quality check"), "int"),
+                    "description"           => array(_T("Description"), "string"),
                     );
 }
 
@@ -63,5 +65,7 @@ function ppolicyTips($attr) {
                   );
     return $tips[$attr];
 }
+
+$x = "Default password policy";
 
 ?>

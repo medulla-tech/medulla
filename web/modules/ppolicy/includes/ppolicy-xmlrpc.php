@@ -28,15 +28,15 @@ function checkPPolicy($ppolicy) {
     return xmlCall("ppolicy.checkPPolicy",array($ppolicy));
 }
 
-function installPPolicy($ppolicy) {
-    return xmlCall("ppolicy.installPPolicy",array($ppolicy));
+function addPPolicy($ppolicy, $desc = "") {
+    return xmlCall("ppolicy.addPPolicy",array($ppolicy, $desc));
 }
 
-function delPPolicy($ppolicy) {
-    return xmlCall("ppolicy.delPPolicy",array($ppolicy));
+function removePPolicy($ppolicy) {
+    return xmlCall("ppolicy.removePPolicy",array($ppolicy));
 }
 
-function listPPolicy($filter) {
+function listPPolicy($filter = "") {
     return xmlCall("ppolicy.listPPolicy", array($filter));
 }
 

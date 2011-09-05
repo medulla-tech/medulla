@@ -77,10 +77,18 @@ function _ppolicy_baseEdit($FH, $mode) {
     $ppolicyList = listPPolicy();
     if (count($ppolicyList) > 1) {
         $ppolicyTpl = new SelectItem("ppolicyname");
-        $values = array(_T("Default password policy", "ppolicy") => "");
         foreach($ppolicyList as $pp) {
-            if ($pp[1]['cn'][0] != "default")
-                $values[$pp[1]['cn'][0]] = $pp[1]['cn'][0];
+            $name = $pp[1]['cn'][0];
+            if (isset($pp[1]['description'][0]))
+                $desc = $pp[1]['description'][0];
+            else
+                $desc = $name;
+            if ($name == "default") {
+                $name = "";
+                $desc = _T($desc, "ppolicy");
+            }
+
+            $values[$desc] = $name;
         }
         $ppolicyTpl->setElements(array_keys($values));
         $ppolicyTpl->setElementsVal(array_values($values));

@@ -58,6 +58,7 @@ else {
 
 if ($_POST) {
     $name = $FH->getPostValue("cn");
+    $desc = $FH->getPostValue("description");
     // Some sanity checks...
     if ($FH->isUpdated("pwdMaxAge") or $FH->isUpdated("pwdMinAge")) {
         $max = $FH->getPostValue("pwdMaxAge");
@@ -69,7 +70,7 @@ if ($_POST) {
     }
     if ($mode == "add") {
         if (!checkPPolicy($name)) {
-            installPPolicy($name);
+            addPPolicy($name, $desc);
             if (!isXMLRPCError())
                 $result .= _T(sprintf("Password policy %s created.", $name), "ppolicy") . "<br />";
             else
@@ -80,7 +81,7 @@ if ($_POST) {
         }
     }
 
-    if (!$errors && !isXMLRPCError()) {
+    if (!$error && !isXMLRPCError()) {
         $ppolicyattr = getPPolicyAttributesKeys();
         $update = "";
         foreach ($ppolicyattr as $attr => $info) { /* foreach supported attributes */
@@ -128,6 +129,12 @@ $f->add(new TrFormElement(
         $nameTpl
     ),
     array("value" => $FH->getArrayOrPostValue("cn"), "required" => true)
+);
+$f->add(new TrFormElement(
+        _T("Description", "ppolicy"),
+        new InputTpl("description")
+    ),
+    array("value" => $FH->getArrayOrPostValue("description"))
 );
 $f->add(new TrFormElement(
         _T("Minimum length", "ppolicy"),

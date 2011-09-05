@@ -34,10 +34,12 @@ $delActions = array();
 $ppolicies = array();
 
 foreach(listPPolicy($filter) as $dn => $entry) {
-    $text = "";
+    if (isset($entry[1]["description"][0]))
+        $text = '(' . $entry[1]["description"][0] . ')';
+    else
+        $text = '';
     $name = $entry[1]["cn"][0];
     if ($name == "default") {
-        $text = "(" . _T("Default password policy") . ")";
         $editActions[] = new ActionItem(_T("Edit password policy", "ppolicy"),"editppolicy","edit","ppolicy", "base", "users");
         $delActions[] = new EmptyActionItem();
     } else {

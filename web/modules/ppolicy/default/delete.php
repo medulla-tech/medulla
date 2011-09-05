@@ -24,7 +24,7 @@
 
 if (isset($_POST["bconfirm"])) {
     $ppolicy = $_POST["ppolicy"];
-    delPPolicy($ppolicy);
+    removePPolicy($ppolicy);
     if (!isXMLRPCError()) {
         $result = _T("The password policy has been deleted.", "ppolicy");
         new NotifyWidgetSuccess($result);
