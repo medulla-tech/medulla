@@ -115,11 +115,11 @@ function add_user($login, $pass, $firstname, $name, $homedir, $createhomedir, $p
     $param = array($login, prepare_string($pass), $firstname, $name, $homedir, $createhomedir, $primaryGroup);
     $ret = xmlCall("base.createUser", $param);
     if($ret == 5) {
-        $msg = sprintf(_("User %s created but password is not valid regarding your password policies.<br/><strong>You must change the user password.</strong><br />"), $login);
+        $msg = sprintf(_("User %s created but password is not valid regarding your password policies.<br/><strong>You must change the user password.</strong>"), $login) . "<br />";
         return array("code" => $ret, "info" => $msg);
     }
     else {
-        $msg = sprintf(_("User %s successfully created<br />"), $login);
+        $msg = sprintf(_("User %s successfully created"), $login) . "<br />";
         return array("code" => $ret, "info" => $msg);
     }
 }

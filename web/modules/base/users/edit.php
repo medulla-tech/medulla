@@ -82,7 +82,7 @@ if ($_POST) {
                 );
                 foreach($ret as $plugin => $err) {
                     if ($err != 0 && $err != NULL) {
-                        $result .= sprintf(_("Failed to change primary group in %s plugin."), $plugin)."<br />";
+                        $result .= sprintf(_("Failed to change primary group in %s plugin"), $plugin)."<br />";
                     }
                 }
             }
@@ -106,20 +106,10 @@ if ($_POST) {
                 array(array($uid, prepare_string($FH->getValue('pass'))))
             );
             if(isXMLRPCError()) {
-                foreach($ret as $info) {
-                    // if the faultCode is in the form :
-                    // {'info': 'Password fails quality checking policy',
-                    // 'desc': 'Constraint violation'}
-                    // keep only the 'info' part
-                    if(preg_match("/{'info': '([^']*)/", $info, $match)) {
-                        $info = $match[1];
-                    }
-                    $result .= "<strong>"._("Password not updated")."</strong><br />";
-                    $result .= "<strong>"._($info)."</strong><br/>";
-                }
+                $error .= _("Password not updated") . "<br />";
             }
             else {
-                $result .= _("Password updated.")."<br />";
+                $result .= _("Password updated") . "<br />";
             }
         }
         /* Global disable account */
@@ -128,7 +118,7 @@ if ($_POST) {
                 $ret = callPluginFunction("disableUser", array($uid));
                 foreach($ret as $plugin => $err) {
                     if ($err != 0 && $err != NULL) {
-                        $result .= sprintf(_("Failed to disable user in %s plugin."), $plugin)."<br />";
+                        $result .= sprintf(_("Failed to disable user in %s plugin"), $plugin)."<br />";
                     }
                 }
                 $result = sprintf(_("User %s disabled."), $uid);
@@ -137,10 +127,10 @@ if ($_POST) {
                 $ret = callPluginFunction("enableUser", array($uid));
                 foreach($ret as $plugin => $err) {
                     if ($err != 0 && $err != NULL) {
-                        $result .= sprintf(_("Failed to enable user in %s plugin."), $plugin)."<br />";
+                        $result .= sprintf(_("Failed to enable user in %s plugin"), $plugin)."<br />";
                     }
                 }
-                $result = sprintf(_("User %s enabled."), $uid);
+                $result = sprintf(_("User %s enabled"), $uid);
             }
         }
         if(!$error) {

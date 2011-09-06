@@ -128,6 +128,7 @@ function _base_changeUser($FH, $mode) {
     global $result;
     global $error;
 
+    $update = false;
     $base_errors = "";
     $uid = $FH->getPostValue("uid");
 
@@ -168,11 +169,11 @@ function _base_changeUser($FH, $mode) {
         // edit mode
         if ($FH->getPostValue("deletephoto")) {
             changeUserAttributes($uid, "jpegPhoto", null);
-            $result .= _("User photo deleted.")."<br />";
+            $result .= _("User photo deleted")."<br />";
         }
         if ($FH->isUpdated("homeDir")) {
             move_home($uid, $FH->getValue("homeDir"));
-            $result .= sprintf(_("Home user directory moved to %s.",
+            $result .= sprintf(_("Home user directory moved to %s",
                 $FH->getValue("homeDir")))."<br />";
         }
     }
@@ -182,24 +183,30 @@ function _base_changeUser($FH, $mode) {
         $shells = getDefaultShells();
         if ($FH->getValue('isBaseDesactive') == "on") {
             changeUserAttributes($uid, 'loginShell', $shells['disabledShell']);
-            $result .= _("User disabled.")."<br />";
+            $result .= _("User disabled")."<br />";
         }
         else {
             changeUserAttributes($uid, 'loginShell', $shells['enabledShell']);
-            $result .= _("User enabled.")."<br />";
+            $result .= _("User enabled")."<br />";
         }
     }
 
-    if($FH->isUpdated('telephoneNumber'))
+    if($FH->isUpdated('telephoneNumber')) {
         changeUserTelephoneNumbers($uid, $FH->getValue("telephoneNumber"));
+        $update = true;
+    }
 
-    if($FH->isUpdated('givenName') or $FH->isUpdated('sn'))
+    if($FH->isUpdated('givenName') or $FH->isUpdated('sn')) {
         change_user_main_attr($uid, $uid, $FH->getValue('givenName'), $FH->getValue('sn'));
+        $update = true;
+    }
 
     foreach(array('title', 'mobile', 'facsimileTelephoneNumber', 'homePhone',
         'cn', 'mail', 'displayName', 'preferredLanguage') as $attr) {
-        if ($FH->isUpdated($attr))
+        if ($FH->isUpdated($attr)) {
             changeUserAttributes($uid, $attr, $FH->getValue($attr));
+            $update = true;
+        }
     }
 
     /* Change photo */
@@ -229,17 +236,17 @@ function _base_changeUser($FH, $mode) {
                 }
                 else {
                     $base_errors .= sprintf(_("The photo is too big. The max size is %s x %s.
-                        Install php gd extention to resize the photo automatically."),
+                        Install php gd extention to resize the photo automatically"),
                         $maxwidth, $maxheight) . "<br/>";
                 }
             }
-            else $base_errors .= _("The photo is not a JPG file.") . "<br/>";
+            else $base_errors .= _("The photo is not a JPG file") . "<br/>";
         }
-        else $base_errors .= _("The photo is not a JPG file.") . "<br/>";
+        else $base_errors .= _("The photo is not a JPG file") . "<br/>";
     }
 
-    if ($mode == "edit")
-        $result .= _("User attributes updated.")."<br />";
+    if ($mode == "edit" && $update)
+        $result .= _("User attributes updated") . "<br />";
 
     $error .= $base_errors;
 
