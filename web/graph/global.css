@@ -391,6 +391,12 @@ html>body #sidebar ul li a { width: auto; }
     -webkit-border-radius: 5px;
 }
 
+#errorCode ul, .errorCode ul {
+    padding: 0;
+    margin: 0;
+    margin-left: 1.5em;
+}
+
 #warningCode {
 	font-size: 12px;
 	text-decoration: none;
