@@ -33,8 +33,10 @@ class FormHandler {
         echo '</pre>';*/
         $this->name = $name;
 
-        if (!$data)
+        if (!$data) {
             $this->isError(false);
+            $this->data = array();
+        }
 
         // get the old posted data in case of
         // error
