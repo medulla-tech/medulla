@@ -73,7 +73,7 @@ function _base_verifInfo($FH, $mode) {
     $uid = $FH->getPostValue("uid");
     $pass = $FH->getPostValue("pass");
     $confpass = $FH->getPostValue("confpass");
-    $homedir = $FH->getPostValue("homeDir");
+    $homedir = $FH->getPostValue("homeDirectory");
     $primary = $FH->getPostValue("primary");
 
     if (!preg_match("/^[a-zA-Z0-9][A-Za-z0-9_.-]*$/", $uid)) {
@@ -108,8 +108,12 @@ function _base_verifInfo($FH, $mode) {
     }
 
     /* Check that the homeDir does not exists */
-    if($FH->getPostValue("createHomeDir") == "on" && $uid) {
-        getHomeDir($uid, $FH->getValue("homeDir"));
+    if ($FH->getPostValue("createHomeDir") == "on" && $uid) {
+        getHomeDir($uid, $FH->getValue("homeDirectory"));
+    }
+    /* If we want to move the userdir */
+    else if ($FH->isUpdated("homeDirectory")) {
+        getHomeDir($uid, $FH->getValue("homeDirectory"));
     }
 
     $error .= $base_errors;
@@ -144,7 +148,7 @@ function _base_changeUser($FH, $mode) {
             $FH->getPostValue("pass"),
             $FH->getPostValue("givenName"),
             $FH->getPostValue("sn"),
-            $FH->getPostValue("homeDir"),
+            $FH->getPostValue("homeDirectory"),
             $createHomeDir,
             $FH->getPostValue("primary")
         );
@@ -171,10 +175,10 @@ function _base_changeUser($FH, $mode) {
             changeUserAttributes($uid, "jpegPhoto", null);
             $result .= _("User photo deleted")."<br />";
         }
-        if ($FH->isUpdated("homeDir")) {
-            move_home($uid, $FH->getValue("homeDir"));
-            $result .= sprintf(_("Home user directory moved to %s",
-                $FH->getValue("homeDir")))."<br />";
+        if ($FH->isUpdated("homeDirectory")) {
+            move_home($uid, $FH->getValue("homeDirectory"));
+            $result .= _(sprintf("Home user directory moved to %s",
+                $FH->getValue("homeDirectory"))) . "<br />";
         }
     }
 
@@ -425,8 +429,8 @@ function _base_baseEdit($FH, $mode) {
     $f->push(new Table());
 
     $f->add(
-        new TrFormElement(_("Home directory"), new InputTpl("homeDir")),
-        array("value" => $FH->getArrayOrPostValue("homeDir"))
+        new TrFormElement(_("Home directory"), new InputTpl("homeDirectory")),
+        array("value" => $FH->getArrayOrPostValue("homeDirectory"))
     );
 
     if ($mode == "add") {
