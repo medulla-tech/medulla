@@ -43,7 +43,7 @@ $errObj->add($errItem);
 
 $errItem = new ErrorHandlingItem("/home/.* already exists.");
 $errItem->setMsg(_("The user home directory already exists."));
-$errItem->setAdvice(_("Set the home directory in a different location (in expert mode) or delete the directory before creating the user."));
+$errItem->setAdvice(_("Set the home directory in a different location or force the use of the existing directory (in expert mode)."));
 $errItem->setTraceBackDisplay(False);
 $errObj->add($errItem);
 

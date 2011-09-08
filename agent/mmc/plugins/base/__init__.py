@@ -258,8 +258,8 @@ def getHomeDir(uid, homeDir):
 def getDefaultShells():
     return ldapUserGroupControl().getDefaultShells()
 
-def createUser(login, passwd, firstname, surname, homedir, createHomeDir = True, primaryGroup = None):
-    return ldapUserGroupControl().addUser(login, passwd, firstname, surname, homedir, createHomeDir, primaryGroup)
+def createUser(login, passwd, firstname, surname, homedir, createHomeDir = True, ownHomeDir = False, primaryGroup = None):
+    return ldapUserGroupControl().addUser(login, passwd, firstname, surname, homedir, createHomeDir, ownHomeDir, primaryGroup)
 
 def addUserToGroup(cngroup,uiduser):
     ldapObj = ldapUserGroupControl()
@@ -805,7 +805,7 @@ class LdapUserGroupControl:
                 if not found: entry[attribute] = value
         return entry
 
-    def addUser(self, uid, password, firstN, lastN, homeDir = None, createHomeDir = True, primaryGroup = None):
+    def addUser(self, uid, password, firstN, lastN, homeDir = None, createHomeDir = True, ownHomeDir = False, primaryGroup = None):
         """
         Add an user in ldap directory
 
@@ -837,7 +837,11 @@ class LdapUserGroupControl:
         r = AF().log(PLUGIN_NAME, AA.BASE_ADD_USER, [(ident, AT.USER)])
 
         # Get the homeDir path
-        homeDir = self.getHomeDir(uid, homeDir)
+        if ownHomeDir:
+            homeDir = self.getHomeDir(uid, homeDir, False)
+        else:
+            homeDir = self.getHomeDir(uid, homeDir)
+
         uidNumber = self.maxUID() + 1
 
         # Get a gid number
@@ -925,14 +929,19 @@ class LdapUserGroupControl:
 
         # creating home directory
         if self.userHomeAction and createHomeDir:
-            try:
-                copytree(self.skelDir, homeDir, symlinks = True)
+            # if we are here, we need to make
+            # the user the owner of the directory
+            if os.path.exists(homeDir):
                 rchown(homeDir, uidNumber, gidNumber)
-            except OSError:
-                # Problem when creating the user home directory,
-                # so we delete the user
-                self.delUser(uid, False)
-                raise
+            else:
+                try:
+                    copytree(self.skelDir, homeDir, symlinks = True)
+                    rchown(homeDir, uidNumber, gidNumber)
+                except OSError:
+                    # Problem when creating the user home directory,
+                    # so we delete the user
+                    self.delUser(uid, False)
+                    raise
 
         # Run addUser hook
         self.runHook("base.adduser", uid, password)
@@ -954,7 +963,7 @@ class LdapUserGroupControl:
         return {'enabledShell': self.defaultShellEnable,
             'disabledShell': self.defaultShellDisable }
 
-    def getHomeDir(self, uid, homeDir = None):
+    def getHomeDir(self, uid, homeDir = None, checkExists = True):
         """
         Check if home directory can be created
         Returns path
@@ -968,10 +977,13 @@ class LdapUserGroupControl:
         if not self.isAuthorizedHome(os.path.realpath(homeDir)):
             raise Exception(homeDir + " is not an authorized home dir.")
         # Return homedir path
-        if not os.path.exists(homeDir):
-            return homeDir
+        if checkExists:
+            if not os.path.exists(homeDir):
+                return homeDir
+            else:
+                raise Exception(homeDir + " already exists.")
         else:
-            raise Exception(homeDir + " already exists.")
+            return homeDir
 
     def addGroup(self, cn):
         """
@@ -1848,7 +1860,7 @@ class LdapUserGroupControl:
         if maxgid < self.gidStart: maxgid = self.gidStart
         return maxgid
 
-    def moveHome(self,uid,newHome):
+    def moveHome(self, uid, newHome):
         """
         Move an home directory.
 

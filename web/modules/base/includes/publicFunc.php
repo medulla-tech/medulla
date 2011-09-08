@@ -108,12 +108,15 @@ function _base_verifInfo($FH, $mode) {
     }
 
     /* Check that the homeDir does not exists */
-    if ($FH->getPostValue("createHomeDir") == "on" && $uid) {
-        getHomeDir($uid, $FH->getValue("homeDirectory"));
+    if ($mode == "add") {
+        if ($FH->getPostValue("createHomeDir") == "on" && $FH->getPostValue("ownHomeDir") != "on" && $uid) {
+            getHomeDir($uid, $FH->getValue("homeDirectory"));
+        }
     }
-    /* If we want to move the userdir */
-    else if ($FH->isUpdated("homeDirectory")) {
-        getHomeDir($uid, $FH->getValue("homeDirectory"));
+    else {
+        /* If we want to move the userdir check the destination */
+        if ($FH->isUpdated("homeDirectory"))
+            getHomeDir($uid, $FH->getValue("homeDirectory"));
     }
 
     $error .= $base_errors;
@@ -143,13 +146,18 @@ function _base_changeUser($FH, $mode) {
         else
             $createHomeDir = false;
 
+        if($FH->getPostValue("ownHomeDir") == "on")
+            $ownHomeDir = true;
+        else
+            $ownHomeDir = false;
+
         # create the user
         $ret = add_user($uid,
             $FH->getPostValue("pass"),
             $FH->getPostValue("givenName"),
             $FH->getPostValue("sn"),
             $FH->getPostValue("homeDirectory"),
-            $createHomeDir,
+            $createHomeDir, $ownHomeDir,
             $FH->getPostValue("primary")
         );
         $result .= $ret["info"];
@@ -437,6 +445,11 @@ function _base_baseEdit($FH, $mode) {
         $f->add(
             new TrFormElement(_("Create home directory on filesystem"), new CheckboxTpl("createHomeDir")),
             array("value" => "checked")
+        );
+        $f->add(
+            new TrFormElement(_("Force to use the home directory if it exists"), new CheckboxTpl("ownHomeDir"),
+                array("tooltip" => _("Warning: an existing directory may belong to another user !"))),
+            array("value" => "")
         );
     }
 
