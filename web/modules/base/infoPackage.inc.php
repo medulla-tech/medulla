@@ -40,9 +40,8 @@ $mod->setPriority(1);
  * define main submod
  */
 
-$submod = new SubModule("main");
+$submod = new SubModule("main", _("Home page"));
 $submod->setVisibility(False);
-$submod->setDescription(_("Home page"));
 
 $page = new Page("default",_("Home page"));
 $page->setFile("main_content.php");
@@ -56,9 +55,8 @@ $page->setOptions(array("visible"=>False,"AJAX" =>True));
 $submod->addPage($page);
 $mod->addSubmod($submod);
 
-$submod = new SubModule("status");
+$submod = new SubModule("status", _("Status"));
 $submod->setVisibility(True);
-$submod->setDescription(_("Status"));
 $submod->setImg('img/navbar/load');
 $submod->setDefaultPage("base/status/index");
 $submod->setPriority(10000);
@@ -75,9 +73,8 @@ if (! isCommunityVersion(true)) {
 
 $mod->addSubmod($submod);
 
-$submod = new ExpertSubModule("logview");
+$submod = new ExpertSubModule("logview", _("Log view"));
 $submod->setVisibility(True);
-$submod->setDescription(_("Log view"));
 $submod->setImg('img/navbar/logview');
 $submod->setDefaultPage("base/logview/index");
 $submod->setPriority(10001);
@@ -104,8 +101,7 @@ $mod->addSubmod($submod);
  * user submod definition
  */
 
-$submod = new SubModule("users");
-$submod->setDescription(_("Users"));
+$submod = new SubModule("users", _("Users"));
 $submod->setImg('img/navbar/user');
 $submod->setDefaultPage("base/users/index");
 $submod->setPriority(10);
@@ -175,8 +171,7 @@ $mod->addSubmod($submod);
  * groups submod definition
  */
 
-$submod = new SubModule("groups");
-$submod->setDescription(_("Groups"));
+$submod = new SubModule("groups", _("Groups"));
 $submod->setImg('img/navbar/group');
 $submod->setDefaultPage("base/groups/index");
 $submod->setPriority(20);
@@ -210,8 +205,7 @@ $mod->addSubmod($submod);
 /* Audit module */
 
 if (has_audit_working()) {
-    $submod = new SubModule("audit");
-    $submod->setDescription(_("Audit"));
+    $submod = new SubModule("audit", _("Audit"));
     $submod->setImg('img/navbar/logview');
     $submod->setDefaultPage("base/audit/indexall");
     $submod->setPriority(2000);
@@ -272,8 +266,7 @@ if (has_audit_working()) {
 /* Computer management module */
 
 if (hasComputerManagerWorking()) {
-    $submod = new SubModule("computers");
-    $submod->setDescription(_("Computers"));
+    $submod = new SubModule("computers", _("Computers"));
     $submod->setImg('img/navbar/computer');
     $submod->setDefaultPage("base/computers/index");
     $submod->setPriority(30);
