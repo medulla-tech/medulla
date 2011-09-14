@@ -28,7 +28,7 @@ require_once("modules/base/includes/logging-xmlrpc.inc.php");
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 require("modules/base/includes/AjaxFilterLog.inc.php");
-require("includes/FormHandler.php");
+require_once("includes/FormHandler.php");
 
 # infos messages
 global $result;
