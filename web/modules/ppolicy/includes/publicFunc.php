@@ -204,7 +204,7 @@ function _ppolicy_baseGroupEdit($ldapArr, $postArr) {
 
 function _ppolicy_changeGroup($postArr) {
     $group = $postArr["groupname"];
-    if (isset($postArr["ppolicyname"])) {
+    if (isset($postArr["ppolicyname"]) && trim($postArr["ppolicyname"])) {
         updateGroupPPolicy($group, $postArr["ppolicyname"]);
     }
 }
