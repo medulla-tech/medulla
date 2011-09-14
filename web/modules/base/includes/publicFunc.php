@@ -162,12 +162,11 @@ function _base_changeUser($FH, $mode) {
         );
         $result .= $ret["info"];
         # password doesn't match the pwd policies
-        # set randomSmbPwd for samba plugin
+        # we set a random password for other plugins
         if($ret["code"] == 5) {
-            $FH->setValue("randomSmbPwd", 1);
-        }
-        else {
-            $FH->setValue("randomSmbPwd", 0);
+            $randomPass = uniqid(rand(), true);
+            $FH->setPostValue("pass", $randomPass);
+            $FH->setValue("pass", $randomPass);
         }
         # add mail attribute
         if ($FH->getPostValue('mail'))
