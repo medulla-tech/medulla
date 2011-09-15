@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-15 14:54+0200\n"
-"PO-Revision-Date: 2011-07-26 09:45+0000\n"
+"POT-Creation-Date: 2011-09-15 15:29+0200\n"
+"PO-Revision-Date: 2011-09-15 12:54+0000\n"
 "Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
 "Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/"
 "mds/team/ru_RU/)\n"
@@ -36,14 +36,12 @@ msgid " and "
 msgstr " и "
 
 #: modules/admin/includes/configure.inc.php:50
-#, fuzzy
 msgid " configuration"
-msgstr "Конфигурация LDAP"
+msgstr ""
 
 #: modules/admin/includes/configure.inc.php:62
-#, fuzzy
 msgid " configuration page"
-msgstr "Конфигурация LDAP"
+msgstr ""
 
 #: modules/base/users/backup.php:74
 #, php-format
@@ -66,8 +64,8 @@ msgid ""
 "</p>"
 msgstr ""
 "<p>\n"
-"Community-версия этого продукта распространяется в предположении\n"
-"что все работает, но <strong>без каких либо гарантий</strong>; даже при "
+"Community-версия этого продукта распространяется в предположении,\n"
+"что все работает, но <strong>без каких-либо гарантий</strong>; даже при "
 "наличии\n"
 "возможности гарантийных случаев для данного вида продуктов. Смотрите\n"
 "GNU General Public License для более подробной информации.</p>\n"
@@ -79,16 +77,11 @@ msgstr ""
 "</p>"
 
 #: modules/base/includes/publicFunc.php:376
-#, fuzzy
 msgid ""
 "A disabled user can't log in any UNIX services. <br/>\n"
 "                                Her/his login shell command is replaced by /"
 "bin/false"
 msgstr ""
-"Отключенные пользователи не смогут воспользоваться какими-либо UNIX-"
-"сервисами. <br/>\n"
-"                            Его/Ее командная оболочка будет заменена на /bin/"
-"false"
 
 #: modules/base/audit/indexall.php:30 modules/base/audit/indexbase.php:30
 msgid "Action"
@@ -121,7 +114,7 @@ msgstr "Добавить пользователя"
 
 #: modules/base/computers/localSidebar.php:10
 msgid "Add computer"
-msgstr "Добавить компьютер"
+msgstr "16a222b6427b8dddc29352a1692324c9_tr"
 
 #: modules/base/infoPackage.inc.php:277
 msgid "Add computer "
@@ -153,16 +146,15 @@ msgstr "Имя узла агента"
 
 #: modules/base/infoPackage.inc.php:292
 msgid "Ajax part of computers list"
-msgstr "Ajax-часть списока компьютеров"
+msgstr "Ajax-часть списка компьютеров"
 
 #: modules/base/computers/localSidebar.php:7
 msgid "All computers"
 msgstr "Все компьютеры"
 
 #: modules/base/includes/publicFunc.php:407
-#, fuzzy
 msgid "All groups"
-msgstr "Удалить группу"
+msgstr ""
 
 #: modules/base/audit/localSidebar.php:28
 msgid "All modules"
@@ -269,7 +261,7 @@ msgstr "Изменить атрибуты пользователя"
 
 #: modules/base/infoPackage.inc.php:158
 msgid "Change user password"
-msgstr ""
+msgstr "Изменить пользовательский пароль"
 
 #: modules/base/includes/auditCodes.php:36
 msgid "Change user primary group"
@@ -285,9 +277,8 @@ msgid "Change your user's password"
 msgstr "Изменить ваш пароль пользователя"
 
 #: modules/base/includes/publicFunc.php:362
-#, fuzzy
 msgid "Choose language"
-msgstr "Язык"
+msgstr ""
 
 #: license.php:53
 msgid ""
@@ -299,7 +290,7 @@ msgstr ""
 
 #: graph/navbar.inc.php:47
 msgid "Click to switch to"
-msgstr "Нажмите для переключения в "
+msgstr "Нажмите для переключения в  "
 
 #: modules/base/audit/logview.php:66
 msgid "Client"
@@ -344,7 +335,7 @@ msgstr "Список компьютеров"
 
 #: modules/base/computers/edit.php:83
 msgid "Computer name"
-msgstr ""
+msgstr "Имя компьютера"
 
 #: modules/base/computers/edit.php:36
 msgid "Computer successfully added"
@@ -364,7 +355,7 @@ msgstr "Адрес маски сети компьютера"
 
 #: modules/base/infoPackage.inc.php:269
 msgid "Computers"
-msgstr ""
+msgstr "Компьютеры"
 
 #: modules/base/includes/computers_list.inc.php:139
 msgid "Computers list"
@@ -492,9 +483,8 @@ msgid "Description"
 msgstr "Описание"
 
 #: modules/base/users/edit.php:183
-#, fuzzy
 msgid "Disable account"
-msgstr "Включить/Отключить аккаунт пользователя"
+msgstr ""
 
 #: modules/base/includes/auditCodes.php:29
 msgid "Disable user"
@@ -558,9 +548,8 @@ msgid "Edit user"
 msgstr "Изменить пользователя"
 
 #: modules/base/users/edit.php:181
-#, fuzzy
 msgid "Enable account"
-msgstr "Включить/Отключить аккаунт пользователя"
+msgstr ""
 
 #: modules/base/includes/auditCodes.php:28
 msgid "Enable user"
@@ -632,9 +621,8 @@ msgid "First name"
 msgstr "Имя"
 
 #: modules/base/includes/publicFunc.php:449
-#, fuzzy
 msgid "Force to use the home directory if it exists"
-msgstr "Создать домашнюю папку"
+msgstr ""
 
 #: graph/header.inc.php:213
 msgid "Form cannot be submit. Input errors are highlighted in red."
@@ -833,7 +821,7 @@ msgstr "Зарегистрированные действия"
 
 #: modules/base/audit/list.php:30
 msgid "Logged actions"
-msgstr ""
+msgstr "Зарегистрированные действия"
 
 #: modules/base/infoPackage.inc.php:133
 msgid "Logged user actions"
@@ -856,7 +844,7 @@ msgstr "Оболочка входа в систему"
 
 #: graph/navbar.inc.php:50 logout/index.php:49 logout/index.php:54
 msgid "Logout"
-msgstr ""
+msgstr "Выход"
 
 #: includes/commonErrorHandling.php:43
 msgid "MMC Agent can't contact your LDAP server"
@@ -880,9 +868,8 @@ msgid "MMC agent seems to be not correctly configured."
 msgstr "Возможно агент MMC не верно настроен."
 
 #: version.php:36
-#, fuzzy
 msgid "MMC agent: version"
-msgstr "Агент MMC"
+msgstr ""
 
 #: version.php:35
 msgid "MMC components version"
@@ -1024,9 +1011,8 @@ msgid "Password not updated"
 msgstr "Пароль не обновлён."
 
 #: modules/base/users/edit.php:112
-#, fuzzy
 msgid "Password updated"
-msgstr "Пароль обновлён."
+msgstr ""
 
 #: modules/base/users/passwd.php:81
 msgid "Passwords are mismatching. Please retry."
@@ -1090,7 +1076,7 @@ msgid ""
 "Please select media size. If your data exceeds the volume size, several "
 "files of your media size will be created."
 msgstr ""
-"Пожалуйста, укажите размер тома. Если данные привысят размер тома, то будет "
+"Пожалуйста, укажите размер тома. Если данные превысят размер тома, то будет "
 "создано несколько томов."
 
 #: modules/base/audit/logview.php:64
@@ -1098,9 +1084,8 @@ msgid "Plugin"
 msgstr "Плагин"
 
 #: modules/base/includes/publicFunc.php:367
-#, fuzzy
 msgid "Preferred language"
-msgstr "Будет использовано предпочтительное имя"
+msgstr ""
 
 #: modules/base/includes/publicFunc.php:467
 #: modules/base/infoPackage.inc.php:320
@@ -1198,9 +1183,8 @@ msgstr "Сек: "
 
 #: modules/base/includes/publicFunc.php:430
 #: modules/base/infoPackage.inc.php:318
-#, fuzzy
 msgid "Secondary groups"
-msgstr "Группы пользователя"
+msgstr ""
 
 #: includes/PageGenerator.php:2626
 msgid "Select all"
@@ -1289,7 +1273,7 @@ msgstr "Страница поддержки"
 
 #: modules/base/status/support.php:59
 msgid "Support phone number"
-msgstr "Телефонный номер поддержки"
+msgstr "Телефонный поддержки"
 
 #: modules/base/status/index.php:119
 msgid "Swap"
@@ -1334,7 +1318,7 @@ msgid ""
 "The files will be stored in the directory %s of the server at the end of the "
 "backup."
 msgstr ""
-"Файлы будут сохранены в каталоге %s на сервере, по окончании резервного "
+"Файлы будут сохранены в каталоге %s на сервере, после окончания резервного "
 "копирования."
 
 #: modules/base/includes/publicFunc.php:106
@@ -1378,9 +1362,8 @@ msgstr ""
 
 #: modules/base/includes/publicFunc.php:254
 #: modules/base/includes/publicFunc.php:256
-#, fuzzy
 msgid "The photo is not a JPG file"
-msgstr "Фотография не является JPG-файлом."
+msgstr ""
 
 #: modules/base/includes/publicFunc.php:249
 #, php-format
@@ -1400,18 +1383,17 @@ msgid "The server %s does not exist"
 msgstr "Сервер %s не существует"
 
 #: modules/base/includes/publicFunc.php:85
-#, fuzzy, php-format
+#, php-format
 msgid "The user %s already exists."
-msgstr "Такой пользователь уже существует."
+msgstr ""
 
 #: modules/base/includes/errorHandling.php:39
 msgid "The user directory does not exist and cannot be removed."
 msgstr "Директория пользователя не существует и поэтому не может быть удалена."
 
 #: modules/base/includes/errorHandling.php:45
-#, fuzzy
 msgid "The user home directory already exists."
-msgstr "Такой пользователь уже существует."
+msgstr ""
 
 #: includes/xmlrpc.inc.php:322
 msgid ""
@@ -1503,23 +1485,21 @@ msgid "User"
 msgstr "Пользователь"
 
 #: modules/base/includes/users-xmlrpc.inc.php:118
-#, fuzzy, php-format
+#, php-format
 msgid ""
 "User %s created but password is not valid regarding your password policies."
 "<br/><strong>You must change the user password.</strong>"
 msgstr ""
-"Пользователь %s был создан, но пароль не отвечает вашим требованиям "
-"безопасности.<br/><strong>Вы должны изменить пароль.</strong><br />"
 
 #: modules/base/users/edit.php:124
-#, fuzzy, php-format
+#, php-format
 msgid "User %s disabled."
-msgstr "Пользователь отключен."
+msgstr ""
 
 #: modules/base/users/edit.php:133
-#, fuzzy, php-format
+#, php-format
 msgid "User %s enabled"
-msgstr "Пользователь включен."
+msgstr ""
 
 #: modules/base/users/delete.php:33
 #, php-format
@@ -1527,9 +1507,9 @@ msgid "User %s has been successfully deleted"
 msgstr "Пользователь %s был успешно удален"
 
 #: modules/base/includes/users-xmlrpc.inc.php:122
-#, fuzzy, php-format
+#, php-format
 msgid "User %s successfully created"
-msgstr "Пользователь %s успешно создан<br />"
+msgstr ""
 
 #: modules/base/users/editacl.php:152
 msgid "User ACLs successfully modified."
@@ -1540,23 +1520,20 @@ msgid "User and group audit"
 msgstr "Аудит пользователей и групп"
 
 #: modules/base/includes/publicFunc.php:260
-#, fuzzy
 msgid "User attributes updated"
-msgstr "Атрибуты обновлены."
+msgstr ""
 
 #: modules/base/includes/auditCodes.php:42
 msgid "User authentication"
-msgstr "Аутенфикация пользователя"
+msgstr "Аутентификация пользователя"
 
 #: modules/base/includes/publicFunc.php:197
-#, fuzzy
 msgid "User disabled"
-msgstr "Пользователь отключен."
+msgstr ""
 
 #: modules/base/includes/publicFunc.php:201
-#, fuzzy
 msgid "User enabled"
-msgstr "Пользователь включен."
+msgstr ""
 
 #: modules/base/infoPackage.inc.php:308
 msgid "User firstname"
@@ -1592,8 +1569,12 @@ msgid "User photo"
 msgstr "Фотография пользователя"
 
 #: modules/base/includes/publicFunc.php:183
-#, fuzzy
 msgid "User photo deleted"
+msgstr ""
+
+#: modules/base/includes/publicFunc.php:276
+#, fuzzy
+msgid "User properties"
 msgstr "Фотография пользователя"
 
 #: modules/base/audit/logview.php:60
@@ -1605,9 +1586,8 @@ msgid "User title"
 msgstr "Обращение к пользователю"
 
 #: modules/base/includes/publicFunc.php:407
-#, fuzzy
 msgid "User's groups"
-msgstr "Группы пользователя"
+msgstr ""
 
 #: modules/base/includes/publicFunc.php:80
 msgid "User's name invalid !"
@@ -1844,7 +1824,7 @@ msgstr "неизвестная ошибка"
 
 #: modules/base/includes/users-xmlrpc.inc.php:55
 msgid "users"
-msgstr ""
+msgstr "пользователи"
 
 #: modules/base/includes/AjaxFilterLog.inc.php:190
 #: includes/FormGenerator.php:536
@@ -1867,27 +1847,3 @@ msgstr ""
 #: includes/FormGenerator.php:261
 msgid "yes"
 msgstr "да"
-
-#~ msgid "Lockout duration (seconds)"
-#~ msgstr "Продолжительность блокировки (секунд)"
-
-#~ msgid "Password maximum failure"
-#~ msgstr "Превышено количество вводов пароля"
-
-#~ msgid "The photo is too big. The max size is %s x %s."
-#~ msgstr "Размер фотографии слишком велик. Максимальный размер  %s x %s."
-
-#~ msgid "This account is locked by the LDAP directory."
-#~ msgstr "Этот аккаунт заблокирован в вашем каталоге LDAP."
-
-#~ msgid "This group doesn't exist"
-#~ msgstr "Эта группа не существует"
-
-#~ msgid "Unlock LDAP account"
-#~ msgstr "Разблокировать аккаунт LDAP"
-
-#~ msgid "disabled"
-#~ msgstr "выключен"
-
-#~ msgid "enabled"
-#~ msgstr "включен"

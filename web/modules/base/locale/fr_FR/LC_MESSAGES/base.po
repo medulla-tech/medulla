@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://mds.mandriva.org/\n"
-"POT-Creation-Date: 2011-09-15 14:54+0200\n"
-"PO-Revision-Date: 2011-09-15 12:58+0000\n"
+"POT-Creation-Date: 2011-09-15 15:29+0200\n"
+"PO-Revision-Date: 2011-09-15 13:30+0000\n"
 "Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/mds/team/fr_FR/)\n"
 "MIME-Version: 1.0\n"
@@ -736,6 +736,10 @@ msgstr "La photo n'est pas un fichier JPG"
 #: modules/base/includes/publicFunc.php:260
 msgid "User attributes updated"
 msgstr "Attributs de l'utilisateur mis à jour"
+
+#: modules/base/includes/publicFunc.php:276
+msgid "User properties"
+msgstr "Propriétés de l'utilisateur"
 
 #: modules/base/includes/publicFunc.php:285
 #: modules/base/users/ajaxFilter.php:68 modules/base/views/index.tpl.php:78

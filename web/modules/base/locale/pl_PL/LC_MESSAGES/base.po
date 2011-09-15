@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-15 14:54+0200\n"
-"PO-Revision-Date: 2011-07-26 09:45+0000\n"
+"POT-Creation-Date: 2011-09-15 15:29+0200\n"
+"PO-Revision-Date: 2011-09-15 12:54+0000\n"
 "Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: pl_PL\n"
@@ -77,16 +77,11 @@ msgstr ""
 "</p>"
 
 #: modules/base/includes/publicFunc.php:376
-#, fuzzy
 msgid ""
 "A disabled user can't log in any UNIX services. <br/>\n"
 "                                Her/his login shell command is replaced by /"
 "bin/false"
 msgstr ""
-"Zablokowany użytkownik nie może logować się do żadnych usług UNIX-owych.. "
-"<br/>\n"
-"                            Jej / jego powłoka logowania została zastąpiona "
-"przez /bin/false"
 
 #: modules/base/audit/indexall.php:30 modules/base/audit/indexbase.php:30
 msgid "Action"
@@ -119,7 +114,7 @@ msgstr "Dodaj użytkownika"
 
 #: modules/base/computers/localSidebar.php:10
 msgid "Add computer"
-msgstr "Dodaj komputer"
+msgstr "16a222b6427b8dddc29352a1692324c9_tr"
 
 #: modules/base/infoPackage.inc.php:277
 msgid "Add computer "
@@ -158,9 +153,8 @@ msgid "All computers"
 msgstr "Wszystkie komputery"
 
 #: modules/base/includes/publicFunc.php:407
-#, fuzzy
 msgid "All groups"
-msgstr "Dodaj grupę"
+msgstr ""
 
 #: modules/base/audit/localSidebar.php:28
 msgid "All modules"
@@ -281,9 +275,8 @@ msgid "Change your user's password"
 msgstr "Zmień hasło użytkownika"
 
 #: modules/base/includes/publicFunc.php:362
-#, fuzzy
 msgid "Choose language"
-msgstr "Język"
+msgstr ""
 
 #: license.php:53
 msgid ""
@@ -488,9 +481,8 @@ msgid "Description"
 msgstr "Opis"
 
 #: modules/base/users/edit.php:183
-#, fuzzy
 msgid "Disable account"
-msgstr "Odbloku / Zablokuj konto użytkownika"
+msgstr ""
 
 #: modules/base/includes/auditCodes.php:29
 msgid "Disable user"
@@ -554,9 +546,8 @@ msgid "Edit user"
 msgstr "Edytuj użytkownika"
 
 #: modules/base/users/edit.php:181
-#, fuzzy
 msgid "Enable account"
-msgstr "Odbloku / Zablokuj konto użytkownika"
+msgstr ""
 
 #: modules/base/includes/auditCodes.php:28
 msgid "Enable user"
@@ -628,9 +619,8 @@ msgid "First name"
 msgstr "Imię"
 
 #: modules/base/includes/publicFunc.php:449
-#, fuzzy
 msgid "Force to use the home directory if it exists"
-msgstr "Utwórz katalog domowy w systemie plików"
+msgstr ""
 
 #: graph/header.inc.php:213
 msgid "Form cannot be submit. Input errors are highlighted in red."
@@ -1019,9 +1009,8 @@ msgid "Password not updated"
 msgstr ""
 
 #: modules/base/users/edit.php:112
-#, fuzzy
 msgid "Password updated"
-msgstr "Uaktualniono hasło."
+msgstr ""
 
 #: modules/base/users/passwd.php:81
 msgid "Passwords are mismatching. Please retry."
@@ -1088,9 +1077,8 @@ msgid "Plugin"
 msgstr ""
 
 #: modules/base/includes/publicFunc.php:367
-#, fuzzy
 msgid "Preferred language"
-msgstr "Preferowana nazwa"
+msgstr ""
 
 #: modules/base/includes/publicFunc.php:467
 #: modules/base/infoPackage.inc.php:320
@@ -1188,9 +1176,8 @@ msgstr "Sek.:"
 
 #: modules/base/includes/publicFunc.php:430
 #: modules/base/infoPackage.inc.php:318
-#, fuzzy
 msgid "Secondary groups"
-msgstr "Grupy użytkowników"
+msgstr ""
 
 #: includes/PageGenerator.php:2626
 msgid "Select all"
@@ -1356,9 +1343,8 @@ msgstr ""
 
 #: modules/base/includes/publicFunc.php:254
 #: modules/base/includes/publicFunc.php:256
-#, fuzzy
 msgid "The photo is not a JPG file"
-msgstr "Zdjęcie nie jest plikiem JPG."
+msgstr ""
 
 #: modules/base/includes/publicFunc.php:249
 #, php-format
@@ -1378,18 +1364,17 @@ msgid "The server %s does not exist"
 msgstr ""
 
 #: modules/base/includes/publicFunc.php:85
-#, fuzzy, php-format
+#, php-format
 msgid "The user %s already exists."
-msgstr "Taki użytkownik już istnieje."
+msgstr ""
 
 #: modules/base/includes/errorHandling.php:39
 msgid "The user directory does not exist and cannot be removed."
 msgstr ""
 
 #: modules/base/includes/errorHandling.php:45
-#, fuzzy
 msgid "The user home directory already exists."
-msgstr "Taki użytkownik już istnieje."
+msgstr ""
 
 #: includes/xmlrpc.inc.php:322
 msgid ""
@@ -1482,14 +1467,14 @@ msgid ""
 msgstr ""
 
 #: modules/base/users/edit.php:124
-#, fuzzy, php-format
+#, php-format
 msgid "User %s disabled."
-msgstr "Zablokowano użytkownika."
+msgstr ""
 
 #: modules/base/users/edit.php:133
-#, fuzzy, php-format
+#, php-format
 msgid "User %s enabled"
-msgstr "Uaktywniono użytkownika."
+msgstr ""
 
 #: modules/base/users/delete.php:33
 #, php-format
@@ -1497,9 +1482,9 @@ msgid "User %s has been successfully deleted"
 msgstr "Usunięto użytkownika %s"
 
 #: modules/base/includes/users-xmlrpc.inc.php:122
-#, fuzzy, php-format
+#, php-format
 msgid "User %s successfully created"
-msgstr "Usunięto użytkownika %s"
+msgstr ""
 
 #: modules/base/users/editacl.php:152
 msgid "User ACLs successfully modified."
@@ -1510,23 +1495,20 @@ msgid "User and group audit"
 msgstr ""
 
 #: modules/base/includes/publicFunc.php:260
-#, fuzzy
 msgid "User attributes updated"
-msgstr "Uaktualniono właściwości."
+msgstr ""
 
 #: modules/base/includes/auditCodes.php:42
 msgid "User authentication"
 msgstr ""
 
 #: modules/base/includes/publicFunc.php:197
-#, fuzzy
 msgid "User disabled"
-msgstr "Zablokowano użytkownika."
+msgstr ""
 
 #: modules/base/includes/publicFunc.php:201
-#, fuzzy
 msgid "User enabled"
-msgstr "Uaktywniono użytkownika."
+msgstr ""
 
 #: modules/base/infoPackage.inc.php:308
 msgid "User firstname"
@@ -1562,8 +1544,12 @@ msgid "User photo"
 msgstr "Zdjęcie użytkownika"
 
 #: modules/base/includes/publicFunc.php:183
-#, fuzzy
 msgid "User photo deleted"
+msgstr ""
+
+#: modules/base/includes/publicFunc.php:276
+#, fuzzy
+msgid "User properties"
 msgstr "Zdjęcie użytkownika"
 
 #: modules/base/audit/logview.php:60
@@ -1575,9 +1561,8 @@ msgid "User title"
 msgstr "Tytuł użytkownika"
 
 #: modules/base/includes/publicFunc.php:407
-#, fuzzy
 msgid "User's groups"
-msgstr "Grupy użytkowników"
+msgstr ""
 
 #: modules/base/includes/publicFunc.php:80
 msgid "User's name invalid !"
@@ -1831,9 +1816,3 @@ msgstr ""
 #: includes/FormGenerator.php:261
 msgid "yes"
 msgstr "tak"
-
-#~ msgid "The photo is too big. The max size is %s x %s."
-#~ msgstr "Zdjęcie jest zbyt duże. Maksymalny rozmiar to %s na %s."
-
-#~ msgid "This group doesn't exist"
-#~ msgstr "Ta grupa nie istnieje"

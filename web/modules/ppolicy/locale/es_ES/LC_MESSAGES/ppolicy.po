@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-15 15:01+0200\n"
-"PO-Revision-Date: 2011-06-17 10:08+0000\n"
+"POT-Creation-Date: 2011-09-15 15:29+0200\n"
+"PO-Revision-Date: 2011-09-15 13:01+0000\n"
 "Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
 "Language-Team: Spanish (Spain) (http://transifex.mandriva.com/projects/p/mds/"
 "team/es_ES/)\n"
@@ -25,24 +25,20 @@ msgstr "\"Duración máxima\" debe ser mayor que \"Duración mínima\"."
 #: modules/ppolicy/default/edit.php:44
 #: modules/ppolicy/includes/localSidebar.php:28
 #: modules/ppolicy/infoPackage.inc.php:50
-#, fuzzy
 msgid "Add a password policy"
-msgstr "Política de contraseñas por defecto"
+msgstr ""
 
 #: modules/ppolicy/includes/auditCodes.php:6
-#, fuzzy
 msgid "Add ppolicy to user"
-msgstr "Añadir atributos de política"
+msgstr ""
 
 #: modules/ppolicy/includes/publicFunc.php:195
-#, fuzzy
 msgid "Apply a password policy for all group users"
-msgstr "Habilitar política específica de contraseñas para este usuario"
+msgstr ""
 
 #: modules/ppolicy/default/edit.php:95
-#, fuzzy
 msgid "Attributes updated"
-msgstr "Atributos de contraseña actualizados"
+msgstr ""
 
 #: modules/ppolicy/default/delete.php:45
 msgid "Cancel"
@@ -66,14 +62,12 @@ msgid "Delete"
 msgstr ""
 
 #: modules/ppolicy/infoPackage.inc.php:59
-#, fuzzy
 msgid "Delete a password policy"
-msgstr "Política de contraseñas por defecto"
+msgstr ""
 
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:48
-#, fuzzy
 msgid "Delete password policy"
-msgstr "Política de contraseñas por defecto"
+msgstr ""
 
 #: modules/ppolicy/includes/auditCodes.php:5
 #: modules/ppolicy/includes/auditCodes.php:10
@@ -81,9 +75,8 @@ msgid "Delete ppolicy attribute"
 msgstr "Eliminar atributo de política"
 
 #: modules/ppolicy/includes/auditCodes.php:8
-#, fuzzy
 msgid "Delete ppolicy on user"
-msgstr "Eliminar atributo de política"
+msgstr ""
 
 #: modules/ppolicy/default/edit.php:129
 #: modules/ppolicy/includes/ppolicy.inc.php:48
@@ -91,16 +84,14 @@ msgid "Description"
 msgstr ""
 
 #: modules/ppolicy/infoPackage.inc.php:54
-#, fuzzy
 msgid "Edit a password policy"
-msgstr "Política de contraseñas por defecto"
+msgstr ""
 
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:44
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:47
 #: modules/ppolicy/default/edit.php:48
-#, fuzzy
 msgid "Edit password policy"
-msgstr "Política de contraseñas por defecto"
+msgstr ""
 
 #: modules/ppolicy/includes/publicFunc.php:96
 msgid "Enable a specific password policy for this user"
@@ -197,14 +188,12 @@ msgstr "Máximo número de fallos en la contraseña"
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:53
 #: modules/ppolicy/includes/localSidebar.php:27
 #: modules/ppolicy/infoPackage.inc.php:46
-#, fuzzy
 msgid "Password policies"
-msgstr "Política de contraseñas"
+msgstr ""
 
 #: modules/ppolicy/default/index.php:31
-#, fuzzy
 msgid "Password policies list"
-msgstr "Plugins de política de contraseñas"
+msgstr ""
 
 #: modules/ppolicy/includes/publicFunc.php:158
 msgid "Password policy attributes updated."
@@ -213,9 +202,8 @@ msgstr "Atributos de contraseña actualizados"
 #: modules/ppolicy/includes/publicFunc.php:37
 #: modules/ppolicy/includes/publicFunc.php:63
 #: modules/ppolicy/includes/publicFunc.php:173
-#, fuzzy
 msgid "Password policy management"
-msgstr "Plugins de política de contraseñas"
+msgstr ""
 
 #: modules/ppolicy/includes/ppolicy.inc.php:47
 msgid "Password policy quality check"
@@ -242,9 +230,8 @@ msgid "Reset the password"
 msgstr "Resetear la contraseña"
 
 #: modules/ppolicy/default/delete.php:29
-#, fuzzy
 msgid "The password policy has been deleted."
-msgstr "Atributos de contraseña actualizados"
+msgstr ""
 
 #: modules/ppolicy/includes/publicFunc.php:64
 msgid "This account is locked by the LDAP directory."
@@ -414,31 +401,3 @@ msgid ""
 msgstr ""
 "Este atributo contiene el número mínimo de caracteres que debe tener una "
 "contraseña para ser aceptada"
-
-#~ msgid "Delete ppolicy attributes"
-#~ msgstr "Eliminar atributos de política"
-
-#~ msgid "Force user to change her password on the first connection ?"
-#~ msgstr "Forzar al usuario a cambiar la contraseña en la primera conexión ?"
-
-#~ msgid "Maximum age (second)"
-#~ msgstr "Duración máxima (segundos)"
-
-#~ msgid "Maximum age must be more than minimum age."
-#~ msgstr "Duración máxima debe ser mayor que duración mínima"
-
-#~ msgid ""
-#~ "You can enable a specific password policy for this user. If disabled, the "
-#~ "default password policy is enforced."
-#~ msgstr ""
-#~ "Puede habilitar una política de contraseñas para este usuario. Si está "
-#~ "deshabilitado se fuerza la política de contraseñas por defecto."
-
-#~ msgid "disabled"
-#~ msgstr "Deshabilitado"
-
-#~ msgid "enabled"
-#~ msgstr "Habilitado"
-
-#~ msgid "has been updated"
-#~ msgstr "ha sido actualizado"

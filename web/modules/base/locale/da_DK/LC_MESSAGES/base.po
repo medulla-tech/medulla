@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-15 14:54+0200\n"
-"PO-Revision-Date: 2011-07-26 10:03+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2011-09-15 15:29+0200\n"
+"PO-Revision-Date: 2011-09-15 12:54+0000\n"
+"Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: da_DK\n"
 "MIME-Version: 1.0\n"
@@ -98,7 +98,7 @@ msgstr ""
 
 #: modules/base/computers/localSidebar.php:10
 msgid "Add computer"
-msgstr ""
+msgstr "16a222b6427b8dddc29352a1692324c9_tr"
 
 #: modules/base/infoPackage.inc.php:277
 msgid "Add computer "
@@ -1489,6 +1489,10 @@ msgstr ""
 
 #: modules/base/includes/publicFunc.php:183
 msgid "User photo deleted"
+msgstr ""
+
+#: modules/base/includes/publicFunc.php:276
+msgid "User properties"
 msgstr ""
 
 #: modules/base/audit/logview.php:60
