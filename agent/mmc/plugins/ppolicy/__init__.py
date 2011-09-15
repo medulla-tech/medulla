@@ -177,6 +177,11 @@ class PPolicy(ldapUserGroupControl):
         if self.checkPPolicy(ppolicyName):
             ppolicyDN = "cn=" + ppolicyName + "," + self.configPPolicy.ppolicydn
             self.delRecursiveEntry(ppolicyDN)
+            # remove ppolicy applied to users
+            s = self.l.search_s(self.baseUsersDN, ldap.SCOPE_SUBTREE, "(&(objectClass=pwdPolicy)(pwdPolicySubentry=%s))" % ppolicyDN)
+            for user in s:
+                uid = user[1]['uid'][0]
+                UserPPolicy(uid).removePPolicy()
             return True
 
         return False
