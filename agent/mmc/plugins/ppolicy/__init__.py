@@ -144,18 +144,24 @@ class PPolicy(ldapUserGroupControl):
             else:
                 ppolicyDN = "cn=" + ppolicyName + "," + self.configPPolicy.ppolicydn
 
+            # set common attributes for all ppolicies
             attrs = {}
             attrs['objectClass'] = ['pwdPolicy', 'device']
             attrs['cn'] = ppolicyName
             if ppolicyDesc:
-                arrts['description'] = ppolicyDesc
-            # set default attributes
-            for k in self.configPPolicy.ppolicyAttributes :
-                if type(self.configPPolicy.ppolicyAttributes[k]) == bool:
-                    self.configPPolicy.ppolicyAttributes[k] = str(self.configPPolicy.ppolicyAttributes[k]).upper()
-                if k == 'pwdCheckModule'.lower():
-                    attrs['objectClass'].append('pwdPolicyChecker')
-                attrs[k] = str(self.configPPolicy.ppolicyAttributes[k])
+                attrs['description'] = ppolicyDesc
+            attrs['pwdattribute'] = self.configPPolicy.ppolicyAttributes['pwdattribute']
+            if 'pwdcheckmodule' in self.configPPolicy.ppolicyAttributes:
+                attrs['objectClass'].append('pwdPolicyChecker')
+                attrs['pwdcheckmodule'] = self.configPPolicy.ppolicyAttributes['pwdcheckmodule']
+
+            # set default attributes for default password policy
+            if ppolicyName == self.configPPolicy.ppolicydefault:
+                for k in self.configPPolicy.ppolicyAttributes:
+                    if type(self.configPPolicy.ppolicyAttributes[k]) == bool:
+                        self.configPPolicy.ppolicyAttributes[k] = str(self.configPPolicy.ppolicyAttributes[k]).upper()
+                    attrs[k] = str(self.configPPolicy.ppolicyAttributes[k])
+
             attributes = modlist.addModlist(attrs)
             self.l.add_s(ppolicyDN, attributes)
             self.logger.info("Password policy registered at: %s" % ppolicyDN)
