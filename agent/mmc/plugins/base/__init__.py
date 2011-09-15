@@ -1891,7 +1891,6 @@ class LdapUserGroupControl:
          @type ldappath: str
         """
         addrdn = 'ou=' + ouname + ', ' + ldappath
-        r = AF().log(PLUGIN_NAME, AA.BASE_ADD_OU, [(addrdn, AT.ORGANIZATIONAL_UNIT)])
         addr_info = {'ou':ouname,
                     'objectClass':('organizationalUnit','top')}
         attributes=[ (k,v) for k,v in addr_info.items() ]
@@ -1899,8 +1898,10 @@ class LdapUserGroupControl:
         try:
             self.l.add_s(addrdn, attributes)
             self.logger.info("Created OU " + addrdn)
-            r.commit()
         except ldap.ALREADY_EXISTS:
+            pass
+        else:
+            r = AF().log(PLUGIN_NAME, AA.BASE_ADD_OU, [(addrdn, AT.ORGANIZATIONAL_UNIT)])
             r.commit()
 
 ldapUserGroupControl = LdapUserGroupControl
