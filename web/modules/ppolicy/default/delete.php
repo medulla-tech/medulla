@@ -37,7 +37,7 @@ else {
 
 ?>
 
-<p><?php echo _T(sprintf("You will delete the password policy <strong>%s</strong>.", $ppolicy), "ppolicy"); ?></p>
+<p><?php echo _T(sprintf("You will delete the password policy <strong>%s</strong>. Default password policy will be applied to users that use this password policy.", $ppolicy), "ppolicy"); ?></p>
 
 <form action="<?php echo urlStrRedirect('base/users/deleteppolicy'); ?>" method="post">
     <input type="hidden" name="ppolicy" value="<?php echo $ppolicy; ?>" />
