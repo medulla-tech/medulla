@@ -32,25 +32,27 @@ class FormHandler {
         print_r($data);
         echo '</pre>';*/
         $this->name = $name;
+        $this->data = array();
 
         if (!$data) {
             $this->isError(false);
-            $this->data = array();
         }
 
         // get the old posted data in case of
         // error
         if(isset($_SESSION[$this->name])) {
             $oldFH = unserialize($_SESSION[$this->name]);
-            $this->data = $oldFH->data;
+            $this->post_data = $oldFH->post_data;
+            // update with new data
+            foreach($data as $name => $value) {
+                if(preg_match('/^old_/', $name) == 0)
+                    $this->post_data[$name] = $value;
+            }
         }
         else {
-            // mixed array
-            $this->data = array();
+            // the raw $_POST data
+            $this->post_data = $data;
         }
-
-        // the raw $_POST data
-        $this->post_data = $data;
         // the LDAP array
         $this->arr = array();
         $this->sanitize();
