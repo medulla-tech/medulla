@@ -94,7 +94,9 @@ function getParams() {
 
 // value in 'o'
 function humanSize($value) {
-    if (strlen($value) > 9)
+    if (strlen($value) > 12)
+        return round($value/1024/1024/1024/1024, 1).'To';
+    else if (strlen($value) > 9)
         return round($value/1024/1024/1024, 1).'Go';
     else if (strlen($value) > 6)
         return round($value/1024/1024, 1).'Mo';

@@ -40,7 +40,7 @@ class Status:
         self.ret = {}
 
     def get(self):
-        d = getProcessOutput('/bin/df', ['-k'], { 'LANG' : 'C', 'LANGUAGE' : 'C'})
+        d = getProcessOutput('/bin/df', ['-m'], { 'LANG' : 'C', 'LANGUAGE' : 'C'})
         d.addCallback(self.getAvailableSpaceOk)
         d.addErrback(self.getAvailableSpaceErr)
         return d
