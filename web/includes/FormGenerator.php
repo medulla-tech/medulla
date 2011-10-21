@@ -849,9 +849,6 @@ class SelectItem extends AbstractTpl{
         }
         $ret .= " name=\"".$this->id."\" id=\"".$this->id."\">\n";
         $ret .= $this->content_to_string($paramArray);
-        $ret .= "</select>\n
-<script>hideAndShowElement('method computers', 'glpi-show.inventory-show.'); return false;</script>
-";
         return $ret;
     }
 }
