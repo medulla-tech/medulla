@@ -332,7 +332,7 @@ function _base_baseEdit($FH, $mode) {
 
     $f->pop();
 
-    $phoneregexp = "/^[a-zA-Z0-9(/ \-]*$/";
+    $phoneregexp = "/^[a-zA-Z0-9(/ +\-]*$/";
 
     $tn = new MultipleInputTpl("telephoneNumber",_("Telephone number"));
     $tn->setRegexp($phoneregexp);
