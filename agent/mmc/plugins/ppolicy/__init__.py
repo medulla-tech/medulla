@@ -43,7 +43,7 @@ from mmc.core.audit import AuditFactory as AF
 from mmc.plugins.ppolicy.audit import AT, AA, PLUGIN_NAME
 
 
-VERSION = "3.0.3"
+VERSION = "3.0.3.1"
 APIVERSION = "0:1:0"
 REVISION = scmRevision("$Rev$")
 
