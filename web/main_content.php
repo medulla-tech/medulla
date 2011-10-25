@@ -127,7 +127,7 @@ ul {
 #home .home-column {
     float: left;
     width: 200px;
-    border: 1px solid transparent;
+    border: 1px solid white;
     background: white;
     min-height: 100px;
     -moz-border-radius: 10px;
@@ -245,7 +245,7 @@ ul {
             only: 'module',
             dropOnEmpty: true,
             handle: 'handle',
-            hoverclass: 'module-hover',
+            hoverclass: 'module-hover'
           });
           $$('.handle').each(function(m) {
             m.observe("mousedown", function(m) {
@@ -259,7 +259,7 @@ ul {
             m.observe("mouseup", function(m) {
                 save();
                 sortables.each(function (s) {
-                    s.style.border = "1px solid transparent";
+                    s.style.border = "1px solid white";
                     s.style.background = "white";
                 });
             });
