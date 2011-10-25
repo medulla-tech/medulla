@@ -476,7 +476,7 @@ function _base_baseEdit($FH, $mode) {
 
     $f->add(
         new TrFormElement(_("GID"), new HiddenTpl("gidNumber")),
-        array("value"=> $FH->getArrayOrPostValue("uidNumber"))
+        array("value"=> $FH->getArrayOrPostValue("gidNumber"))
     );
 
     $f->pop();
