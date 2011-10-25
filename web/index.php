@@ -129,7 +129,7 @@ if (isset($_GET["agentsessionexpired"])) {
 <!-- Put header content here  -->
 
         <p class="lock">
-        <?
+        <?php
         if (!empty($conf["logintitle"][$_SESSION["lang"]]))
             print $conf["logintitle"][$_SESSION["lang"]];
         ?>
@@ -247,7 +247,7 @@ if (isset($error)) {
     </table>
 	</td>
   </tr>
-<?
+<?php
 
 if (isCommunityVersion() && is_file("license.php")) {
     require("license.php");
@@ -261,6 +261,6 @@ if (isCommunityVersion() && is_file("license.php")) {
 
 </body>
 </html>
-<?
+<?php
 ob_end_flush();
 ?>
