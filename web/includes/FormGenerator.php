@@ -701,11 +701,11 @@ class MembersTpl extends AbstractTpl {
             </select>
         </td>
         <td class="membersTplSwitchs">
-            <a href="#" onclick="switch_' . $this->name .'(\'available_'.$this->name.'\', \''.$this->name.'\'); return false;">
+            <a href="#" onclick="switch_' . $this->name .'(\'available_'.$this->name.'\', \''.$this->name.'\'); event.returnValue=false; return false;">
                 <img style="padding: 5px;" src="img/common/icn_arrowleft.gif" value="<--" />
             </a>
             <br/>
-            <a href="#" onclick="switch_' . $this->name .'(\''.$this->name.'\', \'available_'.$this->name.'\'); return false;">
+            <a href="#" onclick="switch_' . $this->name .'(\''.$this->name.'\', \'available_'.$this->name.'\'); event.returnValue=false; return false;">
                 <img style="padding: 5px;" src="img/common/icn_arrowright.gif" value = "-->" />
             </a>
         </td>
@@ -721,12 +721,17 @@ class MembersTpl extends AbstractTpl {
     </table>
     <script type="text/javascript">
         switch_' . $this->name .' = function(from, to) {
-            var toAdd = $$("#"+from+" option").findAll(
-                function(ele) { return ele.selected }
-            );
+            var toAdd = $$("#"+from+" option").findAll(function(e) {
+                return e.selected;
+            });
             var len = toAdd.length;
             for(var i=0; i<len; i++) {
-                $(to).options.add(toAdd[i]);
+                try {
+                    $(to).options.add(toAdd[i]);
+                }
+                catch(ex) {
+                    $(to).appendChild(toAdd[i]);
+                }
             }
         };
     </script>';
