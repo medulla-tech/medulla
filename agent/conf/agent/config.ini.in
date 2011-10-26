@@ -32,17 +32,24 @@ pidfile= @localstatedir@/run/mmc-agent.pid
 # pidfile= @localstatedir@/run/mmc-agent.pid
 
 [loggers]
-keys=root
+keys=root,audit
 
 [handlers]
-keys=hand01,hand02
+keys=hand01,hand02,hand03
 
 [formatters]
-keys=form01
+keys=form01,form02
 
 [logger_root]
 level=NOTSET
 handlers=hand01
+
+[logger_audit]
+level=NOTSET
+qualname=audit
+# Set handlers=hand03 to
+# activate audit syslog logging
+handlers=
 
 [handler_hand01]
 class=FileHandler
@@ -55,5 +62,14 @@ class=StreamHandler
 level=DEBUG
 args=(sys.stderr,)
 
+[handler_hand03]
+class=handlers.SysLogHandler
+level=INFO
+formatter=form02
+args=(('localhost', 514), handlers.SysLogHandler.LOG_DAEMON)
+
 [formatter_form01]
 format=%(asctime)s #%(thread)d %(levelname)s %(message)s
+
+[formatter_form02]
+format=mmc-agent[%(process)s]: %(message)s
