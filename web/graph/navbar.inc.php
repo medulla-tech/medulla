@@ -46,7 +46,7 @@ if (isExpertMode()) {
 
     <li id="expertmode"><a href="<?php echo $root   ?>includes/switchmode.php"><?php echo _("Click to switch to") . "&nbsp;" . $mode; ?></a></li>
     <?php echo "<li id=\"disconnect\"><a title=\""._("logout")."\" href=\"".$root."logout/index.php\"";
-        echo " onclick=\"showPopup(event,'".$root."logout/index.php'); return false;\">";
+        echo " onclick=\"showPopup(event,'".$root."logout/index.php'); event.returnValue=false; return false;\">";
         echo _("Logout").'&nbsp;'.$_SESSION['login'];
         echo "</a></li>";
     ?>
@@ -83,7 +83,7 @@ if (!empty($_GET["module"])) { /* if not main page */
 
 
 <div id="navbar">
-<img src="<?php echo $root; ?>img/common/logomandriva_navbar.gif" alt="Linbox" id="logo" style= "float: right;" />
+    <img src="<?php echo $root; ?>img/common/logomandriva_navbar.gif" alt="Mandriva" id="logo" style= "float: right;" />
 <ul>
 <?php
 

@@ -21,7 +21,7 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
- * $Id$ 
+ * $Id$
  *
  */
 
@@ -139,19 +139,57 @@ function PopupWindowDisplay(evt, width) {
     getStyleObject('popup').display = 'inline';
 }
 
-function showPopup(evt,url) {
+function showPopup(evt, url) {
     $('popup').style.width = '300px';
-    if (!evt) evt = window.event;
-    new Ajax.Updater('__popup_container',url,{onComplete: displayPopup(evt), evalScripts:true});
+    /*new Ajax.Updater('__popup_container', url, {onComplete: displayPopup(evt), evalScripts:true});*/
+    new Ajax.Request(url, {
+        onSuccess: function(t) {
+            try {
+                $('__popup_container').update(t.responseText);
+            }
+            catch(ex) {
+                $('__popup_container').innerHTML = t.responseText;
+            }
+        },
+        onComplete: displayPopup(evt)
+    });
 }
 
 function showPopupFav(evt,url) {
-    $('popup').style.width='200px';
-    if (!evt) evt = window.event;
-    new Ajax.Updater('__popup_container',url,{onComplete: displayPopupFav(evt), evalScripts:true});
+    $('popup').style.width = '200px';
+    /*new Ajax.Updater('__popup_container',url,{onComplete: displayPopupFav(evt), evalScripts:true});*/
+    new Ajax.Request(url, {
+        onSuccess: function(t) {
+            try {
+                $('__popup_container').update(t.responseText);
+            }
+            catch(ex) {
+                $('__popup_container').innerHTML = t.responseText;
+            }
+        },
+        onComplete: displayPopupFav(evt)
+    });
+}
+
+
+function showPopupUp(evt,url) {
+    $('popup').style.width = '300px';
+    /*new Ajax.Updater('__popup_container',url,{onComplete: displayPopupUp(evt), evalScripts:true});*/
+    new Ajax.Request(url, {
+        onSuccess: function(t) {
+            try {
+                $('__popup_container').update(t.responseText);
+            }
+            catch(ex) {
+                $('__popup_container').innerHTML = t.responseText;
+            }
+        },
+        onComplete: displayPopupUp(evt)
+    });
 }
 
 function displayPopupFav (evt) {
+    if (!evt) evt = window.event;
     obj = document.getElementById('popup');
     obj.style.left = parseInt(evt.clientX)+document.documentElement.scrollLeft-100+"px";
     obj.style.top = (parseInt(evt.clientY)+document.documentElement.scrollTop)+"px";
@@ -159,19 +197,15 @@ function displayPopupFav (evt) {
 }
 
 function displayPopup (evt) {
+    if (!evt) evt = window.event;
     obj = document.getElementById('popup');
     obj.style.left = parseInt(evt.clientX)+document.documentElement.scrollLeft-300+"px";
     obj.style.top = (parseInt(evt.clientY)+document.documentElement.scrollTop)+"px";
     getStyleObject('popup').display='inline';
 }
 
-function showPopupUp(evt,url) {
-    $('popup').style.width='300px';
-    if (!evt) evt = window.event;
-    new Ajax.Updater('__popup_container',url,{onComplete: displayPopupUp(evt), evalScripts:true});
-}
-
 function displayPopupUp (evt) {
+    if (!evt) evt = window.event;
     $('popup').style.left = parseInt(evt.clientX)+document.documentElement.scrollLeft+"px";
     $('popup').style.top = (parseInt(evt.clientY)+document.documentElement.scrollTop-350)+"px";
     $('popup').style.display = 'inline';
