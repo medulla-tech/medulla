@@ -30,6 +30,8 @@ from sqlalchemy.orm import create_session
 from sqlalchemy import and_
 from mmc.core.audit.classes import Record, Module, Object, Object_Log, Event, Parameters, Initiator, Type, Source, Previous_Value, Current_Value
 
+logger = logging.getLogger('audit')
+
 class AuditRecord:
 
     """
@@ -49,8 +51,8 @@ class AuditRecord:
         @type user: string
         @param objects: list tuple of object which contains object uri and object type [('object','typeobject')...]
         @type objects: list
-        @param client: tuple which represent client (clienthost, clienttype)
-        @type client: tuple
+        @param initiator: tuple which represent client (clienthost, clienttype)
+        @type initiator: tuple
         @param param: parameters
         @type param: dict
         @param agent: represent agent hostname
@@ -248,6 +250,8 @@ class AuditRecordDB(AuditRecord):
                         self.record.param_log.append(p)
 
             session.add(self.record)
+            self.formatLog()
+            logger.info(self.log)
             session.commit()
         except:
             session.rollback()
@@ -255,11 +259,29 @@ class AuditRecordDB(AuditRecord):
             raise
         session.close()
 
+    def formatLog(self):
+        """
+        Format the current audit record for the python
+        logging system
+        """
+
+        self.log = "PLUGIN:%s ACTION:%s BY:%s" % (self.module, self.event, self.user[0])
+        if len(self.initiator) > 1:
+            self.log += " HOST:%s" % self.initiator[0]
+        if len(self.objects) > 0:
+            self.log += " TARGET:%s" % self.objects[0][0]
+        if len(self.objects) > 1:
+            self.log += " %s:%s" % (self.objects[1][1], self.objects[1][0])
+        if self.currentattribute:
+            self.log += " VALUE:%s" % str(self.currentattribute)
+
     def commit(self):
         """
         Valid the log and set the result attribute to True if event succeeds
         """
         self.record.result = True
+        self.log += " SUCCESS"
+        logger.info(self.log)
         session = create_session()
         session.begin()
         try:
