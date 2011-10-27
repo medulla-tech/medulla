@@ -1,3 +1,17 @@
+mmc-core 3.0.3.1
+----------------
+
+ * Phone numbers can contain the '+' char
+ * IE6 fixes
+
+mmc-core 3.0.3
+--------------
+
+ * Added preferedLanguage field in the user edit page
+ * Option to use an existing home directory for a new user
+ * Filled informations in the user edit page are not lost in case of error
+ * Added a disable button to disable all modules of a user
+
 mmc-core 3.0.1 (MMC web interface)
 ----------------------------------
 

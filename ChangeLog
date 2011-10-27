@@ -1,9 +1,30 @@
-mmc 3.1
--------
+mmc-core 3.0.3.1
+----------------
+
+ * Bugfix release of 3.0.3
+ * Details at http://mds.mandriva.org/milestone/MMC-CORE%203.0.3.1
+
+mmc-core 3.0.3
+--------------
+
+ * Added preferedLanguage field in user edit page
+ * More details at http://mds.mandriva.org/milestone/MMC-CORE%203.0.3
+
+mmc-core 3.0.2.1
+----------------
+
+ * Bugfix release : http://mds.mandriva.org/milestone/MMC-CORE%203.0.2.1
+   * Fix regexp on mail field in the user edit page
+   * Fix update on empty multiple input fields
+   * Fix agent return code in case of error in plugin activation (#409)
+
+mmc-core 3.0.2
+--------------
 
  * Merge MMC Agent and MMC web interface versions (web interface ChangeLog
    in web/Changelog
  * Migrate to autotools
+ * More details at http://mds.mandriva.org/milestone/MMC-CORE%203.0.2
 
 mmc-core 3.0.1 (MMC agent)
 --------------------------
