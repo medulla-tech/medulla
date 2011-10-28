@@ -47,6 +47,7 @@ handlers=hand01
 [logger_audit]
 level=NOTSET
 qualname=audit
+propagate=0
 # Set handlers=hand03 to
 # activate audit syslog logging
 handlers=
