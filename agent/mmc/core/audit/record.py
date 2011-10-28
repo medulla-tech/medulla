@@ -25,6 +25,7 @@ Contains classes that define records for the audit system
 """
 
 import logging
+import uuid
 
 from sqlalchemy.orm import create_session
 from sqlalchemy import and_
@@ -265,7 +266,8 @@ class AuditRecordDB(AuditRecord):
         logging system
         """
 
-        self.log = "PLUGIN:%s ACTION:%s BY:%s" % (self.module, self.event, self.user[0])
+        self.log = "ID:%s" % str(uuid.uuid4()).split('-')[0]
+        self.log += " PLUGIN:%s ACTION:%s BY:%s" % (self.module, self.event, self.user[0])
         if len(self.initiator) > 1:
             self.log += " HOST:%s" % self.initiator[0]
         if len(self.objects) > 0:
@@ -274,13 +276,14 @@ class AuditRecordDB(AuditRecord):
             self.log += " %s:%s" % (self.objects[1][1], self.objects[1][0])
         if self.currentattribute:
             self.log += " VALUE:%s" % str(self.currentattribute)
+        self.log += " STATE:PROGRESS"
 
     def commit(self):
         """
         Valid the log and set the result attribute to True if event succeeds
         """
         self.record.result = True
-        self.log += " SUCCESS"
+        self.log = self.log.replace("PROGRESS", "SUCCESS")
         logger.info(self.log)
         session = create_session()
         session.begin()
