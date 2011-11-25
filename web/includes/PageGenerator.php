@@ -1148,8 +1148,8 @@ class AjaxFilter extends HtmlElement {
         if(isset($_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_filter"])) {
             $this->storedfilter = $_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_filter"];
         }
-        if(isset($_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_max"])) {
-            $this->storedmax = $_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_max"];
+        if(isset($_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_maxperpage"])) {
+            $this->storedmax = $_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_maxperpage"];
         }
         if(isset($_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_start"])) {
             $this->storedstart = $_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_start"];
@@ -1170,6 +1170,7 @@ class AjaxFilter extends HtmlElement {
     function display() {
         global $conf;
         $root = $conf["global"]["root"];
+        $maxperpage = $conf["global"]["maxperpage"];
 
 ?>
 <form name="Form<?php echo $this->formid ?>" id="Form<?php echo $this->formid ?>" action="#" onsubmit="return false;">
@@ -1200,7 +1201,7 @@ if(isset($this->storedfilter)) {
         var refreshtimer<?php echo $this->formid ?> = null;
         var refreshparamtimer<?php echo $this->formid ?> = null;
         var refreshdelay<?php echo $this->formid ?> = <?php echo  $this->refresh ?>;
-        var maxperpage = 10;
+        var maxperpage = <?php echo $maxperpage ?>;
 <?
 if (isset($this->storedmax)) {
 ?>
