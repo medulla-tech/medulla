@@ -54,20 +54,21 @@ class DyngroupDatabase(DatabaseHelper):
 
     def activate(self, config): ## conffile = None):
         self.logger = logging.getLogger()
-        if self.is_activated:
-            return None
-
-        self.logger.info("Dyngroup database is connecting")
-        self.config = config
-        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
-        self.metadata = MetaData(self.db)
-        if not self.initMappersCatchException():
-            self.session = None
-            return False
-        self.metadata.create_all()
-        self.session = create_session()
-        self.is_activated = True
-        self.logger.debug("Dyngroup database connected (version:%s)"%(self.version.select().execute().fetchone()[0]))
+        if not self.is_activated:
+            self.logger.info("Dyngroup database is connecting")
+            self.config = config
+            self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
+            self.metadata = MetaData(self.db)
+            if not self.initMappersCatchException():
+                self.session = None
+                return self.is_activated
+            self.metadata.create_all()
+            self.session = create_session()
+            self.is_activated = True
+            version = self.version.select().execute().fetchone()[0]
+            self.logger.debug("Dyngroup database connected (version:%s)" % version)
+            
+        return self.is_activated
 
     def initMappers(self):
         """
