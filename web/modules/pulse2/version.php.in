@@ -23,7 +23,7 @@
  */
 
 define("VERSION", "@VERSION@");
-define("REVISION", "$Rev$");
+define("REVISION", "");
 
 function getVersion() {
   return VERSION;
