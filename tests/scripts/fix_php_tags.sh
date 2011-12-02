@@ -1,7 +1,11 @@
 #!/bin/bash
 #
-# Replace all php tags with the long form <?php ... ?>
+# Cleanup PHP tags
 #
-for file in `find -name '*.php'`; do
-    sed -i -e 's/<?=/<?php echo /g; s/<? /<?php /g; s/\S?>/ ?>/g' $file
-done
+#
+
+echo ""
+echo "Please use script from: https://github.com/danorton/php_replace_short_tags"
+echo ""
+
+exit 1
