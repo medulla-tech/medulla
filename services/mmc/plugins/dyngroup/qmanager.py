@@ -24,6 +24,7 @@
 """
 QueryManager implementation.
 """
+from sqlalchemy import types as sqltypes
 
 import mmc.support.mmctools
 import logging
@@ -142,14 +143,13 @@ class QueryManager(Singleton):
         @rtype: str
         @return: type of a given criterion for a module
         """
-        from sqlalchemy.databases.mysql import MSDate, MSInteger
         retType = ""
         try:
             possibilities = self.extendedPossibilities[moduleName][criterion]
             ret = possibilities[1]
-            if isinstance(ret, MSDate):
+            if isinstance(ret, sqltypes.Date):
                 retType = "date"
-            elif isinstance(ret, MSInteger):
+            elif isinstance(ret, sqltypes.Integer):
                 retType = "int"
 
         except Exception, e:
