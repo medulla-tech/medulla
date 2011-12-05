@@ -1,38 +1,40 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
+# 
+## Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-13 10:13+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Project-Id-Version: Pulse 2\n"
+"Report-Msgid-Bugs-To: http://pulse2.mandriva.org/\n"
+"POT-Creation-Date: 2011-01-30 11:29+0100\n"
+"PO-Revision-Date: 2011-12-05 14:10+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: da_DK\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
-#: web/modules/pulse2/pulse2/computers_list.php:42
+#: modules/pulse2/pulse2/computers_list.php:42
 msgid "All my entities"
 msgstr ""
 
-#: web/modules/pulse2/infoPackage.inc.php:44
-msgid "Computers list"
+#: modules/pulse2/includes/locations_xmlrpc.inc.php:31
+msgid "Root entity"
 msgstr ""
 
-#: web/modules/pulse2/infoPackage.inc.php:49
-msgid "Location selection in computer edit"
-msgstr ""
-
-#: web/modules/pulse2/infoPackage.inc.php:33
+#: modules/pulse2/infoPackage.inc.php:33
 msgid "Pulse2"
 msgstr ""
 
-#: web/modules/pulse2/includes/locations_xmlrpc.inc.php:31
-msgid "Root entity"
+#: modules/pulse2/infoPackage.inc.php:44
+msgid "Computers list"
 msgstr ""
+
+#: modules/pulse2/infoPackage.inc.php:49
+msgid "Location selection in computer edit"
+msgstr ""
+
+

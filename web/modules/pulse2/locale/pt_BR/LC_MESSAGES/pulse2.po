@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pulse2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-13 10:13+0200\n"
+"POT-Creation-Date: 2011-12-05 14:49+0100\n"
 "PO-Revision-Date: 2011-02-24 11:32-0300\n"
 "Last-Translator: Leonardo Coelho <leonardoc@mandriva.com.br>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_br@mail.kde.org>\n"
@@ -18,23 +18,23 @@ msgstr ""
 "X-Generator: KBabel 1.11.4\n"
 "Plural-Forms: nplurals=2; plural=(n>1);\n"
 
-#: web/modules/pulse2/pulse2/computers_list.php:42
+#: modules/pulse2/pulse2/computers_list.php:42
 msgid "All my entities"
 msgstr "Todas as minhas entradas"
 
-#: web/modules/pulse2/infoPackage.inc.php:44
+#: modules/pulse2/infoPackage.inc.php:45
 msgid "Computers list"
 msgstr "Lista de computadores"
 
-#: web/modules/pulse2/infoPackage.inc.php:49
+#: modules/pulse2/infoPackage.inc.php:50
 msgid "Location selection in computer edit"
 msgstr "Seleção de localização em um computador"
 
-#: web/modules/pulse2/infoPackage.inc.php:33
+#: modules/pulse2/infoPackage.inc.php:34
 msgid "Pulse2"
 msgstr "Pulse2"
 
-#: web/modules/pulse2/includes/locations_xmlrpc.inc.php:31
+#: modules/pulse2/includes/locations_xmlrpc.inc.php:31
 msgid "Root entity"
 msgstr "Entrata root"
 

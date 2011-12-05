@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-08 09:20+0200\n"
+"POT-Creation-Date: 2011-12-05 14:49+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,172 +17,167 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: web/modules/pkgs/pkgs/localSidebar.php:28 web/modules/pkgs/pkgs/edit.php:79
-#: web/modules/pkgs/infoPackage.inc.php:44
+#: modules/pkgs/infoPackage.inc.php:46 modules/pkgs/pkgs/edit.php:79
+#: modules/pkgs/pkgs/localSidebar.php:28
 msgid "Add a package"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/associate_files.php:120
+#: modules/pkgs/pkgs/associate_files.php:120
 msgid "Associate"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/edit.php:179
+#: modules/pkgs/pkgs/edit.php:179
 msgid "Associate files"
 msgstr ""
 
-#: web/modules/pkgs/infoPackage.inc.php:49
+#: modules/pkgs/infoPackage.inc.php:51
 msgid "Associate files to a package"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/associate_files.php:79
+#: modules/pkgs/pkgs/associate_files.php:79
 #, php-format
 msgid "Associate files to package <b>%s (%s)</b>"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/ajaxPendingPackageList.php:50
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:50
 msgid "Associate package"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/edit.php:139
+#: modules/pkgs/pkgs/edit.php:139
 msgid "Command : "
 msgstr ""
 
-#: web/modules/pkgs/pkgs/edit.php:139
+#: modules/pkgs/pkgs/edit.php:139
 msgid "Command's name : "
 msgstr ""
 
-#: web/modules/pkgs/pkgs/associate_files.php:121
+#: modules/pkgs/pkgs/associate_files.php:121
 msgid "Create an empty package"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/ajaxPackageList.php:79
-#: web/modules/pkgs/pkgs/ajaxPendingPackageList.php:79
-#: web/modules/pkgs/infoPackage.inc.php:59
+#: modules/pkgs/infoPackage.inc.php:61
+#: modules/pkgs/pkgs/ajaxPackageList.php:79
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:79
 msgid "Delete a package"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/remove.php:42
+#: modules/pkgs/pkgs/remove.php:42
 msgid "Delete this package"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/ajaxPackageList.php:69
-#: web/modules/pkgs/pkgs/ajaxPendingPackageList.php:69
-#: web/modules/pkgs/pkgs/edit.php:135
+#: modules/pkgs/pkgs/ajaxPackageList.php:69
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
+#: modules/pkgs/pkgs/edit.php:135
 msgid "Description"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/ajaxPackageList.php:78
-#: web/modules/pkgs/pkgs/edit.php:96 web/modules/pkgs/infoPackage.inc.php:46
+#: modules/pkgs/infoPackage.inc.php:48
+#: modules/pkgs/pkgs/ajaxPackageList.php:78 modules/pkgs/pkgs/edit.php:96
 msgid "Edit a package"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/associate_files.php:72
+#: modules/pkgs/pkgs/associate_files.php:72
 msgid "Failed to associate files"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/associate_files.php:69
+#: modules/pkgs/pkgs/associate_files.php:69
 #, php-format
 msgid "Failed to associate files%s"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/associate_files.php:62
+#: modules/pkgs/pkgs/associate_files.php:62
 #, php-format
 msgid "Files successfully associated with package <b>%s (%s)</b>%s"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/ajaxPackageList.php:53
-#: web/modules/pkgs/pkgs/index.php:45
+#: modules/pkgs/pkgs/ajaxPackageList.php:53 modules/pkgs/pkgs/index.php:45
 #, php-format
 msgid "MMC failed to contact package server %s."
 msgstr ""
 
-#: web/modules/pkgs/pkgs/edit.php:147
+#: modules/pkgs/pkgs/edit.php:147
 msgid "Need a reboot ?"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/edit.php:122
+#: modules/pkgs/pkgs/edit.php:122
 msgid "Package API"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/edit.php:70
+#: modules/pkgs/pkgs/edit.php:70
 msgid "Package failed to save"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/edit.php:133
+#: modules/pkgs/pkgs/edit.php:133
 msgid "Package label"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/ajaxPackageList.php:66
-#: web/modules/pkgs/pkgs/ajaxPendingPackageList.php:66
+#: modules/pkgs/pkgs/ajaxPackageList.php:66
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:66
 msgid "Package name"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/ajaxPackageList.php:71
+#: modules/pkgs/pkgs/ajaxPackageList.php:71
 msgid "Package size"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/edit.php:60
+#: modules/pkgs/pkgs/edit.php:60
 msgid "Package successfully edited"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/edit.php:134
+#: modules/pkgs/pkgs/edit.php:134
 msgid "Package version"
 msgstr ""
 
-#: web/modules/pkgs/infoPackage.inc.php:32
-#: web/modules/pkgs/infoPackage.inc.php:38
+#: modules/pkgs/infoPackage.inc.php:34 modules/pkgs/infoPackage.inc.php:40
 msgid "Packages"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/localSidebar.php:27
-#: web/modules/pkgs/pkgs/index.php:29
+#: modules/pkgs/pkgs/index.php:29 modules/pkgs/pkgs/localSidebar.php:27
 msgid "Packages list"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/localSidebar.php:29
-#: web/modules/pkgs/pkgs/pending.php:29
+#: modules/pkgs/pkgs/localSidebar.php:29 modules/pkgs/pkgs/pending.php:29
 msgid "Pending packages list"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/ajaxPackageList.php:63
-#: web/modules/pkgs/pkgs/index.php:53
+#: modules/pkgs/pkgs/ajaxPackageList.php:63 modules/pkgs/pkgs/index.php:53
 msgid "Please contact your administrator."
 msgstr ""
 
-#: web/modules/pkgs/infoPackage.inc.php:52
+#: modules/pkgs/infoPackage.inc.php:54
 msgid "See pending packages"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/associate_files.php:99
+#: modules/pkgs/pkgs/associate_files.php:99
 msgid "Select the directory you want for this package"
 msgstr ""
 
-#: web/modules/pkgs/infoPackage.inc.php:42
+#: modules/pkgs/infoPackage.inc.php:44
 msgid "Show all packages"
 msgstr ""
 
-#: web/modules/pkgs/infoPackage.inc.php:55
+#: modules/pkgs/infoPackage.inc.php:57
 msgid "Show mirror status"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/ajaxPendingPackageList.php:78
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:78
 msgid "Show mirrors"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/rsync.php:32
+#: modules/pkgs/pkgs/rsync.php:32
 #, php-format
 msgid "The package %s (%s) is not associated"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/remove.php:34
+#: modules/pkgs/pkgs/remove.php:34
 msgid "The package failed to delete"
 msgstr ""
 
-#: web/modules/pkgs/pkgs/remove.php:33
+#: modules/pkgs/pkgs/remove.php:33
 msgid "The package has been deleted."
 msgstr ""
 
-#: web/modules/pkgs/pkgs/ajaxPackageList.php:70
-#: web/modules/pkgs/pkgs/ajaxPendingPackageList.php:70
+#: modules/pkgs/pkgs/ajaxPackageList.php:70
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
 msgid "Version"
 msgstr ""

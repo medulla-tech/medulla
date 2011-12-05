@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-13 10:13+0200\n"
+"POT-Creation-Date: 2011-12-05 14:49+0100\n"
 "PO-Revision-Date: 2010-08-08 07:21+0100\n"
 "Last-Translator: Mario Fetka <mario.fetka@gmail.com>\n"
 "Language-Team: Mario Fetka <mario.fetka@gmail.com>\n"
@@ -19,23 +19,23 @@ msgstr ""
 "X-Poedit-Country: AUSTRIA\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: web/modules/pulse2/pulse2/computers_list.php:42
+#: modules/pulse2/pulse2/computers_list.php:42
 msgid "All my entities"
 msgstr "Alle meine Einheiten"
 
-#: web/modules/pulse2/infoPackage.inc.php:44
+#: modules/pulse2/infoPackage.inc.php:45
 msgid "Computers list"
 msgstr "Comupter Liste"
 
-#: web/modules/pulse2/infoPackage.inc.php:49
+#: modules/pulse2/infoPackage.inc.php:50
 msgid "Location selection in computer edit"
 msgstr "Standortauswahl in Computer bearbeiten"
 
-#: web/modules/pulse2/infoPackage.inc.php:33
+#: modules/pulse2/infoPackage.inc.php:34
 msgid "Pulse2"
 msgstr "Pulse2"
 
-#: web/modules/pulse2/includes/locations_xmlrpc.inc.php:31
+#: modules/pulse2/includes/locations_xmlrpc.inc.php:31
 msgid "Root entity"
 msgstr "Haupt Eintrag"
 
