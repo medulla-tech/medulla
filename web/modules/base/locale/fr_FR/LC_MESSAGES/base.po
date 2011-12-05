@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://mds.mandriva.org/\n"
-"POT-Creation-Date: 2011-09-15 15:29+0200\n"
-"PO-Revision-Date: 2011-09-15 13:30+0000\n"
+"POT-Creation-Date: 2011-12-05 15:24+0100\n"
+"PO-Revision-Date: 2011-12-05 14:25+0000\n"
 "Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/mds/team/fr_FR/)\n"
 "MIME-Version: 1.0\n"
@@ -18,6 +18,440 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: fr_FR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
+
+#: graph/header.inc.php:247
+msgid "Form cannot be submit. Input errors are highlighted in red."
+msgstr ""
+"Le formulaire ne peut être envoyé. Les champs invalides sont en rouges."
+
+#: graph/navbar.inc.php:40
+msgid "standard mode"
+msgstr "mode standard"
+
+#: graph/navbar.inc.php:42
+msgid "expert mode"
+msgstr "mode expert"
+
+#: graph/navbar.inc.php:47
+msgid "Click to switch to"
+msgstr "Cliquer pour passer en"
+
+#: graph/navbar.inc.php:48
+msgid "logout"
+msgstr "déconnexion"
+
+#: graph/navbar.inc.php:50 logout/index.php:48 logout/index.php:53
+msgid "Logout"
+msgstr "Déconnexion"
+
+#: graph/navbar.inc.php:63 main_content.php:148
+msgid "Home"
+msgstr "Page principale"
+
+#: graph/navbar.inc.php:117
+msgid ""
+"If this phrase does not change, you browser is not supported by the MMC "
+"application"
+msgstr ""
+"Si cette phrase ne change pas, votre navigateur n'est pas supporté par la "
+"MMC"
+
+#: includes/ErrorHandling.php:75
+msgid "Show complete trackback"
+msgstr "Afficher la traceback complète"
+
+#: includes/ErrorHandling.php:76
+msgid "Complete Traceback"
+msgstr "Traceback complète"
+
+#: includes/acl.inc.php:118
+msgid "You do not have required rights"
+msgstr "Vous n'avez pas les droits requis !"
+
+#: includes/ajaxTools.php:63 includes/ajaxTools.php:69
+#: includes/PageGenerator.php:793 includes/PageGenerator.php:800
+#: includes/PageGenerator.php:1055 includes/PageGenerator.php:1059
+#: modules/base/includes/AjaxFilterLog.inc.php:112
+#: modules/base/includes/AjaxFilterLog.inc.php:116
+msgid "Previous"
+msgstr "Précédent"
+
+#: includes/ajaxTools.php:74 includes/ajaxTools.php:82
+#: includes/PageGenerator.php:809 includes/PageGenerator.php:815
+#: includes/PageGenerator.php:1067 includes/PageGenerator.php:1071
+#: modules/base/includes/AjaxFilterLog.inc.php:123
+#: modules/base/includes/AjaxFilterLog.inc.php:127
+msgid "Next"
+msgstr "Suivant"
+
+#: includes/auditCodesManager.php:33
+msgid "Daemon start"
+msgstr "Démarrage du service"
+
+#: includes/auditCodesManager.php:34
+msgid "Daemon stop"
+msgstr "Fin du service"
+
+#: includes/auditCodesManager.php:35
+msgid "MMC agent"
+msgstr "Agent MMC"
+
+#: includes/bgps_view.php:64
+msgid "No job."
+msgstr "Aucune action."
+
+#: includes/commonErrorHandling.php:30
+msgid "This item already exists in your LDAP directory"
+msgstr "Cette entrée existe déjà dans l'annuaire LDAP"
+
+#: includes/commonErrorHandling.php:31
+msgid ""
+"Solve the problem by:\n"
+"                        <ul>\n"
+"                            <li>change this entry name</li>\n"
+"                            <li>delete this entry before recreate it</li>\n"
+"                        </ul>"
+msgstr ""
+"Pour résoudre ce problème:        <ul>         <li>changez le nom de cette "
+"entrée</li>         <li>supprimer cette entrée avant de la recréer</li> "
+"</ul>"
+
+#: includes/commonErrorHandling.php:43
+msgid "MMC Agent can't contact your LDAP server"
+msgstr "L'agent MMC ne peut pas contacter le serveur LDAP"
+
+#: includes/commonErrorHandling.php:44
+msgid ""
+"Solve the problem by:\n"
+"                        <ul>\n"
+"                            <li>Verify your LDAP server is correctly configured in /etc/mmc/plugins/base/ini </li>\n"
+"                            <li>Verify you LDAP server is up</li>\n"
+"                        </ul>"
+msgstr ""
+"Pour résoudre ce problème:        <ul>         <li>Vérifiez que votre "
+"serveur LDAP est correctement configuré dans /etc/mmc/plugins/base.ini</li>"
+"        <li>Vérifiez que votre serveur LDAP est lancé</li> </ul> "
+
+#: includes/commonErrorHandling.php:53
+msgid "Error during authentication process"
+msgstr "Erreur pendant la phase d'authentification"
+
+#: includes/commonErrorHandling.php:54 includes/commonErrorHandling.php:59
+msgid "Please contact your administrator."
+msgstr "Veuillez contacter votre administrateur."
+
+#: includes/commonErrorHandling.php:58
+msgid "Error while provisioning your account"
+msgstr "Erreur lors de la création ou du paramétrage de votre compte"
+
+#: includes/commonErrorHandling.php:64
+msgid "This item do not seems to be in the index"
+msgstr "Cette entrée semble ne pas être indexée"
+
+#: includes/commonErrorHandling.php:65
+msgid ""
+"This problem can appear if:\n"
+"                        <ul>\n"
+"                            <li>This item no longer exists.</li>\n"
+"                            <li>You misspelled it.</li>\n"
+"                        </ul>"
+msgstr ""
+"Ce problème peut survenir si:       <ul>           <li>Cette entrée n'existe"
+" plus</li>            <li> elle est mal orthographiée</li> </ul>"
+
+#: includes/commonErrorHandling.php:77
+msgid "smbpasswd failed to change your password entry"
+msgstr "smbpasswd n'a pas réussi à changer le mot de passe"
+
+#: includes/commonErrorHandling.php:78
+msgid ""
+"Verify that your smbpasswd is correctly configured:\n"
+"                        <ul>\n"
+"                            <li> Your Ldap server can be down</li>\n"
+"                            <li> Your Samba server is not properly configured</li>\n"
+"                        </ul>"
+msgstr ""
+"Vérifiez que smbpasswd est correctement configuré: <ul>    <li>Votre serveur"
+" LDAP n'est pas joignable</li>    <li>Votre serveur SAMBA n'est pas "
+"correctement configuré</li> </ul>"
+
+#: includes/favorites.php:4
+msgid "Root user cannot have favorites"
+msgstr "L'utilisateur root ne peut pas avoir de favoris"
+
+#: includes/favorites.php:149
+msgid "Add this page to your favorite"
+msgstr "Ajouter cette page à vos favoris"
+
+#: includes/i18n.inc.php:49
+msgid "english"
+msgstr "anglais"
+
+#: includes/i18n.inc.php:50
+msgid "danish"
+msgstr "danois"
+
+#: includes/i18n.inc.php:51
+msgid "german"
+msgstr "allemand"
+
+#: includes/i18n.inc.php:52
+msgid "spanish"
+msgstr "espagnol"
+
+#: includes/i18n.inc.php:53
+msgid "french"
+msgstr "français"
+
+#: includes/i18n.inc.php:54
+msgid "italian"
+msgstr "italien"
+
+#: includes/i18n.inc.php:55
+msgid "norwegian"
+msgstr "norvégien"
+
+#: includes/i18n.inc.php:56
+msgid "polish"
+msgstr "polonais"
+
+#: includes/i18n.inc.php:57
+msgid "brazilian"
+msgstr "brésilien"
+
+#: includes/i18n.inc.php:58
+msgid "russian"
+msgstr "russe"
+
+#: includes/xmlrpc.inc.php:166
+msgid "Can't connect to MMC agent"
+msgstr "Impossible de se connecter à l'agent MMC"
+
+#: includes/xmlrpc.inc.php:167
+msgid "MMC agent seems to be down or not correctly configured."
+msgstr ""
+"L'agent MMC semble ne pas répondre ou n'est pas correctement configuré."
+
+#: includes/xmlrpc.inc.php:179
+msgid "Can't send XML-RPC request to MMC agent"
+msgstr "Impossible d'envoyer la requête XML-RPC à l'agent"
+
+#: includes/xmlrpc.inc.php:180
+msgid "MMC agent seems to be not correctly configured."
+msgstr "L'agent MMC semble ne pas être correctement configuré."
+
+#: includes/xmlrpc.inc.php:196 includes/xmlrpc.inc.php:221
+#: includes/xmlrpc.inc.php:240
+msgid "MMC agent communication problem"
+msgstr "Problème de communication avec l'agent MMC"
+
+#: includes/xmlrpc.inc.php:197
+msgid ""
+"Timeout when reading data from the MMC agent. Please check network "
+"connectivity and server load."
+msgstr ""
+"Temps dépassé lors de la réception de données en provenance de l'agent MMC. "
+"Veuillez vérifier les connexions réseau et la charge du serveur."
+
+#: includes/xmlrpc.inc.php:206
+msgid "Error while reading MMC agent XML-RPC response."
+msgstr "Erreur lors de la réception de la réponse XML-RPC de l'agent."
+
+#: includes/xmlrpc.inc.php:207
+msgid "Please check network connectivity."
+msgstr "Veuillez vérifier les connexions réseau."
+
+#: includes/xmlrpc.inc.php:222
+msgid ""
+"Can't communicate with MMC agent. Please check you're using the right TCP "
+"port and the right protocol."
+msgstr ""
+"Impossible de dialoguer avec l'agent MMC. Vérifiez que vous avez configuré "
+"le bon port TCP et le bon protocole."
+
+#: includes/xmlrpc.inc.php:241
+msgid ""
+"The MMC agent didn't give us a session number. Please check the MMC agent "
+"version."
+msgstr ""
+"L'agent MMC n'a pas fourni de numéro de session. Veuillez vérifier la "
+"version de l'agent MMC."
+
+#: includes/xmlrpc.inc.php:321
+msgid "unknown error"
+msgstr "erreur inconnue"
+
+#: includes/xmlrpc.inc.php:322
+msgid ""
+"This exception is unknown. Please contact us to add an error handling on "
+"this error."
+msgstr ""
+"Cette exception est inconnue. Veuillez nous contacter pour correctement "
+"gérer cette erreur."
+
+#: includes/FormGenerator.php:58 includes/FormGenerator.php:275
+#: includes/FormGenerator.php:632 includes/FormGenerator.php:772
+msgid "unavailable"
+msgstr "indisponible"
+
+#: includes/FormGenerator.php:217
+msgid "Delete photo"
+msgstr "Supprimer photo"
+
+#: includes/FormGenerator.php:261
+msgid "yes"
+msgstr "oui"
+
+#: includes/FormGenerator.php:264
+msgid "no"
+msgstr "non"
+
+#: includes/FormGenerator.php:456
+msgid "Year: "
+msgstr "Année:"
+
+#: includes/FormGenerator.php:456
+msgid "Month: "
+msgstr "Mois: "
+
+#: includes/FormGenerator.php:456
+msgid "Day: "
+msgstr "Jour: "
+
+#: includes/FormGenerator.php:457
+msgid "Hour: "
+msgstr "Heure: "
+
+#: includes/FormGenerator.php:457
+msgid "Min.: "
+msgstr "Min.: "
+
+#: includes/FormGenerator.php:457
+msgid "Sec.: "
+msgstr "Sec.:"
+
+#: includes/FormGenerator.php:530 includes/FormGenerator.php:534
+#: modules/base/includes/AjaxFilterLog.inc.php:184
+#: modules/base/includes/AjaxFilterLog.inc.php:188
+msgid "or <a href='#'"
+msgstr "ou <a href='#'"
+
+#: includes/FormGenerator.php:532
+#: modules/base/includes/AjaxFilterLog.inc.php:186
+msgid "value=\"now\";'>now</a>"
+msgstr "value=\"immediat\";'>immediat</a>"
+
+#: includes/FormGenerator.php:536
+#: modules/base/includes/AjaxFilterLog.inc.php:190
+msgid "value=\"never\";'>never</a>"
+msgstr "value=\"jamais\";'>jamais</a>"
+
+#: includes/FormGenerator.php:598 modules/base/groups/localSidebar.php:29
+#: modules/base/users/localSidebar.php:29
+msgid "Add"
+msgstr "Ajout"
+
+#: includes/FormGenerator.php:994 modules/base/groups/ajaxFilter.php:48
+#: modules/base/users/ajaxFilter.php:85 modules/base/views/index.tpl.php:92
+#: modules/ppolicy/default/delete.php:44
+msgid "Delete"
+msgstr "Suppression"
+
+#: includes/PageGenerator.php:108 includes/PageGenerator.php:2429
+#: includes/PageGenerator.php:2500 modules/base/groups/delete.php:66
+#: modules/base/groups/members.php:185 modules/base/users/backup.php:91
+#: modules/ppolicy/default/delete.php:45
+msgid "Cancel"
+msgstr "Annuler"
+
+#: includes/PageGenerator.php:486 includes/PageGenerator.php:718
+msgid "to"
+msgstr "à"
+
+#: includes/PageGenerator.php:488 includes/PageGenerator.php:720
+#, php-format
+msgid " - Total <b>%s </b>"
+msgstr " - Total <b>%s</b>"
+
+#: includes/PageGenerator.php:491 includes/PageGenerator.php:723
+msgid "page"
+msgstr "page"
+
+#: includes/PageGenerator.php:834
+msgid "Pagination"
+msgstr "Pagination"
+
+#: includes/PageGenerator.php:918
+msgid "Go to page"
+msgstr "Aller à la page"
+
+#: includes/PageGenerator.php:1299
+msgid "No item available"
+msgstr "Aucun élément disponible"
+
+#: includes/PageGenerator.php:1464
+msgid "Select entity"
+msgstr "Entité sélectionnée"
+
+#: includes/PageGenerator.php:2087
+msgid "Ok"
+msgstr "Ok"
+
+#: includes/PageGenerator.php:2425 includes/PageGenerator.php:2496
+#: includes/PageGenerator.php:2522 modules/base/groups/edit.php:107
+#: modules/base/groups/members.php:184
+msgid "Confirm"
+msgstr "Valider"
+
+#: includes/PageGenerator.php:2627
+msgid "Select all"
+msgstr "Tout sélectionner"
+
+#: includes/PageGenerator.php:2628
+msgid "Unselect all"
+msgstr "Tout désélectionner"
+
+#: license.php:33
+msgid ""
+"<p>\n"
+"The community version of this product is distributed in the hope that it\n"
+"will be useful, but <strong>without any warranty</strong>; without even the implied\n"
+"warranty of merchantability of fitness for a particular purpose. See the\n"
+"GNU General Public License for more details.</p>\n"
+"<p>\n"
+"Moreover, this product is a main and critical component of your information system. This community version is distributed without professional support of any kind,\n"
+"and without a tested and certified upgrade path from previous versions.\n"
+"</p>"
+msgstr ""
+"<p>\n"
+"La version communautaire de ce programme est distribuée dans l'espoir qu'elle sera utile, mais <string>sans aucune garantie</strong>; sans même une garantie implicite de commerciabilité ou de conformité à une utilisation particulière. Voir la Licence Publique Générale GNU pour plus de détails.</p>\n"
+"<p>\n"
+"Ce programme est un élément important et critique de votre système d'informations. La version communautaire est distribuée sans aucun support professionnel, et sans un chemin de mis à jour testé et certifié depuis d'anciennes versions.\n"
+"</p>"
+
+#: license.php:53
+msgid ""
+"Click here to get more information about our support and maintenance "
+"subscription plan."
+msgstr ""
+"Cliquer ici pour avoir plus d'informations à propos de notre plan de "
+"maintenance et de souscription."
+
+#: logout/index.php:50
+msgid "Your session will be closed"
+msgstr "Votre session va être fermée"
+
+#: main.php:135
+msgid "Error, you don't have correct rights !"
+msgstr "Erreur, vous n'avez pas les droits requis !"
+
+#: modules/admin/includes/configure.inc.php:50
+msgid " configuration"
+msgstr "configuration"
+
+#: modules/admin/includes/configure.inc.php:62
+msgid " configuration page"
+msgstr "page de configuration"
 
 #: modules/base/audit/ajaxLogFilter.php:49
 #: modules/base/includes/AjaxFilterLog.inc.php:341
@@ -218,8 +652,9 @@ msgid "All computers"
 msgstr "Tous les ordinateurs"
 
 #: modules/base/computers/localSidebar.php:10
+#: modules/base/infoPackage.inc.php:277
 msgid "Add computer"
-msgstr "16a222b6427b8dddc29352a1692324c9_tr"
+msgstr "Ajouter un ordinateur"
 
 #: modules/base/computers/trads.php:26
 msgid "Computer Name"
@@ -245,12 +680,6 @@ msgstr "Édition des membres"
 msgid "Edit group"
 msgstr "Édition du groupe"
 
-#: modules/base/groups/ajaxFilter.php:48 modules/base/users/ajaxFilter.php:85
-#: modules/base/views/index.tpl.php:92 modules/ppolicy/default/delete.php:44
-#: includes/FormGenerator.php:991
-msgid "Delete"
-msgstr "Suppression"
-
 #: modules/base/groups/ajaxFilter.php:49
 msgid "Groups management"
 msgstr "Gestion des groupes"
@@ -266,13 +695,6 @@ msgstr "Vous allez supprimer un groupe"
 #: modules/base/groups/delete.php:60
 msgid "This group will be deleted even though it is not empty"
 msgstr "Ce groupe sera supprimé même si il n'est pas vide"
-
-#: modules/base/groups/delete.php:66 modules/base/groups/members.php:185
-#: modules/base/users/backup.php:91 modules/ppolicy/default/delete.php:45
-#: includes/PageGenerator.php:108 includes/PageGenerator.php:2428
-#: includes/PageGenerator.php:2499
-msgid "Cancel"
-msgstr "Annuler"
 
 #: modules/base/groups/edit.php:35
 #, php-format
@@ -304,12 +726,6 @@ msgstr "Nom du groupe"
 msgid "Create"
 msgstr "Créer"
 
-#: modules/base/groups/edit.php:107 modules/base/groups/members.php:184
-#: includes/PageGenerator.php:2424 includes/PageGenerator.php:2495
-#: includes/PageGenerator.php:2521
-msgid "Confirm"
-msgstr "Valider"
-
 #: modules/base/groups/index.php:31 modules/base/infoPackage.inc.php:179
 msgid "Group list"
 msgstr "Liste des groupes"
@@ -318,11 +734,6 @@ msgstr "Liste des groupes"
 #: modules/base/users/localSidebar.php:28
 msgid "List"
 msgstr "Liste"
-
-#: modules/base/groups/localSidebar.php:29
-#: modules/base/users/localSidebar.php:29 includes/FormGenerator.php:598
-msgid "Add"
-msgstr "Ajout"
 
 #: modules/base/groups/members.php:105
 msgid "Group successfully modified"
@@ -348,38 +759,6 @@ msgstr "Tous les utilisateurs"
 #: modules/base/groups/members.php:158 modules/base/infoPackage.inc.php:195
 msgid "Group members"
 msgstr "Membres du groupe"
-
-#: modules/base/includes/AjaxFilterLog.inc.php:112
-#: modules/base/includes/AjaxFilterLog.inc.php:116
-#: includes/PageGenerator.php:793 includes/PageGenerator.php:800
-#: includes/PageGenerator.php:1055 includes/PageGenerator.php:1059
-#: includes/ajaxTools.php:63 includes/ajaxTools.php:69
-msgid "Previous"
-msgstr "Précédent"
-
-#: modules/base/includes/AjaxFilterLog.inc.php:123
-#: modules/base/includes/AjaxFilterLog.inc.php:127
-#: includes/PageGenerator.php:809 includes/PageGenerator.php:815
-#: includes/PageGenerator.php:1067 includes/PageGenerator.php:1071
-#: includes/ajaxTools.php:74 includes/ajaxTools.php:82
-msgid "Next"
-msgstr "Suivant"
-
-#: modules/base/includes/AjaxFilterLog.inc.php:184
-#: modules/base/includes/AjaxFilterLog.inc.php:188
-#: includes/FormGenerator.php:530 includes/FormGenerator.php:534
-msgid "or <a href='#'"
-msgstr "ou <a href='#'"
-
-#: modules/base/includes/AjaxFilterLog.inc.php:186
-#: includes/FormGenerator.php:532
-msgid "value=\"now\";'>now</a>"
-msgstr "value=\"immediat\";'>immediat</a>"
-
-#: modules/base/includes/AjaxFilterLog.inc.php:190
-#: includes/FormGenerator.php:536
-msgid "value=\"never\";'>never</a>"
-msgstr "value=\"jamais\";'>jamais</a>"
 
 #: modules/base/includes/AjaxFilterLog.inc.php:382
 msgid "Refresh"
@@ -736,10 +1115,6 @@ msgstr "La photo n'est pas un fichier JPG"
 #: modules/base/includes/publicFunc.php:260
 msgid "User attributes updated"
 msgstr "Attributs de l'utilisateur mis à jour"
-
-#: modules/base/includes/publicFunc.php:276
-msgid "User properties"
-msgstr "Propriétés de l'utilisateur"
 
 #: modules/base/includes/publicFunc.php:285
 #: modules/base/users/ajaxFilter.php:68 modules/base/views/index.tpl.php:78
@@ -1121,6 +1496,51 @@ msgstr "Vous allez supprimer l'utilisateur <b>%s</b>."
 msgid "Delete all user's files"
 msgstr "Supprimer tous les fichiers de l'utilisateur"
 
+#: modules/base/users/edit.php:56
+msgid "Edit user"
+msgstr "Édition d'un utilisateur"
+
+#: modules/base/users/edit.php:85
+#, php-format
+msgid "Failed to change primary group in %s plugin"
+msgstr "Erreur lors du changement du groupe primaire dans le module %s"
+
+#: modules/base/users/edit.php:109
+msgid "Password not updated"
+msgstr "Mot de passe non mis à jour"
+
+#: modules/base/users/edit.php:112
+msgid "Password updated"
+msgstr "Mot de passe mis à jour"
+
+#: modules/base/users/edit.php:121
+#, php-format
+msgid "Failed to disable user in %s plugin"
+msgstr "Erreur lors de la désactivation de l'utilisateur dans le module %s"
+
+#: modules/base/users/edit.php:124
+#, php-format
+msgid "User %s disabled."
+msgstr "Utilisateur %s désactivé."
+
+#: modules/base/users/edit.php:130
+#, php-format
+msgid "Failed to enable user in %s plugin"
+msgstr "Erreur lors de l'activation de l'utilisateur dans le module %s"
+
+#: modules/base/users/edit.php:133
+#, php-format
+msgid "User %s enabled"
+msgstr "Utilisateur %s activé"
+
+#: modules/base/users/edit.php:181
+msgid "Enable account"
+msgstr "Activer le compte utilisateur"
+
+#: modules/base/users/edit.php:183
+msgid "Disable account"
+msgstr "Désactiver le compte utilisateur"
+
 #: modules/base/users/editacl.php:152
 msgid "User ACLs successfully modified."
 msgstr "Les ACLs de l'utilisateur ont été modifiées avec succès."
@@ -1223,51 +1643,6 @@ msgstr "Le mot de passe actuel n'est pas valide. Réessayez."
 msgid "Passwords are mismatching. Please retry."
 msgstr "Vos mots de passe ne sont pas identiques. Veuillez recommencer."
 
-#: modules/base/users/edit.php:56
-msgid "Edit user"
-msgstr "Édition d'un utilisateur"
-
-#: modules/base/users/edit.php:85
-#, php-format
-msgid "Failed to change primary group in %s plugin"
-msgstr "Erreur lors du changement du groupe primaire dans le module %s"
-
-#: modules/base/users/edit.php:109
-msgid "Password not updated"
-msgstr "Mot de passe non mis à jour"
-
-#: modules/base/users/edit.php:112
-msgid "Password updated"
-msgstr "Mot de passe mis à jour"
-
-#: modules/base/users/edit.php:121
-#, php-format
-msgid "Failed to disable user in %s plugin"
-msgstr "Erreur lors de la désactivation de l'utilisateur dans le module %s"
-
-#: modules/base/users/edit.php:124
-#, php-format
-msgid "User %s disabled."
-msgstr "Utilisateur %s désactivé."
-
-#: modules/base/users/edit.php:130
-#, php-format
-msgid "Failed to enable user in %s plugin"
-msgstr "Erreur lors de l'activation de l'utilisateur dans le module %s"
-
-#: modules/base/users/edit.php:133
-#, php-format
-msgid "User %s enabled"
-msgstr "Utilisateur %s activé"
-
-#: modules/base/users/edit.php:181
-msgid "Enable account"
-msgstr "Activer le compte utilisateur"
-
-#: modules/base/users/edit.php:183
-msgid "Disable account"
-msgstr "Désactiver le compte utilisateur"
-
 #: modules/base/infoPackage.inc.php:36
 msgid "User, group and computer management"
 msgstr "Gestion utilisateur, groupe et ordinateur"
@@ -1360,13 +1735,9 @@ msgstr "Voir les détails d'une action"
 msgid "Computers"
 msgstr "Ordinateurs"
 
-#: modules/base/infoPackage.inc.php:277
-msgid "Add computer "
-msgstr "16a222b6427b8dddc29352a1692324c9_tr"
-
 #: modules/base/infoPackage.inc.php:283
-msgid "Edit computer "
-msgstr "Édition d'un ordinateur "
+msgid "Edit computer"
+msgstr "23a2941f0c1e85bfc0babfb726d85288_tr"
 
 #: modules/base/infoPackage.inc.php:287
 msgid "Delete a computer"
@@ -1408,349 +1779,25 @@ msgstr "Numéro de mobile"
 msgid "Enable/Disable user account"
 msgstr "Activer/Désactiver un compte"
 
-#: modules/admin/includes/configure.inc.php:50
-msgid " configuration"
-msgstr "configuration"
-
-#: modules/admin/includes/configure.inc.php:62
-msgid " configuration page"
-msgstr "page de configuration"
-
-#: graph/header.inc.php:213
-msgid "Form cannot be submit. Input errors are highlighted in red."
-msgstr ""
-"Le formulaire ne peut être envoyé. Les champs invalides sont en rouges."
-
-#: graph/navbar.inc.php:40
-msgid "standard mode"
-msgstr "mode standard"
-
-#: graph/navbar.inc.php:42
-msgid "expert mode"
-msgstr "mode expert"
-
-#: graph/navbar.inc.php:47
-msgid "Click to switch to"
-msgstr "Cliquer pour passer en"
-
-#: graph/navbar.inc.php:48
-msgid "logout"
-msgstr "déconnexion"
-
-#: graph/navbar.inc.php:50 logout/index.php:49 logout/index.php:54
-msgid "Logout"
-msgstr "Déconnexion"
-
-#: graph/navbar.inc.php:63 main_content.php:145
-msgid "Home"
-msgstr "Page principale"
-
-#: graph/navbar.inc.php:117
-msgid ""
-"If this phrase does not change, you browser is not supported by the MMC "
-"application"
-msgstr ""
-"Si cette phrase ne change pas, votre navigateur n'est pas supporté par la "
-"MMC"
-
-#: includes/ErrorHandling.php:75
-msgid "Show complete trackback"
-msgstr "Afficher la traceback complète"
-
-#: includes/ErrorHandling.php:76
-msgid "Complete Traceback"
-msgstr "Traceback complète"
-
-#: includes/FormGenerator.php:58 includes/FormGenerator.php:275
-#: includes/FormGenerator.php:632 includes/FormGenerator.php:767
-msgid "unavailable"
-msgstr "indisponible"
-
-#: includes/FormGenerator.php:217
-msgid "Delete photo"
-msgstr "Supprimer photo"
-
-#: includes/FormGenerator.php:261
-msgid "yes"
-msgstr "oui"
-
-#: includes/FormGenerator.php:264
-msgid "no"
-msgstr "non"
-
-#: includes/FormGenerator.php:456
-msgid "Year: "
-msgstr "Année:"
-
-#: includes/FormGenerator.php:456
-msgid "Month: "
-msgstr "Mois: "
-
-#: includes/FormGenerator.php:456
-msgid "Day: "
-msgstr "Jour: "
-
-#: includes/FormGenerator.php:457
-msgid "Hour: "
-msgstr "Heure: "
-
-#: includes/FormGenerator.php:457
-msgid "Min.: "
-msgstr "Min.: "
-
-#: includes/FormGenerator.php:457
-msgid "Sec.: "
-msgstr "Sec.:"
-
-#: includes/PageGenerator.php:486 includes/PageGenerator.php:718
-msgid "to"
-msgstr "à"
-
-#: includes/PageGenerator.php:488 includes/PageGenerator.php:720
-#, php-format
-msgid " - Total <b>%s </b>"
-msgstr " - Total <b>%s</b>"
-
-#: includes/PageGenerator.php:491 includes/PageGenerator.php:723
-msgid "page"
-msgstr "page"
-
-#: includes/PageGenerator.php:834
-msgid "Pagination"
-msgstr "Pagination"
-
-#: includes/PageGenerator.php:918
-msgid "Go to page"
-msgstr "Aller à la page"
-
-#: includes/PageGenerator.php:1298
-msgid "No item available"
-msgstr "Aucun élément disponible"
-
-#: includes/PageGenerator.php:1463
-msgid "Select entity"
-msgstr "Entité sélectionnée"
-
-#: includes/PageGenerator.php:2086
-msgid "Ok"
-msgstr "Ok"
-
-#: includes/PageGenerator.php:2626
-msgid "Select all"
-msgstr "Tout sélectionner"
-
-#: includes/PageGenerator.php:2627
-msgid "Unselect all"
-msgstr "Tout désélectionner"
-
-#: includes/acl.inc.php:118
-msgid "You do not have required rights"
-msgstr "Vous n'avez pas les droits requis !"
-
-#: includes/auditCodesManager.php:33
-msgid "Daemon start"
-msgstr "Démarrage du service"
-
-#: includes/auditCodesManager.php:34
-msgid "Daemon stop"
-msgstr "Fin du service"
-
-#: includes/auditCodesManager.php:35
-msgid "MMC agent"
-msgstr "Agent MMC"
-
-#: includes/bgps_view.php:64
-msgid "No job."
-msgstr "Aucune action."
-
-#: includes/commonErrorHandling.php:30
-msgid "This item already exists in your LDAP directory"
-msgstr "Cette entrée existe déjà dans l'annuaire LDAP"
-
-#: includes/commonErrorHandling.php:31
-msgid ""
-"Solve the problem by:\n"
-"                        <ul>\n"
-"                            <li>change this entry name</li>\n"
-"                            <li>delete this entry before recreate it</li>\n"
-"                        </ul>"
-msgstr ""
-"Pour résoudre ce problème:        <ul>         <li>changez le nom de cette "
-"entrée</li>         <li>supprimer cette entrée avant de la recréer</li> "
-"</ul>"
-
-#: includes/commonErrorHandling.php:43
-msgid "MMC Agent can't contact your LDAP server"
-msgstr "L'agent MMC ne peut pas contacter le serveur LDAP"
-
-#: includes/commonErrorHandling.php:44
-msgid ""
-"Solve the problem by:\n"
-"                        <ul>\n"
-"                            <li>Verify your LDAP server is correctly configured in /etc/mmc/plugins/base/ini </li>\n"
-"                            <li>Verify you LDAP server is up</li>\n"
-"                        </ul>"
-msgstr ""
-"Pour résoudre ce problème:        <ul>         <li>Vérifiez que votre "
-"serveur LDAP est correctement configuré dans /etc/mmc/plugins/base.ini</li>"
-"        <li>Vérifiez que votre serveur LDAP est lancé</li> </ul> "
-
-#: includes/commonErrorHandling.php:53
-msgid "Error during authentication process"
-msgstr "Erreur pendant la phase d'authentification"
-
-#: includes/commonErrorHandling.php:54 includes/commonErrorHandling.php:59
-msgid "Please contact your administrator."
-msgstr "Veuillez contacter votre administrateur."
-
-#: includes/commonErrorHandling.php:58
-msgid "Error while provisioning your account"
-msgstr "Erreur lors de la création ou du paramétrage de votre compte"
-
-#: includes/commonErrorHandling.php:64
-msgid "This item do not seems to be in the index"
-msgstr "Cette entrée semble ne pas être indexée"
-
-#: includes/commonErrorHandling.php:65
-msgid ""
-"This problem can appear if:\n"
-"                        <ul>\n"
-"                            <li>This item no longer exists.</li>\n"
-"                            <li>You misspelled it.</li>\n"
-"                        </ul>"
-msgstr ""
-"Ce problème peut survenir si:       <ul>           <li>Cette entrée n'existe"
-" plus</li>            <li> elle est mal orthographiée</li> </ul>"
-
-#: includes/commonErrorHandling.php:77
-msgid "smbpasswd failed to change your password entry"
-msgstr "smbpasswd n'a pas réussi à changer le mot de passe"
-
-#: includes/commonErrorHandling.php:78
-msgid ""
-"Verify that your smbpasswd is correctly configured:\n"
-"                        <ul>\n"
-"                            <li> Your Ldap server can be down</li>\n"
-"                            <li> Your Samba server is not properly configured</li>\n"
-"                        </ul>"
-msgstr ""
-"Vérifiez que smbpasswd est correctement configuré: <ul>    <li>Votre serveur"
-" LDAP n'est pas joignable</li>    <li>Votre serveur SAMBA n'est pas "
-"correctement configuré</li> </ul>"
-
-#: includes/favorites.php:4
-msgid "Root user cannot have favorites"
-msgstr "L'utilisateur root ne peut pas avoir de favoris"
-
-#: includes/favorites.php:149
-msgid "Add this page to your favorite"
-msgstr "Ajouter cette page à vos favoris"
-
-#: includes/i18n.inc.php:49
-msgid "english"
-msgstr "anglais"
-
-#: includes/i18n.inc.php:50
-msgid "danish"
-msgstr "danois"
-
-#: includes/i18n.inc.php:51
-msgid "german"
-msgstr "allemand"
-
-#: includes/i18n.inc.php:52
-msgid "spanish"
-msgstr "espagnol"
-
-#: includes/i18n.inc.php:53
-msgid "french"
-msgstr "français"
-
-#: includes/i18n.inc.php:54
-msgid "italian"
-msgstr "italien"
-
-#: includes/i18n.inc.php:55
-msgid "norwegian"
-msgstr "norvégien"
-
-#: includes/i18n.inc.php:56
-msgid "polish"
-msgstr "polonais"
-
-#: includes/i18n.inc.php:57
-msgid "brazilian"
-msgstr "brésilien"
-
-#: includes/i18n.inc.php:58
-msgid "russian"
-msgstr "russe"
-
-#: includes/xmlrpc.inc.php:166
-msgid "Can't connect to MMC agent"
-msgstr "Impossible de se connecter à l'agent MMC"
-
-#: includes/xmlrpc.inc.php:167
-msgid "MMC agent seems to be down or not correctly configured."
-msgstr ""
-"L'agent MMC semble ne pas répondre ou n'est pas correctement configuré."
-
-#: includes/xmlrpc.inc.php:179
-msgid "Can't send XML-RPC request to MMC agent"
-msgstr "Impossible d'envoyer la requête XML-RPC à l'agent"
-
-#: includes/xmlrpc.inc.php:180
-msgid "MMC agent seems to be not correctly configured."
-msgstr "L'agent MMC semble ne pas être correctement configuré."
-
-#: includes/xmlrpc.inc.php:196 includes/xmlrpc.inc.php:221
-#: includes/xmlrpc.inc.php:240
-msgid "MMC agent communication problem"
-msgstr "Problème de communication avec l'agent MMC"
-
-#: includes/xmlrpc.inc.php:197
-msgid ""
-"Timeout when reading data from the MMC agent. Please check network "
-"connectivity and server load."
-msgstr ""
-"Temps dépassé lors de la réception de données en provenance de l'agent MMC. "
-"Veuillez vérifier les connexions réseau et la charge du serveur."
-
-#: includes/xmlrpc.inc.php:206
-msgid "Error while reading MMC agent XML-RPC response."
-msgstr "Erreur lors de la réception de la réponse XML-RPC de l'agent."
-
-#: includes/xmlrpc.inc.php:207
-msgid "Please check network connectivity."
-msgstr "Veuillez vérifier les connexions réseau."
-
-#: includes/xmlrpc.inc.php:222
-msgid ""
-"Can't communicate with MMC agent. Please check you're using the right TCP "
-"port and the right protocol."
-msgstr ""
-"Impossible de dialoguer avec l'agent MMC. Vérifiez que vous avez configuré "
-"le bon port TCP et le bon protocole."
-
-#: includes/xmlrpc.inc.php:241
-msgid ""
-"The MMC agent didn't give us a session number. Please check the MMC agent "
-"version."
-msgstr ""
-"L'agent MMC n'a pas fourni de numéro de session. Veuillez vérifier la "
-"version de l'agent MMC."
-
-#: includes/xmlrpc.inc.php:321
-msgid "unknown error"
-msgstr "erreur inconnue"
-
-#: includes/xmlrpc.inc.php:322
-msgid ""
-"This exception is unknown. Please contact us to add an error handling on "
-"this error."
-msgstr ""
-"Cette exception est inconnue. Veuillez nous contacter pour correctement "
-"gérer cette erreur."
+#: version.php:35
+msgid "MMC components version"
+msgstr "Version des composants MMC"
+
+#: version.php:36
+msgid "MMC agent: version"
+msgstr "Agent MMC: version"
+
+#: version.php:40
+msgid "agent: version"
+msgstr "agent: version"
+
+#: version.php:42
+msgid "web: version"
+msgstr "web: version"
+
+#: version.php:44
+msgid "web: plugin is not installed"
+msgstr "web: plugin non installé"
 
 #: index.php:57
 #, php-format
@@ -1780,59 +1827,5 @@ msgstr "Langue"
 #: index.php:235
 msgid "Connect"
 msgstr "Connecter"
-
-#: license.php:33
-msgid ""
-"<p>\n"
-"The community version of this product is distributed in the hope that it\n"
-"will be useful, but <strong>without any warranty</strong>; without even the implied\n"
-"warranty of merchantability of fitness for a particular purpose. See the\n"
-"GNU General Public License for more details.</p>\n"
-"<p>\n"
-"Moreover, this product is a main and critical component of your information system. This community version is distributed without professional support of any kind,\n"
-"and without a tested and certified upgrade path from previous versions.\n"
-"</p>"
-msgstr ""
-"<p>\n"
-"La version communautaire de ce programme est distribuée dans l'espoir qu'elle sera utile, mais <string>sans aucune garantie</strong>; sans même une garantie implicite de commerciabilité ou de conformité à une utilisation particulière. Voir la Licence Publique Générale GNU pour plus de détails.</p>\n"
-"<p>\n"
-"Ce programme est un élément important et critique de votre système d'informations. La version communautaire est distribuée sans aucun support professionnel, et sans un chemin de mis à jour testé et certifié depuis d'anciennes versions.\n"
-"</p>"
-
-#: license.php:53
-msgid ""
-"Click here to get more information about our support and maintenance "
-"subscription plan."
-msgstr ""
-"Cliquer ici pour avoir plus d'informations à propos de notre plan de "
-"maintenance et de souscription."
-
-#: logout/index.php:51
-msgid "Your session will be closed"
-msgstr "Votre session va être fermée"
-
-#: main.php:135
-msgid "Error, you don't have correct rights !"
-msgstr "Erreur, vous n'avez pas les droits requis !"
-
-#: version.php:35
-msgid "MMC components version"
-msgstr "Version des composants MMC"
-
-#: version.php:36
-msgid "MMC agent: version"
-msgstr "Agent MMC: version"
-
-#: version.php:40
-msgid "agent: version"
-msgstr "agent: version"
-
-#: version.php:42
-msgid "web: version"
-msgstr "web: version"
-
-#: version.php:44
-msgid "web: plugin is not installed"
-msgstr "web: plugin non installé"
 
 

@@ -274,13 +274,13 @@ if (hasComputerManagerWorking()) {
     $page = new Page("index", _("Computer list"));
     $submod->addPage($page);
 
-    $page = new Page("add", _("Add computer "));
+    $page = new Page("add", _("Add computer"));
     if (!canAddComputer()) {
         $page->setOptions(array("visible"=>False));
     }
     $submod->addPage($page);
 
-    $page = new Page("edit", _("Edit computer "));
+    $page = new Page("edit", _("Edit computer"));
     $page->setOptions(array("visible"=>False));
     $submod->addPage($page);
 

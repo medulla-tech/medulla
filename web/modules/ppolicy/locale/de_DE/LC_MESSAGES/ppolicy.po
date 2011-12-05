@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # # Translators:
+#   <maikwagner@yahoo.com>, 2011.
 msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-15 15:29+0200\n"
-"PO-Revision-Date: 2011-09-15 13:01+0000\n"
-"Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
+"POT-Creation-Date: 2011-12-05 15:24+0100\n"
+"PO-Revision-Date: 2011-11-29 15:24+0000\n"
+"Last-Translator: Maik Wagner <maikwagner@yahoo.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/"
 "mds/team/de_DE/)\n"
 "Language: de_DE\n"
@@ -26,23 +27,23 @@ msgstr "\"Maximales Alter\" muss größer sein als \"Minimales Alter\"."
 #: modules/ppolicy/includes/localSidebar.php:28
 #: modules/ppolicy/infoPackage.inc.php:50
 msgid "Add a password policy"
-msgstr ""
+msgstr "Eine Passwortpolicy hinzufügen"
 
 #: modules/ppolicy/includes/auditCodes.php:6
 msgid "Add ppolicy to user"
-msgstr ""
+msgstr "ppolicy dem Benutzer hinzufügen"
 
 #: modules/ppolicy/includes/publicFunc.php:195
 msgid "Apply a password policy for all group users"
-msgstr ""
+msgstr "Eine Passwortpolicy für alle Gruppenbenutzer anwenden"
 
 #: modules/ppolicy/default/edit.php:95
 msgid "Attributes updated"
-msgstr ""
+msgstr "Attribute aktualisiert"
 
 #: modules/ppolicy/default/delete.php:45
 msgid "Cancel"
-msgstr ""
+msgstr "Abbrechen"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:40
 msgid "Change password on first connection"
@@ -59,15 +60,15 @@ msgstr "Standart"
 
 #: modules/ppolicy/default/delete.php:44
 msgid "Delete"
-msgstr ""
+msgstr "Löschen"
 
 #: modules/ppolicy/infoPackage.inc.php:59
 msgid "Delete a password policy"
-msgstr ""
+msgstr "Eine Passwortpolicy löschen"
 
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:48
 msgid "Delete password policy"
-msgstr ""
+msgstr "Passwort-Policy löschen"
 
 #: modules/ppolicy/includes/auditCodes.php:5
 #: modules/ppolicy/includes/auditCodes.php:10
@@ -76,22 +77,22 @@ msgstr "ppolicy Attribut löschen"
 
 #: modules/ppolicy/includes/auditCodes.php:8
 msgid "Delete ppolicy on user"
-msgstr ""
+msgstr "ppolicy bei Benutzer löschen"
 
 #: modules/ppolicy/default/edit.php:129
 #: modules/ppolicy/includes/ppolicy.inc.php:48
 msgid "Description"
-msgstr ""
+msgstr "Beschreibung"
 
 #: modules/ppolicy/infoPackage.inc.php:54
 msgid "Edit a password policy"
-msgstr ""
+msgstr "Eine Passwortpolicy ändern"
 
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:44
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:47
 #: modules/ppolicy/default/edit.php:48
 msgid "Edit password policy"
-msgstr ""
+msgstr "Passwortpolicy ändern"
 
 #: modules/ppolicy/includes/publicFunc.php:96
 msgid "Enable a specific password policy for this user"
@@ -107,7 +108,7 @@ msgstr "Benutzer zwingen ihre Passwörter bei der ersten Verbindung zu ändern?"
 
 #: modules/ppolicy/includes/publicFunc.php:68
 msgid "If checked, permanently lock the user account"
-msgstr ""
+msgstr "Das Benutzerkonto permanent sperren, wenn aktiviert"
 
 #: modules/ppolicy/includes/publicFunc.php:74
 msgid ""
@@ -121,11 +122,11 @@ msgstr ""
 #: modules/ppolicy/includes/publicFunc.php:97
 #: modules/ppolicy/includes/publicFunc.php:196
 msgid "If not set the default password policy is enforced."
-msgstr ""
+msgstr "Wenn nicht aktiviert, wird die Standard Passwortpolicy durchgesetzt."
 
 #: modules/ppolicy/includes/publicFunc.php:67
 msgid "Lock account"
-msgstr ""
+msgstr "Konto sperren"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:41
 msgid "Lockout duration"
@@ -133,7 +134,7 @@ msgstr "Lockout Dauer"
 
 #: modules/ppolicy/default/edit.php:219
 msgid "Lockout duration (seconds)"
-msgstr "ockout Dauer (Sekunden)"
+msgstr "Lockoutdauer (Sekunden)"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:39
 msgid "Maximum age"
@@ -162,7 +163,7 @@ msgstr "Minimale Länge"
 
 #: modules/ppolicy/default/edit.php:123
 msgid "Name"
-msgstr ""
+msgstr "Name"
 
 #: modules/ppolicy/default/edit.php:163
 #: modules/ppolicy/includes/ppolicy.inc.php:45
@@ -189,11 +190,11 @@ msgstr "Passwort maximale Fehlversuche"
 #: modules/ppolicy/includes/localSidebar.php:27
 #: modules/ppolicy/infoPackage.inc.php:46
 msgid "Password policies"
-msgstr ""
+msgstr "Passwort Policies"
 
 #: modules/ppolicy/default/index.php:31
 msgid "Password policies list"
-msgstr ""
+msgstr "Passwort-Policies Liste"
 
 #: modules/ppolicy/includes/publicFunc.php:158
 msgid "Password policy attributes updated."
@@ -203,7 +204,7 @@ msgstr "Passwort-Policy Attribute aktualisiert."
 #: modules/ppolicy/includes/publicFunc.php:63
 #: modules/ppolicy/includes/publicFunc.php:173
 msgid "Password policy management"
-msgstr ""
+msgstr "Verwaltung der Passwort-Policy"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:47
 msgid "Password policy quality check"
@@ -215,7 +216,7 @@ msgstr "Passwort-Policy"
 
 #: modules/ppolicy/includes/publicFunc.php:73
 msgid "Password reset flag"
-msgstr "Passwort Rücksetzt Option"
+msgstr "Passwort zurücksetzen Option"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:43
 msgid "Preventive lockout user"
@@ -231,11 +232,11 @@ msgstr "Zurücksetzen des Kennwort"
 
 #: modules/ppolicy/default/delete.php:29
 msgid "The password policy has been deleted."
-msgstr ""
+msgstr "Die Passwortpolicy wurde gelöscht."
 
 #: modules/ppolicy/includes/publicFunc.php:64
 msgid "This account is locked by the LDAP directory."
-msgstr ""
+msgstr "Dieses Konto ist durch das LDAP-Verzeichnis gesperrt."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:62
 msgid ""
@@ -360,7 +361,7 @@ msgstr ""
 
 #: modules/ppolicy/includes/auditCodes.php:7
 msgid "Update ppolicy for user"
-msgstr ""
+msgstr "ppolicy für Benutzer aktualisieren"
 
 #: modules/ppolicy/default/warnuser.php:35
 msgid ""
@@ -388,6 +389,9 @@ msgid ""
 "You will delete the password policy <strong>%s</strong>. Default password "
 "policy will be applied to users that use this password policy."
 msgstr ""
+"Sie werden die <strong>Kennwortrichtlinie %s</strong> löschen. Standard "
+"Passwort-Policy wird für Benutzer, die diese Passwort-Policy nutzen "
+"angewendet werden."
 
 #: modules/ppolicy/includes/auditCodes.php:11
 #: modules/ppolicy/includes/auditCodes.php:12
