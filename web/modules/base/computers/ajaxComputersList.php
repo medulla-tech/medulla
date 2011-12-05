@@ -21,13 +21,8 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-/*require("includes/i18n.inc.php");
-require("includes/PageGenerator.php");
-require("includes/config.inc.php");
-require("includes/acl.inc.php");
-require("includes/session.inc.php");*/
-/*require("modules/base/includes/computers.inc.php");
-require("modules/base/includes/computers_list.inc.php");*/
+require_once("modules/base/includes/computers.inc.php");
+require_once("modules/base/includes/computers_list.inc.php");
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
