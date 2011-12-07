@@ -622,6 +622,8 @@ class Glpi07(DyngroupDatabaseHelper):
         if query == None:
             return {}
 
+        query = query.group_by([self.machine.c.name, self.machine.c.domain]).order_by(asc(self.machine.c.name))
+
         if min != 0:
             query = query.offset(min)
         if max != -1:
@@ -630,14 +632,14 @@ class Glpi07(DyngroupDatabaseHelper):
 
         # TODO : need to find a way to remove group_by/order_by ...
         if justId:
-            ret = map(lambda m: self.getMachineUUID(m), query.group_by([self.machine.c.name, self.machine.c.domain]).order_by(asc(self.machine.c.name)))
+            ret = map(lambda m: self.getMachineUUID(m), query.all())
         elif toH:
-            ret = map(lambda m: m.toH(), query.group_by([self.machine.c.name, self.machine.c.domain]).order_by(asc(self.machine.c.name)))
+            ret = map(lambda m: m.toH(), query.all())
         else:
             if filt.has_key('get'):
-                ret = self.__formatMachines(query.group_by([self.machine.c.name, self.machine.c.domain]).order_by(asc(self.machine.c.name)), advanced, filt['get'])
+                ret = self.__formatMachines(query.all(), advanced, filt['get'])
             else:
-                ret = self.__formatMachines(query.group_by([self.machine.c.name, self.machine.c.domain]).order_by(asc(self.machine.c.name)), advanced)
+                ret = self.__formatMachines(query.all(), advanced)
         session.close()
         return ret
 
