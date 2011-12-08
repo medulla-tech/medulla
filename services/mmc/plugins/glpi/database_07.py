@@ -630,7 +630,6 @@ class Glpi07(DyngroupDatabaseHelper):
             max = int(max) - int(min)
             query = query.limit(max)
 
-        # TODO : need to find a way to remove group_by/order_by ...
         if justId:
             ret = map(lambda m: self.getMachineUUID(m), query.all())
         elif toH:
