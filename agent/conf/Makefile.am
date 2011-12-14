@@ -39,7 +39,7 @@ edit = sed \
 
 plugins/base.ini agent/config.ini: Makefile
 	test "$@ = plugins/base.ini" && \
-    	  test -f /etc/mandriva-release && \
+	  test -f /etc/mandriva-release && \
 	    sed -i 's!log/ldap.log!log/ldap/ldap.log!g' $${srcdir}$@.in; \
 	    sed -i 's!ou=Groups\b!ou=Group!g;s!ou=Users\b!ou=People!g' $${srcdir}$@.in
 	rm -f $@ $@.tmp
