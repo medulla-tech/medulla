@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://mds.mandriva.org/\n"
-"POT-Creation-Date: 2011-12-05 15:24+0100\n"
-"PO-Revision-Date: 2011-12-05 14:25+0000\n"
+"POT-Creation-Date: 2011-12-14 10:29+0100\n"
+"PO-Revision-Date: 2011-12-14 09:30+0000\n"
 "Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/mds/team/de_DE/)\n"
 "MIME-Version: 1.0\n"
@@ -45,7 +45,7 @@ msgstr "abmelden"
 msgid "Logout"
 msgstr "Logout"
 
-#: graph/navbar.inc.php:63 main_content.php:148
+#: graph/navbar.inc.php:63 main_content.php:145
 msgid "Home"
 msgstr "Übersicht"
 
@@ -463,11 +463,11 @@ msgstr "Fehler, Sie haben nicht die erforderlichen Rechte!"
 
 #: modules/admin/includes/configure.inc.php:50
 msgid " configuration"
-msgstr ""
+msgstr " Konfiguration"
 
 #: modules/admin/includes/configure.inc.php:62
 msgid " configuration page"
-msgstr ""
+msgstr " Konfigurationsseite"
 
 #: modules/base/audit/ajaxLogFilter.php:49
 #: modules/base/includes/AjaxFilterLog.inc.php:341
@@ -960,13 +960,15 @@ msgstr ""
 
 #: modules/base/includes/errorHandling.php:45
 msgid "The user home directory already exists."
-msgstr ""
+msgstr "Das Home-Verzeichnis des Benutzers existiert bereits."
 
 #: modules/base/includes/errorHandling.php:46
 msgid ""
 "Set the home directory in a different location or force the use of the "
 "existing directory (in expert mode)."
 msgstr ""
+"Das Home-Verzeichnis an einem anderen Ort setzen oder die Nutzung des "
+"bestehenden Bereiches erzwingen (im Experten-Modus)."
 
 #: modules/base/includes/errorHandling.php:51
 msgid "Password fails quality checking policy."
@@ -1052,11 +1054,13 @@ msgid ""
 "User %s created but password is not valid regarding your password "
 "policies.<br/><strong>You must change the user password.</strong>"
 msgstr ""
+"Benutzer %s erstellt aber das Passwort ist wegen den Passwort-Policies nicht"
+" gültig <br/><strong>Sie müssen das Benutzerpasswort ändern.</strong>"
 
 #: modules/base/includes/users-xmlrpc.inc.php:122
 #, php-format
 msgid "User %s successfully created"
-msgstr ""
+msgstr "Benutzer %s erfolgreich erstellt"
 
 #: modules/base/includes/publicFunc.php:46
 #, php-format
@@ -1077,7 +1081,7 @@ msgstr "Benutzername ungültig!"
 #: modules/base/includes/publicFunc.php:85
 #, php-format
 msgid "The user %s already exists."
-msgstr ""
+msgstr "Der Benutzer %s existiert bereits."
 
 #: modules/base/includes/publicFunc.php:90
 msgid "Password is empty."
@@ -1100,15 +1104,15 @@ msgstr ""
 
 #: modules/base/includes/publicFunc.php:183
 msgid "User photo deleted"
-msgstr ""
+msgstr "Benutzerfoto gelöscht"
 
 #: modules/base/includes/publicFunc.php:197
 msgid "User disabled"
-msgstr ""
+msgstr "Benutzer deaktiviert"
 
 #: modules/base/includes/publicFunc.php:201
 msgid "User enabled"
-msgstr ""
+msgstr "Benutzer aktiviert"
 
 #: modules/base/includes/publicFunc.php:249
 #, php-format
@@ -1116,14 +1120,20 @@ msgid ""
 "The photo is too big. The max size is %s x %s.\n"
 "                        Install php gd extention to resize the photo automatically"
 msgstr ""
+"Das Foto ist zu groß. Die maximales Größe beträgt %s x %s.\n"
+"                        Installieren Sie die php gd Erweiterung um das Foto automatisch anzupassen"
 
 #: modules/base/includes/publicFunc.php:254
 #: modules/base/includes/publicFunc.php:256
 msgid "The photo is not a JPG file"
-msgstr ""
+msgstr "Das Foto ist keine JPG-Datei"
 
 #: modules/base/includes/publicFunc.php:260
 msgid "User attributes updated"
+msgstr "Benutzerattribute aktualisiert"
+
+#: modules/base/includes/publicFunc.php:276
+msgid "User attributes"
 msgstr ""
 
 #: modules/base/includes/publicFunc.php:285
@@ -1188,11 +1198,11 @@ msgstr "Telefonnummer privat"
 
 #: modules/base/includes/publicFunc.php:362
 msgid "Choose language"
-msgstr ""
+msgstr "Sprache wählen"
 
 #: modules/base/includes/publicFunc.php:367
 msgid "Preferred language"
-msgstr ""
+msgstr "Bevorzugte Sprache"
 
 #: modules/base/includes/publicFunc.php:375
 msgid "User is disabled, if checked"
@@ -1203,6 +1213,8 @@ msgid ""
 "A disabled user can't log in any UNIX services. <br/>\n"
 "                                Her/his login shell command is replaced by /bin/false"
 msgstr ""
+"Ein deaktivierter Benutzer kann sich in keine UNIX-Dienste einloggen. <br/>\n"
+"                                Seine/ihre Loginshell wird durch /bin/false ersetzt"
 
 #: modules/base/includes/publicFunc.php:401
 #: modules/base/infoPackage.inc.php:317
@@ -1211,16 +1223,16 @@ msgstr "primäre Gruppe"
 
 #: modules/base/includes/publicFunc.php:407
 msgid "User's groups"
-msgstr ""
+msgstr "Gruppen des Benutzers"
 
 #: modules/base/includes/publicFunc.php:407
 msgid "All groups"
-msgstr ""
+msgstr "Alle Gruppen"
 
 #: modules/base/includes/publicFunc.php:430
 #: modules/base/infoPackage.inc.php:318
 msgid "Secondary groups"
-msgstr ""
+msgstr "Sekundäre Gruppen"
 
 #: modules/base/includes/publicFunc.php:439
 #: modules/base/views/index.tpl.php:87
@@ -1233,11 +1245,12 @@ msgstr "Erstellen des Home-Verzeichnis auf Dateisystem"
 
 #: modules/base/includes/publicFunc.php:449
 msgid "Force to use the home directory if it exists"
-msgstr ""
+msgstr "Die Nutzung des Home-Verzeichnisses erzwingen wenn es existiert"
 
 #: modules/base/includes/publicFunc.php:450
 msgid "Warning: an existing directory may belong to another user !"
 msgstr ""
+"Warnung: ein bestehendes Verzeichnis kann einem anderen Benutzer gehören !"
 
 #: modules/base/includes/publicFunc.php:456
 #: modules/base/infoPackage.inc.php:310
@@ -1271,11 +1284,11 @@ msgstr ""
 
 #: modules/base/includes/publicFunc.php:473
 msgid "UID"
-msgstr ""
+msgstr "UID"
 
 #: modules/base/includes/publicFunc.php:478
 msgid "GID"
-msgstr ""
+msgstr "GID"
 
 #: modules/base/logview/ajax_showlog.php:43
 msgid "Connection"
@@ -1510,7 +1523,7 @@ msgstr "Benutzer bearbeiten"
 #: modules/base/users/edit.php:85
 #, php-format
 msgid "Failed to change primary group in %s plugin"
-msgstr ""
+msgstr "Fehler beim Wechsel der Primärgruppe in %s Plugin"
 
 #: modules/base/users/edit.php:109
 msgid "Password not updated"
@@ -1518,35 +1531,35 @@ msgstr "Passwort nicht aktualisiert"
 
 #: modules/base/users/edit.php:112
 msgid "Password updated"
-msgstr ""
+msgstr "Passwort aktualisiert"
 
 #: modules/base/users/edit.php:121
 #, php-format
 msgid "Failed to disable user in %s plugin"
-msgstr ""
+msgstr "Fehler beim Deaktivieren des Benutzers in %s plugin"
 
 #: modules/base/users/edit.php:124
 #, php-format
 msgid "User %s disabled."
-msgstr ""
+msgstr "Benutzer %s deaktiviert."
 
 #: modules/base/users/edit.php:130
 #, php-format
 msgid "Failed to enable user in %s plugin"
-msgstr ""
+msgstr "Fehler beim Aktivieren des Benutzers in %s Plugin"
 
 #: modules/base/users/edit.php:133
 #, php-format
 msgid "User %s enabled"
-msgstr ""
+msgstr "Benutzer %s aktiviert"
 
 #: modules/base/users/edit.php:181
 msgid "Enable account"
-msgstr ""
+msgstr "Konto aktivieren"
 
 #: modules/base/users/edit.php:183
 msgid "Disable account"
-msgstr ""
+msgstr "Konto deaktivieren"
 
 #: modules/base/users/editacl.php:152
 msgid "User ACLs successfully modified."
@@ -1786,23 +1799,23 @@ msgstr "Benutzerkonto aktivieren/deaktivieren"
 
 #: version.php:35
 msgid "MMC components version"
-msgstr ""
+msgstr "MMC Komponenten Version"
 
 #: version.php:36
 msgid "MMC agent: version"
-msgstr ""
+msgstr "MMC agent: Version"
 
 #: version.php:40
 msgid "agent: version"
-msgstr ""
+msgstr "agent: version"
 
 #: version.php:42
 msgid "web: version"
-msgstr ""
+msgstr "web: Version"
 
 #: version.php:44
 msgid "web: plugin is not installed"
-msgstr ""
+msgstr "web: Plugin ist nicht installiert"
 
 #: index.php:57
 #, php-format
