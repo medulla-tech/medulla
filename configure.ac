@@ -59,13 +59,24 @@ if test "x$USE_NLS" = "xyes"; then
    fi
 fi
 
-dnl check for libraries
+dnl
+dnl --disable-python-check
+dnl   Do not check python modules on configure
+dnl
+AC_ARG_ENABLE([python-check],
+              [AS_HELP_STRING([--disable-python-check],
+                              [Do not check python modules on configure @<:@default=enable@:>@])],
+              [],
+              [enable_python_check="yes"])
+AM_CONDITIONAL([ENABLE_PYTHON_CHECK], [test "$enable_python_check" = "yes"])
 
 dnl Check for Python modules
-AX_PYTHON_MODULE([sqlalchemy], [1])
-AX_PYTHON_MODULE([MySQLdb], [1])
-AX_PYTHON_MODULE([twisted.web], [1])
-AX_PYTHON_MODULE([mmc], [1])
+if test "x$enable_python_check" = "xyes"; then
+   AX_PYTHON_MODULE([sqlalchemy], [1])
+   AX_PYTHON_MODULE([MySQLdb], [1])
+   AX_PYTHON_MODULE([twisted.web], [1])
+   AX_PYTHON_MODULE([mmc], [1])
+fi
 
 dnl check for headers
 AC_HEADER_STDC
