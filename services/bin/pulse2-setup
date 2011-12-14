@@ -119,9 +119,13 @@ initscripts = [ 'mmc-agent', 'pulse2-imaging-server', 'pulse2-inventory-server',
 
 class DistroHandler(object):
     def enable_srv(self, name):
-        ret = call("/bin/ln -fs ../init.d/%(name)s /etc/rc2.d/S20%(name)s" % {'name': name}, 
-                   shell=True)
-        return ret==0
+        for runlevel in (2,3,4,5):
+            ret = call("/bin/ln -fs ../init.d/%(name)s /etc/rc%(runlevel)i.d/S20%(name)s" % \
+                           {'name': name, 'runlevel': runlevel}, 
+                       shell=True)
+            if ret != 0:
+                return False
+        return True
 
     def disable_srv(self, name):
         ret = call("/bin/rm -f /etc/rc2.d/S20%(name)s" % {'name': name},
