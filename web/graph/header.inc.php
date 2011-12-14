@@ -188,6 +188,21 @@ function showPopupUp(evt,url) {
     });
 }
 
+function showPopupCenter(url) {
+    /*new Ajax.Updater('__popup_container',url,{onComplete: displayPopupCenter(), evalScripts:true});*/
+    new Ajax.Request(url, {
+        onSuccess: function(t) {
+            try {
+                $('__popup_container').update(t.responseText);
+            }
+            catch(ex) {
+                $('__popup_container').innerHTML = t.responseText;
+            }
+        },
+        onComplete: displayPopupCenter()
+    });    
+}
+
 function displayPopupFav (evt) {
     if (!evt) evt = window.event;
     obj = document.getElementById('popup');
@@ -209,10 +224,6 @@ function displayPopupUp (evt) {
     $('popup').style.left = parseInt(evt.clientX)+document.documentElement.scrollLeft+"px";
     $('popup').style.top = (parseInt(evt.clientY)+document.documentElement.scrollTop-350)+"px";
     $('popup').style.display = 'inline';
-}
-
-function showPopupCenter(url) {
-    new Ajax.Updater('__popup_container',url,{onComplete: displayPopupCenter(), evalScripts:true});
 }
 
 function displayPopupCenter () {
