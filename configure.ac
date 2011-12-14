@@ -60,14 +60,30 @@ if test "x$USE_NLS" = "xyes"; then
 fi
 
 dnl
+dnl --enable-packager-mode
+dnl   Packager mode: disable some features usually done by packagers
+dnl   (eg: installing runlevel scripts)
+dnl
+AC_ARG_ENABLE([packager-mode],
+              [AS_HELP_STRING([--enable-packager-mode],
+                              [Disable features usually done in packaging @<:@default=disable@:>@])],
+              [],
+              [enable_packager_mode="no"])
+AM_CONDITIONAL([ENABLE_PACKAGER_MODE], [test "$enable_packager_mode" = "yes"])
+
+dnl
 dnl --disable-python-check
 dnl   Do not check python modules on configure
 dnl
-AC_ARG_ENABLE([python-check],
-              [AS_HELP_STRING([--disable-python-check],
-                              [Do not check python modules on configure @<:@default=enable@:>@])],
-              [],
-              [enable_python_check="yes"])
+if test "x$enable_packager_mode" = "xno"; then
+   AC_ARG_ENABLE([python-check],
+                 [AS_HELP_STRING([--disable-python-check],
+		                 [Do not check python modules on configure @<:@default=enable@:>@])],
+				 [],
+				 [enable_python_check="yes"])
+else
+   enable_python_check=no
+fi
 AM_CONDITIONAL([ENABLE_PYTHON_CHECK], [test "$enable_python_check" = "yes"])
 
 dnl Check for Python modules
@@ -113,11 +129,15 @@ dnl
 dnl --disable-wol
 dnl   Fetch and compile wake-on-lan tool (3rd party)
 dnl
-AC_ARG_ENABLE([wol],
-              [AS_HELP_STRING([--disable-wol],
-                              [Disable wake-on-lan tool (3rd party) @<:@default=enable@:>@])],
-              [],
-              [enable_wol="yes"])
+if test "x$enable_packager_mode" = "xno"; then
+    AC_ARG_ENABLE([wol],
+                  [AS_HELP_STRING([--disable-wol],
+                                  [Disable wake-on-lan tool (3rd party) @<:@default=enable@:>@])],
+                  [],
+                  [enable_wol="yes"])
+else
+    enable_wol=no
+fi
 AM_CONDITIONAL([ENABLE_WOL], [test "$enable_wol" = "yes"])
 
 dnl

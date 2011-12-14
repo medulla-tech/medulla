@@ -45,12 +45,18 @@ nobase_modpython_DATA = $(wildcard $(srcdir)/*.py $(patsubst %,$(srcdir)/%/*.py 
 nodist_modpython_DATA = site.py
 
 examplesdir = @examplesdir@
+if ENABLE_PACKAGER_MODE
+packagermode = True
+else
+packagermode = False
+endif
 
 EXTRA_DIST = site.py.in version.py.in $(nobase_modpython_DATA)
 CLEANFILES = site.py
 DISTCLEANFILES = version.py
 
 edit = sed \
+        -e 's|@packagermode[@]|$(packagermode)|g' \
         -e 's|@bindir[@]|$(bindir)|g' \
         -e 's|@sbindir[@]|$(sbindir)|g' \
         -e 's|@pkgdatadir[@]|$(pkgdatadir)|g' \

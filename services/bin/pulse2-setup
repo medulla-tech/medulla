@@ -35,7 +35,7 @@ import sqlalchemy as sa
 import logging
 import ldap
 from pulse2.utils import get_default_ip
-from pulse2.site import examplesdir
+from pulse2.site import examplesdir, packagermode
 
 log = logging.getLogger('pulse2-setup')
 
@@ -782,8 +782,9 @@ class SetupApp(object):
                 sys.exit(1)
 
         # Update services
-        for srv in self.services:
-            srv.update_rc()
+        if not packagermode:
+            for srv in self.services:
+                srv.update_rc()
 
         # Setup package server
         log.info('Generate uuid for package server')
