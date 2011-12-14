@@ -22,7 +22,7 @@
 #
 SUBDIRS = confs
 
-datapaths = graph img includes jsframework logout modules \
+datapaths = graph img includes jsframework logout modules/base modules/ppolicy \
 	index.php main_content.php main.php version.php license.php
 
 mmcdatadir = $(datadir)/mmc
