@@ -614,6 +614,7 @@ class SetupApp(object):
             log.info("Update database schema for module %s" % module)
             env['MYSQL_BASE'] = module
             binpath = os.path.join(self.sqldir, module, 'install.sh')
+            log.debug("Call: %s" % binpath)
             ret = call(binpath, env=env)
             if ret<>0:
                 log.error('Can not initialize database for module: %s' % module)
