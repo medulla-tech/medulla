@@ -30,3 +30,5 @@ pythonmodules = plugins plugins.dyngroup plugins.dyngroup.querymanager \
 # Expands Python modules list with found *.py files in each module given in pythonmodules
 modpythondir = $(pythondir)/$(notdir $(realpath $(srcdir)))
 nobase_modpython_DATA = $(wildcard $(srcdir)/*.py $(patsubst %,$(srcdir)/%/*.py ,$(subst .,/,$(pythonmodules))))
+
+EXTRA_DIST = $(nobase_modpython_DATA)
