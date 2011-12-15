@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://mds.mandriva.org/\n"
-"POT-Creation-Date: 2011-12-05 15:24+0100\n"
-"PO-Revision-Date: 2011-12-05 14:25+0000\n"
+"POT-Creation-Date: 2011-12-14 10:29+0100\n"
+"PO-Revision-Date: 2011-12-14 09:31+0000\n"
 "Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/mds/team/fr_FR/)\n"
 "MIME-Version: 1.0\n"
@@ -44,7 +44,7 @@ msgstr "déconnexion"
 msgid "Logout"
 msgstr "Déconnexion"
 
-#: graph/navbar.inc.php:63 main_content.php:148
+#: graph/navbar.inc.php:63 main_content.php:145
 msgid "Home"
 msgstr "Page principale"
 
@@ -1115,6 +1115,10 @@ msgstr "La photo n'est pas un fichier JPG"
 #: modules/base/includes/publicFunc.php:260
 msgid "User attributes updated"
 msgstr "Attributs de l'utilisateur mis à jour"
+
+#: modules/base/includes/publicFunc.php:276
+msgid "User attributes"
+msgstr "Attributs utilisateur"
 
 #: modules/base/includes/publicFunc.php:285
 #: modules/base/users/ajaxFilter.php:68 modules/base/views/index.tpl.php:78

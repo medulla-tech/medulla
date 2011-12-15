@@ -68,8 +68,9 @@ require("../includes/modules.inc.php");
 
 /*----------------------------------*/
 
-html {
-	/* min-width: 910px; */
+* {
+	font-family: Verdana, Lucida, Geneva, Helvetica, Arial, sans-serif;
+	font-size: 11px;
 }
 
 body {
@@ -77,8 +78,6 @@ body {
 	color: #333;
 	padding: 0 0 15px 0;
 	margin: 0;
-	font-family: Verdana, Lucida, Geneva, Helvetica, Arial, sans-serif;
-	font-size: 11px;
 }
 
 a { color: #2A557E;}
@@ -119,8 +118,8 @@ p {
 }
 
 .fixheight {
-        float: right;
-        display: inline;
+    float: right;
+    display: inline;
 	height: 350px;
 	width: 0px;
 	margin: 0;
@@ -200,11 +199,11 @@ p {
 }
 
 #header #menuTopRight ul li#username {
-	width: auto;
-        padding: 5px 0px 0px 9px;
-        /*background: url("../img/common/icn_user.gif") no-repeat 0 4px transparent;*/
-        font-size: 10px;
-        color : #FFF;
+    width: auto;
+    padding: 5px 0px 0px 9px;
+    /*background: url("../img/common/icn_user.gif") no-repeat 0 4px transparent;*/
+    font-size: 10px;
+    color : #FFF;
 }
 
 #header #menuTopRight ul li#expertmode a:hover { background-position: 0 4px; }
@@ -298,17 +297,17 @@ p {
 	top: 350px;
 	left: 17px;
 	margin: 0px;
-        padding-left: 0.5em;
-        margin-bottom: 1em;
+    padding-left: 0.5em;
+    margin-bottom: 1em;
 	padding: 0px;
 	width: 172px;
-        background-color: #FFF;
-        border-style: solid;
-        border-width: 1px;
-        border-color: #BBB #FFF #BBB #BBB;
-        -moz-border-radius-topleft: 5px;
-        -moz-border-radius-bottomleft: 5px;
-        display:none;
+    background-color: #FFF;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #BBB #FFF #BBB #BBB;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-bottomleft: 5px;
+    display:none;
 
 }
 
@@ -367,8 +366,8 @@ html>body #sidebar ul li a { width: auto; }
 	width: 90%;
 	display: block;
 	border: 1px solid #0E0;
-        -moz-border-radius: 5px;
-        -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
 }
 
 #section .errorCode {
@@ -407,8 +406,8 @@ html>body #sidebar ul li a { width: auto; }
 	width: 90%;
 	display: block;
 	border: 1px solid #840;
-        -moz-border-radius: 5px;
-        -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
 }
 
 .error {
@@ -608,12 +607,12 @@ html>body #sidebar ul li a { width: auto; }
 	padding: 8px 25px 8px 25px;
 	border-left: solid 1px #A0A0A0;
 	border-right: solid 1px #A0A0A0;
-    height: 350px;
-    margin-left: 190px;
+	margin: 0px;
+	margin-left: 190px;
 }
 
 html>body #section {
-    min-height: 350px;
+	min-height: 350px;
 }
 
 
@@ -626,7 +625,6 @@ html>body #section {
 
 #section {
 	background-color: #FFFFFF;
-	height: 100%;
 	padding: 8px 25px 8px 25px;
 	margin: 0 0 0 190px;
 	border-left: solid 1px #A0A0A0;
@@ -662,6 +660,7 @@ html>body #section {
 }
 
 #section h2 { font-size: 17px; }
+#section h3 { font-size: 14px; }
 #section form h3 { font-size: 14px; }
 #section form h4 { font-size: 13px; }
 

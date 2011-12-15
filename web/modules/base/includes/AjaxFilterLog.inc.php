@@ -400,9 +400,9 @@ class AjaxFilterLog extends AjaxFilter {
             launch--;
             if (launch==0) {
                 if (document.getElementById('param') == null)
-                    new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?>filter=&filtertype='+document.Form.filtertype.value+'&begindate='+document.Form.begindate.value+'&enddate='+document.Form.enddate.value+'&page=<?php echo  $this->page; ?>', { asynchronous:true, evalScripts: true});    
+                    new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?>filter=&filtertype='+document.Form.filtertype.value+'&begindate='+encodeURI(document.Form.begindate.value)+'&enddate='+document.Form.enddate.value+'&page=<?php echo  $this->page; ?>', { asynchronous:true, evalScripts: true});    
                 else
-                    new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?>filter='+document.Form.param.value+'&filtertype='+document.Form.filtertype.value+'&begindate='+document.Form.begindate.value+'&enddate='+document.Form.enddate.value+'&page=<?php echo  $this->page; ?>', { asynchronous:true, evalScripts: true});
+                    new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?>filter='+document.Form.param.value+'&filtertype='+document.Form.filtertype.value+'&begindate='+encodeURI(document.Form.begindate.value)+'&enddate='+document.Form.enddate.value+'&page=<?php echo  $this->page; ?>', { asynchronous:true, evalScripts: true});
             }
         }
 
@@ -415,7 +415,7 @@ class AjaxFilterLog extends AjaxFilter {
             var tableau = filter.split(reg);
             filter = tableau[0];
             var location = tableau[1];
-            new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?>filter='+document.Form.param.value+'&filtertype='+document.Form.filtertype.value+'&begindate='+document.Form.begindate.value+'&enddate='+document.Form.enddate.value+'&page=<?php echo  $this->page; ?>&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
+            new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?>filter='+document.Form.param.value+'&filtertype='+document.Form.filtertype.value+'&begindate='+encodeURI(document.Form.begindate.value)+'&enddate='+document.Form.enddate.value+'&page=<?php echo  $this->page; ?>&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
             }
 
         /**
