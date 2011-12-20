@@ -74,7 +74,6 @@ foreach ($ret as $r) {
 
 if (count($running_on) > 0) {
     $a_href_open = "<a href=''>";
-    print_r($_GET);
     print sprintf(_T("The synchro is still in progress for the following items : %s. Please wait or reload the page %shere%s", "imaging"), join($running_on, ', '), $a_href_open, '</a>');
 #    print sprintf(_T("The synchro is still running, please wait or reload the page %shere%s", "imaging"), $a_href_open, '</a>');
 }
