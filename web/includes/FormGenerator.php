@@ -721,16 +721,35 @@ class MembersTpl extends AbstractTpl {
     </table>
     <script type="text/javascript">
         switch_' . $this->name .' = function(from, to) {
+            var emptyOption = new Element("option", { value: "" }).update("");
             var toAdd = $$("#"+from+" option").findAll(function(e) {
                 return e.selected;
             });
             var len = toAdd.length;
             for(var i=0; i<len; i++) {
                 try {
+                    // If the first option is empty
+                    // and we are about to add one, remove it
+                    if ($(to).options[0] && $(to).options[0].value == "") {
+                        $(to).options.remove($(to).options[0]); 
+                    }
                     $(to).options.add(toAdd[i]);
+                    // always add an empty option if the select box
+                    // is empty in order to have
+                    // the select box in the $POST array
+                    if ($(from).options.length == 0) {
+                        $(from).options.add(emptyOption);
+                    }
                 }
                 catch(ex) {
+                    // For IE
+                    if ($(to).options[0] && $(to).options[0].value == "") {
+                        $(to).options.removeChild($(to).options[0]); 
+                    }
                     $(to).appendChild(toAdd[i]);
+                    if ($(from).options.length == 0) {
+                        $(from).options.appendChild(emptyOption);
+                    }
                 }
             }
         };
