@@ -117,56 +117,6 @@ AC_ARG_ENABLE([conf-backup],
 AM_CONDITIONAL([ENABLE_CONF_BACKUP], [test "$enable_conf_backup" = "yes"])
 
 dnl
-dnl --enable-check-password
-dnl   Enable ldap mmc-check-password module.
-dnl   WARNING: as of today, we don't know how to compile it
-dnl
-AC_ARG_ENABLE([check-password],
-              [AS_HELP_STRING([--enable-check-password],
-                              [Enable ldap mmc-check-password module @<:@default=disable@:>@])],
-              [],
-              [enable_check_password="no"])
-AM_CONDITIONAL([ENABLE_CHECK_PASSWORD], [test "$enable_check_password" = "yes"])
-
-dnl Check for headers
-if test "x$enable_check_password" = "xyes"; then
-	dnl check for headers
-	AC_HEADER_STDC
-	dnl Add strictness options to the compiler
-	CFLAGS="$CFLAGS -Wall -Werror"
-	AC_SUBST(CFLAGS)
-	AC_SUBST(CPPFLAGS)
-	AC_SUBST(LDFLAGS)
-	# check for slap.h / portable.h headers
-	#AC_CHECK_HEADERS([openldap/include/portable.h],,AC_MSG_ERROR(mmc-check-password requires portable.h))
-	#AC_CHECK_HEADERS([openldap/slapd/slap.h],,AC_MSG_ERROR(mmc-check-password requires slap.h))
-fi
-
-dnl
-dnl --with-ldap-confdir
-dnl   Set path to ldap configuration directory
-dnl   Default to SYSCONFDIR/ldap
-dnl
-AC_ARG_WITH([ldap-confdir],
-            [AS_HELP_STRING([--with-ldap-confdir],
-                            [path to ldap configuration direcory @<:@default=SYSCONFDIR/ldap@:>@])],
-            [ldapconfdir="$withval"],
-	    [ldapconfdir="${sysconfdir}/ldap"])
-AC_SUBST([ldapconfdir])
-
-dnl
-dnl --with-ldap-libdir
-dnl   Set path to ldap plugins directory
-dnl   Default to LIBDIR/ldap
-dnl
-AC_ARG_WITH([ldap-libdir],
-            [AS_HELP_STRING([--with-ldap-libdir],
-                            [path to ldap plugins direcory @<:@default=LIBDIR/ldap@:>@])],
-            [ldaplibdir="$withval"],
-	    [ldaplibdir="${libdir}/ldap"])
-AC_SUBST([ldaplibdir])
-
-dnl
 dnl --with-initdir
 dnl   Set path to init scripts directory
 dnl   Default to SYSCONFDIR/init.d
@@ -190,7 +140,6 @@ AC_CONFIG_FILES([agent/contrib/Makefile])
 AC_CONFIG_FILES([agent/contrib/ldap/Makefile])
 AC_CONFIG_FILES([agent/contrib/audit/Makefile])
 AC_CONFIG_FILES([agent/contrib/audit/sql/Makefile])
-AC_CONFIG_FILES([agent/openldap-check-password/Makefile])
 AC_CONFIG_FILES([web/Makefile])
 AC_CONFIG_FILES([web/confs/Makefile])
 

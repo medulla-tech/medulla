@@ -21,9 +21,6 @@
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
 SUBDIRS = backup-tools bin init.d contrib
-if ENABLE_CHECK_PASSWORD
-SUBDIRS += openldap-check-password
-endif
 if ENABLE_CONF
 SUBDIRS += conf
 endif
