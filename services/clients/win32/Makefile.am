@@ -38,7 +38,7 @@ clients_SCRIPTS = $(installer)
 endif
 dist_clients_SCRIPTS = build.sh
 clients_DATA = sfx.conf.in win32.mk 7zsd.sfx \
-	remote-desktop-agent.reg remote-desktop-agent-vnc2.reg
+	remote-desktop-agent-vnc2.reg
 
 dist_doc_DATA = README.win32
 
@@ -47,7 +47,6 @@ EXTRA_DIST = \
 	win32.mk.in \
 	sfx.conf.in \
 	7zsd.sfx \
-	remote-desktop-agent.reg \
 	remote-desktop-agent-vnc2.reg \
 	$(installernsi) \
 	$(installerdata)
