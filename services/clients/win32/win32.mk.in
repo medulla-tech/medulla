@@ -41,36 +41,27 @@ sa_version = 2.0.2
 sa_name = pulse2-secure-agent-$(sa_version).exe
 sa_url = $(base_url)/pulse2-secure-agent/$(sa_name)
 
-rda1_version = 1.3.9
+rda1_version = 2.0.2
 rda1_name = pulse2-rda-agent-$(rda1_version).exe
 rda1_url = $(base_url)/pulse2-rda-agent/$(rda1_name)
 
-rda2_version = 2.0.2
-rda2_name = pulse2-rda-agent-$(rda2_version).exe
-rda2_url = $(base_url)/pulse2-rda-agent/$(rda2_name)
-
-inv1_version = 4.0.4.6
+inv1_version = 4.0.6.1.1
 inv1_name = inventory-agent-$(inv1_version).exe
 inv1_url = $(base_url)/inventory-agent/$(inv1_name)
 
-inv2_version = 4.0.6.1.1
-inv2_name = inventory-agent-$(inv2_version).exe
-inv2_url = $(base_url)/inventory-agent/$(inv2_name)
-
 installer_version = $(agents_version)
-installer_name = pulse2-win32-agents-$(installer_version).exe
+installer_name = pulse2-win32-agents-installer-$(installer_version).exe
 installer_url = $(base_url)/pulse2-win32-agents-installer/$(installer_name)
 
 sfxmod = 7zsd.sfx
 sfxmod_url = http://www.7zsfx.info/en/files/715/7zSD.7z
 
-subagents = $(sa_name) $(rda1_name) $(rda2_name) $(inv1_name) $(inv2_name) $(installer_name)
+subagents = $(sa_name) $(rda1_name) $(inv1_name) $(installer_name)
 
 agents_pack_base = pulse2-win32-agents-pack-$(agents_version)
 agents_pack = $(agents_pack_base).exe
 agents_pack_files = \
 	$(subagents) \
-	remote-desktop-agent.reg \
 	remote-desktop-agent-vnc2.reg
 
 7z = $(shell which 7z) -l
@@ -138,25 +129,11 @@ $(rda1_name):
 	  wget -O $@ $(rda1_url); \
 	fi
 
-$(rda2_name):
-	if test -e $(clientdir)/$@; then \
-	  ln -fs $(clientdir)/$@ $@; \
-	else \
-	  wget -O $@ $(rda2_url); \
-	fi
-
 $(inv1_name):
 	if test -e $(clientdir)/$@; then \
 	  ln -fs $(clientdir)/$@ $@; \
 	else \
 	  wget -O $@ $(inv1_url); \
-	fi
-
-$(inv2_name):
-	if test -e $(clientdir)/$@; then \
-	  ln -fs $(clientdir)/$@ $@; \
-	else \
-	  wget -O $@ $(inv2_url); \
 	fi
 
 clean:
