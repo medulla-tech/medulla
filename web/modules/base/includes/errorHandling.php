@@ -24,13 +24,13 @@
 ?>
 <?php
 
-$errItem = new ErrorHandlingItem("No such file or directory: '/var/log/ldap.log'");
+$errItem = new ErrorHandlingItem("No such file or directory: .*ldap.log'");
 $errItem->setMsg(_("LDAP log file does not exist."));
 $errItem->setAdvice(_("Please be sure you have:
                         <p>This line in your /etc/ldap/slapd.conf or /etc/openldap/slapd.conf:
                         <pre>loglevel        256</pre></p>
                         <p>and this line in your /etc/syslog.conf:
-                        <pre>local4.*       /var/log/ldap.log</pre>
+                        <pre>local4.*       /var/log/ldap.log (or /var/log/ldap/ldap.log)</pre>
                         </p>
                         "));
 $errObj->add($errItem);
