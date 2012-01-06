@@ -1507,7 +1507,7 @@ class ImagingRpcProxy(RpcProxyI):
             if i == None: # do fail
                 db.setLocationSynchroState(loc_uuid, P2ISS.TODO)
                 logger.error("couldn't initialize the ImagingApi to %s"%(url))
-                return defer.returnValue(False)
+                return defer.fail()
             d = i.imagingServerDefaultMenuSet(menu)
             d.addCallback(treatFailures).addErrback(cb_fail)
             return d
@@ -1515,7 +1515,7 @@ class ImagingRpcProxy(RpcProxyI):
             logger.error("Error trying to set default menu (location: %s): %s" % \
                              (loc_uuid, e))
             db.setLocationSynchroState(loc_uuid, P2ISS.TODO)
-        return defer.returnValue(False)
+        return defer.fail()
 
     def __synchroTargets(self, uuids, target_type, ctx = None):
         """
@@ -2142,7 +2142,7 @@ class ImagingRpcProxy(RpcProxyI):
             def treatAddComputersToProfile(result, uuid = uuid, hostname = hostname, MACAddress = MACAddress, profile = profile):
                 if not result:
                     logger.error("failed to put the computer %s (%s) in the profile %s" % (hostname, MACAddress, profile))
-                    return defer.returnValue([False, "failed to put the computer %s (%s) in the profile %s" % (hostname, MACAddress, profile)])
+                    return defer.fail("failed to put the computer %s (%s) in the profile %s" % (hostname, MACAddress, profile))
                 d = self.synchroComputer(uuid)
                 d.addCallback(sendResult, uuid)
                 return d
@@ -2150,7 +2150,7 @@ class ImagingRpcProxy(RpcProxyI):
             d.addCallback(treatAddComputersToProfile)
         else:
             logger.debug("computer %s (%s) dont need registration" % (hostname, MACAddress))
-            d = defer.returnValue([True, uuid])
+            d = defer.succeed(uuid)
 
         return d
 
