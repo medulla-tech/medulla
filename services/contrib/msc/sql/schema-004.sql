@@ -32,7 +32,8 @@ CREATE TABLE target (
     FOREIGN KEY (id_command) REFERENCES commands(id_command),
     INDEX coh_ind (id_command_on_host),
     FOREIGN KEY (id_command_on_host) REFERENCES commands_on_host(id_command_on_host),
-    PRIMARY KEY (id));
+    PRIMARY KEY (id)
+) ENGINE=MYISAM;
 INSERT INTO target (id_command, target_name) SELECT id_command, target FROM commands;
 
 ALTER TABLE commands \
