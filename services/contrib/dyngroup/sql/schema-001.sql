@@ -30,14 +30,14 @@ CREATE TABLE Groups (
     display_in_menu INT NOT NULL DEFAULT 0,
     FK_user INT NOT NULL,
     PRIMARY KEY(id)
-);
+) TYPE=InnoDB;
 CREATE INDEX dyngroup_groups_name_idx ON Groups (name(10));
 
 CREATE TABLE Users (
     id INT NOT NULL AUTO_INCREMENT,
     login TEXT NOT NULL,
     PRIMARY KEY(id)
-);
+) TYPE=InnoDB;
 CREATE INDEX dyngroup_users_login_idx ON Users (login(10));
 
 CREATE TABLE ShareGroup (
@@ -45,14 +45,14 @@ CREATE TABLE ShareGroup (
     FK_group INT NOT NULL,
     FK_user INT NOT NULL,
     PRIMARY KEY(id)
-);
+) TYPE=InnoDB;
 
 CREATE TABLE Machines (
     id INT NOT NULL AUTO_INCREMENT,
     uuid TEXT NOT NULL,
     name TEXT,
     PRIMARY KEY(id)
-);
+) TYPE=InnoDB;
 CREATE INDEX dyngroup_machines_name_idx ON Machines (name(10));
 /* ?? CREATE INDEX dyngroup_machines_uuid_idx ON Machines (uuid(10)); */
 
@@ -61,7 +61,7 @@ CREATE TABLE Results (
     FK_group INT NOT NULL,
     FK_machine INT NOT NULL,
     PRIMARY KEY(id)
-);
+) TYPE=InnoDB;
 
 CREATE TABLE version (Number INT NOT NULL);
 INSERT INTO version values (1);

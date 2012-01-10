@@ -24,7 +24,7 @@ CREATE TABLE ShareGroupType (
     id INT NOT NULL,
     value TEXT NOT NULL,
     PRIMARY KEY(id)
-);
+) TYPE=InnoDB;
 CREATE INDEX dyngroup_sharegrouptype_value_idx ON ShareGroupType (value(10));
 
 ALTER TABLE ShareGroup ADD COLUMN FK_type INT default 0;
@@ -32,11 +32,11 @@ ALTER TABLE ShareGroup ADD COLUMN FK_type INT default 0;
 INSERT INTO ShareGroupType values (0, 'View');
 INSERT INTO ShareGroupType values (1, 'Edit');
 
-create taBLE UsersType (
+CREATE TABLE UsersType (
     id INT NOT NULL,
     value TEXT NOT NULL,
     PRIMARY KEY(id)
-);
+) TYPE=InnoDB;
 CREATE INDEX dyngroup_userstype_value_idx ON UsersType (value(10));
 
 ALTER TABLE Users ADD COLUMN type INT default 0;

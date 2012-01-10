@@ -28,7 +28,7 @@ CREATE TABLE ProfilesResults (
     FOREIGN KEY (FK_groups) REFERENCES Groups(id),
     INDEX profiles_result_ind_m (FK_machines),
     FOREIGN KEY (FK_machines) REFERENCES Machines(id)
-);
+) TYPE=InnoDB;
 
 CREATE TABLE ProfilesPackages (
     FK_groups INT NOT NULL,
@@ -36,7 +36,7 @@ CREATE TABLE ProfilesPackages (
     PRIMARY KEY(FK_groups, package_id),
     INDEX profiles_packages_ind (FK_groups),
     FOREIGN KEY (FK_groups) REFERENCES Groups(id)
-);
+) TYPE=InnoDB;
 
 CREATE TABLE ProfilesData (
     FK_groups INT NOT NULL,
@@ -45,14 +45,14 @@ CREATE TABLE ProfilesData (
     PRIMARY KEY(FK_groups),
     INDEX profiles_data_ind (FK_groups),
     FOREIGN KEY (FK_groups) REFERENCES Groups(id)
-);
+) TYPE=InnoDB;
 
 -- Groups.type
 CREATE TABLE GroupType (
     id INT NOT NULL,
     value TEXT NOT NULL,
     PRIMARY KEY(id)
-);
+) TYPE=InnoDB;
 CREATE INDEX dyngroup_grouptype_value_idx ON GroupType (value(10));
 
 INSERT INTO GroupType values (0, 'Group');
@@ -76,7 +76,7 @@ ALTER TABLE Results ADD FOREIGN KEY (FK_machines) REFERENCES Machines(id);
 ALTER TABLE ShareGroup ADD FOREIGN KEY (FK_users) REFERENCES Users(id);
 ALTER TABLE ShareGroup ADD FOREIGN KEY (FK_groups) REFERENCES Groups(id);
 ALTER TABLE ShareGroup ADD FOREIGN KEY (type) REFERENCES ShareGroupType(id);
-ALTER TABLE Users ADD FOREIGN KEY (type) REFERENCES UsersTypes(id);
+ALTER TABLE Users ADD FOREIGN KEY (type) REFERENCES UsersType(id);
 
 -- display_in_menu
 ALTER TABLE ShareGroup ADD COLUMN display_in_menu INT NOT NULL Default 0;
