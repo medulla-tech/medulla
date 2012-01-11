@@ -626,7 +626,8 @@ class MscDatabase(DatabaseHelper):
     def __displayLogsQuery2(self, ctx, params, session):
         filter = []
         select_from = None
-        group_by = None
+        group_by = False
+        group_clause = False
 
         # Get query parts
         query = session.query(Commands).select_from(self.commands.join(self.commands_on_host).join(self.target))
@@ -638,7 +639,8 @@ class MscDatabase(DatabaseHelper):
         else: # CMD
             if params['b_id'] != None:
                 filter = [self.commands.c.fk_bundle == params['b_id']]
-            group_by = self.commands.c.id
+            group_by = True
+            group_clause = self.commands.c.id
 
         if params['gid'] != None: # Filter on a machines group id
             filter.append(self.target.c.id_group == params['gid'])
@@ -664,8 +666,8 @@ class MscDatabase(DatabaseHelper):
         query = self.__queryUsersFilter(ctx, query)
         query = query.filter(and_(*filter))
 
-        if group_by != None:
-            query = query.group_by(group_by)
+        if group_by:
+            query = query.group_by(group_clause)
 
         return query
 
