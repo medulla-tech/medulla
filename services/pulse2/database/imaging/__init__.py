@@ -44,6 +44,8 @@ from sqlalchemy.exceptions import InvalidRequestError
 from pulse2.managers.profile import ComputerProfileManager
 from pulse2.managers.location import ComputerLocationManager
 
+from mmc.plugins.imaging import NoImagingServerError
+
 DATABASEVERSION = 1
 
 
@@ -586,7 +588,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session = create_session()
         imaging_server = self.getImagingServerByEntityUUID(loc_id, session)
         if type(imaging_server) == list and len(imaging_server) == 0:
-            raise Exception("can't get any default menu for this entity %s"%loc_id)
+            raise NoImagingServerError()
 
         j = self.menu.join(self.imaging_server).join(self.entity).outerjoin(self.internationalization, and_(self.internationalization.c.id == self.menu.c.fk_name, self.internationalization.c.fk_language == self.imaging_server.c.fk_language))
         q = session.query(Menu).add_column(self.internationalization.c.label).select_from(j)
@@ -595,9 +597,13 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = q.first()
         if need_to_close_session:
             session.close()
-        if q == None: return q
+
+        if q == None: 
+            return None
+
         if q[1] != None and q[1] != 'NOTTRANSLATED':
             q[0].default_name = q[1]
+
         return q[0]
 
     def getTargetMenu(self, uuid, type, session = None):
