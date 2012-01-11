@@ -22,7 +22,14 @@
 #
 clientsdir = $(localstatedir)/lib/pulse2/clients/win32
 
-installer = pulse2-win32-agents-installer-$(VERSION).exe
+if ENABLE_NSIS
+# Installer is generated with NSIS
+installerversion = $(VERSION)
+else
+# Installer is the latest version available on website
+installerversion = 1.3.1.1
+endif
+installer = pulse2-win32-agents-installer-$(installerversion).exe
 installernsi = pulse2-win32-agents-installer.nsi
 installerdata = \
 	artwork/header.bmp \
@@ -69,6 +76,7 @@ $(installer): $(installernsi) $(installerdata)
 
 edit = sed \
 	-e 's|@VERSION[@]|$(VERSION)|g' \
+	-e 's|@installerversion[@]|$(installerversion)|g' \
         -e 's|@localstatedir[@]|$(localstatedir)|g'
 
 win32.mk: Makefile

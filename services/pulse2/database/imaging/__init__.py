@@ -35,7 +35,7 @@ from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHe
 from pulse2.database.imaging.types import P2ISS, P2IT, P2IM, P2IIK, P2ERR, P2ILL
 from pulse2.database import database_helper
 
-from sqlalchemy import create_engine, ForeignKey, Integer, MetaData, Table, Column, and_, or_, desc
+from sqlalchemy import create_engine, ForeignKey, Integer, MetaData, Table, Column, and_, or_, desc, func
 from sqlalchemy.orm import create_session, mapper, relation
 from sqlalchemy.sql.expression import alias as sa_exp_alias
 from sqlalchemy.exceptions import InvalidRequestError
@@ -776,11 +776,13 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def getLastMenuItemOrder(self, menu_id):
         session = create_session()
-        q = session.query(MenuItem).filter(self.menu_item.c.fk_menu == menu_id).max(self.menu_item.c.order)
+        #q = session.query(MenuItem).filter(self.menu_item.c.fk_menu == menu_id).max(self.menu_item.c.order)
+        q = session.query(func.max(self.menu_item.c.order)).filter(self.menu_item.c.fk_menu == menu_id)
+        ret = q.first()
         session.close()
-        if q == None:
+        if ret == None:
             return -1
-        return q
+        return ret[0]
 
     def countMenuContentFast(self, menu_id): # get P2IM.ALL and empty filter
         session = create_session()

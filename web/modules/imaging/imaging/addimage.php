@@ -57,6 +57,7 @@ if (isset($_POST["bconfirm"])) {
         header("Location: ".urlStrRedirect("base/computers/".$type."imgtabs/".$type."tabimages", $params));
     } else {
         new NotifyWidgetFailure($ret[1]);
+        header("Location: ".urlStrRedirect("base/computers/".$type."imgtabs/".$type."tabimages", $params));
     }
 }
 
