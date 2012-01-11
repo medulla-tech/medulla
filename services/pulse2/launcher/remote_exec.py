@@ -131,7 +131,7 @@ def remote_pull(command_id, client, files_list, mode, wrapper_timeout):
         thru_command_list += [ "%s@%s" % (client['user'], client['host'])]
 
         # Build "exec" command
-        real_command  = LauncherConfig().wget_path
+        real_command  = [LauncherConfig().wget_path]
         real_command += client['proto_args']
         real_command += ['-N']
         real_command += files_list
