@@ -108,3 +108,9 @@ class ContextMaker(ContextMakerI):
 
 class RpcProxy(ImagingRpcProxy):
     pass
+
+class ImagingException(Exception):
+    pass
+
+class NoImagingServerError(ImagingException):
+    pass

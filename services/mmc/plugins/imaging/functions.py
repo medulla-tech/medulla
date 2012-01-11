@@ -33,6 +33,7 @@ import re
 from mmc.support.mmctools import xmlrpcCleanup
 from mmc.support.mmctools import RpcProxyI #, ContextMakerI, SecurityContext
 from mmc.plugins.imaging.config import ImagingConfig
+from mmc.plugins.imaging import NoImagingServerError
 from mmc.plugins.base.computers import ComputerManager
 from pulse2.managers.profile import ComputerProfileManager
 from pulse2.managers.location import ComputerLocationManager
@@ -1640,15 +1641,8 @@ class ImagingRpcProxy(RpcProxyI):
         """
         try:
             ret = ImagingDatabase().getMyMenuTarget(uuid, target_type)
-        except Exception, e:
-            try:
-                emsg = e.message
-            except AttributeError:
-                emsg = str(e)
-            if re.match("can't get any default menu for this entity ", emsg):
-                return [False, 'ERROR', P2ERR.ERR_NEED_IMAGING_SERVER_REGISTRATION, "You first need to register your imaging server."]
-            else:
-                raise e
+        except NoImagingServerError, e:
+            return [False, 'ERROR', P2ERR.ERR_NEED_IMAGING_SERVER_REGISTRATION, "You first need to register your imaging server."]
         if ret[1]:
             ret[1] = ret[1].toH()
         return ret
