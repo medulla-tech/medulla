@@ -31,7 +31,7 @@
 KEY_PATH ?= id_rsa.pub
 key = id_rsa.pub
 
-agents_version = 1.3.1.1
+agents_version = 1.3.0
 base_url = http://pulse2.mandriva.org/pub/pulse2/client/windows/win32
 
 # Directory to look for individual agents
@@ -49,7 +49,7 @@ inv1_version = 4.0.6.1.1
 inv1_name = inventory-agent-$(inv1_version).exe
 inv1_url = $(base_url)/inventory-agent/$(inv1_name)
 
-installer_version = $(agents_version)
+installer_version = 1.3.1.1
 installer_name = pulse2-win32-agents-installer-$(installer_version).exe
 installer_url = $(base_url)/pulse2-win32-agents-installer/$(installer_name)
 
@@ -64,7 +64,7 @@ agents_pack_files = \
 	$(subagents) \
 	remote-desktop-agent-vnc2.reg
 
-7z = $(shell which 7z) -l
+7z = 7z -l
 
 edit = sed -e 's|@installername[@]|$(installer_name)|g'
 
