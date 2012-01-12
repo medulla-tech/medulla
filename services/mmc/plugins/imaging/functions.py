@@ -2505,7 +2505,7 @@ def getJustOneMacPerComputer(ctx, macs):
             mac = macs[uuid]
             if len(macs[uuid]) != 1:
                 mac = chooseMacAddress(ctx, uuid, macs[uuid])
-            ret[uuid] = [mac]
+            ret[uuid] = mac
     return ret
 
 def synchroComputers(ctx, uuids, ctype = P2IT.COMPUTER):
