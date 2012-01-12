@@ -319,17 +319,14 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         except KeyError:
             pass
 
-        log.debug('### Query: %s' % groups)
         result = groups.all()
         ret = []
+        # For each group check if the user is the owner of the group
+        # (ie; the user that has created the group)
         for m in result:
-            # be very defensive, as I don't know what is in these objects
-            # TODO: know what's in...
-            if hasattr(m[0], 'is_owner'):
-                setattr(m[0], 'is_owner', m[1]==ctx.userid)
-                ret.append(m[0])
-            else:
-                ret.append(m[0])
+            if m[1] == ctx.userid:
+                m[0].is_owner = True
+            ret.append(m[0])
 
         session.close()
         return ret
