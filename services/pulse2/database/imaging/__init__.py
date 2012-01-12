@@ -44,10 +44,13 @@ from sqlalchemy.exceptions import InvalidRequestError
 from pulse2.managers.profile import ComputerProfileManager
 from pulse2.managers.location import ComputerLocationManager
 
-from mmc.plugins.imaging import NoImagingServerError
-
 DATABASEVERSION = 1
 
+class ImagingException(Exception):
+    pass
+
+class NoImagingServerError(ImagingException):
+    pass
 
 class ImagingDatabase(DyngroupDatabaseHelper):
     """
