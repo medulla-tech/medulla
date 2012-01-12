@@ -72,7 +72,7 @@ class ISOImage:
                     self.target += '-' + str(i)
                     break
                 i += 1
-        self.size = size
+        self.size = int(size) # size is given as string, and we need it in B
         self.tempdir = tempfile.mkdtemp('pulse2-iso')
         self.medialist = {}
 
@@ -137,6 +137,9 @@ class ISOImage:
         """
         Fill the medialist dict with needed value to build the ISO image
         """
+
+        logging.getLogger('imaging').info("Iso image : starting volumes generation, max size is %s" % (self.size))
+
         grubfile = os.path.join(self.config.imaging_api['base_folder'],
                                 self.config.imaging_api['bootloader_folder'],
                                 self.config.imaging_api['cdrom_bootloader'])
@@ -164,6 +167,8 @@ class ISOImage:
                 filesize = os.stat(filepath).st_size
                 if medialist[medianumber]['mediasize'] + filesize > self.size:
                     medianumber += 1
+                    logging.getLogger('imaging').info("Iso image : max size of %s reached, stopping at %s and switching to volume %s" % \
+                                                      (self.size, medialist[medianumber-1]['mediasize'], medianumber))
                     medialist[medianumber] = {'mediasize': 0, 'files': {}, 'opts': ''}
                 medialist[medianumber]['mediasize'] += filesize
                 medialist[medianumber]['files'][len(medialist[medianumber]['files'])] = { 'src': filepath, 'dst': name }
