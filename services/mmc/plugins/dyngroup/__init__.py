@@ -76,7 +76,7 @@ def activate():
 def activate_2():
     if isDynamicEnable():
         logger = logging.getLogger()
-        logger.warning("Plugin dyngroup: dynamic groups are enabled")
+        logger.info("Plugin dyngroup: dynamic groups are enabled")
         global queryManager
         queryManager = QueryManager()
         queryManager.activate()
