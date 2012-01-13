@@ -60,7 +60,7 @@ CREATE TABLE User (
   uid VARCHAR(255) NOT NULL,
   PRIMARY KEY (id),
   UNIQUE (uid)
-);
+) ENGINE=MYISAM;
 
 -- User to entites table
 CREATE TABLE UserEntities (
@@ -69,7 +69,7 @@ CREATE TABLE UserEntities (
   PRIMARY KEY (fk_User, fk_Entity),
   FOREIGN KEY (fk_User) REFERENCES User(id),
   FOREIGN KEY (fk_Entity) REFERENCES Entity(id)
-);
+) ENGINE=MYISAM;
 
 -- Initialize the Entity table with the root entity
 INSERT INTO Entity (Label, parentId) VALUES ("root", 1);

@@ -40,7 +40,7 @@ CREATE TABLE Bios (
   SmbUUID varchar(32) default NULL,
   SmbType varchar(32) default NULL,
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 CREATE INDEX bios_serial_idx ON `Bios` (Serial(64));
 
@@ -55,7 +55,7 @@ CREATE TABLE Controller (
   HardwareVersion varchar(16) default NULL,
   StandardType varchar(16) default NULL,
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 CREATE INDEX controller_expandedType_idx ON `Controller` (ExpandedType(32));
 CREATE INDEX controller_vendor_idx ON `Controller` (Vendor(128));
@@ -74,7 +74,7 @@ CREATE TABLE CustomField (
   PRIMARY KEY  (id),
   KEY machine (machine),
   KEY Keyf (Field)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 --
 -- Table structure for table `Drive` (Logical drives)
@@ -90,7 +90,7 @@ CREATE TABLE Drive (
   FileSystem varchar(16) default NULL,
   FileCount mediumint(16) default NULL,
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 --
 -- Table structure for table `Hardware`
@@ -116,7 +116,7 @@ CREATE TABLE Hardware (
   Description varchar(64) default NULL,
   Type varchar(32) default NULL,
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 --
 -- Table structure for table `Input`
@@ -131,7 +131,7 @@ CREATE TABLE Input (
   Manufacturer varchar(64) default NULL,
   PointType varchar(64) default NULL,
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 --
 -- Table structure for table `Inventory`
@@ -142,7 +142,7 @@ CREATE TABLE Inventory (
   Date date NOT NULL default '0000-00-00',
   Time time NOT NULL default '00:00:00',
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 --
 -- Table structure for table `Machine`
@@ -156,7 +156,7 @@ CREATE TABLE Machine (
   lastCustomId mediumint(8) unsigned,
   lastNmapId mediumint(8) unsigned,
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 --
 -- Table structure for table `Memory`
@@ -171,7 +171,7 @@ CREATE TABLE Memory (
   SlotCount varchar(16) default NULL,
   Description varchar(64) default NULL,
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 --
 -- Table structure for table `Modem`
@@ -184,7 +184,7 @@ CREATE TABLE Modem (
   Type varchar(32) default NULL,
   Model varchar(64) default NULL,
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 --
 -- Table structure for table `Monitor`
@@ -198,7 +198,7 @@ CREATE TABLE Monitor (
   Serial varchar(32) default NULL,
   Manuf varchar(32) default NULL,
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 --
 -- Table structure for table `Network`
@@ -217,7 +217,7 @@ CREATE TABLE Network (
   Gateway varchar(16) default NULL,
   DNS varchar(16) default NULL,
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 --
 -- Table structure for table `Pci`
@@ -232,7 +232,7 @@ CREATE TABLE Pci (
   Class varchar(32) default NULL,
   Type varchar(32) default NULL,
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 --
 -- Table structure for table `Port`
@@ -245,7 +245,7 @@ CREATE TABLE Port (
   Caption varchar(32) default NULL,
   Description varchar(32) default NULL,
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 --
 -- Table structure for table `Printer`
@@ -257,7 +257,7 @@ CREATE TABLE Printer (
   Driver varchar(64) default NULL,
   Port varchar(64) default NULL,
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 --
 -- Table structure for table `Slot`
@@ -270,7 +270,7 @@ CREATE TABLE Slot (
   Availability varchar(16) default NULL,
   State varchar(16) default NULL,
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 --
 -- Table structure for table `Software`
@@ -287,7 +287,7 @@ CREATE TABLE Software (
   ProductVersion varchar(32) default NULL,
   Comments varchar(255) default NULL,
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 CREATE INDEX soft_ProductPath_idx ON Software (ProductPath(255));
 CREATE INDEX soft_ProductName_idx ON Software (ProductName(64));
@@ -309,7 +309,7 @@ CREATE TABLE Sound (
   Description varchar(128) default NULL,
   Manufacturer varchar(128) default NULL,
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 CREATE INDEX sound_name_idx ON Sound (Name(64));
 CREATE INDEX sound_description_idx ON Sound (Description(128));
@@ -329,7 +329,7 @@ CREATE TABLE Storage (
   Manufacturer varchar(64) default NULL,
   DiskSize varchar(32) default NULL,
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 --
 -- Table structure for table `Version`
@@ -337,7 +337,7 @@ CREATE TABLE Storage (
 
 CREATE TABLE Version (
   Number tinyint(4) unsigned NOT NULL default '0'
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 --
 -- Table structure for table `VideoCard`
@@ -350,7 +350,7 @@ CREATE TABLE VideoCard (
   VRAMSize mediumint(8) default NULL,
   Resolution varchar(255) default NULL,
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 --
 -- Table structure for table `hasBios`
@@ -361,7 +361,7 @@ CREATE TABLE hasBios (
   inventory mediumint(5) unsigned NOT NULL default '0',
   bios int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (machine,inventory,bios)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 --
 -- Table structure for table `hasController`
@@ -372,7 +372,7 @@ CREATE TABLE hasController (
   inventory mediumint(5) unsigned NOT NULL default '0',
   controller int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (machine,inventory,controller)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 --
 -- Table structure for table `hasDrive`
@@ -383,7 +383,7 @@ CREATE TABLE hasDrive (
   inventory mediumint(5) unsigned NOT NULL default '0',
   drive int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (machine,inventory,drive)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 --
 -- Table structure for table `hasHardware`
@@ -394,7 +394,7 @@ CREATE TABLE hasHardware (
   inventory mediumint(5) unsigned NOT NULL default '0',
   hardware int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (machine,inventory,hardware)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 --
 -- Table structure for table `hasInput`
@@ -405,7 +405,7 @@ CREATE TABLE hasInput (
   inventory mediumint(5) unsigned NOT NULL default '0',
   input int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (machine,inventory,input)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 --
 -- Table structure for table `hasMemory`
@@ -416,7 +416,7 @@ CREATE TABLE hasMemory (
   inventory mediumint(5) unsigned NOT NULL default '0',
   memory int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (machine,inventory,memory)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 --
 -- Table structure for table `hasModem`
@@ -427,7 +427,7 @@ CREATE TABLE hasModem (
   inventory mediumint(5) unsigned NOT NULL default '0',
   modem int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (machine,inventory,modem)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 --
 -- Table structure for table `hasMonitor`
@@ -438,7 +438,7 @@ CREATE TABLE hasMonitor (
   inventory mediumint(5) unsigned NOT NULL default '0',
   monitor int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (machine,inventory,monitor)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 --
 -- Table structure for table `hasNetwork`
@@ -449,7 +449,7 @@ CREATE TABLE hasNetwork (
   inventory mediumint(5) unsigned NOT NULL default '0',
   network int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (machine,inventory,network)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 --
 -- Table structure for table `hasPci`
@@ -460,7 +460,7 @@ CREATE TABLE hasPci (
   inventory mediumint(5) unsigned NOT NULL default '0',
   pci int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (machine,inventory,pci)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 
 --
@@ -472,7 +472,7 @@ CREATE TABLE hasPort (
   inventory mediumint(5) unsigned NOT NULL default '0',
   port int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (machine,inventory,port)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 --
 -- Table structure for table `hasPrinter`
@@ -483,7 +483,7 @@ CREATE TABLE hasPrinter (
   inventory mediumint(5) unsigned NOT NULL default '0',
   printer int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (machine,inventory,printer)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 --
 -- Table structure for table `hasSlot`
@@ -494,7 +494,7 @@ CREATE TABLE hasSlot (
   inventory mediumint(5) unsigned NOT NULL default '0',
   slot int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (machine,inventory,slot)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 --
 -- Table structure for table `hasSoftware`
@@ -505,7 +505,7 @@ CREATE TABLE hasSoftware (
   inventory mediumint(5) unsigned NOT NULL default '0',
   software int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (machine,inventory,software)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 CREATE INDEX hassoft_machine_idx ON hasSoftware (machine);
 CREATE INDEX hassoft_inventory_idx ON hasSoftware (inventory);
@@ -520,7 +520,7 @@ CREATE TABLE hasSound (
   inventory mediumint(5) unsigned NOT NULL default '0',
   sound int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (machine,inventory,sound)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 --
 -- Table structure for table `hasStorage`
@@ -531,7 +531,7 @@ CREATE TABLE hasStorage (
   inventory mediumint(5) unsigned NOT NULL default '0',
   storage int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (machine,inventory,storage)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 --
 -- Table structure for table `hasVideoCard`
@@ -542,7 +542,7 @@ CREATE TABLE hasVideoCard (
   inventory mediumint(5) unsigned NOT NULL default '0',
   videocard int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (machine,inventory,videocard)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 --
 --

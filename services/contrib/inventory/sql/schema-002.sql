@@ -30,7 +30,7 @@ CREATE TABLE Registry (
   id int(11) unsigned NOT NULL auto_increment,
   Value varchar(128) default NULL,
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 --
 -- Table structure for table `nomRegistryKey`
@@ -40,7 +40,7 @@ CREATE TABLE nomRegistryPath (
   id int(11) unsigned NOT NULL auto_increment,
   Path varchar(128) default NULL,
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 --
 -- Table structure for table `hasRegistry`
@@ -52,7 +52,7 @@ CREATE TABLE hasRegistry (
   registry int(11) unsigned NOT NULL default '0',
   path int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (machine,inventory,registry,path)
-) TYPE=MyISAM;
+) ENGINE=MYISAM;
 
 
 ALTER TABLE Software MODIFY ProductName VarChar(256) default NULL;
