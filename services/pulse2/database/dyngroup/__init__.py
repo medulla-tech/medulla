@@ -216,7 +216,7 @@ class DyngroupDatabase(DatabaseHelper):
         """
         if not session:
             session = create_session()
-        users = session.query(Users).select_from(self.users.join(self.share).join(self.groups)).filter(self.groups.c.id == gid).all()
+        users = session.query(Users).select_from(self.users.join(self.shareGroup).join(self.groups)).filter(self.groups.c.id == gid).all()
         return users
 
     def getUsersType(self, id):

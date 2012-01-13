@@ -396,6 +396,8 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         session.close()
         # Delete the previous results for this group in the Results table
         connection.execute(self.results.delete(self.results.c.FK_groups == id))
+        # Delete all shares on the group before delete group
+        self.__deleteShares(id, session)
         # Update the Machines table to remove ghost records
         self.__updateMachinesTable(connection, to_delete)
         # Delete the group from the Groups table
