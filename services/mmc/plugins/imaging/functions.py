@@ -2689,12 +2689,16 @@ def chooseImagingApiUrl(location):
 def generateMenusContent(menu, menu_items, loc_uuid, target_uuid = None, h_pis = {}):
     menu['bootservices'] = {}
     menu['images'] = {}
+    default_item_counter = 0 # keep track of the item number to generate a relative default menu entry number
+    wol_item_counter = 0 # same for wol
     for mi in menu_items:
         if menu['fk_default_item'] == mi.id:
-            menu['default_item'] = mi.order
+            menu['default_item'] = default_item_counter
         if menu['fk_default_item_WOL'] == mi.id:
-            menu['default_item_WOL'] = mi.order
-            menu['default_item_wol'] = mi.order # TODO : remove
+            menu['default_item_WOL'] = wol_item_counter
+            menu['default_item_wol'] = wol_item_counter # TODO : remove
+        default_item_counter += 1
+        wol_item_counter += 1
         mi = mi.toH()
         if mi.has_key('image'):
             if h_pis.has_key(mi['image']['id']):
