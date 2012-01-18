@@ -674,16 +674,15 @@ class LdapUserGroupControl:
                 fd, tmpname = tempfile.mkstemp()
                 try:
                     fob = os.fdopen(fd, "wb")
-                    result_set = self.search("uid=" + uid, self.baseUsersDN, None, ldap.SCOPE_ONELEVEL)
-                    dn = result_set[0][0][0]
-                    entries = result_set[0][0][1]
+                    dn = self.searchUserDN(uid)
+                    entry = self.getUserEntry(uid)
                     if password:
                         if isinstance(password, xmlrpclib.Binary):
                             password = str(password)
                         # Put user password in clear text in ldif
-                        entries["userPassword"] = [password]
+                        entry["userPassword"] = [password]
                     writer = ldif.LDIFWriter(fob)
-                    writer.unparse(dn, entries)
+                    writer.unparse(dn, entry)
                     fob.close()
                     mmctools.shlaunch(self.hooks[hookName] + " " + tmpname)
                 finally:
@@ -698,15 +697,15 @@ class LdapUserGroupControl:
         @param login: login of the user
         @type login: str
         """
-        dn = 'uid=' + login + ',' + self.baseUsersDN
+        userdn = self.searchUserDN(login)
         attr = 'loginShell'
-        r = AF().log(PLUGIN_NAME, AA.BASE_ENABLE_USER, [(dn, AT.USER), (attr, AT.ATTRIBUTE)])
-        s = self.l.search_s(dn, ldap.SCOPE_BASE)
+        r = AF().log(PLUGIN_NAME, AA.BASE_ENABLE_USER, [(userdn, AT.USER), (attr, AT.ATTRIBUTE)])
+        s = self.l.search_s(userdn, ldap.SCOPE_BASE)
         c, old = s[0]
         new = old.copy()
         new[attr] = self.defaultShellEnable
         modlist = ldap.modlist.modifyModlist(old, new)
-        self.l.modify_s(dn, modlist)
+        self.l.modify_s(userdn, modlist)
         r.commit()
         return 0
 
@@ -717,15 +716,15 @@ class LdapUserGroupControl:
         @param login: login of the user
         @type login: str
         """
-        dn = 'uid=' + login + ',' + self.baseUsersDN
+        userdn = self.searchUserDN(login)
         attr = 'loginShell'
-        r = AF().log(PLUGIN_NAME, AA.BASE_DISABLE_USER, [(dn, AT.USER), (attr, AT.ATTRIBUTE)])
-        s = self.l.search_s(dn, ldap.SCOPE_BASE)
+        r = AF().log(PLUGIN_NAME, AA.BASE_DISABLE_USER, [(userdn, AT.USER), (attr, AT.ATTRIBUTE)])
+        s = self.l.search_s(userdn, ldap.SCOPE_BASE)
         c, old = s[0]
         new = old.copy()
         new["loginShell"] = self.defaultShellDisable
         modlist = ldap.modlist.modifyModlist(old, new)
-        self.l.modify_s(dn, modlist)
+        self.l.modify_s(userdn, modlist)
         r.commit()
         return 0
 
@@ -1181,7 +1180,7 @@ class LdapUserGroupControl:
             if log:
                 r = AF().log(PLUGIN_NAME, AA.BASE_DEL_USER_ATTR, [(userdn, AT.USER), (attr,AT.ATTRIBUTE)])
             try:
-                self.l.modify_s('uid='+uid+','+ self.baseUsersDN, [(ldap.MOD_DELETE,attr, None)])
+                self.l.modify_s(userdn, [(ldap.MOD_DELETE,attr, None)])
                 if log:
                     r.commit()
             except ldap.NO_SUCH_ATTRIBUTE:
@@ -1379,17 +1378,14 @@ class LdapUserGroupControl:
         @return: full raw ldap array (dictionnary of lists)
         @type: dict
         """
-        if not base: base = self.baseUsersDN
-        cn = 'uid=' + str(uid) + ', ' + base
+        userdn = self.searchUserDN(uid)
         attrs = []
         if operational:
             myattrlist = ['+', '*']
         else:
             myattrlist = None
-        attrib = self.l.search_s(cn, ldap.SCOPE_BASE, attrlist = myattrlist)
-
+        attrib = self.l.search_s(userdn, ldap.SCOPE_BASE, attrlist = myattrlist)
         c,attrs=attrib[0]
-
         newattrs = copy.deepcopy(attrs)
 
         return newattrs
@@ -1435,7 +1431,7 @@ class LdapUserGroupControl:
         if uid == 'root':
             ret = self.config.username
         else:
-            result = self.l.search_s(self.config.baseDN, ldap.SCOPE_SUBTREE, 'uid=' + uid)
+            result = self.l.search_s(self.config.baseUsersDN, ldap.SCOPE_SUBTREE, 'uid=' + uid)
             if result:
                 ret, entry = result[0]
             else:
@@ -1732,7 +1728,7 @@ class LdapUserGroupControl:
         @return: maxUid in ldap directory
         @rtype: int
         """
-        ret = [self.search("uid=*", self.baseDN, ["uidNumber"], ldap.SCOPE_SUBTREE)]
+        ret = [self.search("uid=*", self.baseUsersDN, ["uidNumber"], ldap.SCOPE_SUBTREE)]
 
         # prepare array for processing
         maxuid = 0
@@ -1754,9 +1750,9 @@ class LdapUserGroupControl:
 
     def removeUserObjectClass(self, uid, className):
         # Create LDAP path
-        cn = 'uid=' + uid + ', ' + self.baseUsersDN
+        userdn = self.searchUserDN(uid)
         attrs= []
-        attrib = self.l.search_s(cn, ldap.SCOPE_BASE)
+        attrib = self.l.search_s(userdn, ldap.SCOPE_BASE)
 
         # fetch attributes
         c,attrs=attrib[0]
@@ -1768,14 +1764,14 @@ class LdapUserGroupControl:
             del newattrs["objectClass"][indexRm]
 
         # For all element we can try to delete
-        for entry in self.getAttrToDelete(cn, className):
+        for entry in self.getAttrToDelete(userdn, className):
             for k in newattrs.keys():
                 if k.lower()==entry.lower():
                     del newattrs[k] #delete it
 
         # Apply modification
         mlist = ldap.modlist.modifyModlist(attrs, newattrs)
-        self.l.modify_s(cn, mlist)
+        self.l.modify_s(userdn, mlist)
 
     def removeGroupObjectClass(self, group, className):
         # Create LDAP path
@@ -1963,7 +1959,7 @@ class ldapAuthen:
         if login == 'root':
             username = config.username
         else:
-            username = 'uid=' + login + ', ' + config.baseUsersDN
+            username = self.searchUserDN(login)
         self.userdn = username
 
         # If the passwd has been encoded in the XML-RPC stream, decode it
@@ -2080,9 +2076,9 @@ class GpoManager:
         @param gpoName: name of the GPO
         @uid: uid of the user name
         """
-        dn = "uid=" + uid + "," + self.l.baseUsersDN
+        userdn = self.searchUserDN(uid)
         try:
-            self.l.l.modify_s( self._getGpoDN(gpoName), [(ldap.MOD_ADD, 'member', dn)])
+            self.l.l.modify_s( self._getGpoDN(gpoName), [(ldap.MOD_ADD, 'member', userdn)])
         except ldap.TYPE_OR_VALUE_EXISTS:
             # Value already set
             pass
@@ -2094,9 +2090,9 @@ class GpoManager:
         @param gpoName: name of the GPO
         @param uid: uid of the user name
         """
-        dn = "uid=" + uid + "," + self.l.baseUsersDN
+        userdn = self.searchUserDN(uid)
         try:
-            self.l.l.modify_s(self._getGpoDN(gpoName), [(ldap.MOD_DELETE, 'member', dn)])
+            self.l.l.modify_s(self._getGpoDN(gpoName), [(ldap.MOD_DELETE, 'member', userdn)])
         except ldap.NO_SUCH_ATTRIBUTE:
             # Value already deleted
             pass
