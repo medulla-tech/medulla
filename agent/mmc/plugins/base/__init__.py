@@ -976,7 +976,7 @@ class LdapUserGroupControl:
         if not self.isAuthorizedHome(os.path.realpath(homeDir)):
             raise Exception(homeDir + " is not an authorized home dir.")
         # Return homedir path
-        if checkExists:
+        if checkExists and self.userHomeAction:
             if not os.path.exists(homeDir):
                 return homeDir
             else:
