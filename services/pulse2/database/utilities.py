@@ -23,7 +23,7 @@
 
 from sqlalchemy import *
 from sqlalchemy.orm import *
-from sqlalchemy.exceptions import SQLError
+from sqlalchemy.exc import DBAPIError
 
 import logging
 
@@ -110,7 +110,7 @@ def create_method(m):
             old_m = getattr(self, '_old_%s' % m)
             ret = old_m() # success, will send the result back
             return ret # send the result back
-        except SQLError, e: # failure, catch libmysql client error
+        except DBAPIError, e: # failure, catch libmysql client error
             if already_in_loop : # just raise the exception, they will take care of it
                 raise e
 

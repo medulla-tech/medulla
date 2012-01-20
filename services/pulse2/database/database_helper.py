@@ -29,8 +29,7 @@ pulse2 modules.
 
 from pulse2.utils import Singleton
 from pulse2.database.sqlalchemy_tests import checkSqlalchemy, SA_MAJOR, SA_MINOR
-from sqlalchemy.exceptions import SQLError
-from sqlalchemy.exceptions import NoSuchTableError
+from sqlalchemy.exc import DBAPIError, NoSuchTableError
 
 import logging
 NB_DB_CONN_TRY = 2
@@ -116,7 +115,7 @@ class DatabaseHelper(Singleton):
         for i in range(NB_DB_CONN_TRY):
             try:
                 ret = self.db.connect()
-            except SQLError, e:
+            except DBAPIError, e:
                 self.logger.error(e)
             except Exception, e:
                 self.logger.error(e)

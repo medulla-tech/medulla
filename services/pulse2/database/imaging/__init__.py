@@ -38,7 +38,7 @@ from pulse2.database import database_helper
 from sqlalchemy import create_engine, ForeignKey, Integer, MetaData, Table, Column, and_, or_, desc, func
 from sqlalchemy.orm import create_session, mapper, relation
 from sqlalchemy.sql.expression import alias as sa_exp_alias
-from sqlalchemy.exceptions import InvalidRequestError
+from sqlalchemy.exc import InvalidRequestError
 
 # THAT REQUIRE TO BE IN A MMC SCOPE, NOT IN A PULSE2 ONE
 from pulse2.managers.profile import ComputerProfileManager

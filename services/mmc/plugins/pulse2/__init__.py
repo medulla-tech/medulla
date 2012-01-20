@@ -25,7 +25,7 @@ give a central access to the Managers that can be needed by pulse2 modules
 """
 
 # SqlAlchemy
-from sqlalchemy.exceptions import SQLError
+from sqlalchemy.exc import DBAPIError
 import sqlalchemy.orm.query
 
 import logging
@@ -88,13 +88,13 @@ def create_method(m):
         try:
             old_m = getattr(self, '_old_'+m)
             ret = old_m()
-        except SQLError, e:
+        except DBAPIError, e:
             reconnect = False
             if e.orig.args[0] == 2013 and not already_in_loop: # Lost connection to MySQL server during query error
-                logging.getLogger().warn("SQLError Lost connection")
+                logging.getLogger().warn("DBAPIError Lost connection")
                 reconnect = True
             elif e.orig.args[0] == 2006 and not already_in_loop: # MySQL server has gone away
-                logging.getLogger().warn("SQLError MySQL server has gone away")
+                logging.getLogger().warn("DBAPIError MySQL server has gone away")
                 reconnect = True
             if reconnect:
                 for i in range(0, NB_DB_CONN_TRY):

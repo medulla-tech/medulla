@@ -33,7 +33,7 @@ import time
 from sqlalchemy import *
 from sqlalchemy.orm import *
 from sqlalchemy.sql import union
-from sqlalchemy.exceptions import NoSuchTableError, TimeoutError
+from sqlalchemy.exc import NoSuchTableError, TimeoutError
 
 # ORM mappings
 from pulse2.database.msc.orm.commands import Commands
