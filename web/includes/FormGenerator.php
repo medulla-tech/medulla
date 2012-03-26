@@ -1094,7 +1094,7 @@ class TrFormElement extends FormElement {
             if ($arrParam["value"] == "checked")
                 $old_value = "on";
             else
-                $old_value = (string)$arrParam["value"];
+                $old_value = $arrParam["value"];
         }
         else {
             $old_value = "";
@@ -1108,7 +1108,6 @@ class TrFormElement extends FormElement {
         else {
             $field_name = "";
         }
-
         if ($field_name && is_string($old_value)) {
             print '<input type="hidden" name="old_'.$field_name.'" value="'.$old_value.'" />';
         }
