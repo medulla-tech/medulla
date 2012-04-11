@@ -37,7 +37,7 @@ base_url = http://pulse2.mandriva.org/pub/pulse2/client/windows/win32
 # Directory to look for individual agents
 clientdir = @localstatedir@/lib/pulse2/clients/win32
 
-sa_version = 2.0.2
+sa_version = 2.0.2.1
 sa_name = pulse2-secure-agent-$(sa_version).exe
 sa_url = $(base_url)/pulse2-secure-agent/$(sa_name)
 

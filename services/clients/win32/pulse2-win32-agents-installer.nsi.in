@@ -27,7 +27,7 @@
 
 ; Agents defines
 !define SSH_AGENT_NAME "pulse2-secure-agent"
-!define SSH_AGENT_VERSION "2.0.2"
+!define SSH_AGENT_VERSION "2.0.2.1"
 !define SSH_AGENT_EXE "${SSH_AGENT_NAME}-${SSH_AGENT_VERSION}.exe"
 !define VNC_AGENT_NAME "pulse2-rda-agent"
 !define VNC_AGENT_VERSION "2.0.2"
@@ -51,6 +51,10 @@
 
 ; Variable to store from where the 7sfx archive has been run
 Var /GLOBAL ARCHIVE_DIR
+
+; Address of the inventory server
+Var /GLOBAL INV_SERVER
+Var /GLOBAL INV_SERVER_PORT
 
 ; MUI settings
 !define MUI_ABORTWARNING
@@ -143,35 +147,37 @@ SectionEnd
 Section "Inventory Agent" Inventory
   DetailPrint "Inventory Agent Installation...."
   DetailPrint "------------------------------------------------------"
-  ReadINIStr $0 "$PLUGINSDIR\inventoryoptions.ini" "Field 3" "State"
-  ${If} $0 == ""
-    MessageBox MB_OK|MB_ICONEXCLAMATION "Pulse2 Inventory server IP address is empty! $\n\
+
+  ${IfNot} ${Silent}
+    ReadINIStr $0 "$PLUGINSDIR\inventoryoptions.ini" "Field 3" "State"
+    ${If} $0 == ""
+      MessageBox MB_OK|MB_ICONEXCLAMATION "Pulse2 Inventory server IP address is empty! $\n\
 Please fill the field with the right IP address."
-    Abort
-  ${EndIf}
-  ReadINIStr $1 "$PLUGINSDIR\inventoryoptions.ini" "Field 5" "State"
-  ${If} $1 == ""
-    MessageBox MB_OK|MB_ICONEXCLAMATION "Pulse2 Inventory server port is empty! $\n\
+      Abort
+    ${EndIf}
+    StrCpy $INV_SERVER $0
+    ReadINIStr $1 "$PLUGINSDIR\inventoryoptions.ini" "Field 5" "State"
+    ${If} $1 == ""
+      MessageBox MB_OK|MB_ICONEXCLAMATION "Pulse2 Inventory server port is empty! $\n\
 Please fill the field with the right port."
-    Abort
-  ${EndIf}
-  StrCpy $0 "$EXEDIR\${INVENTORY_AGENT_EXE} /S /NP /NOSPLASH /NOTAG /SERVER:$0 /PNUM:$1"
+      Abort
+    ${EndIf}
+    StrCpy $INV_SERVER_PORT $1
+  ${EndIF}
+
+  StrCpy $0 "$EXEDIR\${INVENTORY_AGENT_EXE} /S /NP /NOSPLASH /NOTAG /SERVER:$INV_SERVER /PNUM:$INV_SERVER_PORT"
   DetailPrint "Running $0"
   nsExec::ExecToLog $0
   Delete "$EXEDIR\OcsAgentSetup.log"
   DetailPrint "Creating registry key for inventory at logon time"
   ReadRegStr $0 HKLM "SYSTEM\CurrentControlSet\Services\OCS INVENTORY" "ImagePath"
   ${GetParent} $0 $1
-  ReadINIStr $2 "$PLUGINSDIR\inventoryoptions.ini" "Field 3" "State"
-  ReadINIStr $3 "$PLUGINSDIR\inventoryoptions.ini" "Field 5" "State"
-  WriteRegStr "HKLM" "SOFTWARE\Microsoft\Windows\CurrentVersion\Run" "OCS-Inventory agent" '$1\OCSInventory.exe" /SERVER:$2 /PNUM:$3 /NP /NOTAG /DEBUG'
+  WriteRegStr "HKLM" "SOFTWARE\Microsoft\Windows\CurrentVersion\Run" "OCS-Inventory agent" '$1\OCSInventory.exe" /SERVER:$INV_SERVER /PNUM:$INV_SERVER_PORT /NP /NOTAG /DEBUG'
   ; Start an inventory
   DetailPrint "Creating initial inventory"
   ReadRegStr $0 HKLM "SYSTEM\CurrentControlSet\Services\OCS INVENTORY" "ImagePath"
   ${GetParent} $0 $1
-  ReadINIStr $2 "$PLUGINSDIR\inventoryoptions.ini" "Field 3" "State"
-  ReadINIStr $3 "$PLUGINSDIR\inventoryoptions.ini" "Field 5" "State"
-  StrCpy $4 '$1\OCSInventory.exe" /SERVER:$2 /PNUM:$3 /NP /NOTAG'
+  StrCpy $4 '$1\OCSInventory.exe" /SERVER:$INV_SERVER /PNUM:$INV_SERVER_PORT /NP /NOTAG'
   DetailPrint "Runnning $4"
   nsExec::ExecToLog $4
   DetailPrint ""
@@ -194,6 +200,19 @@ Function .onInit
   ; Handle /A option
   ${GetOptions} $R0 "/A=" $0
   StrCpy $ARCHIVE_DIR $0
+  ; Handle /S option
+  ${GetOptions} $R0 /S $0
+  ${If} ${Errors} ; "Silent mode" flag not set
+    SetSilent normal
+  ${Else} ; "Silent mode" flag set
+    SetSilent silent
+  ${EndIf}
+  ; Handle /INV_SERVER option
+  ${GetOptions} $R0 /INV_SERVER $0
+  StrCpy $INV_SERVER $0
+  ; Handle /INV_SERVER_PORT option
+  ${GetOptions} $R0 /INV_SERVER_PORT $0
+  StrCpy $INV_SERVER_PORT $0
   ; Required for custom pages
   !insertmacro MUI_INSTALLOPTIONS_EXTRACT "inventoryoptions.ini"
   ; Forbid ssh installation if the installer is missing
