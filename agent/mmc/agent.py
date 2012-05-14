@@ -475,7 +475,6 @@ class MMCApp(object):
                 self.lock.release()
 
         if ret:
-            self.cleanPid()
             return ret
 
         reactor.run()
