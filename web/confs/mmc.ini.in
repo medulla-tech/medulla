@@ -42,6 +42,8 @@ es_ES =
 [server_01]
 description = localhost
 url = https://127.0.0.1:7080
+; Show the "Forgot password" link on the login page for this server
+forgotPassword = no
 ; Timeout in seconds for all socket I/O operations
 ; Beware that timeout on a SSL socket only works with PHP >= 5.2.1
 ; timeout = 300
