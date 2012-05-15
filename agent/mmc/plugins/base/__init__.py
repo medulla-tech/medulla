@@ -1916,7 +1916,7 @@ class LdapUserGroupControl:
         token = "%s#%s#%s#%s#%s" % (str(uuid1()), uid, server, lang, time.time())
         encoded_token = base64.urlsafe_b64encode(token)
         self.logger.debug("Created token for %s : %s" % (uid, encoded_token))
-        tokensdb[user] = encoded_token
+        tokensdb[uid] = encoded_token
         tokensdb.close()
 
         self.runHook("base.usertoken", uid, encoded_token)
