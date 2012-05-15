@@ -1,6 +1,4 @@
-# (c) 2011 Mandriva, http://www.mandriva.com
-#
-# $Id$
+# (c) 2011-2012 Mandriva, http://www.mandriva.com
 #
 # This file is part of Mandriva Management Console (MMC).
 #
@@ -20,6 +18,14 @@
 # Author(s)
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
+
+mmclogdir = $(localstatedir)/log/mmc/
+mmclibdir = $(localstatedir)/lib/mmc/
+
+install-exec-hook:
+	install -d -m 0750 $(mmclogdir)
+	install -d -m 0750 $(mmclibdir)
+
 SUBDIRS = backup-tools bin init.d contrib
 if ENABLE_CONF
 SUBDIRS += conf
