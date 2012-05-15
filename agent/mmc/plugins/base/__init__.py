@@ -49,6 +49,7 @@ from mmc.core.audit import AuditFactory as AF
 from mmc.plugins.base.audit import AA, AT, PLUGIN_NAME
 
 from uuid import uuid1
+import shelve
 import ldap
 import ldif
 import crypt
@@ -57,7 +58,7 @@ import random
 import string
 import re
 import os
-
+import time
 import copy
 import tempfile
 from sets import Set
@@ -82,7 +83,8 @@ APIVERSION = "9:0:5"
 REVISION = scmRevision("$Rev$")
 
 # List of methods that can be called without user authentication
-NOAUTHNEEDED = ['authenticate', 'ldapAuth', 'isCommunityVersion']
+NOAUTHNEEDED = ['authenticate', 'ldapAuth', 'isCommunityVersion',
+                'createAuthToken', 'tokenAuthenticate']
 
 def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION
@@ -189,6 +191,9 @@ def setModList(param):
     """
     global modList
     modList = param
+
+def createAuthToken(user, server, lang):
+    return ldapUserGroupControl().createAuthToken(user, server, lang)
 
 def changeAclAttributes(uid,acl):
     ldapObj = ldapUserGroupControl()
@@ -445,10 +450,6 @@ def getSubscriptionInformation(is_dynamic = False):
 
 def isCommunityVersion():
     return xmlrpcCleanup(SubscriptionManager().isCommunity())
-
-# Status methods
-from mmc.plugins.base.status import getLdapRootDN, getDisksInfos, getMemoryInfos, getUptime, listProcess
-
 
 ###log view accessor
 def getLdapLog(filter = ''):
@@ -1900,6 +1901,55 @@ class LdapUserGroupControl:
             r = AF().log(PLUGIN_NAME, AA.BASE_ADD_OU, [(addrdn, AT.ORGANIZATIONAL_UNIT)])
             r.commit()
 
+    def createAuthToken(self, user, server, lang):
+        if '@' in user:
+            ldapUsers = self.searchUserAdvance('mail=%s' % user)
+        else:
+            ldapUsers = self.searchUserAdvance('uid=%s' % user)
+
+        if ldapUsers[0] == 1:
+            uid = ldapUsers[1][0]['uid']
+        else:
+            return False
+
+        tokensdb = shelve.open(os.path.join(localstatedir, 'lib', 'mmc', 'tokens.db'))
+        token = "%s#%s#%s#%s#%s" % (str(uuid1()), uid, server, lang, time.time())
+        encoded_token = base64.urlsafe_b64encode(token)
+        self.logger.debug("Created token for %s : %s" % (uid, encoded_token))
+        tokensdb[user] = encoded_token
+        tokensdb.close()
+
+        self.runHook("base.usertoken", uid, encoded_token)
+
+        return True
+
+    def validateAuthToken(self, user, token):
+
+        current_timestamp = time.time()
+        try:
+            decoded_token = base64.urlsafe_b64decode(token)
+            uuid, uid, server, lang, timestamp = decoded_token.split("#")
+        except:
+            return False
+
+        if user != uid:
+            return False
+
+        # 5 min expiration
+        if current_timestamp - float(timestamp) > 300:
+            return False
+
+        tokensdb = shelve.open(os.path.join(localstatedir, 'lib', 'mmc', 'tokens.db'))
+        if uid in tokensdb and tokensdb[uid] == token:
+            self.logger.debug("User token is valid")
+            del tokensdb[uid]
+            tokensdb.close()
+            return True
+
+        tokensdb.close()
+        return False
+
+
 ldapUserGroupControl = LdapUserGroupControl
 ###########################################################################################
 ############## ldap authentification
@@ -1959,7 +2009,7 @@ class ldapAuthen:
         if login == 'root':
             username = config.username
         else:
-            username = self.searchUserDN(login)
+            username = LdapUserGroupControl().searchUserDN(login)
         self.userdn = username
 
         # If the passwd has been encoded in the XML-RPC stream, decode it
@@ -2321,6 +2371,11 @@ class RpcProxy(RpcProxyI):
         return d
     ldapAuth = authenticate
 
+    def tokenAuthenticate(self, user, token):
+        d = defer.maybeDeferred(LdapUserGroupControl().validateAuthToken, user, token)
+        d.addCallback(self._cbTokenAuthenticate)
+        return d
+
     def _cbAuthenticate(self, token):
         """
         Callback for authentication.
@@ -2331,6 +2386,9 @@ class RpcProxy(RpcProxyI):
             record = AF().log(PLUGIN_NAME, AA.BASE_AUTH_USER, [(userdn, AT.USER)])
             record.commit()
         return ret
+
+    def _cbTokenAuthenticate(self, result):
+        return result
 
     def hasComputerManagerWorking(self):
         """

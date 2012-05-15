@@ -194,6 +194,19 @@ select#lang {
 	background: url("../../img/common/icn_alert.gif") no-repeat 10px 50% #FFF;
 }
 
+#info  {
+	position: relative;
+	left: 22px;
+	top: 77px;
+	width: 163px;
+	float: left;
+	font: 10px Verdana, Lucida, Geneva, Helvetica, Arial, sans-serif;
+	color: #666;
+	padding: 10px 10px 10px 45px;
+	border: 1px solid #A2A2A2;
+	background: url("../../img/common/big_icn_info.png") no-repeat 10px 50% #FFF;
+}
+
 
 /* licence style */
 

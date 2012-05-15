@@ -121,6 +121,10 @@ function fetchIniFile() {
                 printf("The entry %s is missing the cacert and localcert options.", $key);
                 exit;
             }
+            if (isset($conf[$key]["forgotPassword"]) && $conf[$key]["forgotPassword"])
+                $conf[$key]["forgotPassword"] = true;
+            else
+                $conf[$key]["forgotPassword"] = false;
         }
     }
 

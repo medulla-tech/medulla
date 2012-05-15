@@ -141,7 +141,7 @@ function xmlCall($method, $params = null) {
     $httpQuery .= "Content-Type: text/xml\r\n";
     $httpQuery .= "Content-Length: ". strlen($request) . "\r\n";
     /* Don't set the RPC session cookie if the user is on the login page */
-    if ($method == "base.ldapAuth") {
+    if ($method == "base.ldapAuth" || $method == "base.tokenAuthenticate") {
         unset($_SESSION["RPCSESSION"]);
         $httpQuery .= "X-Browser-IP: " . $_SERVER["REMOTE_ADDR"] . "\r\n";
         $httpQuery .= "X-Browser-HOSTNAME: " . gethostbyaddr($_SERVER["REMOTE_ADDR"]) . "\r\n";
@@ -230,7 +230,11 @@ function xmlCall($method, $params = null) {
     /* Process the received HTTP header */
     $pos = strpos($xmlResponse, "\r\n\r\n");
     $httpHeader = substr($xmlResponse, 0, $pos);
-    if ($method == "base.ldapAuth") {
+    if ($method == "base.ldapAuth" || $method == "base.tokenAuthenticate") {
+        if ($method == "base.tokenAuthenticate")
+            $_SESSION["AUTH_METHOD"] = "token";
+        else
+            $_SESSION["AUTH_METHOD"] = "login";
         /* The RPC server must send us a session cookie */
         if (preg_match("/(TWISTED_SESSION=[0-9a-f]+);/", $httpHeader, $match) > 0) {
             $_SESSION["RPCSESSION"] = $match[1];

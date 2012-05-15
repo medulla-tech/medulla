@@ -60,14 +60,14 @@ function getAclAttr($attr) {
     } else {
         if (!empty($_SESSION["aclattr"][$attr])) {
             $ret = $_SESSION["aclattr"][$attr];
-        } 
+        }
     }
     return $ret;
 }
 
 function hasCorrectAcl($module,$submod,$action) {
     global $noAclArray;
-    if (isset($noAclArray[$module][$submod][$action]) && 
+    if (isset($noAclArray[$module][$submod][$action]) &&
         ($noAclArray[$module][$submod][$action] == 1)) {
         return true;
     }
@@ -104,17 +104,18 @@ function getDefaultPage() {
             foreach($modinfo as $submod => $submodinfo) {
                 foreach($submodinfo as $page => $pageinfo) {
                     # check page is not a popup
-                    if ($MMCApp->_modules[$module]->_submod[$submod]->_pages[$page]->_options['noHeader'] != 1) {
-                        # get url
-                        $url = "main.php?module=$module&submod=$submod&action=$page";
-                        # stop foreach loops
-                        break 3;
+                    if (isset($MMCApp->_modules[$module]->_submod[$submod]->_pages[$page]) &&
+                        $MMCApp->_modules[$module]->_submod[$submod]->_pages[$page]->_options['noHeader'] != 1) {
+                            # get url
+                            $url = "main.php?module=$module&submod=$submod&action=$page";
+                            # stop foreach loops
+                            break 3;
                     }
                 }
             }
         }
     }
-    
+
     if (!isset($url)) return "index.php?error=".urlencode(_("You do not have required rights"));
 
     return $url;

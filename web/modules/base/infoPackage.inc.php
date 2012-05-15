@@ -155,11 +155,15 @@ $page->setFile("modules/base/users/backup.php",
                array("noHeader"=>True,"visible"=>False));
 $submod->addPage($page);
 
-$page = new Page("passwd",_("Change user password"));
-if ($_SESSION["login"]=='root') {
-    $page->setOptions(array("visible"=>False));
+if ($_SESSION["login"] != 'root' || $_SESSION['AUTH_METHOD'] == "token") {
+    $page = new Page("resetpasswd",_("Reset user password"));
+    $submod->addPage($page);
 }
-$submod->addPage($page);
+
+if ($_SESSION["login"] != 'root' && $_SESSION['AUTH_METHOD'] == "login") {
+    $page = new Page("passwd",_("Change user password"));
+    $submod->addPage($page);
+}
 
 $page = new Page("getPhoto", _("Get user photo"));
 $page->setOptions(array("visible"=>False, "noHeader" =>True));

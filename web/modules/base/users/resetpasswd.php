@@ -1,9 +1,7 @@
 <?php
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2008 Mandriva, http://www.mandriva.com
- *
- * $Id$
+ * (c) 2007-2012 Mandriva, http://www.mandriva.com
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -23,7 +21,7 @@
  */
 
 if (isset($_POST["bback"])) {
-    header("Location: ".urlStrRedirect("base/users/index"));
+    header("Location: " . urlStrRedirect("base/users/index"));
     exit;
 }
 require("modules/base/includes/users.inc.php");
@@ -33,38 +31,24 @@ require("graph/navbar.inc.php");
 
 $user = $_SESSION["login"];
 
-$p = new PageGenerator(_("Change your password"));
+$p = new PageGenerator(_("Reset your password"));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-if (isset($_POST["bchpasswd"]) && ($_POST["curpass"] != "") && ($_POST["newpass"] != "") && ($_POST["newpass"] == $_POST["confpass"]) && (check_auth($_SESSION['login'], $_POST["curpass"], $error))) {
-    callPluginFunction("changeUserPasswd", array(array($user, prepare_string($_POST["newpass"]), prepare_string($_POST["curpass"]), True)));
+if (isset($_POST["bchpasswd"]) && $_POST["newpass"] != "" && $_POST["newpass"] == $_POST["confpass"]) {
+    callPluginFunction("changeUserPasswd", array(array($user, prepare_string($_POST["newpass"]), "", False)));
     if (!isXMLRPCError())
         $n = new NotifyWidgetSuccess(_("Your password has been changed."));
     else
         $n = new NotifyWidgetSuccess(_("Failed to change your password. Contact your administrator."));
-
     header("Location: " . urlStrRedirect("base/users/index"));
-
-?>
-
-<form action="<?php echo "main.php?module=base&submod=users&action=index"; ?>" method="post">
-<input type="submit" name="bback" class="btnPrimary" value="<?php echo  _("Change your user's password") ?>" />
-</form>
-
-<?php
 }
-else
-{
+else {
 ?>
-<form action="<?php echo "main.php?module=base&submod=users&action=passwd"; ?>" method="post">
-<p>
-<?php echo  _("You are going to change your password") ?>
-</p>
+<form action="<?php echo "main.php?module=base&submod=users&action=resetpasswd"; ?>" method="post">
+<p><?php echo  _("You are going to change your password") ?></p>
 
 <table cellspacing="0">
-<tr><td><?php echo  _("Current password") ?></td>
-    <td><input name="curpass" type="password" class="textfield" size="23" /></td></tr>
 <tr><td><?php echo  _("New password") ?></td>
     <td><input name="newpass" type="password" class="textfield" size="23" /></td></tr>
 <tr><td><?php echo  _("Confirm your password") ?></td>
@@ -75,18 +59,11 @@ else
 <input name="bchpasswd" type="submit" class="btnPrimary" value="<?php echo  _("Change your password") ?>" />
 <input name="bback" type="submit" class="btnSecondary" value="<?php echo  _("Return") ?>" />
 <?php
-if (isset($_POST["bchpasswd"]))
-{
-  if (isset($_POST["bchpasswd"]) && ($_POST["newpass"] == $_POST["confpass"]) && ($_POST["newpass"])) {
-    echo _("Invalid current password. Please retry.");
-  } else {
+if (isset($_POST["bchpasswd"]) && $_POST["newpass"] != $_POST["confpass"])
     echo _("Passwords are mismatching. Please retry.");
-  }
-}
 ?>
 </form>
 
 <?php
 }
-
 ?>

@@ -30,9 +30,10 @@ $sidemenu->addSideMenuItem(new SideMenuItem(_("Add"), "base","users","add", "img
 if (in_array("bulkimport", $_SESSION["modulesList"])) {
     $sidemenu->addSideMenuItem(new SideMenuItem(_("Bulk import (CSV)"), "base", "users", "bulkimport", "img/users/icn_addUser_active.gif", "img/users/icn_addUser.gif"));
 }
-if ($_SESSION["login"] != "root") {
-    $sidemenu->addSideMenuItem(new SideMenuItem(_("Change your password"), "base","users","passwd", "img/access/icn_global_active.gif", "img/access/icn_global.gif"));
-}
+if ($_SESSION["login"] != "root" && $_SESSION["AUTH_METHOD"] == "login")
+    $sidemenu->addSideMenuItem(new SideMenuItem(_("Change your password"), "base", "users", "passwd", "img/access/icn_global_active.gif", "img/access/icn_global.gif"));
+if ($_SESSION["login"] != "root" && $_SESSION["AUTH_METHOD"] == "token")
+    $sidemenu->addSideMenuItem(new SideMenuItem(_("Reset your password"), "base", "users", "resetpasswd", "img/access/icn_global_active.gif", "img/access/icn_global.gif"));
 
 /* Display the global password policy settings if enabled */
 if (in_array("ppolicy", $_SESSION["modulesList"])) {

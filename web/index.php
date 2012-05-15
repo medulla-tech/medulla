@@ -31,8 +31,15 @@ require("modules/base/includes/edit.inc.php");
 require("modules/base/includes/groups.inc.php");
 require("includes/PageGenerator.php");
 
-
+global $conf;
 $root = $conf["global"]["root"];
+
+if (isset($_POST['lang']))
+    $_SESSION['lang'] = $_POST['lang'];
+else if (isset($_GET['lang']))
+    $_SESSION['lang'] = $_GET['lang'];
+
+require("includes/i18n.inc.php");
 
 $error = null;
 $login = "";
@@ -58,37 +65,11 @@ if (isset($_POST["bConnect"])) {
     }
 
     if (empty($error) && auth_user($login, $pass)) {
-        $_SESSION["login"] = $login;
-        $_SESSION["pass"] = $pass;
-        /* Set session expiration time */
-        $_SESSION["expire"] = time() + 90 * 60;
-
-        $_SESSION['lang'] = $_POST['lang'];
-        setcookie('lang', $_POST['lang'], time() + 3600 * 24 * 30);
-
-        list($_SESSION["acl"], $_SESSION["acltab"], $_SESSION["aclattr"]) = createAclArray(getAcl($login));
-
-        /* Register agent module list */
-        $_SESSION["supportModList"] = array();
-        $list = xmlCall("base.getModList", null);
-        if (is_array($list)) {
-            sort($list);
-            $_SESSION["supportModList"] = $list;
-        }
-
-        /* Register module version */
-        $_SESSION["modListVersion"]['rev'] = xmlCall("getRevision",null);
-        $_SESSION["modListVersion"]['ver'] = xmlCall("getVersion",null);
-
-        /* Make the comnpany logo effect */
-        $_SESSION["doeffect"] = True;
-
+        include("includes/createSession.inc.php");
         /* Redirect to main page */
         header("Location: " . $root . "main.php");
         exit;
     } else {
-        $_SESSION['lang'] = $_POST['lang'];
-        require("includes/i18n.inc.php");
         if (!isXMLRPCError()) $error = _("Login failed");
     }
 }
@@ -177,61 +158,65 @@ if (isset($error)) {
 			<input name="password" type="password" class="textfield" id="password" size="18">
 			</p>
 
-                        <p> <?php echo  _("Server"); ?> :<br>
+            <script type="text/javascript">
+                function changeServerLang() {
+                    window.location = "<?=$root?>?server=" + document.getElementById('server').value + "&lang=" + document.getElementById('lang').value;
+                }
+            </script>
 			<?php
 
-                        global $conf;
+            $servLabelList = array();
+            $servDescList = array();
+            foreach ($conf as $key => $value) {
+                if (strstr($key,"server_")) {
+                    $servDescList[] = $conf[$key]["description"];
+                    $servLabelList[] = $key;
+                }
+            }
+            $servList = new SelectItem("server", "changeServerLang");
+            $servList->setElements($servDescList);
+            $servList->setElementsVal($servLabelList);
+            if (isset($_GET['server']))
+                $servList->setSelected($_GET['server']);
+            else
+                $servList->setSelected($servLabelList[0]);
 
+            $langLabelList = array();
+            $langDescList = array();
+            $languages = list_system_locales(realpath("modules/base/locale/"));
+            $langDesc = getArrLocale();
+            foreach ($languages as $value) {
+                if ($langDesc[$value]) {
+                    $langDescList[] = $langDesc[$value];
+                } else {
+                    $langDescList[] = $value;
+                }
+                $langLabelList[] = $value;
+            }
+            $langList = new SelectItem("lang", "changeServerLang");
+            $langList->setElements($langDescList);
+            $langList->setElementsVal($langLabelList);
 
-                        $servList = array();
-                        $descList = array();
+            if (isset($_SESSION['lang']))
+                $langList->setSelected($_SESSION['lang']);
+            else
+                $langList->setSelected($langDescList[0]);
 
-                        foreach ($conf as $key => $value) {
-                            if (strstr($key,"server_")) {
-                                $descList[$key]=$conf[$key]["description"];
-                                $labelList[$key]=$key;
-                            }
-                        }
-
-                        $listbox = new SelectItem("server");
-                        $listbox->setElements($descList);
-                        $listbox->setElementsVal($labelList);
-                        $listbox->display();
-
-                        ?>
-                        <br/>
-                        <?php echo  _("Language"); ?>: <br />
-
-                        <?php
-
-                        $langList = list_system_locales(realpath("modules/base/locale/"));
-
-                        $descList = array();
-                        $urlList = array();
-
-                        $langDesc = getArrLocale();
-
-                        foreach ($langList as $value) {
-                            if ($langDesc[$value]) {
-                                $descList[]=$langDesc[$value];
-                            } else {
-                                $descList[]=$value;
-                            }
-                            $urlList[]=$value;
-                        }
-
-                        $listbox = new SelectItem("lang");
-                        $listbox->setElements($descList);
-                        $listbox->setElementsVal($urlList);
-                        $listbox->setSelected($descList[0]);
-
-                        if ($_SESSION['lang']) {
-                            $listbox->setSelected($_SESSION['lang']);
-                        }
-                        $listbox->display();
-
-                        ?>
-
+            if ($conf[$servList->selected]['forgotPassword']) {
+            ?>
+                <p><a href="<?=$root?>forgotpassword.php?server=<?=$servList->selected?>&lang=<?=$langList->selected?>">Forgot password?</a></p>
+            <?php
+            }
+            ?>
+            <p><?php echo  _("Server"); ?>:<br />
+            <?php
+            $servList->display();
+            ?>
+            <br />
+            <?php echo  _("Language"); ?>: <br />
+            <?php
+            $langList->display();
+            ?>
 			<input name="bConnect" type="submit" class="btnPrimary" value="<?php echo  _("Connect"); ?>" /></p>
 
         </form>

@@ -243,7 +243,8 @@ class MmcServer(xmlrpc.XMLRPC,object):
 
     def _cbRender(self, result, request, functionPath = None, args = None):
         s = request.getSession()
-        if functionPath == "base.ldapAuth" and not isinstance(result, Fault):
+        auth_funcs = ["base.ldapAuth", "base.tokenAuthenticate", "base.authenticate"]
+        if functionPath in auth_funcs and not isinstance(result, Fault):
             # if we are logging on and there was no error
             if result:
                 s = request.getSession()

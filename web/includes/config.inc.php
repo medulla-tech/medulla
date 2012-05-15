@@ -30,7 +30,6 @@ require_once("i18n.inc.php");
 
 global $conf;
 
-
 fetchIniFile();
 
 ?>
