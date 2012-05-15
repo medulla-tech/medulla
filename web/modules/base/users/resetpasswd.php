@@ -20,10 +20,11 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-if (isset($_POST["bback"])) {
+if ($_SESSION["AUTH_METHOD"] == "login" || isset($_POST["bback"])) {
     header("Location: " . urlStrRedirect("base/users/index"));
     exit;
 }
+
 require("modules/base/includes/users.inc.php");
 require("graph/header.inc.php");
 require("localSidebar.php");

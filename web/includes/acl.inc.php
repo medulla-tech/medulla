@@ -105,7 +105,8 @@ function getDefaultPage() {
                 foreach($submodinfo as $page => $pageinfo) {
                     # check page is not a popup
                     if (isset($MMCApp->_modules[$module]->_submod[$submod]->_pages[$page]) &&
-                        $MMCApp->_modules[$module]->_submod[$submod]->_pages[$page]->_options['noHeader'] != 1) {
+                        $MMCApp->_modules[$module]->_submod[$submod]->_pages[$page]->_options['noHeader'] != 1 &&
+                        $MMCApp->_modules[$module]->_submod[$submod]->_pages[$page]->_options['visible']) {
                             # get url
                             $url = "main.php?module=$module&submod=$submod&action=$page";
                             # stop foreach loops
