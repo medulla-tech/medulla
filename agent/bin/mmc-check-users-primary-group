@@ -36,21 +36,22 @@ users = l.searchUser()
 for user in users:
     uid = user['uid']
     entry = l.getDetailedUser(uid)
-    pgidnumber = entry['gidNumber'][0]
-    try:
-        pgroup = l.getDetailedGroupById(pgidnumber)
-    except UnboundLocalError:
-        print "Warning user %s: Primary group with this GID number doesn't exist: %s" % (uid, pgidnumber)
-        continue
-    gname = pgroup['cn'][0]
-    try:
-        members = pgroup['memberUid']
-    except KeyError:
-        members = []
-    if uid not in members:
-        c = raw_input('User "%s" is not a member of her/his primary group "%s". Fix it ? (y/n) ' % (uid, gname))
-        if c in ['y', 'Y']:
-            print 'Fixing user entry'
-            l.addUserToGroup(gname, uid)
-        else:
-            print 'NOT fixing user entry'
+    if 'gidNumber' in entry:
+        pgidnumber = entry['gidNumber'][0]
+        try:
+            pgroup = l.getDetailedGroupById(pgidnumber)
+        except UnboundLocalError:
+            print "Warning user %s: Primary group with this GID number doesn't exist: %s" % (uid, pgidnumber)
+            continue
+        gname = pgroup['cn'][0]
+        try:
+            members = pgroup['memberUid']
+        except KeyError:
+            members = []
+        if uid not in members:
+            c = raw_input('User "%s" is not a member of her/his primary group "%s". Fix it ? (y/n) ' % (uid, gname))
+            if c in ['y', 'Y']:
+                print 'Fixing user entry'
+                l.addUserToGroup(gname, uid)
+            else:
+                print 'NOT fixing user entry'
