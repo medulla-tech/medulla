@@ -46,16 +46,17 @@ if (!function_exists('_T')) {
      * return supported locales as an array
      */
     function getArrLocale() {
-        $res = array("C" => _("english"),
-                     "da_DK" => _("danish"),
-                     "de_DE" => _("german"),
-                     "es_ES" => _("spanish"),
-                     "fr_FR" => _("french"),
-                     "it_IT" => _("italian"),
-                     "nb_NO" => _("norwegian"),
-                     "pl_PL" => _("polish"),
-                     "pt_BR" => _("brazilian"),
-                     "ru_RU" => _("russian"));
+        $res = array("C" => "English",
+                     "da_DK" => "Dansk",
+                     "de_DE" => "Deutsch",
+                     "es_ES" => "Espa&ntilde;ol",
+                     "fr_FR" => "Fran&#231;ais",
+                     "it_IT" => "Italiano",
+                     "nb_NO" => "Norwegian Bokmål",
+                     "pl_PL" => "Polish",
+                     "pt_BR" => "Português do Brasil",
+                     "ru_RU" => "русский язык"
+                    );
         return $res;
     }
 
@@ -74,10 +75,10 @@ if (!function_exists('_T')) {
                      "no" => "nb_NO",
                      "pl" => "pl_PL",
                      "pt-br" => "pt_BR",
+                     "pt" => "pt_BR",
                      "ru" => "ru_RU");
     }
 }
-
 
 /* Set language to use in the interface */
 if (!isset($_SESSION['lang'])) {

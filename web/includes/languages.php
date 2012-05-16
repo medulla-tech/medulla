@@ -54,7 +54,7 @@ function getLanguages() {
         "hy" => "Armenian",
         "id" => "Indonesian",
         "is" => "Icelandic",
-        "it" => "italiano",
+        "it" => "Italiano",
         "ja" => "Japanese",
         "ka" => "Georgian",
         "ko" => "Korean",

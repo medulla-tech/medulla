@@ -24,8 +24,13 @@
 
 ob_start();
 session_start();
-require("includes/config.inc.php");
 
+if (isset($_POST['lang']))
+    $_SESSION['lang'] = $_POST['lang'];
+else if (isset($_GET['lang']))
+    $_SESSION['lang'] = $_GET['lang'];
+
+require("includes/config.inc.php");
 require("modules/base/includes/users.inc.php");
 require("modules/base/includes/edit.inc.php");
 require("modules/base/includes/groups.inc.php");
@@ -33,16 +38,9 @@ require("includes/PageGenerator.php");
 
 global $conf;
 $root = $conf["global"]["root"];
-
-if (isset($_POST['lang']))
-    $_SESSION['lang'] = $_POST['lang'];
-else if (isset($_GET['lang']))
-    $_SESSION['lang'] = $_GET['lang'];
-
-require("includes/i18n.inc.php");
-
 $error = null;
 $login = "";
+
 if (isset($_POST["bConnect"])) {
     $login = $_POST["username"];
     $pass = $_POST["password"];
