@@ -40,17 +40,8 @@ Moreover, this product is a main and critical component of your information syst
 and without a tested and certified upgrade path from previous versions.
 </p>");
  ?>
-
-<?
-$url = "http://www.mandriva.com/enterprise/en/mds-subscription-c";
-if (isset($_SESSION["lang"])) {
-    if ($_SESSION["lang"] == "fr_FR")
-        $url = "http://www.mandriva.com/enterprise/fr/mds-subscription-c";
-}
-?>
-
 <p>
-<a href="<?php echo  $url; ?>"><?php echo  _("Click here to get more information about our support and maintenance subscription plan."); ?></a>
+<a href="http://www.mandriva.com/pro/support.html"><?php echo  _("Click here to get more information about our support and maintenance subscription plan."); ?></a>
 </p>
  </div>
 
