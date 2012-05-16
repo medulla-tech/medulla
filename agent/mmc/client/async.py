@@ -36,32 +36,11 @@ proxy.callRemote("base.ldapAuth", "root", "passpass").addCallbacks(cb)
 reactor.run()
 """
 
-import xmlrpclib
-
+import os
+import stat
 from twisted.web import xmlrpc
-from twisted.internet import reactor, defer, ssl
 
-class Proxy(xmlrpc.Proxy):
-
-    def __init__(self, url, user=None, password=None):
-        xmlrpc.Proxy.__init__(self, url, user, password)
-        self.SSLClientContext = None
-
-    def setSSLClientContext(self, SSLClientContext):
-        self.SSLClientContext = SSLClientContext
-
-    def callRemote(self, method, *args):
-        factory = self.queryFactory(
-            self.path, self.host, method, self.user,
-            self.password, self.allowNone, args)
-        if self.secure:
-            if not self.SSLClientContext:
-                self.SSLClientContext = ssl.ClientContextFactory()
-            reactor.connectSSL(self.host, self.port or 443,
-                               factory, self.SSLClientContext)
-        else:
-            reactor.connectTCP(self.host, self.port or 80, factory)
-        return factory.deferred
+COOKIES_FILE = '/tmp/mmc-cookies'
 
 class MMCQueryProtocol(xmlrpc.QueryProtocol):
 
@@ -75,9 +54,14 @@ class MMCQueryProtocol(xmlrpc.QueryProtocol):
             auth = '%s:%s' % (self.factory.user, self.factory.password)
             auth = auth.encode('base64').strip()
             self.sendHeader('Authorization', 'Basic %s' % (auth,))
-        if self.factory.session:
+        try:
             # Put MMC session cookie
-            self.sendHeader('Cookie', self.factory.session)
+            if not '<methodName>base.ldapAuth</methodName>' in self.factory.payload:
+                h = open(COOKIES_FILE, 'r')
+                self.sendHeader('Cookie', h.read())
+                h.close()
+        except IOError:
+            pass
         self.endHeaders()
         self.transport.write(self.factory.payload)
 
@@ -85,22 +69,22 @@ class MMCQueryProtocol(xmlrpc.QueryProtocol):
         xmlrpc.QueryProtocol.lineReceived(self, line)
         if line:
             if line.startswith("Set-Cookie: "):
-                value = line.split()[1]
-                self.factory.session = value
+                self._session = line.split()[1]
+
+    def handleResponse(self, contents):
+        xmlrpc.QueryProtocol.handleResponse(self, contents)
+        if '<methodName>base.ldapAuth</methodName>' in self.factory.payload:
+            h = open(COOKIES_FILE, 'w+')
+            h.write(self._session)
+            h.close()
+            os.chmod(COOKIES_FILE, stat.S_IRUSR | stat.S_IWUSR)
+
 
 class MMCQueryFactory(xmlrpc._QueryFactory):
 
     protocol = MMCQueryProtocol
 
-    def __init__(self, path, host, method, user=None, password=None, *args):
-        self.path, self.host = path, host
-        self.user, self.password = user, password
-        self.method = method
-        self.payload = xmlrpc.payloadTemplate % (method, xmlrpclib.dumps(args))
-        self.deferred = defer.Deferred()
-        if method == "base.ldapAuth":
-            self.deferred.addCallback(self.getSession)
 
-    def getSession(self, value):
-        self.parent.session = self.session
-        return value
+class Proxy(xmlrpc.Proxy):
+
+    queryFactory = MMCQueryFactory
