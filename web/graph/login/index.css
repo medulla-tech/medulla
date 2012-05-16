@@ -56,12 +56,12 @@ body {
 
 #content {
 	text-align: left;
-	height: 248px;
+	min-height: 248px;
 	background: url(../../img/login/bg_mandriva_large.gif) no-repeat top left transparent;
 }
 
 #login {
-	padding: 20px 10px 0 275px;
+	padding: 20px 10px 10px 275px;
 }
 
 #login img {
