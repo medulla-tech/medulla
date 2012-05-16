@@ -1,0 +1,36 @@
+.TH MMC-AGENT 1
+.SH NAME
+mmc-agent \- launch MMC python agent
+.SH SYNOPSIS
+.B mmc-agent
+.RI [ OPTION ] " " [ FILE ]
+.SH DESCRIPTION
+The MMC (Mandriva Management Console) is made of two parts:
+.TP
+* an agent running on the machine to manage. We call it « MMC agent ». The agent exports to the network several plugins that allow to manage the machine. Of course, there can be multiple agents running on the network. The agent and its plugins are written in Python.
+.TP
+* a web interface, that talks to the agent(s) using XML-RPC. The interface is written in PHP, and use the scriptaculous framework to feature an AJAX experience.
+.TP
+This program launches the MMC agent, eventually with some options.
+.SH OPTIONS
+.TP
+.B \-d
+Launch in debug mode
+.TP
+.B \-f FILE
+Use 
+.I FILE
+as the MMC configuration file
+.SH AUTHOR
+mmc-agent was written by Mandriva-Linbox
+.SH COPYRIGHT
+.TP
+(c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+.TP
+(c) 2007-2012 Mandriva, http://www.mandriva.com
+.TP
+MMC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+.SH SEE ALSO
+.BR mmc-helper (1),
+.BR mmc-add-schema (1),
+.BR mmc-stats (1)

@@ -1,0 +1,26 @@
+.TH MMC-ADD-SCHEMA 1
+.SH NAME
+mmc-add-schema \- add LDAP schemas to OpenLDAP cn=config database 
+.SH SYNOPSIS
+.B mmc-add-schema
+.RI [ SCHEMA ] " " [ DEST ]
+.SH DESCRIPTION
+mmc-add-schema is a simple script to load LDAP schemas in the OpenLDAP dynamic config database.
+.SH OPTIONS
+.TP
+.B SCHEMA
+The path to a single schema file or the path to a directory containing schemas
+.TP
+.B DEST
+The path where to store the LDAP schemas (usually /etc/ldap/schema/)
+.SH AUTHOR
+mmc-add-schema was written by Mandriva
+.SH COPYRIGHT
+.TP
+(c) 2011-2012 Mandriva, http://www.mandriva.com
+.TP
+MMC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+.SH SEE ALSO
+.BR mmc-agent (1),
+.BR mmc-helper (1),
+.BR mmc-stats (1)

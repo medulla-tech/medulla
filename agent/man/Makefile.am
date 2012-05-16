@@ -16,26 +16,7 @@
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Author(s)
-#   Jean Parpaillon <jparpaillon@mandriva.com>
+#   Jean-Philippe Braun <jpbraun@mandriva.com>
 #
 
-mmclogdir = $(localstatedir)/log/mmc/
-mmclibdir = $(localstatedir)/lib/mmc/
-
-install-exec-hook:
-	install -d -m 0750 $(mmclogdir)
-	install -d -m 0750 $(mmclibdir)
-
-SUBDIRS = backup-tools bin init.d contrib man
-if ENABLE_CONF
-SUBDIRS += conf
-endif
-if ENABLE_PYTHON
-SUBDIRS += mmc
-endif
-
-docs: Makefile
-	epydoc mmc
-
-pyflakes: Makefile
-	pyflakes . bin/*
+man_MANS = mmc-agent.1 mmc-helper.1 mmc-add-schema.1 mmc-stats.1
