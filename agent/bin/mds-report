@@ -26,7 +26,7 @@ import sys
 
 from twisted.internet import reactor, defer
 
-from mmc.client import MMCProxy
+from mmc.client.async import Proxy
 
 def usage():
     print "MDS installation report"
@@ -60,7 +60,7 @@ class Report:
     """
 
     def __init__(self, url, httpuser, httppass, username, password):
-        self.proxy = MMCProxy(url, httpuser, httppass)
+        self.proxy = Proxy(url, httpuser, httppass)
         self.username = username
         self.password = password
 
