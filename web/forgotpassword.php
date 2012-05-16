@@ -19,7 +19,7 @@ if (isset($_POST['bBack']))
 
 if (isset($_POST['bReset']) && isset($_POST['user'])) {
     if (xmlCall("base.createAuthToken", array($_POST['user'], $server, $lang)))
-        $info = _("You will receive password reset link.");
+        $info = _("A password reset link has been sent.");
     else
         $error = _("Can't reset your password. Please contact your administrator.");
 }
