@@ -1,6 +1,4 @@
-# (c) 2011 Mandriva, http://www.mandriva.com
-#
-# $Id$
+# (c) 2012 Mandriva, http://www.mandriva.com
 #
 # This file is part of Mandriva Management Console (MMC).
 #
@@ -20,4 +18,5 @@
 # Author(s)
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-SUBDIRS = ldap audit scripts
+scriptscontribdir = $(datarootdir)/doc/python-mmc-base/contrib/scripts
+dist_scriptscontrib_DATA = mmc-check-users-primary-group

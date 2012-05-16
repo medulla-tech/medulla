@@ -140,6 +140,7 @@ AC_CONFIG_FILES([agent/contrib/Makefile])
 AC_CONFIG_FILES([agent/contrib/ldap/Makefile])
 AC_CONFIG_FILES([agent/contrib/audit/Makefile])
 AC_CONFIG_FILES([agent/contrib/audit/sql/Makefile])
+AC_CONFIG_FILES([agent/contrib/scripts/Makefile])
 AC_CONFIG_FILES([web/Makefile])
 AC_CONFIG_FILES([web/confs/Makefile])
 
