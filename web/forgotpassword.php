@@ -2,6 +2,7 @@
 
 session_start();
 require("includes/config.inc.php");
+require("modules/base/includes/users.inc.php");
 require("includes/PageGenerator.php");
 
 global $conf;
@@ -12,6 +13,9 @@ $lang = $_GET["lang"];
 $_SESSION["XMLRPC_agent"] = parse_url($conf[$server]["url"]);
 $_SESSION["agent"] = $server;
 $_SESSION["XMLRPC_server_description"] = $conf[$server]["description"];
+
+if (isset($_POST['bBack']))
+    header("Location: " . $root);
 
 if (isset($_POST['bReset']) && isset($_POST['user'])) {
     if (xmlCall("base.createAuthToken", array($_POST['user'], $server, $lang)))
@@ -72,6 +76,7 @@ if (isset($_POST['bReset']) && isset($_POST['user'])) {
                 </p>
                 <p>
                     <input name="bReset" type="submit" class="btnPrimary" value="<?php echo  _("Password reset"); ?>" />
+                    <input name="bBack" type="submit" class="btnSecondary" value="<?php echo  _("Back"); ?>" />
                 </p>
 
             </form>
@@ -87,6 +92,13 @@ if (isset($_POST['bReset']) && isset($_POST['user'])) {
     </table>
 	</td>
   </tr>
+<?php
+
+if (isCommunityVersion() && is_file("license.php")) {
+    require("license.php");
+}
+
+?>
 </table>
 </div>
 
