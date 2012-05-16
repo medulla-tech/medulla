@@ -86,6 +86,9 @@ REVISION = scmRevision("$Rev$")
 NOAUTHNEEDED = ['authenticate', 'ldapAuth', 'isCommunityVersion',
                 'createAuthToken', 'tokenAuthenticate']
 
+# Status methods
+from mmc.plugins.base.status import getLdapRootDN, getDisksInfos, getMemoryInfos, getUptime, listProcess
+
 def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION
 def getRevision(): return REVISION
