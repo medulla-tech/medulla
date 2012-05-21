@@ -106,8 +106,9 @@ class BaseAction(object):
 
 class CheckAction(BaseAction):
     def run(self):
-        self.proxy.callRemote('imaging.isImagingServerRegistered', self.uuid).addCallbacks(
-                self.resultOk)
+        d = self.proxy.callRemote('imaging.isImagingServerRegistered', self.uuid)
+        d.addCallback(self.resultOk)
+        d.addErrback(self.resultError)
 
     def resultOk(self, result):
         if result is True:
@@ -116,6 +117,10 @@ class CheckAction(BaseAction):
             log.info('Imaging server not registered')
 
         code = 0
+        reactor.stop()
+
+    def resultError(self, error):
+        log.error(error)
         reactor.stop()
 
 
@@ -132,9 +137,10 @@ class RegisterAction(BaseAction):
         return ret
 
     def run(self):
-        self.proxy.callRemote('imaging.imagingServerRegister',
-                             self.name, self.client_url, self.uuid).addCallback(
-                                 self.resultOk)
+        d = self.proxy.callRemote('imaging.imagingServerRegister',
+                                  self.name, self.client_url, self.uuid)
+        d.addCallback(self.resultOk)
+        d.addErrback(self.resultError)
 
     def resultOk(self, result):
         code, msg = result
@@ -146,6 +152,11 @@ class RegisterAction(BaseAction):
             log.error('Registration failed: %s' % msg)
             code = ERROR_REGISTRATION_FAILURE
 
+        reactor.stop()
+
+    def resultError(self, error):
+        log.error(error)
+        code = ERROR_REGISTRATION_FAILURE
         reactor.stop()
 
 
