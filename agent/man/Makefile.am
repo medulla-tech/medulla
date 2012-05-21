@@ -19,4 +19,4 @@
 #   Jean-Philippe Braun <jpbraun@mandriva.com>
 #
 
-man_MANS = mmc-agent.1 mmc-helper.1 mmc-add-schema.1 mmc-stats.1
+dist_man_MANS = mmc-agent.1 mmc-helper.1 mmc-add-schema.1 mmc-stats.1
