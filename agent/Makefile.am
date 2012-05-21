@@ -23,8 +23,8 @@ mmclogdir = $(localstatedir)/log/mmc/
 mmclibdir = $(localstatedir)/lib/mmc/
 
 install-exec-hook:
-	install -d -m 0750 $(mmclogdir)
-	install -d -m 0750 $(mmclibdir)
+	install -d -m 0750 $(DESTDIR)$(mmclogdir)
+	install -d -m 0750 $(DESTDIR)$(mmclibdir)
 
 SUBDIRS = backup-tools bin init.d contrib man
 if ENABLE_CONF
