@@ -1,0 +1,83 @@
+#!/usr/bin/env python
+# -*- coding: utf-8; -*-
+#
+# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+# (c) 2007-2012 Mandriva, http://www.mandriva.com/
+#
+# This file is part of Mandriva Management Console (MMC).
+#
+# MMC is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# MMC is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with MMC; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+"""
+A simple script for MMC usertoken hook
+
+This hook sends to the user a link to login the MMC and reset its password
+
+The user MUST have the ACL for the "Reset password page"
+"""
+
+import sys
+import ldif
+import smtplib
+from email.mime.text import MIMEText
+
+ADMIN = "admin@example.com"
+SUPPORT = "support@example.com"
+URL = "http://localhost/mmc/"
+SMTP = "localhost"
+
+class SendUserToken(ldif.LDIFParser):
+
+    def handle(self, dn, entry):
+        uid = entry["uid"][0]
+        mail = entry["mail"][0]
+        token = entry["userPassword"][0]
+
+        if token:
+            if mail:
+                subject = "Reset your password on %s" % URL
+                body = """
+To reset your password login with %stoken.php?token=%s and then go to the "Reset your password" page.
+
+This link will expire in 5 minutes.
+
+If you didn't request a password reset you can ignore this message.
+
+--
+Example support
+%s
+""" % (URL, token, SUPPORT)
+                dest = mail
+            else:
+                subject = "[ERROR] Password reset failed for %s" % uid
+                body = "The user has no mail!"
+                dest = ADMIN
+        else:
+            subject = "[ERROR] No token for %s" % uid
+            body = "This is not supposed to happen!"
+            dest = ADMIN
+
+        msg = MIMEText(body)
+        msg['Subject'] = subject
+        msg['From'] = SUPPORT
+        msg['To'] = dest
+
+        s = smtplib.SMTP(SMTP)
+        s.sendmail(SUPPORT, dest, msg.as_string())
+        s.quit()
+
+
+parser = SendUserToken(file(sys.argv[1]))
+parser.parse()
