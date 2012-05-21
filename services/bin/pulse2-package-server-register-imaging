@@ -29,9 +29,10 @@ import sys
 import uuid
 from optparse import OptionParser
 import logging
+from twisted.internet import reactor
 
 from mmc.site import mmcconfdir
-from mmc.client import sync
+from mmc.client import async
 from pulse2.package_server.config import P2PServerCP
 
 # Return codes
@@ -41,8 +42,8 @@ ERROR_BAD_CONFIG_PATH = 3
 ERROR_BAD_CONFIG = 4
 ERROR_REGISTRATION_FAILURE = 5
 
-inifile = mmcconfdir + "/pulse2/package-server/package-server.ini"
-
+inifile = os.path.join(mmcconfdir, "pulse2", "package-server", "package-server.ini")
+code = ERROR_REGISTRATION_FAILURE
 log = logging.getLogger()
 
 class BaseAction(object):
@@ -69,10 +70,10 @@ class BaseAction(object):
 
         # Some magic ?
         self.config.imaging_api['mount_point'] = self.config.imaging_api['mount_point'].replace('/', '')
-        
-        self.client_url = "%s://%s:%s/%s" % (self.config.proto, 
-                                             self.config.public_ip, 
-                                             str(self.config.port), 
+
+        self.client_url = "%s://%s:%s/%s" % (self.config.proto,
+                                             self.config.public_ip,
+                                             str(self.config.port),
                                              self.config.imaging_api['mount_point'])
 
         self.uuid = self.config.imaging_api['uuid']
@@ -82,7 +83,7 @@ class BaseAction(object):
 
         log.debug("Connecting from: %s" % self.client_url)
         log.debug("Connecting to: %s" % options.mmc_url)
-        self.proxy = sync.Proxy(options.mmc_url)
+        self.proxy = async.Proxy(options.mmc_url)
 
     def _check_options(self, options):
         ret = True
@@ -102,13 +103,21 @@ class BaseAction(object):
     def run(self):
         raise NotImplemented
 
+
 class CheckAction(BaseAction):
     def run(self):
-        ret = self.proxy.imaging.isImagingServerRegistered(self.uuid)
-        if ret is True:
-            return 0
+        self.proxy.callRemote('imaging.isImagingServerRegistered', self.uuid).addCallbacks(
+                self.resultOk)
+
+    def resultOk(self, result):
+        if result is True:
+            log.info('Imaging server already registered')
         else:
-            return ERROR_REGISTRATION_FAILURE
+            log.info('Imaging server not registered')
+
+        code = 0
+        reactor.stop()
+
 
 class RegisterAction(BaseAction):
     def __init__(self, options):
@@ -123,15 +132,22 @@ class RegisterAction(BaseAction):
         return ret
 
     def run(self):
-        (code, msg) =  self.proxy.imaging.imagingServerRegister(self.name, 
-                                                                self.client_url, 
-                                                                self.uuid)
-        if code:
+        self.proxy.callRemote('imaging.imagingServerRegister',
+                             self.name, self.client_url, self.uuid).addCallback(
+                                 self.resultOk)
+
+    def resultOk(self, result):
+        code, msg = result
+
+        if code is True:
             log.info('Registration succeeded')
-            return 0
+            code = 0
         else:
             log.error('Registration failed: %s' % msg)
-            return ERROR_REGISTRATION_FAILURE
+            code = ERROR_REGISTRATION_FAILURE
+
+        reactor.stop()
+
 
 def generate_uuid():
     """
@@ -141,10 +157,6 @@ def generate_uuid():
 
 if __name__ == '__main__':
     retcode = 0
-
-    if len(sys.argv)==1:
-        display_help()
-        sys.exit(0)
 
     # Declare options
     parser = OptionParser()
@@ -165,6 +177,10 @@ if __name__ == '__main__':
     parser.add_option("-V", "--verbose", dest="verbose", default=False, action="store_true",
                       help="Be more verbose")
     (options, args) = parser.parse_args()
+
+    if len(sys.argv) == 1:
+        parser.print_help()
+        sys.exit(0)
 
     if options.check and options.generate:
         parser.error('Options -C and -u are mutually exclusive')
@@ -190,5 +206,6 @@ if __name__ == '__main__':
     else:
         action = RegisterAction(options)
 
-    ret = action.run()
-    sys.exit(ret)
+    action.run()
+    reactor.run()
+    sys.exit(code)
