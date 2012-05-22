@@ -521,7 +521,7 @@ class UserPPolicy(ldapUserGroupControl):
                 return True
             # Check the user password policy
             elif self.getPPolicy():
-                val = PPolicy(self.getPPolicy()).getAttribute('pwdMustChange')
+                val = PPolicy().getAttribute('pwdMustChange', self.getPPolicy())
                 return val == ['TRUE']
             # Else get the default password policy
             else:
@@ -542,7 +542,7 @@ class UserPPolicy(ldapUserGroupControl):
             if 'pwdGraceAuthNLimit' in user:
                 ppolicygracelimit = user['pwdGraceAuthNLimit']
             elif self.getPPolicy():
-                ppolicygracelimit = PPolicy(self.getPPolicy()).getAttribute('pwdGraceAuthNLimit')
+                ppolicygracelimit = PPolicy().getAttribute('pwdGraceAuthNLimit', self.getPPolicy())
             else:
                 ppolicygracelimit = PPolicy().getAttribute('pwdGraceAuthNLimit')
             if ppolicygracelimit:
@@ -561,7 +561,7 @@ class UserPPolicy(ldapUserGroupControl):
             if 'pwdMaxAge' in user:
                 pwdMaxAge = user['pwdMaxAge'][0]
             elif self.getPPolicy():
-                pwdMaxAge = PPolicy(self.getPPolicy()).getAttribute('pwdMaxAge')[0]
+                pwdMaxAge = PPolicy().getAttribute('pwdMaxAge', self.getPPolicy())[0]
             else:
                 pwdMaxAge = PPolicy().getAttribute('pwdMaxAge')[0]
             last = calendar.timegm(time.strptime(pwdChangedTime[:-1], '%Y%m%d%H%M%S'))
