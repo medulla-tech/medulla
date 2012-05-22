@@ -19,4 +19,4 @@
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
 scriptscontribdir = $(datarootdir)/doc/python-mmc-base/contrib/scripts
-dist_scriptscontrib_DATA = mmc-check-users-primary-group usertoken-example
+dist_scriptscontrib_DATA = mmc-check-users-primary-group usertoken-example mmc-check-expired-passwords-example
