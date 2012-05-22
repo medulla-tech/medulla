@@ -1,6 +1,7 @@
 *.pyc
 *~
 *.mo
+*.pot
 agent/build/
 web/confs/apache/mmc.conf
 Makefile.in
