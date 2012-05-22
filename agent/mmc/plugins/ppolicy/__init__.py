@@ -564,8 +564,11 @@ class UserPPolicy(ldapUserGroupControl):
                 pwdMaxAge = PPolicy().getAttribute('pwdMaxAge', self.getPPolicy())[0]
             else:
                 pwdMaxAge = PPolicy().getAttribute('pwdMaxAge')[0]
-            last = calendar.timegm(time.strptime(pwdChangedTime[:-1], '%Y%m%d%H%M%S'))
-            ret = (time.time() - last) > int(pwdMaxAge)
+            if pwdMaxAge == 0 or pwdMaxAge == None:
+                ret = False
+            else:
+                last = calendar.timegm(time.strptime(pwdChangedTime[:-1], '%Y%m%d%H%M%S'))
+                ret = (time.time() - last) > int(pwdMaxAge)
         return ret
 
 # XML-RPC methods
