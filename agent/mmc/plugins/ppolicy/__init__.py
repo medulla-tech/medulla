@@ -564,7 +564,7 @@ class UserPPolicy(ldapUserGroupControl):
                 pwdMaxAge = PPolicy().getAttribute('pwdMaxAge', self.getPPolicy())[0]
             else:
                 pwdMaxAge = PPolicy().getAttribute('pwdMaxAge')[0]
-            if pwdMaxAge == 0 or pwdMaxAge == None:
+            if pwdMaxAge == "0" or pwdMaxAge == None:
                 ret = False
             else:
                 last = calendar.timegm(time.strptime(pwdChangedTime[:-1], '%Y%m%d%H%M%S'))
