@@ -71,4 +71,10 @@ $errItem->setAdvice(_("The password policy of your account doesn't allow you to 
 $errItem->setTraceBackDisplay(False);
 $errObj->add($errItem);
 
+$errItem = new ErrorHandlingItem(": {'desc': 'Constraint violation'}");
+$errItem->setMsg(_("Password can't be changed"));
+$errItem->setAdvice(_("The password policy of your account doesn't allow you to modify your password. Contact your administrator."));
+$errItem->setTraceBackDisplay(False);
+$errObj->add($errItem);
+
 ?>
