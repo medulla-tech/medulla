@@ -33,16 +33,10 @@ from mmc.plugins.base.auth import AuthenticationManager, AuthenticatorI, Authent
 from mmc.plugins.base.provisioning import ProvisioningManager
 from mmc.plugins.base.externalldap import ExternalLdapAuthenticator, ExternalLdapProvisioner
 from mmc.plugins.base.ldapconnect import LDAPConnection
-from mmc.support.mmctools import Singleton
-
 from mmc.support import mmctools
-from mmc.support.mmctools import cSort, rchown, copytree
-
-from mmc.support.mmctools import cleanFilter
-
-from mmc.support.mmctools import xmlrpcCleanup
-from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
-
+from mmc.support.mmctools import cSort, rchown, copytree, cleanFilter, \
+                                 xmlrpcCleanup, RpcProxyI, ContextMakerI, \
+                                 SecurityContext, Singleton
 from mmc.site import mmcconfdir, localstatedir
 from mmc.core.version import scmRevision
 from mmc.core.audit import AuditFactory as AF
@@ -1244,7 +1238,32 @@ class LdapUserGroupControl:
             ldapConn = self.l
 
         if self.config.passwordscheme == "passmod":
-            ldapConn.passwd_s(userdn, None, str(passwd))
+            try:
+                ldapConn.passwd_s(userdn, None, str(passwd))
+            except ldap.CONSTRAINT_VIOLATION as e:
+                try:
+                    from mmc.plugins.ppolicy import getUserPPolicy, getPPolicyAttribute
+                except:
+                    raise e
+                finally:
+                    # Get the minimum password length for the user
+                    ppolicy = getUserPPolicy(uid)
+                    if not ppolicy:
+                        # User is using the default ppolicy
+                        ppolicy = None
+                    min_length = getPPolicyAttribute("pwdMinLength", ppolicy)
+                    # There is no minimum length specified
+                    if not min_length:
+                        # This is mmc-password-helper minimum length
+                        min_length = "6"
+                    else:
+                        min_length = min_length[0]
+
+                    if not 'info' in e.message or \
+                       ('info' in e.message and e.message['info'] == 'Password fails quality checking policy'):
+                        reason = mmctools.shlaunch('echo %s | mmc-password-helper -v -c -l %s' % (str(passwd), min_length))
+                        message = {'info': " ".join(reason), 'desc': 'Constraint violation'}
+                        raise ldap.CONSTRAINT_VIOLATION(message)
         else:
             userpassword = self._generatePassword(passwd)
             ldapConn.modify_s(userdn, [(ldap.MOD_REPLACE, "userPassword", userpassword)])

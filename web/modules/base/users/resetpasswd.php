@@ -40,8 +40,7 @@ if (isset($_POST["bchpasswd"]) && $_POST["newpass"] != "" && $_POST["newpass"] =
     callPluginFunction("changeUserPasswd", array(array($user, prepare_string($_POST["newpass"]), "", False)));
     if (!isXMLRPCError())
         $n = new NotifyWidgetSuccess(_("Your password has been changed."));
-    else
-        $n = new NotifyWidgetSuccess(_("Failed to change your password. Contact your administrator."));
+
     header("Location: " . urlStrRedirect("base/users/index"));
 }
 else {

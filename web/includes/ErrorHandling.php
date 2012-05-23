@@ -37,6 +37,7 @@ class ErrorHandlingItem {
 
     function ErrorHandlingItem($regexp) {
         $this->regexp = $regexp;
+        $this->msgRegExp = false;
         $this->_size = 800; //default notify Widget size
         $this->_level = 4; //default ErrorHandling level
         $this->_showTraceBack = true; //show traceBack
@@ -68,8 +69,9 @@ class ErrorHandlingItem {
             $str = '<div>';
         }
 
-        $str .= "<h3>" . $this->getMsg() . "</h3>";
-        $str .= "<p>" . $this->getAdvice() . "</p>";;
+        $str .= "<h1>" . $this->getMsg() . "</h1>";
+        if ($this->getAdvice())
+            $str .= "<p>" . $this->getAdvice() . "</p>";;
 
         if ($this->_showTraceBack) {
             $str .= '<a href="#" onClick="Effect.toggle(\'errorTraceback\',\'slide\');">'._("Show complete trackback").'</a>';
@@ -92,12 +94,16 @@ class ErrorHandlingItem {
         $this->msg = $msg;
     }
 
+    function setMsgFromError($regexp) {
+        $this->msgRegExp = $regexp;
+    }
+
     function setAdvice($adv) {
         $this->advice = $adv;
     }
 
     function match($errorMsg) {
-        return ereg($this->regexp,$errorMsg,$this->regs);
+        return ereg($this->regexp, $errorMsg, $this->regs);
     }
 
     function getMsg() {
@@ -122,6 +128,17 @@ class ErrorHandlingControler{
     function handle($errormsg) {
         foreach ($this->eiList as $errorItem) {
             if ($errorItem->match($errormsg)) {
+                if ($errorItem->msgRegExp) {
+                    preg_match($errorItem->msgRegExp, $errormsg, $matches);
+                    if (isset($matches[1])) {
+                        $msg = preg_replace("/[0-9]+/", "%s", $matches[1]);
+                        preg_match("/[0-9]+/", $matches[1], $nb);
+                        if (isset($nb[0]))
+                            $errorItem->setMsg(_(sprintf($msg, $nb[0])));
+                        else
+                            $errorItem->setMsg(_($msg));
+                    }
+                }
                 return $errorItem;
             }
         }
