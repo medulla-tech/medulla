@@ -1240,7 +1240,7 @@ class LdapUserGroupControl:
         if self.config.passwordscheme == "passmod":
             try:
                 ldapConn.passwd_s(userdn, None, str(passwd))
-            except ldap.CONSTRAINT_VIOLATION as e:
+            except ldap.CONSTRAINT_VIOLATION, e:
                 try:
                     from mmc.plugins.ppolicy import getUserPPolicy, getPPolicyAttribute
                 except:
