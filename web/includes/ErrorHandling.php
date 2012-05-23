@@ -134,7 +134,7 @@ class ErrorHandlingControler{
                         $msg = preg_replace("/[0-9]+/", "%s", $matches[1]);
                         preg_match("/[0-9]+/", $matches[1], $nb);
                         if (isset($nb[0]))
-                            $errorItem->setMsg(_(sprintf($msg, $nb[0])));
+                            $errorItem->setMsg(sprintf(_($msg), $nb[0]));
                         else
                             $errorItem->setMsg(_($msg));
                     }
