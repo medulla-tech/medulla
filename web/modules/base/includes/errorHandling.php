@@ -49,7 +49,7 @@ $errObj->add($errItem);
 
 $errItem = new ErrorHandlingItem(": {'info': 'Password fails quality checking policy', 'desc': 'Constraint violation'}");
 $errItem->setMsg(_("Password fails quality checking policy."));
-$errItem->setAdvice(_("The password policy of your account doesn't allow you to modify your password, because your password doesn't met the passwords policies."));
+$errItem->setAdvice(_("The password policy of your account doesn't allow you to modify your password, because your password is not complex enough or is too short."));
 $errItem->setTraceBackDisplay(False);
 $errObj->add($errItem);
 
@@ -72,8 +72,8 @@ $errItem->setTraceBackDisplay(False);
 $errObj->add($errItem);
 
 $errItem = new ErrorHandlingItem(": {'desc': 'Constraint violation'}");
-$errItem->setMsg(_("Password can't be changed"));
-$errItem->setAdvice(_("The password policy of your account doesn't allow you to modify your password. Contact your administrator."));
+$errItem->setMsg(_("Password fails quality checking policy."));
+$errItem->setAdvice(_("The password policy of your account doesn't allow you to modify your password, because your password is not complex enough or is too short."));
 $errItem->setTraceBackDisplay(False);
 $errObj->add($errItem);
 
