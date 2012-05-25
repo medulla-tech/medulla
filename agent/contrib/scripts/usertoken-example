@@ -51,7 +51,7 @@ class SendUserToken(ldif.LDIFParser):
                 body = """
 To reset your password login with %stoken.php?token=%s and then go to the "Reset your password" page.
 
-This link will expire in 5 minutes.
+This link will expire in 15 minutes.
 
 If you didn't request a password reset you can ignore this message.
 

@@ -1957,8 +1957,8 @@ class LdapUserGroupControl:
         if user != uid:
             return False
 
-        # 5 min expiration
-        if current_timestamp - float(timestamp) > 300:
+        # 15 min expiration
+        if current_timestamp - float(timestamp) > 900:
             return False
 
         tokensdb = shelve.open(os.path.join(localstatedir, 'lib', 'mmc', 'tokens.db'))
