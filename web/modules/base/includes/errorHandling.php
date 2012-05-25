@@ -41,7 +41,7 @@ $errItem->setAdvice(_("Please do not remove user's files when deleting the user.
 $errItem->setTraceBackDisplay(False);
 $errObj->add($errItem);
 
-$errItem = new ErrorHandlingItem("/home/.* already exists.");
+$errItem = new ErrorHandlingItem("^/.*already exists.$");
 $errItem->setMsg(_("The user home directory already exists."));
 $errItem->setAdvice(_("Set the home directory in a different location or force the use of the existing directory (in expert mode)."));
 $errItem->setTraceBackDisplay(False);
