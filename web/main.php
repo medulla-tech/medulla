@@ -93,16 +93,23 @@ function autoInclude() {
         else
             $tab = "default";
 
+        // extra arguments of the request so we don't cache filters for another
+        // page
+        $extra = "";
+        foreach($_GET as $key => $value) {
+            if (!in_array($key, array('module', 'submod', 'tab', 'action', 'filter', 'start', 'end', 'maxperpage')))
+                $extra .= $key . "_" . $value;
+        }
         // store the filter
         if(isset($_GET['filter']))
-            $_SESSION[$module."_".$submod."_".$action."_".$tab."_filter"] = $_GET['filter'];
+            $_SESSION[$module."_".$submod."_".$action."_".$tab."_filter_".$extra] = $_GET['filter'];
         // store pagination info
         if(isset($_GET['maxperpage']))
-            $_SESSION[$module."_".$submod."_".$action."_".$tab."_max"] = $_GET['maxperpage'];
+            $_SESSION[$module."_".$submod."_".$action."_".$tab."_max_".$extra] = $_GET['maxperpage'];
         if(isset($_GET['start']))
-            $_SESSION[$module."_".$submod."_".$action."_".$tab."_start"] = $_GET['start'];
+            $_SESSION[$module."_".$submod."_".$action."_".$tab."_start_".$extra] = $_GET['start'];
         if(isset($_GET['end']))
-            $_SESSION[$module."_".$submod."_".$action."_".$tab."_end"] = $_GET['end'];
+            $_SESSION[$module."_".$submod."_".$action."_".$tab."_end_".$extra] = $_GET['end'];
 
         unset($module);
         unset($submod);

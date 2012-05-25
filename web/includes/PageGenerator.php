@@ -1144,18 +1144,23 @@ class AjaxFilter extends HtmlElement {
             $__tab = $_GET['tab'];
         else
             $__tab = "default";
+        $extra = "";
+        foreach($_GET as $key => $value) {
+            if (!in_array($key, array('module', 'submod', 'tab', 'action', 'filter', 'start', 'end', 'maxperpage')))
+                $extra += $key + "_" + $value;
+        }
         // then get our filter info
-        if(isset($_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_filter"])) {
-            $this->storedfilter = $_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_filter"];
+        if(isset($_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_filter_".$extra])) {
+            $this->storedfilter = $_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_filter_".$extra];
         }
-        if(isset($_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_maxperpage"])) {
-            $this->storedmax = $_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_maxperpage"];
+        if(isset($_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_maxperpage_".$extra])) {
+            $this->storedmax = $_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_maxperpage_".$extra];
         }
-        if(isset($_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_start"])) {
-            $this->storedstart = $_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_start"];
+        if(isset($_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_start_".$extra])) {
+            $this->storedstart = $_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_start_".$extra];
         }
-        if(isset($_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_end"])) {
-            $this->storedend = $_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_end"];
+        if(isset($_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_end_".$extra])) {
+            $this->storedend = $_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_end_".$extra];
         }
     }
 
