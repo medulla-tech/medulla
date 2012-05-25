@@ -202,7 +202,7 @@ if (isset($error)) {
 
             if ($conf[$servList->selected]['forgotPassword']) {
             ?>
-                <p><a href="<?=$root?>forgotpassword.php?server=<?=$servList->selected?>&lang=<?=$langList->selected?>">Forgot password?</a></p>
+                <p><a href="<?=$root?>forgotpassword.php?server=<?=$servList->selected?>&lang=<?=$langList->selected?>"><?=_("Forgot password ?")?></a></p>
             <?php
             }
             ?>

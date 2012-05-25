@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://mds.mandriva.org/\n"
-"POT-Creation-Date: 2012-05-23 16:11+0200\n"
-"PO-Revision-Date: 2012-05-23 14:20+0000\n"
+"POT-Creation-Date: 2012-05-25 14:01+0200\n"
+"PO-Revision-Date: 2012-05-25 12:03+0000\n"
 "Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/mds/team/fr_FR/)\n"
 "MIME-Version: 1.0\n"
@@ -1562,35 +1562,6 @@ msgstr "Identifiant ou email"
 msgid "Back"
 msgstr "Retour"
 
-#: index.php:62 token.php:54
-#, php-format
-msgid "The server %s does not exist"
-msgstr "Le serveur %s n'existe pas"
-
-#: index.php:71
-msgid "Login failed"
-msgstr "Échec de la connexion"
-
-#: index.php:77
-msgid ""
-"You have been logged out because the session between the MMC web interface "
-"and the MMC agent expired."
-msgstr ""
-"Vous avez été déconnecté parce que la session entre l'interface web MMC et "
-"l'agent MMC a expiré."
-
-#: index.php:209
-msgid "Server"
-msgstr "Serveur"
-
-#: index.php:214
-msgid "Language"
-msgstr "Langue"
-
-#: index.php:218
-msgid "Connect"
-msgstr "Connecter"
-
 #: includes/acl.inc.php:120
 msgid "You do not have required rights"
 msgstr "Vous n'avez pas les droits requis !"
@@ -1850,6 +1821,11 @@ msgstr "Afficher la traceback complète"
 msgid "Complete Traceback"
 msgstr "Traceback complète"
 
+#: token.php:54 index.php:62
+#, php-format
+msgid "The server %s does not exist"
+msgstr "Le serveur %s n'existe pas"
+
 #: token.php:66
 msgid "Token not valid"
 msgstr "Token non valide"
@@ -1858,5 +1834,33 @@ msgstr "Token non valide"
 msgid "Error while validating your token. Please contact your administrator."
 msgstr ""
 "Erreur lors de la validation du token. Contactez votre administrateur."
+
+#: index.php:71
+msgid "Login failed"
+msgstr "Échec de la connexion"
+
+#: index.php:77
+msgid ""
+"You have been logged out because the session between the MMC web interface "
+"and the MMC agent expired."
+msgstr ""
+"Vous avez été déconnecté parce que la session entre l'interface web MMC et "
+"l'agent MMC a expiré."
+
+#: index.php:205
+msgid "Forgot password ?"
+msgstr "Mot de passe oublié ?"
+
+#: index.php:209
+msgid "Server"
+msgstr "Serveur"
+
+#: index.php:214
+msgid "Language"
+msgstr "Langue"
+
+#: index.php:218
+msgid "Connect"
+msgstr "Connecter"
 
 
