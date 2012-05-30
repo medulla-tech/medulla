@@ -1091,7 +1091,12 @@ class LdapUserGroupControl:
         @rtype: unicode
         """
         gidNumber = self.getDetailedUser(uid)["gidNumber"][0]
-        return self.getDetailedGroupById(gidNumber)["cn"][0]
+        try:
+            group = self.getDetailedGroupById(gidNumber)["cn"][0]
+        except KeyError:
+            import grp
+            group = grp.getgrgid(gidNumber)[0]
+        return group
 
     def getUserSecondaryGroups(self, uid):
         """
