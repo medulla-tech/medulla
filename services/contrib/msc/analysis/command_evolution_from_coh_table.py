@@ -75,7 +75,7 @@ if options.docs :
     print "   + Neutralized : Hosts which have been stopped BY THE SCHEDULER"
     print "Thoses commands were obviously misbehaving - which should"
     print "not arrive - you can consider thoses as a failure"
-    print "  + Aborded : Hosts running out of time"
+    print "  + Over Timed : Hosts running out of time"
     print "They were simply running out of time"
     print "  + Success : Hosts which have been successfully deployed"
     print "Nothing more to add : deployment went as expected"
@@ -130,9 +130,9 @@ if options.docs :
     print "  + Doing : deployments in progress; contains 'In Progress'"
     print "  + Delayed : deployments postponed by user or scheduler  action, contains 'Stopped', 'Neutralized'"
     print "  + Done : deployments finished on success, contains 'Success'"
-    print "  + Not Done : deployments finished on error, contains the following field"
+    print "  + Failed : deployments finished on error, contains the following field"
     print "  + Target : deployment which have failed since the target was deficient, contains 'Not Enough Info', 'Target broken', 'Halt', 'Mac Mismatch', 'Unreachable', 'Inventory', 'Execution', 'Precheck'"
-    print "  + Plan : deployment which have failed since the deployment plan lacked information, contains 'Aborded', 'Script', 'Broken Bundle', 'Delete', 'Timeout', 'Package Modified'"
+    print "  + Plan : deployment which have failed since the deployment plan lacked information, contains 'Over Timed', 'Script', 'Broken Bundle', 'Delete', 'Timeout', 'Package Modified'"
     print "  + Infra : deployment which have failed because of some flaws in the infrastructure, contains 'Package Unavailable', 'Connection issue'"
     sys.exit(0)
 
@@ -177,7 +177,7 @@ def getStruct():
     }
     struct['Stopped'] = 0
     struct['Neutralized'] = 0
-    struct['Aborded'] = 0
+    struct['Over Timed'] = 0
     struct['Fatal'] = {
         'not_enought_info'      : 0,
         'bundle_broken'         : 0,
@@ -299,7 +299,7 @@ for command in commandData:
 
         elif coh['current_state'] in ['over_timed'] :
             # increment counter
-            dataCommand['Aborded'] += 1
+            dataCommand['Over Timed'] += 1
             dataCommand['Results']['Plan'] += 1
 
         elif coh['current_state'] in ['done'] :
@@ -449,7 +449,7 @@ if options.format == 'csv' :
         'Execution',
         'Precheck',
         'Plan',
-        'Aborded',
+        'Over Timed',
         'Script',
         'Broken Bundle',
         'Delete',
@@ -494,7 +494,7 @@ for id_command in ids_command:
             print_human('        Neutralized ', command['Neutralized'], len(command['coh']), command['Results']['Doing'])
             print_human('    Done ', command['Results']['Done'], len(command['coh']), len(command['coh']))
             print_human('        Success ', command['Success'], len(command['coh']), command['Results']['Done'])
-            print_human('    Not Done ', command['Results']['Target'] + command['Results']['Plan'] + command['Results']['Infra'], len(command['coh']), len(command['coh']))
+            print_human('    Failed ', command['Results']['Target'] + command['Results']['Plan'] + command['Results']['Infra'], len(command['coh']), len(command['coh']))
             print_human('        Target ', command['Results']['Target'], len(command['coh']), command['Results']['Target'] + command['Results']['Plan'] + command['Results']['Infra'])
             print_human('            Not Enough Info ', command['Fatal']['not_enought_info'], len(command['coh']), command['Results']['Target'])
             print_human('            Target broken ', command['Fatal']['target_broken'], len(command['coh']), command['Results']['Target'])
@@ -505,7 +505,7 @@ for id_command in ids_command:
             print_human('            Execution ', command['Fatal']['execution'], len(command['coh']), command['Results']['Target'])
             print_human('            Precheck ', command['Fatal']['precheck'], len(command['coh']), command['Results']['Target'])
             print_human('        Plan ', command['Results']['Plan'], len(command['coh']), command['Results']['Target'] + command['Results']['Plan'] + command['Results']['Infra'])
-            print_human('            Aborded ', command['Aborded'], len(command['coh']), command['Results']['Plan'])
+            print_human('            Over Timed ', command['Over Timed'], len(command['coh']), command['Results']['Plan'])
             print_human('            Script ', command['Fatal']['script'], len(command['coh']), command['Results']['Plan'])
             print_human('            Broken Bundle ', command['Fatal']['bundle_broken'], len(command['coh']), command['Results']['Plan'])
             print_human('            Delete ', command['Fatal']['delete'], len(command['coh']), command['Results']['Plan'])
@@ -546,7 +546,7 @@ for id_command in ids_command:
                 command['Fatal']['execution'],
                 command['Fatal']['precheck'],
                 command['Results']['Plan'],
-                command['Aborded'],
+                command['Over Timed'],
                 command['Fatal']['script'],
                 command['Fatal']['bundle_broken'],
                 command['Fatal']['delete'],
