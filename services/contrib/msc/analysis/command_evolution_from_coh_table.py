@@ -58,71 +58,71 @@ if options.docs :
     print " - Domains : The domains found in that command"
     print " - Hosts : Hosts involved in this command, splitted as follow"
     print "   + Scheduled : Hosts which have not yet been touched"
-    print "\tThis is neither a success or a failure, they have not been"
-    print "\tprocesseed."
+    print "This is neither a success or a failure, they have not been"
+    print "processeed."
     print "   + Rescheduled : Hosts which have known at least one"
-    print "\tfailure"
-    print "\tThis is neither a success or a failure, but are not being"
-    print "\tprocessed ATM : as failure may be temporary or definitive,"
-    print "\tkeep an eye on them : previous failure may be due to"
-    print "\tanything."
+    print "failure"
+    print "This is neither a success or a failure, but are not being"
+    print "processed ATM : as failure may be temporary or definitive,"
+    print "keep an eye on them : previous failure may be due to"
+    print "anything."
     print "   + In Progress : Hosts which are currently working"
-    print "\tIt those hosts seems to work since a long time (more than"
-    print "\t24 hours), you should stop them using the interface.."
+    print "It those hosts seems to work since a long time (more than"
+    print "24 hours), you should stop them using the interface.."
     print "   + Stopped : Hosts which have been stopped BY THE USER"
-    print "\tThose copmmands can still be a success or a failure, if the"
-    print "\tuser start them again"
+    print "Those copmmands can still be a success or a failure, if the"
+    print "user start them again"
     print "   + Neutralized : Hosts which have been stopped BY THE SCHEDULER"
-    print "\tThoses commands were obviously misbehaving - which should"
-    print "\tnot arrive - you can consider thoses as a failure"
+    print "Thoses commands were obviously misbehaving - which should"
+    print "not arrive - you can consider thoses as a failure"
     print "  + Aborded : Hosts running out of time"
-    print "\tThey were simply running out of time"
+    print "They were simply running out of time"
     print "  + Success : Hosts which have been successfully deployed"
-    print "\tNothing more to add : deployment went as expected"
+    print "Nothing more to add : deployment went as expected"
     print "  + Failure : Hosts which have consummed all attempts, but"
-    print "\tdon't blame Pulse 2 yet, details are following"
+    print "don't blame Pulse 2 yet, details are following"
     print "     --> Not Enough Info : The system had not enought information to deploy"
-    print "\t\tThis is generally caused by an out-ot-sync inventory"
-    print "\t\tdatase, or a resolv mechanism (DNS) issue."
+    print "This is generally caused by an out-ot-sync inventory"
+    print "datase, or a resolv mechanism (DNS) issue."
     print "     --> Broken Bundle : This commands depends on a failed one"
-    print "\t\tYou should seek out why the dependency do fail."
+    print "You should seek out why the dependency do fail."
     print "     --> Package Unavailable : The required package is not on your server anymore"
-    print "\t\tThis is generally because the package was removed from"
-    print "\t\tthe server before the host can get it. This may also"
-    print "\t\tbe due to network issues."
+    print "This is generally because the package was removed from"
+    print "the server before the host can get it. This may also"
+    print "be due to network issues."
     print "     --> Package Modified : The required package has been modified on your server"
-    print "\t\tThis is generally because the package was modified on"
-    print "\t\tthe server before the host can get it. This may also"
-    print "\t\tbe due to network issues."
+    print "This is generally because the package was modified on"
+    print "the server before the host can get it. This may also"
+    print "be due to network issues."
     print "     --> Timeout : The script was killed has it took too much time."
-    print "\t\tYour script is probably broken, and waiting for event"
-    print "\t\t(keypress for example) which won't occur in silent mode"
+    print "Your script is probably broken, and waiting for event"
+    print "(keypress for example) which won't occur in silent mode"
     print "     --> Target broken : The target is probably broken."
-    print "\t\tIt may be already crashed."
+    print "It may be already crashed."
     print "     --> Mac Mismatch : Issue when controlling the target MAC address."
-    print "\t\tAlso related to an out-of-sync inventory database"
+    print "Also related to an out-of-sync inventory database"
     print "     --> Unreachable : Issue when attempting to contact the host."
-    print "\t\tThe host can be down. Or be firewalled. Or without the agent installed."
+    print "The host can be down. Or be firewalled. Or without the agent installed."
     print "     --> Connection issue : Issue while talking to the host."
-    print "\t\tIssue cause is unknown. Network issue ? Scheduler dying ?"
+    print "Issue cause is unknown. Network issue ? Scheduler dying ?"
     print "     --> Delete : Delete failed."
-    print "\t\tThe deletion raised an error, this generaly occurs when"
-    print "\t\tthe install script screw the temporary folder. Script is"
-    print "\t\tprobably broken."
+    print "The deletion raised an error, this generaly occurs when"
+    print "the install script screw the temporary folder. Script is"
+    print "probably broken."
     print "     --> Inventory : Inventory failed."
-    print "\t\tThe inventory command do failed. Please check those hosts;"
-    print "\t\tthe inventory may be misconfigured."
+    print "The inventory command do failed. Please check those hosts;"
+    print "the inventory may be misconfigured."
     print "     --> Halt : Halt failed."
-    print "\t\tThe halt command do failed. Please check those hosts;"
-    print "\t\tit is possible that something prevent the computer to be"
-    print "\t\tshut down."
+    print "The halt command do failed. Please check those hosts;"
+    print "it is possible that something prevent the computer to be"
+    print "shut down."
     print "     --> Script : Script failed."
-    print "\t\tThe script raised an error you told it to raise (in other"
-    print "\t\twords : you expected this error; based on this code, you"
-    print "\t\tshould now know what to do with those clients."
+    print "The script raised an error you told it to raise (in other"
+    print "words : you expected this error; based on this code, you"
+    print "should now know what to do with those clients."
     print "     --> Execution : Execution failed."
-    print "\t\tThe script raised an INTERNAL error; you should have a"
-    print "\t\tlook to see why it failed"
+    print "The script raised an INTERNAL error; you should have a"
+    print "look to see why it failed"
     print " - Results : the ammounts, categorized"
     print "  + To Do : deployments till to be done; contains 'Scheduled', 'Rescheduled'"
     print "  + Doing : deployments in progress; contains 'In Progress'"
@@ -407,8 +407,8 @@ if options.format == 'csv' :
         'Name',
         'Creator',
         'Created',
-	'Start',
-	'End',
+	    'Start',
+	    'End',
         'Domains',
         'Total',
         "To Do",
@@ -442,50 +442,59 @@ if options.format == 'csv' :
         'Connexion issue'
     ))
 
+def print_human(label, value, total, subtotal):
+    fmt = "{0:.<35} : {1:4d} (abs.: {2:3d} %, rel: {4:3d} %)"
+    if value == 0:
+        return
+    if subtotal !=0 and total != 0:
+        print fmt.format(label, value, 100 * value / total, total, 100 * value / subtotal, subtotal)
+    else:
+        print fmt.format(label, value, 0, total, 0, subtotal)
+    
 ids_command = data.keys()
 ids_command.sort()
 for id_command in ids_command:
     command = data[id_command]
     if len(command['coh']) > options.min:
         if options.format == 'human':
-            print "=============== [%s] ===============" % id_command
-            print "%s : %s" % ('Name\t\t', command['name'])
-            print "%s : %s" % ('Creator\t\t', command['creator'])
-            print "%s : %s" % ('Created\t\t', command['creation_date'])
-            print "%s : %s" % ('Start\t\t', command['start_date'])
-            print "%s : %s" % ('End\t\t', command['end_date'])
-            print "%s : %s" % ('Domains\t\t', command['Domains'])
-            print "--------------- Results ---------------"
-            print "%s : %s (%s %%)" % ('Total\t\t\t\t\t\t', len(command['coh']), 100)
-            print "\t%s : %s (%s %%)" % ('To Do\t\t\t\t\t', command['Results']['To Do'], 100 * command['Results']['To Do'] / len(command['coh']))
-            if command['Scheduled'] : print "\t\t%s : %s (%s %%)" % ('Scheduled\t\t\t', command['Scheduled'], 100 * command['Scheduled'] / len(command['coh']))
-            if command['Rescheduled'] : print "\t\t%s : %s (%s %%)" % ('Rescheduled\t\t\t', command['Rescheduled'], 100 * command['Rescheduled'] / len(command['coh']))
-            print "\t%s : %s (%s %%)" % ('Doing\t\t\t\t\t', command['Results']['Doing'], 100 * command['Results']['Doing'] / len(command['coh']))
-            if sum(command['In Progress'].values()) : print "\t\t%s : %s (%s %%)" % ('In Progress\t\t\t', sum(command['In Progress'].values()), 100 * sum(command['In Progress'].values()) / len(command['coh']))
-            print "\t%s : %s (%s %%)" % ('Delayed\t\t\t\t\t', command['Results']['Delayed'], 100 * command['Results']['Delayed'] / len(command['coh']))
-            if command['Stopped'] : print "\t\t%s : %s (%s %%)" % ('Stopped\t\t\t', command['Stopped'], 100 * command['Stopped'] / len(command['coh']))
-            if command['Neutralized'] : print "\t\t%s : %s (%s %%)" % ('Neutralized\t', command['Neutralized'], 100 * command['Neutralized'] / len(command['coh']))
-            print "\t%s : %s (%s %%)" % ('Done\t\t\t\t\t', command['Results']['Done'], 100 * command['Results']['Done'] / len(command['coh']))
-            if command['Success'] : print "\t\t%s : %s (%s %%)" % ('Success\t\t\t\t', command['Success'], 100 * command['Success'] / len(command['coh']))
-            print "\t%s : %s (%s %%)" % ('Not Done\t\t\t\t', command['Results']['Target'] + command['Results']['Plan'] + command['Results']['Infra'], 100 * (command['Results']['Target'] + command['Results']['Plan'] + command['Results']['Infra']) / len(command['coh']))
-            print "\t%s : %s (%s %%)" % ('\tTarget\t\t\t\t', command['Results']['Target'], 100 * command['Results']['Target'] / len(command['coh']))
-            if command['Fatal']['not_enought_info'] : print "\t\t\t%s : %s (%s %%)" % ('Not Enough Info\t\t', command['Fatal']['not_enought_info'], 100 * command['Fatal']['not_enought_info'] / len(command['coh']))
-            if command['Fatal']['target_broken'] : print "\t\t\t%s : %s (%s %%)" % ('Target broken\t\t', command['Fatal']['target_broken'], 100 * command['Fatal']['target_broken'] / len(command['coh']))
-            if command['Fatal']['halt'] : print "\t\t\t%s : %s (%s %%)" % ('Halt\t\t\t', command['Fatal']['halt'], 100 * command['Fatal']['halt'] / len(command['coh']))
-            if command['Fatal']['mac_mismatch'] : print "\t\t\t%s : %s (%s %%)" % ('Mac Mismatch\t\t', command['Fatal']['mac_mismatch'], 100 * command['Fatal']['mac_mismatch'] / len(command['coh']))
-            if command['Fatal']['unreachable'] : print "\t\t\t%s : %s (%s %%)" % ('Unreachable\t\t', command['Fatal']['unreachable'], 100 * command['Fatal']['unreachable'] / len(command['coh']))
-            if command['Fatal']['inventory'] : print "\t\t\t%s : %s (%s %%)" % ('Inventory\t\t', command['Fatal']['inventory'], 100 * command['Fatal']['inventory'] / len(command['coh']))
-            if command['Fatal']['execution'] : print "\t\t\t%s : %s (%s %%)" % ('Execution\t\t', command['Fatal']['execution'], 100 * command['Fatal']['execution'] / len(command['coh']))
-            print "\t%s : %s (%s %%)" % ('\tPlan\t\t\t\t', command['Results']['Plan'], 100 * command['Results']['Plan'] / len(command['coh']))
-            if command['Aborded'] : print "\t\t\t%s : %s (%s %%)" % ('Aborded\t\t\t', command['Aborded'], 100 * command['Aborded'] / len(command['coh']))
-            if command['Fatal']['script'] : print "\t\t\t%s : %s (%s %%)" % ('Script\t\t\t', command['Fatal']['script'], 100 * command['Fatal']['script'] / len(command['coh']))
-            if command['Fatal']['bundle_broken'] : print "\t\t\t%s : %s (%s %%)" % ('Broken Bundle\t\t', command['Fatal']['bundle_broken'], 100 * command['Fatal']['bundle_broken'] / len(command['coh']))
-            if command['Fatal']['delete'] : print "\t\t\t%s : %s (%s %%)" % ('Delete\t\t\t', command['Fatal']['delete'], 100 * command['Fatal']['delete'] / len(command['coh']))
-            if command['Fatal']['timeout'] : print "\t\t\t%s : %s (%s %%)" % ('Timeout\t\t\t', command['Fatal']['timeout'], 100 * command['Fatal']['timeout'] / len(command['coh']))
-            if command['Fatal']['package_modified'] : print "\t\t\t%s : %s (%s %%)" % ('Package Modified\t', command['Fatal']['package_modified'], 100 * command['Fatal']['package_modified'] / len(command['coh']))
-            print "\t%s : %s (%s %%)" % ('\tInfra\t\t\t\t', command['Results']['Infra'], 100 * command['Results']['Infra'] / len(command['coh']))
-            if command['Fatal']['package_unavailable'] : print "\t\t\t%s : %s (%s %%)" % ('Package Unavailable\t', command['Fatal']['package_unavailable'], 100 * command['Fatal']['package_unavailable'] / len(command['coh']))
-            if command['Fatal']['conn_issue'] : print "\t\t\t%s : %s (%s %%)" % ('Connection Issue\t', command['Fatal']['conn_issue'], 100 * command['Fatal']['conn_issue'] / len(command['coh']))
+            print "================== [%s] ==================" % id_command
+            print "%s : %s" % ('Name    ', command['name'])
+            print "%s : %s" % ('Creator ', command['creator'])
+            print "%s : %s" % ('Created ', command['creation_date'])
+            print "%s : %s" % ('Start   ', command['start_date'])
+            print "%s : %s" % ('End     ', command['end_date'])
+            print "%s : %s" % ('Domains ', command['Domains'])
+            print "------------------ Results ------------------"
+            print_human('Total', len(command['coh']), len(command['coh']), len(command['coh']))
+            print_human('    To Do ', command['Results']['To Do'], len(command['coh']), len(command['coh']))
+            print_human('        Scheduled ', command['Scheduled'], len(command['coh']), command['Results']['To Do'])
+            print_human('        Rescheduled ', command['Rescheduled'], len(command['coh']), command['Results']['To Do'])
+            print_human('    Doing ', command['Results']['Doing'], len(command['coh']), len(command['coh']))
+            print_human('        In Progress ', sum(command['In Progress'].values()), len(command['coh']), command['Results']['Doing'])
+            print_human('        Delayed ', command['Results']['Delayed'], len(command['coh']), command['Results']['Doing'])
+            print_human('        Stopped ', command['Stopped'], len(command['coh']), command['Results']['Doing'])
+            print_human('        Neutralized ', command['Neutralized'], len(command['coh']), command['Results']['Doing'])
+            print_human('    Done ', command['Results']['Done'], len(command['coh']), len(command['coh']))
+            print_human('        Success ', command['Success'], len(command['coh']), command['Results']['Done'])
+            print_human('    Not Done ', command['Results']['Target'] + command['Results']['Plan'] + command['Results']['Infra'], len(command['coh']), len(command['coh']))
+            print_human('        Target ', command['Results']['Target'], len(command['coh']), command['Results']['Target'] + command['Results']['Plan'] + command['Results']['Infra'])
+            print_human('            Not Enough Info ', command['Fatal']['not_enought_info'], len(command['coh']), command['Results']['Target'])
+            print_human('            Target broken ', command['Fatal']['target_broken'], len(command['coh']), command['Results']['Target'])
+            print_human('            Halt ', command['Fatal']['halt'], len(command['coh']), command['Results']['Target'])
+            print_human('            Mac Mismatch ', command['Fatal']['mac_mismatch'], len(command['coh']), command['Results']['Target'])
+            print_human('            Unreachable ', command['Fatal']['unreachable'], len(command['coh']), command['Results']['Target'])
+            print_human('            Inventory ', command['Fatal']['inventory'], len(command['coh']), command['Results']['Target'])
+            print_human('            Execution ', command['Fatal']['execution'], len(command['coh']), command['Results']['Target'])
+            print_human('        Plan ', command['Results']['Plan'], len(command['coh']), command['Results']['Target'] + command['Results']['Plan'] + command['Results']['Infra'])
+            print_human('            Aborded ', command['Aborded'], len(command['coh']), command['Results']['Plan'])
+            print_human('            Script ', command['Fatal']['script'], len(command['coh']), command['Results']['Plan'])
+            print_human('            Broken Bundle ', command['Fatal']['bundle_broken'], len(command['coh']), command['Results']['Plan'])
+            print_human('            Delete ', command['Fatal']['delete'], len(command['coh']), command['Results']['Plan'])
+            print_human('            Timeout ', command['Fatal']['timeout'], len(command['coh']), command['Results']['Plan'])
+            print_human('            Package Modified ', command['Fatal']['package_modified'], len(command['coh']), command['Results']['Plan'])
+            print_human('        Infra ', command['Results']['Infra'], len(command['coh']), command['Results']['Target'] + command['Results']['Plan'] + command['Results']['Infra'])
+            print_human('            Package Unavailable ', command['Fatal']['package_unavailable'], len(command['coh']), command['Results']['Infra'])
+            print_human('            Connection Issue ', command['Fatal']['conn_issue'], len(command['coh']), command['Results']['Infra'])
 
         elif options.format == 'csv':
             print "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s" % (
