@@ -31,15 +31,18 @@ Cookies are stored as a LWPCookieJar in "/tmp/mmc-cookies".
 
 Example:
 import logging
-import mmc.client.sync
+from mmc.client import sync
 
 log = logging.getLogger()
 logging.basicConfig(level=logging.DEBUG)
 
-proxy = sync.Proxy('https://mmc:s3cr3t@localhost:7080')
+# use HTTPS Transport
+proxy = sync.Proxy('https://mmc:s3cr3t@127.0.0.1:7080')
 
 proxy.base.ldapAuth('root', 'secret')
-print proxy.dyngroup.getallgroups({})
+print 'Version:', proxy.base.getVersion()
+print 'APIVersion:', proxy.base.getApiVersion()
+print 'Revision:', proxy.base.getRevision()
 """
 import os
 import stat
@@ -55,20 +58,6 @@ log = logging.getLogger()
 
 COOKIES_FILE = '/tmp/mmc-cookies'
 
-class Proxy(xmlrpclib.ServerProxy, object):
-    """ This subclass ServerProxy to handle login and specific MMC
-    cookies mechanism.
-    Can authenticate automatically if username and passwd are provided.
-    If MMC server return Fault 8003, we identify with base.ldapAuth method.
-    """
-    def __init__(self, uri, username=None, passwd=None, verbose=False):
-        url = urlparse(uri)
-        mmcTransport = MMCSafeTransport(url.username, url.password)
-        xmlrpclib.ServerProxy.__init__(self, uri, transport=mmcTransport)
-        self.username = username
-        self.passwd = passwd
-        self.authenticating = False
-
 class CookieResponse:
     """
     Adapter for the LWPCookieJar.extract_cookies
@@ -79,15 +68,16 @@ class CookieResponse:
     def info(self):
         return self.headers
 
-class MMCSafeTransport(xmlrpclib.SafeTransport):
+class MMCBaseTransport(object):
     """
     Standard synchronous Transport for the MMC agent.
     MMC agent provides a slightly modified XMLRPC interface.
     Each xmlrpc request has to contains a modified header containing a
     valid session ID and authentication information.
     """
+    
     user_agent = 'AdminProxy'
-
+    
     def __init__(self, username, passwd, use_datetime=0):
         """ This method returns an XMLRPC client which supports
         basic authentication through cookies.
@@ -118,7 +108,7 @@ class MMCSafeTransport(xmlrpclib.SafeTransport):
         This method override the send_host method of SafeTransport to send
         authentication and cookie info.
         """
-        xmlrpclib.SafeTransport.send_host(self, connection, host)
+        super(MMCBaseTransport, self).send_host(connection, host)
         if os.path.exists(COOKIES_FILE):
             self.send_cookie_auth(connection)
         elif self.credentials != ():
@@ -162,3 +152,28 @@ class MMCSafeTransport(xmlrpclib.SafeTransport):
             sock = None
 
         return self._parse_response(h.getfile(), sock)
+
+class MMCTransport(MMCBaseTransport, xmlrpclib.Transport):
+    pass
+
+class MMCSafeTransport(MMCBaseTransport, xmlrpclib.SafeTransport):
+    pass
+
+class Proxy(xmlrpclib.ServerProxy, object):
+    """ This subclass ServerProxy to handle login and specific MMC
+    cookies mechanism.
+    Can authenticate automatically if username and passwd are provided.
+    If MMC server return Fault 8003, we identify with base.ldapAuth method.
+    """
+    
+    available_transports = {'http' : MMCTransport, 'https' : MMCSafeTransport}
+    
+    def __init__(self, uri, username=None, passwd=None, verbose=False):
+        url = urlparse(uri)
+        if url.scheme not in self.available_transports:
+            raise IOError, "unsupported XML-RPC protocol"
+        mmcTransport = self.available_transports[url.scheme](url.username, url.password)
+        xmlrpclib.ServerProxy.__init__(self, uri, transport=mmcTransport)
+        self.username = username
+        self.passwd = passwd
+        self.authenticating = False
