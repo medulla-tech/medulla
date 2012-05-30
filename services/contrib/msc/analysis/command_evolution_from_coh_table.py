@@ -123,13 +123,15 @@ if options.docs :
     print "     --> Execution : Execution failed."
     print "The script raised an INTERNAL error; you should have a"
     print "look to see why it failed"
+    print "     --> Precheck : The precheck failed, no idea why."
+    print "The target is probably crached."
     print " - Results : the ammounts, categorized"
     print "  + To Do : deployments till to be done; contains 'Scheduled', 'Rescheduled'"
     print "  + Doing : deployments in progress; contains 'In Progress'"
     print "  + Delayed : deployments postponed by user or scheduler  action, contains 'Stopped', 'Neutralized'"
     print "  + Done : deployments finished on success, contains 'Success'"
     print "  + Not Done : deployments finished on error, contains the following field"
-    print "  + Target : deployment which have failed since the target was deficient, contains 'Not Enough Info', 'Target broken', 'Halt', 'Mac Mismatch', 'Unreachable', 'Inventory', 'Execution'"
+    print "  + Target : deployment which have failed since the target was deficient, contains 'Not Enough Info', 'Target broken', 'Halt', 'Mac Mismatch', 'Unreachable', 'Inventory', 'Execution', 'Precheck'"
     print "  + Plan : deployment which have failed since the deployment plan lacked information, contains 'Aborded', 'Script', 'Broken Bundle', 'Delete', 'Timeout', 'Package Modified'"
     print "  + Infra : deployment which have failed because of some flaws in the infrastructure, contains 'Package Unavailable', 'Connection issue'"
     sys.exit(0)
@@ -186,6 +188,7 @@ def getStruct():
         'target_broken'         : 0,
         'unreachable'           : 0,
         'conn_issue'            : 0,
+        'precheck'              : 0,
         'delete'                : 0,
         'inventory'             : 0,
         'halt'                  : 0,
@@ -353,8 +356,8 @@ for command in commandData:
                 last_failed = 'unreachable'
                 dataCommand['Results']['Target'] += 1
             elif re.findall('PRE-COMMAND FAILED CLIENT SIDE: exitcode = 1', last_message) :
-                last_failed = 'conn_issue'
-                dataCommand['Results']['Infra'] += 1
+                last_failed = 'precheck'
+                dataCommand['Results']['Target'] += 1
             elif re.findall('PRE-COMMAND FAILED CLIENT SIDE: exitcode = 66', last_message) and last_error == 66 and last_state == 'upload_failed':
                 last_failed = 'target_broken'
                 dataCommand['Results']['Target'] += 1
@@ -444,7 +447,8 @@ if options.format == 'csv' :
         'Unreachable',
         'Inventory',
         'Execution',
-        "Plan",
+        'Precheck',
+        'Plan',
         'Aborded',
         'Script',
         'Broken Bundle',
@@ -499,6 +503,7 @@ for id_command in ids_command:
             print_human('            Unreachable ', command['Fatal']['unreachable'], len(command['coh']), command['Results']['Target'])
             print_human('            Inventory ', command['Fatal']['inventory'], len(command['coh']), command['Results']['Target'])
             print_human('            Execution ', command['Fatal']['execution'], len(command['coh']), command['Results']['Target'])
+            print_human('            Precheck ', command['Fatal']['precheck'], len(command['coh']), command['Results']['Target'])
             print_human('        Plan ', command['Results']['Plan'], len(command['coh']), command['Results']['Target'] + command['Results']['Plan'] + command['Results']['Infra'])
             print_human('            Aborded ', command['Aborded'], len(command['coh']), command['Results']['Plan'])
             print_human('            Script ', command['Fatal']['script'], len(command['coh']), command['Results']['Plan'])
@@ -539,6 +544,7 @@ for id_command in ids_command:
                 command['Fatal']['unreachable'],
                 command['Fatal']['inventory'],
                 command['Fatal']['execution'],
+                command['Fatal']['precheck'],
                 command['Results']['Plan'],
                 command['Aborded'],
                 command['Fatal']['script'],
