@@ -310,8 +310,16 @@ for command in commandData:
             last_error = 0
             last_entry = None
             last_message = ''
+            last_state = ''
+            
+            prev_error = 0
+            prev_entry = None
+            prev_message = ''
+            prev_state = ''
+
             for i in dataCommand['coh'][coh['id']]:
                 if i[1] != 0 :
+                    (prev_error, prev_entry, prev_message, prev_state) = (last_error, last_entry, last_message, last_state)
                     if last_entry == None :
                         (last_entry, last_error, last_message, last_state) = i
                     elif last_entry <= i[0]:
@@ -322,6 +330,12 @@ for command in commandData:
                 dataCommand['Results']['Target'] += 1
             elif last_error == 3001 :
                 last_failed = 'bundle_broken'
+                dataCommand['Results']['Plan'] += 1
+            elif re.findall('E: md5sum: WARNING:', last_message) and last_state == 'upload_failed':
+                last_failed = 'package_modified'
+                dataCommand['Results']['Plan'] += 1
+            elif re.findall('E: md5sum: WARNING:', prev_message) and prev_state == 'upload_failed':
+                last_failed = 'package_modified'
                 dataCommand['Results']['Plan'] += 1
             elif last_error == 4001 :
                 last_failed = 'package_unavailable'
