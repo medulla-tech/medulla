@@ -231,6 +231,8 @@ for command in commandData:
     dataCommand['creator'] = command['creator']
     dataCommand['creation_date'] = command['creation_date']
     dataCommand['max_connection_attempt'] = command['max_connection_attempt']
+    dataCommand['start_date'] = command['start_date']
+    dataCommand['end_date'] = command['end_date']
     dataCommand['fk_bundle'] = command['fk_bundle']
 
     for coh in cohData :
@@ -405,6 +407,8 @@ if options.format == 'csv' :
         'Name',
         'Creator',
         'Created',
+	'Start',
+	'End',
         'Domains',
         'Total',
         "To Do",
@@ -448,6 +452,8 @@ for id_command in ids_command:
             print "%s : %s" % ('Name\t\t', command['name'])
             print "%s : %s" % ('Creator\t\t', command['creator'])
             print "%s : %s" % ('Created\t\t', command['creation_date'])
+            print "%s : %s" % ('Start\t\t', command['start_date'])
+            print "%s : %s" % ('End\t\t', command['end_date'])
             print "%s : %s" % ('Domains\t\t', command['Domains'])
             print "--------------- Results ---------------"
             print "%s : %s (%s %%)" % ('Total\t\t\t\t\t\t', len(command['coh']), 100)
@@ -482,11 +488,13 @@ for id_command in ids_command:
             if command['Fatal']['conn_issue'] : print "\t\t\t%s : %s (%s %%)" % ('Connection Issue\t', command['Fatal']['conn_issue'], 100 * command['Fatal']['conn_issue'] / len(command['coh']))
 
         elif options.format == 'csv':
-            print "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s" % (
+            print "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s" % (
                 id_command,
                 command['name'],
                 command['creator'],
                 command['creation_date'],
+                command['start_date'],
+                command['end_date'],
                 ','.join(command['Domains']),
                 len(command['coh']),
                 command['Results']['To Do'],
