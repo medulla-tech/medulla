@@ -64,6 +64,27 @@ function _ppolicy_baseEdit($FH, $mode) {
                 _T("This account is locked by the LDAP directory.", "ppolicy"));
             $em->display();
         }
+        $pwdExpired = isPasswordExpired($uid);
+        $nbGraceLogins = isAccountInGraceLogin($uid);
+        if ($pwdExpired && in_array($nbGraceLogins, array(0, 1))) {
+            // Display an error message on top of the page
+            $em = new ErrorMessage(_T("Password policy management", "ppolicy") . ' : ' .
+                _T("The password of this account has expired. The user cannot change his password.", "ppolicy"));
+            $em->display();
+        }
+        if ($pwdExpired && ($nbGraceLogins == -1 || $nbGraceLogins > 1)) {
+            if ($nbGraceLogins > 1) {
+                // Display an error message on top of the page
+                $em = new ErrorMessage(_T("Password policy management", "ppolicy") . ' : ' .
+                    _T(sprintf("The password of this account has expired. The user has %s login(s) left to change his password.", $nbGraceLogins), "ppolicy"));
+            }
+            else {
+                // Display an error message on top of the page
+                $em = new ErrorMessage(_T("Password policy management", "ppolicy") . ' : ' .
+                    _T("The password of this account has expired. The user can change his password.", "ppolicy"));
+            }
+            $em->display();
+        }
         $f->add(new TrFormElement(_T("Lock account", "ppolicy"),
             new CheckboxTpl("pwdLock"), array("tooltip" => _T("If checked, permanently lock the user account", "ppolicy"))),
             array("value" => $pwdLock ? "checked" : "")
