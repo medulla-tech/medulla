@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://mds.mandriva.org/\n"
-"POT-Creation-Date: 2012-05-25 14:01+0200\n"
-"PO-Revision-Date: 2012-05-25 14:30+0000\n"
+"POT-Creation-Date: 2012-06-01 13:26+0200\n"
+"PO-Revision-Date: 2012-06-01 11:29+0000\n"
 "Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/mds/team/fr_FR/)\n"
 "MIME-Version: 1.0\n"
@@ -18,123 +18,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: fr_FR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
-
-#: modules/base/includes/errorHandling.php:28
-msgid "LDAP log file does not exist."
-msgstr "Le journal LDAP n'existe pas."
-
-#: modules/base/includes/errorHandling.php:29
-msgid ""
-"Please be sure you have:\n"
-"                        <p>This line in your /etc/ldap/slapd.conf or /etc/openldap/slapd.conf:\n"
-"                        <pre>loglevel        256</pre></p>\n"
-"                        <p>and this line in your /etc/syslog.conf:\n"
-"                        <pre>local4.*       /var/log/ldap.log (or /var/log/ldap/ldap.log)</pre>\n"
-"                        </p>\n"
-"                        "
-msgstr ""
-"Assurrez vous d'avoir :\n"
-"                        <p>Cette ligne dans /etc/ldap/slapd.conf ou /etc/openldap/slapd.conf:\n"
-"                        <pre>loglevel        256</pre></p>\n"
-"                        <p>et cette ligne dans  /etc/syslog.conf:\n"
-"                        <pre>local4.*       /var/log/ldap.log (ou /var/log/ldap/ldap.log)</pre>\n"
-"                        </p>\n"
-"                        "
-
-#: modules/base/includes/errorHandling.php:39
-msgid "The user directory does not exist and cannot be removed."
-msgstr ""
-"Le répertoire de l'utilisateur n'existe pas et ne peut donc pas être "
-"supprimé."
-
-#: modules/base/includes/errorHandling.php:40
-msgid "Please do not remove user's files when deleting the user."
-msgstr ""
-"Veuillez demander à ne pas supprimer les fichiers de l'utilisateur lors de "
-"sa suppression."
-
-#: modules/base/includes/errorHandling.php:45
-msgid "The user home directory already exists."
-msgstr "Le dossier personnel de l'utilisateur existe déjà."
-
-#: modules/base/includes/errorHandling.php:46
-msgid ""
-"Set the home directory in a different location or force the use of the "
-"existing directory (in expert mode)."
-msgstr ""
-"Modifiez le chemin du répertoire personnel ou forcez l'utilisation du "
-"répertoire existant (en mode expert)"
-
-#: modules/base/includes/errorHandling.php:51
-msgid "Your password is too young to change."
-msgstr "Votre mot de passe est trop récent pour être changé"
-
-#: modules/base/includes/errorHandling.php:52
-msgid ""
-"The password policy of your account doesn't allow you to modify your "
-"password, because your password is too young to change."
-msgstr ""
-"La politique des mots de passe de votre compte ne vous permet pas de "
-"modifier votre mot de passe, car votre mot de passe n'a pas atteint la durée"
-" de vie minimale requise."
-
-#: modules/base/includes/errorHandling.php:57
-msgid "Password is in history of old passwords"
-msgstr "Le mot de passe est dans l'historique des anciens mots de passe"
-
-#: modules/base/includes/errorHandling.php:58
-#: modules/base/includes/errorHandling.php:64
-msgid ""
-"The password policy of your account doesn't allow you to modify your "
-"password, because you already had this password previously."
-msgstr ""
-"La politique des mots de passe de votre compte ne vous permet pas de "
-"modifier votre mot de passe, car vous aviez déjà ce mot de passe "
-"précédemment."
-
-#: modules/base/includes/errorHandling.php:63
-msgid "Password is not being changed from existing value"
-msgstr "Le mot de passe n'est pas changé de sa valeur actuelle"
-
-#: modules/base/includes/errorHandling.php:69
-msgid "Password fails quality checking policy."
-msgstr "Le mot de passe échoue au test de qualité."
-
-#: modules/base/includes/errorHandling.php:70
-msgid ""
-"The password policy of your account doesn't allow you to modify your "
-"password, because your password is not complex enough or is too short."
-msgstr ""
-
-#: modules/base/includes/errorHandling.php:75
-msgid "The password must contain at least one number"
-msgstr "Le mot de passe doit contenir au moins un chiffre"
-
-#: modules/base/includes/errorHandling.php:80
-msgid "The password must contain at least one upper case character"
-msgstr "Le mot de passe doit contenir au moins un caractère en majuscule"
-
-#: modules/base/includes/errorHandling.php:85
-msgid "The password must contain at least one lower case character"
-msgstr "Le mot de passe doit contenir au moins un caractère minuscule"
-
-#: modules/base/includes/errorHandling.php:90
-msgid ""
-"The password must contain at least one special character: #$%&+./:=?@{}"
-msgstr ""
-"Le mot de passe doit contenir au moins un caractère spécial : #$%&+./:=?@{}"
-
-#: modules/base/includes/errorHandling.php:96
-#, php-format
-msgid "The password must not contain the same character %s times"
-msgstr ""
-"Le mot de passe ne doit pas contenir le même caractère plus de %s fois"
-
-#: modules/base/includes/errorHandling.php:107
-#, php-format
-msgid "The password length must be %s or longer"
-msgstr ""
-"La taille du mot de passe doit être égale ou supérieure à %s caractères"
 
 #: modules/base/includes/auditCodes.php:27 modules/base/users/edit.php:51
 msgid "Add user"
@@ -300,92 +183,124 @@ msgstr "Le groupe %s existe déjà"
 msgid "Group %s created"
 msgstr "Groupe %s crée"
 
-#: modules/base/includes/users-xmlrpc.inc.php:46
-msgid "Invalid login"
-msgstr "Utilisateur invalide"
+#: modules/base/includes/errorHandling.php:28
+msgid "LDAP log file does not exist."
+msgstr "Le journal LDAP n'existe pas."
 
-#: modules/base/includes/users-xmlrpc.inc.php:55
-msgid "users"
-msgstr "utilisateurs"
-
-#: modules/base/includes/users-xmlrpc.inc.php:58
-msgid "computers"
-msgstr "ordinateurs"
-
-#: modules/base/includes/users-xmlrpc.inc.php:61
-#, php-format
-msgid "WARNING: The number of registered %s is exceeding your license."
-msgstr "ATTENTION: Le nombre d'%s enregistrés dépasse votre souscription."
-
-#: modules/base/includes/users-xmlrpc.inc.php:62
-#: modules/base/status/support.php:44
+#: modules/base/includes/errorHandling.php:29
 msgid ""
-"Please contact your administrator for more information. If you are an "
-"administrator, please go to the license status page for more information."
+"Please be sure you have:\n"
+"                        <p>This line in your /etc/ldap/slapd.conf or /etc/openldap/slapd.conf:\n"
+"                        <pre>loglevel        256</pre></p>\n"
+"                        <p>and this line in your /etc/syslog.conf:\n"
+"                        <pre>local4.*       /var/log/ldap.log (or /var/log/ldap/ldap.log)</pre>\n"
+"                        </p>\n"
+"                        "
 msgstr ""
-"Veuillez contacter votre administrateur pour plus d'informations. Si vous "
-"êtes un administrateur, consulter la page de statut des licences pour plus "
-"d'informations."
+"Assurrez vous d'avoir :\n"
+"                        <p>Cette ligne dans /etc/ldap/slapd.conf ou /etc/openldap/slapd.conf:\n"
+"                        <pre>loglevel        256</pre></p>\n"
+"                        <p>et cette ligne dans  /etc/syslog.conf:\n"
+"                        <pre>local4.*       /var/log/ldap.log (ou /var/log/ldap/ldap.log)</pre>\n"
+"                        </p>\n"
+"                        "
 
-#: modules/base/includes/users-xmlrpc.inc.php:118
-#, php-format
+#: modules/base/includes/errorHandling.php:39
+msgid "The user directory does not exist and cannot be removed."
+msgstr ""
+"Le répertoire de l'utilisateur n'existe pas et ne peut donc pas être "
+"supprimé."
+
+#: modules/base/includes/errorHandling.php:40
+msgid "Please do not remove user's files when deleting the user."
+msgstr ""
+"Veuillez demander à ne pas supprimer les fichiers de l'utilisateur lors de "
+"sa suppression."
+
+#: modules/base/includes/errorHandling.php:45
+msgid "The user home directory already exists."
+msgstr "Le dossier personnel de l'utilisateur existe déjà."
+
+#: modules/base/includes/errorHandling.php:46
 msgid ""
-"User %s created but password is not valid regarding your password "
-"policies.<br/><strong>You must change the user password.</strong>"
+"Set the home directory in a different location or force the use of the "
+"existing directory (in expert mode)."
 msgstr ""
-"Utilisateur %s créé mais le mot de passe ne respecte pas la politique des "
-"mots de passe.<br /><strong>Vous devez changer le mot de passe</strong>"
+"Modifiez le chemin du répertoire personnel ou forcez l'utilisation du "
+"répertoire existant (en mode expert)"
 
-#: modules/base/includes/users-xmlrpc.inc.php:122
+#: modules/base/includes/errorHandling.php:51
+msgid "Your password is too young to change."
+msgstr "Votre mot de passe est trop récent pour être changé"
+
+#: modules/base/includes/errorHandling.php:52
+msgid ""
+"The password policy of your account doesn't allow you to modify your "
+"password, because your password is too young to change."
+msgstr ""
+"La politique des mots de passe de votre compte ne vous permet pas de "
+"modifier votre mot de passe, car votre mot de passe n'a pas atteint la durée"
+" de vie minimale requise."
+
+#: modules/base/includes/errorHandling.php:57
+msgid "Password is in history of old passwords"
+msgstr "Le mot de passe est dans l'historique des anciens mots de passe"
+
+#: modules/base/includes/errorHandling.php:58
+#: modules/base/includes/errorHandling.php:64
+msgid ""
+"The password policy of your account doesn't allow you to modify your "
+"password, because you already had this password previously."
+msgstr ""
+"La politique des mots de passe de votre compte ne vous permet pas de "
+"modifier votre mot de passe, car vous aviez déjà ce mot de passe "
+"précédemment."
+
+#: modules/base/includes/errorHandling.php:63
+msgid "Password is not being changed from existing value"
+msgstr "Le mot de passe n'est pas changé de sa valeur actuelle"
+
+#: modules/base/includes/errorHandling.php:69
+msgid "Password fails quality checking policy."
+msgstr "Le mot de passe échoue au test de qualité."
+
+#: modules/base/includes/errorHandling.php:70
+msgid ""
+"The password policy of your account doesn't allow you to modify your "
+"password, because your password is not complex enough or is too short."
+msgstr ""
+"La politique des mots de passe de votre compte ne vous permet pas de changer"
+" votre mot de passe, car celui-ci n'est pas assez complexe ou trop court."
+
+#: modules/base/includes/errorHandling.php:75
+msgid "The password must contain at least one number"
+msgstr "Le mot de passe doit contenir au moins un chiffre"
+
+#: modules/base/includes/errorHandling.php:80
+msgid "The password must contain at least one upper case character"
+msgstr "Le mot de passe doit contenir au moins un caractère en majuscule"
+
+#: modules/base/includes/errorHandling.php:85
+msgid "The password must contain at least one lower case character"
+msgstr "Le mot de passe doit contenir au moins un caractère minuscule"
+
+#: modules/base/includes/errorHandling.php:90
+msgid ""
+"The password must contain at least one special character: #$%&+./:=?@{}"
+msgstr ""
+"Le mot de passe doit contenir au moins un caractère spécial : #$%&+./:=?@{}"
+
+#: modules/base/includes/errorHandling.php:96
 #, php-format
-msgid "User %s successfully created"
-msgstr "Utilisateur %s créé avec succès"
+msgid "The password must not contain the same character %s times"
+msgstr ""
+"Le mot de passe ne doit pas contenir le même caractère plus de %s fois"
 
-#: modules/base/includes/AjaxFilterLog.inc.php:112
-#: modules/base/includes/AjaxFilterLog.inc.php:116 includes/ajaxTools.php:63
-#: includes/ajaxTools.php:69 includes/PageGenerator.php:793
-#: includes/PageGenerator.php:800 includes/PageGenerator.php:1055
-#: includes/PageGenerator.php:1059
-msgid "Previous"
-msgstr "Précédent"
-
-#: modules/base/includes/AjaxFilterLog.inc.php:123
-#: modules/base/includes/AjaxFilterLog.inc.php:127 includes/ajaxTools.php:74
-#: includes/ajaxTools.php:82 includes/PageGenerator.php:809
-#: includes/PageGenerator.php:815 includes/PageGenerator.php:1067
-#: includes/PageGenerator.php:1071
-msgid "Next"
-msgstr "Suivant"
-
-#: modules/base/includes/AjaxFilterLog.inc.php:184
-#: modules/base/includes/AjaxFilterLog.inc.php:188
-#: includes/FormGenerator.php:530 includes/FormGenerator.php:534
-msgid "or <a href='#'"
-msgstr "ou <a href='#'"
-
-#: modules/base/includes/AjaxFilterLog.inc.php:186
-#: includes/FormGenerator.php:532
-msgid "value=\"now\";'>now</a>"
-msgstr "value=\"immediat\";'>immediat</a>"
-
-#: modules/base/includes/AjaxFilterLog.inc.php:190
-#: includes/FormGenerator.php:536
-msgid "value=\"never\";'>never</a>"
-msgstr "value=\"jamais\";'>jamais</a>"
-
-#: modules/base/includes/AjaxFilterLog.inc.php:341
-#: modules/base/audit/ajaxLogFilter.php:49
-msgid "Begin date"
-msgstr "Date de début"
-
-#: modules/base/includes/AjaxFilterLog.inc.php:342
-#: modules/base/audit/ajaxLogFilter.php:52
-msgid "End date"
-msgstr "Date de fin"
-
-#: modules/base/includes/AjaxFilterLog.inc.php:382
-msgid "Refresh"
-msgstr "Rafraîchir"
+#: modules/base/includes/errorHandling.php:107
+#, php-format
+msgid "The password length must be %s or longer"
+msgstr ""
+"La taille du mot de passe doit être égale ou supérieure à %s caractères"
 
 #: modules/base/includes/publicFunc.php:46
 #, php-format
@@ -542,53 +457,53 @@ msgstr ""
 "Un compte utilisateur désactivé ne peux pas se connecter aux services UNIX de la machine. <br />\n"
 "Son shell est remplacé par /bin/false"
 
-#: modules/base/includes/publicFunc.php:401
+#: modules/base/includes/publicFunc.php:408
 #: modules/base/infoPackage.inc.php:321
 msgid "Primary group"
 msgstr "Groupe primaire"
 
-#: modules/base/includes/publicFunc.php:407
+#: modules/base/includes/publicFunc.php:414
 msgid "User's groups"
 msgstr "Groupes de l'utilisateur"
 
-#: modules/base/includes/publicFunc.php:407
+#: modules/base/includes/publicFunc.php:414
 msgid "All groups"
 msgstr "Tous les groupes"
 
-#: modules/base/includes/publicFunc.php:430
+#: modules/base/includes/publicFunc.php:437
 #: modules/base/infoPackage.inc.php:322
 msgid "Secondary groups"
 msgstr "Groupes secondaires"
 
-#: modules/base/includes/publicFunc.php:439
+#: modules/base/includes/publicFunc.php:446
 #: modules/base/views/index.tpl.php:87
 msgid "Home directory"
 msgstr "Répertoire de l'utilisateur"
 
-#: modules/base/includes/publicFunc.php:445
+#: modules/base/includes/publicFunc.php:452
 msgid "Create home directory on filesystem"
 msgstr "Créer le répertoire personnel sur le système de fichiers"
 
-#: modules/base/includes/publicFunc.php:449
+#: modules/base/includes/publicFunc.php:456
 msgid "Force to use the home directory if it exists"
 msgstr "Forcer l'utilisation du répertoire personnel si celui ci existe"
 
-#: modules/base/includes/publicFunc.php:450
+#: modules/base/includes/publicFunc.php:457
 msgid "Warning: an existing directory may belong to another user !"
 msgstr ""
 "Attention: le répertoire existant peut appartenir à un autre utilisateur !"
 
-#: modules/base/includes/publicFunc.php:456
+#: modules/base/includes/publicFunc.php:463
 #: modules/base/infoPackage.inc.php:314
 msgid "Login shell"
 msgstr "Interpréteur de commande"
 
-#: modules/base/includes/publicFunc.php:461
+#: modules/base/includes/publicFunc.php:468
 #: modules/base/infoPackage.inc.php:323
 msgid "Common name"
 msgstr "Nom commun"
 
-#: modules/base/includes/publicFunc.php:462
+#: modules/base/includes/publicFunc.php:469
 msgid ""
 "This field is used by some LDAP clients (for example Thunderbird address "
 "book) to display user entries."
@@ -596,25 +511,112 @@ msgstr ""
 "Ce champ est utilisé par des clients LDAP (par exemple l'annuaire de "
 "Thunderbird) pour afficher les utilisateurs."
 
-#: modules/base/includes/publicFunc.php:467
+#: modules/base/includes/publicFunc.php:474
 #: modules/base/infoPackage.inc.php:324
 msgid "Preferred name to be used"
 msgstr "Nom préféré à utiliser"
 
-#: modules/base/includes/publicFunc.php:468
+#: modules/base/includes/publicFunc.php:475
 msgid ""
 "This field is used by SAMBA (and other LDAP clients) to display user name."
 msgstr ""
 "Ce champ est utilisé par SAMBA (et autres clients LDAP) pour afficher le nom"
 " de l'utilisateur."
 
-#: modules/base/includes/publicFunc.php:473
+#: modules/base/includes/publicFunc.php:480
 msgid "UID"
 msgstr "UID"
 
-#: modules/base/includes/publicFunc.php:478
+#: modules/base/includes/publicFunc.php:485
 msgid "GID"
 msgstr "GID"
+
+#: modules/base/includes/users-xmlrpc.inc.php:46
+msgid "Invalid login"
+msgstr "Utilisateur invalide"
+
+#: modules/base/includes/users-xmlrpc.inc.php:55
+msgid "users"
+msgstr "utilisateurs"
+
+#: modules/base/includes/users-xmlrpc.inc.php:58
+msgid "computers"
+msgstr "ordinateurs"
+
+#: modules/base/includes/users-xmlrpc.inc.php:61
+#, php-format
+msgid "WARNING: The number of registered %s is exceeding your license."
+msgstr "ATTENTION: Le nombre d'%s enregistrés dépasse votre souscription."
+
+#: modules/base/includes/users-xmlrpc.inc.php:62
+#: modules/base/status/support.php:44
+msgid ""
+"Please contact your administrator for more information. If you are an "
+"administrator, please go to the license status page for more information."
+msgstr ""
+"Veuillez contacter votre administrateur pour plus d'informations. Si vous "
+"êtes un administrateur, consulter la page de statut des licences pour plus "
+"d'informations."
+
+#: modules/base/includes/users-xmlrpc.inc.php:118
+#, php-format
+msgid ""
+"User %s created but password is not valid regarding your password "
+"policies.<br/><strong>You must change the user password.</strong>"
+msgstr ""
+"Utilisateur %s créé mais le mot de passe ne respecte pas la politique des "
+"mots de passe.<br /><strong>Vous devez changer le mot de passe</strong>"
+
+#: modules/base/includes/users-xmlrpc.inc.php:122
+#, php-format
+msgid "User %s successfully created"
+msgstr "Utilisateur %s créé avec succès"
+
+#: modules/base/includes/AjaxFilterLog.inc.php:112
+#: modules/base/includes/AjaxFilterLog.inc.php:116
+#: includes/PageGenerator.php:793 includes/PageGenerator.php:800
+#: includes/PageGenerator.php:1055 includes/PageGenerator.php:1059
+#: includes/ajaxTools.php:63 includes/ajaxTools.php:69
+msgid "Previous"
+msgstr "Précédent"
+
+#: modules/base/includes/AjaxFilterLog.inc.php:123
+#: modules/base/includes/AjaxFilterLog.inc.php:127
+#: includes/PageGenerator.php:809 includes/PageGenerator.php:815
+#: includes/PageGenerator.php:1067 includes/PageGenerator.php:1071
+#: includes/ajaxTools.php:74 includes/ajaxTools.php:82
+msgid "Next"
+msgstr "Suivant"
+
+#: modules/base/includes/AjaxFilterLog.inc.php:184
+#: modules/base/includes/AjaxFilterLog.inc.php:188
+#: includes/FormGenerator.php:530 includes/FormGenerator.php:534
+msgid "or <a href='#'"
+msgstr "ou <a href='#'"
+
+#: modules/base/includes/AjaxFilterLog.inc.php:186
+#: includes/FormGenerator.php:532
+msgid "value=\"now\";'>now</a>"
+msgstr "value=\"immediat\";'>immediat</a>"
+
+#: modules/base/includes/AjaxFilterLog.inc.php:190
+#: includes/FormGenerator.php:536
+msgid "value=\"never\";'>never</a>"
+msgstr "value=\"jamais\";'>jamais</a>"
+
+#: modules/base/includes/AjaxFilterLog.inc.php:341
+#: modules/base/audit/ajaxLogFilter.php:49
+msgid "Begin date"
+msgstr "Date de début"
+
+#: modules/base/includes/AjaxFilterLog.inc.php:342
+#: modules/base/audit/ajaxLogFilter.php:52
+msgid "End date"
+msgstr "Date de fin"
+
+#: modules/base/includes/AjaxFilterLog.inc.php:382
+msgid "Refresh"
+msgstr "Rafraîchir"
 
 #: modules/base/audit/ajaxLogFilter.php:114 modules/base/audit/logview.php:58
 #: modules/base/logview/ajax_showlog.php:42
@@ -852,8 +854,8 @@ msgstr "Ce groupe sera supprimé même si il n'est pas vide"
 
 #: modules/base/groups/delete.php:66 modules/base/groups/members.php:185
 #: modules/base/users/backup.php:91 modules/ppolicy/default/delete.php:45
-#: includes/PageGenerator.php:108 includes/PageGenerator.php:2429
-#: includes/PageGenerator.php:2500
+#: includes/PageGenerator.php:108 includes/PageGenerator.php:2434
+#: includes/PageGenerator.php:2505
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -884,8 +886,8 @@ msgid "Create"
 msgstr "Créer"
 
 #: modules/base/groups/edit.php:107 modules/base/groups/members.php:184
-#: includes/PageGenerator.php:2425 includes/PageGenerator.php:2496
-#: includes/PageGenerator.php:2522
+#: includes/PageGenerator.php:2430 includes/PageGenerator.php:2501
+#: includes/PageGenerator.php:2527
 msgid "Confirm"
 msgstr "Valider"
 
@@ -1256,11 +1258,19 @@ msgstr "Liste des utilisateurs"
 msgid "User log"
 msgstr "Journal de l'utilisateur"
 
-#: modules/base/users/passwd.php:36 modules/base/users/passwd.php:73
-#: modules/base/users/resetpasswd.php:59
-#: modules/base/users/localSidebar.php:34
+#: modules/base/users/localSidebar.php:31
+msgid "Bulk import (CSV)"
+msgstr "Import massif"
+
+#: modules/base/users/localSidebar.php:34 modules/base/users/passwd.php:36
+#: modules/base/users/passwd.php:73 modules/base/users/resetpasswd.php:59
 msgid "Change your password"
 msgstr "Changement de votre mot de passe"
+
+#: modules/base/users/localSidebar.php:36
+#: modules/base/users/resetpasswd.php:35
+msgid "Reset your password"
+msgstr "Remettre à zéro votre mot de passe"
 
 #: modules/base/users/passwd.php:43 modules/base/users/resetpasswd.php:42
 msgid "Your password has been changed."
@@ -1298,15 +1308,6 @@ msgstr "Le mot de passe actuel n'est pas valide. Réessayez."
 #: modules/base/users/passwd.php:81 modules/base/users/resetpasswd.php:63
 msgid "Passwords are mismatching. Please retry."
 msgstr "Vos mots de passe ne sont pas identiques. Veuillez recommencer."
-
-#: modules/base/users/resetpasswd.php:35
-#: modules/base/users/localSidebar.php:36
-msgid "Reset your password"
-msgstr "Remettre à zéro votre mot de passe"
-
-#: modules/base/users/localSidebar.php:31
-msgid "Bulk import (CSV)"
-msgstr "Import massif"
 
 #: modules/base/infoPackage.inc.php:36
 msgid "User, group and computer management"
@@ -1456,70 +1457,27 @@ msgstr "configuration"
 msgid " configuration page"
 msgstr "page de configuration"
 
-#: main_content.php:145 graph/navbar.inc.php:63
-msgid "Home"
-msgstr "Page principale"
+#: forgotpassword.php:22
+msgid "A password reset link has been sent."
+msgstr "Un lien vous a été envoyé pour remettre à zéro votre mot de passe."
 
-#: graph/header.inc.php:258
-msgid "Form cannot be submit. Input errors are highlighted in red."
+#: forgotpassword.php:24
+msgid "Can't reset your password. Please contact your administrator."
 msgstr ""
-"Le formulaire ne peut être envoyé. Les champs invalides sont en rouges."
+"Impossible de remettre à zéro votre mot de passe. Contactez votre "
+"administrateur."
 
-#: graph/navbar.inc.php:40
-msgid "standard mode"
-msgstr "mode standard"
+#: forgotpassword.php:72 forgotpassword.php:78
+msgid "Password reset"
+msgstr "Mise à zéro du mot de passe"
 
-#: graph/navbar.inc.php:42
-msgid "expert mode"
-msgstr "mode expert"
+#: forgotpassword.php:74
+msgid "Login or mail"
+msgstr "Identifiant ou email"
 
-#: graph/navbar.inc.php:47
-msgid "Click to switch to"
-msgstr "Cliquer pour passer en"
-
-#: graph/navbar.inc.php:48
-msgid "logout"
-msgstr "déconnexion"
-
-#: graph/navbar.inc.php:50 logout/index.php:48 logout/index.php:53
-msgid "Logout"
-msgstr "Déconnexion"
-
-#: graph/navbar.inc.php:117
-msgid ""
-"If this phrase does not change, you browser is not supported by the MMC "
-"application"
-msgstr ""
-"Si cette phrase ne change pas, votre navigateur n'est pas supporté par la "
-"MMC"
-
-#: logout/index.php:50
-msgid "Your session will be closed"
-msgstr "Votre session va être fermée"
-
-#: main.php:135
-msgid "Error, you don't have correct rights !"
-msgstr "Erreur, vous n'avez pas les droits requis !"
-
-#: version.php:35
-msgid "MMC components version"
-msgstr "Version des composants MMC"
-
-#: version.php:36
-msgid "MMC agent: version"
-msgstr "Agent MMC: version"
-
-#: version.php:40
-msgid "agent: version"
-msgstr "agent: version"
-
-#: version.php:42
-msgid "web: version"
-msgstr "web: version"
-
-#: version.php:44
-msgid "web: plugin is not installed"
-msgstr "web: plugin non installé"
+#: forgotpassword.php:79
+msgid "Back"
+msgstr "Retour"
 
 #: license.php:33
 msgid ""
@@ -1547,27 +1505,108 @@ msgstr ""
 "Cliquer ici pour avoir plus d'informations à propos de notre plan de "
 "maintenance et de souscription."
 
-#: forgotpassword.php:22
-msgid "A password reset link has been sent."
-msgstr "Un lien vous a été envoyé pour remettre à zéro votre mot de passe."
+#: version.php:35
+msgid "MMC components version"
+msgstr "Version des composants MMC"
 
-#: forgotpassword.php:24
-msgid "Can't reset your password. Please contact your administrator."
+#: version.php:36
+msgid "MMC agent: version"
+msgstr "Agent MMC: version"
+
+#: version.php:40
+msgid "agent: version"
+msgstr "agent: version"
+
+#: version.php:42
+msgid "web: version"
+msgstr "web: version"
+
+#: version.php:44
+msgid "web: plugin is not installed"
+msgstr "web: plugin non installé"
+
+#: graph/header.inc.php:258
+msgid "Form cannot be submit. Input errors are highlighted in red."
 msgstr ""
-"Impossible de remettre à zéro votre mot de passe. Contactez votre "
-"administrateur."
+"Le formulaire ne peut être envoyé. Les champs invalides sont en rouges."
 
-#: forgotpassword.php:72 forgotpassword.php:78
-msgid "Password reset"
-msgstr "Mise à zéro du mot de passe"
+#: graph/navbar.inc.php:40
+msgid "standard mode"
+msgstr "mode standard"
 
-#: forgotpassword.php:74
-msgid "Login or mail"
-msgstr "Identifiant ou email"
+#: graph/navbar.inc.php:42
+msgid "expert mode"
+msgstr "mode expert"
 
-#: forgotpassword.php:79
-msgid "Back"
-msgstr "Retour"
+#: graph/navbar.inc.php:47
+msgid "Click to switch to"
+msgstr "Cliquer pour passer en"
+
+#: graph/navbar.inc.php:48
+msgid "logout"
+msgstr "déconnexion"
+
+#: graph/navbar.inc.php:50 logout/index.php:48 logout/index.php:53
+msgid "Logout"
+msgstr "Déconnexion"
+
+#: graph/navbar.inc.php:63 main_content.php:145
+msgid "Home"
+msgstr "Page principale"
+
+#: graph/navbar.inc.php:117
+msgid ""
+"If this phrase does not change, you browser is not supported by the MMC "
+"application"
+msgstr ""
+"Si cette phrase ne change pas, votre navigateur n'est pas supporté par la "
+"MMC"
+
+#: logout/index.php:50
+msgid "Your session will be closed"
+msgstr "Votre session va être fermée"
+
+#: token.php:54 index.php:62
+#, php-format
+msgid "The server %s does not exist"
+msgstr "Le serveur %s n'existe pas"
+
+#: token.php:66
+msgid "Token not valid"
+msgstr "Token non valide"
+
+#: token.php:68
+msgid "Error while validating your token. Please contact your administrator."
+msgstr ""
+"Erreur lors de la validation du token. Contactez votre administrateur."
+
+#: index.php:71
+msgid "Login failed"
+msgstr "Échec de la connexion"
+
+#: index.php:77
+msgid ""
+"You have been logged out because the session between the MMC web interface "
+"and the MMC agent expired."
+msgstr ""
+"Vous avez été déconnecté parce que la session entre l'interface web MMC et "
+"l'agent MMC a expiré."
+
+#: index.php:205
+msgid "Forgot password ?"
+msgstr "Mot de passe oublié ?"
+
+#: index.php:209
+msgid "Server"
+msgstr "Serveur"
+
+#: index.php:214
+msgid "Language"
+msgstr "Langue"
+
+#: index.php:218
+msgid "Connect"
+msgstr "Connecter"
 
 #: includes/acl.inc.php:120
 msgid "You do not have required rights"
@@ -1613,6 +1652,47 @@ msgstr "Min.: "
 #: includes/FormGenerator.php:457
 msgid "Sec.: "
 msgstr "Sec.:"
+
+#: includes/PageGenerator.php:486 includes/PageGenerator.php:718
+msgid "to"
+msgstr "à"
+
+#: includes/PageGenerator.php:488 includes/PageGenerator.php:720
+#, php-format
+msgid " - Total <b>%s </b>"
+msgstr " - Total <b>%s</b>"
+
+#: includes/PageGenerator.php:491 includes/PageGenerator.php:723
+msgid "page"
+msgstr "page"
+
+#: includes/PageGenerator.php:834
+msgid "Pagination"
+msgstr "Pagination"
+
+#: includes/PageGenerator.php:918
+msgid "Go to page"
+msgstr "Aller à la page"
+
+#: includes/PageGenerator.php:1304
+msgid "No item available"
+msgstr "Aucun élément disponible"
+
+#: includes/PageGenerator.php:1469
+msgid "Select entity"
+msgstr "Entité sélectionnée"
+
+#: includes/PageGenerator.php:2092
+msgid "Ok"
+msgstr "Ok"
+
+#: includes/PageGenerator.php:2632
+msgid "Select all"
+msgstr "Tout sélectionner"
+
+#: includes/PageGenerator.php:2633
+msgid "Unselect all"
+msgstr "Tout désélectionner"
 
 #: includes/xmlrpc.inc.php:166
 msgid "Can't connect to MMC agent"
@@ -1779,47 +1859,6 @@ msgstr "L'utilisateur root ne peut pas avoir de favoris"
 msgid "Add this page to your favorite"
 msgstr "Ajouter cette page à vos favoris"
 
-#: includes/PageGenerator.php:486 includes/PageGenerator.php:718
-msgid "to"
-msgstr "à"
-
-#: includes/PageGenerator.php:488 includes/PageGenerator.php:720
-#, php-format
-msgid " - Total <b>%s </b>"
-msgstr " - Total <b>%s</b>"
-
-#: includes/PageGenerator.php:491 includes/PageGenerator.php:723
-msgid "page"
-msgstr "page"
-
-#: includes/PageGenerator.php:834
-msgid "Pagination"
-msgstr "Pagination"
-
-#: includes/PageGenerator.php:918
-msgid "Go to page"
-msgstr "Aller à la page"
-
-#: includes/PageGenerator.php:1299
-msgid "No item available"
-msgstr "Aucun élément disponible"
-
-#: includes/PageGenerator.php:1464
-msgid "Select entity"
-msgstr "Entité sélectionnée"
-
-#: includes/PageGenerator.php:2087
-msgid "Ok"
-msgstr "Ok"
-
-#: includes/PageGenerator.php:2627
-msgid "Select all"
-msgstr "Tout sélectionner"
-
-#: includes/PageGenerator.php:2628
-msgid "Unselect all"
-msgstr "Tout désélectionner"
-
 #: includes/ErrorHandling.php:77
 msgid "Show complete trackback"
 msgstr "Afficher la traceback complète"
@@ -1828,46 +1867,8 @@ msgstr "Afficher la traceback complète"
 msgid "Complete Traceback"
 msgstr "Traceback complète"
 
-#: token.php:54 index.php:62
-#, php-format
-msgid "The server %s does not exist"
-msgstr "Le serveur %s n'existe pas"
-
-#: token.php:66
-msgid "Token not valid"
-msgstr "Token non valide"
-
-#: token.php:68
-msgid "Error while validating your token. Please contact your administrator."
-msgstr ""
-"Erreur lors de la validation du token. Contactez votre administrateur."
-
-#: index.php:71
-msgid "Login failed"
-msgstr "Échec de la connexion"
-
-#: index.php:77
-msgid ""
-"You have been logged out because the session between the MMC web interface "
-"and the MMC agent expired."
-msgstr ""
-"Vous avez été déconnecté parce que la session entre l'interface web MMC et "
-"l'agent MMC a expiré."
-
-#: index.php:205
-msgid "Forgot password ?"
-msgstr "Mot de passe oublié ?"
-
-#: index.php:209
-msgid "Server"
-msgstr "Serveur"
-
-#: index.php:214
-msgid "Language"
-msgstr "Langue"
-
-#: index.php:218
-msgid "Connect"
-msgstr "Connecter"
+#: main.php:142
+msgid "Error, you don't have correct rights !"
+msgstr "Erreur, vous n'avez pas les droits requis !"
 
 
