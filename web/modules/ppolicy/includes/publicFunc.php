@@ -76,7 +76,7 @@ function _ppolicy_baseEdit($FH, $mode) {
             if ($nbGraceLogins > 1) {
                 // Display an error message on top of the page
                 $em = new ErrorMessage(_T("Password policy management", "ppolicy") . ' : ' .
-                    _T(sprintf("The password of this account has expired. The user has %s login(s) left to change his password.", $nbGraceLogins), "ppolicy"));
+                    sprintf(_T("The password of this account has expired. The user has %s login(s) left to change his password.", "ppolicy"), $nbGraceLogins));
             }
             else {
                 // Display an error message on top of the page
@@ -160,11 +160,11 @@ function _ppolicy_changeUser($FH, $mode) {
         $ppolicyName = $FH->getValue("ppolicyname");
         if ($ppolicyName) {
             updateUserPPolicy($uid, $ppolicyName);
-            $result .= _T(sprintf("Password policy %s applied.", $ppolicyName), "ppolicy") . "<br />";
+            $result .= sprintf(_T("Password policy %s applied.", "ppolicy"), $ppolicyName) . "<br />";
         }
         else {
             removeUserPPolicy($uid);
-            $result .= _T(sprintf("Password policy %s removed.", $ppolicyName), "ppolicy") . "<br />";
+            $result .= sprintf(_T("Password policy %s removed.", "ppolicy"), $ppolicyName) . "<br />";
         }
     }
 
