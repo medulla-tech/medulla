@@ -1,3 +1,23 @@
+mmc-core 3.0.4
+--------------
+
+ * Feature #1687: Allow users to reset their password with a token based
+                  authentication
+ * Password policies enhancements: Password complexity hints, show on the user
+								   edit page if the password if expired or if
+								   the user is in grace login mode
+ * New MMC contrib scripts : mmc-check-expired-passwords / usertoken-example in
+							 /usr/share/doc/python-mmc-base/contrib/scripts
+ * Audit : audit logs can be sent to syslog servers
+ * Bug #1558: Broken user / group lists under IE7
+ * Bug #1691: Bad mmc-agent PID file handling
+ * Bug #1706: Previous - Next listing behavior
+ * Bug #1739: pulse2-package-server-register-imaging on python 2.7
+ * Feature #1594: Use localized languages labels on MMC login page
+ * Feature #1671: Man pages for mmc-agent, mmc-helper and mmc-password-helper
+
+ See http://projects.mandriva.org/versions/166
+
 mmc-core 3.0.3.2
 ----------------
 
