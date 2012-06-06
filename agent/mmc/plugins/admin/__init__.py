@@ -1,6 +1,6 @@
 from configuration import *
 
-VERSION = "3.0.3.92"
+VERSION = "3.0.4"
 APIVERSION = "4:1:3"
 REVISION = int("$Rev: 0$".split(':')[1].strip(' $'))
 
