@@ -55,7 +55,7 @@ if ($probe_order == "ping") {
         $title = _T('SSH connection failed', 'msc');
     } else {
         $icon = return_icon("DONE");
-        $title = sprintf(_T('Target plateform is %s', 'msc'), $res);
+        $title = sprintf(_T('Target platform is %s', 'msc'), $res);
     }
 } elseif ($probe_order == "ping_ssh") {
     $res = scheduler_ping_client('', $_GET["uuid"]);
@@ -77,7 +77,7 @@ if ($probe_order == "ping") {
             $title = _T('Ping succeeded, SSH connection failed', 'msc');
         } else {
             $icon = return_icon("DONE");
-            $title = sprintf(_T('Target plateform is %s', 'msc'), $res);
+            $title = sprintf(_T('Target platform is %s', 'msc'), $res);
         }
     }
 } else {

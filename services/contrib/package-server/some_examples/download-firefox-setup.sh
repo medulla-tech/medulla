@@ -24,7 +24,7 @@
 BASE=http://download.mozilla.org
 
 if [ "$#" -ne "3" ]; then
-    echo "usage: $0 <plateform> <version> <lang>"
+    echo "usage: $0 <platform> <version> <lang>"
     exit 1
 fi
 

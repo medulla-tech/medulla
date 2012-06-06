@@ -21,7 +21,7 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//img[@title='Target plateform is GNU Linux']</td>
+	<td>//img[@title='Target platform is GNU Linux']</td>
 	<td></td>
 </tr>
 <tr>
