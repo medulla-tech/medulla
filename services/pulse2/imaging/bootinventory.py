@@ -27,6 +27,7 @@ The original inventory is sent using one line per kind of
 """
 
 import re # the main job here : doing regex !
+import time
 
 # here are the regex
 MACADDR_RE  = re.compile("^MAC Address:(.+)$") # MAC Address
@@ -43,6 +44,64 @@ NUMCPU_RE   = re.compile("^S4:([0-9]+)$") # CPU number
 FEATCPU_RE  = re.compile("^C:(.*)$") # CPU features, comma-separated
 FREQCPU_RE  = re.compile("^F:([0-9]+)$") # CPU frequency
 
+OCS_TPL = """<?xml version="1.0" encoding="UTF-8"?>
+<REQUEST>
+  <CONTENT>
+    <ACCESSLOG>
+      <LOGDATE>%s</LOGDATE>
+      <USERID>N/A</USERID>
+    </ACCESSLOG>
+    <BIOS>
+      <ASSETTAG></ASSETTAG>
+      <BDATE>%s</BDATE>
+      <BMANUFACTURER>%s</BMANUFACTURER>
+      <BVERSION>%s</BVERSION>
+      <SMANUFACTURER>%s</SMANUFACTURER>
+      <SMODEL></SMODEL>
+      <SSN></SSN>
+    </BIOS>
+    <HARDWARE>
+      <ARCHNAME></ARCHNAME>
+      <CHECKSUM></CHECKSUM>
+      <DATELASTLOGGEDUSER></DATELASTLOGGEDUSER>
+      <DEFAULTGATEWAY></DEFAULTGATEWAY>
+      <DESCRIPTION></DESCRIPTION>
+      <DNS></DNS>
+      <ETIME></ETIME>
+      <IPADDR>%s</IPADDR>
+      <LASTLOGGEDUSER></LASTLOGGEDUSER>
+      <MEMORY></MEMORY>
+      <NAME>%s</NAME>
+      <OSCOMMENTS></OSCOMMENTS>
+      <OSNAME></OSNAME>
+      <OSVERSION></OSVERSION>
+      <PROCESSORN></PROCESSORN>
+      <PROCESSORS>%s</PROCESSORS>
+      <PROCESSORT></PROCESSORT>
+      <SWAP></SWAP>
+      <USERID></USERID>
+      <UUID></UUID>
+      <VMSYSTEM></VMSYSTEM>
+      <WORKGROUP></WORKGROUP>
+    </HARDWARE>
+    <NETWORKS>
+      <DESCRIPTION></DESCRIPTION>
+      <DRIVER></DRIVER>
+      <IPADDRESS>%s</IPADDRESS>
+      <IPDHCP></IPDHCP>
+      <IPGATEWAY></IPGATEWAY>
+      <IPMASK></IPMASK>
+      <IPSUBNET></IPSUBNET>
+      <MACADDR>%s</MACADDR>
+      <PCISLOT></PCISLOT>
+      <STATUS>Up</STATUS>
+      <TYPE>Ethernet</TYPE>
+      <VIRTUALDEV></VIRTUALDEV>
+    </NETWORKS>
+  </CONTENT>
+  <DEVICEID>%s</DEVICEID>
+  <QUERY>INVENTORY</QUERY>
+</REQUEST>"""
 
 class BootInventory:
     """
@@ -238,3 +297,20 @@ class BootInventory:
             'freqcpu'   : self.freqcpu_info,
             'macaddr'   : self.macaddr_info,
             'ipaddr'    : self.ipaddr_info}
+
+    def dumpOCS(self, hostname):
+        """
+        Return an OCS XML string
+        """
+
+        return OCS_TPL % (time.strftime("%Y-%m-%d %H:%M:%S"),
+                          self.bios_info['date'],
+                          self.bios_info['vendor'],
+                          self.bios_info['version'],
+                          self.bios_info['vendor'],
+                          self.ipaddr_info['ip'],
+                          hostname,
+                          str(round(self.freqcpu_info / 1000)),
+                          self.ipaddr_info['ip'],
+                          self.macaddr_info,
+                          hostname)
