@@ -25,4 +25,5 @@ SUBDIRS = sql
 dist_sbin_SCRIPTS = pulse2-inventory-clean-database
 
 EXTRA_DIST = pulse2-inventory-clean-database.README lrs-to-pulse2-inventory \
-	pulse2-inventory-populate-root-entity.py README
+	pulse2-inventory-populate-root-entity.py README \
+	pulse2-inventory-manage-entities
