@@ -26,7 +26,12 @@
 """
 import sys
 import os.path
-import twisted.internet.reactor
+from twisted.internet import reactor
+from twisted.internet.defer import succeed
+from twisted.web.client import Agent
+from twisted.web.http_headers import Headers
+from twisted.web.iweb import IBodyProducer
+from zope.interface import implements
 import logging
 import logging.config
 
@@ -43,21 +48,20 @@ ERROR_SERVER = 1    #: error server-side
 ERROR_CLIENT = 2    #: error client-side (here)
 ERROR_UNKNOWN = 3   #: unknow (and default) error
 exitcode = ERROR_UNKNOWN #: global error code, used when exiting
+mac = ''            # client MAC address
 
 ########################################################################
 #         NOTHING SHOULD BE ALTERED ABOVE THIS LINE                    #
 ########################################################################
 
-
-def myCall():
+def loadInventory():
     """
-        Design your own call here
-
-        a deferred should be passed to callFunction()
+        Load the PXE inventory from file
     """
+
     global exitcode
+    global mac
 
-    mac = '' # client MAC address
     filename = '' # where the inventory is temporaly stored
     filestream = None
     data = None     # will hold our inventory (text)
@@ -91,31 +95,128 @@ def myCall():
         exitcode = ERROR_CLIENT
         return endBack()
 
+    inventory = pulse2.imaging.bootinventory.BootInventory(data)
+
+    return inventory
+
+def myImagingCall():
+    """
+        Design your own call here
+
+        a deferred should be passed to callImaging()
+    """
+    global exitcode
+    global mac
+
     try:
-        inventory = pulse2.imaging.bootinventory.BootInventory(data)
-        callFunction(imagingAPI.injectInventory(mac, inventory.dump()))
+        inventory = loadInventory()
+        callImaging(imagingAPI.injectInventory(mac, inventory.dump()))
     except AttributeError, e:
         logging.getLogger().error('HOOK %s : %s' % (sys.argv[0], e))
         exitcode = ERROR_CLIENT
         return endBack()
 
-
-def myTreatment(result):
+def myImagingResult(result):
     """
         Design your own treatment here
 
         don't forget to set exitcode and finally call endBack()
     """
     global exitcode
+
     if result and result != None:
-        exitcode= ERROR_OK
-        logging.getLogger().info('HOOK %s : SUCCESS !' % sys.argv[0])
+        exitcode = ERROR_OK
+        logging.getLogger().info('HOOK %s : SUCCESS (imaging OK)' % sys.argv[0])
     else:
         exitcode = ERROR_SERVER
-        logging.getLogger().error('HOOK %s : Error server side !' % sys.argv[0])
+        logging.getLogger().error('HOOK %s : Error (imaging NOK)' % sys.argv[0])
 
-    # nothing else to do
+    reactor.callLater(0, myHostnameCall)
+
+def myHostnameCall():
+    """
+        Get the hostname of the client
+    """
+
+    global exitcode
+    global mac
+
+    try:
+        callImagingHostname(imagingAPI.getComputerByMac(mac))
+    except AttributeError, e:
+        logging.getLogger().error('HOOK %s : %s' % (sys.argv[0], e))
+        exitcode = ERROR_CLIENT
+        return endBack()
+
+def myImagingHostnameResult(result):
+    """
+        Design your own treatment here
+
+        don't forget to set exitcode and finally call endBack()
+    """
+    global exitcode
+
+    if result and result != None:
+        exitcode = ERROR_OK
+        hostname = result['shortname']
+
+    reactor.callLater(0, myInventoryCall, hostname)
+
+def myInventoryCall(hostname):
+
+    """
+        Send an OCS like inventory to the inventory-server
+    """
+
+    global exitcode
+
+    inventory = loadInventory()
+    inventory = inventory.dumpOCS(hostname)
+
+    logging.getLogger().debug('%s : About to send the inventory to the inventory server' % sys.argv[0])
+
+    agent = Agent(reactor)
+    url = "http://%s:%s/"
+    if config.invserver_enablessl:
+        url = "https://%s:%s/"
+    # POST the inventory to the inventory server
+    class StringProducer(object):
+        implements(IBodyProducer)
+
+        def __init__(self, string):
+            self.body = string
+            self.length = len(self.body)
+
+        def startProducing(self, consumer):
+            consumer.write(self.body)
+            return succeed(None)
+
+    d = agent.request('POST',
+                      url % (config.invserver_host, config.invserver_port),
+                      Headers({
+                        'Content-Type': ['application/x-www-form-urlencoded'],
+                        'Content-Length': [str(len(inventory))],
+                        'User-Agent': ['Pulse2 Imaging server inventory hook']
+                      }),
+                      StringProducer(inventory),
+                     )
+    callInventory(d)
+
+
+def myInventoryResult(result):
+
+    global exitcode
+
+    if result and result != None:
+        exitcode = ERROR_OK
+        logging.getLogger().info('HOOK %s : SUCCESS (inventory OK)' % sys.argv[0])
+    else:
+        exitcode = ERROR_SERVER
+        logging.getLogger().error('HOOK %s : Error (inventory NOK)' % sys.argv[0])
+
+    # nothing more to do
     return endBack()
+
 
 ########################################################################
 #         NOTHING SHOULD BE ALTERED BELOW THIS LINE                    #
@@ -124,19 +225,41 @@ def myTreatment(result):
 
 def endBack(when = None):
     """
-        take the reactor down
+        Take the reactor down
     """
     if when == "timeout" :
         logging.getLogger().error('HOOK %s : Killed by a timeout' % sys.argv[0])
-    twisted.internet.reactor.callLater(0, twisted.internet.reactor.stop)
+    reactor.callLater(0, reactor.stop)
 
 
-def callBack(result):
+def errorBack(reason):
+    """
+        XMLRPC error treatment
+
+        just set exitcode to ERROR_CLIENT then call endBack()
+    """
+    global exitcode
+    logging.getLogger().error("HOOK %s : Failed. Exiting." % sys.argv[0])
+    exitcode = ERROR_CLIENT
+    return endBack()
+
+
+def callImaging(deffered):
+    """
+        XMLRPC request handling
+
+        attach callBackImaging() and errorBack() to the deferred
+    """
+    deffered.addCallbacks( # deferred handling
+        callBackImaging,
+        errorBack)
+
+def callBackImaging(result):
     """
         XMLRPC result treatment
 
         check if it was a success by analysing result
-        if it is a success, call myCall(result)
+        if it is a success, call myImagingResult(result)
         if not, exitcode is set to ERROR_SERVER then call endBack()
     """
 
@@ -148,31 +271,72 @@ def callBack(result):
         exitcode = ERROR_SERVER
         return endBack()
     else:
-        logging.getLogger().debug("%s : No error" % (sys.argv[0]))
+        logging.getLogger().debug("%s : PXE Inventory sent" % (sys.argv[0]))
         exitcode = ERROR_CLIENT
-        myTreatment(result)
+        myImagingResult(result)
 
-
-def errorBack(reason):
-    """
-        XMLRPC error treatment
-
-        just set exitcode to ERROR_CLIENT then call endBack()
-    """
-    global exitcode
-    exitcode = ERROR_CLIENT
-    return endBack()
-
-
-def callFunction(deffered):
+def callImagingHostname(deffered):
     """
         XMLRPC request handling
 
-        attach callBack() and errorBack() to the deferred
+        attach callBackImagingHostname() and errorBack() to the deferred
     """
     deffered.addCallbacks( # deferred handling
-        callBack,
+        callBackImagingHostname,
         errorBack)
+
+def callBackImagingHostname(result):
+    """
+        XMLRPC result treatment
+
+        check if it was a success by analysing result
+        if it is a success, call myImagingHostnameResult(result)
+        if not, exitcode is set to ERROR_SERVER then call endBack()
+    """
+
+    global exitcode
+    # if result is a list and the first arg a string and its value,
+    # 'PULSE2_ERR', then something went wrong
+    if type(result) == list and len(result) > 0 and type(result[0]) == str and result[0] == 'PULSE2_ERR':
+        logging.getLogger().error("HOOK %s : Error code = %d (see previous line)" % (sys.argv[0], result[1]))
+        exitcode = ERROR_SERVER
+        return endBack()
+    else:
+        logging.getLogger().debug("%s : Hostname received" % (sys.argv[0]))
+        exitcode = ERROR_CLIENT
+        myImagingHostnameResult(result)
+
+def callInventory(deffered):
+    """
+        HTTP request handling
+
+        attach callBackInventory() and errorBack() to the deferred
+    """
+    deffered.addCallbacks(
+        callBackInventory,
+        errorBack)
+
+def callBackInventory(result):
+    """
+        HTTP request result treatment
+
+        check if it was a success by analysing result
+        if it is a success, call myInventoryResult(result)
+        if not, exitcode is set to ERROR_SERVER then call endBack()
+    """
+
+    global exitcode
+
+    if result.code != 200:
+        logging.getLogger().error("HOOK %s : Error sending the inventory to the inventory server" % sys.argv[0])
+        logging.getLogger().error(result.phrase)
+        exitcode = ERROR_SERVER
+        return endBack()
+    else:
+        logging.getLogger().debug("%s : Inventory sent to the inventory server" % sys.argv[0])
+        exitcode = ERROR_CLIENT
+        myInventoryResult(result)
+
 
 # Parse the command line
 config = pulse2.imaging_server.config.ImagingConfig() #: ConfigParser object
@@ -194,9 +358,9 @@ imagingAPI = pulse2.apis.clients.imaging.ImagingApi({
 
 # anti-blocking stuff
 # I have 30 seconds to get my result or be killed
-twisted.internet.reactor.callLater(10, endBack, "timeout")
+reactor.callLater(30, endBack, "timeout")
 
 # fire the reactor
-twisted.internet.reactor.callWhenRunning(myCall)
-twisted.internet.reactor.run()
+reactor.callWhenRunning(myImagingCall)
+reactor.run()
 sys.exit(exitcode)
