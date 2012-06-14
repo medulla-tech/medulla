@@ -2529,8 +2529,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if q == None:
             parent_path = ComputerLocationManager().getLocationParentPath(uuid)
             q = session.query(Entity).add_column(self.entity.c.uuid).select_from(self.imaging_server.join(self.entity)) \
-                .filter(and_(self.entity.c.uuid.in_( (parent_path,) ), self.imaging_server.c.recursive == 1, self.imaging_server.c.associated == 1)) \
-                .all()
+                .filter(and_(
+                    self.entity.c.uuid.in_(parent_path), 
+                    self.imaging_server.c.recursive == 1, 
+                    self.imaging_server.c.associated == 1
+                )).all()
             h_temp = {}
             for entity, en_uuid in q:
                 h_temp[en_uuid] = entity
@@ -2550,9 +2553,12 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = session.query(ImagingServer).select_from(self.imaging_server.join(self.entity)).filter(self.entity.c.uuid == uuid).first()
         if q == None:
             parent_path = ComputerLocationManager().getLocationParentPath(uuid)
-            q = session.query(ImagingServer).add_column(self.entity.c.uuid).select_from(self.imaging_server.join(self.entity)) \
-                .filter(and_(self.entity.c.uuid.in_( (parent_path,) ), self.imaging_server.c.recursive == 1, self.imaging_server.c.associated == 1)) \
-                .all()
+            q = session.query(ImagingServer).add_column(self.entity.c.uuid). \
+                select_from(self.imaging_server.join(self.entity)).filter(and_(
+                    self.entity.c.uuid.in_(parent_path),
+                    self.imaging_server.c.recursive == 1,
+                    self.imaging_server.c.associated == 1
+                )).all()
             h_temp = {}
             for imaging_server, en_uuid in q:
                 h_temp[en_uuid] = imaging_server
