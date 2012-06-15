@@ -28,7 +28,6 @@ imaging plugin
 
 import logging
 from twisted.internet import defer
-import re
 
 from mmc.support.mmctools import xmlrpcCleanup
 from mmc.support.mmctools import RpcProxyI #, ContextMakerI, SecurityContext
@@ -1486,7 +1485,7 @@ class ImagingRpcProxy(RpcProxyI):
     def __synchroLocation(self, loc_uuid):
         logger = logging.getLogger()
         db = ImagingDatabase()
-        ret = db.setLocationSynchroState(loc_uuid, P2ISS.RUNNING)
+        db.setLocationSynchroState(loc_uuid, P2ISS.RUNNING)
 
         try:
             menu = self.__generateLocationMenu(logger, db, loc_uuid)
@@ -1640,7 +1639,7 @@ class ImagingRpcProxy(RpcProxyI):
         """
         try:
             ret = ImagingDatabase().getMyMenuTarget(uuid, target_type)
-        except NoImagingServerError, e:
+        except NoImagingServerError:
             return [False, 'ERROR', P2ERR.ERR_NEED_IMAGING_SERVER_REGISTRATION, "You first need to register your imaging server."]
         if ret[1]:
             ret[1] = ret[1].toH()
@@ -1686,7 +1685,7 @@ class ImagingRpcProxy(RpcProxyI):
         if not isRegistered:
             # send the menu to the good imaging server to register the computer
             logger = logging.getLogger()
-            ret = db.changeTargetsSynchroState([uuid], target_type, P2ISS.RUNNING)
+            db.changeTargetsSynchroState([uuid], target_type, P2ISS.RUNNING)
 
 
             if target_type == P2IT.PROFILE:
@@ -1776,7 +1775,6 @@ class ImagingRpcProxy(RpcProxyI):
                     # to do again when computerRegister is plural
                     i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
                     if i != None:
-                        dl = []
                         computers = []
                         for uuid in menus:
                             if db.isTargetRegister(uuid, P2IT.COMPUTER):
@@ -2447,7 +2445,6 @@ class ImagingRpcProxy(RpcProxyI):
         @rtype: list
         """
         db = ImagingDatabase()
-        logger = logging.getLogger()
         try:
             if type(item_number) != int:
                 try:
@@ -2513,7 +2510,7 @@ def synchroTargets(ctx, uuids, target_type):
     db = ImagingDatabase()
 
     # store the fact that we are attempting a sync
-    ret = db.changeTargetsSynchroState(uuids, target_type, P2ISS.RUNNING)
+    db.changeTargetsSynchroState(uuids, target_type, P2ISS.RUNNING)
 
     # Load up l_uuids with the required info (computer within profile OR given computers)
     if target_type == P2IT.PROFILE:
@@ -2525,7 +2522,7 @@ def synchroTargets(ctx, uuids, target_type):
 
     # give up if it appears that no menu as to be synced
     if len(l_uuids) == 0:
-        ret = db.changeTargetsSynchroState(uuids, target_type, P2ISS.DONE)
+        db.changeTargetsSynchroState(uuids, target_type, P2ISS.DONE)
         return [True]
 
     # gather the required menus
@@ -2733,7 +2730,6 @@ def generateMenus(logger, db, uuids):
     logger.debug("generateMenus for %s"%(str(uuids)))
     # get target location
     distinct_loc = {}
-    distinct_loc_own_menu = {}
 
     locations = ComputerLocationManager().getMachinesLocations(uuids)
     if len(locations.keys()) != len(uuids):
@@ -2821,7 +2817,7 @@ def computersUnregister(computers_UUID, backup):
             logger.info("%s is not registered, it can be unregister"%uuid)
             try:
                 computers_UUID.pop(computers_UUID.index(uuid))
-            except ValueError, e:
+            except ValueError:
                 pass
 
     # send a request to the pserver to unregister them
