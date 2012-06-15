@@ -1687,7 +1687,6 @@ class ImagingRpcProxy(RpcProxyI):
             logger = logging.getLogger()
             db.changeTargetsSynchroState([uuid], target_type, P2ISS.RUNNING)
 
-
             if target_type == P2IT.PROFILE:
                 pid = uuid
                 uuids = map(lambda c: c.uuid, ComputerProfileManager().getProfileContent(pid))
@@ -1721,9 +1720,9 @@ class ImagingRpcProxy(RpcProxyI):
                             db.changeTargetsSynchroState([uuid], target_type, P2ISS.INIT_ERROR)
                             return [False, 'P2ISS.INIT_ERROR']
 
-                    MACAddress = MACAddress[0]
                     if type(MACAddress) == list:
                         MACAddress = MACAddress[0]
+
                     d = i.computerRegister(params['target_name'], MACAddress, imagingData)
                     d.addCallback(treatRegister)
                     return d
@@ -2483,6 +2482,14 @@ def chooseMacAddress(ctx, uuid, macs):
     return mac
 
 def getJustOneMacPerComputer(ctx, macs):
+    """
+    @param: dict of computers with their MAC Addresses ({'UUIDX': ['MAC1', 'MAC2']})
+    @return: dict of computers with only one MAC Address ({'UUIDX': 'MAC1'})
+
+    or
+
+    ...
+    """
     # if we don't know what to do with it we just send it back as it came
     ret = macs
     if type(macs) == list:
