@@ -434,6 +434,17 @@ def isUUID(value):
     return ret
 
 
+def checkEntityName(entity_name):
+    """
+    @param: entity name
+    @raise: TypeError: if the entity name is not valid
+    @return: True
+    """
+    if entity_name and not re.match('^[a-zA-Z0-9]{3,64}$', entity_name):
+        raise TypeError('Bad entity name: %s' % entity_name)
+
+    return True
+
 def splitComputerPath(path):
     """
     Split the computer path according to this scheme:
@@ -460,9 +471,7 @@ def splitComputerPath(path):
             raise TypeError
         # Check entities
         for entity in entities.split('/'):
-            # FIXME: re to check entity name ?
-            if entity and not re.match('^[a-zA-Z0-9]{3,64}$', entity):
-                raise TypeError('Bad entity: %s' % entity)
+            checkEntityName(entity)
     else:
         entities = ''
 

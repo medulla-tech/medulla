@@ -29,6 +29,7 @@ from optparse import OptionParser
 from sqlalchemy.orm import create_session
 from mmc.plugins.inventory.config import InventoryConfig
 from pulse2.database.inventory import Inventory
+from pulse2.utils import checkEntityName
 
 def initdb():
     config = InventoryConfig()
@@ -55,6 +56,14 @@ def listEntities():
                 print text
 
 def addEntity(name):
+    # Check if the name is valid
+    try:
+        checkEntityName(name)
+    except:
+        print "Bad entity name: %s" % name
+        print "The entity name should be at least 3 chars."
+        sys.exit(1)
+
     db = initdb()
     if not db.locationExists(name):
         db.createEntity(name)
