@@ -54,7 +54,7 @@ start () {
           then
             echo "done."
           else
-            echo "${RETVAL} failed."
+            echo "failed."
         fi
         return ${RETVAL}
 }
