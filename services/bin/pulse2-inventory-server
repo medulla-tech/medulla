@@ -74,7 +74,6 @@ def running(daemonize, inifile):
     logger.info("Inventory server version('%s') build('%s')" % (str(getVersion()), str(getRevision())))
 
     if InventoryGetService().initialise(config):
-        InventoryGetService().run()
         ret = 0
     else:
         ret = 1
@@ -82,6 +81,9 @@ def running(daemonize, inifile):
     if daemonize:
         _shared_state.value = ret
         _lock.release()
+
+    if ret == 0:
+        InventoryGetService().run()
 
     return ret
 
