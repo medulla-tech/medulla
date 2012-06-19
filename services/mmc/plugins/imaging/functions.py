@@ -1999,13 +1999,15 @@ class ImagingRpcProxy(RpcProxyI):
         p = None
         if entity:
             loc_path = entity.split('/')
-            loc_path.pop(0)
-            entity = ComputerLocationManager().getLocationsFromPathString([loc_path])
-            en_uuid = entity[0]
-            if not en_uuid:
-                logger.error("the entity passed to this function doesn't exists %s"%(entity))
+            # get the last entity of the string
+            entity_name = loc_path.pop()
+            # get the entity UUID
+            entities_uuid = ComputerLocationManager().getLocationsFromPathString([entity_name])
+            entity_uuid = entities_uuid[0]
+            if not entity_uuid:
+                logger.error("The entity passed to this function doesn't exists %s" % entity_name)
             else:
-                loc_id = en_uuid
+                loc_id = entity_uuid
                 imaging_server = db.getImagingServerByEntityUUID(loc_id)
         if profile != '':
             # if entities: we need to get the profile from this entity!

@@ -1226,26 +1226,17 @@ class Inventory(DyngroupDatabaseHelper):
 
     def getLocationsFromPathString(self, location_paths):
         """
+        @param: list of entites names
+        @return: list of entities UUIDs
         """
         session = create_session()
         ens = []
-        for loc_path in location_paths:
-            root_id = 1
-            parent_id = root_id
-            root = True
-            for name in loc_path:
-                filt = and_(self.table['Entity'].c.parentId == parent_id, self.table['Entity'].c.Label == name)
-                if root:
-                    filt = and_(filt, self.table['Entity'].c.id == root_id)
-                    root = False
-                else:
-                    filt = and_(filt, self.table['Entity'].c.id != root_id)
-                q = session.query(self.klass['Entity']).filter(filt).all()
-                if len(q) != 1:
-                    ens.append(False)
-                    continue
-                parent_id = q[0].id
-            ens.append(toUUID(str(parent_id)))
+        for name in location_paths:
+            q = session.query(self.klass['Entity']).filter(self.table['Entity'].c.Label == name).one()
+            if q:
+                ens.append(toUUID(str(q.id)))
+            else:
+                ens.append(False)
         session.close()
         return ens
 
