@@ -46,6 +46,10 @@ class InventoryComputers(ComputerI):
             return {}
 
     def getMachineMac(self, ctx, filt): # TODO : need to sort!
+        """
+        @return: dict of computer with their MAC addresses
+                 {'UUID1', ['MAC1', 'MAC2'], 'UUID2': ['MAC1']}
+        """
         machines = self.inventory.getMachineNetwork(ctx, filt)
         ret = {}
         for m in machines:
