@@ -30,7 +30,7 @@ import uuid
 from random import choice
 from subprocess import call
 from optparse import OptionParser
-from ConfigParser import ConfigParser
+from configobj import ConfigObj
 import sqlalchemy as sa
 import logging
 import ldap
@@ -257,7 +257,7 @@ class SrvPkgServer(Service):
 class SrvScheduler(Service):
     name = 'pulse2-scheduler'
 
-class Pulse2ConfigParser(ConfigParser):
+class Pulse2ConfigParser(ConfigObj):
     """ Values are setted that way:
     - load the config file
     - then populate with default values if not set from the file
@@ -274,7 +274,7 @@ class Pulse2ConfigParser(ConfigParser):
     mode = stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP
 
     def __init__(self, confdir, reset=False):
-        ConfigParser.__init__(self)
+        ConfigObj.__init__(self)
         self.confdir = confdir
         if self.defaults is None:
             self._load_defaults()

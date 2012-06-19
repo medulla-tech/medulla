@@ -28,6 +28,7 @@ imaging plugin
 
 import logging
 from twisted.internet import defer
+from sets import Set as set
 
 from mmc.support.mmctools import xmlrpcCleanup
 from mmc.support.mmctools import RpcProxyI #, ContextMakerI, SecurityContext
@@ -2063,7 +2064,8 @@ class ImagingRpcProxy(RpcProxyI):
         # If a computer with this name already exists, check that the MAC
         # address is also matching
         ctx = self.currentContext
-        db_computer = getJustOneMacPerComputer(ctx, ComputerManager().getMachineMac(ctx, { 'hostname' : hostname }))
+        macs = ComputerManager().getMachineMac(ctx, { 'hostname' : hostname })
+        db_computer = getJustOneMacPerComputer(ctx, macs)
         if db_computer:
             if len(db_computer) > 1:
                 err = "More than one computer in database with hostname %s. Aborting !" % hostname
@@ -2074,20 +2076,18 @@ class ImagingRpcProxy(RpcProxyI):
                 uuid = db_computer.keys()[0]
                 logger.debug("A computer (uuid = %s) with a corresponding hostname already exists in the database, checking its MAC addresses" % uuid)
                 hasMAC = False
-                if db_computer.values()[0] == [u'']:
+                mac = db_computer[uuid]
+                if mac == '':
                     # No MAC address ? We consider we have a match
                     hasMAC = True
-                else:
-                    for mac in db_computer.values()[0]:
-                        if mac.lower() == MACAddress.lower():
-                            hasMAC = True
-                            break
+                elif mac.lower() == MACAddress.lower():
+                    hasMAC = True
                 if not hasMAC:
-                    err = "A computer (uuid = %s) with this hostname already exists, but the MAC address doesn't match: %s not in %s" % (uuid, MACAddress, str(db_computer.values()[0]))
+                    err = "A computer (uuid = %s) with this hostname already exists, but the MAC address doesn't match: %s not in %s" % (uuid, MACAddress, mac)
                     logger.error(err)
                     return [False, err]
                 else:
-                    logger.debug("The computer (uuid = %s) is matching with its hostname and one of its MAC addresses (%s)" % (uuid, db_computer.values()[0]))
+                    logger.debug("The computer (uuid = %s) is matching with its hostname and one of its MAC addresses (%s)" % (uuid, mac))
 
         if uuid == None or type(uuid) == list and len(uuid) == 0:
             logger.info("the computer %s (%s) does not exist in the backend, trying to add it" % (hostname, MACAddress))
@@ -2499,10 +2499,19 @@ def getJustOneMacPerComputer(ctx, macs):
     elif type(macs) == dict:
         ret = {}
         for uuid in macs:
-            mac = macs[uuid]
-            if len(macs[uuid]) != 1:
-                mac = chooseMacAddress(ctx, uuid, macs[uuid])
-            ret[uuid] = mac
+            macs_list = macs[uuid]
+            # Get an unique list of MACs
+            macs_list = list(set(macs_list))
+            if len(macs_list) != 1:
+                mac = chooseMacAddress(ctx, uuid, macs_list)
+                if mac:
+                    ret[uuid] = mac
+                else:
+                    # If the computer is not registered in imaging
+                    # return an empty string
+                    ret[uuid] = ''
+            else:
+                ret[uuid] = macs_list[0]
     return ret
 
 def synchroComputers(ctx, uuids, ctype = P2IT.COMPUTER):
