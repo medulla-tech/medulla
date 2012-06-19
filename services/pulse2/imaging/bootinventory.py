@@ -101,6 +101,7 @@ OCS_TPL = """<?xml version="1.0" encoding="UTF-8"?>
   </CONTENT>
   <DEVICEID>%s</DEVICEID>
   <QUERY>INVENTORY</QUERY>
+  <TAG>%s</TAG>
 </REQUEST>"""
 
 class BootInventory:
@@ -298,7 +299,7 @@ class BootInventory:
             'macaddr'   : self.macaddr_info,
             'ipaddr'    : self.ipaddr_info}
 
-    def dumpOCS(self, hostname):
+    def dumpOCS(self, hostname, entity):
         """
         Return an OCS XML string
         """
@@ -313,4 +314,5 @@ class BootInventory:
                           str(round(self.freqcpu_info / 1000)),
                           self.ipaddr_info['ip'],
                           self.macaddr_info,
-                          hostname)
+                          hostname,
+                          entity)

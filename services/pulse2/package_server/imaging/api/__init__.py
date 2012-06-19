@@ -439,12 +439,13 @@ class ImagingApi(MyXmlrpc):
         """
 
         def _onSuccess(result):
+            self.logger.error(result)
             if type(result) == dict and "faultCode" in result:
                 self.logger.warning('Imaging: While processing result for %s : %s' % (MACAddress, result['faultTraceback']))
                 return False
             try:
                 if result[0]:
-                    self.myUUIDCache.set(result[1]['uuid'], MACAddress, result[1]['shortname'], result[1]['fqdn'])
+                    self.myUUIDCache.set(result[1]['uuid'], MACAddress, result[1]['shortname'], result[1]['fqdn'], result[1]['entity'])
                     self.logger.info('Imaging: Updating cache for %s' % (MACAddress))
                     return result[1]
                 else:

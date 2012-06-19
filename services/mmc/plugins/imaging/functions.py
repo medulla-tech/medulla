@@ -2202,7 +2202,17 @@ class ImagingRpcProxy(RpcProxyI):
             db_computer_name = db_computer.name
         else:
             return [False, "imaging.getComputerByMac() : I was unable to find the good informations about the computer having %s as a mac address" % mac]
-        return [True, {'uuid': uuid, 'mac': mac, 'shortname': db_computer_name, 'fqdn': db_computer_name}]
+
+        # Get the entity of the computer
+        locations = ComputerLocationManager().getMachinesLocations([uuid])
+        logging.getLogger().warn(locations)
+        entity = ""
+        if uuid in locations:
+            entity = locations[uuid]
+        entity_name = entity['Label']
+        logging.getLogger().error(entity)
+
+        return [True, {'uuid': uuid, 'mac': mac, 'shortname': db_computer_name, 'fqdn': db_computer_name, 'entity': entity_name}]
 
     def getComputerByUUID(self, uuid):
         """

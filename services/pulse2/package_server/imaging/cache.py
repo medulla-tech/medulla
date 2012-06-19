@@ -100,7 +100,7 @@ class UUIDCache(pulse2.utils.Singleton):
         @param mac : the client mac address (mandatory)
         @type mac : str
 
-        @return a dict(uuid, mac, shortname, fqdn) or False
+        @return a dict(uuid, mac, shortname, fqdn, entity) or False
         @rtype dict
         """
 
@@ -125,6 +125,10 @@ class UUIDCache(pulse2.utils.Singleton):
                         fqdn = self.config.get(section, 'fullname')
                     else:
                         fqdn = ''
+                    if self.config.has_option(section, 'entity'):
+                        entity = self.config.get(section, 'entity')
+                    else:
+                        entity = ''
                     if self.config.has_option(section, 'updated'):
                         updated = self.config.getint(section, 'updated')
                     else:
@@ -132,12 +136,13 @@ class UUIDCache(pulse2.utils.Singleton):
                     if int(time.time()) - updated > self.cacheLifetime:
                         self.log.debug("Cachefault on %s/%s (expired), ignoring" % (uuid, mac))
                         # do not break the flow
-                        # return False
+                        return False
                     return {
                         'uuid'      : uuid,
                         'mac'       : mac,
                         'shortname' : shortname,
                         'fqdn'      : fqdn,
+                        'entity'    : entity,
                         'updated'   : updated}
         return False
 
@@ -237,7 +242,7 @@ class UUIDCache(pulse2.utils.Singleton):
         """
         return self.getByUUID(uuid)
 
-    def set(self, uuid, mac, shortname = '', domain = ''):
+    def set(self, uuid, mac, shortname = '', domain = '', entity = ''):
         """
         Add a computer in cache.
 
@@ -249,6 +254,8 @@ class UUIDCache(pulse2.utils.Singleton):
         @type shortname : str
         @param domain : the client domain name (default: '')
         @type domain : str
+        @param entity : the client entity name (default: '')
+        @type entity : str
 
         @return: True on success
         @rtype: boolean
@@ -282,6 +289,7 @@ class UUIDCache(pulse2.utils.Singleton):
         self.config.set(uuid, 'mac', mac)
         self.config.set(uuid, 'shortname', shortname)
         self.config.set(uuid, 'fqdn', fqdn)
+        self.config.set(uuid, 'entity', entity)
         self.config.set(uuid, 'updated', updated)
         self._flush()
         return True

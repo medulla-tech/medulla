@@ -156,13 +156,14 @@ def myImagingHostnameResult(result):
     """
     global exitcode
 
+    logging.getLogger().debug("HOOK %s : Get hostname result: %s" % (sys.argv[0], str(result)))
+
     if result and result != None:
         exitcode = ERROR_OK
-        hostname = result['shortname']
 
-    reactor.callLater(0, myInventoryCall, hostname)
+    reactor.callLater(0, myInventoryCall, result)
 
-def myInventoryCall(hostname):
+def myInventoryCall(computer):
 
     """
         Send an OCS like inventory to the inventory-server
@@ -171,7 +172,7 @@ def myInventoryCall(hostname):
     global exitcode
 
     inventory = loadInventory()
-    inventory = inventory.dumpOCS(hostname)
+    inventory = inventory.dumpOCS(computer['shortname'], computer['entity'])
 
     logging.getLogger().debug('%s : About to send the inventory to the inventory server' % sys.argv[0])
 
