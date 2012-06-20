@@ -1238,11 +1238,12 @@ class Inventory(DyngroupDatabaseHelper):
         session = create_session()
         ens = []
         for name in location_paths:
-            q = session.query(self.klass['Entity']).filter(self.table['Entity'].c.Label == name).one()
-            if q:
-                ens.append(toUUID(str(q.id)))
-            else:
+            try:
+                q = session.query(self.klass['Entity']).filter(self.table['Entity'].c.Label == name).one()
+            except sqlalchemy.orm.exc.NoResultFound:
                 ens.append(False)
+            else:
+                ens.append(toUUID(str(q.id)))
         session.close()
         return ens
 
@@ -1752,15 +1753,9 @@ class InventoryCreator(Inventory):
                 m = m[0]
             # Set last inventory flag to 0 for already existing inventory for
             # this computer
-            # Added by SkyAdmin: also check location (entity) to prevent hostname
-            # duplication with different users
-            entity = inventory['Entity'][0]['Label']
             result = session.query(InventoryTable).\
-                select_from(
-                    self.inventory.join(self.table['hasEntity']).join(self.machine).join(self.table['Entity'])
-                ).\
-                filter(self.machine.c.Name == hostname).\
-                filter(self.table['Entity'].c.Label == entity)
+                        select_from(self.inventory.join(self.table['hasEntity']).join(self.machine)).\
+                        filter(self.machine.c.Name == hostname)
 
             for inv in result:
                 inv.Last = 0
@@ -1787,7 +1782,7 @@ class InventoryCreator(Inventory):
                 hasKlass = self.klass['has'+table]
                 hasTable = self.table['has'+table]
 
-                h = hasTable.insert()
+                hasTable.insert()
                 # keep track of already inserted datas for this table
                 already_inserted = []
                 # loop on all inventory part columns

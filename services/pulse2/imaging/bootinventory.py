@@ -314,5 +314,5 @@ class BootInventory:
                           str(round(self.freqcpu_info / 1000)),
                           self.ipaddr_info['ip'],
                           self.macaddr_info,
-                          hostname,
+                          "%s-%s" % (hostname, time.strftime("%Y-%m-%d-%H-%M-%S")),
                           entity)

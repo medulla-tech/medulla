@@ -26,7 +26,7 @@ Inventory server http server part.
 """
 
 import BaseHTTPServer
-from zlib import *
+from zlib import decompressobj, compress
 from time import strftime
 import logging
 import time
@@ -54,6 +54,7 @@ class InventoryServer:
         content = self.rfile.read(int(self.headers['Content-Length']))
         resp = ''
         from_ip = self.client_address[0]
+        deviceid = ''
 
         # handle compressed inventories
         if self.headers['Content-Type'].lower() == 'application/x-compress':
@@ -103,9 +104,10 @@ class InventoryServer:
                         self.logger.error('please check your %s config parameter' % (section))
                 resp = resp + '<RESPONSE>SEND</RESPONSE></REPLY>'
         elif query == 'UPDATE':
+            self.logger.debug("Inventory update from %s" % from_ip)
             resp = '<?xml version="1.0" encoding="utf-8" ?><REPLY><RESPONSE>no_update</RESPONSE></REPLY>'
         elif query == 'INVENTORY':
-            self.logger.debug("Going to treat inventory from %s"%(from_ip))
+            self.logger.debug("New inventory from %s" % from_ip)
             resp = '<?xml version="1.0" encoding="utf-8" ?><REPLY><RESPONSE>no_account_update</RESPONSE></REPLY>'
             Common().addInventory(deviceid, from_ip, cont)
 
@@ -151,12 +153,14 @@ class TreatInv(Thread):
         content = cont[0]
         self.logger.debug('### BEGIN INVENTORY')
         self.logger.debug('%s' % cont)
-        self.logger.debug('### END INVENTORY')        
+        self.logger.debug('### END INVENTORY')
 
         try:
             start_date = time.time()
             threadname = threading.currentThread().getName().split("-")[1]
             inv_data, encoding, date = '', '', strftime("%Y-%m-%d %H:%M:%S")
+            current_entity = ''
+
             self.logger.debug("Thread %s : starting process : %s " % (threadname, time.time()))
             try:
                 inv_data = re.compile(r'<CONTENT>(.+)</CONTENT>', re.DOTALL).search(content).group(1)
@@ -176,6 +180,12 @@ class TreatInv(Thread):
             except AttributeError, e:
                 # we can work without it
                 self.logger.warn("Could not get any LOGDATE section in inventory from %s"%(from_ip))
+
+            try:
+                current_entity = re.compile(r'<TAG>(.+)</TAG>', re.DOTALL).search(content).group(1)
+            except AttributeError, e:
+                # we can work without it
+                self.logger.warn("Could not get any TAG section in inventory from %s" % from_ip)
 
             self.logger.debug("Thread %s : regex : %s " % (threadname, time.time()))
             inventory = '<?xml version="1.0" encoding="%s" ?><Inventory>%s</Inventory>' % (encoding, inv_data)
@@ -210,10 +220,6 @@ class TreatInv(Thread):
             except Exception, e:
                 self.logger.exception(e)
                 self.logger.error("inventory = %s" % inventory)
-            try:
-                date = inventory['ACCESSLOG'][1]['LOGDATE']
-            except:
-                self.logger.warn("Could not get date from the inventory")
 
             # Assign an entity to the computer
             entities = InventoryCreator().rules.compute(inventory)
@@ -221,8 +227,13 @@ class TreatInv(Thread):
                 entity = entities[0]
             else:
                 entity = InventoryCreator().config.default_entity
+
+            # If no rule, use the entity in TAG
+            if entity == InventoryCreator().config.default_entity and current_entity != "root":
+                entity = current_entity
+
             self.logger.debug("Computer '%s' assigned to entity '%s'" % (hostname, entity))
-            inventory['Entity'] = [ { 'Label' : entity } ]
+            inventory['Entity'] = [{'Label' : entity}]
 
             self.logger.debug("Thread %s : prepared : %s " % (threadname, time.time()))
             ret = InventoryCreator().createNewInventory(hostname, inventory, date)
