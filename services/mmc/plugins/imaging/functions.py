@@ -2005,7 +2005,7 @@ class ImagingRpcProxy(RpcProxyI):
             entities_uuid = ComputerLocationManager().getLocationsFromPathString([entity_name])
             entity_uuid = entities_uuid[0]
             if not entity_uuid:
-                logger.error("The entity passed to this function doesn't exists %s" % entity_name)
+                return [False, "The entity %s doesn't exists" % entity_name]
             else:
                 loc_id = entity_uuid
                 imaging_server = db.getImagingServerByEntityUUID(loc_id)
