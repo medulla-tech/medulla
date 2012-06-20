@@ -229,7 +229,7 @@ class TreatInv(Thread):
                 entity = InventoryCreator().config.default_entity
 
             # If no rule, use the entity in TAG
-            if entity == InventoryCreator().config.default_entity and current_entity != "root":
+            if entity == InventoryCreator().config.default_entity and current_entity:
                 entity = current_entity
 
             self.logger.debug("Computer '%s' assigned to entity '%s'" % (hostname, entity))
