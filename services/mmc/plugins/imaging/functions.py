@@ -1998,9 +1998,7 @@ class ImagingRpcProxy(RpcProxyI):
 
         p = None
         if entity:
-            loc_path = entity.split('/')
-            # get the last entity of the string
-            entity_name = loc_path.pop()
+            entity_name = entity
             # get the entity UUID
             entities_uuid = ComputerLocationManager().getLocationsFromPathString([entity_name])
             entity_uuid = entities_uuid[0]
@@ -2205,12 +2203,12 @@ class ImagingRpcProxy(RpcProxyI):
 
         # Get the entity of the computer
         locations = ComputerLocationManager().getMachinesLocations([uuid])
-        logging.getLogger().warn(locations)
         entity = ""
+        entity_name = ""
         if uuid in locations:
             entity = locations[uuid]
-        entity_name = entity['Label']
-        logging.getLogger().error(entity)
+        if entity:
+            entity_name = entity['Label']
 
         return [True, {'uuid': uuid, 'mac': mac, 'shortname': db_computer_name, 'fqdn': db_computer_name, 'entity': entity_name}]
 
@@ -2817,7 +2815,7 @@ def computersUnregister(computers_UUID, backup):
     ret = db.isTargetRegister(computers_UUID, P2IT.ALL_COMPUTERS)
     for uuid in ret:
         if not ret[uuid]:
-            logger.info("%s is not registered, it can be unregister"%uuid)
+            logger.info("%s is not registered, it can't be unregistered" % uuid)
             try:
                 computers_UUID.pop(computers_UUID.index(uuid))
             except ValueError:

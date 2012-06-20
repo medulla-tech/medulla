@@ -1203,13 +1203,10 @@ class Inventory(DyngroupDatabaseHelper):
         q = session.query(self.klass['Entity']).add_column(self.machine.c.id).select_from(self.table['Entity'].join(self.table['hasEntity']).join(self.machine).join(self.inventory)).filter(self.machine.c.id.in_(map(fromUUID, machine_uuids)))
         # Always select the last inventory
         q = q.filter(self.inventory.c.Last == 1)
-        logging.getLogger().error(str(q))
         q = q.all()
-        logging.getLogger().error(str(q))
         session.close()
         ret = {}
         for entity, mid in q:
-            logging.getLogger().error(entity.toH())
             ret[toUUID(mid)] = entity.toH()
         return ret
 
