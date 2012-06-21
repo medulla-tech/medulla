@@ -476,15 +476,17 @@ function _base_baseEdit($FH, $mode) {
         array("value"=> $FH->getArrayOrPostValue("displayName"))
     );
 
-    $f->add(
-        new TrFormElement(_("UID"), new HiddenTpl("uidNumber")),
-        array("value"=> $FH->getArrayOrPostValue("uidNumber"))
-    );
+    if ($mode == "edit") {
+        $f->add(
+            new TrFormElement(_("UID"), new HiddenTpl("uidNumber")),
+            array("value"=> $FH->getArrayOrPostValue("uidNumber"))
+        );
 
-    $f->add(
-        new TrFormElement(_("GID"), new HiddenTpl("gidNumber")),
-        array("value"=> $FH->getArrayOrPostValue("gidNumber"))
-    );
+        $f->add(
+            new TrFormElement(_("GID"), new HiddenTpl("gidNumber")),
+            array("value"=> $FH->getArrayOrPostValue("gidNumber"))
+        );
+    }
 
     $f->pop();
     $f->pop();
