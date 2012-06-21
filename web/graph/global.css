@@ -1,8 +1,6 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007 Mandriva, http://www.mandriva.com
- *
- * $Id$
+ * (c) 2007-2012 Mandriva, http://www.mandriva.com
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -19,65 +17,45 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-*/
+ */
 /*---
-$Id$
 
 Sirius Technologies // Interface serveur fichiers
 Auteur : Arteca Design inc.
-Derniere revision : 16 Juin 2004
 
--> Styles global de l'interface
+1.	Header
+2.	Navbar
+    >  a.	Configuration
+    >  b.	Utilisateurs
+    >  c.	Groupes
+    >  d.	Partages
+    >  e.	Machines
+    >  f.	Imprimantes
+    >  g.	Droits d'acces
 
-	1.	Header
-	2.	Navbar
-	 >  a.	Configuration
-	 >  b.	Utilisateurs
-	 >  c.	Groupes
-	 >  d.	Partages
-	 >  e.	Machines
-	 >  f.	Imprimantes
-	 >  g.	Droits d'acces
+3.	Subnav
+    > 	a.	Configuration
+    >	b.	Users
+    >	c.	Groups
+    >	d.	Shares
+    >	f.	Imprimantes
 
-	3.	Subnav
-	 > 	a.	Configuration
-	 >	b.	Users
-	 >	c.	Groups
-	 >	d.	Shares
-	 >	f.	Imprimantes
-
-	4.	Contenu
-	5.	Footer
-	6.	Form
-
-Notes:
+4.	Contenu
+5.	Footer
+6.	Form
 
 ---*/
 
-/*----------------------------------*/
-/* Style des modules               */
-
-/*
-<?php
-
-require_once("../site.php");
-require("../includes/modules.inc.php");
-
-?>
-*/
-
-/*----------------------------------*/
-
 * {
-	font-family: Verdana, Lucida, Geneva, Helvetica, Arial, sans-serif;
-	font-size: 11px;
+    font-family: Verdana, Lucida, Geneva, Helvetica, Arial, sans-serif;
+    font-size: 11px;
 }
 
 body {
-	background-color: #8E9CA7;
-	color: #333;
-	padding: 0 0 15px 0;
-	margin: 0;
+    background-color: #8E9CA7;
+    color: #333;
+    padding: 0 0 15px 0;
+    margin: 0;
 }
 
 a { color: #2A557E;}
@@ -89,66 +67,66 @@ a.link { color: #2A557E; border-bottom: 1px dotted #777; text-decoration: none; 
 a.link:hover { color: #000; border-bottom: 1px dotted #777; background: #ddd; }
 
 img {
-  /*display: block;*/
-  border: none;
+    /*display: block;*/
+    border: none;
 }
 
 p, ul, li {
-	font-family: Verdana, Lucida, Geneva, Helvetica, Arial, sans-serif;
-	font-size: 11px;
+    font-family: Verdana, Lucida, Geneva, Helvetica, Arial, sans-serif;
+    font-size: 11px;
 }
 
 p {
-	font-size: 11px;
-	padding: 0 0 10px 0;
-	margin: 0;
+    font-size: 11px;
+    padding: 0 0 10px 0;
+    margin: 0;
 }
 
 #wrapper {
-	position: relative;
-	width: 100%;
+    position: relative;
+    width: 100%;
 }
 
 #skip {display: none;}
 
 .clearer {
-	clear: both;
-	line-height: 0;
-	height: 0;
+    clear: both;
+    line-height: 0;
+    height: 0;
 }
 
 .fixheight {
     float: right;
     display: inline;
-	height: 350px;
-	width: 0px;
-	margin: 0;
-	padding: 0;
+    height: 350px;
+    width: 0px;
+    margin: 0;
+    padding: 0;
 }
 
 #expertMode table {
-	background-color: #FEE;
+    background-color: #FEE;
 }
 /* ---------------------------------------- */
 /* 1. Style pour le header	                */
 /* ---------------------------------------- */
 
 #header {
-	background-color: #EE4510;
-	padding: 0 17px 7px 17px;
-	border-top: solid 1px #000;
-	border-bottom: solid 1px #000;
-	background-image: url("../img/common/bg_header.gif");
-	background-repeat: repeat-x;
-	height: 17px;
+    background-color: #EE4510;
+    padding: 0 17px 7px 17px;
+    border-top: solid 1px #000;
+    border-bottom: solid 1px #000;
+    background-image: url("../img/common/bg_header.gif");
+    background-repeat: repeat-x;
+    height: 17px;
 }
 
 #header p {
-	font-size: 10px;
-	color: #000000;
-	padding: 5px 0 0 0;
-	margin: 0;
-	position: absolute;
+    font-size: 10px;
+    color: #000000;
+    padding: 5px 0 0 0;
+    margin: 0;
+    position: absolute;
 }
 
 #header p a {color: #E7ECF2;}
@@ -156,35 +134,35 @@ p {
 #header p a:hover {color: #FFF;}
 
 #header #menuTopRight {
-	float: right;
-	overflow: hidden;
-	position: relative;
+    float: right;
+    overflow: hidden;
+    position: relative;
 }
 
 #header #menuTopRight  ul {
-	border: 0;
-	margin: 0;
-	padding: 0;
-	list-style-type: none;
-	text-align: center;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    text-align: center;
 }
 
 #header #menuTopRight  ul li {
-	display: block;
-	float: right;
-	text-align: left;
-	padding: 0 0 0 0;
-	margin: 0;
+    display: block;
+    float: right;
+    text-align: left;
+    padding: 0 0 0 0;
+    margin: 0;
 }
 
 #header #menuTopRight ul li a {
-	width: 50px;
-	font-size: 10px;
-	color: #FFF;
-	padding: 5px 0 0 18px;
-	margin: 0 0 0 0;
-	text-decoration: none;
-	display: block;
+    width: 50px;
+    font-size: 10px;
+    color: #FFF;
+    padding: 5px 0 0 18px;
+    margin: 0 0 0 0;
+    text-decoration: none;
+    display: block;
 }
 
 /* Commented Backslash Hack hides rule from IE5-Mac \*/
@@ -195,7 +173,7 @@ p {
 #header #menuTopRight  ul li a:hover { color: #000000; }
 
 #header #menuTopRight ul li#expertmode a {
-	padding-right: 15px;
+    padding-right: 15px;
 }
 
 #header #menuTopRight ul li#username {
@@ -209,8 +187,8 @@ p {
 #header #menuTopRight ul li#expertmode a:hover { background-position: 0 4px; }
 
 #header #menuTopRight ul li#disconnect a {
-	background: url("../img/common/icn_disconnect.gif") no-repeat 0 -15px transparent;
-	padding-right: 15px;
+    background: url("../img/common/icn_disconnect.gif") no-repeat 0 -15px transparent;
+    padding-right: 15px;
 }
 
 #header #menuTopRight ul li#disconnect a:hover { background-position: 0 4px; }
@@ -224,52 +202,52 @@ p {
 /* ---------------------------------------- */
 
 #navbar {
-	padding: 0px 17px 0px 17px;
-	height: 69px;
-	background-color: #FFF;
-	background-image: url("../img/common/bg_navbar.gif");
-	background-repeat: repeat-x;
-	overflow: hidden;
-	position: relative;
+    padding: 0px 17px 0px 17px;
+    height: 69px;
+    background-color: #FFF;
+    background-image: url("../img/common/bg_navbar.gif");
+    background-repeat: repeat-x;
+    overflow: hidden;
+    position: relative;
 }
 
 #navbar #logo {
-	float: right;
-	margin-top: 2px;
-	padding: 11px 0 3px 0;
-	position: relative;
-	z-index: 11;
-	background-color: white;
+    float: right;
+    margin-top: 2px;
+    padding: 11px 0 3px 0;
+    position: relative;
+    z-index: 11;
+    background-color: white;
 }
 
 #navbar ul {
-	border: 0;
-	margin: 0;
-	padding: 0;
-	list-style-type: none;
-	text-align: center;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    text-align: center;
 }
 
 #navbar ul li {
-	width: 85px;
-	display: block;
-	float: left;
-	text-align: center;
-	padding: 0;
-	margin: 0;
+    width: 85px;
+    display: block;
+    float: left;
+    text-align: center;
+    padding: 0;
+    margin: 0;
 }
 
 #navbar ul li a {
-	padding: 50px 3px 7px 3px;
-	margin: 0;
-	text-decoration: none;
-	display: block;
-	text-align: center;
-	font-size: 10px;
-	color: #333;
-	line-height: 16px;
-        /* default icon */
-	position: relative;
+    padding: 50px 3px 7px 3px;
+    margin: 0;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+    font-size: 10px;
+    color: #333;
+    line-height: 16px;
+    /* default icon */
+    position: relative;
 }
 
 #navbar ul li a:hover {color: #999;}
@@ -283,32 +261,35 @@ p {
 /* ---------------------------------------- */
 
 #sidebar {
-	position: absolute;
-	top: 110px;
-	left: 17px;
-	margin: 0px;
-	padding: 0px;
-	width: 174px;
+    position: absolute;
+    top: 110px;
+    left: 17px;
+    margin: 0px;
+    padding: 0px;
+    width: 174px;
 }
 
 
 #help {
-	position: absolute;
-	top: 350px;
-	left: 17px;
-	margin: 0px;
+    position: absolute;
+    top: 350px;
+    left: 17px;
+    margin: 0px;
     padding-left: 0.5em;
     margin-bottom: 1em;
-	padding: 0px;
-	width: 172px;
+    padding: 0px;
+    width: 172px;
     background-color: #FFF;
     border-style: solid;
     border-width: 1px;
     border-color: #BBB #FFF #BBB #BBB;
+    display:none;
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-bottom-left-radius: 5px;
     -moz-border-radius-topleft: 5px;
     -moz-border-radius-bottomleft: 5px;
-    display:none;
-
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
 }
 
 #help li {
@@ -318,37 +299,37 @@ p {
 }
 
 #sidebar ul {
-	list-style-type: none;
-	margin: 0;
+    list-style-type: none;
+    margin: 0;
     padding: 0;
-	border-top: solid 1px #A0A0A0;
+    border-top: solid 1px #A0A0A0;
 }
 
 #sidebar ul li {
-	margin: 0;
-	padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 #sidebar ul li a {
-	font-size: 10px;
-	text-decoration: none;
-	padding: 12px 8px 12px 36px;
-	margin: 0;
-	background-color: #EEE;
-	color: #999;
-	width: 128px;
-	display: block;
-	border-left: 1px solid #A0A0A0;
-	border-right: 1px solid #A0A0A0;
-	border-bottom: solid 1px #A0A0A0;
-	background-repeat: no-repeat;
+    font-size: 10px;
+    text-decoration: none;
+    padding: 12px 8px 12px 36px;
+    margin: 0;
+    background-color: #EEE;
+    color: #999;
+    width: 128px;
+    display: block;
+    border-left: 1px solid #A0A0A0;
+    border-right: 1px solid #A0A0A0;
+    border-bottom: solid 1px #A0A0A0;
+    background-repeat: no-repeat;
 }
 
 html>body #sidebar ul li a { width: auto; }
 
 #sidebar ul li a:hover {
-	background-color: #F7F7F7;
-	color: #B9B9B9;
+    background-color: #F7F7F7;
+    color: #B9B9B9;
 }
 
 
@@ -357,17 +338,18 @@ html>body #sidebar ul li a { width: auto; }
 /* ---------------------------------------- */
 
 #validCode, .validCode {
-	font-size: 12px;
-	text-decoration: none;
-	padding: 12px 8px 12px 8px;
-	margin: 0;
-	background-color: #DFD;
-	color: #000;
-	width: 90%;
-	display: block;
-	border: 1px solid #0E0;
-    -moz-border-radius: 5px;
+    font-size: 12px;
+    text-decoration: none;
+    padding: 12px 8px 12px 8px;
+    margin: 0;
+    background-color: #DFD;
+    color: #000;
+    width: 90%;
+    display: block;
+    border: 1px solid #0E0;
     -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
 }
 
 #section .errorCode {
@@ -377,17 +359,18 @@ html>body #sidebar ul li a { width: auto; }
 }
 
 #errorCode, .errorCode {
-	font-size: 12px;
-	text-decoration: none;
-	padding: 12px 8px 12px 8px;
-	margin: 0;
-	background-color: #FDD;
-	color: #000;
-	width: 90%;
-	display: block;
-	border: 1px solid #E00;
-    -moz-border-radius: 5px;
+    font-size: 12px;
+    text-decoration: none;
+    padding: 12px 8px 12px 8px;
+    margin: 0;
+    background-color: #FDD;
+    color: #000;
+    width: 90%;
+    display: block;
+    border: 1px solid #E00;
     -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
 }
 
 #errorCode ul, .errorCode ul {
@@ -397,17 +380,18 @@ html>body #sidebar ul li a { width: auto; }
 }
 
 #warningCode {
-	font-size: 12px;
-	text-decoration: none;
-	padding: 12px 8px 12px 8px;
-	margin: 0;
-	background-color: #FBA;
-	color: #000;
-	width: 90%;
-	display: block;
-	border: 1px solid #840;
-    -moz-border-radius: 5px;
+    font-size: 12px;
+    text-decoration: none;
+    padding: 12px 8px 12px 8px;
+    margin: 0;
+    background-color: #FBA;
+    color: #000;
+    width: 90%;
+    display: block;
+    border: 1px solid #840;
     -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
 }
 
 .error {
@@ -415,26 +399,26 @@ html>body #sidebar ul li a { width: auto; }
 }
 
 #debugCodeHeader {
-	font-size: 1.2em;
-	color: #00F;
+    font-size: 1.2em;
+    color: #00F;
 }
 
 #debugCode {
-	font-size: 12px;
-	text-decoration: none;
-	padding: 12px 8px 12px 36px;
-	margin: 0;
-	background-color: #DDF;
-	color: #000;
-	width: 90%;
-	display: block;
-	border: 1px solid #00F;
+    font-size: 12px;
+    text-decoration: none;
+    padding: 12px 8px 12px 36px;
+    margin: 0;
+    background-color: #DDF;
+    color: #000;
+    width: 90%;
+    display: block;
+    border: 1px solid #00F;
 }
 
 #errorFuncName {
-	font-size: 1.8em;
-	font-weight: bold;
-	color: #F00;
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #F00;
 }
 
 
@@ -444,11 +428,11 @@ html>body #sidebar ul li a { width: auto; }
 /* ---------------------------------------- */
 
 #sidebar ul.shares li#globalConfig a {
-	background-image: url("../img/config/icn_global.gif");
+    background-image: url("../img/config/icn_global.gif");
 }
 
 #sidebar ul.shares li#globalConfig a:hover {
-	background-image: url("../img/config/icn_global_ro.gif");
+    background-image: url("../img/config/icn_global_ro.gif");
 }
 
 /* ---------------------------------------- */
@@ -456,27 +440,27 @@ html>body #sidebar ul li a { width: auto; }
 /* ---------------------------------------- */
 
 #sidebar ul.users li#global a {
-	background-image: url("../img/users/icn_global.gif");
+    background-image: url("../img/users/icn_global.gif");
 }
 
 #sidebar ul.users li#global a:hover {
-	background-image: url("../img/users/icn_global_ro.gif");
+    background-image: url("../img/users/icn_global_ro.gif");
 }
 
 #sidebar ul.users li#addUser a {
-	background-image: url("../img/users/icn_addUser.gif");
+    background-image: url("../img/users/icn_addUser.gif");
 }
 
 #sidebar ul.users li#addUser a:hover {
-	background-image: url("../img/users/icn_addUser_ro.gif");
+    background-image: url("../img/users/icn_addUser_ro.gif");
 }
 
 #sidebar ul.users li#changePasswd a {
-	background-image: url("../img/access/icn_global.gif");
+    background-image: url("../img/access/icn_global.gif");
 }
 
 #sidebar ul.users li#changePasswd a:hover {
-	background-image: url("../img/access/icn_global_ro.gif");
+    background-image: url("../img/access/icn_global_ro.gif");
 }
 
 /* ---------------------------------------- */
@@ -484,19 +468,19 @@ html>body #sidebar ul li a { width: auto; }
 /* ---------------------------------------- */
 
 #sidebar ul.groups li#global a {
-	background-image: url("../img/groups/icn_global.gif");
+    background-image: url("../img/groups/icn_global.gif");
 }
 
 #sidebar ul.groups li#global a:hover {
-	background-image: url("../img/groups/icn_global_ro.gif");
+    background-image: url("../img/groups/icn_global_ro.gif");
 }
 
 #sidebar ul.groups li#addGroup a {
-	background-image: url("../img/groups/icn_addGroup.gif");
+    background-image: url("../img/groups/icn_addGroup.gif");
 }
 
 #sidebar ul.groups li#addGroup a:hover {
-	background-image: url("../img/groups/icn_addGroup_ro.gif");
+    background-image: url("../img/groups/icn_addGroup_ro.gif");
 }
 
 /* ---------------------------------------- */
@@ -504,19 +488,19 @@ html>body #sidebar ul li a { width: auto; }
 /* ---------------------------------------- */
 
 #sidebar ul.shares li#global a {
-	background-image: url("../img/shares/icn_global.gif");
+    background-image: url("../img/shares/icn_global.gif");
 }
 
 #sidebar ul.shares li#global a:hover {
-	background-image: url("../img/shares/icn_global_ro.gif");
+    background-image: url("../img/shares/icn_global_ro.gif");
 }
 
 #sidebar ul.shares li#addShare a {
-	background-image: url("../img/shares/icn_addShare.gif");
+    background-image: url("../img/shares/icn_addShare.gif");
 }
 
 #sidebar ul.shares li#addShare a:hover {
-	background-image: url("../img/shares/icn_addShare_ro.gif");
+    background-image: url("../img/shares/icn_addShare_ro.gif");
 }
 
 /* ---------------------------------------- */
@@ -524,19 +508,19 @@ html>body #sidebar ul li a { width: auto; }
 /* ---------------------------------------- */
 
 #sidebar ul.shares li#globalMachine a {
-	background-image: url("../img/machines/icn_global.gif");
+    background-image: url("../img/machines/icn_global.gif");
 }
 
 #sidebar ul.shares li#globalMachine a:hover {
-	background-image: url("../img/machines/icn_global_ro.gif");
+    background-image: url("../img/machines/icn_global_ro.gif");
 }
 
 #sidebar ul.shares li#addMachine a {
-	background-image: url("../img/machines/icn_addMachines.gif");
+    background-image: url("../img/machines/icn_addMachines.gif");
 }
 
 #sidebar ul.shares li#addMachine a:hover {
-	background-image: url("../img/machines/icn_addMachines_ro.gif");
+    background-image: url("../img/machines/icn_addMachines_ro.gif");
 }
 
 /* ---------------------------------------- */
@@ -544,27 +528,27 @@ html>body #sidebar ul li a { width: auto; }
 /* ---------------------------------------- */
 
 #sidebar ul.printers li#global a {
-	background-image: url("../img/printers/icn_global.gif");
+    background-image: url("../img/printers/icn_global.gif");
 }
 
 #sidebar ul.printers li#global a:hover {
-	background-image: url("../img/printers/icn_global_ro.gif");
+    background-image: url("../img/printers/icn_global_ro.gif");
 }
 
 #sidebar ul.printers li#addPrinter a {
-	background-image: url("../img/printers/icn_addPrinter.gif");
+    background-image: url("../img/printers/icn_addPrinter.gif");
 }
 
 #sidebar ul.printers li#addPrinter a:hover {
-	background-image: url("../img/printers/icn_addPrinter_ro.gif");
+    background-image: url("../img/printers/icn_addPrinter_ro.gif");
 }
 
 #sidebar ul.printers li#expert a {
-	background-image: url("../img/printers/icn_expertPrinter.gif");
+    background-image: url("../img/printers/icn_expertPrinter.gif");
 }
 
 #sidebar ul.printers li#expert a:hover {
-	background-image: url("../img/printers/icn_expertPrinter_ro.gif");
+    background-image: url("../img/printers/icn_expertPrinter_ro.gif");
 }
 
 /* ---------------------------------------- */
@@ -572,91 +556,91 @@ html>body #sidebar ul li a { width: auto; }
 /* ---------------------------------------- */
 
 #content {
-	background-color: #F2F2F2;
-	padding: 0px 17px 15px 0px;
-	background-image: url("../img/common/borderTopContent.gif");
-	background-repeat: repeat-x;
+    background-color: #F2F2F2;
+    padding: 0px 17px 15px 0px;
+    background-image: url("../img/common/borderTopContent.gif");
+    background-repeat: repeat-x;
 }
 
 #content #activeTab {
-	position: absolute;
-	top: 95px;
-	left: 0px;
-	width: 85px;
-	height: 2px;
-	background-color: #F2F2F2;
-	margin-left: -120px;
+    position: absolute;
+    top: 95px;
+    left: 0px;
+    width: 85px;
+    height: 2px;
+    background-color: #F2F2F2;
+    margin-left: -120px;
 }
 
 #sectionContainer {
-	padding: 15px 0 0 0px;
-	margin: 0;
-	background-repeat: no-repeat;
-	background-position: left bottom;
+    padding: 15px 0 0 0px;
+    margin: 0;
+    background-repeat: no-repeat;
+    background-position: left bottom;
 }
 
 #sectionTopRight {
     height: 9px;
-	padding: 0;
-	margin: 0 0 0 190px;
-	border-left: solid 1px #A0A0A0;
-	background: url("../img/common/sectionTopRight.gif") no-repeat top right #FFF;
+    padding: 0;
+    margin: 0 0 0 190px;
+    border-left: solid 1px #A0A0A0;
+    background: url("../img/common/sectionTopRight.gif") no-repeat top right #FFF;
 }
 
 #section {
-	padding: 8px 25px 8px 25px;
-	border-left: solid 1px #A0A0A0;
-	border-right: solid 1px #A0A0A0;
-	margin: 0px;
-	margin-left: 190px;
+    padding: 8px 25px 8px 25px;
+    border-left: solid 1px #A0A0A0;
+    border-right: solid 1px #A0A0A0;
+    margin: 0px;
+    margin-left: 190px;
 }
 
 html>body #section {
-	min-height: 350px;
+    min-height: 350px;
 }
 
 
 /*
-        This is a CSS comment where the end-of-comment marker is escaped.
-        The following styles are not read by Explorer
-        because it thinks they are still part of this comment.
+This is a CSS comment where the end-of-comment marker is escaped.
+The following styles are not read by Explorer
+because it thinks they are still part of this comment.
 
 \*/
 
 #section {
-	background-color: #FFFFFF;
-	padding: 8px 25px 8px 25px;
-	margin: 0 0 0 190px;
-	border-left: solid 1px #A0A0A0;
-	border-right: solid 1px #A0A0A0;
+    background-color: #FFFFFF;
+    padding: 8px 25px 8px 25px;
+    margin: 0 0 0 190px;
+    border-left: solid 1px #A0A0A0;
+    border-right: solid 1px #A0A0A0;
 }
 
 /*
-        Another comment, now with a normal end-of-comment marker. Explorer
-        sees the end of this comment as the end of the previous one.
-*/
+Another comment, now with a normal end-of-comment marker. Explorer
+sees the end of this comment as the end of the previous one.
+ */
 
 #sectionBottomLeft {
-	height: 9px;
-	padding: 0;
-	margin: 0 0 0 190px;
-	background: url("../img/common/sectionBottomLeft.gif") no-repeat top left #FFF;
+    height: 9px;
+    padding: 0;
+    margin: 0 0 0 190px;
+    background: url("../img/common/sectionBottomLeft.gif") no-repeat top left #FFF;
 }
 
 #sectionBottomRight {
-	height: 9px;
-	padding: 0;
-	margin: 0;
-	background: url("../img/common/sectionBottomRight.gif") no-repeat top right transparent;
+    height: 9px;
+    padding: 0;
+    margin: 0;
+    background: url("../img/common/sectionBottomRight.gif") no-repeat top right transparent;
 }
 
 #section h1, h2, h3, h4, h5, h6 {
-	font-family: Verdana, Geneva, Helvetica, Arial, sans-serif;
-	color: #666;
-	font-weight: normal;
-	padding: 0 0 10px 0;
-	margin: 0;
-	/* width: 100%; */
+    font-family: Verdana, Geneva, Helvetica, Arial, sans-serif;
+    color: #666;
+    font-weight: normal;
+    padding: 0 0 10px 0;
+    margin: 0;
+    /* width: 100%; */
 }
 
 #section h2 { font-size: 17px; }
@@ -665,100 +649,100 @@ html>body #section {
 #section form h4 { font-size: 13px; }
 
 #configPad {
-	color: #666;
-	background-color: #F0F4F7;
-	border: solid 1px #CCC;
-	padding: 10px 10px 5px 10px;
-	margin: 0 5px 20px 0;
-	float: left;
-	width: 600px;
+    color: #666;
+    background-color: #F0F4F7;
+    border: solid 1px #CCC;
+    padding: 10px 10px 5px 10px;
+    margin: 0 5px 20px 0;
+    float: left;
+    width: 600px;
 }
 
 #addUserBox {
-	color: #666;
-	background-color: #F0F4F7;
-	border: solid 1px #CCC;
-	padding: 10px 10px 5px 10px;
-	margin: 0 5px 20px 0;
-	float: left;
-	width: 600px;
+    color: #666;
+    background-color: #F0F4F7;
+    border: solid 1px #CCC;
+    padding: 10px 10px 5px 10px;
+    margin: 0 5px 20px 0;
+    float: left;
+    width: 600px;
 }
 
 p.listInfos {
-	font-size: 9px;
-	color: #999;
-	padding: 0px;
+    font-size: 9px;
+    color: #999;
+    padding: 0px;
 }
 
 ul.navList {
-	padding: 0px;
-	margin: 0px;
-	float: right;
+    padding: 0px;
+    margin: 0px;
+    float: right;
 }
 
 ul.navList li {
-	font-size: 9px;
-	color: #999;
-	display: inline;
-	list-style-type: none;
+    font-size: 9px;
+    color: #999;
+    display: inline;
+    list-style-type: none;
 }
 
 li.previousList {
-	margin-left: 20px;
+    margin-left: 20px;
 }
 
 li.previousList a {
-	padding: 0 10px 0 12px;
-	margin: 0;
-	background-image: url("../img/common/icn_previous.gif");
-	background-repeat: no-repeat;
-	border-right: solid 1px #CCC;
+    padding: 0 10px 0 12px;
+    margin: 0;
+    background-image: url("../img/common/icn_previous.gif");
+    background-repeat: no-repeat;
+    border-right: solid 1px #CCC;
 }
 
 li.previousList a:hover {
-	background-image: url("../img/common/icn_previous_ro.gif");
+    background-image: url("../img/common/icn_previous_ro.gif");
 }
 
 li.previousListInactive {
-	padding: 0 10px 0 12px;
-	margin: 0;
-	background-image: url("../img/common/icn_previous_inactive.gif");
-	background-repeat: no-repeat;
-	border-right: solid 1px #CCC;
-	margin-left: 20px;
+    padding: 0 10px 0 12px;
+    margin: 0;
+    background-image: url("../img/common/icn_previous_inactive.gif");
+    background-repeat: no-repeat;
+    border-right: solid 1px #CCC;
+    margin-left: 20px;
 }
 
 li.nextList a {
-	padding: 0 12px 0 9px;
-	margin: 0;
-	background-image: url("../img/common/icn_next.gif");
-	background-repeat: no-repeat;
-	background-position: right top;
+    padding: 0 12px 0 9px;
+    margin: 0;
+    background-image: url("../img/common/icn_next.gif");
+    background-repeat: no-repeat;
+    background-position: right top;
 }
 
 li.nextList a:hover {
-	background-image: url("../img/common/icn_next_ro.gif");
+    background-image: url("../img/common/icn_next_ro.gif");
 }
 
 li.nextListInactive {
-	padding: 0 12px 0 9px;
-	margin: 0;
-	background-image: url("../img/common/icn_next_inactive.gif");
-	background-repeat: no-repeat;
-	background-position: right top;
+    padding: 0 12px 0 9px;
+    margin: 0;
+    background-image: url("../img/common/icn_next_inactive.gif");
+    background-repeat: no-repeat;
+    background-position: right top;
 }
 
 ul.action {
-	padding: 0px;
-	margin: 0px;
-	float: right;
+    padding: 0px;
+    margin: 0px;
+    float: right;
 }
 
 ul.action li {
-	font-size: 11px;
-	color: #999;
-	display: inline;
-	list-style-type: none;
+    font-size: 11px;
+    color: #999;
+    display: inline;
+    list-style-type: none;
 }
 
 span.pagination {
@@ -780,103 +764,103 @@ span.pagination input, span.pagination select {
 /* ---------------------------------------- */
 
 ul.action li a:hover {
-color: #95AABF;
+    color: #95AABF;
 }
 
 li.afficher a {
-	/* Deprecated. Use li.display instead */
-	padding: 3px 0px 5px 20px;
-	margin: 0 0px 0 0px;
-	background-image: url("../img/common/icn_show.gif");
-	background-repeat: no-repeat;
-	line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
+    /* Deprecated. Use li.display instead */
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/common/icn_show.gif");
+    background-repeat: no-repeat;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
 }
 
 li.afficher a:hover {
-	/* Deprecated. Use li.display instead */
-	background-image: url("../img/common/icn_show_ro.gif");
+    /* Deprecated. Use li.display instead */
+    background-image: url("../img/common/icn_show_ro.gif");
 }
 
 li.display a {
-	padding: 3px 0px 5px 20px;
-	margin: 0 0px 0 0px;
-	background-image: url("../img/common/icn_show.gif");
-	background-repeat: no-repeat;
-	line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/common/icn_show.gif");
+    background-repeat: no-repeat;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
 }
 
 li.display a:hover {
-	background-image: url("../img/common/icn_show_ro.gif");
+    background-image: url("../img/common/icn_show_ro.gif");
 }
 
 li.audit a {
-	padding: 3px 0px 5px 20px;
-	margin: 0 0px 0 0px;
-	background-image: url("../img/common/audit.png");
-	background-repeat: no-repeat;
-	line-height: 18px;
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/common/audit.png");
+    background-repeat: no-repeat;
+    line-height: 18px;
     text-decoration: none;
     color: #FFF;
 }
 
 li.supprimer a {
-	/* Deprecated. Use li.delete instead */
-	padding: 3px 0px 5px 20px;
-	margin: 0 0px 0 0px;
-        background-image: url("../img/common/button_cancel.png");
-	background-repeat: no-repeat;
-	background-position: left top;
-	line-height: 18px;
-	text-decoration: none;
-        color: #FFF;
+    /* Deprecated. Use li.delete instead */
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/common/button_cancel.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
 }
 
 li.delete a {
-	padding: 3px 0px 5px 20px;
-	margin: 0 0px 0 0px;
-        background-image: url("../img/common/button_cancel.png");
-	background-repeat: no-repeat;
-	background-position: left top;
-	line-height: 18px;
-	text-decoration: none;
-        color: #FFF;
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/common/button_cancel.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
 }
 
 
 li.editacl a {
-	padding: 3px 0px 5px 20px;
-	margin: 0 0px 0 0px;
-	background-image: url("../img/common/icn_acl.gif");
-	background-repeat: no-repeat;
-	background-position: left top;
-	line-height: 18px;
-	text-decoration: none;
-        color: #FFF;
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/common/icn_acl.gif");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
 }
 
 li.edit a {
-	padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("../img/common/edit2.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-	line-height: 18px;
-	text-decoration: none;
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/common/edit2.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
     color: #FFF;
 }
 
 li.add a {
-	padding: 1px 3px 5px 20px;
+    padding: 1px 3px 5px 20px;
     margin: 0 0px 0 0px;
     background-image: url("../img/common/icn_add.gif");
     background-repeat: no-repeat;
     background-position: left top;
-	line-height: 18px;
-	text-decoration: none;
+    line-height: 18px;
+    text-decoration: none;
     color: #FFF;
 }
 
@@ -887,7 +871,7 @@ li.addbootmenu a {
     color:#FFFFFF;
     line-height:18px;
     margin:0 0;
-	padding: 4px 3px 5px 20px;
+    padding: 4px 3px 5px 20px;
     text-decoration:none;
 }
 
@@ -898,7 +882,7 @@ li.delbootmenu a {
     color:#FFFFFF;
     line-height:18px;
     margin:0 0;
-	padding: 4px 3px 5px 20px;
+    padding: 4px 3px 5px 20px;
     text-decoration:none;
 }
 
@@ -909,124 +893,124 @@ li.duplicatescript a {
     color:#FFFFFF;
     line-height:18px;
     margin:0 0;
-	padding:3px 0 5px 20px;
+    padding:3px 0 5px 20px;
     text-decoration:none;
 }
 
 li.up a {
-	padding: 1px 3px 5px 20px;
+    padding: 1px 3px 5px 20px;
     margin: 0 0px 0 0px;
     background-image: url("../img/common/icn_arrowup.png");
     background-repeat: no-repeat;
     background-position: left top;
-	line-height: 18px;
-	text-decoration: none;
+    line-height: 18px;
+    text-decoration: none;
     color: #FFF;
 }
 
 li.down a {
-	padding: 1px 3px 5px 20px;
+    padding: 1px 3px 5px 20px;
     margin: 0 0px 0 0px;
     background-image: url("../img/common/icn_arrowdown.png");
     background-repeat: no-repeat;
     background-position: left top;
-	line-height: 18px;
-	text-decoration: none;
+    line-height: 18px;
+    text-decoration: none;
     color: #FFF;
 }
 
 li.archiver a {
-	/* Deprecated. Use li.backup instead */
-	padding: 3px 0px 5px 20px;
-	margin: 0 0px 0 0px;
-	background-image: url("../img/common/cd.png");
-	background-repeat: no-repeat;
-	background-position: left top;
-	line-height: 18px;
-	text-decoration: none;
-        color: #FFF;
+    /* Deprecated. Use li.backup instead */
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/common/cd.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
 }
 
 li.backup a {
-	padding: 3px 0px 5px 20px;
-	margin: 0 0px 0 0px;
-	background-image: url("../img/common/cd.png");
-	background-repeat: no-repeat;
-	background-position: left top;
-	line-height: 18px;
-	text-decoration: none;
-        color: #FFF;
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/common/cd.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
 }
 
 li.stop a {
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("../img/common/stop.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/common/stop.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
 }
 
 li.start a {
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("../img/common/start.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/common/start.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
 }
 
 li.reload a {
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("../img/common/reload.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/common/reload.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
 }
 
 li.restart a {
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("../img/common/restart.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/common/restart.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
 }
 
 
 li.info a {
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("../img/common/info.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/common/info.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
 }
 
 li.empty a {
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("../img/common/spacer.gif");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/common/spacer.gif");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
 }
 
 #section table {
-	width: 99%;
+    width: 99%;
 }
 
 #section table.listinfos {
@@ -1048,11 +1032,11 @@ li.empty a {
 
 .none {
 
-	border-width: 0 0 0px 0;
-	border-style: none;
-	margin: 0 0px 0px 0;
-	margin-right: 0px;
-	float: none;
+    border-width: 0 0 0px 0;
+    border-style: none;
+    margin: 0 0px 0px 0;
+    margin-right: 0px;
+    float: none;
 }
 
 
@@ -1061,14 +1045,14 @@ li.empty a {
 /* End IE5-Mac hack */
 
 td {
-	padding: 6px;
-	border-color: #CCCCCC;
-	border-width: 1px 0 0 0;
-	border-style: solid;
+    padding: 6px;
+    border-color: #CCCCCC;
+    border-width: 1px 0 0 0;
+    border-style: solid;
 }
 
 tr.alternate {
-	background-color: #F0F4F7;
+    background-color: #F0F4F7;
 }
 
 td.printerName,
@@ -1076,107 +1060,107 @@ td.shareName,
 td.groupName,
 td.machineName,
 td.userName {
-	color: #666;
-	font-weight: bold;
-	background-repeat: no-repeat;
+    color: #666;
+    font-weight: bold;
+    background-repeat: no-repeat;
 }
 
 td.userName a {
-	color: #666;
-	font-weight: bold;
-	text-decoration: none;
+    color: #666;
+    font-weight: bold;
+    text-decoration: none;
 }
 td.userName a:link {
-	color: #666;
-	font-weight: bold;
-	text-decoration: none;
+    color: #666;
+    font-weight: bold;
+    text-decoration: none;
 }
 td.userName a:visited {
-	color: #666;
-	font-weight: bold;
-	text-decoration: none;
+    color: #666;
+    font-weight: bold;
+    text-decoration: none;
 }
 
 td.userNameDisabled {
-	color: #AAA;
-	font-weight: bold;
-	background-repeat: no-repeat;
+    color: #AAA;
+    font-weight: bold;
+    background-repeat: no-repeat;
 }
 
 td.userNameDisabled a {
-	color: #AAA;
-	font-weight: bold;
-	text-decoration: none;
+    color: #AAA;
+    font-weight: bold;
+    text-decoration: none;
 }
 td.userNameDisabled a:link {
-	color: #AAA;
-	font-weight: bold;
-	text-decoration: none;
+    color: #AAA;
+    font-weight: bold;
+    text-decoration: none;
 }
 td.userNameDisabled a:visited {
-	color: #AAA;
-	font-weight: bold;
-	text-decoration: none;
+    color: #AAA;
+    font-weight: bold;
+    text-decoration: none;
 }
 
 td.groupName a {
-	color: #666;
-	font-weight: bold;
-	text-decoration: none;
+    color: #666;
+    font-weight: bold;
+    text-decoration: none;
 }
 td.groupName a:link {
-	color: #666;
-	font-weight: bold;
-	text-decoration: none;
+    color: #666;
+    font-weight: bold;
+    text-decoration: none;
 }
 td.groupName a:visited {
-	color: #666;
-	font-weight: bold;
-	text-decoration: none;
+    color: #666;
+    font-weight: bold;
+    text-decoration: none;
 }
 
 td.printerName {
-	padding: 0 0 0 34px;
-	background-image: url("../img/printers/icn_printersList.gif");
-	background-position: 7px 8px;
+    padding: 0 0 0 34px;
+    background-image: url("../img/printers/icn_printersList.gif");
+    background-position: 7px 8px;
 }
 
 td.printerAction { text-align: right; }
 
 td.shareName {
-	padding: 0 0 0 34px;
-	background-image: url("../img/shares/icn_shareList.gif");
-	background-position: 7px 7px;
+    padding: 0 0 0 34px;
+    background-image: url("../img/shares/icn_shareList.gif");
+    background-position: 7px 7px;
 }
 
 td.shareAction { text-align: right; }
 
 td.groupName {
-	padding: 0 0 0 34px;
-	background-image: url("../img/groups/icn_groupsList.gif");
-	background-position: 9px 6px;
+    padding: 0 0 0 34px;
+    background-image: url("../img/groups/icn_groupsList.gif");
+    background-position: 9px 6px;
 }
 
 td.groupAction { text-align: right; }
 
 td.userName {
-	padding: 0 0 0 34px;
-	background-image: url("../img/users/icn_usersList.gif");
-	background-position: 13px 6px;
+    padding: 0 0 0 34px;
+    background-image: url("../img/users/icn_usersList.gif");
+    background-position: 13px 6px;
 }
 
 td.userNameDisabled {
-	padding: 0 0 0 34px;
-	background-image: url("../img/users/icn_usersList.gif");
-	background-position: 13px 6px;
+    padding: 0 0 0 34px;
+    background-image: url("../img/users/icn_usersList.gif");
+    background-position: 13px 6px;
 }
 
 td.userAction { text-align: right; }
 
 td.machineName {
-	padding: 0 0 0 37px;
-	background-image: url("../img/machines/icn_machinesList.gif");
-	background-position: 7px 7px;
+    padding: 0 0 0 37px;
+    background-image: url("../img/machines/icn_machinesList.gif");
+    background-position: 7px 7px;
 }
 
 td.machineAction { text-align: right; }
@@ -1186,11 +1170,11 @@ td.machineAction { text-align: right; }
 /* ---------------------------------------- */
 
 #footer {
-	height: 12px;
-	background-image: url("../img/common/bg_footer.gif");
-	background-repeat: repeat-x;
-	color: white;
-	font-size: 9px;
+    height: 12px;
+    background-image: url("../img/common/bg_footer.gif");
+    background-repeat: repeat-x;
+    color: white;
+    font-size: 9px;
 }
 
 /* ---------------------------------------- */
@@ -1198,11 +1182,9 @@ td.machineAction { text-align: right; }
 /* ---------------------------------------- */
 
 form {
-	padding: 0;
-	margin: 0;
+    padding: 0;
+    margin: 0;
 }
-
-
 
 select {
     font-size: 11px;
@@ -1210,107 +1192,111 @@ select {
 }
 
 .btnPrimary {
-	font-family: Arial, Helvetica, sans-serif;
-	font-weight: bold;
-	background-color: #21449C;
-	font-size: 10px;
-	color: #FFF;
-	padding: 5px;
-	margin: 0 5px 0 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    background-color: #21449C;
+    font-size: 10px;
+    color: #FFF;
+    padding: 5px;
+    margin: 0 5px 0 0;
 }
 
 .btnSecondary {
-	font-family: Arial, Helvetica, sans-serif;
-	background-color: #F0EFEF;
-	font-size: 10px;
-	color: #333;
-	padding: 5px;
-	margin: 0 5px 0 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #F0EFEF;
+    font-size: 10px;
+    color: #333;
+    padding: 5px;
+    margin: 0 5px 0 0;
 }
 
 .btnDisabled {
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 10px;
-	padding: 5px;
-	margin: 0 5px 0 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    padding: 5px;
+    margin: 0 5px 0 0;
 }
 
 #addItem .btnSecondary {
-	background-color: #FAF9F9;
-	padding: 2px;
-	margin: 0;
+    background-color: #FAF9F9;
+    padding: 2px;
+    margin: 0;
 }
 
 .textfield:disabled {
-	font: 13px Arial, verdana, sans-serif;
-	margin-top: 0px;
-	margin-bottom: 0px;
-	margin-left:0px;
-	border-top: 1px solid #666;
-	border-right: 1px solid #999;
-	border-bottom: 1px solid #999;
-	border-left: 1px solid #666;
-	clear: right;
-	padding: 2px;
-	background-color: #FFF;
-        color: #CCC;
+    font: 13px Arial, verdana, sans-serif;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-left:0px;
+    border-top: 1px solid #666;
+    border-right: 1px solid #999;
+    border-bottom: 1px solid #999;
+    border-left: 1px solid #666;
+    clear: right;
+    padding: 2px;
+    background-color: #FFF;
+    color: #CCC;
 }
 
 .textfield, select {
-	font: 13px Arial, verdana, sans-serif;
-	margin-top: 0px;
-	margin-bottom: 0px;
-	margin-left:0px;
-	border-top: 1px solid #666;
-	border-right: 1px solid #999;
-	border-bottom: 1px solid #999;
-	border-left: 1px solid #666;
-	clear: right;
-	padding: 2px;
-	background-color: #FFFFFF;
-	color: #666;
+    font: 13px Arial, verdana, sans-serif;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-left:0px;
+    border-top: 1px solid #666;
+    border-right: 1px solid #999;
+    border-bottom: 1px solid #999;
+    border-left: 1px solid #666;
+    clear: right;
+    padding: 2px;
+    background-color: #FFFFFF;
+    color: #666;
 }
 
 .searchfield {
-	font: 13px Arial, verdana, sans-serif;
-	margin-top: 0px;
-	margin-bottom: 0px;
-	margin-left:0px;
-	border-top: 1px solid #CCC;
-	border-right: 1px solid #CCC;
-	border-bottom: 1px solid #CCC;
-	border-left: 1px solid #CCC;
-	clear: right;
-	padding: 4px 2px 2px;
-	padding-top: 0px !ie;
-	background-color: #FFF;
-	color: #666;
+    font: 13px Arial, verdana, sans-serif;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-left:0px;
+    border-top: 1px solid #CCC;
+    border-right: 1px solid #CCC;
+    border-bottom: 1px solid #CCC;
+    border-left: 1px solid #CCC;
+    clear: right;
+    padding: 4px 2px 2px;
+    padding-top: 0px !ie;
+    background-color: #FFF;
+    color: #666;
+    -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
+    border-radius: 5px;
 }
 
 .searchfieldreal {
-	font: 13px Arial, verdana, sans-serif;
-	margin-top: 0px;
-	margin-bottom: 0px;
-	margin-left:0px;
-	border-top: 1px solid #FFF;
-	border-right: 1px solid #FFF;
-	border-bottom: 1px solid #FFF;
-	border-left: 1px solid #FFF;
-	clear: right;
-	/*padding: 2px;*/
-	background-color: #FFF;
-	color: #666;
+    font: 13px Arial, verdana, sans-serif;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-left:0px;
+    border-top: 1px solid #FFF;
+    border-right: 1px solid #FFF;
+    border-bottom: 1px solid #FFF;
+    border-left: 1px solid #FFF;
+    clear: right;
+    /*padding: 2px;*/
+    background-color: #FFF;
+    color: #666;
 }
 
 .searchbox {
-	border: 1px solid #BBB;
-        -moz-border-radius: 8px;
-        padding-left: 2px;
-        padding-right: 2px;
-        padding-top: 2px;
-        padding-bottom: 2px;
-        background-color: #EEE;
+    border: 1px solid #BBB;
+    padding-left: 2px;
+    padding-right: 2px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    background-color: #EEE;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
 }
 
 .ajaxfilterlog {
@@ -1319,14 +1305,15 @@ select {
 
 .searchboxlog {
     border: 1px solid #BBB;
-    -moz-border-radius: 8px;
-    -webkit-border-radius: 8px;
     padding-left: 3px;
     padding-right: 3px;
     padding-top: 3px;
     padding-bottom: 3px;
     background-color: #EEE;
     width: 95%;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
 }
 
 .searchtools {
@@ -1346,7 +1333,7 @@ select {
 }
 
 .dropHL {
-   border: 1px solid #F00;
+    border: 1px solid #F00;
 }
 
 .items {
@@ -1365,7 +1352,9 @@ select {
     background-color: #EEE;
     border: 1px solid;
     border-color:  #BBB;
+    -webkit-border-radius: 8px;
     -moz-border-radius: 8px;
+    border-radius: 8px;
 }
 
 #Location {
@@ -1458,8 +1447,10 @@ form.inplaceeditor-form input[type="text"] {
     margin: 5px;
     padding: 5px;
     width: 300px;
-    -moz-border-radius: 8px;
     z-index: 999;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
 }
 
 
@@ -1469,75 +1460,81 @@ form.inplaceeditor-form input[type="text"] {
 
 
 a.tooltip{
-  position:relative; /*this is the key*/
-  z-index:24;
-  color:#000;
-  text-decoration:none;
+    position:relative; /*this is the key*/
+    z-index:24;
+    color:#000;
+    text-decoration:none;
 }
 
 a.tooltip span{
-  display: none;
+    display: none;
 }
 
 a.tooltip:hover{
-  z-index:25;
+    z-index:25;
 }
 
 a.tooltip
 {
-	padding: 0px;
-	border-bottom: 1px dotted #0033FF;
+    padding: 0px;
+    border-bottom: 1px dotted #0033FF;
 }
 
 a.tooltip:hover span{
-	display:block;
-	position:absolute;
-	top:1.2em;
-	left:-10em;
-	width:25em;
-	border:1px solid #CCC;
-	background-color:#EEE;
-	color:#000;
-	text-align:justify;
-	font-size:1em;
-	font-weight:normal;
-	padding:3px;
-	line-height:15px;
+    display:block;
+    position:absolute;
+    top:1.2em;
+    left:-10em;
+    width:25em;
+    border:1px solid #CCC;
+    background-color:#EEE;
+    color:#000;
+    text-align:justify;
+    font-size:1em;
+    font-weight:normal;
+    padding:3px;
+    line-height:15px;
 }
 
 a.tooltip:hover b{
-	white-space:nowrap;
-	display:inline;
-	font-size:small;
+    white-space:nowrap;
+    display:inline;
+    font-size:small;
 }
 
 a.tooltip:hover img{
-	float:none;
-	margin:5px;
-	vertical-align:middle;
-	border-style:none;
-	border-width:0;
+    float:none;
+    margin:5px;
+    vertical-align:middle;
+    border-style:none;
+    border-width:0;
 }
 
 .submodfav {
     background-color: #E5E5E5;
     margin: 0.3em;
     padding: 0.3em;
+    -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
+    border-radius: 5px;
 }
 
 .submodfav_select {
     background-color: #E5E5C5;
     margin: 0.3em;
     padding: 0.3em;
+    -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
+    border-radius: 5px;
 }
 
 .submodfav_sselect {
     background-color: #D5D5B5;
     margin: 0.3em;
     padding: 0.3em;
+    -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
+    border-radius: 5px;
 }
 
 .modulefav h3 {
@@ -1554,27 +1551,33 @@ a.tooltip:hover img{
     background-color: #EEE;
     margin: 0.3em;
     padding: 0.3em;
-    -moz-border-radius: 10px;
     width: 160px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
 }
 
 .modulefav_select {
     background-color: #EEC;
     margin: 0.3em;
     padding: 0.3em;
-    -moz-border-radius: 10px;
     width: 160px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
 }
 
 .redbutton {
     margin-right: 0.5em;
     float:right;
-    -moz-border-radius: 0.1em;
     padding-left: 0.2em;
     padding-right: 0.3em;
     background-color: #E99;
     color: #FFF;
     text-decoration: none;
+    -webkit-border-radius: .1em;
+    -moz-border-radius: .1em;
+    border-radius: .1em;
 }
 
 .redbutton a{
@@ -1582,9 +1585,11 @@ a.tooltip:hover img{
     text-decoration: none;
 }
 .formblock {
-    -moz-border-radius:9px;
     padding: 1em;
     margin: 1em;
+    -webkit-border-radius: 9px;
+    -moz-border-radius: 9px;
+    border-radius: 9px;
 }
 
 /* Tab selector */

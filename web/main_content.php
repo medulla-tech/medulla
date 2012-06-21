@@ -107,6 +107,7 @@ require("graph/navbar.inc.php");
     margin: 5px;
     margin-bottom: 10px;
     width: 180px;
+    border-radius: 10px;
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
 }
@@ -115,6 +116,7 @@ require("graph/navbar.inc.php");
     background-color: #E5E5E5;
     padding: 5px;
     margin: 10px;
+    border-radius: 5px;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
 }
@@ -130,6 +132,7 @@ ul {
     border: 1px solid white;
     background: white;
     min-height: 100px;
+    border-radius: 10px;
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
     margin-right: 5px;
