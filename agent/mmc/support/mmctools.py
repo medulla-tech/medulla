@@ -75,7 +75,7 @@ os.environ["LANG"] = "C"
 
 def cSort(stringList):
     """
-    case-insensitive sort of list of strings
+    Case-insensitive sort of list of strings
 
     See http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/170242
     """
@@ -253,7 +253,7 @@ class shProcessProtocol(protocol.ProcessProtocol):
     def __init__(self, cmd):
         self.cmd = cmd
         self.done = False
-        self.error = False
+        self.error = ""
         self.out = ""
         self.stdall = ""
         self.status = ""
@@ -266,6 +266,7 @@ class shProcessProtocol(protocol.ProcessProtocol):
         self.desc = cmd
         #time
         self.time = time()
+        self.exitCode = -1
 
     def write(self,data):
         self.transport.write(data)
@@ -375,11 +376,55 @@ def shlaunchDeferred(cmd):
 
 def shlaunch(cmd):
     """
-    return direct (non stderr) output from cmd
+    Run synchronously a shell command
+
+    @param: cmd shell command
+    @type: str
+    @return: return code, stdout, stderr
+    @type: tuple
     """
-    ret = shLaunch(cmd).out.split("\n")
-    if ret: ret.pop()
-    return ret
+    shProcess = shLaunch(cmd)
+
+    stdout = shProcess.out.split("\n")
+    if stdout: stdout.pop()
+    stderr = shProcess.error.split("\n")
+    if stderr: stderr.pop()
+
+    return (shProcess.exitCode, stdout, stderr)
+
+def shlaunchBackground(cmd, desc = None, progressFunc = None, endFunc = None):
+    """
+    Follow backup process
+
+    The progressFunc in param can follow processus via stdin and stdout.
+        - progressFunc is called each time datas are emmited on stdout
+        - shlaunchBackground drop process after 60 seconds on inactivity
+
+    @param cmd: the shell command to launch
+    @type cmd: str
+    @param desc: description in "background action" (optional)
+    @type desc: str
+    @param progressFunc: callback function to follow processus evolution.
+        @see: progressBackup for an example
+    @type progressFunc: function
+    """
+    logger = logging.getLogger()
+    logger.info("support.mmctools.shlaunchBackground(\""+str(cmd)+"\")")
+    shProcess = shSharedProcessProtocol(cmd)
+    if desc == None:
+        shProcess.desc = cmd
+    else:
+        shProcess.desc = desc
+
+    ProcessScheduler().addProcess(shProcess.desc, shProcess)
+
+    if progressFunc:
+        shProcess.progressCalc = instancemethod(progressFunc, shProcess, shSharedProcessProtocol)
+
+    if endFunc:
+        shProcess.processEnded = instancemethod(endFunc, shProcess, shSharedProcessProtocol)
+    reactor.spawnProcess(shProcess, "/bin/sh", ['/bin/sh','-c',cmd],env=os.environ)
+
 
 def shLaunchDeferred(cmd):
     """
@@ -402,36 +447,6 @@ def generateBackgroundProcess(cmd):
     reactor.spawnProcess(shProcess, "/bin/sh", ['/bin/sh','-c',cmd],env=os.environ)
     return shProcess
 
-
-def shlaunchBackground(cmd, desc = None, progressFunc = None, endFunc = None):
-    """
-    follow backup process
-    the progressFunc in param can follow processus via stdin and stdout.
-    progressFunc is called each time datas are emmited on stdout
-    shlaunchBackground drop process after 60 seconds on inactivity
-    @param param: cmd command to launch
-    @param type: cmd str
-    @param param: desc (optionnal) description in "background action"
-    @param type: desc str
-    @param param: progressFunc callback function to follow processus evolution. @see progressBackup for an example
-    @param type: func
-    """
-    logger = logging.getLogger()
-    logger.info("support.mmctools.shlaunchBackground(\""+str(cmd)+"\")")
-    shProcess = shSharedProcessProtocol(cmd)
-    if desc == None:
-        shProcess.desc = cmd
-    else:
-        shProcess.desc = desc
-
-    ProcessScheduler().addProcess(shProcess.desc, shProcess)
-
-    if progressFunc:
-        shProcess.progressCalc = instancemethod(progressFunc, shProcess, shSharedProcessProtocol)
-
-    if endFunc:
-        shProcess.processEnded = instancemethod(endFunc, shProcess, shSharedProcessProtocol)
-    reactor.spawnProcess(shProcess, "/bin/sh", ['/bin/sh','-c',cmd],env=os.environ)
 
 
 def getConfigParser(module, path = mmcconfdir + "/plugins/"):
