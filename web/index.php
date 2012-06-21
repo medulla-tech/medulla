@@ -132,7 +132,7 @@ if (isset($_SESSION['__notify'])) {
 }
 
 if (isset($error)) {
-    echo "<div id=\"alert\">".$error."</div>\n";
+    echo '<div id="alert">' . stripslashes($error) . '</div>';
 }
 ?>
 
