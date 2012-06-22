@@ -24,18 +24,21 @@
 # along with Pulse 2.  If not, see <http://www.gnu.org/licenses/>.
 import os, sys, stat
 import re
-import readline, getpass
+import getpass
 import string
 import uuid
 from random import choice
 from subprocess import call
 from optparse import OptionParser
-from ConfigParser import ConfigParser
+from configobj import ConfigObj
+import gzip
+from StringIO import StringIO
 import sqlalchemy as sa
 import logging
 import ldap
 from pulse2.utils import get_default_ip
-from pulse2.site import examplesdir, packagermode
+from pulse2.site import examplesdir
+from mmc.core.log import ColoredFormatter
 
 log = logging.getLogger('pulse2-setup')
 
@@ -81,7 +84,8 @@ def read_bool(prompt, default):
 def gen_passwd(size=10):
     return ''.join([choice(string.letters + string.digits) for _ in range(size)])
 
-def read_passwd(prompt, check=False):
+def read_passwd(prompt, default, check=False):
+    prompt += ' (default: ' + default + ')'
     match = False
     while not match:
         pwd = getpass.getpass('INPUT    - ' + prompt + ': ')
@@ -92,6 +96,10 @@ def read_passwd(prompt, check=False):
                 log.info('Passwords do not match. Retry.')
         else:
             match = True
+
+    if not pwd:
+        return default
+
     return pwd
 
 re_ip4 = re.compile(r'([0-9]{1,3})(\.([0-9]{1,3})){3}')
@@ -115,21 +123,21 @@ def read_ip(prompt, default):
     return ret
 
 initscripts = [ 'mmc-agent', 'pulse2-imaging-server', 'pulse2-inventory-server',
-                'pulse2-launchers', 'pulse2-package-server', 'pulse2-scheduler' ]
+                'pulse2-launcher', 'pulse2-package-server', 'pulse2-scheduler' ]
 
 class DistroHandler(object):
     def enable_srv(self, name):
         # Start scripts
         for runlevel in (2,3,4,5):
             ret = call("/bin/ln -fs ../init.d/%(name)s /etc/rc%(runlevel)i.d/S20%(name)s" % \
-                           {'name': name, 'runlevel': runlevel}, 
+                           {'name': name, 'runlevel': runlevel},
                        shell=True)
             if ret != 0:
                 return False
         # Stop scripts
         for runlevel in (0,1,6):
             ret = call("/bin/ln -fs ../init.d/%(name)s /etc/rc%(runlevel)i.d/K01%(name)s" % \
-                           {'name': name, 'runlevel': runlevel}, 
+                           {'name': name, 'runlevel': runlevel},
                        shell=True)
             if ret != 0:
                 return False
@@ -139,14 +147,14 @@ class DistroHandler(object):
         # Start scripts
         for runlevel in (2,3,4,5):
             ret = call("/bin/rm -f /etc/rc%(runlevel)i.d/S20%(name)s" % \
-                           {'name': name, 'runlevel': runlevel}, 
+                           {'name': name, 'runlevel': runlevel},
                        shell=True)
             if ret != 0:
                 return False
         # Stop scripts
         for runlevel in (0,1,6):
             ret = call("/bin/rm -f /etc/rc%(runlevel)i.d/K01%(name)s" % \
-                           {'name': name, 'runlevel': runlevel}, 
+                           {'name': name, 'runlevel': runlevel},
                        shell=True)
             if ret != 0:
                 return False
@@ -162,7 +170,7 @@ class DistroHandler(object):
 
 class DebianHandler(DistroHandler):
     def enable_srv(self, name):
-        ret = call("/usr/sbin/update-rc.d %(name)s defaults" % {'name': name}, 
+        ret = call("/usr/sbin/update-rc.d %(name)s defaults" % {'name': name},
                    shell=True)
         return ret== 0
 
@@ -172,12 +180,12 @@ class DebianHandler(DistroHandler):
         return ret==0
 
     def start_srv(self, name):
-        ret = call("/usr/sbin/invoke-rc.d %(name)s start" % {'name': name}, 
+        ret = call("/usr/sbin/invoke-rc.d %(name)s start" % {'name': name},
                    shell=True)
         return ret==0
 
     def stop_srv(self, name):
-        ret = call("/usr/sbin/invoke-rc.d %(name)s stop" % {'name': name}, 
+        ret = call("/usr/sbin/invoke-rc.d %(name)s stop" % {'name': name},
                    shell=True)
         return ret==0
 
@@ -246,7 +254,7 @@ class SrvInventoryserver(Service):
         return self.config['inventory.service.enable']
 
 class SrvLauncher(Service):
-    name = 'pulse2-launchers'
+    name = 'pulse2-launcher'
 
 class SrvPkgServer(Service):
     name = 'pulse2-package-server'
@@ -257,14 +265,14 @@ class SrvPkgServer(Service):
 class SrvScheduler(Service):
     name = 'pulse2-scheduler'
 
-class Pulse2ConfigParser(ConfigParser):
+class Pulse2ConfigFile(object):
     """ Values are setted that way:
     - load the config file
     - then populate with default values if not set from the file
     """
     clsnames = [ 'PluginsPkgConfig', 'PluginsImagingConfig', 'PluginsGlpiConfig',
                  'PluginsBaseConfig', 'PluginsDyngroupConfig', 'PluginsInventoryConfig',
-                 'PluginsPulse2Config', 'PluginsMscConfig', 'InventoryServerConfig', 
+                 'PluginsPulse2Config', 'PluginsMscConfig', 'InventoryServerConfig',
                  'LaunchersConfig', 'PackageServerConfig', 'SchedulerConfig',
                  'ImagingServerConfig' ]
     path = None
@@ -272,69 +280,101 @@ class Pulse2ConfigParser(ConfigParser):
     # examplesdir
     defaults = None
     mode = stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP
+    # ConfigObj object
+    config = None
 
     def __init__(self, confdir, reset=False):
-        ConfigParser.__init__(self)
         self.confdir = confdir
         if self.defaults is None:
-            self._load_defaults()
+            self._load()
         else:
             self._populate(self.__class__.defaults)
+
         if not reset:
             # If not resetting conf, load existing
-            self._load()
+            self._load(True)
 
-    def _load(self):
+    def _load(self, current=False):
         """ Load config file, if any
         """
-        fpath = os.path.join(self.confdir, self.path)
-        if self.read(fpath):
+        # Use current configuration
+        if current:
+            dir_path = self.confdir
+        # Use example configuration
+        else:
+            dir_path = examplesdir
+        fpath = os.path.join(dir_path, self.path)
+        if os.path.exists(fpath):
             log.debug("Load config file %s" % fpath)
+            self.config = ConfigObj(fpath, list_values=False)
+        elif os.path.exists(fpath + '.gz'):
+            fpath = fpath + '.gz'
+            log.debug("Load config file %s" % fpath)
+            fh = gzip.open(fpath, 'rb')
+            config_string = fh.read()
+            fh.close()
+            self.config = ConfigObj(StringIO(config_string), list_values=False)
+            self.config.filename = fpath
         else:
-            log.debug("No such file %s. Will create it." % fpath)
-
-    def _load_defaults(self):
-        """ Load defaults values from config file in examplesdir
-        """
-        fpath = os.path.join(examplesdir, self.path)
-        if self.read(fpath):
-            log.debug("Load default config file: %s" % fpath)
-        else:
-            log.debug("No default config file %s." % fpath)
+            log.debug("No such file %s" % fpath)
+            self.config = ConfigObj(fpath, list_values=False)
 
     def _populate(self, d):
-        for (name, section) in d.iteritems():
-            if not self.has_section(name):
-                self.add_section(name)
-            for (opt, value) in section.iteritems():
-                self.set(name, opt, value)
+        if not self.config:
+            self.config = ConfigObj(list_values=False)
+        for name, section in d.iteritems():
+            self.config[name] = section
 
     def write_path(self, path):
         dirname = os.path.dirname(path)
         if not os.path.isdir(dirname):
             os.makedirs(dirname)
         try:
-            f = open(path, 'w')
-            self.write(f)
+            self.config.filename = path
+            self.config.write()
             os.chmod(path, self.mode)
             log.info("Wrote configuration file: %s" % path)
         except IOError, e:
             log.error("Can not write file: %s" % path)
             log.debug(str(e))
             sys.exit(1)
-        finally:
-            f.close()
+
+    def get(self, section, option):
+        try:
+            return self.config[section][option]
+        except KeyError:
+            return ""
+
+    def set(self, section, option, value):
+        if not section in self.config:
+            self.config[section] = {}
+        self.config[section][option] = value
+
+    def remove_section(self, section):
+        try:
+            del self.config[section]
+        except KeyError:
+            pass
+
+    def has_section(self, section):
+        return section in self.config
+
+    def has_option(self, section, option):
+        if self.has_section(section):
+            return option in self.config[section]
+        else:
+            return False
 
     def commit(self):
         self.write_path(os.path.join(self.confdir, self.path))
 
-class LoggingConfig(Pulse2ConfigParser):
+class LoggingConfig(Pulse2ConfigFile):
     log_dir = '/var/log/mmc'
     log_path = None
 
     def __init__(self, *args, **kwargs):
-        Pulse2ConfigParser.__init__(self, *args, **kwargs)
-        
+        Pulse2ConfigFile.__init__(self, *args, **kwargs)
+
         # Add logging module configuration
         d = {'loggers': {'keys': 'root'},
              'handlers': {'keys': 'hand01'},
@@ -344,28 +384,28 @@ class LoggingConfig(Pulse2ConfigParser):
              'handler_hand01': {'class': 'FileHandler',
                                 'level': 'INFO',
                                 'formatter': 'form01',
-                                'args': (os.path.join(self.log_dir, self.log_path), )},
+                                'args': '("'+os.path.join(self.log_dir, self.log_path)+'", )'},
              'formatter_form01': {'format': '%(asctime)s %(levelname)s %(message)s'}}
         self._populate(d)
 
-class PluginsPkgConfig(Pulse2ConfigParser):
+class PluginsPkgConfig(Pulse2ConfigFile):
     path = 'plugins/pkgs.ini'
 
-class PluginsImagingConfig(Pulse2ConfigParser):
+class PluginsImagingConfig(Pulse2ConfigFile):
     path = 'plugins/imaging.ini'
 
-class PluginsGlpiConfig(Pulse2ConfigParser):
+class PluginsGlpiConfig(Pulse2ConfigFile):
     path = 'plugins/glpi.ini'
 
-class PluginsBaseConfig(Pulse2ConfigParser):
+class PluginsBaseConfig(Pulse2ConfigFile):
     path = 'plugins/base.ini'
     defaults = {'backup-tools': {'path': '/usr/lib/mmc/backup-tools',
                                  'destpath': '/home/archives'},
-                'ldap': {'ldapurl': 'ldap://localhost:389',
-                         'basedn': 'dc=mandriva,dc=com',
-                         'baseusersdn': 'ou=Users,%(basedn)s',
-                         'basegroupsdn': 'ou=Groups,%(basedn)s',
-                         'rootname': 'cn=admin,%(basedn)s',
+                'ldap': {'ldapurl': 'ldap://127.0.0.1:389',
+                         'baseDN': 'dc=mandriva,dc=com',
+                         'baseUsersDN': 'ou=Users,%(baseDN)s',
+                         'baseGroupsDN': 'ou=Groups,%(baseDN)s',
+                         'rootName': 'cn=admin,%(baseDN)s',
                          'password': 'secret',
                          'userHomeAction': 1,
                          'skelDir': '/etc/skel',
@@ -388,16 +428,17 @@ class PluginsBaseConfig(Pulse2ConfigParser):
                           'dbname': 'audit',
                           'dbport': 3306}}
 
-class PluginsDyngroupConfig(Pulse2ConfigParser):
+
+class PluginsDyngroupConfig(Pulse2ConfigFile):
     path = 'plugins/dyngroup.ini'
 
-class PluginsInventoryConfig(Pulse2ConfigParser):
+class PluginsInventoryConfig(Pulse2ConfigFile):
     path = 'plugins/inventory.ini'
 
-class PluginsPulse2Config(Pulse2ConfigParser):
+class PluginsPulse2Config(Pulse2ConfigFile):
     path = 'plugins/pulse2.ini'
 
-class PluginsMscConfig(Pulse2ConfigParser):
+class PluginsMscConfig(Pulse2ConfigFile):
     path = 'plugins/msc.ini'
 
 class InventoryServerConfig(LoggingConfig):
@@ -407,7 +448,7 @@ class InventoryServerConfig(LoggingConfig):
 class LaunchersConfig(LoggingConfig):
     path = 'pulse2/launchers/launchers.ini'
     log_path = 'pulse2-launchers.log'
-    
+
 class PackageServerConfig(LoggingConfig):
     path = 'pulse2/package-server/package-server.ini'
     log_path = 'pulse2-package-server.log'
@@ -449,7 +490,7 @@ class SetupApp(object):
         # self.confs will contain path->ConfigParser objects dictionary
         # path is relative to confdir, as in confpaths list above
         self.confs = {}
-        for clsname in Pulse2ConfigParser.clsnames:
+        for clsname in Pulse2ConfigFile.clsnames:
             cls = globals()[clsname]
             self.confs[cls.path] = cls(self.confdir, self.reset)
 
@@ -465,7 +506,7 @@ class SetupApp(object):
             return default
         else:
             return read_opt(name, default)
-    
+
     def read_bool(self, name, default):
         if self.batch:
             return default
@@ -479,7 +520,7 @@ class SetupApp(object):
             else:
                 return gen_passwd()
         else:
-            return read_passwd(name)
+            return read_passwd(name, default)
 
     def read_ip(self, name, default=None):
         if self.batch:
@@ -495,12 +536,12 @@ class SetupApp(object):
         Values are set from existing config files or default values in *Config classes.
 
         Note 1: db admin credentials are not stored in any file, except host.
-        Note 2: current version does not support diffenriated db host or credentials. All 
+        Note 2: current version does not support diffenriated db host or credentials. All
           db must be on the same host. Default value are taken from plugins/pulse2.ini file.
         """
         self.defaults['ldapurl'] = self.confs['plugins/base.ini'].get('ldap', 'ldapurl')
-        self.defaults['ldapbasedn'] = self.confs['plugins/base.ini'].get('ldap', 'basedn')        
-        self.defaults['ldapadmindn'] = self.confs['plugins/base.ini'].get('ldap', 'rootname')
+        self.defaults['ldapbasedn'] = self.confs['plugins/base.ini'].get('ldap', 'baseDN')
+        self.defaults['ldapadmindn'] = self.confs['plugins/base.ini'].get('ldap', 'rootName')
         self.defaults['ldappasswd'] = self.confs['plugins/base.ini'].get('ldap', 'password')
 
         self.defaults['dbhost'] = self.confs['plugins/pulse2.ini'].get('database', 'dbhost')
@@ -520,15 +561,15 @@ class SetupApp(object):
     def read_config(self):
         """ Read some global config values
         """
-        self.config['audit.module.enable'] = self.read_bool('Enable audit module', 
+        self.config['audit.module.enable'] = self.read_bool('Enable audit module',
                                                             self.defaults['audit.module.enable'])
-        self.config['inventory.service.enable'] = self.read_bool('Enable inventory server', 
+        self.config['inventory.service.enable'] = self.read_bool('Enable inventory server',
                                                                  self.defaults['inventory.service.enable'])
-        self.config['imaging.service.enable'] = self.read_bool('Enable imaging server', 
+        self.config['imaging.service.enable'] = self.read_bool('Enable imaging server',
                                                                self.defaults['imaging.service.enable'])
-        self.config['package.service.enable'] = self.read_bool('Enable package server (proxy)', 
+        self.config['package.service.enable'] = self.read_bool('Enable package server (proxy)',
                                                                self.defaults['package.service.enable'])
-        self.config['server.ip.external'] = self.read_ip('Server external IP address', 
+        self.config['server.ip.external'] = self.read_ip('Server external IP address',
                                                          get_default_ip())
 
     def init_ldap(self):
@@ -641,7 +682,7 @@ class SetupApp(object):
                     # This error means 'user exists'
                     log.debug('User already exists: %s@%s' % (self.config['dbuser'], host))
                 elif e.orig[0]==1044:
-                    log.error('Access denied: please check user \'%s\'@\'%s\' has grant rights.' % (self.config['dbuser'], 
+                    log.error('Access denied: please check user \'%s\'@\'%s\' has grant rights.' % (self.config['dbuser'],
                                                                                                     self.config['dbhost']))
                     sys.exit(2)
                 else:
@@ -661,7 +702,7 @@ class SetupApp(object):
                     conn.execute('GRANT ALL on `%s`.* to %%s@%%s' % module, self.config['dbuser'], host)
             except sa.exc.OperationalError, e:
                 if e.orig[0]==1044:
-                    log.error('Access denied: please check user \'%s\'@\'%s\' has grant rights.' % (self.config['dbuser'], 
+                    log.error('Access denied: please check user \'%s\'@\'%s\' has grant rights.' % (self.config['dbuser'],
                                                                                                     self.config['dbhost']))
                     sys.exit(2)
                 else:
@@ -673,7 +714,7 @@ class SetupApp(object):
         #
         # Set db user and password in conf files
         #
-        
+
         # dyngroup db
         self.confs['plugins/dyngroup.ini'].set('database', 'dbhost', self.config['dbhost'])
         self.confs['plugins/dyngroup.ini'].set('database', 'dbuser', self.config['dbuser'])
@@ -703,8 +744,8 @@ class SetupApp(object):
         # msc db (plugin)
         self.confs['plugins/msc.ini'].set('msc', 'dbhost', self.config['dbhost'])
         self.confs['plugins/msc.ini'].set('msc', 'dbuser', self.config['dbuser'])
-        self.confs['plugins/msc.ini'].set('msc', 'dbpasswd', self.config['dbpasswd'])        
-        
+        self.confs['plugins/msc.ini'].set('msc', 'dbpasswd', self.config['dbpasswd'])
+
         # msc db (scheduler)
         self.confs['pulse2/scheduler/scheduler.ini']\
             .set('database', 'dbhost', self.config['dbhost'])
@@ -750,7 +791,7 @@ class SetupApp(object):
         self.confs['plugins/glpi.ini'].set('main', 'disable', 1)
         self.confs['plugins/inventory.ini'].set('main', 'disable', 0)
         self.confs['plugins/base.ini'].set('computers', 'method', 'inventory')
-        
+
         # Ensure various dirs are created
         for path in [ self.confs['plugins/base.ini'].get('backup-tools', 'destpath'),
                       self.confs['plugins/msc.ini'].get('msc', 'repopath'),
@@ -782,11 +823,6 @@ class SetupApp(object):
                 log.error('Can not create RSA key pair for user root')
                 sys.exit(1)
 
-        # Update services
-        if not packagermode:
-            for srv in self.services:
-                srv.update_rc()
-
         # Setup package server
         log.info('Generate uuid for package server')
         conf = self.confs['pulse2/package-server/package-server.ini']
@@ -806,7 +842,7 @@ class SetupApp(object):
         if self.config['imaging.service.enable']:
             binpath = path_lookup('pulse2-package-server-register-imaging')
             ps_conf = self.confs['pulse2/package-server/package-server.ini']
-            basecmd = binpath + ' -m https://%s:%s@%s:%s ' % (ps_conf.get('mmc_agent', 'username'), 
+            basecmd = binpath + ' -m https://%s:%s@%s:%s ' % (ps_conf.get('mmc_agent', 'username'),
                                                              ps_conf.get('mmc_agent', 'password'),
                                                              ps_conf.get('mmc_agent', 'host'),
                                                              ps_conf.get('mmc_agent', 'port'))
@@ -829,7 +865,7 @@ class SetupApp(object):
             conf.commit()
 
     def run(self):
-        """ Run setup 
+        """ Run setup
         """
         log.info("Load defaults values from existing config")
         self.load_defaults()
@@ -866,8 +902,11 @@ if __name__ == '__main__':
         level = logging.INFO
 
     # Init logger
-    format = '%(levelname)-8s - %(message)s'
-    logging.basicConfig(level=level, format=format)
+    hdlr2 = logging.StreamHandler()
+    hdlr2.setFormatter(ColoredFormatter("%(levelname)-18s %(message)s"))
+    hdlr2.setLevel(level)
+    log.addHandler(hdlr2)
+    log.setLevel(level)
 
     # Run the setup app
     app = SetupApp(datadir=options.pkgdatadir, confdir=options.confdir, batch=options.batch, reset=options.reset)
