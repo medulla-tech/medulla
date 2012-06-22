@@ -111,6 +111,8 @@ class CheckAction(BaseAction):
         d.addErrback(self.resultError)
 
     def resultOk(self, result):
+        global code
+
         if result is True:
             log.info('Imaging server already registered')
         else:
@@ -143,6 +145,8 @@ class RegisterAction(BaseAction):
         d.addErrback(self.resultError)
 
     def resultOk(self, result):
+        global code
+
         code, msg = result
 
         if code is True:
@@ -155,6 +159,8 @@ class RegisterAction(BaseAction):
         reactor.stop()
 
     def resultError(self, error):
+        global code
+
         log.error(error)
         code = ERROR_REGISTRATION_FAILURE
         reactor.stop()
@@ -167,7 +173,7 @@ def generate_uuid():
     print uuid.uuid1()
 
 if __name__ == '__main__':
-    retcode = 0
+    code = 0
 
     # Declare options
     parser = OptionParser()
