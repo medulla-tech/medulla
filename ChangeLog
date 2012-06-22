@@ -1,13 +1,20 @@
+mmc-core 3.0.5
+--------------
+
+ * Bug #1708: Fix unhandled exception when user atttempt to create a already
+   existing user home directory
+ * Bug #1775: UID/GID should not be shown when adding a user
+ * Bug #1777: Slashes in error messages on the login page
+
 mmc-core 3.0.4
 --------------
 
  * Feature #1687: Allow users to reset their password with a token based
-                  authentication
+   authentication
  * Password policies enhancements: Password complexity hints, show on the user
-								   edit page if the password if expired or if
-								   the user is in grace login mode
+   edit page if the password if expired or if the user is in grace login mode
  * New MMC contrib scripts : mmc-check-expired-passwords / usertoken-example in
-							 /usr/share/doc/python-mmc-base/contrib/scripts
+   /usr/share/doc/python-mmc-base/contrib/scripts
  * Audit : audit logs can be sent to syslog servers
  * Bug #1558: Broken user / group lists under IE7
  * Bug #1691: Bad mmc-agent PID file handling
@@ -141,12 +148,12 @@ mmc-agent 2.2.0
  * a user must now be authenticated before any XML-RPC calls
  * put back HTTP basic authentication between the agent and the interface
  * SAMBA plugin:
-   * issue a warning if NSCD is detected 
+   * issue a warning if NSCD is detected
  * network plugin:
    * Make "get next free IP address feature" works with Python 2.4
    * DHCP: authoritative flag management for subnet
    * DNS: allow to specify a DNS zone reader for BIND zone configuration files (initial patch by Josef Boleininger)
-   * DNS: chrooted bind support 
+   * DNS: chrooted bind support
  * a title can now be set to the MMC login page
  * browser language auto-detection on the login page
  * ported a lot of old code to the new MMC framework
@@ -194,7 +201,7 @@ lmc-agent 1.1.3
 lmc-agent 1.1.2
 ---------------
 
- * user login shell attributes can now be edited 
+ * user login shell attributes can now be edited
  * a group entry can now be edited
  * code cleanup and XHTML/CSS fixes
  * base plugin:
@@ -218,19 +225,19 @@ lmc-agent 1.1.1
    * the POSIX primary group of a user can be changed
    * starting uid and gid numbers can now be configured
    * extra modifiers are now available when setting default attributes for new
-     users 
+     users
  * SAMBA plugin:
    * SAMBA user primary group can be changed
    * extra LDAP checks when activating module
    * joined machines on the domain are now added to the 'Domain Computers'
-     group 
+     group
  * mail plugin: virtual mail domain support
  * when searching a user, the scope is extended to uid, firstname and lastname
   (instead of uid only)
  * primary/secondary groups management
  * the group membership page now works with IE6
  * user mail address can be configured directly from the user edit page
- * assorted bug fixes 
+ * assorted bug fixes
 
 lmc-agent 1.1.0
 ---------------
