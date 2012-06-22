@@ -34,11 +34,11 @@ ldapurl = ldap://127.0.0.1:389
 # LDAP base DN
 baseDN = dc=mandriva, dc=com
 # Users location in the LDAP
-baseUsersDN = ou=Users, %(basedn)s
+baseUsersDN = ou=Users, %(baseDN)s
 # Groups location in the LDAP
-baseGroupsDN = ou=Groups, %(basedn)s
+baseGroupsDN = ou=Groups, %(baseDN)s
 # LDAP manager
-rootName = cn=admin, %(basedn)s
+rootName = cn=admin, %(baseDN)s
 password = secret
 # If enabled, the MMC will create/move/delete the home of the users
 # Else will do nothing, but only write user informations into LDAP
