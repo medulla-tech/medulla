@@ -93,6 +93,8 @@ if ($_POST) {
         }
         if ($update)
             $result .= _T("Attributes updated", "ppolicy") . ": <ul>" . $update . "</ul>";
+
+        callPluginFunction("changePasswordPolicy", array($FH, $mode));
     }
 
     if ($error)
