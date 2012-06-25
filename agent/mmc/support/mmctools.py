@@ -385,10 +385,14 @@ def shlaunch(cmd):
     """
     shProcess = shLaunch(cmd)
 
-    stdout = shProcess.out.split("\n")
-    if stdout: stdout.pop()
-    stderr = shProcess.error.split("\n")
-    if stderr: stderr.pop()
+    stdout = []
+    stderr = []
+    if isinstance(shProcess.out, basestring):
+        stdout = shProcess.out.split("\n")
+        if stdout: stdout.pop()
+    if isinstance(shProcess.error, basestring):
+        stderr = shProcess.error.split("\n")
+        if stderr: stderr.pop()
 
     return (shProcess.exitCode, stdout, stderr)
 
