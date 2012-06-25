@@ -284,8 +284,9 @@ class Pulse2ConfigFile(object):
     # ConfigObj object
     config = None
 
-    def __init__(self, confdir, reset=False):
+    def __init__(self, confdir, reset=False, prefix='/usr'):
         self.confdir = confdir
+        self.prefix = prefix
         if self.defaults is None:
             self._load()
         else:
@@ -406,35 +407,6 @@ class PluginsGlpiConfig(Pulse2ConfigFile):
 
 class PluginsBaseConfig(Pulse2ConfigFile):
     path = 'plugins/base.ini'
-    defaults = {'backup-tools': {'path': '/usr/lib/mmc/backup-tools',
-                                 'destpath': '/home/archives'},
-                'ldap': {'ldapurl': 'ldap://127.0.0.1:389',
-                         'baseDN': 'dc=mandriva,dc=com',
-                         'baseUsersDN': 'ou=Users,%(baseDN)s',
-                         'baseGroupsDN': 'ou=Groups,%(baseDN)s',
-                         'rootName': 'cn=admin,%(baseDN)s',
-                         'password': 'secret',
-                         'userHomeAction': 1,
-                         'skelDir': '/etc/skel',
-                         'defaultUserGroup': 'Domain Users',
-                         'defaultHomeDir': '/home',
-                         'defaultShellEnable': '/bin/bash',
-                         'defaultShellDisable': '/bin/false',
-                         'uidStart': '10000',
-                         'gidStart': '10000',
-                         'logfile': '/var/log/ldap.log',
-                         'passwordscheme': 'passmod'},
-                'backup-tools': {'path': '/usr/lib/mmc/backup-tools',
-                                 'destpath': '/home/archives'},
-                'computers': {'method': 'inventory'},
-                'audit': {'method': 'database',
-                          'dbhost': 'localhost',
-                          'dbdriver': 'mysql',
-                          'dbuser': 'audit',
-                          'dbpassword': 'mmc',
-                          'dbname': 'audit',
-                          'dbport': 3306}}
-
 
 class PluginsDyngroupConfig(Pulse2ConfigFile):
     path = 'plugins/dyngroup.ini'
@@ -473,9 +445,9 @@ class SetupApp(object):
                 'inventory.service.enable': True,
                 'package.service.enable': True}
 
-    def __init__(self, datadir, confdir, batch=False, reset=False):
+    def __init__(self, prefix, confdir, batch=False, reset=False):
         self.config = {}
-        self.datadir = datadir
+        self.prefix = prefix
         self.confdir = confdir
         self.batch = batch
         self.reset = reset
@@ -485,8 +457,8 @@ class SetupApp(object):
             log.error("Please run this application as root")
             sys.exit(2)
 
-        # Check datadir contains sql snippets
-        self.sqldir = os.path.join(datadir, 'sql')
+        # Check sql snippets
+        self.sqldir = os.path.join(prefix, 'share', 'mmc', 'sql')
         if not os.path.isdir(self.sqldir):
             log.error('Can not find SQL snippets in %s' % self.sqldir)
 
@@ -499,7 +471,7 @@ class SetupApp(object):
         self.confs = {}
         for clsname in Pulse2ConfigFile.clsnames:
             cls = globals()[clsname]
-            self.confs[cls.path] = cls(self.confdir, self.reset)
+            self.confs[cls.path] = cls(self.confdir, self.reset, self.prefix)
 
         # Creates Services objects
         self.services = []
@@ -894,6 +866,7 @@ class SetupApp(object):
 
         # End Workaround
         self.confs['agent/config.ini'].set('main', 'multithreading', '1')
+        self.commit()
         for srv in self.services:
             if srv.name == "mmc-agent":
                 srv.restart()
@@ -907,10 +880,10 @@ if __name__ == '__main__':
                       help="Do not ask any question")
     parser.add_option("-R", "--reset", action="store_true", dest="reset", default=False,
                       help="Reset configuration")
-    parser.add_option("--pkgdatadir", action="store", dest="pkgdatadir", default='/usr/share/mmc',
-                      help="Path to pulse2 datadir (default: /usr/share/mmc)")
     parser.add_option("--confdir", action="store", dest="confdir", default='/etc/mmc',
-                      help="Path to pulse2 conf dir (default: /etc/mmc)")
+                      help="Path to Pulse2 conf dir (default: /etc/mmc)")
+    parser.add_option("--prefix", action="store", dest="prefix", default='/usr',
+                      help="Prefix used when installing Pulse2 (default: /usr)")
 
     # Parse and analyse args
     (options, args) = parser.parse_args()
@@ -927,5 +900,5 @@ if __name__ == '__main__':
     log.setLevel(level)
 
     # Run the setup app
-    app = SetupApp(datadir=options.pkgdatadir, confdir=options.confdir, batch=options.batch, reset=options.reset)
+    app = SetupApp(prefix=options.prefix, confdir=options.confdir, batch=options.batch, reset=options.reset)
     app.run()
