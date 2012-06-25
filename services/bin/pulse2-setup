@@ -275,7 +275,7 @@ class Pulse2ConfigFile(object):
                  'PluginsBaseConfig', 'PluginsDyngroupConfig', 'PluginsInventoryConfig',
                  'PluginsPulse2Config', 'PluginsMscConfig', 'InventoryServerConfig',
                  'LaunchersConfig', 'PackageServerConfig', 'SchedulerConfig',
-                 'ImagingServerConfig' ]
+                 'ImagingServerConfig', 'MMCAgentConfig' ]
     path = None
     # If defaults is None, try to read default values from config file in
     # examplesdir
@@ -318,6 +318,9 @@ class Pulse2ConfigFile(object):
             self.config.filename = fpath
         else:
             log.debug("No such file %s" % fpath)
+            if not current:
+                fpath = os.path.join(self.confdir, self.path)
+                log.debug("Fallback on current configuration %s" % fpath)
             self.config = ConfigObj(fpath, list_values=False)
 
     def _populate(self, d):
@@ -388,6 +391,9 @@ class LoggingConfig(Pulse2ConfigFile):
                                 'args': '("'+os.path.join(self.log_dir, self.log_path)+'", )'},
              'formatter_form01': {'format': '%(asctime)s %(levelname)s %(message)s'}}
         self._populate(d)
+
+class MMCAgentConfig(Pulse2ConfigFile):
+    path = 'agent/config.ini'
 
 class PluginsPkgConfig(Pulse2ConfigFile):
     path = 'plugins/pkgs.ini'
@@ -876,11 +882,22 @@ class SetupApp(object):
         self.init_db()
         self.init_ldap()
         self.init_misc()
+
+        # FIXME
+        # Workaround timeout calls to the mmc agent when
+        # pulse2-package-server-register-imaging is run
+        self.confs['agent/config.ini'].set('main', 'multithreading', '0')
+
         self.commit()
-
         self.restart_services()
-
         self.post_restart()
+
+        # End Workaround
+        self.confs['agent/config.ini'].set('main', 'multithreading', '1')
+        for srv in self.services:
+            if srv.name == "mmc-agent":
+                srv.restart()
+
 
 if __name__ == '__main__':
     parser = OptionParser()
