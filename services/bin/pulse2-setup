@@ -122,8 +122,9 @@ def read_ip(prompt, default):
             log.info('Incorrect value. Retry.')
     return ret
 
-initscripts = [ 'mmc-agent', 'pulse2-imaging-server', 'pulse2-inventory-server',
-                'pulse2-launcher', 'pulse2-package-server', 'pulse2-scheduler' ]
+initscripts = [ 'mmc-agent', 'pulse2-imaging-server',
+                'pulse2-inventory-server', 'pulse2-launchers', 
+                'pulse2-package-server', 'pulse2-scheduler' ]
 
 class DistroHandler(object):
     def enable_srv(self, name):
@@ -254,7 +255,7 @@ class SrvInventoryserver(Service):
         return self.config['inventory.service.enable']
 
 class SrvLauncher(Service):
-    name = 'pulse2-launcher'
+    name = 'pulse2-launchers'
 
 class SrvPkgServer(Service):
     name = 'pulse2-package-server'
