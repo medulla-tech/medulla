@@ -866,7 +866,7 @@ class SetupApp(object):
 
         # End Workaround
         self.confs['agent/config.ini'].set('main', 'multithreading', '1')
-        self.commit()
+        self.confs['agent/config.ini'].commit()
         for srv in self.services:
             if srv.name == "mmc-agent":
                 srv.restart()
