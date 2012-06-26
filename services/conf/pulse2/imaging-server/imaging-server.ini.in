@@ -37,7 +37,7 @@ host = 127.0.0.1
 # enablessl = False
 
 [hooks]
-# hooks_dir = /usr/lib/pulse2/imaging-server/hooks
+hooks_dir = @libdir@/pulse2/imaging-server/hooks
 #
 # 0xAD => "I'm new" action : menu creation request, triggered by the bootloader
 # arg[1] = source MAC (short)

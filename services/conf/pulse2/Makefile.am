@@ -34,7 +34,23 @@ nobase_pulseconf_DATA = \
 	imaging-server/imaging-server.ini \
 	$(certca) $(certpriv)
 
-EXTRA_DIST = $(nobase_pulseconf_DATA)
+EXTRA_DIST = $(nobase_pulseconf_DATA)  imaging-server/imaging-server.ini.in \
+             scheduler/scheduler.ini.in launchers/launchers.ini.in
+CLEANFILES = imaging-server/imaging-server.ini scheduler/scheduler.ini \
+             launchers/launchers.ini 
+
+imaging-server/imaging-server.ini scheduler/scheduler.ini launchers/launchers.ini: Makefile
+	rm -f $@ $@.tmp
+	$(MKDIR_P) $(@D)
+	srcdir=''; \
+	  test -f ./$@.in || srcdir=$(srcdir)/; \
+	  $(edit) $${srcdir}$@.in >$@.tmp
+	mv $@.tmp $@
+
+edit = sed \
+        -e 's|@bindir[@]|$(bindir)|g' \
+        -e 's|@sbindir[@]|$(sbindir)|g' \
+        -e 's|@libdir[@]|$(libdir)|g'
 
 if ENABLE_CONF_BACKUP
 INSTALL += --backup=numbered
