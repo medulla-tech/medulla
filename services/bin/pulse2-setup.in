@@ -284,9 +284,8 @@ class Pulse2ConfigFile(object):
     # ConfigObj object
     config = None
 
-    def __init__(self, confdir, reset=False, prefix='/usr'):
+    def __init__(self, confdir, reset=False):
         self.confdir = confdir
-        self.prefix = prefix
         if self.defaults is None:
             self._load()
         else:
@@ -445,9 +444,8 @@ class SetupApp(object):
                 'inventory.service.enable': True,
                 'package.service.enable': True}
 
-    def __init__(self, prefix, confdir, batch=False, reset=False):
+    def __init__(self, confdir, batch=False, reset=False):
         self.config = {}
-        self.prefix = prefix
         self.confdir = confdir
         self.batch = batch
         self.reset = reset
@@ -458,7 +456,7 @@ class SetupApp(object):
             sys.exit(2)
 
         # Check sql snippets
-        self.sqldir = os.path.join(prefix, 'share', 'mmc', 'sql')
+        self.sqldir = os.path.join('@datadir@', 'mmc', 'sql')
         if not os.path.isdir(self.sqldir):
             log.error('Can not find SQL snippets in %s' % self.sqldir)
 
@@ -471,7 +469,7 @@ class SetupApp(object):
         self.confs = {}
         for clsname in Pulse2ConfigFile.clsnames:
             cls = globals()[clsname]
-            self.confs[cls.path] = cls(self.confdir, self.reset, self.prefix)
+            self.confs[cls.path] = cls(self.confdir, self.reset)
 
         # Creates Services objects
         self.services = []
@@ -882,8 +880,6 @@ if __name__ == '__main__':
                       help="Reset configuration")
     parser.add_option("--confdir", action="store", dest="confdir", default='/etc/mmc',
                       help="Path to Pulse2 conf dir (default: /etc/mmc)")
-    parser.add_option("--prefix", action="store", dest="prefix", default='/usr',
-                      help="Prefix used when installing Pulse2 (default: /usr)")
 
     # Parse and analyse args
     (options, args) = parser.parse_args()
@@ -900,5 +896,5 @@ if __name__ == '__main__':
     log.setLevel(level)
 
     # Run the setup app
-    app = SetupApp(prefix=options.prefix, confdir=options.confdir, batch=options.batch, reset=options.reset)
+    app = SetupApp(confdir=options.confdir, batch=options.batch, reset=options.reset)
     app.run()

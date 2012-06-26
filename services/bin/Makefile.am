@@ -1,6 +1,4 @@
-# (c) 2011 Mandriva, http://www.mandriva.com
-#
-# $Id$
+# (c) 2011-2012 Mandriva, http://www.mandriva.com
 #
 # This file is part of Mandriva Pulse2 project.
 #
@@ -24,3 +22,20 @@ dist_sbin_SCRIPTS = pulse2-package-server pulse2-package-server-register-imaging
 	pulse2-inventory-server pulse2-scheduler pulse2-scheduler-manager \
 	pulse2-launcher pulse2-launchers-manager pulse2-output-wrapper \
 	pulse2-ping pulse2-tcp-sproxy pulse2-setup
+
+EXTRA_DIST = pulse2-setup.in
+CLEANFILES = pulse2-setup
+
+pulse2-setup: Makefile
+	rm -f $@ $@.tmp
+	$(MKDIR_P) $(@D)
+	srcdir=''; \
+	  test -f ./$@.in || srcdir=$(srcdir)/; \
+	  $(edit) $${srcdir}$@.in >$@.tmp
+	mv $@.tmp $@
+
+edit = sed \
+        -e 's|@datadir[@]|$(datadir)|g' \
+        -e 's|@libdir[@]|$(libdir)|g' \
+        -e 's|@bindir[@]|$(bindir)|g' \
+        -e 's|@sbindir[@]|$(sbindir)|g'
