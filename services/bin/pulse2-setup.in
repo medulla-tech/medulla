@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8; -*-
 #
-# (c) 2011 Mandriva, http://www.mandriva.com/
+# (c) 2011-2012 Mandriva, http://www.mandriva.com/
 #
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
-#
-# $Id$
+#   Jean-Philippe Braun <jpbraun@mandriva.com>
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
 #
@@ -617,11 +616,12 @@ class SetupApp(object):
                 log.debug(str(e))
 
         # Special case for audit db
-        try:
-            conn.execute('CREATE DATABASE IF NOT EXISTS `audit`')
-            log.info('Creates database \'audit\'')
-        except sa.exc.OperationalError, e:
-            raise e
+        if self.config['audit.module.enable']:
+            try:
+                conn.execute('CREATE DATABASE IF NOT EXISTS `audit`')
+                log.info('Creates database \'audit\'')
+            except sa.exc.OperationalError, e:
+                raise e
 
         # All other modules have install.sh script
         env = os.environ
@@ -672,7 +672,8 @@ class SetupApp(object):
             # Grant rights in DB
             try:
                 dbs = self.dbmodules
-                dbs.append('audit')
+                if self.config['audit.module.enable']:
+                    dbs.append('audit')
                 for module in dbs:
                     log.info('Grant rights on db %s' % module)
                     # Put db name without sqlalchemy quoting: it was surrounded by `''
