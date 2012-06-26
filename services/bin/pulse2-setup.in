@@ -270,7 +270,7 @@ class Pulse2ConfigFile(object):
     - load the config file
     - then populate with default values if not set from the file
     """
-    clsnames = [ 'PluginsPkgConfig', 'PluginsImagingConfig', 'PluginsGlpiConfig',
+    clsnames = [ 'PluginsPkgConfig', 'PluginsImagingConfig', # 'PluginsGlpiConfig',
                  'PluginsBaseConfig', 'PluginsDyngroupConfig', 'PluginsInventoryConfig',
                  'PluginsPulse2Config', 'PluginsMscConfig', 'InventoryServerConfig',
                  'LaunchersConfig', 'PackageServerConfig', 'SchedulerConfig',
@@ -766,7 +766,6 @@ class SetupApp(object):
 
         # Choose glpi or inventory backend, and check config files coherency
         # TODO: ask for the user. For the moment, choose inventory
-        self.confs['plugins/glpi.ini'].set('main', 'disable', 1)
         self.confs['plugins/inventory.ini'].set('main', 'disable', 0)
         self.confs['plugins/base.ini'].set('computers', 'method', 'inventory')
 
