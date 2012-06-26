@@ -801,13 +801,14 @@ class SetupApp(object):
                 sys.exit(1)
 
         # Setup package server
-        log.info('Generate uuid for package server')
         conf = self.confs['pulse2/package-server/package-server.ini']
         _uuid = None
         if conf.has_option('imaging_api', 'uuid'):
             _uuid = conf.get('imaging_api', 'uuid')
+            log.info('Using current uuid (%s) for package server' % _uuid)
         if not _uuid:
             _uuid = str(uuid.uuid4())
+            log.info('Generated uuid (%s) for package server' % _uuid)
         conf.set('imaging_api', 'uuid', _uuid)
 
     def restart_services(self):
