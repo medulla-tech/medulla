@@ -827,7 +827,7 @@ class SetupApp(object):
                                                              ps_conf.get('mmc_agent', 'port'))
             cmd = basecmd + '--check'
             log.debug('Call: %s' % cmd)
-            if call(cmd, shell=True)<>0:
+            if call(cmd, shell=True) == 0:
                 # This uuid is not registered
                 log.info('Registering imaging server')
                 cmd = basecmd + '--name \'Local imaging server\''
