@@ -283,7 +283,7 @@ class SrvApache(Service):
     def __init__(self, handler, config):
         Service.__init__(self, handler, config)
         if handler.apache_service:
-            self.name = handler.apache_service
+            self.__class__.name = handler.apache_service
 
 class SrvImagingServer(Service):
     name = 'pulse2-imaging-server'
