@@ -123,7 +123,7 @@ def read_ip(prompt, default):
     return ret
 
 initscripts = [ 'mmc-agent', 'pulse2-imaging-server',
-                'pulse2-inventory-server', 'pulse2-launchers', 
+                'pulse2-inventory-server', 'pulse2-launchers',
                 'pulse2-package-server', 'pulse2-scheduler' ]
 
 class DistroHandler(object):
@@ -453,6 +453,14 @@ class SetupApp(object):
         if os.getuid()<>0:
             log.error("Please run this application as root")
             sys.exit(2)
+
+        # Warn the user about --reset-db
+        if self.options['reset_db']:
+            log.warn("I will delete all Pulse2 databases and existing computers data (images, bootmenus)")
+            log.warn("Existing masters will be kept")
+            if not self.read_bool('Are you sure ?', True):
+                log.info("OK. Exiting")
+                sys.exit(0)
 
         # Check sql snippets
         self.sqldir = os.path.join('@datadir@', 'mmc', 'sql')
