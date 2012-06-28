@@ -918,8 +918,6 @@ if __name__ == '__main__':
                       help="Reset configuration")
     parser.add_option("--reset-db", action="store_true", dest="reset_db", default=False,
                       help="Reset all databases (imaging, inventory, dyngroup...)")
-    parser.add_option("--delete-images", action="store_true", dest="delete_images", default=False,
-                      help="Delete all computer images")
     parser.add_option("--confdir", action="store", dest="confdir", default='/etc/mmc',
                       help="Path to Pulse2 conf dir (default: /etc/mmc)")
 
@@ -942,7 +940,6 @@ if __name__ == '__main__':
         'batch': options.batch,
         'reset_conf': options.reset_conf,
         'reset_db': options.reset_db,
-        'delete_images': options.delete_images,
     }
 
     # Run the setup app
