@@ -129,6 +129,10 @@ initscripts = [ 'mmc-agent', 'pulse2-imaging-server',
                 'pulse2-package-server', 'pulse2-scheduler' ]
 
 class DistroHandler(object):
+    
+    ldap_schemas_dir = None
+    ldap_config = False
+    
     def enable_srv(self, name):
         # Start scripts
         for runlevel in (2,3,4,5):
@@ -172,6 +176,10 @@ class DistroHandler(object):
         return ret==0
 
 class DebianHandler(DistroHandler):
+
+    ldap_schemas_dir = "/etc/ldap/schema/"
+    ldap_config = True
+
     def enable_srv(self, name):
         default_config = os.path.join(sysconfdir, 'default', name)
         if os.path.exists(default_config):
@@ -595,11 +603,22 @@ class SetupApp(object):
 
         # Check mmc schema is installed
         log.info("Check for MMC schema")
+        distro_handler = get_distro_handler()
         (dn, schema) = ldap.schema.urlfetch(self.config['ldapurl'])
         if schema.get_obj(ldap.schema.ObjectClass, 'lmcUserObject') is None:
-            log.error('MMC schema can not be found in LDAP directory.')
-            log.error('Exiting...')
-            sys.exit(1)
+            if distro_handler.ldap_schema_dir and distro_handler.ldap_config:
+                log.info('MMC schema can not be found in LDAP directory.')
+                log.info('Adding the schema...')
+                schema_path = os.path.join(prefix, 'share', 'doc', 'python-mmc-base', 'contrib', 'ldap', 'mmc.schema')
+                ret = call('mmc-add-schema %s %s' % (schema_path, distro_handler.ldap_schema_dir), shell=True)
+                if ret != 0:
+                    log.error('Failed to include the mmc schema in the LDAP directory.')
+                    log.error('Exiting...')
+                    sys.exit(1)
+            else:
+                log.error('MMC schema can not be found in LDAP directory.')
+                log.error('Exiting...')
+                sys.exit(1)
 
         # Populate base plugin conf file
         self.confs['plugins/base.ini'].set('ldap', 'ldapurl', self.config['ldapurl'])
