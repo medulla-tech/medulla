@@ -39,7 +39,7 @@ import logging
 import ldap
 from pulse2.utils import get_default_ip
 from pulse2.site import examplesdir
-from mmc.site import mmcconfdir, prefix
+from mmc.site import sysconfdir, mmcconfdir, prefix
 from mmc.core.log import ColoredFormatter
 
 log = logging.getLogger('pulse2-setup')
@@ -173,11 +173,17 @@ class DistroHandler(object):
 
 class DebianHandler(DistroHandler):
     def enable_srv(self, name):
+        default_config = os.path.join(sysconfdir, 'default', name)
+        if os.path.exists(default_config):
+            call("sed -i 's/ENABLE=no/ENABLE=yes/' %s" % default_config, shell=True)
         ret = call("/usr/sbin/update-rc.d %(name)s defaults" % {'name': name},
                    shell=True)
-        return ret== 0
+        return ret==0
 
     def disable_srv(self, name):
+        default_config = os.path.join(sysconfdir, 'default', name)
+        if os.path.exists(default_config):
+            call("sed -i 's/ENABLE=yes/ENABLE=no/' %s" % default_config, shell=True)
         ret = call("/usr/sbin/update-rc.d -f %(name)s remove" % {'name': name},
                    shell=True)
         return ret==0
