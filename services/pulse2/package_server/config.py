@@ -291,7 +291,7 @@ class P2PServerCP(pulse2.utils.Singleton):
                         return False
 
         # [imaging_api] section parsing
-        if self.cp.has_section("imaging_api"):
+        if self.cp.has_section("imaging_api") and self.cp.has_option("imaging_api", 'uuid'):
             # mount point
             imaging_mp = '/imaging_api'
             # base folder
