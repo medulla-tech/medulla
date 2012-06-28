@@ -27,6 +27,7 @@ import getpass
 import string
 import uuid
 import readline # pyflakes=ignore
+import shutil
 from random import choice
 from subprocess import call
 from optparse import OptionParser
@@ -632,10 +633,10 @@ class SetupApp(object):
                 except sa.exc.OperationalError, e:
                     raise e
             # remove computer boot menus
-            dir = "/var/lib/pulse2/imaging/bootmenus/"
-            for file in os.listdir(dir):
+            dir = "/var/lib/pulse2/imaging/"
+            for file in os.listdir(os.path.join(dir, 'bootmenus')):
                 if re.match('[0-9A-F]{12}', file):
-                    os.unlink(os.path.join(dir, file))
+                    os.unlink(os.path.join(dir, 'bootmenus', file))
                     log.info("Deleted computer menu '%s'" % file)
             # erease the uuid cache
             try:
@@ -643,6 +644,12 @@ class SetupApp(object):
                 log.debug("UUID cache removed")
             except OSError:
                 pass
+            # remove computers data
+            for comp_uuid in os.listdir(os.path.join(dir, 'computers')):
+                comp_dir = os.path.join(dir, 'computers', comp_uuid)
+                if re.match('UUID[0-9]+', comp_uuid) and os.path.isdir(comp_dir):
+                    log.info("Removing computer %s data..." % comp_uuid)
+                    shutil.rmtree(comp_dir)
 
         # Special case for audit db
         if self.config['audit.module.enable']:
@@ -875,7 +882,7 @@ class SetupApp(object):
     def run(self):
         """ Run setup
         """
-        log.info("Load defaults values from config")
+        log.info("Load values from config")
         self.load_defaults()
         self.read_config()
 
