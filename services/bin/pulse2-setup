@@ -124,14 +124,13 @@ def read_ip(prompt, default):
             log.info('Incorrect value. Retry.')
     return ret
 
-initscripts = [ 'mmc-agent', 'pulse2-imaging-server',
-                'pulse2-inventory-server', 'pulse2-launchers',
-                'pulse2-package-server', 'pulse2-scheduler' ]
 
 class DistroHandler(object):
     
     ldap_schemas_dir = None
     ldap_config = False
+    apache_service = None
+    apache_dir = None
     
     def enable_srv(self, name):
         # Start scripts
@@ -174,11 +173,17 @@ class DistroHandler(object):
     def stop_srv(self, name):
         ret = call("/etc/rc2.d/S20%(name)s stop" % {'name': name}, shell=True)
         return ret==0
+    
+    def reload_srv(self, name):
+        ret = call("/etc/rc2.d/S20%(name)s reload" % {'name': name}, shell=True)
+        return ret==0
 
 class DebianHandler(DistroHandler):
 
     ldap_schemas_dir = "/etc/ldap/schema/"
     ldap_config = True
+    apache_service = "apache2"
+    apache_dir = "/etc/apache2/conf.d/"
 
     def enable_srv(self, name):
         default_config = os.path.join(sysconfdir, 'default', name)
@@ -206,6 +211,11 @@ class DebianHandler(DistroHandler):
                    shell=True)
         return ret==0
 
+    def reload_srv(self, name):
+        ret = call("/usr/sbin/invoke-rc.d %(name)s reload" % {'name': name},
+                   shell=True)
+        return ret==0
+
 def get_distro_handler():
     if os.path.exists('/usr/sbin/update-rc.d'):
         return DebianHandler()
@@ -214,8 +224,9 @@ def get_distro_handler():
 
 class Service(object):
     name = None
-    clsnames = [ 'SrvMmcAgent', 'SrvImagingServer', 'SrvInventoryserver',
-                 'SrvLauncher', 'SrvPkgServer', 'SrvScheduler' ]
+    clsnames = [ 'SrvMmcAgent', 'SrvImagingServer', 
+                 'SrvInventoryserver', 'SrvLauncher', 'SrvPkgServer', 
+                 'SrvScheduler' ]
 
     def __init__(self, handler, config):
         self.config = config
@@ -248,7 +259,15 @@ class Service(object):
         if self.is_enable():
             log.info('Starting service: %s' % self.name)
             if not self.handler.start_srv(self.name):
-                log.warn('Can not start service: %s' % self.name)
+                log.warn('Cannot start service: %s' % self.name)
+                if fatal:
+                    sys.exit(1)
+
+    def reload(self, fatal=False):
+        log.info('Reloading service: %s' % self.name)
+        if self.is_enable():
+            if not self.handler.reload_srv(self.name):
+                log.warn('Cannot reload service: %s' % self.name)
                 if fatal:
                     sys.exit(1)
 
@@ -257,6 +276,14 @@ class SrvMmcAgent(Service):
 
     def restart(self, *args, **kwargs):
         super(SrvMmcAgent, self).restart(fatal=True)
+
+class SrvApache(Service):
+    name = None
+
+    def __init__(self, handler, config):
+        Service.__init__(self, handler, config)
+        if handler.apache_service:
+            self.name = handler.apache_service
 
 class SrvImagingServer(Service):
     name = 'pulse2-imaging-server'
@@ -462,6 +489,7 @@ class SetupApp(object):
     def __init__(self, options):
         self.config = {}
         self.options = options
+        self.distro_handler = get_distro_handler()
 
         # Check if we run as root
         if os.getuid()<>0:
@@ -494,10 +522,9 @@ class SetupApp(object):
 
         # Creates Services objects
         self.services = []
-        distro_handler = get_distro_handler()
         for clsname in Service.clsnames:
             cls = globals()[clsname]
-            self.services.append(cls(distro_handler, self.config))
+            self.services.append(cls(self.distro_handler, self.config))
 
     def read_opt(self, name, default):
         if self.options['batch']:
@@ -603,14 +630,13 @@ class SetupApp(object):
 
         # Check mmc schema is installed
         log.info("Check for MMC schema")
-        distro_handler = get_distro_handler()
         (dn, schema) = ldap.schema.urlfetch(self.config['ldapurl'])
         if schema.get_obj(ldap.schema.ObjectClass, 'lmcUserObject') is None:
-            if distro_handler.ldap_schema_dir and distro_handler.ldap_config:
+            if self.distro_handler.ldap_schemas_dir and self.distro_handler.ldap_config:
                 log.info('MMC schema can not be found in LDAP directory.')
                 log.info('Adding the schema...')
                 schema_path = os.path.join(prefix, 'share', 'doc', 'python-mmc-base', 'contrib', 'ldap', 'mmc.schema')
-                ret = call('mmc-add-schema %s %s' % (schema_path, distro_handler.ldap_schema_dir), shell=True)
+                ret = call('mmc-add-schema %s %s' % (schema_path, self.distro_handler.ldap_schemas_dir), shell=True)
                 if ret != 0:
                     log.error('Failed to include the mmc schema in the LDAP directory.')
                     log.error('Exiting...')
@@ -875,6 +901,12 @@ class SetupApp(object):
             _uuid = str(uuid.uuid4())
             log.info('Generated uuid (%s) for package server' % _uuid)
         conf.set('imaging_api', 'uuid', _uuid)
+
+        # Install apache configuration
+        if self.distro_handler.apache_service:
+            shutil.copy(os.path.join(mmcconfdir, 'apache', 'mmc.conf'), self.distro_handler.apache_dir)
+            apache_srv = SrvApache(self.distro_handler, self.config)
+            apache_srv.reload()
 
     def restart_services(self):
         for srv in self.services:
