@@ -69,4 +69,3 @@ services/clients/win32/pulse2-win32-agents-installer.nsi
 services/conf/pulse2/imaging-server/imaging-server.ini
 services/conf/pulse2/launchers/launchers.ini
 services/conf/pulse2/scheduler/scheduler.ini
-services/bin/pulse2-setup

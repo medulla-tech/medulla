@@ -39,6 +39,7 @@ import logging
 import ldap
 from pulse2.utils import get_default_ip
 from pulse2.site import examplesdir
+from mmc.site import mmcconfdir, prefix
 from mmc.core.log import ColoredFormatter
 
 log = logging.getLogger('pulse2-setup')
@@ -285,8 +286,7 @@ class Pulse2ConfigFile(object):
     # ConfigObj object
     config = None
 
-    def __init__(self, confdir, reset=False):
-        self.confdir = confdir
+    def __init__(self, reset=False):
         if self.defaults:
             self._populate(self.__class__.defaults)
         else:
@@ -301,7 +301,7 @@ class Pulse2ConfigFile(object):
         """
         # Use current configuration
         if current:
-            dir_path = self.confdir
+            dir_path = mmcconfdir
         # Use example configuration
         else:
             dir_path = examplesdir
@@ -320,7 +320,7 @@ class Pulse2ConfigFile(object):
         else:
             log.debug("No such file %s" % fpath)
             if not current:
-                fpath = os.path.join(self.confdir, self.path)
+                fpath = os.path.join(mmcconfdir, self.path)
                 log.debug("Fallback on current configuration %s" % fpath)
             self.config = ConfigObj(fpath, list_values=False)
 
@@ -371,7 +371,7 @@ class Pulse2ConfigFile(object):
             return False
 
     def commit(self):
-        self.write_path(os.path.join(self.confdir, self.path))
+        self.write_path(os.path.join(mmcconfdir, self.path))
 
 class LoggingConfig(Pulse2ConfigFile):
     log_dir = '/var/log/mmc'
@@ -445,9 +445,8 @@ class SetupApp(object):
                 'inventory.service.enable': True,
                 'package.service.enable': True}
 
-    def __init__(self, options, confdir='/etc/mmc'):
+    def __init__(self, options):
         self.config = {}
-        self.confdir = confdir
         self.options = options
 
         # Check if we run as root
@@ -464,7 +463,7 @@ class SetupApp(object):
                 sys.exit(0)
 
         # Check sql snippets
-        self.sqldir = os.path.join('@datadir@', 'mmc', 'sql')
+        self.sqldir = os.path.join(prefix, 'share', 'mmc', 'sql')
         if not os.path.isdir(self.sqldir):
             log.error('Can not find SQL snippets in %s' % self.sqldir)
 
@@ -473,11 +472,11 @@ class SetupApp(object):
 
         # Load conf files, if existing
         # self.confs will contain path->ConfigParser objects dictionary
-        # path is relative to confdir, as in confpaths list above
+        # path is relative to mmcconfdir, as in confpaths list above
         self.confs = {}
         for clsname in Pulse2ConfigFile.clsnames:
             cls = globals()[clsname]
-            self.confs[cls.path] = cls(self.confdir, self.options['reset_conf'])
+            self.confs[cls.path] = cls(self.options['reset_conf'])
 
         # Creates Services objects
         self.services = []
@@ -918,8 +917,6 @@ if __name__ == '__main__':
                       help="Reset configuration")
     parser.add_option("--reset-db", action="store_true", dest="reset_db", default=False,
                       help="Reset all databases (imaging, inventory, dyngroup...)")
-    parser.add_option("--confdir", action="store", dest="confdir", default='/etc/mmc',
-                      help="Path to Pulse2 conf dir (default: /etc/mmc)")
 
     # Parse and analyse args
     (options, args) = parser.parse_args()
@@ -943,5 +940,5 @@ if __name__ == '__main__':
     }
 
     # Run the setup app
-    app = SetupApp(config, confdir=options.confdir)
+    app = SetupApp(config)
     app.run()
