@@ -26,6 +26,7 @@ import re
 import getpass
 import string
 import uuid
+import readline # pyflakes=ignore
 from random import choice
 from subprocess import call
 from optparse import OptionParser
@@ -53,7 +54,7 @@ def read_opt(prompt, default=None):
         prompt += ' (default: %s)' % default
     prompt = 'INPUT    - ' + prompt + ': '
     s = raw_input(prompt)
-    if len(s)==0 and default is not None:
+    if not s and default is not None:
         s = default
     return s
 
@@ -285,14 +286,14 @@ class Pulse2ConfigFile(object):
 
     def __init__(self, confdir, reset=False):
         self.confdir = confdir
-        if self.defaults is None:
-            self._load()
-        else:
+        if self.defaults:
             self._populate(self.__class__.defaults)
-
-        if not reset:
-            # If not resetting conf, load existing
-            self._load(True)
+        else:
+            if not reset:
+                # If not resetting conf, load existing
+                self._load(True)
+            else:
+                self._load()
 
     def _load(self, current=False):
         """ Load config file, if any
@@ -443,11 +444,10 @@ class SetupApp(object):
                 'inventory.service.enable': True,
                 'package.service.enable': True}
 
-    def __init__(self, confdir, batch=False, reset=False):
+    def __init__(self, options, confdir='/etc/mmc'):
         self.config = {}
         self.confdir = confdir
-        self.batch = batch
-        self.reset = reset
+        self.options = options
 
         # Check if we run as root
         if os.getuid()<>0:
@@ -468,7 +468,7 @@ class SetupApp(object):
         self.confs = {}
         for clsname in Pulse2ConfigFile.clsnames:
             cls = globals()[clsname]
-            self.confs[cls.path] = cls(self.confdir, self.reset)
+            self.confs[cls.path] = cls(self.confdir, self.options['reset_conf'])
 
         # Creates Services objects
         self.services = []
@@ -478,19 +478,19 @@ class SetupApp(object):
             self.services.append(cls(distro_handler, self.config))
 
     def read_opt(self, name, default):
-        if self.batch:
+        if self.options['batch']:
             return default
         else:
             return read_opt(name, default)
 
     def read_bool(self, name, default):
-        if self.batch:
+        if self.options['batch']:
             return default
         else:
             return read_bool(name, default)
 
     def read_passwd(self, name, default=None):
-        if self.batch:
+        if self.options['batch']:
             if default is not None:
                 return default
             else:
@@ -499,7 +499,7 @@ class SetupApp(object):
             return read_passwd(name, default)
 
     def read_ip(self, name, default=None):
-        if self.batch:
+        if self.options['batch']:
             if default is not None:
                 return default
             else:
@@ -612,14 +612,35 @@ class SetupApp(object):
                 conn = self.engine.connect()
                 invalid = False
             except sa.exc.OperationalError, e:
-                log.error(u"Impossible de se connecter à la base de données")
+                log.error("Can't connect to the database")
                 log.debug(str(e))
+
+        # Drop databases
+        if self.options['reset_db']:
+            for db in self.dbmodules + ['audit']:
+                try:
+                    conn.execute('DROP DATABASE IF EXISTS `%s`' % db)
+                    log.info("Database '%s' dropped" % db)
+                except sa.exc.OperationalError, e:
+                    raise e
+            # remove computer boot menus
+            dir = "/var/lib/pulse2/imaging/bootmenus/"
+            for file in os.listdir(dir):
+                if re.match('[0-9A-F]{12}', file):
+                    os.unlink(os.path.join(dir, file))
+                    log.info("Deleted computer menu '%s'" % file)
+            # erease the uuid cache
+            try:
+                os.unlink(os.path.join(dir, 'uuid-cache.txt'))
+                log.debug("UUID cache removed")
+            except OSError:
+                pass
 
         # Special case for audit db
         if self.config['audit.module.enable']:
             try:
                 conn.execute('CREATE DATABASE IF NOT EXISTS `audit`')
-                log.info('Creates database \'audit\'')
+                log.info("Creates database 'audit'")
             except sa.exc.OperationalError, e:
                 raise e
 
@@ -636,6 +657,7 @@ class SetupApp(object):
             ret = call(binpath, env=env)
             if ret<>0:
                 log.error('Can not initialize database for module: %s' % module)
+                sys.exit(1)
 
         # Get DB user and password for all modules
         log.info("Setup db credentials")
@@ -845,7 +867,7 @@ class SetupApp(object):
     def run(self):
         """ Run setup
         """
-        log.info("Load defaults values from existing config")
+        log.info("Load defaults values from config")
         self.load_defaults()
         self.read_config()
 
@@ -876,9 +898,13 @@ if __name__ == '__main__':
     parser.add_option("-d", "--debug", action="store_true", dest="debug", default=False,
                       help="Print debug messages")
     parser.add_option("-b", "--batch", action="store_true", dest="batch", default=False,
-                      help="Do not ask any question")
-    parser.add_option("-R", "--reset", action="store_true", dest="reset", default=False,
+                      help="Do not ask any question. Uses the default config files.")
+    parser.add_option("-R", "--reset-conf", action="store_true", dest="reset_conf", default=False,
                       help="Reset configuration")
+    parser.add_option("--reset-db", action="store_true", dest="reset_db", default=False,
+                      help="Reset all databases (imaging, inventory, dyngroup...)")
+    parser.add_option("--delete-images", action="store_true", dest="delete_images", default=False,
+                      help="Delete all computer images")
     parser.add_option("--confdir", action="store", dest="confdir", default='/etc/mmc',
                       help="Path to Pulse2 conf dir (default: /etc/mmc)")
 
@@ -896,6 +922,14 @@ if __name__ == '__main__':
     log.addHandler(hdlr2)
     log.setLevel(level)
 
+    # Runtime options
+    config = {
+        'batch': options.batch,
+        'reset_conf': options.reset_conf,
+        'reset_db': options.reset_db,
+        'delete_images': options.delete_images,
+    }
+
     # Run the setup app
-    app = SetupApp(confdir=options.confdir, batch=options.batch, reset=options.reset)
+    app = SetupApp(config, confdir=options.confdir)
     app.run()
