@@ -851,6 +851,10 @@ class SetupApp(object):
             else:
                 log.error('Can not find %s' % wol_path)
 
+        # Update services
+        for srv in self.services:
+            srv.update_rc()
+
         # Check root user has an RSA key
         log.info('Check for root user RSA key pair')
         key_path = '/root/.ssh/id_rsa'
