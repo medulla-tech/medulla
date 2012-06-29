@@ -450,7 +450,7 @@ class LoggingConfig(Pulse2ConfigFile):
              'handler_hand01': {'class': 'FileHandler',
                                 'level': 'INFO',
                                 'formatter': 'form01',
-                                'args': '("'+os.path.join(self.log_dir, self.log_path)+'", )'},
+                                'args': '("'+os.path.join(self.log_dir, self.log_path)+'",)'},
              'formatter_form01': {'format': '%(asctime)s %(levelname)s %(message)s'}}
         self._populate(d)
 
