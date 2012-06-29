@@ -922,9 +922,10 @@ class SetupApp(object):
             log.info('Generated uuid (%s) for package server' % _uuid)
         conf.set('imaging_api', 'uuid', _uuid)
 
-        # Install apache configuration
+        # Install apache configuration if needed
         if self.distro_handler.apache_service:
-            shutil.copy(os.path.join(mmcconfdir, 'apache', 'mmc.conf'), self.distro_handler.apache_dir)
+            if not os.path.exists(os.path.join(self.distro_handler.apache_dir, 'mmc.conf')):
+                shutil.copy(os.path.join(mmcconfdir, 'apache', 'mmc.conf'), self.distro_handler.apache_dir)
             apache_srv = SrvApache(self.distro_handler, self.config)
             apache_srv.reload()
 
