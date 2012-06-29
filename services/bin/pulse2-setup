@@ -126,12 +126,12 @@ def read_ip(prompt, default):
 
 
 class DistroHandler(object):
-    
+
     ldap_schemas_dir = None
     ldap_config = False
     apache_service = None
     apache_dir = None
-    
+
     def enable_srv(self, name):
         # Start scripts
         for runlevel in (2,3,4,5):
@@ -173,7 +173,7 @@ class DistroHandler(object):
     def stop_srv(self, name):
         ret = call("/etc/rc2.d/S20%(name)s stop" % {'name': name}, shell=True)
         return ret==0
-    
+
     def reload_srv(self, name):
         ret = call("/etc/rc2.d/S20%(name)s reload" % {'name': name}, shell=True)
         return ret==0
@@ -185,34 +185,54 @@ class DebianHandler(DistroHandler):
     apache_service = "apache2"
     apache_dir = "/etc/apache2/conf.d/"
 
+    def __init__(self):
+        DistroHandler.__init__(self)
+        # Try to determine sys-v mode (dependency mode or classic mode)
+        self.mode = "classic"
+        ret = call('LC_ALL=C update-rc.d 2>/dev/null | grep -q "dependency based boot"',
+                   shell=True)
+        if ret == 0:
+            self.mode = "dependency"
+            log.debug("Using dependency based boot sequencing")
+
     def enable_srv(self, name):
         default_config = os.path.join(sysconfdir, 'default', name)
         if os.path.exists(default_config):
-            call("sed -i 's/ENABLE=no/ENABLE=yes/' %s" % default_config, shell=True)
-        ret = call("/usr/sbin/update-rc.d %(name)s defaults" % {'name': name},
-                   shell=True)
+            ret = call("sed -i 's/ENABLE=no/ENABLE=yes/' %s" % default_config,
+                       shell=True)
+        else:
+            if self.mode == "classic":
+                ret = call("/usr/sbin/update-rc.d %s defaults" % name,
+                           shell=True)
+            else:
+                ret = call("/sbin/insserv %s" % name, shell=True)
         return ret==0
 
     def disable_srv(self, name):
         default_config = os.path.join(sysconfdir, 'default', name)
         if os.path.exists(default_config):
-            call("sed -i 's/ENABLE=yes/ENABLE=no/' %s" % default_config, shell=True)
-        ret = call("/usr/sbin/update-rc.d -f %(name)s remove" % {'name': name},
-                   shell=True)
+            ret = call("sed -i 's/ENABLE=yes/ENABLE=no/' %s" % default_config,
+                       shell=True)
+        else:
+            if self.mode == "classic":
+                ret = call("/usr/sbin/update-rc.d -f %s remove" % name,
+                           shell=True)
+            else:
+                ret = call("/sbin/insserv -r %s" % name, shell=True)
         return ret==0
 
     def start_srv(self, name):
-        ret = call("/usr/sbin/invoke-rc.d %(name)s start" % {'name': name},
+        ret = call("/usr/sbin/invoke-rc.d %s start" % name,
                    shell=True)
         return ret==0
 
     def stop_srv(self, name):
-        ret = call("/usr/sbin/invoke-rc.d %(name)s stop" % {'name': name},
+        ret = call("/usr/sbin/invoke-rc.d %s stop" % name,
                    shell=True)
         return ret==0
 
     def reload_srv(self, name):
-        ret = call("/usr/sbin/invoke-rc.d %(name)s reload" % {'name': name},
+        ret = call("/usr/sbin/invoke-rc.d %s reload" % name,
                    shell=True)
         return ret==0
 
@@ -224,8 +244,8 @@ def get_distro_handler():
 
 class Service(object):
     name = None
-    clsnames = [ 'SrvMmcAgent', 'SrvImagingServer', 
-                 'SrvInventoryserver', 'SrvLauncher', 'SrvPkgServer', 
+    clsnames = [ 'SrvMmcAgent', 'SrvImagingServer',
+                 'SrvInventoryserver', 'SrvLauncher', 'SrvPkgServer',
                  'SrvScheduler' ]
 
     def __init__(self, handler, config):
