@@ -275,7 +275,9 @@ class AuditRecordDB(AuditRecord):
         if len(self.objects) > 1:
             self.log += " %s:%s" % (self.objects[1][1], self.objects[1][0])
         if self.currentattribute:
-            self.log += " VALUE:%s" % str(self.currentattribute)
+            # convert self.log to type <str>
+            self.log = str(self.log)
+            self.log += " VALUE:%s" % self.currentattribute.encode('utf-8')
         self.log += " STATE:PROGRESS"
 
     def commit(self):
