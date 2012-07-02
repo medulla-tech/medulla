@@ -124,7 +124,18 @@ class MmcServer(xmlrpc.XMLRPC, object):
                 pass
         return ret
 
-    def render(self, request):
+    def render_OPTIONS(self, request):
+
+        request.setHeader("Access-Control-Allow-Origin", request.received_headers["origin"])
+        request.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS")
+        request.setHeader("Access-Control-Allow-Credentials", "true")
+        request.setHeader("Access-Control-Allow-Headers", "content-type, authorization")
+        request.setHeader("Access-Control-Max-Age", "1728000")
+        request.setHeader("Content-Type", "text/plain")
+
+        return ""
+
+    def render_POST(self, request):
         """
         override method of xmlrpc python twisted framework
 
@@ -133,6 +144,15 @@ class MmcServer(xmlrpc.XMLRPC, object):
 
         @return: interpreted request
         """
+
+        if "origin" in request.received_headers:
+            request.setHeader("Access-Control-Allow-Origin", request.received_headers["origin"])
+        request.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS")
+        request.setHeader("Access-Control-Allow-Credentials", "true")
+        request.setHeader("Access-Control-Allow-Headers", "content-type,authorization")
+        request.setHeader("Access-Control-Expose-Headers", "content-type,cookie")
+        request.setHeader("Access-Control-Max-Age", "1728000")
+
         args, functionPath = xmlrpclib.loads(request.content.read())
 
         s = request.getSession()
@@ -185,7 +205,6 @@ class MmcServer(xmlrpc.XMLRPC, object):
         except Fault, f:
             self._cbRender(f, request)
         else:
-            request.setHeader("content-type", "text/xml")
             if self.config.multithreading:
                 oldargs = args
                 args = (function, s,) + args
@@ -286,6 +305,7 @@ class MmcServer(xmlrpc.XMLRPC, object):
             f = Fault(self.FAILURE, "can't serialize output: " + str(e))
             s = xmlrpclib.dumps(f, methodresponse=1)
         request.setHeader("content-length", str(len(s)))
+        request.setHeader("content-type", "application/xml")
         request.write(s)
         request.finish()
 
