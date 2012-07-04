@@ -84,7 +84,7 @@ $page->setFile("modules/inventory/inventory/infos.php",
                array("noHeader"=>True,"visible"=>False));
 $submod->addPage($page);
 
-$page = new Page("graphs",_T("Graphique", "inventory"));
+$page = new Page("graphs",_T("Graphiques", "inventory"));
 $page->setOptions(array("visible"=>False));
 $submod->addPage($page);
 
