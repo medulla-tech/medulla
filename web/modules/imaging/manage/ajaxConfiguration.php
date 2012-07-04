@@ -24,7 +24,7 @@
 /* common ajax includes */
 require("../includes/ajaxcommon.inc.php");
 
-    $t = new TitleElement(_T("Imaging server configuration", "imaging"));
+    $t = new TitleElement(_T("Imaging server configuration", "imaging"), 3);
     $t->display();
 
     $config = xmlrpc_getImagingServerConfig($location);
@@ -173,5 +173,7 @@ require("../includes/ajaxcommon.inc.php");
     $f->addButton("bvalid", _T("Validate"));
     $f->pop();
     $f->display();
+    
+require("../includes/ajaxcommon_bottom.inc.php");
 
  ?>

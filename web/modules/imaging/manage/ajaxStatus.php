@@ -24,15 +24,15 @@
 /* common ajax includes */
 require("../includes/ajaxcommon.inc.php");
 
-    $global_status = xmlrpc_getGlobalStatus($location);
-    if (!empty($global_status)) {
-        $disk_info = format_disk_info($global_status['disk_info']);
-        $health = format_health($global_status['uptime'], $global_status['mem_info']);
-        $short_status = $global_status['short_status'];
-?>
+$t = new TitleElement(_T("Status", "imaging"), 3);
+$t->display();
 
-<br/>
-<h2><?php echo _T('Server status for this entity', 'imaging') ?></h2>
+$global_status = xmlrpc_getGlobalStatus($location);
+if (!empty($global_status)) {
+    $disk_info = format_disk_info($global_status['disk_info']);
+    $health = format_health($global_status['uptime'], $global_status['mem_info']);
+    $short_status = $global_status['short_status'];
+?>
 
 <div class="status">
 <div class="status_block">
@@ -64,7 +64,7 @@ require("../includes/ajaxcommon.inc.php");
 
 <div class="spacer"></div>
 
-<h2 class="activity"><?php echo _T('Recent activity in entity', 'imaging') ?></h2>
+<h3 class="activity"><?php echo _T('Recent activity', 'imaging') ?></h3>
 
 <?
         $ajax = new AjaxFilter("modules/imaging/manage/ajaxLogs.php", "container_logs", array(), "Logs");
@@ -76,4 +76,7 @@ require("../includes/ajaxcommon.inc.php");
         $e = new ErrorMessage(_T("Can't connect to the imaging server linked to the selected entity.", "imaging"));
         print $e->display();
     }
+
+require("../includes/ajaxcommon_bottom.inc.php");
+
 ?>

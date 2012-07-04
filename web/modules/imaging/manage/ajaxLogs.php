@@ -33,7 +33,7 @@ require("../includes/includes.php");
 require("../includes/xmlrpc.inc.php");
 require("../includes/logs.inc.php");
 
-$location = getCurrentLocation();
+$location = $_SESSION['imaging_location']['used'];
 $maxperpage = $conf["global"]["maxperpage"];
 $filter = empty($_GET["filter"]) ? '': $_GET['filter'];
 $start = empty($_GET["start"]) ? 0 : $_GET["start"];
@@ -42,7 +42,7 @@ $end = $start + $maxperpage;
 list($count, $db_logs) = xmlrpc_getLogs4Location($location, $start, $end, $filter);
 
 if ($count == 0) {
-    $l = new TitleElement(_T("No log available.", "imaging"));
+    $l = new TitleElement(_T("No log available.", "imaging"), 3);
     $l->display();
     return;
 }

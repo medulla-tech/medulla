@@ -30,17 +30,48 @@ require("../../../includes/PageGenerator.php");
 require("../includes/includes.php");
 require('../includes/xmlrpc.inc.php');
 require("../../base/includes/edit.inc.php");
+require("../../pulse2/includes/locations_xmlrpc.inc.php");
 
 $location = getCurrentLocation();
+if ($location == "UUID1")
+    $location_name = _T("root", "pulse2");
+else
+    $location_name = xmlrpc_getLocationName($location);
+
+// Store the location in the session
+$_SESSION['imaging_location'] = array(
+    "current" => $location,
+    "current_name" => $location_name
+);
 
 if (!xmlrpc_doesLocationHasImagingServer($location)) {
-    # choose the imaging server we want to associate to that entity
-    $ajax = new AjaxFilter(urlStrRedirect("imaging/manage/ajaxAvailableImagingServer"), "container", array('from'=>$_GET['from']));
-    $ajax->display();
-    print "<br/><br/><br/>";
-    $ajax->displayDivToUpdate();
-    exit();
+    // Try to find the first parent imaging server
+    $parents = xmlrpc_getLocationParentPath($location);
+    if (is_array($parents)) {
+        foreach($parents as $parent_uuid) {
+            if (xmlrpc_doesLocationHasImagingServer($parent_uuid)) {
+                $location = $parent_uuid;
+                if ($location == "UUID1")
+                    $location_name = _T("root", "pulse2");
+                else
+                    $location_name = xmlrpc_getLocationName($location);
+                break;
+            }
+        }
+    }
+    else {
+        require("ajaxcommon_bottom.inc.php");
+        exit();
+    }
 }
+
+// Store the used imaging server for this location
+$_SESSION['imaging_location']['used'] = $location;
+$_SESSION['imaging_location']['used_name'] = $location_name;
+
+$t = new TitleElement(sprintf(_T("Imaging server of entity %s", "imaging"), $location_name), 2);
+$t->display();
+
 
 $ret = xmlrpc_getLocationSynchroState($location);
 # result is an array of dicts
@@ -74,12 +105,15 @@ foreach ($ret as $r) {
 
 if (count($running_on) > 0) {
     $a_href_open = "<a href=''>";
-    print sprintf(_T("The synchro is still in progress for the following items : %s. Please wait or reload the page %shere%s", "imaging"), join($running_on, ', '), $a_href_open, '</a>');
-#    print sprintf(_T("The synchro is still running, please wait or reload the page %shere%s", "imaging"), $a_href_open, '</a>');
+    print "<p>";
+    print sprintf(_T("The synchro is still in progress for the following items : %s. Please wait or reload the page %shere%s.", "imaging"), join($running_on, ', '), $a_href_open, '</a>');
+    print "</p>";
 }
 
 if (count($initerror_on) > 0) {
+    print "<p>";
     print _T("The registering in the imaging server has failed.", "imaging");
+    print "</p>";
     exit();
 }
 

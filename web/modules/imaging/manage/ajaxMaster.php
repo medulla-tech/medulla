@@ -24,7 +24,7 @@
 /* common ajax includes */
 require("../includes/ajaxcommon.inc.php");
 
-    $t = new TitleElement(_T("Available masters", "imaging"));
+    $t = new TitleElement(_T("Available masters", "imaging"), 3);
     $t->display();
 
     $ajax = new AjaxFilter("modules/imaging/manage/ajaxMasterLevel2.php", "Level2", getParams(), "formLevel2");
@@ -32,5 +32,7 @@ require("../includes/ajaxcommon.inc.php");
     $ajax->display();
     echo '<br/><br/><br/>';
     $ajax->displayDivToUpdate();
+    
+require("../includes/ajaxcommon_bottom.inc.php");
     
 ?>

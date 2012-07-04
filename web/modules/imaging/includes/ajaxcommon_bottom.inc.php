@@ -1,9 +1,7 @@
-<?
+<?php
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2010 Mandriva, http://www.mandriva.com
- *
- * $Id$
+ * (c) 2007-2012 Mandriva, http://www.mandriva.com
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -21,21 +19,15 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* common ajax includes */
-require("../includes/ajaxcommon.inc.php");
-
-    $t = new TitleElement(_T("Available post-installation scripts", "imaging"), 3);
+if ($_SESSION['imaging_location']['current'] != $_SESSION['imaging_location']['used']) {
+    print '<br/><br/>';
+    $t = new TitleElement(sprintf(_T("Available imaging servers for entity %s", "imaging"), $_SESSION['imaging_location']['current_name']), 2);
     $t->display();
-
-    if (! isset($params) ) {
-        $params = array();
-    }
-    $ajax = new AjaxFilter("modules/imaging/manage/ajaxPostInstallLevel2.php", "Level2", $params, "formLevel2");
-    //$ajax->setRefresh(10000);
+    # choose the imaging server we want to associate to that entity
+    $ajax = new AjaxFilter(urlStrRedirect("imaging/manage/ajaxAvailableImagingServer"), "container", array('from'=>$_GET['from']));
     $ajax->display();
-    echo '<br/><br/><br/>';
+    print "<br/><br/>";
     $ajax->displayDivToUpdate();
-
-require("../includes/ajaxcommon_bottom.inc.php");
+}
 
 ?>

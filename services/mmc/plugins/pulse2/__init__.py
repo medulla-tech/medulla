@@ -161,6 +161,12 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return xmlrpcCleanup(ComputerLocationManager().getUserLocations(ctx.userid))
 
+    def getLocationParentPath(self, uuid):
+        return xmlrpcCleanup(ComputerLocationManager().getLocationParentPath(uuid))
+
+    def getLocationName(self, uuid):
+        return xmlrpcCleanup(ComputerLocationManager().getLocationName(uuid))
+
     # Profiles
     def isImagingInProfilePossible(self):
         """

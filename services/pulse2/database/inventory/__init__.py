@@ -1260,6 +1260,16 @@ class Inventory(DyngroupDatabaseHelper):
             parent_id = en.parentId
         return path
 
+    def getLocationName(self, loc_uuid):
+        """Return the name of the location
+
+        """
+        session = create_session()
+        en_id = fromUUID(loc_uuid)
+        en = session.query(self.klass['Entity']).filter(self.table['Entity'].c.id == en_id).first()
+
+        return en.Label
+
     def getUsersInSameLocations(self, userid, locations = None):
         """
         Returns all the users id that share the same locations than the given

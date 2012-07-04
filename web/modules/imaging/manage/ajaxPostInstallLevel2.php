@@ -37,7 +37,7 @@ require("../includes/includes.php");
 require('../includes/xmlrpc.inc.php');
 
 $params = getParams();
-$location = getCurrentLocation();
+$location = $_SESSION['imaging_location']['used'];
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];

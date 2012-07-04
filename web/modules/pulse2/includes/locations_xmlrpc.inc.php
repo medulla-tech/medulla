@@ -39,4 +39,12 @@ function getUserLocations() {
     return $_SESSION["pulse2.getUserLocations"];
 }
 
+function xmlrpc_getLocationParentPath($uuid) {
+    return xmlCall("pulse2.getLocationParentPath", array($uuid));
+}
+
+function xmlrpc_getLocationName($uuid) {
+    return xmlCall("pulse2.getLocationName", array($uuid));
+}
+
 ?>
