@@ -35,7 +35,7 @@ from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHe
 from pulse2.database.imaging.types import P2ISS, P2IT, P2IM, P2IIK, P2ERR, P2ILL
 from pulse2.database import database_helper
 
-from sqlalchemy import create_engine, ForeignKey, Integer, MetaData, Table, Column, and_, or_, desc, func
+from sqlalchemy import create_engine, ForeignKey, Integer, MetaData, Table, Column, and_, or_, not_, desc, func
 from sqlalchemy.orm import create_session, mapper, relation
 from sqlalchemy.sql.expression import alias as sa_exp_alias
 from sqlalchemy.exc import InvalidRequestError
@@ -2062,7 +2062,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 filt_master = and_(self.image.c.is_master == 1)
             else:
                 self.logger.debug("Those masters are still linked, they are not going to be removed : %s"%(str(masters_id_linked)))
-                filt_master = and_(self.image.c.is_master == 1,not self.image.c.id.in_(masters_id_linked))
+                filt_master = and_(self.image.c.is_master == 1, not_(self.image.c.id.in_(masters_id_linked)))
 
             images = session.query(Image).add_entity(ImagingLog).add_entity(MasteredOn).select_from(self.image \
                     .join(self.mastered_on, self.mastered_on.c.fk_image == self.image.c.id)
