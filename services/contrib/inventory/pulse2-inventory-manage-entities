@@ -41,21 +41,15 @@ def initdb():
 
 def listEntities():
     db = initdb()
-    entites = db.getUserLocations("root", True)
-    level_max = 0
-    for entity, level in entites:
-        if level > level_max:
-            level_max = level
-    for level in range(1, level_max+1):
-        for entity, entity_level in entites:
-            if entity_level == level:
-                text = ""
-                for tab in range(1, level):
-                    text += "  "
-                text += '- %s' % entity.Label
-                print text
+    entities = db.getUserLocations("root", True)
+    for entity, level in entities:
+        text = ""
+        for tab in range(1, level):
+            text += "  "
+        text += '- %s' % entity.Label
+        print text
 
-def addEntity(name):
+def addEntity(name, parent_name = False):
     # Check if the name is valid
     try:
         checkEntityName(name)
@@ -65,8 +59,13 @@ def addEntity(name):
         sys.exit(1)
 
     db = initdb()
+
+    if parent_name and not db.locationExists(parent_name):
+        print "Entity '%s' doesn't exists" % parent_name
+        sys.exit(1)
+
     if not db.locationExists(name):
-        db.createEntity(name)
+        db.createEntity(name, parent_name)
         print "Entity '%s' created" % name
         print "mmc-agent must be restarted to see the entity in the web interface"
     else:
@@ -109,11 +108,12 @@ def removeEntity(name):
 
 if __name__ == "__main__":
 
-    usage = "usage: %prog [--list] [--add] [--remove] [--name entity]"
+    usage = "usage: %prog [--list] [--add] [--remove] [--name entity] [--parent entity]"
     parser = OptionParser(usage=usage)
     parser.add_option("-a", "--add", action="store_true", dest="add", default=False)
     parser.add_option("-r", "--remove", action="store_true", dest="remove", default=False)
     parser.add_option("-n", "--name", action="store", dest="name")
+    parser.add_option("-p", "--parent", action="store", dest="parent", default=False)
     parser.add_option("-l", "--list", action="store_true", dest="list", default=False)
 
     (options, args) = parser.parse_args()
@@ -132,7 +132,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     if options.add:
-        addEntity(options.name)
+        addEntity(options.name, options.parent)
     else:
         removeEntity(options.name)
 

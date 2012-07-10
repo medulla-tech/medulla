@@ -1127,9 +1127,11 @@ class Inventory(DyngroupDatabaseHelper):
         session.commit()
         session.close()
 
-    def createEntity(self, name):
+    def createEntity(self, name, parent_name = False):
         """
-        Create a new entity under the root entity
+        Create a new entity under parent entity
+
+        If parent_name is False the parent will be the root entity
         """
         session = create_session()
         try:
@@ -1137,6 +1139,15 @@ class Inventory(DyngroupDatabaseHelper):
         except Exception:
             e = self.klass['Entity']()
             e.Label = name
+
+            if parent_name:
+                try:
+                    p = session.query(self.klass['Entity']).filter_by(Label = parent_name).one()
+                except Exception:
+                    raise Exception("Parent entity %s doesn't exists" % parent_name)
+                else:
+                    e.parentId = p.id
+
             session.add(e)
             session.flush()
         session.close()
@@ -1148,7 +1159,7 @@ class Inventory(DyngroupDatabaseHelper):
         session = create_session()
         ret = True
         try:
-            e = session.query(self.klass['Entity']).filter_by(Label = location).one()
+            session.query(self.klass['Entity']).filter_by(Label = location).one()
         except:
             ret = False
         session.close()
