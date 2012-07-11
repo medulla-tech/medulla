@@ -26,7 +26,6 @@ if ($_SESSION['imaging_location']['current'] != $_SESSION['imaging_location']['u
     # choose the imaging server we want to associate to that entity
     $ajax = new AjaxFilter(urlStrRedirect("imaging/manage/ajaxAvailableImagingServer"), "container", array('from'=>$_GET['from']));
     $ajax->display();
-    print "<br/><br/>";
     $ajax->displayDivToUpdate();
 }
 

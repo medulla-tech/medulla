@@ -44,10 +44,12 @@ $_SESSION['imaging_location'] = array(
     "current_name" => $location_name
 );
 
+// Check if the entity can be manage by an imaging server
+$hasImaging = false;
 if (!xmlrpc_doesLocationHasImagingServer($location)) {
     // Try to find the first parent imaging server
     $parents = xmlrpc_getLocationParentPath($location);
-    if (is_array($parents)) {
+    if (is_array($parents) && count($parents) > 0) {
         foreach($parents as $parent_uuid) {
             if (xmlrpc_doesLocationHasImagingServer($parent_uuid)) {
                 $location = $parent_uuid;
@@ -55,23 +57,32 @@ if (!xmlrpc_doesLocationHasImagingServer($location)) {
                     $location_name = _T("root", "pulse2");
                 else
                     $location_name = xmlrpc_getLocationName($location);
+                $hasImaging = true;
                 break;
             }
         }
     }
-    else {
-        require("ajaxcommon_bottom.inc.php");
-        exit();
-    }
+}
+else {
+    $hasImaging = true;
 }
 
-// Store the used imaging server for this location
-$_SESSION['imaging_location']['used'] = $location;
-$_SESSION['imaging_location']['used_name'] = $location_name;
+if ($hasImaging) {
+    // Store the imaging server used for this location
+    $_SESSION['imaging_location']['used'] = $location;
+    $_SESSION['imaging_location']['used_name'] = $location_name;
+}
+else {
+    // No imaging server associated
+    // Display the association list
+    $_SESSION['imaging_location']['used'] = -1;
+    $_SESSION['imaging_location']['used_name'] = -1;
+    require("ajaxcommon_bottom.inc.php");
+    exit();
+}
 
 $t = new TitleElement(sprintf(_T("Imaging server of entity %s", "imaging"), $location_name), 2);
 $t->display();
-
 
 $ret = xmlrpc_getLocationSynchroState($location);
 # result is an array of dicts

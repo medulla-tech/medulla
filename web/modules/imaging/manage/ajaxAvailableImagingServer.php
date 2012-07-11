@@ -67,7 +67,7 @@ foreach ($imaging_server as $entry) {
 }
 
 
-$t = new TitleElement(_T("Associate an entity to an imaging server", "imaging"));
+$t = new TitleElement(_T("Associate an entity to an imaging server", "imaging"), 3);
 $t->display();
 
 // show images list
