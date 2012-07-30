@@ -589,9 +589,10 @@ class SetupApp(object):
         self.defaults['ldapadmindn'] = self.confs['plugins/base.ini'].get('ldap', 'rootName')
         self.defaults['ldappasswd'] = self.confs['plugins/base.ini'].get('ldap', 'password')
 
-        self.defaults['dbhost'] = self.confs['plugins/pulse2.ini'].get('database', 'dbhost')
-        self.defaults['dbadminuser'] = 'root'
-        self.defaults['dbadminpasswd'] = ''
+        self.defaults['dbhost'] = self.options['dbhost'] or self.confs['plugins/pulse2.ini'].get('database', 'dbhost')
+        self.defaults['dbadminuser'] = self.options['dbadminuser'] or 'root'
+        self.defaults['dbadminpasswd'] = self.options['dbadminpasswd'] or ''
+
         self.defaults['dbuser'] = self.confs['plugins/pulse2.ini'].get('database', 'dbuser')
         passwd = self.confs['plugins/pulse2.ini'].get('database', 'dbpasswd')
         if passwd=='mmc':
@@ -999,6 +1000,12 @@ if __name__ == '__main__':
                       help="Reset configuration")
     parser.add_option("--reset-db", action="store_true", dest="reset_db", default=False,
                       help="Reset all databases (imaging, inventory, dyngroup...)")
+    parser.add_option("--mysql-host", dest="dbhost",
+                      help="MySQL server hostname")
+    parser.add_option("--mysql-user", dest="dbadminuser",
+                      help="MySQL administrator username")
+    parser.add_option("--mysql-passwd", dest="dbadminpasswd",
+                      help="MySQL administrator password")
 
     # Parse and analyse args
     (options, args) = parser.parse_args()
@@ -1019,6 +1026,9 @@ if __name__ == '__main__':
         'batch': options.batch,
         'reset_conf': options.reset_conf,
         'reset_db': options.reset_db,
+        'dbhost': options.dbhost,
+        'dbadminuser': options.dbadminuser,
+        'dbadminpasswd': options.dbadminpasswd,
     }
 
     # Run the setup app
