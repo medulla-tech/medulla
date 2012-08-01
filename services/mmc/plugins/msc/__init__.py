@@ -52,6 +52,9 @@ import mmc.plugins.msc.keychain
 import mmc.plugins.msc.package_api
 from mmc.plugins.msc.package_api import get_default_bundle_name
 
+# health check
+from mmc.plugins.msc.health import scheduleCheckStatus
+
 # XMLRPC client functions
 import mmc.plugins.msc.client.scheduler
 
@@ -81,6 +84,9 @@ def activate():
 
     if not MscDatabase().activate(config):
         return False
+
+    if config.check_db_enable:
+        scheduleCheckStatus(config.check_db_interval)
 
     return True
 
