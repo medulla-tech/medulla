@@ -30,17 +30,59 @@ require("../../../includes/PageGenerator.php");
 require("../includes/includes.php");
 require('../includes/xmlrpc.inc.php');
 require("../../base/includes/edit.inc.php");
+require("../../pulse2/includes/locations_xmlrpc.inc.php");
 
 $location = getCurrentLocation();
+if ($location == "UUID1")
+    $location_name = _T("root", "pulse2");
+else
+    $location_name = xmlrpc_getLocationName($location);
 
+// Store the location in the session
+$_SESSION['imaging_location'] = array(
+    "current" => $location,
+    "current_name" => $location_name
+);
+
+// Check if the entity can be manage by an imaging server
+$hasImaging = false;
 if (!xmlrpc_doesLocationHasImagingServer($location)) {
-    # choose the imaging server we want to associate to that entity
-    $ajax = new AjaxFilter(urlStrRedirect("imaging/manage/ajaxAvailableImagingServer"), "container", array('from'=>$_GET['from']));
-    $ajax->display();
-    print "<br/><br/><br/>";
-    $ajax->displayDivToUpdate();
+    // Try to find the first parent imaging server
+    $parents = xmlrpc_getLocationParentPath($location);
+    if (is_array($parents) && count($parents) > 0) {
+        foreach($parents as $parent_uuid) {
+            if (xmlrpc_doesLocationHasImagingServer($parent_uuid)) {
+                $location = $parent_uuid;
+                if ($location == "UUID1")
+                    $location_name = _T("root", "pulse2");
+                else
+                    $location_name = xmlrpc_getLocationName($location);
+                $hasImaging = true;
+                break;
+            }
+        }
+    }
+}
+else {
+    $hasImaging = true;
+}
+
+if ($hasImaging) {
+    // Store the imaging server used for this location
+    $_SESSION['imaging_location']['used'] = $location;
+    $_SESSION['imaging_location']['used_name'] = $location_name;
+}
+else {
+    // No imaging server associated
+    // Display the association list
+    $_SESSION['imaging_location']['used'] = -1;
+    $_SESSION['imaging_location']['used_name'] = -1;
+    require("ajaxcommon_bottom.inc.php");
     exit();
 }
+
+$t = new TitleElement(sprintf(_T("Imaging server of entity %s", "imaging"), $location_name), 2);
+$t->display();
 
 $ret = xmlrpc_getLocationSynchroState($location);
 # result is an array of dicts
@@ -74,11 +116,15 @@ foreach ($ret as $r) {
 
 if (count($running_on) > 0) {
     $a_href_open = "<a href=''>";
+    print "<p>";
     print sprintf(_T("Boot menu generation is still in progress for the following items : %s. Please wait or reload the page %shere%s.", "imaging"), join($running_on, ', '), $a_href_open, '</a>');
+    print "</p>";
 }
 
 if (count($initerror_on) > 0) {
+    print "<p>";
     print _T("The registering in the imaging server has failed.", "imaging");
+    print "</p>";
     exit();
 }
 
