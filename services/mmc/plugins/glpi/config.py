@@ -29,6 +29,9 @@ class GlpiConfig(PluginConfig):
     dbpoolsize = 5
     dbport = None
     dbsslenable = False
+
+    check_db_enable = False
+    check_db_interval = 300
     
     def readConf(self):
         self.dbdriver = self.get("main", "dbdriver")
@@ -43,6 +46,11 @@ class GlpiConfig(PluginConfig):
                 self.dbsslca = self.get("main", "dbsslca")
                 self.dbsslcert = self.get("main", "dbsslcert")
                 self.dbsslkey = self.get("main", "dbsslkey")
+
+        if self.has_option("main", "check_db_enable"):
+            self.check_db_enable = self.getboolean("main", "check_db_enable")
+        if self.has_option("main", "check_db_interval"):
+            self.check_db_interval = self.getint("main", "check_db_interval")
 
         self.disable = self.getint("main", "disable")
         self.displayLocalisationBar = self.getboolean("main", "localisation")

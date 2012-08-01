@@ -36,6 +36,9 @@ from mmc.plugins.glpi.location import GlpiLocation
 
 from pulse2.version import getVersion, getRevision
 
+# health check
+from mmc.plugins.glpi.health import scheduleCheckStatus
+
 import logging
 
 APIVERSION = "0:0:0"
@@ -59,6 +62,8 @@ def activate():
     if config.displayLocalisationBar:
         ComputerLocationManager().register("glpi", GlpiLocation)
 
+    if config.check_db_enable:
+        scheduleCheckStatus(config.check_db_interval)
     return True
 
 class ContextMaker(ContextMakerI):
