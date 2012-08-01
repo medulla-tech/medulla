@@ -23,6 +23,7 @@
 
 import urlparse
 import urllib
+import re
 
 from twisted.internet import reactor
 from twisted.web.client import HTTPClientFactory, _parse, getPage
@@ -40,7 +41,7 @@ class GlpiAuthenticatorConfig(AuthenticatorConfig):
         AuthenticatorConfig.setDefault(self)
         self.loginpage = "index.php"
         self.loginpost = "login.php"
-        self.match = 'window.location="/glpi/front/central.php"'
+        self.match = "window.location='.*/front/central.php'"
         
 class GlpiAuthenticator(AuthenticatorI):
     """
@@ -57,8 +58,8 @@ class GlpiAuthenticator(AuthenticatorI):
         self.logger.debug("GlpiAuthenticator: on index page")
         phpsessid = value.response_headers["set-cookie"][0].split("=")
         params = { "method" : "POST", "cookies" : { phpsessid[0] : phpsessid[1]},
-                   "headers": {"Content-Type": "application/x-www-form-urlencoded"},
-                   "postdata" : urllib.urlencode({"login_name" : self.user, "login_password" : self.password})}
+                   "headers": {"Content-Type": "application/x-www-form-urlencoded", "Referer" : urlparse.urljoin(self.config.baseurl, self.config.loginpage)},
+                   "postdata" : urllib.urlencode({"login_name" : self.user, "login_password" : self.password, "_glpi_csrf_token" : value.glpi_csrf_token})}
         return params
 
     def _cbLoginPost(self, params):
@@ -68,7 +69,7 @@ class GlpiAuthenticator(AuthenticatorI):
         return d
 
     def _cbCheckOutput(self, value):
-        return self.config.match in value
+        return re.search(self.config.match, value) is not None
 
     def authenticate(self, user, password):
         """
@@ -91,7 +92,16 @@ class HTTPClientFactoryWithHeader(HTTPClientFactory):
     header
     """
 
+    # the GLPI anti-csrf token (GLPI 0.83.3+)
+    glpi_csrf_token = ''
+
     def page(self, page):
+        # grabbing the GLPI anti-csrf token (GLPI 0.83.3+) by
+        # looking for such patterns :
+        # <input type='hidden' name='_glpi_csrf_token' value='82d37af7f30d76f2238d49c28167654f'>
+        m = re.search("<input type='hidden' name='_glpi_csrf_token' value='([0-9a-z]{32})'>", page)
+        if m is not None:
+            self.glpi_csrf_token = m.group(1)
         if self.waiting:
             self.waiting = 0
             self.deferred.callback(self)
