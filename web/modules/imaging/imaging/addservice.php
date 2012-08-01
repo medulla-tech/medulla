@@ -50,8 +50,7 @@ if (isset($_POST["bconfirm"])) {
 
     // goto images list
     if ($ret[0] and !isXMLRPCError()) {
-        $str = sprintf(_T("Service <strong>%s</strong> added to boot menu", "imaging"), $label);
-        new NotifyWidgetSuccess($str);
+        /* insert notification code here if needed */
         header("Location: ".urlStrRedirect("base/computers/".$type."imgtabs/".$type."tabservices", $params));
     } elseif ($ret[0]) {
         header("Location: ".urlStrRedirect("base/computers/".$type."imgtabs/".$type."tabservices", $params));

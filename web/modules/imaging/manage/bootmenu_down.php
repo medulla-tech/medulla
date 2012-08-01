@@ -34,8 +34,7 @@ $label = urldecode($_GET['itemlabel']);
 $ret = xmlrpc_moveItemDownInMenu4Location($location, $item_uuid);
 
 if ($ret) {
-    $str = sprintf(_T("<strong>%s</strong> moved down in the default boot menu", "imaging"), $label);
-    new NotifyWidgetSuccess($str);
+    /* insert notification code here if needed */
 } else {
     $str = sprintf(_T("Failed to move down <strong>%s</strong> in the default boot menu", "imaging"), $label);
     new NotifyWidgetFailure($str);

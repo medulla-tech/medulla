@@ -54,10 +54,9 @@ if (isset($_POST['bsync'])) {
     $ret = xmlrpc_synchroLocation($_POST['location_uuid']);
     // goto images list
     if ((is_array($ret) and $ret[0] or !is_array($ret) and $ret) and !isXMLRPCError()) {
-        $str = sprintf(_T("Synchronization launched on this package server.", "imaging"), $label);
-        new NotifyWidgetSuccess($str);
+        /* insert notification code here if needed */
     } elseif (!$ret[0] and !isXMLRPCError()) {
-        new NotifyWidgetFailure(sprintf(_T("Synchronization failed for package server: %s", "imaging"), implode(', ', $ret[1])));
+        new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for package server: %s", "imaging"), implode(', ', $ret[1])));
     }
 }
 

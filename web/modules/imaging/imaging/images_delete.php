@@ -1,4 +1,4 @@
-<?
+	<?
 
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
@@ -38,8 +38,7 @@ if ($_POST) {
     $id = $_POST['itemid'];
     $ret = xmlrpc_imagingServerImageDelete($id);
     if ($ret[0] and !isXMLRPCError()) {
-        $str = sprintf(_T("Image <strong>%s</strong> deleted from the imaging server.", "imaging"), $label);
-        new NotifyWidgetSuccess($str);
+        /* insert notification code here if needed */
         header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
     } elseif ($ret[0]) {
         header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
