@@ -123,6 +123,7 @@ def read_logs(logfiles, start_date, stop_date):
     loadavg   = {}
     fds       = {}
     memory    = {}
+    db        = {}
 
     # Parse all log files in the directory
     for logfile in logfiles:
@@ -147,6 +148,15 @@ def read_logs(logfiles, start_date, stop_date):
 
             scheduler = res.group(2)
             dump = eval(res.group(3))
+
+            if 'db' in dump:
+                if not scheduler in db:
+                    db[scheduler] = {}
+                if not stamp in db[scheduler]:
+                    db[scheduler][stamp] = {}
+                    db[scheduler][stamp]    = int(dump['db']['checkedinconns'])
+                else:
+                    db[scheduler][stamp]   += int(dump['db']['checkedinconns'])
 
             if 'memory' in dump:
                 if not scheduler in memory:
@@ -173,7 +183,7 @@ def read_logs(logfiles, start_date, stop_date):
                 else:
                     fds[scheduler][stamp] += sum(dump['fd'].values())
 
-    return (memory, loadavg, fds)
+    return (memory, loadavg, fds, db)
 
 # Main Loop
 if __name__ == "__main__":
@@ -188,7 +198,7 @@ if __name__ == "__main__":
     # Parse logs
     start = int(time.mktime(time.strptime(start_str, '%Y-%m-%d %H:%M')))
     stop = int(time.mktime(time.strptime(end_str, '%Y-%m-%d %H:%M')))
-    (memory, loads, fds) = read_logs(logfiles, start, stop)
+    (memory, loads, fds, db) = read_logs(logfiles, start, stop)
 
     if memory:
         sched_memory = {}
@@ -261,5 +271,29 @@ if __name__ == "__main__":
                     sched_fds[sched].append(0)
             create_graph("Time", "Fds", sched_hours, {sched: sched_fds[sched]}, '%s - fds - %s-%s.png' % (sched, start_str, end_str), "Fds on \"%s\" between %s and %s" % (sched, start_str, end_str), start, stop, 0, y_max)
         create_graph("Time", "Fds", sched_hours, sched_fds, 'schedulers - fds - %s-%s.png' % (start_str, end_str), "Fds between %s and %s" % (start_str, end_str), start, stop, 0, y_max)
+
+    if db:
+        sched_db = {}
+        scheduler_list = db.keys()
+        y_max = (max(map(lambda x: max(x.values()), db.values())) / 1 + 1) * 1
+
+        # Get all sched hours
+        for sched in scheduler_list:
+            sched_hours += db[sched].keys()
+            # deduplicate list
+            sched_hours = list(set(sched_hours))
+            sched_hours.sort()
+
+        # Sort scheduler data for pygraph
+        for sched in scheduler_list:
+            for hour in sched_hours:
+                if not sched in sched_db:
+                    sched_db[sched] = []
+                if hour in db[sched]:
+                    sched_db[sched].append(db[sched][hour])
+                else:
+                    sched_db[sched].append(0)
+            create_graph("Time", "Cx", sched_hours, {sched: sched_db[sched]}, '%s - cx - %s-%s.png' % (sched, start_str, end_str), "DB cx on \"%s\" between %s and %s" % (sched, start_str, end_str), start, stop, 0, y_max)
+        create_graph("Time", "Cx", sched_hours, sched_db, 'schedulers - cx - %s-%s.png' % (start_str, end_str), "DB cx between %s and %s" % (start_str, end_str), start, stop, 0, y_max)
 
     sys.exit(0)

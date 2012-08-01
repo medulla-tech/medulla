@@ -89,7 +89,8 @@ class deployStats:
         "stage2",
         "stage3",
         "stage4",
-        "bundle_error"
+        "bundle_error",
+        "mirror_error"
     ]
 
     __internal_data = dict()
@@ -138,6 +139,9 @@ for d in hist_data:
     if operation == None and error_code == 3001 : # broken bundle ?
         operation = 'bundle_failed'
         
+    if operation == 'upload_failed' and error_code == 4001 : # package not found ?
+        operation = 'mirror_failed'
+            
     if laststates[fk] == operation:
         print "ANOMALY: %s for %s " % (operation, fk)
         continue
@@ -187,6 +191,9 @@ for d in hist_data:
             deploy_stats.add('reboot_error', fk)
         elif operation == 'bundle_failed':
             deploy_stats.add('bundle_error', fk)
+        elif operation == 'mirror_failed':
+            deploy_stats.remove('upload_error', fk)
+            deploy_stats.add('mirror_error', fk)
 
         if truncated_epoch != lastepoch:
             print "%s;%s;" % (
