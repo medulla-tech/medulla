@@ -1546,7 +1546,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         for iim, mi, target in q:
             targets[target.type].append(target.uuid)
             session.delete(iim)
+            session.flush()
             session.delete(mi)
+            session.flush()
 
         for i in (P2IT.COMPUTER, P2IT.PROFILE):
             if len(targets[i]) > 0:
@@ -1554,9 +1556,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         session.add(il)
         session.delete(mo)
+        session.flush()
         session.delete(iois)
         session.flush()
         session.delete(image)
+        session.flush()
 
         return True
 
@@ -1969,6 +1973,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session.flush()
 
         session.delete(iim)
+        session.flush()
         session.delete(mi)
         # TODO when it's not a master and the computer is the only one, what should we do with the image?
         session.flush()
