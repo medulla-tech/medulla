@@ -815,14 +815,14 @@ void readConfig(char *config_file_path) {
 
     tmp = iniparser_getstring(ini, "main:host", "0.0.0.0");
     snprintf(gHost, 256, "%s", tmp);
-    syslog(LOG_DEBUG, "[hooks] host = %s", gHost);
+    syslog(LOG_DEBUG, "[main] host = %s", gHost);
 
     gPort = iniparser_getint(ini, "main:port", 1001);
     syslog(LOG_DEBUG, "[main] port = %d", gPort);
 
     tmp = iniparser_getstring(ini, "main:adminpass", "");
     snprintf(gAdminPass, 256, "%s", tmp);
-    syslog(LOG_DEBUG, "[hooks] adminpass = ****");
+    syslog(LOG_DEBUG, "[main] adminpass = ****");
 
     // Parse DAEMON section //
     gUser = iniparser_getstring(ini, "daemon:user", "root");
@@ -957,7 +957,7 @@ int main(void) {
 
     pidFileFD = open((char *)gPIDFile, O_WRONLY | O_CREAT | O_TRUNC);
     if (pidFileFD == -1)
-        diep("PID file");
+        diep("Can't open PID file");
     snprintf(pidBuff, 6, "%d", pid);
     write(pidFileFD, pidBuff, strlen(pidBuff));
     close(pidFileFD);
@@ -1002,6 +1002,7 @@ int main(void) {
             strcpy((char *)gBuff, "?");
             mac = (char *)gBuff;
         }
+
         /* client port must be 1001 ! */
         if (ntohs(si_other.sin_port) != 1001) {
             if (so != s)
