@@ -46,6 +46,8 @@ ERROR_CLIENT = 2    #: error client-side (here)
 ERROR_UNKNOWN = 3   #: unknow (and default) error
 exitcode = ERROR_UNKNOWN #: global error code, used when exiting
 
+logger = logging.getLogger()
+
 ########################################################################
 #         NOTHING SHOULD BE ALTERED ABOVE THIS LINE                    #
 ########################################################################
@@ -59,13 +61,14 @@ def myCall():
     """
     global exitcode
 
+    hook = sys.argv[0]
     mac = '' # client MAC address
     name = '' # client ID
     key = '' # registering password (not used)
 
     if len(sys.argv) == 2: # "mac" version
         mac = sys.argv[1]
-        logging.getLogger().warning('HOOK %s : I was not given an name, proceeding anyway' % (sys.argv[0]) )
+        logger.warning('HOOK %s : I was not given an name, proceeding anyway' % hook)
     elif len(sys.argv) == 3: # "mac + name" version
         mac = sys.argv[1]
         name = sys.argv[2]
@@ -73,21 +76,23 @@ def myCall():
         mac = sys.argv[1]
         name = sys.argv[2]
         key = sys.argv[3]
-        logging.getLogger().warning('HOOK %s : I was given a password, but I don\'t now what to do woth it, so I dropped it' % (sys.argv[0]) )
+        logger.warning('HOOK %s : I was given a password, but I don\'t now what to do woth it, so I dropped it' % hook)
     else:
-        logging.getLogger().error('HOOK %s : I was not called with the right number of arguments (one to three expected, got %d)' % (sys.argv[0], len(sys.argv) - 1))
+        logger.error('HOOK %s : I was not called with the right number of arguments (one to three expected, got %d)' % (hook, len(sys.argv) - 1))
         exitcode = ERROR_CLIENT
         return endBack()
 
     if not pulse2.utils.isMACAddress(mac):
-        logging.getLogger().error('HOOK %s : First arg (%s) do not seems to be a MAC address' % (sys.argv[0], mac))
+        logger.error('HOOK %s : First arg (%s) do not seems to be a MAC address' % (hook, mac))
         exitcode = ERROR_CLIENT
         return endBack()
 
     if not len(name):
-        logging.getLogger().error('HOOK %s : No name given' % (sys.argv[0]))
+        logger.error('HOOK %s : No name given' % hook)
         exitcode = ERROR_CLIENT
         return endBack()
+
+    logger.debug('HOOK %s : Going to register computer %s (%s)' % (hook, name, mac))
 
     try:
         callFunction(
@@ -98,7 +103,7 @@ def myCall():
             )
         )
     except AttributeError, e:
-        logging.getLogger().error('HOOK %s : %s' % (sys.argv[0], e))
+        logger.error('HOOK %s : %s' % (hook, e))
         exitcode = ERROR_CLIENT
         return endBack()
 
@@ -110,12 +115,14 @@ def myTreatment(result):
         don't forget to set exitcode and finally call endBack()
     """
     global exitcode
+    hook = sys.argv[0]
+
     if result and result != None:
         exitcode= ERROR_OK
-        logging.getLogger().info('HOOK %s : SUCCESS !' % sys.argv[0])
+        logger.info('HOOK %s : SUCCESS !' % hook)
     else:
         exitcode = ERROR_SERVER
-        logging.getLogger().error('HOOK %s : Error server side !' % sys.argv[0])
+        logger.error('HOOK %s : Error server side !' % hook)
 
     # nothing else to do
     return endBack()
@@ -130,7 +137,7 @@ def endBack(when = None):
         take the reactor down
     """
     if when == "timeout" :
-        logging.getLogger().error('HOOK %s : Killed by a timeout' % sys.argv[0])
+        logger.error('HOOK %s : Killed by a timeout' % sys.argv[0])
     twisted.internet.reactor.callLater(0, twisted.internet.reactor.stop)
 
 
@@ -147,11 +154,11 @@ def callBack(result):
     # if result is a list and the first arg a string and its value,
     # 'PULSE2_ERR', then something went wrong
     if type(result) == list and len(result) > 0 and type(result[0]) == str and result[0] == 'PULSE2_ERR':
-        logging.getLogger().error("HOOK %s : Error code = %d (see previous line)" % (sys.argv[0], result[1]))
+        logger.error("HOOK %s : Error code = %d (see previous line)" % (sys.argv[0], result[1]))
         exitcode = ERROR_SERVER
         return endBack()
     else:
-        logging.getLogger().debug("%s : No error" % (sys.argv[0]))
+        logger.debug("%s : No error" % (sys.argv[0]))
         exitcode = ERROR_CLIENT
         myTreatment(result)
 

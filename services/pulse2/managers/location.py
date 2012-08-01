@@ -139,6 +139,13 @@ class ComputerLocationManager(Singleton):
         except KeyError:
             return True
 
+    def getLocationName(self, loc_uuid):
+        try:
+            klass = self.components[self.main]
+            return klass().getLocationName(loc_uuid)
+        except KeyError:
+            return None
+
 
 class ComputerLocationI(Singleton):
     def displayLocalisationBar(self):
@@ -183,5 +190,9 @@ class ComputerLocationI(Singleton):
 
     def getLocationParentPath(self, loc_uuid):
         """ return an array containing all the parent uuids of this location """
+        pass
+    
+    def getLocationName(self, loc_uuid):
+        """ return a string of the location name """
         pass
 

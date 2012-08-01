@@ -32,8 +32,7 @@ require("../../../includes/PageGenerator.php");
 require("../includes/includes.php");
 require('../includes/xmlrpc.inc.php');
 
-$location = getCurrentLocation();
-
+$location = $_SESSION['imaging_location']['used'];
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];

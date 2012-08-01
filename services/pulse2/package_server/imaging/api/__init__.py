@@ -266,7 +266,7 @@ class ImagingApi(MyXmlrpc):
             else:
                 uuid = result[1]
                 self.logger.info('Imaging: Register client %s (%s) as %s' % (computerName, macAddress, uuid))
-                self.myUUIDCache.set(uuid, macAddress, hostname, domain)
+                self.myUUIDCache.set(uuid, macAddress, hostname, domain, entity)
                 ret = self.xmlrpc_computerPrepareImagingDirectory(uuid, {'mac': macAddress, 'hostname': hostname})
             return ret
 
@@ -277,7 +277,9 @@ class ImagingApi(MyXmlrpc):
             # check computer name is conform
             if not len(computerName):
                 raise TypeError('Malformed computer name: %s' % computerName)
-            profile, entities, hostname, domain = splitComputerPath(computerName)
+            profile, entity_path, hostname, domain = splitComputerPath(computerName)
+            entity_path = entity_path.split('/')
+            entity = entity_path.pop()
         except TypeError, ex:
             self.logger.error('Imaging: Won\'t register %s as %s : %s' % (macAddress, computerName, ex))
             return maybeDeferred(lambda x: x, False)
@@ -287,7 +289,7 @@ class ImagingApi(MyXmlrpc):
             self.logger.info('Imaging: Starting registration for %s as %s' % (macAddress, computerName))
             client = self._getXMLRPCClient()
             func = 'imaging.computerRegister'
-            args = (self.config.imaging_api['uuid'], hostname, domain, macAddress, profile, entities)
+            args = (self.config.imaging_api['uuid'], hostname, domain, macAddress, profile, entity)
             d = client.callRemote(func, *args)
             d.addCallbacks(onSuccess, client.onError, errbackArgs = (func, args, False))
             return d
@@ -439,12 +441,13 @@ class ImagingApi(MyXmlrpc):
         """
 
         def _onSuccess(result):
+            self.logger.error(result)
             if type(result) == dict and "faultCode" in result:
                 self.logger.warning('Imaging: While processing result for %s : %s' % (MACAddress, result['faultTraceback']))
                 return False
             try:
                 if result[0]:
-                    self.myUUIDCache.set(result[1]['uuid'], MACAddress, result[1]['shortname'], result[1]['fqdn'])
+                    self.myUUIDCache.set(result[1]['uuid'], MACAddress, result[1]['shortname'], result[1]['fqdn'], result[1]['entity'])
                     self.logger.info('Imaging: Updating cache for %s' % (MACAddress))
                     return result[1]
                 else:

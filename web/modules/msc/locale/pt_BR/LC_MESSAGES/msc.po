@@ -1411,7 +1411,7 @@ msgstr "Alvo"
 
 #: modules/msc/msc/ajaxPingProbe.php:58 modules/msc/msc/ajaxPingProbe.php:80
 #, php-format
-msgid "Target plateform is %s"
+msgid "Target platform is %s"
 msgstr "A plataforma alvo é %s"
 
 #: modules/msc/msc/launch.php:305

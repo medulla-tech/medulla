@@ -31,10 +31,17 @@ import sys
 import getopt
 import logging
 import logging.config
+import multiprocessing as mp
+
 from mmc.site import mmcconfdir, localstatedir
+from mmc.core.log import ColoredFormatter
 from pulse2.version import getVersion, getRevision
 from pulse2.inventoryserver.server import InventoryGetService
 from pulse2.inventoryserver.config import Pulse2OcsserverConfigParser
+
+# Shared return state, so that father can know if children goes wrong
+_shared_state = mp.Value('i', 0)
+_lock = mp.Lock()
 
 def running(daemonize, inifile):
     config = Pulse2OcsserverConfigParser()
@@ -51,6 +58,7 @@ def running(daemonize, inifile):
 
     # if we daemonize, we start by that before trying to initialise the service
     if daemonize:
+        _lock.acquire()
         daemon(config, inifile)
 
     # Load logging configuration after daemonization, else inventory server
@@ -60,16 +68,23 @@ def running(daemonize, inifile):
     # Log to stderr when not in daemon mode
     if not daemonize:
         hdlr2 = logging.StreamHandler()
+        hdlr2.setFormatter(ColoredFormatter("%(levelname)-18s %(message)s"))
         logger.addHandler(hdlr2)
 
-    logger.debug("Logger loaded")
     logger.info("Inventory server version('%s') build('%s')" % (str(getVersion()), str(getRevision())))
 
     if InventoryGetService().initialise(config):
-        InventoryGetService().run()
         ret = 0
     else:
         ret = 1
+
+    if daemonize:
+        _shared_state.value = ret
+        _lock.release()
+
+    if ret == 0:
+        InventoryGetService().run()
+
     return ret
 
 def daemon(config, inifile):
@@ -92,8 +107,9 @@ def daemon(config, inifile):
     try:
         pid = os.fork()
         if pid > 0:
+            _lock.acquire()
             # exit first parent
-            sys.exit(0)
+            sys.exit(_shared_state.value)
     except OSError, e:
         print >>sys.stderr, "fork #1 failed: %d (%s)" % (e.errno, e.strerror)
         sys.exit(1)
@@ -138,6 +154,8 @@ def daemon(config, inifile):
             sys.exit(0)
     except OSError, e:
         print >>sys.stderr, "fork #2 failed: %d (%s)" % (e.errno, e.strerror)
+        _shared_state.value = 1
+        _lock.release()
         sys.exit(1)
 
 

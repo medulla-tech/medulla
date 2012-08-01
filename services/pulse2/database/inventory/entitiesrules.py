@@ -25,6 +25,7 @@ import logging
 import re
 
 from mmc.site import mmcconfdir
+from pulse2.utils import checkEntityName
 
 class EntitiesRules:
 
@@ -48,7 +49,7 @@ class EntitiesRules:
         """
         self.logger.debug("Reading inventory rules file %s" % self.conf)
         for line in file(self.conf):
-            if line.startswith('#'):
+            if line.startswith('#') or not line.strip():
                 continue
             try:
                 # The first column may contain the quoted entity list
@@ -59,6 +60,8 @@ class EntitiesRules:
                 else:
                     entities, rule = line.split(None, 1)
                 entitieslist = entities.split(',')
+                for entity in entitieslist:
+                    checkEntityName(entity)
                 if entitieslist:
                     words = rule.split()
                     prefix = 'none'
@@ -86,7 +89,7 @@ class EntitiesRules:
                                         self.logger.error("Operator %s is not supported, skipping" % operator)
                                 words = words[3:]
                     self.rules.append((entitieslist, prefix, subexprs))
-            except Exception, e:
+            except Exception:
                 self.logger.error("Error while reading this rule: %s" % line)
                 raise
 

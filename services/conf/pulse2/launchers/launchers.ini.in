@@ -1,6 +1,6 @@
 [launchers]
 # Pulse2 Launcher path
-# launcher_path = /usr/sbin/pulse2-launcher
+launcher_path = @sbindir@/pulse2-launcher
 
 ## Misc locations ##
 # Source directory for push mode
@@ -8,7 +8,7 @@
 
 ## Workflow-related commands ##
 # global ping command
-# ping_path = /usr/sbin/pulse2-ping
+ping_path = @sbindir@/pulse2-ping
 # global inventory command
 # inventory_command = export P2SRV=`echo $SSH_CONNECTION | cut -f1 -d\ `; export P2PORT=9999; export http_proxy=""; export ftp_proxy=""; ( [ -x /cygdrive/c/Program\ Files\ \(x86\)/OCS\ Inventory\ Agent/OCSInventory.exe ] && /cygdrive/c/Program\ Files/OCS\ Inventory\ Agent/OCSInventory.exe /np /server:$P2SRV /pnum:$P2PORT ) || ( [ -x /cygdrive/c/Program\ Files/OCS\ Inventory\ Agent/OCSInventory.exe ] && /cygdrive/c/Program\ Files\ \(x86\)/OCS\ Inventory\ Agent/OCSInventory.exe /np /server:$P2SRV /pnum:$P2PORT ) || ( [ -x /usr/bin/ocsinventory-agent ] && /usr/bin/ocsinventory-agent --server=http://$P2SRV:$P2PORT ) || ( [ -x /usr/sbin/ocsinventory-agent ] && /usr/sbin/ocsinventory-agent --server=http://$P2SRV:$P2PORT ) || ( [ -x /usr/local/sbin/ocs_mac_agent.php ] && /usr/local/sbin/ocs_mac_agent.php )
 # global reboot command
@@ -45,7 +45,7 @@
 
 [wrapper]
 # wrapper path
-# path = /usr/sbin/pulse2-output-wrapper
+path = @sbindir@/pulse2-output-wrapper
 # cap the amount of logs a wrapper can generate (in bytes)
 # max_log_size = 512000
 # wrapper will quit it process takes longer to complete (in seconds)
@@ -82,13 +82,13 @@
 
 [wol]
 # Pulse2 WOL Path
-wol_path = /usr/sbin/pulse2-wol
+wol_path = @sbindir@/pulse2-wol
 # wol_port = 40000
 # wol_bcast = 255.255.255.255
 
 [tcp_sproxy]
 # Pulse2 SSH Proxy path
-# tcp_sproxy_path = /usr/sbin/pulse2-tcp-sproxy
+tcp_sproxy_path = @sbindir@/pulse2-tcp-sproxy
 # The "external" VNC IP adress
 # tcp_sproxy_host =
 # The TCP range to attribue to the proxy
@@ -102,7 +102,7 @@ wol_path = /usr/sbin/pulse2-wol
 
 [smart_cleaner]
 # Pulse2 Smart Cleaner path (on the target); if empty we do not use it
-# smart_cleaner_path = /usr/bin/pulse2-smart-cleaner.sh
+smart_cleaner_path = @bindir@/pulse2-smart-cleaner.sh
 # cleaner options, space separated, see doc
 # smart_cleaner_options =
 

@@ -90,7 +90,7 @@ require("../includes/ajaxcommon.inc.php");
         $a_defaultWOL[] = $entry['default_WOL'];
         $a_displayWOL[] = ($entry['hidden_WOL'] ? False:True);
     }
-    $t = new TitleElement(_T("Default boot menu configuration", "imaging"));
+    $t = new TitleElement(_T("Default boot menu configuration", "imaging"), 3);
     $t->display();
 
     $l = new ListInfos($a_label, _T("Label", "imaging"));
@@ -106,5 +106,7 @@ require("../includes/ajaxcommon.inc.php");
     $l->setTableHeaderPadding(19);
     $l->disableFirstColumnActionLink();
     $l->display();
+
+require("../includes/ajaxcommon_bottom.inc.php");
 
 ?>

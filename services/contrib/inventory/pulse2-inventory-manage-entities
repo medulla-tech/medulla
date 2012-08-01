@@ -1,0 +1,140 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+# (c) 2008-2012 Mandriva, http://www.mandriva.com/
+#
+# This file is part of Pulse 2, http://pulse2.mandriva.org
+#
+# Pulse 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Pulse 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Pulse 2; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+"""
+Little script to manage entities of the Pulse 2 inventory backend
+"""
+
+import sys
+from optparse import OptionParser
+from sqlalchemy.orm import create_session
+from mmc.plugins.inventory.config import InventoryConfig
+from pulse2.database.inventory import Inventory
+from pulse2.utils import checkEntityName
+
+def initdb():
+    config = InventoryConfig()
+    config.init()
+    db = Inventory()
+    db.activate(config)
+
+    return db
+
+def listEntities():
+    db = initdb()
+    entities = db.getUserLocations("root", True)
+    for entity, level in entities:
+        text = ""
+        for tab in range(1, level):
+            text += "  "
+        text += '- %s' % entity.Label
+        print text
+
+def addEntity(name, parent_name = False):
+    # Check if the name is valid
+    try:
+        checkEntityName(name)
+    except:
+        print "Bad entity name: %s" % name
+        print "The entity name should be at least 3 chars."
+        sys.exit(1)
+
+    db = initdb()
+
+    if parent_name and not db.locationExists(parent_name):
+        print "Entity '%s' doesn't exists" % parent_name
+        sys.exit(1)
+
+    if not db.locationExists(name):
+        db.createEntity(name, parent_name)
+        print "Entity '%s' created" % name
+        print "mmc-agent must be restarted to see the entity in the web interface"
+    else:
+        print "Entity '%s' already exists" % name
+
+    sys.exit(0)
+
+def removeEntity(name):
+    db = initdb()
+
+    if name == "root":
+        print "Can't delete the root entity."
+        sys.exit(1)
+
+    if not db.locationExists(name):
+        print "The entity '%s' doesn't exists" % name
+        sys.exit(1)
+
+    print "By removing this entity you will assign all its computers to the root entity."
+    response = raw_input("Are you sure ? (y/n) : ")
+
+    if response == "y":
+        Entity = db.klass['Entity']
+        hasEntity = db.klass['hasEntity']
+
+        session = create_session()
+        entity = session.query(Entity).filter_by(Label = name).one()
+
+        session.begin()
+        session.query(hasEntity).filter_by(entity = entity.id).update({hasEntity.entity: 1})
+        session.delete(entity)
+        session.commit()
+        session.close()
+        print "Entity '%s' removed" % name
+    else:
+        print "Aborted."
+
+    sys.exit(0)
+
+
+if __name__ == "__main__":
+
+    usage = "usage: %prog [--list] [--add] [--remove] [--name entity] [--parent entity]"
+    parser = OptionParser(usage=usage)
+    parser.add_option("-a", "--add", action="store_true", dest="add", default=False)
+    parser.add_option("-r", "--remove", action="store_true", dest="remove", default=False)
+    parser.add_option("-n", "--name", action="store", dest="name")
+    parser.add_option("-p", "--parent", action="store", dest="parent", default=False)
+    parser.add_option("-l", "--list", action="store_true", dest="list", default=False)
+
+    (options, args) = parser.parse_args()
+
+    if options.list:
+        listEntities()
+        sys.exit(0)
+
+    if not options.add and not options.remove:
+        parser.print_help()
+        sys.exit(1)
+
+    if not options.name:
+        print "Error: No entity name specified"
+        parser.print_help()
+        sys.exit(1)
+
+    if options.add:
+        addEntity(options.name, options.parent)
+    else:
+        removeEntity(options.name)
+
+    sys.exit(0)
+

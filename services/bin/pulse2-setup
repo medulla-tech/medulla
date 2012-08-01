@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8; -*-
 #
-# (c) 2011 Mandriva, http://www.mandriva.com/
+# (c) 2011-2012 Mandriva, http://www.mandriva.com/
 #
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
-#
-# $Id$
+#   Jean-Philippe Braun <jpbraun@mandriva.com>
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
 #
@@ -24,18 +23,24 @@
 # along with Pulse 2.  If not, see <http://www.gnu.org/licenses/>.
 import os, sys, stat
 import re
-import readline, getpass
+import getpass
 import string
 import uuid
+import readline # pyflakes=ignore
+import shutil
 from random import choice
 from subprocess import call
 from optparse import OptionParser
-from ConfigParser import ConfigParser
+from configobj import ConfigObj
+import gzip
+from StringIO import StringIO
 import sqlalchemy as sa
 import logging
 import ldap
 from pulse2.utils import get_default_ip
-from pulse2.site import examplesdir, packagermode
+from pulse2.site import examplesdir
+from mmc.site import sysconfdir, mmcconfdir, prefix
+from mmc.core.log import ColoredFormatter
 
 log = logging.getLogger('pulse2-setup')
 
@@ -51,7 +56,7 @@ def read_opt(prompt, default=None):
         prompt += ' (default: %s)' % default
     prompt = 'INPUT    - ' + prompt + ': '
     s = raw_input(prompt)
-    if len(s)==0 and default is not None:
+    if not s and default is not None:
         s = default
     return s
 
@@ -81,7 +86,8 @@ def read_bool(prompt, default):
 def gen_passwd(size=10):
     return ''.join([choice(string.letters + string.digits) for _ in range(size)])
 
-def read_passwd(prompt, check=False):
+def read_passwd(prompt, default, check=False):
+    prompt += ' (default: ' + default + ')'
     match = False
     while not match:
         pwd = getpass.getpass('INPUT    - ' + prompt + ': ')
@@ -92,6 +98,10 @@ def read_passwd(prompt, check=False):
                 log.info('Passwords do not match. Retry.')
         else:
             match = True
+
+    if not pwd:
+        return default
+
     return pwd
 
 re_ip4 = re.compile(r'([0-9]{1,3})(\.([0-9]{1,3})){3}')
@@ -114,22 +124,26 @@ def read_ip(prompt, default):
             log.info('Incorrect value. Retry.')
     return ret
 
-initscripts = [ 'mmc-agent', 'pulse2-imaging-server', 'pulse2-inventory-server',
-                'pulse2-launchers', 'pulse2-package-server', 'pulse2-scheduler' ]
 
 class DistroHandler(object):
+
+    ldap_schemas_dir = None
+    ldap_config = False
+    apache_service = None
+    apache_dir = None
+
     def enable_srv(self, name):
         # Start scripts
         for runlevel in (2,3,4,5):
             ret = call("/bin/ln -fs ../init.d/%(name)s /etc/rc%(runlevel)i.d/S20%(name)s" % \
-                           {'name': name, 'runlevel': runlevel}, 
+                           {'name': name, 'runlevel': runlevel},
                        shell=True)
             if ret != 0:
                 return False
         # Stop scripts
         for runlevel in (0,1,6):
             ret = call("/bin/ln -fs ../init.d/%(name)s /etc/rc%(runlevel)i.d/K01%(name)s" % \
-                           {'name': name, 'runlevel': runlevel}, 
+                           {'name': name, 'runlevel': runlevel},
                        shell=True)
             if ret != 0:
                 return False
@@ -139,14 +153,14 @@ class DistroHandler(object):
         # Start scripts
         for runlevel in (2,3,4,5):
             ret = call("/bin/rm -f /etc/rc%(runlevel)i.d/S20%(name)s" % \
-                           {'name': name, 'runlevel': runlevel}, 
+                           {'name': name, 'runlevel': runlevel},
                        shell=True)
             if ret != 0:
                 return False
         # Stop scripts
         for runlevel in (0,1,6):
             ret = call("/bin/rm -f /etc/rc%(runlevel)i.d/K01%(name)s" % \
-                           {'name': name, 'runlevel': runlevel}, 
+                           {'name': name, 'runlevel': runlevel},
                        shell=True)
             if ret != 0:
                 return False
@@ -160,24 +174,65 @@ class DistroHandler(object):
         ret = call("/etc/rc2.d/S20%(name)s stop" % {'name': name}, shell=True)
         return ret==0
 
+    def reload_srv(self, name):
+        ret = call("/etc/rc2.d/S20%(name)s reload" % {'name': name}, shell=True)
+        return ret==0
+
 class DebianHandler(DistroHandler):
-    def enable_srv(self, name):
-        ret = call("/usr/sbin/update-rc.d %(name)s defaults" % {'name': name}, 
+
+    ldap_schemas_dir = "/etc/ldap/schema/"
+    ldap_config = True
+    apache_service = "apache2"
+    apache_dir = "/etc/apache2/conf.d/"
+
+    def __init__(self):
+        DistroHandler.__init__(self)
+        # Try to determine sys-v mode (dependency mode or classic mode)
+        self.mode = "classic"
+        ret = call('LC_ALL=C update-rc.d 2>/dev/null | grep -q "dependency based boot"',
                    shell=True)
-        return ret== 0
+        if ret == 0:
+            self.mode = "dependency"
+            log.debug("Using dependency based boot sequencing")
+
+    def enable_srv(self, name):
+        default_config = os.path.join(sysconfdir, 'default', name)
+        if os.path.exists(default_config):
+            ret = call("sed -i 's/ENABLE=no/ENABLE=yes/' %s" % default_config,
+                       shell=True)
+        else:
+            if self.mode == "classic":
+                ret = call("/usr/sbin/update-rc.d %s defaults" % name,
+                           shell=True)
+            else:
+                ret = call("/sbin/insserv %s" % name, shell=True)
+        return ret==0
 
     def disable_srv(self, name):
-        ret = call("/usr/sbin/update-rc.d -f %(name)s remove" % {'name': name},
-                   shell=True)
+        default_config = os.path.join(sysconfdir, 'default', name)
+        if os.path.exists(default_config):
+            ret = call("sed -i 's/ENABLE=yes/ENABLE=no/' %s" % default_config,
+                       shell=True)
+        else:
+            if self.mode == "classic":
+                ret = call("/usr/sbin/update-rc.d -f %s remove" % name,
+                           shell=True)
+            else:
+                ret = call("/sbin/insserv -r %s" % name, shell=True)
         return ret==0
 
     def start_srv(self, name):
-        ret = call("/usr/sbin/invoke-rc.d %(name)s start" % {'name': name}, 
+        ret = call("/usr/sbin/invoke-rc.d %s start" % name,
                    shell=True)
         return ret==0
 
     def stop_srv(self, name):
-        ret = call("/usr/sbin/invoke-rc.d %(name)s stop" % {'name': name}, 
+        ret = call("/usr/sbin/invoke-rc.d %s stop" % name,
+                   shell=True)
+        return ret==0
+
+    def reload_srv(self, name):
+        ret = call("/usr/sbin/invoke-rc.d %s reload" % name,
                    shell=True)
         return ret==0
 
@@ -189,8 +244,9 @@ def get_distro_handler():
 
 class Service(object):
     name = None
-    clsnames = [ 'SrvMmcAgent', 'SrvImagingServer', 'SrvInventoryserver',
-                 'SrvLauncher', 'SrvPkgServer', 'SrvScheduler' ]
+    clsnames = [ 'SrvMmcAgent', 'SrvImagingServer',
+                 'SrvInventoryserver', 'SrvLauncher', 'SrvPkgServer',
+                 'SrvScheduler' ]
 
     def __init__(self, handler, config):
         self.config = config
@@ -223,7 +279,15 @@ class Service(object):
         if self.is_enable():
             log.info('Starting service: %s' % self.name)
             if not self.handler.start_srv(self.name):
-                log.warn('Can not start service: %s' % self.name)
+                log.warn('Cannot start service: %s' % self.name)
+                if fatal:
+                    sys.exit(1)
+
+    def reload(self, fatal=False):
+        log.info('Reloading service: %s' % self.name)
+        if self.is_enable():
+            if not self.handler.reload_srv(self.name):
+                log.warn('Cannot reload service: %s' % self.name)
                 if fatal:
                     sys.exit(1)
 
@@ -232,6 +296,14 @@ class SrvMmcAgent(Service):
 
     def restart(self, *args, **kwargs):
         super(SrvMmcAgent, self).restart(fatal=True)
+
+class SrvApache(Service):
+    name = None
+
+    def __init__(self, handler, config):
+        Service.__init__(self, handler, config)
+        if handler.apache_service:
+            self.__class__.name = handler.apache_service
 
 class SrvImagingServer(Service):
     name = 'pulse2-imaging-server'
@@ -257,84 +329,118 @@ class SrvPkgServer(Service):
 class SrvScheduler(Service):
     name = 'pulse2-scheduler'
 
-class Pulse2ConfigParser(ConfigParser):
+class Pulse2ConfigFile(object):
     """ Values are setted that way:
     - load the config file
     - then populate with default values if not set from the file
     """
-    clsnames = [ 'PluginsPkgConfig', 'PluginsImagingConfig', 'PluginsGlpiConfig',
+    clsnames = [ 'PluginsPkgConfig', 'PluginsImagingConfig', # 'PluginsGlpiConfig',
                  'PluginsBaseConfig', 'PluginsDyngroupConfig', 'PluginsInventoryConfig',
-                 'PluginsPulse2Config', 'PluginsMscConfig', 'InventoryServerConfig', 
+                 'PluginsPulse2Config', 'PluginsMscConfig', 'InventoryServerConfig',
                  'LaunchersConfig', 'PackageServerConfig', 'SchedulerConfig',
-                 'ImagingServerConfig' ]
+                 'ImagingServerConfig', 'MMCAgentConfig' ]
     path = None
     # If defaults is None, try to read default values from config file in
     # examplesdir
     defaults = None
     mode = stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP
+    # ConfigObj object
+    config = None
 
-    def __init__(self, confdir, reset=False):
-        ConfigParser.__init__(self)
-        self.confdir = confdir
-        if self.defaults is None:
-            self._load_defaults()
-        else:
+    def __init__(self, reset=False):
+        if self.defaults:
             self._populate(self.__class__.defaults)
-        if not reset:
-            # If not resetting conf, load existing
-            self._load()
+        else:
+            if not reset:
+                # If not resetting conf, load existing
+                self._load(True)
+            else:
+                self._load()
 
-    def _load(self):
+    def _load(self, current=False):
         """ Load config file, if any
         """
-        fpath = os.path.join(self.confdir, self.path)
-        if self.read(fpath):
+        # Use current configuration
+        if current:
+            dir_path = mmcconfdir
+        # Use example configuration
+        else:
+            dir_path = examplesdir
+        fpath = os.path.join(dir_path, self.path)
+        if os.path.exists(fpath):
             log.debug("Load config file %s" % fpath)
+            self.config = ConfigObj(fpath, list_values=False)
+        elif os.path.exists(fpath + '.gz'):
+            fpath = fpath + '.gz'
+            log.debug("Load config file %s" % fpath)
+            fh = gzip.open(fpath, 'rb')
+            config_string = fh.read()
+            fh.close()
+            self.config = ConfigObj(StringIO(config_string), list_values=False)
+            self.config.filename = fpath
         else:
-            log.debug("No such file %s. Will create it." % fpath)
-
-    def _load_defaults(self):
-        """ Load defaults values from config file in examplesdir
-        """
-        fpath = os.path.join(examplesdir, self.path)
-        if self.read(fpath):
-            log.debug("Load default config file: %s" % fpath)
-        else:
-            log.debug("No default config file %s." % fpath)
+            log.debug("No such file %s" % fpath)
+            if not current:
+                fpath = os.path.join(mmcconfdir, self.path)
+                log.debug("Fallback on current configuration %s" % fpath)
+            self.config = ConfigObj(fpath, list_values=False)
 
     def _populate(self, d):
-        for (name, section) in d.iteritems():
-            if not self.has_section(name):
-                self.add_section(name)
-            for (opt, value) in section.iteritems():
-                self.set(name, opt, value)
+        if not self.config:
+            self.config = ConfigObj(list_values=False)
+        for name, section in d.iteritems():
+            self.config[name] = section
 
     def write_path(self, path):
         dirname = os.path.dirname(path)
         if not os.path.isdir(dirname):
             os.makedirs(dirname)
         try:
-            f = open(path, 'w')
-            self.write(f)
+            self.config.filename = path
+            self.config.write()
             os.chmod(path, self.mode)
             log.info("Wrote configuration file: %s" % path)
         except IOError, e:
             log.error("Can not write file: %s" % path)
             log.debug(str(e))
             sys.exit(1)
-        finally:
-            f.close()
+
+    def get(self, section, option):
+        try:
+            return self.config[section][option]
+        except KeyError:
+            return ""
+
+    def set(self, section, option, value):
+        if not section in self.config:
+            self.config[section] = {}
+        self.config[section][option] = value
+
+    def remove_section(self, section):
+        try:
+            del self.config[section]
+        except KeyError:
+            pass
+
+    def has_section(self, section):
+        return section in self.config
+
+    def has_option(self, section, option):
+        if self.has_section(section):
+            return option in self.config[section]
+        else:
+            return False
 
     def commit(self):
-        self.write_path(os.path.join(self.confdir, self.path))
+        self.write_path(os.path.join(mmcconfdir, self.path))
 
-class LoggingConfig(Pulse2ConfigParser):
+class LoggingConfig(Pulse2ConfigFile):
     log_dir = '/var/log/mmc'
     log_path = None
 
     def __init__(self, *args, **kwargs):
-        Pulse2ConfigParser.__init__(self, *args, **kwargs)
-        
+        Pulse2ConfigFile.__init__(self, *args, **kwargs)
+
         # Add logging module configuration
         d = {'loggers': {'keys': 'root'},
              'handlers': {'keys': 'hand01'},
@@ -344,60 +450,35 @@ class LoggingConfig(Pulse2ConfigParser):
              'handler_hand01': {'class': 'FileHandler',
                                 'level': 'INFO',
                                 'formatter': 'form01',
-                                'args': (os.path.join(self.log_dir, self.log_path), )},
+                                'args': '("'+os.path.join(self.log_dir, self.log_path)+'",)'},
              'formatter_form01': {'format': '%(asctime)s %(levelname)s %(message)s'}}
         self._populate(d)
 
-class PluginsPkgConfig(Pulse2ConfigParser):
+class MMCAgentConfig(Pulse2ConfigFile):
+    path = 'agent/config.ini'
+
+class PluginsPkgConfig(Pulse2ConfigFile):
     path = 'plugins/pkgs.ini'
 
-class PluginsImagingConfig(Pulse2ConfigParser):
+class PluginsImagingConfig(Pulse2ConfigFile):
     path = 'plugins/imaging.ini'
 
-class PluginsGlpiConfig(Pulse2ConfigParser):
+class PluginsGlpiConfig(Pulse2ConfigFile):
     path = 'plugins/glpi.ini'
 
-class PluginsBaseConfig(Pulse2ConfigParser):
+class PluginsBaseConfig(Pulse2ConfigFile):
     path = 'plugins/base.ini'
-    defaults = {'backup-tools': {'path': '/usr/lib/mmc/backup-tools',
-                                 'destpath': '/home/archives'},
-                'ldap': {'ldapurl': 'ldap://localhost:389',
-                         'basedn': 'dc=mandriva,dc=com',
-                         'baseusersdn': 'ou=Users,%(basedn)s',
-                         'basegroupsdn': 'ou=Groups,%(basedn)s',
-                         'rootname': 'cn=admin,%(basedn)s',
-                         'password': 'secret',
-                         'userHomeAction': 1,
-                         'skelDir': '/etc/skel',
-                         'defaultUserGroup': 'Domain Users',
-                         'defaultHomeDir': '/home',
-                         'defaultShellEnable': '/bin/bash',
-                         'defaultShellDisable': '/bin/false',
-                         'uidStart': '10000',
-                         'gidStart': '10000',
-                         'logfile': '/var/log/ldap.log',
-                         'passwordscheme': 'passmod'},
-                'backup-tools': {'path': '/usr/lib/mmc/backup-tools',
-                                 'destpath': '/home/archives'},
-                'computers': {'method': 'inventory'},
-                'audit': {'method': 'database',
-                          'dbhost': 'localhost',
-                          'dbdriver': 'mysql',
-                          'dbuser': 'audit',
-                          'dbpassword': 'mmc',
-                          'dbname': 'audit',
-                          'dbport': 3306}}
 
-class PluginsDyngroupConfig(Pulse2ConfigParser):
+class PluginsDyngroupConfig(Pulse2ConfigFile):
     path = 'plugins/dyngroup.ini'
 
-class PluginsInventoryConfig(Pulse2ConfigParser):
+class PluginsInventoryConfig(Pulse2ConfigFile):
     path = 'plugins/inventory.ini'
 
-class PluginsPulse2Config(Pulse2ConfigParser):
+class PluginsPulse2Config(Pulse2ConfigFile):
     path = 'plugins/pulse2.ini'
 
-class PluginsMscConfig(Pulse2ConfigParser):
+class PluginsMscConfig(Pulse2ConfigFile):
     path = 'plugins/msc.ini'
 
 class InventoryServerConfig(LoggingConfig):
@@ -407,7 +488,7 @@ class InventoryServerConfig(LoggingConfig):
 class LaunchersConfig(LoggingConfig):
     path = 'pulse2/launchers/launchers.ini'
     log_path = 'pulse2-launchers.log'
-    
+
 class PackageServerConfig(LoggingConfig):
     path = 'pulse2/package-server/package-server.ini'
     log_path = 'pulse2-package-server.log'
@@ -425,20 +506,26 @@ class SetupApp(object):
                 'inventory.service.enable': True,
                 'package.service.enable': True}
 
-    def __init__(self, datadir, confdir, batch=False, reset=False):
+    def __init__(self, options):
         self.config = {}
-        self.datadir = datadir
-        self.confdir = confdir
-        self.batch = batch
-        self.reset = reset
+        self.options = options
+        self.distro_handler = get_distro_handler()
 
         # Check if we run as root
         if os.getuid()<>0:
             log.error("Please run this application as root")
             sys.exit(2)
 
-        # Check datadir contains sql snippets
-        self.sqldir = os.path.join(datadir, 'sql')
+        # Warn the user about --reset-db
+        if self.options['reset_db']:
+            log.warn("I will delete all Pulse2 databases and existing computers data (images, bootmenus)")
+            log.warn("Existing masters will be kept")
+            if not self.read_bool('Are you sure ?', True):
+                log.info("OK. Exiting")
+                sys.exit(0)
+
+        # Check sql snippets
+        self.sqldir = os.path.join(prefix, 'share', 'mmc', 'sql')
         if not os.path.isdir(self.sqldir):
             log.error('Can not find SQL snippets in %s' % self.sqldir)
 
@@ -447,42 +534,41 @@ class SetupApp(object):
 
         # Load conf files, if existing
         # self.confs will contain path->ConfigParser objects dictionary
-        # path is relative to confdir, as in confpaths list above
+        # path is relative to mmcconfdir, as in confpaths list above
         self.confs = {}
-        for clsname in Pulse2ConfigParser.clsnames:
+        for clsname in Pulse2ConfigFile.clsnames:
             cls = globals()[clsname]
-            self.confs[cls.path] = cls(self.confdir, self.reset)
+            self.confs[cls.path] = cls(self.options['reset_conf'])
 
         # Creates Services objects
         self.services = []
-        distro_handler = get_distro_handler()
         for clsname in Service.clsnames:
             cls = globals()[clsname]
-            self.services.append(cls(distro_handler, self.config))
+            self.services.append(cls(self.distro_handler, self.config))
 
     def read_opt(self, name, default):
-        if self.batch:
+        if self.options['batch']:
             return default
         else:
             return read_opt(name, default)
-    
+
     def read_bool(self, name, default):
-        if self.batch:
+        if self.options['batch']:
             return default
         else:
             return read_bool(name, default)
 
     def read_passwd(self, name, default=None):
-        if self.batch:
+        if self.options['batch']:
             if default is not None:
                 return default
             else:
                 return gen_passwd()
         else:
-            return read_passwd(name)
+            return read_passwd(name, default)
 
     def read_ip(self, name, default=None):
-        if self.batch:
+        if self.options['batch']:
             if default is not None:
                 return default
             else:
@@ -495,17 +581,18 @@ class SetupApp(object):
         Values are set from existing config files or default values in *Config classes.
 
         Note 1: db admin credentials are not stored in any file, except host.
-        Note 2: current version does not support diffenriated db host or credentials. All 
+        Note 2: current version does not support diffenriated db host or credentials. All
           db must be on the same host. Default value are taken from plugins/pulse2.ini file.
         """
         self.defaults['ldapurl'] = self.confs['plugins/base.ini'].get('ldap', 'ldapurl')
-        self.defaults['ldapbasedn'] = self.confs['plugins/base.ini'].get('ldap', 'basedn')        
-        self.defaults['ldapadmindn'] = self.confs['plugins/base.ini'].get('ldap', 'rootname')
+        self.defaults['ldapbasedn'] = self.confs['plugins/base.ini'].get('ldap', 'baseDN')
+        self.defaults['ldapadmindn'] = self.confs['plugins/base.ini'].get('ldap', 'rootName')
         self.defaults['ldappasswd'] = self.confs['plugins/base.ini'].get('ldap', 'password')
 
-        self.defaults['dbhost'] = self.confs['plugins/pulse2.ini'].get('database', 'dbhost')
-        self.defaults['dbadminuser'] = 'root'
-        self.defaults['dbadminpasswd'] = ''
+        self.defaults['dbhost'] = self.options['dbhost'] or self.confs['plugins/pulse2.ini'].get('database', 'dbhost')
+        self.defaults['dbadminuser'] = self.options['dbadminuser'] or 'root'
+        self.defaults['dbadminpasswd'] = self.options['dbadminpasswd'] or ''
+
         self.defaults['dbuser'] = self.confs['plugins/pulse2.ini'].get('database', 'dbuser')
         passwd = self.confs['plugins/pulse2.ini'].get('database', 'dbpasswd')
         if passwd=='mmc':
@@ -520,15 +607,15 @@ class SetupApp(object):
     def read_config(self):
         """ Read some global config values
         """
-        self.config['audit.module.enable'] = self.read_bool('Enable audit module', 
+        self.config['audit.module.enable'] = self.read_bool('Enable audit module',
                                                             self.defaults['audit.module.enable'])
-        self.config['inventory.service.enable'] = self.read_bool('Enable inventory server', 
+        self.config['inventory.service.enable'] = self.read_bool('Enable inventory server',
                                                                  self.defaults['inventory.service.enable'])
-        self.config['imaging.service.enable'] = self.read_bool('Enable imaging server', 
+        self.config['imaging.service.enable'] = self.read_bool('Enable imaging server',
                                                                self.defaults['imaging.service.enable'])
-        self.config['package.service.enable'] = self.read_bool('Enable package server (proxy)', 
+        self.config['package.service.enable'] = self.read_bool('Enable package server (proxy)',
                                                                self.defaults['package.service.enable'])
-        self.config['server.ip.external'] = self.read_ip('Server external IP address', 
+        self.config['server.ip.external'] = self.read_ip('Server external IP address',
                                                          get_default_ip())
 
     def init_ldap(self):
@@ -566,14 +653,24 @@ class SetupApp(object):
         log.info("Check for MMC schema")
         (dn, schema) = ldap.schema.urlfetch(self.config['ldapurl'])
         if schema.get_obj(ldap.schema.ObjectClass, 'lmcUserObject') is None:
-            log.error('MMC schema can not be found in LDAP directory.')
-            log.error('Exiting...')
-            sys.exit(1)
+            if self.distro_handler.ldap_schemas_dir and self.distro_handler.ldap_config:
+                log.info('MMC schema can not be found in LDAP directory.')
+                log.info('Adding the schema...')
+                schema_path = os.path.join(prefix, 'share', 'doc', 'python-mmc-base', 'contrib', 'ldap', 'mmc.schema')
+                ret = call('mmc-add-schema %s %s' % (schema_path, self.distro_handler.ldap_schemas_dir), shell=True)
+                if ret != 0:
+                    log.error('Failed to include the mmc schema in the LDAP directory.')
+                    log.error('Exiting...')
+                    sys.exit(1)
+            else:
+                log.error('MMC schema can not be found in LDAP directory.')
+                log.error('Exiting...')
+                sys.exit(1)
 
         # Populate base plugin conf file
         self.confs['plugins/base.ini'].set('ldap', 'ldapurl', self.config['ldapurl'])
-        self.confs['plugins/base.ini'].set('ldap', 'basedn', self.config['ldapbasedn'])
-        self.confs['plugins/base.ini'].set('ldap', 'rootname', self.config['ldapadmindn'])
+        self.confs['plugins/base.ini'].set('ldap', 'baseDN', self.config['ldapbasedn'])
+        self.confs['plugins/base.ini'].set('ldap', 'rootName', self.config['ldapadmindn'])
         self.confs['plugins/base.ini'].set('ldap', 'password', self.config['ldappasswd'])
 
     def init_db(self):
@@ -595,15 +692,43 @@ class SetupApp(object):
                 conn = self.engine.connect()
                 invalid = False
             except sa.exc.OperationalError, e:
-                log.error(u"Impossible de se connecter à la base de données")
+                log.error("Can't connect to the database")
                 log.debug(str(e))
 
+        # Drop databases
+        if self.options['reset_db']:
+            for db in self.dbmodules + ['audit']:
+                try:
+                    conn.execute('DROP DATABASE IF EXISTS `%s`' % db)
+                    log.info("Database '%s' dropped" % db)
+                except sa.exc.OperationalError, e:
+                    raise e
+            # remove computer boot menus
+            dir = "/var/lib/pulse2/imaging/"
+            for file in os.listdir(os.path.join(dir, 'bootmenus')):
+                if re.match('[0-9A-F]{12}', file):
+                    os.unlink(os.path.join(dir, 'bootmenus', file))
+                    log.info("Deleted computer menu '%s'" % file)
+            # erease the uuid cache
+            try:
+                os.unlink(os.path.join(dir, 'uuid-cache.txt'))
+                log.debug("UUID cache removed")
+            except OSError:
+                pass
+            # remove computers data
+            for comp_uuid in os.listdir(os.path.join(dir, 'computers')):
+                comp_dir = os.path.join(dir, 'computers', comp_uuid)
+                if re.match('UUID[0-9]+', comp_uuid) and os.path.isdir(comp_dir):
+                    log.info("Removing computer %s data..." % comp_uuid)
+                    shutil.rmtree(comp_dir)
+
         # Special case for audit db
-        try:
-            conn.execute('CREATE DATABASE IF NOT EXISTS `audit`')
-            log.info('Creates database \'audit\'')
-        except sa.exc.OperationalError, e:
-            raise e
+        if self.config['audit.module.enable']:
+            try:
+                conn.execute('CREATE DATABASE IF NOT EXISTS `audit`')
+                log.info("Creates database 'audit'")
+            except sa.exc.OperationalError, e:
+                raise e
 
         # All other modules have install.sh script
         env = os.environ
@@ -618,6 +743,7 @@ class SetupApp(object):
             ret = call(binpath, env=env)
             if ret<>0:
                 log.error('Can not initialize database for module: %s' % module)
+                sys.exit(1)
 
         # Get DB user and password for all modules
         log.info("Setup db credentials")
@@ -641,7 +767,7 @@ class SetupApp(object):
                     # This error means 'user exists'
                     log.debug('User already exists: %s@%s' % (self.config['dbuser'], host))
                 elif e.orig[0]==1044:
-                    log.error('Access denied: please check user \'%s\'@\'%s\' has grant rights.' % (self.config['dbuser'], 
+                    log.error('Access denied: please check user \'%s\'@\'%s\' has grant rights.' % (self.config['dbuser'],
                                                                                                     self.config['dbhost']))
                     sys.exit(2)
                 else:
@@ -654,14 +780,15 @@ class SetupApp(object):
             # Grant rights in DB
             try:
                 dbs = self.dbmodules
-                dbs.append('audit')
+                if self.config['audit.module.enable']:
+                    dbs.append('audit')
                 for module in dbs:
                     log.info('Grant rights on db %s' % module)
                     # Put db name without sqlalchemy quoting: it was surrounded by `''
                     conn.execute('GRANT ALL on `%s`.* to %%s@%%s' % module, self.config['dbuser'], host)
             except sa.exc.OperationalError, e:
                 if e.orig[0]==1044:
-                    log.error('Access denied: please check user \'%s\'@\'%s\' has grant rights.' % (self.config['dbuser'], 
+                    log.error('Access denied: please check user \'%s\'@\'%s\' has grant rights.' % (self.config['dbuser'],
                                                                                                     self.config['dbhost']))
                     sys.exit(2)
                 else:
@@ -673,7 +800,7 @@ class SetupApp(object):
         #
         # Set db user and password in conf files
         #
-        
+
         # dyngroup db
         self.confs['plugins/dyngroup.ini'].set('database', 'dbhost', self.config['dbhost'])
         self.confs['plugins/dyngroup.ini'].set('database', 'dbuser', self.config['dbuser'])
@@ -703,8 +830,8 @@ class SetupApp(object):
         # msc db (plugin)
         self.confs['plugins/msc.ini'].set('msc', 'dbhost', self.config['dbhost'])
         self.confs['plugins/msc.ini'].set('msc', 'dbuser', self.config['dbuser'])
-        self.confs['plugins/msc.ini'].set('msc', 'dbpasswd', self.config['dbpasswd'])        
-        
+        self.confs['plugins/msc.ini'].set('msc', 'dbpasswd', self.config['dbpasswd'])
+
         # msc db (scheduler)
         self.confs['pulse2/scheduler/scheduler.ini']\
             .set('database', 'dbhost', self.config['dbhost'])
@@ -747,10 +874,9 @@ class SetupApp(object):
 
         # Choose glpi or inventory backend, and check config files coherency
         # TODO: ask for the user. For the moment, choose inventory
-        self.confs['plugins/glpi.ini'].set('main', 'disable', 1)
         self.confs['plugins/inventory.ini'].set('main', 'disable', 0)
         self.confs['plugins/base.ini'].set('computers', 'method', 'inventory')
-        
+
         # Ensure various dirs are created
         for path in [ self.confs['plugins/base.ini'].get('backup-tools', 'destpath'),
                       self.confs['plugins/msc.ini'].get('msc', 'repopath'),
@@ -772,6 +898,10 @@ class SetupApp(object):
             else:
                 log.error('Can not find %s' % wol_path)
 
+        # Update services
+        for srv in self.services:
+            srv.update_rc()
+
         # Check root user has an RSA key
         log.info('Check for root user RSA key pair')
         key_path = '/root/.ssh/id_rsa'
@@ -782,20 +912,23 @@ class SetupApp(object):
                 log.error('Can not create RSA key pair for user root')
                 sys.exit(1)
 
-        # Update services
-        if not packagermode:
-            for srv in self.services:
-                srv.update_rc()
-
         # Setup package server
-        log.info('Generate uuid for package server')
         conf = self.confs['pulse2/package-server/package-server.ini']
         _uuid = None
         if conf.has_option('imaging_api', 'uuid'):
             _uuid = conf.get('imaging_api', 'uuid')
+            log.info('Using current uuid (%s) for package server' % _uuid)
         if not _uuid:
             _uuid = str(uuid.uuid4())
+            log.info('Generated uuid (%s) for package server' % _uuid)
         conf.set('imaging_api', 'uuid', _uuid)
+
+        # Install apache configuration if needed
+        if self.distro_handler.apache_service:
+            if not os.path.exists(os.path.join(self.distro_handler.apache_dir, 'mmc.conf')):
+                shutil.copy(os.path.join(mmcconfdir, 'apache', 'mmc.conf'), self.distro_handler.apache_dir)
+            apache_srv = SrvApache(self.distro_handler, self.config)
+            apache_srv.reload()
 
     def restart_services(self):
         for srv in self.services:
@@ -806,13 +939,13 @@ class SetupApp(object):
         if self.config['imaging.service.enable']:
             binpath = path_lookup('pulse2-package-server-register-imaging')
             ps_conf = self.confs['pulse2/package-server/package-server.ini']
-            basecmd = binpath + ' -m https://%s:%s@%s:%s ' % (ps_conf.get('mmc_agent', 'username'), 
+            basecmd = binpath + ' -m https://%s:%s@%s:%s ' % (ps_conf.get('mmc_agent', 'username'),
                                                              ps_conf.get('mmc_agent', 'password'),
                                                              ps_conf.get('mmc_agent', 'host'),
                                                              ps_conf.get('mmc_agent', 'port'))
             cmd = basecmd + '--check'
             log.debug('Call: %s' % cmd)
-            if call(cmd, shell=True)<>0:
+            if call(cmd, shell=True) == 0:
                 # This uuid is not registered
                 log.info('Registering imaging server')
                 cmd = basecmd + '--name \'Local imaging server\''
@@ -829,9 +962,9 @@ class SetupApp(object):
             conf.commit()
 
     def run(self):
-        """ Run setup 
+        """ Run setup
         """
-        log.info("Load defaults values from existing config")
+        log.info("Load values from config")
         self.load_defaults()
         self.read_config()
 
@@ -839,24 +972,40 @@ class SetupApp(object):
         self.init_db()
         self.init_ldap()
         self.init_misc()
+
+        # FIXME
+        # Workaround timeout calls to the mmc agent when
+        # pulse2-package-server-register-imaging is run
+        self.confs['agent/config.ini'].set('main', 'multithreading', '0')
+
         self.commit()
-
         self.restart_services()
-
         self.post_restart()
+
+        # End Workaround
+        self.confs['agent/config.ini'].set('main', 'multithreading', '1')
+        self.confs['agent/config.ini'].commit()
+        for srv in self.services:
+            if srv.name == "mmc-agent":
+                srv.restart()
+
 
 if __name__ == '__main__':
     parser = OptionParser()
     parser.add_option("-d", "--debug", action="store_true", dest="debug", default=False,
                       help="Print debug messages")
     parser.add_option("-b", "--batch", action="store_true", dest="batch", default=False,
-                      help="Do not ask any question")
-    parser.add_option("-R", "--reset", action="store_true", dest="reset", default=False,
+                      help="Do not ask any question. Uses the default config files.")
+    parser.add_option("-R", "--reset-conf", action="store_true", dest="reset_conf", default=False,
                       help="Reset configuration")
-    parser.add_option("--pkgdatadir", action="store", dest="pkgdatadir", default='/usr/share/mmc',
-                      help="Path to pulse2 datadir (default: /usr/share/mmc)")
-    parser.add_option("--confdir", action="store", dest="confdir", default='/etc/mmc',
-                      help="Path to pulse2 conf dir (default: /etc/mmc)")
+    parser.add_option("--reset-db", action="store_true", dest="reset_db", default=False,
+                      help="Reset all databases (imaging, inventory, dyngroup...)")
+    parser.add_option("--mysql-host", dest="dbhost",
+                      help="MySQL server hostname")
+    parser.add_option("--mysql-user", dest="dbadminuser",
+                      help="MySQL administrator username")
+    parser.add_option("--mysql-passwd", dest="dbadminpasswd",
+                      help="MySQL administrator password")
 
     # Parse and analyse args
     (options, args) = parser.parse_args()
@@ -866,9 +1015,22 @@ if __name__ == '__main__':
         level = logging.INFO
 
     # Init logger
-    format = '%(levelname)-8s - %(message)s'
-    logging.basicConfig(level=level, format=format)
+    hdlr2 = logging.StreamHandler()
+    hdlr2.setFormatter(ColoredFormatter("%(levelname)-18s %(message)s"))
+    hdlr2.setLevel(level)
+    log.addHandler(hdlr2)
+    log.setLevel(level)
+
+    # Runtime options
+    config = {
+        'batch': options.batch,
+        'reset_conf': options.reset_conf,
+        'reset_db': options.reset_db,
+        'dbhost': options.dbhost,
+        'dbadminuser': options.dbadminuser,
+        'dbadminpasswd': options.dbadminpasswd,
+    }
 
     # Run the setup app
-    app = SetupApp(datadir=options.pkgdatadir, confdir=options.confdir, batch=options.batch, reset=options.reset)
+    app = SetupApp(config)
     app.run()

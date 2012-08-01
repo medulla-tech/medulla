@@ -54,7 +54,7 @@ installer_name = pulse2-win32-agents-installer-$(installer_version).exe
 installer_url = $(base_url)/pulse2-win32-agents-installer/$(installer_name)
 
 sfxmod = 7zsd.sfx
-sfxmod_url = http://www.7zsfx.info/en/files/715/7zSD.7z
+sfxmod_url = http://www.7zsfx.info/files/7zsd_150_2478.7z
 
 subagents = $(sa_name) $(rda1_name) $(inv1_name) $(installer_name)
 

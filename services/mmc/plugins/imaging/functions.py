@@ -28,7 +28,7 @@ imaging plugin
 
 import logging
 from twisted.internet import defer
-import re
+from sets import Set as set
 
 from mmc.support.mmctools import xmlrpcCleanup
 from mmc.support.mmctools import RpcProxyI #, ContextMakerI, SecurityContext
@@ -1292,13 +1292,13 @@ class ImagingRpcProxy(RpcProxyI):
         if len(uuids):
             h_macaddresses = getJustOneMacPerComputer(ctx, ComputerManager().getMachineMac(ctx, {'uuids':uuids}))
             macaddresses = h_macaddresses.values()
-            if [''] in macaddresses:
+            if '' in macaddresses:
                 # Some computers don't have a MAC address
-                logger.info("Some computers don't have any MAC address in the profile %s"%(profileUUID))
+                logger.info("Some computers don't have any MAC address in the profile %s" % profileUUID)
                 ret = 2
             elif len(uuids) < len(macaddresses):
                 # Some computers have more than one MAC address
-                logger.info("Some computers have more than one MAC address in the profile %s"%(profileUUID))
+                logger.info("Some computers have more than one MAC address in the profile %s" % profileUUID)
                 ret = 3
             elif len(uuids) > len(macaddresses):
                 # Some computers don't have a MAC address
@@ -1306,15 +1306,15 @@ class ImagingRpcProxy(RpcProxyI):
                 for uuid in h_macaddresses.keys():
                     if uuid in list_of_fail:
                         list_of_fail.remove(uuid)
-                logger.info("Some computers don't have any MAC address in the profile %s (%s)"%(profileUUID, str(list_of_fail)))
+                logger.info("Some computers don't have any MAC address in the profile %s (%s)" % (profileUUID, str(list_of_fail)))
                 ret = 2
             else:
                 ret = 0
                 # Check all MAC addresses
                 i = 0
-                for macaddress in macaddresses:
-                    if not pulse2.utils.isLinuxMacAddress(macaddress[0]):
-                        logger.info("The computer %s don't have a valid MAC address"%uuids[i])
+                for uuid, mac in macaddresses.iteritems():
+                    if not pulse2.utils.isLinuxMacAddress(mac):
+                        logger.info("The computer %s don't have a valid MAC address" % uuid)
                         ret = 4
                         break
                     i += 1
@@ -1328,11 +1328,11 @@ class ImagingRpcProxy(RpcProxyI):
                     locations_uuid = []
                 if len(locations_uuid) != len(uuids):
                     # some computers have no location ?
-                    logger.info("Some computers don't have location in the profile %s"%(profileUUID))
+                    logger.info("Some computers don't have location in the profile %s" % profileUUID)
                     ret = 5
                 elif locations_uuid.count(locations_uuid[0]) != len(locations_uuid):
                     # All the computers don't belong to the same location
-                    logger.info("All the computers don't belong to the same location (%s)"%(profileUUID))
+                    logger.info("All the computers don't belong to the same location (%s)" % profileUUID)
                     ret = 6
         return ret
 
@@ -1486,7 +1486,7 @@ class ImagingRpcProxy(RpcProxyI):
     def __synchroLocation(self, loc_uuid):
         logger = logging.getLogger()
         db = ImagingDatabase()
-        ret = db.setLocationSynchroState(loc_uuid, P2ISS.RUNNING)
+        db.setLocationSynchroState(loc_uuid, P2ISS.RUNNING)
 
         try:
             menu = self.__generateLocationMenu(logger, db, loc_uuid)
@@ -1640,7 +1640,7 @@ class ImagingRpcProxy(RpcProxyI):
         """
         try:
             ret = ImagingDatabase().getMyMenuTarget(uuid, target_type)
-        except NoImagingServerError, e:
+        except NoImagingServerError:
             return [False, 'ERROR', P2ERR.ERR_NEED_IMAGING_SERVER_REGISTRATION, "You first need to register your imaging server."]
         if ret[1]:
             ret[1] = ret[1].toH()
@@ -1686,8 +1686,7 @@ class ImagingRpcProxy(RpcProxyI):
         if not isRegistered:
             # send the menu to the good imaging server to register the computer
             logger = logging.getLogger()
-            ret = db.changeTargetsSynchroState([uuid], target_type, P2ISS.RUNNING)
-
+            db.changeTargetsSynchroState([uuid], target_type, P2ISS.RUNNING)
 
             if target_type == P2IT.PROFILE:
                 pid = uuid
@@ -1710,9 +1709,9 @@ class ImagingRpcProxy(RpcProxyI):
                     menu = distinct_loc[location[0].uuid][1]
                     imagingData = {'menu':menu, 'uuid':uuid}
                     ctx = self.currentContext
-                    macs = ComputerManager().getMachineMac(ctx, {'uuid':uuid})
-                    MACAddress = getJustOneMacPerComputer(ctx, macs)
-                    MACAddress = MACAddress[uuid]
+                    macs = ComputerManager().getMachineMac(ctx, {'uuid': uuid})
+                    MACAddress = getJustOneMacPerComputer(ctx, macs)[uuid]
+
                     def treatRegister(result, location = location, uuid = uuid, db = db):
                         if result:
                             db.changeTargetsSynchroState([uuid], target_type, P2ISS.DONE)
@@ -1722,9 +1721,6 @@ class ImagingRpcProxy(RpcProxyI):
                             db.changeTargetsSynchroState([uuid], target_type, P2ISS.INIT_ERROR)
                             return [False, 'P2ISS.INIT_ERROR']
 
-                    MACAddress = MACAddress[0]
-                    if type(MACAddress) == list:
-                        MACAddress = MACAddress[0]
                     d = i.computerRegister(params['target_name'], MACAddress, imagingData)
                     d.addCallback(treatRegister)
                     return d
@@ -1740,7 +1736,6 @@ class ImagingRpcProxy(RpcProxyI):
                     uuids.extend(distinct_loc[loc_uuid][1].keys())
                 ctx = self.currentContext
                 hostnames = ComputerManager().getMachineHostname(ctx, {'uuids':uuids})
-                macaddress = getJustOneMacPerComputer(ctx, ComputerManager().getMachineMac(ctx, {'uuids':uuids}))
                 h_hostnames = {}
                 if hostnames:
                     if type(hostnames) == list:
@@ -1749,18 +1744,8 @@ class ImagingRpcProxy(RpcProxyI):
                     else:
                         h_hostnames[hostnames['uuid']] = hostnames['hostname']
                 params['hostnames'] = h_hostnames
-                h_macaddress = {}
-                index = 0
 
-                for computer in macaddress:
-                    if len(computer) > 0:
-                        if type(computer[0]) == list and len(computer[0]) == 1:
-                            h_macaddress[uuids[index]] = computer[0][0]
-                        else:
-                            h_macaddress[uuids[index]] = computer[0]
-                    else:
-                        h_macaddress[uuids[index]] = ''
-                    index += 1
+                h_macaddress = getJustOneMacPerComputer(ctx, ComputerManager().getMachineMac(ctx, {'uuids': uuids}))
 
                 try:
                     params['target_name'] = '' # put the real name!
@@ -1776,7 +1761,6 @@ class ImagingRpcProxy(RpcProxyI):
                     # to do again when computerRegister is plural
                     i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
                     if i != None:
-                        dl = []
                         computers = []
                         for uuid in menus:
                             if db.isTargetRegister(uuid, P2IT.COMPUTER):
@@ -2014,14 +1998,14 @@ class ImagingRpcProxy(RpcProxyI):
 
         p = None
         if entity:
-            loc_path = entity.split('/')
-            loc_path.pop(0)
-            entity = ComputerLocationManager().getLocationsFromPathString([loc_path])
-            en_uuid = entity[0]
-            if not en_uuid:
-                logger.error("the entity passed to this function doesn't exists %s"%(entity))
+            entity_name = entity
+            # get the entity UUID
+            entities_uuid = ComputerLocationManager().getLocationsFromPathString([entity_name])
+            entity_uuid = entities_uuid[0]
+            if not entity_uuid:
+                return [False, "The entity %s doesn't exists" % entity_name]
             else:
-                loc_id = en_uuid
+                loc_id = entity_uuid
                 imaging_server = db.getImagingServerByEntityUUID(loc_id)
         if profile != '':
             # if entities: we need to get the profile from this entity!
@@ -2066,7 +2050,7 @@ class ImagingRpcProxy(RpcProxyI):
         # If a computer with this name already exists, check that the MAC
         # address is also matching
         ctx = self.currentContext
-        db_computer = getJustOneMacPerComputer(ctx, ComputerManager().getMachineMac(ctx, { 'hostname' : hostname }))
+        db_computer = getJustOneMacPerComputer(ctx, ComputerManager().getMachineMac(ctx, {'hostname': hostname}))
         if db_computer:
             if len(db_computer) > 1:
                 err = "More than one computer in database with hostname %s. Aborting !" % hostname
@@ -2075,22 +2059,20 @@ class ImagingRpcProxy(RpcProxyI):
             else:
                 # Checking if MAC address match
                 uuid = db_computer.keys()[0]
+                mac = db_computer[uuid]
                 logger.debug("A computer (uuid = %s) with a corresponding hostname already exists in the database, checking its MAC addresses" % uuid)
                 hasMAC = False
-                if db_computer.values()[0] == [u'']:
+                if mac == '':
                     # No MAC address ? We consider we have a match
                     hasMAC = True
-                else:
-                    for mac in db_computer.values()[0]:
-                        if mac.lower() == MACAddress.lower():
-                            hasMAC = True
-                            break
+                elif mac.lower() == MACAddress.lower():
+                    hasMAC = True
                 if not hasMAC:
-                    err = "A computer (uuid = %s) with this hostname already exists, but the MAC address doesn't match: %s not in %s" % (uuid, MACAddress, str(db_computer.values()[0]))
+                    err = "A computer (uuid = %s) with this hostname already exists, but the MAC address doesn't match: %s not in %s" % (uuid, MACAddress, mac)
                     logger.error(err)
                     return [False, err]
                 else:
-                    logger.debug("The computer (uuid = %s) is matching with its hostname and one of its MAC addresses (%s)" % (uuid, db_computer.values()[0]))
+                    logger.debug("The computer (uuid = %s) is matching with its hostname and one of its MAC addresses (%s)" % (uuid, mac))
 
         if uuid == None or type(uuid) == list and len(uuid) == 0:
             logger.info("the computer %s (%s) does not exist in the backend, trying to add it" % (hostname, MACAddress))
@@ -2218,7 +2200,17 @@ class ImagingRpcProxy(RpcProxyI):
             db_computer_name = db_computer.name
         else:
             return [False, "imaging.getComputerByMac() : I was unable to find the good informations about the computer having %s as a mac address" % mac]
-        return [True, {'uuid': uuid, 'mac': mac, 'shortname': db_computer_name, 'fqdn': db_computer_name}]
+
+        # Get the entity of the computer
+        locations = ComputerLocationManager().getMachinesLocations([uuid])
+        entity = ""
+        entity_name = ""
+        if uuid in locations:
+            entity = locations[uuid]
+        if entity:
+            entity_name = entity['Label']
+
+        return [True, {'uuid': uuid, 'mac': mac, 'shortname': db_computer_name, 'fqdn': db_computer_name, 'entity': entity_name}]
 
     def getComputerByUUID(self, uuid):
         """
@@ -2447,7 +2439,6 @@ class ImagingRpcProxy(RpcProxyI):
         @rtype: list
         """
         db = ImagingDatabase()
-        logger = logging.getLogger()
         try:
             if type(item_number) != int:
                 try:
@@ -2486,20 +2477,31 @@ def chooseMacAddress(ctx, uuid, macs):
     return mac
 
 def getJustOneMacPerComputer(ctx, macs):
-    # if we don't know what to do with it we just send it back as it came
-    ret = macs
-    if type(macs) == list:
-        ret = []
-        for computer in macs:
-            ret.append(getJustOneMacPerComputer(ctx, computer))
-    elif type(macs) == dict:
+    """
+    @param: dict of computers with their MAC Addresses ({'UUIDX': ['MAC1', 'MAC2']})
+    @return: dict of computers with only one MAC Address ({'UUIDX': 'MAC1'})
+    @raises: TypeError if macs is not a dict
+    ...
+    """
+    if type(macs) == dict:
         ret = {}
         for uuid in macs:
-            mac = macs[uuid]
-            if len(macs[uuid]) != 1:
-                mac = chooseMacAddress(ctx, uuid, macs[uuid])
-            ret[uuid] = mac
-    return ret
+            macs_list = macs[uuid]
+            # Get an unique list of MACs
+            macs_list = list(set(macs_list))
+            if len(macs_list) != 1:
+                mac = chooseMacAddress(ctx, uuid, macs_list)
+                if mac:
+                    ret[uuid] = mac
+                else:
+                    # If the computer is not registered in imaging
+                    # return an empty string
+                    ret[uuid] = ''
+            else:
+                ret[uuid] = macs_list[0]
+        return ret
+    else:
+        raise TypeError("Invalid parameter: %s" % macs)
 
 def synchroComputers(ctx, uuids, ctype = P2IT.COMPUTER):
     """ see __synchroTargets """
@@ -2513,7 +2515,7 @@ def synchroTargets(ctx, uuids, target_type):
     db = ImagingDatabase()
 
     # store the fact that we are attempting a sync
-    ret = db.changeTargetsSynchroState(uuids, target_type, P2ISS.RUNNING)
+    db.changeTargetsSynchroState(uuids, target_type, P2ISS.RUNNING)
 
     # Load up l_uuids with the required info (computer within profile OR given computers)
     if target_type == P2IT.PROFILE:
@@ -2525,7 +2527,7 @@ def synchroTargets(ctx, uuids, target_type):
 
     # give up if it appears that no menu as to be synced
     if len(l_uuids) == 0:
-        ret = db.changeTargetsSynchroState(uuids, target_type, P2ISS.DONE)
+        db.changeTargetsSynchroState(uuids, target_type, P2ISS.DONE)
         return [True]
 
     # gather the required menus
@@ -2560,8 +2562,7 @@ def synchroTargets(ctx, uuids, target_type):
             h_hostnames[hostnames['uuid']] = hostnames['hostname']
 
         # store into h_macaddress the MAC addr of computers to register
-        macaddress = getJustOneMacPerComputer(ctx, ComputerManager().getMachineMac(ctx, {'uuids' : to_register.keys()}))
-        h_macaddress = macaddress
+        h_macaddress = getJustOneMacPerComputer(ctx, ComputerManager().getMachineMac(ctx, {'uuids' : to_register.keys()}))
 
         # then try to build a list of computer with menus, hostname, mac addr and so on
         computers = []
@@ -2657,13 +2658,10 @@ def synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid):
             logger.error("couldn't initialize the ImagingApi to %s"%(url))
 
         l_menus = distinct_loc[location_uuid][1]
-        macaddress = getJustOneMacPerComputer(ctx, ComputerManager().getMachineMac(ctx, {'uuids' : l_menus.keys()}))
+        macaddresses = getJustOneMacPerComputer(ctx, ComputerManager().getMachineMac(ctx, {'uuids' : l_menus.keys()}))
 
         for uuid in l_menus.keys():
-            mac = macaddress[uuid]
-            if type(mac) == list:
-                mac = mac[0]
-            l_menus[uuid]['target']['macaddress'] = mac
+            l_menus[uuid]['target']['macaddress'] = macaddresses[uuid]
 
         d = i.computersMenuSet(l_menus)
         d.addCallback(treatFailures, location_uuid, url)
@@ -2733,7 +2731,6 @@ def generateMenus(logger, db, uuids):
     logger.debug("generateMenus for %s"%(str(uuids)))
     # get target location
     distinct_loc = {}
-    distinct_loc_own_menu = {}
 
     locations = ComputerLocationManager().getMachinesLocations(uuids)
     if len(locations.keys()) != len(uuids):
@@ -2818,10 +2815,10 @@ def computersUnregister(computers_UUID, backup):
     ret = db.isTargetRegister(computers_UUID, P2IT.ALL_COMPUTERS)
     for uuid in ret:
         if not ret[uuid]:
-            logger.info("%s is not registered, it can be unregister"%uuid)
+            logger.info("%s is not registered, it can't be unregistered" % uuid)
             try:
                 computers_UUID.pop(computers_UUID.index(uuid))
-            except ValueError, e:
+            except ValueError:
                 pass
 
     # send a request to the pserver to unregister them

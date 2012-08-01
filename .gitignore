@@ -66,3 +66,6 @@ doc/user/msc/en/pulse2_client_check_explained.html
 doc/user/msc/en/pulse2_deployment_error_codes_explained.html
 doc/user/msc/fr/pulse2_deployment_error_codes_explained.html
 services/clients/win32/pulse2-win32-agents-installer.nsi
+services/conf/pulse2/imaging-server/imaging-server.ini
+services/conf/pulse2/launchers/launchers.ini
+services/conf/pulse2/scheduler/scheduler.ini

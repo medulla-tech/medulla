@@ -3,7 +3,7 @@
 id = scheduler_01
 
 ## MANAGING ##
-# scheduler_path = /usr/sbin/pulse2-scheduler
+scheduler_path = @sbindir@/pulse2-scheduler
 
 ## NETWORK ##
 # port = 8000

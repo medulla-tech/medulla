@@ -1,6 +1,4 @@
-# (c) 2011 Mandriva, http://www.mandriva.com
-#
-# $Id$
+# (c) 2011-2012 Mandriva, http://www.mandriva.com
 #
 # This file is part of Mandriva Pulse2 project.
 #

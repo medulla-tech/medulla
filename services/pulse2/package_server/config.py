@@ -291,7 +291,7 @@ class P2PServerCP(pulse2.utils.Singleton):
                         return False
 
         # [imaging_api] section parsing
-        if self.cp.has_section("imaging_api"):
+        if self.cp.has_section("imaging_api") and self.cp.has_option("imaging_api", 'uuid'):
             # mount point
             imaging_mp = '/imaging_api'
             # base folder
@@ -382,7 +382,7 @@ class P2PServerCP(pulse2.utils.Singleton):
             if self.cp.has_option('imaging_api', 'uuid_cache_file'):
                 uuid_cache_file = os.path.join(base_folder, self.cp.get('imaging_api', 'uuid_cache_file'))
             if self.cp.has_option('imaging_api', 'uuid_cache_lifetime'):
-                uuid_cache_lifetime = os.path.join(base_folder, self.cp.getint('imaging_api', 'uuid_cache_lifetime'))
+                uuid_cache_lifetime = self.cp.getint('imaging_api', 'uuid_cache_lifetime')
             if self.cp.has_option('imaging_api', 'rpc_replay_file'):
                 rpc_replay_file = os.path.join(base_folder, self.cp.get('imaging_api', 'rpc_replay_file'))
             if self.cp.has_option('imaging_api', 'rpc_loop_timer'):

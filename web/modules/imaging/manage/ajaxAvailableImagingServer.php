@@ -37,7 +37,7 @@ $location = getCurrentLocation();
 list($count, $imaging_server) = xmlrpc_getAllNonLinkedImagingServer();
 
 if ($count == 0) {// we did not received at least one imaging_server
-    $t = new TitleElement(_T("No imaging server available for association.", "imaging"));
+    $t = new TitleElement(_T("No imaging server available for association.", "imaging"), 3);
     $t->display();
     return;
 }
@@ -67,7 +67,7 @@ foreach ($imaging_server as $entry) {
 }
 
 
-$t = new TitleElement(_T("Associate an entity to an imaging server", "imaging"));
+$t = new TitleElement(_T("Associate an entity to an imaging server", "imaging"), 3);
 $t->display();
 
 // show images list

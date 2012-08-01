@@ -24,7 +24,7 @@
 /* common ajax includes */
 require("../includes/ajaxcommon.inc.php");
 
-    $t = new TitleElement(_T("Manage services", "imaging"));
+    $t = new TitleElement(_T("Manage services", "imaging"), 3);
     $t->display();
     if (! isset($params)) { // FIXME : $params do not exists ?!
         $params = array();
@@ -34,5 +34,7 @@ require("../includes/ajaxcommon.inc.php");
     $ajax->display();
     echo '<br/><br/><br/>';
     $ajax->displayDivToUpdate();
+    
+require("../includes/ajaxcommon_bottom.inc.php");
 
 ?>

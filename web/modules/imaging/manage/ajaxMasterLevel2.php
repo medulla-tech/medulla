@@ -33,7 +33,7 @@ require("../includes/includes.php");
 require('../includes/xmlrpc.inc.php');
 
 $params = getParams();
-$location = getCurrentLocation();
+$location = $_SESSION['imaging_location']['used'];
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
@@ -44,7 +44,7 @@ $filter = empty($_GET["filter"])                          ? ''             : $_G
 list($count, $masters) = xmlrpc_getLocationImages($location, $start, $end, $filter);
 
 if ($count == 0) {
-    $l = new TitleElement(_T('No master available.', 'imaging'));
+    $l = new TitleElement(_T('No master available.', 'imaging'), 3);
     $l->display();
     print "<p>" . _T('To define a master, browse to the computers module ' .
            'click on the imaging icon for the computer you wish to make a master from, then choose &quot;Images and ' .

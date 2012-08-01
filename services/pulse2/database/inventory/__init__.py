@@ -1127,9 +1127,11 @@ class Inventory(DyngroupDatabaseHelper):
         session.commit()
         session.close()
 
-    def createEntity(self, name):
+    def createEntity(self, name, parent_name = False):
         """
-        Create a new entity under the root entity
+        Create a new entity under parent entity
+
+        If parent_name is False the parent will be the root entity
         """
         session = create_session()
         try:
@@ -1137,6 +1139,15 @@ class Inventory(DyngroupDatabaseHelper):
         except Exception:
             e = self.klass['Entity']()
             e.Label = name
+
+            if parent_name:
+                try:
+                    p = session.query(self.klass['Entity']).filter_by(Label = parent_name).one()
+                except Exception:
+                    raise Exception("Parent entity %s doesn't exists" % parent_name)
+                else:
+                    e.parentId = p.id
+
             session.add(e)
             session.flush()
         session.close()
@@ -1148,7 +1159,7 @@ class Inventory(DyngroupDatabaseHelper):
         session = create_session()
         ret = True
         try:
-            e = session.query(self.klass['Entity']).filter_by(Label = location).one()
+            session.query(self.klass['Entity']).filter_by(Label = location).one()
         except:
             ret = False
         session.close()
@@ -1200,7 +1211,10 @@ class Inventory(DyngroupDatabaseHelper):
         Return the locations in which the computers are
         """
         session = create_session()
-        q = session.query(self.klass['Entity']).add_column(self.machine.c.id).select_from(self.table['Entity'].join(self.table['hasEntity']).join(self.machine)).filter(self.machine.c.id.in_(map(fromUUID, machine_uuids))).all()
+        q = session.query(self.klass['Entity']).add_column(self.machine.c.id).select_from(self.table['Entity'].join(self.table['hasEntity']).join(self.machine).join(self.inventory)).filter(self.machine.c.id.in_(map(fromUUID, machine_uuids)))
+        # Always select the last inventory
+        q = q.filter(self.inventory.c.Last == 1)
+        q = q.all()
         session.close()
         ret = {}
         for entity, mid in q:
@@ -1226,26 +1240,18 @@ class Inventory(DyngroupDatabaseHelper):
 
     def getLocationsFromPathString(self, location_paths):
         """
+        @param: list of entites names
+        @return: list of entities UUIDs
         """
         session = create_session()
         ens = []
-        for loc_path in location_paths:
-            root_id = 1
-            parent_id = root_id
-            root = True
-            for name in loc_path:
-                filt = and_(self.table['Entity'].c.parentId == parent_id, self.table['Entity'].c.Label == name)
-                if root:
-                    filt = and_(filt, self.table['Entity'].c.id == root_id)
-                    root = False
-                else:
-                    filt = and_(filt, self.table['Entity'].c.id != root_id)
-                q = session.query(self.klass['Entity']).filter(filt).all()
-                if len(q) != 1:
-                    ens.append(False)
-                    continue
-                parent_id = q[0].id
-            ens.append(toUUID(str(parent_id)))
+        for name in location_paths:
+            try:
+                q = session.query(self.klass['Entity']).filter(self.table['Entity'].c.Label == name).one()
+            except sqlalchemy.orm.exc.NoResultFound:
+                ens.append(False)
+            else:
+                ens.append(toUUID(str(q.id)))
         session.close()
         return ens
 
@@ -1264,6 +1270,16 @@ class Inventory(DyngroupDatabaseHelper):
             path.append(toUUID(en.id))
             parent_id = en.parentId
         return path
+
+    def getLocationName(self, loc_uuid):
+        """Return the name of the location
+
+        """
+        session = create_session()
+        en_id = fromUUID(loc_uuid)
+        en = session.query(self.klass['Entity']).filter(self.table['Entity'].c.id == en_id).first()
+
+        return en.Label
 
     def getUsersInSameLocations(self, userid, locations = None):
         """
@@ -1755,15 +1771,9 @@ class InventoryCreator(Inventory):
                 m = m[0]
             # Set last inventory flag to 0 for already existing inventory for
             # this computer
-            # Added by SkyAdmin: also check location (entity) to prevent hostname
-            # duplication with different users
-            entity = inventory['Entity'][0]['Label']
             result = session.query(InventoryTable).\
-                select_from(
-                    self.inventory.join(self.table['hasEntity']).join(self.machine).join(self.table['Entity'])
-                ).\
-                filter(self.machine.c.Name == hostname).\
-                filter(self.table['Entity'].c.Label == entity)
+                        select_from(self.inventory.join(self.table['hasEntity']).join(self.machine)).\
+                        filter(self.machine.c.Name == hostname)
 
             for inv in result:
                 inv.Last = 0
@@ -1790,7 +1800,7 @@ class InventoryCreator(Inventory):
                 hasKlass = self.klass['has'+table]
                 hasTable = self.table['has'+table]
 
-                h = hasTable.insert()
+                hasTable.insert()
                 # keep track of already inserted datas for this table
                 already_inserted = []
                 # loop on all inventory part columns

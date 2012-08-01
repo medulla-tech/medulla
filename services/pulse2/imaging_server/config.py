@@ -60,6 +60,11 @@ class ImagingConfig(pulse2.utils.Singleton):
     pserver_localcert = mmcconfdir + "/pulse2/imaging-server/keys/privkey.pem"
     pserver_verifypeer = False
 
+    # [inventory-server] section
+    invserver_host = "127.0.0.1"
+    invserver_port = 9999
+    invserver_enablessl = False
+
     # [hooks] section
     hooks_dir = "/usr/lib/pulse2/imaging-server/hooks"
     create_client_path = os.path.join(hooks_dir, "create_client")
@@ -115,6 +120,14 @@ class ImagingConfig(pulse2.utils.Singleton):
                 self.pserver_localcert = self.cp.get("package-server", "localcert")
             if self.cp.has_option("package-server", "verifypeer"):
                 self.pserver_verifypeer = self.cp.getboolean("package-server", "verifypeer")
+
+        if self.cp.has_section("inventory-server"):
+            if self.cp.has_option("inventory-server", "host"):
+                self.invserver_host = self.cp.get("inventory-server", "host")
+            if self.cp.has_option("inventory-server", "port"):
+                self.invserver_port = self.cp.getint("inventory-server", "port")
+            if self.cp.has_option("inventory-server", "enablessl"):
+                self.invserver_enablessl = self.cp.getboolean("inventory-server", "enablessl")
 
         if self.cp.has_section("hooks"):
             if self.cp.has_option("hooks", "hooks_dir"):
