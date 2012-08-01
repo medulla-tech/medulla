@@ -327,7 +327,7 @@ class P2PServerCP(pulse2.utils.Singleton):
             # will contain generated ISO images
             isos_folder = '/var/lib/pulse2/imaging/isos'
             # tool used to generate ISO file
-            isogen_tool = '/usr/bin/mkisofs'
+            isogen_tool = '/usr/bin/genisoimage'
             # will contain our UUID/MAC Addr cache
             uuid_cache_file = os.path.join(base_folder, 'uuid-cache.txt')
             # our UUID/MAC Addr cache lifetime
