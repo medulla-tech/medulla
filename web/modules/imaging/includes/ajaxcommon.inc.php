@@ -74,8 +74,7 @@ foreach ($ret as $r) {
 
 if (count($running_on) > 0) {
     $a_href_open = "<a href=''>";
-    print sprintf(_T("The synchro is still in progress for the following items : %s. Please wait or reload the page %shere%s", "imaging"), join($running_on, ', '), $a_href_open, '</a>');
-#    print sprintf(_T("The synchro is still running, please wait or reload the page %shere%s", "imaging"), $a_href_open, '</a>');
+    print sprintf(_T("Boot menu generation is still in progress for the following items : %s. Please wait or reload the page %shere%s.", "imaging"), join($running_on, ', '), $a_href_open, '</a>');
 }
 
 if (count($initerror_on) > 0) {
@@ -86,26 +85,25 @@ if (count($initerror_on) > 0) {
 if (count($todo_on) > 0) {
     # DISPLAY the sync link
 
-    print "<table><tr><td><font color='red'><b>";
-    print sprintf(_T('The menu needs to be synchronized for the following items : %s. When you are done, please press on "Synchronize" so that modifications are updated on the Imaging server.', 'imaging'), join($todo_on, ', '));
-#    print sprintf(_T('The menu has been modified, when you are done, please press on "Synchronize" so that modifications are updated on the Imaging server.', 'imaging'));
+    print "<table><tr><td><b>";
+    print sprintf(_T('You have modified the boot menu for the following items : %s. If you are done please click on "Generate Menu" to update the computer boot menu.', 'imaging'), join($todo_on, ', '));
     print "</b></font></td><td>";
 
     $f = new ValidatingForm();
     $f->add(new HiddenTpl("location_uuid"),                        array("value" => $location,  "hide" => True));
 
-    $f->addButton("bsync", _T("Synchronize", "imaging"));
+    $f->addButton("bsync", _T("Generate Menu", "imaging"));
     $f->display();
     print "</td></tr></table>";
 } elseif (isExpertMode()) {
     print "<table><tr><td>";
-    print _T('Click on "Force synchronize" if you want to force the synchronization', 'imaging');
+    print _T('Click on "Force Generation" if you want to force the update of the boot menu', 'imaging');
     print "</td><td>";
 
     $f = new ValidatingForm();
     $f->add(new HiddenTpl("location_uuid"),                        array("value" => $location,  "hide" => True));
 
-    $f->addButton("bsync", _T("Force synchronize", "imaging"));
+    $f->addButton("bsync", _T("Force Generation", "imaging"));
     $f->display();
     print "</td></tr></table>";
 }

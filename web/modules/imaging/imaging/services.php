@@ -58,8 +58,7 @@ if (($type == '' && (xmlrpc_isComputerRegistered($target_uuid) || xmlrpc_isCompu
 
         // goto images list
         if ($ret[0]) {
-            $str = sprintf(_T("Service <strong>%s</strong> added to boot menu", "imaging"), $label);
-            new NotifyWidgetSuccess($str);
+            /* insert notification code here if needed */
             header("Location: ".urlStrRedirect("base/computers/imgtabs/".$type."tabservices", $params));
         } else {
             new NotifyWidgetFailure($ret[1]);

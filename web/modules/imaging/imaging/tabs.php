@@ -45,8 +45,7 @@ if (isset($_POST['bsync'])) {
     }
     // goto images list
     if ($ret[0] and !isXMLRPCError()) {
-        $str = sprintf(_T("Synchronization launched on this target.", "imaging"), $label);
-        new NotifyWidgetSuccess($str);
+        /* insert notification code here if needed */
     } elseif (!$ret[0] and !isXMLRPCError()) {
          unset($_SESSION["imaging.isComputerInProfileRegistered_".$params['uuid']]);
          unset($_SESSION["imaging.isComputerRegistered_".$params['uuid']]);
@@ -55,7 +54,7 @@ if (isset($_POST['bsync'])) {
             header("Location: ".urlStrRedirect("base/computers/index", $params));
             exit;
          } else {
-            new NotifyWidgetFailure(sprintf(_T("Synchronization failed for : %s", "imaging"), implode(', ', $ret[1])));
+            new NotifyWidgetFailure(sprintf(_T("Boot Menu Generation failed for : %s", "imaging"), implode(', ', $ret[1])));
          }
     }
 }
@@ -112,10 +111,10 @@ if (isset($params['uuid'])) {
             $p->display();
             $a_href_open = "<a href=''>";
 
-            $msg = sprintf(_T("The synchro is currently running, please wait or reload the page %shere%s.<br/>", "imaging"), $a_href_open, '</a>');
+            $msg = sprintf(_T("The boot menu generation is currently running, please wait or reload the page %shere%s.<br/>", "imaging"), $a_href_open, '</a>');
             $t1 = new TitleElement($msg, 3);
             $t1->display();
-            $msg = sprintf(_T("If the synchro runs since more than 5 minutes, please reset the synchro state of this computer's menu.", "imaging"));
+            $msg = sprintf(_T("If the generation runs since more than 5 minutes, please reset the synchro state of this computer's menu.", "imaging"));
             $t2 = new TitleElement($msg, 3);
             $t2->display();
 
