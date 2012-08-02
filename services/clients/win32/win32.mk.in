@@ -58,7 +58,7 @@ sfxmod_url = http://www.7zsfx.info/files/7zsd_150_2478.7z
 
 subagents = $(sa_name) $(rda1_name) $(inv1_name) $(installer_name)
 
-agents_pack_base = pulse2-win32-agents-pack-$(agents_version)
+agents_pack_base = pulse2-win32-agents-pack
 agents_pack = $(agents_pack_base).exe
 agents_pack_files = \
 	$(subagents) \
@@ -143,6 +143,7 @@ clean:
 	  fi \
 	done
 	rm -f sfx.conf
+	rm -f base.7z
 	rm -f $(key)
 	rm -f $(agents_pack)
 	rm -rf $(agents_pack_base)
