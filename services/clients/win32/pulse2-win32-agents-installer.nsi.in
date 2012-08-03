@@ -27,7 +27,7 @@
 
 ; Agents defines
 !define SSH_AGENT_NAME "pulse2-secure-agent"
-!define SSH_AGENT_VERSION "2.0.2.1"
+!define SSH_AGENT_VERSION "2.0.2.2"
 !define SSH_AGENT_EXE "${SSH_AGENT_NAME}-${SSH_AGENT_VERSION}.exe"
 !define VNC_AGENT_NAME "pulse2-rda-agent"
 !define VNC_AGENT_VERSION "2.0.2"
