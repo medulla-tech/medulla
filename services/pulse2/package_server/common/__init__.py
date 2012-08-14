@@ -698,13 +698,27 @@ class Common(pulse2.utils.Singleton):
         """
         Create the MD5SUMS file for a directory content
         """
+        createmd5 = True
         fmd5name = os.path.join(dirname, self.MD5SUMS)
-        if not os.path.exists(fmd5name): # create file only if it do not exists
+
+        if os.path.exists(fmd5name):
+            fmd5_mtime = os.stat(fmd5name).st_mtime
+
+            fmtime = 0
+            for root, dirs, files in os.walk(dirname):
+                for name in files:
+                    filepath = os.path.join(root, name)
+                    current_file_mtime = os.stat(filepath).st_mtime
+                    if fmtime < current_file_mtime: fmtime = current_file_mtime
+
+            createmd5 = fmd5_mtime < fmtime and True or False
+
+        if createmd5:
             self.logger.info("Computing MD5 sums file %s" % fmd5name)
             md5sums = []
             for root, dirs, files in os.walk(dirname):
                 for name in files:
-                    if name != self.CONFXML:
+                    if name not in [self.CONFXML, self.MD5SUMS]:
                         try:
                             filepath = os.path.join(root, name)
                             f = file(filepath, "rb")
