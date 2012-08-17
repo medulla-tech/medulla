@@ -32,6 +32,10 @@ $_GET['p_api'] = isset($_GET['p_api']) ? $_GET['p_api'] : "";
 
 $package = array();
 
+if (move_uploaded_file($_FILES['importfile']['tmp_name'], '/tmp/package_tmp/put1/up/' . $_FILES['importfile']['name'])) {
+    new NotifyWidgetSuccess(_T("dyngroup Uploaded", "dyngroup"));
+}
+
 if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
     $p_api_id = $_POST['p_api'];
     $need_assign = False;
@@ -115,72 +119,88 @@ $p->setSideMenu($sidemenu);
 $p->display();
 
 
-$f = new ValidatingForm();
-$f->push(new Table());
 
-$f->add(
+if (!isset($_FILES['importfile'])) {
+    $f = new ValidatingForm(array('enctype'=>"multipart/form-data"));
+    $f->push(new Table());
+
+    $f->add( new TrFormElement(_T("Select the file you want to import", "dyngroup"), new FileTpl('importfile')), array("required" => True));
+
+    $f->pop();
+
+    $f->addValidateButton("bimport");
+
+}
+else {
+    $f = new ValidatingForm();
+    $f->push(new Table());
+    $f->add(
         new TrFormElement(_T("Package API", "pkgs"), $selectpapi),
         array("value" => $p_api_id, "required" => True)
+    );
+
+    $f->add(new HiddenTpl("id"), array("value" => $package['id'], "hide" => True));
+
+    if ($_GET["action"]=="add") {
+        $f->add(new HiddenTpl("mode"), array("value" => "creation", "hide" => True));
+    }
+
+    $fields = array(
+        array("label", _T("Package label", "pkgs"), array("required" => True)),
+        array("version", _T("Package version", "pkgs"), array("required" => True)),
+        array('description', _T("Description", "pkgs"), array()),
+    );
+
+    $cmds = array(
+        array('command', _T('Command\'s name : ', 'pkgs'), _T('Command : ', 'pkgs')),
+        array('installInit', _T('installInit', 'pkgs'), _T('Install Init', 'pkgs')),
+        array('preCommand', _T('preCommand', 'pkgs'), _T('Pre Command', 'pkgs')),
+        array('postCommandFailure', _T('postCommandFailure', 'pkgs'), _T('postCommandFailure', 'pkgs')),
+        array('postCommandSuccess', _T('postCommandSuccess', 'pkgs'), _T('postCommandSuccess', 'pkgs'))
+    );
+
+    $options = array(
+        array('reboot', _T('Need a reboot ?', 'pkgs'))
+    );
+
+    foreach ($fields as $p) {
+        $f->add(
+            new TrFormElement($p[1], new InputTpl($p[0])),
+            array_merge(array("value" => $package[$p[0]]), $p[2])
         );
+    }
 
-$f->add(new HiddenTpl("id"), array("value" => $package['id'], "hide" => True));
+    foreach ($options as $p) {
+        $op = ($package[$p[0]] == 1 || $package[$p[0]] == '1' || $package[$p[0]] === 'enable');
+        $f->add(
+            new TrFormElement($p[1], new CheckboxTpl($p[0])),
+            array("value" => ($op ? 'checked' : ''))
+        );
+    }
 
-if ($_GET["action"]=="add") {
-    $f->add(new HiddenTpl("mode"), array("value" => "creation", "hide" => True));
+    foreach ($cmds as $p) {
+        $f->add(
+            new HiddenTpl($p[0].'name'),
+            array("value" => $package[$p[0]]['name'], "hide" => True)
+        );
+        $f->add(
+            new TrFormElement($p[2], new InputTpl($p[0].'cmd')),
+            array("value" => htmlspecialchars($package[$p[0]]['command']))
+        );
+    }
+
+    $f->pop();
+
+    if ($_GET["action"] == "add") {
+        $f->addButton('bassoc', _T("Associate files", "pkgs"), "btnPrimary");
+    }
+    else {
+        $f->addValidateButton("bcreate");
+    }
 }
 
-$fields = array(
-    array("label", _T("Package label", "pkgs"), array("required" => True)),
-    array("version", _T("Package version", "pkgs"), array("required" => True)),
-    array('description', _T("Description", "pkgs"), array()),
-);
-
-$cmds = array(
-    array('command', _T('Command\'s name : ', 'pkgs'), _T('Command : ', 'pkgs'))/*,
-    array('installInit', _T('', 'pkgs')),
-    array('preCommand', _T('', 'pkgs')),
-    array('postCommandFailure', _T('', 'pkgs')),
-    array('postCommandSuccess', _T('', 'pkgs'))*/
-);
-
-$options = array(
-    array('reboot', _T('Need a reboot ?', 'pkgs'))
-);
-
-foreach ($fields as $p) {
-    $f->add(
-        new TrFormElement($p[1], new InputTpl($p[0])),
-        array_merge(array("value" => $package[$p[0]]), $p[2])
-    );
-}
-
-foreach ($options as $p) {
-    $op = ($package[$p[0]] == 1 || $package[$p[0]] == '1' || $package[$p[0]] === 'enable');
-    $f->add(
-        new TrFormElement($p[1], new CheckboxTpl($p[0])),
-        array("value" => ($op ? 'checked' : ''))
-    );
-}
-
-foreach ($cmds as $p) {
-    $f->add(
-        new HiddenTpl($p[0].'name'),
-        array("value" => $package[$p[0]]['name'], "hide" => True)
-    );
-    $f->add(
-        new TrFormElement($p[2], new InputTpl($p[0].'cmd')),
-        array("value" => htmlspecialchars($package[$p[0]]['command']))
-    );
-}
-
-$f->pop();
-
-if ($_GET["action"] == "add") {
-    $f->addButton('bassoc', _T("Associate files", "pkgs"), "btnPrimary");
-} else {
-    $f->addValidateButton("bcreate");
-}
 $f->display();
+
 
 
 ?>
