@@ -918,12 +918,21 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         lang = self.imagingServer_lang[self.imagingServer_entity[loc_id]]
         return lang
 
-    def __PossibleBootServices(self, session, target_uuid, filter):
+    def __PossibleBootServices(self, session, target_uuid, filter, count = False):
+        """
+        Return Possible Boot Services
+        If count variable is set to True, this function return number of Boot Services
+        """
+
         lang = self.getTargetLanguage(session, target_uuid)
 
         I18n1 = sa_exp_alias(self.internationalization)
         I18n2 = sa_exp_alias(self.internationalization)
-        q = session.query(BootService).add_column(self.boot_service.c.id).add_entity(Internationalization, alias=I18n1).add_entity(Internationalization, alias=I18n2)
+
+        # If count is set to True, Using of func.count()
+        q = count and session.query(func.count('*'), BootService) or session.query(BootService)
+
+        q = q.add_column(self.boot_service.c.id).add_entity(Internationalization, alias=I18n1).add_entity(Internationalization, alias=I18n2)
         q = q.select_from(self.boot_service \
                 .outerjoin(self.boot_service_on_imaging_server, self.boot_service.c.id == self.boot_service_on_imaging_server.c.fk_boot_service) \
                 .outerjoin(self.imaging_server, self.imaging_server.c.id == self.boot_service_on_imaging_server.c.fk_imaging_server) \
@@ -933,14 +942,27 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = q.filter(or_(self.target.c.uuid == target_uuid, self.boot_service_on_imaging_server.c.fk_boot_service == None))
         if filter != '':
             q = q.filter(or_(self.boot_service.c.default_desc.like('%'+filter+'%'), self.boot_service.c.value.like('%'+filter+'%')))
+
+        # If count is set to True, Count...
+        if count: q = q.scalar()
+
         return q
 
-    def __EntityBootServices(self, session, loc_id, filter):
+    def __EntityBootServices(self, session, loc_id, filter, count = False):
+        """
+        Return Entity Boot Services
+        If count variable is set to True, this function return number of Boot Services
+        """
+
         lang = self.__getLocLanguage(session, loc_id)
 
         I18n1 = sa_exp_alias(self.internationalization)
         I18n2 = sa_exp_alias(self.internationalization)
-        q = session.query(BootService).add_column(self.boot_service.c.id).add_entity(Internationalization, alias=I18n1).add_entity(Internationalization, alias=I18n2)
+
+        # If count is set to True, Using of func.count()
+        q = count and session.query(func.count('*'), BootService) or session.query(BootService)
+
+        q = q.add_column(self.boot_service.c.id).add_entity(Internationalization, alias=I18n1).add_entity(Internationalization, alias=I18n2)
         q = q.select_from(self.boot_service \
                 .outerjoin(self.boot_service_on_imaging_server, self.boot_service.c.id == self.boot_service_on_imaging_server.c.fk_boot_service) \
                 .outerjoin(self.imaging_server, self.imaging_server.c.id == self.boot_service_on_imaging_server.c.fk_imaging_server) \
@@ -950,6 +972,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = q.filter(or_(self.entity.c.uuid == loc_id, self.boot_service_on_imaging_server.c.fk_boot_service == None))
         if filter != '':
             q = q.filter(or_(self.boot_service.c.default_desc.like('%'+filter+'%'), self.boot_service.c.value.like('%'+filter+'%')))
+
+        # If count is set to True, Count...
+        if count: q = q.scalar()
+
         return q
 
     def __PossibleBootServiceAndMenuItem(self, session, bs_ids, menu_id):
@@ -1012,15 +1038,19 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def countPossibleBootServices(self, target_uuid, filter):
         session = create_session()
-        q = self.__PossibleBootServices(session, target_uuid, filter)
-        q = q.count()
+
+        # With last param of self.__PossibleBootServices set to True,
+        # we get number of PossibleBootServices
+        q = self.__PossibleBootServices(session, target_uuid, filter, True)
         session.close()
         return q
 
     def countEntityBootServices(self, loc_id, filter):
         session = create_session()
-        q = self.__EntityBootServices(session, loc_id, filter)
-        q = q.count()
+        
+        # With last param of self.__EntityBootServices set to True,
+        # we get number of EntityBootServices
+        q = self.__EntityBootServices(session, loc_id, filter, True)
         session.close()
         return q
 
