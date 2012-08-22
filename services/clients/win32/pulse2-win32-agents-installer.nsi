@@ -21,7 +21,6 @@
 
 ; Basic defines
 !define PRODUCT_NAME "Mandriva Pulse2 Win32 Agents"
-!define PRODUCT_VERSION "@VERSION@"
 !define PRODUCT_PUBLISHER "Mandriva S.A."
 !define PRODUCT_WEB_SITE "http://www.mandriva.com"
 
@@ -77,8 +76,8 @@ Page custom InventoryOptions
 ReserveFile "inventoryoptions.ini"
 !insertmacro MUI_RESERVEFILE_INSTALLOPTIONS
 
-Name "${PRODUCT_NAME} (${PRODUCT_VERSION})"
-OutFile "pulse2-win32-agents-installer-${PRODUCT_VERSION}.exe"
+Name "${PRODUCT_NAME}"
+OutFile "pulse2-win32-agents-installer.exe"
 ShowInstDetails show
 
 Section "Secure Agent" SSH
