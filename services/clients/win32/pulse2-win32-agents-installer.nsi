@@ -195,10 +195,13 @@ Function .onInit
     MessageBox MB_OK|MB_ICONEXCLAMATION "You cannot install $(^Name) unless you're running Windows NT later."
     Quit
   ${EndIf}
+  
   ${GetParameters} $R0
+  
   ; Handle /A option
   ${GetOptions} $R0 "/A=" $0
   StrCpy $ARCHIVE_DIR $0
+  
   ; Handle /S option
   ${GetOptions} $R0 /S $0
   ${If} ${Errors} ; "Silent mode" flag not set
@@ -206,12 +209,15 @@ Function .onInit
   ${Else} ; "Silent mode" flag set
     SetSilent silent
   ${EndIf}
+  
   ; Handle /INV_SERVER option
   ${GetOptions} $R0 /INV_SERVER $0
   StrCpy $INV_SERVER $0
+  
   ; Handle /INV_SERVER_PORT option
   ${GetOptions} $R0 /INV_SERVER_PORT $0
   StrCpy $INV_SERVER_PORT $0
+  
   ; Required for custom pages
   !insertmacro MUI_INSTALLOPTIONS_EXTRACT "inventoryoptions.ini"
   ; Forbid ssh installation if the installer is missing
