@@ -43,6 +43,7 @@
 !include "FileFunc.nsh"
 !include "libs\ServiceLib.nsh"
 !include "libs\StrRep.nsh"
+!include "libs\InstallOptionsMacro.nsh"
 
 ; Get command line parameters and values
 !insertmacro GetParameters
@@ -211,11 +212,11 @@ Function .onInit
   ${EndIf}
   
   ; Handle /INV_SERVER option
-  ${GetOptions} $R0 /INV_SERVER $0
+  ${GetOptions} $R0 "/INV_SERVER=" $0
   StrCpy $INV_SERVER $0
   
   ; Handle /INV_SERVER_PORT option
-  ${GetOptions} $R0 /INV_SERVER_PORT $0
+  ${GetOptions} $R0 "/INV_SERVER_PORT=" $0
   StrCpy $INV_SERVER_PORT $0
   
   ; Required for custom pages
@@ -237,6 +238,14 @@ FunctionEnd
 Function InventoryOptions
   ${If} ${SectionIsSelected} ${Inventory} 
     !insertmacro MUI_HEADER_TEXT "Mandriva Pulse2 inventory server IP address" "Configure Pulse2 inventory server IP address (and port if needed)."
-    !insertmacro MUI_INSTALLOPTIONS_DISPLAY "inventoryoptions.ini"
+    !insertmacro INSTALLOPTIONS_INITDIALOG "inventoryoptions.ini"
+    ; Try to pre-fill fileds with command line parameters
+    ${IfNot} $INV_SERVER == ""
+      !insertmacro CHANGETEXTFIELD "inventoryoptions.ini" "Field 3" $INV_SERVER
+    ${EndIf}
+    ${IfNot} $INV_SERVER_PORT == ""
+      !insertmacro CHANGETEXTFIELD "inventoryoptions.ini" "Field 5" $INV_SERVER_PORT
+    ${EndIf}
+    !insertmacro INSTALLOPTIONS_SHOW
   ${EndIf}
 FunctionEnd
