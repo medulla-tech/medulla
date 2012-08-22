@@ -1,0 +1,5 @@
+;!@Install@!UTF-8! 
+SetEnvironment="ArchiveDir=%%S"
+GUIMode="2"
+RunProgram="pulse2-win32-agents-installer.exe /A=%ArchiveDir% /INV_SERVER=@@inv_server@@ /INV_SERVER_PORT=@@inv_server_port@@ /S"
+;!@InstallEnd@!

@@ -25,15 +25,10 @@
 !define PRODUCT_WEB_SITE "http://www.mandriva.com"
 
 ; Agents defines
-!define SSH_AGENT_NAME "pulse2-secure-agent"
-!define SSH_AGENT_VERSION "2.0.2.2"
-!define SSH_AGENT_EXE "${SSH_AGENT_NAME}-${SSH_AGENT_VERSION}.exe"
-!define VNC_AGENT_NAME "pulse2-rda-agent"
-!define VNC_AGENT_VERSION "2.0.2"
-!define VNC_AGENT_EXE "${VNC_AGENT_NAME}-${VNC_AGENT_VERSION}.exe"
-!define INVENTORY_AGENT_NAME "inventory-agent"
-!define INVENTORY_AGENT_VERSION "4.0.6.1.1"
-!define INVENTORY_AGENT_EXE "${INVENTORY_AGENT_NAME}-${INVENTORY_AGENT_VERSION}.exe"
+!define SSH_AGENT_EXE "@@ssh_file@@"
+!define VNC_AGENT_EXE "@@vnc_file@@"
+!define VNC_AGENT_REG "@@vnc_reg@@"
+!define INVENTORY_AGENT_EXE "@@inv_file@@"
 
 ; Useful modules
 !include "MUI.nsh"
@@ -113,9 +108,9 @@ Section "Remote Desktop Agent" VNC
   StrCpy $0 "$EXEDIR\${VNC_AGENT_EXE} /S"
   DetailPrint "Running $0"
   nsExec::ExecToLog $0
-  ${If} ${FileExists} "$EXEDIR\remote-desktop-agent-vnc2.reg"
+  ${If} ${FileExists} "$EXEDIR\${VNC_AGENT_REG}"
     DetailPrint "Merging custom registry settings"
-    StrCpy $0 "regedit /S remote-desktop-agent-vnc2.reg"
+    StrCpy $0 "regedit /S ${VNC_AGENT_REG}"
     DetailPrint "Running $0"
     nsExec::ExecToLog $0
   ${EndIF}

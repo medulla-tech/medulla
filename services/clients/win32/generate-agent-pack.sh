@@ -1,0 +1,284 @@
+#!/bin/sh
+#
+# Copyright (C) 2012 Mandriva S.A
+# http://www.mandriva.com
+#
+# This file is part of Mandriva Pulse2 project.
+#
+# This software is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This software is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this software.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Build a self-extractible Pulse2 agent pack for win32
+#
+# Includes:
+#  - secure agent
+#  - remote desktop agent
+#  - inventory agent
+#  - rsa key
+#
+# Author(s):
+#   Adam Cécile <acecile@mandriva.com>
+
+
+# Latest version of agents
+ssh_ver=2.0.2.2
+vnc_ver=2.0.2
+inv_ver=4.0.6.1.1
+
+# Compute filenames
+ssh_file=pulse2-secure-agent-${ssh_ver}.exe
+vnc_file=pulse2-rda-agent-${vnc_ver}.exe
+vnc_reg=remote-desktop-agent-vnc2.reg
+inv_file=inventory-agent-${inv_ver}.exe
+sfx_file=7zsd.sfx
+
+# Compute downloads url
+base_url=http://pulse2.mandriva.org/pub/pulse2/client/windows/win32
+ssh_url=http://pulse2.mandriva.org/pub/pulse2/client/windows/win32/pulse2-secure-agent/${ssh_file}
+vnc_url=http://pulse2.mandriva.org/pub/pulse2/client/windows/win32/pulse2-rda-agent/${vnc_file}
+inv_url=http://pulse2.mandriva.org/pub/pulse2/client/windows/win32/inventory-agent/${inv_file}
+sfx_url=http://www.7zsfx.info/files/7zsd_150_2478.7z
+
+# Others variables
+my_fqdn=`hostname -f`
+
+# Common cleaning
+rm -f pulse2-win32-agents-pack.exe \
+      pulse2-win32-agents-installer.exe \
+      pulse2-win32-agents-installer.nsi \
+      sfx.conf.silent \
+      sfx.conf \
+      base.7z
+  
+# Theses old files may exists as well
+rm -rf pulse2-win32-agents-pack
+rm -f pulse2-win32-agents-pack-*.exe \
+      pulse2-win32-agents-installer-*.exe
+
+# Are we cleaning the directory ?
+if [ "${1}" = "clean" ]; then
+
+  # Clean agents and pack
+  rm -f pulse2-secure-agent-*.exe \
+        pulse2-rda-agent-*.exe \
+        inventory-agent-*.exe \
+        7zsd.sfx
+  
+  echo
+  echo "Cleaning done successfully."
+  echo
+
+  exit 0
+fi
+
+# Sanity checks
+# Is dig installed ?
+if [ ! -x "`which dig`" ]; then
+ echo
+ echo "dig command cannot be found. Please install dig package and restart this tool."
+ echo
+ exit 1
+fi
+# Is curl installed ?
+if [ ! -x "`which curl`" ]; then
+  echo
+  echo "curl command cannot be found. Please install curl package and restart this tool."
+  echo
+  exit 1
+fi
+# Is 7z installed ?
+if [ ! -x "`which 7z`" ]; then
+  echo
+  echo "7z command cannot be found. Please install p7zip-full package and restart this tool."
+  echo
+  exit 1
+fi
+# Is makensis installed ?
+if [ ! -x "`which makensis`" ]; then
+  echo
+  echo "makensis command cannot be found. Please install nsis package and restart this tool."
+  echo
+  exit 1
+fi
+# Do I have an ssh key ?
+if [ ! -e "/root/.ssh/id_rsa.pub" ]; then
+  echo
+  echo "No /root/.ssh/id_rsa.pub SSH key found. Please generate one using ssh-keygen and restart this tool."
+  echo
+  exit
+fi
+
+# Try to figure out if the DNS configuration is fine or not
+dig ${my_fqdn} +nosearch +short | tail -n1 | grep -q -E '([0-9]{1,3}\.){3}[0-9]{1,3}'
+is_dns_working=$?
+
+# DNS servers haven't replied on i-have-queried-my-own-fqdn, sounds bad.
+if [ ! ${is_dns_working} -eq 0 ]; then
+  echo
+  echo "#####################"
+  echo ' /!\   WARNING   /!\ '
+  echo "#####################"
+  echo
+  echo "I tried to query my own DNS servers for my hostname and haven't got"
+  echo "any valid reply. It means the DNS system isn't properly configured,"
+  echo "or the hostname I use isn't valid."
+  echo
+  echo "Despite there's something wrong, it's NOT FATAL."
+  echo "I will generate the agents pack with my IP address instead of"
+  echo "my FQDN."
+  echo
+  echo "Restart me later after fixing the DNS issue if you'd rather use an"
+  echo "hostname. Verify the DNS entry and DNS configuration by running the"
+  echo "following command:"
+  echo
+  echo "  dig ${my_fqdn}"
+  echo
+  echo "Once it works, restart me by running:"
+  echo
+  echo "  ${0}"
+  echo
+  # I'll try to use an IP address instead
+  my_fqdn=""
+  echo "Trying to guess an IP address instead..."
+  echo
+  if [ ! -e "@sysconfdir@/pulse2/package-server/package-server.ini" ]; then
+    echo "Cannot find @sysconfdir@/pulse2/package-server/package-server.ini"
+    echo "Is Pulse2 really installed ?"
+    echo
+    exit 1
+  else
+    # Read public_ip parameters
+    my_fqdn=`grep -E '^public_ip[[:space:]]*=' @sysconfdir@/pulse2/package-server/package-server.ini | cut -d= -f2 | sed 's!\s!!g' | grep -E '^([0-9]{1,3}\.){3}[0-9]{1,3}$'`
+    # Still empty ?!?!?
+    if [ -z ${my_fqdn} ]; then
+      echo "Unable to determinate IP address using public_ip field from"
+      echo "package-server.ini. Fix your configuration."
+      echo
+      exit 1
+    else
+      echo "For now I will use ${my_fqdn} as hostname."
+      echo
+    fi
+  fi
+fi
+
+# pulse2-secure-agent download
+if [ -e "${ssh_file}" ]; then
+  echo
+  echo "${ssh_file} already available. Skipping download."
+  echo
+else
+  echo
+  echo "Downloading ${ssh_file}..."
+  curl --progress-bar -o ${ssh_file} ${ssh_url}
+  echo
+  if [ ! -e ${ssh_file} ]; then
+    echo
+    echo "${ssh_file} download failed. Please restart."
+    echo
+    exit 1
+  fi
+fi
+
+# pulse2-rda-agent download
+if [ -e "${vnc_file}" ]; then
+  echo
+  echo "${vnc_file} already available. Skipping download."
+  echo
+else
+  echo
+  echo "Downloading ${vnc_file}..."
+  curl --progress-bar -o ${vnc_file} ${vnc_url}
+  echo
+  if [ ! -e ${vnc_file} ]; then
+    echo
+    echo "${vnc_file} download failed. Please restart."
+    echo
+    exit 1
+  fi
+fi
+
+# inventory-agent download
+if [ -e "${inv_file}" ]; then
+  echo
+  echo "${inv_file} already available. Skipping download."
+  echo
+else
+  echo
+  echo "Downloading ${inv_file}..."
+  curl --progress-bar -o ${inv_file} ${inv_url}
+  echo
+  if [ ! -e ${inv_file} ]; then
+    echo
+    echo "${inv_file} download failed. Please restart."
+    echo
+    exit 1
+  fi
+fi
+
+# 7z SFX download
+if [ -e "${sfx_file}" ]; then
+  echo
+  echo "${sfx_file} already available. Skipping download."
+  echo
+else
+  echo
+  echo "Downloading ${sfx_file}..."
+  curl --progress-bar -o ${sfx_file}.7z ${sfx_url}
+  7z -bd e ${sfx_file}.7z >/dev/null
+  rm -f ${sfx_file}.7z
+  echo
+  if [ ! -e ${sfx_file} ]; then
+    echo
+    echo "${sfx_file} download failed. Please restart."
+    echo
+    exit 1
+  fi
+fi
+
+# Generate pulse2-win32-agents-installer.exe
+sed -e "s/@@ssh_file@@/${ssh_file}/" \
+    -e "s/@@vnc_file@@/${vnc_file}/" \
+    -e "s/@@vnc_reg@@/${vnc_reg}/" \
+    -e "s/@@inv_file@@/${inv_file}/" \
+    pulse2-win32-agents-installer.nsi.in \
+    > pulse2-win32-agents-installer.nsi    
+
+# Compile NSIS
+echo
+echo "Compiling NSIS installer..."
+echo
+makensis -V1 pulse2-win32-agents-installer.nsi
+
+# Creating base.7z archive
+echo "Creating base 7z archive..."
+7z a base.7z ${ssh_file} ${vnc_file} ${vnc_reg} ${inv_file} pulse2-win32-agents-installer.exe /root/.ssh/id_rsa.pub
+
+# Create agents pack exe
+sed -e "s/@@inv_server@@/${my_fqdn}/" \
+    -e "s/@@inv_server_port@@/9999/" \
+     sfx.conf.in > sfx.conf
+cat ${sfx_file} sfx.conf base.7z > pulse2-win32-agents-pack.exe
+echo
+echo "pulse2-win32-agents-pack.exe generated successfully!"
+echo
+
+# Create agents pack exe (silent)
+sed -e "s/@@inv_server@@/${my_fqdn}/" \
+    -e "s/@@inv_server_port@@/9999/" \
+     sfx.silent.conf.in > sfx.conf
+cat ${sfx_file} sfx.conf base.7z > pulse2-win32-agents-pack-silent.exe
+
+echo
+echo "pulse2-win32-agents-pack-silent.exe generated successfully!"
+echo
