@@ -282,3 +282,13 @@ cat ${sfx_file} sfx.conf base.7z > pulse2-win32-agents-pack-silent.exe
 echo
 echo "pulse2-win32-agents-pack-silent.exe generated successfully!"
 echo
+
+# Create agents pack exe (no prompt)
+sed -e "s/@@inv_server@@/${my_fqdn}/" \
+    -e "s/@@inv_server_port@@/9999/" \
+     sfx.noprompt.conf.in > sfx.conf
+cat ${sfx_file} sfx.conf base.7z > pulse2-win32-agents-pack-noprompt.exe
+
+echo
+echo "pulse2-win32-agents-pack-noprompt.exe generated successfully!"
+echo
