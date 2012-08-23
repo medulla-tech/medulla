@@ -1267,6 +1267,8 @@ class ImagingRpcProxy(RpcProxyI):
             macaddress = query[0][1]['macAddress']
         except KeyError:
             macaddress = []
+        except IndexError:
+            macaddress = []
         # if we have more than one mac address, we ask the user to chose which NIC he wants
         if len(macaddress) < 1:
             # No MAC address
