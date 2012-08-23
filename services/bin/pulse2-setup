@@ -673,6 +673,19 @@ class SetupApp(object):
         self.confs['plugins/base.ini'].set('ldap', 'rootName', self.config['ldapadmindn'])
         self.confs['plugins/base.ini'].set('ldap', 'password', self.config['ldappasswd'])
 
+    def get_existing_databases (self, conn):
+        """ Get a list of existing databases
+        """
+        databases = []
+        
+        try:
+            crs = conn.execute("SELECT schema_name FROM information_schema.schemata;")
+            databases = [line[0] for line in crs.fetchall()]
+        except sa.exc.OperationalError, e:
+            raise e
+                        
+        return databases
+
     def init_db(self):
         """ Create databases and associated schemas
         """
@@ -697,12 +710,14 @@ class SetupApp(object):
 
         # Drop databases
         if self.options['reset_db']:
+            existing_dbs = self.get_existing_databases(conn)
             for db in self.dbmodules + ['audit']:
-                try:
-                    conn.execute('DROP DATABASE IF EXISTS `%s`' % db)
-                    log.info("Database '%s' dropped" % db)
-                except sa.exc.OperationalError, e:
-                    raise e
+                if db in existing_dbs :
+                    try:
+                        conn.execute('DROP DATABASE IF EXISTS `%s`' % db)
+                        log.info("Database '%s' dropped" % db)
+                    except sa.exc.OperationalError, e:
+                        raise e
             # remove computer boot menus
             dir = "/var/lib/pulse2/imaging/"
             for file in os.listdir(os.path.join(dir, 'bootmenus')):
