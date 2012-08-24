@@ -1,43 +1,61 @@
-# translation of inventory.po to Brazilian Portuguese
+# SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
+## Translators:
+#   <sergio@mandriva.com.br>, 2012.
 # Andre Paulo Machado <andre.panm@gmail.com>, 2009.
 msgid ""
 msgstr ""
-"Project-Id-Version: inventory\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-05 14:49+0100\n"
-"PO-Revision-Date: 2011-02-24 11:07-0300\n"
-"Last-Translator: Leonardo Coelho <leonardoc@mandriva.com.br>\n"
-"Language-Team: Brazilian Portuguese <kde-i18n-pt_br@mail.kde.org>\n"
-"Language: pt_BR\n"
+"Project-Id-Version: Pulse 2\n"
+"Report-Msgid-Bugs-To: http://pulse2.mandriva.org/\n"
+"POT-Creation-Date: 2011-01-30 11:29+0100\n"
+"PO-Revision-Date: 2012-08-22 17:04+0000\n"
+"Last-Translator: Sergio Rafael Lemke <sergio@mandriva.com.br>\n"
+"Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/projects/p/pulse2/team/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.11.4\n"
-"Plural-Forms: nplurals=2; plural=(n>1);\n"
-"X-Poedit-Language: Portuguese\n"
-"X-Poedit-Country: BRAZIL\n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
-#: modules/inventory/inventory/tabs.php:40
-#, php-format
-msgid "%s's content inventory"
-msgstr "Inventário do conteúdo de %s"
+#: modules/inventory/inventory/incoming.php:38
+msgid "Incoming Inventories"
+msgstr "Entrada de Inventários"
 
-#: modules/inventory/inventory/tabs.php:38
-#, php-format
-msgid "%s's inventory"
-msgstr "inventário de %s"
+#: modules/inventory/inventory/incoming.php:46
+msgid "Last week"
+msgstr "Última Semana"
 
-#: modules/inventory/inventory/inventory_diff.php:114
-#, fuzzy
-msgid "Added elements"
-msgstr "<h3>Componentes Adicionados</h3>"
+#: modules/inventory/inventory/incoming.php:46
+msgid "Last month"
+msgstr "Último Mês"
 
-#: modules/inventory/inventory/infos.php:33
-msgid "Additionnal informations"
-msgstr "Informações adicionais"
+#: modules/inventory/inventory/incoming.php:46
+msgid "Last quarter"
+msgstr "Último Trimestre"
+
+#: modules/inventory/inventory/incoming.php:46
+msgid "Last semester"
+msgstr "Último Semestre"
+
+#: modules/inventory/inventory/incoming.php:46
+msgid "Last year"
+msgstr "Último Ano"
+
+#: modules/inventory/inventory/incoming.php:57
+msgid "Period"
+msgstr "Período"
+
+#: modules/inventory/inventory/incoming.php:62
+msgid "Only new computers"
+msgstr "Somente Computadores Novos"
+
+#: modules/inventory/inventory/incoming.php:63
+msgid "Load only the computers which were new when the inventory was made"
+msgstr ""
+"Lista apenas os inventários enviados por computadores novos adicionados "
+"neste período"
 
 #: modules/inventory/inventory/i18n_labels.php:25
 msgid "Application"
@@ -47,23 +65,11 @@ msgstr "Aplicação"
 msgid "Availability"
 msgstr "Disponibilidade"
 
-#: modules/inventory/infoPackage.inc.php:46
 #: modules/inventory/inventory/i18n_labels.php:27
 #: modules/inventory/inventory/localSidebar.php:29
+#: modules/inventory/infoPackage.inc.php:45
 msgid "Bios"
 msgstr "Bios"
-
-#: modules/inventory/inventory/body.php:42
-msgid "Bios list"
-msgstr "Lista da Bios"
-
-#: modules/inventory/infoPackage.inc.php:152
-msgid "Bios tab for a computer in a group"
-msgstr "Aba da Bios para um computador em um grupo"
-
-#: modules/inventory/infoPackage.inc.php:134
-msgid "Bios tab for a group"
-msgstr "Aba da Bios para um grupo"
 
 #: modules/inventory/inventory/i18n_labels.php:28
 msgid "BiosVendor"
@@ -133,41 +139,15 @@ msgstr "Comentários"
 msgid "Company"
 msgstr "Companhia"
 
-#: modules/inventory/inventory/csv.php:67
-#: modules/inventory/inventory/csv.php:107
-#: modules/inventory/inventory/i18n_labels.php:93
-msgid "Computer"
-msgstr "Computador"
-
-#: modules/inventory/inventory/ajaxIncoming.php:74
-msgid "Computer name"
-msgstr "Nome do Computador"
-
 #: modules/inventory/inventory/i18n_labels.php:45
 msgid "Connector"
 msgstr "Conector"
 
-#: modules/inventory/infoPackage.inc.php:52
 #: modules/inventory/inventory/i18n_labels.php:46
 #: modules/inventory/inventory/localSidebar.php:33
+#: modules/inventory/infoPackage.inc.php:51
 msgid "Controller"
 msgstr "Controlador"
-
-#: modules/inventory/inventory/body.php:46
-msgid "Controller list"
-msgstr "Lista de controladores"
-
-#: modules/inventory/infoPackage.inc.php:182
-msgid "Controller tab for a computer"
-msgstr "Aba do Controlador para um computador"
-
-#: modules/inventory/infoPackage.inc.php:161
-msgid "Controller tab for a computer in a group"
-msgstr "Aba do Controlador para um computador em um grupo"
-
-#: modules/inventory/infoPackage.inc.php:143
-msgid "Controller tab for a group"
-msgstr "Aba do Controlador para um grupo"
 
 #: modules/inventory/inventory/i18n_labels.php:47
 msgid "CpuNum"
@@ -176,10 +156,6 @@ msgstr "Nr. da CPU"
 #: modules/inventory/inventory/i18n_labels.php:48
 msgid "CpuVendor"
 msgstr "Fabricante da CPU"
-
-#: modules/inventory/infoPackage.inc.php:95
-msgid "Csv's export"
-msgstr "Exportar para CSV"
 
 #: modules/inventory/inventory/i18n_labels.php:49
 msgid "CustomField"
@@ -193,9 +169,9 @@ msgstr "Cilindros"
 msgid "DNS"
 msgstr "DNS"
 
-#: modules/inventory/includes/html.php:62
-#: modules/inventory/inventory/ajaxViewPart.php:34
 #: modules/inventory/inventory/i18n_labels.php:52
+#: modules/inventory/inventory/ajaxViewPart.php:34
+#: modules/inventory/includes/html.php:62
 msgid "Date"
 msgstr "Data"
 
@@ -215,10 +191,6 @@ msgstr "Descrição"
 msgid "Device"
 msgstr "Dispositivo"
 
-#: modules/inventory/infoPackage.inc.php:190
-msgid "Differences between two inventories"
-msgstr "Diferenças entre dois inventários"
-
 #: modules/inventory/inventory/i18n_labels.php:57
 msgid "Disk"
 msgstr "Disco"
@@ -227,15 +199,11 @@ msgstr "Disco"
 msgid "DiskSize"
 msgstr "Tamanho do Disco"
 
-#: modules/inventory/infoPackage.inc.php:55
 #: modules/inventory/inventory/i18n_labels.php:59
 #: modules/inventory/inventory/localSidebar.php:37
+#: modules/inventory/infoPackage.inc.php:54
 msgid "Drive"
 msgstr "Drive"
-
-#: modules/inventory/inventory/body.php:48
-msgid "Drive list"
-msgstr "Lista de drives"
 
 #: modules/inventory/inventory/i18n_labels.php:60
 msgid "DriveLetter"
@@ -248,15 +216,6 @@ msgstr "Tipo do Drive"
 #: modules/inventory/inventory/i18n_labels.php:62
 msgid "Driver"
 msgstr "Controlador"
-
-#: modules/inventory/inventory/inventory_diff.php:75
-#: modules/inventory/inventory/inventory_diff.php:100
-msgid "Element"
-msgstr "Componente"
-
-#: modules/inventory/inventory/ajaxIncoming.php:83
-msgid "Elements"
-msgstr "Componentes"
 
 #: modules/inventory/inventory/i18n_labels.php:63
 msgid "ExecutableSize"
@@ -290,10 +249,6 @@ msgstr "Total de Arquivos"
 msgid "FileSystem"
 msgstr "Sistema de Arquivos"
 
-#: modules/inventory/inventory/infos.php:43
-msgid "First apparition"
-msgstr "Primeira aparição"
-
 #: modules/inventory/inventory/i18n_labels.php:71
 msgid "Flag"
 msgstr "Flag"
@@ -322,33 +277,11 @@ msgstr "Func"
 msgid "Gateway"
 msgstr "Gateway"
 
-#: modules/inventory/infoPackage.inc.php:87
-#: modules/inventory/infoPackage.inc.php:91
-#: modules/inventory/inventory/graphs.php:35
-msgid "Graphique"
-msgstr "Gráfico"
-
-#: modules/inventory/infoPackage.inc.php:48
 #: modules/inventory/inventory/i18n_labels.php:78
 #: modules/inventory/inventory/localSidebar.php:30
+#: modules/inventory/infoPackage.inc.php:47
 msgid "Hardware"
 msgstr "Hardware"
-
-#: modules/inventory/inventory/body.php:43
-msgid "Hardware and OS information list"
-msgstr "Lista de informações do Hardware e SO"
-
-#: modules/inventory/infoPackage.inc.php:173
-msgid "Hardware tab for a computer"
-msgstr "Aba do Hardware para um computador"
-
-#: modules/inventory/infoPackage.inc.php:149
-msgid "Hardware tab for a computer in a group"
-msgstr "Aba do Hardware para um computador em um grupo"
-
-#: modules/inventory/infoPackage.inc.php:131
-msgid "Hardware tab for a group"
-msgstr "Aba do Hardware para um grupo"
 
 #: modules/inventory/inventory/i18n_labels.php:79
 msgid "HardwareVersion"
@@ -358,77 +291,26 @@ msgstr "Versão do Hardware"
 msgid "Head"
 msgstr "Cabeçalho"
 
-#: modules/inventory/infoPackage.inc.php:111
-msgid "Header"
-msgstr "Cabeçalho"
-
 #: modules/inventory/inventory/i18n_labels.php:81
 msgid "HighMem"
 msgstr "Memória Alta"
-
-#: modules/inventory/inventory/tabs.php:60
-msgid "History"
-msgstr ""
 
 #: modules/inventory/inventory/i18n_labels.php:82
 msgid "IP"
 msgstr "IP"
 
-#: modules/inventory/infoPackage.inc.php:44
-#: modules/inventory/inventory/localSidebar.php:28
-msgid "Incoming"
-msgstr "Entrada"
-
-#: modules/inventory/inventory/incoming.php:38
-msgid "Incoming Inventories"
-msgstr "Entrada de Inventários "
-
-#: modules/inventory/infoPackage.inc.php:82
-#: modules/inventory/inventory/ajaxViewPart.php:196
-msgid "Informations"
-msgstr "Informações"
-
-#: modules/inventory/infoPackage.inc.php:57
 #: modules/inventory/inventory/i18n_labels.php:83
 #: modules/inventory/inventory/localSidebar.php:38
+#: modules/inventory/infoPackage.inc.php:56
 msgid "Input"
 msgstr "Entrada"
 
-#: modules/inventory/inventory/body.php:49
-msgid "Input device list"
-msgstr "Lista de dispositivos de entrada"
-
-#: modules/inventory/infoPackage.inc.php:34
-#: modules/inventory/infoPackage.inc.php:40
-#: modules/inventory/inventory/history.php:80
 #: modules/inventory/inventory/i18n_labels.php:84
+#: modules/inventory/inventory/history.php:80
+#: modules/inventory/infoPackage.inc.php:33
+#: modules/inventory/infoPackage.inc.php:39
 msgid "Inventory"
 msgstr "Inventário"
-
-#: modules/inventory/inventory/history.php:75
-msgid "Inventory Date"
-msgstr "Data do Inventário"
-
-#: modules/inventory/inventory/inventory_diff.php:48
-msgid "Inventory changes"
-msgstr "Alterações do Inventário"
-
-#: modules/inventory/inventory/ajaxIncoming.php:76
-msgid "Inventory date"
-msgstr "Data do Inventário"
-
-#: modules/inventory/inventory/view.php:48
-#, php-format
-msgid "Inventory of %s"
-msgstr "Inventário de %s"
-
-#: modules/inventory/infoPackage.inc.php:128
-msgid "Inventory on a group of computers"
-msgstr "Inventário em um grupo de computadores"
-
-#: modules/inventory/infoPackage.inc.php:169
-msgid "Inventory on a single computer"
-msgstr "Inventário em um único computador"
 
 #: modules/inventory/inventory/i18n_labels.php:85
 msgid "IpAddress"
@@ -438,34 +320,9 @@ msgstr "Endereço de IP"
 msgid "KEY"
 msgstr "CHAVE"
 
-#: modules/inventory/inventory/incoming.php:46
-msgid "Last month"
-msgstr "Último Mês"
-
-#: modules/inventory/inventory/incoming.php:46
-msgid "Last quarter"
-msgstr "Último Trimestre"
-
-#: modules/inventory/inventory/incoming.php:46
-msgid "Last semester"
-msgstr "Último Semestre"
-
-#: modules/inventory/inventory/incoming.php:46
-msgid "Last week"
-msgstr "Última Semana"
-
-#: modules/inventory/inventory/incoming.php:46
-msgid "Last year"
-msgstr "Último Ano"
-
 #: modules/inventory/inventory/i18n_labels.php:87
 msgid "Length"
 msgstr "Tamanho"
-
-#: modules/inventory/inventory/incoming.php:63
-msgid "Load only the computers which were new when the inventory was made"
-msgstr ""
-"Carrega apenas os computadores que eram novos quando o inventario foi feito"
 
 #: modules/inventory/inventory/i18n_labels.php:88
 msgid "Location"
@@ -487,6 +344,12 @@ msgstr "MIB"
 msgid "MacAddr"
 msgstr "Endereço MAC"
 
+#: modules/inventory/inventory/i18n_labels.php:93
+#: modules/inventory/inventory/csv.php:67
+#: modules/inventory/inventory/csv.php:107
+msgid "Computer"
+msgstr "Computador"
+
 #: modules/inventory/inventory/i18n_labels.php:94
 msgid "Manuf"
 msgstr "Fabricante"
@@ -499,15 +362,11 @@ msgstr "Fabricante"
 msgid "Media"
 msgstr "Mídia"
 
-#: modules/inventory/infoPackage.inc.php:59
 #: modules/inventory/inventory/i18n_labels.php:97
 #: modules/inventory/inventory/localSidebar.php:39
+#: modules/inventory/infoPackage.inc.php:58
 msgid "Memory"
 msgstr "Memória"
-
-#: modules/inventory/inventory/body.php:50
-msgid "Memory module list"
-msgstr "Lista de módulos da memória"
 
 #: modules/inventory/inventory/i18n_labels.php:98
 msgid "MiscMem"
@@ -525,49 +384,25 @@ msgstr "Modelo"
 msgid "Modem"
 msgstr "Modem"
 
-#: modules/inventory/infoPackage.inc.php:61
 #: modules/inventory/inventory/i18n_labels.php:102
 #: modules/inventory/inventory/localSidebar.php:40
+#: modules/inventory/infoPackage.inc.php:60
 msgid "Monitor"
 msgstr "Monitor"
-
-#: modules/inventory/inventory/body.php:51
-msgid "Monitor list"
-msgstr "Lista de monitores"
 
 #: modules/inventory/inventory/i18n_labels.php:103
 msgid "Name"
 msgstr "Nome"
 
-#: modules/inventory/infoPackage.inc.php:50
 #: modules/inventory/inventory/i18n_labels.php:104
 #: modules/inventory/inventory/localSidebar.php:32
+#: modules/inventory/infoPackage.inc.php:49
 msgid "Network"
 msgstr "Rede"
-
-#: modules/inventory/inventory/body.php:45
-msgid "Network card and configuration list"
-msgstr "Lista de Placa de Rede e Configurações"
-
-#: modules/inventory/infoPackage.inc.php:179
-msgid "Network tab for a computer"
-msgstr "Aba de Rede para um computador"
-
-#: modules/inventory/infoPackage.inc.php:158
-msgid "Network tab for a computer in a group"
-msgstr "Aba de Rede para um computador em um grupo"
-
-#: modules/inventory/infoPackage.inc.php:140
-msgid "Network tab for a group"
-msgstr "Aba de Rede para um grupo"
 
 #: modules/inventory/inventory/i18n_labels.php:105
 msgid "NetworkType"
 msgstr "Tipo de Rede"
-
-#: modules/inventory/inventory/ajaxIncoming.php:78
-msgid "New computer"
-msgstr "Novo Computador"
 
 #: modules/inventory/inventory/i18n_labels.php:106
 msgid "Num"
@@ -581,10 +416,6 @@ msgstr "Número"
 msgid "OSSerialNumber"
 msgstr "Número Serial do SO"
 
-#: modules/inventory/inventory/incoming.php:62
-msgid "Only new computers"
-msgstr "Apenas Novos Computadores"
-
 #: modules/inventory/inventory/i18n_labels.php:109
 msgid "OperatingSystem"
 msgstr "Sistema Operacional"
@@ -594,10 +425,6 @@ msgstr "Sistema Operacional"
 msgid "Pci"
 msgstr "PCI"
 
-#: modules/inventory/inventory/incoming.php:57
-msgid "Period"
-msgstr "Período"
-
 #: modules/inventory/inventory/i18n_labels.php:111
 msgid "Phone"
 msgstr "Fone"
@@ -606,29 +433,21 @@ msgstr "Fone"
 msgid "PointType"
 msgstr "Tipo do Ponto"
 
-#: modules/inventory/infoPackage.inc.php:63
 #: modules/inventory/inventory/i18n_labels.php:113
 #: modules/inventory/inventory/localSidebar.php:41
+#: modules/inventory/infoPackage.inc.php:62
 msgid "Port"
 msgstr "Porta"
-
-#: modules/inventory/inventory/body.php:52
-msgid "Port list"
-msgstr "Lista de portas"
 
 #: modules/inventory/inventory/i18n_labels.php:114
 msgid "PortType"
 msgstr "Tipo da porta"
 
-#: modules/inventory/infoPackage.inc.php:65
 #: modules/inventory/inventory/i18n_labels.php:115
 #: modules/inventory/inventory/localSidebar.php:42
+#: modules/inventory/infoPackage.inc.php:64
 msgid "Printer"
 msgstr "Impressora"
-
-#: modules/inventory/inventory/body.php:53
-msgid "Printer list"
-msgstr "Lista de impressoras"
 
 #: modules/inventory/inventory/i18n_labels.php:116
 msgid "ProcessorCount"
@@ -654,17 +473,9 @@ msgstr "Caminho do Produto"
 msgid "ProductVersion"
 msgstr "Versão do Produto"
 
-#: modules/inventory/inventory/view.php:78
-msgid "Properties"
-msgstr "Propriedades"
-
 #: modules/inventory/inventory/i18n_labels.php:122
 msgid "RamTotal"
 msgstr "Total de RAM"
-
-#: modules/inventory/includes/html.php:102
-msgid "Refresh"
-msgstr "Atualizar"
 
 #: modules/inventory/inventory/i18n_labels.php:123
 msgid "RegisteredCompany"
@@ -673,32 +484,6 @@ msgstr "Companhia"
 #: modules/inventory/inventory/i18n_labels.php:124
 msgid "RegisteredName"
 msgstr "Nome Registrado"
-
-#: modules/inventory/infoPackage.inc.php:75
-#: modules/inventory/inventory/localSidebar.php:34
-msgid "Registry"
-msgstr "Registro"
-
-#: modules/inventory/inventory/body.php:47
-msgid "Registry keys/values list"
-msgstr "Lista de chaves/valores de registro"
-
-#: modules/inventory/infoPackage.inc.php:185
-msgid "Registry tab for a computer"
-msgstr "Aba de Registro para um computador"
-
-#: modules/inventory/infoPackage.inc.php:164
-msgid "Registry tab for a computer in a group"
-msgstr "Aba de Registro para um computador em um grupo"
-
-#: modules/inventory/infoPackage.inc.php:146
-msgid "Registry tab for a group"
-msgstr "Aba de Registro para um grupo"
-
-#: modules/inventory/inventory/inventory_diff.php:123
-#, fuzzy
-msgid "Removed elements"
-msgstr "<h3>Componentes Removidos</h3>"
 
 #: modules/inventory/inventory/i18n_labels.php:125
 msgid "Resolution"
@@ -745,37 +530,17 @@ msgstr "Tipo (SMB)"
 msgid "SmbVersion"
 msgstr "Versão (SMB)"
 
-#: modules/inventory/infoPackage.inc.php:73
 #: modules/inventory/inventory/i18n_labels.php:136
 #: modules/inventory/inventory/localSidebar.php:31
+#: modules/inventory/infoPackage.inc.php:72
 msgid "Software"
 msgstr "Software"
 
-#: modules/inventory/inventory/body.php:44
-msgid "Software list"
-msgstr "Lista de software"
-
-#: modules/inventory/infoPackage.inc.php:176
-msgid "Software tab for a computer"
-msgstr "Aba de Software para um computador"
-
-#: modules/inventory/infoPackage.inc.php:155
-msgid "Software tab for a computer in a group"
-msgstr "Aba de Software para um computador em um grupo"
-
-#: modules/inventory/infoPackage.inc.php:137
-msgid "Software tab for a group"
-msgstr "Aba de Software para um grupo"
-
-#: modules/inventory/infoPackage.inc.php:67
 #: modules/inventory/inventory/i18n_labels.php:137
 #: modules/inventory/inventory/localSidebar.php:43
+#: modules/inventory/infoPackage.inc.php:66
 msgid "Sound"
 msgstr "Som"
-
-#: modules/inventory/inventory/body.php:54
-msgid "Sound list"
-msgstr "Lista de som"
 
 #: modules/inventory/inventory/i18n_labels.php:138
 msgid "Speed"
@@ -797,15 +562,11 @@ msgstr "Tipo Padrão"
 msgid "State"
 msgstr "Estado"
 
-#: modules/inventory/infoPackage.inc.php:69
 #: modules/inventory/inventory/i18n_labels.php:143
 #: modules/inventory/inventory/localSidebar.php:44
+#: modules/inventory/infoPackage.inc.php:68
 msgid "Storage"
 msgstr "Armazenamento"
-
-#: modules/inventory/inventory/body.php:55
-msgid "Storage medium list"
-msgstr "Lista de mídias de armazenamento"
 
 #: modules/inventory/inventory/i18n_labels.php:144
 msgid "SubnetMask"
@@ -870,24 +631,6 @@ msgstr "Fabricante"
 msgid "Version"
 msgstr "Versão"
 
-#: modules/inventory/inventory/body.php:56
-msgid "Video card list"
-msgstr "Lista de Placas de Vídeo"
-
-#: modules/inventory/infoPackage.inc.php:71
-#: modules/inventory/inventory/localSidebar.php:45
-msgid "VideoCard"
-msgstr "Placa de Vídeo"
-
-#: modules/inventory/infoPackage.inc.php:78
-#: modules/inventory/inventory/ajaxViewPart.php:195
-msgid "View"
-msgstr "Exibir"
-
-#: modules/inventory/inventory/history.php:66
-msgid "View differences since previous inventory"
-msgstr "Ver diferenças desde o ultimo inventario"
-
 #: modules/inventory/inventory/i18n_labels.php:159
 msgid "VolumeName"
 msgstr "Nome do Volume"
@@ -904,445 +647,263 @@ msgstr "Grupo de trabalho"
 msgid "WorkingDate"
 msgstr "Data da Operação"
 
+#: modules/inventory/inventory/inventory_diff.php:48
+msgid "Inventory changes"
+msgstr "Alterações no inventário"
+
+#: modules/inventory/inventory/inventory_diff.php:75
+#: modules/inventory/inventory/inventory_diff.php:100
+msgid "Element"
+msgstr "Elemento"
+
+#: modules/inventory/inventory/inventory_diff.php:114
+msgid "Added elements"
+msgstr "Elementos Adicionados"
+
+#: modules/inventory/inventory/inventory_diff.php:123
+msgid "Removed elements"
+msgstr "Elementos Removidos"
+
+#: modules/inventory/inventory/body.php:42
+msgid "Bios list"
+msgstr "Lista da Bios"
+
+#: modules/inventory/inventory/body.php:43
+msgid "Hardware and OS information list"
+msgstr "Lista de informações do Hardware e SO"
+
+#: modules/inventory/inventory/body.php:44
+msgid "Software list"
+msgstr "Lista de software"
+
+#: modules/inventory/inventory/body.php:45
+msgid "Network card and configuration list"
+msgstr "Lista de Placa de Rede e Configurações"
+
+#: modules/inventory/inventory/body.php:46
+msgid "Controller list"
+msgstr "Lista de controladores"
+
+#: modules/inventory/inventory/body.php:47
+msgid "Registry keys/values list"
+msgstr "Lista de chaves/valores de registro"
+
+#: modules/inventory/inventory/body.php:48
+msgid "Drive list"
+msgstr "Lista de drives"
+
+#: modules/inventory/inventory/body.php:49
+msgid "Input device list"
+msgstr "Lista de dispositivos de entrada"
+
+#: modules/inventory/inventory/body.php:50
+msgid "Memory module list"
+msgstr "Lista de módulos da memória"
+
+#: modules/inventory/inventory/body.php:51
+msgid "Monitor list"
+msgstr "Lista de monitores"
+
+#: modules/inventory/inventory/body.php:52
+msgid "Port list"
+msgstr "Lista de portas"
+
+#: modules/inventory/inventory/body.php:53
+msgid "Printer list"
+msgstr "Lista de impressoras"
+
+#: modules/inventory/inventory/body.php:54
+msgid "Sound list"
+msgstr "Lista de som"
+
+#: modules/inventory/inventory/body.php:55
+msgid "Storage medium list"
+msgstr "Lista de mídias de armazenamento"
+
+#: modules/inventory/inventory/body.php:56
+msgid "Video card list"
+msgstr "Lista de Placas de Vídeo"
+
+#: modules/inventory/inventory/infos.php:33
+msgid "Additionnal informations"
+msgstr "Informações adicionais"
+
+#: modules/inventory/inventory/infos.php:43
+msgid "First apparition"
+msgstr "Primeira aparição"
+
+#: modules/inventory/inventory/ajaxViewPart.php:195
+#: modules/inventory/infoPackage.inc.php:77
+msgid "View"
+msgstr "Exibir"
+
+#: modules/inventory/inventory/ajaxViewPart.php:196
+#: modules/inventory/infoPackage.inc.php:81
+msgid "Informations"
+msgstr "Informações"
+
+#: modules/inventory/inventory/tabs.php:38
+#, php-format
+msgid "%s's inventory"
+msgstr "inventário de %s"
+
+#: modules/inventory/inventory/tabs.php:40
+#, php-format
+msgid "%s's content inventory"
+msgstr "Inventário do conteúdo de %s"
+
+#: modules/inventory/inventory/tabs.php:60
+msgid "History"
+msgstr "Histórico"
+
+#: modules/inventory/inventory/view.php:48
+#, php-format
+msgid "Inventory of %s"
+msgstr "Inventário de %s"
+
+#: modules/inventory/inventory/view.php:78
+msgid "Properties"
+msgstr "Propriedades"
+
+#: modules/inventory/inventory/ajaxIncoming.php:74
+msgid "Computer name"
+msgstr "Nome do Computador"
+
+#: modules/inventory/inventory/ajaxIncoming.php:76
+msgid "Inventory date"
+msgstr "Data do Inventário"
+
+#: modules/inventory/inventory/ajaxIncoming.php:78
+msgid "New computer"
+msgstr "Computador Novo"
+
+#: modules/inventory/inventory/ajaxIncoming.php:83
+msgid "Elements"
+msgstr "Elementos"
+
+#: modules/inventory/inventory/graphs.php:35
+#: modules/inventory/infoPackage.inc.php:86
+#: modules/inventory/infoPackage.inc.php:90
+msgid "Graphique"
+msgstr "Gráfico"
+
 #: modules/inventory/inventory/graphs.php:47
 msgid "back"
 msgstr "voltar"
 
-#, fuzzy
-#~ msgid "%s's inventory (%s)"
-#~ msgstr "inventário de %s"
-
-#, fuzzy
-#~ msgid "Add"
-#~ msgstr "Endereço MAC"
-
-#, fuzzy
-#~ msgid "Available images"
-#~ msgstr "Disponibilidade"
-
-#, fuzzy
-#~ msgid "Available masters"
-#~ msgstr "Disponibilidade"
-
-#, fuzzy
-#~ msgid "Command"
-#~ msgstr "Comentários"
-
-#, fuzzy
-#~ msgid "Command name"
-#~ msgstr "Computador"
-
-#, fuzzy
-#~ msgid "Command status"
-#~ msgstr "Comentários"
-
-#, fuzzy
-#~ msgid "Computer UUID Sent"
-#~ msgstr "Computador"
-
-#, fuzzy
-#~ msgid "Computers list"
-#~ msgstr "Computador"
-
-#, fuzzy
-#~ msgid "Creation"
-#~ msgstr "Conexão"
-
-#, fuzzy
-#~ msgid "Creation date"
-#~ msgstr "Conexão"
-
-#, fuzzy
-#~ msgid "Csv export"
-#~ msgstr "Exportar para CSV"
-
-#, fuzzy
-#~ msgid "Delete a group of computers"
-#~ msgstr "Inventário em um grupo de computadores"
-
-#, fuzzy
-#~ msgid "Descriptions"
-#~ msgstr "Descrição"
-
-#, fuzzy
-#~ msgid "Detailed page of save a group of computers"
-#~ msgstr "Inventário em um grupo de computadores"
-
-#, fuzzy
-#~ msgid "Display a groups of computers"
-#~ msgstr "Inventário em um grupo de computadores"
-
-#, fuzzy
-#~ msgid "Down service"
-#~ msgstr "Dispositivo"
-
-#, fuzzy
-#~ msgid "Download file from a computer"
-#~ msgstr "Aba do Controlador para um computador"
-
-#, fuzzy
-#~ msgid "Duplicate"
-#~ msgstr "Aplicação"
-
-#, fuzzy
-#~ msgid "Execute file"
-#~ msgstr "Tamanho do Executável"
-
-#, fuzzy
-#~ msgid "Execution failed"
-#~ msgstr "Tamanho do Executável"
-
-#, fuzzy
-#~ msgid "First operation at"
-#~ msgstr "Primeira aparição"
-
-#, fuzzy
-#~ msgid "From computer"
-#~ msgstr "Computador"
-
-#, fuzzy
-#~ msgid "GLPI controller tab"
-#~ msgstr "Lista de controladores"
-
-#, fuzzy
-#~ msgid "Group creation"
-#~ msgstr "Localização"
-
-#, fuzzy
-#~ msgid "Group list"
-#~ msgstr "Lista de som"
-
-#, fuzzy
-#~ msgid "Group name"
-#~ msgstr "Computador"
-
-#, fuzzy
-#~ msgid "Hardware Inventory updated"
-#~ msgstr "Inventário"
-
-#, fuzzy
-#~ msgid "Inventory (GLPI) on a groups of machines"
-#~ msgstr "Inventário em um grupo de computadores"
-
-#, fuzzy
-#~ msgid "Inventory (GLPI) on machine"
-#~ msgstr "Inventário"
-
-#, fuzzy
-#~ msgid "Inventory done"
-#~ msgstr "Inventário"
-
-#, fuzzy
-#~ msgid "Inventory failed"
-#~ msgstr "Inventário"
-
-#, fuzzy
-#~ msgid "Inventory in progress"
-#~ msgstr "Inventário"
-
-#, fuzzy
-#~ msgid "Inventory on this group"
-#~ msgstr "Inventário de %s"
-
-#, fuzzy
-#~ msgid "Inventory on this profile"
-#~ msgstr "Inventário de %s"
-
-#, fuzzy
-#~ msgid "List all groups of computers"
-#~ msgstr "Inventário em um grupo de computadores"
-
-#, fuzzy
-#~ msgid "List all profiles of computers"
-#~ msgstr "Inventário em um grupo de computadores"
-
-#, fuzzy
-#~ msgid "MAC Addr."
-#~ msgstr "Endereço MAC"
-
-#, fuzzy
-#~ msgid "MSC bundle tab for a group"
-#~ msgstr "Aba do Controlador para um grupo"
-
-#, fuzzy
-#~ msgid "MSC history tab for a group"
-#~ msgstr "Aba de Registro para um grupo"
-
-#, fuzzy
-#~ msgid "MSC history tab for a machine"
-#~ msgstr "Aba de Registro para um computador"
-
-#, fuzzy
-#~ msgid "MSC launch tab for a group"
-#~ msgstr "Aba de Software para um grupo"
-
-#, fuzzy
-#~ msgid "MSC logs tab for a group"
-#~ msgstr "Aba da Bios para um grupo"
-
-#, fuzzy
-#~ msgid "Machine"
-#~ msgstr "Tipo de Máquina"
-
-#, fuzzy
-#~ msgid "Media size"
-#~ msgstr "Mídia"
-
-#, fuzzy
-#~ msgid "Menu configuration"
-#~ msgstr "Lista de Placa de Rede e Configurações"
-
-#, fuzzy
-#~ msgid "Mode"
-#~ msgstr "Modelo"
-
-#, fuzzy
-#~ msgid "Name :"
-#~ msgstr "Nome"
-
-#, fuzzy
-#~ msgid "Names"
-#~ msgstr "Nome"
-
-#, fuzzy
-#~ msgid "Not enough informations"
-#~ msgstr "Informações adicionais"
-
-#, fuzzy
-#~ msgid "Package version"
-#~ msgstr "Versão do Hardware"
-
-#, fuzzy
-#~ msgid "Profiles list"
-#~ msgstr "Lista de impressoras"
-
-#, fuzzy
-#~ msgid "Progression"
-#~ msgstr "Versão do Produto"
-
-#, fuzzy
-#~ msgid "Register a computer in the imaging module"
-#~ msgstr "Aba de Registro para um computador em um grupo"
-
-#, fuzzy
-#~ msgid "Register computer '%s'"
-#~ msgstr "Aba de Registro para um computador"
-
-#, fuzzy
-#~ msgid "Remove Computer"
-#~ msgstr "Computador"
-
-#, fuzzy
-#~ msgid "Remove a computer"
-#~ msgstr "Computador"
-
-#, fuzzy
-#~ msgid "Remove a computer from a computers group"
-#~ msgstr "Aba de Rede para um computador em um grupo"
-
-#, fuzzy
-#~ msgid "Restoration"
-#~ msgstr "Resolução"
+#: modules/inventory/inventory/history.php:66
+msgid "View differences since previous inventory"
+msgstr "Ver mudanças em comparação ao inventário anterior"
+
+#: modules/inventory/inventory/history.php:75
+msgid "Inventory Date"
+msgstr "f83a483a0a94d3f59024e2c397fe58a6_tr"
+
+#: modules/inventory/inventory/localSidebar.php:28
+#: modules/inventory/infoPackage.inc.php:43
+msgid "Incoming"
+msgstr "Entradas"
+
+#: modules/inventory/inventory/localSidebar.php:34
+#: modules/inventory/infoPackage.inc.php:74
+msgid "Registry"
+msgstr "Registro"
 
-#, fuzzy
-#~ msgid "Restoration options"
-#~ msgstr "Descrição"
+#: modules/inventory/inventory/localSidebar.php:45
+#: modules/inventory/infoPackage.inc.php:70
+msgid "VideoCard"
+msgstr "Placa de Vídeo"
 
-#, fuzzy
-#~ msgid "Restoration type"
-#~ msgstr "Resolução"
+#: modules/inventory/includes/html.php:102
+msgid "Refresh"
+msgstr "Atualizar"
 
-#, fuzzy
-#~ msgid "Save a group of computers"
-#~ msgstr "Inventário em um grupo de computadores"
+#: modules/inventory/infoPackage.inc.php:94
+msgid "Csv's export"
+msgstr "Exportar para CSV"
 
-#, fuzzy
-#~ msgid "Secure control on a group of computers"
-#~ msgstr "Inventário em um grupo de computadores"
+#: modules/inventory/infoPackage.inc.php:110
+msgid "Header"
+msgstr "Cabeçalho"
 
-#, fuzzy
-#~ msgid "Secure control on computer"
-#~ msgstr "Aba do Controlador para um computador"
+#: modules/inventory/infoPackage.inc.php:127
+msgid "Inventory on a group of computers"
+msgstr "Inventário em um grupo de computadores"
 
-#, fuzzy
-#~ msgid "Share a group of computers"
-#~ msgstr "Inventário em um grupo de computadores"
+#: modules/inventory/infoPackage.inc.php:130
+msgid "Hardware tab for a group"
+msgstr "Aba do Hardware para um grupo"
 
-#, fuzzy
-#~ msgid "Share this group"
-#~ msgstr "Aba de Software para um grupo"
+#: modules/inventory/infoPackage.inc.php:133
+msgid "Bios tab for a group"
+msgstr "Aba da Bios para um grupo"
 
-#, fuzzy
-#~ msgid "Show Image Informations"
-#~ msgstr "Informações"
+#: modules/inventory/infoPackage.inc.php:136
+msgid "Software tab for a group"
+msgstr "Aba de Software para um grupo"
 
-#, fuzzy
-#~ msgid "Software deployment on this group"
-#~ msgstr "Aba de Software para um grupo"
+#: modules/inventory/infoPackage.inc.php:139
+msgid "Network tab for a group"
+msgstr "Aba de Rede para um grupo"
 
-#, fuzzy
-#~ msgid "Start action on this group"
-#~ msgstr "Aba de Software para um grupo"
+#: modules/inventory/infoPackage.inc.php:142
+msgid "Controller tab for a group"
+msgstr "Aba do Controlador para um grupo"
 
-#, fuzzy
-#~ msgid "Start download from computer %s"
-#~ msgstr "Aba de Software para um computador"
+#: modules/inventory/infoPackage.inc.php:145
+msgid "Registry tab for a group"
+msgstr "Aba de Registro para um grupo"
 
-#, fuzzy
-#~ msgid "Start inventory"
-#~ msgstr "inventário de %s"
+#: modules/inventory/infoPackage.inc.php:148
+msgid "Hardware tab for a computer in a group"
+msgstr "Aba do Hardware para um computador em um grupo"
 
-#, fuzzy
-#~ msgid "Start inventory agent"
-#~ msgstr "Inventário"
+#: modules/inventory/infoPackage.inc.php:151
+msgid "Bios tab for a computer in a group"
+msgstr "Aba da Bios para um computador em um grupo"
 
-#, fuzzy
-#~ msgid "Start script"
-#~ msgstr "Descrição Padrão"
+#: modules/inventory/infoPackage.inc.php:154
+msgid "Software tab for a computer in a group"
+msgstr "Aba de Software para um computador em um grupo"
 
-#, fuzzy
-#~ msgid "Start the script"
-#~ msgstr "Descrição Padrão"
+#: modules/inventory/infoPackage.inc.php:157
+msgid "Network tab for a computer in a group"
+msgstr "Aba de Rede para um computador em um grupo"
 
-#, fuzzy
-#~ msgid "Stats"
-#~ msgstr "Estado"
+#: modules/inventory/infoPackage.inc.php:160
+msgid "Controller tab for a computer in a group"
+msgstr "Aba do Controlador para um computador em um grupo"
 
-#, fuzzy
-#~ msgid "Status"
-#~ msgstr "Estado"
+#: modules/inventory/infoPackage.inc.php:163
+msgid "Registry tab for a computer in a group"
+msgstr "Aba de Registro para um computador em um grupo"
 
-#, fuzzy
-#~ msgid "Swap"
-#~ msgstr "Tamanho de Swap"
+#: modules/inventory/infoPackage.inc.php:168
+msgid "Inventory on a single computer"
+msgstr "Inventário em um único computador"
 
-#, fuzzy
-#~ msgid "Take control of a computer"
-#~ msgstr "Aba do Controlador para um computador"
+#: modules/inventory/infoPackage.inc.php:172
+msgid "Hardware tab for a computer"
+msgstr "Aba do Hardware para um computador"
 
-#, fuzzy
-#~ msgid "Take control of this computer"
-#~ msgstr "Aba do Controlador para um computador"
+#: modules/inventory/infoPackage.inc.php:175
+msgid "Software tab for a computer"
+msgstr "Aba de Software para um computador"
 
-#, fuzzy
-#~ msgid "Timestamp"
-#~ msgstr "Tempo"
+#: modules/inventory/infoPackage.inc.php:178
+msgid "Network tab for a computer"
+msgstr "Aba de Rede para um computador"
 
-#, fuzzy
-#~ msgid "Unavailable computer"
-#~ msgstr "Computador"
+#: modules/inventory/infoPackage.inc.php:181
+msgid "Controller tab for a computer"
+msgstr "Aba do Controlador para um computador"
 
-#, fuzzy
-#~ msgid "Unregister this computer"
-#~ msgstr "Aba de Registro para um computador"
+#: modules/inventory/infoPackage.inc.php:184
+msgid "Registry tab for a computer"
+msgstr "Aba de Registro para um computador"
 
-#, fuzzy
-#~ msgid "Up service"
-#~ msgstr "Dispositivo"
+#: modules/inventory/infoPackage.inc.php:189
+msgid "Differences between two inventories"
+msgstr "Diferenças entre dois inventários"
 
-#~ msgid "Values"
-#~ msgstr "Valores"
-
-#, fuzzy
-#~ msgid "Versions"
-#~ msgstr "Versão"
-
-#, fuzzy
-#~ msgid "action"
-#~ msgstr "Conexão"
-
-#, fuzzy
-#~ msgid "comment"
-#~ msgstr "Comentários"
-
-#, fuzzy
-#~ msgid "comments"
-#~ msgstr "Comentários"
-
-#, fuzzy
-#~ msgid "computers paused"
-#~ msgstr "Computador"
-
-#, fuzzy
-#~ msgid "computers stopped"
-#~ msgstr "Computador"
-
-#, fuzzy
-#~ msgid "designation"
-#~ msgstr "Descrição"
-
-#, fuzzy
-#~ msgid "drive"
-#~ msgstr "Drive"
-
-#, fuzzy
-#~ msgid "frequence"
-#~ msgstr "Frequência"
-
-#, fuzzy
-#~ msgid "gateway"
-#~ msgstr "Gateway"
-
-#, fuzzy
-#~ msgid "group"
-#~ msgstr "Grupo de trabalho"
-
-#, fuzzy
-#~ msgid "has"
-#~ msgstr "Chassis"
-
-#, fuzzy
-#~ msgid "interface"
-#~ msgstr "Impressora"
-
-#, fuzzy
-#~ msgid "invent."
-#~ msgstr "Inventário"
-
-#, fuzzy
-#~ msgid "inventoried"
-#~ msgstr "Inventário"
-
-#, fuzzy
-#~ msgid "is"
-#~ msgstr "Bios"
-
-#, fuzzy
-#~ msgid "location"
-#~ msgstr "Localização"
-
-#, fuzzy
-#~ msgid "logs list"
-#~ msgstr "Lista da Bios"
-
-#, fuzzy
-#~ msgid "model"
-#~ msgstr "Modelo"
-
-#, fuzzy
-#~ msgid "os"
-#~ msgstr "Bios"
-
-#, fuzzy
-#~ msgid "os_version"
-#~ msgstr "Versão da Bios"
-
-#, fuzzy
-#~ msgid "pci"
-#~ msgstr "PCI"
-
-#, fuzzy
-#~ msgid "processor"
-#~ msgstr "Tipo do Processador"
-
-#, fuzzy
-#~ msgid "serial"
-#~ msgstr "Serial"
-
-#, fuzzy
-#~ msgid "subnet"
-#~ msgstr "Máscara de Sub-rede"
-
-#, fuzzy
-#~ msgid "total"
-#~ msgstr "Total de RAM"
+

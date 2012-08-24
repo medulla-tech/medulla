@@ -1,90 +1,59 @@
-# translation of msc.po to Français
-# Copyright (C) 2008 THE Pulse 2 - MSC Web Interface'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the Pulse 2 - MSC Web Interface package.
-# Olivier Roussy <oroussy@mandriva.com>, 2008.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# 
+## Translators:
 # Nicolas Rueff <nrueff@mandriva.com>, 2007, 2010.
-#
+# Olivier Roussy <oroussy@mandriva.com>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: Pulse 2 - Packages Web Interface 1.3.0\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-05 14:49+0100\n"
-"PO-Revision-Date: 2010-10-08 09:22+0200\n"
-"Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
-"Language-Team: Pulse 2 developers <pulse2-devel@mandrivalinux.org>\n"
-"Language: fr\n"
+"Project-Id-Version: Pulse 2\n"
+"Report-Msgid-Bugs-To: http://pulse2.mandriva.org/\n"
+"POT-Creation-Date: 2011-01-30 11:29+0100\n"
+"PO-Revision-Date: 2011-06-17 13:11+0000\n"
+"Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
+"Language-Team: French (France) (http://transifex.mandriva.com/projects/p/pulse2/team/fr_FR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: fr_FR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
-#: modules/pkgs/infoPackage.inc.php:46 modules/pkgs/pkgs/edit.php:79
+#: modules/pkgs/infoPackage.inc.php:32 modules/pkgs/infoPackage.inc.php:38
+msgid "Packages"
+msgstr "Packages"
+
+#: modules/pkgs/infoPackage.inc.php:42
+msgid "Show all packages"
+msgstr "Montrer tous les packages"
+
+#: modules/pkgs/infoPackage.inc.php:44 modules/pkgs/pkgs/edit.php:79
 #: modules/pkgs/pkgs/localSidebar.php:28
 msgid "Add a package"
 msgstr "Ajouter un package"
 
-#: modules/pkgs/pkgs/associate_files.php:120
-msgid "Associate"
-msgstr "Associer"
-
-#: modules/pkgs/pkgs/edit.php:179
-msgid "Associate files"
-msgstr "Associer des fichiers"
-
-#: modules/pkgs/infoPackage.inc.php:51
-msgid "Associate files to a package"
-msgstr "Associer des fichiers à un package"
-
-#: modules/pkgs/pkgs/associate_files.php:79
-#, php-format
-msgid "Associate files to package <b>%s (%s)</b>"
-msgstr "Associer des fichiers au package <b>%s (%s)</b>"
-
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:50
-msgid "Associate package"
-msgstr "Associer des fichiers à un package"
-
-#: modules/pkgs/pkgs/edit.php:139
-msgid "Command : "
-msgstr "Commande : "
-
-#: modules/pkgs/pkgs/edit.php:139
-msgid "Command's name : "
-msgstr "Nom de la commande : "
-
-#: modules/pkgs/pkgs/associate_files.php:121
-msgid "Create an empty package"
-msgstr "Créer un package vide"
-
-#: modules/pkgs/infoPackage.inc.php:61
-#: modules/pkgs/pkgs/ajaxPackageList.php:79
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:79
-msgid "Delete a package"
-msgstr "Supprimer un package"
-
-#: modules/pkgs/pkgs/remove.php:42
-msgid "Delete this package"
-msgstr "Supprimer ce package"
-
-#: modules/pkgs/pkgs/ajaxPackageList.php:69
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
-#: modules/pkgs/pkgs/edit.php:135
-msgid "Description"
-msgstr "Description"
-
-#: modules/pkgs/infoPackage.inc.php:48
-#: modules/pkgs/pkgs/ajaxPackageList.php:78 modules/pkgs/pkgs/edit.php:96
+#: modules/pkgs/infoPackage.inc.php:46 modules/pkgs/pkgs/edit.php:96
+#: modules/pkgs/pkgs/ajaxPackageList.php:78
 msgid "Edit a package"
 msgstr "Éditer un package"
 
-#: modules/pkgs/pkgs/associate_files.php:72
-msgid "Failed to associate files"
-msgstr "L'association de fichiers a échoué"
+#: modules/pkgs/infoPackage.inc.php:49
+msgid "Associate files to a package"
+msgstr "Associer des fichiers à un package"
 
-#: modules/pkgs/pkgs/associate_files.php:69
-#, php-format
-msgid "Failed to associate files%s"
-msgstr "L'association de fichiers a échoué %s"
+#: modules/pkgs/infoPackage.inc.php:52
+msgid "See pending packages"
+msgstr "Montrer les packages en attente"
+
+#: modules/pkgs/infoPackage.inc.php:55
+msgid "Show mirror status"
+msgstr "Montrer l'état de synchronisation des miroirs"
+
+#: modules/pkgs/infoPackage.inc.php:59
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:79
+#: modules/pkgs/pkgs/ajaxPackageList.php:79
+msgid "Delete a package"
+msgstr "Supprimer un package"
 
 #: modules/pkgs/pkgs/associate_files.php:62
 #, php-format
@@ -92,327 +61,127 @@ msgid "Files successfully associated with package <b>%s (%s)</b>%s"
 msgstr ""
 "Les fichiers ont été associés avec le package <b>%s (%s)</b> avec succès.%s"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:53 modules/pkgs/pkgs/index.php:45
+#: modules/pkgs/pkgs/associate_files.php:69
 #, php-format
-msgid "MMC failed to contact package server %s."
-msgstr "Le MMC a échoué à contacter le package serveur %s."
+msgid "Failed to associate files%s"
+msgstr "L'association de fichiers a échoué %s"
 
-#: modules/pkgs/pkgs/edit.php:147
-msgid "Need a reboot ?"
-msgstr "Besoin de re-démarrer ?"
+#: modules/pkgs/pkgs/associate_files.php:72
+msgid "Failed to associate files"
+msgstr "L'association de fichiers a échoué"
 
-#: modules/pkgs/pkgs/edit.php:122
-msgid "Package API"
-msgstr "Api de package"
-
-#: modules/pkgs/pkgs/edit.php:70
-msgid "Package failed to save"
-msgstr "La sauvegarde du package a échoué"
-
-#: modules/pkgs/pkgs/edit.php:133
-msgid "Package label"
-msgstr "Libellé du package"
-
-#: modules/pkgs/pkgs/ajaxPackageList.php:66
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:66
-msgid "Package name"
-msgstr "Nom du package"
-
-#: modules/pkgs/pkgs/ajaxPackageList.php:71
-msgid "Package size"
-msgstr "Taille du package"
-
-#: modules/pkgs/pkgs/edit.php:60
-msgid "Package successfully edited"
-msgstr "Le package a été correctement édité"
-
-#: modules/pkgs/pkgs/edit.php:134
-msgid "Package version"
-msgstr "Version du package"
-
-#: modules/pkgs/infoPackage.inc.php:34 modules/pkgs/infoPackage.inc.php:40
-msgid "Packages"
-msgstr "Packages"
-
-#: modules/pkgs/pkgs/index.php:29 modules/pkgs/pkgs/localSidebar.php:27
-msgid "Packages list"
-msgstr "Liste des packages"
-
-#: modules/pkgs/pkgs/localSidebar.php:29 modules/pkgs/pkgs/pending.php:29
-msgid "Pending packages list"
-msgstr "Liste des packages en attente"
-
-#: modules/pkgs/pkgs/ajaxPackageList.php:63 modules/pkgs/pkgs/index.php:53
-msgid "Please contact your administrator."
-msgstr "Veuillez contacter votre administrateur."
-
-#: modules/pkgs/infoPackage.inc.php:54
-msgid "See pending packages"
-msgstr "Montrer les packages en attente"
+#: modules/pkgs/pkgs/associate_files.php:79
+#, php-format
+msgid "Associate files to package <b>%s (%s)</b>"
+msgstr "Associer des fichiers au package <b>%s (%s)</b>"
 
 #: modules/pkgs/pkgs/associate_files.php:99
 msgid "Select the directory you want for this package"
 msgstr "Sélectionnez le répertoire correspondant à ce package"
 
-#: modules/pkgs/infoPackage.inc.php:44
-msgid "Show all packages"
-msgstr "Montrer tous les packages"
+#: modules/pkgs/pkgs/associate_files.php:120
+msgid "Associate"
+msgstr "Associer"
 
-#: modules/pkgs/infoPackage.inc.php:57
-msgid "Show mirror status"
-msgstr "Montrer l'état de synchronisation des miroirs"
+#: modules/pkgs/pkgs/associate_files.php:121
+msgid "Create an empty package"
+msgstr "Créer un package vide"
+
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:50
+msgid "Associate package"
+msgstr "Associer des fichiers à un package"
+
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:66
+#: modules/pkgs/pkgs/ajaxPackageList.php:66
+msgid "Package name"
+msgstr "Nom du package"
+
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
+#: modules/pkgs/pkgs/edit.php:135 modules/pkgs/pkgs/ajaxPackageList.php:69
+msgid "Description"
+msgstr "Description"
+
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
+#: modules/pkgs/pkgs/ajaxPackageList.php:70
+msgid "Version"
+msgstr "Version"
 
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:78
 msgid "Show mirrors"
 msgstr "Montrer l'état des miroirs"
+
+#: modules/pkgs/pkgs/pending.php:29 modules/pkgs/pkgs/localSidebar.php:29
+msgid "Pending packages list"
+msgstr "Liste des packages en attente"
+
+#: modules/pkgs/pkgs/remove.php:33
+msgid "The package has been deleted."
+msgstr "Le package a été supprimé."
+
+#: modules/pkgs/pkgs/remove.php:34
+msgid "The package failed to delete"
+msgstr "La suppression du package a échoué."
+
+#: modules/pkgs/pkgs/remove.php:42
+msgid "Delete this package"
+msgstr "Supprimer ce package"
+
+#: modules/pkgs/pkgs/edit.php:60
+msgid "Package successfully edited"
+msgstr "Le package a été correctement édité"
+
+#: modules/pkgs/pkgs/edit.php:70
+msgid "Package failed to save"
+msgstr "La sauvegarde du package a échoué"
+
+#: modules/pkgs/pkgs/edit.php:122
+msgid "Package API"
+msgstr "Api de package"
+
+#: modules/pkgs/pkgs/edit.php:133
+msgid "Package label"
+msgstr "Libellé du package"
+
+#: modules/pkgs/pkgs/edit.php:134
+msgid "Package version"
+msgstr "Version du package"
+
+#: modules/pkgs/pkgs/edit.php:139
+msgid "Command's name : "
+msgstr "Nom de la commande : "
+
+#: modules/pkgs/pkgs/edit.php:139
+msgid "Command : "
+msgstr "Commande : "
+
+#: modules/pkgs/pkgs/edit.php:147
+msgid "Need a reboot ?"
+msgstr "Besoin de re-démarrer ?"
+
+#: modules/pkgs/pkgs/edit.php:179
+msgid "Associate files"
+msgstr "Associer des fichiers"
+
+#: modules/pkgs/pkgs/index.php:29 modules/pkgs/pkgs/localSidebar.php:27
+msgid "Packages list"
+msgstr "Liste des packages"
+
+#: modules/pkgs/pkgs/index.php:45 modules/pkgs/pkgs/ajaxPackageList.php:53
+#, php-format
+msgid "MMC failed to contact package server %s."
+msgstr "Le MMC a échoué à contacter le package serveur %s."
+
+#: modules/pkgs/pkgs/index.php:53 modules/pkgs/pkgs/ajaxPackageList.php:63
+msgid "Please contact your administrator."
+msgstr "Veuillez contacter votre administrateur."
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:71
+msgid "Package size"
+msgstr "Taille du package"
 
 #: modules/pkgs/pkgs/rsync.php:32
 #, php-format
 msgid "The package %s (%s) is not associated"
 msgstr "Le package %s (%s) n'est pas associé"
 
-#: modules/pkgs/pkgs/remove.php:34
-msgid "The package failed to delete"
-msgstr "La suppression du package a échoué."
 
-#: modules/pkgs/pkgs/remove.php:33
-msgid "The package has been deleted."
-msgstr "Le package a été supprimé."
-
-#: modules/pkgs/pkgs/ajaxPackageList.php:70
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
-msgid "Version"
-msgstr "Version"
-
-#, fuzzy
-#~ msgid "Add a profile"
-#~ msgstr "Ajouter un package"
-
-#, fuzzy
-#~ msgid "Add a value"
-#~ msgstr "Ajouter un package"
-
-#, fuzzy
-#~ msgid "BiosVersion"
-#~ msgstr "Versions"
-
-#, fuzzy
-#~ msgid "Command"
-#~ msgstr "Commande : "
-
-#, fuzzy
-#~ msgid "Command expiry date"
-#~ msgstr "Commande : "
-
-#, fuzzy
-#~ msgid "Command line to run"
-#~ msgstr "Nom de la commande : "
-
-#, fuzzy
-#~ msgid "Command name"
-#~ msgstr "Nom de la commande : "
-
-#, fuzzy
-#~ msgid "Command parameters"
-#~ msgstr "Nom de la commande : "
-
-#, fuzzy
-#~ msgid "Command start date"
-#~ msgstr "Commande : "
-
-#, fuzzy
-#~ msgid "Command status"
-#~ msgstr "Commande : "
-
-#, fuzzy
-#~ msgid "Delete failed"
-#~ msgstr "Supprimer un package"
-
-#, fuzzy
-#~ msgid "Delete file"
-#~ msgstr "Supprimer ce package"
-
-#, fuzzy
-#~ msgid "Delete image"
-#~ msgstr "Supprimer un package"
-
-#, fuzzy
-#~ msgid "Delete in progress"
-#~ msgstr "Supprimer ce package"
-
-#, fuzzy
-#~ msgid "Delete master"
-#~ msgstr "Supprimer un package"
-
-#, fuzzy
-#~ msgid "Delete the image"
-#~ msgstr "Supprimer ce package"
-
-#, fuzzy
-#~ msgid "Delete this group"
-#~ msgstr "Supprimer ce package"
-
-#, fuzzy
-#~ msgid "Delete this profile"
-#~ msgstr "Supprimer ce package"
-
-#~ msgid "Descriptions"
-#~ msgstr "Descriptions"
-
-#, fuzzy
-#~ msgid "Edit a profile"
-#~ msgstr "Éditer un package"
-
-#, fuzzy
-#~ msgid "Edit a static group"
-#~ msgstr "Éditer un package"
-
-#, fuzzy
-#~ msgid "Edit image"
-#~ msgstr "Éditer un package"
-
-#, fuzzy
-#~ msgid "Edition of image"
-#~ msgstr "Éditer un package"
-
-#, fuzzy
-#~ msgid "ExpandedDescription"
-#~ msgstr "Description"
-
-#, fuzzy
-#~ msgid "ExtendedDescription"
-#~ msgstr "Description"
-
-#, fuzzy
-#~ msgid "Group failed to share"
-#~ msgstr "La sauvegarde du package a échoué"
-
-#, fuzzy
-#~ msgid "Group successfully created"
-#~ msgstr "Le package a été correctement édité"
-
-#, fuzzy
-#~ msgid "Group successfully modified"
-#~ msgstr "Le package a été correctement édité"
-
-#, fuzzy
-#~ msgid "Group successfully shared"
-#~ msgstr "Le package a été correctement édité"
-
-#, fuzzy
-#~ msgid "HardwareVersion"
-#~ msgstr "Versions"
-
-#, fuzzy
-#~ msgid "Name"
-#~ msgstr "Noms"
-
-#, fuzzy
-#~ msgid "Name :"
-#~ msgstr "Noms"
-
-#~ msgid "Names"
-#~ msgstr "Noms"
-
-#, fuzzy
-#~ msgid "Package"
-#~ msgstr "Packages"
-
-#, fuzzy
-#~ msgid "ProductVersion"
-#~ msgstr "Versions"
-
-#, fuzzy
-#~ msgid "Profile successfully created"
-#~ msgstr "Le package a été correctement édité"
-
-#, fuzzy
-#~ msgid "Profile successfully modified"
-#~ msgstr "Le package a été correctement édité"
-
-#, fuzzy
-#~ msgid "Profiles list"
-#~ msgstr "Liste des packages"
-
-#, fuzzy
-#~ msgid "Restoration"
-#~ msgstr "Description"
-
-#, fuzzy
-#~ msgid "Restoration options"
-#~ msgstr "Descriptions"
-
-#, fuzzy
-#~ msgid "Select the file you want to import"
-#~ msgstr "Sélectionnez le répertoire correspondant à ce package"
-
-#, fuzzy
-#~ msgid "Select the imaging server for this profile."
-#~ msgstr "Sélectionnez le répertoire correspondant à ce package"
-
-#, fuzzy
-#~ msgid "Select this hard disk"
-#~ msgstr "Supprimer ce package"
-
-#, fuzzy
-#~ msgid "Server status"
-#~ msgstr "Montrer l'état de synchronisation des miroirs"
-
-#, fuzzy
-#~ msgid "Show all logs"
-#~ msgstr "Montrer tous les packages"
-
-#, fuzzy
-#~ msgid "Show all pending task's logs"
-#~ msgstr "Montrer tous les packages"
-
-#, fuzzy
-#~ msgid "Show all task logs"
-#~ msgstr "Montrer tous les packages"
-
-#, fuzzy
-#~ msgid "Show package's details"
-#~ msgstr "Montrer tous les packages"
-
-#, fuzzy
-#~ msgid "Show pending task's logs"
-#~ msgstr "Montrer les packages en attente"
-
-#, fuzzy
-#~ msgid "SmbVersion"
-#~ msgstr "Versions"
-
-#, fuzzy
-#~ msgid "StandardDescription"
-#~ msgstr "Description"
-
-#, fuzzy
-#~ msgid "Synchronization failed for package server: %s"
-#~ msgstr "Le MMC a échoué à contacter le package serveur %s."
-
-#, fuzzy
-#~ msgid "The file has been deleted."
-#~ msgstr "Le package a été supprimé."
-
-#, fuzzy
-#~ msgid "The package '%s' is not available on any mirror."
-#~ msgstr "Le package %s (%s) n'est pas associé"
-
-#~ msgid "Versions"
-#~ msgstr "Versions"
-
-#, fuzzy
-#~ msgid "computers successfully deployed"
-#~ msgstr "Le package a été correctement édité"
-
-#, fuzzy
-#~ msgid "designation"
-#~ msgstr "Description"
-
-#, fuzzy
-#~ msgid "logs list"
-#~ msgstr "Liste des packages"
-
-#, fuzzy
-#~ msgid "os_version"
-#~ msgstr "Versions"

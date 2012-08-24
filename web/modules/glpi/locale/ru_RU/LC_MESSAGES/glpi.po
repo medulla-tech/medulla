@@ -1,360 +1,215 @@
-# translation of glpi.po to
+# SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
+## Translators:
+#   <i.sence.i@gmail.com>, 2011.
 # Andrzej Skrzypczak <aeskrzypczak@gmail.com>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: glpi\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-05 14:49+0100\n"
-"PO-Revision-Date: 2008-07-25 13:37+0200\n"
-"Last-Translator: Andrzej Skrzypczak <aeskrzypczak@gmail.com>\n"
-"Language-Team:  <pl@li.org>\n"
-"Language: \n"
+"Project-Id-Version: Pulse 2\n"
+"Report-Msgid-Bugs-To: http://pulse2.mandriva.org/\n"
+"POT-Creation-Date: 2011-01-30 11:29+0100\n"
+"PO-Revision-Date: 2011-07-25 09:13+0000\n"
+"Last-Translator: Irina Sikach <i.sence.i@gmail.com>\n"
+"Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/pulse2/team/ru_RU/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.11.4\n"
+"Language: ru_RU\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
 
-#: modules/glpi/glpi/tabs.php:49
-#, fuzzy, php-format
-msgid "%s's inventory (%s)"
-msgstr "Inwentarz %s (GLPI)"
+#: modules/glpi/glpi/view_part.php:76 modules/glpi/glpi/view_hardware.php:76
+msgid "name"
+msgstr "имя"
 
-#: modules/glpi/glpi/view_hardware.php:54
-#, fuzzy
-msgid "<br/>license number : "
-msgstr "numer_licencji_systemu"
-
-#: modules/glpi/glpi/tabs.php:56
-msgid "Controller"
-msgstr "Kontroler"
-
-#: modules/glpi/infoPackage.inc.php:35
-msgid "Display locations"
-msgstr "Pokaż lokalizacje"
-
-#: modules/glpi/infoPackage.inc.php:55 modules/glpi/infoPackage.inc.php:70
-msgid "GLPI controller tab"
-msgstr "Zakładka kontrolera GLIP"
-
-#: modules/glpi/infoPackage.inc.php:49 modules/glpi/infoPackage.inc.php:64
-msgid "GLPI hardware tab"
-msgstr "Zakłądka sprzętu GLPI"
-
-#: modules/glpi/infoPackage.inc.php:52 modules/glpi/infoPackage.inc.php:67
-msgid "GLPI network tab"
-msgstr "Zakłądka sieci GLPI"
-
-#: modules/glpi/glpi/tabs.php:52
-msgid "Hardware"
-msgstr "Sprzęt"
-
-#: modules/glpi/infoPackage.inc.php:45
-msgid "Inventory (GLPI) on a groups of machines"
-msgstr "Inwentarz (GLPI) na grupie maszyn"
-
-#: modules/glpi/infoPackage.inc.php:60
-msgid "Inventory (GLPI) on machine"
-msgstr "Inwentarz (GLPI) na maszynie"
-
-#: modules/glpi/glpi/tabs.php:56
-msgid "Network"
-msgstr "Sieć"
-
-#: modules/glpi/glpi/view_hardware.php:70
-msgid "Properties"
-msgstr "Właściwości"
-
-#: modules/glpi/glpi/view_hardware.php:71
-msgid "Value"
-msgstr "Wartość"
-
-#: modules/glpi/glpi/view_part.php:87
-msgid "bandwidth"
-msgstr ""
-
-#: modules/glpi/glpi/view_part.php:90
-#, fuzzy
-msgid "comment"
-msgstr "komentarze"
-
-#: modules/glpi/glpi/view_hardware.php:77 modules/glpi/glpi/view_part.php:77
+#: modules/glpi/glpi/view_part.php:77 modules/glpi/glpi/view_hardware.php:77
 msgid "comments"
-msgstr "komentarze"
-
-#: modules/glpi/glpi/view_hardware.php:88
-msgid "contact"
-msgstr ""
-
-#: modules/glpi/glpi/view_part.php:84
-msgid "designation"
-msgstr ""
-
-#: modules/glpi/glpi/view_part.php:96
-msgid "drive"
-msgstr ""
-
-#: modules/glpi/glpi/view_hardware.php:89
-msgid "entity"
-msgstr ""
-
-#: modules/glpi/glpi/view_part.php:86
-msgid "frequence"
-msgstr ""
-
-#: modules/glpi/glpi/view_part.php:81
-msgid "gateway"
-msgstr ""
-
-#: modules/glpi/glpi/view_part.php:97
-msgid "gfxcard"
-msgstr ""
-
-#: modules/glpi/glpi/view_part.php:94
-#, fuzzy
-msgid "hdd"
-msgstr "Dodaj"
-
-#: modules/glpi/glpi/view_part.php:95
-msgid "iface"
-msgstr ""
+msgstr "коментарии"
 
 #: modules/glpi/glpi/view_part.php:78
 msgid "ifaddr"
-msgstr ""
+msgstr "ifaddr"
 
 #: modules/glpi/glpi/view_part.php:79
 msgid "ifmac"
-msgstr ""
-
-#: modules/glpi/glpi/view_part.php:89
-msgid "interface"
-msgstr ""
-
-#: modules/glpi/glpi/view_part.php:88
-msgid "is_writer"
-msgstr ""
-
-#: modules/glpi/glpi/view_hardware.php:54
-#, fuzzy
-msgid "license id : "
-msgstr "id_licencji_systemu"
-
-#: modules/glpi/glpi/view_hardware.php:85
-msgid "location"
-msgstr "lokalizacja"
-
-#: modules/glpi/glpi/view_hardware.php:86
-msgid "model"
-msgstr ""
-
-#: modules/glpi/glpi/view_hardware.php:76 modules/glpi/glpi/view_part.php:76
-msgid "name"
-msgstr "nazwa"
+msgstr "ifmac"
 
 #: modules/glpi/glpi/view_part.php:80
 msgid "netmask"
-msgstr ""
+msgstr "маска сети"
 
-#: modules/glpi/glpi/view_hardware.php:79
-msgid "os"
-msgstr "system"
-
-#: modules/glpi/glpi/view_hardware.php:84
-#, fuzzy
-msgid "os_license"
-msgstr "id_licencji_systemu"
-
-#: modules/glpi/glpi/view_hardware.php:83
-msgid "os_license_id"
-msgstr "id_licencji_systemu"
-
-#: modules/glpi/glpi/view_hardware.php:82
-msgid "os_license_number"
-msgstr "numer_licencji_systemu"
-
-#: modules/glpi/glpi/view_hardware.php:81
-msgid "os_sp"
-msgstr "os_sp"
-
-#: modules/glpi/glpi/view_hardware.php:80
-msgid "os_version"
-msgstr "wersja_systemu"
-
-#: modules/glpi/glpi/view_part.php:99
-msgid "pci"
-msgstr ""
-
-#: modules/glpi/glpi/view_part.php:92
-msgid "processor"
-msgstr ""
-
-#: modules/glpi/glpi/view_part.php:93
-msgid "ram"
-msgstr ""
-
-#: modules/glpi/glpi/view_hardware.php:78
-msgid "serial"
-msgstr "numer"
-
-#: modules/glpi/glpi/view_part.php:98
-msgid "sndcard"
-msgstr ""
-
-#: modules/glpi/glpi/view_part.php:85
-msgid "specif_default"
-msgstr ""
+#: modules/glpi/glpi/view_part.php:81
+msgid "gateway"
+msgstr "шлюз"
 
 #: modules/glpi/glpi/view_part.php:82
 msgid "subnet"
-msgstr ""
+msgstr "подсеть"
 
-#: modules/glpi/glpi/view_hardware.php:87 modules/glpi/glpi/view_part.php:83
+#: modules/glpi/glpi/view_part.php:83 modules/glpi/glpi/view_hardware.php:87
 msgid "type"
-msgstr ""
+msgstr "тип"
 
-#, fuzzy
-#~ msgid "%s's content inventory"
-#~ msgstr "Inwentarz %s (GLPI)"
+#: modules/glpi/glpi/view_part.php:84
+msgid "designation"
+msgstr "обозначение"
 
-#, fuzzy
-#~ msgid "%s's inventory"
-#~ msgstr "Inwentarz %s (GLPI)"
+#: modules/glpi/glpi/view_part.php:85
+msgid "specif_default"
+msgstr "specif_default"
 
-#, fuzzy
-#~ msgid "Add"
-#~ msgstr "Dodaj"
+#: modules/glpi/glpi/view_part.php:86
+msgid "frequence"
+msgstr "частота"
 
-#, fuzzy
-#~ msgid "Application"
-#~ msgstr "lokalizacja"
+#: modules/glpi/glpi/view_part.php:87
+msgid "bandwidth"
+msgstr "пропускная способность"
 
-#, fuzzy
-#~ msgid "BiosVersion"
-#~ msgstr "wersja_systemu"
+#: modules/glpi/glpi/view_part.php:88
+msgid "is_writer"
+msgstr "is_writer"
 
-#, fuzzy
-#~ msgid "BuyValue"
-#~ msgstr "Wartość"
+#: modules/glpi/glpi/view_part.php:89
+msgid "interface"
+msgstr "интерфейс"
 
-#, fuzzy
-#~ msgid "Caption"
-#~ msgstr "lokalizacja"
+#: modules/glpi/glpi/view_part.php:90
+msgid "comment"
+msgstr "комментарий"
 
-#, fuzzy
-#~ msgid "ChipSerial"
-#~ msgstr "numer"
+#: modules/glpi/glpi/view_part.php:92
+msgid "processor"
+msgstr "процессор"
 
-#, fuzzy
-#~ msgid "Comments"
-#~ msgstr "komentarze"
+#: modules/glpi/glpi/view_part.php:93
+msgid "ram"
+msgstr "оперативная память"
 
-#, fuzzy
-#~ msgid "Controller list"
-#~ msgstr "Kontroler"
+#: modules/glpi/glpi/view_part.php:94
+msgid "hdd"
+msgstr "жёсткий диск"
 
-#, fuzzy
-#~ msgid "Creation"
-#~ msgstr "lokalizacja"
+#: modules/glpi/glpi/view_part.php:95
+msgid "iface"
+msgstr "iface"
 
-#, fuzzy
-#~ msgid "Display content"
-#~ msgstr "Pokaż lokalizacje"
+#: modules/glpi/glpi/view_part.php:96
+msgid "drive"
+msgstr "накопитель"
 
-#, fuzzy
-#~ msgid "Displayed on WOL"
-#~ msgstr "Pokaż lokalizacje"
+#: modules/glpi/glpi/view_part.php:97
+msgid "gfxcard"
+msgstr "gfxcard"
 
-#, fuzzy
-#~ msgid "Elements"
-#~ msgstr "komentarze"
+#: modules/glpi/glpi/view_part.php:98
+msgid "sndcard"
+msgstr "sndcard"
 
-#, fuzzy
-#~ msgid "File name"
-#~ msgstr "nazwa"
+#: modules/glpi/glpi/view_part.php:99
+msgid "pci"
+msgstr "pci"
 
-#, fuzzy
-#~ msgid "Group creation"
-#~ msgstr "lokalizacja"
+#: modules/glpi/glpi/tabs.php:49
+#, php-format
+msgid "%s's inventory (%s)"
+msgstr "инвентаризация %s (%s)"
 
-#, fuzzy
-#~ msgid "HardwareVersion"
-#~ msgstr "Sprzęt"
+#: modules/glpi/glpi/tabs.php:52
+msgid "Hardware"
+msgstr "аппаратное обеспечение"
 
-#, fuzzy
-#~ msgid "Informations"
-#~ msgstr "lokalizacja"
+#: modules/glpi/glpi/tabs.php:56
+msgid "Network"
+msgstr "Сеть"
 
-#, fuzzy
-#~ msgid "Inventory changes"
-#~ msgstr "Inwentarz (GLPI) na maszynie"
+#: modules/glpi/glpi/tabs.php:56
+msgid "Controller"
+msgstr "Контроллер "
 
-#, fuzzy
-#~ msgid "Inventory done"
-#~ msgstr "Inwentarz (GLPI) na maszynie"
+#: modules/glpi/glpi/view_hardware.php:54
+msgid "license id : "
+msgstr "Лицензия :"
 
-#, fuzzy
-#~ msgid "Inventory failed"
-#~ msgstr "Inwentarz (GLPI) na maszynie"
+#: modules/glpi/glpi/view_hardware.php:54
+msgid "<br/>license number : "
+msgstr "<br/>номер лицензии : "
 
-#, fuzzy
-#~ msgid "Inventory of %s"
-#~ msgstr "Inwentarz %s (GLPI)"
+#: modules/glpi/glpi/view_hardware.php:70
+msgid "Properties"
+msgstr "Свойства"
 
-#, fuzzy
-#~ msgid "Inventory on a group of computers"
-#~ msgstr "Inwentarz (GLPI) na grupie maszyn"
+#: modules/glpi/glpi/view_hardware.php:71
+msgid "Value"
+msgstr "Значение"
 
-#, fuzzy
-#~ msgid "Inventory on this group"
-#~ msgstr "Inwentarz (GLPI) na grupie maszyn"
+#: modules/glpi/glpi/view_hardware.php:78
+msgid "serial"
+msgstr "серийный номер"
 
-#, fuzzy
-#~ msgid "Inventory on this profile"
-#~ msgstr "Inwentarz (GLPI) na maszynie"
+#: modules/glpi/glpi/view_hardware.php:79
+msgid "os"
+msgstr "ОС"
 
-#, fuzzy
-#~ msgid "Location"
-#~ msgstr "lokalizacja"
+#: modules/glpi/glpi/view_hardware.php:80
+msgid "os_version"
+msgstr "версия_ОС"
 
-#, fuzzy
-#~ msgid "My commands"
-#~ msgstr "komentarze"
+#: modules/glpi/glpi/view_hardware.php:81
+msgid "os_sp"
+msgstr "ОС_sp"
 
-#, fuzzy
-#~ msgid "NetworkType"
-#~ msgstr "Sieć"
+#: modules/glpi/glpi/view_hardware.php:82
+msgid "os_license_number"
+msgstr "номер_лицензии_ОС"
 
-#, fuzzy
-#~ msgid "Restoration"
-#~ msgstr "lokalizacja"
+#: modules/glpi/glpi/view_hardware.php:83
+msgid "os_license_id"
+msgstr "id_лицензии_ОС"
 
-#, fuzzy
-#~ msgid "Serial"
-#~ msgstr "numer"
+#: modules/glpi/glpi/view_hardware.php:84
+msgid "os_license"
+msgstr "лицензия_ОС"
 
-#, fuzzy
-#~ msgid "SmbSerial"
-#~ msgstr "numer"
+#: modules/glpi/glpi/view_hardware.php:85
+msgid "location"
+msgstr "локализация"
 
-#, fuzzy
-#~ msgid "SmbVersion"
-#~ msgstr "wersja_systemu"
+#: modules/glpi/glpi/view_hardware.php:86
+msgid "model"
+msgstr "модель"
 
-#, fuzzy
-#~ msgid "Values"
-#~ msgstr "Wartość"
+#: modules/glpi/glpi/view_hardware.php:88
+msgid "contact"
+msgstr "контакт"
 
-#, fuzzy
-#~ msgid "Version"
-#~ msgstr "wersja_systemu"
+#: modules/glpi/glpi/view_hardware.php:89
+msgid "entity"
+msgstr "объект"
 
-#, fuzzy
-#~ msgid "Versions"
-#~ msgstr "wersja_systemu"
+#: modules/glpi/infoPackage.inc.php:35
+msgid "Display locations"
+msgstr "Показать расположения"
 
-#, fuzzy
-#~ msgid "action"
-#~ msgstr "lokalizacja"
+#: modules/glpi/infoPackage.inc.php:45
+msgid "Inventory (GLPI) on a groups of machines"
+msgstr "Инвентаризация (GLPI) на группах машин"
+
+#: modules/glpi/infoPackage.inc.php:49 modules/glpi/infoPackage.inc.php:64
+msgid "GLPI hardware tab"
+msgstr "вкладка аппаратного обеспечения GLPI"
+
+#: modules/glpi/infoPackage.inc.php:52 modules/glpi/infoPackage.inc.php:67
+msgid "GLPI network tab"
+msgstr "вкладка сети GLPI"
+
+#: modules/glpi/infoPackage.inc.php:55 modules/glpi/infoPackage.inc.php:70
+msgid "GLPI controller tab"
+msgstr "вкладка контроллера GLPI"
+
+#: modules/glpi/infoPackage.inc.php:60
+msgid "Inventory (GLPI) on machine"
+msgstr "Инвентаризация (GLPI) на машине"
+
+

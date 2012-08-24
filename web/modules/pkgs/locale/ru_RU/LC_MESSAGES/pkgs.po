@@ -1,183 +1,185 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
+# 
+## Translators:
+#   <i.sence.i@gmail.com>, 2011.
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-05 14:49+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Project-Id-Version: Pulse 2\n"
+"Report-Msgid-Bugs-To: http://pulse2.mandriva.org/\n"
+"POT-Creation-Date: 2011-01-30 11:29+0100\n"
+"PO-Revision-Date: 2011-07-20 03:43+0000\n"
+"Last-Translator: Irina Sikach <i.sence.i@gmail.com>\n"
+"Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/pulse2/team/ru_RU/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: ru_RU\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
 
-#: modules/pkgs/infoPackage.inc.php:46 modules/pkgs/pkgs/edit.php:79
+#: modules/pkgs/infoPackage.inc.php:32 modules/pkgs/infoPackage.inc.php:38
+msgid "Packages"
+msgstr "Пакеты"
+
+#: modules/pkgs/infoPackage.inc.php:42
+msgid "Show all packages"
+msgstr "Показать все пакеты"
+
+#: modules/pkgs/infoPackage.inc.php:44 modules/pkgs/pkgs/edit.php:79
 #: modules/pkgs/pkgs/localSidebar.php:28
 msgid "Add a package"
-msgstr ""
+msgstr "Добавить пакет"
 
-#: modules/pkgs/pkgs/associate_files.php:120
-msgid "Associate"
-msgstr ""
-
-#: modules/pkgs/pkgs/edit.php:179
-msgid "Associate files"
-msgstr ""
-
-#: modules/pkgs/infoPackage.inc.php:51
-msgid "Associate files to a package"
-msgstr ""
-
-#: modules/pkgs/pkgs/associate_files.php:79
-#, php-format
-msgid "Associate files to package <b>%s (%s)</b>"
-msgstr ""
-
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:50
-msgid "Associate package"
-msgstr ""
-
-#: modules/pkgs/pkgs/edit.php:139
-msgid "Command : "
-msgstr ""
-
-#: modules/pkgs/pkgs/edit.php:139
-msgid "Command's name : "
-msgstr ""
-
-#: modules/pkgs/pkgs/associate_files.php:121
-msgid "Create an empty package"
-msgstr ""
-
-#: modules/pkgs/infoPackage.inc.php:61
-#: modules/pkgs/pkgs/ajaxPackageList.php:79
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:79
-msgid "Delete a package"
-msgstr ""
-
-#: modules/pkgs/pkgs/remove.php:42
-msgid "Delete this package"
-msgstr ""
-
-#: modules/pkgs/pkgs/ajaxPackageList.php:69
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
-#: modules/pkgs/pkgs/edit.php:135
-msgid "Description"
-msgstr ""
-
-#: modules/pkgs/infoPackage.inc.php:48
-#: modules/pkgs/pkgs/ajaxPackageList.php:78 modules/pkgs/pkgs/edit.php:96
+#: modules/pkgs/infoPackage.inc.php:46 modules/pkgs/pkgs/edit.php:96
+#: modules/pkgs/pkgs/ajaxPackageList.php:78
 msgid "Edit a package"
-msgstr ""
+msgstr "Редактировать пакет"
 
-#: modules/pkgs/pkgs/associate_files.php:72
-msgid "Failed to associate files"
-msgstr ""
+#: modules/pkgs/infoPackage.inc.php:49
+msgid "Associate files to a package"
+msgstr "Объединить файлы в пакет"
 
-#: modules/pkgs/pkgs/associate_files.php:69
-#, php-format
-msgid "Failed to associate files%s"
-msgstr ""
+#: modules/pkgs/infoPackage.inc.php:52
+msgid "See pending packages"
+msgstr "Просмотреть ожидающие пакеты"
+
+#: modules/pkgs/infoPackage.inc.php:55
+msgid "Show mirror status"
+msgstr "Показать состояние зеркала"
+
+#: modules/pkgs/infoPackage.inc.php:59
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:79
+#: modules/pkgs/pkgs/ajaxPackageList.php:79
+msgid "Delete a package"
+msgstr "Удалить пакет"
 
 #: modules/pkgs/pkgs/associate_files.php:62
 #, php-format
 msgid "Files successfully associated with package <b>%s (%s)</b>%s"
-msgstr ""
+msgstr "Файлы успешно объединены с пакетом  <b>%s (%s)</b>%s"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:53 modules/pkgs/pkgs/index.php:45
+#: modules/pkgs/pkgs/associate_files.php:69
 #, php-format
-msgid "MMC failed to contact package server %s."
-msgstr ""
+msgid "Failed to associate files%s"
+msgstr "Не удалось объединить файлы %s"
 
-#: modules/pkgs/pkgs/edit.php:147
-msgid "Need a reboot ?"
-msgstr ""
+#: modules/pkgs/pkgs/associate_files.php:72
+msgid "Failed to associate files"
+msgstr "Не удалось объединить файлы"
 
-#: modules/pkgs/pkgs/edit.php:122
-msgid "Package API"
-msgstr ""
-
-#: modules/pkgs/pkgs/edit.php:70
-msgid "Package failed to save"
-msgstr ""
-
-#: modules/pkgs/pkgs/edit.php:133
-msgid "Package label"
-msgstr ""
-
-#: modules/pkgs/pkgs/ajaxPackageList.php:66
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:66
-msgid "Package name"
-msgstr ""
-
-#: modules/pkgs/pkgs/ajaxPackageList.php:71
-msgid "Package size"
-msgstr ""
-
-#: modules/pkgs/pkgs/edit.php:60
-msgid "Package successfully edited"
-msgstr ""
-
-#: modules/pkgs/pkgs/edit.php:134
-msgid "Package version"
-msgstr ""
-
-#: modules/pkgs/infoPackage.inc.php:34 modules/pkgs/infoPackage.inc.php:40
-msgid "Packages"
-msgstr ""
-
-#: modules/pkgs/pkgs/index.php:29 modules/pkgs/pkgs/localSidebar.php:27
-msgid "Packages list"
-msgstr ""
-
-#: modules/pkgs/pkgs/localSidebar.php:29 modules/pkgs/pkgs/pending.php:29
-msgid "Pending packages list"
-msgstr ""
-
-#: modules/pkgs/pkgs/ajaxPackageList.php:63 modules/pkgs/pkgs/index.php:53
-msgid "Please contact your administrator."
-msgstr ""
-
-#: modules/pkgs/infoPackage.inc.php:54
-msgid "See pending packages"
-msgstr ""
+#: modules/pkgs/pkgs/associate_files.php:79
+#, php-format
+msgid "Associate files to package <b>%s (%s)</b>"
+msgstr "Объединить файлы в пакет <b>%s (%s)</b>"
 
 #: modules/pkgs/pkgs/associate_files.php:99
 msgid "Select the directory you want for this package"
-msgstr ""
+msgstr "Выберите каталог, который требуется для этого пакета"
 
-#: modules/pkgs/infoPackage.inc.php:44
-msgid "Show all packages"
-msgstr ""
+#: modules/pkgs/pkgs/associate_files.php:120
+msgid "Associate"
+msgstr "Объединить"
 
-#: modules/pkgs/infoPackage.inc.php:57
-msgid "Show mirror status"
-msgstr ""
+#: modules/pkgs/pkgs/associate_files.php:121
+msgid "Create an empty package"
+msgstr "Создать пустой пакет"
+
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:50
+msgid "Associate package"
+msgstr "Объединить пакет"
+
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:66
+#: modules/pkgs/pkgs/ajaxPackageList.php:66
+msgid "Package name"
+msgstr "Имя пакета"
+
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
+#: modules/pkgs/pkgs/edit.php:135 modules/pkgs/pkgs/ajaxPackageList.php:69
+msgid "Description"
+msgstr "Описание"
+
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
+#: modules/pkgs/pkgs/ajaxPackageList.php:70
+msgid "Version"
+msgstr "Версия"
 
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:78
 msgid "Show mirrors"
-msgstr ""
+msgstr "Показать зеркала"
+
+#: modules/pkgs/pkgs/pending.php:29 modules/pkgs/pkgs/localSidebar.php:29
+msgid "Pending packages list"
+msgstr "Список ожидающих пакетов"
+
+#: modules/pkgs/pkgs/remove.php:33
+msgid "The package has been deleted."
+msgstr "Пакет был удален."
+
+#: modules/pkgs/pkgs/remove.php:34
+msgid "The package failed to delete"
+msgstr "Не удалось удалить пакет"
+
+#: modules/pkgs/pkgs/remove.php:42
+msgid "Delete this package"
+msgstr "Удалить этот пакет"
+
+#: modules/pkgs/pkgs/edit.php:60
+msgid "Package successfully edited"
+msgstr "Пакет успешно отредактирован"
+
+#: modules/pkgs/pkgs/edit.php:70
+msgid "Package failed to save"
+msgstr "Не удалось сохранить пакет"
+
+#: modules/pkgs/pkgs/edit.php:122
+msgid "Package API"
+msgstr "API пакета"
+
+#: modules/pkgs/pkgs/edit.php:133
+msgid "Package label"
+msgstr "Ярлык пакета"
+
+#: modules/pkgs/pkgs/edit.php:134
+msgid "Package version"
+msgstr "Версия пакета"
+
+#: modules/pkgs/pkgs/edit.php:139
+msgid "Command's name : "
+msgstr "Название команды: "
+
+#: modules/pkgs/pkgs/edit.php:139
+msgid "Command : "
+msgstr "Команда: "
+
+#: modules/pkgs/pkgs/edit.php:147
+msgid "Need a reboot ?"
+msgstr "Нужна перезагрузка?"
+
+#: modules/pkgs/pkgs/edit.php:179
+msgid "Associate files"
+msgstr "Объединить файлы"
+
+#: modules/pkgs/pkgs/index.php:29 modules/pkgs/pkgs/localSidebar.php:27
+msgid "Packages list"
+msgstr "Список пакетов"
+
+#: modules/pkgs/pkgs/index.php:45 modules/pkgs/pkgs/ajaxPackageList.php:53
+#, php-format
+msgid "MMC failed to contact package server %s."
+msgstr "MMC не удалось связаться с пакетным сервером %s."
+
+#: modules/pkgs/pkgs/index.php:53 modules/pkgs/pkgs/ajaxPackageList.php:63
+msgid "Please contact your administrator."
+msgstr "Пожалуйста, свяжитесь с вашим администратором."
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:71
+msgid "Package size"
+msgstr "Размер пакета"
 
 #: modules/pkgs/pkgs/rsync.php:32
 #, php-format
 msgid "The package %s (%s) is not associated"
-msgstr ""
+msgstr "Пакет %s (%s) не объединен"
 
-#: modules/pkgs/pkgs/remove.php:34
-msgid "The package failed to delete"
-msgstr ""
 
-#: modules/pkgs/pkgs/remove.php:33
-msgid "The package has been deleted."
-msgstr ""
-
-#: modules/pkgs/pkgs/ajaxPackageList.php:70
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
-msgid "Version"
-msgstr ""

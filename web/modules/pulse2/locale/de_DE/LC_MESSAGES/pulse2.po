@@ -1,120 +1,40 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
+## Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: 2.4.0\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-05 14:49+0100\n"
-"PO-Revision-Date: 2010-08-08 07:21+0100\n"
-"Last-Translator: Mario Fetka <mario.fetka@gmail.com>\n"
-"Language-Team: Mario Fetka <mario.fetka@gmail.com>\n"
-"Language: \n"
+"Project-Id-Version: Pulse 2\n"
+"Report-Msgid-Bugs-To: http://pulse2.mandriva.org/\n"
+"POT-Creation-Date: 2011-01-30 11:29+0100\n"
+"PO-Revision-Date: 2011-06-17 13:08+0000\n"
+"Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
+"Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/pulse2/team/de_DE/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-Language: German\n"
-"X-Poedit-Country: AUSTRIA\n"
-"X-Poedit-SourceCharset: utf-8\n"
+"Language: de_DE\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 #: modules/pulse2/pulse2/computers_list.php:42
 msgid "All my entities"
 msgstr "Alle meine Einheiten"
 
-#: modules/pulse2/infoPackage.inc.php:45
-msgid "Computers list"
-msgstr "Comupter Liste"
-
-#: modules/pulse2/infoPackage.inc.php:50
-msgid "Location selection in computer edit"
-msgstr "Standortauswahl in Computer bearbeiten"
-
-#: modules/pulse2/infoPackage.inc.php:34
-msgid "Pulse2"
-msgstr "Pulse2"
-
 #: modules/pulse2/includes/locations_xmlrpc.inc.php:31
 msgid "Root entity"
 msgstr "Haupt Eintrag"
 
-#, fuzzy
-#~ msgid "All share entities"
-#~ msgstr "Alle meine Einheiten"
+#: modules/pulse2/infoPackage.inc.php:33
+msgid "Pulse2"
+msgstr "Pulse2"
 
-#, fuzzy
-#~ msgid "Bios list"
-#~ msgstr "Comupter Liste"
+#: modules/pulse2/infoPackage.inc.php:44
+msgid "Computers list"
+msgstr "Comupter Liste"
 
-#, fuzzy
-#~ msgid "Boot menu"
-#~ msgstr "Haupt Eintrag"
+#: modules/pulse2/infoPackage.inc.php:49
+msgid "Location selection in computer edit"
+msgstr "Standortauswahl in Computer bearbeiten"
 
-#, fuzzy
-#~ msgid "Computer"
-#~ msgstr "Comupter Liste"
 
-#, fuzzy
-#~ msgid "Computer UUID Request"
-#~ msgstr "Comupter Liste"
-
-#, fuzzy
-#~ msgid "Computer UUID Sent"
-#~ msgstr "Comupter Liste"
-
-#, fuzzy
-#~ msgid "Computer name"
-#~ msgstr "Comupter Liste"
-
-#, fuzzy
-#~ msgid "Computers Group Editor"
-#~ msgstr "Comupter Liste"
-
-#, fuzzy
-#~ msgid "Computers Profile Creator"
-#~ msgstr "Comupter Liste"
-
-#, fuzzy
-#~ msgid "Computers Profile Editor"
-#~ msgstr "Comupter Liste"
-
-#, fuzzy
-#~ msgid "Computers in this command"
-#~ msgstr "Comupter Liste"
-
-#, fuzzy
-#~ msgid "Controller list"
-#~ msgstr "Comupter Liste"
-
-#, fuzzy
-#~ msgid "Monitor list"
-#~ msgstr "Comupter Liste"
-
-#, fuzzy
-#~ msgid "Port list"
-#~ msgstr "Comupter Liste"
-
-#, fuzzy
-#~ msgid "Printer list"
-#~ msgstr "Comupter Liste"
-
-#, fuzzy
-#~ msgid "Reboot client"
-#~ msgstr "Haupt Eintrag"
-
-#, fuzzy
-#~ msgid "computers paused"
-#~ msgstr "Comupter Liste"
-
-#, fuzzy
-#~ msgid "computers stopped"
-#~ msgstr "Comupter Liste"
-
-#, fuzzy
-#~ msgid "entity"
-#~ msgstr "Haupt Eintrag"
-
-#, fuzzy
-#~ msgid "logs list"
-#~ msgstr "Comupter Liste"

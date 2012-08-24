@@ -1,119 +1,42 @@
-# translation of pulse2.po to Brazilian Portuguese
+# SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
+## Translators:
+#   <sergio@mandriva.com.br>, 2012.
 # Andre Paulo Machado <andre.panm@gmail.com>, 2009.
 msgid ""
 msgstr ""
-"Project-Id-Version: pulse2\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-05 14:49+0100\n"
-"PO-Revision-Date: 2011-02-24 11:32-0300\n"
-"Last-Translator: Leonardo Coelho <leonardoc@mandriva.com.br>\n"
-"Language-Team: Brazilian Portuguese <kde-i18n-pt_br@mail.kde.org>\n"
-"Language: pt_BR\n"
+"Project-Id-Version: Pulse 2\n"
+"Report-Msgid-Bugs-To: http://pulse2.mandriva.org/\n"
+"POT-Creation-Date: 2011-01-30 11:29+0100\n"
+"PO-Revision-Date: 2012-08-22 16:49+0000\n"
+"Last-Translator: Sergio Rafael Lemke <sergio@mandriva.com.br>\n"
+"Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/projects/p/pulse2/team/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.11.4\n"
-"Plural-Forms: nplurals=2; plural=(n>1);\n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
 #: modules/pulse2/pulse2/computers_list.php:42
 msgid "All my entities"
-msgstr "Todas as minhas entradas"
-
-#: modules/pulse2/infoPackage.inc.php:45
-msgid "Computers list"
-msgstr "Lista de computadores"
-
-#: modules/pulse2/infoPackage.inc.php:50
-msgid "Location selection in computer edit"
-msgstr "Seleção de localização em um computador"
-
-#: modules/pulse2/infoPackage.inc.php:34
-msgid "Pulse2"
-msgstr "Pulse2"
+msgstr "Todas as minhas entidades"
 
 #: modules/pulse2/includes/locations_xmlrpc.inc.php:31
 msgid "Root entity"
 msgstr "Entrata root"
 
-#, fuzzy
-#~ msgid "All share entities"
-#~ msgstr "Todas as minhas entradas"
+#: modules/pulse2/infoPackage.inc.php:33
+msgid "Pulse2"
+msgstr "Pulse2"
 
-#, fuzzy
-#~ msgid "Bios list"
-#~ msgstr "Lista de computadores"
+#: modules/pulse2/infoPackage.inc.php:44
+msgid "Computers list"
+msgstr "Lista de computadores"
 
-#, fuzzy
-#~ msgid "Boot menu"
-#~ msgstr "Entrata root"
+#: modules/pulse2/infoPackage.inc.php:49
+msgid "Location selection in computer edit"
+msgstr "Seleção de localização em um computador"
 
-#, fuzzy
-#~ msgid "Computer"
-#~ msgstr "Lista de computadores"
 
-#, fuzzy
-#~ msgid "Computer UUID Request"
-#~ msgstr "Lista de computadores"
-
-#, fuzzy
-#~ msgid "Computer UUID Sent"
-#~ msgstr "Lista de computadores"
-
-#, fuzzy
-#~ msgid "Computer name"
-#~ msgstr "Lista de computadores"
-
-#, fuzzy
-#~ msgid "Computers Group Editor"
-#~ msgstr "Lista de computadores"
-
-#, fuzzy
-#~ msgid "Computers Profile Creator"
-#~ msgstr "Lista de computadores"
-
-#, fuzzy
-#~ msgid "Computers Profile Editor"
-#~ msgstr "Lista de computadores"
-
-#, fuzzy
-#~ msgid "Computers in this command"
-#~ msgstr "Lista de computadores"
-
-#, fuzzy
-#~ msgid "Controller list"
-#~ msgstr "Lista de computadores"
-
-#, fuzzy
-#~ msgid "Monitor list"
-#~ msgstr "Lista de computadores"
-
-#, fuzzy
-#~ msgid "Port list"
-#~ msgstr "Lista de computadores"
-
-#, fuzzy
-#~ msgid "Printer list"
-#~ msgstr "Lista de computadores"
-
-#, fuzzy
-#~ msgid "Reboot client"
-#~ msgstr "Entrata root"
-
-#, fuzzy
-#~ msgid "computers paused"
-#~ msgstr "Lista de computadores"
-
-#, fuzzy
-#~ msgid "computers stopped"
-#~ msgstr "Lista de computadores"
-
-#, fuzzy
-#~ msgid "entity"
-#~ msgstr "Entrata root"
-
-#, fuzzy
-#~ msgid "logs list"
-#~ msgstr "Lista de computadores"
