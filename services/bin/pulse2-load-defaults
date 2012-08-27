@@ -1,4 +1,4 @@
-#! /usr/bin/env python 
+#!/usr/bin/python 
 # -*- coding: utf-8; -*-
 """
 Script to load default values into Pulse2 database.
