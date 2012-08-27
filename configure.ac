@@ -141,23 +141,6 @@ fi
 AM_CONDITIONAL([ENABLE_WOL], [test "$enable_wol" = "yes"])
 
 dnl
-dnl --disable-nsis
-dnl   Disable NSIS packages compilation (win32 agent pack installer)
-dnl
-AC_ARG_ENABLE([nsis],
-              [AS_HELP_STRING([--disable-nsis],
-                              [Disable NSIS packages compilation @<:@default=enable@:>@])],
-              [],
-              [enable_nsis="yes"])
-if test "x$enable_nsis" = "xyes"; then
-   AC_CHECK_PROG(HAVE_NSIS, makensis,yes,no)
-   if test "x$HAVE_NSIS" = "xno"; then
-          AC_MSG_ERROR([makensis not found. You need to install the 'nsis' package, or pass --disable-nsis to configure.])
-   fi
-fi
-AM_CONDITIONAL([ENABLE_NSIS], [test "$enable_nsis" = "yes"])
-
-dnl
 dnl --with-examples-dir
 dnl   Set path to configuration files examples dir
 dnl   Default to DOCDIR/examples
@@ -201,7 +184,6 @@ AC_CONFIG_FILES([services/src/Makefile])
 AC_CONFIG_FILES([services/3rd_party/Makefile])
 AC_CONFIG_FILES([services/clients/Makefile])
 AC_CONFIG_FILES([services/clients/win32/Makefile])
-AC_CONFIG_FILES([services/clients/win32/pulse2-win32-agents-installer.nsi])
 AC_CONFIG_FILES([web/Makefile])
 AC_CONFIG_FILES([web/modules/pulse2/version.php])
 AC_CONFIG_FILES([doc/Makefile])

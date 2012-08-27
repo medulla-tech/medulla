@@ -22,69 +22,22 @@
 #
 clientsdir = $(localstatedir)/lib/pulse2/clients/win32
 
-if ENABLE_NSIS
-# Installer is generated with NSIS
-installerversion = $(VERSION)
-else
-# Installer is the latest version available on website
-installerversion = 1.3.1.1
-endif
-installer = pulse2-win32-agents-installer-$(installerversion).exe
-installernsi = pulse2-win32-agents-installer.nsi
-installerdata = \
-	artwork/header.bmp \
-	artwork/uninstall.ico \
-	artwork/wizard.bmp \
-	artwork/install.ico \
-	libs/StrRep.nsh \
-	libs/ServiceLib.nsh \
-	inventoryoptions.ini
+installernsi = pulse2-win32-agents-installer.nsi.in
+installerdata = artwork libs inventoryoptions.ini
 
-if ENABLE_NSIS
-clients_SCRIPTS = $(installer)
-endif
-dist_clients_SCRIPTS = build.sh
-clients_DATA = sfx.conf.in win32.mk 7zsd.sfx \
-	remote-desktop-agent-vnc2.reg
-
+dist_clients_SCRIPTS = generate-agent-pack.sh
+clients_DATA = sfx.conf.in sfx.noprompt.conf.in sfx.silent.conf.in \
+               remote-desktop-agent-vnc2.reg $(installernsi) $(installerdata)
 dist_doc_DATA = README.win32
 
-EXTRA_DIST = \
-	build.sh \
-	win32.mk.in \
-	sfx.conf.in \
-	7zsd.sfx \
-	remote-desktop-agent-vnc2.reg \
-	$(installernsi) \
-	$(installerdata)
+CLEANFILES = generate-agent-pack.sh
 
-CLEANFILES = win32.mk $(installer)
+edit = sed -e 's|@sysconfdir[@]|$(sysconfdir)|g'
 
-$(installer): $(installernsi) $(installerdata)
-	if test "$(builddir)" != "$(srcdir)"; then \
-	  for dep in $(installerdata); do \
-	    mkdir -p `dirname $$dep`; \
-	    cp $(srcdir)/$$dep $$dep; \
-	  done; \
-	fi
-	makensis $<
-	if test "$(builddir)" != "$(srcdir)"; then \
-	  for dep in $(installerdata); do \
-	    rm -f $$dep; \
-	  done; \
-	fi
-
-edit = sed \
-	-e 's|@VERSION[@]|$(VERSION)|g' \
-	-e 's|@installerversion[@]|$(installerversion)|g' \
-        -e 's|@localstatedir[@]|$(localstatedir)|g'
-
-win32.mk: Makefile
+generate-agent-pack.sh: generate-agent-pack.sh.in
 	rm -f $@ $@.tmp
 	$(MKDIR_P) $(@D)
 	srcdir=''; \
-	  test -f ./$@.in || srcdir=$(srcdir)/; \
-	  $(edit) $${srcdir}$@.in >$@.tmp
+	test -f ./$@.in || srcdir=$(srcdir)/; \
+		$(edit) $${srcdir}$@.in >$@.tmp
 	mv $@.tmp $@
-
-win32.mk: win32.mk.in
