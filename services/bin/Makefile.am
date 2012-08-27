@@ -21,4 +21,4 @@
 dist_sbin_SCRIPTS = pulse2-package-server pulse2-package-server-register-imaging \
 	pulse2-inventory-server pulse2-scheduler pulse2-scheduler-manager \
 	pulse2-launcher pulse2-launchers-manager pulse2-output-wrapper \
-	pulse2-ping pulse2-tcp-sproxy pulse2-setup
+	pulse2-ping pulse2-tcp-sproxy pulse2-setup pulse2-load-defaults
