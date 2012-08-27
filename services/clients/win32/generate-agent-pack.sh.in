@@ -151,7 +151,7 @@ if [ ! ${is_dns_working} -eq 0 ]; then
   my_fqdn=""
   echo "Trying to guess an IP address instead..."
   echo
-  if [ ! -e "@sysconfdir@/pulse2/package-server/package-server.ini" ]; then
+  if [ ! -e "@sysconfdir@/mmc/pulse2/package-server/package-server.ini" ]; then
     echo "Cannot find @sysconfdir@/mmc/pulse2/package-server/package-server.ini"
     echo "Is Pulse2 really installed ?"
     echo
