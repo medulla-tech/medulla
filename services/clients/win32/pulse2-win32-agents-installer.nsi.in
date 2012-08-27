@@ -47,6 +47,9 @@
 ; Variable to store from where the 7sfx archive has been run
 Var /GLOBAL ARCHIVE_DIR
 
+; No Prompt (NP) silent with graphics
+Var /GLOBAL NO_PROMPT
+
 ; Address of the inventory server
 Var /GLOBAL INV_SERVER
 Var /GLOBAL INV_SERVER_PORT
@@ -61,10 +64,13 @@ Var /GLOBAL INV_SERVER_PORT
 !define MUI_WELCOMEFINISHPAGE_BITMAP "artwork\wizard.bmp"
 
 ; Installer pages
+!define MUI_PAGE_CUSTOMFUNCTION_PRE pagePre ; A way to override page in No Prompt mode
 !insertmacro MUI_PAGE_WELCOME
+!define MUI_PAGE_CUSTOMFUNCTION_PRE pagePre ; A way to override page in No Prompt mode
 !insertmacro MUI_PAGE_COMPONENTS
 ; Custom page to deal with inventory options
 Page custom InventoryOptions
+!define MUI_PAGE_CUSTOMFUNCTION_PRE lastPagePre ; Let's auto close the installer in No Prompt mode
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_LANGUAGE "English"
 
@@ -143,7 +149,8 @@ Section "Inventory Agent" Inventory
   DetailPrint "Inventory Agent Installation...."
   DetailPrint "------------------------------------------------------"
 
-  ${IfNot} ${Silent}
+  ${IfNot} ${Silent} 
+  ${IfNot} $NO_PROMPT == "true"
     ReadINIStr $0 "$PLUGINSDIR\inventoryoptions.ini" "Field 3" "State"
     ${If} $0 == ""
       MessageBox MB_OK|MB_ICONEXCLAMATION "Pulse2 Inventory server IP address is empty! $\n\
@@ -158,6 +165,7 @@ Please fill the field with the right port."
       Abort
     ${EndIf}
     StrCpy $INV_SERVER_PORT $1
+  ${EndIF}
   ${EndIF}
 
   StrCpy $0 "$EXEDIR\${INVENTORY_AGENT_EXE} /S /NP /NOSPLASH /NOTAG /SERVER:$INV_SERVER /PNUM:$INV_SERVER_PORT"
@@ -206,6 +214,14 @@ Function .onInit
     SetSilent silent
   ${EndIf}
   
+  ; Handle /NP option
+  ${GetOptions} $R0 /NP $0
+  ${If} ${Errors} ; not set
+    StrCpy $NO_PROMPT false
+  ${Else}
+    StrCpy $NO_PROMPT true
+  ${EndIf}
+  
   ; Handle /INV_SERVER option
   ${GetOptions} $R0 "/INV_SERVER=" $0
   StrCpy $INV_SERVER $0
@@ -231,16 +247,32 @@ Function .onInit
 FunctionEnd
 
 Function InventoryOptions
-  ${If} ${SectionIsSelected} ${Inventory} 
-    !insertmacro MUI_HEADER_TEXT "Mandriva Pulse2 inventory server IP address" "Configure Pulse2 inventory server IP address (and port if needed)."
-    !insertmacro INSTALLOPTIONS_INITDIALOG "inventoryoptions.ini"
-    ; Try to pre-fill fileds with command line parameters
-    ${IfNot} $INV_SERVER == ""
-      !insertmacro CHANGETEXTFIELD "inventoryoptions.ini" "Field 3" $INV_SERVER
+  ; Skip in NP (No Prompt) mode
+  ${IfNot} $NO_PROMPT == "true"
+    ${If} ${SectionIsSelected} ${Inventory}
+      !insertmacro MUI_HEADER_TEXT "Mandriva Pulse2 inventory server IP address" "Configure Pulse2 inventory server IP address (and port if needed)."
+      !insertmacro INSTALLOPTIONS_INITDIALOG "inventoryoptions.ini"
+      ; Try to pre-fill fileds with command line parameters
+      ${IfNot} $INV_SERVER == ""
+        !insertmacro CHANGETEXTFIELD "inventoryoptions.ini" "Field 3" $INV_SERVER
+      ${EndIf}
+      ${IfNot} $INV_SERVER_PORT == ""
+        !insertmacro CHANGETEXTFIELD "inventoryoptions.ini" "Field 5" $INV_SERVER_PORT
+      ${EndIf}
+      ; Don't show in NP (No Prompt) mode
+      !insertmacro INSTALLOPTIONS_SHOW
     ${EndIf}
-    ${IfNot} $INV_SERVER_PORT == ""
-      !insertmacro CHANGETEXTFIELD "inventoryoptions.ini" "Field 5" $INV_SERVER_PORT
-    ${EndIf}
-    !insertmacro INSTALLOPTIONS_SHOW
+  ${EndIf}
+FunctionEnd
+
+Function pagePre
+  ${If} $NO_PROMPT == "true"
+    Abort
+  ${EndIf}
+FunctionEnd
+
+Function lastPagePre
+  ${If} $NO_PROMPT == "true"
+    SetAutoClose true
   ${EndIf}
 FunctionEnd
