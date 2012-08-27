@@ -36,12 +36,14 @@ installerdata = \
 dist_clients_SCRIPTS = generate-agent-pack.sh.in
 dist_doc_DATA = README.win32
 
+clients_SCRIPTS = generate-agent-pack.sh
 clients_DATA = \
 	sfx.conf.in \
 	sfx.noprompt.conf.in \
 	sfx.silent.conf.in \
-	remote-desktop-agent-vnc2.reg
-nobase_clients_DATA =  $(installernsi) $(installerdata)
+	remote-desktop-agent-vnc2.reg \
+	$(installernsi)
+nobase_clients_DATA =  $(installerdata)
 
 CLEANFILES = generate-agent-pack.sh
 
@@ -52,7 +54,6 @@ EXTRA_DIST = \
 	remote-desktop-agent-vnc2.reg \
 	$(installernsi) \
 	$(installerdata)
-
 
 edit = sed -e 's|@sysconfdir[@]|$(sysconfdir)|g'
 
