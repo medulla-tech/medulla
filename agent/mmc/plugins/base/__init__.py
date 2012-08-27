@@ -1250,7 +1250,7 @@ class LdapUserGroupControl:
                     from mmc.plugins.ppolicy import getUserPPolicy, getPPolicyAttribute
                 except:
                     raise e
-                finally:
+                else:
                     # Get the minimum password length for the user
                     ppolicy = getUserPPolicy(uid)
                     if not ppolicy:
