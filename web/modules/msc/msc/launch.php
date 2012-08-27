@@ -367,8 +367,10 @@ if (!isset($_GET['badvanced']) && $_GET['uuid'] && !isset($_POST['launchAction']
                                  'hostname' => array('0' => $_GET['hostname']),
                                  'displayName' => $_GET['hostname'])
                            );
-    $msc_host = new RenderedMSCHost($machine);
-    $msc_host->ajaxDisplay();
+    if (strlen(web_probe_order()) > 0){
+        $msc_host = new RenderedMSCHost($machine);
+        $msc_host->ajaxDisplay();
+    }
 
     $msc_actions = new RenderedMSCActions(msc_script_list_file(), $machine->hostname, array('uuid'=>$_GET['uuid']));
     $msc_actions->display();
