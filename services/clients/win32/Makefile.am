@@ -23,14 +23,36 @@
 clientsdir = $(localstatedir)/lib/pulse2/clients/win32
 
 installernsi = pulse2-win32-agents-installer.nsi.in
-installerdata = artwork libs inventoryoptions.ini
+installerdata = \
+	artwork/header.bmp \
+	artwork/uninstall.ico \
+	artwork/wizard.bmp \
+	artwork/install.ico \
+	libs/StrRep.nsh \
+	libs/ServiceLib.nsh \
+	libs/InstallOptionsMacro.nsh \
+	inventoryoptions.ini
 
-dist_clients_SCRIPTS = generate-agent-pack.sh
-clients_DATA = sfx.conf.in sfx.noprompt.conf.in sfx.silent.conf.in \
-               remote-desktop-agent-vnc2.reg $(installernsi) $(installerdata)
+dist_clients_SCRIPTS = generate-agent-pack.sh.in
 dist_doc_DATA = README.win32
 
+clients_DATA = \
+	sfx.conf.in \
+	sfx.noprompt.conf.in \
+	sfx.silent.conf.in \
+	remote-desktop-agent-vnc2.reg
+nobase_clients_DATA =  $(installernsi) $(installerdata)
+
 CLEANFILES = generate-agent-pack.sh
+
+EXTRA_DIST = \
+	sfx.conf.in \
+	sfx.noprompt.conf.in \
+	sfx.silent.conf.in \
+	remote-desktop-agent-vnc2.reg \
+	$(installernsi) \
+	$(installerdata)
+
 
 edit = sed -e 's|@sysconfdir[@]|$(sysconfdir)|g'
 
