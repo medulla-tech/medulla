@@ -190,12 +190,6 @@ class CommandHistory {
             return;
         }
 
-        # FIXME: stolen from ajaxLogsFilter.php, should be factorized
-        $a_uploaded ='<img style="vertical-align: middle;" alt="'.$this->db_coh['uploaded'].'" src="modules/msc/graph/images/status/'.return_icon($this->db_coh['uploaded']).'"/> ';
-        $a_executed ='<img style="vertical-align: middle;" alt="'.$this->db_coh['executed'].'" src="modules/msc/graph/images/status/'.return_icon($this->db_coh['executed']).'"/> ';
-        $a_deleted = '<img style="vertical-align: middle;" alt="'.$this->db_coh['deleted'].'" src="modules/msc/graph/images/status/'.return_icon($this->db_coh['deleted']).'"/> ';
-
-        $state = $a_uploaded . $a_executed . $a_deleted;
 
         if ($this->db_cmd['start_date'])
             if ($this->db_cmd['end_date'])
@@ -281,7 +275,6 @@ class CommandHistory {
 
         ### Display command overview ###
         $values = array(
-            array(_T('State', 'msc'),               $state),
             array(_T('Command name', 'msc'),        $this->db_cmd['title']),
             array(_T('Creation', 'msc'),            sprintf(_T('<i>on</i> %s <i>by</i> %s', 'msc'), _toDate($this->db_cmd['creation_date']),$this->db_cmd['creator'])),
             array(_T('Validity period', 'msc'),     $validity),
