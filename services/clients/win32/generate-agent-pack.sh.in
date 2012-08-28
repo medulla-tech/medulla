@@ -53,6 +53,7 @@ sfx_url=http://www.7zsfx.info/files/7zsd_150_2478.7z
 
 # Others variables
 my_fqdn=`hostname -f`
+download_only=0
 
 # Common cleaning
 rm -f pulse2-win32-agents-pack.exe \
@@ -81,16 +82,42 @@ if [ "${1}" = "clean" ]; then
   echo
 
   exit 0
+elif [ "${1}" = "download-only" ]; then
+   download_only=1
 fi
 
 # Sanity checks
 # Is dig installed ?
-if [ ! -x "`which dig`" ]; then
- echo
- echo "dig command cannot be found. Please install dig package and restart this tool."
- echo
- exit 1
+if [ ! ${download_only} -eq 1 ]; then
+  if [ ! -x "`which dig`" ]; then
+    echo
+    echo "dig command cannot be found. Please install dig package and restart this tool."
+    echo
+    exit 1
+  fi
+  # Is 7z installed ?
+  if [ ! -x "`which 7z`" ]; then
+    echo
+    echo "7z command cannot be found. Please install p7zip-full package and restart this tool."
+    echo
+    exit 1
+  fi
+  # Is makensis installed ?
+  if [ ! -x "`which makensis`" ]; then
+    echo
+    echo "makensis command cannot be found. Please install nsis package and restart this tool."
+    echo
+    exit 1
+  fi
+  # Do I have an ssh key ?
+  if [ ! -e "/root/.ssh/id_rsa.pub" ]; then
+    echo
+    echo "No /root/.ssh/id_rsa.pub SSH key found. Please generate one using ssh-keygen and restart this tool."
+    echo
+    exit
+  fi
 fi
+
 # Is curl installed ?
 if [ ! -x "`which curl`" ]; then
   echo
@@ -98,78 +125,59 @@ if [ ! -x "`which curl`" ]; then
   echo
   exit 1
 fi
-# Is 7z installed ?
-if [ ! -x "`which 7z`" ]; then
-  echo
-  echo "7z command cannot be found. Please install p7zip-full package and restart this tool."
-  echo
-  exit 1
-fi
-# Is makensis installed ?
-if [ ! -x "`which makensis`" ]; then
-  echo
-  echo "makensis command cannot be found. Please install nsis package and restart this tool."
-  echo
-  exit 1
-fi
-# Do I have an ssh key ?
-if [ ! -e "/root/.ssh/id_rsa.pub" ]; then
-  echo
-  echo "No /root/.ssh/id_rsa.pub SSH key found. Please generate one using ssh-keygen and restart this tool."
-  echo
-  exit
-fi
 
-# Try to figure out if the DNS configuration is fine or not
-dig ${my_fqdn} +nosearch +short | tail -n1 | grep -q -E '([0-9]{1,3}\.){3}[0-9]{1,3}'
-is_dns_working=$?
+if [ ! ${download_only} -eq 1 ]; then
+  # Try to figure out if the DNS configuration is fine or not
+  dig ${my_fqdn} +nosearch +short | tail -n1 | grep -q -E '([0-9]{1,3}\.){3}[0-9]{1,3}'
+  is_dns_working=$?
 
-# DNS servers haven't replied on i-have-queried-my-own-fqdn, sounds bad.
-if [ ! ${is_dns_working} -eq 0 ]; then
-  echo
-  echo "#####################"
-  echo ' /!\   WARNING   /!\ '
-  echo "#####################"
-  echo
-  echo "I tried to query my own DNS servers for my hostname and haven't got"
-  echo "any valid reply. It means the DNS system isn't properly configured,"
-  echo "or the hostname I use isn't valid."
-  echo
-  echo "Despite there's something wrong, it's NOT FATAL."
-  echo "I will generate the agents pack with my IP address instead of"
-  echo "my FQDN."
-  echo
-  echo "Restart me later after fixing the DNS issue if you'd rather use an"
-  echo "hostname. Verify the DNS entry and DNS configuration by running the"
-  echo "following command:"
-  echo
-  echo "  dig ${my_fqdn}"
-  echo
-  echo "Once it works, restart me by running:"
-  echo
-  echo "  ${0}"
-  echo
-  # I'll try to use an IP address instead
-  my_fqdn=""
-  echo "Trying to guess an IP address instead..."
-  echo
-  if [ ! -e "@sysconfdir@/mmc/pulse2/package-server/package-server.ini" ]; then
-    echo "Cannot find @sysconfdir@/mmc/pulse2/package-server/package-server.ini"
-    echo "Is Pulse2 really installed ?"
+  # DNS servers haven't replied on i-have-queried-my-own-fqdn, sounds bad.
+  if [ ! ${is_dns_working} -eq 0 ]; then
     echo
-    exit 1
-  else
-    # Read public_ip parameters
-    my_fqdn=`grep -E '^public_ip[[:space:]]*=' @sysconfdir@/mmc/pulse2/package-server/package-server.ini | cut -d= -f2 | sed 's!\s!!g' | grep -E '^([0-9]{1,3}\.){3}[0-9]{1,3}$'`
-    # Still empty ?!?!?
-    if [ -z ${my_fqdn} ]; then
-      echo "Unable to determinate IP address using public_ip field from"
-      echo "package-server.ini. Fix your configuration."
+    echo "#####################"
+    echo ' /!\   WARNING   /!\ '
+    echo "#####################"
+    echo
+    echo "I tried to query my own DNS servers for my hostname and haven't got"
+    echo "any valid reply. It means the DNS system isn't properly configured,"
+    echo "or the hostname I use isn't valid."
+    echo
+    echo "Despite there's something wrong, it's NOT FATAL."
+    echo "I will generate the agents pack with my IP address instead of"
+    echo "my FQDN."
+    echo
+    echo "Restart me later after fixing the DNS issue if you'd rather use an"
+    echo "hostname. Verify the DNS entry and DNS configuration by running the"
+    echo "following command:"
+    echo
+    echo "  dig ${my_fqdn}"
+    echo
+    echo "Once it works, restart me by running:"
+    echo
+    echo "  ${0}"
+    echo
+    # I'll try to use an IP address instead
+    my_fqdn=""
+    echo "Trying to guess an IP address instead..."
+    echo
+    if [ ! -e "@sysconfdir@/mmc/pulse2/package-server/package-server.ini" ]; then
+      echo "Cannot find @sysconfdir@/mmc/pulse2/package-server/package-server.ini"
+      echo "Is Pulse2 really installed ?"
       echo
       exit 1
     else
-      echo "For now I will use ${my_fqdn} as hostname."
-      echo
+      # Read public_ip parameters
+      my_fqdn=`grep -E '^public_ip[[:space:]]*=' @sysconfdir@/mmc/pulse2/package-server/package-server.ini | cut -d= -f2 | sed 's!\s!!g' | grep -E '^([0-9]{1,3}\.){3}[0-9]{1,3}$'`
+      # Still empty ?!?!?
+      if [ -z ${my_fqdn} ]; then
+        echo "Unable to determinate IP address using public_ip field from"
+        echo "package-server.ini. Fix your configuration."
+        echo
+        exit 1
+      else
+        echo "For now I will use ${my_fqdn} as hostname."
+        echo
+      fi
     fi
   fi
 fi
@@ -248,49 +256,51 @@ else
   fi
 fi
 
-# Generate pulse2-win32-agents-installer.exe
-sed -e "s/@@ssh_file@@/${ssh_file}/" \
-    -e "s/@@vnc_file@@/${vnc_file}/" \
-    -e "s/@@vnc_reg@@/${vnc_reg}/" \
-    -e "s/@@inv_file@@/${inv_file}/" \
-    pulse2-win32-agents-installer.nsi.in \
-    > pulse2-win32-agents-installer.nsi    
+if [ ! ${download_only} -eq 1 ]; then
+  # Generate pulse2-win32-agents-installer.exe
+  sed -e "s/@@ssh_file@@/${ssh_file}/" \
+      -e "s/@@vnc_file@@/${vnc_file}/" \
+      -e "s/@@vnc_reg@@/${vnc_reg}/" \
+      -e "s/@@inv_file@@/${inv_file}/" \
+      pulse2-win32-agents-installer.nsi.in \
+      > pulse2-win32-agents-installer.nsi    
 
-# Compile NSIS
-echo
-echo "Compiling NSIS installer..."
-echo
-makensis -V1 pulse2-win32-agents-installer.nsi
+  # Compile NSIS
+  echo
+  echo "Compiling NSIS installer..."
+  echo
+  makensis -V1 pulse2-win32-agents-installer.nsi
 
-# Creating base.7z archive
-echo "Creating base 7z archive..."
-7z a base.7z ${ssh_file} ${vnc_file} ${vnc_reg} ${inv_file} pulse2-win32-agents-installer.exe /root/.ssh/id_rsa.pub
+  # Creating base.7z archive
+  echo "Creating base 7z archive..."
+  7z a base.7z ${ssh_file} ${vnc_file} ${vnc_reg} ${inv_file} pulse2-win32-agents-installer.exe /root/.ssh/id_rsa.pub
 
-# Create agents pack exe
-sed -e "s/@@inv_server@@/${my_fqdn}/" \
-    -e "s/@@inv_server_port@@/9999/" \
-     sfx.conf.in > sfx.conf
-cat ${sfx_file} sfx.conf base.7z > pulse2-win32-agents-pack.exe
-echo
-echo "pulse2-win32-agents-pack.exe generated successfully!"
-echo
+  # Create agents pack exe
+  sed -e "s/@@inv_server@@/${my_fqdn}/" \
+      -e "s/@@inv_server_port@@/9999/" \
+       sfx.conf.in > sfx.conf
+  cat ${sfx_file} sfx.conf base.7z > pulse2-win32-agents-pack.exe
+  echo
+  echo "pulse2-win32-agents-pack.exe generated successfully!"
+  echo
 
-# Create agents pack exe (silent)
-sed -e "s/@@inv_server@@/${my_fqdn}/" \
-    -e "s/@@inv_server_port@@/9999/" \
-     sfx.silent.conf.in > sfx.conf
-cat ${sfx_file} sfx.conf base.7z > pulse2-win32-agents-pack-silent.exe
+  # Create agents pack exe (silent)
+  sed -e "s/@@inv_server@@/${my_fqdn}/" \
+      -e "s/@@inv_server_port@@/9999/" \
+       sfx.silent.conf.in > sfx.conf
+  cat ${sfx_file} sfx.conf base.7z > pulse2-win32-agents-pack-silent.exe
 
-echo
-echo "pulse2-win32-agents-pack-silent.exe generated successfully!"
-echo
+  echo
+  echo "pulse2-win32-agents-pack-silent.exe generated successfully!"
+  echo
 
-# Create agents pack exe (no prompt)
-sed -e "s/@@inv_server@@/${my_fqdn}/" \
-    -e "s/@@inv_server_port@@/9999/" \
-     sfx.noprompt.conf.in > sfx.conf
-cat ${sfx_file} sfx.conf base.7z > pulse2-win32-agents-pack-noprompt.exe
+  # Create agents pack exe (no prompt)
+  sed -e "s/@@inv_server@@/${my_fqdn}/" \
+      -e "s/@@inv_server_port@@/9999/" \
+       sfx.noprompt.conf.in > sfx.conf
+  cat ${sfx_file} sfx.conf base.7z > pulse2-win32-agents-pack-noprompt.exe
 
-echo
-echo "pulse2-win32-agents-pack-noprompt.exe generated successfully!"
-echo
+  echo
+  echo "pulse2-win32-agents-pack-noprompt.exe generated successfully!"
+  echo
+fi
