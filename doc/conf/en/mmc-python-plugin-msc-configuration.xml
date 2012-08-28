@@ -484,7 +484,7 @@ enablessl = 1
             <entry>vnc_allow_user_control</entry>
             <entry>Display applet control to user</entry>
             <entry>yes</entry>
-            <entry>False</entry>
+            <entry>True</entry>
           </row>
           <row>
             <entry>vnc_port</entry>
