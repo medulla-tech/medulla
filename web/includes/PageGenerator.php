@@ -687,7 +687,7 @@ class OptimizedListInfos extends ListInfos {
             if (!isset($_POST["start"])) {
                 $this->start = 0;
                 if (count($this->arrInfo) > 0) {
-                    $this->end = ($conf["global"]["maxperpage"] - 1);
+                    $this->end = (isset($_REQUEST['maxperpage'])) ? ($_REQUEST['maxperpage'] - 1) : ($conf["global"]["maxperpage"] - 1);
                 } else {
                     $this->end = 0;
                 }
