@@ -102,7 +102,7 @@ class MscConfig(MscDatabaseConfig):
     web_vnc_port = "5900"
 
     # Probe behavior
-    web_probe_order =  "ping_ssh"
+    web_probe_order =  ""
 
     # IP blacklists settings
     # To filter out everything which is not a valid unicast address
