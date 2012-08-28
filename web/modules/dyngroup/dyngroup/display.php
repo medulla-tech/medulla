@@ -41,7 +41,7 @@ if (!$gid) { // TODO !!
         $item = null;
     }
     if ($group->type == 0) {
-        __my_header(sprintf(_T("Display group '%s' content", "dyngroup"), $group->getName()), $sidemenu, $item, $group);
+        __my_header(sprintf(_T("Group '%s' content", "dyngroup"), $group->getName()), $sidemenu, $item, $group);
     } else {
         __my_header(sprintf(_T("Display profile '%s' content", "dyngroup"), $group->getName()), $sidemenu, $item, $group);
     }
