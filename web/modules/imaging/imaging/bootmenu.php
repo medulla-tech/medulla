@@ -178,7 +178,11 @@ function item_edit() {
         } else {
             $ret = xmlrpc_editImageToTarget($im_uuid, $target_uuid, $params, $type);
         }
-
+        if ($ret) 
+        { 
+            // generate menu
+            $ret = xmlrpc_synchroComputer($target_uuid);
+        }
         // goto menu boot list
         header("Location: " . urlStrRedirect("base/computers/".$type."imgtabs", $params));
     }
