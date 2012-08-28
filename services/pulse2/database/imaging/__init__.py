@@ -2121,7 +2121,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             ## result is the list of uuid image directories to delete
             result = []
             for image, imaging_log, mastered_on in images:
-                result.append(image.path.split('/').pop())
+                result.append(image.uuid)
                 self.logger.debug("Remove mastered on %s %s"%(str(mastered_on.fk_image), str(mastered_on.fk_imaging_log)))
                 session.delete(mastered_on)
                 self.logger.debug("Remove Image %s"%(str(image.id)))
