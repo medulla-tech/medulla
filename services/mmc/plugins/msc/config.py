@@ -98,7 +98,7 @@ class MscConfig(MscDatabaseConfig):
     web_vnc_show_icon = True
     web_vnc_view_only = True
     web_vnc_network_connectivity = "lan"
-    web_vnc_allow_user_control = False
+    web_vnc_allow_user_control = True
     web_vnc_port = "5900"
 
     # Probe behavior
