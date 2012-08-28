@@ -29,6 +29,8 @@
 # Author(s):
 #   Adam Cécile <acecile@mandriva.com>
 
+# Jump into my own directory
+cd "`dirname $0`"
 
 # Latest version of agents
 ssh_ver=2.0.2.2
