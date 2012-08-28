@@ -2833,51 +2833,33 @@ def computersUnregister(computers_UUID, backup):
             h_location[en_uuid] = [en, []]
         h_location[en_uuid][1].append(target)
 
-    def treatUnregister(results, uuid, *attr):
-         return [results, uuid]
-
-    def treatUnregisterStage2(results, *attr):
-        db = ImagingDatabase()
-        failure = []
-        for res1, result in results:
-            (res, uuid) = result
-            # if they manage to unregister, unregister from the DB
-            if res:
-                # remove the menu + menuitem
-                # remove the computer
-                ret = db.unregisterTargets(uuid)
-                if not ret:
-                    failure.append([uuid, "DATABASE"])
-            else:
-                failure.append([uuid, "PSERVER"])
-
-        # return the status of the whole thing
-        if len(failure) > 0:
-            return [False, failure]
-        return [True]
-
-    dl = []
     for en_uuid in h_location:
         (en, targets) = h_location[en_uuid]
 
         url = chooseImagingApiUrl(en_uuid)
         i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
 
+        db = ImagingDatabase()
+        failure = []
+
         if i != None:
             for computer in targets:
                 computerUUID = computer.uuid
                 # get the list of image uuid
-                imageList = db.getTargetOwnImages(computerUUID, P2IT.ALL_COMPUTERS)
-                imageList = map(lambda i:i.uuid, imageList)
 
-                d = i.computerUnregister(computerUUID, imageList, backup)
-                d.addCallback(treatUnregister, computerUUID)
-                dl.append(d)
-
+                imageList = []
+                # Unregister Targets from DB
+                imageList = db.unregisterTargets(computerUUID)
+                if len(imageList) > 0:
+                    # Unregister Targets from disk
+                    i.computerUnregister(computerUUID, imageList, backup)
+                else:
+                    failure.append([uuid, "DATABASE"])
         else:
             logger.info("couldn't initialize the ImagingApi to %s"%(url))
 
-        defer_list = defer.DeferredList(dl)
-        defer_list.addCallback(treatUnregisterStage2)
-        return defer_list
+        # return the status of the whole thing
+        if len(failure) > 0:
+            return [False, failure]
+        return [True]
     return False

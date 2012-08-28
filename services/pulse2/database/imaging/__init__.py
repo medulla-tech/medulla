@@ -2012,6 +2012,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return None
 
     def unregisterTargets(self, targets_uuid):
+        """
+        Unregister targets from DB
+        @return list of uuid image directories to delete from imaging server
+        """
         session = create_session()
         if type(targets_uuid) != list:
             targets_uuid = [targets_uuid]
@@ -2082,23 +2086,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session.delete(menu)
             session.flush()
 
-            # now we need to drop all the images and the masters linked to nothing
-            imids = map(lambda x: x[1], self.__PossibleImages(session, deleted_uuid, P2IIK.IS_BOTH))
-
-            masters_linked = self.__queryImageInMenu(session)
-            masters_id_linked = map(lambda x: x[0].id, masters_linked.filter(and_(self.target.c.uuid != deleted_uuid, self.image.c.is_master == 1, self.image.c.id.in_(imids))).all())
-
-            masters_linked_2_is = self.__queryImageInImagingServerMenu(session)
-            masters_linked_2_is = map(lambda x: x[0].id, masters_linked_2_is.filter(self.image.c.id.in_(imids)).all())
-
-            masters_id_linked.extend(masters_linked_2_is)
-
-            if len(masters_id_linked) == 0:
-                filt_master = and_(self.image.c.is_master == 1)
-            else:
-                self.logger.debug("Those masters are still linked, they are not going to be removed : %s"%(str(masters_id_linked)))
-                filt_master = and_(self.image.c.is_master == 1, not_(self.image.c.id.in_(masters_id_linked)))
-
             images = session.query(Image).add_entity(ImagingLog).add_entity(MasteredOn).select_from(self.image \
                     .join(self.mastered_on, self.mastered_on.c.fk_image == self.image.c.id)
                     .join(self.imaging_log, self.mastered_on.c.fk_imaging_log == self.imaging_log.c.id)
@@ -2109,7 +2096,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                         self.target.c.uuid == deleted_uuid,
                         or_(
                             self.image.c.is_master == 0,
-                            filt_master
                         )
                     )
                 ).all()
@@ -2131,7 +2117,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 session.delete(iois)
 
             to_delete = []
+
+            ## result is the list of uuid image directories to delete
+            result = []
             for image, imaging_log, mastered_on in images:
+                result.append(image.path.split('/').pop())
                 self.logger.debug("Remove mastered on %s %s"%(str(mastered_on.fk_image), str(mastered_on.fk_imaging_log)))
                 session.delete(mastered_on)
                 self.logger.debug("Remove Image %s"%(str(image.id)))
@@ -2145,7 +2135,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session.flush()
 
         session.close()
-        return True
+        return result
 
 
     ######################
