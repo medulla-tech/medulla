@@ -1389,7 +1389,7 @@ if(isset($this->storedfilter)) {
 <?
 }
 ?>
-        var maxperpage = 10;
+        var maxperpage = <?php echo $conf["global"]["maxperpage"] ?>;
         if(document.getElementById('maxperpage') != undefined)
             maxperpage = document.getElementById('maxperpage').value;
 
