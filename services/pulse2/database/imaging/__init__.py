@@ -1831,7 +1831,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         """
         j = self.menu_item.join(self.image_in_menu).join(self.image).join(self.menu).join(self.imaging_server)
         f = and_(
-            self.image.c.id == uuid2id(item_uuid),
+            self.menu_item.c.id == uuid2id(item_uuid),
             self.menu.c.id == self.imaging_server.c.fk_default_menu,
             self.entity.c.uuid == loc_id)
         mi = session.query(MenuItem).select_from(j)
