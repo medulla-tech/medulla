@@ -64,7 +64,7 @@ sys.path.append("plugins")
 
 Fault = xmlrpclib.Fault
 ctx = None
-VERSION = "3.0.4.91"
+VERSION = "3.0.4.92"
 
 class MmcServer(xmlrpc.XMLRPC,object):
     """
