@@ -7,9 +7,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
-"Report-Msgid-Bugs-To: http://mds.mandriva.org/\n"
-"POT-Creation-Date: 2012-06-01 13:38+0200\n"
-"PO-Revision-Date: 2012-06-01 11:43+0000\n"
+"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
+"POT-Creation-Date: 2012-08-24 15:34+0200\n"
+"PO-Revision-Date: 2012-08-29 15:06+0000\n"
 "Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/mds/team/fr_FR/)\n"
 "MIME-Version: 1.0\n"
@@ -55,76 +55,9 @@ msgstr "Supprimer"
 msgid "Cancel"
 msgstr "Annuler"
 
-#: modules/ppolicy/default/edit.php:44
-#: modules/ppolicy/includes/localSidebar.php:28
-#: modules/ppolicy/infoPackage.inc.php:50
-msgid "Add a password policy"
-msgstr "Ajout d'une politique des mots de passe"
-
-#: modules/ppolicy/default/edit.php:62
-msgid "\"Maximum age\" must be greater than \"Minimum age\"."
-msgstr "\"Durée maximale\" doit être plus grande que \"Durée minimale\"."
-
-#: modules/ppolicy/default/edit.php:95
-msgid "Attributes updated"
-msgstr "Attributs mis à jours"
-
-#: modules/ppolicy/default/edit.php:123
-msgid "Name"
-msgstr "Nom"
-
-#: modules/ppolicy/default/edit.php:129
-#: modules/ppolicy/includes/ppolicy.inc.php:48
-msgid "Description"
-msgstr "Description"
-
-#: modules/ppolicy/default/edit.php:135
-#: modules/ppolicy/includes/ppolicy.inc.php:37
-msgid "Minimum length"
-msgstr "Taille minimum"
-
-#: modules/ppolicy/default/edit.php:142
-msgid "Password quality check"
-msgstr "Test de qualité des mots de passe"
-
-#: modules/ppolicy/default/edit.php:149
-msgid "Minimum age (seconds)"
-msgstr "Durée de vie minimale (secondes)"
-
-#: modules/ppolicy/default/edit.php:156
-msgid "Maximum age (seconds)"
-msgstr "Durée de vie maximale du mot de passe (secondes)"
-
-#: modules/ppolicy/default/edit.php:163
-#: modules/ppolicy/includes/ppolicy.inc.php:45
-msgid "Number of grace authentications"
-msgstr "Nombre d'authentifications autorisées en période de grâce"
-
-#: modules/ppolicy/default/edit.php:177
-msgid "Force users to change their passwords on the first connection ?"
-msgstr ""
-"Forcer les utilisateurs à changer leur mot de passe à la première connexion "
-"?"
-
-#: modules/ppolicy/default/edit.php:184
-msgid "Password history"
-msgstr "Historique des mots de passe"
-
-#: modules/ppolicy/default/edit.php:198
-msgid "Preventive user lockout ?"
-msgstr "Blocage préventif de l'utilisateur ?"
-
-#: modules/ppolicy/default/edit.php:212
-msgid "Password maximum failure"
-msgstr "Nombre d'échec maximum"
-
-#: modules/ppolicy/default/edit.php:219
-msgid "Lockout duration (seconds)"
-msgstr "Période de blocage (secondes)"
-
 #: modules/ppolicy/default/index.php:31
 msgid "Password policies list"
-msgstr "Liste des politiques de mot de passes"
+msgstr "Liste des politiques de mot de passe"
 
 #: modules/ppolicy/default/warnuser.php:35
 msgid ""
@@ -146,6 +79,73 @@ msgstr ""
 "Attention, votre mot de passe a été réinitialisé par un administrateur. "
 "Votre compte LDAP est restreint. Veuillez changer votre mot de passe dès que"
 " possible en utilisant la page de changement de mot de passe."
+
+#: modules/ppolicy/default/edit.php:44
+#: modules/ppolicy/includes/localSidebar.php:28
+#: modules/ppolicy/infoPackage.inc.php:50
+msgid "Add a password policy"
+msgstr "Ajout d'une politique des mots de passe"
+
+#: modules/ppolicy/default/edit.php:62
+msgid "\"Maximum age\" must be greater than \"Minimum age\"."
+msgstr "\"Durée maximale\" doit être plus grande que \"Durée minimale\"."
+
+#: modules/ppolicy/default/edit.php:95
+msgid "Attributes updated"
+msgstr "Attributs mis à jours"
+
+#: modules/ppolicy/default/edit.php:125
+msgid "Name"
+msgstr "Nom"
+
+#: modules/ppolicy/default/edit.php:131
+#: modules/ppolicy/includes/ppolicy.inc.php:48
+msgid "Description"
+msgstr "Description"
+
+#: modules/ppolicy/default/edit.php:137
+#: modules/ppolicy/includes/ppolicy.inc.php:37
+msgid "Minimum length"
+msgstr "Taille minimum"
+
+#: modules/ppolicy/default/edit.php:144
+msgid "Password quality check"
+msgstr "Test de qualité des mots de passe"
+
+#: modules/ppolicy/default/edit.php:151
+msgid "Minimum age (seconds)"
+msgstr "Durée de vie minimale (secondes)"
+
+#: modules/ppolicy/default/edit.php:158
+msgid "Maximum age (seconds)"
+msgstr "Durée de vie maximale du mot de passe (secondes)"
+
+#: modules/ppolicy/default/edit.php:165
+#: modules/ppolicy/includes/ppolicy.inc.php:45
+msgid "Number of grace authentications"
+msgstr "Nombre d'authentifications autorisées en période de grâce"
+
+#: modules/ppolicy/default/edit.php:179
+msgid "Force users to change their passwords on the first connection ?"
+msgstr ""
+"Forcer les utilisateurs à changer leur mot de passe à la première connexion "
+"?"
+
+#: modules/ppolicy/default/edit.php:186
+msgid "Password history"
+msgstr "Historique des mots de passe"
+
+#: modules/ppolicy/default/edit.php:200
+msgid "Preventive user lockout ?"
+msgstr "Blocage préventif de l'utilisateur ?"
+
+#: modules/ppolicy/default/edit.php:214
+msgid "Password maximum failure"
+msgstr "Nombre d'échec maximum"
+
+#: modules/ppolicy/default/edit.php:221
+msgid "Lockout duration (seconds)"
+msgstr "Période de blocage (secondes)"
 
 #: modules/ppolicy/includes/auditCodes.php:4
 #: modules/ppolicy/includes/auditCodes.php:9

@@ -28,7 +28,7 @@ require("graph/navbar.inc.php");
 $ajax = new AjaxFilter(urlStrRedirect("base/users/ajaxPPoliciesFilter"));
 $ajax->display();
 
-$p = new PageGenerator(_T("Password policies list"));
+$p = new PageGenerator(_T("Password policies list", "ppolicy"));
 $p->setSideMenu($sidemenu);
 $p->display();
 
