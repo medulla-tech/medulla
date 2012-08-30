@@ -108,4 +108,8 @@ $dummyMsg = _("The password length must be %s or longer");
 $errItem->setTraceBackDisplay(False);
 $errObj->add($errItem);
 
+$errItem = new ErrorHandlingItem(": {'info': 'The password is too short.*'");
+$errItem->setMsg(_("The password is too short."));
+$errItem->setTraceBackDisplay(False);
+$errObj->add($errItem);
 ?>

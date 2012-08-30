@@ -1246,33 +1246,16 @@ class LdapUserGroupControl:
             try:
                 ldapConn.passwd_s(userdn, None, str(passwd))
             except ldap.CONSTRAINT_VIOLATION, e:
-                try:
-                    from mmc.plugins.ppolicy import getUserPPolicy, getPPolicyAttribute
-                except:
-                    raise e
-                else:
-                    # Get the minimum password length for the user
-                    ppolicy = getUserPPolicy(uid)
-                    if not ppolicy:
-                        # User is using the default ppolicy
-                        ppolicy = None
-                    min_length = getPPolicyAttribute("pwdMinLength", ppolicy)
-                    # There is no minimum length specified
-                    if not min_length:
-                        # This is mmc-password-helper minimum length
-                        min_length = "6"
+                if not 'info' in e.message or \
+                   ('info' in e.message and e.message['info'] == 'Password fails quality checking policy'):
+                    # if the quality test pass, the password was rejected by
+                    # OpenLDAP because it is too short
+                    code, out, err = mmctools.shlaunch('echo %s | mmc-password-helper -v -c' % str(passwd))
+                    if code != 0:
+                        e.message['info'] = " ".join(out).strip()
                     else:
-                        min_length = min_length[0]
-
-                    if not 'info' in e.message or \
-                       ('info' in e.message and e.message['info'] == 'Password fails quality checking policy'):
-                        reason = mmctools.shlaunch('echo %s | mmc-password-helper -v -c -l %s' % (str(passwd), min_length))
-                        reason = " ".join(reason[1]).strip()
-                        if reason:
-                            e.message['info'] = reason
-                        else:
-                            e.message['info'] = 'Password fails quality checking policy'
-                        raise ldap.CONSTRAINT_VIOLATION(e.message)
+                        e.message['info'] = 'The password is too short'
+                    raise ldap.CONSTRAINT_VIOLATION(e.message)
         else:
             userpassword = self._generatePassword(passwd)
             ldapConn.modify_s(userdn, [(ldap.MOD_REPLACE, "userPassword", userpassword)])
