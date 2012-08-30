@@ -384,15 +384,15 @@ def shlaunch(cmd):
     @type: tuple
     """
     shProcess = shLaunch(cmd)
-
     stdout = []
     stderr = []
+
     if isinstance(shProcess.out, basestring):
         stdout = shProcess.out.split("\n")
-        if stdout: stdout.pop()
+        if len(stdout) > 1: stdout.pop()
     if isinstance(shProcess.error, basestring):
         stderr = shProcess.error.split("\n")
-        if stderr: stderr.pop()
+        if len(stderr) > 1: stderr.pop()
 
     return (shProcess.exitCode, stdout, stderr)
 

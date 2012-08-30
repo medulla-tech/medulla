@@ -1267,8 +1267,12 @@ class LdapUserGroupControl:
                     if not 'info' in e.message or \
                        ('info' in e.message and e.message['info'] == 'Password fails quality checking policy'):
                         reason = mmctools.shlaunch('echo %s | mmc-password-helper -v -c -l %s' % (str(passwd), min_length))
-                        message = {'info': " ".join(reason), 'desc': 'Constraint violation'}
-                        raise ldap.CONSTRAINT_VIOLATION(message)
+                        reason = " ".join(reason[1]).strip()
+                        if reason:
+                            e.message['info'] = reason
+                        else:
+                            e.message['info'] = 'Password fails quality checking policy'
+                        raise ldap.CONSTRAINT_VIOLATION(e.message)
         else:
             userpassword = self._generatePassword(passwd)
             ldapConn.modify_s(userdn, [(ldap.MOD_REPLACE, "userPassword", userpassword)])
