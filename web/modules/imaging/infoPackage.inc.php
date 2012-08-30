@@ -45,6 +45,9 @@ $submod->addPage($page);
 
 $page = new Page("master",_T("Manage masters","imaging"));
 $submod->addPage($page);
+$page = new Page("master_remove",_T("Remove master","imaging"));
+$page->setOptions(array("visible" => False, "noHeader" => True));
+$submod->addPage($page);
 $page = new Page("master_delete",_T("Delete master","imaging"));
 $page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);

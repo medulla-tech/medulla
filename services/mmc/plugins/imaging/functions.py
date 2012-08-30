@@ -680,12 +680,12 @@ class ImagingRpcProxy(RpcProxyI):
         except Exception, e:
             return xmlrpcCleanup([False, e])
 
-    def delImageToLocation(self, item_uuid, loc_id):
+    def delImageToLocation(self, menu_item_id, loc_id):
         """ same as delImageToTarget but for a location """
         db = ImagingDatabase()
         try:
             db.setLocationSynchroState(loc_id, P2ISS.TODO)
-            ret = db.delImageToEntity(item_uuid, loc_id)
+            ret = db.delImageToEntity(menu_item_id)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
             return xmlrpcCleanup([False, e])

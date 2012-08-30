@@ -1677,6 +1677,18 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return q
 
+    def __delImage(self, session, menu_item_id):
+        """
+        Queries to remove an image from default boot menu
+        """
+        s_menu_item = session.query(MenuItem).filter(self.menu_item.c.id == menu_item_id).first()
+        s_image_in_menu = session.query(ImageInMenu).filter(self.image_in_menu.c.fk_menuitem == menu_item_id).first()
+        session.delete(s_image_in_menu)
+        session.flush()
+        session.delete(s_menu_item)
+        session.flush()
+        return True
+
     def __addImage(self, session, item_uuid, menu, params):
         im = session.query(Image).filter(self.image.c.id == uuid2id(item_uuid)).first();
         # TODO : what do we do with im ?
@@ -1792,6 +1804,15 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.flush()
         session.close()
         return True
+
+    def delImageToEntity(self, menu_item_id):
+        """
+        Queries to remove an image from default boot menu
+        """
+        session = create_session()
+        ret = self.__delImage(session, menu_item_id)
+        session.close()
+        return ret
 
     def addImageToEntity(self, item_uuid, loc_id, params):
         session = create_session()
