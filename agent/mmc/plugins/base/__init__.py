@@ -357,19 +357,24 @@ def existUser(uid):
     return ldapObj.existUser(uid)
 
 #change main UserAttributes
-def changeUserMainAttributes(uid,newuid,name,surname):
+def changeUserMainAttributes(uid, newuid, name, surname):
     ldapObj = ldapUserGroupControl()
-    gecos = name + " " + surname
-    gecos = delete_diacritics(gecos)
-    name = name
-    surname = surname
+    try:
+        gecos = delete_diacritics(name + " " + surname)
+    # If we failed to build the gecos from the last and firstname
+    # fallback to uid
+    except UnicodeEncodeError:
+        gecos = uid
 
     if surname: ldapObj.changeUserAttributes(uid, "sn", surname)
-    if name: ldapObj.changeUserAttributes(uid,"givenName",name)
-    ldapObj.changeUserAttributes(uid,"gecos",gecos)
+    if name: ldapObj.changeUserAttributes(uid, "givenName", name)
+    try:
+        ldapObj.changeUserAttributes(uid, "gecos", gecos)
+    except ldap.INVALID_SYNTAX:
+        ldapObj.changeUserAttributes(uid, "gecos", uid)
     if newuid != uid:
-        ldapObj.changeUserAttributes(uid,"cn",uid)
-        ldapObj.changeUserAttributes(uid,"uid",newuid)
+        ldapObj.changeUserAttributes(uid, "cn", uid)
+        ldapObj.changeUserAttributes(uid, "uid", newuid)
     return 0
 
 def changeUserAttributes(uid,attr,attrval):
@@ -859,9 +864,14 @@ class LdapUserGroupControl:
         if not lastN: lastN = uid
 
         # For the gecos LDAP field, make a full ASCII string
-        gecosFirstN=str(delete_diacritics((firstN.encode("UTF-8"))))
-        gecosLastN=str(delete_diacritics((lastN.encode("UTF-8"))))
-        gecos = gecosFirstN + ' ' + gecosLastN
+        try:
+            gecosFirstN=str(delete_diacritics((firstN.encode("UTF-8"))))
+            gecosLastN=str(delete_diacritics((lastN.encode("UTF-8"))))
+            gecos = gecosFirstN + ' ' + gecosLastN
+        # If we failed to build the gecos from the last and firstname
+        # fallback to uid
+        except UnicodeEncodeError:
+            gecos = uid
 
         # Build a UTF-8 representation of the unicode strings
         lastN = str(lastN.encode("utf-8"))
