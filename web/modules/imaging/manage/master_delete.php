@@ -45,8 +45,6 @@ if ($_POST) {
     }
 }
 
-// $masters = xmlrpc_getLocationMastersByUUID($location, array($id));
-
 ?>
 <h2><?php echo  _T("Delete master", "imaging") ?></h2>
 <form action="<?php echo urlStr("imaging/manage/master_delete") ?>" method="post">

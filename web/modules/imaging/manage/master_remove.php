@@ -45,8 +45,6 @@ if ($_POST) {
     }
 }
 
-// $masters = xmlrpc_getLocationMastersByUUID($location, array($item_uuid));
-
 list($count, $masters) = xmlrpc_getLocationImages($location);
 $menu_item_id = '';
 
