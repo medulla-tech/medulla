@@ -612,6 +612,43 @@ class Inventory(DyngroupDatabaseHelper):
 
         return ret
 
+    def getMachineNameByInventory (self, ctx, inventory) :
+        """
+        Return the machine name resolved by inventory content.
+        
+        The name resolving is based on existing MAC address registered
+        in the database.
+        
+        @param ctx: Inventory context
+        @type ctx: InventoryContext
+        
+        @param inventory: Incomming inventory from the client
+        @type inventory: dict 
+        
+        @return: Registered machine name
+        @rtype: string
+        """
+        # TODO: This rule could be configured in the config file.
+        if inventory.has_key("Network"):
+            network  = inventory["Network"]
+            if len(network) > 0 : 
+                if network[0].has_key("MACAddress"):
+                    mac = network[0]["MACAddress"]
+                    names = self.getMachinesBy(self.ctx, 
+                                               "Network", 
+                                               "MACAddress", 
+                                               mac)
+                    if len(names) == 1 :
+                        message = "Resolved machine name: %s / MAC: %s" % (names[0], mac)
+                        logging.getLogger().debug(message)
+                        return names[0]
+                    elif len(names) > 1 :
+                        logging.getLogger().error("Cannot resolve machine name: multiply MAC adresses")
+                    else:
+                        logging.getLogger().error("Cannot find a machine")
+
+        return None  
+
     def getValues(self, table, field):
         """
         return every possible values for a field in a table
@@ -1755,7 +1792,12 @@ class InventoryCreator(Inventory):
         session = create_session()
         session.begin()
         try:
-            m = self.getMachinesOnly(self.ctx, {'hostname': hostname}) # TODO uuids!
+            machine_name = self.getMachineNameByInventory(self.ctx, inventory)
+
+            if not machine_name :
+                return False
+
+            m = self.getMachinesOnly(self.ctx, {'hostname': machine_name})
             if len(m) == 0:
                 # If this computer is not in the Machine table, add it
                 m = Machine()
@@ -1773,7 +1815,7 @@ class InventoryCreator(Inventory):
             # this computer
             result = session.query(InventoryTable).\
                         select_from(self.inventory.join(self.table['hasEntity']).join(self.machine)).\
-                        filter(self.machine.c.Name == hostname)
+                        filter(self.machine.c.Name == machine_name)
 
             for inv in result:
                 inv.Last = 0
