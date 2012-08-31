@@ -204,8 +204,8 @@ function xmlrpc_editImageToLocation($item_uuid, $loc_id, $params) {
     return xmlCall("imaging.editImageToLocation", array($item_uuid, $loc_id, $params));
 }
 
-function xmlrpc_delImageToLocation($item_uuid, $loc_id) {
-    return xmlCall("imaging.delImageToLocation", array($item_uuid, $loc_id));
+function xmlrpc_delImageToLocation($menu_item_id, $loc_id) {
+    return xmlCall("imaging.delImageToLocation", array($menu_item_id, $loc_id));
 }
 
 function xmlrpc_editImage($item_uuid, $target_uuid, $params, $type_target) {

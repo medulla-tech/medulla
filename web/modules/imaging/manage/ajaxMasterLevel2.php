@@ -53,6 +53,7 @@ if ($count == 0) {
 }
 // forge params
 $addAction = new ActionPopupItem(_T("Add image to default boot menu", "imaging"), "master_add", "addbootmenu", "master", "imaging", "manage");
+$delAction = new ActionPopupItem(_T("Remove from boot menu", "imaging"), "master_remove", "delbootmenu", "master", "imaging", "manage", $type."tabbootmenu", 300, "delete");
 $emptyAction = new EmptyActionItem();
 $addActions = array();
 
@@ -76,7 +77,7 @@ foreach ($masters as $master) {
     if (!$master['menu_item']) {
         $addActions[] = $addAction;
     } else {
-        $addActions[] = $emptyAction;
+        $addActions[] = $delAction;
     }
 
     $list_params[] = $l_params;
