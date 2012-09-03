@@ -34,11 +34,12 @@ $pid = base64_decode(quickGet('pid'));
 $plabel = base64_decode(quickGet('plabel'));
 $pversion = base64_decode(quickGet('pversion'));
 $mode = quickGet('mode');
+$random_dir = base64_decode(quickGet('random_dir'));
 $level = 0;
 if ($mode == "creation") { $level = 1; }
 
 #if (isset($_POST["bassoc"]) || isset($_POST["bempty"])) {
-    $cbx = array('up');
+    $cbx = array($random_dir);
     #if (!isset($_POST["bempty"])) {
     #    /* Get selected directory only if the user don't want to create an
     #       empty package */

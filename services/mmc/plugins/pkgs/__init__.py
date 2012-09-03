@@ -72,6 +72,17 @@ class RpcProxy(RpcProxyI):
         d.addCallback(_ppa_getPackageDetail)
         return d
 
+    def ppa_pushPackage(self, pp_api_id, filename, random_dir, filebinary):
+        def _ppa_pushPackage(result, pp_api_id = pp_api_id, filename = filename, random_dir = random_dir, filebinary = filebinary):
+            for upa in result:
+                if upa['uuid'] == pp_api_id:
+                    return PackagePutA(upa).pushPackage(filename, random_dir, filebinary)
+            logging.getLogger().warn("Failed to push package on %s"%(pp_api_id))
+            return False
+        d = self.upaa_getUserPackageApi()
+        d.addCallback(_ppa_pushPackage)
+        return d
+
     def ppa_putPackageDetail(self, pp_api_id, package, need_assign = True):
         def _ppa_putPackageDetail(result, pp_api_id = pp_api_id, package = package, need_assign = need_assign):
             for upa in result:

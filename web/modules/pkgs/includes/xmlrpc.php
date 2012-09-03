@@ -34,6 +34,10 @@ function putPackageDetail($papi, $package, $need_assign = True) {
     return xmlCall("pkgs.ppa_putPackageDetail", array($papi, $package, $need_assign));
 }
 
+function pushPackage($papi, $filename, $random_dir, $filebinary) {
+    return xmlCall("pkgs.ppa_pushPackage", array($papi, $filename, $random_dir, $filebinary));
+}
+
 function getPackageDetail($papiid, $pid) {
     return xmlCall("pkgs.ppa_getPackageDetail", array($papiid, $pid));
 }
