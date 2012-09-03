@@ -189,10 +189,10 @@ else {
 
     $f->add(
         new TrFormElement(_T("Package API", "pkgs"), $selectpapi),
-        array("value" => $_POST['p_api'], "required" => True, "hide" => True)
+        array("value" => $p_api_id, "required" => True)
     );
 
-    $f->add(new HiddenTpl("id"), array("value" => $_POST['id'], "hide" => True));
+    $f->add(new HiddenTpl("id"), array("value" => $package['id'], "hide" => True));
 
     $f->add(new HiddenTpl("filename"), array("value" => $_FILES['filepackage']['name'], "hide" => True));
     $f->add(new HiddenTpl("random_dir"), array("value" => $random_dir, "hide" => True));
