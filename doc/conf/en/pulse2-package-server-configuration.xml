@@ -297,7 +297,7 @@ option2 = plop      </screen></para>
             <entry>real_package_deletion</entry>
             <entry>real package deletion</entry>
             <entry>yes</entry>
-            <entry>0</entry>
+            <entry>1</entry>
           </row>
           <row>
             <entry>mm_assign_algo</entry>

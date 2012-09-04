@@ -90,7 +90,7 @@ class P2PServerCP(pulse2.utils.Singleton):
 
     package_detect_tmp_activate = False
 
-    real_package_deletion = False
+    real_package_deletion = True
 
     package_mirror_loop = 5
     package_mirror_activate = False
