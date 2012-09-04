@@ -1351,42 +1351,32 @@ class Inventory(DyngroupDatabaseHelper):
         from sqlalchemy.sql import func
         min = int(min)
         max = int(max)
-        if only_new:
-            # Select only the old machines
-            results_old = session.query(Machine). \
-                      select_from(self.table['hasInventory'].join(self.machine).join(self.table['Inventory'])). \
-                      filter(func.to_days(func.now()) - func.to_days(self.klass['Inventory'].Date) > days). \
-                      group_by(self.machine.c.id). \
-                      all()
-            old_machines_id = []
-            for res in results_old:
-                old_machines_id.append(res.id)
-            # Select all machines which are not in old machines
-            results = session.query(self.klass['Inventory']).add_entity(Machine). \
-                      select_from(self.table['hasInventory'].join(self.table['Inventory']).join(self.machine)). \
-                      filter(and_(not_(Machine.id.in_(old_machines_id)), and_((func.to_days(func.now()) - func.to_days(self.klass['Inventory'].Date)) <= days, Machine.Name.like('%' + pattern + '%')) )). \
-                      order_by(self.klass['Inventory'].id.desc()).group_by(self.klass['Inventory'].id). \
-                      offset(min).limit(max - min)
-        else:
-            results = session.query(self.klass['Inventory']).add_entity(Machine). \
-                      select_from(self.table['hasInventory'].join(self.machine).join(self.table['Inventory'])). \
-                      filter(and_((func.to_days(func.now()) - func.to_days(self.klass['Inventory'].Date)) <= days, Machine.Name.like('%' + pattern + '%'))). \
-                      order_by(self.klass['Inventory'].id.desc()).group_by(self.klass['Inventory'].id). \
-                      offset(min).limit(max - min)
+
+        results = session.query(self.klass['Inventory']).add_entity(Machine). \
+                  select_from(self.table['hasInventory'].join(self.machine). \
+                  join(self.table['Inventory'])). \
+                  filter(and_((func.to_days(func.now()) - func.to_days(self.klass['Inventory'].Date)) <= days, \
+                  Machine.Name.like('%' + pattern + '%'))). \
+                  order_by(self.klass['Inventory'].id.desc()).group_by(self.klass['Inventory'].id). \
+                  offset(min).limit(max - min)
 
         ret = []
         for res in results:
-            if only_new:
-                newMachine = True
-            else:
-                # check if there was an inventory for this tuple before n days
-                newMachine = (session.query(self.klass['hasInventory']). \
-                             select_from(self.table['hasInventory'].join(self.machine).join(self.table['Inventory'])). \
-                             filter(and_(self.klass['hasInventory'].machine == res[1].id, func.to_days(self.klass['Inventory'].Date) < func.to_days(func.now()) - days)). \
-                             count()) == 0
-            # Combine Date and Time field
+            newMachine = True
+            # check if there was an inventory for this tuple before n days
+            for prev in results :
+                if res[1].id == prev[1].id and \
+                res[0].Date >= prev[0].Date and res[0].Time > prev[0].Time :
+                    newMachine = False
+                    break 
+
             timestamp = datetime.datetime.combine(res[0].Date, res[0].Time)
-            ret.append((res[1].Name, timestamp, newMachine))
+            if only_new :
+                if newMachine :
+                    ret.append((res[1].Name, timestamp, newMachine))
+            else :
+                ret.append((res[1].Name, timestamp, newMachine))
+
         session.close()
         return ret
 
