@@ -163,7 +163,7 @@ if ($_GET['action'] == "add" and !isset($_FILES['filepackage'])) {
     $f = new ValidatingForm(array('enctype'=>"multipart/form-data"));
     $f->push(new Table());
 
-    $f->add( new TrFormElement(_T("Select the file you want to import", "pkgs"), new FileTpl('filepackage')), array("required" => True));
+    $f->add( new TrFormElement(_T("Select the file you want to import (" . get_php_max_upload_size() . "M max)", "pkgs"), new FileTpl('filepackage')), array("required" => True));
     $f->add(
         new TrFormElement(_T("Package API", "pkgs"), $selectpapi),
         array("value" => $p_api_id, "required" => True)

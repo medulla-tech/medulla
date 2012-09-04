@@ -41,4 +41,9 @@ function delete_directory($dirname) {
    return true;
 }
 
+function get_php_max_upload_size() {
+    $max_upload = (int)(ini_get('upload_max_filesize'));
+    $max_post = (int)(ini_get('post_max_size'));
+    return min($max_upload, $max_post);
+}
 ?>
