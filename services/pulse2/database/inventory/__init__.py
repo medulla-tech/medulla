@@ -99,6 +99,14 @@ class Inventory(DyngroupDatabaseHelper):
                                   Column('fk_User', Integer, ForeignKey('User.id'), primary_key = True),
                                   Column('fk_Entity', Integer, ForeignKey('Entity.id'), primary_key = True))
 
+        # Add inventory tables for Search field (used in __filterQuery)
+        self.hardware = Table("Hardware", self.metadata, autoload = True)
+        self.bios = Table("Bios", self.metadata, autoload = True)
+        self.software = Table("Software", self.metadata, autoload = True)
+        self.network = Table("Network", self.metadata, autoload = True)
+        self.controller = Table("Controller", self.metadata, autoload = True)
+        self.registry = Table("Registry", self.metadata, autoload = True)
+
         noms = self.config.getInventoryNoms()
 
         self.table['Inventory'] = self.inventory
@@ -900,7 +908,7 @@ class Inventory(DyngroupDatabaseHelper):
         # Filter on the entities the user has the right to see
         result = result.filter(self.table['hasEntity'].c.entity.in_(ctx.locationsid))
         # Apply other filters
-        result = self.__filterQuery(ctx, result, params)
+        result = self.__filterQuery(part, ctx, result, params)
 
         # Apply a filter on the software ProductName if asked in parameters (the filter is loaded from a config file)
         if params.has_key('software_filter') and params['software_filter'] == True and part == 'Software':
@@ -935,11 +943,18 @@ class Inventory(DyngroupDatabaseHelper):
                         self.logger.warn("cant find any %s field"%(where[0]))
         return (result, grp_by)
 
-    def __filterQuery(self, ctx, query, params):
+    def __filterQuery(self, part, ctx, query, params):
+        """
+        @part param is current tab of inventory
+        """
         if params.has_key('hostname') and params['hostname'] != '':
             query = query.filter(Machine.Name==params['hostname'])
-        if params.has_key('filter') and params['filter'] != '':
-            query = query.filter(Machine.Name.like('%'+params['filter']+'%'))
+        if params.has_key('filter') and params['filter'] != '': # params['filter'] is keyword entered in search field
+            # Search keyword in all columns of this tab
+            clauses = []
+            for column in self.__getattribute__(part.lower()).c: # All columns of current tab
+                clauses.append(column.like('%'+params['filter']+'%'))
+            query = query.filter(or_(*clauses))
         if params.has_key('uuid') and params['uuid'] != '':
             query = query.filter(Machine.id==fromUUID(params['uuid']))
         if params.has_key('uuids'):
