@@ -2833,6 +2833,11 @@ def computersUnregister(computers_UUID, backup):
             h_location[en_uuid] = [en, []]
         h_location[en_uuid][1].append(target)
 
+    def treatUnregister(results, uuid, *attr):
+        return [results, uuid]
+          
+
+    dl = []
     for en_uuid in h_location:
         (en, targets) = h_location[en_uuid]
 
@@ -2850,16 +2855,12 @@ def computersUnregister(computers_UUID, backup):
                 imageList = []
                 # Unregister Targets from DB
                 imageList = db.unregisterTargets(computerUUID)
-                if len(imageList) > 0:
-                    # Unregister Targets from disk
-                    i.computerUnregister(computerUUID, imageList, backup)
-                else:
-                    failure.append([uuid, "DATABASE"])
+                d = i.computerUnregister(computerUUID, imageList, backup)
+                d.addCallback(treatUnregister, computerUUID)
+                dl.append(d)
         else:
             logger.info("couldn't initialize the ImagingApi to %s"%(url))
 
-        # return the status of the whole thing
-        if len(failure) > 0:
-            return [False, failure]
-        return [True]
+        defer_list = defer.DeferredList(dl)
+        return defer_list
     return False
