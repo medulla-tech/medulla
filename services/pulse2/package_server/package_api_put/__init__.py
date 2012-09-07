@@ -50,14 +50,15 @@ class PackageApiPut(PackageApiGet):
                 ret.append([f, os.path.isdir(os.path.join(self.tmp_input_dir,f))])
         return ret
 
-    def xmlrpc_pushPackage(self, filename, random_dir, filebinary):
+    def xmlrpc_pushPackage(self, random_dir, files):
         if not os.path.exists(self.tmp_input_dir):
-            return False
+            os.mkdir(self.tmp_input_dir)
         filepath = os.path.join(self.tmp_input_dir, random_dir)
         os.mkdir(filepath)
-        f = open(os.path.join(filepath, filename), 'w')
-        f.write(b64decode(filebinary))
-        f.close()
+        for file in files:
+            f = open(os.path.join(filepath, file['filename']), 'w')
+            f.write(b64decode(file['filebinary']))
+            f.close()
 
         return True
 

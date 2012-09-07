@@ -41,6 +41,25 @@ function delete_directory($dirname) {
    return true;
 }
 
+function get_directory_list ($directory) {
+    // create an array to hold directory list
+    $results = array();
+    // create a handler for the directory
+    $handler = opendir($directory);
+    // open directory and walk through the filenames
+    while ($file = readdir($handler)) {
+        // if file isn't this directory or its parent, add it to the results
+        if ($file != "." && $file != "..") {
+            $results[] = $file;
+        }
+    }
+    // tidy up: close the handler
+    closedir($handler);
+
+    // done!
+    return $results;
+}
+
 function get_php_max_upload_size() {
     $max_upload = (int)(ini_get('upload_max_filesize'));
     $max_post = (int)(ini_get('post_max_size'));

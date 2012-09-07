@@ -37,23 +37,6 @@ $package = array();
  * File Upload
  */
 
-// check if file was correctly uploaded
-if (isset($_FILES['filepackage'])) {
-    // Put uploaded file in PHP upload_tmp_dir / random_dir
-    $upload_tmp_dir = sys_get_temp_dir();
-    $random_dir = uniqid();
-    mkdir($upload_tmp_dir . '/' . $random_dir);
-
-    if (move_uploaded_file($_FILES['filepackage']['tmp_name'], $upload_tmp_dir . '/' . $random_dir . '/' . $_FILES['filepackage']['name'])) {
-        new NotifyWidgetSuccess(_T("File Uploaded", "pkgs"));
-    }
-    else {
-        new NotifyWidgetFailure(_T("File failed to upload"));
-        // don't display second page until there is an uploaded file
-        unset($_FILES['filepackage']);
-    }
-}
-
 if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
     $p_api_id = $_POST['p_api'];
     $filename = $_POST['filename'];
@@ -89,11 +72,21 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
                 // If no error with sending package infos, push package previously uploaded
                 $package_id = $ret[3]['id'];
                 $upload_tmp_dir = sys_get_temp_dir();
-                $file = $upload_tmp_dir . '/' . $random_dir . '/' . $filename;
-                // Read and put content of $file to $filebinary
-                $filebinary = fread(fopen($file, "r"), filesize($file));
-                $push_package_result = pushPackage($p_api_id, $filename, $random_dir, base64_encode($filebinary));
 
+                $file_list = get_directory_list($upload_tmp_dir . '/' . $random_dir);
+
+                $files = array();
+                foreach ($file_list as $filename) {
+                    $file = $upload_tmp_dir . '/' . $random_dir . '/' . $filename;
+                    // Read and put content of $file to $filebinary
+                    $filebinary = fread(fopen($file, "r"), filesize($file));
+                    $files[] = array(
+                        "filename" => $filename,
+                        "filebinary" => base64_encode($filebinary),
+                    );
+                }
+
+                $push_package_result = pushPackage($p_api_id, $random_dir, $files);
                 // Delete package from PHP /tmp dir
                 delete_directory($upload_tmp_dir . '/' . $random_dir);
 
@@ -157,17 +150,17 @@ $sidemenu->forceActiveItem($activeItem);
 $p->setSideMenu($sidemenu);
 $p->display();
 
-if ($_GET['action'] == "add" and !isset($_FILES['filepackage'])) {
+if ($_GET['action'] == 'add' and !isset($_POST['bimport'])) {
     // first page when we add a package
     // display an upload form
     $f = new ValidatingForm(array('enctype'=>"multipart/form-data"));
     $f->push(new Table());
 
-    $f->add( new TrFormElement(_T("Select the file you want to import (" . get_php_max_upload_size() . "M max)", "pkgs"), new FileTpl('filepackage')), array("required" => True));
     $f->add(
         new TrFormElement(_T("Package API", "pkgs"), $selectpapi),
         array("value" => $p_api_id, "required" => True)
     );
+    $f->add( new TrFormElement(_T("Select the file you want to import (" . get_php_max_upload_size() . "M max)", "pkgs"), new MultiFileTpl('filepackage')), array("required" => True));
 
     $f->add(new HiddenTpl("id"), array("value" => $package['id'], "hide" => True));
 
@@ -195,7 +188,7 @@ else {
     $f->add(new HiddenTpl("id"), array("value" => $package['id'], "hide" => True));
 
     $f->add(new HiddenTpl("filename"), array("value" => $_FILES['filepackage']['name'], "hide" => True));
-    $f->add(new HiddenTpl("random_dir"), array("value" => $random_dir, "hide" => True));
+    $f->add(new HiddenTpl("random_dir"), array("value" => $_POST['random_dir'], "hide" => True));
 
     if ($_GET["action"]=="add") {
         $f->add(new HiddenTpl("mode"), array("value" => "creation", "hide" => True));
