@@ -3,15 +3,16 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 ## Translators:
+#   <jcvassort@mandriva.com>, 2012.
 # Nicolas Rueff <nrueff@mandriva.com>, 2007, 2010.
 # Olivier Roussy <oroussy@mandriva.com>, 2008.
 msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
-"Report-Msgid-Bugs-To: http://pulse2.mandriva.org/\n"
-"POT-Creation-Date: 2011-01-30 11:29+0100\n"
-"PO-Revision-Date: 2011-06-17 13:11+0000\n"
-"Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
+"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
+"POT-Creation-Date: 2012-09-07 16:43+0200\n"
+"PO-Revision-Date: 2012-09-07 14:44+0000\n"
+"Last-Translator: Jean-Christophe Vassort <jcvassort@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/pulse2/team/fr_FR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,98 +20,84 @@ msgstr ""
 "Language: fr_FR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
-#: modules/pkgs/infoPackage.inc.php:32 modules/pkgs/infoPackage.inc.php:38
+#: modules/pkgs/infoPackage.inc.php:34 modules/pkgs/infoPackage.inc.php:40
 msgid "Packages"
 msgstr "Packages"
 
-#: modules/pkgs/infoPackage.inc.php:42
+#: modules/pkgs/infoPackage.inc.php:44
 msgid "Show all packages"
 msgstr "Montrer tous les packages"
 
-#: modules/pkgs/infoPackage.inc.php:44 modules/pkgs/pkgs/edit.php:79
-#: modules/pkgs/pkgs/localSidebar.php:28
+#: modules/pkgs/infoPackage.inc.php:46 modules/pkgs/pkgs/localSidebar.php:28
+#: modules/pkgs/pkgs/edit.php:111
 msgid "Add a package"
 msgstr "Ajouter un package"
 
-#: modules/pkgs/infoPackage.inc.php:46 modules/pkgs/pkgs/edit.php:96
-#: modules/pkgs/pkgs/ajaxPackageList.php:78
+#: modules/pkgs/infoPackage.inc.php:48
+#: modules/pkgs/pkgs/ajaxPackageList.php:78 modules/pkgs/pkgs/edit.php:128
 msgid "Edit a package"
 msgstr "Éditer un package"
 
-#: modules/pkgs/infoPackage.inc.php:49
+#: modules/pkgs/infoPackage.inc.php:51
 msgid "Associate files to a package"
 msgstr "Associer des fichiers à un package"
 
-#: modules/pkgs/infoPackage.inc.php:52
+#: modules/pkgs/infoPackage.inc.php:54
 msgid "See pending packages"
 msgstr "Montrer les packages en attente"
 
-#: modules/pkgs/infoPackage.inc.php:55
+#: modules/pkgs/infoPackage.inc.php:57
 msgid "Show mirror status"
 msgstr "Montrer l'état de synchronisation des miroirs"
 
-#: modules/pkgs/infoPackage.inc.php:59
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:79
+#: modules/pkgs/infoPackage.inc.php:61
 #: modules/pkgs/pkgs/ajaxPackageList.php:79
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:79
 msgid "Delete a package"
 msgstr "Supprimer un package"
 
-#: modules/pkgs/pkgs/associate_files.php:62
+#: modules/pkgs/pkgs/ajaxPackageList.php:53 modules/pkgs/pkgs/index.php:45
 #, php-format
-msgid "Files successfully associated with package <b>%s (%s)</b>%s"
-msgstr ""
-"Les fichiers ont été associés avec le package <b>%s (%s)</b> avec succès.%s"
+msgid "MMC failed to contact package server %s."
+msgstr "Le MMC a échoué à contacter le package serveur %s."
 
-#: modules/pkgs/pkgs/associate_files.php:69
-#, php-format
-msgid "Failed to associate files%s"
-msgstr "L'association de fichiers a échoué %s"
+#: modules/pkgs/pkgs/ajaxPackageList.php:63 modules/pkgs/pkgs/index.php:53
+msgid "Please contact your administrator."
+msgstr "Veuillez contacter votre administrateur."
 
-#: modules/pkgs/pkgs/associate_files.php:72
-msgid "Failed to associate files"
-msgstr "L'association de fichiers a échoué"
+#: modules/pkgs/pkgs/ajaxPackageList.php:66
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:66
+msgid "Package name"
+msgstr "Nom du package"
 
-#: modules/pkgs/pkgs/associate_files.php:79
-#, php-format
-msgid "Associate files to package <b>%s (%s)</b>"
-msgstr "Associer des fichiers au package <b>%s (%s)</b>"
+#: modules/pkgs/pkgs/ajaxPackageList.php:69
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
+#: modules/pkgs/pkgs/edit.php:200
+msgid "Description"
+msgstr "Description"
 
-#: modules/pkgs/pkgs/associate_files.php:99
-msgid "Select the directory you want for this package"
-msgstr "Sélectionnez le répertoire correspondant à ce package"
+#: modules/pkgs/pkgs/ajaxPackageList.php:70
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
+msgid "Version"
+msgstr "Version"
 
-#: modules/pkgs/pkgs/associate_files.php:120
-msgid "Associate"
-msgstr "Associer"
-
-#: modules/pkgs/pkgs/associate_files.php:121
-msgid "Create an empty package"
-msgstr "Créer un package vide"
+#: modules/pkgs/pkgs/ajaxPackageList.php:71
+msgid "Package size"
+msgstr "Taille du package"
 
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:50
 msgid "Associate package"
 msgstr "Associer des fichiers à un package"
 
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:66
-#: modules/pkgs/pkgs/ajaxPackageList.php:66
-msgid "Package name"
-msgstr "Nom du package"
-
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
-#: modules/pkgs/pkgs/edit.php:135 modules/pkgs/pkgs/ajaxPackageList.php:69
-msgid "Description"
-msgstr "Description"
-
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
-#: modules/pkgs/pkgs/ajaxPackageList.php:70
-msgid "Version"
-msgstr "Version"
-
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:78
 msgid "Show mirrors"
 msgstr "Montrer l'état des miroirs"
 
-#: modules/pkgs/pkgs/pending.php:29 modules/pkgs/pkgs/localSidebar.php:29
+#: modules/pkgs/pkgs/index.php:29 modules/pkgs/pkgs/localSidebar.php:27
+msgid "Packages list"
+msgstr "Liste des packages"
+
+#: modules/pkgs/pkgs/localSidebar.php:29 modules/pkgs/pkgs/pending.php:29
 msgid "Pending packages list"
 msgstr "Liste des packages en attente"
 
@@ -126,62 +113,69 @@ msgstr "La suppression du package a échoué."
 msgid "Delete this package"
 msgstr "Supprimer ce package"
 
-#: modules/pkgs/pkgs/edit.php:60
-msgid "Package successfully edited"
-msgstr "Le package a été correctement édité"
-
-#: modules/pkgs/pkgs/edit.php:70
-msgid "Package failed to save"
-msgstr "La sauvegarde du package a échoué"
-
-#: modules/pkgs/pkgs/edit.php:122
-msgid "Package API"
-msgstr "Api de package"
-
-#: modules/pkgs/pkgs/edit.php:133
-msgid "Package label"
-msgstr "Libellé du package"
-
-#: modules/pkgs/pkgs/edit.php:134
-msgid "Package version"
-msgstr "Version du package"
-
-#: modules/pkgs/pkgs/edit.php:139
-msgid "Command's name : "
-msgstr "Nom de la commande : "
-
-#: modules/pkgs/pkgs/edit.php:139
-msgid "Command : "
-msgstr "Commande : "
-
-#: modules/pkgs/pkgs/edit.php:147
-msgid "Need a reboot ?"
-msgstr "Besoin de re-démarrer ?"
-
-#: modules/pkgs/pkgs/edit.php:179
-msgid "Associate files"
-msgstr "Associer des fichiers"
-
-#: modules/pkgs/pkgs/index.php:29 modules/pkgs/pkgs/localSidebar.php:27
-msgid "Packages list"
-msgstr "Liste des packages"
-
-#: modules/pkgs/pkgs/index.php:45 modules/pkgs/pkgs/ajaxPackageList.php:53
-#, php-format
-msgid "MMC failed to contact package server %s."
-msgstr "Le MMC a échoué à contacter le package serveur %s."
-
-#: modules/pkgs/pkgs/index.php:53 modules/pkgs/pkgs/ajaxPackageList.php:63
-msgid "Please contact your administrator."
-msgstr "Veuillez contacter votre administrateur."
-
-#: modules/pkgs/pkgs/ajaxPackageList.php:71
-msgid "Package size"
-msgstr "Taille du package"
-
 #: modules/pkgs/pkgs/rsync.php:32
 #, php-format
 msgid "The package %s (%s) is not associated"
 msgstr "Le package %s (%s) n'est pas associé"
+
+#: modules/pkgs/pkgs/associate_files.php:63
+#, php-format
+msgid "Files successfully associated with package <b>%s (%s)</b>%s"
+msgstr ""
+"Les fichiers ont été associés avec le package <b>%s (%s)</b> avec succès.%s"
+
+#: modules/pkgs/pkgs/associate_files.php:70
+#, php-format
+msgid "Failed to associate files%s"
+msgstr "L'association de fichiers a échoué %s"
+
+#: modules/pkgs/pkgs/associate_files.php:73
+msgid "Failed to associate files"
+msgstr "L'association de fichiers a échoué"
+
+#: modules/pkgs/pkgs/edit.php:68
+msgid "Package successfully edited"
+msgstr "Le package a été correctement édité"
+
+#: modules/pkgs/pkgs/edit.php:101
+msgid "Package failed to save"
+msgstr "La sauvegarde du package a échoué"
+
+#: modules/pkgs/pkgs/edit.php:160 modules/pkgs/pkgs/edit.php:184
+msgid "Package API"
+msgstr "Api de package"
+
+#: modules/pkgs/pkgs/edit.php:163
+#, php-format
+msgid "Select the file you want to import (%sM max)"
+msgstr "Sélectionnez le fichier que vous voulez importer (%sM max)"
+
+#: modules/pkgs/pkgs/edit.php:174
+msgid "Add"
+msgstr "Ajouter"
+
+#: modules/pkgs/pkgs/edit.php:198
+msgid "Package label"
+msgstr "Libellé du package"
+
+#: modules/pkgs/pkgs/edit.php:199
+msgid "Package version"
+msgstr "Version du package"
+
+#: modules/pkgs/pkgs/edit.php:204
+msgid "Command's name : "
+msgstr "Nom de la commande : "
+
+#: modules/pkgs/pkgs/edit.php:204
+msgid "Command : "
+msgstr "Commande : "
+
+#: modules/pkgs/pkgs/edit.php:212
+msgid "Need a reboot ?"
+msgstr "Besoin de re-démarrer ?"
+
+#: modules/pkgs/pkgs/edit.php:244
+msgid "Associate files"
+msgstr "Associer des fichiers"
 
 
