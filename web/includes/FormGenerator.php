@@ -110,10 +110,9 @@ class MultiFileTpl extends AbstractTpl {
                 </noscript>         
         </div>
 
-        <input name="random_dir" type="hidden">
+        <input id="random_dir" name="random_dir" type="hidden">
         <input id="triggerUpload" class="btnPrimary" value="Upload Queued Files" name="triggerUpload">
     
-        <script src="jsframework/lib/jquery.min.js"></script>
         <script src="jsframework/lib/fileuploader.js" type="text/javascript"></script>
         <link href="jsframework/lib/fileuploader.css" rel="stylesheet" type="text/css">
         <script>
@@ -132,10 +131,10 @@ class MultiFileTpl extends AbstractTpl {
                     if(uploader.getInProgress() > 0){
                         return;
                     }
-                    $("input[name=\'random_dir\']").val(responseJson.random_dir);
+                    $("random_dir").setValue(responseJson.random_dir);
                 }
             });           
-            $(\'#triggerUpload\').click(function() {
+            $(\'triggerUpload\').observe(\'click\', function() {
                 uploader.uploadStoredFiles();
             });
         }
