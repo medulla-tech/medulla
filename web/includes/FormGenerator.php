@@ -96,6 +96,59 @@ class TextareaTpl extends AbstractTpl {
 }
 
 
+class MultiFileTpl extends AbstractTpl {
+
+    function MultiFileTpl($name) {
+        $this->name=$name;
+    }
+
+    function display($arrParam) {
+        print '<div id="file-uploader-demo1">          
+                <noscript>                      
+                        <p>Please enable JavaScript to use file uploader.</p>
+                        <!-- or put a simple form for upload here -->
+                </noscript>         
+        </div>
+
+        <input id="random_dir" name="random_dir" type="hidden">
+        <input id="triggerUpload" class="btnPrimary" value="Upload Queued Files" name="triggerUpload">
+    
+        <script src="jsframework/lib/fileuploader.js" type="text/javascript"></script>
+        <link href="jsframework/lib/fileuploader.css" rel="stylesheet" type="text/css">
+        <script>
+        function createUploader(){
+            var uploader = new qq.FileUploader({
+                element: document.getElementById(\'file-uploader-demo1\'),
+                action: \'jsframework/lib/fileuploader.php\',
+                debug: true,
+                multiple: true,
+                demoMode: false,
+                random_dir: \'' . uniqid() . '\',
+                autoUpload: false,
+                uploadButtonText: "Click to select files",
+                onComplete: function(id, file, responseJson){
+                    // queue
+                    if(uploader.getInProgress() > 0){
+                        return;
+                    }
+                    $("random_dir").setValue(responseJson.random_dir);
+                }
+            });           
+            $(\'triggerUpload\').observe(\'click\', function() {
+                uploader.uploadStoredFiles();
+            });
+        }
+        
+        // in your app create uploader as soon as the DOM is ready
+        // don\'t wait for the window to load  
+        window.onload = createUploader;     
+    </script>';
+    }
+
+    function displayRo($arrParam) {
+    }
+}
+
 class FileTpl extends AbstractTpl {
 
     function FileTpl($name) {
