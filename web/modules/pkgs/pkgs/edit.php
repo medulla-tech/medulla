@@ -150,7 +150,10 @@ $sidemenu->forceActiveItem($activeItem);
 $p->setSideMenu($sidemenu);
 $p->display();
 
-if ($_GET['action'] == 'add' and !isset($_POST['bimport'])) {
+if ($_GET['action'] == 'add' and strlen($_POST['random_dir'] == 0)) {
+    if (isset($_POST['random_dir']) and strlen($_POST['random_dir']) == 0) {
+        new NotifyWidgetFailure(_T('No files uploaded'), "pkgs");
+    }
     // first page when we add a package
     // display an upload form
     $f = new ValidatingForm(array('enctype'=>"multipart/form-data"));
@@ -160,7 +163,7 @@ if ($_GET['action'] == 'add' and !isset($_POST['bimport'])) {
         new TrFormElement(_T("Package API", "pkgs"), $selectpapi),
         array("value" => $p_api_id, "required" => True)
     );
-    $f->add( new TrFormElement(sprintf(_T("Select the file you want to import (%sM max)", "pkgs"), get_php_max_upload_size()), new MultiFileTpl('filepackage')), array("required" => True));
+    $f->add( new TrFormElement(sprintf(_T("Select files you want to import (%sM max)", "pkgs"), get_php_max_upload_size()), new MultiFileTpl('filepackage')), array("required" => True));
 
     $f->add(new HiddenTpl("id"), array("value" => $package['id'], "hide" => True));
 
