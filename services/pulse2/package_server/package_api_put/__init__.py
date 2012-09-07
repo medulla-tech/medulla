@@ -28,6 +28,7 @@
 import os
 import time
 import exceptions
+from base64 import b64decode
 from pulse2.package_server.package_api_get import PackageApiGet
 from pulse2.package_server.types import Package
 from pulse2.package_server.common import Common
@@ -48,6 +49,18 @@ class PackageApiPut(PackageApiGet):
             for f in os.listdir(self.tmp_input_dir):
                 ret.append([f, os.path.isdir(os.path.join(self.tmp_input_dir,f))])
         return ret
+
+    def xmlrpc_pushPackage(self, random_dir, files):
+        if not os.path.exists(self.tmp_input_dir):
+            os.mkdir(self.tmp_input_dir)
+        filepath = os.path.join(self.tmp_input_dir, random_dir)
+        os.mkdir(filepath)
+        for file in files:
+            f = open(os.path.join(filepath, file['filename']), 'w')
+            f.write(b64decode(file['filebinary']))
+            f.close()
+
+        return True
 
     def xmlrpc_associatePackages(self, pid, fs, level = 0):
         files = []
