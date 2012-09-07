@@ -6,15 +6,13 @@
 .qq-upload-button {
 	display: block;
 	/*or inline-block*/
-	width: 105px;
 	padding: 7px 0;
 	text-align: center;
-	background: #880000;
-	border-bottom: 1px solid #DDD;
-	color: #FFF;
+	background: #DDD;
+	border: 1px solid #AAA;
 }
 .qq-upload-button-hover {
-	background: #CC0000;
+	background: #CCC;
 }
 .qq-upload-button-focus {
 	outline: 1px dotted #000000;
@@ -96,10 +94,16 @@
 	display: inline;
 }
 .qq-upload-list li.qq-upload-success {
-	background-color: #5DA30C;
-	color: #FFFFFF;
+	background-color: #CCFFCC;
+	color: #000;
 }
 .qq-upload-list li.qq-upload-fail {
 	background-color: #D60000;
 	color: #FFFFFF;
+}
+#triggerUpload {
+    margin-top: 15px;
+}
+#file-uploader {
+    width: 200px;
 }

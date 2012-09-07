@@ -103,7 +103,7 @@ class MultiFileTpl extends AbstractTpl {
     }
 
     function display($arrParam) {
-        print '<div id="file-uploader-demo1">          
+        print '<div id="file-uploader">          
                 <noscript>                      
                         <p>Please enable JavaScript to use file uploader.</p>
                         <!-- or put a simple form for upload here -->
@@ -118,14 +118,14 @@ class MultiFileTpl extends AbstractTpl {
         <script>
         function createUploader(){
             var uploader = new qq.FileUploader({
-                element: document.getElementById(\'file-uploader-demo1\'),
+                element: document.getElementById(\'file-uploader\'),
                 action: \'jsframework/lib/fileuploader.php\',
                 debug: true,
                 multiple: true,
                 demoMode: false,
                 random_dir: \'' . uniqid() . '\',
                 autoUpload: false,
-                uploadButtonText: "Click to select files",
+                uploadButtonText: "' . _T('Click here to select files', "pkgs") . '",
                 onComplete: function(id, file, responseJson){
                     // queue
                     if(uploader.getInProgress() > 0){
