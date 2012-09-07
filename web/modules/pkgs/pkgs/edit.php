@@ -160,7 +160,7 @@ if ($_GET['action'] == 'add' and !isset($_POST['bimport'])) {
         new TrFormElement(_T("Package API", "pkgs"), $selectpapi),
         array("value" => $p_api_id, "required" => True)
     );
-    $f->add( new TrFormElement(_T("Select the file you want to import (" . get_php_max_upload_size() . "M max)", "pkgs"), new MultiFileTpl('filepackage')), array("required" => True));
+    $f->add( new TrFormElement(sprintf(_T("Select the file you want to import (%sM max)", "pkgs"), get_php_max_upload_size()), new MultiFileTpl('filepackage')), array("required" => True));
 
     $f->add(new HiddenTpl("id"), array("value" => $package['id'], "hide" => True));
 
@@ -171,7 +171,7 @@ if ($_GET['action'] == 'add' and !isset($_POST['bimport'])) {
 
     $f->pop();
 
-    $f->addValidateButton("bimport", _T("Import", "pkgs"));
+    $f->addValidateButton("bimport", _T("Add", "pkgs"));
 
 }
 else {
