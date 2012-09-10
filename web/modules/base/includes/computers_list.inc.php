@@ -158,7 +158,8 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
         $n->addActionItemArray($actionImaging);
     }
     if ($delete_computer && canDelComputer()) {
-        $n->addActionItem(new ActionPopupItem(_("Delete computer"),"delete","supprimer","computer", "base", "computers"));
+        // set popup window to 400px width
+        $n->addActionItem(new ActionPopupItem(_("Delete computer"),"delete","supprimer","computer", "base", "computers", null, 400));
     }
     if ($remove_from_result) {
         $n->addActionItem(new ActionPopupItem(_("Remove machine from group"),"remove_machine","remove_machine","name", "base", "computers"));
