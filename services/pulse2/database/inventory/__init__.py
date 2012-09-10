@@ -1800,7 +1800,7 @@ class InventoryCreator(Inventory):
             machine_name = self.getMachineNameByInventory(self.ctx, inventory)
 
             if not machine_name :
-                return False
+                machine_name = hostname
 
             m = self.getMachinesOnly(self.ctx, {'hostname': machine_name})
             if len(m) == 0:
