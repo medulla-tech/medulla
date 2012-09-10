@@ -5,6 +5,7 @@ Example of how to use this uploader class...
 You can uncomment the following lines (minus the require) to use these as your defaults.
 /******************************************/
 
+session_start();
 require('../../modules/pkgs/includes/functions.php');
 
 // list of valid extensions, ex. array("jpeg", "xml", "bmp")
@@ -19,7 +20,7 @@ $uploader = new qqFileUploader($allowedExtensions, $sizeLimit);
 
 // Put uploaded file in PHP upload_tmp_dir / random_dir
 $upload_tmp_dir = sys_get_temp_dir();
-$random_dir = $_GET['random_dir'];
+$random_dir = ($_GET['random_dir']) ? $_GET['random_dir'] : $_SESSION['random_dir'];
 mkdir($upload_tmp_dir . '/' . $random_dir);
 
 $result = $uploader->handleUpload($upload_tmp_dir, $random_dir);

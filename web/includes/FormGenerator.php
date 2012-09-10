@@ -103,6 +103,9 @@ class MultiFileTpl extends AbstractTpl {
     }
 
     function display($arrParam) {
+        // FIXME use session or not ?
+        $random_dir = uniqid();
+        $_SESSION['random_dir'] = $random_dir;
         print '<div id="file-uploader">          
                 <noscript>                      
                         <p>Please enable JavaScript to use file uploader.</p>
@@ -111,7 +114,9 @@ class MultiFileTpl extends AbstractTpl {
         </div>
 
         <input id="random_dir" name="random_dir" type="hidden">
-        <input id="triggerUpload" class="btnPrimary" value="Upload Queued Files" name="triggerUpload">
+        <div id="parentTrigger">
+        <div id="triggerUpload">Upload Queued Files</div>
+        </div>
     
         <script src="jsframework/lib/fileuploader.js" type="text/javascript"></script>
         <link href="jsframework/lib/fileuploader.css" rel="stylesheet" type="text/css">
@@ -123,7 +128,7 @@ class MultiFileTpl extends AbstractTpl {
                 debug: true,
                 multiple: true,
                 demoMode: false,
-                random_dir: \'' . uniqid() . '\',
+                random_dir: \'' . $random_dir . '\',
                 autoUpload: false,
                 uploadButtonText: "' . _T('Click here to select files', "pkgs") . '",
                 onComplete: function(id, file, responseJson){

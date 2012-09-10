@@ -10,6 +10,7 @@
 	text-align: center;
 	background: #DDD;
 	border: 1px solid #AAA;
+        height: 20px;
 }
 .qq-upload-button-hover {
 	background: #CCC;
@@ -101,8 +102,19 @@
 	background-color: #D60000;
 	color: #FFFFFF;
 }
+#parentTrigger {
+    position: relative;
+    z-index: 1;
+}
 #triggerUpload {
     margin-top: 15px;
+    padding: 5px;
+    width: 135px;
+    background-color: #21449C;
+    color: white;
+    cursor: pointer;
+    z-index: 1000;
+    position: relative;
 }
 #file-uploader {
     width: 200px;
