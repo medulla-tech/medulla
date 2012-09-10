@@ -1209,6 +1209,14 @@ class TrFormElement extends FormElement {
     function setStyle($style) {
         $this->style = $style;
     }
+
+    function setFirstColWidth($firstColWidth) {
+        $this->firstColWidth = $firstColWidth;
+    }
+
+    function getFirstColWidth() {
+        return $this->firstColWidth;
+    }
 }
 
 ?>
