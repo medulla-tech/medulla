@@ -53,6 +53,11 @@ $page->setOptions(array("visible"=>False));
 $submod->addPage($page);
 $page = new Page("pending", _T('See pending packages', 'pkgs'));
 $submod->addPage($page);
+$page = new Page("addsamba", _T('Add package from samba share', 'pkgs'));
+$submod->addPage($page);
+$page = new Page("associate_files_samba", _T('Associate files to a package', 'pkgs'));
+$page->setOptions(array("visible"=>False));
+$submod->addPage($page);
 
 $page = new Page("rsync",_T("Show mirror status", 'pkgs'));
 $page->setFile("modules/pkgs/pkgs/rsync.php", array("noHeader"=>True,"visible"=>False));
