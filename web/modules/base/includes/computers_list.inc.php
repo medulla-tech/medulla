@@ -135,7 +135,6 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
         }
         $n->setNavBar(new AjaxNavBar(count($columns[$headers[0][0]]), $filter));
     }
-    $n->disableFirstColumnActionLink();
     $n->setName(_("Computers list"));
     $n->setParamInfo($params);
     $n->setCssClass("machineName");
