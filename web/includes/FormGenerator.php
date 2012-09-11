@@ -115,7 +115,7 @@ class MultiFileTpl extends AbstractTpl {
 
         <input id="random_dir" name="random_dir" type="hidden">
         <div id="parentTrigger">
-        <div id="triggerUpload">Upload Queued Files</div>
+        <div id="triggerUpload">' . _T('Upload Queued Files', "pkgs") . '</div>
         </div>
     
         <script src="jsframework/lib/fileuploader.js" type="text/javascript"></script>
