@@ -33,6 +33,14 @@ if(isset($_POST['only_new']))
 if(isset($_POST['period']))
     $params["period"] = $_POST["period"];
 
+if (count($_POST) == 0) {
+    // first display of the page, checkbox is checked by default
+    $checked = "checked";
+    $params["only_new"] = 'on';
+}
+else {
+    $checked = isset($_POST['only_new']) ? "checked" : "";
+}
 
 // Create the page with its title and sidemenu
 $p = new PageGenerator(_T("Incoming Inventories"));
@@ -64,7 +72,7 @@ $checkboxTr = new TrFormElement(_T("Only new computers"), $checkbox,
 
 $form->add($listboxTr);
 $form->add($checkboxTr,
-           array("value" => isset($_POST["only_new"]) ? "checked" : ""));
+           array("value" => $checked));
 
 $form->pop();
 // Display the form
