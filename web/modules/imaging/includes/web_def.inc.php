@@ -45,35 +45,35 @@ function web_def_default_protocol() {
 }
 
 function web_def_image_hidden() {
-    #return __web_def_in_session("image_hidden");
+    return __web_def_in_session("image_hidden");
 }
 
 function web_def_image_hidden_WOL() {
-    #return __web_def_in_session("image_hidden_WOL");
+    return __web_def_in_session("image_hidden_WOL");
 }
 
 function web_def_image_default() {
-    #return __web_def_in_session("image_default");
+    return __web_def_in_session("image_default");
 }
 
 function web_def_image_default_WOL() {
-    #return __web_def_in_session("image_default_WOL");
+    return __web_def_in_session("image_default_WOL");
 }
 
 function web_def_service_hidden() {
-    #return __web_def_in_session("service_hidden");
+    return __web_def_in_session("service_hidden");
 }
 
 function web_def_service_hidden_WOL() {
-    #return __web_def_in_session("service_hidden_WOL");
+    return __web_def_in_session("service_hidden_WOL");
 }
 
 function web_def_service_default() {
-    #return __web_def_in_session("service_default");
+    return __web_def_in_session("service_default");
 }
 
 function web_def_service_default_WOL() {
-    #return __web_def_in_session("service_default_WOL");
+    return __web_def_in_session("service_default_WOL");
 }
 
 function web_def_menu_timeout() {

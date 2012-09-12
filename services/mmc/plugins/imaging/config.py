@@ -40,6 +40,15 @@ class ImagingConfig(PluginConfig, ImagingDatabaseConfig):
     web_def_default_message = 'Warning ! Your PC is being backed up or restored. Do not reboot !'
     web_def_kernel_parameters = 'quiet'
     web_def_image_parameters = ''
+    web_def_image_hidden = 1
+    web_def_image_default = 0
+    web_def_service_hidden = 1
+    web_def_service_default = 0
+    # *_WOL must be lower case because of ini parsing of config file
+    web_def_image_hidden_wol = 0
+    web_def_image_default_wol = 0
+    web_def_service_hidden_wol = 0
+    web_def_service_default_wol = 0
 
     def __init__(self, name = 'imaging', conffile = None):
         if not hasattr(self, 'initdone'):
@@ -55,9 +64,6 @@ class ImagingConfig(PluginConfig, ImagingDatabaseConfig):
         if not self.disabled:
             ImagingDatabaseConfig.setup(self, self.conffile)
             if self.has_section("web"):
-                for i in ('date_fmt', 'default_protocol', 'default_menu_name',
-                          'default_timeout', 'default_background_uri',
-                          'default_message'):
-                    full_name = "web_def_%s" % i
-                    if self.has_option("web", full_name):
-                        setattr(self, full_name, self.get("web", full_name))
+                for option in self.options("web"):
+                    # option variable is lowercase
+                    setattr(self, option, self.get("web", option))

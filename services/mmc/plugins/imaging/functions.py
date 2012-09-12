@@ -67,6 +67,38 @@ class ImagingRpcProxy(RpcProxyI):
         """ get the default image backup and restoration parameters """
         return xmlrpcCleanup(ImagingConfig().web_def_image_parameters)
 
+    def get_web_def_image_hidden(self):
+        """ get the default "Displayed" value when we add an image to a computer """
+        return xmlrpcCleanup(ImagingConfig().web_def_image_hidden)
+    
+    def get_web_def_image_hidden_WOL(self):
+        """ get the default "Displayed on WOL" value when we add an image to a computer """
+        return xmlrpcCleanup(ImagingConfig().web_def_image_hidden_wol)
+    
+    def get_web_def_image_default(self):
+        """ get the default "Selected by default" value when we add an image to a computer """
+        return xmlrpcCleanup(ImagingConfig().web_def_image_default)
+    
+    def get_web_def_image_default_WOL(self):
+        """ get the default "Selected by default on WOL" value when we add an image to a computer """
+        return xmlrpcCleanup(ImagingConfig().web_def_image_default_wol)
+
+    def get_web_def_service_hidden(self):
+        """ get the default "Displayed" value when we add an service to a computer """
+        return xmlrpcCleanup(ImagingConfig().web_def_service_hidden)
+    
+    def get_web_def_service_hidden_WOL(self):
+        """ get the default "Displayed on WOL" value when we add an service to a computer """
+        return xmlrpcCleanup(ImagingConfig().web_def_service_hidden_wol)
+    
+    def get_web_def_service_default(self):
+        """ get the default "Selected by default" value when we add an service to a computer """
+        return xmlrpcCleanup(ImagingConfig().web_def_service_default)
+    
+    def get_web_def_service_default_WOL(self):
+        """ get the default "Selected by default on WOL" value when we add an service to a computer """
+        return xmlrpcCleanup(ImagingConfig().web_def_service_default_wol)
+
     ###########################################################
     def get_all_known_languages(self):
         """ get all the languages defined in the database """
