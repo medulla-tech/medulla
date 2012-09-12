@@ -261,12 +261,16 @@ p {
 /* ---------------------------------------- */
 
 #sidebar {
-    position: absolute;
-    top: 110px;
-    left: 17px;
-    margin: 0px;
+    float: left;
+    margin:-17px 0 0 -199px;
     padding: 0px;
     width: 174px;
+}
+
+/* IE6 Hack */
+/* #sidebar margin must be set differently in IE6 */
+* html #sidebar {
+    margin:-21px 0 0 -100px;
 }
 
 
