@@ -1906,10 +1906,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         for item_uuid, target_uuid, target_type in images:
             # check in targets
             q = self.__queryImageInMenu(session)
-            if target_uuid != None and target_type != None and target_type != -1:
-                q = q.filter(and_(self.image.c.id == uuid2id(item_uuid), or_(self.target.c.uuid != target_uuid, self.target.c.type != target_type))).all()
-            else:
-                q = q.filter(self.image.c.id == uuid2id(item_uuid)).all()
+            q = q.filter(self.image.c.id == uuid2id(item_uuid)).all()
             ret1 = []
             for im, target in q:
                 target = target.toH()
