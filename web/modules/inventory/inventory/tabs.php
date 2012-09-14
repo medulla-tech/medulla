@@ -25,6 +25,9 @@
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 
+$selected = "inv";
+include('modules/base/includes/menu_action.php');
+
 if (!isset($_GET['hostname'])) { $_GET['hostname'] = $_GET['cn']; }
 if (!isset($_GET['uuid'])) { $_GET['uuid'] = $_GET['objectUUID']; }
 if (!isset($_GET['part'])) { $_GET['part'] = 'Hardware'; }

@@ -37,6 +37,9 @@ global $SYNCHROSTATE_SYNCHRO;
 global $SYNCHROSTATE_RUNNING;
 global $SYNCHROSTATE_INIT_ERROR;
 
+$selected = "img";
+include('modules/base/includes/menu_action.php');
+
 if (isset($_POST['bsync'])) {
     if (isset($params['uuid'])) {
         $ret = xmlrpc_synchroComputer($params['uuid']);

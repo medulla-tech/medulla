@@ -30,6 +30,8 @@ require_once('graph/navbar.inc.php');
 
 if (!isset($_GET['hostname'])) { $_GET['hostname'] = $_GET['cn']; }
 if (!isset($_GET['uuid'])) { $_GET['uuid'] = $_GET['objectUUID']; }
+$selected = "msc";
+include('modules/base/includes/menu_action.php');
 
 if ($_GET['uuid']) {
     $machine = getMachine(array('uuid'=>$_GET['uuid']));
