@@ -88,9 +88,21 @@ if ($_GET["action"]=="addsamba") {
         $list[$mirror['uuid']] = $mirror['mountpoint'];
         $_SESSION['PACKAGEAPI'][$mirror['uuid']] = $mirror;
     }
-    $selectpapi = new SelectItem('p_api');
-    $selectpapi->setElements($list);
-    $selectpapi->setElementsVal($list_val);
+
+    if (count($list) > 1) {
+        // If more than one package api, $selectpapi is a list...
+        $multipapi = True;
+        $selectpapi = new SelectItem('p_api');
+        $selectpapi->setElements($list);
+        $selectpapi->setElementsVal($list_val);
+    }
+    else {
+        // ...else it is an HiddenTpl
+        $multipapi = False;
+        $selectpapi = new HiddenTpl('p_api');
+        $p_api_id = array_keys($list_val);
+        $p_api_id = $list_val[$p_api_id[0]];
+    }
 
 } elseif (count($package) == 0 ) {
     $title = _T("Edit a package", "pkgs");
@@ -104,6 +116,7 @@ if ($_GET["action"]=="addsamba") {
     $formElt = new HiddenTpl("id");
 
     $selectpapi = new HiddenTpl('p_api');
+    $p_api_number = count(getUserPackageApi());
 } else {
     $formElt = new HiddenTpl("id");
     $selectpapi = new HiddenTpl('p_api');
@@ -118,10 +131,18 @@ $p->display();
 $f = new ValidatingForm();
 $f->push(new Table());
 
-$f->add(
+if ($multipapi or ($p_api_number > 1)) {
+    $f->add(
         new TrFormElement(_T("Package API", "pkgs"), $selectpapi),
-        array("value" => $p_api_id, "required" => True)
-        );
+        array("value" => $p_api_id, "hide" => $hide)
+    );
+}
+else {
+    $f->add(
+        $selectpapi,
+        array("value" => $p_api_id, "hide" => True)
+    );
+}
 
 $f->add(new HiddenTpl("id"), array("value" => $package['id'], "hide" => True));
 

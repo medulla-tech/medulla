@@ -43,7 +43,6 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
     $random_dir = $_POST['random_dir'];
     $need_assign = False;
     if ($_GET["action"]=="add") {
-        $p_api_id = base64_decode($p_api_id);
         $need_assign = True;
     }
     foreach (array('id', 'label', 'version', 'description', 'mode') as $post) {
@@ -120,9 +119,21 @@ if ($_GET["action"]=="add") {
         $list[$mirror['uuid']] = $mirror['mountpoint'];
         $_SESSION['PACKAGEAPI'][$mirror['uuid']] = $mirror;
     }
-    $selectpapi = new SelectItem('p_api');
-    $selectpapi->setElements($list);
-    $selectpapi->setElementsVal($list_val);
+
+    if (count($list) > 1) {
+        // If more than one package api, $selectpapi is a list...
+        $multipapi = True;
+        $selectpapi = new SelectItem('p_api');
+        $selectpapi->setElements($list);
+        $selectpapi->setElementsVal($list_val);
+    }
+    else {
+        // ...else it is an HiddenTpl
+        $multipapi = False;
+        $selectpapi = new HiddenTpl('p_api');
+        $p_api_id = array_keys($list_val);
+        $p_api_id = $list_val[$p_api_id[0]];
+    }
 
 } elseif (count($package) == 0 ) {
     $title = _T("Edit a package", "pkgs");
@@ -136,6 +147,7 @@ if ($_GET["action"]=="add") {
     $formElt = new HiddenTpl("id");
 
     $selectpapi = new HiddenTpl('p_api');
+    $p_api_number = count(getUserPackageApi());
 } else {
     $formElt = new HiddenTpl("id");
     $selectpapi = new HiddenTpl('p_api');
@@ -159,10 +171,18 @@ if ($_GET['action'] == 'add' and strlen($_POST['random_dir'] == 0)) {
     $f = new ValidatingForm(array('enctype'=>"multipart/form-data"));
     $f->push(new Table());
 
-    $f->add(
-        new TrFormElement(_T("Package API", "pkgs"), $selectpapi),
-        array("value" => $p_api_id, "required" => True)
-    );
+    if ($multipapi) {
+        $f->add(
+            new TrFormElement(_T("Package API", "pkgs"), $selectpapi),
+            array("value" => $p_api_id, "required" => True)
+        );
+    }
+    else {
+        $f->add(
+            $selectpapi,
+            array("value" => $p_api_id, "required" => True, "hide" => True)
+        );
+    }
     $f->add( new TrFormElement(sprintf(_T("Select files you want to import (%sM max)", "pkgs"), get_php_max_upload_size()), new MultiFileTpl('filepackage')), array("required" => True));
 
     $f->add(new HiddenTpl("id"), array("value" => $package['id'], "hide" => True));
@@ -183,10 +203,21 @@ else {
     $f = new ValidatingForm();
     $f->push(new Table());
 
-    $f->add(
-        new TrFormElement(_T("Package API", "pkgs"), $selectpapi),
-        array("value" => $p_api_id, "required" => True)
-    );
+    $p_api_id = ($_GET['p_api']) ? base64_decode($_GET['p_api']) : base64_decode($_POST['p_api']);
+    $selectpapi = new HiddenTpl('p_api');
+
+    if ($multipapi or ($p_api_number > 1)) {
+        $f->add(
+            new TrFormElement(_T("Package API", "pkgs"), $selectpapi),
+            array("value" => $p_api_id, "hide" => $hide)
+        );
+    }
+    else {
+        $f->add(
+            $selectpapi,
+            array("value" => $p_api_id, "hide" => True)
+        );
+    }
 
     $f->add(new HiddenTpl("id"), array("value" => $package['id'], "hide" => True));
 
