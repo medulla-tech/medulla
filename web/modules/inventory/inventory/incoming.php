@@ -45,6 +45,8 @@ else {
 // Create the page with its title and sidemenu
 $p = new PageGenerator(_T("Incoming Inventories"));
 $p->setSideMenu($sidemenu);
+// Display the PageGenerator
+$p->display();
 
 // Create a form with a list of options and a checkbox
 $form = new ValidatingForm();
@@ -85,8 +87,6 @@ $ajax = new AjaxFilter(urlStrRedirect("inventory/inventory/ajaxIncoming"), "cont
 // Display the AjaxFilter
 $ajax->display();
 
-// Display the PageGenerator
-$p->display();
 
 // Display the DIV container that will be updated
 $ajax->displayDivToUpdate();
