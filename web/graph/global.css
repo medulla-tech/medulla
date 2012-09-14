@@ -261,6 +261,7 @@ p {
 /* ---------------------------------------- */
 
 #sidebar {
+    position: relative;
     float: left;
     margin:-17px 0 0 -199px;
     padding: 0px;
