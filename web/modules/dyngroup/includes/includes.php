@@ -24,6 +24,7 @@
 require_once("modules/base/includes/computers.inc.php");
 require_once("modules/base/includes/computers_list.inc.php");
 
+require_once("modules/pulse2/includes/utilities.php"); # for quickGet method
 require_once("modules/dyngroup/includes/utilities.php");
 require_once("modules/dyngroup/includes/querymanager_xmlrpc.php");
 require_once("modules/dyngroup/includes/xmlrpc.php");

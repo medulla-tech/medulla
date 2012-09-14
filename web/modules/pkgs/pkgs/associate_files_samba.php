@@ -25,6 +25,7 @@
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 
+require_once("modules/pulse2/includes/utilities.php"); # for quickGet method
 require_once("modules/pkgs/includes/xmlrpc.php");
 
 $package = array();

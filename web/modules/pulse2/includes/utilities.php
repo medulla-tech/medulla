@@ -21,29 +21,33 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once("modules/dyngroup/includes/xmlrpc.php");
-require_once("modules/pulse2/includes/utilities.php"); # for quickGet method
-ob_end_clean();
-
-$module = quickGet("modulename");
-$criterion = quickGet("criterion");
-$search = quickGet("value");
-if (!$search) { $search = '' ; }
-
-$value1 = quickGet("value1");
-$res = array();
-if (strlen($search) > 2) {
-    if (strlen($value1)) {
-        $res = getPossiblesValuesForCriterionInModuleFuzzyWhere($module, $criterion, $value1, $search);
+function quickGet($name, $p_first = false, $urldecode = True) {
+    if ($p_first) {
+        if (strlen($_POST[$name])) {
+            $res = stripslashes($_POST[$name]);
+        } elseif (strlen($_GET[$name])) {
+            $res = $_GET[$name];
+        } else {
+            $res = null;
+        }
     } else {
-        $res = getPossiblesValuesForCriterionInModuleFuzzy($module, $criterion, $search);
+        if (isset($_GET[$name])) {
+            $res = $_GET[$name];
+        } elseif (isset($_POST[$name])) {
+            $res = stripslashes($_POST[$name]);
+        } else {
+            $res = null;
+        }
+    }
+    if ($urldecode) {
+        return urldecode($res);
+    } else {
+        return $res;
     }
 }
 
-print '<ul>';
-foreach($res as $items) {
-    ?> <li><?php echo  $items ?></li> <?php 
-}
-print '</ul>';
+function quickSet($name, $value) { $_GET[$name] = $value; }
+
+function idGet() { return quickGet('id'); }
 
 ?>

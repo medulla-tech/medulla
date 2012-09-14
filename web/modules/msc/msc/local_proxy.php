@@ -24,6 +24,7 @@
  */
 
 require_once("modules/dyngroup/includes/groups.inc.php");
+require_once("modules/pulse2/includes/utilities.php"); # for quickGet method
 require_once("modules/msc/includes/mscoptions_xmlrpc.php"); # to read msc.ini
 
 /**

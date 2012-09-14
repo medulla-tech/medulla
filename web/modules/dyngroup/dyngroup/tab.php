@@ -21,6 +21,7 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once("modules/pulse2/includes/utilities.php"); # for quickGet method
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/dyngroup/includes/dyngroup.php");

@@ -21,6 +21,7 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once("modules/pulse2/includes/utilities.php"); # for quickGet method
 require_once("modules/dyngroup/includes/dyngroup.php");
 
 $name = quickGet('groupname');

@@ -23,35 +23,6 @@
 
 function clean($val) { return urlencode(urldecode($val)); }
 
-function quickGet($name, $p_first = false, $urldecode = True) {
-    if ($p_first) {
-        if (strlen($_POST[$name])) {
-            $res = stripslashes($_POST[$name]);
-        } elseif (strlen($_GET[$name])) {
-            $res = $_GET[$name];
-        } else {
-            $res = null;
-        }
-    } else {
-        if (isset($_GET[$name])) {
-            $res = $_GET[$name];
-        } elseif (isset($_POST[$name])) {
-            $res = stripslashes($_POST[$name]);
-        } else {
-            $res = null;
-        }
-    }
-    if ($urldecode) {
-        return urldecode($res);
-    } else {
-        return $res;
-    }
-}
-
-function quickSet($name, $value) { $_GET[$name] = $value; }
-
-function idGet() { return quickGet('id'); }
-
 function to_s($obj) { return $obj->toS(); }
 function to_rpc($obj) { return $obj->toRPC(); }
 function to_xml($obj) { return $obj->toXML(); }
