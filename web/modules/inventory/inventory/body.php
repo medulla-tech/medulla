@@ -38,7 +38,6 @@ foreach (array('uuid', 'hostname', 'gid', 'groupname', 'tab') as $get) {
     }
     $params[$get] = $value;
 }
-$ajax = new AjaxFilterInventory(urlStrRedirect("inventory/inventory/ajaxViewPart"), "container", $params);
 $titles = array('index' => _T('Bios list', 'inventory'),
                 'hardware' => _T('Hardware and OS information list', 'inventory'),
                 'software' => _T('Software list', 'inventory'),
@@ -58,12 +57,13 @@ $titles = array('index' => _T('Bios list', 'inventory'),
 
                 
 
-$ajax->display();
 $p = new PageGenerator($titles[$_GET['action']]);
 $p->setSideMenu($sidemenu);
 $p->setNoFixHeight();
 $p->display();
 
+$ajax = new AjaxFilterInventory(urlStrRedirect("inventory/inventory/ajaxViewPart"), "container", $params);
+$ajax->display();
 $ajax->displayDivToUpdate();
 
 ?>
