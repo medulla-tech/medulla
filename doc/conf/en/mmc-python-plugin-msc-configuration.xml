@@ -431,7 +431,7 @@ enablessl = 1
           </row>
           <row>
             <entry>web_allow_local_proxy</entry>
-            <entry>Possibility to use proxy mode for software deployment.</entry>
+            <entry>Possibility to use proxy mode for software deployment on groups.</entry>
             <entry>yes</entry>
             <entry>True</entry>
           </row>
