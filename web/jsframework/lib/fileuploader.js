@@ -340,9 +340,11 @@ qq.FileUploaderBasic.prototype = {
     uploadStoredFiles: function(){
         for (var i = 0; i < this._storedFileIds.length; i++) {
             var item = this._getItemByFileId(this._storedFileIds[i]);
-            this._find(item, 'spinner').style.display = "";
-            this._filesInProgress++;
-            this._handler.upload(this._storedFileIds[i], this._options.params);
+            if (!$(item).hasClassName("qq-upload-success")) {
+                this._find(item, 'spinner').style.display = "";
+                this._filesInProgress++;
+                this._handler.upload(this._storedFileIds[i], this._options.params);
+            }
         }
     },
     clearStoredFiles: function(){
