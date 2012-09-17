@@ -88,7 +88,7 @@ class MscConfig(MscDatabaseConfig):
     web_def_dlmaxbw = 0
 
     # local proxy
-    web_allow_local_proxy = False
+    web_allow_local_proxy = True
     web_def_local_proxy_mode = "multiple"
     web_def_max_clients_per_proxy = 10
     web_def_proxy_number = 2
