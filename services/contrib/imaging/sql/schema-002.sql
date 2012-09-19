@@ -27,4 +27,4 @@ UPDATE PostInstallScript SET value = "MountSystem\nCopySysprepInf /revoinfo/sysp
 UPDATE PostInstallScript SET value = "MountSystem\nChangeSIDAndName" WHERE default_name LIKE "SID";
 UPDATE PostInstallScript SET value = "DeployAgents" WHERE default_name = "Agent Pack";
 
-UPDATE version set Number = 2;
+-- UPDATE version set Number = 2;
