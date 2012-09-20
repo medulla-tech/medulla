@@ -303,4 +303,20 @@ if [ ! ${download_only} -eq 1 ]; then
   echo
   echo "pulse2-win32-agents-pack-noprompt.exe generated successfully!"
   echo
+
+  # Let's copy some files for imaging postinstallation
+  postinstall_dir="../../imaging/postinst"
+  if [ -d ${postinstall_dir} ]; then
+    cp pulse2-win32-agents-pack.exe \
+       pulse2-win32-agents-pack-silent.exe \
+       pulse2-win32-agents-pack-noprompt.exe \
+       ${postinstall_dir}/winutils/
+    cp /root/.ssh/id_rsa.pub ${postinstall_dir}/winutils/
+    cp /root/.ssh/id_rsa.pub ${postinstall_dir}/macutils/
+    cp /root/.ssh/id_rsa.pub ${postinstall_dir}/linuxutils/
+  else
+    echo
+    echo "No imaging module found. Skipping files copy for postinstall."
+    echo
+  fi
 fi
