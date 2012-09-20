@@ -44,7 +44,7 @@ from sqlalchemy.exc import InvalidRequestError
 from pulse2.managers.profile import ComputerProfileManager
 from pulse2.managers.location import ComputerLocationManager
 
-DATABASEVERSION = 1
+DATABASEVERSION = 2
 
 class ImagingException(Exception):
     pass
