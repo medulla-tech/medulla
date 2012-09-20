@@ -50,7 +50,7 @@ import pulse2.time_intervals
 # Imported last
 import logging
 
-DATABASEVERSION = 16
+DATABASEVERSION = 17
 NB_DB_CONN_TRY = 2
 
 # TODO need to check for useless function (there should be many unused one...)
