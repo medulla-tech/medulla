@@ -1,7 +1,5 @@
 --
--- (c) 2008 Mandriva, http://www.mandriva.com/
---
--- $Id$
+-- (c) 2012 Mandriva, http://www.mandriva.com/
 --
 -- This file is part of Pulse 2, http://pulse2.mandriva.org
 --
