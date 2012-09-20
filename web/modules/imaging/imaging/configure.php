@@ -42,7 +42,7 @@ if (!isset($is_registering) || $is_registering == '') {
 }
 $params = getParams();
 
-$opts = array('hidden_menu' => _T('Hide menu', 'imaging'),
+$opts = array('hidden_menu' => _T("Hide menu (shortcut to show it : Shift - Alt - Shift)", 'imaging'),
               'bootcli' => _T('GRUB command line access', 'imaging'),
               'dont_check_disk_size' => _T('Do not check hard disk size', 'imaging'),
               'update_nt_boot' => _T('Update the NT boot loader if the hard disk has changed', 'imaging'),
