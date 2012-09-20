@@ -20,11 +20,19 @@
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
 
+SET storage_engine=INNODB;
+SET GLOBAL character_set_server=UTF8;
+SET SESSION character_set_server=UTF8;
+SET NAMES 'utf8';
+
 DELETE FROM PostInstallScript WHERE default_name LIKE "NTFS Resize";
 UPDATE PostInstallScript SET default_name = "First" WHERE default_name LIKE "Partition extension";
 UPDATE PostInstallScript SET value = "MountSystem\n\ndate | unix2dos >> /mnt/date.txt\n" WHERE default_name LIKE "Date";
 UPDATE PostInstallScript SET value = "MountSystem\nCopySysprepInf /revoinfo/sysprep.inf\n" WHERE default_name LIKE "Sysprep";
 UPDATE PostInstallScript SET value = "MountSystem\nChangeSIDAndName" WHERE default_name LIKE "SID";
 UPDATE PostInstallScript SET value = "DeployAgents" WHERE default_name = "Agent Pack";
+UPDATE PostInstallScript SET default_desc = "The first partition will be extend across the whole disk." WHERE default_name LIKE "First";
+UPDATE Internationalization SET label = "La première partition sera étendue à l'intégralité du disque dur" WHERE id = 18;
+DELETE FROM Internationalization WHERE id = 19;
 
 UPDATE version set Number = 2;
