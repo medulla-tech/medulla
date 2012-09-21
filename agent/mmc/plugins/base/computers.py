@@ -93,6 +93,24 @@ class ComputerI:
         """
         pass
 
+    def editComputerName(self, ctx, uuid, name):
+        """
+        Edit the computer name
+
+        @param ctx: the context
+        @type: currentContext
+
+        @param uuid: the machine uuid
+        @type: str
+
+        @param name: new computer name
+        @type: str
+
+        @returns: True if the name changed
+        @rtype: bool
+        """
+        pass
+
 
     def getComputer(self, ctx, params):
         """
@@ -262,6 +280,32 @@ class ComputerManager(Singleton):
                     instance.delComputer(ctx, uuid, backup)
                 except TypeError:
                     instance.delComputer(uuid, backup)
+
+    def editComputerName(self, ctx, uuid, name):
+        """
+        Edit the computer name
+
+        @param ctx: the context
+        @type: currentContext
+
+        @param uuid: the machine uuid
+        @type: str
+
+        @param name: new computer name
+        @type: str
+
+        @returns: True if the name changed
+        @type: bool
+
+        """
+        for plugin in self.components:
+            klass = self.components[plugin]
+            instance = klass()
+            try:
+                instance.editComputerName(ctx, uuid, name)
+            except TypeError:
+                instance.editComputerName(uuid, name)
+
 
     def neededParamsAddComputer(self):
         try:
