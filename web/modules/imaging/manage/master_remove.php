@@ -36,6 +36,11 @@ if ($_POST) {
     if ($ret[0] and !isXMLRPCError()) {
         $str = sprintf(_T("Image <strong>%s</strong> removed from default boot menu.", "imaging"), $label);
         new NotifyWidgetSuccess($str);
+        // Synchronize boot menu
+        $ret = xmlrpc_synchroLocation($location);
+        if (isXMLRPCError()) {
+            new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for package server: %s", "imaging"), implode(', ', $ret[1])));
+        }
         header("Location: " . urlStrRedirect("imaging/manage/master"));
     } elseif ($ret[0]) {
         header("Location: " . urlStrRedirect("imaging/manage/master"));

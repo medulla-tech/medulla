@@ -47,6 +47,12 @@ if (isset($_POST["bconfirm"])) {
     if ($ret[0] and !isXMLRPCError()) {
         $str = sprintf(_T("Service <strong>%s</strong> added to default boot menu", "imaging"), $label);
         new NotifyWidgetSuccess($str);
+         
+        // Synchronize boot menu
+        $ret = xmlrpc_synchroLocation($location);
+        if (isXMLRPCError()) {
+            new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for package server: %s", "imaging"), implode(', ', $ret[1])));
+        }
         header("Location: " . urlStrRedirect("imaging/manage/service", $params));
     } elseif ($ret[0]) {
         header("Location: " . urlStrRedirect("imaging/manage/service", $params));
