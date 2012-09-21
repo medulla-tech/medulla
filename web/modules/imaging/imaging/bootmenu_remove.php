@@ -61,6 +61,12 @@ if (quickGet('valid')) {
     }
     if ($ret[0] and !isXMLRPCError()) {
         /* insert notification code here if needed */
+
+        // Synchronize boot menu
+        $ret = xmlrpc_synchroComputer($target_uuid);
+        if (isXMLRPCError()) {
+            new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for computer: %s", "imaging"), implode(', ', $ret[1])));
+        }
     } elseif (!$ret[0]) {
         new NotifyWidgetFailure($ret[1]);
     }
