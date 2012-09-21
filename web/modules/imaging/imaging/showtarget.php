@@ -152,8 +152,8 @@ foreach ($ret as $target) {
 
 if (isset($_GET['from'])) {
     // Come from a computer target page
-    printf('<input type="hidden" name="uuid" value="%s"/>', $target[0]);
-    printf('<input type="hidden" name="hostname" value="%s"/>', $target[2]);
+    printf('<input type="hidden" name="uuid" value="%s"/>', $_GET['target_uuid']);
+    printf('<input type="hidden" name="hostname" value="%s"/>', $_GET['hostname']);
 }
 else {
     // Come from an imaging server page
