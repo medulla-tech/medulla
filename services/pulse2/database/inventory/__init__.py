@@ -1111,6 +1111,43 @@ class Inventory(DyngroupDatabaseHelper):
         trans.commit()
         return True
 
+    def editMachineName(self, uuid, name):
+        """
+        Edit the computer name
+
+        @param ctx: the context
+        @type: currentContext
+
+        @param uuid: the machine uuid
+        @type: str
+
+        @param name: new computer name
+        @type: str
+
+        @returns: True if the name changed
+        @type: bool
+
+        """
+        uuid = fromUUID(uuid)
+        session = create_session()
+        connection = self.getDbConnection()
+        trans = connection.begin()
+
+        try:
+            m = session.query(Machine).filter(self.machine.c.id == uuid).first()
+            m.Name = name
+        except Exception :
+            session.flush()
+            session.close()
+            trans.rollback()
+            return False
+
+        session.flush()
+        session.close()
+        trans.commit()
+        return True
+
+
     # User management method
 
     def setUserEntities(self, userid, entities):
@@ -1784,7 +1821,6 @@ class InventoryCreator(Inventory):
             k = i+k
         if k == 0:
             return False
-
         dates = date.split(' ')
         if len(dates) != 2:
             # Fix needed for MAC OS OCS inventory agent, which is using a

@@ -2078,8 +2078,11 @@ class ImagingRpcProxy(RpcProxyI):
                 uuid = db_computer.uuid
                 db_computer_name = db_computer.name
             if db_computer_name.lower() != hostname.lower():
-                logger.error("The hostname you gave is not the one in the database! (%s, %s)"%(db_computer_name, hostname))
-                return [False, "The hostname you gave is not the one we already have in the database (%s, %s)"%(db_computer_name, hostname)]
+                # Computer added via OCS -> renamed by PXE entry    
+                renamed = ComputerManager().editComputerName(self.currentContext, uuid, hostname)
+                logger.info("Machine '%s' renamed to '%s'."% (db_computer_name, hostname))
+                return [renamed, uuid]
+
 
         # If a computer with this name already exists, check that the MAC
         # address is also matching

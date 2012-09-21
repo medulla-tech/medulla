@@ -191,6 +191,25 @@ class InventoryComputers(ComputerI):
     def delComputer(self, ctx, uuid, backup):
         return self.inventory.delMachine(uuid)
 
+    def editComputerName(self, uuid, name):
+        """
+        Edit the computer name
+
+        @param ctx: the context
+        @type: currentContext
+
+        @param uuid: the machine uuid
+        @type: str
+
+        @param name: new computer name
+        @type: str
+
+        @returns: True if the name changed
+        @type: bool
+
+        """
+        return self.inventory.editMachineName(uuid, name)
+
     def getComputerByMac(self, mac):
         ret = self.inventory.getMachinesBy(None, 'Network', 'MACAddress', mac, False)
         if type(ret) == list:
