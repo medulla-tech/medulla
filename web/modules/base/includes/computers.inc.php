@@ -56,10 +56,7 @@ function getComputersListHeaders() {
 }
 
 function canAddComputer() {
-    if (!isset($_SESSION["canAddComputer"])) {
-        $_SESSION["canAddComputer"] = xmlCall("base.canAddComputer", null);
-    }
-    return $_SESSION["canAddComputer"];
+    return xmlCall("base.canAddComputer");    
 }
 
 function canDelComputer() {
