@@ -59,6 +59,7 @@ from sets import Set
 import logging
 import shutil
 import xmlrpclib
+from subprocess import Popen, PIPE
 
 from time import mktime, strptime, strftime, localtime
 from ConfigParser import NoSectionError, NoOptionError
@@ -1260,9 +1261,10 @@ class LdapUserGroupControl:
                    ('info' in e.message and e.message['info'] == 'Password fails quality checking policy'):
                     # if the quality test pass, the password was rejected by
                     # OpenLDAP because it is too short
-                    code, out, err = mmctools.shlaunch('echo %s | mmc-password-helper -v -c' % str(passwd))
-                    if code != 0:
-                        e.message['info'] = " ".join(out).strip()
+                    p = Popen(["mmc-password-helper", "-v", "-c"], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+                    out, err = p.communicate(input=str(passwd))
+                    if p.returncode != 0:
+                        e.message['info'] = out.strip()
                     else:
                         e.message['info'] = 'The password is too short'
                     raise ldap.CONSTRAINT_VIOLATION(e.message)
