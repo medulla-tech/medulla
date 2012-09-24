@@ -1266,6 +1266,8 @@ class LdapUserGroupControl:
                     else:
                         e.message['info'] = 'The password is too short'
                     raise ldap.CONSTRAINT_VIOLATION(e.message)
+                else:
+                    raise e
         else:
             userpassword = self._generatePassword(passwd)
             ldapConn.modify_s(userdn, [(ldap.MOD_REPLACE, "userPassword", userpassword)])
