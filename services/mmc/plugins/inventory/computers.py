@@ -155,7 +155,7 @@ class InventoryComputers(ComputerI):
         return self.getRestrictedComputersListLen(ctx, filt)
 
     def canAddComputer(self):
-        return True
+        return self.inventory.canAddMachine()
 
     def canAssociateComputer2Location(self):
         return True

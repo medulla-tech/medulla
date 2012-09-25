@@ -1015,6 +1015,9 @@ class Inventory(DyngroupDatabaseHelper):
         except:
             return None
 
+    def canAddMachine(self):
+        return True
+
     def addMachine(self, name, ip, mac, netmask, comment = None, location_uuid = None):
         if location_uuid == None:
             location_uuid = 'UUID1'
@@ -1816,6 +1819,8 @@ class InventoryCreator(Inventory):
         Add a new inventory for a computer
         """
         # TODO : check that inventory is not empty....
+        if not self.canAddMachine():
+            return False
         k = 0
         for i in map(lambda x: len(inventory[x]), inventory):
             k = i+k
