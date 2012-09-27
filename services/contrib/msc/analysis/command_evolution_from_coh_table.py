@@ -199,6 +199,7 @@ def getStruct():
         'target_broken'         : 0,
         'unreachable'           : 0,
         'conn_issue'            : 0,
+        'rebooted'              : 0,
         'precheck'              : 0,
         'delete'                : 0,
         'inventory'             : 0,
@@ -366,6 +367,9 @@ for command in commandData:
             elif last_error == 255 :
                 last_failed = 'unreachable'
                 dataCommand['Results']['Target'] += 1
+            elif re.findall('PRE-COMMAND FAILED CLIENT SIDE: exitcode = 1', last_message) and last_error == 1 and last_state == 'delete_failed':
+                last_failed = 'rebooted'
+                dataCommand['Results']['Target'] += 1
             elif re.findall('PRE-COMMAND FAILED CLIENT SIDE: exitcode = 1', last_message) :
                 last_failed = 'precheck'
                 dataCommand['Results']['Target'] += 1
@@ -459,6 +463,7 @@ if options.vent == 'default':
             'Unreachable',
             'Inventory',
             'Execution',
+            'Rebooted',
             'Precheck',
             'Plan',
             'Over Timed',
@@ -496,6 +501,7 @@ elif options.vent == 'ot':
             'Unreachable',
             'Inventory',
             'Execution',
+            'Rebooted',
             'Precheck',
             'Plan',
             'Script',
@@ -552,6 +558,7 @@ for id_command in ids_command:
                 print_human('            Unreachable ', command['Fatal']['unreachable'], len(command['coh']), command['Results']['Target'])
                 print_human('            Inventory ', command['Fatal']['inventory'], len(command['coh']), command['Results']['Target'])
                 print_human('            Execution ', command['Fatal']['execution'], len(command['coh']), command['Results']['Target'])
+                print_human('            Rebooted ', command['Fatal']['rebooted'], len(command['coh']), command['Results']['Target'])
                 print_human('            Precheck ', command['Fatal']['precheck'], len(command['coh']), command['Results']['Target'])
                 print_human('        Plan ', command['Results']['Plan'], len(command['coh']), command['Results']['Target'] + command['Results']['Plan'] + command['Results']['Infra'])
                 print_human('            Over Timed ', command['Over Timed'], len(command['coh']), command['Results']['Plan'])
@@ -564,7 +571,7 @@ for id_command in ids_command:
                 print_human('            Package Unavailable ', command['Fatal']['package_unavailable'], len(command['coh']), command['Results']['Infra'])
                 print_human('            Connection Issue ', command['Fatal']['conn_issue'], len(command['coh']), command['Results']['Infra'])
             elif options.format == 'csv':
-                print "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s" % (
+                print "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s" % (
                     id_command,
                     command['name'],
                     command['creator'],
@@ -592,6 +599,7 @@ for id_command in ids_command:
                     command['Fatal']['unreachable'],
                     command['Fatal']['inventory'],
                     command['Fatal']['execution'],
+                    command['Fatal']['rebooted'],
                     command['Fatal']['precheck'],
                     command['Results']['Plan'],
                     command['Over Timed'],
@@ -630,6 +638,7 @@ for id_command in ids_command:
                 print_human('            Unreachable ', command['Fatal']['unreachable'], len(command['coh']), command['Results']['Target'])
                 print_human('            Inventory ', command['Fatal']['inventory'], len(command['coh']), command['Results']['Target'])
                 print_human('            Execution ', command['Fatal']['execution'], len(command['coh']), command['Results']['Target'])
+                print_human('            Rebooted ', command['Fatal']['rebooted'], len(command['coh']), command['Results']['Target'])
                 print_human('            Precheck ', command['Fatal']['precheck'], len(command['coh']), command['Results']['Target'])
                 print_human('        Plan ', command['Results']['Plan'], len(command['coh']), command['Results']['Target'] + command['Results']['Plan'] + command['Results']['Infra'])
                 print_human('            Script ', command['Fatal']['script'], len(command['coh']), command['Results']['Plan'])
@@ -641,7 +650,7 @@ for id_command in ids_command:
                 print_human('            Package Unavailable ', command['Fatal']['package_unavailable'], len(command['coh']), command['Results']['Infra'])
                 print_human('            Connection Issue ', command['Fatal']['conn_issue'], len(command['coh']), command['Results']['Infra'])
             elif options.format == 'csv':
-                print "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s" % (
+                print "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s" % (
                     id_command,
                     command['name'],
                     command['creator'],
@@ -664,6 +673,7 @@ for id_command in ids_command:
                     command['Fatal']['unreachable'],
                     command['Fatal']['inventory'],
                     command['Fatal']['execution'],
+                    command['Fatal']['rebooted'],
                     command['Fatal']['precheck'],
                     command['Results']['Plan'],
                     command['Fatal']['script'],
