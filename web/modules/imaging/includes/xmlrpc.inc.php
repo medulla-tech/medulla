@@ -354,6 +354,10 @@ function xmlrpc_addPostInstallScript($location, $params) {
     return xmlCall("imaging.addPostInstallScript", array($location, $params));
 }
 
+function xmlrpc_createBootServiceFromPostInstall($script_id, $loc_id) {
+    return xmlCall("imaging.createBootServiceFromPostInstall", array($script_id, $loc_id));
+}
+
 function xmlrpc_getAllKnownLanguages() {
     return xmlCall("imaging.get_all_known_languages");
 }

@@ -978,6 +978,32 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         return q
 
+    def createBootServiceFromPostInstall(self, script_id):
+        session = create_session()
+        res = session.query(PostInstallScript).filter(self.post_install_script.c.id == uuid2id(script_id)).first()
+
+        bs = BootService()
+        bs.default_name = res.default_name
+        bs.default_desc = res.default_desc
+        bs.fk_name = res.fk_name
+        bs.fk_desc = res.fk_desc
+
+        script_name = script_id + ".sh"
+        #<acecile> kernel (nd)/diskless/kernel quiet revooptdir=postinst revobase=/var/lib/pulse2/imaging revopost revomac=0800276CDE98 revopostscript=8.sh revodebug
+        #<acecile> initrd (nd)/diskless/initrd
+        bs.value = ("kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## revooptdir=##PULSE2_POSTINST_DIR## revobase=##PULSE2_BASE_DIR## revopost revomac=##MAC## revopostscript=%s revodebug \ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##") % script_name
+
+        session.add(bs)
+        session.flush()
+
+        return [
+            script_name, 
+            res.value, {
+                'name': bs.default_name,
+                'desc': bs.default_desc,
+                'value': bs.value,
+            }]
+
     def __PossibleBootServiceAndMenuItem(self, session, bs_ids, menu_id):
         q = session.query(BootService).add_entity(MenuItem)
         q = q.filter(and_(

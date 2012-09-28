@@ -85,6 +85,10 @@ $l->addActionItem(
     new ActionItem(_T("Duplicate", "imaging"),
     "postinstall_duplicate", "duplicatescript", "image", "imaging", "manage")
 );
+$l->addActionItem(
+    new ActionItem(_T("Create Boot Service", "imaging"),
+    "postinstall_create_boot_service", "duplicatescript", "image", "imaging", "manage")
+);
 $l->addActionItemArray($a_delete);
 
 $l->setTableHeaderPadding(19);

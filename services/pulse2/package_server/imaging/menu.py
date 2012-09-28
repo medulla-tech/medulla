@@ -576,6 +576,10 @@ class ImagingBootServiceItem(ImagingItem):
             buf += self.value + '\n'
         return self._applyReplacement(buf, network)
 
+    def writeShFile(self, script_file):
+        self.logger.warn(script_file)
+        #config = PackageServerConfig
+        
 
 class ImagingImageItem(ImagingItem):
 
