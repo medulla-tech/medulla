@@ -29,6 +29,8 @@ class DGConfig(DyngroupDatabaseConfig):
     defaultModule = ''
     maxElementsForStaticList = 2000
     profilesEnable = False
+    check_db_enable = False
+    check_db_interval = 300
 
     def init(self, name, conffile = None):
         self.name = name
@@ -55,6 +57,12 @@ class DGConfig(DyngroupDatabaseConfig):
         if self.cp.has_section("querymanager"):
             if self.cp.has_option("querymanager", "activate"):
                 self.dyngroup_activate = self.cp.getboolean("querymanager", "activate")
+
+        if self.cp.has_option("main", "check_db_enable"):
+            self.check_db_enable = self.cp.getboolean("main", "check_db_enable")
+        if self.cp.has_option("main", "check_db_interval"):
+            self.check_db_interval = self.cp.getint("main", "check_db_interval")
+
 
 
     def setDefault(self):

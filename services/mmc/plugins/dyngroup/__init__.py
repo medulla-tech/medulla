@@ -47,6 +47,9 @@ from pulse2.managers.profile import ComputerProfileManager
 
 from pulse2.version import getVersion, getRevision
 
+# health check
+from mmc.plugins.dyngroup.health import scheduleCheckStatus
+
 APIVERSION = '0:0:0'
 queryManager = None
 config = None
@@ -70,6 +73,9 @@ def activate():
     ComputerGroupManager().register("dyngroup", DyngroupGroup)
     ComputerProfileManager().register("dyngroup", DyngroupProfile)
     ComputerManager().register("dyngroup", DyngroupComputers)
+
+    if config.check_db_enable:
+        scheduleCheckStatus(config.check_db_interval)
 
     return True
 
