@@ -576,6 +576,28 @@ class ImagingBootServiceItem(ImagingItem):
             buf += self.value + '\n'
         return self._applyReplacement(buf, network)
 
+    def writeShFile(self, script_file):
+        """
+        Create a sh file who contains commands of PostInstallScript
+        """
+        config = PackageServerConfig()
+        postinst_scripts_folder = os.path.join(config.imaging_api['base_folder'],
+                                config.imaging_api['postinst_folder'],
+                                'scripts')
+        if not os.path.exists(postinst_scripts_folder):
+            self.logger.info("Postinst scripts directory %s doesn't exists, create it", postinst_scripts_folder)
+            os.mkdir(postinst_scripts_folder)
+
+        # Create and write sh file
+        try:
+            f = open(os.path.join(postinst_scripts_folder, script_file[0]), 'w')
+            f.write(script_file[1])
+            f.close()
+            self.logger.info('File %s successfully created', os.path.join(postinst_scripts_folder, script_file[0]))
+        except Exception, e:
+            self.logger.exception('Error while create sh file: %s', e)
+
+        return True
 
 class ImagingImageItem(ImagingItem):
 

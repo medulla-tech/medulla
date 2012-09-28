@@ -38,7 +38,7 @@ from pulse2.package_server.xmlrpc import MyXmlrpc
 from pulse2.package_server.imaging.api.client import ImagingXMLRPCClient
 from pulse2.package_server.imaging.cache import UUIDCache
 from pulse2.package_server.imaging.api.status import Status
-from pulse2.package_server.imaging.menu import isMenuStructure, ImagingDefaultMenuBuilder, ImagingComputerMenuBuilder, changeDefaultMenuItem
+from pulse2.package_server.imaging.menu import isMenuStructure, ImagingDefaultMenuBuilder, ImagingComputerMenuBuilder, changeDefaultMenuItem, ImagingBootServiceItem
 from pulse2.package_server.imaging.computer import ImagingComputerConfiguration
 from pulse2.package_server.imaging.iso import ISOImage
 from pulse2.package_server.imaging.archiver import Archiver
@@ -838,3 +838,14 @@ class ImagingApi(MyXmlrpc):
         """
         self.logger.warn("Not yet implemented !")
         return True
+
+    def xmlrpc_createBootServiceFromPostInstall(self, script_file):
+        ret = True
+        try:
+            entry = script_file.pop()
+            ImagingBootServiceItem(entry).writeShFile(script_file)
+        except Exception, e:
+            self.logger.error('Error while writing sh file: %s' % e)
+            ret = False
+
+        return ret

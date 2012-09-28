@@ -223,6 +223,13 @@ class Imaging(Pulse2Api):
         d.addErrback(self.onErrorRaise, "Imaging:imagingServerBootServiceSetInformations", [imageId, informations])
         return d
 
+    def createBootServiceFromPostInstall(self, script_file):
+        """
+        """
+        d = self.callRemote("createBootServiceFromPostInstall", script_file)
+        d.addErrback(self.onErrorRaise, "Imaging:createBootServiceFromPostInstall", [script_file])
+        return d
+
     def imagingServerDefaultMenuGet(self): # imagingMenu
         """
         Returns the default boot menu of the imaging server.

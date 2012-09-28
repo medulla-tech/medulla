@@ -1989,6 +1989,36 @@ class ImagingRpcProxy(RpcProxyI):
         except Exception, e:
             return xmlrpcCleanup([False, e])
 
+    def createBootServiceFromPostInstall(self, script_id, loc_id):
+        """
+        create a boot service from a postinstall script
+
+        @param script_id: id of the postinstall script
+        @type script_id: int
+
+        @param loc_id: the uuid of the location (field Entity.uuid)
+        @type loc_id: str
+
+        @return:
+        @rtype:
+        """
+        
+        ret = True
+        try:
+            # Add entry in BootService Table
+            db = ImagingDatabase()
+            script_file = db.createBootServiceFromPostInstall(script_id)
+            if not script_file:
+                raise TypeError("Boot service already exists")
+            
+            # Create .sh file
+            url = chooseImagingApiUrl(loc_id)
+            i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
+
+            return xmlrpcCleanup(i.createBootServiceFromPostInstall(script_file))
+        except Exception, e:
+            return xmlrpcCleanup([False, e])
+
     ###### API to be called from the imaging server (ie : without authentication)
     def computerRegister(self, imaging_server_uuid, hostname, domain, MACAddress, profile, entity = None):
         """

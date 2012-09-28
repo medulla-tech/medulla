@@ -978,6 +978,35 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         return q
 
+    def createBootServiceFromPostInstall(self, script_id):
+        session = create_session()
+        res = session.query(PostInstallScript).filter(self.post_install_script.c.id == uuid2id(script_id)).first()
+
+        bs = BootService()
+        bs.default_name = res.default_name
+        bs.default_desc = res.default_desc
+        bs.fk_name = res.fk_name
+        bs.fk_desc = res.fk_desc
+
+        script_name = script_id + ".sh"
+        bs.value = ("kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## revooptdir=##PULSE2_POSTINST_DIR## revobase=##PULSE2_BASE_DIR## revopost revomac=##MAC## revopostscript=%s \ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##") % script_name
+
+        ## Check if Boot service already exists
+        if session.query(BootService).filter(self.boot_service.c.default_name == bs.default_name).all():
+            session.logger.warn("A boot service with this name already exists")
+            return False
+
+        session.add(bs)
+        session.flush()
+
+        return [
+            script_name, 
+            res.value, {
+                'name': bs.default_name,
+                'desc': bs.default_desc,
+                'value': bs.value,
+            }]
+
     def __PossibleBootServiceAndMenuItem(self, session, bs_ids, menu_id):
         q = session.query(BootService).add_entity(MenuItem)
         q = q.filter(and_(
