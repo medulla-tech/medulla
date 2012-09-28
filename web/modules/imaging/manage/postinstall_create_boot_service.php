@@ -39,5 +39,18 @@ $p->display();
 // id of the script
 $script_id = $_GET['itemid'];
 $location = getCurrentLocation();
-$script = xmlrpc_createBootServiceFromPostInstall($script_id, $location);
+$ret = xmlrpc_createBootServiceFromPostInstall($script_id, $location);
+
+$ret = (is_array($ret)) ? $ret[0] : $ret;
+if ($ret) {
+    $str = sprintf(_T("Boot service successfully created", "imaging"));
+    new NotifyWidgetSuccess($str);
+    header("Location: " . urlStrRedirect("imaging/manage/service"));
+}
+else {
+    $str = sprintf(_T("Error while creating Boot Service", "imaging"));
+    new NotifyWidgetFailure($str);
+    header("Location: " . urlStrRedirect("imaging/manage/postinstall"));
+}
+
 ?>

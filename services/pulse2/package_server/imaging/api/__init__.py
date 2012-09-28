@@ -840,7 +840,12 @@ class ImagingApi(MyXmlrpc):
         return True
 
     def xmlrpc_createBootServiceFromPostInstall(self, script_file):
-        entry = script_file.pop()
-        ImagingBootServiceItem(entry).writeShFile(script_file)
+        ret = True
+        try:
+            entry = script_file.pop()
+            ImagingBootServiceItem(entry).writeShFile(script_file)
+        except Exception, e:
+            self.logger.error('Error while writing sh file: %s' % e)
+            ret = False
 
-        return True
+        return ret

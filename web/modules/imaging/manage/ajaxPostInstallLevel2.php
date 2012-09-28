@@ -82,12 +82,12 @@ $l->addExtraInfo($a_desc, _T("Description", "imaging"));
 $l->setParamInfo($list_params);
 $l->addActionItemArray($a_edit);
 $l->addActionItem(
-    new ActionItem(_T("Duplicate", "imaging"),
-    "postinstall_duplicate", "duplicatescript", "image", "imaging", "manage")
+    new ActionItem(_T("Create Boot Service", "imaging"),
+    "postinstall_create_boot_service", "createbootservice", "image", "imaging", "manage")
 );
 $l->addActionItem(
-    new ActionItem(_T("Create Boot Service", "imaging"),
-    "postinstall_create_boot_service", "duplicatescript", "image", "imaging", "manage")
+    new ActionItem(_T("Duplicate", "imaging"),
+    "postinstall_duplicate", "duplicatescript", "image", "imaging", "manage")
 );
 $l->addActionItemArray($a_delete);
 

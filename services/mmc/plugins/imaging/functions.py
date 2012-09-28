@@ -2003,23 +2003,21 @@ class ImagingRpcProxy(RpcProxyI):
         @rtype:
         """
         
-        # Add entry in BootService Table
-        db = ImagingDatabase()
-        script_file = db.createBootServiceFromPostInstall(script_id)
-        print
-        print script_file
-        #mi =  db.getMenuItemByUUID("UUID1118")
-        #print
-        #print type(mi)
-        #print dir(mi)
-        #print
-        
-        # Create .sh file
-        url = chooseImagingApiUrl(loc_id)
-        i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
-        
-        i.createBootServiceFromPostInstall(script_file)
-        print "Done"
+        ret = True
+        try:
+            # Add entry in BootService Table
+            db = ImagingDatabase()
+            script_file = db.createBootServiceFromPostInstall(script_id)
+            if not script_file:
+                raise TypeError("Boot service already exists")
+            
+            # Create .sh file
+            url = chooseImagingApiUrl(loc_id)
+            i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
+
+            return xmlrpcCleanup(i.createBootServiceFromPostInstall(script_file))
+        except Exception, e:
+            return xmlrpcCleanup([False, e])
 
     ###### API to be called from the imaging server (ie : without authentication)
     def computerRegister(self, imaging_server_uuid, hostname, domain, MACAddress, profile, entity = None):

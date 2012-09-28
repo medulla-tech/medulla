@@ -226,7 +226,6 @@ class Imaging(Pulse2Api):
     def createBootServiceFromPostInstall(self, script_file):
         """
         """
-        print "enter createBootServiceFromPostInstall Imaging"
         d = self.callRemote("createBootServiceFromPostInstall", script_file)
         d.addErrback(self.onErrorRaise, "Imaging:createBootServiceFromPostInstall", [script_file])
         return d
