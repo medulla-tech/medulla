@@ -113,7 +113,8 @@ $n->disableFirstColumnActionLink();
 $n->start = 0;
 $n->end = $count;
 
-$n->addActionItem(new ActionPopupItem(_T("Launch", "msc"), "start_command", "start", "msc", "base", "computers"));
+$n->addActionItem(new ActionItem(_T("Advanced launch", "msc"), "start_adv_command", "advanced", "msc", "base", "computers"));
+$n->addActionItem(new ActionItem(_T("Direct launch", "msc"), "start_command", "start", "msc", "base", "computers"));
 $n->addActionItem(new ActionPopupItem(_T("Details", "msc"), "package_detail", "detail", "msc", "base", "computers"));
 
 $n->display();
@@ -135,6 +136,17 @@ li.detail a {
         text-decoration: none;
         color: #FFF;
 }
+li.advanced a {
+        padding: 3px 0px 5px 20px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/msc/graph/images/actions/run.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
 
 </style>
 

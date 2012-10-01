@@ -28,6 +28,7 @@ require('modules/msc/includes/package_api.php');
 require('modules/msc/includes/scheduler_xmlrpc.php');
 require('modules/msc/includes/mscoptions_xmlrpc.php');
 
+
 $from = $_GET['from'];
 $path =  explode('|', $from);
 $module = $path[0];
@@ -40,30 +41,29 @@ $params = array();
 $name = $_GET['name'];
 $version = $_GET['version'];
 $hostname = $_GET['hostname'];
+
 if (!empty($_GET['uuid'])) {
     $uuid = $_GET['uuid'];
 } else {
     $uuid = null;
 }
+
 if (!empty($_GET['gid'])) {
     $gid = $_GET['gid'];
 } else {
     $gid = null;
 }
-
     
 $pid = $_GET['pid'];
-$p_api = new ServerAPI();
-$p_api->fromURI($_GET["papi"]);
-
-
+$papi =  $_GET["papi"];
 $cible = $hostname;
+
 if ($gid) {
     $group = new Group($_GET['gid'], true);
     $cible = $group->getName();
 }
 
-$params["papi"] = $p_api;
+$params["papi"] = $papi;
 $params["name"] = $hostname; 
 $params["hostname"] = $hostname; 
 $params["uuid"] = $uuid; 
@@ -80,7 +80,13 @@ $params["do_inventory"] = web_def_inventory() == 1 ? 'on' : '';
 $params["next_connection_delay"] = web_def_delay();
 $params["max_connection_attempt"] = web_def_attempts();
 $params["maxbw"] = web_def_maxbw();
+$params["copy_mode"] = web_def_mode();
 $params["deployment_intervals"] = web_def_deployment_intervals();
+
+$halt = web_def_issue_halt_to();
+foreach ($halt as $h) {
+    $params["issue_halt_to_".$h] = 'on';
+}
 
 $prefix = '';
 if (strlen($_POST["gid"])) {
@@ -88,35 +94,9 @@ if (strlen($_POST["gid"])) {
 }
 
 $params['tab'] = $prefix.'tablaunch';
+$params['badvanced'] = True;
 
-$halt_to = array();
-foreach ($_POST as $p=>$v) {
-    if (preg_match('/^issue_halt_to_/', $p)) {
-        $p = preg_replace('/^issue_halt_to_/', '', $p);
-        $halt_to[] = $p;
-    }
-}
-$params['issue_halt_to'] = $halt_to;
-
-$mode = $_GET['copy_mode'];
-$prefix = '';
-if (strlen($gid)) {
-    $prefix = 'group';
-}
-
-$cible = array($uuid);
-
-// TODO: activate this  : msc_command_set_pause($cmd_id);
-
-$id_command = add_command_api($pid, $cible, $params, $p_api, $mode, $gid);
-if (!isXMLRPCError()) { 
-    scheduler_start_these_commands('', array($id_command));
-    header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$prefix.$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'gid'=>$gid, 'cmd_id'=>$id_command)));
-} else 
-{
-    ## Return to the launch tab, the backtrace will be displayed 
-    header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$prefix.'tablaunch', 'uuid'=>$uuid, 'hostname'=>$hostname, 'gid'=>$gid, 'cmd_id'=>$id_command)));
-}
+header("Location: " . urlStrRedirect("$module/$submod/$page", $params));
 
 ?>
 
