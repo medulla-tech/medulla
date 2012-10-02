@@ -21,55 +21,41 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-$prev_selected = "";
+if ($_GET['cn']) $_SESSION['cn'] = $_GET['cn'];
+if ($_GET['objectUUID']) $_SESSION['objectUUID'] = $_GET['objectUUID'];
 
-if (isset($_POST['menuAction'])){
-    $action = $_POST['menuAction'];
-    $paramArray = array('cn' => $_GET['cn'], 'objectUUID' => $_GET['objectUUID']);
+$paramArray = array('cn' => $_SESSION['cn'], 'objectUUID' => $_SESSION['objectUUID']);
 
-    $redirect_url = urlStrRedirect('base/computers/invtabs', $paramArray); 
 
-    if ($action=="vnc_client")
-    {
-	$quote = "'";
-	$args = "'event',".$quote.urlStrRedirect("base/computers/vnc_client", $paramArray)."&mod=".$quote.", '300'";
-	$fnc = "PopupWindow(".$args."); return false;";
-	echo '<script type="text/javascript">'.$fnc.'</script>'; 
-	$prev_selected = $selected;
+$inventAction = new ActionItem(_("Inventory"),"invtabs","inventory","inventory", "base", "computers");
+$vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "vncclient", "computer", "base", "computers");
+$logAction = new ActionItem(_("Read log"),"msctabs","logfile","computer", "base", "computers", "tablogs");
+$mscAction = new ActionItem(_("Software deployment"),"msctabs","install","computer", "base", "computers");
+$imgAction = new ActionItem(_("Imaging management"),"imgtabs","imaging","computer", "base", "computers");
 
-    }
-    else
-    {
-	header("Location: ".urlStrRedirect('base/computers/'.$action.'tabs', $paramArray));
-	exit;    
-    }
-}
+
+echo '<div style="float: right;">';
+echo '<table border="0" style="border: none;" cellpadding="0" cellspacing="0"><tr>';
     
-$frm = new ValidatingForm();
-
-$listActions = array(_T("Imaging")=>"img",_T("Inventory")=>"inv",_T("Deployment")=>"msc",_T("Remote Control")=>"vnc_client");
-$listBox = new SelectItem("menuAction","validateForm");
-$listBox->setElements(array_keys($listActions));
-$listBox->setElementsVal(array_values($listActions));
-
-if ($prev_selected != "")
-    $listBox->setSelected($prev_selected);
-elseif(isset($_POST['menuAction']))
-    $listBox->setSelected($_POST['menuAction']);
-else
-    $listBox->setSelected($selected);
-
-$frm->add($listBox);
-$frm->pop();
-echo '<div style="float: right">';
-$frm->display();
-echo '</div>';
-
-?>
-<script type="text/javascript">
-function validateForm()
-{
-    document.getElementById("edit").submit();
+$actions = array($inventAction, $vncClientAction, $logAction, $mscAction, $imgAction);
+foreach ($actions as $action){
+	echo '<td>';    
+        if (is_array($paramArray)) {
+	   $paramArray['mod'] = $action->mod;
+        }    
+        echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; \" >";
+        if (is_array($paramArray) & !empty($paramArray)) $urlChunk = $action->buildUrlChunk($paramArray);
+        else $urlChunk = "&amp;" . $action->paramString."=" . rawurlencode($paramArray);
+	if ($action->action == "vnc_client"){
+            echo "<a title=\"".$action->desc."\" href=\"main.php?module=".$action->module."&amp;submod=".$action->submod."&amp;action=" . $action->action . $urlChunk . "\"";
+            echo " onclick=\"PopupWindow(event,'main.php?module=".$action->module."&amp;submod=".$action->submod."&amp;action=" .$action->action . $urlChunk . "', " . $action->width . "); return false;\">"; 
+	}
+	else {
+	    echo "<a title=\"".$action->desc."\" href=\"" . urlStr($action->path) . $urlChunk . "\">&nbsp;</a>";
+	}
+        echo "</li>";
+	echo '</td>';
 }
-</script>
-
+echo '</tr></table>';	    
+echo '</div>';
+?>
