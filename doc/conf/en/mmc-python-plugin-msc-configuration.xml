@@ -503,6 +503,21 @@ enablessl = 1
     </table>
   </section>
   <section>
+  <section>
+    <title>Client probing behavior</title>
+    <para>The LED which represents the client status can take four colors:</para>
+      <itemizedlist>
+        <listitem>black => no probe done</listitem>
+        <listitem>red => all probe failed</listitem>
+        <listitem>orange => minimal probe succedeed (ping), maximal probe failed (ssh)</listitem>
+        <listitem>green => all probe succedeed</listitem>
+      </itemizedlist>
+    <para>Available probes are: none (field is empty), ping, ssh, ping_ssh (ie. both).
+For networks where icmp is not allowed, ping may be disabled: probe_order=ssh
+To speed-up display, ssh may be disabled: probe_order=ping
+To fully disable probe: probe_order=
+Default conf: none (empty) # probe_order=</para>
+  </section>
     <title>« package_api » section</title>
     <para>This section is used to tell to the plugin where to find its Package service.</para>
     <table>
