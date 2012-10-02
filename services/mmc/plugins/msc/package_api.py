@@ -340,6 +340,9 @@ class SendPackageCommand:
         # Prepare command parameters for database insertion
         cmd = prepareCommand(self.pinfos, self.params)
 
+        # cmd['maxbw'] is in kbits, set in bits
+        cmd['maxbw'] = int(cmd['maxbw']) * 1024
+
         addCmd = MscDatabase().addCommand(  # TODO: refactor to get less args
             self.ctx,
             self.pid,
