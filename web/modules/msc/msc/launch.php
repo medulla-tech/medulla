@@ -305,7 +305,7 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
         'start_date'=>array($type_date, _T('The command may start after', 'msc'), quick_get('start_date'), array('ask_for_now' => 1)),
         'end_date'=>array($type_date, _T('The command must stop before', 'msc'), quick_get('end_date'), array('ask_for_never' => 1)),
         'deployment_intervals'=>array($type_input, _T('Deployment interval', 'msc'), quick_get('deployment_intervals')),
-        'maxbw'=>array($type_numeric, _T('Max bandwidth (b/s)', 'msc'), $max_bw),
+        'maxbw'=>array($type_numeric, _T('Max bandwidth (kbits/s)', 'msc'), $max_bw),
 
     );
     $macro_hide = array(
