@@ -26,6 +26,7 @@ import logging
 
 # our modules
 import pulse2.scheduler.scheduling
+import pulse2.scheduler.threads
 from pulse2.scheduler.tracking.commands import CommandsOnHostTracking
 from pulse2.scheduler.config import SchedulerConfig
 
@@ -38,7 +39,10 @@ def completed_push(launcher, (exitcode, stdout, stderr), id):
     if SchedulerConfig().lock_processed_commands and not CommandsOnHostTracking().preempt(id): return False
     logging.getLogger().info("Scheduler: launcher %s tells us that push of CoH #%s is done" % (launcher, id))
     try:
-        pulse2.scheduler.scheduling.parsePushResult((exitcode, stdout, stderr), id)
+        if SchedulerConfig().multithreading:
+            pulse2.scheduler.threads.runInThread(pulse2.scheduler.scheduling.parsePushResult, (exitcode, stdout, stderr), id)
+        else:
+            pulse2.scheduler.scheduling.parsePushResult((exitcode, stdout, stderr), id)
         return True
     except Exception, e:
         pulse2.scheduler.scheduling.gotErrorInResult(e, id)
@@ -48,18 +52,23 @@ def completed_pull(launcher, (exitcode, stdout, stderr), id):
     if SchedulerConfig().lock_processed_commands and not CommandsOnHostTracking().preempt(id): return False
     logging.getLogger().info("Scheduler: launcher %s tells us that pull of CoH #%s is done" % (launcher, id))
     try:
-        pulse2.scheduler.scheduling.parsePullResult((exitcode, stdout, stderr), id)
+        if SchedulerConfig().multithreading:
+            pulse2.scheduler.threads.runInThread(pulse2.scheduler.scheduling.parsePullResult, (exitcode, stdout, stderr), id)
+        else:
+            pulse2.scheduler.scheduling.parsePullResult((exitcode, stdout, stderr), id)
         return True
     except Exception, e:
         pulse2.scheduler.scheduling.gotErrorInResult(e, id)
         return False
 
 def completed_quick_action(launcher, (exitcode, stdout, stderr), id):
-    """ A launcher tell us a quick action is finished """
     if SchedulerConfig().lock_processed_commands and not CommandsOnHostTracking().preempt(id): return False
     logging.getLogger().info("Scheduler: launcher %s tells us that execution of CoH #%s is done" % (launcher, id))
     try:
-        pulse2.scheduler.scheduling.parseExecutionResult((exitcode, stdout, stderr), id)
+        if SchedulerConfig().multithreading:
+            pulse2.scheduler.threads.runInThread(pulse2.scheduler.scheduling.parseExecutionResult, (exitcode, stdout, stderr), id)
+        else:
+            pulse2.scheduler.scheduling.parseExecutionResult((exitcode, stdout, stderr), id)
         return True
     except Exception, e:
         pulse2.scheduler.scheduling.gotErrorInResult(e, id)
@@ -69,7 +78,10 @@ def completed_execution(launcher, (exitcode, stdout, stderr), id):
     if SchedulerConfig().lock_processed_commands and not CommandsOnHostTracking().preempt(id): return False
     logging.getLogger().info("Scheduler: launcher %s tells us that execution of CoH #%s is done" % (launcher, id))
     try:
-        pulse2.scheduler.scheduling.parseExecutionResult((exitcode, stdout, stderr), id)
+        if SchedulerConfig().multithreading:
+            pulse2.scheduler.threads.runInThread(pulse2.scheduler.scheduling.parseExecutionResult, (exitcode, stdout, stderr), id)
+        else:
+            pulse2.scheduler.scheduling.parseExecutionResult((exitcode, stdout, stderr), id)
         return True
     except Exception, e:
         pulse2.scheduler.scheduling.gotErrorInResult(e, id)
@@ -79,7 +91,10 @@ def completed_deletion(launcher, (exitcode, stdout, stderr), id):
     if SchedulerConfig().lock_processed_commands and not CommandsOnHostTracking().preempt(id): return False
     logging.getLogger().info("Scheduler: launcher %s tells us that deletion of CoH #%s is done" % (launcher, id))
     try:
-        pulse2.scheduler.scheduling.parseDeleteResult((exitcode, stdout, stderr), id)
+        if SchedulerConfig().multithreading:
+            pulse2.scheduler.threads.runInThread(pulse2.scheduler.scheduling.parseDeleteResult, (exitcode, stdout, stderr), id)
+        else:
+            pulse2.scheduler.scheduling.parseDeleteResult((exitcode, stdout, stderr), id)
         return True
     except Exception, e:
         pulse2.scheduler.scheduling.gotErrorInResult(e, id)
@@ -89,7 +104,10 @@ def completed_inventory(launcher, (exitcode, stdout, stderr), id):
     if SchedulerConfig().lock_processed_commands and not CommandsOnHostTracking().preempt(id): return False
     logging.getLogger().info("Scheduler: launcher %s tells us that inventory after CoH #%s is done" % (launcher, id))
     try:
-        pulse2.scheduler.scheduling.parseInventoryResult((exitcode, stdout, stderr), id)
+        if SchedulerConfig().multithreading:
+            pulse2.scheduler.threads.runInThread(pulse2.scheduler.scheduling.parseInventoryResult, (exitcode, stdout, stderr), id)
+        else:
+            pulse2.scheduler.scheduling.parseInventoryResult((exitcode, stdout, stderr), id)
         return True
     except Exception, e:
         pulse2.scheduler.scheduling.gotErrorInResult(e, id)
@@ -99,7 +117,10 @@ def completed_reboot(launcher, (exitcode, stdout, stderr), id):
     if SchedulerConfig().lock_processed_commands and not CommandsOnHostTracking().preempt(id): return False
     logging.getLogger().info("Scheduler: launcher %s tells us that reboot after CoH #%s is done" % (launcher, id))
     try:
-        pulse2.scheduler.scheduling.parseRebootResult((exitcode, stdout, stderr), id)
+        if SchedulerConfig().multithreading:
+            pulse2.scheduler.threads.runInThread(pulse2.scheduler.scheduling.parseRebootResult, (exitcode, stdout, stderr), id)
+        else:
+            pulse2.scheduler.scheduling.parseRebootResult((exitcode, stdout, stderr), id)
         return True
     except Exception, e:
         pulse2.scheduler.scheduling.gotErrorInResult(e, id)
@@ -109,7 +130,10 @@ def completed_halt(launcher, (exitcode, stdout, stderr), id):
     if SchedulerConfig().lock_processed_commands and not CommandsOnHostTracking().preempt(id): return False
     logging.getLogger().info("Scheduler: launcher %s tells us that halt after CoH #%s is done" % (launcher, id))
     try:
-        pulse2.scheduler.scheduling.parseHaltResult((exitcode, stdout, stderr), id)
+        if SchedulerConfig().multithreading:
+            pulse2.scheduler.threads.runInThread(pulse2.scheduler.scheduling.parseHaltResult, (exitcode, stdout, stderr), id)
+        else:
+            pulse2.scheduler.scheduling.parseHaltResult((exitcode, stdout, stderr), id)
         return True
     except Exception, e:
         pulse2.scheduler.scheduling.gotErrorInResult(e, id)
