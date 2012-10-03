@@ -25,7 +25,7 @@ import urlparse
 import urllib
 import re
 
-from twisted.internet import reactor
+from twisted.internet import reactor, defer
 from twisted.web.client import HTTPClientFactory, _parse, getPage
 
 from mmc.plugins.base.auth import *
@@ -36,13 +36,15 @@ class GlpiAuthenticatorConfig(AuthenticatorConfig):
     def readConf(self):
         AuthenticatorConfig.readConf(self)
         self.baseurl = self.get(self.section, "baseurl")
+        self.doauth = self.getboolean(self.section, "doauth")
 
     def setDefault(self):
         AuthenticatorConfig.setDefault(self)
         self.loginpage = "index.php"
         self.loginpost = "login.php"
         self.match = "window.location='.*/front/central.php'"
-        
+        self.doauth = True
+
 class GlpiAuthenticator(AuthenticatorI):
     """
     Use the HTML login page of GLPI to authenticate a user.
@@ -75,6 +77,9 @@ class GlpiAuthenticator(AuthenticatorI):
         """
         Return a deferred object resulting to True or False
         """
+        if not self.config.doauth:
+            self.logger.debug("GlpiAuthenticator: do not authenticate user %s (doauth = False)" % user)
+            return defer.succeed(True)
         self.user = user
         self.password = password
         d = getPageWithHeader(urlparse.urljoin(self.config.baseurl, self.config.loginpage)).addCallback(self._cbIndexPage)
