@@ -1418,10 +1418,14 @@ def _chooseUploadMode(myCoH, myC, myT):
         mirror = mirrors[0]
         fbmirror = mirrors[1]
 
-        credentials, mirror = extractCredentials(mirror)
-        ma = pulse2.apis.clients.mirror.Mirror(credentials, mirror)
-        d = ma.isAvailable(myC.package_id)
-        d.addCallback(_cbRunPushPullPhaseTestMainMirror, mirror, fbmirror, client, myC, myCoH)
+        try:
+            credentials, mirror = extractCredentials(mirror)
+            ma = pulse2.apis.clients.mirror.Mirror(credentials, mirror)
+            d = ma.isAvailable(myC.package_id)
+            d.addCallback(_cbRunPushPullPhaseTestMainMirror, mirror, fbmirror, client, myC, myCoH)
+        except Exception, e:
+            logging.getLogger().error("command_on_host #%s: exception while gathering information about %s on primary mirror %s : %s" % (myCoH.getId(), myC.package_id, mirror, e))
+            return _cbRunPushPullPhaseTestMainMirror(False, mirror, fbmirror, client, myC, myCoH)
 
     return d
 
@@ -1450,11 +1454,14 @@ def _cbRunPushPullPhaseTestFallbackMirror(result, mirror, fbmirror, client, myC,
     if fbmirror != mirror:
         # Test the fallback mirror only if the URL is the different than the
         # primary mirror
-        credentials, mirror = extractCredentials(mirror)
-        ma = pulse2.apis.clients.mirror.Mirror(credentials, fbmirror)
-        d = ma.isAvailable(myC.package_id)
-        d.addCallback(_cbRunPushPullPhase, mirror, fbmirror, client, myC, myCoH, True)
-        return d
+        try:
+            credentials, mirror = extractCredentials(mirror)
+            ma = pulse2.apis.clients.mirror.Mirror(credentials, fbmirror)
+            d = ma.isAvailable(myC.package_id)
+            d.addCallback(_cbRunPushPullPhase, mirror, fbmirror, client, myC, myCoH, True)
+            return d
+        except Exception, e:
+            logging.getLogger().error("command_on_host #%s: exception while gathering information about %s on fallback mirror %s : %s" % (myCoH.getId(), myC.package_id, fbmirror, e))
     else:
         # Go to upload phase, but pass False to tell that the package is not
         # available on the fallback mirror too
