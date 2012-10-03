@@ -71,6 +71,11 @@ scheduler_path = @sbindir@/pulse2-scheduler
 # is for systems under heavy load; risk of double-preemption is
 # drastically reduce using this, but your system will be even more slow
 # lock_processed_commands = False
+#
+# multithreading application
+# for huge installaiton, go threads
+# multithreading = True
+# max_threads = 20
 
 ## Commands life ##
 # Command max default authorized time (for each stage)

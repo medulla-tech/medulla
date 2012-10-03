@@ -96,10 +96,12 @@ class SchedulerConfig(pulse2.utils.Singleton):
     host = "127.0.0.1"
     max_command_time = 3600
     max_slots = 300
+    max_threads = 20
     max_upload_time = 21600
     max_wol_time = 300
     mg_assign_algo = 'default'
     mode = 'async'
+    multithreading = True
     password = 'password'
     preempt_amount = 50
     preempt_period = 1
@@ -219,6 +221,8 @@ class SchedulerConfig(pulse2.utils.Singleton):
         self.setoption("scheduler", "dbencoding", "dbencoding")
         self.setoption("scheduler", "enablessl", "enablessl", 'bool')
         self.setoption("scheduler", "lock_processed_commands", "lock_processed_commands", 'bool')
+        self.setoption("scheduler", "multithreading", "multithreading", 'bool')
+        self.setoption("scheduler", "max_threads", "max_threads", 'int')
 
         if self.cp.has_option("scheduler", "mg_assign_algo"):
             self.mg_assign_algo = self.cp.get("scheduler", 'mg_assign_algo')

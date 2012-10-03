@@ -342,6 +342,9 @@ def startService():
 
     twisted.internet.reactor.callWhenRunning(start_all_callbacks)
     twisted.internet.reactor.addSystemEventTrigger('before', 'shutdown', cleanUp)
+    if config.multithreading:
+        logger.info('scheduler %s: setting threadpool max size to %d' % (config.name, config.max_threads))
+        twisted.internet.reactor.suggestThreadPoolSize(config.max_threads)
     logger.info('scheduler %s: listening on %s:%d' % (config.name, config.host, config.port))
     twisted.internet.reactor.run()
     return 0
