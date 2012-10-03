@@ -85,7 +85,7 @@ class ImagingApi(MyXmlrpc):
             if not os.path.isdir(dirname):
                 raise ValueError, "Directory '%s' does not exists. Please check option '%s' in your configuration file." % (dirname, optname)
         for optname in ['diskless_kernel', 'diskless_initrd',
-                      'diskless_memtest']:
+                      'diskless_memtest', 'diskless_dban']:
             fpath = os.path.join(basefolder,
                                  self.config.imaging_api['diskless_folder'],
                                  self.config.imaging_api[optname])
