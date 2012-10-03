@@ -66,7 +66,7 @@ class ErrorHandlingItem {
         if ($this->_level !=0 ) {
             $str= '<div id="errorCode">';
         } else {
-            $str = '<div>';
+            $str = '<div id="notifyCode">';
         }
 
         $str .= "<h1>" . $this->getMsg() . "</h1>";

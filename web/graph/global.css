@@ -384,6 +384,27 @@ html>body #sidebar ul li a { width: auto; }
     margin-left: 1.5em;
 }
 
+#notifyCode, .notifyCode {
+    font-size: 12px;
+    text-decoration: none;
+    padding: 12px 8px 12px 8px;
+    margin: 0;
+    background-color: #EEE;
+    color: #000;
+    width: 90%;
+    display: block;
+    border: 1px solid #999;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+#notifyCode ul, .notifyCode ul {
+    padding: 0;
+    margin: 0;
+    margin-left: 1.5em;
+}
+
 #warningCode {
     font-size: 12px;
     text-decoration: none;

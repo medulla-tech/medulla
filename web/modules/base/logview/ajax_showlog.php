@@ -18,29 +18,24 @@ $extra = array();
 $date = array();
 $oparr = array();
 
-/*
- * FIXME: remove this try and see http://projects.mandriva.org/issues/1867
- */
-try {
-    foreach (xmlCall("base.getLdapLog",array($_SESSION['ajax']['filter'])) as $line) {
-        if (is_array($line)) {
-            $connectionNumber[] = '<a href="#" onClick="$(\'param\').value=\''.'conn='.$line["conn"].'\'; pushSearch(); return false">'.$line["conn"].'</a>';
-            $action[] = '<a href="#" onClick="$(\'param\').value=\''.$line["op"].'\'; pushSearch(); return false">'.$line["op"].'</a>';
-            $extra[] = $line["extra"];
-            $dateparsed = strftime('%b %d %H:%M:%S',$line["time"]);
-            $date[] = str_replace(" ", "&nbsp;", $dateparsed);
-            if ($line["opfd"] == "op") {
-                $oparr[] = $line["opfdnum"];
-            } else {
-                $oparr[] = "";
-            }
+foreach (xmlCall("base.getLdapLog",array($_SESSION['ajax']['filter'])) as $line) {
+    if (is_array($line)) {
+    $connectionNumber[] = '<a href="#" onClick="$(\'param\').value=\''.'conn='.$line["conn"].'\'; pushSearch(); return false">'.$line["conn"].'</a>';
+    $action[] = '<a href="#" onClick="$(\'param\').value=\''.$line["op"].'\'; pushSearch(); return false">'.$line["op"].'</a>';
+    $extra[] = $line["extra"];
+    $dateparsed = strftime('%b %d %H:%M:%S',$line["time"]);
+    $date[] = str_replace(" ", "&nbsp;", $dateparsed);
+    if ($line["opfd"] == "op") {
+            $oparr[] = $line["opfdnum"];
         } else {
-            $connectionNumber[] = "";
-            $action[] = "";
-            $date[] = "";
             $oparr[] = "";
-            $extra[] = $line;
         }
+    } else {
+    $connectionNumber[] = "";
+    $action[] = "";
+    $date[] = "";
+    $oparr[] = "";
+    $extra[] = $line;
     }
 }
 

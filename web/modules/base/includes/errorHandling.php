@@ -33,6 +33,8 @@ $errItem->setAdvice(_("Please be sure you have:
                         <pre>local4.*       /var/log/ldap.log (or /var/log/ldap/ldap.log)</pre>
                         </p>
                         "));
+$errItem->setLevel(0);
+$errItem->setTraceBackDisplay(False);
 $errObj->add($errItem);
 
 $errItem = new ErrorHandlingItem("No such file or directory: '/home/");

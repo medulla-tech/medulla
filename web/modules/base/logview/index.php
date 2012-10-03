@@ -38,7 +38,7 @@ displayInputLiveSearch(urlStrRedirect('base/logview/setsearch'));
 <div style="height: 400px; overflow: auto;" id="logupdater"></div>
 
 <script>
-    new Ajax.PeriodicalUpdater('logupdater','<?php echo  urlStrRedirect('base/logview/show') ?>','2',{evalScripts: true});
+    new Ajax.PeriodicalUpdater('logupdater','<?php echo  urlStrRedirect('base/logview/show') ?>',{evalScripts: true, frequency: 60});
     new Ajax.Updater('container','<?php echo  urlStrRedirect('base/logview/setsearch') ?>');
 </script>
 
