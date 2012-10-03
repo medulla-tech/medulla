@@ -793,10 +793,13 @@ def sortCommands(commands_to_perform):
     random.shuffle(commands_to_perform)
 
     for command_id in commands_to_perform:
-        (myCoH, myC, myT) = gatherCoHStuff(command_id)
-        if myCoH == None:
-            continue
-        command_group = getClientGroup(myT)
+        if MGAssignAlgoManager().name != "default":
+            (myCoH, myC, myT) = gatherCoHStuff(command_id)
+            if myCoH == None:
+                continue
+            command_group = getClientGroup(myT)
+        else:
+            command_group = ""
         if not command_group in tocome_distribution:
             tocome_distribution[command_group] = [command_id]
         else:
