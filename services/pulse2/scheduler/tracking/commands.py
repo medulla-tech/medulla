@@ -122,9 +122,7 @@ class CommandsOnHostTracking(pulse2.utils.Singleton):
         """ create and take lock for a given coh """
         self.__lock()
         ret = self.__lock_coh(id)
-        if ret:
-            logging.getLogger().debug('LOCK: OK for preempting #%s' % (id))
-        else:
+        if not ret:
             logging.getLogger().warn('LOCK: KO for preempting #%s' % (id))
         self.__unlock()
         return ret
@@ -134,10 +132,7 @@ class CommandsOnHostTracking(pulse2.utils.Singleton):
         self.__lock()
         epoch = time.time()
         ret = self.__unlock_coh(id)
-        if ret:
-            logging.getLogger().debug('LOCK: OK for releasing #%s after %s seconds' % (id, epoch - ret))
-        else:
-            # pass # not an error, as can be called after an xmlrpc command
+        if not ret: # not an error, as can be called after an xmlrpc command
             logging.getLogger().warn('LOCK: KO for releasing #%s (was not locked), releasing anyway' % (id))
         self.__unlock()
         return ret

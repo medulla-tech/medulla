@@ -128,9 +128,7 @@ class WOLTracking(pulse2.utils.Singleton):
         """ create and take lock for a given coh """
         self.__lock()
         ret = self.__lock_coh(id)
-        if ret:
-            logging.getLogger().debug('LOCK: OK to lock WOL #%s' % (id))
-        else:
+        if not ret:
             logging.getLogger().warn('LOCK: KO to lock WOL #%s' % (id))
         self.__unlock()
         return ret
@@ -138,20 +136,17 @@ class WOLTracking(pulse2.utils.Singleton):
     def iswollocked(self, id):
         """ see if there is a lock for a given coh """
         ret = self.__locked_coh(id)
-        if ret:
-            logging.getLogger().debug('LOCK: WOL #%s is locked' % (id))
+        if not ret:
+            logging.getLogger().warn('LOCK: WOL #%s not locked' % (id))
         else:
-            logging.getLogger().warn('LOCK: WOL #%s is not locked' % (id))
+            logging.getLogger().warn('LOCK: WOL #%s is locked' % (id))
         return ret
 
     def unlockwol(self, id):
         """ release lock for a given coh """
         self.__lock()
         ret = self.__unlock_coh(id)
-        if ret:
-            logging.getLogger().debug('LOCK: OK to unlock WOL #%s' % (id))
-        else:
-            # pass # not an error, as can be called after an xmlrpc command
+        if not ret: # not an error, as can be called after an xmlrpc command
             logging.getLogger().warn('LOCK: KO to unlock WOL #%s' % (id))
         self.__unlock()
         return ret
