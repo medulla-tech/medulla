@@ -26,6 +26,9 @@ scheduler_path = @sbindir@/pulse2-scheduler
 #
 # attempt to start (and stop) commands every n seconds
 # awake_time = 600
+# cache settings: requests to package managers are cached
+# cache_size = 300
+# cache_timeout = 500
 #
 # preemption settings : preempting every N second, run M commands
 # preempt_amount = 50

@@ -62,6 +62,7 @@ from pulse2.database.msc import MscDatabase
 from pulse2.scheduler.assign_algo import MGAssignAlgoManager
 from pulse2.scheduler.health import getHealth, checkStatus, startLoopTS, stopLoopTS, logLoopTS, preemptLoopTS
 from pulse2.utils import xmlrpcCleanup, extractExceptionMessage
+from mmc.support.cache import LocMemCache
 
 import pulse2.xmlrpc
 
@@ -305,6 +306,11 @@ def startService():
 
     # put the machine to command group algorithm
     MGAssignAlgoManager().setAlgo(config.mg_assign_algo)
+
+    # Set cache
+    cache = LocMemCache()
+    cache.init(timeout=SchedulerConfig().cache_timeout,
+               max_entries=SchedulerConfig().cache_size)
 
     # Starts XMLRPC server
     logger.info('scheduler %s: starting' % config.name)

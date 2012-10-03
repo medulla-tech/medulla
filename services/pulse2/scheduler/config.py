@@ -109,6 +109,8 @@ class SchedulerConfig(pulse2.utils.Singleton):
     server_check = None
     username = 'username'
     verifypeer = False
+    cache_size = 300
+    cache_timeout = 500
 
     # [daemon] section
     daemon_group = 0
@@ -182,6 +184,10 @@ class SchedulerConfig(pulse2.utils.Singleton):
         self.setoption("scheduler", "checkstatus_period", "checkstatus_period", 'int')
         self.setoption("scheduler", "loghealth_period", "loghealth_period", 'int')
         self.setoption("scheduler", "incertitude_factor", "incertitude_factor", 'float')
+
+        # cache settings
+        self.setoption("scheduler", "cache_size", "cache_size", 'int')
+        self.setoption("scheduler", "cache_timeout", "cache_timeout", 'int')
 
         self.setoption("scheduler", "analyse_hour", "analyse_hour")
         if len(self.analyse_hour) == 0: # no option given
