@@ -24,7 +24,7 @@
  */
  
 /*
- * Script duplication page for post-installation script
+ * Script duplication page for post-imaging script
  */
  
 $task = "duplicate";

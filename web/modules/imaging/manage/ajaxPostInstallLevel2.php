@@ -24,7 +24,7 @@
  */
 
 /*
- * Post-installation scripts list page
+ * Post-imaging scripts list page
  */
 
 /* Get MMC includes */

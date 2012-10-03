@@ -648,24 +648,24 @@ class ImagingImageItem(ImagingItem):
 
     def write(self, config):
         """
-        Write post-installation scripts if any.
+        Write post-imaging scripts if any.
         """
-        # First: remove old post-installation directory if there is one
+        # First: remove old post-imaging directory if there is one
         postinstdir = os.path.join(config.imaging_api['base_folder'], config.imaging_api['masters_folder'], self.uuid, self.POSTINSTDIR)
         if os.path.exists(postinstdir):
-            self.logger.debug('Deleting previous post-installation directory: %s' % postinstdir)
+            self.logger.debug('Deleting previous post-imaging directory: %s' % postinstdir)
             try:
                 shutil.rmtree(postinstdir)
             except OSError, e:
-                self.logger.error("Can't delete post-installation directory %s: %s" % (postinstdir, e))
+                self.logger.error("Can't delete post-imaging directory %s: %s" % (postinstdir, e))
                 raise
-        # Then populate the post-installation script directory if needed
+        # Then populate the post-imaging script directory if needed
         if self.post_install_script:
             try:
                 os.mkdir(postinstdir)
                 self.logger.debug('Directory successfully created: %s' % postinstdir)
             except OSError, e:
-                self.logger.error("Can't create post-installation script folder %s: %s" % (postinstdir, e))
+                self.logger.error("Can't create post-imaging script folder %s: %s" % (postinstdir, e))
                 raise
 
             order = 1  # keep 0 for later use
@@ -687,11 +687,11 @@ class ImagingImageItem(ImagingItem):
                     os.chmod(postinst, stat.S_IRUSR | stat.S_IXUSR)
                     self.logger.debug('Successfully wrote script: %s' % postinst)
                 except OSError, e:
-                    self.logger.error("Can't update post-installation script %s: %s" % (postinst, e))
+                    self.logger.error("Can't update post-imaging script %s: %s" % (postinst, e))
                     raise
                 order += 1
         else:
-            self.logger.debug('No post-installation script to write')
+            self.logger.debug('No post-imaging script to write')
 
 
 def changeDefaultMenuItem(macaddress, value):

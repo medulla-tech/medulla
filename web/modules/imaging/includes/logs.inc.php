@@ -27,7 +27,7 @@ $logStates = array(
     "backup" => array(_T("Backup", "imaging"), 'green'),
     "boot" => array(_T("Boot", "imaging"), 'green'),
     "restoration" => array(_T("Restoration", "imaging"), 'green'),
-    "postinstall" => array(_T("Post-install", "imaging"), 'green'),
+    "postinstall" => array(_T("Post-imaging", "imaging"), 'green'),
     "error" => array(_T("Error", "imaging"), 'red'),
 
     "unknown" => array(_T("Status unknown", "imaging"), 'black'),

@@ -24,7 +24,7 @@
  */
 
 /*
- * Delete post-installation script popup)
+ * Delete post-imaging script popup)
  */
 
 include('modules/imaging/includes/includes.php');
@@ -56,11 +56,11 @@ if ($_POST) {
 
     if (!$script['is_local']) {
     ?>
-    <h2><?php echo  _T("Can't delete this post-installation script, it's a global script.", "imaging") ?></h2>
+    <h2><?php echo  _T("Can't delete this post-imaging script, it's a global script.", "imaging") ?></h2>
     <?
     } else {
     ?>
-    <h2><?php echo  _T("Delete post-installation script", "imaging") ?></h2>
+    <h2><?php echo  _T("Delete post-imaging script", "imaging") ?></h2>
     <form action="<?php echo urlStr("imaging/manage/postinstall_delete") ?>" method="post">
         <p><?php printf(_T("Are you sure you want to delete the <b>%s</b> script ?", "imaging"), $label); ?></p>
         <input name='itemid' type='hidden' value="<?php echo $script_id ?>" />

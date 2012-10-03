@@ -24,7 +24,7 @@
  */
 
 /*
- * Edit/Duplicate page for post-installation script
+ * Edit/Duplicate page for post-imaging script
  */
 
 require("localSidebar.php");
@@ -46,13 +46,13 @@ if ($task == "edit") {
     $name = $script["default_name"];
     $desc = $script["default_desc"];
     $id = $script["id"];
-    $title = "Edit post-installation script";
+    $title = "Edit post-imaging script";
     $action = "updated";
 } elseif ($task == "duplicate") {
     $name = "";
     $desc = $script["default_desc"];
     $id = "";
-    $title = "Duplicate post-installation script";
+    $title = "Duplicate post-imaging script";
     $action = "created";
 }
 

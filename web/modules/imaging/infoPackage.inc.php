@@ -85,18 +85,18 @@ $page = new Page("bootmenu_edit",_T("Down service","imaging"));
 $page->setOptions(array("visible" => False));
 $submod->addPage($page);
 
-$page = new Page("postinstall",_T("Post-installation scripts","imaging"));
+$page = new Page("postinstall",_T("Post-imaging scripts","imaging"));
 $submod->addPage($page);
-$page = new Page("postinstall_edit",_T("Edit post-installation script","imaging"));
+$page = new Page("postinstall_edit",_T("Edit post-imaging script","imaging"));
 $page->setOptions(array("visible" => False));
 $submod->addPage($page);
-$page = new Page("postinstall_duplicate",_T("Edit post-installation script","imaging"));
+$page = new Page("postinstall_duplicate",_T("Edit post-imaging script","imaging"));
 $page->setOptions(array("visible" => False));
 $submod->addPage($page);
 $page = new Page("postinstall_create_boot_service",_T("Create boot service from postinstall script","imaging"));
 $page->setOptions(array("visible" => False));
 $submod->addPage($page);
-$page = new Page("postinstall_delete",_T("Delete post-installation script","imaging"));
+$page = new Page("postinstall_delete",_T("Delete post-imaging script","imaging"));
 $page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
 

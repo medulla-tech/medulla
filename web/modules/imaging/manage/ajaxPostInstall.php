@@ -24,7 +24,7 @@
 /* common ajax includes */
 require("../includes/ajaxcommon.inc.php");
 
-    $t = new TitleElement(_T("Available post-installation scripts", "imaging"), 3);
+    $t = new TitleElement(_T("Available post-imaging scripts", "imaging"), 3);
     $t->display();
 
     if (! isset($params) ) {
