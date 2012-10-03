@@ -34,12 +34,12 @@ $mscAction = new ActionItem(_("Software deployment"),"msctabs","install","comput
 $imgAction = new ActionItem(_("Imaging management"),"imgtabs","imaging","computer", "base", "computers");
 
 
-echo '<div style="float: right;">';
+echo '<div style="float: right; width: 200px;">';
 echo '<table border="0" style="border: none;" cellpadding="0" cellspacing="0"><tr>';
     
 $actions = array($inventAction, $vncClientAction, $logAction, $mscAction, $imgAction);
 foreach ($actions as $action){
-	echo '<td>';    
+	echo '<td style="border: none">';    
         if (is_array($paramArray)) {
 	   $paramArray['mod'] = $action->mod;
         }    
@@ -48,7 +48,7 @@ foreach ($actions as $action){
         else $urlChunk = "&amp;" . $action->paramString."=" . rawurlencode($paramArray);
 	if ($action->action == "vnc_client"){
             echo "<a title=\"".$action->desc."\" href=\"main.php?module=".$action->module."&amp;submod=".$action->submod."&amp;action=" . $action->action . $urlChunk . "\"";
-            echo " onclick=\"PopupWindow(event,'main.php?module=".$action->module."&amp;submod=".$action->submod."&amp;action=" .$action->action . $urlChunk . "', " . $action->width . "); return false;\">"; 
+            echo " onclick=\"PopupWindow(event,'main.php?module=".$action->module."&amp;submod=".$action->submod."&amp;action=" .$action->action . $urlChunk . "', " . $action->width . "); return false;\">&nbsp;</a>"; 
 	}
 	else {
 	    echo "<a title=\"".$action->desc."\" href=\"" . urlStr($action->path) . $urlChunk . "\">&nbsp;</a>";
