@@ -154,7 +154,8 @@ class Commands(object):
             result = True
         else:
             result = pulse2.time_intervals.intimeinterval(self.deployment_intervals, time.strftime("%H:%M:%S"))
-        logging.getLogger().debug("inDeploymentInterval(#%s): %s" % (self.id, result))
+        if not result:
+            logging.getLogger().debug("inDeploymentInterval(#%s): %s" % (self.id, result))
         return result
 
     def getCohIds(self):
