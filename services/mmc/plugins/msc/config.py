@@ -132,6 +132,8 @@ class MscConfig(MscDatabaseConfig):
     schedulers = {
     }
 
+    check_db_enable = False
+    check_db_interval = 300
 
     def init(self, name, conffile = None):
         self.name = name
@@ -146,6 +148,11 @@ class MscConfig(MscDatabaseConfig):
         Read the module configuration
         """
         self.disable = self.cp.getboolean("main", "disable")
+
+        if self.cp.has_option("main", "check_db_enable"):
+            self.check_db_enable = self.cp.getboolean("main", "check_db_enable")
+        if self.cp.has_option("main", "check_db_interval"):
+            self.check_db_interval = self.cp.getint("main", "check_db_interval")
 
         is_login_and_pass = isTwistedEnoughForLoginPass()
 
