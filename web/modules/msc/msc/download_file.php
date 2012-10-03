@@ -27,6 +27,7 @@ require('modules/msc/includes/machines.inc.php');
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require('modules/msc/includes/scheduler_xmlrpc.php');
+require_once('modules/msc/includes/mscoptions_xmlrpc.php');
 
 $p = new PageGenerator(_T("Download file page", "msc"));
 $p->setSideMenu($sidemenu);
@@ -46,7 +47,7 @@ if (isset($_POST["bconfirm"])) {
 }
 
 $ajax = new AjaxFilter(urlStrRedirect('base/computers/ajaxDownloadFile', array('objectUUID' => $_GET['objectUUID'])));
-$ajax->setRefresh(60000);
+$ajax->setRefresh(web_def_refresh_time());
 $ajax->display();
 
 $f = new Form(array('id' => 'dl'));

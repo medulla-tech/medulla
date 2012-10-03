@@ -370,6 +370,7 @@ if (!isset($_GET['badvanced']) && $_GET['uuid'] && !isset($_POST['launchAction']
     if (strlen(web_probe_order()) > 0){
         $msc_host = new RenderedMSCHost($machine);
         $msc_host->ajaxDisplay();
+    } else { // nothing set : do not probe
     }
 
     $msc_actions = new RenderedMSCActions(msc_script_list_file(), $machine->hostname, array('uuid'=>$_GET['uuid']));

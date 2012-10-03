@@ -27,6 +27,7 @@ require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 require_once('modules/msc/includes/command_history.php');
 require_once('modules/msc/includes/functions.php');
 require_once('modules/msc/includes/widgets.inc.php');
+require_once('modules/msc/includes/mscoptions_xmlrpc.php');
 
 // inject styles
 print '<link rel="stylesheet" href="modules/msc/graph/css/msc_commands.css" type="text/css" media="screen" />';
@@ -72,7 +73,7 @@ if (strlen($_GET['uuid'])) {
             "history" => 1
         );            
         $ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), "container", "commands", $params);
-        $ajax->setRefresh(30000);
+        $ajax->setRefresh(web_def_refresh_time());
         $ajax->display();
         print "<br/><br/><br/>";
         $ajax->displayDivToUpdate();

@@ -116,4 +116,8 @@ function web_probe_order() {
     return __web_def_in_session("probe_order");
 }
 
+function web_def_refresh_time() {
+    return __web_def_in_session("refresh_time");
+}
+
 ?>
