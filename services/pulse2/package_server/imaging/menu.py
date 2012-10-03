@@ -213,6 +213,7 @@ class ImagingMenu:
             ('##PULSE2_DISKLESS_KERNEL##', self.config.imaging_api['diskless_kernel'], 'global'),
             ('##PULSE2_DISKLESS_INITRD##', self.config.imaging_api['diskless_initrd'], 'global'),
             ('##PULSE2_DISKLESS_MEMTEST##', self.config.imaging_api['diskless_memtest'], 'global'),
+            ('##PULSE2_DISKLESS_DBAN##', self.config.imaging_api['diskless_dban'], 'global'),
             ('##PULSE2_DISKLESS_OPTS##', ' '.join(self.diskless_opts), 'global'),
             ('##PULSE2_KERNEL_OPTS##', ' '.join(self.kernel_opts), 'global'),
             ('##PULSE2_MASTERS_DIR##', self.config.imaging_api['masters_folder'], 'global'),

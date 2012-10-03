@@ -597,6 +597,12 @@ option2 = plop      </screen></para>
             <entry>initrdcd</entry>
           </row>
           <row>
+            <entry>diskless_dban</entry>
+            <entry>Diskless dban too, relative to "diskless_folder"</entry>
+            <entry>yes</entry>
+            <entry>initrdcd</entry>
+          </row>
+          <row>
             <entry>inventories_folder</entry>
             <entry>Where inventories are stored / retrieved, relative
               to "base_folder"</entry>

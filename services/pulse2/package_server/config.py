@@ -314,6 +314,8 @@ class P2PServerCP(pulse2.utils.Singleton):
             diskless_initrdcd = 'initrdcd'
             # diskless memtest tool
             diskless_memtest = 'memtest'
+            # diskless dban tool
+            diskless_dban = 'dban'
             # will contain computer-related materials
             computers_folder = 'computers'
             # will contain inventories
@@ -365,6 +367,8 @@ class P2PServerCP(pulse2.utils.Singleton):
                 diskless_initrdcd = self.cp.get("imaging_api", 'diskless_initrdcd')
             if self.cp.has_option("imaging_api", 'diskless_memtest'):
                 diskless_memtest = self.cp.get("imaging_api", 'diskless_memtest')
+            if self.cp.has_option("imaging_api", 'diskless_dban'):
+                diskless_dban = self.cp.get("imaging_api", 'diskless_dban')
             if self.cp.has_option('imaging_api', 'computers_folder'):
                 computers_folder = self.cp.get('imaging_api', 'computers_folder')
             if self.cp.has_option('imaging_api', 'inventories_folder'):
@@ -408,6 +412,7 @@ class P2PServerCP(pulse2.utils.Singleton):
                 'diskless_initrd'     : diskless_initrd,
                 'diskless_initrdcd'   : diskless_initrdcd,
                 'diskless_memtest'    : diskless_memtest,
+                'diskless_dban'       : diskless_dban,
                 'computers_folder'    : computers_folder,
                 'inventories_folder'  : inventories_folder,
                 'masters_folder'      : masters_folder,
