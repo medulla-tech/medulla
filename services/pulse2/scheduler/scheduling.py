@@ -65,6 +65,7 @@ from pulse2.consts import PULSE2_UNKNOWN_ERROR, PULSE2_UNPREEMPTABLE_STATES
 from pulse2.scheduler.config import SchedulerConfig
 from pulse2.scheduler.launchers_driving import callOnBestLauncher, callOnLauncher, getLaunchersBalance, probeClient
 import pulse2.scheduler.network
+import pulse2.scheduler.threads
 from pulse2.scheduler.assign_algo import MGAssignAlgoManager
 from pulse2.scheduler.checks import getCheck, getAnnounceCheck
 from pulse2.scheduler.launchers_driving import pingAndProbeClient
@@ -911,11 +912,17 @@ def preemptTasks(scheduler_name):
     if len(commands) :
         log.debug('scheduler "%s": PREEMPT/START: Starting preemption for %d commands' % (scheduler_name, len(commands)))
         for command in commands :
-            deffered = twisted.internet.defer.Deferred()
-            deffered.addCallback(pulse2.scheduler.scheduling.runCommand)
+            if SchedulerConfig().multithreading:
+                deffered = pulse2.scheduler.threads.runInThread(pulse2.scheduler.scheduling.runCommand, command)
+            else:
+                deffered = twisted.internet.defer.Deferred()
+                deffered.addCallback(pulse2.scheduler.scheduling.runCommand)
+
             deffered.addErrback(MscDatabase().antiPoolOverflowErrorback)
             deffered.addErrback(lambda reason: log.error('scheduler "%s": PREEMPT/START: While running command %s : %s'  % (SchedulerConfig().name, command, pulse2.utils.extractExceptionMessage(reason))))
-            deffered.callback(command)
+
+            if not SchedulerConfig().multithreading:
+                deffered.callback(command)
             deffereds.append(deffered)
 
     # deferred handling; consumeErrors set to prevent any unhandled exception
@@ -1184,6 +1191,7 @@ def runWOLPhase(myCommandOnHostID):
 
     # check for WOL condition in order to give up if needed
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+
     if myCoH == None:
         return runGiveUpPhase(myCommandOnHostID)
 
