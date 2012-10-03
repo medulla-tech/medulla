@@ -168,7 +168,13 @@ def awakeAnalyseCommands():
 
 def awakeStartCommands():
     logging.getLogger().info('scheduler "%s": START: Analysing database' % (SchedulerConfig().name))
+
     try:
+        commandsNumber = len(Pulse2Preempt().content)
+        if commandsNumber > SchedulerConfig().preempt_amount:
+            logging.getLogger().info('scheduler "%s": START: Before analysing database : %d commands are already in progress' % (SchedulerConfig().name, commandsNumber))
+            scheduleStartCommands()
+            return
         d = pulse2.scheduler.scheduling.startAllCommands(SchedulerConfig().name)
     except Exception, reason:
         logging.getLogger().error('scheduler "%s": START: Before analysing database : %s' % (SchedulerConfig().name, pulse2.utils.extractExceptionMessage(reason)))
