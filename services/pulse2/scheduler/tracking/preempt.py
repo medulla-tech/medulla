@@ -27,7 +27,7 @@
 # with a semaphore
 
 # logging stuff
-#MDV/NR import logging
+import logging
 
 # randomization
 import random
@@ -55,33 +55,30 @@ class Pulse2Preempt(pulse2.utils.Singleton):
             for k in elements:
                 if k not in self.content:
                     self.content.append(k)
-        finally:
-            self.__unlock()
-        #MDV/NR if len(elements):
-            #MDV/NR logging.getLogger().debug("PREEMPT : p(%s) = %d" % (elements, len(elements)))
+        except Exception, e:
+            logging.getLogger().error("PREEMPT : in put() : elements = %s, content = %s, error = %s" % (elements, self.content, e))
+        self.__unlock()
 
     def members(self):
         result = list()
         self.__lock()
         try:
             result = self.content
-        finally:
-            self.__unlock()
-        #MDV/NR if len(result):
-            #MDV/NR logging.getLogger().debug("PREEMPT : l(%s) = %d" % (result, len(result)))
+        except Exception, e:
+            logging.getLogger().error("PREEMPT : in members() : content = %s, error = %s" % (self.content, e))
+        self.__unlock()
         return result
 
     def get(self, number):
         result = list()
         self.__lock()
-        random.shuffle(self.content) # shuffle internal list
         try:
+            random.shuffle(self.content) # shuffle internal list
             i = min(number, len(self.content))
             result = self.content[:i] # will return the i (0 to i not included) first elements
             self.content = self.content[i:] # and keep the remaining
-        finally:
-            self.__unlock()
-        #MDV/NR if len(result):
-            #MDV/NR logging.getLogger().debug("PREEMPT : g(%s) = %d" % (result, len(result)))
+        except Exception, e:
+            logging.getLogger().error("PREEMPT : in get() : number = %s, content = %s, error = %s" % (number, self.content, e))
+        self.__unlock()
         return result
 
