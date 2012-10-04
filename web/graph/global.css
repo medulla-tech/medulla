@@ -1102,19 +1102,22 @@ td.userName {
     background-repeat: no-repeat;
 }
 
+td a,
 td.machineName a,
 td.userName a {
     color: #666;
     font-weight: bold;
     text-decoration: none;
 }
-td.machineName a,
+td a:link,
+td.machineName a:link,
 td.userName a:link {
     color: #666;
     font-weight: bold;
     text-decoration: none;
 }
-td.machineName a,
+td a:visited,
+td.machineName a:visited,
 td.userName a:visited {
     color: #666;
     font-weight: bold;
