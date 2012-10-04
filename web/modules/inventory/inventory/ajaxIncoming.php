@@ -61,6 +61,8 @@ $machines = array();
 $inventories = array();
 // Create an array with the "new_machine" booleans
 $new_machines = array();
+// Create an array with $params needed for cliquable first column
+$params = array();
 
 foreach($incoming as $inc) {
     $machines[] = $inc[0];
@@ -68,6 +70,8 @@ foreach($incoming as $inc) {
     $inventories[] = _toDate($inc[1]);
 
     $new_machines[] = $inc[2];
+
+    $params[] = array('hostname'=>$inc[0], 'uuid'=>$inc[3]);
 }
 
 // Create the listinfos widget, the first column is the machine name
@@ -76,6 +80,10 @@ $l = new OptimizedListInfos($machines, _T("Computer name"));
 $l->addExtraInfo($inventories, _T("Inventory date"));
 // Add the third column, which is the boolean "new_machine"
 $l->addExtraInfo($new_machines, _T("New computer"));
+// Add actions item, to make first column cliquable
+$l->addActionItem(new ActionItem(_T("View", "inventory"),"invtabs","display","inventory", "base", "computers"));
+$l->addActionItem(new ActionPopupItem(_T("Informations", "inventory"),"infos","info","inventory", "inventory", "inventory"));
+$l->setParamInfo($params);
 // Navbar for an Ajax widget
 $l->setItemCount($count);
 $l->setNavBar(new AjaxNavBar($count, $filter));

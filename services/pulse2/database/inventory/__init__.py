@@ -1428,9 +1428,9 @@ class Inventory(DyngroupDatabaseHelper):
             timestamp = datetime.datetime.combine(res[0].Date, res[0].Time)
             if only_new :
                 if newMachine :
-                    ret.append((res[1].Name, timestamp, newMachine))
+                    ret.append((res[1].Name, timestamp, newMachine, toUUID(res[1].id)))
             else :
-                ret.append((res[1].Name, timestamp, newMachine))
+                ret.append((res[1].Name, timestamp, newMachine, toUUID(res[1].id)))
 
         session.close()
         return ret
