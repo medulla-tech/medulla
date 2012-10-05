@@ -66,19 +66,19 @@ function return_icon($state)
 {
     switch($state) {
         case "TODO":
-            return "led_circle_grey.png";
+            return "todo.png";
             break;
         case "IGNORED":
-            return "led_circle_black.png";
+            return "ignored.gif";
             break;
         case "DONE":
-            return "led_circle_green.png";
+            return "success.png";
             break;
         case "FAILED":
-            return "led_circle_red.png";
+            return "failed.png";
             break;
         case "WORK_IN_PROGRESS":
-            return "led_circle_orange.png";
+            return "inprogress.gif";
             break;
     }
 }
