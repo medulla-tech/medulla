@@ -26,6 +26,8 @@ SET NAMES 'utf8';
 INSERT INTO Internationalization (id, fk_language, label) VALUES (23, 2, "Effacement de disque sécurisé");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (24, 2, "Efface un disque de manière sécurisée en écrivant des nombres pseudoaléatoire");
 INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (6, "Disk Wipe and Data Clearing", "Securely erase disk by overwriting data with pseudorandom numbers", 23, 24, "kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_DBAN## root=/dev/ram0 init=rc nuke=\"dwipe\"");
+UPDATE PostInstallScript SET default_name = "Deploy Pulse Agents", default_desc = "Deploy Pulse agents (SSH, OCS, VNC)" WHERE default_name LIKE "Agent Pack";
+UPDATE Internationalization SET label = "Déployer les agents Pulse (SSH, OCS, VNC)" WHERE id = 20;
 
 UPDATE version set Number = 3;
 

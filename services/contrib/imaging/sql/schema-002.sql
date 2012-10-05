@@ -27,7 +27,7 @@ DELETE FROM PostInstallScript WHERE default_name LIKE "NTFS Resize";
 UPDATE PostInstallScript SET value = "MountSystem\n\ndate | unix2dos >> /mnt/date.txt\n" WHERE default_name LIKE "Date";
 UPDATE PostInstallScript SET value = "MountSystem\nCopySysprepInf /revoinfo/sysprep.inf\n" WHERE default_name LIKE "Sysprep";
 UPDATE PostInstallScript SET value = "MountSystem\nChangeSIDAndName" WHERE default_name LIKE "SID";
-UPDATE PostInstallScript SET value = "DeployAgents" WHERE default_name = "Agent Pack";
+UPDATE PostInstallScript SET value = "DeployAgents" WHERE default_name LIKE "Agent Pack";
 UPDATE PostInstallScript SET default_desc = "The first partition will be extend across the whole disk" WHERE default_name LIKE "Partition extension";
 UPDATE PostInstallScript SET default_desc = "Install the Pulse 2 Agent Pack (VNC, OpenSSH, OCS Inventory and the SSH key)" WHERE default_desc LIKE "Install the Pulse 2 Agent Pack (VNC, OpenSSH, OCS Inventory and the SSH key).";
 UPDATE Internationalization SET label = "La première partition sera étendue à l'intégralité du disque dur" WHERE id = 18;
