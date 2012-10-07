@@ -2275,7 +2275,12 @@ class ImagingRpcProxy(RpcProxyI):
         if uuid in locations:
             entity = locations[uuid]
         if entity:
-            entity_name = entity['Label']
+            if entity.has_key['Label'] :
+                entity_name = entity['Label']
+            # TODO - temporary GLPI hack
+            elif entity.has_key['completename'] :
+                entity_name = entity['completename']
+            
 
         return [True, {'uuid': uuid, 'mac': mac, 'shortname': db_computer_name, 'fqdn': db_computer_name, 'entity': entity_name}]
 
