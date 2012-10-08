@@ -2275,10 +2275,10 @@ class ImagingRpcProxy(RpcProxyI):
         if uuid in locations:
             entity = locations[uuid]
         if entity:
-            if entity.has_key['Label'] :
+            if entity.has_key('Label') :
                 entity_name = entity['Label']
             # TODO - temporary GLPI hack
-            elif entity.has_key['completename'] :
+            elif entity.has_key('completename') :
                 entity_name = entity['completename']
             
 
