@@ -35,7 +35,7 @@ from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHe
 from pulse2.database.imaging.types import P2ISS, P2IT, P2IM, P2IIK, P2ERR, P2ILL
 from pulse2.database import database_helper
 
-from sqlalchemy import create_engine, ForeignKey, Integer, MetaData, Table, Column, and_, or_, not_, desc, func
+from sqlalchemy import create_engine, ForeignKey, Integer, MetaData, Table, Column, and_, or_, not_, desc, func, distinct
 from sqlalchemy.orm import create_session, mapper, relation
 from sqlalchemy.sql.expression import alias as sa_exp_alias
 from sqlalchemy.exc import InvalidRequestError
@@ -632,7 +632,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         for bs, mi in list_of_both:
             if mi != None:
                 temporary[bs.id] = mi
-        for bs, bs_id, name_i18n, desc_i18n in list_of_bs:
+        # used_bs_id = ID of BootService if this BootService is used
+        for bs, bs_id, used_bs_id, name_i18n, desc_i18n in list_of_bs:
             if name_i18n != None:
                 setattr(bs, 'default_name', name_i18n.label)
             if desc_i18n != None:
@@ -644,6 +645,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 if desc_i18n != None:
                     setattr(mi, 'default_desc', desc_i18n.label)
                 setattr(bs, 'menu_item', mi)
+            setattr(bs, 'used_bs_id', used_bs_id)
             ret.append(bs)
         return ret
 
@@ -930,12 +932,13 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         I18n2 = sa_exp_alias(self.internationalization)
 
         # If count is set to True, Using of func.count()
-        q = count and session.query(func.count('*'), BootService) or session.query(BootService)
+        q = count and session.query(func.count(distinct(self.boot_service.c.id)), BootService) or session.query(BootService)
 
-        q = q.add_column(self.boot_service.c.id).add_entity(Internationalization, alias=I18n1).add_entity(Internationalization, alias=I18n2)
+        q = q.add_column(self.boot_service.c.id).add_column(self.boot_service_in_menu.c.fk_bootservice).add_entity(Internationalization, alias=I18n1).add_entity(Internationalization, alias=I18n2)
         q = q.select_from(self.boot_service \
                 .outerjoin(self.boot_service_on_imaging_server, self.boot_service.c.id == self.boot_service_on_imaging_server.c.fk_boot_service) \
                 .outerjoin(self.imaging_server, self.imaging_server.c.id == self.boot_service_on_imaging_server.c.fk_imaging_server) \
+                .outerjoin(self.boot_service_in_menu, self.boot_service_in_menu.c.fk_bootservice == self.boot_service.c.id) \
                 .outerjoin(I18n1, and_(self.boot_service.c.fk_name == I18n1.c.id, I18n1.c.fk_language == lang)) \
                 .outerjoin(I18n2, and_(self.boot_service.c.fk_desc == I18n2.c.id, I18n2.c.fk_language == lang)) \
                 .outerjoin(self.entity).outerjoin(self.target))
@@ -960,12 +963,13 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         I18n2 = sa_exp_alias(self.internationalization)
 
         # If count is set to True, Using of func.count()
-        q = count and session.query(func.count('*'), BootService) or session.query(BootService)
+        q = count and session.query(func.count(distinct(self.boot_service.c.id)), BootService) or session.query(BootService)
 
-        q = q.add_column(self.boot_service.c.id).add_entity(Internationalization, alias=I18n1).add_entity(Internationalization, alias=I18n2)
+        q = q.add_column(self.boot_service.c.id).add_column(self.boot_service_in_menu.c.fk_bootservice).add_entity(Internationalization, alias=I18n1).add_entity(Internationalization, alias=I18n2)
         q = q.select_from(self.boot_service \
                 .outerjoin(self.boot_service_on_imaging_server, self.boot_service.c.id == self.boot_service_on_imaging_server.c.fk_boot_service) \
                 .outerjoin(self.imaging_server, self.imaging_server.c.id == self.boot_service_on_imaging_server.c.fk_imaging_server) \
+                .outerjoin(self.boot_service_in_menu, self.boot_service_in_menu.c.fk_bootservice == self.boot_service.c.id) \
                 .outerjoin(I18n1, and_(self.boot_service.c.fk_name == I18n1.c.id, I18n1.c.fk_language == lang)) \
                 .outerjoin(I18n2, and_(self.boot_service.c.fk_desc == I18n2.c.id, I18n2.c.fk_language == lang)) \
                 .outerjoin(self.entity))
@@ -973,8 +977,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if filter != '':
             q = q.filter(or_(self.boot_service.c.default_desc.like('%'+filter+'%'), self.boot_service.c.value.like('%'+filter+'%')))
 
+        self.logger.error(q)
         # If count is set to True, Count...
         if count: q = q.scalar()
+        self.logger.error(q)
 
         return q
 
@@ -1067,6 +1073,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             q1 = q1.offset(int(start)).limit(int(end)-int(start))
         else:
             q1 = q1.all()
+        self.logger.warn(q1)
         bs_ids = map(lambda bs:bs[1], q1)
         q2 = self.__PossibleBootServiceAndMenuItem(session, bs_ids, menu.id)
         session.close()
@@ -4037,7 +4044,8 @@ class DBObject(database_helper.DBObject):
         return ret
 
 class BootService(DBObject):
-    to_be_exported = ['id', 'value', 'default_desc', 'uri', 'is_local', 'default_name']
+    # used_bs_id = ID of BootService if this BootService is used
+    to_be_exported = ['id', 'value', 'default_desc', 'uri', 'is_local', 'default_name', 'used_bs_id']
     need_iteration = ['menu_item']
     i18n = ['fk_name', 'fk_desc']
 

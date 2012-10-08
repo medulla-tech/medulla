@@ -80,3 +80,24 @@ table.listinfos img {
 #container_status {
     padding-top: 15px;
 }
+
+li.removebootmenu a {
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("img/common/button_cancel.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: white;
+}
+li.showbootmenu a {
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("img/common/info.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: white;
+}

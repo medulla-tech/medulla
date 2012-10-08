@@ -72,6 +72,12 @@ $submod->addPage($page);
 $page = new Page("service_add",_T("Add service","imaging"));
 $page->setOptions(array("noHeader" => True, "visible" => False));
 $submod->addPage($page);
+$page = new Page("service_remove",_T("Remove service","imaging"));
+$page->setOptions(array("noHeader" => True, "visible" => False));
+$submod->addPage($page);
+$page = new Page("service_show_used",_T("Show used services","imaging"));
+$page->setOptions(array("noHeader" => True, "visible" => False));
+$submod->addPage($page);
 
 $page = new Page("bootmenu",_T("Default boot menu","imaging"));
 $submod->addPage($page);

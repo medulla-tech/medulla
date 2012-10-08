@@ -35,31 +35,32 @@ if (isset($_POST["bconfirm"])) {
     $item_uuid = $_POST['itemid'];
     $label = urldecode($_POST['itemlabel']);
 
-    $ret = xmlrpc_delServiceToLocation($item_uuid, $location, $params);
+    print_r($_POST);
+    $ret = xmlrpc_removeServiceToLocation($item_uuid, $location, $params);
 
-    // goto images list 
-    if ($ret[0] and !isXMLRPCError()) {
-        $str = sprintf(_T("Service <strong>%s</strong> removed from default boot menu", "imaging"), $label);
-        new NotifyWidgetSuccess($str);
-         
-        // Synchronize boot menu
-        $ret = xmlrpc_synchroLocation($location);
-        if (isXMLRPCError()) {
-            new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for package server: %s", "imaging"), implode(', ', $ret[1])));
-        }
-        header("Location: " . urlStrRedirect("imaging/manage/service", $params));
-    } elseif ($ret[0]) {
-        header("Location: " . urlStrRedirect("imaging/manage/service", $params));
-    } else {
-        new NotifyWidgetFailure($ret[1]);
-    }
+    #// goto images list 
+    #if ($ret[0] and !isXMLRPCError()) {
+    #    $str = sprintf(_T("Service <strong>%s</strong> removed from default boot menu", "imaging"), $label);
+    #    new NotifyWidgetSuccess($str);
+    #     
+    #    // Synchronize boot menu
+    #    $ret = xmlrpc_synchroLocation($location);
+    #    if (isXMLRPCError()) {
+    #        new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for package server: %s", "imaging"), implode(', ', $ret[1])));
+    #    }
+    #    header("Location: " . urlStrRedirect("imaging/manage/service", $params));
+    #} elseif ($ret[0]) {
+    #    header("Location: " . urlStrRedirect("imaging/manage/service", $params));
+    #} else {
+    #    new NotifyWidgetFailure($ret[1]);
+    #}
 }
 
 $params = getParams();
 $item_uuid = $_GET['itemid'];
 $label = urldecode($_GET['itemlabel']);
 
-$f = new PopupForm(sprintf(_T("Remove the boot service <b>%s</b> from the default boot menu", "imaging"), $label));
+$f = new PopupForm(sprintf(_T("Are you sure you want delete <b>%s</b> Boot Service ?", "imaging"), $label));
 
 $f->push(new Table());
 

@@ -59,7 +59,7 @@ $params = getParams();
 $item_uuid = $_GET['itemid'];
 $label = urldecode($_GET['itemlabel']);
 
-$f = new PopupForm(sprintf(_T("Remove the boot service <b>%s</b> from the default boot menu", "imaging"), $label));
+$f = new PopupForm(sprintf(_T("Show all targets that use <b>%s</b> as a Boot Service", "imaging"), $label));
 
 $f->push(new Table());
 
