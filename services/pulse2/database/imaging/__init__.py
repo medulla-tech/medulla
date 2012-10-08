@@ -44,7 +44,7 @@ from sqlalchemy.exc import InvalidRequestError
 from pulse2.managers.profile import ComputerProfileManager
 from pulse2.managers.location import ComputerLocationManager
 
-DATABASEVERSION = 3
+DATABASEVERSION = 4
 
 class ImagingException(Exception):
     pass
@@ -980,28 +980,37 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def createBootServiceFromPostInstall(self, script_id):
         session = create_session()
-        res = session.query(PostInstallScript).filter(self.post_install_script.c.id == uuid2id(script_id)).first()
+
+        ## Check if Boot service already exists
+        if session.query(PostInstallScript).filter(and_(self.post_install_script.c.id == uuid2id(script_id), self.post_install_script.c.fk_boot_service != None)).first():
+            session.logger.warn("A boot service with this name already exists")
+            session.close()
+            return False
+
+        # Get PostInstallScript according to script_id
+        pis = session.query(PostInstallScript).filter(self.post_install_script.c.id == uuid2id(script_id)).first()
 
         bs = BootService()
-        bs.default_name = res.default_name
-        bs.default_desc = res.default_desc
-        bs.fk_name = res.fk_name
-        bs.fk_desc = res.fk_desc
+        bs.default_name = pis.default_name
+        bs.default_desc = pis.default_desc
+        bs.fk_name = pis.fk_name
+        bs.fk_desc = pis.fk_desc
 
         script_name = script_id + ".sh"
         bs.value = ("kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## revooptdir=##PULSE2_POSTINST_DIR## revobase=##PULSE2_BASE_DIR## revopost revomac=##MAC## revopostscript=%s \ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##") % script_name
 
-        ## Check if Boot service already exists
-        if session.query(BootService).filter(self.boot_service.c.default_name == bs.default_name).all():
-            session.logger.warn("A boot service with this name already exists")
-            return False
-
         session.add(bs)
         session.flush()
 
+        # Update PostInstallScript and associate it with New BootService Created
+        pis.fk_boot_service = bs.id
+        session.flush()
+
+        session.close()
+
         return [
-            script_name, 
-            res.value, {
+            script_name,
+            pis.value, {
                 'name': bs.default_name,
                 'desc': bs.default_desc,
                 'value': bs.value,
@@ -4094,8 +4103,9 @@ class Partition(DBObject):
     to_be_exported = ['id', 'filesystem', 'size', 'fk_image']
 
 class PostInstallScript(DBObject):
-    to_be_exported = ['id', 'default_name', 'value', 'default_desc', 'is_local', 'order']
+    to_be_exported = ['id', 'default_name', 'value', 'default_desc', 'is_local', 'order', 'fk_boot_service']
     i18n = ['fk_name', 'fk_desc']
+
 
 class PostInstallScriptInImage(DBObject):
     to_be_exported = ['order']

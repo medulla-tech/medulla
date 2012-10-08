@@ -48,24 +48,32 @@ $filter = empty($_GET["filter"])                          ? ''             : $_G
 
 list($count, $scripts) = xmlrpc_getAllPostInstallScripts($location, $start, $end, $filter);
 
+$createAction = new ActionItem(_T("Create Boot Service", "imaging"), "postinstall_create_boot_service", "createbootservice", "image", "imaging", "manage");
 $editAction = new ActionItem(_T("Edit script", "imaging"), "postinstall_edit", "edit", "image", "imaging", "manage");
 $deleteAction = new ActionPopupItem(_T("Delete", "imaging"), "postinstall_delete", "delete", "image", "imaging", "manage");
 $emptyAction = new EmptyActionItem();
 
+$a_create = array();
 $a_edit = array();
 $a_delete = array();
 $a_label = array();
 $a_desc = array();
 foreach($scripts as $script) {
 
-    if ($script['is_local']) {
+    if ($script['is_local']) { // 'is_local' is a duplicated PostInstallScript
         $url = '<img src="modules/imaging/graph/images/postinst-action.png" style="vertical-align: middle" /> ';
         $a_edit[] = $editAction;
         $a_delete[] = $deleteAction;
+        // Don't display "Create Boot Service" icon if a Boot Service already created
+        // from this PostInstall entry
+        $a_create[] = ($script['fk_boot_service']) ? $emptyAction : $createAction;
     } else {
         $url = '<img src="modules/imaging/graph/images/postinst-action-ro.png" style="vertical-align: middle" /> ';
         $a_edit[] = $emptyAction;
         $a_delete[] = $emptyAction;
+        // Don't display "Create Boot Service" icon if a Boot Service already created
+        // from this PostInstall entry
+        $a_create[] = ($script['fk_boot_service']) ? $emptyAction : $createAction;
     }
     $a_label[]= sprintf("%s%s", $url, $script['default_name']);
     $a_desc[] = $script["default_desc"];
@@ -81,10 +89,7 @@ $l = new OptimizedListInfos($a_label, _T("Name", "imaging"));
 $l->addExtraInfo($a_desc, _T("Description", "imaging"));
 $l->setParamInfo($list_params);
 $l->addActionItemArray($a_edit);
-$l->addActionItem(
-    new ActionItem(_T("Create Boot Service", "imaging"),
-    "postinstall_create_boot_service", "createbootservice", "image", "imaging", "manage")
-);
+$l->addActionItem($a_create);
 $l->addActionItem(
     new ActionItem(_T("Duplicate", "imaging"),
     "postinstall_duplicate", "duplicatescript", "image", "imaging", "manage")

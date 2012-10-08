@@ -25,4 +25,5 @@ dist_sql_SCRIPTS = install.sh
 dist_sql_DATA = README \
 	schema-001.sql \
 	schema-002.sql \
-	schema-003.sql
+	schema-003.sql \
+	schema-004.sql
