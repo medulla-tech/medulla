@@ -1001,14 +1001,22 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         bs.fk_name = pis.fk_name
         bs.fk_desc = pis.fk_desc
 
-        script_name = script_id + ".sh"
-        bs.value = ("kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## revooptdir=##PULSE2_POSTINST_DIR## revobase=##PULSE2_BASE_DIR## revopost revomac=##MAC## revopostscript=%s \ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##") % script_name
+        # bs.value cannot by null, we need script_name based on bs.id who doesn't still exist
+        # so fill with a dummy value
+        bs.value = "Dummy"
 
         session.add(bs)
         session.flush()
 
+        # We give bs id to script_name
+        script_name = toUUID(bs.id) + ".sh"
+
         # Update PostInstallScript and associate it with New BootService Created
         pis.fk_boot_service = bs.id
+
+        # We have script_name, so give correct value for bs.value
+        bs.value = ("kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## revooptdir=##PULSE2_POSTINST_DIR## revobase=##PULSE2_BASE_DIR## revopost revomac=##MAC## revopostscript=%s \ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##") % script_name
+
         session.flush()
 
         session.close()
@@ -1314,15 +1322,17 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         # Update PostInstallScript table and remove fk link to BootService table
         pis = session.query(PostInstallScript).filter(self.post_install_script.c.fk_boot_service == uuid2id(bs_uuid)).first()
-        pis.fk_boot_service = None
-        session.flush()
+        # pis can be None if pis was deleted
+        if pis:
+            pis.fk_boot_service = None
+            session.flush()
 
         bs = session.query(BootService).filter(self.boot_service.c.id == uuid2id(bs_uuid)).first()
         session.delete(bs)
         session.flush()
 
         session.close()
-        return [toUUID(pis.id), {
+        return [toUUID(bs.id), {
                 'name': bs.default_name,
                 'desc': bs.default_desc,
                 'value': bs.value,
