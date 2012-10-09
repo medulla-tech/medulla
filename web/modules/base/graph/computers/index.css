@@ -86,6 +86,28 @@ li.imaging a {
         color: #FFF;
 }
 
+li.addbootmenu a {
+    background-image:url("modules/imaging/graph/images/imaging-add.png");
+    background-position:left top;
+    background-repeat:no-repeat;
+    color:#FFFFFF;
+    line-height:18px;
+    margin:0 0;
+    padding: 4px 3px 5px 20px;
+    text-decoration:none;
+}
+
+li.delbootmenu a {
+    background-image:url("modules/imaging/graph/images/imaging-del.png");
+    background-position:left top;
+    background-repeat:no-repeat;
+    color:#FFFFFF;
+    line-height:18px;
+    margin:0 0;
+    padding: 4px 3px 5px 20px;
+    text-decoration:none;
+}
+
 .LOG_EMERG {
   color: red;
 }
