@@ -34,6 +34,7 @@ from pulse2.utils import isUUID
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 from pulse2.database.imaging.types import P2ISS, P2IT, P2IM, P2IIK, P2ERR, P2ILL
 from pulse2.database import database_helper
+from pulse2.database.utilities import toUUID
 
 from sqlalchemy import create_engine, ForeignKey, Integer, MetaData, Table, Column, and_, or_, not_, desc, func, distinct
 from sqlalchemy.orm import create_session, mapper, relation
@@ -977,10 +978,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if filter != '':
             q = q.filter(or_(self.boot_service.c.default_desc.like('%'+filter+'%'), self.boot_service.c.value.like('%'+filter+'%')))
 
-        self.logger.error(q)
         # If count is set to True, Count...
         if count: q = q.scalar()
-        self.logger.error(q)
 
         return q
 
@@ -1073,7 +1072,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             q1 = q1.offset(int(start)).limit(int(end)-int(start))
         else:
             q1 = q1.all()
-        self.logger.warn(q1)
         bs_ids = map(lambda bs:bs[1], q1)
         q2 = self.__PossibleBootServiceAndMenuItem(session, bs_ids, menu.id)
         session.close()
@@ -1309,6 +1307,26 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         ret = self.__editService(session, bs_uuid, menu, mi, params)
         session.close()
         return ret
+
+    def removeService(self, bs_uuid, loc_id, params):
+        self.logger.warn("Call to removeService")
+        session = create_session()
+
+        # Update PostInstallScript table and remove fk link to BootService table
+        pis = session.query(PostInstallScript).filter(self.post_install_script.c.fk_boot_service == uuid2id(bs_uuid)).first()
+        pis.fk_boot_service = None
+        session.flush()
+
+        bs = session.query(BootService).filter(self.boot_service.c.id == uuid2id(bs_uuid)).first()
+        session.delete(bs)
+        session.flush()
+
+        session.close()
+        return [toUUID(pis.id), {
+                'name': bs.default_name,
+                'desc': bs.default_desc,
+                'value': bs.value,
+            }]
 
     def __getMenuItemByUUID(self, session, mi_uuid):
         return session.query(MenuItem).filter(self.menu_item.c.id == uuid2id(mi_uuid)).first()

@@ -849,3 +849,14 @@ class ImagingApi(MyXmlrpc):
             ret = False
 
         return ret
+
+    def xmlrpc_bsUnlinkShFile(self, datas):
+        ret = True
+        try:
+            entry = datas.pop()
+            ImagingBootServiceItem(entry).unlinkShFile(datas)
+        except Exception, e:
+            self.logger.error('Error while deleting sh file: %s' % e)
+            ret = False
+
+        return ret

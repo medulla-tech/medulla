@@ -600,6 +600,26 @@ class ImagingBootServiceItem(ImagingItem):
 
         return True
 
+    def unlinkShFile(self, bs_uuid):
+        """
+        Delete sh file created by post-install script
+        """
+        script_file = bs_uuid[0] + ".sh"
+
+        config = PackageServerConfig()
+        postinst_scripts_folder = os.path.join(config.imaging_api['base_folder'],
+                                config.imaging_api['postinst_folder'],
+                                'scripts')
+        if not os.path.exists(postinst_scripts_folder):
+            self.logger.exception("Error while delete sh file: Post-install script folder %s doesn't exists", postinst_scripts_folder)
+            raise Exception ("Post-install script folder %s doesn't exists", postinst_scripts_folder)
+
+        try:
+            os.unlink(os.path.join(postinst_scripts_folder, script_file))
+        except Exception, e:
+            self.logger.exception("Error while delete sh file: %s", e)
+
+
 class ImagingImageItem(ImagingItem):
 
     """

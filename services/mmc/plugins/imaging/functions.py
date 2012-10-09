@@ -971,6 +971,24 @@ class ImagingRpcProxy(RpcProxyI):
         except Exception, e:
             return xmlrpcCleanup([False, e])
 
+    def removeService(self, bs_uuid, location_id, params):
+        """ Remove / Delete a service (generally created by a post-imaging script) """
+        db = ImagingDatabase()
+        try:
+            # Remove BootService in DB
+            db.setLocationSynchroState(location_id, P2ISS.TODO)
+            ret = ImagingDatabase().removeService(bs_uuid, location_id, params)
+            if ret:
+                # Delete .sh file
+                url = chooseImagingApiUrl(location_id)
+                i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
+                i.bsUnlinkShFile(ret)
+            else:
+                raise Exception("Error while removing boot service")
+            return xmlrpcCleanup([True, None])
+        except Exception, e:
+            return xmlrpcCleanup([False, e])
+
     ###### MENU ITEMS
     def getMenuItemByUUID(self, bs_uuid):
         """
@@ -2009,8 +2027,8 @@ class ImagingRpcProxy(RpcProxyI):
             db = ImagingDatabase()
             script_file = db.createBootServiceFromPostInstall(script_id)
             if not script_file:
-                raise TypeError("Boot service already exists")
-            
+                raise Exception("Boot service already exists")
+
             # Create .sh file
             url = chooseImagingApiUrl(loc_id)
             i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....

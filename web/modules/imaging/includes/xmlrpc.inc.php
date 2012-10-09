@@ -262,6 +262,9 @@ function xmlrpc_editServiceToLocation($item_uuid, $location_id, $params) {
     return xmlCall("imaging.editServiceToLocation", array($item_uuid, $location_id, $params));
 }
 
+function xmlrpc_removeService($item_uuid, $location_id, $params) {
+    return xmlCall("imaging.removeService", array($item_uuid, $location_id, $params));
+}
 
 
 /* Logs */
