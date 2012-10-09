@@ -81,6 +81,29 @@ table.listinfos img {
     padding-top: 15px;
 }
 
+
+li.addbootmenu a {
+    background-image:url("modules/imaging/graph/images/imaging-add.png");
+    background-position:left top;
+    background-repeat:no-repeat;
+    color:#FFFFFF;
+    line-height:18px;
+    margin:0 0;
+    padding: 4px 3px 5px 20px;
+    text-decoration:none;
+}
+
+li.delbootmenu a {
+    background-image:url("modules/imaging/graph/images/imaging-del.png");
+    background-position:left top;
+    background-repeat:no-repeat;
+    color:#FFFFFF;
+    line-height:18px;
+    margin:0 0;
+    padding: 4px 3px 5px 20px;
+    text-decoration:none;
+}
+
 li.removebootmenu a {
     padding: 3px 0px 5px 20px;
     margin: 0 0px 0 0px;
@@ -91,6 +114,7 @@ li.removebootmenu a {
     text-decoration: none;
     color: white;
 }
+
 li.showbootmenu a {
     padding: 3px 0px 5px 20px;
     margin: 0 0px 0 0px;
@@ -100,4 +124,37 @@ li.showbootmenu a {
     line-height: 18px;
     text-decoration: none;
     color: white;
+}
+
+li.duplicatescript a {
+    background-image:url("modules/imaging/graph/images/imaging-postinstall-duplicate.png");
+    background-position:left top;
+    background-repeat:no-repeat;
+    color:#FFFFFF;
+    line-height:18px;
+    margin:0 0;
+    padding:3px 0 5px 20px;
+    text-decoration:none;
+}
+
+li.createbootservice a {
+    background-image:url("modules/imaging/graph/images/service-action.png");
+    background-position:left top;
+    background-repeat:no-repeat;
+    color:#FFFFFF;
+    line-height:18px;
+    margin:0 0;
+    padding:3px 0 5px 20px;
+    text-decoration:none;
+}
+
+li.bootserviceexists a {
+    background-image:url("modules/imaging/graph/images/service-action-ro.png");
+    background-position:left top;
+    background-repeat:no-repeat;
+    color:#FFFFFF;
+    line-height:18px;
+    margin:0 0;
+    padding:3px 0 5px 20px;
+    text-decoration:none;
 }
