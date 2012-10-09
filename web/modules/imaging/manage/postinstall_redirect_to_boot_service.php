@@ -23,5 +23,30 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-header("Location: " . urlStrRedirect("imaging/manage/service"));
+require_once('modules/imaging/includes/includes.php');
+require_once('modules/imaging/includes/xmlrpc.inc.php');
+
+if (isset($_POST["bconfirm"])) {
+    header("Location: " . urlStrRedirect("imaging/manage/service"));
+}
+
+$params = getParams();
+$item_uuid = $_GET['itemid'];
+$label = urldecode($_GET['itemlabel']);
+
+$f = new PopupForm(sprintf(_T("<b>%s</b> was already added to Boot Services", "imaging"), $label));
+
+$f->push(new Table());
+
+// form preseeding
+$f->add(new HiddenTpl("location"),                      array("value" => $location,                      "hide" => True));
+$f->add(new HiddenTpl("itemlabel"),                     array("value" => $label,                         "hide" => True));
+$f->add(new HiddenTpl("itemid"),                        array("value" => $item_uuid,                     "hide" => True));
+$f->add(new HiddenTpl("default_mi_label"),              array("value" => $label,                         "hide" => True));
+
+// TODO: Add a validate button to redirect to boot services page ?
+//$f->addValidateButton("bconfirm");
+//$f->addCancelButton("bback");
+$f->display();
+
 ?>

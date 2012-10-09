@@ -48,10 +48,10 @@ $filter = empty($_GET["filter"])                          ? ''             : $_G
 
 list($count, $scripts) = xmlrpc_getAllPostInstallScripts($location, $start, $end, $filter);
 
-$createAction = new ActionItem(_T("Create Boot Service", "imaging"), "postinstall_create_boot_service", "createbootservice", "image", "imaging", "manage");
+$createAction = new ActionPopupItem(_T("Create Boot Service", "imaging"), "postinstall_create_boot_service", "createbootservice", "image", "imaging", "manage");
 $editAction = new ActionItem(_T("Edit script", "imaging"), "postinstall_edit", "edit", "image", "imaging", "manage");
 $deleteAction = new ActionPopupItem(_T("Delete", "imaging"), "postinstall_delete", "delete", "image", "imaging", "manage");
-$bsCreatedAction = new ActionItem(_T("Boot Service already created", "imaging"), "postinstall_redirect_to_boot_service", "bootserviceexists", "image", "imaging", "manage");
+$bsCreatedAction = new ActionPopupItem(_T("Boot Service already created", "imaging"), "postinstall_redirect_to_boot_service", "bootserviceexists", "image", "imaging", "manage");
 $emptyAction = new EmptyActionItem();
 
 $a_create = array();

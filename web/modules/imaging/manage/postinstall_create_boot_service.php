@@ -23,34 +23,44 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require("localSidebar.php");
-require("graph/navbar.inc.php");
 require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
 
+if (isset($_POST["bconfirm"])) {
+    // id of the script
+    $script_id = $_POST['itemid'];
+    $location = getCurrentLocation();
+    $ret = xmlrpc_createBootServiceFromPostInstall($script_id, $location);
 
-// create page
-$p = new PageGenerator(_T($title, "imaging"));
-$sidemenu->setBackgroundImage("modules/imaging/graph/images/section_large.png");
-$sidemenu->forceActiveItem("postinstall");
-$p->setSideMenu($sidemenu);
-$p->display();
-
-// id of the script
-$script_id = $_GET['itemid'];
-$location = getCurrentLocation();
-$ret = xmlrpc_createBootServiceFromPostInstall($script_id, $location);
-
-$ret = (is_array($ret)) ? $ret[0] : $ret;
-if ($ret) {
-    $str = sprintf(_T("Boot service successfully created", "imaging"));
-    new NotifyWidgetSuccess($str);
-    header("Location: " . urlStrRedirect("imaging/manage/service"));
+    $ret = (is_array($ret)) ? $ret[0] : $ret;
+    if ($ret) {
+        $str = sprintf(_T("Boot service successfully created", "imaging"));
+        new NotifyWidgetSuccess($str);
+        header("Location: " . urlStrRedirect("imaging/manage/service"));
+    }
+    else {
+        $str = sprintf(_T("Error while creating Boot Service", "imaging"));
+        new NotifyWidgetFailure($str);
+        header("Location: " . urlStrRedirect("imaging/manage/postinstall"));
+    }
 }
-else {
-    $str = sprintf(_T("Error while creating Boot Service", "imaging"));
-    new NotifyWidgetFailure($str);
-    header("Location: " . urlStrRedirect("imaging/manage/postinstall"));
-}
+
+$params = getParams();
+$item_uuid = $_GET['itemid'];
+$label = urldecode($_GET['itemlabel']);
+
+$f = new PopupForm(sprintf(_T("Add <b>%s</b> to available Boot Services ?", "imaging"), $label));
+
+$f->push(new Table());
+
+// form preseeding
+$f->add(new HiddenTpl("location"),                      array("value" => $location,                      "hide" => True));
+$f->add(new HiddenTpl("itemlabel"),                     array("value" => $label,                         "hide" => True));
+$f->add(new HiddenTpl("itemid"),                        array("value" => $item_uuid,                     "hide" => True));
+$f->add(new HiddenTpl("default_mi_label"),              array("value" => $label,                         "hide" => True));
+
+$f->addValidateButton("bconfirm");
+$f->addCancelButton("bback");
+$f->display();
 
 ?>
