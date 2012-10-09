@@ -51,6 +51,7 @@ list($count, $scripts) = xmlrpc_getAllPostInstallScripts($location, $start, $end
 $createAction = new ActionItem(_T("Create Boot Service", "imaging"), "postinstall_create_boot_service", "createbootservice", "image", "imaging", "manage");
 $editAction = new ActionItem(_T("Edit script", "imaging"), "postinstall_edit", "edit", "image", "imaging", "manage");
 $deleteAction = new ActionPopupItem(_T("Delete", "imaging"), "postinstall_delete", "delete", "image", "imaging", "manage");
+$bsCreatedAction = new ActionItem(_T("Boot Service already created", "imaging"), "postinstall_redirect_to_boot_service", "bootserviceexists", "image", "imaging", "manage");
 $emptyAction = new EmptyActionItem();
 
 $a_create = array();
@@ -66,14 +67,14 @@ foreach($scripts as $script) {
         $a_delete[] = $deleteAction;
         // Don't display "Create Boot Service" icon if a Boot Service already created
         // from this PostInstall entry
-        $a_create[] = ($script['fk_boot_service']) ? $emptyAction : $createAction;
+        $a_create[] = ($script['fk_boot_service']) ? $bsCreatedAction : $createAction;
     } else {
         $url = '<img src="modules/imaging/graph/images/postinst-action-ro.png" style="vertical-align: middle" /> ';
         $a_edit[] = $emptyAction;
         $a_delete[] = $emptyAction;
         // Don't display "Create Boot Service" icon if a Boot Service already created
         // from this PostInstall entry
-        $a_create[] = ($script['fk_boot_service']) ? $emptyAction : $createAction;
+        $a_create[] = ($script['fk_boot_service']) ? $bsCreatedAction : $createAction;
     }
     $a_label[]= sprintf("%s%s", $url, $script['default_name']);
     $a_desc[] = $script["default_desc"];
