@@ -180,6 +180,10 @@ function xmlrpc_areImagesUsed($images) {
     return xmlCall("imaging.areImagesUsed", array($images));
 }
 
+function xmlrpc_isServiceUsed($bs_uuid) {
+    return xmlCall("imaging.isServiceUsed", array($bs_uuid));
+}
+
 function xmlrpc_imagingServerImageDelete($image_uuid) {
     return xmlCall("imaging.imagingServerImageDelete", array($image_uuid));
 }

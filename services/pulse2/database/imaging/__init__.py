@@ -1997,6 +1997,44 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             ret[item_uuid] = ret1
         return ret
 
+    def isServiceUsed(self, bs_uuid):
+        session = create_session()
+        # Check in Targets
+        q = session.query(Target)
+        q = q.select_from(self.target \
+                    .outerjoin(self.menu, self.menu.c.id == self.target.c.fk_menu) \
+                    .outerjoin(self.menu_item, self.menu_item.c.fk_menu == self.menu.c.id) \
+                    .outerjoin(self.boot_service_in_menu, self.boot_service_in_menu.c.fk_menuitem == self.menu_item.c.id))
+        q = q.filter(self.boot_service_in_menu.c.fk_bootservice == uuid2id(bs_uuid)).all()
+
+        ret = []
+        for target in q:
+            target = target.toH()
+            ret.append({
+                'uuid': target['imaging_uuid'], 
+                'type': target['type'], 
+                'name': target['name'],
+            })
+
+        # Check in imaging server
+        q = session.query(ImagingServer)
+        q = q.select_from(self.imaging_server \
+                    .outerjoin(self.menu, self.menu.c.id == self.imaging_server.c.fk_default_menu) \
+                    .outerjoin(self.menu_item, self.menu_item.c.fk_menu == self.menu.c.id) \
+                    .outerjoin(self.boot_service_in_menu, self.boot_service_in_menu.c.fk_menuitem == self.menu_item.c.id))
+        q = q.filter(self.boot_service_in_menu.c.fk_bootservice == uuid2id(bs_uuid)).all()
+
+        for target in q:
+            target = target.toH()
+            ret.append({
+                'uuid': target['imaging_uuid'], 
+                'type': -1,
+                'name': target['name'],
+            })
+
+        session.close()
+        return ret
+
     def __editImage__grepAndStartOrderAtZero(self, post_install_scripts):
         ret = {}
         inverted = {}

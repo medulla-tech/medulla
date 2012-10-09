@@ -642,6 +642,20 @@ class ImagingRpcProxy(RpcProxyI):
 
         return db.areImagesUsed(ims)
 
+    def isServiceUsed(self, bs_uuid):
+        """
+        Return a list of computers or imaging server who use a BootService
+
+        @param bs_uuid: a Boot Service UUID
+        @type bs_uuid: str
+
+        @return: list of computers and/or imaging server who use a BootService
+        @rtype: list
+        """
+        db = ImagingDatabase()
+
+        return db.isServiceUsed(bs_uuid)
+
     def imagingServerImageDelete(self, image_uuid):
         """
         delete an image from the database AND from the imaging server

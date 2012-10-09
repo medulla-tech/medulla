@@ -29,29 +29,77 @@ require_once('modules/imaging/includes/web_def.inc.php');
 
 $location = getCurrentLocation();
 
-if (isset($_POST["bconfirm"])) {
-    $params = getParams();
+/*****************
+ * Remove masters
+ ****************/
 
-    $item_uuid = $_POST['itemid'];
-    $label = urldecode($_POST['itemlabel']);
+if (isset($_POST['removeServices'])) {
+    $imagesToDelFromTarget = array(); // Masters who will be removed from a computer
+    $imagesToDelFromLocation = array(); // Masters who will be removed from a imaging server
 
-    $ret = xmlrpc_delServiceToLocation($item_uuid, $location, $params);
+    foreach ($_POST as $key => $value) {
+        if (substr($key, 0, 14) == 'computer_uuid_') {
+            $target_uuid = substr($key, 14);
+            if (isset($_POST['computer_checkbox_' . $target_uuid]) and $_POST['computer_checkbox_' . $target_uuid] == 'on') {
+                $imagesToDelFromTarget[] = array(
+                    'bs_uuid' => $_POST['computer_uuid_' . $target_uuid],
+                    'target_uuid' => $target_uuid,
+                    'type' => $_POST['type_uuid_' . $target_uuid],
+                );
+            }
+        }
+        if (substr($key, 0, 13) == 'imaging_uuid_') {
+            $location = substr($key, 13);
+            $target_uuid = substr($key, 13);
+            if (isset($_POST['imaging_checkbox_' . $location]) and $_POST['imaging_checkbox_' . $location] == 'on') {
+                $imagesToDelFromLocation[] = array(
+                    'bs_uuid' => $_POST['imaging_uuid_' . $target_uuid],
+                    'location' => $location,
+                );
+            }
+        }
+    }
+    #print '<pre>';
+    #print_r ($_POST);
+    #print_r ($imagesToDelFromTarget);
+    #print_r ($imagesToDelFromLocation);
+    #print '</pre>';
 
-    // goto images list 
-    if ($ret[0] and !isXMLRPCError()) {
-        $str = sprintf(_T("Service <strong>%s</strong> removed from default boot menu", "imaging"), $label);
-        new NotifyWidgetSuccess($str);
-         
+    foreach ($imagesToDelFromTarget as $image) {
+        $ret = xmlrpc_delServiceToTarget($image['bs_uuid'], $image['target_uuid'], $image['type']);
+        if (isXMLRPCError()) {
+            new NotifyWidgetFailure(sprintf(_T("Removal of master failed", "imaging")));
+        }
+
         // Synchronize boot menu
-        $ret = xmlrpc_synchroLocation($location);
+        $ret = xmlrpc_synchroComputer($image['target_uuid']);
+        if (isXMLRPCError()) {
+            new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for computer: %s", "imaging"), implode(', ', $ret[1])));
+        }
+    }
+    foreach ($imagesToDelFromLocation as $image) {
+        $ret = xmlrpc_delServiceToLocation($image['bs_uuid'], $image['location']);
+        if (isXMLRPCError()) {
+            new NotifyWidgetFailure(sprintf(_T("Removal of master failed", "imaging")));
+        }
+
+        // Synchronize boot menu
+        $ret = xmlrpc_synchroLocation($image['location']);
         if (isXMLRPCError()) {
             new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for package server: %s", "imaging"), implode(', ', $ret[1])));
         }
-        header("Location: " . urlStrRedirect("imaging/manage/service", $params));
-    } elseif ($ret[0]) {
-        header("Location: " . urlStrRedirect("imaging/manage/service", $params));
-    } else {
-        new NotifyWidgetFailure($ret[1]);
+    }
+    if (isset($_POST['uuid']) and isset($_POST['hostname'])) {
+        // Come from a computer page
+        $params = array(
+            'uuid' => $_POST['uuid'],
+            'hostname' => $_POST['hostname'],
+        );
+        header("Location: " . urlStrRedirect("base/computers/".$type."imgtabs/".$type."tabservices", $params));
+    }
+    else {
+        // Come from an imaging server page
+        header("Location: " . urlStrRedirect("imaging/manage/service"));
     }
 }
 
@@ -59,19 +107,47 @@ $params = getParams();
 $item_uuid = $_GET['itemid'];
 $label = urldecode($_GET['itemlabel']);
 
-$f = new PopupForm(sprintf(_T("Show all targets that use <b>%s</b> as a Boot Service", "imaging"), $label));
-
-$f->push(new Table());
-
-// form preseeding
-$f->add(new HiddenTpl("location"),                      array("value" => $location,                      "hide" => True));
-$f->add(new HiddenTpl("itemlabel"),                     array("value" => $label,                         "hide" => True));
-$f->add(new HiddenTpl("itemid"),                        array("value" => $item_uuid,                     "hide" => True));
-$f->add(new HiddenTpl("default_mi_label"),              array("value" => $label,                         "hide" => True));
-
-$f->addValidateButton("bconfirm");
-$f->addCancelButton("bback");
-$f->display();
-
+$targets = xmlrpc_isServiceUsed($item_uuid);
 
 ?>
+<form name="showTarget" action="<?php echo urlStr("imaging/manage/service_show_used",$params) ?>" method="post">
+    <p><?php printf(_T("Show all targets that use that image in their boot menu", "imaging")); ?></p>
+<?php
+
+foreach ($targets as $target) {
+    if ($target['type'] == -1) { // This is an imaging server
+        // Boot Service linked to an imaging server
+        $params['location'] = $target['uuid'];
+        $url = urlStrRedirect("imaging/manage/service", $params);
+        printf('<p><input title="' . _T("Remove this boot service from imaging server %s", "imaging") . '" type="checkbox" name="imaging_checkbox_%s"/>', $target['name'], $target['uuid']);
+        printf("<a href='".$url."'>"._T("Imaging server", 'imaging')." : ".$target['name']."</a></p>");
+        printf('<input type="hidden" name="imaging_uuid_%s" value="%s"/>', $target['uuid'], $item_uuid);
+    }
+    else { // Target is a computer
+        // boot service linked to a computer
+        $params['uuid'] = $target['uuid'];
+        $params['hostname'] = $target['name'];
+        $url = urlStrRedirect("base/computers/imgtabs/".$type."tabservices", $params);
+        printf('<p><input title="' . _T("Remove this master from computer %s", "imaging") . '" type="checkbox" name="computer_checkbox_%s"/>', $target['name'], $target['uuid']);
+        printf("<a href='".$url."'>".($target['type']==2?_T('Profile', 'imaging'): _T('Computer', 'imaging'))." : ".$target['name']."</a></p>");
+        printf('<input type="hidden" name="computer_uuid_%s" value="%s"/>', $target['uuid'], $item_uuid);
+        printf('<input type="hidden" name="type_uuid_%s" value="%s"/>', $target['uuid'], $target['type']);
+    }
+}
+
+if (isset($_GET['from'])) {
+    // Come from a computer target page
+    printf('<input type="hidden" name="uuid" value="%s"/>', $_GET['target_uuid']);
+    printf('<input type="hidden" name="hostname" value="%s"/>', $_GET['hostname']);
+}
+else {
+    // Come from an imaging server page
+}
+?>
+    <hr />
+    <p><?php printf(_T("If you want to remove some boot services from a target, check these targets and click on Remove button", "imaging")); ?></p>
+    <p><a onclick="checkAll('imaging_checkbox_',1);checkAll('computer_checkbox_',1);" href="javascript:void(0);"><?php printf(_T("Select all targets", "imaging")); ?></a> 
+    / <a onclick="checkAll('imaging_checkbox_',0);checkAll('computer_checkbox_',0);" href="javascript:void(0);"><?php printf(_T("Unselect all targets", "imaging")); ?></a></p>
+    <input name='removeServices' type="submit" class="btnPrimary" value="<?php echo  _T("Remove", "imaging"); ?>" />
+    <input name="bback" type="submit" class="btnSecondary" value="<?php echo  _T("Cancel", "imaging"); ?>" onClick="new Effect.Fade('popup'); return false;"/>
+</form>
