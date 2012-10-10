@@ -45,6 +45,7 @@ from pulse2.database.inventory.entitiesrules import EntitiesRules, DefaultEntity
 from pulse2.utils import Singleton
 from pulse2.inventoryserver.config import Pulse2OcsserverConfigParser
 from pulse2.inventoryserver.ssl import SecureHTTPRequestHandler, SecureThreadedHTTPServer
+from pulse2.inventoryserver.scheduler import AttemptToScheduler
 
 class InventoryServer:
     def log_message(self, format, *args):
@@ -236,12 +237,18 @@ class TreatInv(Thread):
             inventory['Entity'] = [{'Label' : entity}]
 
             self.logger.debug("Thread %s : prepared : %s " % (threadname, time.time()))
-            ret = InventoryCreator().createNewInventory(hostname, inventory, date)
+            result = InventoryCreator().createNewInventory(hostname, inventory, date)
             self.logger.debug("Thread %s : done : %s " % (threadname, time.time()))
             # TODO if ret == False : reply something else
             end_date = time.time()
 
             self.logger.info("Injected inventory for %s in %s seconds" % (hostname, end_date - start_date))
+
+            if len(result) == 2 :
+                ret, machine_uuid = result
+                AttemptToScheduler(from_ip, machine_uuid)
+            else :
+                ret = result
 
             if not ret:
                 self.logger.error("no inventory created!")

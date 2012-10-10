@@ -1819,6 +1819,7 @@ class InventoryCreator(Inventory):
         Add a new inventory for a computer
         """
         # TODO : check that inventory is not empty....
+        machine_exists = False
         if not self.canAddMachine():
             return False
         k = 0
@@ -1857,6 +1858,8 @@ class InventoryCreator(Inventory):
             else:
                 # Get the current computer
                 m = m[0]
+                machine_exists = True
+                machine_uuid = toUUID(m.id)
             # Set last inventory flag to 0 for already existing inventory for
             # this computer
             result = session.query(InventoryTable).\
@@ -1987,4 +1990,7 @@ class InventoryCreator(Inventory):
             raise e
 
         session.close()
+        if machine_exists :
+            return [True, machine_uuid]
+
         return True
