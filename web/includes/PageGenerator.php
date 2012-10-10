@@ -1766,8 +1766,10 @@ class PageGenerator {
      *  display the side Menu
      */
     function displaySideMenu() {
-        $this->displayCss();
-        $this->sidemenu->display();
+        if ($this->sidemenu) {
+            $this->displayCss();
+            $this->sidemenu->display();
+        }
     }
 
     /**
