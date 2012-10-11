@@ -29,19 +29,19 @@ require_once('modules/imaging/includes/web_def.inc.php');
 
 $location = getCurrentLocation();
 
-/*****************
- * Remove masters
- ****************/
+/**********************
+ * Remove boot services
+ **********************/
 
 if (isset($_POST['removeServices'])) {
-    $imagesToDelFromTarget = array(); // Masters who will be removed from a computer
-    $imagesToDelFromLocation = array(); // Masters who will be removed from a imaging server
+    $bootServicesToDelFromTarget = array(); // Boot Services who will be removed from a computer
+    $bootServicesToDelFromLocation = array(); // Boot Services who will be removed from a imaging server
 
     foreach ($_POST as $key => $value) {
         if (substr($key, 0, 14) == 'computer_uuid_') {
             $target_uuid = substr($key, 14);
             if (isset($_POST['computer_checkbox_' . $target_uuid]) and $_POST['computer_checkbox_' . $target_uuid] == 'on') {
-                $imagesToDelFromTarget[] = array(
+                $bootServicesToDelFromTarget[] = array(
                     'bs_uuid' => $_POST['computer_uuid_' . $target_uuid],
                     'target_uuid' => $target_uuid,
                     'type' => $_POST['type_uuid_' . $target_uuid],
@@ -52,39 +52,34 @@ if (isset($_POST['removeServices'])) {
             $location = substr($key, 13);
             $target_uuid = substr($key, 13);
             if (isset($_POST['imaging_checkbox_' . $location]) and $_POST['imaging_checkbox_' . $location] == 'on') {
-                $imagesToDelFromLocation[] = array(
+                $bootServicesToDelFromLocation[] = array(
                     'bs_uuid' => $_POST['imaging_uuid_' . $target_uuid],
                     'location' => $location,
                 );
             }
         }
     }
-    #print '<pre>';
-    #print_r ($_POST);
-    #print_r ($imagesToDelFromTarget);
-    #print_r ($imagesToDelFromLocation);
-    #print '</pre>';
 
-    foreach ($imagesToDelFromTarget as $image) {
-        $ret = xmlrpc_delServiceToTarget($image['bs_uuid'], $image['target_uuid'], $image['type']);
+    foreach ($bootServicesToDelFromTarget as $boot_service) {
+        $ret = xmlrpc_delServiceToTarget($boot_service['bs_uuid'], $boot_service['target_uuid'], $boot_service['type']);
         if (isXMLRPCError()) {
-            new NotifyWidgetFailure(sprintf(_T("Removal of master failed", "imaging")));
+            new NotifyWidgetFailure(sprintf(_T("Removal of boot service failed", "imaging")));
         }
 
         // Synchronize boot menu
-        $ret = xmlrpc_synchroComputer($image['target_uuid']);
+        $ret = xmlrpc_synchroComputer($boot_service['target_uuid']);
         if (isXMLRPCError()) {
             new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for computer: %s", "imaging"), implode(', ', $ret[1])));
         }
     }
-    foreach ($imagesToDelFromLocation as $image) {
-        $ret = xmlrpc_delServiceToLocation($image['bs_uuid'], $image['location']);
+    foreach ($bootServicesToDelFromLocation as $boot_service) {
+        $ret = xmlrpc_delServiceToLocation($boot_service['bs_uuid'], $boot_service['location']);
         if (isXMLRPCError()) {
-            new NotifyWidgetFailure(sprintf(_T("Removal of master failed", "imaging")));
+            new NotifyWidgetFailure(sprintf(_T("Removal of boot service failed", "imaging")));
         }
 
         // Synchronize boot menu
-        $ret = xmlrpc_synchroLocation($image['location']);
+        $ret = xmlrpc_synchroLocation($boot_service['location']);
         if (isXMLRPCError()) {
             new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for package server: %s", "imaging"), implode(', ', $ret[1])));
         }

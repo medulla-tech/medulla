@@ -41,6 +41,7 @@ if (isset($_POST['removeMasters'])) {
                 $imagesToDelFromTarget[] = array(
                     'uuid' => $_POST['computer_uuid_' . $target_uuid],
                     'target_uuid' => $target_uuid,
+                    'type' => $_POST['type_uuid_' . $target_uuid],
                 );
             }
         }
@@ -66,9 +67,8 @@ if (isset($_POST['removeMasters'])) {
         }
     }
 
-    $type = '';
     foreach ($imagesToDelFromTarget as $image) {
-        $ret = xmlrpc_delImageToTarget($image['uuid'], $image['target_uuid'], $type);
+        $ret = xmlrpc_delImageToTarget($image['uuid'], $image['target_uuid'], $image['type']);
         if (isXMLRPCError()) {
             new NotifyWidgetFailure(sprintf(_T("Removal of master failed", "imaging")));
         }
@@ -147,6 +147,7 @@ foreach ($ret as $target) {
         printf('<p><input title="' . _T("Remove this master from computer %s", "imaging") . '" type="checkbox" name="computer_checkbox_%s"/>', $target[2], $target[0]);
         printf("<a href='".$url."'>".($target[1]==2?_T('Profile', 'imaging'): _T('Computer', 'imaging'))." : ".$target[2]."</a></p>");
         printf('<input type="hidden" name="computer_uuid_%s" value="%s"/>', $target[0], $id);
+        printf('<input type="hidden" name="type_uuid_%s" value="%s"/>', $target[0], $target[1]);
     }
 }
 
