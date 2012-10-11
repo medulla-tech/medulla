@@ -954,6 +954,8 @@ class Inventory(DyngroupDatabaseHelper):
             clauses = []
             for column in self.__getattribute__(part.lower()).c: # All columns of current tab
                 clauses.append(column.like('%'+params['filter']+'%'))
+            # Don't forget to search into Machine's Name
+            clauses.append(Machine.Name.like('%'+params['filter']+'%'))
             query = query.filter(or_(*clauses))
         if params.has_key('uuid') and params['uuid'] != '':
             query = query.filter(Machine.id==fromUUID(params['uuid']))
