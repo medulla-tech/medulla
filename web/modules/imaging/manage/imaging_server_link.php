@@ -58,6 +58,11 @@ if (isset($_POST["bconfirm"])) {
     if ($ret[0] and !isXMLRPCError()) {
         $str = sprintf(_T("Link between imaging server <strong>%s</strong> and the entity <strong>%s</strong> succeeded.", "imaging"), $label, $loc_id);
         new NotifyWidgetSuccess($str);
+        // Synchronize boot menu
+        $ret = xmlrpc_synchroLocation($location);
+        if (isXMLRPCError()) {
+            new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for package server: %s", "imaging"), implode(', ', $ret[1])));
+        }
         header("Location: " . urlStrRedirect("imaging/manage/configuration", $params));
     } elseif ($ret[0]) {
         header("Location: " . urlStrRedirect("imaging/manage/$from", $params));
