@@ -347,8 +347,6 @@ class Glpi07(DyngroupDatabaseHelper):
                     locationid = int(location.replace('UUID', ''))
                     location = self.__getName(location)
                     try:
-                        self.logger.warn(locsid)
-                        self.logger.warn(locationid)
                         locsid.index(locationid) # just check that location is in locs, or throw an exception
                         query_filter = self.__addQueryFilter(query_filter, (self.location.c.name == location))
                     except ValueError:
@@ -604,7 +602,6 @@ class Glpi07(DyngroupDatabaseHelper):
         query = self.__getRestrictedComputersListQuery(ctx, filt, session)
         if query == None:
             return 0
-        query = query.group_by([self.machine.c.name, self.machine.c.domain])
         ret = query.count()
         session.close()
         return ret
