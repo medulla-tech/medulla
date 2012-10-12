@@ -32,7 +32,7 @@ $field = $_GET['field'];
 $filter = $_GET['filter'];
 $from = $_GET['from'];
 
-$p = new PageGenerator(_T("Graphique", 'inventory'));
+$p = new PageGenerator(_T("Chart", 'inventory'));
 $p->setSideMenu($sidemenu);
 $p->display();
 

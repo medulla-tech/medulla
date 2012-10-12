@@ -21,7 +21,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-include_once('libchart/libchart.php');
+include_once('libchart/classes/libchart.php');
 
 /**
  * Display a nice graph from data
@@ -33,6 +33,7 @@ function renderGraph($machines, $type, $sort, $filter) {
 
     $id = "$type $sort";
     $chart = new PieChart(770, 340);
+    $dataSet = new XYDataSet();
 
     $div = 1;
     $mod = 0;
@@ -84,8 +85,9 @@ function renderGraph($machines, $type, $sort, $filter) {
 
     // For each data count the occurence
     foreach($data as $key => $value)
-        $chart->addPoint(new Point("$key ($value)", $value));
+        $dataSet->addPoint(new Point("$key ($value)", $value));
 
+    $chart->setDataSet($dataSet);
     $chart->setTitle(ucfirst($sort));
     header("Content-type: image/png");
     @$chart->render();
