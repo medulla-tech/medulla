@@ -723,7 +723,7 @@ class Glpi07(DyngroupDatabaseHelper):
             for uuid in ret:
                 try:
                     (ret[uuid][1]['macAddress'], ret[uuid][1]['ipHostNumber'], ret[uuid][1]['subnetMask'], ret[uuid][1]['domain'], ret[uuid][1]['networkUuids']) = self.orderIpAdresses(uuid, names[uuid], nets[uuid])
-                    if ret[uuid][1]['domain'] != '':
+                    if ret[uuid][1]['domain'] != '' and len(ret[uuid][1]['domain']) > 0 :
                         ret[uuid][1]['fullname'] = ret[uuid][1]['cn'][0]+'.'+ret[uuid][1]['domain'][0]
                     else:
                         ret[uuid][1]['fullname'] = ret[uuid][1]['cn'][0]
