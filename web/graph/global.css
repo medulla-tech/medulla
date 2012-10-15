@@ -1006,11 +1006,19 @@ li.empty a {
     width: 99%;
 }
 
+/*
+ * word-wrap values: normal and break-word
+ * word-wrap is replaced by overflow-wrap since 2012
+ */
 #section table.listinfos {
+    word-wrap: break-word; 
+    overflow-wrap: break-word;
+    table-layout: fixed;
     border: 1px solid #CCCCCC;
     border-top: 0px;
     margin-bottom: 0.5em;
     margin-top: 0.5em;
+    width: 101%;
 }
 
 
