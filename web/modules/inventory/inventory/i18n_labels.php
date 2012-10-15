@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2008 Mandriva, http://www.mandriva.com
+ * (c) 2012 Mandriva, http://www.mandriva.com
  *
  * $Id$
  *
@@ -22,144 +22,150 @@
  * MA 02110-1301, USA
  */
 
-_T('Application', 'inventory');
-_T('Availability', 'inventory');
-_T('Bios', 'inventory');
-_T('BiosVendor', 'inventory');
-_T('BiosVersion', 'inventory');
-_T('Build', 'inventory');
-_T('Bus', 'inventory');
-_T('BuyDate', 'inventory');
-_T('BuyValue', 'inventory');
-_T('Capacity', 'inventory');
-_T('Caption', 'inventory');
-_T('CardType', 'inventory');
-_T('Chassis', 'inventory');
-_T('ChipSerial', 'inventory');
-_T('ChipVendor', 'inventory');
-_T('Chipset', 'inventory');
-_T('ChipsetType', 'inventory');
-_T('Class', 'inventory');
-_T('Comments', 'inventory');
-_T('Company', 'inventory');
-_T('Connector', 'inventory');
-_T('Controller', 'inventory');
-_T('CpuNum', 'inventory');
-_T('CpuVendor', 'inventory');
-_T('CustomField', 'inventory');
-_T('Cyl', 'inventory');
-_T('DNS', 'inventory');
-_T('Date', 'inventory');
-_T('DeliveryDate', 'inventory');
-_T('Department', 'inventory');
-_T('Description', 'inventory');
-_T('Device', 'inventory');
-_T('Disk', 'inventory');
-_T('DiskSize', 'inventory');
-_T('Drive', 'inventory');
-_T('DriveLetter', 'inventory');
-_T('DriveType', 'inventory');
-_T('Driver', 'inventory');
-_T('ExecutableSize', 'inventory');
-_T('ExpandedDescription', 'inventory');
-_T('ExpandedType', 'inventory');
-_T('ExtendedDescription', 'inventory');
-_T('ExtendedType', 'inventory');
-_T('Field', 'inventory');
-_T('FileCount', 'inventory');
-_T('FileSystem', 'inventory');
-_T('Flag', 'inventory');
-_T('Form', 'inventory');
-_T('FreeSpace', 'inventory');
-_T('Freq', 'inventory');
-_T('Frequency', 'inventory');
-_T('Func', 'inventory');
-_T('Gateway', 'inventory');
-_T('Hardware', 'inventory');
-_T('HardwareVersion', 'inventory');
-_T('Head', 'inventory');
-_T('HighMem', 'inventory');
-_T('IP', 'inventory');
-_T('Input', 'inventory');
-_T('Inventory', 'inventory');
-_T('IpAddress', 'inventory');
-_T('KEY', 'inventory');
-_T('Length', 'inventory');
-_T('Location', 'inventory');
-_T('LowMem', 'inventory');
-_T('MACAddress', 'inventory');
-_T('MIB', 'inventory');
-_T('MacAddr', 'inventory');
-_T('Computer', 'inventory');
-_T('Manuf', 'inventory');
-_T('Manufacturer', 'inventory');
-_T('Media', 'inventory');
-_T('Memory', 'inventory');
-_T('MiscMem', 'inventory');
-_T('MiscSMB', 'inventory');
-_T('Model', 'inventory');
-_T('Modem', 'inventory');
-_T('Monitor', 'inventory');
-_T('Name', 'inventory');
-_T('Network', 'inventory');
-_T('NetworkType', 'inventory');
-_T('Num', 'inventory');
-_T('Number', 'inventory');
-_T('OSSerialNumber', 'inventory');
-_T('OperatingSystem', 'inventory');
-_T('Pci', 'inventory');
-_T('Phone', 'inventory');
-_T('PointType', 'inventory');
-_T('Port', 'inventory');
-_T('PortType', 'inventory');
-_T('Printer', 'inventory');
-_T('ProcessorCount', 'inventory');
-_T('ProcessorFrequency', 'inventory');
-_T('ProcessorType', 'inventory');
-_T('ProductName', 'inventory');
-_T('ProductPath', 'inventory');
-_T('ProductVersion', 'inventory');
-_T('RamTotal', 'inventory');
-_T('RegisteredCompany', 'inventory');
-_T('RegisteredName', 'inventory');
-_T('Resolution', 'inventory');
-_T('Sector', 'inventory');
-_T('Serial', 'inventory');
-_T('Size', 'inventory');
-_T('Slot', 'inventory');
-_T('SlotCount', 'inventory');
-_T('SmbManufacturer', 'inventory');
-_T('SmbProduct', 'inventory');
-_T('SmbSerial', 'inventory');
-_T('SmbType', 'inventory');
-_T('SmbVersion', 'inventory');
-_T('Software', 'inventory');
-_T('Sound', 'inventory');
-_T('Speed', 'inventory');
-_T('Stamp', 'inventory');
-_T('StandardDescription', 'inventory');
-_T('StandardType', 'inventory');
-_T('State', 'inventory');
-_T('Storage', 'inventory');
-_T('SubnetMask', 'inventory');
-_T('SupportEnd', 'inventory');
-_T('SwapSpace', 'inventory');
-_T('System', 'inventory');
-_T('Time', 'inventory');
-_T('TotalMem', 'inventory');
-_T('TotalSpace', 'inventory');
-_T('Type', 'inventory');
-_T('TypeMachine', 'inventory');
-_T('Used', 'inventory');
-_T('User', 'inventory');
-_T('VRAMSize', 'inventory');
-_T('Value', 'inventory');
-_T('Vendor', 'inventory');
-_T('Version', 'inventory');
-_T('VolumeName', 'inventory');
-_T('WarrantyEnd', 'inventory');
-_T('Workgroup', 'inventory');
-_T('WorkingDate', 'inventory');
-
+$tabTitles = array(
+    'Application' => _T('Application', 'inventory'),
+    'Availability' => _T('Availability', 'inventory'),
+    'Bios' => _T('Bios', 'inventory'),
+    'BiosVendor' => _T('Bios Vendor', 'inventory'),
+    'BiosVersion' => _T('Bios Version', 'inventory'),
+    'Build' => _T('Build', 'inventory'),
+    'Bus' => _T('Bus', 'inventory'),
+    'BuyDate' => _T('Buy Date', 'inventory'),
+    'BuyValue' => _T('Buy Value', 'inventory'),
+    'Capacity' => _T('Capacity', 'inventory'),
+    'Caption' => _T('Caption', 'inventory'),
+    'CardType' => _T('Card Type', 'inventory'),
+    'Chassis' => _T('Chassis', 'inventory'),
+    'ChipSerial' => _T('Chip Serial', 'inventory'),
+    'ChipVendor' => _T('Chip Vendor', 'inventory'),
+    'Chipset' => _T('Chipset', 'inventory'),
+    'ChipsetType' => _T('Chipset Type', 'inventory'),
+    'Class' => _T('Class', 'inventory'),
+    'Comments' => _T('Comments', 'inventory'),
+    'Company' => _T('Company', 'inventory'),
+    'Connector' => _T('Connector', 'inventory'),
+    'Controller' => _T('Controller', 'inventory'),
+    'CpuNum' => _T('Cpu Num', 'inventory'),
+    'CpuVendor' => _T('Cpu Vendor', 'inventory'),
+    'CustomField' => _T('Custom Field', 'inventory'),
+    'Cyl' => _T('Cyl', 'inventory'),
+    'DNS' => _T('DNS', 'inventory'),
+    'Date' => _T('Date', 'inventory'),
+    'DateLastSwitchOn' => _T('Date Last Switch On', 'inventory'),
+    'DateLastLoggedUser' => 'Date Last Logged User',
+    'LastLoggedUser' => 'Last Logged User',
+    'DefaultGateway' => _T('Default Gateway', 'inventory'),
+    'DeliveryDate' => _T('Delivery Date', 'inventory'),
+    'Department' => _T('Department', 'inventory'),
+    'Description' => _T('Description', 'inventory'),
+    'Device' => _T('Device', 'inventory'),
+    'Disk' => _T('Disk', 'inventory'),
+    'DiskSize' => _T('Disk Size', 'inventory'),
+    'Drive' => _T('Drive', 'inventory'),
+    'DriveLetter' => _T('Drive Letter', 'inventory'),
+    'DriveType' => _T('Drive Type', 'inventory'),
+    'Driver' => _T('Driver', 'inventory'),
+    'ExecutableSize' => _T('Executable Size', 'inventory'),
+    'ExpandedDescription' => _T('Expanded Description', 'inventory'),
+    'ExpandedType' => _T('Expanded Type', 'inventory'),
+    'ExtendedDescription' => _T('Extended Description', 'inventory'),
+    'Field' => _T('Field', 'inventory'),
+    'FileCount' => _T('File Count', 'inventory'),
+    'FileSystem' => _T('File System', 'inventory'),
+    'Flag' => _T('Flag', 'inventory'),
+    'Form' => _T('Form', 'inventory'),
+    'FreeSpace' => _T('Free Space', 'inventory'),
+    'Freq' => _T('Freq', 'inventory'),
+    'Frequency' => _T('Frequency', 'inventory'),
+    'Func' => _T('Func', 'inventory'),
+    'Gateway' => _T('Gateway', 'inventory'),
+    'Hardware' => _T('Hardware', 'inventory'),
+    'HardwareVersion' => _T('Hardware Version', 'inventory'),
+    'Head' => _T('Head', 'inventory'),
+    'HighMem' => _T('High Mem', 'inventory'),
+    'IP' => _T('IP', 'inventory'),
+    'Input' => _T('Input', 'inventory'),
+    'IpAddress' => _T('Ip Address', 'inventory'),
+    'KEY' => _T('KEY', 'inventory'),
+    'Length' => _T('Length', 'inventory'),
+    'Location' => _T('Location', 'inventory'),
+    'LowMem' => _T('Low Mem', 'inventory'),
+    'MACAddress' => _T('MAC Address', 'inventory'),
+    'MIB' => _T('MIB', 'inventory'),
+    'MacAddr' => _T('Mac Addr', 'inventory'),
+    'Computer' => _T('Computer', 'inventory'),
+    'Manuf' => _T('Manuf', 'inventory'),
+    'Manufacturer' => _T('Manufacturer', 'inventory'),
+    'Media' => _T('Media', 'inventory'),
+    'Memory' => _T('Memory', 'inventory'),
+    'MiscMem' => _T('Misc Mem', 'inventory'),
+    'MiscSMB' => _T('Misc SMB', 'inventory'),
+    'Model' => _T('Model', 'inventory'),
+    'Modem' => _T('Modem', 'inventory'),
+    'Monitor' => _T('Monitor', 'inventory'),
+    'Name' => _T('Name', 'inventory'),
+    'Network' => _T('Network', 'inventory'),
+    'NetworkType' => _T('Network Type', 'inventory'),
+    'Num' => _T('Num', 'inventory'),
+    'Number' => _T('Number', 'inventory'),
+    'OSSerialNumber' => _T('OS Serial Number', 'inventory'),
+    'OsInstallationDate' => _T('Os Installation Date', 'inventory'),
+    'OsArchitecture' => _T('Os Architecture', 'inventory'),
+    'OperatingSystem' => _T('Operating System', 'inventory'),
+    'Pci' => _T('Pci', 'inventory'),
+    'Phone' => _T('Phone', 'inventory'),
+    'PointType' => _T('Point Type', 'inventory'),
+    'Port' => _T('Port', 'inventory'),
+    'PortType' => _T('Port Type', 'inventory'),
+    'Printer' => _T('Printer', 'inventory'),
+    'ProcessorCount' => _T('Processor Count', 'inventory'),
+    'ProcessorFrequency' => _T('Processor Frequency', 'inventory'),
+    'ProcessorType' => _T('Processor Type', 'inventory'),
+    'ProductName' => _T('Product Name', 'inventory'),
+    'ProductPath' => _T('Product Path', 'inventory'),
+    'ProductVersion' => _T('Product Version', 'inventory'),
+    'RamTotal' => _T('Ram Total', 'inventory'),
+    'RegisteredCompany' => _T('Registered Company', 'inventory'),
+    'RegisteredName' => _T('Registered Name', 'inventory'),
+    'Resolution' => _T('Resolution', 'inventory'),
+    'Sector' => _T('Sector', 'inventory'),
+    'Serial' => _T('Serial', 'inventory'),
+    'Size' => _T('Size', 'inventory'),
+    'Slot' => _T('Slot', 'inventory'),
+    'SlotCount' => _T('Slot Count', 'inventory'),
+    'SmbManufacturer' => _T('Smb Manufacturer', 'inventory'),
+    'SmbProduct' => _T('Smb Product', 'inventory'),
+    'SmbSerial' => _T('Smb Serial', 'inventory'),
+    'SmbType' => _T('Smb Type', 'inventory'),
+    'SmbVersion' => _T('Smb Version', 'inventory'),
+    'Software' => _T('Software', 'inventory'),
+    'Sound' => _T('Sound', 'inventory'),
+    'Speed' => _T('Speed', 'inventory'),
+    'Stamp' => _T('Stamp', 'inventory'),
+    'StandardDescription' => _T('Standard Description', 'inventory'),
+    'StandardType' => _T('Standard Type', 'inventory'),
+    'State' => _T('State', 'inventory'),
+    'Storage' => _T('Storage', 'inventory'),
+    'SubnetMask' => _T('Subnet Mask', 'inventory'),
+    'SupportEnd' => _T('Support End', 'inventory'),
+    'SwapSpace' => _T('Swap Space', 'inventory'),
+    'System' => _T('System', 'inventory'),
+    'Time' => _T('Time', 'inventory'),
+    'TotalMem' => _T('Total Mem', 'inventory'),
+    'TotalSpace' => _T('Total Space', 'inventory'),
+    'Type' => _T('Type', 'inventory'),
+    'TypeMachine' => _T('Type Machine', 'inventory'),
+    'Used' => _T('Used', 'inventory'),
+    'User' => _T('User', 'inventory'),
+    'VRAMSize' => _T('VRAM Size', 'inventory'),
+    'Value' => _T('Value', 'inventory'),
+    'Vendor' => _T('Vendor', 'inventory'),
+    'Version' => _T('Version', 'inventory'),
+    'VolumeName' => _T('VolumeName', 'inventory'),
+    'WarrantyEnd' => _T('WarrantyEnd', 'inventory'),
+    'Workgroup' => _T('Workgroup', 'inventory'),
+    'WorkingDate' => _T('WorkingDate', 'inventory'),
+);
 
 ?>
+

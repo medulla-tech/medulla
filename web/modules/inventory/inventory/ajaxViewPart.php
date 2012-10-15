@@ -23,6 +23,7 @@
  */
 
 require_once("modules/inventory/includes/xmlrpc.php");
+require_once("modules/inventory/inventory/i18n_labels.php");
 require_once("modules/base/includes/edit.inc.php");
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
@@ -89,12 +90,35 @@ if ($_GET['uuid'] != '') {
         $n = new OptimizedListInfos($h['Icon'], '');
     }
     
+    /*
+     * $k is header title of inventory tab
+     * corresponding to tables in DB
+     * Use an array to display friendly names
+     * instead of Ugly table name
+     */
     foreach ($h as $k => $v) {
+        /*
+         * If a machine has many IP Adresses, they are stored like this
+         * in database (separated by a slash):
+         * x.x.x.x/x.x.x.x/x.x.x.x
+         *
+         * For machines with many IPs, display is very awful,
+         * So search & replace slashes by \r\n
+         */
+
+        if ($k == 'IpAddress') {
+            foreach ($v as &$ipaddr) {
+                $ipaddr = str_replace("/", "\r\n", $ipaddr);
+            }
+        }
+
+        // Replace Database table names by human names
+        $k = ($tabTitles[$k] != NULL) ? $tabTitles[$k] : $k;
         if (!in_array($k, $disabled_columns)) {
             if (in_array($k, $graph) && count($v) > 1) {
                 $type = ucfirst($_GET['part']);
                 # TODO should give the tab in the from param
-                $nhead = _T($k, 'inventory')." <a href='main.php?module=inventory&submod=inventory&action=graphs&type=$type&from=$from&field=$k";
+                $nhead = $k." <a href='main.php?module=inventory&submod=inventory&action=graphs&type=$type&from=$from&field=$k";
                 foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab', 'part') as $get) {
                     $nhead .= "&$get=".$_GET[$get];
                 }
@@ -169,12 +193,35 @@ if ($_GET['uuid'] != '') {
     }
     
     $graph = getInventoryGraph($display);
+    /*
+     * $head is header title of inventory tab
+     * corresponding to tables in DB
+     * Use an array to display friendly names
+     * instead of Ugly table name
+     */
     foreach ($result as $head => $vals) {
+        /*
+         * If a machine has many IP Adresses, they are stored like this
+         * in database (separated by a slash):
+         * x.x.x.x/x.x.x.x/x.x.x.x
+         *
+         * For machines with many IPs, display is very awful,
+         * So search & replace slashes by \r\n
+         */
+
+        if ($head == 'IpAddress') {
+            foreach ($vals as &$ipaddr) {
+                $ipaddr = str_replace("/", "\r\n", $ipaddr);
+            }
+        }
+
+        // Replace Database table names by human names
+        $head = ($tabTitles[$head] != NULL) ? $tabTitles[$head] : $head;
         if (!in_array($head, $disabled_columns)) {
             if (in_array($head, $graph) && count($vals) > 1) {
                 $type = ucfirst($_GET['part']);
                 # TODO should give the tab in the from param
-                $nhead = _T($head, 'inventory')." <a href='main.php?module=inventory&submod=inventory&action=graphs&type=$type&from=$from&field=$head";
+                $nhead = $head." <a href='main.php?module=inventory&submod=inventory&action=graphs&type=$type&from=$from&field=$head";
                 foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab', 'part') as $get) {
                     $nhead .= "&$get=".$_GET[$get];
                 }
