@@ -1583,7 +1583,9 @@ class Glpi08(DyngroupDatabaseHelper):
         idx_good = 0
         failure = [True, True]
         for iface in netiface:
-            if 'ifaddr' in iface and 'gateway' in iface and 'netmask' in iface:
+            if 'ifaddr' in iface and iface['ifaddr'] \
+               and 'gateway' in iface and iface['gateway'] \
+               and 'netmask' in iface and iface['netmask'] :
                 if iface['gateway'] == None:
                     ret_ifmac.append(iface['ifmac'])
                     ret_ifaddr.append(iface['ifaddr'])
