@@ -244,7 +244,7 @@ class TreatInv(Thread):
 
             self.logger.info("Injected inventory for %s in %s seconds" % (hostname, end_date - start_date))
 
-            if len(result) == 2 :
+            if isinstance(result, list) and len(result) == 2 :
                 ret, machine_uuid = result
                 AttemptToScheduler(from_ip, machine_uuid)
             else :

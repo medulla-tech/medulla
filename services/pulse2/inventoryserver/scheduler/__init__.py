@@ -24,7 +24,6 @@
 Anticipated executing of scheduled tasks on scheduler.
 """
 import os
-import sys
 import logging 
 
 
@@ -39,21 +38,17 @@ from mmc.site import mmcconfdir
 class ConfigReader :
     """Read and parse config files"""
     def __init__(self):
-        base_ini = os.path.join(mmcconfdir, 
+        self._base_ini = os.path.join(mmcconfdir, 
                                 "plugins", 
                                 "base.ini")
-        pkg_server_ini = os.path.join(mmcconfdir, 
+        self._pkg_server_ini = os.path.join(mmcconfdir, 
                                       "pulse2",  
                                       "package-server", 
                                       "package-server.ini")
-        img_server_ini = os.path.join(mmcconfdir, 
+        self._img_server_ini = os.path.join(mmcconfdir, 
                                       "pulse2",  
                                       "imaging-server", 
                                       "imaging-server.ini")
-        
-        self._base_config = self.get_config(base_ini)
-        self._pkg_server_config = self.get_config(pkg_server_ini)
-        self._img_server_config = self.get_config(img_server_ini)
         
 
     @classmethod
@@ -68,9 +63,11 @@ class ConfigReader :
         """
         logging.getLogger().debug("<scheduler> : Load config file %s" % inifile)
         if not os.path.exists(inifile) :
-            logging.getLogger().error("<scheduler> : Error while reading the config file:")
-            logging.getLogger().error("<scheduler> : Not found.")
-            sys.exit(2)
+
+            logging.getLogger().warn("<scheduler> : Error while reading the config file:")
+            logging.getLogger().warn("<scheduler> : Not found.")
+
+            raise IOError, "Config file '%s' not found" % inifile
 
         return ConfigObj(inifile)
  
@@ -81,7 +78,7 @@ class ConfigReader :
              
         @return: ConfigParser.ConfigParser instance 
         """
-        return self._img_server_config
+        return self.get_config(self._img_server_ini)
 
     @property
     def pkg_server_config (self):
@@ -90,7 +87,7 @@ class ConfigReader :
              
         @return: ConfigParser.ConfigParser instance 
         """
-        return self._pkg_server_config
+        return self.get_config(self._pkg_server_ini)
 
 
     @property
@@ -100,7 +97,7 @@ class ConfigReader :
     
         @return: ConfigParser.ConfigParser instance 
         """
-        return self._base_config
+        return self.get_config(self._base_ini)
 
 
 class MMCProxy :
@@ -112,22 +109,39 @@ class MMCProxy :
         self.pkg_server_config = config.pkg_server_config
         self.base_config = config.base_config
         
+        self._failure = False
+
         self._url = None
         self._proxy = None
 
         self._build_url()
-        self._build_proxy()
+
+        if not self._failure :
+            password = self._get_ldap_password()
+
+        if not self._failure :
+            self._build_proxy(password)
 
     def _build_url(self):
         """ URL building for XML-RPC proxy """
        
         if not "mmc_agent" in self.pkg_server_config :
-            logging.getLogger().error("<scheduler> : Error while reading the config file:")
-            logging.getLogger().error("<scheduler> : Section 'mmc_agent' not exists")
-            sys.exit(2)
+            logging.getLogger().warn("<scheduler> : Error while reading the config file:")
+            logging.getLogger().warn("<scheduler> : Section 'mmc_agent' not exists")
+            self._failure = True
+            return
 
         mmc_section =  self.pkg_server_config["mmc_agent"]
 
+        for option in ["username", "password", "host", "port"] :
+
+            if option not in mmc_section :
+                logging.getLogger().warn("<scheduler> : Error while reading section 'mmc_agent':")
+                logging.getLogger().warn("<scheduler> : Option '%s' not exists" % option)
+
+                self._failure = True
+                return
+ 
         username = mmc_section["username"]
         host = mmc_section["host"]
         password = mmc_section["password"]
@@ -136,7 +150,16 @@ class MMCProxy :
         logging.getLogger().debug("<scheduler> : Building the connection URL at mmc-agent") 
 
         self._url = 'https://%s:%s@%s:%s' % (username, password, host, port)
-        
+
+    @property
+    def failure (self):
+        """ 
+        Failure flag to indicate the incorrect build of proxy 
+
+        @returns: bool
+        """
+        return self._failure
+
     def _get_ldap_password(self):
         """ 
         Password for LDAP authentification 
@@ -145,25 +168,29 @@ class MMCProxy :
         """
        
         if not "ldap" in self.base_config :
-            logging.getLogger().error("<scheduler> : Error while reading the config file: Section 'ldap'")
-            sys.exit(2)
+
+            logging.getLogger().warn("<scheduler> : Error while reading the config file: Section 'ldap'")
+
+            self._failure = True
+            return
                                 
         return self.base_config["ldap"]["password"]
 
-    def _build_proxy (self):
+    def _build_proxy (self, password):
         """ Builds the XML-RPC proxy to MMC agent. """
         try :
             self._proxy = Proxy(self._url)
 
             logging.getLogger().debug("<scheduler> : LDAP authentification")
 
-            self._proxy.base.ldapAuth('root', self._get_ldap_password())
+            self._proxy.base.ldapAuth('root', password)
 
             logging.getLogger().debug("<scheduler> : Create a mmc-agent proxy") 
 
         except Exception, err :
             logging.getLogger().error("<scheduler> : Error while connecting to mmc-agent : %s" % err)
-            sys.exit(2)
+            self._failure = True
+            
 
     @property
     def proxy (self):
@@ -204,15 +231,20 @@ class AttemptToScheduler :
             logging.getLogger().info("<scheduler> : Start")
             self.uuid = uuid
             mmc = MMCProxy()
-            self.proxy = mmc.proxy
-            self.dispatch_msc()
+            if not mmc.failure :
+                self.proxy = mmc.proxy
+                self.dispatch_msc()
+            else :
+                logging.getLogger().warn("<scheduler> : Building the mmc proxy failed")
+                logging.getLogger().warn("<scheduler> : Exit the scheduler trigger")
             logging.getLogger().info("<scheduler> : Return to inventory")
 
         else :
 
             logging.getLogger().info("<scheduler> : Incomming from PXE : ignore")
 
-    def get_pkg_server_ip(self):
+    @classmethod
+    def get_pkg_server_ip(cls):
         """ 
         Get the ip address of package server. 
         
@@ -228,7 +260,8 @@ class AttemptToScheduler :
 
         return "127.0.0.1"
 
-    def is_comming_from_pxe(self, from_ip):
+    @classmethod
+    def is_comming_from_pxe(cls, from_ip):
         """ 
         Check if the inventory is incomming from PXE.
 
@@ -237,7 +270,7 @@ class AttemptToScheduler :
 
         @return: bool
         """
-        return from_ip == self.get_pkg_server_ip()
+        return from_ip == cls.get_pkg_server_ip()
 
 
     def dispatch_msc (self):
