@@ -147,9 +147,11 @@ class ImagingMenu:
 
     DEFAULT_MENU_FILE = 'default'
     LANG_CODE = {1 : 'C',
-                 2 : 'fr_FR'}
+                 2 : 'fr_FR',
+                 3 : 'pt_BR'}
     KEYB_CODE = {1 : None,
-                 2 : 'fr'}
+                 2 : 'fr',
+                 3 : 'pt'}
 
     def __init__(self, config, macaddress = None):
         """
@@ -384,7 +386,7 @@ class ImagingMenu:
         set keyboard map
         if mapping is none, do not set keymap
         """
-        if mapping in ['fr']:
+        if mapping in ['fr', 'pt']:
             self.keyboard = mapping
 
     def hideMenu(self):
@@ -469,14 +471,11 @@ class ImagingMenu:
         """
         try:
             self.language = self.LANG_CODE[value]
-        except KeyError:
-            self.language = 'C'
-        if not self.keyboard:
-            # Try to set a default keyboard according to the language
-            try:
+            if not self.keyboard:
                 self.keyboard = self.KEYB_CODE[value]
-            except IndexError:
-                pass
+        except KeyError:
+            self.language = self.LANG_CODE[1]
+            self.keyboard = self.KEYB_CODE[1]
 
     def setRawMode(self, value):
         """
