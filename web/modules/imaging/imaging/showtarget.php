@@ -161,9 +161,9 @@ else {
 }
 ?>
     <hr />
-    <p><?php printf(_T("If you want to remove some masters from a target, check these targets and click on Remove button", "imaging")); ?></p>
-    <p><a onclick="checkAll('imaging_checkbox_',1);checkAll('computer_checkbox_',1);" href="javascript:void(0);"><?php printf(_T("Select all targets", "imaging")); ?></a> 
-    / <a onclick="checkAll('imaging_checkbox_',0);checkAll('computer_checkbox_',0);" href="javascript:void(0);"><?php printf(_T("Unselect all targets", "imaging")); ?></a></p>
+    <p><?php printf(_T("If you want to remove this master from one or more targets, check these targets and click on the remove button", "imaging")); ?></p>
+    <p><a onclick="checkAll('imaging_checkbox_',1);checkAll('computer_checkbox_',1);" href="javascript:void(0);"><?php printf(_T("Select all", "imaging")); ?></a> 
+    / <a onclick="checkAll('imaging_checkbox_',0);checkAll('computer_checkbox_',0);" href="javascript:void(0);"><?php printf(_T("Unselect all", "imaging")); ?></a></p>
     <input name='removeMasters' type="submit" class="btnPrimary" value="<?php echo  _T("Remove", "imaging"); ?>" />
     <input name="bback" type="submit" class="btnSecondary" value="<?php echo  _T("Cancel", "imaging"); ?>" onClick="new Effect.Fade('popup'); return false;"/>
 </form>
