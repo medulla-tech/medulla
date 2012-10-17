@@ -36,10 +36,10 @@ if (isProfilesEnable() && areProfilesPossible()) {
 $items = array();
 $groups = getAllGroups(array('canShow'=>true, 'localSidebar'=>true));
 foreach ($groups as $group) {
-    $isA = ($group->isDyn() ? (!$group->isRequest() ? _T('the result', 'dyngroup') : _T('the query', 'dyngroup')) : (_T('the static group', 'dyngroup')));
+    $isA = ($group->isDyn() ? (!$group->isRequest() ? _T('Static group:', 'dyngroup') : _T('Dynamic group:', 'dyngroup')) : (_T('Static group:', 'dyngroup')));
 
     $s = new SideMenuItemNoAclCheck(
-             sprintf(_T("(G) Display %s '%s'", "dyngroup"), $isA, $group->getName()),
+             sprintf("%s<br />%s", $isA, $group->getName()),
              "base", "computers", "display&gid=".$group->id."&groupname=".$group->name
     );
     $s->setCssId("displayid".$group->id);
@@ -51,10 +51,10 @@ if (isProfilesEnable()) {
     $items = array();
     $profiles = getAllProfiles(array('canShow'=>true));
     foreach ($profiles as $profile) {
-        $isA = ($profile->isDyn() ? (!$profile->isRequest() ? _T('the result', 'dyngroup') : _T('the query', 'dyngroup')) : (_T('the static profile', 'dyngroup')));
+        $isA = ($profile->isDyn() ? (!$profile->isRequest() ? _T('Static profile:', 'dyngroup') : _T('Dynamic profile', 'dyngroup')) : (_T('Static profile', 'dyngroup')));
 
         $s = new SideMenuItemNoAclCheck(
-                 sprintf(_T("(P) Display %s '%s'", "dyngroup"), $isA, $profile->getName()),
+                 sprintf("%s<br />%s", $isA, $profile->getName()),
                  "base", "computers", "display&gid=".$profile->id."&groupname=".$profile->name
         );
         $s->setCssId("displayid".$profile->id);
