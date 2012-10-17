@@ -61,6 +61,11 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
         if ($ret[0] and !isXMLRPCError()) {
             $str = sprintf(_T("Imaging server <strong>%s</strong> configuration saved.", "imaging"), $label, $loc_id);
             new NotifyWidgetSuccess($str);
+            // Synchronize boot menu
+            $ret = xmlrpc_synchroLocation($location);
+            if (isXMLRPCError()) {
+                new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for package server: %s", "imaging"), implode(', ', $ret[1])));
+            }
         } else {
             new NotifyWidgetFailure($ret[1]);
         }
