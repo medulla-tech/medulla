@@ -309,7 +309,6 @@ class Glpi08(DyngroupDatabaseHelper):
         if session == None:
             session = create_session()
         query = session.query(Machine)
-        query = self.__filter_on(query)
         if filt:
             # filtering on query
             join_query = self.machine
