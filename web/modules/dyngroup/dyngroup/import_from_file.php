@@ -53,7 +53,7 @@ $r = new RadioTpl('visible');
 $r->setChoices(array(_T('Yes', 'dyngroup'), _T('No', 'dyngroup')));
 $r->setValues(array('visible', 'hidden'));
 $r->setSelected($visibility);
-$f->add( new TrFormElement(_T("Is the group visible", "dyngroup"), $r), array("required" => True));
+$f->add( new TrFormElement(_T("Add shortcut", "dyngroup"), $r), array("required" => True));
 
 $f->add( new TrFormElement(_T("Select the file you want to import", "dyngroup"), new FileTpl('importfile')), array("required" => True));
 
