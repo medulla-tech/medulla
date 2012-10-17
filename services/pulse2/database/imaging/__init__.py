@@ -767,8 +767,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                     .join(self.boot_service_in_menu) \
                     .join(self.boot_service) \
                     .join(self.menu, self.menu_item.c.fk_menu == self.menu.c.id) \
-                    .outerjoin(I18n1, and_(self.boot_service.c.fk_name == I18n1.c.id, I18n1.c.fk_language == lang)) \
-                    .outerjoin(I18n2, and_(self.boot_service.c.fk_desc == I18n2.c.id, I18n2.c.fk_language == lang)) \
+                    # ID 1 of Internationalization table is "NOTTRANSLATED"
+                    # Do not display it, display english text instead
+                    .outerjoin(I18n1, and_(self.boot_service.c.fk_name == I18n1.c.id, I18n1.c.fk_language == lang, I18n1.c.id != 1)) \
+                    .outerjoin(I18n2, and_(self.boot_service.c.fk_desc == I18n2.c.id, I18n2.c.fk_language == lang, I18n2.c.id != 1)) \
                     .outerjoin(self.boot_service_on_imaging_server) \
             )
             q1 = q1.filter(and_(self.menu_item.c.id.in_(mi_ids), or_(self.boot_service_on_imaging_server.c.fk_boot_service == None, self.boot_service_on_imaging_server.c.fk_imaging_server == is_id)))
@@ -940,8 +942,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 .outerjoin(self.boot_service_on_imaging_server, self.boot_service.c.id == self.boot_service_on_imaging_server.c.fk_boot_service) \
                 .outerjoin(self.imaging_server, self.imaging_server.c.id == self.boot_service_on_imaging_server.c.fk_imaging_server) \
                 .outerjoin(self.boot_service_in_menu, self.boot_service_in_menu.c.fk_bootservice == self.boot_service.c.id) \
-                .outerjoin(I18n1, and_(self.boot_service.c.fk_name == I18n1.c.id, I18n1.c.fk_language == lang)) \
-                .outerjoin(I18n2, and_(self.boot_service.c.fk_desc == I18n2.c.id, I18n2.c.fk_language == lang)) \
+                # ID 1 of Internationalization table is "NOTTRANSLATED"
+                # Do not display it, display english text instead
+                .outerjoin(I18n1, and_(self.boot_service.c.fk_name == I18n1.c.id, I18n1.c.fk_language == lang, I18n1.c.id != 1)) \
+                .outerjoin(I18n2, and_(self.boot_service.c.fk_desc == I18n2.c.id, I18n2.c.fk_language == lang, I18n2.c.id != 1)) \
                 .outerjoin(self.entity).outerjoin(self.target))
         q = q.filter(or_(self.target.c.uuid == target_uuid, self.boot_service_on_imaging_server.c.fk_boot_service == None))
         if filter != '':
@@ -971,8 +975,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 .outerjoin(self.boot_service_on_imaging_server, self.boot_service.c.id == self.boot_service_on_imaging_server.c.fk_boot_service) \
                 .outerjoin(self.imaging_server, self.imaging_server.c.id == self.boot_service_on_imaging_server.c.fk_imaging_server) \
                 .outerjoin(self.boot_service_in_menu, self.boot_service_in_menu.c.fk_bootservice == self.boot_service.c.id) \
-                .outerjoin(I18n1, and_(self.boot_service.c.fk_name == I18n1.c.id, I18n1.c.fk_language == lang)) \
-                .outerjoin(I18n2, and_(self.boot_service.c.fk_desc == I18n2.c.id, I18n2.c.fk_language == lang)) \
+                # ID 1 of Internationalization table is "NOTTRANSLATED"
+                # Do not display it, display english text instead
+                .outerjoin(I18n1, and_(self.boot_service.c.fk_name == I18n1.c.id, I18n1.c.fk_language == lang, I18n1.c.id != 1)) \
+                .outerjoin(I18n2, and_(self.boot_service.c.fk_desc == I18n2.c.id, I18n2.c.fk_language == lang, I18n2.c.id != 1)) \
                 .outerjoin(self.entity))
         q = q.filter(or_(self.entity.c.uuid == loc_id, self.boot_service_on_imaging_server.c.fk_boot_service == None))
         if filter != '':
@@ -1317,7 +1323,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return ret
 
     def removeService(self, bs_uuid, loc_id, params):
-        self.logger.warn("Call to removeService")
         session = create_session()
 
         # Update PostInstallScript table and remove fk link to BootService table
