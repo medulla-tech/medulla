@@ -3,15 +3,16 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 ## Translators:
+#   <leonardoc@mandriva.com.br>, 2012.
 #   <sergio@mandriva.com.br>, 2012.
 # Andre Paulo Machado <andre.panm@gmail.com>, 2009.
 msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
-"Report-Msgid-Bugs-To: http://pulse2.mandriva.org/\n"
-"POT-Creation-Date: 2011-01-30 11:29+0100\n"
-"PO-Revision-Date: 2012-08-22 17:04+0000\n"
-"Last-Translator: Sergio Rafael Lemke <sergio@mandriva.com.br>\n"
+"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
+"POT-Creation-Date: 2012-10-18 07:36+0200\n"
+"PO-Revision-Date: 2012-10-18 14:11+0000\n"
+"Last-Translator: Leonardo Coelho <leonardoc@mandriva.com.br>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/projects/p/pulse2/team/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,633 +20,40 @@ msgstr ""
 "Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
-#: modules/inventory/inventory/incoming.php:38
-msgid "Incoming Inventories"
-msgstr "Entrada de Inventários"
-
-#: modules/inventory/inventory/incoming.php:46
-msgid "Last week"
-msgstr "Última Semana"
-
-#: modules/inventory/inventory/incoming.php:46
-msgid "Last month"
-msgstr "Último Mês"
-
-#: modules/inventory/inventory/incoming.php:46
-msgid "Last quarter"
-msgstr "Último Trimestre"
-
-#: modules/inventory/inventory/incoming.php:46
-msgid "Last semester"
-msgstr "Último Semestre"
-
-#: modules/inventory/inventory/incoming.php:46
-msgid "Last year"
-msgstr "Último Ano"
-
-#: modules/inventory/inventory/incoming.php:57
-msgid "Period"
-msgstr "Período"
-
-#: modules/inventory/inventory/incoming.php:62
-msgid "Only new computers"
-msgstr "Somente Computadores Novos"
-
-#: modules/inventory/inventory/incoming.php:63
-msgid "Load only the computers which were new when the inventory was made"
-msgstr ""
-"Lista apenas os inventários enviados por computadores novos adicionados "
-"neste período"
-
-#: modules/inventory/inventory/i18n_labels.php:25
-msgid "Application"
-msgstr "Aplicação"
-
-#: modules/inventory/inventory/i18n_labels.php:26
-msgid "Availability"
-msgstr "Disponibilidade"
-
-#: modules/inventory/inventory/i18n_labels.php:27
-#: modules/inventory/inventory/localSidebar.php:29
-#: modules/inventory/infoPackage.inc.php:45
-msgid "Bios"
-msgstr "Bios"
-
-#: modules/inventory/inventory/i18n_labels.php:28
-msgid "BiosVendor"
-msgstr "Fabricante da Bios"
-
-#: modules/inventory/inventory/i18n_labels.php:29
-msgid "BiosVersion"
-msgstr "Versão da Bios"
-
-#: modules/inventory/inventory/i18n_labels.php:30
-msgid "Build"
-msgstr "Build"
-
-#: modules/inventory/inventory/i18n_labels.php:31
-msgid "Bus"
-msgstr "Bus"
-
-#: modules/inventory/inventory/i18n_labels.php:32
-msgid "BuyDate"
-msgstr "Data de Aquisição"
-
-#: modules/inventory/inventory/i18n_labels.php:33
-msgid "BuyValue"
-msgstr "Valor da Aquisição"
-
-#: modules/inventory/inventory/i18n_labels.php:34
-msgid "Capacity"
-msgstr "Capacidade"
-
-#: modules/inventory/inventory/i18n_labels.php:35
-msgid "Caption"
-msgstr "Conexão"
-
-#: modules/inventory/inventory/i18n_labels.php:36
-msgid "CardType"
-msgstr "Tipo da Placa"
-
-#: modules/inventory/inventory/i18n_labels.php:37
-msgid "Chassis"
-msgstr "Chassis"
-
-#: modules/inventory/inventory/i18n_labels.php:38
-msgid "ChipSerial"
-msgstr "Número de Série do Chip"
-
-#: modules/inventory/inventory/i18n_labels.php:39
-msgid "ChipVendor"
-msgstr "Fabricante do Chip"
-
-#: modules/inventory/inventory/i18n_labels.php:40
-msgid "Chipset"
-msgstr "Chipset"
-
-#: modules/inventory/inventory/i18n_labels.php:41
-msgid "ChipsetType"
-msgstr "Tipo do Chipset"
-
-#: modules/inventory/inventory/i18n_labels.php:42
-msgid "Class"
-msgstr "Classe"
-
-#: modules/inventory/inventory/i18n_labels.php:43
-msgid "Comments"
-msgstr "Comentários"
-
-#: modules/inventory/inventory/i18n_labels.php:44
-msgid "Company"
-msgstr "Companhia"
-
-#: modules/inventory/inventory/i18n_labels.php:45
-msgid "Connector"
-msgstr "Conector"
-
-#: modules/inventory/inventory/i18n_labels.php:46
-#: modules/inventory/inventory/localSidebar.php:33
-#: modules/inventory/infoPackage.inc.php:51
-msgid "Controller"
-msgstr "Controlador"
-
-#: modules/inventory/inventory/i18n_labels.php:47
-msgid "CpuNum"
-msgstr "Nr. da CPU"
-
-#: modules/inventory/inventory/i18n_labels.php:48
-msgid "CpuVendor"
-msgstr "Fabricante da CPU"
-
-#: modules/inventory/inventory/i18n_labels.php:49
-msgid "CustomField"
-msgstr "Campo Personalizado"
-
-#: modules/inventory/inventory/i18n_labels.php:50
-msgid "Cyl"
-msgstr "Cilindros"
-
-#: modules/inventory/inventory/i18n_labels.php:51
-msgid "DNS"
-msgstr "DNS"
-
-#: modules/inventory/inventory/i18n_labels.php:52
-#: modules/inventory/inventory/ajaxViewPart.php:34
-#: modules/inventory/includes/html.php:62
-msgid "Date"
-msgstr "Data"
-
-#: modules/inventory/inventory/i18n_labels.php:53
-msgid "DeliveryDate"
-msgstr "Data da Entrega"
-
-#: modules/inventory/inventory/i18n_labels.php:54
-msgid "Department"
-msgstr "Departamento"
-
-#: modules/inventory/inventory/i18n_labels.php:55
-msgid "Description"
-msgstr "Descrição"
-
-#: modules/inventory/inventory/i18n_labels.php:56
-msgid "Device"
-msgstr "Dispositivo"
-
-#: modules/inventory/inventory/i18n_labels.php:57
-msgid "Disk"
-msgstr "Disco"
-
-#: modules/inventory/inventory/i18n_labels.php:58
-msgid "DiskSize"
-msgstr "Tamanho do Disco"
-
-#: modules/inventory/inventory/i18n_labels.php:59
-#: modules/inventory/inventory/localSidebar.php:37
-#: modules/inventory/infoPackage.inc.php:54
-msgid "Drive"
-msgstr "Drive"
-
-#: modules/inventory/inventory/i18n_labels.php:60
-msgid "DriveLetter"
-msgstr "Unidade do Drive"
-
-#: modules/inventory/inventory/i18n_labels.php:61
-msgid "DriveType"
-msgstr "Tipo do Drive"
-
-#: modules/inventory/inventory/i18n_labels.php:62
-msgid "Driver"
-msgstr "Controlador"
-
-#: modules/inventory/inventory/i18n_labels.php:63
-msgid "ExecutableSize"
-msgstr "Tamanho do Executável"
-
-#: modules/inventory/inventory/i18n_labels.php:64
-msgid "ExpandedDescription"
-msgstr "Descrição Expandida"
-
-#: modules/inventory/inventory/i18n_labels.php:65
-msgid "ExpandedType"
-msgstr "Tipo Expandido"
-
-#: modules/inventory/inventory/i18n_labels.php:66
-msgid "ExtendedDescription"
-msgstr "Descrição Extendida"
-
-#: modules/inventory/inventory/i18n_labels.php:67
-msgid "ExtendedType"
-msgstr "Tipo Extendido"
-
-#: modules/inventory/inventory/i18n_labels.php:68
-msgid "Field"
-msgstr "Campo"
-
-#: modules/inventory/inventory/i18n_labels.php:69
-msgid "FileCount"
-msgstr "Total de Arquivos"
-
-#: modules/inventory/inventory/i18n_labels.php:70
-msgid "FileSystem"
-msgstr "Sistema de Arquivos"
-
-#: modules/inventory/inventory/i18n_labels.php:71
-msgid "Flag"
-msgstr "Flag"
-
-#: modules/inventory/inventory/i18n_labels.php:72
-msgid "Form"
-msgstr "Formulário"
-
-#: modules/inventory/inventory/i18n_labels.php:73
-msgid "FreeSpace"
-msgstr "Espaço Livre"
-
-#: modules/inventory/inventory/i18n_labels.php:74
-msgid "Freq"
-msgstr "Freq"
-
-#: modules/inventory/inventory/i18n_labels.php:75
-msgid "Frequency"
-msgstr "Frequência"
-
-#: modules/inventory/inventory/i18n_labels.php:76
-msgid "Func"
-msgstr "Func"
-
-#: modules/inventory/inventory/i18n_labels.php:77
-msgid "Gateway"
-msgstr "Gateway"
-
-#: modules/inventory/inventory/i18n_labels.php:78
-#: modules/inventory/inventory/localSidebar.php:30
-#: modules/inventory/infoPackage.inc.php:47
-msgid "Hardware"
-msgstr "Hardware"
-
-#: modules/inventory/inventory/i18n_labels.php:79
-msgid "HardwareVersion"
-msgstr "Versão do Hardware"
-
-#: modules/inventory/inventory/i18n_labels.php:80
-msgid "Head"
-msgstr "Cabeçalho"
-
-#: modules/inventory/inventory/i18n_labels.php:81
-msgid "HighMem"
-msgstr "Memória Alta"
-
-#: modules/inventory/inventory/i18n_labels.php:82
-msgid "IP"
-msgstr "IP"
-
-#: modules/inventory/inventory/i18n_labels.php:83
-#: modules/inventory/inventory/localSidebar.php:38
-#: modules/inventory/infoPackage.inc.php:56
-msgid "Input"
-msgstr "Entrada"
-
-#: modules/inventory/inventory/i18n_labels.php:84
-#: modules/inventory/inventory/history.php:80
-#: modules/inventory/infoPackage.inc.php:33
-#: modules/inventory/infoPackage.inc.php:39
-msgid "Inventory"
-msgstr "Inventário"
-
-#: modules/inventory/inventory/i18n_labels.php:85
-msgid "IpAddress"
-msgstr "Endereço de IP"
-
-#: modules/inventory/inventory/i18n_labels.php:86
-msgid "KEY"
-msgstr "CHAVE"
-
-#: modules/inventory/inventory/i18n_labels.php:87
-msgid "Length"
-msgstr "Tamanho"
-
-#: modules/inventory/inventory/i18n_labels.php:88
-msgid "Location"
-msgstr "Localização"
-
-#: modules/inventory/inventory/i18n_labels.php:89
-msgid "LowMem"
-msgstr "Memória Baixa"
-
-#: modules/inventory/inventory/i18n_labels.php:90
-msgid "MACAddress"
-msgstr "Endereço MAC"
-
-#: modules/inventory/inventory/i18n_labels.php:91
-msgid "MIB"
-msgstr "MIB"
-
-#: modules/inventory/inventory/i18n_labels.php:92
-msgid "MacAddr"
-msgstr "Endereço MAC"
-
-#: modules/inventory/inventory/i18n_labels.php:93
 #: modules/inventory/inventory/csv.php:67
 #: modules/inventory/inventory/csv.php:107
+#: modules/inventory/inventory/i18n_labels.php:96
 msgid "Computer"
 msgstr "Computador"
 
-#: modules/inventory/inventory/i18n_labels.php:94
-msgid "Manuf"
-msgstr "Fabricante"
+#: modules/inventory/inventory/view.php:48
+#, php-format
+msgid "Inventory of %s"
+msgstr "Inventário de %s"
 
-#: modules/inventory/inventory/i18n_labels.php:95
-msgid "Manufacturer"
-msgstr "Fabricante"
+#: modules/inventory/inventory/view.php:78
+msgid "Properties"
+msgstr "Propriedades"
 
-#: modules/inventory/inventory/i18n_labels.php:96
-msgid "Media"
-msgstr "Mídia"
-
-#: modules/inventory/inventory/i18n_labels.php:97
-#: modules/inventory/inventory/localSidebar.php:39
-#: modules/inventory/infoPackage.inc.php:58
-msgid "Memory"
-msgstr "Memória"
-
-#: modules/inventory/inventory/i18n_labels.php:98
-msgid "MiscMem"
-msgstr "Drivers (Memória)"
-
-#: modules/inventory/inventory/i18n_labels.php:99
-msgid "MiscSMB"
-msgstr "Drivers SMB"
-
-#: modules/inventory/inventory/i18n_labels.php:100
-msgid "Model"
-msgstr "Modelo"
-
-#: modules/inventory/inventory/i18n_labels.php:101
-msgid "Modem"
-msgstr "Modem"
-
-#: modules/inventory/inventory/i18n_labels.php:102
-#: modules/inventory/inventory/localSidebar.php:40
-#: modules/inventory/infoPackage.inc.php:60
-msgid "Monitor"
-msgstr "Monitor"
-
-#: modules/inventory/inventory/i18n_labels.php:103
-msgid "Name"
-msgstr "Nome"
-
-#: modules/inventory/inventory/i18n_labels.php:104
-#: modules/inventory/inventory/localSidebar.php:32
-#: modules/inventory/infoPackage.inc.php:49
-msgid "Network"
-msgstr "Rede"
-
-#: modules/inventory/inventory/i18n_labels.php:105
-msgid "NetworkType"
-msgstr "Tipo de Rede"
-
-#: modules/inventory/inventory/i18n_labels.php:106
-msgid "Num"
-msgstr "Número"
-
-#: modules/inventory/inventory/i18n_labels.php:107
-msgid "Number"
-msgstr "Número"
-
-#: modules/inventory/inventory/i18n_labels.php:108
-msgid "OSSerialNumber"
-msgstr "Número Serial do SO"
-
-#: modules/inventory/inventory/i18n_labels.php:109
-msgid "OperatingSystem"
-msgstr "Sistema Operacional"
-
-#: modules/inventory/inventory/i18n_labels.php:110
-#: modules/inventory/inventory/pci.php:27
-msgid "Pci"
-msgstr "PCI"
-
-#: modules/inventory/inventory/i18n_labels.php:111
-msgid "Phone"
-msgstr "Fone"
-
-#: modules/inventory/inventory/i18n_labels.php:112
-msgid "PointType"
-msgstr "Tipo do Ponto"
-
-#: modules/inventory/inventory/i18n_labels.php:113
-#: modules/inventory/inventory/localSidebar.php:41
-#: modules/inventory/infoPackage.inc.php:62
-msgid "Port"
-msgstr "Porta"
-
-#: modules/inventory/inventory/i18n_labels.php:114
-msgid "PortType"
-msgstr "Tipo da porta"
-
-#: modules/inventory/inventory/i18n_labels.php:115
-#: modules/inventory/inventory/localSidebar.php:42
-#: modules/inventory/infoPackage.inc.php:64
-msgid "Printer"
-msgstr "Impressora"
-
-#: modules/inventory/inventory/i18n_labels.php:116
-msgid "ProcessorCount"
-msgstr "Nome do Processador"
-
-#: modules/inventory/inventory/i18n_labels.php:117
-msgid "ProcessorFrequency"
-msgstr "Frequência do Processador"
-
-#: modules/inventory/inventory/i18n_labels.php:118
-msgid "ProcessorType"
-msgstr "Tipo do Processador"
-
-#: modules/inventory/inventory/i18n_labels.php:119
-msgid "ProductName"
-msgstr "Nome do Produto"
-
-#: modules/inventory/inventory/i18n_labels.php:120
-msgid "ProductPath"
-msgstr "Caminho do Produto"
-
-#: modules/inventory/inventory/i18n_labels.php:121
-msgid "ProductVersion"
-msgstr "Versão do Produto"
-
-#: modules/inventory/inventory/i18n_labels.php:122
-msgid "RamTotal"
-msgstr "Total de RAM"
-
-#: modules/inventory/inventory/i18n_labels.php:123
-msgid "RegisteredCompany"
-msgstr "Companhia"
-
-#: modules/inventory/inventory/i18n_labels.php:124
-msgid "RegisteredName"
-msgstr "Nome Registrado"
-
-#: modules/inventory/inventory/i18n_labels.php:125
-msgid "Resolution"
-msgstr "Resolução"
-
-#: modules/inventory/inventory/i18n_labels.php:126
-msgid "Sector"
-msgstr "Setor"
-
-#: modules/inventory/inventory/i18n_labels.php:127
-msgid "Serial"
-msgstr "Serial"
-
-#: modules/inventory/inventory/i18n_labels.php:128
-msgid "Size"
-msgstr "Tamanho"
-
-#: modules/inventory/inventory/i18n_labels.php:129
-#: modules/inventory/inventory/slot.php:27
-msgid "Slot"
-msgstr "Slot"
-
-#: modules/inventory/inventory/i18n_labels.php:130
-msgid "SlotCount"
-msgstr "Nr. do Slot"
-
-#: modules/inventory/inventory/i18n_labels.php:131
-msgid "SmbManufacturer"
-msgstr "Fabricante (SMB)"
-
-#: modules/inventory/inventory/i18n_labels.php:132
-msgid "SmbProduct"
-msgstr "Produto (SMB)"
-
-#: modules/inventory/inventory/i18n_labels.php:133
-msgid "SmbSerial"
-msgstr "Serial (SMB)"
-
-#: modules/inventory/inventory/i18n_labels.php:134
-msgid "SmbType"
-msgstr "Tipo (SMB)"
-
-#: modules/inventory/inventory/i18n_labels.php:135
-msgid "SmbVersion"
-msgstr "Versão (SMB)"
-
-#: modules/inventory/inventory/i18n_labels.php:136
-#: modules/inventory/inventory/localSidebar.php:31
-#: modules/inventory/infoPackage.inc.php:72
-msgid "Software"
-msgstr "Software"
-
-#: modules/inventory/inventory/i18n_labels.php:137
-#: modules/inventory/inventory/localSidebar.php:43
-#: modules/inventory/infoPackage.inc.php:66
-msgid "Sound"
-msgstr "Som"
-
-#: modules/inventory/inventory/i18n_labels.php:138
-msgid "Speed"
-msgstr "Velocidade"
-
-#: modules/inventory/inventory/i18n_labels.php:139
-msgid "Stamp"
-msgstr "Categoria"
-
-#: modules/inventory/inventory/i18n_labels.php:140
-msgid "StandardDescription"
-msgstr "Descrição Padrão"
-
-#: modules/inventory/inventory/i18n_labels.php:141
-msgid "StandardType"
-msgstr "Tipo Padrão"
-
-#: modules/inventory/inventory/i18n_labels.php:142
-msgid "State"
-msgstr "Estado"
-
-#: modules/inventory/inventory/i18n_labels.php:143
-#: modules/inventory/inventory/localSidebar.php:44
-#: modules/inventory/infoPackage.inc.php:68
-msgid "Storage"
-msgstr "Armazenamento"
-
-#: modules/inventory/inventory/i18n_labels.php:144
-msgid "SubnetMask"
-msgstr "Máscara de Sub-rede"
-
-#: modules/inventory/inventory/i18n_labels.php:145
-msgid "SupportEnd"
-msgstr "Finalizar Suporte"
-
-#: modules/inventory/inventory/i18n_labels.php:146
-msgid "SwapSpace"
-msgstr "Tamanho de Swap"
-
-#: modules/inventory/inventory/i18n_labels.php:147
-msgid "System"
-msgstr "Sistema"
-
-#: modules/inventory/inventory/i18n_labels.php:148
-msgid "Time"
-msgstr "Tempo"
-
-#: modules/inventory/inventory/i18n_labels.php:149
-msgid "TotalMem"
-msgstr "Memória Total"
-
-#: modules/inventory/inventory/i18n_labels.php:150
-msgid "TotalSpace"
-msgstr "Espaço Total"
-
-#: modules/inventory/inventory/i18n_labels.php:151
-msgid "Type"
-msgstr "Tipo"
-
-#: modules/inventory/inventory/i18n_labels.php:152
-msgid "TypeMachine"
-msgstr "Tipo de Máquina"
-
-#: modules/inventory/inventory/i18n_labels.php:153
-msgid "Used"
-msgstr "Utilizado"
-
-#: modules/inventory/inventory/i18n_labels.php:154
-msgid "User"
-msgstr "Usuário"
-
-#: modules/inventory/inventory/i18n_labels.php:155
-msgid "VRAMSize"
-msgstr "Tamanho da VRAM"
-
-#: modules/inventory/inventory/i18n_labels.php:156
+#: modules/inventory/inventory/view.php:79
 #: modules/inventory/inventory/inventory_diff.php:76
 #: modules/inventory/inventory/inventory_diff.php:101
-#: modules/inventory/inventory/view.php:79
+#: modules/inventory/inventory/i18n_labels.php:161
 msgid "Value"
 msgstr "Valor"
 
-#: modules/inventory/inventory/i18n_labels.php:157
-msgid "Vendor"
-msgstr "Fabricante"
+#: modules/inventory/inventory/infos.php:33
+msgid "Additionnal informations"
+msgstr "Informações adicionais"
 
-#: modules/inventory/inventory/i18n_labels.php:158
-msgid "Version"
-msgstr "Versão"
+#: modules/inventory/inventory/infos.php:43
+msgid "First apparition"
+msgstr "Primeira aparição"
 
-#: modules/inventory/inventory/i18n_labels.php:159
-msgid "VolumeName"
-msgstr "Nome do Volume"
-
-#: modules/inventory/inventory/i18n_labels.php:160
-msgid "WarrantyEnd"
-msgstr "Fim da Garantia"
-
-#: modules/inventory/inventory/i18n_labels.php:161
-msgid "Workgroup"
-msgstr "Grupo de trabalho"
-
-#: modules/inventory/inventory/i18n_labels.php:162
-msgid "WorkingDate"
-msgstr "Data da Operação"
+#: modules/inventory/inventory/slot.php:27
+#: modules/inventory/inventory/i18n_labels.php:134
+msgid "Slot"
+msgstr "Slot"
 
 #: modules/inventory/inventory/inventory_diff.php:48
 msgid "Inventory changes"
@@ -664,132 +72,594 @@ msgstr "Elementos Adicionados"
 msgid "Removed elements"
 msgstr "Elementos Removidos"
 
-#: modules/inventory/inventory/body.php:42
-msgid "Bios list"
-msgstr "Lista da Bios"
+#: modules/inventory/inventory/i18n_labels.php:26
+msgid "Application"
+msgstr "Aplicação"
 
-#: modules/inventory/inventory/body.php:43
-msgid "Hardware and OS information list"
-msgstr "Lista de informações do Hardware e SO"
+#: modules/inventory/inventory/i18n_labels.php:27
+msgid "Availability"
+msgstr "Disponibilidade"
 
-#: modules/inventory/inventory/body.php:44
-msgid "Software list"
-msgstr "Lista de software"
+#: modules/inventory/inventory/i18n_labels.php:28
+#: modules/inventory/inventory/localSidebar.php:29
+#: modules/inventory/infoPackage.inc.php:46
+msgid "Bios"
+msgstr "Bios"
 
-#: modules/inventory/inventory/body.php:45
-msgid "Network card and configuration list"
-msgstr "Lista de Placa de Rede e Configurações"
+#: modules/inventory/inventory/i18n_labels.php:29
+msgid "Bios Vendor"
+msgstr "Fabricante da Bios"
 
-#: modules/inventory/inventory/body.php:46
-msgid "Controller list"
-msgstr "Lista de controladores"
+#: modules/inventory/inventory/i18n_labels.php:30
+msgid "Bios Version"
+msgstr "Versão da BIOS"
 
-#: modules/inventory/inventory/body.php:47
-msgid "Registry keys/values list"
-msgstr "Lista de chaves/valores de registro"
+#: modules/inventory/inventory/i18n_labels.php:31
+msgid "Build"
+msgstr "Build"
 
-#: modules/inventory/inventory/body.php:48
-msgid "Drive list"
-msgstr "Lista de drives"
+#: modules/inventory/inventory/i18n_labels.php:32
+msgid "Bus"
+msgstr "Bus"
 
-#: modules/inventory/inventory/body.php:49
-msgid "Input device list"
-msgstr "Lista de dispositivos de entrada"
+#: modules/inventory/inventory/i18n_labels.php:33
+msgid "Buy Date"
+msgstr "Data da Compra"
 
-#: modules/inventory/inventory/body.php:50
-msgid "Memory module list"
-msgstr "Lista de módulos da memória"
+#: modules/inventory/inventory/i18n_labels.php:34
+msgid "Buy Value"
+msgstr "Valor da compra"
 
-#: modules/inventory/inventory/body.php:51
-msgid "Monitor list"
-msgstr "Lista de monitores"
+#: modules/inventory/inventory/i18n_labels.php:35
+msgid "Capacity"
+msgstr "Capacidade"
 
-#: modules/inventory/inventory/body.php:52
-msgid "Port list"
-msgstr "Lista de portas"
+#: modules/inventory/inventory/i18n_labels.php:36
+msgid "Caption"
+msgstr "Conexão"
 
-#: modules/inventory/inventory/body.php:53
-msgid "Printer list"
-msgstr "Lista de impressoras"
+#: modules/inventory/inventory/i18n_labels.php:37
+msgid "Card Type"
+msgstr "Tipo de cartão"
 
-#: modules/inventory/inventory/body.php:54
-msgid "Sound list"
-msgstr "Lista de som"
+#: modules/inventory/inventory/i18n_labels.php:38
+msgid "Chassis"
+msgstr "Chassis"
 
-#: modules/inventory/inventory/body.php:55
-msgid "Storage medium list"
-msgstr "Lista de mídias de armazenamento"
+#: modules/inventory/inventory/i18n_labels.php:39
+msgid "Chip Serial"
+msgstr "Número de Série do Chip"
 
-#: modules/inventory/inventory/body.php:56
-msgid "Video card list"
-msgstr "Lista de Placas de Vídeo"
+#: modules/inventory/inventory/i18n_labels.php:40
+msgid "Chip Vendor"
+msgstr "Fabricante do Chip"
 
-#: modules/inventory/inventory/infos.php:33
-msgid "Additionnal informations"
-msgstr "Informações adicionais"
+#: modules/inventory/inventory/i18n_labels.php:41
+msgid "Chipset"
+msgstr "Chipset"
 
-#: modules/inventory/inventory/infos.php:43
-msgid "First apparition"
-msgstr "Primeira aparição"
+#: modules/inventory/inventory/i18n_labels.php:42
+msgid "Chipset Type"
+msgstr "Tipo do Chipset"
 
-#: modules/inventory/inventory/ajaxViewPart.php:195
-#: modules/inventory/infoPackage.inc.php:77
+#: modules/inventory/inventory/i18n_labels.php:43
+msgid "Class"
+msgstr "Classe"
+
+#: modules/inventory/inventory/i18n_labels.php:44
+msgid "Comments"
+msgstr "Comentários"
+
+#: modules/inventory/inventory/i18n_labels.php:45
+msgid "Company"
+msgstr "Companhia"
+
+#: modules/inventory/inventory/i18n_labels.php:46
+msgid "Connector"
+msgstr "Conector"
+
+#: modules/inventory/inventory/i18n_labels.php:47
+#: modules/inventory/inventory/localSidebar.php:33
+#: modules/inventory/infoPackage.inc.php:52
+msgid "Controller"
+msgstr "Controlador"
+
+#: modules/inventory/inventory/i18n_labels.php:48
+msgid "Cpu Num"
+msgstr "Quantidade de Processador"
+
+#: modules/inventory/inventory/i18n_labels.php:49
+msgid "Cpu Vendor"
+msgstr "Vendedor do processador"
+
+#: modules/inventory/inventory/i18n_labels.php:50
+msgid "Custom Field"
+msgstr "Campo Personalizado"
+
+#: modules/inventory/inventory/i18n_labels.php:51
+msgid "Cyl"
+msgstr "Cilindros"
+
+#: modules/inventory/inventory/i18n_labels.php:52
+msgid "DNS"
+msgstr "DNS"
+
+#: modules/inventory/inventory/i18n_labels.php:53
+#: modules/inventory/inventory/ajaxViewPart.php:35
+#: modules/inventory/includes/html.php:62
+msgid "Date"
+msgstr "Data"
+
+#: modules/inventory/inventory/i18n_labels.php:54
+msgid "Date Last Switch On"
+msgstr "Data que estava ligada por ultimo"
+
+#: modules/inventory/inventory/i18n_labels.php:57
+msgid "Default Gateway"
+msgstr "Gateway Padrão"
+
+#: modules/inventory/inventory/i18n_labels.php:58
+msgid "Delivery Date"
+msgstr "Data de Entrega"
+
+#: modules/inventory/inventory/i18n_labels.php:59
+msgid "Department"
+msgstr "Departamento"
+
+#: modules/inventory/inventory/i18n_labels.php:60
+msgid "Description"
+msgstr "Descrição"
+
+#: modules/inventory/inventory/i18n_labels.php:61
+msgid "Device"
+msgstr "Dispositivo"
+
+#: modules/inventory/inventory/i18n_labels.php:62
+msgid "Disk"
+msgstr "Disco"
+
+#: modules/inventory/inventory/i18n_labels.php:63
+msgid "Disk Size"
+msgstr "Tamanho do Disco"
+
+#: modules/inventory/inventory/i18n_labels.php:64
+#: modules/inventory/inventory/localSidebar.php:37
+#: modules/inventory/infoPackage.inc.php:55
+msgid "Drive"
+msgstr "Drive"
+
+#: modules/inventory/inventory/i18n_labels.php:65
+msgid "Drive Letter"
+msgstr "Unidade do Drive"
+
+#: modules/inventory/inventory/i18n_labels.php:66
+msgid "Drive Type"
+msgstr "Tipo da Unidade"
+
+#: modules/inventory/inventory/i18n_labels.php:67
+msgid "Driver"
+msgstr "Controlador"
+
+#: modules/inventory/inventory/i18n_labels.php:68
+msgid "Executable Size"
+msgstr "Tamanho do Executável"
+
+#: modules/inventory/inventory/i18n_labels.php:69
+msgid "Expanded Description"
+msgstr "Descrição Expandida"
+
+#: modules/inventory/inventory/i18n_labels.php:70
+msgid "Expanded Type"
+msgstr "Tipo Expandido"
+
+#: modules/inventory/inventory/i18n_labels.php:71
+msgid "Extended Description"
+msgstr "Descrição Estendida"
+
+#: modules/inventory/inventory/i18n_labels.php:72
+msgid "Field"
+msgstr "Campo"
+
+#: modules/inventory/inventory/i18n_labels.php:73
+msgid "File Count"
+msgstr "Contagem de arquivos"
+
+#: modules/inventory/inventory/i18n_labels.php:74
+msgid "File System"
+msgstr "Sistema de Arquivos"
+
+#: modules/inventory/inventory/i18n_labels.php:75
+msgid "Flag"
+msgstr "Flag"
+
+#: modules/inventory/inventory/i18n_labels.php:76
+msgid "Form"
+msgstr "Formulário"
+
+#: modules/inventory/inventory/i18n_labels.php:77
+msgid "Free Space"
+msgstr "Espaço Livre"
+
+#: modules/inventory/inventory/i18n_labels.php:78
+msgid "Freq"
+msgstr "Freq"
+
+#: modules/inventory/inventory/i18n_labels.php:79
+msgid "Frequency"
+msgstr "Frequência"
+
+#: modules/inventory/inventory/i18n_labels.php:80
+msgid "Func"
+msgstr "Func"
+
+#: modules/inventory/inventory/i18n_labels.php:81
+msgid "Gateway"
+msgstr "Gateway"
+
+#: modules/inventory/inventory/i18n_labels.php:82
+#: modules/inventory/inventory/localSidebar.php:30
+#: modules/inventory/infoPackage.inc.php:48
+msgid "Hardware"
+msgstr "Hardware"
+
+#: modules/inventory/inventory/i18n_labels.php:83
+msgid "Hardware Version"
+msgstr "Versão do Hardware"
+
+#: modules/inventory/inventory/i18n_labels.php:84
+msgid "Head"
+msgstr "Cabeçalho"
+
+#: modules/inventory/inventory/i18n_labels.php:85
+msgid "High Mem"
+msgstr "Memoria Alta"
+
+#: modules/inventory/inventory/i18n_labels.php:86
+msgid "IP"
+msgstr "IP"
+
+#: modules/inventory/inventory/i18n_labels.php:87
+#: modules/inventory/inventory/localSidebar.php:38
+#: modules/inventory/infoPackage.inc.php:57
+msgid "Input"
+msgstr "Entrada"
+
+#: modules/inventory/inventory/i18n_labels.php:88
+msgid "Ip Address"
+msgstr "Endereço IP"
+
+#: modules/inventory/inventory/i18n_labels.php:89
+msgid "KEY"
+msgstr "CHAVE"
+
+#: modules/inventory/inventory/i18n_labels.php:90
+msgid "Length"
+msgstr "Tamanho"
+
+#: modules/inventory/inventory/i18n_labels.php:91
+msgid "Location"
+msgstr "Localização"
+
+#: modules/inventory/inventory/i18n_labels.php:92
+msgid "Low Mem"
+msgstr "Memoria Baixa"
+
+#: modules/inventory/inventory/i18n_labels.php:93
+msgid "MAC Address"
+msgstr "Endereço MAC"
+
+#: modules/inventory/inventory/i18n_labels.php:94
+msgid "MIB"
+msgstr "MIB"
+
+#: modules/inventory/inventory/i18n_labels.php:95
+msgid "Mac Addr"
+msgstr "Endereço MAC"
+
+#: modules/inventory/inventory/i18n_labels.php:97
+msgid "Manuf"
+msgstr "Fabricante"
+
+#: modules/inventory/inventory/i18n_labels.php:98
+msgid "Manufacturer"
+msgstr "Fabricante"
+
+#: modules/inventory/inventory/i18n_labels.php:99
+msgid "Media"
+msgstr "Mídia"
+
+#: modules/inventory/inventory/i18n_labels.php:100
+#: modules/inventory/inventory/localSidebar.php:39
+#: modules/inventory/infoPackage.inc.php:59
+msgid "Memory"
+msgstr "Memória"
+
+#: modules/inventory/inventory/i18n_labels.php:101
+msgid "Misc Mem"
+msgstr "Memorias Diversas"
+
+#: modules/inventory/inventory/i18n_labels.php:102
+msgid "Misc SMB"
+msgstr "Diversos SMB"
+
+#: modules/inventory/inventory/i18n_labels.php:103
+msgid "Model"
+msgstr "Modelo"
+
+#: modules/inventory/inventory/i18n_labels.php:104
+msgid "Modem"
+msgstr "Modem"
+
+#: modules/inventory/inventory/i18n_labels.php:105
+#: modules/inventory/inventory/localSidebar.php:40
+#: modules/inventory/infoPackage.inc.php:61
+msgid "Monitor"
+msgstr "Monitor"
+
+#: modules/inventory/inventory/i18n_labels.php:106
+msgid "Name"
+msgstr "Nome"
+
+#: modules/inventory/inventory/i18n_labels.php:107
+#: modules/inventory/inventory/localSidebar.php:32
+#: modules/inventory/infoPackage.inc.php:50
+msgid "Network"
+msgstr "Rede"
+
+#: modules/inventory/inventory/i18n_labels.php:108
+msgid "Network Type"
+msgstr "Tipo de Rede"
+
+#: modules/inventory/inventory/i18n_labels.php:109
+msgid "Num"
+msgstr "Número"
+
+#: modules/inventory/inventory/i18n_labels.php:110
+msgid "Number"
+msgstr "Número"
+
+#: modules/inventory/inventory/i18n_labels.php:111
+msgid "OS Serial Number"
+msgstr "Numero Serial do S.O"
+
+#: modules/inventory/inventory/i18n_labels.php:112
+msgid "Os Installation Date"
+msgstr "Data de Instalação do S.O"
+
+#: modules/inventory/inventory/i18n_labels.php:113
+msgid "Os Architecture"
+msgstr "Arquitetura do S.O"
+
+#: modules/inventory/inventory/i18n_labels.php:114
+msgid "Operating System"
+msgstr "Sistema Operacional"
+
+#: modules/inventory/inventory/i18n_labels.php:115
+#: modules/inventory/inventory/pci.php:27
+msgid "Pci"
+msgstr "PCI"
+
+#: modules/inventory/inventory/i18n_labels.php:116
+msgid "Phone"
+msgstr "Fone"
+
+#: modules/inventory/inventory/i18n_labels.php:117
+msgid "Point Type"
+msgstr "Tipo de apontamento"
+
+#: modules/inventory/inventory/i18n_labels.php:118
+#: modules/inventory/inventory/localSidebar.php:41
+#: modules/inventory/infoPackage.inc.php:63
+msgid "Port"
+msgstr "Porta"
+
+#: modules/inventory/inventory/i18n_labels.php:119
+msgid "Port Type"
+msgstr "Tipo de Porta"
+
+#: modules/inventory/inventory/i18n_labels.php:120
+#: modules/inventory/inventory/localSidebar.php:42
+#: modules/inventory/infoPackage.inc.php:65
+msgid "Printer"
+msgstr "Impressora"
+
+#: modules/inventory/inventory/i18n_labels.php:121
+msgid "Processor Count"
+msgstr "Quantidade de Processadores"
+
+#: modules/inventory/inventory/i18n_labels.php:122
+msgid "Processor Frequency"
+msgstr "Frequência do Processador"
+
+#: modules/inventory/inventory/i18n_labels.php:123
+msgid "Processor Type"
+msgstr "Tipo de Processador"
+
+#: modules/inventory/inventory/i18n_labels.php:124
+msgid "Product Name"
+msgstr "Nome do Produto"
+
+#: modules/inventory/inventory/i18n_labels.php:125
+msgid "Product Path"
+msgstr "Caminho do Produto"
+
+#: modules/inventory/inventory/i18n_labels.php:126
+msgid "Product Version"
+msgstr "Versão do Produto"
+
+#: modules/inventory/inventory/i18n_labels.php:127
+msgid "Ram Total"
+msgstr "Total de RAM"
+
+#: modules/inventory/inventory/i18n_labels.php:128
+msgid "Registered Company"
+msgstr "Empresa Registrada"
+
+#: modules/inventory/inventory/i18n_labels.php:129
+msgid "Registered Name"
+msgstr "Nome Registrado"
+
+#: modules/inventory/inventory/i18n_labels.php:130
+msgid "Resolution"
+msgstr "Resolução"
+
+#: modules/inventory/inventory/i18n_labels.php:131
+msgid "Sector"
+msgstr "Setor"
+
+#: modules/inventory/inventory/i18n_labels.php:132
+msgid "Serial"
+msgstr "Serial"
+
+#: modules/inventory/inventory/i18n_labels.php:133
+msgid "Size"
+msgstr "Tamanho"
+
+#: modules/inventory/inventory/i18n_labels.php:135
+msgid "Slot Count"
+msgstr "Contagem do SLOT"
+
+#: modules/inventory/inventory/i18n_labels.php:136
+msgid "Smb Manufacturer"
+msgstr "Fabricante SMB"
+
+#: modules/inventory/inventory/i18n_labels.php:137
+msgid "Smb Product"
+msgstr "Produto SMB"
+
+#: modules/inventory/inventory/i18n_labels.php:138
+msgid "Smb Serial"
+msgstr "Serial SMB"
+
+#: modules/inventory/inventory/i18n_labels.php:139
+msgid "Smb Type"
+msgstr "Tipo SMB"
+
+#: modules/inventory/inventory/i18n_labels.php:140
+msgid "Smb Version"
+msgstr "Versão SMB"
+
+#: modules/inventory/inventory/i18n_labels.php:141
+#: modules/inventory/inventory/localSidebar.php:31
+#: modules/inventory/infoPackage.inc.php:73
+msgid "Software"
+msgstr "Software"
+
+#: modules/inventory/inventory/i18n_labels.php:142
+#: modules/inventory/inventory/localSidebar.php:43
+#: modules/inventory/infoPackage.inc.php:67
+msgid "Sound"
+msgstr "Som"
+
+#: modules/inventory/inventory/i18n_labels.php:143
+msgid "Speed"
+msgstr "Velocidade"
+
+#: modules/inventory/inventory/i18n_labels.php:144
+msgid "Stamp"
+msgstr "Categoria"
+
+#: modules/inventory/inventory/i18n_labels.php:145
+msgid "Standard Description"
+msgstr "Descrição Padrão"
+
+#: modules/inventory/inventory/i18n_labels.php:146
+msgid "Standard Type"
+msgstr "Tipo Padrão"
+
+#: modules/inventory/inventory/i18n_labels.php:147
+msgid "State"
+msgstr "Estado"
+
+#: modules/inventory/inventory/i18n_labels.php:148
+#: modules/inventory/inventory/localSidebar.php:44
+#: modules/inventory/infoPackage.inc.php:69
+msgid "Storage"
+msgstr "Armazenamento"
+
+#: modules/inventory/inventory/i18n_labels.php:149
+msgid "Subnet Mask"
+msgstr "Máscara de Sub-rede"
+
+#: modules/inventory/inventory/i18n_labels.php:150
+msgid "Support End"
+msgstr "Finalizar Suporte"
+
+#: modules/inventory/inventory/i18n_labels.php:151
+msgid "Swap Space"
+msgstr "Espaço do SWAP"
+
+#: modules/inventory/inventory/i18n_labels.php:152
+msgid "System"
+msgstr "Sistema"
+
+#: modules/inventory/inventory/i18n_labels.php:153
+msgid "Time"
+msgstr "Tempo"
+
+#: modules/inventory/inventory/i18n_labels.php:154
+msgid "Total Mem"
+msgstr "Total de memoria"
+
+#: modules/inventory/inventory/i18n_labels.php:155
+msgid "Total Space"
+msgstr "Espaço Total"
+
+#: modules/inventory/inventory/i18n_labels.php:156
+msgid "Type"
+msgstr "Tipo"
+
+#: modules/inventory/inventory/i18n_labels.php:157
+msgid "Type Machine"
+msgstr "Tipo de Maquina"
+
+#: modules/inventory/inventory/i18n_labels.php:158
+msgid "Used"
+msgstr "Utilizado"
+
+#: modules/inventory/inventory/i18n_labels.php:159
+msgid "User"
+msgstr "Usuário"
+
+#: modules/inventory/inventory/i18n_labels.php:160
+msgid "VRAM Size"
+msgstr "Tamanho da VRAM"
+
+#: modules/inventory/inventory/i18n_labels.php:162
+msgid "Vendor"
+msgstr "Fabricante"
+
+#: modules/inventory/inventory/i18n_labels.php:163
+msgid "Version"
+msgstr "Versão"
+
+#: modules/inventory/inventory/i18n_labels.php:164
+msgid "VolumeName"
+msgstr "Nome do Volume"
+
+#: modules/inventory/inventory/i18n_labels.php:165
+msgid "WarrantyEnd"
+msgstr "Fim da Garantia"
+
+#: modules/inventory/inventory/i18n_labels.php:166
+msgid "Workgroup"
+msgstr "Grupo de trabalho"
+
+#: modules/inventory/inventory/i18n_labels.php:167
+msgid "WorkingDate"
+msgstr "Data da Operação"
+
+#: modules/inventory/inventory/ajaxViewPart.php:242
+#: modules/inventory/inventory/ajaxIncoming.php:84
+#: modules/inventory/infoPackage.inc.php:78
 msgid "View"
 msgstr "Exibir"
 
-#: modules/inventory/inventory/ajaxViewPart.php:196
-#: modules/inventory/infoPackage.inc.php:81
+#: modules/inventory/inventory/ajaxViewPart.php:243
+#: modules/inventory/inventory/ajaxIncoming.php:85
+#: modules/inventory/infoPackage.inc.php:82
 msgid "Informations"
 msgstr "Informações"
-
-#: modules/inventory/inventory/tabs.php:38
-#, php-format
-msgid "%s's inventory"
-msgstr "inventário de %s"
-
-#: modules/inventory/inventory/tabs.php:40
-#, php-format
-msgid "%s's content inventory"
-msgstr "Inventário do conteúdo de %s"
-
-#: modules/inventory/inventory/tabs.php:60
-msgid "History"
-msgstr "Histórico"
-
-#: modules/inventory/inventory/view.php:48
-#, php-format
-msgid "Inventory of %s"
-msgstr "Inventário de %s"
-
-#: modules/inventory/inventory/view.php:78
-msgid "Properties"
-msgstr "Propriedades"
-
-#: modules/inventory/inventory/ajaxIncoming.php:74
-msgid "Computer name"
-msgstr "Nome do Computador"
-
-#: modules/inventory/inventory/ajaxIncoming.php:76
-msgid "Inventory date"
-msgstr "Data do Inventário"
-
-#: modules/inventory/inventory/ajaxIncoming.php:78
-msgid "New computer"
-msgstr "Computador Novo"
-
-#: modules/inventory/inventory/ajaxIncoming.php:83
-msgid "Elements"
-msgstr "Elementos"
-
-#: modules/inventory/inventory/graphs.php:35
-#: modules/inventory/infoPackage.inc.php:86
-#: modules/inventory/infoPackage.inc.php:90
-msgid "Graphique"
-msgstr "Gráfico"
-
-#: modules/inventory/inventory/graphs.php:47
-msgid "back"
-msgstr "voltar"
 
 #: modules/inventory/inventory/history.php:66
 msgid "View differences since previous inventory"
@@ -797,112 +667,259 @@ msgstr "Ver mudanças em comparação ao inventário anterior"
 
 #: modules/inventory/inventory/history.php:75
 msgid "Inventory Date"
-msgstr "f83a483a0a94d3f59024e2c397fe58a6_tr"
+msgstr "Data do inventário"
+
+#: modules/inventory/inventory/history.php:80
+#: modules/inventory/infoPackage.inc.php:34
+#: modules/inventory/infoPackage.inc.php:40
+msgid "Inventory"
+msgstr "Inventário"
+
+#: modules/inventory/inventory/incoming.php:46
+msgid "Incoming Inventories"
+msgstr "Entrada de Inventários"
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last week"
+msgstr "Última Semana"
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last month"
+msgstr "Último Mês"
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last quarter"
+msgstr "Último Trimestre"
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last semester"
+msgstr "Último Semestre"
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last year"
+msgstr "Último Ano"
+
+#: modules/inventory/inventory/incoming.php:67
+msgid "Period"
+msgstr "Período"
+
+#: modules/inventory/inventory/incoming.php:72
+msgid "Only new computers"
+msgstr "Somente Computadores Novos"
+
+#: modules/inventory/inventory/incoming.php:73
+msgid "Load only the computers which were new when the inventory was made"
+msgstr ""
+"Lista apenas os inventários enviados por computadores novos adicionados "
+"neste período"
+
+#: modules/inventory/inventory/body.php:41
+msgid "Bios list"
+msgstr "Lista da Bios"
+
+#: modules/inventory/inventory/body.php:42
+msgid "Hardware and OS information list"
+msgstr "Lista de informações do Hardware e SO"
+
+#: modules/inventory/inventory/body.php:43
+msgid "Software list"
+msgstr "Lista de software"
+
+#: modules/inventory/inventory/body.php:44
+msgid "Network card and configuration list"
+msgstr "Lista de Placa de Rede e Configurações"
+
+#: modules/inventory/inventory/body.php:45
+msgid "Controller list"
+msgstr "Lista de controladores"
+
+#: modules/inventory/inventory/body.php:46
+msgid "Registry keys/values list"
+msgstr "Lista de chaves/valores de registro"
+
+#: modules/inventory/inventory/body.php:47
+msgid "Drive list"
+msgstr "Lista de drives"
+
+#: modules/inventory/inventory/body.php:48
+msgid "Input device list"
+msgstr "Lista de dispositivos de entrada"
+
+#: modules/inventory/inventory/body.php:49
+msgid "Memory module list"
+msgstr "Lista de módulos da memória"
+
+#: modules/inventory/inventory/body.php:50
+msgid "Monitor list"
+msgstr "Lista de monitores"
+
+#: modules/inventory/inventory/body.php:51
+msgid "Port list"
+msgstr "Lista de portas"
+
+#: modules/inventory/inventory/body.php:52
+msgid "Printer list"
+msgstr "Lista de impressoras"
+
+#: modules/inventory/inventory/body.php:53
+msgid "Sound list"
+msgstr "Lista de som"
+
+#: modules/inventory/inventory/body.php:54
+msgid "Storage medium list"
+msgstr "Lista de mídias de armazenamento"
+
+#: modules/inventory/inventory/body.php:55
+msgid "Video card list"
+msgstr "Lista de Placas de Vídeo"
 
 #: modules/inventory/inventory/localSidebar.php:28
-#: modules/inventory/infoPackage.inc.php:43
+#: modules/inventory/infoPackage.inc.php:44
 msgid "Incoming"
 msgstr "Entradas"
 
 #: modules/inventory/inventory/localSidebar.php:34
-#: modules/inventory/infoPackage.inc.php:74
+#: modules/inventory/infoPackage.inc.php:75
 msgid "Registry"
 msgstr "Registro"
 
 #: modules/inventory/inventory/localSidebar.php:45
-#: modules/inventory/infoPackage.inc.php:70
+#: modules/inventory/infoPackage.inc.php:71
 msgid "VideoCard"
 msgstr "Placa de Vídeo"
+
+#: modules/inventory/inventory/graphs.php:35
+#: modules/inventory/infoPackage.inc.php:91
+msgid "Chart"
+msgstr "Gráfico"
+
+#: modules/inventory/inventory/graphs.php:47
+msgid "back"
+msgstr "voltar"
+
+#: modules/inventory/inventory/ajaxIncoming.php:78
+msgid "Computer name"
+msgstr "Nome do Computador"
+
+#: modules/inventory/inventory/ajaxIncoming.php:80
+msgid "Inventory date"
+msgstr "Data do Inventário"
+
+#: modules/inventory/inventory/ajaxIncoming.php:82
+msgid "New computer"
+msgstr "Computador Novo"
+
+#: modules/inventory/inventory/ajaxIncoming.php:91
+msgid "Elements"
+msgstr "Elementos"
+
+#: modules/inventory/inventory/tabs.php:40
+#, php-format
+msgid "%s's inventory"
+msgstr "inventário de %s"
+
+#: modules/inventory/inventory/tabs.php:42
+#, php-format
+msgid "%s's content inventory"
+msgstr "Inventário do conteúdo de %s"
+
+#: modules/inventory/inventory/tabs.php:62
+msgid "History"
+msgstr "Histórico"
 
 #: modules/inventory/includes/html.php:102
 msgid "Refresh"
 msgstr "Atualizar"
 
-#: modules/inventory/infoPackage.inc.php:94
+#: modules/inventory/infoPackage.inc.php:87
+msgid "Charts"
+msgstr "Gráficos"
+
+#: modules/inventory/infoPackage.inc.php:95
 msgid "Csv's export"
 msgstr "Exportar para CSV"
 
-#: modules/inventory/infoPackage.inc.php:110
+#: modules/inventory/infoPackage.inc.php:111
 msgid "Header"
 msgstr "Cabeçalho"
 
-#: modules/inventory/infoPackage.inc.php:127
+#: modules/inventory/infoPackage.inc.php:128
 msgid "Inventory on a group of computers"
 msgstr "Inventário em um grupo de computadores"
 
-#: modules/inventory/infoPackage.inc.php:130
+#: modules/inventory/infoPackage.inc.php:131
 msgid "Hardware tab for a group"
 msgstr "Aba do Hardware para um grupo"
 
-#: modules/inventory/infoPackage.inc.php:133
+#: modules/inventory/infoPackage.inc.php:134
 msgid "Bios tab for a group"
 msgstr "Aba da Bios para um grupo"
 
-#: modules/inventory/infoPackage.inc.php:136
+#: modules/inventory/infoPackage.inc.php:137
 msgid "Software tab for a group"
 msgstr "Aba de Software para um grupo"
 
-#: modules/inventory/infoPackage.inc.php:139
+#: modules/inventory/infoPackage.inc.php:140
 msgid "Network tab for a group"
 msgstr "Aba de Rede para um grupo"
 
-#: modules/inventory/infoPackage.inc.php:142
+#: modules/inventory/infoPackage.inc.php:143
 msgid "Controller tab for a group"
 msgstr "Aba do Controlador para um grupo"
 
-#: modules/inventory/infoPackage.inc.php:145
+#: modules/inventory/infoPackage.inc.php:146
 msgid "Registry tab for a group"
 msgstr "Aba de Registro para um grupo"
 
-#: modules/inventory/infoPackage.inc.php:148
+#: modules/inventory/infoPackage.inc.php:149
 msgid "Hardware tab for a computer in a group"
 msgstr "Aba do Hardware para um computador em um grupo"
 
-#: modules/inventory/infoPackage.inc.php:151
+#: modules/inventory/infoPackage.inc.php:152
 msgid "Bios tab for a computer in a group"
 msgstr "Aba da Bios para um computador em um grupo"
 
-#: modules/inventory/infoPackage.inc.php:154
+#: modules/inventory/infoPackage.inc.php:155
 msgid "Software tab for a computer in a group"
 msgstr "Aba de Software para um computador em um grupo"
 
-#: modules/inventory/infoPackage.inc.php:157
+#: modules/inventory/infoPackage.inc.php:158
 msgid "Network tab for a computer in a group"
 msgstr "Aba de Rede para um computador em um grupo"
 
-#: modules/inventory/infoPackage.inc.php:160
+#: modules/inventory/infoPackage.inc.php:161
 msgid "Controller tab for a computer in a group"
 msgstr "Aba do Controlador para um computador em um grupo"
 
-#: modules/inventory/infoPackage.inc.php:163
+#: modules/inventory/infoPackage.inc.php:164
 msgid "Registry tab for a computer in a group"
 msgstr "Aba de Registro para um computador em um grupo"
 
-#: modules/inventory/infoPackage.inc.php:168
+#: modules/inventory/infoPackage.inc.php:169
 msgid "Inventory on a single computer"
 msgstr "Inventário em um único computador"
 
-#: modules/inventory/infoPackage.inc.php:172
+#: modules/inventory/infoPackage.inc.php:173
 msgid "Hardware tab for a computer"
 msgstr "Aba do Hardware para um computador"
 
-#: modules/inventory/infoPackage.inc.php:175
+#: modules/inventory/infoPackage.inc.php:176
 msgid "Software tab for a computer"
 msgstr "Aba de Software para um computador"
 
-#: modules/inventory/infoPackage.inc.php:178
+#: modules/inventory/infoPackage.inc.php:179
 msgid "Network tab for a computer"
 msgstr "Aba de Rede para um computador"
 
-#: modules/inventory/infoPackage.inc.php:181
+#: modules/inventory/infoPackage.inc.php:182
 msgid "Controller tab for a computer"
 msgstr "Aba do Controlador para um computador"
 
-#: modules/inventory/infoPackage.inc.php:184
+#: modules/inventory/infoPackage.inc.php:185
 msgid "Registry tab for a computer"
 msgstr "Aba de Registro para um computador"
 
-#: modules/inventory/infoPackage.inc.php:189
+#: modules/inventory/infoPackage.inc.php:190
 msgid "Differences between two inventories"
 msgstr "Diferenças entre dois inventários"
 

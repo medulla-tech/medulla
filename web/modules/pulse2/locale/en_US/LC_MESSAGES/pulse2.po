@@ -6,9 +6,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
-"Report-Msgid-Bugs-To: http://pulse2.mandriva.org/\n"
-"POT-Creation-Date: 2011-01-30 11:29+0100\n"
-"PO-Revision-Date: 2012-08-24 13:40+0000\n"
+"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
+"POT-Creation-Date: 2012-10-17 11:46+0200\n"
+"PO-Revision-Date: 2012-10-19 13:07+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -25,15 +25,15 @@ msgstr ""
 msgid "Root entity"
 msgstr ""
 
-#: modules/pulse2/infoPackage.inc.php:33
+#: modules/pulse2/infoPackage.inc.php:34
 msgid "Pulse2"
 msgstr ""
 
-#: modules/pulse2/infoPackage.inc.php:44
+#: modules/pulse2/infoPackage.inc.php:45
 msgid "Computers list"
 msgstr ""
 
-#: modules/pulse2/infoPackage.inc.php:49
+#: modules/pulse2/infoPackage.inc.php:50
 msgid "Location selection in computer edit"
 msgstr ""
 

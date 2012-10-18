@@ -6,9 +6,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
-"Report-Msgid-Bugs-To: http://pulse2.mandriva.org/\n"
-"POT-Creation-Date: 2011-01-30 11:29+0100\n"
-"PO-Revision-Date: 2012-08-24 13:40+0000\n"
+"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
+"POT-Creation-Date: 2012-10-17 11:46+0200\n"
+"PO-Revision-Date: 2012-10-19 13:07+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -109,23 +109,6 @@ msgstr ""
 msgid "pci"
 msgstr ""
 
-#: modules/glpi/glpi/tabs.php:49
-#, php-format
-msgid "%s's inventory (%s)"
-msgstr ""
-
-#: modules/glpi/glpi/tabs.php:52
-msgid "Hardware"
-msgstr ""
-
-#: modules/glpi/glpi/tabs.php:56
-msgid "Network"
-msgstr ""
-
-#: modules/glpi/glpi/tabs.php:56
-msgid "Controller"
-msgstr ""
-
 #: modules/glpi/glpi/view_hardware.php:54
 msgid "license id : "
 msgstr ""
@@ -184,6 +167,23 @@ msgstr ""
 
 #: modules/glpi/glpi/view_hardware.php:89
 msgid "entity"
+msgstr ""
+
+#: modules/glpi/glpi/tabs.php:49
+#, php-format
+msgid "%s's inventory (%s)"
+msgstr ""
+
+#: modules/glpi/glpi/tabs.php:52
+msgid "Hardware"
+msgstr ""
+
+#: modules/glpi/glpi/tabs.php:56
+msgid "Network"
+msgstr ""
+
+#: modules/glpi/glpi/tabs.php:56
+msgid "Controller"
 msgstr ""
 
 #: modules/glpi/infoPackage.inc.php:35
