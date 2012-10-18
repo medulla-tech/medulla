@@ -1670,7 +1670,12 @@ class ImagingRpcProxy(RpcProxyI):
         # synchro the location
         def treatLocation(results):
             logger.debug("treatLocation>>>>>>")
-            logger.debug(results)
+            if results:
+                logger.debug(results)
+            else:
+                logger.error(results)
+                db.setLocationSynchroState(uuid, P2ISS.TODO)
+                raise Exception("Error while synchronizing location")
 
         d3 = self.__synchroLocation(uuid)
         d3.addCallback(treatLocation)

@@ -56,7 +56,10 @@ if (isset($_POST['bsync'])) {
     if ((is_array($ret) and $ret[0] or !is_array($ret) and $ret) and !isXMLRPCError()) {
         /* insert notification code here if needed */
     } elseif (!$ret[0] and !isXMLRPCError()) {
-        new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for package server: %s", "imaging"), implode(', ', $ret[1])));
+        new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for package server: %s<br /><br />Check /var/log/mmc/pulse2-package-server.log", "imaging"), implode(', ', $ret[1])));
+    }
+    elseif (isXMLRPCError()) {
+        new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for package server: %s<br /><br />Check /var/log/mmc/pulse2-package-server.log", "imaging"), implode(', ', $ret[1])));
     }
 }
 

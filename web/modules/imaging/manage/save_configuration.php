@@ -64,7 +64,7 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
             // Synchronize boot menu
             $ret = xmlrpc_synchroLocation($location);
             if (isXMLRPCError()) {
-                new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for package server: %s", "imaging"), implode(', ', $ret[1])));
+                new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for package server: %s<br /><br />Check /var/log/mmc/pulse2-package-server.log", "imaging"), implode(', ', $ret[1])));
             }
         } else {
             new NotifyWidgetFailure($ret[1]);
