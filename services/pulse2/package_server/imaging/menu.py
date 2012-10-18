@@ -238,6 +238,38 @@ class ImagingMenu:
                 output = re.sub(f, t, output)
         return output
 
+    def _fill_reptable(self):
+        """
+         this function create array to remove accent who are not
+         compatible with MS-DOS encoding
+        """
+        _reptable = {}
+        _corresp = [
+            (u"a",  [0x00E3]),
+            ]
+        for repchar,codes in _corresp :
+            for code in codes :
+                _reptable[code] = repchar
+
+        return _reptable
+
+    def delete_diacritics(self, s) :
+        """
+        Delete accent marks.
+
+        @param s: string to clean
+        @type s: unicode
+        @return: cleaned string
+        @rtype: unicode
+        """
+        _reptable = self._fill_reptable()
+        if isinstance(s, str):
+            s = unicode(s, "utf8", "replace")
+        ret = []
+        for c in s:
+            ret.append(_reptable.get(ord(c) ,c))
+        return u"".join(ret)
+
     def buildMenu(self):
         """
         @return: the GRUB boot menu as a string encoded using CP-437
@@ -301,6 +333,11 @@ class ImagingMenu:
             buf += output
 
         assert(type(buf) == unicode)
+
+        # Clean brazilian characters who are not compatible
+        # with MS-DOS encoding by delete accent marks
+        buf = self.delete_diacritics(buf)
+        
         # Encode menu using code page 437 (MS-DOS) encoding
         buf = buf.encode('cp437')
         return buf
