@@ -503,6 +503,17 @@ def progressBackup(self, data):
         if (group):
             self.progress = int(group)/int(self.volumeNumber) + ((int(self.currVolume)-1) *100/int(self.volumeNumber))
 
+def size_format(b):
+    if b < 1000:
+        return '%i' % b + 'B'
+    elif 1000 <= b < 1000000:
+        return '%.1f' % float(b/1000.0) + 'KB'
+    elif 1000000 <= b < 1000000000:
+        return '%.1f' % float(b/1000000.0) + 'MB'
+    elif 1000000000 <= b < 1000000000000:
+        return '%.1f' % float(b/1000000000.0) + 'GB'
+    elif 1000000000000 <= b:
+        return '%.1f' % float(b/1000000000000.0) + 'TB'
 
 class ServiceManager:
     """
