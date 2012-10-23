@@ -1,0 +1,9 @@
+[main]
+disable = 1
+journalctl_path = /bin/systemd-journalctl
+
+[plugins]
+base = slapd
+samba = samba
+mail = dovecot,postfix,amavis
+network = isc-dhcp-server,bind9

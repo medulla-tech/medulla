@@ -34,6 +34,7 @@ web/confs/mmc.ini
 web/site.php
 agent/conf/agent/config.ini
 agent/conf/plugins/base.ini
+agent/conf/plugins/services.ini
 config.h
 config.h.in
 stamp-h1
