@@ -214,10 +214,22 @@ def localifs():
             for i in xrange(0, outbytes, var2)]
 
 class Singleton(object):
+
     def __new__(type, *args):
         if not '_the_instance' in type.__dict__:
             type._the_instance = object.__new__(type)
         return type._the_instance
+
+class SingletonN(type):
+
+    def __init__(cls, name, bases, dict):
+        super(SingletonN, cls).__init__(name, bases, dict)
+        cls.instance = None
+
+    def __call__(cls, *args, **kw):
+        if cls.instance is None:
+            cls.instance = super(SingletonN, cls).__call__(*args, **kw)
+        return cls.instance
 
 class ProcessScheduler(Singleton):
     """
