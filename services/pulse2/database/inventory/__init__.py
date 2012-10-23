@@ -1879,6 +1879,8 @@ class InventoryCreator(Inventory):
             session.add(i)
             session.flush()
 
+            inventory = InventoryNetworkComplete(inventory).get()
+
             # Loop on all inventory parts
             for table, entries_list in inventory.items():
                 # table: bios, controller, etc.
@@ -1996,3 +1998,94 @@ class InventoryCreator(Inventory):
             return [True, machine_uuid]
 
         return True
+
+
+# TODO - Get this info on the PXE client side !
+class InventoryNetworkComplete :
+    """
+    A little hack to complete computer's inventory.
+
+    In the case of absence the OCS processing, the network info
+    is not present on the PXE subscription (only IP & MAC address).
+    To use the Wake on LAN, we need also the gateway and netmask info.
+    Hope to be on the same network, we can use the server network info.
+    """
+
+    SIOCGIFNETMASK = 0x891b
+
+    def __init__(self, inventory):
+        """
+        @param inventory: inventory to update
+        @type inventory: dict
+        """
+
+        self._inventory = inventory
+
+        if "Network" in inventory :
+            network = inventory["Network"][0]
+
+            if "SubnetMask" not in network and "Gateway" not in network :
+
+                netmask, gateway = self._get_networking()
+                if netmask and gateway :
+                    inventory["Network"][0]["SubnetMask"] = netmask
+                    inventory["Network"][0]["Gateway"] = gateway
+
+                    logging.getLogger().debug("Resolved netmask: %s" % netmask)
+                    logging.getLogger().debug("Resolved gateway: %s" % gateway)
+    
+                    self._inventory = inventory
+
+    def _get_networking (self) :
+        """
+        Getting the server's netmask & gateway 
+
+        @return: netmask and gateway 
+        @rtype: tuple
+        """
+
+        import socket
+        import struct
+        import fcntl
+
+        filename = "/proc/net/route"
+
+        route = []
+        try :
+            r_file = open(filename, "r") 
+
+            for line in r_file.readlines():
+                r_fields = line.strip().split()
+                if r_fields[1] != '00000000' or not int(r_fields[3], 16) & 2:
+                    continue
+                route.append(r_fields)
+
+            r_file.close()
+
+        except IOError :
+
+            logging.getLogger().warn("Cannot read file '%s'" % filename)
+            logging.getLogger().warn("Ignore to get the netmask and gateway")
+
+            return False, False
+
+
+        iface = route[0][0]
+
+        n_sck = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+        netmask = fcntl.ioctl(n_sck, self.SIOCGIFNETMASK, struct.pack('256s', iface))[20:24]
+        gateway = struct.pack("<L", int(route[0][2], 16))
+
+        return socket.inet_ntoa(netmask), socket.inet_ntoa(gateway)
+
+    def get(self) :
+        """ 
+        Get the updated inventory.
+
+        @return: inventory
+        @rtype: dict
+        """
+        return self._inventory
+
+
