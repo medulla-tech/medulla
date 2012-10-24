@@ -620,11 +620,11 @@ class Inventory(DyngroupDatabaseHelper):
 
         return ret
 
-    def getMachineNameByInventory (self, ctx, inventory) :
+    def getMachineByInventory (self, ctx, inventory) :
         """
-        Return the machine name resolved by inventory content.
+        Return the machine resolved by inventory content.
         
-        The name resolving is based on existing MAC address registered
+        The machine resolving is based on existing MAC address registered
         in the database.
         
         @param ctx: Inventory context
@@ -633,29 +633,32 @@ class Inventory(DyngroupDatabaseHelper):
         @param inventory: Incomming inventory from the client
         @type inventory: dict 
         
-        @return: Registered machine name
-        @rtype: string
+        @return: MAC Address, Machine UUID, Machine name
+        @rtype: tuple
         """
-        # TODO: This rule could be configured in the config file.
-        if inventory.has_key("Network"):
+        if "Network" in inventory :
             network  = inventory["Network"]
             if len(network) > 0 : 
-                if network[0].has_key("MACAddress"):
+                if "MACAddress" in network[0]:
                     mac = network[0]["MACAddress"]
-                    names = self.getMachinesBy(self.ctx, 
-                                               "Network", 
-                                               "MACAddress", 
-                                               mac)
-                    if len(names) == 1 :
-                        message = "Resolved machine name: %s / MAC: %s" % (names[0], mac)
+                    machines = self.getMachinesBy(self.ctx, 
+                                                  "Network", 
+                                                  "MACAddress", 
+                                                  mac,
+                                                  False)
+
+                    if len(machines) == 1 :
+                        uuid = machines[0]["uuid"]
+                        name = machines[0]["hostname"]
+                        message = "Resolved machine name: %s (%s)/ MAC: %s" % (name, uuid, mac)
                         logging.getLogger().debug(message)
-                        return names[0]
-                    elif len(names) > 1 :
+                        return mac, uuid, name
+                    elif len(machines) > 1 :
                         logging.getLogger().error("Cannot resolve machine name: multiply MAC adresses")
                     else:
                         logging.getLogger().error("Cannot find a machine")
 
-        return None  
+        return None, None, None
 
     def getValues(self, table, field):
         """
@@ -1841,36 +1844,32 @@ class InventoryCreator(Inventory):
         session = create_session()
         session.begin()
         try:
-            machine_name = self.getMachineNameByInventory(self.ctx, inventory)
+            machine_mac, machine_uuid, machine_name = self.getMachineByInventory(self.ctx, inventory)
 
-            if not machine_name :
-                machine_name = hostname
-
-            m = self.getMachinesOnly(self.ctx, {'hostname': machine_name})
-            if len(m) == 0:
-                # If this computer is not in the Machine table, add it
+            if machine_mac and machine_uuid and machine_name :
+                machine_exists = True
+                machines = self.getMachinesOnly(self.ctx, {'uuid': machine_uuid})
+                if len(machines) == 1 :
+                    m = machines[0]
+                else :
+                    session.close()
+                    logging.getLogger().error("Computer %s seem to appear more than one time in database" %
+                                               hostname)
+                    return False
+            else :
                 m = Machine()
                 m.Name = hostname
                 session.add(m)
-            elif len(m) > 1:
-                # If this computer has been registered twice, exit
-                session.close()
-                logging.getLogger().error("Computer %s seem to appear more than one time in database" % hostname)
-                return False
-            else:
-                # Get the current computer
-                m = m[0]
-                machine_exists = True
-                machine_uuid = toUUID(m.id)
-            # Set last inventory flag to 0 for already existing inventory for
-            # this computer
-            result = session.query(InventoryTable).\
-                        select_from(self.inventory.join(self.table['hasEntity']).join(self.machine)).\
-                        filter(self.machine.c.Name == machine_name)
+            
 
-            for inv in result:
-                inv.Last = 0
-                session.add(inv)
+            if machine_exists :
+                result = session.query(InventoryTable).\
+                        select_from(self.inventory.join(self.table['hasEntity']).join(self.machine)).\
+                        filter(self.machine.c.id == fromUUID(machine_uuid))
+
+                for inv in result:
+                    inv.Last = 0
+                    session.add(inv)
 
             # Create a new empty inventory, and flag it as the last
             i = InventoryTable()
