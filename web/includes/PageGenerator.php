@@ -810,8 +810,9 @@ class SimpleNavBar extends HtmlElement {
         else {
             $start = $this->curend + 1;
             $end = $this->curend + $this->max;
+            $filter = isset($_GET["filter"]) ? $_GET["filter"] : "";
             echo "<li class=\"nextList\"><a href=\"".$_SERVER["SCRIPT_NAME"];
-            printf("?module=%s&amp;submod=%s&amp;action=%s&amp;start=%d&amp;end=%d&amp;filter=%s%s", $_GET["module"],$_GET["submod"],$_GET["action"],$start, $end, $_GET["filter"], $this->extra);
+            printf("?module=%s&amp;submod=%s&amp;action=%s&amp;start=%d&amp;end=%d&amp;filter=%s%s", $_GET["module"],$_GET["submod"],$_GET["action"],$start, $end, $filter, $this->extra);
             echo "\">"._("Next")."</a></li>\n";
         }
 
