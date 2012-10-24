@@ -2655,20 +2655,21 @@ class TrTitleElement extends HtmlElement{
 
 class AjaxPage extends HtmlElement {
 
-    function AjaxPage($id, $url, $refresh = 10) {
+    function AjaxPage($url, $id = "container", $params = array(), $refresh = 10) {
         $this->url = $url;
         $this->id = $id;
+        $this->params = json_encode($params);
         $this->refresh = $refresh;
     }
 
     function display() {
-
 echo <<< EOT
         <div id="{$this->id}"></div>
         <script type="text/javascript">
         updater = new Ajax.PeriodicalUpdater("{$this->id}", "{$this->url}", {
             method: "get",
             frequency: {$this->refresh},
+            parameters: {$this->params},
             evalScripts: true
         });
         </script>
