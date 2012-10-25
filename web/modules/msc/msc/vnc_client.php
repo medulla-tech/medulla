@@ -29,11 +29,9 @@ require('modules/msc/includes/mscoptions_xmlrpc.php');
 if ($_GET["establishproxy"] == "yes") {
     $result = scheduler_establish_vnc_proxy('', $_GET['objectUUID'], $_SERVER["REMOTE_ADDR"]);
 
-    if ($res == 11) { # connection refused
-        new NotifyWidgetFailure(_T("Connection was refused by the other side.", "msc"));
-    }
     # $result is expected to be an array containing host, port, let's check it:
     if ($result == False) {
+        new NotifyWidgetFailure(_T("Connection was refused by the other side.", "msc"));
         echo "
             <HTML>
             <head>
