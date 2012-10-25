@@ -38,8 +38,9 @@ from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
 from SocketServer import ThreadingMixIn
 from threading import Thread, Semaphore
 import threading
+from xml.dom.minidom import parseString
 
-from pulse2.database.inventory import InventoryCreator
+from pulse2.database.inventory import InventoryCreator, Inventory
 from pulse2.database.inventory.mapping import OcsMapping
 from pulse2.database.inventory.entitiesrules import EntitiesRules, DefaultEntityRules
 from pulse2.utils import Singleton
@@ -156,6 +157,17 @@ class TreatInv(Thread):
         self.logger.debug('%s' % cont)
         self.logger.debug('### END INVENTORY')
 
+        setLastFlag = True
+
+        if AttemptToScheduler.is_comming_from_pxe(from_ip):
+            self.logger.debug("Inventory is coming from PXE")
+            dom = parseString(content)
+            xmlTag = dom.getElementsByTagName('MACADDR')[0].toxml()
+            macaddr = xmlTag.replace('<MACADDR>','').replace('</MACADDR>','')
+            inv = Inventory()
+            inv.activate(self.config)
+            setLastFlag = not inv.isInventoried(macaddr)
+
         try:
             start_date = time.time()
             threadname = threading.currentThread().getName().split("-")[1]
@@ -237,7 +249,7 @@ class TreatInv(Thread):
             inventory['Entity'] = [{'Label' : entity}]
 
             self.logger.debug("Thread %s : prepared : %s " % (threadname, time.time()))
-            result = InventoryCreator().createNewInventory(hostname, inventory, date)
+            result = InventoryCreator().createNewInventory(hostname, inventory, date, setLastFlag)
             self.logger.debug("Thread %s : done : %s " % (threadname, time.time()))
             # TODO if ret == False : reply something else
             end_date = time.time()

@@ -188,6 +188,27 @@ class Inventory(DyngroupDatabaseHelper):
             return True
         return False
 
+    def isInventoried(self, macaddr):
+        """
+        Search if a machine is already inventoried according to its MAC Address
+        @param macaddr: a Mac address
+        @type macaddr: string
+
+        @return: Return True if the machine exists according to its MAC Address
+        @rtype: bool
+        """
+        session = create_session()
+        q = session.query(self.klass['hasNetwork'])
+        q = q.select_from(self.table['hasNetwork'] \
+                          .join(self.table['Network'], self.table['Network'].c.id == self.table['hasNetwork'].c.network)
+                          .join(self.table['hasBios'], self.table['hasBios'].c.machine == self.table['hasNetwork'].c.machine)
+                         )
+        q = q.filter(self.table['Network'].c.MACAddress == macaddr)
+
+        session.close()
+        
+        return bool(q.count())
+
     def complete_ctx(self, ctx):
         """
         Set user locations in current security context.
@@ -1819,7 +1840,7 @@ class InventoryCreator(Inventory):
             self.ctx = InventoryContext()
             self.ctx.userid = 'root'
 
-    def createNewInventory(self, hostname, inventory, date):
+    def createNewInventory(self, hostname, inventory, date, setLastFlag = True):
         """
         Add a new inventory for a computer
         """
@@ -1874,7 +1895,7 @@ class InventoryCreator(Inventory):
             # Create a new empty inventory, and flag it as the last
             i = InventoryTable()
             i.Date, i.Time = date
-            i.Last = 1
+            i.Last = setLastFlag and 1 or 0
             session.add(i)
             session.flush()
 
