@@ -240,6 +240,7 @@ if ($_GET['uuid'] != '') {
         }
     }
 
+    print "<div style=\"overflow: auto\">";
     if ($n != null) {
         $n->addActionItem(new ActionItem(_T("View", "inventory"),"invtabs","display","inventory", "base", "computers"));
         $n->addActionItem(new ActionPopupItem(_T("Informations", "inventory"),"infos","info","inventory", "inventory", "inventory"));
@@ -251,6 +252,7 @@ if ($_GET['uuid'] != '') {
         $n->end = $maxperpage;
         $n->display();
     }
+    print "</div>";
     ?><a href='<?php echo  urlStr("inventory/inventory/csv", array('table'=>$display, 'gid'=>$_GET["gid"], 'filter' => $_GET['filter'])) ?>'><img src='modules/inventory/graph/csv.png' alt='export csv'/></a><?php
 }
 
