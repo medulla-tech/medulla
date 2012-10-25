@@ -315,15 +315,16 @@ class ListInfos extends HtmlElement {
      * constructor
      * @param $tab must be an array of array
      */
-    function ListInfos($tab, $description ="", $extranavbar = "") {
+    function ListInfos($tab, $description = "", $extranavbar = "", $width = "", $tooltip = "") {
         $this->arrInfo=$tab;
         $this->arrAction=array();
         $this->description[] = $description;
         $this->extranavbar = $extranavbar;
         $this->initVar();
         $this->col_width = array();
+        $this->col_width[] = $width;
         $this->tooltip = array();
-        $this->tooltip[] = "";
+        $this->tooltip[] = $tooltip;
         $this->firstColumnActionLink = True;
         $this->_addInfo = array();
     }
