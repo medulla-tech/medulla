@@ -1023,10 +1023,6 @@ li.empty a {
     padding-left: 0px;
 }
 
-div#container {
-    overflow: auto;
-}
-
 .none {
 
     border-width: 0 0 0px 0;
