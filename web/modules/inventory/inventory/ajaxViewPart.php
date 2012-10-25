@@ -135,6 +135,7 @@ if ($_GET['uuid'] != '') {
             }
         }
     }
+    print "<div style=\"overflow: auto\">";
     if ($n != null) {
         $n->setTableHeaderPadding(1);
         $n->setItemCount($count);
@@ -143,6 +144,7 @@ if ($_GET['uuid'] != '') {
         $n->end = $maxperpage;
         $n->display();
     }
+    print "</div>";
     ?><a href='<?php echo  urlStr("inventory/inventory/csv", array('table'=>$table, 'uuid'=>$_GET["uuid"])) ?>'><img src='modules/inventory/graph/csv.png' alt='export csv'/></a><?php
 } else {
     $display = $_GET['part'];
