@@ -31,7 +31,7 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
     $mscAction = new ActionItem(_("Software deployment"),"msctabs","install","computer", "base", "computers");
     $imgAction = new ActionItem(_("Imaging management"),"imgtabs","imaging","computer", "base", "computers");
     $downloadFileAction = new ActionItem(_("Download file"), "download_file", "download", "computer", "base", "computers");
-    $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "vncclient", "computer", "base", "computers");
+    $vncClientAction = new ActionItem(_("Remote control"), "index", "vncclient", "computer", "base", "computers");
     $profileAction = new ActionItem(_("Show Profile"), "computersgroupedit", "logfile","computer", "base", "computers"); 
 
     $actionInventory = array();
@@ -165,6 +165,20 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
     }
 
     $n->display();
+    #$result = scheduler_establish_vnc_proxy('', , "192.168.71.52");
+    #echo "
+    #                <APPLET CODE=VncViewer.class ARCHIVE='modules/msc/graph/java/VncViewer.jar' WIDTH=100 HEIGHT=10>
+    #                <PARAM NAME='PORT' VALUE='8103'>
+    #                <PARAM NAME='HOST' VALUE='192.168.71.10'>
+    #                <PARAM NAME='Open new window' VALUE='Yes'>
+    #                <PARAM NAME='Offer Relogin' VALUE='No'>
+    #                <PARAM NAME='Show controls' VALUE='Yes'>
+    #                <PARAM NAME='Encoding' VALUE='Tight'>
+    #                <PARAM NAME='Compression Level' VALUE='9'>
+    #                <PARAM NAME='Restricted colors' VALUE='No'>
+    #                <PARAM NAME='JPEG image quality' VALUE='0'>
+    #                </APPLET>
+    #                ";
 }
 
 ?>
