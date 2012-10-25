@@ -1884,13 +1884,14 @@ class InventoryCreator(Inventory):
             
 
             if machine_exists :
-                result = session.query(InventoryTable).\
-                        select_from(self.inventory.join(self.table['hasEntity']).join(self.machine)).\
-                        filter(self.machine.c.id == fromUUID(machine_uuid))
+                if setLastFlag:
+                    result = session.query(InventoryTable).\
+                            select_from(self.inventory.join(self.table['hasEntity']).join(self.machine)).\
+                            filter(self.machine.c.id == fromUUID(machine_uuid))
 
-                for inv in result:
-                    inv.Last = 0
-                    session.add(inv)
+                    for inv in result:
+                        inv.Last = 0
+                        session.add(inv)
 
             # Create a new empty inventory, and flag it as the last
             i = InventoryTable()
