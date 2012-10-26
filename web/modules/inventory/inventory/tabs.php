@@ -25,7 +25,7 @@
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 
-include('modules/base/includes/menu_action.php');
+include('modules/pulse2/includes/menu_action.php');
 
 if (!isset($_GET['hostname'])) { $_GET['hostname'] = $_GET['cn']; }
 if (!isset($_GET['uuid'])) { $_GET['uuid'] = $_GET['objectUUID']; }

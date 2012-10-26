@@ -37,7 +37,7 @@ global $SYNCHROSTATE_SYNCHRO;
 global $SYNCHROSTATE_RUNNING;
 global $SYNCHROSTATE_INIT_ERROR;
 
-include('modules/base/includes/menu_action.php');
+include('modules/pulse2/includes/menu_action.php');
 
 if (isset($_POST['bsync'])) {
     if (isset($params['uuid'])) {
