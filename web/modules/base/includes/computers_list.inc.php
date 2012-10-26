@@ -102,6 +102,7 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
         }
         if ($msc_vnc_show_icon) {
             $actionVncClient[] = $vncClientAction;
+            $value['vnc'] = '';
         }
         $params[] = $value;
     }
@@ -165,20 +166,6 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
     }
 
     $n->display();
-    #$result = scheduler_establish_vnc_proxy('', , "192.168.71.52");
-    #echo "
-    #                <APPLET CODE=VncViewer.class ARCHIVE='modules/msc/graph/java/VncViewer.jar' WIDTH=100 HEIGHT=10>
-    #                <PARAM NAME='PORT' VALUE='8103'>
-    #                <PARAM NAME='HOST' VALUE='192.168.71.10'>
-    #                <PARAM NAME='Open new window' VALUE='Yes'>
-    #                <PARAM NAME='Offer Relogin' VALUE='No'>
-    #                <PARAM NAME='Show controls' VALUE='Yes'>
-    #                <PARAM NAME='Encoding' VALUE='Tight'>
-    #                <PARAM NAME='Compression Level' VALUE='9'>
-    #                <PARAM NAME='Restricted colors' VALUE='No'>
-    #                <PARAM NAME='JPEG image quality' VALUE='0'>
-    #                </APPLET>
-    #                ";
 }
 
 ?>

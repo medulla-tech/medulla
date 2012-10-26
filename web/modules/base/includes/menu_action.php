@@ -21,14 +21,17 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+include("modules/msc/msc/vnc_client.php");
+
 if ($_GET['cn']) $_SESSION['cn'] = $_GET['cn'];
 if ($_GET['objectUUID']) $_SESSION['objectUUID'] = $_GET['objectUUID'];
+if ($_GET['action']) $_SESSION['action'] = $_GET['action'];
 
-$paramArray = array('cn' => $_SESSION['cn'], 'objectUUID' => $_SESSION['objectUUID']);
+$paramArray = array('vnc' => '', 'cn' => $_SESSION['cn'], 'objectUUID' => $_SESSION['objectUUID']);
 
 
 $inventAction = new ActionItem(_("Inventory"),"invtabs","inventory","inventory", "base", "computers");
-$vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "vncclient", "computer", "base", "computers");
+$vncClientAction = new ActionItem(_("Remote control"), $_SESSION['action'], "vncclient", "computer", "base", "computers");
 $logAction = new ActionItem(_("Read log"),"msctabs","logfile","computer", "base", "computers", "tablogs");
 $mscAction = new ActionItem(_("Software deployment"),"msctabs","install","computer", "base", "computers");
 $imgAction = new ActionItem(_("Imaging management"),"imgtabs","imaging","computer", "base", "computers");
