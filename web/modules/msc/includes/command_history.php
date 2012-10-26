@@ -492,7 +492,7 @@ function _toDate($a, $noneIsAsap = False) {
             return _T('As soon as possible', 'msc');
 
         $parsed_date = mktime($a[3], $a[4], $a[5], $a[1], $a[2], $a[0]);
-        return strftime(web_def_date_fmt(), $parsed_date);
+        return strftime(web_def_date_fmt_msc(), $parsed_date);
 
     } elseif ($noneIsAsap && !$a) {
         return _T('As soon as possible', 'msc');
