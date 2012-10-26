@@ -129,6 +129,11 @@ class Pulse2Image:
             if line_grub_file_part != None:  # got one part (second line)
                 hd_number = int(line_grub_file_part.group(1))
                 part_number = int(line_grub_file_part.group(2))
+                try:
+                    self.disks[hd_number][part_number] = {}
+                except KeyError:
+                    self.disks[hd_number] = {}
+                    self.disks[hd_number][part_number] = {}
                 self.disks[hd_number][part_number]['line'] = \
                     line_grub_file.rstrip("\n").lstrip("#")
         fd_grub_file.close()
