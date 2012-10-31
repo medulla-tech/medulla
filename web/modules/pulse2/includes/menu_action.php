@@ -61,6 +61,11 @@ function modIsActive($action) {
             $mod = $value;
         }
         if (in_array($mod, $_SESSION["supportModList"])) {
+            if (strpos($action, "vnc") !== false) {
+                // if VNC icon, check if "Take control of this computer" ACL
+                // is True or not
+                return hasCorrectAcl('base', 'computers', "index&vnc=");
+            }
             return True;
         }
     }
