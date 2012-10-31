@@ -293,9 +293,7 @@ if (hasComputerManagerWorking()) {
                    array("noHeader"=>True,"visible"=>False));
     $submod->addPage($page);
 
-    $page = new Page("vnc_client", _T("Take control of a computer", "msc"));
-    $page->setFile("modules/base/computers/vnc_client.php");
-    $page->setOptions(array("visible"=>False, "noHeader"=>True));
+    $page = new Page("index&vnc=", _T("Take control of a computer", "msc"));
     $submod->addPage($page);
 
     $page = new Page("ajaxComputersList", _("Ajax part of computers list"));
