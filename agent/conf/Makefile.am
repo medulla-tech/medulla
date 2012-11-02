@@ -42,5 +42,5 @@ plugins/base.ini plugins/services.ini agent/config.ini: Makefile
 	$(MKDIR_P) $(@D)
 	$(edit) $@.in > $@.tmp
 	test "$@ = plugins/base.ini" && test -f /etc/mandriva-release && sed -i 's!log/ldap.log!log/ldap/ldap.log!;s!ou=Groups\b!ou=Group!g;s!ou=Users\b!ou=People!g' $@.tmp || echo Continue
-	test "$@ = plugins/services.ini" && test -f /etc/mandriva-release && sed -i 's!systemd-journalctl!journalctl!' $@.tmp || echo Continue
+	test "$@ = plugins/services.ini" && test -f /etc/mandriva-release && sed -i 's!systemd-journalctl!journalctl!;s!slapd!openldap!;s!samba!smb!;s!bind9!named!;s!isc-dhcp-server!dhcpd!;s!amavis!amavis!' $@.tmp || echo Continue
 	mv $@.tmp $@
