@@ -23,13 +23,7 @@
  */
 ?>
 
-  <tr>
-  <td align="center">
-  <table width="60%" border="0" cellpadding="0" cellspacing="0">
-  <tr>
-  <td>
-  <div id="licence">
-
+<div id="licence">
 <?php echo  _("<p>
 The community version of this product is distributed in the hope that it
 will be useful, but <strong>without any warranty</strong>; without even the implied
@@ -43,13 +37,4 @@ and without a tested and certified upgrade path from previous versions.
 <p>
 <a href="http://www.mandriva.com/pro/support.html"><?php echo  _("Click here to get more information about our support and maintenance subscription plan."); ?></a>
 </p>
- </div>
-
-
-
-  </td>
-  </tr>
-  </table>
-  </td>
-  </tr>
-
+</div>

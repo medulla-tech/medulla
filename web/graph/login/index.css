@@ -45,13 +45,20 @@ body {
 	background: url(../../img/login/bg_login.gif) top left #C0C0C0;
 }
 
+#loginBox {
+    width: 500px;
+    margin: auto;
+    margin-top: 7%;
+}
+
 /* ---------------------------------------- */
 /* 1. Style pour le contenu	   				*/
 /* ---------------------------------------- */
 
 #interface {
-	padding: 0 5px 0 5px;
-	background: url(../../img/login/bg_interface_main.gif);
+    background: white;
+    margin: 0 5px;
+    box-shadow: 0 0 5px;
 }
 
 #content {
@@ -211,15 +218,19 @@ select#lang {
 /* licence style */
 
 #licence {
+    margin: auto;
+    margin-top: 3em;
 	font-size: 12px;
 	text-decoration: none;
 	padding: 0px 5px 0px 5px;
 	background-color: #FDD;
 	color: #000;
-	width: 100%;
+	width: 65%;
 	display: block;
 	border: 1px solid #E00;
-        -moz-border-radius: 10px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
 }
 
 #licence a {

@@ -90,30 +90,15 @@ if (isset($_GET["agentsessionexpired"])) {
 	<meta name="Description" content="" />
 	<meta name="Keywords" content="" />
 	<link rel="icon" href="img/common/favicon.ico" />
-        <script src="jsframework/lib/prototype.js" type="text/javascript"></script>
-        <script src="jsframework/src/scriptaculous.js" type="text/javascript"></script>
+    <script src="jsframework/lib/prototype.js" type="text/javascript"></script>
+    <script src="jsframework/src/scriptaculous.js" type="text/javascript"></script>
 </head>
 <body onload="Form.focusFirstElement('loginForm')">
 
-<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
-  <tr>
-    <td align="center">
-	<table width="467" border="0" cellpadding="0" cellspacing="0">
-      <tr>
-        <td align="center" valign="middle">
-
+<div id="loginBox">
         <div id="header">
         <div id="headerLeft"><div id="headerRight">
-
-<!-- Put header content here  -->
-
-        <p class="lock">
-        <?php
-        if (!empty($conf["logintitle"][$_SESSION["lang"]]))
-            print $conf["logintitle"][$_SESSION["lang"]];
-        ?>
-        </p>
-
+            <p class="lock"></p>
         </div></div></div>
 
         <div id="interface">
@@ -225,11 +210,8 @@ if (isset($error)) {
         <div id="footer">
         <div id="footerLeft"><div id="footerRight">
         </div></div></div>
-  		</td>
-      </tr>
-    </table>
-	</td>
-  </tr>
+
+</div>
 <?php
 
 if (isCommunityVersion() && is_file("license.php")) {
@@ -237,8 +219,6 @@ if (isCommunityVersion() && is_file("license.php")) {
 }
 
 ?>
-</table>
-</div>
 
 <?if (isset($error)) print '<script type="text/javascript">new Effect.Shake($("alert"));</script>'; ?>
 
