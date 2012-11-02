@@ -786,29 +786,9 @@ def sortCommands(commands_to_perform):
         else: # failure in the call...
             return False
 
-    # extract only the ids we need
-    try:
-        filtered_commands_to_perform = list()
-        in_bundles = dict()
-        for (id, bundle, order) in commands_to_perform:
-            if bundle is None: # not a bundle : weeps the commands
-                filtered_commands_to_perform.append(id)
-            else: # it's a bundle : put it in a list ordered by priority
-                if not bundle in in_bundles:
-                    in_bundles[bundle] = dict()
-                if not order in in_bundles[bundle]:
-                    in_bundles[bundle][order] = list()
-                in_bundles[bundle][order].append(id)
-        # add back to filtered_commands_to_perform the bundles with the lower priority
-        for b in in_bundles:
-            max_prio = min(in_bundles[b])
-            for v in in_bundles[b][max_prio]:
-                filtered_commands_to_perform.append(v)
-    except Exception,e: # something weird happened : tell it, and fall back to legacy code
-        logging.getLogger().error('scheduler "%s": START: got %s while optimizing the commands, input was %s' % (SchedulerConfig().name, e, commands_to_perform))
-        filtered_commands_to_perform = list()
-        for (id, bundle, order) in commands_to_perform:
-            filtered_commands_to_perform.append(id)
+    filtered_commands_to_perform = list()
+    for (id, bundle, order) in commands_to_perform:
+        filtered_commands_to_perform.append(id)
 
     # a few pre-randomization to avoid dead locks
     random.shuffle(filtered_commands_to_perform)
