@@ -21,12 +21,9 @@
 # You should have received a copy of the GNU General Public License
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 
-import dbus.mainloop.glib
-import gobject
 from twisted.internet import glib2reactor
 
 glib2reactor.install()
-dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 
 import os
 import os.path
