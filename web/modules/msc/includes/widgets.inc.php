@@ -161,6 +161,30 @@ class RenderedMSCActions extends HtmlElement {
             $label = new RenderedLabel(3, sprintf(_T('Quick action on %s', 'msc'), $this->qa_on_name));
             $label->display();
 
+?>
+    <script type="text/javascript">
+            document.observe("dom:loaded", function() { 
+                var inputImg = $('launchActionImg');
+                var src = inputImg.src;
+                var style = inputImg.style;
+
+                var inputImgInactive= new Element("img", {src: src, style: style, id: "launchActionImg"});
+                var inputImgActive= new Element("input", {src: src, style: style, type: "image", id: "launchActionImg"});
+                
+                inputImg.replace(inputImgInactive.setOpacity(0.3));
+
+                $('launchAction').observe('change', function() {
+                    if ($('launchAction').selectedIndex == 0) {
+                        $('launchActionImg').replace(inputImgInactive.setOpacity(0.3));
+                    }
+                    else {
+                        $('launchActionImg').replace(inputImgActive);
+                    }
+                });
+            });
+</script>
+<?php
+
             print '
                 <div id="msc-standard-host-actions"> <!-- STANDARD HOST ACTIONS -->
                     <table>
@@ -240,6 +264,7 @@ class RenderedImgInput extends HtmlElement {
     function display() {
         print '
              <input
+                id="launchActionImg"
                 type="image"
                 src="'.$this->path.'"
                 style="'.$this->style.'"
