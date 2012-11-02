@@ -68,14 +68,15 @@ class GlpiProvisioner(ProvisionerI):
         if not auth:
             self.logger.warning("User authentication with GLPI web interface failed, but going on with provisioning")
         profiles = Glpi().getUserProfiles(authtoken.getLogin())
-        self.logger.debug("User %s GLPI profiles: %s" % (authtoken.getLogin(), str(profiles)))
+        self.logger.debug("User '%s' GLPI's profiles: %s" % (authtoken.getLogin(), str(profiles)))
+        self.logger.debug("Profiles order (from ini configuration): %s" % (self.config.profilesOrder))
         selected = None
         for profile in self.config.profilesOrder:
             if profile in profiles:
                 selected = profile
                 break
         if not selected:
-            self.logger.info("User GLPI profile can't be applied")
+            self.logger.info("User GLPI's profile can't be applied")
         else:
             self.logger.debug("Selected GLPI profile is %s" % selected)
             try:
