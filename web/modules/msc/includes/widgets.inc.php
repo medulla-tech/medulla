@@ -151,7 +151,7 @@ class RenderedMSCActions extends HtmlElement {
             $onSubmit = "";
         } elseif (!$this->error) {
             $selectDisabled = "";
-            $onSubmit = 'onsubmit="showPopup(event,\'' . urlStrRedirect($this->module . "/" . $this->submod . "/" . $this->action, $this->params) . '&launchAction=\' + $(\'launchAction\').value); return false;"';
+            $onSubmit = 'onsubmit="showQAPopup(event,\'' . urlStrRedirect($this->module . "/" . $this->submod . "/" . $this->action, $this->params) . '&launchAction=\' + $(\'launchAction\').value); return false;"';
         } else {
             $selectDisabled = "DISABLED";
             $onSubmit = "";
@@ -232,6 +232,28 @@ class RenderedMSCActions extends HtmlElement {
                     </table>
                 </div>';
         }
+?>
+<script text="text/javascript">
+function showQAPopup(evt, url) {
+    $('popup').style.width = '300px';
+    /*new Ajax.Updater('__popup_container', url, {onComplete: displayPopup(evt), evalScripts:true});*/
+    new Ajax.Request(url, {
+        onSuccess: function(t) {
+            try {
+                $('__popup_container').update(t.responseText);
+            }
+            catch(ex) {
+                $('__popup_container').innerHTML = t.responseText;
+            }
+            $('popup').setStyle({"top": "280px",
+                                 "left": "210px"
+                                });
+        },
+        onComplete: displayPopup(evt)
+    });
+}
+</script>
+<?php
     }
 }
 
