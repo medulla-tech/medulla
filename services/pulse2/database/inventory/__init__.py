@@ -1702,9 +1702,59 @@ class Inventory(DyngroupDatabaseHelper):
                     # in the returned tuple
                     if removed:
                         removed_elements[part].append(previous_elem)
-
+        # Do ignore to report the identical inventories 
+        # which unimportants elements makes the differences
+        if self.__isIdenticalInventory(added_elements, 
+                                 removed_elements, 
+                                 exclude={"Hardware": ["ProcessorFrequency", "id"],
+                                          }
+                                 ) :
+            return [[],[]]
+  
         ret = [added_elements, removed_elements]
         return ret
+
+    def __isIdenticalInventory (self, added, removed, exclude={}) :
+        """
+        Compare two inventories excluding ignored elements.
+
+        @param added: inventory diff containing added elements 
+        @type added: dict
+
+        @param removed: inventory diff containing removed elements
+        @type added: dict
+
+        @param exclude: ignored parts and elements of inventory
+        @type exclude: dict (format: {"part": [list of element keys], ..} 
+
+        @return: True if passed diffs are the sames (excluding ignored elements)
+        @rtype: bool
+        """
+        a_keys = set(added.keys())
+        r_keys = set(removed.keys())
+
+        # test of egality between the intersections of added/removed parts    
+        if len(a_keys - r_keys) != 0 and len(r_keys - a_keys) != 0 :
+            return False
+
+        for part_key in a_keys :
+            for added_part in added[part_key] :
+                removed_part = removed[part_key][0]
+                a_elem_keys = set(added_part.keys())
+                r_elem_keys = set(removed_part.keys())
+                # test of egality between the intersections of added/removed elements
+                if len(a_elem_keys - r_elem_keys) != 0 and \
+                        len(r_elem_keys - a_elem_keys) != 0 :
+                    return False
+                
+                for elem_key in a_elem_keys :
+                    if part_key in exclude :
+                        # ignore unimportants elements
+                        if elem_key in exclude[part_key] :
+                            continue
+                    if added_part[elem_key] != removed_part[elem_key] :
+                        return False
+        return True
 
 def toUUID(id): # TODO : change this method to get a value from somewhere in the db, depending on a config param
     return "UUID%s" % (str(id))
