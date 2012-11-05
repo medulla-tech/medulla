@@ -343,6 +343,15 @@ class SendPackageCommand:
         # cmd['maxbw'] is in kbits, set in bits
         cmd['maxbw'] = int(cmd['maxbw']) * 1024
 
+        cmd['start_file'], patternActions = MscDatabase().applyCmdPatterns(cmd['start_file'],
+                                                                           {
+                                                                               'do_reboot': cmd['do_reboot'],
+                                                                               'do_halt': cmd['issue_halt_to'],
+                                                                               'do_wol': cmd['do_wol'],
+                                                                               'do_inventory': cmd['do_inventory'],
+                                                                           }
+                                                                          )
+
         addCmd = MscDatabase().addCommand(  # TODO: refactor to get less args
             self.ctx,
             self.pid,
@@ -358,12 +367,12 @@ class SendPackageCommand:
             cmd['end_date'],
             "root", # TODO: may use another login name
             cmd['title'],
-            cmd['issue_halt_to'],
-            cmd['do_reboot'],
-            cmd['do_wol'],
+            patternActions['do_halt'],
+            patternActions['do_reboot'],
+            patternActions['do_wol'],
             cmd['next_connection_delay'],
             cmd['max_connection_attempt'],
-            cmd['do_inventory'],
+            patternActions['do_inventory'],
             cmd['maxbw'],
             self.root,
             cmd['deployment_intervals'],

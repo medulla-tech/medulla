@@ -135,12 +135,8 @@ if (isset($_POST["bconfirm"]) || isset($_POST["badvanced"])) {
     }
 } else {
     $f = new PopupForm(_T("Please confirm you really want to perform this action", "msc"));
-    if ($action == '007wake_on_lan.msc') {
-        $f->addButton("badvanced", _T('Advanced', 'msc'));
-    } else {
-        $f->addValidateButton("bconfirm");
-        $f->addButton("badvanced", _T('Advanced', 'msc'));
-    }
+    $f->addValidateButton("bconfirm");
+    $f->addButton("badvanced", _T('Advanced', 'msc'));
     $f->addCancelButton("bback");
     $f->display();
 }

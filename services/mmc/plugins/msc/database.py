@@ -391,6 +391,49 @@ class MscDatabase(msc.MscDatabase):
         d.addErrback(lambda err: err)
         return d
 
+    def applyCmdPatterns(self, cmd, patternActions = None):
+        """
+        Replace special patterns in command by special action
+        Return a list who contains command and special actions
+        
+        special actions are:
+            @@do_reboot@@
+            @@do_halt@@
+            @@do_inventory@@
+            @@do_wol@@
+
+        @param cmd: command to start (e.g. '/sbin/shutdown -r now')
+        @type cmd: str
+
+        @patternActions: dictionnary of special actions
+        @type: dict
+        
+        @return list of command and special actions
+        """
+
+        if patternActions is None:
+            patternActions = {
+                'do_reboot': "disable",
+                'do_halt': self.config.web_def_issue_halt_to,
+                'do_inventory': "disable",
+                'do_wol': "disable",
+            }
+
+        if "@@do_reboot@@" in cmd:
+            patternActions['do_reboot'] = "enable"
+            cmd = cmd.replace("@@do_reboot@@", "")
+        if "@@do_halt@@" in cmd:
+            patternActions['do_halt'] = ["done"]
+            cmd = cmd.replace("@@do_halt@@", "")
+        if "@@do_inventory@@" in cmd:
+            patternActions['do_inventory'] = "enable"
+            cmd = cmd.replace("@@do_inventory@@", "")
+        if "@@do_wol@@" in cmd:
+            patternActions['do_wol'] = "enable"
+            cmd = cmd.replace("@@do_wol@@", "")
+
+        return [cmd, patternActions]
+
     def addCommandQuick(self, ctx, cmd, targets, desc, gid = None):
         """
         Schedule a command for immediate execution into database.
@@ -415,6 +458,8 @@ class MscDatabase(msc.MscDatabase):
         self.logger.debug(targets)
         files = []
 
+        cmd, patternActions = self.applyCmdPatterns(cmd)
+
         # run a built-in script
         p1 = re.compile('^\/scripts\/')
         if p1.match(cmd):
@@ -436,12 +481,12 @@ class MscDatabase(msc.MscDatabase):
             "0000-00-00 00:00:00",
             "root",     # FIXME: this should be the effective user we want to connect with
             desc,
-            self.config.web_def_issue_halt_to,
-            "disable",
-            "disable",
+            patternActions['do_halt'],
+            patternActions['do_reboot'],
+            patternActions['do_wol'],
             60,
             3,
-            "disable",
+            patternActions['do_inventory'],
             0,
             0,
             '',

@@ -1,3 +1,3 @@
 title=Inventory
 titlefr=Inventaire
-command=export P2SRV=`echo $SSH_CONNECTION | cut -f1 -d\ `; export P2PORT=9999; export http_proxy=""; export ftp_proxy=""; ( [ -x /cygdrive/c/Program\ Files/OCS\ Inventory\ Agent/OCSInventory.exe ] && /cygdrive/c/Program\ Files/OCS\ Inventory\ Agent/OCSInventory.exe /np /server:$P2SRV /pnum:$P2PORT ) || ( [ -x /cygdrive/c/Program\ Files\ \(x86\)/OCS\ Inventory\ Agent/OCSInventory.exe ] && /cygdrive/c/Program\ Files\ \(x86\)/OCS\ Inventory\ Agent/OCSInventory.exe /np /server:$P2SRV /pnum:$P2PORT ) || ( [ -x /usr/bin/ocsinventory-agent ] && /usr/bin/ocsinventory-agent --server=http://$P2SRV:$P2PORT ) || ( [ -x /usr/sbin/ocsinventory-agent ] && /usr/sbin/ocsinventory-agent --server=http://$P2SRV:$P2PORT ) || ( [ -x /usr/local/sbin/ocs_mac_agent.php ] && /usr/local/sbin/ocs_mac_agent.php )
+command=@@do_inventory@@
