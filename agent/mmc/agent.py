@@ -23,14 +23,13 @@
 """
 XML-RPC server implementation of the MMC agent.
 """
-from resource import RLIMIT_NOFILE, RLIM_INFINITY, getrlimit
 import signal
 import multiprocessing as mp
 
 import twisted.internet.error
 import twisted.copyright
 from twisted.web import xmlrpc, server
-from twisted.internet import reactor, defer
+from twisted.internet import reactor, defer, process
 from twisted.python import failure
 try:
     from twisted.web import http
@@ -389,14 +388,11 @@ class MMCApp(object):
             self.lock.release()
             sys.exit(1)
 
-        maxfd = getrlimit(RLIMIT_NOFILE)[1]
-        if maxfd == RLIM_INFINITY:
-            maxfd = 1024
-
-        for fd in range(0, maxfd):
-            # fd 6 and 7 are twisted pipes
+        for fd in process._listOpenFDs():
+            # Don't close twisted FDs
             # TODO: make a clean code to be sure nothing is opened before this function
-            if fd not in (6, 7):
+            # ie: daemonize very early, then after import all stuff...
+            if fd not in (3, 4, 5, 6, 7):
                 try:
                     os.close(fd)
                 except OSError:
