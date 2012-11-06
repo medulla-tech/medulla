@@ -32,19 +32,7 @@ docsrc = \
 	dev/dyngroup/en/database_documentation.xml \
 	user/msc/en/pulse2_client_check_explained.xml \
 	user/msc/en/pulse2_deployment_error_codes_explained.xml \
-	user/msc/fr/pulse2_deployment_error_codes_explained.xml \
-	conf/en/mmc-python-plugin-glpi-configuration.xml \
-	conf/en/mmc-python-plugin-inventory-configuration.xml \
-	conf/en/pulse2-inventory-server-configuration.xml \
-	conf/en/pulse2-package-server-configuration.xml \
-	conf/en/mmc-python-plugin-imaging-configuration.xml \
-	conf/en/mmc-python-plugin-msc-configuration.xml \
-	conf/en/pulse2-scheduler-configuration.xml \
-	conf/en/pulse2-launcher-configuration.xml \
-	conf/en/mmc-python-plugin-dyngroup-configuration.xml \
-	conf/en/pulse2-imaging-server-configuration.xml \
-	conf/en/mmc-python-plugin-pkgs-configuration.xml \
-	conf/en/mmc-python-plugin-pulse2-configuration.xml
+	user/msc/fr/pulse2_deployment_error_codes_explained.xml
 
 
 docpng = \
