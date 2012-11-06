@@ -26,7 +26,10 @@ import logging
 import dbus.mainloop.glib
 dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 
-from mmc.plugins.services.manager import ServiceManager
+try:
+    from mmc.plugins.services.manager import ServiceManager
+except ImportError:
+    pass
 from mmc.plugins.services.config import ServicesConfig
 
 logger = logging.getLogger()
@@ -45,7 +48,11 @@ def activate():
         logger.warning("Plugin services: disabled by configuration.")
         return False
     logger.debug("Loading systemd units")
-    ServiceManager().list()
+    try:
+        ServiceManager().list()
+    except NameError:
+        logger.error("Failed to list systemd units. Is python-systemd-dbus installed ?")
+        return False
     try:
         from mmc.plugins.dashboard.manager import DashboardManager
         from mmc.plugins.services.panel import ServicesPanel
