@@ -310,9 +310,13 @@ for command in commandData:
                 dataCommand['Results']['Delayed'] += 1
 
         elif coh['current_state'] in ['over_timed'] :
-            # increment counter
-            dataCommand['Over Timed'] += 1
-            dataCommand['Results']['Plan'] += 1
+            if coh['next_launch_date'] == datetime.datetime(2031, 12, 31, 23, 59, 59):
+                dataCommand['Stopped'] += 1
+                dataCommand['Results']['Delayed'] += 1
+            else :
+                # increment counter
+                dataCommand['Over Timed'] += 1
+                dataCommand['Results']['Plan'] += 1
 
         elif coh['current_state'] in ['done'] :
             # increment success counters
