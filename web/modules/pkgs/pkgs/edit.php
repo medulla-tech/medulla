@@ -183,7 +183,7 @@ if ($_GET['action'] == 'add' and strlen($_POST['random_dir'] == 0)) {
             array("value" => $p_api_id, "required" => True, "hide" => True)
         );
     }
-    $f->add( new TrFormElement(sprintf(_T("Select files you want to import (%sM max)", "pkgs"), get_php_max_upload_size()), new MultiFileTpl('filepackage')), array("required" => True));
+    $f->add( new TrFormElement(sprintf(_T("Select files you want to import (%sM max)", "pkgs"), get_php_max_upload_size()), new MultiFileTpl('filepackage'), array("required" => True, "tooltip" => _T("Change <strong>post_max_size</strong> and <strong>upload_max_filesize</strong> directives in php.ini file to increase upload size.", "pkgs"))));
 
     $f->add(new HiddenTpl("id"), array("value" => $package['id'], "hide" => True));
 
