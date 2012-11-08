@@ -475,6 +475,8 @@ class DyngroupDatabase(DatabaseHelper):
             _session.delete(share)
             _session.flush()
 
+        still_linked = _session.query(ShareGroup).filter(self.shareGroup.c.FK_users == user_id).count()
+
         if session is None:
             _session.close()
         return still_linked
