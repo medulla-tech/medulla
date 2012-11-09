@@ -62,11 +62,29 @@ def funcGet(couple, type = 'list'):
             return getValues(table, col)
         return getListValue
     elif type == 'double':
-        table, col = re.compile('/').split('Software/ProductName')
-        def getListValue(ctx, value = '', table = table, col = col):
-            if value != '':
-                return getValuesFuzzy(table, col, value)
-            return getValues(table, col)
+        def getListValue(ctx, table, cols, value1 = '', value2 = None):
+            """
+            getListValue of "double" type. It's used where you search on 2 fields of a table.
+            Example: On table Software, you can search on ProductName and ProductVersion
+
+            @param table: table who will be requested
+            @type table: str
+
+            @param cols: the 2 fields of table who will be requested, it's a string separated by ":"
+            @type cols: str
+
+            @param value1: ajax search on field 1 (the first field of table)
+            @type value1: str
+
+            @param value2: ajax search on field 2 (the second field of table)
+            @type value2: str
+            """
+            if value2 is None: # Search of possibles values of field 1
+                if value1 != '':
+                    return getValuesFuzzy(table, cols.split(':')[0], value1)
+                return getValues(table, col)
+            else: # Search of possibles values of field 2 according to field 1
+                return getValueFuzzyWhere(table, cols.split(':')[0], value1, cols.split(':')[1], value2)
         return getListValue
     elif type == 'halfstatic':
         try:

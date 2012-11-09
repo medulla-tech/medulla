@@ -64,13 +64,13 @@ class InventoryDatabaseConfig(InventoryDatabaseConfigSkel):
             'Drive/TotalSpace':['int']
     }
     double = {
-            'Software/Products': [
+            'Software/ProductName:ProductVersion': [
                 ['Software/ProductName', 'string'],
-                ['Software/ProductVersion', 'int']
+                ['Software/ProductVersion', 'string']
             ]
     }
     doubledetail = {
-            'Software/ProductVersion' : 'int'
+            'Software/ProductVersion' : 'string'
     }
     halfstatic = {
             'Registry/Value/display name' : ['string', 'Path', 'DisplayName']

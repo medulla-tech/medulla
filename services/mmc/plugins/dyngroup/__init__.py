@@ -356,6 +356,12 @@ class RpcProxy(RpcProxyI):
         return xmlrpcCleanup(queryManager.getPossiblesValuesForCriterionInModule(ctx, moduleName, criterion))
 
     def getPossiblesValuesForCriterionInModuleFuzzy(self, moduleName, criterion, search = ''):
+        """
+        Used in "double" type. It's used where you search on 2 fields of a table.
+        Example: On table Software, you can search on ProductName and ProductVersion
+        
+        This function is related to field 1
+        """
         ctx = self.currentContext
         if not isDynamicEnable():
             return False
@@ -366,7 +372,13 @@ class RpcProxy(RpcProxyI):
         ret = ret[:100]
         return xmlrpcCleanup(ret)
 
-    def getPossiblesValuesForCriterionInModuleFuzzyWhere(self, moduleName, criterion, value1, value2 = ''): # not used anymore ?
+    def getPossiblesValuesForCriterionInModuleFuzzyWhere(self, moduleName, criterion, value1, value2 = ''):
+        """
+        Used in "double" type. It's used where you search on 2 fields of a table.
+        Example: On table Software, you can search on ProductName and ProductVersion
+        
+        This function is related to field 2
+        """
         ctx = self.currentContext
         if not isDynamicEnable():
             return False
