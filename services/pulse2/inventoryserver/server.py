@@ -59,7 +59,9 @@ class InventoryServer:
         deviceid = ''
 
         # handle compressed inventories
-        if self.headers['Content-Type'].lower() == 'application/x-compress':
+        # application/x-compress is for OCS
+        # application/x-compress is for Fusion
+        if self.headers['Content-Type'].lower() in ['application/x-compress', 'application/x-compress-zlib']:
             try:
                 decomp = decompressobj()
                 content = decomp.decompress(content)
@@ -79,7 +81,7 @@ class InventoryServer:
             query = 'FAILS'
         try:
             if query != 'UPDATE':
-                deviceid = re.search(r'<DEVICEID>([\w-]+)</DEVICEID>', content).group(1)
+                deviceid = re.search(r'<DEVICEID>([\w.-]+)</DEVICEID>', content).group(1)
         except AttributeError, e:
             self.logger.warn("Could not get any DEVICEID section in inventory from %s"%(from_ip))
             self.logger.debug("no DEVICEID in %s"%(content))
