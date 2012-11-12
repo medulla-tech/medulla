@@ -73,29 +73,31 @@ if (! isCommunityVersion(true)) {
 
 $mod->addSubmod($submod);
 
-$submod = new ExpertSubModule("logview", _("Log view"));
-$submod->setVisibility(True);
-$submod->setImg('img/navbar/logview');
-$submod->setDefaultPage("base/logview/index");
-$submod->setPriority(10001);
+// Deprecated module
+if (isLogViewEnabled()) {
+    $submod = new ExpertSubModule("logview", _("Log view"));
+    $submod->setVisibility(True);
+    $submod->setImg('img/navbar/logview');
+    $submod->setDefaultPage("base/logview/index");
+    $submod->setPriority(10001);
 
-$page = new Page("index",_("LDAP log"));
-$page->setFile("modules/base/logview/index.php", array("expert" => True));
+    $page = new Page("index",_("LDAP log"));
+    $page->setFile("modules/base/logview/index.php", array("expert" => True));
 
-$submod->addPage($page);
+    $submod->addPage($page);
 
-$page = new Page("show");
-$page->setFile("modules/base/logview/ajax_showlog.php",
-               array("AJAX" =>True,"visible"=>False));
-$submod->addPage($page);
+    $page = new Page("show");
+    $page->setFile("modules/base/logview/ajax_showlog.php",
+                   array("AJAX" =>True,"visible"=>False));
+    $submod->addPage($page);
 
-$page = new Page("setsearch");
-$page->setFile("modules/base/logview/ajax_setSearch.php",
-               array("AJAX" =>True,"visible"=>False));
-$submod->addPage($page);
+    $page = new Page("setsearch");
+    $page->setFile("modules/base/logview/ajax_setSearch.php",
+                   array("AJAX" =>True,"visible"=>False));
+    $submod->addPage($page);
 
-$mod->addSubmod($submod);
-
+    $mod->addSubmod($submod);
+}
 
 /**
  * user submod definition
@@ -209,7 +211,7 @@ $mod->addSubmod($submod);
 /* Audit module */
 
 if (has_audit_working()) {
-    $submod = new SubModule("audit", _("Audit"));
+    $submod = new SubModule("audit", _("MMC Logs"));
     $submod->setImg('img/navbar/logview');
     $submod->setDefaultPage("base/audit/indexall");
     $submod->setPriority(2000);

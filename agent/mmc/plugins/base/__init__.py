@@ -455,6 +455,9 @@ def isCommunityVersion():
     return xmlrpcCleanup(SubscriptionManager().isCommunity())
 
 ###log view accessor
+def isLogViewEnabled():
+    return LogView().isLogViewEnabled()
+
 def getLdapLog(filter = ''):
     return LogView().getLog(filter)
 
@@ -2514,6 +2517,8 @@ class LogView:
 
     def __init__(self, logfile = localstatedir + '/log/ldap.log', pattern=None):
         config = PluginConfig("base")
+        try: self.enabled = config.getboolean("ldap", "logViewModule")
+        except (NoSectionError, NoOptionError): self.enabled = True
         try: self.logfile = config.get("ldap", "logfile")
         except (NoSectionError, NoOptionError): self.logfile = logfile
         try: self.maxElt = config.get("LogView", "maxElt")
@@ -2525,6 +2530,9 @@ class LogView:
                 "slapd-syslog" : "^(?P<b>[A-z]{3}) *(?P<d>[0-9]+) (?P<H>[0-9]{2}):(?P<M>[0-9]{2}):(?P<S>[0-9]{2}) .* conn=(?P<conn>[0-9]+)\ (?P<opfd>op|fd)=(?P<opfdnum>[0-9]+) (?P<op>[A-Za-z]+) (?P<extra>.*)$",
                 "fds-accesslog" : "^\[(?P<d>[0-9]{2})/(?P<b>[A-z]{3})/(?P<y>[0-9]{4}):(?P<H>[0-9]{2}):(?P<M>[0-9]{2}):(?P<S>[0-9]{2}) .*\] conn=(?P<conn>[0-9]+)\ (?P<opfd>op|fd)=(?P<opfdnum>[0-9]+) (?P<op>[A-Za-z]+)(?P<extra> .*|)$"
                 }
+
+    def isLogViewEnabled(self):
+        return self.enabled
 
     def revReadlines(self, arg, bufsize = 8192):
         """

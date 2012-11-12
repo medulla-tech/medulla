@@ -34,7 +34,7 @@ $ajax = new AjaxFilterLog(urlStrRedirect("base/audit/ajaxLogFilter"),
 $ajax->setsearchbar(urlStrRedirect("base/audit/searchbar"));
 $ajax->display();
 
-$p = new PageGenerator(_("User and group audit"));
+$p = new PageGenerator(_("User and group"));
 $p->setSideMenu($sidemenu);
 $p->display();
 

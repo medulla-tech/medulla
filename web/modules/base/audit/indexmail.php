@@ -32,7 +32,7 @@ $ajax = new AjaxFilterLog(urlStrRedirect("base/audit/ajaxLogFilter"),$types,"mai
 $ajax->setsearchbar(urlStrRedirect("base/audit/searchbar"));
 $ajax->display();
 
-$p = new PageGenerator(_("Mail audit"));
+$p = new PageGenerator(_("Mail"));
 $p->setSideMenu($sidemenu);
 $p->display();
 

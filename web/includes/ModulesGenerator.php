@@ -497,7 +497,8 @@ class Module {
 
    function process() {
         foreach ($this->_submod as $submod) {
-            $submod->process($this->getName());
+            if ($submod)
+                $submod->process($this->getName());
         }
    }
 

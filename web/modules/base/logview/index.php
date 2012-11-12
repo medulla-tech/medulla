@@ -24,7 +24,7 @@
 
 require_once("graph/navbar.inc.php");
 require_once("includes/ajaxTools.php");
-require("includes/logviewSidebar.inc.php");
+require("localSidebar.inc.php");
 
 displayInputLiveSearch(urlStrRedirect('base/logview/setsearch'));
 ?>

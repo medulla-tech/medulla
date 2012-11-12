@@ -85,7 +85,8 @@ $MMCApp->addModule($mod);
 
 # hide log submod in base module
 $base = &$MMCApp->getModule('base');
-$status = &$base->getSubmod('logview');
-$status->setVisibility(False);
+$logview = &$base->getSubmod('logview');
+if ($logview)
+    $logview->setVisibility(False);
 
 ?>

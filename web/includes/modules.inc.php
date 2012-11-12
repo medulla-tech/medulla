@@ -179,9 +179,11 @@ function autoGenerateNavbar() {
     foreach ($MMCApp->getModules() as $mod) {
         foreach ($mod->getSubmodules() as $submod) {
             $add = False;
-            foreach($submod->getPages() as $page) {
-                $add = $page->hasAccessAndVisible($mod, $submod);
-                if ($add) break;
+            if ($submod) {
+                foreach($submod->getPages() as $page) {
+                    $add = $page->hasAccessAndVisible($mod, $submod);
+                    if ($add) break;
+                }
             }
             if ($add) $prio = insert_without_delete($prio,$submod->getPriority(),$submod);
         }

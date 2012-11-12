@@ -236,4 +236,11 @@ function isCommunityVersion($xmlrpc = False) {
     }
 }
 
+function isLogViewEnabled() {
+    if (!isset($_SESSION["isLogViewEnabled"])) {
+        $_SESSION["isLogViewEnabled"] = xmlCall("base.isLogViewEnabled");
+    }
+    return $_SESSION["isLogViewEnabled"];
+}
+
 ?>

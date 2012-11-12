@@ -32,7 +32,7 @@ $ajax = new AjaxFilterLog(urlStrRedirect("base/audit/ajaxLogFilter"),$types,"net
 $ajax->setsearchbar(urlStrRedirect("base/audit/searchbar"));
 $ajax->display();
 
-$p = new PageGenerator(_("Network audit"));
+$p = new PageGenerator(_("Network"));
 $p->setSideMenu($sidemenu);
 $p->display();
 
