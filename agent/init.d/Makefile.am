@@ -40,6 +40,7 @@ mmc-agent: Makefile
 	srcdir=''; \
 	  test -f ./$@.in || srcdir=$(srcdir)/; \
 	  $(edit) $${srcdir}$@.in >$@.tmp
+	test "$@ = mmc-agent" && test -f /etc/mandriva-release && sed -i 's!slapd!ldap!g' $@.tmp || echo Continue
 	mv $@.tmp $@
 
 mmc-agent: $(srcdir)/mmc-agent.in
