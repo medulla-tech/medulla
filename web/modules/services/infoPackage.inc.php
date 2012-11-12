@@ -25,7 +25,7 @@
  */
 
 $mod = new Module("services");
-$mod->setVersion("3.0.5");
+$mod->setVersion("3.0.90");
 $mod->setRevision('');
 $mod->setDescription(_T("Services", "services"));
 $mod->setAPIVersion("0:0:0");
