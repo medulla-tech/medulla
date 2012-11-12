@@ -44,8 +44,7 @@ if (!empty($submod)) {
     $mod->setAPIVersion("0:0:0");
     $mod->setPriority(700);
 
-    $submodmsc = new SubModule("logs");
-    $submodmsc->setDescription(_T("MSC logs", "msc"));
+    $submodmsc = new SubModule("logs", _T("Audit", "msc"));
     $submodmsc->setImg('modules/msc/img/navbar/msc');
     $submodmsc->setDefaultPage("msc/logs/consult");
 
