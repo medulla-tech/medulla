@@ -39,9 +39,13 @@ class GeneralPanel(Panel):
 
     def serialize(self):
         memory = psutil.virtual_memory()
+        try:
+            dist = platform.linux_distribution()
+        except:
+            dist = platform.dist()
         return {
             'hostname': socket.gethostname(),
-            'dist': platform.dist(),
+            'dist': dist,
             'load': os.getloadavg(),
             'uptime': str(datetime.now() - datetime.fromtimestamp(psutil.BOOT_TIME)),
             'users': len(getUsersLdap()),
