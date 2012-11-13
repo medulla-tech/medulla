@@ -30,6 +30,7 @@ certpriv = $(patsubst %,%/privkey.pem,$(certpaths))
 
 nobase_pulseconf_DATA = \
 	package-server/package-server.ini inventory-server/inventory-server.ini \
+	inventory-server/xml-fix/00_Microsoft_consistency.py \
 	scheduler/scheduler.ini launchers/launchers.ini atftpd/pcre.conf \
 	imaging-server/imaging-server.ini \
 	$(certca) $(certpriv)

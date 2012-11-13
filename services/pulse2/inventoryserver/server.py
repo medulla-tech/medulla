@@ -34,6 +34,7 @@ import re
 import signal
 import os
 import sys
+import imp
 from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
 from SocketServer import ThreadingMixIn
 from threading import Thread, Semaphore
@@ -206,6 +207,20 @@ class TreatInv(Thread):
             inventory = '<?xml version="1.0" encoding="%s" ?><Inventory>%s</Inventory>' % (encoding, inv_data)
             inventory = re.sub(r'</?HISTORY>', '', inventory)
             inventory = re.sub(r'</?DOWNLOAD>', '', inventory)
+
+            # Let's fix the XML using py config scripts
+            # Find all .py from xmlfixplugindir and run its "xml_fix" function against our XML
+            for (path, dirs, files) in os.walk(self.config.xmlfixplugindir):
+                for filename in files:
+                    filename = os.path.join(path, filename)
+                    if re.match('^.*\.py$',filename):
+			try:
+                            self.logger.info('Thread %s : Fixing XML inventory using %s' % (threadname, filename))
+                            mod_name = "xml-fix"
+                            py_mod = imp.load_source(mod_name, filename)
+                            inventory = getattr(py_mod, 'xml_fix')(inventory)
+                        except Exception, e:
+                            self.logger.error("Thread %s : Unable to run %s script: %s" % (threadname, filename, e))
 
             # Store data on the server
             inventory = OcsMapping().parse(inventory)
