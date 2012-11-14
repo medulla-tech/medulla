@@ -267,7 +267,7 @@ else {
             array("value" => $package[$p[0]]['name'], "hide" => True)
         );
         $f->add(
-            new TrFormElement($p[2], new InputTpl($p[0].'cmd')),
+            new TrFormElement($p[2], new TextareaTpl($p[0].'cmd')),
             array("value" => htmlspecialchars($package[$p[0]]['command']))
         );
     }
