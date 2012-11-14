@@ -104,7 +104,7 @@ class MultiFileTpl extends AbstractTpl {
 
     function display($arrParam) {
         // FIXME use session or not ?
-        $random_dir = uniqid();
+        $random_dir = "pulse_rdir_" . uniqid();
         $_SESSION['random_dir'] = $random_dir;
         print '<div id="file-uploader">          
                 <noscript>                      
@@ -144,9 +144,7 @@ class MultiFileTpl extends AbstractTpl {
             });
         }
         
-        // in your app create uploader as soon as the DOM is ready
-        // don\'t wait for the window to load  
-        window.onload = createUploader;     
+        createUploader();
     </script>';
     }
 
