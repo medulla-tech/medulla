@@ -48,15 +48,19 @@ $submod->addPage($page);
 $page = new Page("edit", _T('Edit a package', 'pkgs'));
 $page->setOptions(array("visible"=>False));
 $submod->addPage($page);
-$page = new Page("associate_files", _T('Associate files to a package', 'pkgs'));
-$page->setOptions(array("visible"=>False));
-$submod->addPage($page);
 $page = new Page("pending", _T('See pending packages', 'pkgs'));
 $submod->addPage($page);
-$page = new Page("addsamba", _T('Add package from samba share', 'pkgs'));
+
+$page = new Page("ajaxRefreshPackageTempDir", _T('Display Package API Temporary Dir', 'pkgs'));
+$page->setOptions(array("AJAX" => True, "visible" => False, "noHeader"=>True));
 $submod->addPage($page);
-$page = new Page("associate_files_samba", _T('Associate files to a package', 'pkgs'));
-$page->setOptions(array("visible"=>False));
+
+$page = new Page("ajaxGetSuggestedCommand", _T('Get suggested command', 'pkgs'));
+$page->setOptions(array("AJAX" => True, "visible" => False, "noHeader"=>True));
+$submod->addPage($page);
+
+$page = new Page("ajaxDisplayUploadForm", _T('Display upload form', 'pkgs'));
+$page->setOptions(array("AJAX" => True, "visible" => False, "noHeader"=>True));
 $submod->addPage($page);
 
 $page = new Page("rsync",_T("Show mirror status", 'pkgs'));

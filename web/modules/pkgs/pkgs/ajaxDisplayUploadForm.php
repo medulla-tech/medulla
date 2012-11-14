@@ -1,0 +1,40 @@
+<?php
+/**
+ * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+ * (c) 2007-2012 Mandriva, http://www.mandriva.com
+ *
+ * $Id$
+ *
+ * This file is part of Mandriva Management Console (MMC).
+ *
+ * MMC is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * MMC is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+require_once("modules/pkgs/includes/functions.php");
+
+// TODO: purge PHP packages temp directories
+// This code deletes all temp packages, bad if many users
+// upload packages at the same time
+//
+//function delete_all_package_temp_directories() {
+//    $upload_tmp_dir = sys_get_temp_dir();
+//    foreach (glob($upload_tmp_dir . '/pulse_rdir_*', GLOB_ONLYDIR) as $temp_directory) {
+//        delete_directory($temp_directory);
+//    }
+//}
+//delete_all_package_temp_directories();
+
+$m = new MultiFileTpl('filepackage');
+$m->display();
+?>

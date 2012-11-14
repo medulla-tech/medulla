@@ -46,6 +46,26 @@ function getTemporaryFiles($papiid) {
     return xmlCall("pkgs.ppa_getTemporaryFiles", array($papiid));
 }
 
+/*
+ * Try to suggest a command line by parsing *.exe
+ * or *.msi file in tempdir
+ *
+ * @param $papiid: a Package API
+ * @type $papiid: str
+ *
+ * @param $tempdir: tempdir
+ * @type $tempdir: str
+ */
+
+function getTemporaryFileSuggestedCommand($papiid, $tempdir) {
+    return array(
+        "label" => $tempdir,
+        "version" => "Package API: " . $papiid,
+        "commandcmd" => "Suggested command of " . $tempdir,
+    );
+    return xmlcall("pkgs.ppa_getTemporaryFileSuggestedCommand", array($papiid, $tempdir));
+}
+
 function associatePackages($papiid, $pid, $files, $level = 0) {
     return xmlCall("pkgs.ppa_associatePackages", array($papiid, $pid, $files, $level));
 }
@@ -58,5 +78,4 @@ function getRsyncStatus($p_api, $pid) {
     return xmlCall("pkgs.ppa_getRsyncStatus", array($p_api, $pid));
 }
 
-          
 ?>
