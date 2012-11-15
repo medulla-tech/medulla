@@ -15,10 +15,10 @@ The package integrates different tools to provide a complete Pulse2 client
 under various Windows operating systems.
 
 Tools:
-- cygwin environment with bash, etc.
-- openssh
+- CygWin environment with bash, etc.
+- OpenSSH
 - TightVNC server
-- OCS inventory
+- FusionInventory agent
 
 Supported Windows versions:
 - MS Windows 2000, XP, 2003, Vista, 2008, 7

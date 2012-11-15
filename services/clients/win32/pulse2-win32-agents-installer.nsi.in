@@ -168,21 +168,9 @@ Please fill the field with the right port."
   ${EndIF}
   ${EndIF}
 
-  StrCpy $0 "$EXEDIR\${INVENTORY_AGENT_EXE} /S /NP /NOSPLASH /NOTAG /SERVER:$INV_SERVER /PNUM:$INV_SERVER_PORT"
+  StrCpy $0 "$EXEDIR\${INVENTORY_AGENT_EXE} /S /debug /runnow /server=http://$INV_SERVER:$INV_SERVER_PORT"
   DetailPrint "Running $0"
   nsExec::ExecToLog $0
-  Delete "$EXEDIR\OcsAgentSetup.log"
-  DetailPrint "Creating registry key for inventory at logon time"
-  ReadRegStr $0 HKLM "SYSTEM\CurrentControlSet\Services\OCS INVENTORY" "ImagePath"
-  ${GetParent} $0 $1
-  WriteRegStr "HKLM" "SOFTWARE\Microsoft\Windows\CurrentVersion\Run" "OCS-Inventory agent" '$1\OCSInventory.exe" /SERVER:$INV_SERVER /PNUM:$INV_SERVER_PORT /NP /NOTAG /DEBUG'
-  ; Start an inventory
-  DetailPrint "Creating initial inventory"
-  ReadRegStr $0 HKLM "SYSTEM\CurrentControlSet\Services\OCS INVENTORY" "ImagePath"
-  ${GetParent} $0 $1
-  StrCpy $4 '$1\OCSInventory.exe" /SERVER:$INV_SERVER /PNUM:$INV_SERVER_PORT /NP /NOTAG'
-  DetailPrint "Runnning $4"
-  nsExec::ExecToLog $4
   DetailPrint ""
   DetailPrint ""
 SectionEnd
