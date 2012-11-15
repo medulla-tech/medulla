@@ -6,11 +6,10 @@
 .qq-upload-button {
 	display: block;
 	/*or inline-block*/
-	padding: 7px 0;
+	padding: 7px;
 	text-align: center;
 	background: #DDD;
 	border: 1px solid #AAA;
-        height: 20px;
 }
 .qq-upload-button-hover {
 	background: #CCC;
@@ -107,9 +106,9 @@
     z-index: 1;
 }
 #triggerUpload {
-    margin-top: 15px;
     padding: 5px;
-    width: 135px;
+    width: 190px;
+    text-align: center;
     background-color: #21449C;
     color: white;
     cursor: pointer;
