@@ -54,7 +54,8 @@ class PackageApiPut(PackageApiGet):
         if not os.path.exists(self.tmp_input_dir):
             os.mkdir(self.tmp_input_dir)
         filepath = os.path.join(self.tmp_input_dir, random_dir)
-        os.mkdir(filepath)
+        if not os.path.exists(filepath):
+            os.mkdir(filepath)
         for file in files:
             f = open(os.path.join(filepath, file['filename']), 'w')
             f.write(b64decode(file['filebinary']))
