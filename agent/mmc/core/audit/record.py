@@ -277,7 +277,11 @@ class AuditRecordDB(AuditRecord):
         if self.currentattribute:
             # convert self.log to type <str>
             self.log = str(self.log)
-            self.log += " VALUE:%s" % self.currentattribute.encode('utf-8')
+            if isinstance(self.currentattribute, basestring):
+                value = self.currentattribute.encode('utf-8')
+            else:
+                value = str(self.currentattribute)
+            self.log += " VALUE:%s" % value
         self.log += " STATE:PROGRESS"
 
     def commit(self):
