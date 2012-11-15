@@ -22,8 +22,6 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-?>
-<?php
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 
@@ -248,18 +246,12 @@ Event.observe(window, 'load', function() { // load this piece of code when page 
         selectedPapi = refreshTempPapi();
     });
 
-    // When click on radio buttons...
     document.observe('click', function(event) {
         var elem = event.element();
         
-        // fill form when changing temp package
-        if (elem.match('input[name="rdo_files"]')) {
-            var tempdir = elem.value;
-            fillForm(selectedPapi, tempdir);
-        }
         // display temp package or upload form
         // according to package-method chosen ("package" or "upload")
-        else if (elem.match('input[name="package-method"]')) {
+        if (elem.match('input[name="package-method"]')) {
             var selectedValue= $$('input:checked[type="radio"][name="package-method"]').pluck('value');
             if (selectedValue == "package") {
                 selectedPapi = refreshTempPapi();

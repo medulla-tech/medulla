@@ -25,7 +25,7 @@ require_once("modules/pkgs/includes/xmlrpc.php");
 
 $files = getTemporaryFiles($_GET['papi']);
 
-$r = new RadioTpl("rdo_files");
+$r = new SelectItem("rdo_files");
 $vals = array();
 $keys = array();
 foreach ($files as $fi) {
@@ -34,8 +34,40 @@ foreach ($files as $fi) {
         $keys[] = $fi[0];
     }
 }
-$r->setValues($vals);
-$r->setChoices($keys);
+$r->setElementsVal($vals);
+$r->setElements($keys);
 
 $r->display();
 ?>
+<script type="text/javascript">
+    /*
+     * Auto fill fields of form
+     * if tempdir is empty (when changing packageAPI)
+     * default tempdir will be chosen in ajaxGetSuggestedCommand
+     * php file.
+     */
+    // FIXME: duplicated fillForm function
+    function fillForm(selectedPapi, tempdir) {
+        url = '<?php echo urlStrRedirect("pkgs/pkgs/ajaxGetSuggestedCommand")?>&papiid=' + selectedPapi;
+        if (tempdir != undefined) {
+            url += '&tempdir=' + tempdir;
+        }
+        new Ajax.Request(url, {
+            onSuccess: function(response) {
+                $('label').value = response.headerJSON.label;
+                $('version').value = response.headerJSON.version;
+                $('commandcmd').value = response.headerJSON.commandcmd;
+            }
+        });
+    }
+    // fill form when changing temp package
+    $('rdo_files').observe('change', function() {
+        var box = $('rdo_files');
+        var selectedIndex = box.selectedIndex;
+        var tempdir = box.options[selectedIndex].value;
+        var box = $('p_api');
+        var selectedIndex = box.selectedIndex;
+        var selectedPapi = box.options[selectedIndex].value;
+        fillForm(selectedPapi, tempdir);
+    });
+</script>
