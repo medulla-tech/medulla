@@ -121,6 +121,9 @@ class MultiFileTpl extends AbstractTpl {
         <script src="jsframework/lib/fileuploader.js" type="text/javascript"></script>
         <link href="jsframework/lib/fileuploader.css" rel="stylesheet" type="text/css">
         <script>
+        var box = $(\'p_api\');
+        var selectedIndex = box.selectedIndex;
+        var selectedPapi = box.options[selectedIndex].value;
         function createUploader(){
             var uploader = new qq.FileUploader({
                 element: document.getElementById(\'file-uploader\'),
@@ -129,6 +132,7 @@ class MultiFileTpl extends AbstractTpl {
                 multiple: true,
                 demoMode: false,
                 random_dir: \'' . $random_dir . '\',
+                selectedPapi: selectedPapi,
                 autoUpload: false,
                 uploadButtonText: "' . _T('Click here to select files', "pkgs") . '",
                 onComplete: function(id, file, responseJson){

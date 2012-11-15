@@ -377,6 +377,7 @@ qq.FileUploaderBasic.prototype = {
 
         var handler = new qq[handlerClass]({
             random_dir: this._options.random_dir,
+            selectedPapi: this._options.selectedPapi,
             debug: this._options.debug,
             action: this._options.action,
             encoding: this._options.encoding,
@@ -1416,6 +1417,7 @@ qq.extend(qq.UploadHandlerXhr.prototype, {
         params = params || {};
         params[this._options.inputName] = name;
         params['random_dir'] = this._options.random_dir;
+        params['selectedPapi'] = this._options.selectedPapi;
         var queryString = qq.obj2url(params, this._options.action);
 
         var protocol = this._options.demoMode ? "GET" : "POST";

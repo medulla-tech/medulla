@@ -6,7 +6,10 @@ You can uncomment the following lines (minus the require) to use these as your d
 /******************************************/
 
 session_start();
-require('../../modules/pkgs/includes/functions.php');
+require_once("../../includes/xmlrpc.inc.php");
+require_once("../../modules/pkgs/includes/xmlrpc.php");
+require_once("../../modules/pkgs/includes/functions.php");
+
 
 // list of valid extensions, ex. array("jpeg", "xml", "bmp")
 $allowedExtensions = array();
@@ -21,9 +24,10 @@ $uploader = new qqFileUploader($allowedExtensions, $sizeLimit);
 // Put uploaded file in PHP upload_tmp_dir / random_dir
 $upload_tmp_dir = sys_get_temp_dir();
 $random_dir = ($_GET['random_dir']) ? $_GET['random_dir'] : $_SESSION['random_dir'];
+$p_api_id = $_GET['selectedPapi'];
 mkdir($upload_tmp_dir . '/' . $random_dir);
 
-$result = $uploader->handleUpload($upload_tmp_dir, $random_dir);
+$result = $uploader->handleUpload($upload_tmp_dir, $random_dir, $p_api_id);
 
 // to pass data through iframe you will need to encode all html tags
 echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
@@ -39,7 +43,7 @@ class qqUploadedFileXhr {
      * Save the file to the specified path
      * @return boolean TRUE on success
      */
-    function save($path) {    
+    function save($path, $filename, $random_dir, $p_api_id) {    
         $input = fopen("php://input", "r");
         $temp = tmpfile();
         $realSize = stream_copy_to_stream($input, $temp);
@@ -53,8 +57,26 @@ class qqUploadedFileXhr {
         fseek($temp, 0, SEEK_SET);
         stream_copy_to_stream($temp, $target);
         fclose($target);
+
+        // Push file to package server
+        $upload_tmp_dir = sys_get_temp_dir();
+
+        $files = array();
+        $file = $upload_tmp_dir . '/' . $random_dir . '/' . $filename;
+        // Read and put content of $file to $filebinary
+        $filebinary = fread(fopen($file, "r"), filesize($file));
+        $files[] = array(
+            "filename" => $filename,
+            "filebinary" => base64_encode($filebinary),
+        );
+
+        $push_package_result = pushPackage($p_api_id, $random_dir, $files);
+        // Delete package from PHP /tmp dir
+        delete_directory($upload_tmp_dir . '/' . $random_dir);
         
-        return true;
+        if (!isXMLRPCError() and $push_package_result) {
+            return true;
+        }
     }
     function getName() {
         return $_GET['qqfile'];
@@ -148,7 +170,7 @@ class qqFileUploader {
     /**
      * Returns array('success'=>true) or array('error'=>'error message')
      */
-    function handleUpload($uploadDirectory, $random_dir, $replaceOldFile = FALSE){
+    function handleUpload($uploadDirectory, $random_dir, $p_api_id, $replaceOldFile = FALSE){
         $uploadDirectory .= '/' . $random_dir . '/';
         if (!is_writable($uploadDirectory)){
             return array('error' => "Server error. Upload directory isn't writable.");
@@ -189,7 +211,7 @@ class qqFileUploader {
         
 	$this->uploadName = $filename . $ext;
 		
-        if ($this->file->save($uploadDirectory . $filename . $ext)){
+        if ($this->file->save($uploadDirectory . $filename . $ext, $filename . $ext, $random_dir, $p_api_id)){
             return array(
                 'success' => true,
                 'random_dir' => $random_dir
