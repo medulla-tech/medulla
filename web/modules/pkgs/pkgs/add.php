@@ -58,62 +58,20 @@ if (isset($_POST['bconfirm'])) {
     $plabel = $ret[3]['label'];
     $pversion = $ret[3]['version'];
 
-    if ($_POST['package-method'] == "upload") {
-        if (!isXMLRPCError() and $ret and $ret != -1) {
-            // If no error with sending package infos, push package previously uploaded
-            $package_id = $ret[3]['id'];
-            $upload_tmp_dir = sys_get_temp_dir();
-
-            $file_list = get_directory_list($upload_tmp_dir . '/' . $random_dir);
-
-            $files = array();
-            foreach ($file_list as $filename) {
-                $file = $upload_tmp_dir . '/' . $random_dir . '/' . $filename;
-                // Read and put content of $file to $filebinary
-                $filebinary = fread(fopen($file, "r"), filesize($file));
-                $files[] = array(
-                    "filename" => $filename,
-                    "filebinary" => base64_encode($filebinary),
-                );
-            }
-
-            $push_package_result = pushPackage($p_api_id, $random_dir, $files);
-            // Delete package from PHP /tmp dir
-            delete_directory($upload_tmp_dir . '/' . $random_dir);
-
-            if (!isXMLRPCError() and $push_package_result) {
-                $cbx = array($random_dir);
-                $ret = associatePackages($p_api_id, $pid, $cbx, $level);
-                if (!isXMLRPCError() and is_array($ret)) {
-                    if ($ret[0]) {
-                        $explain = '';
-                        if (count($ret) > 1) {
-                            $explain = sprintf(" : <br/>%s", implode("<br/>", $ret[1]));
-                        }
-                        new NotifyWidgetSuccess(sprintf(_T("Files successfully associated with package <b>%s (%s)</b>%s", "pkgs"), $plabel, $pversion, $explain));
-                        header("Location: " . urlStrRedirect("pkgs/pkgs/pending", array('location'=>base64_encode($p_api_id))));
-                    } else {
-                        $reason = '';
-                        if (count($ret) > 1) {
-                            $reason = sprintf(" : <br/>%s", $ret[1]);
-                        }
-                        new NotifyWidgetFailure(sprintf(_T("Failed to associate files%s", "pkgs"), $reason));
-                    }
-                } else {
-                    new NotifyWidgetFailure(_T("Failed to associate files", "pkgs"));
+    if (!isXMLRPCError() and $ret and $ret != -1) {
+        if ($_POST['package-method'] == "upload") {
+            $cbx = array($random_dir);
+        }
+        else if ($_POST['package-method'] == "package") {
+            $cbx = array();
+            foreach ($_POST as $post => $v) {
+                if (preg_match("/cbx_/", $post) > 0) {
+                    $cbx[] = preg_replace("/cbx_/", "", $post);
                 }
             }
-        }
-    }
-    else if ($_POST['package-method'] == "package") {
-        $cbx = array();
-        foreach ($_POST as $post => $v) {
-            if (preg_match("/cbx_/", $post) > 0) {
-                $cbx[] = preg_replace("/cbx_/", "", $post);
+            if (isset($_POST['rdo_files'])) {
+                $cbx[] = $_POST['rdo_files'];
             }
-        }
-        if (isset($_POST['rdo_files'])) {
-            $cbx[] = $_POST['rdo_files'];
         }
         $ret = associatePackages($p_api_id, $pid, $cbx, $level);
         if (!isXMLRPCError() and is_array($ret)) {
@@ -151,20 +109,9 @@ else {
         $_SESSION['PACKAGEAPI'][$mirror['uuid']] = $mirror;
     }
 
-    if (count($list) > 0) {
-        // If more than one package api, $selectpapi is a list...
-        $multipapi = True;
-        $selectpapi = new SelectItem('p_api');
-        $selectpapi->setElements($list);
-        $selectpapi->setElementsVal($list_val);
-    }
-    else {
-        // ...else it is an HiddenTpl
-        $multipapi = False;
-        $selectpapi = new HiddenTpl('p_api');
-        $p_api_id = array_keys($list_val);
-        $p_api_id = $list_val[$p_api_id[0]];
-    }
+    $selectpapi = new SelectItem('p_api');
+    $selectpapi->setElements($list);
+    $selectpapi->setElementsVal($list_val);
 
     $f = new ValidatingForm();
     $f->push(new Table());
@@ -177,19 +124,10 @@ else {
     $f->add(new TrFormElement(_T("Select how you want to create packages", "pkgs"), $r), array());
     // Package API
 
-    $multipapi = True;
-    if ($multipapi) {
-        $f->add(
-            new TrFormElement(_T("Package API", "pkgs"), $selectpapi),
-            array("value" => $p_api_id, "required" => True)
-        );
-    }
-    else {
-        $f->add(
-            $selectpapi,
-            array("value" => $p_api_id, "required" => True, "hide" => True)
-        );
-    }
+    $f->add(
+        new TrFormElement(_T("Package API", "pkgs"), $selectpapi),
+        array("value" => $p_api_id, "required" => True)
+    );
 
     $f->add(new TrFormElement(_T("Select the directory you want for this package", "pkgs"), new Div(array("id" => "package-temp-directory"))), array());
     $f->add(new HiddenTpl("mode"), array("value" => "creation", "hide" => True));
@@ -277,14 +215,27 @@ Event.observe(window, 'load', function() { // load this piece of code when page 
      * in package API tempdir
      */
     function refreshTempPapi() {
+        var packageMethodValue= $$('input:checked[type="radio"][name="package-method"]').pluck('value');
         var box = $('p_api');
         var selectedIndex = box.selectedIndex;
         var selectedPapi = box.options[selectedIndex].value;
-        new Ajax.Updater('package-temp-directory', '<?php echo urlStrRedirect("pkgs/pkgs/ajaxRefreshPackageTempDir") ?>&papi=' + selectedPapi, { 
-            method: "get", 
-            evalScripts: true,
-            onComplete: fillForm(selectedPapi)
-        });
+        if (packageMethodValue == "package") {
+            new Ajax.Updater('package-temp-directory', '<?php echo urlStrRedirect("pkgs/pkgs/ajaxRefreshPackageTempDir") ?>&papi=' + selectedPapi, { 
+                method: "get", 
+                    evalScripts: true,
+                    onComplete: fillForm(selectedPapi)
+            });
+        }
+        else {
+            new Ajax.Updater('package-temp-directory', '<?php echo urlStrRedirect("pkgs/pkgs/ajaxDisplayUploadForm") ?>&papi=' + selectedPapi, { 
+                method: "get", 
+                evalScripts: true
+            });
+            // reset form fields
+            $('label').value = "";
+            $('version').value = "";
+            $('commandcmd').value = "";
+        }
         
         return selectedPapi;
     }
@@ -294,8 +245,7 @@ Event.observe(window, 'load', function() { // load this piece of code when page 
 
     // When change Package API, update available temp packages
     $('p_api').observe('change', function() {
-        var packageMethodValue= $$('input:checked[type="radio"][name="package-method"]').pluck('value');
-        if (packageMethodValue == "package") selectedPapi = refreshTempPapi();
+        selectedPapi = refreshTempPapi();
     });
 
     // When click on radio buttons...

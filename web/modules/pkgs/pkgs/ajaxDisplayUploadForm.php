@@ -23,17 +23,10 @@
 
 require_once("modules/pkgs/includes/functions.php");
 
-// TODO: purge PHP packages temp directories
-// This code deletes all temp packages, bad if many users
-// upload packages at the same time
-//
-//function delete_all_package_temp_directories() {
-//    $upload_tmp_dir = sys_get_temp_dir();
-//    foreach (glob($upload_tmp_dir . '/pulse_rdir_*', GLOB_ONLYDIR) as $temp_directory) {
-//        delete_directory($temp_directory);
-//    }
-//}
-//delete_all_package_temp_directories();
+if ($_SESSION['random_dir']) {
+    $upload_tmp_dir = sys_get_temp_dir();
+    delete_directory($upload_tmp_dir . '/' . $random_dir);
+}
 
 $m = new MultiFileTpl('filepackage');
 $m->display();
