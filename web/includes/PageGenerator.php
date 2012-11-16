@@ -2625,6 +2625,23 @@ class TitleElement extends HtmlElement {
     }
 }
 
+class SpanElement extends HtmlElement {
+    function SpanElement($content, $class = Null){
+        $this->content = $content;
+        $this->class = $class;
+    }
+
+    function display(){
+        if ($this->class) {
+            $class = ' class="' . $this->class . '"';
+        }
+        else {
+            $class = '';
+        }
+        printf ('<span%s>%s</span>', $class, $this->content);
+    }
+}
+
 class SelectElement extends HtmlElement{
 
     function SelectElement($name, $nametab){
