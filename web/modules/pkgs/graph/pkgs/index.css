@@ -28,4 +28,7 @@ td.package {
         background-repeat: no-repeat;
 }
 
-
+.pkgs-title {
+    font-weight: bold;
+    font-size: 1.4em;
+}

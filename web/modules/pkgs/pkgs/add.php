@@ -32,6 +32,9 @@ $p = new PageGenerator(_T("Add package", "pkgs"));
 $p->setSideMenu($sidemenu);
 $p->display();
 
+// This session variable is used for auto-check upload button
+// @see ajaxrefreshPackageTempdir.php
+$_SESSION['pkgs-add-reloaded'] = array();
 
 if (isset($_POST['bconfirm'])) {
     $p_api_id = $_POST['p_api'];
@@ -107,6 +110,8 @@ else {
         $_SESSION['PACKAGEAPI'][$mirror['uuid']] = $mirror;
     }
 
+    $span = new SpanElement("Choose files source", "pkgs-title");
+
     $selectpapi = new SelectItem('p_api');
     $selectpapi->setElements($list);
     $selectpapi->setElementsVal($list_val);
@@ -114,26 +119,22 @@ else {
     $f = new ValidatingForm();
     $f->push(new Table());
 
+    // Step title
+    $f->add(new TrFormElement("", $span), array());
+
     $r = new RadioTpl("package-method");
     $vals = array("package", "upload");
-    $keys = array(_T("Already uploaded on the server", "pkgs"), _T("Upoad from this web page", "pkgs"));
+    $keys = array(_T("Already uploaded on the server", "pkgs"), _T("Upload from this web page", "pkgs"));
     $r->setValues($vals);
     $r->setChoices($keys);
 
     // Package API
     $f->add(
-        new TrFormElement(_T("Package API", "pkgs"), $selectpapi),
+        new TrFormElement("<div id=\"p_api_label\">" . _T("Package API" . "</div>", "pkgs"), $selectpapi),
         array("value" => $p_api_id, "required" => True)
     );
 
-    // Step 1: Choose files source
     $f->add(new TrFormElement(_T("Package source", "pkgs"), $r), array());
-
-    // Step 2: Create Package
-    // Si tempdir vide, afficher un message
-    // infobulle qui dit ou mettre les packages
-    // griser les champs
-    //$f->add( new TrFormElement(sprintf(_T("Files upload (%sM max)", "pkgs"), get_php_max_upload_size()), new MultiFileTpl('filepackage'), array("required" => True, "tooltip" => _T("Change <strong>post_max_size</strong> and <strong>upload_max_filesize</strong> directives in php.ini file to increase upload size.", "pkgs"))));
     $f->add(new TrFormElement(_T("Files directory", "pkgs"), new Div(array("id" => "package-temp-directory"))), array());
     $f->add(new HiddenTpl("mode"), array("value" => "creation", "hide" => True));
 
@@ -262,6 +263,7 @@ Event.observe(window, 'load', function() { // load this piece of code when page 
             var selectedValue= $$('input:checked[type="radio"][name="package-method"]').pluck('value');
             if (selectedValue == "package") {
                 selectedPapi = refreshTempPapi();
+                $('directory-label').update("<?php echo _T("Files directory", "pkgs") ?>");
             }
             else if (selectedValue == "upload"){
                 new Ajax.Updater('package-temp-directory', '<?php echo urlStrRedirect("pkgs/pkgs/ajaxDisplayUploadForm") ?>&papi=' + selectedPapi, { 
@@ -272,8 +274,21 @@ Event.observe(window, 'load', function() { // load this piece of code when page 
                 $('label').value = "";
                 $('version').value = "";
                 $('commandcmd').value = "";
+                $('directory-label').update("<?php echo sprintf(_T("Files upload (<b><u title='%s'>%sM max</u></b>)", "pkgs"), _T("Change post_max_size and upload_max_filesize directives in php.ini file to increase upload size.", "pkgs"), get_php_max_upload_size()) ?>");
             }
         }
     });
 });
+<?php
+    // if one package API, hide field
+    if (count($list) < 2) {
+        echo <<< EOT
+            $$('table tbody tr').each(function(item, index) {
+                if (index == 1) {
+                    item.hide();
+                }
+            });
+EOT;
+    }
+?>
 </script>
