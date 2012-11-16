@@ -135,7 +135,17 @@ else {
     );
 
     $f->add(new TrFormElement(_T("Package source", "pkgs"), $r), array());
+<<<<<<< HEAD
     $f->add(new TrFormElement(_T("Files directory", "pkgs"), new Div(array("id" => "package-temp-directory"))), array());
+=======
+    $f->add(new TrFormElement("<div id=\"directory-label\">" . _T("Files directory", "pkgs") . "</div>", new Div(array("id" => "package-temp-directory"))), array());
+
+    $span = new SpanElement("<br /><br />" . _T("Create package", "pkgs"), "pkgs-title");
+
+    // Step title
+    $f->add(new TrFormElement("", $span), array());
+    
+>>>>>>> pkgs: Hide Package API if there is only one Package API
     $f->add(new HiddenTpl("mode"), array("value" => "creation", "hide" => True));
 
     // fields

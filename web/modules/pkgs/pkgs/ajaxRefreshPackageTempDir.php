@@ -23,22 +23,31 @@
 
 require_once("modules/pkgs/includes/xmlrpc.php");
 
+// This session variable is used for auto-check upload button
+if (isset($_SESSION['pkgs-add-reloaded'][$_GET['papi']])) {
+    $_SESSION['pkgs-add-reloaded'][$_GET['papi']]++;
+}
+else {
+    $_SESSION['pkgs-add-reloaded'][$_GET['papi']] = 0;
+}
+
 $_SESSION['p_api_id'] = $_GET['papi'];
 $files = getTemporaryFiles($_GET['papi']);
 
-$r = new SelectItem("rdo_files");
-$vals = array();
-$keys = array();
-foreach ($files as $fi) {
-    if ($fi[1] == True) {
-        $vals[] = $fi[0];
-        $keys[] = $fi[0];
+if(count($files)) {
+    $r = new SelectItem("rdo_files");
+    $vals = array();
+    $keys = array();
+    foreach ($files as $fi) {
+        if ($fi[1] == True) {
+            $vals[] = $fi[0];
+            $keys[] = $fi[0];
+        }
     }
-}
-$r->setElementsVal($vals);
-$r->setElements($keys);
+    $r->setElementsVal($vals);
+    $r->setElements($keys);
 
-$r->display();
+    $r->display();
 ?>
 <script type="text/javascript">
     /*
@@ -71,4 +80,61 @@ $r->display();
         var selectedPapi = box.options[selectedIndex].value;
         fillForm(selectedPapi, tempdir);
     });
+    var jcArray = new Array('label', 'version', 'description', 'commandcmd');
+    for (var dummy in jcArray) {
+        try {
+            $(jcArray[dummy]).setStyle("background: #FFF;");
+            $(jcArray[dummy]).enable();
+        }
+        catch (err){
+            // this php file is prototype ajax request with evalscript
+            // enabled.
+        }
+    }
 </script>
+<?php
+}
+else {
+    // This session variable is used in this case:
+    // If it is _first_ time we display Package API tempdir and this is empty,
+    // auto-check upload button
+    if ($_SESSION['pkgs-add-reloaded'][$_GET['papi']]) {
+    print "<strong style='color: red;'>" . _T("Package API temporary directory is empty", "pkgs") . "<strong>";
+?>
+        <script type="text/javascript">
+        var jcArray = new Array('label', 'version', 'description', 'commandcmd');
+        for (var dummy in jcArray) {
+            try {
+                $(jcArray[dummy]).value = "";
+                $(jcArray[dummy]).setStyle("background: #DDD;");
+                $(jcArray[dummy]).disable();
+            }
+            catch (err){
+                // this php file is prototype ajax request with evalscript
+                // enabled.
+            }
+        }
+        </script>
+
+<?php
+    }
+    else {
+?>
+        <script type="text/javascript">
+        var box = $('p_api');
+        var selectedIndex = box.selectedIndex;
+        var selectedPapi = box.options[selectedIndex].value;
+        new Ajax.Updater('package-temp-directory', '<?php echo urlStrRedirect("pkgs/pkgs/ajaxDisplayUploadForm") ?>&papi=' + selectedPapi, { 
+            method: "get", 
+                evalScripts: true
+        });
+        // reset form fields
+        $('label').value = "";
+        $('version').value = "";
+        $('commandcmd').value = "";
+        $$('input[type="radio"][name="package-method"][value="upload"]')[0].writeAttribute("checked", "checked");
+        </script>
+<?php
+    }
+}
+?>

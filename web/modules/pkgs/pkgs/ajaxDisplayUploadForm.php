@@ -31,3 +31,16 @@ if (isset($_SESSION['random_dir'])) {
 $m = new MultiFileTpl('filepackage');
 $m->display();
 ?>
+<script type="text/javascript">
+    var sexyArray = new Array('label', 'version', 'description', 'commandcmd');
+    for (var dummy in sexyArray) {
+        try {
+            $(sexyArray[dummy]).setStyle("background: #FFF;");
+            $(sexyArray[dummy]).enable();
+        }
+        catch (err){
+            // this php file is prototype ajax request with evalscript
+            // enabled.
+        }
+    }
+</script>
