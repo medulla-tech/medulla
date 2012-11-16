@@ -25,7 +25,7 @@ require_once("modules/pkgs/includes/xmlrpc.php");
 
 $papiid = $_GET['papiid'];
 
-if ($_GET['tempdir'] == null) {
+if (!isset($_GET['tempdir'])) {
     // No tempdir defined, get default value
     $tempdir = getTemporaryFiles($papiid);
     $tempdir = $tempdir[0][0];

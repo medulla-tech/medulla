@@ -60,8 +60,8 @@ function getTemporaryFiles($papiid) {
 function getTemporaryFileSuggestedCommand($papiid, $tempdir) {
     return array(
         "label" => $tempdir,
-        "version" => "Package API: " . $papiid,
-        "commandcmd" => "Suggested command of " . $tempdir,
+        "version" => "0.0",
+        "commandcmd" => _T("No suggested command", "pkgs"),
     );
     return xmlcall("pkgs.ppa_getTemporaryFileSuggestedCommand", array($papiid, $tempdir));
 }

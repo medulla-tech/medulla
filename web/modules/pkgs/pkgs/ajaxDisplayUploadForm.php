@@ -23,9 +23,9 @@
 
 require_once("modules/pkgs/includes/functions.php");
 
-if ($_SESSION['random_dir']) {
+if (isset($_SESSION['random_dir'])) {
     $upload_tmp_dir = sys_get_temp_dir();
-    delete_directory($upload_tmp_dir . '/' . $random_dir);
+    delete_directory($upload_tmp_dir . '/' . $_SESSION['random_dir']);
 }
 
 $m = new MultiFileTpl('filepackage');

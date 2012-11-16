@@ -115,26 +115,33 @@ else {
     $f->push(new Table());
 
     $r = new RadioTpl("package-method");
-    $keys = $vals = array("package", "upload");
+    $vals = array("package", "upload");
+    $keys = array(_T("Already uploaded on the server", "pkgs"), _T("Upoad from this web page", "pkgs"));
     $r->setValues($vals);
     $r->setChoices($keys);
 
-    $f->add(new TrFormElement(_T("Select how you want to create packages", "pkgs"), $r), array());
     // Package API
-
     $f->add(
         new TrFormElement(_T("Package API", "pkgs"), $selectpapi),
         array("value" => $p_api_id, "required" => True)
     );
 
-    $f->add(new TrFormElement(_T("Select the directory you want for this package", "pkgs"), new Div(array("id" => "package-temp-directory"))), array());
+    // Step 1: Choose files source
+    $f->add(new TrFormElement(_T("Package source", "pkgs"), $r), array());
+
+    // Step 2: Create Package
+    // Si tempdir vide, afficher un message
+    // infobulle qui dit ou mettre les packages
+    // griser les champs
+    //$f->add( new TrFormElement(sprintf(_T("Files upload (%sM max)", "pkgs"), get_php_max_upload_size()), new MultiFileTpl('filepackage'), array("required" => True, "tooltip" => _T("Change <strong>post_max_size</strong> and <strong>upload_max_filesize</strong> directives in php.ini file to increase upload size.", "pkgs"))));
+    $f->add(new TrFormElement(_T("Files directory", "pkgs"), new Div(array("id" => "package-temp-directory"))), array());
     $f->add(new HiddenTpl("mode"), array("value" => "creation", "hide" => True));
 
     // fields
 
     $fields = array(
-        array("label", _T("Package label", "pkgs"), array("required" => True)),
-        array("version", _T("Package version", "pkgs"), array("required" => True)),
+        array("label", _T("Name", "pkgs"), array("required" => True)),
+        array("version", _T("Version", "pkgs"), array("required" => True)),
         array('description', _T("Description", "pkgs"), array()),
     );
 

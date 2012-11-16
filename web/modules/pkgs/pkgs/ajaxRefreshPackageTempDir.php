@@ -23,6 +23,7 @@
 
 require_once("modules/pkgs/includes/xmlrpc.php");
 
+$_SESSION['p_api_id'] = $_GET['papi'];
 $files = getTemporaryFiles($_GET['papi']);
 
 $r = new SelectItem("rdo_files");
