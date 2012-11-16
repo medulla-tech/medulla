@@ -326,7 +326,7 @@ function _base_baseEdit($FH, $mode) {
     );
 
     $f->add(
-        new TrFormElement(_("Mail address"), new MailInputTpl("mail")),
+        new TrFormElement(_("Email address"), new MailInputTpl("mail")),
         array("value"=> $FH->getArrayOrPostValue("mail"))
     );
 
