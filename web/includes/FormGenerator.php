@@ -102,7 +102,7 @@ class MultiFileTpl extends AbstractTpl {
         $this->name=$name;
     }
 
-    function display($arrParam) {
+    function display($arrParam = array()) {
         // FIXME use session or not ?
         $random_dir = "pulse_rdir_" . uniqid();
         $_SESSION['random_dir'] = $random_dir;
@@ -140,7 +140,7 @@ class MultiFileTpl extends AbstractTpl {
                     if(uploader.getInProgress() > 0){
                         return;
                     }
-                    $("random_dir").setValue(responseJson.random_dir);
+                    // DEBUG: write action to do when upload complete
                 }
             });           
             $(\'triggerUpload\').observe(\'click\', function() {

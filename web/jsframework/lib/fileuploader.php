@@ -22,18 +22,16 @@ $uploader = new qqFileUploader($allowedExtensions, $sizeLimit);
 // Call handleUpload() with the name of the folder, relative to PHP's getcwd()
 
 // Put uploaded file in PHP upload_tmp_dir / random_dir
+// FIXME: With IE, can't use $_GET values ?? So I use $_SESSION values
+$random_dir = (isset($_GET['random_dir'])) ? $_GET['random_dir'] : $_SESSION['random_dir'];
+$p_api_id = (isset($_GET['selectedPapi'])) ? $_GET['selectedPapi'] : $_SESSION['p_api_id'];
 $upload_tmp_dir = sys_get_temp_dir();
-$random_dir = ($_GET['random_dir']) ? $_GET['random_dir'] : $_SESSION['random_dir'];
-$p_api_id = $_GET['selectedPapi'];
 mkdir($upload_tmp_dir . '/' . $random_dir);
 
 $result = $uploader->handleUpload($upload_tmp_dir, $random_dir, $p_api_id);
 
 // to pass data through iframe you will need to encode all html tags
 echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
-
-
-
 
 /**
  * Handle file uploads via XMLHttpRequest
@@ -43,7 +41,7 @@ class qqUploadedFileXhr {
      * Save the file to the specified path
      * @return boolean TRUE on success
      */
-    function save($path, $filename, $random_dir, $p_api_id) {    
+    function save($path) {
         $input = fopen("php://input", "r");
         $temp = tmpfile();
         $realSize = stream_copy_to_stream($input, $temp);
@@ -57,26 +55,7 @@ class qqUploadedFileXhr {
         fseek($temp, 0, SEEK_SET);
         stream_copy_to_stream($temp, $target);
         fclose($target);
-
-        // Push file to package server
-        $upload_tmp_dir = sys_get_temp_dir();
-
-        $files = array();
-        $file = $upload_tmp_dir . '/' . $random_dir . '/' . $filename;
-        // Read and put content of $file to $filebinary
-        $filebinary = fread(fopen($file, "r"), filesize($file));
-        $files[] = array(
-            "filename" => $filename,
-            "filebinary" => base64_encode($filebinary),
-        );
-
-        $push_package_result = pushPackage($p_api_id, $random_dir, $files);
-        // Delete package from PHP /tmp dir
-        delete_directory($upload_tmp_dir . '/' . $random_dir);
-        
-        if (!isXMLRPCError() and $push_package_result) {
-            return true;
-        }
+        return true;
     }
     function getName() {
         return $_GET['qqfile'];
@@ -211,11 +190,33 @@ class qqFileUploader {
         
 	$this->uploadName = $filename . $ext;
 		
-        if ($this->file->save($uploadDirectory . $filename . $ext, $filename . $ext, $random_dir, $p_api_id)){
-            return array(
-                'success' => true,
-                'random_dir' => $random_dir
+        if ($this->file->save($uploadDirectory . $filename . $ext)){
+            // If file pushed to temp directory, push it to package server
+            $filename = $filename . $ext;
+            $upload_tmp_dir = sys_get_temp_dir();
+
+            $files = array();
+            $file = $upload_tmp_dir . '/' . $random_dir . '/' . $filename;
+            // Read and put content of $file to $filebinary
+            $filebinary = fread(fopen($file, "r"), filesize($file));
+            $files[] = array(
+                "filename" => $filename,
+                "filebinary" => base64_encode($filebinary),
             );
+
+            $push_package_result = pushPackage($p_api_id, $random_dir, $files);
+            // Delete package from PHP /tmp dir
+            delete_directory($upload_tmp_dir . '/' . $random_dir);
+            
+            if (!isXMLRPCError() and $push_package_result) {
+                return array(
+                    'success' => true,
+                );
+            }
+            else {
+                return array('error'=> 'Could not save uploaded file.' .
+                    'The upload was cancelled, or server error encountered');
+            }
         } else {
             return array('error'=> 'Could not save uploaded file.' .
                 'The upload was cancelled, or server error encountered');
