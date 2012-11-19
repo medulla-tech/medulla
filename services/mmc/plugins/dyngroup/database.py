@@ -535,11 +535,16 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         user_id = self.__getOrCreateUser(ctx)
         session = create_session()
         s = self.__getShareGroupInSession(id, user_id, session)
-        s.display_in_menu = 0
-        session.add(s)
-        session.flush()
-        session.close()
-        return s.id
+        # FIXME: Root user cannot change group shortcut status
+        # (hide or visible) if he's not creator of this group
+        if s is not None:
+            s.display_in_menu = 0
+            session.add(s)
+            session.flush()
+            session.close()
+            return s.id
+        else:
+            return None
 
     def todyn_group(self, ctx, id):
         """
@@ -639,7 +644,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         (select_from, filter_on) = self.__get_group_permissions_request_first(ctx, session)
         groups = session.query(Groups).select_from(select_from)
-        if filter_on != None:
+        if filter_on is not None:
             groups = groups.filter(filter_on)
         return groups
 
