@@ -32,3 +32,7 @@ td.package {
     font-weight: bold;
     font-size: 1.4em;
 }
+
+.btnPrimary {
+    margin: 10px 0 0 40%;
+}

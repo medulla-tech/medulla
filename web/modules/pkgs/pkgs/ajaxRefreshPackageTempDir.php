@@ -22,6 +22,7 @@
  */
 
 require_once("modules/pkgs/includes/xmlrpc.php");
+require_once("modules/pkgs/includes/functions.php");
 
 // This session variable is used for auto-check upload button
 if (isset($_SESSION['pkgs-add-reloaded'][$_GET['papi']])) {
@@ -133,6 +134,7 @@ else {
         $('version').value = "";
         $('commandcmd').value = "";
         $$('input[type="radio"][name="package-method"][value="upload"]')[0].writeAttribute("checked", "checked");
+                $('directory-label').update("<?php echo sprintf(_T("Files upload (<b><u title='%s'>%sM max</u></b>)", "pkgs"), _T("Change post_max_size and upload_max_filesize directives in php.ini file to increase upload size.", "pkgs"), get_php_max_upload_size()) ?>");
         </script>
 <?php
     }

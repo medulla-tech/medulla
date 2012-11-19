@@ -110,7 +110,7 @@ else {
         $_SESSION['PACKAGEAPI'][$mirror['uuid']] = $mirror;
     }
 
-    $span = new SpanElement("Choose files source", "pkgs-title");
+    $span = new SpanElement(_T("Choose package source", "pkgs"), "pkgs-title");
 
     $selectpapi = new SelectItem('p_api');
     $selectpapi->setElements($list);
@@ -130,13 +130,16 @@ else {
 
     // Package API
     $f->add(
-        new TrFormElement("<div id=\"p_api_label\">" . _T("Package API" . "</div>", "pkgs"), $selectpapi),
+        new TrFormElement("<div id=\"p_api_label\">" . _T("Package API", "pkgs") . "</div>", $selectpapi),
         array("value" => $p_api_id, "required" => True)
     );
 
     $f->add(new TrFormElement(_T("Package source", "pkgs"), $r), array());
-    $f->add(new TrFormElement(_T("Files directory", "pkgs"), new Div(array("id" => "package-temp-directory"))), array());
+    $f->add(new TrFormElement("<div id='directory-label'>" . _T("Files directory", "pkgs") . "</div>", new Div(array("id" => "package-temp-directory"))), array());
     $f->add(new HiddenTpl("mode"), array("value" => "creation", "hide" => True));
+
+    $span = new SpanElement(_T("Package Creation", "pkgs"), "pkgs-title");
+    $f->add(new TrFormElement("", $span), array());
 
     // fields
 

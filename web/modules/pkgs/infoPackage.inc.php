@@ -51,15 +51,15 @@ $submod->addPage($page);
 $page = new Page("pending", _T('See pending packages', 'pkgs'));
 $submod->addPage($page);
 
-$page = new Page("ajaxRefreshPackageTempDir", _T('Display Package API Temporary Dir', 'pkgs'));
+$page = new Page("ajaxRefreshPackageTempDir", 'Display Package API Temporary Dir');
 $page->setOptions(array("AJAX" => True, "visible" => False, "noHeader"=>True));
 $submod->addPage($page);
 
-$page = new Page("ajaxGetSuggestedCommand", _T('Get suggested command', 'pkgs'));
+$page = new Page("ajaxGetSuggestedCommand", 'Get suggested command');
 $page->setOptions(array("AJAX" => True, "visible" => False, "noHeader"=>True));
 $submod->addPage($page);
 
-$page = new Page("ajaxDisplayUploadForm", _T('Display upload form', 'pkgs'));
+$page = new Page("ajaxDisplayUploadForm", 'Display upload form');
 $page->setOptions(array("AJAX" => True, "visible" => False, "noHeader"=>True));
 $submod->addPage($page);
 

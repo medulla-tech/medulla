@@ -29,6 +29,8 @@ if (isset($_SESSION['random_dir'])) {
 }
 
 $m = new MultiFileTpl('filepackage');
+_T("Click here to select files", "pkgs");
+_T("Upload Queued Files", "pkgs");
 $m->display();
 ?>
 <script type="text/javascript">
