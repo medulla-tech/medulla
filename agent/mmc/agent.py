@@ -397,7 +397,7 @@ class MMCApp(object):
             # Don't close twisted FDs
             # TODO: make a clean code to be sure nothing is opened before this function
             # ie: daemonize very early, then after import all stuff...
-            if fd not in (3, 4, 5, 6, 7):
+            if fd not in (3, 4, 5, 6, 7, 8):
                 try:
                     os.close(fd)
                 except OSError:
