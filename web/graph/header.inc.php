@@ -77,6 +77,23 @@ cbox=document.getElementsByTagName('INPUT');
   }
 }
 
+// pf="prefix" and value can be (null, ro, rw)
+function checkAllRadio (pf,value) {
+    rbox=document.getElementsByTagName('INPUT');
+    for (i=0; i<rbox.length; i++){
+        if (rbox[i].type=='radio'){
+            if (rbox[i].name.indexOf(pf) > -1) {
+                if (value == rbox[i].value) { 
+                    rbox[i].checked = true;
+                } 
+                else { 
+                    rbox[i].checked = false;
+                }
+            }
+        }
+    }
+}
+
 // select all select with class 'list' options in the page
 // usefull to run before post a form with
 // selects in it.
