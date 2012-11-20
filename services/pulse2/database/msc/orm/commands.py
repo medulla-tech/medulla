@@ -167,6 +167,19 @@ class Commands(object):
         session.close()
         return myCommandOnHosts.all()
 
+    def setNextConnectionDelay(self, delay):
+        """"set delay to the next attept """
+        self.next_connection_delay = delay
+        self.flush()
+
+    def flush(self):
+        """ Handle SQL flushing """
+        session = sqlalchemy.orm.create_session()
+        session.add(self)
+        session.flush()
+        session.close()
+
+
     def toH(self):
         return {
             'id': self.id,

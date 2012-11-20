@@ -300,8 +300,6 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
 #        "issue_halt_to_over_time"=>array($type_checkbox, '', $_GET['issue_halt_to_over_time'], _T("over time", "msc")),
 #        "issue_halt_to_out_of_interval"=>array($type_checkbox, '', $_GET['issue_halt_to_out_of_interval'], _T("out of interval", "msc")),
         'do_reboot'=>array($type_checkbox, _T('Reboot client', 'msc'), quick_get('do_reboot', True)),
-        'max_connection_attempt'=>array($type_input, _T('Maximum number of connection attempt', 'msc'), quick_get('max_connection_attempt')),
-        'next_connection_delay'=>array($type_input, _T('Delay between two connections (minutes)', 'msc'), quick_get('next_connection_delay')),
         'start_date'=>array($type_date, _T('The command must start after', 'msc'), quick_get('start_date'), array('ask_for_now' => 1)),
         'end_date'=>array($type_date, _T('The command must stop before', 'msc'), quick_get('end_date'), array('ask_for_never' => 1)),
         'deployment_intervals'=>array($type_input, _T('Deployment interval', 'msc'), quick_get('deployment_intervals')),

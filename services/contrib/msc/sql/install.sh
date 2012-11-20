@@ -3,7 +3,7 @@
 MODULE_NAME=msc
 BASEDIR=`dirname $0`
 SCHEMA_NAME=schema
-SCHEMA_MAXVERSION=17
+SCHEMA_MAXVERSION=18
 
 if [ ! -n "${MYSQL_HOST+x}" ]; then
     echo 'Enter MYSQL host (default : "localhost", or $MYSQL_DATABASE if defined)' && read

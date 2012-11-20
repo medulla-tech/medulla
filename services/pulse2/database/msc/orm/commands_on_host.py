@@ -656,14 +656,8 @@ class CommandsOnHost(object):
             else return False
         """
         if decrement:
-            if self.attempts_left < 1: # no attempts left
-                return False # nothing more to do
-            elif self.attempts_left == 1: # was the last attempt: tag as done, no rescheduling
-                self.attempts_left -= 1
-                self.flush()
-                return False # nothing more to do
-            else: # reschedule in other cases
-                self.attempts_left -= 1
+            if self.attempts_left > self.attempts_failed :
+                self.attempts_failed += 1
         self.next_launch_date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time() + delay * 60))
         self.flush()
         return True
@@ -907,6 +901,13 @@ class CommandsOnHost(object):
         Set end_date field to current time
         """
         self.end_date = datetime.datetime.now()
+        self.flush()
+
+    def setBalance(self, balance):#, failed_attempts_nbr):
+        """
+        Set balance value to calculate next_launch_date
+        """
+        self.balance = balance        
         self.flush()
 
 def startCommandOnHost(coh_id):

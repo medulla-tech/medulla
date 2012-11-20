@@ -74,6 +74,7 @@ from pulse2.scheduler.tracking.commands import CommandsOnHostTracking
 from pulse2.scheduler.tracking.wol import WOLTracking
 from pulse2.scheduler.tracking.preempt import Pulse2Preempt
 from pulse2.utils import extractExceptionMessage
+from pulse2.scheduler.balance import ParabolicBalance, randomListByBalance, getBalanceByAttempts
 
 log = logging.getLogger()
 
@@ -630,11 +631,143 @@ def analyseCommands(commands_to_analyse):
             myCoH.setStateStopped()
 
 def startAllCommands(scheduler_name, commandIDs = []):
+    calcBalance(scheduler_name)
     if commandIDs:
         log.debug('scheduler "%s": START: Starting commands %s' % (scheduler_name, commandIDs))
     else:
         log.debug('scheduler "%s": START: Starting all commands' % scheduler_name)
     return twisted.internet.threads.deferToThread(gatherIdsToStart, scheduler_name, commandIDs).addCallback(sortCommands)
+
+def gatherIdsToReSchedule(scheduler_name):
+
+    session = sqlalchemy.orm.create_session()
+    database = MscDatabase()
+
+    now = time.strftime("%Y-%m-%d %H:%M:%S")
+    soon = time.strftime("0000-00-00 00:00:00")
+    later = time.strftime("2031-12-31 23:59:59")
+
+    commands_query = session.query(CommandsOnHost, Commands).\
+        select_from(database.commands_on_host.join(database.commands)
+        ).filter(sqlalchemy.not_(database.commands_on_host.c.current_state.in_(PULSE2_PROGRESSING_STATES))
+        ).filter(sqlalchemy.not_(database.commands_on_host.c.current_state.in_(PULSE2_UNPREEMPTABLE_STATES))
+        ).filter(database.commands_on_host.c.attempts_left > database.commands_on_host.c.attempts_failed
+        ).filter(database.commands_on_host.c.next_launch_date <= now
+        ).filter(sqlalchemy.or_(
+            database.commands.c.start_date == soon,
+            database.commands.c.start_date <= now)
+        ).filter(database.commands.c.start_date != later
+        ).filter(sqlalchemy.or_(
+            database.commands.c.end_date == soon,
+            database.commands.c.end_date == later,
+            database.commands.c.end_date > now)
+        ).filter(sqlalchemy.or_(
+            database.commands_on_host.c.scheduler == '',
+            database.commands_on_host.c.scheduler == scheduler_name,
+            database.commands_on_host.c.scheduler == None)
+        ).filter(sqlalchemy.not_(
+            database.commands.c.id.in_(Pulse2Preempt().members()))
+        )
+    session.close()
+
+       
+    return commands_query
+
+def calcBalance(scheduler_name):
+    """ 
+    Calculate the priority coefficient 
+    
+    @param scheduler_name: name of scheduler 
+    @type scheduler_name: string
+    """
+    commands_query = gatherIdsToReSchedule(scheduler_name)
+
+    for q in commands_query.all():
+        
+        (myCoH, myC, myT) = gatherCoHStuff(q[0].id)
+        if myCoH == None:    
+            return False 
+        balance = getBalanceByAttempts(myC.start_date, 
+                                       myC.end_date,
+                                       myCoH.attempts_failed)
+
+        myCoH.setBalance(balance)
+
+
+def selectCommandsToReSchedule (scheduler_name, limit):
+    """ 
+    Select the maximum of commands to fire.
+
+    Commands with a high balance coeficient is favorised
+    and choiced with a random select. 
+
+    @param scheduler_name: name of scheduler 
+    @type scheduler_name: string
+
+    @param limit: maximum number of commands to reach
+    @type limit: int
+    """
+    query = gatherIdsToReSchedule(scheduler_name)
+
+    balances = dict((q[0].id, q[0].balance) for q in query.all())
+
+    selected = randomListByBalance(balances, limit)
+    log.debug("Drawed CoHs : %s" % str(selected))        
+    if selected :
+        for coh in selected :
+            calcNextAttemptDelay(coh)
+
+
+def calcNextAttemptDelay(drw_coh):
+    """ Calculate the delay to set the next_connection_delay """
+
+    log.debug("Start the delay calculation for CoH: %s" % str(drw_coh))
+
+    # Number of first attempts with interval wol_time between them
+    FIRST_ATTEMPTS_NBR = 3
+
+    (myCoH, myC, myT) = gatherCoHStuff(drw_coh)
+    if myCoH and myC :
+        attempts_total = myCoH.attempts_left
+        log.debug("Number of failed attempts %d / %d" % (myCoH.attempts_failed, attempts_total))
+
+        start_timestamp = time.mktime(myC.start_date.timetuple())
+        end_timestamp = time.mktime(myC.end_date.timetuple())
+
+        total_secs = end_timestamp - start_timestamp
+        # ---------* just for debug display *----------------- 
+        # TODO - determine DEBUG level from log.FileHandler...
+        log.debug("Execution plan for CoH %s :" %str(myCoH.id))
+        _exec_plan = ParabolicBalance(attempts_total)
+        _deltas = map(lambda x: x * total_secs, _exec_plan.balances)
+        _next = start_timestamp
+        for _attempt_nbr, _delta in enumerate(_deltas) :
+            if _attempt_nbr in range(FIRST_ATTEMPTS_NBR - 1) :
+                _next += SchedulerConfig().max_wol_time
+            else :
+                _next += _delta
+            _nxt_date = datetime.datetime.fromtimestamp(_next).strftime("%Y-%m-%d %H:%M:%S")
+            log.debug("- next date : %s" % str(_nxt_date))
+        # -----------------------------------------------------
+        if myCoH.attempts_failed > FIRST_ATTEMPTS_NBR :
+            if myCoH.attempts_failed +1 <= attempts_total :
+                b = ParabolicBalance(attempts_total)
+                coef = b.balances[myCoH.attempts_failed]
+                delay_in_seconds = coef * total_secs
+            else :
+                return
+        else :
+            delay_in_seconds = SchedulerConfig().max_wol_time
+
+            if delay_in_seconds < SchedulerConfig().max_wol_time : 
+                delay_in_seconds = SchedulerConfig().max_wol_time
+ 
+        delay = delay_in_seconds // 60
+        log.debug("Next delay for CoH %s : + %s min" %(str(drw_coh),str(delay)))
+
+        if myC.getNextConnectionDelay() != delay :
+            myC.setNextConnectionDelay(delay)
+
 
 def gatherIdsToStart(scheduler_name, commandIDs = []):
 
@@ -672,7 +805,7 @@ def gatherIdsToStart(scheduler_name, commandIDs = []):
         select_from(database.commands_on_host.join(database.commands)
         ).filter(sqlalchemy.not_(database.commands_on_host.c.current_state.in_(PULSE2_PROGRESSING_STATES))
         ).filter(sqlalchemy.not_(database.commands_on_host.c.current_state.in_(PULSE2_UNPREEMPTABLE_STATES))
-        ).filter(database.commands_on_host.c.attempts_left > 0
+        ).filter(database.commands_on_host.c.attempts_left > database.commands_on_host.c.attempts_failed
         ).filter(database.commands_on_host.c.next_launch_date <= now
         ).filter(sqlalchemy.or_(
             database.commands.c.start_date == soon,
@@ -775,6 +908,7 @@ def sortCommands(commands_to_perform):
 
         log.info('scheduler "%s": START: %d commands to start' % (SchedulerConfig().name, len(ids_list)))
         ToBeStarted.put(ids_list)
+        selectCommandsToReSchedule(SchedulerConfig().name, to_reach)
         return True
 
     def _parseResult(result):

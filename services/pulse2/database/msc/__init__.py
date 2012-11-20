@@ -50,7 +50,7 @@ import pulse2.time_intervals
 # Imported last
 import logging
 
-DATABASEVERSION = 17
+DATABASEVERSION = 18
 NB_DB_CONN_TRY = 2
 
 # TODO need to check for useless function (there should be many unused one...)
@@ -223,12 +223,12 @@ class MscDatabase(DatabaseHelper):
         session.flush()
         return cmd
 
-    def createCommandsOnHost(self, command, target, target_id, target_name, cmd_max_connection_attempt, scheduler = None, order_in_proxy = None, max_clients_per_proxy = 0):
+    def createCommandsOnHost(self, command, target, target_id, target_name, cmd_max_connection_attempt, end_date, scheduler = None, order_in_proxy = None, max_clients_per_proxy = 0):
         logging.getLogger().debug("Create new command on host '%s'" % target_name)
         return {
             "host" : target_name,
             "start_date" : None,
-            "end_date" : None,
+            "end_date" : end_date,
             "next_launch_date" : time.strftime("%Y-%m-%d %H:%M:%S"),
             "current_state" : "scheduled",
             "uploaded" : "TODO",

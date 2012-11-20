@@ -84,6 +84,10 @@ class MscConfig(MscDatabaseConfig):
     web_def_issue_halt_to = []
     web_show_reboot = False
     web_dlpath = []
+    # Default life time of command (in hours)
+    web_def_coh_life_time = 24
+    # Attempts per day average
+    web_def_attempts_per_day = 4
     # Max bandwith to use to download a file
     web_def_dlmaxbw = 0
     # Refresh time
@@ -289,7 +293,11 @@ class MscConfig(MscDatabaseConfig):
             self.web_def_proxy_selection_mode = self.cp.get("web", "web_def_proxy_selection_mode")
         if self.cp.has_option("web", "web_def_refresh_time"):
             self.web_def_refresh_time = self.cp.getint("web", "web_def_refresh_time") * 1000
-
+        if self.cp.has_option("web", "web_def_coh_life_time"):
+            self.web_def_proxy_selection_mode = self.cp.get("web", "web_def_coh_life_time")
+        if self.cp.has_option("web", "web_def_attempts_per_day"):
+            self.web_def_proxy_selection_mode = self.cp.get("web", "web_def_attempts_per_day")
+ 
         # VNC stuff
         if self.cp.has_option("web", "vnc_show_icon"):
             self.web_vnc_show_icon = self.cp.getboolean("web", "vnc_show_icon")
