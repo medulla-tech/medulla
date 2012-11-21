@@ -127,30 +127,38 @@ def randomListByBalance (balances, limit):
 
     """
     if len(balances) > 0 :
-        # sort by balance
-        sorted_keys = sorted(balances, key=balances.get, reverse=True)
-        # draw the treshold  
-        drw_coh = random.choice(sorted_keys)
- 
-        logging.getLogger().debug("Keys to draw: %s " % str(sorted_keys))
-        treshold_idx = sorted_keys.index(drw_coh)
-        # remove all the keys bellow the treshold
-        sorted_keys = sorted_keys[-treshold_idx:]
-        logging.getLogger().debug("Reduced interval: %s " % str(sorted_keys))
-
-        count = 0
-        selected = []
+        if len(balances) <= limit :
+            # no necesity to choice the most important CoHs
+            return balances.keys()
         while True :
-            if count >= limit :
-                break
-            if count >= len(sorted_keys) :
-                break
-            drw_coh = random.choice(sorted_keys)
-            if drw_coh not in selected :
-                selected.append(drw_coh)
-                count += 1
 
-        return selected 
+            # sort by balance
+            sorted_keys = sorted(balances, key=balances.get, reverse=True)
+            # draw the treshold  
+            drw_coh = random.choice(sorted_keys)
+ 
+            logging.getLogger().debug("Keys to draw: %s " % str(sorted_keys))
+            treshold_idx = sorted_keys.index(drw_coh)
+            # remove all the keys bellow the treshold
+            sorted_keys = sorted_keys[-treshold_idx:]
+            logging.getLogger().debug("Reduced interval: %s " % str(sorted_keys))
+
+            count = 0
+            selected = []
+            while True :
+                if count >= limit :
+                    break
+                if count >= len(sorted_keys) :
+                    break
+                drw_coh = random.choice(sorted_keys)
+                if drw_coh not in selected :
+                    selected.append(drw_coh)
+                    count += 1
+            if len(selected) / limit > 0.8 :
+                # OK when number of selected is more than 80% of limit
+                return selected 
+            else :
+                logging.getLogger().debug("List of drawed CoHs too small. Repeat the drawing")
 
 def getBalanceByAttempts (start_date, end_date, attempts_failed) :
     """

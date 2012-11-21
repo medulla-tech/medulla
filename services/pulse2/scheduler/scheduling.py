@@ -644,8 +644,6 @@ def gatherIdsToReSchedule(scheduler_name):
     database = MscDatabase()
 
     now = time.strftime("%Y-%m-%d %H:%M:%S")
-    soon = time.strftime("0000-00-00 00:00:00")
-    later = time.strftime("2031-12-31 23:59:59")
 
     commands_query = session.query(CommandsOnHost, Commands).\
         select_from(database.commands_on_host.join(database.commands)
@@ -653,14 +651,8 @@ def gatherIdsToReSchedule(scheduler_name):
         ).filter(sqlalchemy.not_(database.commands_on_host.c.current_state.in_(PULSE2_UNPREEMPTABLE_STATES))
         ).filter(database.commands_on_host.c.attempts_left > database.commands_on_host.c.attempts_failed
         ).filter(database.commands_on_host.c.next_launch_date <= now
-        ).filter(sqlalchemy.or_(
-            database.commands.c.start_date == soon,
-            database.commands.c.start_date <= now)
-        ).filter(database.commands.c.start_date != later
-        ).filter(sqlalchemy.or_(
-            database.commands.c.end_date == soon,
-            database.commands.c.end_date == later,
-            database.commands.c.end_date > now)
+        ).filter(database.commands.c.start_date <= now
+        ).filter(database.commands.c.end_date > now        
         ).filter(sqlalchemy.or_(
             database.commands_on_host.c.scheduler == '',
             database.commands_on_host.c.scheduler == scheduler_name,
@@ -712,8 +704,8 @@ def selectCommandsToReSchedule (scheduler_name, limit):
     balances = dict((q[0].id, q[0].balance) for q in query.all())
 
     selected = randomListByBalance(balances, limit)
-    log.debug("Drawed CoHs : %s" % str(selected))        
     if selected :
+        log.debug("Drawed CoHs : %s" % str(selected))        
         for coh in selected :
             calcNextAttemptDelay(coh)
 

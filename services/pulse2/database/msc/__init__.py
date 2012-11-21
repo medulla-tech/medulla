@@ -223,11 +223,14 @@ class MscDatabase(DatabaseHelper):
         session.flush()
         return cmd
 
-    def createCommandsOnHost(self, command, target, target_id, target_name, cmd_max_connection_attempt, end_date, scheduler = None, order_in_proxy = None, max_clients_per_proxy = 0):
+    def createCommandsOnHost(self, command, target, target_id, 
+                             target_name, cmd_max_connection_attempt, 
+                             start_date, end_date, scheduler = None, 
+                             order_in_proxy = None, max_clients_per_proxy = 0):
         logging.getLogger().debug("Create new command on host '%s'" % target_name)
         return {
             "host" : target_name,
-            "start_date" : None,
+            "start_date" : start_date,
             "end_date" : end_date,
             "next_launch_date" : time.strftime("%Y-%m-%d %H:%M:%S"),
             "current_state" : "scheduled",

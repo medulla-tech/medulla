@@ -261,7 +261,16 @@ class MscDatabase(msc.MscDatabase):
                             order_in_proxy = candidates[0]['priority']
                     except ValueError:
                         pass
-                    coh_to_insert.append(self.createCommandsOnHost(cobj.getId(),atarget, first_target_id, target_name, cmd['end_date'], cmd['max_connection_attempt'], ascheduler, order_in_proxy, max_clients_per_proxy))
+                    coh_to_insert.append(self.createCommandsOnHost(cobj.getId(),
+                                                                   atarget,
+                                                                   first_target_id, 
+                                                                   target_name, 
+                                                                   cmd['start_date'], 
+                                                                   cmd['end_date'], 
+                                                                   cmd['max_connection_attempt'], 
+                                                                   ascheduler, 
+                                                                   order_in_proxy, 
+                                                                   max_clients_per_proxy))
                     first_target_id = first_target_id + 1
             session.execute(self.commands_on_host.insert(), coh_to_insert)
             session.commit()
@@ -401,7 +410,16 @@ class MscDatabase(msc.MscDatabase):
                         order_in_proxy = candidates[0]['priority']
                 except ValueError:
                     pass
-                coh_to_insert.append(self.createCommandsOnHost(cmd.getId(), atarget, first_target_id, target_name, max_connection_attempt, end_date, ascheduler, order_in_proxy, max_clients_per_proxy))
+                coh_to_insert.append(self.createCommandsOnHost(cmd.getId(), 
+                                                               atarget, 
+                                                               first_target_id, 
+                                                               target_name, 
+                                                               max_connection_attempt, 
+                                                               start_date,
+                                                               end_date, 
+                                                               ascheduler, 
+                                                               order_in_proxy, 
+                                                               max_clients_per_proxy))
                 first_target_id = first_target_id + 1
             session.execute(self.commands_on_host.insert(), coh_to_insert)
             session.commit()
