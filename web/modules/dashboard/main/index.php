@@ -208,22 +208,25 @@ foreach($modules as $module) {
         handle: 'handle',
         hoverclass: 'panel-hover'
       });
-      $$('.handle').each(function(m) {
-        m.observe("mousedown", function(m) {
-            sortables.each(function (s) {
-                s.style.border = "1px solid #ccc";
-                s.style.background = "#FFFAFA";
+      // Wait a little that all panels are loaded
+      setTimeout(function() {
+          $$('.handle').each(function(m) {
+            m.observe("mousedown", function(m) {
+                sortables.each(function (s) {
+                    s.style.border = "1px solid #ccc";
+                    s.style.background = "#FFFAFA";
+                });
             });
-        });
-      });
-      $$('.handle').each(function(m) {
-        m.observe("mouseup", function(m) {
-            save();
-            sortables.each(function (s) {
-                s.style.border = "1px solid white";
-                s.style.background = "white";
+          });
+          $$('.handle').each(function(m) {
+            m.observe("mouseup", function(m) {
+                save();
+                sortables.each(function (s) {
+                    s.style.border = "1px solid white";
+                    s.style.background = "white";
+                });
             });
-        });
-      });
+          });
+      }, 500);
 });
 </script>
