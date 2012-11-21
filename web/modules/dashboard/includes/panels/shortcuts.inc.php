@@ -25,6 +25,7 @@ include_once("modules/dashboard/includes/panel.class.php");
 $options = array(
     "class" => "ShortcutsPanel",
     "id" => "shortcuts",
+    "refresh" => 3600,
     "title" => _T("Shortcuts", "dashboard"),
 );
 

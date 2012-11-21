@@ -24,6 +24,7 @@ include_once("modules/dashboard/includes/panel.class.php");
 $options = array(
     "class" => "GeneralPanel",
     "id" => "general",
+    "refresh" => 30,
     "title" => _T("General", "dashboard"),
 );
 

@@ -24,6 +24,7 @@ include_once("modules/dashboard/includes/panel.class.php");
 $options = array(
     "class" => "SpacePanel",
     "id" => "space",
+    "refresh" => 960,
     "title" => _T("Space", "dashboard"),
 );
 

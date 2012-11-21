@@ -22,7 +22,6 @@
 
 $topLeft = 1;
 require("graph/navbar.inc.php");
-include("modules/dashboard/includes/dashboard-xmlrpc.inc.php");
 
 ?>
 <script src="jsframework/cookiejar.js"></script>
@@ -107,8 +106,10 @@ foreach($modules as $module) {
         while (false !== ($f = readdir($h))) {
             if (substr($f, 0, 1) != ".") {
                 $file = $basedir . $f;
-                $id = explode(".", $f)[0];
-                $panel = new AjaxPage(urlStrRedirect('dashboard/main/ajaxPanels'), $id, array("file" => urlencode($file)), 5);
+                include_once($file);
+                if (!isset($options["refresh"]))
+                    $options["refresh"] = 10;
+                $panel = new AjaxPage(urlStrRedirect('dashboard/main/ajaxPanels'), $options["id"], array("file" => urlencode($file)), $options["refresh"]);
                 $panel->class = "panel";
                 $panel->display();
             }
