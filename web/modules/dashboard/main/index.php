@@ -210,7 +210,7 @@ foreach($modules as $module) {
       });
       // Wait a little that all panels are loaded
       setTimeout(function() {
-          $$('.handle').each(function(m) {
+          $$('.panel').each(function(m) {
             m.observe("mousedown", function(m) {
                 sortables.each(function (s) {
                     s.style.border = "1px solid #ccc";
@@ -218,7 +218,7 @@ foreach($modules as $module) {
                 });
             });
           });
-          $$('.handle').each(function(m) {
+          $$('.panel').each(function(m) {
             m.observe("mouseup", function(m) {
                 save();
                 sortables.each(function (s) {
