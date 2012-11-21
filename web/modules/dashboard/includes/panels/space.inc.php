@@ -34,75 +34,41 @@ class SpacePanel extends Panel {
 
         $json = json_encode($this->data['partitions']);
 
-echo <<< SPACE
+        echo <<< SPACE
     <div id="space-graphs"></div>
     <script type="text/javascript">
-    Plotr.Base.generateColorscheme = function() {
-        return {
-            used: "#a40000",
-            free: "#4e9a06"
-        }
-    };
-
-    drawPie = function(id, name, used) {
-        var free = (1 - used);
-
-        var options = {
-            // Define a padding for the canvas node.
-            padding: {
-                left: 20,
-                right: 20,
-                top: 0,
-                bottom: 30
-            },
-            // Background color to render.
-            background: {
-                hide: true
-            },
-            legend: {
-                hide: true
-            },
-            // Use the predefined blue colorscheme.
-            colorScheme: "space",
-            axis: {
-                // The fontcolor of the labels is black.
-                labelColor: '#444',
-                // Add the ticks. Keep in mind, x and y axis are swapped
-                // when the BarOrientation is horizontal.
-                x: {
-                    ticks: [
-                        {v:0, label:'Used'},
-                        {v:1, label:'Free'},
-                    ]
-                }
-            }
-        };
-
-        var graphs =  $("space-graphs");
-        var container = new Element("div");
-        var title = new Element("h4");
-        title.update(name);
-        var canvas = new Element("canvas", {id: "canvas-" + id, height: 200, width: 200});
-
-        container.appendChild(title);
-        container.appendChild(canvas);
-        graphs.appendChild(container);
-
-        var pie = new Plotr.PieChart("canvas-" + id, options);
-        pie.addDataset({
-            used: [[0, used]],
-            free: [[0, free]]
-        });
-        pie.render();
-    };
-    var partitions = $json;
+    var partitions = $json,
+        r = Raphael("space-graphs"),
+        radius = 40,
+        margin = 30,
+        x = 50,
+        y = 60;
     for (var i=0; i < partitions.length; i++) {
-        var partition = partitions[i];
-        drawPie(i, partition.mountpoint, partition.usage.percent / 100);
+        var partition = partitions[i],
+            data = [],
+            legend = [],
+            colors = ["#73d216", "#ef2929"],
+            title = partition.mountpoint;
+        data.push((100 - partition.usage.percent));
+        legend.push(partition.usage.free + " Free");
+        data.push(partition.usage.percent);
+        legend.push(partition.usage.used + " Used");
+        if (partition.usage.percent > 50)
+            colors.reverse();
+        if (partition.device.length < 30)
+            title += " (" + partition.device + ") ";
+        r.text(5, y - radius - 10, title)
+         .attr({ font: "12px sans-serif" })
+         .attr({ "text-anchor": "start" });
+        pie = r.piechart(x, y + 5, radius, data, 
+                         {legend: legend,
+                          legendpos: "est",
+                          colors: colors});
+        y += (radius * 2) + margin + 5;
     }
+    r.setSize(200, partitions.length * (radius * 2 + margin) + 10);
     </script>
 SPACE;
-
     }
 }
 

@@ -31,8 +31,10 @@ $f->display();
 
 ?>
 <script src="jsframework/cookiejar.js"></script>
-<script type="text/javascript" src="modules/dashboard/graph/js/plotr/plotr.js"></script>
-<script type="text/javascript" src="modules/dashboard/graph/js/plotr/excanvas.js"></script>
+<script type="text/javascript" src="modules/dashboard/graph/js/raphael-min.js"></script>
+<script type="text/javascript" src="modules/dashboard/graph/js/g.raphael-min.js"></script>
+<script type="text/javascript" src="modules/dashboard/graph/js/g.pie-min.js"></script>
+<script type="text/javascript" src="modules/dashboard/graph/js/g.bar-min.js"></script>
 <style type="text/css">
     #section, #sectionTopRight, #sectionBottomLeft { margin: 0 0 0 17px; }
     #sectionTopRight { border-left: none; }
@@ -57,15 +59,6 @@ $f->display();
 
     #dashboard .panel .handle {
         cursor: move;
-    }
-
-    #space-graphs {
-        text-align: center;
-    }
-
-    #space-graphs h4 {
-        padding: 10px 0 0;
-        font-weight: bold;
     }
 
     .panel {
@@ -94,28 +87,6 @@ $f->display();
     }
 
     .subpanel h4 {
-        padding: 0;
-    }
-
-    .barfree {
-        display: inline-block;
-        vertical-align: bottom;
-        height: 12px;
-        background: #4e9a06;
-        padding: 0;
-        margin: 0;
-        border: 2px solid white;
-        -webkit-box-shadow: 2px 2px 1px 0px #babdb6;
-             -o-box-shadow: 2px 2px 1px 0px #babdb6;
-                box-shadow: 2px 2px 1px 0px #babdb6;
-    }
-
-    .barused {
-        display: inline;
-        height: 12px;
-        background: #a40000;
-        overflow: hidden;
-        float: left;
         padding: 0;
     }
 
