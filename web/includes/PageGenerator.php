@@ -2685,7 +2685,7 @@ class AjaxPage extends HtmlElement {
 echo <<< EOT
         <div id="{$this->id}" class="{$this->class}"></div>
         <script type="text/javascript">
-        updater = new Ajax.PeriodicalUpdater("{$this->id}", "{$this->url}", {
+        new Ajax.PeriodicalUpdater("{$this->id}", "{$this->url}", {
             method: "get",
             frequency: {$this->refresh},
             parameters: {$this->params},

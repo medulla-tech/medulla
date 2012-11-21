@@ -48,12 +48,12 @@ class GeneralPanel extends Panel {
                 height = 65,
                 width = 200,
                 r = Raphael("load-graph", width, height + 5);
-            r.linechart(15, 5, width - 15, height - 5,
-                        [[15, 5, 0], [15, 5, 0]],
-                        [load.reverse(), [0, 1, 0]],
-                        {axis: "0 0 0 1", colors: ["#ef2929", "transparent"], shade: true}
-            );
             r.path("M20 55L191 55");
+            r.linechart(15, 5, width - 15, height - 5,
+                        [[10, 5, 0], [10, 5, 0]],
+                        [load, [0, 1, 0]],
+                        {axis: "0 0 0 1", colors: ["#ef2929", ""], shade: true}
+            );
             var memory = ' . $memory . ',
                 height = 15,
                 width = 200,

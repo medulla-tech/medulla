@@ -38,7 +38,7 @@ class SpacePanel(Panel):
         partitions = []
 
         for part in parts:
-            if not 'loop' in part.mountpoint:
+            if not 'loop' in part.device:
                 usage = psutil.disk_usage(part.mountpoint)
                 partitions.append({
                     'device': part.device,

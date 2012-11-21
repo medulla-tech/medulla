@@ -68,10 +68,10 @@ class SpacePanel extends Panel {
             r.text(5, y - radius - 10, title)
              .attr({ font: "12px sans-serif" })
              .attr({ "text-anchor": "start" });
-            pie = r.piechart(x, y + 5, radius, data, 
-                             {legend: legend,
-                              legendpos: "est",
-                              colors: colors});
+            r.piechart(x, y + 5, radius, data,
+                       {legend: legend,
+                        legendpos: "east",
+                        colors: colors});
             y += (radius * 2) + margin + 5;
         }
         r.setSize(200, partitions.length * (radius * 2 + margin) + 10);
