@@ -2676,13 +2676,14 @@ class AjaxPage extends HtmlElement {
     function AjaxPage($url, $id = "container", $params = array(), $refresh = 10) {
         $this->url = $url;
         $this->id = $id;
+        $this->class = "";
         $this->params = json_encode($params);
         $this->refresh = $refresh;
     }
 
     function display() {
 echo <<< EOT
-        <div id="{$this->id}"></div>
+        <div id="{$this->id}" class="{$this->class}"></div>
         <script type="text/javascript">
         updater = new Ajax.PeriodicalUpdater("{$this->id}", "{$this->url}", {
             method: "get",

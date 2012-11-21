@@ -31,10 +31,8 @@ class Panel {
     }
     
     function display() {
-        echo '<div class="panel" id="' . $this->id . '">
-                <h3 class="handle">' . $this->title . '</h3>';
+        echo '<h3 class="handle">' . $this->title . '</h3>';
         echo $this->display_content();
-        echo '</div>';
     }
 
     function display_content() {
