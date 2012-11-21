@@ -34,7 +34,7 @@ $f->display();
 <script type="text/javascript" src="modules/dashboard/graph/js/raphael-min.js"></script>
 <script type="text/javascript" src="modules/dashboard/graph/js/g.raphael-min.js"></script>
 <script type="text/javascript" src="modules/dashboard/graph/js/g.pie-min.js"></script>
-<script type="text/javascript" src="modules/dashboard/graph/js/g.bar-min.js"></script>
+<script type="text/javascript" src="modules/dashboard/graph/js/g.line-min.js"></script>
 <style type="text/css">
     #section, #sectionTopRight, #sectionBottomLeft { margin: 0 0 0 17px; }
     #sectionTopRight { border-left: none; }

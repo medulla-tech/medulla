@@ -1,7 +1,6 @@
 <?php
 /**
- * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2012 Mandriva, http://www.mandriva.com
+ * (c) 2012 Mandriva, http://www.mandriva.com
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -31,32 +30,40 @@ $options = array(
 class GeneralPanel extends Panel {
 
     function display_content() {
-
-        $load = implode(", ", $this->data['load']);
+        $load = json_encode($this->data['load']);
         $memory = json_encode($this->data['memory']);
 
-echo <<< GENERAL
-    <p><strong>{$this->data['hostname']}</strong> on <strong>{$this->data['dist'][0]} {$this->data['dist'][1]}</strong></p>
-    <br />
-    <p>Uptime : {$this->data['uptime']}</p>
-    <p>Load : $load</p>
-    <div>RAM :
-        <div id="ram-graph"></div>
-    </div>
-    <script type="text/javacript">
-        var memory = $memory,
-            height = 15,
-            width = 200,
-            r = Raphael("ram-graph", width, height + 5);
-        r.rect(0, 5, width, height)
-         .attr({fill: "#73d216", stroke: "#fff", "stroke-width": "2px"});
-        r.rect(1, 6, width * (memory.percent / 100), height - 2)
-         .attr({fill: "#ef2929", "stroke-width": "0"});
-        r.text(width - 3, 13, memory.available + " Free")
-         .attr({ font: "12px sans-serif", "text-anchor": "end", "fill": "white" });
-    </script>
-GENERAL;
-
+        echo '
+        <p><strong>' . $this->data['hostname'] . '</strong> ' . _T('on') . ' <strong>' . $this->data['dist'][0] . ' ' . $this->data['dist'][1] . '</strong></p>
+        <p><strong>Uptime</strong> : ' . $this->data['uptime'] . '</p>
+        <div><strong>' . _T('Load') . '</strong>
+            <div id="load-graph"></div>
+        </div>
+        <div><strong>' . _T('RAM') . '</strong>
+            <div id="ram-graph"></div>
+        </div>
+        <script type="text/javacript">
+            var load = ' . $load . ',
+                height = 65,
+                width = 200,
+                r = Raphael("load-graph", width, height + 5);
+            r.linechart(15, 5, width - 15, height - 5,
+                        [[15, 5, 0], [15, 5, 0]],
+                        [load.reverse(), [0, 1, 0]],
+                        {axis: "0 0 0 1", colors: ["#ef2929", "transparent"], shade: true}
+            );
+            r.path("M20 55L191 55");
+            var memory = ' . $memory . ',
+                height = 15,
+                width = 200,
+                r = Raphael("ram-graph", width, height + 5);
+            r.rect(0, 5, width, height)
+             .attr({fill: "#73d216", stroke: "#fff", "stroke-width": "2px"});
+            r.rect(1, 6, width * (memory.percent / 100), height - 2)
+             .attr({fill: "#ef2929", "stroke-width": "0"});
+            r.text(width - 3, 13, memory.available + " ' . _T("free") . '")
+             .attr({ font: "12px sans-serif", "text-anchor": "end", "fill": "white" });
+        </script>';
     }
 }
 

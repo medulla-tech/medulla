@@ -1,7 +1,6 @@
 <?php
 /**
- * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2012 Mandriva, http://www.mandriva.com
+ * (c) 2012 Mandriva, http://www.mandriva.com
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -33,41 +32,43 @@ class SpacePanel extends Panel {
     function display_content() {
 
         $json = json_encode($this->data['partitions']);
+        $used = _T("used");
+        $free = _T("free");
 
         echo <<< SPACE
-    <div id="space-graphs"></div>
-    <script type="text/javascript">
-    var partitions = $json,
-        r = Raphael("space-graphs"),
-        radius = 40,
-        margin = 30,
-        x = 50,
-        y = 60;
-    for (var i=0; i < partitions.length; i++) {
-        var partition = partitions[i],
-            data = [],
-            legend = [],
-            colors = ["#73d216", "#ef2929"],
-            title = partition.mountpoint;
-        data.push((100 - partition.usage.percent));
-        legend.push(partition.usage.free + " Free");
-        data.push(partition.usage.percent);
-        legend.push(partition.usage.used + " Used");
-        if (partition.usage.percent > 50)
-            colors.reverse();
-        if (partition.device.length < 30)
-            title += " (" + partition.device + ") ";
-        r.text(5, y - radius - 10, title)
-         .attr({ font: "12px sans-serif" })
-         .attr({ "text-anchor": "start" });
-        pie = r.piechart(x, y + 5, radius, data, 
-                         {legend: legend,
-                          legendpos: "est",
-                          colors: colors});
-        y += (radius * 2) + margin + 5;
-    }
-    r.setSize(200, partitions.length * (radius * 2 + margin) + 10);
-    </script>
+        <div id="space-graphs"></div>
+        <script type="text/javascript">
+        var partitions = $json,
+            r = Raphael("space-graphs"),
+            radius = 40,
+            margin = 30,
+            x = 50,
+            y = 60;
+        for (var i=0; i < partitions.length; i++) {
+            var partition = partitions[i],
+                data = [],
+                legend = [],
+                colors = ["#73d216", "#ef2929"],
+                title = partition.mountpoint;
+            data.push((100 - partition.usage.percent));
+            legend.push(partition.usage.free + " $free");
+            data.push(partition.usage.percent);
+            legend.push(partition.usage.used + " $used");
+            if (partition.usage.percent > 50)
+                colors.reverse();
+            if (partition.device.length < 30)
+                title += " (" + partition.device + ") ";
+            r.text(5, y - radius - 10, title)
+             .attr({ font: "12px sans-serif" })
+             .attr({ "text-anchor": "start" });
+            pie = r.piechart(x, y + 5, radius, data, 
+                             {legend: legend,
+                              legendpos: "est",
+                              colors: colors});
+            y += (radius * 2) + margin + 5;
+        }
+        r.setSize(200, partitions.length * (radius * 2 + margin) + 10);
+        </script>
 SPACE;
     }
 }
