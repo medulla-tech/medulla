@@ -38,19 +38,20 @@ class SpacePanel(Panel):
         partitions = []
 
         for part in parts:
-            usage = psutil.disk_usage(part.mountpoint)
-            partitions.append({
-                'device': part.device,
-                'mountpoint': part.mountpoint,
-                'fstype': part.fstype,
-                'opts': part.opts,
-                'usage': {
-                    'total': size_format(usage.total),
-                    'used': size_format(usage.used),
-                    'free': size_format(usage.free),
-                    'percent': usage.percent
-                }                
-            })
+            if not 'loop' in part.mountpoint:
+                usage = psutil.disk_usage(part.mountpoint)
+                partitions.append({
+                    'device': part.device,
+                    'mountpoint': part.mountpoint,
+                    'fstype': part.fstype,
+                    'opts': part.opts,
+                    'usage': {
+                        'total': size_format(usage.total),
+                        'used': size_format(usage.used),
+                        'free': size_format(usage.free),
+                        'percent': usage.percent
+                    }
+                })
 
         return {
             'partitions': partitions,
