@@ -53,14 +53,14 @@ class SpacePanel extends Panel {
                 title = partition.mountpoint,
                 free = 100 - parseInt(partition.usage.percent),
                 used = parseInt(partition.usage.percent);
+            data.push(used);
+            legend.push(partition.usage.used + " $used");
+            colors.push("#ef2929");
             if (free > 0) {
                 data.push(free);
                 legend.push(partition.usage.free + " $free");
                 colors.push("#73d216");
             }
-            data.push(used);
-            legend.push(partition.usage.used + " $used");
-            colors.push("#ef2929");
             if (partition.device.length < 30)
                 title += " (" + partition.device + ") ";
             r.text(5, y - radius - 10, title)
