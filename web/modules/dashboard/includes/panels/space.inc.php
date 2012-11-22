@@ -61,8 +61,6 @@ class SpacePanel extends Panel {
             data.push(used);
             legend.push(partition.usage.used + " $used");
             colors.push("#ef2929");
-            if (partition.usage.percent > 50)
-                colors.reverse();
             if (partition.device.length < 30)
                 title += " (" + partition.device + ") ";
             r.text(5, y - radius - 10, title)
