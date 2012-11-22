@@ -112,6 +112,9 @@ class RpcProxy(RpcProxyI):
         # Use xmlrpcCleanup to clean all None values
         return xmlrpcCleanup(Inventory().getComputerInventoryDiff(ctx, params))
 
+    def getMachineNumberByState(self):
+        return Inventory().getMachineNumberByState()
+
     def getAllMachinesInventoryColumn(self, part, column, pattern = {}):
         ctx = self.currentContext
         ret = self.getLastMachineInventoryPart(part, pattern)

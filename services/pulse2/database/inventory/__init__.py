@@ -31,6 +31,7 @@ from pulse2.managers.group import ComputerGroupManager
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 from pulse2.database.utilities import unique, handle_deconnect, DbObject
 from pulse2.database.inventory.mapping import OcsMapping
+from pulse2.inventoryserver.config import Pulse2OcsserverConfigParser
 from pulse2.utils import same_network, Singleton, isUUID, xmlrpcCleanup
 
 from sqlalchemy import *
@@ -1712,6 +1713,60 @@ class Inventory(DyngroupDatabaseHelper):
             return [[],[]]
   
         ret = [added_elements, removed_elements]
+        return ret
+
+    def getMachineNumberByState(self):
+        """
+        return number of machines sorted by state
+        states are:
+            * green: less than 5 days
+            * orange: less than 35 days
+            * red: more than 35 days
+        
+        @return: dictionnary with state as key, number as value
+        @rtype: dict
+        """
+
+        session = create_session()
+        q = session.query(self.klass['Inventory']). \
+            select_from(self.machine \
+            .join(self.table['hasNetwork'], self.klass['hasNetwork'].machine == self.machine.c.id) \
+            .join(self.table['Inventory'], self.klass['hasNetwork'].inventory == self.klass['Inventory'].id)) \
+            .filter(self.klass['Inventory'].Last == 1) \
+            .group_by(self.machine.c.Name) \
+            .order_by(desc(self.klass['Inventory'].Date), desc(self.klass['Inventory'].Time)).all()
+
+        now = datetime.datetime.now()
+
+        green = Pulse2OcsserverConfigParser.green
+        orange = Pulse2OcsserverConfigParser.orange
+
+        ret = {
+            "days": {
+                "green": green,
+                "orange": orange,
+            },
+            "count": {
+                "green": 0,
+                "orange": 0,
+                "red": 0,
+            }
+        }
+
+        for i in q:
+            year, month, day = i.Date.year, i.Date.month, i.Date.day
+            hour, minute, second = i.Time.hour, i.Time.minute, i.Time.second
+            machine_time = datetime.datetime(year, month, day, hour, minute, second)
+            delta = now - machine_time
+            if delta.days < green:
+                ret['count']['green'] += 1
+            elif delta.days < orange:
+                ret['count']['orange'] += 1
+            else:
+                ret['count']['red'] += 1
+
+        session.close()
+
         return ret
 
     def __isIdenticalInventory (self, added, removed, exclude={}) :

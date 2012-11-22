@@ -61,6 +61,10 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
     daemon_user = 0
     daemon_group = 0
 
+    # state section
+    green = 10
+    orange = 35
+
     options = {}
 
 
@@ -133,6 +137,12 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
                 self.daemon_group = grp.getgrnam(self.cp.get("daemon", "group"))[2]
             if self.cp.has_option("daemon", "umask"):
                 self.umask = string.atoi(self.cp.get("daemon", "umask"), 8)
+
+        if self.cp.has_section("state"):
+            if self.cp.has_option("state", "green"):
+                self.pid_path = self.cp.get("state", "green")
+            if self.cp.has_option("state", "orange"):
+                self.pid_path = self.cp.get("state", "orange")
 
         for section in self.cp.sections():
             if re.compile('^option_[0-9]+$').match(section):

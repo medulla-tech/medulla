@@ -79,4 +79,16 @@ function countMachineInventoryHistory($params) {
 function getMachineInventoryDiff($params) {
     return xmlCall("inventory.getMachineInventoryDiff", array($params));
 }
+
+/*
+ * Return number of machines inventoried
+ * by state
+ * Default states values:
+ *  * green: less than 10 days
+ *  * orange: less than 35 days
+ *  * red: more than 35 days
+ */
+function getMachineNumberByState() {
+    return xmlCall("inventory.getMachineNumberByState");
+}
 ?>
