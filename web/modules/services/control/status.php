@@ -20,19 +20,6 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include("modules/services/includes/services-xmlrpc.inc.php");
-
-$service = $_GET['service'];
-$action = $_GET['action'];
-$result = call_user_func($action . "Service", $service);
-
-if (isset($_GET['parent']))
-    header("Location: " . urlStrRedirect("services/control/" . $_GET['parent']));
-if (isset($_GET['output']) && isset($_GET['output']) == "json") {
-    header('Cache-Control: no-cache, must-revalidate');
-    header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-    header('Content-type: application/json');
-    echo json_encode($result);
-}
+include('action.php');
 
 ?>

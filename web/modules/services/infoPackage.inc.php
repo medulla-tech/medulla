@@ -66,6 +66,10 @@ $page = new Page("reload");
 $page->setOptions(array("visible" => False, "AJAX" => True));
 $submod->addPage($page);
 
+$page = new Page("status");
+$page->setOptions(array("visible" => False, "AJAX" => True));
+$submod->addPage($page);
+
 $page = new Page("log", _T("Services log"));
 $page->setOptions(array("visible" => True));
 $submod->addPage($page);
