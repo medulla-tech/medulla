@@ -24,12 +24,12 @@ include("modules/services/includes/services-xmlrpc.inc.php");
 
 $service = $_GET['service'];
 $action = $_GET['action'];
-$parent = $_GET['parent'];
 
 call_user_func($action . "Service", $service);
 
 #if (!isXMLRPCError()) new NotifyWidgetSuccess(_T("The service has been asked to") . " " . $action);
 
-header("Location: " . urlStrRedirect("services/control/$parent"));
+if (isset($_GET['parent']))
+    header("Location: " . urlStrRedirect("services/control/" . $_GET['parent']));
 
 ?>
