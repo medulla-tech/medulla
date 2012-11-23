@@ -120,4 +120,8 @@ function web_def_refresh_time() {
     return __web_def_in_session_msc("refresh_time");
 }
 
+function web_def_coh_life_time() {
+    return __web_def_in_session_msc("coh_life_time");
+}
+
 ?>

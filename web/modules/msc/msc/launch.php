@@ -288,6 +288,13 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     $type_checkbox = 1;
     $type_date = 2;
     $type_numeric = 3;
+    
+    # FIXME: is quick_get() methods still used ??
+    // $start_date is now()
+    $start_date = (quick_get('start_date')) ? quick_get('start_date') : date("Y-m-d H:i:s");
+    // $end_date = now() + 24h by default (set in web_def_coh_life_time msc ini value)
+    $end_date = (quick_get('end_date')) ? quick_get('end_date') : date("Y-m-d H:i:s", time() + web_def_coh_life_time() * 60 * 60);
+    
     $parameters = array(
         'ltitle'=>array($type_input, _T('Command name', 'msc'), $name),
         'parameters'=>array($type_input, _T('Script parameters', 'msc'), quick_get('parameters')),
@@ -300,8 +307,8 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
 #        "issue_halt_to_over_time"=>array($type_checkbox, '', $_GET['issue_halt_to_over_time'], _T("over time", "msc")),
 #        "issue_halt_to_out_of_interval"=>array($type_checkbox, '', $_GET['issue_halt_to_out_of_interval'], _T("out of interval", "msc")),
         'do_reboot'=>array($type_checkbox, _T('Reboot client', 'msc'), quick_get('do_reboot', True)),
-        'start_date'=>array($type_date, _T('The command must start after', 'msc'), quick_get('start_date'), array('ask_for_now' => 1)),
-        'end_date'=>array($type_date, _T('The command must stop before', 'msc'), quick_get('end_date'), array('ask_for_never' => 1)),
+        'start_date'=>array($type_date, _T('The command must start after', 'msc'), $start_date, array('ask_for_now' => 0)),
+        'end_date'=>array($type_date, _T('The command must stop before', 'msc'), $end_date, array('ask_for_never' => 0)),
         'deployment_intervals'=>array($type_input, _T('Deployment interval', 'msc'), quick_get('deployment_intervals')),
         'maxbw'=>array($type_numeric, _T('Max bandwidth (kbits/s)', 'msc'), $max_bw),
 
