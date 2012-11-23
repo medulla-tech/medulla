@@ -586,14 +586,19 @@ class DynamicDateTpl extends InputTpl {
         ';
 
         // ugly gettext workaround
+        // display now or never shortcuts
         if (isset($arrParam["ask_for_now"])) {
-            print _("or <a href='#'");
-            print " onclick='javascript:document.getElementById(\"".$this->name."\").";
-            print _("value=\"now\";'>now</a>");
+            if ($arrParam['ask_for_now']) {
+                print _("or <a href='#'");
+                print " onclick='javascript:document.getElementById(\"".$this->name."\").";
+                print _("value=\"now\";'>now</a>");
+            }
         } elseif (isset($arrParam["ask_for_never"])) {
-            print _("or <a href='#'");
-            print " onclick='javascript:document.getElementById(\"".$this->name."\").";
-            print _("value=\"never\";'>never</a>");
+            if ($arrParam['ask_for_never']) {
+                print _("or <a href='#'");
+                print " onclick='javascript:document.getElementById(\"".$this->name."\").";
+                print _("value=\"never\";'>never</a>");
+            }
         }
         print '
             </span>';
