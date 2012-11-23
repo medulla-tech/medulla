@@ -2017,6 +2017,9 @@ class InventoryCreator(Inventory):
                 if len(entries_list) == 0:
                     continue
 
+                if "has" + table not in self.klass or table not in self.table :
+                    continue
+
                 klass = self.klass[table]
                 hasKlass = self.klass['has'+table]
                 hasTable = self.table['has'+table]
