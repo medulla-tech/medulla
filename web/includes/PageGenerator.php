@@ -1997,6 +1997,15 @@ class NotifyWidget {
        $_SESSION["notify"] = serialize($this);
     }
 
+    function setSize() {
+        // Deprecated
+        return;
+    }
+
+    function setLevel($level) {
+        $this->level = $level;
+    }
+
     /**
      * Add a string in notify widget
      * @param $str any HTML CODE

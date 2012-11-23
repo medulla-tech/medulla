@@ -85,8 +85,8 @@ class ErrorHandlingItem {
         $str .= '</div>';
         
         $n = new NotifyWidget();
-        $n->setSize($this->_size);
-        $n->setLevel($this->_level);
+        $n->size = $this->_size;
+        $n->level = $this->_level;
         $n->add($str);
     }
 
