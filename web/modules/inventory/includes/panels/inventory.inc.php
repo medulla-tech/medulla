@@ -26,6 +26,7 @@ require_once("modules/inventory/includes/xmlrpc.php");
 $options = array(
     "class" => "InventoryPanel",
     "id" => "inventory",
+    "refresh" => 3600,
     "title" => _T("Incoming inventories", "inventory"),
 );
 
@@ -50,21 +51,21 @@ class InventoryPanel extends Panel {
         x = 90,
         y = 90;
 
-    var data = [
-        machineCount.green,
-        machineCount.orange,
-        machineCount.red
-        ];
-    var legend = [
-        "Less than " + days.green  + " days",
-        "Less than " + days.orange + " days",
-        "More than " + days.orange + " days"
-        ];
-    var colors = [
-        "#73d216", // green
-        "#ff9c00", // orange
-        "#ef2929" // red
-        ];
+    var data = [];
+    if (machineCount.green) data.push(machineCount.green);
+    if (machineCount.orange) data.push(machineCount.orange);
+    if (machineCount.red) data.push(machineCount.red);
+
+    var legend = [];
+    if (machineCount.green) legend.push("Less than " + days.green  + " days");
+    if (machineCount.orange) legend.push("Less than " + days.orange + " days");
+    if (machineCount.red) legend.push("More than " + days.orange + " days");
+
+    var colors = [];
+    if (machineCount.green) colors.push("#73d216");
+    if (machineCount.orange) colors.push("#ff9c00");
+    if (machineCount.red) colors.push("#ef2929");
+        
     var href = [
         "#",
         "#",
