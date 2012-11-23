@@ -2447,8 +2447,9 @@ class ValidatingForm extends Form {
 
     function ValidatingForm($options = array()) {
         $this->Form($options);
-        $this->options["id"] = "edit";
-        $this->options["onsubmit"] = "selectAll(); return validateForm();";
+        if (!isset($this->options["id"]))
+            $this->options["id"] = "validatingForm";
+        $this->options["onsubmit"] = "selectAll('" . $this->options["id"] . "'); return validateForm('" . $this->options["id"]. "');";
     }
 
     function end() {

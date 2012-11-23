@@ -97,8 +97,8 @@ function checkAllRadio (pf,value) {
 // select all select with class 'list' options in the page
 // usefull to run before post a form with
 // selects in it.
-function selectAll() {
-    $$("select.list option").each(function(e) {
+function selectAll(formId) {
+    $$("#" + formId + " select.list option").each(function(e) {
         e.selected = true;
     });
 }
@@ -250,27 +250,27 @@ function displayPopupCenter () {
     $('popup').style.display = 'inline';
 }
 
-function validateForm() {
+function validateForm(formId) {
     var resultok;
     resultok = 0;
     var resultbad;
     resultbad = 0;
     var inputlist;
-    inputlist = document.getElementsByTagName('input');
-    inputlist = $A(inputlist);
-    inputlist.each( function(input){
-        try {
-            var result = input.validate()
-                if (result!=true) {
-                    resultbad++;
-                } else {
-                    resultok++;
-                }
+    $$('#' + formId + ' input').each(
+        function(input) {
+            try {
+                var result = input.validate()
+                    if (result!=true) {
+                        resultbad++;
+                    } else {
+                        resultok++;
+                    }
+            }
+            catch (ex) {
+                //do nothing... function not exist
+            }
         }
-        catch (ex) {
-            //do nothing... function not exist
-        }
-    });
+    );
     if (resultbad!=0) {
         alert('<?php echo  _("Form cannot be submit. Input errors are highlighted in red.") ?>');
         return false;
