@@ -1,9 +1,7 @@
 <?php
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2008 Mandriva, http://www.mandriva.com
- *
- * $Id$
+ * (c) 2007-2012 Mandriva, http://www.mandriva.com
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -25,15 +23,13 @@
 <?php
 
 require("config.inc.php");
-
-
-
 require("i18n.inc.php");
 require("acl.inc.php");
 require("session.inc.php");
 require("PageGenerator.php");
 
-$n = new NotifyWidget();
+$n = unserialize($_SESSION['notify']);
 $n->display();
+$n->flush();
 
 ?>

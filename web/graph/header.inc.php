@@ -206,7 +206,6 @@ function showPopupUp(evt,url) {
 }
 
 function showPopupCenter(url) {
-    /*new Ajax.Updater('__popup_container',url,{onComplete: displayPopupCenter(), evalScripts:true});*/
     new Ajax.Request(url, {
         onSuccess: function(t) {
             try {
@@ -248,6 +247,11 @@ function displayPopupCenter () {
     $('popup').style.left = '25%';
     $('popup').style.top  = '15%';
     $('popup').style.display = 'inline';
+    $('overlay').show();
+    $('overlay').observe("click", function () {
+        toggleVisibility('popup');
+        toggleVisibility('overlay');
+    });
 }
 
 function validateForm(formId) {

@@ -1437,21 +1437,35 @@ form.inplaceeditor-form input[type="text"] {
 }
 
 .popup {
-    position:absolute;
-    background: #FFFFFF;
-    /*display: none;*/
-    border-style : solid;
-    border-width: 1px;
-    border-color: #DDD;
+    position: absolute;
+    background: #fff;
+    border: 1px solid #999;
     margin: 5px;
     padding: 5px;
-    width: 300px;
     z-index: 999;
-    -webkit-border-radius: 8px;
-    -moz-border-radius: 8px;
-    border-radius: 8px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    -moz-box-shadow: 0px 0px 5px 0px #aaa;
+    -webkit-box-shadow: 0px 0px 5px 0px #aaa;
+    -o-box-shadow: 0px 0px 5px 0px #aaa;
+    box-shadow: 0px 0px 5px 0px #aaa;
+    filter:progid:DXImageTransform.Microsoft.Shadow(color=#aaaaaa, Direction=NaN, Strength=5);
 }
 
+.overlay {
+    height:100%;
+    width:100%;
+    position:fixed;
+    left:0;
+    top:0;
+    z-index:1 !important;
+    background-color:black;
+    filter: alpha(opacity=25);
+    -khtml-opacity: 0.25;
+    -moz-opacity: 0.25;
+    opacity: 0.25;
+}
 
 /* ---------------------------------------- */
 /*    CSS for tooltip                       */

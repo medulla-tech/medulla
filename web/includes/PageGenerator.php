@@ -1982,6 +1982,19 @@ class NotifyWidget {
      * default constructor
      */
     function NotifyWidget() {
+        $this->strings = [];
+        // 0: info (default, blue info bubble)
+        // 1: error for the moment (red icon)
+        // 5 is critical
+        $this->level = 0;
+        $this->save();
+    }
+
+    /**
+     * Save the object in the session
+     */
+    function save() {
+       $_SESSION["notify"] = serialize($this);
     }
 
     /**
@@ -1989,120 +2002,43 @@ class NotifyWidget {
      * @param $str any HTML CODE
      */
     function add($str) {
-
-        if (!isset($_SESSION['__notify'])) {
-            $_SESSION['__notify'] = array();
-        }
-        $_SESSION['__notify'][] = $str;
+        $this->strings[] = $str;
+        $this->save();
     }
 
-    /**
-     * set width size
-     * @param $size size in px
-     */
-    function setSize($size) {
-        $_SESSION['__notify_size'] = $size;
-    }
-
-    /**
-     * private internal function
-     */
-    function getSize() {
-        if (isset($_SESSION['__notify_size']) && $_SESSION['__notify_size']) {
-            return $_SESSION['__notify_size'];
-        } else {
-            return 300; //default value
-        }
-    }
-
-    /**
-     * @brief set level (change icon in widget)
-     * @param $level level must be beetween 0 and 5
-     * level must be beetween 0,5
-     * 0: info (default, blue info bubble)
-     * <= 1: error for the moment (red icon)
-     * 5 is critical
-     */
-    function setLevel($level) {
-        $_SESSION['__notify_level'] = $level;
-    }
-
-    /**
-     * private internal function
-     */
-    function getLevel() {
-        if (isset($_SESSION['__notify_level']) && $_SESSION['__notify_level']) {
-            return $_SESSION['__notify_level'];
-        } else {
-            return 0; //default level is 0
-        }
-    }
-
-    /**
-     * private internal function
-     */
     function getImgLevel() {
-        if ($this->getLevel() != 0) {
+        if ($this->level != 0)
             return "img/common/icn_alert.gif";
-        }
-
-        return "img/common/big_icn_info.png";
-
+        else
+            return "img/common/big_icn_info.png";
     }
 
-    /**
-     * private internal function
-     */
-    function get() {
-        $_SESSION['__notify'];
+    function show() {
+        echo '<script type="text/javascript">
+                showPopupCenter("includes/notify.php");
+              </script>';
     }
 
-    /**
-     * private internal function
-     */
-    function showJS() {
-        # if this function has already been launch, no need for a second launch
-        global $doneJS;
-        if ($doneJS) { return; }
-        $doneJS = True;
-        if (!isset($_SESSION['__notify'])) {
-            return;
-        }
-        echo "<script>\n";
-        echo "$('popup').style.width='".$this->getSize()."px';";
-        echo "  showPopupCenter('includes/notify.php');";
-        echo "</script>\n";
-    }
-
-
-    /**
-     * private internal function
-     */
     function display() {
-        # if this function has already been launch, no need for a second launch
-        global $doneDisplay;
-        if ($doneDisplay) { return; }
-        $doneDisplay = True;
-        if (!isset($_SESSION['__notify'])) {
-            return;
+        echo '
+        <div style="padding: 10px">
+            <div style="width: 50px; padding-top: 5px; float: left; text-align: center">
+                <img src="' . $this->getImgLevel() . '" />
+            </div>
+            <div style="margin-left: 60px">';
+        foreach ($this->strings as $string) {
+            echo $string;
         }
-        echo '<table style="border-width: 0 0 0 0; border-style: none;"><tr style="border-width: 0 0 0 0; border-style: none;"><td style="border-width: 0 0 0 0; border-style: none;">';
-        echo '<div id="popupicon" style="float: left;"><img src="'.$this->getImgLevel().'"></div>';
-        echo '</td><td style="vertical-align: center; border-width: 0 0 0 0; text-align: justify; width:100%;">';
-        foreach ($_SESSION['__notify'] as $info) {
-            echo "<p style=\"margin: auto;\">$info</p>";
-        }
-        echo '<div style="text-align: center; padding-top: 10px">';
-        echo '<input name="breset" type="reset" class="btnSecondary" onclick="getStyleObject(\'popup\').display=\'none\'; return false;" value="'._("Ok").'" />';
-        echo '</div>';
-        echo '</td></tr></table>';
-        $this->flush();
+        echo '
+            </div>
+            <div style="clear: left; text-align: right">
+                <button class="btnSecondary" onclick="toggleVisibility(\'popup\'); toggleVisibility(\'overlay\');">' . _("Close") . '</button>
+            </div>
+        </div>';
     }
 
     function flush() {
-        unset($_SESSION['__notify']);
-        unset ($_SESSION['__notify_size']);
-        unset ($_SESSION['__notify_level']);
+        unset($_SESSION["notify"]);
     }
 }
 
@@ -2113,10 +2049,9 @@ class NotifyWidget {
 class NotifyWidgetSuccess extends NotifyWidget {
 
     function NotifyWidgetSuccess($message) {
-        $this->flush();
+        parent::NotifyWidget();
         $this->add("<div id=\"validCode\">$message</div>");
-        $this->setLevel(0);
-        $this->setSize(600);
+        $this->save();
     }
 
 }
@@ -2128,10 +2063,10 @@ class NotifyWidgetSuccess extends NotifyWidget {
 class NotifyWidgetFailure extends NotifyWidget {
 
     function NotifyWidgetFailure($message) {
-        $this->flush();
+        parent::NotifyWidget();
         $this->add("<div id=\"errorCode\">$message</div>");
-        $this->setLevel(4);
-        $this->setSize(600);
+        $this->level = 4;
+        $this->save();
     }
 
 }
@@ -2143,10 +2078,10 @@ class NotifyWidgetFailure extends NotifyWidget {
 class NotifyWidgetWarning extends NotifyWidget {
 
     function NotifyWidgetWarning($message) {
-        $this->flush();
+        parent::NotifyWidget();
         $this->add("<div id=\"warningCode\">$message</div>");
-        $this->setLevel(3);
-        $this->setSize(600);
+        $this->level = 3;
+        $this->save();
     }
 }
 

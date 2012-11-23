@@ -43,8 +43,11 @@ $MMCApp->render();
 </div><!-- Content -->
 
 <?php
-    $n = new NotifyWidget();
-    $n->showJS();
+if (isset($_SESSION['notify'])) {
+    $n = unserialize($_SESSION['notify']);
+    if ($n->strings)
+        $n->show();
+}
 ?>
 
 <div id="footer">
