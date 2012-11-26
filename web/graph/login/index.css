@@ -39,9 +39,15 @@ Notes:
 
 ---*/
 
+@import '../bootstrap-buttons.css';
+@import '../bootstrap-forms.css';
+
+* {
+    font-family: Verdana, Lucida, Geneva, Helvetica, Arial, sans-serif;
+    font-size: 11px;
+}
+
 body {
-	font-family: Verdana, Lucida, Geneva, Helvetica, Arial, sans-serif;
-	font-size: 10px;
 	background: url(../../img/login/bg_login.gif) top left #C0C0C0;
 }
 
@@ -133,58 +139,6 @@ body {
 }
 
 /* ---------------------------------------- */
-/* 4. Style pour les forms				   	*/
-/* ---------------------------------------- */
-
-form {
-	padding: 0;
-	margin: 0;
-}
-
-form p {
-	font-size: 9px;
-	color: #999;
-	padding: 3px 0 3px 0;
-	margin: 0;
-}
-
-
-input, select {
-	font-size: 11px;
-	/*color: #999;*/
-}
-
-select#lang {
-    display: block;
-    margin-bottom: 5px;
-}
-
-.btnPrimary {
-	Font-family: Arial, Helvetica, sans-serif;
-	font-weight: bold;
-	background-color: #21449C;
-	font-size: 10px;
-	color: #FFF;
-	padding: 3px;
-	margin: 0px 0px 0 0;
-}
-
-.textfield {
-	font: 11px Arial, verdana, sans-serif;
-	margin-top: 2px;
-	margin-bottom: 0;
-	margin-left: 0;
-	border-top: 1px solid #666;
-	border-right: 1px solid #999;
-	border-bottom: 1px solid #999;
-	border-left: 1px solid #666;
-	clear: right;
-	padding: 2px;
-	background-color: #FFFFFF;
-	color: #666;
-}
-
-/* ---------------------------------------- */
 /* 5. Style pour message d'erreur   		*/
 /* ---------------------------------------- */
 
@@ -194,11 +148,19 @@ select#lang {
 	top: 77px;
 	width: 163px;
 	float: left;
-	font: 10px Verdana, Lucida, Geneva, Helvetica, Arial, sans-serif;
 	color: #666;
-	padding: 10px 10px 10px 45px;
-	border: 1px solid #A2A2A2;
+	padding: 15px 15px 15px 45px;
 	background: url("../../img/common/icn_alert.gif") no-repeat 10px 50% #FFF;
+    border: 1px solid #999;
+    z-index: 999;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    -moz-box-shadow: 0px 0px 5px 0px #aaa;
+    -webkit-box-shadow: 0px 0px 5px 0px #aaa;
+    -o-box-shadow: 0px 0px 5px 0px #aaa;
+    box-shadow: 0px 0px 5px 0px #aaa;
+    filter:progid:DXImageTransform.Microsoft.Shadow(color=#aaaaaa, Direction=NaN, Strength=5);
 }
 
 #info  {
@@ -223,17 +185,49 @@ select#lang {
 	font-size: 12px;
 	text-decoration: none;
 	padding: 0px 5px 0px 5px;
-	background-color: #FDD;
-	color: #000;
+	color: #fff;
 	width: 65%;
 	display: block;
 	border: 1px solid #E00;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
+    background: #ff4f3f;
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmNGYzZiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNjZTJmMmYiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+    background: -moz-linear-gradient(top, #ff4f3f 0%, #ce2f2f 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ff4f3f), color-stop(100%,#ce2f2f));
+    background: -webkit-linear-gradient(top, #ff4f3f 0%,#ce2f2f 100%);
+    background: -o-linear-gradient(top, #ff4f3f 0%,#ce2f2f 100%);
+    background: -ms-linear-gradient(top, #ff4f3f 0%,#ce2f2f 100%);
+    background: linear-gradient(to bottom, #ff4f3f 0%,#ce2f2f 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff4f3f', endColorstr='#ce2f2f',GradientType=0 );
 }
 
 #licence a {
 	font-size: 12px;
-	color: #000;
+	color: #fff;
+    font-weight: bold;
+}
+
+input, select {
+    width: 100px;
+    padding: 2px 4px;
+}
+
+.form-horizontal .control-group {
+    margin-bottom: 0px;
+}
+
+.form-horizontal .control-label {
+    width: 90px;
+}
+
+.form-horizontal .controls {
+    margin-left: 100px;
+    padding-top: 3px;
+}
+
+form {
+    margin-bottom: 5px;
+    margin-left: -20px;
 }

@@ -1186,8 +1186,8 @@ class AjaxFilter extends HtmlElement {
         <img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/>
     </div>
     <div id="searchSpan<?php echo $this->formid ?>" class="searchbox" style="float: right;">
-    <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" /> <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param<?php echo $this->formid ?>" onkeyup="pushSearch<?php echo $this->formid ?>(); return false;" />
-    <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
+    <img src="graph/search.gif" style="position:relative; top: 5px; float: left;" alt="search" /> <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param<?php echo $this->formid ?>" onkeyup="pushSearch<?php echo $this->formid ?>(); return false;" />
+    <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 4px;"
     onclick="document.getElementById('param<?php echo $this->formid ?>').value =''; pushSearch<?php echo $this->formid ?>(); return false;" />
     </span>
     </div>
@@ -2316,7 +2316,7 @@ class Form extends HtmlContainer {
 
     function addCancelButton($name) {
         $b = new Button();
-        $this->buttons[] = $b->getCancelButtonString($name, "btnSecondary");
+        $this->buttons[] = $b->getCancelButtonString($name);
     }
 
     function addExpertButton($name, $value) {
@@ -2375,11 +2375,11 @@ class Button {
     }
 
     function getValidateButtonString($name, $klass = "btnPrimary", $extra = "", $type = "submit") {
-        return $this->getButtonString($name, _("Confirm"));
+        return $this->getButtonString($name, _("Confirm"), $klass);
     }
 
-    function getCancelButtonString($name, $klass = "btnPrimary", $extra = "", $type = "submit") {
-        return $this->getButtonString($name, _("Cancel"));
+    function getCancelButtonString($name, $klass = "btnSecondary", $extra = "", $type = "submit") {
+        return $this->getButtonString($name, _("Cancel"), $klass);
     }
 
     function getOnClickButton($text, $url, $klass = "btnPrimary", $extra = "", $type = "button") {

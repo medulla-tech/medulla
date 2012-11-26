@@ -62,11 +62,11 @@ else
 
 <table cellspacing="0">
 <tr><td><?php echo  _("Current password") ?></td>
-    <td><input name="curpass" type="password" class="textfield" size="23" /></td></tr>
+    <td><input name="curpass" type="password" size="23" /></td></tr>
 <tr><td><?php echo  _("New password") ?></td>
-    <td><input name="newpass" type="password" class="textfield" size="23" /></td></tr>
+    <td><input name="newpass" type="password" size="23" /></td></tr>
 <tr><td><?php echo  _("Confirm your password") ?></td>
-    <td><input name="confpass" type="password" class="textfield" size="23" /></td></tr>
+    <td><input name="confpass" type="password" size="23" /></td></tr>
 </table>
 
 <input name="user" type="hidden" value="<?php echo $user; ?>" />

@@ -85,7 +85,7 @@ class TextareaTpl extends AbstractTpl {
             $arrParam['disabled'] = '';
         }
 
-        echo '<textarea name="'.$this->name.'" id="'.$this->name.'" class="textfield" rows="' . $this->rows . '" cols="'.$this->cols.'" '.$arrParam["disabled"].' />';
+        echo '<textarea name="'.$this->name.'" id="'.$this->name.'" rows="' . $this->rows . '" cols="'.$this->cols.'" '.$arrParam["disabled"].' />';
 
         if (isset($arrParam["value"])) {
             echo $arrParam["value"];
@@ -163,7 +163,7 @@ class FileTpl extends AbstractTpl {
     }
 
     function display($arrParam) {
-        print '<input name="'.$this->name.'" id="'.$this->name.'" type="file" class="textfield" size="23" />';
+        print '<input name="'.$this->name.'" id="'.$this->name.'" type="file" size="23" />';
     }
 
     function displayRo($arrParam) {
@@ -371,7 +371,7 @@ class InputTpl extends AbstractTpl{
         if (!isset($arrParam['disabled'])) {
             $arrParam['disabled'] = '';
         }
-        print '<span id="container_input_'.$this->name.'"><input name="'.$this->name.'" id="'.$this->name.'" type="' . $this->fieldType . '" class="textfield" size="'.$this->size.'" value="'.$arrParam["value"].'" '.$arrParam["disabled"].' autocomplete="off" /></span>';
+        print '<span id="container_input_'.$this->name.'"><input name="'.$this->name.'" id="'.$this->name.'" type="' . $this->fieldType . '" size="'.$this->size.'" value="'.$arrParam["value"].'" '.$arrParam["disabled"].' autocomplete="off" /></span>';
         print '<script type="text/javascript">
                 $(\''.$this->name.'\').validate = function() {';
         if (!isset($arrParam["required"]))
@@ -553,7 +553,7 @@ class DynamicDateTpl extends InputTpl {
     function DynamicDateTpl($name) {
         $this->name = $name;
         $this->size = "";
-        $this->fieldType = "";
+        $this->fieldType = "text";
     }
     function display($arrParam) {
         $e = new InputTpl($this->name);
@@ -576,7 +576,7 @@ class DynamicDateTpl extends InputTpl {
 
         print '
             <span id="container_input_'.$this->name.'">
-                <input name="'.$this->name.'" id="'.$this->name.'" type="' . $this->fieldType . '" class="textfield" size="'.$this->size.'" value="'.$arrParam["value"].'" readonly=1 />
+                <input name="'.$this->name.'" id="'.$this->name.'" type="' . $this->fieldType . '" size="'.$this->size.'" value="'.$arrParam["value"].'" readonly=1 />
                 <input
                     type="image"
                     style="vertical-align: bottom;"
@@ -1075,7 +1075,7 @@ class DeletableTrFormElement extends FormElement{
 
         // reald field display
         parent::display($arrParam);
-        print '<input name="bdel" type="submit" class="btnSecondary" value="'._("Delete").'" onclick="
+        print ' <input name="bdel" type="submit" class="btnSecondary" value="'._("Delete").'" onclick="
         new Ajax.Updater(\''.$this->name.'\',\'includes/FormGenerator/MultipleInput.tpl.php\',
         { evalScripts: true, parameters: Form.serialize($(\'edit\'))+\'&amp;minputname='.$this->name.'&amp;del='.$this->key.'&amp;desc='.urlencode($this->desc) . '&amp;regexp='.rawurlencode($this->template->regexp) . '\' }); return false;"/>';
 

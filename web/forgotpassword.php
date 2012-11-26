@@ -72,7 +72,7 @@ if (isset($_POST['bReset']) && isset($_POST['user'])) {
                 <p><strong><?= _("Password reset") ?></strong></p>
 
                 <p><?php echo  _("Login or mail"); ?> :<br>
-                    <input name="user" type="text" class="textfield" id="username" size="18" />
+                    <input name="user" type="text" id="username" size="18" />
                 </p>
                 <p>
                     <input name="bReset" type="submit" class="btnPrimary" value="<?php echo  _("Password reset"); ?>" />

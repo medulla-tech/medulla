@@ -9,7 +9,7 @@ class DisabledInputTpl extends AbstractTpl{
         if ($arrParam=='') {
             $arrParam = $_POST[$this->name];
         }
-        print '<span id="container_input_'.$this->name.'"><input name="'.$this->name.'" id="'.$this->name.'" type="" class="textfield" value="'.$arrParam["value"].'" disabled="'.$arrParam["disabled"].'" /></span>';
+        print '<span id="container_input_'.$this->name.'"><input name="'.$this->name.'" id="'.$this->name.'" type="" value="'.$arrParam["value"].'" disabled="'.$arrParam["disabled"].'" /></span>';
 
         print '<script type="text/javascript">
                 $(\''.$this->name.'\').validate = function() {';
@@ -170,7 +170,7 @@ class LogDynamicDateTpl extends InputTpl {
 
         print '
             <span id="container_input_'.$this->name.'">
-                <input name="'.$this->name.'" id="'.$this->name.'" type="" class="textfield" size="'.$this->size.'" value="'.$this->value.'" readonly="1" onChange="ValidDates();"/>
+                <input name="'.$this->name.'" id="'.$this->name.'" type="text" size="'.$this->size.'" value="'.$this->value.'" readonly="1" onChange="ValidDates();"/>
                 <input
                     type="image"
                     style="vertical-align: bottom;"
@@ -379,7 +379,7 @@ class AjaxFilterLog extends AjaxFilter {
             </select>    
             <span id="searchfilter">
             </span>    
-            <img src="img/common/reload.png" style="vertical-align: middle; margin-left: 10px; margin-right: 10px;" onclick="pushSearch(); return false;" title="<?php echo _("Refresh") ?>" />
+            <img src="img/common/reload.png" style="vertical-align: middle; margin-left: 2px; margin-right: 10px;" onclick="pushSearch(); return false;" title="<?php echo _("Refresh") ?>" />
         </span>
     </span>&nbsp;
     </div>

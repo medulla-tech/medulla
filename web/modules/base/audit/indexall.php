@@ -29,13 +29,14 @@ require("modules/base/includes/AjaxFilterLog.inc.php");
 $types = array("object" => _("Object"), "type"=> _("Type"),
                "action" => _("Action"), "user"=> _("User"));
 
-$ajax = new AjaxFilterLog(urlStrRedirect("base/audit/ajaxLogFilter"), $types);
-$ajax->setsearchbar(urlStrRedirect("base/audit/searchbar"));
-$ajax->display();
 
 $p = new PageGenerator(_("All modules"));
 $p->setSideMenu($sidemenu);
 $p->display();
+
+$ajax = new AjaxFilterLog(urlStrRedirect("base/audit/ajaxLogFilter"), $types);
+$ajax->setsearchbar(urlStrRedirect("base/audit/searchbar"));
+$ajax->display();
 
 $ajax->displayDivToUpdate();
 

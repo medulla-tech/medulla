@@ -37,7 +37,6 @@ require("modules/base/includes/groups.inc.php");
 require("includes/PageGenerator.php");
 
 global $conf;
-$root = $conf["global"]["root"];
 $error = null;
 $login = "";
 
@@ -84,7 +83,7 @@ if (isset($_GET["agentsessionexpired"])) {
 <html>
 <head>
 	<title>Mandriva Linux / Mandriva Management Console</title>
-	<link href="<?php echo $root; ?>graph/login/index.css" rel="stylesheet" media="screen" type="text/css" />
+	<link href="graph/login/index.css" rel="stylesheet" media="screen" type="text/css" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta http-equiv="imagetoolbar" content="false" />
 	<meta name="Description" content="" />
@@ -125,25 +124,25 @@ if (isset($error)) {
 
 <!--Login content -->
 
-        <img src="<?php echo $root; ?>img/login/logo_mandriva_small.png" alt="">
+        <img src="img/login/logo_mandriva_small.png" alt="">
 
-		<form action="<?php echo $root; ?>index.php" method="post" name="loginForm" id="loginForm" target="_self">
+		<form class="form-horizontal" action="index.php" method="post" name="loginForm" id="loginForm" target="_self">
 
-			<p><?php echo  _("Login"); ?> :<br>
-			<input name="username" type="text" class="textfield" id="username" size="18"
-<?php
-			echo "value=\"$login\"";
-?>
-			/>
-			</p>
-
-			<p><?php echo  _("Password"); ?> :<br>
-			<input name="password" type="password" class="textfield" id="password" size="18">
-			</p>
-
+            <div class="control-group">
+                <label class="control-label" for="username"><?php echo  _("Login"); ?></label>
+                <div class="controls">
+                    <input name="username" type="text" id="username" value="<?= $login ?>" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="password"><?php echo  _("Password"); ?></label>
+                <div class="controls">
+                    <input name="password" type="password" id="password" value="" />
+                </div>
+            </div>
             <script type="text/javascript">
                 function changeServerLang() {
-                    window.location = "<?=$root?>?server=" + document.getElementById('server').value + "&lang=" + document.getElementById('lang').value;
+                    window.location = "index.php?server=" + document.getElementById('server').value + "&lang=" + document.getElementById('lang').value;
                 }
             </script>
 			<?php
@@ -187,21 +186,27 @@ if (isset($error)) {
 
             if ($conf[$servList->selected]['forgotPassword']) {
             ?>
-                <p><a href="<?=$root?>forgotpassword.php?server=<?=$servList->selected?>&lang=<?=$langList->selected?>"><?=_("Forgot password ?")?></a></p>
+                <p><a href="forgotpassword.php?server=<?=$servList->selected?>&lang=<?=$langList->selected?>"><?=_("Forgot password ?")?></a></p>
             <?php
             }
             ?>
-            <p><?php echo  _("Server"); ?>:<br />
-            <?php
-            $servList->display();
-            ?>
-            <br />
-            <?php echo  _("Language"); ?>: <br />
-            <?php
-            $langList->display();
-            ?>
-			<input name="bConnect" type="submit" class="btnPrimary" value="<?php echo  _("Connect"); ?>" /></p>
-
+            <div class="control-group">
+                <label class="control-label" for="server"><?php echo  _("Server"); ?></label>
+                <div class="controls">
+                    <?= $servList->display() ?>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="lang"><?php echo  _("Language"); ?></label>
+                <div class="controls">
+                    <?= $langList->display() ?>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+			        <input name="bConnect" type="submit" class="btn btn-primary" value="<?php echo  _("Connect"); ?>" />
+                </div>
+            </div>
         </form>
 
         </div> <!-- login -->

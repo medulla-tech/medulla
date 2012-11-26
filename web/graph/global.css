@@ -697,13 +697,19 @@ sees the end of this comment as the end of the previous one.
 p.listInfos {
     font-size: 9px;
     color: #999;
-    padding: 0px;
+    padding: 0;
+    margin: 0;
+    height: 22px;
+    line-height: 22px;
+    margin-top: 5px;
 }
 
 ul.navList {
-    padding: 0px;
-    margin: 0px;
     float: right;
+    padding: 0;
+    margin: 0;
+    height: 22px;
+    line-height: 22px;
 }
 
 ul.navList li {
@@ -778,11 +784,14 @@ span.pagination {
 }
 
 span.pagination input, span.pagination select {
-    border: 1px solid #888;
     font-size: 9px;
-    color: #777;
-    background: white;
-    min-width: 0px;
+    padding: 0px;
+    min-width: auto;
+    width: auto;
+}
+
+span.pagination input {
+    padding: 2px;
 }
 
 /* ---------------------------------------- */
@@ -1185,74 +1194,17 @@ form {
     margin: 0;
 }
 
-select {
-    font-size: 11px;
-    min-width: 150px;
-}
-
-.textfield:disabled {
-    font: 13px Arial, verdana, sans-serif;
-    margin-top: 0px;
-    margin-bottom: 0px;
-    margin-left:0px;
-    border-top: 1px solid #666;
-    border-right: 1px solid #999;
-    border-bottom: 1px solid #999;
-    border-left: 1px solid #666;
-    clear: right;
-    padding: 2px;
-    background-color: #FFF;
-    color: #CCC;
-}
-
-.textfield, select {
-    font: 13px Arial, verdana, sans-serif;
-    margin-top: 0px;
-    margin-bottom: 0px;
-    margin-left:0px;
-    border-top: 1px solid #666;
-    border-right: 1px solid #999;
-    border-bottom: 1px solid #999;
-    border-left: 1px solid #666;
-    clear: right;
-    padding: 2px;
-    background-color: #FFFFFF;
-    color: #666;
-}
-
 .searchfield {
     font: 13px Arial, verdana, sans-serif;
     margin-top: 0px;
     margin-bottom: 0px;
     margin-left:0px;
-    border-top: 1px solid #CCC;
-    border-right: 1px solid #CCC;
-    border-bottom: 1px solid #CCC;
-    border-left: 1px solid #CCC;
     clear: right;
     padding: 4px 2px 2px;
     padding-top: 0px !ie;
-    background-color: #FFF;
     color: #666;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
 }
 
-.searchfieldreal {
-    font: 13px Arial, verdana, sans-serif;
-    margin-top: 0px;
-    margin-bottom: 0px;
-    margin-left:0px;
-    border-top: 1px solid #FFF;
-    border-right: 1px solid #FFF;
-    border-bottom: 1px solid #FFF;
-    border-left: 1px solid #FFF;
-    clear: right;
-    /*padding: 2px;*/
-    background-color: #FFF;
-    color: #666;
-}
 
 .searchbox {
     border: 1px solid #BBB;
@@ -1291,8 +1243,8 @@ select {
 .loader {
     float: right;
     position : relative;
-    top : 5px;
-    left: 2px
+    top : 7px;
+    left: 4px
 }
 
 .highlight {
@@ -1340,6 +1292,7 @@ select {
 
 #Location .searchfieldreal {
     clear: none;
+    padding: 0px;
 }
 
 
