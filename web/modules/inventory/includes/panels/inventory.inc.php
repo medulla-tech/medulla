@@ -40,37 +40,56 @@ class InventoryPanel extends Panel {
 
         $jsonCount = json_encode($count);
         $jsonDays= json_encode($days);
+        $lessThanText = json_encode(_T("Less than ", "inventory"));
+        $moreThanText = json_encode(_T("More than ", "inventory"));
+        $daysText = json_encode(_T(" days", "inventory"));
+        $urlRedirect = json_encode(urlStrRedirect("inventory/inventory/createStaticGroup"));
+        $greenMachines = json_encode(base64_encode(serialize($result['machine']['green'])));
+        $orangeMachines = json_encode(base64_encode(serialize($result['machine']['orange'])));
+        $redMachines = json_encode(base64_encode(serialize($result['machine']['red'])));
 
         echo <<< INVENTORY
     <div id="inventory-graphs"></div>
     <script type="text/javascript">
     var machineCount = $jsonCount,
         days = $jsonDays,
+        lessThanText = $lessThanText,
+        moreThanText = $moreThanText,
+        daysText = $daysText,
+        urlRedirect = $urlRedirect,
+        greenMachines = $greenMachines,
+        orangeMachines = $orangeMachines,
+        redMachines = $redMachines,
         r = Raphael("inventory-graphs", 200, 250),
         radius = 80,
         x = 90,
         y = 90;
 
     var data = [];
-    if (machineCount.green) data.push(machineCount.green);
-    if (machineCount.orange) data.push(machineCount.orange);
-    if (machineCount.red) data.push(machineCount.red);
-
     var legend = [];
-    if (machineCount.green) legend.push("Less than " + days.green  + " days");
-    if (machineCount.orange) legend.push("Less than " + days.orange + " days");
-    if (machineCount.red) legend.push("More than " + days.orange + " days");
-
     var colors = [];
-    if (machineCount.green) colors.push("#73d216");
-    if (machineCount.orange) colors.push("#ff9c00");
-    if (machineCount.red) colors.push("#ef2929");
-        
-    var href = [
-        "#",
-        "#",
-        "#"
-        ];
+    var href = [];
+
+    if (machineCount.green) {
+        data.push(machineCount.green);
+        legend.push(lessThanText + days.green + daysText + ": " + machineCount.green);
+        colors.push("#73d216");
+        href.push(urlRedirect + "&group=green&days=" + days.green + "&machines=" + greenMachines);
+    }
+
+    if (machineCount.orange) {
+        data.push(machineCount.orange);
+        legend.push(lessThanText + days.orange + daysText + ": " + machineCount.orange);
+        colors.push("#ff9c00");
+        href.push(urlRedirect + "&group=orange&days=" + days.orange + "&machines=" + orangeMachines);
+    }
+
+    if (machineCount.red) {
+        data.push(machineCount.red);
+        legend.push(moreThanText + days.orange + daysText + ": " + machineCount.red);
+        colors.push("#ef2929");
+        href.push(urlRedirect + "&group=red&days=" + days.orange + "&machines=" + redMachines);
+    }
 
     var pie = r.piechart(x, y, radius, data, 
                      {legend: legend,

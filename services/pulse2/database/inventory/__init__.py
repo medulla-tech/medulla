@@ -1718,7 +1718,7 @@ class Inventory(DyngroupDatabaseHelper):
     def getMachineNumberByState(self):
         """
         return number of machines sorted by state
-        states are:
+        default states are:
             * green: less than 5 days
             * orange: less than 35 days
             * red: more than 35 days
@@ -1728,7 +1728,7 @@ class Inventory(DyngroupDatabaseHelper):
         """
 
         session = create_session()
-        q = session.query(self.klass['Inventory']). \
+        q = session.query(self.klass['Inventory']).add_column(self.machine.c.id).add_column(self.machine.c.Name). \
             select_from(self.machine \
             .join(self.table['hasNetwork'], self.klass['hasNetwork'].machine == self.machine.c.id) \
             .join(self.table['Inventory'], self.klass['hasNetwork'].inventory == self.klass['Inventory'].id)) \
@@ -1750,20 +1750,28 @@ class Inventory(DyngroupDatabaseHelper):
                 "green": 0,
                 "orange": 0,
                 "red": 0,
+            },
+            "machine": {
+                "green": {},
+                "orange": {},
+                "red": {},
             }
         }
 
-        for i in q:
+        for i, mid, mname in q:
             year, month, day = i.Date.year, i.Date.month, i.Date.day
             hour, minute, second = i.Time.hour, i.Time.minute, i.Time.second
             machine_time = datetime.datetime(year, month, day, hour, minute, second)
             delta = now - machine_time
             if delta.days < green:
                 ret['count']['green'] += 1
+                ret['machine']['green'][toUUID(mid)] = mname
             elif delta.days < orange:
                 ret['count']['orange'] += 1
+                ret['machine']['orange'][toUUID(mid)] = mname
             else:
                 ret['count']['red'] += 1
+                ret['machine']['red'][toUUID(mid)] = mname
 
         session.close()
 
