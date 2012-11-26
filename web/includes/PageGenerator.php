@@ -2040,7 +2040,7 @@ class NotifyWidget {
         }
         echo '
             </div>
-            <div style="clear: left; text-align: right">
+            <div style="clear: left; text-align: right; margin-top: 1em;">
                 <button class="btnSecondary" onclick="toggleVisibility(\'popup\'); toggleVisibility(\'overlay\');">' . _("Close") . '</button>
             </div>
         </div>';
