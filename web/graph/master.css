@@ -1,8 +1,6 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007 Mandriva, http://www.mandriva.com
- *
- * $Id$
+ * (c) 2007-2012 Mandriva, http://www.mandriva.com
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -21,7 +19,6 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 /*---
-$Id$
 
 Sirius Technologies // Interface serveur fichiers
 Auteur : Arteca Design inc.
@@ -46,3 +43,4 @@ Pour plus d'infos visitez : http://tantek.com/CSS/Examples/highpass.html
 
 /*@import "null?\"\{"; */
 @import "global.css";
+@import "bootstrap-buttons.css";

@@ -1190,38 +1190,6 @@ select {
     min-width: 150px;
 }
 
-.btnPrimary {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: bold;
-    background-color: #21449C;
-    font-size: 10px;
-    color: #FFF;
-    padding: 5px;
-    margin: 0 5px 0 0;
-}
-
-.btnSecondary {
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #F0EFEF;
-    font-size: 10px;
-    color: #333;
-    padding: 5px;
-    margin: 0 5px 0 0;
-}
-
-.btnDisabled {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 10px;
-    padding: 5px;
-    margin: 0 5px 0 0;
-}
-
-#addItem .btnSecondary {
-    background-color: #FAF9F9;
-    padding: 2px;
-    margin: 0;
-}
-
 .textfield:disabled {
     font: 13px Arial, verdana, sans-serif;
     margin-top: 0px;
