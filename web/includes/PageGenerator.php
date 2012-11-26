@@ -1982,7 +1982,7 @@ class NotifyWidget {
      * default constructor
      */
     function NotifyWidget() {
-        $this->strings = [];
+        $this->strings = array();
         // 0: info (default, blue info bubble)
         // 1: error for the moment (red icon)
         // 5 is critical
