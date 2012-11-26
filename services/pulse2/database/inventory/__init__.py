@@ -31,6 +31,7 @@ from pulse2.managers.group import ComputerGroupManager
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 from pulse2.database.utilities import unique, handle_deconnect, DbObject
 from pulse2.database.inventory.mapping import OcsMapping
+from mmc.site import mmcconfdir
 from pulse2.inventoryserver.config import Pulse2OcsserverConfigParser
 from pulse2.utils import same_network, Singleton, isUUID, xmlrpcCleanup
 
@@ -1719,8 +1720,8 @@ class Inventory(DyngroupDatabaseHelper):
         """
         return number of machines sorted by state
         default states are:
-            * green: less than 5 days
-            * orange: less than 35 days
+            * green: less than 10 days
+            * orange: more than 10 days and less than 35 days
             * red: more than 35 days
         
         @return: dictionnary with state as key, number as value
@@ -1738,13 +1739,18 @@ class Inventory(DyngroupDatabaseHelper):
 
         now = datetime.datetime.now()
 
-        green = Pulse2OcsserverConfigParser.green
-        orange = Pulse2OcsserverConfigParser.orange
+        # Read config from ini file
+        inifile = mmcconfdir + "/pulse2/inventory-server/inventory-server.ini"
+        config = Pulse2OcsserverConfigParser()
+        config.setup(inifile)
+
+        orange = int(config.orange)
+        red = int(config.red)
 
         ret = {
             "days": {
-                "green": green,
                 "orange": orange,
+                "red": red,
             },
             "count": {
                 "green": 0,
@@ -1763,15 +1769,15 @@ class Inventory(DyngroupDatabaseHelper):
             hour, minute, second = i.Time.hour, i.Time.minute, i.Time.second
             machine_time = datetime.datetime(year, month, day, hour, minute, second)
             delta = now - machine_time
-            if delta.days < green:
-                ret['count']['green'] += 1
-                ret['machine']['green'][toUUID(mid)] = mname
-            elif delta.days < orange:
+            if delta.days > red:
+                ret['count']['red'] += 1
+                ret['machine']['red'][toUUID(mid)] = mname
+            elif delta.days > orange:
                 ret['count']['orange'] += 1
                 ret['machine']['orange'][toUUID(mid)] = mname
             else:
-                ret['count']['red'] += 1
-                ret['machine']['red'][toUUID(mid)] = mname
+                ret['count']['green'] += 1
+                ret['machine']['green'][toUUID(mid)] = mname
 
         session.close()
 
