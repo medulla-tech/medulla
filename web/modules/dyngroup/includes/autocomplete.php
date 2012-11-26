@@ -37,7 +37,7 @@ class Autocomplete {
 
     <td style="text-align:right;"><?php echo  _T("Add a value", "dyngroup"); ?></td><td>
 
-    <input type="text" id="autocomplete" name="value" class="textfield" size="23" value="<?php echo $this->val ?>" /> 
+    <input type="text" id="autocomplete" name="value" size="23" value="<?php echo $this->val ?>" /> 
     <div id="autocomplete_choices" class="autocomplete">
         <ul>
             <li>A</li>

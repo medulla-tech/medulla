@@ -45,7 +45,7 @@ class DoubleAutocomplete {
 
     <td style="text-align:right;"><?php echo  $this->field1; ?> : </td>
     <td>
-        <input type="text" id="autocomplete" name="value" class="textfield" size="23" value="<?php echo $this->val ?>" /> 
+        <input type="text" id="autocomplete" name="value" size="23" value="<?php echo $this->val ?>" /> 
         <div id="autocomplete_choices" class="autocomplete">
             <ul>
                 <li>A</li>
@@ -63,7 +63,7 @@ class DoubleAutocomplete {
         <table><tr>
         <td id='secondPart1' style="text-align:right;"><?php echo  $this->field2; ?> : </td>
         <td id='secondPart2'>
-            <input type="text" id="autocomplete2" name="value2" class="textfield" size="23" /> 
+            <input type="text" id="autocomplete2" name="value2" size="23" /> 
             <div id="autocomplete2_choices" class="autocomplete">
                 <ul>
                     <li>A</li>
