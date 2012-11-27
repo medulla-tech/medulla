@@ -487,8 +487,8 @@ class ListInfos extends HtmlElement {
         echo _("to")." <strong>".min($this->end + 1, count($this->arrInfo))."</strong>\n";
 
         printf (_(" - Total <b>%s </b>")."\n",count($this->arrInfo));
-        /* Display page counter only when possible */
-        if ($this->maxperpage >= ($this->end - $this->start)) {
+        /* Display page counter only when useful */
+        if (count($this->arrInfo) > $this->maxperpage) {
             echo "("._("page")." ";
             printf("%.0f", ($this->end + 1) / $this->maxperpage);
             echo " / ";
@@ -719,8 +719,8 @@ class OptimizedListInfos extends ListInfos {
         echo _("to")." <strong>".min($this->endreal + 1, $count)."</strong>\n";
 
         printf (_(" - Total <b>%s </b>")."\n", $count);
-        /* Display page counter only when possible */
-        if ($this->maxperpage >= ($this->endreal - $this->startreal)) {
+        /* Display page counter only when useful */
+        if ($count > $this->maxperpage) {
             echo "("._("page")." ";
             printf("%.0f", ($this->endreal + 1) / $this->maxperpage);
             echo " / ";
@@ -790,9 +790,7 @@ class SimpleNavBar extends HtmlElement {
         echo '<form method="post">';
         echo "<ul class=\"navList\">\n";
 
-        if ($this->curstart == 0 || ($this->curstart - $this->max < 0))
-            echo "<li class=\"previousListInactive\">"._("Previous")."</li>\n";
-        else {
+        if ($this->curstart != 0 || ($this->curstart - $this->max > 0)) {
             $start = $this->curstart - $this->max;
             $end = $this->curstart - 1;
             echo "<li class=\"previousList\"><a href=\"".$_SERVER["SCRIPT_NAME"];
@@ -806,9 +804,7 @@ class SimpleNavBar extends HtmlElement {
             $this->displaySelectMax();
         }
 
-        if (($this->curend + 1) >= $this->itemcount)
-            echo "<li class=\"nextListInactive\">"._("Next")."</li>\n";
-        else {
+        if (($this->curend + 1) < $this->itemcount) {
             $start = $this->curend + 1;
             $end = $this->curend + $this->max;
             $filter = isset($_GET["filter"]) ? $_GET["filter"] : "";
@@ -837,9 +833,9 @@ class SimpleNavBar extends HtmlElement {
         if(isset($jsfunc)) {
             $start = $this->curstart;
 
-            echo "<select id=\"maxperpage\" name=\"maxperpage\" onChange=\"updateMaxPerPage(this); return false;\" class=\"pagination\">";
+            echo "<select id=\"maxperpage\" name=\"maxperpage\" onChange=\"updateMaxPerPage(this); return false;\">";
         } else {
-            echo "<select id=\"maxperpage\" name=\"maxperpage\" class=\"pagination\">";
+            echo "<select id=\"maxperpage\" name=\"maxperpage\">";
         }
         /* Display the selector and each option of the array set in the config
            file */
@@ -917,7 +913,7 @@ class SimpleNavBar extends HtmlElement {
                 }
             }
         </script>';
-        echo '<span class="pagination">'._("Go to page").': <input type="input" size="2" onchange="gotoPage(this)" /></span>';
+        echo '<span class="pagination">'._("Go to page").': <input type="text" size="2" onchange="gotoPage(this)" /></span>';
     }
 
     function displayPagesNumbers() {
@@ -1053,9 +1049,7 @@ class AjaxNavBar extends SimpleNavBar {
         }
 
         # previous link
-        if ($this->curstart == 0 || ($this->curstart - $this->max < 0))
-            echo "<li class=\"previousListInactive\">" . _("Previous") . "</li>\n";
-        else {
+        if ($this->curstart != 0 || ($this->curstart - $this->max > 0)) {
             $start = $this->curstart - $this->max;
             $end = $this->curstart - 1;
             echo "<li class=\"previousList\"><a href=\"#\" onClick=\"" . $this->jsfunc . "('" . $this->filter . "','$start','$end', document.getElementById('maxperpage')); return false;\">" . _("Previous") . "</a></li>\n";
@@ -1065,9 +1059,7 @@ class AjaxNavBar extends SimpleNavBar {
         $this->displayPagesNumbers();
 
         # next link
-        if (($this->curend + 1) >= $this->itemcount)
-            echo "<li class=\"nextListInactive\">"._("Next")."</li>\n";
-        else {
+        if (($this->curend + 1) < $this->itemcount) {
             $start = $this->curend + 1;
             $end = $this->curend + $this->max;
             echo "<li class=\"nextList\"><a href=\"#\" onClick=\"" . $this->jsfunc . "('" . $this->filter . "','$start','$end', document.getElementById('maxperpage')); return false;\">" . _("Next") . "</a></li>\n";
