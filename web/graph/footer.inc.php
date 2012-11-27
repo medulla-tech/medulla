@@ -22,26 +22,21 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-
 $root = $conf["global"]["root"];
-
 //generate MMCApp (CSS, etc...)
 $MMCApp =& MMCApp::getInstance();
 $MMCApp->render();
 
 ?>
+            <div class="clearer"></div>
+        </div><!-- section -->
+    </div><!-- content -->
 
-<div class="clearer"></div>
-
-</div><!-- section -->
-
-<div id="sectionBottomLeft"><div id="sectionBottomRight">
-<img src="<?php echo $root; ?>img/common/spacer.gif" alt="" width="1" height="1" />
-</div></div>
-
-</div><!-- sectionContainer -->
-</div><!-- Content -->
-
+    <div id="overlay" class="overlay" style="display: none"></div>
+    <div id="popup" class="popup" style="display: none;">
+        <div style="float:right"><a href="#" onclick="toggleVisibility('popup'); $('overlay').hide(); return false;"><img src="img/common/icn_close.png" alt ="[x]"/></a></div>
+        <div id="__popup_container"><?php echo  _("If this phrase does not change, you browser is not supported by the MMC application"); ?></div>
+    </div>
 <?php
 if (isset($_SESSION['notify'])) {
     $n = unserialize($_SESSION['notify']);
@@ -49,17 +44,10 @@ if (isset($_SESSION['notify'])) {
         $n->show();
 }
 ?>
-
-<div id="footer">
-MMC Agent
-
-    <a href="#" style="color: #FFF;" onclick="showPopupUp(event,'version.php'); return false;">
-        <?php  echo $_SESSION["modListVersion"]['ver'] ?>
-    </a>
-
-</div>
-
-</div>
+    <div id="footer">
+        MMC Agent <a href="#" style="color: #FFF;" onclick="showPopupUp(event,'version.php'); return false;"><?php  echo $_SESSION["modListVersion"]['ver'] ?></a>
+    </div>
+</div><!-- wrapper -->
 <script type="text/javascript">
 
 <!--

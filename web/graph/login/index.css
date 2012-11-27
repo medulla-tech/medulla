@@ -48,7 +48,7 @@ Notes:
 }
 
 body {
-	background: url(../../img/login/bg_login.gif) top left #C0C0C0;
+	background: url(../../img/common/background.gif) top left #C0C0C0;
 }
 
 #loginBox {
@@ -74,7 +74,7 @@ body {
 }
 
 #login {
-	padding: 20px 10px 10px 275px;
+	padding: 50px 10px 10px 250px;
 }
 
 #login img {
@@ -125,7 +125,6 @@ body {
 #footer {
 	height: 9px;
 	background: url(../../img/login/bg_footer.gif) repeat-x transparent;
-	/*background: url(../../img/login/bg_footer.gif) repeat-x top left #transparent;*/
 }
 
 #footerLeft {
@@ -214,20 +213,13 @@ input, select {
     padding: 2px 4px;
 }
 
-.form-horizontal .control-group {
-    margin-bottom: 0px;
+.form-inline .control-group {
+    margin-bottom: 10px;
 }
 
-.form-horizontal .control-label {
+.form-inline .control-label {
     width: 90px;
-}
-
-.form-horizontal .controls {
-    margin-left: 100px;
-    padding-top: 3px;
-}
-
-form {
-    margin-bottom: 5px;
-    margin-left: -20px;
+    float: left;
+    text-align: right;
+    margin-right: 5px;
 }

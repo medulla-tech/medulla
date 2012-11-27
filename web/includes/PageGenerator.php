@@ -1562,36 +1562,33 @@ class SideMenuItem {
      * @param active: this menu item is active
      */
     function getCss($active = False) {
-        $ret = "";
+        $bgi_active = $bgi_inactive = "";
         if ($this->activebg != "" && $this->inactivebg != "") {
-            if ($active) $bgi = "background-image: url(" . $this->activebg . ");";
-            else $bgi = "background-image: url(" . $this->inactivebg . ");";
-        } else {
-            $bgi = "";
+            $bgi_active = "background-image: url(" . $this->activebg . ");";
+            $bgi_inactive = "background-image: url(" . $this->inactivebg . ");";
         }
 
         if ($active) {
-            $color = "#FFF";
-            $border = "#FFF";
-        } else {
-            $color = "#EEE";
-            $border = "#666";
+            return "#sidebar ul.$this->submod li#$this->cssId a {
+                        background-color: #f6f6f6;
+                        color: #444;
+                        border-bottom: solid 1px #ccc;
+                        border-top: solid 1px #ccc;
+                        -webkit-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+                        box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+                        $bgi_active
+            }";
+        }
+        else if ($bgi_inactive){
+            return "#sidebar ul.$this->submod li#$this->cssId a {
+                        $bgi_inactive
+                    }
+                    #sidebar ul.$this->submod li#$this->cssId a:hover {
+                        $bgi_active
+                    }";
         }
 
-        $ret = "#sidebar ul." . $this->submod . " li#" . $this->cssId . " a {
-                    background-color: " . $color . ";
-                    color: #666;
-                    border-right: 1px solid ". $border . ";"
-                    . $bgi . "
-                }";
-        if (!$active)
-                $ret = $ret . "
-                #sidebar ul." . $this->submod . " li#" . $this->cssId ." a:hover {
-                    color: #666;
-                    background-color: #F7F7F7;"
-                    . $bgi . "
-                }";
-        return $ret;
+        return;
     }
 }
 
@@ -1670,6 +1667,7 @@ class SideMenu {
      *  print the SideMenu and the sideMenuItem
      */
     function display() {
+        echo "<style>#section { margin-left: 200px; border-left: 3px solid #bbb; }</style>";
         echo "<div id=\"sidebar\">\n";
         echo "<ul class=\"".$this->className."\">\n";
         foreach ($this->itemArray as $objSideMenuItem) {
@@ -1718,7 +1716,6 @@ class PageGenerator {
     function PageGenerator($title = "") {
         $content=array();
         $this->title = $title;
-        $this->fixheight = True;
     }
 
     /**
@@ -1742,10 +1739,6 @@ class PageGenerator {
         $this->displaySideMenu();
         if ($this->title)
             $this->displayTitle();
-        if ($this->fixheight) {
-            /* On IE, make the page have a minimal length, else the sidemenu may be cut */
-            print '<div class="fixheight"></div>';
-        }
     }
 
     function displayCss() {

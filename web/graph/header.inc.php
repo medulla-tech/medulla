@@ -1,9 +1,7 @@
 <?php
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2008 Mandriva, http://www.mandriva.com
- *
- * $Id$
+ * (c) 2007-2012 Mandriva, http://www.mandriva.com
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -21,12 +19,9 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
- * $Id$
- *
  */
 
 $root = $conf["global"]["root"];
-$css = $root."graph";
 
 ?>
 
@@ -34,7 +29,7 @@ $css = $root."graph";
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Mandriva Management Console</title>
-    <link href="<?php echo $css; ?>/master.css" rel="stylesheet" media="screen" type="text/css" />
+    <link href="graph/master.css" rel="stylesheet" media="screen" type="text/css" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="imagetoolbar" content="false" />
     <meta name="Description" content="" />

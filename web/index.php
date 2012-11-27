@@ -124,9 +124,7 @@ if (isset($error)) {
 
 <!--Login content -->
 
-        <img src="img/login/logo_mandriva_small.png" alt="">
-
-		<form class="form-horizontal" action="index.php" method="post" name="loginForm" id="loginForm" target="_self">
+		<form class="form-inline" action="index.php" method="post" name="loginForm" id="loginForm">
 
             <div class="control-group">
                 <label class="control-label" for="username"><?php echo  _("Login"); ?></label>
@@ -203,6 +201,7 @@ if (isset($error)) {
                 </div>
             </div>
             <div class="control-group">
+                <label class="control-label"></label>
                 <div class="controls">
 			        <input name="bConnect" type="submit" class="btn btn-primary" value="<?php echo  _("Connect"); ?>" />
                 </div>

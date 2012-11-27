@@ -52,10 +52,10 @@ Auteur : Arteca Design inc.
 }
 
 body {
-    background-color: #8E9CA7;
     color: #333;
-    padding: 0 0 15px 0;
+    padding: 0;
     margin: 0;
+    background: url("../img/common/background.gif") #999;
 }
 
 a { color: #2A557E;}
@@ -93,15 +93,6 @@ p {
     clear: both;
     line-height: 0;
     height: 0;
-}
-
-.fixheight {
-    float: right;
-    display: inline;
-    height: 350px;
-    width: 0px;
-    margin: 0;
-    padding: 0;
 }
 
 #expertMode table {
@@ -204,11 +195,12 @@ p {
 #navbar {
     padding: 0px 17px 0px 17px;
     height: 69px;
-    background-color: #FFF;
-    background-image: url("../img/common/bg_navbar.gif");
-    background-repeat: repeat-x;
+    background-color: #f6f6f6;
     overflow: hidden;
     position: relative;
+    -webkit-box-shadow: 0 0 4px rgba(0,0,0,0.3);
+    box-shadow: 0 0 4px rgba(0,0,0,0.3);
+    border-bottom: 1px solid #aaa;
 }
 
 #navbar #logo {
@@ -260,21 +252,6 @@ p {
 /* 3. Style pour Subnav                     */
 /* ---------------------------------------- */
 
-#sidebar {
-    position: relative;
-    float: left;
-    margin:-17px 0 0 -199px;
-    padding: 0px;
-    width: 174px;
-}
-
-/* IE6 Hack */
-/* #sidebar margin must be set differently in IE6 */
-* html #sidebar {
-    margin:-21px 0 0 -100px;
-}
-
-
 #help {
     position: absolute;
     top: 350px;
@@ -303,11 +280,23 @@ p {
     padding-left : 10px;
 }
 
+#sidebar {
+    position: fixed;
+    top: 125px;
+    left: 0px;
+    padding: 0px;
+    width: 200px;
+    min-height: 300px;
+}
+
+* html #sidebar { /* lte IE6 */
+    position: absolute;
+}
+
 #sidebar ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
-    border-top: solid 1px #A0A0A0;
 }
 
 #sidebar ul li {
@@ -318,23 +307,16 @@ p {
 #sidebar ul li a {
     font-size: 10px;
     text-decoration: none;
-    padding: 12px 8px 12px 36px;
+    padding: 12px 8px 12px 61px;
     margin: 0;
-    background-color: #EEE;
-    color: #999;
-    width: 128px;
-    display: block;
-    border-left: 1px solid #A0A0A0;
-    border-right: 1px solid #A0A0A0;
-    border-bottom: solid 1px #A0A0A0;
     background-repeat: no-repeat;
+    background-position: 25px 0%;
+    color: #666;
+    display: block;
 }
 
-html>body #sidebar ul li a { width: auto; }
-
 #sidebar ul li a:hover {
-    background-color: #F7F7F7;
-    color: #B9B9B9;
+    color: #444;
 }
 
 
@@ -357,7 +339,7 @@ html>body #sidebar ul li a { width: auto; }
     border-radius: 5px;
 }
 
-#section .errorCode {
+.errorCode {
     padding: 3px 5px;
     margin: 1em;
     width: auto;
@@ -582,82 +564,15 @@ html>body #sidebar ul li a { width: auto; }
 /* ---------------------------------------- */
 
 #content {
-    background-color: #F2F2F2;
-    padding: 0px 17px 15px 0px;
-    background-image: url("../img/common/borderTopContent.gif");
-    background-repeat: repeat-x;
-}
-
-#content #activeTab {
-    position: absolute;
-    top: 95px;
-    left: 0px;
-    width: 85px;
-    height: 2px;
-    background-color: #F2F2F2;
-    margin-left: -120px;
-}
-
-#sectionContainer {
-    padding: 15px 0 0 0px;
-    margin: 0;
-    background-repeat: no-repeat;
-    background-position: left bottom;
-}
-
-#sectionTopRight {
-    height: 9px;
-    padding: 0;
-    margin: 0 0 0 190px;
-    border-left: solid 1px #A0A0A0;
-    background: url("../img/common/sectionTopRight.gif") no-repeat top right #FFF;
+    background: white;
 }
 
 #section {
-    padding: 8px 25px 8px 25px;
-    border-left: solid 1px #A0A0A0;
-    border-right: solid 1px #A0A0A0;
-    margin: 0px;
-    margin-left: 190px;
-}
-
-html>body #section {
+    padding: 25px;
     min-height: 350px;
-}
-
-
-/*
-This is a CSS comment where the end-of-comment marker is escaped.
-The following styles are not read by Explorer
-because it thinks they are still part of this comment.
-
-\*/
-
-#section {
-    background-color: #FFFFFF;
-    padding: 8px 25px 8px 25px;
-    margin: 0 0 0 190px;
-    border-left: solid 1px #A0A0A0;
-    border-right: solid 1px #A0A0A0;
-}
-
-/*
-Another comment, now with a normal end-of-comment marker. Explorer
-sees the end of this comment as the end of the previous one.
- */
-
-#sectionBottomLeft {
-    height: 9px;
-    padding: 0;
-    margin: 0 0 0 190px;
-    background: url("../img/common/sectionBottomLeft.gif") no-repeat top left #FFF;
-}
-
-#sectionBottomRight {
-    height: 9px;
-    padding: 0;
-    margin: 0;
-    background: url("../img/common/sectionBottomRight.gif") no-repeat top right transparent;
+    /* IE6 fake min-height */
+    height: auto !important;
+    height: 350px;
 }
 
 #section h1, h2, h3, h4, h5, h6 {
@@ -673,26 +588,6 @@ sees the end of this comment as the end of the previous one.
 #section h3 { font-size: 14px; }
 #section form h3 { font-size: 14px; }
 #section form h4 { font-size: 13px; }
-
-#configPad {
-    color: #666;
-    background-color: #F0F4F7;
-    border: solid 1px #CCC;
-    padding: 10px 10px 5px 10px;
-    margin: 0 5px 20px 0;
-    float: left;
-    width: 600px;
-}
-
-#addUserBox {
-    color: #666;
-    background-color: #F0F4F7;
-    border: solid 1px #CCC;
-    padding: 10px 10px 5px 10px;
-    margin: 0 5px 20px 0;
-    float: left;
-    width: 600px;
-}
 
 p.listInfos {
     font-size: 9px;
@@ -1185,6 +1080,12 @@ td.machineAction { text-align: right; }
     font-size: 9px;
 }
 
+#footer a {
+    font-size: 9px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
 /* ---------------------------------------- */
 /* 6. Style pour les forms                  */
 /* ---------------------------------------- */
@@ -1367,10 +1268,10 @@ form.inplaceeditor-form input[type="text"] {
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     border-radius: 4px;
-    -moz-box-shadow: 0px 0px 5px 0px #aaa;
-    -webkit-box-shadow: 0px 0px 5px 0px #aaa;
-    -o-box-shadow: 0px 0px 5px 0px #aaa;
-    box-shadow: 0px 0px 5px 0px #aaa;
+    -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.3);
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.3);
+    -o-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.3);
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.3);
     filter:progid:DXImageTransform.Microsoft.Shadow(color=#aaaaaa, Direction=NaN, Strength=5);
 }
 
@@ -1588,4 +1489,59 @@ ul.roACL {
 
 .roACL {
     color: #666;
+}
+ 
+/**
+ * Dashboard and home page
+ */
+#dashboard .dashboard-column, #home .dashboard-column {
+    float: left;
+    width: 220px;
+    border: 1px solid white;
+    background: white;
+    min-height: 100px;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+#dashboard .panel .handle, #home .module .handle {
+    cursor: move;
+}
+
+.panel, .module {
+    float: left;
+    background-color: #f6f6f6;
+    padding: 5px;
+    margin: 5px 5px 10px;
+    width: 200px;
+    -webkit-border-radius: 4px;
+       -moz-border-radius: 4px;
+            border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.subpanel, .submod {
+    background-color: #eee;
+    padding: 5px;
+    margin: 10px;
+    -webkit-border-radius: 2px;
+       -moz-border-radius: 2px;
+            border-radius: 2px;
+}
+
+.subpanel ul, .submod ul {
+    margin: .5em 1em;
+    padding: 0.5em;
+}
+
+.subpanel h4, .submod h4 {
+    padding: 0;
+}
+
+.panel .errors {
+    color: #a40000;
+    font-weight: bold;
 }

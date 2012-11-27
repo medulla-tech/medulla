@@ -88,63 +88,6 @@ require("graph/navbar.inc.php");
 
 ?>
 
-<style type="text/css">
-<!--
-
-#section, #sectionTopRight, #sectionBottomLeft { margin: 0 0 0 17px; }
-#sectionTopRight { border-left: none; }
-#sectionTopLeft {
-    height: 9px;
-    padding: 0;
-    margin: 0;
-    background: url("<?php echo $root; ?>img/common/sectionTopLeft.gif") no-repeat top left transparent;
-}
-
-.module {
-    float: left;
-    background-color: #EEE;
-    padding: 5px;
-    margin: 5px;
-    margin-bottom: 10px;
-    width: 180px;
-    border-radius: 10px;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-}
-
-.submod {
-    background-color: #E5E5E5;
-    padding: 5px;
-    margin: 10px;
-    border-radius: 5px;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-}
-
-ul {
-    margin: 0.5em;
-    padding: 0.5em;
-}
-
-#home .home-column {
-    float: left;
-    width: 200px;
-    border: 1px solid white;
-    background: white;
-    min-height: 100px;
-    border-radius: 10px;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    margin-right: 5px;
-    margin-bottom: 5px;
-}
-
-#home .module .handle {
-    cursor: move;
-}
-
--->
-</style>
     <h2><?php echo  _("Home") ?></h2>
     <div id="home">
         <?php
@@ -182,10 +125,10 @@ ul {
                 settings = {};
                 // store column info
                 for(var c=0; c<cols; c++)
-                    settings['home-column_'+c] = {};
+                    settings['dashboard-column_'+c] = {};
                 // add each module in a column
                 for(var m=0, c=0; m<modules.length; m++, c++) {
-                    settings['home-column_'+c][modules[m].id] = modules[m].id;
+                    settings['dashboard-column_'+c][modules[m].id] = modules[m].id;
                     // don't fill the first column
                     // base module can be very high
                     if (c == cols-1)
@@ -198,7 +141,7 @@ ul {
             zone_no = 0;
             for(zone in settings) {
                 // create che columns
-                var z = new Element('div', {'class': 'home-column', 'id': 'home-column_'+zone_no});
+                var z = new Element('div', {'class': 'dashboard-column', 'id': 'dashboard-column_'+zone_no});
                 // add modules in columns
                 for(module in settings[zone])
                     z.appendChild(modules.find(function(m) { return m.id == module; }));
@@ -209,7 +152,7 @@ ul {
             // add more columns if needed
             if(Object.keys(settings).length < cols) {
                 for(var i=Object.keys(settings).length; i<cols; i++) {
-                    var z = new Element('div', {'class': 'home-column', 'id': 'home-column_'+i});
+                    var z = new Element('div', {'class': 'dashboard-column', 'id': 'dashboard-column_'+i});
                     home.appendChild(z);
                 }
             }
@@ -239,7 +182,7 @@ ul {
         // load the modules in the columns
         load();
         // make the modules sortable
-        var sortables = $$('.home-column');
+        var sortables = $$('.dashboard-column');
         sortables.each(function (sortable) {
           Sortable.create(sortable, {
             containment: sortables,

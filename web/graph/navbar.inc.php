@@ -100,34 +100,4 @@ if ($_SESSION["login"]=='root') {
 </div>
 
 <div id="content">
-
-<div id="overlay" class="overlay" style="display: none"></div>
-<div id="popup" class="popup" style="display: none;">
-    <div style="float:right"><a href="#" onclick="toggleVisibility('popup'); $('overlay').hide(); return false;"><img src="img/common/icn_close.png" alt ="[x]"/></a></div>
-    <div id="__popup_container">
-        <?php echo  _("If this phrase does not change, you browser is not supported by the MMC application"); ?>
-    </div>
-</div>
-
-<?php //<div id="activeTab"></div>
-?>
-
-<div id="sectionContainer">
-
-<div id="sectionTopRight">
-<?php
-if (isset($topLeft))
-{
-echo "<div id=\"sectionTopLeft\">";
-}
-?>
-<img src="<?php echo $root; ?>img/common/spacer.gif" alt="" />
-</div>
-<?php
-if (isset($topLeft))
-{
-echo "</div>";
-}
-?>
-
-<div id="section">
+    <div id="section">

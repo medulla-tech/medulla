@@ -29,66 +29,6 @@ require("graph/navbar.inc.php");
 <script type="text/javascript" src="modules/dashboard/graph/js/g.raphael-min.js"></script>
 <script type="text/javascript" src="modules/dashboard/graph/js/g.pie-min.js"></script>
 <script type="text/javascript" src="modules/dashboard/graph/js/g.line-min.js"></script>
-<style type="text/css">
-    #section, #sectionTopRight, #sectionBottomLeft { margin: 0 0 0 17px; }
-    #sectionTopRight { border-left: none; }
-    #sectionTopLeft {
-        height: 9px;
-        padding: 0;
-        margin: 0;
-        background: url("img/common/sectionTopLeft.gif") no-repeat top left transparent;
-    }
-    #dashboard .dashboard-column {
-        float: left;
-        width: 220px;
-        border: 1px solid white;
-        background: white;
-        min-height: 100px;
-        border-radius: 10px;
-        -moz-border-radius: 10px;
-        -webkit-border-radius: 10px;
-        margin-right: 5px;
-        margin-bottom: 5px;
-    }
-
-    #dashboard .panel .handle {
-        cursor: move;
-    }
-
-    .panel {
-        float: left;
-        background-color: rgb(238, 238, 238);
-        padding: 5px;
-        margin: 5px 5px 10px;
-        width: 200px;
-        -webkit-border-radius: 10px;
-           -moz-border-radius: 10px;
-                border-radius: 10px;
-    }
-
-    .subpanel {
-        background-color: #E5E5E5;
-        padding: 5px;
-        margin: 10px;
-        -webkit-border-radius: 5px;
-           -moz-border-radius: 5px;
-                border-radius: 5px;
-    }
-
-    .subpanel ul {
-        margin: .5em 1em;
-        padding: 0.5em;
-    }
-
-    .subpanel h4 {
-        padding: 0;
-    }
-
-    .panel .errors {
-        color: #a40000;
-        font-weight: bold;
-    }
-</style>
 <?php
 
 $p = new PageGenerator(_T("Dashboard", "dashboard"));
