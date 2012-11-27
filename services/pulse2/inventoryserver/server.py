@@ -45,9 +45,11 @@ from pulse2.database.inventory import InventoryCreator, Inventory
 from pulse2.database.inventory.mapping import OcsMapping
 from pulse2.database.inventory.entitiesrules import EntitiesRules, DefaultEntityRules
 from pulse2.utils import Singleton
+from mmc.site import mmcconfdir
 from pulse2.inventoryserver.config import Pulse2OcsserverConfigParser
 from pulse2.inventoryserver.ssl import SecureHTTPRequestHandler, SecureThreadedHTTPServer
 from pulse2.inventoryserver.scheduler import AttemptToScheduler
+from pulse2.inventoryserver.glpiproxy import GlpiProxy
 
 class InventoryServer:
     def log_message(self, format, *args):
@@ -74,6 +76,13 @@ class InventoryServer:
                 self.logger.error(str(e))
 
         cont = [content, self.headers['Content-Type']]
+
+        # Forwarding the inventories to GLPI
+        if self.config.enable_forward :
+            glpi_proxy = GlpiProxy(self.config.url_to_forward)
+            glpi_proxy.send(content)
+            for msg in glpi_proxy.result :
+                self.logger.warn("GlpiProxy: %s" % msg)
 
         try:
             query = re.search(r'<QUERY>([\w-]+)</QUERY>', content).group(1)
@@ -123,6 +132,9 @@ class InventoryServer:
 class HttpInventoryServer(BaseHTTPServer.BaseHTTPRequestHandler, InventoryServer):
     def __init__(self, *args):
         self.logger = logging.getLogger()
+        cfgfile = os.path.join(mmcconfdir,"pulse2","inventory-server","inventory-server.ini")
+        self.config = Pulse2OcsserverConfigParser()
+        self.config.setup(cfgfile)
         BaseHTTPServer.BaseHTTPRequestHandler.__init__(self, *args)
     def log_message(self, format, *args):
         self.logger.info(format % args)
@@ -130,6 +142,9 @@ class HttpInventoryServer(BaseHTTPServer.BaseHTTPRequestHandler, InventoryServer
 class HttpsInventoryServer(SecureHTTPRequestHandler, InventoryServer):
     def __init__(self, *args):
         self.logger = logging.getLogger()
+        cfgfile = os.path.join(mmcconfdir,"pulse2","inventory-server","inventory-server.ini")
+        self.config = Pulse2OcsserverConfigParser()
+        self.config.setup(cfgfile)
         SecureHTTPRequestHandler.__init__(self, *args)
     def log_message(self, format, *args):
         self.logger.info(format % args)

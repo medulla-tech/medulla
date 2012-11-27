@@ -47,6 +47,8 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
     verifypeer = False
     cacert = mmcconfdir + '/pulse2/inventory-server/keys/cacert.pem'
     localcert = mmcconfdir + '/pulse2/inventory-server/keys/privkey.pem'
+    enable_forward = False
+    url_to_forward = "http://localhost/glpi/plugins/fusioninventory/front/plugin_fusioninventory.communication.php"
 
     hostname = ['Hardware', 'Host']
 
@@ -92,13 +94,18 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
         if self.cp.has_option('main', 'verifypeer'):
             self.verifypeer = self.cp.getboolean('main', 'verifypeer')
         if self.cp.has_option('main', 'certfile'):
-            self.cacert = self.cp.get('main', 'certfile')
+            self.certfile = self.cp.get('main', 'certfile')
         if self.cp.has_option('main', 'cacert'):
             self.cacert = self.cp.get('main', 'cacert')
         if self.cp.has_option('main', 'privkey'):
-            self.localcert = self.cp.get('main', 'privkey')
+            self.privkey = self.cp.get('main', 'privkey')
         if self.cp.has_option('main', 'localcert'):
             self.localcert = self.cp.get('main', 'localcert')
+        if self.cp.has_option('main', 'enable_forward'):
+            self.enable_forward = self.cp.get('main', 'enable_forward')
+        if self.cp.has_option('main', 'url_to_forward'):
+            self.url_to_forward = self.cp.get('main', 'url_to_forward')
+
 
         if not os.path.isfile(self.localcert):
             raise Exception('can\'t read SSL key "%s"' % (self.localcert))
