@@ -205,11 +205,7 @@ p {
 
 #navbar #logo {
     float: right;
-    margin-top: 2px;
-    padding: 11px 0 3px 0;
-    position: relative;
-    z-index: 11;
-    background-color: white;
+    margin-top: 24px;
 }
 
 #navbar ul {

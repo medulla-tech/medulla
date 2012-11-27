@@ -34,6 +34,7 @@ require("includes/config.inc.php");
 require_once("includes/i18n.inc.php");
 require("modules/base/includes/edit.inc.php");
 require("includes/acl.inc.php");
+require("includes/utils.inc.php");
 
 /**
  Lookup and load all MMC modules

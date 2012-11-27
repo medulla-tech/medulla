@@ -81,10 +81,9 @@ if (!empty($_GET["module"])) { /* if not main page */
 </p>
 </div>
 
-
 <div id="navbar">
-    <img src="<?php echo $root; ?>img/common/logomandriva_navbar.gif" alt="Mandriva" id="logo" style= "float: right;" />
-<ul>
+<img src="<?=getMMCLogo()?>" alt="Mandriva" id="logo" />
+    <ul>
 <?php
 
 autoGenerateNavbar(); //auto generation of navbar for new modules;
