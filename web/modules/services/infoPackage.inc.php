@@ -24,6 +24,8 @@
  * services module declaration
  */
 
+$MMCApp =& MMCApp::getInstance();
+
 $mod = new Module("services");
 $mod->setVersion("3.0.90");
 $mod->setRevision('');
@@ -84,13 +86,6 @@ $submod->addPage($page);
 
 $mod->addSubmod($submod);
 
-$MMCApp =& MMCApp::getInstance();
 $MMCApp->addModule($mod);
-
-# hide log submod in base module
-$base = &$MMCApp->getModule('base');
-$logview = &$base->getSubmod('logview');
-if ($logview)
-    $logview->setVisibility(False);
 
 ?>

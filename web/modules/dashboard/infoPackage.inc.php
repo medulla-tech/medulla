@@ -45,7 +45,6 @@ $submod->setPriority(-1);
 /* Add the dashboard to the main module */
 $page = new Page("default", _T("Dashboard", "dashboard"));
 $page->setFile("modules/dashboard/main/index.php");
-$page->setOptions(array("visible" => True));
 $submod->addPage($page);
 $main->addPage($page);
 
