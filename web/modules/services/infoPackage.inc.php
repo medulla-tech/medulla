@@ -32,7 +32,7 @@ $mod->setAPIVersion("0:0:0");
 
 $submod = new SubModule("control", _T("Services", "services"));
 $submod->setDefaultPage("services/control/index");
-$submod->setImg('img/navbar/load');
+$submod->setImg('modules/services/graph/navbar/services');
 $submod->setPriority(20000);
 
 /* Add the page to the module */

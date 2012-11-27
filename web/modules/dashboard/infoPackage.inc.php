@@ -38,7 +38,7 @@ $mod->setAPIVersion("0:0:0");
 $mod->setPriority(2000);
 
 $submod = new SubModule("main", _T("Dashboard", "dashboard"));
-$submod->setImg('img/navbar/fav');
+$submod->setImg('modules/dashboard/graph/navbar/dashboard');
 $submod->setDefaultPage("dashboard/main/default");
 $submod->setPriority(-1);
 

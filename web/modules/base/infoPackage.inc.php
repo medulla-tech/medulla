@@ -57,7 +57,7 @@ $mod->addSubmod($submod);
 
 $submod = new SubModule("status", _("Status"));
 $submod->setVisibility(True);
-$submod->setImg('img/navbar/load');
+$submod->setImg('modules/base/graph/navbar/load');
 $submod->setDefaultPage("base/status/index");
 $submod->setPriority(10000);
 
@@ -77,7 +77,7 @@ $mod->addSubmod($submod);
 if (isLogViewEnabled()) {
     $submod = new ExpertSubModule("logview", _("Log view"));
     $submod->setVisibility(True);
-    $submod->setImg('img/navbar/logview');
+    $submod->setImg('modules/base/graph/navbar/logview');
     $submod->setDefaultPage("base/logview/index");
     $submod->setPriority(10001);
 
@@ -104,7 +104,7 @@ if (isLogViewEnabled()) {
  */
 
 $submod = new SubModule("users", _("Users"));
-$submod->setImg('img/navbar/user');
+$submod->setImg('modules/base/graph/navbar/user');
 $submod->setDefaultPage("base/users/index");
 $submod->setPriority(10);
 
@@ -178,7 +178,7 @@ $mod->addSubmod($submod);
  */
 
 $submod = new SubModule("groups", _("Groups"));
-$submod->setImg('img/navbar/group');
+$submod->setImg('modules/base/graph/navbar/group');
 $submod->setDefaultPage("base/groups/index");
 $submod->setPriority(20);
 
@@ -212,7 +212,7 @@ $mod->addSubmod($submod);
 
 if (has_audit_working()) {
     $submod = new SubModule("audit", _("MMC Logs"));
-    $submod->setImg('img/navbar/logview');
+    $submod->setImg('modules/base/graph/navbar/logview');
     $submod->setDefaultPage("base/audit/indexall");
     $submod->setPriority(2000);
 
@@ -273,7 +273,7 @@ if (has_audit_working()) {
 
 if (hasComputerManagerWorking()) {
     $submod = new SubModule("computers", _("Computers"));
-    $submod->setImg('img/navbar/computer');
+    $submod->setImg('modules/base/graph/navbar/computer');
     $submod->setDefaultPage("base/computers/index");
     $submod->setPriority(30);
 
