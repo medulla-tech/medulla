@@ -97,15 +97,6 @@ if ($_SESSION["login"]=='root') {
 
 ?>
 </ul>
-
-<style type="text/css">
-#navbar ul li#fav { 				width: 70px; }
-                #navbar ul li#fav a {         background: url("img/navbar/fav<?php echo  $favact ?>.png") no-repeat transparent;
-                                        background-position: 50% 10px;}
-                #navbar ul li#fav a:hover {   background: url("img/navbar/fav<?php echo  $favact ?>.png") no-repeat transparent;
-                                        background-position: 50% 10px	}
-
-</style>
 </div>
 
 <div id="content">
