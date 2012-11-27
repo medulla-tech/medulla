@@ -1666,6 +1666,63 @@ class Glpi07(DyngroupDatabaseHelper):
         session.close()
         return ret_gw
 
+    def getMachineNumberByState(self):
+        """
+        return number of machines sorted by state
+        default states are:
+            * green: less than 10 days
+            * orange: more than 10 days and less than 35 days
+            * red: more than 35 days
+        
+        @return: dictionnary with state as key, number as value
+        @rtype: dict
+        """
+
+        session = create_session()
+        query = session.query(Machine).all()
+
+        now = datetime.datetime.now()
+
+        # Read config from ini file
+        orange = self.config.orange
+        red = self.config.red
+
+        ret = {
+            "days": {
+                "orange": orange,
+                "red": red,
+            },
+            "count": {
+                "green": 0,
+                "orange": 0,
+                "red": 0,
+            },
+            "machine": {
+                "green": {},
+                "orange": {},
+                "red": {},
+            }
+        }
+
+        for i in query:
+            year, month, day = i.date_mod.year, i.date_mod.month, i.date_mod.day
+            hour, minute, second = i.date_mod.hour, i.date_mod.minute, i.date_mod.second
+            machine_time = datetime.datetime(year, month, day, hour, minute, second)
+            delta = now - machine_time
+            if delta.days > red:
+                ret['count']['red'] += 1
+                ret['machine']['red'][toUUID(i.id)] = i.name
+            elif delta.days > orange:
+                ret['count']['orange'] += 1
+                ret['machine']['orange'][toUUID(i.id)] = i.name
+            else:
+                ret['count']['green'] += 1
+                ret['machine']['green'][toUUID(i.id)] = i.name
+
+        session.close()
+
+        return ret
+
     def getIpFromMac(self, mac):
         """
         Get an ip address when a mac address is given

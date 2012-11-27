@@ -91,6 +91,9 @@ def getMachineMac(uuid):
 def getMachineIp(uuid):
     return xmlrpcCleanup(Glpi().getMachineIp(uuid))
 
+def getMachineNumberByState():
+    return xmlrpcCleanup(Glpi().getMachineNumberByState())
+
 # TODO
 def getInventoryEM(part):
     return []

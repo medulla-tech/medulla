@@ -32,6 +32,10 @@ class GlpiConfig(PluginConfig):
 
     check_db_enable = False
     check_db_interval = 300
+
+    # state section
+    orange = 10
+    red = 35
     
     def readConf(self):
         self.dbdriver = self.get("main", "dbdriver")
@@ -74,6 +78,10 @@ class GlpiConfig(PluginConfig):
             logging.getLogger().debug("will filter machines on %s" % (str(self.filter_on)))
         except:
             self.filter_on = None
+        if self.has_option("state", "orange"):
+            self.orange = self.getint("state", "orange")
+        if self.has_option("state", "red"):
+            self.red = self.getint("state", "red")
 
 class GlpiQueryManagerConfig(PluginConfig):
     activate = False
