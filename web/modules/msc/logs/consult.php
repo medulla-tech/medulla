@@ -44,3 +44,6 @@ $ajax->displayDivToUpdate();
 
 ?>
 
+<script type="text/javascript" src="modules/dashboard/graph/js/raphael-min.js"></script>
+<script type="text/javascript" src="modules/dashboard/graph/js/g.raphael-min.js"></script>
+<script type="text/javascript" src="modules/dashboard/graph/js/g.pie-min.js"></script>

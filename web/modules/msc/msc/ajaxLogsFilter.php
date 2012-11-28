@@ -79,7 +79,7 @@ $actionplay    = new ActionPopupItem(_T("Start", "msc"), "msctabsplay",  "start"
 $actionpause   = new ActionPopupItem(_T("Pause", "msc"), "msctabspause", "pause",   "msc", "base", "computers");
 $actionstop    = new ActionPopupItem(_T("Stop", "msc"),  "msctabsstop",  "stop",    "msc", "base", "computers");
 $actionstatus  = new ActionPopupItem(_T("Status", "msc"), "msctabsstatus","status", "msc", "base", "computers");
-$actionstatus->setWidth("600");
+$actionstatus->setWidth("400");
 if (strlen($gid)) {
     $actiondetails = new ActionItem(_T("Details", "msc"),    "groupmsctabs",    "display", "msc", "base", "computers");
 } else {

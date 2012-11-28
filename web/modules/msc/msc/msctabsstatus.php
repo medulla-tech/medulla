@@ -88,27 +88,32 @@ if (strlen($_GET['bundle_id']) && !strlen($cmd_id)) {
         array('success', array(
             _T('<b>No</b> computer was successfully deployed', 'msc'),
             _T('<b>One</b> computer was successfully deployed', 'msc'),
-            _T('<b>%s</b> computers were successfully deployed', 'msc')
+            _T('<b>%s</b> computers were successfully deployed', 'msc'),
+            _T('Successful deployment', 'msc') // Pie chart legend text
         )),
         array('stopped', array(
             _T('<b>No</b> computer is stopped', 'msc'),
             _T('<b>One</b> computer is stopped', 'msc'),
-            _T('<b>%s</b> computers are stopped', 'msc')
+            _T('<b>%s</b> computers are stopped', 'msc'),
+            _T('Computer(s) stopped', 'msc') // Pie chart legend text
         )),
         array('paused', array(
             _T('<b>No</b> computer is paused', 'msc'),
             _T('<b>One</b> computer is paused', 'msc'),
-            _T('<b>%s</b> computers are paused', 'msc')
+            _T('<b>%s</b> computers are paused', 'msc'),
+            _T('Computer(s) paused', 'msc') // Pie chart legend text
         )),
         array('running', array(
             _T('<b>No</b> computer is running a deployment', 'msc'),
             _T('<b>One</b> computer is running a deployment', 'msc'),
-            _T('<b>%s</b> computers are running a deployment', 'msc')
+            _T('<b>%s</b> computers are running a deployment', 'msc'),
+            _T('Deployment in progress', 'msc') // Pie chart legend text
         )),
         array('failure', array(
             _T('<b>No</b> computer failed to deploy', 'msc'),
             _T('<b>One</b> computer failed to deploy', 'msc'),
-            _T('<b>%s</b> computers failed to deploy', 'msc')
+            _T('<b>%s</b> computers failed to deploy', 'msc'),
+            _T('Deployment failed', 'msc') // Pie chart legend text
         )),
         );
 }
@@ -153,10 +158,42 @@ function export_csv($cmd_id, $bundle_id, $state) {
 </td></tr>
  <?php
 
+/*
+ * machineStateNumber declaration
+ * used like this to store number of machines by state:
+ *      $machineStateNumber[state] = array(
+ *          "number => "int(number),
+ *          "percent" => int(percent)
+ *
+ *  states are:
+ *      success
+ *      running
+ *      failure
+ *      paused
+ *      stopped
+ */
+$machineStateNumber = array();
+
+$url = urlstr("base/computers/groupmsctabs", array(
+        'tab' => $_GET['tab'],
+        'from' => $_GET['from'],
+        'gid' => $_GET['gid'],
+        'cmd_id' => $_GET['cmd_id'],
+        'mod' => $_GET['mod']
+    )
+);
+
+$deployState = array("wait_up", "run_up", "wait_ex", "run_ex", "wait_run");
+$failState = array("fail_up", "fail_ex", "fail_rm", "over_timed");
 foreach ($labels as $l) {
     $s = $status[$l[0]];
+    $machineStateNumber[$l[0]] = array(
+        "number" => $s['total'][0],
+        "percent" => $s['total'][1],
+        "legend" => $l[1][3],
+    );
     if ($s['total'][0] == '0') {
-        print "<tr><td colspan='3'>".$l[1][0]." (".$s['total'][1]."%)</td><td><img src='modules/msc/graph/nocsv.png' alt='no csv export possible'/></td></tr>";
+        //print "<tr><td colspan='3'>".$l[1][0]." (".$s['total'][1]."%)</td><td><img src='modules/msc/graph/nocsv.png' alt='no csv export possible'/></td></tr>";
     } elseif ($s['total'][0] == '1') {
         print "<tr><td colspan='3'>".$l[1][1]." (".$s['total'][1]."%)</td>".export_csv($cmd_id, $_GET['bundle_id'], $l[0])."</tr>";
     } else {
@@ -165,29 +202,102 @@ foreach ($labels as $l) {
 
     foreach ($slabels[$l[0]] as $sl) {
         $ss = $status[$l[0]][$sl[0]];
-        print "<tr><td>&nbsp;&nbsp;&nbsp;</td><td colspan='2'>";
+        if ($ss[0] != '0') {
+            print "<tr><td>&nbsp;&nbsp;&nbsp;</td><td colspan='2'>";
+        }
         $verb = $verbs[$l[0]];
         if (in_array($l[0]."#".$sl[0], array_keys($verbs))) {
             $verb = $verbs[$l[0]."#".$sl[0]];
         }
         if ($ss[0] == '0') {
-            print _T('None', 'msc')." ".$verb[0]." ";
+            //print _T('None', 'msc')." ".$verb[0]." ";
         } elseif ($ss[0] == '1') {
             print _T('One', 'msc')." ".$verb[0]." ";
         } else {
             print $ss[0]." ".$verb[1]." ";
         }
-        print $sl[1];
-        if (count($sl) == 4) {
+        if ($ss[0] != '0') {
+            print $sl[1];
+        }
+        if (count($sl) == 4 and $ss[0] != '0') {
             print " ".sprintf($sl[3], $status[$l[0]][$sl[2]][0]);
         }
-        print " (".$ss[1]."%)";
+        if ($ss[0] != '0') {
+            print " (".$ss[1]."%)";
+        }
         if ($ss[0] == 0) {
-            print "</td><td><img src='modules/msc/graph/nocsv.png' alt='no csv export possible'/></td></tr>";
+            //print "</td><td><img src='modules/msc/graph/nocsv.png' alt='no csv export possible'/></td></tr>";
         } else {
             print "</td>".export_csv($cmd_id, $_GET['bundle_id'], $sl[0])."</tr>";
         }
     }
 }
 
-?> </table>
+$jsonMachineStateNumber = json_encode($machineStateNumber);
+$jsonHref = json_encode($url);
+echo <<< MSC
+</table>
+
+    <div id="msc-graphs"></div>
+    <script type="text/javascript">
+var machineStateNumber = $jsonMachineStateNumber,
+    url = $jsonHref,
+        r = Raphael("msc-graphs", 400, 200),
+        radius = 80,
+        x = 90,
+        y = 90;
+
+    url = url.replace(/&amp;/g, '&');
+    var data = [];
+    var legend = [];
+    var colors = [];
+    var href = [];
+
+    if (machineStateNumber.success.number) {
+        data.push(machineStateNumber.success.number);
+        legend.push(machineStateNumber.success.legend);
+        href.push(url);
+    }
+    if (machineStateNumber.stopped.number) {
+        data.push(machineStateNumber.stopped.number);
+        legend.push(machineStateNumber.stopped.legend);
+    }
+    if (machineStateNumber.paused.number) {
+        data.push(machineStateNumber.paused.number);
+        legend.push(machineStateNumber.paused.legend);
+    }
+    if (machineStateNumber.running.number) {
+        data.push(machineStateNumber.running.number);
+        legend.push(machineStateNumber.running.legend);
+    }
+    if (machineStateNumber.failure.number) {
+        data.push(machineStateNumber.failure.number);
+        legend.push(machineStateNumber.failure.legend);
+    }
+
+    var pie = r.piechart(x, y, radius, data,
+                     {legend: legend,
+                      legendpos: "east",
+                      colors: colors, 
+                      href: href});
+    pie.hover(function () {
+        this.sector.stop();
+        this.sector.animate({ transform: 's1.1 1.1 ' + this.cx + ' ' + this.cy }, 800, "elastic");
+
+        if (this.label) {
+            this.label[0].stop();
+            this.label[0].attr({ r: 7.5 });
+            this.label[1].attr({ "font-weight": 800 });
+        }
+    }, function () {
+        this.sector.animate({ transform: 's1 1 ' + this.cx + ' ' + this.cy }, 800, "elastic");
+
+        if (this.label) {
+            this.label[0].animate({ r: 5 }, 500, "bounce");
+            this.label[1].attr({ "font-weight": 400 });
+        }
+    });
+
+    </script>
+MSC;
+?>

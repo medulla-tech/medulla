@@ -50,7 +50,7 @@ $actionpause = new ActionPopupItem(_T("Pause", "msc"),"msctabspause","pause","ms
 $actionstop = new ActionPopupItem(_T("Stop", "msc"),"msctabsstop","stop","msc", "base", "computers");
 $actionstatus  = new ActionPopupItem(_T("Status", "msc"), "msctabsstatus","status", "msc", "base", "computers");
 $actionsinglestatus  = new ActionPopupItem(_T("Status", "msc"), "msctabssinglestatus","status", "msc", "base", "computers");
-$actionstatus->setWidth("600");
+$actionstatus->setWidth("400");
 $actionempty = new EmptyActionItem();
 $a_start = array();
 $a_pause = array();
