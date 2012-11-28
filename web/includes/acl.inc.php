@@ -95,30 +95,34 @@ function hasCorrectModuleAcl($module) {
 }
 
 function getDefaultPage() {
-
-    $MMCApp =& MMCApp::getInstance();
-
-    # get first page in acl list which is not a popup
-    if (isset($_SESSION["acl"])) {
-        foreach($_SESSION["acl"] as $module => $modinfo) {
-            foreach($modinfo as $submod => $submodinfo) {
-                foreach($submodinfo as $page => $pageinfo) {
-                    # check page is not a popup
-                    if (isset($MMCApp->_modules[$module]->_submod[$submod]->_pages[$page]) &&
-                        $MMCApp->_modules[$module]->_submod[$submod]->_pages[$page]->_options['noHeader'] != 1 &&
-                        $MMCApp->_modules[$module]->_submod[$submod]->_pages[$page]->_options['visible']) {
-                            # get url
-                            $url = "main.php?module=$module&submod=$submod&action=$page";
-                            # stop foreach loops
-                            break 3;
+    if ($_SESSION["login"] == "root") {
+        $url = urlStrRedirect("base/main/default");
+    }
+    else {
+        $MMCApp =& MMCApp::getInstance();
+        # get first page in acl list which is not a popup
+        if (isset($_SESSION["acl"])) {
+            foreach($_SESSION["acl"] as $module => $modinfo) {
+                foreach($modinfo as $submod => $submodinfo) {
+                    foreach($submodinfo as $page => $pageinfo) {
+                        # check page is not a popup
+                        if (isset($MMCApp->_modules[$module]->_submod[$submod]->_pages[$page]) &&
+                            $MMCApp->_modules[$module]->_submod[$submod]->_pages[$page]->_options['noHeader'] != 1 &&
+                            $MMCApp->_modules[$module]->_submod[$submod]->_pages[$page]->_options['visible']) {
+                                # get url
+                                $url = urlStrRedirect("$module/$submod/$page");
+                                # stop foreach loops
+                                break 3;
+                        }
                     }
                 }
             }
         }
     }
 
-    if (!isset($url)) return "index.php?error=".urlencode(_("You do not have required rights"));
-
+    if (!isset($url)) 
+        return "index.php?error=".urlencode(_("You do not have required rights"));
+    
     return $url;
 }
 

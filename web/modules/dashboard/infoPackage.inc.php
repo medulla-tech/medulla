@@ -35,21 +35,20 @@ $mod->setVersion("3.0.90");
 $mod->setRevision('');
 $mod->setDescription(_T("Dashboard", "dashboard"));
 $mod->setAPIVersion("0:0:0");
-$mod->setPriority(2000);
+$mod->setPriority(0);
 
 $submod = new SubModule("main", _T("Dashboard", "dashboard"));
 $submod->setImg('modules/dashboard/graph/navbar/dashboard');
 $submod->setDefaultPage("dashboard/main/default");
-$submod->setPriority(-1);
+$submod->setPriority(0);
 
 /* Add the dashboard to the main module */
 $page = new Page("default", _T("Dashboard", "dashboard"));
-$page->setFile("modules/dashboard/main/index.php");
+$page->setFile("modules/dashboard/main/default.php");
 $submod->addPage($page);
 $main->addPage($page);
 
 $page = new Page("ajaxPanels", _T("Panels", "dashboard"));
-$page->setFile("modules/dashboard/main/ajaxPanels.php");
 $page->setOptions(array("visible" => False, "AJAX" =>True));
 $submod->addPage($page);
 

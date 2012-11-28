@@ -40,19 +40,19 @@ $mod->setPriority(1);
  * define main submod
  */
 
-$submod = new SubModule("main", _("Home page"));
+$submod = new SubModule("main", _("Home"));
 $submod->setVisibility(False);
+$submod->setDefaultPage("base/main/default");
+$submod->setPriority(0);
 
-$page = new Page("default",_("Home page"));
-$page->setFile("main_content.php");
-$page->setOptions(array("visible"=>False));
+$page = new Page("default", _("Shortcuts"));
+$page->setOptions(array("visible" => False));
 $submod->addPage($page);
-$mod->addSubmod($submod);
 
 $page = new Page("favorites",_("Favorites page"));
-$page->setFile("includes/favorites.php");
-$page->setOptions(array("visible"=>False,"AJAX" =>True));
+$page->setOptions(array("visible" => False, "AJAX" => True));
 $submod->addPage($page);
+
 $mod->addSubmod($submod);
 
 $submod = new SubModule("status", _("Status"));

@@ -32,9 +32,10 @@ require("includes/assert.inc.php");
 require("includes/session.inc.php");
 require("includes/config.inc.php");
 require_once("includes/i18n.inc.php");
-require("modules/base/includes/edit.inc.php");
 require("includes/acl.inc.php");
 require("includes/utils.inc.php");
+require("includes/PageGenerator.php");
+require("modules/base/includes/edit.inc.php");
 
 /**
  Lookup and load all MMC modules
@@ -119,13 +120,10 @@ function autoInclude() {
     }
 
     /* Redirect user to a default page. */
-    if (
-        (!isset($redirArray[$__module][$__submod][$__action]))
-        && (!isset($redirAjaxArray[$__module][$__submod][$__action]))
-        ) {
-        $__module = "base";
-        $__submod = "main";
-        $__action = "default";
+    if (!isset($redirArray[$__module][$__submod][$__action])
+        && !isset($redirAjaxArray[$__module][$__submod][$__action])
+       ) {
+        header("Location: " . getDefaultPage());
     }
 
     if (!isNoHeader($__module, $__submod, $__action)) {
@@ -135,16 +133,8 @@ function autoInclude() {
     }
 
     /* ACL check */
-    if (!hasCorrectAcl($__module,$__submod,$__action)) {
-        $__module = "base";
-        $__submod = "main";
-        $__action = "default";
-        global $acl_error;
-        $acl_error = _("Error, you don't have correct rights !");
-        echo "<script>\n";
-        echo "window.location = '".getDefaultPage()."';";
-        echo "</script>\n";
-        return;
+    if (!hasCorrectAcl($__module, $__submod, $__action)) {
+        header("Location: " . getDefaultPage());
     }
 
     /* Warn user once at login if her account is expired. */
@@ -154,28 +144,18 @@ function autoInclude() {
 
     if (!empty($redirArray[$__module][$__submod][$__action])) {
         require($redirArray[$__module][$__submod][$__action]);
-    } else {
-        if (!empty($redirAjaxArray[$__module][$__submod][$__action])) {
-            require($redirAjaxArray[$__module][$__submod][$__action]);
-        }
-        else {
-            require("main_content.php");
-        }
+    } else if (!empty($redirAjaxArray[$__module][$__submod][$__action])) {
+        require($redirAjaxArray[$__module][$__submod][$__action]);
     }
 
     if (!isNoHeader($__module, $__submod, $__action)) {
         require_once("graph/footer.inc.php");
     }
-
 }
-
 
 global $maxperpage;
 $root = $conf["global"]["root"];
 $maxperpage = $conf["global"]["maxperpage"];
-
-//include PageGenerator primitives
-require("includes/PageGenerator.php");
 
 autoInclude();
 

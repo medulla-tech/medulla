@@ -23,13 +23,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-/* bord haut gauche arrondi */
-$topLeft = 1;
-
-global $acl_error;
-if ($acl_error) {
-  print "<div id=\"errorCode\">$acl_error</div>";
-}
+require("graph/navbar.inc.php");
 
 function display_page($page,$submod,$mod) {
     if ($page->getDescription() && $page->isVisible()) {
@@ -83,12 +77,10 @@ $MMCApp =& MMCApp::getInstance();
 $modules = getSorted($MMCApp->getModules());
 $nb_modules = count($modules);
 
-/* inclusion header HTML */
-require("graph/navbar.inc.php");
+$p = new PageGenerator(_("Home"));
+$p->display();
 
 ?>
-
-    <h2><?php echo  _("Home") ?></h2>
     <div id="home">
         <?php
         foreach($modules as $key => $mod) {
@@ -96,12 +88,11 @@ require("graph/navbar.inc.php");
         }
         ?>
     </div>
-    <div style="clear: both;"></div>
+    <div class="clearer"></div>
 </div>
 
 <script src="jsframework/cookiejar.js"></script>
 <script type="text/javascript">
-
     Event.observe(window, 'load', function() {
 
         load = function() {
