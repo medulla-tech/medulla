@@ -259,7 +259,9 @@ class ActionPopupItem extends ActionItem {
 
     function displayWithRight($param, $extraParams = array()) {
         /* Add special param for actionPopupItem */
-        $extraParams['mod'] = $this->mod;
+        if (is_array($extraParams)) {
+            $extraParams['mod'] = $this->mod;
+        }
         if (is_array($extraParams) & !empty($extraParams)) {
             $urlChunk = $this->buildUrlChunk($extraParams);
         } else {
