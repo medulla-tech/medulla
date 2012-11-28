@@ -62,9 +62,9 @@ $type = array();
 $show = array();
 $action_delete = array();
 if ($is_gp != 1) {
-    $delete = new ActionPopupItem(_T("Delete this group", 'dyngroup'), "delete_group", "supprimer", "id", "base", "computers");
+    $delete = new ActionPopupItem(_T("Delete this group", 'dyngroup'), "delete_group", "delete", "id", "base", "computers");
 } else {
-    $delete = new ActionPopupItem(_T("Delete this profile", 'dyngroup'), "delete_group", "supprimer", "id", "base", "computers");
+    $delete = new ActionPopupItem(_T("Delete this profile", 'dyngroup'), "delete_group", "delete", "id", "base", "computers");
 }
 $empty = new EmptyActionItem();
 
@@ -103,7 +103,7 @@ $n->addExtraInfo($show, _T('Display', 'dyngroup'));
 $n->setParamInfo($ids);
 
 if ($is_gp != 1) {
-    $n->addActionItem(new ActionItem(_T("Display this group's content", 'dyngroup'), "display", "afficher", "id", "base", "computers"));
+    $n->addActionItem(new ActionItem(_T("Display this group's content", 'dyngroup'), "display", "display", "id", "base", "computers"));
     if (in_array("inventory", $_SESSION["supportModList"])) {
         $n->addActionItem(new ActionItem(_T("Inventory on this group", "dyngroup"),"groupinvtabs","inventory","inventory", "base", "computers"));
     } else {
@@ -117,7 +117,7 @@ if ($is_gp != 1) {
         $n->addActionItem(new ActionItem(_T("Software deployment on this group", "dyngroup"),"groupmsctabs","install","computer", "base", "computers"));
     }
 } else {
-    $n->addActionItem(new ActionItem(_T("Display this profile's content", 'dyngroup'), "display", "afficher", "id", "base", "computers"));
+    $n->addActionItem(new ActionItem(_T("Display this profile's content", 'dyngroup'), "display", "display", "id", "base", "computers"));
     if (in_array("inventory", $_SESSION["supportModList"])) {
         $n->addActionItem(new ActionItem(_T("Inventory on this profile", "dyngroup"),"groupinvtabs","inventory","inventory", "base", "computers"));
     } else {
