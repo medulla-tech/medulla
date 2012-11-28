@@ -262,8 +262,8 @@ foreach ($_SESSION["modulesList"] as $key) {
     if ($mod != null) {
         $mod_name = $mod->getDescription();
         if ($redirArray[$key])
-            createRedirectAclTemplate($key,$acl, $acltab,&$f);
-        createAclAttrTemplate($key,$aclattr,&$f);
+            createRedirectAclTemplate($key,$acl, $acltab,$f);
+        createAclAttrTemplate($key,$aclattr,$f);
     }
 
 }
