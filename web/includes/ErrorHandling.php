@@ -64,9 +64,9 @@ class ErrorHandlingItem {
      */
     function registerNotify($xmlResponse) {
         if ($this->_level !=0 ) {
-            $str= '<div id="errorCode">';
+            $str= '<div class="alert alert-error">';
         } else {
-            $str = '<div id="notifyCode">';
+            $str = '<div class="alert alert-info">';
         }
 
         $str .= "<h1>" . $this->getMsg() . "</h1>";

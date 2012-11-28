@@ -2042,7 +2042,7 @@ class NotifyWidgetSuccess extends NotifyWidget {
 
     function NotifyWidgetSuccess($message) {
         parent::NotifyWidget();
-        $this->add("<div class=\"validCode\">$message</div>");
+        $this->add("<div class=\"alert alert-success\">$message</div>");
         $this->save();
     }
 
@@ -2056,7 +2056,7 @@ class NotifyWidgetFailure extends NotifyWidget {
 
     function NotifyWidgetFailure($message) {
         parent::NotifyWidget();
-        $this->add("<div id=\"errorCode\">$message</div>");
+        $this->add("<div class=\"alert alert-error\">$message</div>");
         $this->level = 4;
         $this->save();
     }
@@ -2071,7 +2071,7 @@ class NotifyWidgetWarning extends NotifyWidget {
 
     function NotifyWidgetWarning($message) {
         parent::NotifyWidget();
-        $this->add("<div id=\"warningCode\">$message</div>");
+        $this->add("<div class=\"alert\">$message</div>");
         $this->level = 3;
         $this->save();
     }
@@ -2087,7 +2087,7 @@ class ErrorMessage extends HtmlElement {
     }
 
     function display() {
-        print '<div class="errorCode">' . $this->msg . '</div>';
+        print '<div class="alert alert-error">' . $this->msg . '</div>';
     }
 }
 

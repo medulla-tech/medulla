@@ -278,9 +278,7 @@ function xmlCall($method, $params = null) {
 
     /* If debug is on, print the XML-RPC call and result */
     if ($conf["debug"]["level"]!=0) {
-        $str = '<div id="debugCode">';
-        $str .= "&nbsp;&nbsp;debuginfo";
-        $str.= '<div id="debugCodeHeader">';
+        $str = '<div class="alert alert-info">';
         $str .= "XML RPC CALL FUNCTION: $method(";
         if (!$params) {
             $params = "null";
@@ -290,7 +288,6 @@ function xmlCall($method, $params = null) {
             $str .= $params;
         }
         $str .=')';
-        $str .= "</div>";
         if (is_array($xmlResponse)) {
             $str .= "<pre>";
             $str .= "result : ";
