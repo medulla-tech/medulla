@@ -22,8 +22,6 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-$root = $conf["global"]["root"];
-//generate MMCApp (CSS, etc...)
 $MMCApp =& MMCApp::getInstance();
 $MMCApp->render();
 
@@ -100,21 +98,6 @@ var nodes = $A(inputList);
 
 focusStyler(nodes);
 
-<?php
-/*if (isset($_SESSION["doeffect"])) {
-    print 'Element.hide("logo");';
-    print 'new Effect.Appear("logo", {duration: 2.0});';
-    unset($_SESSION["doeffect"]);
-}*/
-?>
-
-//Event.observe(input, 'focus', ifocus, false);
--->
-
 </script>
 </body>
 </html>
-
-<?php
-unset($root);
-?>
