@@ -116,6 +116,10 @@ function web_probe_order() {
     return __web_def_in_session_msc("probe_order");
 }
 
+function web_probe_order_on_demand() {
+    return __web_def_in_session_msc("probe_order_on_demand");
+}
+
 function web_def_refresh_time() {
     return __web_def_in_session_msc("refresh_time");
 }

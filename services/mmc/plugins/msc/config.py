@@ -109,6 +109,7 @@ class MscConfig(MscDatabaseConfig):
 
     # Probe behavior
     web_probe_order =  ""
+    web_probe_order_on_demand = "ping"
 
     # IP blacklists settings
     # To filter out everything which is not a valid unicast address
@@ -312,6 +313,9 @@ class MscConfig(MscDatabaseConfig):
 
         if self.cp.has_option("web", "probe_order"):
             self.web_probe_order = self.cp.get("web", "probe_order")
+        if self.cp.has_option("web", "probe_order_on_demand"):
+            self.web_probe_order_on_demand = self.cp.get("web", "probe_order_on_demand")
+
 
         # API Package
         if self.cp.has_option("package_api", "mserver"):

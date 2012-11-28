@@ -29,7 +29,7 @@ require_once("modules/msc/includes/scheduler_xmlrpc.php");
 require_once("modules/msc/includes/mscoptions_xmlrpc.php");
 
 # depending on probe wishes, probe system differs
-$probe_order = web_probe_order();
+$probe_order = $_GET["probe_order"];
 
 if ($probe_order == "ping") {
     $res = scheduler_ping_client('', $_GET["uuid"]);

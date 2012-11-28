@@ -34,13 +34,14 @@ _T("Other/N.A.", "msc");
 
 /* HTML display for known MSC host */
 class RenderedMSCHost extends RenderedLabel {
-    function RenderedMSCHost($machine) {
+    function RenderedMSCHost($machine, $probe_order) {
         $this->hostname = $machine->hostname;
         $this->machine = $machine;
         $this->platform = $machine->platform;
         $this->uuid = $machine->uuid;
         $this->level = 3;
-        $this->text = sprintf(_T('%s status', 'msc'), $machine->hostname);
+	$this->text = sprintf(_T('%s status', 'msc'), $machine->hostname);
+	$this->probe_order = $probe_order;
     }
 
     function line($label, $text) { # FIXME: should use CSS instead of hard coded styles
@@ -50,7 +51,7 @@ class RenderedMSCHost extends RenderedLabel {
     function ajaxDisplay() {
         $buffer = '
             <script type="text/javascript">
-            new Ajax.Updater("ping", "'     . urlStrRedirect("base/computers/ajaxPingProbe"). "&hostname=" . $this->hostname . '&uuid='. $this->uuid .'", { method: "get" });
+            new Ajax.Updater("ping", "'     . urlStrRedirect("base/computers/ajaxPingProbe"). "&hostname=" . $this->hostname ."&probe_order=" . $this->probe_order . '&uuid='. $this->uuid .'", { method: "get" });
             </script>
         ';
         $this->text .= ' <span id="ping"><img src="img/common/loader_p.gif" /></span>';

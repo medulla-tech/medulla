@@ -371,11 +371,21 @@ if (!isset($_GET['badvanced']) && $_GET['uuid'] && !isset($_POST['launchAction']
                                  'uuid' => $_GET['uuid'],
                                  'hostname' => array('0' => $_GET['hostname']),
                                  'displayName' => $_GET['hostname'])
-                           );
+			 );
     if (strlen(web_probe_order()) > 0){
-        $msc_host = new RenderedMSCHost($machine);
+        $msc_host = new RenderedMSCHost($machine, web_probe_order());
         $msc_host->ajaxDisplay();
     } else { // nothing set : do not probe
+        if(!isset($_POST["bprobe"])){
+            $fprobe = new ValidatingForm();
+            $fprobe->addButton("bprobe", _T("Probe status", "msc"));
+            $fprobe->display();
+	    print "<br/>";
+        } else {
+            $msc_host = new RenderedMSCHost($machine, web_probe_order_on_demand());
+            $msc_host->ajaxDisplay();
+ 	}
+ 
     }
 
     $msc_actions = new RenderedMSCActions(msc_script_list_file(), $machine->hostname, array('uuid'=>$_GET['uuid']));

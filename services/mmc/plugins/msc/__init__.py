@@ -521,6 +521,9 @@ class RpcProxy(RpcProxyI):
     def get_web_def_probe_order(self):
         return xmlrpcCleanup(MscConfig().web_probe_order)
 
+    def get_web_def_probe_order_on_demand(self):
+        return xmlrpcCleanup(MscConfig().web_probe_order_on_demand)
+ 
     def get_web_def_refresh_time(self):
         return xmlrpcCleanup(MscConfig().web_def_refresh_time)
 
