@@ -2015,7 +2015,7 @@ class NotifyWidget {
     function display() {
         echo '
         <div style="padding: 10px">
-            <div style="width: 50px; padding-top: 5px; float: left; text-align: center">
+            <div style="width: 50px; padding-top: 15px; float: left; text-align: center">
                 <img src="' . $this->getImgLevel() . '" />
             </div>
             <div style="margin-left: 60px">';
@@ -2025,7 +2025,7 @@ class NotifyWidget {
         echo '
             </div>
             <div style="clear: left; text-align: right; margin-top: 1em;">
-                <button class="btnSecondary" onclick="toggleVisibility(\'popup\'); toggleVisibility(\'overlay\');">' . _("Close") . '</button>
+                <button class="btn btn-small" onclick="toggleVisibility(\'popup\'); toggleVisibility(\'overlay\');">' . _("Close") . '</button>
             </div>
         </div>';
     }
