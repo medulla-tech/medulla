@@ -174,15 +174,6 @@ function export_csv($cmd_id, $bundle_id, $state) {
  */
 $machineStateNumber = array();
 
-$url = urlstr("base/computers/groupmsctabs", array(
-        'tab' => $_GET['tab'],
-        'from' => $_GET['from'],
-        'gid' => $_GET['gid'],
-        'cmd_id' => $_GET['cmd_id'],
-        'mod' => $_GET['mod']
-    )
-);
-
 $deployState = array("wait_up", "run_up", "wait_ex", "run_ex", "wait_run");
 $failState = array("fail_up", "fail_ex", "fail_rm", "over_timed");
 foreach ($labels as $l) {
@@ -232,6 +223,16 @@ foreach ($labels as $l) {
         }
     }
 }
+$urlArray = array(
+        'from' => $_GET['from'],
+        'gid' => $_GET['gid'],
+        'cmd_id' => $_GET['cmd_id'],
+        'mod' => $_GET['mod']
+    );
+
+$urlArray['tab'] = ($machineStateNumber['success']['percent'] == 100) ? "grouptabhistory" : "grouptablogs";
+
+$url = urlstr("base/computers/groupmsctabs", $urlArray);
 
 $jsonMachineStateNumber = json_encode($machineStateNumber);
 $jsonHref = json_encode($url);
@@ -261,18 +262,22 @@ var machineStateNumber = $jsonMachineStateNumber,
     if (machineStateNumber.stopped.number) {
         data.push(machineStateNumber.stopped.number);
         legend.push(machineStateNumber.stopped.legend);
+        href.push(url);
     }
     if (machineStateNumber.paused.number) {
         data.push(machineStateNumber.paused.number);
         legend.push(machineStateNumber.paused.legend);
+        href.push(url);
     }
     if (machineStateNumber.running.number) {
         data.push(machineStateNumber.running.number);
         legend.push(machineStateNumber.running.legend);
+        href.push(url);
     }
     if (machineStateNumber.failure.number) {
         data.push(machineStateNumber.failure.number);
         legend.push(machineStateNumber.failure.legend);
+        href.push(url);
     }
 
     var pie = r.piechart(x, y, radius, data,
