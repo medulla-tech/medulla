@@ -27,7 +27,7 @@ import logging
 from mmc.support.config import PluginConfig
 from mmc.plugins.dashboard.manager import DashboardManager
 
-VERSION = "3.0.90"
+VERSION = "3.0.91"
 APIVERSION = "0:1:0"
 REVISION = ""
 
