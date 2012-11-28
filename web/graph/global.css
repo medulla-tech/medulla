@@ -806,6 +806,14 @@ li.empty a {
     border-top: 0px;
     margin-bottom: 0.5em;
     margin-top: 0.5em;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
+    -o-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
+    filter:progid:DXImageTransform.Microsoft.Shadow(color=#aaaaaa, Direction=NaN, Strength=5);
 }
 
 
@@ -830,7 +838,7 @@ td {
 }
 
 tr.alternate {
-    background-color: #F0F4F7;
+    background-color: #f6f6f6;
 }
 
 td.printerName,
@@ -1002,6 +1010,11 @@ form {
     -webkit-border-radius: 8px;
     -moz-border-radius: 8px;
     border-radius: 8px;
+    -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
+    -o-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
+    filter:progid:DXImageTransform.Microsoft.Shadow(color=#aaaaaa, Direction=NaN, Strength=5);
 }
 
 .ajaxfilterlog {
@@ -1125,16 +1138,16 @@ div.autocomplete ul li {
     color: #999;
 }
 
-.listinfos tbody tr:hover{
-    background-color: #B8BCDB;
+.listinfos tbody tr:hover {
+    background-color: #ddd;
 }
 
 .listinfos thead {
-    background-color: #EEE;
+    background-color: #eee;
 }
 
-.listinfos thead:hover{
-    background-color: #EEE;
+.listinfos thead td {
+    border-width: 1px 0px 1px 0px;
 }
 
 form.inplaceeditor-form input[type="text"] {
@@ -1332,6 +1345,11 @@ ul.roACL {
        -moz-border-radius: 4px;
             border-radius: 4px;
     border: 1px solid #ddd;
+    -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
+    -o-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
+    filter:progid:DXImageTransform.Microsoft.Shadow(color=#aaaaaa, Direction=NaN, Strength=5);
 }
 
 .subpanel, .submod {
