@@ -97,6 +97,7 @@ $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
 
 $page = new Page("createStaticGroup");
+$page->setFile("modules/inventory/inventory/createStaticGroup.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
 
