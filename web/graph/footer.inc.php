@@ -38,10 +38,10 @@ $MMCApp->render();
         <div id="__popup_container"><?php echo  _("If this phrase does not change, you browser is not supported by the MMC application"); ?></div>
     </div>
 <?php
-if (isset($_SESSION['notify'])) {
-    $n = unserialize($_SESSION['notify']);
-    if ($n->strings)
-        $n->show();
+if (isset($_SESSION['notify']) && count($_SESSION['notify']) > 0) {
+    echo '<script type="text/javascript">
+                showPopupCenter("includes/notify.php");
+          </script>';
 }
 ?>
     <div id="footer">

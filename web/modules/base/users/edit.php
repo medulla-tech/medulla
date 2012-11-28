@@ -159,6 +159,7 @@ if ($redirect)
     header('Location: ' . urlStrRedirect("base/users/edit",
         array("user" => $uid)));
 
+
 // in case of failure, set errorStatus to 0 in order to display the edit form
 $errorStatus = 0;
 

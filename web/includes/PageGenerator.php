@@ -649,13 +649,13 @@ class ListInfos extends HtmlElement {
         if (!isset($this->paramInfo)) {
             $this->paramInfo = $this->arrInfo;
         }
-
         if ($header == 1) {
             $this->drawHeader($navbar);
         }
-        $n = new NotifyWidget();
-        if (isset($_SESSION['__notify'])) {
-            $n->showJS();
+        if (isset($_SESSION['notify']) && count($_SESSION['notify']) > 0) {
+            echo '<script type="text/javascript">
+                        showPopupCenter("includes/notify.php");
+                  </script>';
         }
         $this->drawTable($navbar);
     }
@@ -1965,6 +1965,7 @@ class NotifyWidget {
      * default constructor
      */
     function NotifyWidget() {
+        $this->id = uniqid();
         $this->strings = array();
         // 0: info (default, blue info bubble)
         // 1: error for the moment (red icon)
@@ -1977,7 +1978,11 @@ class NotifyWidget {
      * Save the object in the session
      */
     function save() {
-       $_SESSION["notify"] = serialize($this);
+        if (!isset($_SESSION["notify"]))
+            $_SESSION["notify"] = array();
+        if ($this->strings) {
+            $_SESSION["notify"][$this->id] = serialize($this);
+        }
     }
 
     function setSize() {
@@ -2005,12 +2010,6 @@ class NotifyWidget {
             return "img/common/big_icn_info.png";
     }
 
-    function show() {
-        echo '<script type="text/javascript">
-                showPopupCenter("includes/notify.php");
-              </script>';
-    }
-
     function display() {
         echo '
         <div style="padding: 10px">
@@ -2030,7 +2029,7 @@ class NotifyWidget {
     }
 
     function flush() {
-        unset($_SESSION["notify"]);
+        unset($_SESSION["notify"][$this->id]);
     }
 }
 
@@ -2043,7 +2042,6 @@ class NotifyWidgetSuccess extends NotifyWidget {
     function NotifyWidgetSuccess($message) {
         parent::NotifyWidget();
         $this->add("<div class=\"alert alert-success\">$message</div>");
-        $this->save();
     }
 
 }

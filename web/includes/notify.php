@@ -28,8 +28,10 @@ require("acl.inc.php");
 require("session.inc.php");
 require("PageGenerator.php");
 
-$n = unserialize($_SESSION['notify']);
-$n->display();
-$n->flush();
+foreach($_SESSION['notify'] as $notify) {
+    $n = unserialize($notify);
+    $n->display();
+    $n->flush();
+}
 
 ?>
