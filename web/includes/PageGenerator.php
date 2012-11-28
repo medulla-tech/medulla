@@ -1574,8 +1574,6 @@ class SideMenuItem {
                         color: #444;
                         border-bottom: solid 1px #ccc;
                         border-top: solid 1px #ccc;
-                        -webkit-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
-                        box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
                         $bgi_active
             }";
         }
@@ -1667,7 +1665,7 @@ class SideMenu {
      *  print the SideMenu and the sideMenuItem
      */
     function display() {
-        echo "<style>#section { margin-left: 200px; border-left: 3px solid #bbb; }</style>";
+        echo "<style>#section { margin-left: 200px; border-left: 2px solid #bbb; }</style>";
         echo "<div id=\"sidebar\">\n";
         echo "<ul class=\"".$this->className."\">\n";
         foreach ($this->itemArray as $objSideMenuItem) {
@@ -2044,7 +2042,7 @@ class NotifyWidgetSuccess extends NotifyWidget {
 
     function NotifyWidgetSuccess($message) {
         parent::NotifyWidget();
-        $this->add("<div id=\"validCode\">$message</div>");
+        $this->add("<div class=\"validCode\">$message</div>");
         $this->save();
     }
 

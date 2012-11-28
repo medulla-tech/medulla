@@ -56,27 +56,22 @@ if (isExpertMode()) {
 
 <p class="path">
 <?php
-  /* Path automatic creation */
-print '<span style="color: #FFF">' . $_SESSION["XMLRPC_server_description"] . '</span>';
-print '&nbsp;: ';
-print '<a href="main.php">';
-print _("Home");
-print '</a>';
+/* Path automatic creation */
+print '<span>' . $_SESSION["XMLRPC_server_description"] . '</span>&nbsp;:&nbsp;';
+print '<a href="main.php">' . _("Home") . '</a>';
 if (!empty($_GET["module"])) { /* if not main page */
-        $MMCApp =&MMCApp::getInstance();
-        $mod = $MMCApp->_modules[$_GET['module']];
-        $submod = $mod->_submod[$_GET['submod']];
+    $MMCApp =&MMCApp::getInstance();
+    $mod = $MMCApp->_modules[$_GET['module']];
+    $submod = $mod->_submod[$_GET['submod']];
+    print ' &gt; ';
+    list($m, $s, $a) = split('/',$submod->_defaultpage,3);
+    print '<a href="'. urlStr("$m/$s/$a") .'">' . $submod->getDescription() . '</a>';
+    $action = $submod->_pages[$_GET["action"]];
+    if (is_object($action)) {
         print ' &gt; ';
-            list($m,$s,$a) = split('/',$submod->_defaultpage,3);
-            print '<a href="main.php?module='.$m.'&amp;submod='.$s.'&amp;action='.$a.'">'.$submod->getDescription().'</a>';
-            print ' &gt; ';
-            $action = $submod->_pages[$_GET["action"]];
-
-            if (is_object($action)) {
-                print '<span style="color: #FFF">' . $action->getDescription() . "</span>";
-            }
+        print '<span>' . $action->getDescription() . "</span>";
+    }
 }
-
 ?>
 </p>
 </div>

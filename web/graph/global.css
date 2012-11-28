@@ -18,33 +18,6 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-/*---
-
-Sirius Technologies // Interface serveur fichiers
-Auteur : Arteca Design inc.
-
-1.	Header
-2.	Navbar
-    >  a.	Configuration
-    >  b.	Utilisateurs
-    >  c.	Groupes
-    >  d.	Partages
-    >  e.	Machines
-    >  f.	Imprimantes
-    >  g.	Droits d'acces
-
-3.	Subnav
-    > 	a.	Configuration
-    >	b.	Users
-    >	c.	Groups
-    >	d.	Shares
-    >	f.	Imprimantes
-
-4.	Contenu
-5.	Footer
-6.	Form
-
----*/
 
 * {
     font-family: Verdana, Lucida, Geneva, Helvetica, Arial, sans-serif;
@@ -87,8 +60,6 @@ p {
     width: 100%;
 }
 
-#skip {display: none;}
-
 .clearer {
     clear: both;
     line-height: 0;
@@ -114,15 +85,19 @@ p {
 
 #header p {
     font-size: 10px;
-    color: #000000;
     padding: 5px 0 0 0;
     margin: 0;
     position: absolute;
+    color: #f8f8f8;
 }
 
-#header p a {color: #E7ECF2;}
+#header p a {
+    color: #f8f8f8;
+}
 
-#header p a:hover {color: #FFF;}
+#header p a:hover {
+    color: #fff;
+}
 
 #header #menuTopRight {
     float: right;
@@ -248,34 +223,6 @@ p {
 /* 3. Style pour Subnav                     */
 /* ---------------------------------------- */
 
-#help {
-    position: absolute;
-    top: 350px;
-    left: 17px;
-    margin: 0px;
-    padding-left: 0.5em;
-    margin-bottom: 1em;
-    padding: 0px;
-    width: 172px;
-    background-color: #FFF;
-    border-style: solid;
-    border-width: 1px;
-    border-color: #BBB #FFF #BBB #BBB;
-    display:none;
-    -webkit-border-top-left-radius: 5px;
-    -webkit-border-bottom-left-radius: 5px;
-    -moz-border-radius-topleft: 5px;
-    -moz-border-radius-bottomleft: 5px;
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-}
-
-#help li {
-    list-style-type: none;
-    width: 172px;
-    padding-left : 10px;
-}
-
 #sidebar {
     position: fixed;
     top: 125px;
@@ -320,7 +267,7 @@ p {
 /*    Debug presentation and colorization   */
 /* ---------------------------------------- */
 
-#validCode, .validCode {
+.validCode {
     font-size: 12px;
     text-decoration: none;
     padding: 12px 8px 12px 8px;
@@ -418,14 +365,6 @@ p {
     display: block;
     border: 1px solid #00F;
 }
-
-#errorFuncName {
-    font-size: 1.8em;
-    font-weight: bold;
-    color: #F00;
-}
-
-
 
 /* ---------------------------------------- */
 /* 3a. Subnav / Configuration 		        */
@@ -572,12 +511,10 @@ p {
 }
 
 #section h1, h2, h3, h4, h5, h6 {
-    font-family: Verdana, Geneva, Helvetica, Arial, sans-serif;
     color: #666;
     font-weight: normal;
     padding: 0 0 10px 0;
     margin: 0;
-    /* width: 100%; */
 }
 
 #section h2 { font-size: 17px; }
@@ -693,22 +630,6 @@ ul.action li a:hover {
     color: #95AABF;
 }
 
-li.afficher a {
-    /* Deprecated. Use li.display instead */
-    padding: 3px 0px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("../img/common/icn_show.gif");
-    background-repeat: no-repeat;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-}
-
-li.afficher a:hover {
-    /* Deprecated. Use li.display instead */
-    background-image: url("../img/common/icn_show_ro.gif");
-}
-
 li.display a {
     padding: 3px 0px 5px 20px;
     margin: 0 0px 0 0px;
@@ -733,18 +654,6 @@ li.audit a {
     color: #FFF;
 }
 
-li.supprimer a {
-    /* Deprecated. Use li.delete instead */
-    padding: 3px 0px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("../img/common/button_cancel.png");
-    background-repeat: no-repeat;
-    background-position: left top;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-}
-
 li.delete a {
     padding: 3px 0px 5px 20px;
     margin: 0 0px 0 0px;
@@ -755,7 +664,6 @@ li.delete a {
     text-decoration: none;
     color: #FFF;
 }
-
 
 li.editacl a {
     padding: 3px 0px 5px 20px;
@@ -805,18 +713,6 @@ li.down a {
     padding: 1px 3px 5px 20px;
     margin: 0 0px 0 0px;
     background-image: url("../img/common/icn_arrowdown.png");
-    background-repeat: no-repeat;
-    background-position: left top;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-}
-
-li.archiver a {
-    /* Deprecated. Use li.backup instead */
-    padding: 3px 0px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("../img/common/cd.png");
     background-repeat: no-repeat;
     background-position: left top;
     line-height: 18px;
@@ -879,7 +775,6 @@ li.restart a {
     color: #FFF;
 }
 
-
 li.info a {
     padding: 3px 0px 5px 20px;
     margin: 0 0px 0 0px;
@@ -922,16 +817,6 @@ li.empty a {
     border: none;
     padding-left: 0px;
 }
-
-.none {
-
-    border-width: 0 0 0px 0;
-    border-style: none;
-    margin: 0 0px 0px 0;
-    margin-right: 0px;
-    float: none;
-}
-
 
 /* Commented Backslash Hack hides rule from IE5-Mac \*/
 * html #section table {float: left; margin: 0 0 10px 0;}
@@ -1070,16 +955,20 @@ td.machineAction { text-align: right; }
 
 #footer {
     height: 12px;
-    background-image: url("../img/common/bg_footer.gif");
-    background-repeat: repeat-x;
-    color: white;
+    color: #555;
     font-size: 9px;
+    background: #f6f6f6;
+    border-top: 1px solid #ddd;
+    box-shadow: 0 2px 2px rgba(0,0,0,0.1);
+    border-bottom: 1px solid #aaa;
+    padding-left: 5px;
 }
 
 #footer a {
     font-size: 9px;
     text-decoration: none;
     font-weight: bold;
+    color: #555;
 }
 
 /* ---------------------------------------- */
@@ -1341,80 +1230,6 @@ a.tooltip:hover img{
     border-width:0;
 }
 
-.submodfav {
-    background-color: #E5E5E5;
-    margin: 0.3em;
-    padding: 0.3em;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-}
-
-.submodfav_select {
-    background-color: #E5E5C5;
-    margin: 0.3em;
-    padding: 0.3em;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-}
-
-.submodfav_sselect {
-    background-color: #D5D5B5;
-    margin: 0.3em;
-    padding: 0.3em;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-}
-
-.modulefav h3 {
-    margin:0px;
-    padding: 0px;
-}
-
-.submodfav h4 {
-    margin:0px;
-    padding: 0px;
-}
-
-.modulefav {
-    background-color: #EEE;
-    margin: 0.3em;
-    padding: 0.3em;
-    width: 160px;
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    border-radius: 10px;
-}
-
-.modulefav_select {
-    background-color: #EEC;
-    margin: 0.3em;
-    padding: 0.3em;
-    width: 160px;
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    border-radius: 10px;
-}
-
-.redbutton {
-    margin-right: 0.5em;
-    float:right;
-    padding-left: 0.2em;
-    padding-right: 0.3em;
-    background-color: #E99;
-    color: #FFF;
-    text-decoration: none;
-    -webkit-border-radius: .1em;
-    -moz-border-radius: .1em;
-    border-radius: .1em;
-}
-
-.redbutton a{
-    color: #FFF;
-    text-decoration: none;
-}
 .formblock {
     padding: 1em;
     margin: 1em;
@@ -1428,7 +1243,7 @@ a.tooltip:hover img{
 .tabselector {
     background-color: #EEE ;
     border: 1px solid #A0A0A0;
-    font: normal 10px verdana,'Bitstream Vera Sans',helvetica,arial,sans-serif;
+    font-size: 10px;
     margin: .66em 0 20px;
     padding: .2em 0;
 }
@@ -1496,9 +1311,9 @@ ul.roACL {
     border: 1px solid white;
     background: white;
     min-height: 100px;
-    border-radius: 10px;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
     margin-right: 5px;
     margin-bottom: 5px;
 }

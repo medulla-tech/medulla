@@ -45,7 +45,7 @@ if (isset($_SESSION['notify'])) {
 }
 ?>
     <div id="footer">
-        MMC Agent <a href="#" style="color: #FFF;" onclick="showPopupUp(event,'version.php'); return false;"><?php  echo $_SESSION["modListVersion"]['ver'] ?></a>
+        MMC Agent <a href="#" onclick="showPopupUp(event,'version.php'); return false;"><?php  echo $_SESSION["modListVersion"]['ver'] ?></a>
     </div>
 </div><!-- wrapper -->
 <script type="text/javascript">
