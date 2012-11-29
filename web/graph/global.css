@@ -706,7 +706,15 @@ li.empty a {
     -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
     -o-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
     box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
-    filter:progid:DXImageTransform.Microsoft.Shadow(color=#aaaaaa, Direction=NaN, Strength=5);
+    filter:progid:DXImageTransform.Microsoft.Shadow(color=#aaaaaa, Direction=NaN, Strength=2);
+}
+
+#section table.listinfos tbody tr {
+    background: white;
+}
+
+#section table.listinfos tbody tr.alternate {
+    background-color: #f6f6f6;
 }
 
 
@@ -728,10 +736,6 @@ td {
     border-color: #CCCCCC;
     border-width: 1px 0 0 0;
     border-style: solid;
-}
-
-tr.alternate {
-    background-color: #f6f6f6;
 }
 
 td.printerName,
@@ -906,7 +910,7 @@ form {
     -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
     -o-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
     box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
-    filter:progid:DXImageTransform.Microsoft.Shadow(color=#aaaaaa, Direction=NaN, Strength=5);
+    filter:progid:DXImageTransform.Microsoft.Shadow(color=#aaaaaa, Direction=NaN, Strength=2);
 }
 
 .ajaxfilterlog {
@@ -1038,7 +1042,7 @@ form.inplaceeditor-form input[type="text"] {
     -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.3);
     -o-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.3);
     box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.3);
-    filter:progid:DXImageTransform.Microsoft.Shadow(color=#aaaaaa, Direction=NaN, Strength=5);
+    filter:progid:DXImageTransform.Microsoft.Shadow(color=#aaaaaa, Direction=NaN, Strength=2);
 }
 
 .overlay {
@@ -1102,7 +1106,7 @@ a.tooltip:hover span{
     -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
     -o-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
     box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
-    filter:progid:DXImageTransform.Microsoft.Shadow(color=#aaaaaa, Direction=NaN, Strength=5);
+    filter:progid:DXImageTransform.Microsoft.Shadow(color=#aaaaaa, Direction=NaN, Strength=2);
 }
 
 a.tooltip:hover b{
@@ -1225,7 +1229,7 @@ ul.roACL {
     -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
     -o-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
     box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
-    filter:progid:DXImageTransform.Microsoft.Shadow(color=#aaaaaa, Direction=NaN, Strength=5);
+    filter:progid:DXImageTransform.Microsoft.Shadow(color=#aaaaaa, Direction=NaN, Strength=2);
 }
 
 .subpanel, .submod {

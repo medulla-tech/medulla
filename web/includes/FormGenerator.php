@@ -577,12 +577,7 @@ class DynamicDateTpl extends InputTpl {
         print '
             <span id="container_input_'.$this->name.'">
                 <input name="'.$this->name.'" id="'.$this->name.'" type="' . $this->fieldType . '" size="'.$this->size.'" value="'.$arrParam["value"].'" readonly=1 />
-                <input
-                    type="image"
-                    style="vertical-align: bottom;"
-                    src="graph/jscalendar/img/calendar.png"
-                    id="'.$this->name.'_button"
-                />
+                <input type="image" style="width: 24px;height: 21px;vertical-align: bottom;" src="graph/jscalendar/img/calendar.png" id="'.$this->name.'_button" />
         ';
 
         // ugly gettext workaround
