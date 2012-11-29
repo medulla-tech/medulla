@@ -55,6 +55,9 @@ class InventoryServer:
     def log_message(self, format, *args):
         self.logger.info(format % args)
 
+    def do_GET(self):
+        self.logger.debug("GET http method - ignore")
+
     def do_POST(self):
         content = self.rfile.read(int(self.headers['Content-Length']))
         resp = ''
