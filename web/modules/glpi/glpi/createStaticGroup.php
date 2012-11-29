@@ -25,10 +25,10 @@
 require_once("modules/dyngroup/includes/dyngroup.php"); # for Group Class
 
 if ($_GET['group'] == 'green') {
-    $groupname = sprintf (_T("Last inventory is less than %s days at %s", "inventory"), $_GET['days'], date("Y-m-d H:i:s"));
+    $groupname = sprintf (_T("Latest inventory is less than %s days at %s", "inventory"), $_GET['days'], date("Y-m-d H:i:s"));
 }
 else {
-    $groupname = sprintf (_T("Last inventory is more than %s days at %s", "inventory"), $_GET['days'], date("Y-m-d H:i:s"));
+    $groupname = sprintf (_T("Latest inventory is more than %s days at %s", "inventory"), $_GET['days'], date("Y-m-d H:i:s"));
 }
 
 $machines = unserialize(base64_decode($_GET['machines']));
