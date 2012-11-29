@@ -20,6 +20,17 @@ li.logfile a {
         color: #FFF;
 }
 
+li.groupshare a {
+        padding: 3px 0px 5px 20px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/dyngroup/img/share.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
 li.inventory a {
     	padding: 0px 0px 5px 23px;
         margin: 0 0px 0 0px;
@@ -31,6 +42,7 @@ li.inventory a {
         color: #FFF;
 }
 
+li.delete a,
 li.remove_machine a {
         padding: 3px 0px 5px 20px;
         margin: 0 0px 0 0px;
