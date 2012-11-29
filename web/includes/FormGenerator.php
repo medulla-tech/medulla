@@ -614,7 +614,7 @@ class DynamicDateTpl extends InputTpl {
 
 class MultipleInputTpl extends AbstractTpl {
 
-    function MultipleInputTpl($name,$desc='', $new=false) {
+    function MultipleInputTpl($name, $desc = '', $new = false, $formId = "Form") {
         $this->name = $name;
         /*
           stripslashes is needed, because some characters may be backslashed
@@ -624,6 +624,7 @@ class MultipleInputTpl extends AbstractTpl {
         $this->regexp = '/.*/';
         $this->new = $new;
         $this->tooltip = False;
+        $this->formId = $formId;
     }
 
     function setRegexp($regexp) {
@@ -640,7 +641,8 @@ class MultipleInputTpl extends AbstractTpl {
                                                      'name' => $this->name,
                                                      'new' => $this->new,
                                                      "tooltip" => $this->tooltip
-                                                     )
+                                                 ),
+                                               $this->formId
                                                );
             $test->setCssError($this->name . $key);
             $test->display(array("value" => $param));
@@ -655,9 +657,9 @@ class MultipleInputTpl extends AbstractTpl {
             }
         }
         print '</td><td>';
-        print '<input name="b'.$this->name.'" type="submit" class="btnPrimary" value="'._("Add").'" onclick="
+        print '<input name="b'.$this->name.'" type="button" class="btn btn-primary" value="'._("Add").'" onclick="
         new Ajax.Updater(\''.$this->name.'\',\'includes/FormGenerator/MultipleInput.tpl.php\',
-        { evalScripts: true, parameters: Form.serialize($(\'edit\'))+\'&amp;minputname='.$this->name.'&amp;desc='.urlencode($this->desc) . '&amp;regexp='.rawurlencode($this->regexp).'\' }); return false;"/>';
+        { evalScripts: true, parameters: Form.serialize($(\'' . $this->formId . '\'))+\'&amp;minputname='.$this->name.'&amp;desc='.urlencode($this->desc) . '&amp;regexp='.rawurlencode($this->regexp).'\' }); return false;"/>';
         print '</td></tr>';
         print '</table>';
         print '</div>';
@@ -670,7 +672,8 @@ class MultipleInputTpl extends AbstractTpl {
             $test = new DeletableTrFormElement($this->desc,
                                                new InputTpl($this->name.'['.$key.']',$this->regexp),
                                                array('key'=>$key,
-                                                     'name'=> $this->name)
+                                                     'name'=> $this->name),
+                                               $this->formId
                                                );
             $test->setCssError($this->name.$key);
             $test->displayRo(array("value"=>$param));
@@ -696,7 +699,7 @@ class MultipleInputTpl extends AbstractTpl {
         foreach ($arrParam as $key => $param) {
             $test = new DeletableTrFormElement($this->desc,
                 new InputTpl($this->name.'['.$key.']',$this->regexp),
-                array('key'=>$key, 'name'=> $this->name)
+                array('key'=>$key, 'name'=> $this->name), $this->formId
             );
             $test->setCssError($this->name.$key);
             $test->displayHide(array("value"=>$param));
@@ -1011,12 +1014,13 @@ class DeletableTrFormElement extends FormElement{
     var $desc;
     var $cssErrorName;
 
-    function DeletableTrFormElement($desc,$tpl,$extraInfo = array()) {
+    function DeletableTrFormElement($desc, $tpl, $extraInfo = array(), $formId) {
         $this->desc=$desc;
         $this->template=&$tpl;
         foreach ($extraInfo as $key => $value) {
             $this->$key = $value;
         }
+        $this->formId = $formId;
     }
 
     /**
@@ -1072,7 +1076,7 @@ class DeletableTrFormElement extends FormElement{
         parent::display($arrParam);
         print ' <input name="bdel" type="submit" class="btnSecondary" value="'._("Delete").'" onclick="
         new Ajax.Updater(\''.$this->name.'\',\'includes/FormGenerator/MultipleInput.tpl.php\',
-        { evalScripts: true, parameters: Form.serialize($(\'edit\'))+\'&amp;minputname='.$this->name.'&amp;del='.$this->key.'&amp;desc='.urlencode($this->desc) . '&amp;regexp='.rawurlencode($this->template->regexp) . '\' }); return false;"/>';
+        { evalScripts: true, parameters: Form.serialize($(\'' . $this->formId . '\'))+\'&amp;minputname='.$this->name.'&amp;del='.$this->key.'&amp;desc='.urlencode($this->desc) . '&amp;regexp='.rawurlencode($this->template->regexp) . '\' }); return false;"/>';
 
         print '</td></tr>';
     }

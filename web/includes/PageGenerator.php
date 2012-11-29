@@ -2264,7 +2264,10 @@ class Form extends HtmlContainer {
 
     function Form($options = array()) {
         $this->HtmlContainer();
-        if (!isset($options["method"])) $options["method"] = "POST";
+        if (!isset($options["method"]))
+            $options["method"] = "post";
+        if (!isset($options["id"]))
+            $options["id"] = "Form";
         $this->options = $options;
         $this->buttons = array();
         $this->summary = NULL;
@@ -2374,8 +2377,6 @@ class ValidatingForm extends Form {
 
     function ValidatingForm($options = array()) {
         $this->Form($options);
-        if (!isset($this->options["id"]))
-            $this->options["id"] = "validatingForm";
         $this->options["onsubmit"] = "selectAll('" . $this->options["id"] . "'); return validateForm('" . $this->options["id"]. "');";
     }
 

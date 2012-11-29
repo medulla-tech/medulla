@@ -65,6 +65,6 @@ if (!isset($aclArray)) {
 
 $mtpl = new MultipleInputTpl($name, urldecode($_POST['desc']), true);
 $mtpl->setRegexp(stripslashes(rawurldecode($_POST['regexp'])));
-$fe = new FormElement(_T($name,"mail"), $mtpl);
+$fe = new FormElement(_T($name), $mtpl);
 $fe->setCssError($name);
 $fe->display($arr);
