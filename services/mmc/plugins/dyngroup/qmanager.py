@@ -137,6 +137,9 @@ class QueryManager(Singleton):
                 return [ret[0], ret[1](ctx, table, cols, value1)]
             else: # ajax search on field 2
                 return [ret[0], ret[1](ctx, table, cols, value1, value2)]
+        if value2 == None:
+            return [ret[0], ret[1](ctx, value1)]
+
         return [ret[0], ret[1](ctx, value1, value2)]
 
     def getExtended(self, moduleName, criterion):
