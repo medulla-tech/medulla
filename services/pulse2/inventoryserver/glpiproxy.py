@@ -78,7 +78,7 @@ class GlpiProxy :
     """ Sending inventories to GLPI with an error handling."""
 
     HEADER = {"Pragma": "no-cache",
-              "User-Agent": "wwFusionInventory-Agent_v2.2.3",
+              "User-Agent": "Proxy:FusionInventory/Pulse2/GLPI",
               "Content-Type": "application/x-compress",
              }
 
