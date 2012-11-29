@@ -31,7 +31,15 @@ require_once('graph/navbar.inc.php');
 if (!isset($_GET['hostname'])) { $_GET['hostname'] = $_GET['cn']; }
 if (!isset($_GET['uuid'])) { $_GET['uuid'] = $_GET['objectUUID']; }
 
-include('modules/pulse2/includes/menu_action.php');
+/*
+ * Display right top shortcuts menu
+ */
+if (isset($_GET['cn']) and isset($_GET['objectUUID'])) { // Computers
+    include('modules/pulse2/includes/menu_action.php');
+}
+else { // Groups
+    include('modules/pulse2/includes/menu_group_action.php');
+}
 
 if ($_GET['uuid']) {
     $machine = getMachine(array('uuid'=>$_GET['uuid']));

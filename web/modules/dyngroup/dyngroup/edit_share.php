@@ -29,6 +29,16 @@ require("graph/navbar.inc.php");
 require("modules/dyngroup/includes/groups.inc.php");
 require_once("modules/pulse2/includes/utilities.php"); # for quickGet method
 
+/*
+ * Display right top shortcuts menu
+ */
+if (isset($_GET['cn']) and isset($_GET['objectUUID'])) { // Computers
+    include('modules/pulse2/includes/menu_action.php');
+}
+else { // Groups
+    include('modules/pulse2/includes/menu_group_action.php');
+}
+
 $gid = quickGet('gid');
 $group = new Group($gid, true);
 $name = $group->getName();

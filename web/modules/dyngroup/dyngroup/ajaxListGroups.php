@@ -21,16 +21,6 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*require("../../../includes/PageGenerator.php");
-require("../../../includes/config.inc.php");
-require("../../../includes/i18n.inc.php");
-require("../../../includes/acl.inc.php");
-require("../../../includes/session.inc.php");
-require_once("../../../modules/dyngroup/includes/utilities.php");
-require_once("../../../modules/dyngroup/includes/querymanager_xmlrpc.php");
-require_once("../../../modules/dyngroup/includes/xmlrpc.php");
-require_once("../../../modules/dyngroup/includes/request.php");
-require("../../../modules/dyngroup/includes/dyngroup.php");*/
 require("modules/pulse2/includes/profiles_xmlrpc.inc.php");
 
 global $conf;

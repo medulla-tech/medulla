@@ -37,7 +37,15 @@ global $SYNCHROSTATE_SYNCHRO;
 global $SYNCHROSTATE_RUNNING;
 global $SYNCHROSTATE_INIT_ERROR;
 
-include('modules/pulse2/includes/menu_action.php');
+/*
+ * Display right top shortcuts menu
+ */
+if (isset($_GET['cn']) and isset($_GET['objectUUID'])) { // Computers
+    include('modules/pulse2/includes/menu_action.php');
+}
+else { // Groups
+    include('modules/pulse2/includes/menu_group_action.php');
+}
 
 if (isset($_POST['bsync'])) {
     if (isset($params['uuid'])) {

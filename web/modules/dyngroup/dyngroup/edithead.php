@@ -25,6 +25,16 @@ require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/dyngroup/includes/includes.php");
 
+/*
+ * Display right top shortcuts menu
+ */
+if (isset($_GET['cn']) and isset($_GET['objectUUID'])) { // Computers
+    include('modules/pulse2/includes/menu_action.php');
+}
+else { // Groups
+    include('modules/pulse2/includes/menu_group_action.php');
+}
+
 $gid = idGet();
 $group = getPGobject($gid, True);
 $edition = True;

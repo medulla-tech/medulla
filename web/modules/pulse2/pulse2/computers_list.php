@@ -64,7 +64,9 @@ if (displayLocalisationBar() && (isset($_GET['imaging_server']) && $_GET['imagin
 }
 
 $ajax->display();
-print "<br/><br/><br/>";
+print "<br/><br/><br/<br/><br/>";
+include('modules/pulse2/includes/menu_group_action.php');
+
 $ajax->displayDivToUpdate();
 
 ?>

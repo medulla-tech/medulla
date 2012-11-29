@@ -25,7 +25,15 @@
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 
-include('modules/pulse2/includes/menu_action.php');
+/*
+ * Display right top shortcuts menu
+ */
+if (isset($_GET['cn']) and isset($_GET['objectUUID'])) { // Computers
+    include('modules/pulse2/includes/menu_action.php');
+}
+else { // Groups
+    include('modules/pulse2/includes/menu_group_action.php');
+}
 
 if (!isset($_GET['hostname'])) { $_GET['hostname'] = $_GET['cn']; }
 if (!isset($_GET['uuid'])) { $_GET['uuid'] = $_GET['objectUUID']; }

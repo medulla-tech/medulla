@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * (c) 2012 Mandriva, http://www.mandriva.com
@@ -35,8 +35,6 @@ $logAction = new ActionItem(_T("Read log", "pulse2"),"msctabs","logfile","comput
 $mscAction = new ActionItem(_T("Software deployment", "pulse2"),"msctabs","install","computer", "base", "computers");
 $imgAction = new ActionItem(_T("Imaging management", "pulse2"),"imgtabs","imaging","computer", "base", "computers");
 
-echo '<div style="float: right; width: 200px;">';
-echo '<table border="0" style="border: none;" cellpadding="0" cellspacing="0"><tr>';
     
 $actions = array($inventAction, $vncClientAction, $logAction, $mscAction, $imgAction);
 
@@ -73,8 +71,8 @@ function modIsActive($action) {
     return False;
 }
 
+echo "<ul class='action'>";
 foreach ($actions as $action){
-        echo '<td style="border: none">';    
         if (is_array($paramArray)) {
             $paramArray['mod'] = $action->mod;
         }    
@@ -85,8 +83,6 @@ foreach ($actions as $action){
             echo "<a title=\"".$action->desc."\" href=\"" . urlStr($action->path) . $urlChunk . "\">&nbsp;</a>";
         }
         echo "</li>";
-        echo '</td>';
 }
-echo '</tr></table>';	    
-echo '</div>';
+echo "</ul>";
 ?>
