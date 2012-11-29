@@ -129,13 +129,13 @@ if (isset($error)) {
             <div class="control-group">
                 <label class="control-label" for="username"><?php echo  _("Login"); ?></label>
                 <div class="controls">
-                    <input name="username" type="text" id="username" value="<?= $login ?>" />
+                    <input name="username" type="text" class="input-small" id="username" value="<?= $login ?>" />
                 </div>
             </div>
             <div class="control-group">
                 <label class="control-label" for="password"><?php echo  _("Password"); ?></label>
                 <div class="controls">
-                    <input name="password" type="password" id="password" value="" />
+                    <input name="password" type="password" class="input-small" id="password" value="" />
                 </div>
             </div>
             <script type="text/javascript">

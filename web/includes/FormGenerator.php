@@ -274,7 +274,7 @@ class ImageTpl extends AbstractTpl {
             <td>&nbsp;</td>
             <td><input name="photofilename" type="file" size="23" />';
         if ($arrParam["action"] == "edit")
-            echo '<input name="deletephoto" type="submit" value="' . _("Delete photo") . '"/>';
+            echo ' <input name="deletephoto" class="btn btn-small" type="submit" value="' . _("Delete photo") . '"/>';
     }
 
     function displayRo($arrParam) {
@@ -1074,7 +1074,7 @@ class DeletableTrFormElement extends FormElement{
 
         // reald field display
         parent::display($arrParam);
-        print ' <input name="bdel" type="submit" class="btnSecondary" value="'._("Delete").'" onclick="
+        print ' <input name="bdel" type="submit" class="btn btn-small" value="'._("Delete").'" onclick="
         new Ajax.Updater(\''.$this->name.'\',\'includes/FormGenerator/MultipleInput.tpl.php\',
         { evalScripts: true, parameters: Form.serialize($(\'' . $this->formId . '\'))+\'&amp;minputname='.$this->name.'&amp;del='.$this->key.'&amp;desc='.urlencode($this->desc) . '&amp;regexp='.rawurlencode($this->template->regexp) . '\' }); return false;"/>';
 

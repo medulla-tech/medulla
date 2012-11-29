@@ -208,8 +208,12 @@ body {
     font-weight: bold;
 }
 
-input, select {
+input[type=text],
+input[type=password],
+select {
     width: 100px;
+}
+select {
     padding: 2px 4px;
 }
 
@@ -222,4 +226,5 @@ input, select {
     float: left;
     text-align: right;
     margin-right: 5px;
+    margin-top: 5px;
 }
