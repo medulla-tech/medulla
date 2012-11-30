@@ -49,7 +49,7 @@ from mmc.site import mmcconfdir
 from pulse2.inventoryserver.config import Pulse2OcsserverConfigParser
 from pulse2.inventoryserver.ssl import SecureHTTPRequestHandler, SecureThreadedHTTPServer
 from pulse2.inventoryserver.scheduler import AttemptToScheduler
-from pulse2.inventoryserver.glpiproxy import GlpiProxy
+from pulse2.inventoryserver.glpiproxy import GlpiProxy, resolveGlpiMachineUUIDByMAC
 
 class InventoryServer:
     def log_message(self, format, *args):
@@ -172,23 +172,37 @@ class TreatInv(Thread):
             self.logger.debug("TreatInv :: there are no new inventories")
             time.sleep(15) # TODO put in the conf file
 
+    def _getMAC(self, content):
+        dom = parseString(content)
+        xmlTag = dom.getElementsByTagName('MACADDR')[0].toxml()
+        return xmlTag.replace('<MACADDR>','').replace('</MACADDR>','')
+ 
     def treatinv(self, deviceid, from_ip, cont):
         content = cont[0]
         self.logger.debug('### BEGIN INVENTORY')
         self.logger.debug('%s' % cont)
         self.logger.debug('### END INVENTORY')
+        macaddr = self._getMAC(content)
 
         setLastFlag = True
 
+        # GLPI case - inventory creating disabled 
+        if self.config.enable_forward :
+            try :
+                glpi_machine_uuid = resolveGlpiMachineUUIDByMAC(macaddr) 
+                self.logger.debug("Resolved machine UUID='%s'" % str(glpi_machine_uuid))
+                if glpi_machine_uuid :
+                    AttemptToScheduler(from_ip, glpi_machine_uuid)
+                else :
+                    self.logger.warn("GLPI machine couldn't be resolved, skipping the light pull.")
+            except Exception, exc :
+                self.logger.error("GLPI light pull mode: %s" % str(exc))
         if self.config.disable_create_inventory :
-            self.logger.debug(type(self.config.disable_create_inventory))
             self.logger.debug("Access to database disabled - exit the inventory creator")
             return False
+
         if AttemptToScheduler.is_comming_from_pxe(from_ip):
             self.logger.debug("Inventory is coming from PXE")
-            dom = parseString(content)
-            xmlTag = dom.getElementsByTagName('MACADDR')[0].toxml()
-            macaddr = xmlTag.replace('<MACADDR>','').replace('</MACADDR>','')
             inv = Inventory()
             inv.activate(self.config)
             setLastFlag = not inv.isInventoried(macaddr)
@@ -296,8 +310,10 @@ class TreatInv(Thread):
             self.logger.info("Injected inventory for %s in %s seconds" % (hostname, end_date - start_date))
 
             if isinstance(result, list) and len(result) == 2 :
-                ret, machine_uuid = result
-                AttemptToScheduler(from_ip, machine_uuid)
+                # disabling light pull on GLPI mode when Pulse2 inventory creator is enabled
+                if not self.config.enable_forward :
+                    ret, machine_uuid = result
+                    AttemptToScheduler(from_ip, machine_uuid)
             else :
                 ret = result
 

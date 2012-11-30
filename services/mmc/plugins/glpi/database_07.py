@@ -1532,6 +1532,22 @@ class Glpi07(DyngroupDatabaseHelper):
         session.close()
         return ret
 
+     def getMachineUUIDByMacAddress(self, mac):
+        """
+        Return a machine's UUID by MAC address.
+        @param mac: MAC address of machine
+        @type mac: str
+
+        @return: machine UUID
+        @rtype: str
+        """
+        ret = self.getMachineByMacAddress('imaging_module', mac)
+        if type(ret) == list:
+           if len(ret) != 0:
+              return str(toUUID(ret[0].id))
+        return None
+
+
     ##################### for msc
     def getMachinesNetwork(self, uuids):
         """
