@@ -50,4 +50,13 @@ function quickSet($name, $value) { $_GET[$name] = $value; }
 
 function idGet() { return quickGet('id'); }
 
+function right_top_shortcuts_display() {
+    if ((isset($_GET['cn']) and isset($_GET['objectUUID'])) or (isset($_GET['uuid']) and $_GET['uuid'] != "")) { // Computers
+        include('modules/pulse2/includes/menu_action.php');
+    }
+    elseif(isset($_GET['gid'])) { // Groups
+        include('modules/pulse2/includes/menu_group_action.php');
+    }
+}
+
 ?>

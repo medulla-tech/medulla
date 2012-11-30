@@ -27,6 +27,7 @@ require_once('modules/msc/includes/machines.inc.php');
 require_once('modules/msc/includes/widgets.inc.php');
 require_once('modules/base/computers/localSidebar.php');
 require_once('graph/navbar.inc.php');
+require_once("modules/pulse2/includes/utilities.php");
 
 if (!isset($_GET['hostname'])) { $_GET['hostname'] = $_GET['cn']; }
 if (!isset($_GET['uuid'])) { $_GET['uuid'] = $_GET['objectUUID']; }
@@ -34,12 +35,7 @@ if (!isset($_GET['uuid'])) { $_GET['uuid'] = $_GET['objectUUID']; }
 /*
  * Display right top shortcuts menu
  */
-if (isset($_GET['cn']) and isset($_GET['objectUUID'])) { // Computers
-    include('modules/pulse2/includes/menu_action.php');
-}
-else { // Groups
-    include('modules/pulse2/includes/menu_group_action.php');
-}
+right_top_shortcuts_display();
 
 if ($_GET['uuid']) {
     $machine = getMachine(array('uuid'=>$_GET['uuid']));

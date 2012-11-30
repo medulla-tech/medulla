@@ -27,6 +27,7 @@ require_once('modules/base/computers/localSidebar.php');
 require_once('graph/navbar.inc.php');
 require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
+require_once("modules/pulse2/includes/utilities.php");
 
 $params = getParams();
 $hostname = $params['hostname'];
@@ -40,12 +41,7 @@ global $SYNCHROSTATE_INIT_ERROR;
 /*
  * Display right top shortcuts menu
  */
-if (isset($_GET['cn']) and isset($_GET['objectUUID'])) { // Computers
-    include('modules/pulse2/includes/menu_action.php');
-}
-else { // Groups
-    include('modules/pulse2/includes/menu_group_action.php');
-}
+right_top_shortcuts_display();
 
 if (isset($_POST['bsync'])) {
     if (isset($params['uuid'])) {

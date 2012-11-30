@@ -32,12 +32,7 @@ require_once("modules/pulse2/includes/utilities.php"); # for quickGet method
 /*
  * Display right top shortcuts menu
  */
-if (isset($_GET['cn']) and isset($_GET['objectUUID'])) { // Computers
-    include('modules/pulse2/includes/menu_action.php');
-}
-else { // Groups
-    include('modules/pulse2/includes/menu_group_action.php');
-}
+right_top_shortcuts_display();
 
 $gid = quickGet('gid');
 $group = new Group($gid, true);
