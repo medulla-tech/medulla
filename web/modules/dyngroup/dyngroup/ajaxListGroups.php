@@ -128,7 +128,7 @@ if ($is_gp != 1) {
 }
 $n->addActionItemArray($action_delete);
 $n->addActionItem(new ActionItem(_T("Csv export", "dyngroup"),"csv","csv","computer", "base", "computers"));
-$n->disableFirstColumnActionLink();
+//$n->disableFirstColumnActionLink();
 
 $n->display();
 ?>
