@@ -1532,7 +1532,7 @@ class Glpi07(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-     def getMachineUUIDByMacAddress(self, mac):
+    def getMachineUUIDByMacAddress(self, mac):
         """
         Return a machine's UUID by MAC address.
         @param mac: MAC address of machine
