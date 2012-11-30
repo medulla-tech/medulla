@@ -49,6 +49,7 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
     localcert = mmcconfdir + '/pulse2/inventory-server/keys/privkey.pem'
     enable_forward = False
     url_to_forward = "http://localhost/glpi/plugins/fusioninventory/front/plugin_fusioninventory.communication.php"
+    disable_create_inventory = False 
 
     hostname = ['Hardware', 'Host']
 
@@ -102,9 +103,12 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
         if self.cp.has_option('main', 'localcert'):
             self.localcert = self.cp.get('main', 'localcert')
         if self.cp.has_option('main', 'enable_forward'):
-            self.enable_forward = self.cp.get('main', 'enable_forward')
+            self.enable_forward = self.cp.getboolean('main', 'enable_forward')
         if self.cp.has_option('main', 'url_to_forward'):
             self.url_to_forward = self.cp.get('main', 'url_to_forward')
+        if self.cp.has_option('main', 'disable_create_inventory'):
+            self.disable_create_inventory = self.cp.getboolean('main', 'disable_create_inventory')
+
 
 
         if not os.path.isfile(self.localcert):

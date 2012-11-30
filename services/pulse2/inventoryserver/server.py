@@ -180,6 +180,10 @@ class TreatInv(Thread):
 
         setLastFlag = True
 
+        if self.config.disable_create_inventory :
+            self.logger.debug(type(self.config.disable_create_inventory))
+            self.logger.debug("Access to database disabled - exit the inventory creator")
+            return False
         if AttemptToScheduler.is_comming_from_pxe(from_ip):
             self.logger.debug("Inventory is coming from PXE")
             dom = parseString(content)
@@ -339,18 +343,24 @@ class InventoryGetService(Singleton):
     def initialise(self, config):
         self.logger = logging.getLogger()
         self.xmlmapping = config.ocsmapping
+        self.bind = config.bind
+        self.port = int(config.port)
+        self.config = config
+
         try:
             OcsMapping().initialize(self.xmlmapping)
         except IOError, e:
             self.logger.error(e)
             return False
+        if self.config.disable_create_inventory :
+            return True
+
         try:
             if not InventoryCreator().activate(config): # does the db_check
                 return False
         except Exception, e : # TODO improve to get the "not the good version" message
             self.logger.error(e)
             return False
-        self.config = config
 
         # Translate the default entity to its real name if the dot character
         # has been used in the configuration file
@@ -378,8 +388,6 @@ class InventoryGetService(Singleton):
         else:
             InventoryCreator().rules = DefaultEntityRules(self.config.default_entity)
 
-        self.bind = config.bind
-        self.port = int(config.port)
         return True
 
     def run(self, server_class=ThreadedHTTPServer, handler_class=HttpInventoryServer): # by default launch a multithreaded server without ssl
