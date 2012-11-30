@@ -118,8 +118,8 @@ class MultiFileTpl extends AbstractTpl {
         <div id="triggerUpload">' . _T('Upload Queued Files', "pkgs") . '</div>
         </div>
     
-        <script src="jsframework/lib/fileuploader.js" type="text/javascript"></script>
-        <link href="jsframework/lib/fileuploader.css" rel="stylesheet" type="text/css">
+        <script src="jsframework/lib/fileuploader/fileuploader.js" type="text/javascript"></script>
+        <link href="jsframework/lib/fileuploader/fileuploader.css" rel="stylesheet" type="text/css">
         <script>
         var box = $(\'p_api\');
         var selectedIndex = box.selectedIndex;
@@ -127,7 +127,7 @@ class MultiFileTpl extends AbstractTpl {
         function createUploader(){
             var uploader = new qq.FileUploader({
                 element: document.getElementById(\'file-uploader\'),
-                action: \'jsframework/lib/fileuploader.php\',
+                action: \'jsframework/lib/fileuploader/fileuploader.php\',
                 debug: true,
                 multiple: true,
                 demoMode: false,

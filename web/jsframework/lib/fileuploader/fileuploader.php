@@ -6,9 +6,9 @@ You can uncomment the following lines (minus the require) to use these as your d
 /******************************************/
 
 session_start();
-require_once("../../includes/xmlrpc.inc.php");
-require_once("../../modules/pkgs/includes/xmlrpc.php");
-require_once("../../modules/pkgs/includes/functions.php");
+require_once("../../../includes/xmlrpc.inc.php");
+require_once("../../../modules/pkgs/includes/xmlrpc.php");
+require_once("../../../modules/pkgs/includes/functions.php");
 
 
 // list of valid extensions, ex. array("jpeg", "xml", "bmp")

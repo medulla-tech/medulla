@@ -24,10 +24,10 @@ require("graph/navbar.inc.php");
 
 ?>
 <script src="jsframework/cookiejar.js"></script>
-<script type="text/javascript" src="modules/dashboard/graph/js/raphael-min.js"></script>
-<script type="text/javascript" src="modules/dashboard/graph/js/g.raphael-min.js"></script>
-<script type="text/javascript" src="modules/dashboard/graph/js/g.pie-min.js"></script>
-<script type="text/javascript" src="modules/dashboard/graph/js/g.line-min.js"></script>
+<script type="text/javascript" src="jsframework/lib/raphael/raphael-min.js"></script>
+<script type="text/javascript" src="jsframework/lib/raphael/g.raphael-min.js"></script>
+<script type="text/javascript" src="jsframework/lib/raphael/g.pie-min.js"></script>
+<script type="text/javascript" src="jsframework/lib/raphael/g.line-min.js"></script>
 <?php
 
 $p = new PageGenerator(_T("Dashboard", "dashboard"));
