@@ -23,7 +23,7 @@
 SUBDIRS = confs
 
 datapaths = graph img includes jsframework logout modules/base modules/ppolicy \
-	modules/dashboard modules/services index.php main_content.php main.php \
+	modules/dashboard modules/services index.php main.php \
 	version.php license.php forgotpassword.php token.php
 
 mmcdatadir = $(datadir)/mmc
