@@ -309,6 +309,7 @@ class TreatInv(Thread):
 
             self.logger.info("Injected inventory for %s in %s seconds" % (hostname, end_date - start_date))
 
+            ret = None
             if isinstance(result, list) and len(result) == 2 :
                 # disabling light pull on GLPI mode when Pulse2 inventory creator is enabled
                 if not self.config.enable_forward :
