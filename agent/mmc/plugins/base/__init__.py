@@ -386,6 +386,9 @@ def maxUID():
     ldapObj = ldapUserGroupControl()
     return ldapObj.maxUID()
 
+def freeUID():
+    return ldapUserGroupControl().freeUID()
+
 def maxGID():
     ldapObj = ldapUserGroupControl()
     return ldapObj.maxGID()
@@ -848,7 +851,7 @@ class LdapUserGroupControl:
         else:
             homeDir = self.getHomeDir(uid, homeDir)
 
-        uidNumber = self.maxUID() + 1
+        uidNumber = self.freeUID()
 
         # Get a gid number
         if not primaryGroup:
@@ -1779,6 +1782,21 @@ class LdapUserGroupControl:
             if maxuid < self.uidStart: maxuid = self.uidStart
 
         return maxuid
+
+    def freeUID(self):
+        """
+        Returns the first free UID available for posixAccounts
+        """
+
+        accounts = self.search("objectClass=posixAccount", self.baseDN, ["uidNumber"], ldap.SCOPE_SUBTREE)
+        uidNumbers = []
+        for account in accounts:
+            uidNumbers.append(account[0][1]['uidNumber'][0])
+        uid = self.uidStart
+        while uid in uidNumbers:
+            uid = uid + 1
+
+        return uid
 
     def removeUserObjectClass(self, uid, className):
         # Create LDAP path
