@@ -27,7 +27,7 @@ $options = array(
     "class" => "InventoryPanel",
     "id" => "inventory",
     "refresh" => 3600,
-    "title" => _T("Incoming inventories", "inventory"),
+    "title" => _T("Computers", "inventory"),
 );
 
 class InventoryPanel extends Panel {
@@ -47,6 +47,8 @@ class InventoryPanel extends Panel {
         $greenMachines = json_encode(base64_encode(serialize($result['machine']['green'])));
         $orangeMachines = json_encode(base64_encode(serialize($result['machine']['orange'])));
         $redMachines = json_encode(base64_encode(serialize($result['machine']['red'])));
+
+        print _T("Latest Inventory Date", "inventory");
 
         echo <<< INVENTORY
     <div id="inventory-graphs"></div>
