@@ -50,9 +50,11 @@ class SpacePanel extends Panel {
                 data = [],
                 legend = [],
                 colors = [],
-                title = partition.mountpoint,
-                free = 100 - parseInt(partition.usage.percent),
-                used = parseInt(partition.usage.percent);
+                title = partition.mountpoint;
+            if (partition.usage.percent < 1)
+                partition.usage.percent = 1;
+            var free = 100 - Math.round(partition.usage.percent),
+                used = Math.round(partition.usage.percent);
             data.push(used);
             legend.push(partition.usage.used + " $used");
             colors.push("#ef2929");
