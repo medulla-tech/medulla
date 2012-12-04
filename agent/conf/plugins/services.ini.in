@@ -7,3 +7,5 @@ base = slapd
 samba = samba
 mail = dovecot,postfix,amavis
 network = isc-dhcp-server,bind9
+shorewall = shorewall
+squid = squid
