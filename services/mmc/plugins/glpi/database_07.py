@@ -46,6 +46,7 @@ import logging
 import re
 from sets import Set
 import exceptions
+import datetime
 
 class Glpi07(DyngroupDatabaseHelper):
     """
