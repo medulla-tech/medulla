@@ -1732,13 +1732,13 @@ class Glpi07(DyngroupDatabaseHelper):
             delta = now - machine_time
             if delta.days > red:
                 ret['count']['red'] += 1
-                ret['machine']['red'][toUUID(i.id)] = i.name
+                ret['machine']['red'][toUUID(i.ID)] = i.name
             elif delta.days > orange:
                 ret['count']['orange'] += 1
-                ret['machine']['orange'][toUUID(i.id)] = i.name
+                ret['machine']['orange'][toUUID(i.ID)] = i.name
             else:
                 ret['count']['green'] += 1
-                ret['machine']['green'][toUUID(i.id)] = i.name
+                ret['machine']['green'][toUUID(i.ID)] = i.name
 
         session.close()
 
