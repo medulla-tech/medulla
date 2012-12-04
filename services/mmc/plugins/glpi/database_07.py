@@ -632,7 +632,7 @@ class Glpi07(DyngroupDatabaseHelper):
         elif toH:
             ret = map(lambda m: m.toH(), query.all())
         else:
-            if filt.has_key('get'):
+            if filt is not None and filt.has_key('get'):
                 ret = self.__formatMachines(query.all(), advanced, filt['get'])
             else:
                 ret = self.__formatMachines(query.all(), advanced)
@@ -1683,7 +1683,7 @@ class Glpi07(DyngroupDatabaseHelper):
         session.close()
         return ret_gw
 
-    def getMachineNumberByState(self):
+    def getMachineNumberByState(self, ctx):
         """
         return number of machines sorted by state
         default states are:
@@ -1695,8 +1695,12 @@ class Glpi07(DyngroupDatabaseHelper):
         @rtype: dict
         """
 
+        complete_ctx(ctx)
+        filt = {'ctxlocation': ctx.locations}
+        computersList = self.getRestrictedComputersList(ctx, filt=filt)
+
         session = create_session()
-        query = session.query(Machine).all()
+        query = session.query(Machine).filter(Machine.id.in_(map(lambda x:fromUUID(x), computersList))).all()
 
         now = datetime.datetime.now()
 
