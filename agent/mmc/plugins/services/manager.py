@@ -52,7 +52,7 @@ class ServiceManager(object):
             if service in self.config.services[plugin]:
                 return True
         return False
-    
+
     def list_plugins_services(self):
         """
         Returns list of services ordered by MMC plugins
@@ -70,8 +70,10 @@ class ServiceManager(object):
         """
         list = []
         for unit in self.list():
-            if not self.is_plugin_service(unit['id']) and unit['id'].endswith(".service") and unit['unit_file_state'] != "static":
-                if filter and any(filter in s for s in unit):
+            if not self.is_plugin_service(unit['id']) and \
+               unit['id'].endswith(".service") and \
+               unit['unit_file_state'] != "static":
+                if filter and any(v for k,v in unit.items() if filter in str(v)):
                     list.append(unit)
                 if not filter:
                     list.append(unit)
@@ -91,7 +93,7 @@ class ServiceManager(object):
             if unit.properties.Id == '%s.service' % service:
                 return unit
         return False
-    
+
     def get_unit_info(self, service):
         service = service.replace(".service", "", 1)
         unit = self.get_unit(service)
@@ -99,7 +101,7 @@ class ServiceManager(object):
 
     def serialize_unit(self, unit, service = ""):
         if unit:
-            return {'id': str(unit.properties.Id), 
+            return {'id': str(unit.properties.Id),
                     'description': str(unit.properties.Description),
                     'active_state': str(unit.properties.ActiveState),
                     'can_start': bool(unit.properties.CanStart),
@@ -108,8 +110,8 @@ class ServiceManager(object):
                     'unit_file_state': str(unit.properties.UnitFileState),
                    }
         else:
-            return {'id': service + ".service", 
-                    'description': service, 
+            return {'id': service + ".service",
+                    'description': service,
                     'active_state': "unavailable",
                     'can_start': False,
                     'can_stop': False,
@@ -126,7 +128,7 @@ class ServiceManager(object):
         unit = self.get_unit(service)
         unit.stop('fail')
         return True
-    
+
     def restart(self, service):
         unit = self.get_unit(service)
         unit.restart('fail')

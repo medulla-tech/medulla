@@ -34,7 +34,7 @@ $emptyAction = new EmptyActionItem();
 
 $ids = array();
 $names = array();
-$desc = array();
+$descs = array();
 $statuses = array();
 $actionsStart = array();
 $actionsStop = array();
