@@ -1700,7 +1700,7 @@ class Glpi07(DyngroupDatabaseHelper):
         computersList = self.getRestrictedComputersList(ctx, filt=filt)
 
         session = create_session()
-        query = session.query(Machine).filter(Machine.id.in_(map(lambda x:fromUUID(x), computersList))).all()
+        query = session.query(Machine).filter(Machine.ID.in_(map(lambda x:fromUUID(x), computersList))).all()
 
         now = datetime.datetime.now()
 
