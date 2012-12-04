@@ -124,6 +124,7 @@ if (isset($_POST["bdelmachine_x"])) {
             } else {
                 new NotifyWidgetSuccess(_T("Profile successfully created", "dyngroup"));
             }
+            header("Location: " . urlStrRedirect("base/computers/display", array('gid'=>$group->id)));
         }
         $list = $group->members();
         $members = array();
@@ -131,13 +132,13 @@ if (isset($_POST["bdelmachine_x"])) {
             $listOfMembers[$member['uuid']] = $member;
             $members[$member['hostname']."##".$member['uuid']] = $member['hostname'];
         }
-        if ($visibility == 'show') {
-            if ($type == 0) {
-                header("Location: " . urlStrRedirect("base/computers/computersgroupcreator", array('tab'=>'tabsta', 'id'=>$group->id)));
-            } else {
-                header("Location: " . urlStrRedirect("base/computers/computersprofilecreator", array('tab'=>'tabsta', 'id'=>$group->id)));
-            }
-        }
+        #if ($visibility == 'show') {
+        #    if ($type == 0) {
+        #        //header("Location: " . urlStrRedirect("base/computers/computersgroupcreator", array('tab'=>'tabsta', 'id'=>$group->id)));
+        #    } else {
+        #        //header("Location: " . urlStrRedirect("base/computers/computersprofilecreator", array('tab'=>'tabsta', 'id'=>$group->id)));
+        #    }
+        #}
     } else {
         $names = array();
         if (count($ret_add) == 2) {
