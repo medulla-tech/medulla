@@ -27,7 +27,7 @@ $options = array(
     "class" => "GlpiPanel",
     "id" => "glpi",
     "refresh" => 3600,
-    "title" => _T("Computers state", "glpi"),
+    "title" => _T("Computers", "glpi"),
 );
 
 class GlpiPanel extends Panel {
@@ -43,12 +43,12 @@ class GlpiPanel extends Panel {
         $lessThanText = json_encode(_T("Less than ", "inventory"));
         $moreThanText = json_encode(_T("More than ", "inventory"));
         $daysText = json_encode(_T(" days", "inventory"));
-        $idleText = json_encode(_T("idle", "inventory"));
         $urlRedirect = json_encode(urlStrRedirect("base/computers/createStaticGroup"));
         $greenMachines = json_encode(base64_encode(serialize($result['machine']['green'])));
         $orangeMachines = json_encode(base64_encode(serialize($result['machine']['orange'])));
         $redMachines = json_encode(base64_encode(serialize($result['machine']['red'])));
 
+        print _T("Latest Inventory Date", "glpi");
         echo <<< INVENTORY
     <div id="inventory-graphs"></div>
     <script type="text/javascript">
@@ -60,7 +60,6 @@ class GlpiPanel extends Panel {
         urlRedirect = $urlRedirect,
         greenMachines = $greenMachines,
         orangeMachines = $orangeMachines,
-        idleText = $idleText,
         redMachines = $redMachines,
         r = Raphael("inventory-graphs", 200, 250),
         radius = 80,
@@ -74,7 +73,7 @@ class GlpiPanel extends Panel {
 
     if (machineCount.green) {
         data.push(machineCount.green);
-        legend.push(idleText + ": " + machineCount.green);
+        legend.push(lessThanText + days.orange + daysText + ": " + machineCount.green);
         colors.push("#73d216");
         href.push(urlRedirect + "&group=green&days=" + days.orange + "&machines=" + greenMachines);
     }

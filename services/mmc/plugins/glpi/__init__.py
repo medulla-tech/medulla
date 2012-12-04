@@ -73,8 +73,10 @@ class ContextMaker(ContextMakerI):
         return s
 
 class RpcProxy(RpcProxyI):
-    pass
-    # ctx = self.currentContext
+    def getMachineNumberByState(self):
+        ctx = self.currentContext
+
+        return xmlrpcCleanup(Glpi().getMachineNumberByState(ctx))
 
 def getLastMachineInventoryFull(uuid):
     return xmlrpcCleanup(Glpi().getLastMachineInventoryFull(uuid))
@@ -90,9 +92,6 @@ def getMachineMac(uuid):
 
 def getMachineIp(uuid):
     return xmlrpcCleanup(Glpi().getMachineIp(uuid))
-
-def getMachineNumberByState():
-    return xmlrpcCleanup(Glpi().getMachineNumberByState())
 
 # TODO
 def getInventoryEM(part):
