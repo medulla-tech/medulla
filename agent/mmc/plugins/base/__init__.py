@@ -1763,6 +1763,9 @@ class LdapUserGroupControl:
         @return: maxUid in ldap directory
         @rtype: int
         """
+
+        self.logger.warning("API call deprecated, use freeUID instead.")
+
         ret = [self.search("uid=*", self.baseUsersDN, ["uidNumber"], ldap.SCOPE_SUBTREE)]
 
         # prepare array for processing
