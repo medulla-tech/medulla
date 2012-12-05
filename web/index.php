@@ -37,7 +37,7 @@ require("modules/base/includes/groups.inc.php");
 require("includes/PageGenerator.php");
 
 global $conf;
-$error = null;
+$error = "";
 $login = "";
 
 if (isset($_POST["bConnect"])) {
@@ -67,7 +67,8 @@ if (isset($_POST["bConnect"])) {
         header("Location: " . $root . "main.php");
         exit;
     } else {
-        if (!isXMLRPCError()) $error = _("Login failed");
+        if (!isXMLRPCError())
+            $error = _("Login failed");
     }
 }
 
@@ -85,9 +86,6 @@ if (isset($_GET["agentsessionexpired"])) {
 	<title>Mandriva Linux / Mandriva Management Console</title>
 	<link href="graph/login/index.css" rel="stylesheet" media="screen" type="text/css" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta http-equiv="imagetoolbar" content="false" />
-	<meta name="Description" content="" />
-	<meta name="Keywords" content="" />
 	<link rel="icon" href="img/common/favicon.ico" />
     <script src="jsframework/lib/prototype.js" type="text/javascript"></script>
     <script src="jsframework/src/scriptaculous.js" type="text/javascript"></script>
@@ -104,24 +102,20 @@ if (isset($_GET["agentsessionexpired"])) {
         <div id="content">
 
 <?php
-
-
-$n = new NotifyWidget();
-
-if (isset($_SESSION['__notify'])) {
-    foreach ($_SESSION['__notify'] as $err){ //add notify widget error
-        $error = $error . $err.'<br/>';
+if (isset($_SESSION['notify']) && count($_SESSION['notify']) > 0) {
+    foreach($_SESSION['notify'] as $n) {
+        $n = unserialize($n);
+        foreach($n->strings as $s)
+            if ($error) $error .= '<br/>';
+            $error .= $s;
+        $n->flush();
     }
-    $n->flush();
 }
-
-if (isset($error)) {
+if ($error) {
     echo '<div id="alert">' . stripslashes($error) . '</div>';
 }
 ?>
-
         <div id="login">
-
 <!--Login content -->
 
 		<form class="form-inline" action="index.php" method="post" name="loginForm" id="loginForm">
@@ -217,15 +211,11 @@ if (isset($error)) {
 
 </div>
 <?php
-
-if (isCommunityVersion() && is_file("license.php")) {
+if (isCommunityVersion() && is_file("license.php"))
     require("license.php");
-}
-
+if ($error)
+    print '<script type="text/javascript">new Effect.Shake($("alert"));</script>';
 ?>
-
-<?if (isset($error)) print '<script type="text/javascript">new Effect.Shake($("alert"));</script>'; ?>
-
 </body>
 </html>
 <?php

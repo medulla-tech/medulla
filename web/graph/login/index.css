@@ -41,6 +41,7 @@ Notes:
 
 @import '../bootstrap-buttons.css';
 @import '../bootstrap-forms.css';
+@import '../bootstrap-alerts.css';
 
 * {
     font-family: Verdana, Lucida, Geneva, Helvetica, Arial, sans-serif;
@@ -144,8 +145,8 @@ body {
 #alert  {
 	position: relative;
 	left: 22px;
-	top: 77px;
-	width: 163px;
+	top: 22px;
+	width: 170px;
 	float: left;
 	color: #666;
 	padding: 15px 15px 15px 45px;
