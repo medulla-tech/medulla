@@ -46,58 +46,5 @@ if (isset($_SESSION['notify']) && count($_SESSION['notify']) > 0) {
         MMC Agent <a href="#" onclick="showPopupUp(event,'version.php'); return false;"><?php  echo $_SESSION["modListVersion"]['ver'] ?></a>
     </div>
 </div><!-- wrapper -->
-<script type="text/javascript">
-
-<!--
-
-function canChangeStyle(elt) {
-    if (elt.id=='param') return false;
-    if (elt.type=='text') return true;
-    if (elt.type=='checkbox') return true;
-    if (elt.type=='select') return true;
-    if (elt.type=='password') return true;
-    return false;
-}
-
-function ifocus(e) {
-    var elt = Event.element(e);
-    if (canChangeStyle(elt)) {
-        Element.setStyle(elt, {'border-color': '#EE5010'});
-        Element.setStyle(elt, {'background-color': '#FFFFEE'});
-    }
-}
-function iblur(e) {
-    var elt = Event.element(e);
-    if (canChangeStyle(elt)) {
-        Element.setStyle(elt, {'border-color': '#666'})
-        Element.setStyle(elt, {'background-color': '#FFF'});
-    }
-}
-
-function focusStyler(nodes) {
-var i = 0;
-
-nodes.each( function(node) {
-
-        Event.observe(node, 'focus', ifocus, false);
-        Event.observe(node, 'blur', iblur, false);
-        if ((i==0)&&(canChangeStyle(node))) {
-            node.focus();
-            Element.setStyle(node, {'border-color': '#EE5010'});
-            Element.setStyle(node, {'background-color': '#FFFFEE'});
-        }
-
-        if (canChangeStyle(node)) {
-            i++;
-        }
-    });
-}
-
-var inputList = document.getElementsByTagName('input');
-var nodes = $A(inputList);
-
-focusStyler(nodes);
-
-</script>
 </body>
 </html>
