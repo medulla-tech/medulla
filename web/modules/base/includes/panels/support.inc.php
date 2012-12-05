@@ -37,6 +37,9 @@ class SupportPanel extends Panel {
         echo '<div class="subpanel"><h4>' . _("License") . '</h4>';
         $this->display_licence("users", _("Users : "));
         $this->display_licence("computers", _("Computers : "));
+        echo '</div>';
+        if ($this->data['upgrade_url'])
+            echo '<div style="text-align: right"><a class="btn btn-info btn-small" href="' . $this->data['upgrade_url'] . '">' . _('Upgrade') . '</a></div>';
     }
 
     function display_licence($type, $title) {
@@ -46,8 +49,6 @@ class SupportPanel extends Panel {
             else
                 echo '<p class="alert alert-success">';
             echo $title . ' <strong>' . $this->data['installed_' . $type] . ' / ' . $this->data[$type];
-            if ($this->data['too_much_' . $type] && $this->data['upgrade_url'])
-                echo ' &raquo; <a class="error" href="' . $this->data['upgrade_url'] . '">' . _('Upgrade') . '</a>';
             echo '</strong></p>';
         }
     }
