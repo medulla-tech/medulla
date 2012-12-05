@@ -37,12 +37,14 @@ class ServicesPanel extends Panel {
         $errors = '';
         foreach($this->data as $module => $services_infos) {
             $moduleObj = $MMCApp->getModule($module);
-            $errors .= '<p>' . $moduleObj->getDescription() . ' : <a href="' . urlStrRedirect('services/control/index') . '">' . count($services_infos) . ' inactive service(s)</a></p>';
+            if ($errors) $errors .= "<br/>";
+            $errors .= '<strong>' . $moduleObj->getDescription() . ' : <a class="error" href="' . urlStrRedirect('services/control/index') . '">' .
+                sprintf(dngettext("services", "%d inactive service", "%d inactive services", count($services_infos)), count($services_infos)) . '</a></strong>';
         }
 
         if ($errors)
-            echo '<div class="errors">' . $errors . '</div>';
+            echo '<p class="alert alert-error">' . $errors . '</p>';
         else
-            echo '<p>' . _T("All services are up", "services") . '</p>';
+            echo '<p class="alert alert-success">' . _T("All services are up", "services") . '</p>';
     }
 }

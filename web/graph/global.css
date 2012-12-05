@@ -1252,6 +1252,6 @@ ul.roACL {
     font-weight: bold;
 }
 
-.subpanel .alert, .submod .alert {
+.panel .alert, .panel .alert {
     padding: 4px;
 }
