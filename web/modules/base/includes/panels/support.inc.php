@@ -34,10 +34,12 @@ class SupportPanel extends Panel {
     function display_content() {
         echo '<p><strong>' . $this->data['product_name'][0] . '</strong></p>';
         echo '<p>' . _("Support :") . ' <a href="mailto:' . $this->data['support_mail']. '">' . $this->data['support_mail'] . '</a></p>';
-        echo '<div class="subpanel"><h4>' . _("License") . '</h4>';
-        $this->display_licence("users", _("Users : "));
-        $this->display_licence("computers", _("Computers : "));
-        echo '</div>';
+        if ($this->data['users'] > 0 || $this->data['computers'] > 0) {
+            echo '<div class="subpanel"><h4>' . _("License") . '</h4>';
+            $this->display_licence("users", _("Users : "));
+            $this->display_licence("computers", _("Computers : "));
+            echo '</div>';
+        }
         if ($this->data['upgrade_url'])
             echo '<div style="text-align: right"><a class="btn btn-info btn-small" href="' . $this->data['upgrade_url'] . '">' . _('Upgrade') . '</a></div>';
     }
