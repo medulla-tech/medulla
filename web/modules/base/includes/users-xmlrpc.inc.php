@@ -112,9 +112,15 @@ function add_user($login, $pass, $firstname, $name, $homedir, $createhomedir, $o
 {
     $param = array($login, prepare_string($pass), $firstname, $name, $homedir, $createhomedir, $ownHomeDir, $primaryGroup);
     $ret = xmlCall("base.createUser", $param);
-    if($ret == 5) {
+    if ($ret == 5) {
         $msg = sprintf(_("User %s created but password is not valid regarding your password policies.<br/><strong>You must change the user password.</strong>"), $login) . "<br />";
         return array("code" => $ret, "info" => $msg);
+    }
+    else if ($ret == 10) {
+        $msg = _("You cannot add more users.") . "<br />";
+        new NotifyWidgetFailure($msg);
+        header('Location: ' . urlStrRedirect("base/users/index"));
+        exit;
     }
     else {
         $msg = sprintf(_("User %s successfully created"), $login) . "<br />";

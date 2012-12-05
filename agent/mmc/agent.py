@@ -705,7 +705,7 @@ class PluginManager(Singleton):
         @rtype: list
         """
         ret = []
-        for item in glob.glob(os.path.join(self.pluginDirectory, "*", "__init__.py")):
+        for item in glob.glob(os.path.join(self.pluginDirectory, "*", "__init__.pyc")):
             ret.append(item.split("/")[1])
         return ret
 

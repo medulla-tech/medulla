@@ -155,10 +155,11 @@ if ($result) {
     $resultPopup->add('<div class="alert alert-success">' . $result . '</div>');
 }
 // in case of modification/creation success, redirect to the edit page
-if ($redirect)
+if ($redirect) {
     header('Location: ' . urlStrRedirect("base/users/edit",
         array("user" => $uid)));
-
+    exit;
+}
 
 // in case of failure, set errorStatus to 0 in order to display the edit form
 $errorStatus = 0;
