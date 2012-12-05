@@ -189,6 +189,7 @@ destpath = /home/archives
 # comment =
 # users = 0
 # computers = 0
+# upgrade_url =
 # # Support informations
 # support_mail =
 # support_phone =

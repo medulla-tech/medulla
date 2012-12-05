@@ -34,7 +34,7 @@ class SupportPanel extends Panel {
     function display_content() {
         echo '<p><strong>' . $this->data['product_name'][0] . '</strong></p>';
         echo '<p>' . _("Support :") . ' <a href="mailto:' . $this->data['support_mail']. '">' . $this->data['support_mail'] . '</a></p>';
-        echo '<div class="subpanel"><h4>' . _("Licence") . '</h4>';
+        echo '<div class="subpanel"><h4>' . _("License") . '</h4>';
         $this->display_licence("users", _("Users : "));
         $this->display_licence("computers", _("Computers : "));
     }
@@ -45,7 +45,10 @@ class SupportPanel extends Panel {
                 echo '<p class="alert alert-error">';
             else
                 echo '<p class="alert alert-success">';
-            echo $title . ' <strong>' . $this->data['installed_' . $type] . ' / ' . $this->data[$type] . '</strong>';
+            echo $title . ' <strong>' . $this->data['installed_' . $type] . ' / ' . $this->data[$type];
+            if ($this->data['too_much_' . $type] && $this->data['upgrade_url'])
+                echo ' &raquo; <a class="error" href="' . $this->data['upgrade_url'] . '">' . _('Upgrade') . '</a>';
+            echo '</strong></p>';
         }
     }
 }

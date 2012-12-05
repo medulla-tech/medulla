@@ -58,10 +58,8 @@ function auth_user ($login, $pass)
             $msg[] = _("computers");
         }
         if (count($msg) > 0) {
-            $warn = array(sprintf(_('WARNING: The number of registered %s is exceeding your license.'), implode($msg, ' and ')));
-            $warn[] = _('Please contact your administrator for more information. If you are an administrator, please go to the license status page for more information.');
-
-            new NotifyWidgetWarning(implode($warn, '<br/>'));
+            $warn = sprintf(_('WARNING: The number of registered %s is exceeding your license.'), implode($msg, _(' and ')));
+            new NotifyWidgetWarning($warn);
         }
     }
 

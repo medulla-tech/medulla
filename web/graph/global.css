@@ -31,9 +31,10 @@ body {
     background: url("../img/common/background.gif") #999;
 }
 
+.error { color : #A40000; }
 a { color: #2A557E;}
-a:link { color: #2A557E; }
 a:visited { color: #2A557E; }
+a:visited.error { color: #A40000; }
 a:hover { color: #000; }
 
 a.link { color: #2A557E; border-bottom: 1px dotted #777; text-decoration: none; }
@@ -253,10 +254,6 @@ p {
 
 #sidebar ul li a:hover {
     color: #444;
-}
-
-.error {
-    color : #D00;
 }
 
 /* ---------------------------------------- */
@@ -1253,4 +1250,8 @@ ul.roACL {
 .panel .errors {
     color: #a40000;
     font-weight: bold;
+}
+
+.subpanel .alert, .submod .alert {
+    padding: 4px;
 }

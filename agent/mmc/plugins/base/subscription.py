@@ -50,6 +50,7 @@ class SubscriptionConfig:
     subs_comment = ""
     subs_users = 0
     subs_computers = 0
+    subs_upgrade_url = ""
     # Support informations
     subs_support_mail = ""
     subs_support_phone = ""
@@ -95,6 +96,7 @@ class SubscriptionConfig:
         self.getValueMacro(section, "comment")
         self.getValueMacro(section, "users", True)
         self.getValueMacro(section, "computers", True)
+        self.getValueMacro(section, "upgrade_url")
         self.getValueMacro(section, "support_mail")
         self.getValueMacro(section, "support_phone")
         self.getValueMacro(section, "support_comment")
@@ -128,6 +130,7 @@ class SubscriptionManager(object):
             'customer_mail':self.config.subs_customer_mail,
             'comment':self.config.subs_comment,
             'users':self.config.subs_users,
+            'upgrade_url':self.config.subs_upgrade_url,
             'computers':self.config.subs_computers,
             'support_mail':self.config.subs_support_mail,
             'support_phone':self.config.subs_support_phone,
@@ -136,12 +139,12 @@ class SubscriptionManager(object):
         if dynamic:
             # we add the number of user and computers we have right now
             ret['installed_users'], _ = searchUserAdvanced()
-            ret['too_much_users'] = (ret['installed_users'] > ret['users'])
+            ret['too_much_users'] = (ret['users'] > 0 and ret['installed_users'] > ret['users'])
             if ComputerManager().isActivated():
                 ret['installed_computers'] = ComputerManager().getTotalComputerCount()
             else:
                 ret['installed_computers'] = 0
-            ret['too_much_computers'] = (ret['installed_computers'] > ret['computers'])
+            ret['too_much_computers'] = (ret['computers'] and ret['installed_computers'] > ret['computers'])
         return ret
 
     def checkUsers(self):
