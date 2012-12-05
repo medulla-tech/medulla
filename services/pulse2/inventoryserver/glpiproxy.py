@@ -117,8 +117,8 @@ class GlpiProxy :
             response = urllib2.urlopen(request)
 
         except Exception, exc:
-            self._result += "GlpiProxy: Impossible to sending inventory."
-            self._result += 'Getted response: "%s"' % str(exc)
+            self._result.append("GlpiProxy: Impossible to sending inventory.")
+            self._result.append('Getted response: "%s"' % str(exc))
 
             return
 
@@ -136,7 +136,7 @@ class GlpiProxy :
         if self.ErrorHandler :
             return self._result
         else :
-            self._result += "Unable to parse response from GLPI"
+            self._result.append("Unable to parse response from GLPI")
 
 
 class ConfigReader :
