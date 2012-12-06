@@ -21,8 +21,6 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include("modules/msc/msc/vnc_client.php");
-
 if ($_GET['cn']) $_SESSION['cn'] = $_GET['cn'];
 if ($_GET['objectUUID']) $_SESSION['objectUUID'] = $_GET['objectUUID'];
 if ($_GET['action']) $_SESSION['action'] = $_GET['action'];
@@ -30,7 +28,7 @@ if ($_GET['action']) $_SESSION['action'] = $_GET['action'];
 $paramArray = array('cn' => $_SESSION['cn'], 'objectUUID' => $_SESSION['objectUUID']);
 
 $inventAction = new ActionItem(_T("Inventory", "pulse2"),"invtabs","inventory","inventory", "base", "computers");
-$vncClientAction = new ActionItem(_T("Remote control", "pulse2"), $_SESSION['action'] . "&vnc=", "vncclient", "computer", "base", "computers");
+$vncClientAction = new ActionItem(_T("Remote control", "pulse2"), "vnc_client", "vncclient", "computer", "base", "computers");
 $logAction = new ActionItem(_T("Read log", "pulse2"),"msctabs","logfile","computer", "base", "computers", "tablogs");
 $mscAction = new ActionItem(_T("Software deployment", "pulse2"),"msctabs","install","computer", "base", "computers");
 $imgAction = new ActionItem(_T("Imaging management", "pulse2"),"imgtabs","imaging","computer", "base", "computers");
@@ -75,12 +73,20 @@ echo "<ul class='action'>";
 foreach ($actions as $action){
         if (is_array($paramArray)) {
             $paramArray['mod'] = $action->mod;
+            if ($action->action == "vnc_client") {
+                $paramArray['establishproxy'] = "yes";
+            }
         }    
         echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; \" >";
         if (is_array($paramArray) & !empty($paramArray)) $urlChunk = $action->buildUrlChunk($paramArray);
         else $urlChunk = "&amp;" . $action->paramString."=" . rawurlencode($paramArray);
         if (modIsActive($action->action)) {
-            echo "<a title=\"".$action->desc."\" href=\"" . urlStr($action->path) . $urlChunk . "\">&nbsp;</a>";
+            if ($action->action == "vnc_client") {
+                echo "<a title=\"".$action->desc."\" onclick=\"window.open('" . urlStr($action->path) . $urlChunk . "','mywin','left=20,top=20,width=300,height=150,toolbar=1,resizable=0');\">&nbsp;</a>";
+            }
+            else {
+                echo "<a title=\"".$action->desc."\" href=\"" . urlStr($action->path) . $urlChunk . "\">&nbsp;</a>";
+            }
         }
         echo "</li>";
 }
