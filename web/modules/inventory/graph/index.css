@@ -1,0 +1,23 @@
+#sidebar {
+    position: static;
+    margin-left: -227px;
+    float: left;
+}
+
+/* IE6 Hack */
+/* #sidebar margin must be set differently in IE6 */
+* html #sidebar {
+    margin-left: -10px;
+    border-right: 2px solid #bbb;
+    position: static;
+    float: left;
+}
+
+* html #content {
+    margin-left: -200px;
+    padding-right: -50px;
+}
+
+* html #section form {
+    margin-left: 200px;
+}
