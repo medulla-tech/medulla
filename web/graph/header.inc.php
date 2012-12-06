@@ -42,23 +42,20 @@ $root = $conf["global"]["root"];
 unset($css);
 ?>
 <script type="text/javascript">
-
 <!--
-
 var myglobalHandlers = {
     onCreate : function() {
-        document.getElementById('loadimg').src = "<?php echo $root; ?>img/common/loader_p.gif"
+        if ($('loadimg'))
+            $('loadimg').src = "<?php echo $root; ?>img/common/loader_p.gif";
     },
     onComplete: function() {
-            if(Ajax.activeRequestCount== 0) {
-                document.getElementById('loadimg').src = "<?php echo $root; ?>img/common/loader.gif"
-            }
+        if(Ajax.activeRequestCount == 0 && $('loadimg')) {
+            $('loadimg').src = "<?php echo $root; ?>img/common/loader.gif";
         }
-    };
+    }
+};
 
-    Ajax.Responders.register(myglobalHandlers);
-
-
+Ajax.Responders.register(myglobalHandlers);
 
 // pf="prefix" and ck="checked" (0|1)
 function checkAll (pf,ck) {
@@ -280,5 +277,4 @@ function validateForm(formId) {
 }
 
 -->
-
 </script>
