@@ -73,7 +73,7 @@ if ($probe_order == "ping") {
             $icon = return_icon("IGNORED");
             $title = _T('Error scheduler-side !', 'msc');
         } elseif ($res === "Not available") {
-            $icon = return_icon("WORK_IN_PROGRESS");
+            $icon = return_icon("FAILED");
             $title = _T('Ping succeeded, SSH connection failed', 'msc');
         } else {
             $icon = return_icon("DONE");
