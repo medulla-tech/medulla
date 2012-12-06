@@ -30,7 +30,7 @@ require_once("modules/base/includes/users-xmlrpc.inc.php");
  * module declaration
  */
 $mod = new Module("base");
-$mod->setVersion("3.0.92");
+$mod->setVersion("3.0.91");
 $mod->setRevision('$Rev$');
 $mod->setAPIVersion("9:0:5");
 $mod->setDescription(_("User, group and computer management"));
@@ -293,9 +293,6 @@ if (hasComputerManagerWorking()) {
     $page = new Page("delete",_("Delete a computer"));
     $page->setFile("modules/base/computers/delete.php",
                    array("noHeader"=>True,"visible"=>False));
-    $submod->addPage($page);
-
-    $page = new Page("index&vnc=", _T("Take control of a computer", "msc"));
     $submod->addPage($page);
 
     $page = new Page("ajaxComputersList", _("Ajax part of computers list"));

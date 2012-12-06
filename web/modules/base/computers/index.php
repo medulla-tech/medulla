@@ -31,9 +31,6 @@ $p->display();
 
 if (in_array("pulse2", $_SESSION["modulesList"])) {
     include("modules/pulse2/pulse2/computers_list.php");
-    if (in_array("msc", $_SESSION["modulesList"])) {
-        include("modules/msc/msc/vnc_client.php");
-    }
 } else {
     $param = array();
     if (isset($_GET['gid'])) { $param['gid'] = $_GET['gid']; }

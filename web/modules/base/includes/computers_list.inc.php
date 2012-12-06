@@ -31,7 +31,7 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
     $mscAction = new ActionItem(_("Software deployment"),"msctabs","install","computer", "base", "computers");
     $imgAction = new ActionItem(_("Imaging management"),"imgtabs","imaging","computer", "base", "computers");
     $downloadFileAction = new ActionItem(_("Download file"), "download_file", "download", "computer", "base", "computers");
-    $vncClientAction = new ActionItem(_("Remote control"), "index&vnc=", "vncclient", "computer", "base", "computers");
+    $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "vncclient", "computer", "base", "computers");
     $profileAction = new ActionItem(_("Show Profile"), "computersgroupedit", "logfile","computer", "base", "computers"); 
 
     $actionInventory = array();
