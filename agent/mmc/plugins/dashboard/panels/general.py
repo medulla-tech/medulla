@@ -46,7 +46,7 @@ class GeneralPanel(Panel):
         return {
             'hostname': socket.gethostname(),
             'dist': dist,
-            'load': os.getloadavg(),
+            'load': [str(val) for val in os.getloadavg()],
             'uptime': str(datetime.now() - datetime.fromtimestamp(psutil.BOOT_TIME)),
             'users': len(getUsersLdap()),
             'memory': {
