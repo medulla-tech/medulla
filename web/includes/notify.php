@@ -28,7 +28,7 @@ require("acl.inc.php");
 require("session.inc.php");
 require("PageGenerator.php");
 
-foreach($_SESSION['notify'] as $notify) {
+foreach($_SESSION['notify_render'] as $notify) {
     $n = unserialize($notify);
     $n->display();
     $n->flush();

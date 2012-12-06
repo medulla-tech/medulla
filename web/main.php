@@ -148,6 +148,8 @@ function autoInclude() {
         require($redirAjaxArray[$__module][$__submod][$__action]);
     }
 
+    require_once("includes/check_notify.inc.php");
+
     if (!isNoHeader($__module, $__submod, $__action)) {
         require_once("graph/footer.inc.php");
     }

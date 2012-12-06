@@ -654,11 +654,6 @@ class ListInfos extends HtmlElement {
         if ($header == 1) {
             $this->drawHeader($navbar);
         }
-        if (isset($_SESSION['notify']) && count($_SESSION['notify']) > 0) {
-            echo '<script type="text/javascript">
-                        showPopupCenter("includes/notify.php");
-                  </script>';
-        }
         $this->drawTable($navbar);
     }
 }
@@ -2031,7 +2026,7 @@ class NotifyWidget {
     }
 
     function flush() {
-        unset($_SESSION["notify"][$this->id]);
+        unset($_SESSION["notify_render"][$this->id]);
     }
 }
 
