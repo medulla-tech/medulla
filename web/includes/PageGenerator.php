@@ -820,7 +820,7 @@ class SimpleNavBar extends HtmlElement {
             $this->displayNextListBorder();
         }
 
-        echo "</ul>\n";
+        echo "</ul></form>\n";
     }
 
     /*
