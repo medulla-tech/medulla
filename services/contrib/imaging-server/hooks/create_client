@@ -53,6 +53,120 @@ logger = logging.getLogger()
 ########################################################################
 
 
+
+class RegisterByInventory :
+    """
+    Registering a new computer by sending the inventory. 
+    
+    Used on GLPI mode where the method computerRegister 
+    is not accessible (GLPI backend is read-only).
+    """
+    # When GLPI mode is a special case, all imports 
+    # are encapsulated in this class to avoid 
+    # the unusuals imports when we are using
+    # only Pulse on stand-allone mode.
+
+    def __init__(self, config):
+        """
+        @param config: imaging server config container
+        @type config: ImagingConfig
+        """
+        if config.invserver_enablessl :
+            protocol = "https"
+        else :
+            protocol = "http"
+
+        self._url = "%s://%s:%s/" % (protocol, config.invserver_host, config.invserver_port)
+
+
+    def send(self, hostname, mac):
+        """
+        Send the minimal inventory to URL of inventory server.
+
+        @param hostname: computer's hostname
+        @type hostname: str
+        @param mac: MAC address on standard format xx:xx:xx:xx:xx:xx
+        @type mac: str
+
+        """
+        from pulse2.imaging.bootinventory import BootInventory
+        from twisted.web.client import Agent
+ 
+        boot_inv = BootInventory()
+        boot_inv.macaddr_info = mac
+
+        self.inventory = boot_inv.dumpOCS(hostname, "root")
+
+        logging.getLogger().debug("Registering the computer '%s'by inventory" % hostname)
+
+        agent = Agent(twisted.internet.reactor)
+
+        # POST the inventory to the inventory server
+        defer = agent.request('POST', self._url, self._headers, self._content)
+        defer.addCallbacks(self._callBack, self._errorBack)
+
+        return defer
+
+    @property
+    def _headers(self):
+        """
+        @return: headers for POST method
+        @rtype: str
+        """
+        from twisted.web.http_headers import Headers
+        return Headers({'Content-Type': ['application/x-www-form-urlencoded'],
+                        'Content-Length': [str(len(self.inventory))],
+                        'User-Agent': ['Pulse2 Imaging server inventory register']
+                        })
+ 
+    @property
+    def _content(self):
+        """
+        @return: content to post
+        @rtype: str
+        """
+        from zope.interface import implements
+        from twisted.web.iweb import IBodyProducer
+        from twisted.internet.defer import succeed
+
+        class StringProducer(object):
+            implements(IBodyProducer)
+
+            def __init__(self, string):
+                self.body = string
+                self.length = len(self.body)
+
+            def startProducing(self, consumer):
+                consumer.write(self.body)
+                return succeed(None)
+
+        return StringProducer(self.inventory)
+
+
+    def _errorBack (self, reason):
+
+        logging.getLogger().debug('Error while sending the register inventory : %s' % str(reason))
+        return endBack()
+
+    def _callBack(self, result):
+
+        global exitcode
+
+        if result.code != 200:
+            logging.getLogger().error("HOOK %s : Error sending the inventory to the inventory server" % sys.argv[0])
+            logging.getLogger().error(result.phrase)
+            exitcode = ERROR_SERVER
+        else:
+            logging.getLogger().debug("%s : Inventory sent to the inventory server" % sys.argv[0])
+
+            if result and result != None:
+                exitcode = ERROR_OK
+                logging.getLogger().info('HOOK %s : SUCCESS (inventory OK)' % sys.argv[0])
+            else:
+                exitcode = ERROR_SERVER
+                logging.getLogger().error('HOOK %s : Error (inventory NOK)' % sys.argv[0])
+
+
 def myCall():
     """
         Design your own call here
@@ -65,7 +179,6 @@ def myCall():
     mac = '' # client MAC address
     name = '' # client ID
     key = '' # registering password (not used)
-
     if len(sys.argv) == 2: # "mac" version
         mac = sys.argv[1]
         logger.warning('HOOK %s : I was not given an name, proceeding anyway' % hook)
@@ -95,13 +208,18 @@ def myCall():
     logger.debug('HOOK %s : Going to register computer %s (%s)' % (hook, name, mac))
 
     try:
-        callFunction(
-            imagingAPI.computerRegister(
-                name,
-                mac,
-                False # imagingData = False, since we are not the mmc agent !
+        if config.invserver_glpi_mode :
+            invfwd = RegisterByInventory(config)
+            callFunction(invfwd.send(name, mac))
+        else:
+            callFunction(
+                imagingAPI.computerRegister(
+                    name,
+                    mac,
+                    False # imagingData = False, since we are not the mmc agent !
+                )
             )
-        )
+            
     except AttributeError, e:
         logger.error('HOOK %s : %s' % (hook, e))
         exitcode = ERROR_CLIENT
@@ -149,7 +267,7 @@ def callBack(result):
         if it is a success, call myCall(result)
         if not, exitcode is set to ERROR_SERVER then call endBack()
     """
-
+    
     global exitcode
     # if result is a list and the first arg a string and its value,
     # 'PULSE2_ERR', then something went wrong

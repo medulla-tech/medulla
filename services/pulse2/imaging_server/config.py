@@ -64,6 +64,7 @@ class ImagingConfig(pulse2.utils.Singleton):
     invserver_host = "127.0.0.1"
     invserver_port = 9999
     invserver_enablessl = False
+    invserver_glpi_mode = False
 
     # [hooks] section
     hooks_dir = "/usr/lib/pulse2/imaging-server/hooks"
@@ -128,6 +129,9 @@ class ImagingConfig(pulse2.utils.Singleton):
                 self.invserver_port = self.cp.getint("inventory-server", "port")
             if self.cp.has_option("inventory-server", "enablessl"):
                 self.invserver_enablessl = self.cp.getboolean("inventory-server", "enablessl")
+            if self.cp.has_option("inventory-server", "glpi_mode"):
+                self.invserver_glpi_mode = self.cp.getboolean("inventory-server", "glpi_mode")
+
 
         if self.cp.has_section("hooks"):
             if self.cp.has_option("hooks", "hooks_dir"):

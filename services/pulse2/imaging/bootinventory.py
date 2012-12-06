@@ -135,7 +135,7 @@ class BootInventory:
     # CPu features, to be interpreted (that's a infamous 26 bytes array)
     featcpu_info    = []
     # the CP frequencies
-    freqcpu_info    = []
+    freqcpu_info    = 0
     # the client MAC adress
     macaddr_info    = ''
     # the inventory IP source (not necesary the client IP)
