@@ -106,6 +106,7 @@ if ($_POST) {
         if ($result)
             new NotifyWidgetSuccess($result);
         header("Location: ". urlStrRedirect("base/users/editppolicy", array("ppolicy" => $name)));
+        exit;
     }
 }
 

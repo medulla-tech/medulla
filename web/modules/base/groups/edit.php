@@ -34,6 +34,7 @@ if (isset($_POST["badd"])) {
     if (!isXMLRPCError()) {
         new NotifyWidgetSuccess(sprintf(_("Group %s successfully added"), $groupname));
         header("Location: " . urlStrRedirect("base/groups/index"));
+        exit;
     }    
 } else if (isset($_POST["bmodify"])) {
     $groupname = $_POST["groupname"];

@@ -31,10 +31,11 @@ session_start();
 
 if (isExpertMode()) {
     setExpertMode(0);
-  } else {
+} else {
     setExpertMode(1);
-  } 
+} 
 
 header("Location: ".$_SERVER["HTTP_REFERER"]);
+exit;
 
 ?>

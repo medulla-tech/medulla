@@ -45,6 +45,7 @@ if (isset($_POST["bconfirm"])) {
             new NotifyWidgetSuccess($info);
             
         header("Location: " . urlStrRedirect("base/groups/index"));
+        exit;
     }
 } else {
     $group = urldecode($_GET["group"]);

@@ -64,6 +64,7 @@ if (isset($_POST["bgo"])) {
     }
 
     header("Location: ".urlStrRedirect("base/users/index"));
+    exit;
 }
 else {
 ?>

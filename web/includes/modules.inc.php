@@ -340,6 +340,7 @@ function renderTPL($view,$module = null) {
 
     function redirectTo($url) {
         header('Location: '.$url);
+        exit;
     }
 
 /**

@@ -42,6 +42,7 @@ if (isset($_POST["bchpasswd"]) && $_POST["newpass"] != "" && $_POST["newpass"] =
         $n = new NotifyWidgetSuccess(_("Your password has been changed."));
 
     header("Location: " . urlStrRedirect("base/users/index"));
+    exit;
 }
 else {
 ?>

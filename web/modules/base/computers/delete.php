@@ -29,6 +29,7 @@ if (isset($_POST["bconfirm"])) {
     if (!isset($_POST["imageWarning"])) {
         new NotifyWidgetFailure(_("You have to check the box <b>\"I am aware that all related images (non-master) will be deleted\"</b> if you want to remove this computer."));
         header("Location: " . urlStrRedirect("base/computers/index"));
+        exit;
     }
     else {
         $uuid = $_POST["objectUUID"];
@@ -36,6 +37,7 @@ if (isset($_POST["bconfirm"])) {
         delComputer($uuid, $backup);
         if (!isXMLRPCError()) new NotifyWidgetSuccess(_("The computer has been deleted."));
         header("Location: " . urlStrRedirect("base/computers/index"));
+        exit;
     }
 } else {
     $uuid = urldecode($_GET["objectUUID"]);

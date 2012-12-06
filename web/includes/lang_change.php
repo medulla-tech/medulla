@@ -31,11 +31,9 @@ require("session.inc.php");
 require("PageGenerator.php");
 
 if ($_GET['value']) {
-//print_r($_GET);
-$_SESSION['lang']=$_GET['value'];
-
-header("Location: ".$_SERVER[HTTP_REFERER]);
-
+    $_SESSION['lang']=$_GET['value'];
+    header("Location: ".$_SERVER[HTTP_REFERER]);
+    exit;
 }
 else {
     echo "<h3>Choix de la langue</h3>";

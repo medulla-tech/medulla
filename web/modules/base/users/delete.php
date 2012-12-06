@@ -33,6 +33,7 @@ if (isset($_POST["bdeluser"])) {
         new NotifyWidgetSuccess(sprintf(_("User %s has been successfully deleted"), $user));
     }
     header("Location: " . urlStrRedirect("base/users/index" ));
+    exit;
 } else {
     $f = new PopupForm(_("Delete user"));
     $f->addText(sprintf(_("You will delete user <b>%s</b>."),$user));

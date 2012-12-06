@@ -30,6 +30,7 @@ if (isset($_POST["bconfirm"])) {
         new NotifyWidgetSuccess($result);
     }
     header("Location: " . urlStrRedirect("base/users/indexppolicy"));
+    exit;
 }
 else {
     $ppolicy = urldecode($_GET["ppolicy"]);

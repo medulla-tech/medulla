@@ -35,6 +35,7 @@ if (isset($_POST["bcreate"])) {
             if (!isXMLRPCError()) {
                 new NotifyWidgetSuccess(_("Computer successfully added"));
                 header("Location: " . urlStrRedirect("base/computers/index"));
+                exit;
             }
         } else {
             $err = new ErrorMessage(_("The computer name is already taken."));

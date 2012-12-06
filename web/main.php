@@ -124,6 +124,7 @@ function autoInclude() {
         && !isset($redirAjaxArray[$__module][$__submod][$__action])
        ) {
         header("Location: " . getDefaultPage());
+        exit;
     }
 
     if (!isNoHeader($__module, $__submod, $__action)) {
@@ -135,6 +136,7 @@ function autoInclude() {
     /* ACL check */
     if (!hasCorrectAcl($__module, $__submod, $__action)) {
         header("Location: " . getDefaultPage());
+        exit;
     }
 
     /* Warn user once at login if her account is expired. */

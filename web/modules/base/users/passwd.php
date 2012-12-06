@@ -43,7 +43,7 @@ if (isset($_POST["bchpasswd"]) && ($_POST["curpass"] != "") && ($_POST["newpass"
         $n = new NotifyWidgetSuccess(_("Your password has been changed."));
 
     header("Location: " . urlStrRedirect("base/users/index"));
-
+    exit;
 ?>
 
 <form action="<?php echo "main.php?module=base&submod=users&action=index"; ?>" method="post">

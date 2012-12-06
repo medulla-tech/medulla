@@ -14,8 +14,10 @@ $_SESSION["XMLRPC_agent"] = parse_url($conf[$server]["url"]);
 $_SESSION["agent"] = $server;
 $_SESSION["XMLRPC_server_description"] = $conf[$server]["description"];
 
-if (isset($_POST['bBack']))
+if (isset($_POST['bBack'])) {
     header("Location: " . $root);
+    exit;
+}
 
 if (isset($_POST['bReset']) && isset($_POST['user'])) {
     if (xmlCall("base.createAuthToken", array($_POST['user'], $server, $lang)))

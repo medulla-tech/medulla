@@ -67,6 +67,7 @@ if (empty($error) && xmlCall("base.tokenAuthenticate", array($login, $token))) {
     else if (isXMLRPCError())
         $error = _("Error while validating your token. Please contact your administrator.");
     header("Location: " . $root . "index.php?error=" . $error);
+    exit;
 }
 
 ?>
