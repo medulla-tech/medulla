@@ -48,6 +48,8 @@ if ($is_gp != 1) {
 }
 
 if ($is_gp != 1) {
+    $actions['displayGroup'] = new ActionItem(_T("Display this group's content", 'dyngroup'), "display", "display", "id", "base", "computers");
+
     if (in_array("inventory", $_SESSION["supportModList"])) {
         $actions['inventory'] = new ActionItem(_T("Inventory on this group", "dyngroup"),"groupinvtabs","inventory","inventory", "base", "computers");
     } else {

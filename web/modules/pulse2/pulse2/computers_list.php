@@ -63,9 +63,10 @@ if (displayLocalisationBar() && (isset($_GET['imaging_server']) && $_GET['imagin
     $ajax = new AjaxFilter(urlStrRedirect("base/computers/ajaxComputersList"), "container", $param);
 }
 
-$ajax->display();
-print "<br/><br/><br/<br/><br/>";
 right_top_shortcuts_display();
+print "<br/><br/><br/>";
+$ajax->display();
+print "<br/><br/>";
 
 $ajax->displayDivToUpdate();
 
