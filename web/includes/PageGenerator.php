@@ -2007,22 +2007,21 @@ class NotifyWidget {
             return "img/common/big_icn_info.png";
     }
 
-    function display() {
-        echo '
-        <div style="padding: 10px">
-            <div style="width: 50px; padding-top: 15px; float: left; text-align: center">
-                <img src="' . $this->getImgLevel() . '" />
-            </div>
-            <div style="margin-left: 60px">';
-        foreach ($this->strings as $string) {
-            echo $string;
-        }
-        echo '
-            </div>
-            <div style="clear: left; text-align: right; margin-top: 1em;">
-                <button class="btn btn-small" onclick="toggleVisibility(\'popup\'); toggleVisibility(\'overlay\');">' . _("Close") . '</button>
-            </div>
-        </div>';
+    function begin() {
+        return '<div style="padding: 10px">';
+    }
+
+    function content() {
+        $str = '<div style="width: 50px; padding-top: 15px; float: left; text-align: center"><img src="' . $this->getImgLevel() . '" /></div><div style="margin-left: 60px">';
+        foreach ($this->strings as $string)
+            $str .= $string;
+        $str .= '</div>';
+        return $str;
+    }
+
+    function end() {
+        $str = '<div style="clear: left; text-align: right; margin-top: 1em;"><button class="btn btn-small" onclick="toggleVisibility(\'popup\'); toggleVisibility(\'overlay\');">' . _("Close") . '</button></div></div>';
+        return $str;
     }
 
     function flush() {

@@ -22,16 +22,28 @@
 ?>
 <?php
 
-require("config.inc.php");
-require("i18n.inc.php");
-require("acl.inc.php");
-require("session.inc.php");
-require("PageGenerator.php");
-
-foreach($_SESSION['notify_render'] as $notify) {
-    $n = unserialize($notify);
-    $n->display();
-    $n->flush();
+// Check if some notification(s) needs to be shown
+// If yes display the popup
+if (isset($_SESSION['notify']) && count($_SESSION['notify']) > 0) {
+    $_SESSION['notify_render'] = $_SESSION['notify'];
+    unset($_SESSION['notify']);
+    echo '
+    <script type="text/javascript">
+        var notify_text = "' . addslashes(NotifyWidget::begin()) . '";';
+    foreach($_SESSION['notify_render'] as $notify) {
+        $n = unserialize($notify);
+        echo '
+        notify_text += "' . addslashes($n->content()) .'";';
+        $n->flush();
+    }
+    echo '
+        notify_text += "' . addslashes(NotifyWidget::end()) .'";
+        try {
+            $("__popup_container").update(notify_text);
+        }
+        catch(ex) {
+            $("__popup_container").innerHTML = notify_text;
+        }
+        displayPopupCenter();
+    </script>';
 }
-
-?>
