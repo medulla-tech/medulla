@@ -98,6 +98,7 @@ function action($action, $target, $is_advanced) {
             $params['launchAction'] = $action;
 
             header("Location: ".urlStrRedirect("base/computers/".$type."msctabs", $params));
+            exit;
         } else {
             new NotifyWidgetFailure(_T('Failed to retrieve this quick action.', 'msc'));
         }
@@ -114,6 +115,7 @@ function action($action, $target, $is_advanced) {
                 $tab = 'tablogs';
             }
             header("Location: ".urlStrRedirect("base/computers/$actionpage", array('tab'=>$tab, 'uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname'], 'cmd_id'=>$id, 'gid'=>$_GET['gid'])));
+            exit;
         }
     }
 }

@@ -35,6 +35,7 @@ if (isset($_POST["bconfirm"])) {
     $to = "index";
     if ($from) { $to = $from; }
     header("Location: " . urlStrRedirect("pkgs/pkgs/$to", array('p_api'=>$p_api)));
+    exit;
 } else {
     $p_api = $_GET["p_api"];
     $pid = $_GET["pid"];

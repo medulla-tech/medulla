@@ -112,10 +112,12 @@ $id_command = add_command_api($pid, $cible, $params, $p_api, $mode, $gid);
 if (!isXMLRPCError()) { 
     scheduler_start_these_commands('', array($id_command));
     header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$prefix.$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'gid'=>$gid, 'cmd_id'=>$id_command)));
+    exit;
 } else 
 {
     ## Return to the launch tab, the backtrace will be displayed 
     header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$prefix.'tablaunch', 'uuid'=>$uuid, 'hostname'=>$hostname, 'gid'=>$gid, 'cmd_id'=>$id_command)));
+    exit;
 }
 
 ?>

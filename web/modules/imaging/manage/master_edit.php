@@ -94,11 +94,14 @@ if(count($_POST) == 0) {
         $str = sprintf(_T("Master <strong>%s</strong> modified with success", "imaging"), $label);
         new NotifyWidgetSuccess($str);
         header("Location: " . urlStrRedirect("imaging/manage/master"));
+        exit;
     } elseif ($ret[0]) {
         header("Location: " . urlStrRedirect("imaging/manage/master"));
+        exit;
     } else {
         new NotifyWidgetFailure($ret[1]);
         header("Location: " . urlStrRedirect("imaging/manage/master"));
+        exit;
     }
 }
 

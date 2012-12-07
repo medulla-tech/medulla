@@ -42,11 +42,14 @@ if ($_POST) {
             new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for package server: %s", "imaging"), implode(', ', $ret[1])));
         }
         header("Location: " . urlStrRedirect("imaging/manage/master"));
+        exit;
     } elseif ($ret[0]) {
         header("Location: " . urlStrRedirect("imaging/manage/master"));
+        exit;
     } else {
         new NotifyWidgetFailure($ret[1]);
         header("Location: " . urlStrRedirect("imaging/manage/master"));
+        exit;
     }
 }
 

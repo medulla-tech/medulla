@@ -90,6 +90,7 @@ if (isset($_POST["bdeluser_x"])) {
     }
     /* Redirect to computer groups list */
     header("Location: " . urlStrRedirect("base/computers/list"));
+    exit;
 } else {
     $list = $group->shareWith();
     $members = array();

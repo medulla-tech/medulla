@@ -73,6 +73,7 @@ if (($type == '' && (xmlrpc_isComputerRegistered($target_uuid) || xmlrpc_isCompu
     /* register the target (computer or profile) */
     $params = array('target_uuid'=>$target_uuid, 'type'=>$type, 'from'=>"services", "target_name"=>$target_name);
     header("Location: " . urlStrRedirect("base/computers/".$type."register_target", $params));
+    exit;
 }
 
 function image_edit($target_uuid, $type, $item_uuid) {
@@ -139,6 +140,7 @@ function image_edit($target_uuid, $type, $item_uuid) {
             $ret = xmlrpc_editImage($item_uuid, $target_uuid, $params, $type);
             // goto images list
             header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
+            exit;
         } elseif (isset($_POST['bconvert_master'])) {
             $f = create_form(False, $image, $target_uuid, $_POST['image_label'], $_POST['image_description']);
             $f->addButton("bvalid_master", _T("Save", "imaging"));
@@ -148,10 +150,12 @@ function image_edit($target_uuid, $type, $item_uuid) {
             $params['is_master'] = True;
             $ret = xmlrpc_editImage($item_uuid, $target_uuid, $params, $type);
             header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
+            exit;
         } elseif (isset($_POST['bconvert_image'])) {
             $params['is_master'] = False;
             $ret = xmlrpc_editImage($item_uuid, $target_uuid, $params, $type);
             header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
+            exit;
         }
     }
 }

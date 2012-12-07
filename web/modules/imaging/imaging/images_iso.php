@@ -45,7 +45,7 @@ if ($_POST) {
         $msg = _T("Please specify a title for the ISO image file.", "imaging");
         new NotifyWidgetFailure($msg);
         header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
-        exit(1);
+        exit;
     }
 
     $ret = xmlrpc_imagingServerISOCreate($image_uuid, $size, $title);
@@ -67,8 +67,10 @@ if ($_POST) {
 
         new NotifyWidgetSuccess($str);
         header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
+        exit;
     } elseif ($ret[0]) {
         header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
+        exit;
     } else {
         new NotifyWidgetFailure($ret[1]);
     }

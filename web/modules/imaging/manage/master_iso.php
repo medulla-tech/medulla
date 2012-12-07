@@ -53,8 +53,10 @@ if ($_POST) {
 
         new NotifyWidgetSuccess($str);
         header("Location: " . urlStrRedirect("imaging/manage/master", $params));
+        exit;
     } elseif ($ret[0]) {
         header("Location: " . urlStrRedirect("imaging/manage/master", $params));
+        exit;
     } else {
         new NotifyWidgetFailure($ret[1]);
     }

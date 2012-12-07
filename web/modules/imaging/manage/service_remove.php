@@ -48,8 +48,10 @@ if (isset($_POST["bconfirm"])) {
             new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for package server: %s", "imaging"), implode(', ', $ret[1])));
         }
         header("Location: " . urlStrRedirect("imaging/manage/service", $params));
+        exit;
     } elseif ($ret[0]) {
         header("Location: " . urlStrRedirect("imaging/manage/service", $params));
+        exit;
     } else {
         new NotifyWidgetFailure($ret[1]);
     }

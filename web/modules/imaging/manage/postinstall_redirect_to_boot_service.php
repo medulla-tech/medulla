@@ -28,6 +28,7 @@ require_once('modules/imaging/includes/xmlrpc.inc.php');
 
 if (isset($_POST["bconfirm"])) {
     header("Location: " . urlStrRedirect("imaging/manage/service"));
+    exit;
 }
 
 $params = getParams();

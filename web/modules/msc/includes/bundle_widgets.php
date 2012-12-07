@@ -48,6 +48,7 @@ class RenderedMSCBundleChoice {
             }
         } elseif (isset($_POST["bconfirm"])) {
             header("Location: " . urlStrRedirect($this->set_order_uri, array('list'=>base64_encode(serialize($this->list)))));
+            exit;
         } else {
             $members = array();
             $nonmemb = $this->list;

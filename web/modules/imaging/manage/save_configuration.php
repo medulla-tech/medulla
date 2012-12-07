@@ -72,5 +72,6 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
     }
 }
 header("Location: " . urlStrRedirect("imaging/manage/configuration", $params));
+exit;
 
 ?>

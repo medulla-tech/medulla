@@ -43,6 +43,7 @@ if ($type == 1) {
 if (quickGet('valid')) {
     $group->delete();
     header("Location: " . urlStrRedirect("base/computers/list$stype" ));
+    exit;
 }
 
 ?>

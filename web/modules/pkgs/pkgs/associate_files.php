@@ -63,6 +63,7 @@ if ($mode == "creation") { $level = 1; }
             }
             new NotifyWidgetSuccess(sprintf(_T("Files successfully associated with package <b>%s (%s)</b>%s", "pkgs"), $plabel, $pversion, $explain));
             header("Location: " . urlStrRedirect("pkgs/pkgs/pending", array('location'=>base64_encode($p_api_id))));
+            exit;
         } else {
             $reason = '';
             if (count($ret) > 1) {

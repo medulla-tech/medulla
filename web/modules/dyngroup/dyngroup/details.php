@@ -34,14 +34,17 @@ if ($group->isDyn()) {
 if ($_GET['bregen'] || $_POST['bregen']) {
     $group->reload();
     header("Location: " . urlStrRedirect("base/computers/list" ));
+    exit;
 }
 if ($_GET['bshow'] || $_POST['bshow']) {
     $group->show();
     header("Location: " . urlStrRedirect("base/computers/list" ));
+    exit;
 }
 if ($_GET['bhide'] || $_POST['bhide']) {
     $group->hide();
     header("Location: " . urlStrRedirect("base/computers/list" ));
+    exit;
 }
 
 //$group->prettyDisplay();

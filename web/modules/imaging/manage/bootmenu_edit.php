@@ -123,6 +123,7 @@ if(count($_POST) == 0) {
     }
 
     header("Location: " . urlStrRedirect("imaging/manage/bootmenu"));
+    exit;
 }   
 
 

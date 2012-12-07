@@ -125,6 +125,7 @@ if (isset($_POST["bdelmachine_x"])) {
                 new NotifyWidgetSuccess(_T("Profile successfully created", "dyngroup"));
             }
             header("Location: " . urlStrRedirect("base/computers/display", array('gid'=>$group->id)));
+            exit;
         }
         $list = $group->members();
         $members = array();

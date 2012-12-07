@@ -62,6 +62,7 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
                 #new NotifyWidgetSuccess(sprintf(_T("Package successfully added in %s", "pkgs"), $ret[2]));
                 if (! isset($_POST["bassoc"])) {
                     header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location'=>base64_encode($p_api_id)))); # TODO add params to go on the good p_api
+                    exit;
                 }
             } else {
                 new NotifyWidgetSuccess(_T("Package successfully edited", "pkgs"));
@@ -91,6 +92,7 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
 
                 if (!isXMLRPCError() and $push_package_result) {
                     header("Location: " . urlStrRedirect("pkgs/pkgs/associate_files", array('p_api'=>base64_encode($p_api_id), 'random_dir'=>base64_encode($random_dir), 'pid'=>base64_encode($ret[3]['id']), 'plabel'=>base64_encode($ret[3]['label']), 'pversion'=>base64_encode($ret[3]['version']), 'mode'=>$_POST['mode'])));
+                    exit;
                 }
             }
         } else {

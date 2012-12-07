@@ -52,7 +52,7 @@ function start_a_command($proxy = array()) {
             $url .= "$v=$k";
         }
         header("Location: " . urlStrRedirect("base/computers/msctabs", array_merge($_GET, $_POST, array('failure'=>True))));
-        return False;
+        exit;
     }
     // Vars seeding
     $post = $_POST;
@@ -99,9 +99,11 @@ function start_a_command($proxy = array()) {
             scheduler_start_these_commands('', array($id));
             /* then redirect to the logs page */
             header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'cmd_id'=>$id)));
+            exit;
         } else {
             /* Return to the launch tab, the backtrace will be displayed */
             header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>'tablaunch', 'uuid'=>$uuid, 'hostname'=>$hostname)));
+            exit;
         }
     } else { # command on a whole group
         $gid = $post['gid'];
@@ -129,6 +131,7 @@ function start_a_command($proxy = array()) {
         scheduler_start_these_commands('', array($id));
         // then redirect to the logs page
         header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'gid'=>$gid, 'cmd_id'=>$id, 'proxy' => $proxy)));
+        exit;
     }
 }
 function complete_post() {
@@ -206,8 +209,10 @@ if (isset($_POST['bback'])) {
     $page = $path[2];
     if (isset($_POST["gid"]))
         header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>"grouptablaunch", 'gid'=>$_POST["gid"])));
+        exit;
     if (isset($_POST["uuid"]))
         header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>"msctabs", 'uuid'=>$_POST["uuid"])));
+        exit;
 }
 
 /* local proxy selection handling */

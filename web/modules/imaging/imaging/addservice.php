@@ -58,8 +58,10 @@ if (isset($_POST["bconfirm"])) {
             new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for computer: %s", "imaging"), implode(', ', $ret[1])));
         }
         header("Location: ".urlStrRedirect("base/computers/".$type."imgtabs/".$type."tabservices", $params));
+        exit;
     } elseif ($ret[0]) {
         header("Location: ".urlStrRedirect("base/computers/".$type."imgtabs/".$type."tabservices", $params));
+        exit;
     } else {
         new NotifyWidgetFailure($ret[1]);
     }

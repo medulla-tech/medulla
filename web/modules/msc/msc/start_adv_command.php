@@ -97,6 +97,7 @@ $params['tab'] = $prefix.'tablaunch';
 $params['badvanced'] = True;
 
 header("Location: " . urlStrRedirect("$module/$submod/$page", $params));
+exit;
 
 ?>
 

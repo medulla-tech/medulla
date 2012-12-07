@@ -49,15 +49,18 @@ if (isset($_POST["bconfirm"])) {
                 stop_bundle($bundle_id);
                 
                 header("Location: " . urlStrRedirect("$module/$submod/$page", $url)); #array('tab'=>$tab, 'gid'=>$gid)));
+                exit;
             } elseif (strlen($_POST["cmd_id"]) and !strlen($_POST["coh_id"])) {
                 $cmd_id = $_POST["cmd_id"];
                 stop_command($cmd_id);
                 header("Location: " . urlStrRedirect("$module/$submod/$page", $url)); #array('tab'=>$tab, 'gid'=>$gid, 'bundle_id'=>$bundle_id)));
+                exit;
             } else {
                 $coh_id = $_POST["coh_id"];
                 $cmd_id = $_POST["cmd_id"];
                 stop_command_on_host($coh_id);
                 header("Location: " . urlStrRedirect("$module/$submod/$page", $url)); #array('tab'=>$tab, 'gid'=>$gid, 'bundle_id'=>$bundle_id, 'cmd_id'=>$cmd_id)));
+                exit;
             }
         } elseif (strlen($_POST["uuid"])) {
             $hostname = $_POST["hostname"];
@@ -65,10 +68,12 @@ if (isset($_POST["bconfirm"])) {
             if (!strlen($_POST["coh_id"]) and !strlen($_POST["cmd_id"])) {
                 stop_bundle($bundle_id);
                 header("Location: " . urlStrRedirect("$module/$submod/$page", $url)); #array('tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname)));
+                exit;
             } else {
                 $coh_id = $_POST["coh_id"];
                 stop_command_on_host($coh_id);
                 header("Location: " . urlStrRedirect("$module/$submod/$page", $url)); #array('tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname)));
+                exit;
             }
         }
     } else {
@@ -78,6 +83,7 @@ if (isset($_POST["bconfirm"])) {
             $gid = $_POST["gid"];
             stop_command($cmd_id);
             header("Location: " . urlStrRedirect("$module/$submod/$page", $url)); #array('tab'=>$tab, 'gid'=>$gid)));
+            exit;
         } else if (strlen($_POST['gid'])) {
             /* The stop command is done on a commands_on_host for a group of
                computers */
@@ -86,12 +92,14 @@ if (isset($_POST["bconfirm"])) {
             $gid = $_POST["gid"];
             stop_command_on_host($coh_id);
             header("Location: " . urlStrRedirect("$module/$submod/$page", $url)); #array('tab'=>$tab, 'cmd_id'=>$cmd_id, 'gid'=>$gid)));
+            exit;
         } else {
             $hostname = $_POST["hostname"];
             $uuid = $_POST["uuid"];
             $coh_id = $_POST["coh_id"];
             stop_command_on_host($coh_id);
             header("Location: " . urlStrRedirect("$module/$submod/$page", $url)); #array('tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname)));
+            exit;
         }
     }
 } else {

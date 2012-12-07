@@ -80,6 +80,7 @@ else {
     new NotifyWidgetSuccess($str);
     // goto menu boot list
     header("Location: " . urlStrRedirect("imaging/manage/service"));
+    exit;
 } 
 
 ?>

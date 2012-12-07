@@ -47,3 +47,4 @@ $group->create($groupname, False);
 $group->addMembers($groupmembers);
 
 header("Location: " . urlStrRedirect("base/computers/display", array('gid'=>$group->id)));
+exit;

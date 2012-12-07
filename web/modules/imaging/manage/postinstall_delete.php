@@ -45,6 +45,7 @@ if ($_POST) {
         $str = sprintf(_T("<strong>%s</strong> script deleted", "imaging"), $script_name);
         new NotifyWidgetSuccess($str);
         header("Location: " . urlStrRedirect("imaging/manage/postinstall"));
+        exit;
     } elseif (count($ret) > 1) {
         new NotifyWidgetFailure($ret[1]);
     } else {

@@ -40,11 +40,14 @@ if ($_POST) {
     if ($ret[0] and !isXMLRPCError()) {
         /* insert notification code here if needed */
         header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
+        exit;
     } elseif ($ret[0]) {
         header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
+        exit;
     } else {
         new NotifyWidgetFailure($ret[1]);
         header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
+        exit;
     }
 }
 

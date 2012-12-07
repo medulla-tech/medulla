@@ -83,6 +83,7 @@ if (count($_POST) > 0) {
         $str = sprintf(_T("<strong>%s</strong> script %s", "imaging"), $script_name, $action);
         new NotifyWidgetSuccess($str);
         header("Location: " . urlStrRedirect("imaging/manage/postinstall"));
+        exit;
     } elseif (count($ret) > 1) {
         new NotifyWidgetFailure($ret[1]);
     } else {

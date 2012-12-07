@@ -40,5 +40,6 @@ if ($ret) {
     new NotifyWidgetFailure($str);
 }
 header("Location: " . urlStrRedirect("imaging/manage/bootmenu", $params));
+exit;
 
 ?>

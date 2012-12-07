@@ -37,11 +37,13 @@ if (isset($_POST["bconfirm"])) {
         $str = sprintf(_T("Boot service successfully created", "imaging"));
         new NotifyWidgetSuccess($str);
         header("Location: " . urlStrRedirect("imaging/manage/service"));
+        exit;
     }
     else {
         $str = sprintf(_T("Error while creating Boot Service", "imaging"));
         new NotifyWidgetFailure($str);
         header("Location: " . urlStrRedirect("imaging/manage/postinstall"));
+        exit;
     }
 }
 

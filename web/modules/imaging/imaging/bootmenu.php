@@ -68,6 +68,7 @@ function item_up() {
     }
 
     header("Location: " . urlStrRedirect("base/computers/".$type."imgtabs", $params));
+    exit;
 }
 
 function item_down() {
@@ -93,6 +94,7 @@ function item_down() {
     }
 
     header("Location: " . urlStrRedirect("base/computers/".$type."imgtabs", $params));
+    exit;
 }
 
 function item_edit() {
@@ -185,6 +187,7 @@ function item_edit() {
         }
         // goto menu boot list
         header("Location: " . urlStrRedirect("base/computers/".$type."imgtabs", $params));
+        exit;
     }
 }
 
@@ -339,6 +342,7 @@ if (($type == '' && (xmlrpc_isComputerRegistered($target_uuid) || xmlrpc_isCompu
     # register the target (computer or profile)
     $params = array('target_uuid'=>$target_uuid, 'type'=>$type, 'from'=>"services", "target_name"=>$target_name);
     header("Location: " . urlStrRedirect("base/computers/".$type."register_target", $params));
+    exit;
 }
 
 ?>

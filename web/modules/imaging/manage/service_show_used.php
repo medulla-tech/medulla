@@ -91,10 +91,12 @@ if (isset($_POST['removeServices'])) {
             'hostname' => $_POST['hostname'],
         );
         header("Location: " . urlStrRedirect("base/computers/".$type."imgtabs/".$type."tabservices", $params));
+        exit;
     }
     else {
         // Come from an imaging server page
         header("Location: " . urlStrRedirect("imaging/manage/service"));
+        exit;
     }
 }
 

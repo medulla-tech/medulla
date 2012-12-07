@@ -117,13 +117,16 @@ if (isset($_POST["bvalid"])) {
         new NotifyWidgetSuccess($str);
         if ($is_registering) {
             header("Location: ".urlStrRedirect("base/computers/".$type."imgtabs/".$type."tabbootmenu", $params));
+            exit;
         } else {
             /* Reload the configure tab to get the synchro button */
             header("Location: ".urlStrRedirect("base/computers/".$type."imgtabs/".$type."tabconfigure", $params));
+            exit;
         }
     } elseif ($ret[0]) {
         if ($is_registering) {
             header("Location: ".urlStrRedirect("base/computers/".$type."imgtabs/".$type."tabbootmenu", $params));
+            exit;
         }
     } else {
         new NotifyWidgetFailure(sprintf(_T("Failed to generate the boot menu those computers : %s", "imaging"), implode($ret[1], ", ")));
@@ -143,6 +146,7 @@ if (isset($_POST["bunregister2"])) {
         new NotifyWidgetSuccess(sprintf(_T("The computer %s has correctly been unregistered from imaging", 'imaging'), $target_name));
         unset($_SESSION["imaging.isComputerRegistered_".$target_uuid]);
         header("Location: ".urlStrRedirect("base/computers/register_target", $params));
+        exit;
     } else {
         new NotifyWidgetFailure(sprintf(_T("Failed to unregistered the computer %s", 'imaging'), $target_name));
     }

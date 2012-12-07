@@ -98,10 +98,12 @@ if (isset($_POST['removeMasters'])) {
             'hostname' => $_POST['hostname'],
         );
         header("Location: " . urlStrRedirect("base/computers/".$type."imgtabs/".$type."tabimages", $params));
+        exit;
     }
     else {
         // Come from an imaging server page
         header("Location: " . urlStrRedirect("imaging/manage/master"));
+        exit;
     }
 }
 

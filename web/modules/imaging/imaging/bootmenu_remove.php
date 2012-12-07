@@ -73,6 +73,7 @@ if (quickGet('valid')) {
     $params['mod'] = 'remove_success';
     $params['tab'] = $type.$params['from'];
     header("Location: " . urlStrRedirect("base/computers/".$type."imgtabs", $params));
+    exit;
 }
 
 // show popup

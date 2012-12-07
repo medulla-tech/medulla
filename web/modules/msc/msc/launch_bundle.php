@@ -103,7 +103,9 @@ if (isset($_POST["bconfirmproxy"])) {
     $orders = $sort->get_sort_order();
 
     $bundle_id = launch_bundle(array(), $orders, $gid, $proxy);
-    header("Location: ".urlStrRedirect("base/computers/groupmsctabs", array('tab'=>'grouptablogs', 'gid'=>$gid, 'bundle_id'=>$id_bundle[0])));}
+    header("Location: ".urlStrRedirect("base/computers/groupmsctabs", array('tab'=>'grouptablogs', 'gid'=>$gid, 'bundle_id'=>$id_bundle[0])));
+    exit;
+}
 
 if (isset($_POST["local_proxy"]) && isset($_POST["blaunch_bundle"])) {
     require('modules/msc/msc/local_proxy.php');
@@ -135,6 +137,7 @@ if (isset($_GET['uuid']) and !isset($_GET['badvanced']) and !isset($_POST['launc
                 $cible = array($machine->uuid);
                 $id_bundle = launch_bundle($cible, $orders);
                 header("Location: " . urlStrRedirect("base/computers/msctabs", array('tab'=>'tablogs', 'uuid'=>$machine->uuid, 'hostname'=>$machine->hostname, 'bundle_id'=>$id_bundle[0])));
+                exit;
             }
         // stage 3: user choosed to go into advanced mode
         } elseif (isset($_POST["badvanced_bundle"])) {
@@ -153,6 +156,7 @@ if (isset($_GET['uuid']) and !isset($_GET['badvanced']) and !isset($_POST['launc
                 $cible = array($machine->uuid);
                 $id_bundle = launch_bundle($cible, $orders);
                 header("Location: ".urlStrRedirect("base/computers/groupmsctabs", array('tab'=>'grouptablogs', 'uuid'=>$machine->uuid, 'hostname'=>$machine->hostname, 'bundle_id'=>$id_bundle[0])));
+                exit;
             }
         // stage 1: packages selection
         } else {
@@ -182,6 +186,7 @@ if (!isset($_GET['badvanced']) && isset($_GET['gid']) && !isset($_POST['launchAc
             $cible = array_map("onlyValues", $group->getResult(0, -1));
             $id_bundle = launch_bundle($cible, $orders, $group->id);
             header("Location: ".urlStrRedirect("base/computers/groupmsctabs", array('tab'=>'grouptablogs', 'gid'=>$group->id, 'bundle_id'=>$id_bundle[0])));
+            exit;
         }
     // stage 3: user choosed to go into advanced mode
     } elseif (isset($_POST["badvanced_bundle"])) {
@@ -200,6 +205,7 @@ if (!isset($_GET['badvanced']) && isset($_GET['gid']) && !isset($_POST['launchAc
             $cible = array_map("onlyValues", $group->getResult(0, -1));
             $id_bundle = launch_bundle($cible, $orders, $group->id);
             header("Location: ".urlStrRedirect("base/computers/groupmsctabs", array('tab'=>'grouptablogs', 'gid'=>$group->id, 'bundle_id'=>$id_bundle[0])));
+            exit;
         }
     // stage 1: packages selection
     } else {

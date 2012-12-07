@@ -31,6 +31,7 @@ $uuid = quickGet('objectUUID');
 if (quickGet('valid')) {
     $group->delMember(array("$uuid" => array("uuid" => $uuid)));
     header("Location: " . urlStrRedirect("base/computers/display", array('gid'=>$gid)));
+    exit;
 }
 
 ?> <h2><?php echo  _T("Remove a computer", "dyngroup") ?></h2> <?php

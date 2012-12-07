@@ -58,6 +58,7 @@ $r->parse($request);
 $check = checkBoolEquation($bool, $r, isset($_POST['checkBool']));
 if ($check && isset($_POST['displayTmp'])) {
     header("Location: " . urlStrRedirect("base/computers/tmpdisplay", array('id'=>$id, 'request'=>urlencode($r->toS()), 'is_group'=>$is_group, 'equ_bool'=>$bool, 'name'=>urlencode($name), 'save_type'=>$save_type, 'visible'=>$visible, 'imaging_server'=>$imaging_server)));
+    exit;
 }
 
 $name_exists = xmlrpc_group_name_exists($name, $group->id);
@@ -127,8 +128,10 @@ if (!isset($_POST['btnPrimary']) || $name_exists || !$check || isset($_POST['che
     if ($visible == 1) { $group->show(); }
     if ($group->type == 0) {
         header("Location: " . urlStrRedirect("base/computers/save_detail", array('id'=>$gid, 'is_group'=>$is_group)));
+        exit;
     } else {
         header("Location: " . urlStrRedirect("base/computers/display", array('id'=>$gid, 'gid'=>$gid, 'is_group'=>$is_group, 'groupname'=>$group->name)));
+        exit;
     }
 }
 

@@ -37,11 +37,14 @@ if ($_POST) {
         $str = sprintf(_T("Image <strong>%s</strong> deleted from the imaging server.", "imaging"), $label);
         new NotifyWidgetSuccess($str);
         header("Location: " . urlStrRedirect("imaging/manage/master"));
+        exit;
     } elseif ($ret[0]) {
         header("Location: " . urlStrRedirect("imaging/manage/master"));
+        exit;
     } else {
         new NotifyWidgetFailure($ret[1]);
         header("Location: " . urlStrRedirect("imaging/manage/master"));
+        exit;
     }
 }
 
