@@ -35,6 +35,7 @@ import signal
 import os
 import sys
 import imp
+import traceback
 from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
 from SocketServer import ThreadingMixIn
 from threading import Thread, Semaphore
@@ -83,6 +84,11 @@ class InventoryServer:
         # Forwarding the inventories to GLPI
         if self.config.enable_forward :
             glpi_proxy = GlpiProxy(self.config.url_to_forward)
+            self.logger.info("GlpiProxy: Forwarding the inventory to GLPI")
+            # Let's fix the XML using py config scripts
+            invfix = InventoryFix(self.config, content)
+            content = invfix.get()
+
             glpi_proxy.send(content)
             for msg in glpi_proxy.result :
                 self.logger.warn("GlpiProxy: %s" % msg)
@@ -131,6 +137,69 @@ class InventoryServer:
         self.send_response(200)
         self.end_headers()
         self.wfile.write(compress(resp))
+
+class InventoryFix :
+    """Let's fix the XML using py config scripts"""
+
+    def __init__(self, config, inventory):
+        self.config = config
+        self._inventory = inventory
+        self.logger = logging.getLogger()
+        self.logger.debug("Initialize the inventory fixer")
+
+        self.fixers = []
+        self._check_in()
+        self._update()
+ 
+    def _check_in (self):
+       """ 
+       Find and pre-check all .py from xmlfixplugindir.
+       Checked module must have a calable function named 'xml_fix'.       
+       """
+       for (path, dirs, files) in os.walk(self.config.xmlfixplugindir):
+          for filename in files:
+              pathname = os.path.join(path, filename)
+              if re.match('^.*\.py$',pathname):
+                  mod_name = filename 
+                  py_mod = fnc = None
+                  try:
+                      py_mod = imp.load_source(mod_name, pathname)
+                      
+                  except ImportError :
+                      self.logger.warn("Cannot load fixing script '%s'" % filename)
+                      continue
+                  except Exception, e :
+                      self.logger.warn("Unable to run %s script: %s" % (filename, e))
+                      continue
+
+                  if hasattr(py_mod, 'xml_fix'):
+                      fnc = getattr(py_mod, 'xml_fix')
+                      if hasattr(fnc, "__call__") :
+                          self.fixers.append(fnc)
+                      else :
+                          self.logger.warn("module %s : attribute xml_fix is not a function or method" %  filename)
+                  else :
+                      self.logger.warn("Unable to run %s script: missing xml_fix() function" % filename)
+                                      
+ 
+    def _update (self):
+        """Aply the script on inventory"""
+        for fnc in self.fixers :
+            try :
+                self._inventory = fnc(self._inventory)
+                self.logger.info("Inventory fixed by '%s' script" % fnc.__module__)
+            except :
+                info = sys.exc_info()
+                for fname, linenumber, fnc_name, text in traceback.extract_tb(info[2]):
+                    args = (fname, linenumber, fnc_name)
+                    self.logger.error("module: %s line: %d in function: %s" % args)
+                    self.logger.error("Failed on: %s" % text)
+
+    def get (self):
+        """get the fixed inventory"""
+        return self._inventory
+
+
 
 class HttpInventoryServer(BaseHTTPServer.BaseHTTPRequestHandler, InventoryServer):
     def __init__(self, *args):
@@ -245,19 +314,8 @@ class TreatInv(Thread):
             inventory = re.sub(r'</?DOWNLOAD>', '', inventory)
 
             # Let's fix the XML using py config scripts
-            # Find all .py from xmlfixplugindir and run its "xml_fix" function against our XML
-            for (path, dirs, files) in os.walk(self.config.xmlfixplugindir):
-                for filename in files:
-                    filename = os.path.join(path, filename)
-                    if re.match('^.*\.py$',filename):
-			try:
-                            self.logger.info('Thread %s : Fixing XML inventory using %s' % (threadname, filename))
-                            mod_name = "xml-fix"
-                            py_mod = imp.load_source(mod_name, filename)
-                            inventory = getattr(py_mod, 'xml_fix')(inventory)
-                        except Exception, e:
-                            self.logger.error("Thread %s : Unable to run %s script: %s" % (threadname, filename, e))
-
+            invfix = InventoryFix(self.config, inventory)
+            inventory = invfix.get()
             # Store data on the server
             inventory = OcsMapping().parse(inventory)
             self.logger.debug("Thread %s : parsed : %s " % (threadname, time.time()))
