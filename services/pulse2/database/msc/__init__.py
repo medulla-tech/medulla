@@ -954,7 +954,7 @@ class MscDatabase(DatabaseHelper):
     
     def getCommandOnGroupStatus(self, ctx, cmd_id):# TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         session = create_session()
-        query = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.id == cmd_id)
+        query = session.query(CommandsOnHost).add_column(self.target.c.target_uuid).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.commands.c.id == cmd_id)
         ret = self.__getStatus(ctx, query)
         session.close()
         return ret
@@ -969,7 +969,7 @@ class MscDatabase(DatabaseHelper):
         
     def getCommandOnBundleStatus(self, ctx, fk_bundle):
         session = create_session()
-        query = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.fk_bundle == fk_bundle)
+        query = session.query(CommandsOnHost).add_column(self.target.c.target_uuid).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.commands.c.fk_bundle == fk_bundle)
         ret = self.__getStatus(ctx, query)
         session.close()
         return ret
@@ -992,16 +992,20 @@ class MscDatabase(DatabaseHelper):
         ret = {
             'total':0,
             'success':{
-                'total':[0, []]
+                'total':[0, []],
+                'machineNames': [],
             },
             'stopped':{
-                'total':[0, []]
+                'total':[0, []],
+                'machineNames': [],
             },
             'paused':{
-                'total':[0, []]
+                'total':[0, []],
+                'machineNames': [],
             },
             'running':{
                 'total':[0, []],
+                'machineNames': [],
                 'wait_up':[0, []],
                 'run_up':[0, []],
                 'sec_up':[0, []],
@@ -1014,6 +1018,7 @@ class MscDatabase(DatabaseHelper):
             },
             'failure':{
                 'total':[0, []],
+                'machineNames': [],
                 'fail_up':[0, []],
                 'conn_up':[0, []],
                 'fail_ex':[0, []],
@@ -1028,82 +1033,115 @@ class MscDatabase(DatabaseHelper):
         failure = ['failed', 'upload_failed', 'execution_failed', 'delete_failed', 'inventory_failed', 'not_reachable']
         for coh in query:
             ret['total'] += 1
-            if coh.current_state == 'done': # success
+            if coh[0].current_state == 'done': # success
                 ret['success']['total'][0] += 1
+                ret['success']['machineNames'].append({
+                    'hostname': coh[0].host,
+                    'target_uuid': coh[1],
+                })
                 if verbose: ret['success']['total'][1].append(coh)
-            elif coh.current_state == 'stop' or coh.current_state == 'stopped': # stopped coh
+            elif coh[0].current_state == 'stop' or coh[0].current_state == 'stopped': # stopped coh
                 ret['stopped']['total'][0] += 1
+                ret['stopped']['machineNames'].append({
+                    'hostname': coh[0].host,
+                    'target_uuid': coh[1],
+                })
                 if verbose: ret['stopped']['total'][1].append(coh)
-            elif coh.current_state == 'pause':
+            elif coh[0].current_state == 'pause':
                 ret['paused']['total'][0] += 1
+                ret['paused']['machineNames'].append({
+                    'hostname': coh[0].host,
+                    'target_uuid': coh[1],
+                })
                 if verbose: ret['paused']['total'][1].append(coh)
-            elif coh.current_state == 'over_timed': # out of the valid period of execution (= failed)
+            elif coh[0].current_state == 'over_timed': # out of the valid period of execution (= failed)
                 ret['failure']['total'][0] += 1
+                ret['failure']['machineNames'].append({
+                    'hostname': coh[0].host,
+                    'target_uuid': coh[1],
+                })
                 if verbose: ret['failure']['total'][1].append(coh)
                 ret['failure']['over_timed'][0] += 1
                 if verbose: ret['failure']['over_timed'][1].append(coh)
-            elif coh.attempts_left == 0 and (coh.uploaded == 'FAILED' or coh.executed == 'FAILED' or coh.deleted == 'FAILED'): # failure
+            elif coh[0].attempts_left == 0 and (coh[0].uploaded == 'FAILED' or coh[0].executed == 'FAILED' or coh[0].deleted == 'FAILED'): # failure
                 ret['failure']['total'][0] += 1
+                ret['failure']['machineNames'].append({
+                    'hostname': coh[0].host,
+                    'target_uuid': coh[1],
+                })
                 if verbose: ret['failure']['total'][1].append(coh)
-                if coh.uploaded == 'FAILED':
+                if coh[0].uploaded == 'FAILED':
                     ret['failure']['fail_up'][0] += 1
                     if verbose: ret['failure']['fail_up'][1].append(coh)
-                    if coh.current_state == 'not_reachable':
+                    if coh[0].current_state == 'not_reachable':
                         ret['failure']['conn_up'][0] += 1
                         if verbose: ret['failure']['conn_up'][1].append(coh)
-                elif coh.executed == 'FAILED':
+                elif coh[0].executed == 'FAILED':
                     ret['failure']['fail_ex'][0] += 1
                     if verbose: ret['failure']['fail_ex'][1].append(coh)
-                    if coh.current_state == 'not_reachable':
+                    if coh[0].current_state == 'not_reachable':
                         ret['failure']['conn_ex'][0] += 1
                         if verbose: ret['failure']['conn_ex'][1].append(coh)
-                elif coh.deleted == 'FAILED':
+                elif coh[0].deleted == 'FAILED':
                     ret['failure']['fail_rm'][0] += 1
                     if verbose: ret['failure']['fail_rm'][1].append(coh)
-                    if coh.current_state == 'not_reachable':
+                    if coh[0].current_state == 'not_reachable':
                         ret['failure']['conn_rm'][0] += 1
                         if verbose: ret['failure']['conn_rm'][1].append(coh)
-            elif coh.attempts_left != 0 and (coh.uploaded == 'FAILED' or coh.executed == 'FAILED' or coh.deleted == 'FAILED'): # fail but can still try again
+            elif coh[0].attempts_left != 0 and (coh[0].uploaded == 'FAILED' or coh[0].executed == 'FAILED' or coh[0].deleted == 'FAILED'): # fail but can still try again
                 ret['running']['total'][0] += 1
+                ret['running']['machineNames'].append({
+                    'hostname': coh[0].host,
+                    'target_uuid': coh[1],
+                })
                 if verbose: ret['running']['total'][1].append(coh)
-                if coh.uploaded == 'FAILED':
+                if coh[0].uploaded == 'FAILED':
                     ret['running']['wait_up'][0] += 1
                     if verbose: ret['running']['wait_up'][1].append(coh)
                     ret['running']['sec_up'][0] += 1
                     if verbose: ret['running']['sec_up'][1].append(coh)
-                elif coh.executed == 'FAILED':
+                elif coh[0].executed == 'FAILED':
                     ret['running']['wait_ex'][0] += 1
                     if verbose: ret['running']['wait_ex'][1].append(coh)
                     ret['running']['sec_ex'][0] += 1
                     if verbose: ret['running']['sec_ex'][1].append(coh)
-                elif coh.deleted == 'FAILED':
+                elif coh[0].deleted == 'FAILED':
                     ret['running']['wait_rm'][0] += 1
                     if verbose: ret['running']['wait_rm'][1].append(coh)
                     ret['running']['sec_rm'][0] += 1
                     if verbose: ret['running']['sec_rm'][1].append(coh)
             else: # running
                 ret['running']['total'][0] += 1
-                if verbose and coh.deleted != 'DONE' and coh.deleted != 'IGNORED': ret['running']['total'][1].append(coh)
-                if coh.deleted == 'DONE' or coh.deleted == 'IGNORED': # done
+                ret['running']['machineNames'].append({
+                    'hostname': coh[0].host,
+                    'target_uuid': coh[1],
+                })
+                if verbose and coh[0].deleted != 'DONE' and coh[0].deleted != 'IGNORED': ret['running']['total'][1].append(coh)
+                if coh[0].deleted == 'DONE' or coh[0].deleted == 'IGNORED': # done
                     ret['running']['total'][0] -= 1
+                    ret['running']['machineNames'].pop()
                     ret['success']['total'][0] += 1
+                    ret['success']['machineNames'].append({
+                        'hostname': coh[0].host,
+                        'target_uuid': coh[1],
+                    })
                     if verbose: ret['success']['total'][1].append(coh)
-                elif coh.executed == 'DONE' or coh.executed == 'IGNORED': # delete running
-                    if coh.deleted == 'WORK_IN_PROGRESS':
+                elif coh[0].executed == 'DONE' or coh[0].executed == 'IGNORED': # delete running
+                    if coh[0].deleted == 'WORK_IN_PROGRESS':
                         ret['running']['run_rm'][0] += 1
                         if verbose: ret['running']['run_rm'][1].append(coh)
                     else:
                         ret['running']['wait_rm'][0] += 1
                         if verbose: ret['running']['wait_rm'][1].append(coh)
-                elif coh.uploaded == 'DONE' or coh.uploaded == 'IGNORED': # exec running
-                    if coh.executed == 'WORK_IN_PROGRESS':
+                elif coh[0].uploaded == 'DONE' or coh[0].uploaded == 'IGNORED': # exec running
+                    if coh[0].executed == 'WORK_IN_PROGRESS':
                         ret['running']['run_ex'][0] += 1
                         if verbose: ret['running']['run_ex'][1].append(coh)
                     else:
                         ret['running']['wait_ex'][0] += 1
                         if verbose: ret['running']['wait_ex'][1].append(coh)
                 else: # upload running
-                    if coh.uploaded == 'WORK_IN_PROGRESS':
+                    if coh[0].uploaded == 'WORK_IN_PROGRESS':
                         ret['running']['run_up'][0] += 1
                         if verbose: ret['running']['run_up'][1].append(coh)
                     else:

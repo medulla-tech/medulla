@@ -199,7 +199,24 @@ ksort($machines);
 $diff = array_diff_assoc($machines, $members);
 natcasesort($diff);
 
-drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, $group->id, htmlspecialchars($name), $_POST['filter'], $type);
+if (isset($_GET['pieGroupStatus'])) {
+    // if group creation page is called by clicking on a Pie slice
+    // Auto-fill page
+    foreach($_SESSION['MSCPieGroup'][$_GET['pieGroupStatus']] as $machine) {
+        $members[$machine['hostname'] . '##' . $machine['target_uuid']] = $machine['hostname'];
+        $listOfMembers[$machine['target_uuid']] = array(
+            "hostname" => $machine['hostname'],
+            "uuid" => $machine['target_uuid'],
+        );
+    }
+
+    $diff = array_diff_assoc($machines, $members);
+    
+    drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, $group->id, htmlspecialchars($name), $_POST['filter'], $type);
+}
+else {
+    drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, $group->id, htmlspecialchars($name), $_POST['filter'], $type);
+}
 
 ?>
 
