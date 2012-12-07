@@ -77,8 +77,8 @@ class class01inventoryReportTest(TestCase):
         """
         Inject an Ubuntu UTF-8 inventory containing latin-1 chars
         """
-        os.system('gunzip -c ../data/ocs-ubuntu-10.04-lts.xml.gz | $PULSE2/services/contrib/Ocsinventory_local.pl -u http://127.0.0.1:9999 --stdin')
-        time.sleep(60)
+        os.system('gunzip -c ../data/ocs-ubuntu-10.04-lts.xml.gz | ../../../pulse2/services/contrib/Ocsinventory_local.pl -u http://127.0.0.1:9999 --stdin')
+        time.sleep(10)
         result = client.inventory.inventoryExists('UUID3')
         self.assertTrue(result)
 
@@ -86,8 +86,8 @@ class class01inventoryReportTest(TestCase):
         """
         Inject a MAC OS X inventory
         """
-        os.system('gunzip -c ../data/ocs-os-x-10.4.xml.gz | $PULSE2/services/contrib/Ocsinventory_local.pl -u http://127.0.0.1:9999 --stdin')
-        time.sleep(60)
+        os.system('gunzip -c ../data/ocs-os-x-10.4.xml.gz | ../../../pulse2/services/contrib/Ocsinventory_local.pl -u http://127.0.0.1:9999 --stdin')
+        time.sleep(10)
         result = client.inventory.inventoryExists('UUID4')
         self.assertTrue(result)
 
