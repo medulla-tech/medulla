@@ -35,12 +35,12 @@ $mod->setVersion("3.0.92");
 $mod->setRevision('');
 $mod->setDescription(_T("Dashboard", "dashboard"));
 $mod->setAPIVersion("0:0:0");
-$mod->setPriority(0);
+$mod->setPriority(-10);
 
 $submod = new SubModule("main", _T("Dashboard", "dashboard"));
 $submod->setImg('modules/dashboard/graph/navbar/dashboard');
 $submod->setDefaultPage("dashboard/main/default");
-$submod->setPriority(0);
+$submod->setPriority(-10);
 
 /* Add the dashboard to the main module */
 $page = new Page("default", _T("Dashboard", "dashboard"));

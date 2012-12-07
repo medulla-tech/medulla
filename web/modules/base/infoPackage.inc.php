@@ -34,7 +34,7 @@ $mod->setVersion("3.0.91");
 $mod->setRevision('$Rev$');
 $mod->setAPIVersion("9:0:5");
 $mod->setDescription(_("User, group and computer management"));
-$mod->setPriority(1);
+$mod->setPriority(0);
 
 /**
  * define main submod
@@ -55,23 +55,65 @@ $submod->addPage($page);
 
 $mod->addSubmod($submod);
 
-$submod = new SubModule("status", _("Status"));
-$submod->setVisibility(True);
-$submod->setImg('modules/base/graph/navbar/load');
-$submod->setDefaultPage("base/status/index");
-$submod->setPriority(10000);
+/* Audit module */
+if (has_audit_working()) {
+    $submod = new SubModule("audit", _("MMC Logs"));
+    $submod->setImg('modules/base/graph/navbar/logview');
+    $submod->setDefaultPage("base/audit/indexall");
+    $submod->setPriority(1000);
 
-$page = new Page("index",_("Default status page"));
-$page->setFile("modules/base/status/index.php");
-$submod->addPage($page);
-
-if (! isCommunityVersion(true)) {
-    $page = new Page("support",_("Support page"));
-    $page->setFile("modules/base/status/support.php");
+    $page = new Page("indexall",_T("All modules", "base"));
+    $page->setFile("modules/base/audit/indexall.php", array("AJAX" =>False,"visible"=>True));
     $submod->addPage($page);
-}
 
-$mod->addSubmod($submod);
+    $page = new Page("indexbase",_T("Users and Groups", "base"));
+    $page->setFile("modules/base/audit/indexbase.php", array("AJAX" =>False,"visible"=>True));
+    $submod->addPage($page);
+
+    if(in_array("samba", $_SESSION["modulesList"])) {
+        $page = new Page("indexsamba",_T("Samba", "base"));
+        $page->setFile("modules/base/audit/indexsamba.php", array("AJAX" =>False,"visible"=>True));
+        $submod->addPage($page);
+    }
+
+    if(in_array("mail", $_SESSION["modulesList"])) {
+        $page = new Page("indexmail",_T("Mail", "base"));
+        $page->setFile("modules/base/audit/indexmail.php", array("AJAX" =>False,"visible"=>True));
+        $submod->addPage($page);
+    }
+
+    if(in_array("network", $_SESSION["modulesList"])) {
+        $page = new Page("indexnetwork",_T("Network", "base"));
+        $page->setFile("modules/base/audit/indexnetwork.php", array("AJAX" =>False,"visible"=>True));
+        $submod->addPage($page);
+    }
+
+    if(in_array("sshlpk", $_SESSION["modulesList"])) {
+        $page = new Page("indexsshlpk",_T("SSH public keys", "base"));
+        $page->setFile("modules/base/audit/indexsshlpk.php", array("AJAX" =>False,"visible"=>True));
+        $submod->addPage($page);
+    }
+
+    if(in_array("proxy", $_SESSION["modulesList"])) {
+        $page = new Page("indexproxy",_T("Proxy", "base"));
+        $page->setFile("modules/base/audit/indexproxy.php", array("AJAX" =>False,"visible"=>True));
+        $submod->addPage($page);
+    }
+
+    $page = new Page("searchbar");
+    $page->setFile("modules/base/includes/searchbar.php", array("AJAX" =>True,"visible"=>False));
+    $submod->addPage($page);
+
+    $page = new Page("ajaxLogFilter");
+    $page->setFile("modules/base/audit/ajaxLogFilter.php", array("AJAX" =>True,"visible"=>False));
+    $submod->addPage($page);
+
+    $page = new Page("logview",_("View details of an action"));
+    $page->setFile("modules/base/audit/logview.php", array("AJAX" =>False,"visible"=>False));
+    $submod->addPage($page);
+
+    $mod->addSubmod($submod);
+}
 
 // Deprecated module
 if (isLogViewEnabled()) {
@@ -79,7 +121,7 @@ if (isLogViewEnabled()) {
     $submod->setVisibility(True);
     $submod->setImg('modules/base/graph/navbar/logview');
     $submod->setDefaultPage("base/logview/index");
-    $submod->setPriority(10001);
+    $submod->setPriority(1001);
 
     $page = new Page("index",_("LDAP log"));
     $page->setFile("modules/base/logview/index.php", array("expert" => True));
@@ -99,6 +141,24 @@ if (isLogViewEnabled()) {
     $mod->addSubmod($submod);
 }
 
+$submod = new SubModule("status", _("Status"));
+$submod->setVisibility(True);
+$submod->setImg('modules/base/graph/navbar/load');
+$submod->setDefaultPage("base/status/index");
+$submod->setPriority(10012);
+
+$page = new Page("index",_("Default status page"));
+$page->setFile("modules/base/status/index.php");
+$submod->addPage($page);
+
+if (! isCommunityVersion(true)) {
+    $page = new Page("support",_("Support page"));
+    $page->setFile("modules/base/status/support.php");
+    $submod->addPage($page);
+}
+
+$mod->addSubmod($submod);
+
 /**
  * user submod definition
  */
@@ -106,7 +166,7 @@ if (isLogViewEnabled()) {
 $submod = new SubModule("users", _("Users"));
 $submod->setImg('modules/base/graph/navbar/user');
 $submod->setDefaultPage("base/users/index");
-$submod->setPriority(10);
+$submod->setPriority(0);
 
 $page = new Page("index",_("User list"));
 $submod->addPage($page);
@@ -180,7 +240,7 @@ $mod->addSubmod($submod);
 $submod = new SubModule("groups", _("Groups"));
 $submod->setImg('modules/base/graph/navbar/group');
 $submod->setDefaultPage("base/groups/index");
-$submod->setPriority(20);
+$submod->setPriority(1);
 
 $page = new Page("index",_("Group list"));
 $submod->addPage($page);
@@ -208,74 +268,13 @@ $submod->addPage($page);
 
 $mod->addSubmod($submod);
 
-/* Audit module */
-
-if (has_audit_working()) {
-    $submod = new SubModule("audit", _("MMC Logs"));
-    $submod->setImg('modules/base/graph/navbar/logview');
-    $submod->setDefaultPage("base/audit/indexall");
-    $submod->setPriority(2000);
-
-    $page = new Page("indexall",_T("All modules", "base"));
-    $page->setFile("modules/base/audit/indexall.php", array("AJAX" =>False,"visible"=>True));
-    $submod->addPage($page);
-
-    $page = new Page("indexbase",_T("Users and Groups", "base"));
-    $page->setFile("modules/base/audit/indexbase.php", array("AJAX" =>False,"visible"=>True));
-    $submod->addPage($page);
-
-    if(in_array("samba", $_SESSION["modulesList"])) {
-        $page = new Page("indexsamba",_T("Samba", "base"));
-        $page->setFile("modules/base/audit/indexsamba.php", array("AJAX" =>False,"visible"=>True));
-        $submod->addPage($page);
-    }
-
-    if(in_array("mail", $_SESSION["modulesList"])) {
-        $page = new Page("indexmail",_T("Mail", "base"));
-        $page->setFile("modules/base/audit/indexmail.php", array("AJAX" =>False,"visible"=>True));
-        $submod->addPage($page);
-    }
-
-    if(in_array("network", $_SESSION["modulesList"])) {
-        $page = new Page("indexnetwork",_T("Network", "base"));
-        $page->setFile("modules/base/audit/indexnetwork.php", array("AJAX" =>False,"visible"=>True));
-        $submod->addPage($page);
-    }
-
-    if(in_array("sshlpk", $_SESSION["modulesList"])) {
-        $page = new Page("indexsshlpk",_T("SSH public keys", "base"));
-        $page->setFile("modules/base/audit/indexsshlpk.php", array("AJAX" =>False,"visible"=>True));
-        $submod->addPage($page);
-    }
-
-    if(in_array("proxy", $_SESSION["modulesList"])) {
-        $page = new Page("indexproxy",_T("Proxy", "base"));
-        $page->setFile("modules/base/audit/indexproxy.php", array("AJAX" =>False,"visible"=>True));
-        $submod->addPage($page);
-    }
-
-    $page = new Page("searchbar");
-    $page->setFile("modules/base/includes/searchbar.php", array("AJAX" =>True,"visible"=>False));
-    $submod->addPage($page);
-
-    $page = new Page("ajaxLogFilter");
-    $page->setFile("modules/base/audit/ajaxLogFilter.php", array("AJAX" =>True,"visible"=>False));
-    $submod->addPage($page);
-
-    $page = new Page("logview",_("View details of an action"));
-    $page->setFile("modules/base/audit/logview.php", array("AJAX" =>False,"visible"=>False));
-    $submod->addPage($page);
-
-    $mod->addSubmod($submod);
-}
-
 /* Computer management module */
 
 if (hasComputerManagerWorking()) {
     $submod = new SubModule("computers", _("Computers"));
     $submod->setImg('modules/base/graph/navbar/computer');
     $submod->setDefaultPage("base/computers/index");
-    $submod->setPriority(30);
+    $submod->setPriority(3);
 
     $page = new Page("index", _("Computer list"));
     $submod->addPage($page);

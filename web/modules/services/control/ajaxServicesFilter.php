@@ -32,8 +32,27 @@ $restartAction = new ActionItem(_T("Restart service"), "restart", "restart","");
 $logAction = new ActionItem(_T("View log"), "log", "display","");
 $emptyAction = new EmptyActionItem();
 
+// Sort services by prio
+$objList = array();
 foreach($list as $module => $services) {
     $moduleObj = $MMCApp->getModule($module);
+    $added = false;
+    if ($objList) {
+        foreach($objList as $index => $obj) {
+            if ($moduleObj->getPriority() < $obj->getPriority()) {
+                array_splice($objList, $index, 0, array($moduleObj));
+                $added = true;
+                break;
+            }
+        }
+    }
+    if (!$added) {
+        $objList[] = $moduleObj;
+    }
+}
+
+foreach($objList as $moduleObj) {
+    $services = $list[$moduleObj->getName()];
     if ($moduleObj) {
         $ids = array();
         $names = array();

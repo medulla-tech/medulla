@@ -29,13 +29,14 @@ $MMCApp =& MMCApp::getInstance();
 $mod = new Module("services");
 $mod->setVersion("3.0.92");
 $mod->setRevision('');
-$mod->setDescription(_T("Services", "services"));
+$mod->setDescription(_T("Services management", "services"));
 $mod->setAPIVersion("0:0:0");
+$mod->setPriority(990);
 
 $submod = new SubModule("control", _T("Services", "services"));
 $submod->setDefaultPage("services/control/index");
 $submod->setImg('modules/services/graph/navbar/services');
-$submod->setPriority(20000);
+$submod->setPriority(990);
 
 /* Add the page to the module */
 $page = new Page("index", _T("Core services", "services"));
