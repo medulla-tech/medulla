@@ -24,6 +24,7 @@ Systemd service manager
 
 import json
 from systemd_dbus.manager import Manager
+from operator import itemgetter
 
 from mmc.support.mmctools import SingletonN, shlaunch
 from mmc.plugins.services.config import ServicesConfig
@@ -62,6 +63,7 @@ class ServiceManager(object):
             list[plugin] = []
             for service in services:
                 list[plugin].append(self.get_unit_info(service))
+            list[plugin] = sorted(list[plugin], key=itemgetter('id'))
         return list
 
     def list_others_services(self, filter = None):
@@ -77,6 +79,7 @@ class ServiceManager(object):
                     list.append(unit)
                 if not filter:
                     list.append(unit)
+        list = sorted(list, key=itemgetter('id'))
         return list
 
     def list(self):
@@ -85,7 +88,8 @@ class ServiceManager(object):
         units = []
         for unit in self.units:
             units.append(self.serialize_unit(unit))
-        return units
+        list = sorted(units, key=itemgetter('id'))
+        return list
 
     def get_unit(self, service):
         service = service.replace(".service", "", 1)
