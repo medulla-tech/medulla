@@ -152,5 +152,7 @@ echo "#################################################################"
 echo
 echo "Number of failed test: ${ERROR}"
 echo -e ${ERRORLOG}
+echo
+echo
 
 exit ${ERROR}

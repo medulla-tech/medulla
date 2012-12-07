@@ -310,7 +310,7 @@ class class15NetworkStuffTest (TestCase):
 
     def test1505get_pubkey(self):
         result=server.get_pubkey("")
-        ssh=open("/root/.ssh/id_dsa.pub","r")
+        ssh=open("/root/.ssh/id_rsa.pub","r")
         ssh_key=ssh.read()
         self.assertEqual(result,ssh_key)
 
