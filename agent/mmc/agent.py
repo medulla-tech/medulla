@@ -35,7 +35,7 @@ from twisted.python import failure
 try:
     from twisted.web import http
 except ImportError:
-    from twisted.protocols import http
+    from twisted.protocols import http  # pyflakes.ignore
 
 from mmc.site import localstatedir
 from mmc.ssl import makeSSLContext
@@ -66,7 +66,8 @@ Fault = xmlrpclib.Fault
 ctx = None
 VERSION = "3.0.92"
 
-class MmcServer(xmlrpc.XMLRPC,object):
+
+class MmcServer(xmlrpc.XMLRPC, object):
     """
     MMC Server implemented as a XML-RPC server.
 
@@ -149,7 +150,7 @@ class MmcServer(xmlrpc.XMLRPC,object):
             self._cbRender(
                 xmlrpc.Fault(http.UNAUTHORIZED, "Unauthorized: invalid credentials to connect to the MMC agent, basic HTTP authentication is required"),
                 request
-                )
+            )
             return server.NOT_DONE_YET
 
         if not s.loggedin:
@@ -185,7 +186,7 @@ class MmcServer(xmlrpc.XMLRPC,object):
             request.setHeader("content-type", "text/xml")
             if self.config.multithreading:
                 oldargs = args
-                args = (function,s,) + args
+                args = (function, s,) + args
                 defer.maybeDeferred(self._runInThread, *args).addErrback(
                     self._ebRender, functionPath, oldargs, request
                 ).addCallback(
@@ -242,7 +243,7 @@ class MmcServer(xmlrpc.XMLRPC,object):
         reactor.callInThread(_putResult, d, function, context, args, kwargs)
         return d
 
-    def _cbRender(self, result, request, functionPath = None, args = None):
+    def _cbRender(self, result, request, functionPath=None, args=None):
         s = request.getSession()
         auth_funcs = ["base.ldapAuth", "base.tokenAuthenticate", "base.authenticate"]
         if functionPath in auth_funcs and not isinstance(result, Fault):
@@ -259,7 +260,8 @@ class MmcServer(xmlrpc.XMLRPC,object):
                     f = Fault(8004, "MMC agent can't provide a security context for this account")
                     self._cbRender(f, request)
                     return
-        if result == None: result = 0
+        if result is None:
+            result = 0
         if isinstance(result, xmlrpc.Handler):
             result = result.result
         if not isinstance(result, Fault):
@@ -331,6 +333,7 @@ class MmcServer(xmlrpc.XMLRPC,object):
         f.write(time.asctime() + ': ' + content + "\n")
         f.close()
 
+
 class MMCApp(object):
     """ Represent the MMCApp
     """
@@ -345,7 +348,7 @@ class MMCApp(object):
 
         if self.daemon:
             self.lock = mp.Lock()
-            
+
     def getState(self):
         if self.daemon:
             return self._shared_state.value
@@ -368,7 +371,7 @@ class MMCApp(object):
             if pid > 0:
                 # Wait for initialization before exiting
                 self.lock.acquire()
-                # exit first parent and return 
+                # exit first parent and return
                 sys.exit(self.state)
         except OSError, e:
             print >>sys.stderr, "fork #1 failed: %d (%s)" % (e.errno, e.strerror)
@@ -508,11 +511,11 @@ class MMCApp(object):
         logger.info("mmc-agent %s starting..." % VERSION)
         logger.info("Using Python %s" % sys.version.split("\n")[0])
         logger.info("Using Python Twisted %s" % twisted.copyright.version)
-        
+
         logger.debug("Running as euid = %d, egid = %d" % (os.geteuid(), os.getegid()))
         if self.config.multithreading:
-            logger.info("Multi-threading enabled, max threads pool size is %d" \
-                     % self.config.maxthreads)
+            logger.info("Multi-threading enabled, max threads pool size is %d"
+                        % self.config.maxthreads)
             reactor.suggestThreadPoolSize(self.config.maxthreads)
 
         # Start audit system
@@ -541,8 +544,8 @@ class MMCApp(object):
         if self.config.enablessl:
             sslContext = makeSSLContext(self.config.verifypeer, self.config.cacert,
                                         self.config.localcert)
-            reactor.listenSSL(self.config.port, MMCSite(r), 
-                              interface=self.config.host, 
+            reactor.listenSSL(self.config.port, MMCSite(r),
+                              interface=self.config.host,
                               contextFactory=sslContext)
         else:
             logger.warning("SSL is disabled by configuration.")
@@ -550,8 +553,8 @@ class MMCApp(object):
 
         # Add event handler before shutdown
         reactor.addSystemEventTrigger('before', 'shutdown', self.cleanUp)
-        logger.info("Listening to XML-RPC requests on %s:%s" \
-                 % (self.config.host, self.config.port))
+        logger.info("Listening to XML-RPC requests on %s:%s"
+                    % (self.config.host, self.config.port))
 
     def cleanUp(self):
         """
@@ -562,6 +565,7 @@ class MMCApp(object):
         l.commit()
 
         self.cleanPid()
+
 
 class MMCHTTPChannel(http.HTTPChannel):
     """
@@ -578,8 +582,10 @@ class MMCHTTPChannel(http.HTTPChannel):
             logger.error(reason)
         http.HTTPChannel.connectionLost(self, reason)
 
+
 class MMCSite(server.Site):
     protocol = MMCHTTPChannel
+
 
 def readConfig(config):
     """
@@ -595,7 +601,7 @@ def readConfig(config):
     try:
         config.host = config.get("main", "host")
         config.port = config.getint("main", "port")
-    except Exception,e:
+    except Exception, e:
         logger.error(e)
         return 1
 
@@ -725,9 +731,9 @@ class PluginManager(Singleton):
             logger.debug("Trying to load module %s" % name)
             plugin = imp.load_module(name, f, p, d)
             logger.debug("Module %s loaded" % name)
-        except Exception,e:
+        except Exception, e:
             logger.exception(e)
-            logger.error('Module '+ name+ " raise an exception.\n"+ name+ " not loaded.")
+            logger.error('Module ' + name + " raise an exception.\n" + name + " not loaded.")
             return 0
 
         # If module has no activate function
@@ -749,7 +755,7 @@ class PluginManager(Singleton):
         # If is active
         try:
             if (func()):
-                version = 'version: '+str(getattr(plugin, "getVersion")())
+                version = 'version: ' + str(getattr(plugin, "getVersion")())
                 logger.info('Plugin %s loaded, %s' % (name, version))
             else:
                 # If we can't activate it
@@ -868,4 +874,3 @@ class PluginManager(Singleton):
         del self.plugins[name]
         getattr(self.plugins["base"], "setModList")([name for name in self.plugins.keys()])
         return True
-
