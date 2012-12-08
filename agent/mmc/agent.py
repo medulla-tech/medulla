@@ -698,16 +698,15 @@ class PluginManager(Singleton):
         """
         Fetch all available MMC plugin
 
-        @param path: UNIX path where the plugins are located
-        @type path: str
-
-        @return: list of all .py in a path
+        @return: list of all mmc plugins names
         @rtype: list
         """
-        ret = []
-        for item in glob.glob(os.path.join(self.pluginDirectory, "*", "__init__.pyc")):
-            ret.append(item.split("/")[1])
-        return ret
+        plugins = []
+        for path in glob.glob(os.path.join(self.pluginDirectory, "*", "__init__.py*")):
+            plugin = path.split("/")[1]
+            if not plugin in plugins:
+                plugins.append(plugin)
+        return plugins
 
     def loadPlugin(self, name, force=False):
         """
