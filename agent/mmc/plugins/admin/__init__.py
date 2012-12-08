@@ -1,8 +1,6 @@
-from configuration import *
-
 VERSION = "3.0.92"
-APIVERSION = "4:1:3"
-REVISION = int("$Rev: 0$".split(':')[1].strip(' $'))
+APIVERSION = "0:0:0"
+REVISION = ""
 
 def getVersion():
     return VERSION

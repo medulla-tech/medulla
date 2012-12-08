@@ -110,8 +110,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         """
         if version == None:
             version = self.getUptodateVersion()
-        func = getattr(self, "_initTables" + self.config.auditdbdriver + "V" + str(version))
-        func()
+        getattr(self, "_initTables" + self.config.auditdbdriver + "V" + str(version))()
 
     def _initMappers(self, version = None):
         """
@@ -119,8 +118,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         """
         if version == None:
             version = self.getUptodateVersion()
-        func = getattr(self, "_initMappers" + self.config.auditdbdriver + "V" + str(version))
-        func()
+        getattr(self, "_initMappers" + self.config.auditdbdriver + "V" + str(version))()
 
     def _populateTables(self, version = None):
         """
@@ -128,8 +126,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         """
         if version == None:
             version = self.getUptodateVersion()
-        func = getattr(self, "_populateTables" + self.config.auditdbdriver + "V" + str(version))
-        func()
+        getattr(self, "_populateTables" + self.config.auditdbdriver + "V" + str(version))()
 
     def operation(self, op):
         """

@@ -63,7 +63,7 @@ except ImportError:
 try:
     import mx.DateTime as mxDateTime
 except ImportError:
-    mxDateTime = None
+    mxDateTime = None # pyflakes.ignore
 
 def cleanFilter(f):
     for char in "()&=":

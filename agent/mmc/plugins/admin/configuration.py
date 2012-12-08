@@ -55,14 +55,12 @@ def loadInventoryConf(module_name):
     Also enable and disable the correct module (but they
     are not yet started, just the config is modified)
     """
-    pm = PluginManager()
     inventory_config = PluginConfigFactory.new(InventoryConfig, "inventory")
     glpi_config = PluginConfigFactory.new(GlpiConfig, "glpi")
     print('Instance of inventory config in loadInventoryConf is %s' % inventory_config)
 
-
     # Enable and disable the right modules in their config
-    base_config = PluginConfigFactory.get("base")
+    # base_config = PluginConfigFactory.get("base")
     # base_config.set('computers', 'method', module_name)
     glpi_config.set('main', 'disable', '0' if module_name == 'glpi' else 1)
     inventory_config.init('inventory')
