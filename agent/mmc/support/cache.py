@@ -327,31 +327,6 @@ class CacheableObject(object):
                                                                    key))
         return ret
 
-class cacheable(object):
-    """ Method decorator
-    """
-    def __init__(self, keyFunc):
-        self.keyFunc = keyFunc
-
-    def __call__(self, method):
-        def wrapped(obj, *args, **kwargs):
-            if not isinstance(obj, CacheableApi):
-                raise NotImplementedError("Cacheable decorator must be used on CacheableObject object only.")
-
-            key = self.keyFunc(obj, *args, **kwargs)
-            if obj.cache.has_key(key):
-                ret = obj.cache.get(key)
-                log.debug("%s(%s, %s): key=%s, value=%s" % (method.__name__,
-                                                            args, kwargs,
-                                                            key, ret))
-            else:
-                ret = method(obj, *args, **kwargs)
-                obj.cache.set(key, ret)
-                log.debug("%s(%s, %s): key=%s, value=<EMPTY CACHE>" % (method.__name__,
-                                                                       args, kwargs,
-                                                                       key))
-            return ret
-        return wrapped
 
 from twisted.internet import defer
 class _DeferredCache(object):
