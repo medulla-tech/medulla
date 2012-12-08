@@ -129,7 +129,7 @@ class BaseCache(object):
         Subtract delta from value in the cache. If the key does not exist, raise
         a ValueError exception.
         """
-        return self.incr(key, -delta, version=version)
+        return self.incr(key, -delta)
 
     def __contains__(self, key):
         """
@@ -150,7 +150,7 @@ class BaseCache(object):
         the default cache timeout will be used.
         """
         for key, value in data.items():
-            self.set(key, value, timeout=timeout, version=version)
+            self.set(key, value, timeout=timeout)
 
     def delete_many(self, keys):
         """
@@ -292,12 +292,12 @@ def genericHashFunc(*args, **kwargs):
 
     try:
         arghash = hash(freeze(args))
-    except TypeError, e:
+    except TypeError:
         return None
 
     try:
         kwhash = hash(freeze(kwargs))
-    except TypeError, e:
+    except TypeError:
         return None
     return (arghash, kwhash)
 
@@ -374,8 +374,8 @@ class _DeferredCache(object):
         return res
 
     def cb_triggerUserErrback(self, failure, deferred):
-        deferred.errback(res)
-        return res
+        deferred.errback(failure)
+        return failure
 
     def call(self, *args, **kwargs):
         # Currently not in progress - start it
