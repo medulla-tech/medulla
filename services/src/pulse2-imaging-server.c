@@ -423,7 +423,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
              */
             char *name = malloc(40);
             bzero(name, 40);
-            fo = open(filename, 'r');
+            fo = open(filename, O_RDONLY);
             read(fo, name, 40);
             close(fo);
             sendto(s, name, strlen(name) + 1 , MSG_NOSIGNAL,
@@ -453,8 +453,8 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
 
     // after a save
     if (buf[0] == 0xED) {
-        char uuid[36];
-        snprintf(uuid, 36 + 1, "%s", buf + 1);
+        char uuid[37];
+        snprintf(uuid, sizeof(uuid), "%s", buf + 1);
         logClientActivity(mac,
                           LOG_DEBUG,
                           PULSE_LOG_STATE_BACKUP,
@@ -670,7 +670,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
              */
             char *name = malloc(256);
             bzero(name, 256);
-            fo = open(filename, 'r');
+            fo = open(filename, O_RDONLY);
             read(fo, name, 256);
             close(fo);
             sendto(s, name, strlen(name) + 1 , MSG_NOSIGNAL,
@@ -730,7 +730,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
              */
             char *name = malloc(256);
             bzero(name, 256);
-            fo = open(filename, 'r');
+            fo = open(filename, O_RDONLY);
             read(fo, name, 256);
             close(fo);
             sendto(s, name, strlen(name) + 1 , MSG_NOSIGNAL,
@@ -806,8 +806,8 @@ void readConfig(char *config_file_path) {
     ini = iniparser_load(config_file_path);
 
     if (ini == NULL) {
-        char msg[256];
-        snprintf(msg, 1000, "cannot parse file %.900s", config_file_path);
+        char msg[PATH_MAX];
+        snprintf(msg, sizeof(msg), "cannot parse file %.900s", config_file_path);
         syslog(LOG_ERR, "%s", msg);
         diep(msg);
     }
@@ -924,7 +924,7 @@ int main(void) {
     if (pid) {
         char *msg = malloc(256);
         bzero(msg, 256);
-        snprintf(msg, 1000, "daemonization succedeed, PID is %d", pid);
+        snprintf(msg, sizeof(msg), "daemonization succedeed, PID is %d", pid);
         syslog(LOG_INFO, "%s", msg);
     } else {
         diep("daemon");
@@ -936,7 +936,7 @@ int main(void) {
         diep("tcp socket");
 
     /* UDP sock */
-    memset((char *)&si_me, sizeof(si_me), 0);
+    memset((char *)&si_me, 0, sizeof(si_me));
     si_me.sin_family = AF_INET;
     si_me.sin_port = htons(gPort);
     si_me.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -947,7 +947,7 @@ int main(void) {
     if (setsockopt(stcp, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) != 0)
         syslog(LOG_DEBUG, "SO_REUSEADDR failed");
 
-    memset((char *)&si_tcp, sizeof(si_tcp), 0);
+    memset((char *)&si_tcp, 0, sizeof(si_tcp));
     si_tcp.sin_family = AF_INET;
     si_tcp.sin_port = htons(gPort);
     si_tcp.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -955,10 +955,10 @@ int main(void) {
         diep("bind TCP");
     listen(stcp, 1000);
 
-    pidFileFD = open((char *)gPIDFile, O_WRONLY | O_CREAT | O_TRUNC);
+    pidFileFD = open((char *)gPIDFile, O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU);
     if (pidFileFD == -1)
         diep("Can't open PID file");
-    snprintf(pidBuff, 6, "%d", pid);
+    snprintf(pidBuff, sizeof(pidBuff), "%d", pid);
     write(pidFileFD, pidBuff, strlen(pidBuff));
     close(pidFileFD);
 
