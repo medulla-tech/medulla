@@ -164,6 +164,9 @@ function export_csv($cmd_id, $bundle_id, $state) {
  <?php
 
 /*
+ * If it's an action on a group:
+ * -----------------------------
+ *
  * machineStateNumber declaration
  * used like this to store number of machines by state:
  *      $machineStateNumber[state] = array(
@@ -176,24 +179,42 @@ function export_csv($cmd_id, $bundle_id, $state) {
  *      failure
  *      paused
  *      stopped
+ *
+ *  If it's a bundle on a group:
+ *  ----------------------------
+ *  
+ *  bundleStatus declaration
+ *  used in the same manner of machineStateNumber
+ *
+ *  But in bundles, machines can have packages with several status
+ *  
+ *  For a successfull status, all packages of the bundle must have success status.
+ *
  */
 $machineStateNumber = array();
+$bundleStatus = array();
 $urlArray = array(
     "tab" => "tabsta",
     "type" => 0,
 );
 
+
 foreach ($labels as $l) {
     $s = $status[$l[0]];
 
-    $_SESSION['MSCPieGroup'][$l[0]] = $s['machineNames'];
-    $urlArray['pieGroupStatus'] = $l[0];
-    $machineStateNumber[$l[0]] = array(
-        "number" => $s['total'][0],
-        "percent" => $s['total'][1],
-        "url" => urlStr("base/computers/computersgroupcreator", $urlArray),
-        "legend" => $l[1][3] . " " . $s['total'][1] . " %",
-    );
+    if (strlen($cmd_id)) { // If it's an action on a group
+        $_SESSION['MSCPieGroup'][$l[0]] = $s['machineNames'];
+        $urlArray['pieGroupStatus'] = $l[0];
+        $machineStateNumber[$l[0]] = array(
+            "number" => $s['total'][0],
+            "percent" => $s['total'][1],
+            "url" => urlStr("base/computers/computersgroupcreator", $urlArray),
+            "legend" => $l[1][3] . " " . $s['total'][1] . " %",
+        );
+    }
+    elseif(strlen($_GET['bundle_id'])) { // If it's a bundle on a group
+        $bundleStatus[$l[0]] = $s['machineNames'];
+    }
     
     if ($s['total'][0] == '0') {
         //print "<tr><td colspan='3'>".$l[1][0]." (".$s['total'][1]."%)</td><td><img src='modules/msc/graph/nocsv.png' alt='no csv export possible'/></td></tr>";
@@ -235,12 +256,58 @@ foreach ($labels as $l) {
         }
     }
 }
-$urlArray = array(
-        'from' => $_GET['from'],
-        'gid' => $_GET['gid'],
-        'cmd_id' => $_GET['cmd_id'],
-        'mod' => $_GET['mod']
-    );
+
+/*
+ *  bundle treatment:
+ *  -----------------
+ *
+ *  machines can be stored in more than one status (one package can be success, and another in fail state)
+ *
+ *  If one package is failed, bundle is in fail status
+ *  If no failed, but one running package, bundle is in running status
+ *  For package paused => running status
+ *  For package stopped => failed status
+ */
+
+if(strlen($_GET['bundle_id'])) {
+    // merge stopped and paused status
+    $bundleStatus['failure'] = array_merge($bundleStatus['failure'], $bundleStatus['stopped']);
+    $bundleStatus['running'] = array_merge($bundleStatus['running'], $bundleStatus['paused']);
+
+    // If one package is in failure state, unset corresponding machine from other states
+    foreach ($bundleStatus['failure'] as $failKey => $failValue) {
+        foreach ($bundleStatus['success'] as $successKey => $successValue) {
+            if ($failValue == $successValue) unset($bundleStatus['success'][$successKey]);
+        }
+        foreach ($bundleStatus['running'] as $runningKey => $runningValue) {
+            if ($failValue == $runningValue) unset ($bundleStatus['running'][$runningKey]);
+        }
+    }
+
+    // If a machine have both running and success packages, machine has running status
+    foreach ($bundleStatus['running'] as $runningKey => $runningValue) {
+        foreach ($bundleStatus['success'] as $successKey => $successValue) {
+            if ($runningValue == $successValue) unset ($bundleStatus['success'][$successKey]);
+        }
+    }
+
+    $totalMachineNumber = 0;
+    foreach ($bundleStatus as $key => $value) {
+        $totalMachineNumber += count($value);
+    }
+
+    $i = 0;
+    foreach ($bundleStatus as $key => $value) {
+        $_SESSION['MSCPieGroup'][$key] = $value;
+        $urlArray['pieGroupStatus'] = $key;
+        $machineStateNumber[$key] = array(
+            "number" => count($value),
+            "url" => urlStr("base/computers/computersgroupcreator", $urlArray),
+            "legend" => $labels[$i][1][3] . " " . count($value) * 100 / $totalMachineNumber . " %",
+        );
+        $i++;
+    }
+}
 
 $jsonMachineStateNumber = json_encode($machineStateNumber);
 echo <<< MSC
