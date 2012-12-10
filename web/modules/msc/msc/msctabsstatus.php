@@ -330,26 +330,31 @@ var machineStateNumber = $jsonMachineStateNumber,
         data.push(machineStateNumber.success.number);
         legend.push(machineStateNumber.success.legend);
         href.push(machineStateNumber.success.url.replace(/&amp;/g, '&'));
+        colors.push("#73d216");
     }
     if (machineStateNumber.stopped.number) {
         data.push(machineStateNumber.stopped.number);
         legend.push(machineStateNumber.stopped.legend);
         href.push(machineStateNumber.stopped.url.replace(/&amp;/g, '&'));
+        colors.push("#111111");
     }
     if (machineStateNumber.paused.number) {
         data.push(machineStateNumber.paused.number);
         legend.push(machineStateNumber.paused.legend);
         href.push(machineStateNumber.paused.url.replace(/&amp;/g, '&'));
+        colors.push("#ff9c00");
     }
     if (machineStateNumber.running.number) {
         data.push(machineStateNumber.running.number);
         legend.push(machineStateNumber.running.legend);
         href.push(machineStateNumber.running.url.replace(/&amp;/g, '&'));
+        colors.push("#0066ff");
     }
     if (machineStateNumber.failure.number) {
         data.push(machineStateNumber.failure.number);
         legend.push(machineStateNumber.failure.legend);
         href.push(machineStateNumber.failure.url.replace(/&amp;/g, '&'));
+        colors.push("#ef2929");
     }
 
     var pie = r.piechart(x, y, radius, data,
