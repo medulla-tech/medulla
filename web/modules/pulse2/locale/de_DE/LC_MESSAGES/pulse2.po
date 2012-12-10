@@ -6,9 +6,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
-"Report-Msgid-Bugs-To: http://pulse2.mandriva.org/\n"
-"POT-Creation-Date: 2011-01-30 11:29+0100\n"
-"PO-Revision-Date: 2011-06-17 13:08+0000\n"
+"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
+"POT-Creation-Date: 2012-12-10 15:56+0100\n"
+"PO-Revision-Date: 2012-12-10 14:54+0000\n"
 "Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/pulse2/team/de_DE/)\n"
 "MIME-Version: 1.0\n"
@@ -17,24 +17,95 @@ msgstr ""
 "Language: de_DE\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
-#: modules/pulse2/pulse2/computers_list.php:42
-msgid "All my entities"
-msgstr "Alle meine Einheiten"
-
 #: modules/pulse2/includes/locations_xmlrpc.inc.php:31
 msgid "Root entity"
 msgstr "Haupt Eintrag"
 
-#: modules/pulse2/infoPackage.inc.php:33
+#: modules/pulse2/includes/menu_action.php:30
+msgid "Inventory"
+msgstr ""
+
+#: modules/pulse2/includes/menu_action.php:31
+msgid "Remote control"
+msgstr ""
+
+#: modules/pulse2/includes/menu_action.php:32
+#: modules/pulse2/includes/menu_group_action.php:62
+#: modules/pulse2/includes/menu_group_action.php:75
+msgid "Read log"
+msgstr ""
+
+#: modules/pulse2/includes/menu_action.php:33
+msgid "Software deployment"
+msgstr ""
+
+#: modules/pulse2/includes/menu_action.php:34
+#: modules/pulse2/includes/menu_group_action.php:80
+msgid "Imaging management"
+msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:45
+msgid "Delete this group"
+msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:47
+msgid "Delete this profile"
+msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:51
+msgid "Display this group's content"
+msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:54
+msgid "Inventory on this group"
+msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:59
+msgid "Edit this group"
+msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:60
+msgid "Share this group"
+msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:63
+msgid "Software deployment on this group"
+msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:67
+msgid "Inventory on this profile"
+msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:72
+msgid "Edit this profile"
+msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:73
+msgid "Share this profile"
+msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:76
+msgid "Software deployment on this profile"
+msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:93
+msgid "Csv export"
+msgstr ""
+
+#: modules/pulse2/infoPackage.inc.php:34
 msgid "Pulse2"
 msgstr "Pulse2"
 
-#: modules/pulse2/infoPackage.inc.php:44
+#: modules/pulse2/infoPackage.inc.php:45
 msgid "Computers list"
 msgstr "Comupter Liste"
 
-#: modules/pulse2/infoPackage.inc.php:49
+#: modules/pulse2/infoPackage.inc.php:50
 msgid "Location selection in computer edit"
 msgstr "Standortauswahl in Computer bearbeiten"
+
+#: modules/pulse2/pulse2/computers_list.php:42
+msgid "All my entities"
+msgstr "Alle meine Einheiten"
 
 

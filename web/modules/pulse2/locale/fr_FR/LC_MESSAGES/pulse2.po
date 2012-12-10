@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 ## Translators:
+#   <jcvassort@mandriva.com>, 2012.
 # Nicolas Rueff <nicolas.rueff@mandriva.com>, 2007.
 msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
-"Report-Msgid-Bugs-To: http://pulse2.mandriva.org/\n"
-"POT-Creation-Date: 2011-01-30 11:29+0100\n"
-"PO-Revision-Date: 2011-06-17 13:08+0000\n"
+"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
+"POT-Creation-Date: 2012-12-10 15:56+0100\n"
+"PO-Revision-Date: 2012-12-10 14:54+0000\n"
 "Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/pulse2/team/fr_FR/)\n"
 "MIME-Version: 1.0\n"
@@ -18,24 +19,95 @@ msgstr ""
 "Language: fr_FR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
-#: modules/pulse2/pulse2/computers_list.php:42
-msgid "All my entities"
-msgstr "Toutes mes entités"
-
 #: modules/pulse2/includes/locations_xmlrpc.inc.php:31
 msgid "Root entity"
 msgstr "Entité racine"
 
-#: modules/pulse2/infoPackage.inc.php:33
+#: modules/pulse2/includes/menu_action.php:30
+msgid "Inventory"
+msgstr "Inventaire"
+
+#: modules/pulse2/includes/menu_action.php:31
+msgid "Remote control"
+msgstr "Contrêle à distance"
+
+#: modules/pulse2/includes/menu_action.php:32
+#: modules/pulse2/includes/menu_group_action.php:62
+#: modules/pulse2/includes/menu_group_action.php:75
+msgid "Read log"
+msgstr "Lire le rapport"
+
+#: modules/pulse2/includes/menu_action.php:33
+msgid "Software deployment"
+msgstr "Déploiement logiciel"
+
+#: modules/pulse2/includes/menu_action.php:34
+#: modules/pulse2/includes/menu_group_action.php:80
+msgid "Imaging management"
+msgstr "Gestion de l'imaging"
+
+#: modules/pulse2/includes/menu_group_action.php:45
+msgid "Delete this group"
+msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:47
+msgid "Delete this profile"
+msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:51
+msgid "Display this group's content"
+msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:54
+msgid "Inventory on this group"
+msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:59
+msgid "Edit this group"
+msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:60
+msgid "Share this group"
+msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:63
+msgid "Software deployment on this group"
+msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:67
+msgid "Inventory on this profile"
+msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:72
+msgid "Edit this profile"
+msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:73
+msgid "Share this profile"
+msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:76
+msgid "Software deployment on this profile"
+msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:93
+msgid "Csv export"
+msgstr ""
+
+#: modules/pulse2/infoPackage.inc.php:34
 msgid "Pulse2"
 msgstr "Pulse2"
 
-#: modules/pulse2/infoPackage.inc.php:44
+#: modules/pulse2/infoPackage.inc.php:45
 msgid "Computers list"
 msgstr "Liste des ordinateurs"
 
-#: modules/pulse2/infoPackage.inc.php:49
+#: modules/pulse2/infoPackage.inc.php:50
 msgid "Location selection in computer edit"
 msgstr "Sélection de l'entité d'un ordinateur"
+
+#: modules/pulse2/pulse2/computers_list.php:42
+msgid "All my entities"
+msgstr "Toutes mes entités"
 
 
