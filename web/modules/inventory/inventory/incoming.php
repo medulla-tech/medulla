@@ -96,6 +96,6 @@ $ajax->displayDivToUpdate();
 <script type="text/javascript">
 function validateForm()
 {
-    document.getElementById("edit").submit();
+    document.getElementById("Form").submit();
 }
 </script>

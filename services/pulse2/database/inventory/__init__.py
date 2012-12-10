@@ -1422,6 +1422,20 @@ class Inventory(DyngroupDatabaseHelper):
         ret.append(userid)
         return ret
 
+    def __getInventoryHistory(self, session, days, only_new, pattern, max = 10, min = 0):
+        if only_new:
+            only_new_filter = self.inventory.c.Last == 1
+        else:
+            only_new_filter = None
+
+        return session.query(self.klass['Inventory']).add_entity(Machine). \
+                  select_from(self.table['hasInventory'].join(self.machine). \
+                  join(self.table['Inventory'])). \
+                  filter(and_((func.to_days(func.now()) - func.to_days(self.klass['Inventory'].Date)) <= days, \
+                  Machine.Name.like('%' + pattern + '%'), only_new_filter)). \
+                  order_by(self.klass['Inventory'].id.desc()).group_by(self.klass['Inventory'].id). \
+                  offset(min)
+
     def getInventoryHistory(self, days, only_new, pattern, max, min):
         """
         Returns the last inventories since n days, and for each inventory, the machine concerned
@@ -1431,17 +1445,10 @@ class Inventory(DyngroupDatabaseHelper):
         @return: a tuple with last inventories since n days with their machines
         """
         session = create_session()
-        from sqlalchemy.sql import func
         min = int(min)
         max = int(max)
 
-        results = session.query(self.klass['Inventory']).add_entity(Machine). \
-                  select_from(self.table['hasInventory'].join(self.machine). \
-                  join(self.table['Inventory'])). \
-                  filter(and_((func.to_days(func.now()) - func.to_days(self.klass['Inventory'].Date)) <= days, \
-                  Machine.Name.like('%' + pattern + '%'))). \
-                  order_by(self.klass['Inventory'].id.desc()).group_by(self.klass['Inventory'].id). \
-                  offset(min).limit(max - min)
+        results = self.__getInventoryHistory(session, days, only_new, pattern, max, min).limit(max - min)
 
         ret = []
         for res in results:
@@ -1454,11 +1461,7 @@ class Inventory(DyngroupDatabaseHelper):
                     break 
 
             timestamp = datetime.datetime.combine(res[0].Date, res[0].Time)
-            if only_new :
-                if newMachine :
-                    ret.append((res[1].Name, timestamp, newMachine, toUUID(res[1].id)))
-            else :
-                ret.append((res[1].Name, timestamp, newMachine, toUUID(res[1].id)))
+            ret.append((res[1].Name, timestamp, newMachine, toUUID(res[1].id)))
 
         session.close()
         return ret
@@ -1468,32 +1471,8 @@ class Inventory(DyngroupDatabaseHelper):
         Return the number of inventories for the parameters given
         """
         session = create_session()
-        from sqlalchemy.sql import func
-        if only_new:
-            # Select only the old machines
-            results_old = session.query(Machine). \
-                      select_from(self.table['hasInventory'].join(self.machine).join(self.table['Inventory'])). \
-                      filter(func.to_days(func.now()) - func.to_days(self.klass['Inventory'].Date) > days). \
-                      group_by(self.machine.c.id). \
-                      all()
-            old_machines_id = []
-            for res in results_old:
-                old_machines_id.append(res.id)
-            # Select all machines which are not in old machines
-            count = session.query(self.klass['Inventory']).add_entity(Machine).add_column(self.klass['Inventory'].id). \
-                      select_from(self.table['hasInventory'].join(self.table['Inventory']).join(self.machine)). \
-                      filter(and_(not_(Machine.id.in_(old_machines_id)), and_((func.to_days(func.now()) - func.to_days(self.klass['Inventory'].Date)) <= days, Machine.Name.like('%' + pattern + '%')) )). \
-                      order_by(self.klass['Inventory'].id.desc()).group_by(self.klass['Inventory'].id).all()
-            count = session.query(self.klass['Inventory']).filter(self.klass['Inventory'].id.in_(map(lambda l:l[2], count))).count()
-        else:
-            count = session.query(self.klass['Inventory']).add_entity(Machine).add_column(self.klass['Inventory'].id). \
-                      select_from(self.table['hasInventory'].join(self.machine).join(self.table['Inventory'])). \
-                      filter(and_((func.to_days(func.now()) - func.to_days(self.klass['Inventory'].Date)) <= days, Machine.Name.like('%' + pattern + '%'))). \
-                      order_by(self.klass['Inventory'].id.desc()).group_by(self.klass['Inventory'].id).all()
-            count = session.query(self.klass['Inventory']).filter(self.klass['Inventory'].id.in_(map(lambda l:l[2], count))).count()
-
-        session.close()
-        return count
+        results = self.__getInventoryHistory(session, days, only_new, pattern)
+        return results.count()
 
     def getTypeOfAttribute(self, klass, attr):
         """
