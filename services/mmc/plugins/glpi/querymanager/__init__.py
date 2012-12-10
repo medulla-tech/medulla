@@ -50,10 +50,8 @@ def queryPossibilities():
     ret['Reseau'] = ['list', getAllNetworks]
     ret['Logiciel'] = ['list', getAllSoftwares, 3]
     ret['Version'] = ['double', getAllSoftwaresAndVersions, 3, 2]
+    ret['Entity'] = ['list', getAllEntities]
 
-#    ret['OS'] = ['list', getAllOs]
-#    ret['ENTITY'] = ['list', getAllEntities]
-#    ret['SOFTWARE'] = ['list', getAllSoftwares, 3]
     logging.getLogger().info('queryPossibilities %s'%(str(ret)))
     return ret
 

@@ -61,6 +61,7 @@ class InventoryDatabaseConfig(InventoryDatabaseConfigSkel):
             'Software/ProductName':['string'],
             'Hardware/ProcessorType':['string'],
             'Hardware/OperatingSystem':['string'],
+            'Entity/Label':['string'],
             'Drive/TotalSpace':['int']
     }
     double = {
