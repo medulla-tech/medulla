@@ -8,9 +8,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
-"Report-Msgid-Bugs-To: http://mds.mandriva.org/\n"
-"POT-Creation-Date: 2012-06-01 13:26+0200\n"
-"PO-Revision-Date: 2012-05-25 12:02+0000\n"
+"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
+"POT-Creation-Date: 2012-12-10 15:53+0100\n"
+"PO-Revision-Date: 2012-12-10 14:55+0000\n"
 "Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
 "Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/mds/team/ru_RU/)\n"
 "MIME-Version: 1.0\n"
@@ -18,6 +18,198 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ru_RU\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+
+#: modules/base/includes/errorHandling.php:28
+msgid "LDAP log file does not exist."
+msgstr "Файл журнала LDAP не существует"
+
+#: modules/base/includes/errorHandling.php:29
+msgid ""
+"Please be sure you have:\n"
+"                        <p>This line in your /etc/ldap/slapd.conf or /etc/openldap/slapd.conf:\n"
+"                        <pre>loglevel        256</pre></p>\n"
+"                        <p>and this line in your /etc/syslog.conf:\n"
+"                        <pre>local4.*       /var/log/ldap.log (or /var/log/ldap/ldap.log)</pre>\n"
+"                        </p>\n"
+"                        "
+msgstr ""
+
+#: modules/base/includes/errorHandling.php:41
+msgid "The user directory does not exist and cannot be removed."
+msgstr ""
+"Директория пользователя не существует и поэтому не может быть удалена."
+
+#: modules/base/includes/errorHandling.php:42
+msgid "Please do not remove user's files when deleting the user."
+msgstr "Не удаляйте файлы пользователя при его удалении."
+
+#: modules/base/includes/errorHandling.php:47
+msgid "The user home directory already exists."
+msgstr ""
+
+#: modules/base/includes/errorHandling.php:48
+msgid ""
+"Set the home directory in a different location or force the use of the "
+"existing directory (in expert mode)."
+msgstr ""
+
+#: modules/base/includes/errorHandling.php:53
+msgid "Your password is too young to change."
+msgstr "Ваш пороль слишком молод для изменения"
+
+#: modules/base/includes/errorHandling.php:54
+msgid ""
+"The password policy of your account doesn't allow you to modify your "
+"password, because your password is too young to change."
+msgstr ""
+"Политика паролей вашего аккаунта не позволяет вам изменить пароль, так как "
+"прошло мало времени с его создания/изменения."
+
+#: modules/base/includes/errorHandling.php:59
+msgid "Password is in history of old passwords"
+msgstr "Пароль в истории старых паролей"
+
+#: modules/base/includes/errorHandling.php:60
+#: modules/base/includes/errorHandling.php:66
+msgid ""
+"The password policy of your account doesn't allow you to modify your "
+"password, because you already had this password previously."
+msgstr ""
+"Политика паролей вашего аккаунта не позволяет вам изменить пароль, так как "
+"он совпадает с ранее установленным."
+
+#: modules/base/includes/errorHandling.php:65
+msgid "Password is not being changed from existing value"
+msgstr "Пароль не был изменен с существуюго значения"
+
+#: modules/base/includes/errorHandling.php:71
+msgid "Password fails quality checking policy."
+msgstr "Пароль не прошел проверку на качество."
+
+#: modules/base/includes/errorHandling.php:72
+msgid ""
+"The password policy of your account doesn't allow you to modify your "
+"password, because your password is not complex enough or is too short."
+msgstr ""
+
+#: modules/base/includes/errorHandling.php:77
+msgid "The password must contain at least one number"
+msgstr ""
+
+#: modules/base/includes/errorHandling.php:82
+msgid "The password must contain at least one upper case character"
+msgstr ""
+
+#: modules/base/includes/errorHandling.php:87
+msgid "The password must contain at least one lower case character"
+msgstr ""
+
+#: modules/base/includes/errorHandling.php:92
+msgid ""
+"The password must contain at least one special character: #$%&+./:=?@{}"
+msgstr ""
+
+#: modules/base/includes/errorHandling.php:98
+#, php-format
+msgid "The password must not contain the same character %s times"
+msgstr ""
+
+#: modules/base/includes/errorHandling.php:109
+#, php-format
+msgid "The password length must be %s or longer"
+msgstr ""
+
+#: modules/base/includes/errorHandling.php:114
+msgid "The password is too short."
+msgstr ""
+
+#: modules/base/includes/AjaxFilterLog.inc.php:112
+#: modules/base/includes/AjaxFilterLog.inc.php:116
+#: includes/PageGenerator.php:796 includes/PageGenerator.php:1052
+#: includes/ajaxTools.php:63 includes/ajaxTools.php:69
+msgid "Previous"
+msgstr "Назад"
+
+#: modules/base/includes/AjaxFilterLog.inc.php:123
+#: modules/base/includes/AjaxFilterLog.inc.php:127
+#: includes/PageGenerator.php:810 includes/PageGenerator.php:1062
+#: includes/ajaxTools.php:74 includes/ajaxTools.php:82
+msgid "Next"
+msgstr "Вперёд"
+
+#: modules/base/includes/AjaxFilterLog.inc.php:184
+#: modules/base/includes/AjaxFilterLog.inc.php:188
+#: includes/FormGenerator.php:587 includes/FormGenerator.php:593
+msgid "or <a href='#'"
+msgstr "или <a href='#'"
+
+#: modules/base/includes/AjaxFilterLog.inc.php:186
+#: includes/FormGenerator.php:589
+msgid "value=\"now\";'>now</a>"
+msgstr "value=\"now\";'>сейчас</a>"
+
+#: modules/base/includes/AjaxFilterLog.inc.php:190
+#: includes/FormGenerator.php:595
+msgid "value=\"never\";'>never</a>"
+msgstr "value=\"never\";'>никогда</a>"
+
+#: modules/base/includes/AjaxFilterLog.inc.php:341
+#: modules/base/audit/ajaxLogFilter.php:49
+msgid "Begin date"
+msgstr "Дата начала"
+
+#: modules/base/includes/AjaxFilterLog.inc.php:342
+#: modules/base/audit/ajaxLogFilter.php:52
+msgid "End date"
+msgstr "Дата окончания"
+
+#: modules/base/includes/AjaxFilterLog.inc.php:382
+msgid "Refresh"
+msgstr "Обновить"
+
+#: modules/base/includes/computers_list.inc.php:28
+msgid "Inventory"
+msgstr "Инвентарь"
+
+#: modules/base/includes/computers_list.inc.php:29
+msgid "GLPI Inventory"
+msgstr "GLPI Инвентарь"
+
+#: modules/base/includes/computers_list.inc.php:30
+msgid "Read log"
+msgstr "Читать журнал"
+
+#: modules/base/includes/computers_list.inc.php:31
+msgid "Software deployment"
+msgstr "Развертывание ПО"
+
+#: modules/base/includes/computers_list.inc.php:32
+msgid "Imaging management"
+msgstr "Управление образами"
+
+#: modules/base/includes/computers_list.inc.php:33
+msgid "Download file"
+msgstr "Загрузить файл"
+
+#: modules/base/includes/computers_list.inc.php:34
+msgid "Remote control"
+msgstr "Удаленное управление"
+
+#: modules/base/includes/computers_list.inc.php:35
+msgid "Show Profile"
+msgstr "Показать профиль"
+
+#: modules/base/includes/computers_list.inc.php:138
+msgid "Computers list"
+msgstr "Список компьютеров"
+
+#: modules/base/includes/computers_list.inc.php:161
+msgid "Delete computer"
+msgstr "Удалить компьютер"
+
+#: modules/base/includes/computers_list.inc.php:164
+msgid "Remove machine from group"
+msgstr "Удалить компьютер из группы"
 
 #: modules/base/includes/auditCodes.php:27 modules/base/users/edit.php:51
 msgid "Add user"
@@ -39,7 +231,7 @@ msgstr "Изменить атрибуты пользователя"
 msgid "Change group attribute"
 msgstr "Изменить атрибуты группы"
 
-#: modules/base/includes/auditCodes.php:32 modules/base/groups/edit.php:48
+#: modules/base/includes/auditCodes.php:32 modules/base/groups/edit.php:49
 msgid "Add group"
 msgstr "Добавить группу"
 
@@ -129,50 +321,6 @@ msgstr "MAC-адрес компьютера"
 msgid "Computer's netmask address"
 msgstr "Адрес маски сети компьютера"
 
-#: modules/base/includes/computers_list.inc.php:28
-msgid "Inventory"
-msgstr "Инвентарь"
-
-#: modules/base/includes/computers_list.inc.php:29
-msgid "GLPI Inventory"
-msgstr "GLPI Инвентарь"
-
-#: modules/base/includes/computers_list.inc.php:30
-msgid "Read log"
-msgstr "Читать журнал"
-
-#: modules/base/includes/computers_list.inc.php:31
-msgid "Software deployment"
-msgstr "Развертывание ПО"
-
-#: modules/base/includes/computers_list.inc.php:32
-msgid "Imaging management"
-msgstr "Управление образами"
-
-#: modules/base/includes/computers_list.inc.php:33
-msgid "Download file"
-msgstr "Загрузить файл"
-
-#: modules/base/includes/computers_list.inc.php:34
-msgid "Remote control"
-msgstr "Удаленное управление"
-
-#: modules/base/includes/computers_list.inc.php:35
-msgid "Show Profile"
-msgstr "Показать профиль"
-
-#: modules/base/includes/computers_list.inc.php:139
-msgid "Computers list"
-msgstr "Список компьютеров"
-
-#: modules/base/includes/computers_list.inc.php:161
-msgid "Delete computer"
-msgstr "Удалить компьютер"
-
-#: modules/base/includes/computers_list.inc.php:164
-msgid "Remove machine from group"
-msgstr "Удалить компьютер из группы"
-
 #: modules/base/includes/groups-xmlrpc.inc.php:88
 #, php-format
 msgid "Group %s already exist"
@@ -183,104 +331,70 @@ msgstr "Группа %s уже существует"
 msgid "Group %s created"
 msgstr "Группа %s создана"
 
-#: modules/base/includes/errorHandling.php:28
-msgid "LDAP log file does not exist."
-msgstr "Файл журнала LDAP не существует"
-
-#: modules/base/includes/errorHandling.php:29
-msgid ""
-"Please be sure you have:\n"
-"                        <p>This line in your /etc/ldap/slapd.conf or /etc/openldap/slapd.conf:\n"
-"                        <pre>loglevel        256</pre></p>\n"
-"                        <p>and this line in your /etc/syslog.conf:\n"
-"                        <pre>local4.*       /var/log/ldap.log (or /var/log/ldap/ldap.log)</pre>\n"
-"                        </p>\n"
-"                        "
+#: modules/base/includes/panels/support.inc.php:29
+msgid "Your product"
 msgstr ""
 
-#: modules/base/includes/errorHandling.php:39
-msgid "The user directory does not exist and cannot be removed."
-msgstr ""
-"Директория пользователя не существует и поэтому не может быть удалена."
-
-#: modules/base/includes/errorHandling.php:40
-msgid "Please do not remove user's files when deleting the user."
-msgstr "Не удаляйте файлы пользователя при его удалении."
-
-#: modules/base/includes/errorHandling.php:45
-msgid "The user home directory already exists."
+#: modules/base/includes/panels/support.inc.php:38
+msgid "Support"
 msgstr ""
 
-#: modules/base/includes/errorHandling.php:46
-msgid ""
-"Set the home directory in a different location or force the use of the "
-"existing directory (in expert mode)."
+#: modules/base/includes/panels/support.inc.php:43
+msgid "Phone :"
 msgstr ""
 
-#: modules/base/includes/errorHandling.php:51
-msgid "Your password is too young to change."
-msgstr "Ваш пороль слишком молод для изменения"
-
-#: modules/base/includes/errorHandling.php:52
-msgid ""
-"The password policy of your account doesn't allow you to modify your "
-"password, because your password is too young to change."
-msgstr ""
-"Политика паролей вашего аккаунта не позволяет вам изменить пароль, так как "
-"прошло мало времени с его создания/изменения."
-
-#: modules/base/includes/errorHandling.php:57
-msgid "Password is in history of old passwords"
-msgstr "Пароль в истории старых паролей"
-
-#: modules/base/includes/errorHandling.php:58
-#: modules/base/includes/errorHandling.php:64
-msgid ""
-"The password policy of your account doesn't allow you to modify your "
-"password, because you already had this password previously."
-msgstr ""
-"Политика паролей вашего аккаунта не позволяет вам изменить пароль, так как "
-"он совпадает с ранее установленным."
-
-#: modules/base/includes/errorHandling.php:63
-msgid "Password is not being changed from existing value"
-msgstr "Пароль не был изменен с существуюго значения"
-
-#: modules/base/includes/errorHandling.php:69
-msgid "Password fails quality checking policy."
-msgstr "Пароль не прошел проверку на качество."
-
-#: modules/base/includes/errorHandling.php:70
-msgid ""
-"The password policy of your account doesn't allow you to modify your "
-"password, because your password is not complex enough or is too short."
+#: modules/base/includes/panels/support.inc.php:48
+msgid "License"
 msgstr ""
 
-#: modules/base/includes/errorHandling.php:75
-msgid "The password must contain at least one number"
+#: modules/base/includes/panels/support.inc.php:49
+msgid "Users : "
 msgstr ""
 
-#: modules/base/includes/errorHandling.php:80
-msgid "The password must contain at least one upper case character"
+#: modules/base/includes/panels/support.inc.php:50
+msgid "Computers : "
 msgstr ""
 
-#: modules/base/includes/errorHandling.php:85
-msgid "The password must contain at least one lower case character"
+#: modules/base/includes/panels/support.inc.php:55
+msgid "Upgrade"
 msgstr ""
 
-#: modules/base/includes/errorHandling.php:90
-msgid ""
-"The password must contain at least one special character: #$%&+./:=?@{}"
-msgstr ""
+#: modules/base/includes/users-xmlrpc.inc.php:46
+msgid "Invalid login"
+msgstr "Неверное имя пользователя"
 
-#: modules/base/includes/errorHandling.php:96
+#: modules/base/includes/users-xmlrpc.inc.php:55
+msgid "users"
+msgstr "пользователи"
+
+#: modules/base/includes/users-xmlrpc.inc.php:58
+msgid "computers"
+msgstr "Компьютеры"
+
+#: modules/base/includes/users-xmlrpc.inc.php:61
 #, php-format
-msgid "The password must not contain the same character %s times"
+msgid "WARNING: The number of registered %s is exceeding your license."
+msgstr "ВНИМАНИЕ: Количество зарегистрированных %s превышает вашу лицензию."
+
+#: modules/base/includes/users-xmlrpc.inc.php:61
+#: modules/base/status/support.php:34
+msgid " and "
+msgstr " и "
+
+#: modules/base/includes/users-xmlrpc.inc.php:116
+#, php-format
+msgid ""
+"User %s created but password is not valid regarding your password "
+"policies.<br/><strong>You must change the user password.</strong>"
 msgstr ""
 
-#: modules/base/includes/errorHandling.php:107
+#: modules/base/includes/users-xmlrpc.inc.php:120
+msgid "You cannot add more users."
+msgstr ""
+
+#: modules/base/includes/users-xmlrpc.inc.php:126
 #, php-format
-msgid "The password length must be %s or longer"
+msgid "User %s successfully created"
 msgstr ""
 
 #: modules/base/includes/publicFunc.php:46
@@ -357,7 +471,7 @@ msgstr ""
 
 #: modules/base/includes/publicFunc.php:285
 #: modules/base/users/ajaxFilter.php:68 modules/base/views/index.tpl.php:78
-#: index.php:147
+#: index.php:124
 msgid "Login"
 msgstr "Имя пользователя"
 
@@ -366,7 +480,7 @@ msgid "Last action"
 msgstr "Последнее действие"
 
 #: modules/base/includes/publicFunc.php:300
-#: modules/base/infoPackage.inc.php:325 index.php:155
+#: modules/base/infoPackage.inc.php:326 index.php:130
 msgid "Password"
 msgstr "Пароль"
 
@@ -391,13 +505,12 @@ msgid "Title"
 msgstr "Обращение"
 
 #: modules/base/includes/publicFunc.php:329
-#: modules/base/infoPackage.inc.php:316
-msgid "Mail address"
-msgstr "Почтовый адрес"
+msgid "Email address"
+msgstr ""
 
 #: modules/base/includes/publicFunc.php:337
 #: modules/base/includes/publicFunc.php:340
-#: modules/base/infoPackage.inc.php:317
+#: modules/base/infoPackage.inc.php:318
 msgid "Telephone number"
 msgstr "Телефон"
 
@@ -406,12 +519,12 @@ msgid "Mobile number"
 msgstr "Мобильный"
 
 #: modules/base/includes/publicFunc.php:352
-#: modules/base/infoPackage.inc.php:319
+#: modules/base/infoPackage.inc.php:320
 msgid "Fax number"
 msgstr "Факс"
 
 #: modules/base/includes/publicFunc.php:357
-#: modules/base/infoPackage.inc.php:320
+#: modules/base/infoPackage.inc.php:321
 msgid "Home phone number"
 msgstr "номер домашнего телефона"
 
@@ -434,7 +547,7 @@ msgid ""
 msgstr ""
 
 #: modules/base/includes/publicFunc.php:408
-#: modules/base/infoPackage.inc.php:321
+#: modules/base/infoPackage.inc.php:322
 msgid "Primary group"
 msgstr "Основная группа"
 
@@ -447,7 +560,7 @@ msgid "All groups"
 msgstr ""
 
 #: modules/base/includes/publicFunc.php:437
-#: modules/base/infoPackage.inc.php:322
+#: modules/base/infoPackage.inc.php:323
 msgid "Secondary groups"
 msgstr ""
 
@@ -469,12 +582,12 @@ msgid "Warning: an existing directory may belong to another user !"
 msgstr ""
 
 #: modules/base/includes/publicFunc.php:463
-#: modules/base/infoPackage.inc.php:314
+#: modules/base/infoPackage.inc.php:315
 msgid "Login shell"
 msgstr "Оболочка входа в систему"
 
 #: modules/base/includes/publicFunc.php:468
-#: modules/base/infoPackage.inc.php:323
+#: modules/base/infoPackage.inc.php:324
 msgid "Common name"
 msgstr "Общее имя"
 
@@ -487,7 +600,7 @@ msgstr ""
 "Thunderbird) для показа записей пользователя."
 
 #: modules/base/includes/publicFunc.php:474
-#: modules/base/infoPackage.inc.php:324
+#: modules/base/infoPackage.inc.php:325
 msgid "Preferred name to be used"
 msgstr "Будет использовано предпочтительное имя"
 
@@ -498,98 +611,13 @@ msgstr ""
 "Это поле используется SAMBA (и другими LDAP-клиентами) для отображения имени"
 " пользователя."
 
-#: modules/base/includes/publicFunc.php:480
+#: modules/base/includes/publicFunc.php:481
 msgid "UID"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:485
+#: modules/base/includes/publicFunc.php:486
 msgid "GID"
 msgstr ""
-
-#: modules/base/includes/users-xmlrpc.inc.php:46
-msgid "Invalid login"
-msgstr "Неверное имя пользователя"
-
-#: modules/base/includes/users-xmlrpc.inc.php:55
-msgid "users"
-msgstr "пользователи"
-
-#: modules/base/includes/users-xmlrpc.inc.php:58
-msgid "computers"
-msgstr "Компьютеры"
-
-#: modules/base/includes/users-xmlrpc.inc.php:61
-#, php-format
-msgid "WARNING: The number of registered %s is exceeding your license."
-msgstr "ВНИМАНИЕ: Количество зарегистрированных %s превышает вашу лицензию."
-
-#: modules/base/includes/users-xmlrpc.inc.php:62
-#: modules/base/status/support.php:44
-msgid ""
-"Please contact your administrator for more information. If you are an "
-"administrator, please go to the license status page for more information."
-msgstr ""
-"Пожалуйста, свяжитесь с вашим администратором, чтобы олучить больше "
-"информации. Если вы администратор, пожалуйста, перейдите на страницу "
-"состояния лицензии, чтобы получить больше информации."
-
-#: modules/base/includes/users-xmlrpc.inc.php:118
-#, php-format
-msgid ""
-"User %s created but password is not valid regarding your password "
-"policies.<br/><strong>You must change the user password.</strong>"
-msgstr ""
-
-#: modules/base/includes/users-xmlrpc.inc.php:122
-#, php-format
-msgid "User %s successfully created"
-msgstr ""
-
-#: modules/base/includes/AjaxFilterLog.inc.php:112
-#: modules/base/includes/AjaxFilterLog.inc.php:116
-#: includes/PageGenerator.php:793 includes/PageGenerator.php:800
-#: includes/PageGenerator.php:1055 includes/PageGenerator.php:1059
-#: includes/ajaxTools.php:63 includes/ajaxTools.php:69
-msgid "Previous"
-msgstr "Назад"
-
-#: modules/base/includes/AjaxFilterLog.inc.php:123
-#: modules/base/includes/AjaxFilterLog.inc.php:127
-#: includes/PageGenerator.php:809 includes/PageGenerator.php:815
-#: includes/PageGenerator.php:1067 includes/PageGenerator.php:1071
-#: includes/ajaxTools.php:74 includes/ajaxTools.php:82
-msgid "Next"
-msgstr "Вперёд"
-
-#: modules/base/includes/AjaxFilterLog.inc.php:184
-#: modules/base/includes/AjaxFilterLog.inc.php:188
-#: includes/FormGenerator.php:530 includes/FormGenerator.php:534
-msgid "or <a href='#'"
-msgstr "или <a href='#'"
-
-#: modules/base/includes/AjaxFilterLog.inc.php:186
-#: includes/FormGenerator.php:532
-msgid "value=\"now\";'>now</a>"
-msgstr "value=\"now\";'>сейчас</a>"
-
-#: modules/base/includes/AjaxFilterLog.inc.php:190
-#: includes/FormGenerator.php:536
-msgid "value=\"never\";'>never</a>"
-msgstr "value=\"never\";'>никогда</a>"
-
-#: modules/base/includes/AjaxFilterLog.inc.php:341
-#: modules/base/audit/ajaxLogFilter.php:49
-msgid "Begin date"
-msgstr "Дата начала"
-
-#: modules/base/includes/AjaxFilterLog.inc.php:342
-#: modules/base/audit/ajaxLogFilter.php:52
-msgid "End date"
-msgstr "Дата окончания"
-
-#: modules/base/includes/AjaxFilterLog.inc.php:382
-msgid "Refresh"
-msgstr "Обновить"
 
 #: modules/base/audit/ajaxLogFilter.php:114 modules/base/audit/logview.php:58
 #: modules/base/logview/ajax_showlog.php:42
@@ -621,43 +649,6 @@ msgstr "Результат"
 msgid "View details"
 msgstr "Показать подробности"
 
-#: modules/base/audit/indexall.php:29 modules/base/audit/indexbase.php:29
-#: modules/base/audit/logview.php:75
-msgid "Object"
-msgstr "Объект"
-
-#: modules/base/audit/indexall.php:30 modules/base/audit/indexbase.php:30
-msgid "Action"
-msgstr "Действие"
-
-#: modules/base/audit/indexall.php:36
-msgid "All modules audit"
-msgstr "Аудит всех модулей"
-
-#: modules/base/audit/indexbase.php:37
-msgid "User and group audit"
-msgstr "Аудит пользователей и групп"
-
-#: modules/base/audit/indexmail.php:35
-msgid "Mail audit"
-msgstr "Аудит почты"
-
-#: modules/base/audit/indexnetwork.php:35
-msgid "Network audit"
-msgstr "Аудит сети"
-
-#: modules/base/audit/indexproxy.php:35
-msgid "Proxy audit"
-msgstr "Аудит прокси"
-
-#: modules/base/audit/indexsamba.php:35
-msgid "Samba audit"
-msgstr "Аудит Samba"
-
-#: modules/base/audit/indexsshlpk.php:35
-msgid "SSH public key audit"
-msgstr "Аудит публичного ключа SSH"
-
 #: modules/base/audit/list.php:30
 msgid "Logged actions"
 msgstr "Зарегистрированные действия"
@@ -666,7 +657,7 @@ msgstr "Зарегистрированные действия"
 msgid "Search action"
 msgstr "Поиск действий"
 
-#: modules/base/audit/localSidebar.php:28
+#: modules/base/audit/localSidebar.php:28 modules/base/audit/indexall.php:33
 msgid "All modules"
 msgstr "Все модули"
 
@@ -674,11 +665,12 @@ msgstr "Все модули"
 msgid "Users and Groups"
 msgstr "Пользователи и группы"
 
-#: modules/base/audit/localSidebar.php:34
+#: modules/base/audit/localSidebar.php:34 modules/base/audit/indexsamba.php:31
 msgid "Samba"
 msgstr "Samba"
 
-#: modules/base/audit/localSidebar.php:38 modules/base/users/ajaxFilter.php:80
+#: modules/base/audit/localSidebar.php:38 modules/base/audit/indexmail.php:31
+#: modules/base/users/ajaxFilter.php:80
 msgid "Mail"
 msgstr "Почта"
 
@@ -687,6 +679,7 @@ msgid "Proxy"
 msgstr "Прокси"
 
 #: modules/base/audit/localSidebar.php:46
+#: modules/base/audit/indexnetwork.php:31
 msgid "Network"
 msgstr "Сеть"
 
@@ -714,6 +707,11 @@ msgstr "Имя узла клиента"
 msgid "Agent hostname"
 msgstr "Имя узла агента"
 
+#: modules/base/audit/logview.php:75 modules/base/audit/indexall.php:29
+#: modules/base/audit/indexbase.php:29
+msgid "Object"
+msgstr "Объект"
+
 #: modules/base/audit/logview.php:77
 msgid "Object type"
 msgstr "Тип объекта"
@@ -722,60 +720,28 @@ msgstr "Тип объекта"
 msgid "Value"
 msgstr "Значение"
 
-#: modules/base/computers/delete.php:31
-msgid "The computer has been deleted."
-msgstr "Компьютер был удален."
+#: modules/base/audit/indexall.php:30 modules/base/audit/indexbase.php:30
+msgid "Action"
+msgstr "Действие"
 
-#: modules/base/computers/delete.php:35
-msgid "Delete this computer"
-msgstr "Удалить этот компьютер"
+#: modules/base/audit/indexbase.php:32
+msgid "User and group"
+msgstr ""
 
-#: modules/base/computers/delete.php:38
-msgid "Do you want a backup to be done ?"
-msgstr "Вы хотите выполнить резервное копирование?"
+#: modules/base/audit/indexproxy.php:31
+msgid "Proxy audit"
+msgstr "Аудит прокси"
 
-#: modules/base/computers/edit.php:36
-msgid "Computer successfully added"
-msgstr "Компьютер успешно добавлен"
-
-#: modules/base/computers/edit.php:40
-msgid "The computer name is already taken."
-msgstr "Имя компьютера уже занято."
-
-#: modules/base/computers/edit.php:43
-msgid "Invalid computer name."
-msgstr "Недоступное имя компьютера"
-
-#: modules/base/computers/edit.php:49
-msgid "Add a computer"
-msgstr "Добавить компьютер"
-
-#: modules/base/computers/edit.php:51
-msgid "Edit a computer"
-msgstr "Изменить компьютер"
-
-#: modules/base/computers/edit.php:83
-msgid "Computer name"
-msgstr "Имя компьютера"
-
-#: modules/base/computers/edit.php:88 modules/base/groups/edit.php:92
-msgid "Description"
-msgstr "Описание"
-
-#: modules/base/computers/edit.php:122
-msgid "Location"
-msgstr "Местоположение"
-
-#: modules/base/computers/index.php:28 modules/base/infoPackage.inc.php:278
-msgid "Computer list"
-msgstr "Список компьютеров"
+#: modules/base/audit/indexsshlpk.php:31
+msgid "SSH public key audit"
+msgstr "Аудит публичного ключа SSH"
 
 #: modules/base/computers/localSidebar.php:7
 msgid "All computers"
 msgstr "Все компьютеры"
 
 #: modules/base/computers/localSidebar.php:10
-#: modules/base/infoPackage.inc.php:281
+#: modules/base/infoPackage.inc.php:282
 msgid "Add computer"
 msgstr "Добавить компьютер "
 
@@ -787,7 +753,67 @@ msgstr "Имя компьютера"
 msgid "Display Name"
 msgstr "Отображаемое имя"
 
-#: modules/base/groups/ajaxFilter.php:41 modules/base/infoPackage.inc.php:178
+#: modules/base/computers/index.php:28 modules/base/infoPackage.inc.php:279
+msgid "Computer list"
+msgstr "Список компьютеров"
+
+#: modules/base/computers/delete.php:30
+msgid ""
+"You have to check the box <b>\"I am aware that all related images (non-"
+"master) will be deleted\"</b> if you want to remove this computer."
+msgstr ""
+
+#: modules/base/computers/delete.php:38
+msgid "The computer has been deleted."
+msgstr "Компьютер был удален."
+
+#: modules/base/computers/delete.php:44
+msgid "Delete this computer"
+msgstr "Удалить этот компьютер"
+
+#: modules/base/computers/delete.php:47
+msgid "Do you want a backup to be done ?"
+msgstr "Вы хотите выполнить резервное копирование?"
+
+#: modules/base/computers/delete.php:53
+msgid ""
+"I am aware that <b>all related images (non-master)</b> will be "
+"<b>DELETED</b>.<br />Check this box if it is what you want."
+msgstr ""
+
+#: modules/base/computers/edit.php:36
+msgid "Computer successfully added"
+msgstr "Компьютер успешно добавлен"
+
+#: modules/base/computers/edit.php:41
+msgid "The computer name is already taken."
+msgstr "Имя компьютера уже занято."
+
+#: modules/base/computers/edit.php:44
+msgid "Invalid computer name."
+msgstr "Недоступное имя компьютера"
+
+#: modules/base/computers/edit.php:50
+msgid "Add a computer"
+msgstr "Добавить компьютер"
+
+#: modules/base/computers/edit.php:52
+msgid "Edit a computer"
+msgstr "Изменить компьютер"
+
+#: modules/base/computers/edit.php:84
+msgid "Computer name"
+msgstr "Имя компьютера"
+
+#: modules/base/computers/edit.php:89 modules/base/groups/edit.php:93
+msgid "Description"
+msgstr "Описание"
+
+#: modules/base/computers/edit.php:123
+msgid "Location"
+msgstr "Местоположение"
+
+#: modules/base/groups/ajaxFilter.php:41 modules/base/infoPackage.inc.php:240
 msgid "Groups"
 msgstr "Группы"
 
@@ -799,13 +825,13 @@ msgstr "Комментарии"
 msgid "Edit members"
 msgstr "Изменить Членов группы"
 
-#: modules/base/groups/ajaxFilter.php:47 modules/base/groups/edit.php:53
+#: modules/base/groups/ajaxFilter.php:47 modules/base/groups/edit.php:54
 msgid "Edit group"
 msgstr "Изменить группу"
 
 #: modules/base/groups/ajaxFilter.php:48 modules/base/users/ajaxFilter.php:85
-#: modules/base/views/index.tpl.php:92 modules/ppolicy/default/delete.php:44
-#: includes/FormGenerator.php:1013
+#: modules/base/views/index.tpl.php:92 modules/ppolicy/default/delete.php:45
+#: includes/FormGenerator.php:1077
 msgid "Delete"
 msgstr "Удалить"
 
@@ -813,57 +839,7 @@ msgstr "Удалить"
 msgid "Groups management"
 msgstr "Управление группами"
 
-#: modules/base/groups/delete.php:54 modules/base/groups/delete.php:65
-msgid "Delete group"
-msgstr "Удалить группу"
-
-#: modules/base/groups/delete.php:57
-msgid "You will delete group"
-msgstr "Вы удалите группу"
-
-#: modules/base/groups/delete.php:60
-msgid "This group will be deleted even though it is not empty"
-msgstr "Эта группа будет удалена, при том что она не пуста"
-
-#: modules/base/groups/delete.php:66 modules/base/groups/members.php:185
-#: modules/base/users/backup.php:91 modules/ppolicy/default/delete.php:45
-#: includes/PageGenerator.php:108 includes/PageGenerator.php:2434
-#: includes/PageGenerator.php:2505
-msgid "Cancel"
-msgstr "Отмена"
-
-#: modules/base/groups/edit.php:35
-#, php-format
-msgid "Group %s successfully added"
-msgstr "Группа %s успешно добавлена"
-
-#: modules/base/groups/edit.php:43
-#, php-format
-msgid "Group %s successfully modified"
-msgstr "Группа %s успешно изменена"
-
-#: modules/base/groups/edit.php:72
-msgid ""
-"The group name can only contain letters and numeric, and must begin with a "
-"letter"
-msgstr ""
-"Имя группы может содержать только буквы и цифры и должно начинаться с буквы"
-
-#: modules/base/groups/edit.php:89
-msgid "Group name"
-msgstr "Имя группы"
-
-#: modules/base/groups/edit.php:104
-msgid "Create"
-msgstr "Создать"
-
-#: modules/base/groups/edit.php:107 modules/base/groups/members.php:184
-#: includes/PageGenerator.php:2430 includes/PageGenerator.php:2501
-#: includes/PageGenerator.php:2527
-msgid "Confirm"
-msgstr "Подтвердить"
-
-#: modules/base/groups/index.php:31 modules/base/infoPackage.inc.php:183
+#: modules/base/groups/index.php:31 modules/base/infoPackage.inc.php:245
 msgid "Group list"
 msgstr "Список групп"
 
@@ -873,7 +849,7 @@ msgid "List"
 msgstr "Список"
 
 #: modules/base/groups/localSidebar.php:29
-#: modules/base/users/localSidebar.php:29 includes/FormGenerator.php:598
+#: modules/base/users/localSidebar.php:29 includes/FormGenerator.php:660
 msgid "Add"
 msgstr "Добавить"
 
@@ -898,9 +874,59 @@ msgstr "Члены группы %s"
 msgid "All users"
 msgstr "Все пользователи"
 
-#: modules/base/groups/members.php:158 modules/base/infoPackage.inc.php:199
+#: modules/base/groups/members.php:158 modules/base/infoPackage.inc.php:261
 msgid "Group members"
 msgstr "Члены группы"
+
+#: modules/base/groups/members.php:184 modules/base/groups/edit.php:108
+#: includes/PageGenerator.php:2358 includes/PageGenerator.php:2428
+#: includes/PageGenerator.php:2454
+msgid "Confirm"
+msgstr "Подтвердить"
+
+#: modules/base/groups/members.php:185 modules/base/groups/delete.php:67
+#: modules/base/users/backup.php:92 modules/ppolicy/default/delete.php:46
+#: includes/PageGenerator.php:108 includes/PageGenerator.php:2362
+#: includes/PageGenerator.php:2432
+msgid "Cancel"
+msgstr "Отмена"
+
+#: modules/base/groups/delete.php:55 modules/base/groups/delete.php:66
+msgid "Delete group"
+msgstr "Удалить группу"
+
+#: modules/base/groups/delete.php:58
+msgid "You will delete group"
+msgstr "Вы удалите группу"
+
+#: modules/base/groups/delete.php:61
+msgid "This group will be deleted even though it is not empty"
+msgstr "Эта группа будет удалена, при том что она не пуста"
+
+#: modules/base/groups/edit.php:35
+#, php-format
+msgid "Group %s successfully added"
+msgstr "Группа %s успешно добавлена"
+
+#: modules/base/groups/edit.php:44
+#, php-format
+msgid "Group %s successfully modified"
+msgstr "Группа %s успешно изменена"
+
+#: modules/base/groups/edit.php:73
+msgid ""
+"The group name can only contain letters and numeric, and must begin with a "
+"letter"
+msgstr ""
+"Имя группы может содержать только буквы и цифры и должно начинаться с буквы"
+
+#: modules/base/groups/edit.php:90
+msgid "Group name"
+msgstr "Имя группы"
+
+#: modules/base/groups/edit.php:105
+msgid "Create"
+msgstr "Создать"
 
 #: modules/base/logview/ajax_showlog.php:43
 msgid "Connection"
@@ -970,10 +996,6 @@ msgstr "Фоновые задания"
 msgid "License and support informations"
 msgstr "Информация о лицензии и поддержке"
 
-#: modules/base/status/support.php:34
-msgid " and "
-msgstr " и "
-
 #: modules/base/status/support.php:38
 msgid "WARNING: The number of registered users is exceeding your license."
 msgstr ""
@@ -984,6 +1006,15 @@ msgstr ""
 msgid "WARNING: The number of registered computers is exceeding your license."
 msgstr ""
 "ВНИМАНИЕ: количество зарегистрированных коспьютеров превышает вашу лицензию."
+
+#: modules/base/status/support.php:44
+msgid ""
+"Please contact your administrator for more information. If you are an "
+"administrator, please go to the license status page for more information."
+msgstr ""
+"Пожалуйста, свяжитесь с вашим администратором, чтобы олучить больше "
+"информации. Если вы администратор, пожалуйста, перейдите на страницу "
+"состояния лицензии, чтобы получить больше информации."
 
 #: modules/base/status/support.php:50
 msgid "Product name"
@@ -1025,6 +1056,29 @@ msgstr "Электронная почта поддержки"
 msgid "Support phone number"
 msgstr "Телефонный поддержки"
 
+#: modules/base/users/index.php:31 modules/base/views/index.tpl.php:43
+#: modules/base/infoPackage.inc.php:171
+msgid "User list"
+msgstr "Список пользователей"
+
+#: modules/base/users/loguser.php:39
+msgid "User log"
+msgstr "Журнал пользователя"
+
+#: modules/base/users/localSidebar.php:31
+msgid "Bulk import (CSV)"
+msgstr "Массовый импорт (CSV)"
+
+#: modules/base/users/localSidebar.php:34 modules/base/users/passwd.php:36
+#: modules/base/users/passwd.php:73 modules/base/users/resetpasswd.php:60
+msgid "Change your password"
+msgstr "Изменить пароль"
+
+#: modules/base/users/localSidebar.php:36
+#: modules/base/users/resetpasswd.php:35
+msgid "Reset your password"
+msgstr ""
+
 #: modules/base/users/ajaxFilter.php:79 modules/base/views/index.tpl.php:84
 msgid "Name"
 msgstr "Имя"
@@ -1050,85 +1104,9 @@ msgid "Logged Actions"
 msgstr "Зарегистрированные действия"
 
 #: modules/base/users/ajaxFilter.php:90 modules/base/views/index.tpl.php:95
-#: modules/base/infoPackage.inc.php:104
+#: modules/base/infoPackage.inc.php:166
 msgid "Users"
 msgstr "Пользователи"
-
-#: modules/base/users/backup.php:38
-msgid "Backup a user's folder"
-msgstr "Резервное копирование папки пользователя"
-
-#: modules/base/users/backup.php:52
-msgid "Backup a user's home directory"
-msgstr "Резервное копирование домашней папки пользователя"
-
-#: modules/base/users/backup.php:54
-#, php-format
-msgid "Backup of <b>%s</b> user's folder has been launched in background."
-msgstr ""
-"Резервное копированиепапки папки пользователя <b>%s</b> запущено в фоновом "
-"режиме."
-
-#: modules/base/users/backup.php:56
-#, php-format
-msgid ""
-"The files will be stored in the directory %s of the server at the end of the"
-" backup."
-msgstr ""
-"Файлы будут сохранены в каталоге %s на сервере, после окончания резервного "
-"копирования."
-
-#: modules/base/users/backup.php:58
-msgid "Please go to the status page to check the backup status."
-msgstr ""
-"Пожалуйста перейдите на страницу состояния, для проверки состояния "
-"резервного копирования."
-
-#: modules/base/users/backup.php:60
-msgid "This operation will last according to the amount of data to backup."
-msgstr ""
-"Продолжительность этой операции зависит от объема данных заданных для "
-"резервного копирования."
-
-#: modules/base/users/backup.php:74
-#, php-format
-msgid "%s home directory will be archived."
-msgstr "Домашний каталог %s будет заархивирован."
-
-#: modules/base/users/backup.php:79
-#, php-format
-msgid ""
-"Please select media size. If your data exceeds the volume size, several "
-"files of your media size will be created."
-msgstr ""
-"Пожалуйста, укажите размер тома. Если данные превысят размер тома, то будет "
-"создано несколько томов."
-
-#: modules/base/users/backup.php:83
-msgid "Media size"
-msgstr "Размер тома"
-
-#: modules/base/users/backup.php:90
-msgid "Launch backup"
-msgstr "Запуск резервного копирования."
-
-#: modules/base/users/delete.php:33
-#, php-format
-msgid "User %s has been successfully deleted"
-msgstr "Пользователь %s был успешно удален"
-
-#: modules/base/users/delete.php:37
-msgid "Delete user"
-msgstr "Удалить пользователя"
-
-#: modules/base/users/delete.php:38
-#, php-format
-msgid "You will delete user <b>%s</b>."
-msgstr "Вы удалите пользователя <b>%s</b>."
-
-#: modules/base/users/delete.php:39
-msgid "Delete all user's files"
-msgstr "Удалить все файлы пользователя"
 
 #: modules/base/users/edit.php:56
 msgid "Edit user"
@@ -1167,11 +1145,11 @@ msgstr ""
 msgid "User %s enabled"
 msgstr ""
 
-#: modules/base/users/edit.php:181
+#: modules/base/users/edit.php:183
 msgid "Enable account"
 msgstr ""
 
-#: modules/base/users/edit.php:183
+#: modules/base/users/edit.php:185
 msgid "Disable account"
 msgstr ""
 
@@ -1180,69 +1158,126 @@ msgid "User ACLs successfully modified."
 msgstr "ACL-разрешения пользователя успешно изменены."
 
 #: modules/base/users/editacl.php:175
-msgid "Attribute description"
-msgstr "Описание атрибута"
+msgid "Set value for all radio buttons:&nbsp;&nbsp;"
+msgstr ""
 
-#: modules/base/users/editacl.php:175
+#: modules/base/users/editacl.php:176 modules/base/users/editacl.php:181
 msgid "read only"
 msgstr "только для чтения"
 
-#: modules/base/users/editacl.php:175
+#: modules/base/users/editacl.php:177 modules/base/users/editacl.php:181
 msgid "read/write"
 msgstr "чтение/запись"
 
-#: modules/base/users/editacl.php:175
+#: modules/base/users/editacl.php:178 modules/base/users/editacl.php:181
 msgid "hide"
 msgstr "скрыть"
 
-#: modules/base/users/editacl.php:203
+#: modules/base/users/editacl.php:181
+msgid "Attribute description"
+msgstr "Описание атрибута"
+
+#: modules/base/users/editacl.php:209
 #, php-format
 msgid " (%s module)"
 msgstr " (модуль %s)"
 
-#: modules/base/users/editacl.php:213
+#: modules/base/users/editacl.php:219
 msgid "Web page description"
 msgstr "Описание web-страницы"
 
-#: modules/base/users/editacl.php:213
+#: modules/base/users/editacl.php:219
 msgid "Authorization"
 msgstr "Авторизация "
 
-#: modules/base/users/editacl.php:222
+#: modules/base/users/editacl.php:228
 msgid "Warning no desc found in infoPackage.inc.php :"
 msgstr "Внимание, не найдено описание в  infoPackage.inc.php :"
 
-#: modules/base/users/editacl.php:245
+#: modules/base/users/editacl.php:251
 #, php-format
 msgid "Edit ACL of user %s"
 msgstr "Изменить ACL-разрешения пользователя %s"
 
-#: modules/base/users/editacl.php:265
+#: modules/base/users/editacl.php:271
 msgid "Download ACL string"
 msgstr "Загрузить строку ACL"
 
-#: modules/base/users/index.php:31 modules/base/views/index.tpl.php:43
-#: modules/base/infoPackage.inc.php:109
-msgid "User list"
-msgstr "Список пользователей"
+#: modules/base/users/backup.php:38
+msgid "Backup a user's folder"
+msgstr "Резервное копирование папки пользователя"
 
-#: modules/base/users/loguser.php:39
-msgid "User log"
-msgstr "Журнал пользователя"
+#: modules/base/users/backup.php:52
+msgid "Backup a user's home directory"
+msgstr "Резервное копирование домашней папки пользователя"
 
-#: modules/base/users/localSidebar.php:31
-msgid "Bulk import (CSV)"
-msgstr "Массовый импорт (CSV)"
-
-#: modules/base/users/localSidebar.php:34 modules/base/users/passwd.php:36
-#: modules/base/users/passwd.php:73 modules/base/users/resetpasswd.php:59
-msgid "Change your password"
-msgstr "Изменить пароль"
-
-#: modules/base/users/localSidebar.php:36
-#: modules/base/users/resetpasswd.php:35
-msgid "Reset your password"
+#: modules/base/users/backup.php:54
+#, php-format
+msgid "Backup of <b>%s</b> user's folder has been launched in background."
 msgstr ""
+"Резервное копированиепапки папки пользователя <b>%s</b> запущено в фоновом "
+"режиме."
+
+#: modules/base/users/backup.php:56
+#, php-format
+msgid ""
+"The files will be stored in the directory %s of the server at the end of the"
+" backup."
+msgstr ""
+"Файлы будут сохранены в каталоге %s на сервере, после окончания резервного "
+"копирования."
+
+#: modules/base/users/backup.php:58
+msgid "Please go to the status page to check the backup status."
+msgstr ""
+"Пожалуйста перейдите на страницу состояния, для проверки состояния "
+"резервного копирования."
+
+#: modules/base/users/backup.php:60
+msgid "This operation will last according to the amount of data to backup."
+msgstr ""
+"Продолжительность этой операции зависит от объема данных заданных для "
+"резервного копирования."
+
+#: modules/base/users/backup.php:75
+#, php-format
+msgid "%s home directory will be archived."
+msgstr "Домашний каталог %s будет заархивирован."
+
+#: modules/base/users/backup.php:80
+#, php-format
+msgid ""
+"Please select media size. If your data exceeds the volume size, several "
+"files of your media size will be created."
+msgstr ""
+"Пожалуйста, укажите размер тома. Если данные превысят размер тома, то будет "
+"создано несколько томов."
+
+#: modules/base/users/backup.php:84
+msgid "Media size"
+msgstr "Размер тома"
+
+#: modules/base/users/backup.php:91
+msgid "Launch backup"
+msgstr "Запуск резервного копирования."
+
+#: modules/base/users/delete.php:33
+#, php-format
+msgid "User %s has been successfully deleted"
+msgstr "Пользователь %s был успешно удален"
+
+#: modules/base/users/delete.php:38
+msgid "Delete user"
+msgstr "Удалить пользователя"
+
+#: modules/base/users/delete.php:39
+#, php-format
+msgid "You will delete user <b>%s</b>."
+msgstr "Вы удалите пользователя <b>%s</b>."
+
+#: modules/base/users/delete.php:40
+msgid "Delete all user's files"
+msgstr "Удалить все файлы пользователя"
 
 #: modules/base/users/passwd.php:43 modules/base/users/resetpasswd.php:42
 msgid "Your password has been changed."
@@ -1252,7 +1287,7 @@ msgstr "Пароль был изменён."
 msgid "Change your user's password"
 msgstr "Изменить ваш пароль пользователя"
 
-#: modules/base/users/passwd.php:60 modules/base/users/resetpasswd.php:49
+#: modules/base/users/passwd.php:60 modules/base/users/resetpasswd.php:50
 msgid "You are going to change your password"
 msgstr "Вы должны сменить пароль."
 
@@ -1260,16 +1295,16 @@ msgstr "Вы должны сменить пароль."
 msgid "Current password"
 msgstr "Текущий пароль"
 
-#: modules/base/users/passwd.php:66 modules/base/users/resetpasswd.php:52
+#: modules/base/users/passwd.php:66 modules/base/users/resetpasswd.php:53
 msgid "New password"
 msgstr "Новый пароль"
 
-#: modules/base/users/passwd.php:68 modules/base/users/resetpasswd.php:54
-#: modules/base/infoPackage.inc.php:326
+#: modules/base/users/passwd.php:68 modules/base/users/resetpasswd.php:55
+#: modules/base/infoPackage.inc.php:327
 msgid "Confirm your password"
 msgstr "Подтвердите пароль"
 
-#: modules/base/users/passwd.php:74 modules/base/users/resetpasswd.php:60
+#: modules/base/users/passwd.php:74 modules/base/users/resetpasswd.php:61
 msgid "Return"
 msgstr "Возврат"
 
@@ -1277,147 +1312,164 @@ msgstr "Возврат"
 msgid "Invalid current password. Please retry."
 msgstr "Неверный пароль. Попробуйте еще раз."
 
-#: modules/base/users/passwd.php:81 modules/base/users/resetpasswd.php:63
+#: modules/base/users/passwd.php:81 modules/base/users/resetpasswd.php:64
 msgid "Passwords are mismatching. Please retry."
 msgstr "Пароли не совпадают. Попробуйте еще раз."
+
+#: modules/base/main/default.php:80 modules/base/infoPackage.inc.php:43
+#: graph/navbar.inc.php:62
+msgid "Home"
+msgstr "Главная"
+
+#: modules/base/main/favorites.php:4
+msgid "Root user cannot have favorites"
+msgstr "У пользователя root не может быть избранного"
+
+#: modules/base/main/favorites.php:149
+msgid "Add this page to your favorite"
+msgstr "Добавить эту страницу в закладки"
 
 #: modules/base/infoPackage.inc.php:36
 msgid "User, group and computer management"
 msgstr "Управление пользователями, группами и копьютерами"
 
-#: modules/base/infoPackage.inc.php:43 modules/base/infoPackage.inc.php:46
-msgid "Home page"
-msgstr "Домашняя страница"
+#: modules/base/infoPackage.inc.php:48
+msgid "Shortcuts"
+msgstr ""
 
 #: modules/base/infoPackage.inc.php:52
 msgid "Favorites page"
 msgstr "Страница закладок"
 
-#: modules/base/infoPackage.inc.php:58
-msgid "Status"
-msgstr "Состояние"
-
-#: modules/base/infoPackage.inc.php:64
-msgid "Default status page"
-msgstr "Общая страница состояния"
-
-#: modules/base/infoPackage.inc.php:69
-msgid "Support page"
-msgstr "Страница поддержки"
-
-#: modules/base/infoPackage.inc.php:76
-msgid "Log view"
-msgstr "Просмотреть журнал"
-
-#: modules/base/infoPackage.inc.php:82
-msgid "LDAP log"
-msgstr "Журнал LDAP"
-
-#: modules/base/infoPackage.inc.php:122
-msgid "Add a user"
-msgstr "Добавить пользователя"
-
-#: modules/base/infoPackage.inc.php:125
-msgid "Edit a user"
-msgstr "Изменить пользователя"
-
-#: modules/base/infoPackage.inc.php:129
-msgid "Edit ACL permissions on a user"
-msgstr "Изменить ACL-разрешения для пользователя"
-
-#: modules/base/infoPackage.inc.php:133
-msgid "Logged user actions"
-msgstr "Записанные действия пользователя"
-
-#: modules/base/infoPackage.inc.php:138
-msgid "Action details"
-msgstr "Детали действия"
-
-#: modules/base/infoPackage.inc.php:148
-msgid "Delete a user"
-msgstr "Удалить пользователя"
-
-#: modules/base/infoPackage.inc.php:153
-msgid "Backup user files"
-msgstr "Резервирование файлов пользователя"
-
-#: modules/base/infoPackage.inc.php:158
-msgid "Reset user password"
+#: modules/base/infoPackage.inc.php:60
+msgid "MMC Logs"
 msgstr ""
 
-#: modules/base/infoPackage.inc.php:163
-msgid "Change user password"
-msgstr "Изменить пользовательский пароль"
-
-#: modules/base/infoPackage.inc.php:168
-msgid "Get user photo"
-msgstr "Получить фотографию пользователя"
-
-#: modules/base/infoPackage.inc.php:186
-msgid "Add a group"
-msgstr "Добавить группу"
-
-#: modules/base/infoPackage.inc.php:189
-msgid "Delete a group"
-msgstr "Удалить группу"
-
-#: modules/base/infoPackage.inc.php:203
-msgid "Edit a group"
-msgstr "Изменить группу"
-
-#: modules/base/infoPackage.inc.php:212
-msgid "Audit"
-msgstr "Аудит"
-
-#: modules/base/infoPackage.inc.php:263
+#: modules/base/infoPackage.inc.php:111
 msgid "View details of an action"
 msgstr "Показать подробности действия"
 
-#: modules/base/infoPackage.inc.php:273
+#: modules/base/infoPackage.inc.php:120
+msgid "Log view"
+msgstr "Просмотреть журнал"
+
+#: modules/base/infoPackage.inc.php:126
+msgid "LDAP log"
+msgstr "Журнал LDAP"
+
+#: modules/base/infoPackage.inc.php:144
+msgid "Status"
+msgstr "Состояние"
+
+#: modules/base/infoPackage.inc.php:150
+msgid "Default status page"
+msgstr "Общая страница состояния"
+
+#: modules/base/infoPackage.inc.php:155
+msgid "Support page"
+msgstr "Страница поддержки"
+
+#: modules/base/infoPackage.inc.php:184
+msgid "Add a user"
+msgstr "Добавить пользователя"
+
+#: modules/base/infoPackage.inc.php:187
+msgid "Edit a user"
+msgstr "Изменить пользователя"
+
+#: modules/base/infoPackage.inc.php:191
+msgid "Edit ACL permissions on a user"
+msgstr "Изменить ACL-разрешения для пользователя"
+
+#: modules/base/infoPackage.inc.php:195
+msgid "Logged user actions"
+msgstr "Записанные действия пользователя"
+
+#: modules/base/infoPackage.inc.php:200
+msgid "Action details"
+msgstr "Детали действия"
+
+#: modules/base/infoPackage.inc.php:210
+msgid "Delete a user"
+msgstr "Удалить пользователя"
+
+#: modules/base/infoPackage.inc.php:215
+msgid "Backup user files"
+msgstr "Резервирование файлов пользователя"
+
+#: modules/base/infoPackage.inc.php:220
+msgid "Reset user password"
+msgstr ""
+
+#: modules/base/infoPackage.inc.php:225
+msgid "Change user password"
+msgstr "Изменить пользовательский пароль"
+
+#: modules/base/infoPackage.inc.php:230
+msgid "Get user photo"
+msgstr "Получить фотографию пользователя"
+
+#: modules/base/infoPackage.inc.php:248
+msgid "Add a group"
+msgstr "Добавить группу"
+
+#: modules/base/infoPackage.inc.php:251
+msgid "Delete a group"
+msgstr "Удалить группу"
+
+#: modules/base/infoPackage.inc.php:265
+msgid "Edit a group"
+msgstr "Изменить группу"
+
+#: modules/base/infoPackage.inc.php:274
 msgid "Computers"
 msgstr "Компьютеры"
 
-#: modules/base/infoPackage.inc.php:287
+#: modules/base/infoPackage.inc.php:288
 msgid "Edit computer"
 msgstr "23a2941f0c1e85bfc0babfb726d85288_tr"
 
-#: modules/base/infoPackage.inc.php:291
+#: modules/base/infoPackage.inc.php:292
 msgid "Delete a computer"
 msgstr "Удалить компьютер"
 
-#: modules/base/infoPackage.inc.php:296
+#: modules/base/infoPackage.inc.php:297
 msgid "Ajax part of computers list"
 msgstr "Ajax-часть списка компьютеров"
 
-#: modules/base/infoPackage.inc.php:309
+#: modules/base/infoPackage.inc.php:310
 msgid "User photo"
 msgstr "Фотография пользователя"
 
-#: modules/base/infoPackage.inc.php:310
+#: modules/base/infoPackage.inc.php:311
 msgid "User login"
 msgstr "Имя регистрации"
 
-#: modules/base/infoPackage.inc.php:311
+#: modules/base/infoPackage.inc.php:312
 msgid "User name"
 msgstr "Имя пользователя"
 
-#: modules/base/infoPackage.inc.php:312
+#: modules/base/infoPackage.inc.php:313
 msgid "User firstname"
 msgstr "Имя пользователя"
 
-#: modules/base/infoPackage.inc.php:313
+#: modules/base/infoPackage.inc.php:314
 msgid "User home directory"
 msgstr "Домашний каталог пользователя"
 
-#: modules/base/infoPackage.inc.php:315
+#: modules/base/infoPackage.inc.php:316
 msgid "User title"
 msgstr "Обращение к пользователю"
 
-#: modules/base/infoPackage.inc.php:318
+#: modules/base/infoPackage.inc.php:317
+msgid "Mail address"
+msgstr "Почтовый адрес"
+
+#: modules/base/infoPackage.inc.php:319
 msgid "Mobile phone number"
 msgstr "Мобильный"
 
-#: modules/base/infoPackage.inc.php:327
+#: modules/base/infoPackage.inc.php:328
 msgid "Enable/Disable user account"
 msgstr "Включить/Отключить аккаунт пользователя"
 
@@ -1429,77 +1481,15 @@ msgstr ""
 msgid " configuration page"
 msgstr ""
 
-#: forgotpassword.php:22
-msgid "A password reset link has been sent."
-msgstr ""
+#: modules/services/includes/panels/services.inc.php:42
+#, php-format
+msgid "%d inactive service"
+msgid_plural "%d inactive services"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
-#: forgotpassword.php:24
-msgid "Can't reset your password. Please contact your administrator."
-msgstr ""
-
-#: forgotpassword.php:72 forgotpassword.php:78
-msgid "Password reset"
-msgstr ""
-
-#: forgotpassword.php:74
-msgid "Login or mail"
-msgstr ""
-
-#: forgotpassword.php:79
-msgid "Back"
-msgstr ""
-
-#: license.php:33
-msgid ""
-"<p>\n"
-"The community version of this product is distributed in the hope that it\n"
-"will be useful, but <strong>without any warranty</strong>; without even the implied\n"
-"warranty of merchantability of fitness for a particular purpose. See the\n"
-"GNU General Public License for more details.</p>\n"
-"<p>\n"
-"Moreover, this product is a main and critical component of your information system. This community version is distributed without professional support of any kind,\n"
-"and without a tested and certified upgrade path from previous versions.\n"
-"</p>"
-msgstr ""
-"<p>\n"
-"Community-версия этого продукта распространяется в предположении,\n"
-"что все работает, но <strong>без каких-либо гарантий</strong>; даже при наличии\n"
-"возможности гарантийных случаев для данного вида продуктов. Смотрите\n"
-"GNU General Public License для более подробной информации.</p>\n"
-"<p>\n"
-"Более того, этот продукт является главной и критичной частью вашей информационной системы. Эта Community-версия распространяется без профессиональной поддержки от кого-либо,\n"
-"и без тестирования на возможность обновления с предыдущих версий.\n"
-"</p>"
-
-#: license.php:44
-msgid ""
-"Click here to get more information about our support and maintenance "
-"subscription plan."
-msgstr ""
-"Нажмите здесь для получения информации о правилах подписки на нашу поддержку"
-" и обслуживание."
-
-#: version.php:35
-msgid "MMC components version"
-msgstr ""
-
-#: version.php:36
-msgid "MMC agent: version"
-msgstr ""
-
-#: version.php:40
-msgid "agent: version"
-msgstr ""
-
-#: version.php:42
-msgid "web: version"
-msgstr ""
-
-#: version.php:44
-msgid "web: plugin is not installed"
-msgstr ""
-
-#: graph/header.inc.php:258
+#: graph/header.inc.php:271
 msgid "Form cannot be submit. Input errors are highlighted in red."
 msgstr "Форма не подтверждена. Ошибки ввода выделены красным."
 
@@ -1523,11 +1513,7 @@ msgstr "завершить сеанс"
 msgid "Logout"
 msgstr "Выход"
 
-#: graph/navbar.inc.php:63 main_content.php:145
-msgid "Home"
-msgstr "Главная"
-
-#: graph/navbar.inc.php:117
+#: graph/navbar.inc.php:97
 msgid ""
 "If this phrase does not change, you browser is not supported by the MMC "
 "application"
@@ -1538,7 +1524,27 @@ msgstr ""
 msgid "Your session will be closed"
 msgstr "Ваш сеанс будет завершен"
 
-#: token.php:54 index.php:62
+#: version.php:35
+msgid "MMC components version"
+msgstr ""
+
+#: version.php:36
+msgid "MMC agent: version"
+msgstr ""
+
+#: version.php:40
+msgid "agent: version"
+msgstr ""
+
+#: version.php:42
+msgid "web: version"
+msgstr ""
+
+#: version.php:44
+msgid "web: plugin is not installed"
+msgstr ""
+
+#: token.php:54 index.php:61
 #, php-format
 msgid "The server %s does not exist"
 msgstr "Сервер %s не существует"
@@ -1551,119 +1557,58 @@ msgstr ""
 msgid "Error while validating your token. Please contact your administrator."
 msgstr ""
 
-#: index.php:71
-msgid "Login failed"
-msgstr "Ошибка входа в систему"
+#: includes/ErrorHandling.php:77
+msgid "Show complete trackback"
+msgstr "Показать полную трассировку"
 
-#: index.php:77
-msgid ""
-"You have been logged out because the session between the MMC web interface "
-"and the MMC agent expired."
-msgstr ""
-"Вы были отсоединены, потому что сессия между web-интерфейсом MMC и "
-"MMC-агентом истекла."
+#: includes/ErrorHandling.php:78
+msgid "Complete Traceback"
+msgstr "Полная трассировка"
 
-#: index.php:205
-msgid "Forgot password ?"
-msgstr ""
-
-#: index.php:209
-msgid "Server"
-msgstr "Сервер"
-
-#: index.php:214
-msgid "Language"
-msgstr "Язык"
-
-#: index.php:218
-msgid "Connect"
-msgstr "Подключиться"
-
-#: includes/acl.inc.php:120
-msgid "You do not have required rights"
-msgstr "У вас нет необходимых прав"
-
-#: includes/FormGenerator.php:58 includes/FormGenerator.php:275
-#: includes/FormGenerator.php:632 includes/FormGenerator.php:791
+#: includes/FormGenerator.php:58 includes/FormGenerator.php:335
+#: includes/FormGenerator.php:695 includes/FormGenerator.php:854
 msgid "unavailable"
 msgstr "недоступно"
 
-#: includes/FormGenerator.php:217
+#: includes/FormGenerator.php:277
 msgid "Delete photo"
 msgstr "Удалить фото"
 
-#: includes/FormGenerator.php:261
+#: includes/FormGenerator.php:321
 msgid "yes"
 msgstr "да"
 
-#: includes/FormGenerator.php:264
+#: includes/FormGenerator.php:324
 msgid "no"
 msgstr "нет"
 
-#: includes/FormGenerator.php:456
+#: includes/FormGenerator.php:516
 msgid "Year: "
 msgstr "Год: "
 
-#: includes/FormGenerator.php:456
+#: includes/FormGenerator.php:516
 msgid "Month: "
 msgstr "Месяц: "
 
-#: includes/FormGenerator.php:456
+#: includes/FormGenerator.php:516
 msgid "Day: "
 msgstr "День: "
 
-#: includes/FormGenerator.php:457
+#: includes/FormGenerator.php:517
 msgid "Hour: "
 msgstr "Час: "
 
-#: includes/FormGenerator.php:457
+#: includes/FormGenerator.php:517
 msgid "Min.: "
 msgstr "Мин: "
 
-#: includes/FormGenerator.php:457
+#: includes/FormGenerator.php:517
 msgid "Sec.: "
 msgstr "Сек: "
 
-#: includes/PageGenerator.php:486 includes/PageGenerator.php:718
-msgid "to"
-msgstr "в"
-
-#: includes/PageGenerator.php:488 includes/PageGenerator.php:720
-#, php-format
-msgid " - Total <b>%s </b>"
-msgstr " - Всего <b>%s </b>"
-
-#: includes/PageGenerator.php:491 includes/PageGenerator.php:723
-msgid "page"
-msgstr "страница"
-
-#: includes/PageGenerator.php:834
-msgid "Pagination"
-msgstr "Нумерация"
-
-#: includes/PageGenerator.php:918
-msgid "Go to page"
-msgstr "Перейти на страницу"
-
-#: includes/PageGenerator.php:1304
-msgid "No item available"
-msgstr "Нет доступных элементов"
-
-#: includes/PageGenerator.php:1469
-msgid "Select entity"
-msgstr "Выберите объект"
-
-#: includes/PageGenerator.php:2092
-msgid "Ok"
-msgstr "OК"
-
-#: includes/PageGenerator.php:2632
-msgid "Select all"
-msgstr "Выделить все"
-
-#: includes/PageGenerator.php:2633
-msgid "Unselect all"
-msgstr "Снять выделение"
+#: includes/acl.inc.php:124
+msgid "You do not have required rights"
+msgstr "У вас нет необходимых прав"
 
 #: includes/xmlrpc.inc.php:166
 msgid "Can't connect to MMC agent"
@@ -1717,17 +1662,58 @@ msgid ""
 msgstr ""
 "Агент MMC не предоставил нам номер сеанса. Проверьте версию MMC-агента."
 
-#: includes/xmlrpc.inc.php:325
+#: includes/xmlrpc.inc.php:322
 msgid "unknown error"
 msgstr "неизвестная ошибка"
 
-#: includes/xmlrpc.inc.php:326
+#: includes/xmlrpc.inc.php:323
 msgid ""
 "This exception is unknown. Please contact us to add an error handling on "
 "this error."
 msgstr ""
 "Неизвестное исключение. Пожалуйста, свяжитель с нами для добавления "
 "обработки этой ошибки."
+
+#: includes/PageGenerator.php:489 includes/PageGenerator.php:716
+msgid "to"
+msgstr "в"
+
+#: includes/PageGenerator.php:491 includes/PageGenerator.php:718
+#, php-format
+msgid " - Total <b>%s </b>"
+msgstr " - Всего <b>%s </b>"
+
+#: includes/PageGenerator.php:494 includes/PageGenerator.php:721
+msgid "page"
+msgstr "страница"
+
+#: includes/PageGenerator.php:829
+msgid "Pagination"
+msgstr "Нумерация"
+
+#: includes/PageGenerator.php:913
+msgid "Go to page"
+msgstr "Перейти на страницу"
+
+#: includes/PageGenerator.php:1295
+msgid "No item available"
+msgstr "Нет доступных элементов"
+
+#: includes/PageGenerator.php:1460
+msgid "Select entity"
+msgstr "Выберите объект"
+
+#: includes/PageGenerator.php:2023
+msgid "Close"
+msgstr ""
+
+#: includes/PageGenerator.php:2576
+msgid "Select all"
+msgstr "Выделить все"
+
+#: includes/PageGenerator.php:2577
+msgid "Unselect all"
+msgstr "Снять выделение"
 
 #: includes/auditCodesManager.php:33
 msgid "Daemon start"
@@ -1829,24 +1815,82 @@ msgstr ""
 "                            <li> Ваш Samba-сервер не правильно настроен</li>\n"
 "                        </ul>"
 
-#: includes/favorites.php:4
-msgid "Root user cannot have favorites"
-msgstr "У пользователя root не может быть избранного"
+#: license.php:27
+msgid ""
+"<p>\n"
+"The community version of this product is distributed in the hope that it\n"
+"will be useful, but <strong>without any warranty</strong>; without even the implied\n"
+"warranty of merchantability of fitness for a particular purpose. See the\n"
+"GNU General Public License for more details.</p>\n"
+"<p>\n"
+"Moreover, this product is a main and critical component of your information system. This community version is distributed without professional support of any kind,\n"
+"and without a tested and certified upgrade path from previous versions.\n"
+"</p>"
+msgstr ""
+"<p>\n"
+"Community-версия этого продукта распространяется в предположении,\n"
+"что все работает, но <strong>без каких-либо гарантий</strong>; даже при наличии\n"
+"возможности гарантийных случаев для данного вида продуктов. Смотрите\n"
+"GNU General Public License для более подробной информации.</p>\n"
+"<p>\n"
+"Более того, этот продукт является главной и критичной частью вашей информационной системы. Эта Community-версия распространяется без профессиональной поддержки от кого-либо,\n"
+"и без тестирования на возможность обновления с предыдущих версий.\n"
+"</p>"
 
-#: includes/favorites.php:149
-msgid "Add this page to your favorite"
-msgstr "Добавить эту страницу в закладки"
+#: license.php:38
+msgid ""
+"Click here to get more information about our support and maintenance "
+"subscription plan."
+msgstr ""
+"Нажмите здесь для получения информации о правилах подписки на нашу поддержку"
+" и обслуживание."
 
-#: includes/ErrorHandling.php:77
-msgid "Show complete trackback"
-msgstr "Показать полную трассировку"
+#: index.php:71
+msgid "Login failed"
+msgstr "Ошибка входа в систему"
 
-#: includes/ErrorHandling.php:78
-msgid "Complete Traceback"
-msgstr "Полная трассировка"
+#: index.php:77
+msgid ""
+"You have been logged out because the session between the MMC web interface "
+"and the MMC agent expired."
+msgstr ""
+"Вы были отсоединены, потому что сессия между web-интерфейсом MMC и "
+"MMC-агентом истекла."
 
-#: main.php:142
-msgid "Error, you don't have correct rights !"
-msgstr "Ошибка, у вас нет прав!"
+#: index.php:181
+msgid "Forgot password ?"
+msgstr ""
+
+#: index.php:186
+msgid "Server"
+msgstr "Сервер"
+
+#: index.php:192
+msgid "Language"
+msgstr "Язык"
+
+#: index.php:200
+msgid "Connect"
+msgstr "Подключиться"
+
+#: forgotpassword.php:24
+msgid "A password reset link has been sent."
+msgstr ""
+
+#: forgotpassword.php:26
+msgid "Can't reset your password. Please contact your administrator."
+msgstr ""
+
+#: forgotpassword.php:74 forgotpassword.php:80
+msgid "Password reset"
+msgstr ""
+
+#: forgotpassword.php:76
+msgid "Login or mail"
+msgstr ""
+
+#: forgotpassword.php:81
+msgid "Back"
+msgstr ""
 
 

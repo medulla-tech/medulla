@@ -6,9 +6,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
-"Report-Msgid-Bugs-To: http://mds.mandriva.org/\n"
-"POT-Creation-Date: 2012-06-01 13:38+0200\n"
-"PO-Revision-Date: 2012-08-24 13:39+0000\n"
+"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
+"POT-Creation-Date: 2012-12-10 15:53+0100\n"
+"PO-Revision-Date: 2012-12-10 15:16+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -33,22 +33,40 @@ msgstr ""
 msgid "Password policies"
 msgstr ""
 
+#: modules/ppolicy/default/warnuser.php:35
+msgid ""
+"Warning you have been logged using grace login mode. Please change your "
+"password as soon as possible using the password change page, else your "
+"account will be locked."
+msgstr ""
+
+#: modules/ppolicy/default/warnuser.php:40
+msgid ""
+"Warning your password has been reset by an administrator. Your LDAP account "
+"is restricted. Please change your password as soon as possible using the "
+"password change page."
+msgstr ""
+
+#: modules/ppolicy/default/index.php:31
+msgid "Password policies list"
+msgstr ""
+
 #: modules/ppolicy/default/delete.php:29
 msgid "The password policy has been deleted."
 msgstr ""
 
-#: modules/ppolicy/default/delete.php:40
+#: modules/ppolicy/default/delete.php:41
 #, php-format
 msgid ""
 "You will delete the password policy <strong>%s</strong>. Default password "
 "policy will be applied to users that use this password policy."
 msgstr ""
 
-#: modules/ppolicy/default/delete.php:44
+#: modules/ppolicy/default/delete.php:45
 msgid "Delete"
 msgstr ""
 
-#: modules/ppolicy/default/delete.php:45
+#: modules/ppolicy/default/delete.php:46
 msgid "Cancel"
 msgstr ""
 
@@ -66,73 +84,55 @@ msgstr ""
 msgid "Attributes updated"
 msgstr ""
 
-#: modules/ppolicy/default/edit.php:123
+#: modules/ppolicy/default/edit.php:126
 msgid "Name"
 msgstr ""
 
-#: modules/ppolicy/default/edit.php:129
+#: modules/ppolicy/default/edit.php:132
 #: modules/ppolicy/includes/ppolicy.inc.php:48
 msgid "Description"
 msgstr ""
 
-#: modules/ppolicy/default/edit.php:135
+#: modules/ppolicy/default/edit.php:138
 #: modules/ppolicy/includes/ppolicy.inc.php:37
 msgid "Minimum length"
 msgstr ""
 
-#: modules/ppolicy/default/edit.php:142
+#: modules/ppolicy/default/edit.php:145
 msgid "Password quality check"
 msgstr ""
 
-#: modules/ppolicy/default/edit.php:149
+#: modules/ppolicy/default/edit.php:152
 msgid "Minimum age (seconds)"
 msgstr ""
 
-#: modules/ppolicy/default/edit.php:156
+#: modules/ppolicy/default/edit.php:159
 msgid "Maximum age (seconds)"
 msgstr ""
 
-#: modules/ppolicy/default/edit.php:163
+#: modules/ppolicy/default/edit.php:166
 #: modules/ppolicy/includes/ppolicy.inc.php:45
 msgid "Number of grace authentications"
 msgstr ""
 
-#: modules/ppolicy/default/edit.php:177
+#: modules/ppolicy/default/edit.php:180
 msgid "Force users to change their passwords on the first connection ?"
 msgstr ""
 
-#: modules/ppolicy/default/edit.php:184
+#: modules/ppolicy/default/edit.php:187
 msgid "Password history"
 msgstr ""
 
-#: modules/ppolicy/default/edit.php:198
+#: modules/ppolicy/default/edit.php:201
 msgid "Preventive user lockout ?"
 msgstr ""
 
-#: modules/ppolicy/default/edit.php:212
+#: modules/ppolicy/default/edit.php:215
 msgid "Password maximum failure"
 msgstr ""
 
-#: modules/ppolicy/default/edit.php:219
+#: modules/ppolicy/default/edit.php:222
 msgid "Lockout duration (seconds)"
-msgstr ""
-
-#: modules/ppolicy/default/index.php:31
-msgid "Password policies list"
-msgstr ""
-
-#: modules/ppolicy/default/warnuser.php:35
-msgid ""
-"Warning you have been logged using grace login mode. Please change your "
-"password as soon as possible using the password change page, else your "
-"account will be locked."
-msgstr ""
-
-#: modules/ppolicy/default/warnuser.php:40
-msgid ""
-"Warning your password has been reset by an administrator. Your LDAP account "
-"is restricted. Please change your password as soon as possible using the "
-"password change page."
 msgstr ""
 
 #: modules/ppolicy/includes/auditCodes.php:4
