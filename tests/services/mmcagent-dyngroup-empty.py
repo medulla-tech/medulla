@@ -278,11 +278,11 @@ class class01dyngroupInitTest(TestCase):
 
     def test240getPossiblesCriterionsInMainModule(self):
         result = self.client.getPossiblesCriterionsInMainModule()
-        self.assertEqual(result, ['Inventory/Date', 'Entity/Label', 'Software/ProductName', 'Hardware/OperatingSystem', 'Registry/Value/display name', 'Drive/TotalSpace', 'Hardware/ProcessorType', 'Software/Products'])
+        self.assertEqual(result, ['Entity/Label', 'Software/ProductName:ProductVersion', 'Software/ProductName', 'Hardware/OperatingSystem', 'Registry/Value/display name', 'Drive/TotalSpace', 'Hardware/ProcessorType'])
 
     def test241getPossiblesCriterionInModule(self):
         result = self.client.getPossiblesCriterionsInModule('inventory')
-        self.assertEqual(result, ['Inventory/Date', 'Entity/Label', 'Software/ProductName', 'Hardware/OperatingSystem', 'Registry/Value/display name', 'Drive/TotalSpace', 'Hardware/ProcessorType', 'Software/Products'])
+        self.assertEqual(result, ['Entity/Label', 'Software/ProductName:ProductVersion', 'Software/ProductName', 'Hardware/OperatingSystem', 'Registry/Value/display name', 'Drive/TotalSpace', 'Hardware/ProcessorType'])
 
     def test242getTypeForCriterionInModule(self):
         result = self.client.getTypeForCriterionInModule("inventory", "Software/ProductName")
