@@ -481,10 +481,10 @@ def splitComputerPath(path):
         hostname = fqdn
         domain = ''
 
-    if domain and not re.match('^([a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]\.){0,10}[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$', domain):
+    if domain and not re.match('^([a-z][a-z0-9-]*[a-z0-9]\.){0,10}[a-z][a-z0-9-]*[a-z0-9]$', domain):
         raise TypeError('Bad domain: %s' % domain)
 
-    if not re.match('^([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9])$', hostname):
+    if not re.match('^([a-z0-9][a-z0-9-]*[a-z0-9]|[A-Z0-9][A-Z0-9-]*[A-Z0-9])$', hostname):
         raise TypeError('Bad hostname: %s' % hostname)
 
     return (profile, entities, hostname, domain)
