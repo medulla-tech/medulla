@@ -37,6 +37,9 @@ a:visited { color: #2A557E; }
 a:visited.error { color: #A40000; }
 a:hover { color: #000; }
 
+a.btn { color: #333; }
+a.btn-primary, a.btn-info { color: white; }
+
 a.link { color: #2A557E; border-bottom: 1px dotted #777; text-decoration: none; }
 a.link:hover { color: #000; border-bottom: 1px dotted #777; background: #ddd; }
 
@@ -1191,7 +1194,7 @@ ul.roACL {
 .roACL {
     color: #666;
 }
- 
+
 /**
  * Dashboard and home page
  */
