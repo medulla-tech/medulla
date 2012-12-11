@@ -38,7 +38,7 @@ function fetchModulesList($dir) {
 
     $ret = array();
     $registerList = array();
-    
+
     if (isset($_SESSION["supportModList"])) {
         foreach($_SESSION["supportModList"] as $module) {
             if (file_exists($dir.$module.'/infoPackage.inc.php') &&
@@ -50,7 +50,7 @@ function fetchModulesList($dir) {
         sort($ret);
         sort($registerList);
     }
-    
+
     /* register modulesList in $_SESSION */
     $_SESSION["modulesList"] = $registerList;
     return $ret;
@@ -365,6 +365,32 @@ function list_system_locales($dir){
     /* Restore current locale */
     setlocale(LC_ALL, $current);
     return $_SESSION['__locale'];
+}
+
+/**
+ * Add a button to restart a service in a popup
+ * Needs the services module
+ */
+function handleServicesModule($popup, $services) {
+    if (in_array("services", $_SESSION["supportModList"])) {
+        $servicesInfos = array();
+        unset($_SESSION['servicesInfos']);
+        foreach($services as $service => $name) {
+            $serviceInfo = array();
+            $serviceInfo['id'] = $service;
+            $serviceInfo['name'] = $name;
+            $serviceInfo['restart'] = urlStrRedirect('services/control/restart', array("service" => $service, "output" => "json"));
+            $serviceInfo['check'] = urlStrRedirect('services/control/status', array("service" => $service, "output" => "json"));
+            $serviceInfo['msg_exec'] = sprintf(_("%s service restarting..."), $name);
+            $serviceInfo['msg_success'] = sprintf(_("%s service restarted successfully."), $name);
+            $serviceInfo['msg_fail'] = sprintf(_("%s service failed to restart."), $name);
+
+            $servicesInfos[] = $serviceInfo;
+        }
+        $_SESSION['servicesInfos'] = json_encode($servicesInfos);
+        $popup->add('<br /><p>' . ngettext("Restart the service ?", "Restart the services ?", count($services)) . '&nbsp;&nbsp;<button id="restartBtn" class="btn btn-small btn-primary" onclick="restartServices()"> '. _T("Restart") .'</button></p><div id="restartStatus" style="display: none;"></div>');
+    }
+    return $popup;
 }
 
 ?>

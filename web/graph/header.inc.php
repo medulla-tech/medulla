@@ -303,5 +303,80 @@ function validateForm(formId) {
     return false;
 }
 
+<?php
+if (isset($_SESSION['servicesInfos'])) {
+?>
+function restartServices() {
+
+    services = JSON.parse('<?=$_SESSION['servicesInfos']?>');
+
+    checkService = function(service) {
+        new Ajax.Request(service.check, {
+            onSuccess: function(r) {
+                if (r.responseJSON[1]) {
+                    var status = r.responseJSON[1];
+                    var statusElem = $(service.id + 'Status');
+                    if (status != "active" && status != "failed") {
+                        setTimeout(function() {
+                            checkService(service);
+                        }, 800);
+                    }
+                    else {
+                        if (status == "failed") {
+                            statusElem.update(service.msg_fail);
+                            statusElem.removeClassName("alert-info");
+                            statusElem.addClassName("alert-error");
+                        }
+                        else {
+                            statusElem.update(service.msg_success);
+                            statusElem.removeClassName("alert-info");
+                            statusElem.addClassName("alert-success");
+                        }
+                    }
+                }
+                else {
+                    statusElem.update(service.msg_fail);
+                    statusElem.removeClassName("alert-info");
+                    statusElem.addClassName("alert-error");
+                }
+            },
+            onFailure: function() {
+                statusElem.update(service.msg_fail);
+                statusElem.removeClassName("alert-info");
+                statusElem.addClassName("alert-error");
+            }
+        });
+    };
+
+    services.each(function(service) {
+        new Ajax.Request(service.restart, {
+            onSuccess: function() {
+                var message = $(service.id + 'Status');
+                if (!message) {
+                    message = new Element('p', {'id': service.id + 'Status',
+                                                'class': 'alert alert-info'});
+                    $('restartStatus').appendChild(message);
+                }
+                message.update(service.msg_exec);
+                message.removeClassName("alert-success");
+                message.removeClassName("alert-error");
+                message.addClassName("alert-info");
+                $('restartStatus').show();
+                setTimeout(function() {
+                    checkService(service);
+                }, 1000);
+            },
+            onFailure: function() {
+                statusElem.update(service.msg_fail);
+                statusElem.removeClassName("alert-info");
+                statusElem.addClassName("alert-error");
+            }
+        });
+    });
+}
+<?php
+}
+?>
+
 -->
 </script>
