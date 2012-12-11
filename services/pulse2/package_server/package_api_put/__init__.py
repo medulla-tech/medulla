@@ -50,6 +50,23 @@ class PackageApiPut(PackageApiGet):
                 ret.append([f, os.path.isdir(os.path.join(self.tmp_input_dir,f))])
         return ret
 
+    def xmlrpc_getTemporaryFilesSuggestedCommand(self, tempdir):
+        self.logger.debug("Try to suggest command for tempdir %s" % tempdir)
+        ret = {
+            "label": tempdir,
+            "version": 42,
+            "commandcmd": [],
+        }
+
+        filelist = []
+        if os.path.exists(self.tmp_input_dir):
+            for f in os.listdir(os.path.join(self.tmp_input_dir, tempdir)):
+                f = os.path.join(self.tmp_input_dir, tempdir, f)
+                if os.path.isfile(f):
+                    filelist.append(f)
+        ret['commandcmd'] = filelist
+        return ret
+
     def xmlrpc_pushPackage(self, random_dir, files):
         if not os.path.exists(self.tmp_input_dir):
             os.makedirs(self.tmp_input_dir)

@@ -40,6 +40,13 @@ class PackagePutA(Pulse2Api):
         d.addErrback(self.onError, "getTemporaryFiles")
         return d
 
+    def getTemporaryFilesSuggestedCommand(self, tempdir):
+        if self.initialized_failed:
+            return -1
+        d = self.callRemote("getTemporaryFilesSuggestedCommand", tempdir)
+        d.addErrback(self.onError, "getTemporaryFilesSuggestedCommand", [tempdir])
+        return d
+
     def associatePackages(self, pid, files, level = 0):
         if self.initialized_failed:
             return [False, "PackagePutA %s failed to initialize"%self.server_addr]
