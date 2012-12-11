@@ -38,7 +38,7 @@ a:visited.error { color: #A40000; }
 a:hover { color: #000; }
 
 a.btn { color: #333; }
-a.btn-primary, a.btn-info { color: white; }
+a.btn-primary, a.btn-info, a.btn-danger { color: white; }
 
 a.link { color: #2A557E; border-bottom: 1px dotted #777; text-decoration: none; }
 a.link:hover { color: #000; border-bottom: 1px dotted #777; background: #ddd; }
@@ -1257,4 +1257,18 @@ ul.roACL {
 
 .panel .alert, .panel .alert {
     padding: 4px;
+}
+
+.errorTraceback pre {
+    overflow: auto;
+    color: #f8f8f8;
+    background: #333;
+    border: 1px solid #777;
+    font-family: monospace;
+    text-shadow: none;
+}
+
+.errorTraceback h1 {
+    margin-top: 1em;
+    margin-bottom: 0.2em;
 }
