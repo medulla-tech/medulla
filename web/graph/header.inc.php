@@ -75,10 +75,10 @@ function checkAllRadio (pf,value) {
     for (i=0; i<rbox.length; i++){
         if (rbox[i].type=='radio'){
             if (rbox[i].name.indexOf(pf) > -1) {
-                if (value == rbox[i].value) { 
+                if (value == rbox[i].value) {
                     rbox[i].checked = true;
-                } 
-                else { 
+                }
+                else {
                     rbox[i].checked = false;
                 }
             }
@@ -208,7 +208,7 @@ function showPopupCenter(url) {
             }
         },
         onComplete: displayPopupCenter()
-    });    
+    });
 }
 
 function displayPopupFav (evt) {
@@ -241,9 +241,36 @@ function displayPopupCenter () {
     $('popup').style.display = 'inline';
     $('overlay').show();
     $('overlay').observe("click", function () {
-        toggleVisibility('popup');
-        toggleVisibility('overlay');
+        closePopup();
     });
+}
+
+function displayConfirmationPopup(message, url_yes, url_no, klass) {
+    if (!klass)
+        var klass = '';
+    var message = '<div style="padding: 10px"><div class="alert ' + klass + '">' + message + '</div>';
+    message += '<div style="text-align: center"><a class="btn btn-primary" href="' + url_yes + '"><?=_('Yes')?></a>';
+
+    if (url_no)
+        message += ' <a class="btn" href="' + url_no + '"><?=_('No')?></a>';
+    else
+        message += ' <button class="btn" onclick="closePopup(); return false;"><?=_('No')?></button>';
+
+    message += '</div></div>';
+
+    try {
+        $('__popup_container').update(message);
+    }
+    catch(ex) {
+        $('__popup_container').innerHTML = message;
+    }
+
+    displayPopupCenter();
+}
+
+function closePopup() {
+    $('popup').hide();
+    $('overlay').hide();
 }
 
 function validateForm(formId) {
