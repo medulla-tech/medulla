@@ -313,9 +313,9 @@ function restartServices() {
     checkService = function(service) {
         new Ajax.Request(service.check, {
             onSuccess: function(r) {
-                if (r.responseJSON[1]) {
+                var statusElem = $(service.id + 'Status');
+                if (r.responseJSON) {
                     var status = r.responseJSON[1];
-                    var statusElem = $(service.id + 'Status');
                     if (status != "active" && status != "failed") {
                         setTimeout(function() {
                             checkService(service);
@@ -338,12 +338,9 @@ function restartServices() {
                     statusElem.update(service.msg_fail);
                     statusElem.removeClassName("alert-info");
                     statusElem.addClassName("alert-error");
+                    r.responseText.evalScripts();
                 }
-            },
-            onFailure: function() {
-                statusElem.update(service.msg_fail);
-                statusElem.removeClassName("alert-info");
-                statusElem.addClassName("alert-error");
+
             }
         });
     };
@@ -365,11 +362,6 @@ function restartServices() {
                 setTimeout(function() {
                     checkService(service);
                 }, 1000);
-            },
-            onFailure: function() {
-                statusElem.update(service.msg_fail);
-                statusElem.removeClassName("alert-info");
-                statusElem.addClassName("alert-error");
             }
         });
     });
