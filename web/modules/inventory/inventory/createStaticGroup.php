@@ -31,7 +31,7 @@ else {
     $groupname = sprintf (_T("Latest inventory is more than %s days at %s", "inventory"), $_GET['days'], date("Y-m-d H:i:s"));
 }
 
-$machines = unserialize(base64_decode($_GET['machines']));
+$machines = $_SESSION['inventoryDashboard'][$_GET['group']];
 
 $groupmembers = array();
 
