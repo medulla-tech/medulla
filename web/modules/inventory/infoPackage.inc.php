@@ -96,7 +96,7 @@ $page = new Page("csv",_T("Csv's export", "inventory"));
 $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
 
-$page = new Page("createStaticGroup");
+$page = new Page("createStaticGroup", _T("Create static group from dashboard", "inventory"));
 $page->setFile("modules/inventory/inventory/createStaticGroup.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);

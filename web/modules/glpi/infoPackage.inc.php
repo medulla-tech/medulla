@@ -30,7 +30,7 @@ $base = &$MMCApp->getModule('base');
 /* Get the computers sub-module instance */
 $submod = & $base->getSubmod('computers');
 
-$page = new Page("createStaticGroup", _T("Create static group from dashboard", "glpi"));
+$page = new Page("createStaticGroup", _T("Create static group from dashboard (GLPI)", "glpi"));
 $page->setFile("modules/glpi/glpi/createStaticGroup.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);

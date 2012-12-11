@@ -61,31 +61,31 @@ if (strlen($_GET['bundle_id']) && !strlen($cmd_id)) {
             _T("<b>No</b> package installation was successful", "msc"),
             _T("<b>One</b> package installation was successful", "msc"),
             _T('<b>%s</b> packages installation were successful', 'msc'),
-            _T('Successfull package(s)', 'msc')
+            _T('Success: %s%', 'msc')
         )),
         array('stopped', array(
             _T("<b>No</b> package installation is stopped", "msc"),
             _T("<b>One</b> package installation is stopped", "msc"),
             _T('<b>%s</b> packages installation are stopped', 'msc'),
-            _T('Stopped package(s)', 'msc')
+            _T('Stopped: %s%', 'msc')
         )),
         array('paused', array(
             _T("<b>No</b> package installation is paused", "msc"),
             _T("<b>One</b> package installation is paused", "msc"),
             _T('<b>%s</b> packages installation are paused', 'msc'),
-            _T('Paused package(s)', 'msc')
+            _T('Paused: %s%', 'msc')
         )),
         array('running', array(
-            _T("<b>No</b> package installation is being done", "msc"),
-            _T("<b>One</b> package installation is being done", "msc"),
-            _T('<b>%s</b> packages installation are being done', 'msc'),
-            _T('Being done packages', 'msc')
+            _T("<b>No</b> package installation is in progress", "msc"),
+            _T("<b>One</b> package installation is in progress", "msc"),
+            _T('<b>%s</b> packages installation are in progress', 'msc'),
+            _T('In progress: %s%', 'msc')
         )),
         array('failure', array(
             _T('<b>No</b> package installation failed', 'msc'),
             _T('<b>One</b> package installation failed', 'msc'),
             _T('<b>%s</b> packages installation failed', 'msc'),
-            _T('Failed packages', 'msc')
+            _T('Failed: %s%', 'msc')
         )),
         );
 } else {
@@ -94,31 +94,31 @@ if (strlen($_GET['bundle_id']) && !strlen($cmd_id)) {
             _T('<b>No</b> computer was successfully deployed', 'msc'),
             _T('<b>One</b> computer was successfully deployed', 'msc'),
             _T('<b>%s</b> computers were successfully deployed', 'msc'),
-            _T('Successful deployment', 'msc') // Pie chart legend text
+            _T('Success: %s%', 'msc') // Pie chart legend text
         )),
         array('stopped', array(
             _T('<b>No</b> computer is stopped', 'msc'),
             _T('<b>One</b> computer is stopped', 'msc'),
             _T('<b>%s</b> computers are stopped', 'msc'),
-            _T('Computer(s) stopped', 'msc') // Pie chart legend text
+            _T('Stopped: %s%', 'msc') // Pie chart legend text
         )),
         array('paused', array(
             _T('<b>No</b> computer is paused', 'msc'),
             _T('<b>One</b> computer is paused', 'msc'),
             _T('<b>%s</b> computers are paused', 'msc'),
-            _T('Computer(s) paused', 'msc') // Pie chart legend text
+            _T('Paused: %s%', 'msc') // Pie chart legend text
         )),
         array('running', array(
             _T('<b>No</b> computer is running a deployment', 'msc'),
             _T('<b>One</b> computer is running a deployment', 'msc'),
             _T('<b>%s</b> computers are running a deployment', 'msc'),
-            _T('Deployment in progress', 'msc') // Pie chart legend text
+            _T('In progress: %s%', 'msc') // Pie chart legend text
         )),
         array('failure', array(
             _T('<b>No</b> computer failed to deploy', 'msc'),
             _T('<b>One</b> computer failed to deploy', 'msc'),
             _T('<b>%s</b> computers failed to deploy', 'msc'),
-            _T('Deployment failed', 'msc') // Pie chart legend text
+            _T('Failed: %s%', 'msc') // Pie chart legend text
         )),
         );
 }
@@ -209,7 +209,7 @@ foreach ($labels as $l) {
             "number" => $s['total'][0],
             "percent" => $s['total'][1],
             "url" => urlStr("base/computers/computersgroupcreator", $urlArray),
-            "legend" => $l[1][3] . " " . $s['total'][1] . " %",
+            "legend" => str_replace('%s', $s['total'][1], $l[1][3]),
         );
     }
     elseif(strlen($_GET['bundle_id'])) { // If it's a bundle on a group
@@ -303,7 +303,7 @@ if(strlen($_GET['bundle_id'])) {
         $machineStateNumber[$key] = array(
             "number" => count($value),
             "url" => urlStr("base/computers/computersgroupcreator", $urlArray),
-            "legend" => $labels[$i][1][3] . " " . count($value) * 100 / $totalMachineNumber . " %",
+            "legend" => str_replace('%s', count($value) * 100 / $totalMachineNumber, $labels[$i][1][3]),
         );
         $i++;
     }
