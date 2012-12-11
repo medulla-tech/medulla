@@ -11,10 +11,9 @@ msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-12-11 11:34+0100\n"
-"PO-Revision-Date: 2012-12-10 14:55+0000\n"
-"Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
-"Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
-"projects/p/pulse2/team/pt_BR/)\n"
+"PO-Revision-Date: 2012-12-11 11:20-0300\n"
+"Last-Translator: Leonardo Coelho <leonardoc@mandriva.com.br>\n"
+"Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/projects/p/pulse2/team/pt_BR/)\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -154,7 +153,7 @@ msgstr "Nome do Computador"
 
 #: modules/inventory/includes/panels/inventory.inc.php:30
 msgid "Computers"
-msgstr ""
+msgstr "Computadores"
 
 #: modules/inventory/inventory/i18n_labels.php:46
 msgid "Connector"
@@ -192,7 +191,7 @@ msgstr "Vendedor do processador"
 
 #: modules/inventory/infoPackage.inc.php:99
 msgid "Create static group from dashboard"
-msgstr ""
+msgstr "Criar um grupo estático do dashboard"
 
 #: modules/inventory/infoPackage.inc.php:95
 msgid "Csv's export"
@@ -475,17 +474,17 @@ msgstr "Último Ano"
 
 #: modules/inventory/includes/panels/inventory.inc.php:50
 msgid "Latest Inventory Date"
-msgstr ""
+msgstr "Ultima data do inventario"
 
 #: modules/inventory/inventory/createStaticGroup.php:28
 #, php-format
 msgid "Latest inventory is less than %s days at %s"
-msgstr ""
+msgstr "Último inventario é menor que tantos %s dias a %s"
 
 #: modules/inventory/inventory/createStaticGroup.php:31
 #, php-format
 msgid "Latest inventory is more than %s days at %s"
-msgstr ""
+msgstr "Último inventario é maior que tantos %s dias a %s"
 
 #: modules/inventory/inventory/i18n_labels.php:90
 msgid "Length"
@@ -494,13 +493,11 @@ msgstr "Tamanho"
 #: modules/inventory/includes/panels/inventory.inc.php:43
 #, php-format
 msgid "Less than %s days: %d"
-msgstr ""
+msgstr "Menor que %s dias: %d"
 
 #: modules/inventory/inventory/incoming.php:73
 msgid "Load only the computers which were new when the inventory was made"
-msgstr ""
-"Lista apenas os inventários enviados por computadores novos adicionados "
-"neste período"
+msgstr "Lista apenas os inventários enviados por computadores novos adicionados neste período"
 
 #: modules/inventory/inventory/i18n_labels.php:91
 msgid "Location"
@@ -573,7 +570,7 @@ msgstr "Lista de monitores"
 #: modules/inventory/includes/panels/inventory.inc.php:44
 #, php-format
 msgid "More than %s days: %d"
-msgstr ""
+msgstr "Maior que %s dias: %d"
 
 #: modules/inventory/inventory/i18n_labels.php:106
 msgid "Name"
@@ -955,3 +952,4 @@ msgstr "Data da Operação"
 #: modules/inventory/inventory/graphs.php:47
 msgid "back"
 msgstr "voltar"
+

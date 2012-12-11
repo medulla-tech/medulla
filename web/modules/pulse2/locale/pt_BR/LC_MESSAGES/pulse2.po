@@ -10,10 +10,9 @@ msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-12-11 11:34+0100\n"
-"PO-Revision-Date: 2012-12-10 14:54+0000\n"
-"Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
-"Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
-"projects/p/pulse2/team/pt_BR/)\n"
+"PO-Revision-Date: 2012-12-11 11:34-0300\n"
+"Last-Translator: Leonardo Coelho <leonardoc@mandriva.com.br>\n"
+"Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/projects/p/pulse2/team/pt_BR/)\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,44 +29,44 @@ msgstr "Lista de computadores"
 
 #: modules/pulse2/includes/menu_group_action.php:93
 msgid "Csv export"
-msgstr ""
+msgstr "Exportar em CSV"
 
 #: modules/pulse2/includes/menu_group_action.php:45
 msgid "Delete this group"
-msgstr ""
+msgstr "Delete este grupo"
 
 #: modules/pulse2/includes/menu_group_action.php:47
 msgid "Delete this profile"
-msgstr ""
+msgstr "Delete este perfil"
 
 #: modules/pulse2/includes/menu_group_action.php:51
 msgid "Display this group's content"
-msgstr ""
+msgstr "Exibir o conteúdo deste grupo"
 
 #: modules/pulse2/includes/menu_group_action.php:59
 msgid "Edit this group"
-msgstr ""
+msgstr "Editar este grupo"
 
 #: modules/pulse2/includes/menu_group_action.php:72
 msgid "Edit this profile"
-msgstr ""
+msgstr "Editar este perfil"
 
 #: modules/pulse2/includes/menu_action.php:34
 #: modules/pulse2/includes/menu_group_action.php:80
 msgid "Imaging management"
-msgstr ""
+msgstr "Gerenciamento de imagens"
 
 #: modules/pulse2/includes/menu_action.php:30
 msgid "Inventory"
-msgstr ""
+msgstr "Inventário"
 
 #: modules/pulse2/includes/menu_group_action.php:54
 msgid "Inventory on this group"
-msgstr ""
+msgstr "Inventário neste grupo"
 
 #: modules/pulse2/includes/menu_group_action.php:67
 msgid "Inventory on this profile"
-msgstr ""
+msgstr "Inventário neste perfil"
 
 #: modules/pulse2/infoPackage.inc.php:50
 msgid "Location selection in computer edit"
@@ -81,11 +80,11 @@ msgstr "Pulse2"
 #: modules/pulse2/includes/menu_group_action.php:62
 #: modules/pulse2/includes/menu_group_action.php:75
 msgid "Read log"
-msgstr ""
+msgstr "Ler Log"
 
 #: modules/pulse2/includes/menu_action.php:31
 msgid "Remote control"
-msgstr ""
+msgstr "Controle Remoto"
 
 #: modules/pulse2/includes/locations_xmlrpc.inc.php:31
 msgid "Root entity"
@@ -93,20 +92,21 @@ msgstr "Entrada root"
 
 #: modules/pulse2/includes/menu_group_action.php:60
 msgid "Share this group"
-msgstr ""
+msgstr "Compartilhar este grupo"
 
 #: modules/pulse2/includes/menu_group_action.php:73
 msgid "Share this profile"
-msgstr ""
+msgstr "Compartilhar este perfil"
 
 #: modules/pulse2/includes/menu_action.php:33
 msgid "Software deployment"
-msgstr ""
+msgstr "Implantação de Software"
 
 #: modules/pulse2/includes/menu_group_action.php:63
 msgid "Software deployment on this group"
-msgstr ""
+msgstr "Implatanção de Software neste grupo"
 
 #: modules/pulse2/includes/menu_group_action.php:76
 msgid "Software deployment on this profile"
-msgstr ""
+msgstr "Implatanção de Software neste perfil"
+

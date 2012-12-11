@@ -9,10 +9,9 @@ msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-12-11 11:34+0100\n"
-"PO-Revision-Date: 2012-12-10 14:54+0000\n"
-"Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
-"Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
-"projects/p/pulse2/team/pt_BR/)\n"
+"PO-Revision-Date: 2012-12-11 10:31-0300\n"
+"Last-Translator: Leonardo Coelho <leonardoc@mandriva.com.br>\n"
+"Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/projects/p/pulse2/team/pt_BR/)\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +29,7 @@ msgstr "<br/>número da licença : "
 
 #: modules/glpi/includes/panels/glpi.inc.php:30
 msgid "Computers"
-msgstr ""
+msgstr "Computadores"
 
 #: modules/glpi/glpi/tabs.php:56
 msgid "Controller"
@@ -38,21 +37,24 @@ msgstr "Controlador"
 
 #: modules/glpi/infoPackage.inc.php:33
 msgid "Create static group from dashboard (GLPI)"
-msgstr ""
+msgstr "Criar grupo estático do dashboard (GLPI)"
 
 #: modules/glpi/infoPackage.inc.php:40
 msgid "Display locations"
 msgstr "Mostrar locais"
 
-#: modules/glpi/infoPackage.inc.php:60 modules/glpi/infoPackage.inc.php:75
+#: modules/glpi/infoPackage.inc.php:60
+#: modules/glpi/infoPackage.inc.php:75
 msgid "GLPI controller tab"
 msgstr "Aba controlador GLPI"
 
-#: modules/glpi/infoPackage.inc.php:54 modules/glpi/infoPackage.inc.php:69
+#: modules/glpi/infoPackage.inc.php:54
+#: modules/glpi/infoPackage.inc.php:69
 msgid "GLPI hardware tab"
 msgstr "Aba hardware GLPI"
 
-#: modules/glpi/infoPackage.inc.php:57 modules/glpi/infoPackage.inc.php:72
+#: modules/glpi/infoPackage.inc.php:57
+#: modules/glpi/infoPackage.inc.php:72
 msgid "GLPI network tab"
 msgstr "Aba rede GLPI"
 
@@ -70,27 +72,27 @@ msgstr "Inventário (GLPI) na máquina"
 
 #: modules/glpi/includes/panels/glpi.inc.php:50
 msgid "Latest Inventory Date"
-msgstr ""
+msgstr "Última data do inventário"
 
 #: modules/glpi/glpi/createStaticGroup.php:28
 #, php-format
 msgid "Latest inventory is less than %s days at %s"
-msgstr ""
+msgstr "Último inventário é menos que %s dias a %s"
 
 #: modules/glpi/glpi/createStaticGroup.php:31
 #, php-format
 msgid "Latest inventory is more than %s days at %s"
-msgstr ""
+msgstr "Último inventário é mais que %s dias a %s"
 
 #: modules/glpi/includes/panels/glpi.inc.php:43
 #, php-format
 msgid "Less than %s days: %d"
-msgstr ""
+msgstr "Menos que %s dias: %d"
 
 #: modules/glpi/includes/panels/glpi.inc.php:44
 #, php-format
 msgid "More than %s days: %d"
-msgstr ""
+msgstr "Mais que %s dias: %d"
 
 #: modules/glpi/glpi/tabs.php:56
 msgid "Network"
@@ -112,7 +114,8 @@ msgstr "Largura de banda"
 msgid "comment"
 msgstr "comentário"
 
-#: modules/glpi/glpi/view_part.php:77 modules/glpi/glpi/view_hardware.php:77
+#: modules/glpi/glpi/view_part.php:77
+#: modules/glpi/glpi/view_hardware.php:77
 msgid "comments"
 msgstr "comentários"
 
@@ -130,7 +133,7 @@ msgstr "drive"
 
 #: modules/glpi/glpi/view_hardware.php:89
 msgid "entity"
-msgstr "entrada"
+msgstr "entidade"
 
 #: modules/glpi/glpi/view_part.php:86
 msgid "frequence"
@@ -180,7 +183,8 @@ msgstr "localização"
 msgid "model"
 msgstr "modelo"
 
-#: modules/glpi/glpi/view_part.php:76 modules/glpi/glpi/view_hardware.php:76
+#: modules/glpi/glpi/view_part.php:76
+#: modules/glpi/glpi/view_hardware.php:76
 msgid "name"
 msgstr "nome"
 
@@ -240,6 +244,8 @@ msgstr "specif_default"
 msgid "subnet"
 msgstr "subnet"
 
-#: modules/glpi/glpi/view_part.php:83 modules/glpi/glpi/view_hardware.php:87
+#: modules/glpi/glpi/view_part.php:83
+#: modules/glpi/glpi/view_hardware.php:87
 msgid "type"
 msgstr "tipo"
+
