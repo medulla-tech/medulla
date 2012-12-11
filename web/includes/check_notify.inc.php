@@ -27,22 +27,22 @@
 if (isset($_SESSION['notify']) && count($_SESSION['notify']) > 0) {
     $_SESSION['notify_render'] = $_SESSION['notify'];
     unset($_SESSION['notify']);
-    echo '
-    <script type="text/javascript">
-        var notify_text = "' . addslashes(NotifyWidget::begin()) . '";';
+    $content = NotifyWidget::begin();
     foreach($_SESSION['notify_render'] as $notify) {
         $n = unserialize($notify);
-        echo '
-        notify_text += "' . addslashes($n->content()) .'";';
+        $content .= $n->content();
         $n->flush();
     }
+    $content .= NotifyWidget::end();
+    $content = json_encode($content);
     echo '
-        notify_text += "' . addslashes(NotifyWidget::end()) .'";
+    <script type="text/javascript">
+        var message = ' . $content . ';
         try {
-            $("__popup_container").update(notify_text);
+            $("__popup_container").update(message);
         }
         catch(ex) {
-            $("__popup_container").innerHTML = notify_text;
+            $("__popup_container").innerHTML = messages;
         }
         displayPopupCenter();
     </script>';

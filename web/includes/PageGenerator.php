@@ -2020,7 +2020,7 @@ class NotifyWidget {
     }
 
     function end() {
-        $str = '<div style="clear: left; text-align: right; margin-top: 1em;"><button class="btn btn-small" onclick="toggleVisibility(\'popup\'); toggleVisibility(\'overlay\');">' . _("Close") . '</button></div></div>';
+        $str = '<div style="clear: left; text-align: right; margin-top: 1em;"><button class="btn btn-small" onclick="closePopup()">' . _("Close") . '</button></div></div>';
         return $str;
     }
 
