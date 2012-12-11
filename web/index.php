@@ -64,7 +64,7 @@ if (isset($_POST["bConnect"])) {
     if (empty($error) && auth_user($login, $pass)) {
         include("includes/createSession.inc.php");
         /* Redirect to main page */
-        header("Location: " . $root . "main.php");
+        header("Location: main.php");
         exit;
     } else {
         if (!isXMLRPCError())
