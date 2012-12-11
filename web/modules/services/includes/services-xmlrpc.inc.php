@@ -28,5 +28,7 @@ function restartService($service) { return xmlCall("services.restart", array($se
 function reloadService($service) { return xmlCall("services.reload", array($service)); }
 function statusService($service) { return xmlCall("services.status", array($service)); }
 function servicesLog($service = "", $filter = "") { return xmlCall("services.log", array($service, $filter)); }
+function serverPoweroff() { return xmlCall("services.server_power_off", array()); }
+function serverReboot() { return xmlCall("services.server_reboot", array()); }
 
 ?>

@@ -90,3 +90,9 @@ def list_others_services(filter = None):
 
 def log(service = "", filter = ""):
     return ServiceManager().log(service, filter)
+
+def server_power_off():
+    return ServiceManager().m.power_off()
+
+def server_reboot():
+    return ServiceManager().m.reboot()

@@ -85,6 +85,14 @@ $page = new Page("ajaxOthersServicesFilter");
 $page->setOptions(array("visible" => False, "AJAX" => True));
 $submod->addPage($page);
 
+$page = new Page("reboot");
+$page->setOptions(array("visible" => False));
+$submod->addPage($page);
+
+$page = new Page("poweroff");
+$page->setOptions(array("visible" => False));
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 
 $MMCApp->addModule($mod);
