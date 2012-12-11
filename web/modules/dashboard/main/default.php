@@ -145,11 +145,14 @@ foreach($modules as $module) {
         only: 'panel',
         dropOnEmpty: true,
         handle: 'handle',
-        hoverclass: 'panel-hover'
+        hoverclass: 'panel-hover',
+        onUpdate: function() {
+            save();
+        }
       });
       // Wait a little that all panels are loaded
       setTimeout(function() {
-          $$('.panel').each(function(m) {
+          $$('.handle').each(function(m) {
             m.observe("mousedown", function(m) {
                 sortables.each(function (s) {
                     s.style.border = "1px solid #ccc";
@@ -157,9 +160,8 @@ foreach($modules as $module) {
                 });
             });
           });
-          $$('.panel').each(function(m) {
+          $$('.handle').each(function(m) {
             m.observe("mouseup", function(m) {
-                save();
                 sortables.each(function (s) {
                     s.style.border = "1px solid white";
                     s.style.background = "white";
