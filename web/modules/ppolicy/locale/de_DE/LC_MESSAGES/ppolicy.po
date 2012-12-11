@@ -1,129 +1,397 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
-## Translators:
+#
+# # Translators:
 #   <maikwagner@yahoo.com>, 2011.
 msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
-"Report-Msgid-Bugs-To: http://mds.mandriva.org/\n"
-"POT-Creation-Date: 2012-06-01 13:38+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-12-11 11:58+0100\n"
 "PO-Revision-Date: 2012-06-01 11:40+0000\n"
 "Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
-"Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/mds/team/de_DE/)\n"
+"Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/"
+"mds/team/de_DE/)\n"
+"Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: de_DE\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-
-#: modules/ppolicy/default/ajaxPPoliciesFilter.php:44
-#: modules/ppolicy/default/ajaxPPoliciesFilter.php:47
-#: modules/ppolicy/default/edit.php:48
-msgid "Edit password policy"
-msgstr "Passwortpolicy ändern"
-
-#: modules/ppolicy/default/ajaxPPoliciesFilter.php:48
-msgid "Delete password policy"
-msgstr "Passwort-Policy löschen"
-
-#: modules/ppolicy/default/ajaxPPoliciesFilter.php:53
-#: modules/ppolicy/includes/localSidebar.php:27
-#: modules/ppolicy/infoPackage.inc.php:46
-msgid "Password policies"
-msgstr "Passwort Policies"
-
-#: modules/ppolicy/default/delete.php:29
-msgid "The password policy has been deleted."
-msgstr "Die Passwortpolicy wurde gelöscht."
-
-#: modules/ppolicy/default/delete.php:40
-#, php-format
-msgid ""
-"You will delete the password policy <strong>%s</strong>. Default password "
-"policy will be applied to users that use this password policy."
-msgstr ""
-"Sie werden die <strong>Kennwortrichtlinie %s</strong> löschen. Standard "
-"Passwort-Policy wird für Benutzer, die diese Passwort-Policy nutzen "
-"angewendet werden."
-
-#: modules/ppolicy/default/delete.php:44
-msgid "Delete"
-msgstr "Löschen"
-
-#: modules/ppolicy/default/delete.php:45
-msgid "Cancel"
-msgstr "Abbrechen"
-
-#: modules/ppolicy/default/edit.php:44
-#: modules/ppolicy/includes/localSidebar.php:28
-#: modules/ppolicy/infoPackage.inc.php:50
-msgid "Add a password policy"
-msgstr "Eine Passwortpolicy hinzufügen"
 
 #: modules/ppolicy/default/edit.php:62
 msgid "\"Maximum age\" must be greater than \"Minimum age\"."
 msgstr "\"Maximales Alter\" muss größer sein als \"Minimales Alter\"."
 
+#: modules/ppolicy/default/edit.php:44 modules/ppolicy/infoPackage.inc.php:50
+#: modules/ppolicy/includes/localSidebar.php:28
+msgid "Add a password policy"
+msgstr "Eine Passwortpolicy hinzufügen"
+
+#: modules/ppolicy/includes/auditCodes.php:6
+msgid "Add ppolicy to user"
+msgstr "ppolicy dem Benutzer hinzufügen"
+
+#: modules/ppolicy/includes/publicFunc.php:216
+msgid "Apply a password policy for all group users"
+msgstr "Eine Passwortpolicy für alle Gruppenbenutzer anwenden"
+
 #: modules/ppolicy/default/edit.php:95
 msgid "Attributes updated"
 msgstr "Attribute aktualisiert"
 
-#: modules/ppolicy/default/edit.php:123
-msgid "Name"
-msgstr "Name"
+#: modules/ppolicy/default/delete.php:46
+msgid "Cancel"
+msgstr "Abbrechen"
 
-#: modules/ppolicy/default/edit.php:129
+#: modules/ppolicy/includes/ppolicy.inc.php:40
+msgid "Change password on first connection"
+msgstr "Passwort ändern bei der ersten Verbindung"
+
+#: modules/ppolicy/includes/auditCodes.php:4
+#: modules/ppolicy/includes/auditCodes.php:9
+msgid "Change ppolicy attribute"
+msgstr "ppolicy Attribute ändern"
+
+#: modules/ppolicy/infoPackage.inc.php:75
+msgid "Default "
+msgstr "Standart"
+
+#: modules/ppolicy/default/delete.php:45
+msgid "Delete"
+msgstr "Löschen"
+
+#: modules/ppolicy/infoPackage.inc.php:59
+msgid "Delete a password policy"
+msgstr "Eine Passwortpolicy löschen"
+
+#: modules/ppolicy/default/ajaxPPoliciesFilter.php:48
+msgid "Delete password policy"
+msgstr "Passwort-Policy löschen"
+
+#: modules/ppolicy/includes/auditCodes.php:5
+#: modules/ppolicy/includes/auditCodes.php:10
+msgid "Delete ppolicy attribute"
+msgstr "ppolicy Attribut löschen"
+
+#: modules/ppolicy/includes/auditCodes.php:8
+msgid "Delete ppolicy on user"
+msgstr "ppolicy bei Benutzer löschen"
+
+#: modules/ppolicy/default/edit.php:132
 #: modules/ppolicy/includes/ppolicy.inc.php:48
 msgid "Description"
 msgstr "Beschreibung"
 
-#: modules/ppolicy/default/edit.php:135
+#: modules/ppolicy/infoPackage.inc.php:54
+msgid "Edit a password policy"
+msgstr "Eine Passwortpolicy ändern"
+
+#: modules/ppolicy/default/edit.php:48
+#: modules/ppolicy/default/ajaxPPoliciesFilter.php:44
+#: modules/ppolicy/default/ajaxPPoliciesFilter.php:47
+msgid "Edit password policy"
+msgstr "Passwortpolicy ändern"
+
+#: modules/ppolicy/includes/publicFunc.php:117
+msgid "Enable a specific password policy for this user"
+msgstr "Aktiviere ein bestimmtes Kennwort Policy für diesen Benutzer"
+
+#: modules/ppolicy/infoPackage.inc.php:78
+msgid "Enable user specific password policy"
+msgstr "Aktiviere Benutzer spezifischen Passwort-Policy"
+
+#: modules/ppolicy/default/edit.php:180
+msgid "Force users to change their passwords on the first connection ?"
+msgstr "Benutzer zwingen ihre Passwörter bei der ersten Verbindung zu ändern?"
+
+#: modules/ppolicy/includes/publicFunc.php:89
+msgid "If checked, permanently lock the user account"
+msgstr "Das Benutzerkonto permanent sperren, wenn aktiviert"
+
+#: modules/ppolicy/includes/publicFunc.php:95
+msgid ""
+"If checked, the user must change her password when she first binds to the "
+"LDAP directory after password is set or reset by a password administrator"
+msgstr ""
+"Wenn diese Option aktiviert ist, muss der Benutzer bei der ersten LDAP-"
+"Verzeichnis Verbindung oder nach dem zurücksetzen des Passworts durch den "
+"Administrator neu gesetzt werden."
+
+#: modules/ppolicy/includes/publicFunc.php:118
+#: modules/ppolicy/includes/publicFunc.php:217
+msgid "If not set the default password policy is enforced."
+msgstr "Wenn nicht aktiviert, wird die Standard Passwortpolicy durchgesetzt."
+
+#: modules/ppolicy/includes/publicFunc.php:88
+msgid "Lock account"
+msgstr "Konto sperren"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:41
+msgid "Lockout duration"
+msgstr "Lockout Dauer"
+
+#: modules/ppolicy/default/edit.php:222
+msgid "Lockout duration (seconds)"
+msgstr "Lockoutdauer (Sekunden)"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:39
+msgid "Maximum age"
+msgstr "Maximales Alter"
+
+#: modules/ppolicy/default/edit.php:159
+msgid "Maximum age (seconds)"
+msgstr "Maximales Alter (Sekunden)"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:42
+msgid "Maximum failed"
+msgstr "Maximale gescheitert"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:38
+msgid "Minimum age"
+msgstr "Minimales Alter"
+
+#: modules/ppolicy/default/edit.php:152
+msgid "Minimum age (seconds)"
+msgstr "Minimales Alter (Sekunden)"
+
+#: modules/ppolicy/default/edit.php:138
 #: modules/ppolicy/includes/ppolicy.inc.php:37
 msgid "Minimum length"
 msgstr "Minimale Länge"
 
-#: modules/ppolicy/default/edit.php:142
-msgid "Password quality check"
-msgstr "Passwort-Policy"
+#: modules/ppolicy/default/edit.php:126
+msgid "Name"
+msgstr "Name"
 
-#: modules/ppolicy/default/edit.php:149
-msgid "Minimum age (seconds)"
-msgstr "Minimales Alter (Sekunden)"
-
-#: modules/ppolicy/default/edit.php:156
-msgid "Maximum age (seconds)"
-msgstr "Maximales Alter (Sekunden)"
-
-#: modules/ppolicy/default/edit.php:163
+#: modules/ppolicy/default/edit.php:166
 #: modules/ppolicy/includes/ppolicy.inc.php:45
 msgid "Number of grace authentications"
 msgstr "Anzahl der Gnade Authentifizierungen"
 
-#: modules/ppolicy/default/edit.php:177
-msgid "Force users to change their passwords on the first connection ?"
-msgstr "Benutzer zwingen ihre Passwörter bei der ersten Verbindung zu ändern?"
+#: modules/ppolicy/infoPackage.inc.php:36
+msgid "Password Policy"
+msgstr "Password Policy"
 
-#: modules/ppolicy/default/edit.php:184
+#: modules/ppolicy/includes/ppolicy.inc.php:44
+msgid "Password hash history"
+msgstr "Passwort-Hash Geschichte"
+
+#: modules/ppolicy/default/edit.php:187
 msgid "Password history"
 msgstr "Passwort Geschichte"
 
-#: modules/ppolicy/default/edit.php:198
-msgid "Preventive user lockout ?"
-msgstr "Präventive Benutzer Lockout?"
-
-#: modules/ppolicy/default/edit.php:212
+#: modules/ppolicy/default/edit.php:215
 msgid "Password maximum failure"
 msgstr "Passwort maximale Fehlversuche"
 
-#: modules/ppolicy/default/edit.php:219
-msgid "Lockout duration (seconds)"
-msgstr "Lockoutdauer (Sekunden)"
+#: modules/ppolicy/default/ajaxPPoliciesFilter.php:53
+#: modules/ppolicy/infoPackage.inc.php:46
+#: modules/ppolicy/includes/localSidebar.php:27
+msgid "Password policies"
+msgstr "Passwort Policies"
 
 #: modules/ppolicy/default/index.php:31
 msgid "Password policies list"
 msgstr "Passwort-Policies Liste"
+
+#: modules/ppolicy/includes/publicFunc.php:163
+#, php-format
+msgid "Password policy %s applied."
+msgstr ""
+
+#: modules/ppolicy/includes/publicFunc.php:167
+#, php-format
+msgid "Password policy %s removed."
+msgstr ""
+
+#: modules/ppolicy/includes/publicFunc.php:179
+msgid "Password policy attributes updated."
+msgstr "Passwort-Policy Attribute aktualisiert."
+
+#: modules/ppolicy/includes/publicFunc.php:37
+#: modules/ppolicy/includes/publicFunc.php:63
+#: modules/ppolicy/includes/publicFunc.php:71
+#: modules/ppolicy/includes/publicFunc.php:78
+#: modules/ppolicy/includes/publicFunc.php:83
+#: modules/ppolicy/includes/publicFunc.php:194
+msgid "Password policy management"
+msgstr "Verwaltung der Passwort-Policy"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:47
+msgid "Password policy quality check"
+msgstr "Passwort-Policy Qualitäts-Check"
+
+#: modules/ppolicy/default/edit.php:145
+msgid "Password quality check"
+msgstr "Passwort-Policy"
+
+#: modules/ppolicy/includes/publicFunc.php:94
+msgid "Password reset flag"
+msgstr "Passwort zurücksetzen Option"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:43
+msgid "Preventive lockout user"
+msgstr "Präventive Lockout Benutzer"
+
+#: modules/ppolicy/default/edit.php:201
+msgid "Preventive user lockout ?"
+msgstr "Präventive Benutzer Lockout?"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:46
+msgid "Reset the password"
+msgstr "Zurücksetzen des Kennwort"
+
+#: modules/ppolicy/includes/publicFunc.php:84
+msgid ""
+"The password of this account has expired. The user can change his password."
+msgstr ""
+
+#: modules/ppolicy/includes/publicFunc.php:72
+msgid ""
+"The password of this account has expired. The user cannot change his "
+"password."
+msgstr ""
+
+#: modules/ppolicy/includes/publicFunc.php:79
+#, php-format
+msgid ""
+"The password of this account has expired. The user has %s login(s) left to "
+"change his password."
+msgstr ""
+
+#: modules/ppolicy/default/delete.php:29
+msgid "The password policy has been deleted."
+msgstr "Die Passwortpolicy wurde gelöscht."
+
+#: modules/ppolicy/includes/publicFunc.php:64
+msgid "This account is locked by the LDAP directory."
+msgstr "Dieses Konto ist durch das LDAP-Verzeichnis gesperrt."
+
+#: modules/ppolicy/includes/ppolicy.inc.php:62
+msgid ""
+"This attribute contains the number of times that an expired password may be "
+"used to authenticate a user to the directory. If this attribute is not "
+"present or if its value is zero, users with expired password will not be "
+"allowed to authenticate."
+msgstr ""
+"Dieses Attribut enthält die Anzahl die ein abgelaufenes Kennwort verwendet "
+"wird, um einen Benutzer zu dem Verzeichnis zu authentifizieren. Wenn dieses "
+"Attribut nicht vorhanden ist oder wenn der Wert Null ist, Dürfen sich "
+"Benutzer mit einem abgelaufenen Passwort nicht authentifizieren."
+
+#: modules/ppolicy/includes/ppolicy.inc.php:56
+msgid ""
+"This attribute holds the number of seconds after which a modified password "
+"will expire. If this attribute is not present, or if the value is 0 the "
+"password does not expire."
+msgstr ""
+"Dieses Attribut enthält die Anzahl der Sekunden, nach denen eine geänderte "
+"Kennwort ablaufen ist. Wenn dieses Attribut nicht vorhanden ist, oder wenn "
+"der Wert 0 ist dann läuft das Kennwort nicht ab."
+
+#: modules/ppolicy/includes/ppolicy.inc.php:55
+msgid ""
+"This attribute holds the number of seconds that must elapse between "
+"modifications to the password. If this attribute is not present, 0 seconds "
+"is assumed (i.e. the password may be modified whenever and however often is "
+"desired)."
+msgstr ""
+"Dieses Attribut enthält die Anzahl der Sekunden, die zwischen Änderungen des "
+"Passworts verstreichen muss. Wenn dieses Attribut nicht vorhanden ist wird 0 "
+"Sekunden angenommen (dh das Passwort kann geändert werden, wie oft gewünscht "
+"wird)."
+
+#: modules/ppolicy/includes/ppolicy.inc.php:61
+msgid ""
+"This attribute holds the number of seconds that the password cannot be used "
+"to authenticate due to too many failed authentication attempts. If this "
+"attribute is empty, or if the value is 0 the password cannot be used to "
+"authenticate until reset by a password administrator."
+msgstr ""
+"Dieses Attribut enthält die Anzahl der Sekunden, die das Kennwort nach "
+"fehlgeschlagene Authentifizierung nicht zur authentifizieren verwendet "
+"werden kann. Wenn dieses Attribut leer ist, oder wenn der Wert 0 ist kann "
+"das Passwort nicht verwendet werden, bis es durch einen Administrator "
+"zurückgesetzt wurde."
+
+#: modules/ppolicy/includes/ppolicy.inc.php:64
+msgid ""
+"This attribute indicates how the password quality will be verified while "
+"being modified or added. If this attribute is not present, or if the value "
+"is '0', quality checking will not be enforced.  A value of '1' indicates "
+"that the server will check the quality, and if the server is unable to check "
+"it (due to a hashed password or other reasons) it will be accepted. A value "
+"of '2' indicates that the server will check the quality, and if the server "
+"is unable to verify it, it will return an error refusing the password."
+msgstr ""
+"Dieses Attribut gibt an, wie die Kennwort Qualität überprüft werden, während "
+"es geändert oder hinzugefügt wird. Wenn dieses Attribut nicht vorhanden ist, "
+"oder wenn der Wert '0 ' ist, wird Qualitätsprüfung ist nicht durchgeführt. "
+"Ein Wert von '1 'bedeutet, dass der Server die Qualitätsprüfung durchführen "
+"wird, und wenn der Server nicht in der Lage ist (aufgrund einer Hash-"
+"Passwort oder aus anderen Gründen) wird das Passwort akzeptiert. Ein Wert "
+"von '2 'zeigt an, dass der Server die Qualitätsprüfung durchführen wird, und "
+"wenn der Server nicht in der Lage ist wird das Passwort abgelehnt."
+
+#: modules/ppolicy/includes/ppolicy.inc.php:58
+msgid ""
+"This attribute is used to specify the maximum number of used passwords. If "
+"the attribute is not present, or if its value is 0, used passwords will not "
+"be stored and thus any previously-used password may be reused."
+msgstr ""
+"Dieses Attribut wird verwendet, um die maximale Anzahl der verwendeten "
+"Passwörter anzugeben. Wenn das Attribut nicht vorhanden ist, oder wenn sein "
+"Wert 0 ist, werden verwendete Passwörter nicht gespeichert und somit können "
+"alle zuvor verwendete Passwort wiederverwendet werden."
+
+#: modules/ppolicy/includes/ppolicy.inc.php:60
+msgid ""
+"This attribute specifies the number of consecutive failed bind attempts "
+"after which the password may not be used to authenticate. If this attribute "
+"is not present, or if the value is 0, this policy is not checked, and the "
+"value of \"Preventive user lockout\" will be ignored."
+msgstr ""
+"Dieses Attribut gibt die Anzahl der aufeinander folgenden fehlgeschlagenen "
+"Verbindungsversuche an, nach denen das Passwort nicht mehr zur "
+"Authentifizierung verwendet werden kann. Wenn dieses Attribut nicht "
+"vorhanden ist, oder wenn der Wert 0 ist, diese Policy wird nicht überprüft "
+"und der Wert von \"Präventive Lockout Benutzer \" wird ignoriert."
+
+#: modules/ppolicy/includes/ppolicy.inc.php:63
+msgid ""
+"This flag allows to mark the password as having being reset by an "
+"administrator."
+msgstr ""
+"Dieser Flag ermöglicht es das Kennwort als vom Administrator zurückzusetzt "
+"zu Markieren."
+
+#: modules/ppolicy/includes/ppolicy.inc.php:59
+msgid ""
+"This flag indicates, when enabled, that the password may not be used to "
+"authenticate after a specified number of consecutive failed bind attempts. "
+"The maximum number of consecutive failed bind attempts is specified in the "
+"\"Password maximum failure\" field below."
+msgstr ""
+"Dieser Flag gibt an, wenn aktiviert, dass das Passwort nicht verwendet "
+"werden, nach einer bestimmten Anzahl von aufeinander folgenden "
+"fehlgeschlagenen Verbindungsversuche. Die maximale Anzahl von aufeinander "
+"folgenden fehlgeschlagenen Verbindungsversuche ist in der \"Passwort "
+"maximale Fehlversuche\" weiter unten angegeben."
+
+#: modules/ppolicy/includes/ppolicy.inc.php:57
+msgid ""
+"This flag specifies whether users must change their passwords when they "
+"first bind to the directory after a password is set or reset by the "
+"administrator."
+msgstr ""
+"Dieses Flag gibt an, ob Benutzer ihre Passwörter ändern müssen, wenn sie "
+"sich zum ersten mal mit dem Verzeichnis verbinden oder durch den "
+"Administrator zurückgesetzt worden ist."
+
+#: modules/ppolicy/includes/auditCodes.php:7
+msgid "Update ppolicy for user"
+msgstr "ppolicy für Benutzer aktualisieren"
 
 #: modules/ppolicy/default/warnuser.php:35
 msgid ""
@@ -145,68 +413,20 @@ msgstr ""
 "LDAP-Konto wurde eingeschränkt. Bitte ändern Sie Ihr Kennwort so bald wie "
 "möglich mit der \"Kennwort ändern Seite\"."
 
-#: modules/ppolicy/includes/auditCodes.php:4
-#: modules/ppolicy/includes/auditCodes.php:9
-msgid "Change ppolicy attribute"
-msgstr "ppolicy Attribute ändern"
-
-#: modules/ppolicy/includes/auditCodes.php:5
-#: modules/ppolicy/includes/auditCodes.php:10
-msgid "Delete ppolicy attribute"
-msgstr "ppolicy Attribut löschen"
-
-#: modules/ppolicy/includes/auditCodes.php:6
-msgid "Add ppolicy to user"
-msgstr "ppolicy dem Benutzer hinzufügen"
-
-#: modules/ppolicy/includes/auditCodes.php:7
-msgid "Update ppolicy for user"
-msgstr "ppolicy für Benutzer aktualisieren"
-
-#: modules/ppolicy/includes/auditCodes.php:8
-msgid "Delete ppolicy on user"
-msgstr "ppolicy bei Benutzer löschen"
+#: modules/ppolicy/default/delete.php:41
+#, php-format
+msgid ""
+"You will delete the password policy <strong>%s</strong>. Default password "
+"policy will be applied to users that use this password policy."
+msgstr ""
+"Sie werden die <strong>Kennwortrichtlinie %s</strong> löschen. Standard "
+"Passwort-Policy wird für Benutzer, die diese Passwort-Policy nutzen "
+"angewendet werden."
 
 #: modules/ppolicy/includes/auditCodes.php:11
 #: modules/ppolicy/includes/auditCodes.php:12
 msgid "ppolicy"
 msgstr "PPolicy"
-
-#: modules/ppolicy/includes/ppolicy.inc.php:38
-msgid "Minimum age"
-msgstr "Minimales Alter"
-
-#: modules/ppolicy/includes/ppolicy.inc.php:39
-msgid "Maximum age"
-msgstr "Maximales Alter"
-
-#: modules/ppolicy/includes/ppolicy.inc.php:40
-msgid "Change password on first connection"
-msgstr "Passwort ändern bei der ersten Verbindung"
-
-#: modules/ppolicy/includes/ppolicy.inc.php:41
-msgid "Lockout duration"
-msgstr "Lockout Dauer"
-
-#: modules/ppolicy/includes/ppolicy.inc.php:42
-msgid "Maximum failed"
-msgstr "Maximale gescheitert"
-
-#: modules/ppolicy/includes/ppolicy.inc.php:43
-msgid "Preventive lockout user"
-msgstr "Präventive Lockout Benutzer"
-
-#: modules/ppolicy/includes/ppolicy.inc.php:44
-msgid "Password hash history"
-msgstr "Passwort-Hash Geschichte"
-
-#: modules/ppolicy/includes/ppolicy.inc.php:46
-msgid "Reset the password"
-msgstr "Zurücksetzen des Kennwort"
-
-#: modules/ppolicy/includes/ppolicy.inc.php:47
-msgid "Password policy quality check"
-msgstr "Passwort-Policy Qualitäts-Check"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:54
 msgid ""
@@ -215,226 +435,3 @@ msgid ""
 msgstr ""
 "Dieses Attribut enthält die minimale Anzahl von Zeichen, die in einem "
 "Passwort akzeptiert werden"
-
-#: modules/ppolicy/includes/ppolicy.inc.php:55
-msgid ""
-"This attribute holds the number of seconds that must elapse between "
-"modifications to the password. If this attribute is not present, 0 seconds "
-"is assumed (i.e. the password may be modified whenever and however often is "
-"desired)."
-msgstr ""
-"Dieses Attribut enthält die Anzahl der Sekunden, die zwischen Änderungen des"
-" Passworts verstreichen muss. Wenn dieses Attribut nicht vorhanden ist wird "
-"0 Sekunden angenommen (dh das Passwort kann geändert werden, wie oft "
-"gewünscht wird)."
-
-#: modules/ppolicy/includes/ppolicy.inc.php:56
-msgid ""
-"This attribute holds the number of seconds after which a modified password "
-"will expire. If this attribute is not present, or if the value is 0 the "
-"password does not expire."
-msgstr ""
-"Dieses Attribut enthält die Anzahl der Sekunden, nach denen eine geänderte "
-"Kennwort ablaufen ist. Wenn dieses Attribut nicht vorhanden ist, oder wenn "
-"der Wert 0 ist dann läuft das Kennwort nicht ab."
-
-#: modules/ppolicy/includes/ppolicy.inc.php:57
-msgid ""
-"This flag specifies whether users must change their passwords when they "
-"first bind to the directory after a password is set or reset by the "
-"administrator."
-msgstr ""
-"Dieses Flag gibt an, ob Benutzer ihre Passwörter ändern müssen, wenn sie "
-"sich zum ersten mal mit dem Verzeichnis verbinden oder durch den "
-"Administrator zurückgesetzt worden ist."
-
-#: modules/ppolicy/includes/ppolicy.inc.php:58
-msgid ""
-"This attribute is used to specify the maximum number of used passwords. If "
-"the attribute is not present, or if its value is 0, used passwords will not "
-"be stored and thus any previously-used password may be reused."
-msgstr ""
-"Dieses Attribut wird verwendet, um die maximale Anzahl der verwendeten "
-"Passwörter anzugeben. Wenn das Attribut nicht vorhanden ist, oder wenn sein "
-"Wert 0 ist, werden verwendete Passwörter nicht gespeichert und somit können "
-"alle zuvor verwendete Passwort wiederverwendet werden."
-
-#: modules/ppolicy/includes/ppolicy.inc.php:59
-msgid ""
-"This flag indicates, when enabled, that the password may not be used to "
-"authenticate after a specified number of consecutive failed bind attempts. "
-"The maximum number of consecutive failed bind attempts is specified in the "
-"\"Password maximum failure\" field below."
-msgstr ""
-"Dieser Flag gibt an, wenn aktiviert, dass das Passwort nicht verwendet "
-"werden, nach einer bestimmten Anzahl von aufeinander folgenden "
-"fehlgeschlagenen Verbindungsversuche. Die maximale Anzahl von aufeinander "
-"folgenden fehlgeschlagenen Verbindungsversuche ist in der \"Passwort "
-"maximale Fehlversuche\" weiter unten angegeben."
-
-#: modules/ppolicy/includes/ppolicy.inc.php:60
-msgid ""
-"This attribute specifies the number of consecutive failed bind attempts "
-"after which the password may not be used to authenticate. If this attribute "
-"is not present, or if the value is 0, this policy is not checked, and the "
-"value of \"Preventive user lockout\" will be ignored."
-msgstr ""
-"Dieses Attribut gibt die Anzahl der aufeinander folgenden fehlgeschlagenen "
-"Verbindungsversuche an, nach denen das Passwort nicht mehr zur "
-"Authentifizierung verwendet werden kann. Wenn dieses Attribut nicht "
-"vorhanden ist, oder wenn der Wert 0 ist, diese Policy wird nicht überprüft "
-"und der Wert von \"Präventive Lockout Benutzer \" wird ignoriert."
-
-#: modules/ppolicy/includes/ppolicy.inc.php:61
-msgid ""
-"This attribute holds the number of seconds that the password cannot be used "
-"to authenticate due to too many failed authentication attempts. If this "
-"attribute is empty, or if the value is 0 the password cannot be used to "
-"authenticate until reset by a password administrator."
-msgstr ""
-"Dieses Attribut enthält die Anzahl der Sekunden, die das Kennwort nach "
-"fehlgeschlagene Authentifizierung nicht zur authentifizieren verwendet "
-"werden kann. Wenn dieses Attribut leer ist, oder wenn der Wert 0 ist kann "
-"das Passwort nicht verwendet werden, bis es durch einen Administrator "
-"zurückgesetzt wurde."
-
-#: modules/ppolicy/includes/ppolicy.inc.php:62
-msgid ""
-"This attribute contains the number of times that an expired password may be "
-"used to authenticate a user to the directory. If this attribute is not "
-"present or if its value is zero, users with expired password will not be "
-"allowed to authenticate."
-msgstr ""
-"Dieses Attribut enthält die Anzahl die ein abgelaufenes Kennwort verwendet "
-"wird, um einen Benutzer zu dem Verzeichnis zu authentifizieren. Wenn dieses "
-"Attribut nicht vorhanden ist oder wenn der Wert Null ist, Dürfen sich "
-"Benutzer mit einem abgelaufenen Passwort nicht authentifizieren."
-
-#: modules/ppolicy/includes/ppolicy.inc.php:63
-msgid ""
-"This flag allows to mark the password as having being reset by an "
-"administrator."
-msgstr ""
-"Dieser Flag ermöglicht es das Kennwort als vom Administrator zurückzusetzt "
-"zu Markieren."
-
-#: modules/ppolicy/includes/ppolicy.inc.php:64
-msgid ""
-"This attribute indicates how the password quality will be verified while "
-"being modified or added. If this attribute is not present, or if the value "
-"is '0', quality checking will not be enforced.  A value of '1' indicates "
-"that the server will check the quality, and if the server is unable to check"
-" it (due to a hashed password or other reasons) it will be accepted. A value"
-" of '2' indicates that the server will check the quality, and if the server "
-"is unable to verify it, it will return an error refusing the password."
-msgstr ""
-"Dieses Attribut gibt an, wie die Kennwort Qualität überprüft werden, während"
-" es geändert oder hinzugefügt wird. Wenn dieses Attribut nicht vorhanden "
-"ist, oder wenn der Wert '0 ' ist, wird Qualitätsprüfung ist nicht "
-"durchgeführt. Ein Wert von '1 'bedeutet, dass der Server die "
-"Qualitätsprüfung durchführen wird, und wenn der Server nicht in der Lage ist"
-" (aufgrund einer Hash-Passwort oder aus anderen Gründen) wird das Passwort "
-"akzeptiert. Ein Wert von '2 'zeigt an, dass der Server die Qualitätsprüfung "
-"durchführen wird, und wenn der Server nicht in der Lage ist wird das "
-"Passwort abgelehnt."
-
-#: modules/ppolicy/includes/publicFunc.php:37
-#: modules/ppolicy/includes/publicFunc.php:63
-#: modules/ppolicy/includes/publicFunc.php:71
-#: modules/ppolicy/includes/publicFunc.php:78
-#: modules/ppolicy/includes/publicFunc.php:83
-#: modules/ppolicy/includes/publicFunc.php:194
-msgid "Password policy management"
-msgstr "Verwaltung der Passwort-Policy"
-
-#: modules/ppolicy/includes/publicFunc.php:64
-msgid "This account is locked by the LDAP directory."
-msgstr "Dieses Konto ist durch das LDAP-Verzeichnis gesperrt."
-
-#: modules/ppolicy/includes/publicFunc.php:72
-msgid ""
-"The password of this account has expired. The user cannot change his "
-"password."
-msgstr ""
-
-#: modules/ppolicy/includes/publicFunc.php:79
-#, php-format
-msgid ""
-"The password of this account has expired. The user has %s login(s) left to "
-"change his password."
-msgstr ""
-
-#: modules/ppolicy/includes/publicFunc.php:84
-msgid ""
-"The password of this account has expired. The user can change his password."
-msgstr ""
-
-#: modules/ppolicy/includes/publicFunc.php:88
-msgid "Lock account"
-msgstr "Konto sperren"
-
-#: modules/ppolicy/includes/publicFunc.php:89
-msgid "If checked, permanently lock the user account"
-msgstr "Das Benutzerkonto permanent sperren, wenn aktiviert"
-
-#: modules/ppolicy/includes/publicFunc.php:94
-msgid "Password reset flag"
-msgstr "Passwort zurücksetzen Option"
-
-#: modules/ppolicy/includes/publicFunc.php:95
-msgid ""
-"If checked, the user must change her password when she first binds to the "
-"LDAP directory after password is set or reset by a password administrator"
-msgstr ""
-"Wenn diese Option aktiviert ist, muss der Benutzer bei der ersten LDAP-"
-"Verzeichnis Verbindung oder nach dem zurücksetzen des Passworts durch den "
-"Administrator neu gesetzt werden."
-
-#: modules/ppolicy/includes/publicFunc.php:117
-msgid "Enable a specific password policy for this user"
-msgstr "Aktiviere ein bestimmtes Kennwort Policy für diesen Benutzer"
-
-#: modules/ppolicy/includes/publicFunc.php:118
-#: modules/ppolicy/includes/publicFunc.php:217
-msgid "If not set the default password policy is enforced."
-msgstr "Wenn nicht aktiviert, wird die Standard Passwortpolicy durchgesetzt."
-
-#: modules/ppolicy/includes/publicFunc.php:163
-#, php-format
-msgid "Password policy %s applied."
-msgstr ""
-
-#: modules/ppolicy/includes/publicFunc.php:167
-#, php-format
-msgid "Password policy %s removed."
-msgstr ""
-
-#: modules/ppolicy/includes/publicFunc.php:179
-msgid "Password policy attributes updated."
-msgstr "Passwort-Policy Attribute aktualisiert."
-
-#: modules/ppolicy/includes/publicFunc.php:216
-msgid "Apply a password policy for all group users"
-msgstr "Eine Passwortpolicy für alle Gruppenbenutzer anwenden"
-
-#: modules/ppolicy/infoPackage.inc.php:36
-msgid "Password Policy"
-msgstr "Password Policy"
-
-#: modules/ppolicy/infoPackage.inc.php:54
-msgid "Edit a password policy"
-msgstr "Eine Passwortpolicy ändern"
-
-#: modules/ppolicy/infoPackage.inc.php:59
-msgid "Delete a password policy"
-msgstr "Eine Passwortpolicy löschen"
-
-#: modules/ppolicy/infoPackage.inc.php:75
-msgid "Default "
-msgstr "Standart"
-
-#: modules/ppolicy/infoPackage.inc.php:78
-msgid "Enable user specific password policy"
-msgstr "Aktiviere Benutzer spezifischen Passwort-Policy"
-
-
