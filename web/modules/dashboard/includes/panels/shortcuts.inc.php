@@ -50,8 +50,10 @@ class ShortcutsPanel extends Panel {
                 foreach($pages as $page) {
                     if (isset($submodPages[$page])) {
                         $pageObj = $submodPages[$page];
-                        $links .= '<li><a href="'. urlStrRedirect("$module/$submod/$page") .'">' . $pageObj->getDescription() . '</a></li>';
-                        $hasPages = true;
+                        if ($pageObj->hasAccess($moduleObj, $submodObj)) {
+                            $links .= '<li><a href="'. urlStrRedirect("$module/$submod/$page") .'">' . $pageObj->getDescription() . '</a></li>';
+                            $hasPages = true;
+                        }
                     }
                 }
                 $links .= "</ul>";
