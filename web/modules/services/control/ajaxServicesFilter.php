@@ -36,18 +36,20 @@ $emptyAction = new EmptyActionItem();
 $objList = array();
 foreach($list as $module => $services) {
     $moduleObj = $MMCApp->getModule($module);
-    $added = false;
-    if ($objList) {
-        foreach($objList as $index => $obj) {
-            if ($moduleObj->getPriority() < $obj->getPriority()) {
-                array_splice($objList, $index, 0, array($moduleObj));
-                $added = true;
-                break;
+    if ($moduleObj) {
+        $added = false;
+        if ($objList) {
+            foreach($objList as $index => $obj) {
+                if ($moduleObj->getPriority() < $obj->getPriority()) {
+                    array_splice($objList, $index, 0, array($moduleObj));
+                    $added = true;
+                    break;
+                }
             }
         }
-    }
-    if (!$added) {
-        $objList[] = $moduleObj;
+        if (!$added) {
+            $objList[] = $moduleObj;
+        }
     }
 }
 
