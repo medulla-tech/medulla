@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2012-12-11 17:30+0100\n"
-"PO-Revision-Date: 2012-12-10 15:10+0000\n"
+"POT-Creation-Date: 2012-12-12 18:08+0100\n"
+"PO-Revision-Date: 2012-12-12 17:16+0000\n"
 "Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/mds/team/fr_FR/)\n"
 "MIME-Version: 1.0\n"
@@ -18,6 +18,10 @@ msgstr ""
 "Language: fr_FR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
+#: modules/dashboard/includes/panels/shortcuts.inc.php:29
+msgid "Shortcuts"
+msgstr "Raccourcis"
+
 #: modules/dashboard/includes/panels/general.inc.php:28
 msgid "General"
 msgstr "Général"
@@ -25,6 +29,10 @@ msgstr "Général"
 #: modules/dashboard/includes/panels/general.inc.php:38
 msgid "on"
 msgstr "sur"
+
+#: modules/dashboard/includes/panels/general.inc.php:39
+msgid "Uptime"
+msgstr "Uptime"
 
 #: modules/dashboard/includes/panels/general.inc.php:40
 msgid "Load"
@@ -39,19 +47,14 @@ msgstr "RAM"
 msgid "free"
 msgstr "libre"
 
-#: modules/dashboard/includes/panels/shortcuts.inc.php:29
-msgid "Shortcuts"
-msgstr "Raccourcis"
-
 #: modules/dashboard/includes/panels/space.inc.php:28
-msgid "Space"
-msgstr "Espace"
+msgid "Disk usage"
+msgstr "Utilisation des disques"
 
 #: modules/dashboard/includes/panels/space.inc.php:36
 msgid "used"
 msgstr "utilisé"
 
-#: modules/dashboard/main/default.php:33
 #: modules/dashboard/infoPackage.inc.php:36
 #: modules/dashboard/infoPackage.inc.php:40
 #: modules/dashboard/infoPackage.inc.php:46
