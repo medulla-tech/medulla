@@ -46,7 +46,6 @@ class MyXmlrpc(xmlrpc.XMLRPC):
         args, functionPath = xmlrpclib.loads(request.content.read())
 
         function = getattr(self, "xmlrpc_%s"%(functionPath))
-        s = request.getSession()
         request.setHeader("content-type", "text/xml")
 
         start = time.time()
@@ -82,11 +81,26 @@ class MyXmlrpc(xmlrpc.XMLRPC):
             result['faultTraceback'] = failure.getTraceback()
             return result
 
+        def _cbLogger(result, request) :
+            """ Logging the HTTP requests """
+
+            host = request.getHost().host
+            method = request.method
+            uri = request.uri
+            args = request.args
+
+            message = "HTTP request from %s%s method: %s with arguments: %s" 
+            message = message % (host, uri, method, str(args))
+
+            self.logger.debug(message)
+
         self.logger.debug("RPC method call for %s.%s%s"%(self.mp, functionPath, str(args)))
         defer.maybeDeferred(function, *args).addErrback(
             _ebRender, start, functionPath, args, request
         ).addCallback(
             _cbRender, start, request, functionPath, args
+        ).addCallback(
+            _cbLogger, request
         )
         return server.NOT_DONE_YET
 
