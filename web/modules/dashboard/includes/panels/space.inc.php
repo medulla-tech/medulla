@@ -25,7 +25,7 @@ $options = array(
     "class" => "SpacePanel",
     "id" => "space",
     "refresh" => 960,
-    "title" => _T("Space", "dashboard"),
+    "title" => _T("Disk usage", "dashboard"),
 );
 
 class SpacePanel extends Panel {

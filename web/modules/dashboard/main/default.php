@@ -30,9 +30,6 @@ require("graph/navbar.inc.php");
 <script type="text/javascript" src="jsframework/lib/raphael/g.line-min.js"></script>
 <?php
 
-$p = new PageGenerator(_T("Dashboard", "dashboard"));
-$p->display();
-
 $d = new Div(array("id" => "dashboard"));
 $d->display();
 

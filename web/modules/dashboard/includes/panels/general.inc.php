@@ -36,7 +36,7 @@ class GeneralPanel extends Panel {
 
         echo '
         <p><strong>' . $this->data['hostname'] . '</strong> ' . _T('on') . ' <strong>' . $this->data['dist'][0] . ' ' . $this->data['dist'][1] . '</strong></p>
-        <p><strong>Uptime</strong> : ' . $this->data['uptime'] . '</p>
+        <p><strong>' . _('Uptime') . '</strong> : ' . $this->data['uptime'] . '</p>
         <div><strong>' . _T('Load') . '</strong>
             <div id="load-graph"></div>
         </div>
