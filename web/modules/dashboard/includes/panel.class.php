@@ -29,7 +29,7 @@ class Panel {
         $this->title = $title;
         $this->data = getPanelInfos($id);
     }
-    
+
     function display() {
         echo '<h3 class="handle">' . $this->title . '</h3>';
         echo $this->display_content();

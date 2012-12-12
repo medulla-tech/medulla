@@ -27,6 +27,7 @@ $options = array(
     "id" => "support",
     "refresh" => 14400,
     "title" => _("Your product"),
+    "enable" => !isCommunityVersion(true)
 );
 
 class SupportPanel extends Panel {

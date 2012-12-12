@@ -46,11 +46,15 @@ foreach($modules as $module) {
             if (substr($f, 0, 1) != ".") {
                 $file = $basedir . $f;
                 include_once($file);
+                if (!isset($options["enable"]))
+                    $options["enable"] = True;
                 if (!isset($options["refresh"]))
                     $options["refresh"] = 10;
-                $panel = new AjaxPage(urlStrRedirect('dashboard/main/ajaxPanels'), $options["id"], array("file" => urlencode($file)), $options["refresh"]);
-                $panel->class = "panel";
-                $panel->display();
+                if ($options["enable"]) {
+                    $panel = new AjaxPage(urlStrRedirect('dashboard/main/ajaxPanels'), $options["id"], array("file" => urlencode($file)), $options["refresh"]);
+                    $panel->class = "panel";
+                    $panel->display();
+                }
             }
         }
     }
