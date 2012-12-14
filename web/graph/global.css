@@ -208,6 +208,10 @@ p {
     line-height: 16px;
     /* default icon */
     position: relative;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 #navbar ul li a:hover {color: #999;}
