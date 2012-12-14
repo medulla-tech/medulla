@@ -35,12 +35,12 @@ class SystemPanel extends Panel {
         echo '<p style="text-align: center">
                 <script type="text/javascript">
                     reboot = function() {
-                        var message = "<strong>' . _T("The server will reboot. Are you sure ?") . '</strong>";
+                        var message = "<strong>' . _T("The server will reboot. Are you sure ?", "services") . '</strong>";
                         var url = "' . urlStrRedirect('services/control/reboot') . '";
                         displayConfirmationPopup(message, url);
                     }
                     poweroff = function() {
-                        var message = "<strong>' . _T("The server will be poweroff. Are you sure ?") . '</strong>";
+                        var message = "<strong>' . _T("The server will be poweroff. Are you sure ?", "services") . '</strong>";
                         var url = "' . urlStrRedirect('services/control/reboot') . '";
                         displayConfirmationPopup(message, url);
                     }
