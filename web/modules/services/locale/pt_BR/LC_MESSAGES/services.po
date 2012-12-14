@@ -1,0 +1,148 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# 
+## Translators:
+#   <alexandre@mandriva.com.br>, 2012.
+msgid ""
+msgstr ""
+"Project-Id-Version: Mandriva Directory Server\n"
+"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
+"POT-Creation-Date: 2012-12-12 18:08+0100\n"
+"PO-Revision-Date: 2012-12-12 18:54+0000\n"
+"Last-Translator: Alexandre Proença <alexandre@mandriva.com.br>\n"
+"Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/projects/p/mds/team/pt_BR/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+
+#: modules/services/control/ajaxLogFilter.php:53
+msgid "Date"
+msgstr "Data"
+
+#: modules/services/control/ajaxLogFilter.php:57
+#: modules/services/control/ajaxOthersServicesFilter.php:49
+#: modules/services/control/ajaxServicesFilter.php:75
+msgid "Service"
+msgstr "Serviço"
+
+#: modules/services/control/ajaxLogFilter.php:58
+msgid "UID"
+msgstr "UID"
+
+#: modules/services/control/ajaxLogFilter.php:59
+msgid "GID"
+msgstr "GID"
+
+#: modules/services/control/ajaxLogFilter.php:60
+msgid "PID"
+msgstr "PID"
+
+#: modules/services/control/ajaxLogFilter.php:61
+msgid "Message"
+msgstr "Mensagem"
+
+#: modules/services/control/index.php:26
+#: modules/services/control/localSidebar.php:26
+#: modules/services/infoPackage.inc.php:42
+#: modules/services/infoPackage.inc.php:45
+msgid "Core services"
+msgstr "Serviços principais"
+
+#: modules/services/control/localSidebar.php:27
+#: modules/services/control/others.php:29
+msgid "Other services"
+msgstr "Outros Serviços"
+
+#: modules/services/control/localSidebar.php:28
+#: modules/services/control/log.php:38 modules/services/infoPackage.inc.php:76
+msgid "Services log"
+msgstr "Log dos serviços"
+
+#: modules/services/control/log.php:36
+#, php-format
+msgid "%s service log"
+msgstr "%s log do serviço"
+
+#: modules/services/control/ajaxOthersServicesFilter.php:28
+#: modules/services/control/ajaxServicesFilter.php:28
+msgid "Start service"
+msgstr "Iniciar serviço"
+
+#: modules/services/control/ajaxOthersServicesFilter.php:29
+#: modules/services/control/ajaxServicesFilter.php:29
+msgid "Stop service"
+msgstr "Parar serviço"
+
+#: modules/services/control/ajaxOthersServicesFilter.php:30
+#: modules/services/control/ajaxServicesFilter.php:30
+msgid "Reload service"
+msgstr "Recarregar serviço"
+
+#: modules/services/control/ajaxOthersServicesFilter.php:31
+#: modules/services/control/ajaxServicesFilter.php:31
+msgid "Restart service"
+msgstr "Reiniciar serviço"
+
+#: modules/services/control/ajaxOthersServicesFilter.php:32
+#: modules/services/control/ajaxServicesFilter.php:32
+msgid "View log"
+msgstr "Vizualizar log"
+
+#: modules/services/control/ajaxOthersServicesFilter.php:52
+#: modules/services/control/ajaxServicesFilter.php:78
+msgid "Description"
+msgstr "Descrição"
+
+#: modules/services/control/ajaxOthersServicesFilter.php:53
+#: modules/services/control/ajaxServicesFilter.php:79
+msgid "Status"
+msgstr "Status"
+
+#: modules/services/includes/panels/services.inc.php:29
+#: modules/services/infoPackage.inc.php:36
+msgid "Services"
+msgstr "Serviços"
+
+#: modules/services/includes/panels/services.inc.php:42
+#, php-format
+msgid "%d inactive service"
+msgid_plural "%d inactive services"
+msgstr[0] "%d serviço inativo"
+msgstr[1] "%d serviços inativos"
+
+#: modules/services/includes/panels/services.inc.php:48
+msgid "All services are up"
+msgstr "Todos os servições estão rodando."
+
+#: modules/services/includes/panels/system.inc.php:29
+msgid "System"
+msgstr "Sistema"
+
+#: modules/services/includes/panels/system.inc.php:38
+msgid "The server will reboot. Are you sure ?"
+msgstr "O servidor será reiniciado. Você tem certeza?"
+
+#: modules/services/includes/panels/system.inc.php:43
+msgid "The server will be poweroff. Are you sure ?"
+msgstr "O servidor será desligado, Você tem certeza?"
+
+#: modules/services/includes/panels/system.inc.php:48
+msgid "Reboot"
+msgstr "Reiniciar"
+
+#: modules/services/includes/panels/system.inc.php:49
+msgid "Poweroff"
+msgstr "Desligar"
+
+#: modules/services/infoPackage.inc.php:32
+msgid "Services management"
+msgstr "Gerenciamento de serviços"
+
+#: modules/services/infoPackage.inc.php:49
+msgid "Others services"
+msgstr "Outros serviços"
+
+
