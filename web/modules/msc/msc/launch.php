@@ -314,7 +314,6 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
         'do_reboot'=>array($type_checkbox, _T('Reboot client', 'msc'), quick_get('do_reboot', True)),
         'start_date'=>array($type_date, _T('The command must start after', 'msc'), $start_date, array('ask_for_now' => 0)),
         'end_date'=>array($type_date, _T('The command must stop before', 'msc'), $end_date, array('ask_for_never' => 0)),
-        'deployment_intervals'=>array($type_input, _T('Deployment interval', 'msc'), quick_get('deployment_intervals')),
         'maxbw'=>array($type_numeric, _T('Max bandwidth (kbits/s)', 'msc'), $max_bw),
 
     );
