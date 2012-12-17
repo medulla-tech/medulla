@@ -594,6 +594,26 @@ class Glpi07(DyngroupDatabaseHelper):
             return False
         return ret.values()[0]
 
+    def getRestrictedComputersListStatesLen(self, ctx, filt, orange, red):
+        """
+        Return number of computers by state
+        """
+        session = create_session()
+        now = datetime.datetime.now()
+        orange = now - datetime.timedelta(orange)
+        red = now - datetime.timedelta(red)
+
+        date_mod = self.machine.c.date_mod
+
+        query = self.__getRestrictedComputersListQuery(ctx, filt, session)
+        ret = {
+            "green": int(query.filter(date_mod > orange).count()),
+            "orange": int(query.filter(and_(date_mod < orange, date_mod > red)).count()),
+            "red": int(query.filter(date_mod < red).count()),
+        }
+        session.close()
+        return ret
+
     def getRestrictedComputersListLen(self, ctx, filt = None):
         """
         Get the size of the computer list that match filters parameters
@@ -1683,6 +1703,44 @@ class Glpi07(DyngroupDatabaseHelper):
         session.close()
         return ret_gw
 
+    def getMachineListByState(self, ctx, groupName):
+        """
+        """
+
+        # Read config from ini file
+        orange = self.config.orange
+        red = self.config.red
+
+        complete_ctx(ctx)
+        filt = {'ctxlocation': ctx.locations}
+
+        session = create_session()
+        now = datetime.datetime.now()
+        orange = now - datetime.timedelta(orange)
+        red = now - datetime.timedelta(red)
+
+        date_mod = self.machine.c.date_mod
+
+        query = self.__getRestrictedComputersListQuery(ctx, filt, session)
+
+        # Limit list according to max_elements_for_static_list param in dyngroup.ini
+        query.limit(DGConfig().maxElementsForStaticList)
+
+        if groupName == "green":
+            result = query.filter(date_mod > orange).limit(limit)
+        elif groupName == "orange":
+            result = query.filter(and_(date_mod < orange, date_mod > red)).limit(limit)
+        elif groupName == "red":
+            result = query.filter(date_mod < red).limit(limit)
+
+        ret = {}
+        for machine in result.all():
+            if machine.name is not None:
+                ret[toUUID(machine.id) + '##' + machine.name] = {"hostname": machine.name, "uuid": toUUID(machine.id)}
+
+        session.close()
+        return ret
+
     def getMachineNumberByState(self, ctx):
         """
         return number of machines sorted by state
@@ -1695,52 +1753,20 @@ class Glpi07(DyngroupDatabaseHelper):
         @rtype: dict
         """
 
-        complete_ctx(ctx)
-        filt = {'ctxlocation': ctx.locations}
-        computersList = self.getRestrictedComputersList(ctx, filt=filt)
-
-        session = create_session()
-        query = session.query(Machine).filter(Machine.ID.in_(map(lambda x:fromUUID(x), computersList))).all()
-
-        now = datetime.datetime.now()
-
         # Read config from ini file
         orange = self.config.orange
         red = self.config.red
+        
+        complete_ctx(ctx)
+        filt = {'ctxlocation': ctx.locations}
 
         ret = {
             "days": {
                 "orange": orange,
                 "red": red,
             },
-            "count": {
-                "green": 0,
-                "orange": 0,
-                "red": 0,
-            },
-            "machine": {
-                "green": {},
-                "orange": {},
-                "red": {},
-            }
+            "count": self.getRestrictedComputersListStatesLen(ctx, filt, orange, red),
         }
-
-        for i in query:
-            year, month, day = i.date_mod.year, i.date_mod.month, i.date_mod.day
-            hour, minute, second = i.date_mod.hour, i.date_mod.minute, i.date_mod.second
-            machine_time = datetime.datetime(year, month, day, hour, minute, second)
-            delta = now - machine_time
-            if delta.days > red:
-                ret['count']['red'] += 1
-                ret['machine']['red'][toUUID(i.ID)] = i.name
-            elif delta.days > orange:
-                ret['count']['orange'] += 1
-                ret['machine']['orange'][toUUID(i.ID)] = i.name
-            else:
-                ret['count']['green'] += 1
-                ret['machine']['green'][toUUID(i.ID)] = i.name
-
-        session.close()
 
         return ret
 

@@ -43,11 +43,6 @@ class GlpiPanel extends Panel {
         $lessThanText = json_encode(_T("Less than %s days: %d", "glpi"));
         $moreThanText = json_encode(_T("More than %s days: %d", "glpi"));
         $urlRedirect = json_encode(urlStrRedirect("base/computers/createStaticGroup"));
-        $_SESSION['glpiDashboard'] = array(
-            "green" => $result['machine']['green'],
-            "orange" => $result['machine']['orange'],
-            "red" => $result['machine']['red'],
-        );
 
         print _T("Latest Inventory Date", "glpi");
         echo <<< INVENTORY
