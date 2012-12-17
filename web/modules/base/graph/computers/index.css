@@ -42,17 +42,7 @@ li.inventory a {
         color: #FFF;
 }
 
-li.remove_machine a {
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/msc/graph/images/actions/delete.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-
+li.remove_machine a,
 li.delete a {
         padding: 1px 3px 5px 20px;
         margin: 0 0px 0 0px;
