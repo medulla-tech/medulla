@@ -43,11 +43,6 @@ class InventoryPanel extends Panel {
         $lessThanText = json_encode(_T("Less than %s days: %d", "inventory"));
         $moreThanText = json_encode(_T("More than %s days: %d", "inventory"));
         $urlRedirect = json_encode(urlStrRedirect("inventory/inventory/createStaticGroup"));
-        $_SESSION['inventoryDashboard'] = array(
-            "green" => $result['machine']['green'],
-            "orange" => $result['machine']['orange'],
-            "red" => $result['machine']['red'],
-        );
 
         print _T("Latest Inventory Date", "inventory");
 

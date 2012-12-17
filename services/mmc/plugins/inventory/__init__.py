@@ -113,7 +113,12 @@ class RpcProxy(RpcProxyI):
         return xmlrpcCleanup(Inventory().getComputerInventoryDiff(ctx, params))
 
     def getMachineNumberByState(self):
-        return Inventory().getMachineNumberByState()
+        ctx = self.currentContext
+        return xmlrpcCleanup(Inventory().getMachineNumberByState(ctx))
+
+    def getMachineListByState(self, groupName):
+        ctx = self.currentContext
+        return xmlrpcCleanup(Inventory().getMachineListByState(ctx, groupName))
 
     def getAllMachinesInventoryColumn(self, part, column, pattern = {}):
         ctx = self.currentContext

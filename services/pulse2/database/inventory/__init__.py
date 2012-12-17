@@ -34,6 +34,7 @@ from pulse2.database.inventory.mapping import OcsMapping
 from mmc.site import mmcconfdir
 from pulse2.inventoryserver.config import Pulse2OcsserverConfigParser
 from pulse2.utils import same_network, Singleton, isUUID, xmlrpcCleanup
+from mmc.plugins.dyngroup.config import DGConfig
 
 from sqlalchemy import *
 from sqlalchemy.orm import *
@@ -243,6 +244,19 @@ class Inventory(DyngroupDatabaseHelper):
 
         # Then we apply extra filter according to pattern content
         if pattern:
+            if 'green' in pattern:
+                date_mod = pattern['green']['date_mod']
+                orange = pattern['green']['orange']
+                query = query.filter(date_mod > orange)
+            if 'orange' in pattern:
+                date_mod = pattern['orange']['date_mod']
+                orange = pattern['orange']['orange']
+                red = pattern['orange']['red']
+                query = query.filter(and_(date_mod < orange, date_mod > red))
+            if 'red' in pattern:
+                date_mod = pattern['red']['date_mod']
+                red = pattern['red']['red']
+                query = query.filter(date_mod < red)
             if 'hostname' in pattern:
                 query = query.filter(self.machine.c.Name.like("%" + pattern['hostname'] + "%"))
             if 'filter' in pattern:
@@ -1695,7 +1709,64 @@ class Inventory(DyngroupDatabaseHelper):
         ret = [added_elements, removed_elements]
         return ret
 
-    def getMachineNumberByState(self):
+    def countMachinesByState(self, ctx, orange, red):
+        """
+        Return number of computers by state
+        """
+        session = create_session()
+        now = datetime.datetime.now()
+        orange = now - datetime.timedelta(orange)
+        red = now - datetime.timedelta(red)
+
+        # FIXME date_mod must be Inventory.Date + Inventory.Time
+        date_mod = self.inventory.c.Date
+
+        ret = {
+            "green": int(self.__machinesOnlyQuery(ctx, pattern={"green": {"date_mod": date_mod, "orange": orange}}, session=session, count=True)),
+            "orange": int(self.__machinesOnlyQuery(ctx, pattern={"orange": {"date_mod": date_mod, "orange": orange, "red": red}}, session=session, count=True)),
+            "red": int(self.__machinesOnlyQuery(ctx, pattern={"red": {"date_mod": date_mod, "red": red}}, session=session, count=True)),
+        }
+        session.close()
+        return ret
+
+    def getMachineListByState(self, ctx, groupName):
+        """
+        """
+        # Read config from ini file
+        inifile = mmcconfdir + "/pulse2/inventory-server/inventory-server.ini"
+        config = Pulse2OcsserverConfigParser()
+        config.setup(inifile)
+
+        orange = int(config.orange)
+        red = int(config.red)
+
+        session = create_session()
+        now = datetime.datetime.now()
+        orange = now - datetime.timedelta(orange)
+        red = now - datetime.timedelta(red)
+
+        # FIXME date_mod must be Inventory.Date + Inventory.Time
+        date_mod = self.inventory.c.Date
+
+        if groupName == "green":
+            result = self.__machinesOnlyQuery(ctx, pattern={"green": {"date_mod": date_mod, "orange": orange}}, session=session)
+        elif groupName == "orange":
+            result = self.__machinesOnlyQuery(ctx, pattern={"orange": {"date_mod": date_mod, "orange": orange, "red": red}}, session=session)
+        elif groupName == "red":
+            result = self.__machinesOnlyQuery(ctx, pattern={"red": {"date_mod": date_mod, "red": red}}, session=session)
+
+        # Limit list according to max_elements_for_static_list param in dyngroup.ini
+        result.limit(DGConfig().maxElementsForStaticList)
+
+        ret = {}
+        for machine in result.all():
+            if machine.Name is not None:
+                ret[toUUID(machine.id) + '##' + machine.Name] = {"hostname": machine.Name, "uuid": toUUID(machine.id)}
+
+        session.close()
+        return ret
+
+    def getMachineNumberByState(self, ctx):
         """
         return number of machines sorted by state
         default states are:
@@ -1706,17 +1777,6 @@ class Inventory(DyngroupDatabaseHelper):
         @return: dictionnary with state as key, number as value
         @rtype: dict
         """
-
-        session = create_session()
-        q = session.query(self.klass['Inventory']).add_column(self.machine.c.id).add_column(self.machine.c.Name). \
-            select_from(self.machine \
-            .join(self.table['hasNetwork'], self.klass['hasNetwork'].machine == self.machine.c.id) \
-            .join(self.table['Inventory'], self.klass['hasNetwork'].inventory == self.klass['Inventory'].id)) \
-            .filter(self.klass['Inventory'].Last == 1) \
-            .group_by(self.machine.c.Name) \
-            .order_by(desc(self.klass['Inventory'].Date), desc(self.klass['Inventory'].Time)).all()
-
-        now = datetime.datetime.now()
 
         # Read config from ini file
         inifile = mmcconfdir + "/pulse2/inventory-server/inventory-server.ini"
@@ -1731,11 +1791,7 @@ class Inventory(DyngroupDatabaseHelper):
                 "orange": orange,
                 "red": red,
             },
-            "count": {
-                "green": 0,
-                "orange": 0,
-                "red": 0,
-            },
+            "count": self.countMachinesByState(ctx, orange, red),
             "machine": {
                 "green": {},
                 "orange": {},
@@ -1743,22 +1799,6 @@ class Inventory(DyngroupDatabaseHelper):
             }
         }
 
-        for i, mid, mname in q:
-            year, month, day = i.Date.year, i.Date.month, i.Date.day
-            hour, minute, second = i.Time.hour, i.Time.minute, i.Time.second
-            machine_time = datetime.datetime(year, month, day, hour, minute, second)
-            delta = now - machine_time
-            if delta.days > red:
-                ret['count']['red'] += 1
-                ret['machine']['red'][toUUID(mid)] = mname
-            elif delta.days > orange:
-                ret['count']['orange'] += 1
-                ret['machine']['orange'][toUUID(mid)] = mname
-            else:
-                ret['count']['green'] += 1
-                ret['machine']['green'][toUUID(mid)] = mname
-
-        session.close()
 
         return ret
 

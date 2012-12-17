@@ -23,6 +23,7 @@
  */
 
 require_once("modules/dyngroup/includes/dyngroup.php"); # for Group Class
+require_once("modules/inventory/includes/xmlrpc.php");
 
 if ($_GET['group'] == 'green') {
     $groupname = sprintf (_T("Latest inventory is less than %s days at %s", "inventory"), $_GET['days'], date("Y-m-d H:i:s"));
@@ -31,16 +32,7 @@ else {
     $groupname = sprintf (_T("Latest inventory is more than %s days at %s", "inventory"), $_GET['days'], date("Y-m-d H:i:s"));
 }
 
-$machines = $_SESSION['inventoryDashboard'][$_GET['group']];
-
-$groupmembers = array();
-
-foreach ($machines as $key => $value) {
-    $groupmembers[$key . '##' . $value] = array(
-        "hostname" => $value,
-        "uuid" => $key,
-    );
-}
+$groupmembers = getMachineListByState($_GET['group']);
 
 $group = new Group();
 $group->create($groupname, False);

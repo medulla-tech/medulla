@@ -91,4 +91,8 @@ function getMachineInventoryDiff($params) {
 function getMachineNumberByState() {
     return xmlCall("inventory.getMachineNumberByState");
 }
+
+function getMachineListByState($groupName) {
+    return xmlCall("inventory.getMachineListByState", array($groupName));
+}
 ?>
