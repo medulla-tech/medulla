@@ -61,12 +61,12 @@ class GlpiConfig(PluginConfig):
         try:
             self.glpi_computer_uri = self.get("main", "glpi_computer_uri")
         except:
-            self.glpi_computer_uri = "" #http://localhost/glpi/front/computer.form.php?ID="
+            self.glpi_computer_uri = "" # http://localhost/glpi/front/computer.form.php?id="
         try:
             self.activeProfiles = self.get('main', 'active_profiles').split(' ')
         except NoOptionError:
             # put the GLPI default values for actives profiles
-            self.activeProfiles = ['admin', 'normal', 'post-only', 'super-admin']
+            self.activeProfiles = ['Super-Admin', 'Admin', 'Supervisor', 'Technician']
         for option in ["dbport", "dbpoolrecycle", "dbpoolsize"]:
             try:
                 self.__dict__[option] = self.getint("main", option)
