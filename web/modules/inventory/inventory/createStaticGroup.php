@@ -24,6 +24,7 @@
 
 require_once("modules/dyngroup/includes/dyngroup.php"); # for Group Class
 require_once("modules/inventory/includes/xmlrpc.php");
+require_once("modules/dyngroup/includes/xmlrpc.php");
 
 if ($_GET['group'] == 'green') {
     $groupname = sprintf (_T("Latest inventory is less than %s days at %s", "inventory"), $_GET['days'], date("Y-m-d H:i:s"));
@@ -37,6 +38,9 @@ $groupmembers = getMachineListByState($_GET['group']);
 $group = new Group();
 $group->create($groupname, False);
 $group->addMembers($groupmembers);
+
+$truncate_limit = getMaxElementsForStaticList();
+if ($truncate_limit == count($groupmembers)) new NotifyWidgetWarning(sprintf(_T("Computers list has been truncated at %d computers", "dyngroup"), $truncate_limit));
 
 header("Location: " . urlStrRedirect("base/computers/display", array('gid'=>$group->id)));
 exit;
