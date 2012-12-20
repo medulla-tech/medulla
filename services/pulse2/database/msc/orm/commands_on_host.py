@@ -756,23 +756,6 @@ class CommandsOnHost(object):
             self.setStateDeleteFailed()                     # set command status
         return ret                                          # returns is processing may be continued
 
-    def switchToDeleteFailedIgnored(self):
-        """
-            This method is called in case of "delete" is part
-            of non_fatal_steps
-
-            goes in "delete_done" state only if we where in
-            "delete_in_progress" state.
-            Returns True if processing can continue,
-            False else.
-        """
-        self.setDeleteFailed()                                # set task status
-        if self.isStateDeleteInProgress():                  # normal flow
-            self.setStateDeleteDone()                       # set command status
-            return True                                     # continue command flow
-        else:                                               # other state (paused, stopped, etc ...)
-            return False                                    # simply break flow
-
     def switchToDeleteDone(self):
         """
             goes in "delete_done" state only if we where in
@@ -799,23 +782,6 @@ class CommandsOnHost(object):
         if self.isStateInventoryInProgress():               # normal flow
             self.setStateInventoryFailed()                  # set command status
         return ret                                          # returns is processing may be continued
-
-    def switchToInventoryFailedIgnored(self):
-        """
-            This method is called in case of "inventory" is part
-            of non_fatal_steps
-
-            goes in "inventory_done" state only if we where in
-            "inventory_in_progress" state.
-            Returns True if processing can continue,
-            False else.
-        """
-        self.setInventoryFailed()                             # set task status
-        if self.isStateInventoryInProgress():               # normal flow
-            self.setStateInventoryDone()                    # set command status
-            return True                                     # continue command flow
-        else:                                               # other state (paused, stopped, etc ...)
-            return False                                    # simply break flow
 
     def switchToInventoryDone(self):
         """
@@ -844,23 +810,6 @@ class CommandsOnHost(object):
             self.setStateRebootFailed()                     # set command status
         return ret                                          # returns is processing may be continued
 
-    def switchToRebootFailedIgnored(self):
-        """
-            This method is called in case of "reboot" is part
-            of non_fatal_steps
-
-            goes in "reboot_done" state only if we where in
-            "reboot_in_progress" state.
-            Returns True if processing can continue,
-            False else.
-        """
-        self.setRebootFailed()                                # set task status
-        if self.isStateRebootInProgress():                  # normal flow
-            self.setStateRebootDone()                       # set command status
-            return True                                     # continue command flow
-        else:                                               # other state (paused, stopped, etc ...)
-            return False                                    # simply break flow
-
     def switchToRebootDone(self):
         """
             goes in "reboot_done" state only if we where in
@@ -887,23 +836,6 @@ class CommandsOnHost(object):
         if self.isStateHaltInProgress():                    # normal flow
             self.setStateHaltFailed()                       # set command status
         return ret                                          # returns is processing may be continued
-
-    def switchToHaltFailedIgnored(self):
-        """
-            This method is called in case of "halt" is part
-            of non_fatal_steps
-
-            goes in "halt_done" state only if we where in
-            "halt_in_progress" state.
-            Returns True if processing can continue,
-            False else.
-        """
-        self.setHaltFailed()                                  # set task status
-        if self.isStateHaltInProgress():                    # normal flow
-            self.setStateHaltDone()                         # set command status
-            return True                                     # continue command flow
-        else:                                               # other state (paused, stopped, etc ...)
-            return False                                    # simply break flow
 
     def switchToHaltDone(self):
         """
