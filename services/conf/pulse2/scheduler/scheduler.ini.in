@@ -76,6 +76,12 @@ scheduler_path = @sbindir@/pulse2-scheduler
 # for huge installaiton, go threads
 # multithreading = True
 # max_threads = 20
+#
+# In some cases, some steps failure are non-fatal for the final state of the command.
+# Example: inventory fail but if other steps are ok, we want a success result for
+# this command.
+# Possible values are (separated by spaces): delete inventory reboot halt
+# non_fatal_steps = 
 
 ## Commands life ##
 # Command max default authorized time (for each stage)
