@@ -2359,6 +2359,12 @@ def parseDeleteResult((exitcode, stdout, stderr), myCommandOnHostID):
         if myCoH.switchToDeleteDone():
             return runInventoryPhase(myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
+    elif "delete" in SchedulerConfig().non_fatal_steps:
+        log.info("command_on_host #%s: delete failed (exitcode != 0), but non fatal according to scheduler config file" % (myCommandOnHostID))
+        updateHistory(myCommandOnHostID, 'delete_failed', exitcode, stdout, stderr)
+        if myCoH.switchToDeleteFailedIgnored():
+            return runInventoryPhase(myCommandOnHostID)
+        return runGiveUpPhase(myCommandOnHostID)
     else: # failure: immediately give up
         log.info("command_on_host #%s: delete failed (exitcode != 0)" % (myCommandOnHostID))
         updateHistory(myCommandOnHostID, 'delete_failed', exitcode, stdout, stderr)
@@ -2374,6 +2380,12 @@ def parseInventoryResult((exitcode, stdout, stderr), myCommandOnHostID):
         log.info("command_on_host #%s: inventory done (exitcode == 0)" % (myCommandOnHostID))
         updateHistory(myCommandOnHostID, 'inventory_done', exitcode, stdout, stderr)
         if myCoH.switchToInventoryDone():
+            return runRebootPhase(myCommandOnHostID)
+        return runGiveUpPhase(myCommandOnHostID)
+    elif "inventory" in SchedulerConfig().non_fatal_steps:
+        log.info("command_on_host #%s: inventory failed (exitcode != 0), but non fatal according to scheduler config file" % (myCommandOnHostID))
+        updateHistory(myCommandOnHostID, 'inventory_failed', exitcode, stdout, stderr)
+        if myCoH.switchToInventoryFailedIgnored():
             return runRebootPhase(myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
     else: # failure: immediately give up
@@ -2393,6 +2405,12 @@ def parseRebootResult((exitcode, stdout, stderr), myCommandOnHostID):
         if myCoH.switchToRebootDone():
             return runHaltOnDone(myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
+    elif "reboot" in SchedulerConfig().non_fatal_steps:
+        log.info("command_on_host #%s: reboot failed (exitcode != 0), but non fatal according to scheduler config file" % (myCommandOnHostID))
+        updateHistory(myCommandOnHostID, 'reboot_failed', exitcode, stdout, stderr)
+        if myCoH.switchToRebootFailedIgnored():
+            return runHaltOnDone(myCommandOnHostID)
+        return runGiveUpPhase(myCommandOnHostID)
     else: # failure: immediately give up
         log.info("command_on_host #%s: reboot failed (exitcode != 0)" % (myCommandOnHostID))
         updateHistory(myCommandOnHostID, 'reboot_failed', exitcode, stdout, stderr)
@@ -2408,6 +2426,12 @@ def parseHaltResult((exitcode, stdout, stderr), myCommandOnHostID):
         log.info("command_on_host #%s: halt done (exitcode == 0)" % (myCommandOnHostID))
         updateHistory(myCommandOnHostID, 'halt_done', exitcode, stdout, stderr)
         if myCoH.switchToHaltDone():
+            return runDonePhase(myCommandOnHostID)
+        return runGiveUpPhase(myCommandOnHostID)
+    elif "halt" in SchedulerConfig().non_fatal_steps:
+        log.info("command_on_host #%s: halt failed (exitcode != 0), but non fatal according to scheduler config file" % (myCommandOnHostID))
+        updateHistory(myCommandOnHostID, 'halt_failed', exitcode, stdout, stderr)
+        if myCoH.switchToHaltFailedIgnored():
             return runDonePhase(myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
     else: # failure: immediately give up
