@@ -52,7 +52,7 @@ class PackageApiPut(PackageApiGet):
 
     def xmlrpc_pushPackage(self, random_dir, files):
         if not os.path.exists(self.tmp_input_dir):
-            os.mkdir(self.tmp_input_dir)
+            os.makedirs(self.tmp_input_dir)
         filepath = os.path.join(self.tmp_input_dir, random_dir)
         if not os.path.exists(filepath):
             os.mkdir(filepath)
