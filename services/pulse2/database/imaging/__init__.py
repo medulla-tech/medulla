@@ -3947,7 +3947,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         Inject a computer inventory into the dabatase.
         For now only the ComputerDisk and ComputerPartition tables are used.
         """
-        self.enableLogging(logging.INFO)
         if not isUUID(imaging_server_uuid):
             raise TypeError('Bad imaging server UUID: %s'
                             % imaging_server_uuid)
