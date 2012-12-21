@@ -82,7 +82,7 @@ class MscConfig(MscDatabaseConfig):
     web_def_attempts = "3"
     web_def_deployment_intervals = ""
     web_def_issue_halt_to = []
-    web_show_reboot = False
+    web_show_reboot = True
     web_dlpath = []
     # Default life time of command (in hours)
     web_def_coh_life_time = 24
