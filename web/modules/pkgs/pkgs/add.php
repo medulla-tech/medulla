@@ -124,8 +124,8 @@ else {
     $f->add(new TrFormElement("", $span), array());
 
     $r = new RadioTpl("package-method");
-    $vals = array("package", "upload");
-    $keys = array(_T("Already uploaded on the server", "pkgs"), _T("Upload from this web page", "pkgs"));
+    $vals = array("package", "upload", "empty");
+    $keys = array(_T("Already uploaded on the server", "pkgs"), _T("Upload from this web page", "pkgs"), _T("Make an empty package", "pkgs"));
     $r->setValues($vals);
     $r->setChoices($keys);
 
@@ -268,6 +268,21 @@ Event.observe(window, 'load', function() { // load this piece of code when page 
             if (selectedValue == "package") {
                 selectedPapi = refreshTempPapi();
                 $('directory-label').update("<?php echo _T("Files directory", "pkgs") ?>");
+                $('directory-label').parentNode.parentNode.show();
+            }
+            else if (selectedValue == "empty"){
+                var jcArray = new Array('label', 'version', 'description', 'commandcmd');
+                for (var dummy in jcArray) {
+                    try {
+                        $(jcArray[dummy]).setStyle("background: #FFF;");
+                        $(jcArray[dummy]).enable();
+                    }
+                    catch (err){
+                        // this php file is prototype ajax request with evalscript
+                        // enabled.
+                    }
+                }
+                $('directory-label').parentNode.parentNode.hide();
             }
             else if (selectedValue == "upload"){
                 new Ajax.Updater('package-temp-directory', '<?php echo urlStrRedirect("pkgs/pkgs/ajaxDisplayUploadForm") ?>&papi=' + selectedPapi, { 
@@ -279,6 +294,7 @@ Event.observe(window, 'load', function() { // load this piece of code when page 
                 $('version').value = "";
                 $('commandcmd').value = "";
                 $('directory-label').update("<?php echo sprintf(_T("Files upload (<b><u title='%s'>%sM max</u></b>)", "pkgs"), _T("Change post_max_size and upload_max_filesize directives in php.ini file to increase upload size.", "pkgs"), get_php_max_upload_size()) ?>");
+                $('directory-label').parentNode.parentNode.show();
             }
         }
     });
