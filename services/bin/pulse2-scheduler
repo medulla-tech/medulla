@@ -390,7 +390,16 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
         override method of xmlrpc python twisted framework
         """
         args, functionPath = xmlrpclib.loads(request.content.read())
-        function = self._getFunction(functionPath)
+        # Twisted: deprecated private method '_getFunction' becomes
+        #          public and named 'lookupProcedure'
+        #          (changed since version 11.1)
+        if hasattr(self, "lookupProcedure") :
+            function = self.lookupProcedure(functionPath)
+        elif hasattr(self, "_getFunction") :
+            function = self._getFunction(functionPath)
+        else :
+            self.logger.error("Unable to get XML-RPC function '%s'" % functionPath)
+
 
         cleartext_token = '%s:%s' % (SchedulerConfig().username, SchedulerConfig().password)
         token = '%s:%s' % (request.getUser(), request.getPassword())
