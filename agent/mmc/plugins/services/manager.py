@@ -144,7 +144,7 @@ class ServiceManager(object):
         return True
 
     def status(self, service):
-        unit = self.m.get_unit('%s.service' % service)
+        unit = self.get_unit(service)
         return (str(unit.properties.LoadState),
                 str(unit.properties.ActiveState),
                 str(unit.properties.SubState))
