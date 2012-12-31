@@ -366,7 +366,9 @@ class MscDatabase(DatabaseHelper):
         session = create_session()
         ret = self.__queryAllCommandsonhostBy(session, ctx)
         ret = ret.add_column(self.commands.c.max_connection_attempt).filter(self.commands_on_host.c.current_state <> ''). \
-                group_by([self.commands_on_host.c.current_state, self.commands_on_host.c.attempts_left, self.commands.c.max_connection_attempt]). \
+                group_by(self.commands_on_host.c.current_state). \
+                group_by(self.commands_on_host.c.attempts_left). \
+                group_by(self.commands.c.max_connection_attempt). \
                 order_by(asc(self.commands_on_host.c.next_launch_date))
         # x[0] contains a commands_on_host object x[1] contains commands
         l = []
