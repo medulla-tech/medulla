@@ -357,6 +357,8 @@ var machineStateNumber = $jsonMachineStateNumber,
         colors.push("#ef2929");
     }
 
+    data = getPercentageData(data);
+
     var pie = r.piechart(x, y, radius, data,
                      {legend: legend,
                       legendpos: "east",

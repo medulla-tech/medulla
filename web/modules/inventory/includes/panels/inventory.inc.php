@@ -40,8 +40,8 @@ class InventoryPanel extends Panel {
 
         $jsonCount = json_encode($count);
         $jsonDays= json_encode($days);
-        $lessThanText = json_encode(_T("Less than %s days: %d", "inventory"));
-        $moreThanText = json_encode(_T("More than %s days: %d", "inventory"));
+        $lessThanText = json_encode(_T("Less than %s days:\r\n %percent% (%d computers)", "inventory"));
+        $moreThanText = json_encode(_T("More than %s days:\r\n %percent% (%d computers)", "inventory"));
         $urlRedirect = json_encode(urlStrRedirect("inventory/inventory/createStaticGroup"));
 
         print _T("Latest Inventory Date", "inventory");
@@ -54,7 +54,7 @@ class InventoryPanel extends Panel {
         lessThanText = $lessThanText,
         moreThanText = $moreThanText,
         urlRedirect = $urlRedirect,
-        r = Raphael("inventory-graphs", 200, 250),
+        r = Raphael("inventory-graphs", 200, 300),
         radius = 80,
         x = 90,
         y = 90;
@@ -86,6 +86,14 @@ class InventoryPanel extends Panel {
         legend.push(legendText);
         colors.push("#ef2929");
         href.push(urlRedirect + "&group=red&days=" + days.red);
+    }
+
+    // get data percentage values for pie chart generation
+    data = getPercentageData(data);
+
+    // put percentage values in legend
+    for (var i = 0; i < data.length; i++) {
+        legend[i] = legend[i].replace('%percent', data[i]);
     }
 
     var pie = r.piechart(x, y, radius, data, 

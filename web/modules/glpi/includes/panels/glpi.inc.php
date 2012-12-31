@@ -40,8 +40,8 @@ class GlpiPanel extends Panel {
 
         $jsonCount = json_encode($count);
         $jsonDays= json_encode($days);
-        $lessThanText = json_encode(_T("Less than %s days: %d", "glpi"));
-        $moreThanText = json_encode(_T("More than %s days: %d", "glpi"));
+        $lessThanText = json_encode(_T("Less than %s days:\r\n %percent% (%d computers)", "glpi"));
+        $moreThanText = json_encode(_T("More than %s days:\r\n %percent% (%d computers)", "glpi"));
         $urlRedirect = json_encode(urlStrRedirect("base/computers/createStaticGroup"));
 
         print _T("Latest Inventory Date", "glpi");
@@ -53,7 +53,7 @@ class GlpiPanel extends Panel {
         lessThanText = $lessThanText,
         moreThanText = $moreThanText,
         urlRedirect = $urlRedirect,
-        r = Raphael("inventory-graphs", 200, 250),
+        r = Raphael("inventory-graphs", 200, 300),
         radius = 80,
         x = 90,
         y = 90;
@@ -85,6 +85,14 @@ class GlpiPanel extends Panel {
         legend.push(legendText);
         colors.push("#ef2929");
         href.push(urlRedirect + "&group=red&days=" + days.red);
+    }
+
+    // get data percentage values for pie chart generation
+    data = getPercentageData(data);
+
+    // put percentage values in legend
+    for (var i = 0; i < data.length; i++) {
+        legend[i] = legend[i].replace('%percent', data[i]);
     }
 
     var pie = r.piechart(x, y, radius, data, 
