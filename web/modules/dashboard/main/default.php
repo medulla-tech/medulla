@@ -28,6 +28,7 @@ require("graph/navbar.inc.php");
 <script type="text/javascript" src="jsframework/lib/raphael/g.raphael-min.js"></script>
 <script type="text/javascript" src="jsframework/lib/raphael/g.pie-min.js"></script>
 <script type="text/javascript" src="jsframework/lib/raphael/g.line-min.js"></script>
+<script type="text/javascript" src="jsframework/lib/raphael/utilities.js"></script>
 <?php
 
 $d = new Div(array("id" => "dashboard"));

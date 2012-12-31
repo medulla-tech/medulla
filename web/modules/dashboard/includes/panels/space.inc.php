@@ -68,6 +68,7 @@ class SpacePanel extends Panel {
             r.text(5, y - radius - 10, title)
              .attr({ font: "12px sans-serif" })
              .attr({ "text-anchor": "start" });
+            data = getPercentageData(data);
             r.piechart(x, y + 5, radius, data,
                        {legend: legend,
                         legendpos: "east",
