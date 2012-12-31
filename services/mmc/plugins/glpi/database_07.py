@@ -639,7 +639,10 @@ class Glpi07(DyngroupDatabaseHelper):
         if query == None:
             return {}
 
-        query = query.group_by([self.machine.c.name, self.machine.c.domain]).order_by(asc(self.machine.c.name))
+        query = query.group_by(self.machine.c.name)
+        query = query.group_by(self.machine.c.domain)
+        query = query.order_by(asc(self.machine.c.name))
+
 
         if min != 0:
             query = query.offset(min)
