@@ -59,6 +59,8 @@ import os
 from time import struct_time, gmtime, strftime
 import inspect
 import posixpath
+import psutil
+import logging
 
 # python 2.3 fallback for set() in xmlrpcleanup
 try:
@@ -576,3 +578,54 @@ def get_default_ip():
     """
     netif = get_default_netif()
     return get_ip_address(netif)
+
+
+class HasSufficientMemory :
+    """
+    Can be used as a decorator to avoid executing the functions with high costs. 
+
+    When usage of memory is less than mem_limit, this decorator returns 
+    decorated function, otherwise neg_ret_value.
+
+    Examples:
+    --------- 
+    @HasSufficientMemory(80)
+    def called_function(arg1, arg2, ..)
+        ...
+        return True
+
+    @HasSufficientMemory(60, "NOK")
+    def called_function(arg1, arg2, ..)
+        ...
+        return "OK"
+    """
+
+    def __init__(self, mem_limit, neg_ret_value=False):
+        """
+        @param mem_limit: limit (in percent) of memory usage
+        @type mem_limit: int
+
+        @param neg_ret_value: returned value when memory usage is exceeded
+        @type neg_ret_value: object
+        """
+
+        self.mem_limit = mem_limit
+        self.neg_ret_value = neg_ret_value
+
+    def __call__(self, fnc, *args):
+        """
+        @param fnc: decorated function
+        @type fnc: function type
+
+        @returns: decorated function or neg_ret_value
+        """
+
+        def wrapped (*args) :
+            if psutil.virtual_memory().percent < self.mem_limit :
+                 return fnc(*args)
+            else :
+                 logging.getLogger().warn("Not enough memory to run '%s'" % fnc.__name__)
+                 return self.neg_ret_value
+
+        return wrapped
+

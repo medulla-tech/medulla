@@ -36,10 +36,11 @@ import twisted.internet.reactor
 import twisted.internet.protocol
 
 # Others Pulse2 Stuff
-import pulse2.utils
+from pulse2.utils import Singleton, HasSufficientMemory
 from pulse2.launcher.config import LauncherConfig
 from pulse2.consts import PULSE2_WRAPPER_ERROR_SIGNAL_BASE
 
+@HasSufficientMemory(70)
 def commandRunner(cmd, cbCommandEnd):
     """
     Return a Deferred resulting in the stdout output of a shell command.
@@ -67,6 +68,7 @@ def commandRunner(cmd, cbCommandEnd):
     process.deferred.addCallback(cbCommandEnd)
     return process.deferred
 
+@HasSufficientMemory(70)
 def commandForker(cmd, cbCommandEnd, id, defer_results, callbackName, max_exec_time, group, kind):
     """
     """
@@ -286,7 +288,7 @@ class commandProtocol(twisted.internet.protocol.ProcessProtocol):
     def getAge(self):
         return time.time() - self.start_time
 
-class ProcessList(pulse2.utils.Singleton):
+class ProcessList(Singleton):
     """
         Launcher core: kep a track of launched commands
     """
@@ -331,6 +333,7 @@ class ProcessList(pulse2.utils.Singleton):
 
     """ Process handling """
     def addProcess(self, obj, id):
+        logging.getLogger().info("IBT23SEC5 : Process count : %d" %len(self.listProcesses()))
         if not self.canAddThisProcess(id):
             return False
         self._processArr[id] = obj
