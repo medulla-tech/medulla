@@ -32,6 +32,7 @@ from base64 import b64decode
 from pulse2.package_server.package_api_get import PackageApiGet
 from pulse2.package_server.types import Package
 from pulse2.package_server.common import Common
+from pulse2.package_server.common.getCommand import getCommand
 from pulse2.package_server.config import P2PServerCP
 
 class PackageApiPut(PackageApiGet):
@@ -58,13 +59,17 @@ class PackageApiPut(PackageApiGet):
             "commandcmd": [],
         }
 
-        filelist = []
+        suggestedCommand = []
         if os.path.exists(self.tmp_input_dir):
             for f in os.listdir(os.path.join(self.tmp_input_dir, tempdir)):
                 f = os.path.join(self.tmp_input_dir, tempdir, f)
                 if os.path.isfile(f):
-                    filelist.append(f)
-        ret['commandcmd'] = filelist
+                    c = getCommand(f)
+                    command = c.getCommand()
+                    if command is not None:
+                        suggestedCommand.append(command)
+
+        ret['commandcmd'] = '\n'.join(suggestedCommand)
         return ret
 
     def xmlrpc_pushPackage(self, random_dir, files):
