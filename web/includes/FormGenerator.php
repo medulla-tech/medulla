@@ -141,6 +141,17 @@ class MultiFileTpl extends AbstractTpl {
                         return;
                     }
                     // DEBUG: write action to do when upload complete
+
+                    url = \'' . urlStrRedirect("pkgs/pkgs/ajaxGetSuggestedCommand") . '&papiid=\' + selectedPapi;
+                    url += \'&tempdir=' . $random_dir . '\';
+
+                    new Ajax.Request(url, {
+                        onSuccess: function(response) {
+                            $(\'label\').value = response.headerJSON.label;
+                            $(\'version\').value = response.headerJSON.version;
+                            $(\'commandcmd\').value = response.headerJSON.commandcmd;
+                        }
+                    });
                 }
             });           
             $(\'triggerUpload\').observe(\'click\', function() {
