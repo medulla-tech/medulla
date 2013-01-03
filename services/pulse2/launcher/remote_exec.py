@@ -124,6 +124,7 @@ def remote_pull(command_id, client, files_list, mode, wrapper_timeout):
         # command is issued though our wrapper, time to build it
 
         if not LauncherConfig().is_ssh_available:
+            logging.getLogger().warn('Can\'t do remote pull because ssh is not available')
             return False
         # Built "thru" command
         thru_command_list  = [LauncherConfig().ssh_path]
@@ -174,7 +175,7 @@ def remote_pull(command_id, client, files_list, mode, wrapper_timeout):
             command_list += ['--action', client['action']]
 
         if mode == 'async':
-            return pulse2.launcher.process_control.commandForker(
+            result = pulse2.launcher.process_control.commandForker(
                 command_list,
                 __cb_async_process_end,
                 command_id,
@@ -184,11 +185,17 @@ def remote_pull(command_id, client, files_list, mode, wrapper_timeout):
                 client['group'],
                 'pull'
             )
+            if not result :
+                logging.getLogger().warn("Remote pull (wget/async) failed for CoH #%d" % command_id)
+            return result
         elif mode == 'sync':
-            return pulse2.launcher.process_control.commandRunner(
+            result = pulse2.launcher.process_control.commandRunner(
                 command_list,
                 __cb_sync_process_end
             )
+            if not result :
+                logging.getLogger().warn("Remote pull (wget/sync) failed for CoH #%d" % command_id)
+            return result
     elif client['protocol'] == "rsyncproxy":
         # Built "thru" command
         thru_command_list  = [LauncherConfig().ssh_path]
@@ -226,7 +233,7 @@ def remote_pull(command_id, client, files_list, mode, wrapper_timeout):
             command_list += ['--action', client['action']]
 
         if mode == 'async':
-            return pulse2.launcher.process_control.commandForker(
+            result = pulse2.launcher.process_control.commandForker(
                 command_list,
                 __cb_async_process_end,
                 command_id,
@@ -236,12 +243,19 @@ def remote_pull(command_id, client, files_list, mode, wrapper_timeout):
                 client['group'],
                 'pull'
             )
+            if not result :
+                logging.getLogger().warn("Remote pull (rsyncproxy/async) failed for CoH #%d" % command_id)
+            return result
         elif mode == 'sync':
-            return pulse2.launcher.process_control.commandRunner(
+            result = pulse2.launcher.process_control.commandRunner(
                 command_list,
                 __cb_sync_process_end
             )
-
+            if not result :
+                logging.getLogger().warn("Remote pull (rsyncproxy/sync) failed for CoH #%d" % command_id)
+            return result
+ 
+    logging.getLogger().warn("Remote pull failed for CoH #%d" % command_id)
     return None
 
 def sync_remote_delete(command_id, client, files_list, wrapper_timeout):
