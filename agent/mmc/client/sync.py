@@ -1,9 +1,7 @@
 # -*- coding: utf-8; -*-
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# (c) 2007-2008 Mandriva, http://www.mandriva.com
-#
-# $Id$
+# (c) 2007-2012 Mandriva, http://www.mandriva.com
 #
 # This file is part of Mandriva Management Console (MMC).
 #
@@ -49,6 +47,7 @@ import stat
 import logging
 
 import xmlrpclib
+import httplib
 from urlparse import urlparse
 from base64 import encodestring
 from cookielib import LWPCookieJar
@@ -57,6 +56,7 @@ from urllib2 import Request as CookieRequest
 log = logging.getLogger()
 
 COOKIES_FILE = '/tmp/mmc-cookies'
+
 
 class CookieResponse:
     """
@@ -68,6 +68,7 @@ class CookieResponse:
     def info(self):
         return self.headers
 
+
 class MMCBaseTransport(object):
     """
     Standard synchronous Transport for the MMC agent.
@@ -75,9 +76,9 @@ class MMCBaseTransport(object):
     Each xmlrpc request has to contains a modified header containing a
     valid session ID and authentication information.
     """
-    
+
     user_agent = 'AdminProxy'
-    
+
     def __init__(self, username, passwd, use_datetime=0):
         """ This method returns an XMLRPC client which supports
         basic authentication through cookies.
@@ -85,6 +86,34 @@ class MMCBaseTransport(object):
         self.credentials = (username, passwd)
         # See xmlrpc.Transport Class
         self._use_datetime = use_datetime
+        self.accept_gzip_encoding = False
+        # UGLY HACK ALERT. If we're running on Python 2.6 or earlier,
+        # self.make_connection() needs to return an HTTP; newer versions
+        # expect an HTTPConnection. Our strategy is to guess which is
+        # running, and override self.make_connection for older versions.
+        # That check and override happens here.
+        if self._connection_requires_compat():
+            self.make_connection = self._make_connection_compat
+
+    def _connection_requires_compat(self):
+        # UGLY HACK ALERT. Python 2.7 xmlrpclib caches connection objects in
+        # self._connection (and sets self._connection in __init__). Python
+        # 2.6 and earlier has no such cache. Thus, if self._connection
+        # exists, we're running the newer-style, and if it doesn't then
+        # we're running older-style and thus need compatibility mode.
+        try:
+            self._connection
+            return False
+        except AttributeError:
+            return True
+
+    def _make_connection_compat(self, host):
+        # This method runs as make_connection under Python 2.6 and older.
+        # __init__ detects which version we need and pastes this method
+        # directly into self.make_connection if necessary.
+        # Returns an HTTPSConnection like Python 2.7 does.
+        host, self._extra_headers, x509 = self.get_host_info(host)
+        return httplib.HTTPSConnection(host)
 
     def send_basic_auth(self, connection):
         """ Include HTTPS Basic Authentication data in a header
@@ -126,8 +155,12 @@ class MMCBaseTransport(object):
 
         self.send_content(h, request_body)
 
-        errcode, errmsg, headers = h.getreply()
-        # Creating cookie jar
+        r = h.getresponse()
+        errcode = r.status
+        errmsg = r.reason
+        headers = r.msg
+
+        # Creati g cookie jar
         cresponse = CookieResponse(headers)
         crequest = CookieRequest('https://' + host + '/')
         if '<methodName>base.ldapAuth</methodName>' in request_body:
@@ -146,18 +179,39 @@ class MMCBaseTransport(object):
 
         self.verbose = verbose
 
-        try:
-            sock = h._conn.sock
-        except AttributeError:
-            sock = None
+        return self.parse_response(r)
 
-        return self._parse_response(h.getfile(), sock)
+    # Backported from python 2.7
+    def parse_response(self, response):
+        # read response data from httpresponse, and parse it
+
+        # Check for new http response object, else it is a file object
+        stream = response
+
+        p, u = self.getparser()
+
+        while 1:
+            data = stream.read(1024)
+            if not data:
+                break
+            if self.verbose:
+                print "body:", repr(data)
+            p.feed(data)
+
+        if stream is not response:
+            stream.close()
+        p.close()
+
+        return u.close()
+
 
 class MMCTransport(MMCBaseTransport, xmlrpclib.Transport):
     pass
 
+
 class MMCSafeTransport(MMCBaseTransport, xmlrpclib.SafeTransport):
     pass
+
 
 class Proxy(xmlrpclib.ServerProxy, object):
     """ This subclass ServerProxy to handle login and specific MMC
@@ -165,9 +219,9 @@ class Proxy(xmlrpclib.ServerProxy, object):
     Can authenticate automatically if username and passwd are provided.
     If MMC server return Fault 8003, we identify with base.ldapAuth method.
     """
-    
+
     available_transports = {'http' : MMCTransport, 'https' : MMCSafeTransport}
-    
+
     def __init__(self, uri, username=None, passwd=None, verbose=False):
         url = urlparse(uri)
         if url.scheme not in self.available_transports:
