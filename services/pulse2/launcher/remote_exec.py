@@ -91,7 +91,7 @@ def remote_push(command_id, client, files_list, mode, wrapper_timeout):
             command_list += ['--action', client['action']]
 
         if mode == 'async':
-            return pulse2.launcher.process_control.commandForker(
+            result = pulse2.launcher.process_control.commandForker(
                 command_list,
                 __cb_async_process_end,
                 command_id,
@@ -101,11 +101,19 @@ def remote_push(command_id, client, files_list, mode, wrapper_timeout):
                 client['group'],
                 'push'
             )
+            if not result :
+                logging.getLogger().warn("Remote push (rsyncssh/async) failed for CoH #%d" % command_id)
+            return result
         elif mode == 'sync':
-            return pulse2.launcher.process_control.commandRunner(
+            result = pulse2.launcher.process_control.commandRunner(
                 command_list,
                 __cb_sync_process_end
             )
+            if not result :
+                logging.getLogger().warn("Remote push (rsyncssh/async) failed for CoH #%d" % command_id)
+            return result
+
+    logging.getLogger().warn("Remote push failed for CoH #%d" % command_id)
     return None
 
 def sync_remote_pull(command_id, client, files_list, wrapper_timeout):
@@ -124,7 +132,7 @@ def remote_pull(command_id, client, files_list, mode, wrapper_timeout):
         # command is issued though our wrapper, time to build it
 
         if not LauncherConfig().is_ssh_available:
-            logging.getLogger().warn('Can\'t do remote pull because ssh is not available')
+            logging.getLogger().warn("Can't do remote pull because ssh is not available")
             return False
         # Built "thru" command
         thru_command_list  = [LauncherConfig().ssh_path]
@@ -274,6 +282,7 @@ def remote_delete(command_id, client, files_list, mode, wrapper_timeout):
         # command is issued through our wrapper, time to build it
 
         if not LauncherConfig().is_ssh_available:
+            logging.getLogger().warn("Can't do remote delete because ssh is not available")
             return False
 
         # Built "thru" command
@@ -335,7 +344,7 @@ def remote_delete(command_id, client, files_list, mode, wrapper_timeout):
             command_list += ['--action', client['action']]
 
         if mode == 'async':
-            return pulse2.launcher.process_control.commandForker(
+            result = pulse2.launcher.process_control.commandForker(
                 command_list,
                 __cb_async_process_end,
                 command_id,
@@ -345,11 +354,18 @@ def remote_delete(command_id, client, files_list, mode, wrapper_timeout):
                 client['group'],
                 'delete'
             )
+            if not result :
+                logging.getLogger().warn("Remote delete (ssh/async) failed for CoH #%d" % command_id)
+            return result
         elif mode == 'sync':
-            return pulse2.launcher.process_control.commandRunner(
+            result = pulse2.launcher.process_control.commandRunner(
                 command_list,
                 __cb_sync_process_end
             )
+            if not result :
+                logging.getLogger().warn("Remote delete (ssh/sync) failed for CoH #%d" % command_id)
+            return result
+    logging.getLogger().warn("Remote delete failed for CoH #%d" % command_id) 
     return None
 
 def sync_remote_exec(command_id, client, command, wrapper_timeout):
@@ -368,6 +384,7 @@ def remote_exec(command_id, client, command, mode, wrapper_timeout):
         # command is issued though our wrapper, time to build it
 
         if not LauncherConfig().is_ssh_available:
+            logging.getLogger().warn("Can't do remote exec because ssh is not available")
             return False
 
         # Built "thru" command
@@ -400,7 +417,7 @@ def remote_exec(command_id, client, command, mode, wrapper_timeout):
             command_list += ['--action', client['action']]
 
         if mode == 'async':
-            return pulse2.launcher.process_control.commandForker(
+            result = pulse2.launcher.process_control.commandForker(
                 command_list,
                 __cb_async_process_end,
                 command_id,
@@ -410,11 +427,18 @@ def remote_exec(command_id, client, command, mode, wrapper_timeout):
                 client['group'],
                 'exec'
             )
+            if not result :
+                logging.getLogger().warn("Remote exec (ssh/async) failed for CoH #%d" % command_id)
+            return result
         elif mode == 'sync':
-            return pulse2.launcher.process_control.commandRunner(
+            result = pulse2.launcher.process_control.commandRunner(
                 command_list,
                 __cb_sync_process_end
             )
+            if not result :
+                logging.getLogger().warn("Remote exec (ssh/sync) failed for CoH #%d" % command_id)
+            return result
+    logging.getLogger().warn("Remote exec failed for CoH #%d" % command_id) 
     return None
 
 def sync_remote_quickaction(command_id, client, command, wrapper_timeout):
@@ -432,6 +456,7 @@ def remote_quickaction(command_id, client, command, mode, wrapper_timeout):
         # command is issued though our wrapper, time to build it
 
         if not LauncherConfig().is_ssh_available:
+            logging.getLogger().warn("Can't do remote quickaction because ssh is not available") 
             return False
 
         # Built "thru" command
@@ -464,7 +489,7 @@ def remote_quickaction(command_id, client, command, mode, wrapper_timeout):
             command_list += ['--action', client['action']]
 
         if mode == 'async':
-            return pulse2.launcher.process_control.commandForker(
+            result = pulse2.launcher.process_control.commandForker(
                 command_list,
                 __cb_async_process_end,
                 command_id,
@@ -474,11 +499,19 @@ def remote_quickaction(command_id, client, command, mode, wrapper_timeout):
                 client['group'],
                 'quickaction'
             )
+            if not result :
+                logging.getLogger().warn("Remote quickaction (ssh/async) failed for CoH #%d" % command_id)
+            return result
         elif mode == 'sync':
-            return pulse2.launcher.process_control.commandRunner(
+            result = pulse2.launcher.process_control.commandRunner(
                 command_list,
                 __cb_sync_process_end
             )
+            if not result :
+                logging.getLogger().warn("Remote quickaction (ssh/sync) failed for CoH #%d" % command_id)
+            return result
+
+    logging.getLogger().warn("Remote quickaction failed for CoH #%d" % command_id)
     return None
 
 def sync_remote_direct(command_id, client, command, max_log_size, wrapper_timeout):
@@ -496,6 +529,7 @@ def remote_direct(command_id, client, command, mode, max_log_size, wrapper_timeo
         # command is issued though our wrapper, time to build it
 
         if not LauncherConfig().is_ssh_available:
+            logging.getLogger().warn("Can't do remote direct because ssh is not available")
             return False
 
         # Built "thru" command
@@ -534,7 +568,7 @@ def remote_direct(command_id, client, command, mode, max_log_size, wrapper_timeo
             command_list += ['--action', client['action']]
 
         if mode == 'async':
-            return pulse2.launcher.process_control.commandForker(
+            result = pulse2.launcher.process_control.commandForker(
                 command_list,
                 __cb_async_process_end,
                 command_id,
@@ -544,11 +578,19 @@ def remote_direct(command_id, client, command, mode, max_log_size, wrapper_timeo
                 client['group'],
                 'direct'
             )
+            if not result :
+                logging.getLogger().warn("Remote direct (ssh/async) failed for CoH #%d" % command_id)
+            return result
         elif mode == 'sync':
-            return pulse2.launcher.process_control.commandRunner(
+            result = pulse2.launcher.process_control.commandRunner(
                 command_list,
                 __cb_sync_process_end
             )
+            if not result :
+                logging.getLogger().warn("Remote direct (ssh/sync) failed for CoH #%d" % command_id)
+            return result
+
+    logging.getLogger().warn("Remote direct failed for CoH #%d" % command_id)
     return None
 
 def sync_remote_inventory(command_id, client, wrapper_timeout):
@@ -575,6 +617,7 @@ def remote_inventory(command_id, client, mode, wrapper_timeout):
         # command is issued though our wrapper, time to build it
 
         if not LauncherConfig().is_ssh_available:
+            logging.getLogger().warn("Can't do remote inventory because ssh is not available")
             return False
 
         # Built "thru" command
@@ -607,7 +650,7 @@ def remote_inventory(command_id, client, mode, wrapper_timeout):
             command_list += ['--action', client['action']]
 
         if mode == 'async':
-            return pulse2.launcher.process_control.commandForker(
+            result = pulse2.launcher.process_control.commandForker(
                 command_list,
                 __cb_async_process_end,
                 command_id,
@@ -617,11 +660,19 @@ def remote_inventory(command_id, client, mode, wrapper_timeout):
                 client['group'],
                 'inventory'
             )
+            if not result :
+                logging.getLogger().warn("Remote inventory (ssh/async) failed for CoH #%d" % command_id)
+            return result
         elif mode == 'sync':
-            return pulse2.launcher.process_control.commandRunner(
+            result = pulse2.launcher.process_control.commandRunner(
                 command_list,
                 __cb_sync_process_end
             )
+            if not result :
+                logging.getLogger().warn("Remote inventory (ssh/sync) failed for CoH #%d" % command_id) 
+            return result
+
+    logging.getLogger().warn("Remote inventory failed for CoH #%d" % command_id) 
     return None
 
 def sync_remote_reboot(command_id, client, wrapper_timeout):
@@ -641,6 +692,7 @@ def remote_reboot(command_id, client, mode, wrapper_timeout):
         # command is issued though our wrapper, time to build it
 
         if not LauncherConfig().is_ssh_available:
+            logging.getLogger().warn("Can't do remote reboot because ssh is not available")
             return False
 
         # Built "thru" command
@@ -673,7 +725,7 @@ def remote_reboot(command_id, client, mode, wrapper_timeout):
             command_list += ['--action', client['action']]
 
         if mode == 'async':
-            return pulse2.launcher.process_control.commandForker(
+            result = pulse2.launcher.process_control.commandForker(
                 command_list,
                 __cb_async_process_end,
                 command_id,
@@ -683,11 +735,19 @@ def remote_reboot(command_id, client, mode, wrapper_timeout):
                 client['group'],
                 'reboot'
             )
+            if not result :
+                logging.getLogger().warn("Remote boot (ssh/async) failed for CoH #%d" % command_id)
+            return result 
         elif mode == 'sync':
-            return pulse2.launcher.process_control.commandRunner(
+            result = pulse2.launcher.process_control.commandRunner(
                 command_list,
                 __cb_sync_process_end
             )
+            if not result :
+                logging.getLogger().warn("Remote boot (ssh/sync) failed for CoH #%d" % command_id)
+            return result
+
+    logging.getLogger().warn("Remote boot failed for CoH #%d" % command_id)  
     return None
 
 def sync_remote_halt(command_id, client, wrapper_timeout):
@@ -707,6 +767,7 @@ def remote_halt(command_id, client, mode, wrapper_timeout):
         # command is issued though our wrapper, time to build it
 
         if not LauncherConfig().is_ssh_available:
+            logging.getLogger().warn("Can't do remote halt because ssh is not available")
             return False
 
         # Built "thru" command
@@ -739,7 +800,7 @@ def remote_halt(command_id, client, mode, wrapper_timeout):
             command_list += ['--action', client['action']]
 
         if mode == 'async':
-            return pulse2.launcher.process_control.commandForker(
+            result = pulse2.launcher.process_control.commandForker(
                 command_list,
                 __cb_async_process_end,
                 command_id,
@@ -749,11 +810,18 @@ def remote_halt(command_id, client, mode, wrapper_timeout):
                 client['group'],
                 'halt'
             )
+            if not result :
+                logging.getLogger().warn("Remote halt (ssh/async) failed for CoH #%d" % command_id)
+            return result  
         elif mode == 'sync':
-            return pulse2.launcher.process_control.commandRunner(
+            result = pulse2.launcher.process_control.commandRunner(
                 command_list,
                 __cb_sync_process_end
             )
+            if not result :
+                logging.getLogger().warn("Remote halt (ssh/sync) failed for CoH #%d" % command_id)
+            return result
+    logging.getLogger().warn("Remote halt failed for CoH #%d" % command_id)
     return None
 
 def from_remote_to_launcher(command_id, client, paths, targetpath, bwlimit, wrapper_timeout):
@@ -763,6 +831,7 @@ def from_remote_to_launcher(command_id, client, paths, targetpath, bwlimit, wrap
     client = pulse2.launcher.utils.setDefaultClientOptions(client)
 
     if not LauncherConfig().is_scp_available:
+        logging.getLogger().warn("Can't do remote to launcher because scp is not available")
         return False
 
     real_command = [LauncherConfig().scp_path]
@@ -804,9 +873,12 @@ def from_remote_to_launcher(command_id, client, paths, targetpath, bwlimit, wrap
     if client['action']:
         command_list += ['--action', client['action']]
 
-    return pulse2.launcher.process_control.commandRunner(
+    result = pulse2.launcher.process_control.commandRunner(
         command_list,
         __cb_sync_process_end)
+    if not result:
+        logging.getLogger().warn("Remote to launcher failed for CoH #%d" % command_id)
+    return result
 
 
 def __cb_sync_process_end(shprocess):
