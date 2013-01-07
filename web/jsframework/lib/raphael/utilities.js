@@ -23,6 +23,7 @@ function getPercentageData(data, percent) {
     var val = 0;
     var decrem = percent;
     var sumData = 0;
+    var total = 0;
 
     // get sum of array
     for (var i = 0; i < data.length; i++) {
@@ -31,7 +32,7 @@ function getPercentageData(data, percent) {
 
     for (var i = 0; i < data.length; i++) {
         // express value in percentage
-        val = data[i] * percent / sumData;
+        val = Math.round(data[i] * percent / sumData);
 
         // we don't want a value lesser than 1
         if (val < 1) {
@@ -43,9 +44,10 @@ function getPercentageData(data, percent) {
             result.push(val);
         }
         else {
-            result.push(decrem);
+            result.push(percent - total);
         }
         decrem -= val;
+        total += val;
     }
 
     return result;
