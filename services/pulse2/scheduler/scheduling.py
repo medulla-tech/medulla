@@ -2461,7 +2461,7 @@ def parsePullOrder(taken_in_account, myCommandOnHostID):
         return runGiveUpPhase(myCommandOnHostID)
     if taken_in_account: # success
         updateHistory(myCommandOnHostID, 'upload_in_progress')
-        log.info("command_on_host #%s: pull order taken stacked" % myCommandOnHostID)
+        log.info("command_on_host #%s: pull order stacked" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
     else: # failed: launcher seems to have rejected it
         myCoH.setUploadToDo()
