@@ -333,7 +333,6 @@ class ProcessList(Singleton):
 
     """ Process handling """
     def addProcess(self, obj, id):
-        logging.getLogger().info("IBT23SEC5 : Process count : %d" %len(self.listProcesses()))
         if not self.canAddThisProcess(id):
             return False
         self._processArr[id] = obj
