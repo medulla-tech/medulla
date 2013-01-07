@@ -1352,7 +1352,7 @@ def runWOLPhase(myCommandOnHostID):
         return runGiveUpPhase(myCommandOnHostID)
 
     if myCoH.isWOLIgnored(): # wol has already been ignored, jump to next stage
-        log.info("command_on_host #%s: wol ignored" % myCoH.getId())
+        log.debug("command_on_host #%s: wol ignored" % myCoH.getId())
         return runUploadPhase(myCommandOnHostID)
     if myCoH.isWOLDone(): # wol has already already done, jump to next stage
         log.info("command_on_host #%s: wol done" % myCoH.getId())
@@ -1428,7 +1428,7 @@ def runUploadPhase(myCommandOnHostID):
         log.info("command_on_host #%s: still running" % myCoH.getId())
         return runGiveUpPhase(myCommandOnHostID)
     if myCoH.isUploadIgnored(): # upload has already been ignored, jump to next stage
-        log.info("command_on_host #%s: upload ignored" % myCoH.getId())
+        log.debug("command_on_host #%s: upload ignored" % myCoH.getId())
         return runExecutionPhase(myCoH.getId())
     if myCoH.isUploadDone(): # upload has already already done, jump to next stage
         log.info("command_on_host #%s: upload done" % myCoH.getId())
@@ -1828,7 +1828,7 @@ def runExecutionPhase(myCommandOnHostID):
         log.info("command_on_host #%s: execution done" % myCommandOnHostID)
         return runDeletePhase(myCommandOnHostID)
     if myCoH.isExecutionIgnored(): # execution has already been ignored, jump to next stage
-        log.info("command_on_host #%s: execution ignored" % myCommandOnHostID)
+        log.debug("command_on_host #%s: execution ignored" % myCommandOnHostID)
         return runDeletePhase(myCommandOnHostID)
     if not myCoH.isExecutionImminent(): # nothing to do right now, give out
         log.info("command_on_host #%s: nothing to execute right now" % myCommandOnHostID)
@@ -1934,7 +1934,7 @@ def runDeletePhase(myCommandOnHostID):
         log.info("command_on_host #%s: delete done" % myCommandOnHostID)
         return runInventoryPhase(myCommandOnHostID)
     if myCoH.isDeleteIgnored(): # delete has already be ignored, jump to next stage
-        log.info("command_on_host #%s: delete ignored" % myCommandOnHostID)
+        log.debug("command_on_host #%s: delete ignored" % myCommandOnHostID)
         return runInventoryPhase(myCommandOnHostID)
     if not myCoH.isDeleteImminent(): # nothing to do right now, give out
         log.info("command_on_host #%s: nothing to delete right now" % myCommandOnHostID)
@@ -2054,7 +2054,7 @@ def runInventoryPhase(myCommandOnHostID):
         log.info("command_on_host #%s: still inventoriing" % myCoH.getId())
         return runGiveUpPhase(myCommandOnHostID)
     if myCoH.isInventoryIgnored(): # inventory has already been ignored, jump to next stage
-        log.info("command_on_host #%s: inventory ignored" % myCoH.getId())
+        log.debug("command_on_host #%s: inventory ignored" % myCoH.getId())
         return runRebootPhase(myCommandOnHostID)
     if myCoH.isInventoryDone(): # inventory has already already done, jump to next stage
         log.info("command_on_host #%s: inventory done" % myCoH.getId())
@@ -2121,7 +2121,7 @@ def runRebootPhase(myCommandOnHostID):
         log.info("command_on_host #%s: still rebooting" % myCoH.getId())
         return runGiveUpPhase(myCommandOnHostID)
     if myCoH.isRebootIgnored(): # reboot has already been ignored, jump to next stage
-        log.info("command_on_host #%s: reboot ignored" % myCoH.getId())
+        log.debug("command_on_host #%s: reboot ignored" % myCoH.getId())
         return runHaltOnDone(myCommandOnHostID)
     if myCoH.isRebootDone(): # reboot has already been done, jump to next stage
         log.info("command_on_host #%s: reboot done" % myCoH.getId())
@@ -2190,7 +2190,7 @@ def runHaltPhase(myCommandOnHostID, condition):
         log.info("command_on_host #%s: still halting" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
     if myCoH.isHaltIgnored(): # halt has already be ignored, jump to next stage
-        log.info("command_on_host #%s: halt ignored" % myCommandOnHostID)
+        log.debug("command_on_host #%s: halt ignored" % myCommandOnHostID)
         return runDonePhase(myCommandOnHostID)
     if myCoH.isHaltDone(): # halt has already be done, jump to next stage
         log.info("command_on_host #%s: halt done" % myCommandOnHostID)
@@ -2203,17 +2203,17 @@ def runHaltPhase(myCommandOnHostID, condition):
         log.info("command_on_host #%s: do not halt right now" % myCoH.getId())
         return runGiveUpPhase(myCommandOnHostID)
     if not myC.hasToHalt(): # do not run halt
-        log.info("command_on_host #%s: halt ignored" % myCommandOnHostID)
+        log.debug("command_on_host #%s: halt ignored" % myCommandOnHostID)
         myCoH.setHaltIgnored()
         myCoH.setStateScheduled()
         return runDonePhase(myCommandOnHostID)
     if condition == 'done' and not myC.hasToHaltIfDone(): # halt on done and we do not have to halt on done
-        log.info("command_on_host #%s: halt-on-done ignored" % myCommandOnHostID)
+        log.debug("command_on_host #%s: halt-on-done ignored" % myCommandOnHostID)
         myCoH.setHaltIgnored()
         myCoH.setStateScheduled()
         return runDonePhase(myCommandOnHostID)
     if condition == 'failed' and not myC.hasToHaltIfFailed(): # halt on failed and we do not have to halt on failure
-        log.info("command_on_host #%s: halt-on-failed ignored" % myCommandOnHostID)
+        log.debug("command_on_host #%s: halt-on-failed ignored" % myCommandOnHostID)
         myCoH.setHaltIgnored()
         myCoH.setStateScheduled()
         return runDonePhase(myCommandOnHostID)
