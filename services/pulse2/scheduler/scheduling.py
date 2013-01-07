@@ -2447,12 +2447,12 @@ def parsePushOrder(taken_in_account, myCommandOnHostID):
         return runGiveUpPhase(myCommandOnHostID)
     if taken_in_account: # success
         updateHistory(myCommandOnHostID, 'upload_in_progress')
-        log.info("command_on_host #%s: push order taken in account" % myCommandOnHostID)
+        log.info("command_on_host #%s: push order stacked" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
     else: # failed: launcher seems to have rejected it
         myCoH.setUploadToDo()
         myCoH.setStateScheduled()
-        log.warn("command_on_host #%s: push order not taken in account" % myCommandOnHostID)
+        log.warn("command_on_host #%s: push order NOT stacked" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
 
 def parsePullOrder(taken_in_account, myCommandOnHostID):
@@ -2461,12 +2461,12 @@ def parsePullOrder(taken_in_account, myCommandOnHostID):
         return runGiveUpPhase(myCommandOnHostID)
     if taken_in_account: # success
         updateHistory(myCommandOnHostID, 'upload_in_progress')
-        log.info("command_on_host #%s: pull order taken in account" % myCommandOnHostID)
+        log.info("command_on_host #%s: pull order taken stacked" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
     else: # failed: launcher seems to have rejected it
         myCoH.setUploadToDo()
         myCoH.setStateScheduled()
-        log.warn("command_on_host #%s: pull order not taken in account" % myCommandOnHostID)
+        log.warn("command_on_host #%s: pull order NOT stacked" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
 
 def parseExecutionOrder(taken_in_account, myCommandOnHostID):
@@ -2475,12 +2475,12 @@ def parseExecutionOrder(taken_in_account, myCommandOnHostID):
         return runGiveUpPhase(myCommandOnHostID)
     if taken_in_account: # success
         updateHistory(myCommandOnHostID, 'execution_in_progress')
-        log.info("command_on_host #%s: execution order taken in account" % myCommandOnHostID)
+        log.info("command_on_host #%s: execution order stacked" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
     else: # failed: launcher seems to have rejected it
         myCoH.setExecutionToDo()
         myCoH.setStateScheduled()
-        log.warn("command_on_host #%s: execution order not taken in account" % myCommandOnHostID)
+        log.warn("command_on_host #%s: execution order NOT stacked" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
 
 def parseDeleteOrder(taken_in_account, myCommandOnHostID):
@@ -2489,12 +2489,12 @@ def parseDeleteOrder(taken_in_account, myCommandOnHostID):
         return runGiveUpPhase(myCommandOnHostID)
     if taken_in_account: # success
         updateHistory(myCommandOnHostID, 'delete_in_progress')
-        log.info("command_on_host #%s: delete order taken in account" % myCommandOnHostID)
+        log.info("command_on_host #%s: delete order stacked" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
     else: # failed: launcher seems to have rejected it
         myCoH.setDeleteToDo()
         myCoH.setStateScheduled()
-        log.warn("command_on_host #%s: delete order not taken in account" % myCommandOnHostID)
+        log.warn("command_on_host #%s: delete order NOT stacked" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
 
 def parseInventoryOrder(taken_in_account, myCommandOnHostID):
@@ -2503,12 +2503,12 @@ def parseInventoryOrder(taken_in_account, myCommandOnHostID):
         return runGiveUpPhase(myCommandOnHostID)
     if taken_in_account: # success
         updateHistory(myCommandOnHostID, 'inventory_in_progress')
-        log.info("command_on_host #%s: inventory order taken in account" % myCommandOnHostID)
+        log.info("command_on_host #%s: inventory order stacked" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
     else: # failed: launcher seems to have rejected it
         myCoH.setInventoryToDo()
         myCoH.setStateScheduled()
-        log.warn("command_on_host #%s: inventory order not taken in account" % myCommandOnHostID)
+        log.warn("command_on_host #%s: inventory order NOT stacked" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
 
 def parseRebootOrder(taken_in_account, myCommandOnHostID):
@@ -2517,12 +2517,12 @@ def parseRebootOrder(taken_in_account, myCommandOnHostID):
         return runGiveUpPhase(myCommandOnHostID)
     if taken_in_account: # success
         updateHistory(myCommandOnHostID, 'reboot_in_progress')
-        log.info("command_on_host #%s: reboot order taken in account" % myCommandOnHostID)
+        log.info("command_on_host #%s: reboot order stacked" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
     else: # failed: launcher seems to have rejected it
         myCoH.setRebootToDo()
         myCoH.setStateScheduled()
-        log.warn("command_on_host #%s: reboot order not taken in account" % myCommandOnHostID)
+        log.warn("command_on_host #%s: reboot order NOT stacked" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
 
 def parseHaltOrder(taken_in_account, myCommandOnHostID):
@@ -2531,12 +2531,12 @@ def parseHaltOrder(taken_in_account, myCommandOnHostID):
         return runGiveUpPhase(myCommandOnHostID)
     if taken_in_account: # success
         updateHistory(myCommandOnHostID, 'halt_in_progress')
-        log.info("command_on_host #%s: halt order taken in account" % myCommandOnHostID)
+        log.info("command_on_host #%s: halt order stacked" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
     else: # failed: launcher seems to have rejected it
         myCoH.setHaltToDo()
         myCoH.setStateScheduled()
-        log.warn("command_on_host #%s: halt order not taken in account" % myCommandOnHostID)
+        log.warn("command_on_host #%s: halt order NOT stacked" % myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
 
 def parseWOLError(reason, myCommandOnHostID, decrement_attempts_left = False, error_code = PULSE2_UNKNOWN_ERROR):
