@@ -61,31 +61,31 @@ if (strlen($_GET['bundle_id']) && !strlen($cmd_id)) {
             _T("<b>No</b> package installation was successful", "msc"),
             _T("<b>One</b> package installation was successful", "msc"),
             _T('<b>%s</b> packages installation were successful', 'msc'),
-            _T('Success: %s%', 'msc')
+            _T('Success: %percent% (%d packages)', 'msc')
         )),
         array('stopped', array(
             _T("<b>No</b> package installation is stopped", "msc"),
             _T("<b>One</b> package installation is stopped", "msc"),
             _T('<b>%s</b> packages installation are stopped', 'msc'),
-            _T('Stopped: %s%', 'msc')
+            _T('Stopped: %percent% (%d packages)', 'msc')
         )),
         array('paused', array(
             _T("<b>No</b> package installation is paused", "msc"),
             _T("<b>One</b> package installation is paused", "msc"),
             _T('<b>%s</b> packages installation are paused', 'msc'),
-            _T('Paused: %s%', 'msc')
+            _T('Paused: %percent% (%d packages)', 'msc')
         )),
         array('running', array(
             _T("<b>No</b> package installation is in progress", "msc"),
             _T("<b>One</b> package installation is in progress", "msc"),
             _T('<b>%s</b> packages installation are in progress', 'msc'),
-            _T('In progress: %s%', 'msc')
+            _T('In progress: %percent% (%d packages)', 'msc')
         )),
         array('failure', array(
             _T('<b>No</b> package installation failed', 'msc'),
             _T('<b>One</b> package installation failed', 'msc'),
             _T('<b>%s</b> packages installation failed', 'msc'),
-            _T('Failed: %s%', 'msc')
+            _T('Failed: %percent% (%d packages)', 'msc')
         )),
         );
 } else {
@@ -94,31 +94,31 @@ if (strlen($_GET['bundle_id']) && !strlen($cmd_id)) {
             _T('<b>No</b> computer was successfully deployed', 'msc'),
             _T('<b>One</b> computer was successfully deployed', 'msc'),
             _T('<b>%s</b> computers were successfully deployed', 'msc'),
-            _T('Success: %s%', 'msc') // Pie chart legend text
+            _T('Success: %percent% (%d computers)', 'msc') // Pie chart legend text
         )),
         array('stopped', array(
             _T('<b>No</b> computer is stopped', 'msc'),
             _T('<b>One</b> computer is stopped', 'msc'),
             _T('<b>%s</b> computers are stopped', 'msc'),
-            _T('Stopped: %s%', 'msc') // Pie chart legend text
+            _T('Stopped: %percent% (%d computers)', 'msc') // Pie chart legend text
         )),
         array('paused', array(
             _T('<b>No</b> computer is paused', 'msc'),
             _T('<b>One</b> computer is paused', 'msc'),
             _T('<b>%s</b> computers are paused', 'msc'),
-            _T('Paused: %s%', 'msc') // Pie chart legend text
+            _T('Paused: %percent% (%d computers)', 'msc') // Pie chart legend text
         )),
         array('running', array(
             _T('<b>No</b> computer is running a deployment', 'msc'),
             _T('<b>One</b> computer is running a deployment', 'msc'),
             _T('<b>%s</b> computers are running a deployment', 'msc'),
-            _T('In progress: %s%', 'msc') // Pie chart legend text
+            _T('In progress: %percent% (%d computers)', 'msc') // Pie chart legend text
         )),
         array('failure', array(
             _T('<b>No</b> computer failed to deploy', 'msc'),
             _T('<b>One</b> computer failed to deploy', 'msc'),
             _T('<b>%s</b> computers failed to deploy', 'msc'),
-            _T('Failed: %s%', 'msc') // Pie chart legend text
+            _T('Failed: %percent% (%d computers)', 'msc') // Pie chart legend text
         )),
         );
 }
@@ -209,7 +209,7 @@ foreach ($labels as $l) {
             "number" => $s['total'][0],
             "percent" => $s['total'][1],
             "url" => urlStr("base/computers/computersgroupcreator", $urlArray),
-            "legend" => str_replace('%s', $s['total'][1], $l[1][3]),
+            "legend" => $l[1][3],
         );
     }
     elseif(strlen($_GET['bundle_id'])) { // If it's a bundle on a group
@@ -219,9 +219,9 @@ foreach ($labels as $l) {
     if ($s['total'][0] == '0') {
         //print "<tr><td colspan='3'>".$l[1][0]." (".$s['total'][1]."%)</td><td><img src='modules/msc/graph/nocsv.png' alt='no csv export possible'/></td></tr>";
     } elseif ($s['total'][0] == '1') {
-        print "<tr><td colspan='3'>".$l[1][1]." (".$s['total'][1]."%)</td>".export_csv($cmd_id, $_GET['bundle_id'], $l[0])."</tr>";
+        print "<tr><td colspan='3'>".$l[1][1]."</td>".export_csv($cmd_id, $_GET['bundle_id'], $l[0])."</tr>";
     } else {
-        print "<tr><td colspan='3'>".sprintf($l[1][2], $s['total'][0])." (".$s['total'][1]."%)</td>".export_csv($cmd_id, $_GET['bundle_id'], $l[0])."</tr>";
+        print "<tr><td colspan='3'>".sprintf($l[1][2], $s['total'][0])."</td>".export_csv($cmd_id, $_GET['bundle_id'], $l[0])."</tr>";
     }
 
     foreach ($slabels[$l[0]] as $sl) {
@@ -246,9 +246,6 @@ foreach ($labels as $l) {
         if (count($sl) == 4 and $ss[0] != '0') {
             print " ".sprintf($sl[3], $status[$l[0]][$sl[2]][0]);
         }
-        if ($ss[0] != '0') {
-            print " (".$ss[1]."%)";
-        }
         if ($ss[0] == 0) {
             //print "</td><td><img src='modules/msc/graph/nocsv.png' alt='no csv export possible'/></td></tr>";
         } else {
@@ -269,7 +266,10 @@ foreach ($labels as $l) {
  *  For package stopped => failed status
  */
 
-if(strlen($_GET['bundle_id'])) {
+if(strlen($_GET['bundle_id']) and !isset($_GET['tab'])) {
+    #print "<pre>";
+    #print_r(isset($_GET['tab']));
+    #print "</pre>";
     // merge stopped and paused status
     $bundleStatus['failure'] = array_merge($bundleStatus['failure'], $bundleStatus['stopped']);
     $bundleStatus['running'] = array_merge($bundleStatus['running'], $bundleStatus['paused']);
@@ -303,7 +303,7 @@ if(strlen($_GET['bundle_id'])) {
         $machineStateNumber[$key] = array(
             "number" => count($value),
             "url" => urlStr("base/computers/computersgroupcreator", $urlArray),
-            "legend" => str_replace('%s', count($value) * 100 / $totalMachineNumber, $labels[$i][1][3]),
+            "legend" => $labels[$i][1][3],
         );
         $i++;
     }
@@ -317,7 +317,7 @@ echo <<< MSC
     <script type="text/javascript">
 var machineStateNumber = $jsonMachineStateNumber,
         r = Raphael("msc-graphs", 400, 200),
-        radius = 80,
+        radius = 50,
         x = 90,
         y = 90;
 
@@ -328,36 +328,41 @@ var machineStateNumber = $jsonMachineStateNumber,
 
     if (machineStateNumber.success.number) {
         data.push(machineStateNumber.success.number);
-        legend.push(machineStateNumber.success.legend);
+        legend.push(machineStateNumber.success.legend.replace('%d', machineStateNumber.success.number));
         href.push(machineStateNumber.success.url.replace(/&amp;/g, '&'));
         colors.push("#73d216");
     }
     if (machineStateNumber.stopped.number) {
         data.push(machineStateNumber.stopped.number);
-        legend.push(machineStateNumber.stopped.legend);
+        legend.push(machineStateNumber.stopped.legend.replace('%d', machineStateNumber.stopped.number));
         href.push(machineStateNumber.stopped.url.replace(/&amp;/g, '&'));
         colors.push("#111111");
     }
     if (machineStateNumber.paused.number) {
         data.push(machineStateNumber.paused.number);
-        legend.push(machineStateNumber.paused.legend);
+        legend.push(machineStateNumber.paused.legend.replace('%d', machineStateNumber.paused.number));
         href.push(machineStateNumber.paused.url.replace(/&amp;/g, '&'));
         colors.push("#ff9c00");
     }
     if (machineStateNumber.running.number) {
         data.push(machineStateNumber.running.number);
-        legend.push(machineStateNumber.running.legend);
+        legend.push(machineStateNumber.running.legend.replace('%d', machineStateNumber.running.number));
         href.push(machineStateNumber.running.url.replace(/&amp;/g, '&'));
         colors.push("#0066ff");
     }
     if (machineStateNumber.failure.number) {
         data.push(machineStateNumber.failure.number);
-        legend.push(machineStateNumber.failure.legend);
+        legend.push(machineStateNumber.failure.legend.replace('%d', machineStateNumber.failure.number));
         href.push(machineStateNumber.failure.url.replace(/&amp;/g, '&'));
         colors.push("#ef2929");
     }
 
     data = getPercentageData(data);
+
+    // put percentage values in legend
+    for (var i = 0; i < data.length; i++) {
+        legend[i] = legend[i].replace('%percent', data[i]);
+    }
 
     var pie = r.piechart(x, y, radius, data,
                      {legend: legend,
