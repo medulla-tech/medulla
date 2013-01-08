@@ -118,7 +118,7 @@ class SubscriptionManager(object):
                 pass
 
     def getInformations(self, dynamic = False):
-        from mmc.plugins.base import searchUserAdvanced, ComputerManager
+        from mmc.plugins.base import ComputerManager, LdapUserGroupControl
         if not self.config.is_subscribe_done:
             return { 'is_subsscribed': False }
         ret = {
@@ -137,8 +137,20 @@ class SubscriptionManager(object):
             'support_comment':self.config.subs_support_comment
         }
         if dynamic:
+            # Don't count SAMBA admin and nobody users
+            userCount = 0
+            users = LdapUserGroupControl().search(searchFilter="(&(uid=*)(objectClass=sambaSamAccount))",
+                                                  attrs=["uid", "gidNumber"])
+            for user in users:
+                try:
+                    user = user[0][1]
+                    if (('uid' in user and not user['uid'] == ['nobody']) and
+                            ('gidNumber' in user and not user['gidNumber'] == ['512'])):
+                        userCount += 1
+                except:
+                    pass
             # we add the number of user and computers we have right now
-            ret['installed_users'], _ = searchUserAdvanced()
+            ret['installed_users'] = userCount
             ret['too_much_users'] = (ret['users'] > 0 and ret['installed_users'] > ret['users'])
             if ComputerManager().isActivated():
                 ret['installed_computers'] = ComputerManager().getTotalComputerCount()
