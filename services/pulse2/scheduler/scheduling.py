@@ -45,7 +45,7 @@ from pulse2.apis.consts import PULSE2_ERR_CONN_REF, PULSE2_ERR_404
 
 # ORM mappings
 from pulse2.database.msc.orm.commands import Commands
-from pulse2.database.msc.orm.commands_on_host import CommandsOnHost
+from pulse2.database.msc.orm.commands_on_host import CommandsOnHost, setBalances
 from pulse2.database.msc.orm.commands_history import CommandsHistory
 from pulse2.database.msc.orm.target import Target
 from pulse2.database.utilities import handle_deconnect
@@ -644,6 +644,7 @@ def gatherIdsToReSchedule(scheduler_name):
     database = MscDatabase()
 
     now = time.strftime("%Y-%m-%d %H:%M:%S")
+    to_reach = int(SchedulerConfig().max_slots / getMaxNumberOfGroups())
 
     commands_query = session.query(CommandsOnHost, Commands).\
         select_from(database.commands_on_host.join(database.commands)
@@ -659,7 +660,7 @@ def gatherIdsToReSchedule(scheduler_name):
             database.commands_on_host.c.scheduler == None)
         ).filter(sqlalchemy.not_(
             database.commands.c.id.in_(Pulse2Preempt().members()))
-        )
+        ).limit(to_reach)
     session.close()
 
        
@@ -673,18 +674,15 @@ def calcBalance(scheduler_name):
     @type scheduler_name: string
     """
     commands_query = gatherIdsToReSchedule(scheduler_name)
-
-    for q in commands_query.all():
+    coh_balances = []
+    for myCoH, myC in commands_query.all():
         
-        (myCoH, myC, myT) = gatherCoHStuff(q[0].id)
-        if myCoH == None:    
-            return False 
         balance = getBalanceByAttempts(myC.start_date, 
                                        myC.end_date,
                                        myCoH.attempts_failed)
+        coh_balances.append((myCoH.id, balance))
 
-        myCoH.setBalance(balance)
-
+    setBalances(coh_balances)
 
 def selectCommandsToReSchedule (scheduler_name, limit):
     """ 

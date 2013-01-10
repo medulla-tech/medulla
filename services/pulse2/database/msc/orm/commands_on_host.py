@@ -1014,3 +1014,18 @@ def togglePauseCommandOnHost(coh_id):
     session.close()
     myCommandOnHost.toggleStatePaused()
 
+def setBalances (coh_balances):
+    """
+    Multiple update of balances.
+
+    @param coh_balances: list of tuples (id, balance)
+    @type coh_balances: list
+    """
+    session = sqlalchemy.orm.create_session()
+    for coh_id, balance in coh_balances :
+        myCommandOnHost = session.query(CommandsOnHost).get(coh_id)
+        myCommandOnHost.balance = balance
+        session.add(myCommandOnHost)
+        session.flush()
+    session.close()
+
