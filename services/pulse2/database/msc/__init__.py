@@ -1045,13 +1045,14 @@ class MscDatabase(DatabaseHelper):
         @return: a list of machine formated like this: [{'hostname': host, 'target_uuid': 'UUID'}, ...]
         @rtype: list
         """
+        return []
         for f in filter:
             query = query.filter(getattr(self.commands_on_host.c, f[0]).in_(f[1]))
         return [{'hostname': machine[0].host, 'target_uuid': machine[1]} for machine in query]
 
     def __getStatus(self, ctx, query, verbose = False):
         running = ['upload_in_progress', 'upload_done', 'execution_in_progress', 'execution_done', 'delete_in_progress', 'delete_done', 'inventory_in_progress', 'inventory_done', 'pause', 'stop', 'stopped', 'scheduled']
-        failure = ['failed', 'upload_failed', 'execution_failed', 'delete_failed', 'inventory_failed', 'not_reachable']
+        failure = ['failed', 'upload_failed', 'execution_failed', 'delete_failed', 'inventory_failed', 'not_reachable', 'over_timed']
 
         ret = {
             'total': int(query.count()),
@@ -1085,7 +1086,7 @@ class MscDatabase(DatabaseHelper):
                                                  ["uploaded", ["TODO"]],
                                                 ]
                                                 )]),[]],
-                'run_up':[self.getStateLen(query, [["uploaded", ["WORK_IN_PROGRESS"]]]), []],
+                'run_up':[self.getStateLen(query, [["current_state", running], ["uploaded", ["WORK_IN_PROGRESS"]]]), []],
                 'sec_up': [self.getStateLen(query, [["attempts_left", [0], False], ["uploaded", ["FAILED"]]]), []],
                 'wait_ex': [sum([self.getStateLen(query,
                                              [
@@ -1101,7 +1102,7 @@ class MscDatabase(DatabaseHelper):
                                                  ["executed", ["WORK_IN_PROGRESS"], False],
                                                 ]
                                                 )]),[]],
-                'run_ex':[self.getStateLen(query, [["uploaded", ["DONE", "IGNORED"]], ["executed", ["WORK_IN_PROGRESS"]]]), []],
+                'run_ex':[self.getStateLen(query, [["current_state", running], ["uploaded", ["DONE", "IGNORED"]], ["executed", ["WORK_IN_PROGRESS"]]]), []],
                 'sec_ex': [self.getStateLen(query, [["attempts_left", [0], False], ["executed", ["FAILED"]]]), []],
                 'wait_rm': [sum([self.getStateLen(query,
                                              [
@@ -1117,8 +1118,8 @@ class MscDatabase(DatabaseHelper):
                                                  ["deleted", ["WORK_IN_PROGRESS"], False],
                                                 ]
                                                 )]),[]],
-                'run_rm':[self.getStateLen(query, [["executed", ["DONE", "IGNORED"]], ["deleted", ["WORK_IN_PROGRESS"]]]), []],
-                'sec_rm': [self.getStateLen(query, [["attempts_left", [0], False], ["deleted", ["FAILED"]]]), []],
+                'run_rm':[self.getStateLen(query, [["current_state", running], ["executed", ["DONE", "IGNORED"]], ["deleted", ["WORK_IN_PROGRESS"]]]), []],
+                'sec_rm': [self.getStateLen(query, [["current_state", running], ["attempts_left", [0], False], ["deleted", ["FAILED"]]]), []],
             },
             'failure':{
                 'total':[self.getStateLen(query, [["current_state", failure]]), []],
@@ -1177,10 +1178,10 @@ class MscDatabase(DatabaseHelper):
                                                  ["executed", ["DONE", "IGNORED"]],
                                                  ["deleted", ["WORK_IN_PROGRESS"], False],
                                                 ])
-            ret['running']['sec_rm'][1] = self.getStateCoh(query, [["attempts_left", [0], False], ["deleted", ["FAILED"]]])
-            ret['running']['run_rm'][1] = self.getStateCoh(query, [["executed", ["DONE", "IGNORED"]], ["deleted", ["WORK_IN_PROGRESS"]]])
-            ret['running']['run_ex'][1] = self.getStateCoh(query, [["uploaded", ["DONE", "IGNORED"]], ["executed", ["WORK_IN_PROGRESS"]]])
-            ret['running']['run_up'][1] = self.getStateCoh(query, [["uploaded", ["WORK_IN_PROGRESS"]]])
+            ret['running']['sec_rm'][1] = self.getStateCoh(query, [["current_state", running], ["attempts_left", [0], False], ["deleted", ["FAILED"]]])
+            ret['running']['run_rm'][1] = self.getStateCoh(query, [["current_state", running], ["executed", ["DONE", "IGNORED"]], ["deleted", ["WORK_IN_PROGRESS"]]])
+            ret['running']['run_ex'][1] = self.getStateCoh(query, [["current_state", running], ["uploaded", ["DONE", "IGNORED"]], ["executed", ["WORK_IN_PROGRESS"]]])
+            ret['running']['run_up'][1] = self.getStateCoh(query, [["current_state", running], ["uploaded", ["WORK_IN_PROGRESS"]]])
 
         return ret
 
