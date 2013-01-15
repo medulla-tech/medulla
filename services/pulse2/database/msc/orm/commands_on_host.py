@@ -1014,18 +1014,40 @@ def togglePauseCommandOnHost(coh_id):
     session.close()
     myCommandOnHost.toggleStatePaused()
 
-def setBalances (coh_balances):
-    """
-    Multiple update of balances.
+class CoHManager :
+    """ Manager class to encapsulate the methods bellow. """
 
-    @param coh_balances: list of tuples (id, balance)
-    @type coh_balances: list
-    """
-    session = sqlalchemy.orm.create_session()
-    for coh_id, balance in coh_balances :
-        myCommandOnHost = session.query(CommandsOnHost).get(coh_id)
-        myCommandOnHost.balance = balance
-        session.add(myCommandOnHost)
-        session.flush()
-    session.close()
+    @classmethod
+    def setBalances (cls, coh_balances):
+        """
+        Multiple update of balances.
+
+        @param coh_balances: list of tuples (id, balance)
+        @type coh_balances: list
+        """
+        session = sqlalchemy.orm.create_session()
+        for coh_id, balance in coh_balances :
+            myCommandOnHost = session.query(CommandsOnHost).get(coh_id)
+            if myCommandOnHost :
+                myCommandOnHost.balance = balance
+                session.add(myCommandOnHost)
+                session.flush()
+        session.close()
+
+    @classmethod
+    def setCoHsStateOverTimed(cls, ids_overtimed):
+        """
+        Multiple setting the current state to 'overtimed'.
+
+        @param ids_overtimed: list of ids to update
+        @type ids_overtimed: list
+        """
+        session = sqlalchemy.orm.create_session()
+        for coh_id in ids_overtimed :
+            myCommandOnHost = session.query(CommandsOnHost).get(coh_id)
+            if myCommandOnHost :
+                myCommandOnHost.current_state = 'over_timed'
+                session.add(myCommandOnHost)
+                session.flush()
+        session.close()
 

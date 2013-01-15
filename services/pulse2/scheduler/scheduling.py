@@ -45,7 +45,7 @@ from pulse2.apis.consts import PULSE2_ERR_CONN_REF, PULSE2_ERR_404
 
 # ORM mappings
 from pulse2.database.msc.orm.commands import Commands
-from pulse2.database.msc.orm.commands_on_host import CommandsOnHost, setBalances
+from pulse2.database.msc.orm.commands_on_host import CommandsOnHost, CoHManager
 from pulse2.database.msc.orm.commands_history import CommandsHistory
 from pulse2.database.msc.orm.target import Target
 from pulse2.database.utilities import handle_deconnect
@@ -682,7 +682,7 @@ def calcBalance(scheduler_name):
                                        myCoH.attempts_failed)
         coh_balances.append((myCoH.id, balance))
 
-    setBalances(coh_balances)
+    CoHManager.setBalances(coh_balances)
 
 def selectCommandsToReSchedule (scheduler_name, limit):
     """ 
@@ -939,13 +939,17 @@ def sortCommands(commands_to_perform):
         addCallback(_parseResult)
 
 def getRunningCommandsOnHostInDB(scheduler_name, ids = None):
+    query = __getRunningCommandsOnHostInDB(scheduler_name, ids)
+    return [q[0].id for q in query]
+
+def __getRunningCommandsOnHostInDB(scheduler_name, ids=None) :
     # get the list of running commands according to the database content
     # ifs ids provided, returns only coh whose id corresponds
     session = sqlalchemy.orm.create_session()
     database = MscDatabase()
 
-    query = session.query(CommandsOnHost
-        ).select_from(database.commands_on_host
+    query = session.query(CommandsOnHost, Commands
+        ).select_from(database.commands_on_host.join(database.commands)
         ).filter(database.commands_on_host.c.current_state.in_(PULSE2_RUNNING_STATES)
         ).filter(sqlalchemy.or_(
             database.commands_on_host.c.scheduler == '',
@@ -959,9 +963,8 @@ def getRunningCommandsOnHostInDB(scheduler_name, ids = None):
         query = query.\
             filter(database.commands_on_host.c.id == ids)
 
-    ret = map(lambda q: q.id, query.all())
     session.close()
-    return ret
+    return query.all()
 
 def getCommandsToNeutralize(scheduler_name):
     # get the list of commands which can be put into "over_timed" state,
@@ -985,7 +988,7 @@ def getCommandsToNeutralize(scheduler_name):
             database.commands_on_host.c.scheduler == None)
         )
 
-    ret = map(lambda q: q.id, query.all())
+    ret = [q.id for q in query.all()]
     session.close()
     return ret
 
@@ -1002,25 +1005,27 @@ def gatherIdsToStop(scheduler_name):
     # - commands exhausted get killed *and* tagged as over_timed
     now = time.strftime("%Y-%m-%d %H:%M:%S")
     ids = list()
-    for id in getRunningCommandsOnHostInDB(scheduler_name):
-        (myCoH, myC, myT) = gatherCoHStuff(id)
-        if myCoH == None:
+    ids_overtimed = list()
+    for myCoH, myC in __getRunningCommandsOnHostInDB(scheduler_name):
+        if not myCoH:
             continue
         if not myC.inDeploymentInterval(): # stops command not in interval
-            ids.append(id)
+            ids.append(myCoH.id)
         elif myC.end_date.__str__() != '0000-00-00 00:00:00' and myC.end_date.__str__() <= now:
-            myCoH.setStateOverTimed() # change the CoH current_state (we are not going to be able to try to start this coh ever again)
-            ids.append(id)
+            ids_overtimed.append(myCoH.id)
+            ids.append(myCoH.id)
 
     # this loop only put the current_state in over_timed, but as the coh
     # are not running, we dont need to stop them.
     # /!\ has to be run *after* previous loop
     for id in getCommandsToNeutralize(scheduler_name):
-        (myCoH, myC, myT) = gatherCoHStuff(id)
-        if myCoH == None:
+        if not id:
             continue
         log.debug("Scheduler: Over Timed command_on_host #%s" % (id))
-        myCoH.setStateOverTimed()
+        ids_overtimed.append(id)
+
+    if len(ids_overtimed) > 0 :
+        CoHManager.setCoHsStateOverTimed(ids_overtimed)
 
     return ids
 
