@@ -441,7 +441,6 @@ class ImagingApi(MyXmlrpc):
         """
 
         def _onSuccess(result):
-            self.logger.error(result)
             if type(result) == dict and "faultCode" in result:
                 self.logger.warning('Imaging: While processing result for %s : %s' % (MACAddress, result['faultTraceback']))
                 return False
@@ -451,6 +450,7 @@ class ImagingApi(MyXmlrpc):
                     self.logger.info('Imaging: Updating cache for %s' % (MACAddress))
                     return result[1]
                 else:
+                    self.logger.warning("Imaging: Empty result for MAC: %s" % (MACAddress))
                     return False
             except Exception, e:
                 self.logger.warning('Imaging: While processing result %s for %s : %s' % (result, MACAddress, e))
