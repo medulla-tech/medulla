@@ -105,7 +105,9 @@ def cleanUp(config):
         os.setegid(0)
         os.unlink(config.pidfile)
 
-    uuid_cache = os.path.join("var","lib","pulse2","imaging", "uuid-cache.txt")
+    _cache_path = config.imaging_api['base_folder']
+    _cache_file = config.imaging_api['uuid_cache_file'] 
+    uuid_cache = os.path.join(_cache_path, _cache_file)
     if os.path.isfile(uuid_cache):
         logger.debug("Deleting the cache file")
         os.unlink(uuid_cache)
