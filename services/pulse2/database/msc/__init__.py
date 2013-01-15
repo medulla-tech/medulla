@@ -47,6 +47,8 @@ from pulse2.database.database_helper import DatabaseHelper
 from pulse2.managers.location import ComputerLocationManager
 import pulse2.time_intervals
 
+from mmc.plugins.dyngroup.config import DGConfig
+
 # Imported last
 import logging
 
@@ -956,8 +958,34 @@ class MscDatabase(DatabaseHelper):
     
     def getCommandOnGroupStatus(self, ctx, cmd_id):# TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         session = create_session()
-        query = session.query(CommandsOnHost).add_column(self.target.c.target_uuid).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.commands.c.id == cmd_id)
+        query = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.id == cmd_id)
         ret = self.__getStatus(ctx, query)
+        session.close()
+        return ret
+
+    def getMachineNamesOnGroupStatus(self, ctx, cmd_id, state):
+        session = create_session()
+        query = session.query(CommandsOnHost).add_column(self.target.c.target_uuid).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.commands.c.id == cmd_id)
+        query = query.filter(self.commands_on_host.c.current_state.in_(self.__getAllStatus()[state]))
+
+        # Limit list according to max_elements_for_static_list param in dyngroup.ini
+        limit = DGConfig().maxElementsForStaticList
+
+        query.limit(limit)
+        ret = [{'hostname': machine[0].host, 'target_uuid': machine[1]} for machine in query]
+        session.close()
+        return ret
+
+    def getMachineNamesOnBundleStatus(self, ctx, fk_bundle, state):
+        session = create_session()
+        query = session.query(CommandsOnHost).add_column(self.target.c.target_uuid).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.commands.c.fk_bundle == fk_bundle)
+        query = query.filter(self.commands_on_host.c.current_state.in_(self.__getAllStatus()[state]))
+
+        # Limit list according to max_elements_for_static_list param in dyngroup.ini
+        limit = DGConfig().maxElementsForStaticList
+
+        query.limit(limit)
+        ret = [{'hostname': machine[0].host, 'target_uuid': machine[1]} for machine in query]
         session.close()
         return ret
 
@@ -971,7 +999,7 @@ class MscDatabase(DatabaseHelper):
         
     def getCommandOnBundleStatus(self, ctx, fk_bundle):
         session = create_session()
-        query = session.query(CommandsOnHost).add_column(self.target.c.target_uuid).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.commands.c.fk_bundle == fk_bundle)
+        query = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.fk_bundle == fk_bundle)
         ret = self.__getStatus(ctx, query)
         session.close()
         return ret
@@ -1032,45 +1060,38 @@ class MscDatabase(DatabaseHelper):
                 query = query.filter(getattr(self.commands_on_host.c, f[0]).in_(f[1]))
         return int(query.count())
 
-    def getStateMachineNames(self, query, filter):
+    def __getAllStatus(self):
         """
-        Add filters to query and return machine names who match these filter
-        @param query: the query
-        @type query: sqlalchemy query object
-        @param filter: a list formated like this: [[field, state], [field, state], ...]
-                        field is name of field in commands_on_host table
-                        state is a list of possible states to filter on
-        @type filter: list
-
-        @return: a list of machine formated like this: [{'hostname': host, 'target_uuid': 'UUID'}, ...]
-        @rtype: list
+        return global statuses (success, paused, stopped, running, failure) by commands_on_host's current_state
         """
-        return []
-        for f in filter:
-            query = query.filter(getattr(self.commands_on_host.c, f[0]).in_(f[1]))
-        return [{'hostname': machine[0].host, 'target_uuid': machine[1]} for machine in query]
+        return {
+            'success': ['done'],
+            'paused': ['paused'],
+            'stopped': ['stopped', 'stop'],
+            'running': ['upload_in_progress', 'upload_done', 'execution_in_progress', 'execution_done', 'delete_in_progress', 'delete_done', 'inventory_in_progress', 'inventory_done', 'pause', 'stop', 'stopped', 'scheduled'],
+            'failure': ['failed', 'upload_failed', 'execution_failed', 'delete_failed', 'inventory_failed', 'not_reachable', 'over_timed'],
+        }
 
     def __getStatus(self, ctx, query, verbose = False):
-        running = ['upload_in_progress', 'upload_done', 'execution_in_progress', 'execution_done', 'delete_in_progress', 'delete_done', 'inventory_in_progress', 'inventory_done', 'pause', 'stop', 'stopped', 'scheduled']
-        failure = ['failed', 'upload_failed', 'execution_failed', 'delete_failed', 'inventory_failed', 'not_reachable', 'over_timed']
+        running = self.__getAllStatus()['running']
+        failure = self.__getAllStatus()['failure']
+        stopped = self.__getAllStatus()['stopped']
+        paused = self.__getAllStatus()['paused']
+        success = self.__getAllStatus()['success']
 
         ret = {
             'total': int(query.count()),
             'success':{
-                'total':[self.getStateLen(query, [["current_state", ["done"]]]), []],
-                'machineNames': self.getStateMachineNames(query, [["current_state", ["done"]]]),
+                'total':[self.getStateLen(query, [["current_state", success]]), []],
             },
             'stopped':{
-                'total':[self.getStateLen(query, [["current_state", ["stopped", "stop"]]]), []],
-                'machineNames': self.getStateMachineNames(query, [["current_state", ["stopped", "stop"]]]),
+                'total':[self.getStateLen(query, [["current_state", stopped]]), []],
             },
             'paused':{
-                'total':[self.getStateLen(query, [["current_state", ["paused"]]]), []],
-                'machineNames': self.getStateMachineNames(query, [["current_state", ["paused"]]]),
+                'total':[self.getStateLen(query, [["current_state", paused]]), []],
             },
             'running':{
                 'total': [self.getStateLen(query, [["current_state", running]]), []],
-                'machineNames': self.getStateMachineNames(query, [["current_state", running]]),
                 'wait_up': [sum([self.getStateLen(query,
                                              [
                                                  ["current_state", running],
@@ -1123,7 +1144,6 @@ class MscDatabase(DatabaseHelper):
             },
             'failure':{
                 'total':[self.getStateLen(query, [["current_state", failure]]), []],
-                'machineNames': self.getStateMachineNames(query, [["current_state", failure]]),
                 'fail_up': [self.getStateLen(query, [["attempts_left", [0]], ["uploaded", ["FAILED"]]]), []],
                 'conn_up': [self.getStateLen(query, [["attempts_left", [0]], ["uploaded", ["FAILED"]], ["current_state", ["not_reachable"]]]), []],
                 'fail_ex': [self.getStateLen(query, [["attempts_left", [0]], ["executed", ["FAILED"]]]), []],

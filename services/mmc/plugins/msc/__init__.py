@@ -442,6 +442,14 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return ctx.filterType
 
+    def getMachineNamesOnGroupStatus(self, cmd_id, state):
+        ctx = self.currentContext
+        return xmlrpcCleanup(MscDatabase().getMachineNamesOnGroupStatus(ctx, cmd_id, state))
+
+    def getMachineNamesOnBundleStatus(self, bundle_id, state):
+        ctx = self.currentContext
+        return xmlrpcCleanup(MscDatabase().getMachineNamesOnBundleStatus(ctx, bundle_id, state))
+
     #
     # default WEB values handling
     #

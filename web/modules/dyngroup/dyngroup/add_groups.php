@@ -202,7 +202,16 @@ natcasesort($diff);
 if (isset($_GET['pieGroupStatus'])) {
     // if group creation page is called by clicking on a Pie slice
     // Auto-fill page
-    foreach($_SESSION['MSCPieGroup'][$_GET['pieGroupStatus']] as $machine) {
+
+    require("modules/msc/includes/commands_xmlrpc.inc.php");
+
+    if(isset($_GET['cmd_id'])) {
+        $groupmembers = getMachineNamesOnGroupStatus($_GET['cmd_id'], $_GET['pieGroupStatus']);
+    }
+    elseif(isset($_GET['bundle_id'])) {
+        $groupmembers = getMachineNamesOnBundleStatus($_GET['bundle_id'], $_GET['pieGroupStatus']);
+    }
+    foreach($groupmembers as $machine) {
         $members[$machine['hostname'] . '##' . $machine['target_uuid']] = $machine['hostname'];
         $listOfMembers[$machine['target_uuid']] = array(
             "hostname" => $machine['hostname'],

@@ -193,18 +193,17 @@ function export_csv($cmd_id, $bundle_id, $state) {
  */
 $machineStateNumber = array();
 $bundleStatus = array();
-$urlArray = array(
-    "tab" => "tabsta",
-    "type" => 0,
-);
-
 
 foreach ($labels as $l) {
     $s = $status[$l[0]];
 
     if (strlen($cmd_id)) { // If it's an action on a group
-        $_SESSION['MSCPieGroup'][$l[0]] = $s['machineNames'];
-        $urlArray['pieGroupStatus'] = $l[0];
+        $urlArray = array(
+            'pieGroupStatus' => $l[0],
+            'cmd_id' => $cmd_id,
+            "tab" => "tabsta",
+            "type" => 0,
+        );
         $machineStateNumber[$l[0]] = array(
             "number" => $s['total'][0],
             "percent" => $s['total'][1],
@@ -298,8 +297,12 @@ if(strlen($_GET['bundle_id']) and !isset($_GET['tab'])) {
 
     $i = 0;
     foreach ($bundleStatus as $key => $value) {
-        $_SESSION['MSCPieGroup'][$key] = $value;
-        $urlArray['pieGroupStatus'] = $key;
+        $urlArray = array(
+            'pieGroupStatus' => $key,
+            'bundle_id' => $_GET['bundle_id'],
+            "tab" => "tabsta",
+            "type" => 0,
+        );
         $machineStateNumber[$key] = array(
             "number" => count($value),
             "url" => urlStr("base/computers/computersgroupcreator", $urlArray),

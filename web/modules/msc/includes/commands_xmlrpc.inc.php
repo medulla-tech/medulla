@@ -177,6 +177,14 @@ function get_def_package_label($label, $version) {
     return xmlCall('msc.get_def_package_label', array($label, $version));
 }
 
+function getMachineNamesOnGroupStatus($cmd_id, $state) {
+    return xmlCall("msc.getMachineNamesOnGroupStatus", array($cmd_id, $state));
+}
+
+function getMachineNamesOnBundleStatus($bundle_id, $state) {
+    return xmlCall("msc.getMachineNamesOnBundleStatus", array($bundle_id, $state));
+}
+
 
 function get_new_bundle_title($nb = 0) {
     return xmlCall('msc.get_new_bundle_title', array($nb));
