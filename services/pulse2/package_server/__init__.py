@@ -39,6 +39,8 @@ from twisted.internet import task
 from twisted.internet import utils
 from twisted.internet import defer
 
+from pulse2.version import getVersion, getRevision # pyflakes.ignore
+
 class ThreadPackageHelper(Thread):
     def __init__(self, config):
         Thread.__init__(self)

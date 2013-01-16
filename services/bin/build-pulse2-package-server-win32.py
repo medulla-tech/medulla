@@ -21,5 +21,6 @@
 # MA 02110-1301, USA.
 
 from distutils.core import setup
+import py2exe # pyflakes.ignore
 
 setup(service=["pulse2-package-server-win32"])

@@ -41,6 +41,7 @@ from mmc.plugins.base.computers import ComputerManager
 from pulse2.managers.imaging import ComputerImagingManager
 from pulse2.managers.pulse import Pulse2Manager
 from pulse2.database.imaging import ImagingDatabase
+from pulse2.version import getVersion, getRevision # pyflakes.ignore
 
 APIVERSION = "0:0:0"
 

@@ -23,6 +23,8 @@
 import win32serviceutil
 import win32service
 import win32event
+import winerror # pyflakes.ignore
+import pywintypes # pyflakes.ignore
 import os
 import os.path
 import sys

@@ -28,6 +28,8 @@ from mmc.plugins.pkgs.package_put_api import PackagePutA
 from mmc.plugins.pkgs.user_packageapi_api import UserPackageApiApi
 from mmc.plugins.pkgs.config import PkgsConfig
 
+from pulse2.version import getVersion, getRevision # pyflakes.ignore
+
 APIVERSION = "0:0:0"
 
 def getApiVersion(): return APIVERSION
