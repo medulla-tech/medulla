@@ -28,8 +28,8 @@ Add a specific mmc-agent plugin level
 import logging
 
 # SqlAlchemy
+from sqlalchemy import and_, or_, asc, select
 from sqlalchemy.orm import create_session
-from sqlalchemy.sql import *
 
 # MMC modules
 from mmc.plugins.base import getUserGroups

@@ -34,8 +34,8 @@ import time
 import datetime
 
 # SqlAlchemy
-from sqlalchemy import *
-from sqlalchemy.orm import *
+from sqlalchemy import and_, select
+from sqlalchemy.orm import create_session
 
 # MMC modules
 from mmc.plugins.base.computers import ComputerManager

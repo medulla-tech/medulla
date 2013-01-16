@@ -21,8 +21,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-from sqlalchemy import *
-from sqlalchemy.orm import *
+from sqlalchemy.orm import Query
 from sqlalchemy.exc import DBAPIError
 
 import logging
@@ -61,7 +60,7 @@ def unique(s):
         for x in s:
             u[x] = 1
     except TypeError:
-        del u  # move on to the next method
+        pass  # move on to the next method
     else:
         return u.keys()
 
@@ -76,7 +75,7 @@ def unique(s):
         t = list(s)
         t.sort()
     except TypeError:
-        del t  # move on to the next method
+        pass  # move on to the next method
     else:
         assert n > 0
         last = t[0]

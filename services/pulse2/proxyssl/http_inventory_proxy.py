@@ -35,10 +35,10 @@ from twisted.internet import ssl
 from twisted.web import proxy
 from twisted.web.server import NOT_DONE_YET
 
-from zlib import *
+from zlib import decompressobj, compressobj
 
 if os.name == 'nt':
-    from _winreg import *
+    from _winreg import * # pyflakes.ignore
 
 
 def makeSSLContext(verifypeer, cacert, localcert, log = False):

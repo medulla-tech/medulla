@@ -29,15 +29,17 @@ Inventory database backend
 from pulse2.managers.group import ComputerGroupManager
 
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
-from pulse2.database.utilities import unique, handle_deconnect, DbObject
+from pulse2.database.utilities import unique, handle_deconnect
+from pulse2.database.utilities import DbObject # pyflakes.ignore
 from pulse2.database.inventory.mapping import OcsMapping
 from mmc.site import mmcconfdir
 from pulse2.inventoryserver.config import Pulse2OcsserverConfigParser
 from pulse2.utils import same_network, Singleton, isUUID
 from mmc.plugins.dyngroup.config import DGConfig
 
-from sqlalchemy import *
-from sqlalchemy.orm import *
+from sqlalchemy import and_, create_engine, MetaData, Table, Column, \
+        Integer, ForeignKey, asc, or_, desc, func, not_
+from sqlalchemy.orm import create_session, mapper
 import sqlalchemy.databases
 
 import datetime

@@ -23,15 +23,11 @@
 # MA 02110-1301, USA.
 
 import os
-from os import *
 
 class Find:
     def find(self, path, func, attr):
         for p in os.listdir(path):
-            file = "%s%s%s" % (path, sep, p)
+            file = os.path.join(path, p)
             if os.path.isdir(file):
                 self.find(file, func, attr)
             func(file, *attr)
-                
-        
-

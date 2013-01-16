@@ -25,7 +25,8 @@ import sys
 import os
 import re
 import time
-from pychart import *
+
+from pychart import theme, color, canvas, font, axis, area, line_style, line_plot
 
 X_MINOR_TICK_INTERVAL = 600
 X_TICK_INTERVAL = 3600

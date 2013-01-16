@@ -24,8 +24,9 @@
 Test module for the Pulse 2 cache
 """
 import unittest
+import time.sleep
 
-from pulse2.cache import *
+from pulse2.cache import CacheManager, getCache, CacheFault, CacheExpired, DEFAULT_TIMEOUT
 
 class CacheTest(unittest.TestCase):
     """ Test Generic Pulse2 cache

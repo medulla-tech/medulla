@@ -23,7 +23,8 @@
 Mapping between SA and SQL ?
 """
 
-from sqlalchemy import *
+from sqlalchemy import create_engine, Table, MetaData
+from sqlalchemy.orm import create_session, mapper
 
 class SqlPlugin:
     """
@@ -32,7 +33,7 @@ class SqlPlugin:
     def __init__(self, conf):
         self.config = conf
         self.db = create_engine(self.makeConnectionPath())
-        self.metadata = BoundMetaData(self.db)
+        self.metadata = MetaData(self.db)
         self.initMappers()
         self.metadata.create_all()
         self.session = create_session()

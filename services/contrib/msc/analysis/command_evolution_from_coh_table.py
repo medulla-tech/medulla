@@ -30,7 +30,8 @@ import time
 import re
 import datetime
 from optparse import OptionParser
-from sqlalchemy import *
+
+from sqlalchemy import create_engine, MetaData, Table, or_, and_
 
 parser = OptionParser()
 parser.add_option("-f", "--format", dest="format", help="Output format (default : human)", metavar="csv|human", default="human")

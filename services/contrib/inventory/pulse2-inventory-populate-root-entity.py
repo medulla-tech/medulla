@@ -25,12 +25,10 @@
 import sys
 
 try:
-    from sqlalchemy import *
+    from sqlalchemy import create_engine, MetaData, Table, select, and_, __version__
 except ImportError:
     print "SqlAlchemy was not found, please install it !"
     sys.exit(1)
-
-import sqlalchemy
 
 def usage(argv):
     print >> sys.stderr, 'Usage: %s db_conn_string [--id entity_id|--name entity_name]' % argv[0]
@@ -41,7 +39,7 @@ if __name__ == "__main__":
     if len(sys.argv) != 2 and len(sys.argv) != 4:
         sys.exit(usage(sys.argv))
 
-    if not sqlalchemy.__version__.startswith('0.4'):
+    if not __version__.startswith('0.4'):
         print "Wrong version of SqlAlchemy found, please install a 0.4 version !"
         sys.exit(1)
 

@@ -36,7 +36,8 @@
 
 import sys
 import time
-from sqlalchemy import *
+
+from sqlalchemy import create_engine, MetaData, Table, Column, Integer, ForeignKey, select
 
 if len(sys.argv) != 3:
     print "usage: %s <mysql-uri> <command-id-comma-separated>" % sys.argv[0]

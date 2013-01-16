@@ -31,9 +31,6 @@ from mmc.plugins.glpi.database_07 import Glpi07
 from mmc.plugins.glpi.database_08 import Glpi08
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 
-from sqlalchemy import *
-from sqlalchemy.orm import *
-
 import logging
 
 class Glpi(DyngroupDatabaseHelper):
@@ -84,4 +81,3 @@ class Glpi(DyngroupDatabaseHelper):
             setattr(self, i, getattr(self.database, i))
 
         return ret
-

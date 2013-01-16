@@ -26,9 +26,9 @@ Dyngroup database handler
 """
 
 # SqlAlchemy
-from sqlalchemy import create_engine, MetaData, Table, Column, Integer, ForeignKey
+from sqlalchemy import and_, create_engine, MetaData, Table, Column, \
+        Integer, ForeignKey, select, not_, exceptions, bindparam
 from sqlalchemy.orm import create_session, mapper, relation
-from sqlalchemy.sql import *
 
 # PULSE2 modules
 from pulse2.database.database_helper import DatabaseHelper

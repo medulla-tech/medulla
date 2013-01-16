@@ -27,7 +27,7 @@
 
 import os
 import logging
-from stat import * # for S_*
+from stat import S_IFSOCK, S_IFLNK, S_IFREG, S_IFBLK, S_IFDIR, S_IFCHR, S_IFIFO
 
 def basicHealth():
     """

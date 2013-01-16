@@ -32,9 +32,12 @@ from pulse2.utils import same_network, unique
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 from pulse2.managers.group import ComputerGroupManager
 from mmc.plugins.glpi.database_utils import decode_latin1, encode_latin1, decode_utf8, encode_utf8, fromUUID, toUUID, setUUID
+from mmc.plugins.dyngroup.config import DGConfig
 
-from sqlalchemy import *
-from sqlalchemy.orm import *
+from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
+        Integer, ForeignKey, asc, or_, not_
+from sqlalchemy.orm import create_session, mapper
+from sqlalchemy.sql.expression.ColumnOperators import in_
 
 import logging
 import re
@@ -86,7 +89,7 @@ class Glpi07(DyngroupDatabaseHelper):
         if config != None:
             self.config = config
         else:
-            self.config = GlpiConfig("glpi", conffile)
+            self.config = GlpiConfig("glpi")
         dburi = self.makeConnectionPath()
         self.db = create_engine(dburi, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
         try:
@@ -1284,9 +1287,9 @@ class Glpi07(DyngroupDatabaseHelper):
             # is wrong, so for the moment we need this loop:
             while type(swname[0]) == list:
                 swname = swname[0]
-            query = query.filter(and_(self.software.c.name == swname[0], glpi_license.version == swname[1]))
+            query = query.filter(and_(self.software.c.name == swname[0], self.licenses.version == swname[1]))
         else:
-            query = query.filter(self.software.c.name == swname).order_by(glpi_license.version)
+            query = query.filter(self.software.c.name == swname).order_by(self.licenses.version)
         ret = query.all()
         session.close()
         return ret
@@ -1719,7 +1722,8 @@ class Glpi07(DyngroupDatabaseHelper):
         query = self.__getRestrictedComputersListQuery(ctx, filt, session)
 
         # Limit list according to max_elements_for_static_list param in dyngroup.ini
-        query.limit(DGConfig().maxElementsForStaticList)
+        limit = DGConfig().maxElementsForStaticList
+        query.limit(limit)
 
         if groupName == "green":
             result = query.filter(date_mod > orange).limit(limit)

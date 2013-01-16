@@ -29,8 +29,7 @@ Client to connect to the scheduler XMLRPC api from the msc mmc plugin.
 import twisted.web.xmlrpc
 import twisted.internet.defer
 
-from sqlalchemy import *
-from sqlalchemy.orm import *
+from sqlalchemy.orm import create_session
 import logging
 import re
 
@@ -247,7 +246,7 @@ def startCommand(scheduler, command_id):
         mydeffered.addCallback(parseResult).addErrback(parseResult)
         return mydeffered
     else:
-        self.logger.error("startCommand: no target associated to coh %s" % command_id)
+        logging.getLogger().error("startCommand: no target associated to coh %s" % command_id)
 
 
 def __select_scheduler(scheduler_name):

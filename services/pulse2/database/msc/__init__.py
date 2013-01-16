@@ -30,8 +30,9 @@ Provides access to MSC database
 import time
 
 # SqlAlchemy
-from sqlalchemy import *
-from sqlalchemy.orm import *
+from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
+        Integer, ForeignKey, select, asc, or_, desc, func, not_
+from sqlalchemy.orm import create_session, mapper, relation
 from sqlalchemy.sql import union
 from sqlalchemy.exc import NoSuchTableError, TimeoutError
 

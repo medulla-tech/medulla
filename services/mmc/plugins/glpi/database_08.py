@@ -34,9 +34,11 @@ from pulse2.managers.group import ComputerGroupManager
 from mmc.plugins.glpi.database_utils import decode_latin1, encode_latin1, decode_utf8, encode_utf8, fromUUID, toUUID, setUUID
 from mmc.plugins.dyngroup.config import DGConfig
 
-from sqlalchemy import *
-from sqlalchemy.orm import *
+from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
+        Integer, ForeignKey, select, asc, or_, func, not_
+from sqlalchemy.orm import create_session, mapper
 from sqlalchemy.sql import union
+from sqlalchemy.sql.expression.ColumnOperators import in_
 
 import logging
 import re
@@ -89,7 +91,7 @@ class Glpi08(DyngroupDatabaseHelper):
         if config != None:
             self.config = config
         else:
-            self.config = GlpiConfig("glpi", conffile)
+            self.config = GlpiConfig("glpi")
         dburi = self.makeConnectionPath()
         self.db = create_engine(dburi, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
         try:
@@ -1269,9 +1271,9 @@ class Glpi08(DyngroupDatabaseHelper):
             # is wrong, so for the moment we need this loop:
             while type(swname[0]) == list:
                 swname = swname[0]
-            query = query.filter(and_(self.software.c.name == swname[0], glpi_license.version == swname[1]))
+            query = query.filter(and_(self.software.c.name == swname[0], self.licenses.version == swname[1]))
         else:
-            query = query.filter(self.software.c.name == swname).order_by(glpi_license.version)
+            query = query.filter(self.software.c.name == swname).order_by(self.licenses.version)
         ret = query.all()
         session.close()
         return ret

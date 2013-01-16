@@ -28,7 +28,7 @@ import re
 from twisted.internet import reactor, defer
 from twisted.web.client import HTTPClientFactory, _parse, getPage
 
-from mmc.plugins.base.auth import *
+from mmc.plugins.base.auth import AuthenticatorConfig, AuthenticatorI
 from mmc.support.mmctools import getConfigFile
 
 class GlpiAuthenticatorConfig(AuthenticatorConfig):

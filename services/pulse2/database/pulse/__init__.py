@@ -28,13 +28,13 @@ Pulse2 database handler
 # SqlAlchemy
 from sqlalchemy import create_engine, MetaData, Table, Column, Text
 from sqlalchemy.orm import create_session, mapper
-from sqlalchemy.sql import *
+from sqlalchemy.sql import and_
+from sqlalchemy.exceptions import SQLError
 
 # PULSE2 modules
 # from pulse2.database.database_helper import DBObject
 from pulse2.database import database_helper
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
-
 
 # Imported last
 import logging
@@ -53,7 +53,7 @@ class Pulse2Database(DyngroupDatabaseHelper):
     def db_check(self):
         self.my_name = "Pulse2"
         self.configfile = "pulse2.ini"
-        return DatabaseHelper.db_check(self, DATABASEVERSION)
+        return DyngroupDatabaseHelper.db_check(self, DATABASEVERSION)
 
     def activate(self, config):
         self.logger = logging.getLogger()
@@ -95,7 +95,7 @@ class Pulse2Database(DyngroupDatabaseHelper):
         for i in range(NB_DB_CONN_TRY):
             try:
                 ret = self.db.connect()
-            except exceptions.SQLError, e:
+            except SQLError, e:
                 self.logger.error(e)
             except Exception, e:
                 self.logger.error(e)
