@@ -24,11 +24,11 @@
 from sqlalchemy import __version__
 
 SA_MAJOR = 0
-SA_MINOR = 4
+SA_MINOR = 6
 
 def checkSqlalchemy():
     a_version = __version__.split('.')
-    if len(a_version) > 2 and str(a_version[0]) == str(SA_MAJOR) and str(a_version[1]) == str(SA_MINOR):
+    if len(a_version) > 2 and str(a_version[0]) == str(SA_MAJOR) and str(a_version[1]) <= str(SA_MINOR):
         return True
     else:
         return False

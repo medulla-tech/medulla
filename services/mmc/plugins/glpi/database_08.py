@@ -38,7 +38,7 @@ from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
         Integer, ForeignKey, select, asc, or_, func, not_
 from sqlalchemy.orm import create_session, mapper
 from sqlalchemy.sql import union
-from sqlalchemy.sql.expression.ColumnOperators import in_
+from sqlalchemy.sql.expression import ColumnOperators
 
 import logging
 import re
@@ -444,7 +444,7 @@ class Glpi08(DyngroupDatabaseHelper):
         if not invert:
             return Machine.id.in_(map(lambda x:fromUUID(x), computers))
         else:
-            return Machine.id.not_(in_(map(lambda x:fromUUID(x), computers)))
+            return Machine.id.not_(ColumnOperators.in_(map(lambda x:fromUUID(x), computers)))
 
     def mappingTable(self, ctx, query):
         """
