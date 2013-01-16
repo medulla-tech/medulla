@@ -40,6 +40,8 @@ from mmc.plugins.inventory.provisioning import InventoryProvisioner
 from mmc.plugins.inventory.locations import InventoryLocation
 from mmc.plugins.inventory.tables_def import PossibleQueries
 
+from pulse2.version import getVersion, getRevision
+
 APIVERSION = "0:0:0"
 
 def getApiVersion(): return APIVERSION
