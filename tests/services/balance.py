@@ -22,7 +22,6 @@
 Test module for the scheduler balance module - part of advanced scheduling
 """
 
-import sys
 import unittest
 import random
 import datetime

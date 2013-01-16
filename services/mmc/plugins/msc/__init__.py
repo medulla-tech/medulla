@@ -61,8 +61,6 @@ import mmc.plugins.msc.client.scheduler
 # ORM mappings
 import pulse2.database.msc.orm.commands_on_host
 
-from pulse2.version import getVersion, getRevision
-
 APIVERSION = '0:0:0'
 
 def getApiVersion(): return APIVERSION

@@ -30,7 +30,7 @@ import xmlrpclib
 import unittest
 
 from tempfile import mkdtemp
-from testutils import generation_Launcher, generation_Commands, generation_Machine
+from testutils import generation_Launcher, generation_Commands
 from os import removedirs, remove, getcwd, system
 
 ipserver='localhost' # Address of pulse2 scheduler

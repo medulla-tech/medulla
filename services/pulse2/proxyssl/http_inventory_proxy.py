@@ -153,9 +153,9 @@ class MyProxyRequest(proxy.ProxyRequest):
                     if sys.platform[0:3] == "win":                          #It's here because I need Pulse2InventoryProxyConfig be initialited before improve packtage be initialat
                         from improveWin import improveXML,getOcsDebugLog
                     elif sys.platform == "mac":
-                        from improveMac import improveXML,getOcsDebugLog
+                        from improveMac import improveXML,getOcsDebugLog # pyflakes.ignore
                     else:
-                        from improveUnix import improveXML,getOcsDebugLog
+                        from improveUnix import improveXML,getOcsDebugLog # pyflakes.ignore
                     logger.debug("\tOcs Inventory Report Processing")
                     if self.config.getocsdebuglog:
                         # Add Ocs Log File

@@ -73,7 +73,6 @@ from pulse2.scheduler.tracking.proxy import LocalProxiesUsageTracking
 from pulse2.scheduler.tracking.commands import CommandsOnHostTracking
 from pulse2.scheduler.tracking.wol import WOLTracking
 from pulse2.scheduler.tracking.preempt import Pulse2Preempt
-from pulse2.utils import extractExceptionMessage
 from pulse2.scheduler.balance import ParabolicBalance, randomListByBalance, getBalanceByAttempts
 
 log = logging.getLogger()

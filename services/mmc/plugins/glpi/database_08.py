@@ -41,7 +41,6 @@ from sqlalchemy.sql import union
 import logging
 import re
 from sets import Set
-import exceptions
 import datetime
 
 class Glpi08(DyngroupDatabaseHelper):

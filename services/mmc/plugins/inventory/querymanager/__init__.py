@@ -60,7 +60,7 @@ def funcGet(couple, type = 'list'):
             return getValues(table, col)
         return getListValue
     elif type == 'double':
-        def getListValue(ctx, table, cols, value1 = '', value2 = None):
+        def getListValue(ctx, table, cols, value1 = '', value2 = None): # pyflakes.ignore
             """
             getListValue of "double" type. It's used where you search on 2 fields of a table.
             Example: On table Software, you can search on ProductName and ProductVersion
@@ -90,7 +90,7 @@ def funcGet(couple, type = 'list'):
             logging.getLogger().info('funcGet halfstatic:')
             dummy, f, v = PossibleQueries().possibleQueries('halfstatic')[couple]
             logging.getLogger().info("%s - %s" % (f,v))
-            def getListValue(ctx, value = '', table = table, col = col, f = f, v = v):
+            def getListValue(ctx, value = '', table = table, col = col, f = f, v = v): # pyflakes.ignore
                 if value != '':
                     return getValueFuzzyWhere(table, f, v, col, value)
                 return getValuesWhere(table, f, v, col)

@@ -26,18 +26,12 @@ It provide a full set of methods to get information from the database
 """
 
 # TODO rename location into entity (and locations in location)
-from mmc.support.config import PluginConfig
-from mmc.support.mmctools import Singleton, xmlrpcCleanup
-from mmc.plugins.base import ComputerI
 from mmc.plugins.glpi.config import GlpiConfig
 from mmc.plugins.glpi.utilities import complete_ctx
-from pulse2.utils import same_network, unique, onlyAddNew, grep, grepv
+from pulse2.utils import same_network, unique
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 from pulse2.managers.group import ComputerGroupManager
 from mmc.plugins.glpi.database_utils import decode_latin1, encode_latin1, decode_utf8, encode_utf8, fromUUID, toUUID, setUUID
-from mmc.plugins.glpi.database_utils import DbTOA
-
-from ConfigParser import NoOptionError
 
 from sqlalchemy import *
 from sqlalchemy.orm import *

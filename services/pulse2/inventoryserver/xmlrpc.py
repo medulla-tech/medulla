@@ -31,7 +31,7 @@ import twisted.web.xmlrpc
 try:
     from twisted.web import http
 except ImportError:
-    from twisted.protocols import http
+    from twisted.protocols import http # pyflakes.ignore
 
 class InventoryHTTPChannel(http.HTTPChannel):
     """

@@ -21,6 +21,5 @@
 # MA 02110-1301, USA.
 
 from distutils.core import setup
-import py2exe
 
 setup(service=["pulse2-inventory-ssl-proxy-win32"])

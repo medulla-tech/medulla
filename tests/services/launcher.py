@@ -399,7 +399,7 @@ if makefile:
     generation_Launcher(directory)
     file=directory+'/test.bin'
     chdir("%s/config/" %(directory))
-    system("sed \'s/src = /src = \/tmp\/%s/\' package_server.conf > package-server.conf" % (directory_temp[5:]))
+    system("sed \'s/src = /src = \/tmp\/%s/\' package_server.conf > package-server.conf" % (directory[5:]))
     system( "sed -i \'s/host = /host = %s/\' package-server.conf" %(ipserver))
     system ("%s/services/bin/pulse2-launcher -c %s/services/test/config/launchers.conf -i launcher_01 -l %s/services/test/config/launchers.conf &" %(direct,direct,direct))
 else:
@@ -415,7 +415,7 @@ sleep(10)
 if mode=="debug":
     success=[]
     nb=0
-    for klass in [class01sync_push_inventoryTest,class02sync_deleteTest,class03async_push_inventoryTest,class04async_deleteTest,class05statTest,class06killTest,class07sync_execTest,class08async_execTest,class09stopTest,class10int_contTest,class11stdTest,class12sync_quickactionTest,class13async_quickactionTest,class14idsTest,class15NetworkStuffTest,class16SProxyStuffTest,class17sleepTest,class18removedir,class19killlauncher]:
+    for klass in [class01sync_push_inventoryTest,class02sync_deleteTest,class03async_push_inventoryTest,class04async_deleteTest,class05statTest,class06killTest,class07sync_execTest,class08async_execTest,class09stopTest,class12sync_quickactionTest,class13async_quickactionTest,class14idsTest,class15NetworkStuffTest,class16SProxyStuffTest,class17sleepTest,class18removedir]:
         suite = unittest.TestLoader().loadTestsFromTestCase(klass)
         test=unittest.TextTestRunner(verbosity=Verbosity).run(suite)
         success.append(test.wasSuccessful())

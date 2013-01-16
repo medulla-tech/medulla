@@ -71,7 +71,7 @@ except NameError:
 try:
     import mx.DateTime as mxDateTime
 except ImportError:
-    mxDateTime = None
+    mxDateTime = None # pyflakes.ignore
 
 import uuid
 

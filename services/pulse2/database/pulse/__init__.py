@@ -26,8 +26,8 @@ Pulse2 database handler
 """
 
 # SqlAlchemy
-from sqlalchemy import create_engine, MetaData, Table, Column, Integer, ForeignKey, Text
-from sqlalchemy.orm import create_session, mapper, relation
+from sqlalchemy import create_engine, MetaData, Table, Column, Text
+from sqlalchemy.orm import create_session, mapper
 from sqlalchemy.sql import *
 
 # PULSE2 modules

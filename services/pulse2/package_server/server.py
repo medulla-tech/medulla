@@ -32,7 +32,7 @@ import logging
 try:
     from twisted.web import http
 except ImportError:
-    from twisted.protocols import http
+    from twisted.protocols import http # pyflakes.ignore
 
 class P2PHTTPChannel(http.HTTPChannel):
     """

@@ -45,8 +45,6 @@ from mmc.plugins.base.computers import ComputerManager
 from pulse2.managers.group import ComputerGroupManager
 from pulse2.managers.profile import ComputerProfileManager
 
-from pulse2.version import getVersion, getRevision
-
 # health check
 from mmc.plugins.dyngroup.health import scheduleCheckStatus
 
