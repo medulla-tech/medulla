@@ -168,7 +168,7 @@ class Pulse2Image:
                 if not line_log_file_error == None:
                     self.has_error = True
             fd_log_file.close()
-        except OSError, e:
+        except OSError:
             pass  # harmless
 
     def _readProgress(self):
@@ -185,7 +185,7 @@ class Pulse2Image:
                     self.current_part = int(line_prog_file_split.group(1))
                     self.progress = int(line_prog_file_split.group(2))
             fd_prog_file.close()
-        except OSError, e:
+        except OSError:
             pass  # harmless
 
 

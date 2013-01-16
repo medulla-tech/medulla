@@ -90,7 +90,6 @@ class Machines(Singleton):
         h_params stuct looks like that : {'hostname':name, 'uuid':uuid}
         """
         try:
-            uuid = h_params['uuid']
             ret = ComputerManager().getComputer(ctx, h_params)
             self.logger.debug("getMachine: wanted |%s|, got |%s|" % (h_params, ret))
             if ret != None:
@@ -111,10 +110,3 @@ class Machines(Singleton):
             return Machine(ret[h_params['hostname']][1])
         except:
             return None
-
-
-
-
-
-
-

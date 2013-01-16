@@ -130,7 +130,6 @@ class CommandsOnHostTracking(pulse2.utils.Singleton):
     def release(self, id):
         """ release lock for a given coh """
         self.__lock()
-        epoch = time.time()
         ret = self.__unlock_coh(id)
         if not ret: # not an error, as can be called after an xmlrpc command
             logging.getLogger().warn('LOCK: KO for releasing #%s (was not locked), releasing anyway' % (id))

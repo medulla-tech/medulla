@@ -29,11 +29,11 @@ Inventory database backend
 from pulse2.managers.group import ComputerGroupManager
 
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
-from pulse2.database.utilities import unique, handle_deconnect, DbObject
+from pulse2.database.utilities import unique, handle_deconnect
 from pulse2.database.inventory.mapping import OcsMapping
 from mmc.site import mmcconfdir
 from pulse2.inventoryserver.config import Pulse2OcsserverConfigParser
-from pulse2.utils import same_network, Singleton, isUUID, xmlrpcCleanup
+from pulse2.utils import same_network, Singleton, isUUID
 from mmc.plugins.dyngroup.config import DGConfig
 
 from sqlalchemy import *
@@ -517,7 +517,7 @@ class Inventory(DyngroupDatabaseHelper):
                     nomKlass = self.klass[nomTableName]
                     if hasattr(nomKlass, hs[1]):
                         condition = (getattr(nomKlass, hs[1]) == hs[2])
-                except ValueError, e:
+                except ValueError:
                     condition = (getattr(partKlass, hs[1]) == hs[2])
 
             if value.startswith('>') and not invert or value.startswith('<') and invert:
@@ -705,10 +705,8 @@ class Inventory(DyngroupDatabaseHelper):
         session = create_session()
         if table == 'Machine':
             partKlass = Machine
-            partTable = self.machine
         else:
             partKlass = self.klass[table]
-            partTable = self.table[table]
 
         result = session.query(partKlass).add_column(getattr(partKlass, field)).limit(MAX_REQ_NUM)
         session.close()
@@ -726,10 +724,8 @@ class Inventory(DyngroupDatabaseHelper):
         session = create_session()
         if table == 'Machine':
             partKlass = Machine
-            partTable = self.machine
         else:
             partKlass = self.klass[table]
-            partTable = self.table[table]
 
         result = session.query(partKlass).add_column(getattr(partKlass, field)).filter(getattr(partKlass, field).like('%'+fuzzy_value+'%')).limit(MAX_REQ_NUM).all()
         session.close()
@@ -856,7 +852,6 @@ class Inventory(DyngroupDatabaseHelper):
         """
         ret = []
         session = create_session()
-        partKlass = self.klass[part]
         partTable = self.table[part]
         haspartTable = self.table["has" + part]
         result, grp_by = self.__lastMachineInventoryPartQuery(session, ctx, part, params)
@@ -913,7 +908,6 @@ class Inventory(DyngroupDatabaseHelper):
         partKlass = self.klass[part]
         partTable = self.table[part]
         haspartTable = self.table["has" + part]
-        haspartKlass = self.klass["has" + part]
         grp_by = [partTable.c.id, haspartTable.c.machine]
 
         # This SQL query has been built using the one from the LRS inventory module
@@ -1531,8 +1525,6 @@ class Inventory(DyngroupDatabaseHelper):
         if params.has_key('uuid'):
             uuid = params['uuid']
             machineId = fromUUID(uuid)
-        if params.has_key('name'):
-            name = params['name']
         if params.has_key('min'):
             min = params['min']
         else:
@@ -1569,8 +1561,6 @@ class Inventory(DyngroupDatabaseHelper):
         if params.has_key('uuid'):
             uuid = params['uuid']
             machineId = fromUUID(uuid)
-        if params.has_key('name'):
-            name = params['name']
 
         session = create_session()
         count = session.query(self.klass['Inventory']). \
@@ -2106,7 +2096,6 @@ class InventoryCreator(Inventory):
                             for nom in OcsMapping().nomenclatures[table]:
                                 nomName = 'nom%s%s' % (table, nom)
                                 nomKlass = self.klass[nomName]
-                                nomTable = self.table[nomName]
 
                                 new_entry = {}
                                 for field in entry:

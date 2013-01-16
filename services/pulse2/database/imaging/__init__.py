@@ -36,7 +36,7 @@ from pulse2.database.imaging.types import P2ISS, P2IT, P2IM, P2IIK, P2ERR, P2ILL
 from pulse2.database import database_helper
 from pulse2.database.utilities import toUUID
 
-from sqlalchemy import create_engine, ForeignKey, Integer, MetaData, Table, Column, and_, or_, not_, desc, func, distinct
+from sqlalchemy import create_engine, ForeignKey, Integer, MetaData, Table, Column, and_, or_, desc, func, distinct
 from sqlalchemy.orm import create_session, mapper, relation
 from sqlalchemy.sql.expression import alias as sa_exp_alias
 from sqlalchemy.exc import InvalidRequestError
@@ -1191,7 +1191,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         mis = session.query(MenuItem).select_from(self.menu_item.join(self.menu, self.menu.c.id == self.menu_item.c.fk_menu))
         mis = mis.filter(self.menu.c.id == menu.id).order_by(self.menu_item.c.order).all()
 
-        mi_id = self.__computerChangeDefaultMenuItem(session, menu, mis, item_number)
+        self.__computerChangeDefaultMenuItem(session, menu, mis, item_number)
 
         if session_need_close:
             session.close()
@@ -1257,8 +1257,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return imim
 
     def __addService(self, session, bs_uuid, menu, params):
-        bs = session.query(BootService).filter(self.boot_service.c.id == uuid2id(bs_uuid)).first()
-        # TODO : what do we do with bs ?
         if menu == None:
             raise '%s:Please create menu before trying to put a bootservice' % (P2ERR.ERR_TARGET_HAS_NO_MENU)
 
@@ -1296,8 +1294,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return mi
 
     def __editService(self, session, bs_uuid, menu, mi, params):
-        bs = session.query(BootService).filter(self.boot_service.c.id == uuid2id(bs_uuid)).first()
-        # TODO : what do we do with bs ?
         if menu == None:
             raise '%s:Please create menu before trying to put a bootservice' % (P2ERR.ERR_TARGET_HAS_NO_MENU)
 
@@ -1359,7 +1355,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         mi = self.__getMenuItemByUUID(session, mi_uuid)
         if mi == None:
             raise '%s:This MenuItem does not exists'%(P2ERR.ERR_UNEXISTING_MENUITEM)
-        ret = self.__fillMenuItem(session, mi, mi.fk_menu, params)
+        self.__fillMenuItem(session, mi, mi.fk_menu, params)
         # TODO : what do we do with ret ?
         session.flush()
         self.__editMenuDefaults(session, mi.fk_menu, mi, params)
@@ -1768,8 +1764,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return True
 
     def __addImage(self, session, item_uuid, menu, params):
-        im = session.query(Image).filter(self.image.c.id == uuid2id(item_uuid)).first();
-        # TODO : what do we do with im ?
         if menu == None:
             raise '%s:Please create menu before trying to put an image' % (P2ERR.ERR_TARGET_HAS_NO_MENU)
 
@@ -1900,8 +1894,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return ret
 
     def __editImage(self, session, item_uuid, menu, mi, params):
-        im = session.query(Image).filter(self.image.c.id == uuid2id(item_uuid)).first();
-        # TODO : what do we do with im ?
         if menu == None:
             raise '%s:Please create menu before trying to put an image' % (P2ERR.ERR_TARGET_HAS_NO_MENU)
 
@@ -3109,15 +3101,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = session.query(ImagingServer).select_from(self.imaging_server.join(self.entity)).filter(self.imaging_server.c.associated == 1).filter(self.entity.c.uuid == loc_id).count()
         return (q == 1)
 
-    def setImagingServerConfig(self, location, config):
-        session = create_session()
-        imaging_server = self.getImagingServerByEntityUUID(location, session)
-        # modify imaging_server
-        # session.add(imaging_server)
-        # session.flush()
-        session.close()
-        return True
-
     def checkLanguage(self, location, language):
         session = create_session()
         imaging_server = self.getImagingServerByEntityUUID(location, session)
@@ -3617,7 +3600,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         for computer in computers.values():
             m = self.__duplicateMenu(session, menu, location_id, profile_UUID, True)
-            t = self.__createTarget(session, computer['uuid'], computer['hostname'], P2IT.COMPUTER_IN_PROFILE, loc.id, m.id, {})
+            self.__createTarget(session, computer['uuid'], computer['hostname'], P2IT.COMPUTER_IN_PROFILE, loc.id, m.id, {})
 
         session.flush()
         session.close()
@@ -3675,7 +3658,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
                 for computer in ComputerProfileManager().getProfileContent(uuid):
                    m = self.__duplicateMenu(session, menu, location_id, uuid, True)
-                   t = self.__createTarget(session, computer.uuid, computer.name, P2IT.COMPUTER_IN_PROFILE, loc.id, m.id, params)
+                   self.__createTarget(session, computer.uuid, computer.name, P2IT.COMPUTER_IN_PROFILE, loc.id, m.id, params)
 
                 session.flush()
         else:

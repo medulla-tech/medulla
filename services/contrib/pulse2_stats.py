@@ -70,7 +70,7 @@ def create_graph(label_x, label_y, data_x, alldata_y, filename, title, start_dat
     left = WIDTH / 2  - font.text_width(newtitle)/2
     can.show(left, HEIGHT + DELTA, newtitle)
 
-    data = zip(data_x)
+    zip(data_x)
     int_to_date = lambda x: '/a60{}' + time.strftime("%H:%M", time.localtime(x))
 
     xaxis = axis.X(

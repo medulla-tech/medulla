@@ -196,7 +196,6 @@ class MscDatabase(DatabaseHelper):
             files = "\n".join(files)
 
         cmd = Commands()
-        now = time.localtime()
         cmd.creation_date = time.strftime("%Y-%m-%d %H:%M:%S")
         cmd.package_id = package_id
         cmd.start_file = start_file
@@ -302,7 +301,6 @@ class MscDatabase(DatabaseHelper):
         """
         Build a part of a query for commands, that add user filtering
         """
-        q = 1==1
         if ctx.filterType == "mine":
             # User just want to get her/his commands
             return self.commands.c.creator == ctx.userid
@@ -632,7 +630,6 @@ class MscDatabase(DatabaseHelper):
 
     def __displayLogsQuery2(self, ctx, params, session):
         filter = []
-        select_from = None
         group_by = False
         group_clause = False
 

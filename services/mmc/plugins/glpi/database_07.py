@@ -45,7 +45,6 @@ from sqlalchemy.orm import *
 import logging
 import re
 from sets import Set
-import exceptions
 import datetime
 
 class Glpi07(DyngroupDatabaseHelper):
@@ -78,7 +77,7 @@ class Glpi07(DyngroupDatabaseHelper):
         try:
             logging.getLogger().debug('Trying to detect if GLPI version is 7')
             self.db.execute('SELECT version FROM glpi_config').fetchone().values()[0].replace(' ', '')
-        except Exception, e:
+        except Exception:
             logging.getLogger().debug('GLPI version 7 was not detected')
             return False
         return True
@@ -407,7 +406,7 @@ class Glpi07(DyngroupDatabaseHelper):
                     bool = filt['equ_bool']
                 machines = map(lambda m: fromUUID(m), ComputerGroupManager().request(ctx, request, bool, 0, -1, ''))
                 query = query.filter(self.machine.c.ID.in_(machines))
-            except KeyError, e:
+            except KeyError:
                 pass
 
         return query
@@ -749,7 +748,7 @@ class Glpi07(DyngroupDatabaseHelper):
                         ret[uuid][1]['fullname'] = ret[uuid][1]['cn'][0]+'.'+ret[uuid][1]['domain'][0]
                     else:
                         ret[uuid][1]['fullname'] = ret[uuid][1]['cn'][0]
-                except KeyError, e:
+                except KeyError:
                     ret[uuid][1]['macAddress'] = []
                     ret[uuid][1]['ipHostNumber'] = []
                     ret[uuid][1]['subnetMask'] = []

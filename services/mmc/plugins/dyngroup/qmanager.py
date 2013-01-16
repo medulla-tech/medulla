@@ -187,10 +187,9 @@ class QueryManager(Singleton):
 
     def _replyToQuery(self, ctx, query, bool = None):
         raise "DON'T USE _replyToQuery!!!"
-        ret = self.__recursive_query(ctx, query)
+        self.__recursive_query(ctx, query)
 
         values = {}
-        values_neg = {}
 
         # TODO does not seems to work...
         #['AND', [['1', 'dyngroup', 'groupname', 'test']]]
@@ -245,7 +244,6 @@ class QueryManager(Singleton):
 
     def _replyToQueryXML(self, ctx, query, bool = None):
         values = {}
-        values_neg = {}
         for qid, module, criterion, value in query:
             val, neg = self._getPluginReplyToQuery(
                 ctx,
@@ -306,7 +304,7 @@ class QueryManager(Singleton):
 
         try:
             return br.getTree(values)
-        except KeyError, e:
+        except KeyError:
             self.logger.error("Your boolean equation does not match your request (if you are using a group please check it's correct)")
             return None
 

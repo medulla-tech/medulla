@@ -29,7 +29,6 @@ from mmc.support.mmctools import shLaunch
 def get_keychain():
     proc = shLaunch('uname -n')
     p1 = re.compile('\n')
-    p2 = re.compile(';')
     out = p1.split(proc.out)
 
     if os.path.exists('/root/.keychain/'+out[0]+'-sh'):

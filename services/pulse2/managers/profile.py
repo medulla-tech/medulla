@@ -78,7 +78,6 @@ class ComputerProfileManager(Singleton):
 
     def addComputersToProfile(self, ctx, computers_UUID, profile_UUID):
         " ask to all profile managers "
-        ret = True
         def treatDeferList(result):
             ret = True
             for r in result:

@@ -2040,7 +2040,6 @@ class ImagingRpcProxy(RpcProxyI):
         @rtype:
         """
         
-        ret = True
         try:
             # Add entry in BootService Table
             db = ImagingDatabase()
@@ -2952,7 +2951,6 @@ def computersUnregister(computers_UUID, backup):
         i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
 
         db = ImagingDatabase()
-        failure = []
 
         if i != None:
             for computer in targets:

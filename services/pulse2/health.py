@@ -107,7 +107,6 @@ def getLoadAvg():
 
 def getMem():
     total = 0
-    free = 0
     cached = 0
     buffers = 0
     swap_total = 0
@@ -126,8 +125,6 @@ def getMem():
     for line in meminfo:
         if line.startswith("MemTotal:"):
             total = int(line.split()[1])
-        elif line.startswith("MemFree:"):
-            free = int(line.split()[1])
         elif line.startswith("Cached:"):
             cached = int(line.split()[1])
         elif line.startswith("Buffers:"):

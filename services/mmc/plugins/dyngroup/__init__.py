@@ -155,7 +155,7 @@ class RpcProxy(RpcProxyI):
         if self.isprofile(id):
             grp = DyngroupDatabase().get_group(ctx, id, True)
             profile_UUID = grp.getUUID()
-            ret2 = ComputerProfileManager().delProfile(profile_UUID)
+            ComputerProfileManager().delProfile(profile_UUID)
         return xmlrpcCleanup(DyngroupDatabase().delete_group(ctx, id))
 
     def create_group(self, name, visibility):
@@ -167,7 +167,6 @@ class RpcProxy(RpcProxyI):
         return xmlrpcCleanup(DyngroupDatabase().create_group(ctx, name, visibility, 1))
 
     def tos_group(self, id):
-        ctx = self.currentContext
         self.logger.error('tos_group is not implemented')
 
     def setname_group(self, id, name):
@@ -484,7 +483,7 @@ def __addCtxFilters(ctx, filt = None):
 def replyToQuery(ctx, query, bool = None, min = 0, max = 10, justId = False, toH = False, filt = None):
     if query == None: return []
     if __onlyIn(query, ComputerManager().main):
-        module = ComputerManager().main
+        ComputerManager().main
         filt = __addCtxFilters(ctx, filt)
         filt['query'] = query
         return xmlrpcCleanup(ComputerManager().getRestrictedComputersList(ctx, min, max, filt, False, justId, toH))
@@ -494,7 +493,7 @@ def replyToQuery(ctx, query, bool = None, min = 0, max = 10, justId = False, toH
 def replyToQueryLen(ctx, query, bool = None, filt = None):
     if query == None: return 0
     if __onlyIn(query, ComputerManager().main):
-        module = ComputerManager().main
+        ComputerManager().main
         filt = __addCtxFilters(ctx, filt)
         filt['query'] = query
         return xmlrpcCleanup(ComputerManager().getRestrictedComputersListLen(ctx, filt))

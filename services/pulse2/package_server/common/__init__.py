@@ -33,7 +33,7 @@ import shutil
 import hashlib
 import logging
 import random
-from pulse2.package_server.types import Mirror, Command, A_Packages, Package, AFiles, File, Machine, User
+from pulse2.package_server.types import File
 from pulse2.package_server.parser import PackageParser
 from pulse2.package_server.find import Find
 import pulse2.utils
@@ -517,7 +517,6 @@ class Common(pulse2.utils.Singleton):
     def associateFiles(self, mp, pid, files, level = 0):
         if not self.packages.has_key(pid):
             return [False, "This package don't exists"]
-        params = self.h_desc(mp)
         path = self._getPackageRoot(pid)
         self.logger.debug("File association will put files in %s" % (path))
         files_out = []

@@ -128,7 +128,7 @@ def establishProxy(client, requestor_ip, requested_port):
         command_list += ['--action', client['action']]
 
     proxy = proxyProtocol()
-    handler = twisted.internet.reactor.spawnProcess(
+    twisted.internet.reactor.spawnProcess(
         proxy,
         command_list[0],
         map(lambda(x): x.encode('utf-8', 'ignore'), command_list),

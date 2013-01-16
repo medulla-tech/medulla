@@ -137,7 +137,7 @@ def informationSearch():            # Found any information for the computer.
     #Company Register
     try:
         companyRegister = wmiObject.Win32_OperatingSystem(["Organization"])[0].Organization
-    except (WindowsError, wmi.x_wmi, IndexError):
+    except (WindowsError, wmi.x_wmi, IndexError): # pyflakes.ignore
         companyRegister = "N/A"
         
     result['companyRegister']=companyRegister
@@ -145,7 +145,7 @@ def informationSearch():            # Found any information for the computer.
     #Os Architecture (32-64 bit) only for Vista and superior
     try:
         osArchitecture = wmiObject.Win32_OperatingSystem(["OSArchitecture"])[0].OSArchitecture
-    except WindowsError:
+    except WindowsError: # pyflakes.ignore
         osArchitecture = "N/A"
     except wmi.x_wmi :    # If os is XP, 2003, 2000, 98, 95, ...
         osArchitecture = "32-bit"
@@ -156,7 +156,7 @@ def informationSearch():            # Found any information for the computer.
     try:
         dateFirst = wmiObject.Win32_BIOS(["ReleaseDate"])[0].ReleaseDate
         dateFirst = windowsDateConversion(dateFirst,False)
-    except (WindowsError, wmi.x_wmi, IndexError):
+    except (WindowsError, wmi.x_wmi, IndexError): # pyflakes.ignore
         dateFirst = "N/A"
         
     result['dateFirst']=dateFirst
@@ -165,7 +165,7 @@ def informationSearch():            # Found any information for the computer.
     try:    
         dateLastBoot = wmiObject.Win32_OperatingSystem(["LastBootUpTime"])[0].LastBootUpTime
         dateLastBoot = windowsDateConversion(dateLastBoot)
-    except (WindowsError, wmi.x_wmi, IndexError):
+    except (WindowsError, wmi.x_wmi, IndexError): # pyflakes.ignore
         dateLastBoot = "N/A"
         
     result['dateLastBoot'] = dateLastBoot
@@ -173,7 +173,7 @@ def informationSearch():            # Found any information for the computer.
     # Serial Number
     try:  
         serialNumber = wmiObject.Win32_BIOS(["SerialNumber"])[0].SerialNumber
-    except (WindowsError, wmi.x_wmi, IndexError):
+    except (WindowsError, wmi.x_wmi, IndexError): # pyflakes.ignore
         serialNumber = "N/A"
            
     result['serialNumber'] = serialNumber
@@ -182,7 +182,7 @@ def informationSearch():            # Found any information for the computer.
     try:    
         dateInstall = wmiObject.Win32_OperatingSystem(["InstallDate"])[0].InstallDate
         dateInstall = windowsDateConversion(dateInstall)
-    except (WindowsError, wmi.x_wmi, IndexError):
+    except (WindowsError, wmi.x_wmi, IndexError): # pyflakes.ignore
         dateInstall = "N/A"
         
     result['installDate'] = dateInstall
@@ -194,7 +194,7 @@ def informationSearch():            # Found any information for the computer.
             if not (interface.DefaultIPGateway is None):
                 defaultGateway = interface.DefaultIPGateway[0]
                 break
-    except (WindowsError, wmi.x_wmi, IndexError):
+    except (WindowsError, wmi.x_wmi, IndexError): # pyflakes.ignore
         defaultGateway = "N/A"
         
     result['defaultGateway'] = defaultGateway
@@ -204,7 +204,7 @@ def informationSearch():            # Found any information for the computer.
     try:
         # os.getenv("windir")
         result['OSfolder'] = wmiObject.Win32_OperatingSystem(["WindowsDirectory"])[0].WindowsDirectory     #by WMI. The installation can be anywhere
-    except (WindowsError, wmi.x_wmi, IndexError):
+    except (WindowsError, wmi.x_wmi, IndexError): # pyflakes.ignore
         result['OSfolder'] = "N/A"    
         
     # last login date
@@ -215,7 +215,7 @@ def informationSearch():            # Found any information for the computer.
         # convert the date
         lastLogin[1] = windowsDateConversion(lastLogin[1])
         result['lastLogin']=lastLogin
-    except (WindowsError, wmi.x_wmi, IndexError):
+    except (WindowsError, wmi.x_wmi, IndexError): # pyflakes.ignore
         result['lastLogin']=["N/A","N/A"]
     
     return result
@@ -320,7 +320,7 @@ def xmlUpdate(xmlString, lastInformation):
             
             _winreg.CloseKey(subkey)
             i = i + 1
-    except WindowsError:
+    except WindowsError: # pyflakes.ignore
         pass    
     _winreg.CloseKey(key)
     
@@ -384,7 +384,7 @@ def xmlUpdate(xmlString, lastInformation):
                     try:
                         installDate = _winreg.QueryValueEx(subkey,"InstallDate")[0] 
                         installDate = windowsDateConversion(installDate,False)                       
-                    except WindowsError:
+                    except WindowsError: # pyflakes.ignore
                         installDate = "N/A"
                     
                     newnode = xmlFile.createElement("INSTALLDATE")
@@ -401,7 +401,7 @@ def xmlUpdate(xmlString, lastInformation):
                         if refnode.nodeValue == "N/A":
                             displayversion = _winreg.QueryValueEx(subkey,"DisplayVersion")[0]
                             refnode.nodeValue = displayversion                      
-                    except WindowsError:
+                    except WindowsError: # pyflakes.ignore
                         pass                   
                     
                     # Software size calculated on hardDisk
@@ -422,7 +422,7 @@ def xmlUpdate(xmlString, lastInformation):
                             refnode.parentNode.insertBefore(newnode,refnode.nextSibling)
                             newnode.parentNode.insertBefore(xmlFile.createTextNode("\n"),newnode)
                                                 
-                    except WindowsError:
+                    except WindowsError: # pyflakes.ignore
                         foldersize = "N/A"
                         folder = "N/A"
                         
@@ -439,7 +439,7 @@ def xmlUpdate(xmlString, lastInformation):
                         estimatedSize = _winreg.QueryValueEx(subkey,"EstimatedSize")[0]
                         if not (estimatedSize > 0):
                             estimatedSize = "N/A"
-                    except WindowsError:
+                    except WindowsError: # pyflakes.ignore
                         estimatedSize = "N/A"
                     
                     selectnode.getElementsByTagName("FILESIZE")[0].firstChild.nodeValue = estimatedSize
@@ -447,7 +447,7 @@ def xmlUpdate(xmlString, lastInformation):
                     #Uninstall command
                     try:
                         uninstallCommand = _winreg.QueryValueEx(subkey,"UninstallString")[0]
-                    except WindowsError:
+                    except WindowsError: # pyflakes.ignore
                         uninstallCommand = "N/A"
                     
                     if len(uninstallCommand)==0:
@@ -477,7 +477,7 @@ def xmlUpdate(xmlString, lastInformation):
                                         parentName = _winreg.QueryValueEx(parentRegisterKey,"DisplayName")[0]
                                         _winreg.CloseKey(parentRegisterKey)
                                         nodeParentId = foundNodeInList(listSoftXMLDefault,"NAME",parentName)
-                                    except WindowsError:    # if parent doesn't exist
+                                    except WindowsError:    # if parent doesn't exist # pyflakes.ignore
                                         parentName = _winreg.QueryValueEx(subkey,"ParentDisplayName")[0]
                                         if len(parentName)>0:   # search parent with his name
                                             nodeParentId = foundNodeInList(listSoftXMLDefault,"NAME",parentName)
@@ -507,7 +507,7 @@ def xmlUpdate(xmlString, lastInformation):
                                     selectnode.setAttribute("parent",parentName)    #only notified the dependance by attribute
                                     del(listSoftXML[nodeId])
                                       
-                        except WindowsError:
+                        except WindowsError: # pyflakes.ignore
                             isUpdate = False
                     
                     # if not update, we calculate this Rate Of Use and get icon
@@ -521,11 +521,11 @@ def xmlUpdate(xmlString, lastInformation):
                                 if valueRateOfUse == 255:
                                     valueRateOfUse = "N/A"
                                     
-                            except WindowsError:
+                            except WindowsError: # pyflakes.ignore
                                 valueRateOfUse = "N/A"
                                 
                             _winreg.CloseKey(arpKey)
-                        except WindowsError:
+                        except WindowsError: # pyflakes.ignore
                             valueRateOfUse = "N/A"
                             
                         refnode = selectnode.getElementsByTagName("RATEOFUSE") 
@@ -577,16 +577,16 @@ def xmlUpdate(xmlString, lastInformation):
                                     selectnode.appendChild(newnode)
                                     selectnode.appendChild(xmlFile.createTextNode("\n"))
                                 
-                            except WindowsError:
+                            except WindowsError: # pyflakes.ignore
                                 pass
                                 
-            except WindowsError:
+            except WindowsError: # pyflakes.ignore
                 pass
             
             _winreg.CloseKey(subkey)
             i += 1
             
-    except WindowsError:
+    except WindowsError: # pyflakes.ignore
         pass
 
     if Pulse2InventoryProxyConfig().addicon:
@@ -673,4 +673,3 @@ def getOcsDebugLog( xmlString ):
     
     xmlString = xmlFile.toxml("utf-8")  
     return xmlString
-    

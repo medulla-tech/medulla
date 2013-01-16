@@ -150,7 +150,7 @@ class GlpiComputers(ComputerI):
             filt = self.__restrictLocationsOnImagingServerOrEntity(filt, location, ctx)
             if not filt[0]: return 0
             filt = filt[1]
-        except exceptions.AttributeError, e:
+        except exceptions.AttributeError:
             pass
         return self.glpi.getRestrictedComputersListLen(ctx, filt)
 
@@ -166,7 +166,7 @@ class GlpiComputers(ComputerI):
             filt = self.__restrictLocationsOnImagingServerOrEntity(filt, location, ctx)
             if not filt[0]: return {}
             filt = filt[1]
-        except exceptions.AttributeError, e:
+        except exceptions.AttributeError:
             pass
         return self.glpi.getRestrictedComputersList(ctx, min, max, filt, advanced, justId, toH)
 
@@ -185,7 +185,7 @@ class GlpiComputers(ComputerI):
             filt = self.__restrictLocationsOnImagingServerOrEntity(filt, location, ctx)
             if not filt[0]: return 0
             filt = filt[1]
-        except exceptions.AttributeError, e:
+        except exceptions.AttributeError:
             pass
         return self.glpi.getComputerCount(ctx, filt)
 

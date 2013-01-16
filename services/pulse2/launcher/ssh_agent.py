@@ -59,8 +59,6 @@ def setupSSHAgent():
             logging.getLogger().warn("launcher %s: Couldn't declare the ssh key '%s' to your ssh agent, hope you won't need to forward it !" % (LauncherConfig().name, keyname))
 
 def killSSHAgent():
-    logger = logging.getLogger()
-
     if LauncherConfig().ssh_agent_pid:
         logging.getLogger().info("launcher %s: terminating the ssh-agent binary (pid is %s)" % (LauncherConfig().name, LauncherConfig().ssh_agent_pid))
         try:

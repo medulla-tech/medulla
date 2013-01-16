@@ -104,7 +104,7 @@ def create_method(m):
 
         # FIXME: NOT YET IMPLEMENTED, but do not implement this using a
         # simple time.sleep(), it would lock the main loop !!!
-        TIME_BTW_CONN_TRY = 0.1 # in seconds, floats are authorized,
+        #TIME_BTW_CONN_TRY = 0.1 # in seconds, floats are authorized, # pyflakes.ignore
 
         try: # do a libmysql client call : attempt to perform the old call (_old_<method>)
             old_m = getattr(self, '_old_%s' % m)

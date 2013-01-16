@@ -35,7 +35,7 @@ import logging
 import re
 
 # our stuff
-import mmc.client.async
+from mmc.client import async
 from mmc.ssl import makeSSLContext
 from mmc.plugins.msc.config import MscConfig
 from mmc.plugins.msc.scheduler_api import SchedulerApi
@@ -48,8 +48,6 @@ def getProxy(schedulerConfig):
     """
     Return a suitable Proxy object to communicate with the scheduler
     """
-    config = MscConfig()
-
     (url, credentials) = makeURL(schedulerConfig)
 
     if url.startswith("http://"):
@@ -165,7 +163,7 @@ def process_on_client(proposed_scheduler_name, computer, function, *args):
         mydeffered = SchedulerApi().getScheduler(computer[1]['objectUUID'][0])
         mydeffered.addCallback(runResult).addErrback(lambda reason: reason)
         return mydeffered
-    except AttributeError, e:
+    except AttributeError:
         return runResult(MscConfig().default_scheduler)
 
 def pauseCommands(scheduler, command_ids):

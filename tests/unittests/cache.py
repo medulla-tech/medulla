@@ -63,14 +63,14 @@ class CacheTest(unittest.TestCase):
         val = cache.get(obj)
         self.assertEqual(val, 'a')
 
-    def testTimeout(self):
+    def testTimeout3(self):
         obj = object()
         cache = getCache('test')
         cache.set(obj, 'a', timeout=2)
         time.sleep(3)
         
         def f():
-            val = cache.get(obj)
+            cache.get(obj)
         self.assertRaises(CacheExpired, f)
 
     def testTimeout2(self):
@@ -80,7 +80,7 @@ class CacheTest(unittest.TestCase):
         time.sleep(3)
         
         def f():
-            val = cache.get(obj)
+            cache.get(obj)
         self.assertRaises(CacheExpired, f)
         self.assertRaises(CacheFault, f)
 

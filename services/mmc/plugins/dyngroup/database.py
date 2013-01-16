@@ -37,7 +37,6 @@ import mmc.plugins.dyngroup
 # PULSE2 modules
 import pulse2.database.dyngroup
 from pulse2.database.dyngroup import Groups, Machines, Results, Users
-from pulse2.managers.imaging import ComputerImagingManager
 # Imported last
 import re
 
@@ -387,7 +386,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         delete a group defined by it's id
         delete the results and the machines linked to that group if needed
         """
-        user_id = self.__getOrCreateUser(ctx)
+        self.__getOrCreateUser(ctx)
         connection = self.getDbConnection()
         trans = connection.begin()
         # get machines to possibly delete

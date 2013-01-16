@@ -106,7 +106,7 @@ def mscCopy(session, path_source, files_source, path_destination):
 
     # * chmod +x on *.bat and *.exe
     chmod_command = "find %s -iname '*.exe' -or -iname '*.bat' -exec chmod 755 {} \\;" % (path_source) # FIXME: should be up to the user
-    ret = msc_exec(chmod_command) # FIXME: should handle errors here ?
+    msc_exec(chmod_command) # FIXME: should handle errors here ?
 
     # Iterate over all files
     for filename in files_source:
@@ -149,20 +149,14 @@ def mscDelete(session, path_target, files_to_delete):
     if type(files_to_delete) != list:
         files_to_delete = [files_to_delete]
 
-    # directory_list array content all directory and subdirectory path (to delete it after files deleting)
-    directory_list = [];
-
     path_destination = os.path.join(session.root_path, session.tmp_path.strip('/'), path_target.strip('/'))
     # First step : iterate all files to delete it
     for f in files_to_delete:
         logger.debug('Attempt to delete "%s" from "%s"' % (f, path_destination))
         rm_command = "rm -rf %s" % os.path.join(path_destination, f)
         ret = msc_ssh(session.user, session.ip, rm_command)
-        command = ret[0]
         output = ret[1]
         return_var = ret[2]
-        stdout = ret[3]
-        stderr = ret[4]
         if type(output) == list:
             output = "\n".join(output)
         if return_var != 0:
@@ -178,11 +172,8 @@ def mscDelete(session, path_target, files_to_delete):
     logger.debug('Attempt to delete MSC main directory ("%s")' % path_destination)
     rm_command = "rmdir %s" % path_destination
     ret = msc_ssh(session.user, session.ip, rm_command)
-    command = ret[0]
     output = ret[1]
     return_var = ret[2]
-    stdout = ret[3]
-    stderr = ret[4]
     if type(output) == list:
         output = "\n".join(output)
     result["stdout"] += output

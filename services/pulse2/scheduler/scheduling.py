@@ -105,7 +105,6 @@ def gatherStuff():
 def gatherCoHStuff(idCommandOnHost):
     """ same as gatherStuff(), this time for a particular CommandOnHost """
     session = sqlalchemy.orm.create_session()
-    database = MscDatabase()
     myCommandOnHost = session.query(CommandsOnHost).get(idCommandOnHost)
     if type(myCommandOnHost) != CommandsOnHost:
         session.close()
@@ -1728,9 +1727,6 @@ def _runPushPullPhase(mirror, fbmirror, client, myC, myCoH, useFallback = False)
 
 def _cbRunPushPullPhasePushPull(result, mirror, fbmirror, client, myC, myCoH, useFallback):
     if type(result) == list and result[0] == 'PULSE2_ERR':
-        m = mirror
-        if useFallback:
-            m = fbmirror
         if result[1] == PULSE2_ERR_CONN_REF:
             updateHistory(myCoH.getId(), 'upload_failed', PULSE2_PSERVER_MIRRORFAILED_CONNREF_ERROR, '', result[2])
         elif result[1] == PULSE2_ERR_404:
@@ -2277,7 +2273,7 @@ def parseWOLAttempt(attempt_result, myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     try:
         (exitcode, stdout, stderr) = attempt_result
-    except TypeError,e: # xmlrpc call failed
+    except TypeError: # xmlrpc call failed
         log.error("command_on_host #%s: WOL request seems to have failed ?!" % (myCommandOnHostID))
 
         myCoH.setStateScheduled()

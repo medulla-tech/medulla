@@ -60,7 +60,6 @@ class Pulse2ProxySsl(win32serviceutil.ServiceFramework):
         config = Pulse2InventoryProxyConfig()
         config.setup(self.inifile)
         logging.config.fileConfig(self.inifile)
-        logger = logging.getLogger()
         initialize(config)
 
     def SvcDoRun(self):

@@ -187,7 +187,6 @@ class MscDatabase(msc.MscDatabase):
         bundle in database.
         """
         targets_to_insert_list = []
-        targets_scheduler = []
         targets_name = []
         coh_to_insert = []
 
@@ -348,7 +347,6 @@ class MscDatabase(msc.MscDatabase):
         max_connection_attempt = days_nbr * self.config.web_def_attempts_per_day
 
         targets_to_insert = []
-        targets_scheduler = []
         targets_name = []
         coh_to_insert = []
 
@@ -506,7 +504,6 @@ class MscDatabase(msc.MscDatabase):
         # run a built-in script
         p1 = re.compile('^\/scripts\/')
         if p1.match(cmd):
-            fullpath = basedir + '/msc.script/' + cmd
             files.append(cmd)
 
         return self.addCommand(

@@ -40,8 +40,6 @@ from mmc.plugins.inventory.provisioning import InventoryProvisioner
 from mmc.plugins.inventory.locations import InventoryLocation
 from mmc.plugins.inventory.tables_def import PossibleQueries
 
-from pulse2.version import getVersion, getRevision
-
 APIVERSION = "0:0:0"
 
 def getApiVersion(): return APIVERSION
@@ -121,15 +119,11 @@ class RpcProxy(RpcProxyI):
         return xmlrpcCleanup(Inventory().getMachineListByState(ctx, groupName))
 
     def getAllMachinesInventoryColumn(self, part, column, pattern = {}):
-        ctx = self.currentContext
         ret = self.getLastMachineInventoryPart(part, pattern)
         # TODO : m.uuid doesn't exists and should do that in just one call
         retour = []
         for machine in ret:
             name = machine[0]
-            uuid = machine[2]
-#            if not ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid):
-#                continue
             invents = []
             for invent in machine[1]:
                 invents.append(invent[column])

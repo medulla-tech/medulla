@@ -69,10 +69,6 @@ class PackageParserXML:
             name = tmp.firstChild.wholeText.strip()
             version = root.getElementsByTagName('version')[0]
             tmp = version.getElementsByTagName('numeric')[0]
-            if tmp.firstChild != None:
-                v_num = tmp.firstChild.wholeText
-            else:
-                v_num = 0
             tmp = version.getElementsByTagName('label')[0]
             if tmp.firstChild != None:
                 v_txt = tmp.firstChild.wholeText.strip()

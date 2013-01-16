@@ -28,10 +28,6 @@ def addslashes(str):
     p1 = re.compile("'")
     return p1.sub("\\'", str)
 
-def escapeshellcmd(str):
-    p1 = re.compile(" ")
-    return str #p1.sub("\\ ", str)
-
 def escapeshellarg(str):
     p1 = re.compile('"')
     str = p1.sub('\"', str)

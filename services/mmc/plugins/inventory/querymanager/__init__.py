@@ -34,7 +34,6 @@ def activate():
 
 def queryPossibilities():
     ret = {}
-    p1 = re.compile('/')
     for type in ['list', 'double', 'halfstatic']:
         for possible in PossibleQueries().possibleQueries(type):
             ret[possible] = [type, funcGet(possible, type)]
@@ -42,7 +41,6 @@ def queryPossibilities():
 
 def extendedPossibilities():
     ret = {}
-    p1 = re.compile('/')
     for possible in PossibleQueries().possibleQueries('extended'):
         ret[possible] = ['extended', funcGet(possible, 'extended')]
     return ret

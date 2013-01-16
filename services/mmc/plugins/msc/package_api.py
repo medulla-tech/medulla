@@ -171,7 +171,6 @@ class SendBundleCommand:
         # Insert bundle object
         self.session = create_session()
         bundle = MscDatabase().createBundle(title, self.session)
-        bundle_id = bundle.id
 
         commands = []
         for p in self.porders:
@@ -549,7 +548,6 @@ class GetPackagesGroupFiltered:
             self.sendResult()
         else:
             plists = []
-            n = len(mergedlist[0])
             i = 0
             for i in range(len(mergedlist[0])): # all line must have the same size!
                 plists.insert(i, [])

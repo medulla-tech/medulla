@@ -55,7 +55,6 @@ class MscDownloadProcess:
         self.mscdlfiles = MscDownloadedFiles(self.userid)
         self.storage = self.mscdlfiles.storage
         self.lockfile = os.path.join(self.storage, self.uuid + '.' + self.mscdlfiles.LOCKEXT)
-        errorfile = os.path.join(self.storage, self.uuid + '.' + self.mscdlfiles.ERROREXT)
         self.logger = logging.getLogger()
 
     def _cbDownloadOk(self, result):

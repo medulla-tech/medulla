@@ -69,7 +69,6 @@ class ComputerGroupManager(Singleton):
         Wrapper that according to the group type calls result_group (static
         or stored results for a group) or requestresult_group (dynamic group)
         """
-        klass = self.components[self.main]
         if self.isdyn_group(ctx, gid):
             if self.isrequest_group(ctx, gid):
                 ret = self.requestresult_group(ctx, gid, min, max, filter)
