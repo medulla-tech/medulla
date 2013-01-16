@@ -65,9 +65,10 @@ class Glpi08(DyngroupDatabaseHelper):
         dburi = self.makeConnectionPath()
         self.db = create_engine(dburi, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
         try:
-            glpi_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
+            logging.getLogger().debug('Trying to detect if GLPI version is 8')
+            self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
         except Exception, e:
-            logging.getLogger().error(e)
+            logging.getLogger().debug('GLPI version 8 was not detected')
             return False
         return True
 
