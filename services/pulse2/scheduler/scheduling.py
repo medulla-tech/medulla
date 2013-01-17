@@ -707,9 +707,6 @@ def calcNextAttemptDelay(drw_coh):
 
     log.debug("Start the delay calculation for CoH: %s" % str(drw_coh))
 
-    # Number of first attempts with interval wol_time between them
-    FIRST_ATTEMPTS_NBR = 3
-
     (myCoH, myC, myT) = gatherCoHStuff(drw_coh)
     if myCoH and myC :
         attempts_total = myCoH.attempts_left
@@ -726,26 +723,17 @@ def calcNextAttemptDelay(drw_coh):
         _deltas = map(lambda x: x * total_secs, _exec_plan.balances)
         _next = start_timestamp
         for _attempt_nbr, _delta in enumerate(_deltas) :
-            if _attempt_nbr in range(FIRST_ATTEMPTS_NBR - 1) :
-                _next += SchedulerConfig().max_wol_time
-            else :
-                _next += _delta
+            _next += _delta
             _nxt_date = datetime.datetime.fromtimestamp(_next).strftime("%Y-%m-%d %H:%M:%S")
             log.debug("- next date : %s" % str(_nxt_date))
         # -----------------------------------------------------
-        if myCoH.attempts_failed > FIRST_ATTEMPTS_NBR :
-            if myCoH.attempts_failed +1 <= attempts_total :
-                b = ParabolicBalance(attempts_total)
-                coef = b.balances[myCoH.attempts_failed]
-                delay_in_seconds = coef * total_secs
-            else :
-                return
+        if myCoH.attempts_failed +1 <= attempts_total :
+            b = ParabolicBalance(attempts_total)
+            coef = b.balances[myCoH.attempts_failed]
+            delay_in_seconds = coef * total_secs
         else :
-            delay_in_seconds = SchedulerConfig().max_wol_time
+            return
 
-            if delay_in_seconds < SchedulerConfig().max_wol_time : 
-                delay_in_seconds = SchedulerConfig().max_wol_time
- 
         delay = delay_in_seconds // 60
         log.debug("Next delay for CoH %s : + %s min" %(str(drw_coh),str(delay)))
 
