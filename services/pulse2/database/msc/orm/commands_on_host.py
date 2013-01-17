@@ -1051,3 +1051,20 @@ class CoHManager :
                 session.flush()
         session.close()
 
+    @classmethod
+    def setCoHsStateStopped(cls, ids_stopped):
+        """
+        Multiple setting the current state to 'stopped'.
+
+        @param ids_stopped: list of ids to update
+        @type ids_stopped: list
+        """
+        session = sqlalchemy.orm.create_session()
+        for coh_id in ids_stopped :
+            myCommandOnHost = session.query(CommandsOnHost).get(coh_id)
+            if myCommandOnHost :
+                myCommandOnHost.current_state = 'stopped'
+                session.add(myCommandOnHost)
+                session.flush()
+        session.close()
+

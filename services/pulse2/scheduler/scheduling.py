@@ -543,22 +543,17 @@ def gatherIdsToAnalyse(scheduler_name):
             database.commands_on_host.c.scheduler == scheduler_name,
             database.commands_on_host.c.scheduler == None)
         )
-
-    commands_to_analyse = []
-    for q in commands_query.all():
-        commands_to_analyse.append(q.id)
-
     session.close()
-    return commands_to_analyse
+    return commands_query.all()    
 
 def analyseCommands(commands_to_analyse):
 
-    for id in commands_to_analyse:
+    ids_stopped = list()
+    for myCoH in commands_to_analyse :
 
         report = list() # will hold each report line
         this_is_a_weird_command = False
-        (myCoH, myC, myT) = gatherCoHStuff(id)
-        report.append("Command_on_host #%s" % id)
+        report.append("Command_on_host #%s" % myCoH.id)
 
         # check stage against next stage state
         # algo is easy:
@@ -626,7 +621,9 @@ def analyseCommands(commands_to_analyse):
         if this_is_a_weird_command :
             log.warn('scheduler "%s": report for %s' % (SchedulerConfig().name, '\n'.join(report)))
             log.warn('Scheduler: Stopping command_on_host #%s' % (id))
-            myCoH.setStateStopped()
+            ids_stopped.append(myCoH.id)
+
+    CoHManager.setCoHsStateStopped(ids_stopped)
 
 def startAllCommands(scheduler_name, commandIDs = []):
     calcBalance(scheduler_name)
@@ -642,7 +639,6 @@ def gatherIdsToReSchedule(scheduler_name):
     database = MscDatabase()
 
     now = time.strftime("%Y-%m-%d %H:%M:%S")
-    to_reach = int(SchedulerConfig().max_slots / getMaxNumberOfGroups())
 
     commands_query = session.query(CommandsOnHost, Commands).\
         select_from(database.commands_on_host.join(database.commands)
@@ -658,7 +654,7 @@ def gatherIdsToReSchedule(scheduler_name):
             database.commands_on_host.c.scheduler == None)
         ).filter(sqlalchemy.not_(
             database.commands.c.id.in_(Pulse2Preempt().members()))
-        ).limit(to_reach)
+        )
     session.close()
 
        
@@ -1029,7 +1025,7 @@ def gatherIdsToStop(scheduler_name):
 
 def fixUnprocessedTasks(scheduler_name):
     log.debug('scheduler "%s": FUT: Starting analysis' % scheduler_name)
-    return twisted.internet.threads.deferToThread(getRunningCommandsOnHostInDB, scheduler_name, None).addCallback(cleanStatesAllRunningIds)
+    return twisted.internet.threads.deferToThread(__getRunningCommandsOnHostInDB, scheduler_name, None).addCallback(cleanStatesAllRunningIds)
 
 def fixProcessingTasks(scheduler_name):
     log.debug('scheduler "%s": FPT: Starting analysis' % scheduler_name)
@@ -1058,7 +1054,7 @@ def preemptTasks(scheduler_name):
     # deferred handling; consumeErrors set to prevent any unhandled exception
     return twisted.internet.defer.DeferredList(deffereds, consumeErrors = True) 
 
-def cleanStatesAllRunningIds(ids):
+def cleanStatesAllRunningIds(dataset):
     """
         algo is pretty simple:
         - ids is the result of getRunningCommandsOnHostInDb(),
@@ -1081,26 +1077,24 @@ def cleanStatesAllRunningIds(ids):
         That's why this feature is disabled by default.
     """
 
-    def __treatBadStateCommandsOnHost(result, ids = ids):
+    def __treatBadStateCommandsOnHost(result, dataset = dataset):
         fails = []
-        if len(ids) > 0:
-            log.debug('scheduler "%s": FUT: Looking if the following tasks are still running  : %s' % (SchedulerConfig().name, str(ids)))
+        if len(dataset) > 0:
+            log.debug('scheduler "%s": FUT: Looking if the following tasks are still running  : %s' % (SchedulerConfig().name, str([q.id for q in dataset])))
         else:
             log.debug('scheduler "%s": FUT: No task should be running' % (SchedulerConfig().name))
-        for id in ids:
+        for myCoH, myC in dataset:
             found = False
             for running_ids in result: # one tuple per launcher
                 if running_ids[1] == None: # None: launcher may be down
                     continue
-                if id in running_ids[1]:
+                if myCoH.id in running_ids[1]:
                     found = True
                     continue
             if not found:
-                fails.append(id)
+                fails.append(myCoH.id)
                 log.warn('scheduler "%s": FUT: Forcing the following command to STOP state: %s' % (SchedulerConfig().name, id))
-        for id in fails:
-            (myCoH, myC, myT) = gatherCoHStuff(id)
-            myCoH.setStateStopped()
+        CoHManager.setCoHsStateStopped(fails)
 
     deffereds = [] # will hold all deferred
     for launcher in SchedulerConfig().launchers_uri.values():
