@@ -33,6 +33,7 @@ from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHe
 from pulse2.managers.group import ComputerGroupManager
 from mmc.plugins.glpi.database_utils import decode_latin1, encode_latin1, decode_utf8, encode_utf8, fromUUID, toUUID, setUUID
 from mmc.plugins.dyngroup.config import DGConfig
+from mmc.plugins.glpi.database_utils import DbTOA # pyflakes.ignore
 
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
         Integer, ForeignKey, select, asc, or_, func, not_
