@@ -76,7 +76,8 @@ class MscDatabase(DatabaseHelper):
 
         self.logger.info("Msc database is connecting")
         self.config = config
-        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize, pool_timeout = self.config.dbpooltimeout, convert_unicode = True)
+        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, \
+		pool_size = self.config.dbpoolsize, pool_timeout = self.config.dbpooltimeout, convert_unicode = True)
         self.metadata = MetaData(self.db)
         if not self.initTables():
             return False
@@ -1007,7 +1008,6 @@ class MscDatabase(DatabaseHelper):
         return coh
     
     def __filterOnStatus(self, ctx, query, state):
-        logging.getLogger().error("filteron Called")
         query = map(lambda x: self.__putUUIDInCOH(x[0], x[1]), query)
         ret = self.__getStatus(ctx, query, True)
         if state in ret:
@@ -1031,6 +1031,8 @@ class MscDatabase(DatabaseHelper):
         @rtype: int
         """
         for f in filter:
+            if isinstance(f[1], str): # f[1] must be a list
+                f[1] = [f[1]]
             if len(f) == 3 and not f[2]:
                 query = query.filter(not_(getattr(self.commands_on_host.c, f[0]).in_(f[1])))
             else:
@@ -1051,12 +1053,17 @@ class MscDatabase(DatabaseHelper):
         @return: SQL count()
         @rtype: int
         """
-        for f in filter:
-            if len(f) == 3 and not f[2]:
-                query = query.filter(not_(getattr(self.commands_on_host.c, f[0]).in_(f[1])))
-            else:
-                query = query.filter(getattr(self.commands_on_host.c, f[0]).in_(f[1]))
-        return int(query.count())
+        try:
+            for f in filter:
+                if isinstance(f[1], str): # f[1] must be a list
+                    f[1] = [f[1]]
+                if len(f) == 3 and not f[2]:
+                    query = query.filter(not_(getattr(self.commands_on_host.c, f[0]).in_(f[1])))
+                else:
+                    query = query.filter(getattr(self.commands_on_host.c, f[0]).in_(f[1]))
+            return int(query.count())
+        except:
+            return 0
 
     def __getAllStatus(self):
         """
@@ -1064,10 +1071,13 @@ class MscDatabase(DatabaseHelper):
         """
         return {
             'success': ['done'],
-            'paused': ['paused'],
+            'paused': ['paused', 'pause'],
             'stopped': ['stopped', 'stop'],
-            'running': ['upload_in_progress', 'upload_done', 'execution_in_progress', 'execution_done', 'delete_in_progress', 'delete_done', 'inventory_in_progress', 'inventory_done', 'pause', 'stop', 'stopped', 'scheduled'],
-            'failure': ['failed', 'upload_failed', 'execution_failed', 'delete_failed', 'inventory_failed', 'not_reachable', 'over_timed'],
+            'running': ['wol_in_progress', 'upload_in_progress', 'upload_done', 'execution_in_progress', 'execution_done', 'delete_in_progress', 'delete_done', \
+                        'inventory_in_progress', 'inventory_done', 'reboot_in_progress', 'reboot_done', 'scheduled', 're_scheduled', \
+                        'halt_in_progress', 'halt_done'],
+            'failure': ['failed', 'upload_failed', 'execution_failed', 'delete_failed', 'inventory_failed', 'reboot_failed', 'halt_failed', \
+                        'not_reachable'],
         }
 
     def __getStatus(self, ctx, query, verbose = False):
@@ -1077,129 +1087,300 @@ class MscDatabase(DatabaseHelper):
         paused = self.__getAllStatus()['paused']
         success = self.__getAllStatus()['success']
 
+        sec_up = self.getStateLen(query, [
+	    ["current_state", ["over_timed"], False],
+	    ["current_state", paused, False],
+	    ["current_state", stopped, False],
+            ["attempts_left", [0], False], 
+            ["uploaded", ["FAILED"]],
+        ])
+        sec_ex = self.getStateLen(query, [
+	    ["current_state", ["over_timed"], False],
+	    ["current_state", paused, False],
+	    ["current_state", stopped, False],
+            ["attempts_left", [0], False], 
+            ["executed", ["FAILED"]],
+        ])
+        sec_rm = self.getStateLen(query, [
+	    ["current_state", ["over_timed"], False],
+	    ["current_state", paused, False],
+	    ["current_state", stopped, False],
+            ["attempts_left", [0], False], 
+            ["deleted", ["FAILED"]],
+        ])
+        sec_inv = self.getStateLen(query, [
+	    ["current_state", ["over_timed"], False],
+	    ["current_state", paused, False],
+	    ["current_state", stopped, False],
+            ["attempts_left", [0], False], 
+            ["inventoried", ["FAILED"]],
+        ])
+
+        success_total = self.getStateLen(query, [["current_state", success]])
+        stopped_total = self.getStateLen(query, [["current_state", stopped]])
+        paused_total = self.getStateLen(query, [["current_state", paused]])
+        running_total = self.getStateLen(query, [["current_state", running]]) + self.getStateLen(query, [["current_state", failure], ["attempts_left", [0], False]])
+        failure_total = self.getStateLen(query, [["current_state", failure], ["attempts_left", [0]]]) + self.getStateLen(query, [["current_state", ["over_timed"]]])
+
+        try:
+            total = int(query.count())
+        except:
+            total = 0
+
         ret = {
-            'total': int(query.count()),
+            'total': total,
             'success':{
-                'total':[self.getStateLen(query, [["current_state", success]]), []],
+                'total':[success_total, []],
             },
             'stopped':{
-                'total':[self.getStateLen(query, [["current_state", stopped]]), []],
+                'total':[stopped_total, []],
             },
             'paused':{
-                'total':[self.getStateLen(query, [["current_state", paused]]), []],
+                'total':[paused_total, []],
             },
             'running':{
-                'total': [self.getStateLen(query, [["current_state", running]]), []],
-                'wait_up': [sum([self.getStateLen(query,
-                                             [
-                                                 ["current_state", running],
-                                                 ["attempts_left", [0], False],
-                                                 ["uploaded", ["FAILED"]],
-                                             ]
-                                            ), 
+                'total': [running_total, []],
+                'wait_up': [sum([sec_up, 
                                 self.getStateLen(query,
                                                 [
-                                                 ["current_state", running],
-                                                 ["deleted", ["DONE", "IGNORED"], False],
-                                                 ["executed", ["DONE", "IGNORED"], False],
+                                                 ["current_state", ["over_timed"], False],
+                                                 ["current_state", paused, False],
+                                                 ["current_state", stopped, False],
                                                  ["uploaded", ["TODO"]],
                                                 ]
                                                 )]),[]],
-                'run_up':[self.getStateLen(query, [["current_state", running], ["uploaded", ["WORK_IN_PROGRESS"]]]), []],
-                'sec_up': [self.getStateLen(query, [["attempts_left", [0], False], ["uploaded", ["FAILED"]]]), []],
-                'wait_ex': [sum([self.getStateLen(query,
-                                             [
-                                                 ["current_state", running],
-                                                 ["attempts_left", [0], False],
-                                                 ["executed", ["FAILED"]],
-                                             ]
-                                            ), 
+                'run_up':[self.getStateLen(query, 
+                                           [
+                                               ["current_state", "upload_in_progress"],
+                                           ]), []],
+                'sec_up': [sec_up, []],
+                'wait_ex': [sum([sec_ex, 
                                 self.getStateLen(query,
                                                 [
-                                                 ["current_state", running],
-                                                 ["uploaded", ["DONE", "IGNORED"]],
-                                                 ["executed", ["WORK_IN_PROGRESS"], False],
+                                                 ["current_state", ["over_timed"], False],
+                                                 ["current_state", paused, False],
+                                                 ["current_state", stopped, False],
+                                                 ["uploaded", ["TODO", "FAILED", "WORK_IN_PROGRESS"], False],
+                                                 ["executed", ["TODO"]],
                                                 ]
                                                 )]),[]],
-                'run_ex':[self.getStateLen(query, [["current_state", running], ["uploaded", ["DONE", "IGNORED"]], ["executed", ["WORK_IN_PROGRESS"]]]), []],
-                'sec_ex': [self.getStateLen(query, [["attempts_left", [0], False], ["executed", ["FAILED"]]]), []],
-                'wait_rm': [sum([self.getStateLen(query,
-                                             [
-                                                 ["current_state", running],
-                                                 ["attempts_left", [0], False],
-                                                 ["deleted", ["FAILED"]],
-                                             ]
-                                            ), 
+                'run_ex':[self.getStateLen(query, 
+                                           [
+                                               ["current_state", ["execution_in_progress"]],
+                                           ]), []],
+                'sec_ex': [sec_ex, []],
+                'wait_rm': [sum([sec_rm, 
                                 self.getStateLen(query,
                                                 [
-                                                 ["current_state", running],
-                                                 ["executed", ["DONE", "IGNORED"]],
-                                                 ["deleted", ["WORK_IN_PROGRESS"], False],
+                                                 ["current_state", ["over_timed"], False],
+                                                 ["current_state", paused, False],
+                                                 ["current_state", stopped, False],
+                                                 ["executed", ["TODO", "FAILED", "WORK_IN_PROGRESS"], False],
+                                                 ["deleted", ["TODO"]],
                                                 ]
                                                 )]),[]],
-                'run_rm':[self.getStateLen(query, [["current_state", running], ["executed", ["DONE", "IGNORED"]], ["deleted", ["WORK_IN_PROGRESS"]]]), []],
-                'sec_rm': [self.getStateLen(query, [["current_state", running], ["attempts_left", [0], False], ["deleted", ["FAILED"]]]), []],
+                'run_rm':[self.getStateLen(query, 
+                                           [
+                                               ["current_state", ["delete_in_progress"]],
+                                           ]), []],
+                'sec_rm': [sec_rm, []],
+                'wait_inv': [sum([sec_inv, 
+                                self.getStateLen(query,
+                                                [
+                                                 ["current_state", ["over_timed"], False],
+                                                 ["current_state", paused, False],
+                                                 ["current_state", stopped, False],
+                                                 ["deleted", ["TODO", "FAILED", "WORK_IN_PROGRESS"], False],
+                                                 ["inventoried", ["TODO"]],
+                                                ]
+                                                )]),[]],
+                'run_inv':[self.getStateLen(query, 
+                                           [
+                                               ["current_state", ["inventory_in_progress"]],
+                                           ]), []],
+                'sec_inv': [sec_inv, []],
             },
             'failure':{
-                'total':[self.getStateLen(query, [["current_state", failure]]), []],
+                'total':[failure_total, []],
                 'fail_up': [self.getStateLen(query, [["attempts_left", [0]], ["uploaded", ["FAILED"]]]), []],
                 'conn_up': [self.getStateLen(query, [["attempts_left", [0]], ["uploaded", ["FAILED"]], ["current_state", ["not_reachable"]]]), []],
                 'fail_ex': [self.getStateLen(query, [["attempts_left", [0]], ["executed", ["FAILED"]]]), []],
                 'conn_ex': [self.getStateLen(query, [["attempts_left", [0]], ["executed", ["FAILED"]], ["current_state", ["not_reachable"]]]), []],
                 'fail_rm': [self.getStateLen(query, [["attempts_left", [0]], ["deleted", ["FAILED"]]]), []],
                 'conn_rm': [self.getStateLen(query, [["attempts_left", [0]], ["deleted", ["FAILED"]], ["current_state", ["not_reachable"]]]), []],
+                'fail_inv': [self.getStateLen(query, [["attempts_left", [0]], ["inventoried", ["FAILED"]]]), []],
+                'conn_inv': [self.getStateLen(query, [["attempts_left", [0]], ["inventoried", ["FAILED"]], ["current_state", ["not_reachable"]]]), []],
                 'over_timed':[self.getStateLen(query, [["current_state", ["over_timed"]]]), []],
 
             }
         }
 
         if verbose: # used for CSV generation
-            ret['success']['total'][1] = self.getStateCoh(query, [["current_state", ["done"]]])
-            ret['stopped']['total'][1] = self.getStateCoh(query, [["current_state", ["stopped", "stop"]]])
-            ret['paused']['total'][1] = self.getStateCoh(query, [["current_state", ["paused"]]])
-            ret['failure']['total'][1] = self.getStateCoh(query, [["current_state", failure]])
-            ret['failure']['over_timed'][1] = self.getStateCoh(query, [["current_state", ["over_timed"]]])
-            ret['failure']['fail_up'][1] = self.getStateCoh(query, [["attempts_left", [0]], ["uploaded", ["FAILED"]]])
-            ret['failure']['conn_up'][1] = self.getStateCoh(query, [["attempts_left", [0]], ["uploaded", ["FAILED"]], ["current_state", ["not_reachable"]]])
-            ret['failure']['fail_ex'][1] = self.getStateCoh(query, [["attempts_left", [0]], ["executed", ["FAILED"]]])
-            ret['failure']['conn_ex'][1] = self.getStateCoh(query, [["attempts_left", [0]], ["executed", ["FAILED"]], ["current_state", ["not_reachable"]]])
-            ret['failure']['fail_rm'][1] = self.getStateCoh(query, [["attempts_left", [0]], ["deleted", ["FAILED"]]])
-            ret['failure']['conn_rm'][1] = self.getStateCoh(query, [["attempts_left", [0]], ["deleted", ["FAILED"]], ["current_state", ["not_reachable"]]])
-            ret['running']['total'][1] = self.getStateCoh(query, [["current_state", running]])
-            ret['running']['wait_up'][1] = self.getStateCoh(query, [
-                                                 ["current_state", running],
-                                                 ["attempts_left", [0], False],
-                                                 ["uploaded", ["FAILED"]],
-                                             ]) + self.getStateCoh(query, [
-                                                 ["current_state", running],
-                                                 ["deleted", ["DONE", "IGNORED"], False],
-                                                 ["executed", ["DONE", "IGNORED"], False],
-                                                 ["uploaded", ["TODO"]],
-                                                ])
-            ret['running']['sec_up'][1] = self.getStateCoh(query, [["attempts_left", [0], False], ["uploaded", ["FAILED"]]])
-            ret['running']['wait_ex'][1] = self.getStateCoh(query, [
-                                                 ["current_state", running],
-                                                 ["attempts_left", [0], False],
-                                                 ["executed", ["FAILED"]],
-                                             ]) + self.getStateCoh(query, [
-                                                 ["current_state", running],
-                                                 ["uploaded", ["DONE", "IGNORED"]],
-                                                 ["executed", ["WORK_IN_PROGRESS"], False],
-                                                ])
-            ret['running']['sec_ex'][1] = self.getStateCoh(query, [["attempts_left", [0], False], ["executed", ["FAILED"]]])
-            ret['running']['wait_rm'][1] = self.getStateCoh(query, [
-                                                 ["current_state", running],
-                                                 ["attempts_left", [0], False],
-                                                 ["deleted", ["FAILED"]],
-                                             ]) + self.getStateCoh(query, [
-                                                 ["current_state", running],
-                                                 ["executed", ["DONE", "IGNORED"]],
-                                                 ["deleted", ["WORK_IN_PROGRESS"], False],
-                                                ])
-            ret['running']['sec_rm'][1] = self.getStateCoh(query, [["current_state", running], ["attempts_left", [0], False], ["deleted", ["FAILED"]]])
-            ret['running']['run_rm'][1] = self.getStateCoh(query, [["current_state", running], ["executed", ["DONE", "IGNORED"]], ["deleted", ["WORK_IN_PROGRESS"]]])
-            ret['running']['run_ex'][1] = self.getStateCoh(query, [["current_state", running], ["uploaded", ["DONE", "IGNORED"]], ["executed", ["WORK_IN_PROGRESS"]]])
-            ret['running']['run_up'][1] = self.getStateCoh(query, [["current_state", running], ["uploaded", ["WORK_IN_PROGRESS"]]])
+            for coh in query:
+                if coh.current_state == 'done': # success
+                    if verbose: ret['success']['total'][1].append(coh)
+                elif coh.current_state == 'stop' or coh.current_state == 'stopped': # stopped coh
+                    if verbose: ret['stopped']['total'][1].append(coh)
+                elif coh.current_state == 'pause':
+                    if verbose: ret['paused']['total'][1].append(coh)
+                elif coh.current_state == 'over_timed': # out of the valid period of execution (= failed)
+                    if verbose: ret['failure']['total'][1].append(coh)
+                    if verbose: ret['failure']['over_timed'][1].append(coh)
+                elif coh.attempts_left == 0 and (coh.uploaded == 'FAILED' or coh.executed == 'FAILED' or coh.deleted == 'FAILED'): # failure
+                    if verbose: ret['failure']['total'][1].append(coh)
+                    if coh.uploaded == 'FAILED':
+                        if verbose: ret['failure']['fail_up'][1].append(coh)
+                        if coh.current_state == 'not_reachable':
+                            if verbose: ret['failure']['conn_up'][1].append(coh)
+                    elif coh.executed == 'FAILED':
+                        if verbose: ret['failure']['fail_ex'][1].append(coh)
+                        if coh.current_state == 'not_reachable':
+                            if verbose: ret['failure']['conn_ex'][1].append(coh)
+                    elif coh.deleted == 'FAILED':
+                        if verbose: ret['failure']['fail_rm'][1].append(coh)
+                        if coh.current_state == 'not_reachable':
+                            if verbose: ret['failure']['conn_rm'][1].append(coh)
+                elif coh.attempts_left != 0 and (coh.uploaded == 'FAILED' or coh.executed == 'FAILED' or coh.deleted == 'FAILED'): # fail but can still try again
+                    if verbose: ret['running']['total'][1].append(coh)
+                    if coh.uploaded == 'FAILED':
+                        if verbose: ret['running']['wait_up'][1].append(coh)
+                        if verbose: ret['running']['sec_up'][1].append(coh)
+                    elif coh.executed == 'FAILED':
+                        if verbose: ret['running']['wait_ex'][1].append(coh)
+                        if verbose: ret['running']['sec_ex'][1].append(coh)
+                    elif coh.deleted == 'FAILED':
+                        ret['running']['wait_rm'][0] += 1
+                        ret['running']['sec_rm'][0] += 1
+                else: # running
+                    if verbose and coh.deleted != 'DONE' and coh.deleted != 'IGNORED': ret['running']['total'][1].append(coh)
+                    if coh.deleted == 'DONE' or coh.deleted == 'IGNORED': # done
+                        if verbose: ret['success']['total'][1].append(coh)
+                    elif coh.executed == 'DONE' or coh.executed == 'IGNORED': # delete running
+                        if coh.deleted == 'WORK_IN_PROGRESS':
+                            if verbose: ret['running']['run_rm'][1].append(coh)
+                        else:
+                            if verbose: ret['running']['wait_rm'][1].append(coh)
+                    elif coh.uploaded == 'DONE' or coh.uploaded == 'IGNORED': # exec running
+                        if coh.executed == 'WORK_IN_PROGRESS':
+                            if verbose: ret['running']['run_ex'][1].append(coh)
+                        else:
+                            if verbose: ret['running']['wait_ex'][1].append(coh)
+                    else: # upload running
+                        if coh.uploaded == 'WORK_IN_PROGRESS':
+                            if verbose: ret['running']['run_up'][1].append(coh)
+                        else:
+                            if verbose: ret['running']['wait_up'][1].append(coh)
+
+            #success_total = self.getStateCoh(query, [["current_state", success]])
+            #stopped_total = self.getStateCoh(query, [["current_state", stopped]])
+            #paused_total = self.getStateCoh(query, [["current_state", paused]])
+            #running_total = self.getStateCoh(query, [["current_state", running]]) + self.getStateCoh(query, [["current_state", failure], ["attempts_left", [0], False]])
+            #failure_total = self.getStateCoh(query, [["current_state", failure], ["attempts_left", [0]]]) + self.getStateCoh(query, [["current_state", ["over_timed"]]])
+
+            #sec_up = self.getStateCoh(query, [
+            #    ["current_state", ["over_timed"], False],
+            #    ["current_state", paused, False],
+            #    ["current_state", stopped, False],
+            #    ["attempts_left", [0], False], 
+            #    ["uploaded", ["FAILED"]],
+            #])
+            #sec_ex = self.getStateCoh(query, [
+            #    ["current_state", ["over_timed"], False],
+            #    ["current_state", paused, False],
+            #    ["current_state", stopped, False],
+            #    ["attempts_left", [0], False], 
+            #    ["executed", ["FAILED"]],
+            #])
+            #sec_rm = self.getStateCoh(query, [
+            #    ["current_state", ["over_timed"], False],
+            #    ["current_state", paused, False],
+            #    ["current_state", stopped, False],
+            #    ["attempts_left", [0], False], 
+            #    ["deleted", ["FAILED"]],
+            #])
+            #sec_inv = self.getStateCoh(query, [
+            #    ["current_state", ["over_timed"], False],
+            #    ["current_state", paused, False],
+            #    ["current_state", stopped, False],
+            #    ["attempts_left", [0], False], 
+            #    ["inventoried", ["FAILED"]],
+            #])
+
+            #ret['success']['total'][1] = success_total
+            #ret['stopped']['total'][1] = stopped_total
+            #ret['paused']['total'][1] = paused_total
+            #ret['failure']['total'][1] = failure_total
+            #ret['running']['total'][1] = running_total
+
+            #ret['failure']['over_timed'][1] = self.getStateCoh(query, [["current_state", ["over_timed"]]])
+            #ret['failure']['fail_up'][1] = self.getStateCoh(query, [["attempts_left", [0]], ["uploaded", ["FAILED"]]])
+            #ret['failure']['conn_up'][1] = self.getStateCoh(query, [["attempts_left", [0]], ["uploaded", ["FAILED"]], ["current_state", ["not_reachable"]]])
+            #ret['failure']['fail_ex'][1] = self.getStateCoh(query, [["attempts_left", [0]], ["executed", ["FAILED"]]])
+            #ret['failure']['conn_ex'][1] = self.getStateCoh(query, [["attempts_left", [0]], ["executed", ["FAILED"]], ["current_state", ["not_reachable"]]])
+            #ret['failure']['fail_rm'][1] = self.getStateCoh(query, [["attempts_left", [0]], ["deleted", ["FAILED"]]])
+            #ret['failure']['conn_rm'][1] = self.getStateCoh(query, [["attempts_left", [0]], ["deleted", ["FAILED"]], ["current_state", ["not_reachable"]]])
+            #ret['failure']['fail_inv'][1] = self.getStateCoh(query, [["attempts_left", [0]], ["inventoried", ["FAILED"]]])
+            #ret['failure']['conn_inv'][1] = self.getStateCoh(query, [["attempts_left", [0]], ["inventoried", ["FAILED"]], ["current_state", ["not_reachable"]]])
+
+            #ret['running']['wait_up'][1] = sum([sec_up, 
+            #                    self.getStateCoh(query,
+            #                                    [
+            #                                     ["current_state", ["over_timed"], False],
+            #                                     ["current_state", paused, False],
+            #                                     ["current_state", stopped, False],
+            #                                     ["uploaded", ["TODO"]],
+            #                                    ]
+            #                                    )]) 
+            #ret['running']['run_up'][1] = self.getStateCoh(query, 
+            #                               [
+            #                                   ["current_state", "upload_in_progress"],
+            #                               ])
+            #ret['running']['sec_up'][1] = sec_up
+            #ret['running']['wait_ex'][1] = sum([sec_ex, 
+            #                    self.getStateCoh(query,
+            #                                    [
+            #                                     ["current_state", ["over_timed"], False],
+            #                                     ["current_state", paused, False],
+            #                                     ["current_state", stopped, False],
+            #                                     ["uploaded", ["TODO", "FAILED", "WORK_IN_PROGRESS"], False],
+            #                                     ["executed", ["TODO"]],
+            #                                    ]
+            #                                    )])
+            #ret['running']['run_ex'][1] = self.getStateCoh(query, 
+            #                               [
+            #                                   ["current_state", ["execution_in_progress"]],
+            #                               ])
+            #ret['running']['sec_ex'][1] = sec_ex
+            #ret['running']['wait_rm'][1] = sum([sec_rm, 
+            #                    self.getStateCoh(query,
+            #                                    [
+            #                                     ["current_state", ["over_timed"], False],
+            #                                     ["current_state", paused, False],
+            #                                     ["current_state", stopped, False],
+            #                                     ["executed", ["TODO", "FAILED", "WORK_IN_PROGRESS"], False],
+            #                                     ["deleted", ["TODO"]],
+            #                                    ]
+            #                                    )])
+            #ret['running']['run_rm'][1] = self.getStateCoh(query, 
+            #                               [
+            #                                   ["current_state", ["delete_in_progress"]],
+            #                               ])
+            #ret['running']['sec_rm'][1] = sec_rm
+            #ret['running']['wait_inv'][1] = sum([sec_inv, 
+            #                    self.getStateCoh(query,
+            #                                    [
+            #                                     ["current_state", ["over_timed"], False],
+            #                                     ["current_state", paused, False],
+            #                                     ["current_state", stopped, False],
+            #                                     ["deleted", ["TODO", "FAILED", "WORK_IN_PROGRESS"], False],
+            #                                     ["inventoried", ["TODO"]],
+            #                                    ]
+            #                                    )])
+            #ret['running']['run_inv'][1] = self.getStateCoh(query, 
+            #                               [
+            #                                   ["current_state", ["inventory_in_progress"]],
+            #                               ])
+            #ret['running']['sec_inv'][1] = sec_inv
 
         return ret
 

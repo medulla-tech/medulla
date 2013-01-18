@@ -138,12 +138,15 @@ $slabels = array(
         array('wait_ex', _T('waiting to execute', 'msc'), 'sec_ex', _T('(with %s already try)', 'msc')),
         array('run_ex', _T('executing', 'msc')),
         array('wait_rm', _T('waiting to suppress', 'msc'), 'sec_rm', _T('(with %s already try)', 'msc')),
-        array('run_rm', _T('suppressing', 'msc'))
+        array('run_rm', _T('suppressing', 'msc')),
+        array('wait_inv', _T('waiting to inventory', 'msc'), 'sec_inv', _T('(with %s already try)', 'msc')),
+        array('run_inv', _T('inventoring', 'msc')),
     ),
     'failure'=>array(
         array('fail_up', _T('failed during upload', 'msc'), 'conn_up', _T('(with %s being unreachable)', 'msc')),
         array('fail_ex', _T('failed during execution', 'msc'), 'conn_ex', _T('(with %s being unreachable)', 'msc')),
         array('fail_rm', _T('failed during suppression', 'msc'), 'conn_rm', _T('(with %s being unreachable)', 'msc')),
+        array('fail_inv', _T('failed during suppression', 'msc'), 'conn_inv', _T('(with %s being unreachable)', 'msc')),
         array('over_timed', _T('out of the valid period of execution', 'msc'))
     )
 
