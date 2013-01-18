@@ -40,7 +40,7 @@ from pulse2.utils import Singleton, HasSufficientMemory
 from pulse2.launcher.config import LauncherConfig
 from pulse2.consts import PULSE2_WRAPPER_ERROR_SIGNAL_BASE
 
-@HasSufficientMemory(70)
+@HasSufficientMemory(80)
 def commandRunner(cmd, cbCommandEnd):
     """
     Return a Deferred resulting in the stdout output of a shell command.
@@ -68,7 +68,7 @@ def commandRunner(cmd, cbCommandEnd):
     process.deferred.addCallback(cbCommandEnd)
     return process.deferred
 
-@HasSufficientMemory(70)
+@HasSufficientMemory(80)
 def commandForker(cmd, cbCommandEnd, id, defer_results, callbackName, max_exec_time, group, kind):
     """
     """
