@@ -61,7 +61,7 @@ from pulse2.consts import PULSE2_PSERVER_MIRRORFAILED_CONNREF_ERROR, PULSE2_PSER
 from pulse2.consts import PULSE2_RUNNING_STATES, PULSE2_STAGE_DONE, PULSE2_STAGE_FAILED, PULSE2_STAGE_IGNORED
 from pulse2.consts import PULSE2_STAGES, PULSE2_STAGE_TODO, PULSE2_STAGE_WORK_IN_PROGRESS, PULSE2_STATE_PREFIXES
 from pulse2.consts import PULSE2_SUCCESS_ERROR, PULSE2_TARGET_NOTENOUGHINFO_ERROR, PULSE2_TERMINATED_STATES
-from pulse2.consts import PULSE2_UNKNOWN_ERROR, PULSE2_UNPREEMPTABLE_STATES
+from pulse2.consts import PULSE2_UNKNOWN_ERROR, PULSE2_UNPREEMPTABLE_STATES, PULSE2_FAILED_NON_FINAL_STATES
 from pulse2.scheduler.config import SchedulerConfig
 from pulse2.scheduler.launchers_driving import callOnBestLauncher, callOnLauncher, getLaunchersBalance, probeClient
 import pulse2.scheduler.network
@@ -970,9 +970,8 @@ def getCommandsToNeutralize(scheduler_name):
             database.commands_on_host.c.scheduler == None)
         )
 
-    ret = [q.id for q in query.all()]
     session.close()
-    return ret
+    return query.all()
 
 def stopElapsedCommands(scheduler_name):
     log.debug('scheduler "%s": STOP: Stopping all commands' % scheduler_name)
@@ -987,6 +986,7 @@ def gatherIdsToStop(scheduler_name):
     # - commands exhausted get killed *and* tagged as over_timed
     now = time.strftime("%Y-%m-%d %H:%M:%S")
     ids = list()
+    ids_failed = list()
     ids_overtimed = list()
     for myCoH, myC in __getRunningCommandsOnHostInDB(scheduler_name):
         if not myCoH:
@@ -1000,14 +1000,20 @@ def gatherIdsToStop(scheduler_name):
     # this loop only put the current_state in over_timed, but as the coh
     # are not running, we dont need to stop them.
     # /!\ has to be run *after* previous loop
-    for id in getCommandsToNeutralize(scheduler_name):
-        if not id:
+    for myCoH in getCommandsToNeutralize(scheduler_name):
+        if not myCoH.id:
             continue
-        log.debug("Scheduler: Over Timed command_on_host #%s" % (id))
-        ids_overtimed.append(id)
+        if myCoH.current_state in PULSE2_FAILED_NON_FINAL_STATES :
+            log.debug("Scheduler: Failed command_on_host #%s" % (myCoH.id))
+            ids_failed.append(myCoH.id)
+        else :
+            log.debug("Scheduler: Over Timed command_on_host #%s" % (myCoH.id))
+            ids_overtimed.append(myCoH.id)
 
     if len(ids_overtimed) > 0 :
         CoHManager.setCoHsStateOverTimed(ids_overtimed)
+    if len(ids_failed) > 0 :
+        CoHManager.setCoHsStateFailed(ids_failed)
 
     return ids
 

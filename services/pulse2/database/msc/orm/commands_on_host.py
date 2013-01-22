@@ -1035,36 +1035,49 @@ class CoHManager :
         session.close()
 
     @classmethod
-    def setCoHsStateOverTimed(cls, ids_overtimed):
+    def setCoHsStates(cls, ids, state):
         """
-        Multiple setting the current state to 'overtimed'.
+        Multiple setting the current state to <state>.
 
-        @param ids_overtimed: list of ids to update
-        @type ids_overtimed: list
+        @param ids: list of ids to update
+        @type ids: list
         """
         session = sqlalchemy.orm.create_session()
-        for coh_id in ids_overtimed :
-            myCommandOnHost = session.query(CommandsOnHost).get(coh_id)
+        for id in ids :
+            myCommandOnHost = session.query(CommandsOnHost).get(id)
             if myCommandOnHost :
-                myCommandOnHost.current_state = 'over_timed'
+                myCommandOnHost.current_state = state
                 session.add(myCommandOnHost)
                 session.flush()
         session.close()
 
     @classmethod
-    def setCoHsStateStopped(cls, ids_stopped):
+    def setCoHsStateOverTimed(cls, ids):
+        """
+        Multiple setting the current state to 'overtimed'.
+
+        @param ids: list of ids to update
+        @type ids: list
+        """
+        CoHManager.setCoHsStates(ids, "over_timed")
+
+    @classmethod
+    def setCoHsStateStopped(cls, ids):
         """
         Multiple setting the current state to 'stopped'.
 
-        @param ids_stopped: list of ids to update
-        @type ids_stopped: list
+        @param ids: list of ids to update
+        @type ids: list
         """
-        session = sqlalchemy.orm.create_session()
-        for coh_id in ids_stopped :
-            myCommandOnHost = session.query(CommandsOnHost).get(coh_id)
-            if myCommandOnHost :
-                myCommandOnHost.current_state = 'stopped'
-                session.add(myCommandOnHost)
-                session.flush()
-        session.close()
+        CoHManager.setCoHsStates(ids, "stopped")
+
+    @classmethod
+    def setCoHsStateFailed(cls, ids):
+        """
+        Multiple setting the current state to 'failed'.
+
+        @param ids: list of ids to update
+        @type ids: list
+        """
+        CoHManager.setCoHsStates(ids, "failed")
 

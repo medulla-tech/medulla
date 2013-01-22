@@ -202,6 +202,17 @@ PULSE2_POST_INVENTORY_STATES = [
 PULSE2_POST_HALT_STATES = [
 ] + PULSE2_TERMINATED_STATES
 
+
+PULSE2_FAILED_NON_FINAL_STATES = [
+    'wol_failed',
+    'upload_failed',
+    'execution_failed',
+    'delete_failed',
+    'inventory_failed',
+    'reboot_failed',
+    'halt_failed'
+    ]
+
 """ The stages a command will cross by, KEEP IN THAT ORDER ! """
 PULSE2_STAGES = [
     'awoken',
@@ -223,7 +234,6 @@ PULSE2_STATE_PREFIXES = [
     'reboot',
     'halt'
 ]
-
 PULSE2_STAGE_TODO               = 'TODO'
 PULSE2_STAGE_WORK_IN_PROGRESS   = 'WORK_IN_PROGRESS'
 PULSE2_STAGE_DONE               = 'DONE'
