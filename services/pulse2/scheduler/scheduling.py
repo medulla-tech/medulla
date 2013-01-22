@@ -1013,7 +1013,7 @@ def gatherIdsToStop(scheduler_name):
 
 def fixUnprocessedTasks(scheduler_name):
     log.debug('scheduler "%s": FUT: Starting analysis' % scheduler_name)
-    return twisted.internet.threads.deferToThread(__getRunningCommandsOnHostInDB, scheduler_name, None).addCallback(cleanStatesAllRunningIds)
+    return twisted.internet.threads.deferToThread(getRunningCommandsOnHostInDB, scheduler_name, None).addCallback(cleanStatesAllRunningIds)
 
 def fixProcessingTasks(scheduler_name):
     log.debug('scheduler "%s": FPT: Starting analysis' % scheduler_name)
@@ -1042,7 +1042,7 @@ def preemptTasks(scheduler_name):
     # deferred handling; consumeErrors set to prevent any unhandled exception
     return twisted.internet.defer.DeferredList(deffereds, consumeErrors = True) 
 
-def cleanStatesAllRunningIds(dataset):
+def cleanStatesAllRunningIds(ids):
     """
         algo is pretty simple:
         - ids is the result of getRunningCommandsOnHostInDb(),
@@ -1064,25 +1064,26 @@ def cleanStatesAllRunningIds(dataset):
         any way to tell if an unreachable launcher is down or not.
         That's why this feature is disabled by default.
     """
-
-    def __treatBadStateCommandsOnHost(result, dataset = dataset):
+    def __treatBadStateCommandsOnHost(result, ids = ids):
         fails = []
-        if len(dataset) > 0:
-            log.debug('scheduler "%s": FUT: Looking if the following tasks are still running  : %s' % (SchedulerConfig().name, str([q.id for q in dataset])))
+        if len(ids) > 0:
+            log.debug('scheduler "%s": FUT: Looking if the following tasks are still running  : %s' % (SchedulerConfig().name, str(ids)))
         else:
             log.debug('scheduler "%s": FUT: No task should be running' % (SchedulerConfig().name))
-        for myCoH, myC in dataset:
+        for id in ids:
             found = False
             for running_ids in result: # one tuple per launcher
                 if running_ids[1] == None: # None: launcher may be down
                     continue
-                if myCoH.id in running_ids[1]:
+                if id in running_ids[1]:
                     found = True
                     continue
             if not found:
-                fails.append(myCoH.id)
+                fails.append(id)
                 log.warn('scheduler "%s": FUT: Forcing the following command to STOP state: %s' % (SchedulerConfig().name, id))
-        CoHManager.setCoHsStateStopped(fails)
+        for id in fails:
+            (myCoH, myC, myT) = gatherCoHStuff(id)
+            myCoH.setStateStopped()
 
     deffereds = [] # will hold all deferred
     for launcher in SchedulerConfig().launchers_uri.values():
@@ -1097,6 +1098,7 @@ def cleanStatesAllRunningIds(dataset):
         lambda reason: log.error('scheduler "%s": FUT: error %s'  % (SchedulerConfig().name, pulse2.utils.extractExceptionMessage(reason)))
     )
     return deffered_list
+
 
 def getRunningCommandsOnHostFromLaunchers(scheduler_name):
     """
