@@ -51,7 +51,11 @@ int myLogger(char *msg) {
     fi = fopen(gLogFile, "a");
     if (!fi)
         return 0;
-    fwrite(buffer, sizeof(buffer), 1, fi);
+
+    if (fwrite(buffer, sizeof(buffer), 1, fi) < 1) {
+        perror("Error when writing file");
+    }
+
     fclose(fi);
 
     return 0;
@@ -327,7 +331,10 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
                               "IP Address:%s:%d\nMAC Address:%s\n%s",
                               inet_ntoa(si_other->sin_addr),
                               ntohs(si_other->sin_port), mac, buf + 1);
-        write(fo, buffer, buffer_len);
+
+        if (write(fo, buffer, buffer_len) < 0 ) {
+            perror("Error when writing file");
+        }
         close(fo);
 
         if (analyseresult(mysystem(3, gPathProcessInventory, mac, filename))) {
@@ -424,7 +431,9 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             char *name = malloc(40);
             bzero(name, 40);
             fo = open(filename, O_RDONLY);
-            read(fo, name, 40);
+            if (read(fo, name, 40) <0) {
+                perror("Error when reading file");
+            }
             close(fo);
             sendto(s, name, strlen(name) + 1 , MSG_NOSIGNAL,
                    (struct sockaddr *)si_other, sizeof(*si_other));
@@ -671,7 +680,9 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             char *name = malloc(256);
             bzero(name, 256);
             fo = open(filename, O_RDONLY);
-            read(fo, name, 256);
+            if (read(fo, name, 256) <0) {
+                perror("Error when reading file");
+            }
             close(fo);
             sendto(s, name, strlen(name) + 1 , MSG_NOSIGNAL,
                    (struct sockaddr *)si_other, sizeof(*si_other));
@@ -731,7 +742,9 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             char *name = malloc(256);
             bzero(name, 256);
             fo = open(filename, O_RDONLY);
-            read(fo, name, 256);
+            if (read(fo, name, 256) <0 ){
+                perror("Error when reading file");
+            }
             close(fo);
             sendto(s, name, strlen(name) + 1 , MSG_NOSIGNAL,
                    (struct sockaddr *)si_other, sizeof(*si_other));
@@ -959,7 +972,9 @@ int main(void) {
     if (pidFileFD == -1)
         diep("Can't open PID file");
     snprintf(pidBuff, sizeof(pidBuff), "%d", pid);
-    write(pidFileFD, pidBuff, strlen(pidBuff));
+    if (write(pidFileFD, pidBuff, strlen(pidBuff)) < 0 ) {
+        perror("Error when writing file");
+    }
     close(pidFileFD);
 
     while (1) {
