@@ -1795,7 +1795,7 @@ class LdapUserGroupControl:
         accounts = self.search("objectClass=posixAccount", self.baseDN, ["uidNumber"], ldap.SCOPE_SUBTREE)
         uidNumbers = []
         for account in accounts:
-            uidNumbers.append(account[0][1]['uidNumber'][0])
+            uidNumbers.append(int(account[0][1]['uidNumber'][0]))
         uid = self.uidStart
         while uid in uidNumbers:
             uid = uid + 1
