@@ -29,6 +29,7 @@ from os import makedirs, chdir, popen
 
 from xml.dom.minidom import Document
 from sqlalchemy import create_engine
+from pulse2.database.config import DatabaseConfig
 
 def generation_Pserver(directory):
     """
@@ -144,8 +145,8 @@ def generation_Machine(driver,host,port):
     """
     Add a computer into the inventory database.
     """
-
-    connectionM=create_engine('%s://mmc:mmc@%s:%s/inventory' %(driver,host,port))
+    dbpasswd = DatabaseConfig.dbpasswd
+    connectionM=create_engine('%s://mmc:%s@%s:%s/inventory' %(driver,dbpasswd,host,port))
     m=connectionM.connect()
 
     m.execute("""INSERT INTO `Inventory` VALUES (1,'0000-00-00','00:00:00',1)""")
@@ -166,7 +167,8 @@ def generation_Machine(driver,host,port):
 
 def generation_Commands(driver,host,port):
 
-    connectionC=create_engine('%s://mmc:mmc@%s:%s/msc' %(driver,host,port))
+    dbpasswd = DatabaseConfig.dbpasswd
+    connectionC=create_engine('%s://mmc:%s@%s:%s/msc' %(driver,dbpasswd,host,port))
     c=connectionC.connect()
 
     c.execute("""INSERT INTO `commands` VALUES (1,'active','2029-10-29 22:53:58','sleep 360\n','','enable','enable','','0000-00-00 00:00:00','2029-01-01 00:00:00','root','root','YES','Test Mandriva : Pause 6 minute\n','disable','disable',360,3,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,'disable','',NULL,NULL,NULL,'none') """)
