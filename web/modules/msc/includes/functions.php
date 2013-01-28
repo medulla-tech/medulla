@@ -201,6 +201,7 @@ function state_tmpl($current_state) {
     if (in_array(
         $current_state,
         array(
+            'over_timed',
             'failed',
             'done'
         )
