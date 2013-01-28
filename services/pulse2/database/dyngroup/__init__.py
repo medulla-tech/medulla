@@ -27,8 +27,9 @@ Dyngroup database handler
 
 # SqlAlchemy
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, \
-        Integer, ForeignKey, select, not_, exceptions, bindparam
+        Integer, ForeignKey, select, not_, bindparam
 from sqlalchemy.orm import create_session, mapper, relation
+from sqlalchemy.exc import DBAPIError
 
 # PULSE2 modules
 from pulse2.database.database_helper import DatabaseHelper
@@ -148,7 +149,7 @@ class DyngroupDatabase(DatabaseHelper):
         for i in range(NB_DB_CONN_TRY):
             try:
                 ret = self.db.connect()
-            except exceptions.SQLError, e:
+            except DBAPIError, e:
                 self.logger.error(e)
             except Exception, e:
                 self.logger.error(e)

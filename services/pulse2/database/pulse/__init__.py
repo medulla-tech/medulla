@@ -29,7 +29,7 @@ Pulse2 database handler
 from sqlalchemy import create_engine, MetaData, Table, Column, Text
 from sqlalchemy.orm import create_session, mapper
 from sqlalchemy.sql import and_
-from sqlalchemy.exceptions import SQLError
+from sqlalchemy.exc import DBAPIError
 
 # PULSE2 modules
 # from pulse2.database.database_helper import DBObject
@@ -93,7 +93,7 @@ class Pulse2Database(DyngroupDatabaseHelper):
         for i in range(NB_DB_CONN_TRY):
             try:
                 ret = self.db.connect()
-            except SQLError, e:
+            except DBAPIError, e:
                 self.logger.error(e)
             except Exception, e:
                 self.logger.error(e)
