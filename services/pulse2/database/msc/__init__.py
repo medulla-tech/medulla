@@ -1057,8 +1057,16 @@ class MscDatabase(DatabaseHelper):
             for f in filter:
                 if isinstance(f[1], str): # f[1] must be a list
                     f[1] = [f[1]]
-                if len(f) == 3 and not f[2]:
-                    query = query.filter(not_(getattr(self.commands_on_host.c, f[0]).in_(f[1])))
+                if len(f) == 3:
+		    if isinstance(f[2], bool):
+			if f[2]:
+                    	    query = query.filter(getattr(self.commands_on_host.c, f[0]).in_(f[1]))
+			else:
+                            query = query.filter(not_(getattr(self.commands_on_host.c, f[0]).in_(f[1])))
+                    elif f[2] == '<=':
+                    	query = query.filter(getattr(self.commands_on_host.c, f[0]) <= f[1][0])
+                    elif f[2] == '>=':
+                    	query = query.filter(getattr(self.commands_on_host.c, f[0]) >= f[1][0])
                 else:
                     query = query.filter(getattr(self.commands_on_host.c, f[0]).in_(f[1]))
             return int(query.count())
@@ -1086,9 +1094,11 @@ class MscDatabase(DatabaseHelper):
         stopped = self.__getAllStatus()['stopped']
         paused = self.__getAllStatus()['paused']
         success = self.__getAllStatus()['success']
+	now = time.strftime("%Y-%m-%d %H:%M:%S")
 
         sec_up = self.getStateLen(query, [
 	    ["current_state", ["over_timed"], False],
+	    ["end_date", [now], '>='],
 	    ["current_state", paused, False],
 	    ["current_state", stopped, False],
             ["attempts_left", [0], False], 
@@ -1096,6 +1106,7 @@ class MscDatabase(DatabaseHelper):
         ])
         sec_ex = self.getStateLen(query, [
 	    ["current_state", ["over_timed"], False],
+	    ["end_date", [now], '>='],
 	    ["current_state", paused, False],
 	    ["current_state", stopped, False],
             ["attempts_left", [0], False], 
@@ -1103,6 +1114,7 @@ class MscDatabase(DatabaseHelper):
         ])
         sec_rm = self.getStateLen(query, [
 	    ["current_state", ["over_timed"], False],
+	    ["end_date", [now], '>='],
 	    ["current_state", paused, False],
 	    ["current_state", stopped, False],
             ["attempts_left", [0], False], 
@@ -1110,6 +1122,7 @@ class MscDatabase(DatabaseHelper):
         ])
         sec_inv = self.getStateLen(query, [
 	    ["current_state", ["over_timed"], False],
+	    ["end_date", [now], '>='],
 	    ["current_state", paused, False],
 	    ["current_state", stopped, False],
             ["attempts_left", [0], False], 
@@ -1119,8 +1132,10 @@ class MscDatabase(DatabaseHelper):
         success_total = self.getStateLen(query, [["current_state", success]])
         stopped_total = self.getStateLen(query, [["current_state", stopped]])
         paused_total = self.getStateLen(query, [["current_state", paused]])
-        running_total = self.getStateLen(query, [["current_state", running]]) + self.getStateLen(query, [["current_state", failure], ["attempts_left", [0], False]])
-        failure_total = self.getStateLen(query, [["current_state", failure], ["attempts_left", [0]]]) + self.getStateLen(query, [["current_state", ["over_timed"]]])
+        running_total = self.getStateLen(query, [["current_state", running]]) + self.getStateLen(query, [["current_state", failure], ["end_date", now, '>='], ["attempts_left", [0], False]])
+        failure_total = self.getStateLen(query, [["current_state", failure], ["attempts_left", [0]]]) \
+                        + self.getStateLen(query, [["current_state", ["over_timed"]]]) \
+                        + self.getStateLen(query, [["current_state", failure], ["attempts_left", [0], False], ["end_date", now, '<=']])
 
         try:
             total = int(query.count())
