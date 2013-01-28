@@ -51,7 +51,7 @@ else:
 
 del(sys.argv[1:])
 
-server = xmlrpclib.ServerProxy('%s://username:password@%s:8000/' % (protocol, ipserver))
+server = xmlrpclib.ServerProxy('%s://mmc:s3cr3t@%s:8000/' % (protocol, ipserver))
 
 connectionC=generation_Commands(dbdriver,dbhost,dbport)
 
