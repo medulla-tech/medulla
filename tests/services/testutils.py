@@ -25,10 +25,12 @@
 Little common utility functions used by some tests.
 """
 import sys
-from os import makedirs, chdir, popen
+from os import makedirs, chdir, popen, path
 
 from xml.dom.minidom import Document
 from sqlalchemy import create_engine
+
+from mmc.site import mmcconfdir
 from pulse2.database.config import DatabaseConfig
 
 def generation_Pserver(directory):
@@ -167,7 +169,12 @@ def generation_Machine(driver,host,port):
 
 def generation_Commands(driver,host,port):
 
-    dbpasswd = DatabaseConfig.dbpasswd
+    # Read config from ini file
+    inifile = path.join(mmcconfdir, "plugins", "pulse2.ini")
+    config = DatabaseConfig()
+    config.setup(inifile)
+
+    dbpasswd = config.dbpasswd
     connectionC=create_engine('%s://mmc:%s@%s:%s/msc' %(driver,dbpasswd,host,port))
     c=connectionC.connect()
 
@@ -175,11 +182,11 @@ def generation_Commands(driver,host,port):
     
     c.execute("""INSERT INTO `commands` VALUES (2,'active','2029-10-29 22:53:58','sleep 360\n','','enable','enable','','0000-00-00 00:00:00','2029-01-01 00:00:00','root','root','YES','Test Mandriva : Pause 6 minute\n','disable','disable',360,3,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,'disable','',NULL,NULL,NULL,'none') """)
 
-    c.execute(""" INSERT INTO `commands_on_host` VALUES (1,1,'localhost','2009-10-29 22:54:00',NULL,'execution_in_progress','pending','IGNORED','IGNORED','WORK_IN_PROGRESS','TODO','TODO','TODO','TODO','2009-10-29 22:53:59',3,0,'launcher_01',1,'scheduler_01',NULL,NULL,NULL,0) """)
+    c.execute(""" INSERT INTO `commands_on_host` VALUES (1,1,'localhost','2009-10-29 22:54:00',NULL,'execution_in_progress','pending','IGNORED','IGNORED','WORK_IN_PROGRESS','TODO','TODO','TODO','TODO','2009-10-29 22:53:59',3,0,0,0,'launcher_01',1,'scheduler_01',NULL,NULL,NULL,0) """)
     
-    c.execute(""" INSERT INTO `commands_on_host` VALUES (2,2,'localhost','2009-10-29 22:54:00','2029-10-29 22:54:00','scheduled','pending','IGNORED','IGNORED','TODO','TODO','TODO','TODO','TODO','2009-10-29 23:53:59',3,0,'launcher_01',1,'scheduler_01',NULL,NULL,NULL,0) """)
+    c.execute(""" INSERT INTO `commands_on_host` VALUES (2,2,'localhost','2009-10-29 22:54:00','2029-10-29 22:54:00','scheduled','pending','IGNORED','IGNORED','TODO','TODO','TODO','TODO','TODO','2009-10-29 23:53:59',3,0,0,0,'launcher_01',1,'scheduler_01',NULL,NULL,NULL,0) """)
     
-    c.execute(""" INSERT INTO `commands_on_host` VALUES (3,1,'localhost','2009-10-29 22:54:00','2029-10-29 22:54:00','scheduled','pending','IGNORED','IGNORED','TODO','TODO','TODO','TODO','TODO','2009-10-29 23:53:59',3,0,'launcher_01',1,'scheduler_01',NULL,NULL,NULL,0) """)
+    c.execute(""" INSERT INTO `commands_on_host` VALUES (3,1,'localhost','2009-10-29 22:54:00','2029-10-29 22:54:00','scheduled','pending','IGNORED','IGNORED','TODO','TODO','TODO','TODO','TODO','2009-10-29 23:53:59',3,0,0,0,'launcher_01',1,'scheduler_01',NULL,NULL,NULL,0) """)
     
     c.execute(""" INSERT INTO `target` VALUES (1,'localhost','file://0','','UUID1','','','','') """)
 
