@@ -991,8 +991,8 @@ class Glpi08(DyngroupDatabaseHelper):
         while parent_id != 0:
             en_id = parent_id
             en = session.query(Location).filter(self.location.c.id == parent_id).first()
-            path.append(toUUID(en.c.id))
-            parent_id = en.c.entities_id
+            path.append(toUUID(en.id))
+            parent_id = en.entities_id
         path.append('UUID0')
         return path
 
