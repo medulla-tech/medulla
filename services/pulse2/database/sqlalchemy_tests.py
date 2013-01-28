@@ -23,12 +23,12 @@
 
 from sqlalchemy import __version__
 
-SA_MAJOR = 0
-SA_MINOR = 6
+MIN_VERSION = '0.6.3' # Debian Squeeze version
+MAX_VERSION = '0.7.8' # Debian Wheezy version
+CUR_VERSION = __version__
 
 def checkSqlalchemy():
-    a_version = __version__.split('.')
-    if len(a_version) > 2 and str(a_version[0]) == str(SA_MAJOR) and str(a_version[1]) <= str(SA_MINOR):
+    if MIN_VERSION <= CUR_VERSION <= MAX_VERSION:
         return True
     else:
         return False

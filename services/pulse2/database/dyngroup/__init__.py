@@ -36,8 +36,6 @@ from pulse2.database.database_helper import DatabaseHelper
 # Imported last
 import logging
 
-SA_MAJOR = 0
-SA_MINOR = 4
 DATABASEVERSION = 3
 
 class DyngroupDatabase(DatabaseHelper):

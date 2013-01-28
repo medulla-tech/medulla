@@ -28,7 +28,7 @@ pulse2 modules.
 """
 
 from pulse2.utils import Singleton
-from pulse2.database.sqlalchemy_tests import checkSqlalchemy, SA_MAJOR, SA_MINOR
+from pulse2.database.sqlalchemy_tests import checkSqlalchemy, MIN_VERSION, MAX_VERSION, CUR_VERSION
 from sqlalchemy.exc import DBAPIError, NoSuchTableError
 
 import logging
@@ -40,7 +40,7 @@ class DatabaseHelper(Singleton):
 
     def db_check(self, required_version = -1):
         if not checkSqlalchemy():
-            self.logger.error("Sqlalchemy version error : is not %s.%s.* version" % (SA_MAJOR, SA_MINOR))
+            self.logger.error("Sqlalchemy: current version is %s. Must be between %s and %s" % (CUR_VERSION, MIN_VERSION, MAX_VERSION))
             return False
 
         conn = self.connected()

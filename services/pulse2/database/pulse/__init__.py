@@ -39,8 +39,6 @@ from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHe
 # Imported last
 import logging
 
-SA_MAJOR = 0
-SA_MINOR = 4
 DATABASEVERSION = 1
 
 class Pulse2Database(DyngroupDatabaseHelper):
