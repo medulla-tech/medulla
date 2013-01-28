@@ -3060,6 +3060,33 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return True
 
+    def unlinkImagingServerToEntity(self, is_uuid):
+        """
+        Inverse method to linkImagingServerToEntity.
+
+        @param is_uuid: Imaging server UUID
+        @type is_uuid: str
+
+        @return: True if success
+        @rtype: bool
+        """
+        session = create_session()
+
+        # checks if IS already exists
+        imaging_server = self.getImagingServerByUUID(is_uuid, session)
+        if imaging_server == None:
+            raise Exception("%s : No server exists with that uuid (%s)" % (P2ERR.ERR_IMAGING_SERVER_DONT_EXISTS, is_uuid))
+
+        imaging_server.associated = 0
+        imaging_server.fk_entity = 1
+        imaging_server.fk_default_menu = 1
+        session.add(imaging_server)
+        session.flush()
+
+        session.close()
+        return True
+
+
     def __getLinkedImagingServerForEntity(self, session, loc_id):
         """
         If this entity is linked to an imaging server, returns it's uuid, if not (or if the entity do not exists), return None

@@ -245,10 +245,11 @@ class LoadDefaults (RPCClient):
         # -- link imaging server options check
         opt = self.options
         
-        if opt.default_menu or opt.link_img_server: 
+        if opt.default_menu or opt.link_img_server \
+               or opt.unlink_img_server : 
             log.debug("Options validated")
             return
-        
+
         if (opt.loc_id or opt.is_id or opt.loc_name) \
             and not (opt.link_img_server or opt.default_menu) :
         
@@ -268,6 +269,9 @@ class LoadDefaults (RPCClient):
         # -- link imaging server execute
         if self.options.link_img_server : 
             self.linkImagingServerToLocation()
+        # -- unlink imaging server execute
+        if self.options.unlink_img_server : 
+            self.unlinkImagingServerToLocation()
         # -- generating default menu    
         if self.options.default_menu :
             self.synchroLocation()
@@ -289,7 +293,23 @@ class LoadDefaults (RPCClient):
         else :
             log.error(msg)
       
+    def unlinkImagingServerToLocation (self):
+        """ Wrapper for the remote function """
+        is_id = self.options.is_id or "UUID1"
+        loc_id = self.options.loc_id or "UUID1"
+        
+        # Function to call
+        fnc = self.proxy.imaging.unlinkImagingServerToLocation
+        args = [is_id, loc_id]
 
+        success1, success2 = self.rpc_execute(fnc, *args)
+        if not success1 :
+            log.warn("Failed to unassociate the imaging server to entity")
+        if not success2 :
+            log.warn("Failed to unassociate the package server to entity")
+        if success1 and success2 :
+            log.info("Imaging server successfully unassociated.")
+ 
     def synchroLocation (self):
         """ Wrapper for the remote function """
         loc_id = self.options.loc_id or "UUID1"
@@ -318,11 +338,15 @@ def run(argv) :
                       action="store_true",
                       dest="link_img_server", default=False,
                       help="Link imagging server to location")
+    group.add_option("--unlink-server", 
+                      action="store_true",
+                      dest="unlink_img_server", default=False,
+                      help="Unlink imagging server to location")
     group.add_option("--default-menu", 
                       action="store_true",
                       dest="default_menu", default=False,
                       help="Generate Menu")
-    group.add_option("--is-id", dest="is_id",
+    group.add_option("--imaging-id", dest="is_id",
                       help="Imaging server UUID")
     group.add_option("--loc-id", dest="loc_id",
                       help="Location UUID")

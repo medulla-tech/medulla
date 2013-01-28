@@ -50,3 +50,7 @@ class Pulse2Pulse2Manager(Pulse2I):
         print "pulse2 > putPackageServerEntity"
         ret = Pulse2Database().putPackageServerEntity(ps_uuid, e_uuid)
         return ret.toH()
+
+    def delPackageServerEntity(self, e_uuid):
+        ret = Pulse2Database().delPackageServerEntity(e_uuid)
+        return ret

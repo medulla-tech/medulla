@@ -178,6 +178,27 @@ class Pulse2Database(DyngroupDatabaseHelper):
         session.close()
         return pse
 
+    def delPackageServerEntity(self, e_uuid):
+        """
+        @param e_uuid: the entity uuid
+        @type e_uuid: str
+
+        @return: True if success
+        @rtype: bool
+        """
+        session = create_session()
+        pse = session.query(PackageServerEntity).filter(self.packageServerEntity.c.entity_uuid==e_uuid).all()
+        if pse and len(pse) == 1:
+            session.delete(pse[0])
+        else :
+            session.close()
+            return False
+            
+        session.flush()
+        session.close()
+        return True
+
+
     ################################
     ## MEMBERS
 

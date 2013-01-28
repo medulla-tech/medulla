@@ -73,6 +73,11 @@ class Pulse2Manager(Singleton):
                 ret = ret and r
         return ret
 
+    def delPackageServerEntity(self, e_uuid):
+        klass = self.components[self.main]
+        return klass().delPackageServerEntity(e_uuid)
+
+
 class Pulse2I:
     def getPackageServerEntityByPackageServer(self, ps_uuid):
         """

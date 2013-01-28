@@ -1181,6 +1181,37 @@ class ImagingRpcProxy(RpcProxyI):
 
         return [True, ret]
 
+    def unlinkImagingServerToLocation(self, is_uuid, loc_id):
+        """
+        Inverse method to linkImagingServerToLocation: unlink an imaging server
+
+        @param is_uuid: the imaging server UUID
+        @type is_uuid: str
+
+        @param loc_id: the location UUID (Entity.uuid)
+        @type loc_id: str
+
+        @returns: a pair :
+            * True if succeed or False otherwise
+            * the error in case of failure
+        @rtype: list
+        """
+        db = ImagingDatabase()
+        success1 = success2 = False
+        try:
+            success1 = db.unlinkImagingServerToEntity(is_uuid)
+            success2 = Pulse2Manager().delPackageServerEntity(loc_id)
+        except Exception, e:
+            logging.getLogger().warn("Imaging.unlinkImagingServerToEntity : %s" % e)
+
+        if not success1 :
+            logging.getLogger().warn("Failed to unassociate the imaging server to entity:")
+        if not success2 :
+            logging.getLogger().warn("Failed to unassociate the package server to entity:")
+ 
+        return [success1, success2]
+
+
     def getImagingServerConfig(self, location):
         """
         get an imaging server configuration
