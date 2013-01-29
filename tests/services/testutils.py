@@ -25,6 +25,7 @@
 Little common utility functions used by some tests.
 """
 import sys
+import time
 from os import makedirs, chdir, popen, path
 
 from xml.dom.minidom import Document
@@ -178,16 +179,99 @@ def generation_Commands(driver,host,port):
     connectionC=create_engine('%s://mmc:%s@%s:%s/msc' %(driver,dbpasswd,host,port))
     c=connectionC.connect()
 
-    c.execute("""INSERT INTO `commands` VALUES (1,'active','2029-10-29 22:53:58','sleep 360\n','','enable','enable','','0000-00-00 00:00:00','2029-01-01 00:00:00','root','root','YES','Test Mandriva : Pause 6 minute\n','disable','disable',360,3,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,'disable','',NULL,NULL,NULL,'none') """)
-    
-    c.execute("""INSERT INTO `commands` VALUES (2,'active','2029-10-29 22:53:58','sleep 360\n','','enable','enable','','0000-00-00 00:00:00','2029-01-01 00:00:00','root','root','YES','Test Mandriva : Pause 6 minute\n','disable','disable',360,3,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,'disable','',NULL,NULL,NULL,'none') """)
+    now = time.time()
+    tomorrow = now + 3600*24
 
-    c.execute(""" INSERT INTO `commands_on_host` VALUES (1,1,'localhost','2009-10-29 22:54:00',NULL,'execution_in_progress','pending','IGNORED','IGNORED','WORK_IN_PROGRESS','TODO','TODO','TODO','TODO','2009-10-29 22:53:59',3,0,0,0,'launcher_01',1,'scheduler_01',NULL,NULL,NULL,0) """)
+
+    start_date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(now))
+    end_date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(tomorrow))
     
-    c.execute(""" INSERT INTO `commands_on_host` VALUES (2,2,'localhost','2009-10-29 22:54:00','2029-10-29 22:54:00','scheduled','pending','IGNORED','IGNORED','TODO','TODO','TODO','TODO','TODO','2009-10-29 23:53:59',3,0,0,0,'launcher_01',1,'scheduler_01',NULL,NULL,NULL,0) """)
-    
-    c.execute(""" INSERT INTO `commands_on_host` VALUES (3,1,'localhost','2009-10-29 22:54:00','2029-10-29 22:54:00','scheduled','pending','IGNORED','IGNORED','TODO','TODO','TODO','TODO','TODO','2009-10-29 23:53:59',3,0,0,0,'launcher_01',1,'scheduler_01',NULL,NULL,NULL,0) """)
-    
+    statement = """INSERT INTO `commands` 
+                             (id,state,creation_date,start_file,parameters,
+                              start_script,clean_on_success,files,start_date,
+                              end_date,connect_as,creator,dispatched,title,
+                              do_inventory,do_wol,next_connection_delay,
+                              max_connection_attempt,pre_command_hook,
+                              post_command_hook,pre_run_hook,post_run_hook,
+                              on_success_hook,on_failure_hook,maxbw,
+                              deployment_intervals,do_reboot,do_halt,fk_bundle,
+                              order_in_bundle,package_id,proxy_mode)
+                      VALUES (1,'active','%s','sleep 360\n','',
+                              'enable','enable','','%s','%s','root','root','YES',
+                              'Test Mandriva : Pause 6 minute\n','disable',
+                              'disable',360,3,NULL,NULL,NULL,NULL,NULL,NULL,
+                              0,NULL,'disable','',NULL,NULL,NULL,'none') 
+                              """ % (start_date, start_date, end_date)
+    c.execute(statement)
+
+    statement = """INSERT INTO `commands` 
+                             (id,state,creation_date,start_file,parameters,
+                              start_script,clean_on_success,files,start_date,
+                              end_date,connect_as,creator,dispatched,title,
+                              do_inventory,do_wol,next_connection_delay,
+                              max_connection_attempt,pre_command_hook,
+                              post_command_hook,pre_run_hook,post_run_hook,
+                              on_success_hook,on_failure_hook,maxbw,
+                              deployment_intervals,do_reboot,do_halt,fk_bundle,
+                              order_in_bundle,package_id,proxy_mode)
+                      VALUES (2,'active','%s','sleep 360\n','',
+                              'enable','enable','','%s','%s','root','root','YES',
+                              'Test Mandriva : Pause 6 minute\n','disable',
+                              'disable',360,3,NULL,NULL,NULL,NULL,NULL,NULL,
+                              0,NULL,'disable','',NULL,NULL,NULL,'none') 
+                              """ % (start_date, start_date, end_date)
+    c.execute(statement)
+
+    statement = """ INSERT INTO `commands_on_host` 
+                              (id, fk_commands, host, start_date, end_date, 
+                               current_state, stage, awoken, uploaded, 
+                               executed, deleted, inventoried, rebooted, 
+                               halted, next_launch_date, attempts_left,
+                               attempts_failed, balance, next_attempt_date_time, 
+                               current_launcher, fk_target, scheduler, 
+                               last_wol_attempt,fk_use_as_proxy, 
+                               order_in_proxy,  max_clients_per_proxy)
+                       VALUES (1,1,'localhost','%s','%s',
+                               'execution_in_progress','pending','IGNORED','IGNORED',
+                               'WORK_IN_PROGRESS','TODO','TODO','TODO','TODO',
+                               '2009-10-29 22:53:59',3,0,0,0,'launcher_01',1,
+                               'scheduler_01',NULL,NULL,NULL,0) 
+                               """ % (start_date, end_date)
+    c.execute(statement)
+   
+    statement = """ INSERT INTO `commands_on_host` 
+                              (id, fk_commands, host, start_date, end_date, 
+                               current_state, stage, awoken, uploaded, 
+                               executed, deleted, inventoried, rebooted, 
+                               halted, next_launch_date, attempts_left,
+                               attempts_failed, balance, next_attempt_date_time, 
+                               current_launcher, fk_target, scheduler, 
+                               last_wol_attempt,fk_use_as_proxy, 
+                               order_in_proxy,  max_clients_per_proxy)
+                       VALUES (2,2,'localhost','%s','%s',
+                               'scheduled','pending','IGNORED','IGNORED','TODO',
+                               'TODO','TODO','TODO','TODO','2009-10-29 23:53:59',
+                               3,0,0,0,'launcher_01',1,'scheduler_01',
+                               NULL,NULL,NULL,0) """ % (start_date, end_date)
+    c.execute(statement)
+  
+    statement = """ INSERT INTO `commands_on_host` 
+                              (id, fk_commands, host, start_date, end_date, 
+                               current_state, stage, awoken, uploaded, 
+                               executed, deleted, inventoried, rebooted, 
+                               halted, next_launch_date, attempts_left,
+                               attempts_failed, balance, next_attempt_date_time, 
+                               current_launcher, fk_target, scheduler, 
+                               last_wol_attempt,fk_use_as_proxy, 
+                               order_in_proxy,  max_clients_per_proxy)
+                       VALUES (3,1,'localhost','%s','%s',
+                               'scheduled','pending','IGNORED','IGNORED','TODO',
+                               'TODO','TODO','TODO','TODO','2009-10-29 23:53:59',
+                               3,0,0,0,'launcher_01',1,'scheduler_01',
+                               NULL,NULL,NULL,0) """ % (start_date, end_date)
+    c.execute(statement)
+
+ 
     c.execute(""" INSERT INTO `target` VALUES (1,'localhost','file://0','','UUID1','','','','') """)
 
     c.close()
