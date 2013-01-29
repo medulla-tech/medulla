@@ -1634,9 +1634,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         il.fk_target = target_id
 
         # delete PostInstallScriptInImage if exists
-        q = session.query(PostInstallScriptInImage).filter(self.post_install_script_in_image.c.fk_image == image_id).first()
-        if q:
-            session.delete(q)
+        session.query(PostInstallScriptInImage).filter(self.post_install_script_in_image.c.fk_image == image_id).delete()
+        session.flush()
 
         # TODO!
         # delete ImageInMenu and MenuItem if exists for all targets and put the synchro state flag to TODO
