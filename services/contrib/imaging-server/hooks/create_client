@@ -211,8 +211,8 @@ def myCall():
         if config.invserver_glpi_mode :
             invfwd = RegisterByInventory(config)
             callFunction(invfwd.send(name, mac))
-        else:
-            callFunction(
+
+        callFunction(
                 imagingAPI.computerRegister(
                     name,
                     mac,
@@ -267,7 +267,6 @@ def callBack(result):
         if it is a success, call myCall(result)
         if not, exitcode is set to ERROR_SERVER then call endBack()
     """
-    
     global exitcode
     # if result is a list and the first arg a string and its value,
     # 'PULSE2_ERR', then something went wrong

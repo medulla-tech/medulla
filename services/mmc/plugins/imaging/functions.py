@@ -2177,14 +2177,17 @@ class ImagingRpcProxy(RpcProxyI):
             if db_computer_name.lower() != hostname.lower():
                 # Computer added via OCS -> renamed by PXE entry    
                 renamed = ComputerManager().editComputerName(self.currentContext, uuid, hostname)
-                logger.info("Machine '%s' renamed to '%s'."% (db_computer_name, hostname))
-                return [renamed, uuid]
+                if renamed :
+                     logger.info("Machine '%s' renamed to '%s'."% (db_computer_name, hostname))
+                else :
+                     logger.warning("Machine '%s' couldn't be renamed to '%s'."% (db_computer_name, hostname))
 
-
+        
         # If a computer with this name already exists, check that the MAC
         # address is also matching
         ctx = self.currentContext
-        db_computer = getJustOneMacPerComputer(ctx, ComputerManager().getMachineMac(ctx, {'hostname': hostname}))
+        if uuid : 
+            db_computer = getJustOneMacPerComputer(ctx, ComputerManager().getMachineMac(ctx, {'uuid': uuid}))
         if db_computer:
             if len(db_computer) > 1:
                 err = "More than one computer in database with hostname %s. Aborting !" % hostname
