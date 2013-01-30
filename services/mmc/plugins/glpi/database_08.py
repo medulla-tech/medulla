@@ -1656,6 +1656,9 @@ class Glpi08(DyngroupDatabaseHelper):
                         else:
                             ret_domain.insert(idx_good, '')
                         failure[1] = False
+            elif 'ifmac' in iface and iface['ifmac']:
+                # We need ifmac for imaging registration, so always fill ret_ifmac list
+                ret_ifmac.append(iface['ifmac'])
 
         if failure[0]:
             if failure[1]:
