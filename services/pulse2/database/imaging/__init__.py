@@ -3266,7 +3266,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         if session_need_to_close:
             session.close()
-        return map(lambda x: x.nic_uuid, ret)
+        return [x.nic_uuid for x in ret]
 
     ######### SYNCHRO
     def getTargetsThatNeedSynchroInEntity(self, loc_id, target_type, session = None):
