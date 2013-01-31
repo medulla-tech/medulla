@@ -30,6 +30,7 @@
 """
 import sys
 import twisted.internet.reactor
+from twisted.internet import task
 import logging
 import logging.config
 from mmc.site import mmcconfdir
@@ -212,7 +213,11 @@ def myCall():
             invfwd = RegisterByInventory(config)
             callFunction(invfwd.send(name, mac))
 
-        callFunction(
+            d = task.deferLater(twisted.internet.reactor, 0, imagingAPI.computerRegister, name, mac, False)
+            d.addCallback(callBack)
+            d.addErrback(errorBack)
+        else :
+            callFunction(
                 imagingAPI.computerRegister(
                     name,
                     mac,

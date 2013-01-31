@@ -42,6 +42,8 @@ from pulse2.database.imaging.types import P2IT, P2ISS, P2IM, P2ERR
 from pulse2.apis.clients.imaging import ImagingApi
 import pulse2.utils
 
+
+
 class ImagingRpcProxy(RpcProxyI):
     """ XML/RPC Bindings """
 
@@ -2157,7 +2159,7 @@ class ImagingRpcProxy(RpcProxyI):
             'computermac': MACAddress,
             'computernet': '',
             'location_uuid': loc_id}
-
+        
         uuid = None
         db_computer = ComputerManager().getComputerByMac(MACAddress)
         if db_computer != None:
@@ -2188,6 +2190,7 @@ class ImagingRpcProxy(RpcProxyI):
         ctx = self.currentContext
         if uuid : 
             db_computer = getJustOneMacPerComputer(ctx, ComputerManager().getMachineMac(ctx, {'uuid': uuid}))
+
         if db_computer:
             if len(db_computer) > 1:
                 err = "More than one computer in database with hostname %s. Aborting !" % hostname
@@ -2210,7 +2213,7 @@ class ImagingRpcProxy(RpcProxyI):
                     return [False, err]
                 else:
                     logger.debug("The computer (uuid = %s) is matching with its hostname and one of its MAC addresses (%s)" % (uuid, mac))
-
+        
         if uuid == None or type(uuid) == list and len(uuid) == 0:
             logger.info("the computer %s (%s) does not exist in the backend, trying to add it" % (hostname, MACAddress))
             # the computer does not exists, so we create it
@@ -2263,7 +2266,7 @@ class ImagingRpcProxy(RpcProxyI):
         else:
             logger.debug("computer %s (%s) dont need registration" % (hostname, MACAddress))
             d = defer.succeed(uuid)
-
+        
         return d
 
     def imagingServerRegister(self, name, url, uuid):
@@ -2723,7 +2726,8 @@ def synchroTargets(ctx, uuids, target_type):
                 mac = mac[0]
                 if (type(mac) == list or type(mac) == tuple) and len(mac) == 1:
                     mac = mac[0]
-            computers.append((h_hostnames[uuid], mac, imagingData))
+            if uuid in h_hostnames :
+                computers.append((h_hostnames[uuid], mac, imagingData))
 
         if not url in h_computers:
             h_computers[url] = []
