@@ -1802,15 +1802,22 @@ class ImagingRpcProxy(RpcProxyI):
                 db.changeTargetsSynchroState([uuid], target_type, P2ISS.DONE)
                 return [True]
 
+            # Getting menus
             distinct_loc = generateMenus(logger, db, uuids)
 
             if target_type == P2IT.COMPUTER:
+                # Getting current computer location
                 location = db.getTargetsEntity([uuid])[0]
+
                 url = chooseImagingApiUrl(location[0].uuid)
                 i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
                 if i != None:
-                    # imagingData = {'uuid':uuid}
-                    menu = distinct_loc[location[0].uuid][1]
+                    # Current computer's menu is in distinct_loc dictionnary
+                    # We're treating a computer, so distinct_loc contains one loc_uuid
+                    # we can make a for in:
+                    for loc_uuid in distinct_loc:
+                        menu = distinct_loc[loc_uuid][1]
+
                     imagingData = {'menu':menu, 'uuid':uuid}
                     ctx = self.currentContext
                     macs = ComputerManager().getMachineMac(ctx, {'uuid': uuid})
