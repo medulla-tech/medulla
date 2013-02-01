@@ -2152,7 +2152,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 .join(self.target, self.target.c.fk_menu == self.menu.c.id) \
             )
             mis = mis.filter(self.target.c.uuid == target_uuid).all()
-            mis_id = map(lambda mi:mi.id, mis)
+            mis_id = [mi.id for mi in mis]
 
             iims = session.query(ImageInMenu).select_from(self.image_in_menu \
                 .join(self.menu_item, self.menu_item.c.id == self.image_in_menu.c.fk_menuitem) \
@@ -2225,21 +2225,22 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                     )
                 ).all()
 
-            images_id = map(lambda m:m[0].id, images)
+            images_id = [m[0].id for m in images]
 
-            post_install_script_in_image = session.query(PostInstallScriptInImage) \
-                    .filter(self.post_install_script_in_image.c.fk_image.in_(images_id)).all()
+            if images_id:
+                post_install_script_in_image = session.query(PostInstallScriptInImage) \
+                        .filter(self.post_install_script_in_image.c.fk_image.in_(images_id)).all()
 
-            image_on_imaging_server = session.query(ImageOnImagingServer) \
-                    .filter(self.image_on_imaging_server.c.fk_image.in_(images_id)).all()
+                image_on_imaging_server = session.query(ImageOnImagingServer) \
+                        .filter(self.image_on_imaging_server.c.fk_image.in_(images_id)).all()
 
-            for pisim in post_install_script_in_image:
-                self.logger.debug("Remove post_install_script_in_image %s %s"%(str(pisim.fk_image), str(pisim.fk_post_install_script)))
-                session.delete(pisim)
+                for pisim in post_install_script_in_image:
+                    self.logger.debug("Remove post_install_script_in_image %s %s"%(str(pisim.fk_image), str(pisim.fk_post_install_script)))
+                    session.delete(pisim)
 
-            for iois in image_on_imaging_server:
-                self.logger.debug("Remove image_on_imaging_server %s %s"%(str(iois.fk_image), str(iois.fk_imaging_server)))
-                session.delete(iois)
+                for iois in image_on_imaging_server:
+                    self.logger.debug("Remove image_on_imaging_server %s %s"%(str(iois.fk_image), str(iois.fk_imaging_server)))
+                    session.delete(iois)
 
             to_delete = []
 
