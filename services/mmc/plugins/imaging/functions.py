@@ -29,6 +29,7 @@ imaging plugin
 import logging
 from twisted.internet import defer
 from sets import Set as set
+import time
 
 from mmc.support.mmctools import xmlrpcCleanup
 from mmc.support.mmctools import RpcProxyI #, ContextMakerI, SecurityContext
@@ -2095,6 +2096,41 @@ class ImagingRpcProxy(RpcProxyI):
         except Exception, e:
             return xmlrpcCleanup([False, e])
 
+    def __get_computer(self, MACAddress, timeout=20):
+        """
+        Get the computer instance with repeated attempts until timeout.
+        @param MACAddress: MAC address of computer
+        @type MACAddress: str
+
+        @param timeout: timeout of attempts
+        @type timeout: int
+
+        @return: machine instance
+        @rtype: object
+        """
+        uuid = None
+        start = time.time()
+        while True :
+            db_computer = ComputerManager().getComputerByMac(MACAddress)
+            if db_computer :
+                
+                if isinstance(db_computer, dict):
+                    uuid = db_computer['uuid']
+                elif hasattr(db_computer, 'getUUID'):
+                    uuid = db_computer.getUUID()
+                elif hasattr(db_computer, 'uuid'):
+                    uuid = db_computer.uuid
+                if uuid :
+                    location = ComputerLocationManager().getMachinesLocations([uuid])
+                    if isinstance(location, dict) :
+                        if uuid in location :
+                            break
+                    
+            if time.time() > (start + timeout) :
+                break
+
+        return db_computer
+ 
     ###### API to be called from the imaging server (ie : without authentication)
     def computerRegister(self, imaging_server_uuid, hostname, domain, MACAddress, profile, entity = None):
         """
@@ -2168,7 +2204,7 @@ class ImagingRpcProxy(RpcProxyI):
             'location_uuid': loc_id}
         
         uuid = None
-        db_computer = ComputerManager().getComputerByMac(MACAddress)
+        db_computer = self.__get_computer(MACAddress)
         if db_computer != None:
             db_computer_name = ''
             if type(db_computer) == dict:
