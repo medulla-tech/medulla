@@ -920,8 +920,8 @@ int main(void) {
     int on = 1;
     int pidFileFD;
     int pid = 0;
-    char pidBuff[5];
-    bzero(pidBuff, 5);
+    char pidBuff[6];
+    bzero(pidBuff, 6);
 
     syslog(LOG_INFO, "pulse2-imaging-server r.$Revision$");
 
