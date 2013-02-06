@@ -98,7 +98,7 @@ foreach ($_POST as $p=>$v) {
 }
 $params['issue_halt_to'] = $halt_to;
 
-$mode = $_GET['copy_mode'];
+$mode = web_def_mode();
 $prefix = '';
 if (strlen($gid)) {
     $prefix = 'group';
