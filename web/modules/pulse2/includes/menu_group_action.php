@@ -22,7 +22,9 @@
  */
 
 $paramArray = array(
-    'id' => $_GET['id'],
+    // if no $_GET['id'], get the $_GET['gid'] value
+    // to be checked with profiles activated...
+    'id' => ($_GET['id']) ? $_GET['id'] : $_GET['gid'],
     'gid' => $_GET['gid'],
     'groupname' => $_GET['groupname'],
     'type' => $_GET['type'],
