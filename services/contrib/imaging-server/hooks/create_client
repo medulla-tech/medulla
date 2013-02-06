@@ -80,7 +80,7 @@ class RegisterByInventory :
         self._url = "%s://%s:%s/" % (protocol, config.invserver_host, config.invserver_port)
 
 
-    def send(self, hostname, mac):
+    def send(self, hostname, mac, ip_addr):
         """
         Send the minimal inventory to URL of inventory server.
 
@@ -88,13 +88,15 @@ class RegisterByInventory :
         @type hostname: str
         @param mac: MAC address on standard format xx:xx:xx:xx:xx:xx
         @type mac: str
-
+        @param ip_addr: IP address
+        @type ip_addr: str
         """
         from pulse2.imaging.bootinventory import BootInventory
         from twisted.web.client import Agent
  
         boot_inv = BootInventory()
         boot_inv.macaddr_info = mac
+        boot_inv.ipaddr_info = {'ip': ip_addr, 'port': 0}
 
         self.inventory = boot_inv.dumpOCS(hostname, "root")
 
@@ -179,6 +181,7 @@ def myCall():
     hook = sys.argv[0]
     mac = '' # client MAC address
     name = '' # client ID
+    ip_addr = '' # client IP address
     key = '' # registering password (not used)
     if len(sys.argv) == 2: # "mac" version
         mac = sys.argv[1]
@@ -186,10 +189,15 @@ def myCall():
     elif len(sys.argv) == 3: # "mac + name" version
         mac = sys.argv[1]
         name = sys.argv[2]
-    elif len(sys.argv) == 4: # "mac + name + pass" version
+    elif len(sys.argv) == 4: # "mac + name + ip_address" version
         mac = sys.argv[1]
         name = sys.argv[2]
-        key = sys.argv[3]
+        ip_addr = sys.argv[3]
+    elif len(sys.argv) == 5: # "mac + name + ip_address + pass" version
+        mac = sys.argv[1]
+        name = sys.argv[2]
+        ip_addr = sys.argv[3]
+        key = sys.argv[4]
         logger.warning('HOOK %s : I was given a password, but I don\'t now what to do woth it, so I dropped it' % hook)
     else:
         logger.error('HOOK %s : I was not called with the right number of arguments (one to three expected, got %d)' % (hook, len(sys.argv) - 1))
@@ -211,11 +219,12 @@ def myCall():
     try:
         if config.invserver_glpi_mode :
             invfwd = RegisterByInventory(config)
-            callFunction(invfwd.send(name, mac))
+            defer_inv = task.deferLater(twisted.internet.reactor, 0, invfwd.send, name, mac, ip_addr)
+            defer_inv.addErrback(errorBack)
 
-            d = task.deferLater(twisted.internet.reactor, 0, imagingAPI.computerRegister, name, mac, False)
-            d.addCallback(callBack)
-            d.addErrback(errorBack)
+            defer_reg = task.deferLater(twisted.internet.reactor, 2, imagingAPI.computerRegister, name, mac, False)
+            defer_reg.addCallback(callBack)
+            defer_reg.addErrback(errorBack)
         else :
             callFunction(
                 imagingAPI.computerRegister(

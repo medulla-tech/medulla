@@ -377,7 +377,12 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
                  inet_ntoa(si_other->sin_addr),
                  ntohs(si_other->sin_port), mac, hostname);
         myLogger(buff);
-        if (analyseresult(mysystem(4, gPathCreateClient, mac, hostname, pass))) {
+        if (analyseresult(mysystem(5, 
+				   gPathCreateClient, 
+				   mac, 
+				   hostname, 
+				   inet_ntoa(si_other->sin_addr),
+				   pass))) {
             logClientActivity(mac,
                               LOG_WARNING,
                               PULSE_LOG_STATE_MENU,
