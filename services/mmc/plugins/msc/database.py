@@ -182,6 +182,36 @@ class MscDatabase(msc.MscDatabase):
         self.logger.debug("msc.database.getComputersData took %ss to get network data and %ss to treat it"%(middle_time-start_time, end_time-middle_time))
         return tmp, targetsdata
 
+    def __getTimeDefaults (self, start_date, end_date):
+        """ time stuff to calculate number of attempts and keep 
+            the default values
+        """
+        fmt = "%Y-%m-%d %H:%M:%S"
+        
+        if start_date == "0000-00-00 00:00:00":
+            start_timestamp = time.time()
+            start_date = datetime.datetime.fromtimestamp(start_timestamp).strftime(fmt)
+        else :
+            start_timestamp = time.mktime(datetime.datetime.strptime(start_date, fmt).timetuple())
+            
+        if end_date == "0000-00-00 00:00:00":
+            delta = int(self.config.web_def_coh_life_time) * 60 * 60
+            end_timestamp = start_timestamp + delta
+            end_date = datetime.datetime.fromtimestamp(end_timestamp).strftime(fmt)
+        else :
+            end_timestamp = time.mktime(datetime.datetime.strptime(end_date, fmt).timetuple())
+         
+        total_time = end_timestamp - start_timestamp
+        seconds_per_day = 60 * 60 * 24
+        days_nbr = total_time // seconds_per_day
+        if days_nbr == 0 : 
+            days_nbr = 1
+
+        max_connection_attempt = days_nbr * self.config.web_def_attempts_per_day
+
+        return start_date, end_date, max_connection_attempt
+
+
     def addCommands(self, ctx, session, targets, commands, group_id = None):
         """
         Add multiple commands in one database session. Used when inserting a
@@ -256,6 +286,9 @@ class MscDatabase(msc.MscDatabase):
             ret = []
             for cmd, targets_to_insert in zip(commands, targets_to_insert_list):
 
+                time_defaults = self.__getTimeDefaults(cmd["start_date"], cmd["end_date"])
+                cmd["start_date"], cmd["end_date"], cmd["max_connection_attempt"] = time_defaults
+
                 cobj = self.createCommand(session, 
                                           cmd['package_id'], 
                                           cmd['start_file'], cmd['parameters'], 
@@ -303,10 +336,10 @@ class MscDatabase(msc.MscDatabase):
                     coh_to_insert.append(self.createCommandsOnHost(cobj.getId(),
                                                                    atarget,
                                                                    target.id, 
-                                                                   target_name, 
+                                                                   target_name,
+                                                                   cmd['max_connection_attempt'],
                                                                    cmd['start_date'], 
                                                                    cmd['end_date'], 
-                                                                   cmd['max_connection_attempt'], 
                                                                    ascheduler, 
                                                                    order_in_proxy, 
                                                                    max_clients_per_proxy))
@@ -362,29 +395,9 @@ class MscDatabase(msc.MscDatabase):
         if root == None:
             root = self.config.repopath
 
-        # a time stuff to calculate number of attempts
-        fmt = "%Y-%m-%d %H:%M:%S"
-        
-        if start_date == "0000-00-00 00:00:00":
-            start_timestamp = time.time()
-            start_date = datetime.datetime.fromtimestamp(start_timestamp).strftime(fmt)
-        else :
-            start_timestamp = time.mktime(datetime.datetime.strptime(start_date, fmt).timetuple())
-            
-        if end_date == "0000-00-00 00:00:00":
-            delta = int(self.config.web_def_coh_life_time) * 60 * 60
-            end_timestamp = start_timestamp + delta
-            end_date = datetime.datetime.fromtimestamp(end_timestamp).strftime(fmt)
-        else :
-            end_timestamp = time.mktime(datetime.datetime.strptime(end_date, fmt).timetuple())
-         
-        total_time = end_timestamp - start_timestamp
-        seconds_per_day = 60 * 60 * 24
-        days_nbr = total_time // seconds_per_day
-        if days_nbr == 0 : 
-            days_nbr = 1
+        time_defaults = self.__getTimeDefaults(start_date, end_date)
+        start_date, end_date, max_connection_attempt = time_defaults
 
-        max_connection_attempt = days_nbr * self.config.web_def_attempts_per_day
 
         targets_to_insert = []
         targets_name = []
