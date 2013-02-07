@@ -47,6 +47,7 @@ from mmc.plugins.msc import blacklist
 
 # Pulse 2 stuff
 from pulse2.database import msc
+from pulse2.database.msc.orm.target import Target
 
 class MscDatabase(msc.MscDatabase):
     """
@@ -226,43 +227,82 @@ class MscDatabase(msc.MscDatabase):
                         # FIXME: we only take the the first mirrors
                         mirror = mirrors[i]
                         fallback = fbmirrors[i]
-                        uri = '%s://%s:%s%s' % (mirror['protocol'], mirror['server'], str(mirror['port']), mirror['mountpoint']) + \
-                              '||' + \
-                              '%s://%s:%s%s' % (fallback['protocol'], fallback['server'], str(fallback['port']), fallback['mountpoint'])
+                        uri = '%s://%s:%s%s' % (mirror['protocol'], 
+                                                mirror['server'], 
+                                                str(mirror['port']), 
+                                                mirror['mountpoint']) + \
+                              '||' + '%s://%s:%s%s' % (fallback['protocol'], 
+                                                       fallback['server'], 
+                                                       str(fallback['port']), 
+                                                       fallback['mountpoint'])
                     else:
                         uri = '%s://%s' % ('file', root)
+
                     targetsdata[i]['mirrors'] = uri
                     # Keep not blacklisted target name for commands_on_host
                     # creation.
                     targets_name.append(targets[i][1])
                     # Maybe could be done in prepareTarget
                     targetsdata[i] = self.blacklistTargetHostname(targetsdata[i])
-                    targets_to_insert.append(dict(targetsdata[i]))
+                    targets_to_insert.append((dict(targetsdata[i]),
+                                              targets[i][1],
+                                              schedulers[i]
+                                             ))
                 targets_to_insert_list.append(targets_to_insert)
 
             if session == None:
                 session = create_session(transactional = True)
+            session.begin()
             ret = []
             for cmd, targets_to_insert in zip(commands, targets_to_insert_list):
-                cobj = self.createCommand(session, cmd['package_id'], cmd['start_file'], cmd['parameters'], cmd['files'], cmd['start_script'], cmd['clean_on_success'], cmd['start_date'], cmd['end_date'], cmd['connect_as'], ctx.userid, cmd['title'], cmd['issue_halt_to'], cmd['do_reboot'], cmd['do_wol'], cmd['next_connection_delay'], cmd['max_connection_attempt'], cmd['do_inventory'], cmd['maxbw'], cmd['deployment_intervals'], cmd['fk_bundle'], cmd['order_in_bundle'], cmd['proxies'], cmd['proxy_mode'])
+
+                cobj = self.createCommand(session, 
+                                          cmd['package_id'], 
+                                          cmd['start_file'], cmd['parameters'], 
+                                          cmd['files'], cmd['start_script'], 
+                                          cmd['clean_on_success'], 
+                                          cmd['start_date'], cmd['end_date'], 
+                                          cmd['connect_as'], ctx.userid, 
+                                          cmd['title'], cmd['issue_halt_to'], 
+                                          cmd['do_reboot'], cmd['do_wol'], 
+                                          cmd['next_connection_delay'], 
+                                          cmd['max_connection_attempt'], 
+                                          cmd['do_inventory'], cmd['maxbw'], 
+                                          cmd['deployment_intervals'], 
+                                          cmd['fk_bundle'], cmd['order_in_bundle'], 
+                                          cmd['proxies'], cmd['proxy_mode'])
                 session.flush()
                 ret.append(cobj.getId())
 
-                r = session.execute(self.target.insert(), targets_to_insert)
-                first_target_id = r.lastrowid
-                for atarget, target_name, ascheduler in zip(targets_to_insert, targets_name, schedulers):
+                for atarget, target_name, ascheduler in targets_to_insert:
                     order_in_proxy = None
                     max_clients_per_proxy = 0
+
+                    target = Target()
+                    target.target_macaddr = atarget["target_macaddr"]
+                    target.id_group = atarget["id_group"]
+                    target.target_uuid = atarget["target_uuid"]
+                    target.target_bcast = atarget["target_bcast"]
+                    target.target_name = atarget["target_name"]
+                    target.target_ipaddr = atarget["target_ipaddr"]
+                    target.mirrors = atarget["mirrors"]
+                    target.target_network = atarget["target_network"]
+
+                    session.add(target)
+                    session.flush()
+                    if hasattr(session, "refresh"):
+                        session.refresh(target)
+                   
                     try:
                         candidates = filter(lambda(x): x['uuid'] == atarget["target_uuid"], cmd['proxies'])
                         if len(candidates) == 1:
                             max_clients_per_proxy = candidates[0]['max_clients']
                             order_in_proxy = candidates[0]['priority']
                     except ValueError:
-                        pass
+                        self.logger.warn("Failed to get values 'order_in_proxy' or 'max_clients'")
                     coh_to_insert.append(self.createCommandsOnHost(cobj.getId(),
                                                                    atarget,
-                                                                   first_target_id, 
+                                                                   target.id, 
                                                                    target_name, 
                                                                    cmd['start_date'], 
                                                                    cmd['end_date'], 
@@ -270,12 +310,12 @@ class MscDatabase(msc.MscDatabase):
                                                                    ascheduler, 
                                                                    order_in_proxy, 
                                                                    max_clients_per_proxy))
-                    first_target_id = first_target_id + 1
+                    
             session.execute(self.commands_on_host.insert(), coh_to_insert)
             session.commit()
 
             return ret
-
+        
         d = self.getMachinesSchedulers(targets)
         mode = commands[0]['mode']
         if mode == 'push_pull':
@@ -373,32 +413,60 @@ class MscDatabase(msc.MscDatabase):
             return cbCreateTargets(None, None, schedulers, push_pull = False)
 
         def cbCreateTargets(fbmirrors, mirrors, schedulers, push_pull = True):
+ 
             for i in range(len(targets)):
                 if push_pull:
                     # FIXME: we only take the the first mirrors
                     mirror = mirrors[i]
                     fallback = fbmirrors[i]
-                    uri = '%s://%s:%s%s' % (mirror['protocol'], mirror['server'], str(mirror['port']), mirror['mountpoint']) + \
-                          '||' + \
-                          '%s://%s:%s%s' % (fallback['protocol'], fallback['server'], str(fallback['port']), fallback['mountpoint'])
+                    uri = '%s://%s:%s%s' % (mirror['protocol'], 
+                                            mirror['server'], 
+                                            str(mirror['port']), 
+                                            mirror['mountpoint']) \
+                        + '||' + '%s://%s:%s%s' % (fallback['protocol'], 
+                                                   fallback['server'],
+                                                   str(fallback['port']), 
+                                                   fallback['mountpoint'])
                 else:
                     uri = '%s://%s' % ('file', root)
+
                 targetsdata[i]['mirrors'] = uri
                 # Keep not blacklisted target name for commands_on_host
                 # creation.
                 targets_name.append(targets[i][1])
                 # Maybe could be done in prepareTarget
                 targetsdata[i] = self.blacklistTargetHostname(targetsdata[i])
-                targets_to_insert.append(targetsdata[i])
 
+                targets_to_insert.append((targetsdata[i], 
+                                          targets[i][1],    
+                                          schedulers[i]))
             session = create_session()
             session.begin()
-            cmd = self.createCommand(session, package_id, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, ctx.userid, title, do_halt, do_reboot, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, fk_bundle, order_in_bundle, proxies, proxy_mode)
+            cmd = self.createCommand(session, package_id, start_file, parameters, 
+                                     files, start_script, clean_on_success, 
+                                     start_date, end_date, connect_as, ctx.userid, 
+                                     title, do_halt, do_reboot, do_wol, next_connection_delay, 
+                                     max_connection_attempt, do_inventory, maxbw, 
+                                     deployment_intervals, fk_bundle, 
+                                     order_in_bundle, proxies, proxy_mode)
             session.flush()
 
-            r = session.execute(self.target.insert(), targets_to_insert)
-            first_target_id = r.lastrowid
-            for atarget, target_name, ascheduler in zip(targets_to_insert, targets_name, schedulers):
+            for atarget, target_name, ascheduler in targets_to_insert :
+                target = Target()
+                target.target_macaddr = atarget["target_macaddr"]
+                target.id_group = atarget["id_group"]
+                target.target_uuid = atarget["target_uuid"]
+                target.target_bcast = atarget["target_bcast"]
+                target.target_name = atarget["target_name"]
+                target.target_ipaddr = atarget["target_ipaddr"]
+                target.mirrors = atarget["mirrors"]
+                target.target_network = atarget["target_network"]
+
+                session.add(target)
+                session.flush()
+                if hasattr(session, "refresh") :
+                    session.refresh(target)
+
                 order_in_proxy = None
                 max_clients_per_proxy = 0
                 try:
@@ -407,10 +475,10 @@ class MscDatabase(msc.MscDatabase):
                         max_clients_per_proxy = candidates[0]['max_clients']
                         order_in_proxy = candidates[0]['priority']
                 except ValueError:
-                    pass
+                    self.logger.warn("Failed to get values 'order_in_proxy' or 'max_clients'")
                 coh_to_insert.append(self.createCommandsOnHost(cmd.getId(), 
                                                                atarget, 
-                                                               first_target_id, 
+                                                               target.id, 
                                                                target_name, 
                                                                max_connection_attempt, 
                                                                start_date,
@@ -418,7 +486,6 @@ class MscDatabase(msc.MscDatabase):
                                                                ascheduler, 
                                                                order_in_proxy, 
                                                                max_clients_per_proxy))
-                first_target_id = first_target_id + 1
             session.execute(self.commands_on_host.insert(), coh_to_insert)
             session.commit()
 
