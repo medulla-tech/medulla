@@ -635,73 +635,64 @@ class DyngroupDatabase(DatabaseHelper):
         @param computers: list of dicts with {'uuid':uuid, 'hostname':name}
         @type computers: list
         """
-        # Get already registered machines
-        # and get a uuid to name hash
-        uuids = []
-        uuids2name = {}
-        for x in computers:
-            uuids.append(x["uuid"])
-            uuids2name[x["uuid"]] = x["hostname"]
-        existing = connection.execute(self.machines.select(self.machines.c.uuid.in_(uuids)))
-        # Prepare insert for the Results table
-        into_results = []
-        existing_uuids_hash = {}
-        need_name_update_hash = {}
-        for machines_id, uuid, name in existing:
-            if name != uuids2name[uuid]:
-                # TODO update de machine
-                need_name_update_hash[uuid] = uuids2name[uuid]
-            into_results.append({
-                "FK_groups" : groupid,
-                "FK_machines" : machines_id
-                })
-            existing_uuids_hash[uuid] = None
-        for uuid in need_name_update_hash:
-            self.logger.debug("going to update %s name to %s in dyngroup machines cache"%(uuid, need_name_update_hash[uuid]))
-            self.machines.update(self.machines.c.uuid==uuid).execute(name=need_name_update_hash[uuid])
-        # Prepare insert for the Machines table
-        into_machines = []
-        for computer in computers:
-            uuid = computer["uuid"]
-            if uuid not in existing_uuids_hash:
-                into_machines.append({
-                    "uuid" : uuid,
-                    "name" : computer["hostname"]
-                    })
-        # Insert needed Machines rows
-        if into_machines:
-            ret = connection.execute(self.machines.insert(), into_machines)
-            id_sequence = ret.lastrowid
-            # Prepare remaining insert for Results table
-            for elt in into_machines:
-                into_results.append({
-                    "FK_groups" : groupid,
-                    "FK_machines" : id_sequence
-                })
-                id_sequence = id_sequence + 1
-        if into_results:
-            if type == 0:
-                # Insert into Results table only if there is something to insert
-                connection.execute(self.results.insert(), into_results)
-            else:
-                # check if some machines are already in a profile
-                session = create_session()
-                ret = session.query(ProfilesResults).filter(self.profilesResults.c.FK_machines.in_(map(lambda x: x["FK_machines"], into_results))).all()
-                session.close()
-                if ret:
-                    into_results_old = into_results
-                    into_results = []
-                    ret = map(lambda m:m.FK_machines, ret)
-                    for result in into_results_old:
-                        if not result['FK_machines'] in ret:
-                            into_results.append(result)
-                # Insert into ProfilesResults table only if there is something to insert
-                if into_results:
-                    connection.execute(self.profilesResults.insert(), into_results)
-                else:
-                    return False
-        return True
+        session = create_session()
 
+        # transform to dictionnary on format {"uuid": "hostname",}
+        comp_dict = dict([(c["uuid"], c["hostname"]) for c in computers])
+        # existing machines
+        existing = session.query(Machines).filter(
+                           self.machines.c.uuid.in_(comp_dict.keys())
+                           ).all()
+        results_ids = []
+ 
+        for comp in existing :
+            # if the hostname was changed, we change this name in the db
+            if comp.name != comp_dict[comp.uuid] :
+                self.logger.debug("going to update %s name to %s in dyngroup machines cache" % (comp.uuid, comp_dict[comp.uuid]))
+                self.machines.update(self.machines.c.uuid==comp.uuid).execute(name=comp_dict[comp.uuid])
+
+            results_ids.append(comp.id)
+
+        existing_uuids = [q.uuid for q in existing]
+        # inserting non-existing computers 
+        for uuid, name in comp_dict.items() :
+            if uuid not in existing_uuids :
+                id = self.__getOrCreateMachine(uuid, name, session)
+                results_ids.append(id)
+
+        if type == 0 :
+            # Insert into Results table only if there is something to insert
+            for id in results_ids :
+                self.__createResult(groupid, id)
+
+        else :
+            # check if some machines are already in a profile
+            profiles = session.query(ProfilesResults).filter(
+                               self.profilesResults.c.FK_machines.in_(results_ids)
+                               ).all()
+
+            profiles_ids = [q.id for q in profiles]
+
+            # insert only non-existing records
+            profiles_to_insert = [id for id in results_ids if id not in profiles_ids]
+
+            # Insert into ProfilesResults table only if there is something to insert
+            if len(profiles_to_insert) == 0 :
+                session.close()
+                return False
+
+            for id in profiles_to_insert :
+               
+                profile = ProfilesResults()
+                profile.FK_machines = id
+                profile.FK_groups = groupid
+                session.add(profile)
+                session.flush()
+
+        session.close()    
+        return True
+                
+ 
     ################################
     ## MEMBERS
 
