@@ -452,12 +452,11 @@ class Glpi08(DyngroupDatabaseHelper):
         Map a table name on a table mapping
         """
         base = []
-        if ctx.userid != 'root':
-            base.append(self.location)
+        base.append(self.location)
         if query[2] == 'OS':
             return base + [self.os]
-        elif query[2] == 'ENTITY':
-            return base + [self.location]
+        elif query[2] == 'Entity':
+            return base
         elif query[2] == 'SOFTWARE':
             return base + [self.inst_software, self.licenses, self.software]
         elif query[2] == 'Nom':
@@ -532,7 +531,7 @@ class Glpi08(DyngroupDatabaseHelper):
     def __getPartsFromQuery(self, query):
         if query[2] == 'OS':
             return [[self.os.c.name, query[3]]]
-        elif query[2] == 'ENTITY':
+        elif query[2] == 'Entity':
             return [[self.location.c.name, query[3]]]
         elif query[2] == 'SOFTWARE':
             return [[self.software.c.name, query[3]]]
@@ -550,13 +549,13 @@ class Glpi08(DyngroupDatabaseHelper):
             return [[self.locations.c.completename, query[3]]]
         elif query[2] == 'ServicePack':
             return [[self.os_sp.c.name, query[3]]]
-        elif query[2] == 'Groupe': # TODO double join on ENTITY
+        elif query[2] == 'Groupe': # TODO double join on Entity
             return [[self.group.c.name, query[3]]]
         elif query[2] == 'Reseau':
             return [[self.net.c.name, query[3]]]
-        elif query[2] == 'Logiciel': # TODO double join on ENTITY
+        elif query[2] == 'Logiciel': # TODO double join on Entity
             return [[self.software.c.name, query[3]]]
-        elif query[2] == 'Version': # TODO double join on ENTITY
+        elif query[2] == 'Version': # TODO double join on Entity
             return [[self.software.c.name, query[3][0]], [self.softwareversions.c.name, query[3][1]]]
         return []
 
@@ -564,7 +563,7 @@ class Glpi08(DyngroupDatabaseHelper):
     def __getTable(self, table):
         if table == 'OS':
             return self.os.c.name
-        elif table == 'ENTITY':
+        elif table == 'Entity':
             return self.location.c.name
         elif table == 'SOFTWARE':
             return self.software.c.name
@@ -1485,7 +1484,7 @@ class Glpi08(DyngroupDatabaseHelper):
         ret = query.group_by(self.group.c.name).all()
         session.close()
         return ret
-    def getMachineByGroup(self, ctx, filt):# ENTITY!
+    def getMachineByGroup(self, ctx, filt):# Entity!
         """ @return: all machines that have this contact number """
         session = create_session()
         query = session.query(Machine).select_from(self.machine.join(self.group))
