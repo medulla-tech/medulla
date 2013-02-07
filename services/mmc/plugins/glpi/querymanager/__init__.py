@@ -100,7 +100,7 @@ def getAllOs(ctx, value = ''):
     return unique([x.name for x in Glpi().getAllOs(ctx, value)])
 
 def getAllEntities(ctx, value = ''):
-    return unique([x.name for x in Glpi().getAllEntities(ctx, value)])
+    return [x.name for x in Glpi().getAllEntities(ctx, value)]
 
 def getAllSoftwares(ctx, value = ''):
     ret = unique([x.name for x in Glpi().getAllSoftwares(ctx, value)])

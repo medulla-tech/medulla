@@ -33,6 +33,12 @@ class Autocomplete {
     }
     
     function display() {
+        if (in_array($_GET['add_param'], array("Entity"))) {
+            $frequency = 0.01;
+        }
+        else {
+            $frequency = 2.0;
+        }
     ?>
 
     <td style="text-align:right;"><?php echo  _T("Add a value", "dyngroup"); ?></td><td>
@@ -53,7 +59,7 @@ class Autocomplete {
     <!--
         var groups = new Array();
         new Ajax.Autocompleter('autocomplete','autocomplete_choices',
-            'main.php?module=base&submod=computers&action=ajaxAutocompleteSearch&modulename=<?php echo  $this->module ?>&criterion=<?php echo  $this->criterion ?>', {paramName: "value", frequency: 2.0});
+            'main.php?module=base&submod=computers&action=ajaxAutocompleteSearch&modulename=<?php echo  $this->module ?>&criterion=<?php echo  $this->criterion ?>', {paramName: "value", frequency: <?php echo $frequency ?>});
     -->
     </script>
     <?php
