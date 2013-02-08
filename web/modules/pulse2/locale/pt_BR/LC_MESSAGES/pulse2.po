@@ -9,10 +9,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-11 11:34+0100\n"
+"POT-Creation-Date: 2013-02-07 18:36+0100\n"
 "PO-Revision-Date: 2012-12-11 11:34-0300\n"
 "Last-Translator: Leonardo Coelho <leonardoc@mandriva.com.br>\n"
-"Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/projects/p/pulse2/team/pt_BR/)\n"
+"Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
+"projects/p/pulse2/team/pt_BR/)\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,32 +28,32 @@ msgstr "Todas as minhas entidades"
 msgid "Computers list"
 msgstr "Lista de computadores"
 
-#: modules/pulse2/includes/menu_group_action.php:93
+#: modules/pulse2/includes/menu_group_action.php:95
 msgid "Csv export"
 msgstr "Exportar em CSV"
 
-#: modules/pulse2/includes/menu_group_action.php:45
+#: modules/pulse2/includes/menu_group_action.php:47
 msgid "Delete this group"
 msgstr "Delete este grupo"
 
-#: modules/pulse2/includes/menu_group_action.php:47
+#: modules/pulse2/includes/menu_group_action.php:49
 msgid "Delete this profile"
 msgstr "Delete este perfil"
 
-#: modules/pulse2/includes/menu_group_action.php:51
+#: modules/pulse2/includes/menu_group_action.php:53
 msgid "Display this group's content"
 msgstr "Exibir o conteúdo deste grupo"
 
-#: modules/pulse2/includes/menu_group_action.php:59
+#: modules/pulse2/includes/menu_group_action.php:61
 msgid "Edit this group"
 msgstr "Editar este grupo"
 
-#: modules/pulse2/includes/menu_group_action.php:72
+#: modules/pulse2/includes/menu_group_action.php:74
 msgid "Edit this profile"
 msgstr "Editar este perfil"
 
 #: modules/pulse2/includes/menu_action.php:34
-#: modules/pulse2/includes/menu_group_action.php:80
+#: modules/pulse2/includes/menu_group_action.php:82
 msgid "Imaging management"
 msgstr "Gerenciamento de imagens"
 
@@ -60,11 +61,11 @@ msgstr "Gerenciamento de imagens"
 msgid "Inventory"
 msgstr "Inventário"
 
-#: modules/pulse2/includes/menu_group_action.php:54
+#: modules/pulse2/includes/menu_group_action.php:56
 msgid "Inventory on this group"
 msgstr "Inventário neste grupo"
 
-#: modules/pulse2/includes/menu_group_action.php:67
+#: modules/pulse2/includes/menu_group_action.php:69
 msgid "Inventory on this profile"
 msgstr "Inventário neste perfil"
 
@@ -77,8 +78,8 @@ msgid "Pulse2"
 msgstr "Pulse2"
 
 #: modules/pulse2/includes/menu_action.php:32
-#: modules/pulse2/includes/menu_group_action.php:62
-#: modules/pulse2/includes/menu_group_action.php:75
+#: modules/pulse2/includes/menu_group_action.php:64
+#: modules/pulse2/includes/menu_group_action.php:77
 msgid "Read log"
 msgstr "Ler Log"
 
@@ -90,11 +91,11 @@ msgstr "Controle Remoto"
 msgid "Root entity"
 msgstr "Entrada root"
 
-#: modules/pulse2/includes/menu_group_action.php:60
+#: modules/pulse2/includes/menu_group_action.php:62
 msgid "Share this group"
 msgstr "Compartilhar este grupo"
 
-#: modules/pulse2/includes/menu_group_action.php:73
+#: modules/pulse2/includes/menu_group_action.php:75
 msgid "Share this profile"
 msgstr "Compartilhar este perfil"
 
@@ -102,11 +103,10 @@ msgstr "Compartilhar este perfil"
 msgid "Software deployment"
 msgstr "Implantação de Software"
 
-#: modules/pulse2/includes/menu_group_action.php:63
+#: modules/pulse2/includes/menu_group_action.php:65
 msgid "Software deployment on this group"
 msgstr "Implatanção de Software neste grupo"
 
-#: modules/pulse2/includes/menu_group_action.php:76
+#: modules/pulse2/includes/menu_group_action.php:78
 msgid "Software deployment on this profile"
 msgstr "Implatanção de Software neste perfil"
-

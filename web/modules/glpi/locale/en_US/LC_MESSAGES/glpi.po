@@ -1,153 +1,28 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
-# # Translators:
+# 
+## Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-11 11:34+0100\n"
-"PO-Revision-Date: 2012-12-10 15:16+0000\n"
+"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
+"POT-Creation-Date: 2013-02-07 18:36+0100\n"
+"PO-Revision-Date: 2013-02-08 09:45+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: en_US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: en_US\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
-#: modules/glpi/glpi/tabs.php:49
-#, php-format
-msgid "%s's inventory (%s)"
-msgstr ""
-
-#: modules/glpi/glpi/view_hardware.php:54
-msgid "<br/>license number : "
-msgstr ""
-
-#: modules/glpi/includes/panels/glpi.inc.php:30
-msgid "Computers"
-msgstr ""
-
-#: modules/glpi/glpi/tabs.php:56
-msgid "Controller"
-msgstr ""
-
-#: modules/glpi/infoPackage.inc.php:33
-msgid "Create static group from dashboard (GLPI)"
-msgstr ""
-
-#: modules/glpi/infoPackage.inc.php:40
-msgid "Display locations"
-msgstr ""
-
-#: modules/glpi/infoPackage.inc.php:60 modules/glpi/infoPackage.inc.php:75
-msgid "GLPI controller tab"
-msgstr ""
-
-#: modules/glpi/infoPackage.inc.php:54 modules/glpi/infoPackage.inc.php:69
-msgid "GLPI hardware tab"
-msgstr ""
-
-#: modules/glpi/infoPackage.inc.php:57 modules/glpi/infoPackage.inc.php:72
-msgid "GLPI network tab"
-msgstr ""
-
-#: modules/glpi/glpi/tabs.php:52
-msgid "Hardware"
-msgstr ""
-
-#: modules/glpi/infoPackage.inc.php:50
-msgid "Inventory (GLPI) on a groups of machines"
-msgstr ""
-
-#: modules/glpi/infoPackage.inc.php:65
-msgid "Inventory (GLPI) on machine"
-msgstr ""
-
-#: modules/glpi/includes/panels/glpi.inc.php:50
-msgid "Latest Inventory Date"
-msgstr ""
-
-#: modules/glpi/glpi/createStaticGroup.php:28
-#, php-format
-msgid "Latest inventory is less than %s days at %s"
-msgstr ""
-
-#: modules/glpi/glpi/createStaticGroup.php:31
-#, php-format
-msgid "Latest inventory is more than %s days at %s"
-msgstr ""
-
-#: modules/glpi/includes/panels/glpi.inc.php:43
-#, php-format
-msgid "Less than %s days: %d"
-msgstr ""
-
-#: modules/glpi/includes/panels/glpi.inc.php:44
-#, php-format
-msgid "More than %s days: %d"
-msgstr ""
-
-#: modules/glpi/glpi/tabs.php:56
-msgid "Network"
-msgstr ""
-
-#: modules/glpi/glpi/view_hardware.php:70
-msgid "Properties"
-msgstr ""
-
-#: modules/glpi/glpi/view_hardware.php:71
-msgid "Value"
-msgstr ""
-
-#: modules/glpi/glpi/view_part.php:87
-msgid "bandwidth"
-msgstr ""
-
-#: modules/glpi/glpi/view_part.php:90
-msgid "comment"
+#: modules/glpi/glpi/view_part.php:76 modules/glpi/glpi/view_hardware.php:76
+msgid "name"
 msgstr ""
 
 #: modules/glpi/glpi/view_part.php:77 modules/glpi/glpi/view_hardware.php:77
 msgid "comments"
-msgstr ""
-
-#: modules/glpi/glpi/view_hardware.php:88
-msgid "contact"
-msgstr ""
-
-#: modules/glpi/glpi/view_part.php:84
-msgid "designation"
-msgstr ""
-
-#: modules/glpi/glpi/view_part.php:96
-msgid "drive"
-msgstr ""
-
-#: modules/glpi/glpi/view_hardware.php:89
-msgid "entity"
-msgstr ""
-
-#: modules/glpi/glpi/view_part.php:86
-msgid "frequence"
-msgstr ""
-
-#: modules/glpi/glpi/view_part.php:81
-msgid "gateway"
-msgstr ""
-
-#: modules/glpi/glpi/view_part.php:97
-msgid "gfxcard"
-msgstr ""
-
-#: modules/glpi/glpi/view_part.php:94
-msgid "hdd"
-msgstr ""
-
-#: modules/glpi/glpi/view_part.php:95
-msgid "iface"
 msgstr ""
 
 #: modules/glpi/glpi/view_part.php:78
@@ -158,60 +33,48 @@ msgstr ""
 msgid "ifmac"
 msgstr ""
 
-#: modules/glpi/glpi/view_part.php:89
-msgid "interface"
+#: modules/glpi/glpi/view_part.php:80
+msgid "netmask"
+msgstr ""
+
+#: modules/glpi/glpi/view_part.php:81
+msgid "gateway"
+msgstr ""
+
+#: modules/glpi/glpi/view_part.php:82
+msgid "subnet"
+msgstr ""
+
+#: modules/glpi/glpi/view_part.php:83 modules/glpi/glpi/view_hardware.php:87
+msgid "type"
+msgstr ""
+
+#: modules/glpi/glpi/view_part.php:84
+msgid "designation"
+msgstr ""
+
+#: modules/glpi/glpi/view_part.php:85
+msgid "specif_default"
+msgstr ""
+
+#: modules/glpi/glpi/view_part.php:86
+msgid "frequence"
+msgstr ""
+
+#: modules/glpi/glpi/view_part.php:87
+msgid "bandwidth"
 msgstr ""
 
 #: modules/glpi/glpi/view_part.php:88
 msgid "is_writer"
 msgstr ""
 
-#: modules/glpi/glpi/view_hardware.php:54
-msgid "license id : "
+#: modules/glpi/glpi/view_part.php:89
+msgid "interface"
 msgstr ""
 
-#: modules/glpi/glpi/view_hardware.php:85
-msgid "location"
-msgstr ""
-
-#: modules/glpi/glpi/view_hardware.php:86
-msgid "model"
-msgstr ""
-
-#: modules/glpi/glpi/view_part.php:76 modules/glpi/glpi/view_hardware.php:76
-msgid "name"
-msgstr ""
-
-#: modules/glpi/glpi/view_part.php:80
-msgid "netmask"
-msgstr ""
-
-#: modules/glpi/glpi/view_hardware.php:79
-msgid "os"
-msgstr ""
-
-#: modules/glpi/glpi/view_hardware.php:84
-msgid "os_license"
-msgstr ""
-
-#: modules/glpi/glpi/view_hardware.php:83
-msgid "os_license_id"
-msgstr ""
-
-#: modules/glpi/glpi/view_hardware.php:82
-msgid "os_license_number"
-msgstr ""
-
-#: modules/glpi/glpi/view_hardware.php:81
-msgid "os_sp"
-msgstr ""
-
-#: modules/glpi/glpi/view_hardware.php:80
-msgid "os_version"
-msgstr ""
-
-#: modules/glpi/glpi/view_part.php:99
-msgid "pci"
+#: modules/glpi/glpi/view_part.php:90
+msgid "comment"
 msgstr ""
 
 #: modules/glpi/glpi/view_part.php:92
@@ -222,22 +85,168 @@ msgstr ""
 msgid "ram"
 msgstr ""
 
-#: modules/glpi/glpi/view_hardware.php:78
-msgid "serial"
+#: modules/glpi/glpi/view_part.php:94
+msgid "hdd"
+msgstr ""
+
+#: modules/glpi/glpi/view_part.php:95
+msgid "iface"
+msgstr ""
+
+#: modules/glpi/glpi/view_part.php:96
+msgid "drive"
+msgstr ""
+
+#: modules/glpi/glpi/view_part.php:97
+msgid "gfxcard"
 msgstr ""
 
 #: modules/glpi/glpi/view_part.php:98
 msgid "sndcard"
 msgstr ""
 
-#: modules/glpi/glpi/view_part.php:85
-msgid "specif_default"
+#: modules/glpi/glpi/view_part.php:99
+msgid "pci"
 msgstr ""
 
-#: modules/glpi/glpi/view_part.php:82
-msgid "subnet"
+#: modules/glpi/glpi/createStaticGroup.php:30
+#, php-format
+msgid "Latest inventory is less than %s days at %s"
 msgstr ""
 
-#: modules/glpi/glpi/view_part.php:83 modules/glpi/glpi/view_hardware.php:87
-msgid "type"
+#: modules/glpi/glpi/createStaticGroup.php:33
+#, php-format
+msgid "Latest inventory is more than %s days at %s"
 msgstr ""
+
+#: modules/glpi/glpi/createStaticGroup.php:43
+#, php-format
+msgid "Computers list has been truncated at %d computers"
+msgstr ""
+
+#: modules/glpi/glpi/view_hardware.php:54
+msgid "license id : "
+msgstr ""
+
+#: modules/glpi/glpi/view_hardware.php:54
+msgid "<br/>license number : "
+msgstr ""
+
+#: modules/glpi/glpi/view_hardware.php:70
+msgid "Properties"
+msgstr ""
+
+#: modules/glpi/glpi/view_hardware.php:71
+msgid "Value"
+msgstr ""
+
+#: modules/glpi/glpi/view_hardware.php:78
+msgid "serial"
+msgstr ""
+
+#: modules/glpi/glpi/view_hardware.php:79
+msgid "os"
+msgstr ""
+
+#: modules/glpi/glpi/view_hardware.php:80
+msgid "os_version"
+msgstr ""
+
+#: modules/glpi/glpi/view_hardware.php:81
+msgid "os_sp"
+msgstr ""
+
+#: modules/glpi/glpi/view_hardware.php:82
+msgid "os_license_number"
+msgstr ""
+
+#: modules/glpi/glpi/view_hardware.php:83
+msgid "os_license_id"
+msgstr ""
+
+#: modules/glpi/glpi/view_hardware.php:84
+msgid "os_license"
+msgstr ""
+
+#: modules/glpi/glpi/view_hardware.php:85
+msgid "location"
+msgstr ""
+
+#: modules/glpi/glpi/view_hardware.php:86
+msgid "model"
+msgstr ""
+
+#: modules/glpi/glpi/view_hardware.php:88
+msgid "contact"
+msgstr ""
+
+#: modules/glpi/glpi/view_hardware.php:89
+msgid "entity"
+msgstr ""
+
+#: modules/glpi/glpi/tabs.php:49
+#, php-format
+msgid "%s's inventory (%s)"
+msgstr ""
+
+#: modules/glpi/glpi/tabs.php:52
+msgid "Hardware"
+msgstr ""
+
+#: modules/glpi/glpi/tabs.php:56
+msgid "Network"
+msgstr ""
+
+#: modules/glpi/glpi/tabs.php:56
+msgid "Controller"
+msgstr ""
+
+#: modules/glpi/includes/panels/glpi.inc.php:30
+msgid "Computers"
+msgstr ""
+
+#: modules/glpi/includes/panels/glpi.inc.php:43
+msgid ""
+"Less than %s days:\r\n"
+" %percent% (%d computers)"
+msgstr ""
+
+#: modules/glpi/includes/panels/glpi.inc.php:44
+msgid ""
+"More than %s days:\r\n"
+" %percent% (%d computers)"
+msgstr ""
+
+#: modules/glpi/includes/panels/glpi.inc.php:47
+msgid "Latest Inventory Date"
+msgstr ""
+
+#: modules/glpi/infoPackage.inc.php:33
+msgid "Create static group from dashboard (GLPI)"
+msgstr ""
+
+#: modules/glpi/infoPackage.inc.php:40
+msgid "Display locations"
+msgstr ""
+
+#: modules/glpi/infoPackage.inc.php:50
+msgid "Inventory (GLPI) on a groups of machines"
+msgstr ""
+
+#: modules/glpi/infoPackage.inc.php:54 modules/glpi/infoPackage.inc.php:69
+msgid "GLPI hardware tab"
+msgstr ""
+
+#: modules/glpi/infoPackage.inc.php:57 modules/glpi/infoPackage.inc.php:72
+msgid "GLPI network tab"
+msgstr ""
+
+#: modules/glpi/infoPackage.inc.php:60 modules/glpi/infoPackage.inc.php:75
+msgid "GLPI controller tab"
+msgstr ""
+
+#: modules/glpi/infoPackage.inc.php:65
+msgid "Inventory (GLPI) on machine"
+msgstr ""
+
+

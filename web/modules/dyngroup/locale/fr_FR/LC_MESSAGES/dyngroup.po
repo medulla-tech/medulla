@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-11 11:34+0100\n"
+"POT-Creation-Date: 2013-02-07 18:36+0100\n"
 "PO-Revision-Date: 2012-10-19 12:03+0000\n"
 "Last-Translator: Jean-Christophe Vassort <jcvassort@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
@@ -43,8 +43,8 @@ msgid "->"
 msgstr "->"
 
 #: modules/dyngroup/dyngroup/import_from_file.php:45
-#: modules/dyngroup/dyngroup/save.php:92
 #: modules/dyngroup/dyngroup/add_groups.php:170
+#: modules/dyngroup/dyngroup/save.php:92
 #, php-format
 msgid "A group already exists with name '%s'"
 msgstr "Un groupe portant le nom '%s' existe déjà"
@@ -76,7 +76,7 @@ msgstr "Ajouter un profil"
 msgid "Add a static group"
 msgstr "Ajouter un groupe statique"
 
-#: modules/dyngroup/includes/autocomplete.php:38
+#: modules/dyngroup/includes/autocomplete.php:44
 msgid "Add a value"
 msgstr "Ajouter une valeur"
 
@@ -116,8 +116,8 @@ msgstr ""
 msgid "Are you sure you want to delete profile <b>%s</b>?<br/>"
 msgstr "Etes-vous sûr de bien vouloir supprimer le profil <b>%s</b>?<br/>"
 
-#: modules/dyngroup/dyngroup/delete_group.php:62
 #: modules/dyngroup/dyngroup/remove_machine.php:48
+#: modules/dyngroup/dyngroup/delete_group.php:62
 #: modules/dyngroup/includes/groups.inc.php:81
 #: modules/dyngroup/includes/groups.inc.php:184
 msgid "Cancel"
@@ -308,8 +308,8 @@ msgstr "Éditer un groupe dynamique"
 msgid "Edit a profile"
 msgstr "Éditer un profil"
 
-#: modules/dyngroup/dyngroup/groupshead.php:31
 #: modules/dyngroup/dyngroup/edithead.php:52
+#: modules/dyngroup/dyngroup/groupshead.php:31
 msgid "Edit a static group"
 msgstr "Éditer un groupe statique"
 
@@ -687,8 +687,8 @@ msgstr "visible"
 msgid "Yes"
 msgstr "Oui"
 
-#: modules/dyngroup/dyngroup/save.php:94 modules/dyngroup/dyngroup/save.php:96
 #: modules/dyngroup/dyngroup/add_groups.php:165
+#: modules/dyngroup/dyngroup/save.php:94 modules/dyngroup/dyngroup/save.php:96
 msgid "You must specify a group name"
 msgstr "Le nom du groupe est obligatoire"
 
