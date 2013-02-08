@@ -34,7 +34,7 @@ class Autocomplete {
     
     function display() {
         if (in_array($_GET['add_param'], array("Entity"))) {
-            $frequency = 0.01;
+            $frequency = 1.0;
         }
         else {
             $frequency = 2.0;
