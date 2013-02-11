@@ -286,7 +286,7 @@ function _base_baseEdit($FH, $mode) {
         array("value" => $uid)
     );
 
-    if($mode == "edit") {
+    /*if($mode == "edit") {
         $lastlog = get_last_log_user($uid);
         if ($lastlog[0] != 0) {
         	$f->add(
@@ -294,7 +294,7 @@ function _base_baseEdit($FH, $mode) {
                 array("value" => urlStr("base/users/loguser", array("user" => $uid)), "name" => $lastlog[1][0]["date"])
             );
         }
-    }
+    }*/
 
     $f->add(
         new TrFormElement(_("Password"), new PasswordTpl("pass")),
