@@ -143,11 +143,30 @@ $slabels = array(
         array('run_inv', _T('inventoring', 'msc')),
     ),
     'failure'=>array(
-        array('fail_up', _T('failed during upload', 'msc'), 'conn_up', _T('(with %s being unreachable)', 'msc')),
-        array('fail_ex', _T('failed during execution', 'msc'), 'conn_ex', _T('(with %s being unreachable)', 'msc')),
-        array('fail_rm', _T('failed during suppression', 'msc'), 'conn_rm', _T('(with %s being unreachable)', 'msc')),
-        array('fail_inv', _T('failed during suppression', 'msc'), 'conn_inv', _T('(with %s being unreachable)', 'msc')),
-        array('over_timed', _T('out of the valid period of execution', 'msc'))
+        array('fail_up', _T('failed during upload', 'msc'), 'conn_up', _T('(with %s being unreachable)', 'msc'),
+            _T('Upload Failed: %percent% (%d computers)', 'msc'), // Pie chart legend text
+            _T('Upload Failed: %percent% (%d packages)', 'msc')), // Pie chart legend text
+        array('fail_ex', _T('failed during execution', 'msc'), 'conn_ex', _T('(with %s being unreachable)', 'msc'),
+            _T('Execution Failed: %percent% (%d computers)', 'msc'), // Pie chart legend text
+            _T('Execution Failed: %percent% (%d packages)', 'msc')), // Pie chart legend text
+        array('fail_rm', _T('failed during suppression', 'msc'), 'conn_rm', _T('(with %s being unreachable)', 'msc'),
+            _T('Delete Failed: %percent% (%d computers)', 'msc'), // Pie chart legend text
+            _T('Delete Failed: %percent% (%d packages)', 'msc')), // Pie chart legend text
+        array('fail_inv', _T('failed during inventory', 'msc'), 'conn_inv', _T('(with %s being unreachable)', 'msc'),
+            _T('Inventory Failed: %percent% (%d computers)', 'msc'), // Pie chart legend text
+            _T('Inventory Failed: %percent% (%d packages)', 'msc')), // Pie chart legend text
+        array('over_timed', _T('out of the valid period of execution', 'msc'), '', '',
+            _T('Over-timed: %percent% (%d computers)', 'msc'), // Pie chart legend text
+            _T('Over-timed: %percent% (%d packages)', 'msc')), // Pie chart legend text
+        array('fail_wol', _T('failed during awake', 'msc'), '', '',
+            _T('Awake Failed: %percent% (%d computers)', 'msc'), // Pie chart legend text
+            _T('Awake Failed: %percent% (%d packages)', 'msc')), // Pie chart legend text
+        array('fail_reboot', _T('failed during reboot', 'msc'), '', '',
+            _T('Reboot Failed: %percent% (%d computers)', 'msc'), // Pie chart legend text
+            _T('Reboot Failed: %percent% (%d packages)', 'msc')), // Pie chart legend text
+        array('fail_halt', _T('failed during halt', 'msc'), '', '',
+            _T('Halt Failed: %percent% (%d computers)', 'msc'), // Pie chart legend text
+            _T('Halt Failed: %percent% (%d packages)', 'msc')), // Pie chart legend text
     )
 
 );
@@ -170,6 +189,8 @@ function export_csv($cmd_id, $bundle_id, $state) {
  * If it's an action on a group:
  * -----------------------------
  *
+ * First Pie chart:
+ *
  * machineStateNumber declaration
  * used like this to store number of machines by state:
  *      $machineStateNumber[state] = array(
@@ -183,41 +204,37 @@ function export_csv($cmd_id, $bundle_id, $state) {
  *      paused
  *      stopped
  *
- *  If it's a bundle on a group:
- *  ----------------------------
- *  
- *  bundleStatus declaration
- *  used in the same manner of machineStateNumber
- *
- *  But in bundles, machines can have packages with several status
- *  
- *  For a successfull status, all packages of the bundle must have success status.
+ * Second pie chart is for failed state
+ * Using failedStateNumber
  *
  */
 $machineStateNumber = array();
-$bundleStatus = array();
 
 foreach ($labels as $l) {
     $s = $status[$l[0]];
 
+    // 1st pie chart datas
+    $urlArray = array(
+        'pieGroupStatus' => $l[0],
+        "tab" => "tabsta",
+        "type" => 0,
+    );
+
     if (strlen($cmd_id)) { // If it's an action on a group
-        $urlArray = array(
-            'pieGroupStatus' => $l[0],
-            'cmd_id' => $cmd_id,
-            "tab" => "tabsta",
-            "type" => 0,
-        );
-        $machineStateNumber[$l[0]] = array(
-            "number" => $s['total'][0],
-            "percent" => $s['total'][1],
-            "url" => urlStr("base/computers/computersgroupcreator", $urlArray),
-            "legend" => $l[1][3],
-        );
+        $urlArray['cmd_id'] = $cmd_id;
     }
     elseif(strlen($_GET['bundle_id'])) { // If it's a bundle on a group
-        $bundleStatus[$l[0]] = $s['machineNames'];
+        $urlArray['bundle_id'] = $_GET['bundle_id'];
     }
-    
+
+    $machineStateNumber[$l[0]] = array(
+        "number" => $s['total'][0],
+        "percent" => $s['total'][1],
+        "url" => urlStr("base/computers/computersgroupcreator", $urlArray),
+        "legend" => $l[1][3],
+    );
+    // End of pie chart datas
+
     if ($s['total'][0] == '0') {
         //print "<tr><td colspan='3'>".$l[1][0]." (".$s['total'][1]."%)</td><td><img src='modules/msc/graph/nocsv.png' alt='no csv export possible'/></td></tr>";
     } elseif ($s['total'][0] == '1') {
@@ -228,6 +245,25 @@ foreach ($labels as $l) {
 
     foreach ($slabels[$l[0]] as $sl) {
         $ss = $status[$l[0]][$sl[0]];
+
+        // Failed states Pie Chart
+        $urlArray = array(
+            'pieGroupStatus' => $sl[0],
+            "tab" => "tabsta",
+            "type" => 0,
+        );
+        if (strlen($cmd_id) && $l[0] == "failure") { // If it's an action on a group
+            $urlArray['cmd_id'] = $cmd_id;
+        }
+        elseif (strlen($_GET['bundle_id']) && $l[0] == "failure") {
+            $urlArray['bundle_id'] = $_GET['bundle_id'];
+        }
+        $failedStateNumber[$sl[0]] = array(
+            "number" => $ss[0],
+            "url" => urlStr("base/computers/computersgroupcreator", $urlArray),
+            "legend" => (strlen($cmd_id)) ? $sl[4] : $sl[5],
+        );
+
         if ($ss[0] != '0') {
             print "<tr><td>&nbsp;&nbsp;&nbsp;</td><td colspan='2'>";
         }
@@ -256,73 +292,19 @@ foreach ($labels as $l) {
     }
 }
 
-/*
- *  bundle treatment:
- *  -----------------
- *
- *  machines can be stored in more than one status (one package can be success, and another in fail state)
- *
- *  If one package is failed, bundle is in fail status
- *  If no failed, but one running package, bundle is in running status
- *  For package paused => running status
- *  For package stopped => failed status
- */
-
-if(strlen($_GET['bundle_id']) and !isset($_GET['tab'])) {
-    #print "<pre>";
-    #print_r(isset($_GET['tab']));
-    #print "</pre>";
-    // merge stopped and paused status
-    $bundleStatus['failure'] = array_merge($bundleStatus['failure'], $bundleStatus['stopped']);
-    $bundleStatus['running'] = array_merge($bundleStatus['running'], $bundleStatus['paused']);
-
-    // If one package is in failure state, unset corresponding machine from other states
-    foreach ($bundleStatus['failure'] as $failKey => $failValue) {
-        foreach ($bundleStatus['success'] as $successKey => $successValue) {
-            if ($failValue == $successValue) unset($bundleStatus['success'][$successKey]);
-        }
-        foreach ($bundleStatus['running'] as $runningKey => $runningValue) {
-            if ($failValue == $runningValue) unset ($bundleStatus['running'][$runningKey]);
-        }
-    }
-
-    // If a machine have both running and success packages, machine has running status
-    foreach ($bundleStatus['running'] as $runningKey => $runningValue) {
-        foreach ($bundleStatus['success'] as $successKey => $successValue) {
-            if ($runningValue == $successValue) unset ($bundleStatus['success'][$successKey]);
-        }
-    }
-
-    $totalMachineNumber = 0;
-    foreach ($bundleStatus as $key => $value) {
-        $totalMachineNumber += count($value);
-    }
-
-    $i = 0;
-    foreach ($bundleStatus as $key => $value) {
-        $urlArray = array(
-            'pieGroupStatus' => $key,
-            'bundle_id' => $_GET['bundle_id'],
-            "tab" => "tabsta",
-            "type" => 0,
-        );
-        $machineStateNumber[$key] = array(
-            "number" => count($value),
-            "url" => urlStr("base/computers/computersgroupcreator", $urlArray),
-            "legend" => $labels[$i][1][3],
-        );
-        $i++;
-    }
-}
-
+$jsonFailedStateNumber = json_encode($failedStateNumber);
 $jsonMachineStateNumber = json_encode($machineStateNumber);
-echo <<< MSC
-</table>
+$machines_have_failed = ($status['failure']['total'][0]) ? True : False;
 
-    <div id="msc-graphs"></div>
+print "</table>";
+
+print "    <div id=\"msc-graphs\"></div>";
+if ($machines_have_failed) print "    <div id=\"msc-graphs-failed\"></div>";
+echo <<< MSC
     <script type="text/javascript">
-var machineStateNumber = $jsonMachineStateNumber,
-        r = Raphael("msc-graphs", 400, 200),
+    // First pie chart with globals states
+    var machineStateNumber = $jsonMachineStateNumber,
+        r = Raphael("msc-graphs", 400, 150),
         radius = 50,
         x = 90,
         y = 90;
@@ -361,6 +343,97 @@ var machineStateNumber = $jsonMachineStateNumber,
         legend.push(machineStateNumber.failure.legend.replace('%d', machineStateNumber.failure.number));
         href.push(machineStateNumber.failure.url.replace(/&amp;/g, '&'));
         colors.push("#ef2929");
+    }
+
+    data = getPercentageData(data);
+
+    // put percentage values in legend
+    for (var i = 0; i < data.length; i++) {
+        legend[i] = legend[i].replace('%percent', data[i]);
+    }
+
+    var pie = r.piechart(x, y, radius, data,
+                     {legend: legend,
+                      legendpos: "east",
+                      colors: colors, 
+                      href: href});
+    pie.hover(function () {
+        this.sector.stop();
+        this.sector.animate({ transform: 's1.1 1.1 ' + this.cx + ' ' + this.cy }, 800, "elastic");
+
+        if (this.label) {
+            this.label[0].stop();
+            this.label[0].attr({ r: 7.5 });
+            this.label[1].attr({ "font-weight": 800 });
+        }
+    }, function () {
+        this.sector.animate({ transform: 's1 1 ' + this.cx + ' ' + this.cy }, 800, "elastic");
+
+        if (this.label) {
+            this.label[0].animate({ r: 5 }, 500, "bounce");
+            this.label[1].attr({ "font-weight": 400 });
+        }
+    });
+
+    // Second pie chart with failed states
+    var failedStateNumber = $jsonFailedStateNumber,
+        r = Raphael("msc-graphs-failed", 400, 150),
+        radius = 50,
+        x = 90,
+        y = 90;
+
+    var data = [];
+    var legend = [];
+    var colors = [];
+    var href = [];
+
+    if (failedStateNumber.fail_up.number) {
+        data.push(failedStateNumber.fail_up.number);
+        legend.push(failedStateNumber.fail_up.legend.replace('%d', failedStateNumber.fail_up.number));
+        href.push(failedStateNumber.fail_up.url.replace(/&amp;/g, '&'));
+        //colors.push("#73d216");
+    }
+    if (failedStateNumber.fail_ex.number) {
+        data.push(failedStateNumber.fail_ex.number);
+        legend.push(failedStateNumber.fail_ex.legend.replace('%d', failedStateNumber.fail_ex.number));
+        href.push(failedStateNumber.fail_ex.url.replace(/&amp;/g, '&'));
+        //colors.push("#111111");
+    }
+    if (failedStateNumber.fail_rm.number) {
+        data.push(failedStateNumber.fail_rm.number);
+        legend.push(failedStateNumber.fail_rm.legend.replace('%d', failedStateNumber.fail_rm.number));
+        href.push(failedStateNumber.fail_rm.url.replace(/&amp;/g, '&'));
+        //colors.push("#ff9c00");
+    }
+    if (failedStateNumber.fail_inv.number) {
+        data.push(failedStateNumber.fail_inv.number);
+        legend.push(failedStateNumber.fail_inv.legend.replace('%d', failedStateNumber.fail_inv.number));
+        href.push(failedStateNumber.fail_inv.url.replace(/&amp;/g, '&'));
+        //colors.push("#0066ff");
+    }
+    if (failedStateNumber.fail_wol.number) {
+        data.push(failedStateNumber.fail_wol.number);
+        legend.push(failedStateNumber.fail_wol.legend.replace('%d', failedStateNumber.fail_wol.number));
+        href.push(failedStateNumber.fail_wol.url.replace(/&amp;/g, '&'));
+        //colors.push("#0066ff");
+    }
+    if (failedStateNumber.fail_reboot.number) {
+        data.push(failedStateNumber.fail_reboot.number);
+        legend.push(failedStateNumber.fail_reboot.legend.replace('%d', failedStateNumber.fail_reboot.number));
+        href.push(failedStateNumber.fail_reboot.url.replace(/&amp;/g, '&'));
+        //colors.push("#0066ff");
+    }
+    if (failedStateNumber.fail_halt.number) {
+        data.push(failedStateNumber.fail_halt.number);
+        legend.push(failedStateNumber.fail_halt.legend.replace('%d', failedStateNumber.fail_halt.number));
+        href.push(failedStateNumber.fail_halt.url.replace(/&amp;/g, '&'));
+        //colors.push("#0066ff");
+    }
+    if (failedStateNumber.over_timed.number) {
+        data.push(failedStateNumber.over_timed.number);
+        legend.push(failedStateNumber.over_timed.legend.replace('%d', failedStateNumber.over_timed.number));
+        href.push(failedStateNumber.over_timed.url.replace(/&amp;/g, '&'));
+        //colors.push("#ef2929");
     }
 
     data = getPercentageData(data);

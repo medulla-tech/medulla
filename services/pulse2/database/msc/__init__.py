@@ -965,7 +965,25 @@ class MscDatabase(DatabaseHelper):
     def getMachineNamesOnGroupStatus(self, ctx, cmd_id, state):
         session = create_session()
         query = session.query(CommandsOnHost).add_column(self.target.c.target_uuid).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.commands.c.id == cmd_id)
-        query = query.filter(self.commands_on_host.c.current_state.in_(self.__getAllStatus()[state]))
+        if state in ['success', 'paused', 'stopped', 'running', 'failure']: # Global statues
+            query = query.filter(self.commands_on_host.c.current_state.in_(self.__getAllStatus()[state]))
+        # Treat failed statues
+        elif state == "fail_up":
+            query = query.filter(self.commands_on_host.c.uploaded == 'FAILED')
+        elif state == "fail_ex":
+            query = query.filter(self.commands_on_host.c.executed == 'FAILED')
+        elif state == "fail_rm":
+            query = query.filter(self.commands_on_host.c.deleted == 'FAILED')
+        elif state == "fail_inv":
+            query = query.filter(self.commands_on_host.c.inventoried == 'FAILED')
+        elif state == "fail_wol":
+            query = query.filter(self.commands_on_host.c.awoken == 'FAILED')
+        elif state == "fail_reboot":
+            query = query.filter(self.commands_on_host.c.rebooted == 'FAILED')
+        elif state == "fail_halt":
+            query = query.filter(self.commands_on_host.c.halted == 'FAILED')
+        elif state == "over_timed":
+            query = query.filter(self.commands_on_host.c.current_state == 'over_timed')
 
         # Limit list according to max_elements_for_static_list param in dyngroup.ini
         limit = DGConfig().maxElementsForStaticList
@@ -978,7 +996,26 @@ class MscDatabase(DatabaseHelper):
     def getMachineNamesOnBundleStatus(self, ctx, fk_bundle, state):
         session = create_session()
         query = session.query(CommandsOnHost).add_column(self.target.c.target_uuid).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.commands.c.fk_bundle == fk_bundle)
-        query = query.filter(self.commands_on_host.c.current_state.in_(self.__getAllStatus()[state]))
+        if state in ['success', 'paused', 'stopped', 'running', 'failure']: # Global statues
+            query = query.filter(self.commands_on_host.c.current_state.in_(self.__getAllStatus()[state]))
+        # Treat failed statues
+        elif state == "fail_up":
+            query = query.filter(self.commands_on_host.c.uploaded == 'FAILED')
+        elif state == "fail_ex":
+            query = query.filter(self.commands_on_host.c.executed == 'FAILED')
+        elif state == "fail_rm":
+            query = query.filter(self.commands_on_host.c.deleted == 'FAILED')
+        elif state == "fail_inv":
+            query = query.filter(self.commands_on_host.c.inventoried == 'FAILED')
+        elif state == "fail_wol":
+            query = query.filter(self.commands_on_host.c.awoken == 'FAILED')
+        elif state == "fail_reboot":
+            query = query.filter(self.commands_on_host.c.rebooted == 'FAILED')
+        elif state == "fail_halt":
+            query = query.filter(self.commands_on_host.c.halted == 'FAILED')
+        elif state == "over_timed":
+            query = query.filter(self.commands_on_host.c.current_state == 'over_timed')
+
 
         # Limit list according to max_elements_for_static_list param in dyngroup.ini
         limit = DGConfig().maxElementsForStaticList
@@ -1217,15 +1254,18 @@ class MscDatabase(DatabaseHelper):
             },
             'failure':{
                 'total':[failure_total, []],
-                'fail_up': [self.getStateLen(query, [["attempts_left", [0]], ["uploaded", ["FAILED"]]]), []],
+                'fail_up': [self.getStateLen(query, [["current_state", ["failed"]], ["uploaded", ["FAILED"]]]), []],
                 'conn_up': [self.getStateLen(query, [["attempts_left", [0]], ["uploaded", ["FAILED"]], ["current_state", ["not_reachable"]]]), []],
-                'fail_ex': [self.getStateLen(query, [["attempts_left", [0]], ["executed", ["FAILED"]]]), []],
+                'fail_ex': [self.getStateLen(query, [["current_state", ["failed"]], ["executed", ["FAILED"]]]), []],
                 'conn_ex': [self.getStateLen(query, [["attempts_left", [0]], ["executed", ["FAILED"]], ["current_state", ["not_reachable"]]]), []],
-                'fail_rm': [self.getStateLen(query, [["attempts_left", [0]], ["deleted", ["FAILED"]]]), []],
+                'fail_rm': [self.getStateLen(query, [["current_state", ["failed"]], ["deleted", ["FAILED"]]]), []],
                 'conn_rm': [self.getStateLen(query, [["attempts_left", [0]], ["deleted", ["FAILED"]], ["current_state", ["not_reachable"]]]), []],
-                'fail_inv': [self.getStateLen(query, [["attempts_left", [0]], ["inventoried", ["FAILED"]]]), []],
+                'fail_inv': [self.getStateLen(query, [["current_state", ["failed"]], ["inventoried", ["FAILED"]]]), []],
                 'conn_inv': [self.getStateLen(query, [["attempts_left", [0]], ["inventoried", ["FAILED"]], ["current_state", ["not_reachable"]]]), []],
                 'over_timed':[self.getStateLen(query, [["current_state", ["over_timed"]]]), []],
+                'fail_wol': [self.getStateLen(query, [["current_state", ["failed"]], ["awoken", ["FAILED"]]]), []],
+                'fail_reboot': [self.getStateLen(query, [["current_state", ["failed"]], ["rebooted", ["FAILED"]]]), []],
+                'fail_halt': [self.getStateLen(query, [["current_state", ["failed"]], ["halted", ["FAILED"]]]), []],
 
             }
         }
