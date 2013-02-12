@@ -391,15 +391,16 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         trans = connection.begin()
         # get machines to possibly delete
         session = create_session()
-        to_delete = map(lambda x: x.id, session.query(Machines).select_from(self.machines.join(self.results)).filter(self.results.c.FK_groups == id))
+        to_delete = [x.id for x in session.query(Machines).select_from(self.machines.join(self.profilesResults)).filter(self.profilesResults.c.FK_groups == id)]
         session.close()
         # Delete the previous results for this group in the Results table
-        connection.execute(self.results.delete(self.results.c.FK_groups == id))
+        connection.execute(self.profilesResults.delete(self.profilesResults.c.FK_groups == id))
         # Delete all shares on the group before delete group
         self.__deleteShares(id, session)
         # Update the Machines table to remove ghost records
         self.__updateMachinesTable(connection, to_delete)
         # Delete the group from the Groups table
+        connection.execute(self.profilesData.delete(self.profilesData.c.FK_groups == id))
         connection.execute(self.groups.delete(self.groups.c.id == id))
         trans.commit()
         return True
@@ -795,9 +796,9 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         group = self.get_group(ctx, id)
         connection = self.getDbConnection()
         trans = connection.begin()
-        uuids = map(lambda x: x["uuid"], uuids.values())
+        uuids = [x["uuid"] for x in uuids.values()]
         # Delete the selected machines from the Results table
-        connection.execute(self.results.delete(and_(self.results.c.FK_groups == group.id, self.results.c.FK_machines.in_(select([self.machines.c.id], self.machines.c.uuid.in_(uuids))))))
+        connection.execute(self.profilesResults.delete(and_(self.profilesResults.c.FK_groups == group.id, self.profilesResults.c.FK_machines.in_(select([self.machines.c.id], self.machines.c.uuid.in_(uuids))))))
         # Update the Machines table
         self.__updateMachinesTable(connection, uuids)
         trans.commit()
