@@ -1,0 +1,248 @@
+#!/usr/bin/python
+#
+# -*- coding: utf-8; -*-
+#
+# (c) 2013 Mandriva, http://www.mandriva.com/
+#
+# This file is part of Pulse 2, http://pulse2.mandriva.org
+#
+# Pulse 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Pulse 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Pulse 2; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+""" XMLRPC Proxy processing incomming requests from launcher """
+
+import os
+import sys
+import xmlrpclib
+
+from twisted.internet import epollreactor
+epollreactor.install()
+
+from twisted.internet import reactor
+import twisted.web.xmlrpc
+import twisted.web.server
+import twisted.internet.defer
+import twisted.internet.base
+try:
+    from twisted.web import http
+except ImportError:
+    from twisted.protocols import http # pyflakes.ignore
+
+import pulse2.scheduler.scheduling
+import pulse2.scheduler.network
+import pulse2.scheduler.launcher
+import pulse2.scheduler.launchers_driving
+from pulse2.database.msc import MscDatabase
+
+from pulse2.scheduler.health import getHealth
+# Filter SA warns to prevent trivial (hex/dec notation) error printing on STDOUT
+import warnings
+warnings.filterwarnings("ignore", category=FutureWarning)
+
+from mmc.site import mmcconfdir
+from pulse2.scheduler.config import SchedulerConfig, SchedulerDatabaseConfig
+from pulse2.scheduler.xmlrpc import SchedulerSite
+from pulse2.scheduler.assign_algo import MGAssignAlgoManager
+from pulse2.utils import xmlrpcCleanup
+import pulse2.xmlrpc
+from mmc.support.cache import LocMemCache
+
+import logging
+import logging.config
+
+
+class Scheduler(twisted.web.xmlrpc.XMLRPC):
+    """ XMLRPC Scheduler Proxy """
+
+    def __init__(self, name):
+        twisted.web.xmlrpc.XMLRPC.__init__(self)
+        self.logger = logging.getLogger()
+        self.name = name
+
+    def _ebRender(self, failure, func, args):
+        self.logger.error("XMLRPC Proxy : %s" % str(failure))
+        if isinstance(failure.value, xmlrpclib.Fault):
+            return failure.value
+        return xmlrpclib.Fault(self.FAILURE, "Internal Error")
+
+    def _cbRender(self, result, request, func, args):
+        if isinstance(result, Scheduler):
+            result = xmlrpcCleanup(result.result)
+        if not isinstance(result, xmlrpclib.Fault):
+            result = (result,)
+        self.logger.debug('xmlrpc: %s%s => %s' % (func, (args), (result)))
+
+        try:
+            s = xmlrpclib.dumps(result, methodresponse=1)
+        except:
+            f = xmlrpclib.Fault(self.FAILURE, "can't serialize output")
+            s = xmlrpclib.dumps(f, methodresponse=1)
+        request.setHeader("content-length", str(len(s)))
+        request.write(s)
+        request.finish()
+
+    def render(self, request):
+        """
+        override method of xmlrpc python twisted framework
+        """
+        args, functionPath = xmlrpclib.loads(request.content.read())
+        # Twisted: deprecated private method '_getFunction' becomes
+        #          public and named 'lookupProcedure'
+        #          (changed since version 11.1)
+        if hasattr(self, "lookupProcedure") :
+            function = self.lookupProcedure(functionPath)
+        elif hasattr(self, "_getFunction") :
+            function = self._getFunction(functionPath)
+        else :
+            self.logger.error("Unable to get XML-RPC function '%s'" % functionPath)
+
+
+        cleartext_token = '%s:%s' % (SchedulerConfig().username, SchedulerConfig().password)
+        token = '%s:%s' % (request.getUser(), request.getPassword())
+        if token != cleartext_token:
+            self.logger.error("Invalid login / password for HTTP basic authentication")
+            request.setResponseCode(http.UNAUTHORIZED)
+            self._cbRender(
+                twisted.web.xmlrpc.Fault(http.UNAUTHORIZED, 
+                    "Unauthorized: invalid credentials to connect to this Pulse 2 Scheduler, basic HTTP authentication is required"),
+                request,
+                functionPath,
+                args
+                )
+            return twisted.web.server.NOT_DONE_YET
+
+        request.setHeader("content-type", "text/xml")
+        twisted.internet.defer.maybeDeferred(function, *args).addErrback(
+            self._ebRender, functionPath, args
+        ).addCallback(
+            self._cbRender, request, functionPath, args
+        )
+        return twisted.web.server.NOT_DONE_YET
+
+    ### XMLRPC functions used from a MMC agent ###
+    def xmlrpc_ping_client(self, uuid, fqdn, shortname, ips, macs):
+        return xmlrpcCleanup(pulse2.scheduler.launchers_driving.pingClient(uuid, fqdn, shortname, ips, macs))
+    def xmlrpc_probe_client(self, uuid, fqdn, shortname, ips, macs):
+        return xmlrpcCleanup(pulse2.scheduler.launchers_driving.probeClient(uuid, fqdn, shortname, ips, macs))
+    def xmlrpc_ping_and_probe_client(self, uuid, fqdn, shortname, ips, macs):
+        return xmlrpcCleanup(pulse2.scheduler.launchers_driving.pingAndProbeClient(uuid, fqdn, shortname, ips, macs))
+    def xmlrpc_download_file(self, uuid, fqdn, shortname, ips, macs, path, bwlimit):
+        return xmlrpcCleanup(pulse2.scheduler.launchers_driving.downloadFile(uuid, fqdn, shortname, ips, macs, path, bwlimit))
+    def xmlrpc_start_all_commands(self):
+        return xmlrpcCleanup(pulse2.scheduler.scheduling.startAllCommands(self.name))
+    def xmlrpc_start_these_commands(self, commands):
+        return xmlrpcCleanup(pulse2.scheduler.scheduling.startTheseCommands(self.name, commands))
+    def xmlrpc_start_command(self, id):
+        return xmlrpcCleanup(pulse2.scheduler.scheduling.startCommand(id))
+    def xmlrpc_start_commands(self, cmdids):
+        for cid in cmdids:
+            xmlrpcCleanup(pulse2.scheduler.scheduling.startCommand(cid))
+        return True
+    def xmlrpc_stop_command(self, id):
+        return xmlrpcCleanup(pulse2.scheduler.scheduling.stopCommand(id))
+    def xmlrpc_stop_commands(self, cmdids):
+        pulse2.scheduler.scheduling.stopCommandsOnHosts(cmdids)
+        return True
+    def xmlrpc_tcp_sproxy(self, uuid, fqdn, shortname, ips, macs, requestor_ip, requested_port):
+        return xmlrpcCleanup(pulse2.scheduler.launchers_driving.establishProxy(uuid, fqdn, shortname, ips, macs, requestor_ip, requested_port))
+
+    ### XMLRPC functions used from a launcher ###
+    def xmlrpc_tell_i_am_alive(self, launcher):
+        return xmlrpcCleanup(pulse2.scheduler.launcher.tell_i_am_alive(launcher))
+    def xmlrpc_completed_quick_action(self, launcher, (exitcode, stdout, stderr), id):
+        return xmlrpcCleanup(pulse2.scheduler.launcher.completed_quick_action(launcher, (exitcode, stdout, stderr), id))
+    def xmlrpc_completed_push(self, launcher, (exitcode, stdout, stderr), id):
+        return xmlrpcCleanup(pulse2.scheduler.launcher.completed_push(launcher, (exitcode, stdout, stderr), id))
+    def xmlrpc_completed_pull(self, launcher, (exitcode, stdout, stderr), id):
+        return xmlrpcCleanup(pulse2.scheduler.launcher.completed_pull(launcher, (exitcode, stdout, stderr), id))
+    def xmlrpc_completed_execution(self, launcher, (exitcode, stdout, stderr), id):
+        return xmlrpcCleanup(pulse2.scheduler.launcher.completed_execution(launcher, (exitcode, stdout, stderr), id))
+    def xmlrpc_completed_deletion(self, launcher, (exitcode, stdout, stderr), id):
+        return xmlrpcCleanup(pulse2.scheduler.launcher.completed_deletion(launcher, (exitcode, stdout, stderr), id))
+    def xmlrpc_completed_inventory(self, launcher, (exitcode, stdout, stderr), id):
+        return xmlrpcCleanup(pulse2.scheduler.launcher.completed_inventory(launcher, (exitcode, stdout, stderr), id))
+    def xmlrpc_completed_reboot(self, launcher, (exitcode, stdout, stderr), id):
+        return xmlrpcCleanup(pulse2.scheduler.launcher.completed_reboot(launcher, (exitcode, stdout, stderr), id))
+    def xmlrpc_completed_halt(self, launcher, (exitcode, stdout, stderr), id):
+        return xmlrpcCleanup(pulse2.scheduler.launcher.completed_halt(launcher, (exitcode, stdout, stderr), id))
+
+    def xmlrpc_get_health(self):
+        return xmlrpcCleanup(getHealth())
+
+def app() :
+    config = SchedulerConfig()
+    # Set cache
+    cache = LocMemCache()
+    cache.init(timeout=SchedulerConfig().cache_timeout,
+               max_entries=SchedulerConfig().cache_size)
+
+    MGAssignAlgoManager().setAlgo(config.mg_assign_algo)
+
+  
+    logger.info('XMLRPC Proxy of scheduler %s: starting' % config.name)
+    try:
+        if config.enablessl:
+            pulse2.xmlrpc.OpenSSLContext().setup(config.localcert, config.cacert, config.verifypeer)
+            twisted.internet.reactor.listenSSL(
+                config.port,
+                SchedulerSite(Scheduler(config.name)),
+                interface = config.host,
+                contextFactory = pulse2.xmlrpc.OpenSSLContext().getContext()
+                )
+            logger.info('XMLRPC Proxy of scheduler %s: activating SSL mode' % (config.name))
+        else:
+            twisted.internet.reactor.listenTCP(
+                config.port,
+                twisted.web.server.Site(Scheduler(config.name)),
+                interface = config.host
+                )
+    except Exception, e:
+        logger.error('XMLRPC Proxy of scheduler %s: can\'t bind to %s:%d, reason is %s' % (config.name, config.host, config.port, e))
+        return 1
+
+    reactor.run()
+    return 0
+
+if __name__ == "__main__" :
+
+    config_file = os.path.join(mmcconfdir, "pulse2", "scheduler", "scheduler.ini")
+ 
+    if not os.path.exists(config_file):
+        print "Config file '%s' does not exist." % config_file
+        sys.exit(3)
+ 
+    logging.config.fileConfig(config_file)
+    logger = logging.getLogger()
+ 
+    logger.info("XMLRPC Proxy: Reading configuration file: %s" % config_file)
+    try:
+        SchedulerConfig().setup(config_file)
+    except Exception, e:
+        logger.error("XMLRPC Proxy: %s" % str(e))
+        logger.error("XMLRPC Proxy: Please fix the configuration file")
+        sys.exit(1)
+
+    try:
+        confmsc = SchedulerDatabaseConfig()
+        confmsc.setup(config_file)
+        if not MscDatabase().activate(confmsc): # does the db_check
+            sys.exit(1)
+    except Exception, e:
+        logger.error("XMLRPC Proxy: %s" % str(e))
+        logger.error("XMLRPC Proxy: Please fix the configuration file")
+        sys.exit(1)
+
+    sys.exit(app())
+ 
