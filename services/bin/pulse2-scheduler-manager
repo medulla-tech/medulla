@@ -41,6 +41,7 @@ import signal
 import time
 import errno
 import resource
+from subprocess import Popen
 
 time_to_wait_for_start = 2
 time_to_wait_for_stop = 2
@@ -114,6 +115,16 @@ def start_scheduler(config):
     except OSError, e:
         logger.error('daemonization part #2 failed: %d (%s)' % (e.errno, e.strerror))
         sys.exit(1)
+    
+    # Scheduler's XMLRPC Proxy
+    scheduler_proxy_path = config.scheduler_proxy_path
+    logger.info('Starting XMLRPC Proxy "%s"' % (scheduler_proxy_path))
+    try :
+        Popen([scheduler_proxy_path])
+    except OSError, e:
+        logger.error('Start of XMLRPC Proxy failed')
+        sys.exit(1)
+ 
 
     # drop privs
     os.seteuid(0)
@@ -193,7 +204,7 @@ def kill_pid(pid, signal):
     os.setegid(0)
     os.seteuid(0)
     try:
-        os.kill(pid, signal)
+        os.killpg(os.getpgid(pid), signal)
     except OSError, err:
         if err.errno == errno.ESRCH:
             os.setegid(config.daemon_group)

@@ -4,6 +4,8 @@ id = scheduler_01
 
 ## MANAGING ##
 scheduler_path = @sbindir@/pulse2-scheduler
+scheduler_proxy_path = @sbindir@/pulse2-scheduler-proxy
+
 
 ## NETWORK ##
 # port = 8000

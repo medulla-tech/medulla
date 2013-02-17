@@ -109,6 +109,7 @@ class SchedulerConfig(pulse2.utils.Singleton):
     port = 8000
     resolv_order = ['fqdn', 'netbios', 'hosts', 'ip']
     scheduler_path = '/usr/sbin/pulse2-scheduler'
+    scheduler_proxy_path = '/usr/sbin/pulse2-scheduler-proxy'
     server_check = None
     username = 'username'
     verifypeer = False
@@ -281,6 +282,8 @@ class SchedulerConfig(pulse2.utils.Singleton):
         if not type(self.resolv_order) == type([]):
             self.resolv_order = self.resolv_order.split(' ')
         self.setoption("scheduler", "scheduler_path", "scheduler_path")
+        self.setoption("scheduler", "scheduler_proxy_path", "scheduler_proxy_path")
+
 
         if self.cp.has_option("scheduler", "client_check"):
             self.client_check = {}
