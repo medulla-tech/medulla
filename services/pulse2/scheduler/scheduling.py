@@ -800,7 +800,14 @@ def gatherIdsToStart(scheduler_name, commandIDs = []):
             database.commands_on_host.c.scheduler == None)
         ).filter(sqlalchemy.not_(
             database.commands.c.id.in_(Pulse2Preempt().members()))
-        )
+        ).order_by(database.commands_on_host.c.current_state.desc())
+        # IMPORTANT NOTE : This ordering is not alphabetical!
+        # Field 'current_state' is ENUM type, so decisive condition
+        # is order of element in the declaration of field.
+        # Because this order of elements is suitable on workflow, 
+        # using of descending order allows to favouring the commands
+        # which state is approaching to end of worklow.
+
 
     if commandIDs:
         commands_query = commands_query.filter(database.commands.c.id.in_(commandIDs))
