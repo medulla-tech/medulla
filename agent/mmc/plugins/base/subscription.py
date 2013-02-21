@@ -139,7 +139,7 @@ class SubscriptionManager(object):
         if dynamic:
             # Don't count SAMBA admin and nobody users
             userCount = 0
-            users = LdapUserGroupControl().search(searchFilter="(&(uid=*)(objectClass=sambaSamAccount))",
+            users = LdapUserGroupControl().search(searchFilter="(&(uid=*)(objectClass=inetOrgPerson))",
                                                   attrs=["uid", "gidNumber"])
             for user in users:
                 try:
