@@ -631,7 +631,14 @@ def startAllCommands(scheduler_name, commandIDs = []):
         log.debug('scheduler "%s": START: Starting commands %s' % (scheduler_name, commandIDs))
     else:
         log.debug('scheduler "%s": START: Starting all commands' % scheduler_name)
-    return twisted.internet.threads.deferToThread(gatherIdsToStart, scheduler_name, commandIDs).addCallback(sortCommands)
+
+    def _cbPreempt (result):
+        preemptTasks(scheduler_name)
+
+    d = twisted.internet.threads.deferToThread(gatherIdsToStart, scheduler_name, commandIDs)
+    d.addCallback(sortCommands)
+    d.addCallback(_cbPreempt)
+    return d
 
 def gatherIdsToReSchedule(scheduler_name):
 
@@ -678,7 +685,7 @@ def calcBalance(scheduler_name):
 
     CoHManager.setBalances(coh_balances)
 
-def selectCommandsToReSchedule (scheduler_name, limit):
+def selectCommandsToReSchedule (result, scheduler_name, limit):
     """ 
     Select the maximum of commands to fire.
 
@@ -880,8 +887,8 @@ def sortCommands(commands_to_perform):
 
         log.info('scheduler "%s": START: %d commands to start' % (SchedulerConfig().name, len(ids_list)))
         ToBeStarted.put(ids_list)
-        selectCommandsToReSchedule(SchedulerConfig().name, to_reach)
         return True
+
 
     def _parseResult(result):
         if result:
@@ -916,10 +923,13 @@ def sortCommands(commands_to_perform):
             tocome_distribution[command_group].append(command_id)
 
     # build array of commands being processed by available launchers
+    to_reach = int(SchedulerConfig().max_slots / getMaxNumberOfGroups())
+
     return getLaunchersBalance().\
         addCallback(_cb, tocome_distribution).\
-        addCallback(_parseResult)
-
+        addCallback(_parseResult).\
+        addCallback(selectCommandsToReSchedule, SchedulerConfig().name, to_reach)
+ 
 def getRunningCommandsOnHostInDB(scheduler_name, ids = None):
     query = __getRunningCommandsOnHostInDB(scheduler_name, ids)
     return [q[0].id for q in query]
