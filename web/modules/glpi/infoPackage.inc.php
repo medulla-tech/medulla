@@ -66,7 +66,10 @@ $page->addTab($tab);
 $tab = new Tab("tab4", _T("GLPI software tab", 'glpi'));
 $page->addTab($tab);
 
-$tab = new Tab("tab5", _T("GLPI history tab", 'glpi'));
+$tab = new Tab("tab5", _T("GLPI administration tab", 'glpi'));
+$page->addTab($tab);
+
+$tab = new Tab("tab6", _T("GLPI history tab", 'glpi'));
 $page->addTab($tab);
 
 $submod->addPage($page);
@@ -90,7 +93,10 @@ $page->addTab($tab);
 $tab = new Tab("tab4", _T("GLPI software tab", 'glpi'));
 $page->addTab($tab);
 
-$tab = new Tab("tab5", _T("GLPI history tab", 'glpi'));
+$tab = new Tab("tab5", _T("GLPI administration tab", 'glpi'));
+$page->addTab($tab);
+
+$tab = new Tab("tab6", _T("GLPI history tab", 'glpi'));
 $page->addTab($tab);
 
 $submod->addPage($page);
