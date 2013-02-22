@@ -35,6 +35,6 @@ and without a tested and certified upgrade path from previous versions.
 </p>");
  ?>
 <p>
-<a href="http://www.mandriva.com/pro/support.html"><?php echo  _("Click here to get more information about our support and maintenance subscription plan."); ?></a>
+<a href="http://www.mandriva.com/support"><?php echo  _("Click here to get more information about our support and maintenance subscription plan."); ?></a>
 </p>
 </div>
