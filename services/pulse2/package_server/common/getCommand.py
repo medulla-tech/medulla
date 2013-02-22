@@ -3,7 +3,7 @@
 
 import os
 import logging
-from BeautifulSoup import BeautifulSoup
+from xml.dom import minidom
 
 class getCommand(object):
     def __init__(self, file):
@@ -14,7 +14,9 @@ class getCommand(object):
         strings_command = 'strings "%s"' % self.file
         strings_data = os.popen(strings_command).read()
         xml_pos = strings_data.find('<?xml')
-        return BeautifulSoup(strings_data[xml_pos:])
+        strings_data = strings_data[xml_pos:]
+        end_pos = strings_data.find('</assembly>') + 11
+        return strings_data[:end_pos]
 
     def getFileData(self):
         file_command = 'file "%s"' % self.file
@@ -62,10 +64,18 @@ class getCommand(object):
             # Not an MSI file, maybe InnoSetup or NSIS
             self.logger.debug("%s is a PE32 executable" % self.file)
             installer = None
-            if strings_data.find('assemblyidentity'):
-                installer = strings_data.assemblyidentity["name"]
-            elif strings_data.find('assemblyIdentity'):
-                installer = strings_data.assemblyIdentity["name"]
+
+            if strings_data.startswith('<?xml'):
+                xmldoc = minidom.parseString(strings_data)
+                identity = xmldoc.getElementsByTagName('assemblyidentity')
+
+                if len(identity) == 0:
+                    # if assemblyIdentity don't exists, try assemblyIdentity
+                    identity = xmldoc.getElementsByTagName('assemblyIdentity')
+
+                if identity > 0:
+                    if identity[0].hasAttribute('name'):
+                        installer = identity[0].getAttribute('name')
 
             if installer == "JR.Inno.Setup":
                 self.logger.debug("InnoSetup detected")
