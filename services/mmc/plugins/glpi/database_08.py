@@ -593,6 +593,7 @@ class Glpi08(DyngroupDatabaseHelper):
 
             parts = self.__getPartsFromQuery(query)
             ret = []
+
             for part in parts:
                 partA, partB = part
                 if invert:
@@ -1256,15 +1257,16 @@ class Glpi08(DyngroupDatabaseHelper):
             else:
                 ret = []
                 for network, interface in query:
-                    l = [
-                        ['Name', network.name],
-                        ['Network Type', interface],
-                        ['MAC Address', network.mac],
-                        ['IP', network.ip],
-                        ['Netmask', network.netmask],
-                        ['Gateway', network.gateway],
-                    ]
-                    ret.append(l)
+                    if network is not None:
+                        l = [
+                            ['Name', network.name],
+                            ['Network Type', interface],
+                            ['MAC Address', network.mac],
+                            ['IP', network.ip],
+                            ['Netmask', network.netmask],
+                            ['Gateway', network.gateway],
+                        ]
+                        ret.append(l)
         elif part == 'Disk volumes':
             query = self.filterOnUUID(
                 session.query(Disk).add_column(self.diskfs.c.name).select_from(
@@ -1276,15 +1278,16 @@ class Glpi08(DyngroupDatabaseHelper):
                 ret = []
                 for disk, diskfs in query:
                     if diskfs not in ['rootfs', 'tmpfs', 'devtmpfs']:
-                        l = [
-                            ['Name', disk.name],
-                            ['Partition', disk.device],
-                            ['Mountpoint', disk.mountpoint],
-                            ['File System', diskfs],
-                            ['Global Size', str(disk.totalsize) + ' MB'],
-                            ['Free Size', str(disk.freesize) + ' MB'],
-                        ]
-                        ret.append(l)
+                        if disk is not None:
+                            l = [
+                                ['Name', disk.name],
+                                ['Partition', disk.device],
+                                ['Mountpoint', disk.mountpoint],
+                                ['File System', diskfs],
+                                ['Global Size', str(disk.totalsize) + ' MB'],
+                                ['Free Size', str(disk.freesize) + ' MB'],
+                            ]
+                            ret.append(l)
         elif part == 'Administration':
             query = self.filterOnUUID(
                 session.query(Infocoms).add_column(self.suppliers.c.name).select_from(
@@ -1296,14 +1299,15 @@ class Glpi08(DyngroupDatabaseHelper):
             else:
                 ret = []
                 for infocoms, supplierName in query:
-                    endDate = self.getWarrantyEndDate(infocoms)
+                    if infocoms is not None:
+                        endDate = self.getWarrantyEndDate(infocoms)
 
-                    l = [
-                        ['Supplier', supplierName],
-                        ['Invoice Number', infocoms and infocoms.bill or ''],
-                        ['Warranty End Date', endDate],
-                    ]
-                    ret.append(l)
+                        l = [
+                            ['Supplier', supplierName],
+                            ['Invoice Number', infocoms and infocoms.bill or ''],
+                            ['Warranty End Date', endDate],
+                        ]
+                        ret.append(l)
         elif part == 'Software':
             query = self.filterOnUUID(
                 session.query(Software).add_column(self.manufacturers.c.name) \
@@ -1333,12 +1337,13 @@ class Glpi08(DyngroupDatabaseHelper):
             else:
                 ret = []
                 for software, manufacturer, version in query:
-                    l = [
-                        ['Company', manufacturer],
-                        ['Product', software.name],
-                        ['Product Version', version],
-                    ]
-                    ret.append(l)
+                    if software is not None:
+                        l = [
+                            ['Company', manufacturer],
+                            ['Product', software.name],
+                            ['Product Version', version],
+                        ]
+                        ret.append(l)
         elif part == 'Summary':
             query = self.filterOnUUID(
                 session.query(Machine).add_entity(Infocoms) \
@@ -1363,7 +1368,9 @@ class Glpi08(DyngroupDatabaseHelper):
             else:
                 ret = []
                 for machine, infocoms, entity, location, os, manufacturer, type, model in query:
-                    endDate = self.getWarrantyEndDate(infocoms)
+                    endDate = ''
+                    if infocoms is not None:
+                        endDate = self.getWarrantyEndDate(infocoms)
 
                     modelType = []
                     if model is not None:
@@ -1401,11 +1408,12 @@ class Glpi08(DyngroupDatabaseHelper):
             else:
                 ret = []
                 for processor in query:
-                    l = [
-                        ['Name', processor.designation],
-                        ['Frequency', str(processor.specif_default) + ' Hz'],
-                    ]
-                    ret.append(l)
+                    if processor is not None:
+                        l = [
+                            ['Name', processor.designation],
+                            ['Frequency', str(processor.specif_default) + ' Hz'],
+                        ]
+                        ret.append(l)
         elif part == 'Memories':
             query = self.filterOnUUID(
                 session.query(Memory).add_column(self.memoryType.c.name).select_from(
@@ -1419,13 +1427,14 @@ class Glpi08(DyngroupDatabaseHelper):
             else:
                 ret = []
                 for memory, type in query:
-                    l = [
-                        ['Name', memory.designation],
-                        ['Type', type],
-                        ['Frequency', str(memory.frequence) + ' Hz'],
-                        ['Size', str(memory.specif_default) + ' MB'],
-                    ]
-                    ret.append(l)
+                    if memory is not None:
+                        l = [
+                            ['Name', memory.designation],
+                            ['Type', type],
+                            ['Frequency', str(memory.frequence) + ' Hz'],
+                            ['Size', str(memory.specif_default) + ' MB'],
+                        ]
+                        ret.append(l)
         elif part == 'Harddrives':
             query = self.filterOnUUID(
                 session.query(self.klass['deviceharddrives']).select_from(
@@ -1438,11 +1447,12 @@ class Glpi08(DyngroupDatabaseHelper):
             else:
                 ret = []
                 for hd in query:
-                    l = [
-                        ['Name', hd.designation],
-                        ['Capacity', str(hd.specif_default) + ' MB'],
-                    ]
-                    ret.append(l)
+                    if hd is not None:
+                        l = [
+                            ['Name', hd.designation],
+                            ['Capacity', str(hd.specif_default) + ' MB'],
+                        ]
+                        ret.append(l)
         elif part == 'NetworkCards':
             query = self.filterOnUUID(
                 session.query(self.klass['devicenetworkcards']).add_column(self.computers_devicenetworkcards.c.specificity) \
@@ -1456,12 +1466,13 @@ class Glpi08(DyngroupDatabaseHelper):
             else:
                 ret = []
                 for network, mac in query:
-                    l = [
-                        ['Name', network.designation],
-                        ['Bandwidth', network.bandwidth],
-                        ['MAC', mac],
-                    ]
-                    ret.append(l)
+                    if network is not None:
+                        l = [
+                            ['Name', network.designation],
+                            ['Bandwidth', network.bandwidth],
+                            ['MAC', mac],
+                        ]
+                        ret.append(l)
         elif part == 'Drives':
             query = self.filterOnUUID(
                 session.query(self.klass['devicedrives']).select_from(
@@ -1474,11 +1485,12 @@ class Glpi08(DyngroupDatabaseHelper):
             else:
                 ret = []
                 for drive in query:
-                    l = [
-                        ['Name', drive.designation],
-                        ['Writer', drive.is_writer and 'Yes' or 'No'],
-                    ]
-                    ret.append(l)
+                    if drive is not None:
+                        l = [
+                            ['Name', drive.designation],
+                            ['Writer', drive.is_writer and 'Yes' or 'No'],
+                        ]
+                        ret.append(l)
         elif part == 'GraphicCards':
             query = self.filterOnUUID(
                 session.query(self.klass['devicegraphiccards']).add_column(self.interfaceType.c.name) \
@@ -1493,12 +1505,13 @@ class Glpi08(DyngroupDatabaseHelper):
             else:
                 ret = []
                 for card, interfaceType in query:
-                    l = [
-                        ['Name', card.designation],
-                        ['Memory', str(card.specif_default) + ' MB'],
-                        ['Type', interfaceType],
-                    ]
-                    ret.append(l)
+                    if card is not None:
+                        l = [
+                            ['Name', card.designation],
+                            ['Memory', str(card.specif_default) + ' MB'],
+                            ['Type', interfaceType],
+                        ]
+                        ret.append(l)
         elif part == 'SoundCards':
             query = self.filterOnUUID(
                 session.query(self.klass['devicesoundcards']).select_from(
@@ -1511,10 +1524,11 @@ class Glpi08(DyngroupDatabaseHelper):
             else:
                 ret = []
                 for sound in query:
-                    l = [
-                        ['Name', sound.designation],
-                    ]
-                    ret.append(l)
+                    if sound is not None:
+                        l = [
+                            ['Name', sound.designation],
+                        ]
+                        ret.append(l)
         elif part == 'Others':
             query = self.filterOnUUID(
                 session.query(self.klass['devicepcis']).select_from(
@@ -1527,11 +1541,12 @@ class Glpi08(DyngroupDatabaseHelper):
             else:
                 ret = []
                 for pci in query:
-                    l = [
-                        ['Name', pci.designation],
-                        ['Comment', pci.comment],
-                    ]
-                    ret.append(l)
+                    if pci is not None:
+                        l = [
+                            ['Name', pci.designation],
+                            ['Comment', pci.comment],
+                        ]
+                        ret.append(l)
         elif part == 'Historical':
             query = self.filterOnUUID(
                 session.query(Logs).select_from(
@@ -1554,20 +1569,20 @@ class Glpi08(DyngroupDatabaseHelper):
             else:
                 ret = []
                 for log in query:
-                    l = [
-                        ['Log', log.id],
-                        ['Date', log.date_mod.strftime('%Y-%m-%d %H:%m')],
-                        ['User', log.user_name],
-                        ['Field', log.itemtype],
-                        ['Old', log.old_value],
-                        ['New', log.new_value],
-                    ]
-                    ret.append(l)
+                    if log is not None:
+                        l = [
+                            ['Log', log.id],
+                            ['Date', log.date_mod.strftime('%Y-%m-%d %H:%m')],
+                            ['User', log.user_name],
+                            ['Field', log.itemtype],
+                            ['Old', log.old_value],
+                            ['New', log.new_value],
+                        ]
+                        ret.append(l)
         else:
             ret = None
 
         session.close()
-        logging.getLogger().error(ret)
         return ret
 
     ##################### functions used by querymanager
