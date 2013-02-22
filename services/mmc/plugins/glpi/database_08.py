@@ -591,7 +591,7 @@ class Glpi08(DyngroupDatabaseHelper):
                     like = True
                     query[3] = r1.sub('%', query[3])
 
-            parts = self.__getPartsFromQuery(query)
+            parts = self.__getPartsFromQuery(ctx, query)
             ret = []
 
             for part in parts:
@@ -612,11 +612,18 @@ class Glpi08(DyngroupDatabaseHelper):
         else:
             return self.__treatQueryLevel(query)
 
-    def __getPartsFromQuery(self, query):
+    def __getPartsFromQuery(self, ctx, query):
         if query[2] == 'OS':
             return [[self.os.c.name, query[3]]]
         elif query[2] == 'Entity':
-            return [[self.location.c.name, query[3]]]
+            locid = None
+            for loc in ctx.locations:
+                if self.__getName(loc) == query[3]:
+                    locid = self.__getId(loc)
+            if locid is not None:
+                return [[self.machine.c.entities_id, locid]]
+            else:
+                return [[self.location.c.name, query[3]]]
         elif query[2] == 'SOFTWARE':
             return [[self.software.c.name, query[3]]]
         elif query[2] == 'Nom':
