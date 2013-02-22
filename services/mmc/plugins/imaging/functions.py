@@ -1387,8 +1387,7 @@ class ImagingRpcProxy(RpcProxyI):
         logger = logging.getLogger()
         ret = 0
         ctx = self.currentContext
-        uuids = map(lambda c: c.uuid,
-                    ComputerProfileManager().getProfileContent(profileUUID))
+        uuids = [c.uuid for c in ComputerProfileManager().getProfileContent(profileUUID)]
         if len(uuids):
             h_macaddresses = getJustOneMacPerComputer(ctx, ComputerManager().getMachineMac(ctx, {'uuids':uuids}))
             macaddresses = h_macaddresses.values()
@@ -1412,7 +1411,7 @@ class ImagingRpcProxy(RpcProxyI):
                 ret = 0
                 # Check all MAC addresses
                 i = 0
-                for uuid, mac in macaddresses.iteritems():
+                for uuid, mac in h_macaddresses.iteritems():
                     if not pulse2.utils.isLinuxMacAddress(mac):
                         logger.info("The computer %s don't have a valid MAC address" % uuid)
                         ret = 4
@@ -1422,10 +1421,7 @@ class ImagingRpcProxy(RpcProxyI):
                 # Still no error ? Now checks that all the computers belong to the
                 # same entity
                 locations = ComputerLocationManager().getMachinesLocations(uuids)
-                try:
-                    locations_uuid = map(lambda l: l['uuid'], locations.values())
-                except IndexError:
-                    locations_uuid = []
+                locations_uuid = [l['uuid'] for l in locations.values() if 'uuid' in l]
                 if len(locations_uuid) != len(uuids):
                     # some computers have no location ?
                     logger.info("Some computers don't have location in the profile %s" % profileUUID)
