@@ -29,18 +29,18 @@ require("graph/navbar.inc.php");
 
 if (!isset($_GET['hostname'])) { $_GET['hostname'] = $_GET['cn']; }
 if (!isset($_GET['uuid'])) { $_GET['uuid'] = $_GET['objectUUID']; }
-if (!isset($_GET['part'])) { $_GET['part'] = 'Hardware'; }
+if (!isset($_GET['part'])) { $_GET['part'] = 'Summary'; }
 
 $uuid = '';
 $hostname = '';
 if (isset($_GET['uuid'])) { $uuid = $_GET['uuid']; }
 if (isset($_GET['hostname'])) { $hostname = $_GET['hostname']; }
-    
 
 $uri = getGlpiMachineUri();
 if ($uri) {
     $glpi_link = sprintf('<a href="%s" target="new">GLPI</a>', $uri.str_replace('UUID', '', $uuid));
-} else {
+}
+else {
     $glpi_link = 'GLPI';
 }
 
@@ -48,16 +48,24 @@ $p = new TabbedPageGenerator();
 $p->setSideMenu($sidemenu);
 $p->addTop(sprintf(_T("%s's inventory (%s)", "glpi"), $hostname, $glpi_link), "modules/glpi/glpi/header.php");
 
-/* TABS */
-$p->addTab("tab0", _T("Hardware", "glpi"), "", "modules/glpi/glpi/view_hardware.php", array('hostname'=>$hostname, 'uuid'=>$uuid));
-
-$i = 1;
+$i = 0;
 // TODO get the list with trads from agent (conf file...)
-foreach (array('Network'=>_T('Network', "glpi"), 'Controller'=>_T('Controller', "glpi")) as $tab=>$str) {
+
+$tabList = array(
+    'Summary' => _T('Summary', "glpi"),
+    'Hardware' => _T('Hardware', "glpi"),
+    'Disk volumes' => _T('Disk volumes', "glpi"),
+    'Network' => _T('Network', "glpi"),
+    'Software' => _T('Software', "glpi"),
+    'Administration' => _T('Administration', "glpi"),
+    'Historical' => _T('Historical', "glpi"),
+);
+
+foreach ($tabList as $tab => $str) {
     $p->addTab("tab$i", $str, "", "modules/glpi/glpi/view_part.php", array('hostname'=>$hostname, 'uuid'=>$uuid, 'part' => $tab));
     $i++;
 }
 
-$p->display();   
+$p->display();
 
 ?>

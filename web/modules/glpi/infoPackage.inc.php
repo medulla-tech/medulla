@@ -57,7 +57,13 @@ $page->addTab($tab);
 $tab = new Tab("tab1", _T("GLPI network tab", 'glpi'));
 $page->addTab($tab);
 
-$tab = new Tab("tab2", _T("GLPI controller tab", 'glpi'));
+$tab = new Tab("tab2", _T("GLPI disk tab", 'glpi'));
+$page->addTab($tab);
+
+$tab = new Tab("tab3", _T("GLPI administration tab", 'glpi'));
+$page->addTab($tab);
+
+$tab = new Tab("tab4", _T("GLPI software tab", 'glpi'));
 $page->addTab($tab);
 
 $submod->addPage($page);
@@ -72,11 +78,20 @@ $page->addTab($tab);
 $tab = new Tab("tab1", _T("GLPI network tab", 'glpi'));
 $page->addTab($tab);
 
-$tab = new Tab("tab2", _T("GLPI controller tab", 'glpi'));
+$tab = new Tab("tab2", _T("GLPI disk tab", 'glpi'));
+$page->addTab($tab);
+
+$tab = new Tab("tab3", _T("GLPI administration tab", 'glpi'));
+$page->addTab($tab);
+
+$tab = new Tab("tab4", _T("GLPI software tab", 'glpi'));
 $page->addTab($tab);
 
 $submod->addPage($page);
 
+$page = new Page("ajaxViewPart");
+$page->setFile("modules/glpi/glpi/ajaxViewPart.php", array("AJAX" =>True,"visible"=>False));
+$submod->addPage($page);
 
 unset($submod);
 /* groupes dynamiques end */
