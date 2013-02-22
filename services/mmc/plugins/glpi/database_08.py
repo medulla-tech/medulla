@@ -818,6 +818,8 @@ class Glpi08(DyngroupDatabaseHelper):
         ret = {}
         if get != None:
             for m in machines:
+                if isinstance(m, tuple):
+                    m= m[0]
                 ret[m.getUUID()] = self.__getAttr(m, get)
             return ret
 
@@ -860,7 +862,12 @@ class Glpi08(DyngroupDatabaseHelper):
             if advanced:
                 names[m.getUUID()] = m.name
         if advanced:
-            uuids = map(lambda m: m.getUUID(), machines)
+            uuids = []
+            for m in machines:
+                if isinstance(m, tuple):
+                    m = m[0]
+                uuids.append(m.getUUID())
+
             nets = self.getMachinesNetwork(uuids)
             for uuid in ret:
                 try:
