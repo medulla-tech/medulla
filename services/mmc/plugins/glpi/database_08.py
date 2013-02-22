@@ -36,15 +36,15 @@ from mmc.plugins.dyngroup.config import DGConfig
 from mmc.plugins.glpi.database_utils import DbTOA # pyflakes.ignore
 
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
-        Integer, ForeignKey, select, asc, or_, func, not_
+        Integer, ForeignKey, asc, or_, not_, desc
 from sqlalchemy.orm import create_session, mapper
-from sqlalchemy.sql import union
 from sqlalchemy.sql.expression import ColumnOperators
 
 import logging
 import re
 from sets import Set
 import datetime
+import calendar
 
 class Glpi08(DyngroupDatabaseHelper):
     """
@@ -133,8 +133,13 @@ class Glpi08(DyngroupDatabaseHelper):
 
         # declare all the glpi_device* and glpi_computer_device*
         # two of these tables have a nomenclature one (devicecasetypes and devicememorytypes) but we dont need it for the moment.
-        self.devices = ('devicecases', 'devicecontrols', 'devicedrives', 'devicegraphiccards', 'deviceharddrives', 'devicememories', \
-                        'devicemotherboards', 'devicenetworkcards', 'devicepcis', 'devicepowersupplies', 'deviceprocessors', 'devicesoundcards')
+        #
+        # List of devices:
+        # cases, controls, drives, graphiccards, harddrives, motherboards, networkcards,
+        # pcis, powersupplies, soundcards
+
+        self.devices = ('devicecases', 'devicecontrols', 'devicedrives', 'devicegraphiccards', 'deviceharddrives', \
+                        'devicemotherboards', 'devicenetworkcards', 'devicepcis', 'devicepowersupplies', 'devicesoundcards')
         for i in self.devices:
             setattr(self, i, Table("glpi_%s"%i, self.metadata, autoload = True))
             j = self.getTableName(i)
@@ -159,15 +164,50 @@ class Glpi08(DyngroupDatabaseHelper):
         self.locations = Table("glpi_locations", self.metadata, autoload = True)
         mapper(Locations, self.locations)
 
+        # logs
+        self.logs = Table("glpi_logs", self.metadata,
+            Column('items_id', Integer, ForeignKey('glpi_computers.id')),
+            autoload = True)
+        mapper(Logs, self.logs)
+
         # processor
         self.processor = Table("glpi_deviceprocessors", self.metadata, autoload = True)
         mapper(Processor, self.processor)
 
+        self.computerProcessor = Table("glpi_computers_deviceprocessors", self.metadata,
+            Column('computers_id', Integer, ForeignKey('glpi_computers.id')),
+            Column('deviceprocessors_id', Integer, ForeignKey('glpi_deviceprocessors.id')),
+            autoload = True)
+        mapper(ComputerProcessor, self.computerProcessor)
+
+        # memory
+        self.memory = Table("glpi_devicememories", self.metadata,
+            Column('devicememorytypes_id', Integer, ForeignKey('glpi_devicememorytypes.id')),
+            autoload = True)
+        mapper(Memory, self.memory)
+
+        self.memoryType = Table("glpi_devicememorytypes", self.metadata, autoload = True)
+        mapper(MemoryType, self.memoryType)
+
+        self.computerMemory = Table("glpi_computers_devicememories", self.metadata, 
+            Column('computers_id', Integer, ForeignKey('glpi_computers.id')),
+            Column('devicememories_id', Integer, ForeignKey('glpi_devicememories.id')),
+            autoload = True)
+        mapper(ComputerMemory, self.computerMemory)
+
+        # interfaces types
+
+        self.interfaceType = Table("glpi_interfacetypes", self.metadata, autoload = True)
+
         # network # TODO take care with the itemtype should we always set it to Computer?
         self.network = Table("glpi_networkports", self.metadata,
             Column('items_id', Integer, ForeignKey('glpi_computers.id')),
+            Column('networkinterfaces_id', Integer, ForeignKey('glpi_networkinterfaces.id')),
             autoload = True)
         mapper(Network, self.network)
+
+        self.networkinterfaces = Table("glpi_networkinterfaces", self.metadata, autoload = True)
+        mapper(NetworkInterfaces, self.networkinterfaces)
 
         self.net = Table("glpi_networks", self.metadata, autoload = True)
         mapper(Net, self.net)
@@ -182,6 +222,28 @@ class Glpi08(DyngroupDatabaseHelper):
         # domain
         self.domain = Table('glpi_domains', self.metadata, autoload = True)
         mapper(Domain, self.domain)
+        
+        # glpi_infocoms
+        self.infocoms = Table('glpi_infocoms', self.metadata,
+                              Column('suppliers_id', Integer, ForeignKey('glpi_suppliers.id')),
+                              Column('items_id', Integer, ForeignKey('glpi_computers.id')),
+                              autoload = True)
+        mapper(Infocoms, self.infocoms)
+
+        # glpi_suppliers
+        self.suppliers = Table('glpi_suppliers', self.metadata, autoload = True)
+        mapper(Suppliers, self.suppliers)
+
+        # glpi_filesystems
+        self.diskfs = Table('glpi_filesystems', self.metadata, autoload = True)
+        mapper(DiskFs, self.diskfs)
+
+        # glpi_computerdisks
+        self.disk = Table('glpi_computerdisks', self.metadata,
+                          Column('computers_id', Integer, ForeignKey('glpi_computers.id')),
+                          Column('filesystems_id', Integer, ForeignKey('glpi_filesystems.id')),
+                          autoload = True)
+        mapper(Disk, self.disk)
 
         # machine (we need the foreign key, so we need to declare the table by hand ...
         #          as we don't need all columns, we don't declare them all)
@@ -197,6 +259,7 @@ class Glpi08(DyngroupDatabaseHelper):
             Column('computermodels_id', Integer, ForeignKey('glpi_computermodels.id')),
             Column('computertypes_id', Integer, ForeignKey('glpi_computertypes.id')),
             Column('groups_id', Integer, ForeignKey('glpi_groups.id')),
+            Column('manufacturers_id', Integer, ForeignKey('glpi_manufacturers.id')),
             #Column('FK_glpi_enterprise', Integer, ForeignKey('glpi_enterprises.id')),
             Column('name', String(255), nullable=False),
             Column('serial', String(255), nullable=False),
@@ -233,8 +296,14 @@ class Glpi08(DyngroupDatabaseHelper):
             Column('is_recursive', Integer))
         mapper(UserProfile, self.userprofile)
 
+        # glpi_manufacturers
+        self.manufacturers = Table("glpi_manufacturers", self.metadata, autoload = True)
+        mapper(Manufacturers, self.manufacturers)
+
         # software
-        self.software = Table("glpi_softwares", self.metadata, autoload = True)
+        self.software = Table("glpi_softwares", self.metadata,
+                              Column('manufacturers_id', Integer, ForeignKey('glpi_manufacturers.id')),
+                              autoload = True)
         mapper(Software, self.software)
 
         # glpi_inst_software
@@ -306,9 +375,10 @@ class Glpi08(DyngroupDatabaseHelper):
             complete_ctx(ctx)
         return self.machine.c.entities_id.in_(ctx.locationsid + other_locids)
 
-    def __getRestrictedComputersListQuery(self, ctx, filt = None, session = create_session()):
+    def __getRestrictedComputersListQuery(self, ctx, filt = None, session = create_session(), displayList = False):
         """
         Get the sqlalchemy query to get a list of computers with some filters
+        If displayList is True, we are displaying computers list
         """
         if session == None:
             session = create_session()
@@ -316,6 +386,17 @@ class Glpi08(DyngroupDatabaseHelper):
         if filt:
             # filtering on query
             join_query = self.machine
+
+            if displayList:
+                if 'os' in self.config.summary:
+                    query = query.add_column(self.os.c.name)
+                if 'type' in self.config.summary:
+                    query = query.add_column(self.glpi_computertypes.c.name)
+                if 'entity' in self.config.summary:
+                    query = query.add_column(self.location.c.name) # entities
+                if 'location' in self.config.summary:
+                    query = query.add_column(self.locations.c.name) # locations
+
             query_filter = None
 
             filters = [self.machine.c.is_deleted == 0, self.machine.c.is_template == 0, self.__filter_on_filter(query), self.__filter_on_entity_filter(query, ctx)]
@@ -323,18 +404,18 @@ class Glpi08(DyngroupDatabaseHelper):
             join_query, query_filter = self.filter(ctx, self.machine, filt, session.query(Machine), self.machine.c.id, filters)
 
             # filtering on locations
-            try:
+            if 'location' in filt:
                 location = filt['location']
                 if location == '' or location == u'' or not self.displayLocalisationBar:
                     location = None
-            except KeyError:
+            else:
                 location = None
 
-            try:
+            if 'ctxlocation' in filt:
                 ctxlocation = filt['ctxlocation']
                 if not self.displayLocalisationBar:
                     ctxlocation = None
-            except KeyError:
+            else:
                 ctxlocation = None
 
             if ctxlocation != None:
@@ -363,34 +444,52 @@ class Glpi08(DyngroupDatabaseHelper):
 
                 location = self.__getName(location)
                 query_filter = self.__addQueryFilter(query_filter, (self.location.c.name == location))
+
+            if displayList:
+                if 'os' in self.config.summary:
+                    join_query = join_query.outerjoin(self.os)
+                if 'type' in self.config.summary:
+                    join_query = join_query.outerjoin(self.glpi_computertypes)
+                if 'location' in self.config.summary:
+                    join_query = join_query.outerjoin(self.locations)
+
             query = query.select_from(join_query).filter(query_filter)
             query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
             query = self.__filter_on(query)
             query = self.__filter_on_entity(query, ctx)
 
-            # filtering on machines (name or uuid)
-            try:
-                query = query.filter(self.machine.c.name.like(filt['hostname']+'%'))
-            except KeyError:
-                pass
-            try:
+            if 'hostname' in filt:
+                if displayList:
+                    clauses = []
+                    if 'cn' in self.config.summary:
+                        clauses.append(self.machine.c.name.like('%'+filt['hostname']+'%'))
+                    if 'os' in self.config.summary:
+                        clauses.append(self.os.c.name.like('%'+filt['hostname']+'%'))
+                    if 'description' in self.config.summary:
+                        clauses.append(self.machine.c.comment.like('%'+filt['hostname']+'%'))
+                    if 'type' in self.config.summary:
+                        clauses.append(self.glpi_computertypes.c.name.like('%'+filt['hostname']+'%'))
+                    if 'user' in self.config.summary:
+                        clauses.append(self.machine.c.contact.like('%'+filt['hostname']+'%'))
+                    if 'entity' in self.config.summary:
+                        clauses.append(self.location.c.name.like('%'+filt['hostname']+'%'))
+                    if 'location' in self.config.summary:
+                        clauses.append(self.locations.c.name.like('%'+filt['hostname']+'%'))
+                    # Filtering on computer list page
+                    if clauses:
+                        query = query.filter(or_(*clauses))
+                else:
+                    # filtering on machines (name or uuid)
+                    query = query.filter(self.machine.c.name.like(filt['hostname']+'%'))
+            if 'name' in filt:
                 query = query.filter(self.machine.c.name.like(filt['name']+'%'))
-            except KeyError:
-                pass
-            try:
+            if 'filter' in filt:
                 query = query.filter(self.machine.c.name.like(filt['filter']+'%'))
-            except KeyError:
-                pass
-
-            try:
+            if 'uuid' in filt:
                 query = self.filterOnUUID(query, filt['uuid'])
-            except KeyError:
-                pass
-
             if 'uuids' in filt and type(filt['uuids']) == list and len(filt['uuids']) > 0:
                 query = self.filterOnUUID(query, filt['uuids'])
-
-            try:
+            if 'gid' in filt:
                 gid = filt['gid']
                 machines = []
                 if ComputerGroupManager().isrequest_group(ctx, gid):
@@ -398,19 +497,13 @@ class Glpi08(DyngroupDatabaseHelper):
                 else:
                     machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, gid, 0, -1, ''))
                 query = query.filter(self.machine.c.id.in_(machines))
-
-            except KeyError:
-                pass
-
-            try:
+            if 'request' in filt:
                 request = filt['request']
                 bool = None
-                if filt.has_key('equ_bool'):
+                if 'equ_bool' in filt:
                     bool = filt['equ_bool']
                 machines = map(lambda m: fromUUID(m), ComputerGroupManager().request(ctx, request, bool, 0, -1, ''))
                 query = query.filter(self.machine.c.id.in_(machines))
-            except KeyError:
-                pass
 
         return query
 
@@ -574,14 +667,14 @@ class Glpi08(DyngroupDatabaseHelper):
         """
         Get the first computers that match filters parameters
         """
-        ret = self.getRestrictedComputersList(ctx, 0, 10, filt)
+        ret = self.getRestrictedComputersList(ctx, 0, 10, filt, displayList=False)
         if len(ret) != 1:
             for i in ['location', 'ctxlocation']:
                 try:
                     filt.pop(i)
                 except:
                     pass
-            ret = self.getRestrictedComputersList(ctx, 0, 10, filt)
+            ret = self.getRestrictedComputersList(ctx, 0, 10, filt, displayList=False)
             if len(ret) > 0:
                 raise Exception("NOPERM##%s" % (ret[0][1]['fullname']))
             return False
@@ -612,14 +705,14 @@ class Glpi08(DyngroupDatabaseHelper):
         Get the size of the computer list that match filters parameters
         """
         session = create_session()
-        query = self.__getRestrictedComputersListQuery(ctx, filt, session)
+        query = self.__getRestrictedComputersListQuery(ctx, filt, session, displayList = True)
         if query == None:
             return 0
         ret = query.count()
         session.close()
         return ret
 
-    def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = None, advanced = True, justId = False, toH = False):
+    def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = None, advanced = True, justId = False, toH = False, displayList = None):
         """
         Get the computer list that match filters parameters between min and max
 
@@ -628,7 +721,13 @@ class Glpi08(DyngroupDatabaseHelper):
         session = create_session()
         ret = {}
 
-        query = self.__getRestrictedComputersListQuery(ctx, filt, session)
+        if displayList is None:
+            if justId or toH:
+                displayList = False
+            else:
+                displayList = True
+
+        query = self.__getRestrictedComputersListQuery(ctx, filt, session, displayList)
         if query == None:
             return {}
 
@@ -696,7 +795,7 @@ class Glpi08(DyngroupDatabaseHelper):
         Modify the given query to filter on the machine UUID
         """
         if type(uuid) == list:
-            return query.filter(self.machine.c.id.in_(map(lambda a:int(str(a).replace("UUID", "")), uuid)))
+            return query.filter(self.machine.c.id.in_([int(str(a).replace("UUID", "")) for a in uuid]))
         else:
             return query.filter(self.machine.c.id == int(str(uuid).replace("UUID", "")))
 
@@ -724,12 +823,42 @@ class Glpi08(DyngroupDatabaseHelper):
 
         names = {}
         for m in machines:
-            ret[m.getUUID()] = [None, {
+            displayList = False
+            if isinstance(m, tuple):
+                displayList = True
+                # m, os, type, entity, location = m
+                l = list(m)
+                if 'location' in self.config.summary:
+                    location = l.pop()
+                if 'entity' in self.config.summary:
+                    entity = l.pop()
+                if 'type' in self.config.summary:
+                    type = l.pop()
+                if 'os' in self.config.summary:
+                    os = l.pop()
+                m = l.pop()
+
+            datas = {
                 'cn': [m.name],
                 'displayName': [m.comment],
-                'objectUUID': [m.getUUID()]
-            }]
-            names[m.getUUID()] = m.name
+                'objectUUID': [m.getUUID()],
+                'user': [m.contact],
+            }
+
+            if displayList:
+                if 'location' in self.config.summary:
+                    datas['location'] = location
+                if 'entity' in self.config.summary:
+                    datas['entity'] = entity
+                if 'type' in self.config.summary:
+                    datas['type'] = type
+                if 'os' in self.config.summary:
+                    datas['os'] = os
+
+            ret[m.getUUID()] = [None, datas]
+
+            if advanced:
+                names[m.getUUID()] = m.name
         if advanced:
             uuids = map(lambda m: m.getUUID(), machines)
             nets = self.getMachinesNetwork(uuids)
@@ -1047,35 +1176,6 @@ class Glpi08(DyngroupDatabaseHelper):
         return self.doesUserHaveAccessToMachines(ctx, [machine_uuid])
 
     ##################### for inventory purpose (use the same API than OCSinventory to keep the same GUI)
-    def getAllDevices(self, uuid):
-        my_union = []
-        session = create_session()
-        for i in self.devices:
-            glpi_table = getattr(self, 'computers_%s'%(i))
-            my_union.append(select([glpi_table.c.id, getattr(glpi_table.c, "%s_id"%i), func.concat('', i).label('type')], glpi_table.c.computers_id == fromUUID(uuid)))
-        query = union(*my_union)
-
-        conn = self.getDbConnection()
-        query = conn.execute(query).fetchall()
-        conn.close()
-
-        session.close()
-        ret = []
-        query.sort(lambda x, y: cmp(x[2], y[2]))
-        for i in query:
-            ret.append(self.getDeviceByType(i[1], i[2]))
-        return ret
-
-    def getDeviceByType(self, did, device_type):
-        k = getattr(self, device_type)
-        klass = self.klass[device_type]
-        session = create_session()
-        query = session.query(klass).filter(k.c.id == did).first()
-        session.close()
-        ret = query.to_a()
-        ret.append(['type', device_type.replace('device', '')])
-        return ret
-
     def getLastMachineInventoryFull(self, uuid):
         session = create_session()
         # there is glpi_entreprise missing
@@ -1116,16 +1216,361 @@ class Glpi08(DyngroupDatabaseHelper):
         else:
             return False
 
-    def getLastMachineInventoryPart(self, uuid, part):
+    def getWarrantyEndDate(self, infocoms):
+        """
+        Get a computer's warranty end date
+        @param infocoms: Content of glpi_infocoms SQL table
+        @type infocoms: self.infocoms sqlalchemy object
+
+        @return: computer's warranty end date if exists, else None
+        @rtype: string or None
+        """
+
+        def add_months(sourcedate, months):
+            """
+            Add x months to a datetime object
+            thanks to http://stackoverflow.com/questions/4130922/how-to-increment-datetime-month-in-python
+            """
+            month = sourcedate.month - 1 + months
+            year = sourcedate.year + month / 12
+            month = month % 12 + 1
+            day = min(sourcedate.day, calendar.monthrange(year, month)[1])
+            return datetime.date(year,month,day)
+
+        if infocoms is not None and infocoms.warranty_date is not None:
+            endDate = add_months(infocoms.warranty_date, infocoms.warranty_duration)
+            return endDate.strftime('%Y-%m-%d')
+
+        return ''
+
+    def countLastMachineInventoryPart(self, uuid, part, filt = None):
+        return self.getLastMachineInventoryPart(uuid, part, count = True)
+
+    def getLastMachineInventoryPart(self, uuid, part, min = 0, max = -1, filt = None, count = False):
+        session = create_session()
         if part == 'Network':
-            session = create_session()
-            query = self.filterOnUUID(session.query(Network).select_from(self.machine.join(self.network)), uuid).all()
-            ret = map(lambda a:a.to_a(), query)
-            session.close()
-        elif part == 'Controller':
-            ret = self.getAllDevices(uuid)
+            query = self.filterOnUUID(
+                session.query(Network).add_column(self.networkinterfaces.c.name) \
+                .select_from(
+                    self.machine.outerjoin(self.network).outerjoin(self.networkinterfaces)
+                ), uuid)
+            if count:
+                ret = query.count()
+            else:
+                ret = []
+                for network, interface in query:
+                    l = [
+                        ['Name', network.name],
+                        ['Network Type', interface],
+                        ['MAC Address', network.mac],
+                        ['IP', network.ip],
+                        ['Netmask', network.netmask],
+                        ['Gateway', network.gateway],
+                    ]
+                    ret.append(l)
+        elif part == 'Disk volumes':
+            query = self.filterOnUUID(
+                session.query(Disk).add_column(self.diskfs.c.name).select_from(
+                    self.machine.outerjoin(self.disk).outerjoin(self.diskfs)
+                ), uuid)
+            if count:
+                ret = query.count()
+            else:
+                ret = []
+                for disk, diskfs in query:
+                    if diskfs not in ['rootfs', 'tmpfs', 'devtmpfs']:
+                        l = [
+                            ['Name', disk.name],
+                            ['Partition', disk.device],
+                            ['Mountpoint', disk.mountpoint],
+                            ['File System', diskfs],
+                            ['Global Size', str(disk.totalsize) + ' MB'],
+                            ['Free Size', str(disk.freesize) + ' MB'],
+                        ]
+                        ret.append(l)
+        elif part == 'Administration':
+            query = self.filterOnUUID(
+                session.query(Infocoms).add_column(self.suppliers.c.name).select_from(
+                    self.machine.outerjoin(self.infocoms).outerjoin(self.suppliers)
+                ), uuid)
+
+            if count:
+                ret = query.count()
+            else:
+                ret = []
+                for infocoms, supplierName in query:
+                    endDate = self.getWarrantyEndDate(infocoms)
+
+                    l = [
+                        ['Supplier', supplierName],
+                        ['Invoice Number', infocoms and infocoms.bill or ''],
+                        ['Warranty End Date', endDate],
+                    ]
+                    ret.append(l)
+        elif part == 'Software':
+            query = self.filterOnUUID(
+                session.query(Software).add_column(self.manufacturers.c.name) \
+                .add_column(self.softwareversions.c.name).select_from(
+                    self.machine.outerjoin(self.inst_software) \
+                    .outerjoin(self.softwareversions) \
+                    .outerjoin(self.software) \
+                    .outerjoin(self.manufacturers)
+                ), uuid)
+            query = query.order_by(self.software.c.name)
+
+            if filt:
+                clauses = []
+                clauses.append(self.manufacturers.c.name.like('%'+filt+'%'))
+                clauses.append(self.softwareversions.c.name.like('%'+filt+'%'))
+                clauses.append(self.software.c.name.like('%'+filt+'%'))
+                query = query.filter(or_(*clauses))
+
+            if min != 0:
+                query = query.offset(min)
+            if max != -1:
+                max = int(max) - int(min)
+                query = query.limit(max)
+
+            if count:
+                ret = query.count()
+            else:
+                ret = []
+                for software, manufacturer, version in query:
+                    l = [
+                        ['Company', manufacturer],
+                        ['Product', software.name],
+                        ['Product Version', version],
+                    ]
+                    ret.append(l)
+        elif part == 'Summary':
+            query = self.filterOnUUID(
+                session.query(Machine).add_entity(Infocoms) \
+                .add_column(self.location.c.name) \
+                .add_column(self.locations.c.name) \
+                .add_column(self.os.c.name) \
+                .add_column(self.manufacturers.c.name) \
+                .add_column(self.glpi_computertypes.c.name) \
+                .add_column(self.glpi_computermodels.c.name) \
+                .select_from(
+                    self.machine.outerjoin(self.location) \
+                    .outerjoin(self.locations) \
+                    .outerjoin(self.os) \
+                    .outerjoin(self.manufacturers) \
+                    .outerjoin(self.infocoms) \
+                    .outerjoin(self.glpi_computertypes) \
+                    .outerjoin(self.glpi_computermodels)
+                ), uuid)
+
+            if count:
+                ret = query.count()
+            else:
+                ret = []
+                for machine, infocoms, entity, location, os, manufacturer, type, model in query:
+                    endDate = self.getWarrantyEndDate(infocoms)
+
+                    modelType = []
+                    if model is not None:
+                        modelType.append(model)
+                    if type is not None:
+                        modelType.append(type)
+
+                    if len(modelType) == 0:
+                        modelType = ''
+                    elif len(modelType) == 1:
+                        modelType = modelType[0]
+                    elif len(modelType) == 2:
+                        modelType = " / ".join(modelType)
+
+                    l = [
+                        ['Computer Name', machine.name],
+                        ['Description', machine.comment],
+                        ['Entity (Location)', '%s (%s)' % (entity, location)],
+                        ['Last logged user', machine.contact],
+                        ['OS', os],
+                        ['Manufacturer', manufacturer],
+                        ['Model / Type', modelType],
+                        ['Warranty End Date', endDate],
+                    ]
+                    ret.append(l)
+        elif part == 'Processors':
+            query = self.filterOnUUID(
+                session.query(Processor).select_from(
+                    self.machine.outerjoin(self.computerProcessor) \
+                    .outerjoin(self.processor)
+                ), uuid)
+
+            if count:
+                ret = query.count()
+            else:
+                ret = []
+                for processor in query:
+                    l = [
+                        ['Name', processor.designation],
+                        ['Frequency', str(processor.specif_default) + ' Hz'],
+                    ]
+                    ret.append(l)
+        elif part == 'Memories':
+            query = self.filterOnUUID(
+                session.query(Memory).add_column(self.memoryType.c.name).select_from(
+                    self.machine.outerjoin(self.computerMemory) \
+                    .outerjoin(self.memory) \
+                    .outerjoin(self.memoryType)
+                ), uuid)
+
+            if count:
+                ret = query.count()
+            else:
+                ret = []
+                for memory, type in query:
+                    l = [
+                        ['Name', memory.designation],
+                        ['Type', type],
+                        ['Frequency', str(memory.frequence) + ' Hz'],
+                        ['Size', str(memory.specif_default) + ' MB'],
+                    ]
+                    ret.append(l)
+        elif part == 'Harddrives':
+            query = self.filterOnUUID(
+                session.query(self.klass['deviceharddrives']).select_from(
+                    self.machine.outerjoin(self.computers_deviceharddrives) \
+                    .outerjoin(self.deviceharddrives)
+                ), uuid)
+
+            if count:
+                ret = query.count()
+            else:
+                ret = []
+                for hd in query:
+                    l = [
+                        ['Name', hd.designation],
+                        ['Capacity', str(hd.specif_default) + ' MB'],
+                    ]
+                    ret.append(l)
+        elif part == 'NetworkCards':
+            query = self.filterOnUUID(
+                session.query(self.klass['devicenetworkcards']).add_column(self.computers_devicenetworkcards.c.specificity) \
+                .select_from(
+                    self.machine.outerjoin(self.computers_devicenetworkcards) \
+                    .outerjoin(self.devicenetworkcards)
+                ), uuid)
+
+            if count:
+                ret = query.count()
+            else:
+                ret = []
+                for network, mac in query:
+                    l = [
+                        ['Name', network.designation],
+                        ['Bandwidth', network.bandwidth],
+                        ['MAC', mac],
+                    ]
+                    ret.append(l)
+        elif part == 'Drives':
+            query = self.filterOnUUID(
+                session.query(self.klass['devicedrives']).select_from(
+                    self.machine.outerjoin(self.computers_devicedrives) \
+                    .outerjoin(self.devicedrives)
+                ), uuid)
+
+            if count:
+                ret = query.count()
+            else:
+                ret = []
+                for drive in query:
+                    l = [
+                        ['Name', drive.designation],
+                        ['Writer', drive.is_writer and 'Yes' or 'No'],
+                    ]
+                    ret.append(l)
+        elif part == 'GraphicCards':
+            query = self.filterOnUUID(
+                session.query(self.klass['devicegraphiccards']).add_column(self.interfaceType.c.name) \
+                .select_from(
+                    self.machine.outerjoin(self.computers_devicegraphiccards) \
+                    .outerjoin(self.devicegraphiccards) \
+                    .outerjoin(self.interfaceType, self.interfaceType.c.id == self.devicegraphiccards.c.interfacetypes_id)
+                ), uuid)
+
+            if count:
+                ret = query.count()
+            else:
+                ret = []
+                for card, interfaceType in query:
+                    l = [
+                        ['Name', card.designation],
+                        ['Memory', str(card.specif_default) + ' MB'],
+                        ['Type', interfaceType],
+                    ]
+                    ret.append(l)
+        elif part == 'SoundCards':
+            query = self.filterOnUUID(
+                session.query(self.klass['devicesoundcards']).select_from(
+                    self.machine.outerjoin(self.computers_devicesoundcards) \
+                    .outerjoin(self.devicesoundcards)
+                ), uuid)
+
+            if count:
+                ret = query.count()
+            else:
+                ret = []
+                for sound in query:
+                    l = [
+                        ['Name', sound.designation],
+                    ]
+                    ret.append(l)
+        elif part == 'Others':
+            query = self.filterOnUUID(
+                session.query(self.klass['devicepcis']).select_from(
+                    self.machine.outerjoin(self.computers_devicepcis) \
+                    .outerjoin(self.devicepcis)
+                ), uuid)
+
+            if count:
+                ret = query.count()
+            else:
+                ret = []
+                for pci in query:
+                    l = [
+                        ['Name', pci.designation],
+                        ['Comment', pci.comment],
+                    ]
+                    ret.append(l)
+        elif part == 'Historical':
+            query = self.filterOnUUID(
+                session.query(Logs).select_from(
+                    self.machine.outerjoin(self.logs)
+                ), uuid)
+
+            now = datetime.datetime.now()
+            orange = now - datetime.timedelta(10)
+
+            query.filter(self.logs.c.date_mod > orange)
+
+            if min != 0:
+                query = query.offset(min)
+            if max != -1:
+                max = int(max) - int(min)
+                query = query.limit(max)
+
+            if count:
+                ret = query.count()
+            else:
+                ret = []
+                for log in query:
+                    l = [
+                        ['Log', log.id],
+                        ['Date', log.date_mod.strftime('%Y-%m-%d %H:%m')],
+                        ['User', log.user_name],
+                        ['Field', log.itemtype],
+                        ['Old', log.old_value],
+                        ['New', log.new_value],
+                    ]
+                    ret.append(l)
         else:
             ret = None
+
+        session.close()
+        logging.getLogger().error(ret)
         return ret
 
     ##################### functions used by querymanager
@@ -1831,7 +2276,34 @@ class Location(object):
             'level':self.level
         }
 
+class DiskFs(object):
+    pass
+
+class Disk(object):
+    pass
+
+class Suppliers(object):
+    pass
+
+class Infocoms(object):
+    pass
+
 class Processor(object):
+    pass
+
+class ComputerProcessor(object):
+    pass
+
+class Memory(object):
+    pass
+
+class MemoryType(object):
+    pass
+
+class ComputerMemory(object):
+    pass
+
+class Logs(object):
     pass
 
 class User(object):
@@ -1855,17 +2327,6 @@ class Network(object):
             'subnet': self.subnet
         }
 
-    def to_a(self):
-        return [
-            ['uuid', toUUID(self.id)],
-            ['name', self.name],
-            ['ifaddr', self.ip],
-            ['ifmac', self.mac],
-            ['netmask', self.netmask],
-            ['gateway', self.gateway],
-            ['subnet', self.subnet]
-        ]
-
 class OS(object):
     pass
 
@@ -1873,6 +2334,9 @@ class ComputerDevice(object):
     pass
 
 class Domain(object):
+    pass
+
+class Manufacturers(object):
     pass
 
 class Software(object):
@@ -1900,5 +2364,8 @@ class Locations(object):
     pass
 
 class Net(object):
+    pass
+
+class NetworkInterfaces(object):
     pass
 

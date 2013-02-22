@@ -34,8 +34,12 @@ function getGlpiEM($part) {
     return xmlCall("glpi.getInventoryEM", array($part));
 }
 
-function getLastMachineGlpiPart($uuid, $part) {
-    return xmlCall("glpi.getLastMachineInventoryPart", array($uuid, $part));
+function getLastMachineGlpiPart($uuid, $part, $start, $end, $filter) {
+    return xmlCall("glpi.getLastMachineInventoryPart", array($uuid, $part, $start, $end, $filter));
+}
+
+function countLastMachineGlpiPart($uuid, $part, $filter) {
+    return xmlCall("glpi.countLastMachineInventoryPart", array($uuid, $part, $filter));
 }
 
 function getGlpiMachineUri() {

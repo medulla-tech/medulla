@@ -36,6 +36,9 @@ class GlpiConfig(PluginConfig):
     # state section
     orange = 10
     red = 35
+
+    # computer_list section
+    summary = ['cn', 'description', 'os', 'type', 'user', 'entity', 'location']
     
     def readConf(self):
         self.dbdriver = self.get("main", "dbdriver")
@@ -78,10 +81,14 @@ class GlpiConfig(PluginConfig):
             logging.getLogger().debug("will filter machines on %s" % (str(self.filter_on)))
         except:
             self.filter_on = None
+        
         if self.has_option("state", "orange"):
             self.orange = self.getint("state", "orange")
         if self.has_option("state", "red"):
             self.red = self.getint("state", "red")
+
+        if self.has_option("computer_list", "summary"):
+            self.summary = self.get("computer_list", "summary").split(' ')
 
 class GlpiQueryManagerConfig(PluginConfig):
     activate = False

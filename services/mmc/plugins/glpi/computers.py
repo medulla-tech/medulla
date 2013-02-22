@@ -231,6 +231,24 @@ class GlpiComputers(ComputerI):
                 return None
         return ret
 
+    def getComputersListHeaders(self, ctx):
+        ret = []
+        if 'cn' in self.config.summary:
+            ret.append(['cn', 'Computer Name'])
+        if 'os' in self.config.summary:
+            ret.append(['os', 'Operating System'])
+        if 'description' in self.config.summary:
+            ret.append(['displayName', 'Description'])
+        if 'type' in self.config.summary:
+            ret.append(['type', 'Computer Type'])
+        if 'user' in self.config.summary:
+            ret.append(['user', 'Last Logged User'])
+        if 'entity' in self.config.summary:
+            ret.append(['entity', 'Entity'])
+        if 'location' in self.config.summary:
+            ret.append(['location', 'Location'])
+
+        return ret
 
     def isComputerNameAvailable(self, ctx, locationUUID, name):
         return self.glpi.isComputerNameAvailable(ctx, locationUUID, name)
