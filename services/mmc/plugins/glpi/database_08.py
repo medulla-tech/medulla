@@ -420,30 +420,20 @@ class Glpi08(DyngroupDatabaseHelper):
 
             if ctxlocation != None:
                 locsid = []
-                locs = []
-                if type(ctxlocation) == list:
+                if isinstance(ctxlocation, list):
                     for loc in ctxlocation:
-                        locs.append(self.__getName(loc))
                         locsid.append(self.__getId(loc))
                 join_query = join_query.join(self.location)
 
                 if location != None:
                     locationid = int(location.replace('UUID', ''))
-                    location = self.__getName(location)
                     try:
                         locsid.index(locationid) # just check that location is in locs, or throw an exception
-                        query_filter = self.__addQueryFilter(query_filter, (self.location.c.name == location))
+                        query_filter = self.__addQueryFilter(query_filter, (self.machine.c.entities_id == locationid))
                     except ValueError:
                         self.logger.warn("User '%s' is trying to get the content of an unauthorized entity : '%s'" % (ctx.userid, location))
                         session.close()
                         return None
-                else:
-                    query_filter = self.__addQueryFilter(query_filter, self.location.c.name.in_(locs))
-            elif location != None:
-                join_query = join_query.join(self.location)
-
-                location = self.__getName(location)
-                query_filter = self.__addQueryFilter(query_filter, (self.location.c.name == location))
 
             if displayList:
                 if 'os' in self.config.summary:
@@ -705,7 +695,7 @@ class Glpi08(DyngroupDatabaseHelper):
         Get the size of the computer list that match filters parameters
         """
         session = create_session()
-        query = self.__getRestrictedComputersListQuery(ctx, filt, session, displayList = True)
+        query = self.__getRestrictedComputersListQuery(ctx, filt, session)
         if query == None:
             return 0
         ret = query.count()
@@ -731,7 +721,7 @@ class Glpi08(DyngroupDatabaseHelper):
         if query == None:
             return {}
 
-        query = query.order_by(asc(self.machine.c.name))
+        #query = query.order_by(asc(self.machine.c.name))
 
         if min != 0:
             query = query.offset(min)
