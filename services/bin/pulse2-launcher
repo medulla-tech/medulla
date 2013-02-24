@@ -29,6 +29,7 @@ import xmlrpclib
 import time
 import random
 import psutil
+from threading import Semaphore
 
 # Twisted
 from twisted.internet import epollreactor
@@ -73,7 +74,16 @@ class CommandsQueue (Singleton) :
     """ Input buffer to stocking the executing orders """
 
     content = []
+    semaphore = Semaphore(1)
 
+    def __lock(self):
+        """ Queue access locking """
+        self.semaphore.acquire(True)
+
+    def __unlock(self):
+        """ Queue access unlocking """
+        self.semaphore.release()
+ 
     def put(self, fnc, args, kwargs):
         """ 
         Adding a function to buffer
@@ -88,8 +98,9 @@ class CommandsQueue (Singleton) :
         @type kwargs: dict
 
         """
-        
+        self.__lock()        
         self.content.append((fnc, args, kwargs))
+        self.__unlock()
         return True
 
     def get_first(self) :
@@ -100,7 +111,10 @@ class CommandsQueue (Singleton) :
         @rtype: tuple
         """
         if len(self.content) > 0 :
-            return self.content.pop(0)
+            self.__lock()
+            ret = self.content.pop(0)
+            self.__unlock()
+            return ret
         else :
             return None
 
