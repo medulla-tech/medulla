@@ -36,7 +36,7 @@ from mmc.plugins.dyngroup.config import DGConfig
 from mmc.plugins.glpi.database_utils import DbTOA # pyflakes.ignore
 
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
-        Integer, ForeignKey, asc, or_, not_
+        Integer, ForeignKey, asc, or_, not_, desc
 from sqlalchemy.orm import create_session, mapper
 from sqlalchemy.sql.expression import ColumnOperators
 
@@ -1559,35 +1559,39 @@ class Glpi08(DyngroupDatabaseHelper):
                         ]
                         ret.append(l)
         elif part == 'Historical':
-            query = self.filterOnUUID(
-                session.query(Logs).select_from(
-                    self.machine.outerjoin(self.logs)
-                ), uuid)
-
-            now = datetime.datetime.now()
-            orange = now - datetime.timedelta(10)
-
-            query.filter(self.logs.c.date_mod > orange)
-
-            if min != 0:
-                query = query.offset(min)
-            if max != -1:
-                max = int(max) - int(min)
-                query = query.limit(max)
+            query = session.query(Logs)
+            query = query.filter(and_(
+                self.logs.c.items_id == int(uuid.replace('UUID', '')),
+                self.logs.c.itemtype == "Computer"
+            ))
 
             if count:
                 ret = query.count()
             else:
+                query = query.order_by(desc(self.logs.c.date_mod))
+
+                if min != 0:
+                    query = query.offset(min)
+                if max != -1:
+                    max = int(max) - int(min)
+                    query = query.limit(max)
+
                 ret = []
                 for log in query:
                     if log is not None:
+                        update = ''
+                        if log.old_value == '' and log.new_value != '':
+                            update = '[+] %s' % log.new_value
+                        elif log.old_value != '' and log.new_value == '':
+                            update = '[-] %s' % log.old_value
+                        else:
+                            update = '%s --> %s' % (log.old_value, log.new_value)
+
                         l = [
-                            ['Log', log.id],
+                            ['Log Id', log.id],
                             ['Date', log.date_mod.strftime('%Y-%m-%d %H:%m')],
                             ['User', log.user_name],
-                            ['Field', log.itemtype],
-                            ['Old', log.old_value],
-                            ['New', log.new_value],
+                            ['Update', update],
                         ]
                         ret.append(l)
         else:
