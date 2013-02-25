@@ -715,12 +715,16 @@ class Glpi08(DyngroupDatabaseHelper):
         Get the computer list that match filters parameters between min and max
 
         FIXME: may return a list or a dict according to the parameters
+
+        @param displayList: if True, we are displaying Computers list main page
+        @type displayList: None or bool
         """
         session = create_session()
         ret = {}
 
+        # If we are displaying Computers list main page, set displayList to True
         if displayList is None:
-            if justId or toH:
+            if justId or toH or 'uuid' in filt: # if 'uuid' in filt: used where adding a command to a group
                 displayList = False
             else:
                 displayList = True
