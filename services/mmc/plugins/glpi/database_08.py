@@ -411,6 +411,9 @@ class Glpi08(DyngroupDatabaseHelper):
             else:
                 location = None
 
+            if 'entity_uuid' in filt:
+                location = filt['entity_uuid']
+
             if 'ctxlocation' in filt:
                 ctxlocation = filt['ctxlocation']
                 if not self.displayLocalisationBar:
