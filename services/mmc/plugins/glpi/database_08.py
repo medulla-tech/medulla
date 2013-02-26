@@ -1409,7 +1409,8 @@ class Glpi08(DyngroupDatabaseHelper):
                     ret.append(l)
         elif part == 'Processors':
             query = self.filterOnUUID(
-                session.query(Processor).select_from(
+                session.query(ComputerProcessor).add_column(self.processor.c.designation) \
+                .select_from(
                     self.machine.outerjoin(self.computerProcessor) \
                     .outerjoin(self.processor)
                 ), uuid)
@@ -1418,16 +1419,19 @@ class Glpi08(DyngroupDatabaseHelper):
                 ret = query.count()
             else:
                 ret = []
-                for processor in query:
+                for processor, designation in query:
                     if processor is not None:
                         l = [
-                            ['Name', processor.designation],
-                            ['Frequency', str(processor.specif_default) + ' Hz'],
+                            ['Name', designation],
+                            ['Frequency', str(processor.specificity) + ' Hz'],
                         ]
                         ret.append(l)
         elif part == 'Memories':
             query = self.filterOnUUID(
-                session.query(Memory).add_column(self.memoryType.c.name).select_from(
+                session.query(ComputerMemory) \
+                .add_column(self.memoryType.c.name) \
+                .add_column(self.memory.c.frequence) \
+                .add_column(self.memory.c.designation).select_from(
                     self.machine.outerjoin(self.computerMemory) \
                     .outerjoin(self.memory) \
                     .outerjoin(self.memoryType)
@@ -1437,18 +1441,20 @@ class Glpi08(DyngroupDatabaseHelper):
                 ret = query.count()
             else:
                 ret = []
-                for memory, type in query:
+                for memory, type, frequence, designation in query:
                     if memory is not None:
                         l = [
-                            ['Name', memory.designation],
+                            ['Name', designation],
                             ['Type', type],
-                            ['Frequency', str(memory.frequence) + ' Hz'],
-                            ['Size', str(memory.specif_default) + ' MB'],
+                            ['Frequency', frequence],
+                            ['Size', str(memory.specificity) + ' MB'],
                         ]
                         ret.append(l)
         elif part == 'Harddrives':
             query = self.filterOnUUID(
-                session.query(self.klass['deviceharddrives']).select_from(
+                session.query(self.klass['computers_deviceharddrives']) \
+                .add_column(self.deviceharddrives.c.designation) \
+                .select_from(
                     self.machine.outerjoin(self.computers_deviceharddrives) \
                     .outerjoin(self.deviceharddrives)
                 ), uuid)
@@ -1457,16 +1463,17 @@ class Glpi08(DyngroupDatabaseHelper):
                 ret = query.count()
             else:
                 ret = []
-                for hd in query:
+                for hd, designation in query:
                     if hd is not None:
                         l = [
-                            ['Name', hd.designation],
-                            ['Capacity', str(hd.specif_default) + ' MB'],
+                            ['Name', designation],
+                            ['Capacity', str(hd.specificity) + ' MB'],
                         ]
                         ret.append(l)
         elif part == 'NetworkCards':
             query = self.filterOnUUID(
-                session.query(self.klass['devicenetworkcards']).add_column(self.computers_devicenetworkcards.c.specificity) \
+                session.query(self.klass['computers_devicenetworkcards']) \
+                .add_entity(self.klass['devicenetworkcards']) \
                 .select_from(
                     self.machine.outerjoin(self.computers_devicenetworkcards) \
                     .outerjoin(self.devicenetworkcards)
@@ -1476,12 +1483,12 @@ class Glpi08(DyngroupDatabaseHelper):
                 ret = query.count()
             else:
                 ret = []
-                for network, mac in query:
+                for mac, network in query:
                     if network is not None:
                         l = [
                             ['Name', network.designation],
                             ['Bandwidth', network.bandwidth],
-                            ['MAC', mac],
+                            ['MAC', mac.specificity],
                         ]
                         ret.append(l)
         elif part == 'Drives':
@@ -1538,6 +1545,24 @@ class Glpi08(DyngroupDatabaseHelper):
                     if sound is not None:
                         l = [
                             ['Name', sound.designation],
+                        ]
+                        ret.append(l)
+        elif part == 'Controllers':
+            query = self.filterOnUUID(
+                session.query(self.klass['computers_devicecontrols']) \
+                .add_entity(self.klass['devicecontrols']).select_from(
+                    self.machine.outerjoin(self.computers_devicecontrols) \
+                    .outerjoin(self.devicecontrols)
+                ), uuid)
+
+            if count:
+                ret = query.count()
+            else:
+                ret = []
+                for computerControls, deviceControls in query:
+                    if computerControls is not None:
+                        l = [
+                            ['Name', deviceControls.designation],
                         ]
                         ret.append(l)
         elif part == 'Others':

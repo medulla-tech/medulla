@@ -25,7 +25,21 @@
 /* Get GLPI xmlrpc includes */
 require_once("modules/glpi/includes/xmlrpc.php");
 
-function display_part($part, $get, $simpleTableParts) {
+/*
+ * Display Glpi Inventory part infos (Summary, Hardware, Network, etc..)
+ *
+ * @param part: Part to display
+ * @type part: string
+ * @param get: $_GET array
+ * @type get: array
+ * @param simpleTableParts: part who are displayed in a simple table
+ * @type simpleTableParts: array
+ * @param displayNavBar: Should NavBar will be displayed ?
+ * @type displayNavBar: Boolean
+ * @param partTitle: Should we display a Title to part ?
+ * @type: null or string
+ */
+function display_part($part, $get, $simpleTableParts, $displayNavBar = True, $partTitle = null) {
     $uuid = '';
     if (isset($get['uuid'])) {
         $uuid = $get['uuid'];
@@ -95,7 +109,13 @@ function display_part($part, $get, $simpleTableParts) {
             $n->setTableHeaderPadding(1);
             $n->start = 0;
             $n->end = $itemCount;
-            $n->display();
+
+            // Display a title (it happens in Hardware tab)
+            if ($partTitle) printf("<h2>%s</h2>", $partTitle);
+
+            // Display table with (or not) NavBar
+            $n->display($displayNavBar, $displayNavBar);
+            if ($partTitle) echo "<br />";
         }
     }
 }
@@ -103,29 +123,21 @@ function display_part($part, $get, $simpleTableParts) {
 $part = $_GET['part'];
 
 if ($part == 'Hardware') {
-    printf("<h2>%s</h2>", _T('Processors', "glpi"));
-    display_part('Processors', $_GET, $simpleTableParts);
-    print "<br />";
-    printf("<h2>%s</h2>", _T('Memories', "glpi"));
-    display_part('Memories', $_GET, $simpleTableParts);
-    print "<br />";
-    printf("<h2>%s</h2>", _T('Hard Drives', "glpi"));
-    display_part('Harddrives', $_GET, $simpleTableParts);
-    print "<br />";
-    printf("<h2>%s</h2>", _T('Network Cards', "glpi"));
-    display_part('NetworkCards', $_GET, $simpleTableParts);
-    print "<br />";
-    printf("<h2>%s</h2>", _T('Drives', "glpi"));
-    display_part('Drives', $_GET, $simpleTableParts);
-    print "<br />";
-    printf("<h2>%s</h2>", _T('Graphic Cards', "glpi"));
-    display_part('GraphicCards', $_GET, $simpleTableParts);
-    print "<br />";
-    printf("<h2>%s</h2>", _T('Sound Cards', "glpi"));
-    display_part('SoundCards', $_GET, $simpleTableParts);
-    print "<br />";
-    printf("<h2>%s</h2>", _T('Others', "glpi"));
-    display_part('Others', $_GET, $simpleTableParts);
+    $hardwareParts = array(
+        'Processors' => _T('Processors', "glpi"),
+        'Memories' => _T('Memories', "glpi"),
+        'Harddrives' => _T('Hard Drives', "glpi"),
+        'Controllers' => _T('Controllers', "glpi"),
+        'NetworkCards' => _T('Network Cards', "glpi"),
+        'Drives' => _T('Drives', "glpi"),
+        'GraphicCards' => _T('Graphic Cards', "glpi"),
+        'SoundCards' => _T('Sound Cards', "glpi"),
+        'Others' => _T('Others', "glpi"),
+    );
+
+    foreach ($hardwareParts as $part => $title) {
+        display_part($part, $_GET, $simpleTableParts, False, $title);
+    }
 }
 else {
     display_part($part, $_GET, $simpleTableParts);
