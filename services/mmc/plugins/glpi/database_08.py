@@ -843,7 +843,7 @@ class Glpi08(DyngroupDatabaseHelper):
                 m = l.pop()
 
             datas = {
-                'cn': [m.name],
+                'cn': m.name != '' and [m.name] or ['(%s)' % m.id],
                 'displayName': [m.comment],
                 'objectUUID': [m.getUUID()],
                 'user': [m.contact],
