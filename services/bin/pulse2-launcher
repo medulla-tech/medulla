@@ -28,8 +28,6 @@ import optparse
 import xmlrpclib
 import time
 import random
-import psutil
-from threading import Semaphore
 
 # Twisted
 from twisted.internet import epollreactor
@@ -46,7 +44,7 @@ except ImportError:
 from mmc.site import mmcconfdir
 from pulse2.version import getVersion, getRevision
 from pulse2.launcher.config import LauncherConfig
-from pulse2.utils import xmlrpcCleanup, Singleton
+from pulse2.utils import xmlrpcCleanup
 import pulse2.launcher.utils
 import pulse2.launcher.ssh_agent
 # XMLRPC funcs
@@ -67,122 +65,12 @@ import logging.config
 CB_STARTUP_DELAY = 2
 LOG_STATS_DELAY = 60
 
-MEMORY_LIMIT = 75
-BATCH_QUEUED_DELAY = 1
-
-class CommandsQueue (Singleton) :
-    """ Input buffer to stocking the executing orders """
-
-    content = []
-    semaphore = Semaphore(1)
-
-    def __lock(self):
-        """ Queue access locking """
-        self.semaphore.acquire(True)
-
-    def __unlock(self):
-        """ Queue access unlocking """
-        self.semaphore.release()
- 
-    def put(self, fnc, args, kwargs):
-        """ 
-        Adding a function to buffer
-
-        @param fnc: function to execute
-        @type fnc: method
-
-        @param args: function arguments
-        @type args: list
-
-        @param kwargs: function keywords
-        @type kwargs: dict
-
-        """
-        self.__lock()        
-        self.content.append((fnc, args, kwargs))
-        self.__unlock()
-        return True
-
-    def get_first(self) :
-        """
-        Get and remove first element from buffer
-
-        @return: function, arguments and keywords
-        @rtype: tuple
-        """
-        if len(self.content) > 0 :
-            self.__lock()
-            ret = self.content.pop(0)
-            self.__unlock()
-            return ret
-        else :
-            return None
-
-class QueueWrap(object):
-    """ Function wrapping """
-    def __init__(self, fnc):
-        """
-        @param fnc: function to execute
-        @type fnc: method
-        """
-        self.fnc = xmlrpcCleanup(fnc)
-
-    def queue(self, *args, **kwargs):
-        """ Adding the function to queue """
-        return CommandsQueue().put(self.fnc, args, kwargs)
-
-
-def queued(fnc):
-    """ 
-    Decorator to wrap the xmlrpc method.
-
-    Passed method with arguments is buffered to CommandsQueue buffer.
-    Important : Method name must be prefixed by 'xmlrpc_'
-
-    @param fnc: function to execute
-    @type fnc: method
- 
-    @return: True if correctly stacked
-    @rtype: bool
-    """
-    return QueueWrap(fnc).queue
- 
-
-def execute_queued_commands ():
-    """Queued commands checking and executing"""
-
-    while True :
-        q_command = CommandsQueue().get_first()
-        if not q_command :
-            break
-        if psutil.virtual_memory().percent > MEMORY_LIMIT :
-            logging.getLogger().info('Memory limit reached, buffering %d commands' % len(CommandsQueue().content))
-            break
-        fnc, args, kwargs = q_command
-        fnc_name = fnc.func_name.replace("xmlrpc_","")
-
-        function = getattr(pulse2.launcher.remote_exec, fnc_name)
-
-        try :
-            ret = function.__call__(*args, **kwargs)
-            if not ret :
-                logging.getLogger().info("Failed to execute function '%s'" % (fnc_name))
-        except Exception, e :
-            logging.getLogger().info("Failed to execute function '%s': %s" % (fnc_name, str(e)))
-
-    twisted.internet.reactor.callLater(BATCH_QUEUED_DELAY, execute_queued_commands)
-
-
-
-
-
 def start_all_callbacks():
     logger = logging.getLogger()
     logger.info('launcher %s: will run callbacks in %d seconds' % (LauncherConfig().name, CB_STARTUP_DELAY))
     time.sleep(CB_STARTUP_DELAY)
     scheduleTellIAmAlive()
     scheduleLogStats()
-    execute_queued_commands()
     logger.info('launcher %s: all callbacks started' % (LauncherConfig().name))
 
 def scheduleTellIAmAlive():
@@ -377,42 +265,41 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
         )
         return twisted.web.server.NOT_DONE_YET
 
-
     # Synchrone commands summoning
-    @queued
-    def xmlrpc_sync_remote_push(self, command_id, client, files_list, timeout = LauncherConfig().wrapper_max_exec_time): pass
-    @queued
-    def xmlrpc_sync_remote_pull(self, command_id, client, files_list, timeout = LauncherConfig().wrapper_max_exec_time): pass
-    @queued
-    def xmlrpc_sync_remote_delete(self, command_id, client, files_list, timeout = LauncherConfig().wrapper_max_exec_time): pass
-    @queued
-    def xmlrpc_sync_remote_exec(self, command_id, client, command, timeout = LauncherConfig().wrapper_max_exec_time):pass
-    @queued
-    def xmlrpc_sync_remote_quickaction(self, command_id, client, command, timeout = LauncherConfig().wrapper_max_exec_time):pass
-    @queued
-    def xmlrpc_sync_remote_inventory(self, command_id, client, timeout =LauncherConfig().wrapper_max_exec_time): pass
-    @queued
-    def xmlrpc_sync_remote_reboot(self, command_id, client, timeout = LauncherConfig().wrapper_max_exec_time): pass
-    @queued
-    def xmlrpc_sync_remote_halt(self, command_id, client, timeout = LauncherConfig().wrapper_max_exec_time): pass
+    def xmlrpc_sync_remote_push(self, command_id, client, files_list, timeout = None):
+        return xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_push(int(command_id), client, files_list, timeout or LauncherConfig().wrapper_max_exec_time))
+    def xmlrpc_sync_remote_pull(self, command_id, client, files_list, timeout = None):
+        return xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_pull(int(command_id), client, files_list, timeout or LauncherConfig().wrapper_max_exec_time))
+    def xmlrpc_sync_remote_delete(self, command_id, client, files_list, timeout = None):
+        return xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_delete(int(command_id), client, files_list, timeout or LauncherConfig().wrapper_max_exec_time))
+    def xmlrpc_sync_remote_exec(self, command_id, client, command, timeout = None):
+        return xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_exec(int(command_id), client, command, timeout or LauncherConfig().wrapper_max_exec_time))
+    def xmlrpc_sync_remote_quickaction(self, command_id, client, command, timeout = None):
+        return xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_quickaction(int(command_id), client, command, timeout or LauncherConfig().wrapper_max_exec_time))
+    def xmlrpc_sync_remote_inventory(self, command_id, client, timeout = None):
+        return xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_inventory(int(command_id), client, timeout or LauncherConfig().wrapper_max_exec_time))
+    def xmlrpc_sync_remote_reboot(self, command_id, client, timeout = None):
+        return xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_reboot(int(command_id), client, timeout or LauncherConfig().wrapper_max_exec_time))
+    def xmlrpc_sync_remote_halt(self, command_id, client, timeout = None):
+        return xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_halt(int(command_id), client, timeout or LauncherConfig().wrapper_max_exec_time))
 
     # Asynchrone commands summoning
-    @queued
-    def xmlrpc_async_remote_push(self, command_id, client, files_list, timeout = LauncherConfig().wrapper_max_exec_time): pass
-    @queued
-    def xmlrpc_async_remote_pull(self, command_id, client, files_list, timeout = LauncherConfig().wrapper_max_exec_time): pass
-    @queued
-    def xmlrpc_async_remote_delete(self, command_id, client, files_list, timeout = LauncherConfig().wrapper_max_exec_time): pass
-    @queued
-    def xmlrpc_async_remote_exec(self, command_id, client, command, timeout = LauncherConfig().wrapper_max_exec_time): pass
-    @queued
-    def xmlrpc_async_remote_quickaction(self, command_id, client, command, timeout = LauncherConfig().wrapper_max_exec_time): pass
-    @queued
-    def xmlrpc_async_remote_inventory(self, command_id, client, timeout = LauncherConfig().wrapper_max_exec_time): pass
-    @queued
-    def xmlrpc_async_remote_reboot(self, command_id, client, timeout =LauncherConfig().wrapper_max_exec_time): pass
-    @queued
-    def xmlrpc_async_remote_halt(self, command_id, client, timeout = LauncherConfig().wrapper_max_exec_time): pass
+    def xmlrpc_async_remote_push(self, command_id, client, files_list, timeout = None):
+        return xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_push(int(command_id), client, files_list, timeout or LauncherConfig().wrapper_max_exec_time))
+    def xmlrpc_async_remote_pull(self, command_id, client, files_list, timeout = None):
+        return xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_pull(int(command_id), client, files_list, timeout or LauncherConfig().wrapper_max_exec_time))
+    def xmlrpc_async_remote_delete(self, command_id, client, files_list, timeout = None):
+        return xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_delete(int(command_id), client, files_list, timeout or LauncherConfig().wrapper_max_exec_time))
+    def xmlrpc_async_remote_exec(self, command_id, client, command, timeout = None):
+        return xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_exec(int(command_id), client, command, timeout or LauncherConfig().wrapper_max_exec_time))
+    def xmlrpc_async_remote_quickaction(self, command_id, client, command, timeout = None):
+        return xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_quickaction(int(command_id), client, command, timeout or LauncherConfig().wrapper_max_exec_time))
+    def xmlrpc_async_remote_inventory(self, command_id, client, timeout = None):
+        return xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_inventory(int(command_id), client, timeout or LauncherConfig().wrapper_max_exec_time))
+    def xmlrpc_async_remote_reboot(self, command_id, client, timeout = None):
+        return xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_reboot(int(command_id), client, timeout or LauncherConfig().wrapper_max_exec_time))
+    def xmlrpc_async_remote_halt(self, command_id, client, timeout = None):
+        return xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_halt(int(command_id), client, timeout or LauncherConfig().wrapper_max_exec_time))
 
     # Background process lists
     def xmlrpc_get_process_count(self):
