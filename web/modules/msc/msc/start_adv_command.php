@@ -56,6 +56,10 @@ if (!empty($_GET['gid'])) {
     
 $pid = $_GET['pid'];
 $papi =  $_GET["papi"];
+$p_api = new ServerAPI();
+$p_api->fromURI($papi);
+
+
 $cible = $hostname;
 
 if ($gid) {
@@ -74,7 +78,7 @@ $params["ltitle"] = get_def_package_label($name, $version);
 $params["create_directory"] = 'on';
 $params["start_script"] = 'on';
 $params["clean_on_success"] = 'on';
-$params["do_reboot"] = getPackageHasToReboot($papi, $_GET["pid"]) == 1 ? 'on': '';
+$params["do_reboot"] = getPackageHasToReboot($p_api, $_GET["pid"]) == 1 ? 'on': '';
 $params["do_wol"] = web_def_awake() == 1 ? 'on' : '';
 $params["do_inventory"] = web_def_inventory() == 1 ? 'on' : '';
 $params["next_connection_delay"] = web_def_delay();
