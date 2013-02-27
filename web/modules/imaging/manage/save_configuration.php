@@ -49,6 +49,7 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
         $params = getParams();
         $params['default_name'] = $_POST['default_m_label'];
         $params['timeout'] = $_POST['default_m_timeout'];
+        $params['hidden_menu'] = $_POST['default_m_hidden_menu'];
         $params['background_uri'] = $_POST['boot_xpm'];
         $params['message'] = $_POST['boot_msg'];
         $params['protocol'] = $_POST['rest_type'];

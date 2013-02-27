@@ -100,6 +100,16 @@ require("../includes/ajaxcommon.inc.php");
                               new InputTpl("default_m_timeout")),
             array("value" => $default_menu['timeout'])
     );
+    if ($default_menu["hidden_menu"]) {
+          $hidden_menu_value = 'CHECKED';
+    } else {
+          $hidden_menu_value = '';
+    }
+    $f->add(
+	    new TrFormElement(_T('Hide menu', 'imaging'),
+	                     new CheckBoxTpl("default_m_hidden_menu")),
+            array("value" => $hidden_menu_value)
+    );
     $f->pop();
 
 
