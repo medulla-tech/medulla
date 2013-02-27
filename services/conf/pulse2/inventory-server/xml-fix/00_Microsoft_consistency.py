@@ -28,15 +28,16 @@ def xml_fix(xml):
   for subelem1 in root:
     if subelem1.tag == 'CONTENT':
       for subelem2 in subelem1:
+          
+        # Apply for anything, not softwares only
+        for subelem3 in subelem2:
+          # Microsoft vendor name should allways be the same
+          if subelem3.text in ['Microsoft', 'MICROSOFT']:
+            subelem3.text = 'Microsoft Corporation'
+
         if subelem2.tag == 'SOFTWARES':
           for subelem3 in subelem2:
             
-            if subelem3.tag == 'PUBLISHER':
-
-              # Microsoft vendor name should allways be the same
-              if subelem3.text in ['Microsoft', 'MICROSOFT']:
-                subelem3.text = 'Microsoft Corporation'
-
             if subelem3.tag == 'NAME':
              
               # Convert Microsoft KB updates
@@ -75,5 +76,6 @@ def xml_fix(xml):
                 subelem3.text = re.sub('Correctif pour','Update for',subelem3.text)
               if re.search('Lecteur Windows Media',subelem3.text):
                 subelem3.text = re.sub('Lecteur Windows Media','Windows Media Player',subelem3.text)
+
 
   return ET.tostring(root)
