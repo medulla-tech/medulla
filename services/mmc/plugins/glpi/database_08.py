@@ -706,7 +706,18 @@ class Glpi08(DyngroupDatabaseHelper):
         Get the size of the computer list that match filters parameters
         """
         session = create_session()
-        query = self.__getRestrictedComputersListQuery(ctx, filt, session)
+
+        displayList = None
+
+        # When search field is used on main computer's list page,
+        # Pagination PHP Widget must know total machine result
+        # So, set displayList to True to count on glpi_computers
+        # and all needed joined tables
+        if 'hostname' in filt:
+            if len(filt['hostname']) > 0:
+                displayList = True
+
+        query = self.__getRestrictedComputersListQuery(ctx, filt, session, displayList)
         if query == None:
             return 0
         ret = query.count()
