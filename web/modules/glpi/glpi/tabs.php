@@ -58,7 +58,9 @@ $tabList = array(
     'Network' => _T('Network', "glpi"),
     'Software' => _T('Software', "glpi"),
     'Administration' => _T('Administration', "glpi"),
-    'Historical' => _T('Historical', "glpi"),
+    // Temporary disable 'Historical' tab, will be reactivated
+    // in next step of development
+    // 'Historical' => _T('Historical', "glpi"),
 );
 
 foreach ($tabList as $tab => $str) {

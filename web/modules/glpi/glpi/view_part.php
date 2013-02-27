@@ -24,6 +24,7 @@
 
 
 require_once('modules/glpi/includes/xmlrpc.php');
+require_once('modules/glpi/includes/html.php');
 
 $params = array("from" => 'base%2computers%2Finvtabs');
 
@@ -46,10 +47,9 @@ else {
             $params[$get] = $value;
         }
     }
-    $ajax = new AjaxFilter(urlStrRedirect("base/computers/ajaxViewPart"), "container", $params);
+    $ajax = new AjaxFilterGlpi(urlStrRedirect("base/computers/ajaxViewPart"), "container", $params);
 
     $ajax->display();
-    print "<br/><br/><br/>";
     $ajax->displayDivToUpdate();
 }
 ?>

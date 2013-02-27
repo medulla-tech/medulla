@@ -48,14 +48,17 @@ function display_part($part, $get, $simpleTableParts, $displayNavBar = True, $pa
         $uuid = $get['objectUUID'];
     }
 
-    $maxperpage = $get['maxperpage'];
+    $maxperpage = (isset($get['maxperpage'])) ? $get['maxperpage'] : 0;
     $filter = isset($get["filter"]) ? $get['filter'] : '';
     if (isset($get["start"])) { $start = $get["start"]; } else { $start = 0; }
     $end = $start + $maxperpage;
 
+    $hide_win_updates = (isset($get['hide_win_updates'])) ? $get['hide_win_updates'] : False;
+    $hide_win_updates = (strtolower($hide_win_updates) == 'true') ? True : False;
+
     // Get current part inventory
-    $inv = getLastMachineGlpiPart($uuid, $part, $start, $end, $filter);
-    $itemCount = countLastMachineGlpiPart($uuid, $part, $filter);
+    $inv = getLastMachineGlpiPart($uuid, $part, $start, $end, $filter, $hide_win_updates);
+    $itemCount = countLastMachineGlpiPart($uuid, $part, $filter, $hide_win_updates);
 
     if (!is_array($inv)) $inv = array();
 
@@ -120,6 +123,7 @@ function display_part($part, $get, $simpleTableParts, $displayNavBar = True, $pa
     }
 }
 
+if (!isset($simpleTableParts)) $simpleTableParts = array();
 $part = $_GET['part'];
 
 if ($part == 'Hardware') {

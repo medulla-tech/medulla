@@ -1266,10 +1266,10 @@ class Glpi08(DyngroupDatabaseHelper):
 
         return ''
 
-    def countLastMachineInventoryPart(self, uuid, part, filt = None):
-        return self.getLastMachineInventoryPart(uuid, part, count = True)
+    def countLastMachineInventoryPart(self, uuid, part, filt = None, hide_win_updates = False):
+        return self.getLastMachineInventoryPart(uuid, part, filt = filt, hide_win_updates = hide_win_updates, count = True)
 
-    def getLastMachineInventoryPart(self, uuid, part, min = 0, max = -1, filt = None, count = False):
+    def getLastMachineInventoryPart(self, uuid, part, min = 0, max = -1, filt = None, hide_win_updates = False, count = False):
         session = create_session()
         if part == 'Network':
             query = self.filterOnUUID(
@@ -1350,6 +1350,16 @@ class Glpi08(DyngroupDatabaseHelper):
                 clauses.append(self.softwareversions.c.name.like('%'+filt+'%'))
                 clauses.append(self.software.c.name.like('%'+filt+'%'))
                 query = query.filter(or_(*clauses))
+
+            if hide_win_updates:
+                query = query.filter(
+                    not_(
+                        and_(
+                            self.manufacturers.c.name.contains('microsoft'),
+                            self.software.c.name.op('regexp')('KB[0-9]+(-v[0-9]+)?(v[0-9]+)?')
+                        )
+                    )
+                )
 
             if min != 0:
                 query = query.offset(min)
