@@ -369,7 +369,13 @@ class Pulse2ConfigFile(object):
         fpath = os.path.join(dir_path, self.path)
         if os.path.exists(fpath):
             log.debug("Load config file %s" % fpath)
-            self.config = ConfigObj(fpath, list_values=False)
+            try:
+                self.config = ConfigObj(fpath, list_values=False)
+            except Exception, e:
+                log.error("Error while parsing file: %s" % fpath)
+                log.error(str(e))
+                sys.exit(1)
+
         elif os.path.exists(fpath + '.gz'):
             fpath = fpath + '.gz'
             log.debug("Load config file %s" % fpath)
