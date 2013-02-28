@@ -1266,6 +1266,12 @@ class Glpi08(DyngroupDatabaseHelper):
 
         return ''
 
+    def getManufacturerWarrantyUrl(self, manufacturer, serial):
+        if manufacturer in self.config.manufacturerWarrantyUrl:
+            return self.config.manufacturerWarrantyUrl[manufacturer].replace('@@SERIAL@@', serial)
+        else:
+            return False
+
     def countLastMachineInventoryPart(self, uuid, part, filt = None, hide_win_updates = False):
         return self.getLastMachineInventoryPart(uuid, part, filt = filt, hide_win_updates = hide_win_updates, count = True)
 
@@ -1420,14 +1426,23 @@ class Glpi08(DyngroupDatabaseHelper):
                     elif len(modelType) == 2:
                         modelType = " / ".join(modelType)
 
+                    if machine.serial is not None and len(machine.serial) > 0:
+                        manufacturerWarrantyUrl = self.getManufacturerWarrantyUrl(manufacturer, machine.serial)
+
+                    if manufacturerWarrantyUrl:
+                        serialNumber = '%s / <a href="%s" target="_blank">Click here to get warranty informations on manufacturer website</a>' % (machine.serial, manufacturerWarrantyUrl)
+                    else:
+                        serialNumber = machine.serial
+
                     l = [
                         ['Computer Name', machine.name],
                         ['Description', machine.comment],
                         ['Entity (Location)', '%s (%s)' % (entity, location)],
                         ['Last logged user', machine.contact],
                         ['OS', os],
-                        ['Manufacturer', manufacturer],
                         ['Model / Type', modelType],
+                        ['Manufacturer', manufacturer],
+                        ['Serial Number', serialNumber],
                         ['Warranty End Date', endDate],
                     ]
                     ret.append(l)

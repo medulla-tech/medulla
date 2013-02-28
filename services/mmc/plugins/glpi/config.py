@@ -39,7 +39,10 @@ class GlpiConfig(PluginConfig):
 
     # computer_list section
     summary = ['cn', 'description', 'os', 'type', 'user', 'entity', 'location']
-    
+
+    # manufacturer section
+    manufacturerWarrantyUrl = {}
+
     def readConf(self):
         self.dbdriver = self.get("main", "dbdriver")
         self.dbhost = self.get("main", "dbhost")
@@ -89,6 +92,20 @@ class GlpiConfig(PluginConfig):
 
         if self.has_option("computer_list", "summary"):
             self.summary = self.get("computer_list", "summary").split(' ')
+
+        # associate manufacturer's names to their warranty url
+        # manufacturer must have same key in 'manufacturer' and 'manufacturer_warranty_url' sections
+        # for adding its warranty url
+        if 'manufacturer' in self._sections and 'manufacturer_warranty_url' in self._sections:
+            logging.getLogger().debug('[GLPI] Get manufacturers and their warranty urls')
+            for k in self._sections['manufacturer']:
+                if not k in self._sections['manufacturer_warranty_url']:
+                    logging.getLogger().warn('[GLPI] Manufacturer \'%s\': no matching warranty url in glpi.ini file' % k)
+                else:
+                    logging.getLogger().debug('[GLPI] Get \'%s\' warranty url' % k)
+                    for manufacturerName in self._sections['manufacturer'][k].split('||'):
+                        self.manufacturerWarrantyUrl[manufacturerName] = self._sections['manufacturer_warranty_url'][k]
+
 
 class GlpiQueryManagerConfig(PluginConfig):
     activate = False
