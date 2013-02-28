@@ -25,7 +25,12 @@
 require("modules/glpi/includes/xmlrpc.php");
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
+require_once("modules/pulse2/includes/utilities.php");
 
+/*
+ * Display right top shortcuts menu
+ */
+right_top_shortcuts_display();
 
 if (!isset($_GET['hostname'])) { $_GET['hostname'] = $_GET['cn']; }
 if (!isset($_GET['uuid'])) { $_GET['uuid'] = $_GET['objectUUID']; }

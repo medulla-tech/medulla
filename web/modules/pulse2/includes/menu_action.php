@@ -50,13 +50,15 @@ function modIsActive($action) {
         "vnc" => "msc",
         "msc" => "msc",
     );
+    $modList = $_SESSION['supportModList'];
+    if (in_array('glpi', $modList)) $modList[] = 'inventory';
     $action = strtolower($action);
     foreach ($modActionAssoc as $key => $value) {
         $mod = '';
         if (strpos($action, $key) !== false) {
             $mod = $value;
         }
-        if (in_array($mod, $_SESSION["supportModList"])) {
+        if (in_array($mod, $modList)) {
             if (strpos($action, "vnc") !== false) {
                 // if VNC icon, check if "Take control of this computer" ACL
                 // is True or not
@@ -85,7 +87,8 @@ foreach ($actions as $action){
                 echo "<a title=\"".$action->desc."\" onclick=\"window.open('" . urlStr($action->path) . $urlChunk . "','mywin','left=20,top=20,width=300,height=150,toolbar=1,resizable=0');\">&nbsp;</a>";
             }
             else {
-                echo "<a title=\"".$action->desc."\" href=\"" . urlStr($action->path) . $urlChunk . "\">&nbsp;</a>";
+                $url = (in_array('glpi', $_SESSION['supportModList']) && $action->path == 'base/computers/invtabs') ? 'base/computers/glpitabs' : $action->path;
+                echo "<a title=\"".$action->desc."\" href=\"" . urlStr($url) . $urlChunk . "\">&nbsp;</a>";
             }
         }
         echo "</li>";
