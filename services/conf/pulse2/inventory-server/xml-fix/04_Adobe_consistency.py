@@ -27,10 +27,14 @@ def xml_fix(xml):
   for subelem1 in root:
     if subelem1.tag == 'CONTENT':
       for subelem2 in subelem1:
+          
+        if subelem2.tag == 'SOFTWARES':
           for subelem3 in subelem2:
+            
+            if subelem3.tag == 'NAME':
 
-            # DELL vendor name should allways be the same
-            if subelem3.text in ['DELL', 'Dell Corp.', 'Dell Computer Corp.', 'Dell', 'Dell Computer Corporation']:
-              subelem3.text = 'Dell Inc.'
+              # Adobe vendor name should allways be the same
+              if subelem3.text in ['Adobe Systems Inc.', 'Adobe Inc.', 'ADOBE', 'Adobe']:
+                subelem3.text = 'Adobe Systems Incorporated'
 
   return ET.tostring(root)

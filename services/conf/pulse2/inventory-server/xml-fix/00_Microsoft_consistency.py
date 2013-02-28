@@ -32,7 +32,7 @@ def xml_fix(xml):
         # Apply for anything, not softwares only
         for subelem3 in subelem2:
           # Microsoft vendor name should allways be the same
-          if subelem3.text in ['Microsoft', 'MICROSOFT']:
+          if subelem3.text in ['Microsoft', 'MICROSOFT', 'MicrosoftH']:
             subelem3.text = 'Microsoft Corporation'
 
         if subelem2.tag == 'SOFTWARES':
@@ -62,6 +62,10 @@ def xml_fix(xml):
                 children = ET.SubElement(subelem2,'PUBLISHER')
                 children.text = 'Microsoft Corporation'
 
+              # FusionInventory on Windows XP report some weird things we'll drop
+              if subelem3.text in ['ie7', 'Branding','IDNMitigationAPIs','NLSDownlevelMapping','PCHealth'] and not subelem2.findall('PUBLISHER'):
+                subelem1.remove(subelem2)
+
               # Windows Media and .NET framework stuff needs Microsoft vendor too
               if re.search('(Windows Media|Microsoft .NET Framework)',subelem3.text) and not subelem2.findall('PUBLISHER'):
                 children = ET.SubElement(subelem2,'PUBLISHER')
@@ -77,5 +81,13 @@ def xml_fix(xml):
               if re.search('Lecteur Windows Media',subelem3.text):
                 subelem3.text = re.sub('Lecteur Windows Media','Windows Media Player',subelem3.text)
 
+        # There's an entry for the OS itself but without any publisher
+        # Doesn't seem to work with GLPI sadly
+        if subelem2.tag == 'OPERATINGSYSTEM':
+          for subelem3 in subelem2:
+            if subelem3.tag == 'FULL_NAME':
+              if re.search('^Microsoft Windows (2000|2003|XP|Vista|7|8) ',subelem3.text) and not subelem2.findall('PUBLISHER'):
+                children = ET.SubElement(subelem2,'PUBLISHER')
+                children.text = 'Microsoft Corporation'
 
   return ET.tostring(root)

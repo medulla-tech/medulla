@@ -29,8 +29,8 @@ def xml_fix(xml):
       for subelem2 in subelem1:
           for subelem3 in subelem2:
 
-            # DELL vendor name should allways be the same
-            if subelem3.text in ['DELL', 'Dell Corp.', 'Dell Computer Corp.', 'Dell', 'Dell Computer Corporation']:
-              subelem3.text = 'Dell Inc.'
+            # ASUS vendor name should allways be the same
+            if subelem3.text in ['ASUSTEK', 'ASUSTeK Computer Inc.', 'Asus']:
+              subelem3.text = 'ASUS'
 
   return ET.tostring(root)
