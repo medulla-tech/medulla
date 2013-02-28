@@ -1426,6 +1426,7 @@ class Glpi08(DyngroupDatabaseHelper):
                     elif len(modelType) == 2:
                         modelType = " / ".join(modelType)
 
+                    manufacturerWarrantyUrl = False
                     if machine.serial is not None and len(machine.serial) > 0:
                         manufacturerWarrantyUrl = self.getManufacturerWarrantyUrl(manufacturer, machine.serial)
 
