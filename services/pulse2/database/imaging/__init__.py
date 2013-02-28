@@ -125,6 +125,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         self.default_params = {
             'default_name': self.config.web_def_default_menu_name,
             'timeout': self.config.web_def_default_timeout,
+            'hidden_menu': self.config.web_def_default_hidden_menu,
             'background_uri': self.config.web_def_default_background_uri,
             'message': self.config.web_def_default_message,
             'protocol': self.config.web_def_default_protocol
@@ -2812,7 +2813,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session = create_session()
         menus = self.getMenusByID(menus_id, session)
         for m in menus:
-            for p in ['default_name', 'timeout', 'background_uri', 'message', 'protocol', 'default_item', 'default_item_WOL']:
+            for p in ['default_name', 'hidden_menu','timeout', 'background_uri', 'message', 'protocol', 'default_item', 'default_item_WOL']:
                 if params.has_key(p):
                     setattr(m, p, params[p])
         session.flush()
@@ -2837,6 +2838,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if params.has_key('timeout') and menu.timeout != params['timeout']:
             need_to_be_save = True
             menu.timeout = params['timeout']
+        if params.has_key('hidden_menu') and menu.hidden_menu != params['hidden_menu']:
+            need_to_be_save = True
+            menu.hidden_menu = params['hidden_menu']
+
 
         for option in ['hidden_menu', 'bootcli', 'dont_check_disk_size',
                        'update_nt_boot', 'disklesscli']:
@@ -2950,6 +2955,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         menu.default_name = default_menu.default_name
         menu.fk_name = default_menu.fk_name
         menu.timeout = default_menu.timeout
+        menu.hidden_menu = default_menu.hidden_menu
         menu.mtftp_restore_timeout = default_menu.mtftp_restore_timeout
         menu.background_uri = default_menu.background_uri
         menu.message = default_menu.message
@@ -2982,6 +2988,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         menu = Menu()
         menu.default_name = params['default_name']
         menu.timeout = params['timeout']
+        menu.hidden_menu = params['hidden_menu']
         menu.background_uri = params['background_uri']
         menu.message = params['message']
         if params.has_key('protocol'):

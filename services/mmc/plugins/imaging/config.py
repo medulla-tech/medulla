@@ -36,6 +36,7 @@ class ImagingConfig(PluginConfig, ImagingDatabaseConfig):
     web_def_default_protocol = 'nfs'
     web_def_default_menu_name = 'Menu'
     web_def_default_timeout = '60'
+    web_def_default_hidden_menu = False
     web_def_default_background_uri = ''
     web_def_default_message = 'Warning ! Your PC is being backed up or restored. Do not reboot !'
     web_def_kernel_parameters = 'quiet'
