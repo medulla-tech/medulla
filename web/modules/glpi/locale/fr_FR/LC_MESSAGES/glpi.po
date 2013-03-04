@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-03-04 11:46+0100\n"
-"PO-Revision-Date: 2013-03-04 10:48+0000\n"
+"POT-Creation-Date: 2013-03-04 17:04+0100\n"
+"PO-Revision-Date: 2013-03-04 16:05+0000\n"
 "Last-Translator: Cécile Adam <acecile@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/pulse2/team/fr_FR/)\n"
 "MIME-Version: 1.0\n"
@@ -35,184 +35,204 @@ msgstr "Dernier inventaire de plus de %s jours au %s"
 msgid "Computers list has been truncated at %d computers"
 msgstr "La liste des machines a été tronquée à %d"
 
-#: modules/glpi/glpi/ajaxViewPart.php:89
+#: modules/glpi/glpi/ajaxViewPart.php:94
+msgid "Click here to see this computer on manufacturer website"
+msgstr "Cliquez ici pour voir cet ordinateur sur le site du constructeur"
+
+#: modules/glpi/glpi/ajaxViewPart.php:100
 msgid "Properties"
 msgstr "Propriétés"
 
-#: modules/glpi/glpi/ajaxViewPart.php:90
+#: modules/glpi/glpi/ajaxViewPart.php:101
 msgid "Value"
 msgstr "Valeur"
 
-#: modules/glpi/glpi/ajaxViewPart.php:131
+#: modules/glpi/glpi/ajaxViewPart.php:142
 msgid "Processors"
 msgstr "Processeurs"
 
-#: modules/glpi/glpi/ajaxViewPart.php:132
-#: modules/glpi/glpi/ajaxViewPart.php:182
+#: modules/glpi/glpi/ajaxViewPart.php:143
+#: modules/glpi/glpi/ajaxViewPart.php:193
 msgid "Memory"
 msgstr "Mémoire"
 
-#: modules/glpi/glpi/ajaxViewPart.php:133
+#: modules/glpi/glpi/ajaxViewPart.php:144
 msgid "Hard Drives"
 msgstr "Disques Durs"
 
-#: modules/glpi/glpi/ajaxViewPart.php:134
+#: modules/glpi/glpi/ajaxViewPart.php:145
 msgid "Controllers"
 msgstr "Contrôleurs"
 
-#: modules/glpi/glpi/ajaxViewPart.php:135
+#: modules/glpi/glpi/ajaxViewPart.php:146
 msgid "Network Cards"
 msgstr "Cartes Réseaux"
 
-#: modules/glpi/glpi/ajaxViewPart.php:136
+#: modules/glpi/glpi/ajaxViewPart.php:147
 msgid "Drives"
 msgstr "Lecteurs"
 
-#: modules/glpi/glpi/ajaxViewPart.php:137
+#: modules/glpi/glpi/ajaxViewPart.php:148
 msgid "Graphic Cards"
 msgstr "Cartes Videos"
 
-#: modules/glpi/glpi/ajaxViewPart.php:138
+#: modules/glpi/glpi/ajaxViewPart.php:149
 msgid "Sound Cards"
 msgstr "Cartes Sons"
 
-#: modules/glpi/glpi/ajaxViewPart.php:139
+#: modules/glpi/glpi/ajaxViewPart.php:150
 msgid "Others"
 msgstr "Autres"
 
-#: modules/glpi/glpi/ajaxViewPart.php:152
-#: modules/glpi/glpi/ajaxViewPart.php:167
+#: modules/glpi/glpi/ajaxViewPart.php:163
+#: modules/glpi/glpi/ajaxViewPart.php:178
 msgid "Name"
 msgstr "Nom"
 
-#: modules/glpi/glpi/ajaxViewPart.php:153
+#: modules/glpi/glpi/ajaxViewPart.php:164
 msgid "Network Type"
 msgstr "Type de Réseau"
 
-#: modules/glpi/glpi/ajaxViewPart.php:154
+#: modules/glpi/glpi/ajaxViewPart.php:165
 msgid "MAC Address"
 msgstr "Adresse MAC"
 
-#: modules/glpi/glpi/ajaxViewPart.php:155
+#: modules/glpi/glpi/ajaxViewPart.php:166
 msgid "IP"
 msgstr "IP"
 
-#: modules/glpi/glpi/ajaxViewPart.php:156
+#: modules/glpi/glpi/ajaxViewPart.php:167
 msgid "Netmask"
 msgstr "Masque"
 
-#: modules/glpi/glpi/ajaxViewPart.php:157
+#: modules/glpi/glpi/ajaxViewPart.php:168
 msgid "Gateway"
 msgstr "Passerelle"
 
-#: modules/glpi/glpi/ajaxViewPart.php:158
+#: modules/glpi/glpi/ajaxViewPart.php:169
 msgid "Device"
 msgstr "Périphérique"
 
-#: modules/glpi/glpi/ajaxViewPart.php:159
+#: modules/glpi/glpi/ajaxViewPart.php:170
 msgid "Mount Point"
 msgstr "Point de Montage"
 
-#: modules/glpi/glpi/ajaxViewPart.php:160
+#: modules/glpi/glpi/ajaxViewPart.php:171
 msgid "Filesystem"
 msgstr "Système de Fichiers"
 
-#: modules/glpi/glpi/ajaxViewPart.php:161
-#: modules/glpi/glpi/ajaxViewPart.php:179
+#: modules/glpi/glpi/ajaxViewPart.php:172
+#: modules/glpi/glpi/ajaxViewPart.php:190
 msgid "Size"
 msgstr "Taille"
 
-#: modules/glpi/glpi/ajaxViewPart.php:162
+#: modules/glpi/glpi/ajaxViewPart.php:173
 msgid "Free Size"
 msgstr "Espace Libre"
 
-#: modules/glpi/glpi/ajaxViewPart.php:163
+#: modules/glpi/glpi/ajaxViewPart.php:174
 msgid "Supplier"
 msgstr "Fournisseur"
 
-#: modules/glpi/glpi/ajaxViewPart.php:164
+#: modules/glpi/glpi/ajaxViewPart.php:175
 msgid "Invoice Number"
 msgstr "Numéro de Facture"
 
-#: modules/glpi/glpi/ajaxViewPart.php:165
+#: modules/glpi/glpi/ajaxViewPart.php:176
 msgid "Warranty End Date"
 msgstr "Fin de Garantie"
 
-#: modules/glpi/glpi/ajaxViewPart.php:166
+#: modules/glpi/glpi/ajaxViewPart.php:177
 msgid "Vendor"
 msgstr "Marque"
 
-#: modules/glpi/glpi/ajaxViewPart.php:168
+#: modules/glpi/glpi/ajaxViewPart.php:179
 msgid "Version"
 msgstr "Version"
 
-#: modules/glpi/glpi/ajaxViewPart.php:169
+#: modules/glpi/glpi/ajaxViewPart.php:180
 msgid "Computer Name"
 msgstr "Nom de la Machine"
 
-#: modules/glpi/glpi/ajaxViewPart.php:170
+#: modules/glpi/glpi/ajaxViewPart.php:181
 msgid "Description"
 msgstr "Description"
 
-#: modules/glpi/glpi/ajaxViewPart.php:171
+#: modules/glpi/glpi/ajaxViewPart.php:182
 msgid "Entity (Location)"
 msgstr "Entitée (Lieu)"
 
-#: modules/glpi/glpi/ajaxViewPart.php:172
+#: modules/glpi/glpi/ajaxViewPart.php:183
 msgid "Last Logged User"
 msgstr "Dernier Utilisateur"
 
-#: modules/glpi/glpi/ajaxViewPart.php:173
+#: modules/glpi/glpi/ajaxViewPart.php:184
 msgid "OS"
 msgstr "OS"
 
-#: modules/glpi/glpi/ajaxViewPart.php:174
+#: modules/glpi/glpi/ajaxViewPart.php:185
 msgid "Model / Type"
 msgstr "Modèle / Type"
 
-#: modules/glpi/glpi/ajaxViewPart.php:175
+#: modules/glpi/glpi/ajaxViewPart.php:186
 msgid "Manufacturer"
 msgstr "Fabriquant"
 
-#: modules/glpi/glpi/ajaxViewPart.php:176
+#: modules/glpi/glpi/ajaxViewPart.php:187
 msgid "Serial Number"
 msgstr "Numéro de Série"
 
-#: modules/glpi/glpi/ajaxViewPart.php:177
+#: modules/glpi/glpi/ajaxViewPart.php:188
 msgid "Frequency"
 msgstr "Fréquence"
 
-#: modules/glpi/glpi/ajaxViewPart.php:178
+#: modules/glpi/glpi/ajaxViewPart.php:189
 msgid "Type"
 msgstr "Type"
 
-#: modules/glpi/glpi/ajaxViewPart.php:180
+#: modules/glpi/glpi/ajaxViewPart.php:191
 msgid "Bandwidth"
 msgstr "Bande Passante"
 
-#: modules/glpi/glpi/ajaxViewPart.php:181
+#: modules/glpi/glpi/ajaxViewPart.php:192
 msgid "Writer"
 msgstr "Graveur"
 
-#: modules/glpi/glpi/ajaxViewPart.php:183
+#: modules/glpi/glpi/ajaxViewPart.php:194
 msgid "Comment"
 msgstr "Commentaire"
 
-#: modules/glpi/glpi/ajaxViewPart.php:184
+#: modules/glpi/glpi/ajaxViewPart.php:195
 msgid "Date"
 msgstr "Date"
 
-#: modules/glpi/glpi/ajaxViewPart.php:185
+#: modules/glpi/glpi/ajaxViewPart.php:196
 msgid "User"
 msgstr "Utilisateur"
 
-#: modules/glpi/glpi/ajaxViewPart.php:186
+#: modules/glpi/glpi/ajaxViewPart.php:197
 msgid "Category"
 msgstr "Catégorie"
 
-#: modules/glpi/glpi/ajaxViewPart.php:187
+#: modules/glpi/glpi/ajaxViewPart.php:198
 msgid "Action"
 msgstr "Action"
+
+#: modules/glpi/glpi/ajaxViewPart.php:199 modules/glpi/includes/html.php:57
+msgid "Today"
+msgstr "Aujourd'hui"
+
+#: modules/glpi/glpi/ajaxViewPart.php:200 modules/glpi/includes/html.php:58
+msgid "Last week"
+msgstr "Cette semaine"
+
+#: modules/glpi/glpi/ajaxViewPart.php:201 modules/glpi/includes/html.php:59
+msgid "Last month"
+msgstr "Ce mois"
+
+#: modules/glpi/glpi/ajaxViewPart.php:202 modules/glpi/includes/html.php:60
+msgid "All"
+msgstr "Tout"
 
 #: modules/glpi/glpi/tabs.php:54
 #, php-format
@@ -247,7 +267,7 @@ msgstr "Administratif"
 msgid "History"
 msgstr "Historique"
 
-#: modules/glpi/includes/html.php:45
+#: modules/glpi/includes/html.php:49
 msgid "Hide Windows Updates"
 msgstr "Masquer les MAJ Windows Update"
 

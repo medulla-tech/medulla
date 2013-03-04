@@ -90,7 +90,12 @@ function display_part($part, $get, $simpleTableParts, $displayNavBar = True, $pa
         $val = array();
         foreach(array_keys($all) as $k) {
             $key[] = _T($k, 'glpi');
-            $val[] = $all[$k][0];
+            if ($k == 'Serial Number') {
+                $val[] = str_replace('@@WARRANTY_LINK_TEXT@@', _T('Click here to see this computer on manufacturer website', 'glpi'), $all[$k][0]);
+            }
+            else {
+                $val[] = $all[$k][0];
+            }
         }
         $n = new ListInfos($key, _T("Properties", "glpi"));
         $n->addExtraInfo($val, _T("Value", "glpi"));
@@ -191,6 +196,10 @@ _T('Date', 'glpi');
 _T('User', 'glpi');
 _T('Category', 'glpi');
 _T('Action', 'glpi');
+_T('Today', 'glpi');
+_T('Last week', 'glpi');
+_T('Last month', 'glpi');
+_T('All', 'glpi');
 
 ?>
 

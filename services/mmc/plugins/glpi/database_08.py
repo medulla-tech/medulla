@@ -1448,14 +1448,20 @@ class Glpi08(DyngroupDatabaseHelper):
                         manufacturerWarrantyUrl = self.getManufacturerWarrantyUrl(manufacturer, machine.serial)
 
                     if manufacturerWarrantyUrl:
-                        serialNumber = '%s / <a href="%s" target="_blank">Click here to get warranty informations on manufacturer website</a>' % (machine.serial, manufacturerWarrantyUrl)
+                        serialNumber = '%s / <a href="%s" target="_blank">@@WARRANTY_LINK_TEXT@@</a>' % (machine.serial, manufacturerWarrantyUrl)
                     else:
                         serialNumber = machine.serial
+
+                    entityValue = ''
+                    if entity:
+                        entityValue += entity
+                    if location:
+                        entityValue += ' (%s)' % location
 
                     l = [
                         ['Computer Name', machine.name],
                         ['Description', machine.comment],
-                        ['Entity (Location)', '%s (%s)' % (entity, location)],
+                        ['Entity (Location)', '%s' % entityValue],
                         ['Last Logged User', machine.contact],
                         ['OS', os],
                         ['Model / Type', modelType],
@@ -1784,7 +1790,13 @@ class Glpi08(DyngroupDatabaseHelper):
             },
         }
 
-        return d[log.linked_action]
+        if log.linked_action in d:
+            return d[log.linked_action]
+        else:
+            return {
+                'update': '',
+                'field': '',
+            }
 
     def getLinkedActionField(self, itemtype):
         """
