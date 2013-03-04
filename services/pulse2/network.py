@@ -128,10 +128,9 @@ class ResolvingCallable :
 
     name = None
 
-    def __init__(self, ip, netmask, gateway):
+    def __init__(self, ip, netmask):
         self.ip = ip
         self.netmask = netmask
-        self.gateway = gateway
 
     def __call__(self, target):
         raise NotImplementedError
@@ -184,6 +183,58 @@ class ChoosePerIP (ResolvingCallable):
                     return iface["ip"]
 
         return None
+
+class ChoosePerFQDN (ResolvingCallable):
+
+    name = "fqdn"
+
+    def __call__(self, target):
+        """ 
+        Implemented for the backward compatibility with scheduler networking. 
+
+        @param target: container having complete networking info.
+        @type target: list
+
+        @return: IP address of reachable interface
+        @rtype: string
+ 
+        """
+        return None
+
+class ChoosePerHosts (ResolvingCallable):
+
+    name = "hosts"
+
+    def __call__(self, target):
+        """ 
+        Implemented for the backward compatibility with scheduler networking. 
+
+        @param target: container having complete networking info.
+        @type target: list
+
+        @return: IP address of reachable interface
+        @rtype: string
+ 
+        """
+        return None
+
+class ChoosePerNetBios (ResolvingCallable):
+
+    name = "netbios"
+
+    def __call__(self, target):
+        """ 
+        Implemented for the backward compatibility with scheduler networking. 
+
+        @param target: container having complete networking info.
+        @type target: list
+
+        @return: IP address of reachable interface
+        @rtype: string
+ 
+        """
+        return None
+
 
 class ChooseFirstComplete (ResolvingCallable) :
 
@@ -272,7 +323,7 @@ class IPResolve (IPResolversContainer) :
     based on inventory info ("network" section).
     """
 
-    def __init__(self, resolve_order, ip=None, netmask=None, gateway=None):
+    def __init__(self, resolve_order, ip=None, netmask=None):
         """
         @param resolv_order: list of methods to apply
         @type resolv_order: list
@@ -282,17 +333,13 @@ class IPResolve (IPResolversContainer) :
 
         @param netmask: netmask of relevant network 
         @type netmask: str
-
-        @param gateway: gateway of relevant network 
-        @type gateway: str
         """
         self.resolve_order = resolve_order
 
         if not ip :
             ip = get_default_ip()
-        if not netmask or not gateway:
+        if not netmask :
             netmask, gateway = NetUtils.get_netmask_and_gateway()
-        self.gateway = gateway
 
         self.ip = ip or get_default_ip()
         self.netmask = netmask
@@ -352,14 +399,15 @@ class IPResolve (IPResolversContainer) :
             log.error("Bad target format")
             return None
 
-        for resolver in self.resolvers :     
-            method = resolver(self.ip, self.netmask, self.gateway)
-            if method and hasattr(method, "__call__"):
-                log.debug("Apply '%s' method ..." % method.name)
-                result = method(target)
-                if result :
-                    log.info("IP address resolved by '%s' method : %s" % (method.name, result))
-                    return result 
+        for resolver in self.resolvers :    
+
+            method = resolver(self.ip, self.netmask)
+
+            log.debug("Apply '%s' method ..." % method.name)
+            result = method(target)
+            if result :
+                log.info("IP address resolved by '%s' method : %s" % (method.name, result))
+                return result 
             else :
                 log.warn("Method select ignored")
                 continue
