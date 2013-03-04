@@ -1,6 +1,5 @@
 #!/usr/bin/python
 import os
-from mmc.site import mmcconfdir
 from optparse import OptionParser
 
 class GlpiSearchOptions(object):
@@ -114,7 +113,7 @@ if __name__ == '__main__':
 
     glpiSearchOptions = GlpiSearchOptions(options)
 
-    fpath = os.path.join(mmcconfdir, "plugins", "glpi_search_options.ini")
+    fpath = os.path.join(os.getcwd(), "glpi_search_options.ini")
     f = open(fpath, 'w')
 
     for lang in ['en_US', 'fr_FR', 'pt_BR']:
@@ -128,4 +127,5 @@ if __name__ == '__main__':
             print e
 
     f.close()
-    print '%s was written' % fpath
+    print 'Ini file was written in current directory:\n%s' % fpath
+    print 'You have to copy it in your mmc plugin conf dir (Default: /etc/mmc/plugins/)'
