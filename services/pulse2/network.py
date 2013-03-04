@@ -26,8 +26,10 @@ import struct
 import fcntl
 import logging
 import inspect
+import os
+import subprocess
 
-from pulse2.utils import isMACAddress, get_default_ip
+from pulse2.utils import isdigit, isMACAddress, get_default_ip
 
 log = logging.getLogger()
 
@@ -121,16 +123,61 @@ class NetUtils :
                 return False
         return True
 
+    @classmethod
+    def is_ip4_address(cls, candidate):
+        """
+        Validating the IPv4 address format.
+
+        @param candidate: candidate string to validate
+        @str candidate: str
+
+        @return: True if correct IPv4 format 
+        @rtype: bool
+        """
+        if "." in candidate :
+            if len(candidate.split(".")) == 4 :
+                for num in candidate.split(".") :
+                    if not isdigit(num) :
+                        return False
+                return True
+        return False
+                
+
 
 
 class ResolvingCallable :
-    """ An abstract class to implement a resolving callable method """
+    """ 
+    An abstract class to implement a resolving callable.
+
+    Inheriting this class ensure the creating a resolving method.
+    This instance is identified by 'name' attribute and code placed 
+    in __call__ method try to resolve a correct IP address.
+
+    To pre-check of validity before the register a resolver
+    use the 'validate' method which allows to prevent 
+    an unauthorised execution.
+    """
 
     name = None
 
-    def __init__(self, ip, netmask):
+    def __init__(self, ip, netmask, **kwargs):
         self.ip = ip
         self.netmask = netmask
+
+        for attr, value in kwargs.items():
+            setattr(self, attr, value)
+
+    def validate(self):
+        """ 
+        Method to pre-check when the resolver is installed.
+
+        Can be used to check the dependencies and prerequisites before
+        the execution of resolving callable.
+
+        @return: True if all the conditions are ok
+        @rtype: bool
+        """
+        return True
 
     def __call__(self, target):
         raise NotImplementedError
@@ -258,6 +305,63 @@ class ChooseFirstComplete (ResolvingCallable) :
                 return iface["ip"]
         return None
 
+class ChoosePerNMBLookup (ResolvingCallable) :
+
+    name = "nmblookup"
+
+    nmblookup_path = "/usr/bin/nmblookup"
+
+    def validate(self):
+        if not os.path.exists(self.nmblookup_path):
+            log.warn("Samba utils seems not installed, omitting nmblookup method.")
+            return False
+        else :
+            return True
+
+
+    def __call__(self, target):
+        """ 
+        Samba based method - NetBIOS  
+
+        @param target: container having complete networking info.
+        @type target: list
+
+        @return: IP address of reachable interface
+        @rtype: string
+
+        """
+        hostname, ifaces = target 
+
+        cmd = "%s -U server -R '%s'" % (self.nmblookup_path, hostname)
+        ps = subprocess.Popen(cmd, shell=True, 
+                              stdout=subprocess.PIPE,
+                              stderr=subprocess.PIPE)
+        out = ps.communicate()[0]
+
+        # <example of a positive response> :
+        # querying WORKSTATION_NAME on 192.168.1.255
+        # 192.168.70.254 WORKSTATION_NAME<00>
+
+        # <example of a negative response> :
+        # querying WORKSTATION_NAME on 192.168.1.255
+        # name_query failed to find name WORKSTATION_NAME
+
+        # So, let's go to parse!
+        if "\n" in out and len(out.split("\n")) > 1 :
+
+            second_line = out.split("\n")[1]
+
+            if not second_line.startswith("name_query") \
+            and " " in second_line :
+
+                ip = second_line.split(" ")[0]
+
+                if NetUtils.is_ip4_address(ip) :
+                    return ip
+
+        return None
+        
+ 
 class IPResolversContainer :
     """ 
     Registering of all resolvers to get a correct network interface 
@@ -288,7 +392,7 @@ class IPResolversContainer :
         """
         return [r for r in globals().values() if cls.is_resolver(r)]
  
-    def register_resolvers (self, resolve_order, resolvers=None) :
+    def register_resolvers (self, resolve_order, resolvers=None, **kwargs) :
         """
         Registering of resolvers.
 
@@ -298,6 +402,10 @@ class IPResolversContainer :
         @param resolvers: resolvers to register
         @type resolvers: list
 
+        kwargs parameters can be passed to resolvers from IPResolve constructor 
+        to precize some parameters (typicaly command paths, etc.) 
+        To prevent name conflicts, please use the name of resolver
+        as a prefix, like 'dns_value', 'nmblookup_path', etc.
         """
         if not resolvers :
             resolvers = self.get_all_resolvers()
@@ -310,10 +418,12 @@ class IPResolversContainer :
             
         for name in resolve_order :
             
-            for resolver in resolvers :
+            for resolver_class in resolvers :
+                resolver = resolver_class(self.ip, self.netmask, **kwargs)
                 
                 if name == resolver.name :
-                    self.resolvers.append(resolver)
+                    if resolver.validate():
+                        self.resolvers.append(resolver)
 
 
 
@@ -323,7 +433,7 @@ class IPResolve (IPResolversContainer) :
     based on inventory info ("network" section).
     """
 
-    def __init__(self, resolve_order, ip=None, netmask=None):
+    def __init__(self, resolve_order, ip=None, netmask=None, **kwargs):
         """
         @param resolv_order: list of methods to apply
         @type resolv_order: list
@@ -344,7 +454,7 @@ class IPResolve (IPResolversContainer) :
         self.ip = ip or get_default_ip()
         self.netmask = netmask
 
-        self.register_resolvers(resolve_order)
+        self.register_resolvers(resolve_order, resolvers=None, **kwargs)
 
 
     def _validate_target (self, target):
@@ -401,17 +511,14 @@ class IPResolve (IPResolversContainer) :
 
         for resolver in self.resolvers :    
 
-            method = resolver(self.ip, self.netmask)
-
-            log.debug("Apply '%s' method ..." % method.name)
-            result = method(target)
+            log.debug("Apply '%s' method ..." % resolver.name)
+            result = resolver(target)
             if result :
-                log.info("IP address resolved by '%s' method : %s" % (method.name, result))
+                log.info("IP address resolved by '%s' method : %s" % (resolver.name, result))
                 return result 
             else :
-                log.warn("Method select ignored")
+                log.warn("Method '%s' ignored" % resolver.name)
                 continue
 
         return None
-
 
