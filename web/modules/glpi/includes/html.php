@@ -41,8 +41,24 @@ class AjaxFilterGlpi extends AjaxFilter {
 
     <?php if($_GET['part'] == 'Softwares') { ?>
     <!-- Hide Windows Updates checkbox -->
-    <input checked style="top: 2px; left: 5px; position: relative; float: left" type="checkbox" class="searchfieldreal" name="hide_win_updates" id="hide_win_updates<?php echo $this->formid ?>" onchange="pushSearch<?php echo $this->formid ?>(); return false;" />
+    <input checked style="top: 2px; left: 5px; position: relative; float: left" 
+        type="checkbox"
+        class="searchfieldreal" 
+        name="hide_win_updates" 
+        id="hide_win_updates<?php echo $this->formid ?>" onchange="pushSearch<?php echo $this->formid ?>(); return false;" />
     <span style="padding: 7px 15px; position: relative; float: left"><?php echo _T('Hide Windows Updates', "glpi")?></span>
+    <?php } ?>
+
+    <?php if($_GET['part'] == 'History') { ?>
+    <select style="position: relative; float: left" 
+        class="searchfieldreal" 
+        name="history_delta" 
+        id="history_delta<?php echo $this->formid ?>" onchange="pushSearch<?php echo $this->formid ?>(); return false;" >
+        <option value="today"><?php echo _T('Today', 'glpi') ?></option>
+        <option value="week"><?php echo _T('Last week', 'glpi') ?></option>
+        <option value="month"><?php echo _T('Last month', 'glpi') ?></option>
+        <option value="older"><?php echo _T('All', 'glpi') ?></option>
+    </select>
     <?php } ?>
 
     <img src="graph/search.gif" style="position:relative; top: 5px; float: left;" alt="search" />
@@ -55,7 +71,7 @@ class AjaxFilterGlpi extends AjaxFilter {
     <br /><br /><br />
 
     <script type="text/javascript">
-    <?php if (!in_array($_GET['part'], array('Softwares'))) echo "$('Form').hide();" ?>
+    <?php if (!in_array($_GET['part'], array('Softwares', 'History'))) echo "$('Form').hide();" ?>
 <?
 if(!$this->formid) {
 ?>
@@ -73,10 +89,15 @@ if(isset($this->storedfilter)) {
         var refreshdelay<?php echo $this->formid ?> = <?php echo  $this->refresh ?>;
         var maxperpage = <?php echo $maxperpage ?>;
 
-        // Get the state of the software_value checkbox
+        // Get the state of the hide_win_updates checkbox
         var hide_win_updates = "";
         if(document.Form<?php echo $this->formid ?>.hide_win_updates != undefined){
             hide_win_updates = document.Form<?php echo $this->formid ?>.hide_win_updates.checked;
+        }
+        // Get the state of the history_delta dropdown
+        var history_delta = "";
+        if(document.Form<?php echo $this->formid ?>.history_delta != undefined){
+            history_delta = document.Form<?php echo $this->formid ?>.history_delta.value;
         }
 
 <?
@@ -105,7 +126,7 @@ if (isset($this->storedmax)) {
          * Update div
          */
         <?php
-        $url = $this->url."filter='+document.Form".$this->formid.".param.value+'&maxperpage='+maxperpage+'&hide_win_updates='+hide_win_updates+'".$this->params;
+        $url = $this->url."filter='+document.Form".$this->formid.".param.value+'&maxperpage='+maxperpage+'&hide_win_updates='+hide_win_updates+'&history_delta='+history_delta+'".$this->params;
         if (isset($this->storedstart) && isset($this->storedend)) {
             $url .= "&start=".$this->storedstart."&end=".$this->storedend;
         }
@@ -134,7 +155,7 @@ if ($this->refresh) {
             if(document.getElementById('maxperpage') != undefined)
                 maxperpage = document.getElementById('maxperpage').value;
 
-            new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?>filter='+filter+'&start='+start+'&end='+end+'&maxperpage='+maxperpage+'&hide_win_updates='+hide_win_updates+'<?php echo  $this->params ?>', { asynchronous:true, evalScripts: true});
+            new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?>filter='+filter+'&start='+start+'&end='+end+'&maxperpage='+maxperpage+'&hide_win_updates='+hide_win_updates+'&history_delta='+history_delta+'<?php echo  $this->params ?>', { asynchronous:true, evalScripts: true});
 <?
 if ($this->refresh) {
 ?>
@@ -153,6 +174,10 @@ if ($this->refresh) {
             // Refresh the state of the hide_win_updates checkbox
             if(document.Form<?php echo $this->formid ?>.hide_win_updates != undefined) {
                 hide_win_updates = document.Form<?php echo $this->formid ?>.hide_win_updates.checked;
+            }
+            // Refresh the state of the history_delta dropdown
+            if(document.Form<?php echo $this->formid ?>.history_delta != undefined) {
+                history_delta = document.Form<?php echo $this->formid ?>.history_delta.value;
             }
         }
 

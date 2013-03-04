@@ -55,10 +55,16 @@ function display_part($part, $get, $simpleTableParts, $displayNavBar = True, $pa
 
     $hide_win_updates = (isset($get['hide_win_updates'])) ? $get['hide_win_updates'] : False;
     $hide_win_updates = (strtolower($hide_win_updates) == 'true') ? True : False;
+    $history_delta = (isset($get['history_delta'])) ? $get['history_delta'] : False;
+
+    $options = array(
+        'hide_win_updates' => $hide_win_updates,
+        'history_delta' => $history_delta,
+    );
 
     // Get current part inventory
-    $inv = getLastMachineGlpiPart($uuid, $part, $start, $end, $filter, $hide_win_updates);
-    $itemCount = countLastMachineGlpiPart($uuid, $part, $filter, $hide_win_updates);
+    $inv = getLastMachineGlpiPart($uuid, $part, $start, $end, $filter, $options);
+    $itemCount = countLastMachineGlpiPart($uuid, $part, $filter, $options);
 
     if (!is_array($inv)) $inv = array();
 

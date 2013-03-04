@@ -1281,10 +1281,18 @@ class Glpi08(DyngroupDatabaseHelper):
         else:
             return False
 
-    def countLastMachineInventoryPart(self, uuid, part, filt = None, hide_win_updates = False):
-        return self.getLastMachineInventoryPart(uuid, part, filt = filt, hide_win_updates = hide_win_updates, count = True)
+    def countLastMachineInventoryPart(self, uuid, part, filt = None, options = {}):
+        return self.getLastMachineInventoryPart(uuid, part, filt = filt, options = options, count = True)
 
-    def getLastMachineInventoryPart(self, uuid, part, min = 0, max = -1, filt = None, hide_win_updates = False, count = False):
+    def getLastMachineInventoryPart(self, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        # Set options
+        hide_win_updates = False
+        history_delta = 'All'
+        if 'hide_win_updates' in options:
+            hide_win_updates = options['hide_win_updates']
+        if 'history_delta' in options:
+            history_delta = options['history_delta']
+
         session = create_session()
         if part == 'Network':
             query = self.filterOnUUID(
@@ -1638,6 +1646,14 @@ class Glpi08(DyngroupDatabaseHelper):
                 self.logs.c.items_id == int(uuid.replace('UUID', '')),
                 self.logs.c.itemtype == "Computer"
             ))
+
+            now = datetime.datetime.now()
+            if history_delta == 'today':
+                query = query.filter(self.logs.c.date_mod > now - datetime.timedelta(1))
+            elif history_delta == 'week':
+                query = query.filter(self.logs.c.date_mod > now - datetime.timedelta(7))
+            if history_delta == 'month':
+                query = query.filter(self.logs.c.date_mod > now - datetime.timedelta(30))
 
             if count:
                 ret = query.count()

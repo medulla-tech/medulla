@@ -87,11 +87,11 @@ def getLastMachineInventoryFull(uuid):
 def inventoryExists(uuid):
     return xmlrpcCleanup(Glpi().inventoryExists(uuid))
 
-def getLastMachineInventoryPart(uuid, part, min = 0, max = -1, filt = None, hide_win_updates = False):
-    return xmlrpcCleanup(Glpi().getLastMachineInventoryPart(uuid, part, min, max, filt, hide_win_updates))
+def getLastMachineInventoryPart(uuid, part, min = 0, max = -1, filt = None, options = {}):
+    return xmlrpcCleanup(Glpi().getLastMachineInventoryPart(uuid, part, min, max, filt, options))
 
-def countLastMachineInventoryPart(uuid, part, filt = None, hide_win_updates = False):
-    return xmlrpcCleanup(Glpi().countLastMachineInventoryPart(uuid, part, filt, hide_win_updates))
+def countLastMachineInventoryPart(uuid, part, filt = None, options = {}):
+    return xmlrpcCleanup(Glpi().countLastMachineInventoryPart(uuid, part, filt, options))
 
 def getMachineMac(uuid):
     return xmlrpcCleanup(Glpi().getMachineMac(uuid))
