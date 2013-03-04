@@ -99,6 +99,12 @@ function display_part($part, $get, $simpleTableParts, $displayNavBar = True, $pa
         }
         $n = new ListInfos($key, _T("Properties", "glpi"));
         $n->addExtraInfo($val, _T("Value", "glpi"));
+        /*
+         * $_GET['maxperpage'] is set to 10 by default
+         * If there is more than 10 elements, they don't be displayed
+         * So setRowsPerPage equal to number of elements to display
+         */
+        $n->setRowsPerPage(count($all));
         $n->drawTable(0);
     }
     // Multi-line table

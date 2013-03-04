@@ -1438,6 +1438,8 @@ class Glpi08(DyngroupDatabaseHelper):
                 .add_column(self.manufacturers.c.name) \
                 .add_column(self.glpi_computertypes.c.name) \
                 .add_column(self.glpi_computermodels.c.name) \
+                .add_column(self.glpi_operatingsystemservicepacks.c.name) \
+                .add_column(self.glpi_domains.c.name) \
                 .select_from(
                     self.machine.outerjoin(self.location) \
                     .outerjoin(self.locations) \
@@ -1445,14 +1447,16 @@ class Glpi08(DyngroupDatabaseHelper):
                     .outerjoin(self.manufacturers) \
                     .outerjoin(self.infocoms) \
                     .outerjoin(self.glpi_computertypes) \
-                    .outerjoin(self.glpi_computermodels)
+                    .outerjoin(self.glpi_computermodels) \
+                    .outerjoin(self.glpi_operatingsystemservicepacks) \
+                    .outerjoin(self.glpi_domains)
                 ), uuid)
 
             if count:
                 ret = query.count()
             else:
                 ret = []
-                for machine, infocoms, entity, location, os, manufacturer, type, model in query:
+                for machine, infocoms, entity, location, os, manufacturer, type, model, servicepack, domain in query:
                     endDate = ''
                     if infocoms is not None:
                         endDate = self.getWarrantyEndDate(infocoms)
@@ -1489,8 +1493,10 @@ class Glpi08(DyngroupDatabaseHelper):
                         ['Computer Name', machine.name],
                         ['Description', machine.comment],
                         ['Entity (Location)', '%s' % entityValue],
+                        ['Domain', domain],
                         ['Last Logged User', machine.contact],
                         ['OS', os],
+                        ['Service Pack', servicepack],
                         ['Model / Type', modelType],
                         ['Manufacturer', manufacturer],
                         ['Serial Number', serialNumber],
