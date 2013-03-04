@@ -1281,6 +1281,33 @@ class Glpi08(DyngroupDatabaseHelper):
         else:
             return False
 
+    def getSearchOptionId(self, filter, lang = 'en_US'):
+        """ 
+        return a list of ids corresponding to filter
+        @param filter: a value to search
+        @type filter: string
+        """
+
+        ids = []
+        dict = self.searchOptions[lang]
+        for key, value in dict.iteritems():
+            if filter in value:
+                ids.append(key)
+
+        return ids
+
+    def getLinkedActionKey(self, filter, lang = 'en_US'):
+        """ 
+        return a list of ids corresponding to filter
+        """
+        ids = []
+        dict = self.getLinkedActions()
+        for key, value in dict.iteritems():
+            if filter in value:
+                ids.append(key)
+
+        return ids
+
     def countLastMachineInventoryPart(self, uuid, part, filt = None, options = {}):
         return self.getLastMachineInventoryPart(uuid, part, filt = filt, options = options, count = True)
 
@@ -1661,6 +1688,16 @@ class Glpi08(DyngroupDatabaseHelper):
             if history_delta == 'month':
                 query = query.filter(self.logs.c.date_mod > now - datetime.timedelta(30))
 
+            if filt:
+                clauses = []
+                clauses.append(self.logs.c.date_mod.like('%'+filt+'%'))
+                clauses.append(self.logs.c.user_name.like('%'+filt+'%'))
+                clauses.append(self.logs.c.old_value.like('%'+filt+'%'))
+                clauses.append(self.logs.c.new_value.like('%'+filt+'%'))
+                clauses.append(self.logs.c.id_search_option.in_(self.getSearchOptionId(filt)))
+                clauses.append(self.logs.c.itemtype_link.in_(self.getLinkedActionKey(filt)))
+                query = query.filter(or_(*clauses))
+
             if count:
                 ret = query.count()
             else:
@@ -1798,11 +1835,8 @@ class Glpi08(DyngroupDatabaseHelper):
                 'field': '',
             }
 
-    def getLinkedActionField(self, itemtype):
-        """
-        return Field content
-        """
-        field = {
+    def getLinkedActions(self):
+        return {
             'DeviceDrive': 'Drive',
             'DeviceGraphicCard': 'Graphic Card',
             'DeviceHardDrive': 'Hard Drive',
@@ -1814,6 +1848,12 @@ class Glpi08(DyngroupDatabaseHelper):
             'ComputerDisk': 'Volume',
             'NetworkPort': 'Network Port',
         }
+
+    def getLinkedActionField(self, itemtype):
+        """
+        return Field content
+        """
+        field = self.getLinkedActions()
         try:
             return field[itemtype]
         except:
