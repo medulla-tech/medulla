@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-07 18:36+0100\n"
+"POT-Creation-Date: 2013-03-04 10:49+0100\n"
 "PO-Revision-Date: 2012-10-19 12:01+0000\n"
 "Last-Translator: Jean-Christophe Vassort <jcvassort@mandriva.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/"
@@ -47,7 +47,7 @@ msgstr ""
 msgid "%s's profile imaging"
 msgstr ""
 
-#: modules/imaging/manage/ajaxConfiguration.php:122
+#: modules/imaging/manage/ajaxConfiguration.php:132
 #: modules/imaging/imaging/configure.php:379
 msgid "(default)"
 msgstr "(standard)"
@@ -272,7 +272,7 @@ msgstr ""
 msgid "Boot menu generation failed for package server: %s"
 msgstr ""
 
-#: modules/imaging/manage/save_configuration.php:67
+#: modules/imaging/manage/save_configuration.php:68
 #: modules/imaging/manage/location.php:59
 #: modules/imaging/manage/location.php:62
 #, php-format
@@ -302,7 +302,7 @@ msgstr ""
 msgid "Boot menu shown"
 msgstr ""
 
-#: modules/imaging/manage/ajaxConfiguration.php:143
+#: modules/imaging/manage/ajaxConfiguration.php:153
 #: modules/imaging/imaging/configure.php:400
 msgid "Boot options"
 msgstr "Bootoptionen"
@@ -702,7 +702,7 @@ msgstr ""
 msgid "From profile"
 msgstr ""
 
-#: modules/imaging/manage/ajaxConfiguration.php:146
+#: modules/imaging/manage/ajaxConfiguration.php:156
 #: modules/imaging/imaging/configure.php:403
 msgid "Full path to the XPM displayed at boot"
 msgstr "Vollständiger beim Boot angezeigter Pfad zum XPM "
@@ -744,6 +744,10 @@ msgstr ""
 
 #: modules/imaging/includes/logs.inc.php:50
 msgid "Hardware Inventory updated"
+msgstr ""
+
+#: modules/imaging/manage/ajaxConfiguration.php:109
+msgid "Hide menu"
 msgstr ""
 
 #: modules/imaging/imaging/configure.php:45
@@ -869,7 +873,7 @@ msgstr ""
 msgid "Imaging server"
 msgstr ""
 
-#: modules/imaging/manage/save_configuration.php:62
+#: modules/imaging/manage/save_configuration.php:63
 #, php-format
 msgid "Imaging server <strong>%s</strong> configuration saved."
 msgstr "Imaging server <strong>%s</strong> Konfiguration gespeichert."
@@ -1014,7 +1018,7 @@ msgstr ""
 msgid "Message"
 msgstr "Nachricht"
 
-#: modules/imaging/manage/ajaxConfiguration.php:150
+#: modules/imaging/manage/ajaxConfiguration.php:160
 #: modules/imaging/imaging/configure.php:407
 msgid "Message displayed during backup/restoration"
 msgstr "Angezeigte Nachricht während Backup/Restore"
@@ -1260,17 +1264,17 @@ msgstr ""
 msgid "Restoration Started"
 msgstr ""
 
-#: modules/imaging/manage/ajaxConfiguration.php:106
+#: modules/imaging/manage/ajaxConfiguration.php:116
 #: modules/imaging/imaging/configure.php:362
 msgid "Restoration options"
 msgstr "Wiederherstellungsoptionen"
 
-#: modules/imaging/manage/ajaxConfiguration.php:135
+#: modules/imaging/manage/ajaxConfiguration.php:145
 #: modules/imaging/imaging/configure.php:392
 msgid "Restoration type"
 msgstr "Wiederherstellungsart"
 
-#: modules/imaging/manage/ajaxConfiguration.php:138
+#: modules/imaging/manage/ajaxConfiguration.php:148
 #: modules/imaging/imaging/configure.php:395
 msgid "Restoration: MTFTP maximum waiting (in sec)"
 msgstr "Restore: MTFTP maximale Wartezeit (in Sek.)"
@@ -1641,7 +1645,7 @@ msgstr ""
 
 #: modules/imaging/manage/master_edit.php:70
 #: modules/imaging/manage/service_edit.php:69
-#: modules/imaging/manage/ajaxConfiguration.php:173
+#: modules/imaging/manage/ajaxConfiguration.php:183
 #: modules/imaging/manage/bootmenu_edit.php:101
 #: modules/imaging/manage/postinstall_edit.php:119
 #: modules/imaging/imaging/bootmenu.php:156
@@ -1728,12 +1732,12 @@ msgstr "Master sind verfügbar"
 msgid "minute"
 msgstr ""
 
-#: modules/imaging/manage/ajaxConfiguration.php:115
+#: modules/imaging/manage/ajaxConfiguration.php:125
 #: modules/imaging/imaging/configure.php:372
 msgid "mtftp"
 msgstr "mtftp"
 
-#: modules/imaging/manage/ajaxConfiguration.php:114
+#: modules/imaging/manage/ajaxConfiguration.php:124
 #: modules/imaging/imaging/configure.php:370
 msgid "nfs"
 msgstr "nfs"
