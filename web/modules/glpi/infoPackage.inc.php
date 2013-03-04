@@ -47,29 +47,29 @@ $page->setFile("modules/glpi/glpi/ajaxLocationSearch.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 
-$page = new Page("groupglpitabs", _T("Inventory (GLPI) on a groups of machines", "glpi"));
+$page = new Page("groupglpitabs", _T("Inventory (GLPI) on a group of machines", "glpi"));
 $page->setFile("modules/glpi/glpi/tabs.php");
 $page->setOptions(array("visible"=>False));
 
-$tab = new Tab("tab0", _T("GLPI hardware tab", 'glpi'));
+$tab = new Tab("tab0", _T("Summary tab (GLPI)", 'glpi'));
 $page->addTab($tab);
 
-$tab = new Tab("tab1", _T("GLPI network tab", 'glpi'));
+$tab = new Tab("tab1", _T("Hardware tab (GLPI)", 'glpi'));
 $page->addTab($tab);
 
-$tab = new Tab("tab2", _T("GLPI disk tab", 'glpi'));
+$tab = new Tab("tab2", _T("Storage tab (GLPI)", 'glpi'));
 $page->addTab($tab);
 
-$tab = new Tab("tab3", _T("GLPI administration tab", 'glpi'));
+$tab = new Tab("tab3", _T("Network tab (GLPI)", 'glpi'));
 $page->addTab($tab);
 
-$tab = new Tab("tab4", _T("GLPI software tab", 'glpi'));
+$tab = new Tab("tab4", _T("Softwares tab (GLPI)", 'glpi'));
 $page->addTab($tab);
 
-$tab = new Tab("tab5", _T("GLPI administration tab", 'glpi'));
+$tab = new Tab("tab5", _T("Administrative tab (GLPI)", 'glpi'));
 $page->addTab($tab);
 
-$tab = new Tab("tab6", _T("GLPI history tab", 'glpi'));
+$tab = new Tab("tab6", _T("History tab (GLPI)", 'glpi'));
 $page->addTab($tab);
 
 $submod->addPage($page);
@@ -78,25 +78,25 @@ $page = new Page("glpitabs", _T("Inventory (GLPI) on machine", "glpi"));
 $page->setFile("modules/glpi/glpi/tabs.php");
 $page->setOptions(array("visible"=>False));
 
-$tab = new Tab("tab0", _T("GLPI hardware tab", 'glpi'));
+$tab = new Tab("tab0", _T("Summary tab (GLPI)", 'glpi'));
 $page->addTab($tab);
 
-$tab = new Tab("tab1", _T("GLPI network tab", 'glpi'));
+$tab = new Tab("tab1", _T("Hardware tab (GLPI)", 'glpi'));
 $page->addTab($tab);
 
-$tab = new Tab("tab2", _T("GLPI disk tab", 'glpi'));
+$tab = new Tab("tab2", _T("Storage tab (GLPI)", 'glpi'));
 $page->addTab($tab);
 
-$tab = new Tab("tab3", _T("GLPI administration tab", 'glpi'));
+$tab = new Tab("tab3", _T("Network tab (GLPI)", 'glpi'));
 $page->addTab($tab);
 
-$tab = new Tab("tab4", _T("GLPI software tab", 'glpi'));
+$tab = new Tab("tab4", _T("Softwares tab (GLPI)", 'glpi'));
 $page->addTab($tab);
 
-$tab = new Tab("tab5", _T("GLPI administration tab", 'glpi'));
+$tab = new Tab("tab5", _T("Administrative tab (GLPI)", 'glpi'));
 $page->addTab($tab);
 
-$tab = new Tab("tab6", _T("GLPI history tab", 'glpi'));
+$tab = new Tab("tab6", _T("History tab (GLPI)", 'glpi'));
 $page->addTab($tab);
 
 $submod->addPage($page);

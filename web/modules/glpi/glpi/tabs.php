@@ -59,13 +59,11 @@ $i = 0;
 $tabList = array(
     'Summary' => _T('Summary', "glpi"),
     'Hardware' => _T('Hardware', "glpi"),
-    'Disk volumes' => _T('Disk volumes', "glpi"),
+    'Storage' => _T('Storage', "glpi"),
     'Network' => _T('Network', "glpi"),
-    'Software' => _T('Software', "glpi"),
-    'Administration' => _T('Administration', "glpi"),
-    // Temporary disable 'Historical' tab, will be reactivated
-    // in next step of development
-    // 'Historical' => _T('Historical', "glpi"),
+    'Softwares' => _T('Softwares', "glpi"),
+    'Administrative' => _T('Administrative', "glpi"),
+    'History' => _T('History', "glpi"),
 );
 
 foreach ($tabList as $tab => $str) {

@@ -35,6 +35,11 @@ from mmc.plugins.glpi.database_utils import decode_latin1, encode_latin1, decode
 from mmc.plugins.dyngroup.config import DGConfig
 from mmc.plugins.glpi.database_utils import DbTOA # pyflakes.ignore
 
+# GLPI Historical tab needed imports
+from mmc.site import mmcconfdir
+import os
+from configobj import ConfigObj
+
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
         Integer, ForeignKey, asc, or_, not_, desc
 from sqlalchemy.orm import create_session, mapper
@@ -110,6 +115,10 @@ class Glpi08(DyngroupDatabaseHelper):
         self.metadata.create_all()
         self.is_activated = True
         self.logger.debug("Glpi finish activation")
+
+        searchOptionConfFile = os.path.join(mmcconfdir, "plugins", "glpi_search_options.ini")
+        self.searchOptions = ConfigObj(searchOptionConfFile)
+
         return True
 
     def getTableName(self, name):
@@ -1298,7 +1307,7 @@ class Glpi08(DyngroupDatabaseHelper):
                             ['Gateway', network.gateway],
                         ]
                         ret.append(l)
-        elif part == 'Disk volumes':
+        elif part == 'Storage':
             query = self.filterOnUUID(
                 session.query(Disk).add_column(self.diskfs.c.name).select_from(
                     self.machine.outerjoin(self.disk).outerjoin(self.diskfs)
@@ -1312,14 +1321,14 @@ class Glpi08(DyngroupDatabaseHelper):
                         if disk is not None:
                             l = [
                                 ['Name', disk.name],
-                                ['Partition', disk.device],
-                                ['Mountpoint', disk.mountpoint],
-                                ['File System', diskfs],
-                                ['Global Size', str(disk.totalsize) + ' MB'],
+                                ['Device', disk.device],
+                                ['Mount Point', disk.mountpoint],
+                                ['Filesystem', diskfs],
+                                ['Size', str(disk.totalsize) + ' MB'],
                                 ['Free Size', str(disk.freesize) + ' MB'],
                             ]
                             ret.append(l)
-        elif part == 'Administration':
+        elif part == 'Administrative':
             query = self.filterOnUUID(
                 session.query(Infocoms).add_column(self.suppliers.c.name).select_from(
                     self.machine.outerjoin(self.infocoms).outerjoin(self.suppliers)
@@ -1339,7 +1348,7 @@ class Glpi08(DyngroupDatabaseHelper):
                             ['Warranty End Date', endDate],
                         ]
                         ret.append(l)
-        elif part == 'Software':
+        elif part == 'Softwares':
             query = self.filterOnUUID(
                 session.query(Software).add_column(self.manufacturers.c.name) \
                 .add_column(self.softwareversions.c.name).select_from(
@@ -1380,9 +1389,9 @@ class Glpi08(DyngroupDatabaseHelper):
                 for software, manufacturer, version in query:
                     if software is not None:
                         l = [
-                            ['Company', manufacturer],
-                            ['Product', software.name],
-                            ['Product Version', version],
+                            ['Vendor', manufacturer],
+                            ['Name', software.name],
+                            ['Version', version],
                         ]
                         ret.append(l)
         elif part == 'Summary':
@@ -1439,7 +1448,7 @@ class Glpi08(DyngroupDatabaseHelper):
                         ['Computer Name', machine.name],
                         ['Description', machine.comment],
                         ['Entity (Location)', '%s (%s)' % (entity, location)],
-                        ['Last logged user', machine.contact],
+                        ['Last Logged User', machine.contact],
                         ['OS', os],
                         ['Model / Type', modelType],
                         ['Manufacturer', manufacturer],
@@ -1466,7 +1475,7 @@ class Glpi08(DyngroupDatabaseHelper):
                             ['Frequency', str(processor.specificity) + ' Hz'],
                         ]
                         ret.append(l)
-        elif part == 'Memories':
+        elif part == 'Memory':
             query = self.filterOnUUID(
                 session.query(ComputerMemory) \
                 .add_column(self.memoryType.c.name) \
@@ -1507,7 +1516,7 @@ class Glpi08(DyngroupDatabaseHelper):
                     if hd is not None:
                         l = [
                             ['Name', designation],
-                            ['Capacity', str(hd.specificity) + ' MB'],
+                            ['Size', str(hd.specificity) + ' MB'],
                         ]
                         ret.append(l)
         elif part == 'NetworkCards':
@@ -1528,7 +1537,7 @@ class Glpi08(DyngroupDatabaseHelper):
                         l = [
                             ['Name', network.designation],
                             ['Bandwidth', network.bandwidth],
-                            ['MAC', mac.specificity],
+                            ['MAC Address', mac.specificity],
                         ]
                         ret.append(l)
         elif part == 'Drives':
@@ -1623,7 +1632,7 @@ class Glpi08(DyngroupDatabaseHelper):
                             ['Comment', pci.comment],
                         ]
                         ret.append(l)
-        elif part == 'Historical':
+        elif part == 'History':
             query = session.query(Logs)
             query = query.filter(and_(
                 self.logs.c.items_id == int(uuid.replace('UUID', '')),
@@ -1646,17 +1655,19 @@ class Glpi08(DyngroupDatabaseHelper):
                     if log is not None:
                         update = ''
                         if log.old_value == '' and log.new_value != '':
-                            update = '[+] %s' % log.new_value
+                            update = '%s' % log.new_value
                         elif log.old_value != '' and log.new_value == '':
-                            update = '[-] %s' % log.old_value
+                            update = '%s' % log.old_value
                         else:
                             update = '%s --> %s' % (log.old_value, log.new_value)
 
+                        update = '%s%s' % (self.getLinkedActionValues(log)['update'], update)
+
                         l = [
-                            ['Log Id', log.id],
                             ['Date', log.date_mod.strftime('%Y-%m-%d %H:%m')],
                             ['User', log.user_name],
-                            ['Update', update],
+                            ['Category', self.getLinkedActionValues(log)['field']],
+                            ['Action', update],
                         ]
                         ret.append(l)
         else:
@@ -1664,6 +1675,121 @@ class Glpi08(DyngroupDatabaseHelper):
 
         session.close()
         return ret
+
+    def getSearchOptionValue(self, log):
+        try:
+            return self.searchOptions['en_US'][str(log.id_search_option)]
+        except:
+            if log.id_search_option != 0:
+                logging.getLogger().warn('I can\'t get a search option for id %s' % log.id_search_option)
+            return ''
+
+    def getLinkedActionValues(self, log):
+        d = {
+            0: {
+                'update': '',
+                'field': self.getSearchOptionValue(log),
+            },
+            1: {
+                'update': 'Add a component: ',
+                'field': self.getLinkedActionField(log.itemtype_link),
+            },
+            2: {
+                'update': 'Update a component: ',
+                'field': self.getLinkedActionField(log.itemtype_link),
+            },
+            3: {
+                'update': 'Deletion of a component: ',
+                'field': self.getLinkedActionField(log.itemtype_link),
+            },
+            4: {
+                'update': 'Install software: ',
+                'field': 'Software',
+            },
+            5: {
+                'update': 'Uninstall software: ',
+                'field': 'Software',
+            },
+            6: {
+                'update': 'Disconnect device: ',
+                'field': log.itemtype_link,
+            },
+            7: {
+                'update': 'Connect device: ',
+                'field': log.itemtype_link,
+            },
+            8: {
+                'update': 'OCS Import: ',
+                'field': '',
+            },
+            9: {
+                'update': 'OCS Delete: ',
+                'field': '',
+            },
+            10: {
+                'update': 'OCS ID Changed: ',
+                'field': '',
+            },
+            11: {
+                'update': 'OCS Link: ',
+                'field': '',
+            },
+            12: {
+                'update': 'Other (often from plugin): ',
+                'field': '',
+            },
+            13: {
+                'update': 'Delete item (put in trash): ',
+                'field': '',
+            },
+            14: {
+                'update': 'Restore item from trash: ',
+                'field': '',
+            },
+            15: {
+                'update': 'Add relation: ',
+                'field': log.itemtype_link,
+            },
+            16: {
+                'update': 'Delete relation: ',
+                'field': log.itemtype_link,
+            },
+            17: {
+                'update': 'Add an item: ',
+                'field': self.getLinkedActionField(log.itemtype_link),
+            },
+            18: {
+                'update': 'Update an item: ',
+                'field': self.getLinkedActionField(log.itemtype_link),
+            },
+            19: {
+                'update': 'Deletion of an item: ',
+                'field': self.getLinkedActionField(log.itemtype_link),
+            },
+        }
+
+        return d[log.linked_action]
+
+    def getLinkedActionField(self, itemtype):
+        """
+        return Field content
+        """
+        field = {
+            'DeviceDrive': 'Drive',
+            'DeviceGraphicCard': 'Graphic Card',
+            'DeviceHardDrive': 'Hard Drive',
+            'DeviceMemory': 'Memory',
+            'DeviceNetworkCard': 'Network Card',
+            'DevicePci': 'Other Component',
+            'DeviceProcessor': 'Processor',
+            'DeviceSoundCard': 'Sound Card',
+            'ComputerDisk': 'Volume',
+            'NetworkPort': 'Network Port',
+        }
+        try:
+            return field[itemtype]
+        except:
+            return itemtype
 
     ##################### functions used by querymanager
     def getAllOs(self, ctx, filt = ''):

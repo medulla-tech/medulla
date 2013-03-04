@@ -1,0 +1,131 @@
+#!/usr/bin/python
+import os
+from mmc.site import mmcconfdir
+from optparse import OptionParser
+
+class GlpiSearchOptions(object):
+    def __init__(self, options):
+        self.options = options
+
+    def getLangValues(self, lang):
+        # Get $LANG values
+        a = os.popen("grep '$LANG' %s/locales/%s.php" % (self.options.glpi_path, lang)).read().split('\n')
+        if len(a) == 1:
+            # Error while parsing file
+            errormsg = "I can't find %s/locales/%s.php\nCheck your Glpi path" % (self.options.glpi_path, lang)
+            raise Exception(errormsg)
+
+        a = [i.split('=') for i in a]
+
+        # put in a list result and remove PHP's ; end line
+        b = []
+        for i in a:
+            tmp = [j.replace(';', '').replace('"', '').strip() for j in i if j != '']
+            if tmp:
+                b.append(tmp)
+
+        lang = {}
+        for i in b:
+            lang[i[0]] = i[1:]
+
+        return lang
+
+    def getIdSearchOptionsValues(self, lang = 'en_US'):
+        # Get id_search_options values ($tab)
+        lang = self.getLangValues(lang)
+        
+        # Get $LANG['common'] values
+        a = os.popen("grep -rn '$tab' %s/inc/computer.class.php | grep \"\$LANG\" | grep -v \<td\>" % self.options.glpi_path).read().split('\n')
+        a = [i.split(' ') for i in a]
+        
+        # put in a list result and remove PHP's ; end line
+        b = []
+        for i in a:
+            tmp = [j.replace(';', '') for j in i if j != '']
+            # tmp = ['php class file', '$tab', '=', '$LANG']
+            if tmp:
+                tmp.pop(0) # remove php class file
+                tmp.pop(1) # remove '='
+                b.append(tmp)
+        
+        # b is a list of [$tab[x], $LANG[x]]
+        
+        # Get Special values added by getSearchOptionsToAdd method
+        a = os.popen("sed -n '/static function getSearchOptionsToAdd/,/function getSearchOptions/p' %s/inc/* | grep name | grep \$LANG" % self.options.glpi_path).read().split('\n')
+        
+        a = [i.split(' ') for i in a]
+        
+        # put in a list result and remove PHP's ; end line
+        c = []
+        for i in a:
+            tmp = [j.replace(';', '') for j in i if j != '']
+            # tmp = ['php class file', '$tab', '=', '$LANG']
+            if tmp:
+                tmp.pop(1) # remove '='
+                c.append(tmp)
+        
+        # b is a list of [$tab[x], $LANG[x]]
+        
+        id_search_option = {}
+        
+        for i in b + c:
+            value = []
+            for val in i[1:]:
+                val = val \
+                    .replace("\\",'') \
+                    .replace('."', '') \
+                    .replace('".', '') \
+                    .replace(".'", '') \
+                    .replace("'.", '') \
+                    .replace('.', '') \
+                    .replace('(', '') \
+                    .replace(')"', '') \
+                    .replace(',', '')
+                if val.startswith('$LANG'):
+                    try:
+                        value.append(lang[val])
+                    except:
+                        try:
+                            value.append(lang[val.replace('"', '\'')])
+                        except:
+                            value.append('')
+                else:
+                    value.append(val)
+                value = ["".join(j) for j in value]
+            
+            if 'name' in i[0]:
+                key = int(i[0][5:-9]) # extract 'id' from $tab[id]['name']
+                id_search_option[key] = "".join(value)
+        
+        return id_search_option
+
+if __name__ == '__main__':
+    parser = OptionParser()
+    parser.add_option("-p", "--glpi-path", dest="glpi_path", 
+                      help="Define Glpi root path")
+    # Parse and analyse args
+    (options, args) = parser.parse_args()
+    if options.glpi_path is None:
+        print
+        print "Mandatory Glpi root path option is missing !!"
+        print
+        parser.print_help()
+        exit(1)
+
+    glpiSearchOptions = GlpiSearchOptions(options)
+
+    fpath = os.path.join(mmcconfdir, "plugins", "glpi_search_options.ini")
+    f = open(fpath, 'w')
+
+    for lang in ['en_US', 'fr_FR', 'pt_BR']:
+        try:
+            dict = glpiSearchOptions.getIdSearchOptionsValues(lang)
+            inikey = '[%s]\n' % lang
+            f.write(inikey)
+            for k in dict:
+                f.write('%s = %s\n' % (k, dict[k]))
+        except Exception, e:
+            print e
+
+    f.close()
+    print '%s was written' % fpath

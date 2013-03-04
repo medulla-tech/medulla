@@ -129,7 +129,7 @@ $part = $_GET['part'];
 if ($part == 'Hardware') {
     $hardwareParts = array(
         'Processors' => _T('Processors', "glpi"),
-        'Memories' => _T('Memories', "glpi"),
+        'Memory' => _T('Memory', "glpi"),
         'Harddrives' => _T('Hard Drives', "glpi"),
         'Controllers' => _T('Controllers', "glpi"),
         'NetworkCards' => _T('Network Cards', "glpi"),
@@ -149,30 +149,42 @@ else {
 
 /**  to get i18n labels... */
 
-_T('name', 'glpi');
-_T('comments', 'glpi');
-_T('ifaddr', 'glpi');
-_T('ifmac', 'glpi');
-_T('netmask', 'glpi');
-_T('gateway', 'glpi');
-_T('subnet', 'glpi');
-_T('type', 'glpi');
-_T('designation', 'glpi');
-_T('specif_default', 'glpi');
-_T('frequence', 'glpi');
-_T('bandwidth', 'glpi');
-_T('is_writer', 'glpi');
-_T('interface', 'glpi');
-_T('comment', 'glpi');
-
-_T('processor', 'glpi');
-_T('ram', 'glpi');
-_T('hdd', 'glpi');
-_T('iface', 'glpi');
-_T('drive', 'glpi');
-_T('gfxcard', 'glpi');
-_T('sndcard', 'glpi');
-_T('pci', 'glpi');
+_T('Name', 'glpi');
+_T('Network Type', 'glpi');
+_T('MAC Address', 'glpi');
+_T('IP', 'glpi');
+_T('Netmask', 'glpi');
+_T('Gateway', 'glpi');
+_T('Device', 'glpi');
+_T('Mount Point', 'glpi');
+_T('Filesystem', 'glpi');
+_T('Size', 'glpi');
+_T('Free Size', 'glpi');
+_T('Supplier', 'glpi');
+_T('Invoice Number', 'glpi');
+_T('Warranty End Date', 'glpi');
+_T('Vendor', 'glpi');
+_T('Name', 'glpi');
+_T('Version', 'glpi');
+_T('Computer Name', 'glpi');
+_T('Description', 'glpi');
+_T('Entity (Location)', 'glpi');
+_T('Last Logged User', 'glpi');
+_T('OS', 'glpi');
+_T('Model / Type', 'glpi');
+_T('Manufacturer', 'glpi');
+_T('Serial Number', 'glpi');
+_T('Frequency', 'glpi');
+_T('Type', 'glpi');
+_T('Size', 'glpi');
+_T('Bandwidth', 'glpi');
+_T('Writer', 'glpi');
+_T('Memory', 'glpi');
+_T('Comment', 'glpi');
+_T('Date', 'glpi');
+_T('User', 'glpi');
+_T('Category', 'glpi');
+_T('Action', 'glpi');
 
 ?>
 

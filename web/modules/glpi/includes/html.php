@@ -39,7 +39,7 @@ class AjaxFilterGlpi extends AjaxFilter {
     </div>
     <div id="searchSpan<?php echo $this->formid ?>" class="searchbox" style="float: right;">
 
-    <?php if($_GET['part'] == 'Software') { ?>
+    <?php if($_GET['part'] == 'Softwares') { ?>
     <!-- Hide Windows Updates checkbox -->
     <input checked style="top: 2px; left: 5px; position: relative; float: left" type="checkbox" class="searchfieldreal" name="hide_win_updates" id="hide_win_updates<?php echo $this->formid ?>" onchange="pushSearch<?php echo $this->formid ?>(); return false;" />
     <span style="padding: 7px 15px; position: relative; float: left"><?php echo _T('Hide Windows Updates', "glpi")?></span>
@@ -55,7 +55,7 @@ class AjaxFilterGlpi extends AjaxFilter {
     <br /><br /><br />
 
     <script type="text/javascript">
-    <?php if (!in_array($_GET['part'], array('Software', 'Historical'))) echo "$('Form').hide();" ?>
+    <?php if (!in_array($_GET['part'], array('Softwares'))) echo "$('Form').hide();" ?>
 <?
 if(!$this->formid) {
 ?>
