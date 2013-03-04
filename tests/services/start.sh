@@ -136,6 +136,12 @@ if [ ! $? -eq 0 ]; then
   ERRORLOG="${ERRORLOG}\nFAILURE: Inventory Injection: mmcagent-inventory-inject.py"
 fi 
 
+echo "Testing networking utils"
+python network.py
+if [ ! $? -eq 0 ]; then
+  ERROR=`expr ${ERROR} + 1`;
+  ERRORLOG="${ERRORLOG}\nFAILURE: networking utils: network.py"
+fi 
 
 echo ""
 echo ""
