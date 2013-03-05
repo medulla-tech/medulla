@@ -23,9 +23,18 @@
 
 import unittest
 import subprocess
+import logging
 
 from pulse2.network import NetUtils, IPResolve
 
+def myLogger ():
+    """ Default logging instance """
+    log = logging.getLogger()
+    handler = logging.StreamHandler()
+    log.addHandler(handler)
+    return log
+
+log = myLogger()
 
 def get_my_network ():
     """ 
@@ -40,14 +49,24 @@ def get_my_network ():
     """
     cmd_ip = "ifconfig $EXT_NIC | grep inet | cut -d : -f 2 | cut -d ' ' -f 1"
     cmd_nm = "ifconfig $EXT_NIC | grep Mask | cut -d : -f 4 | cut -d ' ' -f 1"
-    cmd_gw = "ip route show default"
     
     ip = exec_cmd(cmd_ip,exclude="127.0.0.1")
     nm = exec_cmd(cmd_nm)
-    gw = exec_cmd(cmd_gw).split()[11]
 
-    return ip, nm, gw
+    return ip, nm
 
+def get_my_gateway():
+    import socket
+    import struct
+
+    with open("/proc/net/route") as f_route:
+        for line in f_route:
+            fields = line.strip().split()
+            if fields[1] != '00000000' or not int(fields[3], 16) & 2:
+                continue
+            return socket.inet_ntoa(struct.pack("<L", int(fields[2], 16)))
+
+ 
 def exec_cmd(cmd, exclude=None):
     """
     Command execute and output parse 
@@ -83,7 +102,8 @@ class class01_NetUtils (unittest.TestCase) :
 
     def setUp (self):
         """getting of local network settings"""
-        self.my_ip, self.my_nm, self.my_gw = get_my_network()  
+        self.my_ip, self.my_nm = get_my_network()  
+        self.my_gw = get_my_gateway()
         
 
     def test01_get_netmask(self):
@@ -169,16 +189,17 @@ class class02_IPresolve (unittest.TestCase):
 
         self.assertEqual(estimated_ip, getted_ip)
 
-    def test02_resolve_per_dns(self):
+    def test02_resolve_per_ip_with_default_detection(self):
+        """ 
+        IP resolving method.
+        
+        Selecting of correct interface depends on prefered network of server.
+        IP address of tested machine exists on local network.
         """
-        DNS resolving method.
 
-        Based on request to local DNS server by hostname of checked computer.
-        """
+        my_ip, my_mask = get_my_network()
 
-        my_ip, my_mask, my_gw = get_my_network()
-
-        resolve_order = ["dns"]
+        resolve_order = ["ip"]
 
         # modify the last number of IP address to 111 
         # e.g. 211.55.21.37 --> 211.55.21.111

@@ -60,35 +60,35 @@ class class01schedulerTest(unittest.TestCase):
     Test's class of ping,probe,ping_probe_client,download,tcp_sproxy,tell_i_alive and healt functions
     """
     def test101ping_client(self):
-        result=server.ping_client(uuid,fqdn,ipserver,['127.0.0.1'],["00:11:22:33:44:55"])
+        result=server.ping_client(uuid,fqdn,ipserver,['127.0.0.1'],["00:11:22:33:44:55"],['255.255.255.0'])
         self.assertEqual (result,True)
 
     def test102probe_client(self):
-        result=server.probe_client(uuid,fqdn,ipserver,['127.0.0.1'],["00:11:22:33:44:55"])
+        result=server.probe_client(uuid,fqdn,ipserver,['127.0.0.1'],["00:11:22:33:44:55"],['255.255.255.0'])
         self.assertEqual (result,'GNU Linux')
 
     def test103ping_probe_client(self):
-        result=server.ping_and_probe_client(uuid,fqdn,ipserver,['127.0.0.1'],["00:11:22:33:44:55"])
+        result=server.ping_and_probe_client(uuid,fqdn,ipserver,['127.0.0.1'],["00:11:22:33:44:55"],['255.255.255.0'])
         self.assertEqual (result,2)
 
     def test104ping_client_error(self):
-        result=server.ping_client(uuid,fqdn,'0.0.0.1',['0.0.0.1'],["00:11:22:33:44:55"])
+        result=server.ping_client(uuid,fqdn,'0.0.0.1',['0.0.0.1'],["00:11:22:33:44:55"],['255.255.255.0'])
         self.assertEqual (result,False)
 
     def test105probe_client_error(self):
-        result=server.probe_client(uuid,fqdn,'0.0.0.1',['0.0.0.1'],["00:11:22:33:44:55"])
+        result=server.probe_client(uuid,fqdn,'0.0.0.1',['0.0.0.1'],["00:11:22:33:44:55"],['255.255.255.0'])
         self.assertEqual (result,'Not available')
 
     def test106ping_probe_client_error(self):
-        result=server.ping_and_probe_client(uuid,fqdn,'0.0.0.1',['0.0.0.1'],["00:11:22:33:44:55"])
+        result=server.ping_and_probe_client(uuid,fqdn,'0.0.0.1',['0.0.0.1'],["00:11:22:33:44:55"],['255.255.255.0'])
         self.assertEqual (result,0)
 
     def test107download_file(self):
-        result=server.download_file(uuid,fqdn,ipserver,['127.0.0.1'],["00:11:22:33:44:55"],[directory],0)
+        result=server.download_file(uuid,fqdn,ipserver,['127.0.0.1'],["00:11:22:33:44:55"],['255.255.255.0'],[directory],0)
         self.assertEqual (result,['test.bin', result[1]])
 
     def test108tcp_sproxy(self):
-        result=server.tcp_sproxy(uuid,fqdn,ipserver,'localhost',"00:11:22:33:44:55",ipserver,"9990")
+        result=server.tcp_sproxy(uuid,fqdn,ipserver,'localhost',"00:11:22:33:44:55",['255.255.255.0'],ipserver,"9990")
         self.assertEqual (result,['127.0.0.1', result[1]])
 
     def test109tell_i_am_alive(self):
