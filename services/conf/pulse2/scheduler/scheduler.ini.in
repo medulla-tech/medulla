@@ -99,18 +99,19 @@ scheduler_proxy_path = @sbindir@/pulse2-scheduler-proxy
 # prefered method to reach a client
 # available:
 # - ip: test if a machine exists on the same network
-# - nmblookup: attempt to reach a machine by Samba query
 # - dns: query to DNS server 
 # - fqdn: attempt to perform a DNS query on FQDN
 # - hosts: same, no DNS query
 # - netbios: attempt to do a nmblookup on IP adress
 # tests are performed using ping
-# resolv_order = ip nmblookup dns fqdn hosts netbios
+# resolv_order = ip netbios dns fqdn hosts netbios
 #
 # Preferred network parameter overrides default IP/netmask of server detected when scheduler is started.
 # Setting this parameter favorize the introduced network prior to others network availables.
 # Format of parameter: ip_address/netmask (e.g. 192.168.1.1/255.255.255.0) 
 # preferred_network =
+# nmblookup command path
+# netbios_path = /usr/bin/nmblookup
 
 ## CHECKING ##
 # in some situations itn may be useful to do some pre-checks on clients

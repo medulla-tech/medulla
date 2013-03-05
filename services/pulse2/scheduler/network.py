@@ -21,9 +21,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-# regular modules
-import logging
-
 # My functions
 from pulse2.scheduler.config import SchedulerConfig
 from pulse2.network import IPResolve

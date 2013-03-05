@@ -107,9 +107,9 @@ class SchedulerConfig(pulse2.utils.Singleton):
     preempt_amount = 50
     preempt_period = 1
     port = 8000
-    resolv_order = ['ip','nmblookup', 'dns', 'fqdn', 'netbios', 'hosts', 'first']
+    resolv_order = ['ip','netbios', 'dns', 'fqdn', 'hosts', 'first']
     preferred_network = (None, None)
-    nmblookup_path = "/usr/bin/nmblookup"
+    netbios_path = "/usr/bin/nmblookup"
     scheduler_path = '/usr/sbin/pulse2-scheduler'
     scheduler_proxy_path = '/usr/sbin/pulse2-scheduler-proxy'
     server_check = None
@@ -286,7 +286,7 @@ class SchedulerConfig(pulse2.utils.Singleton):
         self.setoption("scheduler", "preferred_network", "preferred_network")
         if not type(self.preferred_network) == type(()):
             self.preferred_network = self.preferred_network.split('/')
-        self.setoption("scheduler", "nmblookup_path", "nmblookup_path")
+        self.setoption("scheduler", "netbios_path", "netbios_path")
         self.setoption("scheduler", "scheduler_path", "scheduler_path")
         self.setoption("scheduler", "scheduler_proxy_path", "scheduler_proxy_path")
 

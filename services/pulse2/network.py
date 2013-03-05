@@ -330,24 +330,6 @@ class ChoosePerHosts (ResolvingCallable):
             return None
                
 
-class ChoosePerNetBios (ResolvingCallable):
-
-    name = "netbios"
-
-    def __call__(self, target):
-        """ 
-        Implemented for the backward compatibility with scheduler networking. 
-
-        @param target: container having complete networking info.
-        @type target: list
-
-        @return: IP address of reachable interface
-        @rtype: string
- 
-        """
-        return None
-
-
 class ChooseFirstComplete (ResolvingCallable) :
 
     name = "first"
@@ -372,12 +354,12 @@ class ChooseFirstComplete (ResolvingCallable) :
 
 class ChoosePerNMBLookup (ResolvingCallable) :
 
-    name = "nmblookup"
+    name = "netbios"
 
-    nmblookup_path = "/usr/bin/nmblookup"
+    netbios_path = "/usr/bin/nmblookup"
 
     def validate(self):
-        if not os.path.exists(self.nmblookup_path):
+        if not os.path.exists(self.netbios_path):
             log.warn("Samba utils seems not installed, omitting nmblookup method.")
             return False
         else :
@@ -397,7 +379,7 @@ class ChoosePerNMBLookup (ResolvingCallable) :
         """
         hostname, ifaces = target 
 
-        cmd = "%s -U server -R '%s'" % (self.nmblookup_path, hostname)
+        cmd = "%s -U server -R '%s'" % (self.netbios_path, hostname)
 
         out = self.run_command(cmd)
         # <example of a positive response> :
