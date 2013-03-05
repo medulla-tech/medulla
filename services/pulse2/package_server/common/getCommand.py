@@ -52,7 +52,10 @@ class getCommand(object):
         return 'regedit /s "%s"' % self.file.split('/').pop()
 
     def getBatCommand(self):
-        return '"./%s"' % self.file.split('/').pop()
+        return 'cmd.exe /c "%s"' % self.file.split('/').pop()
+
+    def getShCommand(self):
+        return './"%s"' % self.file.split('/').pop()
 
     def getCommand(self):
         self.logger.debug("Parsing %s:" % self.file)
@@ -106,12 +109,14 @@ class getCommand(object):
                     return self.logger.info("I can't get a command for %s" % self.file)
             else:
                 return self.logger.info("No Template Key for %s" % self.file)
-        elif file_data[self.file] == 'ASCII text':
-            if self.file.endswith(".reg"):
-                self.logger.debug("Reg file detected")
-                return self.getRegCommand()
-            elif self.file.endswith(".bat"):
-                self.logger.debug("MS-DOS Batch file detected")
-                return self.getBatCommand()
+        elif self.file.endswith(".reg"):
+            self.logger.debug("Reg file detected")
+            return self.getRegCommand()
+        elif self.file.endswith(".bat"):
+            self.logger.debug("MS-DOS Batch file detected")
+            return self.getBatCommand()
+        elif self.file.endswith(".sh"):
+            self.logger.debug("sh file detected")
+            return self.getShCommand()
         else:
             return self.logger.info("I don't know what to do with %s (%s)" % (self.file, file_data[self.file]))
