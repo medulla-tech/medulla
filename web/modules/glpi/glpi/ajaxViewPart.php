@@ -206,6 +206,8 @@ _T('Today', 'glpi');
 _T('Last week', 'glpi');
 _T('Last month', 'glpi');
 _T('All', 'glpi');
+_T('Service Pack', 'glpi');
+_T('Domain', 'glpi');
 
 ?>
 

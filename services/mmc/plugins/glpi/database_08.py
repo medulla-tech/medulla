@@ -1291,7 +1291,7 @@ class Glpi08(DyngroupDatabaseHelper):
         ids = []
         dict = self.searchOptions[lang]
         for key, value in dict.iteritems():
-            if filter in value:
+            if filter.lower() in value.lower():
                 ids.append(key)
 
         return ids
@@ -1303,7 +1303,7 @@ class Glpi08(DyngroupDatabaseHelper):
         ids = []
         dict = self.getLinkedActions()
         for key, value in dict.iteritems():
-            if filter in value:
+            if filter.lower() in value.lower():
                 ids.append(key)
 
         return ids
@@ -1311,105 +1311,433 @@ class Glpi08(DyngroupDatabaseHelper):
     def countLastMachineInventoryPart(self, uuid, part, filt = None, options = {}):
         return self.getLastMachineInventoryPart(uuid, part, filt = filt, options = options, count = True)
 
-    def getLastMachineInventoryPart(self, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
-        # Set options
+    def getLastMachineNetworkPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        query = self.filterOnUUID(
+            session.query(Network).add_column(self.networkinterfaces.c.name) \
+            .select_from(
+                self.machine.outerjoin(self.network).outerjoin(self.networkinterfaces)
+            ), uuid)
+        if count:
+            ret = query.count()
+        else:
+            ret = []
+            for network, interface in query:
+                if network is not None:
+                    l = [
+                        ['Name', network.name],
+                        ['Network Type', interface],
+                        ['MAC Address', network.mac],
+                        ['IP', network.ip],
+                        ['Netmask', network.netmask],
+                        ['Gateway', network.gateway],
+                    ]
+                    ret.append(l)
+        return ret
+
+    def getLastMachineStoragePart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        query = self.filterOnUUID(
+            session.query(Disk).add_column(self.diskfs.c.name).select_from(
+                self.machine.outerjoin(self.disk).outerjoin(self.diskfs)
+            ), uuid)
+        if count:
+            ret = query.count()
+        else:
+            ret = []
+            for disk, diskfs in query:
+                if diskfs not in ['rootfs', 'tmpfs', 'devtmpfs']:
+                    if disk is not None:
+                        l = [
+                            ['Name', disk.name],
+                            ['Device', disk.device],
+                            ['Mount Point', disk.mountpoint],
+                            ['Filesystem', diskfs],
+                            ['Size', str(disk.totalsize) + ' MB'],
+                            ['Free Size', str(disk.freesize) + ' MB'],
+                        ]
+                        ret.append(l)
+        return ret
+
+    def getLastMachineAdministrativePart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        query = self.filterOnUUID(
+            session.query(Infocoms).add_column(self.suppliers.c.name).select_from(
+                self.machine.outerjoin(self.infocoms).outerjoin(self.suppliers)
+            ), uuid)
+
+        if count:
+            ret = query.count()
+        else:
+            ret = []
+            for infocoms, supplierName in query:
+                if infocoms is not None:
+                    endDate = self.getWarrantyEndDate(infocoms)
+
+                    l = [
+                        ['Supplier', supplierName],
+                        ['Invoice Number', infocoms and infocoms.bill or ''],
+                        ['Warranty End Date', endDate],
+                    ]
+                    ret.append(l)
+        return ret
+
+    def getLastMachineSoftwaresPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
         hide_win_updates = False
-        history_delta = 'All'
         if 'hide_win_updates' in options:
             hide_win_updates = options['hide_win_updates']
+
+        query = self.filterOnUUID(
+            session.query(Software).add_column(self.manufacturers.c.name) \
+            .add_column(self.softwareversions.c.name).select_from(
+                self.machine.outerjoin(self.inst_software) \
+                .outerjoin(self.softwareversions) \
+                .outerjoin(self.software) \
+                .outerjoin(self.manufacturers)
+            ), uuid)
+        query = query.order_by(self.software.c.name)
+
+        if filt:
+            clauses = []
+            clauses.append(self.manufacturers.c.name.like('%'+filt+'%'))
+            clauses.append(self.softwareversions.c.name.like('%'+filt+'%'))
+            clauses.append(self.software.c.name.like('%'+filt+'%'))
+            query = query.filter(or_(*clauses))
+
+        if hide_win_updates:
+            query = query.filter(
+                not_(
+                    and_(
+                        self.manufacturers.c.name.contains('microsoft'),
+                        self.software.c.name.op('regexp')('KB[0-9]+(-v[0-9]+)?(v[0-9]+)?')
+                    )
+                )
+            )
+
+        if min != 0:
+            query = query.offset(min)
+        if max != -1:
+            max = int(max) - int(min)
+            query = query.limit(max)
+
+        if count:
+            ret = query.count()
+        else:
+            ret = []
+            for software, manufacturer, version in query:
+                if software is not None:
+                    l = [
+                        ['Vendor', manufacturer],
+                        ['Name', software.name],
+                        ['Version', version],
+                    ]
+                    ret.append(l)
+        return ret
+
+    def getLastMachineSummaryPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        query = self.filterOnUUID(
+            session.query(Machine).add_entity(Infocoms) \
+            .add_column(self.location.c.name) \
+            .add_column(self.locations.c.name) \
+            .add_column(self.os.c.name) \
+            .add_column(self.manufacturers.c.name) \
+            .add_column(self.glpi_computertypes.c.name) \
+            .add_column(self.glpi_computermodels.c.name) \
+            .add_column(self.glpi_operatingsystemservicepacks.c.name) \
+            .add_column(self.glpi_domains.c.name) \
+            .select_from(
+                self.machine.outerjoin(self.location) \
+                .outerjoin(self.locations) \
+                .outerjoin(self.os) \
+                .outerjoin(self.manufacturers) \
+                .outerjoin(self.infocoms) \
+                .outerjoin(self.glpi_computertypes) \
+                .outerjoin(self.glpi_computermodels) \
+                .outerjoin(self.glpi_operatingsystemservicepacks) \
+                .outerjoin(self.glpi_domains)
+            ), uuid)
+
+        if count:
+            ret = query.count()
+        else:
+            ret = []
+            for machine, infocoms, entity, location, os, manufacturer, type, model, servicepack, domain in query:
+                endDate = ''
+                if infocoms is not None:
+                    endDate = self.getWarrantyEndDate(infocoms)
+
+                modelType = []
+                if model is not None:
+                    modelType.append(model)
+                if type is not None:
+                    modelType.append(type)
+
+                if len(modelType) == 0:
+                    modelType = ''
+                elif len(modelType) == 1:
+                    modelType = modelType[0]
+                elif len(modelType) == 2:
+                    modelType = " / ".join(modelType)
+
+                manufacturerWarrantyUrl = False
+                if machine.serial is not None and len(machine.serial) > 0:
+                    manufacturerWarrantyUrl = self.getManufacturerWarrantyUrl(manufacturer, machine.serial)
+
+                if manufacturerWarrantyUrl:
+                    serialNumber = '%s / <a href="%s" target="_blank">@@WARRANTY_LINK_TEXT@@</a>' % (machine.serial, manufacturerWarrantyUrl)
+                else:
+                    serialNumber = machine.serial
+
+                entityValue = ''
+                if entity:
+                    entityValue += entity
+                if location:
+                    entityValue += ' (%s)' % location
+
+                l = [
+                    ['Computer Name', machine.name],
+                    ['Description', machine.comment],
+                    ['Entity (Location)', '%s' % entityValue],
+                    ['Domain', domain],
+                    ['Last Logged User', machine.contact],
+                    ['OS', os],
+                    ['Service Pack', servicepack],
+                    ['Model / Type', modelType],
+                    ['Manufacturer', manufacturer],
+                    ['Serial Number', serialNumber],
+                    ['Warranty End Date', endDate],
+                ]
+                ret.append(l)
+        return ret
+
+    def getLastMachineProcessorsPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        query = self.filterOnUUID(
+            session.query(ComputerProcessor).add_column(self.processor.c.designation) \
+            .select_from(
+                self.machine.outerjoin(self.computerProcessor) \
+                .outerjoin(self.processor)
+            ), uuid)
+
+        if count:
+            ret = query.count()
+        else:
+            ret = []
+            for processor, designation in query:
+                if processor is not None:
+                    l = [
+                        ['Name', designation],
+                        ['Frequency', str(processor.specificity) + ' Hz'],
+                    ]
+                    ret.append(l)
+        return ret
+
+    def getLastMachineMemoryPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        query = self.filterOnUUID(
+            session.query(ComputerMemory) \
+            .add_column(self.memoryType.c.name) \
+            .add_column(self.memory.c.frequence) \
+            .add_column(self.memory.c.designation).select_from(
+                self.machine.outerjoin(self.computerMemory) \
+                .outerjoin(self.memory) \
+                .outerjoin(self.memoryType)
+            ), uuid)
+
+        if count:
+            ret = query.count()
+        else:
+            ret = []
+            for memory, type, frequence, designation in query:
+                if memory is not None:
+                    l = [
+                        ['Name', designation],
+                        ['Type', type],
+                        ['Frequency', frequence],
+                        ['Size', str(memory.specificity) + ' MB'],
+                    ]
+                    ret.append(l)
+        return ret
+
+    def getLastMachineHarddrivesPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        query = self.filterOnUUID(
+            session.query(self.klass['computers_deviceharddrives']) \
+            .add_column(self.deviceharddrives.c.designation) \
+            .select_from(
+                self.machine.outerjoin(self.computers_deviceharddrives) \
+                .outerjoin(self.deviceharddrives)
+            ), uuid)
+
+        if count:
+            ret = query.count()
+        else:
+            ret = []
+            for hd, designation in query:
+                if hd is not None:
+                    l = [
+                        ['Name', designation],
+                        ['Size', str(hd.specificity) + ' MB'],
+                    ]
+                    ret.append(l)
+        return ret
+
+    def getLastMachineNetworkCardsPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        query = self.filterOnUUID(
+            session.query(self.klass['computers_devicenetworkcards']) \
+            .add_entity(self.klass['devicenetworkcards']) \
+            .select_from(
+                self.machine.outerjoin(self.computers_devicenetworkcards) \
+                .outerjoin(self.devicenetworkcards)
+            ), uuid)
+
+        if count:
+            ret = query.count()
+        else:
+            ret = []
+            for mac, network in query:
+                if network is not None:
+                    l = [
+                        ['Name', network.designation],
+                        ['Bandwidth', network.bandwidth],
+                        ['MAC Address', mac.specificity],
+                    ]
+                    ret.append(l)
+        return ret
+
+    def getLastMachineDrivesPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        query = self.filterOnUUID(
+            session.query(self.klass['devicedrives']).select_from(
+                self.machine.outerjoin(self.computers_devicedrives) \
+                .outerjoin(self.devicedrives)
+            ), uuid)
+
+        if count:
+            ret = query.count()
+        else:
+            ret = []
+            for drive in query:
+                if drive is not None:
+                    l = [
+                        ['Name', drive.designation],
+                        ['Writer', drive.is_writer and 'Yes' or 'No'],
+                    ]
+                    ret.append(l)
+        return ret
+
+    def getLastMachineGraphicCardsPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        query = self.filterOnUUID(
+            session.query(self.klass['devicegraphiccards']).add_column(self.interfaceType.c.name) \
+            .select_from(
+                self.machine.outerjoin(self.computers_devicegraphiccards) \
+                .outerjoin(self.devicegraphiccards) \
+                .outerjoin(self.interfaceType, self.interfaceType.c.id == self.devicegraphiccards.c.interfacetypes_id)
+            ), uuid)
+
+        if count:
+            ret = query.count()
+        else:
+            ret = []
+            for card, interfaceType in query:
+                if card is not None:
+                    l = [
+                        ['Name', card.designation],
+                        ['Memory', str(card.specif_default) + ' MB'],
+                        ['Type', interfaceType],
+                    ]
+                    ret.append(l)
+        return ret
+
+    def getLastMachineSoundCardsPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        query = self.filterOnUUID(
+            session.query(self.klass['devicesoundcards']).select_from(
+                self.machine.outerjoin(self.computers_devicesoundcards) \
+                .outerjoin(self.devicesoundcards)
+            ), uuid)
+
+        if count:
+            ret = query.count()
+        else:
+            ret = []
+            for sound in query:
+                if sound is not None:
+                    l = [
+                        ['Name', sound.designation],
+                    ]
+                    ret.append(l)
+        return ret
+
+    def getLastMachineControllersPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        query = self.filterOnUUID(
+            session.query(self.klass['computers_devicecontrols']) \
+            .add_entity(self.klass['devicecontrols']).select_from(
+                self.machine.outerjoin(self.computers_devicecontrols) \
+                .outerjoin(self.devicecontrols)
+            ), uuid)
+
+        if count:
+            ret = query.count()
+        else:
+            ret = []
+            for computerControls, deviceControls in query:
+                if computerControls is not None:
+                    l = [
+                        ['Name', deviceControls.designation],
+                    ]
+                    ret.append(l)
+        return ret
+
+    def getLastMachineOthersPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        query = self.filterOnUUID(
+            session.query(self.klass['devicepcis']).select_from(
+                self.machine.outerjoin(self.computers_devicepcis) \
+                .outerjoin(self.devicepcis)
+            ), uuid)
+
+        if count:
+            ret = query.count()
+        else:
+            ret = []
+            for pci in query:
+                if pci is not None:
+                    l = [
+                        ['Name', pci.designation],
+                        ['Comment', pci.comment],
+                    ]
+                    ret.append(l)
+        return ret
+
+    def getLastMachineHistoryPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        # Set options
+        history_delta = 'All'
         if 'history_delta' in options:
             history_delta = options['history_delta']
 
-        session = create_session()
-        if part == 'Network':
-            query = self.filterOnUUID(
-                session.query(Network).add_column(self.networkinterfaces.c.name) \
-                .select_from(
-                    self.machine.outerjoin(self.network).outerjoin(self.networkinterfaces)
-                ), uuid)
-            if count:
-                ret = query.count()
-            else:
-                ret = []
-                for network, interface in query:
-                    if network is not None:
-                        l = [
-                            ['Name', network.name],
-                            ['Network Type', interface],
-                            ['MAC Address', network.mac],
-                            ['IP', network.ip],
-                            ['Netmask', network.netmask],
-                            ['Gateway', network.gateway],
-                        ]
-                        ret.append(l)
-        elif part == 'Storage':
-            query = self.filterOnUUID(
-                session.query(Disk).add_column(self.diskfs.c.name).select_from(
-                    self.machine.outerjoin(self.disk).outerjoin(self.diskfs)
-                ), uuid)
-            if count:
-                ret = query.count()
-            else:
-                ret = []
-                for disk, diskfs in query:
-                    if diskfs not in ['rootfs', 'tmpfs', 'devtmpfs']:
-                        if disk is not None:
-                            l = [
-                                ['Name', disk.name],
-                                ['Device', disk.device],
-                                ['Mount Point', disk.mountpoint],
-                                ['Filesystem', diskfs],
-                                ['Size', str(disk.totalsize) + ' MB'],
-                                ['Free Size', str(disk.freesize) + ' MB'],
-                            ]
-                            ret.append(l)
-        elif part == 'Administrative':
-            query = self.filterOnUUID(
-                session.query(Infocoms).add_column(self.suppliers.c.name).select_from(
-                    self.machine.outerjoin(self.infocoms).outerjoin(self.suppliers)
-                ), uuid)
+        query = session.query(Logs)
+        query = query.filter(and_(
+            self.logs.c.items_id == int(uuid.replace('UUID', '')),
+            self.logs.c.itemtype == "Computer"
+        ))
 
-            if count:
-                ret = query.count()
-            else:
-                ret = []
-                for infocoms, supplierName in query:
-                    if infocoms is not None:
-                        endDate = self.getWarrantyEndDate(infocoms)
+        now = datetime.datetime.now()
+        if history_delta == 'today':
+            query = query.filter(self.logs.c.date_mod > now - datetime.timedelta(1))
+        elif history_delta == 'week':
+            query = query.filter(self.logs.c.date_mod > now - datetime.timedelta(7))
+        if history_delta == 'month':
+            query = query.filter(self.logs.c.date_mod > now - datetime.timedelta(30))
 
-                        l = [
-                            ['Supplier', supplierName],
-                            ['Invoice Number', infocoms and infocoms.bill or ''],
-                            ['Warranty End Date', endDate],
-                        ]
-                        ret.append(l)
-        elif part == 'Softwares':
-            query = self.filterOnUUID(
-                session.query(Software).add_column(self.manufacturers.c.name) \
-                .add_column(self.softwareversions.c.name).select_from(
-                    self.machine.outerjoin(self.inst_software) \
-                    .outerjoin(self.softwareversions) \
-                    .outerjoin(self.software) \
-                    .outerjoin(self.manufacturers)
-                ), uuid)
-            query = query.order_by(self.software.c.name)
+        if filt:
+            clauses = []
+            clauses.append(self.logs.c.date_mod.like('%'+filt+'%'))
+            clauses.append(self.logs.c.user_name.like('%'+filt+'%'))
+            clauses.append(self.logs.c.old_value.like('%'+filt+'%'))
+            clauses.append(self.logs.c.new_value.like('%'+filt+'%'))
+            clauses.append(self.logs.c.id_search_option.in_(self.getSearchOptionId(filt)))
+            clauses.append(self.logs.c.itemtype_link.in_(self.getLinkedActionKey(filt)))
+            # Treat Software case
+            if filt.lower() in 'software':
+                clauses.append(self.logs.c.linked_action.in_([4, 5]))
+            query = query.filter(or_(*clauses))
 
-            if filt:
-                clauses = []
-                clauses.append(self.manufacturers.c.name.like('%'+filt+'%'))
-                clauses.append(self.softwareversions.c.name.like('%'+filt+'%'))
-                clauses.append(self.software.c.name.like('%'+filt+'%'))
-                query = query.filter(or_(*clauses))
-
-            if hide_win_updates:
-                query = query.filter(
-                    not_(
-                        and_(
-                            self.manufacturers.c.name.contains('microsoft'),
-                            self.software.c.name.op('regexp')('KB[0-9]+(-v[0-9]+)?(v[0-9]+)?')
-                        )
-                    )
-                )
+        if count:
+            ret = query.count()
+        else:
+            query = query.order_by(desc(self.logs.c.date_mod))
 
             if min != 0:
                 query = query.offset(min)
@@ -1417,326 +1745,34 @@ class Glpi08(DyngroupDatabaseHelper):
                 max = int(max) - int(min)
                 query = query.limit(max)
 
-            if count:
-                ret = query.count()
-            else:
-                ret = []
-                for software, manufacturer, version in query:
-                    if software is not None:
-                        l = [
-                            ['Vendor', manufacturer],
-                            ['Name', software.name],
-                            ['Version', version],
-                        ]
-                        ret.append(l)
-        elif part == 'Summary':
-            query = self.filterOnUUID(
-                session.query(Machine).add_entity(Infocoms) \
-                .add_column(self.location.c.name) \
-                .add_column(self.locations.c.name) \
-                .add_column(self.os.c.name) \
-                .add_column(self.manufacturers.c.name) \
-                .add_column(self.glpi_computertypes.c.name) \
-                .add_column(self.glpi_computermodels.c.name) \
-                .add_column(self.glpi_operatingsystemservicepacks.c.name) \
-                .add_column(self.glpi_domains.c.name) \
-                .select_from(
-                    self.machine.outerjoin(self.location) \
-                    .outerjoin(self.locations) \
-                    .outerjoin(self.os) \
-                    .outerjoin(self.manufacturers) \
-                    .outerjoin(self.infocoms) \
-                    .outerjoin(self.glpi_computertypes) \
-                    .outerjoin(self.glpi_computermodels) \
-                    .outerjoin(self.glpi_operatingsystemservicepacks) \
-                    .outerjoin(self.glpi_domains)
-                ), uuid)
-
-            if count:
-                ret = query.count()
-            else:
-                ret = []
-                for machine, infocoms, entity, location, os, manufacturer, type, model, servicepack, domain in query:
-                    endDate = ''
-                    if infocoms is not None:
-                        endDate = self.getWarrantyEndDate(infocoms)
-
-                    modelType = []
-                    if model is not None:
-                        modelType.append(model)
-                    if type is not None:
-                        modelType.append(type)
-
-                    if len(modelType) == 0:
-                        modelType = ''
-                    elif len(modelType) == 1:
-                        modelType = modelType[0]
-                    elif len(modelType) == 2:
-                        modelType = " / ".join(modelType)
-
-                    manufacturerWarrantyUrl = False
-                    if machine.serial is not None and len(machine.serial) > 0:
-                        manufacturerWarrantyUrl = self.getManufacturerWarrantyUrl(manufacturer, machine.serial)
-
-                    if manufacturerWarrantyUrl:
-                        serialNumber = '%s / <a href="%s" target="_blank">@@WARRANTY_LINK_TEXT@@</a>' % (machine.serial, manufacturerWarrantyUrl)
+            ret = []
+            for log in query:
+                if log is not None:
+                    update = ''
+                    if log.old_value == '' and log.new_value != '':
+                        update = '%s' % log.new_value
+                    elif log.old_value != '' and log.new_value == '':
+                        update = '%s' % log.old_value
                     else:
-                        serialNumber = machine.serial
+                        update = '%s --> %s' % (log.old_value, log.new_value)
 
-                    entityValue = ''
-                    if entity:
-                        entityValue += entity
-                    if location:
-                        entityValue += ' (%s)' % location
+                    update = '%s%s' % (self.getLinkedActionValues(log)['update'], update)
 
                     l = [
-                        ['Computer Name', machine.name],
-                        ['Description', machine.comment],
-                        ['Entity (Location)', '%s' % entityValue],
-                        ['Domain', domain],
-                        ['Last Logged User', machine.contact],
-                        ['OS', os],
-                        ['Service Pack', servicepack],
-                        ['Model / Type', modelType],
-                        ['Manufacturer', manufacturer],
-                        ['Serial Number', serialNumber],
-                        ['Warranty End Date', endDate],
+                        ['Date', log.date_mod.strftime('%Y-%m-%d %H:%m')],
+                        ['User', log.user_name],
+                        ['Category', self.getLinkedActionValues(log)['field']],
+                        ['Action', update],
                     ]
                     ret.append(l)
-        elif part == 'Processors':
-            query = self.filterOnUUID(
-                session.query(ComputerProcessor).add_column(self.processor.c.designation) \
-                .select_from(
-                    self.machine.outerjoin(self.computerProcessor) \
-                    .outerjoin(self.processor)
-                ), uuid)
+        return ret
 
-            if count:
-                ret = query.count()
-            else:
-                ret = []
-                for processor, designation in query:
-                    if processor is not None:
-                        l = [
-                            ['Name', designation],
-                            ['Frequency', str(processor.specificity) + ' Hz'],
-                        ]
-                        ret.append(l)
-        elif part == 'Memory':
-            query = self.filterOnUUID(
-                session.query(ComputerMemory) \
-                .add_column(self.memoryType.c.name) \
-                .add_column(self.memory.c.frequence) \
-                .add_column(self.memory.c.designation).select_from(
-                    self.machine.outerjoin(self.computerMemory) \
-                    .outerjoin(self.memory) \
-                    .outerjoin(self.memoryType)
-                ), uuid)
+    def getLastMachineInventoryPart(self, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        session = create_session()
 
-            if count:
-                ret = query.count()
-            else:
-                ret = []
-                for memory, type, frequence, designation in query:
-                    if memory is not None:
-                        l = [
-                            ['Name', designation],
-                            ['Type', type],
-                            ['Frequency', frequence],
-                            ['Size', str(memory.specificity) + ' MB'],
-                        ]
-                        ret.append(l)
-        elif part == 'Harddrives':
-            query = self.filterOnUUID(
-                session.query(self.klass['computers_deviceharddrives']) \
-                .add_column(self.deviceharddrives.c.designation) \
-                .select_from(
-                    self.machine.outerjoin(self.computers_deviceharddrives) \
-                    .outerjoin(self.deviceharddrives)
-                ), uuid)
-
-            if count:
-                ret = query.count()
-            else:
-                ret = []
-                for hd, designation in query:
-                    if hd is not None:
-                        l = [
-                            ['Name', designation],
-                            ['Size', str(hd.specificity) + ' MB'],
-                        ]
-                        ret.append(l)
-        elif part == 'NetworkCards':
-            query = self.filterOnUUID(
-                session.query(self.klass['computers_devicenetworkcards']) \
-                .add_entity(self.klass['devicenetworkcards']) \
-                .select_from(
-                    self.machine.outerjoin(self.computers_devicenetworkcards) \
-                    .outerjoin(self.devicenetworkcards)
-                ), uuid)
-
-            if count:
-                ret = query.count()
-            else:
-                ret = []
-                for mac, network in query:
-                    if network is not None:
-                        l = [
-                            ['Name', network.designation],
-                            ['Bandwidth', network.bandwidth],
-                            ['MAC Address', mac.specificity],
-                        ]
-                        ret.append(l)
-        elif part == 'Drives':
-            query = self.filterOnUUID(
-                session.query(self.klass['devicedrives']).select_from(
-                    self.machine.outerjoin(self.computers_devicedrives) \
-                    .outerjoin(self.devicedrives)
-                ), uuid)
-
-            if count:
-                ret = query.count()
-            else:
-                ret = []
-                for drive in query:
-                    if drive is not None:
-                        l = [
-                            ['Name', drive.designation],
-                            ['Writer', drive.is_writer and 'Yes' or 'No'],
-                        ]
-                        ret.append(l)
-        elif part == 'GraphicCards':
-            query = self.filterOnUUID(
-                session.query(self.klass['devicegraphiccards']).add_column(self.interfaceType.c.name) \
-                .select_from(
-                    self.machine.outerjoin(self.computers_devicegraphiccards) \
-                    .outerjoin(self.devicegraphiccards) \
-                    .outerjoin(self.interfaceType, self.interfaceType.c.id == self.devicegraphiccards.c.interfacetypes_id)
-                ), uuid)
-
-            if count:
-                ret = query.count()
-            else:
-                ret = []
-                for card, interfaceType in query:
-                    if card is not None:
-                        l = [
-                            ['Name', card.designation],
-                            ['Memory', str(card.specif_default) + ' MB'],
-                            ['Type', interfaceType],
-                        ]
-                        ret.append(l)
-        elif part == 'SoundCards':
-            query = self.filterOnUUID(
-                session.query(self.klass['devicesoundcards']).select_from(
-                    self.machine.outerjoin(self.computers_devicesoundcards) \
-                    .outerjoin(self.devicesoundcards)
-                ), uuid)
-
-            if count:
-                ret = query.count()
-            else:
-                ret = []
-                for sound in query:
-                    if sound is not None:
-                        l = [
-                            ['Name', sound.designation],
-                        ]
-                        ret.append(l)
-        elif part == 'Controllers':
-            query = self.filterOnUUID(
-                session.query(self.klass['computers_devicecontrols']) \
-                .add_entity(self.klass['devicecontrols']).select_from(
-                    self.machine.outerjoin(self.computers_devicecontrols) \
-                    .outerjoin(self.devicecontrols)
-                ), uuid)
-
-            if count:
-                ret = query.count()
-            else:
-                ret = []
-                for computerControls, deviceControls in query:
-                    if computerControls is not None:
-                        l = [
-                            ['Name', deviceControls.designation],
-                        ]
-                        ret.append(l)
-        elif part == 'Others':
-            query = self.filterOnUUID(
-                session.query(self.klass['devicepcis']).select_from(
-                    self.machine.outerjoin(self.computers_devicepcis) \
-                    .outerjoin(self.devicepcis)
-                ), uuid)
-
-            if count:
-                ret = query.count()
-            else:
-                ret = []
-                for pci in query:
-                    if pci is not None:
-                        l = [
-                            ['Name', pci.designation],
-                            ['Comment', pci.comment],
-                        ]
-                        ret.append(l)
-        elif part == 'History':
-            query = session.query(Logs)
-            query = query.filter(and_(
-                self.logs.c.items_id == int(uuid.replace('UUID', '')),
-                self.logs.c.itemtype == "Computer"
-            ))
-
-            now = datetime.datetime.now()
-            if history_delta == 'today':
-                query = query.filter(self.logs.c.date_mod > now - datetime.timedelta(1))
-            elif history_delta == 'week':
-                query = query.filter(self.logs.c.date_mod > now - datetime.timedelta(7))
-            if history_delta == 'month':
-                query = query.filter(self.logs.c.date_mod > now - datetime.timedelta(30))
-
-            if filt:
-                clauses = []
-                clauses.append(self.logs.c.date_mod.like('%'+filt+'%'))
-                clauses.append(self.logs.c.user_name.like('%'+filt+'%'))
-                clauses.append(self.logs.c.old_value.like('%'+filt+'%'))
-                clauses.append(self.logs.c.new_value.like('%'+filt+'%'))
-                clauses.append(self.logs.c.id_search_option.in_(self.getSearchOptionId(filt)))
-                clauses.append(self.logs.c.itemtype_link.in_(self.getLinkedActionKey(filt)))
-                query = query.filter(or_(*clauses))
-
-            if count:
-                ret = query.count()
-            else:
-                query = query.order_by(desc(self.logs.c.date_mod))
-
-                if min != 0:
-                    query = query.offset(min)
-                if max != -1:
-                    max = int(max) - int(min)
-                    query = query.limit(max)
-
-                ret = []
-                for log in query:
-                    if log is not None:
-                        update = ''
-                        if log.old_value == '' and log.new_value != '':
-                            update = '%s' % log.new_value
-                        elif log.old_value != '' and log.new_value == '':
-                            update = '%s' % log.old_value
-                        else:
-                            update = '%s --> %s' % (log.old_value, log.new_value)
-
-                        update = '%s%s' % (self.getLinkedActionValues(log)['update'], update)
-
-                        l = [
-                            ['Date', log.date_mod.strftime('%Y-%m-%d %H:%m')],
-                            ['User', log.user_name],
-                            ['Category', self.getLinkedActionValues(log)['field']],
-                            ['Action', update],
-                        ]
-                        ret.append(l)
-        else:
-            ret = None
+        ret = None
+        if hasattr(self, 'getLastMachine%sPart' % part):
+            ret = getattr(self, 'getLastMachine%sPart' % part)(session, uuid, part, min, max, filt, options, count)
 
         session.close()
         return ret
