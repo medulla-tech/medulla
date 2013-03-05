@@ -124,7 +124,7 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
 <table style="border: none;" cellspacing="0">
 <tr><td><?php echo  $label_name; ?></td><td></td><td><input name="name" value="<?php echo  $name ?>" type="text"/></td></tr>
 <tr><td><?php echo  $label_visible; ?></td><td></td><td>
-    <input name='visible' value='show' <?php if ($visibility == 'show') { echo 'checked'; } ?> type='radio'/><?php echo  _T('Yes', 'dyngroup') ?>, 
+    <input name='visible' value='show' <?php if ($visibility == 'show') { echo 'checked'; } ?> type='radio'/><?php echo  _T('Yes', 'dyngroup') ?> 
     <input name='visible' value='hide' <?php if ($visibility != 'show') { echo 'checked'; } ?> type='radio'/><?php echo  _T('No', 'dyngroup') ?>
 </td></tr>
 <!-- add all group inupts -->
