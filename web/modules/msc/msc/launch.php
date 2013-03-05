@@ -308,7 +308,7 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
         'clean_on_success'=>array($type_checkbox, _T('Delete files after a successful execution', 'msc'), $clean_on_success),
         'do_inventory'=>array($type_checkbox, _T('Do an inventory after a successful execution', 'msc'), quick_get('do_inventory', True)),
         'do_reboot'=>array($type_checkbox, _T('Reboot client', 'msc'), quick_get('do_reboot', True)),
-        "issue_halt_to_done"=>array($type_checkbox, _T('Halt client after', 'msc'), quick_get('issue_halt_to_done', True), _T("done", "msc")),
+        "issue_halt_to_done"=>array($type_checkbox, _T('Halt client after', 'msc'), quick_get('issue_halt_to_done', True)),
 #        "issue_halt_to_failed"=>array($type_checkbox, '', $_GET['issue_halt_to_failed'], _T("failed", "msc")),
 #        "issue_halt_to_over_time"=>array($type_checkbox, '', $_GET['issue_halt_to_over_time'], _T("over time", "msc")),
 #        "issue_halt_to_out_of_interval"=>array($type_checkbox, '', $_GET['issue_halt_to_out_of_interval'], _T("out of interval", "msc")),
