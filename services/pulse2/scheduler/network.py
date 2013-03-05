@@ -26,8 +26,55 @@ import logging
 
 # My functions
 from pulse2.scheduler.config import SchedulerConfig
+from pulse2.network import IPResolve
 
-def chooseClientIP(target):
+class SchedulerNetUtils :
+
+    @classmethod
+    def prepare_target(cls, target):
+        """
+        Convert the scheduler target format to common format.
+
+        @param target: target info
+        @type target: dict
+
+        @return: target common format
+        @rtype: tuple
+        """
+        hostname = target["shortname"]
+        ips = target["ips"]
+        macs = target["macs"]
+        if "netmasks" in target :
+            netmasks = target["netmasks"]
+
+        i = 0
+        ifaces = []
+        for ip in ips :
+            iface = {}
+            iface["ip"] = ip
+            if i < len(macs) :
+                iface["mac"] = macs[i]
+            if i < len(netmasks) :
+                iface["netmask"] = netmasks[i]
+            ifaces.append(iface)
+            i += 1
+
+        return (hostname, ifaces)
+
+    @classmethod
+    def get_ip_resolve(cls):
+        resolve_order = SchedulerConfig().resolv_order
+        ip, netmask = SchedulerConfig().preferred_network
+        nmblookup_path = SchedulerConfig().nmblookup_path
+        
+        ip_resolve = IPResolve(resolve_order,
+                               ip,
+                               netmask,
+                               nmblookup_path=nmblookup_path)
+        return ip_resolve
+
+
+def chooseClientIP(msc_target):
     """
         Attempt to guess how to reach our client
 
@@ -41,7 +88,8 @@ def chooseClientIP(target):
             'fqdn': ,
             'shortname': ,
             'ips': [],
-            'macs': []
+            'macs': [],
+            'netmasks': [],
         }
 
         Probes:
@@ -50,64 +98,9 @@ def chooseClientIP(target):
         - Host resolution
         - IP check
     """
-    for method in SchedulerConfig().resolv_order:
-        if method == 'fqdn':
-            result = chooseClientIPperFQDN(target)
-            if result:
-                logging.getLogger().debug("scheduler %s: will connect to %s as %s using DNS resolver" % (SchedulerConfig().name, target, result))
-                return result
-            logging.getLogger().debug("scheduler %s: won't connect to %s using DNS resolver" % (SchedulerConfig().name, target))
-        if method == 'netbios':
-            result = chooseClientIPperNetbios(target)
-            if result:
-                logging.getLogger().debug("scheduler %s: will connect to %s as %s using Netbios resolver" % (SchedulerConfig().name, target, result))
-                return result
-            logging.getLogger().debug("scheduler %s: won't connect to %s using Netbios resolver" % (SchedulerConfig().name, target))
-        if method == 'hosts':
-            result = chooseClientIPperHosts(target)
-            if result:
-                logging.getLogger().debug("scheduler %s: will connect to %s as %s using Hosts" % (SchedulerConfig().name, target, result))
-                return result
-            logging.getLogger().debug("scheduler %s: won't connect to %s using Hosts" % (SchedulerConfig().name, target))
-        if method == 'ip':
-            result = chooseClientIPperIP(target)
-            if result:
-                logging.getLogger().debug("scheduler %s: will connect to %s as %s using IP given" % (SchedulerConfig().name, target, result))
-                return result
-            logging.getLogger().debug("scheduler %s: won't connect to %s using IP given" % (SchedulerConfig().name, target))
-    # (unfortunately) got nothing
-    return None
+    target = SchedulerNetUtils.prepare_target(msc_target)
+    ip_resolve = SchedulerNetUtils.get_ip_resolve()
+    ip = ip_resolve.get_from_target(target)
+ 
+    return ip
 
-def chooseClientIPperFQDN(target):
-    import os
-    # FIXME: port to twisted
-    # FIXME: drop hardcoded path !
-    # FIXME: use deferred
-    command = "%s -s 1 -t a %s 2>/dev/null 1>/dev/null" % ('/usr/bin/host', target['fqdn'])
-    if not os.system(command):
-        return target['fqdn']
-    return False
-
-def chooseClientIPperNetbios(target):
-    # FIXME: todo
-    return False
-
-def chooseClientIPperHosts(target):
-    import os
-    # FIXME: port to twisted
-    # FIXME: drop hardcoded path !
-    # FIXME: use deferred
-    # FIXME: should be merged with chooseClientIPperFQDN ?
-    command = "%s hosts %s 2>/dev/null 1>/dev/null" % ('/usr/bin/getent', target['fqdn'])
-    if not os.system(command):
-        return target['fqdn']
-    command = "%s hosts %s 2>/dev/null 1>/dev/null" % ('/usr/bin/getent', target['shortname'])
-    if not os.system(command):
-        return target['shortname']
-    return False
-
-def chooseClientIPperIP(target):
-    # TODO: weird, check only the first IP address :/
-    if len(target['ips']) > 0:
-        return target['ips'][0]
-    return False

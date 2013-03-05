@@ -110,7 +110,8 @@ def process_on_client(proposed_scheduler_name, computer, function, *args):
                     'cn': ['my-short-name'],
                     'objectUUID': ['UUID1234'],
                     'ipHostNumber': ['IP.AD.DR.ES'],
-                    'fullname': 'my-fully.qualified.domain.tld'
+                    'fullname': 'my-fully.qualified.domain.tld',
+                    'subnetMask': ['SUB.NET.MA.SK']
                 }
             ]
 
@@ -153,6 +154,7 @@ def process_on_client(proposed_scheduler_name, computer, function, *args):
             computer[1]['cn'][0],
             computer[1]['ipHostNumber'],
             computer[1]['macAddress'],
+            computer[1]['subnetMask'],
             *args
         )
         mydeffered.addCallback(parseResult).addErrback(parseError)

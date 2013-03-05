@@ -114,7 +114,7 @@ class NetUtils :
         @return: True if enough info
         @rtype: bool
         """
-        for key in ["ip", "mac", "netmask", "gateway"] :
+        for key in ["ip", "mac", "netmask"] :
             # if one of required key is missing
             if key not in iface :
                 return False
@@ -179,6 +179,32 @@ class ResolvingCallable :
         """
         return True
 
+    @classmethod
+    def run_command(cls, cmd):
+        """
+        Execute a command in shell.
+
+        @param cmd: command/expression to execute
+        @type cmd: str
+
+        @return: stdout of command
+        @rtype: str
+        """
+        ps = subprocess.Popen(cmd, shell=True, 
+                              stdout=subprocess.PIPE,
+                              stderr=subprocess.PIPE)
+        try :
+            out, err = ps.communicate()
+        except Exception, e :
+            log.error("While executing command: %s / Raised exception: %s" % (cmd, str(e)))
+
+        if err :
+            log.error("While executing command: %s / Received error mesage: %s" % (cmd, err))
+
+        log.debug("Command executed (%s) result: %s" % (cmd, out))
+        return out
+
+
     def __call__(self, target):
         raise NotImplementedError
 
@@ -235,6 +261,16 @@ class ChoosePerFQDN (ResolvingCallable):
 
     name = "fqdn"
 
+    fqdn_path = "/usr/bin/host"
+
+    def validate(self):
+        if not os.path.exists(self.fqdn_path):
+            log.warn("Command '%s' not found, omitting '%s' method." % (self.fqdn_path, self.name))
+            return False
+        else :
+            return True
+
+
     def __call__(self, target):
         """ 
         Implemented for the backward compatibility with scheduler networking. 
@@ -246,12 +282,31 @@ class ChoosePerFQDN (ResolvingCallable):
         @rtype: string
  
         """
-        return None
+        hostname, ifaces = target
+
+        cmd = "%s -s 1 -t a %s 2>/dev/null 1>/dev/null" % (self.fqdn_path, hostname)
+
+        out = self.run_command(cmd)
+
+        if not out :
+            return hostname
+        else :
+            return None
 
 class ChoosePerHosts (ResolvingCallable):
 
     name = "hosts"
 
+    hosts_path = "/usr/bin/getent"
+
+    def validate(self):
+        if not os.path.exists(self.hosts_path):
+            log.warn("Command '%s' not found, omitting '%s' method." % (self.hosts_path, self.name))
+            return False
+        else :
+            return True
+
+
     def __call__(self, target):
         """ 
         Implemented for the backward compatibility with scheduler networking. 
@@ -263,7 +318,17 @@ class ChoosePerHosts (ResolvingCallable):
         @rtype: string
  
         """
-        return None
+        hostname, ifaces = target
+
+        cmd = "%s hosts %s 2>/dev/null 1>/dev/null" % (self.hosts_path, hostname)
+
+        out = self.run_command(cmd)
+
+        if not out :
+            return hostname
+        else :
+            return None
+               
 
 class ChoosePerNetBios (ResolvingCallable):
 
@@ -333,11 +398,8 @@ class ChoosePerNMBLookup (ResolvingCallable) :
         hostname, ifaces = target 
 
         cmd = "%s -U server -R '%s'" % (self.nmblookup_path, hostname)
-        ps = subprocess.Popen(cmd, shell=True, 
-                              stdout=subprocess.PIPE,
-                              stderr=subprocess.PIPE)
-        out = ps.communicate()[0]
 
+        out = self.run_command(cmd)
         # <example of a positive response> :
         # querying WORKSTATION_NAME on 192.168.1.255
         # 192.168.70.254 WORKSTATION_NAME<00>
@@ -448,9 +510,11 @@ class IPResolve (IPResolversContainer) :
 
         if not ip :
             ip = get_default_ip()
+            log.info("Networking: Default IP address of server not setted, detected IP: %s" % ip)
         if not netmask :
             netmask, gateway = NetUtils.get_netmask_and_gateway()
-
+            log.info("Networking: Default netmask of server not setted, detected: %s" % netmask)
+ 
         self.ip = ip or get_default_ip()
         self.netmask = netmask
 
@@ -511,13 +575,13 @@ class IPResolve (IPResolversContainer) :
 
         for resolver in self.resolvers :    
 
-            log.debug("Apply '%s' method ..." % resolver.name)
+            log.debug("Trying to apply '%s' method ..." % resolver.name)
             result = resolver(target)
             if result :
                 log.info("IP address resolved by '%s' method : %s" % (resolver.name, result))
                 return result 
             else :
-                log.warn("Method '%s' ignored" % resolver.name)
+                log.debug("Method '%s' ignored, trying the next one..." % resolver.name)
                 continue
 
         return None

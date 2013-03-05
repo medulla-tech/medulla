@@ -133,49 +133,53 @@ def getLaunchersBalance():
 
     return _callback(None, {}, SchedulerConfig().launchers_uri.copy(), None)
 
-def pingClient(uuid, fqdn, shortname, ips, macs):
+def pingClient(uuid, fqdn, shortname, ips, macs, netmasks):
     # choose a way to perform the operation
     client = chooseClientIP({
             'uuid': uuid,
             'fqdn': fqdn,
             'shortname': shortname,
             'ips': ips,
-            'macs': macs
+            'macs': macs,
+            'netmasks': netmasks
     })
     return callOnBestLauncher(None, 'icmp', False, client)
 
-def probeClient(uuid, fqdn, shortname, ips, macs):
+def probeClient(uuid, fqdn, shortname, ips, macs, netmasks):
     # choose a way to perform the operation
     client = chooseClientIP({
             'uuid': uuid,
             'fqdn': fqdn,
             'shortname': shortname,
             'ips': ips,
-            'macs': macs
+            'macs': macs,
+            'netmasks': netmasks
     })
     return callOnBestLauncher(None, 'probe', 'Unknown', client)
 
-def pingAndProbeClient(uuid, fqdn, shortname, ips, macs):
+def pingAndProbeClient(uuid, fqdn, shortname, ips, macs, netmasks):
     """ returns
         0 => ping NOK
         1 => ping OK, ssh NOK
         2 => ping OK, ssh OK
     """
-    def _pingcb(result, uuid=uuid, fqdn=fqdn, shortname=shortname, ips=ips, macs=macs):
-        def _probecb(result, uuid=uuid, fqdn=fqdn, shortname=shortname, ips=ips, macs=macs):
+    def _pingcb(result, uuid=uuid, fqdn=fqdn, shortname=shortname, 
+            ips=ips,macs=macs, netmasks=netmasks):
+        def _probecb(result, uuid=uuid, fqdn=fqdn, shortname=shortname, 
+                     ips=ips, macs=macs, netmasks=netmasks):
             if not result == "Not available":
                 return 2
             return 1
         if result:
-            mydeffered = probeClient(uuid, fqdn, shortname, ips, macs)
+            mydeffered = probeClient(uuid, fqdn, shortname, ips, macs, netmasks)
             mydeffered.addCallback(_probecb)
             return mydeffered
         return 0
-    mydeffered = pingClient(uuid, fqdn, shortname, ips, macs)
+    mydeffered = pingClient(uuid, fqdn, shortname, ips, macs, netmasks)
     mydeffered.addCallback(_pingcb)
     return mydeffered
 
-def downloadFile(uuid, fqdn, shortname, ips, macs, path, bwlimit):
+def downloadFile(uuid, fqdn, shortname, ips, macs, netmasks, path, bwlimit):
     # choose a way to perform the operation
 
     # choose a way to perform the operation
@@ -184,8 +188,9 @@ def downloadFile(uuid, fqdn, shortname, ips, macs, path, bwlimit):
         'fqdn': fqdn,
         'shortname': shortname,
         'ips': ips,
-        'macs': macs
-    })
+        'macs': macs,
+        'netmasks': netmasks
+     })
 
     client = {
         'host': ip,
@@ -201,7 +206,7 @@ def downloadFile(uuid, fqdn, shortname, ips, macs, path, bwlimit):
 
     return callOnBestLauncher(None, 'download_file', False, client, path, bwlimit)
 
-def establishProxy(uuid, fqdn, shortname, ips, macs, requestor_ip, requested_port):
+def establishProxy(uuid, fqdn, shortname, ips, macs, netmasks, requestor_ip, requested_port):
     def _finalize(result):
         if type(result) == list: # got expected struct
             (launcher, host, port) = result
@@ -216,7 +221,8 @@ def establishProxy(uuid, fqdn, shortname, ips, macs, requestor_ip, requested_por
         'fqdn': fqdn,
         'shortname': shortname,
         'ips': ips,
-        'macs': macs
+        'macs': macs,
+        'netmasks': netmasks
     })
 
     client = {

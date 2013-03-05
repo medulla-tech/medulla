@@ -59,6 +59,10 @@ class Target(object):
     def getBCast(self):
         return self.target_bcast.split('||')
 
+    def getNetmasks(self):
+        return self.target_network.split('||')
+
+
     def hasEnoughInfoToWOL(self):
         # to perform a WOL, we need two informations:
         # - at least one MAC address

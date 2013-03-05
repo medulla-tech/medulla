@@ -132,14 +132,14 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
         return twisted.web.server.NOT_DONE_YET
 
     ### XMLRPC functions used from a MMC agent ###
-    def xmlrpc_ping_client(self, uuid, fqdn, shortname, ips, macs):
-        return xmlrpcCleanup(pulse2.scheduler.launchers_driving.pingClient(uuid, fqdn, shortname, ips, macs))
-    def xmlrpc_probe_client(self, uuid, fqdn, shortname, ips, macs):
-        return xmlrpcCleanup(pulse2.scheduler.launchers_driving.probeClient(uuid, fqdn, shortname, ips, macs))
-    def xmlrpc_ping_and_probe_client(self, uuid, fqdn, shortname, ips, macs):
-        return xmlrpcCleanup(pulse2.scheduler.launchers_driving.pingAndProbeClient(uuid, fqdn, shortname, ips, macs))
-    def xmlrpc_download_file(self, uuid, fqdn, shortname, ips, macs, path, bwlimit):
-        return xmlrpcCleanup(pulse2.scheduler.launchers_driving.downloadFile(uuid, fqdn, shortname, ips, macs, path, bwlimit))
+    def xmlrpc_ping_client(self, uuid, fqdn, shortname, ips, macs, netmasks):
+        return xmlrpcCleanup(pulse2.scheduler.launchers_driving.pingClient(uuid, fqdn, shortname, ips, macs, netmasks))
+    def xmlrpc_probe_client(self, uuid, fqdn, shortname, ips, macs, netmasks):
+        return xmlrpcCleanup(pulse2.scheduler.launchers_driving.probeClient(uuid, fqdn, shortname, ips, macs, netmasks))
+    def xmlrpc_ping_and_probe_client(self, uuid, fqdn, shortname, ips, macs, netmasks):
+        return xmlrpcCleanup(pulse2.scheduler.launchers_driving.pingAndProbeClient(uuid, fqdn, shortname, ips, macs, netmasks))
+    def xmlrpc_download_file(self, uuid, fqdn, shortname, ips, macs, netmasks, path, bwlimit):
+        return xmlrpcCleanup(pulse2.scheduler.launchers_driving.downloadFile(uuid, fqdn, shortname, ips, macs, netmasks, path, bwlimit))
     def xmlrpc_start_all_commands(self):
         return xmlrpcCleanup(pulse2.scheduler.scheduling.startAllCommands(self.name))
     def xmlrpc_start_these_commands(self, commands):
@@ -155,8 +155,8 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
     def xmlrpc_stop_commands(self, cmdids):
         pulse2.scheduler.scheduling.stopCommandsOnHosts(cmdids)
         return True
-    def xmlrpc_tcp_sproxy(self, uuid, fqdn, shortname, ips, macs, requestor_ip, requested_port):
-        return xmlrpcCleanup(pulse2.scheduler.launchers_driving.establishProxy(uuid, fqdn, shortname, ips, macs, requestor_ip, requested_port))
+    def xmlrpc_tcp_sproxy(self, uuid, fqdn, shortname, ips, macs, netmasks, requestor_ip, requested_port):
+        return xmlrpcCleanup(pulse2.scheduler.launchers_driving.establishProxy(uuid, fqdn, shortname, ips, macs, netmasks, requestor_ip, requested_port))
 
     ### XMLRPC functions used from a launcher ###
     def xmlrpc_tell_i_am_alive(self, launcher):

@@ -389,7 +389,8 @@ def localProxyAttemptSplitMode(myCommandOnHostID):
                 proxyT.getFQDN(),
                 proxyT.getShortName(),
                 proxyT.getIps(),
-                proxyT.getMacs()
+                proxyT.getMacs(),
+                proxyT.getNetmasks()
             )
             d.addCallback(__processProbe, proxyT.getUUID(), proxy)
             deffered_list.append(d)
@@ -1399,7 +1400,8 @@ def runWOLPhase(myCommandOnHostID):
     shortname = myT.target_name
     ips = myT.target_ipaddr.split('||')
     macs = myT.target_macaddr.split('||')
-    mydeffered = pingAndProbeClient(uuid, fqdn, shortname, ips, macs)
+    netmasks = myT.target_network.split('||')
+    mydeffered = pingAndProbeClient(uuid, fqdn, shortname, ips, macs, netmasks)
     mydeffered.\
         addCallback(_cb).\
         addErrback(_eb)
@@ -2729,7 +2731,8 @@ def chooseClientIP(myT):
         'fqdn': myT.getFQDN(),
         'shortname': myT.getShortName(),
         'ips': myT.getIps(),
-        'macs': myT.getMacs()
+        'macs': myT.getMacs(),
+        'netmasks': myT.getNetmasks()
     })
 
 def getClientGroup(myT):
