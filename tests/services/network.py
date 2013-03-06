@@ -158,8 +158,7 @@ class class02_IPresolve (unittest.TestCase):
         Selecting of correct interface depends on prefered network of server.
         """
 
-        my_ip = "192.168.1.100"
-        my_mask = "255.255.255.0"
+        my_network = [("192.168.1.100","255.255.255.0")]
 
         resolve_order = ["ip"]
 
@@ -184,7 +183,7 @@ class class02_IPresolve (unittest.TestCase):
 
         target = ("WORKSTATION-2547", ifaces)
 
-        ip_resolve = IPResolve(resolve_order, my_ip, my_mask)
+        ip_resolve = IPResolve(resolve_order, my_network)
         getted_ip = ip_resolve.get_from_target(target)
 
         self.assertEqual(estimated_ip, getted_ip)
@@ -198,6 +197,7 @@ class class02_IPresolve (unittest.TestCase):
         """
 
         my_ip, my_mask = get_my_network()
+        my_network = [(my_ip, my_mask)]
 
         resolve_order = ["ip"]
 
@@ -224,7 +224,7 @@ class class02_IPresolve (unittest.TestCase):
 
         target = ("WORKSTATION-2547", ifaces)
 
-        ip_resolve = IPResolve(resolve_order, my_ip, my_mask)
+        ip_resolve = IPResolve(resolve_order, my_network)
         getted_ip = ip_resolve.get_from_target(target)
 
         self.assertEqual(estimated_ip, getted_ip)
@@ -235,6 +235,8 @@ class class02_IPresolve (unittest.TestCase):
 
         Returns the first interface having enough networking info. 
         """
+        my_ip, my_mask = get_my_network()
+        my_network = [(my_ip, my_mask)]
 
         resolve_order = ["first"]
 
@@ -256,7 +258,7 @@ class class02_IPresolve (unittest.TestCase):
 
         target = ("WORKSTATION-2547", ifaces)
 
-        ip_resolve = IPResolve(resolve_order)
+        ip_resolve = IPResolve(resolve_order, my_network)
         getted_ip = ip_resolve.get_from_target(target)
 
         self.assertEqual(estimated_ip, getted_ip)
