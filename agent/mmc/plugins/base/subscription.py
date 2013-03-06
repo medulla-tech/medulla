@@ -111,7 +111,7 @@ class SubscriptionManager(object):
         if self.config.is_subscribe_done:
             try:
                 from mmc.plugins.dashboard.manager import DashboardManager
-                from mmc.plugins.base.panels import SupportPanel
+                from mmc.plugins.base.panel import SupportPanel
                 DM = DashboardManager()
                 DM.register_panel(SupportPanel("support"))
             except ImportError:

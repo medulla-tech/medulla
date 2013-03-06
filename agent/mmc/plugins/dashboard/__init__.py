@@ -24,8 +24,9 @@ MMC Dashboard
 
 import logging
 
-from mmc.support.config import PluginConfig
 from mmc.plugins.dashboard.manager import DashboardManager
+from mmc.plugins.dashboard.config import DashboardConfig
+from mmc.plugins.dashboard.panel import GeneralPanel, SpacePanel, ShortcutsPanel
 
 VERSION = "3.0.95"
 APIVERSION = "0:1:0"
@@ -42,23 +43,12 @@ def activate():
     if config.disabled:
         logger.warning("Plugin dashboard: disabled by configuration.")
         return False
-    DashboardManager()
+    DM = DashboardManager()
+    DM.register_panel(GeneralPanel("general"))
+    DM.register_panel(SpacePanel("space"))
+    DM.register_panel(ShortcutsPanel("shortcuts"))
     return True
 
-
-class DashboardConfig(PluginConfig):
-
-    def readConf(self):
-        PluginConfig.readConf(self)
-
-
-class Panel(object):
-
-    def __init__(self, id):
-        self.id = id
-
-    def serialize(self):
-        raise Exception("Must be implemented by subclass")
 
 # XML-RPC methods
 def get_panels():

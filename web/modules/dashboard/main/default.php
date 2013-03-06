@@ -21,6 +21,7 @@
  */
 
 require("graph/navbar.inc.php");
+require("modules/dashboard/includes/dashboard-xmlrpc.inc.php");
 
 ?>
 <script src="jsframework/cookiejar.js"></script>
@@ -35,23 +36,27 @@ $d = new Div(array("id" => "dashboard"));
 $d->display();
 
 // Search for panels...
-$modules = $_SESSION["modulesList"];
-foreach($modules as $module) {
-    $basedir = "modules/$module/includes/panels/";
-    if (is_dir($basedir)) {
-        $h = opendir($basedir);
-        while (false !== ($f = readdir($h))) {
-            if (substr($f, 0, 1) != ".") {
-                $file = $basedir . $f;
-                include_once($file);
-                if (!isset($options["enable"]))
-                    $options["enable"] = True;
-                if (!isset($options["refresh"]))
-                    $options["refresh"] = 10;
-                if ($options["enable"]) {
-                    $panel = new AjaxPage(urlStrRedirect('dashboard/main/ajaxPanels'), $options["id"], array("file" => urlencode($file)), $options["refresh"]);
-                    $panel->class = "panel";
-                    $panel->display();
+foreach(getPanels() as $panelName) {
+    $modules = $_SESSION["modulesList"];
+    foreach($modules as $module) {
+        $basedir = "modules/$module/includes/panels/";
+        if (is_dir($basedir)) {
+            $h = opendir($basedir);
+            while (false !== ($f = readdir($h))) {
+                if (substr($f, 0, 1) != ".") {
+                    if ($f == $panelName . ".inc.php") {
+                        $file = $basedir . $f;
+                        include_once($file);
+                        if (!isset($options["enable"]))
+                            $options["enable"] = True;
+                        if (!isset($options["refresh"]))
+                            $options["refresh"] = 10;
+                        if ($options["enable"]) {
+                            $panel = new AjaxPage(urlStrRedirect('dashboard/main/ajaxPanels'), $options["id"], array("file" => urlencode($file)), $options["refresh"]);
+                            $panel->class = "panel";
+                            $panel->display();
+                        }
+                    }
                 }
             }
         }

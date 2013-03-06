@@ -18,12 +18,10 @@
 # You should have received a copy of the GNU General Public License
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-import glob
-import imp
 import logging
 
 from mmc.support.mmctools import SingletonN
+from mmc.plugins.dashboard.config import DashboardConfig
 
 logger = logging.getLogger()
 
@@ -32,22 +30,15 @@ class DashboardManager(object):
     __metaclass__ = SingletonN
 
     def __init__(self):
+        self.config = DashboardConfig("dashboard")
         self.panel = {}
-        for panel in glob.glob(os.path.join(os.path.dirname(__file__), 'panels', '*.py')):
-            name = os.path.splitext(os.path.basename(panel))[0]
-            if name != "__init__":
-                f, p, d = imp.find_module(name, [os.path.join(os.path.dirname(__file__), 'panels')])
-                try:
-                    panel = imp.load_module(name, f, p, d)
-                except Exception,e:
-                    logger.exception(e)
-                    logger.error('Panel'+ name+ " raise an exception.\n"+ name+ " not loaded.")
-                    return 0
-                self.register_panel(panel.get_panel())
 
     def register_panel(self, panel):
-        logger.debug("Registering panel %s" % panel)
-        self.panel[panel.id] = panel
+        if not panel.id in self.config.disabled_panels:
+            logger.debug("Registering panel %s" % panel)
+            self.panel[panel.id] = panel
+        else:
+            logger.info("Panel %s disabled by configuration" % panel)
 
     def get_panels(self):
         return [ name for name, panel in self.panel.items() ]

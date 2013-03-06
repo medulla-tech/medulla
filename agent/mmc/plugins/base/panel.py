@@ -19,28 +19,13 @@
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-MMC services dasboard panel
+MMC base dasboard panels
 """
 
-from mmc.agent import PluginManager
 from mmc.plugins.dashboard.panel import Panel
-from mmc.plugins.services import ServiceManager
+from mmc.plugins.base.subscription import SubscriptionManager
 
-class ServicesPanel(Panel):
-
-    def check_plugin(self, plugin):
-        for s in ServiceManager().get_plugin_services(plugin):
-            service = ServiceManager().get_unit_info(s)
-            # only display inactive services
-            if service and service['active_state'] != "active":
-                if not plugin in self.services:
-                    self.services[plugin] = []
-                self.services[plugin].append(service)
+class SupportPanel(Panel):
 
     def serialize(self):
-        self.services = {}
-        plugins = PluginManager().getEnabledPluginNames()
-        for plugin in plugins:
-            self.check_plugin(plugin)
-
-        return self.services
+        return SubscriptionManager().getInformations(True)

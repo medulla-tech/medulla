@@ -19,7 +19,7 @@
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-MMC Dashboard general panel
+MMC Dashboard panels
 """
 
 import os
@@ -29,11 +29,21 @@ import psutil
 from datetime import datetime
 
 from mmc.support.mmctools import size_format
-from mmc.plugins.dashboard import Panel
 from mmc.plugins.base import getUsersLdap
 
-def get_panel():
-    return GeneralPanel("general")
+
+class Panel(object):
+
+    def __init__(self, id):
+        self.id = id
+
+    def serialize(self):
+        return {}
+
+
+class ShortcutsPanel(Panel):
+    pass
+
 
 class GeneralPanel(Panel):
 
@@ -56,4 +66,32 @@ class GeneralPanel(Panel):
                 'free': size_format(memory.free),
                 'percent': memory.percent
             }
+        }
+
+
+class SpacePanel(Panel):
+
+    def serialize(self):
+
+        parts = psutil.disk_partitions()
+        partitions = []
+
+        for part in parts:
+            if not 'loop' in part.device:
+                usage = psutil.disk_usage(part.mountpoint)
+                partitions.append({
+                    'device': part.device,
+                    'mountpoint': part.mountpoint,
+                    'fstype': part.fstype,
+                    'opts': part.opts,
+                    'usage': {
+                        'total': size_format(usage.total),
+                        'used': size_format(usage.used),
+                        'free': size_format(usage.free),
+                        'percent': usage.percent
+                    }
+                })
+
+        return {
+            'partitions': partitions,
         }

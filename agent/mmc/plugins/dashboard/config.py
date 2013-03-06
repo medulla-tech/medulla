@@ -18,14 +18,14 @@
 # You should have received a copy of the GNU General Public License
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 
-"""
-MMC base dasboard panels
-"""
+from mmc.support.config import PluginConfig
 
-from mmc.plugins.dashboard import Panel
-from mmc.plugins.base.subscription import SubscriptionManager
 
-class SupportPanel(Panel):
+class DashboardConfig(PluginConfig):
 
-    def serialize(self):
-        return SubscriptionManager().getInformations(True)
+    def readConf(self):
+        PluginConfig.readConf(self)
+        try:
+            self.disabled_panels = self.get("main", "disabled_panels").split()
+        except:
+            self.disabled_panels = []
