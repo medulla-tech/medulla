@@ -393,4 +393,8 @@ function handleServicesModule($popup, $services) {
     return $popup;
 }
 
+function servicesModuleEnabled() {
+    return in_array("services", $_SESSION["supportModList"]);
+}
+
 ?>
