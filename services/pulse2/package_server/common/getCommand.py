@@ -34,13 +34,13 @@ class getCommand(object):
         return d
 
     def getInnoCommand(self):
-        return '"./%s" /SP /VERYSILENT /NORESTART' % self.file.split('/').pop()
+        return './"%s" /SP /VERYSILENT /NORESTART' % self.file.split('/').pop()
 
     def getNSISCommand(self):
-        return '"./%s" /S' % self.file.split('/').pop()
+        return './"%s" /S' % self.file.split('/').pop()
 
     def getMozillaCommand(self):
-        return '"./%s" -ms' % self.file.split('/').pop()
+        return './"%s" -ms' % self.file.split('/').pop()
 
     def getMSI32Command(self):
         return 'msiexec /i "%s" /qn ALLUSERS=1' % self.file.split('/').pop()
