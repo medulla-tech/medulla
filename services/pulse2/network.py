@@ -78,29 +78,78 @@ class NetUtils :
         return socket.inet_ntoa(netmask), socket.inet_ntoa(gateway)
 
     @classmethod
-    def on_same_network(cls, ip1, ip2):
+    def on_same_network(cls, ip, network, netmask):
         """
-        Test of those IP addresses on the same network.
+        Test if IP address can be found in network.
 
-        @param ip1: first IP adddress
-        @type ip1: string
+        @param ip: tested IP adddress
+        @type ip: string
 
-        @param ip2: second IP adddress
-        @type ip2: string
+        @param network: address of network
+        @type network: string
 
-        @return: True if this two IP addresses are in the same network.
+        @param netmask: netmask of network
+        @type netmask: string
+
+        @return: True if IP address are in the same network.
         @rtype: bool      
         """
-        ip_list1 = ip1.split(".")
-        ip_list2 = ip2.split(".")
+        if not cls.check_netmask(network, netmask):
+            log.warn("Setted netmask %s to network %s is not valid!" % (network, netmask))
 
-        assert len(ip_list1) == len(ip_list2)
+        ip_num = struct.unpack('>L',socket.inet_aton(ip))[0]
+        
+        cidr = cls.netmask_to_cidr(netmask)
+        netmask_of_network = struct.unpack('>L',socket.inet_aton(network))[0]
 
-        for i in range(3):
-            if ip_list1[i] != ip_list2[i] :
-                return False
+        masked = ip_num & (4294967295<<(32-int(cidr)))
 
-        return True
+        return masked == netmask_of_network
+
+    @classmethod
+    def check_netmask(cls, network, netmask):
+        """
+        Test if defined netmask of network is correct.
+
+        @param network: address of network
+        @type network: string
+
+        @param netmask: netmask of network
+        @type netmask: string
+
+        @return: True if IP address are in the same network.
+        @rtype: bool      
+        """
+        
+        cidr = cls.netmask_to_cidr(netmask)
+        netmask_of_network = struct.unpack('>L',socket.inet_aton(network))[0]
+
+        return netmask_of_network == netmask_of_network & (4294967295<<(32-int(cidr)))
+
+ 
+    @classmethod
+    def netmask_to_cidr(cls, netmask):
+        """
+        Converting decimal dotted subnet mask to CIDR format
+
+        i.e.: 255.255.255.0 -> 24
+
+        @param netmask: netmask on dotted decimal format
+        @type netmask: str
+
+        @return: number of bits (CIDR)
+        @rtype: int
+        """
+        dec_bytes = [int(n) for n in netmask.split(".")]
+
+        count = 0
+        for byte in dec_bytes :
+            while byte != 0:
+                if byte % 2 == 1:
+                    count += 1
+                byte = byte / 2
+
+        return count
 
 
     @classmethod
@@ -259,8 +308,7 @@ class ChoosePerIP (ResolvingCallable):
                     log.debug("Comparing host '%s'(%s/%s) with my preferred network (%s/%s)" % 
                             (hostname, iface_ip, iface_netmask, pref_ip, pref_netmask))
 
-                    if iface_netmask == pref_netmask and \
-                    NetUtils.on_same_network(iface_ip, pref_ip) :
+                    if NetUtils.on_same_network(iface_ip, pref_ip, pref_netmask) :
 
                         return iface_ip
 
