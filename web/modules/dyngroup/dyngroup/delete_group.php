@@ -26,13 +26,13 @@ require_once("modules/dyngroup/includes/includes.php");
 $id = quickGet('gid');
 $group = new Group($id, False);
 $type = quickGet('type');
-if ($type == 1) {
+if ($type == 1) { // Imaging group
     $stype = "_profiles";
     $ltype = 'profile';
-    $title = _T("Delete profile", "dyngroup");
-    $popup = _T("Are you sure you want to delete profile <b>%s</b>?<br/>", "dyngroup");
-    $delete = _T("Delete profile", "dyngroup");
-} else {
+    $title = _T("Delete imaging group", "dyngroup");
+    $popup = _T("Are you sure you want to delete imaging group <b>%s</b>?<br/>", "dyngroup");
+    $delete = _T("Delete imaging group", "dyngroup");
+} else { // Simple group
     $stype = '';
     $ltype = 'group';
     $title = _T("Delete group", "dyngroup");
@@ -42,7 +42,14 @@ if ($type == 1) {
 
 if (quickGet('valid')) {
     $group->delete();
-    header("Location: " . urlStrRedirect("base/computers/list$stype" ));
+    if ($type == 1) { // Imaging group
+        header("Location: " . urlStrRedirect("imaging/manage/list$stype" ));
+        new NotifyWidgetSuccess(sprintf(_T("Imaging group %s was successfully deleted", "imaging"), $group->getName()));
+    }
+    else { // simple group
+        header("Location: " . urlStrRedirect("base/computers/list$stype" ));
+        new NotifyWidgetSuccess(sprintf(_T("Group %s was successfully deleted", "imaging"), $group->getName()));
+    }
     exit;
 }
 
@@ -53,7 +60,7 @@ if (quickGet('valid')) {
 <form action="<?php echo  urlStr("base/computers/delete_group", array('gid'=>$id, 'type'=>$type)) ?>" method="post">
 <p>
 
-<?
+<?php
     printf($popup, $_GET["groupname"]);
 ?>
 

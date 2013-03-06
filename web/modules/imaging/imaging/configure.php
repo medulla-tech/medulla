@@ -316,16 +316,31 @@ if (isset($_POST["bvalid"])) {
         }
         new NotifyWidgetSuccess($str);
         if ($is_registering) {
-            header("Location: ".urlStrRedirect("base/computers/".$type."imgtabs/".$type."tabbootmenu", $params));
+            if ($type == 'group') { // Imaging group
+                header("Location: ".urlStrRedirect("imaging/manage/".$type."imgtabs/".$type."tabbootmenu", $params));
+            }
+            else {
+                header("Location: ".urlStrRedirect("base/computers/".$type."imgtabs/".$type."tabbootmenu", $params));
+            }
             exit;
         } else {
             /* Reload the configure tab to get the synchro button */
-            header("Location: ".urlStrRedirect("base/computers/".$type."imgtabs/".$type."tabconfigure", $params));
+            if ($type == 'group') { // Imaging group
+                header("Location: ".urlStrRedirect("imaging/manage/".$type."imgtabs/".$type."tabconfigure", $params));
+            }
+            else {
+                header("Location: ".urlStrRedirect("base/computers/".$type."imgtabs/".$type."tabconfigure", $params));
+            }
             exit;
         }
     } elseif ($ret[0]) {
         if ($is_registering) {
-            header("Location: ".urlStrRedirect("base/computers/".$type."imgtabs/".$type."tabbootmenu", $params));
+            if ($type == 'group') { // Imaging group
+                header("Location: ".urlStrRedirect("imaging/manage/".$type."imgtabs/".$type."tabbootmenu", $params));
+            }
+            else {
+                header("Location: ".urlStrRedirect("base/computers/".$type."imgtabs/".$type."tabbootmenu", $params));
+            }
             exit;
         }
     } else {

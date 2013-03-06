@@ -38,7 +38,7 @@ $gid = quickGet('gid');
 $group = new Group($gid, true);
 $name = $group->getName();
 
-$p = new PageGenerator(sprintf(_T("Share groupe '%s' with", "dyngroup"), htmlspecialchars($name)));
+$p = new PageGenerator(sprintf(_T("Share group '%s' with", "dyngroup"), htmlspecialchars($name)));
 $sidemenu->forceActiveItem($item->action);
 $p->setSideMenu($sidemenu);
 $p->display();

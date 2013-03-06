@@ -225,6 +225,38 @@ if (in_array("dyngroup", $_SESSION["modulesList"])) {
         $page->setFile("modules/dyngroup/dyngroup/display.php");
         $page->setOptions(array("visible"=>False));
         $submod->addPage($page);
+        $page = new Page("delete_group",_T("Delete a group of computers","dyngroup"));
+        $page->setFile("modules/dyngroup/dyngroup/delete_group.php");
+        $page->setOptions(array("visible"=>False, "noHeader" =>True));
+        $submod->addPage($page);
+        $page = new Page("computersgroupedit",_T("Computers Group Editor","dyngroup"));
+        $page->setFile("modules/dyngroup/dyngroup/groupshead.php");
+        $page->setOptions(array("visible"=>False));
+        $submod->addPage($page);
+        $page = new Page("edit_share",_T("Share a group of computers","dyngroup"));
+        $page->setFile("modules/dyngroup/dyngroup/edit_share.php");
+        $page->setOptions(array("visible"=>False));
+        $submod->addPage($page);
+
+        if (in_array("msc", $_SESSION["modulesList"])) {
+            $page = new Page("groupmsctabs", _T("Secure control on a group of computers", "msc"));
+            $page->setFile("modules/msc/msc/tabs.php");
+            $page->setOptions(array("visible"=>False));
+
+            $tab = new Tab("grouptablaunch", _T("MSC launch tab for a group", "msc"));
+            $page->addTab($tab);
+
+            $tab = new Tab("grouptabbundle", _T("MSC bundle tab for a group", "msc"));
+            $page->addTab($tab);
+
+            $tab = new Tab("grouptablogs", _T("MSC logs tab for a group", "msc"));
+            $page->addTab($tab);
+
+            $tab = new Tab("grouptabhistory", _T("MSC history tab for a group", "msc"));
+            $page->addTab($tab);
+
+            $submod->addPage($page);
+        }
 
     }
 }

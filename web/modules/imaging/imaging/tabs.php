@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
@@ -92,15 +92,15 @@ if (isset($params['uuid'])) {
         $p->display();
         # when the computer is in a profile, but the profile is not registered
         # display an information message
-        $msg = _T("This computer can't be declared in the Imaging module, it's part of a profile, but the profile is not declared in the Imaging.", "imaging");
+        $msg = _T("This computer can't be declared in the Imaging module, it's part of an imaging group, but this one is not declared in the Imaging.", "imaging");
         $t1 = new TitleElement($msg, 3);
         $t1->display();
         # give a link to the profile registering
         if (count($canReg) == 2 and $canReg[1] != '') {
             $group = new Group($canReg[1], true);
             $params = array("id"=>$canReg[1], "gid"=>$canReg[1], "groupname"=>$group->getName());
-            $url = urlStr("base/computers/groupimgtabs", $params);
-            $msg = sprintf(_T("Please declare the profile first %shere%s.", "imaging"), "<a href='$url'>", "</a>");
+            $url = urlStr("imaging/manage/groupimgtabs", $params);
+            $msg = sprintf(_T("Please declare the imaging group first %shere%s.", "imaging"), "<a href='$url'>", "</a>");
             $t2 = new TitleElement($msg, 3);
             $t2->display();
         }

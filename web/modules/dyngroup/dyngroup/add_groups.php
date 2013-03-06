@@ -113,18 +113,19 @@ if (isset($_POST["bdelmachine_x"])) {
 
     if ($res) {
         if ($already_exists) {
-            if ($type == 0) {
+            if ($type == 0) { // Simple group
                 new NotifyWidgetSuccess(_T("Group successfully modified", "dyngroup"));
-            } else {
-                new NotifyWidgetSuccess(_T("Profile successfully modified", "dyngroup"));
+            } else { // Imaging group
+                new NotifyWidgetSuccess(_T("Imaging group successfully modified", "dyngroup"));
             }
         } else {
-            if ($type == 0) {
+            if ($type == 0) { // Simple group
                 new NotifyWidgetSuccess(_T("Group successfully created", "dyngroup"));
-            } else {
-                new NotifyWidgetSuccess(_T("Profile successfully created", "dyngroup"));
+                header("Location: " . urlStrRedirect("base/computers/display", array('gid'=>$group->id)));
+            } else { //  Imaging group
+                new NotifyWidgetSuccess(_T("Imaging group successfully created", "dyngroup"));
+                header("Location: " . urlStrRedirect("imaging/manage/display", array('gid'=>$group->id)));
             }
-            header("Location: " . urlStrRedirect("base/computers/display", array('gid'=>$group->id)));
             exit;
         }
         $list = $group->members();
@@ -150,26 +151,26 @@ if (isset($_POST["bdelmachine_x"])) {
                 unset($listOfMembers[$uuid]);
             }
         }
-        if ($type == 0) {
+        if ($type == 0) { // Simple group
             new NotifyWidgetFailure(_T("Group failed to modify", "dyngroup"));
-        } else {
+        } else { // Imaging group
             if (count($names) > 0) {
-                new NotifyWidgetFailure(sprintf(_T("Profile failed to modify.<br/>Can't add %s", "dyngroup"), implode(', ', $names)));
+                new NotifyWidgetFailure(sprintf(_T("Imaging group failed to modify.<br/>Can't add %s", "dyngroup"), implode(', ', $names)));
             } else {
-                new NotifyWidgetFailure(_T("Profile failed to modify", "dyngroup"));
+                new NotifyWidgetFailure(_T("Imaging group failed to modify", "dyngroup"));
             }
         }
     }
 } elseif (isset($_POST["bconfirm"]) and $name == '') {
-    if ($type == 0) {
+    if ($type == 0) { // Simple group
         new NotifyWidgetFailure(_T("You must specify a group name", "dyngroup"));
-    } else {
-        new NotifyWidgetFailure(_T("You must specify a profile name", "dyngroup"));
+    } else { // Imaging group
+        new NotifyWidgetFailure(_T("You must specify an imaging group name", "dyngroup"));
     }
-} elseif (isset($_POST["bconfirm"]) and $type == 0 and xmlrpc_group_name_exists($name, $id)) {
+} elseif (isset($_POST["bconfirm"]) and $type == 0 and xmlrpc_group_name_exists($name, $id)) { // Simple group
     new NotifyWidgetFailure(sprintf(_T("A group already exists with name '%s'", "dyngroup"), $name));
-} elseif (isset($_POST["bconfirm"]) and $type != 0 and xmlrpc_profile_name_exists($name, $id)) {
-    new NotifyWidgetFailure(sprintf(_T("A profile already exists with name '%s'", "dyngroup"), $name));
+} elseif (isset($_POST["bconfirm"]) and $type != 0 and xmlrpc_profile_name_exists($name, $id)) { // Imaging group
+    new NotifyWidgetFailure(sprintf(_T("An imaging group already exists with name '%s'", "dyngroup"), $name));
 } else {
     $list = $group->members();
     $members = array();
@@ -228,4 +229,3 @@ else {
 }
 
 ?>
-
