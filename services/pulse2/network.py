@@ -29,7 +29,7 @@ import inspect
 import os
 import subprocess
 
-from pulse2.utils import isdigit, isMACAddress, get_default_ip
+from pulse2.utils import isdigit, isMACAddress
 
 log = logging.getLogger()
 
@@ -160,9 +160,9 @@ class ResolvingCallable :
 
     name = None
 
-    def __init__(self, ip, netmask, **kwargs):
-        self.ip = ip
-        self.netmask = netmask
+    def __init__(self, networks, **kwargs):
+        
+        self.networks = networks
 
         for attr, value in kwargs.items():
             setattr(self, attr, value)
@@ -249,11 +249,24 @@ class ChoosePerIP (ResolvingCallable):
  
         """
         hostname, ifaces = target
+
         for iface in ifaces :
             if NetUtils.has_enough_info(iface) :
-                if iface["netmask"] == self.netmask and \
-                NetUtils.on_same_network(iface["ip"], self.ip) :
-                    return iface["ip"]
+                iface_ip = iface["ip"]
+                iface_netmask = iface["netmask"]
+                for pref_ip, pref_netmask in self.networks :
+                    
+                    log.debug("Comparing host '%s'(%s/%s) with my preferred network (%s/%s)" % 
+                            (hostname, iface_ip, iface_netmask, pref_ip, pref_netmask))
+
+                    if iface_netmask == pref_netmask and \
+                    NetUtils.on_same_network(iface_ip, pref_ip) :
+
+                        return iface_ip
+
+        log.debug("No match host='%s'with preferred network(%s/%s)" % 
+                   (hostname, pref_ip, pref_netmask))
+
 
         return None
 
@@ -463,7 +476,7 @@ class IPResolversContainer :
         for name in resolve_order :
             
             for resolver_class in resolvers :
-                resolver = resolver_class(self.ip, self.netmask, **kwargs)
+                resolver = resolver_class(self.networks, **kwargs)
                 
                 if name == resolver.name :
                     if resolver.validate():
@@ -477,31 +490,18 @@ class IPResolve (IPResolversContainer) :
     based on inventory info ("network" section).
     """
 
-    def __init__(self, resolve_order, ip=None, netmask=None, **kwargs):
+    def __init__(self, resolve_order, networks, **kwargs):
         """
         @param resolv_order: list of methods to apply
         @type resolv_order: list
 
-        @param ip: IP address of server
-        @type ip: str
-
-        @param netmask: netmask of relevant network 
-        @type netmask: str
+        @param networks: list of preferred networks
+        @type networks: list
         """
         self.resolve_order = resolve_order
-
-        if not ip :
-            ip = get_default_ip()
-            log.info("Networking: Default IP address of server not setted, detected IP: %s" % ip)
-        if not netmask :
-            netmask, gateway = NetUtils.get_netmask_and_gateway()
-            log.info("Networking: Default netmask of server not setted, detected: %s" % netmask)
- 
-        self.ip = ip or get_default_ip()
-        self.netmask = netmask
+        self.networks = networks
 
         self.register_resolvers(resolve_order, resolvers=None, **kwargs)
-
 
     def _validate_target (self, target):
         """ 
@@ -563,7 +563,7 @@ class IPResolve (IPResolversContainer) :
                 log.info("IP address resolved by '%s' method : %s" % (resolver.name, result))
                 return result 
             else :
-                log.debug("Method '%s' ignored, trying the next one..." % resolver.name)
+                log.debug("No match, method '%s' ignored, trying the next one..." % resolver.name)
                 continue
 
         return None

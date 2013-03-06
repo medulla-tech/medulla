@@ -37,6 +37,7 @@ from mmc.site import mmcconfdir
 
 # Others Pulse2 Stuff
 import pulse2.utils
+from pulse2.network import NetUtils
 from pulse2.xmlrpc import isTwistedEnoughForLoginPass
 from pulse2.database.msc.config import MscDatabaseConfig
 
@@ -283,9 +284,14 @@ class SchedulerConfig(pulse2.utils.Singleton):
         self.setoption("scheduler", "resolv_order", "resolv_order")
         if not type(self.resolv_order) == type([]):
             self.resolv_order = self.resolv_order.split(' ')
-        self.setoption("scheduler", "preferred_network", "preferred_network")
-        if not type(self.preferred_network) == type(()):
-            self.preferred_network = self.preferred_network.split('/')
+
+        pnp = PreferredNetworkParser(None, None)
+        if self.cp.has_option("scheduler", "preferred_network"):
+            self.preferred_network = pnp.parse(self.cp.get("scheduler", "preferred_network"))
+        else :
+            self.preferred_network = pnp.get_default()
+
+
         self.setoption("scheduler", "netbios_path", "netbios_path")
         self.setoption("scheduler", "scheduler_path", "scheduler_path")
         self.setoption("scheduler", "scheduler_proxy_path", "scheduler_proxy_path")
@@ -346,3 +352,37 @@ class SchedulerConfig(pulse2.utils.Singleton):
                     uri += '%s:%s@' % (self.launchers[section]['username'], self.launchers[section]['password'])
                 uri += '%s:%d' % (self.launchers[section]['host'], int(self.launchers[section]['port']))
                 self.launchers_uri.update({section: uri})
+
+class PreferredNetworkParser :
+
+    def __init__(self, default_ip, default_netmask): 
+        if not default_ip :
+            default_ip = pulse2.utils.get_default_ip()
+        if not default_netmask :
+            default_netmask, gw = NetUtils.get_netmask_and_gateway()
+
+        self.default_network = [(default_ip, default_netmask)]
+
+    def get_default(self):
+        return self.default_network
+
+    @classmethod
+    def check_str_format(cls, value):
+        networks = value.split()
+        for ip_slash_mask in networks :
+            if not "/" in ip_slash_mask :
+                return False
+            elif len(ip_slash_mask.split("/")) != 2 :
+                return False
+        return True
+
+    def parse(self, value):
+        if not self.check_str_format(value) :
+            log.warning("Preferred network not set, using default value: %s/%s" % self.default_network[0])
+            return self.default_network
+        else :
+            network = []
+            for ip_slash_mask in value.split() :
+                ip, mask = ip_slash_mask.split("/")
+                network.append((ip, mask))
+            return network

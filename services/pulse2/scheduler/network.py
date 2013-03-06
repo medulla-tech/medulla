@@ -61,13 +61,12 @@ class SchedulerNetUtils :
     @classmethod
     def get_ip_resolve(cls):
         resolve_order = SchedulerConfig().resolv_order
-        ip, netmask = SchedulerConfig().preferred_network
-        nmblookup_path = SchedulerConfig().nmblookup_path
+        networks = SchedulerConfig().preferred_network
+        netbios_path = SchedulerConfig().netbios_path
         
         ip_resolve = IPResolve(resolve_order,
-                               ip,
-                               netmask,
-                               nmblookup_path=nmblookup_path)
+                               networks,
+                               netbios_path=netbios_path)
         return ip_resolve
 
 

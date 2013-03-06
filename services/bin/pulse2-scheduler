@@ -312,6 +312,9 @@ def startService():
     cache.init(timeout=SchedulerConfig().cache_timeout,
                max_entries=SchedulerConfig().cache_size)
 
+    pref_ntw_display = [(ip +"/"+ mask) for ip, mask in config.preferred_network]
+    logger.info("Preferred network is set to %s" % str(pref_ntw_display))
+
 
     twisted.internet.reactor.callWhenRunning(start_all_callbacks)
     twisted.internet.reactor.addSystemEventTrigger('before', 'shutdown', cleanUp)
