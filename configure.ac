@@ -31,7 +31,7 @@ AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 
 AM_INIT_AUTOMAKE([-Wno-portability])
-AM_CONFIG_HEADER(config.h) 
+AM_CONFIG_HEADER(config.h)
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES(yes)])
 AC_CONFIG_MACRO_DIR([m4])
 
@@ -91,6 +91,7 @@ if test "x$enable_python_check" = "xyes"; then
     AX_PYTHON_MODULE([ldap], [1])
     AX_PYTHON_MODULE([OpenSSL], [1])
     AX_PYTHON_MODULE([multiprocessing], [1])
+    AX_PYTHON_MODULE([gobject], [1])
 fi
 
 
