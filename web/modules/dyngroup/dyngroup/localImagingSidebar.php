@@ -28,10 +28,10 @@ require_once("modules/pulse2/includes/profiles_xmlrpc.inc.php");
 
 if (isProfilesEnable() && areProfilesPossible()) {
     $sidemenu->addSideMenuItem(
-        new SideMenuItem(_T("All profiles", "dyngroup"), "imaging", "manage",  "list_profiles")
+        new SideMenuItem(_T("All imaging groups", "dyngroup"), "imaging", "manage",  "list_profiles")
     );
     $sidemenu->addSideMenuItem(
-        new SideMenuItem(_T("Add a profile", "dyngroup"), "imaging", "manage", "computersprofilecreator", "img/machines/icn_addMachines_active.gif", "img/machines/icn_addMachines_ro.gif")
+        new SideMenuItem(_T("Add an imaging group", "dyngroup"), "imaging", "manage", "computersprofilecreator", "img/machines/icn_addMachines_active.gif", "img/machines/icn_addMachines_ro.gif")
     );
 }
 
@@ -39,7 +39,7 @@ if (isProfilesEnable()) {
     $items = array();
     $profiles = getAllProfiles(array('canShow'=>true));
     foreach ($profiles as $profile) {
-        $isA = ($profile->isDyn() ? (!$profile->isRequest() ? _T('Static profile:', 'dyngroup') : _T('Dynamic profile', 'dyngroup')) : (_T('Static profile', 'dyngroup')));
+        $isA = ($profile->isDyn() ? (!$profile->isRequest() ? _T('Imaging group:', 'dyngroup') : _T('Dynamic imaging group:', 'dyngroup')) : (_T('Imaging group:', 'dyngroup')));
 
         $s = new SideMenuItemNoAclCheck(
                  sprintf("%s<br />%s", $isA, $profile->getName()),

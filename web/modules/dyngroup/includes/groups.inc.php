@@ -114,9 +114,9 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
         $label_visible = _T('Add shortcut', 'dyngroup');
         $label_members = _T("Group members", "dyngroup");
     } else {
-        $label_name = _T('Profile name', 'dyngroup');
+        $label_name = _T('Group name', 'dyngroup'); // Imaging group
         $label_visible = _T('Add shortcut', 'dyngroup');
-        $label_members = _T("Profile members", "dyngroup");
+        $label_members = _T("Group members", "dyngroup");
     }
 ?>
 

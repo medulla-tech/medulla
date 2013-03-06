@@ -77,7 +77,7 @@ foreach ($list as $group) {
 if ($is_gp != 1) {
     $n = new OptimizedListInfos($name, _T('Group name', 'dyngroup'));
 } else {
-    $n = new OptimizedListInfos($name, _T('Profile name', 'dyngroup'));
+    $n = new OptimizedListInfos($name, _T('Group name', 'dyngroup')); // Imaging group
 }
 $n->setTableHeaderPadding(0);
 $n->setItemCount($count);

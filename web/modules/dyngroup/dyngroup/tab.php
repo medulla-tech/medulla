@@ -53,13 +53,21 @@ if ($type == 0) {
         $params['imaging_server'] = $imaging_server;
         $p = new TabbedPageGenerator();
         $p->setSideMenu($sidemenu);
-        $p->addTop(sprintf(_T("Profile creation", "dyngroup"), $_GET['name']), "modules/dyngroup/dyngroup/header.php");
-        $p->addTab("tabdyn", _T("Result profile creation", "dyngroup"), "", "modules/dyngroup/dyngroup/creator.php", $params);
-        $p->addTab("tabsta", _T("Static profile creation", "dyngroup"), "", "modules/dyngroup/dyngroup/add_groups.php", $params);
-        $p->addTab("tabfromfile", _T("Static profile creation from import", "dyngroup"), "", "modules/dyngroup/dyngroup/import_from_file.php", $params);
+        $p->addTop(sprintf(_T("Imaging group creation", "dyngroup"), $_GET['name']), "modules/dyngroup/dyngroup/header.php");
+        /*
+         * Commented tabs will be reactivated when dynamic imaging group
+         * will be implemented
+         */
+        //$p->addTab("tabdyn", _T("Result imaging group", "dyngroup"), "", "modules/dyngroup/dyngroup/creator.php", $params);
+        //$p->addTab("tabfromfile", _T("Static imaging group from import", "dyngroup"), "", "modules/dyngroup/dyngroup/import_from_file.php", $params);
+
+        echo '<style type="text/css">';
+        echo '.tabselector { display: none;}';
+        echo '</style>';
+        $p->addTab("tabsta", _T("Static imaging group", "dyngroup"), "", "modules/dyngroup/dyngroup/add_groups.php", $params);
         $p->display();
     } else {
-        $p = new PageGenerator(_T('Select this profile\'s Imaging Server', 'dyngroup'));
+        $p = new PageGenerator(_T('Imaging server selection', 'dyngroup'));
         $p->setSideMenu($sidemenu);
 
         require_once("modules/pulse2/includes/profiles_xmlrpc.inc.php");
@@ -80,7 +88,7 @@ if ($type == 0) {
         $imss->setElementsVal($elt_values);
 
         $f->add(
-            new TrFormElement(_T("Select the imaging server for this profile.", "dyngroup"), $imss)
+            new TrFormElement(_T("Select an imaging server for this group", "dyngroup"), $imss)
         );
 
         $f->pop();

@@ -23,9 +23,9 @@
 
 global $type;
 if (strlen($type) && $type == 1) {
-    print _T("Please chose the type of profile you want to create", "dyngroup");
+    //print _T("Please choose the type of imaging group you want to create", "dyngroup");
 } else {
-    print _T("Please chose the type of group you want to create", "dyngroup");
+    print _T("Please choose the type of group you want to create", "dyngroup");
 }
 
 ?>

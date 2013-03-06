@@ -27,7 +27,7 @@ require("graph/navbar.inc.php");
 require_once("modules/dyngroup/includes/includes.php");
 require("modules/dyngroup/graph/index.css");
 
-$p = new PageGenerator(_T("Profiles list", 'dyngroup'));
+$p = new PageGenerator(_T("Imaging groups", 'dyngroup'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
