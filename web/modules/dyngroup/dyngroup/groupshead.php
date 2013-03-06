@@ -21,7 +21,7 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require("modules/base/computers/localSidebar.php");
+require("modules/imaging/manage/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/dyngroup/includes/includes.php");
 

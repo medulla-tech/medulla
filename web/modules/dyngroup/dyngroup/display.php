@@ -21,12 +21,12 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/dyngroup/includes/includes.php");
 
 $gid = quickGet('gid');
 if (!$gid) { // TODO !!
+    require("modules/base/computers/localSidebar.php");
     $request = quickGet('request');
     $r = new Request();
     $r->parse($request);
@@ -34,6 +34,7 @@ if (!$gid) { // TODO !!
     $result->replyToRequest();
     $result->displayResListInfos();
 } else {
+    require("modules/imaging/manage/localSidebar.php");
     $group = getPGobject($gid, true);
     if (isset($items[$gid])) {
         $item = $items[$gid];

@@ -23,7 +23,12 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require_once('modules/base/computers/localSidebar.php');
+if ($_GET['action'] == 'groupimgtabs') {
+    require_once('modules/imaging/manage/localSidebar.php');
+}
+else {
+    require_once('modules/base/computers/localSidebar.php');
+}
 require_once('graph/navbar.inc.php');
 require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');

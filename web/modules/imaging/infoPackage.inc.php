@@ -121,8 +121,115 @@ $submod->addPage($page);
 $page = new Page("imaging_server_link",_T("Link an Imaging Server","imaging"));
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
-$mod->addSubmod($submod);
 
+if (in_array("dyngroup", $_SESSION["modulesList"])) {
+    require_once("modules/dyngroup/includes/includes.php");
+    if (isProfilesEnable()) {
+        if (isDynamicEnable()) {
+            $page = new Page("computersprofilecreator",_T("Computers Profile Creator","dyngroup"));
+            $page->setFile("modules/dyngroup/dyngroup/tab.php");
+
+            $tab = new Tab("tabdyn", _T("Profile creation's tab from dynamic request", "dyngroup"));
+            $page->addTab($tab);
+
+            $tab = new Tab("tabsta", _T("Profile creation's tab from machine list", "dyngroup"));
+            $page->addTab($tab);
+
+            $tab = new Tab("tabfromfile", _T("Profile creation's tab from file import", "dyngroup"));
+            $page->addTab($tab);
+            $submod->addPage($page);
+
+            $page = new Page("computersprofilecreatesubedit",_T("Computers Profile Creator Sub Request Editor","dyngroup"));
+            $page->setFile("modules/dyngroup/dyngroup/tab.php");
+            $page->setOptions(array("visible"=>False));
+
+            $tab = new Tab("tabdyn", _T("Profile creation's tab from dynamic request", "dyngroup"));
+            $page->addTab($tab);
+
+            $tab = new Tab("tabsta", _T("Profile creation's tab from machine list", "dyngroup"));
+            $page->addTab($tab);
+
+            $tab = new Tab("tabfromfile", _T("Profile creation's tab from file import", "dyngroup"));
+            $page->addTab($tab);
+            $submod->addPage($page);
+
+            $page = new Page("computersprofilecreatesubdel",_T("Computers Profile Creator Sub Request Delete","dyngroup"));
+            $page->setFile("modules/dyngroup/dyngroup/tab.php");
+            $page->setOptions(array("visible"=>False));
+
+            $tab = new Tab("tabdyn", _T("Profile creation's tab from dynamic request", "dyngroup"));
+            $page->addTab($tab);
+
+            $tab = new Tab("tabsta", _T("Profile creation's tab from machine list", "dyngroup"));
+            $page->addTab($tab);
+
+            $tab = new Tab("tabfromfile", _T("Profile creation's tab from file import", "dyngroup"));
+            $page->addTab($tab);
+            $submod->addPage($page);
+
+            $page = new Page("computersprofileedit",_T("Computers Profile Editor","dyngroup"));
+            $page->setFile("modules/dyngroup/dyngroup/edithead.php");
+            $page->setOptions(array("visible"=>False));
+            $submod->addPage($page);
+
+            $page = new Page("computersprofilesubedit",_T("Computers Profile Sub Request Editor","dyngroup"));
+            $page->setFile("modules/dyngroup/dyngroup/edithead.php");
+            $page->setOptions(array("visible"=>False, "noACL"=>True));
+            $submod->addPage($page);
+
+            $page = new Page("computersprofilesubdel",_T("Computers Profile Sub Request Delete","dyngroup"));
+            $page->setFile("modules/dyngroup/dyngroup/edithead.php");
+            $page->setOptions(array("visible"=>False, "noACL"=>True));
+            $submod->addPage($page);
+
+            $page = new Page("list_profiles",_T("List all profiles of computers","dyngroup"));
+            $page->setFile("modules/dyngroup/dyngroup/list_profiles.php");
+            $submod->addPage($page);
+        }
+        else {
+            $page = new Page("computersprofilecreator",_T("Computers Profile Creator","dyngroup"));
+            $page->setFile("modules/dyngroup/dyngroup/groupshead.php");
+            $submod->addPage($page);
+
+            $page = new Page("computersprofileedit",_T("Computers Profile Editor","dyngroup"));
+            $page->setFile("modules/dyngroup/dyngroup/groupshead.php");
+            $page->setOptions(array("visible"=>False));
+            $submod->addPage($page);
+
+            $page = new Page("list_profiles",_T("List all profiles of computers","dyngroup"));
+            $page->setFile("modules/dyngroup/dyngroup/list_profiles.php");
+            $submod->addPage($page);
+        }
+
+        // imaging on group
+        $page = new Page("groupregister_target", _T("Register a profile in the imaging module", "imaging"));
+        $page->setFile("modules/imaging/imaging/register_target.php");
+        $page->setOptions(array("visible" => False));
+        $submod->addPage($page);
+
+        $page = new Page("groupimgtabs", _T("Imaging on group", "imaging"));
+        $page->setFile("modules/imaging/imaging/tabs.php");
+        $page->setOptions(array("visible" => False));
+        $tab = new Tab("grouptabbootmenu", _T("Boot menu", "imaging"));
+        $page->addTab($tab);
+        $tab = new Tab("grouptabimages", _T("Images and Masters", "imaging"));
+        $page->addTab($tab);
+        $tab = new Tab("grouptabservices", _T("Boot services", "imaging"));
+        $page->addTab($tab);
+        $tab = new Tab("grouptabimlogs", _T("Imaging Log", "imaging"));
+        $page->addTab($tab);
+        $tab = new Tab("grouptabconfigure", _T("Menu configuration", "imaging"));
+        $page->addTab($tab);
+        $submod->addPage($page);
+        $page = new Page("display",_T("Display a groups of computers","dyngroup"));
+        $page->setFile("modules/dyngroup/dyngroup/display.php");
+        $page->setOptions(array("visible"=>False));
+        $submod->addPage($page);
+
+    }
+}
+
+$mod->addSubmod($submod);
 $MMCApp =& MMCApp::getInstance();
 $MMCApp->addModule($mod);
 
@@ -151,27 +258,6 @@ if (!empty($submod)) {
     $tab = new Tab("tabimlogs", _T("Imaging Log", "imaging"));
     $page->addTab($tab);
     $tab = new Tab("tabconfigure", _T("Menu configuration", "imaging"));
-    $page->addTab($tab);
-    $submod->addPage($page);
-
-    // imaging on group
-    $page = new Page("groupregister_target", _T("Register a profile in the imaging module", "imaging"));
-    $page->setFile("modules/imaging/imaging/register_target.php");
-    $page->setOptions(array("visible" => False));
-    $submod->addPage($page);
-
-    $page = new Page("groupimgtabs", _T("Imaging on group", "imaging"));
-    $page->setFile("modules/imaging/imaging/tabs.php");
-    $page->setOptions(array("visible" => False));
-    $tab = new Tab("grouptabbootmenu", _T("Boot menu", "imaging"));
-    $page->addTab($tab);
-    $tab = new Tab("grouptabimages", _T("Images and Masters", "imaging"));
-    $page->addTab($tab);
-    $tab = new Tab("grouptabservices", _T("Boot services", "imaging"));
-    $page->addTab($tab);
-    $tab = new Tab("grouptabimlogs", _T("Imaging Log", "imaging"));
-    $page->addTab($tab);
-    $tab = new Tab("grouptabconfigure", _T("Menu configuration", "imaging"));
     $page->addTab($tab);
     $submod->addPage($page);
 

@@ -24,7 +24,7 @@
  */
 
 
-require('modules/base/computers/localSidebar.php');
+require('modules/imaging/manage/localSidebar.php');
 require("graph/navbar.inc.php");
 
 $p = new PageGenerator();
