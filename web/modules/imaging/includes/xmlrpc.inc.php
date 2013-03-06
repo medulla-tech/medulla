@@ -101,6 +101,10 @@ function xmlrpc_getComputerBootMenu($id) {
     return xmlCall("imaging.getComputerBootMenu", array($id));
 }
 
+function xmlrpc_getProfileNetworks($uuid) {
+    return xmlCall("imaging.getProfileNetworks", array($uuid));
+}
+
 function xmlrpc_getProfileBootMenu($id) {
     return xmlCall("imaging.getProfileBootMenu", array($id));
 }

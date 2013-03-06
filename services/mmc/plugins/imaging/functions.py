@@ -1379,6 +1379,13 @@ class ImagingRpcProxy(RpcProxyI):
             ret = 3
         return ret
 
+    def getProfileNetworks(self, profileUUID):
+        uuids = [c.uuid for c in ComputerProfileManager().getProfileContent(profileUUID)]
+        ctx = self.currentContext
+        networks = ComputerManager().getComputersNetwork(ctx, {'uuids': uuids})
+
+        return xmlrpcCleanup(networks)
+
     def checkProfileForImaging(self, profileUUID):
         """
         @return: 0 if the profile can be registered into the imaging module
@@ -1389,17 +1396,23 @@ class ImagingRpcProxy(RpcProxyI):
         ctx = self.currentContext
         uuids = [c.uuid for c in ComputerProfileManager().getProfileContent(profileUUID)]
         if len(uuids):
+            logger.error(uuids)
+            logger.error(ComputerManager().getComputersNetwork(ctx, {'uuids':uuids}))
             h_macaddresses = getJustOneMacPerComputer(ctx, ComputerManager().getMachineMac(ctx, {'uuids':uuids}))
+            logger.error(h_macaddresses)
             macaddresses = h_macaddresses.values()
             if '' in macaddresses:
+                logger.error(1)
                 # Some computers don't have a MAC address
                 logger.info("Some computers don't have any MAC address in the profile %s" % profileUUID)
                 ret = 2
             elif len(uuids) < len(macaddresses):
+                logger.error(2)
                 # Some computers have more than one MAC address
                 logger.info("Some computers have more than one MAC address in the profile %s" % profileUUID)
                 ret = 3
             elif len(uuids) > len(macaddresses):
+                logger.error(3)
                 # Some computers don't have a MAC address
                 list_of_fail = uuids
                 for uuid in h_macaddresses.keys():
@@ -1408,6 +1421,7 @@ class ImagingRpcProxy(RpcProxyI):
                 logger.info("Some computers don't have any MAC address in the profile %s (%s)" % (profileUUID, str(list_of_fail)))
                 ret = 2
             else:
+                logger.error(4)
                 ret = 0
                 # Check all MAC addresses
                 i = 0
@@ -1418,6 +1432,7 @@ class ImagingRpcProxy(RpcProxyI):
                         break
                     i += 1
             if not ret:
+                logger.error(5)
                 # Still no error ? Now checks that all the computers belong to the
                 # same entity
                 locations = ComputerLocationManager().getMachinesLocations(uuids)
@@ -1769,8 +1784,6 @@ class ImagingRpcProxy(RpcProxyI):
         """
         db = ImagingDatabase()
         isRegistered = db.isTargetRegister(uuid, target_type)
-        #if (target_type == P2IT.COMPUTER or target_type == P2IT.COMPUTER_IN_PROFILE or target_type == P2IT.ALL_COMPUTERS) and db.isTargetRegister(uuid, P2IT.DELETED_COMPUTER):
-        #    pass
 
         if not isRegistered and target_type == P2IT.COMPUTER and db.isTargetRegister(uuid, P2IT.COMPUTER_IN_PROFILE):
             # if the computer change from a profile to it's own registering,
@@ -1853,7 +1866,13 @@ class ImagingRpcProxy(RpcProxyI):
                         h_hostnames[hostnames['uuid']] = hostnames['hostname']
                 params['hostnames'] = h_hostnames
 
-                h_macaddress = getJustOneMacPerComputer(ctx, ComputerManager().getMachineMac(ctx, {'uuids': uuids}))
+                #h_macaddress = getJustOneMacPerComputer(ctx, ComputerManager().getMachineMac(ctx, {'uuids': uuids}))
+                h_macaddress = {}
+                for uuid in uuids:
+                    if uuid in params['choose_network_profile']:
+                        h_macaddress[uuid] = params['choose_network_profile'][uuid]
+                    else:
+                        logger.warn('Imaging on group: %s doesn\'t exists in choose_network_profile key' % uuid)
 
                 try:
                     params['target_name'] = '' # put the real name!
