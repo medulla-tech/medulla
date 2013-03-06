@@ -56,7 +56,7 @@ def activate():
         return False
     if not Glpi().db_check():
         return False
-                    
+
     ComputerManager().register("glpi", GlpiComputers)
     ProvisioningManager().register("glpi", GlpiProvisioner)
     if config.displayLocalisationBar:
@@ -64,6 +64,16 @@ def activate():
 
     if config.check_db_enable:
         scheduleCheckStatus(config.check_db_interval)
+
+    # Register the panel to the DashboardManager
+    try:
+        from mmc.plugins.dashboard.manager import DashboardManager
+        from mmc.plugins.glpi.panel import GlpiPanel
+        DM = DashboardManager()
+        DM.register_panel(GlpiPanel("glpi"))
+    except ImportError:
+        pass
+
     return True
 
 class ContextMaker(ContextMakerI):

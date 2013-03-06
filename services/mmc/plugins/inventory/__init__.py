@@ -67,6 +67,16 @@ def activate():
     ComputerLocationManager().register('inventory', InventoryLocation)
 
     PossibleQueries().init(config)
+
+    # Register the panel to the DashboardManager
+    try:
+        from mmc.plugins.dashboard.manager import DashboardManager
+        from mmc.plugins.inventory.panel import InventoryPanel
+        DM = DashboardManager()
+        DM.register_panel(InventoryPanel("inventory"))
+    except ImportError:
+        pass
+
     return True
 
 
