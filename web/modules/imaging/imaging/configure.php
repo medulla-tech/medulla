@@ -415,7 +415,7 @@ else {
         }
     } else { // Profile
         if (!xmlrpc_isProfileRegistered($target_uuid)) {
-            $f->add(new TitleElement(sprintf(_T("Register profile '%s'", "imaging"), $target_name)));
+            $f->add(new TitleElement(sprintf(_T("Imaging activation for group '%s'", "imaging"), $target_name)));
         }
     }
 

@@ -123,8 +123,12 @@ if (isset($_POST["bdelmachine_x"])) {
                 new NotifyWidgetSuccess(_T("Group successfully created", "dyngroup"));
                 header("Location: " . urlStrRedirect("base/computers/display", array('gid'=>$group->id)));
             } else { //  Imaging group
-                new NotifyWidgetSuccess(_T("Imaging group successfully created", "dyngroup"));
-                header("Location: " . urlStrRedirect("imaging/manage/display", array('gid'=>$group->id)));
+                $params = array(
+                    'target_uuid' => $group->id,
+                    'type' => 'group',
+                    'target_name' => $name,
+                );
+                header("Location: " . urlStrRedirect("imaging/manage/groupregister_target", $params));
             }
             exit;
         }
