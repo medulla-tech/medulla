@@ -60,10 +60,11 @@ class ServiceManager(object):
         """
         list = {}
         for plugin, services in self.config.services.items():
-            list[plugin] = []
-            for service in services:
-                list[plugin].append(self.get_unit_info(service))
-            list[plugin] = sorted(list[plugin], key=itemgetter('id'))
+            if services:
+                list[plugin] = []
+                for service in services:
+                    list[plugin].append(self.get_unit_info(service))
+                list[plugin] = sorted(list[plugin], key=itemgetter('id'))
         return list
 
     def list_others_services(self, filter = None):
