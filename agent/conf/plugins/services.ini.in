@@ -3,9 +3,8 @@ disable = 1
 journalctl_path = /bin/systemd-journalctl
 
 [plugins]
-base = slapd
-samba = samba
-mail = dovecot,postfix,amavis
-network = isc-dhcp-server,bind9
+samba = samba,smb
+mail = dovecot,postfix,amavis,amavisd
+network = isc-dhcp-server,dhcpd,bind9,named,named-sdb
 shorewall = shorewall
 squid = squid
