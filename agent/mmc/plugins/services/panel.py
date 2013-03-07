@@ -22,26 +22,17 @@
 MMC services dasboard panel
 """
 
-from mmc.agent import PluginManager
 from mmc.plugins.dashboard.panel import Panel
 from mmc.plugins.services import ServiceManager
 
 class ServicesPanel(Panel):
 
-    def check_plugin(self, plugin):
-        for s in ServiceManager().get_plugin_services(plugin):
-            service = ServiceManager().get_unit_info(s)
-            # only display inactive services
-            if service and service['active_state'] != "active" and \
-                    service['active_state'] != "unavailable":
-                if not plugin in self.services:
-                    self.services[plugin] = []
-                self.services[plugin].append(service)
-
     def serialize(self):
-        self.services = {}
-        plugins = PluginManager().getEnabledPluginNames()
-        for plugin in plugins:
-            self.check_plugin(plugin)
-
-        return self.services
+        data = {}
+        for plugin, services in ServiceManager().list_plugins_services().items():
+            for service in services:
+                if service['active_state'] not in ("active", "unavailable"):
+                    if not plugin in data:
+                        data[plugin] = []
+                    data[plugin].append(service)
+        return data

@@ -23,11 +23,15 @@ Systemd service manager
 """
 
 import json
+import logging
 from systemd_dbus.manager import Manager
 from operator import itemgetter
 
+from mmc.agent import PluginManager
 from mmc.support.mmctools import SingletonN, shlaunch
 from mmc.plugins.services.config import ServicesConfig
+
+logger = logging.getLogger()
 
 
 class ServiceManager(object):
@@ -59,13 +63,26 @@ class ServiceManager(object):
         Returns list of services ordered by MMC plugins
         """
         list = {}
-        for plugin, services in self.config.services.items():
-            if services:
-                list[plugin] = []
-                for service in services:
-                    list[plugin].append(self.get_unit_info(service))
-                list[plugin] = sorted(list[plugin], key=itemgetter('id'))
+        plugins = PluginManager().getEnabledPluginNames()
+        for plugin in plugins:
+            for plugin_services, services in self.config.services.items():
+                if plugin == plugin_services and services:
+                    list[plugin] = []
+                    for service in services:
+                        list[plugin].append(self.get_unit_info(service))
+                    list[plugin] = sorted(list[plugin], key=itemgetter('id'))
         return list
+
+    def has_inactive_plugins_services(self):
+        """
+        Return True if one of the plugin's services
+        is not active
+        """
+        for plugin, services in self.list_plugins_services().items():
+            for service in services:
+                if service['active_state'] not in ("active", "unavailable"):
+                    return True
+        return False
 
     def list_others_services(self, filter = None):
         """

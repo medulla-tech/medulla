@@ -21,6 +21,7 @@
  */
 
 function listPluginsServices() { return xmlCall("services.list_plugins_services"); }
+function hasInactivePluginsServices() { return xmlCall("services.has_inactive_plugins_services"); }
 function listOthersServices($filter = "") { return xmlCall("services.list_others_services", array($filter)); }
 function startService($service) { return xmlCall("services.start", array($service)); }
 function stopService($service) { return xmlCall("services.stop", array($service)); }

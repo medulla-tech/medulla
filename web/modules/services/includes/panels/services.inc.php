@@ -21,12 +21,14 @@
  */
 
 include_once("modules/dashboard/includes/panel.class.php");
+include_once("modules/services/includes/services-xmlrpc.inc.php");
 
 $options = array(
     "class" => "ServicesPanel",
     "id" => "services",
     "refresh" => 30,
     "title" => _T("Services", "services"),
+    "enable" => hasInactivePluginsServices()
 );
 
 class ServicesPanel extends Panel {

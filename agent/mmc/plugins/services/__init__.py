@@ -85,6 +85,9 @@ def list():
 def list_plugins_services():
     return ServiceManager().list_plugins_services()
 
+def has_inactive_plugins_services():
+    return ServiceManager().has_inactive_plugins_services()
+
 def list_others_services(filter = None):
     return ServiceManager().list_others_services(filter)
 
