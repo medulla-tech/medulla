@@ -118,16 +118,18 @@ class class01_NetUtils (unittest.TestCase) :
 
     def test03_on_same_network_true(self):
         """ test of co-existence in the same network"""
-        ip1 = "10.1.22.5"
-        ip2 = "10.1.22.211"
-        result = NetUtils.on_same_network(ip1, ip2)
+        ip = "10.1.22.5"
+        network = "10.1.22.0"
+        netmask = "255.255.255.0"
+        result = NetUtils.on_same_network(ip, network, netmask)
         self.assertEqual(result, True)
 
     def test04_on_same_network_false(self):
         """ test of co-existence in the same network"""
-        ip1 = "10.1.20.5"
-        ip2 = "10.1.41.2"
-        result = NetUtils.on_same_network(ip1, ip2)
+        ip = "10.1.22.5"
+        network = "192.168.0.0"
+        netmask = "255.255.255.0"
+        result = NetUtils.on_same_network(ip, network, netmask)
         self.assertEqual(result, False)
 
     def test05_has_enough_info_true(self):
@@ -158,7 +160,7 @@ class class02_IPresolve (unittest.TestCase):
         Selecting of correct interface depends on prefered network of server.
         """
 
-        my_network = [("192.168.1.100","255.255.255.0")]
+        my_network = [("192.168.1.0","255.255.255.0")]
 
         resolve_order = ["ip"]
 
@@ -197,6 +199,8 @@ class class02_IPresolve (unittest.TestCase):
         """
 
         my_ip, my_mask = get_my_network()
+        # convert the last number to 0
+        my_ip = ".".join(my_ip.split(".")[0:3]) + ".0"
         my_network = [(my_ip, my_mask)]
 
         resolve_order = ["ip"]
