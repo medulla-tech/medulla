@@ -32,7 +32,8 @@ class ServicesPanel(Panel):
         for s in ServiceManager().get_plugin_services(plugin):
             service = ServiceManager().get_unit_info(s)
             # only display inactive services
-            if service and service['active_state'] != "active":
+            if service and service['active_state'] != "active" and \
+                    service['active_state'] != "unavailable":
                 if not plugin in self.services:
                     self.services[plugin] = []
                 self.services[plugin].append(service)
