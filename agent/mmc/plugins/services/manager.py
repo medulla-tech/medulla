@@ -25,7 +25,6 @@ Systemd service manager
 import json
 import logging
 from systemd_dbus.manager import Manager
-from operator import itemgetter
 
 from mmc.agent import PluginManager
 from mmc.support.mmctools import SingletonN, shlaunch
@@ -70,7 +69,7 @@ class ServiceManager(object):
                     list[plugin] = []
                     for service in services:
                         list[plugin].append(self.get_unit_info(service))
-                    list[plugin] = sorted(list[plugin], key=itemgetter('id'))
+                    list[plugin] = sorted(list[plugin], key=lambda s: s['id'].lower())
         return list
 
     def has_inactive_plugins_services(self):
@@ -97,7 +96,7 @@ class ServiceManager(object):
                     list.append(unit)
                 if not filter:
                     list.append(unit)
-        list = sorted(list, key=itemgetter('id'))
+        list = sorted(list, key=lambda s: s['id'].lower())
         return list
 
     def list(self):
@@ -106,7 +105,7 @@ class ServiceManager(object):
         units = []
         for unit in self.units:
             units.append(self.serialize_unit(unit))
-        list = sorted(units, key=itemgetter('id'))
+        list = sorted(units, key=lambda s: s['id'].lower())
         return list
 
     def get_unit(self, service):
