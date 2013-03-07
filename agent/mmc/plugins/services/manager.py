@@ -68,7 +68,8 @@ class ServiceManager(object):
                 if plugin == plugin_services and services:
                     list[plugin] = []
                     for service in services:
-                        list[plugin].append(self.get_unit_info(service))
+                        if service not in self.config.blacklist:
+                            list[plugin].append(self.get_unit_info(service))
                     list[plugin] = sorted(list[plugin], key=lambda s: s['id'].lower())
         return list
 
@@ -104,9 +105,11 @@ class ServiceManager(object):
             self.units = self.m.list_units()
         units = []
         for unit in self.units:
-            units.append(self.serialize_unit(unit))
-        list = sorted(units, key=lambda s: s['id'].lower())
-        return list
+            unit = self.serialize_unit(unit)
+            if unit['id'].split(".")[0] not in self.config.blacklist:
+                units.append(unit)
+        units = sorted(units, key=lambda u: u['id'].lower())
+        return units
 
     def get_unit(self, service):
         service = service.replace(".service", "", 1)

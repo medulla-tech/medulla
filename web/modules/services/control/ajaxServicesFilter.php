@@ -55,7 +55,7 @@ foreach($list as $module => $services) {
 
 foreach($objList as $moduleObj) {
     $services = $list[$moduleObj->getName()];
-    if ($moduleObj) {
+    if ($moduleObj && count($services) > 0) {
         $ids = array();
         $names = array();
         $descs = array();
@@ -65,6 +65,7 @@ foreach($objList as $moduleObj) {
         $actionsReload = array();
         $actionsRestart = array();
         $actionsLog = array();
+
         foreach($services as $service) {
             include('servicesList.inc.php');
         }

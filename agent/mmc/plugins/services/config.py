@@ -32,3 +32,7 @@ class ServicesConfig(PluginConfig):
         self.services = {}
         for plugin, services in self.items('plugins'):
             self.services[plugin] = services.split(",")
+        try:
+            self.blacklist = self.get('main', 'blacklist').split(',')
+        except:
+            self.blacklist = []
