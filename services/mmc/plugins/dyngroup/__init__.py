@@ -103,6 +103,10 @@ def isProfilesEnable(): #NEW
 
 class RpcProxy(RpcProxyI):
     # new groups implementations
+    def arePartOfAProfile(self, uuids):
+        ctx = self.currentContext
+        return DyngroupDatabase().arePartOfAProfile(ctx, uuids)
+
     def countallprofiles(self, params): #NEW
         ctx = self.currentContext
         count = DyngroupDatabase().countallgroups(ctx, params, 1)

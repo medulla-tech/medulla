@@ -351,6 +351,26 @@ class DyngroupDatabase(DatabaseHelper):
         session.close()
         return q
 
+    def arePartOfAProfile(self, ctx, uuids):
+        session = create_session()
+        query = session.query(Machines) \
+            .add_entity(Groups).select_from(
+                self.machines.outerjoin(self.profilesResults) \
+                .outerjoin(self.groups) \
+                .outerjoin(self.groupType) \
+            )
+        query = query.filter(self.groupType.c.value == 'Profile')
+        query = query.filter(self.machines.c.uuid.in_(uuids))
+
+        ret = {}
+        for machine, group in query:
+            ret[machine.uuid] = {
+                'groupid': group.id,
+                'groupname': group.name,
+            }
+
+        return ret
+
     def getComputersProfile(self, uuid):
         """
         Get a computer's profile given the computer uuid

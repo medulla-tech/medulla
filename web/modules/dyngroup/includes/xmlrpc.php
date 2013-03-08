@@ -42,6 +42,18 @@ function getDefaultModule() {
     return $_SESSION["defaultModule"];
 }
 
+/*
+ * Are machines part of a profile ?
+ * @param $uuids: array of machines uuid
+ * @type $uuids: array
+ *
+ * @return: uuids of machines who are part of a profile
+ * @rtype: array
+ */
+function arePartOfAProfile($uuids) {
+    return xmlCall("dyngroup.arePartOfAProfile", array($uuids));
+}
+
 function updateMachineCache() {
     return xmlCall("dyngroup.update_machine_cache", null);
 }

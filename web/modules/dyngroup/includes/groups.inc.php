@@ -161,9 +161,13 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
     <h3><?php echo  $label_members; ?></h3>
     <select multiple size="15" class="list" name="members[]">
     <?php
+    $machinesInProfile = arePartOfAProfile(array_keys($listOfMembers));
     foreach ($members as $idx => $member) {
         if ($member == "") { unset($members[$idx]); continue; }
-        echo "<option value=\"".$idx."\">".$member."</option>\n";
+        $currentUuid = explode('##', $idx);
+        $currentUuid = $currentUuid[1];
+        $red = (in_array($currentUuid, array_keys($machinesInProfile))) ? 'yellow' : 'white';
+        echo "<option style=\"background: " . $red . "\" value=\"".$idx."\">".$member."</option>\n";
     }
     ?>
     </select>
@@ -174,6 +178,17 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
 </tr>
 </table>
 </div>
+
+<?php
+if (count($machinesInProfile) > 0) {
+    print '<p>';
+    print 'WARNING !!!!<br /><br />';
+    foreach($machinesInProfile as $machineUuid => $group) {
+        printf('%s is part of profile %s<br />', $listOfMembers[$machineUuid]['hostname'], $group['name']);
+    }
+    print '</p>';
+}
+?>
 
 <input type="hidden" name="type" value="<?php echo  $type; ?>" />
 <input type="hidden" name="lmachines" value="<?php echo base64_encode(serialize($machines)); ?>" />
