@@ -103,3 +103,16 @@ if (in_array("dyngroup", $_SESSION["modulesList"]) and isset($_GET['gid'])) {
 }
 
 ?>
+
+<style type="text/css">
+td:hover {
+    cursor:pointer;
+}
+</style>
+<script type="text/javascript">
+$$('td').invoke('observe', 'click', function(event) {
+    var tdValue = this.innerHTML.stripTags()
+    $('param').value = tdValue;
+    pushSearch();
+});
+</script>
