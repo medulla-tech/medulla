@@ -691,28 +691,27 @@ class DyngroupDatabase(DatabaseHelper):
                                self.profilesResults.c.FK_machines.in_(results_ids)
                                ).all()
 
-            profiles_ids = [q.id for q in profiles]
+            profiles_ids = [q.FK_machines for q in profiles]
 
-            # insert only non-existing records
-            profiles_to_insert = [id for id in results_ids if id not in profiles_ids]
+            # If machines are found, delete them. They will be part of new profile
+            if profiles_ids:
+                session.query(ProfilesResults).filter(self.profilesResults.c.FK_machines.in_(profiles_ids)).delete(synchronize_session='fetch')
 
             # Insert into ProfilesResults table only if there is something to insert
-            if len(profiles_to_insert) == 0 :
+            if len(results_ids) == 0 :
                 session.close()
                 return False
 
-            for id in profiles_to_insert :
-               
+            for id in results_ids:
                 profile = ProfilesResults()
                 profile.FK_machines = id
                 profile.FK_groups = groupid
                 session.add(profile)
                 session.flush()
 
-        session.close()    
+        session.close()
         return True
-                
- 
+
     ################################
     ## MEMBERS
 

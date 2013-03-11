@@ -1866,13 +1866,17 @@ class ImagingRpcProxy(RpcProxyI):
                         h_hostnames[hostnames['uuid']] = hostnames['hostname']
                 params['hostnames'] = h_hostnames
 
-                #h_macaddress = getJustOneMacPerComputer(ctx, ComputerManager().getMachineMac(ctx, {'uuids': uuids}))
-                h_macaddress = {}
-                for uuid in uuids:
-                    if uuid in params['choose_network_profile']:
-                        h_macaddress[uuid] = params['choose_network_profile'][uuid]
-                    else:
-                        logger.warn('Imaging on group: %s doesn\'t exists in choose_network_profile key' % uuid)
+                # if 'choose_network_profile' in params, there is at least more than
+                # one computer with more than one network card
+                if 'choose_network_profile' in params:
+                    h_macaddress = {}
+                    for uuid in uuids:
+                        if uuid in params['choose_network_profile']:
+                            h_macaddress[uuid] = params['choose_network_profile'][uuid]
+                        else:
+                            logger.warn('Imaging on group: %s doesn\'t exists in choose_network_profile key' % uuid)
+                else:
+                    h_macaddress = getJustOneMacPerComputer(ctx, ComputerManager().getMachineMac(ctx, {'uuids': uuids}))
 
                 try:
                     params['target_name'] = '' # put the real name!

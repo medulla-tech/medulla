@@ -166,8 +166,8 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
         if ($member == "") { unset($members[$idx]); continue; }
         $currentUuid = explode('##', $idx);
         $currentUuid = $currentUuid[1];
-        $red = (in_array($currentUuid, array_keys($machinesInProfile))) ? 'yellow' : 'white';
-        echo "<option style=\"background: " . $red . "\" value=\"".$idx."\">".$member."</option>\n";
+        $style = (in_array($currentUuid, array_keys($machinesInProfile))) ? 'background: red; color: white;' : '';
+        echo "<option style=\"" . $style . "\" value=\"".$idx."\">".$member."</option>\n";
     }
     ?>
     </select>
@@ -182,10 +182,17 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
 <?php
 if (count($machinesInProfile) > 0) {
     print '<p>';
-    print 'WARNING !!!!<br /><br />';
+    print _T('WARNING !!!!<br /><br />
+        Be advised that computers listed bellow are already part of another imaging group.<br />
+        These computers will move to this group and their bootmenus will be rewritten', 'dyngroup');
+    echo '<ul>';
     foreach($machinesInProfile as $machineUuid => $group) {
-        printf('%s is part of profile %s<br />', $listOfMembers[$machineUuid]['hostname'], $group['name']);
+        printf(_T('<li>%s is part of <a href="%s">%s</a></li>'),
+            $listOfMembers[$machineUuid]['hostname'],
+            urlStrRedirect('imaging/manage/display', array('gid' => $group['groupid'], 'groupname' => $group['groupname'])),
+            $group['groupname']);
     }
+    echo '</ul>';
     print '</p>';
 }
 ?>
