@@ -40,7 +40,6 @@ from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
 from SocketServer import ThreadingMixIn
 from threading import Thread, Semaphore
 import threading
-from xml.dom.minidom import parseString
 
 from pulse2.database.inventory import InventoryCreator, Inventory
 from pulse2.database.inventory.mapping import OcsMapping
@@ -52,6 +51,7 @@ from pulse2.inventoryserver.ssl import SecureHTTPRequestHandler, SecureThreadedH
 from pulse2.inventoryserver.utils import InventoryUtils
 from pulse2.inventoryserver.scheduler import AttemptToScheduler
 from pulse2.inventoryserver.glpiproxy import GlpiProxy, resolveGlpiMachineUUIDByMAC
+
 
 class InventoryServer:
     def log_message(self, format, *args):
@@ -84,15 +84,7 @@ class InventoryServer:
 
         # Forwarding the inventories to GLPI
         if self.config.enable_forward :
-            glpi_proxy = GlpiProxy(self.config.url_to_forward)
-            self.logger.info("GlpiProxy: Forwarding the inventory to GLPI")
-            # Let's fix the XML using py config scripts
-            invfix = InventoryFix(self.config, content)
-            content = invfix.get()
-
-            glpi_proxy.send(content)
-            for msg in glpi_proxy.result :
-                self.logger.warn("GlpiProxy: %s" % msg)
+            self.glpi_forward(content, from_ip)
 
         try:
             query = re.search(r'<QUERY>([\w-]+)</QUERY>', content).group(1)
@@ -138,6 +130,49 @@ class InventoryServer:
         self.send_response(200)
         self.end_headers()
         self.wfile.write(compress(resp))
+
+    def glpi_forward(self, content, from_ip):
+        """
+        Some checks and controls before the forwarding the invontory to GLPI
+
+        @param content: invntory on XML format
+        @type content: str
+
+        @param from_ip: IP address of machine which is sending the inventory
+        @type from_ip: str
+        """
+        try:
+
+            macaddr = InventoryUtils.getMAC(content)
+            self.logger.debug("GlpiProxy: Resolved MAC: %s" % str(macaddr))
+            if macaddr :
+                glpi_uuid = resolveGlpiMachineUUIDByMAC(macaddr)
+                if not (glpi_uuid and InventoryUtils.is_comming_from_pxe(from_ip)) :  
+                    glpi_proxy = GlpiProxy(self.config.url_to_forward)
+                    self.logger.info("GlpiProxy: Forwarding the inventory to GLPI")
+
+                    # Let's fix the XML using py config scripts
+                    invfix = InventoryFix(self.config, content)
+                    content = invfix.get()
+
+                    glpi_proxy.send(content)
+                    for msg in glpi_proxy.result :
+                        self.logger.warn("GlpiProxy: %s" % msg)
+                else :
+                    self.logger.info("GlpiProxy: Incomming from PXE, ignoring the forward for a existing machine")
+            else :
+                self.logger.debug("GlpiProxy: New machine inscription or forwarding the prolog")
+                glpi_proxy = GlpiProxy(self.config.url_to_forward)
+                invfix = InventoryFix(self.config, content)
+                content = invfix.get()
+
+                glpi_proxy.send(content)
+                for msg in glpi_proxy.result :
+                    self.logger.warn("GlpiProxy: %s" % msg)
+
+        except Exception, e :
+            self.logger.error("GlpiProxy: %s" % str(e))
+
 
 class InventoryFix :
     """Let's fix the XML using py config scripts"""
@@ -222,6 +257,7 @@ class HttpsInventoryServer(SecureHTTPRequestHandler, InventoryServer):
     def log_message(self, format, *args):
         self.logger.info(format % args)
 
+
 class TreatInv(Thread):
     def __init__(self, config):
         Thread.__init__(self)
@@ -242,17 +278,12 @@ class TreatInv(Thread):
             self.logger.debug("TreatInv :: there are no new inventories")
             time.sleep(15) # TODO put in the conf file
 
-    def _getMAC(self, content):
-        dom = parseString(content)
-        xmlTag = dom.getElementsByTagName('MACADDR')[0].toxml()
-        return xmlTag.replace('<MACADDR>','').replace('</MACADDR>','')
- 
     def treatinv(self, deviceid, from_ip, cont):
         content = cont[0]
         self.logger.debug('### BEGIN INVENTORY')
         self.logger.debug('%s' % cont)
         self.logger.debug('### END INVENTORY')
-        macaddr = self._getMAC(content)
+        macaddr = InventoryUtils.getMAC(content)
 
         setLastFlag = True
 

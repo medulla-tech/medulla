@@ -26,7 +26,7 @@ import os
 import logging 
 
 from socket import gethostbyname
-
+from xml.dom.minidom import parseString
 from configobj import ConfigObj
 
 from mmc.client.sync import Proxy
@@ -234,4 +234,23 @@ class InventoryUtils :
         """
         return from_ip == cls.get_pkg_server_ip()
 
+    @classmethod
+    def getMAC(cls, content):
+        """
+        Getting the MAC address from inventory XML
+
+        @param content: incomming inventory on XML format
+        @type content: str
+
+        @return: MAC address
+        @rtype: str
+        """
+        dom = parseString(content)
+        tags = dom.getElementsByTagName('MACADDR')
+
+        if isinstance(tags, list) and len(tags) > 0:
+            xmlTag = tags[0].toxml()
+            return xmlTag.replace('<MACADDR>','').replace('</MACADDR>','')
+        else :
+            return None
 
