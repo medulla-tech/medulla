@@ -49,6 +49,7 @@ from pulse2.utils import Singleton
 from mmc.site import mmcconfdir
 from pulse2.inventoryserver.config import Pulse2OcsserverConfigParser
 from pulse2.inventoryserver.ssl import SecureHTTPRequestHandler, SecureThreadedHTTPServer
+from pulse2.inventoryserver.utils import InventoryUtils
 from pulse2.inventoryserver.scheduler import AttemptToScheduler
 from pulse2.inventoryserver.glpiproxy import GlpiProxy, resolveGlpiMachineUUIDByMAC
 
@@ -270,7 +271,7 @@ class TreatInv(Thread):
             self.logger.debug("Access to database disabled - exit the inventory creator")
             return False
 
-        if AttemptToScheduler.is_comming_from_pxe(from_ip):
+        if InventoryUtils.is_comming_from_pxe(from_ip):
             self.logger.debug("Inventory is coming from PXE")
             inv = Inventory()
             inv.activate(self.config)
