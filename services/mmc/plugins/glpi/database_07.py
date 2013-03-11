@@ -1806,6 +1806,44 @@ class Glpi07(DyngroupDatabaseHelper):
     def isComputerNameAvailable(self, ctx, locationUUID, name):
         raise Exception("need to be implemented when we would be able to add computers")
 
+           
+    def delMachine(self, uuid):
+        """
+        Deleting a machine in GLPI (only the flag 'is_deleted' updated)
+
+        @param uuid: UUID of machine
+        @type uuid: str
+
+        @return: True if the machine successfully deleted
+        @rtype: bool
+        """
+        session = create_session()
+        id = fromUUID(uuid)
+
+        machine = session.query(Machine).filter(self.machine.c.id == id).first()
+
+        if machine :
+            connection = self.getDbConnection()
+            trans = connection.begin()
+            try:
+                machine.deleted = True
+            except Exception, e :
+                self.logger.warn("Unable to delete machine (uuid=%s): %s" % (uuid, str(e)))
+                session.flush()
+                session.close()
+                trans.rollback()
+
+                return False
+
+            session.flush()
+            session.close()
+            trans.commit()
+            self.logger.debug("Machine (uuid=%s) successfully deleted" % uuid)
+
+            return True
+        else:
+            return False
+
 # Class for SQLalchemy mapping
 class Machine(object):
     def getUUID(self):

@@ -212,14 +212,14 @@ class GlpiComputers(ComputerI):
         return False
 
     def canDelComputer(self):
-        return False
+        return True
 
     def delComputer(self, ctx, uuid, backend):
         """
         Remove a computer, given its uuid
         """
-        self.logger.warning("delComputer has not yet been implemented for glpi")
-        return False
+        return self.glpi.delMachine(uuid)
+
 
 
     def getComputerByMac(self, mac):
