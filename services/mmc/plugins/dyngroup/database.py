@@ -386,15 +386,21 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         delete a group defined by it's id
         delete the results and the machines linked to that group if needed
         """
+        # Is current group a profile ?
+        if self.isprofile(ctx, id):
+            resultTable = self.profilesResults
+        else:
+            resultTable = self.results
+
         self.__getOrCreateUser(ctx)
         connection = self.getDbConnection()
         trans = connection.begin()
         # get machines to possibly delete
         session = create_session()
-        to_delete = [x.id for x in session.query(Machines).select_from(self.machines.join(self.profilesResults)).filter(self.profilesResults.c.FK_groups == id)]
+        to_delete = [x.id for x in session.query(Machines).select_from(self.machines.join(resultTable)).filter(resultTable.c.FK_groups == id)]
         session.close()
         # Delete the previous results for this group in the Results table
-        connection.execute(self.profilesResults.delete(self.profilesResults.c.FK_groups == id))
+        connection.execute(resultTable.delete(resultTable.c.FK_groups == id))
         # Delete all shares on the group before delete group
         self.__deleteShares(id, session)
         # Update the Machines table to remove ghost records
@@ -793,12 +799,18 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         Remove from a group member computers, specified by a uuids list.
         """
+        # Is current group a profile ?
+        if self.isprofile(ctx, id):
+            resultTable = self.profilesResults
+        else:
+            resultTable = self.results
+
         group = self.get_group(ctx, id)
         connection = self.getDbConnection()
         trans = connection.begin()
         uuids = [x["uuid"] for x in uuids.values()]
         # Delete the selected machines from the Results table
-        connection.execute(self.profilesResults.delete(and_(self.profilesResults.c.FK_groups == group.id, self.profilesResults.c.FK_machines.in_(select([self.machines.c.id], self.machines.c.uuid.in_(uuids))))))
+        connection.execute(resultTable.delete(and_(resultTable.c.FK_groups == group.id, resultTable.c.FK_machines.in_(select([self.machines.c.id], self.machines.c.uuid.in_(uuids))))))
         # Update the Machines table
         self.__updateMachinesTable(connection, uuids)
         trans.commit()
