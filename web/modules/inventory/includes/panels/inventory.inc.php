@@ -40,8 +40,8 @@ class InventoryPanel extends Panel {
 
         $jsonCount = json_encode($count);
         $jsonDays= json_encode($days);
-        $lessThanText = json_encode(_T("Less than %s days:\r\n %percent% (%d computers)", "inventory"));
-        $moreThanText = json_encode(_T("More than %s days:\r\n %percent% (%d computers)", "inventory"));
+        $lessThanText = json_encode(_T("Less than %s days:\n %percent% (%d computers)", "inventory"));
+        $moreThanText = json_encode(_T("More than %s days:\n %percent% (%d computers)", "inventory"));
         $urlRedirect = json_encode(urlStrRedirect("inventory/inventory/createStaticGroup"));
 
         print _T("Latest Inventory Date", "inventory");

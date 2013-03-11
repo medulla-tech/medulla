@@ -40,8 +40,8 @@ class GlpiPanel extends Panel {
 
         $jsonCount = json_encode($count);
         $jsonDays= json_encode($days);
-        $lessThanText = json_encode(_T("Less than %s days:\r\n %percent% (%d computers)", "glpi"));
-        $moreThanText = json_encode(_T("More than %s days:\r\n %percent% (%d computers)", "glpi"));
+        $lessThanText = json_encode(_T("Less than %s days:\n %percent% (%d computers)", "glpi"));
+        $moreThanText = json_encode(_T("More than %s days:\n %percent% (%d computers)", "glpi"));
         $urlRedirect = json_encode(urlStrRedirect("base/computers/createStaticGroup"));
 
         print _T("Latest Inventory Date", "glpi");
