@@ -3481,8 +3481,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         # we put the profile's mi before the computer's mi
         session = create_session()
         computers_UUID = map(lambda c:c['uuid'], computers.values())
-        self.unregisterTargets(computers_UUID)
-        return True
         # copy the profile part of the menu in their own menu
         pmenu = self.getTargetMenu(profile_UUID, P2IT.PROFILE, session)
         pmis = self.__getAllProfileMenuItem(profile_UUID, session)

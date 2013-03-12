@@ -1396,23 +1396,17 @@ class ImagingRpcProxy(RpcProxyI):
         ctx = self.currentContext
         uuids = [c.uuid for c in ComputerProfileManager().getProfileContent(profileUUID)]
         if len(uuids):
-            logger.error(uuids)
-            logger.error(ComputerManager().getComputersNetwork(ctx, {'uuids':uuids}))
             h_macaddresses = getJustOneMacPerComputer(ctx, ComputerManager().getMachineMac(ctx, {'uuids':uuids}))
-            logger.error(h_macaddresses)
             macaddresses = h_macaddresses.values()
             if '' in macaddresses:
-                logger.error(1)
                 # Some computers don't have a MAC address
                 logger.info("Some computers don't have any MAC address in the profile %s" % profileUUID)
                 ret = 2
             elif len(uuids) < len(macaddresses):
-                logger.error(2)
                 # Some computers have more than one MAC address
                 logger.info("Some computers have more than one MAC address in the profile %s" % profileUUID)
                 ret = 3
             elif len(uuids) > len(macaddresses):
-                logger.error(3)
                 # Some computers don't have a MAC address
                 list_of_fail = uuids
                 for uuid in h_macaddresses.keys():
@@ -1421,7 +1415,6 @@ class ImagingRpcProxy(RpcProxyI):
                 logger.info("Some computers don't have any MAC address in the profile %s (%s)" % (profileUUID, str(list_of_fail)))
                 ret = 2
             else:
-                logger.error(4)
                 ret = 0
                 # Check all MAC addresses
                 i = 0
@@ -1432,7 +1425,6 @@ class ImagingRpcProxy(RpcProxyI):
                         break
                     i += 1
             if not ret:
-                logger.error(5)
                 # Still no error ? Now checks that all the computers belong to the
                 # same entity
                 locations = ComputerLocationManager().getMachinesLocations(uuids)
