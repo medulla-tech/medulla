@@ -63,7 +63,12 @@ if (quickGet('valid')) {
         /* insert notification code here if needed */
 
         // Synchronize boot menu
-        $ret = xmlrpc_synchroComputer($target_uuid);
+        if ($type == 'group') {
+            $ret = xmlrpc_synchroProfile($target_uuid);
+        }
+        else {
+            $ret = xmlrpc_synchroComputer($target_uuid);
+        }
         if (isXMLRPCError()) {
             new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for computer: %s", "imaging"), implode(', ', $ret[1])));
         }
@@ -72,7 +77,8 @@ if (quickGet('valid')) {
     }
     $params['mod'] = 'remove_success';
     $params['tab'] = $type.$params['from'];
-    header("Location: " . urlStrRedirect("base/computers/".$type."imgtabs", $params));
+    $urlRedirect = ($type == 'group') ? 'imaging/manage/' : 'base/computers/';
+    header("Location: " . urlStrRedirect($urlRedirect.$type."imgtabs", $params));
     exit;
 }
 
