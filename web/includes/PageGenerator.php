@@ -2072,16 +2072,33 @@ class NotifyWidgetWarning extends NotifyWidget {
 }
 
 /**
- * Display a simple DIV with an error message
+ * Display a simple DIV with a message
  */
-class ErrorMessage extends HtmlElement {
+class Message extends HtmlElement {
 
-    function ErrorMessage($msg) {
+    function Message($msg, $type = "info") {
         $this->msg = $msg;
+        $this->type = $type;
     }
 
     function display() {
-        print '<div class="alert alert-error">' . $this->msg . '</div>';
+        print '<div class="alert alert-' . $this->type . '">' . $this->msg . '</div>';
+    }
+}
+
+class ErrorMessage extends Message {
+    function __construct($msg) {
+        parent::__construct($msg, "error");
+    }
+}
+class SuccessMessage extends Message {
+    function __construct($msg) {
+        parent::__construct($msg, "success");
+    }
+}
+class WarningMessage extends Message {
+    function __construct($msg) {
+        parent::__construct($msg, "warning");
     }
 }
 
