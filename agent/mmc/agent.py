@@ -520,7 +520,7 @@ class MMCApp(object):
 
         # Export the MMC-AGENT variable in the environement so that
         # child process can know they were spawned by mmc-agent
-        os.environ["MMC-AGENT"] = VERSION
+        os.environ["MMC_AGENT"] = VERSION
 
         # Start audit system
         l = AuditFactory().log(u'MMC-AGENT', u'MMC_AGENT_SERVICE_START')
