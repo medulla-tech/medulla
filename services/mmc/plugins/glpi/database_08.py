@@ -276,11 +276,14 @@ class Glpi08(DyngroupDatabaseHelper):
             Column('os_licenseid', String(255), nullable=True),
             Column('is_deleted', Integer, nullable=False),
             Column('is_template', Integer, nullable=False),
-            Column('states_id', Integer, nullable=False), #ForeignKey('glpi_states.id')),
+            Column('states_id', Integer, ForeignKey('glpi_states.id'), nullable=False),
             Column('comment', String(255), nullable=False),
             autoload = True)
         mapper(Machine, self.machine) #, properties={'entities_id': relation(Location)})
 
+        # states
+        self.state = Table("glpi_states", self.metadata, autoload = True)
+        mapper(State, self.state)
         # profile
         self.profile = Table("glpi_profiles", self.metadata,
             Column('id', Integer, primary_key=True),
@@ -401,6 +404,10 @@ class Glpi08(DyngroupDatabaseHelper):
                     query = query.add_column(self.os.c.name)
                 if 'type' in self.config.summary:
                     query = query.add_column(self.glpi_computertypes.c.name)
+                if 'inventorynumber' in self.config.summary:
+                    query = query.add_column(self.machine.c.otherserial)
+                if 'state' in self.config.summary:
+                    query = query.add_column(self.state.c.name)
                 if 'entity' in self.config.summary:
                     query = query.add_column(self.location.c.name) # entities
                 if 'location' in self.config.summary:
@@ -452,6 +459,8 @@ class Glpi08(DyngroupDatabaseHelper):
                     join_query = join_query.outerjoin(self.os)
                 if 'type' in self.config.summary:
                     join_query = join_query.outerjoin(self.glpi_computertypes)
+                if 'state' in self.config.summary:
+                    join_query = join_query.outerjoin(self.state)
                 if 'location' in self.config.summary:
                     join_query = join_query.outerjoin(self.locations)
 
@@ -473,6 +482,10 @@ class Glpi08(DyngroupDatabaseHelper):
                         clauses.append(self.glpi_computertypes.c.name.like('%'+filt['hostname']+'%'))
                     if 'user' in self.config.summary:
                         clauses.append(self.machine.c.contact.like('%'+filt['hostname']+'%'))
+                    if 'state' in self.config.summary:
+                        clauses.append(self.state.c.name.like('%'+filt['hostname']+'%'))
+                    if 'inventorynumber' in self.config.summary:
+                        clauses.append(self.machine.c.otherserial.like('%'+filt['hostname']+'%'))
                     if 'entity' in self.config.summary:
                         clauses.append(self.location.c.name.like('%'+filt['hostname']+'%'))
                     if 'location' in self.config.summary:
@@ -853,12 +866,17 @@ class Glpi08(DyngroupDatabaseHelper):
             displayList = False
             if isinstance(m, tuple):
                 displayList = True
-                # m, os, type, entity, location = m
+                # List of fields defined around line 402
+                # m, os, type, inventorynumber, state, entity, location = m
                 l = list(m)
                 if 'location' in self.config.summary:
                     location = l.pop()
                 if 'entity' in self.config.summary:
                     entity = l.pop()
+                if 'state' in self.config.summary:
+                    state = l.pop()
+                if 'inventorynumber' in self.config.summary:
+                    inventorynumber = l.pop()
                 if 'type' in self.config.summary:
                     type = l.pop()
                 if 'os' in self.config.summary:
@@ -877,6 +895,10 @@ class Glpi08(DyngroupDatabaseHelper):
                     datas['location'] = location
                 if 'entity' in self.config.summary:
                     datas['entity'] = entity
+                if 'state' in self.config.summary:
+                    datas['state'] = state
+                if 'inventorynumber' in self.config.summary:
+                    datas['inventorynumber'] = inventorynumber
                 if 'type' in self.config.summary:
                     datas['type'] = type
                 if 'os' in self.config.summary:
@@ -1442,6 +1464,7 @@ class Glpi08(DyngroupDatabaseHelper):
             .add_column(self.glpi_computermodels.c.name) \
             .add_column(self.glpi_operatingsystemservicepacks.c.name) \
             .add_column(self.glpi_domains.c.name) \
+            .add_column(self.state.c.name) \
             .select_from(
                 self.machine.outerjoin(self.location) \
                 .outerjoin(self.locations) \
@@ -1451,6 +1474,7 @@ class Glpi08(DyngroupDatabaseHelper):
                 .outerjoin(self.glpi_computertypes) \
                 .outerjoin(self.glpi_computermodels) \
                 .outerjoin(self.glpi_operatingsystemservicepacks) \
+                .outerjoin(self.state) \
                 .outerjoin(self.glpi_domains)
             ), uuid)
 
@@ -1458,7 +1482,7 @@ class Glpi08(DyngroupDatabaseHelper):
             ret = query.count()
         else:
             ret = []
-            for machine, infocoms, entity, location, os, manufacturer, type, model, servicepack, domain in query:
+            for machine, infocoms, entity, location, os, manufacturer, type, model, servicepack, domain, state in query:
                 endDate = ''
                 if infocoms is not None:
                     endDate = self.getWarrantyEndDate(infocoms)
@@ -1502,6 +1526,8 @@ class Glpi08(DyngroupDatabaseHelper):
                     ['Model / Type', modelType],
                     ['Manufacturer', manufacturer],
                     ['Serial Number', serialNumber],
+                    ['Inventory Number', machine.otherserial],
+                    ['State', state],
                     ['Warranty End Date', endDate],
                 ]
                 ret.append(l)
@@ -2641,6 +2667,9 @@ class Location(object):
             'comments':self.comment,
             'level':self.level
         }
+
+class State(object):
+    pass
 
 class DiskFs(object):
     pass

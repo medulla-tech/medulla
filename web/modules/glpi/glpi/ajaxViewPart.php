@@ -208,6 +208,8 @@ _T('Last month', 'glpi');
 _T('All', 'glpi');
 _T('Service Pack', 'glpi');
 _T('Domain', 'glpi');
+_T('State', 'glpi');
+_T('Inventory Number', 'glpi');
 
 ?>
 

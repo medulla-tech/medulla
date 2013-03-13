@@ -38,6 +38,7 @@ class GlpiConfig(PluginConfig):
     red = 35
 
     # computer_list section
+    # complete list: ['cn', 'description', 'os', 'type', 'user', 'inventorynumber', 'state', 'entity', 'location']
     summary = ['cn', 'description', 'os', 'type', 'user', 'entity', 'location']
 
     # manufacturer section

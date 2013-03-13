@@ -243,6 +243,10 @@ class GlpiComputers(ComputerI):
             ret.append(['type', 'Computer Type'])
         if 'user' in self.config.summary:
             ret.append(['user', 'Last Logged User'])
+        if 'inventorynumber' in self.config.summary:
+            ret.append(['inventorynumber', 'Inventory Number'])
+        if 'state' in self.config.summary:
+            ret.append(['state', 'State'])
         if 'entity' in self.config.summary:
             ret.append(['entity', 'Entity'])
         if 'location' in self.config.summary:
