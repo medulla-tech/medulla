@@ -43,10 +43,10 @@ class getCommand(object):
         return './"%s" -ms' % self.file.split('/').pop()
 
     def getMSI32Command(self):
-        return 'msiexec /i "%s" /qn ALLUSERS=1' % self.file.split('/').pop()
+        return 'msiexec /qn /i "%s" ALLUSERS=1 CREATEDESKTOPLINK=0 ISCHECKFORPRODUCTUPDATES=0' % self.file.split('/').pop()
 
     def getMSI64Command(self):
-        return '$(cygpath -W)/sysnative/msiexec /i "%s" /qn ALLUSERS=1' % self.file.split('/').pop()
+        return '$(cygpath -W)/sysnative/msiexec /qn /i "%s" ALLUSERS=1 CREATEDESKTOPLINK=0 ISCHECKFORPRODUCTUPDATES=0' % self.file.split('/').pop()
 
     def getRegCommand(self):
         return 'regedit /s "%s"' % self.file.split('/').pop()
