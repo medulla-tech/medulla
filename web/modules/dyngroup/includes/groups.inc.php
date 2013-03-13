@@ -21,6 +21,8 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require('modules/imaging/includes/xmlrpc.inc.php');
+
 function drawGroupShare($nonmemb, $members, $listOfMembers, $diff, $gid, $name) {
 ?>
 <form action="<?php echo $_SERVER["REQUEST_URI"]; ?>" method="post">
@@ -118,6 +120,17 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
         $label_visible = _T('Add shortcut', 'dyngroup');
         $label_members = _T("Group members", "dyngroup");
     }
+    $listOfMembersUuids = array_keys($listOfMembers);
+    $willBeUnregistered = array();
+    foreach ($listOfMembersUuids as $target_uuid) {
+        $ret = xmlrpc_canIRegisterThisComputer($target_uuid);
+        if (!$ret[0]) {
+            $willBeUnregistered[] = $target_uuid;
+        }
+        elseif ($ret[0] && isset($ret[1]) && $ret[1] != False) {
+            $willBeUnregistered[] = $target_uuid;
+        }
+    }
 ?>
 
 <form action="<?php echo $_SERVER["REQUEST_URI"]; ?>" method="post">
@@ -166,7 +179,13 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
         if ($member == "") { unset($members[$idx]); continue; }
         $currentUuid = explode('##', $idx);
         $currentUuid = $currentUuid[1];
-        $style = (in_array($currentUuid, array_keys($machinesInProfile))) ? 'background: red; color: white;' : '';
+        $style = '';
+        if (in_array($currentUuid, array_keys($machinesInProfile))) {
+            $style = 'background: red; color: white;';
+        }
+        elseif (in_array($currentUuid, $willBeUnregistered)) {
+            $style = 'background: purple; color: white;';
+        }
         echo "<option style=\"" . $style . "\" value=\"".$idx."\">".$member."</option>\n";
     }
     ?>
@@ -180,11 +199,11 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
 </div>
 
 <?php
+$warningMessage = False;
 if (count($machinesInProfile) > 0) {
+    $warningMessage = True;
     print '<p>';
-    print _T('WARNING !!!!<br /><br />
-        Be advised that computers listed bellow are already part of another imaging group.<br />
-        These computers will move to this group and their bootmenus will be rewritten', 'dyngroup');
+    print _T('Be advised that computers listed bellow are already part of another imaging group.', 'dyngroup');
     echo '<ul>';
     foreach($machinesInProfile as $machineUuid => $group) {
         printf(_T('<li>%s is part of <a href="%s">%s</a></li>'),
@@ -195,12 +214,27 @@ if (count($machinesInProfile) > 0) {
     echo '</ul>';
     print '</p>';
 }
+$standAloneImagingRegistered = array_diff($willBeUnregistered, array_keys($machinesInProfile));
+if (count($standAloneImagingRegistered) > 0) {
+    $warningMessage = True;
+    print '<p>';
+    print _T('Be advised that computers listed bellow are already stand-alone registered into imaging module', 'dyngroup');
+    echo '<ul>';
+    foreach($standAloneImagingRegistered as $machineUuid) {
+        printf(_T('<li>%s</li>'), $listOfMembers[$machineUuid]['hostname']);
+    }
+    echo '</ul>';
+    print '</p>';
+}
+
+if ($warningMessage) echo _T('<p>These computers will move to this group and their bootmenus <strong>will be rewritten</strong></p>', 'dyngroup');
 ?>
 
 <input type="hidden" name="type" value="<?php echo  $type; ?>" />
 <input type="hidden" name="lmachines" value="<?php echo base64_encode(serialize($machines)); ?>" />
 <input type="hidden" name="lmembers" value="<?php echo base64_encode(serialize($members)); ?>" />
 <input type="hidden" name="lsmembers" value="<?php echo base64_encode(serialize($listOfMembers)); ?>" />
+<input type="hidden" name="willBeUnregistered" value="<?php echo base64_encode(serialize($willBeUnregistered)); ?>" />
 <input type="hidden" name="id" value="<?php echo  $gid ?>" />
 <input type="submit" name="bconfirm" class="btnPrimary" value="<?php echo  _("Confirm"); ?>" />
 <input type="submit" name="breset" class="btnSecondary" value="<?php echo  _("Cancel"); ?>" />

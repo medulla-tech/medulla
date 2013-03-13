@@ -81,6 +81,12 @@ if (isset($_POST["bdelmachine_x"])) {
         }
     }
 } elseif (isset($_POST["bconfirm"]) and $name != '' and (($type == 0 and !xmlrpc_group_name_exists($name, $id)) or ($type == 1 and !xmlrpc_profile_name_exists($name, $id)))) {
+    $willBeUnregistered = unserialize(base64_decode($_POST["willBeUnregistered"]));
+
+    if (count($willBeUnregistered) > 0) {
+        xmlrpc_delComputersImaging($willBeUnregistered, False);
+    }
+
     $listOfCurMembers = $group->members();
     $curmem = array();
     foreach ($listOfCurMembers as $member) {
