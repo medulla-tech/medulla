@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2012-12-12 18:08+0100\n"
+"POT-Creation-Date: 2013-03-14 16:21+0100\n"
 "PO-Revision-Date: 2012-12-14 10:15+0000\n"
 "Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/mds/team/fr_FR/)\n"
@@ -17,10 +17,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: fr_FR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
-
-#: modules/dashboard/includes/panels/shortcuts.inc.php:29
-msgid "Shortcuts"
-msgstr "Raccourcis"
 
 #: modules/dashboard/includes/panels/general.inc.php:28
 msgid "General"
@@ -46,6 +42,10 @@ msgstr "RAM"
 #: modules/dashboard/includes/panels/space.inc.php:37
 msgid "free"
 msgstr "libre"
+
+#: modules/dashboard/includes/panels/shortcuts.inc.php:29
+msgid "Shortcuts"
+msgstr "Raccourcis"
 
 #: modules/dashboard/includes/panels/space.inc.php:28
 msgid "Disk usage"

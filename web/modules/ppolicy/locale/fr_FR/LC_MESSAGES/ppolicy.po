@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2012-12-11 17:30+0100\n"
+"POT-Creation-Date: 2013-03-14 16:21+0100\n"
 "PO-Revision-Date: 2012-08-29 15:06+0000\n"
 "Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/mds/team/fr_FR/)\n"
@@ -33,31 +33,6 @@ msgstr "Supprimer la politique des mots de passe"
 #: modules/ppolicy/infoPackage.inc.php:46
 msgid "Password policies"
 msgstr "Politique des mots de passe"
-
-#: modules/ppolicy/default/warnuser.php:35
-msgid ""
-"Warning you have been logged using grace login mode. Please change your "
-"password as soon as possible using the password change page, else your "
-"account will be locked."
-msgstr ""
-"Avertissement: vous avez bien été authentifié, mais votre compte est en "
-"période de grâce. Changez votre mot de passe dès que possible en utilisant "
-"la page de changement de mot de passe. Dans le cas contraire, votre compte "
-"sera bientôt bloqué."
-
-#: modules/ppolicy/default/warnuser.php:40
-msgid ""
-"Warning your password has been reset by an administrator. Your LDAP account "
-"is restricted. Please change your password as soon as possible using the "
-"password change page."
-msgstr ""
-"Attention, votre mot de passe a été réinitialisé par un administrateur. "
-"Votre compte LDAP est restreint. Veuillez changer votre mot de passe dès que"
-" possible en utilisant la page de changement de mot de passe."
-
-#: modules/ppolicy/default/index.php:31
-msgid "Password policies list"
-msgstr "Liste des politiques de mot de passe"
 
 #: modules/ppolicy/default/delete.php:29
 msgid "The password policy has been deleted."
@@ -146,6 +121,31 @@ msgstr "Nombre d'échec maximum"
 #: modules/ppolicy/default/edit.php:222
 msgid "Lockout duration (seconds)"
 msgstr "Période de blocage (secondes)"
+
+#: modules/ppolicy/default/index.php:31
+msgid "Password policies list"
+msgstr "Liste des politiques de mot de passe"
+
+#: modules/ppolicy/default/warnuser.php:35
+msgid ""
+"Warning you have been logged using grace login mode. Please change your "
+"password as soon as possible using the password change page, else your "
+"account will be locked."
+msgstr ""
+"Avertissement: vous avez bien été authentifié, mais votre compte est en "
+"période de grâce. Changez votre mot de passe dès que possible en utilisant "
+"la page de changement de mot de passe. Dans le cas contraire, votre compte "
+"sera bientôt bloqué."
+
+#: modules/ppolicy/default/warnuser.php:40
+msgid ""
+"Warning your password has been reset by an administrator. Your LDAP account "
+"is restricted. Please change your password as soon as possible using the "
+"password change page."
+msgstr ""
+"Attention, votre mot de passe a été réinitialisé par un administrateur. "
+"Votre compte LDAP est restreint. Veuillez changer votre mot de passe dès que"
+" possible en utilisant la page de changement de mot de passe."
 
 #: modules/ppolicy/includes/auditCodes.php:4
 #: modules/ppolicy/includes/auditCodes.php:9

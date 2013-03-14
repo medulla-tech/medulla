@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2012-12-12 18:08+0100\n"
+"POT-Creation-Date: 2013-03-14 16:21+0100\n"
 "PO-Revision-Date: 2012-12-13 17:41+0000\n"
 "Last-Translator: Alexandre Proença <alexandre@mandriva.com.br>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/projects/p/mds/team/pt_BR/)\n"
@@ -34,30 +34,6 @@ msgstr "Remover política de senhas"
 #: modules/ppolicy/infoPackage.inc.php:46
 msgid "Password policies"
 msgstr "Política de senhas"
-
-#: modules/ppolicy/default/warnuser.php:35
-msgid ""
-"Warning you have been logged using grace login mode. Please change your "
-"password as soon as possible using the password change page, else your "
-"account will be locked."
-msgstr ""
-"Aviso, você se conectou usando no modo grace. Por favor, altere a sua senha "
-"assim que possível usando a página de alteração de senha ou a sua conta será"
-" trancada."
-
-#: modules/ppolicy/default/warnuser.php:40
-msgid ""
-"Warning your password has been reset by an administrator. Your LDAP account "
-"is restricted. Please change your password as soon as possible using the "
-"password change page."
-msgstr ""
-"Aviso, sua senha sofreu um reset do administrador. Sua conta LDAP é "
-"restrita.Por favor, troque a senha assim que possível usando a página de "
-"alteração de senha."
-
-#: modules/ppolicy/default/index.php:31
-msgid "Password policies list"
-msgstr "Lista de Políticas de senhas"
 
 #: modules/ppolicy/default/delete.php:29
 msgid "The password policy has been deleted."
@@ -144,6 +120,30 @@ msgstr "Quantidade máxima de falhas de senha"
 #: modules/ppolicy/default/edit.php:222
 msgid "Lockout duration (seconds)"
 msgstr "Duração do trancamento (segundos)"
+
+#: modules/ppolicy/default/index.php:31
+msgid "Password policies list"
+msgstr "Lista de Políticas de senhas"
+
+#: modules/ppolicy/default/warnuser.php:35
+msgid ""
+"Warning you have been logged using grace login mode. Please change your "
+"password as soon as possible using the password change page, else your "
+"account will be locked."
+msgstr ""
+"Aviso, você se conectou usando no modo grace. Por favor, altere a sua senha "
+"assim que possível usando a página de alteração de senha ou a sua conta será"
+" trancada."
+
+#: modules/ppolicy/default/warnuser.php:40
+msgid ""
+"Warning your password has been reset by an administrator. Your LDAP account "
+"is restricted. Please change your password as soon as possible using the "
+"password change page."
+msgstr ""
+"Aviso, sua senha sofreu um reset do administrador. Sua conta LDAP é "
+"restrita.Por favor, troque a senha assim que possível usando a página de "
+"alteração de senha."
 
 #: modules/ppolicy/includes/auditCodes.php:4
 #: modules/ppolicy/includes/auditCodes.php:9
