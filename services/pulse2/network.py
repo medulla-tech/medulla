@@ -33,6 +33,10 @@ from pulse2.utils import isdigit, isMACAddress
 
 log = logging.getLogger()
 
+# All possibles values of subnet mask
+# (To get a bit value, use index of them)
+SUBNET_BITS = (0, 128, 192, 224, 240, 248, 252, 254, 255)
+
 class NetUtils :
     """ Common network utils """
 
@@ -95,7 +99,7 @@ class NetUtils :
         @rtype: bool      
         """
         if not cls.check_netmask(network, netmask):
-            log.warn("Setted netmask %s to network %s is not valid!" % (network, netmask))
+            log.warn("network %s is not matching to netmask %s !" % (network, netmask))
 
         ip_num = struct.unpack('>L',socket.inet_aton(ip))[0]
         
@@ -173,7 +177,7 @@ class NetUtils :
         return True
 
     @classmethod
-    def is_ip4_address(cls, candidate):
+    def is_ipv4_format(cls, candidate):
         """
         Validating the IPv4 address format.
 
@@ -190,8 +194,165 @@ class NetUtils :
                         return False
                 return True
         return False
-                
 
+    @classmethod
+    def netmask_validate(cls, netmask):
+        """
+        Check of netmask format
+
+        @param netmask: checked netmask
+        @type netmask: str
+
+        @return: True if netmask is valid
+        @rtype: bool
+        """
+        if not NetUtils.is_ipv4_format(netmask) :
+            return False
+        for element in netmask.split("."):
+            if not isdigit(element):
+                return False
+            if int(element) not in SUBNET_BITS :
+                return False
+        return True
+
+    @classmethod
+    def ipv4_to_dec(cls, address):
+        """
+        Converts a IPv4 address string to list of integers.
+
+        i.e. '192.168.12.206' --> [192, 168, 12, 206]
+
+        @param address: address to extract
+        @type address: string
+
+        @return: ip address in list of integers 
+        @rtype: list
+        """
+        return [int(a) for a in address.split(".")]
+
+
+
+class NetworkDetect :
+    """ Detecting of the network/broadcast addresses """
+    
+    def __init__(self, ip, netmask):
+        """
+        @param ip: IP address of any computer on checked network
+        @type ip: str
+
+        @param netmask: netmask of checked network
+        @type netmask: str
+        """
+
+        if NetUtils.is_ipv4_format(netmask) :
+            self.ip = ip
+        else :
+            raise Exception("Invalid format of IP address")
+
+        if NetUtils.netmask_validate(netmask) :
+            self.netmask = netmask
+        else :
+            raise Exception("Invalid format of netmask")
+
+        self.subnets = self.get_subnets(netmask)
+
+    @classmethod
+    def get_subnets(cls, netmask):
+        """
+        For each bit returns number of subnets and number of elements.
+
+        @param netmask: netmask to extract
+        @type netmask: str
+
+        @return: number of subnets and last bit value for each bit
+        @rtype: list
+        """
+
+        TOTAL_BITS = 8
+
+        for element in NetUtils.ipv4_to_dec(netmask) :
+
+            n_bits = SUBNET_BITS.index(element)
+            m_bits = TOTAL_BITS - n_bits
+
+            nbr_subnets = 2 ** m_bits
+            last_bit_value = 2 ** n_bits
+
+            yield (nbr_subnets, last_bit_value)
+
+
+    @classmethod
+    def get_valid_range(cls, nbr, last_bit, value):
+        """
+        Get the valid range according to checked value
+
+        @param nbr: number of subnets
+        @type nbr: int
+
+        @param last_bit: value of last bit of subnet
+        @type last_bit: int
+
+        @param value: checked value
+        @type value: int
+
+        @return: valid range to get network/broadcast addresses
+        @rtype: tuple
+        """
+
+        if nbr == 256 :
+            return (0, 255)
+
+        start = 0
+        end = 0
+
+        for attempt in range(0, nbr) :
+          
+            end = attempt * last_bit - 1
+
+            if value in range(start, end) :
+                return (start, end)
+            start = attempt * last_bit
+
+        return (value, value)
+
+
+    def get_ranges(self):
+        """
+        Apply the netmask rules on checked IP address.
+        @return: range of all possibles IP adresses on format:
+                 (min, max), (min, max), (min, max), (min, max)
+        @rtype: generator
+        """
+
+        ip_dec = NetUtils.ipv4_to_dec(self.ip)
+        
+        i = 0
+        for nbr, last_bit in self.get_subnets(self.netmask) :
+
+            value = ip_dec[i]
+
+            octet_range = self.get_valid_range(nbr, last_bit, value)
+            yield octet_range
+
+            i += 1
+
+    @property 
+    def network(self):
+        """
+        @return: calculated IPv4 network address
+        @rtype: str
+        """
+        decimals = [ str(min(r)) for r in self.get_ranges() ]
+        return ".".join(decimals)
+
+    @property 
+    def broadcast(self):
+        """
+        @return: calculated IPv4 broadcast address
+        @rtype: str
+        """
+        decimals = [ str(max(r)) for r in self.get_ranges() ]
+        return ".".join(decimals)
 
 
 class ResolvingCallable :
@@ -461,7 +622,7 @@ class ChoosePerNMBLookup (ResolvingCallable) :
 
                 ip = second_line.split(" ")[0]
 
-                if NetUtils.is_ip4_address(ip) :
+                if NetUtils.is_ipv4_format(ip) :
                     return ip
 
         return None

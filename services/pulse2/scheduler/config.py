@@ -37,7 +37,7 @@ from mmc.site import mmcconfdir
 
 # Others Pulse2 Stuff
 import pulse2.utils
-from pulse2.network import NetUtils
+from pulse2.network import NetUtils, NetworkDetect
 from pulse2.xmlrpc import isTwistedEnoughForLoginPass
 from pulse2.database.msc.config import MscDatabaseConfig
 
@@ -361,7 +361,9 @@ class PreferredNetworkParser :
         if not default_netmask :
             default_netmask, gw = NetUtils.get_netmask_and_gateway()
 
-        self.default_network = [(default_ip, default_netmask)]
+        net_detect = NetworkDetect(default_ip, default_netmask)
+        network_address = net_detect.network
+        self.default_network = [(network_address, default_netmask)]
 
     def get_default(self):
         return self.default_network
