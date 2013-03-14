@@ -150,13 +150,15 @@ else {
         array('description', _T("Description", "pkgs"), array()),
     );
 
-    $commandText = _T('Command: <br /><br /><span>Pulse will try to figure out how to install the uploaded files.<br /><br />
-            If the detection fails, it doesn\'t mean that the application cannot be installed using Pulse but that you\'ll have to figure out the proper command.<br /><br />
-            Many vendors (Acrobat, Flash, Skype) provide a MSI version of their applications which can be processed automatically by Pulse.<br />
-            You may also ask Google for the silent installation switches. If you\'re feeling lucky, here is a Google search that may help:<br /><br />
-            <a href="http://www.google.fr/#q=firefox+silent+install">Google: \'file\'+silent+install</a></span>', 'pkgs');
+    $command = _T('Command:', 'pkgs') . '<br /><br />';
+    $commandHelper = '<span>' . _T('Pulse will try to figure out how to install the uploaded files.\n\n
+If the detection fails, it doesn\'t mean that the application cannot be installed using Pulse but that you\'ll have to figure out the proper command.\n\n
+Many vendors (Acrobat, Flash, Skype) provide a MSI version of their applications which can be processed automatically by Pulse.\n
+You may also ask Google for the silent installation switches. If you\'re feeling lucky, here is a Google search that may help:\n\n
+<a href="@@GOOGLE_SEARCH_URL@@">Google search</a>', 'pkgs') . '</span>';
+    $command = $command . str_replace('\n', '<br />', $commandHelper);
     $cmds = array(
-        array('command', _T('Command\'s name : ', 'pkgs'), $commandText),/*
+        array('command', _T('Command\'s name : ', 'pkgs'), $command),/*
         array('installInit', _T('installInit', 'pkgs'), _T('Install Init', 'pkgs')),
         array('preCommand', _T('preCommand', 'pkgs'), _T('Pre Command', 'pkgs')),
         array('postCommandFailure', _T('postCommandFailure', 'pkgs'), _T('postCommandFailure', 'pkgs')),
