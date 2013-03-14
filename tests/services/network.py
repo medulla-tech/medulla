@@ -25,7 +25,7 @@ import unittest
 import subprocess
 import logging
 
-from pulse2.network import NetUtils, IPResolve
+from pulse2.network import NetUtils, IPResolve, NetworkDetect
 
 def myLogger ():
     """ Default logging instance """
@@ -150,6 +150,34 @@ class class01_NetUtils (unittest.TestCase) :
         result = NetUtils.has_enough_info(iface_info)
         self.assertEqual(result, False)
 
+    def test07_is_ipv4_format(self):
+        """ test of ipv4 format"""
+        ip = "192.168.1.25"
+        result = NetUtils.is_ipv4_format(ip)
+
+        self.assertTrue(result)
+
+    def test08_is_not_ipv4_format(self):
+        """ test of ipv4 format"""
+        ip = "150.150.154.aaa"
+        result = NetUtils.is_ipv4_format(ip)
+
+        self.assertFalse(result)
+
+    def test09_netmask_validate(self):
+        """ correct format of netmask """
+        nmask = "255.255.128.0"
+
+        result = NetUtils.netmask_validate(nmask)
+        self.assertTrue(result)
+
+    def test09_netmask_validate_false(self):
+        """ correct format of netmask """
+        nmask = "200.255.128.0"
+
+        result = NetUtils.netmask_validate(nmask)
+        self.assertFalse(result)
+
 
 class class02_IPresolve (unittest.TestCase):
 
@@ -267,6 +295,28 @@ class class02_IPresolve (unittest.TestCase):
 
         self.assertEqual(estimated_ip, getted_ip)
 
+class class03_NetDetect (unittest.TestCase):
+    """ testing of detecting address and broadcast from ip & netmask"""
+
+    def test01_correct_networks_and_broadcasts(self):
+        """
+        format of 1-of-tuple :
+        (ip, netmask, correct_network, correct_broadcast)
+        """
+        corrects = [("192.168.21.52", "255.255.255.0", 
+                     "192.168.21.0" , "192.168.21.255"),
+
+                    ("10.10.152.55" , "255.255.0.0",
+                     "10.10.0.0", "10.10.255.255"),
+
+                    ("140.25.55.6", "255.0.0.0",
+                     "140.0.0.0",  "140.255.255.255"),
+                ]
+        for correct in corrects :
+            ip, nmask, ntw, bcast = correct
+            nd = NetworkDetect(ip, nmask)
+            self.assertEqual(ntw, nd.network)
+            self.assertEqual(bcast, nd.broadcast)
 
 if __name__ == '__main__' :
     unittest.main()
