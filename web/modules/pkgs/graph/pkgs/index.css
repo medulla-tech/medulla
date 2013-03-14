@@ -33,9 +33,10 @@ td.package {
     font-size: 1.4em;
 }
 
-p.command-helper {
+.label span {
     float: right;
     width: 250px;
+    color: grey;
 }
 
 textarea {

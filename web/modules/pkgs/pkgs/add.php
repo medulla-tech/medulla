@@ -145,16 +145,16 @@ else {
     // fields
 
     $fields = array(
-        array("label", _T("Name", "pkgs"), array("required" => True)),
+        array("label", _T("Name", "pkgs"), array("required" => True, 'placeholder' => _T('<fill_package_name>', 'pkgs'))),
         array("version", _T("Version", "pkgs"), array("required" => True)),
         array('description', _T("Description", "pkgs"), array()),
     );
 
-    $commandText = _T('<p class="command-helper">Pulse will try to figure out how to install the uploaded files.<br /><br />
+    $commandText = _T('Command: <br /><br /><span>Pulse will try to figure out how to install the uploaded files.<br /><br />
             If the detection fails, it doesn\'t mean that the application cannot be installed using Pulse but that you\'ll have to figure out the proper command.<br /><br />
             Many vendors (Acrobat, Flash, Skype) provide a MSI version of their applications which can be processed automatically by Pulse.<br />
             You may also ask Google for the silent installation switches. If you\'re feeling lucky, here is a Google search that may help:<br /><br />
-            <a href="http://www.google.fr/#q=firefox+silent+install">Google: \'file\'+silent+install</a></p>', 'pkgs');
+            <a href="http://www.google.fr/#q=firefox+silent+install">Google: \'file\'+silent+install</a></span>', 'pkgs');
     $cmds = array(
         array('command', _T('Command\'s name : ', 'pkgs'), $commandText),/*
         array('installInit', _T('installInit', 'pkgs'), _T('Install Init', 'pkgs')),
@@ -218,7 +218,6 @@ Event.observe(window, 'load', function() { // load this piece of code when page 
         }
         new Ajax.Request(url, {
             onSuccess: function(response) {
-                $('label').value = response.headerJSON.label;
                 $('version').value = response.headerJSON.version;
                 $('commandcmd').value = response.headerJSON.commandcmd;
             }
@@ -247,7 +246,6 @@ Event.observe(window, 'load', function() { // load this piece of code when page 
                 evalScripts: true
             });
             // reset form fields
-            $('label').value = "";
             $('version').value = "";
             $('commandcmd').value = "";
         }
@@ -295,7 +293,6 @@ Event.observe(window, 'load', function() { // load this piece of code when page 
                     evalScripts: true
                 });
                 // reset form fields
-                $('label').value = "";
                 $('version').value = "";
                 $('commandcmd').value = "";
                 $('directory-label').update("<?php echo sprintf(_T("Files upload (<b><u title='%s'>%sM max</u></b>)", "pkgs"), _T("Change post_max_size and upload_max_filesize directives in php.ini file to increase upload size.", "pkgs"), get_php_max_upload_size()) ?>");

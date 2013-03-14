@@ -65,7 +65,6 @@ if(count($files)) {
         }
         new Ajax.Request(url, {
             onSuccess: function(response) {
-                $('label').value = response.headerJSON.label;
                 $('version').value = response.headerJSON.version;
                 $('commandcmd').value = response.headerJSON.commandcmd;
             }
@@ -130,7 +129,6 @@ else {
                 evalScripts: true
         });
         // reset form fields
-        $('label').value = "";
         $('version').value = "";
         $('commandcmd').value = "";
         $$('input[type="radio"][name="package-method"][value="upload"]')[0].writeAttribute("checked", "checked");

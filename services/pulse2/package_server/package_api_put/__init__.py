@@ -54,8 +54,7 @@ class PackageApiPut(PackageApiGet):
     def xmlrpc_getTemporaryFilesSuggestedCommand(self, tempdir):
         self.logger.debug("Try to suggest command for tempdir %s" % tempdir)
         ret = {
-            "label": tempdir,
-            "version": 42,
+            "version": '0.1',
             "commandcmd": [],
         }
 
