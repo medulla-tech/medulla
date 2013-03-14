@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-14 15:54+0100\n"
+"POT-Creation-Date: 2013-03-14 17:02+0100\n"
 "PO-Revision-Date: 2012-10-19 12:01+0000\n"
 "Last-Translator: Jean-Christophe Vassort <jcvassort@mandriva.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/"
@@ -41,11 +41,6 @@ msgstr "->"
 #: modules/dyngroup/includes/groups.inc.php:209
 #, php-format
 msgid "<li>%s is part of <a href=\"%s\">%s</a></li>"
-msgstr ""
-
-#: modules/dyngroup/includes/groups.inc.php:224
-#, php-format
-msgid "<li>%s</li>"
 msgstr ""
 
 #: modules/dyngroup/includes/groups.inc.php:230
@@ -130,18 +125,6 @@ msgstr ""
 msgid "Are you sure you want to delete imaging group <b>%s</b>?<br/>"
 msgstr "Sind Sie sicher, dass Sie Profil <b>%s</b> löschen wollen?<br/>"
 
-#: modules/dyngroup/includes/groups.inc.php:206
-msgid ""
-"Be advised that computers listed bellow are already part of another imaging "
-"group."
-msgstr ""
-
-#: modules/dyngroup/includes/groups.inc.php:221
-msgid ""
-"Be advised that computers listed bellow are already stand-alone registered "
-"into imaging module"
-msgstr ""
-
 #: modules/dyngroup/dyngroup/delete_group.php:69
 #: modules/dyngroup/dyngroup/remove_machine.php:48
 #: modules/dyngroup/includes/groups.inc.php:83
@@ -200,6 +183,11 @@ msgstr "Computer Gruppen Unter Anforderung Editor"
 #, php-format
 msgid "Computers list has been truncated at %d computers"
 msgstr "Computers Liste wurde bei %d Computern abgeschnitten"
+
+#: modules/dyngroup/includes/groups.inc.php:206
+#: modules/dyngroup/includes/groups.inc.php:221
+msgid "Computers listed below are already part of another imaging group."
+msgstr ""
 
 #: modules/dyngroup/includes/groups.inc.php:82
 #: modules/dyngroup/includes/groups.inc.php:239

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-14 15:54+0100\n"
+"POT-Creation-Date: 2013-03-14 17:02+0100\n"
 "PO-Revision-Date: 2012-10-19 12:01+0000\n"
 "Last-Translator: Jean-Christophe Vassort <jcvassort@mandriva.com>\n"
 "Language-Team: Spanish (Spain) (http://transifex.mandriva.com/projects/p/"
@@ -1619,8 +1619,8 @@ msgstr ""
 
 #: modules/imaging/imaging/tabs.php:95
 msgid ""
-"This computer can't be declared in the Imaging module, it's part of an "
-"imaging group, but this one is not declared in the Imaging."
+"This computer can't be declared in the imaging module: it's already part of "
+"a broken imaging group."
 msgstr ""
 
 #: modules/imaging/imaging/tabs.php:64
