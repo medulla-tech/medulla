@@ -200,8 +200,8 @@ else {
 }
 ?>
 
-<script src="jsframework/lib/fileuploader/fileuploader.js" type="text/javascript"></script> <!-- js for file upload -->
-<link href="jsframework/lib/fileuploader/fileuploader.css" rel="stylesheet" type="text/css"> <!-- css for file upload -->
+<script src="modules/pkgs/lib/fileuploader/fileuploader.js" type="text/javascript"></script> <!-- js for file upload -->
+<link href="modules/pkgs/lib/fileuploader/fileuploader.css" rel="stylesheet" type="text/css"> <!-- css for file upload -->
 
 <script type="text/javascript">
 Event.observe(window, 'load', function() { // load this piece of code when page is loaded

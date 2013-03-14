@@ -22,6 +22,7 @@
  */
 
 require_once("modules/pkgs/includes/functions.php");
+require_once("modules/pkgs/includes/html.inc.php");
 
 if (isset($_SESSION['random_dir'])) {
     $upload_tmp_dir = sys_get_temp_dir();
