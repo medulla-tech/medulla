@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-04 10:49+0100\n"
+"POT-Creation-Date: 2013-03-14 15:54+0100\n"
 "PO-Revision-Date: 2012-10-19 12:01+0000\n"
 "Last-Translator: Jean-Christophe Vassort <jcvassort@mandriva.com>\n"
 "Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/"
@@ -30,29 +30,29 @@ msgstr ""
 "использованы для установки по умолчанию пункта меню клиента снимков, если не "
 "будет сделан выбор пользователем со стороны клиента перед меню таймаут. "
 
-#: modules/imaging/imaging/configure.php:339
+#: modules/imaging/imaging/configure.php:47
 #, php-format
 msgid "%s menu parameters"
 msgstr "Параметры меню %s "
 
-#: modules/imaging/imaging/tabs.php:84 modules/imaging/imaging/tabs.php:115
-#: modules/imaging/imaging/tabs.php:136 modules/imaging/imaging/tabs.php:155
+#: modules/imaging/imaging/tabs.php:89 modules/imaging/imaging/tabs.php:120
+#: modules/imaging/imaging/tabs.php:141 modules/imaging/imaging/tabs.php:160
 #, php-format
 msgid "%s's computer imaging"
 msgstr "снимок компьютера %s"
 
-#: modules/imaging/imaging/tabs.php:152
+#: modules/imaging/imaging/tabs.php:157
 #, php-format
 msgid "%s's computer imaging (in profile)"
 msgstr "Снимок компьютера %s (в профиле)"
 
-#: modules/imaging/imaging/tabs.php:204 modules/imaging/imaging/tabs.php:234
+#: modules/imaging/imaging/tabs.php:209 modules/imaging/imaging/tabs.php:239
 #, php-format
 msgid "%s's profile imaging"
 msgstr "снимок профиля %s"
 
+#: modules/imaging/imaging/configure.php:87
 #: modules/imaging/manage/ajaxConfiguration.php:132
-#: modules/imaging/imaging/configure.php:379
 msgid "(default)"
 msgstr "(по умолчанию)"
 
@@ -90,11 +90,11 @@ msgstr "<strong>%s</strong> сценарий не был удален"
 msgid "Add <b>%s</b> to available Boot Services ?"
 msgstr ""
 
-#: modules/imaging/infoPackage.inc.php:242
+#: modules/imaging/infoPackage.inc.php:360
 msgid "Add a image to a target"
 msgstr "Добавить снимок пользователю"
 
-#: modules/imaging/infoPackage.inc.php:229
+#: modules/imaging/infoPackage.inc.php:347
 msgid "Add a service to a target"
 msgstr "Добавить службу к пользователю"
 
@@ -122,7 +122,7 @@ msgstr "Добавить службу в меню загрузки"
 msgid "Add service to default boot menu"
 msgstr "Добавить службу в меню загрузки по умолчанию"
 
-#: modules/imaging/imaging/addservice.php:100
+#: modules/imaging/imaging/addservice.php:106
 #, php-format
 msgid "Add the boot service <b>%s</b> to <b>%s</b>"
 msgstr "Добавить службу загрузки <b>%s</b> в <b>%s</b>"
@@ -132,8 +132,8 @@ msgstr "Добавить службу загрузки <b>%s</b> в <b>%s</b>"
 msgid "Add the boot service <b>%s</b> to the default boot menu"
 msgstr "Добавить службу загрузки <b>%s</b> в меню загрузки по умолчанию"
 
-#: modules/imaging/manage/master_add.php:89
 #: modules/imaging/imaging/addimage.php:102
+#: modules/imaging/manage/master_add.php:89
 #, php-format
 msgid "Add the image <b>%s</b> to <b>%s</b>"
 msgstr "Добавить снимок <b>%s</b> в <b>%s</b>"
@@ -158,7 +158,7 @@ msgstr "Вы уверены, что хотите удалить мастер <b>
 msgid "Are you sure you want to delete the <b>%s</b> script ?"
 msgstr "Вы уверены, что хотите удалить сценарий <b>%s</b>?"
 
-#: modules/imaging/imaging/bootmenu_remove.php:88
+#: modules/imaging/imaging/bootmenu_remove.php:94
 #, php-format
 msgid "Are you sure you want to remove <b>%s</b> from the boot menu ?"
 msgstr "Вы уверены, что хотите удалить <b>%s</b> из меню загрузки?"
@@ -181,7 +181,7 @@ msgstr "Объединить объект с сервером снимков"
 msgid "Available Imaging Server"
 msgstr "Доступный Сервер Снимков"
 
-#: modules/imaging/imaging/tabs.php:163 modules/imaging/imaging/tabs.php:240
+#: modules/imaging/imaging/tabs.php:168 modules/imaging/imaging/tabs.php:245
 msgid "Available boot menu services"
 msgstr "Доступные службы меню загрузки"
 
@@ -194,8 +194,8 @@ msgstr "Доступные снимки"
 msgid "Available imaging servers for entity %s"
 msgstr ""
 
-#: modules/imaging/manage/ajaxMaster.php:27
 #: modules/imaging/imaging/images.php:69
+#: modules/imaging/manage/ajaxMaster.php:27
 msgid "Available masters"
 msgstr "Доступные мастеры"
 
@@ -203,8 +203,8 @@ msgstr "Доступные мастеры"
 msgid "Available post-imaging scripts"
 msgstr ""
 
-#: modules/imaging/manage/ajaxLogs.php:55
 #: modules/imaging/includes/logs.inc.php:27
+#: modules/imaging/manage/ajaxLogs.php:55
 msgid "Backup"
 msgstr "Резервное копирование"
 
@@ -216,18 +216,18 @@ msgstr "Резервное копирование Завершено"
 msgid "Backup Started"
 msgstr "Запуск Резервного копирования"
 
-#: modules/imaging/manage/ajaxLogs.php:65
 #: modules/imaging/includes/logs.inc.php:39
+#: modules/imaging/manage/ajaxLogs.php:65
 msgid "Backup done"
 msgstr "Резервное копирование выполнено"
 
-#: modules/imaging/manage/ajaxLogs.php:66
 #: modules/imaging/includes/logs.inc.php:40
+#: modules/imaging/manage/ajaxLogs.php:66
 msgid "Backup failed"
 msgstr "Не удалось выполнить резервное копирование"
 
-#: modules/imaging/manage/ajaxLogs.php:64
 #: modules/imaging/includes/logs.inc.php:38
+#: modules/imaging/manage/ajaxLogs.php:64
 msgid "Backup in progress"
 msgstr "Выполняется резервное копирование"
 
@@ -235,12 +235,12 @@ msgstr "Выполняется резервное копирование"
 msgid "Backup log messages"
 msgstr "Сообщения журнала резервного копирования"
 
-#: modules/imaging/manage/ajaxLogs.php:52
 #: modules/imaging/includes/logs.inc.php:28
+#: modules/imaging/manage/ajaxLogs.php:52
 msgid "Boot"
 msgstr "Загрузка"
 
-#: modules/imaging/imaging/tabs.php:63
+#: modules/imaging/imaging/tabs.php:68
 #, php-format
 msgid "Boot Menu Generation failed for : %s"
 msgstr ""
@@ -249,36 +249,36 @@ msgstr ""
 msgid "Boot Service already created"
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:159 modules/imaging/imaging/tabs.php:236
-#: modules/imaging/infoPackage.inc.php:145
-#: modules/imaging/infoPackage.inc.php:166
+#: modules/imaging/imaging/tabs.php:164 modules/imaging/imaging/tabs.php:241
+#: modules/imaging/infoPackage.inc.php:213
+#: modules/imaging/infoPackage.inc.php:284
 msgid "Boot menu"
 msgstr "Меню загрузки"
 
-#: modules/imaging/manage/service_show_used.php:72
-#: modules/imaging/imaging/bootmenu_remove.php:68
-#: modules/imaging/imaging/showtarget.php:79
 #: modules/imaging/imaging/addimage.php:58
-#: modules/imaging/imaging/addservice.php:58
+#: modules/imaging/imaging/addservice.php:63
+#: modules/imaging/imaging/bootmenu_remove.php:73
+#: modules/imaging/imaging/showtarget.php:79
+#: modules/imaging/manage/service_show_used.php:72
 #, php-format
 msgid "Boot menu generation failed for computer: %s"
 msgstr ""
 
-#: modules/imaging/manage/service_del.php:48
-#: modules/imaging/manage/service_show_used.php:84
-#: modules/imaging/manage/master_add.php:54
-#: modules/imaging/manage/service_add.php:54
-#: modules/imaging/manage/imaging_server_link.php:64
-#: modules/imaging/manage/master_remove.php:42
-#: modules/imaging/manage/service_remove.php:48
 #: modules/imaging/imaging/showtarget.php:91
+#: modules/imaging/manage/imaging_server_link.php:64
+#: modules/imaging/manage/master_add.php:54
+#: modules/imaging/manage/master_remove.php:42
+#: modules/imaging/manage/service_add.php:54
+#: modules/imaging/manage/service_del.php:48
+#: modules/imaging/manage/service_remove.php:48
+#: modules/imaging/manage/service_show_used.php:84
 #, php-format
 msgid "Boot menu generation failed for package server: %s"
 msgstr ""
 
-#: modules/imaging/manage/save_configuration.php:68
 #: modules/imaging/manage/location.php:59
 #: modules/imaging/manage/location.php:62
+#: modules/imaging/manage/save_configuration.php:68
 #, php-format
 msgid ""
 "Boot menu generation failed for package server: %s<br /><br />Check /var/log/"
@@ -292,12 +292,12 @@ msgid ""
 "Please wait or reload the page %shere%s."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:113
+#: modules/imaging/imaging/configure.php:313
 #, php-format
 msgid "Boot menu is created for <strong>%s</strong>."
 msgstr "Меню загрузки создано для <strong>%s</strong>."
 
-#: modules/imaging/imaging/configure.php:115
+#: modules/imaging/imaging/configure.php:315
 #, php-format
 msgid "Boot menu modified for <strong>%s</strong>."
 msgstr "Меню загрузки изменено для <strong>%s</strong>."
@@ -306,8 +306,8 @@ msgstr "Меню загрузки изменено для <strong>%s</strong>."
 msgid "Boot menu shown"
 msgstr "Показано меню загрузки"
 
+#: modules/imaging/imaging/configure.php:108
 #: modules/imaging/manage/ajaxConfiguration.php:153
-#: modules/imaging/imaging/configure.php:400
 msgid "Boot options"
 msgstr "Варианты загрузки"
 
@@ -315,9 +315,9 @@ msgstr "Варианты загрузки"
 msgid "Boot service successfully created"
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:163 modules/imaging/imaging/tabs.php:240
-#: modules/imaging/infoPackage.inc.php:149
-#: modules/imaging/infoPackage.inc.php:170
+#: modules/imaging/imaging/tabs.php:168 modules/imaging/imaging/tabs.php:245
+#: modules/imaging/infoPackage.inc.php:217
+#: modules/imaging/infoPackage.inc.php:288
 msgid "Boot services"
 msgstr "Службы загрузки"
 
@@ -334,20 +334,21 @@ msgstr ""
 msgid "Can't delete this post-imaging script, it's a global script."
 msgstr ""
 
-#: modules/imaging/manage/service_show_used.php:149
-#: modules/imaging/manage/postinstall_delete.php:69
+#: modules/imaging/imaging/bootmenu_remove.php:96
+#: modules/imaging/imaging/configure.php:377
+#: modules/imaging/imaging/images_delete.php:61
+#: modules/imaging/imaging/images_iso.php:99
+#: modules/imaging/imaging/showtarget.php:170
 #: modules/imaging/manage/master_delete.php:57
 #: modules/imaging/manage/master_iso.php:85
 #: modules/imaging/manage/master_remove.php:72
-#: modules/imaging/imaging/bootmenu_remove.php:90
-#: modules/imaging/imaging/images_iso.php:99
-#: modules/imaging/imaging/configure.php:175
-#: modules/imaging/imaging/showtarget.php:170
-#: modules/imaging/imaging/images_delete.php:61
+#: modules/imaging/manage/postinstall_delete.php:69
+#: modules/imaging/manage/service_show_used.php:149
 msgid "Cancel"
 msgstr "Отмена"
 
-#: modules/imaging/imaging/configure.php:322
+#: modules/imaging/imaging/configure.php:477
+#: modules/imaging/imaging/configure.php:609
 msgid "Choose the MAC address you want to use"
 msgstr "Выберите MAC-адрес, который вы хотите использовать"
 
@@ -362,9 +363,9 @@ msgid ""
 "menu"
 msgstr ""
 
-#: modules/imaging/manage/service_show_used.php:129
-#: modules/imaging/imaging/configure.php:339
+#: modules/imaging/imaging/configure.php:47
 #: modules/imaging/imaging/showtarget.php:150
+#: modules/imaging/manage/service_show_used.php:129
 msgid "Computer"
 msgstr "Компьютер"
 
@@ -376,7 +377,42 @@ msgstr "Запрос UUID Компьютера"
 msgid "Computer UUID Sent"
 msgstr "UUID Компьютера отправлено"
 
-#: modules/imaging/imaging/images.php:123
+#: modules/imaging/imaging/configure.php:476
+#, fuzzy
+msgid "Computer:"
+msgstr "Компьютер"
+
+#: modules/imaging/infoPackage.inc.php:232
+msgid "Computers Group Editor"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:129
+#: modules/imaging/infoPackage.inc.php:190
+msgid "Computers Profile Creator"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:156
+msgid "Computers Profile Creator Sub Request Delete"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:142
+msgid "Computers Profile Creator Sub Request Editor"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:170
+#: modules/imaging/infoPackage.inc.php:194
+msgid "Computers Profile Editor"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:180
+msgid "Computers Profile Sub Request Delete"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:175
+msgid "Computers Profile Sub Request Editor"
+msgstr ""
+
+#: modules/imaging/imaging/images.php:128
 msgid "Convert to master"
 msgstr "Конвертировать в мастер"
 
@@ -392,8 +428,8 @@ msgstr "Создать ISO-образ с мастера"
 msgid "Create boot service from postinstall script"
 msgstr ""
 
-#: modules/imaging/manage/ajaxMasterLevel2.php:114
 #: modules/imaging/imaging/ajaxImages.php:158
+#: modules/imaging/manage/ajaxMasterLevel2.php:114
 msgid "Create bootable iso"
 msgstr "Создать загрузочный образ"
 
@@ -402,17 +438,17 @@ msgstr "Создать загрузочный образ"
 msgid "Create iso for <strong>%s</strong>"
 msgstr "Создать образ для <strong>%s</strong>"
 
-#: modules/imaging/manage/master_iso.php:43
 #: modules/imaging/infoPackage.inc.php:60
+#: modules/imaging/manage/master_iso.php:43
 msgid "Create iso from master"
 msgstr "Создать образ мастера"
 
-#: modules/imaging/infoPackage.inc.php:254
+#: modules/imaging/infoPackage.inc.php:372
 msgid "Create iso image"
 msgstr "Создать ISO-образ"
 
-#: modules/imaging/manage/ajaxMasterLevel2.php:109
 #: modules/imaging/imaging/ajaxImages.php:148
+#: modules/imaging/manage/ajaxMasterLevel2.php:109
 msgid "Created"
 msgstr "Созданный"
 
@@ -420,7 +456,7 @@ msgstr "Созданный"
 msgid "Critical error"
 msgstr "Критическая ошибка"
 
-#: modules/imaging/imaging/tabs.php:159 modules/imaging/imaging/tabs.php:236
+#: modules/imaging/imaging/tabs.php:164 modules/imaging/imaging/tabs.php:241
 msgid "Current boot menu"
 msgstr "Текущее меню загрузки"
 
@@ -428,8 +464,8 @@ msgstr "Текущее меню загрузки"
 msgid "Default"
 msgstr "По умолчанию"
 
-#: modules/imaging/manage/localSidebar.php:37
 #: modules/imaging/infoPackage.inc.php:82
+#: modules/imaging/manage/localSidebar.php:37
 msgid "Default boot menu"
 msgstr "Меню загрузки по умолчанию"
 
@@ -441,8 +477,8 @@ msgstr "Конфигурация меню загрузки по умолчани
 msgid "Default menu item label"
 msgstr "Ярлык пункта меню по умолчанию"
 
+#: modules/imaging/imaging/configure.php:51
 #: modules/imaging/manage/ajaxConfiguration.php:94
-#: modules/imaging/imaging/configure.php:343
 msgid "Default menu label"
 msgstr "Ярлык меню по умолчанию"
 
@@ -458,27 +494,31 @@ msgstr "Таймаут меню по умолчанию"
 msgid "Default on WOL"
 msgstr "По умолчанию на WOL"
 
-#: modules/imaging/manage/ajaxLogs.php:58
-#: modules/imaging/manage/postinstall_delete.php:68
-#: modules/imaging/manage/ajaxMasterLevel2.php:68
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:53
 #: modules/imaging/imaging/bootmenu.php:210
 #: modules/imaging/includes/logs.inc.php:34
+#: modules/imaging/manage/ajaxLogs.php:58
+#: modules/imaging/manage/ajaxMasterLevel2.php:68
+#: modules/imaging/manage/ajaxPostInstallLevel2.php:53
+#: modules/imaging/manage/postinstall_delete.php:68
 msgid "Delete"
 msgstr "Удалить"
 
+#: modules/imaging/infoPackage.inc.php:228
+msgid "Delete a group of computers"
+msgstr ""
+
 #: modules/imaging/imaging/images_delete.php:56
-#: modules/imaging/infoPackage.inc.php:250
+#: modules/imaging/infoPackage.inc.php:368
 msgid "Delete image"
 msgstr "Удалить снимок"
 
-#: modules/imaging/manage/master_delete.php:52
 #: modules/imaging/infoPackage.inc.php:51
+#: modules/imaging/manage/master_delete.php:52
 msgid "Delete master"
 msgstr "Удалить мастер"
 
-#: modules/imaging/manage/postinstall_delete.php:64
 #: modules/imaging/infoPackage.inc.php:108
+#: modules/imaging/manage/postinstall_delete.php:64
 msgid "Delete post-imaging script"
 msgstr ""
 
@@ -490,48 +530,52 @@ msgstr ""
 msgid "Delete the image"
 msgstr "Удалить снимок "
 
-#: modules/imaging/manage/ajaxBootmenu.php:98
-#: modules/imaging/manage/ajaxServiceLevel2.php:93
-#: modules/imaging/manage/ajaxAvailableImagingServer.php:76
-#: modules/imaging/manage/master_edit.php:57
-#: modules/imaging/manage/ajaxMasterLevel2.php:108
-#: modules/imaging/manage/service_edit.php:59
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:90
-#: modules/imaging/imaging/bootmenu.php:302
-#: modules/imaging/imaging/ajaxServices.php:88
 #: modules/imaging/imaging/ajaxImages.php:147
-#: modules/imaging/imaging/images.php:103
+#: modules/imaging/imaging/ajaxServices.php:88
+#: modules/imaging/imaging/bootmenu.php:302
+#: modules/imaging/imaging/images.php:108
 #: modules/imaging/includes/post_install_script.php:65
+#: modules/imaging/manage/ajaxAvailableImagingServer.php:76
+#: modules/imaging/manage/ajaxBootmenu.php:98
+#: modules/imaging/manage/ajaxMasterLevel2.php:108
+#: modules/imaging/manage/ajaxPostInstallLevel2.php:90
+#: modules/imaging/manage/ajaxServiceLevel2.php:93
+#: modules/imaging/manage/master_edit.php:57
+#: modules/imaging/manage/service_edit.php:59
 msgid "Description"
 msgstr "Описание"
 
-#: modules/imaging/imaging/configure.php:49
+#: modules/imaging/imaging/configure.php:220
 msgid "Diskless Linux command line access"
 msgstr "Доступ к командной строке Diskless Linux"
 
-#: modules/imaging/manage/ajaxBootmenu.php:100
-#: modules/imaging/manage/master_add.php:105
-#: modules/imaging/manage/service_add.php:104
-#: modules/imaging/manage/bootmenu_edit.php:86
+#: modules/imaging/infoPackage.inc.php:224
+msgid "Display a groups of computers"
+msgstr ""
+
+#: modules/imaging/imaging/addimage.php:116
+#: modules/imaging/imaging/addservice.php:120
 #: modules/imaging/imaging/bootmenu.php:141
 #: modules/imaging/imaging/bootmenu.php:305
-#: modules/imaging/imaging/addimage.php:116
-#: modules/imaging/imaging/addservice.php:114
+#: modules/imaging/manage/ajaxBootmenu.php:100
+#: modules/imaging/manage/bootmenu_edit.php:86
+#: modules/imaging/manage/master_add.php:105
+#: modules/imaging/manage/service_add.php:104
 msgid "Displayed"
 msgstr "Показанный"
 
-#: modules/imaging/manage/ajaxBootmenu.php:102
-#: modules/imaging/manage/master_add.php:109
-#: modules/imaging/manage/service_add.php:108
-#: modules/imaging/manage/bootmenu_edit.php:96
+#: modules/imaging/imaging/addimage.php:120
+#: modules/imaging/imaging/addservice.php:124
 #: modules/imaging/imaging/bootmenu.php:151
 #: modules/imaging/imaging/bootmenu.php:308
-#: modules/imaging/imaging/addimage.php:120
-#: modules/imaging/imaging/addservice.php:118
+#: modules/imaging/manage/ajaxBootmenu.php:102
+#: modules/imaging/manage/bootmenu_edit.php:96
+#: modules/imaging/manage/master_add.php:109
+#: modules/imaging/manage/service_add.php:108
 msgid "Displayed on WOL"
 msgstr "Показать на WOL"
 
-#: modules/imaging/imaging/configure.php:47
+#: modules/imaging/imaging/configure.php:218
 msgid "Do not check hard disk size"
 msgstr "Не проверять размер жесткого диска"
 
@@ -544,7 +588,7 @@ msgstr ""
 "Вы действительно хотите установить связь между Сервером Снимков '<b>%s</b>' "
 "и объектом '<b>%s</b>'?"
 
-#: modules/imaging/imaging/configure.php:167
+#: modules/imaging/imaging/configure.php:369
 msgid "Do you want a backup to be done ?"
 msgstr "Вы хотите, чтобы было выполнено резервное копирование?"
 
@@ -557,8 +601,8 @@ msgstr "Служба ниже"
 msgid "Duplicate"
 msgstr "Дублировать"
 
-#: modules/imaging/manage/ajaxBootmenu.php:105
 #: modules/imaging/imaging/bootmenu.php:209
+#: modules/imaging/manage/ajaxBootmenu.php:105
 msgid "Edit"
 msgstr "Редактировать"
 
@@ -567,9 +611,9 @@ msgstr "Редактировать"
 msgid "Edit : %s"
 msgstr "Редактировать: %s"
 
-#: modules/imaging/manage/ajaxMasterLevel2.php:118
 #: modules/imaging/imaging/ajaxImages.php:77
 #: modules/imaging/imaging/ajaxImages.php:165
+#: modules/imaging/manage/ajaxMasterLevel2.php:118
 msgid "Edit image"
 msgstr "Изменить снимок"
 
@@ -581,11 +625,11 @@ msgstr "Редактировать мастер"
 msgid "Edit master : "
 msgstr "Редактировать мастер: "
 
-#: modules/imaging/infoPackage.inc.php:246
+#: modules/imaging/infoPackage.inc.php:364
 msgid "Edit parameters of a image on a target"
 msgstr "Редактировать параметры снимка пользователя"
 
-#: modules/imaging/infoPackage.inc.php:233
+#: modules/imaging/infoPackage.inc.php:351
 msgid "Edit parameters of a service on a target"
 msgstr "Редактировать параметры службы пользователя"
 
@@ -606,7 +650,7 @@ msgstr "Редактировать службу"
 msgid "Edit service : "
 msgstr "Изменить службу: "
 
-#: modules/imaging/imaging/images.php:88
+#: modules/imaging/imaging/images.php:93
 msgid "Edition of image"
 msgstr "Редактирование  снимков"
 
@@ -614,7 +658,7 @@ msgstr "Редактирование  снимков"
 msgid "Edition of item"
 msgstr "Редактирование пункта"
 
-#: modules/imaging/imaging/images.php:90
+#: modules/imaging/imaging/images.php:95
 msgid "Edition of master"
 msgstr "Редактирование мастера"
 
@@ -630,8 +674,8 @@ msgstr "Запрос Завершения Резервного копирова�
 msgid "End of Backup Success"
 msgstr "Успешно выполено Завершение Резервного копирования"
 
-#: modules/imaging/manage/ajaxLogs.php:57
 #: modules/imaging/includes/logs.inc.php:31
+#: modules/imaging/manage/ajaxLogs.php:57
 msgid "Error"
 msgstr "Ошибка"
 
@@ -639,7 +683,7 @@ msgstr "Ошибка"
 msgid "Error while creating Boot Service"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:132
+#: modules/imaging/imaging/configure.php:347
 #, php-format
 msgid "Failed to generate the boot menu those computers : %s"
 msgstr ""
@@ -670,7 +714,7 @@ msgstr "Не удалось определить UUID Компьютера"
 msgid "Failed to obtain a Hostname"
 msgstr "Не удалось определить Имя хоста"
 
-#: modules/imaging/imaging/tabs.php:110 modules/imaging/imaging/tabs.php:199
+#: modules/imaging/imaging/tabs.php:115 modules/imaging/imaging/tabs.php:204
 msgid "Failed to reset synchronise state."
 msgstr "Ошибка сброса состояния синхронизации."
 
@@ -690,9 +734,9 @@ msgstr "Не удалось отправить снимок UUID"
 msgid "Failed to summon an Image UUID"
 msgstr "Не удалось вызвать снимок UUID"
 
-#: modules/imaging/imaging/configure.php:151
-#, php-format
-msgid "Failed to unregistered the computer %s"
+#: modules/imaging/imaging/configure.php:396
+#, fuzzy, php-format
+msgid "Failed to unregister the computer %s"
 msgstr "Ошибка при отмене регистрации компьютера компьютера %s"
 
 #: modules/imaging/imaging/header.php:43
@@ -700,21 +744,21 @@ msgstr "Ошибка при отмене регистрации компьюте
 msgid "Force Generation"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:489
+#: modules/imaging/imaging/configure.php:197
 msgid "Force raw backup mode"
 msgstr "Усилить режим копирования raw"
 
-#: modules/imaging/imaging/ajaxServices.php:91
 #: modules/imaging/imaging/ajaxImages.php:152
+#: modules/imaging/imaging/ajaxServices.php:91
 msgid "From profile"
 msgstr "С профиля"
 
+#: modules/imaging/imaging/configure.php:111
 #: modules/imaging/manage/ajaxConfiguration.php:156
-#: modules/imaging/imaging/configure.php:403
 msgid "Full path to the XPM displayed at boot"
 msgstr "Полный путь к показанному при загрузке XPM "
 
-#: modules/imaging/imaging/configure.php:46
+#: modules/imaging/imaging/configure.php:217
 msgid "GRUB command line access"
 msgstr "GRUB доступ командной строки"
 
@@ -728,12 +772,12 @@ msgstr "Сгенерировать ISO-образ для <strong>%s</strong>"
 msgid "Generate Menu"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:262
+#: modules/imaging/imaging/configure.php:545
 #, php-format
 msgid "Hard disk number: %d"
 msgstr "Жесткий диск номер: %d"
 
-#: modules/imaging/imaging/configure.php:257
+#: modules/imaging/imaging/configure.php:540
 msgid "Hard disks and partitions selection to backup"
 msgstr "Резервное копирование жестких дисков и выбранных разделов"
 
@@ -757,7 +801,7 @@ msgstr "Инвентаризация Оборудования обновлена
 msgid "Hide menu"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:45
+#: modules/imaging/imaging/configure.php:216
 msgid "Hide menu (shortcut to show it : Shift - Alt - Shift)"
 msgstr ""
 
@@ -785,13 +829,13 @@ msgstr "Идентификация выполнена успешно"
 msgid "Identifier"
 msgstr "Идентификатор"
 
-#: modules/imaging/imaging/tabs.php:124
+#: modules/imaging/imaging/tabs.php:129
 msgid ""
 "If the generation runs since more than 5 minutes, please reset the synchro "
 "state of this computer's menu."
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:213
+#: modules/imaging/imaging/tabs.php:218
 msgid ""
 "If the synchro runs since more than 5 minutes, please reset the synchro "
 "state of this computer's menu."
@@ -834,17 +878,17 @@ msgstr "Запрос снимка UUID"
 msgid "Image UUID sent"
 msgstr "Снимок UUID отправлен"
 
-#: modules/imaging/imaging/images.php:187
+#: modules/imaging/imaging/images.php:192
 msgid "Image backup logs"
 msgstr "Снимок журналов архивации"
 
-#: modules/imaging/imaging/configure.php:484
+#: modules/imaging/imaging/configure.php:192
 msgid "Image parameters"
 msgstr "Параметры снимка"
 
-#: modules/imaging/imaging/tabs.php:161
-#: modules/imaging/infoPackage.inc.php:147
-#: modules/imaging/infoPackage.inc.php:168
+#: modules/imaging/imaging/tabs.php:166
+#: modules/imaging/infoPackage.inc.php:215
+#: modules/imaging/infoPackage.inc.php:286
 msgid "Images and Masters"
 msgstr "Снимки и Мастеры"
 
@@ -856,29 +900,34 @@ msgstr "Imaging"
 msgid "Imaging Configuration"
 msgstr "Конфигурация Снимков"
 
-#: modules/imaging/infoPackage.inc.php:151
-#: modules/imaging/infoPackage.inc.php:172
+#: modules/imaging/infoPackage.inc.php:219
+#: modules/imaging/infoPackage.inc.php:290
 msgid "Imaging Log"
 msgstr ""
+
+#: modules/imaging/imaging/configure.php:418
+#, fuzzy, php-format
+msgid "Imaging activation for group '%s'"
+msgstr "Снимки по группе"
 
 #: modules/imaging/infoPackage.inc.php:112
 msgid "Imaging configuration"
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:165 modules/imaging/imaging/tabs.php:242
+#: modules/imaging/imaging/tabs.php:170 modules/imaging/imaging/tabs.php:247
 msgid "Imaging log"
 msgstr "Журнал Снимков"
 
-#: modules/imaging/infoPackage.inc.php:142
+#: modules/imaging/infoPackage.inc.php:281
 msgid "Imaging on computer"
 msgstr "Снимки по компьютеру"
 
-#: modules/imaging/infoPackage.inc.php:163
+#: modules/imaging/infoPackage.inc.php:210
 msgid "Imaging on group"
 msgstr "Снимки по группе"
 
-#: modules/imaging/manage/service_show_used.php:120
 #: modules/imaging/imaging/showtarget.php:142
+#: modules/imaging/manage/service_show_used.php:120
 msgid "Imaging server"
 msgstr "Сервер снимков"
 
@@ -904,8 +953,8 @@ msgstr "Состояние сервера снимков"
 msgid "Imaging service"
 msgstr "Служба Imaging"
 
-#: modules/imaging/manage/ajaxServiceLevel2.php:94
 #: modules/imaging/imaging/ajaxImages.php:150
+#: modules/imaging/manage/ajaxServiceLevel2.php:94
 msgid "In boot menu"
 msgstr "В меню загрузки"
 
@@ -921,8 +970,8 @@ msgstr "В меню загрузки по умолчанию"
 msgid "In default bootmenu"
 msgstr "В меню загрузки по умолчанию"
 
-#: modules/imaging/manage/ajaxLogs.php:59
 #: modules/imaging/includes/logs.inc.php:26
+#: modules/imaging/manage/ajaxLogs.php:59
 msgid "Inventory"
 msgstr "Инвентаризация"
 
@@ -931,19 +980,19 @@ msgstr "Инвентаризация"
 msgid "Iso of master <strong>%s</strong> has been launched in background."
 msgstr "Образ мастера <strong>%s</strong> запущен в фоновом режиме."
 
-#: modules/imaging/imaging/configure.php:480
+#: modules/imaging/imaging/configure.php:188
 msgid "Kernel parameters"
 msgstr "Параметры ядра"
 
+#: modules/imaging/imaging/ajaxImages.php:145
+#: modules/imaging/imaging/ajaxServices.php:87
+#: modules/imaging/imaging/bootmenu.php:300
+#: modules/imaging/imaging/images.php:104
 #: modules/imaging/manage/ajaxBootmenu.php:96
+#: modules/imaging/manage/ajaxMasterLevel2.php:106
 #: modules/imaging/manage/ajaxServiceLevel2.php:91
 #: modules/imaging/manage/master_edit.php:53
-#: modules/imaging/manage/ajaxMasterLevel2.php:106
 #: modules/imaging/manage/service_edit.php:54
-#: modules/imaging/imaging/bootmenu.php:300
-#: modules/imaging/imaging/ajaxServices.php:87
-#: modules/imaging/imaging/ajaxImages.php:145
-#: modules/imaging/imaging/images.php:99
 msgid "Label"
 msgstr "Ярлык"
 
@@ -969,17 +1018,38 @@ msgstr ""
 msgid "Link this Imaging Server to the '%s' entity."
 msgstr "Соединить сервер снимков с объектом '%s'."
 
+#: modules/imaging/infoPackage.inc.php:185
+#: modules/imaging/infoPackage.inc.php:199
+msgid "List all profiles of computers"
+msgstr ""
+
 #: modules/imaging/manage/ajaxStatus.php:43
 msgid "Load on server"
 msgstr "Загрузить на сервер"
 
-#: modules/imaging/manage/localSidebar.php:34
+#: modules/imaging/infoPackage.inc.php:249
+msgid "MSC bundle tab for a group"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:255
+msgid "MSC history tab for a group"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:246
+msgid "MSC launch tab for a group"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:252
+msgid "MSC logs tab for a group"
+msgstr ""
+
 #: modules/imaging/infoPackage.inc.php:64
+#: modules/imaging/manage/localSidebar.php:34
 msgid "Manage boot services"
 msgstr "Управление службами загрузки"
 
-#: modules/imaging/manage/localSidebar.php:31
 #: modules/imaging/infoPackage.inc.php:46
+#: modules/imaging/manage/localSidebar.php:31
 msgid "Manage masters"
 msgstr "Управление мастерами"
 
@@ -992,12 +1062,12 @@ msgstr "Управлять службами"
 msgid "Master <strong>%s</strong> modified with success"
 msgstr "Мастер <strong>%s</strong> успешно изменен"
 
-#: modules/imaging/imaging/tabs.php:238
+#: modules/imaging/imaging/tabs.php:243
 msgid "Masters"
 msgstr "Мастеры"
 
-#: modules/imaging/manage/master_iso.php:74
 #: modules/imaging/imaging/images_iso.php:88
+#: modules/imaging/manage/master_iso.php:74
 msgid "Media size"
 msgstr "Размер тома"
 
@@ -1005,14 +1075,14 @@ msgstr "Размер тома"
 msgid "Memory"
 msgstr "Память"
 
-#: modules/imaging/manage/ajaxLogs.php:53
 #: modules/imaging/includes/logs.inc.php:25
+#: modules/imaging/manage/ajaxLogs.php:53
 msgid "Menu"
 msgstr "Меню"
 
-#: modules/imaging/imaging/tabs.php:167 modules/imaging/imaging/tabs.php:244
-#: modules/imaging/infoPackage.inc.php:153
-#: modules/imaging/infoPackage.inc.php:174
+#: modules/imaging/imaging/tabs.php:172 modules/imaging/imaging/tabs.php:249
+#: modules/imaging/infoPackage.inc.php:221
+#: modules/imaging/infoPackage.inc.php:292
 msgid "Menu configuration"
 msgstr "Настройка меню"
 
@@ -1020,33 +1090,33 @@ msgstr "Настройка меню"
 msgid "Menu language"
 msgstr "Меню языка"
 
-#: modules/imaging/imaging/configure.php:347
+#: modules/imaging/imaging/configure.php:55
 msgid "Menu timeout"
 msgstr "Меню таймаут"
 
-#: modules/imaging/manage/ajaxLogs.php:112
 #: modules/imaging/imaging/ajaxLogs.php:95
+#: modules/imaging/manage/ajaxLogs.php:112
 msgid "Message"
 msgstr "Сообщение"
 
+#: modules/imaging/imaging/configure.php:115
 #: modules/imaging/manage/ajaxConfiguration.php:160
-#: modules/imaging/imaging/configure.php:407
 msgid "Message displayed during backup/restoration"
 msgstr "Сообщение, показанное при резервном копировании/восстановлении"
 
-#: modules/imaging/manage/ajaxBootmenu.php:29
 #: modules/imaging/imaging/bootmenu.php:207
+#: modules/imaging/manage/ajaxBootmenu.php:29
 msgid "Move Up"
 msgstr "Вверх"
 
-#: modules/imaging/manage/ajaxBootmenu.php:30
 #: modules/imaging/imaging/bootmenu.php:208
+#: modules/imaging/manage/ajaxBootmenu.php:30
 msgid "Move down"
 msgstr "Вниз"
 
+#: modules/imaging/includes/post_install_script.php:63
 #: modules/imaging/manage/ajaxAvailableImagingServer.php:74
 #: modules/imaging/manage/ajaxPostInstallLevel2.php:89
-#: modules/imaging/includes/post_install_script.php:63
 msgid "Name"
 msgstr "Имя"
 
@@ -1066,7 +1136,7 @@ msgstr "Нет доступных журналов"
 msgid "No master available."
 msgstr "Нет доступного мастера"
 
-#: modules/imaging/imaging/tabs.php:253
+#: modules/imaging/imaging/tabs.php:258
 msgid "Not enough informations"
 msgstr "Не достаточно информации"
 
@@ -1086,14 +1156,14 @@ msgstr ""
 msgid "Order"
 msgstr "Порядок"
 
-#: modules/imaging/imaging/configure.php:286
+#: modules/imaging/imaging/configure.php:569
 #, php-format
 msgid "Partition number: %d"
 msgstr "Номер раздела: %d"
 
-#: modules/imaging/imaging/tabs.php:98
-#, php-format
-msgid "Please declare the profile first %shere%s."
+#: modules/imaging/imaging/tabs.php:103
+#, fuzzy, php-format
+msgid "Please declare the imaging group first %shere%s."
 msgstr "Пожалуйста, объявите профиль сначала %sздесь%s."
 
 #: modules/imaging/manage/master_iso.php:49
@@ -1114,19 +1184,20 @@ msgstr ""
 msgid "Please specify a title for the ISO image file."
 msgstr "Пожалуйста, уточните заголовок для файла ISO-образа"
 
-#: modules/imaging/imaging/configure.php:331
+#: modules/imaging/imaging/configure.php:490
+#: modules/imaging/imaging/configure.php:618
 msgid "Please switch to expert mode now if you want to change more parameters."
 msgstr ""
 "Пожалуйста, сейчас переключитесь на режим эксперта, если вы хотите изменить "
 "больше параметров."
 
-#: modules/imaging/manage/ajaxLogs.php:56
 #: modules/imaging/includes/logs.inc.php:30
+#: modules/imaging/manage/ajaxLogs.php:56
 msgid "Post-imaging"
 msgstr ""
 
-#: modules/imaging/manage/localSidebar.php:40
 #: modules/imaging/infoPackage.inc.php:94
+#: modules/imaging/manage/localSidebar.php:40
 msgid "Post-imaging scripts"
 msgstr ""
 
@@ -1158,11 +1229,29 @@ msgstr "Предварительный выбор "
 msgid "Preselected choice on WOL"
 msgstr "Предварительный выбор на WOL"
 
-#: modules/imaging/manage/service_show_used.php:129
-#: modules/imaging/imaging/configure.php:339
+#: modules/imaging/imaging/configure.php:47
 #: modules/imaging/imaging/showtarget.php:150
+#: modules/imaging/manage/service_show_used.php:129
 msgid "Profile"
 msgstr "Профиль"
+
+#: modules/imaging/infoPackage.inc.php:132
+#: modules/imaging/infoPackage.inc.php:146
+#: modules/imaging/infoPackage.inc.php:160
+msgid "Profile creation's tab from dynamic request"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:138
+#: modules/imaging/infoPackage.inc.php:152
+#: modules/imaging/infoPackage.inc.php:166
+msgid "Profile creation's tab from file import"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:135
+#: modules/imaging/infoPackage.inc.php:149
+#: modules/imaging/infoPackage.inc.php:163
+msgid "Profile creation's tab from machine list"
+msgstr ""
 
 #: modules/imaging/manage/ajaxStatus.php:67
 msgid "Recent activity"
@@ -1172,23 +1261,18 @@ msgstr ""
 msgid "Redirect to Boot Services page"
 msgstr ""
 
-#: modules/imaging/infoPackage.inc.php:137
+#: modules/imaging/infoPackage.inc.php:276
 msgid "Register a computer in the imaging module"
 msgstr "Зарегистрировать компьютер в модуле снимков"
 
-#: modules/imaging/infoPackage.inc.php:158
+#: modules/imaging/infoPackage.inc.php:205
 msgid "Register a profile in the imaging module"
 msgstr "Зарегистрировать профиль в модуле снимков"
 
-#: modules/imaging/imaging/configure.php:186
+#: modules/imaging/imaging/configure.php:414
 #, php-format
 msgid "Register computer '%s'"
 msgstr "Зарегистрировать компьютер '%s'"
-
-#: modules/imaging/imaging/configure.php:190
-#, php-format
-msgid "Register profile '%s'"
-msgstr "Зарегистрировать профиль '%s'"
 
 #: modules/imaging/manage/service_show_used.php:66
 #: modules/imaging/manage/service_show_used.php:78
@@ -1200,28 +1284,28 @@ msgstr ""
 msgid "Removal of master failed"
 msgstr ""
 
-#: modules/imaging/manage/service_show_used.php:148
+#: modules/imaging/imaging/bootmenu_remove.php:95
+#: modules/imaging/imaging/images_delete.php:60
+#: modules/imaging/imaging/showtarget.php:169
 #: modules/imaging/manage/master_delete.php:56
 #: modules/imaging/manage/master_remove.php:71
-#: modules/imaging/imaging/bootmenu_remove.php:89
-#: modules/imaging/imaging/showtarget.php:169
-#: modules/imaging/imaging/images_delete.php:60
+#: modules/imaging/manage/service_show_used.php:148
 msgid "Remove"
 msgstr "Переместить"
 
-#: modules/imaging/infoPackage.inc.php:237
+#: modules/imaging/infoPackage.inc.php:355
 msgid "Remove a service from a target"
 msgstr "Удалить службу с пользователя"
 
-#: modules/imaging/manage/ajaxMasterLevel2.php:56
-#: modules/imaging/imaging/bootmenu_remove.php:85
 #: modules/imaging/imaging/ajaxImages.php:71
-#: modules/imaging/infoPackage.inc.php:179
+#: modules/imaging/imaging/bootmenu_remove.php:91
+#: modules/imaging/infoPackage.inc.php:297
+#: modules/imaging/manage/ajaxMasterLevel2.php:56
 msgid "Remove from boot menu"
 msgstr "Удалить из меню загрузки"
 
-#: modules/imaging/manage/master_remove.php:67
 #: modules/imaging/infoPackage.inc.php:48
+#: modules/imaging/manage/master_remove.php:67
 msgid "Remove master"
 msgstr ""
 
@@ -1248,8 +1332,8 @@ msgstr "Удалить службу загрузки <b>%s</b> с меню за�
 msgid "Remove this boot service from imaging server %s"
 msgstr ""
 
-#: modules/imaging/manage/service_show_used.php:128
 #: modules/imaging/imaging/showtarget.php:149
+#: modules/imaging/manage/service_show_used.php:128
 #, php-format
 msgid "Remove this master from computer %s"
 msgstr ""
@@ -1259,17 +1343,17 @@ msgstr ""
 msgid "Remove this master from imaging server %s"
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:132 modules/imaging/imaging/tabs.php:221
+#: modules/imaging/imaging/tabs.php:137 modules/imaging/imaging/tabs.php:226
 msgid "Reset Synchro state"
 msgstr "Сброс состояния синхронизации"
 
-#: modules/imaging/imaging/tabs.php:106 modules/imaging/imaging/tabs.php:195
+#: modules/imaging/imaging/tabs.php:111 modules/imaging/imaging/tabs.php:200
 #, php-format
 msgid "Reset synchronisation state for %s (%s) succeed"
 msgstr "Сброс состояния синхронизации для %s (%s) выполнен успешно"
 
-#: modules/imaging/manage/ajaxLogs.php:54
 #: modules/imaging/includes/logs.inc.php:29
+#: modules/imaging/manage/ajaxLogs.php:54
 msgid "Restoration"
 msgstr "Восстановление"
 
@@ -1281,42 +1365,42 @@ msgstr "Восстановление Завершено"
 msgid "Restoration Started"
 msgstr "Запуск Восстановления"
 
+#: modules/imaging/imaging/configure.php:70
 #: modules/imaging/manage/ajaxConfiguration.php:116
-#: modules/imaging/imaging/configure.php:362
 msgid "Restoration options"
 msgstr "Параметры восстановления"
 
+#: modules/imaging/imaging/configure.php:100
 #: modules/imaging/manage/ajaxConfiguration.php:145
-#: modules/imaging/imaging/configure.php:392
 msgid "Restoration type"
 msgstr "Тип восстановления"
 
+#: modules/imaging/imaging/configure.php:103
 #: modules/imaging/manage/ajaxConfiguration.php:148
-#: modules/imaging/imaging/configure.php:395
 msgid "Restoration: MTFTP maximum waiting (in sec)"
 msgstr "Восстановление: MTFTP максимально ожидать (в сек)"
 
-#: modules/imaging/manage/ajaxLogs.php:62
 #: modules/imaging/includes/logs.inc.php:36
+#: modules/imaging/manage/ajaxLogs.php:62
 msgid "Restore done"
 msgstr "Восстановление выполнено"
 
-#: modules/imaging/manage/ajaxLogs.php:63
 #: modules/imaging/includes/logs.inc.php:37
+#: modules/imaging/manage/ajaxLogs.php:63
 msgid "Restore failed"
 msgstr "Не удалось выполнить восстановление"
 
-#: modules/imaging/manage/ajaxLogs.php:61
 #: modules/imaging/includes/logs.inc.php:35
+#: modules/imaging/manage/ajaxLogs.php:61
 msgid "Restore in progress"
 msgstr "Выполняется восстановление"
 
-#: modules/imaging/imaging/images.php:119
-#: modules/imaging/imaging/images.php:146
+#: modules/imaging/imaging/images.php:124
+#: modules/imaging/imaging/images.php:151
 msgid "Save"
 msgstr "Сохранить"
 
-#: modules/imaging/imaging/images.php:121
+#: modules/imaging/imaging/images.php:126
 msgid "Save (converting to image)"
 msgstr "Сохранить (конвертируя в снимок)"
 
@@ -1328,30 +1412,34 @@ msgstr "Сохранить настройки Сервера Снимков "
 msgid "Script value"
 msgstr "Значение сценария"
 
-#: modules/imaging/manage/service_show_used.php:146
+#: modules/imaging/infoPackage.inc.php:242
+msgid "Secure control on a group of computers"
+msgstr ""
+
 #: modules/imaging/imaging/showtarget.php:167
+#: modules/imaging/manage/service_show_used.php:146
 msgid "Select all"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:273
+#: modules/imaging/imaging/configure.php:556
 msgid "Select this hard disk"
 msgstr "Выбрать этот жесткий диск"
 
+#: modules/imaging/imaging/addimage.php:114
+#: modules/imaging/imaging/addservice.php:118
+#: modules/imaging/imaging/bootmenu.php:136
+#: modules/imaging/manage/bootmenu_edit.php:81
 #: modules/imaging/manage/master_add.php:103
 #: modules/imaging/manage/service_add.php:102
-#: modules/imaging/manage/bootmenu_edit.php:81
-#: modules/imaging/imaging/bootmenu.php:136
-#: modules/imaging/imaging/addimage.php:114
-#: modules/imaging/imaging/addservice.php:112
 msgid "Selected by default"
 msgstr "Выбранный по умолчанию"
 
+#: modules/imaging/imaging/addimage.php:118
+#: modules/imaging/imaging/addservice.php:122
+#: modules/imaging/imaging/bootmenu.php:146
+#: modules/imaging/manage/bootmenu_edit.php:91
 #: modules/imaging/manage/master_add.php:107
 #: modules/imaging/manage/service_add.php:106
-#: modules/imaging/manage/bootmenu_edit.php:91
-#: modules/imaging/imaging/bootmenu.php:146
-#: modules/imaging/imaging/addimage.php:118
-#: modules/imaging/imaging/addservice.php:116
 msgid "Selected by default on WOL"
 msgstr "Выбранный по умолчанию на WOL"
 
@@ -1379,21 +1467,25 @@ msgstr "Служба <strong>%s</strong> удалена с меню загруз
 msgid "Service <strong>%s</strong> successfully removed"
 msgstr ""
 
-#: modules/imaging/manage/service_show_used.php:111
+#: modules/imaging/infoPackage.inc.php:236
+msgid "Share a group of computers"
+msgstr ""
+
 #: modules/imaging/imaging/showtarget.php:126
+#: modules/imaging/manage/service_show_used.php:111
 msgid "Show all targets that use that image in their boot menu"
 msgstr "Показать пользователей, которые используют снимки в их меню загрузки"
 
-#: modules/imaging/infoPackage.inc.php:187
+#: modules/imaging/infoPackage.inc.php:305
 msgid "Show sync status"
 msgstr "Показать состояние синхронизации"
 
-#: modules/imaging/infoPackage.inc.php:183
+#: modules/imaging/infoPackage.inc.php:301
 msgid "Show target that use that image"
 msgstr "Показать пользователей, который используют снимки"
 
-#: modules/imaging/manage/ajaxMasterLevel2.php:69
 #: modules/imaging/imaging/ajaxImages.php:74
+#: modules/imaging/manage/ajaxMasterLevel2.php:69
 msgid "Show target using that image"
 msgstr "Показать пользователей, которые используют тот снимок"
 
@@ -1405,8 +1497,8 @@ msgstr ""
 msgid "Show where service is used"
 msgstr ""
 
-#: modules/imaging/manage/ajaxMasterLevel2.php:110
 #: modules/imaging/imaging/ajaxImages.php:149
+#: modules/imaging/manage/ajaxMasterLevel2.php:110
 msgid "Size (compressed)"
 msgstr "Размер (сжатый)"
 
@@ -1447,12 +1539,12 @@ msgstr "Своп"
 msgid "Synchronization state"
 msgstr "Состояние синхронизации"
 
-#: modules/imaging/manage/ajaxLogs.php:111
 #: modules/imaging/imaging/ajaxLogs.php:94
+#: modules/imaging/manage/ajaxLogs.php:111
 msgid "Target"
 msgstr "Пользователь"
 
-#: modules/imaging/imaging/configure.php:451
+#: modules/imaging/imaging/configure.php:159
 msgid "Target options"
 msgstr "Параметры пользователей"
 
@@ -1472,19 +1564,19 @@ msgid ""
 msgstr ""
 "Генерация ISO-образа мастера <strong>%s</strong> запущена в фоновом режиме."
 
-#: modules/imaging/imaging/tabs.php:121
+#: modules/imaging/imaging/tabs.php:126
 #, php-format
 msgid ""
 "The boot menu generation is currently running, please wait or reload the "
 "page %shere%s.<br/>"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:146
+#: modules/imaging/imaging/configure.php:391
 #, php-format
 msgid "The computer %s has correctly been unregistered from imaging"
 msgstr "Регистрация компьютер %s была успешно отменена со снимка "
 
-#: modules/imaging/imaging/configure.php:215
+#: modules/imaging/imaging/configure.php:447
 msgid ""
 "The computer either doesn't have a MAC address, either has more than one MAC "
 "address or the only NIC doesn't have any network mask. It can't be "
@@ -1494,12 +1586,12 @@ msgstr ""
 "только NIC не имеет маски сети. Он может быть зарегистрирован на модуль "
 "снимков."
 
-#: modules/imaging/imaging/configure.php:243
+#: modules/imaging/imaging/configure.php:526
 #, php-format
 msgid "The default values displayed here come from this %s's profile menu."
 msgstr "Значения по умолчанию, показанные здесь, исходят из меню профиля %s."
 
-#: modules/imaging/imaging/configure.php:232
+#: modules/imaging/imaging/configure.php:514
 msgid ""
 "The default values for the imaging parameters will be inherited from the "
 "imaging server that manages the entities of the computers that belongs to "
@@ -1509,7 +1601,7 @@ msgstr ""
 "снимков, который управляет объектами компьютеров, относящимися к данному "
 "профилю."
 
-#: modules/imaging/imaging/configure.php:230
+#: modules/imaging/imaging/configure.php:511
 msgid ""
 "The default values for the imaging parameters will be inherited from the "
 "imaging server that manages the entity that owns this computer."
@@ -1530,16 +1622,16 @@ msgstr ""
 msgid "The nomenclature is missing."
 msgstr "Не хватает номенклатуры."
 
-#: modules/imaging/imaging/configure.php:221
+#: modules/imaging/imaging/configure.php:452
 msgid "The profile can't be registered into the imaging module."
 msgstr "Профиль не может быть зарегистрирован на модуль снимков."
 
-#: modules/imaging/imaging/tabs.php:140
+#: modules/imaging/imaging/tabs.php:145
 #: modules/imaging/includes/ajaxcommon.inc.php:126
 msgid "The registering in the imaging server has failed."
 msgstr "Произошла ошибка при регистрации в сервере снимков."
 
-#: modules/imaging/imaging/tabs.php:210
+#: modules/imaging/imaging/tabs.php:215
 #, php-format
 msgid ""
 "The synchro is currently running, please wait or reload the page %shere%s."
@@ -1565,15 +1657,16 @@ msgstr "Произошла ошибка (это сообщение по умол
 msgid "This computer already exists."
 msgstr "Этот компьютер уже существует."
 
-#: modules/imaging/imaging/tabs.php:90
+#: modules/imaging/imaging/tabs.php:95
+#, fuzzy
 msgid ""
-"This computer can't be declared in the Imaging module, it's part of a "
-"profile, but the profile is not declared in the Imaging."
+"This computer can't be declared in the Imaging module, it's part of an "
+"imaging group, but this one is not declared in the Imaging."
 msgstr ""
 "Этот компьютер не может быть объявлен в модуле Imaging, это часть профиля, "
 "но профиль не объявлен в Imaging."
 
-#: modules/imaging/imaging/tabs.php:59
+#: modules/imaging/imaging/tabs.php:64
 #, php-format
 msgid "This computer is no longer registered : %s"
 msgstr "Этот компьютер не зарегистрирован: %s"
@@ -1619,13 +1712,13 @@ msgstr ""
 "Это значение уже занято, пожалуйста, введите только один элемент для каждого "
 "порядка."
 
-#: modules/imaging/manage/ajaxLogs.php:109
 #: modules/imaging/imaging/ajaxLogs.php:90
+#: modules/imaging/manage/ajaxLogs.php:109
 msgid "Timestamp"
 msgstr "Метка времени"
 
-#: modules/imaging/manage/master_iso.php:69
 #: modules/imaging/imaging/images_iso.php:83
+#: modules/imaging/manage/master_iso.php:69
 msgid "Title"
 msgstr "Заголовок"
 
@@ -1641,7 +1734,7 @@ msgstr ""
 "Images и Masters&quot;, после клика на кнопке редактирования на резервном "
 "снимке для его конвертации в мастер."
 
-#: modules/imaging/imaging/configure.php:208
+#: modules/imaging/imaging/configure.php:442
 msgid ""
 "To register, you must first set a default menu to the imaging server that "
 "manages the entities of the computers that belongs to this profile."
@@ -1649,7 +1742,7 @@ msgstr ""
 "Для регистрации, сначала вам необходимо установить меню по умолчанию на "
 "сервер снимков, который управляет компьютерами, принадлежащими этому профилю."
 
-#: modules/imaging/imaging/configure.php:206
+#: modules/imaging/imaging/configure.php:440
 msgid ""
 "To register, you must first set a default menu to the imaging server that "
 "manages the entity of this computer."
@@ -1657,13 +1750,13 @@ msgstr ""
 "Для регистрации, сначала вам необходимо установить меню по умолчанию на "
 "сервер снимков, который управляет этим компьютером."
 
-#: modules/imaging/imaging/configure.php:174
-#: modules/imaging/imaging/configure.php:503
+#: modules/imaging/imaging/configure.php:376
+#: modules/imaging/imaging/configure.php:631
 msgid "Unregister this computer"
 msgstr "Отменить регистрацию этого компьютера"
 
-#: modules/imaging/manage/service_show_used.php:147
 #: modules/imaging/imaging/showtarget.php:168
+#: modules/imaging/manage/service_show_used.php:147
 msgid "Unselect all"
 msgstr ""
 
@@ -1675,7 +1768,7 @@ msgstr "Служба выше"
 msgid "Up-to-date"
 msgstr "Своевременный"
 
-#: modules/imaging/imaging/configure.php:48
+#: modules/imaging/imaging/configure.php:219
 msgid "Update the NT boot loader if the hard disk has changed"
 msgstr "Обновить загрузчик NT загрузки, если изменился жесткий диск"
 
@@ -1683,12 +1776,12 @@ msgstr "Обновить загрузчик NT загрузки, если изм
 msgid "Uptime: "
 msgstr "Время работы: "
 
-#: modules/imaging/manage/master_edit.php:70
-#: modules/imaging/manage/service_edit.php:69
+#: modules/imaging/imaging/bootmenu.php:156
 #: modules/imaging/manage/ajaxConfiguration.php:183
 #: modules/imaging/manage/bootmenu_edit.php:101
+#: modules/imaging/manage/master_edit.php:70
 #: modules/imaging/manage/postinstall_edit.php:119
-#: modules/imaging/imaging/bootmenu.php:156
+#: modules/imaging/manage/service_edit.php:69
 msgid "Validate"
 msgstr "Проверка"
 
@@ -1706,7 +1799,7 @@ msgstr ""
 "в профиле, эти значения будут установлены на всех меню загрузки на "
 "компьютерах принадлежащих профилю."
 
-#: modules/imaging/imaging/configure.php:162
+#: modules/imaging/imaging/configure.php:364
 msgid ""
 "You are going to unregister this computer from the imaging module, are you "
 "sure you want to do that?"
@@ -1718,7 +1811,8 @@ msgstr ""
 msgid "You asked for an unexisting menu item."
 msgstr "Вы запросили несуществующий пункт меню."
 
-#: modules/imaging/imaging/configure.php:333
+#: modules/imaging/imaging/configure.php:492
+#: modules/imaging/imaging/configure.php:620
 msgid "You can switch to standard mode now if you want less parameters."
 msgstr ""
 "Вы можете переключиться на стандартный режим, если вы хотите меньше "
@@ -1781,13 +1875,13 @@ msgstr "доступные мастеры"
 msgid "minute"
 msgstr "минута"
 
+#: modules/imaging/imaging/configure.php:80
 #: modules/imaging/manage/ajaxConfiguration.php:125
-#: modules/imaging/imaging/configure.php:372
 msgid "mtftp"
 msgstr "mtftp"
 
+#: modules/imaging/imaging/configure.php:78
 #: modules/imaging/manage/ajaxConfiguration.php:124
-#: modules/imaging/imaging/configure.php:370
 msgid "nfs"
 msgstr "nfs"
 
@@ -1796,10 +1890,13 @@ msgstr "nfs"
 msgid "root"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:371
+#: modules/imaging/imaging/configure.php:79
 msgid "tftp"
 msgstr "tftp"
 
 #: modules/imaging/includes/ajaxcommon.inc.php:103
 msgid "the entity itself"
 msgstr "объект"
+
+#~ msgid "Register profile '%s'"
+#~ msgstr "Зарегистрировать профиль '%s'"

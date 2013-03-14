@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-04 10:49+0100\n"
+"POT-Creation-Date: 2013-03-14 15:54+0100\n"
 "PO-Revision-Date: 2013-02-08 08:50+0000\n"
 "Last-Translator: Jean-Christophe Vassort <jcvassort@mandriva.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/"
@@ -19,7 +19,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
-#: modules/pkgs/pkgs/edit.php:199 modules/pkgs/pkgs/add.php:193
+#: modules/pkgs/pkgs/add.php:148
+#, fuzzy
+msgid "<fill_package_name>"
+msgstr "Paketname"
+
+#: modules/pkgs/pkgs/add.php:198 modules/pkgs/pkgs/edit.php:199
 msgid "Add"
 msgstr ""
 
@@ -50,8 +55,8 @@ msgid ""
 "strong> directives in php.ini file to increase upload size."
 msgstr ""
 
-#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:137
-#: modules/pkgs/pkgs/add.php:296
+#: modules/pkgs/pkgs/add.php:298
+#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:135
 msgid ""
 "Change post_max_size and upload_max_filesize directives in php.ini file to "
 "increase upload size."
@@ -61,17 +66,33 @@ msgstr ""
 msgid "Choose package source"
 msgstr ""
 
-#: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:32
+#: modules/pkgs/includes/html.inc.php:61
+#: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:33
 msgid "Click here to select files"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:240 modules/pkgs/pkgs/add.php:154
+#: modules/pkgs/pkgs/edit.php:240
 msgid "Command : "
 msgstr "Command:"
 
-#: modules/pkgs/pkgs/edit.php:240 modules/pkgs/pkgs/add.php:154
+#: modules/pkgs/pkgs/add.php:159 modules/pkgs/pkgs/edit.php:240
 msgid "Command's name : "
 msgstr "Command Name:"
+
+#: modules/pkgs/pkgs/add.php:153
+msgid ""
+"Command: <br /><br /><span>Pulse will try to figure out how to install the "
+"uploaded files.<br /><br />\n"
+"            If the detection fails, it doesn't mean that the application "
+"cannot be installed using Pulse but that you'll have to figure out the "
+"proper command.<br /><br />\n"
+"            Many vendors (Acrobat, Flash, Skype) provide a MSI version of "
+"their applications which can be processed automatically by Pulse.<br />\n"
+"            You may also ask Google for the silent installation switches. If "
+"you're feeling lucky, here is a Google search that may help:<br /><br />\n"
+"            <a href=\"http://www.google.fr/#q=firefox+silent+install"
+"\">Google: 'file'+silent+install</a></span>"
+msgstr ""
 
 #: modules/pkgs/infoPackage.inc.php:70
 #: modules/pkgs/pkgs/ajaxPackageList.php:79
@@ -83,9 +104,9 @@ msgstr "Paket löschen"
 msgid "Delete this package"
 msgstr "dieses Paket löschen"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:69 modules/pkgs/pkgs/edit.php:236
-#: modules/pkgs/pkgs/add.php:150
+#: modules/pkgs/pkgs/add.php:150 modules/pkgs/pkgs/ajaxPackageList.php:69
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
+#: modules/pkgs/pkgs/edit.php:236
 msgid "Description"
 msgstr "Beschreibung"
 
@@ -103,7 +124,7 @@ msgstr "Dateiassoziierung fehlgeschlagen"
 msgid "Failed to associate files%s"
 msgstr "Dateiassoziierung fehlgeschlagen %s"
 
-#: modules/pkgs/pkgs/add.php:139 modules/pkgs/pkgs/add.php:270
+#: modules/pkgs/pkgs/add.php:139 modules/pkgs/pkgs/add.php:273
 msgid "Files directory"
 msgstr ""
 
@@ -112,8 +133,8 @@ msgstr ""
 msgid "Files successfully associated with package <b>%s (%s)</b>%s"
 msgstr "Dateien erfolgreich Verbinden mit Paket <b>t%s (%s)</b> %s"
 
-#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:137
-#: modules/pkgs/pkgs/add.php:296
+#: modules/pkgs/pkgs/add.php:298
+#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:135
 #, php-format
 msgid "Files upload (<b><u title='%s'>%sM max</u></b>)"
 msgstr ""
@@ -131,7 +152,7 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:248 modules/pkgs/pkgs/add.php:162
+#: modules/pkgs/pkgs/add.php:167 modules/pkgs/pkgs/edit.php:248
 msgid "Need a reboot ?"
 msgstr "Braucht einen Neustart?"
 
@@ -139,12 +160,12 @@ msgstr "Braucht einen Neustart?"
 msgid "No files uploaded"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:178 modules/pkgs/pkgs/edit.php:213
-#: modules/pkgs/pkgs/add.php:134
+#: modules/pkgs/pkgs/add.php:134 modules/pkgs/pkgs/edit.php:178
+#: modules/pkgs/pkgs/edit.php:213
 msgid "Package API"
 msgstr "Paket API"
 
-#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:103
+#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:102
 msgid "Package API temporary directory is empty"
 msgstr ""
 
@@ -185,11 +206,11 @@ msgstr "Paket Version"
 msgid "Packages"
 msgstr "Pakete"
 
-#: modules/pkgs/pkgs/localSidebar.php:27 modules/pkgs/pkgs/index.php:29
+#: modules/pkgs/pkgs/index.php:29 modules/pkgs/pkgs/localSidebar.php:27
 msgid "Packages list"
 msgstr "Pakete Liste"
 
-#: modules/pkgs/pkgs/pending.php:29 modules/pkgs/pkgs/localSidebar.php:29
+#: modules/pkgs/pkgs/localSidebar.php:29 modules/pkgs/pkgs/pending.php:29
 msgid "Pending packages list"
 msgstr "noch nicht erledigt Pakete Liste"
 
@@ -231,7 +252,8 @@ msgstr "Das Paket konnte nicht gelöscht werden"
 msgid "The package has been deleted."
 msgstr "Das Paket wurde gelöscht."
 
-#: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:33
+#: modules/pkgs/includes/html.inc.php:42
+#: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:34
 msgid "Upload Queued Files"
 msgstr ""
 
@@ -239,7 +261,7 @@ msgstr ""
 msgid "Upload from this web page"
 msgstr ""
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:70 modules/pkgs/pkgs/add.php:149
+#: modules/pkgs/pkgs/add.php:149 modules/pkgs/pkgs/ajaxPackageList.php:70
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
 msgid "Version"
 msgstr "Version"
