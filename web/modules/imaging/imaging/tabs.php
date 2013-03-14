@@ -92,7 +92,7 @@ if (isset($params['uuid'])) {
         $p->display();
         # when the computer is in a profile, but the profile is not registered
         # display an information message
-        $msg = _T("This computer can't be declared in the Imaging module, it's part of an imaging group, but this one is not declared in the Imaging.", "imaging");
+        $msg = _T("This computer can't be declared in the imaging module: it's already part of a broken imaging group.", "imaging");
         $t1 = new TitleElement($msg, 3);
         $t1->display();
         # give a link to the profile registering

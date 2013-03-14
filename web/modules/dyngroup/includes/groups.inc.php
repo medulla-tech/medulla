@@ -203,7 +203,7 @@ $warningMessage = False;
 if (count($machinesInProfile) > 0) {
     $warningMessage = True;
     print '<p>';
-    print _T('Be advised that computers listed bellow are already part of another imaging group.', 'dyngroup');
+    print _T('Computers listed below are already part of another imaging group.', 'dyngroup');
     echo '<ul>';
     foreach($machinesInProfile as $machineUuid => $group) {
         printf(_T('<li>%s is part of <a href="%s">%s</a></li>'),
@@ -218,7 +218,7 @@ $standAloneImagingRegistered = array_diff($willBeUnregistered, array_keys($machi
 if (count($standAloneImagingRegistered) > 0) {
     $warningMessage = True;
     print '<p>';
-    print _T('Be advised that computers listed bellow are already stand-alone registered into imaging module', 'dyngroup');
+    print _T('Computers listed below are already part of another imaging group.', 'dyngroup');
     echo '<ul>';
     foreach($standAloneImagingRegistered as $machineUuid) {
         printf(_T('<li>%s</li>'), $listOfMembers[$machineUuid]['hostname']);
