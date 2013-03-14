@@ -310,6 +310,9 @@ class InputTpl extends AbstractTpl{
         if (!isset($arrParam['disabled'])) {
             $arrParam['disabled'] = '';
         }
+        if (!isset($arrParam['placeholder'])) {
+            $arrParam['placeholder'] = '';
+        }
         print '<span id="container_input_'.$this->name.'"><input name="'.$this->name.'" id="'.$this->name.'" type="' . $this->fieldType . '" size="'.$this->size.'" value="'.$arrParam["value"].'" placeholder="'.$arrParam["placeholder"].'" '.$arrParam["disabled"].' autocomplete="off" /></span>';
         print '<script type="text/javascript">
                 $(\''.$this->name.'\').validate = function() {';
