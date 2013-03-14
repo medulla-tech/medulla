@@ -221,7 +221,7 @@ if (count($standAloneImagingRegistered) > 0) {
     print _T('Computers listed below are already part of another imaging group.', 'dyngroup');
     echo '<ul>';
     foreach($standAloneImagingRegistered as $machineUuid) {
-        printf(_T('<li>%s</li>'), $listOfMembers[$machineUuid]['hostname']);
+        printf('<li>%s</li>', $listOfMembers[$machineUuid]['hostname']);
     }
     echo '</ul>';
     print '</p>';
