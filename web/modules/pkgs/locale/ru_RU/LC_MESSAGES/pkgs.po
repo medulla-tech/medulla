@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-14 15:54+0100\n"
+"POT-Creation-Date: 2013-03-14 16:04+0100\n"
 "PO-Revision-Date: 2013-02-08 08:50+0000\n"
 "Last-Translator: Jean-Christophe Vassort <jcvassort@mandriva.com>\n"
 "Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/"
@@ -25,12 +25,11 @@ msgstr ""
 msgid "<fill_package_name>"
 msgstr "Имя пакета"
 
-#: modules/pkgs/pkgs/add.php:198 modules/pkgs/pkgs/edit.php:199
+#: modules/pkgs/pkgs/add.php:199
 msgid "Add"
 msgstr ""
 
-#: modules/pkgs/infoPackage.inc.php:46 modules/pkgs/pkgs/edit.php:112
-#: modules/pkgs/pkgs/localSidebar.php:28
+#: modules/pkgs/infoPackage.inc.php:46 modules/pkgs/pkgs/localSidebar.php:28
 msgid "Add a package"
 msgstr "Добавить пакет"
 
@@ -42,22 +41,12 @@ msgstr ""
 msgid "Already uploaded on the server"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:280
-msgid "Associate files"
-msgstr "Объединить файлы"
-
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:50
 msgid "Associate package"
 msgstr "Объединить пакет"
 
-#: modules/pkgs/pkgs/edit.php:188
-msgid ""
-"Change <strong>post_max_size</strong> and <strong>upload_max_filesize</"
-"strong> directives in php.ini file to increase upload size."
-msgstr ""
-
-#: modules/pkgs/pkgs/add.php:298
 #: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:135
+#: modules/pkgs/pkgs/add.php:299
 msgid ""
 "Change post_max_size and upload_max_filesize directives in php.ini file to "
 "increase upload size."
@@ -72,28 +61,18 @@ msgstr ""
 msgid "Click here to select files"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:240
+#: modules/pkgs/pkgs/edit.php:165
 msgid "Command : "
 msgstr "Команда: "
 
-#: modules/pkgs/pkgs/add.php:159 modules/pkgs/pkgs/edit.php:240
+#: modules/pkgs/pkgs/add.php:161 modules/pkgs/pkgs/edit.php:165
 msgid "Command's name : "
 msgstr "Название команды: "
 
 #: modules/pkgs/pkgs/add.php:153
-msgid ""
-"Command: <br /><br /><span>Pulse will try to figure out how to install the "
-"uploaded files.<br /><br />\n"
-"            If the detection fails, it doesn't mean that the application "
-"cannot be installed using Pulse but that you'll have to figure out the "
-"proper command.<br /><br />\n"
-"            Many vendors (Acrobat, Flash, Skype) provide a MSI version of "
-"their applications which can be processed automatically by Pulse.<br />\n"
-"            You may also ask Google for the silent installation switches. If "
-"you're feeling lucky, here is a Google search that may help:<br /><br />\n"
-"            <a href=\"http://www.google.fr/#q=firefox+silent+install"
-"\">Google: 'file'+silent+install</a></span>"
-msgstr ""
+#, fuzzy
+msgid "Command:"
+msgstr "Команда: "
 
 #: modules/pkgs/infoPackage.inc.php:70
 #: modules/pkgs/pkgs/ajaxPackageList.php:79
@@ -105,37 +84,42 @@ msgstr "Удалить пакет"
 msgid "Delete this package"
 msgstr "Удалить этот пакет"
 
-#: modules/pkgs/pkgs/add.php:150 modules/pkgs/pkgs/ajaxPackageList.php:69
+#: modules/pkgs/pkgs/ajaxPackageList.php:69
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
-#: modules/pkgs/pkgs/edit.php:236
+#: modules/pkgs/pkgs/add.php:150 modules/pkgs/pkgs/edit.php:161
 msgid "Description"
 msgstr "Описание"
 
 #: modules/pkgs/infoPackage.inc.php:48
-#: modules/pkgs/pkgs/ajaxPackageList.php:78 modules/pkgs/pkgs/edit.php:141
+#: modules/pkgs/pkgs/ajaxPackageList.php:78 modules/pkgs/pkgs/edit.php:111
 msgid "Edit a package"
 msgstr "Редактировать пакет"
 
-#: modules/pkgs/pkgs/add.php:95 modules/pkgs/pkgs/associate_files.php:75
+#: modules/pkgs/pkgs/edit.php:31
+#, fuzzy
+msgid "Edit package"
+msgstr "Редактировать пакет"
+
+#: modules/pkgs/pkgs/associate_files.php:75 modules/pkgs/pkgs/add.php:95
 msgid "Failed to associate files"
 msgstr "Не удалось объединить файлы"
 
-#: modules/pkgs/pkgs/add.php:92 modules/pkgs/pkgs/associate_files.php:72
+#: modules/pkgs/pkgs/associate_files.php:72 modules/pkgs/pkgs/add.php:92
 #, php-format
 msgid "Failed to associate files%s"
 msgstr "Не удалось объединить файлы %s"
 
-#: modules/pkgs/pkgs/add.php:139 modules/pkgs/pkgs/add.php:273
+#: modules/pkgs/pkgs/add.php:139 modules/pkgs/pkgs/add.php:274
 msgid "Files directory"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:84 modules/pkgs/pkgs/associate_files.php:64
+#: modules/pkgs/pkgs/associate_files.php:64 modules/pkgs/pkgs/add.php:84
 #, php-format
 msgid "Files successfully associated with package <b>%s (%s)</b>%s"
 msgstr "Файлы успешно объединены с пакетом  <b>%s (%s)</b>%s"
 
-#: modules/pkgs/pkgs/add.php:298
 #: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:135
+#: modules/pkgs/pkgs/add.php:299
 #, php-format
 msgid "Files upload (<b><u title='%s'>%sM max</u></b>)"
 msgstr ""
@@ -153,16 +137,11 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:167 modules/pkgs/pkgs/edit.php:248
+#: modules/pkgs/pkgs/add.php:169 modules/pkgs/pkgs/edit.php:173
 msgid "Need a reboot ?"
 msgstr "Нужна перезагрузка?"
 
-#: modules/pkgs/pkgs/edit.php:169
-msgid "No files uploaded"
-msgstr ""
-
-#: modules/pkgs/pkgs/add.php:134 modules/pkgs/pkgs/edit.php:178
-#: modules/pkgs/pkgs/edit.php:213
+#: modules/pkgs/pkgs/add.php:134 modules/pkgs/pkgs/edit.php:141
 msgid "Package API"
 msgstr "API пакета"
 
@@ -174,11 +153,11 @@ msgstr ""
 msgid "Package Creation"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:102
+#: modules/pkgs/pkgs/edit.php:104
 msgid "Package failed to save"
 msgstr "Не удалось сохранить пакет"
 
-#: modules/pkgs/pkgs/edit.php:234
+#: modules/pkgs/pkgs/edit.php:159
 msgid "Package label"
 msgstr "Ярлык пакета"
 
@@ -195,11 +174,11 @@ msgstr "Размер пакета"
 msgid "Package source"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:68
+#: modules/pkgs/pkgs/edit.php:70
 msgid "Package successfully edited"
 msgstr "Пакет успешно отредактирован"
 
-#: modules/pkgs/pkgs/edit.php:235
+#: modules/pkgs/pkgs/edit.php:160
 msgid "Package version"
 msgstr "Версия пакета"
 
@@ -219,14 +198,22 @@ msgstr "Список ожидающих пакетов"
 msgid "Please contact your administrator."
 msgstr "Пожалуйста, свяжитесь с вашим администратором."
 
+#: modules/pkgs/pkgs/add.php:154
+msgid ""
+"Pulse will try to figure out how to install the uploaded files.\\n\\n\n"
+"If the detection fails, it doesn't mean that the application cannot be "
+"installed using Pulse but that you'll have to figure out the proper command."
+"\\n\\n\n"
+"Many vendors (Acrobat, Flash, Skype) provide a MSI version of their "
+"applications which can be processed automatically by Pulse.\\n\n"
+"You may also ask Google for the silent installation switches. If you're "
+"feeling lucky, here is a Google search that may help:\\n\\n\n"
+"<a href=\"@@GOOGLE_SEARCH_URL@@\">Google search</a>"
+msgstr ""
+
 #: modules/pkgs/infoPackage.inc.php:51
 msgid "See pending packages"
 msgstr "Просмотреть ожидающие пакеты"
-
-#: modules/pkgs/pkgs/edit.php:188
-#, php-format
-msgid "Select files you want to import (%sM max)"
-msgstr ""
 
 #: modules/pkgs/infoPackage.inc.php:44
 msgid "Show all packages"
@@ -262,7 +249,11 @@ msgstr ""
 msgid "Upload from this web page"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:149 modules/pkgs/pkgs/ajaxPackageList.php:70
+#: modules/pkgs/pkgs/ajaxPackageList.php:70
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
+#: modules/pkgs/pkgs/add.php:149
 msgid "Version"
 msgstr "Версия"
+
+#~ msgid "Associate files"
+#~ msgstr "Объединить файлы"
