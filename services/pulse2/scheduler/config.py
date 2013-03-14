@@ -386,5 +386,11 @@ class PreferredNetworkParser :
             network = []
             for ip_slash_mask in value.split() :
                 ip, mask = ip_slash_mask.split("/")
-                network.append((ip, mask))
+                net_detect = NetworkDetect(ip, mask)
+                if ip != net_detect.network :
+                    log.warn("Incorrect network address '%s' for netmask '%s', correcting to: '%s'" % 
+                            (ip, mask, net_detect.network))
+                    network.append((net_detect.network, mask))
+                else :
+                    network.append((ip, mask))
             return network
