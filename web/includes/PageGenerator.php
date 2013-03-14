@@ -2247,8 +2247,9 @@ class HtmlContainer {
 
 class Div extends HtmlContainer {
 
-    function Div($options = array()) {
+    function Div($options = array(), $class = Null) {
         $this->HtmlContainer();
+        $this->name = $class;
         $this->options = $options;
         $this->display = True;
     }
@@ -2567,6 +2568,7 @@ class TitleElement extends HtmlElement {
 
 class SpanElement extends HtmlElement {
     function SpanElement($content, $class = Null){
+        $this->name = $class;
         $this->content = $content;
         $this->class = $class;
     }
