@@ -33,6 +33,16 @@ td.package {
     font-size: 1.4em;
 }
 
+p.command-helper {
+    float: right;
+    width: 250px;
+}
+
+textarea {
+  width: 560px;
+  height: 220px;
+}
+
 .btnPrimary {
     margin: 10px 0 0 40%;
 }

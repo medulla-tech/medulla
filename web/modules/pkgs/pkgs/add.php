@@ -150,8 +150,13 @@ else {
         array('description', _T("Description", "pkgs"), array()),
     );
 
+    $commandText = _T('<p class="command-helper">Pulse will try to figure out how to install the uploaded files.<br /><br />
+            If the detection fails, it doesn\'t mean that the application cannot be installed using Pulse but that you\'ll have to figure out the proper command.<br /><br />
+            Many vendors (Acrobat, Flash, Skype) provide a MSI version of their applications which can be processed automatically by Pulse.<br />
+            You may also ask Google for the silent installation switches. If you\'re feeling lucky, here is a Google search that may help:<br /><br />
+            <a href="http://www.google.fr/#q=firefox+silent+install">Google: \'file\'+silent+install</a></p>', 'pkgs');
     $cmds = array(
-        array('command', _T('Command\'s name : ', 'pkgs'), _T('Command : ', 'pkgs')),/*
+        array('command', _T('Command\'s name : ', 'pkgs'), $commandText),/*
         array('installInit', _T('installInit', 'pkgs'), _T('Install Init', 'pkgs')),
         array('preCommand', _T('preCommand', 'pkgs'), _T('Pre Command', 'pkgs')),
         array('postCommandFailure', _T('postCommandFailure', 'pkgs'), _T('postCommandFailure', 'pkgs')),
