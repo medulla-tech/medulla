@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-14 16:04+0100\n"
+"POT-Creation-Date: 2013-03-14 16:26+0100\n"
 "PO-Revision-Date: 2013-02-08 09:41+0000\n"
 "Last-Translator: Jean-Christophe Vassort <jcvassort@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
@@ -46,8 +46,8 @@ msgstr "Déjà présent sur le serveur"
 msgid "Associate package"
 msgstr "Associer des fichiers à un package"
 
-#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:135
 #: modules/pkgs/pkgs/add.php:299
+#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:135
 msgid ""
 "Change post_max_size and upload_max_filesize directives in php.ini file to "
 "increase upload size."
@@ -87,9 +87,9 @@ msgstr "Supprimer un package"
 msgid "Delete this package"
 msgstr "Supprimer ce package"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:69
+#: modules/pkgs/pkgs/add.php:150 modules/pkgs/pkgs/ajaxPackageList.php:69
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
-#: modules/pkgs/pkgs/add.php:150 modules/pkgs/pkgs/edit.php:161
+#: modules/pkgs/pkgs/edit.php:161
 msgid "Description"
 msgstr "Description"
 
@@ -103,11 +103,11 @@ msgstr "Éditer un package"
 msgid "Edit package"
 msgstr "Éditer un package"
 
-#: modules/pkgs/pkgs/associate_files.php:75 modules/pkgs/pkgs/add.php:95
+#: modules/pkgs/pkgs/add.php:95 modules/pkgs/pkgs/associate_files.php:75
 msgid "Failed to associate files"
 msgstr "L'association de fichiers a échoué"
 
-#: modules/pkgs/pkgs/associate_files.php:72 modules/pkgs/pkgs/add.php:92
+#: modules/pkgs/pkgs/add.php:92 modules/pkgs/pkgs/associate_files.php:72
 #, php-format
 msgid "Failed to associate files%s"
 msgstr "L'association de fichiers a échoué %s"
@@ -116,14 +116,14 @@ msgstr "L'association de fichiers a échoué %s"
 msgid "Files directory"
 msgstr "Répertoire des fichiers"
 
-#: modules/pkgs/pkgs/associate_files.php:64 modules/pkgs/pkgs/add.php:84
+#: modules/pkgs/pkgs/add.php:84 modules/pkgs/pkgs/associate_files.php:64
 #, php-format
 msgid "Files successfully associated with package <b>%s (%s)</b>%s"
 msgstr ""
 "Les fichiers ont été associés avec le package <b>%s (%s)</b> avec succès.%s"
 
-#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:135
 #: modules/pkgs/pkgs/add.php:299
+#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:135
 #, php-format
 msgid "Files upload (<b><u title='%s'>%sM max</u></b>)"
 msgstr "Envoi de fichiers (<b><u title='%s'>%sM max</u></b>)"
@@ -253,9 +253,8 @@ msgstr "Transmettre les fichiers en attente"
 msgid "Upload from this web page"
 msgstr "Envoyer depuis cette page"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:70
+#: modules/pkgs/pkgs/add.php:149 modules/pkgs/pkgs/ajaxPackageList.php:70
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
-#: modules/pkgs/pkgs/add.php:149
 msgid "Version"
 msgstr "Version"
 
