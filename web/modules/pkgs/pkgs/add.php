@@ -170,26 +170,25 @@ else {
     foreach ($fields as $p) {
         $f->add(
             new TrFormElement($p[1], new InputTpl($p[0])),
-            array_merge(array("value" => $package[$p[0]]), $p[2])
+            array_merge(array("value" => ''), $p[2])
         );
     }
 
     foreach ($options as $p) {
-        $op = ($package[$p[0]] == 1 || $package[$p[0]] == '1' || $package[$p[0]] === 'enable');
         $f->add(
             new TrFormElement($p[1], new CheckboxTpl($p[0])),
-            array("value" => ($op ? 'checked' : ''))
+            array("value" => '')
         );
     }
 
     foreach ($cmds as $p) {
         $f->add(
             new HiddenTpl($p[0].'name'),
-            array("value" => $package[$p[0]]['name'], "hide" => True)
+            array("value" => '', "hide" => True)
         );
         $f->add(
             new TrFormElement($p[2], new TextareaTpl($p[0].'cmd')),
-            array("value" => htmlspecialchars($package[$p[0]]['command']))
+            array("value" => '')
         );
     }
 

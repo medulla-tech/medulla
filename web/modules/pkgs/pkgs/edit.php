@@ -28,6 +28,10 @@ require("graph/navbar.inc.php");
 require_once("modules/pkgs/includes/xmlrpc.php");
 require_once("modules/pkgs/includes/functions.php");
 
+$p = new PageGenerator(_T("Edit package", "pkgs"));
+$p->setSideMenu($sidemenu);
+$p->display();
+
 // var formating
 $_GET['p_api'] = isset($_GET['p_api']) ? $_GET['p_api'] : "";
 
@@ -39,13 +43,11 @@ $package = array();
 
 if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
     $p_api_id = $_POST['p_api'];
-    $filename = $_POST['filename'];
-    $random_dir = $_POST['random_dir'];
     $need_assign = False;
     if ($_GET["action"]=="add") {
         $need_assign = True;
     }
-    foreach (array('id', 'label', 'version', 'description', 'mode') as $post) {
+    foreach (array('id', 'label', 'version', 'description') as $post) {
         $package[$post] = $_POST[$post];
     }
     foreach (array('reboot') as $post) {
@@ -91,7 +93,7 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
                 delete_directory($upload_tmp_dir . '/' . $random_dir);
 
                 if (!isXMLRPCError() and $push_package_result) {
-                    header("Location: " . urlStrRedirect("pkgs/pkgs/associate_files", array('p_api'=>base64_encode($p_api_id), 'random_dir'=>base64_encode($random_dir), 'pid'=>base64_encode($ret[3]['id']), 'plabel'=>base64_encode($ret[3]['label']), 'pversion'=>base64_encode($ret[3]['version']), 'mode'=>$_POST['mode'])));
+                    header("Location: " . urlStrRedirect("pkgs/pkgs/associate_files", array('p_api'=>base64_encode($p_api_id), 'random_dir'=>base64_encode($random_dir), 'pid'=>base64_encode($ret[3]['id']), 'plabel'=>base64_encode($ret[3]['label']), 'pversion'=>base64_encode($ret[3]['version']))));
                     exit;
                 }
             }
@@ -105,39 +107,7 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
 
 $p_api_id = base64_decode($_GET['p_api']);
 
-
-
-//title differ with action
-if ($_GET["action"]=="add") {
-    $title = _T("Add a package", "pkgs");
-    $activeItem = "add";
-    $formElt = new DomainInputTpl("id");
-
-    $res = getUserPackageApi();
-    $list_val = $list = array();
-    if (!isset($_SESSION['PACKAGEAPI'])) { $_SESSION['PACKAGEAPI'] = array(); }
-    foreach ($res as $mirror) {
-        $list_val[$mirror['uuid']] = base64_encode($mirror['uuid']);
-        $list[$mirror['uuid']] = $mirror['mountpoint'];
-        $_SESSION['PACKAGEAPI'][$mirror['uuid']] = $mirror;
-    }
-
-    if (count($list) > 1) {
-        // If more than one package api, $selectpapi is a list...
-        $multipapi = True;
-        $selectpapi = new SelectItem('p_api');
-        $selectpapi->setElements($list);
-        $selectpapi->setElementsVal($list_val);
-    }
-    else {
-        // ...else it is an HiddenTpl
-        $multipapi = False;
-        $selectpapi = new HiddenTpl('p_api');
-        $p_api_id = array_keys($list_val);
-        $p_api_id = $list_val[$p_api_id[0]];
-    }
-
-} elseif (count($package) == 0 ) {
+if (count($package) == 0 ) {
     $title = _T("Edit a package", "pkgs");
     $activeItem = "index";
     # get existing package
@@ -159,130 +129,79 @@ if ($_GET["action"]=="add") {
  * Page form
  */
 
-$p = new PageGenerator($title);
-$sidemenu->forceActiveItem($activeItem);
-$p->setSideMenu($sidemenu);
-$p->display();
+// display an edit package form (description, version, ...)
+$f = new ValidatingForm();
+$f->push(new Table());
 
-if ($_GET['action'] == 'add' and strlen($_POST['random_dir'] == 0)) {
-    if (isset($_POST['random_dir']) and strlen($_POST['random_dir']) == 0) {
-        new NotifyWidgetFailure(_T('No files uploaded'), "pkgs");
-    }
-    // first page when we add a package
-    // display an upload form
-    $f = new ValidatingForm(array('enctype'=>"multipart/form-data"));
-    $f->push(new Table());
+$p_api_id = ($_GET['p_api']) ? base64_decode($_GET['p_api']) : base64_decode($_POST['p_api']);
+$selectpapi = new HiddenTpl('p_api');
 
-    if ($multipapi) {
-        $f->add(
-            new TrFormElement(_T("Package API", "pkgs"), $selectpapi),
-            array("value" => $p_api_id, "required" => True)
-        );
-    }
-    else {
-        $f->add(
-            $selectpapi,
-            array("value" => $p_api_id, "required" => True, "hide" => True)
-        );
-    }
-    $f->add( new TrFormElement(sprintf(_T("Select files you want to import (%sM max)", "pkgs"), get_php_max_upload_size()), new MultiFileTpl('filepackage'), array("required" => True, "tooltip" => _T("Change <strong>post_max_size</strong> and <strong>upload_max_filesize</strong> directives in php.ini file to increase upload size.", "pkgs"))));
-
-    $f->add(new HiddenTpl("id"), array("value" => $package['id'], "hide" => True));
-
-    if ($_GET["action"]=="add") {
-        $f->add(new HiddenTpl("mode"), array("value" => "creation", "hide" => True));
-    }
-
-
-    $f->pop();
-
-    $f->addValidateButton("bimport", _T("Add", "pkgs"));
-
+if ($p_api_number > 1) {
+    $f->add(
+        new TrFormElement(_T("Package API", "pkgs"), $selectpapi),
+        array("value" => $p_api_id, "hide" => $hide)
+    );
 }
 else {
-    // second page: display an edit package form (description, version, ...)
-    // this form is also displayed when a package is edited
-    $f = new ValidatingForm();
-    $f->push(new Table());
-
-    $p_api_id = ($_GET['p_api']) ? base64_decode($_GET['p_api']) : base64_decode($_POST['p_api']);
-    $selectpapi = new HiddenTpl('p_api');
-
-    if ($multipapi or ($p_api_number > 1)) {
-        $f->add(
-            new TrFormElement(_T("Package API", "pkgs"), $selectpapi),
-            array("value" => $p_api_id, "hide" => $hide)
-        );
-    }
-    else {
-        $f->add(
-            $selectpapi,
-            array("value" => $p_api_id, "hide" => True)
-        );
-    }
-
-    $f->add(new HiddenTpl("id"), array("value" => $package['id'], "hide" => True));
-
-    $f->add(new HiddenTpl("filename"), array("value" => $_FILES['filepackage']['name'], "hide" => True));
-    $f->add(new HiddenTpl("random_dir"), array("value" => $_POST['random_dir'], "hide" => True));
-
-    if ($_GET["action"]=="add") {
-        $f->add(new HiddenTpl("mode"), array("value" => "creation", "hide" => True));
-    }
-
-    $fields = array(
-        array("label", _T("Package label", "pkgs"), array("required" => True)),
-        array("version", _T("Package version", "pkgs"), array("required" => True)),
-        array('description', _T("Description", "pkgs"), array()),
+    $f->add(
+        $selectpapi,
+        array("value" => $p_api_id, "hide" => True)
     );
-
-    $cmds = array(
-        array('command', _T('Command\'s name : ', 'pkgs'), _T('Command : ', 'pkgs')),/*
-        array('installInit', _T('installInit', 'pkgs'), _T('Install Init', 'pkgs')),
-        array('preCommand', _T('preCommand', 'pkgs'), _T('Pre Command', 'pkgs')),
-        array('postCommandFailure', _T('postCommandFailure', 'pkgs'), _T('postCommandFailure', 'pkgs')),
-        array('postCommandSuccess', _T('postCommandSuccess', 'pkgs'), _T('postCommandSuccess', 'pkgs')) //*/
-    );
-
-    $options = array(
-        array('reboot', _T('Need a reboot ?', 'pkgs'))
-    );
-
-    foreach ($fields as $p) {
-        $f->add(
-            new TrFormElement($p[1], new InputTpl($p[0])),
-            array_merge(array("value" => $package[$p[0]]), $p[2])
-        );
-    }
-
-    foreach ($options as $p) {
-        $op = ($package[$p[0]] == 1 || $package[$p[0]] == '1' || $package[$p[0]] === 'enable');
-        $f->add(
-            new TrFormElement($p[1], new CheckboxTpl($p[0])),
-            array("value" => ($op ? 'checked' : ''))
-        );
-    }
-
-    foreach ($cmds as $p) {
-        $f->add(
-            new HiddenTpl($p[0].'name'),
-            array("value" => $package[$p[0]]['name'], "hide" => True)
-        );
-        $f->add(
-            new TrFormElement($p[2], new TextareaTpl($p[0].'cmd')),
-            array("value" => htmlspecialchars($package[$p[0]]['command']))
-        );
-    }
-
-    $f->pop();
-
-    if ($_GET["action"] == "add") {
-        $f->addButton('bassoc', _T("Associate files", "pkgs"), "btnPrimary");
-    }
-    else {
-        $f->addValidateButton("bcreate");
-    }
 }
+
+$f->add(new HiddenTpl("id"), array("value" => $package['id'], "hide" => True));
+
+if ($_GET["action"]=="add") {
+    $f->add(new HiddenTpl("mode"), array("value" => "creation", "hide" => True));
+}
+
+$fields = array(
+    array("label", _T("Package label", "pkgs"), array("required" => True)),
+    array("version", _T("Package version", "pkgs"), array("required" => True)),
+    array('description', _T("Description", "pkgs"), array()),
+);
+
+$cmds = array(
+    array('command', _T('Command\'s name : ', 'pkgs'), _T('Command : ', 'pkgs')),/*
+    array('installInit', _T('installInit', 'pkgs'), _T('Install Init', 'pkgs')),
+    array('preCommand', _T('preCommand', 'pkgs'), _T('Pre Command', 'pkgs')),
+    array('postCommandFailure', _T('postCommandFailure', 'pkgs'), _T('postCommandFailure', 'pkgs')),
+    array('postCommandSuccess', _T('postCommandSuccess', 'pkgs'), _T('postCommandSuccess', 'pkgs')) //*/
+);
+
+$options = array(
+    array('reboot', _T('Need a reboot ?', 'pkgs'))
+);
+
+foreach ($fields as $p) {
+    $f->add(
+        new TrFormElement($p[1], new InputTpl($p[0])),
+        array_merge(array("value" => $package[$p[0]]), $p[2])
+    );
+}
+
+foreach ($options as $p) {
+    $op = ($package[$p[0]] == 1 || $package[$p[0]] == '1' || $package[$p[0]] === 'enable');
+    $f->add(
+        new TrFormElement($p[1], new CheckboxTpl($p[0])),
+        array("value" => ($op ? 'checked' : ''))
+    );
+}
+
+foreach ($cmds as $p) {
+    $f->add(
+        new HiddenTpl($p[0].'name'),
+        array("value" => $package[$p[0]]['name'], "hide" => True)
+    );
+    $f->add(
+        new TrFormElement($p[2], new TextareaTpl($p[0].'cmd')),
+        array("value" => htmlspecialchars($package[$p[0]]['command']))
+    );
+}
+
+$f->pop();
+
+$f->addValidateButton("bcreate");
 
 $f->display();
 
