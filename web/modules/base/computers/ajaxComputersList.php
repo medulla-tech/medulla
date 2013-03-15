@@ -111,8 +111,8 @@ td:hover {
 </style>
 <script type="text/javascript">
 $$('td').invoke('observe', 'click', function(event) {
-    var tdValue = this.innerHTML.stripTags()
-    $('param').value = tdValue;
+    var tdValue = this.innerHTML.stripTags();
+    $('param').value = tdValue.replace(/&nbsp;/g, '');
     pushSearch();
 });
 </script>
