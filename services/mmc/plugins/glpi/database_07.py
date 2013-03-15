@@ -1640,8 +1640,7 @@ class Glpi07(DyngroupDatabaseHelper):
         failure = [True, True]
         for iface in netiface:
             if 'ifaddr' in iface and iface['ifaddr'] \
-               and 'gateway' in iface and iface['gateway'] \
-               and 'netmask' in iface and iface['netmask'] :
+               and 'ifmac' in iface and iface['ifmac']:
                 if iface['gateway'] == None:
                     ret_ifmac.append(iface['ifmac'])
                     ret_ifaddr.append(iface['ifaddr'])
@@ -1673,10 +1672,6 @@ class Glpi07(DyngroupDatabaseHelper):
                         else:
                             ret_domain.insert(idx_good, '')
                         failure[1] = False
-            elif 'ifmac' in iface and iface['ifmac']:
-                # We need ifmac for imaging registration, so always fill ret_ifmac list
-                ret_ifmac.append(iface['ifmac'])
-                ret_networkUuids.append(iface['uuid'])
 
         if failure[0]:
             if failure[1]:
