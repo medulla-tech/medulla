@@ -71,9 +71,19 @@ class MultiFileTpl extends AbstractTpl {
 
                     new Ajax.Request(url, {
                         onSuccess: function(response) {
-                            $(\'label\').value = response.headerJSON.label;
+                            var googleFileName = \'\'
                             $(\'version\').value = response.headerJSON.version;
                             $(\'commandcmd\').value = response.headerJSON.commandcmd;
+                            var file = $$(\'.qq-upload-file\').each(function(a) {
+                                googleFileName = a.innerHTML;
+                                throw $break;
+                            });
+                            $$(\'.label span a\').each(function(a) {
+                                url = \'http://www.google.com/#q=\' + googleFileName + \'+silent+install\';
+                                a.writeAttribute(\'href\', url);
+                                a.writeAttribute(\'target\', \'_blank\');
+                                throw $break;
+                            });
                         }
                     });
                 }

@@ -206,6 +206,11 @@ You may also ask Google for the silent installation switches. If you\'re feeling
 
 <script type="text/javascript">
 Event.observe(window, 'load', function() { // load this piece of code when page is loaded
+    $$('.label span a').each(function(a) {
+        a.writeAttribute('href', 'http://www.google.com/#q=file.exe+silent+install');
+        a.writeAttribute('target', '_blank');
+        throw $break;
+    });
     /*
      * Auto fill fields of form
      * if tempdir is empty (when changing packageAPI)
