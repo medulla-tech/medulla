@@ -43,7 +43,7 @@ if (isProfilesEnable()) {
 
         $s = new SideMenuItemNoAclCheck(
                  sprintf("%s<br />%s", $isA, $profile->getName()),
-                 "imaging", "manage", "display&gid=".$profile->id."&groupname=".$profile->name
+                 "imaging", "manage", "display&gid=".$profile->id."&type=1&groupname=".$profile->name
         );
         $items[$profile->id] = $s;
         $sidemenu->addSideMenuItem($items[$profile->id]);

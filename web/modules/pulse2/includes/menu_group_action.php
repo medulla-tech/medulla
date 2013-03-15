@@ -49,7 +49,7 @@ if ($is_gp != 1) {
     $delete = new ActionPopupItem(_T("Delete this profile", 'dyngroup'), "delete_group", "delete", "id", "base", "computers");
 }
 
-if ($is_gp != 1) {
+if ($is_gp != 1) { // Simple group
     $actions['displayGroup'] = new ActionItem(_T("Display this group's content", 'dyngroup'), "display", "display", "id", "base", "computers");
 
     if (in_array("inventory", $_SESSION["supportModList"])) {
@@ -64,22 +64,23 @@ if ($is_gp != 1) {
         $actions['log'] = new ActionItem(_T("Read log", "dyngroup"),"groupmsctabs","logfile","computer", "base", "computers", "grouptablogs");
         $actions['deploy'] = new ActionItem(_T("Software deployment on this group", "dyngroup"),"groupmsctabs","install","computer", "base", "computers");
     }
-} else {
+} else { // Imaging group
     if (in_array("inventory", $_SESSION["supportModList"])) {
         $actions['inventory'] = new ActionItem(_T("Inventory on this profile", "dyngroup"),"groupinvtabs","inventory","inventory", "base", "computers");
     } else {
         # TODO implement the glpi inventory on groups
         #    $n->addActionItem(new ActionItem(_T("Inventory on this profile", "dyngroup"),"groupglpitabs","inventory","inventory", "base", "computers"));
+        $actions['displayGroup'] = new ActionItem(_T("Display this imaging group's content", 'dyngroup'), "display", "display", "id", "imaging", "manage");
     }
-    $actions['edit'] = new ActionItem(_T("Edit this profile", 'dyngroup'), "computersgroupedit", "edit", "id", "base", "computers");
-    $actions['share'] = new ActionItem(_T("Share this profile", 'dyngroup'), "edit_share", "groupshare", "id", "base", "computers");
+    $actions['edit'] = new ActionItem(_T("Edit this imaging group", 'dyngroup'), "computersgroupedit", "edit", "id", "imaging", "manage");
+    $actions['share'] = new ActionItem(_T("Share this imaging group", 'dyngroup'), "edit_share", "groupshare", "id", "imaging", "manage");
     if (in_array("msc", $_SESSION["supportModList"])) {
-        $actions['log'] = new ActionItem(_T("Read log", "dyngroup"),"groupmsctabs","logfile","computer", "base", "computers", "grouptablogs");
-        $actions['deploy'] = new ActionItem(_T("Software deployment on this profile", "dyngroup"),"groupmsctabs","install","computer", "base", "computers");
+        $actions['log'] = new ActionItem(_T("Read log", "dyngroup"),"groupmsctabs","logfile","computer", "imaging", "manage", "grouptablogs");
+        $actions['deploy'] = new ActionItem(_T("Software deployment on this imaging group", "dyngroup"),"groupmsctabs","install","computer", "imaging", "manage");
     }
     if (in_array("imaging", $_SESSION["supportModList"])) {
         if (xmlrpc_isImagingInProfilePossible()) {
-            $actions['imaging'] = new ActionItem(_("Imaging management"),"groupimgtabs","imaging","computer", "base", "computers");
+            $actions['imaging'] = new ActionItem(_("Imaging management"),"groupimgtabs","imaging","computer", "imaging", "manage");
         }
     }
 }

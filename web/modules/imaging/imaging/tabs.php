@@ -154,7 +154,7 @@ if (isset($params['uuid'])) {
             # check if we are in a profile
             $in_profile = xmlrpc_isComputerInProfileRegistered($params['target_uuid']);
             if ($in_profile) {
-                $p->addTop(sprintf(_T("%s's computer imaging (in profile)", 'imaging'), $hostname),
+                $p->addTop(sprintf(_T("%s's computer imaging (in group)", 'imaging'), $hostname),
                     "modules/imaging/imaging/header.php");
             } else {
                 $p->addTop(sprintf(_T("%s's computer imaging", 'imaging'), $hostname),
@@ -236,7 +236,7 @@ if (isset($params['uuid'])) {
 
             $params['groupname'] = $group->getName();
             $params['target_name'] = $params['groupname'];
-            $p->addTop(sprintf(_T("%s's profile imaging", 'imaging'), $group->getName()),
+            $p->addTop(sprintf(_T("%s's imaging group", 'imaging'), $group->getName()),
                 "modules/imaging/imaging/header.php");
             $p->addTab("grouptabbootmenu", _T("Boot menu", 'imaging'), _T("Current boot menu", "imaging"),
                 "modules/imaging/imaging/bootmenu.php", $params);

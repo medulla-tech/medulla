@@ -225,6 +225,16 @@ li.groupshare a {
         color: #FFF;
 }
 
+li.csv a {
+        padding: 3px 0px 5px 20px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/csv.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
 textarea#postinstall_value {
     width: 500px;
 }
