@@ -131,6 +131,23 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
             $willBeUnregistered[] = $target_uuid;
         }
     }
+
+    // Check if machines who are displayed are part of an existing profile
+    $machinesInProfile = arePartOfAProfile(array_keys($listOfMembers));
+
+    // If we edit an imaging group, exclude machines of current group. else they
+    // will be reported as machines in imaging group
+    if (isset($_GET['action']) && $_GET['action'] == 'computersgroupedit') {
+        $i = 0;
+        foreach ($machinesInProfile as $uuid => $group) {
+            if ($group['groupname'] == $_GET['groupname']) {
+                unset($machinesInProfile[$uuid]);
+                unset($willBeUnregistered[array_search($uuid, $willBeUnregistered)]);
+            }
+            $i++;
+        }
+    }
+
 ?>
 
 <form action="<?php echo $_SERVER["REQUEST_URI"]; ?>" method="post">
@@ -174,15 +191,17 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
     <h3><?php echo  $label_members; ?></h3>
     <select multiple size="15" class="list" name="members[]">
     <?php
-    $machinesInProfile = arePartOfAProfile(array_keys($listOfMembers));
     foreach ($members as $idx => $member) {
         if ($member == "") { unset($members[$idx]); continue; }
         $currentUuid = explode('##', $idx);
         $currentUuid = $currentUuid[1];
         $style = '';
+
+        // Check if machines who are displayed are part of an existing profile
         if (in_array($currentUuid, array_keys($machinesInProfile))) {
             $style = 'background: red; color: white;';
         }
+        // Or if they're registered in imaging as stand-alone machines
         elseif (in_array($currentUuid, $willBeUnregistered)) {
             $style = 'background: purple; color: white;';
         }
@@ -218,7 +237,7 @@ $standAloneImagingRegistered = array_diff($willBeUnregistered, array_keys($machi
 if (count($standAloneImagingRegistered) > 0) {
     $warningMessage = True;
     print '<p>';
-    print _T('Computers listed below are already part of another imaging group.', 'dyngroup');
+    print _T('Computers listed below are already stand-alone registered in imaging.', 'dyngroup');
     echo '<ul>';
     foreach($standAloneImagingRegistered as $machineUuid) {
         printf('<li>%s</li>', $listOfMembers[$machineUuid]['hostname']);
