@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-03-14 16:21+0100\n"
-"PO-Revision-Date: 2013-03-14 16:33+0000\n"
+"POT-Creation-Date: 2013-03-14 17:37+0100\n"
+"PO-Revision-Date: 2013-03-15 00:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -332,8 +332,8 @@ msgid ""
 "this error."
 msgstr ""
 
-#: includes/PageGenerator.php:108 includes/PageGenerator.php:2379
-#: includes/PageGenerator.php:2449 modules/base/groups/delete.php:67
+#: includes/PageGenerator.php:108 includes/PageGenerator.php:2380
+#: includes/PageGenerator.php:2450 modules/base/groups/delete.php:67
 #: modules/base/groups/members.php:185 modules/base/users/backup.php:92
 #: modules/ppolicy/default/delete.php:46
 msgid "Cancel"
@@ -372,17 +372,17 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: includes/PageGenerator.php:2375 includes/PageGenerator.php:2445
-#: includes/PageGenerator.php:2471 modules/base/groups/edit.php:108
+#: includes/PageGenerator.php:2376 includes/PageGenerator.php:2446
+#: includes/PageGenerator.php:2472 modules/base/groups/edit.php:108
 #: modules/base/groups/members.php:184
 msgid "Confirm"
 msgstr ""
 
-#: includes/PageGenerator.php:2593
+#: includes/PageGenerator.php:2595
 msgid "Select all"
 msgstr ""
 
-#: includes/PageGenerator.php:2594
+#: includes/PageGenerator.php:2596
 msgid "Unselect all"
 msgstr ""
 
