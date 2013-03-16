@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-15 01:00+0100\n"
+"POT-Creation-Date: 2013-03-16 01:00+0100\n"
 "PO-Revision-Date: 2012-12-10 14:54+0000\n"
 "Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
 "Language-Team: Spanish (Spain) (http://transifex.mandriva.com/projects/p/"
@@ -26,7 +26,7 @@ msgstr ""
 msgid "Computers list"
 msgstr ""
 
-#: modules/pulse2/includes/menu_group_action.php:95
+#: modules/pulse2/includes/menu_group_action.php:96
 msgid "Csv export"
 msgstr ""
 
@@ -42,16 +42,20 @@ msgstr ""
 msgid "Display this group's content"
 msgstr ""
 
+#: modules/pulse2/includes/menu_group_action.php:73
+msgid "Display this imaging group's content"
+msgstr ""
+
 #: modules/pulse2/includes/menu_group_action.php:61
 msgid "Edit this group"
 msgstr ""
 
-#: modules/pulse2/includes/menu_group_action.php:74
-msgid "Edit this profile"
+#: modules/pulse2/includes/menu_group_action.php:75
+msgid "Edit this imaging group"
 msgstr ""
 
 #: modules/pulse2/includes/menu_action.php:34
-#: modules/pulse2/includes/menu_group_action.php:82
+#: modules/pulse2/includes/menu_group_action.php:83
 msgid "Imaging management"
 msgstr ""
 
@@ -77,7 +81,7 @@ msgstr ""
 
 #: modules/pulse2/includes/menu_action.php:32
 #: modules/pulse2/includes/menu_group_action.php:64
-#: modules/pulse2/includes/menu_group_action.php:77
+#: modules/pulse2/includes/menu_group_action.php:78
 msgid "Read log"
 msgstr ""
 
@@ -93,8 +97,8 @@ msgstr ""
 msgid "Share this group"
 msgstr ""
 
-#: modules/pulse2/includes/menu_group_action.php:75
-msgid "Share this profile"
+#: modules/pulse2/includes/menu_group_action.php:76
+msgid "Share this imaging group"
 msgstr ""
 
 #: modules/pulse2/includes/menu_action.php:33
@@ -105,6 +109,6 @@ msgstr ""
 msgid "Software deployment on this group"
 msgstr ""
 
-#: modules/pulse2/includes/menu_group_action.php:78
-msgid "Software deployment on this profile"
+#: modules/pulse2/includes/menu_group_action.php:79
+msgid "Software deployment on this imaging group"
 msgstr ""

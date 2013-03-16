@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-15 01:00+0100\n"
+"POT-Creation-Date: 2013-03-16 01:00+0100\n"
 "PO-Revision-Date: 2013-03-14 15:59+0000\n"
 "Last-Translator: Cécile Adam <acecile@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
@@ -46,11 +46,16 @@ msgid "%s's computer imaging"
 msgstr "Module d'imaging pour l'ordinateur %s"
 
 #: modules/imaging/imaging/tabs.php:157
-#, php-format
-msgid "%s's computer imaging (in profile)"
+#, fuzzy, php-format
+msgid "%s's computer imaging (in group)"
 msgstr "Module d'imaging pour l'ordinateur %s (appartenant à un profil)"
 
-#: modules/imaging/imaging/tabs.php:209 modules/imaging/imaging/tabs.php:239
+#: modules/imaging/imaging/tabs.php:239
+#, fuzzy, php-format
+msgid "%s's imaging group"
+msgstr "Images sur un groupe"
+
+#: modules/imaging/imaging/tabs.php:209
 #, php-format
 msgid "%s's profile imaging"
 msgstr "Profil imaging de %s"

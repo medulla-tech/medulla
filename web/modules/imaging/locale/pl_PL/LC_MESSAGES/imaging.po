@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-15 01:00+0100\n"
+"POT-Creation-Date: 2013-03-16 01:00+0100\n"
 "PO-Revision-Date: 2013-03-14 16:31+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,10 +38,15 @@ msgstr ""
 
 #: modules/imaging/imaging/tabs.php:157
 #, php-format
-msgid "%s's computer imaging (in profile)"
+msgid "%s's computer imaging (in group)"
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:209 modules/imaging/imaging/tabs.php:239
+#: modules/imaging/imaging/tabs.php:239
+#, php-format
+msgid "%s's imaging group"
+msgstr ""
+
+#: modules/imaging/imaging/tabs.php:209
 #, php-format
 msgid "%s's profile imaging"
 msgstr ""

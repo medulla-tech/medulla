@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-15 01:00+0100\n"
+"POT-Creation-Date: 2013-03-16 01:00+0100\n"
 "PO-Revision-Date: 2013-03-14 15:53+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Spanish (Spain) (http://transifex.mandriva.com/projects/p/"
@@ -37,12 +37,12 @@ msgstr ""
 msgid "->"
 msgstr ""
 
-#: modules/dyngroup/includes/groups.inc.php:209
+#: modules/dyngroup/includes/groups.inc.php:228
 #, php-format
 msgid "<li>%s is part of <a href=\"%s\">%s</a></li>"
 msgstr ""
 
-#: modules/dyngroup/includes/groups.inc.php:230
+#: modules/dyngroup/includes/groups.inc.php:249
 msgid ""
 "<p>These computers will move to this group and their bootmenus <strong>will "
 "be rewritten</strong></p>"
@@ -95,7 +95,7 @@ msgstr ""
 msgid "All imaging groups"
 msgstr ""
 
-#: modules/dyngroup/includes/groups.inc.php:151
+#: modules/dyngroup/includes/groups.inc.php:168
 msgid "All machines"
 msgstr ""
 
@@ -123,7 +123,7 @@ msgstr ""
 #: modules/dyngroup/dyngroup/delete_group.php:69
 #: modules/dyngroup/dyngroup/remove_machine.php:48
 #: modules/dyngroup/includes/groups.inc.php:83
-#: modules/dyngroup/includes/groups.inc.php:240
+#: modules/dyngroup/includes/groups.inc.php:259
 msgid "Cancel"
 msgstr ""
 
@@ -179,13 +179,16 @@ msgstr ""
 msgid "Computers list has been truncated at %d computers"
 msgstr ""
 
-#: modules/dyngroup/includes/groups.inc.php:206
-#: modules/dyngroup/includes/groups.inc.php:221
+#: modules/dyngroup/includes/groups.inc.php:225
 msgid "Computers listed below are already part of another imaging group."
 msgstr ""
 
+#: modules/dyngroup/includes/groups.inc.php:240
+msgid "Computers listed below are already stand-alone registered in imaging."
+msgstr ""
+
 #: modules/dyngroup/includes/groups.inc.php:82
-#: modules/dyngroup/includes/groups.inc.php:239
+#: modules/dyngroup/includes/groups.inc.php:258
 msgid "Confirm"
 msgstr ""
 
@@ -286,14 +289,14 @@ msgstr ""
 msgid "Edit a dynamic group"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/edithead.php:43
-#: modules/dyngroup/dyngroup/edithead.php:54
-msgid "Edit a profile"
-msgstr ""
-
 #: modules/dyngroup/dyngroup/edithead.php:52
 #: modules/dyngroup/dyngroup/groupshead.php:31
 msgid "Edit a static group"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/edithead.php:43
+#: modules/dyngroup/dyngroup/edithead.php:54
+msgid "Edit an imaging group"
 msgstr ""
 
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:103
@@ -439,7 +442,7 @@ msgstr ""
 
 #: modules/dyngroup/dyngroup/creator.php:237
 #: modules/dyngroup/dyngroup/import_from_file.php:54
-#: modules/dyngroup/includes/groups.inc.php:141
+#: modules/dyngroup/includes/groups.inc.php:158
 msgid "No"
 msgstr ""
 
@@ -625,7 +628,7 @@ msgstr ""
 #: modules/dyngroup/dyngroup/creator.php:236
 #: modules/dyngroup/dyngroup/creator.php:242
 #: modules/dyngroup/dyngroup/import_from_file.php:54
-#: modules/dyngroup/includes/groups.inc.php:140
+#: modules/dyngroup/includes/groups.inc.php:157
 msgid "Yes"
 msgstr ""
 

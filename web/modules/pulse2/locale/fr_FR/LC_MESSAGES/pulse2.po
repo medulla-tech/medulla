@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-15 01:00+0100\n"
+"POT-Creation-Date: 2013-03-16 01:00+0100\n"
 "PO-Revision-Date: 2013-03-12 15:44+0000\n"
 "Last-Translator: Jean-Christophe Vassort <jcvassort@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
@@ -29,7 +29,7 @@ msgstr "Toutes mes entités"
 msgid "Computers list"
 msgstr "Liste des ordinateurs"
 
-#: modules/pulse2/includes/menu_group_action.php:95
+#: modules/pulse2/includes/menu_group_action.php:96
 msgid "Csv export"
 msgstr "Export CSV"
 
@@ -45,16 +45,22 @@ msgstr "Supprimer ce profil"
 msgid "Display this group's content"
 msgstr "Afficher le contenu du groupe"
 
+#: modules/pulse2/includes/menu_group_action.php:73
+#, fuzzy
+msgid "Display this imaging group's content"
+msgstr "Afficher le contenu du groupe"
+
 #: modules/pulse2/includes/menu_group_action.php:61
 msgid "Edit this group"
 msgstr "Modifier ce groupe"
 
-#: modules/pulse2/includes/menu_group_action.php:74
-msgid "Edit this profile"
-msgstr "Modifier ce profil"
+#: modules/pulse2/includes/menu_group_action.php:75
+#, fuzzy
+msgid "Edit this imaging group"
+msgstr "Modifier ce groupe"
 
 #: modules/pulse2/includes/menu_action.php:34
-#: modules/pulse2/includes/menu_group_action.php:82
+#: modules/pulse2/includes/menu_group_action.php:83
 msgid "Imaging management"
 msgstr "Gestion de l'imaging"
 
@@ -80,7 +86,7 @@ msgstr "Pulse2"
 
 #: modules/pulse2/includes/menu_action.php:32
 #: modules/pulse2/includes/menu_group_action.php:64
-#: modules/pulse2/includes/menu_group_action.php:77
+#: modules/pulse2/includes/menu_group_action.php:78
 msgid "Read log"
 msgstr "Lire le rapport"
 
@@ -96,9 +102,10 @@ msgstr "Entité racine"
 msgid "Share this group"
 msgstr "Partager ce groupe"
 
-#: modules/pulse2/includes/menu_group_action.php:75
-msgid "Share this profile"
-msgstr "Partager ce profil"
+#: modules/pulse2/includes/menu_group_action.php:76
+#, fuzzy
+msgid "Share this imaging group"
+msgstr "Partager ce groupe"
 
 #: modules/pulse2/includes/menu_action.php:33
 msgid "Software deployment"
@@ -108,6 +115,16 @@ msgstr "Déploiement logiciel"
 msgid "Software deployment on this group"
 msgstr "Télé-déploiement sur ce groupe"
 
-#: modules/pulse2/includes/menu_group_action.php:78
-msgid "Software deployment on this profile"
-msgstr "Télé-déploiement sur ce profil"
+#: modules/pulse2/includes/menu_group_action.php:79
+#, fuzzy
+msgid "Software deployment on this imaging group"
+msgstr "Télé-déploiement sur ce groupe"
+
+#~ msgid "Edit this profile"
+#~ msgstr "Modifier ce profil"
+
+#~ msgid "Share this profile"
+#~ msgstr "Partager ce profil"
+
+#~ msgid "Software deployment on this profile"
+#~ msgstr "Télé-déploiement sur ce profil"
