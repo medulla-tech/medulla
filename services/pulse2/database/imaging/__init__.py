@@ -3451,6 +3451,34 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return True
 
+    def switchMenusToDefault(self, uuids):
+        """ 
+        Menus of deleted computers from profile wil be switched
+        to default entity menu.
+ 
+        @param uuids: list of UUIDs of removed computers
+        @type uuids: list
+        """
+        session = create_session()
+
+        menus = []
+        for uuid in uuids :
+            location = ComputerLocationManager().getMachinesLocations([uuid])
+            location_id = location[uuid]['uuid']
+            menu = self.getEntityDefaultMenu(location_id, session)
+            mis = self.__getDefaultMenuMenuItems(session)
+            target = self.getTargetsByUUID([uuid])[0]
+            params = menu.toH()
+            params["target_name"] = target.name
+            menus.append((uuid, params, mis))
+
+        self.unregisterTargets(uuids)
+
+        for uuid, params, items in menus :
+            self.setMyMenuTarget(uuid, params, P2IT.COMPUTER)
+
+        return True
+
 
     def __getAllProfileMenuItem(self, profile_UUID, session):
         return self.__getAllMenuItem(session, and_(self.target.c.uuid == profile_UUID, self.target.c.type == P2IT.PROFILE))
@@ -3484,8 +3512,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         computers_UUID = map(lambda c:c['uuid'], computers.values())
         # copy the profile part of the menu in their own menu
         pmenu = self.getTargetMenu(profile_UUID, P2IT.PROFILE, session)
-
         pmis = self.__getAllProfileMenuItem(profile_UUID, session)
+
         pnb_element = len(pmis)
         mis = self.__getAllComputersMenuItem(computers_UUID, session)
 

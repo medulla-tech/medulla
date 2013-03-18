@@ -70,7 +70,7 @@ class ImagingProfile(ComputerProfileI):
             ret2 = ImagingDatabase().changeTargetsSynchroState(computers_UUID, P2IT.COMPUTER, P2ISS.TODO)
             # delete the profile itself
             ret3 = ImagingDatabase().delProfile(profile_UUID)
-            ret4 = ImagingDatabase().unregisterTargets(computers_UUID)
+            ret4 = ImagingDatabase().switchMenusToDefault(computers_UUID)
  
             return ret1 and ret2 and ret3 and ret4
         return True
