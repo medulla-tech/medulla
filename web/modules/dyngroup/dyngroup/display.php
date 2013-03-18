@@ -34,7 +34,12 @@ if (!$gid) { // TODO !!
     $result->replyToRequest();
     $result->displayResListInfos();
 } else {
-    require("modules/imaging/manage/localSidebar.php");
+    if ($_GET['module'] == 'base' && $_GET['submod'] == 'computers' && !isset($_GET['gid'])) {
+        require("modules/base/computers/localSidebar.php");
+    }
+    else {
+        require("modules/imaging/manage/localSidebar.php");
+    }
     $group = getPGobject($gid, true);
     if (isset($items[$gid])) {
         $item = $items[$gid];

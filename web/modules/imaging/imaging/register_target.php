@@ -24,7 +24,12 @@
  */
 
 
-require('modules/imaging/manage/localSidebar.php');
+if ($_GET['module'] == 'base' && $_GET['submod'] == 'computers') {
+    require("modules/base/computers/localSidebar.php");
+}
+else {
+    require("modules/imaging/manage/localSidebar.php");
+}
 require("graph/navbar.inc.php");
 
 $p = new PageGenerator();

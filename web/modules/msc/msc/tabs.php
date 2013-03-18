@@ -25,7 +25,12 @@
 
 require_once('modules/msc/includes/machines.inc.php');
 require_once('modules/msc/includes/widgets.inc.php');
-require_once('modules/base/computers/localSidebar.php');
+if ($_GET['module'] == 'base' && $_GET['submod'] == 'computers') {
+    require("modules/base/computers/localSidebar.php");
+}
+else {
+    require("modules/imaging/manage/localSidebar.php");
+}
 require_once('graph/navbar.inc.php');
 require_once("modules/pulse2/includes/utilities.php");
 
