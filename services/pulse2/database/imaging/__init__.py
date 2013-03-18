@@ -3451,6 +3451,32 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return True
 
+    def switchMenusToDefault(self, uuids):
+        """ 
+        Switching the menus of deleted computers from profile 
+
+        @param uuids: list of UUIDs of removed computers
+        @type uuids: list
+        """
+        session = create_session()
+
+        items = session.query(MenuItem).add_entity(Menu).add_entity(Target)
+        items = items.select_from(self.menu_item \
+                .join(self.menu, self.menu_item.c.fk_menu == self.menu.c.id) \
+                .join(self.target, self.target.c.fk_menu == self.menu.c.id))
+        items = items.filter(self.target.c.uuid.in_(uuids)).all()
+
+        for mi, m, tg in items:
+    
+            tg.fk_menu = 1
+            session.add(tg)
+
+        session.flush()
+        session.close()
+        return True
+
+
+
     def __getAllProfileMenuItem(self, profile_UUID, session):
         return self.__getAllMenuItem(session, and_(self.target.c.uuid == profile_UUID, self.target.c.type == P2IT.PROFILE))
 
