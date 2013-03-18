@@ -36,3 +36,7 @@ class ServicesPanel(Panel):
                         data[plugin] = []
                     data[plugin].append(service)
         return data
+
+
+class SystemPanel(Panel):
+    pass

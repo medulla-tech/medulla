@@ -55,9 +55,10 @@ def activate():
         return False
     try:
         from mmc.plugins.dashboard.manager import DashboardManager
-        from mmc.plugins.services.panel import ServicesPanel
+        from mmc.plugins.services.panel import ServicesPanel, SystemPanel
         DM = DashboardManager()
         DM.register_panel(ServicesPanel("services"))
+        DM.register_panel(SystemPanel("system"))
     except ImportError:
         pass
 
