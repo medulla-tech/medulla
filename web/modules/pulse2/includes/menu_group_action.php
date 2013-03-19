@@ -32,10 +32,15 @@ $paramArray = array(
 
 $actions = array();
 
-if(isset($_GET['type']))
-    $is_gp = $_GET['type'];
-else
+if(isset($_GET['type'])) {
+    $is_gp = ($_GET['type'] == 'group') ? 1 : $_GET['type'];
+}
+elseif (isset($_GET['gid'])) {
+    $is_gp = 1;
+}
+else {
     $is_gp = 0;
+}
 
 if ($is_gp && $is_gp == 1) { # Profile
     $list = getAllProfiles(array());

@@ -22,7 +22,12 @@
  */
 
 require_once("modules/pulse2/includes/utilities.php"); # for quickGet method
-require("modules/imaging/manage/localSidebar.php");
+if ($_GET['module'] == 'base' && $_GET['submod'] == 'computers') {
+    require("modules/base/computers/localSidebar.php");
+}
+else {
+    require("modules/imaging/manage/localSidebar.php");
+}
 require("graph/navbar.inc.php");
 require_once("modules/dyngroup/includes/dyngroup.php");
 

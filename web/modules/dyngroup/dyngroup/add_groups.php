@@ -122,6 +122,9 @@ if (isset($_POST["bdelmachine_x"])) {
             if ($type == 0) { // Simple group
                 new NotifyWidgetSuccess(_T("Group successfully modified", "dyngroup"));
             } else { // Imaging group
+                // Synchro Profile
+                $ret = xmlrpc_synchroProfile($group->id);
+
                 new NotifyWidgetSuccess(_T("Imaging group successfully modified", "dyngroup"));
             }
         } else {
