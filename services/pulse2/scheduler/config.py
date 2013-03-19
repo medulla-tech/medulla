@@ -37,7 +37,7 @@ from mmc.site import mmcconfdir
 
 # Others Pulse2 Stuff
 import pulse2.utils
-from pulse2.network import NetUtils, NetworkDetect
+from pulse2.network import PreferredNetworkParser
 from pulse2.xmlrpc import isTwistedEnoughForLoginPass
 from pulse2.database.msc.config import MscDatabaseConfig
 
@@ -353,44 +353,4 @@ class SchedulerConfig(pulse2.utils.Singleton):
                 uri += '%s:%d' % (self.launchers[section]['host'], int(self.launchers[section]['port']))
                 self.launchers_uri.update({section: uri})
 
-class PreferredNetworkParser :
 
-    def __init__(self, default_ip, default_netmask): 
-        if not default_ip :
-            default_ip = pulse2.utils.get_default_ip()
-        if not default_netmask :
-            default_netmask, gw = NetUtils.get_netmask_and_gateway()
-
-        net_detect = NetworkDetect(default_ip, default_netmask)
-        network_address = net_detect.network
-        self.default_network = [(network_address, default_netmask)]
-
-    def get_default(self):
-        return self.default_network
-
-    @classmethod
-    def check_str_format(cls, value):
-        networks = value.split()
-        for ip_slash_mask in networks :
-            if not "/" in ip_slash_mask :
-                return False
-            elif len(ip_slash_mask.split("/")) != 2 :
-                return False
-        return True
-
-    def parse(self, value):
-        if not self.check_str_format(value) :
-            log.warning("Preferred network not set, using default value: %s/%s" % self.default_network[0])
-            return self.default_network
-        else :
-            network = []
-            for ip_slash_mask in value.split() :
-                ip, mask = ip_slash_mask.split("/")
-                net_detect = NetworkDetect(ip, mask)
-                if ip != net_detect.network :
-                    log.warn("Incorrect network address '%s' for netmask '%s', correcting to: '%s'" % 
-                            (ip, mask, net_detect.network))
-                    network.append((net_detect.network, mask))
-                else :
-                    network.append((ip, mask))
-            return network

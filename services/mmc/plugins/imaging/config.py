@@ -25,6 +25,7 @@ Configuration reader for imaging
 
 from mmc.support.config import PluginConfig
 from pulse2.database.imaging.config import ImagingDatabaseConfig
+from pulse2.network import PreferredNetworkParser
 
 class ImagingConfig(PluginConfig, ImagingDatabaseConfig):
 
@@ -50,7 +51,9 @@ class ImagingConfig(PluginConfig, ImagingDatabaseConfig):
     web_def_image_default_wol = 0
     web_def_service_hidden_wol = 0
     web_def_service_default_wol = 0
-
+    resolv_order = ['ip','netbios', 'dns', 'fqdn', 'hosts', 'first']
+    preferred_network = (None, None)
+ 
     def __init__(self, name = 'imaging', conffile = None):
         if not hasattr(self, 'initdone'):
             PluginConfig.__init__(self, name, conffile)
@@ -68,3 +71,15 @@ class ImagingConfig(PluginConfig, ImagingDatabaseConfig):
                 for option in self.options("web"):
                     # option variable is lowercase
                     setattr(self, option, self.get("web", option))
+
+        setattr(self, "network", "resolv_order")
+        if not type(self.resolv_order) == type([]):
+            self.resolv_order = self.resolv_order.split(' ')
+
+        pnp = PreferredNetworkParser(None, None)
+        if self.has_option("network", "preferred_network"):
+            self.preferred_network = pnp.parse(self.get("network", "preferred_network"))
+        else :
+            self.preferred_network = pnp.get_default()
+
+
