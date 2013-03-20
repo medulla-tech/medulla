@@ -66,11 +66,11 @@ class ImagingProfile(ComputerProfileI):
             for uuid in computers_UUID:
                 computers[uuid] = {'uuid':uuid}
  
-            ret1 = ImagingDatabase().delComputersFromProfile(profile_UUID, computers)
-            ret2 = ImagingDatabase().changeTargetsSynchroState(computers_UUID, P2IT.COMPUTER, P2ISS.TODO)
+            ret1 = len(computers) > 0 and ImagingDatabase().delComputersFromProfile(profile_UUID, computers) or True
+            ret2 = len(computers) > 0 and ImagingDatabase().changeTargetsSynchroState(computers_UUID, P2IT.COMPUTER, P2ISS.TODO) or True
             # delete the profile itself
             ret3 = ImagingDatabase().delProfile(profile_UUID)
-            ret4 = ImagingDatabase().switchMenusToDefault(computers_UUID)
+            ret4 = len(computers) > 0 and ImagingDatabase().switchMenusToDefault(computers_UUID) or True
  
             return ret1 and ret2 and ret3 and ret4
         return True
