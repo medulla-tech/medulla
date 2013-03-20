@@ -1862,9 +1862,15 @@ class ImagingRpcProxy(RpcProxyI):
                 # one computer with more than one network card
                 if 'choose_network_profile' in params:
                     h_macaddress = {}
+                    networks = ComputerManager().getComputersNetwork(ctx, {'uuids': uuids})[0][1]
+                    keys = networks['networkUuids']
+                    values = networks['macAddress']
+                    # [Memo] uuidMacDict = {'NIC_UUID': 'Mac_adress', etc.}
+                    uuidMacDict = dict(zip(keys, values))
+
                     for uuid in uuids:
                         if uuid in params['choose_network_profile']:
-                            h_macaddress[uuid] = params['choose_network_profile'][uuid]
+                            h_macaddress[uuid] = uuidMacDict[params['choose_network_profile'][uuid]]
                         else:
                             logger.warn('Imaging on group: %s doesn\'t exists in choose_network_profile key' % uuid)
                 else:
@@ -2662,10 +2668,25 @@ def chooseMacAddress(ctx, uuid, macs):
     # should pass uuids and the list of uuids
     nets = ComputerManager().getComputersNetwork(ctx, {'uuid':uuid})
     nets = nets[0][1]
+
+    # For nic_uuid variable, get Target Nic UUID from Target table
+    # It's buggy... If Target is not registered, we will never
+    # find corresponding target's Nic_uuid
     nic_uuid = ImagingDatabase().getTargetNICuuid(uuid)
+
+    # So, if Target have only one Mac address, and this one is part
+    # of the macs list, return this
+    if len(nets['macAddress']) == 1:
+        mac = nets['macAddress'][0]
+        if mac in macs:
+            return mac
+
     if len(nic_uuid) != 1:
         logging.getLogger().error("couldn't find the registered mac address for computer %s"%uuid)
         return None
+
+    # If target has more than one macadresses, choose the one registered
+    # in imaging module (current target must be registered to find one)
     nic_uuid = nic_uuid[0]
     mac = None
     for i in range(0, len(nets['macAddress'])):

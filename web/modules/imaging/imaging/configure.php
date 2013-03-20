@@ -469,7 +469,7 @@ else {
                         $values = array();
                         foreach (range(0, count($networks['macAddress']) - 1) as $i) {
                             $elements[] = sprintf("%s / %s", $networks['ipHostNumber'][$i], $networks['macAddress'][$i]);
-                            $values[] = $networks['macAddress'][$i];
+                            $values[] = $networks['networkUuids'][$i];
                         }
                         $macs_choice->setElements($elements);
                         $macs_choice->setElementsVal($values);
@@ -479,7 +479,7 @@ else {
                     } elseif (count($networks['macAddress']) == 1) {
                         $f->add(new HiddenTpl("choose_network_" . $networks['objectUUID'][0]),
                             array(
-                                "value" => $networks['macAddress'][0],
+                                "value" => $networks['networkUuids'][0],
                                 "hide" => True,
                             )
                         );

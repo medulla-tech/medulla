@@ -3241,6 +3241,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         target.type = type
         if 'choose_network' in params:
             target.nic_uuid = params['choose_network']
+        if 'choose_network_profile' in params:
+            # Get nic_uuid only for computers
+            # type 2 => profile type
+            if target.type != 2:
+                target.nic_uuid = params['choose_network_profile'][uuid]
         if 'nic_uuid' in params:
             target.nic_uuid = params['nic_uuid']
         if params.has_key('target_opt_kernel'):
