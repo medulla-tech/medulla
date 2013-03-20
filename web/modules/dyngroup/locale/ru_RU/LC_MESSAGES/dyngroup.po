@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-16 01:00+0100\n"
+"POT-Creation-Date: 2013-03-20 01:00+0100\n"
 "PO-Revision-Date: 2013-03-14 15:53+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/"
@@ -51,7 +51,7 @@ msgid ""
 "be rewritten</strong></p>"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/add_groups.php:181
+#: modules/dyngroup/dyngroup/add_groups.php:184
 #: modules/dyngroup/dyngroup/import_from_file.php:45
 #: modules/dyngroup/dyngroup/save.php:92
 #, php-format
@@ -106,7 +106,7 @@ msgstr "Все машины"
 msgid "All share entities"
 msgstr "Общий доступ для всех"
 
-#: modules/dyngroup/dyngroup/add_groups.php:183
+#: modules/dyngroup/dyngroup/add_groups.php:186
 #, php-format
 msgid "An imaging group already exists with name '%s'"
 msgstr ""
@@ -179,7 +179,7 @@ msgid "Computers Group Sub Request Editor"
 msgstr "Computers Group Sub Request Editor"
 
 #: modules/dyngroup/dyngroup/add_groups.php:68
-#: modules/dyngroup/dyngroup/add_groups.php:199
+#: modules/dyngroup/dyngroup/add_groups.php:202
 #, php-format
 msgid "Computers list has been truncated at %d computers"
 msgstr "Список компьютеров был усечен до %d компьютеров "
@@ -251,7 +251,7 @@ msgstr "Показать группы компьютеров"
 msgid "Display content"
 msgstr "Показать содержимое"
 
-#: modules/dyngroup/dyngroup/display.php:47
+#: modules/dyngroup/dyngroup/display.php:52
 #, php-format
 msgid "Display profile '%s' content"
 msgstr "Показать содержимое профиля '%s' "
@@ -264,7 +264,7 @@ msgstr "Показать содержимое этой группы"
 msgid "Display this imaging group's content"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/tab.php:36
+#: modules/dyngroup/dyngroup/tab.php:41
 msgid "Dynamic group creation"
 msgstr "Динамическое создание групп"
 
@@ -322,16 +322,16 @@ msgstr "Перейти к сохраненному шагу"
 msgid "Group %s was successfully deleted"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/display.php:45
+#: modules/dyngroup/dyngroup/display.php:50
 #, php-format
 msgid "Group '%s' content"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/tab.php:35
+#: modules/dyngroup/dyngroup/tab.php:40
 msgid "Group creation"
 msgstr "Создание групп"
 
-#: modules/dyngroup/dyngroup/add_groups.php:165
+#: modules/dyngroup/dyngroup/add_groups.php:168
 msgid "Group failed to modify"
 msgstr "Не удалось изменить группу"
 
@@ -364,7 +364,7 @@ msgstr "Информация о группе компьютеров"
 msgid "Group share"
 msgstr "Общий доступ к группе"
 
-#: modules/dyngroup/dyngroup/add_groups.php:129
+#: modules/dyngroup/dyngroup/add_groups.php:132
 #: modules/dyngroup/dyngroup/import_from_file.php:41
 msgid "Group successfully created"
 msgstr "Группа создана успешно "
@@ -390,20 +390,20 @@ msgstr "Скрыть"
 msgid "Imaging group %s was successfully deleted"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/tab.php:56
+#: modules/dyngroup/dyngroup/tab.php:61
 msgid "Imaging group creation"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/add_groups.php:170
+#: modules/dyngroup/dyngroup/add_groups.php:173
 msgid "Imaging group failed to modify"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/add_groups.php:168
+#: modules/dyngroup/dyngroup/add_groups.php:171
 #, php-format
 msgid "Imaging group failed to modify.<br/>Can't add %s"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/add_groups.php:125
+#: modules/dyngroup/dyngroup/add_groups.php:128
 msgid "Imaging group successfully modified"
 msgstr ""
 
@@ -419,7 +419,7 @@ msgstr ""
 msgid "Imaging management"
 msgstr "Управление изображениями"
 
-#: modules/dyngroup/dyngroup/tab.php:76
+#: modules/dyngroup/dyngroup/tab.php:81
 msgid "Imaging server selection"
 msgstr ""
 
@@ -502,7 +502,7 @@ msgstr "Часть поиска"
 msgid "Second page of result/request group creator"
 msgstr "Вторая страница результатов/запросов генератора групп"
 
-#: modules/dyngroup/dyngroup/tab.php:97
+#: modules/dyngroup/dyngroup/tab.php:102
 msgid "Select an imaging server for this group"
 msgstr ""
 
@@ -547,11 +547,11 @@ msgstr ""
 msgid "Specify a boolean operator between sub-requests"
 msgstr "Укажите логический оператор между подзапросами"
 
-#: modules/dyngroup/dyngroup/tab.php:37
+#: modules/dyngroup/dyngroup/tab.php:42
 msgid "Static group creation"
 msgstr "Статическое создание групп"
 
-#: modules/dyngroup/dyngroup/tab.php:38
+#: modules/dyngroup/dyngroup/tab.php:43
 msgid "Static group creation from import"
 msgstr "Статическое создание группы из импорта"
 
@@ -571,7 +571,7 @@ msgstr "Вкладка создания статических групп"
 msgid "Static group:"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/tab.php:73
+#: modules/dyngroup/dyngroup/tab.php:78
 msgid "Static imaging group"
 msgstr ""
 
@@ -640,12 +640,12 @@ msgstr "видимая"
 msgid "Yes"
 msgstr "Да"
 
-#: modules/dyngroup/dyngroup/add_groups.php:176
+#: modules/dyngroup/dyngroup/add_groups.php:179
 #: modules/dyngroup/dyngroup/save.php:94 modules/dyngroup/dyngroup/save.php:96
 msgid "You must specify a group name"
 msgstr "Необходимо указать имя группы"
 
-#: modules/dyngroup/dyngroup/add_groups.php:178
+#: modules/dyngroup/dyngroup/add_groups.php:181
 msgid "You must specify an imaging group name"
 msgstr ""
 

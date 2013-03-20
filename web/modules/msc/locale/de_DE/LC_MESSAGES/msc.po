@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-15 01:00+0100\n"
+"POT-Creation-Date: 2013-03-20 01:00+0100\n"
 "PO-Revision-Date: 2013-03-13 15:57+0000\n"
 "Last-Translator: Jean-Christophe Vassort <jcvassort@mandriva.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/"
@@ -61,12 +61,12 @@ msgstr "%s auf %s %s"
 msgid "%s status"
 msgstr ""
 
-#: modules/msc/msc/tabs.php:43 modules/msc/msc/tabs.php:51
+#: modules/msc/msc/tabs.php:48 modules/msc/msc/tabs.php:56
 #, php-format
 msgid "%s's computer secure control"
 msgstr ""
 
-#: modules/msc/msc/tabs.php:67
+#: modules/msc/msc/tabs.php:72
 #, php-format
 msgid "%s's group secure control"
 msgstr ""
@@ -807,7 +807,7 @@ msgstr ""
 msgid "Halt in progress"
 msgstr ""
 
-#: modules/msc/msc/tabs.php:55 modules/msc/msc/tabs.php:73
+#: modules/msc/msc/tabs.php:60 modules/msc/msc/tabs.php:78
 msgid "History"
 msgstr "Historie"
 
@@ -867,12 +867,12 @@ msgstr ""
 msgid "Launch"
 msgstr "Start"
 
-#: modules/msc/msc/tabs.php:52 modules/msc/msc/tabs.php:69
+#: modules/msc/msc/tabs.php:57 modules/msc/msc/tabs.php:74
 msgid "Launch Actions"
 msgstr "Aktionen beim Start"
 
-#: modules/msc/includes/bundle_widgets.php:218 modules/msc/msc/tabs.php:53
-#: modules/msc/msc/tabs.php:70
+#: modules/msc/includes/bundle_widgets.php:218 modules/msc/msc/tabs.php:58
+#: modules/msc/msc/tabs.php:75
 msgid "Launch Bundle"
 msgstr "Bundle starten"
 
@@ -908,7 +908,7 @@ msgstr "Lokale Proxies"
 msgid "Local proxies selection"
 msgstr "Auswahl lokaler Proxies"
 
-#: modules/msc/msc/tabs.php:54 modules/msc/msc/tabs.php:72
+#: modules/msc/msc/tabs.php:59 modules/msc/msc/tabs.php:77
 msgid "Logs"
 msgstr "Logs"
 
@@ -1026,7 +1026,7 @@ msgstr ""
 msgid "Normal"
 msgstr "Normal"
 
-#: modules/msc/msc/tabs.php:80
+#: modules/msc/msc/tabs.php:85
 msgid "Not enough informations"
 msgstr "Nicht genug Informationen"
 
