@@ -24,12 +24,11 @@
 require("graph/navbar.inc.php");
 require_once("modules/dyngroup/includes/includes.php");
 
-$group = getPGobject($gid, true);
-if ($group->type == 0) {
-    require("modules/base/computers/localSidebar.php");
+if (isset($_GET['type']) && $_GET['type'] == 1) { // Imaging group
+    require("modules/imaging/manage/localSidebar.php");
 }
 else {
-    require("modules/imaging/manage/localSidebar.php");
+    require("modules/base/computers/localSidebar.php");
 }
 
 if ($_GET["action"]=="computersgroupcreator") {
