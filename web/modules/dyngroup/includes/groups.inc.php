@@ -22,6 +22,7 @@
  */
 
 require('modules/imaging/includes/xmlrpc.inc.php');
+require_once('modules/dyngroup/includes/dyngroup.php'); // for getPGobject method
 
 function drawGroupShare($nonmemb, $members, $listOfMembers, $diff, $gid, $name) {
 ?>
@@ -120,31 +121,38 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
         $label_visible = _T('Add shortcut', 'dyngroup');
         $label_members = _T("Group members", "dyngroup");
     }
-    $listOfMembersUuids = array_keys($listOfMembers);
     $willBeUnregistered = array();
-    foreach ($listOfMembersUuids as $target_uuid) {
-        $ret = xmlrpc_canIRegisterThisComputer($target_uuid);
-        if (!$ret[0]) {
-            $willBeUnregistered[] = $target_uuid;
-        }
-        elseif ($ret[0] && isset($ret[1]) && $ret[1] != False) {
-            $willBeUnregistered[] = $target_uuid;
+    if ($type == 1) {
+        $listOfMembersUuids = array_keys($listOfMembers);
+        foreach ($listOfMembersUuids as $target_uuid) {
+            $ret = xmlrpc_canIRegisterThisComputer($target_uuid);
+            if (!$ret[0]) {
+                $willBeUnregistered[] = $target_uuid;
+            }
+            elseif ($ret[0] && isset($ret[1]) && $ret[1] != False) {
+                $willBeUnregistered[] = $target_uuid;
+            }
         }
     }
 
-    // Check if machines who are displayed are part of an existing profile
-    $machinesInProfile = arePartOfAProfile(array_keys($listOfMembers));
+    $currentGroup = getPGobject($gid, true);
+    if ($type == 1) {
+        // Check if machines who are displayed are part of an existing profile
+        $machinesInProfile = arePartOfAProfile(array_keys($listOfMembers));
 
-    // If we edit an imaging group, exclude machines of current group. else they
-    // will be reported as machines in imaging group
-    if (isset($_GET['action']) && $_GET['action'] == 'computersgroupedit') {
-        $i = 0;
-        foreach ($machinesInProfile as $uuid => $group) {
-            if ($group['groupname'] == $_GET['groupname']) {
-                unset($machinesInProfile[$uuid]);
-                unset($willBeUnregistered[array_search($uuid, $willBeUnregistered)]);
+        // If we edit an imaging group, exclude machines of current group. else they
+        // will be reported as machines in imaging group
+        $computersgroupedit = 0;
+        if (isset($_GET['action']) && $_GET['action'] == 'computersgroupedit') {
+            $computersgroupedit = 1;
+            $i = 0;
+            foreach ($machinesInProfile as $uuid => $group) {
+                if ($group['groupname'] == $currentGroup->name) {
+                    unset($machinesInProfile[$uuid]);
+                    unset($willBeUnregistered[array_search($uuid, $willBeUnregistered)]);
+                }
+                $i++;
             }
-            $i++;
         }
     }
 
@@ -192,18 +200,24 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
     <select multiple size="15" class="list" name="members[]">
     <?php
     foreach ($members as $idx => $member) {
-        if ($member == "") { unset($members[$idx]); continue; }
         $currentUuid = explode('##', $idx);
         $currentUuid = $currentUuid[1];
-        $style = '';
-
-        // Check if machines who are displayed are part of an existing profile
-        if (in_array($currentUuid, array_keys($machinesInProfile))) {
-            $style = 'background: red; color: white;';
+        if ($member == "") {
+            unset($members[$idx]);
+            continue;
         }
-        // Or if they're registered in imaging as stand-alone machines
-        elseif (in_array($currentUuid, $willBeUnregistered)) {
-            $style = 'background: purple; color: white;';
+
+        $style = '';
+        if ($type == 1) { // Imaging group
+
+            // Check if machines who are displayed are part of an existing profile
+            if (in_array($currentUuid, array_keys($machinesInProfile))) {
+                $style = 'background: red; color: white;';
+            }
+            // Or if they're registered in imaging as stand-alone machines
+            elseif (in_array($currentUuid, $willBeUnregistered)) {
+                $style = 'background: purple; color: white;';
+            }
         }
         echo "<option style=\"" . $style . "\" value=\"".$idx."\">".$member."</option>\n";
     }
@@ -218,35 +232,37 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
 </div>
 
 <?php
-$warningMessage = False;
-if (count($machinesInProfile) > 0) {
-    $warningMessage = True;
-    print '<p>';
-    print _T('Computers listed below are already part of another imaging group.', 'dyngroup');
-    echo '<ul>';
-    foreach($machinesInProfile as $machineUuid => $group) {
-        printf(_T('<li>%s is part of <a href="%s">%s</a></li>'),
-            $listOfMembers[$machineUuid]['hostname'],
-            urlStrRedirect('imaging/manage/display', array('gid' => $group['groupid'], 'groupname' => $group['groupname'])),
-            $group['groupname']);
-    }
-    echo '</ul>';
-    print '</p>';
-}
-$standAloneImagingRegistered = array_diff($willBeUnregistered, array_keys($machinesInProfile));
-if (count($standAloneImagingRegistered) > 0) {
-    $warningMessage = True;
-    print '<p>';
-    print _T('Computers listed below are already stand-alone registered in imaging.', 'dyngroup');
-    echo '<ul>';
-    foreach($standAloneImagingRegistered as $machineUuid) {
-        printf('<li>%s</li>', $listOfMembers[$machineUuid]['hostname']);
-    }
-    echo '</ul>';
-    print '</p>';
-}
+    if ($type == 1) { // Imaging group
+        $warningMessage = False;
+        if (count($machinesInProfile) > 0) {
+            $warningMessage = True;
+            print '<p>';
+            print _T('Computers listed below are already part of another imaging group.', 'dyngroup');
+            echo '<ul>';
+            foreach($machinesInProfile as $machineUuid => $group) {
+                printf(_T('<li>%s is part of <a href="%s">%s</a></li>'),
+                    $listOfMembers[$machineUuid]['hostname'],
+                    urlStrRedirect('imaging/manage/display', array('gid' => $group['groupid'], 'groupname' => $group['groupname'])),
+                    $group['groupname']);
+            }
+            echo '</ul>';
+            print '</p>';
+        }
+        $standAloneImagingRegistered = array_diff($willBeUnregistered, array_keys($machinesInProfile));
+        if (count($standAloneImagingRegistered) > 0) {
+            $warningMessage = True;
+            print '<p>';
+            print _T('Computers listed below are already stand-alone registered in imaging.', 'dyngroup');
+            echo '<ul>';
+            foreach($standAloneImagingRegistered as $machineUuid) {
+                printf('<li>%s</li>', $listOfMembers[$machineUuid]['hostname']);
+            }
+            echo '</ul>';
+            print '</p>';
+        }
 
-if ($warningMessage) echo _T('<p>These computers will move to this group and their bootmenus <strong>will be rewritten</strong></p>', 'dyngroup');
+        if ($warningMessage) echo _T('<p>These computers will move to this group and their bootmenus <strong>will be rewritten</strong></p>', 'dyngroup');
+    }
 ?>
 
 <input type="hidden" name="type" value="<?php echo  $type; ?>" />
@@ -254,6 +270,7 @@ if ($warningMessage) echo _T('<p>These computers will move to this group and the
 <input type="hidden" name="lmembers" value="<?php echo base64_encode(serialize($members)); ?>" />
 <input type="hidden" name="lsmembers" value="<?php echo base64_encode(serialize($listOfMembers)); ?>" />
 <input type="hidden" name="willBeUnregistered" value="<?php echo base64_encode(serialize($willBeUnregistered)); ?>" />
+<input type="hidden" name="computersgroupedit" value="<?php echo $computersgroupedit; ?>" />
 <input type="hidden" name="id" value="<?php echo  $gid ?>" />
 <input type="submit" name="bconfirm" class="btnPrimary" value="<?php echo  _("Confirm"); ?>" />
 <input type="submit" name="breset" class="btnSecondary" value="<?php echo  _("Cancel"); ?>" />

@@ -81,10 +81,13 @@ if (isset($_POST["bdelmachine_x"])) {
         }
     }
 } elseif (isset($_POST["bconfirm"]) and $name != '' and (($type == 0 and !xmlrpc_group_name_exists($name, $id)) or ($type == 1 and !xmlrpc_profile_name_exists($name, $id)))) {
-    $willBeUnregistered = unserialize(base64_decode($_POST["willBeUnregistered"]));
+    if ($type == 1) {
+        $willBeUnregistered = unserialize(base64_decode($_POST["willBeUnregistered"]));
+        print_r($willBeUnregistered);
 
-    if (count($willBeUnregistered) > 0) {
-        xmlrpc_delComputersImaging($willBeUnregistered, False);
+        if (count($willBeUnregistered) > 0) {
+            xmlrpc_delComputersImaging($willBeUnregistered, False);
+        }
     }
 
     $listOfCurMembers = $group->members();
@@ -96,10 +99,32 @@ if (isset($_POST["bdelmachine_x"])) {
     if (!$curmem) { $curmem = array(); }
     if (!$listOfCurMembers) { $listOfCurMembers = array(); }
 
+    // If we're editing an existing imaging group,
+    // check if target has more than one ethernet card
+    $hasMoreThanOneEthCard = array();
+    if (isset($_POST['computersgroupedit']) && $_POST['computersgroupedit'] == 1) {
+        $listOfMembersUuids = array();
+        foreach ($listOfMembers as $member) {
+            $listOfMembersUuids[] = $member['uuid'];
+        }
+        $hasMoreThanOneEthCard = xmlrpc_hasMoreThanOneEthCard($listOfMembersUuids);
+    }
+
     $listN = array();
     $listC = array();
-    foreach ($listOfMembers as $member) { $listN[$member['uuid'].'##'.$member['hostname']] = $member; }
-    foreach ($listOfCurMembers as $member) { $listC[$member['uuid'].'##'.$member['hostname']] = $member; }
+    $dontAddedToProfile = array();
+    foreach ($listOfMembers as $member) { 
+        // If Profile, don't add computer to current group if it has more than one ethernet card
+        if (in_array($member['uuid'], $hasMoreThanOneEthCard)) {
+            $dontAddedToProfile[] = $member;
+        }
+        else {
+            $listN[$member['uuid'].'##'.$member['hostname']] = $member;
+        }
+    }
+    foreach ($listOfCurMembers as $member) { 
+        $listC[$member['uuid'].'##'.$member['hostname']] = $member; 
+    }
 
     $newmem = array_diff_assoc($listN, $listC);
     $delmem = array_diff_assoc($listC, $listN);
@@ -125,7 +150,17 @@ if (isset($_POST["bdelmachine_x"])) {
                 // Synchro Profile
                 $ret = xmlrpc_synchroProfile($group->id);
 
-                new NotifyWidgetSuccess(_T("Imaging group successfully modified", "dyngroup"));
+                if (count($dontAddedToProfile) > 0) {
+                    $msg = _T("Imaging group modified, but some machines were not added to existing imaging group, because they have more than one ethernet card:", 'dyngroup');
+                    $msg .= "<br /><br />";
+                    foreach ($dontAddedToProfile as $member) {
+                        $msg .= $member['hostname'] . "<br />";
+                    }
+                    new NotifyWidgetWarning($msg);
+                }
+                else {
+                    new NotifyWidgetSuccess(_T("Imaging group successfully modified", "dyngroup"));
+                }
             }
         } else {
             if ($type == 0) { // Simple group

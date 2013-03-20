@@ -34,13 +34,13 @@ if (!$gid) { // TODO !!
     $result->replyToRequest();
     $result->displayResListInfos();
 } else {
-    if ($_GET['module'] == 'base' && $_GET['submod'] == 'computers' && !isset($_GET['gid'])) {
+    $group = getPGobject($gid, true);
+    if ($group->type == 0) {
         require("modules/base/computers/localSidebar.php");
     }
     else {
         require("modules/imaging/manage/localSidebar.php");
     }
-    $group = getPGobject($gid, true);
     if (isset($items[$gid])) {
         $item = $items[$gid];
     } else {
@@ -49,7 +49,7 @@ if (!$gid) { // TODO !!
     if ($group->type == 0) {
         __my_header(sprintf(_T("Group '%s' content", "dyngroup"), $group->getName()), $sidemenu, $item, $group);
     } else {
-        __my_header(sprintf(_T("Display profile '%s' content", "dyngroup"), $group->getName()), $sidemenu, $item, $group);
+        __my_header(sprintf(_T("Imaging group '%s' content", "dyngroup"), $group->getName()), $sidemenu, $item, $group);
     }
     $group->prettyDisplay();
 }

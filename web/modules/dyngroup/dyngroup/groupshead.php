@@ -21,9 +21,16 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require("modules/imaging/manage/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/dyngroup/includes/includes.php");
+
+$group = getPGobject($gid, true);
+if ($group->type == 0) {
+    require("modules/base/computers/localSidebar.php");
+}
+else {
+    require("modules/imaging/manage/localSidebar.php");
+}
 
 if ($_GET["action"]=="computersgroupcreator") {
     $title = _T("Add a static group", 'dyngroup');

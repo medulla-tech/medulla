@@ -107,6 +107,20 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return DyngroupDatabase().arePartOfAProfile(ctx, uuids)
 
+    def hasMoreThanOneEthCard(self, uuids):
+        ctx = self.currentContext
+        moreThanOneEthCard = []
+        # Exclude computers who have more than one network card
+        nets = ComputerManager().getComputersNetwork(ctx, {'uuids':uuids})
+        for net in nets:
+            net = net[1]
+            if len(net['macAddress']) > 1:
+                if net['objectUUID'] not in moreThanOneEthCard:
+                    logging.getLogger().debug("Computer %s (%s) has more than one network card, it won't be added to profile" % (net['cn'], net['objectUUID']))
+                    moreThanOneEthCard.append(net['objectUUID'][0])
+
+        return moreThanOneEthCard
+
     def countallprofiles(self, params): #NEW
         ctx = self.currentContext
         count = DyngroupDatabase().countallgroups(ctx, params, 1)
@@ -261,6 +275,7 @@ class RpcProxy(RpcProxyI):
                 computers.append(uuids[c]['uuid'])
                 uuid2key[uuids[c]['uuid']] = c
             didnt_work = ComputerProfileManager().areForbiddebComputers(computers)
+
             if len(didnt_work) > 0:
                 logging.getLogger().debug("Can't add the following computers in that profile %s : %s"%(str(id), str(didnt_work)))
                 for i in didnt_work:
