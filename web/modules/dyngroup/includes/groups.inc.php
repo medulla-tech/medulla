@@ -261,7 +261,10 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
             print '</p>';
         }
 
-        if ($warningMessage) echo _T('<p>These computers will move to this group and their bootmenus <strong>will be rewritten</strong></p>', 'dyngroup');
+        if ($warningMessage) {
+            echo _T('<p>These computers will move to this group and their bootmenus <strong>will be rewritten</strong></p>', 'dyngroup');
+            echo '<p>' . _T('All related images to these computers will be <strong>DELETED</strong>', 'dyngroup') . '</p>';
+        }
     }
 ?>
 
