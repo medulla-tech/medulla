@@ -1870,7 +1870,12 @@ class ImagingRpcProxy(RpcProxyI):
 
                     for uuid in uuids:
                         if uuid in params['choose_network_profile']:
-                            h_macaddress[uuid] = uuidMacDict[params['choose_network_profile'][uuid]]
+                            if params['choose_network_profile'][uuid] in uuidMacDict:
+                                # if Target have more than one ethernet card
+                                h_macaddress[uuid] = uuidMacDict[params['choose_network_profile'][uuid]]
+                            else:
+                                # else, get the good one
+                                h_macaddress[uuid] = getJustOneMacPerComputer(ctx, ComputerManager().getMachineMac(ctx, {'uuids': uuids}))
                         else:
                             logger.warn('Imaging on group: %s doesn\'t exists in choose_network_profile key' % uuid)
                 else:
