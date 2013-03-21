@@ -53,18 +53,38 @@ if (isset($_POST["bconfirm"])) {
         /* insert notification code here if needed */
 
         // Synchronize boot menu
-        $ret = xmlrpc_synchroComputer($target_uuid);
+        if ($type == 'group') {
+            $ret = xmlrpc_synchroProfile($target_uuid);
+        }
+        else {
+            $ret = xmlrpc_synchroComputer($target_uuid);
+        }
         if (isXMLRPCError()) {
             new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for computer: %s", "imaging"), implode(', ', $ret[1])));
         }
-        header("Location: ".urlStrRedirect("base/computers/".$type."imgtabs/".$type."tabimages", $params));
+        if ($type == 'group') { // Imaging group
+            header("Location: ".urlStrRedirect("imaging/manage/".$type."imgtabs/".$type."tabimages", $params));
+        }
+        else {
+            header("Location: ".urlStrRedirect("base/computers/".$type."imgtabs/".$type."tabimages", $params));
+        }
         exit;
     } elseif ($ret[0]) {
-        header("Location: ".urlStrRedirect("base/computers/".$type."imgtabs/".$type."tabimages", $params));
+        if ($type == 'group') { // Imaging group
+            header("Location: ".urlStrRedirect("imaging/manage/".$type."imgtabs/".$type."tabimages", $params));
+        }
+        else {
+            header("Location: ".urlStrRedirect("base/computers/".$type."imgtabs/".$type."tabimages", $params));
+        }
         exit;
     } else {
         new NotifyWidgetFailure($ret[1]);
-        header("Location: ".urlStrRedirect("base/computers/".$type."imgtabs/".$type."tabimages", $params));
+        if ($type == 'group') { // Imaging group
+            header("Location: ".urlStrRedirect("imaging/manage/".$type."imgtabs/".$type."tabimages", $params));
+        }
+        else {
+            header("Location: ".urlStrRedirect("base/computers/".$type."imgtabs/".$type."tabimages", $params));
+        }
         exit;
     }
 }
