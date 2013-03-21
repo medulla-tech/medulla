@@ -41,6 +41,12 @@ if (!$gid) { // TODO !!
     else {
         require("modules/imaging/manage/localSidebar.php");
     }
+    // FIXME
+    // We redefine here $group who was *altered* by require() above:
+    // "modules/base/computers/localSidebar.php" include "modules/dyngroup/dyngroup/localSidebar.php"
+    // who contains a foreach ($groups as $group)
+    // FIXME
+    $group = getPGobject($gid, true);
     if (isset($items[$gid])) {
         $item = $items[$gid];
     } else {
