@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-20 01:00+0100\n"
+"POT-Creation-Date: 2013-03-21 01:00+0100\n"
 "PO-Revision-Date: 2013-03-14 15:53+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
@@ -42,12 +42,12 @@ msgstr "%s) Recherche %s %s (%s) dans le module %s"
 msgid "->"
 msgstr "->"
 
-#: modules/dyngroup/includes/groups.inc.php:228
+#: modules/dyngroup/includes/groups.inc.php:243
 #, php-format
 msgid "<li>%s is part of <a href=\"%s\">%s</a></li>"
 msgstr "<li>%s fait partie de <a href=\"%s\">%s</a></li>"
 
-#: modules/dyngroup/includes/groups.inc.php:249
+#: modules/dyngroup/includes/groups.inc.php:264
 msgid ""
 "<p>These computers will move to this group and their bootmenus <strong>will "
 "be rewritten</strong></p>"
@@ -55,7 +55,7 @@ msgstr ""
 "<p>Ces machines seront intégrées au groupe et leurs menus de démarrage "
 "<strong>seront écrasés</strong></p>"
 
-#: modules/dyngroup/dyngroup/add_groups.php:184
+#: modules/dyngroup/dyngroup/add_groups.php:219
 #: modules/dyngroup/dyngroup/import_from_file.php:45
 #: modules/dyngroup/dyngroup/save.php:92
 #, php-format
@@ -76,7 +76,7 @@ msgstr "Ajouter"
 msgid "Add a group"
 msgstr "Ajouter un groupe"
 
-#: modules/dyngroup/dyngroup/groupshead.php:29
+#: modules/dyngroup/dyngroup/groupshead.php:35
 msgid "Add a static group"
 msgstr "Ajouter un groupe statique"
 
@@ -89,8 +89,8 @@ msgid "Add an imaging group"
 msgstr "Ajouter un groupe d'imaging"
 
 #: modules/dyngroup/dyngroup/import_from_file.php:57
-#: modules/dyngroup/includes/groups.inc.php:116
-#: modules/dyngroup/includes/groups.inc.php:120
+#: modules/dyngroup/includes/groups.inc.php:117
+#: modules/dyngroup/includes/groups.inc.php:121
 msgid "Add shortcut"
 msgstr "Créer un raccourci"
 
@@ -102,15 +102,15 @@ msgstr "Tous les groupes"
 msgid "All imaging groups"
 msgstr "Tous les groupes d'imaging"
 
-#: modules/dyngroup/includes/groups.inc.php:168
+#: modules/dyngroup/includes/groups.inc.php:176
 msgid "All machines"
 msgstr "Tous les ordinateurs"
 
-#: modules/dyngroup/includes/groups.inc.php:35
+#: modules/dyngroup/includes/groups.inc.php:36
 msgid "All share entities"
 msgstr "Partager avec"
 
-#: modules/dyngroup/dyngroup/add_groups.php:186
+#: modules/dyngroup/dyngroup/add_groups.php:221
 #, php-format
 msgid "An imaging group already exists with name '%s'"
 msgstr "Un groupe d'imaging '%s' existe déjà"
@@ -132,8 +132,8 @@ msgstr ""
 
 #: modules/dyngroup/dyngroup/delete_group.php:69
 #: modules/dyngroup/dyngroup/remove_machine.php:48
-#: modules/dyngroup/includes/groups.inc.php:83
-#: modules/dyngroup/includes/groups.inc.php:259
+#: modules/dyngroup/includes/groups.inc.php:84
+#: modules/dyngroup/includes/groups.inc.php:276
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -184,22 +184,22 @@ msgid "Computers Group Sub Request Editor"
 msgstr "Page d'édition d'une sous requête de groupe d'ordinateurs"
 
 #: modules/dyngroup/dyngroup/add_groups.php:68
-#: modules/dyngroup/dyngroup/add_groups.php:202
+#: modules/dyngroup/dyngroup/add_groups.php:237
 #, php-format
 msgid "Computers list has been truncated at %d computers"
 msgstr "La liste des ordinateurs a été tronquée à %d ordinateurs"
 
-#: modules/dyngroup/includes/groups.inc.php:225
+#: modules/dyngroup/includes/groups.inc.php:240
 msgid "Computers listed below are already part of another imaging group."
 msgstr "Les machines ci-dessous font déjà partie d'un autre groupe d'imaging."
 
-#: modules/dyngroup/includes/groups.inc.php:240
+#: modules/dyngroup/includes/groups.inc.php:255
 #, fuzzy
 msgid "Computers listed below are already stand-alone registered in imaging."
 msgstr "Les machines ci-dessous font déjà partie d'un autre groupe d'imaging."
 
-#: modules/dyngroup/includes/groups.inc.php:82
-#: modules/dyngroup/includes/groups.inc.php:258
+#: modules/dyngroup/includes/groups.inc.php:83
+#: modules/dyngroup/includes/groups.inc.php:275
 msgid "Confirm"
 msgstr "Confirmer"
 
@@ -257,11 +257,6 @@ msgstr "Montrer un groupe d'ordinateurs"
 msgid "Display content"
 msgstr "Voir le contenu"
 
-#: modules/dyngroup/dyngroup/display.php:52
-#, php-format
-msgid "Display profile '%s' content"
-msgstr "Voir le contenu du profil '%s'"
-
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:96
 msgid "Display this group's content"
 msgstr "Montrer le contenu de ce groupe"
@@ -301,7 +296,7 @@ msgid "Edit a dynamic group"
 msgstr "Éditer un groupe dynamique"
 
 #: modules/dyngroup/dyngroup/edithead.php:52
-#: modules/dyngroup/dyngroup/groupshead.php:31
+#: modules/dyngroup/dyngroup/groupshead.php:37
 msgid "Edit a static group"
 msgstr "Éditer un groupe statique"
 
@@ -337,7 +332,7 @@ msgstr "Membres de groupe '%s' contient"
 msgid "Group creation"
 msgstr "Création d'un groupe"
 
-#: modules/dyngroup/dyngroup/add_groups.php:168
+#: modules/dyngroup/dyngroup/add_groups.php:203
 msgid "Group failed to modify"
 msgstr "Erreur à la modification du groupe"
 
@@ -349,16 +344,16 @@ msgstr "Erreur à la modification des partages du groupe"
 msgid "Group list"
 msgstr "Liste des groupes"
 
-#: modules/dyngroup/includes/groups.inc.php:117
-#: modules/dyngroup/includes/groups.inc.php:121
+#: modules/dyngroup/includes/groups.inc.php:118
+#: modules/dyngroup/includes/groups.inc.php:122
 msgid "Group members"
 msgstr "Membres du groupe"
 
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:78
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:80
 #: modules/dyngroup/dyngroup/import_from_file.php:51
-#: modules/dyngroup/includes/groups.inc.php:115
-#: modules/dyngroup/includes/groups.inc.php:119
+#: modules/dyngroup/includes/groups.inc.php:116
+#: modules/dyngroup/includes/groups.inc.php:120
 msgid "Group name"
 msgstr "Nom du groupe"
 
@@ -366,16 +361,16 @@ msgstr "Nom du groupe"
 msgid "Group of computers details"
 msgstr "Détails du groupe d'ordinateurs"
 
-#: modules/dyngroup/includes/groups.inc.php:58
+#: modules/dyngroup/includes/groups.inc.php:59
 msgid "Group share"
 msgstr "Partage du groupe"
 
-#: modules/dyngroup/dyngroup/add_groups.php:132
+#: modules/dyngroup/dyngroup/add_groups.php:167
 #: modules/dyngroup/dyngroup/import_from_file.php:41
 msgid "Group successfully created"
 msgstr "Groupe créé avec succès"
 
-#: modules/dyngroup/dyngroup/add_groups.php:123
+#: modules/dyngroup/dyngroup/add_groups.php:148
 msgid "Group successfully modified"
 msgstr "Groupe modifié avec succès"
 
@@ -396,21 +391,32 @@ msgstr "Cacher"
 msgid "Imaging group %s was successfully deleted"
 msgstr "Le groupe d'imaging %s a été supprimé avec succès"
 
+#: modules/dyngroup/dyngroup/display.php:52
+#, fuzzy, php-format
+msgid "Imaging group '%s' content"
+msgstr "Membres de groupe '%s' contient"
+
 #: modules/dyngroup/dyngroup/tab.php:61
 msgid "Imaging group creation"
 msgstr "Création d'un groupe d'imaging"
 
-#: modules/dyngroup/dyngroup/add_groups.php:173
+#: modules/dyngroup/dyngroup/add_groups.php:208
 msgid "Imaging group failed to modify"
 msgstr "La modification du groupe d'imaging a échoué"
 
-#: modules/dyngroup/dyngroup/add_groups.php:171
+#: modules/dyngroup/dyngroup/add_groups.php:206
 #, php-format
 msgid "Imaging group failed to modify.<br/>Can't add %s"
 msgstr ""
 "La modification du groupe d'imaging a échoué.<br/>Impossible d'ajouter %s"
 
-#: modules/dyngroup/dyngroup/add_groups.php:128
+#: modules/dyngroup/dyngroup/add_groups.php:154
+msgid ""
+"Imaging group modified, but some machines were not added to existing imaging "
+"group, because they have more than one ethernet card:"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/add_groups.php:162
 msgid "Imaging group successfully modified"
 msgstr "Le groupe d'imaging a été modifié avec succès"
 
@@ -455,7 +461,7 @@ msgstr "Nom :"
 
 #: modules/dyngroup/dyngroup/creator.php:237
 #: modules/dyngroup/dyngroup/import_from_file.php:54
-#: modules/dyngroup/includes/groups.inc.php:158
+#: modules/dyngroup/includes/groups.inc.php:166
 msgid "No"
 msgstr "Non"
 
@@ -643,16 +649,16 @@ msgstr "visible"
 #: modules/dyngroup/dyngroup/creator.php:236
 #: modules/dyngroup/dyngroup/creator.php:242
 #: modules/dyngroup/dyngroup/import_from_file.php:54
-#: modules/dyngroup/includes/groups.inc.php:157
+#: modules/dyngroup/includes/groups.inc.php:165
 msgid "Yes"
 msgstr "Oui"
 
-#: modules/dyngroup/dyngroup/add_groups.php:179
+#: modules/dyngroup/dyngroup/add_groups.php:214
 #: modules/dyngroup/dyngroup/save.php:94 modules/dyngroup/dyngroup/save.php:96
 msgid "You must specify a group name"
 msgstr "Le nom du groupe est obligatoire"
 
-#: modules/dyngroup/dyngroup/add_groups.php:181
+#: modules/dyngroup/dyngroup/add_groups.php:216
 msgid "You must specify an imaging group name"
 msgstr "Vous devez spécifier le nom du groupe d'imaging"
 
@@ -711,6 +717,9 @@ msgstr "mise à jour du cache des noms de ordinateurs : %s ordinateurs"
 #: modules/dyngroup/dyngroup/save.php:78
 msgid "visible"
 msgstr "visible"
+
+#~ msgid "Display profile '%s' content"
+#~ msgstr "Voir le contenu du profil '%s'"
 
 #~ msgid "Edit a profile"
 #~ msgstr "Éditer un profil"
