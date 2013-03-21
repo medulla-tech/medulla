@@ -65,13 +65,24 @@ foreach ($menu as $entry) {
     $l_params["itemid"] = $entry['imaging_uuid'];
     $l_params['targetid'] = $targetid;
 
-    // don't show action if service is in bootmenu
-    if(!isset($entry['menu_item'])) {
-        $addActions[] = $addAction;
-    } elseif ($entry['menu_item']['read_only']) {
-        $is_in_profile = True;
+    if (isset($entry['menu_item']['read_only']) && $image['menu_item']['read_only']) $is_in_profile = True;
+
+    if (in_array("dyngroup", $_SESSION["modulesList"])) {
+        require_once("../../../modules/dyngroup/includes/xmlrpc.php");
+        if (isProfilesEnable()) {
+            $machinesInProfile = arePartOfAProfile(array($_GET['target_uuid']));
+            if (in_array($_GET['target_uuid'], array_keys($machinesInProfile))) $is_in_profile = True;
+        }
+    }
+
+    if ($is_in_profile) {
         $addActions[] = $emptyAction;
-    } else {
+    }
+    // don't show action if service is in bootmenu
+    elseif(!isset($entry['menu_item'])) {
+        $addActions[] = $addAction;
+    } 
+    else {
         $addActions[] = $delAction;
         $l_params["mi_itemid"] = $entry['menu_item']['imaging_uuid'];
     }
