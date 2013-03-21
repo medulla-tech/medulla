@@ -147,7 +147,7 @@ foreach ($ret as $target) {
         $params['hostname'] = $target[2];
         $url = urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params);
         printf('<p><input title="' . _T("Remove this master from computer %s", "imaging") . '" type="checkbox" name="computer_checkbox_%s"/>', $target[2], $target[0]);
-        printf("<a href='".$url."'>".($target[1]==2?_T('Profile', 'imaging'): _T('Computer', 'imaging'))." : ".$target[2]."</a></p>");
+        printf("<a href='".$url."'>".($target[1]==2?_T('Imaging group', 'imaging'): _T('Computer', 'imaging'))." : ".$target[2]."</a></p>");
         printf('<input type="hidden" name="computer_uuid_%s" value="%s"/>', $target[0], $id);
         printf('<input type="hidden" name="type_uuid_%s" value="%s"/>', $target[0], $target[1]);
     }
