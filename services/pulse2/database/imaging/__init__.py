@@ -3471,7 +3471,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             location = ComputerLocationManager().getMachinesLocations([uuid])
             location_id = location[uuid]['uuid']
             menu = self.getEntityDefaultMenu(location_id, session)
-            mis = self.__getDefaultMenuMenuItems(session)
+            mis = self.__getDefaultMenuItem(session, menu.id)
             target = self.getTargetsByUUID([uuid])[0]
             params = menu.toH()
             params["target_name"] = target.name
