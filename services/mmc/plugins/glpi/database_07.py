@@ -364,23 +364,16 @@ class Glpi07(DyngroupDatabaseHelper):
             query = self.__filter_on_entity(query, ctx)
 
             # filtering on machines (name or uuid)
-            try:
-                query = query.filter(self.machine.c.name.like(filt['hostname']+'%'))
-            except KeyError:
-                pass
-            try:
-                query = query.filter(self.machine.c.name.like(filt['name']+'%'))
-            except KeyError:
-                pass
-            try:
-                query = query.filter(self.machine.c.name.like(filt['filter']+'%'))
-            except KeyError:
-                pass
+            if 'hostname' in filt:
+                query = query.filter(self.machine.c.name.like('%'+filt['hostname']+'%'))
+            if 'name' in filt:
+                query = query.filter(self.machine.c.name.like('%'+filt['name']+'%'))
 
-            try:
+            if 'filter' in filt: # Used with search field of static group creation
+                query = query.filter(self.machine.c.name.like('%'+filt['filter']+'%'))
+
+            if 'uuid' in filt:
                 query = self.filterOnUUID(query, filt['uuid'])
-            except KeyError:
-                pass
 
             if 'uuids' in filt and type(filt['uuids']) == list and len(filt['uuids']) > 0:
                 query = self.filterOnUUID(query, filt['uuids'])

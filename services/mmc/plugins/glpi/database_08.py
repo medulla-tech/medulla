@@ -495,11 +495,11 @@ class Glpi08(DyngroupDatabaseHelper):
                         query = query.filter(or_(*clauses))
                 else:
                     # filtering on machines (name or uuid)
-                    query = query.filter(self.machine.c.name.like(filt['hostname']+'%'))
+                    query = query.filter(self.machine.c.name.like('%'+filt['hostname']+'%'))
             if 'name' in filt:
-                query = query.filter(self.machine.c.name.like(filt['name']+'%'))
-            if 'filter' in filt:
-                query = query.filter(self.machine.c.name.like(filt['filter']+'%'))
+                query = query.filter(self.machine.c.name.like('%'+filt['name']+'%'))
+            if 'filter' in filt: # Used with search field of static group creation
+                query = query.filter(self.machine.c.name.like('%'+filt['filter']+'%'))
             if 'uuid' in filt:
                 query = self.filterOnUUID(query, filt['uuid'])
             if 'uuids' in filt and type(filt['uuids']) == list and len(filt['uuids']) > 0:
