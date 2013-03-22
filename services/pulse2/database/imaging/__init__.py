@@ -3308,6 +3308,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def getComputersThatNeedSynchroInEntity(self, loc_id, session = None):
         return self.getTargetsThatNeedSynchroInEntity(loc_id, P2IT.COMPUTER, session)
     def getProfilesThatNeedSynchroInEntity(self, loc_id, session = None):
+        return self.getTargetsThatNeedSynchroInEntity(loc_id, P2IT.PROFILE, session)
+    def getComputersInProfileThatNeedSynchroInEntity(self, loc_id, session = None):
         return self.getTargetsThatNeedSynchroInEntity(loc_id, P2IT.COMPUTER_IN_PROFILE, session)
 
     def getComputersSynchroStates(self, uuids, session = None):

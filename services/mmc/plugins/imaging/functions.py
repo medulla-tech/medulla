@@ -1697,12 +1697,28 @@ class ImagingRpcProxy(RpcProxyI):
             logger.debug(results)
 
         if len(pids) != 0:
-            d2 = self.__synchroTargets(pids, P2IT.COMPUTER_IN_PROFILE)
+            d2 = self.__synchroTargets(pids, P2IT.PROFILE)
             if type(d2) == list and d2[0]:
                 pass
             else:
                 d2.addCallback(treatProfiles)
                 dl.append(d2)
+
+        # get computers in profiles in location that need synchro
+        pids = db.getComputersInProfileThatNeedSynchroInEntity(uuid)
+        pids = map(__getUUID, pids)
+
+        def treatComputersInProfile(results):
+            logger.debug("treatComputersInProfile>>>>>>")
+            logger.debug(results)
+
+        if len(pids) != 0:
+            d3 = self.__synchroTargets(pids, P2IT.COMPUTER_IN_PROFILE)
+            if type(d3) == list and d3[0]:
+                pass
+            else:
+                d3.addCallback(treatComputersInProfile)
+                dl.append(d3)
 
         # synchro the location
         def treatLocation(results):
@@ -1714,9 +1730,9 @@ class ImagingRpcProxy(RpcProxyI):
                 db.setLocationSynchroState(uuid, P2ISS.TODO)
                 raise Exception("Error while synchronizing location")
 
-        d3 = self.__synchroLocation(uuid)
-        d3.addCallback(treatLocation)
-        dl.append(d3)
+        d4 = self.__synchroLocation(uuid)
+        d4.addCallback(treatLocation)
+        dl.append(d4)
 
         def sendResult(results):
             return xmlrpcCleanup(results)
