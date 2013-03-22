@@ -41,12 +41,17 @@ if ($type == 1) { // Imaging group
 }
 
 if (quickGet('valid')) {
+    if ($type == 1) { // Imaging group
+        if (in_array("imaging", $_SESSION["modulesList"])) {
+            // Get Current Location
+            include('modules/imaging/includes/xmlrpc.inc.php');
+            $location = xmlrpc_getProfileLocation($id);
+        }
+    }
     $group->delete();
     if ($type == 1) { // Imaging group
         if (in_array("imaging", $_SESSION["modulesList"])) {
-            include('modules/imaging/includes/includes.php');
-            include('modules/imaging/includes/xmlrpc.inc.php');
-            $location = getCurrentLocation();
+            // Synchro Location
             xmlrpc_synchroLocation($location);
         }
         header("Location: " . urlStrRedirect("imaging/manage/list$stype" ));
