@@ -43,6 +43,12 @@ if ($type == 1) { // Imaging group
 if (quickGet('valid')) {
     $group->delete();
     if ($type == 1) { // Imaging group
+        if (in_array("imaging", $_SESSION["modulesList"])) {
+            include('modules/imaging/includes/includes.php');
+            include('modules/imaging/includes/xmlrpc.inc.php');
+            $location = getCurrentLocation();
+            xmlrpc_synchroLocation($location);
+        }
         header("Location: " . urlStrRedirect("imaging/manage/list$stype" ));
         new NotifyWidgetSuccess(sprintf(_T("Imaging group %s was successfully deleted", "imaging"), $group->getName()));
     }
