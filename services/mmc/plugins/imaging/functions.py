@@ -1741,6 +1741,10 @@ class ImagingRpcProxy(RpcProxyI):
         dl.addCallback(sendResult)
         return dl
 
+    def getProfileLocation(self, uuid):
+        """ get Location of given Profile """
+        return ImagingDatabase().getProfileLocation(uuid)
+
     ###### Menus
     def getMyMenuTarget(self, uuid, target_type):
         """

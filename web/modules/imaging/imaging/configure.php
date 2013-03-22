@@ -309,9 +309,11 @@ if (isset($_POST["bvalid"])) {
 
     // Go to images list
     if ($ret[0] and !isXMLRPCError()) {
-        // Synchronize location
-        $location = getCurrentLocation();
-        xmlrpc_synchroLocation($location);
+        if ($type == 'group') { // Imaging group
+            // Synchronize location
+            $location = xmlrpc_getProfileLocation($target_uuid);
+            xmlrpc_synchroLocation($location);
+        }
         if ($is_registering) {
             $str = sprintf(_T("Boot menu is created for <strong>%s</strong>.", "imaging"), $target_name);
         } else {

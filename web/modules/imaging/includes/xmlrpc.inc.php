@@ -34,6 +34,10 @@ function xmlrpc_isProfileRegistered($profile_uuid) {
     return ($_SESSION["imaging.isProfileRegistered_".$profile_uuid] == 1);
 }
 
+function xmlrpc_getProfileLocation($target_uuid) {
+    return xmlCall("imaging.getProfileLocation", array($target_uuid));
+}
+
 function xmlrpc_getMyMenuProfile($target_uuid) {
     return xmlCall("imaging.getMyMenuProfile", array($target_uuid));
 }
