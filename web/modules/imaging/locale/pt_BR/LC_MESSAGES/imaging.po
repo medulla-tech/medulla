@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-16 01:00+0100\n"
+"POT-Creation-Date: 2013-03-22 01:00+0100\n"
 "PO-Revision-Date: 2013-03-14 15:48+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
@@ -138,7 +138,7 @@ msgstr "Adicionar o serviço de boot <b>%s</b> em <b>%s</b>"
 msgid "Add the boot service <b>%s</b> to the default boot menu"
 msgstr "Adicionar o serviço de boot <b>%s</b> ao menu de boot padrão"
 
-#: modules/imaging/imaging/addimage.php:102
+#: modules/imaging/imaging/addimage.php:122
 #: modules/imaging/manage/master_add.php:89
 #, php-format
 msgid "Add the image <b>%s</b> to <b>%s</b>"
@@ -261,7 +261,7 @@ msgstr "Serviço de boot já foi criado"
 msgid "Boot menu"
 msgstr "Menu de boot"
 
-#: modules/imaging/imaging/addimage.php:58
+#: modules/imaging/imaging/addimage.php:63
 #: modules/imaging/imaging/addservice.php:63
 #: modules/imaging/imaging/bootmenu_remove.php:73
 #: modules/imaging/imaging/showtarget.php:79
@@ -438,7 +438,7 @@ msgstr "Criar imagem ISO a partir de master"
 msgid "Create boot service from postinstall script"
 msgstr "Criar serviço de boot a partir do script de pós-instalação"
 
-#: modules/imaging/imaging/ajaxImages.php:158
+#: modules/imaging/imaging/ajaxImages.php:168
 #: modules/imaging/manage/ajaxMasterLevel2.php:114
 msgid "Create bootable iso"
 msgstr "Criar ISO inicializável"
@@ -457,7 +457,7 @@ msgstr "Criar iso de master"
 msgid "Create iso image"
 msgstr "Criar imagem ISO"
 
-#: modules/imaging/imaging/ajaxImages.php:148
+#: modules/imaging/imaging/ajaxImages.php:158
 #: modules/imaging/manage/ajaxMasterLevel2.php:109
 msgid "Created"
 msgstr "Criado"
@@ -540,8 +540,8 @@ msgstr "Deletar Serviço"
 msgid "Delete the image"
 msgstr "Exluir a imagem"
 
-#: modules/imaging/imaging/ajaxImages.php:147
-#: modules/imaging/imaging/ajaxServices.php:88
+#: modules/imaging/imaging/ajaxImages.php:157
+#: modules/imaging/imaging/ajaxServices.php:99
 #: modules/imaging/imaging/bootmenu.php:302
 #: modules/imaging/imaging/images.php:108
 #: modules/imaging/includes/post_install_script.php:65
@@ -563,7 +563,7 @@ msgstr "Acesso a linha de comando Linux"
 msgid "Display a groups of computers"
 msgstr ""
 
-#: modules/imaging/imaging/addimage.php:116
+#: modules/imaging/imaging/addimage.php:136
 #: modules/imaging/imaging/addservice.php:120
 #: modules/imaging/imaging/bootmenu.php:141
 #: modules/imaging/imaging/bootmenu.php:305
@@ -574,7 +574,7 @@ msgstr ""
 msgid "Displayed"
 msgstr "Mostrado"
 
-#: modules/imaging/imaging/addimage.php:120
+#: modules/imaging/imaging/addimage.php:140
 #: modules/imaging/imaging/addservice.php:124
 #: modules/imaging/imaging/bootmenu.php:151
 #: modules/imaging/imaging/bootmenu.php:308
@@ -622,7 +622,7 @@ msgid "Edit : %s"
 msgstr "Editar: %s"
 
 #: modules/imaging/imaging/ajaxImages.php:77
-#: modules/imaging/imaging/ajaxImages.php:165
+#: modules/imaging/imaging/ajaxImages.php:175
 #: modules/imaging/manage/ajaxMasterLevel2.php:118
 msgid "Edit image"
 msgstr "Editar imagem"
@@ -757,8 +757,8 @@ msgstr "Forçar Geração"
 msgid "Force raw backup mode"
 msgstr "Forçar modo de backup raw"
 
-#: modules/imaging/imaging/ajaxImages.php:152
-#: modules/imaging/imaging/ajaxServices.php:91
+#: modules/imaging/imaging/ajaxImages.php:162
+#: modules/imaging/imaging/ajaxServices.php:102
 msgid "From profile"
 msgstr "De perfil"
 
@@ -929,6 +929,12 @@ msgstr ""
 msgid "Imaging configuration"
 msgstr "Configuração de Imaging"
 
+#: modules/imaging/imaging/showtarget.php:150
+#: modules/imaging/manage/service_show_used.php:129
+#, fuzzy
+msgid "Imaging group"
+msgstr "Imaging no grupo"
+
 #: modules/imaging/imaging/tabs.php:170 modules/imaging/imaging/tabs.php:247
 msgid "Imaging log"
 msgstr "Logs de Imaging"
@@ -968,12 +974,12 @@ msgstr "Estado do servidor de imagens"
 msgid "Imaging service"
 msgstr "Serviço de Imaging"
 
-#: modules/imaging/imaging/ajaxImages.php:150
+#: modules/imaging/imaging/ajaxImages.php:160
 #: modules/imaging/manage/ajaxServiceLevel2.php:94
 msgid "In boot menu"
 msgstr "no menu de boot"
 
-#: modules/imaging/imaging/ajaxServices.php:89
+#: modules/imaging/imaging/ajaxServices.php:100
 msgid "In bootmenu"
 msgstr "No menu de boot"
 
@@ -999,8 +1005,8 @@ msgstr "Criação de iso da master <strong>%s</strong> em execução."
 msgid "Kernel parameters"
 msgstr "Parâmetros de kernel"
 
-#: modules/imaging/imaging/ajaxImages.php:145
-#: modules/imaging/imaging/ajaxServices.php:87
+#: modules/imaging/imaging/ajaxImages.php:155
+#: modules/imaging/imaging/ajaxServices.php:98
 #: modules/imaging/imaging/bootmenu.php:300
 #: modules/imaging/imaging/images.php:104
 #: modules/imaging/manage/ajaxBootmenu.php:96
@@ -1242,8 +1248,6 @@ msgid "Preselected choice on WOL"
 msgstr "Opção pré-selecionada num WOL"
 
 #: modules/imaging/imaging/configure.php:47
-#: modules/imaging/imaging/showtarget.php:150
-#: modules/imaging/manage/service_show_used.php:129
 msgid "Profile"
 msgstr "Perfil"
 
@@ -1437,7 +1441,7 @@ msgstr "Selecionar Todas"
 msgid "Select this hard disk"
 msgstr "Selecione o disco rígido"
 
-#: modules/imaging/imaging/addimage.php:114
+#: modules/imaging/imaging/addimage.php:134
 #: modules/imaging/imaging/addservice.php:118
 #: modules/imaging/imaging/bootmenu.php:136
 #: modules/imaging/manage/bootmenu_edit.php:81
@@ -1446,7 +1450,7 @@ msgstr "Selecione o disco rígido"
 msgid "Selected by default"
 msgstr "Selecionado por padrão"
 
-#: modules/imaging/imaging/addimage.php:118
+#: modules/imaging/imaging/addimage.php:138
 #: modules/imaging/imaging/addservice.php:122
 #: modules/imaging/imaging/bootmenu.php:146
 #: modules/imaging/manage/bootmenu_edit.php:91
@@ -1509,7 +1513,7 @@ msgstr "Mostrar Serviços Usados"
 msgid "Show where service is used"
 msgstr "Mostre aonde o serviço está sendo usado"
 
-#: modules/imaging/imaging/ajaxImages.php:149
+#: modules/imaging/imaging/ajaxImages.php:159
 #: modules/imaging/manage/ajaxMasterLevel2.php:110
 msgid "Size (compressed)"
 msgstr "Tamanho(comprimido)"

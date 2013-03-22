@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-21 01:00+0100\n"
+"POT-Creation-Date: 2013-03-22 01:00+0100\n"
 "PO-Revision-Date: 2013-03-14 15:53+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Spanish (Spain) (http://transifex.mandriva.com/projects/p/"
@@ -42,13 +42,13 @@ msgstr ""
 msgid "<li>%s is part of <a href=\"%s\">%s</a></li>"
 msgstr ""
 
-#: modules/dyngroup/includes/groups.inc.php:264
+#: modules/dyngroup/includes/groups.inc.php:265
 msgid ""
 "<p>These computers will move to this group and their bootmenus <strong>will "
 "be rewritten</strong></p>"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/add_groups.php:219
+#: modules/dyngroup/dyngroup/add_groups.php:218
 #: modules/dyngroup/dyngroup/import_from_file.php:45
 #: modules/dyngroup/dyngroup/save.php:92
 #, php-format
@@ -99,11 +99,15 @@ msgstr ""
 msgid "All machines"
 msgstr ""
 
+#: modules/dyngroup/includes/groups.inc.php:266
+msgid "All related images to these computers will be <strong>DELETED</strong>"
+msgstr ""
+
 #: modules/dyngroup/includes/groups.inc.php:36
 msgid "All share entities"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/add_groups.php:221
+#: modules/dyngroup/dyngroup/add_groups.php:220
 #, php-format
 msgid "An imaging group already exists with name '%s'"
 msgstr ""
@@ -123,7 +127,7 @@ msgstr ""
 #: modules/dyngroup/dyngroup/delete_group.php:69
 #: modules/dyngroup/dyngroup/remove_machine.php:48
 #: modules/dyngroup/includes/groups.inc.php:84
-#: modules/dyngroup/includes/groups.inc.php:276
+#: modules/dyngroup/includes/groups.inc.php:279
 msgid "Cancel"
 msgstr ""
 
@@ -174,7 +178,7 @@ msgid "Computers Group Sub Request Editor"
 msgstr ""
 
 #: modules/dyngroup/dyngroup/add_groups.php:68
-#: modules/dyngroup/dyngroup/add_groups.php:237
+#: modules/dyngroup/dyngroup/add_groups.php:236
 #, php-format
 msgid "Computers list has been truncated at %d computers"
 msgstr ""
@@ -188,7 +192,7 @@ msgid "Computers listed below are already stand-alone registered in imaging."
 msgstr ""
 
 #: modules/dyngroup/includes/groups.inc.php:83
-#: modules/dyngroup/includes/groups.inc.php:275
+#: modules/dyngroup/includes/groups.inc.php:278
 msgid "Confirm"
 msgstr ""
 
@@ -311,7 +315,7 @@ msgstr ""
 msgid "Group %s was successfully deleted"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/display.php:50
+#: modules/dyngroup/dyngroup/display.php:56
 #, php-format
 msgid "Group '%s' content"
 msgstr ""
@@ -320,7 +324,7 @@ msgstr ""
 msgid "Group creation"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/add_groups.php:203
+#: modules/dyngroup/dyngroup/add_groups.php:202
 msgid "Group failed to modify"
 msgstr ""
 
@@ -353,12 +357,12 @@ msgstr ""
 msgid "Group share"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/add_groups.php:167
+#: modules/dyngroup/dyngroup/add_groups.php:166
 #: modules/dyngroup/dyngroup/import_from_file.php:41
 msgid "Group successfully created"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/add_groups.php:148
+#: modules/dyngroup/dyngroup/add_groups.php:147
 msgid "Group successfully modified"
 msgstr ""
 
@@ -379,7 +383,7 @@ msgstr ""
 msgid "Imaging group %s was successfully deleted"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/display.php:52
+#: modules/dyngroup/dyngroup/display.php:58
 #, php-format
 msgid "Imaging group '%s' content"
 msgstr ""
@@ -388,22 +392,22 @@ msgstr ""
 msgid "Imaging group creation"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/add_groups.php:208
+#: modules/dyngroup/dyngroup/add_groups.php:207
 msgid "Imaging group failed to modify"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/add_groups.php:206
+#: modules/dyngroup/dyngroup/add_groups.php:205
 #, php-format
 msgid "Imaging group failed to modify.<br/>Can't add %s"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/add_groups.php:154
+#: modules/dyngroup/dyngroup/add_groups.php:153
 msgid ""
 "Imaging group modified, but some machines were not added to existing imaging "
 "group, because they have more than one ethernet card:"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/add_groups.php:162
+#: modules/dyngroup/dyngroup/add_groups.php:161
 msgid "Imaging group successfully modified"
 msgstr ""
 
@@ -638,12 +642,12 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/add_groups.php:214
+#: modules/dyngroup/dyngroup/add_groups.php:213
 #: modules/dyngroup/dyngroup/save.php:94 modules/dyngroup/dyngroup/save.php:96
 msgid "You must specify a group name"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/add_groups.php:216
+#: modules/dyngroup/dyngroup/add_groups.php:215
 msgid "You must specify an imaging group name"
 msgstr ""
 

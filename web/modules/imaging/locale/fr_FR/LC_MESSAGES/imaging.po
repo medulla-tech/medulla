@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-16 01:00+0100\n"
+"POT-Creation-Date: 2013-03-22 01:00+0100\n"
 "PO-Revision-Date: 2013-03-14 15:59+0000\n"
 "Last-Translator: Cécile Adam <acecile@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
@@ -142,7 +142,7 @@ msgid "Add the boot service <b>%s</b> to the default boot menu"
 msgstr ""
 "Ajout du service de démarrage <b>%s</b> au menu de démarrage par défaut"
 
-#: modules/imaging/imaging/addimage.php:102
+#: modules/imaging/imaging/addimage.php:122
 #: modules/imaging/manage/master_add.php:89
 #, php-format
 msgid "Add the image <b>%s</b> to <b>%s</b>"
@@ -265,7 +265,7 @@ msgstr "Le service de démarrage existe déjà"
 msgid "Boot menu"
 msgstr "Menu de démarrage"
 
-#: modules/imaging/imaging/addimage.php:58
+#: modules/imaging/imaging/addimage.php:63
 #: modules/imaging/imaging/addservice.php:63
 #: modules/imaging/imaging/bootmenu_remove.php:73
 #: modules/imaging/imaging/showtarget.php:79
@@ -446,7 +446,7 @@ msgstr "Créer une image ISO depuis le master"
 msgid "Create boot service from postinstall script"
 msgstr "Créer un boot service"
 
-#: modules/imaging/imaging/ajaxImages.php:158
+#: modules/imaging/imaging/ajaxImages.php:168
 #: modules/imaging/manage/ajaxMasterLevel2.php:114
 msgid "Create bootable iso"
 msgstr "Créer une iso bootable"
@@ -465,7 +465,7 @@ msgstr "Créer une iso depuis le master"
 msgid "Create iso image"
 msgstr "Créer une image iso"
 
-#: modules/imaging/imaging/ajaxImages.php:148
+#: modules/imaging/imaging/ajaxImages.php:158
 #: modules/imaging/manage/ajaxMasterLevel2.php:109
 msgid "Created"
 msgstr "Créé"
@@ -548,8 +548,8 @@ msgstr "Supprimer le service"
 msgid "Delete the image"
 msgstr "Supprimer l'image"
 
-#: modules/imaging/imaging/ajaxImages.php:147
-#: modules/imaging/imaging/ajaxServices.php:88
+#: modules/imaging/imaging/ajaxImages.php:157
+#: modules/imaging/imaging/ajaxServices.php:99
 #: modules/imaging/imaging/bootmenu.php:302
 #: modules/imaging/imaging/images.php:108
 #: modules/imaging/includes/post_install_script.php:65
@@ -571,7 +571,7 @@ msgstr "Accès en ligne de commande au linux diskless"
 msgid "Display a groups of computers"
 msgstr "Afficher un groupe de machines"
 
-#: modules/imaging/imaging/addimage.php:116
+#: modules/imaging/imaging/addimage.php:136
 #: modules/imaging/imaging/addservice.php:120
 #: modules/imaging/imaging/bootmenu.php:141
 #: modules/imaging/imaging/bootmenu.php:305
@@ -582,7 +582,7 @@ msgstr "Afficher un groupe de machines"
 msgid "Displayed"
 msgstr "Affiché"
 
-#: modules/imaging/imaging/addimage.php:120
+#: modules/imaging/imaging/addimage.php:140
 #: modules/imaging/imaging/addservice.php:124
 #: modules/imaging/imaging/bootmenu.php:151
 #: modules/imaging/imaging/bootmenu.php:308
@@ -630,7 +630,7 @@ msgid "Edit : %s"
 msgstr "Éditer: %s"
 
 #: modules/imaging/imaging/ajaxImages.php:77
-#: modules/imaging/imaging/ajaxImages.php:165
+#: modules/imaging/imaging/ajaxImages.php:175
 #: modules/imaging/manage/ajaxMasterLevel2.php:118
 msgid "Edit image"
 msgstr "Éditer l'image"
@@ -770,8 +770,8 @@ msgstr "Forcer la génération"
 msgid "Force raw backup mode"
 msgstr "Forcer le backup en mode raw"
 
-#: modules/imaging/imaging/ajaxImages.php:152
-#: modules/imaging/imaging/ajaxServices.php:91
+#: modules/imaging/imaging/ajaxImages.php:162
+#: modules/imaging/imaging/ajaxServices.php:102
 msgid "From profile"
 msgstr "Venant du profil"
 
@@ -944,6 +944,12 @@ msgstr "Activation de l'imaging pour le groupe '%s'"
 msgid "Imaging configuration"
 msgstr "Configuration de l'imaging"
 
+#: modules/imaging/imaging/showtarget.php:150
+#: modules/imaging/manage/service_show_used.php:129
+#, fuzzy
+msgid "Imaging group"
+msgstr "Images sur un groupe"
+
 #: modules/imaging/imaging/tabs.php:170 modules/imaging/imaging/tabs.php:247
 msgid "Imaging log"
 msgstr "Journaux de l'imaging"
@@ -985,12 +991,12 @@ msgstr "Statut du serveur d'imaging"
 msgid "Imaging service"
 msgstr "Service d'imaging"
 
-#: modules/imaging/imaging/ajaxImages.php:150
+#: modules/imaging/imaging/ajaxImages.php:160
 #: modules/imaging/manage/ajaxServiceLevel2.php:94
 msgid "In boot menu"
 msgstr "Dans le menu de démarrage"
 
-#: modules/imaging/imaging/ajaxServices.php:89
+#: modules/imaging/imaging/ajaxServices.php:100
 msgid "In bootmenu"
 msgstr "Dans le menu de démarrage"
 
@@ -1018,8 +1024,8 @@ msgstr ""
 msgid "Kernel parameters"
 msgstr "Paramètres du noyau"
 
-#: modules/imaging/imaging/ajaxImages.php:145
-#: modules/imaging/imaging/ajaxServices.php:87
+#: modules/imaging/imaging/ajaxImages.php:155
+#: modules/imaging/imaging/ajaxServices.php:98
 #: modules/imaging/imaging/bootmenu.php:300
 #: modules/imaging/imaging/images.php:104
 #: modules/imaging/manage/ajaxBootmenu.php:96
@@ -1264,8 +1270,6 @@ msgid "Preselected choice on WOL"
 msgstr "Choix pre-séléctionné pour le WOL"
 
 #: modules/imaging/imaging/configure.php:47
-#: modules/imaging/imaging/showtarget.php:150
-#: modules/imaging/manage/service_show_used.php:129
 msgid "Profile"
 msgstr "Profil"
 
@@ -1460,7 +1464,7 @@ msgstr "Tout sélectionner"
 msgid "Select this hard disk"
 msgstr "Sélectionner ce disque dur"
 
-#: modules/imaging/imaging/addimage.php:114
+#: modules/imaging/imaging/addimage.php:134
 #: modules/imaging/imaging/addservice.php:118
 #: modules/imaging/imaging/bootmenu.php:136
 #: modules/imaging/manage/bootmenu_edit.php:81
@@ -1469,7 +1473,7 @@ msgstr "Sélectionner ce disque dur"
 msgid "Selected by default"
 msgstr "Sélectionné par défaut"
 
-#: modules/imaging/imaging/addimage.php:118
+#: modules/imaging/imaging/addimage.php:138
 #: modules/imaging/imaging/addservice.php:122
 #: modules/imaging/imaging/bootmenu.php:146
 #: modules/imaging/manage/bootmenu_edit.php:91
@@ -1535,7 +1539,7 @@ msgstr "Afficher les services utilisés"
 msgid "Show where service is used"
 msgstr "Afficher qui utilise ce service"
 
-#: modules/imaging/imaging/ajaxImages.php:149
+#: modules/imaging/imaging/ajaxImages.php:159
 #: modules/imaging/manage/ajaxMasterLevel2.php:110
 msgid "Size (compressed)"
 msgstr "Taille (compressée)"
