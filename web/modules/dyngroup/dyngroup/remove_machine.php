@@ -29,7 +29,20 @@ $machine = quickGet('hostname');
 $uuid = quickGet('objectUUID');
 
 if (quickGet('valid')) {
+    if (in_array("imaging", $_SESSION["modulesList"])) {
+        include('modules/imaging/includes/xmlrpc.inc.php');
+        if (xmlrpc_isProfileRegistered($gid)) {
+            // Get Current Location
+            $location = xmlrpc_getProfileLocation($gid);
+        }
+    }
     $group->delMember(array("$uuid" => array("uuid" => $uuid)));
+    if (in_array("imaging", $_SESSION["modulesList"])) {
+        if (xmlrpc_isProfileRegistered($gid)) {
+            // Synchro Location
+            xmlrpc_synchroLocation($location);
+        }
+    }
     header("Location: " . urlStrRedirect("base/computers/display", array('gid'=>$gid)));
     exit;
 }
