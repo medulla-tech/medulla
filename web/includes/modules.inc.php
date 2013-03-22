@@ -371,7 +371,7 @@ function list_system_locales($dir){
  * Add a button to restart a service in a popup
  * Needs the services module
  */
-function handleServicesModule($popup, $services) {
+function handleServicesModule($popup, $services, $mode = "restart") {
     if (in_array("services", $_SESSION["supportModList"])) {
         $servicesInfos = array();
         unset($_SESSION['servicesInfos']);
@@ -379,7 +379,7 @@ function handleServicesModule($popup, $services) {
             $serviceInfo = array();
             $serviceInfo['id'] = $service;
             $serviceInfo['name'] = $name;
-            $serviceInfo['restart'] = urlStrRedirect('services/control/restart', array("service" => $service, "output" => "json"));
+            $serviceInfo['restart'] = urlStrRedirect('services/control/' . $mode, array("service" => $service, "output" => "json"));
             $serviceInfo['check'] = urlStrRedirect('services/control/status', array("service" => $service, "output" => "json"));
             $serviceInfo['msg_exec'] = sprintf(_("%s service restarting..."), $name);
             $serviceInfo['msg_success'] = sprintf(_("%s service restarted successfully."), $name);
