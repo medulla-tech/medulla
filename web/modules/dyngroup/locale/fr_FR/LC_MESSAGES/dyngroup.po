@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-22 01:00+0100\n"
+"POT-Creation-Date: 2013-03-23 01:00+0100\n"
 "PO-Revision-Date: 2013-03-14 15:53+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
@@ -134,8 +134,8 @@ msgid "Are you sure you want to delete imaging group <b>%s</b>?<br/>"
 msgstr ""
 "Êtes-vous certain de vouloir supprimer le groupe d'imaging <b>%s</b>?<br/>"
 
-#: modules/dyngroup/dyngroup/delete_group.php:69
-#: modules/dyngroup/dyngroup/remove_machine.php:48
+#: modules/dyngroup/dyngroup/delete_group.php:80
+#: modules/dyngroup/dyngroup/remove_machine.php:61
 #: modules/dyngroup/includes/groups.inc.php:84
 #: modules/dyngroup/includes/groups.inc.php:279
 msgid "Cancel"
@@ -322,7 +322,7 @@ msgstr "Modifier ce groupe d'imaging"
 msgid "Go to save step"
 msgstr "Sauvegarder"
 
-#: modules/dyngroup/dyngroup/delete_group.php:51
+#: modules/dyngroup/dyngroup/delete_group.php:62
 #, php-format
 msgid "Group %s was successfully deleted"
 msgstr "Le groupe %s "
@@ -390,7 +390,7 @@ msgstr "caché"
 msgid "Hide"
 msgstr "Cacher"
 
-#: modules/dyngroup/dyngroup/delete_group.php:47
+#: modules/dyngroup/dyngroup/delete_group.php:58
 #, php-format
 msgid "Imaging group %s was successfully deleted"
 msgstr "Le groupe d'imaging %s a été supprimé avec succès"
@@ -482,11 +482,11 @@ msgstr "Lire les journaux"
 msgid "Regenerate"
 msgstr "Re-générer"
 
-#: modules/dyngroup/dyngroup/remove_machine.php:47
+#: modules/dyngroup/dyngroup/remove_machine.php:60
 msgid "Remove Computer"
 msgstr "Enlever l'ordinateur"
 
-#: modules/dyngroup/dyngroup/remove_machine.php:37
+#: modules/dyngroup/dyngroup/remove_machine.php:50
 msgid "Remove a computer"
 msgstr "Enlever un ordinateur"
 
@@ -666,7 +666,7 @@ msgstr "Le nom du groupe est obligatoire"
 msgid "You must specify an imaging group name"
 msgstr "Vous devez spécifier le nom du groupe d'imaging"
 
-#: modules/dyngroup/dyngroup/remove_machine.php:44
+#: modules/dyngroup/dyngroup/remove_machine.php:57
 #, php-format
 msgid "You will remove computer <b>%s</b> from group <b>%s</b>."
 msgstr "Vous allez enlever l'ordinateur <b>%s</b> du groupe <b>%s</b>."

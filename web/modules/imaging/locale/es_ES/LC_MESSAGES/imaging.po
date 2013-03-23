@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-22 01:00+0100\n"
+"POT-Creation-Date: 2013-03-23 01:00+0100\n"
 "PO-Revision-Date: 2013-03-14 15:48+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Spanish (Spain) (http://transifex.mandriva.com/projects/p/"
@@ -292,12 +292,12 @@ msgid ""
 "Please wait or reload the page %shere%s."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:313
+#: modules/imaging/imaging/configure.php:318
 #, php-format
 msgid "Boot menu is created for <strong>%s</strong>."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:315
+#: modules/imaging/imaging/configure.php:320
 #, php-format
 msgid "Boot menu modified for <strong>%s</strong>."
 msgstr ""
@@ -334,7 +334,7 @@ msgid "Can't delete this post-imaging script, it's a global script."
 msgstr ""
 
 #: modules/imaging/imaging/bootmenu_remove.php:96
-#: modules/imaging/imaging/configure.php:377
+#: modules/imaging/imaging/configure.php:382
 #: modules/imaging/imaging/images_delete.php:61
 #: modules/imaging/imaging/images_iso.php:99
 #: modules/imaging/imaging/showtarget.php:170
@@ -346,8 +346,8 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:477
-#: modules/imaging/imaging/configure.php:609
+#: modules/imaging/imaging/configure.php:482
+#: modules/imaging/imaging/configure.php:614
 msgid "Choose the MAC address you want to use"
 msgstr ""
 
@@ -376,7 +376,7 @@ msgstr ""
 msgid "Computer UUID Sent"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:476
+#: modules/imaging/imaging/configure.php:481
 msgid "Computer:"
 msgstr ""
 
@@ -584,7 +584,7 @@ msgid ""
 "%s</b>'"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:369
+#: modules/imaging/imaging/configure.php:374
 msgid "Do you want a backup to be done ?"
 msgstr ""
 
@@ -679,7 +679,7 @@ msgstr ""
 msgid "Error while creating Boot Service"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:347
+#: modules/imaging/imaging/configure.php:352
 #, php-format
 msgid "Failed to generate the boot menu those computers : %s"
 msgstr ""
@@ -728,7 +728,7 @@ msgstr ""
 msgid "Failed to summon an Image UUID"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:396
+#: modules/imaging/imaging/configure.php:401
 #, php-format
 msgid "Failed to unregister the computer %s"
 msgstr ""
@@ -766,12 +766,12 @@ msgstr ""
 msgid "Generate Menu"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:545
+#: modules/imaging/imaging/configure.php:550
 #, php-format
 msgid "Hard disk number: %d"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:540
+#: modules/imaging/imaging/configure.php:545
 msgid "Hard disks and partitions selection to backup"
 msgstr ""
 
@@ -897,7 +897,7 @@ msgstr ""
 msgid "Imaging Log"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:418
+#: modules/imaging/imaging/configure.php:423
 #, php-format
 msgid "Imaging activation for group '%s'"
 msgstr ""
@@ -1149,7 +1149,7 @@ msgstr ""
 msgid "Order"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:569
+#: modules/imaging/imaging/configure.php:574
 #, php-format
 msgid "Partition number: %d"
 msgstr ""
@@ -1173,8 +1173,8 @@ msgstr ""
 msgid "Please specify a title for the ISO image file."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:490
-#: modules/imaging/imaging/configure.php:618
+#: modules/imaging/imaging/configure.php:495
+#: modules/imaging/imaging/configure.php:623
 msgid "Please switch to expert mode now if you want to change more parameters."
 msgstr ""
 
@@ -1254,7 +1254,7 @@ msgstr ""
 msgid "Register a profile in the imaging module"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:414
+#: modules/imaging/imaging/configure.php:419
 #, php-format
 msgid "Register computer '%s'"
 msgstr ""
@@ -1406,7 +1406,7 @@ msgstr ""
 msgid "Select all"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:556
+#: modules/imaging/imaging/configure.php:561
 msgid "Select this hard disk"
 msgstr ""
 
@@ -1553,31 +1553,31 @@ msgid ""
 "page %shere%s.<br/>"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:391
+#: modules/imaging/imaging/configure.php:396
 #, php-format
 msgid "The computer %s has correctly been unregistered from imaging"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:447
+#: modules/imaging/imaging/configure.php:452
 msgid ""
 "The computer either doesn't have a MAC address, either has more than one MAC "
 "address or the only NIC doesn't have any network mask. It can't be "
 "registered into the imaging module."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:526
+#: modules/imaging/imaging/configure.php:531
 #, php-format
 msgid "The default values displayed here come from this %s's profile menu."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:514
+#: modules/imaging/imaging/configure.php:519
 msgid ""
 "The default values for the imaging parameters will be inherited from the "
 "imaging server that manages the entities of the computers that belongs to "
 "this profile."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:511
+#: modules/imaging/imaging/configure.php:516
 msgid ""
 "The default values for the imaging parameters will be inherited from the "
 "imaging server that manages the entity that owns this computer."
@@ -1594,7 +1594,7 @@ msgstr ""
 msgid "The nomenclature is missing."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:452
+#: modules/imaging/imaging/configure.php:457
 msgid "The profile can't be registered into the imaging module."
 msgstr ""
 
@@ -1691,20 +1691,20 @@ msgid ""
 "convert it to a master."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:442
+#: modules/imaging/imaging/configure.php:447
 msgid ""
 "To register, you must first set a default menu to the imaging server that "
 "manages the entities of the computers that belongs to this profile."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:440
+#: modules/imaging/imaging/configure.php:445
 msgid ""
 "To register, you must first set a default menu to the imaging server that "
 "manages the entity of this computer."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:376
-#: modules/imaging/imaging/configure.php:631
+#: modules/imaging/imaging/configure.php:381
+#: modules/imaging/imaging/configure.php:636
 msgid "Unregister this computer"
 msgstr ""
 
@@ -1749,7 +1749,7 @@ msgid ""
 "computers owned by the profile."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:364
+#: modules/imaging/imaging/configure.php:369
 msgid ""
 "You are going to unregister this computer from the imaging module, are you "
 "sure you want to do that?"
@@ -1759,8 +1759,8 @@ msgstr ""
 msgid "You asked for an unexisting menu item."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:492
-#: modules/imaging/imaging/configure.php:620
+#: modules/imaging/imaging/configure.php:497
+#: modules/imaging/imaging/configure.php:625
 msgid "You can switch to standard mode now if you want less parameters."
 msgstr ""
 

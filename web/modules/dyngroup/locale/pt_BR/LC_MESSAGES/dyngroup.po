@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-22 01:00+0100\n"
+"POT-Creation-Date: 2013-03-23 01:00+0100\n"
 "PO-Revision-Date: 2013-03-14 15:53+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
@@ -130,8 +130,8 @@ msgstr ""
 msgid "Are you sure you want to delete imaging group <b>%s</b>?<br/>"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/delete_group.php:69
-#: modules/dyngroup/dyngroup/remove_machine.php:48
+#: modules/dyngroup/dyngroup/delete_group.php:80
+#: modules/dyngroup/dyngroup/remove_machine.php:61
 #: modules/dyngroup/includes/groups.inc.php:84
 #: modules/dyngroup/includes/groups.inc.php:279
 msgid "Cancel"
@@ -317,7 +317,7 @@ msgstr ""
 msgid "Go to save step"
 msgstr "Ir para salvar etapa"
 
-#: modules/dyngroup/dyngroup/delete_group.php:51
+#: modules/dyngroup/dyngroup/delete_group.php:62
 #, php-format
 msgid "Group %s was successfully deleted"
 msgstr ""
@@ -385,7 +385,7 @@ msgstr "oculto"
 msgid "Hide"
 msgstr "Ocultar"
 
-#: modules/dyngroup/dyngroup/delete_group.php:47
+#: modules/dyngroup/dyngroup/delete_group.php:58
 #, php-format
 msgid "Imaging group %s was successfully deleted"
 msgstr ""
@@ -476,11 +476,11 @@ msgstr "Ver o log"
 msgid "Regenerate"
 msgstr "Regerar"
 
-#: modules/dyngroup/dyngroup/remove_machine.php:47
+#: modules/dyngroup/dyngroup/remove_machine.php:60
 msgid "Remove Computer"
 msgstr "Remover Computador"
 
-#: modules/dyngroup/dyngroup/remove_machine.php:37
+#: modules/dyngroup/dyngroup/remove_machine.php:50
 msgid "Remove a computer"
 msgstr "Remover um computador"
 
@@ -659,7 +659,7 @@ msgstr "Você precisa especificar um nome de grupo"
 msgid "You must specify an imaging group name"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/remove_machine.php:44
+#: modules/dyngroup/dyngroup/remove_machine.php:57
 #, php-format
 msgid "You will remove computer <b>%s</b> from group <b>%s</b>."
 msgstr "Você vai remover o computador <b>%s</b> do grupo <b>%s</b>."

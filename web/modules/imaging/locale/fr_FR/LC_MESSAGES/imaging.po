@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-22 01:00+0100\n"
+"POT-Creation-Date: 2013-03-23 01:00+0100\n"
 "PO-Revision-Date: 2013-03-14 15:59+0000\n"
 "Last-Translator: Cécile Adam <acecile@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
@@ -306,12 +306,12 @@ msgstr ""
 "La génération du menu de démarrage est en cours pour les éléments suivants : "
 "%s. Merci de patienter ou rechargez la page en cliquant %sici%s."
 
-#: modules/imaging/imaging/configure.php:313
+#: modules/imaging/imaging/configure.php:318
 #, php-format
 msgid "Boot menu is created for <strong>%s</strong>."
 msgstr "Menu de démarrage de <strong>%s</strong> créé."
 
-#: modules/imaging/imaging/configure.php:315
+#: modules/imaging/imaging/configure.php:320
 #, php-format
 msgid "Boot menu modified for <strong>%s</strong>."
 msgstr "Menu de démarrage de <strong>%s</strong> modifié."
@@ -352,7 +352,7 @@ msgstr ""
 "global"
 
 #: modules/imaging/imaging/bootmenu_remove.php:96
-#: modules/imaging/imaging/configure.php:377
+#: modules/imaging/imaging/configure.php:382
 #: modules/imaging/imaging/images_delete.php:61
 #: modules/imaging/imaging/images_iso.php:99
 #: modules/imaging/imaging/showtarget.php:170
@@ -364,8 +364,8 @@ msgstr ""
 msgid "Cancel"
 msgstr "Annuler"
 
-#: modules/imaging/imaging/configure.php:477
-#: modules/imaging/imaging/configure.php:609
+#: modules/imaging/imaging/configure.php:482
+#: modules/imaging/imaging/configure.php:614
 msgid "Choose the MAC address you want to use"
 msgstr "Veuillez choisir l'adresse MAC que vous désirez utiliser"
 
@@ -396,7 +396,7 @@ msgstr "Demande de Computer UUID"
 msgid "Computer UUID Sent"
 msgstr "Computer UUID envoyé"
 
-#: modules/imaging/imaging/configure.php:476
+#: modules/imaging/imaging/configure.php:481
 msgid "Computer:"
 msgstr "Ordinateur:"
 
@@ -606,7 +606,7 @@ msgstr ""
 "Êtes vous sur de vouloir associer le serveur d'imaging '<b>%s</b>' à "
 "l'entité '<b>%s</b>'"
 
-#: modules/imaging/imaging/configure.php:369
+#: modules/imaging/imaging/configure.php:374
 msgid "Do you want a backup to be done ?"
 msgstr "Est-ce que vous voulez sauvegarder cet ordinateur ?"
 
@@ -701,7 +701,7 @@ msgstr "Erreur"
 msgid "Error while creating Boot Service"
 msgstr "Une erreur est survenue lors de la création du service de démarrage"
 
-#: modules/imaging/imaging/configure.php:347
+#: modules/imaging/imaging/configure.php:352
 #, php-format
 msgid "Failed to generate the boot menu those computers : %s"
 msgstr "Impossible de générer le menu de démarrage de ces ordinateurs : %s"
@@ -756,7 +756,7 @@ msgstr "N'a pas pu envoyer un UUID d'image"
 msgid "Failed to summon an Image UUID"
 msgstr "N'a pas pu récupérer un UUID d'image"
 
-#: modules/imaging/imaging/configure.php:396
+#: modules/imaging/imaging/configure.php:401
 #, php-format
 msgid "Failed to unregister the computer %s"
 msgstr "Impossible de désinscrire l'ordinateur %s"
@@ -794,12 +794,12 @@ msgstr "Générer une iso de <strong>%s</strong>"
 msgid "Generate Menu"
 msgstr "Générer le menu"
 
-#: modules/imaging/imaging/configure.php:545
+#: modules/imaging/imaging/configure.php:550
 #, php-format
 msgid "Hard disk number: %d"
 msgstr "Disque dur numéro: %d"
 
-#: modules/imaging/imaging/configure.php:540
+#: modules/imaging/imaging/configure.php:545
 msgid "Hard disks and partitions selection to backup"
 msgstr "Sélection des disques et partitions à sauvegarder"
 
@@ -935,7 +935,7 @@ msgstr "Configuration de l'imaging"
 msgid "Imaging Log"
 msgstr "Journaux de l'imaging"
 
-#: modules/imaging/imaging/configure.php:418
+#: modules/imaging/imaging/configure.php:423
 #, php-format
 msgid "Imaging activation for group '%s'"
 msgstr "Activation de l'imaging pour le groupe '%s'"
@@ -1196,7 +1196,7 @@ msgstr ""
 msgid "Order"
 msgstr "Ordre"
 
-#: modules/imaging/imaging/configure.php:569
+#: modules/imaging/imaging/configure.php:574
 #, php-format
 msgid "Partition number: %d"
 msgstr "Partition numéro: %d"
@@ -1224,8 +1224,8 @@ msgstr ""
 msgid "Please specify a title for the ISO image file."
 msgstr "Veuillez spécifier un titre pour l'image ISO."
 
-#: modules/imaging/imaging/configure.php:490
-#: modules/imaging/imaging/configure.php:618
+#: modules/imaging/imaging/configure.php:495
+#: modules/imaging/imaging/configure.php:623
 msgid "Please switch to expert mode now if you want to change more parameters."
 msgstr ""
 "Veuillez passer en mode expert maintenant si vous désirez changer plus de "
@@ -1307,7 +1307,7 @@ msgstr "Enregistrer un ordinateur dans le module d'imaging"
 msgid "Register a profile in the imaging module"
 msgstr "Enregistrer un profil dans le module d'imaging"
 
-#: modules/imaging/imaging/configure.php:414
+#: modules/imaging/imaging/configure.php:419
 #, php-format
 msgid "Register computer '%s'"
 msgstr "Enregistrement de l'ordinateur '%s'."
@@ -1460,7 +1460,7 @@ msgstr "Déploiement sur un groupe de machines"
 msgid "Select all"
 msgstr "Tout sélectionner"
 
-#: modules/imaging/imaging/configure.php:556
+#: modules/imaging/imaging/configure.php:561
 msgid "Select this hard disk"
 msgstr "Sélectionner ce disque dur"
 
@@ -1616,12 +1616,12 @@ msgstr ""
 "La génération du menu de démarrage est en cours, merci de patienter ou "
 "rechargez la page en cliquant %sici%s.<br/>"
 
-#: modules/imaging/imaging/configure.php:391
+#: modules/imaging/imaging/configure.php:396
 #, php-format
 msgid "The computer %s has correctly been unregistered from imaging"
 msgstr "L'ordinateur %s a été correctement supprimé de l'imaging"
 
-#: modules/imaging/imaging/configure.php:447
+#: modules/imaging/imaging/configure.php:452
 msgid ""
 "The computer either doesn't have a MAC address, either has more than one MAC "
 "address or the only NIC doesn't have any network mask. It can't be "
@@ -1631,12 +1631,12 @@ msgstr ""
 "interface ne possède pas de masque de réseau. Il ne peut pas être enregistré "
 "dans le module d'imaging."
 
-#: modules/imaging/imaging/configure.php:526
+#: modules/imaging/imaging/configure.php:531
 #, php-format
 msgid "The default values displayed here come from this %s's profile menu."
 msgstr "Les valeurs par défaut affichées proviennent du menu du profil %s."
 
-#: modules/imaging/imaging/configure.php:514
+#: modules/imaging/imaging/configure.php:519
 msgid ""
 "The default values for the imaging parameters will be inherited from the "
 "imaging server that manages the entities of the computers that belongs to "
@@ -1646,7 +1646,7 @@ msgstr ""
 "serveur d'imaging qui gère les entités des ordinateurs appartenant à ce "
 "profil."
 
-#: modules/imaging/imaging/configure.php:511
+#: modules/imaging/imaging/configure.php:516
 msgid ""
 "The default values for the imaging parameters will be inherited from the "
 "imaging server that manages the entity that owns this computer."
@@ -1667,7 +1667,7 @@ msgstr ""
 msgid "The nomenclature is missing."
 msgstr "La nomenclature manque."
 
-#: modules/imaging/imaging/configure.php:452
+#: modules/imaging/imaging/configure.php:457
 msgid "The profile can't be registered into the imaging module."
 msgstr "Ce profil ne peut pas être enregistré dans le module d'imaging."
 
@@ -1782,7 +1782,7 @@ msgstr ""
 "cliquer sur « Images et masters », puis cliquer sur le bouton d'édition de "
 "l'image de secours à convertir en master."
 
-#: modules/imaging/imaging/configure.php:442
+#: modules/imaging/imaging/configure.php:447
 msgid ""
 "To register, you must first set a default menu to the imaging server that "
 "manages the entities of the computers that belongs to this profile."
@@ -1791,7 +1791,7 @@ msgstr ""
 "être positionné sur le serveur d'imaging qui gère les entités des "
 "ordinateurs appartenant à ce profil."
 
-#: modules/imaging/imaging/configure.php:440
+#: modules/imaging/imaging/configure.php:445
 msgid ""
 "To register, you must first set a default menu to the imaging server that "
 "manages the entity of this computer."
@@ -1799,8 +1799,8 @@ msgstr ""
 "Avant de pouvoir faire l'enregistrement, un menu par défaut doit d'abord "
 "être positionné sur le serveur d'imaging qui gère l'entité de cet ordinateur."
 
-#: modules/imaging/imaging/configure.php:376
-#: modules/imaging/imaging/configure.php:631
+#: modules/imaging/imaging/configure.php:381
+#: modules/imaging/imaging/configure.php:636
 msgid "Unregister this computer"
 msgstr "Suppression de cet ordinateur de l'imaging"
 
@@ -1850,7 +1850,7 @@ msgstr ""
 "séléctionné pour le WOL\" sur un profil, ces valeurs seront définies pour "
 "tous les menus de boot des ordinateurs contenus dans ce profil."
 
-#: modules/imaging/imaging/configure.php:364
+#: modules/imaging/imaging/configure.php:369
 msgid ""
 "You are going to unregister this computer from the imaging module, are you "
 "sure you want to do that?"
@@ -1862,8 +1862,8 @@ msgstr ""
 msgid "You asked for an unexisting menu item."
 msgstr "Vous avez demandé un item inexistant."
 
-#: modules/imaging/imaging/configure.php:492
-#: modules/imaging/imaging/configure.php:620
+#: modules/imaging/imaging/configure.php:497
+#: modules/imaging/imaging/configure.php:625
 msgid "You can switch to standard mode now if you want less parameters."
 msgstr ""
 "Vous pouvez maintenant passer en mode standard si vous désirez afficher "
