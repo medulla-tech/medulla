@@ -459,6 +459,7 @@ class ChoosePerIP (ResolvingCallable):
  
         """
         hostname, ifaces = target
+        last_ip = last_netmask = None
 
         for iface in ifaces :
             if NetUtils.has_enough_info(iface) :
@@ -473,8 +474,14 @@ class ChoosePerIP (ResolvingCallable):
 
                         return iface_ip
 
-        log.debug("No match host='%s'with preferred network(%s/%s)" % 
-                   (hostname, pref_ip, pref_netmask))
+                    last_ip = pref_ip
+                    last_netmask = pref_netmask
+
+        if not last_ip and not last_netmask :
+            log.debug("Not enough info to check host='%s'" % hostname)
+        else :
+            log.debug("No match host='%s'with preferred network(%s/%s)" % 
+                     (hostname, last_ip, last_netmask))
 
 
         return None
