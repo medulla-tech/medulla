@@ -22,14 +22,14 @@
 #
 contribdir = $(datadir)/doc/mmc/contrib
 
-nobase_contrib_DATA = audit/sql/install.sh \
-                      audit/sql/schema-2.sql \
-                      monit/mmc-agent \
-                      scripts/mmc-check-expired-passwords-example \
-                      scripts/mmc-check-users-primary-group \
-                      scripts/usertoken-example \
-                      base/mmc.schema \
-                      base/nsswitch.conf \
-                      base/pam_ldap.conf \
-                      base/slapd.conf \
-                      ppolicy/ppolicy.schema
+nobase_dist_contrib_DATA = audit/sql/install.sh \
+						  audit/sql/schema-2.sql \
+						  monit/mmc-agent \
+						  scripts/mmc-check-expired-passwords-example \
+						  scripts/mmc-check-users-primary-group \
+						  scripts/usertoken-example \
+						  base/mmc.schema \
+						  base/nsswitch.conf \
+						  base/pam_ldap.conf \
+						  base/slapd.conf \
+						  ppolicy/ppolicy.schema
