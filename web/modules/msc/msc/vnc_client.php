@@ -30,7 +30,26 @@ if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
 
     # $result is expected to be an array containing host, port, let's check it:
     if ($result == False) {
-        new NotifyWidgetFailure(_T("Connection was refused by the other side.", "msc"));
+        echo "
+            <HTML>
+            <head>
+                <title>Mandriva Management Console</title>
+                <link href='/mmc/graph/master.css' rel='stylesheet' media='screen' type='text/css' />
+            </head>
+            <BODY style='background-color: #FFFFFF;'>
+            <center>
+                <div class='popup' style='position: relative;'>
+                    <div class='__popup_container'>
+                        <h2 style='color: red;'>"._T("Connection Failed !", "msc") . "</h2>
+                        <br/>
+                        "._T("Connection was refused by the other side.", "msc") . "<br/>
+                        <br/>
+                        <button id='btnPrimary' onclick='window.close();'>Close window</button>
+                    </div>
+           </div>
+            </center>
+            </BODY>
+            </HTML>";
     } else {
         $host = $result[0];
         $port = $result[1];
