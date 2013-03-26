@@ -53,7 +53,6 @@ from mmc.plugins.dyngroup.config import DGConfig
 # Imported last
 import logging
 
-DATABASEVERSION = 18
 NB_DB_CONN_TRY = 2
 
 # TODO need to check for useless function (there should be many unused one...)
@@ -65,9 +64,9 @@ class MscDatabase(DatabaseHelper):
     """
 
     def db_check(self):
-        self.my_name = "Msc"
+        self.my_name = "msc"
         self.configfile = "msc.ini"
-        return DatabaseHelper.db_check(self, DATABASEVERSION)
+        return DatabaseHelper.db_check(self)
 
     def activate(self, config):
         self.logger = logging.getLogger()

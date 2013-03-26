@@ -21,7 +21,6 @@
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
 sqldir = $(datadir)/mmc/sql/msc
-dist_sql_SCRIPTS = install.sh
 dist_sql_DATA = clean-db.sql purge-old-rows.sql README \
 	schema-001.sql \
 	schema-002.sql \

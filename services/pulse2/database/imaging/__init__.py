@@ -45,7 +45,6 @@ from sqlalchemy.exc import InvalidRequestError
 from pulse2.managers.profile import ComputerProfileManager
 from pulse2.managers.location import ComputerLocationManager
 
-DATABASEVERSION = 5
 
 class ImagingException(Exception):
     pass
@@ -61,9 +60,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     """
 
     def db_check(self):
-        self.my_name = "ImagingDatabase"
+        self.my_name = "imaging"
         self.configfile = "imaging.ini"
-        return DyngroupDatabaseHelper.db_check(self, DATABASEVERSION)
+        return DyngroupDatabaseHelper.db_check(self)
 
     def activate(self, config):
         self.logger = logging.getLogger()

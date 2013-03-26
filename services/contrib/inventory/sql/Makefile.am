@@ -21,7 +21,6 @@
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
 sqldir = $(datadir)/mmc/sql/inventory
-dist_sql_SCRIPTS = install.sh
 dist_sql_DATA = \
 	schema-001.sql \
 	schema-002.sql \

@@ -21,5 +21,4 @@
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
 sqldir = $(datadir)/mmc/sql/pulse2
-dist_sql_SCRIPTS = install.sh
 dist_sql_DATA = schema-001.sql README

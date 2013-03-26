@@ -39,7 +39,6 @@ from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHe
 # Imported last
 import logging
 
-DATABASEVERSION = 1
 
 class Pulse2Database(DyngroupDatabaseHelper):
     """
@@ -49,9 +48,9 @@ class Pulse2Database(DyngroupDatabaseHelper):
     is_activated = False
 
     def db_check(self):
-        self.my_name = "Pulse2"
+        self.my_name = "pulse2"
         self.configfile = "pulse2.ini"
-        return DyngroupDatabaseHelper.db_check(self, DATABASEVERSION)
+        return DyngroupDatabaseHelper.db_check(self)
 
     def activate(self, config):
         self.logger = logging.getLogger()

@@ -39,6 +39,7 @@ import logging
 import ldap
 from pulse2.utils import get_default_ip
 from pulse2.site import examplesdir
+from pulse2.ddl import DBControl
 from mmc.site import sysconfdir, mmcconfdir, prefix
 from mmc.core.log import ColoredFormatter
 
@@ -753,18 +754,16 @@ class SetupApp(object):
 
         # All other modules have install.sh script
         env = os.environ
-        env['MYSQL_HOST'] = self.config['dbhost']
-        env['MYSQL_USER'] = self.config['dbadminuser']
-        env['MYSQL_PWD'] = self.config['dbadminpasswd']
         for module in self.dbmodules:
             log.info("Update database schema for module %s" % module)
-            env['MYSQL_BASE'] = module
-            binpath = os.path.join(self.sqldir, module, 'install.sh')
-            log.debug("Call: %s" % binpath)
-            ret = call(binpath, env=env)
-            if ret<>0:
-                log.error('Can not initialize database for module: %s' % module)
-                sys.exit(1)
+            db_control = DBControl(user=self.config['dbadminuser'], 
+                                   passwd=self.config['dbadminpasswd'], 
+                                   host=self.config['dbhost'], 
+                                   # TODO - get the port number from config file
+                                   port=3306, 
+                                   module=module, 
+                                   log=log)
+            db_control.process()
 
         # Get DB user and password for all modules
         log.info("Setup db credentials")

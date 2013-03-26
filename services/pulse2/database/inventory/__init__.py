@@ -46,7 +46,6 @@ import datetime
 import re
 import logging
 
-DATABASEVERSION = 10
 MAX_REQ_NUM = 100
 
 class UserTable(object):
@@ -65,9 +64,9 @@ class Inventory(DyngroupDatabaseHelper):
     """
 
     def db_check(self):
-        self.my_name = "Inventory"
+        self.my_name = "inventory"
         self.configfile = "inventory.ini"
-        return DyngroupDatabaseHelper.db_check(self, DATABASEVERSION)
+        return DyngroupDatabaseHelper.db_check(self)
 
     def activate(self, config):
         self.logger = logging.getLogger()

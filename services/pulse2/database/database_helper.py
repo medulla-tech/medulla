@@ -28,6 +28,7 @@ pulse2 modules.
 """
 
 from pulse2.utils import Singleton
+from pulse2.ddl import DDLContentManager
 from pulse2.database.sqlalchemy_tests import checkSqlalchemy, MIN_VERSION, MAX_VERSION, CUR_VERSION
 from sqlalchemy.exc import DBAPIError, NoSuchTableError
 
@@ -38,7 +39,8 @@ class DatabaseHelper(Singleton):
     is_activated = False
     config = None
 
-    def db_check(self, required_version = -1):
+    def db_check(self):
+        required_version = DDLContentManager().get_version(self.my_name)
         if not checkSqlalchemy():
             self.logger.error("Sqlalchemy: current version is %s. Must be between %s and %s" % (CUR_VERSION, MIN_VERSION, MAX_VERSION))
             return False
