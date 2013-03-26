@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-03-21 01:07+0100\n"
-"PO-Revision-Date: 2013-03-23 00:00+0000\n"
+"POT-Creation-Date: 2013-03-25 15:15+0100\n"
+"PO-Revision-Date: 2013-03-26 00:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -254,27 +254,6 @@ msgid ""
 "                        </ul>"
 msgstr ""
 
-#: includes/modules.inc.php:384
-#, php-format
-msgid "%s service restarting..."
-msgstr ""
-
-#: includes/modules.inc.php:385
-#, php-format
-msgid "%s service restarted successfully."
-msgstr ""
-
-#: includes/modules.inc.php:386
-#, php-format
-msgid "%s service failed to restart."
-msgstr ""
-
-#: includes/modules.inc.php:391
-msgid "Restart the service ?"
-msgid_plural "Restart the services ?"
-msgstr[0] ""
-msgstr[1] ""
-
 #: includes/xmlrpc.inc.php:166
 msgid "Can't connect to MMC agent"
 msgstr ""
@@ -385,6 +364,27 @@ msgstr ""
 #: includes/PageGenerator.php:2596
 msgid "Unselect all"
 msgstr ""
+
+#: includes/modules.inc.php:384
+#, php-format
+msgid "%s service restarting..."
+msgstr ""
+
+#: includes/modules.inc.php:385
+#, php-format
+msgid "%s service restarted successfully."
+msgstr ""
+
+#: includes/modules.inc.php:386
+#, php-format
+msgid "%s service failed to restart."
+msgstr ""
+
+#: includes/modules.inc.php:391
+msgid "Restart the service ?"
+msgid_plural "Restart the services ?"
+msgstr[0] ""
+msgstr[1] ""
 
 #: index.php:61 token.php:54
 #, php-format
