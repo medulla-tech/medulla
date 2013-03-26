@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-20 01:00+0100\n"
+"POT-Creation-Date: 2013-03-26 01:00+0100\n"
 "PO-Revision-Date: 2013-03-13 15:57+0000\n"
 "Last-Translator: Jean-Christophe Vassort <jcvassort@mandriva.com>\n"
 "Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/"
@@ -530,7 +530,12 @@ msgstr "Состояние команды"
 msgid "Computers in this command"
 msgstr "Компьютеры в этой команде:"
 
-#: modules/msc/msc/vnc_client.php:48
+#: modules/msc/msc/vnc_client.php:43
+#, fuzzy
+msgid "Connection Failed !"
+msgstr "Не удалось соединиться с SSH"
+
+#: modules/msc/msc/vnc_client.php:67
 msgid "Connection Succeedeed !"
 msgstr ""
 
@@ -547,7 +552,7 @@ msgid ""
 "Connection was refused by the other side while trying to probe the machine"
 msgstr "Было отказано в подключении с другой стороны при исследовании машины"
 
-#: modules/msc/msc/vnc_client.php:33
+#: modules/msc/msc/vnc_client.php:45
 msgid "Connection was refused by the other side."
 msgstr "Было отказано в подключении с другой стороны."
 
@@ -1167,7 +1172,7 @@ msgstr "Платформа"
 msgid "Play a command"
 msgstr "Запустить команду"
 
-#: modules/msc/msc/vnc_client.php:52
+#: modules/msc/msc/vnc_client.php:71
 msgid "Please close this windows when you are done."
 msgstr ""
 
@@ -1484,7 +1489,7 @@ msgstr ""
 msgid "Take control of a computer"
 msgstr "Управлять компьютером"
 
-#: modules/msc/msc/vnc_client.php:141
+#: modules/msc/msc/vnc_client.php:160
 msgid "Take control of this computer"
 msgstr ""
 
@@ -1570,7 +1575,7 @@ msgstr "Эти пакеты могуть быть установлены на к
 msgid "These packages can be installed on group \"%s\""
 msgstr "Эти пакеты могут быть установлены на группу \"%s\""
 
-#: modules/msc/msc/vnc_client.php:50
+#: modules/msc/msc/vnc_client.php:69
 msgid "This connection will be automatically shut down in 60 minutes."
 msgstr ""
 

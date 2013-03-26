@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-20 01:00+0100\n"
+"POT-Creation-Date: 2013-03-26 01:00+0100\n"
 "PO-Revision-Date: 2013-03-13 17:08+0000\n"
 "Last-Translator: Cécile Adam <acecile@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
@@ -532,7 +532,12 @@ msgstr "Statut de la commande"
 msgid "Computers in this command"
 msgstr "Ordinateurs dans cette commande"
 
-#: modules/msc/msc/vnc_client.php:48
+#: modules/msc/msc/vnc_client.php:43
+#, fuzzy
+msgid "Connection Failed !"
+msgstr "Échec de la connexion SSH"
+
+#: modules/msc/msc/vnc_client.php:67
 msgid "Connection Succeedeed !"
 msgstr "La connexion a réussi !"
 
@@ -547,7 +552,7 @@ msgid ""
 "Connection was refused by the other side while trying to probe the machine"
 msgstr "La connexion a été refusée lors de la tentative de probe de la machine"
 
-#: modules/msc/msc/vnc_client.php:33
+#: modules/msc/msc/vnc_client.php:45
 msgid "Connection was refused by the other side."
 msgstr "La connexion a été refusée"
 
@@ -1168,7 +1173,7 @@ msgstr "Système d'exploitation"
 msgid "Play a command"
 msgstr "Jouer une commande"
 
-#: modules/msc/msc/vnc_client.php:52
+#: modules/msc/msc/vnc_client.php:71
 msgid "Please close this windows when you are done."
 msgstr "Please close this windows when you are done."
 
@@ -1486,7 +1491,7 @@ msgstr "Terminé: %percent% (%d packages)"
 msgid "Take control of a computer"
 msgstr "Prendre le contrôle d'un ordinateur"
 
-#: modules/msc/msc/vnc_client.php:141
+#: modules/msc/msc/vnc_client.php:160
 msgid "Take control of this computer"
 msgstr "Prendre le contrôle de cet ordinateur"
 
@@ -1572,7 +1577,7 @@ msgstr "Les packages suivants peuvent être installés sur le client \"%s\""
 msgid "These packages can be installed on group \"%s\""
 msgstr "Les packages suivants peuvent être installés sur le groupe \"%s\""
 
-#: modules/msc/msc/vnc_client.php:50
+#: modules/msc/msc/vnc_client.php:69
 msgid "This connection will be automatically shut down in 60 minutes."
 msgstr "La connexion sera automatiquement interrompue dans 60 minutes."
 
