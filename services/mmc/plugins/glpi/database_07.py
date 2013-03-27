@@ -278,7 +278,10 @@ class Glpi07(DyngroupDatabaseHelper):
                 if filter_key == 'state':
                     self.logger.debug('will filter %s == %s' % (filter_key, filter_value))
                     a_filter_on.append(self.machine.c.state == filter_value)
-                else:
+                if filter_key == 'type':
+                    self.logger.debug('will filter %s == %s' % (filter_key, filter_value))
+                    a_filter_on.append(self.machine.c.type == filter_value)
+                if not filter_key in ('state','type') :
                     self.logger.warn('dont know how to filter on %s' % (filter_key))
             if len(a_filter_on) == 0:
                 return None
