@@ -26,7 +26,6 @@ and database version checkings.
 """
 import os
 import re
-import sys
 import logging
 from subprocess import Popen, PIPE
 
@@ -148,6 +147,9 @@ class DBScriptLaunchInterface :
 class DDLContentManager :
     """ Class to manage DDL scripts content """
 
+    # ommitting of checking the following databases : 
+    blacklisted_databases = ("glpi")
+
     def __init__(self, log=None):
         """
         @param log: logger instance
@@ -225,6 +227,9 @@ class DDLContentManager :
         @return: last schema version to install
         @rtype: int
         """
+        if module.lower() in self.blacklisted_databases : 
+            return -1
+
         scripts = self.get_scripts(module)
         numbers = [int(self.get_script_number(s)) for s in scripts]
         return max(numbers)
