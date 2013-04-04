@@ -79,13 +79,9 @@ class GlpiConfig(PluginConfig):
                 self.__dict__[option] = self.getint("main", option)
             except NoOptionError:
                 pass
-        try:
-            filter_on = self.get("main", "filter_on")
-            self.filter_on = map(lambda x:x.split('='), filter_on.split(' '))
-            logging.getLogger().debug("will filter machines on %s" % (str(self.filter_on)))
-        except:
-            self.filter_on = None
-        
+
+        self.filter_on = self._parse_filter_on(self.get("main", "filter_on"))
+
         if self.has_option("state", "orange"):
             self.orange = self.getint("state", "orange")
         if self.has_option("state", "red"):
@@ -107,6 +103,31 @@ class GlpiConfig(PluginConfig):
                     for manufacturerName in self._sections['manufacturer'][k].split('||'):
                         self.manufacturerWarrantyUrl[manufacturerName] = self._sections['manufacturer_warranty_url'][k]
 
+    def _parse_filter_on(self, value):
+        """
+        Parsing of customized filters.
+
+        Returned value will be parsed as a dictionnary with list of values 
+        for each filter.
+
+        @param value: raw string
+        @type value: str
+
+        @return: dictionnary of filters
+        @rtype: dict
+        """
+        try:
+            couples = [f.split("=") for f in value.split(" ")]
+            
+            filters = dict([(key, values.split("|")) for (key, values) in couples])
+            logging.getLogger().debug("will filter machines on %s" % (str(filters)))
+            return filters
+
+        except Exception, e:
+            logging.getLogger().warn("Parsing on filter_on failed: %s" % str(e))
+            return None
+            
+ 
 
 class GlpiQueryManagerConfig(PluginConfig):
     activate = False

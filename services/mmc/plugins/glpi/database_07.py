@@ -274,13 +274,13 @@ class Glpi07(DyngroupDatabaseHelper):
     def __filter_on_filter(self, query):
         if self.config.filter_on != None:
             a_filter_on = []
-            for filter_key, filter_value in self.config.filter_on:
+            for filter_key, filter_values in self.config.filter_on.items():
                 if filter_key == 'state':
-                    self.logger.debug('will filter %s == %s' % (filter_key, filter_value))
-                    a_filter_on.append(self.machine.c.state == filter_value)
+                    self.logger.debug('will filter %s in (%s)' % (filter_key, str(filter_values)))
+                    a_filter_on.append(self.machine.c.state.in_(filter_values))
                 if filter_key == 'type':
-                    self.logger.debug('will filter %s == %s' % (filter_key, filter_value))
-                    a_filter_on.append(self.machine.c.type == filter_value)
+                    self.logger.debug('will filter %s in (%s)' % (filter_key, str(filter_values)))
+                    a_filter_on.append(self.machine.c.type.in_(filter_values))
                 if not filter_key in ('state','type') :
                     self.logger.warn('dont know how to filter on %s' % (filter_key))
             if len(a_filter_on) == 0:
@@ -290,6 +290,7 @@ class Glpi07(DyngroupDatabaseHelper):
             else:
                 return or_(*a_filter_on)
         return None
+
 
     def __filter_on_entity(self, query, ctx, other_locids = []):
         ret = self.__filter_on_entity_filter(query, ctx, other_locids)
