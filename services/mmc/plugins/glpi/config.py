@@ -33,6 +33,8 @@ class GlpiConfig(PluginConfig):
     check_db_enable = False
     check_db_interval = 300
 
+    filter_on = None
+
     # state section
     orange = 10
     red = 35
@@ -80,7 +82,8 @@ class GlpiConfig(PluginConfig):
             except NoOptionError:
                 pass
 
-        self.filter_on = self._parse_filter_on(self.get("main", "filter_on"))
+        if self.has_option("main", "filter_on"):
+            self.filter_on = self._parse_filter_on(self.get("main", "filter_on"))
 
         if self.has_option("state", "orange"):
             self.orange = self.getint("state", "orange")
