@@ -1157,12 +1157,17 @@ class Glpi07(DyngroupDatabaseHelper):
         @return: all entities defined in the GLPI database
         """
         session = create_session()
-        query = session.query(Location).select_from(self.model.join(self.machine))
-        query = self.__filter_on(query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0))
-        query = self.__filter_on_entity(query, ctx)
+        query = session.query(Location)
         if filter != '':
             query = query.filter(self.location.c.name.like('%'+filt+'%'))
-        ret = query.all()
+        
+        # Request only entites current user can access
+        if not hasattr(ctx, 'locationsid'):
+            complete_ctx(ctx)
+        query = query.filter(self.location.c.id.in_(ctx.locationsid))
+
+        query = query.order_by(self.location.c.name)
+        ret = query.limit(10)
         session.close()
         return ret
     def getMachineByEntity(self, ctx, enname):
