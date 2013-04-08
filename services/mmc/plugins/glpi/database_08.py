@@ -205,7 +205,6 @@ class Glpi08(DyngroupDatabaseHelper):
         mapper(ComputerMemory, self.computerMemory)
 
         # interfaces types
-
         self.interfaceType = Table("glpi_interfacetypes", self.metadata, autoload = True)
 
         # network # TODO take care with the itemtype should we always set it to Computer?
@@ -269,7 +268,6 @@ class Glpi08(DyngroupDatabaseHelper):
             Column('computertypes_id', Integer, ForeignKey('glpi_computertypes.id')),
             Column('groups_id', Integer, ForeignKey('glpi_groups.id')),
             Column('manufacturers_id', Integer, ForeignKey('glpi_manufacturers.id')),
-            #Column('FK_glpi_enterprise', Integer, ForeignKey('glpi_enterprises.id')),
             Column('name', String(255), nullable=False),
             Column('serial', String(255), nullable=False),
             Column('os_license_number', String(255), nullable=True),

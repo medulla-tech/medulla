@@ -36,7 +36,7 @@ from mmc.plugins.dyngroup.config import DGConfig
 from mmc.plugins.glpi.database_utils import DbTOA # pyflakes.ignore
 
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
-        Integer, ForeignKey, asc, or_, not_
+        Integer, ForeignKey, asc, or_, not_, desc
 from sqlalchemy.orm import create_session, mapper
 from sqlalchemy.sql.expression import ColumnOperators
 
@@ -44,6 +44,7 @@ import logging
 import re
 from sets import Set
 import datetime
+import calendar
 
 class Glpi07(DyngroupDatabaseHelper):
     """
@@ -121,7 +122,12 @@ class Glpi07(DyngroupDatabaseHelper):
 
         self.klass = {}
 
-        for i in ('glpi_dropdown_os', 'glpi_dropdown_os_sp', 'glpi_dropdown_os_version', 'glpi_dropdown_domain', 'glpi_dropdown_locations', 'glpi_dropdown_model', 'glpi_dropdown_network', 'glpi_type_computers', 'glpi_enterprises', 'glpi_device_case', 'glpi_device_control', 'glpi_device_drive', 'glpi_device_gfxcard', 'glpi_device_hdd', 'glpi_device_iface', 'glpi_device_moboard', 'glpi_device_pci', 'glpi_device_power', 'glpi_device_processor', 'glpi_device_ram', 'glpi_device_sndcard', 'glpi_config'):
+        for i in ('glpi_dropdown_os', 'glpi_dropdown_os_sp', 'glpi_dropdown_os_version', \
+                  'glpi_dropdown_domain', 'glpi_dropdown_locations', 'glpi_dropdown_model', \
+                  'glpi_dropdown_network', 'glpi_type_computers', 'glpi_enterprises', 'glpi_device_case', \
+                  'glpi_device_control', 'glpi_device_drive', 'glpi_device_gfxcard', 'glpi_device_hdd', \
+                  'glpi_device_iface', 'glpi_device_moboard', 'glpi_device_pci', 'glpi_device_power', \
+                  'glpi_device_processor', 'glpi_device_sndcard', 'glpi_config'):
             setattr(self, i, Table(i, self.metadata, autoload = True))
             j = self.getTableName(i) #''.join(map(lambda x:x.capitalize(), i.split('_')))
             exec "class %s(DbTOA): pass" % j
@@ -136,9 +142,27 @@ class Glpi07(DyngroupDatabaseHelper):
         self.locations = Table("glpi_dropdown_locations", self.metadata, autoload = True)
         mapper(Locations, self.locations)
 
+        # logs
+        self.logs = Table("glpi_history", self.metadata,
+            Column('FK_glpi_device', Integer, ForeignKey('glpi_computers.ID')),
+            autoload = True)
+        mapper(Logs, self.logs)
+
         # processor
         self.processor = Table("glpi_device_processor", self.metadata, autoload = True)
         mapper(Processor, self.processor)
+
+        # memory
+        self.memory = Table("glpi_device_ram", self.metadata,
+            Column('type', Integer, ForeignKey('glpi_dropdown_ram_type.ID')),
+            autoload = True)
+        mapper(Memory, self.memory)
+
+        self.memoryType = Table("glpi_dropdown_ram_type", self.metadata, autoload = True)
+        mapper(MemoryType, self.memoryType)
+
+        # interfaces types
+        self.interfaceType = Table("glpi_dropdown_iface", self.metadata, autoload = True)
 
         # network
         self.network = Table("glpi_networking_ports", self.metadata,
@@ -164,6 +188,21 @@ class Glpi07(DyngroupDatabaseHelper):
         self.domain = Table('glpi_dropdown_domain', self.metadata, autoload = True)
         mapper(Domain, self.domain)
 
+        # glpi_infocoms
+        self.infocoms = Table('glpi_infocoms', self.metadata,
+                              Column('FK_enterprise', Integer, ForeignKey('glpi_enterprises.ID')),
+                              Column('FK_device', Integer, ForeignKey('glpi_computers.ID')),
+                              autoload = True)
+        mapper(Infocoms, self.infocoms)
+
+        # glpi_suppliers
+        self.suppliers = Table('glpi_enterprises', self.metadata, autoload = True)
+        mapper(Suppliers, self.suppliers)
+
+        # glpi_filesystems
+        self.diskfs = Table('glpi_dropdown_filesystems', self.metadata, autoload = True)
+        mapper(DiskFs, self.diskfs)
+
         # machine (we need the foreign key, so we need to declare the table by hand ...
         #          as we don't need all columns, we don't declare them all)
         self.machine = Table("glpi_computers", self.metadata,
@@ -172,6 +211,7 @@ class Glpi07(DyngroupDatabaseHelper):
             Column('FK_groups', Integer, ForeignKey('glpi_groups.ID')),
             Column('FK_glpi_enterprise', Integer, ForeignKey('glpi_enterprises.ID')),
             Column('name', String(255), nullable=False),
+            Column('domain', Integer, ForeignKey('glpi_dropdown_domain.ID')),
             Column('serial', String(255), nullable=False),
             Column('os', Integer, ForeignKey('glpi_dropdown_os.ID')),
             Column('os_version', Integer, ForeignKey('glpi_dropdown_os_version.ID')),
@@ -185,7 +225,7 @@ class Glpi07(DyngroupDatabaseHelper):
             Column('type', Integer, ForeignKey('glpi_type_computers.ID')),
             Column('deleted', Integer, nullable=False),
             Column('is_template', Integer, nullable=False),
-            Column('state', Integer, nullable=False), #ForeignKey('glpi_dropdown_state.ID')),
+            Column('state', Integer, ForeignKey('glpi_dropdown_state.ID'), nullable=False),
             Column('comments', String(255), nullable=False),
             autoload = True)
         mapper(Machine, self.machine) #, properties={'FK_entities': relation(Location)})
@@ -225,7 +265,9 @@ class Glpi07(DyngroupDatabaseHelper):
         mapper(ComputerDevice, self.computer_device)
 
         # software
-        self.software = Table("glpi_software", self.metadata, autoload = True)
+        self.software = Table("glpi_software", self.metadata,
+                              Column('FK_glpi_enterprise', Integer, ForeignKey('glpi_enterprises.ID')),
+                              autoload = True)
         mapper(Software, self.software)
 
         # glpi_inst_software
@@ -773,7 +815,7 @@ class Glpi07(DyngroupDatabaseHelper):
         Modify the given query to filter on the machine UUID
         """
         if type(uuid) == list:
-            return query.filter(self.machine.c.ID.in_(map(lambda a:int(str(a).replace("UUID", "")), uuid)))
+            return query.filter(self.machine.c.ID.in_([int(str(a).replace("UUID", "")) for a in uuid]))
         else:
             return query.filter(self.machine.c.ID == int(str(uuid).replace("UUID", "")))
 
@@ -1164,27 +1206,6 @@ class Glpi07(DyngroupDatabaseHelper):
         return self.doesUserHaveAccessToMachines(ctx, [machine_uuid])
 
     ##################### for inventory purpose (use the same API than OCSinventory to keep the same GUI)
-    def getAllDevices(self, uuid):
-        session = create_session()
-        query = session.query(ComputerDevice).filter(self.computer_device.c.FK_computers == fromUUID(uuid)).order_by(self.computer_device.c.device_type).all()
-        session.close()
-        ret = []
-        for i in query:
-            ret.append(self.getDeviceByType(i.FK_device, i.device_type))
-        return ret
-
-    def getDeviceByType(self, did, type):
-        types = ['', 'glpi_device_moboard', 'glpi_device_processor', 'glpi_device_ram', 'glpi_device_hdd', 'glpi_device_iface', 'glpi_device_drive', 'glpi_device_control', 'glpi_device_gfxcard', 'glpi_device_sndcard', 'glpi_device_pci', 'glpi_device_case', 'glpi_device_power']
-        t = types[type]
-        k = getattr(self, t)
-        klass = self.klass[t]
-        session = create_session()
-        query = session.query(klass).filter(k.c.ID == did).first()
-        session.close()
-        ret = query.to_a()
-        ret.append(['type', t.replace('glpi_device_', '')])
-        return ret
-
     def getLastMachineInventoryFull(self, uuid):
         session = create_session()
         query = self.filterOnUUID(session.query(Machine) \
@@ -1225,20 +1246,662 @@ class Glpi07(DyngroupDatabaseHelper):
         else:
             return False
 
+    def getWarrantyEndDate(self, infocoms):
+        """
+        Get a computer's warranty end date
+        @param infocoms: Content of glpi_infocoms SQL table
+        @type infocoms: self.infocoms sqlalchemy object
+
+        @return: computer's warranty end date if exists, else None
+        @rtype: string or None
+        """
+
+        def add_months(sourcedate, months):
+            """
+            Add x months to a datetime object
+            thanks to http://stackoverflow.com/questions/4130922/how-to-increment-datetime-month-in-python
+            """
+            month = sourcedate.month - 1 + months
+            year = sourcedate.year + month / 12
+            month = month % 12 + 1
+            day = min(sourcedate.day, calendar.monthrange(year, month)[1])
+            return datetime.date(year,month,day)
+
+        if infocoms is not None and infocoms.use_date is not None:
+            endDate = add_months(infocoms.use_date, infocoms.warranty_duration)
+            return endDate.strftime('%Y-%m-%d')
+
+        return ''
+
+    def getManufacturerWarrantyUrl(self, manufacturer, serial):
+        if manufacturer in self.config.manufacturerWarrantyUrl:
+            return self.config.manufacturerWarrantyUrl[manufacturer].replace('@@SERIAL@@', serial)
+        else:
+            return False
+
+    def getSearchOptionId(self, filter, lang = 'en_US'):
+        """ 
+        return a list of ids corresponding to filter
+        @param filter: a value to search
+        @type filter: string
+        """
+
+        ids = []
+        dict = self.searchOptions[lang]
+        for key, value in dict.iteritems():
+            if filter.lower() in value.lower():
+                ids.append(key)
+
+        return ids
+
+    def getLinkedActionKey(self, filter, lang = 'en_US'):
+        """ 
+        return a list of ids corresponding to filter
+        """
+        ids = []
+        dict = self.getLinkedActions()
+        for key, value in dict.iteritems():
+            if filter.lower() in value.lower():
+                ids.append(key)
+
+        return ids
+
     def countLastMachineInventoryPart(self, uuid, part, filt = None, options = {}):
         return self.getLastMachineInventoryPart(uuid, part, filt = filt, options = options, count = True)
 
-    def getLastMachineInventoryPart(self, uuid, part):
-        if part == 'Network':
-            session = create_session()
-            query = self.filterOnUUID(session.query(Network).select_from(self.machine.join(self.network)), uuid).all()
-            ret = map(lambda a:a.to_a(), query)
-            session.close()
-        elif part == 'Controller':
-            ret = self.getAllDevices(uuid)
+    def getLastMachineNetworkPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        query = self.filterOnUUID(
+            session.query(Network).add_column(self.networkinterfaces.c.name) \
+            .select_from(
+                self.machine.outerjoin(self.network).outerjoin(self.networkinterfaces)
+            ), uuid)
+        if count:
+            ret = query.count()
         else:
-            ret = None
+            ret = []
+            for network, interface in query:
+                if network is not None:
+                    l = [
+                        ['Name', network.name],
+                        ['Network Type', interface],
+                        ['MAC Address', network.mac],
+                        ['IP', network.ip],
+                        ['Netmask', network.netmask],
+                        ['Gateway', network.gateway],
+                    ]
+                    ret.append(l)
         return ret
+
+    def getLastMachineStoragePart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        query = self.filterOnUUID(
+            session.query(Disk).add_column(self.diskfs.c.name).select_from(
+                self.machine.outerjoin(self.disk).outerjoin(self.diskfs)
+            ), uuid)
+        if count:
+            ret = query.count()
+        else:
+            ret = []
+            for disk, diskfs in query:
+                if diskfs not in ['rootfs', 'tmpfs', 'devtmpfs']:
+                    if disk is not None:
+                        l = [
+                            ['Name', disk.name],
+                            ['Device', disk.device],
+                            ['Mount Point', disk.mountpoint],
+                            ['Filesystem', diskfs],
+                            ['Size', str(disk.totalsize) + ' MB'],
+                            ['Free Size', str(disk.freesize) + ' MB'],
+                        ]
+                        ret.append(l)
+        return ret
+
+    def getLastMachineAdministrativePart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        query = self.filterOnUUID(
+            session.query(Infocoms).add_column(self.suppliers.c.name).select_from(
+                self.machine.outerjoin(self.infocoms).outerjoin(self.suppliers)
+            ), uuid)
+
+        if count:
+            ret = query.count()
+        else:
+            ret = []
+            for infocoms, supplierName in query:
+                if infocoms is not None:
+                    endDate = self.getWarrantyEndDate(infocoms)
+
+                    l = [
+                        ['Supplier', supplierName],
+                        ['Invoice Number', infocoms and infocoms.bill or ''],
+                        ['Warranty End Date', endDate],
+                    ]
+                    ret.append(l)
+        return ret
+
+    def getLastMachineSoftwaresPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        hide_win_updates = False
+        if 'hide_win_updates' in options:
+            hide_win_updates = options['hide_win_updates']
+
+        query = self.filterOnUUID(
+            session.query(Software).add_column(self.manufacturers.c.name) \
+            .add_column(self.softwareversions.c.name).select_from(
+                self.machine.outerjoin(self.inst_software) \
+                .outerjoin(self.softwareversions) \
+                .outerjoin(self.software) \
+                .outerjoin(self.manufacturers)
+            ), uuid)
+        query = query.order_by(self.software.c.name)
+
+        if filt:
+            clauses = []
+            clauses.append(self.manufacturers.c.name.like('%'+filt+'%'))
+            clauses.append(self.softwareversions.c.name.like('%'+filt+'%'))
+            clauses.append(self.software.c.name.like('%'+filt+'%'))
+            query = query.filter(or_(*clauses))
+
+        if hide_win_updates:
+            query = query.filter(
+                not_(
+                    and_(
+                        self.manufacturers.c.name.contains('microsoft'),
+                        self.software.c.name.op('regexp')('KB[0-9]+(-v[0-9]+)?(v[0-9]+)?')
+                    )
+                )
+            )
+
+        if min != 0:
+            query = query.offset(min)
+        if max != -1:
+            max = int(max) - int(min)
+            query = query.limit(max)
+
+        if count:
+            ret = query.count()
+        else:
+            ret = []
+            for software, manufacturer, version in query:
+                if software is not None:
+                    l = [
+                        ['Vendor', manufacturer],
+                        ['Name', software.name],
+                        ['Version', version],
+                    ]
+                    ret.append(l)
+        return ret
+
+    def getLastMachineSummaryPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        query = self.filterOnUUID(
+            session.query(Machine).add_entity(Infocoms) \
+            .add_column(self.location.c.name) \
+            .add_column(self.locations.c.name) \
+            .add_column(self.os.c.name) \
+            .add_column(self.glpi_enterprises.c.name) \
+            .add_column(self.glpi_type_computers.c.name) \
+            .add_column(self.glpi_dropdown_model.c.name) \
+            .add_column(self.glpi_dropdown_os_sp.c.name) \
+            .add_column(self.glpi_dropdown_domain.c.name) \
+            .add_column(self.state.c.name) \
+            .select_from(
+                self.machine.outerjoin(self.location) \
+                .outerjoin(self.locations) \
+                .outerjoin(self.os) \
+                .outerjoin(self.glpi_enterprises) \
+                .outerjoin(self.infocoms) \
+                .outerjoin(self.glpi_type_computers) \
+                .outerjoin(self.glpi_dropdown_model) \
+                .outerjoin(self.glpi_dropdown_os_sp) \
+                .outerjoin(self.state) \
+                .outerjoin(self.glpi_dropdown_domain)
+            ), uuid)
+
+        if count:
+            ret = query.count()
+        else:
+            ret = []
+            for machine, infocoms, entity, location, os, manufacturer, type, model, servicepack, domain, state in query:
+                endDate = ''
+                if infocoms is not None:
+                    endDate = self.getWarrantyEndDate(infocoms)
+
+                modelType = []
+                if model is not None:
+                    modelType.append(model)
+                if type is not None:
+                    modelType.append(type)
+
+                if len(modelType) == 0:
+                    modelType = ''
+                elif len(modelType) == 1:
+                    modelType = modelType[0]
+                elif len(modelType) == 2:
+                    modelType = " / ".join(modelType)
+
+                manufacturerWarrantyUrl = False
+                if machine.serial is not None and len(machine.serial) > 0:
+                    manufacturerWarrantyUrl = self.getManufacturerWarrantyUrl(manufacturer, machine.serial)
+
+                if manufacturerWarrantyUrl:
+                    serialNumber = '%s / <a href="%s" target="_blank">@@WARRANTY_LINK_TEXT@@</a>' % (machine.serial, manufacturerWarrantyUrl)
+                else:
+                    serialNumber = machine.serial
+
+                entityValue = ''
+                if entity:
+                    entityValue += entity
+                if location:
+                    entityValue += ' (%s)' % location
+
+                l = [
+                    ['Computer Name', machine.name],
+                    ['Description', machine.comments],
+                    ['Entity (Location)', '%s' % entityValue],
+                    ['Domain', domain],
+                    ['Last Logged User', machine.contact],
+                    ['OS', os],
+                    ['Service Pack', servicepack],
+                    ['Model / Type', modelType],
+                    ['Manufacturer', manufacturer],
+                    ['Serial Number', serialNumber],
+                    ['Inventory Number', machine.otherserial],
+                    ['State', state],
+                    ['Warranty End Date', endDate],
+                ]
+                ret.append(l)
+        return ret
+
+    def getLastMachineProcessorsPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        query = self.filterOnUUID(
+            session.query(ComputerProcessor).add_column(self.processor.c.designation) \
+            .select_from(
+                self.machine.outerjoin(self.computerProcessor) \
+                .outerjoin(self.processor)
+            ), uuid)
+
+        if count:
+            ret = query.count()
+        else:
+            ret = []
+            for processor, designation in query:
+                if processor is not None:
+                    l = [
+                        ['Name', designation],
+                        ['Frequency', str(processor.specificity) + ' Hz'],
+                    ]
+                    ret.append(l)
+        return ret
+
+    def getLastMachineMemoryPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        query = self.filterOnUUID(
+            session.query(ComputerMemory) \
+            .add_column(self.memoryType.c.name) \
+            .add_column(self.memory.c.frequence) \
+            .add_column(self.memory.c.designation).select_from(
+                self.machine.outerjoin(self.computerMemory) \
+                .outerjoin(self.memory) \
+                .outerjoin(self.memoryType)
+            ), uuid)
+
+        if count:
+            ret = query.count()
+        else:
+            ret = []
+            for memory, type, frequence, designation in query:
+                if memory is not None:
+                    l = [
+                        ['Name', designation],
+                        ['Type', type],
+                        ['Frequency', frequence],
+                        ['Size', str(memory.specificity) + ' MB'],
+                    ]
+                    ret.append(l)
+        return ret
+
+    def getLastMachineHarddrivesPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        query = self.filterOnUUID(
+            session.query(self.klass['computers_deviceharddrives']) \
+            .add_column(self.deviceharddrives.c.designation) \
+            .select_from(
+                self.machine.outerjoin(self.computers_deviceharddrives) \
+                .outerjoin(self.deviceharddrives)
+            ), uuid)
+
+        if count:
+            ret = query.count()
+        else:
+            ret = []
+            for hd, designation in query:
+                if hd is not None:
+                    l = [
+                        ['Name', designation],
+                        ['Size', str(hd.specificity) + ' MB'],
+                    ]
+                    ret.append(l)
+        return ret
+
+    def getLastMachineNetworkCardsPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        query = self.filterOnUUID(
+            session.query(self.klass['computers_devicenetworkcards']) \
+            .add_entity(self.klass['devicenetworkcards']) \
+            .select_from(
+                self.machine.outerjoin(self.computers_devicenetworkcards) \
+                .outerjoin(self.devicenetworkcards)
+            ), uuid)
+
+        if count:
+            ret = query.count()
+        else:
+            ret = []
+            for mac, network in query:
+                if network is not None:
+                    l = [
+                        ['Name', network.designation],
+                        ['Bandwidth', network.bandwidth],
+                        ['MAC Address', mac.specificity],
+                    ]
+                    ret.append(l)
+        return ret
+
+    def getLastMachineDrivesPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        query = self.filterOnUUID(
+            session.query(self.klass['devicedrives']).select_from(
+                self.machine.outerjoin(self.computers_devicedrives) \
+                .outerjoin(self.devicedrives)
+            ), uuid)
+
+        if count:
+            ret = query.count()
+        else:
+            ret = []
+            for drive in query:
+                if drive is not None:
+                    l = [
+                        ['Name', drive.designation],
+                        ['Writer', drive.is_writer and 'Yes' or 'No'],
+                    ]
+                    ret.append(l)
+        return ret
+
+    def getLastMachineGraphicCardsPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        query = self.filterOnUUID(
+            session.query(self.klass['devicegraphiccards']).add_column(self.interfaceType.c.name) \
+            .select_from(
+                self.machine.outerjoin(self.computers_devicegraphiccards) \
+                .outerjoin(self.devicegraphiccards) \
+                .outerjoin(self.interfaceType, self.interfaceType.c.id == self.devicegraphiccards.c.interfacetypes_id)
+            ), uuid)
+
+        if count:
+            ret = query.count()
+        else:
+            ret = []
+            for card, interfaceType in query:
+                if card is not None:
+                    l = [
+                        ['Name', card.designation],
+                        ['Memory', str(card.specif_default) + ' MB'],
+                        ['Type', interfaceType],
+                    ]
+                    ret.append(l)
+        return ret
+
+    def getLastMachineSoundCardsPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        query = self.filterOnUUID(
+            session.query(self.klass['devicesoundcards']).select_from(
+                self.machine.outerjoin(self.computers_devicesoundcards) \
+                .outerjoin(self.devicesoundcards)
+            ), uuid)
+
+        if count:
+            ret = query.count()
+        else:
+            ret = []
+            for sound in query:
+                if sound is not None:
+                    l = [
+                        ['Name', sound.designation],
+                    ]
+                    ret.append(l)
+        return ret
+
+    def getLastMachineControllersPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        query = self.filterOnUUID(
+            session.query(self.klass['computers_devicecontrols']) \
+            .add_entity(self.klass['devicecontrols']).select_from(
+                self.machine.outerjoin(self.computers_devicecontrols) \
+                .outerjoin(self.devicecontrols)
+            ), uuid)
+
+        if count:
+            ret = query.count()
+        else:
+            ret = []
+            for computerControls, deviceControls in query:
+                if computerControls is not None:
+                    l = [
+                        ['Name', deviceControls.designation],
+                    ]
+                    ret.append(l)
+        return ret
+
+    def getLastMachineOthersPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        query = self.filterOnUUID(
+            session.query(self.klass['devicepcis']).select_from(
+                self.machine.outerjoin(self.computers_devicepcis) \
+                .outerjoin(self.devicepcis)
+            ), uuid)
+
+        if count:
+            ret = query.count()
+        else:
+            ret = []
+            for pci in query:
+                if pci is not None:
+                    l = [
+                        ['Name', pci.designation],
+                        ['Comment', pci.comment],
+                    ]
+                    ret.append(l)
+        return ret
+
+    def getLastMachineHistoryPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        # Set options
+        history_delta = 'All'
+        if 'history_delta' in options:
+            history_delta = options['history_delta']
+
+        query = session.query(Logs)
+        query = query.filter(and_(
+            self.logs.c.items_id == int(uuid.replace('UUID', '')),
+            self.logs.c.itemtype == "Computer"
+        ))
+
+        now = datetime.datetime.now()
+        if history_delta == 'today':
+            query = query.filter(self.logs.c.date_mod > now - datetime.timedelta(1))
+        elif history_delta == 'week':
+            query = query.filter(self.logs.c.date_mod > now - datetime.timedelta(7))
+        if history_delta == 'month':
+            query = query.filter(self.logs.c.date_mod > now - datetime.timedelta(30))
+
+        if filt:
+            clauses = []
+            clauses.append(self.logs.c.date_mod.like('%'+filt+'%'))
+            clauses.append(self.logs.c.user_name.like('%'+filt+'%'))
+            clauses.append(self.logs.c.old_value.like('%'+filt+'%'))
+            clauses.append(self.logs.c.new_value.like('%'+filt+'%'))
+            clauses.append(self.logs.c.id_search_option.in_(self.getSearchOptionId(filt)))
+            clauses.append(self.logs.c.itemtype_link.in_(self.getLinkedActionKey(filt)))
+            # Treat Software case
+            if filt.lower() in 'software':
+                clauses.append(self.logs.c.linked_action.in_([4, 5]))
+            query = query.filter(or_(*clauses))
+
+        if count:
+            ret = query.count()
+        else:
+            query = query.order_by(desc(self.logs.c.date_mod))
+
+            if min != 0:
+                query = query.offset(min)
+            if max != -1:
+                max = int(max) - int(min)
+                query = query.limit(max)
+
+            ret = []
+            for log in query:
+                if log is not None:
+                    update = ''
+                    if log.old_value == '' and log.new_value != '':
+                        update = '%s' % log.new_value
+                    elif log.old_value != '' and log.new_value == '':
+                        update = '%s' % log.old_value
+                    else:
+                        update = '%s --> %s' % (log.old_value, log.new_value)
+
+                    update = '%s%s' % (self.getLinkedActionValues(log)['update'], update)
+
+                    l = [
+                        ['Date', log.date_mod.strftime('%Y-%m-%d %H:%m')],
+                        ['User', log.user_name],
+                        ['Category', self.getLinkedActionValues(log)['field']],
+                        ['Action', update],
+                    ]
+                    ret.append(l)
+        return ret
+
+    def getLastMachineInventoryPart(self, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        session = create_session()
+
+        ret = None
+        if hasattr(self, 'getLastMachine%sPart' % part):
+            ret = getattr(self, 'getLastMachine%sPart' % part)(session, uuid, part, min, max, filt, options, count)
+
+        session.close()
+        return ret
+
+    def getSearchOptionValue(self, log):
+        try:
+            return self.searchOptions['en_US'][str(log.id_search_option)]
+        except:
+            if log.id_search_option != 0:
+                logging.getLogger().warn('I can\'t get a search option for id %s' % log.id_search_option)
+            return ''
+
+    def getLinkedActionValues(self, log):
+        d = {
+            0: {
+                'update': '',
+                'field': self.getSearchOptionValue(log),
+            },
+            1: {
+                'update': 'Add a component: ',
+                'field': self.getLinkedActionField(log.itemtype_link),
+            },
+            2: {
+                'update': 'Update a component: ',
+                'field': self.getLinkedActionField(log.itemtype_link),
+            },
+            3: {
+                'update': 'Deletion of a component: ',
+                'field': self.getLinkedActionField(log.itemtype_link),
+            },
+            4: {
+                'update': 'Install software: ',
+                'field': 'Software',
+            },
+            5: {
+                'update': 'Uninstall software: ',
+                'field': 'Software',
+            },
+            6: {
+                'update': 'Disconnect device: ',
+                'field': log.itemtype_link,
+            },
+            7: {
+                'update': 'Connect device: ',
+                'field': log.itemtype_link,
+            },
+            8: {
+                'update': 'OCS Import: ',
+                'field': '',
+            },
+            9: {
+                'update': 'OCS Delete: ',
+                'field': '',
+            },
+            10: {
+                'update': 'OCS ID Changed: ',
+                'field': '',
+            },
+            11: {
+                'update': 'OCS Link: ',
+                'field': '',
+            },
+            12: {
+                'update': 'Other (often from plugin): ',
+                'field': '',
+            },
+            13: {
+                'update': 'Delete item (put in trash): ',
+                'field': '',
+            },
+            14: {
+                'update': 'Restore item from trash: ',
+                'field': '',
+            },
+            15: {
+                'update': 'Add relation: ',
+                'field': log.itemtype_link,
+            },
+            16: {
+                'update': 'Delete relation: ',
+                'field': log.itemtype_link,
+            },
+            17: {
+                'update': 'Add an item: ',
+                'field': self.getLinkedActionField(log.itemtype_link),
+            },
+            18: {
+                'update': 'Update an item: ',
+                'field': self.getLinkedActionField(log.itemtype_link),
+            },
+            19: {
+                'update': 'Deletion of an item: ',
+                'field': self.getLinkedActionField(log.itemtype_link),
+            },
+        }
+
+        if log.linked_action in d:
+            return d[log.linked_action]
+        else:
+            return {
+                'update': '',
+                'field': '',
+            }
+
+    def getLinkedActions(self):
+        return {
+            'DeviceDrive': 'Drive',
+            'DeviceGraphicCard': 'Graphic Card',
+            'DeviceHardDrive': 'Hard Drive',
+            'DeviceMemory': 'Memory',
+            'DeviceNetworkCard': 'Network Card',
+            'DevicePci': 'Other Component',
+            'DeviceProcessor': 'Processor',
+            'DeviceSoundCard': 'Sound Card',
+            'ComputerDisk': 'Volume',
+            'NetworkPort': 'Network Port',
+        }
+
+    def getLinkedActionField(self, itemtype):
+        """
+        return Field content
+        """
+        field = self.getLinkedActions()
+        try:
+            return field[itemtype]
+        except:
+            return itemtype
 
     ##################### functions used by querymanager
     def getAllOs(self, ctx, filt = ''):
@@ -2002,6 +2665,9 @@ class Location(object):
 class State(object):
     pass
 
+class Logs(object):
+    pass
+
 class Processor(object):
     pass
 
@@ -2025,17 +2691,6 @@ class Network(object):
             'gateway': self.gateway,
             'subnet': self.subnet
         }
-
-    def to_a(self):
-        return [
-            ['ifmac', self.ifmac],
-            ['ifaddr', self.ifaddr],
-            ['uuid', toUUID(self.ID)],
-            ['name', self.name],
-            ['netmask', self.netmask],
-            ['gateway', self.gateway],
-            ['subnet', self.subnet]
-        ]
 
 class OS(object):
     pass
@@ -2074,4 +2729,19 @@ class Net(object):
     pass
 
 class NetworkInterfaces(object):
+    pass
+
+class Memory(object):
+    pass
+
+class MemoryType(object):
+    pass
+
+class Infocoms(object):
+    pass
+
+class Suppliers(object):
+    pass
+
+class DiskFs(object):
     pass
