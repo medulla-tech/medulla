@@ -501,12 +501,16 @@ class Glpi08(DyngroupDatabaseHelper):
                     query = query.filter(self.machine.c.name.like('%'+filt['hostname']+'%'))
             if 'name' in filt:
                 query = query.filter(self.machine.c.name.like('%'+filt['name']+'%'))
+
             if 'filter' in filt: # Used with search field of static group creation
                 query = query.filter(self.machine.c.name.like('%'+filt['filter']+'%'))
+            
             if 'uuid' in filt:
                 query = self.filterOnUUID(query, filt['uuid'])
+            
             if 'uuids' in filt and type(filt['uuids']) == list and len(filt['uuids']) > 0:
                 query = self.filterOnUUID(query, filt['uuids'])
+            
             if 'gid' in filt:
                 gid = filt['gid']
                 machines = []
@@ -515,6 +519,7 @@ class Glpi08(DyngroupDatabaseHelper):
                 else:
                     machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, gid, 0, -1, ''))
                 query = query.filter(self.machine.c.id.in_(machines))
+            
             if 'request' in filt:
                 request = filt['request']
                 bool = None
@@ -860,7 +865,7 @@ class Glpi08(DyngroupDatabaseHelper):
         if get != None:
             for m in machines:
                 if isinstance(m, tuple):
-                    m= m[0]
+                    m = m[0]
                 ret[m.getUUID()] = self.__getAttr(m, get)
             return ret
 
@@ -2761,4 +2766,3 @@ class Net(object):
 
 class NetworkInterfaces(object):
     pass
-

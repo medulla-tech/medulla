@@ -143,8 +143,12 @@ class Glpi07(DyngroupDatabaseHelper):
         # network
         self.network = Table("glpi_networking_ports", self.metadata,
             Column('on_device', Integer, ForeignKey('glpi_computers.ID')),
+            Column('iface', Integer, ForeignKey('glpi_dropdown_iface.ID')),
             autoload = True)
         mapper(Network, self.network)
+
+        self.networkinterfaces = Table("glpi_dropdown_iface", self.metadata, autoload = True)
+        mapper(NetworkInterfaces, self.networkinterfaces)
 
         self.net = Table("glpi_dropdown_network", self.metadata, autoload = True)
         mapper(Net, self.net)
@@ -185,6 +189,10 @@ class Glpi07(DyngroupDatabaseHelper):
             Column('comments', String(255), nullable=False),
             autoload = True)
         mapper(Machine, self.machine) #, properties={'FK_entities': relation(Location)})
+
+        # states
+        self.state = Table("glpi_dropdown_state", self.metadata, autoload = True)
+        mapper(State, self.state)
 
         # profile
         self.profile = Table("glpi_profiles", self.metadata,
@@ -305,9 +313,10 @@ class Glpi07(DyngroupDatabaseHelper):
             complete_ctx(ctx)
         return self.machine.c.FK_entities.in_(ctx.locationsid + other_locids)
 
-    def __getRestrictedComputersListQuery(self, ctx, filt = None, session = create_session()):
+    def __getRestrictedComputersListQuery(self, ctx, filt = None, session = create_session(), displayList = False):
         """
         Get the sqlalchemy query to get a list of computers with some filters
+        If displayList is True, we are displaying computers list
         """
         if session == None:
             session = create_session()
@@ -315,6 +324,21 @@ class Glpi07(DyngroupDatabaseHelper):
         if filt:
             # filtering on query
             join_query = self.machine
+
+            if displayList:
+                if 'os' in self.config.summary:
+                    query = query.add_column(self.os.c.name)
+                if 'type' in self.config.summary:
+                    query = query.add_column(self.glpi_type_computers.c.name)
+                if 'inventorynumber' in self.config.summary:
+                    query = query.add_column(self.machine.c.otherserial)
+                if 'state' in self.config.summary:
+                    query = query.add_column(self.state.c.name)
+                if 'entity' in self.config.summary:
+                    query = query.add_column(self.location.c.name) # entities
+                if 'location' in self.config.summary:
+                    query = query.add_column(self.locations.c.name) # locations
+
             query_filter = None
 
             filters = [self.machine.c.deleted == 0, self.machine.c.is_template == 0, self.__filter_on_filter(query), self.__filter_on_entity_filter(query, ctx)]
@@ -322,18 +346,21 @@ class Glpi07(DyngroupDatabaseHelper):
             join_query, query_filter = self.filter(ctx, self.machine, filt, session.query(Machine), self.machine.c.ID, filters)
 
             # filtering on locations
-            try:
+            if 'location' in filt:
                 location = filt['location']
                 if location == '' or location == u'' or not self.displayLocalisationBar:
                     location = None
-            except KeyError:
+            else:
                 location = None
 
-            try:
+            if 'entity_uuid' in filt:
+                location = filt['entity_uuid']
+
+            if 'ctxlocation' in filt:
                 ctxlocation = filt['ctxlocation']
                 if not self.displayLocalisationBar:
                     ctxlocation = None
-            except KeyError:
+            else:
                 ctxlocation = None
 
             if ctxlocation != None:
@@ -362,14 +389,49 @@ class Glpi07(DyngroupDatabaseHelper):
 
                 location = self.__getName(location)
                 query_filter = self.__addQueryFilter(query_filter, (self.location.c.name == location))
+
+            if displayList:
+                if 'os' in self.config.summary:
+                    join_query = join_query.outerjoin(self.os)
+                if 'type' in self.config.summary:
+                    join_query = join_query.outerjoin(self.glpi_type_computers)
+                if 'state' in self.config.summary:
+                    join_query = join_query.outerjoin(self.state)
+                if 'location' in self.config.summary:
+                    join_query = join_query.outerjoin(self.locations)
+
             query = query.select_from(join_query).filter(query_filter)
             query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
             query = self.__filter_on(query)
             query = self.__filter_on_entity(query, ctx)
 
-            # filtering on machines (name or uuid)
             if 'hostname' in filt:
-                query = query.filter(self.machine.c.name.like('%'+filt['hostname']+'%'))
+                if displayList:
+                    clauses = []
+                    if 'cn' in self.config.summary:
+                        clauses.append(self.machine.c.name.like('%'+filt['hostname']+'%'))
+                    if 'os' in self.config.summary:
+                        clauses.append(self.os.c.name.like('%'+filt['hostname']+'%'))
+                    if 'description' in self.config.summary:
+                        clauses.append(self.machine.c.comments.like('%'+filt['hostname']+'%'))
+                    if 'type' in self.config.summary:
+                        clauses.append(self.glpi_type_computers.c.name.like('%'+filt['hostname']+'%'))
+                    if 'user' in self.config.summary:
+                        clauses.append(self.machine.c.contact.like('%'+filt['hostname']+'%'))
+                    if 'state' in self.config.summary:
+                        clauses.append(self.state.c.name.like('%'+filt['hostname']+'%'))
+                    if 'inventorynumber' in self.config.summary:
+                        clauses.append(self.machine.c.otherserial.like('%'+filt['hostname']+'%'))
+                    if 'entity' in self.config.summary:
+                        clauses.append(self.location.c.name.like('%'+filt['hostname']+'%'))
+                    if 'location' in self.config.summary:
+                        clauses.append(self.locations.c.name.like('%'+filt['hostname']+'%'))
+                    # Filtering on computer list page
+                    if clauses:
+                        query = query.filter(or_(*clauses))
+                else:
+                    # filtering on machines (name or uuid)
+                    query = query.filter(self.machine.c.name.like('%'+filt['hostname']+'%'))
             if 'name' in filt:
                 query = query.filter(self.machine.c.name.like('%'+filt['name']+'%'))
 
@@ -382,7 +444,7 @@ class Glpi07(DyngroupDatabaseHelper):
             if 'uuids' in filt and type(filt['uuids']) == list and len(filt['uuids']) > 0:
                 query = self.filterOnUUID(query, filt['uuids'])
 
-            try:
+            if 'gid' in filt:
                 gid = filt['gid']
                 machines = []
                 if ComputerGroupManager().isrequest_group(ctx, gid):
@@ -391,18 +453,13 @@ class Glpi07(DyngroupDatabaseHelper):
                     machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, gid, 0, -1, ''))
                 query = query.filter(self.machine.c.ID.in_(machines))
 
-            except KeyError:
-                pass
-
-            try:
+            if 'request' in filt:
                 request = filt['request']
                 bool = None
-                if filt.has_key('equ_bool'):
+                if 'equ_bool' in filt:
                     bool = filt['equ_bool']
                 machines = map(lambda m: fromUUID(m), ComputerGroupManager().request(ctx, request, bool, 0, -1, ''))
                 query = query.filter(self.machine.c.ID.in_(machines))
-            except KeyError:
-                pass
 
         return query
 
@@ -575,14 +632,14 @@ class Glpi07(DyngroupDatabaseHelper):
         """
         Get the first computers that match filters parameters
         """
-        ret = self.getRestrictedComputersList(ctx, 0, 10, filt)
+        ret = self.getRestrictedComputersList(ctx, 0, 10, filt, displayList=False)
         if len(ret) != 1:
             for i in ['location', 'ctxlocation']:
                 try:
                     filt.pop(i)
                 except:
                     pass
-            ret = self.getRestrictedComputersList(ctx, 0, 10, filt)
+            ret = self.getRestrictedComputersList(ctx, 0, 10, filt, displayList=False)
             if len(ret) > 0:
                 raise Exception("NOPERM##%s" % (ret[0][1]['fullname']))
             return False
@@ -613,14 +670,25 @@ class Glpi07(DyngroupDatabaseHelper):
         Get the size of the computer list that match filters parameters
         """
         session = create_session()
-        query = self.__getRestrictedComputersListQuery(ctx, filt, session)
+
+        displayList = None
+
+        # When search field is used on main computer's list page,
+        # Pagination PHP Widget must know total machine result
+        # So, set displayList to True to count on glpi_computers
+        # and all needed joined tables
+        if 'hostname' in filt:
+            if len(filt['hostname']) > 0:
+                displayList = True
+
+        query = self.__getRestrictedComputersListQuery(ctx, filt, session, displayList)
         if query == None:
             return 0
         ret = query.count()
         session.close()
         return ret
 
-    def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = None, advanced = True, justId = False, toH = False):
+    def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = None, advanced = True, justId = False, toH = False, displayList = None):
         """
         Get the computer list that match filters parameters between min and max
 
@@ -629,11 +697,18 @@ class Glpi07(DyngroupDatabaseHelper):
         session = create_session()
         ret = {}
 
-        query = self.__getRestrictedComputersListQuery(ctx, filt, session)
+        # If we are displaying Computers list main page, set displayList to True
+        if displayList is None:
+            if justId or toH or 'uuid' in filt: # if 'uuid' in filt: used where adding a command to a group
+                displayList = False
+            else:
+                displayList = True
+
+        query = self.__getRestrictedComputersListQuery(ctx, filt, session, displayList)
         if query == None:
             return {}
 
-        query = query.order_by(asc(self.machine.c.name))
+        #query = query.order_by(asc(self.machine.c.name))
 
 
         if min != 0:
@@ -721,17 +796,58 @@ class Glpi07(DyngroupDatabaseHelper):
         ret = {}
         if get != None:
             for m in machines:
+                if isinstance(m, tuple):
+                    m = m[0]
                 ret[m.getUUID()] = self.__getAttr(m, get)
             return ret
 
         names = {}
         for m in machines:
-            ret[m.getUUID()] = [None, {
-                'cn': [m.name],
+            displayList = False
+            if isinstance(m, tuple):
+                displayList = True
+                # List of fields defined around line 402
+                # m, os, type, inventorynumber, state, entity, location = m
+                l = list(m)
+                if 'location' in self.config.summary:
+                    location = l.pop()
+                if 'entity' in self.config.summary:
+                    entity = l.pop()
+                if 'state' in self.config.summary:
+                    state = l.pop()
+                if 'inventorynumber' in self.config.summary:
+                    inventorynumber = l.pop()
+                if 'type' in self.config.summary:
+                    type = l.pop()
+                if 'os' in self.config.summary:
+                    os = l.pop()
+                m = l.pop()
+
+            datas = {
+                'cn': m.name not in ['', None] and [m.name] or ['(%s)' % m.id],
                 'displayName': [m.comments],
-                'objectUUID': [m.getUUID()]
-            }]
-            names[m.getUUID()] = m.name
+                'objectUUID': [m.getUUID()],
+                'user': [m.contact],
+            }
+
+            if displayList:
+                if 'location' in self.config.summary:
+                    datas['location'] = location
+                if 'entity' in self.config.summary:
+                    datas['entity'] = entity
+                if 'state' in self.config.summary:
+                    datas['state'] = state
+                if 'inventorynumber' in self.config.summary:
+                    datas['inventorynumber'] = inventorynumber
+                if 'type' in self.config.summary:
+                    datas['type'] = type
+                if 'os' in self.config.summary:
+                    datas['os'] = os
+
+            ret[m.getUUID()] = [None, datas]
+
+            if advanced:
+                names[m.getUUID()] = m.name
         if advanced:
             uuids = map(lambda m: m.getUUID(), machines)
             nets = self.getMachinesNetwork(uuids)
@@ -1883,6 +1999,9 @@ class Location(object):
             'level':self.level
         }
 
+class State(object):
+    pass
+
 class Processor(object):
     pass
 
@@ -1909,10 +2028,10 @@ class Network(object):
 
     def to_a(self):
         return [
+            ['ifmac', self.ifmac],
+            ['ifaddr', self.ifaddr],
             ['uuid', toUUID(self.ID)],
             ['name', self.name],
-            ['ifaddr', self.ifaddr],
-            ['ifmac', self.ifmac],
             ['netmask', self.netmask],
             ['gateway', self.gateway],
             ['subnet', self.subnet]
@@ -1954,3 +2073,5 @@ class Locations(object):
 class Net(object):
     pass
 
+class NetworkInterfaces(object):
+    pass
