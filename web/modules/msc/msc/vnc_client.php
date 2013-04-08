@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * (c) 2008 Mandriva, http://www.mandriva.com/
  *
@@ -35,6 +35,7 @@ if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
             <head>
                 <title>Mandriva Management Console</title>
                 <link href='/mmc/graph/master.css' rel='stylesheet' media='screen' type='text/css' />
+                
             </head>
             <BODY style='background-color: #FFFFFF;'>
             <center>
@@ -43,6 +44,7 @@ if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
                         <h2 style='color: red;'>"._T("Connection Failed !", "msc") . "</h2>
                         <br/>
                         "._T("Connection was refused by the other side.", "msc") . "<br/>
+                            
                         <br/>
                         <button id='btnPrimary' onclick='window.close();'>Close window</button>
                     </div>
@@ -61,8 +63,9 @@ if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
                 <link href='/mmc/graph/master.css' rel='stylesheet' media='screen' type='text/css' />
             </head>
             <BODY style='background-color: #FFFFFF;'>
+            <!-- Checking JAVA RUNTIME function -->
             <center>
-                <div class='popup' style='position: relative;'>
+                <div class='popup' style='position: relative;height:90%;'>
                     <div class='__popup_container'>
                         <h2>"._T("Connection Succeedeed !", "msc") . "</h2>
                         <br/>
@@ -156,10 +159,23 @@ if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
     echo "[connection]\r\nhost=$host \r\nport=$port\r\n";
  *
  */
+
 else {
-    $f = new PopupWindowForm(_T("Take control of this computer", "msc"));
-    $f->target_uri = $_SERVER["REQUEST_URI"] . "&establishproxy=yes";
-    $f->addValidateButtonWithFade("bconfirm");
+    ?>
+<?php
+    // Test if Java Runtime is installed
+    if(!isset($_COOKIE['javaenabled']))
+        print('<script type="text/javascript">document.location.href=document.location.href;</script>');
+    if(!isset($_COOKIE['javaenabled']) || $_COOKIE['javaenabled']=="null") {
+        $f = new PopupWindowForm("");    
+        print("<br/><span style='color:red'>"._T("Java Runtime is not installed, please download it from <a href='http://www.java.com/download/'>http://www.java.com/download/</a> and retry.", "msc")."</span>");
+    }    
+    else
+    {
+        $f = new PopupWindowForm(_T("Take control of this computer", "msc"));    
+        $f->target_uri = $_SERVER["REQUEST_URI"] . "&establishproxy=yes";
+        $f->addValidateButtonWithFade("bconfirm");
+    }
     $f->addCancelButton("bback");
     $f->display();
 }
