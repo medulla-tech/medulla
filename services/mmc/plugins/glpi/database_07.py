@@ -123,7 +123,7 @@ class Glpi07(DyngroupDatabaseHelper):
         self.klass = {}
 
         for i in ('glpi_dropdown_os', 'glpi_dropdown_os_sp', 'glpi_dropdown_os_version', \
-                  'glpi_dropdown_domain', 'glpi_dropdown_locations', 'glpi_dropdown_model', \
+                  'glpi_dropdown_domain', 'glpi_dropdown_locations', 'glpi_dropdown_manufacturer', 'glpi_dropdown_model', \
                   'glpi_dropdown_network', 'glpi_type_computers', 'glpi_enterprises', 'glpi_device_case', \
                   'glpi_device_control', 'glpi_device_drive', 'glpi_device_gfxcard', 'glpi_device_hdd', \
                   'glpi_device_iface', 'glpi_device_moboard', 'glpi_device_pci', 'glpi_device_power', \
@@ -203,6 +203,13 @@ class Glpi07(DyngroupDatabaseHelper):
         self.diskfs = Table('glpi_dropdown_filesystems', self.metadata, autoload = True)
         mapper(DiskFs, self.diskfs)
 
+        # glpi_computerdisks
+        self.disk = Table('glpi_computerdisks', self.metadata,
+                          Column('FK_computers', Integer, ForeignKey('glpi_computers.ID')),
+                          Column('FK_filesystems', Integer, ForeignKey('glpi_dropdown_filesystems.ID')),
+                          autoload = True)
+        mapper(Disk, self.disk)
+
         # machine (we need the foreign key, so we need to declare the table by hand ...
         #          as we don't need all columns, we don't declare them all)
         self.machine = Table("glpi_computers", self.metadata,
@@ -266,7 +273,7 @@ class Glpi07(DyngroupDatabaseHelper):
 
         # software
         self.software = Table("glpi_software", self.metadata,
-                              Column('FK_glpi_enterprise', Integer, ForeignKey('glpi_enterprises.ID')),
+                              Column('FK_glpi_enterprise', Integer, ForeignKey('glpi_dropdown_manufacturer.ID')),
                               autoload = True)
         mapper(Software, self.software)
 
@@ -1324,8 +1331,8 @@ class Glpi07(DyngroupDatabaseHelper):
                     l = [
                         ['Name', network.name],
                         ['Network Type', interface],
-                        ['MAC Address', network.mac],
-                        ['IP', network.ip],
+                        ['MAC Address', network.ifmac],
+                        ['IP', network.ifaddr],
                         ['Netmask', network.netmask],
                         ['Gateway', network.gateway],
                     ]
@@ -1383,18 +1390,18 @@ class Glpi07(DyngroupDatabaseHelper):
             hide_win_updates = options['hide_win_updates']
 
         query = self.filterOnUUID(
-            session.query(Software).add_column(self.manufacturers.c.name) \
+            session.query(Software).add_column(self.glpi_dropdown_manufacturer.c.name) \
             .add_column(self.softwareversions.c.name).select_from(
                 self.machine.outerjoin(self.inst_software) \
                 .outerjoin(self.softwareversions) \
                 .outerjoin(self.software) \
-                .outerjoin(self.manufacturers)
+                .outerjoin(self.glpi_dropdown_manufacturer)
             ), uuid)
         query = query.order_by(self.software.c.name)
 
         if filt:
             clauses = []
-            clauses.append(self.manufacturers.c.name.like('%'+filt+'%'))
+            clauses.append(self.glpi_dropdown_manufacturer.c.name.like('%'+filt+'%'))
             clauses.append(self.softwareversions.c.name.like('%'+filt+'%'))
             clauses.append(self.software.c.name.like('%'+filt+'%'))
             query = query.filter(or_(*clauses))
@@ -1403,7 +1410,7 @@ class Glpi07(DyngroupDatabaseHelper):
             query = query.filter(
                 not_(
                     and_(
-                        self.manufacturers.c.name.contains('microsoft'),
+                        self.glpi_dropdown_manufacturer.c.name.contains('microsoft'),
                         self.software.c.name.op('regexp')('KB[0-9]+(-v[0-9]+)?(v[0-9]+)?')
                     )
                 )
@@ -2741,6 +2748,9 @@ class Infocoms(object):
     pass
 
 class Suppliers(object):
+    pass
+
+class Disk(object):
     pass
 
 class DiskFs(object):
