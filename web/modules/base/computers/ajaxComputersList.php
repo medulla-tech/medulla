@@ -115,4 +115,24 @@ $$('tbody tr td:not(.action)').invoke('observe', 'click', function(event) {
     $('param').value = tdValue.replace(/&nbsp;/g, ' ');
     pushSearch();
 });
+
+// Detecting Java Runtime version for VNC Applet
+
+function JavaVersion()
+{
+  var result = null;
+  // Walk through the full list of mime types.
+  for(var i=0; i<navigator.mimeTypes.length; i++ )
+  {
+      // The jpi-version is the plug-in version.  This is the best
+      // version to use.
+      if( (result = navigator.mimeTypes[i].type.match(/^application\/x-java-applet;jpi-version=(.*)$/)) !== null )
+          return result[1];
+  }
+  return null;
+}    
+    
+// Setting a cookie for Java Version
+document.cookie = "javaenabled="+JavaVersion();
+
 </script>
