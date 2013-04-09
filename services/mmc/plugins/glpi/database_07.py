@@ -1786,7 +1786,7 @@ class Glpi07(DyngroupDatabaseHelper):
 
         if filt:
             clauses = []
-            clauses.append(self.logs.c.date_mod.like('%'+filt+'%'))
+            clauses.append(self.logs.c.date_mod.like('%'+filt.split(' ')[0]+'%'))
             clauses.append(self.logs.c.user_name.like('%'+filt+'%'))
             clauses.append(self.logs.c.old_value.like('%'+filt+'%'))
             clauses.append(self.logs.c.new_value.like('%'+filt+'%'))
