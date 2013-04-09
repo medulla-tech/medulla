@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com
@@ -214,3 +214,10 @@ _T('Inventory Number', 'glpi');
 ?>
 
 </table>
+<script type="text/javascript">
+$$('tbody tr td:not(.action)').invoke('observe', 'click', function(event) {
+    var tdValue = this.innerHTML.stripTags();
+    $('param').value = tdValue.replace(/&nbsp;/g, ' ');
+    pushSearch();
+});
+</script>
