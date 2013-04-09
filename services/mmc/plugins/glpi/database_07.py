@@ -907,7 +907,12 @@ class Glpi07(DyngroupDatabaseHelper):
             if advanced:
                 names[m.getUUID()] = m.name
         if advanced:
-            uuids = map(lambda m: m.getUUID(), machines)
+            uuids = []
+            for m in machines:
+                if isinstance(m, tuple):
+                    m = m[0]
+                uuids.append(m.getUUID())
+
             nets = self.getMachinesNetwork(uuids)
             for uuid in ret:
                 try:
