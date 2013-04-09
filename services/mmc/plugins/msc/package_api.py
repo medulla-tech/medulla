@@ -336,6 +336,11 @@ class SendPackageCommand:
         if self.pid != None and self.pid != '' and not root:
             return self.onError("Can't get path for package %s" % self.pid)
         self.root = root
+        
+        # If is an empty Package, avoid file uploading
+        if self.pinfos['size'] == 0 :
+            self.pinfos['files'] = None
+        
         # Prepare command parameters for database insertion
         cmd = prepareCommand(self.pinfos, self.params)
 
