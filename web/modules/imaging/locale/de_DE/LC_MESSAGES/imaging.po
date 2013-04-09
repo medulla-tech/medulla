@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
 "POT-Creation-Date: 2013-04-09 12:05+0200\n"
-"PO-Revision-Date: 2013-04-09 10:41+0000\n"
+"PO-Revision-Date: 2013-04-09 10:42+0000\n"
 "Last-Translator: Maik Wagner <maikwagner@yahoo.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/pulse2/team/de_DE/)\n"
 "MIME-Version: 1.0\n"
@@ -759,7 +759,7 @@ msgstr "Möchten Sie, dass ein Backup durchgeführt wird ?"
 #: modules/imaging/imaging/configure.php:381
 #: modules/imaging/imaging/configure.php:636
 msgid "Unregister this computer"
-msgstr ""
+msgstr "Deregistrierung dieses Rechners"
 
 #: modules/imaging/imaging/configure.php:396
 #, php-format
@@ -774,7 +774,7 @@ msgstr ""
 #: modules/imaging/imaging/configure.php:419
 #, php-format
 msgid "Register computer '%s'"
-msgstr ""
+msgstr "Registrieren von Rechner '%s'"
 
 #: modules/imaging/imaging/configure.php:423
 #, php-format
@@ -844,12 +844,12 @@ msgstr ""
 
 #: modules/imaging/imaging/configure.php:545
 msgid "Hard disks and partitions selection to backup"
-msgstr ""
+msgstr "Festplatten und Partitionsauswahl für Backup"
 
 #: modules/imaging/imaging/configure.php:550
 #, php-format
 msgid "Hard disk number: %d"
-msgstr ""
+msgstr "Festplatten-Nummer: %d"
 
 #: modules/imaging/imaging/configure.php:561
 msgid "Select this hard disk"
