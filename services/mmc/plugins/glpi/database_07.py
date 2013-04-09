@@ -35,6 +35,11 @@ from mmc.plugins.glpi.database_utils import decode_latin1, encode_latin1, decode
 from mmc.plugins.dyngroup.config import DGConfig
 from mmc.plugins.glpi.database_utils import DbTOA # pyflakes.ignore
 
+# GLPI Historical tab needed imports
+from mmc.site import mmcconfdir
+import os
+from configobj import ConfigObj
+
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
         Integer, ForeignKey, asc, or_, not_, desc
 from sqlalchemy.orm import create_session, mapper
@@ -111,6 +116,10 @@ class Glpi07(DyngroupDatabaseHelper):
         self.metadata.create_all()
         self.is_activated = True
         self.logger.debug("Glpi finish activation")
+
+        searchOptionConfFile = os.path.join(mmcconfdir, "plugins", "glpi_search_options.ini")
+        self.searchOptions = ConfigObj(searchOptionConfFile)
+
         return True
 
     def getTableName(self, name):
@@ -1280,6 +1289,37 @@ class Glpi07(DyngroupDatabaseHelper):
 
         return ''
 
+    def getDeviceTypeIds(self, type = None):
+        """
+        In glpi_computer_device table, there is a 'device_type' field.
+        This field is filled by ids corresponding to device types (processor, memory, etc.)
+        This function return device id according to its type.
+        You can find these informations in glpi source code:
+            /<glpi_base_dir>/config/define.php => search "DEVICE TYPE"
+        """
+        types = {
+            "MOBOARD_DEVICE": 1,
+            "PROCESSOR_DEVICE": 2,
+            "RAM_DEVICE": 3,
+            "HDD_DEVICE": 4,
+            "NETWORK_DEVICE": 5,
+            "DRIVE_DEVICE": 6,
+            "CONTROL_DEVICE": 7,
+            "GFX_DEVICE": 8,
+            "SND_DEVICE": 9,
+            "PCI_DEVICE": 10,
+            "CASE_DEVICE": 11,
+            "POWER_DEVICE": 12,
+        }
+
+        if type is None:
+            return types
+        else:
+            if type in types:
+                return types[type]
+            else:
+                raise Exception("Type %s is unkown" % type)
+
     def getManufacturerWarrantyUrl(self, manufacturer, serial):
         if manufacturer in self.config.manufacturerWarrantyUrl:
             return self.config.manufacturerWarrantyUrl[manufacturer].replace('@@SERIAL@@', serial)
@@ -1378,7 +1418,7 @@ class Glpi07(DyngroupDatabaseHelper):
 
                     l = [
                         ['Supplier', supplierName],
-                        ['Invoice Number', infocoms and infocoms.bill or ''],
+                        ['Invoice Number', infocoms and infocoms.facture or ''],
                         ['Warranty End Date', endDate],
                     ]
                     ret.append(l)
@@ -1518,11 +1558,12 @@ class Glpi07(DyngroupDatabaseHelper):
 
     def getLastMachineProcessorsPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
         query = self.filterOnUUID(
-            session.query(ComputerProcessor).add_column(self.processor.c.designation) \
+            session.query(ComputerDevice).add_column(self.processor.c.designation) \
             .select_from(
-                self.machine.outerjoin(self.computerProcessor) \
-                .outerjoin(self.processor)
+                self.machine.outerjoin(self.computer_device) \
+                .outerjoin(self.processor, self.computer_device.c.FK_device == self.processor.c.ID)
             ), uuid)
+        query = query.filter(self.computer_device.c.device_type == self.getDeviceTypeIds('PROCESSOR_DEVICE'))
 
         if count:
             ret = query.count()
@@ -1539,14 +1580,15 @@ class Glpi07(DyngroupDatabaseHelper):
 
     def getLastMachineMemoryPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
         query = self.filterOnUUID(
-            session.query(ComputerMemory) \
+            session.query(ComputerDevice) \
             .add_column(self.memoryType.c.name) \
             .add_column(self.memory.c.frequence) \
             .add_column(self.memory.c.designation).select_from(
-                self.machine.outerjoin(self.computerMemory) \
-                .outerjoin(self.memory) \
-                .outerjoin(self.memoryType)
+                self.machine.outerjoin(self.computer_device) \
+                .outerjoin(self.memory, self.computer_device.c.FK_device == self.memory.c.ID) \
+                .outerjoin(self.memoryType, self.memory.c.type == self.memoryType.c.ID)
             ), uuid)
+        query = query.filter(self.computer_device.c.device_type == self.getDeviceTypeIds('RAM_DEVICE'))
 
         if count:
             ret = query.count()
@@ -1565,12 +1607,13 @@ class Glpi07(DyngroupDatabaseHelper):
 
     def getLastMachineHarddrivesPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
         query = self.filterOnUUID(
-            session.query(self.klass['computers_deviceharddrives']) \
-            .add_column(self.deviceharddrives.c.designation) \
+            session.query(ComputerDevice) \
+            .add_column(self.glpi_device_hdd.c.designation) \
             .select_from(
-                self.machine.outerjoin(self.computers_deviceharddrives) \
-                .outerjoin(self.deviceharddrives)
+                self.machine.outerjoin(self.computer_device) \
+                .outerjoin(self.glpi_device_hdd, self.computer_device.c.FK_device == self.glpi_device_hdd.c.ID)
             ), uuid)
+        query = query.filter(self.computer_device.c.device_type == self.getDeviceTypeIds('HDD_DEVICE'))
 
         if count:
             ret = query.count()
@@ -1587,12 +1630,13 @@ class Glpi07(DyngroupDatabaseHelper):
 
     def getLastMachineNetworkCardsPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
         query = self.filterOnUUID(
-            session.query(self.klass['computers_devicenetworkcards']) \
-            .add_entity(self.klass['devicenetworkcards']) \
+            session.query(ComputerDevice) \
+            .add_entity(self.klass['glpi_dropdown_network']) \
             .select_from(
-                self.machine.outerjoin(self.computers_devicenetworkcards) \
-                .outerjoin(self.devicenetworkcards)
+                self.machine.outerjoin(self.computer_device) \
+                .outerjoin(self.glpi_dropdown_network, self.computer_device.c.FK_device == self.glpi_dropdown_network.c.ID)
             ), uuid)
+        query = query.filter(self.computer_device.c.device_type == self.getDeviceTypeIds('NETWORK_DEVICE'))
 
         if count:
             ret = query.count()
@@ -1610,10 +1654,11 @@ class Glpi07(DyngroupDatabaseHelper):
 
     def getLastMachineDrivesPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
         query = self.filterOnUUID(
-            session.query(self.klass['devicedrives']).select_from(
-                self.machine.outerjoin(self.computers_devicedrives) \
-                .outerjoin(self.devicedrives)
+            session.query(self.klass['glpi_device_drive']).select_from(
+                self.machine.outerjoin(self.computer_device) \
+                .outerjoin(self.glpi_device_drive, self.computer_device.c.FK_device == self.glpi_device_drive.c.ID)
             ), uuid)
+        query = query.filter(self.computer_device.c.device_type == self.getDeviceTypeIds('DRIVE_DEVICE'))
 
         if count:
             ret = query.count()
@@ -1630,12 +1675,13 @@ class Glpi07(DyngroupDatabaseHelper):
 
     def getLastMachineGraphicCardsPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
         query = self.filterOnUUID(
-            session.query(self.klass['devicegraphiccards']).add_column(self.interfaceType.c.name) \
+            session.query(self.klass['glpi_device_gfxcard']).add_column(self.interfaceType.c.name) \
             .select_from(
-                self.machine.outerjoin(self.computers_devicegraphiccards) \
-                .outerjoin(self.devicegraphiccards) \
-                .outerjoin(self.interfaceType, self.interfaceType.c.id == self.devicegraphiccards.c.interfacetypes_id)
+                self.machine.outerjoin(self.computer_device) \
+                .outerjoin(self.glpi_device_gfxcard, self.computer_device.c.FK_device == self.glpi_device_gfxcard.c.ID) \
+                .outerjoin(self.interfaceType, self.interfaceType.c.ID == self.glpi_device_gfxcard.c.FK_interface)
             ), uuid)
+        query = query.filter(self.computer_device.c.device_type == self.getDeviceTypeIds('GFX_DEVICE'))
 
         if count:
             ret = query.count()
@@ -1653,10 +1699,11 @@ class Glpi07(DyngroupDatabaseHelper):
 
     def getLastMachineSoundCardsPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
         query = self.filterOnUUID(
-            session.query(self.klass['devicesoundcards']).select_from(
-                self.machine.outerjoin(self.computers_devicesoundcards) \
-                .outerjoin(self.devicesoundcards)
+            session.query(self.klass['glpi_device_sndcard']).select_from(
+                self.machine.outerjoin(self.computer_device) \
+                .outerjoin(self.glpi_device_sndcard, self.computer_device.c.FK_device == self.glpi_device_sndcard.c.ID)
             ), uuid)
+        query = query.filter(self.computer_device.c.device_type == self.getDeviceTypeIds('SND_DEVICE'))
 
         if count:
             ret = query.count()
@@ -1672,11 +1719,12 @@ class Glpi07(DyngroupDatabaseHelper):
 
     def getLastMachineControllersPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
         query = self.filterOnUUID(
-            session.query(self.klass['computers_devicecontrols']) \
-            .add_entity(self.klass['devicecontrols']).select_from(
-                self.machine.outerjoin(self.computers_devicecontrols) \
-                .outerjoin(self.devicecontrols)
+            session.query(ComputerDevice) \
+            .add_entity(self.klass['glpi_device_control']).select_from(
+                self.machine.outerjoin(self.computer_device) \
+                .outerjoin(self.glpi_device_control, self.computer_device.c.FK_device == self.glpi_device_control.c.ID)
             ), uuid)
+        query = query.filter(self.computer_device.c.device_type == self.getDeviceTypeIds('CONTROL_DEVICE'))
 
         if count:
             ret = query.count()
@@ -1692,10 +1740,11 @@ class Glpi07(DyngroupDatabaseHelper):
 
     def getLastMachineOthersPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
         query = self.filterOnUUID(
-            session.query(self.klass['devicepcis']).select_from(
-                self.machine.outerjoin(self.computers_devicepcis) \
-                .outerjoin(self.devicepcis)
+            session.query(self.klass['glpi_device_pci']).select_from(
+                self.machine.outerjoin(self.computer_device) \
+                .outerjoin(self.glpi_device_pci, self.computer_device.c.FK_device == self.glpi_device_pci.c.ID)
             ), uuid)
+        query = query.filter(self.computer_device.c.device_type == self.getDeviceTypeIds('PCI_DEVICE'))
 
         if count:
             ret = query.count()
@@ -1718,8 +1767,8 @@ class Glpi07(DyngroupDatabaseHelper):
 
         query = session.query(Logs)
         query = query.filter(and_(
-            self.logs.c.items_id == int(uuid.replace('UUID', '')),
-            self.logs.c.itemtype == "Computer"
+            self.logs.c.FK_glpi_device == int(uuid.replace('UUID', '')),
+            self.logs.c.device_type == 1
         ))
 
         now = datetime.datetime.now()
@@ -1737,7 +1786,7 @@ class Glpi07(DyngroupDatabaseHelper):
             clauses.append(self.logs.c.old_value.like('%'+filt+'%'))
             clauses.append(self.logs.c.new_value.like('%'+filt+'%'))
             clauses.append(self.logs.c.id_search_option.in_(self.getSearchOptionId(filt)))
-            clauses.append(self.logs.c.itemtype_link.in_(self.getLinkedActionKey(filt)))
+            clauses.append(self.logs.c.device_internal_type.in_(self.getLinkedActionKey(filt)))
             # Treat Software case
             if filt.lower() in 'software':
                 clauses.append(self.logs.c.linked_action.in_([4, 5]))
@@ -1802,15 +1851,15 @@ class Glpi07(DyngroupDatabaseHelper):
             },
             1: {
                 'update': 'Add a component: ',
-                'field': self.getLinkedActionField(log.itemtype_link),
+                'field': 'Device',
             },
             2: {
                 'update': 'Update a component: ',
-                'field': self.getLinkedActionField(log.itemtype_link),
+                'field': 'Device',
             },
             3: {
                 'update': 'Deletion of a component: ',
-                'field': self.getLinkedActionField(log.itemtype_link),
+                'field': 'Device',
             },
             4: {
                 'update': 'Install software: ',
@@ -1822,11 +1871,11 @@ class Glpi07(DyngroupDatabaseHelper):
             },
             6: {
                 'update': 'Disconnect device: ',
-                'field': log.itemtype_link,
+                'field': 'Device',
             },
             7: {
                 'update': 'Connect device: ',
-                'field': log.itemtype_link,
+                'field': 'Device',
             },
             8: {
                 'update': 'OCS Import: ',
@@ -1858,23 +1907,23 @@ class Glpi07(DyngroupDatabaseHelper):
             },
             15: {
                 'update': 'Add relation: ',
-                'field': log.itemtype_link,
+                'field': '',
             },
             16: {
                 'update': 'Delete relation: ',
-                'field': log.itemtype_link,
+                'field': '',
             },
             17: {
                 'update': 'Add an item: ',
-                'field': self.getLinkedActionField(log.itemtype_link),
+                'field': '',
             },
             18: {
                 'update': 'Update an item: ',
-                'field': self.getLinkedActionField(log.itemtype_link),
+                'field': '',
             },
             19: {
                 'update': 'Deletion of an item: ',
-                'field': self.getLinkedActionField(log.itemtype_link),
+                'field': '',
             },
         }
 
