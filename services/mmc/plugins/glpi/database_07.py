@@ -748,6 +748,9 @@ class Glpi07(DyngroupDatabaseHelper):
         Get the computer list that match filters parameters between min and max
 
         FIXME: may return a list or a dict according to the parameters
+
+        @param displayList: if True, we are displaying Computers list main page
+        @type displayList: None or bool
         """
         session = create_session()
         ret = {}
