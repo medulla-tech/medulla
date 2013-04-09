@@ -42,6 +42,7 @@ class GlpiConfig(PluginConfig):
     # computer_list section
     # complete list: ['cn', 'description', 'os', 'type', 'user', 'inventorynumber', 'state', 'entity', 'location']
     summary = ['cn', 'description', 'os', 'type', 'user', 'entity', 'location']
+    ordered = False
 
     # manufacturer section
     manufacturerWarrantyUrl = {}
@@ -92,6 +93,9 @@ class GlpiConfig(PluginConfig):
 
         if self.has_option("computer_list", "summary"):
             self.summary = self.get("computer_list", "summary").split(' ')
+
+        if self.has_option("computer_list", "ordered"):
+            self.ordered = self.getint("computer_list", "ordered")
 
         # associate manufacturer's names to their warranty url
         # manufacturer must have same key in 'manufacturer' and 'manufacturer_warranty_url' sections

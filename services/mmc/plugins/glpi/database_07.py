@@ -756,7 +756,8 @@ class Glpi07(DyngroupDatabaseHelper):
         if query == None:
             return {}
 
-        #query = query.order_by(asc(self.machine.c.name))
+        if self.config.ordered:
+            query = query.order_by(asc(self.machine.c.name))
 
         if min != 0:
             query = query.offset(min)
