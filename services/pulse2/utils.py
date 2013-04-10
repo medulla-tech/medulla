@@ -563,6 +563,8 @@ def get_ip_address(ifname):
 def get_default_netif():
     """ Read the default interface directly from /proc.
     """
+    netif = None
+
     fh = open("/proc/net/route")
     try:
         for line in fh:
@@ -570,9 +572,29 @@ def get_default_netif():
             if fields[1] != '00000000' or not int(fields[3], 16) & 2:
                 continue
 
-            return fields[0]
+            netif = fields[0]
+            fh.close()
+            break
     finally:
         fh.close()
+
+    # 2nd possibility ->
+    if not netif :
+        cmd = "ip route get 6.6.6.6"
+        ps = os.popen(cmd, "r")
+        out = ps.read()
+        ps.close()
+
+        # output on format :
+        # 6.6.6.6 via 192.168.127.1 dev eth1  src 192.168.127.2 
+        #    cache  mtu 1500 advmss 1460 hoplimit 64
+        # so, we take 5th element to get our default interface
+
+        netif = out.split()[4].strip()
+
+    return netif
+
+
 
 def get_default_ip():
     """ Return the IP of first netif with a default gateway
