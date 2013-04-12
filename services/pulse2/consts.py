@@ -151,6 +151,18 @@ PULSE2_PSERVER_ISAVAILABLE_MIRROR           = PULSE2_PSERVER_MESSAGES_MIN + 9
     some known states
 """
 
+# Commands states
+PULSE2_COMMANDS_NONACTIVE_STATES = [
+    "draft", 
+    "archived", 
+    "disabled", 
+    "template",
+]
+PULSE2_COMMANDS_ACTIVE_STATES = ["active"]
+
+PULSE2_COMMANDS_STATES = PULSE2_COMMANDS_NONACTIVE_STATES + PULSE2_COMMANDS_ACTIVE_STATES
+
+# Commands On Host states
 """ Commands in this state are definitively terminated """
 
 PULSE2_FAILURE_STATE = [

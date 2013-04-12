@@ -303,7 +303,8 @@ class MscDatabase(msc.MscDatabase):
                                           cmd['do_inventory'], cmd['maxbw'], 
                                           cmd['deployment_intervals'], 
                                           cmd['fk_bundle'], cmd['order_in_bundle'], 
-                                          cmd['proxies'], cmd['proxy_mode'])
+                                          cmd['proxies'], cmd['proxy_mode'],
+                                          cmd['state'])
                 session.flush()
                 ret.append(cobj.getId())
 
@@ -385,7 +386,8 @@ class MscDatabase(msc.MscDatabase):
                 fk_bundle = None,
                 order_in_bundle = None,
                 proxy_mode = 'none',
-                proxies = []
+                proxies = [],
+                state = 'active'
             ):
         """
         Main func to inject a new command in our MSC database
@@ -461,7 +463,7 @@ class MscDatabase(msc.MscDatabase):
                                      title, do_halt, do_reboot, do_wol, next_connection_delay, 
                                      max_connection_attempt, do_inventory, maxbw, 
                                      deployment_intervals, fk_bundle, 
-                                     order_in_bundle, proxies, proxy_mode)
+                                     order_in_bundle, proxies, proxy_mode, state)
             session.flush()
 
             for atarget, target_name, ascheduler in targets_to_insert :
@@ -613,7 +615,8 @@ class MscDatabase(msc.MscDatabase):
             None,
             None,
             'none',
-            []
+            [],
+            'active'
         )
 
     def startBundle(self, fk_bundle):

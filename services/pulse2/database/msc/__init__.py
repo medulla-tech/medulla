@@ -189,7 +189,11 @@ class MscDatabase(DatabaseHelper):
         session.flush()
         return bdl
 
-    def createCommand(self, session, package_id, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, creator, title, do_halt, do_reboot, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, fk_bundle, order_in_bundle, proxies, proxy_mode):
+    def createCommand(self, session, package_id, start_file, parameters, files,
+            start_script, clean_on_success, start_date, end_date, connect_as,
+            creator, title, do_halt, do_reboot, do_wol, next_connection_delay,
+            max_connection_attempt, do_inventory, maxbw, deployment_intervals,
+            fk_bundle, order_in_bundle, proxies, proxy_mode, state):
         """
         Return a Command object
         """
@@ -220,7 +224,7 @@ class MscDatabase(DatabaseHelper):
         cmd.fk_bundle = fk_bundle
         cmd.order_in_bundle = order_in_bundle
         cmd.proxy_mode = proxy_mode # FIXME: we may add some code to check everything is OK
-        cmd.state = 'active'
+        cmd.state = state
         session.add(cmd)
         session.flush()
         return cmd

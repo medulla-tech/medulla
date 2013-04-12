@@ -232,6 +232,11 @@ def prepareCommand(pinfos, params):
     ret['do_inventory'] = (params['do_inventory'] == 'on' and 'enable' or 'disable')
     ret['issue_halt_to'] = params['issue_halt_to']
     ret['maxbw'] = params['maxbw']
+    if 'state' not in params :
+        ret['state'] = 'active'
+    else :
+        ret['state'] = params['state']
+
 
     if 'proxy_mode' in params:
         ret['proxy_mode'] = params['proxy_mode']
@@ -383,7 +388,8 @@ class SendPackageCommand:
             self.bundle_id,
             self.order_in_bundle,
             cmd['proxy_mode'],
-            self.proxies
+            self.proxies,
+            cmd['state']
         )
         if type(addCmd) != int:
             addCmd.addCallbacks(self.sendResult, self.onError)

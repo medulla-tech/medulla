@@ -62,6 +62,7 @@ from pulse2.consts import PULSE2_RUNNING_STATES, PULSE2_STAGE_DONE, PULSE2_STAGE
 from pulse2.consts import PULSE2_STAGES, PULSE2_STAGE_TODO, PULSE2_STAGE_WORK_IN_PROGRESS, PULSE2_STATE_PREFIXES
 from pulse2.consts import PULSE2_SUCCESS_ERROR, PULSE2_TARGET_NOTENOUGHINFO_ERROR, PULSE2_TERMINATED_STATES
 from pulse2.consts import PULSE2_UNKNOWN_ERROR, PULSE2_UNPREEMPTABLE_STATES, PULSE2_FAILED_NON_FINAL_STATES
+from pulse2.consts import PULSE2_COMMANDS_ACTIVE_STATES
 from pulse2.scheduler.config import SchedulerConfig
 from pulse2.scheduler.launchers_driving import callOnBestLauncher, callOnLauncher, getLaunchersBalance, probeClient
 import pulse2.scheduler.network
@@ -129,6 +130,7 @@ def isLastToInventoryInBundle(myCommandOnHostID):
         ).select_from(database.commands_on_host.join(database.commands).join(database.target)
         ).filter(database.commands.c.fk_bundle == myC.fk_bundle
         ).filter(database.commands.c.order_in_bundle == myC.order_in_bundle
+        ).filter(database.commands.c.state.in_(PULSE2_COMMANDS_ACTIVE_STATES)
         ).filter(database.target.c.target_uuid ==  myT.target_uuid
         ).filter(sqlalchemy.not_(
             database.commands_on_host.c.current_state.in_(PULSE2_POST_INVENTORY_STATES))
@@ -152,6 +154,7 @@ def isLastToHaltInBundle(myCommandOnHostID):
         ).select_from(database.commands_on_host.join(database.commands).join(database.target)
         ).filter(database.commands.c.fk_bundle == myC.fk_bundle
         ).filter(database.commands.c.order_in_bundle == myC.order_in_bundle
+        ).filter(database.commands.c.state.in_(PULSE2_COMMANDS_ACTIVE_STATES)                
         ).filter(database.target.c.target_uuid ==  myT.target_uuid
         ).filter(sqlalchemy.not_(
             database.commands_on_host.c.current_state.in_(PULSE2_POST_HALT_STATES))
@@ -190,6 +193,7 @@ def getDependancies(myCommandOnHostID):
         ).select_from(database.commands_on_host.join(database.commands).join(database.target)
         ).filter(database.commands.c.fk_bundle == myC.fk_bundle
         ).filter(database.commands.c.order_in_bundle < myC.order_in_bundle
+        ).filter(database.commands.c.state.in_(PULSE2_COMMANDS_ACTIVE_STATES)                
         ).filter(database.target.c.target_uuid ==  myT.target_uuid
         ).all():
             if q.current_state in ['done']:
@@ -260,6 +264,7 @@ def localProxyAttemptQueueMode(myCommandOnHostID):
     for q in session.query(CommandsOnHost).\
         select_from(database.commands_on_host.join(database.commands).join(database.target)).\
         filter(database.commands.c.id == myC.id).\
+        filter(database.commands.c.state.in_(PULSE2_COMMANDS_ACTIVE_STATES)).\
         filter(database.commands_on_host.c.id != myCoH.getId()).\
         all():
             if q.uploaded == PULSE2_STAGE_DONE:                                 # got a pal which succeeded in doing its upload
@@ -355,6 +360,7 @@ def localProxyAttemptSplitMode(myCommandOnHostID):
         for q in session.query(CommandsOnHost).\
             select_from(database.commands_on_host.join(database.commands).join(database.target)).\
             filter(database.commands.c.id == myC.id).\
+            filter(database.commands.c.state.in_(PULSE2_COMMANDS_ACTIVE_STATES)).\
             filter(database.commands_on_host.c.id != myCoH.getId()).\
             filter(database.commands_on_host.c.order_in_proxy != None).\
             all():
@@ -416,6 +422,7 @@ def getClientUsageForProxy(proxyCommandOnHostID):
     client_count = session.query(CommandsOnHost).\
         select_from(database.commands_on_host.join(database.commands).join(database.target)).\
         filter(database.commands.c.id == myC.id).\
+        filter(database.commands.c.state.in_(PULSE2_COMMANDS_ACTIVE_STATES)).\
         filter(database.commands_on_host.c.fk_use_as_proxy == myCoH.getId()).\
         filter(database.commands_on_host.c.current_state == 'upload_in_progress').\
         count()
@@ -442,6 +449,7 @@ def getProxyModeForCommand(myCommandOnHostID):
     for q in session.query(CommandsOnHost).\
         select_from(database.commands_on_host.join(database.commands).join(database.target)).\
         filter(database.commands.c.id == myC.id).\
+        filter(database.commands.c.state.in_(PULSE2_COMMANDS_ACTIVE_STATES)).\
         all():
             if q.order_in_proxy != None: # some potential proxy
                 if q.order_in_proxy in spotted_priorities:
@@ -487,6 +495,7 @@ def localProxyMayContinue(myCommandOnHostID):
             our_client_count = session.query(CommandsOnHost).\
                 select_from(database.commands_on_host.join(database.commands).join(database.target)).\
                 filter(database.commands.c.id == myC.id).\
+                filter(database.commands.c.state.in_(PULSE2_COMMANDS_ACTIVE_STATES)).\
                 filter(database.commands_on_host.c.id != myCoH.getId()).\
                 filter(database.commands_on_host.c.uploaded != 'DONE').\
                 filter(database.commands_on_host.c.uploaded != 'IGNORED').\
@@ -502,6 +511,7 @@ def localProxyMayContinue(myCommandOnHostID):
             our_client_count = session.query(CommandsOnHost).\
                 select_from(database.commands_on_host.join(database.commands).join(database.target)).\
                 filter(database.commands.c.id == myC.id).\
+                filter(database.commands.c.state.in_(PULSE2_COMMANDS_ACTIVE_STATES)).\
                 filter(database.commands_on_host.c.id != myCoH.getId()).\
                 filter(database.commands_on_host.c.order_in_proxy == None).\
                 filter(database.commands_on_host.c.uploaded != 'DONE').\
@@ -539,6 +549,7 @@ def gatherIdsToAnalyse(scheduler_name):
     commands_query = session.query(CommandsOnHost).\
         select_from(database.commands_on_host.join(database.commands)
         ).filter(sqlalchemy.not_(database.commands_on_host.c.current_state.in_(PULSE2_UNPREEMPTABLE_STATES))
+        ).filter(database.commands.c.state.in_(PULSE2_COMMANDS_ACTIVE_STATES)            
         ).filter(sqlalchemy.or_(
             database.commands_on_host.c.scheduler == '',
             database.commands_on_host.c.scheduler == scheduler_name,
@@ -654,6 +665,7 @@ def gatherIdsToReSchedule(scheduler_name):
         ).filter(sqlalchemy.not_(database.commands_on_host.c.current_state.in_(PULSE2_UNPREEMPTABLE_STATES))
         ).filter(database.commands_on_host.c.attempts_left > database.commands_on_host.c.attempts_failed
         ).filter(database.commands_on_host.c.next_launch_date <= now
+        ).filter(database.commands.c.state.in_(PULSE2_COMMANDS_ACTIVE_STATES)
         ).filter(database.commands.c.start_date <= now
         ).filter(database.commands.c.end_date > now        
         ).filter(sqlalchemy.or_(
@@ -787,6 +799,7 @@ def gatherIdsToStart(scheduler_name, commandIDs = []):
         ).filter(sqlalchemy.not_(database.commands_on_host.c.current_state.in_(PULSE2_UNPREEMPTABLE_STATES))
         ).filter(database.commands_on_host.c.attempts_left > database.commands_on_host.c.attempts_failed
         ).filter(database.commands_on_host.c.next_launch_date <= now
+        ).filter(database.commands.c.state.in_(PULSE2_COMMANDS_ACTIVE_STATES)                
         ).filter(sqlalchemy.or_(
             database.commands.c.start_date == soon,
             database.commands.c.start_date <= now)
@@ -951,6 +964,7 @@ def __getRunningCommandsOnHostInDB(scheduler_name, ids=None) :
     query = session.query(CommandsOnHost, Commands
         ).select_from(database.commands_on_host.join(database.commands)
         ).filter(database.commands_on_host.c.current_state.in_(PULSE2_RUNNING_STATES)
+        ).filter(database.commands.c.state.in_(PULSE2_COMMANDS_ACTIVE_STATES)                
         ).filter(sqlalchemy.or_(
             database.commands_on_host.c.scheduler == '',
             database.commands_on_host.c.scheduler == scheduler_name,
@@ -977,6 +991,7 @@ def getCommandsToNeutralize(scheduler_name):
 
     query = session.query(CommandsOnHost
         ).select_from(database.commands_on_host.join(database.commands)
+        ).filter(database.commands.c.state.in_(PULSE2_COMMANDS_ACTIVE_STATES)                
         ).filter(sqlalchemy.not_(
             database.commands_on_host.c.current_state.in_(PULSE2_TERMINATED_STATES))
         ).filter(sqlalchemy.and_(
