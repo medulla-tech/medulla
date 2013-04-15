@@ -45,8 +45,20 @@ class getCommand(object):
     def getMSI32Command(self):
         return 'msiexec /qn /i "%s" ALLUSERS=1 CREATEDESKTOPLINK=0 ISCHECKFORPRODUCTUPDATES=0' % self.file.split('/').pop()
 
+    def getMSI32UpdateCommand(self):
+        """
+        Command for *.msp files (MSI update packages)
+        """
+        return 'msiexec /p "%s" /qb REINSTALLMODE="ecmus" REINSTALL="ALL"' % self.file.split('/').pop()
+
     def getMSI64Command(self):
         return '$(cygpath -W)/sysnative/msiexec /qn /i "%s" ALLUSERS=1 CREATEDESKTOPLINK=0 ISCHECKFORPRODUCTUPDATES=0' % self.file.split('/').pop()
+
+    def getMSI64UpdateCommand(self):
+        """
+        Command for *.msp files (MSI update packages 64-bits)
+        """
+        return '$(cygpath -W)/sysnative/msiexec /p "%s" /qb REINSTALLMODE="ecmus" REINSTALL="ALL"' % self.file.split('/').pop()
 
     def getRegCommand(self):
         return 'regedit /s "%s"' % self.file.split('/').pop()
@@ -100,11 +112,19 @@ class getCommand(object):
             # MSI files
             if "Template" in file_data:
                 if "x64" in file_data['Template']:
-                    self.logger.debug("%s is a x64 MSI file" % self.file)
-                    return self.getMSI64Command()
+                    if self.file.endswith('.msp'):
+                        self.logger.debug("%s is a x64 MSI Update file" % self.file)
+                        return self.getMSI64UpdateCommand()
+                    else:
+                        self.logger.debug("%s is a x64 MSI file" % self.file)
+                        return self.getMSI64Command()
                 elif "Intel" in file_data['Template']:
-                    self.logger.debug("%s is a 32-bit MSI file" % self.file)
-                    return self.getMSI32Command()
+                    if self.file.endswith('.msp'):
+                        self.logger.debug("%s is a 32-bit MSI Update file" % self.file)
+                        return self.getMSI32UpdateCommand()
+                    else:
+                        self.logger.debug("%s is a 32-bit MSI file" % self.file)
+                        return self.getMSI32Command()
                 else:
                     return self.logger.info("I can't get a command for %s" % self.file)
             else:
