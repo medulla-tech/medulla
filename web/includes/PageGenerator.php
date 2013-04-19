@@ -455,6 +455,13 @@ class ListInfos extends HtmlElement {
     function setCssClasses($a_names) {
         $this->cssClasses = $a_names;
     }
+    
+    /**
+     * set cssclass for each MainAction column
+     */
+    function setMainActionClasses($classes) {
+        $this->MainActionClasses = $classes;
+    }    
 
     /**
      * Set the ListInfos navigation bar
@@ -513,6 +520,8 @@ class ListInfos extends HtmlElement {
     function drawMainAction($idx) {
         if (!empty($this->cssClass)) {
             echo "<td class=\"".$this->cssClass."\">";
+        } else if (!empty($this->MainActionClasses)) {
+            echo "<td class=\"".$this->MainActionClasses[$idx]."\">";
         } else {
             echo "<td>";
         }
