@@ -460,7 +460,7 @@ class ListInfos extends HtmlElement {
      * set cssclass for each MainAction column
      */
     function setMainActionClasses($classes) {
-        $this->MainActionClasses = $classes;
+        $this->mainActionClasses = $classes;
     }    
 
     /**
@@ -520,8 +520,8 @@ class ListInfos extends HtmlElement {
     function drawMainAction($idx) {
         if (!empty($this->cssClass)) {
             echo "<td class=\"".$this->cssClass."\">";
-        } else if (!empty($this->MainActionClasses)) {
-            echo "<td class=\"".$this->MainActionClasses[$idx]."\">";
+        } else if (!empty($this->mainActionClasses)) {
+            echo "<td class=\"".$this->mainActionClasses[$idx]."\">";
         } else {
             echo "<td>";
         }
