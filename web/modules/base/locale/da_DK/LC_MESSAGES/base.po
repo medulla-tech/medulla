@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-04-16 01:01+0200\n"
-"PO-Revision-Date: 2013-04-16 23:01+0000\n"
+"POT-Creation-Date: 2013-04-19 17:20+0200\n"
+"PO-Revision-Date: 2013-04-22 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -136,76 +136,22 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: includes/PageGenerator.php:108 includes/PageGenerator.php:2380
-#: includes/PageGenerator.php:2450 modules/base/groups/delete.php:67
-#: modules/base/groups/members.php:185 modules/base/users/backup.php:92
-#: modules/ppolicy/default/delete.php:46
-msgid "Cancel"
+#: includes/acl.inc.php:124
+msgid "You do not have required rights"
 msgstr ""
 
-#: includes/PageGenerator.php:489 includes/PageGenerator.php:716
-msgid "to"
-msgstr ""
-
-#: includes/PageGenerator.php:491 includes/PageGenerator.php:718
-#, php-format
-msgid " - Total <b>%s </b>"
-msgstr ""
-
-#: includes/PageGenerator.php:494 includes/PageGenerator.php:721
-msgid "page"
-msgstr ""
-
-#: includes/PageGenerator.php:796 includes/PageGenerator.php:1052
 #: includes/ajaxTools.php:63 includes/ajaxTools.php:69
+#: includes/PageGenerator.php:805 includes/PageGenerator.php:1061
 #: modules/base/includes/AjaxFilterLog.inc.php:112
 #: modules/base/includes/AjaxFilterLog.inc.php:116
 msgid "Previous"
 msgstr ""
 
-#: includes/PageGenerator.php:810 includes/PageGenerator.php:1062
 #: includes/ajaxTools.php:74 includes/ajaxTools.php:82
+#: includes/PageGenerator.php:819 includes/PageGenerator.php:1071
 #: modules/base/includes/AjaxFilterLog.inc.php:123
 #: modules/base/includes/AjaxFilterLog.inc.php:127
 msgid "Next"
-msgstr ""
-
-#: includes/PageGenerator.php:829
-msgid "Pagination"
-msgstr ""
-
-#: includes/PageGenerator.php:913
-msgid "Go to page"
-msgstr ""
-
-#: includes/PageGenerator.php:1295
-msgid "No item available"
-msgstr ""
-
-#: includes/PageGenerator.php:1460
-msgid "Select entity"
-msgstr ""
-
-#: includes/PageGenerator.php:2023
-msgid "Close"
-msgstr ""
-
-#: includes/PageGenerator.php:2376 includes/PageGenerator.php:2446
-#: includes/PageGenerator.php:2472 modules/base/groups/edit.php:108
-#: modules/base/groups/members.php:184
-msgid "Confirm"
-msgstr ""
-
-#: includes/PageGenerator.php:2595
-msgid "Select all"
-msgstr ""
-
-#: includes/PageGenerator.php:2596
-msgid "Unselect all"
-msgstr ""
-
-#: includes/acl.inc.php:124
-msgid "You do not have required rights"
 msgstr ""
 
 #: includes/auditCodesManager.php:33
@@ -364,6 +310,60 @@ msgstr ""
 msgid ""
 "This exception is unknown. Please contact us to add an error handling on "
 "this error."
+msgstr ""
+
+#: includes/PageGenerator.php:108 includes/PageGenerator.php:2389
+#: includes/PageGenerator.php:2459 modules/base/groups/delete.php:67
+#: modules/base/groups/members.php:185 modules/base/users/backup.php:92
+#: modules/ppolicy/default/delete.php:46
+msgid "Cancel"
+msgstr ""
+
+#: includes/PageGenerator.php:496 includes/PageGenerator.php:725
+msgid "to"
+msgstr ""
+
+#: includes/PageGenerator.php:498 includes/PageGenerator.php:727
+#, php-format
+msgid " - Total <b>%s </b>"
+msgstr ""
+
+#: includes/PageGenerator.php:501 includes/PageGenerator.php:730
+msgid "page"
+msgstr ""
+
+#: includes/PageGenerator.php:838
+msgid "Pagination"
+msgstr ""
+
+#: includes/PageGenerator.php:922
+msgid "Go to page"
+msgstr ""
+
+#: includes/PageGenerator.php:1304
+msgid "No item available"
+msgstr ""
+
+#: includes/PageGenerator.php:1469
+msgid "Select entity"
+msgstr ""
+
+#: includes/PageGenerator.php:2032
+msgid "Close"
+msgstr ""
+
+#: includes/PageGenerator.php:2385 includes/PageGenerator.php:2455
+#: includes/PageGenerator.php:2481 modules/base/groups/edit.php:108
+#: modules/base/groups/members.php:184
+msgid "Confirm"
+msgstr ""
+
+#: includes/PageGenerator.php:2604
+msgid "Select all"
+msgstr ""
+
+#: includes/PageGenerator.php:2605
+msgid "Unselect all"
 msgstr ""
 
 #: logout/index.php:50
