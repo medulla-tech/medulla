@@ -600,6 +600,8 @@ class ListInfos extends HtmlElement {
             } else {
                 if (!empty($this->cssClass)) {
                     echo "<td class=\"".$this->cssClass."\">";
+                } else if (!empty($this->mainActionClasses)) {
+                    echo "<td class=\"".$this->mainActionClasses[$idx]."\">";
                 } else {
                     echo "<td>";
                 }
