@@ -261,4 +261,3 @@ function __xmlrpc_get_profile_entity($gid) { return xmlCall("dyngroup.get_profil
 function xmlrpc_isProfileAssociatedToImagingServer($gid) { return xmlCall("dyngroup.isProfileAssociatedToImagingServer", array($gid)); }
 
 ?>
-
