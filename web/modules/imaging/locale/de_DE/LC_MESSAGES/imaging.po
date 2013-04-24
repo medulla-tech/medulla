@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-10 01:00+0200\n"
+"POT-Creation-Date: 2013-04-25 01:00+0200\n"
 "PO-Revision-Date: 2013-04-09 10:42+0000\n"
 "Last-Translator: Maik Wagner <maikwagner@yahoo.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/"
@@ -339,7 +339,7 @@ msgstr ""
 #: modules/imaging/imaging/bootmenu_remove.php:96
 #: modules/imaging/imaging/configure.php:382
 #: modules/imaging/imaging/images_delete.php:61
-#: modules/imaging/imaging/images_iso.php:99
+#: modules/imaging/imaging/images_iso.php:102
 #: modules/imaging/imaging/showtarget.php:170
 #: modules/imaging/manage/master_delete.php:57
 #: modules/imaging/manage/master_iso.php:85
@@ -1496,7 +1496,7 @@ msgstr "Größe (komprimiert)"
 msgid "Space available on server"
 msgstr "Verfügbarer Platz auf dem Server"
 
-#: modules/imaging/imaging/images_iso.php:98
+#: modules/imaging/imaging/images_iso.php:101
 msgid "Start ISO generation"
 msgstr ""
 

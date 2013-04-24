@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-27 01:00+0100\n"
+"POT-Creation-Date: 2013-04-25 01:00+0200\n"
 "PO-Revision-Date: 2013-03-26 16:52+0000\n"
 "Last-Translator: Leonardo Coelho <leonardoc@mandriva.com.br>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
@@ -346,7 +346,7 @@ msgstr "Não é possivel deletar este script pós-imagem, ele é um script globa
 #: modules/imaging/imaging/bootmenu_remove.php:96
 #: modules/imaging/imaging/configure.php:382
 #: modules/imaging/imaging/images_delete.php:61
-#: modules/imaging/imaging/images_iso.php:99
+#: modules/imaging/imaging/images_iso.php:102
 #: modules/imaging/imaging/showtarget.php:170
 #: modules/imaging/manage/master_delete.php:57
 #: modules/imaging/manage/master_iso.php:85
@@ -1521,7 +1521,7 @@ msgstr "Tamanho(comprimido)"
 msgid "Space available on server"
 msgstr "Espaço disponível no servidor"
 
-#: modules/imaging/imaging/images_iso.php:98
+#: modules/imaging/imaging/images_iso.php:101
 msgid "Start ISO generation"
 msgstr "Iniciar geração da ISO"
 
