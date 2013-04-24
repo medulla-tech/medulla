@@ -168,5 +168,3 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
 }
 
 ?>
-
-
