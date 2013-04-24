@@ -87,8 +87,8 @@ if ($_POST) {
 </td></tr>
 <tr><td><?php echo  _T("Media size", "imaging"); ?></td><td>
 <select name="media" />
-<option value="681574400">CD (650 Mo)</option>
-<option value="734003200">CD (700 Mo)</option>
+<option value="681574400">CD (650 MB)</option>
+<option value="734003200">CD (700 MB)</option>
 <option value="4617089843">DVD (4.3 GB)</option>
 <option value="8375186227">DVD-DL (7.8 GB)</option>
 <option value="24696061952">Blu-ray (25 GB)</option>
