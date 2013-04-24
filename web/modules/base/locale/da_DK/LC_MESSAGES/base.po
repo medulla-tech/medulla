@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-04-19 17:20+0200\n"
-"PO-Revision-Date: 2013-04-22 23:00+0000\n"
+"POT-Creation-Date: 2013-04-24 14:50+0200\n"
+"PO-Revision-Date: 2013-04-24 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,18 +16,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: da_DK\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-
-#: graph/header.inc.php:252
-msgid "Yes"
-msgstr ""
-
-#: graph/header.inc.php:255 graph/header.inc.php:257
-msgid "No"
-msgstr ""
-
-#: graph/header.inc.php:298
-msgid "Form cannot be submit. Input errors are highlighted in red."
-msgstr ""
 
 #: graph/navbar.inc.php:40
 msgid "standard mode"
@@ -58,6 +46,18 @@ msgstr ""
 msgid ""
 "If this phrase does not change, you browser is not supported by the MMC "
 "application"
+msgstr ""
+
+#: graph/header.inc.php:252
+msgid "Yes"
+msgstr ""
+
+#: graph/header.inc.php:255 graph/header.inc.php:257
+msgid "No"
+msgstr ""
+
+#: graph/header.inc.php:298
+msgid "Form cannot be submit. Input errors are highlighted in red."
 msgstr ""
 
 #: includes/ErrorHandling.php:77
@@ -141,14 +141,14 @@ msgid "You do not have required rights"
 msgstr ""
 
 #: includes/ajaxTools.php:63 includes/ajaxTools.php:69
-#: includes/PageGenerator.php:805 includes/PageGenerator.php:1061
+#: includes/PageGenerator.php:807 includes/PageGenerator.php:1063
 #: modules/base/includes/AjaxFilterLog.inc.php:112
 #: modules/base/includes/AjaxFilterLog.inc.php:116
 msgid "Previous"
 msgstr ""
 
 #: includes/ajaxTools.php:74 includes/ajaxTools.php:82
-#: includes/PageGenerator.php:819 includes/PageGenerator.php:1071
+#: includes/PageGenerator.php:821 includes/PageGenerator.php:1073
 #: modules/base/includes/AjaxFilterLog.inc.php:123
 #: modules/base/includes/AjaxFilterLog.inc.php:127
 msgid "Next"
@@ -312,57 +312,57 @@ msgid ""
 "this error."
 msgstr ""
 
-#: includes/PageGenerator.php:108 includes/PageGenerator.php:2389
-#: includes/PageGenerator.php:2459 modules/base/groups/delete.php:67
+#: includes/PageGenerator.php:108 includes/PageGenerator.php:2391
+#: includes/PageGenerator.php:2461 modules/base/groups/delete.php:67
 #: modules/base/groups/members.php:185 modules/base/users/backup.php:92
 #: modules/ppolicy/default/delete.php:46
 msgid "Cancel"
 msgstr ""
 
-#: includes/PageGenerator.php:496 includes/PageGenerator.php:725
+#: includes/PageGenerator.php:496 includes/PageGenerator.php:727
 msgid "to"
 msgstr ""
 
-#: includes/PageGenerator.php:498 includes/PageGenerator.php:727
+#: includes/PageGenerator.php:498 includes/PageGenerator.php:729
 #, php-format
 msgid " - Total <b>%s </b>"
 msgstr ""
 
-#: includes/PageGenerator.php:501 includes/PageGenerator.php:730
+#: includes/PageGenerator.php:501 includes/PageGenerator.php:732
 msgid "page"
 msgstr ""
 
-#: includes/PageGenerator.php:838
+#: includes/PageGenerator.php:840
 msgid "Pagination"
 msgstr ""
 
-#: includes/PageGenerator.php:922
+#: includes/PageGenerator.php:924
 msgid "Go to page"
 msgstr ""
 
-#: includes/PageGenerator.php:1304
+#: includes/PageGenerator.php:1306
 msgid "No item available"
 msgstr ""
 
-#: includes/PageGenerator.php:1469
+#: includes/PageGenerator.php:1471
 msgid "Select entity"
 msgstr ""
 
-#: includes/PageGenerator.php:2032
+#: includes/PageGenerator.php:2034
 msgid "Close"
 msgstr ""
 
-#: includes/PageGenerator.php:2385 includes/PageGenerator.php:2455
-#: includes/PageGenerator.php:2481 modules/base/groups/edit.php:108
+#: includes/PageGenerator.php:2387 includes/PageGenerator.php:2457
+#: includes/PageGenerator.php:2483 modules/base/groups/edit.php:108
 #: modules/base/groups/members.php:184
 msgid "Confirm"
 msgstr ""
 
-#: includes/PageGenerator.php:2604
+#: includes/PageGenerator.php:2606
 msgid "Select all"
 msgstr ""
 
-#: includes/PageGenerator.php:2605
+#: includes/PageGenerator.php:2607
 msgid "Unselect all"
 msgstr ""
 
@@ -811,50 +811,6 @@ msgstr ""
 msgid "Computer's netmask address"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:28
-msgid "Inventory"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:29
-msgid "GLPI Inventory"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:30
-msgid "Read log"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:31
-msgid "Software deployment"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:32
-msgid "Imaging management"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:33
-msgid "Download file"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:34
-msgid "Remote control"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:35
-msgid "Show Profile"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:138
-msgid "Computers list"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:161
-msgid "Delete computer"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:164
-msgid "Remove machine from group"
-msgstr ""
-
 #: modules/base/includes/errorHandling.php:28
 msgid "LDAP log file does not exist."
 msgstr ""
@@ -1210,6 +1166,50 @@ msgstr ""
 #: modules/base/includes/users-xmlrpc.inc.php:126
 #, php-format
 msgid "User %s successfully created"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:28
+msgid "Inventory"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:29
+msgid "GLPI Inventory"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:30
+msgid "Read log"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:31
+msgid "Software deployment"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:32
+msgid "Imaging management"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:33
+msgid "Download file"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:34
+msgid "Remote control"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:35
+msgid "Show Profile"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:138
+msgid "Computers list"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:161
+msgid "Delete computer"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:164
+msgid "Remove machine from group"
 msgstr ""
 
 #: modules/base/logview/ajax_showlog.php:43
