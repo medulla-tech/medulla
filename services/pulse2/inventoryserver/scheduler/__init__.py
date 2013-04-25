@@ -67,7 +67,7 @@ class AttemptToScheduler :
 
         else :
 
-            logging.getLogger().info("<scheduler> : Incomming from PXE : ignore")
+            logging.getLogger().info("<scheduler> : Incoming from PXE : ignore")
 
 
     def dispatch_msc (self):

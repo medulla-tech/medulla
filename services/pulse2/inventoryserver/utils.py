@@ -225,7 +225,7 @@ class InventoryUtils :
     @classmethod
     def is_comming_from_pxe(cls, from_ip):
         """ 
-        Check if the inventory is incomming from PXE.
+        Check if the inventory is coming from PXE.
 
         @param from_ip: IP address of inventory source 
         @type from_ip: string
@@ -239,7 +239,7 @@ class InventoryUtils :
         """
         Getting the MAC address from inventory XML
 
-        @param content: incomming inventory on XML format
+        @param content: incoming inventory in XML format
         @type content: str
 
         @return: MAC address

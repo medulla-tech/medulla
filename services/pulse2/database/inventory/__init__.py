@@ -668,8 +668,8 @@ class Inventory(DyngroupDatabaseHelper):
         @param ctx: Inventory context
         @type ctx: InventoryContext
         
-        @param inventory: Incomming inventory from the client
-        @type inventory: dict 
+        @param inventory: Incoming inventory from the client
+        @type inventory: dict
         
         @return: MAC Address, Machine UUID, Machine name
         @rtype: tuple
@@ -692,7 +692,7 @@ class Inventory(DyngroupDatabaseHelper):
                         logging.getLogger().debug(message)
                         return mac, uuid, name
                     elif len(machines) > 1 :
-                        logging.getLogger().error("Cannot resolve machine name: multiply MAC adresses")
+                        logging.getLogger().error("Cannot resolve machine name: duplicate MAC address")
                     else:
                         logging.getLogger().error("Cannot find a machine")
 

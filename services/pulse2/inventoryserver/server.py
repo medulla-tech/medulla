@@ -159,7 +159,7 @@ class InventoryServer:
                     for msg in glpi_proxy.result :
                         self.logger.warn("GlpiProxy: %s" % msg)
                 else :
-                    self.logger.info("GlpiProxy: Incomming from PXE, ignoring the forward for a existing machine")
+                    self.logger.info("GlpiProxy: Incoming from PXE, ignoring the forward for a existing machine")
             else :
                 self.logger.debug("GlpiProxy: New machine inscription or forwarding the prolog")
                 glpi_proxy = GlpiProxy(self.config.url_to_forward)
