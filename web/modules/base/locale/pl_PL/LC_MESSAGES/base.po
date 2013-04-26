@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-03-14 16:21+0100\n"
+"POT-Creation-Date: 2013-04-26 01:01+0200\n"
 "PO-Revision-Date: 2013-03-14 12:52+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,39 +17,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: pl_PL\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
-
-#: forgotpassword.php:24
-msgid "A password reset link has been sent."
-msgstr ""
-
-#: forgotpassword.php:26
-msgid "Can't reset your password. Please contact your administrator."
-msgstr ""
-
-#: forgotpassword.php:74 forgotpassword.php:80
-msgid "Password reset"
-msgstr ""
-
-#: forgotpassword.php:76
-msgid "Login or mail"
-msgstr ""
-
-#: forgotpassword.php:81
-msgid "Back"
-msgstr ""
-
-#: graph/header.inc.php:252
-msgid "Yes"
-msgstr ""
-
-#: graph/header.inc.php:255 graph/header.inc.php:257
-msgid "No"
-msgstr ""
-
-#: graph/header.inc.php:298
-msgid "Form cannot be submit. Input errors are highlighted in red."
-msgstr ""
-"Nie można przesłać formularza. Błędne wpisy są podświetlone na czerwono. "
 
 #: graph/navbar.inc.php:40
 msgid "standard mode"
@@ -71,8 +38,8 @@ msgstr "wyloguj"
 msgid "Logout"
 msgstr ""
 
-#: graph/navbar.inc.php:62 modules/base/infoPackage.inc.php:43
-#: modules/base/main/default.php:80
+#: graph/navbar.inc.php:62 modules/base/main/default.php:80
+#: modules/base/infoPackage.inc.php:43
 msgid "Home"
 msgstr "Katalog domowy"
 
@@ -83,6 +50,19 @@ msgid ""
 msgstr ""
 "Jeżeli ten tekst nie ulegnie zmianie, to znaczy, że Twoja przeglądarka nie "
 "jest obsługiwana przez aplikację MCC"
+
+#: graph/header.inc.php:251
+msgid "Yes"
+msgstr ""
+
+#: graph/header.inc.php:254 graph/header.inc.php:256
+msgid "No"
+msgstr ""
+
+#: graph/header.inc.php:297
+msgid "Form cannot be submit. Input errors are highlighted in red."
+msgstr ""
+"Nie można przesłać formularza. Błędne wpisy są podświetlone na czerwono. "
 
 #: includes/ErrorHandling.php:77
 msgid "Show complete trackback"
@@ -165,14 +145,14 @@ msgid "You do not have required rights"
 msgstr "Nie masz odpowiednich uprawnień"
 
 #: includes/ajaxTools.php:63 includes/ajaxTools.php:69
-#: includes/PageGenerator.php:796 includes/PageGenerator.php:1052
+#: includes/PageGenerator.php:807 includes/PageGenerator.php:1063
 #: modules/base/includes/AjaxFilterLog.inc.php:112
 #: modules/base/includes/AjaxFilterLog.inc.php:116
 msgid "Previous"
 msgstr "Poprzednia"
 
 #: includes/ajaxTools.php:74 includes/ajaxTools.php:82
-#: includes/PageGenerator.php:810 includes/PageGenerator.php:1062
+#: includes/PageGenerator.php:821 includes/PageGenerator.php:1073
 #: modules/base/includes/AjaxFilterLog.inc.php:123
 #: modules/base/includes/AjaxFilterLog.inc.php:127
 msgid "Next"
@@ -358,130 +338,59 @@ msgid ""
 "this error."
 msgstr ""
 
-#: includes/PageGenerator.php:108 includes/PageGenerator.php:2379
-#: includes/PageGenerator.php:2449 modules/base/groups/delete.php:67
+#: includes/PageGenerator.php:108 includes/PageGenerator.php:2391
+#: includes/PageGenerator.php:2461 modules/base/groups/delete.php:67
 #: modules/base/groups/members.php:185 modules/base/users/backup.php:92
 #: modules/ppolicy/default/delete.php:46
 msgid "Cancel"
 msgstr "Anuluj"
 
-#: includes/PageGenerator.php:489 includes/PageGenerator.php:716
+#: includes/PageGenerator.php:496 includes/PageGenerator.php:727
 msgid "to"
 msgstr "do"
 
-#: includes/PageGenerator.php:491 includes/PageGenerator.php:718
+#: includes/PageGenerator.php:498 includes/PageGenerator.php:729
 #, php-format
 msgid " - Total <b>%s </b>"
 msgstr " - W sumie <b>%s</b> "
 
-#: includes/PageGenerator.php:494 includes/PageGenerator.php:721
+#: includes/PageGenerator.php:501 includes/PageGenerator.php:732
 msgid "page"
 msgstr "strona"
 
-#: includes/PageGenerator.php:829
+#: includes/PageGenerator.php:840
 msgid "Pagination"
 msgstr ""
 
-#: includes/PageGenerator.php:913
+#: includes/PageGenerator.php:924
 msgid "Go to page"
 msgstr ""
 
-#: includes/PageGenerator.php:1295
+#: includes/PageGenerator.php:1306
 msgid "No item available"
 msgstr ""
 
-#: includes/PageGenerator.php:1460
+#: includes/PageGenerator.php:1471
 msgid "Select entity"
 msgstr ""
 
-#: includes/PageGenerator.php:2023
+#: includes/PageGenerator.php:2034
 msgid "Close"
 msgstr ""
 
-#: includes/PageGenerator.php:2375 includes/PageGenerator.php:2445
-#: includes/PageGenerator.php:2471 modules/base/groups/edit.php:108
+#: includes/PageGenerator.php:2387 includes/PageGenerator.php:2457
+#: includes/PageGenerator.php:2483 modules/base/groups/edit.php:108
 #: modules/base/groups/members.php:184
 msgid "Confirm"
 msgstr "Potwierdź"
 
-#: includes/PageGenerator.php:2593
+#: includes/PageGenerator.php:2606
 msgid "Select all"
 msgstr "Zaznacz wszystkie"
 
-#: includes/PageGenerator.php:2594
+#: includes/PageGenerator.php:2607
 msgid "Unselect all"
 msgstr ""
-
-#: index.php:61 token.php:54
-#, php-format
-msgid "The server %s does not exist"
-msgstr ""
-
-#: index.php:71
-msgid "Login failed"
-msgstr "Logowanie nieudane"
-
-#: index.php:77
-msgid ""
-"You have been logged out because the session between the MMC web interface "
-"and the MMC agent expired."
-msgstr ""
-
-#: index.php:124 modules/base/includes/publicFunc.php:285
-#: modules/base/users/ajaxFilter.php:68 modules/base/views/index.tpl.php:78
-msgid "Login"
-msgstr "Logowanie"
-
-#: index.php:130 modules/base/includes/publicFunc.php:300
-#: modules/base/infoPackage.inc.php:326
-msgid "Password"
-msgstr "Hasło "
-
-#: index.php:181
-msgid "Forgot password ?"
-msgstr ""
-
-#: index.php:186
-msgid "Server"
-msgstr "Serwer"
-
-#: index.php:192
-msgid "Language"
-msgstr "Język"
-
-#: index.php:200
-msgid "Connect"
-msgstr "Połącz"
-
-#: license.php:27
-msgid ""
-"<p>\n"
-"The community version of this product is distributed in the hope that it\n"
-"will be useful, but <strong>without any warranty</strong>; without even the implied\n"
-"warranty of merchantability of fitness for a particular purpose. See the\n"
-"GNU General Public License for more details.</p>\n"
-"<p>\n"
-"Moreover, this product is a main and critical component of your information system. This community version is distributed without professional support of any kind,\n"
-"and without a tested and certified upgrade path from previous versions.\n"
-"</p>"
-msgstr ""
-"<p>\n"
-"Niniejsze wydanie 'Community' produktu jest wydane z nadzieją, że będzie \n"
-"przydatne, ale <strong>bez jakichkolwiek gwarancji</strong>; nawet bez zakładanej\n"
-"gwarancji przydatności do określonego celu. W celu uzyskania dalszych szczegółów\n"
-"zapoznaj się z Licencją GNU GPL</p>\n"
-"<p>\n"
-"Co więcej, produkt ten stanowi główną i kluczową cześć Twojej infrastruktury informatycznej. Ta wersja 'Community' jest rozprowadzana bez jakiegokolwiek profesjonalnego wsparcia\n"
-"oraz bez sprawdzonej i certyfikowanej ścieżki aktualizacji z poprzednich wersji.\n"
-"</p>"
-
-#: license.php:38
-msgid ""
-"Click here to get more information about our support and maintenance "
-"subscription plan."
-msgstr ""
-"Aby uzyskać więcej informacji o naszym programie wsparcia i aktualizacji, "
-"kliknij tutaj."
 
 #: logout/index.php:50
 msgid "Your session will be closed"
@@ -800,6 +709,34 @@ msgstr "Wszyscy użytkownicy"
 msgid "Group members"
 msgstr "Członkowie grupy"
 
+#: modules/base/includes/panels/support.inc.php:29
+msgid "Your product"
+msgstr ""
+
+#: modules/base/includes/panels/support.inc.php:39
+msgid "Support"
+msgstr ""
+
+#: modules/base/includes/panels/support.inc.php:44
+msgid "Phone :"
+msgstr ""
+
+#: modules/base/includes/panels/support.inc.php:49
+msgid "License"
+msgstr ""
+
+#: modules/base/includes/panels/support.inc.php:50
+msgid "Users : "
+msgstr ""
+
+#: modules/base/includes/panels/support.inc.php:51
+msgid "Computers : "
+msgstr ""
+
+#: modules/base/includes/panels/support.inc.php:56
+msgid "Upgrade"
+msgstr ""
+
 #: modules/base/includes/AjaxFilterLog.inc.php:382
 msgid "Refresh"
 msgstr ""
@@ -903,50 +840,6 @@ msgstr ""
 #: modules/base/includes/computers-i18n.php:27
 msgid "Computer's netmask address"
 msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:28
-msgid "Inventory"
-msgstr "Katalog"
-
-#: modules/base/includes/computers_list.inc.php:29
-msgid "GLPI Inventory"
-msgstr "Katalog GLPI"
-
-#: modules/base/includes/computers_list.inc.php:30
-msgid "Read log"
-msgstr "Czytaj log"
-
-#: modules/base/includes/computers_list.inc.php:31
-msgid "Software deployment"
-msgstr "Wdrożenie oprogramowania"
-
-#: modules/base/includes/computers_list.inc.php:32
-msgid "Imaging management"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:33
-msgid "Download file"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:34
-msgid "Remote control"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:35
-msgid "Show Profile"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:138
-msgid "Computers list"
-msgstr "Lista komputerów"
-
-#: modules/base/includes/computers_list.inc.php:161
-msgid "Delete computer"
-msgstr "Usuń komputer"
-
-#: modules/base/includes/computers_list.inc.php:164
-msgid "Remove machine from group"
-msgstr "Usuń komputer z grupy"
 
 #: modules/base/includes/errorHandling.php:28
 msgid "LDAP log file does not exist."
@@ -1057,34 +950,6 @@ msgstr "Grupa %s już istnieje"
 msgid "Group %s created"
 msgstr "Utworzono grupę %s"
 
-#: modules/base/includes/panels/support.inc.php:29
-msgid "Your product"
-msgstr ""
-
-#: modules/base/includes/panels/support.inc.php:39
-msgid "Support"
-msgstr ""
-
-#: modules/base/includes/panels/support.inc.php:44
-msgid "Phone :"
-msgstr ""
-
-#: modules/base/includes/panels/support.inc.php:49
-msgid "License"
-msgstr ""
-
-#: modules/base/includes/panels/support.inc.php:50
-msgid "Users : "
-msgstr ""
-
-#: modules/base/includes/panels/support.inc.php:51
-msgid "Computers : "
-msgstr ""
-
-#: modules/base/includes/panels/support.inc.php:56
-msgid "Upgrade"
-msgstr ""
-
 #: modules/base/includes/publicFunc.php:46
 #, php-format
 msgid "Group %s can't be deleted.<br/>%s is the primary group of some users."
@@ -1152,6 +1017,17 @@ msgstr ""
 #: modules/base/includes/publicFunc.php:276
 msgid "User attributes"
 msgstr ""
+
+#: modules/base/includes/publicFunc.php:285
+#: modules/base/users/ajaxFilter.php:68 modules/base/views/index.tpl.php:78
+#: index.php:124
+msgid "Login"
+msgstr "Logowanie"
+
+#: modules/base/includes/publicFunc.php:300
+#: modules/base/infoPackage.inc.php:326 index.php:130
+msgid "Password"
+msgstr "Hasło "
 
 #: modules/base/includes/publicFunc.php:304
 msgid "Confirm password"
@@ -1326,164 +1202,49 @@ msgstr ""
 msgid "User %s successfully created"
 msgstr ""
 
-#: modules/base/infoPackage.inc.php:36
-msgid "User, group and computer management"
+#: modules/base/includes/computers_list.inc.php:28
+msgid "Inventory"
+msgstr "Katalog"
+
+#: modules/base/includes/computers_list.inc.php:29
+msgid "GLPI Inventory"
+msgstr "Katalog GLPI"
+
+#: modules/base/includes/computers_list.inc.php:30
+msgid "Read log"
+msgstr "Czytaj log"
+
+#: modules/base/includes/computers_list.inc.php:31
+msgid "Software deployment"
+msgstr "Wdrożenie oprogramowania"
+
+#: modules/base/includes/computers_list.inc.php:32
+msgid "Imaging management"
 msgstr ""
 
-#: modules/base/infoPackage.inc.php:48
-msgid "Shortcuts"
+#: modules/base/includes/computers_list.inc.php:33
+msgid "Download file"
 msgstr ""
 
-#: modules/base/infoPackage.inc.php:52
-msgid "Favorites page"
-msgstr "Strona ulubionych "
-
-#: modules/base/infoPackage.inc.php:60
-msgid "MMC Logs"
+#: modules/base/includes/computers_list.inc.php:34
+msgid "Remote control"
 msgstr ""
 
-#: modules/base/infoPackage.inc.php:111
-msgid "View details of an action"
+#: modules/base/includes/computers_list.inc.php:35
+msgid "Show Profile"
 msgstr ""
 
-#: modules/base/infoPackage.inc.php:120
-msgid "Log view"
-msgstr "Widok logów"
+#: modules/base/includes/computers_list.inc.php:138
+msgid "Computers list"
+msgstr "Lista komputerów"
 
-#: modules/base/infoPackage.inc.php:126
-msgid "LDAP log"
-msgstr "Log LDAP"
-
-#: modules/base/infoPackage.inc.php:144
-msgid "Status"
-msgstr "Stan"
-
-#: modules/base/infoPackage.inc.php:150
-msgid "Default status page"
-msgstr "Domyślna strona stanu"
-
-#: modules/base/infoPackage.inc.php:155
-msgid "Support page"
-msgstr ""
-
-#: modules/base/infoPackage.inc.php:166 modules/base/users/ajaxFilter.php:90
-#: modules/base/views/index.tpl.php:95
-msgid "Users"
-msgstr "Użytkownicy"
-
-#: modules/base/infoPackage.inc.php:171 modules/base/users/index.php:31
-#: modules/base/views/index.tpl.php:43
-msgid "User list"
-msgstr "Lista użytkowników"
-
-#: modules/base/infoPackage.inc.php:184
-msgid "Add a user"
-msgstr "Dodaj użytkownika"
-
-#: modules/base/infoPackage.inc.php:187
-msgid "Edit a user"
-msgstr "Edytuj użytkownika"
-
-#: modules/base/infoPackage.inc.php:191
-msgid "Edit ACL permissions on a user"
-msgstr "Edytuj pozwolenia ACL użytkownika"
-
-#: modules/base/infoPackage.inc.php:195
-msgid "Logged user actions"
-msgstr ""
-
-#: modules/base/infoPackage.inc.php:200
-msgid "Action details"
-msgstr ""
-
-#: modules/base/infoPackage.inc.php:210
-msgid "Delete a user"
-msgstr "Usuń użytkownika"
-
-#: modules/base/infoPackage.inc.php:215
-msgid "Backup user files"
-msgstr "Archiwizuj pliki użytkownika"
-
-#: modules/base/infoPackage.inc.php:220
-msgid "Reset user password"
-msgstr ""
-
-#: modules/base/infoPackage.inc.php:225
-msgid "Change user password"
-msgstr ""
-
-#: modules/base/infoPackage.inc.php:230
-msgid "Get user photo"
-msgstr "Pobierz zdjęcie użytkownika"
-
-#: modules/base/infoPackage.inc.php:248
-msgid "Add a group"
-msgstr "Dodaj grupę"
-
-#: modules/base/infoPackage.inc.php:251
-msgid "Delete a group"
-msgstr "Usuń grupę"
-
-#: modules/base/infoPackage.inc.php:265
-msgid "Edit a group"
-msgstr "Edytuj grupę"
-
-#: modules/base/infoPackage.inc.php:274
-msgid "Computers"
-msgstr ""
-
-#: modules/base/infoPackage.inc.php:288
-msgid "Edit computer"
-msgstr "23a2941f0c1e85bfc0babfb726d85288_tr"
-
-#: modules/base/infoPackage.inc.php:292
-msgid "Delete a computer"
+#: modules/base/includes/computers_list.inc.php:161
+msgid "Delete computer"
 msgstr "Usuń komputer"
 
-#: modules/base/infoPackage.inc.php:297
-msgid "Ajax part of computers list"
-msgstr "Część AJAX-owa listy komputerów"
-
-#: modules/base/infoPackage.inc.php:310
-msgid "User photo"
-msgstr "Zdjęcie użytkownika"
-
-#: modules/base/infoPackage.inc.php:311
-msgid "User login"
-msgstr "Login użytkownika"
-
-#: modules/base/infoPackage.inc.php:312
-msgid "User name"
-msgstr "Nazwa użytkownika"
-
-#: modules/base/infoPackage.inc.php:313
-msgid "User firstname"
-msgstr "Imię użytkownika"
-
-#: modules/base/infoPackage.inc.php:314
-msgid "User home directory"
-msgstr "Katalog domowy użytkownika"
-
-#: modules/base/infoPackage.inc.php:316
-msgid "User title"
-msgstr "Tytuł użytkownika"
-
-#: modules/base/infoPackage.inc.php:317
-msgid "Mail address"
-msgstr "Adres pocztowy"
-
-#: modules/base/infoPackage.inc.php:319
-msgid "Mobile phone number"
-msgstr "Numer telefonu komórkowego"
-
-#: modules/base/infoPackage.inc.php:327 modules/base/users/passwd.php:68
-#: modules/base/users/resetpasswd.php:55
-msgid "Confirm your password"
-msgstr "Potwierdź hasło"
-
-#: modules/base/infoPackage.inc.php:328
-msgid "Enable/Disable user account"
-msgstr "Odbloku / Zablokuj konto użytkownika"
+#: modules/base/includes/computers_list.inc.php:164
+msgid "Remove machine from group"
+msgstr "Usuń komputer z grupy"
 
 #: modules/base/logview/ajax_showlog.php:43
 msgid "Connection"
@@ -1638,6 +1399,11 @@ msgstr "Kopia zapasowa"
 #: modules/base/users/ajaxFilter.php:88
 msgid "Logged Actions"
 msgstr ""
+
+#: modules/base/users/ajaxFilter.php:90 modules/base/views/index.tpl.php:95
+#: modules/base/infoPackage.inc.php:166
+msgid "Users"
+msgstr "Użytkownicy"
 
 #: modules/base/users/backup.php:38
 msgid "Backup a user's folder"
@@ -1804,6 +1570,11 @@ msgstr "Edytuj ACL użytkownika %s"
 msgid "Download ACL string"
 msgstr ""
 
+#: modules/base/users/index.php:31 modules/base/views/index.tpl.php:43
+#: modules/base/infoPackage.inc.php:171
+msgid "User list"
+msgstr "Lista użytkowników"
+
 #: modules/base/users/localSidebar.php:31
 msgid "Bulk import (CSV)"
 msgstr ""
@@ -1842,6 +1613,11 @@ msgstr "Obecne hasło"
 msgid "New password"
 msgstr "Nowe hasło"
 
+#: modules/base/users/passwd.php:68 modules/base/users/resetpasswd.php:55
+#: modules/base/infoPackage.inc.php:327
+msgid "Confirm your password"
+msgstr "Potwierdź hasło"
+
 #: modules/base/users/passwd.php:74 modules/base/users/resetpasswd.php:61
 msgid "Return"
 msgstr "Powrót"
@@ -1854,6 +1630,150 @@ msgstr "Nieprawidłowe hasło. Proszę spróbować ponownie."
 msgid "Passwords are mismatching. Please retry."
 msgstr "Hasła się nie zgadzają. Proszę spróbować ponownie."
 
+#: modules/base/infoPackage.inc.php:36
+msgid "User, group and computer management"
+msgstr ""
+
+#: modules/base/infoPackage.inc.php:48
+msgid "Shortcuts"
+msgstr ""
+
+#: modules/base/infoPackage.inc.php:52
+msgid "Favorites page"
+msgstr "Strona ulubionych "
+
+#: modules/base/infoPackage.inc.php:60
+msgid "MMC Logs"
+msgstr ""
+
+#: modules/base/infoPackage.inc.php:111
+msgid "View details of an action"
+msgstr ""
+
+#: modules/base/infoPackage.inc.php:120
+msgid "Log view"
+msgstr "Widok logów"
+
+#: modules/base/infoPackage.inc.php:126
+msgid "LDAP log"
+msgstr "Log LDAP"
+
+#: modules/base/infoPackage.inc.php:144
+msgid "Status"
+msgstr "Stan"
+
+#: modules/base/infoPackage.inc.php:150
+msgid "Default status page"
+msgstr "Domyślna strona stanu"
+
+#: modules/base/infoPackage.inc.php:155
+msgid "Support page"
+msgstr ""
+
+#: modules/base/infoPackage.inc.php:184
+msgid "Add a user"
+msgstr "Dodaj użytkownika"
+
+#: modules/base/infoPackage.inc.php:187
+msgid "Edit a user"
+msgstr "Edytuj użytkownika"
+
+#: modules/base/infoPackage.inc.php:191
+msgid "Edit ACL permissions on a user"
+msgstr "Edytuj pozwolenia ACL użytkownika"
+
+#: modules/base/infoPackage.inc.php:195
+msgid "Logged user actions"
+msgstr ""
+
+#: modules/base/infoPackage.inc.php:200
+msgid "Action details"
+msgstr ""
+
+#: modules/base/infoPackage.inc.php:210
+msgid "Delete a user"
+msgstr "Usuń użytkownika"
+
+#: modules/base/infoPackage.inc.php:215
+msgid "Backup user files"
+msgstr "Archiwizuj pliki użytkownika"
+
+#: modules/base/infoPackage.inc.php:220
+msgid "Reset user password"
+msgstr ""
+
+#: modules/base/infoPackage.inc.php:225
+msgid "Change user password"
+msgstr ""
+
+#: modules/base/infoPackage.inc.php:230
+msgid "Get user photo"
+msgstr "Pobierz zdjęcie użytkownika"
+
+#: modules/base/infoPackage.inc.php:248
+msgid "Add a group"
+msgstr "Dodaj grupę"
+
+#: modules/base/infoPackage.inc.php:251
+msgid "Delete a group"
+msgstr "Usuń grupę"
+
+#: modules/base/infoPackage.inc.php:265
+msgid "Edit a group"
+msgstr "Edytuj grupę"
+
+#: modules/base/infoPackage.inc.php:274
+msgid "Computers"
+msgstr ""
+
+#: modules/base/infoPackage.inc.php:288
+msgid "Edit computer"
+msgstr "23a2941f0c1e85bfc0babfb726d85288_tr"
+
+#: modules/base/infoPackage.inc.php:292
+msgid "Delete a computer"
+msgstr "Usuń komputer"
+
+#: modules/base/infoPackage.inc.php:297
+msgid "Ajax part of computers list"
+msgstr "Część AJAX-owa listy komputerów"
+
+#: modules/base/infoPackage.inc.php:310
+msgid "User photo"
+msgstr "Zdjęcie użytkownika"
+
+#: modules/base/infoPackage.inc.php:311
+msgid "User login"
+msgstr "Login użytkownika"
+
+#: modules/base/infoPackage.inc.php:312
+msgid "User name"
+msgstr "Nazwa użytkownika"
+
+#: modules/base/infoPackage.inc.php:313
+msgid "User firstname"
+msgstr "Imię użytkownika"
+
+#: modules/base/infoPackage.inc.php:314
+msgid "User home directory"
+msgstr "Katalog domowy użytkownika"
+
+#: modules/base/infoPackage.inc.php:316
+msgid "User title"
+msgstr "Tytuł użytkownika"
+
+#: modules/base/infoPackage.inc.php:317
+msgid "Mail address"
+msgstr "Adres pocztowy"
+
+#: modules/base/infoPackage.inc.php:319
+msgid "Mobile phone number"
+msgstr "Numer telefonu komórkowego"
+
+#: modules/base/infoPackage.inc.php:328
+msgid "Enable/Disable user account"
+msgstr "Odbloku / Zablokuj konto użytkownika"
+
 #: modules/dashboard/includes/panels/general.inc.php:39
 msgid "Uptime"
 msgstr ""
@@ -1865,6 +1785,87 @@ msgid_plural "%d inactive services"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
+
+#: forgotpassword.php:24
+msgid "A password reset link has been sent."
+msgstr ""
+
+#: forgotpassword.php:26
+msgid "Can't reset your password. Please contact your administrator."
+msgstr ""
+
+#: forgotpassword.php:74 forgotpassword.php:80
+msgid "Password reset"
+msgstr ""
+
+#: forgotpassword.php:76
+msgid "Login or mail"
+msgstr ""
+
+#: forgotpassword.php:81
+msgid "Back"
+msgstr ""
+
+#: index.php:61 token.php:54
+#, php-format
+msgid "The server %s does not exist"
+msgstr ""
+
+#: index.php:71
+msgid "Login failed"
+msgstr "Logowanie nieudane"
+
+#: index.php:77
+msgid ""
+"You have been logged out because the session between the MMC web interface "
+"and the MMC agent expired."
+msgstr ""
+
+#: index.php:181
+msgid "Forgot password ?"
+msgstr ""
+
+#: index.php:186
+msgid "Server"
+msgstr "Serwer"
+
+#: index.php:192
+msgid "Language"
+msgstr "Język"
+
+#: index.php:200
+msgid "Connect"
+msgstr "Połącz"
+
+#: license.php:27
+msgid ""
+"<p>\n"
+"The community version of this product is distributed in the hope that it\n"
+"will be useful, but <strong>without any warranty</strong>; without even the implied\n"
+"warranty of merchantability of fitness for a particular purpose. See the\n"
+"GNU General Public License for more details.</p>\n"
+"<p>\n"
+"Moreover, this product is a main and critical component of your information system. This community version is distributed without professional support of any kind,\n"
+"and without a tested and certified upgrade path from previous versions.\n"
+"</p>"
+msgstr ""
+"<p>\n"
+"Niniejsze wydanie 'Community' produktu jest wydane z nadzieją, że będzie \n"
+"przydatne, ale <strong>bez jakichkolwiek gwarancji</strong>; nawet bez zakładanej\n"
+"gwarancji przydatności do określonego celu. W celu uzyskania dalszych szczegółów\n"
+"zapoznaj się z Licencją GNU GPL</p>\n"
+"<p>\n"
+"Co więcej, produkt ten stanowi główną i kluczową cześć Twojej infrastruktury informatycznej. Ta wersja 'Community' jest rozprowadzana bez jakiegokolwiek profesjonalnego wsparcia\n"
+"oraz bez sprawdzonej i certyfikowanej ścieżki aktualizacji z poprzednich wersji.\n"
+"</p>"
+
+#: license.php:38
+msgid ""
+"Click here to get more information about our support and maintenance "
+"subscription plan."
+msgstr ""
+"Aby uzyskać więcej informacji o naszym programie wsparcia i aktualizacji, "
+"kliknij tutaj."
 
 #: token.php:66
 msgid "Token not valid"
