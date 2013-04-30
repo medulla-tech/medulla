@@ -81,6 +81,7 @@ class SSHForwardingProxy(object):
         self.local_port = local_port 
         self.process = commandProtocol(self.command)
         self.process.endback = endback
+        self.process.installEndBack()
 
     def local_to_remote(self):
         """ Establishing of local SSH forward"""
@@ -103,6 +104,14 @@ class SSHForwardingProxy(object):
                                               self.port)
         d = self._spawn(args)
 
+        @d.addCallback
+        def _cb(reason):
+            log.debug("TCP SSH Proxy: Output proxy - process successfully spawned")
+
+        @d.addErrback
+        def _eb(failure):
+            log.warn("TCP SSH Proxy: Output proxy - process spawn failed: %s" % str(failure))
+
         return d
 
     def _spawn(self, ssh_args):
@@ -122,8 +131,8 @@ class SSHForwardingProxy(object):
 
         reactor.addSystemEventTrigger('before', 
                                       'shutdown', 
-                                      self.process.sendSigKill,
-                                      self.process.handler)
+                                      self.process.sendSigKill)
+        return self.process.deferred
 
 class InputProxyServer(portforward.ProxyServer):
     """Establish a input proxy to check requestor IP"""
@@ -259,12 +268,19 @@ class timeout :
  
 class DispatchProxies :
     """ Main dispatcher to control our proxies. """
+    from_ip = ""
+    to_ip = ""
+    to_port = 0
+    command = ""
+    proxy_port = 0
+    local_port = 0
     connect_delay = 0
     establish_delay = 0
+    session_length = 0
+    stoppers = list()
 
     def __init__(self):
         self.parse_args()
-        self.stoppers = list()
 
         self.start_output_proxy()
         self.start_input_proxy()
@@ -274,7 +290,7 @@ class DispatchProxies :
                         self.session_length, 
                         self.stop_proxies)
 
-        d.addCallback(self.session_expired)
+        d.addCallback(self._session_expired)
 
     def _session_expired(result):
         log.warn("TCP SSH Proxy: Your session has expired.")
@@ -286,7 +302,7 @@ class DispatchProxies :
             # requestor ip - an address to verify the source of request
             # in other words a machine requesting a VNC session through 
             # our proxies
-            self.from_ip = "10.10.0.2" #sys.argv[1]
+            self.from_ip = sys.argv[1]
             # destinated machine to create a VNC session
             self.to_ip = sys.argv[2]
             # assigned port to create a VNC session on dest. machine
@@ -305,10 +321,10 @@ class DispatchProxies :
             self.session_length = int(sys.argv[9])
 
         except ValueError, val_exc:
-            log.warn("TCP SSH Proxy - Arguments parsing failure: %s" % str(val_exc))
+            log.warn("TCP SSH Proxy: Arguments parsing failure: %s" % str(val_exc))
             self.stop_proxies()
         except IndexError, idx_exc:
-            log.warn("TCP SSH Proxy - Arguments parsing failure: %s" % str(idx_exc))
+            log.warn("TCP SSH Proxy: Arguments parsing failure: %s" % str(idx_exc))
             self.stop_proxies()
 
 
@@ -328,7 +344,8 @@ class DispatchProxies :
             try :
                 if callable(stopper):
                     stopper()
-
+            except AttributeError :
+                log.debug("TCP SSH Proxy: service probably stopped, going to next")
             except Exception, exc:
                 log.warn("TCP SSH Proxy: Stopping failed: %s" % str(exc))
 
@@ -368,7 +385,7 @@ class DispatchProxies :
         self.stop_proxies()
 
     def _endback_output_proxy(self, result):
-        log.info("TCP SSH Proxy: Output proxy terminated")
+        log.debug("TCP SSH Proxy: Output proxy - SSH tunnel building finished")
 
 
     def _start_input_proxy(self):
