@@ -86,6 +86,22 @@ def start_these_commands(scheduler, commands):
             )
     session.close()
 
+def choose_client_ip(scheduler, interfaces):
+    """
+    Get the correct IP address by preferred_network engine.
+
+    @param scheduler: requested scheduler
+    @type scheduler: str
+
+    @param interfaces: computer networking info
+    @type interfaces: dict
+
+    @return: IP address (across the xmlrpc)
+    @rtype: str
+    """
+    return getProxy(__select_scheduler(scheduler)).callRemote("choose_client_ip",
+                                                   interfaces
+                                                   )
 def ping_client(scheduler, computer):
     return process_on_client(scheduler, computer, 'ping_client')
 

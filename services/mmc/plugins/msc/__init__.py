@@ -147,6 +147,21 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return xmlrpcCleanup2(Machines().getMachine(ctx, params))
 
+    def scheduler_choose_client_ip(self, scheduler, uuid):
+        ctx = self.currentContext
+        computer = ComputerManager().getComputer(ctx, {'uuid': uuid})
+        network = computer[1]
+        
+        interfaces = {"uuid"      : uuid,
+                      "fqdn"      : network["cn"][0],
+                      "shortname" : network["cn"][0],
+                      "ips"       : network["ipHostNumber"],
+                      "macs"      : network["macAddress"],
+                      "netmasks"  : network["subnetMask"],
+                      }
+        return xmlrpcCleanup2(mmc.plugins.msc.client.scheduler.choose_client_ip(scheduler, interfaces))
+
+ 
     ##
     # commands
     ##

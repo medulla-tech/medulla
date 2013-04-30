@@ -181,6 +181,9 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
     def xmlrpc_get_health(self):
         return xmlrpcCleanup(getHealth())
 
+    def xmlrpc_choose_client_ip(self, interfaces):
+        return xmlrpcCleanup(pulse2.scheduler.network.chooseClientIP(interfaces))
+
 def app() :
     config = SchedulerConfig()
     # Set cache
