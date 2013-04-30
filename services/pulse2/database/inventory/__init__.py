@@ -675,10 +675,12 @@ class Inventory(DyngroupDatabaseHelper):
         @rtype: tuple
         """
         if "Network" in inventory :
-            network  = inventory["Network"]
-            if len(network) > 0 : 
-                if "MACAddress" in network[0]:
-                    mac = network[0]["MACAddress"]
+            logging.getLogger().debug("Try to associate a MAC address to an existing machine")
+            networks = inventory["Network"]
+            for network in networks:
+                if "MACAddress" in network:
+                    mac = network["MACAddress"]
+                    logging.getLogger().debug("Searching for a machine with MAC %s" % mac)
                     machines = self.getMachinesBy(self.ctx, 
                                                   "Network", 
                                                   "MACAddress", 
@@ -692,9 +694,9 @@ class Inventory(DyngroupDatabaseHelper):
                         logging.getLogger().debug(message)
                         return mac, uuid, name
                     elif len(machines) > 1 :
-                        logging.getLogger().error("Cannot resolve machine name: duplicate MAC address")
+                        logging.getLogger().warn("Cannot resolve machine name: duplicate MAC address (%s)" % mac)
                     else:
-                        logging.getLogger().error("Cannot find a machine")
+                        logging.getLogger().debug("Cannot find a machine with MAC %s" % mac)
 
         return None, None, None
 
