@@ -115,6 +115,7 @@ class LauncherConfig(pulse2.utils.Singleton):
     # SSH Proxy stuff
     tcp_sproxy_path = '/usr/sbin/pulse2-tcp-sproxy'
     tcp_sproxy_host = None
+    tcp_sproxy_check = True
     tcp_sproxy_port_range_start = 8100
     tcp_sproxy_port_range_end = 8200
     tcp_sproxy_establish_delay = 20
@@ -278,6 +279,7 @@ class LauncherConfig(pulse2.utils.Singleton):
         # Parse "tcp_sproxy" section
         self.setoption('tcp_sproxy', 'tcp_sproxy_path', 'tcp_sproxy_path')
         self.setoption('tcp_sproxy', 'tcp_sproxy_host', 'tcp_sproxy_host')
+        self.setoption('tcp_sproxy', 'tcp_sproxy_check', 'tcp_sproxy_check', 'bool')
         self.setoption('tcp_sproxy', 'tcp_sproxy_establish_delay', 'tcp_sproxy_establish_delay', 'int')
         self.setoption('tcp_sproxy', 'tcp_sproxy_connect_delay', 'tcp_sproxy_connect_delay', 'int')
         self.setoption('tcp_sproxy', 'tcp_sproxy_session_lenght', 'tcp_sproxy_session_lenght', 'int')

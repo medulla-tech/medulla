@@ -1,9 +1,7 @@
-#!/usr/bin/perl -w
+#!/usr/bin/python
+# -*- coding: utf-8; -*-
 #
-# (c) 2008 Mandriva, http://www.mandriva.com/
-# (c) 2005-2007 Linbox, http://www.linbox.com/
-#
-# $Id$
+# (c) 2013 Mandriva, http://www.mandriva.com/
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
 #
@@ -21,320 +19,399 @@
 # along with Pulse 2; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
-#
-# Some proxy code is based on tcpproxy (c)opyright 1999 by dan
-# goldwater, dgold@zblob.com
+"""
+Script to establish two proxies to forward the traffic over the SSH tunnel 
+with checking of requestor IP. When the checking of requestor is enabled,
+InputProxy accepts only the requests from passed requestor IP address.
+Otherwise, both proxies are stopped.
 
-# the idea behind this stuff:
-# we want to connect
-# - a client ($fromIp)
-# - a server ($toIp:$toPort)
-# - thought us
-#
-# the server must (and may only) listen on localhost
-#
-# in an ideal world the client would connect to $toIp:$toPort
-#
-# in a paranoid world (our) the client would connect on us and been
-# forwarded thourght ssh to 127.0.0.1:$toPort
-#
-# we first start by looking for 2 locally free port:
-# - $proxyport on which we will bind,
-# - $localport on which we will bind ssh,
-# then we fork() and:
-# - establish an ssh session from us to $toIp,
-# - ask ssh to forward TCP traffic from 127.0.0.1:$localport to
-#   127.0.0.1:$toPort
-# - start to forward all traffic comming from $fromIp on $proxyport to
-#   127.0.0.1:$localport
-#
-# any question ?
++---------+ local_port  +----------+ proxy_port +----------+ to_port +------+
+|Requestor|------------>|InputProxy|----------->|SSH tunnel|-------->|Client| 
++---------+             +----------+            +----------+         +------+
+Example:
+192.168.20.14:8101 -> (8101:8102) -> 8102:127.0.0.1:5900 -> 192.168.20.199:5900          
+"""
+import os
+import sys
+import logging
+import logging.config 
 
-use strict;
-use Socket;
-use POSIX qw(setsid);
-use warnings;
-use Sys::Syslog;
-use Sys::Syslog qw(:DEFAULT setlogsock);
-use IO::Socket::INET;
+from twisted.internet import reactor, task 
+from twisted.protocols import portforward
+from twisted.internet.endpoints import TCP4ServerEndpoint
 
-# command line parsing: simple, always 9 arguments
-# FIXME: we should use Getopt or Getoptions::Long to handle parameters (ticket already opened: #387)
-if ( @ARGV != 9 ) {
-    print "Usage: proxy.pl <from-ip> <to-ip> <to-port> <ssh-options-comma-separated> <start-port> <end-port> <establish-delay> <connect-delay> <session-lenght>\n";
-    exit 1;
-}
+from mmc.site import mmcconfdir
+from pulse2.launcher.config import LauncherConfig
+from pulse2.launcher.process_control import commandProtocol
 
-# globals
-my ($fromIp, $toIp, $toPort, $proxyCommand, $startPort, $endPort, $establishDelay, $connectDelay, $sessionMaxLenght) = @ARGV;
-my $pid;
+LOCALHOST = "127.0.0.1"
 
-# force STDOUT flushing (we could also have flushed all buffers using 'local $| = 1;')
-select((select(STDOUT), $| = 1)[0]);
+config_file = os.path.join(mmcconfdir, "pulse2", "launchers", "launchers.ini")
+config = LauncherConfig()
+config.setup(config_file)
+logging.config.fileConfig(config_file)
 
-#
-# Look for two free ports in the range "$startPort-$endPort"
-#
-sub alloc_freeport()  {
-    my $localport   = $startPort;
-    my $max         = $endPort-$startPort;
-    my $tries       = $max;
-    my ($sock1, $sock2);
-
-    while (1) {
-        $tries--;
-        return 0 if ($tries == 0); # give up if no attempt left
-        $localport += 2;
-
-        # attempt to get the first port
-        $sock1 = new IO::Socket::INET ( LocalPort => $localport, Proto => 'tcp', Listen => 1, Reuse => 1 );
-        next unless $sock1;
-        close($sock1);
-
-        # attempt to get the second port
-        $sock2 = new IO::Socket::INET ( LocalPort => $localport + 1, Proto => 'tcp', Listen => 1, Reuse => 1 );
-        next unless $sock2;
-        close($sock2);
-
-        # if we are here, we got 2 available ports
-        last;
-    }
-    return $localport;
-}
-
-#
-# Transparent proxy (connects server and client)
-#
-sub proxy($$$$$$) {
-    my $remoteAddr  = shift;
-    my $proxyPort   = shift;
-    my $destHost    = shift;
-    my $destPort    = shift;
-    my $toIp        = shift;
-    my $toPort      = shift;
-
-    my $peer;
-    do {
-        client($destHost, $destPort);
-        print "LINK $remoteAddr:0,127.0.0.1:$proxyPort,127.0.0.1:$destPort,$toIp:$toPort";
-        $peer = server($remoteAddr, $proxyPort);
-        transferdata();
-    } while ($peer ne $remoteAddr);
-}
+log = logging.getLogger()
 
 
-#
-# proxy client
-#
-sub server($$) {
-    my($addr) = shift;
-    my($port) = shift;
+class SSHForwardingProxy(object):
+    """ Establishing of SSH tunnel by spawning of child process """
 
-    # establish TCP connection: listen to $port
-    socket(SERVER, PF_INET, SOCK_STREAM, getprotobyname('tcp'));
-    setsockopt(SERVER, SOL_SOCKET, SO_REUSEADDR, pack("l", 1));
-    bind(SERVER, sockaddr_in($port, INADDR_ANY));
-    listen(SERVER, 1);
+    def __init__(self, host, port, command, local_port, endback):
+        """
+        @param host: destinated machine 
+        @type host: str
 
-    # allow $connectDelay seconds for the initial connect
-    $SIG{ALRM} = \&sigterm;
-    alarm($connectDelay);
+        @param port: port number of destinated machine to open a VNC session
+        @type port: int
 
-    # connection loop
-    while (1) {
-        accept(CLIENT, SERVER);
+        @param command: command to execute
+        @type command: str
 
-        my ($port, $iaddr) = unpack_sockaddr_in(getpeername(CLIENT));
-        my $peer = inet_ntoa($iaddr);
-        my ($port2, $iaddr2) = unpack_sockaddr_in(getsockname(CLIENT));
-        my $peer2 = inet_ntoa($iaddr2);
-        syslog("info", "connect from ".$peer." to ".$peer2);
-        if ($peer ne $addr) {
-            syslog("info", "rejected");
-            next;
-        } else {
-            # autokill after 60 minuts
-            alarm($sessionMaxLenght);
-            return $peer;
-        }
-    }
-}
+        @param local_port: port number of input of SSH tunnel
+        @type local_port: int
 
-#
-# proxy server
-#
-sub client($$) {
-    my $remote = shift;
-    my $port = shift;
-    my $paddr;
-    my $tries = $establishDelay;
+        @param endback: called when our process with SSH tunnel is terminated
+        @type endback: callable
+        """
+        self.host = host
+        self.port = port
+        self.command = command.replace(","," -o") 
 
-    # establish TCP connection: connect to $remote:$port
-    $paddr = sockaddr_in($port, inet_aton($remote));
-    socket(SOCK, PF_INET, SOCK_STREAM, getprotobyname('tcp'));
+        self.local_port = local_port 
+        self.process = commandProtocol(self.command)
+        self.process.endback = endback
 
-    # connection loop
-    while (1) {
-        last if (connect(SOCK, $paddr));
-        syslog("err", "Could not connect to $remote:$port: $!");
-        sleep(1);
-        $tries--;
-        mydie("$establishDelay tries") if ($tries == 0);
-    }
+    def local_to_remote(self):
+        """ Establishing of local SSH forward"""
+        return self._call_process("L")
 
-    select(SOCK);
-    $| = 1;
-    select(STDOUT);
-    return;
-}
+    def remote_to_local(self):
+        """ Establishing of remote SSH forward"""
+        return self._call_process("R")
 
-# move data through the tunnel.
-# called when data is waiting at one end of the tunnel.
-# it moves the data to the other end.
-# input: direction flag:  0 = client->server   1 = server->client
-sub movedata($) {
-    my($s2c) = $_[0];
-    my($buf1, $buf2, $buf3, $len1, $len2, $offset, $written);
-    my($FH1, $FH2);
-    my($decode) = 0;
-    my($encode) = 0;
+    def _call_process(self, switch):
+        """
+        Creating of a new child process.
 
-    if($s2c) { # data from server to client
-        $FH1 = \*SOCK;
-        $FH2 = \*CLIENT;
-    } else { # data from client to server
-        $FH1 = \*CLIENT;
-        $FH2 = \*SOCK;
-    }
+        @param switch: switch to determine if local or remote forward {L|R}
+        @type switch: str
+        """
 
-    # reads incoming stuff
-    $len1 = sysread($FH1, $buf1, 4096, 0);
+        args = "-%s %i:127.0.0.1:%i -N -n" % (switch, 
+                                              self.local_port, 
+                                              self.port)
+        d = self._spawn(args)
 
-    unless(defined($len1)) { # handle read error
-        next if($! =~ /^Interrupted/);
-        mydie("system read error: $!");
-    }
+        return d
 
-    if($len1 == 0) { # handle closed socket
-        return 0;
-    }
+    def _spawn(self, ssh_args):
+        """ 
+        Spawning the process
 
-    $buf2 = $buf1;
-    $len2 = $len1;
+        @param ssh_args: passed arguments 
+        @type ssh_args: str
+        """
 
-    $offset = 0;
-    while($len2) { # write outgoing stuff
-        $written = syswrite($FH2, $buf2, $len2, $offset);
-        mydie("system write error: $!\n") unless(defined($written)); # handle write error
-        $len2 -= $written;
-        $offset += $written;
-    }
-    return 1;
-}
+        cmdline = "/usr/bin/ssh %s -o%s %s \n" % (ssh_args,
+                                                  self.command,
+                                                  self.host)
+        cmds = cmdline.split()
 
-# main processing function once connections are established
-# alternately checks the client and server sockets to see if any
-# data is waiting on them to be read.
-# if data is available, it calls the MoveData() function to move the
-# data from one socket to the other.
-sub transferdata() {
-    my($rin, $rout, $blksize1, $blksize2, $nfound, $FH1, $FH2);
+        self.process.handler = reactor.spawnProcess(self.process, "/usr/bin/ssh", cmds)
 
-    # read from stdin if we are an inetd managed daemon, otherwise read
-    # from the client socket which we created
+        reactor.addSystemEventTrigger('before', 
+                                      'shutdown', 
+                                      self.process.sendSigKill,
+                                      self.process.handler)
 
-    $FH1 = \*CLIENT;
-    $FH2 = \*SOCK;
+class InputProxyServer(portforward.ProxyServer):
+    """Establish a input proxy to check requestor IP"""
+ 
+    def dataReceived(self, data):
+        """Overriden method from ProxyServer"""
+        portforward.ProxyServer.dataReceived(self, data)
+        if config.tcp_sproxy_check :
+            # requestor IP
+            client_ip = self.transport.client[0]
+            if self.from_ip != client_ip :
+                log.warn("Client address <%s> is not matching with requestor ip <%s>" % (client_ip, self.from_ip))
+                log.warn("Closing the connection") 
+                self.stopper()
+                return
 
-    $rin = "";
-    vec($rin, fileno($FH2), 1) = 1;
-    vec($rin, fileno($FH1), 1) = 1;
+        self.timeout_refresh()
+
+    def kill_me(self):
+        """ Terminate this proxy """
+        self.transport.loseConnection()
+
+    @classmethod
+    def set_incomming_ip_to_verify(cls, from_ip):
+        """ 
+        Client IP to check.
+
+        @param from_ip: requestor IP address
+        @type from_ip: str
+        """
+        cls.from_ip = from_ip
+
+    @classmethod
+    def set_establish_delay(cls, establish_delay):
+        """
+        Setting the timeout of proxy
+
+        @param establish_delay: timeout to expire
+        @type establish_delay: int
+        """
+        cls.establish_delay = establish_delay
+        cls.timeout_refresh()
+
+    @classmethod
+    def register_stopper(cls, stopper):
+        """ 
+        Registering of global method to killing all the runtimes 
+
+        @param stopper: method to call if the traffic is inactive
+        @type stopper: callable
+        """
+        cls.stopper = stopper
+
+    @classmethod 
+    def timeout_refresh(cls):
+        """ 
+        Refreshing of the session.
+        
+        This metho is periodicaly called when data transport is processed 
+        """
+        if hasattr(cls, "timeout_defer"):
+            cls.timeout_defer.cancel()
+        if hasattr(cls, "stopper"): 
+            cls.timeout_defer = task.deferLater(reactor, 
+                                             cls.establish_delay,
+                                             cls.stopper)
+ 
+ 
+class InputProxyFactory(portforward.ProxyFactory):
+    """Factory proxy to provide port forwarding"""
+
+    protocol = InputProxyServer
+
+    def __init__(self, host, port, from_ip, establish_delay, stopper):
+        """
+        @param host: IP address of portforwarding proxy (usually localhost)
+        @type host: str
+
+        @param port: port to listen of incoming requests
+        @type port: int
+
+        @param from_ip: requestor IP address to check
+        @type from_ip: str
+
+        @param establish_delay: input proxy timeout
+        @type establish_delay: int
+
+        @param stopper: handler to call when proxy is timeouted or stopped
+        @type stopper: callable
+        """
+        self.host = host
+        self.port = port
+
+        self.protocol.set_incomming_ip_to_verify(from_ip)
+        self.protocol.set_establish_delay(establish_delay)
+        self.protocol.register_stopper(stopper)
 
 
-    while(1) { # main processing loop.  stay here until a socket closes.
-        $nfound = select($rout=$rin, undef, undef, undef);
+    def kill_me(self):
+        """ calling the terminating method """
+        self.protocol.transport.kill_me()
 
-        if(vec($rout, fileno($FH1), 1)) { # move from client to server
-            unless(movedata(0)) {
-                syslog("info", "client closed connection");
-                return;
-            }
-        }
-        if(vec($rout, fileno($FH2), 1)) { # move from server to client
-            unless(movedata(1)) {
-                syslog("info", "server closed connection");
-                return;
-            }
-        }
-    }
-}
+class timeout :
+    """Decorator class to declare a timeout for a function"""
 
-#
-# Syslog the error before exit
-#
-sub mydie {
-    my $txt = shift;
+    def __init__(self, timeout, action):
+        """
+        @param timeout: time of expiration of decorated object
+        @type timeout: int
 
-    # kill the tunnel
-    kill 15, $pid;
-    syslog("crit", "died: $txt");
-    print "LINK ERROR";
-    exit(1);
-}
+        @param action: a callable object which be called after the timeout
+        @type action: callable
 
-#
-# SIGKILL handler
-#
-sub sigterm {
-    # kill the tunnel
-    kill 15, $pid;
-    exit(0);
-}
+        """
+        self.timeout = timeout
+        self.action = action
 
-#
-# Main processing
-#
+    def __call__(self, fnc, *args):
 
-setlogsock('unix');
-openlog("pulse2-tcp-sproxy: to $toIp", "", "daemon");
+        def wrapped(*args):
+            self.time_defer = task.deferLater(reactor, 
+                                         self.timeout, 
+                                         self.action)
+            fnc_defer = fnc(*args)
+            fnc_defer.addCallback(self.endback_fnc)
 
-# set up the tunnel
-my $localport = alloc_freeport();
-my $proxyport = $localport + 1;
+            return fnc_defer
 
-# installs SIGPIPE and SIGTERM handlers
-$SIG{PIPE} = 'IGNORE';
-$SIG{TERM} = \&sigterm;
+        return wrapped
 
-# compute SSH command_line
-my @sshArgs  = split(/,/, $proxyCommand);
+    def endback_fnc (self, result):
+        self.time_defer.cancel()
+ 
+class DispatchProxies :
+    """ Main dispatcher to control our proxies. """
+    connect_delay = 0
+    establish_delay = 0
 
-my @sshCommand;
-push @sshCommand, "/usr/bin/ssh";
-while (@sshArgs) {
-    my $sshArg = pop @sshArgs;
-    push @sshCommand, '-o', $sshArg;
-}
+    def __init__(self):
+        self.parse_args()
+        self.stoppers = list()
 
-push @sshCommand, "-L", "$localport:127.0.0.1:$toPort";
-push @sshCommand, "-n", "-N"; # useful for what we want to do
-push @sshCommand, $toIp;
+        self.start_output_proxy()
+        self.start_input_proxy()
 
-# fork to summon SSH stuff
-$pid = fork();
-die "Cannot fork: $!" unless defined($pid);
-if ($pid == 0) { # child process, will become ssh process
-    close STDIN;
-    close STDOUT;
-    close STDERR;
-    exec @sshCommand;
-    exit 0;   # Child process exits when it is done.
-} else { # parent process: proxy
+        # Session expiration
+        d = task.deferLater(reactor, 
+                        self.session_length, 
+                        self.stop_proxies)
 
-    proxy($fromIp, $proxyport, "127.0.0.1", $localport, $toIp, $toPort);
+        d.addCallback(self.session_expired)
 
-    # in the end, we kill the tunnel
-    kill 15, $pid;
-    syslog("debug", "done kill $pid");
-    exit(0);
-}
+    def _session_expired(result):
+        log.warn("TCP SSH Proxy: Your session has expired.")
+
+
+    def parse_args(self):
+        """ Input arguments parsing """
+        try :
+            # requestor ip - an address to verify the source of request
+            # in other words a machine requesting a VNC session through 
+            # our proxies
+            self.from_ip = "10.10.0.2" #sys.argv[1]
+            # destinated machine to create a VNC session
+            self.to_ip = sys.argv[2]
+            # assigned port to create a VNC session on dest. machine
+            self.to_port = int(sys.argv[3])
+            # passed command with all options
+            self.command = sys.argv[4]
+            # port to communicate between input and output proxy 
+            self.proxy_port = int(sys.argv[5])
+            # port to listen from reqestor ip
+            self.local_port = int(sys.argv[6])
+            # timeout of input proxy
+            self.establish_delay = int(sys.argv[7]) 
+            # timeout of output proxy
+            self.connect_delay = int(sys.argv[8]) 
+            # valid time of session - will be expired after session_length  
+            self.session_length = int(sys.argv[9])
+
+        except ValueError, val_exc:
+            log.warn("TCP SSH Proxy - Arguments parsing failure: %s" % str(val_exc))
+            self.stop_proxies()
+        except IndexError, idx_exc:
+            log.warn("TCP SSH Proxy - Arguments parsing failure: %s" % str(idx_exc))
+            self.stop_proxies()
+
+
+
+    def register_stopper(self, stopper):
+        """
+        Registering of stopping methods of proxies
+
+        @param stopper: proxy method to terminate of processing
+        @type stopper: callable
+        """
+        self.stoppers.append(stopper)
+
+    def stop_proxies(self):
+        """ Stopping of all the proxies and exit from script """
+        for stopper in self.stoppers :
+            try :
+                if callable(stopper):
+                    stopper()
+
+            except Exception, exc:
+                log.warn("TCP SSH Proxy: Stopping failed: %s" % str(exc))
+
+        log.info("TCP SSH Proxy: Stopping")
+
+        reactor.stop()
+
+    # stop_proxies called when connect_delay passed
+    @timeout(connect_delay, stop_proxies) 
+    def start_output_proxy(self):
+        """ Start a process spawn which create a SSH tunnel"""
+
+        self.out_proxy = SSHForwardingProxy(self.to_ip, 
+                                            self.to_port, 
+                                            self.command, 
+                                            self.local_port,
+                                            self._endback_output_proxy)
+
+        d = task.deferLater(reactor, 0, self.out_proxy.local_to_remote)
+
+        d.addCallback(self._cb_output_proxy)
+        d.addErrback(self._eb_output_proxy)
+
+        return d
+
+    def _cb_output_proxy(self, result):
+        log.debug("TCP SSH Proxy: Output proxy successfully started")
+        try:
+            if hasattr(self.out_proxy, "process"):
+                self.register_stopper(self.out_proxy.process.sendSigKill)
+        except Exception, e:    
+            log.warn("TCP SSH Proxy: %s" %str(e))
+ 
+ 
+    def _eb_output_proxy(self, failure):
+        log.warn("TCP SSH Proxy: Start of output proxy failed: %s" % str(failure))
+        self.stop_proxies()
+
+    def _endback_output_proxy(self, result):
+        log.info("TCP SSH Proxy: Output proxy terminated")
+
+
+    def _start_input_proxy(self):
+        """
+        Creating of input proxy that is checking requestor IP 
+        and forwarding TCP trafic to binded SSH tunnel.
+        """
+        server = TCP4ServerEndpoint(reactor, self.proxy_port)
+        self.in_proxy = InputProxyFactory(LOCALHOST, 
+                                          self.local_port, 
+                                          self.from_ip,
+                                          self.establish_delay,
+                                          self.stop_proxies)
+        server.listen(self.in_proxy)
+
+    @timeout(establish_delay, stop_proxies) 
+    def start_input_proxy(self):
+        """
+        Creating of input proxy that is checking requestor IP 
+        and forwarding TCP trafic to binded SSH tunnel.
+        """
+        d = task.deferLater(reactor, 1, self._start_input_proxy)
+        d.addCallback(self._cb_input_proxy)
+        d.addErrback(self._eb_input_proxy)
+
+        return d
+
+    def _cb_input_proxy(self, result):
+        log.debug("TCP SSH Proxy: Input proxy successfully started")
+        self.register_stopper(self.in_proxy.kill_me)
+
+    def _eb_input_proxy(self, failure):
+        log.warn("TCP SSH Proxy: Start of input proxy failed: %s" % str(failure))
+        self.stop_proxies()
+
+
+
+if __name__ == "__main__" :
+
+    log.info("TCP SSH Proxy: Starting")
+    reactor.callWhenRunning(DispatchProxies)
+    reactor.run()
+    sys.exit(0)
+
+
+

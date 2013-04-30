@@ -99,6 +99,8 @@ tcp_sproxy_path = @sbindir@/pulse2-tcp-sproxy
 # tcp_sproxy_connect_delay = 60
 # the number of seconds a connection will stay open after the initial handshake
 # tcp_sproxy_session_lenght = 3600
+# Check the requestor IP address
+# tcp_sproxy_check = True
 
 [smart_cleaner]
 # Pulse2 Smart Cleaner path (on the target); if empty we do not use it

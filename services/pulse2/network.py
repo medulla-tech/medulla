@@ -230,6 +230,28 @@ class NetUtils :
         """
         return [int(a) for a in address.split(".")]
 
+    @classmethod
+    def is_port_free(cls, port, host="127.0.0.1"):
+        """
+        Check if port on host is free.
+
+        @param port: checked port
+        @type port: int
+
+        @param host: checked host
+        @type host: str
+
+        @return: True if port is free
+        @rtype: bool
+        """
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        try:
+            s.connect((host, port))
+            s.shutdown(2)
+            s.close()
+            return False
+        except :
+            return True
 
 
 class NetworkDetect :

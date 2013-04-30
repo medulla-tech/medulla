@@ -23,54 +23,22 @@
 # MA 02110-1301, USA.
 
 import logging
-import re
 
 import twisted.internet.reactor
 import twisted.internet.protocol
+from twisted.internet import task
 
 import pulse2.launcher.utils
 import pulse2.launcher.process_control
 from pulse2.launcher.config import LauncherConfig
+from pulse2.network import NetUtils
 
 SEPARATOR = u'·' # FIXME: duplicate of what we found in remote_exec.py !!
 
 class proxyProtocol(twisted.internet.protocol.ProcessProtocol):
-# this RE matched either ip:port or hostname:port
-    RE_TCPIP = '((25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])|([A-Za-z][A-Za-z0-9\-\.]+)):(0|([1-9]\d{0,3}|[1-5]\d{4}|[6][0-5][0-5]([0-2]\d|[3][0-5])))'
-    RE_LINKINFO = '^LINK (%s,%s,%s,%s)$' % (RE_TCPIP, RE_TCPIP, RE_TCPIP, RE_TCPIP)
-    RE_LINKERROR = '^LINK ERROR$'
-
-    sourcePort = None
-    proxyPort = None
-    passthroughPort = None
-    targetPort = None
-    sourceIp = None
-    proxyIp = None
-    targetIp = None
-    passthroughIp = None
-    host = ''
-    defferedLinkStatus = None
-    gotLinkStatus = False
-
-    def __init__(self):
-        self.defferedLinkStatus = twisted.internet.defer.Deferred()
-        if LauncherConfig().tcp_sproxy_host:
-            self.host = LauncherConfig().tcp_sproxy_host
-
     def processEnded(self, reason):
-        if not self.gotLinkStatus: # something goes weird: we never got a link status
-            logging.getLogger().warn('proxy finished before a link status was received')
-            self.defferedLinkStatus.callback(False) # FIXME: should return a Failure
+        logging.getLogger().debug("proxy finished: %s" % str(reason))
 
-    def outReceived(self, data):
-        if re.match(self.RE_LINKINFO, data):
-            ((self.sourceIp, self.sourcePort), (self.proxyIp, self.proxyPort), (self.passthroughIp, self.passthroughPort), (self.targetIp, self.targetPort))  = map(lambda a: a.split(":"), re.search(self.RE_LINKINFO, data).group(1).split(','))
-            logging.getLogger().debug('got link status: %s' % data)
-            ret = (LauncherConfig().name, self.host, self.proxyPort)
-            self.gotLinkStatus = True
-            self.defferedLinkStatus.callback(ret)
-        else:
-            logging.getLogger().warn('got this from the proxy: %s' % data)
 
 def establishProxy(client, requestor_ip, requested_port):
     """
@@ -82,7 +50,7 @@ def establishProxy(client, requestor_ip, requested_port):
     client['server_check'] = getServerCheck(client)
     client['action'] = getAnnounceCheck('vnc')
     """
-
+    proxy_port, local_port = allocate_port_couple()
     # Built "exec" command
     real_command = [
         LauncherConfig().tcp_sproxy_path,
@@ -90,8 +58,8 @@ def establishProxy(client, requestor_ip, requested_port):
         client['host'],
         requested_port,
         ','.join(client['transp_args']),
-        str(LauncherConfig().tcp_sproxy_port_range_start),
-        str(LauncherConfig().tcp_sproxy_port_range_end),
+        str(proxy_port),
+        str(local_port),
         str(LauncherConfig().tcp_sproxy_establish_delay),
         str(LauncherConfig().tcp_sproxy_connect_delay),
         str(LauncherConfig().tcp_sproxy_session_lenght)
@@ -139,6 +107,30 @@ def establishProxy(client, requestor_ip, requested_port):
         None, # usePTY
         { 0: "w", 1: 'r', 2: 'r' } # FDs: not closing STDIN (might be used)
     )
-
+    def parse_result(): 
+        return LauncherConfig().name, LauncherConfig().tcp_sproxy_host, proxy_port
+    # Waiting to establish the proxy 
+    ret = task.deferLater(twisted.internet.reactor, 2, parse_result)
     logging.getLogger().debug('about to execute ' + ' '.join(command_list))
-    return proxy.defferedLinkStatus
+    return ret 
+
+def allocate_port_couple():
+    """
+    Looking for two free ports to establish SSH proxy.
+
+    @return: two free ports 
+    @rtype: list
+    """
+    ret_ports = []
+    port_range = range(LauncherConfig().tcp_sproxy_port_range_start + 1,
+                       LauncherConfig().tcp_sproxy_port_range_end + 1)
+
+    for port in port_range :
+        if NetUtils.is_port_free(port):
+            ret_ports.append(port)
+
+        if len(ret_ports) == 2 :
+            logging.getLogger().debug("Allocated ports to build TCP SSH Proxy: (%d:%d)" % tuple(ret_ports))
+            return ret_ports
+
+
