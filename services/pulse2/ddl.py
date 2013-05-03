@@ -125,7 +125,9 @@ class DBScriptLaunchInterface :
         @type log: object
         """
         self.log = log or myLogger()
-        self.cmd = "mysql %s -u%s -p%s -h%s" % (db, user, passwd, host)
+        self.cmd = "mysql %s -u%s -h%s" % (db, user, host)
+        if len(passwd) > 0 : 
+            self.cmd += " -p%s" % passwd
         if port :
             self.cmd += " -P%d" % port
 
