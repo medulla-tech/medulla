@@ -28,7 +28,7 @@ pulse2 modules.
 """
 
 from pulse2.utils import Singleton
-from pulse2.ddl import DDLContentManager
+from pulse2.ddl import DDLContentManager, DBControl
 from pulse2.database.sqlalchemy_tests import checkSqlalchemy, MIN_VERSION, MAX_VERSION, CUR_VERSION
 from sqlalchemy.exc import DBAPIError, NoSuchTableError
 
@@ -47,7 +47,9 @@ class DatabaseHelper(Singleton):
 
         conn = self.connected()
         if conn:
-            if required_version != -1 and conn != required_version:
+            if required_version > conn :
+                return self.db_update()
+            elif required_version != -1 and conn != required_version:
                 self.logger.error("%s database version error: v.%s needeed, v.%s found; please update your schema !" % (self.my_name, required_version, conn))
                 return False
         else:
@@ -55,6 +57,19 @@ class DatabaseHelper(Singleton):
             return False
 
         return True
+    def db_update(self):
+        """Automatic database update"""
+ 
+        db_control = DBControl(user=self.config.dbuser, 
+                               passwd=self.config.dbpasswd, 
+                               host=self.config.dbhost, 
+                               port=self.config.dbport, 
+                               module=self.config.dbname,
+                               log=self.logger,
+                               use_same_db=True)
+
+        return db_control.process()
+       
 
     def connected(self):
         try:

@@ -238,7 +238,8 @@ class DDLContentManager :
 class DBControl :
     """ Main base to check and update the database """
 
-    def __init__(self, user, passwd, host, port, module, log=None):
+    def __init__(self, user, passwd, host, port, 
+                 module, log=None, use_same_db=False):
         """
         @param user: database user
         @type user: str
@@ -257,14 +258,21 @@ class DBControl :
 
         @param log: logger instance
         @type log: object
+
+        @param use_same_db: If True, same database used, otherwise "mysql"
+        @type use_same_db: bool
         """
  
         self.log = log or myLogger()
 
+        if use_same_db :
+            db = module
+        else :
+            db = "mysql"
         self.db = DBEngine(user, 
                            passwd, 
                            host, 
-                           "mysql", 
+                           db, 
                            port=port, 
                            log=log)
 
@@ -372,18 +380,20 @@ class DBControl :
 
         if version_in_db == version_to_install :
             self.log.debug("Database '%s' is up-to-date" % (self.module))
-            return
+            return True
  
         elif version_in_db < version_to_install :
-            self.log.debug("Updating the database '%s' from version %d to %d" %
+            self.log.info("'%s' database updated from version %d to %d" %
                               (self.module, version_in_db, version_to_install))
             scripts = self._get_scripts_to_install(version_in_db, 
                                                    version_to_install)
             for script in scripts :
                 self.script_manager.execute(script)
+            return True
         else :
             self.log.error("Database '%s' version conflict" % self.module)
             self.log.error("Installed version is %d, but you are trying to install the version %d." %
                                                   (self.module, version_in_db, version_to_install))
+            return False
  
 
