@@ -28,7 +28,7 @@ from xmlrpclib import Fault, ProtocolError
 from socket import error as SocketError
 from mmc.site import mmcconfdir
 from ConfigParser import ConfigParser
-from mmc.client.sync import Proxy
+from mmc.client.async import Proxy
 
 log = logging.getLogger()
 
@@ -97,6 +97,8 @@ class MMCProxy :
         self._url = None
         self._proxy = None
 
+        self._username = self.scheduler_config.get("mmc_agent", "username")
+        self._password = self.scheduler_config.get("mmc_agent", "password")
         self._build_url()
         self._build_proxy()
 
@@ -107,13 +109,11 @@ class MMCProxy :
             log.error("Error while reading the config file: Section 'mmc_agent' not exists")
             return False
 
-        username = self.scheduler_config.get("mmc_agent", "username")
         host = self.scheduler_config.get("mmc_agent", "host")
-        password = self.scheduler_config.get("mmc_agent", "password")
         port = self.scheduler_config.get("mmc_agent", "port")
         
         log.debug("Building the connection URL at mmc-agent") 
-        self._url = 'https://%s:%s@%s:%s' % (username, password, host, port)
+        self._url = 'https://%s:%s/XMLRPC' % (host, port)
         
     def _get_ldap_password(self):
         """ 
@@ -131,11 +131,11 @@ class MMCProxy :
     def _build_proxy (self):
         """ Builds the XML-RPC proxy to MMC agent. """
         try :
-            self._proxy = Proxy(self._url)
+            self._proxy = Proxy(self._url, self._username, self._password)
 
             log.debug("LDAP authentification")
 
-            self._proxy.base.ldapAuth('root', self._get_ldap_password())
+            self._proxy.callRemote('base.ldapAuth', 'root', self._get_ldap_password())
 
             log.debug("Create a mmc-agent proxy") 
 
@@ -178,8 +178,7 @@ class RPCClient :
         mmc_agent = MMCProxy()
         self.proxy = mmc_agent.proxy
         
-    @classmethod
-    def rpc_execute(cls, fnc, *args, **kwargs) :
+    def rpc_execute(self, fnc, *args, **kwargs) :
         """ 
         Remote execution handler
         
@@ -192,10 +191,10 @@ class RPCClient :
         @param kwargs: Arguments of called function
         @type kwargs: **kwargs type (dict) 
         """
-        log.debug("Execute remote function")
+        log.debug("Execute remote function %s" % (fnc))
 
         try :
-            ret_msg = fnc(*args, **kwargs)
+            ret_msg = self.proxy.callRemote(fnc, *args, **kwargs)
         except Fault, err :
             log.error(err)
             return False

@@ -28,12 +28,21 @@ log = logging.getLogger()
 
 class ImagingAPI(RPCClient):
     def synchroComputer(self, uuid, wol = False):
+        def _callback(result):
+            log.debug(result)
+            return True
+
+        def _errBack(result):
+            log.debug(result)
+            return False
+
         # Function to call
-        fnc = self.proxy.imaging.synchroComputer
+        fnc = "imaging.synchroComputer"
         args = [uuid, wol]
 
-        self.rpc_execute(fnc, *args)
-        return True
+        d = self.rpc_execute(fnc, *args)
+        d.addCallback(_callback)
+        d.addErrback(_errBack)
 
     def setWOLMenu(self, uuid):
         log.debug("Set WOL bootmenu for computer %s" % uuid)
