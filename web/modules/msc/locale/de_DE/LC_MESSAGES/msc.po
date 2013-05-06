@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-26 23:24+0200\n"
+"POT-Creation-Date: 2013-05-06 12:28+0200\n"
 "PO-Revision-Date: 2013-04-15 07:18+0000\n"
 "Last-Translator: Maik Wagner <maikwagner@yahoo.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/"
@@ -322,10 +322,6 @@ msgstr "Fortgeschritten"
 msgid "Advanced launch"
 msgstr "Fortgeschrittener Start"
 
-#: modules/msc/includes/bundle_widgets.php:285
-msgid "Advanced launch bundle"
-msgstr "Fortgeschrittenes Startgerät-Bündel"
-
 #: modules/msc/includes/widgets.inc.php:312
 #: modules/msc/includes/widgets.inc.php:438
 msgid "All users commands"
@@ -456,6 +452,9 @@ msgstr ""
 "Befehls modifiziert wurden."
 
 #: modules/msc/includes/bundle_widgets.php:286
+msgid "Cancel"
+msgstr ""
+
 #: modules/msc/includes/bundle_widgets.php:387
 #: modules/msc/includes/bundle_widgets.php:403
 msgid "Cancel bundle creation"
@@ -900,16 +899,20 @@ msgstr "Letzter WOL-Versuch"
 msgid "Last operation at"
 msgstr "Letzte Operation um"
 
-#: modules/msc/msc/packages.php:43
+#: modules/msc/includes/bundle_widgets.php:218 modules/msc/msc/packages.php:43
 msgid "Launch"
 msgstr "Start"
+
+#: modules/msc/includes/bundle_widgets.php:285
+#, fuzzy
+msgid "Launch (advanced)"
+msgstr "Einen fortgeschrittenen Befehl starten"
 
 #: modules/msc/msc/tabs.php:57 modules/msc/msc/tabs.php:74
 msgid "Launch Actions"
 msgstr "Aktionen beim Start"
 
-#: modules/msc/includes/bundle_widgets.php:218 modules/msc/msc/tabs.php:58
-#: modules/msc/msc/tabs.php:75
+#: modules/msc/msc/tabs.php:58 modules/msc/msc/tabs.php:75
 msgid "Launch Bundle"
 msgstr "Bundle starten"
 
@@ -1992,3 +1995,6 @@ msgstr "wartend auf Upload und bereits versucht"
 #: modules/msc/includes/command_history.php:297
 msgid "yes"
 msgstr "ja"
+
+#~ msgid "Advanced launch bundle"
+#~ msgstr "Fortgeschrittenes Startgerät-Bündel"

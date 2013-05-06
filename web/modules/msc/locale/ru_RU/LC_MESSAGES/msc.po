@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-26 23:24+0200\n"
+"POT-Creation-Date: 2013-05-06 12:28+0200\n"
 "PO-Revision-Date: 2013-04-09 10:05+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/"
@@ -322,10 +322,6 @@ msgstr "Расширенный"
 msgid "Advanced launch"
 msgstr ""
 
-#: modules/msc/includes/bundle_widgets.php:285
-msgid "Advanced launch bundle"
-msgstr "Расширенный запуск набора пакетов"
-
 #: modules/msc/includes/widgets.inc.php:312
 #: modules/msc/includes/widgets.inc.php:438
 msgid "All users commands"
@@ -461,6 +457,9 @@ msgstr ""
 "включения в команду."
 
 #: modules/msc/includes/bundle_widgets.php:286
+msgid "Cancel"
+msgstr ""
+
 #: modules/msc/includes/bundle_widgets.php:387
 #: modules/msc/includes/bundle_widgets.php:403
 msgid "Cancel bundle creation"
@@ -899,16 +898,20 @@ msgstr "Последняя попытка WOL"
 msgid "Last operation at"
 msgstr "Последняя операция на"
 
-#: modules/msc/msc/packages.php:43
+#: modules/msc/includes/bundle_widgets.php:218 modules/msc/msc/packages.php:43
 msgid "Launch"
 msgstr "Запуск"
+
+#: modules/msc/includes/bundle_widgets.php:285
+#, fuzzy
+msgid "Launch (advanced)"
+msgstr "Запустить команду"
 
 #: modules/msc/msc/tabs.php:57 modules/msc/msc/tabs.php:74
 msgid "Launch Actions"
 msgstr "Запуск Действий"
 
-#: modules/msc/includes/bundle_widgets.php:218 modules/msc/msc/tabs.php:58
-#: modules/msc/msc/tabs.php:75
+#: modules/msc/msc/tabs.php:58 modules/msc/msc/tabs.php:75
 msgid "Launch Bundle"
 msgstr "Запуск комплекта пакетов"
 
@@ -1990,3 +1993,6 @@ msgstr "дождаться загрузки, и потом пробовать"
 #: modules/msc/includes/command_history.php:297
 msgid "yes"
 msgstr "да"
+
+#~ msgid "Advanced launch bundle"
+#~ msgstr "Расширенный запуск набора пакетов"

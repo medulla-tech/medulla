@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-26 23:24+0200\n"
+"POT-Creation-Date: 2013-05-06 12:28+0200\n"
 "PO-Revision-Date: 2013-04-09 10:05+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Spanish (Spain) (http://transifex.mandriva.com/projects/p/"
@@ -319,10 +319,6 @@ msgstr ""
 msgid "Advanced launch"
 msgstr ""
 
-#: modules/msc/includes/bundle_widgets.php:285
-msgid "Advanced launch bundle"
-msgstr ""
-
 #: modules/msc/includes/widgets.inc.php:312
 #: modules/msc/includes/widgets.inc.php:438
 msgid "All users commands"
@@ -436,6 +432,9 @@ msgid ""
 msgstr ""
 
 #: modules/msc/includes/bundle_widgets.php:286
+msgid "Cancel"
+msgstr ""
+
 #: modules/msc/includes/bundle_widgets.php:387
 #: modules/msc/includes/bundle_widgets.php:403
 msgid "Cancel bundle creation"
@@ -868,16 +867,19 @@ msgstr ""
 msgid "Last operation at"
 msgstr ""
 
-#: modules/msc/msc/packages.php:43
+#: modules/msc/includes/bundle_widgets.php:218 modules/msc/msc/packages.php:43
 msgid "Launch"
+msgstr ""
+
+#: modules/msc/includes/bundle_widgets.php:285
+msgid "Launch (advanced)"
 msgstr ""
 
 #: modules/msc/msc/tabs.php:57 modules/msc/msc/tabs.php:74
 msgid "Launch Actions"
 msgstr ""
 
-#: modules/msc/includes/bundle_widgets.php:218 modules/msc/msc/tabs.php:58
-#: modules/msc/msc/tabs.php:75
+#: modules/msc/msc/tabs.php:58 modules/msc/msc/tabs.php:75
 msgid "Launch Bundle"
 msgstr ""
 
