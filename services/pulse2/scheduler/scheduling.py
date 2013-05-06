@@ -76,6 +76,8 @@ from pulse2.scheduler.tracking.wol import WOLTracking
 from pulse2.scheduler.tracking.preempt import Pulse2Preempt
 from pulse2.scheduler.balance import ParabolicBalance, randomListByBalance, getBalanceByAttempts
 
+from pulse2.scheduler.api.imaging import ImagingAPI
+
 log = logging.getLogger()
 
 # Regex compilers
@@ -1215,6 +1217,8 @@ def stopCommand(myCommandOnHostID):
     log.info("going to terminate command_on_host #%s from command #%s" % (myCoH.getId(), myCoH.getIdCommand()))
     log.debug("command_on_host state is %s" % myCoH.toH())
     log.debug("command state is %s" % myC.toH())
+    # Restore Bootmenu (No WOL)
+    ImagingAPI().unsetWOLMenu(myT.target_uuid)
     for launcher in SchedulerConfig().launchers_uri.values():
         callOnLauncher(None, launcher, 'term_process', myCommandOnHostID)
     return True
@@ -1424,6 +1428,9 @@ def runWOLPhase(myCommandOnHostID):
 
 def performWOLPhase(myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+
+    # Set WOL Bootmenu
+    ImagingAPI().setWOLMenu(myT.target_uuid)
 
     # perform call
     mydeffered = callOnBestLauncher(myCommandOnHostID,
@@ -2287,9 +2294,13 @@ def parseWOLAttempt(attempt_result, myCommandOnHostID):
             return runGiveUpPhase(myCommandOnHostID)
         updateHistory(myCommandOnHostID, 'wol_done', PULSE2_SUCCESS_ERROR, stdout, stderr)
         if myCoH.switchToWOLDone():
+            # Restore Bootmenu (No WOL)
+            ImagingAPI().unsetWOLMenu(myT.target_uuid)
             WOLTracking().unlockwol(myCommandOnHostID)
             return runUploadPhase(myCommandOnHostID)
         else:
+            # Restore Bootmenu (No WOL)
+            ImagingAPI().unsetWOLMenu(myT.target_uuid)
             WOLTracking().unlockwol(myCommandOnHostID)
             return runGiveUpPhase(myCommandOnHostID)
 
@@ -2573,6 +2584,8 @@ def parseWOLError(reason, myCommandOnHostID, decrement_attempts_left = False, er
         return runGiveUpPhase(myCommandOnHostID)
     updateHistory(myCommandOnHostID, 'wol_failed', error_code, '', reason.getErrorMessage())
     if not myCoH.switchToWOLFailed(myC.getNextConnectionDelay(), decrement_attempts_left):
+        # Restore Bootmenu (No WOL)
+        ImagingAPI().unsetWOLMenu(myT.target_uuid)
         WOLTracking().unlockwol(myCommandOnHostID)
         return runFailedPhase(myCommandOnHostID)
     WOLTracking().unlockwol(myCommandOnHostID)
@@ -2771,4 +2784,3 @@ def getServerCheck(myT):
         'ips': myT.getIps(),
         'macs': myT.getMacs()
     });
-

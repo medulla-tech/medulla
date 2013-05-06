@@ -1620,7 +1620,7 @@ class ImagingRpcProxy(RpcProxyI):
             db.setLocationSynchroState(loc_uuid, P2ISS.TODO)
         return defer.fail()
 
-    def __synchroTargets(self, uuids, target_type, ctx = None):
+    def __synchroTargets(self, uuids, target_type, ctx = None, wol = False):
         """
         synchronize targets with their imaging servers
 
@@ -1633,19 +1633,24 @@ class ImagingRpcProxy(RpcProxyI):
         but as to be the same for all the targets
         @type target_type: str or int
 
+        @param wol: this parameter is used to update bootmenu for Wake-On-Lan
+        If wol is true, generated bootmenu is the WOL one
+        @type wol: bool
+
         @returns: the list of uuids of the target that failed to synchronize
         @rtype: list
         """
         if ctx == None:
             ctx = self.currentContext
-        return synchroTargets(ctx, uuids, target_type)
+        return synchroTargets(ctx, uuids, target_type, wol = wol)
 
-    def synchroComputer(self, uuid):
+    def synchroComputer(self, uuid, wol = False):
         """ see __synchroTargets """
+        logging.getLogger().debug("I'm going to synchronize computer %s bootmenu, Wake-on-lan is %s" % (uuid, wol and 'on' or 'off'))
         if self.isTargetRegister(uuid, P2IT.COMPUTER):
-            ret = self.__synchroTargets([uuid], P2IT.COMPUTER)
+            ret = self.__synchroTargets([uuid], P2IT.COMPUTER, wol = wol)
         elif self.isTargetRegister(uuid, P2IT.COMPUTER_IN_PROFILE):
-            ret = self.__synchroTargets([uuid], P2IT.COMPUTER_IN_PROFILE)
+            ret = self.__synchroTargets([uuid], P2IT.COMPUTER_IN_PROFILE, wol = wol)
         else:
             return False
         return xmlrpcCleanup(ret)
@@ -2753,7 +2758,7 @@ def synchroComputers(ctx, uuids, ctype = P2IT.COMPUTER):
     ret = synchroTargets(ctx, uuids, ctype)
     return xmlrpcCleanup(ret)
 
-def synchroTargets(ctx, uuids, target_type):
+def synchroTargets(ctx, uuids, target_type, wol = False):
 
     # initialize stuff
     logger = logging.getLogger()
@@ -2786,6 +2791,14 @@ def synchroTargets(ctx, uuids, target_type):
     for loc_uuid in distinct_loc:
         # extract menus and url for our location
         (url, menus) = distinct_loc[loc_uuid][0:2]
+
+        # If wol is True, generated bootmenu is the WOL one
+        if wol:
+            for uuid in menus:
+                if 'default_item_wol' in menus[uuid]:
+                    menus[uuid]['default_item'] = menus[uuid]['default_item_wol']
+                elif 'default_item_WOL' in menus[uuid]:
+                    menus[uuid]['default_item'] = menus[uuid]['default_item_WOL']
 
         # store into to_register the list of menus to register
         to_register = {}
