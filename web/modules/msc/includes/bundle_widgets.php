@@ -215,7 +215,7 @@ class RenderedMSCBundleSortParent {
     function RenderedMSCBundleSortParent() {
         $this->input_pre = 'si_';
         $this->buttons = array(
-            array('blaunch_bundle', _T("Launch Bundle", "msc"), "btnPrimary")
+            array('blaunch_bundle', _T("Launch", "msc"), "btnPrimary")
         );
     }
     function initCount() {
@@ -282,8 +282,8 @@ class RenderedMSCBundleSortParent {
 class RenderedMSCBundleSort extends RenderedMSCBundleSortParent {
     function RenderedMSCBundleSort() {
         parent::RenderedMSCBundleSortParent();
-        $this->buttons []= array('badvanced_bundle', _T("Advanced launch bundle", "msc"), "btnPrimary");
-        $this->buttons []= array('bcancel_bundle', _T("Cancel bundle creation", "msc"), "btnSecondary");
+        $this->buttons []= array('badvanced_bundle', _T("Launch (advanced)", "msc"), "btnPrimary");
+        $this->buttons []= array('bcancel_bundle', _T("Cancel", "msc"), "btnSecondary");
     }
     function display_options($f) {
         $f->add(new HiddenTpl("lmembers"),                              array("value" => base64_encode(serialize($this->members)), "hide" => True));
