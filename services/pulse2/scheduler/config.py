@@ -126,6 +126,8 @@ class SchedulerConfig(pulse2.utils.Singleton):
     daemon_user = 0
     setrlimit = ''
 
+    mmc_agent = {}
+
     # [launcher_xxx] section
     launchers = {
     }
@@ -323,6 +325,43 @@ class SchedulerConfig(pulse2.utils.Singleton):
                 self.setoption('daemon', 'pid_path', 'pid_path')
             else:
                 self.setoption('daemon', 'pidfile', 'pid_path')
+
+        # [mmc_agent] section parsing
+        self.mmc_agent = {}
+        if self.cp.has_section("mmc_agent"):
+            self.mmc_agent = {
+                'host' : "127.0.0.1",
+                'port' : 7080,
+                'username' : 'mmc',
+                'password' : 's3cr3t',
+                'enablessl' : True,
+                'verifypeer' : False,
+                'cacert' : mmcconfdir + "/pulse2/scheduler/keys/cacert.pem",
+                'localcert' : mmcconfdir + "/pulse2/scheduler/keys/privkey.pem"}
+            if self.cp.has_option('mmc_agent', 'host'):
+                self.mmc_agent['host'] = self.cp.get('mmc_agent', 'host')
+            if self.cp.has_option('mmc_agent', 'port'):
+                self.mmc_agent['port'] = self.cp.getint('mmc_agent', 'port')
+            if self.cp.has_option('mmc_agent', 'enablessl'):
+                self.mmc_agent['enablessl'] = self.cp.getboolean('mmc_agent', 'enablessl')
+            if self.cp.has_option('mmc_agent', 'verifypeer'):
+                self.mmc_agent['verifypeer'] = self.cp.getboolean('mmc_agent', 'verifypeer')
+            if self.cp.has_option('mmc_agent', 'cacert'):
+                self.mmc_agent['cacert'] = self.cp.get('mmc_agent', 'cacert')
+            if self.cp.has_option('mmc_agent', 'localcert'):
+                self.mmc_agent['localcert'] = self.cp.get('mmc_agent', 'localcert')
+            if self.mmc_agent['enablessl']:
+                if not os.path.isfile(self.mmc_agent['localcert']):
+                    raise Exception('can\'t read SSL key "%s"' % (self.mmc_agent['localcert']))
+                    return False
+                if not os.path.isfile(self.mmc_agent['cacert']):
+                    raise Exception('can\'t read SSL certificate "%s"' % (self.mmc_agent['cacert']))
+                    return False
+                if self.mmc_agent['verifypeer']:  # we need twisted.internet.ssl.Certificate to activate certs
+                    import twisted.internet.ssl
+                    if not hasattr(twisted.internet.ssl, "Certificate"):
+                        raise Exception('I need at least Python Twisted 2.5 to handle peer checking')
+                        return False
 
         # [launcher_xxx] section parsing
         for section in self.cp.sections():

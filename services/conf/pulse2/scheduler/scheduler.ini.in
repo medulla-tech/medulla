@@ -171,6 +171,18 @@ dbpasswd = mmc
 # setrlimit = RLIMIT_NOFILE 2048 2048 RLIMIT_CORE 0 0
 # setrlimit =
 
+[mmc_agent]
+# We sometimes need to talk to our referent agent
+# here are some key to speak with it
+host = 127.0.0.1
+port = 7080
+username = mmc
+password = s3cr3t
+# enablessl = True
+# verifypeer = False
+# cacert = /etc/mmc/pulse2/scheduler/keys/cacert.pem
+# localcert = /etc/mmc/pulse2/scheduler/keys/privkey.pem
+
 # Our launchers
 [launcher_01]
 host=127.0.0.1
