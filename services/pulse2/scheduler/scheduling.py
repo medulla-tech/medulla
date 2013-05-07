@@ -2299,9 +2299,6 @@ def parseWOLAttempt(attempt_result, myCommandOnHostID):
             WOLTracking().unlockwol(myCommandOnHostID)
             return runUploadPhase(myCommandOnHostID)
         else:
-            # Restore Bootmenu (No WOL)
-            ImagingAPI().unsetWOLMenu(myT.target_uuid)
-            WOLTracking().unlockwol(myCommandOnHostID)
             return runGiveUpPhase(myCommandOnHostID)
 
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
