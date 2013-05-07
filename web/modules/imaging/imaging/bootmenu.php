@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
@@ -67,7 +67,12 @@ function item_up() {
         new NotifyWidgetFailure($str);
     }
 
-    header("Location: " . urlStrRedirect("base/computers/".$type."imgtabs", $params));
+    if ($type == '') {
+        header("Location: " . urlStrRedirect("base/computers/".$type."imgtabs", $params));
+    }
+    else {
+        header("Location: " . urlStrRedirect("imaging/manage/".$type."imgtabs", $params));
+    }
     exit;
 }
 
@@ -93,7 +98,12 @@ function item_down() {
         new NotifyWidgetFailure($str);
     }
 
-    header("Location: " . urlStrRedirect("base/computers/".$type."imgtabs", $params));
+    if ($type == '') {
+        header("Location: " . urlStrRedirect("base/computers/".$type."imgtabs", $params));
+    }
+    else {
+        header("Location: " . urlStrRedirect("imaging/manage/".$type."imgtabs", $params));
+    }
     exit;
 }
 
@@ -186,7 +196,12 @@ function item_edit() {
             $ret = xmlrpc_synchroComputer($target_uuid);
         }
         // goto menu boot list
-        header("Location: " . urlStrRedirect("base/computers/".$type."imgtabs", $params));
+        if ($type == '') {
+            header("Location: " . urlStrRedirect("base/computers/".$type."imgtabs", $params));
+        }
+        else {
+            header("Location: " . urlStrRedirect("imaging/manage/".$type."imgtabs", $params));
+        }
         exit;
     }
 }
@@ -204,10 +219,19 @@ function item_list() {
     $params = getParams();
 
     // forge params
-    $upAction = new ActionItem(_T("Move Up"), $type."imgtabs", "up", "item", "base", "computers", $type."tabbootmenu", "up");
-    $downAction = new ActionItem(_T("Move down"), $type."imgtabs", "down", "item", "base", "computers", $type."tabbootmenu", "down");
-    $editAction = new ActionItem(_T("Edit"), $type."imgtabs", "edit", "item", "base", "computers", $type."tabbootmenu", "edit");
-    $deleteAction = new ActionPopupItem(_T("Delete"), "bootmenu_remove", "delete", "item", "base", "computers", $type."tabbootmenu", 300, "delete");
+
+    if ($type == 'group') {
+        $module = "imaging";
+        $submod = "manage";
+    }
+    else {
+        $module = "base";
+        $submod = "computers";
+    }
+    $upAction = new ActionItem(_T("Move Up"), $type."imgtabs", "up", "item", $module, $submod, $type."tabbootmenu", "up");
+    $downAction = new ActionItem(_T("Move down"), $type."imgtabs", "down", "item", $module, $submod, $type."tabbootmenu", "down");
+    $editAction = new ActionItem(_T("Edit"), $type."imgtabs", "edit", "item", $module, $submod, $type."tabbootmenu", "edit");
+    $deleteAction = new ActionPopupItem(_T("Delete"), "bootmenu_remove", "delete", "item", $module, $submod, $type."tabbootmenu", 300, "delete");
 
     $emptyAction = new EmptyActionItem();
     $actionUp = array();
