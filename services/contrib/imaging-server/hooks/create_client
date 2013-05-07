@@ -222,7 +222,14 @@ def myCall():
             defer_inv = task.deferLater(twisted.internet.reactor, 0, invfwd.send, name, mac, ip_addr)
             defer_inv.addErrback(errorBack)
 
-            defer_reg = task.deferLater(twisted.internet.reactor, 2, imagingAPI.computerRegister, name, mac, False)
+            defer_reg = task.deferLater(twisted.internet.reactor, 
+                                        2, 
+                                        imagingAPI.computerRegister, 
+                                        name, 
+                                        mac, 
+                                        False, # imagingData
+                                        True   # waitToBeInventoried
+                                        )
             defer_reg.addCallback(callBack)
             defer_reg.addErrback(errorBack)
         else :
@@ -230,7 +237,8 @@ def myCall():
                 imagingAPI.computerRegister(
                     name,
                     mac,
-                    False # imagingData = False, since we are not the mmc agent !
+                    False, # imagingData = False, since we are not the mmc agent !
+                    False  # waitToBeInventoried 
                 )
             )
             

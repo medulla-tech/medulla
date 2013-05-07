@@ -243,7 +243,7 @@ class ImagingApi(MyXmlrpc):
                 self.logger.error("Can't register computer %s / %s: %s" % (computerName, macAddress, str(e)))
         return ret
 
-    def xmlrpc_computerRegister(self, computerName, macAddress, imagingData = False):
+    def xmlrpc_computerRegister(self, computerName, macAddress, imagingData = False, waitToBeInventoried=False):
         """
         Method to register a new computer.
 
@@ -289,7 +289,8 @@ class ImagingApi(MyXmlrpc):
             self.logger.info('Imaging: Starting registration for %s as %s' % (macAddress, computerName))
             client = self._getXMLRPCClient()
             func = 'imaging.computerRegister'
-            args = (self.config.imaging_api['uuid'], hostname, domain, macAddress, profile, entity)
+            args = (self.config.imaging_api['uuid'], hostname, domain,
+                    macAddress, profile, entity, waitToBeInventoried)
             d = client.callRemote(func, *args)
             d.addCallbacks(onSuccess, client.onError, errbackArgs = (func, args, False))
             return d

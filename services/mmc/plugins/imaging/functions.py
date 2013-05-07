@@ -2143,11 +2143,16 @@ class ImagingRpcProxy(RpcProxyI):
         except Exception, e:
             return xmlrpcCleanup([False, e])
 
-    def __get_computer(self, MACAddress, timeout=20):
+    def __inventory_check(self, MACAddress, waitToBeInventoried, timeout=20):
         """
-        Get the computer instance with repeated attempts until timeout.
+        Get the computer instance with repeated attempts until timeout 
+        (GLPI case), otherwise only one attempt processed.
+
         @param MACAddress: MAC address of computer
         @type MACAddress: str
+
+        @param waitToBeInventoried: If True, a periodic check until timeout
+        @type waitToBeInventoried: bool
 
         @param timeout: timeout of attempts
         @type timeout: int
@@ -2155,31 +2160,48 @@ class ImagingRpcProxy(RpcProxyI):
         @return: machine instance
         @rtype: object
         """
-        uuid = None
-        start = time.time()
-        while True :
-            db_computer = ComputerManager().getComputerByMac(MACAddress)
-            if db_computer :
-                
-                if isinstance(db_computer, dict):
-                    uuid = db_computer['uuid']
-                elif hasattr(db_computer, 'getUUID'):
-                    uuid = db_computer.getUUID()
-                elif hasattr(db_computer, 'uuid'):
-                    uuid = db_computer.uuid
-                if uuid :
-                    location = ComputerLocationManager().getMachinesLocations([uuid])
-                    if isinstance(location, dict) :
-                        if uuid in location :
-                            break
-                    
-            if time.time() > (start + timeout) :
-                break
+        if waitToBeInventoried :
+            start = time.time()
+           
+            while True :
+                computer = self.__get_computer(MACAddress)
+                if computer :
+                    return computer
+                if time.time() > (start + timeout) :
+                    break
+        else :
+            return self.__get_computer(MACAddress)
 
-        return db_computer
- 
+                   
+    def __get_computer (self, MACAddress):
+        """
+        Get the computer from inventory
+        @param MACAddress: MAC address of computer
+        @type MACAddress: str
+
+        @return: machine instance
+        @rtype: object
+        """
+        uuid = None
+        db_computer = ComputerManager().getComputerByMac(MACAddress)
+        if db_computer :
+            
+            if isinstance(db_computer, dict):
+                uuid = db_computer['uuid']
+            elif hasattr(db_computer, 'getUUID'):
+                uuid = db_computer.getUUID()
+            elif hasattr(db_computer, 'uuid'):
+                uuid = db_computer.uuid
+            if uuid :
+                location = ComputerLocationManager().getMachinesLocations([uuid])
+                if isinstance(location, dict) :
+                    if uuid in location :
+                        return db_computer
+
+
+
     ###### API to be called from the imaging server (ie : without authentication)
-    def computerRegister(self, imaging_server_uuid, hostname, domain, MACAddress, profile, entity = None):
+    def computerRegister(self, imaging_server_uuid, hostname, domain, MACAddress, profile, entity = None, waitToBeInventoried=False):
         """
         Called by the Package Server to register a new computer.
         The computer name may contain a profile and an entity path (like profile:/entityA/entityB/computer)
@@ -2251,7 +2273,7 @@ class ImagingRpcProxy(RpcProxyI):
             'location_uuid': loc_id}
         
         uuid = None
-        db_computer = self.__get_computer(MACAddress)
+        db_computer = self.__inventory_check(MACAddress, waitToBeInventoried)
         if db_computer != None:
             db_computer_name = ''
             if type(db_computer) == dict:
