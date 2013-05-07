@@ -61,7 +61,15 @@ function item_up() {
         $ret = xmlrpc_moveItemUpInMenu($uuid, $type, $item_uuid);
     }
     if ($ret) {
-    /* insert notification code here if needed */
+        if (isset($_GET['gid'])) {
+            if (xmlrpc_isProfileRegistered($_GET['gid'])) {
+                // Get Current Location
+                $location = xmlrpc_getProfileLocation($_GET['gid']);
+                xmlrpc_synchroLocation($location);
+            }
+        } else {
+            $ret = xmlrpc_synchroComputer($params['uuid']);
+        }
     } else {
         $str = sprintf(_T("Failed to move item <strong>%s</strong> in the boot menu", "imaging"), urldecode($label));
         new NotifyWidgetFailure($str);
@@ -92,7 +100,15 @@ function item_down() {
         $ret = xmlrpc_moveItemDownInMenu($uuid, $type, $item_uuid);
     }
     if ($ret) {
-    /* insert notification code here if needed */
+        if (isset($_GET['gid'])) {
+            if (xmlrpc_isProfileRegistered($_GET['gid'])) {
+                // Get Current Location
+                $location = xmlrpc_getProfileLocation($_GET['gid']);
+                xmlrpc_synchroLocation($location);
+            }
+        } else {
+            $ret = xmlrpc_synchroComputer($params['uuid']);
+        }
     } else {
         $str = sprintf(_T("Failed to move item <strong>%s</strong> in the boot menu", "imaging"), urldecode($label));
         new NotifyWidgetFailure($str);
@@ -192,8 +208,15 @@ function item_edit() {
         }
         if ($ret) 
         { 
-            // generate menu
-            $ret = xmlrpc_synchroComputer($target_uuid);
+            if (isset($_GET['gid'])) {
+                if (xmlrpc_isProfileRegistered($_GET['gid'])) {
+                    // Get Current Location
+                    $location = xmlrpc_getProfileLocation($_GET['gid']);
+                    xmlrpc_synchroLocation($location);
+                }
+            } else {
+                $ret = xmlrpc_synchroComputer($params['uuid']);
+            }
         }
         // goto menu boot list
         if ($type == '') {
