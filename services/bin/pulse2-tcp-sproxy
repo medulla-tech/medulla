@@ -106,11 +106,11 @@ class SSHForwardingProxy(object):
 
         @d.addCallback
         def _cb(reason):
-            log.debug("TCP SSH Proxy: Output proxy - process successfully spawned")
+            log.debug("VNC Proxy: Output proxy - process successfully spawned")
 
         @d.addErrback
         def _eb(failure):
-            log.warn("TCP SSH Proxy: Output proxy - process spawn failed: %s" % str(failure))
+            log.warn("VNC Proxy: Output proxy - process spawn failed: %s" % str(failure))
 
         return d
 
@@ -136,6 +136,10 @@ class SSHForwardingProxy(object):
 
 class InputProxyServer(portforward.ProxyServer):
     """Establish a input proxy to check requestor IP"""
+
+    def connectionMade(self):
+        log.info("VNC Proxy: New connection from %s on port %d" % (self.from_ip, self.from_port))
+        portforward.ProxyServer.connectionMade(self)
  
     def dataReceived(self, data):
         """Overriden method from ProxyServer"""
@@ -156,14 +160,14 @@ class InputProxyServer(portforward.ProxyServer):
         self.transport.loseConnection()
 
     @classmethod
-    def set_incomming_ip_to_verify(cls, from_ip):
+    def set_incomming_machine_info(cls, from_machine):
         """ 
         Client IP to check.
 
-        @param from_ip: requestor IP address
-        @type from_ip: str
+        @param from_machine: requestor IP address, requestor port 
+        @type from_machine: tuple
         """
-        cls.from_ip = from_ip
+        cls.from_ip, cls.from_port = from_machine
 
     @classmethod
     def set_establish_delay(cls, establish_delay):
@@ -206,7 +210,7 @@ class InputProxyFactory(portforward.ProxyFactory):
 
     protocol = InputProxyServer
 
-    def __init__(self, host, port, from_ip, establish_delay, stopper):
+    def __init__(self, host, port, from_ip, from_port, establish_delay, stopper):
         """
         @param host: IP address of portforwarding proxy (usually localhost)
         @type host: str
@@ -217,6 +221,9 @@ class InputProxyFactory(portforward.ProxyFactory):
         @param from_ip: requestor IP address to check
         @type from_ip: str
 
+        @param from_port: requestor port
+        @type from_port: int
+
         @param establish_delay: input proxy timeout
         @type establish_delay: int
 
@@ -226,7 +233,7 @@ class InputProxyFactory(portforward.ProxyFactory):
         self.host = host
         self.port = port
 
-        self.protocol.set_incomming_ip_to_verify(from_ip)
+        self.protocol.set_incomming_machine_info((from_ip, from_port))
         self.protocol.set_establish_delay(establish_delay)
         self.protocol.register_stopper(stopper)
 
@@ -281,6 +288,8 @@ class DispatchProxies :
 
     def __init__(self):
         self.parse_args()
+        log.info("VNC Proxy: Request from %s for computer %s" % (self.from_ip,
+                                                                 self.to_ip))
 
         self.start_output_proxy()
         self.start_input_proxy()
@@ -293,7 +302,7 @@ class DispatchProxies :
         d.addCallback(self._session_expired)
 
     def _session_expired(result):
-        log.warn("TCP SSH Proxy: Your session has expired.")
+        log.warn("VNC Proxy: Your session has expired.")
 
 
     def parse_args(self):
@@ -321,10 +330,10 @@ class DispatchProxies :
             self.session_length = int(sys.argv[9])
 
         except ValueError, val_exc:
-            log.warn("TCP SSH Proxy: Arguments parsing failure: %s" % str(val_exc))
+            log.warn("VNC Proxy: Arguments parsing failure: %s" % str(val_exc))
             self.stop_proxies()
         except IndexError, idx_exc:
-            log.warn("TCP SSH Proxy: Arguments parsing failure: %s" % str(idx_exc))
+            log.warn("VNC Proxy: Arguments parsing failure: %s" % str(idx_exc))
             self.stop_proxies()
 
 
@@ -345,11 +354,12 @@ class DispatchProxies :
                 if callable(stopper):
                     stopper()
             except AttributeError :
-                log.debug("TCP SSH Proxy: service probably stopped, going to next")
+                log.debug("VNC Proxy: service probably stopped, going to next")
             except Exception, exc:
-                log.warn("TCP SSH Proxy: Stopping failed: %s" % str(exc))
+                log.warn("VNC Proxy: Stopping failed: %s" % str(exc))
 
-        log.info("TCP SSH Proxy: Stopping")
+        log.info("VNC Proxy: Proxy for %s closed" % self.to_ip)
+        log.info("VNC Proxy: Stopping")
 
         reactor.stop()
 
@@ -372,20 +382,20 @@ class DispatchProxies :
         return d
 
     def _cb_output_proxy(self, result):
-        log.debug("TCP SSH Proxy: Output proxy successfully started")
+        log.debug("VNC Proxy: Output proxy successfully started")
         try:
             if hasattr(self.out_proxy, "process"):
                 self.register_stopper(self.out_proxy.process.sendSigKill)
         except Exception, e:    
-            log.warn("TCP SSH Proxy: %s" %str(e))
+            log.warn("VNC Proxy: %s" %str(e))
  
  
     def _eb_output_proxy(self, failure):
-        log.warn("TCP SSH Proxy: Start of output proxy failed: %s" % str(failure))
+        log.warn("VNC Proxy: Start of output proxy failed: %s" % str(failure))
         self.stop_proxies()
 
     def _endback_output_proxy(self, result):
-        log.debug("TCP SSH Proxy: Output proxy - SSH tunnel building finished")
+        log.debug("VNC Proxy: Output proxy - SSH tunnel building finished")
 
 
     def _start_input_proxy(self):
@@ -397,6 +407,7 @@ class DispatchProxies :
         self.in_proxy = InputProxyFactory(LOCALHOST, 
                                           self.local_port, 
                                           self.from_ip,
+                                          self.proxy_port,
                                           self.establish_delay,
                                           self.stop_proxies)
         server.listen(self.in_proxy)
@@ -414,18 +425,24 @@ class DispatchProxies :
         return d
 
     def _cb_input_proxy(self, result):
-        log.debug("TCP SSH Proxy: Input proxy successfully started")
+        log.debug("VNC Proxy: Input proxy successfully started")
+        log.info("VNC Proxy: Proxy established for %s: %s:%d => %s:%d" % (self.to_ip,
+                                                                          LOCALHOST,
+                                                                          self.local_port,
+                                                                          self.from_ip,
+                                                                          self.proxy_port))
+                
         self.register_stopper(self.in_proxy.kill_me)
 
     def _eb_input_proxy(self, failure):
-        log.warn("TCP SSH Proxy: Start of input proxy failed: %s" % str(failure))
+        log.warn("VNC Proxy: Start of input proxy failed: %s" % str(failure))
         self.stop_proxies()
 
 
 
 if __name__ == "__main__" :
 
-    log.info("TCP SSH Proxy: Starting")
+    log.info("VNC Proxy: Starting")
     reactor.callWhenRunning(DispatchProxies)
     reactor.run()
     sys.exit(0)
