@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-26 23:24+0200\n"
+"POT-Creation-Date: 2013-05-13 01:00+0200\n"
 "PO-Revision-Date: 2013-04-15 07:43+0000\n"
 "Last-Translator: Maik Wagner <maikwagner@yahoo.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
-#: modules/imaging/imaging/bootmenu.php:293
+#: modules/imaging/imaging/bootmenu.php:340
 msgid ""
 "\"Preselected choice\" and \"Preselected choice on WOL\" values will be used "
 "to set the default imaging client menu item to run, if no choice is made by "
@@ -506,7 +506,7 @@ msgstr "Standard Menü-Timeout"
 msgid "Default on WOL"
 msgstr "Default bei WOL"
 
-#: modules/imaging/imaging/bootmenu.php:210
+#: modules/imaging/imaging/bootmenu.php:257
 #: modules/imaging/includes/logs.inc.php:34
 #: modules/imaging/manage/ajaxLogs.php:58
 #: modules/imaging/manage/ajaxMasterLevel2.php:68
@@ -544,7 +544,7 @@ msgstr "Das Image löschen"
 
 #: modules/imaging/imaging/ajaxImages.php:157
 #: modules/imaging/imaging/ajaxServices.php:99
-#: modules/imaging/imaging/bootmenu.php:302
+#: modules/imaging/imaging/bootmenu.php:349
 #: modules/imaging/imaging/images.php:108
 #: modules/imaging/includes/post_install_script.php:65
 #: modules/imaging/manage/ajaxAvailableImagingServer.php:76
@@ -567,8 +567,8 @@ msgstr "Eine Gruppe von Rechnern anzeigen"
 
 #: modules/imaging/imaging/addimage.php:136
 #: modules/imaging/imaging/addservice.php:120
-#: modules/imaging/imaging/bootmenu.php:141
-#: modules/imaging/imaging/bootmenu.php:305
+#: modules/imaging/imaging/bootmenu.php:167
+#: modules/imaging/imaging/bootmenu.php:352
 #: modules/imaging/manage/ajaxBootmenu.php:100
 #: modules/imaging/manage/bootmenu_edit.php:86
 #: modules/imaging/manage/master_add.php:105
@@ -578,8 +578,8 @@ msgstr "Angezeigt"
 
 #: modules/imaging/imaging/addimage.php:140
 #: modules/imaging/imaging/addservice.php:124
-#: modules/imaging/imaging/bootmenu.php:151
-#: modules/imaging/imaging/bootmenu.php:308
+#: modules/imaging/imaging/bootmenu.php:177
+#: modules/imaging/imaging/bootmenu.php:355
 #: modules/imaging/manage/ajaxBootmenu.php:102
 #: modules/imaging/manage/bootmenu_edit.php:96
 #: modules/imaging/manage/master_add.php:109
@@ -613,7 +613,7 @@ msgstr "Dienst herabsetzen"
 msgid "Duplicate"
 msgstr "Duplizieren"
 
-#: modules/imaging/imaging/bootmenu.php:209
+#: modules/imaging/imaging/bootmenu.php:256
 #: modules/imaging/manage/ajaxBootmenu.php:105
 msgid "Edit"
 msgstr "Bearbeiten"
@@ -666,7 +666,7 @@ msgstr "Dienst bearbeiten:"
 msgid "Edition of image"
 msgstr "Ausgabe von Abbild"
 
-#: modules/imaging/imaging/bootmenu.php:111
+#: modules/imaging/imaging/bootmenu.php:137
 msgid "Edition of item"
 msgstr "Ausgabe des Items"
 
@@ -712,8 +712,8 @@ msgid "Failed to move down <strong>%s</strong> in the default boot menu"
 msgstr ""
 "Fehler beim Heruntersetzen von <strong>%s</strong> im vorgegebenen Bootmenü"
 
-#: modules/imaging/imaging/bootmenu.php:66
-#: modules/imaging/imaging/bootmenu.php:92
+#: modules/imaging/imaging/bootmenu.php:74
+#: modules/imaging/imaging/bootmenu.php:113
 #, php-format
 msgid "Failed to move item <strong>%s</strong> in the boot menu"
 msgstr "Fehler beim Bewegen des Eintrags <strong>%s</strong> im Bootmenü"
@@ -1009,7 +1009,7 @@ msgstr "Kernelparameter"
 
 #: modules/imaging/imaging/ajaxImages.php:155
 #: modules/imaging/imaging/ajaxServices.php:98
-#: modules/imaging/imaging/bootmenu.php:300
+#: modules/imaging/imaging/bootmenu.php:347
 #: modules/imaging/imaging/images.php:104
 #: modules/imaging/manage/ajaxBootmenu.php:96
 #: modules/imaging/manage/ajaxMasterLevel2.php:106
@@ -1127,12 +1127,12 @@ msgstr "Nachricht"
 msgid "Message displayed during backup/restoration"
 msgstr "Angezeigte Nachricht während Backup/Restore"
 
-#: modules/imaging/imaging/bootmenu.php:207
+#: modules/imaging/imaging/bootmenu.php:254
 #: modules/imaging/manage/ajaxBootmenu.php:29
 msgid "Move Up"
 msgstr "Nach oben verschieben"
 
-#: modules/imaging/imaging/bootmenu.php:208
+#: modules/imaging/imaging/bootmenu.php:255
 #: modules/imaging/manage/ajaxBootmenu.php:30
 msgid "Move down"
 msgstr "Nach unten verschieben"
@@ -1167,7 +1167,7 @@ msgstr "Nicht genug Informationen"
 msgid "Not selected"
 msgstr "Nicht ausgewählt"
 
-#: modules/imaging/imaging/bootmenu.php:296
+#: modules/imaging/imaging/bootmenu.php:343
 msgid ""
 "Once the operation triggered by a choice is successfull, the preselected "
 "choice will default to the first item of the boot menu."
@@ -1244,11 +1244,11 @@ msgstr "Vorselektierter Menüeintrag Änderungsanfrage"
 msgid "Preselected Menu Entry Change Success"
 msgstr "Vorselektierter Menüeintrag-Änderung Erfolg"
 
-#: modules/imaging/imaging/bootmenu.php:303
+#: modules/imaging/imaging/bootmenu.php:350
 msgid "Preselected choice"
 msgstr "Vorausgewählte Wahl"
 
-#: modules/imaging/imaging/bootmenu.php:306
+#: modules/imaging/imaging/bootmenu.php:353
 msgid "Preselected choice on WOL"
 msgstr "Vorausgewählte Wahl bei WOL"
 
@@ -1448,7 +1448,7 @@ msgstr "Diese Festplatte auswählen"
 
 #: modules/imaging/imaging/addimage.php:134
 #: modules/imaging/imaging/addservice.php:118
-#: modules/imaging/imaging/bootmenu.php:136
+#: modules/imaging/imaging/bootmenu.php:162
 #: modules/imaging/manage/bootmenu_edit.php:81
 #: modules/imaging/manage/master_add.php:103
 #: modules/imaging/manage/service_add.php:102
@@ -1457,7 +1457,7 @@ msgstr "Standardmäßig ausgewählt"
 
 #: modules/imaging/imaging/addimage.php:138
 #: modules/imaging/imaging/addservice.php:122
-#: modules/imaging/imaging/bootmenu.php:146
+#: modules/imaging/imaging/bootmenu.php:172
 #: modules/imaging/manage/bootmenu_edit.php:91
 #: modules/imaging/manage/master_add.php:107
 #: modules/imaging/manage/service_add.php:106
@@ -1665,7 +1665,7 @@ msgstr ""
 "Synchro läuft momentan, bitte warten Sie oder laden Sie die Seite neu %shere"
 "%s.<br/> "
 
-#: modules/imaging/imaging/bootmenu.php:298
+#: modules/imaging/imaging/bootmenu.php:345
 msgid ""
 "Then for each computer, once the operation triggered by a choice is "
 "successfull, the preselected choice will default to the first item of the "
@@ -1802,7 +1802,7 @@ msgstr "Den NT-Bootloader aktualisieren falls die Festplatte verändert wurde"
 msgid "Uptime: "
 msgstr "Uptime: "
 
-#: modules/imaging/imaging/bootmenu.php:156
+#: modules/imaging/imaging/bootmenu.php:182
 #: modules/imaging/manage/ajaxConfiguration.php:183
 #: modules/imaging/manage/bootmenu_edit.php:101
 #: modules/imaging/manage/master_edit.php:70
@@ -1815,7 +1815,7 @@ msgstr "Validieren"
 msgid "View image log"
 msgstr "Imagelog anschauen"
 
-#: modules/imaging/imaging/bootmenu.php:298
+#: modules/imaging/imaging/bootmenu.php:345
 msgid ""
 "When you modify the \"Preselected choice\" or \"Preselected choice on WOL\" "
 "values on a profile, those values will be set on all the boot menu of the "
@@ -1869,11 +1869,11 @@ msgstr ""
 "Sie müssen den Imagingserver dieses Rechners registrieren um Imaging zu "
 "nutzen."
 
-#: modules/imaging/imaging/bootmenu.php:253
+#: modules/imaging/imaging/bootmenu.php:300
 msgid "boot service"
 msgstr "Dienst booten"
 
-#: modules/imaging/imaging/bootmenu.php:251
+#: modules/imaging/imaging/bootmenu.php:298
 msgid "boot service from profile"
 msgstr "Dienst vom Profil booten"
 
@@ -1889,11 +1889,11 @@ msgstr "Tag"
 msgid "hour"
 msgstr "Stunde"
 
-#: modules/imaging/imaging/bootmenu.php:244
+#: modules/imaging/imaging/bootmenu.php:291
 msgid "master"
 msgstr "master"
 
-#: modules/imaging/imaging/bootmenu.php:242
+#: modules/imaging/imaging/bootmenu.php:289
 msgid "master from the profile"
 msgstr "vom Profil mastern"
 

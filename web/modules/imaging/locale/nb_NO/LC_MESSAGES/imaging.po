@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-05-06 12:30+0200\n"
-"PO-Revision-Date: 2013-05-06 10:40+0000\n"
+"POT-Creation-Date: 2013-05-10 16:57+0200\n"
+"PO-Revision-Date: 2013-05-12 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -34,7 +34,7 @@ msgstr ""
 
 #: modules/imaging/imaging/addimage.php:134
 #: modules/imaging/imaging/addservice.php:118
-#: modules/imaging/imaging/bootmenu.php:136
+#: modules/imaging/imaging/bootmenu.php:162
 #: modules/imaging/manage/bootmenu_edit.php:81
 #: modules/imaging/manage/master_add.php:103
 #: modules/imaging/manage/service_add.php:102
@@ -43,8 +43,8 @@ msgstr ""
 
 #: modules/imaging/imaging/addimage.php:136
 #: modules/imaging/imaging/addservice.php:120
-#: modules/imaging/imaging/bootmenu.php:141
-#: modules/imaging/imaging/bootmenu.php:305
+#: modules/imaging/imaging/bootmenu.php:167
+#: modules/imaging/imaging/bootmenu.php:352
 #: modules/imaging/manage/ajaxBootmenu.php:100
 #: modules/imaging/manage/bootmenu_edit.php:86
 #: modules/imaging/manage/master_add.php:105
@@ -54,7 +54,7 @@ msgstr ""
 
 #: modules/imaging/imaging/addimage.php:138
 #: modules/imaging/imaging/addservice.php:122
-#: modules/imaging/imaging/bootmenu.php:146
+#: modules/imaging/imaging/bootmenu.php:172
 #: modules/imaging/manage/bootmenu_edit.php:91
 #: modules/imaging/manage/master_add.php:107
 #: modules/imaging/manage/service_add.php:106
@@ -63,8 +63,8 @@ msgstr ""
 
 #: modules/imaging/imaging/addimage.php:140
 #: modules/imaging/imaging/addservice.php:124
-#: modules/imaging/imaging/bootmenu.php:151
-#: modules/imaging/imaging/bootmenu.php:308
+#: modules/imaging/imaging/bootmenu.php:177
+#: modules/imaging/imaging/bootmenu.php:355
 #: modules/imaging/manage/ajaxBootmenu.php:102
 #: modules/imaging/manage/bootmenu_edit.php:96
 #: modules/imaging/manage/master_add.php:109
@@ -109,8 +109,8 @@ msgstr ""
 
 #: modules/imaging/imaging/ajaxImages.php:155
 #: modules/imaging/imaging/ajaxServices.php:98
-#: modules/imaging/imaging/bootmenu.php:300
 #: modules/imaging/imaging/images.php:104
+#: modules/imaging/imaging/bootmenu.php:347
 #: modules/imaging/manage/service_edit.php:54
 #: modules/imaging/manage/ajaxBootmenu.php:96
 #: modules/imaging/manage/ajaxMasterLevel2.php:106
@@ -121,8 +121,8 @@ msgstr ""
 
 #: modules/imaging/imaging/ajaxImages.php:157
 #: modules/imaging/imaging/ajaxServices.php:99
-#: modules/imaging/imaging/bootmenu.php:302
 #: modules/imaging/imaging/images.php:108
+#: modules/imaging/imaging/bootmenu.php:349
 #: modules/imaging/includes/post_install_script.php:65
 #: modules/imaging/manage/service_edit.php:59
 #: modules/imaging/manage/ajaxAvailableImagingServer.php:76
@@ -188,100 +188,6 @@ msgstr ""
 
 #: modules/imaging/imaging/ajaxServices.php:100
 msgid "In bootmenu"
-msgstr ""
-
-#: modules/imaging/imaging/bootmenu.php:66
-#: modules/imaging/imaging/bootmenu.php:92
-#, php-format
-msgid "Failed to move item <strong>%s</strong> in the boot menu"
-msgstr ""
-
-#: modules/imaging/imaging/bootmenu.php:111
-msgid "Edition of item"
-msgstr ""
-
-#: modules/imaging/imaging/bootmenu.php:156
-#: modules/imaging/manage/service_edit.php:69
-#: modules/imaging/manage/ajaxConfiguration.php:183
-#: modules/imaging/manage/bootmenu_edit.php:101
-#: modules/imaging/manage/master_edit.php:70
-#: modules/imaging/manage/postinstall_edit.php:119
-msgid "Validate"
-msgstr ""
-
-#: modules/imaging/imaging/bootmenu.php:207
-#: modules/imaging/manage/ajaxBootmenu.php:29
-msgid "Move Up"
-msgstr ""
-
-#: modules/imaging/imaging/bootmenu.php:208
-#: modules/imaging/manage/ajaxBootmenu.php:30
-msgid "Move down"
-msgstr ""
-
-#: modules/imaging/imaging/bootmenu.php:209
-#: modules/imaging/manage/ajaxBootmenu.php:105
-msgid "Edit"
-msgstr ""
-
-#: modules/imaging/imaging/bootmenu.php:210
-#: modules/imaging/includes/logs.inc.php:34
-#: modules/imaging/manage/ajaxLogs.php:58
-#: modules/imaging/manage/ajaxMasterLevel2.php:68
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:53
-#: modules/imaging/manage/postinstall_delete.php:68
-msgid "Delete"
-msgstr ""
-
-#: modules/imaging/imaging/bootmenu.php:242
-msgid "master from the profile"
-msgstr ""
-
-#: modules/imaging/imaging/bootmenu.php:244
-msgid "master"
-msgstr ""
-
-#: modules/imaging/imaging/bootmenu.php:251
-msgid "boot service from profile"
-msgstr ""
-
-#: modules/imaging/imaging/bootmenu.php:253
-msgid "boot service"
-msgstr ""
-
-#: modules/imaging/imaging/bootmenu.php:293
-msgid ""
-"\"Preselected choice\" and \"Preselected choice on WOL\" values will be used"
-" to set the default imaging client menu item to run, if no choice is made by"
-" the user on the client side prior to the menu timeout."
-msgstr ""
-
-#: modules/imaging/imaging/bootmenu.php:296
-msgid ""
-"Once the operation triggered by a choice is successfull, the preselected "
-"choice will default to the first item of the boot menu."
-msgstr ""
-
-#: modules/imaging/imaging/bootmenu.php:298
-msgid ""
-"When you modify the \"Preselected choice\" or \"Preselected choice on WOL\" "
-"values on a profile, those values will be set on all the boot menu of the "
-"computers owned by the profile."
-msgstr ""
-
-#: modules/imaging/imaging/bootmenu.php:298
-msgid ""
-"Then for each computer, once the operation triggered by a choice is "
-"successfull, the preselected choice will default to the first item of the "
-"boot menu."
-msgstr ""
-
-#: modules/imaging/imaging/bootmenu.php:303
-msgid "Preselected choice"
-msgstr ""
-
-#: modules/imaging/imaging/bootmenu.php:306
-msgid "Preselected choice on WOL"
 msgstr ""
 
 #: modules/imaging/imaging/bootmenu_remove.php:94
@@ -857,6 +763,100 @@ msgstr ""
 
 #: modules/imaging/imaging/images_iso.php:101
 msgid "Start ISO generation"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:74
+#: modules/imaging/imaging/bootmenu.php:113
+#, php-format
+msgid "Failed to move item <strong>%s</strong> in the boot menu"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:137
+msgid "Edition of item"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:182
+#: modules/imaging/manage/service_edit.php:69
+#: modules/imaging/manage/ajaxConfiguration.php:183
+#: modules/imaging/manage/bootmenu_edit.php:101
+#: modules/imaging/manage/master_edit.php:70
+#: modules/imaging/manage/postinstall_edit.php:119
+msgid "Validate"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:254
+#: modules/imaging/manage/ajaxBootmenu.php:29
+msgid "Move Up"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:255
+#: modules/imaging/manage/ajaxBootmenu.php:30
+msgid "Move down"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:256
+#: modules/imaging/manage/ajaxBootmenu.php:105
+msgid "Edit"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:257
+#: modules/imaging/includes/logs.inc.php:34
+#: modules/imaging/manage/ajaxLogs.php:58
+#: modules/imaging/manage/ajaxMasterLevel2.php:68
+#: modules/imaging/manage/ajaxPostInstallLevel2.php:53
+#: modules/imaging/manage/postinstall_delete.php:68
+msgid "Delete"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:289
+msgid "master from the profile"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:291
+msgid "master"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:298
+msgid "boot service from profile"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:300
+msgid "boot service"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:340
+msgid ""
+"\"Preselected choice\" and \"Preselected choice on WOL\" values will be used"
+" to set the default imaging client menu item to run, if no choice is made by"
+" the user on the client side prior to the menu timeout."
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:343
+msgid ""
+"Once the operation triggered by a choice is successfull, the preselected "
+"choice will default to the first item of the boot menu."
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:345
+msgid ""
+"When you modify the \"Preselected choice\" or \"Preselected choice on WOL\" "
+"values on a profile, those values will be set on all the boot menu of the "
+"computers owned by the profile."
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:345
+msgid ""
+"Then for each computer, once the operation triggered by a choice is "
+"successfull, the preselected choice will default to the first item of the "
+"boot menu."
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:350
+msgid "Preselected choice"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:353
+msgid "Preselected choice on WOL"
 msgstr ""
 
 #: modules/imaging/includes/ajaxcommon.inc.php:37
