@@ -2466,11 +2466,6 @@ class Glpi08(DyngroupDatabaseHelper):
                             ret_domain.insert(idx_good, '')
                         failure[1] = False
 
-        if failure[0]:
-            if failure[1]:
-                self.logger.warn("Computer %s (uuid:%s) does not have any gateway"%(hostname, uuid))
-            else:
-                self.logger.warn("Computer %s (uuid:%s) does not have any gateway in it's network"%(hostname, uuid))
         return (ret_ifmac, ret_ifaddr, ret_netmask, ret_domain, ret_networkUuids)
 
     def getMachineIp(self, uuid):
