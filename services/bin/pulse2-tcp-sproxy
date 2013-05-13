@@ -33,6 +33,7 @@ Example:
 """
 import os
 import sys
+import socket
 import logging
 import logging.config 
 
@@ -52,6 +53,42 @@ config.setup(config_file)
 logging.config.fileConfig(config_file)
 
 log = logging.getLogger()
+
+class FormatedNameAndIP :
+    """Get hostname or IP address and format"""
+    def __init__(self, name_or_ip):
+        if self.is_ip_address(name_or_ip) :
+            self.host = self.get_hostname(name_or_ip)
+            self.ip = name_or_ip
+        else :
+            self.host = name_or_ip
+            self.ip = self.get_ip(name_or_ip)
+
+    def get_hostname(self, ip):
+        try:
+            hostname = socket.gethostbyaddr(ip)[0]
+        except Exception, exc:
+            hostname = ""
+            log.warn("VNC Proxy: Getting of hostname failed: %s" % str(exc))
+        return hostname
+
+    def get_ip(self, hostname):
+        try:
+            ip = socket.gethostbyname(hostname)
+        except Exception, exc:
+            ip = ""
+            log.warn("VNC Proxy: Getting of ip failed: %s" % str(exc))
+        return ip
+
+    def is_ip_address(self, ip):
+        try:
+            digits = ip.split(".")
+            return all([d.isdigit() for d in digits])
+        except :
+            return False
+
+    def __repr__(self):
+        return "%s (%s)" % (self.host, self.ip)
 
 
 class SSHForwardingProxy(object):
@@ -138,7 +175,8 @@ class InputProxyServer(portforward.ProxyServer):
     """Establish a input proxy to check requestor IP"""
 
     def connectionMade(self):
-        log.info("VNC Proxy: New connection from %s on port %d" % (self.from_ip, self.from_port))
+        from_host = FormatedNameAndIP(self.from_ip)
+        log.info("VNC Proxy: New connection from %s on port %d" % (from_host, self.from_port))
         portforward.ProxyServer.connectionMade(self)
  
     def dataReceived(self, data):
@@ -288,8 +326,10 @@ class DispatchProxies :
 
     def __init__(self):
         self.parse_args()
-        log.info("VNC Proxy: Request from %s for computer %s" % (self.from_ip,
-                                                                 self.to_ip))
+        from_host = FormatedNameAndIP(self.from_ip)
+        to_host = FormatedNameAndIP(self.to_ip)
+        log.info("VNC Proxy: Request from %s for computer %s" % (from_host,
+                                                                 to_host))
 
         self.start_output_proxy()
         self.start_input_proxy()
@@ -358,7 +398,8 @@ class DispatchProxies :
             except Exception, exc:
                 log.warn("VNC Proxy: Stopping failed: %s" % str(exc))
 
-        log.info("VNC Proxy: Proxy for %s closed" % self.to_ip)
+        to_host = FormatedNameAndIP(self.to_ip)
+        log.info("VNC Proxy: Proxy for %s closed" % to_host)
         log.info("VNC Proxy: Stopping")
 
         reactor.stop()
@@ -426,11 +467,15 @@ class DispatchProxies :
 
     def _cb_input_proxy(self, result):
         log.debug("VNC Proxy: Input proxy successfully started")
-        log.info("VNC Proxy: Proxy established for %s: %s:%d => %s:%d" % (self.to_ip,
-                                                                          LOCALHOST,
-                                                                          self.local_port,
-                                                                          self.from_ip,
-                                                                          self.proxy_port))
+        from_host = FormatedNameAndIP(self.from_ip)
+        to_host = FormatedNameAndIP(self.to_ip)
+        message = "VNC Proxy: Proxy established for %s:%d %s:%d => %s:%d"
+        log.info(message % (to_host,
+                            self.to_port,
+                            LOCALHOST,
+                            self.local_port,
+                            from_host,
+                            self.proxy_port))
                 
         self.register_stopper(self.in_proxy.kill_me)
 
