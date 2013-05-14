@@ -1200,6 +1200,14 @@ def getRunningCommandsOnHostFromLaunchers(scheduler_name):
 
 def stopCommandsOnHosts(ids):
     deffereds = [] # will hold all deferred
+
+    # Restore imaging default bootmenus
+    for myCommandOnHostID in ids:
+        (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+        imgdeferred = ImagingAPI().unsetWOLMenu(myT.target_uuid)
+        if imgdeferred:
+            deffereds.append(imgdeferred)
+
     if len(ids) > 0:
         log.info('scheduler "%s": STOP: %d commands to stop' % (SchedulerConfig().name, len(ids)))
         for launcher in SchedulerConfig().launchers_uri.values():
@@ -1218,9 +1226,20 @@ def stopCommand(myCommandOnHostID):
     log.debug("command_on_host state is %s" % myCoH.toH())
     log.debug("command state is %s" % myC.toH())
     # Restore Bootmenu (No WOL)
-    ImagingAPI().unsetWOLMenu(myT.target_uuid)
-    for launcher in SchedulerConfig().launchers_uri.values():
-        callOnLauncher(None, launcher, 'term_process', myCommandOnHostID)
+    imgdeferred = ImagingAPI().unsetWOLMenu(myT.target_uuid)
+
+    def _cb(result, myCommandOnHostID):
+        for launcher in SchedulerConfig().launchers_uri.values():
+            callOnLauncher(None, launcher, 'term_process', myCommandOnHostID)
+        return True
+
+    def _eb(result):
+        log.debug("Restoring bootmenu (No WOL) failed: %s" % result)
+        return False
+
+    imgdeferred.addCallback(_cb, myCommandOnHostID). \
+            addErrback(_eb)
+
     return True
 
 def startCommand(myCommandOnHostID):
@@ -1430,21 +1449,27 @@ def performWOLPhase(myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
 
     # Set WOL Bootmenu
-    ImagingAPI().setWOLMenu(myT.target_uuid)
+    imgdeferred = ImagingAPI().setWOLMenu(myT.target_uuid)
 
-    # perform call
-    mydeffered = callOnBestLauncher(myCommandOnHostID,
-        'wol',
-        False,
-        myT.target_macaddr.split('||'),
-        myT.target_bcast.split('||')
-    )
+    def _cb(result, myCommandOnHostID):
+        # perform call
+        mydeffered = callOnBestLauncher(myCommandOnHostID,
+            'wol',
+            False,
+            myT.target_macaddr.split('||'),
+            myT.target_bcast.split('||')
+        )
 
-    mydeffered.\
-        addCallback(parseWOLAttempt, myCommandOnHostID).\
-        addErrback(parseWOLError, myCommandOnHostID).\
-        addErrback(gotErrorInError, myCommandOnHostID)
-    return mydeffered
+        mydeffered.\
+            addCallback(parseWOLAttempt, myCommandOnHostID).\
+            addErrback(parseWOLError, myCommandOnHostID).\
+            addErrback(gotErrorInError, myCommandOnHostID)
+        return mydeffered
+
+    imgdeferred.addCallback(_cb, myCommandOnHostID). \
+            addErrback(parseWOLError, myCommandOnHostID)
+
+    return imgdeferred
 
 def runUploadPhase(myCommandOnHostID):
     """
@@ -2295,9 +2320,16 @@ def parseWOLAttempt(attempt_result, myCommandOnHostID):
         updateHistory(myCommandOnHostID, 'wol_done', PULSE2_SUCCESS_ERROR, stdout, stderr)
         if myCoH.switchToWOLDone():
             # Restore Bootmenu (No WOL)
-            ImagingAPI().unsetWOLMenu(myT.target_uuid)
-            WOLTracking().unlockwol(myCommandOnHostID)
-            return runUploadPhase(myCommandOnHostID)
+            imgdeferred = ImagingAPI().unsetWOLMenu(myT.target_uuid)
+
+            def _cb(result, myCommandOnHostID):
+                WOLTracking().unlockwol(myCommandOnHostID)
+                return runUploadPhase(myCommandOnHostID)
+
+            imgdeferred.addCallback(_cb, myCommandOnHostID). \
+                    addErrback(parseWOLError, myCommandOnHostID)
+
+            return imgdeferred
         else:
             return runGiveUpPhase(myCommandOnHostID)
 
@@ -2582,9 +2614,16 @@ def parseWOLError(reason, myCommandOnHostID, decrement_attempts_left = False, er
     updateHistory(myCommandOnHostID, 'wol_failed', error_code, '', reason.getErrorMessage())
     if not myCoH.switchToWOLFailed(myC.getNextConnectionDelay(), decrement_attempts_left):
         # Restore Bootmenu (No WOL)
-        ImagingAPI().unsetWOLMenu(myT.target_uuid)
-        WOLTracking().unlockwol(myCommandOnHostID)
-        return runFailedPhase(myCommandOnHostID)
+        imgdeferred = ImagingAPI().unsetWOLMenu(myT.target_uuid)
+
+        def _cb(result, myCommandOnHostID):
+            WOLTracking().unlockwol(myCommandOnHostID)
+            return runFailedPhase(myCommandOnHostID)
+
+        imgdeferred.addCallback(_cb, myCommandOnHostID). \
+                addErrback(runFailedPhase, myCommandOnHostID)
+
+        return imgdeferred
     WOLTracking().unlockwol(myCommandOnHostID)
     return runGiveUpPhase(myCommandOnHostID)
 
