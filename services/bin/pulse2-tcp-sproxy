@@ -469,7 +469,7 @@ class DispatchProxies :
         log.debug("VNC Proxy: Input proxy successfully started")
         from_host = FormatedNameAndIP(self.from_ip)
         to_host = FormatedNameAndIP(self.to_ip)
-        message = "VNC Proxy: Proxy established for %s:%d %s:%d => Connection allowed for %s on port %d"
+        message = "VNC Proxy: Proxy established for %s:%d on %s:%d => Connection allowed for %s on port %d"
         log.info(message % (to_host,
                             self.to_port,
                             LOCALHOST,
