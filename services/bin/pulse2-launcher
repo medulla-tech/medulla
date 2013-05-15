@@ -121,8 +121,8 @@ def scheduleLogStats():
 
 def logStats():
     config = LauncherConfig().launchers[LauncherConfig().name]
-    logging.getLogger().info('launcher %s: BALANCE: %s' % (LauncherConfig().name, getBalance(config)))
-    logging.getLogger().info('launcher %s: HEALTH: %s' % (LauncherConfig().name, getHealth(config)))
+    logging.getLogger().debug('launcher %s: BALANCE: %s' % (LauncherConfig().name, getBalance(config)))
+    logging.getLogger().debug('launcher %s: HEALTH: %s' % (LauncherConfig().name, getHealth(config)))
     logging.getLogger().debug('launcher %s: PROCESSING: %s' % (LauncherConfig().name, pulse2.launcher.process_control.getProcessIds()))
     scheduleLogStats()
 
