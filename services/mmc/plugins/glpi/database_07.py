@@ -41,7 +41,7 @@ import os
 from configobj import ConfigObj
 
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
-        Integer, ForeignKey, asc, or_, not_, desc
+        Integer, ForeignKey, asc, or_, not_, desc, func
 from sqlalchemy.orm import create_session, mapper
 from sqlalchemy.sql.expression import ColumnOperators
 
@@ -371,14 +371,14 @@ class Glpi07(DyngroupDatabaseHelper):
             complete_ctx(ctx)
         return self.machine.c.FK_entities.in_(ctx.locationsid + other_locids)
 
-    def __getRestrictedComputersListQuery(self, ctx, filt = None, session = create_session(), displayList = False):
+    def __getRestrictedComputersListQuery(self, ctx, filt = None, session = create_session(), displayList = False, count = False):
         """
         Get the sqlalchemy query to get a list of computers with some filters
         If displayList is True, we are displaying computers list
         """
         if session == None:
             session = create_session()
-        query = session.query(Machine)
+        query = count and session.query(func.count(self.machine.c.ID), Machine) or session.query(Machine)
         if filt:
             # filtering on query
             join_query = self.machine
@@ -509,6 +509,19 @@ class Glpi07(DyngroupDatabaseHelper):
                 machines = map(lambda m: fromUUID(m), ComputerGroupManager().request(ctx, request, bool, 0, -1, ''))
                 query = query.filter(self.machine.c.ID.in_(machines))
 
+            if 'date' in filt:
+                state = filt['date']['states']
+                date_mod = filt['date']['date_mod']
+                value = filt['date']['value']
+
+                if 'green' in value:
+                    query = query.filter(date_mod > state['orange'])
+                if 'orange' in value:
+                    query = query.filter(and_(date_mod < state['orange'], date_mod > state['red']))
+                if 'red' in value:
+                    query = query.filter(date_mod < state['red'])
+
+        if count: query = query.scalar()
         return query
 
     def __getId(self, obj):
@@ -706,16 +719,30 @@ class Glpi07(DyngroupDatabaseHelper):
         """
         session = create_session()
         now = datetime.datetime.now()
-        orange = now - datetime.timedelta(orange)
-        red = now - datetime.timedelta(red)
+        states = {
+            'orange': now - datetime.timedelta(orange),
+            'red': now - datetime.timedelta(red),
+        }
 
         date_mod = self.machine.c.date_mod
 
-        query = self.__getRestrictedComputersListQuery(ctx, filt, session)
+        for value in ['green', 'orange', 'red']:
+            # This loop instanciate self.filt_green,
+            # self.filt_orange and self.filt_red
+            setattr(self, 'filt_%s' % value, filt.copy())
+
+            newFilter = getattr(self, 'filt_%s' % value)
+            values = {
+                'states': states,
+                'date_mod': date_mod,
+                'value': value,
+            }
+            newFilter['date'] = values
+
         ret = {
-            "green": int(query.filter(date_mod > orange).count()),
-            "orange": int(query.filter(and_(date_mod < orange, date_mod > red)).count()),
-            "red": int(query.filter(date_mod < red).count()),
+            "green": int(self.__getRestrictedComputersListQuery(ctx, self.filt_green, session, count=True)),
+            "orange": int(self.__getRestrictedComputersListQuery(ctx, self.filt_orange, session, count=True)),
+            "red": int(self.__getRestrictedComputersListQuery(ctx, self.filt_red, session, count=True)),
         }
         session.close()
         return ret
@@ -736,10 +763,9 @@ class Glpi07(DyngroupDatabaseHelper):
             if len(filt['hostname']) > 0:
                 displayList = True
 
-        query = self.__getRestrictedComputersListQuery(ctx, filt, session, displayList)
-        if query == None:
+        ret = self.__getRestrictedComputersListQuery(ctx, filt, session, displayList, count=True)
+        if ret == None:
             return 0
-        ret = query.count()
         session.close()
         return ret
 
