@@ -881,7 +881,7 @@ class SimpleNavBar extends HtmlElement {
             return false;
         }
         </script>
-<?
+<?php
 
     }
 
@@ -905,7 +905,7 @@ class SimpleNavBar extends HtmlElement {
             nextList[1].style.borderLeft = "solid 1px #CCC";
         }
         </script>
-<?
+<?php
     }
 
     function displayGotoPageField() {
@@ -1193,27 +1193,27 @@ class AjaxFilter extends HtmlElement {
     </div>
 
     <script type="text/javascript">
-<?
+<?php
 if(!$this->formid) {
 ?>
         document.getElementById('param<?php echo $this->formid ?>').focus();
-<?
+<?php
 }
 if(isset($this->storedfilter)) {
 ?>
         document.Form<?php echo $this->formid ?>.param.value = "<?php echo $this->storedfilter ?>";
-<?
+<?php
 }
 ?>
         var refreshtimer<?php echo $this->formid ?> = null;
         var refreshparamtimer<?php echo $this->formid ?> = null;
         var refreshdelay<?php echo $this->formid ?> = <?php echo  $this->refresh ?>;
         var maxperpage = <?php echo $maxperpage ?>;
-<?
+<?php
 if (isset($this->storedmax)) {
 ?>
         maxperpage = <?php echo $this->storedmax ?>;
-<?
+<?php
 }
 ?>
         if(document.getElementById('maxperpage') != undefined)
@@ -1247,11 +1247,11 @@ if (isset($this->storedmax)) {
             { asynchronous:true, evalScripts: true}
             );
 
-<?
+<?php
 if ($this->refresh) {
 ?>
             refreshtimer<?php echo $this->formid ?> = setTimeout("updateSearch<?php echo $this->formid ?>()", refreshdelay<?php echo $this->formid ?>)
-<?
+<?php
 }
 ?>
         }
@@ -1265,11 +1265,11 @@ if ($this->refresh) {
                 maxperpage = document.getElementById('maxperpage').value;
 
             new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?>filter='+filter+'&start='+start+'&end='+end+'&maxperpage='+maxperpage+'<?php echo  $this->params ?>', { asynchronous:true, evalScripts: true});
-<?
+<?php
 if ($this->refresh) {
 ?>
             refreshparamtimer<?php echo $this->formid ?> = setTimeout("updateSearchParam<?php echo $this->formid ?>('"+filter+"',"+start+","+end+","+maxperpage+")", refreshdelay<?php echo $this->formid ?>);
-<?
+<?php
 }
 ?>
         }
@@ -1287,7 +1287,7 @@ if ($this->refresh) {
     </script>
 
 </form>
-<?
+<?php
           }
 
     function displayDivToUpdate() {
@@ -1384,11 +1384,11 @@ class AjaxFilterLocation extends AjaxFilter {
     <script type="text/javascript">
         document.getElementById('param').focus();
 
-<?
+<?php
 if(isset($this->storedfilter)) {
 ?>
         document.Form.param.value = "<?php echo $this->storedfilter ?>";
-<?
+<?php
 }
 ?>
         var maxperpage = <?php echo $conf["global"]["maxperpage"] ?>;
@@ -1449,7 +1449,7 @@ if(isset($this->storedfilter)) {
     </script>
 
 </form>
-<?
+<?php
           }
 }
 
@@ -1501,7 +1501,7 @@ class AjaxLocation extends AjaxFilterLocation {
     </script>
 
 </form>
-<?
+<?php
     }
 }
 

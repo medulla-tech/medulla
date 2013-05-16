@@ -12,7 +12,7 @@ if($_GET["filtertype"] == "object" or $_GET["filtertype"] == "user"){
     onclick="document.getElementById('param').value =''; pushSearch(); return false;" />
     </span>
     
-<?
+<?php
 }
 else {
     $lst=array();
@@ -30,5 +30,5 @@ else {
     }    
 ?>
     </select>
-<?
+<?php
 }

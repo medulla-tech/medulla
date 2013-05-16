@@ -1,4 +1,4 @@
-<?
+<?php
 
 /* Build log sidebar that aggregates all log viewers from all available modules */
 

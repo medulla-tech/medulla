@@ -2,14 +2,14 @@
 <script>
     window.location= 'main.php'
 </script>
-<?
+<?php
 
 exit(6);
 
 }
 ?>
 <div style="width:99%">
-<?
+<?php
 
 
 $connectionNumber = array();

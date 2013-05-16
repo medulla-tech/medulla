@@ -22,7 +22,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 ?>
-<?
+<?php
 /* définition des fonctions pour cette page */
 
 function print_mem_bar($title, $max, $used, $cache = 0, $width = 320) {

@@ -1,4 +1,4 @@
-<?
+<?php
 
 $module_audit_codes = array(
     'PPOLICY_MOD_USER_ATTR' => _T("Change ppolicy attribute", "ppolicy"),

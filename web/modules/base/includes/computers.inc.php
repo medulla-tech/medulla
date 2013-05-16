@@ -1,4 +1,4 @@
-<?
+<?php
 
 function addComputer($params) {
     return xmlCall("base.addComputer", $params);

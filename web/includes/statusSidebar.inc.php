@@ -1,4 +1,4 @@
-<?
+<?php
 $sidemenu= new SideMenu();
 
 $sidemenu->setClass("status");

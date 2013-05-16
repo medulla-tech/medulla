@@ -73,14 +73,14 @@ $p->display();
 <?php echo  _("The group name can only contain letters and numeric, and must begin with a letter"); ?>
 </p>
 
-<?
+<?php
 }
 ?>
 
 <form name="groupform" method="post" onsubmit="return validateForm();">
 <table cellspacing="0">
 
-<?
+<?php
 if ($_GET["action"]=="add") {
     $formElt = new InputTpl("groupname", "/^[a-zA-Z][0-9_a-zA-Z-]*$/");
 } else {
@@ -97,7 +97,7 @@ $tr->display(array("value" => $groupdesc));
 
 </table>
 
-<?
+<?php
 callPluginFunction("baseGroupEdit", array($detailArr, $_POST));
 ?>
 

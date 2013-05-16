@@ -141,7 +141,7 @@ if (strstr($action,'?')===False) {
 
 </form>
 
-<?
+<?php
 
 }
 
