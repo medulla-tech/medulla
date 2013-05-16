@@ -67,7 +67,8 @@ def establishProxy(client, requestor_ip, requested_port):
         str(local_port),
         str(LauncherConfig().tcp_sproxy_establish_delay),
         str(LauncherConfig().tcp_sproxy_connect_delay),
-        str(LauncherConfig().tcp_sproxy_session_lenght)
+        str(LauncherConfig().tcp_sproxy_session_lenght),
+        client['shortname'],
     ]
 
     # Built "thru" command
