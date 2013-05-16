@@ -1346,6 +1346,9 @@ class Glpi08(DyngroupDatabaseHelper):
             .select_from(
                 self.machine.outerjoin(self.network).outerjoin(self.networkinterfaces)
             ), uuid)
+
+        query = query.filter(self.network.c.itemtype == "Computer")
+
         if count:
             ret = query.count()
         else:

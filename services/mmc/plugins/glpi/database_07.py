@@ -1367,6 +1367,9 @@ class Glpi07(DyngroupDatabaseHelper):
             .select_from(
                 self.machine.outerjoin(self.network).outerjoin(self.networkinterfaces)
             ), uuid)
+
+        query = query.filter(self.network.c.device_type == 1) # filter on device type "Computer"
+
         if count:
             ret = query.count()
         else:
