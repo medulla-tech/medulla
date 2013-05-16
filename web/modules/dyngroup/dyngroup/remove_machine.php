@@ -53,7 +53,7 @@ if (quickGet('valid')) {
 
 <form action="<?php echo  urlStr("base/computers/remove_machine", array('gid'=>$gid, 'hostname'=>$machine, 'objectUUID'=>$uuid)) ?>" method="post">
 <p>
-<?
+<?php
     printf(_T("You will remove computer <b>%s</b> from group <b>%s</b>.", "dyngroup"), $machine, $group->getName());
 ?>
 </p>

@@ -1,4 +1,4 @@
-<?
+<?php
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2010 Mandriva, http://www.mandriva.com
@@ -48,7 +48,7 @@ if (!empty($global_status)) {
 <div class="status">
 <!--<div class="status_block">
     <h3 style="display: inline"><?php echo _T('Synchronization state', 'imaging') ?> : </h3>
-    <?
+    <?php
     $led = new LedElement('green');
     $led->display();
     echo "&nbsp;"._T("Up-to-date", "imaging");
@@ -66,7 +66,7 @@ if (!empty($global_status)) {
 
 <h3 class="activity"><?php echo _T('Recent activity', 'imaging') ?></h3>
 
-<?
+<?php
         $ajax = new AjaxFilter("modules/imaging/manage/ajaxLogs.php", "container_logs", array(), "Logs");
         //$ajax->setRefresh(10000);
         $ajax->display();

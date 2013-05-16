@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
@@ -66,7 +66,7 @@ function enableLocalProxyForm() {
 }
 </script>
 <input type="radio" name="local_proxy_selection_mode" value="semi_auto" onClick="javascript:disableLocalProxyForm();" <?php echo  $this->local_proxy_selection_mode == "manual" ? "" : "checked"; ?>><?php echo  _T("Random (indicate number of proxies) : ", "msc"); ?>
-<?
+<?php
 $num = new MyNumericInputTpl("proxy_number");
 $num->display(array('value' => $this->proxy_number));
 ?>
@@ -142,7 +142,7 @@ select.list
 </style>
 
 
-<?
+<?php
     } /* display */
 
 } /* class */

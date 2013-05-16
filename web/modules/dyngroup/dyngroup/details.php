@@ -50,7 +50,7 @@ if ($_GET['bhide'] || $_POST['bhide']) {
 //$group->prettyDisplay();
 
 ?> <form action="<?php echo  urlStr("base/computers/details", array('id'=>$id)) ?>" method="post"> <?php  
-?> <input name="bback" type="submit" class="btnPrimary" value="<?php echo  _T("Close", "dyngroup") ?>" onClick="new Effect.Fade('popup'); return false;"/> <?
+?> <input name="bback" type="submit" class="btnPrimary" value="<?php echo  _T("Close", "dyngroup") ?>" onClick="new Effect.Fade('popup'); return false;"/> <?php
 
 if ($group->isDyn() && $group->isGroup()) {
     print '<input name="bregen" type="submit" class="btnSecondary" value="'._T("Regenerate", "dyngroup").'"/>';

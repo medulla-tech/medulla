@@ -22,7 +22,7 @@
  * MA 02110-1301, USA
  */
 
-<?
+<?php
 
 function decode_entities($text) {
     $text = html_entity_decode($text,ENT_QUOTES,"ISO-8859-1"); /* NOTE: UTF-8 does not work! */

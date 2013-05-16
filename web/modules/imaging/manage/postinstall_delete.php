@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
@@ -58,7 +58,7 @@ if ($_POST) {
     if (!$script['is_local']) {
     ?>
     <h2><?php echo  _T("Can't delete this post-imaging script, it's a global script.", "imaging") ?></h2>
-    <?
+    <?php
     } else {
     ?>
     <h2><?php echo  _T("Delete post-imaging script", "imaging") ?></h2>
@@ -68,7 +68,7 @@ if ($_POST) {
         <input name='valid' type="submit" class="btnPrimary" value="<?php echo  _T("Delete", "imaging"); ?>" />
         <input name="bback" type="submit" class="btnSecondary" value="<?php echo  _T("Cancel", "imaging"); ?>" onClick="new Effect.Fade('popup'); return false;"/>
     </form>
-    <?
+    <?php
     }
 }
 

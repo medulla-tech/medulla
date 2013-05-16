@@ -1,4 +1,4 @@
-<?
+<?php
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com
@@ -111,7 +111,7 @@ class RenderedMSCBundleChoice {
 <input type="hidden" name="lnonmemb" value="<?php echo base64_encode(serialize($this->nonmemb)); ?>" />
 <input type="hidden" name="lmembers" value="<?php echo base64_encode(serialize($this->members)); ?>" />
 <input type="hidden" name="list" value="<?php echo base64_encode(serialize($this->list)); ?>" />
-<?
+<?php
     }
 
     function display_end() {
@@ -142,7 +142,7 @@ select.list
 }
 -->
 </style>
-<?
+<?php
     }
 
     function display_error() {

@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
  * (c) 2009-2010 Mandriva, http://www.mandriva.com

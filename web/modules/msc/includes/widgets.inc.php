@@ -1,4 +1,4 @@
-<?
+<?php
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com
@@ -361,11 +361,11 @@ class AjaxFilterCommands extends AjaxFilter {
         var refreshparamtimer = null;
         var refreshdelay = <?php echo  $this->refresh ?>;
 
-<?
+<?php
 if(isset($this->storedfilter)) {
 ?>
         document.Form<?php echo $this->formid ?>.param.value = "<?php echo $this->storedfilter ?>";
-<?
+<?php
 }    
 ?>
         /**
@@ -386,11 +386,11 @@ if(isset($this->storedfilter)) {
         function updateSearch() {
             new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?>filter='+document.Form.param.value+'<?php echo  $this->params ?>&<?php echo  $this->paramname ?>='+document.Form.<?php echo  $this->paramname ?>.value, { asynchronous:true, evalScripts: true});
 
-<?
+<?php
 if ($this->refresh) {
 ?>
             refreshtimer = setTimeout("updateSearch()", refreshdelay)
-<?
+<?php
 }
 ?>
         }
@@ -402,11 +402,11 @@ if ($this->refresh) {
             clearTimers();
             new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?>filter='+filter+'<?php echo  $this->params ?>&<?php echo  $this->paramname ?>='+document.Form.<?php echo  $this->paramname ?>.value+'&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
 
-<?
+<?php
 if ($this->refresh) {
 ?>
             refreshparamtimer = setTimeout("updateSearchParam('"+filter+"',"+start+","+end+")", refreshdelay);
-<?
+<?php
 }
 ?>
         }
@@ -423,7 +423,7 @@ if ($this->refresh) {
     </script>
 
 </form>
-<?
+<?php
           }
 }
 
@@ -492,11 +492,11 @@ class AjaxFilterCommandsStates extends AjaxFilter {
         var refreshparamtimer = null;
         var refreshdelay = <?php echo  $this->refresh ?>;
 
-<?
+<?php
 if(isset($this->storedfilter)) {
 ?>
         document.Form<?php echo $this->formid ?>.param.value = "<?php echo $this->storedfilter ?>";
-<?
+<?php
 }    
 ?>
         /**
@@ -518,11 +518,11 @@ if(isset($this->storedfilter)) {
             clearTimers();
             new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?>filter='+document.Form.param.value+'<?php echo  $this->params ?>&<?php echo  $this->paramname1 ?>='+document.Form.<?php echo  $this->paramname1 ?>.value+'&<?php echo  $this->paramname2 ?>='+document.Form.<?php echo  $this->paramname2 ?>.value, { asynchronous:true, evalScripts: true});
 
-<?
+<?php
 if ($this->refresh) {
 ?>
             refreshtimer = setTimeout("updateSearch()", refreshdelay)
-<?
+<?php
 }
 ?>
         }
@@ -544,11 +544,11 @@ if ($this->refresh) {
             clearTimers();
             new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?>filter='+filter+'<?php echo  $this->params ?>&<?php echo  $this->paramname1 ?>='+document.Form.<?php echo  $this->paramname1 ?>.value+'&<?php echo  $this->paramname2 ?>='+document.Form.<?php echo  $this->paramname2 ?>.value+'&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
 
-<?
+<?php
 if ($this->refresh) {
 ?>
             refreshparamtimer = setTimeout("updateSearchParam('"+filter+"',"+start+","+end+")", refreshdelay);
-<?
+<?php
 }
 ?>
         }
@@ -570,7 +570,7 @@ if ($this->refresh) {
     </script>
 
 </form>
-<?
+<?php
           }
 
 }

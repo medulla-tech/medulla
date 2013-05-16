@@ -72,16 +72,16 @@ class AjaxFilterGlpi extends AjaxFilter {
 
     <script type="text/javascript">
     <?php if (!in_array($_GET['part'], array('Softwares', 'History'))) echo "$('Form').hide();" ?>
-<?
+<?php
 if(!$this->formid) {
 ?>
         document.getElementById('param<?php echo $this->formid ?>').focus();
-<?
+<?php
 }
 if(isset($this->storedfilter)) {
 ?>
         document.Form<?php echo $this->formid ?>.param.value = "<?php echo $this->storedfilter ?>";
-<?
+<?php
 }
 ?>
         var refreshtimer<?php echo $this->formid ?> = null;
@@ -100,11 +100,11 @@ if(isset($this->storedfilter)) {
             history_delta = document.Form<?php echo $this->formid ?>.history_delta.value;
         }
 
-<?
+<?php
 if (isset($this->storedmax)) {
 ?>
         maxperpage = <?php echo $this->storedmax ?>;
-<?
+<?php
 }
 ?>
         if(document.getElementById('maxperpage') != undefined)
@@ -138,11 +138,11 @@ if (isset($this->storedmax)) {
             { asynchronous:true, evalScripts: true}
             );
 
-<?
+<?php
 if ($this->refresh) {
 ?>
             refreshtimer<?php echo $this->formid ?> = setTimeout("updateSearch<?php echo $this->formid ?>()", refreshdelay<?php echo $this->formid ?>)
-<?
+<?php
 }
 ?>
         }
@@ -156,11 +156,11 @@ if ($this->refresh) {
                 maxperpage = document.getElementById('maxperpage').value;
 
             new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?>filter='+filter+'&start='+start+'&end='+end+'&maxperpage='+maxperpage+'&hide_win_updates='+hide_win_updates+'&history_delta='+history_delta+'<?php echo  $this->params ?>', { asynchronous:true, evalScripts: true});
-<?
+<?php
 if ($this->refresh) {
 ?>
             refreshparamtimer<?php echo $this->formid ?> = setTimeout("updateSearchParam<?php echo $this->formid ?>('"+filter+"',"+start+","+end+","+maxperpage+")", refreshdelay<?php echo $this->formid ?>);
-<?
+<?php
 }
 ?>
         }
@@ -186,7 +186,7 @@ if ($this->refresh) {
     </script>
 
 </form>
-<?
+<?php
           }
 }
 

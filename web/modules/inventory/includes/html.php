@@ -105,16 +105,16 @@ class AjaxFilterInventory extends AjaxFilter {
     </div>
     <script type="text/javascript">
 
-<?
+<?php
 if(!$this->formid) {
 ?>
         document.getElementById('param<?php echo $this->formid ?>').focus();
-<?
+<?php
 }
 if(isset($this->storedfilter)) {
 ?>
         document.Form<?php echo $this->formid ?>.param.value = "<?php echo $this->storedfilter ?>";
-<?
+<?php
 }
 ?>
 
@@ -149,11 +149,11 @@ if(isset($this->storedfilter)) {
             { asynchronous:true, evalScripts: true}
             );
 
-<?
+<?php
 if ($this->refresh) {
 ?>
             //refreshtimer<?php echo $this->formid ?> = setTimeout("updateSearch<?php echo $this->formid ?>()", refreshdelay<?php echo $this->formid ?>)
-<?
+<?php
 }
 ?>
         }
@@ -165,11 +165,11 @@ if ($this->refresh) {
             clearTimers<?php echo $this->formid ?>();
             new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?>filter='+filter+'&start='+start+'&end='+end+'&date='+document.Form<?php echo $this->formid ?>.date.value+'<?php echo  $this->params ?>&software_filter='+software_filter, { asynchronous:true, evalScripts: true});
 
-<?
+<?php
 if ($this->refresh) {
 ?>
             refreshparamtimer<?php echo $this->formid ?> = setTimeout("updateSearchParam<?php echo $this->formid ?>('"+filter+"',"+start+","+end+")", refreshdelay<?php echo $this->formid ?>);
-<?
+<?php
 }
 ?>
         }
@@ -191,7 +191,7 @@ if ($this->refresh) {
     </script>
 
 </form>
-<?
+<?php
           }
 }
 
