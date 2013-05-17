@@ -47,6 +47,11 @@ $page->setFile("modules/glpi/glpi/ajaxLocationSearch.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 
+$page = new Page("ajaxSetGlpiEditableValue");
+$page->setFile("modules/glpi/glpi/ajaxSetGlpiEditableValue.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$submod->addPage($page);
+
 $page = new Page("groupglpitabs", _T("Inventory (GLPI) on a group of machines", "glpi"));
 $page->setFile("modules/glpi/glpi/tabs.php");
 $page->setOptions(array("visible"=>False));

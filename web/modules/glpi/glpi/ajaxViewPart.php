@@ -85,9 +85,6 @@ function display_part($part, $get, $simpleTableParts, $displayNavBar = True, $pa
      */
 
     // Simple table
-    $name = 'computer_name';
-    $value = 'JC-' . $uuid;
-    setGlpiEditableValue($uuid, $name, $value);
     if (in_array($part, $simpleTableParts)) {
         $key = array();
         $val = array();
@@ -103,7 +100,8 @@ function display_part($part, $get, $simpleTableParts, $displayNavBar = True, $pa
                  */
                 if (is_array($all[$k][0])) {
                     $editable = $all[$k][0];
-                    $val[] = sprintf('<label name="%s" data="%s">%s</label>', $editable[0], $editable[1], $editable[2]);
+                    $val[] = sprintf('<label class="editableField" name="%s" data="%s" style="height:1em;">%s</label>', $editable[0], $editable[1], $editable[2])
+                             .sprintf('<input type="text" class="editableField" name="%s" value="%s" style="display:none" />', $editable[0], $editable[2]);
                 }
                 else {
                     $val[] = $all[$k][0];
@@ -233,4 +231,68 @@ $$('tbody tr td:not(.action)').invoke('observe', 'click', function(event) {
     $('param').value = tdValue.replace(/&nbsp;/g, ' ');
     pushSearch();
 });
+
+// Label clicking functions
+$$('label.editableField').each(function(item) { 
+    item.observe('click', function(event,element) {
+        // item name
+        var name = item.readAttribute('name');
+        var value = item.innerHTML;
+        // corresponding input
+        var input = $$('input.editableField[name="'+name+'"]').first();
+        input.setStyle({'display':'block'});
+        item.setStyle({'display':'none'});
+        input.setValue(value);
+        input.focus();
+    })});
+
+// Input validate functions
+$$('input.editableField').each(function(item) { 
+    item.observe('keyup', function(e,element) {
+        if (e.which == 13) {
+            // item name
+            var name = item.readAttribute('name');
+            var value = item.getValue();
+            
+            var cname_regex = /^([a-zA-Z0-9][a-zA-Z0-9-_]*[a-zA-Z0-9])$/;
+            if (name=='computer_name' && !cname_regex.test(value)) {
+                alert('<?php print(_T('Invalid hostname','glpi')); ?>');
+                return;
+            }
+            new Ajax.Request('<?php echo urlStrRedirect("base/computers/ajaxSetGlpiEditableValue")?>&uuid=<?php print($_GET['objectUUID']); ?>&name='+name+'&value='+value, {
+                onSuccess: function(response) {
+                    // showing corresponding label and hide input
+                    var label = $$('label.editableField[name="'+name+'"]').first();
+                    label.setStyle({'display':'block'});
+                    label.innerHTML = value;
+                    item.setStyle({'display':'none'});
+                }
+              });
+            e.preventDefault();
+        }
+    });
+    
+    item.observe('focusout', function(e,element) {
+        // item name
+        var name = item.readAttribute('name');
+        var value = item.getValue();
+
+        var cname_regex = /^([a-zA-Z0-9][a-zA-Z0-9-_]*[a-zA-Z0-9])$/;
+        if (name=='computer_name' && !cname_regex.test(value)) {
+            alert('<?php print(_T('Invalid hostname','glpi')); ?>');
+            return;
+        }
+        new Ajax.Request('<?php echo urlStrRedirect("base/computers/ajaxSetGlpiEditableValue")?>&uuid=<?php print($_GET['objectUUID']); ?>&name='+name+'&value='+value, {
+            onSuccess: function(response) {
+                // showing corresponding label and hide input
+                var label = $$('label.editableField[name="'+name+'"]').first();
+                label.setStyle({'display':'block'});
+                label.innerHTML = value;
+                item.setStyle({'display':'none'});
+            }
+          });
+        e.preventDefault();
+    });    
+    
+    });
 </script>
