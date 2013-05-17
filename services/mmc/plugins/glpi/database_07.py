@@ -1524,6 +1524,8 @@ class Glpi07(DyngroupDatabaseHelper):
 
         values = {
             'computer_name': (Machine, 'name'),
+            'description': (Machine, 'comments'),
+            'inventory_number': (Machine, 'otherserial'),
         }
 
         return values[name]
@@ -1620,8 +1622,8 @@ class Glpi07(DyngroupDatabaseHelper):
                     entityValue += ' (%s)' % location
 
                 l = [
-                    ['Computer Name', machine.name],
-                    ['Description', machine.comments],
+                    ['Computer Name', ['computer_name', 'text', machine.name]],
+                    ['Description', ['description', 'text', machine.comments]],
                     ['Entity (Location)', '%s' % entityValue],
                     ['Domain', domain],
                     ['Last Logged User', machine.contact],
@@ -1630,7 +1632,7 @@ class Glpi07(DyngroupDatabaseHelper):
                     ['Model / Type', modelType],
                     ['Manufacturer', manufacturer],
                     ['Serial Number', serialNumber],
-                    ['Inventory Number', machine.otherserial],
+                    ['Inventory Number', ['inventory_number', 'text', machine.otherserial]],
                     ['State', state],
                     ['Warranty End Date', endDate],
                 ]
