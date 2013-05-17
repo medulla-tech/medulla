@@ -246,6 +246,13 @@ class Glpi08(DyngroupDatabaseHelper):
         self.diskfs = Table('glpi_filesystems', self.metadata, autoload = True)
         mapper(DiskFs, self.diskfs)
 
+	# glpi_plugin_fusinvinventory_antivirus
+        self.fusionantivirus = Table('glpi_plugin_fusinvinventory_antivirus', self.metadata,
+            Column('computers_id', Integer, ForeignKey('glpi_computers.id')),
+            Column('manufacturers_id', Integer, ForeignKey('glpi_manufacturers.id')),
+            autoload = True)
+        mapper(FusionAntivirus, self.fusionantivirus)
+
         # glpi_computerdisks
         self.disk = Table('glpi_computerdisks', self.metadata,
                           Column('computers_id', Integer, ForeignKey('glpi_computers.id')),
@@ -1435,6 +1442,30 @@ class Glpi08(DyngroupDatabaseHelper):
                         ['Warranty End Date', endDate],
                     ]
                     ret.append(l)
+        return ret
+
+    def getLastMachineAntivirusPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        query = self.filterOnUUID(
+            session.query(FusionAntivirus).add_column(self.manufacturers.c.name).select_from(
+                self.machine.outerjoin(self.fusionantivirus).outerjoin(self.manufacturers)
+            ), uuid)
+
+        if count:
+            ret = query.count()
+        else:
+            ret = []
+            for antivirus, manufacturerName in query:
+                if antivirus:
+                    l = [
+                        ['Name', manufacturerName and manufacturerName+' '+antivirus.name or antivirus.name],
+                        ['Enabled', antivirus.is_active == 1 and 'Yes' or 'No'],
+                        ['Up-to-date', antivirus.uptodate == 1 and 'Yes' or 'No'],
+                    ]
+                    if antivirus.version:
+                        l.insert(1, ['Version', antivirus.version])
+                    ret.append(l)
+                else:
+                    ret=[]
         return ret
 
     def getLastMachineSoftwaresPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
@@ -2747,6 +2778,9 @@ class State(object):
     pass
 
 class DiskFs(object):
+    pass
+
+class FusionAntivirus(object):
     pass
 
 class Disk(object):

@@ -64,6 +64,7 @@ $tabList = array(
     'Softwares' => _T('Softwares', "glpi"),
     'Administrative' => _T('Administrative', "glpi"),
     'History' => _T('History', "glpi"),
+    'Antivirus' => _T('Antivirus', "glpi"),
 );
 
 foreach ($tabList as $tab => $str) {

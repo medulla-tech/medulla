@@ -105,6 +105,11 @@ function display_part($part, $get, $simpleTableParts, $displayNavBar = True, $pa
                 }
                 else {
                     $val[] = $all[$k][0];
+                  // Dirty hack to translate Yes and No
+                  // This strings should be declared at the end of this file too
+                  if ($val[count($val)-1] == 'Yes' || $val[count($val)-1] == 'No' ) {
+                      $val[count($val)-1] = _T($val[count($val)-1], 'glpi');
+                  }
                 }
             }
         }
@@ -122,6 +127,21 @@ function display_part($part, $get, $simpleTableParts, $displayNavBar = True, $pa
     else {
         $n = null;
 
+        // Nothing found
+        if (count($all) == 0)  {
+            switch($part) {
+            case 'History':
+                printf('<p>%s</p>', _T('No record found for this period', 'glpi'));
+                break;
+            case 'Antivirus':
+                printf('<p>%s</p>', _T('Unable to detect any Antivirus software on this machine.', 'glpi'));
+                printf('<p>%s</p>', _T('Please ensure you are running GLPI with FusionInventory plugin and FusionInventory Agent on this client.', 'glpi'));
+                break;
+            default:
+                printf('<p>%s</p>', _T('No record found for this.', 'glpi'));
+            }
+        }
+
         // Put datas in a ListInfos object
         foreach ($all as $k => $v) {
             if ($n == null) {
@@ -129,6 +149,11 @@ function display_part($part, $get, $simpleTableParts, $displayNavBar = True, $pa
             }
             else {
                 $n->addExtraInfo($v, _T($k, 'glpi'));
+                // Dirty hack to translate Yes and No
+                // This strings should be declared at the end of this file too
+                if ($v == 'Yes' || $v == 'No') {
+                    $v = _T($v, 'glpi');
+                }
             }
         }
 
@@ -177,6 +202,9 @@ else {
 
 /**  to get i18n labels... */
 
+// Yes/No translation hack
+_T('Yes', 'glpi');
+_T('No', 'glpi');
 _T('Name', 'glpi');
 _T('Network Type', 'glpi');
 _T('MAC Address', 'glpi');
@@ -221,6 +249,9 @@ _T('Service Pack', 'glpi');
 _T('Domain', 'glpi');
 _T('State', 'glpi');
 _T('Inventory Number', 'glpi');
+// From Antivirus tab
+_T('Enabled', 'glpi');
+_T('Up-to-date', 'glpi');
 
 ?>
 
