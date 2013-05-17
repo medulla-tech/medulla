@@ -109,6 +109,9 @@ def getMachineMac(uuid):
 def getMachineIp(uuid):
     return xmlrpcCleanup(Glpi().getMachineIp(uuid))
 
+def setGlpiEditableValue(uuid, name, value):
+    return xmlrpcCleanup(Glpi().setGlpiEditableValue(uuid, name, value))
+
 # TODO
 def getInventoryEM(part):
     return []

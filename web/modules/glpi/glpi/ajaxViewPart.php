@@ -85,6 +85,9 @@ function display_part($part, $get, $simpleTableParts, $displayNavBar = True, $pa
      */
 
     // Simple table
+    $name = 'computer_name';
+    $value = 'JC-' . $uuid;
+    setGlpiEditableValue($uuid, $name, $value);
     if (in_array($part, $simpleTableParts)) {
         $key = array();
         $val = array();
@@ -94,7 +97,17 @@ function display_part($part, $get, $simpleTableParts, $displayNavBar = True, $pa
                 $val[] = str_replace('@@WARRANTY_LINK_TEXT@@', _T('Click here to see this computer on manufacturer website', 'glpi'), $all[$k][0]);
             }
             else {
-                $val[] = $all[$k][0];
+                /*
+                 * if $all[$k][0] is an array, it's an editable value
+                 * $editable = array(uniquename, type, value)
+                 */
+                if (is_array($all[$k][0])) {
+                    $editable = $all[$k][0];
+                    $val[] = sprintf('<label name="%s" data="%s">%s</label>', $editable[0], $editable[1], $editable[2]);
+                }
+                else {
+                    $val[] = $all[$k][0];
+                }
             }
         }
         $n = new ListInfos($key, _T("Properties", "glpi"));

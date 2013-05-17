@@ -1510,6 +1510,53 @@ class Glpi07(DyngroupDatabaseHelper):
                     ret.append(l)
         return ret
 
+    def __getTableAndFieldFromName(self, name):
+        """
+        return table class and field name for a given name
+        used for editable fields
+
+        @param name: a given name
+        @type name: string
+
+        @return: table class and field name
+        @rtype: tuple
+        """
+
+        values = {
+            'computer_name': (Machine, 'name'),
+        }
+
+        return values[name]
+
+    def setGlpiEditableValue(self, uuid, name, value):
+        """
+        Set a new value for a Glpi field
+
+        @param uuid: machine uuid
+        @type uuid: string
+
+        @param name: Glpi field who will be updated
+        @param name: string
+
+        @param value: The new value
+        @param value: string
+        """
+
+        self.logger.debug("Update an editable field")
+        self.logger.debug("%s: Set %s as new value for %s" % (uuid, value, name))
+        try:
+            session = create_session()
+
+            # Get SQL field who will be updated
+            table, field = self.__getTableAndFieldFromName(name)
+
+            session.query(table).filter_by(ID=fromUUID(uuid)).update({field: value})
+            session.close()
+            return True
+        except Exception, e:
+            self.logger.error(e)
+            return False
+
     def getLastMachineSummaryPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
         query = self.filterOnUUID(
             session.query(Machine).add_entity(Infocoms) \
