@@ -131,14 +131,14 @@ function display_part($part, $get, $simpleTableParts, $displayNavBar = True, $pa
         if (count($all) == 0)  {
             switch($part) {
             case 'History':
-                printf('<p>%s</p>', _T('No record found for this period', 'glpi'));
+                printf('<p>%s</p>', _T('No record found for this period.', 'glpi'));
                 break;
             case 'Antivirus':
                 printf('<p>%s</p>', _T('Unable to detect any Antivirus software on this machine.', 'glpi'));
                 printf('<p>%s</p>', _T('Please ensure you are running GLPI with FusionInventory plugin and FusionInventory Agent on this client.', 'glpi'));
                 break;
             default:
-                printf('<p>%s</p>', _T('No record found for this.', 'glpi'));
+                printf('<p>%s</p>', _T('No record found.', 'glpi'));
             }
         }
 
