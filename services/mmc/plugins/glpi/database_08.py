@@ -247,11 +247,21 @@ class Glpi08(DyngroupDatabaseHelper):
         mapper(DiskFs, self.diskfs)
 
 	# glpi_plugin_fusinvinventory_antivirus
-        self.fusionantivirus = Table('glpi_plugin_fusinvinventory_antivirus', self.metadata,
-            Column('computers_id', Integer, ForeignKey('glpi_computers.id')),
-            Column('manufacturers_id', Integer, ForeignKey('glpi_manufacturers.id')),
-            autoload = True)
-        mapper(FusionAntivirus, self.fusionantivirus)
+        # this table comes with Fusioninventory plugin and could not exists
+        # if you don't use this plugin, so use try / except
+        self.fusionantivirus = None
+        try:
+            self.logger.debug('Try to load fusion antivirus table...')
+            self.fusionantivirus = Table('glpi_plugin_fusinvinventory_antivirus', self.metadata,
+                Column('computers_id', Integer, ForeignKey('glpi_computers.id')),
+                Column('manufacturers_id', Integer, ForeignKey('glpi_manufacturers.id')),
+                autoload = True)
+            mapper(FusionAntivirus, self.fusionantivirus)
+            self.logger.debug('... Success !!')
+        except:
+            self.logger.warn('Load of fusion antivirus table failed')
+            self.logger.warn('This means you can not know antivirus statuses of your machines.')
+            self.logger.warn('This feature comes with Fusioninventory GLPI plugin')
 
         # glpi_computerdisks
         self.disk = Table('glpi_computerdisks', self.metadata,
@@ -1445,6 +1455,9 @@ class Glpi08(DyngroupDatabaseHelper):
         return ret
 
     def getLastMachineAntivirusPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        if self.fusionantivirus is None: # glpi_plugin_fusinvinventory_antivirus doesn't exists
+            return []
+
         query = self.filterOnUUID(
             session.query(FusionAntivirus).add_column(self.manufacturers.c.name).select_from(
                 self.machine.outerjoin(self.fusionantivirus).outerjoin(self.manufacturers)
