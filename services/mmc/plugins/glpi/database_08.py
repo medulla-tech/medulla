@@ -246,6 +246,8 @@ class Glpi08(DyngroupDatabaseHelper):
         self.diskfs = Table('glpi_filesystems', self.metadata, autoload = True)
         mapper(DiskFs, self.diskfs)
 
+        ## Fusion Inventory tables
+
 	# glpi_plugin_fusinvinventory_antivirus
         # this table comes with Fusioninventory plugin and could not exists
         # if you don't use this plugin, so use try / except
@@ -262,6 +264,16 @@ class Glpi08(DyngroupDatabaseHelper):
             self.logger.warn('Load of fusion antivirus table failed')
             self.logger.warn('This means you can not know antivirus statuses of your machines.')
             self.logger.warn('This feature comes with Fusioninventory GLPI plugin')
+
+        # glpi_plugin_fusioninventory_locks
+        self.fusionlocks = None
+
+        if self.fusionantivirus is not None: # Fusion is not installed
+            self.logger.debug('Load glpi_plugin_fusioninventory_locks')
+            self.fusionlocks = Table('glpi_plugin_fusioninventory_locks', self.metadata,
+                Column('items_id', Integer, ForeignKey('glpi_computers.id')),
+                autoload = True)
+            mapper(FusionLocks, self.fusionlocks)
 
         # glpi_computerdisks
         self.disk = Table('glpi_computerdisks', self.metadata,
@@ -1545,6 +1557,10 @@ class Glpi08(DyngroupDatabaseHelper):
         @rtype: tuple
         """
 
+        # Reminder:
+        #   If you add some other classes, check
+        #   if __tablename__ exists for these classes
+
         values = {
             'computer_name': (Machine, 'name'),
             'description': (Machine, 'comment'),
@@ -1574,8 +1590,29 @@ class Glpi08(DyngroupDatabaseHelper):
 
             # Get SQL field who will be updated
             table, field = self.__getTableAndFieldFromName(name)
-
             session.query(table).filter_by(id=fromUUID(uuid)).update({field: value})
+
+            # Set updated field as a locked field so it won't be updated
+            # at next inventory
+            query = session.query(FusionLocks).filter(self.fusionlocks.c.items_id == fromUUID(uuid))
+            flocks = query.first()
+            if flocks is not None:
+                # Update glpi_plugin_fusioninventory_locks tablefields table
+                flocksFields = eval(flocks.tablefields)
+                if field not in flocksFields:
+                    self.logger.error(field)
+                    flocksFields.append(field)
+                    query.update({'tablefields': str(flocksFields).replace("'", '"')})
+            else:
+                # Create new glpi_plugin_fusioninventory_locks entry
+                session.execute(
+                    self.fusionlocks.insert().values({
+                        'tablename': table.__tablename__,
+                        'items_id': fromUUID(uuid),
+                        'tablefields': str([field]).replace("'", '"'),
+                    })
+                )
+
             session.close()
             return True
         except Exception, e:
@@ -2750,6 +2787,8 @@ class Glpi08(DyngroupDatabaseHelper):
  
 # Class for SQLalchemy mapping
 class Machine(object):
+    __tablename__ = 'glpi_computers'
+
     def getUUID(self):
         return toUUID(self.id)
     def toH(self):
@@ -2794,6 +2833,9 @@ class DiskFs(object):
     pass
 
 class FusionAntivirus(object):
+    pass
+
+class FusionLocks(object):
     pass
 
 class Disk(object):
