@@ -1600,7 +1600,6 @@ class Glpi08(DyngroupDatabaseHelper):
                 # Update glpi_plugin_fusioninventory_locks tablefields table
                 flocksFields = eval(flocks.tablefields)
                 if field not in flocksFields:
-                    self.logger.error(field)
                     flocksFields.append(field)
                     query.update({'tablefields': str(flocksFields).replace("'", '"')})
             else:
