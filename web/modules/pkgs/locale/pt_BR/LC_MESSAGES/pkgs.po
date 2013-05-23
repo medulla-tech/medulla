@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-26 23:24+0200\n"
+"POT-Creation-Date: 2013-05-23 17:11+0200\n"
 "PO-Revision-Date: 2013-03-14 19:47+0000\n"
 "Last-Translator: Leonardo Coelho <leonardoc@mandriva.com.br>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
@@ -46,8 +46,8 @@ msgstr "Já enviado para o servidor"
 msgid "Associate package"
 msgstr "Associar pacote"
 
-#: modules/pkgs/pkgs/add.php:304
 #: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:135
+#: modules/pkgs/pkgs/add.php:304
 msgid ""
 "Change post_max_size and upload_max_filesize directives in php.ini file to "
 "increase upload size."
@@ -68,7 +68,7 @@ msgstr "Clique aqui para selecionar os arquivos"
 msgid "Command : "
 msgstr "Comando : "
 
-#: modules/pkgs/pkgs/add.php:161 modules/pkgs/pkgs/edit.php:165
+#: modules/pkgs/pkgs/edit.php:165 modules/pkgs/pkgs/add.php:161
 msgid "Command's name : "
 msgstr "Nome do comando : "
 
@@ -86,9 +86,9 @@ msgstr "Excluir um pacote"
 msgid "Delete this package"
 msgstr "Excluir este pacote"
 
-#: modules/pkgs/pkgs/add.php:150 modules/pkgs/pkgs/ajaxPackageList.php:69
+#: modules/pkgs/pkgs/ajaxPackageList.php:69 modules/pkgs/pkgs/edit.php:161
+#: modules/pkgs/pkgs/add.php:150
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
-#: modules/pkgs/pkgs/edit.php:161
 msgid "Description"
 msgstr "Descrição"
 
@@ -119,8 +119,8 @@ msgstr "Diretório de arquivos"
 msgid "Files successfully associated with package <b>%s (%s)</b>%s"
 msgstr "Os arquivos foram associados com sucesso ao pacote <b>%s (%s)</b>%s"
 
-#: modules/pkgs/pkgs/add.php:304
 #: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:135
+#: modules/pkgs/pkgs/add.php:304
 #, php-format
 msgid "Files upload (<b><u title='%s'>%sM max</u></b>)"
 msgstr "Arquivos Enviados (<b><u title='%s'>%sM max</u></b>)"
@@ -138,11 +138,11 @@ msgstr "Fazer um pacote vazio"
 msgid "Name"
 msgstr "Nome"
 
-#: modules/pkgs/pkgs/add.php:169 modules/pkgs/pkgs/edit.php:173
+#: modules/pkgs/pkgs/edit.php:173 modules/pkgs/pkgs/add.php:169
 msgid "Need a reboot ?"
 msgstr "Necessita reiniciar ?"
 
-#: modules/pkgs/pkgs/add.php:134 modules/pkgs/pkgs/edit.php:141
+#: modules/pkgs/pkgs/edit.php:141 modules/pkgs/pkgs/add.php:134
 msgid "Package API"
 msgstr "API do pacote"
 
@@ -187,11 +187,11 @@ msgstr "Versão do pacote"
 msgid "Packages"
 msgstr "Pacotes"
 
-#: modules/pkgs/pkgs/index.php:29 modules/pkgs/pkgs/localSidebar.php:27
+#: modules/pkgs/pkgs/localSidebar.php:27 modules/pkgs/pkgs/index.php:29
 msgid "Packages list"
 msgstr "Lista de pacotes"
 
-#: modules/pkgs/pkgs/localSidebar.php:29 modules/pkgs/pkgs/pending.php:29
+#: modules/pkgs/pkgs/pending.php:29 modules/pkgs/pkgs/localSidebar.php:29
 msgid "Pending packages list"
 msgstr "Lista de pacotes pendentes"
 
@@ -254,7 +254,7 @@ msgstr "Fila de arquivos enviados"
 msgid "Upload from this web page"
 msgstr "Enviar a partir desta pagina web"
 
-#: modules/pkgs/pkgs/add.php:149 modules/pkgs/pkgs/ajaxPackageList.php:70
+#: modules/pkgs/pkgs/ajaxPackageList.php:70 modules/pkgs/pkgs/add.php:149
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
 msgid "Version"
 msgstr "Versão"

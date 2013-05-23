@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-26 23:24+0200\n"
+"POT-Creation-Date: 2013-05-23 17:11+0200\n"
 "PO-Revision-Date: 2013-03-14 14:48+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Spanish (Spain) (http://transifex.mandriva.com/projects/p/"
@@ -42,8 +42,8 @@ msgstr ""
 msgid "Associate package"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:304
 #: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:135
+#: modules/pkgs/pkgs/add.php:304
 msgid ""
 "Change post_max_size and upload_max_filesize directives in php.ini file to "
 "increase upload size."
@@ -62,7 +62,7 @@ msgstr ""
 msgid "Command : "
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:161 modules/pkgs/pkgs/edit.php:165
+#: modules/pkgs/pkgs/edit.php:165 modules/pkgs/pkgs/add.php:161
 msgid "Command's name : "
 msgstr ""
 
@@ -80,9 +80,9 @@ msgstr ""
 msgid "Delete this package"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:150 modules/pkgs/pkgs/ajaxPackageList.php:69
+#: modules/pkgs/pkgs/ajaxPackageList.php:69 modules/pkgs/pkgs/edit.php:161
+#: modules/pkgs/pkgs/add.php:150
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
-#: modules/pkgs/pkgs/edit.php:161
 msgid "Description"
 msgstr ""
 
@@ -113,8 +113,8 @@ msgstr ""
 msgid "Files successfully associated with package <b>%s (%s)</b>%s"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:304
 #: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:135
+#: modules/pkgs/pkgs/add.php:304
 #, php-format
 msgid "Files upload (<b><u title='%s'>%sM max</u></b>)"
 msgstr ""
@@ -132,11 +132,11 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:169 modules/pkgs/pkgs/edit.php:173
+#: modules/pkgs/pkgs/edit.php:173 modules/pkgs/pkgs/add.php:169
 msgid "Need a reboot ?"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:134 modules/pkgs/pkgs/edit.php:141
+#: modules/pkgs/pkgs/edit.php:141 modules/pkgs/pkgs/add.php:134
 msgid "Package API"
 msgstr ""
 
@@ -181,11 +181,11 @@ msgstr ""
 msgid "Packages"
 msgstr ""
 
-#: modules/pkgs/pkgs/index.php:29 modules/pkgs/pkgs/localSidebar.php:27
+#: modules/pkgs/pkgs/localSidebar.php:27 modules/pkgs/pkgs/index.php:29
 msgid "Packages list"
 msgstr ""
 
-#: modules/pkgs/pkgs/localSidebar.php:29 modules/pkgs/pkgs/pending.php:29
+#: modules/pkgs/pkgs/pending.php:29 modules/pkgs/pkgs/localSidebar.php:29
 msgid "Pending packages list"
 msgstr ""
 
@@ -244,7 +244,7 @@ msgstr ""
 msgid "Upload from this web page"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:149 modules/pkgs/pkgs/ajaxPackageList.php:70
+#: modules/pkgs/pkgs/ajaxPackageList.php:70 modules/pkgs/pkgs/add.php:149
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
 msgid "Version"
 msgstr ""
