@@ -74,7 +74,9 @@ function display_part($part, $get, $simpleTableParts, $displayNavBar = True, $pa
     $i = 0;
     foreach ($inv as $line) {
         foreach ($line as $vals) {
-            $all[$vals[0]][$i] = $vals[1];
+            // If $vals[1] is an empty string, don't use the _T() function
+            // Empty fields are replaced by a trademark text by transifex
+            $all[$vals[0]][$i] = ($vals[1] != '') ? _T($vals[1]) : '';
         }
         $i++;
     }
@@ -105,11 +107,6 @@ function display_part($part, $get, $simpleTableParts, $displayNavBar = True, $pa
                 }
                 else {
                     $val[] = $all[$k][0];
-                  // Dirty hack to translate Yes and No
-                  // This strings should be declared at the end of this file too
-                  if ($val[count($val)-1] == 'Yes' || $val[count($val)-1] == 'No' ) {
-                      $val[count($val)-1] = _T($val[count($val)-1], 'glpi');
-                  }
                 }
             }
         }
@@ -149,11 +146,6 @@ function display_part($part, $get, $simpleTableParts, $displayNavBar = True, $pa
             }
             else {
                 $n->addExtraInfo($v, _T($k, 'glpi'));
-                // Dirty hack to translate Yes and No
-                // This strings should be declared at the end of this file too
-                if ($v == 'Yes' || $v == 'No') {
-                    $v = _T($v, 'glpi');
-                }
             }
         }
 
@@ -225,8 +217,12 @@ _T('Version', 'glpi');
 _T('Computer Name', 'glpi');
 _T('Description', 'glpi');
 _T('Entity (Location)', 'glpi');
+_T('Entity', 'glpi');
+_T('Location', 'glpi');
 _T('Last Logged User', 'glpi');
 _T('OS', 'glpi');
+_T('Operating System', 'glpi');
+_T('computer Type', 'glpi');
 _T('Model / Type', 'glpi');
 _T('Manufacturer', 'glpi');
 _T('Serial Number', 'glpi');
