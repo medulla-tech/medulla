@@ -116,9 +116,19 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
     if ($count) {
         foreach ($headers as $header) {
             if ($n == null) {
-                $n = new OptimizedListInfos($columns[$header[0]], _($header[1]));
+                if (in_array("glpi", $_SESSION["modulesList"])) {
+                    $n = new OptimizedListInfos($columns[$header[0]], _T($header[1], 'glpi'));
+                }
+                else {
+                    $n = new OptimizedListInfos($columns[$header[0]], _($header[1]));
+                }
             } else {
-                $n->addExtraInfo($columns[$header[0]], _($header[1]));
+                if (in_array("glpi", $_SESSION["modulesList"])) {
+                    $n->addExtraInfo($columns[$header[0]], _T($header[1], 'glpi'));
+                }
+                else {
+                    $n->addExtraInfo($columns[$header[0]], _($header[1]));
+                }
             }
         }
         $n->setItemCount($count);
