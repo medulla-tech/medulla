@@ -124,8 +124,9 @@ function display_part($part, $get, $simpleTableParts, $displayNavBar = True, $pa
     else {
         $n = null;
 
-        // Nothing found
-        if (count($all) == 0)  {
+        // If nothing found, display a "nothing found" message
+        // except on Hardware tab (identified by $partTitle == null) => display nothing
+        if (count($all) == 0 && $partTitle == null)  {
             switch($part) {
             case 'History':
                 printf('<p>%s</p>', _T('No record found for this period.', 'glpi'));
