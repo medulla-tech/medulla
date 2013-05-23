@@ -222,7 +222,7 @@ _T('Location', 'glpi');
 _T('Last Logged User', 'glpi');
 _T('OS', 'glpi');
 _T('Operating System', 'glpi');
-_T('computer Type', 'glpi');
+_T('Computer Type', 'glpi');
 _T('Model / Type', 'glpi');
 _T('Manufacturer', 'glpi');
 _T('Serial Number', 'glpi');
