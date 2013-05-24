@@ -56,6 +56,7 @@ class Pulse2Api(twisted.web.xmlrpc.Proxy):
     def callRemote(self, method, *args):
         if pulse2.xmlrpc.isTwistedEnoughForCert():
             factory = self.queryFactory(self.path, self.host, method, self.user, self.password, self.allowNone, args)
+	    d = factory.deferred
             if self.secure:
                 from twisted.internet import ssl
                 if not self.SSLClientContext:
@@ -63,7 +64,7 @@ class Pulse2Api(twisted.web.xmlrpc.Proxy):
                 reactor.connectSSL(self.host, self.port or 443, factory, self.SSLClientContext)
             else:
                 reactor.connectTCP(self.host, self.port or 80, factory)
-            return factory.deferred
+            return d
         else:
             # cont support certif
             return twisted.web.xmlrpc.Proxy.callRemote(self, method, *args)
