@@ -143,10 +143,16 @@ class InventoryServer:
         """
         try:
 
-            macaddr = InventoryUtils.getMAC(content)
-            self.logger.debug("GlpiProxy: Resolved MAC: %s" % str(macaddr))
-            if macaddr :
-                glpi_uuid = resolveGlpiMachineUUIDByMAC(macaddr)
+            macaddresses = InventoryUtils.getMACs(content)
+            self.logger.debug("GlpiProxy: MAC addresses found: %s" % str(macaddresses))
+            if len(macaddresses) > 0 :
+                glpi_uuid = None
+                for macaddr in macaddresses :
+                    self.logger.debug("GlpiProxy: Trying to resolve a machine with MAC address=%s" % macaddr)
+                    glpi_uuid = resolveGlpiMachineUUIDByMAC(macaddr)
+                    if glpi_uuid :
+                        self.logger.debug("GlpiProxy: Resolved machine UUID='%s'" % str(glpi_uuid))
+                        break
                 if not (glpi_uuid and InventoryUtils.is_comming_from_pxe(from_ip)) :  
                     glpi_proxy = GlpiProxy(self.config.url_to_forward)
                     self.logger.info("GlpiProxy: Forwarding the inventory to GLPI")
@@ -283,19 +289,25 @@ class TreatInv(Thread):
         self.logger.debug('### BEGIN INVENTORY')
         self.logger.debug('%s' % cont)
         self.logger.debug('### END INVENTORY')
-        macaddr = InventoryUtils.getMAC(content)
+        macaddresses = InventoryUtils.getMACs(content)
+        self.logger.debug("MAC addresses found: %s" % str(macaddresses))
+        final_macaddr = None
 
         setLastFlag = True
 
         # GLPI case - inventory creating disabled 
-        if self.config.enable_forward :
+        if self.config.enable_forward and len(macaddresses) > 0:
             try :
-                glpi_machine_uuid = resolveGlpiMachineUUIDByMAC(macaddr) 
-                self.logger.debug("Resolved machine UUID='%s'" % str(glpi_machine_uuid))
-                if glpi_machine_uuid :
-                    AttemptToScheduler(from_ip, glpi_machine_uuid)
-                else :
-                    self.logger.warn("GLPI machine couldn't be resolved, skipping the light pull.")
+                for macaddr in macaddresses :
+                    self.logger.debug("Trying to resolve a machine with MAC address=%s" % macaddr)
+                    glpi_machine_uuid = resolveGlpiMachineUUIDByMAC(macaddr) 
+                    if glpi_machine_uuid :
+                        self.logger.debug("Resolved machine UUID='%s'" % str(glpi_machine_uuid))
+                        AttemptToScheduler(from_ip, glpi_machine_uuid)
+                        final_macaddr = macaddr
+                        break
+                    else :
+                        self.logger.warn("GLPI machine couldn't be resolved, skipping the light pull.")
             except Exception, exc :
                 self.logger.error("GLPI light pull mode: %s" % str(exc))
         if self.config.disable_create_inventory :
@@ -306,7 +318,7 @@ class TreatInv(Thread):
             self.logger.debug("Inventory is coming from PXE")
             inv = Inventory()
             inv.activate(self.config)
-            setLastFlag = not inv.isInventoried(macaddr)
+            setLastFlag = not inv.isInventoried(final_macaddr)
 
         try:
             start_date = time.time()

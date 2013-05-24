@@ -235,22 +235,26 @@ class InventoryUtils :
         return from_ip == cls.get_pkg_server_ip()
 
     @classmethod
-    def getMAC(cls, content):
+    def getMACs(cls, content):
         """
-        Getting the MAC address from inventory XML
+        Getting the MAC addresses from inventory XML
 
         @param content: incoming inventory in XML format
         @type content: str
 
-        @return: MAC address
-        @rtype: str
+        @return: list of MAC addresses
+        @rtype: generator
         """
         dom = parseString(content)
         tags = dom.getElementsByTagName('MACADDR')
 
+        macs = []
+
         if isinstance(tags, list) and len(tags) > 0:
-            xmlTag = tags[0].toxml()
-            return xmlTag.replace('<MACADDR>','').replace('</MACADDR>','')
-        else :
-            return None
+            for tag in tags :
+                xml_tag = tag.toxml()
+                mac = xml_tag.replace('<MACADDR>','').replace('</MACADDR>','')
+                macs.append(mac)
+
+        return macs
 
