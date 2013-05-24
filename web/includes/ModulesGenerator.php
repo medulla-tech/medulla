@@ -44,7 +44,7 @@ class MMCApp {
     * fake static element (due to php4 bad object integration) with
     * a global value
     */
-   function &getInstance() {
+   public static function &getInstance() {
 
       if (!isset($GLOBALS["__INSTANCE_MMC_APP__"])) {
          $GLOBALS["__INSTANCE_MMC_APP__"] = new MMCApp();

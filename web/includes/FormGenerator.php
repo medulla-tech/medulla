@@ -43,7 +43,7 @@ class AbstractTpl extends HtmlElement {
      *  display abstract Element
      *  $arrParam accept ["value"]
      */
-    function display($arrParam) {
+    function display($arrParam = array()) {
     }
 
     /**
@@ -80,7 +80,7 @@ class TextareaTpl extends AbstractTpl {
         $this->cols = $value;
     }
 
-    function display($arrParam) {
+    function display($arrParam = array()) {
         if (!isset($arrParam['disabled'])) {
             $arrParam['disabled'] = '';
         }
@@ -101,7 +101,7 @@ class FileTpl extends AbstractTpl {
         $this->name=$name;
     }
 
-    function display($arrParam) {
+    function display($arrParam = array()) {
         print '<input name="'.$this->name.'" id="'.$this->name.'" type="file" size="23" />';
     }
 
@@ -137,7 +137,7 @@ class RadioTpl extends AbstractTpl {
         $this->selected = $selected;
     }
 
-    function display($arrParam) {
+    function display($arrParam = array()) {
         if (!isset($this->choiceVal)) {
             $this->choiceVal = $this->choices;
         }
@@ -199,7 +199,7 @@ class ImageTpl extends AbstractTpl {
         $this->name = $name;
     }
 
-    function display($arrParam) {
+    function display($arrParam = array()) {
 
         if ($arrParam['value'])
             $img = "data:image/jpeg;base64," . base64_encode($arrParam['value']->scalar);
@@ -303,7 +303,7 @@ class InputTpl extends AbstractTpl{
      *  display input Element
      *  $arrParam accept ["value"] to corresponding value
      */
-    function display($arrParam) {
+    function display($arrParam = array()) {
         if ($arrParam=='') {
             $arrParam = $_POST[$this->name];
         }
@@ -450,7 +450,7 @@ class DateTpl extends InputTpl {
     function DateTpl($name) {
         $this->name = $name;
     }
-    function display($arrParam) {
+    function display($arrParam = array()) {
         print '<div id="div'.$this->name.'">';
         print '<table cellspacing="0">';
 
@@ -497,7 +497,7 @@ class DynamicDateTpl extends InputTpl {
         $this->size = "";
         $this->fieldType = "text";
     }
-    function display($arrParam) {
+    function display($arrParam = array()) {
         $e = new InputTpl($this->name);
         if (!isset($GLOBALS["__JSCALENDAR_SOURCED__"])) { // to avoid double-sourcing
             $GLOBALS["__JSCALENDAR_SOURCED__"] = 1;
@@ -573,7 +573,7 @@ class MultipleInputTpl extends AbstractTpl {
         $this->regexp = $regexp;
     }
 
-    function display($arrParam) {
+    function display($arrParam = array()) {
         print '<div id="'.$this->name.'">';
         print '<table cellspacing="0">';
         foreach ($arrParam as $key => $param) {
@@ -671,7 +671,7 @@ class MembersTpl extends AbstractTpl {
         $this->titleRight = $titleRight;
     }
 
-    function display($arrParam) {
+    function display($arrParam = array()) {
 
         if(is_array($arrParam['member']))
             $this->member = $arrParam['member'];

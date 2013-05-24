@@ -292,7 +292,7 @@ class EmptyActionItem extends ActionItem {
     function EmptyActionItem() {
     }
 
-    function display($param = null) {
+    function display($param = null, $extraParams = Array()) {
         print '<li class="empty"><a href="#" onclick="return false;">&nbsp;</a></li>';
     }
 
@@ -794,7 +794,7 @@ class SimpleNavBar extends HtmlElement {
         $this->curpage = floor(($this->curend + 1) / $this->max);
     }
 
-    function display() {
+    function display($arrParam = array()) {
         echo '<form method="post">';
         echo "<ul class=\"navList\">\n";
 
@@ -1042,7 +1042,7 @@ class AjaxNavBar extends SimpleNavBar {
         $this->jsfunc = $jsfunc;
     }
 
-    function display() {
+    function display($arrParam = array()) {
         echo '<form method="post">';
         echo "<ul class=\"navList\">\n";
 
@@ -1174,7 +1174,7 @@ class AjaxFilter extends HtmlElement {
         $this->refresh = $refresh;
     }
 
-    function display() {
+    function display($arrParam = array()) {
         global $conf;
         $root = $conf["global"]["root"];
         $maxperpage = $conf["global"]["maxperpage"];
@@ -1302,7 +1302,7 @@ class NoLocationTpl extends AbstractTpl {
         $this->size = '13';
     }
 
-    function display() {
+    function display($arrParam = array()) {
         print '<span class="error">' . _("No item available") . '</span>';
         print '<input name="'.$this->name.'" id="'.$this->name.'" type="HIDDEN" size="'.$this->size.'" value="" class="searchfieldreal" />';
     }
@@ -1327,7 +1327,7 @@ class SingleLocationTpl extends AbstractTpl {
     function setSelected($elemnt) {
     }
 
-    function display() {
+    function display($arrParam = array()) {
         print $this->label;
         print '<input name="'.$this->name.'" id="'.$this->name.'" type="HIDDEN" value="'. $this->value .'" class="searchfieldreal" />';
     }
@@ -1362,7 +1362,7 @@ class AjaxFilterLocation extends AjaxFilter {
         $this->location->setSelected($elemnt);
     }
 
-    function display() {
+    function display($arrParam = array()) {
         global $conf;
         $root = $conf["global"]["root"];
 ?>
@@ -1460,7 +1460,7 @@ class AjaxLocation extends AjaxFilterLocation {
         $this->location = new SelectItem($paramname, 'pushSearchLocation', 'searchfieldreal noborder');
     }
 
-    function display() {
+    function display($arrParam = array()) {
         global $conf;
         $root = $conf["global"]["root"];
 ?>
@@ -1790,7 +1790,7 @@ class DisplayFile extends HtmlElement {
         $this->file = $file;
     }
 
-    function display() {
+    function display($arrParam = array()) {
         require($this->file);
     }
 }
@@ -1839,7 +1839,7 @@ class TabWidget extends HtmlElement {
         $this->active = $flag;
     }
 
-    function display() {
+    function display($arrParam = array()) {
         if ($this->active)
             $klass = ' class="tabactive"';
         else
@@ -2092,7 +2092,7 @@ class Message extends HtmlElement {
         $this->type = $type;
     }
 
-    function display() {
+    function display($arrParam = array()) {
         print '<div class="alert alert-' . $this->type . '">' . $this->msg . '</div>';
     }
 }
@@ -2177,7 +2177,7 @@ class HtmlElement {
         return True;
     }
 
-    function display() {
+    function display($arrParam = array()) {
         die("Must be implemented by the subclass");
     }
 
@@ -2562,7 +2562,7 @@ class ModuleTitleElement extends HtmlElement{
         $this->title=$title;
     }
 
-    function display(){
+    function display($arrParam = array()){
         print '<br><h1>'.$this->title.'</h1>';
     }
 }
@@ -2572,7 +2572,7 @@ class TitleElement extends HtmlElement {
         $this->title=$title;
         $this->level = $level;
     }
-    function display(){
+    function display($arrParam = array()){
         print '<br/><h'.$this->level.'>'.$this->title.'</h'.$this->level.'>';
     }
 }
@@ -2584,7 +2584,7 @@ class SpanElement extends HtmlElement {
         $this->class = $class;
     }
 
-    function display(){
+    function display($arrParam = array()){
         if ($this->class) {
             $class = ' class="' . $this->class . '"';
         }
@@ -2602,7 +2602,7 @@ class SelectElement extends HtmlElement{
         $this->nametab = $nametab;
     }
 
-    function display() {
+    function display($arrParam = array()) {
         print '<a href="javascript:void(0);" onclick="checkAll(\''.$this->name.'\',1);checkAll(\''.$this->nametab.'\',1);">'._("Select all").' </a> / ';
         print '<a href="javascript:void(0);" onclick="checkAll(\''.$this->name.'\',0);checkAll(\''.$this->nametab.'\',0);">'._("Unselect all").'</a><br/>';
     }
@@ -2614,7 +2614,7 @@ class TrTitleElement extends HtmlElement{
             $this->titles=$arrtitles;
         }
 
-        function display(){
+        function display($arrParam = array()){
             $colsize=100/sizeof($this->titles);
             print '<tr>';
             foreach( $this->titles as $value ){
@@ -2634,7 +2634,7 @@ class AjaxPage extends HtmlElement {
         $this->refresh = $refresh;
     }
 
-    function display() {
+    function display($arrParam = array()) {
 echo <<< EOT
         <div id="{$this->id}" class="{$this->class}"></div>
         <script type="text/javascript">
