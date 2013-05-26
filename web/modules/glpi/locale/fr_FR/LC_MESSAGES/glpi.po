@@ -1,24 +1,216 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
-## Translators:
+#
+# # Translators:
 #   <acecile@mandriva.com>, 2012, 2013.
 #   <jcvassort@mandriva.com>, 2013.
 # Nicolas Rueff <n.rueff@mandriva.com>, 2008.
 msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
-"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-05-23 17:11+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-05-27 01:00+0200\n"
 "PO-Revision-Date: 2013-05-23 15:12+0000\n"
 "Last-Translator: Jean-Christophe Vassort <jcvassort@mandriva.com>\n"
-"Language-Team: French (France) (http://transifex.mandriva.com/projects/p/pulse2/team/fr_FR/)\n"
+"Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
+"pulse2/team/fr_FR/)\n"
+"Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr_FR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
+
+#: modules/glpi/glpi/tabs.php:54
+#, php-format
+msgid "%s's inventory (%s)"
+msgstr "Inventaire de %s (%s)"
+
+#: modules/glpi/glpi/ajaxViewPart.php:241
+msgid "Action"
+msgstr "Action"
+
+#: modules/glpi/glpi/tabs.php:65
+msgid "Administrative"
+msgstr "Administratif"
+
+#: modules/glpi/infoPackage.inc.php:74 modules/glpi/infoPackage.inc.php:104
+msgid "Administrative tab (GLPI)"
+msgstr "Onglet administratif (GLPI)"
+
+#: modules/glpi/glpi/ajaxViewPart.php:245 modules/glpi/includes/html.php:60
+msgid "All"
+msgstr "Tout"
+
+#: modules/glpi/glpi/tabs.php:67
+msgid "Antivirus"
+msgstr "Antivirus"
+
+#: modules/glpi/infoPackage.inc.php:80 modules/glpi/infoPackage.inc.php:110
+msgid "Antivirus tab (GLPI)"
+msgstr "Onglet antivirus (GLPI)"
+
+#: modules/glpi/glpi/ajaxViewPart.php:234
+msgid "Bandwidth"
+msgstr "Bande Passante"
+
+#: modules/glpi/glpi/ajaxViewPart.php:240
+msgid "Category"
+msgstr "Catégorie"
+
+#: modules/glpi/glpi/ajaxViewPart.php:97
+msgid "Click here to see this computer on manufacturer website"
+msgstr "Cliquez ici pour voir cet ordinateur sur le site du constructeur"
+
+#: modules/glpi/glpi/ajaxViewPart.php:237
+msgid "Comment"
+msgstr "Commentaire"
+
+#: modules/glpi/glpi/ajaxViewPart.php:219
+msgid "Computer Name"
+msgstr "Nom de la Machine"
+
+#: modules/glpi/glpi/ajaxViewPart.php:227
+msgid "Computer Type"
+msgstr "Type"
+
+#: modules/glpi/includes/panels/glpi.inc.php:30
+msgid "Computers"
+msgstr "Machines"
+
+#: modules/glpi/glpi/createStaticGroup.php:43
+#, php-format
+msgid "Computers list has been truncated at %d computers"
+msgstr "La liste des machines a été tronquée à %d"
+
+#: modules/glpi/glpi/ajaxViewPart.php:181
+msgid "Controllers"
+msgstr "Contrôleurs"
+
+#: modules/glpi/infoPackage.inc.php:33
+msgid "Create static group from dashboard (GLPI)"
+msgstr "Créer un groupe statique depuis le tableau de bord (GLPI)"
+
+#: modules/glpi/glpi/ajaxViewPart.php:238
+msgid "Date"
+msgstr "Date"
+
+#: modules/glpi/glpi/ajaxViewPart.php:220
+msgid "Description"
+msgstr "Description"
+
+#: modules/glpi/glpi/ajaxViewPart.php:208
+msgid "Device"
+msgstr "Périphérique"
+
+#: modules/glpi/infoPackage.inc.php:40
+msgid "Display locations"
+msgstr "Montrer les lieux"
+
+#: modules/glpi/glpi/ajaxViewPart.php:247
+msgid "Domain"
+msgstr "Domaine"
+
+#: modules/glpi/glpi/ajaxViewPart.php:183
+msgid "Drives"
+msgstr "Lecteurs"
+
+#: modules/glpi/glpi/ajaxViewPart.php:252
+msgid "Enabled"
+msgstr "Activé"
+
+#: modules/glpi/glpi/ajaxViewPart.php:222
+msgid "Entity"
+msgstr "Entité"
+
+#: modules/glpi/glpi/ajaxViewPart.php:221
+msgid "Entity (Location)"
+msgstr "Entitée (Lieu)"
+
+#: modules/glpi/glpi/ajaxViewPart.php:210
+msgid "Filesystem"
+msgstr "Système de Fichiers"
+
+#: modules/glpi/glpi/ajaxViewPart.php:212
+msgid "Free Size"
+msgstr "Espace Libre"
+
+#: modules/glpi/glpi/ajaxViewPart.php:231
+msgid "Frequency"
+msgstr "Fréquence"
+
+#: modules/glpi/glpi/ajaxViewPart.php:207
+msgid "Gateway"
+msgstr "Passerelle"
+
+#: modules/glpi/glpi/ajaxViewPart.php:184
+msgid "Graphic Cards"
+msgstr "Cartes Videos"
+
+#: modules/glpi/glpi/ajaxViewPart.php:180
+msgid "Hard Drives"
+msgstr "Disques Durs"
+
+#: modules/glpi/glpi/tabs.php:61
+msgid "Hardware"
+msgstr "Matériel"
+
+#: modules/glpi/infoPackage.inc.php:62 modules/glpi/infoPackage.inc.php:92
+msgid "Hardware tab (GLPI)"
+msgstr "Onglet matériel (GLPI)"
+
+#: modules/glpi/includes/html.php:49
+msgid "Hide Windows Updates"
+msgstr "Masquer les MAJ Windows Update"
+
+#: modules/glpi/glpi/tabs.php:66
+msgid "History"
+msgstr "Historique"
+
+#: modules/glpi/infoPackage.inc.php:77 modules/glpi/infoPackage.inc.php:107
+msgid "History tab (GLPI)"
+msgstr "Onglet historique (GLPI)"
+
+#: modules/glpi/glpi/ajaxViewPart.php:205
+msgid "IP"
+msgstr "IP"
+
+#: modules/glpi/glpi/ajaxViewPart.php:289
+#: modules/glpi/glpi/ajaxViewPart.php:312
+msgid "Invalid hostname"
+msgstr "Nom de machine invalide"
+
+#: modules/glpi/infoPackage.inc.php:55
+msgid "Inventory (GLPI) on a group of machines"
+msgstr "Inventaire (GLPI) sur un groupe de machines"
+
+#: modules/glpi/infoPackage.inc.php:85
+msgid "Inventory (GLPI) on machine"
+msgstr "Inventaire (GLPI) de la machine"
+
+#: modules/glpi/glpi/ajaxViewPart.php:250
+msgid "Inventory Number"
+msgstr "Numéro d'inventaire"
+
+#: modules/glpi/glpi/ajaxViewPart.php:214
+msgid "Invoice Number"
+msgstr "Numéro de Facture"
+
+#: modules/glpi/glpi/ajaxViewPart.php:224
+msgid "Last Logged User"
+msgstr "Dernier Utilisateur"
+
+#: modules/glpi/glpi/ajaxViewPart.php:244 modules/glpi/includes/html.php:59
+msgid "Last month"
+msgstr "Ce mois"
+
+#: modules/glpi/glpi/ajaxViewPart.php:243 modules/glpi/includes/html.php:58
+msgid "Last week"
+msgstr "Cette semaine"
+
+#: modules/glpi/includes/panels/glpi.inc.php:47
+msgid "Latest Inventory Date"
+msgstr "Date du dernier inventaire"
 
 #: modules/glpi/glpi/createStaticGroup.php:30
 #, php-format
@@ -30,328 +222,6 @@ msgstr "Dernier inventaire de moins de %s jours au %s"
 msgid "Latest inventory is more than %s days at %s"
 msgstr "Dernier inventaire de plus de %s jours au %s"
 
-#: modules/glpi/glpi/createStaticGroup.php:43
-#, php-format
-msgid "Computers list has been truncated at %d computers"
-msgstr "La liste des machines a été tronquée à %d"
-
-#: modules/glpi/glpi/ajaxViewPart.php:96
-msgid "Click here to see this computer on manufacturer website"
-msgstr "Cliquez ici pour voir cet ordinateur sur le site du constructeur"
-
-#: modules/glpi/glpi/ajaxViewPart.php:113
-msgid "Properties"
-msgstr "Propriétés"
-
-#: modules/glpi/glpi/ajaxViewPart.php:114
-msgid "Value"
-msgstr "Valeur"
-
-#: modules/glpi/glpi/ajaxViewPart.php:131
-msgid "No record found for this period."
-msgstr "Aucune entrée pour cette période."
-
-#: modules/glpi/glpi/ajaxViewPart.php:134
-msgid "Unable to detect any Antivirus software on this machine."
-msgstr "Impossible de détecter un Antivirus sur cette machine."
-
-#: modules/glpi/glpi/ajaxViewPart.php:135
-msgid ""
-"Please ensure you are running GLPI with FusionInventory plugin and "
-"FusionInventory Agent on this client."
-msgstr ""
-"Vérifiez que vous utilisez bien GLPI avec le plugin FusionInventory ainsi "
-"que l'agent FusionInventory sur ce client."
-
-#: modules/glpi/glpi/ajaxViewPart.php:138
-msgid "No record found."
-msgstr "Aucune entrée."
-
-#: modules/glpi/glpi/ajaxViewPart.php:176
-msgid "Processors"
-msgstr "Processeurs"
-
-#: modules/glpi/glpi/ajaxViewPart.php:177
-#: modules/glpi/glpi/ajaxViewPart.php:234
-msgid "Memory"
-msgstr "Mémoire"
-
-#: modules/glpi/glpi/ajaxViewPart.php:178
-msgid "Hard Drives"
-msgstr "Disques Durs"
-
-#: modules/glpi/glpi/ajaxViewPart.php:179
-msgid "Controllers"
-msgstr "Contrôleurs"
-
-#: modules/glpi/glpi/ajaxViewPart.php:180
-msgid "Network Cards"
-msgstr "Cartes Réseaux"
-
-#: modules/glpi/glpi/ajaxViewPart.php:181
-msgid "Drives"
-msgstr "Lecteurs"
-
-#: modules/glpi/glpi/ajaxViewPart.php:182
-msgid "Graphic Cards"
-msgstr "Cartes Videos"
-
-#: modules/glpi/glpi/ajaxViewPart.php:183
-msgid "Sound Cards"
-msgstr "Cartes Sons"
-
-#: modules/glpi/glpi/ajaxViewPart.php:184
-msgid "Others"
-msgstr "Autres"
-
-#: modules/glpi/glpi/ajaxViewPart.php:198
-msgid "Yes"
-msgstr "Oui"
-
-#: modules/glpi/glpi/ajaxViewPart.php:199
-msgid "No"
-msgstr "Non"
-
-#: modules/glpi/glpi/ajaxViewPart.php:200
-#: modules/glpi/glpi/ajaxViewPart.php:215
-msgid "Name"
-msgstr "Nom"
-
-#: modules/glpi/glpi/ajaxViewPart.php:201
-msgid "Network Type"
-msgstr "Type de Réseau"
-
-#: modules/glpi/glpi/ajaxViewPart.php:202
-msgid "MAC Address"
-msgstr "Adresse MAC"
-
-#: modules/glpi/glpi/ajaxViewPart.php:203
-msgid "IP"
-msgstr "IP"
-
-#: modules/glpi/glpi/ajaxViewPart.php:204
-msgid "Netmask"
-msgstr "Masque"
-
-#: modules/glpi/glpi/ajaxViewPart.php:205
-msgid "Gateway"
-msgstr "Passerelle"
-
-#: modules/glpi/glpi/ajaxViewPart.php:206
-msgid "Device"
-msgstr "Périphérique"
-
-#: modules/glpi/glpi/ajaxViewPart.php:207
-msgid "Mount Point"
-msgstr "Point de Montage"
-
-#: modules/glpi/glpi/ajaxViewPart.php:208
-msgid "Filesystem"
-msgstr "Système de Fichiers"
-
-#: modules/glpi/glpi/ajaxViewPart.php:209
-#: modules/glpi/glpi/ajaxViewPart.php:231
-msgid "Size"
-msgstr "Taille"
-
-#: modules/glpi/glpi/ajaxViewPart.php:210
-msgid "Free Size"
-msgstr "Espace Libre"
-
-#: modules/glpi/glpi/ajaxViewPart.php:211
-msgid "Supplier"
-msgstr "Fournisseur"
-
-#: modules/glpi/glpi/ajaxViewPart.php:212
-msgid "Invoice Number"
-msgstr "Numéro de Facture"
-
-#: modules/glpi/glpi/ajaxViewPart.php:213
-msgid "Warranty End Date"
-msgstr "Fin de Garantie"
-
-#: modules/glpi/glpi/ajaxViewPart.php:214
-msgid "Vendor"
-msgstr "Marque"
-
-#: modules/glpi/glpi/ajaxViewPart.php:216
-msgid "Version"
-msgstr "Version"
-
-#: modules/glpi/glpi/ajaxViewPart.php:217
-msgid "Computer Name"
-msgstr "Nom de la Machine"
-
-#: modules/glpi/glpi/ajaxViewPart.php:218
-msgid "Description"
-msgstr "Description"
-
-#: modules/glpi/glpi/ajaxViewPart.php:219
-msgid "Entity (Location)"
-msgstr "Entitée (Lieu)"
-
-#: modules/glpi/glpi/ajaxViewPart.php:220
-msgid "Entity"
-msgstr "Entité"
-
-#: modules/glpi/glpi/ajaxViewPart.php:221
-msgid "Location"
-msgstr "Lieu"
-
-#: modules/glpi/glpi/ajaxViewPart.php:222
-msgid "Last Logged User"
-msgstr "Dernier Utilisateur"
-
-#: modules/glpi/glpi/ajaxViewPart.php:223
-msgid "OS"
-msgstr "OS"
-
-#: modules/glpi/glpi/ajaxViewPart.php:224
-msgid "Operating System"
-msgstr "Système d'exploitation"
-
-#: modules/glpi/glpi/ajaxViewPart.php:225
-msgid "Computer Type"
-msgstr "Type"
-
-#: modules/glpi/glpi/ajaxViewPart.php:226
-msgid "Model / Type"
-msgstr "Modèle / Type"
-
-#: modules/glpi/glpi/ajaxViewPart.php:227
-msgid "Manufacturer"
-msgstr "Fabriquant"
-
-#: modules/glpi/glpi/ajaxViewPart.php:228
-msgid "Serial Number"
-msgstr "Numéro de Série"
-
-#: modules/glpi/glpi/ajaxViewPart.php:229
-msgid "Frequency"
-msgstr "Fréquence"
-
-#: modules/glpi/glpi/ajaxViewPart.php:230
-msgid "Type"
-msgstr "Type"
-
-#: modules/glpi/glpi/ajaxViewPart.php:232
-msgid "Bandwidth"
-msgstr "Bande Passante"
-
-#: modules/glpi/glpi/ajaxViewPart.php:233
-msgid "Writer"
-msgstr "Graveur"
-
-#: modules/glpi/glpi/ajaxViewPart.php:235
-msgid "Comment"
-msgstr "Commentaire"
-
-#: modules/glpi/glpi/ajaxViewPart.php:236
-msgid "Date"
-msgstr "Date"
-
-#: modules/glpi/glpi/ajaxViewPart.php:237
-msgid "User"
-msgstr "Utilisateur"
-
-#: modules/glpi/glpi/ajaxViewPart.php:238
-msgid "Category"
-msgstr "Catégorie"
-
-#: modules/glpi/glpi/ajaxViewPart.php:239
-msgid "Action"
-msgstr "Action"
-
-#: modules/glpi/glpi/ajaxViewPart.php:240 modules/glpi/includes/html.php:57
-msgid "Today"
-msgstr "Aujourd'hui"
-
-#: modules/glpi/glpi/ajaxViewPart.php:241 modules/glpi/includes/html.php:58
-msgid "Last week"
-msgstr "Cette semaine"
-
-#: modules/glpi/glpi/ajaxViewPart.php:242 modules/glpi/includes/html.php:59
-msgid "Last month"
-msgstr "Ce mois"
-
-#: modules/glpi/glpi/ajaxViewPart.php:243 modules/glpi/includes/html.php:60
-msgid "All"
-msgstr "Tout"
-
-#: modules/glpi/glpi/ajaxViewPart.php:244
-msgid "Service Pack"
-msgstr "Service Pack"
-
-#: modules/glpi/glpi/ajaxViewPart.php:245
-msgid "Domain"
-msgstr "Domaine"
-
-#: modules/glpi/glpi/ajaxViewPart.php:246
-msgid "State"
-msgstr "Statut:"
-
-#: modules/glpi/glpi/ajaxViewPart.php:247
-msgid "Inventory Number"
-msgstr "Numéro d'inventaire"
-
-#: modules/glpi/glpi/ajaxViewPart.php:249
-msgid "Enabled"
-msgstr "Activé"
-
-#: modules/glpi/glpi/ajaxViewPart.php:250
-msgid "Up-to-date"
-msgstr "A jour"
-
-#: modules/glpi/glpi/ajaxViewPart.php:286
-#: modules/glpi/glpi/ajaxViewPart.php:309
-msgid "Invalid hostname"
-msgstr "Nom de machine invalide"
-
-#: modules/glpi/glpi/tabs.php:54
-#, php-format
-msgid "%s's inventory (%s)"
-msgstr "Inventaire de %s (%s)"
-
-#: modules/glpi/glpi/tabs.php:60
-msgid "Summary"
-msgstr "Résumé"
-
-#: modules/glpi/glpi/tabs.php:61
-msgid "Hardware"
-msgstr "Matériel"
-
-#: modules/glpi/glpi/tabs.php:62
-msgid "Storage"
-msgstr "Stockage"
-
-#: modules/glpi/glpi/tabs.php:63
-msgid "Network"
-msgstr "Réseau"
-
-#: modules/glpi/glpi/tabs.php:64
-msgid "Softwares"
-msgstr "Logiciels"
-
-#: modules/glpi/glpi/tabs.php:65
-msgid "Administrative"
-msgstr "Administratif"
-
-#: modules/glpi/glpi/tabs.php:66
-msgid "History"
-msgstr "Historique"
-
-#: modules/glpi/glpi/tabs.php:67
-msgid "Antivirus"
-msgstr "Antivirus"
-
-#: modules/glpi/includes/html.php:49
-msgid "Hide Windows Updates"
-msgstr "Masquer les MAJ Windows Update"
-
-#: modules/glpi/includes/panels/glpi.inc.php:30
-msgid "Computers"
-msgstr "Machines"
-
 #: modules/glpi/includes/panels/glpi.inc.php:43
 msgid ""
 "Less than %s days:\n"
@@ -359,6 +229,27 @@ msgid ""
 msgstr ""
 "Moins de %s jours:\n"
 "%percent% (%d machines)"
+
+#: modules/glpi/glpi/ajaxViewPart.php:223
+msgid "Location"
+msgstr "Lieu"
+
+#: modules/glpi/glpi/ajaxViewPart.php:204
+msgid "MAC Address"
+msgstr "Adresse MAC"
+
+#: modules/glpi/glpi/ajaxViewPart.php:229
+msgid "Manufacturer"
+msgstr "Fabriquant"
+
+#: modules/glpi/glpi/ajaxViewPart.php:179
+#: modules/glpi/glpi/ajaxViewPart.php:236
+msgid "Memory"
+msgstr "Mémoire"
+
+#: modules/glpi/glpi/ajaxViewPart.php:228
+msgid "Model / Type"
+msgstr "Modèle / Type"
 
 #: modules/glpi/includes/panels/glpi.inc.php:44
 msgid ""
@@ -368,56 +259,168 @@ msgstr ""
 "Plus de %s jours:\n"
 "%percent% (%d machines)"
 
-#: modules/glpi/includes/panels/glpi.inc.php:47
-msgid "Latest Inventory Date"
-msgstr "Date du dernier inventaire"
+#: modules/glpi/glpi/ajaxViewPart.php:209
+msgid "Mount Point"
+msgstr "Point de Montage"
 
-#: modules/glpi/infoPackage.inc.php:33
-msgid "Create static group from dashboard (GLPI)"
-msgstr "Créer un groupe statique depuis le tableau de bord (GLPI)"
+#: modules/glpi/glpi/ajaxViewPart.php:202
+#: modules/glpi/glpi/ajaxViewPart.php:217
+msgid "Name"
+msgstr "Nom"
 
-#: modules/glpi/infoPackage.inc.php:40
-msgid "Display locations"
-msgstr "Montrer les lieux"
+#: modules/glpi/glpi/ajaxViewPart.php:206
+msgid "Netmask"
+msgstr "Masque"
 
-#: modules/glpi/infoPackage.inc.php:55
-msgid "Inventory (GLPI) on a group of machines"
-msgstr "Inventaire (GLPI) sur un groupe de machines"
+#: modules/glpi/glpi/tabs.php:63
+msgid "Network"
+msgstr "Réseau"
 
-#: modules/glpi/infoPackage.inc.php:59 modules/glpi/infoPackage.inc.php:89
-msgid "Summary tab (GLPI)"
-msgstr "Onglet résumé (GLPI)"
+#: modules/glpi/glpi/ajaxViewPart.php:182
+msgid "Network Cards"
+msgstr "Cartes Réseaux"
 
-#: modules/glpi/infoPackage.inc.php:62 modules/glpi/infoPackage.inc.php:92
-msgid "Hardware tab (GLPI)"
-msgstr "Onglet matériel (GLPI)"
-
-#: modules/glpi/infoPackage.inc.php:65 modules/glpi/infoPackage.inc.php:95
-msgid "Storage tab (GLPI)"
-msgstr "Onglet stockage (GLPI)"
+#: modules/glpi/glpi/ajaxViewPart.php:203
+msgid "Network Type"
+msgstr "Type de Réseau"
 
 #: modules/glpi/infoPackage.inc.php:68 modules/glpi/infoPackage.inc.php:98
 msgid "Network tab (GLPI)"
 msgstr "Onglet réseau (GLPI)"
 
+#: modules/glpi/glpi/ajaxViewPart.php:201
+msgid "No"
+msgstr "Non"
+
+#: modules/glpi/glpi/ajaxViewPart.php:133
+msgid "No record found for this period."
+msgstr "Aucune entrée pour cette période."
+
+#: modules/glpi/glpi/ajaxViewPart.php:140
+msgid "No record found."
+msgstr "Aucune entrée."
+
+#: modules/glpi/glpi/ajaxViewPart.php:225
+msgid "OS"
+msgstr "OS"
+
+#: modules/glpi/glpi/ajaxViewPart.php:226
+msgid "Operating System"
+msgstr "Système d'exploitation"
+
+#: modules/glpi/glpi/ajaxViewPart.php:186
+msgid "Others"
+msgstr "Autres"
+
+#: modules/glpi/glpi/ajaxViewPart.php:137
+msgid ""
+"Please ensure you are running GLPI with FusionInventory plugin and "
+"FusionInventory Agent on this client."
+msgstr ""
+"Vérifiez que vous utilisez bien GLPI avec le plugin FusionInventory ainsi "
+"que l'agent FusionInventory sur ce client."
+
+#: modules/glpi/glpi/ajaxViewPart.php:178
+msgid "Processors"
+msgstr "Processeurs"
+
+#: modules/glpi/glpi/ajaxViewPart.php:114
+msgid "Properties"
+msgstr "Propriétés"
+
+#: modules/glpi/glpi/ajaxViewPart.php:230
+msgid "Serial Number"
+msgstr "Numéro de Série"
+
+#: modules/glpi/glpi/ajaxViewPart.php:246
+msgid "Service Pack"
+msgstr "Service Pack"
+
+#: modules/glpi/glpi/ajaxViewPart.php:211
+#: modules/glpi/glpi/ajaxViewPart.php:233
+msgid "Size"
+msgstr "Taille"
+
+#: modules/glpi/glpi/tabs.php:64
+msgid "Softwares"
+msgstr "Logiciels"
+
 #: modules/glpi/infoPackage.inc.php:71 modules/glpi/infoPackage.inc.php:101
 msgid "Softwares tab (GLPI)"
 msgstr "Onglet logiciel (GLPI)"
 
-#: modules/glpi/infoPackage.inc.php:74 modules/glpi/infoPackage.inc.php:104
-msgid "Administrative tab (GLPI)"
-msgstr "Onglet administratif (GLPI)"
+#: modules/glpi/glpi/ajaxViewPart.php:185
+msgid "Sound Cards"
+msgstr "Cartes Sons"
 
-#: modules/glpi/infoPackage.inc.php:77 modules/glpi/infoPackage.inc.php:107
-msgid "History tab (GLPI)"
-msgstr "Onglet historique (GLPI)"
+#: modules/glpi/glpi/ajaxViewPart.php:248
+msgid "State"
+msgstr "Statut:"
 
-#: modules/glpi/infoPackage.inc.php:80 modules/glpi/infoPackage.inc.php:110
-msgid "Antivirus tab (GLPI)"
-msgstr "Onglet antivirus (GLPI)"
+#: modules/glpi/glpi/tabs.php:62
+msgid "Storage"
+msgstr "Stockage"
 
-#: modules/glpi/infoPackage.inc.php:85
-msgid "Inventory (GLPI) on machine"
-msgstr "Inventaire (GLPI) de la machine"
+#: modules/glpi/infoPackage.inc.php:65 modules/glpi/infoPackage.inc.php:95
+msgid "Storage tab (GLPI)"
+msgstr "Onglet stockage (GLPI)"
 
+#: modules/glpi/glpi/tabs.php:60
+msgid "Summary"
+msgstr "Résumé"
 
+#: modules/glpi/infoPackage.inc.php:59 modules/glpi/infoPackage.inc.php:89
+msgid "Summary tab (GLPI)"
+msgstr "Onglet résumé (GLPI)"
+
+#: modules/glpi/glpi/ajaxViewPart.php:213
+msgid "Supplier"
+msgstr "Fournisseur"
+
+#: modules/glpi/glpi/ajaxViewPart.php:242 modules/glpi/includes/html.php:57
+msgid "Today"
+msgstr "Aujourd'hui"
+
+#: modules/glpi/glpi/ajaxViewPart.php:232
+msgid "Type"
+msgstr "Type"
+
+#: modules/glpi/glpi/ajaxViewPart.php:136
+msgid "Unable to detect any Antivirus software on this machine."
+msgstr "Impossible de détecter un Antivirus sur cette machine."
+
+#: modules/glpi/glpi/ajaxViewPart.php:249
+msgid "Unknown"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxViewPart.php:253
+msgid "Up-to-date"
+msgstr "A jour"
+
+#: modules/glpi/glpi/ajaxViewPart.php:239
+msgid "User"
+msgstr "Utilisateur"
+
+#: modules/glpi/glpi/ajaxViewPart.php:115
+msgid "Value"
+msgstr "Valeur"
+
+#: modules/glpi/glpi/ajaxViewPart.php:216
+msgid "Vendor"
+msgstr "Marque"
+
+#: modules/glpi/glpi/ajaxViewPart.php:218
+msgid "Version"
+msgstr "Version"
+
+#: modules/glpi/glpi/ajaxViewPart.php:215
+msgid "Warranty End Date"
+msgstr "Fin de Garantie"
+
+#: modules/glpi/glpi/ajaxViewPart.php:235
+msgid "Writer"
+msgstr "Graveur"
+
+#: modules/glpi/glpi/ajaxViewPart.php:200
+msgid "Yes"
+msgstr "Oui"

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-05-23 17:11+0200\n"
-"PO-Revision-Date: 2013-05-23 15:15+0000\n"
+"POT-Creation-Date: 2013-05-24 17:58+0200\n"
+"PO-Revision-Date: 2013-05-26 23:02+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -25,123 +25,6 @@ msgstr ""
 #: modules/pkgs/includes/html.inc.php:61
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:33
 msgid "Click here to select files"
-msgstr ""
-
-#: modules/pkgs/infoPackage.inc.php:34 modules/pkgs/infoPackage.inc.php:40
-msgid "Packages"
-msgstr ""
-
-#: modules/pkgs/infoPackage.inc.php:44
-msgid "Show all packages"
-msgstr ""
-
-#: modules/pkgs/infoPackage.inc.php:46 modules/pkgs/pkgs/localSidebar.php:28
-msgid "Add a package"
-msgstr ""
-
-#: modules/pkgs/infoPackage.inc.php:48
-#: modules/pkgs/pkgs/ajaxPackageList.php:78 modules/pkgs/pkgs/edit.php:111
-msgid "Edit a package"
-msgstr ""
-
-#: modules/pkgs/infoPackage.inc.php:51
-msgid "See pending packages"
-msgstr ""
-
-#: modules/pkgs/infoPackage.inc.php:66
-msgid "Show mirror status"
-msgstr ""
-
-#: modules/pkgs/infoPackage.inc.php:70
-#: modules/pkgs/pkgs/ajaxPackageList.php:79
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:79
-msgid "Delete a package"
-msgstr ""
-
-#: modules/pkgs/pkgs/ajaxPackageList.php:53 modules/pkgs/pkgs/index.php:45
-#, php-format
-msgid "MMC failed to contact package server %s."
-msgstr ""
-
-#: modules/pkgs/pkgs/ajaxPackageList.php:63 modules/pkgs/pkgs/index.php:53
-msgid "Please contact your administrator."
-msgstr ""
-
-#: modules/pkgs/pkgs/ajaxPackageList.php:66
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:66
-msgid "Package name"
-msgstr ""
-
-#: modules/pkgs/pkgs/ajaxPackageList.php:69 modules/pkgs/pkgs/edit.php:161
-#: modules/pkgs/pkgs/add.php:150
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
-msgid "Description"
-msgstr ""
-
-#: modules/pkgs/pkgs/ajaxPackageList.php:70 modules/pkgs/pkgs/add.php:149
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
-msgid "Version"
-msgstr ""
-
-#: modules/pkgs/pkgs/ajaxPackageList.php:71
-msgid "Package size"
-msgstr ""
-
-#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:102
-msgid "Package API temporary directory is empty"
-msgstr ""
-
-#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:135
-#: modules/pkgs/pkgs/add.php:304
-#, php-format
-msgid "Files upload (<b><u title='%s'>%sM max</u></b>)"
-msgstr ""
-
-#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:135
-#: modules/pkgs/pkgs/add.php:304
-msgid ""
-"Change post_max_size and upload_max_filesize directives in php.ini file to "
-"increase upload size."
-msgstr ""
-
-#: modules/pkgs/pkgs/edit.php:31
-msgid "Edit package"
-msgstr ""
-
-#: modules/pkgs/pkgs/edit.php:70
-msgid "Package successfully edited"
-msgstr ""
-
-#: modules/pkgs/pkgs/edit.php:104
-msgid "Package failed to save"
-msgstr ""
-
-#: modules/pkgs/pkgs/edit.php:141 modules/pkgs/pkgs/add.php:134
-msgid "Package API"
-msgstr ""
-
-#: modules/pkgs/pkgs/edit.php:159
-msgid "Package label"
-msgstr ""
-
-#: modules/pkgs/pkgs/edit.php:160
-msgid "Package version"
-msgstr ""
-
-#: modules/pkgs/pkgs/edit.php:165 modules/pkgs/pkgs/add.php:161
-msgid "Command's name : "
-msgstr ""
-
-#: modules/pkgs/pkgs/edit.php:165
-msgid "Command : "
-msgstr ""
-
-#: modules/pkgs/pkgs/edit.php:173 modules/pkgs/pkgs/add.php:169
-msgid "Need a reboot ?"
-msgstr ""
-
-#: modules/pkgs/pkgs/pending.php:29 modules/pkgs/pkgs/localSidebar.php:29
-msgid "Pending packages list"
 msgstr ""
 
 #: modules/pkgs/pkgs/add.php:31
@@ -178,6 +61,10 @@ msgstr ""
 msgid "Make an empty package"
 msgstr ""
 
+#: modules/pkgs/pkgs/add.php:134 modules/pkgs/pkgs/edit.php:141
+msgid "Package API"
+msgstr ""
+
 #: modules/pkgs/pkgs/add.php:138
 msgid "Package source"
 msgstr ""
@@ -198,6 +85,17 @@ msgstr ""
 msgid "<fill_package_name>"
 msgstr ""
 
+#: modules/pkgs/pkgs/add.php:149 modules/pkgs/pkgs/ajaxPackageList.php:70
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
+msgid "Version"
+msgstr ""
+
+#: modules/pkgs/pkgs/add.php:150 modules/pkgs/pkgs/edit.php:161
+#: modules/pkgs/pkgs/ajaxPackageList.php:69
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
+msgid "Description"
+msgstr ""
+
 #: modules/pkgs/pkgs/add.php:153
 msgid "Command:"
 msgstr ""
@@ -211,20 +109,79 @@ msgid ""
 "<a href=\"@@GOOGLE_SEARCH_URL@@\">Google search</a>"
 msgstr ""
 
+#: modules/pkgs/pkgs/add.php:161 modules/pkgs/pkgs/edit.php:165
+msgid "Command's name : "
+msgstr ""
+
+#: modules/pkgs/pkgs/add.php:169 modules/pkgs/pkgs/edit.php:173
+msgid "Need a reboot ?"
+msgstr ""
+
 #: modules/pkgs/pkgs/add.php:199
 msgid "Add"
 msgstr ""
 
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:50
-msgid "Associate package"
+#: modules/pkgs/pkgs/add.php:304
+#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:135
+#, php-format
+msgid "Files upload (<b><u title='%s'>%sM max</u></b>)"
 msgstr ""
 
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:78
-msgid "Show mirrors"
+#: modules/pkgs/pkgs/add.php:304
+#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:135
+msgid ""
+"Change post_max_size and upload_max_filesize directives in php.ini file to "
+"increase upload size."
 msgstr ""
 
-#: modules/pkgs/pkgs/localSidebar.php:27 modules/pkgs/pkgs/index.php:29
+#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:102
+msgid "Package API temporary directory is empty"
+msgstr ""
+
+#: modules/pkgs/pkgs/edit.php:31
+msgid "Edit package"
+msgstr ""
+
+#: modules/pkgs/pkgs/edit.php:70
+msgid "Package successfully edited"
+msgstr ""
+
+#: modules/pkgs/pkgs/edit.php:104
+msgid "Package failed to save"
+msgstr ""
+
+#: modules/pkgs/pkgs/edit.php:111 modules/pkgs/pkgs/ajaxPackageList.php:78
+#: modules/pkgs/infoPackage.inc.php:48
+msgid "Edit a package"
+msgstr ""
+
+#: modules/pkgs/pkgs/edit.php:159
+msgid "Package label"
+msgstr ""
+
+#: modules/pkgs/pkgs/edit.php:160
+msgid "Package version"
+msgstr ""
+
+#: modules/pkgs/pkgs/edit.php:165
+msgid "Command : "
+msgstr ""
+
+#: modules/pkgs/pkgs/index.php:29 modules/pkgs/pkgs/localSidebar.php:27
 msgid "Packages list"
+msgstr ""
+
+#: modules/pkgs/pkgs/index.php:45 modules/pkgs/pkgs/ajaxPackageList.php:53
+#, php-format
+msgid "MMC failed to contact package server %s."
+msgstr ""
+
+#: modules/pkgs/pkgs/index.php:53 modules/pkgs/pkgs/ajaxPackageList.php:63
+msgid "Please contact your administrator."
+msgstr ""
+
+#: modules/pkgs/pkgs/pending.php:29 modules/pkgs/pkgs/localSidebar.php:29
+msgid "Pending packages list"
 msgstr ""
 
 #: modules/pkgs/pkgs/remove.php:33
@@ -242,6 +199,49 @@ msgstr ""
 #: modules/pkgs/pkgs/rsync.php:32
 #, php-format
 msgid "The package %s (%s) is not associated"
+msgstr ""
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:66
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:66
+msgid "Package name"
+msgstr ""
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:71
+msgid "Package size"
+msgstr ""
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:79
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:79
+#: modules/pkgs/infoPackage.inc.php:70
+msgid "Delete a package"
+msgstr ""
+
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:50
+msgid "Associate package"
+msgstr ""
+
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:78
+msgid "Show mirrors"
+msgstr ""
+
+#: modules/pkgs/pkgs/localSidebar.php:28 modules/pkgs/infoPackage.inc.php:46
+msgid "Add a package"
+msgstr ""
+
+#: modules/pkgs/infoPackage.inc.php:34 modules/pkgs/infoPackage.inc.php:40
+msgid "Packages"
+msgstr ""
+
+#: modules/pkgs/infoPackage.inc.php:44
+msgid "Show all packages"
+msgstr ""
+
+#: modules/pkgs/infoPackage.inc.php:51
+msgid "See pending packages"
+msgstr ""
+
+#: modules/pkgs/infoPackage.inc.php:66
+msgid "Show mirror status"
 msgstr ""
 
 

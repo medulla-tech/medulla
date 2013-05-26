@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-05-23 17:11+0200\n"
-"PO-Revision-Date: 2013-05-23 15:15+0000\n"
+"POT-Creation-Date: 2013-05-24 17:57+0200\n"
+"PO-Revision-Date: 2013-05-26 23:01+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,71 +17,49 @@ msgstr ""
 "Language: da_DK\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
+#: modules/inventory/includes/panels/inventory.inc.php:30
+msgid "Computers"
+msgstr ""
+
+#: modules/inventory/includes/panels/inventory.inc.php:43
+msgid ""
+"Less than %s days:\n"
+" %percent% (%d computers)"
+msgstr ""
+
+#: modules/inventory/includes/panels/inventory.inc.php:44
+msgid ""
+"More than %s days:\n"
+" %percent% (%d computers)"
+msgstr ""
+
+#: modules/inventory/includes/panels/inventory.inc.php:47
+msgid "Latest Inventory Date"
+msgstr ""
+
+#: modules/inventory/includes/html.php:62
+#: modules/inventory/inventory/i18n_labels.php:53
+#: modules/inventory/inventory/ajaxViewPart.php:35
+msgid "Date"
+msgstr ""
+
+#: modules/inventory/includes/html.php:102
+msgid "Refresh"
+msgstr ""
+
 #: modules/inventory/inventory/csv.php:67
 #: modules/inventory/inventory/csv.php:107
 #: modules/inventory/inventory/i18n_labels.php:96
 msgid "Computer"
 msgstr ""
 
-#: modules/inventory/inventory/view.php:48
-#, php-format
-msgid "Inventory of %s"
+#: modules/inventory/inventory/graphs.php:35
+#: modules/inventory/infoPackage.inc.php:91
+msgid "Chart"
 msgstr ""
 
-#: modules/inventory/inventory/view.php:78
-msgid "Properties"
-msgstr ""
-
-#: modules/inventory/inventory/view.php:79
-#: modules/inventory/inventory/inventory_diff.php:76
-#: modules/inventory/inventory/inventory_diff.php:101
-#: modules/inventory/inventory/i18n_labels.php:161
-msgid "Value"
-msgstr ""
-
-#: modules/inventory/inventory/infos.php:33
-msgid "Additionnal informations"
-msgstr ""
-
-#: modules/inventory/inventory/infos.php:43
-msgid "First apparition"
-msgstr ""
-
-#: modules/inventory/inventory/createStaticGroup.php:30
-#, php-format
-msgid "Latest inventory is less than %s days at %s"
-msgstr ""
-
-#: modules/inventory/inventory/createStaticGroup.php:33
-#, php-format
-msgid "Latest inventory is more than %s days at %s"
-msgstr ""
-
-#: modules/inventory/inventory/createStaticGroup.php:43
-#, php-format
-msgid "Computers list has been truncated at %d computers"
-msgstr ""
-
-#: modules/inventory/inventory/slot.php:27
-#: modules/inventory/inventory/i18n_labels.php:134
-msgid "Slot"
-msgstr ""
-
-#: modules/inventory/inventory/inventory_diff.php:48
-msgid "Inventory changes"
-msgstr ""
-
-#: modules/inventory/inventory/inventory_diff.php:75
-#: modules/inventory/inventory/inventory_diff.php:100
-msgid "Element"
-msgstr ""
-
-#: modules/inventory/inventory/inventory_diff.php:114
-msgid "Added elements"
-msgstr ""
-
-#: modules/inventory/inventory/inventory_diff.php:123
-msgid "Removed elements"
+#: modules/inventory/inventory/graphs.php:47
+msgid "back"
 msgstr ""
 
 #: modules/inventory/inventory/i18n_labels.php:26
@@ -194,12 +172,6 @@ msgstr ""
 
 #: modules/inventory/inventory/i18n_labels.php:52
 msgid "DNS"
-msgstr ""
-
-#: modules/inventory/inventory/i18n_labels.php:53
-#: modules/inventory/inventory/ajaxViewPart.php:35
-#: modules/inventory/includes/html.php:62
-msgid "Date"
 msgstr ""
 
 #: modules/inventory/inventory/i18n_labels.php:54
@@ -527,6 +499,11 @@ msgstr ""
 msgid "Size"
 msgstr ""
 
+#: modules/inventory/inventory/i18n_labels.php:134
+#: modules/inventory/inventory/slot.php:27
+msgid "Slot"
+msgstr ""
+
 #: modules/inventory/inventory/i18n_labels.php:135
 msgid "Slot Count"
 msgstr ""
@@ -637,6 +614,13 @@ msgstr ""
 msgid "VRAM Size"
 msgstr ""
 
+#: modules/inventory/inventory/i18n_labels.php:161
+#: modules/inventory/inventory/inventory_diff.php:76
+#: modules/inventory/inventory/inventory_diff.php:101
+#: modules/inventory/inventory/view.php:79
+msgid "Value"
+msgstr ""
+
 #: modules/inventory/inventory/i18n_labels.php:162
 msgid "Vendor"
 msgstr ""
@@ -673,54 +657,20 @@ msgstr ""
 msgid "Informations"
 msgstr ""
 
-#: modules/inventory/inventory/history.php:66
-msgid "View differences since previous inventory"
+#: modules/inventory/inventory/ajaxIncoming.php:78
+msgid "Computer name"
 msgstr ""
 
-#: modules/inventory/inventory/history.php:75
-msgid "Inventory Date"
+#: modules/inventory/inventory/ajaxIncoming.php:80
+msgid "Inventory date"
 msgstr ""
 
-#: modules/inventory/inventory/history.php:80
-#: modules/inventory/infoPackage.inc.php:34
-#: modules/inventory/infoPackage.inc.php:40
-msgid "Inventory"
+#: modules/inventory/inventory/ajaxIncoming.php:82
+msgid "New computer"
 msgstr ""
 
-#: modules/inventory/inventory/incoming.php:46
-msgid "Incoming Inventories"
-msgstr ""
-
-#: modules/inventory/inventory/incoming.php:56
-msgid "Last week"
-msgstr ""
-
-#: modules/inventory/inventory/incoming.php:56
-msgid "Last month"
-msgstr ""
-
-#: modules/inventory/inventory/incoming.php:56
-msgid "Last quarter"
-msgstr ""
-
-#: modules/inventory/inventory/incoming.php:56
-msgid "Last semester"
-msgstr ""
-
-#: modules/inventory/inventory/incoming.php:56
-msgid "Last year"
-msgstr ""
-
-#: modules/inventory/inventory/incoming.php:67
-msgid "Period"
-msgstr ""
-
-#: modules/inventory/inventory/incoming.php:72
-msgid "Only new computers"
-msgstr ""
-
-#: modules/inventory/inventory/incoming.php:73
-msgid "Load only the computers which were new when the inventory was made"
+#: modules/inventory/inventory/ajaxIncoming.php:91
+msgid "Elements"
 msgstr ""
 
 #: modules/inventory/inventory/body.php:41
@@ -783,6 +733,96 @@ msgstr ""
 msgid "Video card list"
 msgstr ""
 
+#: modules/inventory/inventory/createStaticGroup.php:30
+#, php-format
+msgid "Latest inventory is less than %s days at %s"
+msgstr ""
+
+#: modules/inventory/inventory/createStaticGroup.php:33
+#, php-format
+msgid "Latest inventory is more than %s days at %s"
+msgstr ""
+
+#: modules/inventory/inventory/createStaticGroup.php:43
+#, php-format
+msgid "Computers list has been truncated at %d computers"
+msgstr ""
+
+#: modules/inventory/inventory/history.php:66
+msgid "View differences since previous inventory"
+msgstr ""
+
+#: modules/inventory/inventory/history.php:75
+msgid "Inventory Date"
+msgstr ""
+
+#: modules/inventory/inventory/history.php:80
+#: modules/inventory/infoPackage.inc.php:34
+#: modules/inventory/infoPackage.inc.php:40
+msgid "Inventory"
+msgstr ""
+
+#: modules/inventory/inventory/incoming.php:46
+msgid "Incoming Inventories"
+msgstr ""
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last week"
+msgstr ""
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last month"
+msgstr ""
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last quarter"
+msgstr ""
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last semester"
+msgstr ""
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last year"
+msgstr ""
+
+#: modules/inventory/inventory/incoming.php:67
+msgid "Period"
+msgstr ""
+
+#: modules/inventory/inventory/incoming.php:72
+msgid "Only new computers"
+msgstr ""
+
+#: modules/inventory/inventory/incoming.php:73
+msgid "Load only the computers which were new when the inventory was made"
+msgstr ""
+
+#: modules/inventory/inventory/infos.php:33
+msgid "Additionnal informations"
+msgstr ""
+
+#: modules/inventory/inventory/infos.php:43
+msgid "First apparition"
+msgstr ""
+
+#: modules/inventory/inventory/inventory_diff.php:48
+msgid "Inventory changes"
+msgstr ""
+
+#: modules/inventory/inventory/inventory_diff.php:75
+#: modules/inventory/inventory/inventory_diff.php:100
+msgid "Element"
+msgstr ""
+
+#: modules/inventory/inventory/inventory_diff.php:114
+msgid "Added elements"
+msgstr ""
+
+#: modules/inventory/inventory/inventory_diff.php:123
+msgid "Removed elements"
+msgstr ""
+
 #: modules/inventory/inventory/localSidebar.php:28
 #: modules/inventory/infoPackage.inc.php:44
 msgid "Incoming"
@@ -796,31 +836,6 @@ msgstr ""
 #: modules/inventory/inventory/localSidebar.php:45
 #: modules/inventory/infoPackage.inc.php:71
 msgid "VideoCard"
-msgstr ""
-
-#: modules/inventory/inventory/graphs.php:35
-#: modules/inventory/infoPackage.inc.php:91
-msgid "Chart"
-msgstr ""
-
-#: modules/inventory/inventory/graphs.php:47
-msgid "back"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxIncoming.php:78
-msgid "Computer name"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxIncoming.php:80
-msgid "Inventory date"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxIncoming.php:82
-msgid "New computer"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxIncoming.php:91
-msgid "Elements"
 msgstr ""
 
 #: modules/inventory/inventory/tabs.php:44
@@ -837,28 +852,13 @@ msgstr ""
 msgid "History"
 msgstr ""
 
-#: modules/inventory/includes/html.php:102
-msgid "Refresh"
+#: modules/inventory/inventory/view.php:48
+#, php-format
+msgid "Inventory of %s"
 msgstr ""
 
-#: modules/inventory/includes/panels/inventory.inc.php:30
-msgid "Computers"
-msgstr ""
-
-#: modules/inventory/includes/panels/inventory.inc.php:43
-msgid ""
-"Less than %s days:\n"
-" %percent% (%d computers)"
-msgstr ""
-
-#: modules/inventory/includes/panels/inventory.inc.php:44
-msgid ""
-"More than %s days:\n"
-" %percent% (%d computers)"
-msgstr ""
-
-#: modules/inventory/includes/panels/inventory.inc.php:47
-msgid "Latest Inventory Date"
+#: modules/inventory/inventory/view.php:78
+msgid "Properties"
 msgstr ""
 
 #: modules/inventory/infoPackage.inc.php:87

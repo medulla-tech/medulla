@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-05-23 17:11+0200\n"
-"PO-Revision-Date: 2013-05-23 15:15+0000\n"
+"POT-Creation-Date: 2013-05-24 17:58+0200\n"
+"PO-Revision-Date: 2013-05-26 23:02+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,10 +16,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: nb_NO\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-
-#: modules/pulse2/pulse2/computers_list.php:42
-msgid "All my entities"
-msgstr ""
 
 #: modules/pulse2/includes/menu_action.php:30
 msgid "Inventory"
@@ -98,6 +94,10 @@ msgstr ""
 
 #: modules/pulse2/includes/locations_xmlrpc.inc.php:31
 msgid "Root entity"
+msgstr ""
+
+#: modules/pulse2/pulse2/computers_list.php:42
+msgid "All my entities"
 msgstr ""
 
 #: modules/pulse2/infoPackage.inc.php:34
