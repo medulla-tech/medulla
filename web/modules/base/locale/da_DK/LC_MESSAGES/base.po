@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-05-13 01:03+0200\n"
-"PO-Revision-Date: 2013-05-19 23:03+0000\n"
+"POT-Creation-Date: 2013-05-24 11:47+0200\n"
+"PO-Revision-Date: 2013-05-26 23:04+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -66,74 +66,6 @@ msgstr ""
 
 #: includes/ErrorHandling.php:78
 msgid "Complete Traceback"
-msgstr ""
-
-#: includes/FormGenerator.php:58 includes/FormGenerator.php:274
-#: includes/FormGenerator.php:637 includes/FormGenerator.php:796
-msgid "unavailable"
-msgstr ""
-
-#: includes/FormGenerator.php:216
-msgid "Delete photo"
-msgstr ""
-
-#: includes/FormGenerator.php:260
-msgid "yes"
-msgstr ""
-
-#: includes/FormGenerator.php:263
-msgid "no"
-msgstr ""
-
-#: includes/FormGenerator.php:458
-msgid "Year: "
-msgstr ""
-
-#: includes/FormGenerator.php:458
-msgid "Month: "
-msgstr ""
-
-#: includes/FormGenerator.php:458
-msgid "Day: "
-msgstr ""
-
-#: includes/FormGenerator.php:459
-msgid "Hour: "
-msgstr ""
-
-#: includes/FormGenerator.php:459
-msgid "Min.: "
-msgstr ""
-
-#: includes/FormGenerator.php:459
-msgid "Sec.: "
-msgstr ""
-
-#: includes/FormGenerator.php:529 includes/FormGenerator.php:535
-#: modules/base/includes/AjaxFilterLog.inc.php:184
-#: modules/base/includes/AjaxFilterLog.inc.php:188
-msgid "or <a href='#'"
-msgstr ""
-
-#: includes/FormGenerator.php:531
-#: modules/base/includes/AjaxFilterLog.inc.php:186
-msgid "value=\"now\";'>now</a>"
-msgstr ""
-
-#: includes/FormGenerator.php:537
-#: modules/base/includes/AjaxFilterLog.inc.php:190
-msgid "value=\"never\";'>never</a>"
-msgstr ""
-
-#: includes/FormGenerator.php:602 modules/base/groups/localSidebar.php:29
-#: modules/base/users/localSidebar.php:29
-msgid "Add"
-msgstr ""
-
-#: includes/FormGenerator.php:1019 modules/base/groups/ajaxFilter.php:48
-#: modules/base/users/ajaxFilter.php:85 modules/base/views/index.tpl.php:92
-#: modules/ppolicy/default/delete.php:45
-msgid "Delete"
 msgstr ""
 
 #: includes/acl.inc.php:124
@@ -310,6 +242,74 @@ msgstr ""
 msgid ""
 "This exception is unknown. Please contact us to add an error handling on "
 "this error."
+msgstr ""
+
+#: includes/FormGenerator.php:58 includes/FormGenerator.php:274
+#: includes/FormGenerator.php:637 includes/FormGenerator.php:796
+msgid "unavailable"
+msgstr ""
+
+#: includes/FormGenerator.php:216
+msgid "Delete photo"
+msgstr ""
+
+#: includes/FormGenerator.php:260
+msgid "yes"
+msgstr ""
+
+#: includes/FormGenerator.php:263
+msgid "no"
+msgstr ""
+
+#: includes/FormGenerator.php:458
+msgid "Year: "
+msgstr ""
+
+#: includes/FormGenerator.php:458
+msgid "Month: "
+msgstr ""
+
+#: includes/FormGenerator.php:458
+msgid "Day: "
+msgstr ""
+
+#: includes/FormGenerator.php:459
+msgid "Hour: "
+msgstr ""
+
+#: includes/FormGenerator.php:459
+msgid "Min.: "
+msgstr ""
+
+#: includes/FormGenerator.php:459
+msgid "Sec.: "
+msgstr ""
+
+#: includes/FormGenerator.php:529 includes/FormGenerator.php:535
+#: modules/base/includes/AjaxFilterLog.inc.php:184
+#: modules/base/includes/AjaxFilterLog.inc.php:188
+msgid "or <a href='#'"
+msgstr ""
+
+#: includes/FormGenerator.php:531
+#: modules/base/includes/AjaxFilterLog.inc.php:186
+msgid "value=\"now\";'>now</a>"
+msgstr ""
+
+#: includes/FormGenerator.php:537
+#: modules/base/includes/AjaxFilterLog.inc.php:190
+msgid "value=\"never\";'>never</a>"
+msgstr ""
+
+#: includes/FormGenerator.php:602 modules/base/groups/localSidebar.php:29
+#: modules/base/users/localSidebar.php:29
+msgid "Add"
+msgstr ""
+
+#: includes/FormGenerator.php:1019 modules/base/groups/ajaxFilter.php:48
+#: modules/base/users/ajaxFilter.php:85 modules/base/views/index.tpl.php:92
+#: modules/ppolicy/default/delete.php:45
+msgid "Delete"
 msgstr ""
 
 #: includes/PageGenerator.php:108 includes/PageGenerator.php:2391
@@ -1200,15 +1200,15 @@ msgstr ""
 msgid "Show Profile"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:138
+#: modules/base/includes/computers_list.inc.php:148
 msgid "Computers list"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:161
+#: modules/base/includes/computers_list.inc.php:171
 msgid "Delete computer"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:164
+#: modules/base/includes/computers_list.inc.php:174
 msgid "Remove machine from group"
 msgstr ""
 
