@@ -21,6 +21,11 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
+import os
+from ConfigParser import ConfigParser
+from base64 import b64encode, b64decode
+
+from mmc.site import mmcconfdir
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 
 from mmc.plugins.msc.package_api import PackageGetA
@@ -49,6 +54,44 @@ class ContextMaker(ContextMakerI):
         s.userid = self.userid
         return s
 
+class ConfigReader(object):
+    """Read and parse config files"""
+    def __init__(self):
+        agent_ini = os.path.join(mmcconfdir, 
+                                "agent", 
+                                "config.ini")
+        self._agent_config = self.get_config(agent_ini)
+
+
+    @classmethod
+    def get_config(cls, inifile):
+        """
+        Get the configuration from config file
+
+        @param inifile: path to config file
+        @type inifile: string
+
+        @return: ConfigParser.ConfigParser instance 
+        """
+        logging.getLogger().debug("Load config file %s" % inifile)
+        if not os.path.exists(inifile) :
+            logging.getLogger().error("Error while reading the config file: Not found.")
+            return False
+
+        config = ConfigParser()
+        config.readfp(open(inifile))
+
+        return config
+
+    @property
+    def agent_config(self):
+        """ 
+        Get the configuration of package server 
+
+        @return: ConfigParser.ConfigParser instance 
+        """
+        return self._agent_config
+
 class RpcProxy(RpcProxyI):
     def getPApiDetail(self, pp_api_id):
         def _getPApiDetail(result, pp_api_id = pp_api_id):
@@ -72,11 +115,50 @@ class RpcProxy(RpcProxyI):
         d.addCallback(_ppa_getPackageDetail)
         return d
 
-    def ppa_pushPackage(self, pp_api_id, random_dir, files):
-        def _ppa_pushPackage(result, pp_api_id = pp_api_id, random_dir = random_dir, files = files):
+    def ppa_pushPackage(self, pp_api_id, random_dir, files, local_mmc):
+        def _ppa_pushPackage(result, pp_api_id = pp_api_id, random_dir = random_dir, files = files, local_mmc = local_mmc):
             for upa in result:
                 if upa['uuid'] == pp_api_id:
-                    return PackagePutA(upa).pushPackage(random_dir, files)
+                    local_pserver = self.getPServerIP() in ['localhost', '127.0.0.1'] and True or False
+                    if local_mmc:
+                        logging.getLogger().info("Push package from local mmc-agent...")
+                        if local_pserver:
+                            logging.getLogger().info("... to local package server")
+                            return PackagePutA(upa).pushPackage(random_dir, files, local_pserver)
+                        else:
+                            logging.getLogger().info("... to external package server")
+                            # Encode files (base64) and send them with XMLRPC
+                            encoded_files = []
+                            for file in files:
+                                logging.getLogger().debug("Encoding file %s" % file['filename'])
+                                tmp_dir = file['tmp_dir']
+                                f = open(os.path.join(tmp_dir, random_dir, file['filename']), 'r')
+                                encoded_files.append({
+                                    'filename': file['filename'],
+                                    'filebinary': b64encode(f.read()),
+                                })
+                                f.close()
+                            return PackagePutA(upa).pushPackage(random_dir, encoded_files, local_pserver)
+                    else:
+                        logging.getLogger().info("Push package from external mmc-agent...")
+                        if local_pserver:
+                            logging.getLogger().info("... to local package server")
+                            pkgs_tmp_dir = self.getPServerTmpDir()
+                            # decode files
+                            if not os.path.exists(os.path.join(pkgs_tmp_dir, random_dir)):
+                                os.makedirs(os.path.join(pkgs_tmp_dir, random_dir))
+                            filepath = os.path.join(pkgs_tmp_dir, random_dir)
+                            for file in files:
+                                logging.getLogger().debug("Decoding file %s" % file['filename'])
+                                f = open(os.path.join(filepath, file['filename']), 'w')
+                                f.write(b64decode(file['filebinary']))
+                                f.close()
+                                file['filebinary'] = False
+                                file['tmp_dir'] = pkgs_tmp_dir
+                            return PackagePutA(upa).pushPackage(random_dir, files, local_pserver)
+                        else:
+                            logging.getLogger().info("... to external package server")
+                            return PackagePutA(upa).pushPackage(random_dir, files, local_pserver)
             logging.getLogger().warn("Failed to push package on %s"%(pp_api_id))
             return False
         d = self.upaa_getUserPackageApi()
@@ -149,3 +231,17 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return UserPackageApiApi().getUserPackageApi(ctx.userid)
 
+    def getMMCIP(self):
+        config = ConfigReader()
+
+        self.agent_config = config.agent_config
+
+        return self.agent_config.get("main", "host")
+
+    def getPServerIP(self):
+        config = PkgsConfig("pkgs")
+        return config.upaa_server
+
+    def getPServerTmpDir(self):
+        config = PkgsConfig("pkgs")
+        return config.tmp_dir

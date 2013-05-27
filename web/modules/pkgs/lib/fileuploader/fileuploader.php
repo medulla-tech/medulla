@@ -192,20 +192,31 @@ class qqFileUploader {
 	$this->uploadName = $filename . $ext;
 		
         if ($this->file->save($uploadDirectory . $filename . $ext)){
-            // If file pushed to temp directory, push it to package server
+            // If file pushed to temp directory, push it to MMC agent
             $filename = $filename . $ext;
             $upload_tmp_dir = sys_get_temp_dir();
 
             $files = array();
-            $file = $upload_tmp_dir . '/' . $random_dir . '/' . $filename;
-            // Read and put content of $file to $filebinary
-            $filebinary = fread(fopen($file, "r"), filesize($file));
+            // If mmc-agent is not on the same machine than apache server
+            // send binary files with XMLRPC (base64 encoded)
+            // else mmc-agent will directly get it from tmp directory
+            $mmc_ip = xmlrpc_getMMCIP();
+            $local_mmc = (in_array($mmc_ip, array('127.0.0.1', 'localhost', $_SERVER['SERVER_ADDR']))) ? True : False;
+
+            $filebinary = False;
+            if (!$local_mmc) {
+                $file = $upload_tmp_dir . '/' . $random_dir . '/' . $filename;
+                // Read and put content of $file to $filebinary
+                $filebinary = fread(fopen($file, "r"), filesize($file));
+            }
+
             $files[] = array(
                 "filename" => $filename,
-                "filebinary" => base64_encode($filebinary),
+                "filebinary" => ($local_mmc) ? False : base64_encode($filebinary),
+                "tmp_dir" => ($local_mmc) ? $upload_tmp_dir : False,
             );
 
-            $push_package_result = pushPackage($p_api_id, $random_dir, $files);
+            $push_package_result = pushPackage($p_api_id, $random_dir, $files, $local_mmc);
             // Delete package from PHP /tmp dir
             delete_directory($upload_tmp_dir . '/' . $random_dir);
             

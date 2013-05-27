@@ -28,6 +28,7 @@
 import os
 import time
 import exceptions
+import logging
 from base64 import b64decode
 from pulse2.package_server.package_api_get import PackageApiGet
 from pulse2.package_server.types import Package
@@ -59,28 +60,43 @@ class PackageApiPut(PackageApiGet):
         }
 
         suggestedCommand = []
-        if os.path.exists(self.tmp_input_dir):
-            for f in os.listdir(os.path.join(self.tmp_input_dir, tempdir)):
-                f = os.path.join(self.tmp_input_dir, tempdir, f)
-                if os.path.isfile(f):
-                    c = getCommand(f)
-                    command = c.getCommand()
-                    if command is not None:
-                        suggestedCommand.append(command)
+
+        # In some cases, tempdir can be an empty list
+        # if True, don't enter in this piece of code
+        if not isinstance(tempdir, list):
+            if os.path.exists(self.tmp_input_dir):
+                for f in os.listdir(os.path.join(self.tmp_input_dir, tempdir)):
+                    f = os.path.join(self.tmp_input_dir, tempdir, f)
+                    if os.path.isfile(f):
+                        c = getCommand(f)
+                        command = c.getCommand()
+                        if command is not None:
+                            suggestedCommand.append(command)
 
         ret['commandcmd'] = '\n'.join(suggestedCommand)
         return ret
 
-    def xmlrpc_pushPackage(self, random_dir, files):
+    def xmlrpc_pushPackage(self, random_dir, files, local_files):
+        if local_files:
+            logging.getLogger().info("pushing package from a local mmc-agent")
+        else:
+            logging.getLogger().info("pushing package from an external mmc-agent")
+
         if not os.path.exists(self.tmp_input_dir):
             os.makedirs(self.tmp_input_dir)
         filepath = os.path.join(self.tmp_input_dir, random_dir)
         if not os.path.exists(filepath):
             os.mkdir(filepath)
         for file in files:
-            f = open(os.path.join(filepath, file['filename']), 'w')
-            f.write(b64decode(file['filebinary']))
-            f.close()
+            if local_files:
+                logging.getLogger().debug("Move file %s" % file['filename'])
+                os.rename(os.path.join(file['tmp_dir'], random_dir, file['filename']), \
+                             os.path.join(filepath, file['filename']))
+            else:
+                logging.getLogger().debug("Decode file %s" % file['filename'])
+                f = open(os.path.join(filepath, file['filename']), 'w')
+                f.write(b64decode(file['filebinary']))
+                f.close()
 
         return True
 

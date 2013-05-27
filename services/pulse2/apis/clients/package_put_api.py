@@ -54,11 +54,11 @@ class PackagePutA(Pulse2Api):
         d.addErrback(self.onError, "associatePackages", [pid, files, level])
         return d
 
-    def pushPackage(self, random_dir, files):
+    def pushPackage(self, random_dir, files, local_files):
         if self.initialized_failed:
             return -1
-        d = self.callRemote("pushPackage", random_dir, files)
-        d.addErrback(self.onError, "pushPackage", [random_dir, files], -1)
+        d = self.callRemote("pushPackage", random_dir, files, local_files)
+        d.addErrback(self.onError, "pushPackage", [random_dir, files, local_files], -1)
         return d
 
     def putPackageDetail(self, package, need_assign = True):

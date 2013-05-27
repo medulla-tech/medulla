@@ -34,8 +34,8 @@ function putPackageDetail($papi, $package, $need_assign = True) {
     return xmlCall("pkgs.ppa_putPackageDetail", array($papi, $package, $need_assign));
 }
 
-function pushPackage($papi, $random_dir, $files) {
-    return xmlCall("pkgs.ppa_pushPackage", array($papi, $random_dir, $files));
+function pushPackage($papi, $random_dir, $files, $local_mmc) {
+    return xmlCall("pkgs.ppa_pushPackage", array($papi, $random_dir, $files, $local_mmc));
 }
 
 function getPackageDetail($papiid, $pid) {
@@ -46,6 +46,9 @@ function getTemporaryFiles($papiid) {
     return xmlCall("pkgs.ppa_getTemporaryFiles", array($papiid));
 }
 
+function xmlrpc_getMMCIP() {
+    return xmlCall('pkgs.getMMCIP');
+}
 /*
  * Try to suggest a command line by parsing *.exe
  * or *.msi file in tempdir

@@ -40,6 +40,7 @@ class PkgsConfig(PluginConfig):
     upaa_verifypeer = False
     upaa_cacert = ''
     upaa_localcert = ''
+    tmp_dir = os.path.join('/tmp', 'pkgs_tmp')
 
     def readConf(self):
         """
@@ -67,6 +68,8 @@ class PkgsConfig(PluginConfig):
                 self.upaa_password = ""
             else:
                 self.upaa_password = self.get("user_package_api", "password")
+        if self.has_option("user_package_api", "tmp_dir"):
+            self.tmp_dir = self.get("user_package_api", "tmp_dir")
         if self.has_option("user_package_api", "enablessl"):
             self.upaa_enablessl = self.getboolean("user_package_api", "enablessl")
 
