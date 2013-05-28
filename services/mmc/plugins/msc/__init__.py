@@ -553,6 +553,10 @@ class RpcProxy(RpcProxyI):
     def get_web_def_coh_life_time(self):
         return xmlrpcCleanup(MscConfig().web_def_coh_life_time)
 
+    def get_web_def_attempts_per_day(self):
+        return xmlrpcCleanup(MscConfig().web_def_attempts_per_day)
+
+
 ##
 # machines
 ##

@@ -1081,3 +1081,51 @@ class CoHManager :
         """
         CoHManager.setCoHsStates(ids, "failed")
 
+    @classmethod
+    def extendTimeAndSwitchToDelete(cls, ids, start_date, end_date):
+        """
+        Failed command_on_host re-scheduling to delete only.
+
+        When a command_on_host fails, failed install package 
+        is staying on host. To make clean the remote install directory,
+        we need to re-create a new command on host with delete-only step.
+
+        First step is duration extending of failed command to default 
+        command time and setting default number of attempts.
+        Second step is switching needed flags to simulate a deleting
+        phase as last step (without sending of inventory, reboot or halt)
+        and flag it as failed.
+
+        In other words, this a shortcut in the workflow to failed state,
+        including the deleting phase.
+
+        @param ids: commands_on_host ids to update
+        @type ids: list
+
+        @param start_date: new start date of command
+        @type start_date: str
+
+        @param end_date: new end date of command
+        @type end_date: str
+        """
+        session = sqlalchemy.orm.create_session()
+        for id in ids :
+            myCommandOnHost = session.query(CommandsOnHost).get(id)
+            if myCommandOnHost :
+
+                myCommandOnHost.start_date = start_date
+                myCommandOnHost.end_date = end_date
+                myCommandOnHost.attempts_failed = 0
+                
+                myCommandOnHost.deleted = "TODO"
+                myCommandOnHost.inventoried = "IGNORED"
+                myCommandOnHost.rebooted = "IGNORED"
+                myCommandOnHost.halted = "IGNORED"
+               
+                myCommandOnHost.current_state = "scheduled"
+
+                session.flush()
+        session.close()
+
+
+

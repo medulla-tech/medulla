@@ -77,6 +77,7 @@ from pulse2.scheduler.tracking.preempt import Pulse2Preempt
 from pulse2.scheduler.balance import ParabolicBalance, randomListByBalance, getBalanceByAttempts
 
 from pulse2.scheduler.api.imaging import ImagingAPI
+from pulse2.scheduler.api.msc import CoHTimeExtend
 
 log = logging.getLogger()
 
@@ -1022,6 +1023,8 @@ def gatherIdsToStop(scheduler_name):
     now = time.strftime("%Y-%m-%d %H:%M:%S")
     ids = list()
     ids_failed = list()
+    ids_failed_to_delete = list() # ids with failed execution 
+                                  #to reschedule with only delete phase
     ids_overtimed = list()
     for myCoH, myC in __getRunningCommandsOnHostInDB(scheduler_name):
         if not myCoH:
@@ -1038,6 +1041,9 @@ def gatherIdsToStop(scheduler_name):
     for myCoH in getCommandsToNeutralize(scheduler_name):
         if not myCoH.id:
             continue
+        if myCoH.isExecutionFailed():
+            ids_failed_to_delete.append(myCoH.id)
+            continue
         if myCoH.current_state in PULSE2_FAILED_NON_FINAL_STATES :
             log.debug("Scheduler: Failed command_on_host #%s" % (myCoH.id))
             ids_failed.append(myCoH.id)
@@ -1049,8 +1055,37 @@ def gatherIdsToStop(scheduler_name):
         CoHManager.setCoHsStateOverTimed(ids_overtimed)
     if len(ids_failed) > 0 :
         CoHManager.setCoHsStateFailed(ids_failed)
+    if len(ids_failed_to_delete) > 0 :
+        switchFailedIdsToDelete(ids_failed_to_delete)
 
     return ids
+
+def switchFailedIdsToDelete(ids):
+    """
+    Workflow shortcut to delete failed install packages.
+
+    When all attempts of execution fails, we directly skip
+    to delete method which set this command_on_host as failed
+    when is done.
+    """
+    log.debug("Re-scheduling the delete phase of failed ids on execution: %s" %str(ids))
+
+    d = CoHTimeExtend().get_deferred()
+
+    def _callback(result):
+        start_date, end_date = result
+        try :
+            CoHManager.extendTimeAndSwitchToDelete(ids, start_date, end_date)
+        except Exception, exc:
+            log.warn("Unable to re-schedule the delete phase of failed CoHs: %s" % str(exc))
+            return
+
+        for id in ids :
+            twisted.internet.reactor.callLater(0, runDeletePhase, id)
+
+
+    d.addCallback(_callback)
+
 
 def fixUnprocessedTasks(scheduler_name):
     log.debug('scheduler "%s": FUT: Starting analysis' % scheduler_name)
@@ -1986,7 +2021,11 @@ def runDeletePhase(myCommandOnHostID):
         return runGiveUpPhase(myCommandOnHostID)
     if myCoH.isDeleteDone(): # delete has already be done, jump to next stage
         log.info("command_on_host #%s: delete done" % myCommandOnHostID)
-        return runInventoryPhase(myCommandOnHostID)
+        if myCoH.isExecutionFailed():
+           log.info("command_on_host #%s: delete done, but execution failed => flagged as failed" % (myCommandOnHostID))
+           return runFailedPhase(myCommandOnHostID)
+        else :
+           return runInventoryPhase(myCommandOnHostID)
     if myCoH.isDeleteIgnored(): # delete has already be ignored, jump to next stage
         log.debug("command_on_host #%s: delete ignored" % myCommandOnHostID)
         return runInventoryPhase(myCommandOnHostID)
@@ -2093,10 +2132,13 @@ def runDeletePhase(myCommandOnHostID):
             pass
         else: # do nothing
             pass
-
-    myCoH.setDeleteIgnored()
-    myCoH.setStateScheduled()
-    return runInventoryPhase(myCommandOnHostID)
+    if myCoH.isExecutionFailed():
+        log.info("command_on_host #%s: delete done, but execution failed => flagged as failed" % (myCommandOnHostID))
+        return runFailedPhase(myCommandOnHostID)
+    else :
+        myCoH.setDeleteIgnored()
+        myCoH.setStateScheduled()
+        return runInventoryPhase(myCommandOnHostID)
 
 def runInventoryPhase(myCommandOnHostID):
     # Run inventory if needed
@@ -2419,7 +2461,11 @@ def parseDeleteResult((exitcode, stdout, stderr), myCommandOnHostID):
         log.info("command_on_host #%s: delete done (exitcode == 0)" % (myCommandOnHostID))
         updateHistory(myCommandOnHostID, 'delete_done', exitcode, stdout, stderr)
         if myCoH.switchToDeleteDone():
-            return runInventoryPhase(myCommandOnHostID)
+            if myCoH.isExecutionFailed():
+                log.info("command_on_host #%s: delete done, but execution failed => flagged as failed" % (myCommandOnHostID))
+                return runFailedPhase(myCommandOnHostID)
+            else :
+                return runInventoryPhase(myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
     elif "delete" in SchedulerConfig().non_fatal_steps:
         log.info("command_on_host #%s: delete failed (exitcode != 0), but non fatal according to scheduler config file" % (myCommandOnHostID))
