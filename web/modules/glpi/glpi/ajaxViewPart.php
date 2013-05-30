@@ -244,6 +244,7 @@ _T('Last 7 days', 'glpi');
 _T('Last 30 days', 'glpi');
 _T('All', 'glpi');
 _T('Service Pack', 'glpi');
+_T('Windows Key', 'glpi');
 _T('Domain', 'glpi');
 _T('State', 'glpi');
 _T('Unknown', 'glpi');

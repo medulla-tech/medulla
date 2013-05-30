@@ -1688,6 +1688,7 @@ class Glpi08(DyngroupDatabaseHelper):
                     ['Last Logged User', machine.contact],
                     ['OS', os],
                     ['Service Pack', servicepack],
+                    ['Windows Key', machine.os_license_number],
                     ['Model / Type', modelType],
                     ['Manufacturer', manufacturer],
                     ['Serial Number', serialNumber],
