@@ -142,16 +142,20 @@ class InputProxyServer(portforward.ProxyServer):
  
     def dataReceived(self, data):
         """Overriden method from ProxyServer"""
-        portforward.ProxyServer.dataReceived(self, data)
-        if config.tcp_sproxy_check :
-            # requestor IP
-            client_ip = self.transport.client[0]
-            if self.from_ip != client_ip :
+        # requestor IP
+        client_ip = self.transport.client[0]
+        if self.from_ip != client_ip :
+            if config.tcp_sproxy_check :
                 log.warn("Client address <%s> is not matching with requestor ip <%s>" % (client_ip, self.from_ip))
                 log.warn("Closing the connection") 
                 self.stopper()
                 return
+            else :
+                log.warn("Request from client address <%s> rejected" % client_ip)
+                return
+ 
 
+        portforward.ProxyServer.dataReceived(self, data)
         self.timeout_refresh()
 
     def kill_me(self):
