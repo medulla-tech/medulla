@@ -1316,7 +1316,10 @@ class Glpi07(DyngroupDatabaseHelper):
 
         if infocoms is not None and infocoms.use_date is not None:
             endDate = add_months(infocoms.use_date, infocoms.warranty_duration)
-            return endDate.strftime('%Y-%m-%d')
+            if datetime.datetime.now().date() > endDate:
+                return '<span style="color:red;font-weight: bold;">%s</span>' % endDate.strftime('%Y-%m-%d')
+            else:
+                return endDate.strftime('%Y-%m-%d')
 
         return ''
 
