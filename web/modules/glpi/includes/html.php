@@ -55,8 +55,8 @@ class AjaxFilterGlpi extends AjaxFilter {
         name="history_delta" 
         id="history_delta<?php echo $this->formid ?>" onchange="pushSearch<?php echo $this->formid ?>(); return false;" >
         <option value="today"><?php echo _T('Today', 'glpi') ?></option>
-        <option value="week"><?php echo _T('Last week', 'glpi') ?></option>
-        <option value="month"><?php echo _T('Last month', 'glpi') ?></option>
+        <option selected="selected" alue="week"><?php echo _T('Last 7 days', 'glpi') ?></option>
+        <option value="month"><?php echo _T('Last 30 days', 'glpi') ?></option>
         <option value="older"><?php echo _T('All', 'glpi') ?></option>
     </select>
     <?php } ?>
