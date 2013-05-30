@@ -1041,7 +1041,7 @@ def gatherIdsToStop(scheduler_name):
     for myCoH in getCommandsToNeutralize(scheduler_name):
         if not myCoH.id:
             continue
-        if myCoH.isExecutionFailed():
+        if myCoH.isExecutionFailed() and not (myCoH.isStatePaused() or myCoH.isStateStopped()):
             ids_failed_to_delete.append(myCoH.id)
             continue
         if myCoH.current_state in PULSE2_FAILED_NON_FINAL_STATES :
