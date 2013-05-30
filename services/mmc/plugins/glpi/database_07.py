@@ -1430,8 +1430,8 @@ class Glpi07(DyngroupDatabaseHelper):
                             ['Device', disk.device],
                             ['Mount Point', disk.mountpoint],
                             ['Filesystem', diskfs],
-                            ['Size', str(disk.totalsize) + ' MB'],
-                            ['Free Size', str(disk.freesize) + ' MB'],
+                            ['Size', disk.totalsize and str(disk.totalsize) + ' MB' or ''],
+                            ['Free Size', disk.freesize and str(disk.freesize) + ' MB' or ''],
                         ]
                         ret.append(l)
         return ret
@@ -1657,7 +1657,7 @@ class Glpi07(DyngroupDatabaseHelper):
                 if processor is not None:
                     l = [
                         ['Name', designation],
-                        ['Frequency', str(processor.specificity) + ' Hz'],
+                        ['Frequency', processor.specificity and str(processor.specificity) + ' Hz' or ''],
                     ]
                     ret.append(l)
         return ret
@@ -1684,7 +1684,7 @@ class Glpi07(DyngroupDatabaseHelper):
                         ['Name', designation],
                         ['Type', type],
                         ['Frequency', frequence],
-                        ['Size', str(memory.specificity) + ' MB'],
+                        ['Size', memory.specificity and str(memory.specificity) + ' MB' or ''],
                     ]
                     ret.append(l)
         return ret
@@ -1707,7 +1707,7 @@ class Glpi07(DyngroupDatabaseHelper):
                 if hd is not None:
                     l = [
                         ['Name', designation],
-                        ['Size', str(hd.specificity) + ' MB'],
+                        ['Size', hd.specificity and str(hd.specificity) + ' MB' or ''],
                     ]
                     ret.append(l)
         return ret
@@ -1775,7 +1775,7 @@ class Glpi07(DyngroupDatabaseHelper):
                 if card is not None:
                     l = [
                         ['Name', card.designation],
-                        ['Memory', str(card.specif_default) + ' MB'],
+                        ['Memory', card.specif_default and str(card.specif_default) + ' MB' or ''],
                         ['Type', interfaceType],
                     ]
                     ret.append(l)
