@@ -26,6 +26,7 @@
     Pulse2 Modules
 """
 import os
+from shutil import move
 import time
 import exceptions
 import logging
@@ -90,7 +91,7 @@ class PackageApiPut(PackageApiGet):
         for file in files:
             if local_files:
                 logging.getLogger().debug("Move file %s" % file['filename'])
-                os.rename(os.path.join(file['tmp_dir'], random_dir, file['filename']), \
+                move(os.path.join(file['tmp_dir'], random_dir, file['filename']), \
                              os.path.join(filepath, file['filename']))
             else:
                 logging.getLogger().debug("Decode file %s" % file['filename'])
