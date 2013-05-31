@@ -1,3 +1,11 @@
+mmc-core 3.1.0
+--------------
+
+ * New dashboard plugin
+ * New services plugin (systemd integration)
+ * Bug #1912: Fix MMC login page on IE9
+ * Bug #1915: Fix UID between users and computers accounts
+
 mmc-core 3.0.5
 --------------
 
