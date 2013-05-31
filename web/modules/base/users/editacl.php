@@ -206,11 +206,11 @@ function createRedirectAclTemplate($module_name, $acl, $acltab, $form) {
     $value = $redirArray[$module_name];
     $MMCApp =&MMCApp::getInstance();
     $base = &$MMCApp->getModule($module_name);
-    $form->add(new ModuleTitleElement(_($base->getDescription()) . " " . sprintf(_(" (%s module)"), $module_name)));
+    $form->add(new TitleElement(_($base->getDescription()) . " " . sprintf(_(" (%s module)"), $module_name)));
     foreach ($value as $subkey => $subvalue) {
         $rowNum=1;
         $submod = &$base->getSubmod($subkey);
-        $form->add(new TitleElement(_($submod->getDescription())));
+        $form->add(new TitleElement(_($submod->getDescription()), 3));
         if (sizeof($subvalue)>1)
         {
             $form->add(new SelectElement("acl[".$module_name."][".$subkey."]", "acltab[".$module_name."][".$subkey."]"));

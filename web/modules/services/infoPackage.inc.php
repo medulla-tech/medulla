@@ -85,11 +85,11 @@ $page = new Page("ajaxOthersServicesFilter");
 $page->setOptions(array("visible" => False, "AJAX" => True));
 $submod->addPage($page);
 
-$page = new Page("reboot");
+$page = new Page("reboot", _T("Reboot"));
 $page->setOptions(array("visible" => False));
 $submod->addPage($page);
 
-$page = new Page("poweroff");
+$page = new Page("poweroff", _T("Poweroff"));
 $page->setOptions(array("visible" => False));
 $submod->addPage($page);
 
