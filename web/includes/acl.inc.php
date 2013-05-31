@@ -108,7 +108,7 @@ function getDefaultPage() {
                         # check page is not a popup
                         if (isset($MMCApp->_modules[$module]->_submod[$submod]->_pages[$page]) &&
                             $MMCApp->_modules[$module]->_submod[$submod]->_pages[$page]->_options['noHeader'] != 1 &&
-                            $MMCApp->_modules[$module]->_submod[$submod]->_pages[$page]->_options['visible']) {
+                            $MMCApp->_modules[$module]->_submod[$submod]->_pages[$page]->_options['AJAX'] != true) {
                                 # get url
                                 $url = urlStrRedirect("$module/$submod/$page");
                                 # stop foreach loops
@@ -120,9 +120,9 @@ function getDefaultPage() {
         }
     }
 
-    if (!isset($url)) 
+    if (!isset($url))
         return "index.php?error=".urlencode(_("You do not have required rights"));
-    
+
     return $url;
 }
 
