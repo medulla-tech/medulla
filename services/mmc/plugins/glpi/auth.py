@@ -119,6 +119,7 @@ def getPageWithHeader(url, contextFactory=None, *args, **kwargs):
     """
     scheme, host, port, path = _parse(url)
     factory = HTTPClientFactoryWithHeader(url, *args, **kwargs)
+    d = factory.deferred
     if scheme == 'https':
         from twisted.internet import ssl
         if contextFactory is None:
@@ -126,4 +127,4 @@ def getPageWithHeader(url, contextFactory=None, *args, **kwargs):
         reactor.connectSSL(host, port, factory, contextFactory)
     else:
         reactor.connectTCP(host, port, factory)
-    return factory.deferred
+    return d

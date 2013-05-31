@@ -69,6 +69,7 @@ class SchedulerProxy(twisted.web.xmlrpc.Proxy):
         factory = self.queryFactory(
             self.path, self.host, method, self.user,
             self.password, self.allowNone, args)
+        d = factory.deferred
         if self.secure:
             from twisted.internet import ssl
             if not self.SSLClientContext:
@@ -77,7 +78,7 @@ class SchedulerProxy(twisted.web.xmlrpc.Proxy):
                                factory, self.SSLClientContext)
         else:
             reactor.connectTCP(self.host, self.port or 80, factory)
-        return factory.deferred
+        return d
 
 def getProxy(url):
     """
