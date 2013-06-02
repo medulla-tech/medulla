@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-05-28 21:24+0200\n"
-"PO-Revision-Date: 2013-05-30 08:44+0000\n"
+"POT-Creation-Date: 2013-05-31 11:07+0200\n"
+"PO-Revision-Date: 2013-06-02 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -299,11 +299,11 @@ msgid "Today"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:243 modules/glpi/includes/html.php:58
-msgid "Last week"
+msgid "Last 7 days"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:244 modules/glpi/includes/html.php:59
-msgid "Last month"
+msgid "Last 30 days"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:245 modules/glpi/includes/html.php:60
@@ -315,31 +315,35 @@ msgid "Service Pack"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:247
-msgid "Domain"
+msgid "Windows Key"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:248
-msgid "State"
+msgid "Domain"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:249
-msgid "Unknown"
+msgid "State"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:250
+msgid "Unknown"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxViewPart.php:251
 msgid "Inventory Number"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:252
+#: modules/glpi/glpi/ajaxViewPart.php:253
 msgid "Enabled"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:253
+#: modules/glpi/glpi/ajaxViewPart.php:254
 msgid "Up-to-date"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:289
-#: modules/glpi/glpi/ajaxViewPart.php:312
+#: modules/glpi/glpi/ajaxViewPart.php:290
+#: modules/glpi/glpi/ajaxViewPart.php:313
 msgid "Invalid hostname"
 msgstr ""
 
