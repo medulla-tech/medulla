@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-05-24 11:47+0200\n"
-"PO-Revision-Date: 2013-05-26 23:04+0000\n"
+"POT-Creation-Date: 2013-05-31 17:12+0200\n"
+"PO-Revision-Date: 2013-06-02 23:05+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -66,10 +66,6 @@ msgstr ""
 
 #: includes/ErrorHandling.php:78
 msgid "Complete Traceback"
-msgstr ""
-
-#: includes/acl.inc.php:124
-msgid "You do not have required rights"
 msgstr ""
 
 #: includes/ajaxTools.php:63 includes/ajaxTools.php:69
@@ -364,6 +360,10 @@ msgstr ""
 
 #: includes/PageGenerator.php:2607
 msgid "Unselect all"
+msgstr ""
+
+#: includes/acl.inc.php:124
+msgid "You do not have required rights"
 msgstr ""
 
 #: logout/index.php:50
@@ -1482,56 +1482,6 @@ msgstr ""
 msgid "Disable account"
 msgstr ""
 
-#: modules/base/users/editacl.php:152
-msgid "User ACLs successfully modified."
-msgstr ""
-
-#: modules/base/users/editacl.php:175
-msgid "Set value for all radio buttons:&nbsp;&nbsp;"
-msgstr ""
-
-#: modules/base/users/editacl.php:176 modules/base/users/editacl.php:181
-msgid "read only"
-msgstr ""
-
-#: modules/base/users/editacl.php:177 modules/base/users/editacl.php:181
-msgid "read/write"
-msgstr ""
-
-#: modules/base/users/editacl.php:178 modules/base/users/editacl.php:181
-msgid "hide"
-msgstr ""
-
-#: modules/base/users/editacl.php:181
-msgid "Attribute description"
-msgstr ""
-
-#: modules/base/users/editacl.php:209
-#, php-format
-msgid " (%s module)"
-msgstr ""
-
-#: modules/base/users/editacl.php:219
-msgid "Web page description"
-msgstr ""
-
-#: modules/base/users/editacl.php:219
-msgid "Authorization"
-msgstr ""
-
-#: modules/base/users/editacl.php:228
-msgid "Warning no desc found in infoPackage.inc.php :"
-msgstr ""
-
-#: modules/base/users/editacl.php:251
-#, php-format
-msgid "Edit ACL of user %s"
-msgstr ""
-
-#: modules/base/users/editacl.php:271
-msgid "Download ACL string"
-msgstr ""
-
 #: modules/base/users/index.php:31 modules/base/views/index.tpl.php:43
 #: modules/base/infoPackage.inc.php:171
 msgid "User list"
@@ -1590,6 +1540,56 @@ msgstr ""
 
 #: modules/base/users/passwd.php:81 modules/base/users/resetpasswd.php:64
 msgid "Passwords are mismatching. Please retry."
+msgstr ""
+
+#: modules/base/users/editacl.php:152
+msgid "User ACLs successfully modified."
+msgstr ""
+
+#: modules/base/users/editacl.php:175
+msgid "Set value for all radio buttons:&nbsp;&nbsp;"
+msgstr ""
+
+#: modules/base/users/editacl.php:176 modules/base/users/editacl.php:181
+msgid "read only"
+msgstr ""
+
+#: modules/base/users/editacl.php:177 modules/base/users/editacl.php:181
+msgid "read/write"
+msgstr ""
+
+#: modules/base/users/editacl.php:178 modules/base/users/editacl.php:181
+msgid "hide"
+msgstr ""
+
+#: modules/base/users/editacl.php:181
+msgid "Attribute description"
+msgstr ""
+
+#: modules/base/users/editacl.php:209
+#, php-format
+msgid " (%s module)"
+msgstr ""
+
+#: modules/base/users/editacl.php:219
+msgid "Web page description"
+msgstr ""
+
+#: modules/base/users/editacl.php:219
+msgid "Authorization"
+msgstr ""
+
+#: modules/base/users/editacl.php:228
+msgid "Warning no desc found in infoPackage.inc.php :"
+msgstr ""
+
+#: modules/base/users/editacl.php:251
+#, php-format
+msgid "Edit ACL of user %s"
+msgstr ""
+
+#: modules/base/users/editacl.php:271
+msgid "Download ACL string"
 msgstr ""
 
 #: modules/base/infoPackage.inc.php:36
