@@ -101,12 +101,14 @@ class PluginConfig(MMCConfigParser):
     """
     USERDEFAULT = "userdefault"
     HOOKS = "hooks"
+    SERVICE = "service"
 
     def __init__(self, name, conffile = None):
         MMCConfigParser.__init__(self)
         self.name = name
         self.userDefault = {}
         self.hooks = {}
+        self.service = {}
         if not conffile:
             self.conffile = mmctools.getConfigFile(name)
         else: self.conffile = conffile
@@ -127,6 +129,9 @@ class PluginConfig(MMCConfigParser):
         if self.has_section(self.HOOKS):
             for option in self.options(self.HOOKS):
                 self.hooks[self.name + "." + option] = self.get(self.HOOKS, option)
+        if self.has_section(self.SERVICE):
+            for option in self.options(self.SERVICE):
+                self.service[option] = self.get(self.SERVICE, option)
 
     def setDefault(self):
         """Set reasonable default"""
