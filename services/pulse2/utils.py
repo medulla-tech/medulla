@@ -557,7 +557,7 @@ def get_ip_address(ifname):
     return socket.inet_ntoa(fcntl.ioctl(
         s.fileno(),
         0x8915,  # SIOCGIFADDR
-        struct.pack('256s', ifname[:15])
+        struct.pack('256s', ifname)
     )[20:24])
 
 def get_default_netif():
@@ -572,7 +572,7 @@ def get_default_netif():
             if fields[1] != '00000000' or not int(fields[3], 16) & 2:
                 continue
 
-            netif = fields[0]
+            netif = fields[0][:15]
             fh.close()
             break
     finally:
@@ -580,18 +580,19 @@ def get_default_netif():
 
     # 2nd possibility ->
     if not netif :
-        cmd = "ip route get 6.6.6.6"
+        cmd = "netstat -i"
         ps = os.popen(cmd, "r")
         out = ps.read()
         ps.close()
 
         # output on format :
-        # 6.6.6.6 via 192.168.127.1 dev eth1  src 192.168.127.2 
-        #    cache  mtu 1500 advmss 1460 hoplimit 64
-        # so, we take 5th element to get our default interface
+        # Iface   MTU Met   RX-OK RX-ERR RX-DRP RX-OVR    TX-OK TX-ERR TX-DRP  TX-OVR Flg
+        # eth0       1500 0     15985      0      0 0         13285      0      0       0 BMRU
+        # lo        16436 0         0      0      0 0             0      0      0       0 LRU
+        # so, we take 1st iface (16th element) to get our default interface
 
-        netif = out.split()[4].strip()
-
+        netif = out.split()[15].strip()
+ 
     return netif
 
 
