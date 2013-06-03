@@ -74,10 +74,19 @@ function display_part($part, $get, $simpleTableParts, $displayNavBar = True, $pa
     $i = 0;
     foreach ($inv as $line) {
         foreach ($line as $vals) {
-            // If $vals[1] is an empty string or an array, don't use the _T() function
-            // Empty fields are replaced by a trademark text by transifex
-            // if it's an array, it's an editable field
-            $all[$vals[0]][$i] = (!is_array($vals[1]) && $vals[1] != '') ? _T($vals[1]) : '';
+            /* 
+             * If $vals[1] is an empty string or an array, don't use the _T() function
+             * Empty fields are replaced by a trademark text by transifex
+             * if it's an array, it's an editable field
+             */
+
+            $all[$vals[0]][$i] = '';
+            if (!is_array($vals[1]) && $vals[1] != '') { // translatable fields
+                $all[$vals[0]][$i] = _T($vals[1]);
+            }
+            elseif (is_array($vals[1])) { // editable fields
+                $all[$vals[0]][$i] = $vals[1];
+            }
         }
         $i++;
     }
