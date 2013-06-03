@@ -50,7 +50,7 @@ import xmlrpclib
 import httplib
 from urlparse import urlparse
 from base64 import encodestring
-from cookielib import LWPCookieJar
+from cookielib import LWPCookieJar, LoadError
 from urllib2 import Request as CookieRequest
 
 log = logging.getLogger()
@@ -125,11 +125,18 @@ class MMCBaseTransport(object):
     def send_cookie_auth(self, connection):
         """ Include Cookie Authentication data in a header
         """
-        cj = LWPCookieJar()
-        cj.load(COOKIES_FILE, ignore_discard=True, ignore_expires=True)
+        try:
+            cj = LWPCookieJar()
+            cj.load(COOKIES_FILE, ignore_discard=True, ignore_expires=True)
 
-        for cookie in cj:
-            connection.putheader('Cookie', '%s=%s' % (cookie.name, cookie.value))
+            for cookie in cj:
+                connection.putheader('Cookie', '%s=%s' % (cookie.name, cookie.value))
+            return True
+        except LoadError :
+            # mmc-cookies file is sometimes on bad format 
+            # (probably caused by interrupted twisted sessions)
+            log.warn("mmc-cookies: invalid LWP format file, resending the credentials")
+            return False
 
     ## override the send_host hook to also send authentication info
     def send_host(self, connection, host):
@@ -139,7 +146,8 @@ class MMCBaseTransport(object):
         """
         super(MMCBaseTransport, self).send_host(connection, host)
         if os.path.exists(COOKIES_FILE):
-            self.send_cookie_auth(connection)
+            if not self.send_cookie_auth(connection):
+                self.send_basic_auth(connection) 
         elif self.credentials != ():
             self.send_basic_auth(connection)
 
