@@ -663,7 +663,7 @@ class SetupApp(object):
             if self.distro_handler.ldap_schemas_dir and self.distro_handler.ldap_config:
                 log.info('MMC schema can not be found in LDAP directory.')
                 log.info('Adding the schema...')
-                schema_path = os.path.join(prefix, 'share', 'doc', 'python-mmc-base', 'contrib', 'ldap', 'mmc.schema')
+                schema_path = os.path.join(prefix, 'share', 'doc', 'mmc', 'contrib', 'base', 'mmc.schema')
                 ret = call('mmc-add-schema %s %s' % (schema_path, self.distro_handler.ldap_schemas_dir), shell=True)
                 if ret != 0:
                     log.error('Failed to include the mmc schema in the LDAP directory.')
