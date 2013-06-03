@@ -57,8 +57,6 @@ defaultShellDisable = /bin/false
 uidStart = 10000
 # group gid number start
 gidStart = 10000
-# deprecated logview module
-logViewModule = no
 # LDAP log file path
 logfile = /var/log/ldap.log
 # FDS log file path

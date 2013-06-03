@@ -42,6 +42,8 @@ from mmc.core.version import scmRevision
 from mmc.core.audit import AuditFactory as AF
 from mmc.plugins.base.audit import AA, AT, PLUGIN_NAME
 from mmc.plugins.base.subscription import SubscriptionManager
+from mmc.agent import PluginManager
+
 
 from uuid import uuid1
 import shelve
@@ -2539,8 +2541,6 @@ class LogView:
 
     def __init__(self, logfile = localstatedir + '/log/ldap.log', pattern=None):
         config = PluginConfig("base")
-        try: self.enabled = config.getboolean("ldap", "logViewModule")
-        except (NoSectionError, NoOptionError): self.enabled = True
         try: self.logfile = config.get("ldap", "logfile")
         except (NoSectionError, NoOptionError): self.logfile = logfile
         try: self.maxElt = config.get("LogView", "maxElt")
@@ -2554,7 +2554,8 @@ class LogView:
                 }
 
     def isLogViewEnabled(self):
-        return self.enabled
+        # Disable logview module if the plugin services is enabled
+        return not 'services' in PluginManager().getEnabledPluginNames()
 
     def revReadlines(self, arg, bufsize = 8192):
         """
