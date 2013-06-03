@@ -26,7 +26,9 @@ require('modules/msc/includes/mscoptions_xmlrpc.php');
 
 # FIXME: I'm not really proud of this piece of code :/
 if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
-    $result = scheduler_establish_vnc_proxy('', $_GET['objectUUID'], $_SERVER["REMOTE_ADDR"]);
+    // Check if we're here thru a proxy defining HTTP_X_FORWARDED_FOR
+    $remoteaddr = isset($_SERVER["HTTP_X_FORWARDED_FOR"])? $_SERVER["HTTP_X_FORWARDED_FOR"]: $_SERVER["REMOTE_ADDR"];
+    $result = scheduler_establish_vnc_proxy('', $_GET['objectUUID'], $remoteaddr);
 
     # $result is expected to be an array containing host, port, let's check it:
     if ($result == False) {
