@@ -542,7 +542,7 @@ class ServiceManager:
     def restart(self):
         shLaunch(self.initfile + " restart")
 
-    def reLoad(self):
+    def reload(self):
         shLaunch(self.initfile + " reload")
 
     def command(self, command):
@@ -556,7 +556,7 @@ class ServiceManager:
         elif command == "restart":
             self.restart()
         elif command == "reload":
-            self.reLoad()
+            self.reload()
         return ret
 
 
