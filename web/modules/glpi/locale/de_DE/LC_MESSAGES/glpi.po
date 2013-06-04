@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-03 01:00+0200\n"
+"POT-Creation-Date: 2013-06-04 16:55+0200\n"
 "PO-Revision-Date: 2013-05-30 09:10+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/"
@@ -24,7 +24,7 @@ msgstr ""
 msgid "%s's inventory (%s)"
 msgstr "%s's Inventar (%s)"
 
-#: modules/glpi/glpi/ajaxViewPart.php:241
+#: modules/glpi/glpi/ajaxViewPart.php:250
 msgid "Action"
 msgstr "Aktion"
 
@@ -36,7 +36,7 @@ msgstr "Administrativ"
 msgid "Administrative tab (GLPI)"
 msgstr "Verwaltungs-Tab (GLPI)"
 
-#: modules/glpi/glpi/ajaxViewPart.php:245 modules/glpi/includes/html.php:60
+#: modules/glpi/glpi/ajaxViewPart.php:254 modules/glpi/includes/html.php:60
 msgid "All"
 msgstr "Alle"
 
@@ -48,28 +48,28 @@ msgstr "Antivirus"
 msgid "Antivirus tab (GLPI)"
 msgstr "Antivirus-Reiter (GLPI)"
 
-#: modules/glpi/glpi/ajaxViewPart.php:234
+#: modules/glpi/glpi/ajaxViewPart.php:243
 msgid "Bandwidth"
 msgstr "Bandbreite"
 
-#: modules/glpi/glpi/ajaxViewPart.php:240
+#: modules/glpi/glpi/ajaxViewPart.php:249
 msgid "Category"
 msgstr "Kategorie"
 
-#: modules/glpi/glpi/ajaxViewPart.php:97
+#: modules/glpi/glpi/ajaxViewPart.php:106
 msgid "Click here to see this computer on manufacturer website"
 msgstr ""
 "Klicken Sie hier um diesen Rechner auf der Hersteller-Webseite zu sehen"
 
-#: modules/glpi/glpi/ajaxViewPart.php:237
+#: modules/glpi/glpi/ajaxViewPart.php:246
 msgid "Comment"
 msgstr "Kommentar"
 
-#: modules/glpi/glpi/ajaxViewPart.php:219
+#: modules/glpi/glpi/ajaxViewPart.php:228
 msgid "Computer Name"
 msgstr "Rechnername"
 
-#: modules/glpi/glpi/ajaxViewPart.php:227
+#: modules/glpi/glpi/ajaxViewPart.php:236
 msgid "Computer Type"
 msgstr "Computertyp"
 
@@ -82,7 +82,7 @@ msgstr "Rechner"
 msgid "Computers list has been truncated at %d computers"
 msgstr "Rechnerliste wurde bei %d Rechnern abgeschnitten"
 
-#: modules/glpi/glpi/ajaxViewPart.php:181
+#: modules/glpi/glpi/ajaxViewPart.php:190
 msgid "Controllers"
 msgstr "Controller"
 
@@ -90,15 +90,15 @@ msgstr "Controller"
 msgid "Create static group from dashboard (GLPI)"
 msgstr "Statische Gruppe vom Dashboard (GLPI) erstellen "
 
-#: modules/glpi/glpi/ajaxViewPart.php:238
+#: modules/glpi/glpi/ajaxViewPart.php:247
 msgid "Date"
 msgstr "Datum"
 
-#: modules/glpi/glpi/ajaxViewPart.php:220
+#: modules/glpi/glpi/ajaxViewPart.php:229
 msgid "Description"
 msgstr "Beschreibung"
 
-#: modules/glpi/glpi/ajaxViewPart.php:208
+#: modules/glpi/glpi/ajaxViewPart.php:217
 msgid "Device"
 msgstr "Gerät"
 
@@ -106,47 +106,47 @@ msgstr "Gerät"
 msgid "Display locations"
 msgstr "Display Standorte"
 
-#: modules/glpi/glpi/ajaxViewPart.php:248
+#: modules/glpi/glpi/ajaxViewPart.php:257
 msgid "Domain"
 msgstr "Domain"
 
-#: modules/glpi/glpi/ajaxViewPart.php:183
+#: modules/glpi/glpi/ajaxViewPart.php:192
 msgid "Drives"
 msgstr "Laufwerke"
 
-#: modules/glpi/glpi/ajaxViewPart.php:253
+#: modules/glpi/glpi/ajaxViewPart.php:262
 msgid "Enabled"
 msgstr "Aktiviert"
 
-#: modules/glpi/glpi/ajaxViewPart.php:222
+#: modules/glpi/glpi/ajaxViewPart.php:231
 msgid "Entity"
 msgstr "Entität"
 
-#: modules/glpi/glpi/ajaxViewPart.php:221
+#: modules/glpi/glpi/ajaxViewPart.php:230
 msgid "Entity (Location)"
 msgstr "Einheit (Ort)"
 
-#: modules/glpi/glpi/ajaxViewPart.php:210
+#: modules/glpi/glpi/ajaxViewPart.php:219
 msgid "Filesystem"
 msgstr "Dateisystem"
 
-#: modules/glpi/glpi/ajaxViewPart.php:212
+#: modules/glpi/glpi/ajaxViewPart.php:221
 msgid "Free Size"
 msgstr "Freie Größe"
 
-#: modules/glpi/glpi/ajaxViewPart.php:231
+#: modules/glpi/glpi/ajaxViewPart.php:240
 msgid "Frequency"
 msgstr "Häufigkeit"
 
-#: modules/glpi/glpi/ajaxViewPart.php:207
+#: modules/glpi/glpi/ajaxViewPart.php:216
 msgid "Gateway"
 msgstr "Gateway"
 
-#: modules/glpi/glpi/ajaxViewPart.php:184
+#: modules/glpi/glpi/ajaxViewPart.php:193
 msgid "Graphic Cards"
 msgstr "Grafikkarten"
 
-#: modules/glpi/glpi/ajaxViewPart.php:180
+#: modules/glpi/glpi/ajaxViewPart.php:189
 msgid "Hard Drives"
 msgstr "Festplatten"
 
@@ -170,12 +170,12 @@ msgstr "Verlauf"
 msgid "History tab (GLPI)"
 msgstr "Verlauf-Tab (GLPI)"
 
-#: modules/glpi/glpi/ajaxViewPart.php:205
+#: modules/glpi/glpi/ajaxViewPart.php:214
 msgid "IP"
 msgstr "IP"
 
-#: modules/glpi/glpi/ajaxViewPart.php:290
-#: modules/glpi/glpi/ajaxViewPart.php:313
+#: modules/glpi/glpi/ajaxViewPart.php:299
+#: modules/glpi/glpi/ajaxViewPart.php:322
 msgid "Invalid hostname"
 msgstr "Ungültiger Hostname"
 
@@ -187,23 +187,23 @@ msgstr "Inventar (GLPI) auf einer Gruppe von Rechnern"
 msgid "Inventory (GLPI) on machine"
 msgstr "Inventar (glpi) der Maschine"
 
-#: modules/glpi/glpi/ajaxViewPart.php:251
+#: modules/glpi/glpi/ajaxViewPart.php:260
 msgid "Inventory Number"
 msgstr "Inventarnummer"
 
-#: modules/glpi/glpi/ajaxViewPart.php:214
+#: modules/glpi/glpi/ajaxViewPart.php:223
 msgid "Invoice Number"
 msgstr "Rechnungsnummer"
 
-#: modules/glpi/glpi/ajaxViewPart.php:244 modules/glpi/includes/html.php:59
+#: modules/glpi/glpi/ajaxViewPart.php:253 modules/glpi/includes/html.php:59
 msgid "Last 30 days"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:243 modules/glpi/includes/html.php:58
+#: modules/glpi/glpi/ajaxViewPart.php:252 modules/glpi/includes/html.php:58
 msgid "Last 7 days"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:224
+#: modules/glpi/glpi/ajaxViewPart.php:233
 msgid "Last Logged User"
 msgstr "Letzter erfasster Benutzer"
 
@@ -229,24 +229,24 @@ msgstr ""
 "Weniger als %s Tage:\n"
 " %percent% (%d Rechner)"
 
-#: modules/glpi/glpi/ajaxViewPart.php:223
+#: modules/glpi/glpi/ajaxViewPart.php:232
 msgid "Location"
 msgstr "Ort"
 
-#: modules/glpi/glpi/ajaxViewPart.php:204
+#: modules/glpi/glpi/ajaxViewPart.php:213
 msgid "MAC Address"
 msgstr "MAC Addresse"
 
-#: modules/glpi/glpi/ajaxViewPart.php:229
+#: modules/glpi/glpi/ajaxViewPart.php:238
 msgid "Manufacturer"
 msgstr "Hersteller"
 
-#: modules/glpi/glpi/ajaxViewPart.php:179
-#: modules/glpi/glpi/ajaxViewPart.php:236
+#: modules/glpi/glpi/ajaxViewPart.php:188
+#: modules/glpi/glpi/ajaxViewPart.php:245
 msgid "Memory"
 msgstr "Speicher"
 
-#: modules/glpi/glpi/ajaxViewPart.php:228
+#: modules/glpi/glpi/ajaxViewPart.php:237
 msgid "Model / Type"
 msgstr "Modell / Typ"
 
@@ -258,16 +258,16 @@ msgstr ""
 "Mehr als %s Tage:\n"
 " %percent% (%d Rechner)"
 
-#: modules/glpi/glpi/ajaxViewPart.php:209
+#: modules/glpi/glpi/ajaxViewPart.php:218
 msgid "Mount Point"
 msgstr "Mountpoint"
 
-#: modules/glpi/glpi/ajaxViewPart.php:202
-#: modules/glpi/glpi/ajaxViewPart.php:217
+#: modules/glpi/glpi/ajaxViewPart.php:211
+#: modules/glpi/glpi/ajaxViewPart.php:226
 msgid "Name"
 msgstr "Name"
 
-#: modules/glpi/glpi/ajaxViewPart.php:206
+#: modules/glpi/glpi/ajaxViewPart.php:215
 msgid "Netmask"
 msgstr "Netzmaske"
 
@@ -275,11 +275,11 @@ msgstr "Netzmaske"
 msgid "Network"
 msgstr "Netzwerk"
 
-#: modules/glpi/glpi/ajaxViewPart.php:182
+#: modules/glpi/glpi/ajaxViewPart.php:191
 msgid "Network Cards"
 msgstr "Netzwerkkarten"
 
-#: modules/glpi/glpi/ajaxViewPart.php:203
+#: modules/glpi/glpi/ajaxViewPart.php:212
 msgid "Network Type"
 msgstr "Netzwerkart"
 
@@ -287,31 +287,31 @@ msgstr "Netzwerkart"
 msgid "Network tab (GLPI)"
 msgstr "Netzwerk-Tab (GLPI)"
 
-#: modules/glpi/glpi/ajaxViewPart.php:201
+#: modules/glpi/glpi/ajaxViewPart.php:210
 msgid "No"
 msgstr "Nein"
 
-#: modules/glpi/glpi/ajaxViewPart.php:133
+#: modules/glpi/glpi/ajaxViewPart.php:142
 msgid "No record found for this period."
 msgstr "Keine Aufzeichnung für diese Periode gefunden."
 
-#: modules/glpi/glpi/ajaxViewPart.php:140
+#: modules/glpi/glpi/ajaxViewPart.php:149
 msgid "No record found."
 msgstr "Kein Eintrag gefunden."
 
-#: modules/glpi/glpi/ajaxViewPart.php:225
+#: modules/glpi/glpi/ajaxViewPart.php:234
 msgid "OS"
 msgstr "OS"
 
-#: modules/glpi/glpi/ajaxViewPart.php:226
+#: modules/glpi/glpi/ajaxViewPart.php:235
 msgid "Operating System"
 msgstr "Betriebssystem"
 
-#: modules/glpi/glpi/ajaxViewPart.php:186
+#: modules/glpi/glpi/ajaxViewPart.php:195
 msgid "Others"
 msgstr "Weitere"
 
-#: modules/glpi/glpi/ajaxViewPart.php:137
+#: modules/glpi/glpi/ajaxViewPart.php:146
 msgid ""
 "Please ensure you are running GLPI with FusionInventory plugin and "
 "FusionInventory Agent on this client."
@@ -319,24 +319,24 @@ msgstr ""
 "Bitte vergewissern Sie sich, dass Sie GLPI mit dem FusionInventory-Plugin "
 "und dem FusionInventory Agent auf diesem Client laufen lassen."
 
-#: modules/glpi/glpi/ajaxViewPart.php:178
+#: modules/glpi/glpi/ajaxViewPart.php:187
 msgid "Processors"
 msgstr "Prozessoren"
 
-#: modules/glpi/glpi/ajaxViewPart.php:114
+#: modules/glpi/glpi/ajaxViewPart.php:123
 msgid "Properties"
 msgstr "Eigenschaften"
 
-#: modules/glpi/glpi/ajaxViewPart.php:230
+#: modules/glpi/glpi/ajaxViewPart.php:239
 msgid "Serial Number"
 msgstr "Seriennummer"
 
-#: modules/glpi/glpi/ajaxViewPart.php:246
+#: modules/glpi/glpi/ajaxViewPart.php:255
 msgid "Service Pack"
 msgstr "Service Pack"
 
-#: modules/glpi/glpi/ajaxViewPart.php:211
-#: modules/glpi/glpi/ajaxViewPart.php:233
+#: modules/glpi/glpi/ajaxViewPart.php:220
+#: modules/glpi/glpi/ajaxViewPart.php:242
 msgid "Size"
 msgstr "Größe"
 
@@ -348,11 +348,11 @@ msgstr "Software"
 msgid "Softwares tab (GLPI)"
 msgstr "Software-Tab (GLPI)"
 
-#: modules/glpi/glpi/ajaxViewPart.php:185
+#: modules/glpi/glpi/ajaxViewPart.php:194
 msgid "Sound Cards"
 msgstr "Soundkarte"
 
-#: modules/glpi/glpi/ajaxViewPart.php:249
+#: modules/glpi/glpi/ajaxViewPart.php:258
 msgid "State"
 msgstr "Zustand"
 
@@ -372,58 +372,58 @@ msgstr "Zusammenfassung"
 msgid "Summary tab (GLPI)"
 msgstr "Zusammenfassung-Tab (GLPI)"
 
-#: modules/glpi/glpi/ajaxViewPart.php:213
+#: modules/glpi/glpi/ajaxViewPart.php:222
 msgid "Supplier"
 msgstr "Lieferant"
 
-#: modules/glpi/glpi/ajaxViewPart.php:242 modules/glpi/includes/html.php:57
+#: modules/glpi/glpi/ajaxViewPart.php:251 modules/glpi/includes/html.php:57
 msgid "Today"
 msgstr "Heute"
 
-#: modules/glpi/glpi/ajaxViewPart.php:232
+#: modules/glpi/glpi/ajaxViewPart.php:241
 msgid "Type"
 msgstr "Typ"
 
-#: modules/glpi/glpi/ajaxViewPart.php:136
+#: modules/glpi/glpi/ajaxViewPart.php:145
 msgid "Unable to detect any Antivirus software on this machine."
 msgstr "Keine Antivirensoftware auf diesem Rechner entdeckt."
 
-#: modules/glpi/glpi/ajaxViewPart.php:250
+#: modules/glpi/glpi/ajaxViewPart.php:259
 msgid "Unknown"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:254
+#: modules/glpi/glpi/ajaxViewPart.php:263
 msgid "Up-to-date"
 msgstr "Up-to-date"
 
-#: modules/glpi/glpi/ajaxViewPart.php:239
+#: modules/glpi/glpi/ajaxViewPart.php:248
 msgid "User"
 msgstr "Benutzer"
 
-#: modules/glpi/glpi/ajaxViewPart.php:115
+#: modules/glpi/glpi/ajaxViewPart.php:124
 msgid "Value"
 msgstr "Wert"
 
-#: modules/glpi/glpi/ajaxViewPart.php:216
+#: modules/glpi/glpi/ajaxViewPart.php:225
 msgid "Vendor"
 msgstr "Anbieter"
 
-#: modules/glpi/glpi/ajaxViewPart.php:218
+#: modules/glpi/glpi/ajaxViewPart.php:227
 msgid "Version"
 msgstr "Version"
 
-#: modules/glpi/glpi/ajaxViewPart.php:215
+#: modules/glpi/glpi/ajaxViewPart.php:224
 msgid "Warranty End Date"
 msgstr "Ende der Garantie-Datum "
 
-#: modules/glpi/glpi/ajaxViewPart.php:247
+#: modules/glpi/glpi/ajaxViewPart.php:256
 msgid "Windows Key"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:235
+#: modules/glpi/glpi/ajaxViewPart.php:244
 msgid "Writer"
 msgstr "Writer"
 
-#: modules/glpi/glpi/ajaxViewPart.php:200
+#: modules/glpi/glpi/ajaxViewPart.php:209
 msgid "Yes"
 msgstr "Ja"

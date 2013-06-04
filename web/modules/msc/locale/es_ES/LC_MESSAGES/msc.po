@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-27 01:01+0200\n"
+"POT-Creation-Date: 2013-06-04 16:55+0200\n"
 "PO-Revision-Date: 2013-05-06 10:18+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Spanish (Spain) (http://transifex.mandriva.com/projects/p/"
@@ -502,11 +502,11 @@ msgstr ""
 msgid "Computers in this command"
 msgstr ""
 
-#: modules/msc/msc/vnc_client.php:44
+#: modules/msc/msc/vnc_client.php:46
 msgid "Connection Failed !"
 msgstr ""
 
-#: modules/msc/msc/vnc_client.php:70
+#: modules/msc/msc/vnc_client.php:72
 msgid "Connection Succeedeed !"
 msgstr ""
 
@@ -521,7 +521,7 @@ msgid ""
 "Connection was refused by the other side while trying to probe the machine"
 msgstr ""
 
-#: modules/msc/msc/vnc_client.php:46
+#: modules/msc/msc/vnc_client.php:48
 msgid "Connection was refused by the other side."
 msgstr ""
 
@@ -646,7 +646,7 @@ msgstr ""
 msgid "Do an inventory after a successful execution ?"
 msgstr ""
 
-#: modules/msc/includes/functions.php:48 modules/msc/includes/functions.php:57
+#: modules/msc/includes/functions.php:48 modules/msc/includes/functions.php:58
 msgid "Done"
 msgstr ""
 
@@ -731,7 +731,7 @@ msgstr ""
 msgid "Exit code : %s"
 msgstr ""
 
-#: modules/msc/includes/functions.php:54 modules/msc/includes/functions.php:58
+#: modules/msc/includes/functions.php:54 modules/msc/includes/functions.php:59
 msgid "Failed"
 msgstr ""
 
@@ -817,7 +817,7 @@ msgstr ""
 msgid "IP Addr."
 msgstr ""
 
-#: modules/msc/includes/functions.php:56
+#: modules/msc/includes/functions.php:57
 msgid "Ignored"
 msgstr ""
 
@@ -849,7 +849,7 @@ msgstr ""
 msgid "Inventory in progress"
 msgstr ""
 
-#: modules/msc/msc/vnc_client.php:171
+#: modules/msc/msc/vnc_client.php:173
 msgid ""
 "Java Runtime is not installed, please download it from <a href='http://www."
 "java.com/download/'>http://www.java.com/download/</a> and retry."
@@ -1146,7 +1146,7 @@ msgstr ""
 msgid "Play a command"
 msgstr ""
 
-#: modules/msc/msc/vnc_client.php:74
+#: modules/msc/msc/vnc_client.php:76
 msgid "Please close this windows when you are done."
 msgstr ""
 
@@ -1462,7 +1462,7 @@ msgstr ""
 msgid "Take control of a computer"
 msgstr ""
 
-#: modules/msc/msc/vnc_client.php:175
+#: modules/msc/msc/vnc_client.php:177
 msgid "Take control of this computer"
 msgstr ""
 
@@ -1543,15 +1543,19 @@ msgstr ""
 msgid "These packages can be installed on group \"%s\""
 msgstr ""
 
-#: modules/msc/msc/vnc_client.php:72
+#: modules/msc/msc/vnc_client.php:74
 msgid "This connection will be automatically shut down in 60 minutes."
+msgstr ""
+
+#: modules/msc/includes/functions.php:55
+msgid "Time Exceeded"
 msgstr ""
 
 #: modules/msc/msc/ajaxDownloadFile.php:86
 msgid "Timestamp"
 msgstr ""
 
-#: modules/msc/includes/functions.php:55
+#: modules/msc/includes/functions.php:56
 msgid "To do"
 msgstr ""
 
@@ -1614,7 +1618,7 @@ msgstr ""
 msgid "Wake on lan"
 msgstr ""
 
-#: modules/msc/includes/functions.php:59
+#: modules/msc/includes/functions.php:60
 msgid "Work in progress"
 msgstr ""
 

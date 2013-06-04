@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-27 01:01+0200\n"
+"POT-Creation-Date: 2013-06-04 16:55+0200\n"
 "PO-Revision-Date: 2013-05-06 10:18+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
@@ -529,11 +529,11 @@ msgstr "Estado do comando"
 msgid "Computers in this command"
 msgstr "Computadores neste comando"
 
-#: modules/msc/msc/vnc_client.php:44
+#: modules/msc/msc/vnc_client.php:46
 msgid "Connection Failed !"
 msgstr "Conexão Falhou!"
 
-#: modules/msc/msc/vnc_client.php:70
+#: modules/msc/msc/vnc_client.php:72
 msgid "Connection Succeedeed !"
 msgstr "Conectado com sucesso !"
 
@@ -549,7 +549,7 @@ msgid ""
 "Connection was refused by the other side while trying to probe the machine"
 msgstr "A conexão foi recusada pela máquina na qual está tentanto examinar."
 
-#: modules/msc/msc/vnc_client.php:46
+#: modules/msc/msc/vnc_client.php:48
 msgid "Connection was refused by the other side."
 msgstr "A conexão foi recusada do outro lado."
 
@@ -674,7 +674,7 @@ msgstr "Inventariar após uma execução sucedida"
 msgid "Do an inventory after a successful execution ?"
 msgstr "Inventariar após uma execução sucedida ?"
 
-#: modules/msc/includes/functions.php:48 modules/msc/includes/functions.php:57
+#: modules/msc/includes/functions.php:48 modules/msc/includes/functions.php:58
 msgid "Done"
 msgstr "Pronto"
 
@@ -762,7 +762,7 @@ msgstr "Execução em andamento"
 msgid "Exit code : %s"
 msgstr "Código de saída: %s"
 
-#: modules/msc/includes/functions.php:54 modules/msc/includes/functions.php:58
+#: modules/msc/includes/functions.php:54 modules/msc/includes/functions.php:59
 msgid "Failed"
 msgstr "Falhou"
 
@@ -848,7 +848,7 @@ msgstr "Host"
 msgid "IP Addr."
 msgstr "End. IP"
 
-#: modules/msc/includes/functions.php:56
+#: modules/msc/includes/functions.php:57
 msgid "Ignored"
 msgstr "Ignorado"
 
@@ -880,7 +880,7 @@ msgstr "Inventário falhou"
 msgid "Inventory in progress"
 msgstr "Inventário em andamento"
 
-#: modules/msc/msc/vnc_client.php:171
+#: modules/msc/msc/vnc_client.php:173
 msgid ""
 "Java Runtime is not installed, please download it from <a href='http://www."
 "java.com/download/'>http://www.java.com/download/</a> and retry."
@@ -1179,7 +1179,7 @@ msgstr "Plataforma"
 msgid "Play a command"
 msgstr "Executar um comando"
 
-#: modules/msc/msc/vnc_client.php:74
+#: modules/msc/msc/vnc_client.php:76
 msgid "Please close this windows when you are done."
 msgstr "Porfavor feche a janela quando terminar."
 
@@ -1495,7 +1495,7 @@ msgstr "Sucesso: %percent% (%d pacotes)"
 msgid "Take control of a computer"
 msgstr "Obter controle de computador"
 
-#: modules/msc/msc/vnc_client.php:175
+#: modules/msc/msc/vnc_client.php:177
 msgid "Take control of this computer"
 msgstr "Assumir o controle deste computador"
 
@@ -1582,15 +1582,19 @@ msgstr "Estes pacotes podem ser instalados no computador \"%s\""
 msgid "These packages can be installed on group \"%s\""
 msgstr "Estes pacotes podem ser instalados no grupo \"%s\""
 
-#: modules/msc/msc/vnc_client.php:72
+#: modules/msc/msc/vnc_client.php:74
 msgid "This connection will be automatically shut down in 60 minutes."
 msgstr "Está conexão será automaticamente desligada em 60 minutos."
+
+#: modules/msc/includes/functions.php:55
+msgid "Time Exceeded"
+msgstr ""
 
 #: modules/msc/msc/ajaxDownloadFile.php:86
 msgid "Timestamp"
 msgstr "Timestamp"
 
-#: modules/msc/includes/functions.php:55
+#: modules/msc/includes/functions.php:56
 msgid "To do"
 msgstr "A fazer"
 
@@ -1653,7 +1657,7 @@ msgstr "Requisição WOL foi enviada"
 msgid "Wake on lan"
 msgstr "Ligar máquina remotamente (Wake on lan)"
 
-#: modules/msc/includes/functions.php:59
+#: modules/msc/includes/functions.php:60
 msgid "Work in progress"
 msgstr "Trabalho em andamento"
 
