@@ -33,7 +33,7 @@
 require_once("modules/admin/includes/commons.inc.php");
 
 $mod = new Module("admin");
-$mod->setVersion("3.0.97");
+$mod->setVersion("3.0.98");
 $mod->setRevision('$Rev$');
 $mod->setDescription(_T("Configuration", "admin"));
 $mod->setAPIVersion("4.1.3");

@@ -28,7 +28,7 @@ from mmc.plugins.dashboard.manager import DashboardManager
 from mmc.plugins.dashboard.config import DashboardConfig
 from mmc.plugins.dashboard.panel import GeneralPanel, SpacePanel, ShortcutsPanel
 
-VERSION = "3.0.97"
+VERSION = "3.0.98"
 APIVERSION = "0:1:0"
 REVISION = ""
 
