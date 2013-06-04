@@ -33,7 +33,7 @@
 cd "`dirname $0`"
 
 # Latest version of agents
-ssh_ver=2.0.2.2
+ssh_ver=2.0.3
 vnc_ver=2.0.2
 inv_ver=2.2.6-1
 
