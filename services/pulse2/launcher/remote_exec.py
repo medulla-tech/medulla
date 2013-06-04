@@ -302,7 +302,7 @@ def remote_delete(command_id, client, files_list, mode, wrapper_timeout):
             real_command += ['then']
             real_command += [ LauncherConfig().smart_cleaner_path ]
             real_command += ['--directory', '"%s"' % target_path]
-            real_command += ['--files', ','.join(files_list)]
+            real_command += ['--files', '"%s"' % ','.join(files_list)]
             real_command += LauncherConfig().smart_cleaner_options
             real_command += [';']
             real_command += ['else']
