@@ -108,13 +108,8 @@ class class01_NetUtils (unittest.TestCase) :
 
     def test01_get_netmask(self):
         """ test of getting of netmask """
-        netmask, gateway = NetUtils.get_netmask_and_gateway()
+        netmask = NetUtils.get_netmask()
         self.assertEqual(self.my_nm, netmask)
-
-    def test02_get_gateway(self):
-        """ test of getting of gateway """
-        netmask, gateway = NetUtils.get_netmask_and_gateway()
-        self.assertEqual(self.my_gw, gateway)
 
     def test03_on_same_network_true(self):
         """ test of co-existence in the same network"""

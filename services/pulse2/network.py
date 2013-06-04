@@ -29,7 +29,7 @@ import inspect
 import os
 import subprocess
 
-from pulse2.utils import isdigit, isMACAddress, get_default_ip
+from pulse2.utils import isdigit, isMACAddress, get_default_ip, get_default_netif
 
 log = logging.getLogger()
 
@@ -41,45 +41,21 @@ class NetUtils :
     """ Common network utils """
 
     @classmethod
-    def get_netmask_and_gateway(cls):
+    def get_netmask(cls):
         """
-        Getting the server's netmask & gateway 
+        Getting the server's netmask  
 
-        @return: netmask and gateway 
-        @rtype: tuple
+        @return: netmask
+        @rtype: str
         """
         SIOCGIFNETMASK = 0x891b
 
-        filename = "/proc/net/route"
-
-        route = []
-        try :
-            r_file = open(filename, "r") 
-
-            for line in r_file.readlines():
-                r_fields = line.strip().split()
-                if r_fields[1] != '00000000' or not int(r_fields[3], 16) & 2:
-                    continue
-                route.append(r_fields)
-
-            r_file.close()
-
-        except IOError :
-
-            log.warn("Cannot read file '%s'" % filename)
-            log.warn("Ignore to get the netmask and gateway")
-
-            return False, False
-
-
-        iface = route[0][0]
+        iface = get_default_netif()
 
         n_sck = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
         netmask = fcntl.ioctl(n_sck, SIOCGIFNETMASK, struct.pack('256s', iface))[20:24]
-        gateway = struct.pack("<L", int(route[0][2], 16))
 
-        return socket.inet_ntoa(netmask), socket.inet_ntoa(gateway)
+        return socket.inet_ntoa(netmask)
 
     @classmethod
     def on_same_network(cls, ip, network, netmask):
@@ -812,7 +788,7 @@ class PreferredNetworkParser :
         if not default_ip :
             default_ip = get_default_ip()
         if not default_netmask :
-            default_netmask, gw = NetUtils.get_netmask_and_gateway()
+            default_netmask = NetUtils.get_netmask()
 
         net_detect = NetworkDetect(default_ip, default_netmask)
         network_address = net_detect.network
