@@ -52,6 +52,7 @@ function getStatusTable() {
                      "scheduled" => _T("Scheduled", "msc"),
                      "rescheduled" => _T("Rescheduled", "msc"),
                      "failed" => _T("Failed", "msc"),
+                     "over_timed" => _T("Time Exceeded", "msc"),
                      "TODO" => _T("To do", "msc"),
                      "IGNORED" => _T("Ignored", "msc"),
                      "DONE" => _T("Done", "msc"),
