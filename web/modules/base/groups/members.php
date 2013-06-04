@@ -58,11 +58,15 @@ select.list
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 
-if (isset($_GET["group"])) $group = urldecode($_GET["group"]);
-else $group = $_POST["group"];
+if (isset($_GET["group"]))
+    $group = urldecode($_GET["group"]);
+else
+    $group = $_POST["group"];
 
-$members = unserialize(base64_decode($_POST["lmembers"]));
-$users = unserialize(base64_decode($_POST["lusers"]));
+if (isset($_POST)) {
+    $members = unserialize(base64_decode($_POST["lmembers"]));
+    $users = unserialize(base64_decode($_POST["lusers"]));
+}
 
 $forbidden = array();
 
@@ -90,7 +94,7 @@ if (isset($_POST["bdeluser_x"])) {
     sort($members);
     reset($members);
 } else if (isset($_POST["bconfirm"])) {
-    $curmem = get_members($group);  
+    $curmem = get_members($group);
     $newmem = array_diff($members, $curmem);
     $delmem = array_diff($curmem, $members);
 
