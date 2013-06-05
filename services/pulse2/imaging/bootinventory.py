@@ -385,13 +385,13 @@ class BootInventory:
 	REQUEST = ET.Element('REQUEST')
 
 	DEVICEID = ET.SubElement(REQUEST,'DEVICEID')
-	DEVICEID.text = "%s-%s" % (hostname, time.strftime("%Y-%m-%d-%H-%M-%S"))
+	DEVICEID.text = ("%s-%s" % (hostname, time.strftime("%Y-%m-%d-%H-%M-%S"))).strip(' \t\n\r').strip()
 
 	QUERY = ET.SubElement(REQUEST,'QUERY')
 	QUERY.text = 'INVENTORY'
 
 	TAG = ET.SubElement(REQUEST,'TAG')
-	TAG.text = entity
+	TAG.text = entity.strip(' \t\n\r').strip()
 
 
 	###### CONTENT ##############################
@@ -401,7 +401,7 @@ class BootInventory:
 	ACCESSLOG = ET.SubElement(CONTENT,'ACCESSLOG')
 
 	LOGDATE = ET.SubElement(ACCESSLOG,'LOGDATE')
-	LOGDATE.text = time.strftime("%Y-%m-%d %H:%M:%S")
+	LOGDATE.text = time.strftime("%Y-%m-%d %H:%M:%S").strip(' \t\n\r').strip()
 
 	USERID = ET.SubElement(ACCESSLOG,'USERID')
 	USERID.text = 'N/A'
@@ -410,44 +410,62 @@ class BootInventory:
 	BIOS = ET.SubElement(CONTENT,'BIOS')
 
 
+
+	ASSETTAG = ET.SubElement(BIOS,'ASSETTAG')
+	ASSETTAG.text = ''
+
+	MMANUFACTURER = ET.SubElement(BIOS,'MMANUFACTURER')
+	MMODEL = ET.SubElement(BIOS,'MMODEL')
+	MSN = ET.SubElement(BIOS,'MSN')
+	SKUNUMBER = ET.SubElement(BIOS,'SKUNUMBER')
+	
+
 	BDATE = ET.SubElement(BIOS,'BDATE')
-	BDATE.text = self.bios_info['date']
+	BDATE.text = self.bios_info['date'].strip(' \t\n\r').strip()
 
 	BMANUFACTURER = ET.SubElement(BIOS,'BMANUFACTURER')
-	BMANUFACTURER.text = self.bios_info['vendor']
+	BMANUFACTURER.text = self.bios_info['vendor'].strip(' \t\n\r').strip()
 
 	BVERSION = ET.SubElement(BIOS,'BVERSION')
-	BVERSION.text = self.bios_info['version']
+	BVERSION.text = self.bios_info['version'].strip(' \t\n\r').strip()
 
 	SMANUFACTURER = ET.SubElement(BIOS,'SMANUFACTURER')
-	SMANUFACTURER.text = self.sys_info['manufacturer']
+	SMANUFACTURER.text = self.sys_info['manufacturer'].strip(' \t\n\r').strip()
 
 	SMODEL = ET.SubElement(BIOS,'SMODEL')
-	SMODEL.text = self.sys_info['product']
+	SMODEL.text = self.sys_info['product'].strip(' \t\n\r').strip()
 
 	SSN = ET.SubElement(BIOS,'SSN')
-	SSN.text = self.sys_info['serial']
+	SSN.text = self.sys_info['serial'].strip(' \t\n\r').strip()
 
 	#### HARDWARE SECTION ###############################
 	HARDWARE = ET.SubElement(CONTENT,'HARDWARE')
 
 	IPADDR = ET.SubElement(HARDWARE,'IPADDR')
-	IPADDR.text = self.ipaddr_info['ip']
+	IPADDR.text = self.ipaddr_info['ip'].strip(' \t\n\r').strip()
 
 	NAME = ET.SubElement(HARDWARE,'NAME')
-	NAME.text = hostname
+	NAME.text = hostname.strip(' \t\n\r').strip()
 
 	UUID = ET.SubElement(HARDWARE,'UUID')
-	UUID.text = self.sys_info['uuid']
+	_uuid = self.sys_info['uuid']
+	if len(_uuid) == 32:
+		UUID.text = _uuid[0:8]+'-'+_uuid[8:12]+'-'+_uuid[12:16]+'-'+_uuid[16:20]+'-'+_uuid[20:32]
 
 	CHASSIS_TYPE = ET.SubElement(HARDWARE,'CHASSIS_TYPE')
-	CHASSIS_TYPE.text = COMPUTER_TYPES[self.enclos_info['type']]
+	if self.enclos_info['type'] in COMPUTER_TYPES:
+		CHASSIS_TYPE.text = COMPUTER_TYPES[self.enclos_info['type']]
+	else:
+		CHASSIS_TYPE.text = 'Unknown'
 
 	PROCESSORS = ET.SubElement(HARDWARE,'PROCESSORS')
-	PROCESSORS.text = str(round(self.freqcpu_info / 1000))
+	PROCESSORS.text = str(int(self.freqcpu_info / 1000))
 
 	PROCESSORN = ET.SubElement(HARDWARE,'PROCESSORN')
 	PROCESSORN.text = str(self.numcpu_info)
+
+	PROCESSORT = ET.SubElement(HARDWARE,'PROCESSORT')
+	PROCESSORT.text = 'Unknown processor'
 
 
 	#### NETWORK SECTION ###############################
@@ -458,10 +476,10 @@ class BootInventory:
 	DESCRIPTION.text = 'eth0'
 
 	IPADDRESS = ET.SubElement(NETWORKS,'IPADDRESS')
-	IPADDRESS.text = self.ipaddr_info['ip']
+	IPADDRESS.text = self.ipaddr_info['ip'].strip(' \t\n\r').strip()
 
 	MACADDR = ET.SubElement(NETWORKS,'MACADDR')
-	MACADDR.text = self.macaddr_info
+	MACADDR.text = self.macaddr_info.strip(' \t\n\r').strip()
 
 	STATUS = ET.SubElement(NETWORKS,'STATUS')
 	STATUS.text = 'Up'
@@ -494,7 +512,8 @@ class BootInventory:
 			DRIVES = ET.SubElement(CONTENT,'DRIVES')
 
 			FILESYSTEM = ET.SubElement(DRIVES,'FILESYSTEM')
-			FILESYSTEM.text = FILESYSTEMS_H[partinfo['type_hex']]
+			if partinfo['type_hex'] in FILESYSTEMS_H:
+				FILESYSTEM.text = FILESYSTEMS_H[partinfo['type_hex']]
 			
 			TOTAL = ET.SubElement(DRIVES,'TOTAL')
 			TOTAL.text = str(partinfo['length_mb'])
@@ -502,17 +521,37 @@ class BootInventory:
 			TYPE = ET.SubElement(DRIVES,'TYPE')
 			TYPE.text = 'hd'+diskid+'p'+partid
 		
+	# MEMORY SECTION #####################################
+
 	for mem_slot in self.memory_info:
-			if not mem_slot['speed']: continue
+			if not mem_slot['size']: continue
 			MEMORIES = ET.SubElement(CONTENT,'MEMORIES')
 
 			CAPACITY = ET.SubElement(MEMORIES,'CAPACITY')
 			CAPACITY.text = str(mem_slot['size'])
 
 			CAPTION = ET.SubElement(MEMORIES,'CAPTION')
-			CAPTION.text = mem_slot['location']
+			CAPTION.text = mem_slot['location'].strip(' \t\n\r').strip()
+
+			DESCRIPTION = ET.SubElement(MEMORIES,'DESCRIPTION')
+			DESCRIPTION.text = 'Unknown'
+
+			MEMORYCORRECTION = ET.SubElement(MEMORIES,'MEMORYCORRECTION')
+			MEMORYCORRECTION.text = 'Unknown'
+
+			NUMSLOTS = ET.SubElement(MEMORIES,'NUMSLOTS')
+			NUMSLOTS.text = '1'
+
+			SERIALNUMBER = ET.SubElement(MEMORIES,'SERIALNUMBER')
+			SERIALNUMBER.text = 'Unknown'
+
+			TYPE = ET.SubElement(MEMORIES,'TYPE')
+			TYPE.text = 'N/A'
 
 			SPEED = ET.SubElement(MEMORIES,'SPEED')
-			SPEED.text = str(mem_slot['speed'])+' MHz'
+			if mem_slot['speed']:
+				SPEED.text = str(mem_slot['speed'])+' MHz'
+			else:
+				SPEED.text = 'N/A'
 
 	return '<?xml version="1.0" encoding="utf-8"?>'+ET.tostring(REQUEST)
