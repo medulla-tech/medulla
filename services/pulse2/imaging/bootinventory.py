@@ -515,4 +515,4 @@ class BootInventory:
 			SPEED = ET.SubElement(MEMORIES,'SPEED')
 			SPEED.text = str(mem_slot['speed'])+' MHz'
 
-	return ET.dump(REQUEST)
+	return '<?xml version="1.0" encoding="utf-8"?>'+ET.tostring(REQUEST)
