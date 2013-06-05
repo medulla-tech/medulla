@@ -370,7 +370,7 @@ class BootInventory:
             'bios'      : self.bios_info,
             'sys'       : self.sys_info,
             'enclos'    : self.enclos_info,
-            'memslot'   : self.memslot_info,
+            'memslot'   : self.memory_info,
             'numcpu'    : self.numcpu_info,
             'featcpu'   : self.featcpu_info,
             'freqcpu'   : self.freqcpu_info,
