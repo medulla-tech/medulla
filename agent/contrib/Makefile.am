@@ -20,7 +20,7 @@
 # Author(s)
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-contribdir = $(docdir)/mmc/contrib
+contribdir = $(datadir)/doc/mmc/contrib
 
 nobase_dist_contrib_DATA = audit/sql/install.sh \
 						  audit/sql/schema-2.sql \
