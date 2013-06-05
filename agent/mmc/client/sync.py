@@ -55,7 +55,7 @@ from urllib2 import Request as CookieRequest
 
 log = logging.getLogger()
 
-COOKIES_FILE = '/tmp/mmc-cookies'
+COOKIES_FILE = '/tmp/mmc-cookies-sync'
 
 
 class CookieResponse:
