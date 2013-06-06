@@ -430,10 +430,16 @@ class BootInventory:
 	ASSETTAG.text = ''
 
 	MMANUFACTURER = ET.SubElement(BIOS,'MMANUFACTURER')
-	MMODEL = ET.SubElement(BIOS,'MMODEL')
-	MSN = ET.SubElement(BIOS,'MSN')
-	SKUNUMBER = ET.SubElement(BIOS,'SKUNUMBER')
+	MMANUFACTURER.text = ''
 	
+	MMODEL = ET.SubElement(BIOS,'MMODEL')
+	MMODEL.text = ''
+
+	MSN = ET.SubElement(BIOS,'MSN')
+	MSN.text = ''
+
+	SKUNUMBER = ET.SubElement(BIOS,'SKUNUMBER')
+	SKUNUMBER.text = ''
 
 	BDATE = ET.SubElement(BIOS,'BDATE')
 	BDATE.text = self.bios_info['date'].strip(' \t\n\r').strip()
