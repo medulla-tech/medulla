@@ -1,7 +1,6 @@
 # -*- coding: utf-8; -*-
 #
 # (c) 2010 Mandriva, http://www.mandriva.com
-#
 # $Id$
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
@@ -235,6 +234,7 @@ class BootInventory:
         @param data : the inventory data
         """
         current_disk = None # track the disk we are reading
+	self.memory_info = []
 
         for line in data: # process line per line
             if not len(line):
@@ -451,6 +451,9 @@ class BootInventory:
 	_uuid = self.sys_info['uuid']
 	if len(_uuid) == 32:
 		UUID.text = _uuid[0:8]+'-'+_uuid[8:12]+'-'+_uuid[12:16]+'-'+_uuid[16:20]+'-'+_uuid[20:32]
+
+	OSNAME = ET.SubElement(HARDWARE,'OSNAME')
+	OSNAME.text = 'Unknown operating system (PXE network boot inventory)'
 
 	CHASSIS_TYPE = ET.SubElement(HARDWARE,'CHASSIS_TYPE')
 	if self.enclos_info['type'] in COMPUTER_TYPES:
