@@ -103,7 +103,7 @@ FILESYSTEMS_H = {
 	"86":"NTFS volume set",\
 	"87":"NTFS volume set",\
 	"88":"Linux plaintext",\
-	"08":"Linux LVM",\
+	"8e":"Linux LVM",\
 	"93":"Amoeba",\
 	"94":"Amoeba BBT",\
 	"9f":"BSD/OS",\
