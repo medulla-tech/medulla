@@ -50,7 +50,7 @@ from pulse2.inventoryserver.config import Pulse2OcsserverConfigParser
 from pulse2.inventoryserver.ssl import SecureHTTPRequestHandler, SecureThreadedHTTPServer
 from pulse2.inventoryserver.utils import InventoryUtils
 from pulse2.inventoryserver.scheduler import AttemptToScheduler
-from pulse2.inventoryserver.glpiproxy import GlpiProxy, resolveGlpiMachineUUIDByMAC
+from pulse2.inventoryserver.glpiproxy import GlpiProxy, resolveGlpiMachineUUIDByMAC, hasKnownOS
 
 
 class InventoryServer:
@@ -142,7 +142,7 @@ class InventoryServer:
         @type from_ip: str
         """
         try:
-
+            has_known_os = False
             macaddresses = InventoryUtils.getMACs(content)
             self.logger.debug("GlpiProxy: MAC addresses found: %s" % str(macaddresses))
             if len(macaddresses) > 0 :
@@ -152,8 +152,13 @@ class InventoryServer:
                     glpi_uuid = resolveGlpiMachineUUIDByMAC(macaddr)
                     if glpi_uuid :
                         self.logger.debug("GlpiProxy: Resolved machine UUID='%s'" % str(glpi_uuid))
+                        has_known_os = hasKnownOS(glpi_uuid)
                         break
-                if not (glpi_uuid and InventoryUtils.is_comming_from_pxe(from_ip)) :  
+                if glpi_uuid and has_known_os and InventoryUtils.is_comming_from_pxe(from_ip):
+                    self.logger.info("GlpiProxy: Incoming from PXE, ignoring the forward for a existing machine")
+                else :
+                    if not has_known_os:
+                        self.logger.info("GlpiProxy: This machine has no known operating system")
                     glpi_proxy = GlpiProxy(self.config.url_to_forward)
                     self.logger.info("GlpiProxy: Forwarding the inventory to GLPI")
 
@@ -164,8 +169,6 @@ class InventoryServer:
                     glpi_proxy.send(content)
                     for msg in glpi_proxy.result :
                         self.logger.warn("GlpiProxy: %s" % msg)
-                else :
-                    self.logger.info("GlpiProxy: Incoming from PXE, ignoring the forward for a existing machine")
             else :
                 self.logger.debug("GlpiProxy: New machine inscription or forwarding the prolog")
                 glpi_proxy = GlpiProxy(self.config.url_to_forward)

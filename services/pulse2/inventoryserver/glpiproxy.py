@@ -312,4 +312,24 @@ def resolveGlpiMachineUUIDByMAC (mac):
         return uuid
     return None
  
+def hasKnownOS(uuid):
+    """
+    Return True if machine has a known Operating System
+    Used to know if a PXE inventory will be sent or not
+     * If no known OS: send inventory
+     * if known OS: don't send inventory
 
+    @param uuid: UUID of machine
+    @type uuid: str
+
+    @return: True or False if machine has a known OS
+    @rtype: boolean
+    """
+    if uuid is None:
+        return False
+
+    mmc = MMCProxy()
+    if not mmc.failure :
+        proxy = mmc.proxy
+        return proxy.glpi.hasKnownOS(uuid)
+    return False
