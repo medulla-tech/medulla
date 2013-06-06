@@ -2094,6 +2094,51 @@ class Glpi08(DyngroupDatabaseHelper):
         except:
             return itemtype
 
+    def getUnknownPXEOSId(self, unknownOsString):
+        """
+        Return id of Unknown OS depending given string
+
+        @param unknownOsString: unknown OS string
+        @type: str
+
+        @return: id of Unknown OS string
+        @rtype: int
+        """
+        ret = None
+        session = create_session()
+        query = session.query(OS).filter(self.os.c.name == unknownOsString)
+        result = query.first()
+        if result is not None:
+            ret = result.id
+        session.close()
+        return ret
+
+    def hasKnownOS(self, uuid):
+        """
+        Return True if machine has a known Operating System
+        Used to know if a PXE inventory will be sent or not
+         * If no known OS: send inventory
+         * if known OS: don't send inventory
+
+        @param uuid: UUID of machine
+        @type uuid: str
+
+        @return: True or False if machine has a known OS
+        @rtype: boolean
+        """
+        session = create_session()
+        # In GLPI, unknown OS id is 0
+        # PXE Inventory create a new one with name: "Unknown operating system (PXE network boot inventory)"
+        unknown_os_ids = [0]
+        unknown_os_pxe_id = self.getUnknownPXEOSId("Unknown operating system (PXE network boot inventory)")
+        if unknown_os_pxe_id:
+            unknown_os_ids.append(unknown_os_pxe_id)
+
+        query = self.filterOnUUID(session.query(Machine).filter(not_(self.machine.c.operatingsystems_id.in_(unknown_os_ids))), uuid)
+        session.close()
+
+        return query.first() and True or False
+
     ##################### functions used by querymanager
     def getAllOs(self, ctx, filt = ''):
         """

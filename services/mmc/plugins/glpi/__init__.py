@@ -124,3 +124,6 @@ def getMachineUUIDByMacAddress(mac):
 
 def getMachinesLocations(uuids):
     return xmlrpcCleanup(Glpi().getMachinesLocations(uuids))
+
+def hasKnownOS(uuid):
+    return xmlrpcCleanup(Glpi().hasKnownOS(uuid))
