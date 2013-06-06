@@ -192,6 +192,7 @@ class BootInventory:
     bus_info        = {}
     # disks (and parts)
     disk_info       = {}
+    disk_info_i     = {}  # Disk info with int indexes to avoid missordering
     # bios basic infos
     bios_info       = {'vendor': '', 'version': '', 'date' : ''}
     # system basic infos
@@ -273,7 +274,15 @@ class BootInventory:
                 s = int(mo.group(4), 10)
                 sz = int(mo.group(4), 10)
 		lba_size = int(mo.group(5), 10)
-                self.disk_info[int(num)] = {
+                self.disk_info_i[int(num)] = {
+                    "C": c,
+                    "H" : h,
+                    "S" : s,
+                    "size" : sz,
+		    "lba_size" : lba_size,
+		    "lba_size_mb" : lba_size*512/1000/1000,
+                    "parts" : dict()}
+		self.disk_info[num] = {
                     "C": c,
                     "H" : h,
                     "S" : s,
@@ -290,7 +299,13 @@ class BootInventory:
                 t = int(mo.group(2), 16)
                 s = int(mo.group(3), 10)
                 l = int(mo.group(4), 10)
-                self.disk_info[int(current_disk)]['parts'][int(num)] = {
+                self.disk_info[current_disk]['parts'][num] = {
+                    'type' : t,
+		    'type_hex' : '%.2x' % t,
+                    'start' : s,
+		    'length_mb' : l*512/1000/1000,
+                    'length' : l}
+		self.disk_info_i[int(current_disk)]['parts'][int(num)] = {
                     'type' : t,
 		    'type_hex' : '%.2x' % t,
                     'start' : s,
@@ -496,7 +511,7 @@ class BootInventory:
 
 	#### STORAGE SECTION ###################################
 
-	for k,v in self.disk_info.iteritems():
+	for k,v in self.disk_info_i.iteritems():
 		STORAGES = ET.SubElement(CONTENT,'STORAGES')
 		
 		NAME = ET.SubElement(STORAGES,'NAME')
@@ -510,8 +525,8 @@ class BootInventory:
 
 	# DRIVES SECTION #####################################
 
-	for diskid in self.disk_info.keys():
-		for partid,partinfo in self.disk_info[diskid]['parts'].iteritems():
+	for diskid in self.disk_info_i.keys():
+		for partid,partinfo in self.disk_info_i[diskid]['parts'].iteritems():
 			DRIVES = ET.SubElement(CONTENT,'DRIVES')
 
 			FILESYSTEM = ET.SubElement(DRIVES,'FILESYSTEM')
