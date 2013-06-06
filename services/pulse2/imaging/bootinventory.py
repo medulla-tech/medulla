@@ -273,7 +273,7 @@ class BootInventory:
                 s = int(mo.group(4), 10)
                 sz = int(mo.group(4), 10)
 		lba_size = int(mo.group(5), 10)
-                self.disk_info[num] = {
+                self.disk_info[int(num)] = {
                     "C": c,
                     "H" : h,
                     "S" : s,
@@ -290,9 +290,9 @@ class BootInventory:
                 t = int(mo.group(2), 16)
                 s = int(mo.group(3), 10)
                 l = int(mo.group(4), 10)
-                self.disk_info[current_disk]['parts'][num] = {
+                self.disk_info[int(current_disk)]['parts'][int(num)] = {
                     'type' : t,
-		    'type_hex' : '%.2X' % t,
+		    'type_hex' : '%.2x' % t,
                     'start' : s,
 		    'length_mb' : l*512/1000/1000,
                     'length' : l}
@@ -500,7 +500,7 @@ class BootInventory:
 		STORAGES = ET.SubElement(CONTENT,'STORAGES')
 		
 		NAME = ET.SubElement(STORAGES,'NAME')
-		NAME.text = 'hd'+k
+		NAME.text = 'hd'+str(k)
 
 		TYPE = ET.SubElement(STORAGES,'TYPE')
 		TYPE.text = 'disk'
@@ -522,7 +522,7 @@ class BootInventory:
 			TOTAL.text = str(partinfo['length_mb'])
 			
 			TYPE = ET.SubElement(DRIVES,'TYPE')
-			TYPE.text = 'hd'+diskid+'p'+partid
+			TYPE.text = 'hd'+str(diskid)+'p'+str(partid)
 		
 	# MEMORY SECTION #####################################
 
