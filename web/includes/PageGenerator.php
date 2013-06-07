@@ -1464,7 +1464,7 @@ class AjaxLocation extends AjaxFilterLocation {
         global $conf;
         $root = $conf["global"]["root"];
 ?>
-<form name="FormLocation" id="FormLocation" action="#">
+<form name="FormLocation" id="FormLocation" action="#" onsubmit="return false;">
     <div id="Location">
         <span id="searchSpan" class="searchbox">
             <img src="graph/search.gif"/>

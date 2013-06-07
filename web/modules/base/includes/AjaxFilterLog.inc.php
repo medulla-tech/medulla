@@ -355,7 +355,7 @@ class AjaxFilterLog extends AjaxFilter {
         
         
 ?>
-<form name="Form" id="Form" class="ajaxfilterlog" action="#">
+<form name="Form" id="Form" class="ajaxfilterlog" action="#" onsubmit="return false;">
     <div id="loader"><img id="loadimg" src="img/common/loader.gif" alt="loader" class="loader"/></div>
     <div id="searchSpan" class="searchboxlog">
         <span class="searchfieldfilter">
