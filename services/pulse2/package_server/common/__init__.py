@@ -540,14 +540,16 @@ class Common(pulse2.utils.Singleton):
                     fo = os.path.join(path, os.path.basename(f1))
                     self.logger.debug("File association will move %s to %s" % (f1, fo))
                     files_out.append(fo)
-                    if os.path.isdir(f):
-                        shutil.copytree(f, fo)
-                        self.logger.debug("File association will remove %s"%(f))
-                        shutil.rmtree(f)
+                    if os.path.isdir(f1):
+                        shutil.copytree(f1, fo)
+                        self.logger.debug("File association will remove %s"%(f1))
+                        shutil.rmtree(f1)
                     else:
-                        shutil.copy2(f, fo)
-                        self.logger.debug("File association will remove %s"%(f))
+                        shutil.copy2(f1, fo)
+                        self.logger.debug("File association will remove %s"%(f1))
                         os.unlink(f1)
+                self.logger.debug("File association will remove %s"%(f1))
+                shutil.rmtree(f)
 
         self._treatFiles(files_out, mp, pid, access = {})
         del Common().need_assign[pid]
