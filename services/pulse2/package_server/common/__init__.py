@@ -526,29 +526,28 @@ class Common(pulse2.utils.Singleton):
                 fo = os.path.join(path, os.path.basename(f))
                 self.logger.debug("File association will move %s to %s" % (f, fo))
                 files_out.append(fo)
-                shutil.copy2(f, fo)
-                try:
+                if os.path.isdir(f):
+                    shutil.copytree(f, fo)
+                    self.logger.debug("File association will remove %s"%(f))
+                    shutil.rmtree(f)
+                else:
+                    shutil.copy2(f, fo)
+                    self.logger.debug("File association will remove %s"%(f))
                     os.unlink(f)
-                except:
-                    self.logger.warn("File association failed to remove %s"%(f))
-                    err |= 1
             elif level == 1:
                 for f1 in os.listdir(f):
                     f1 = os.path.join(f, f1)
                     fo = os.path.join(path, os.path.basename(f1))
                     self.logger.debug("File association will move %s to %s" % (f1, fo))
                     files_out.append(fo)
-                    shutil.copy2(f1, fo)
-                    try:
+                    if os.path.isdir(f):
+                        shutil.copytree(f, fo)
+                        self.logger.debug("File association will remove %s"%(f))
+                        shutil.rmtree(f)
+                    else:
+                        shutil.copy2(f, fo)
+                        self.logger.debug("File association will remove %s"%(f))
                         os.unlink(f1)
-                    except:
-                        self.logger.warn("File association failed to remove %s"%(f1))
-                        err |= 1
-                try:
-                    shutil.rmtree(f)
-                except:
-                    self.logger.warn("File association failed to remove %s"%(f))
-                    err |= 1
 
         self._treatFiles(files_out, mp, pid, access = {})
         del Common().need_assign[pid]
