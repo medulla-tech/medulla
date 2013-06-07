@@ -103,9 +103,14 @@ function action($action, $target, $is_advanced) {
             new NotifyWidgetFailure(_T('Failed to retrieve this quick action.', 'msc'));
         }
     } else {
-        $id = add_command_quick_with_id($action, $target, $current_lang, $_GET["gid"]);
-        if ($id != -1) {
-            scheduler_start_these_commands("", array($id));
+        $result = add_command_quick_with_id($action, $target, $current_lang, $_GET["gid"]);
+        if (is_array($result)) {
+            new NotifyWidgetFailure(sprintf(_T("Quick action has failed: %s", "msc"), $result[1]));
+            header('Location: ' . $_SERVER['HTTP_REFERER'] );
+            exit;
+        }
+        else {
+            scheduler_start_these_commands("", array($result));
             // if on a single computer
             if (count($_GET["gid"]) > 0) {
                 $actionpage = 'groupmsctabs';
@@ -114,7 +119,7 @@ function action($action, $target, $is_advanced) {
                 $actionpage = 'msctabs';
                 $tab = 'tablogs';
             }
-            header("Location: ".urlStrRedirect("base/computers/$actionpage", array('tab'=>$tab, 'uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname'], 'cmd_id'=>$id, 'gid'=>$_GET['gid'])));
+            header("Location: ".urlStrRedirect("base/computers/$actionpage", array('tab'=>$tab, 'uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname'], 'cmd_id'=>$result, 'gid'=>$_GET['gid'])));
             exit;
         }
     }

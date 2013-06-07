@@ -278,6 +278,11 @@ class RpcProxy(RpcProxyI):
         """
         ctx = self.currentContext
         result, qas = qa_list_files()
+        def _eb(result):
+            logging.getLogger().error("There was a problem: %s" % result.value)
+            logging.getLogger().error("Complete traceback: %s" % result)
+            return [False, result.value.message]
+
         if result and idcmd in qas:
             try:
                 desc = qas[idcmd]["title" + lang]
@@ -289,10 +294,10 @@ class RpcProxy(RpcProxyI):
             # Use maybeDeferred because addCommandQuick will return an error
             # code in case of failure
             d = defer.maybeDeferred(MscDatabase().addCommandQuick, ctx, qas[idcmd]["command"], target, desc, gid)
-            d.addCallback(xmlrpcCleanup)
+            d.addCallback(xmlrpcCleanup).addErrback(_eb)
             ret = d
         else:
-            ret = -1
+            ret = [False, -1]
         return ret
 
 
