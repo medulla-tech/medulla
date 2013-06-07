@@ -336,7 +336,7 @@ class AjaxFilterCommands extends AjaxFilter {
         $root = $conf["global"]["root"];
 
 ?>
-<form name="Form" id="Form" action="#">
+<form name="Form" id="Form" action="#" onsubmit="return false;">
 
     <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
 
@@ -466,7 +466,7 @@ class AjaxFilterCommandsStates extends AjaxFilter {
         $root = $conf["global"]["root"];
 
 ?>
-<form name="Form" id="Form" action="#">
+<form name="Form" id="Form" action="#" onsubmit="return false;">
 
     <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
 
