@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-04 16:55+0200\n"
+"POT-Creation-Date: 2013-06-10 01:00+0200\n"
 "PO-Revision-Date: 2013-05-06 10:18+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/"
@@ -314,7 +314,7 @@ msgstr "Eine Datei wird bereits heruntergeladen."
 msgid "Actions in bundle"
 msgstr "Aktionen im Bundle"
 
-#: modules/msc/msc/start_quick_action.php:141
+#: modules/msc/msc/start_quick_action.php:146
 msgid "Advanced"
 msgstr "Fortgeschritten"
 
@@ -1188,7 +1188,7 @@ msgstr "Bitte schließen Sie dieses Fenster wenn Sie fertig sind."
 msgid "Please confirm file deletion"
 msgstr "Bitte bestätigen Sie die Löschung der Datei"
 
-#: modules/msc/msc/start_quick_action.php:139
+#: modules/msc/msc/start_quick_action.php:144
 msgid "Please confirm you really want to perform this action"
 msgstr "Bitte bestätigen Sie, dass Sie wirklich diese Aktion ausführen wollen"
 
@@ -1217,6 +1217,11 @@ msgstr "Proxymodus"
 #: modules/msc/includes/command_history.php:311
 msgid "Proxy priority"
 msgstr "Proxy-Priorität"
+
+#: modules/msc/msc/start_quick_action.php:108
+#, fuzzy, php-format
+msgid "Quick action has failed: %s"
+msgstr "Quick Action auf %s"
 
 #: modules/msc/includes/widgets.inc.php:219
 msgid "Quick action list is empty"
