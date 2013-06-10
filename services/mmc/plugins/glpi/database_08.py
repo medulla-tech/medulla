@@ -132,7 +132,7 @@ class Glpi08(DyngroupDatabaseHelper):
         self.klass = {}
 
         # simply declare some tables (that dont need and FK relations, or anything special to declare)
-        for i in ('glpi_operatingsystemversions', 'glpi_computertypes', 'glpi_operatingsystems', 'glpi_operatingsystemservicepacks', 'glpi_operatingsystemversions', 'glpi_domains', \
+        for i in ('glpi_operatingsystemversions', 'glpi_computertypes', 'glpi_operatingsystems', 'glpi_operatingsystemservicepacks', 'glpi_domains', \
                 'glpi_computermodels', 'glpi_networks'):
             setattr(self, i, Table(i, self.metadata, autoload = True))
             j = self.getTableName(i)
