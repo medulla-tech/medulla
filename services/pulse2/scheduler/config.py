@@ -118,6 +118,7 @@ class SchedulerConfig(pulse2.utils.Singleton):
     verifypeer = False
     cache_size = 300
     cache_timeout = 500
+    imaging = False
 
     # [daemon] section
     daemon_group = 0
@@ -230,6 +231,8 @@ class SchedulerConfig(pulse2.utils.Singleton):
         self.setoption("scheduler", "lock_processed_commands", "lock_processed_commands", 'bool')
         self.setoption("scheduler", "multithreading", "multithreading", 'bool')
         self.setoption("scheduler", "max_threads", "max_threads", 'int')
+
+        self.setoption("scheduler", "imaging", "imaging", 'bool')
 
         if self.cp.has_option("scheduler", "non_fatal_steps"):
             self.non_fatal_steps = self.cp.get("scheduler", "non_fatal_steps").split(' ')
