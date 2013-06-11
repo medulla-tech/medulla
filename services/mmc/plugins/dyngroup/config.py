@@ -28,7 +28,7 @@ class DGConfig(DyngroupDatabaseConfig):
     dyngroup_activate = True
     defaultModule = ''
     maxElementsForStaticList = 2000
-    profilesEnable = False
+    profilesEnable = True
     check_db_enable = False
     check_db_interval = 300
 
