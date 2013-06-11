@@ -142,9 +142,6 @@ class MscDatabase(msc.MscDatabase):
                 bcastAddresses.append(h_mac2bcast[i])
                 netmasks.append(h_mac2netmask[i])
 
-        if len(netmasks) == 0 or None in netmasks:
-            raise Exception("There is no netmask for computer %s" % targetName)
-
         # Multiple IP addresses or IP addresses may be separated by "||"
         targetMac = '||'.join(macAddresses)
         targetIp = '||'.join(ipAddresses)
