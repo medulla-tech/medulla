@@ -74,6 +74,7 @@ char gPathLogAction[256];
 char gPathGetUUID[256];
 char gPathGetHostName[256];
 char gPathMTFTPSync[256];
+char gClient_auth[256];
 // global config options, daemon section
 char *gUser;
 char *gGroup;
@@ -91,5 +92,6 @@ dictionary *ini;
 #define PULSE_LOG_STATE_ERROR "error"
 #define PULSE_LOG_STATE_DELETE "delete"
 #define PULSE_LOG_STATE_INVENTORY "inventory"
+#define PULSE_LOG_STATE_INDENTITY "identity"
 
 #endif                          //PULSE_IMAGING_SERVER_H

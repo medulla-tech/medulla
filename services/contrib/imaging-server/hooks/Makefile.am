@@ -23,6 +23,6 @@
 hooksdir = $(pkglibdir)/imaging-server/hooks
 dist_hooks_SCRIPTS = boot_client change_default create_client end_image \
 	get_hostname get_uuid log_action mtftp_sync \
-	process_inventory start_image
+	process_inventory start_image client_auth
 
 EXTRA_DIST = generic_hook.py

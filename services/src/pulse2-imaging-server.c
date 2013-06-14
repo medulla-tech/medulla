@@ -157,7 +157,40 @@ int mysystem(int argc, ...) {
     retval = WEXITSTATUS(system(tmp));
     return retval;
 }
+/*
+ * system() func with logging
+ * mysystem1 pour que le mot de passe ne figure pas dans les log
+ */
+int mysystem1(int argc, ...) {
+    char cmd[1024];
+    char tmp[1024];
+    char logtmp[1024];
+    int count = 0;
+    int retval = 0;
+    va_list argv;
 
+    bzero(cmd, sizeof(cmd));
+    bzero(tmp, sizeof(tmp));
+
+    va_start(argv, argc);
+    while (argc--) {
+        if (count)
+            snprintf(tmp, 1024, "%s %s", cmd, va_arg(argv, char *));
+        else
+            snprintf(tmp, 1024, "%s", va_arg(argv, char *));
+        strncpy(cmd, tmp, 1024);
+        count++;
+    }
+    va_end(argv);
+    
+    snprintf(logtmp, 1023, "Command authentification");
+    myLogger(logtmp);
+
+    snprintf(tmp, 1023, "%.900s 1>>%s 2>&1", cmd, gLogFile);
+    /* we now take care of the error code : */
+    retval = WEXITSTATUS(system(tmp));
+    return retval;
+}
 void logClientActivity(char *mac, int priority, char *phase,
                        const char *format_str, ...) {
     va_list ap;
@@ -352,7 +385,40 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         unlink(filename);
         return 0;
     }
-
+ // identification menu general
+    if (buf[0] == 0xAF)
+    {
+      logClientActivity(mac,
+                              LOG_INFO,
+                              PULSE_LOG_STATE_INDENTITY,
+                              "'identification request Menu'");
+        char re[]="ko";
+        char *ptr, pass[256], buff[256];
+        bzero(pass, sizeof(pass));
+        bzero(buff, sizeof(buff));
+        ptr = strrchr((char *)buf + 1, ':');
+        strncpy(pass, ptr + 1, sizeof(pass));
+        snprintf(buff, 255, "password from %s:%d (%s)",
+                 inet_ntoa(si_other->sin_addr),
+                 ntohs(si_other->sin_port), mac);
+        myLogger(buff);
+    //verify password
+    // mysystem1 pour que le mot de passe ne figure pas dans les log
+	if (mysystem1(3,gClient_auth,pass,mac)==1) {
+            /* Fixme : We Should also send back a NAK */
+            strcpy(re,"ok");
+        }else
+	{
+	  strcpy(re,"ko");
+	}
+        sendto(s,
+                   re,
+                   strlen(re) + 1,
+                   MSG_NOSIGNAL,
+                   (struct sockaddr *)si_other,
+                   sizeof(*si_other));
+        return 0;
+    }
     // identification
     if (buf[0] == 0xAD) {
         char *ptr, pass[256], hostname[256], buff[256];
@@ -868,6 +934,12 @@ void readConfig(char *config_file_path) {
     snprintf(gPathBootClient, 256, "%s/%s", gDirHooks, tmp);
     syslog(LOG_DEBUG, "[hooks] boot_client_path = %s", gPathBootClient);
 
+    char tmp1[]="client_auth";
+    //snprintf(gClient_auth, 256, "%s/%s", gDirHooks, tmp);
+    snprintf(gClient_auth, 256, "%s/%s", gDirHooks, tmp1);
+    syslog(LOG_DEBUG, "[hooks] process_client_auth = %s",
+           gClient_auth);
+    
     tmp =
         iniparser_getstring(ini, "hooks:process_inventory_path",
                             "process_inventory");
