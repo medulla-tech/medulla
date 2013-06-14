@@ -43,6 +43,8 @@ MEMSLOT_RE  = re.compile("^SM:([0-9]+):([^:]*):([^:]*):([0-9]+):([0-9]+)$") # Si
 NUMCPU_RE   = re.compile("^S4:([0-9]+)$") # CPU number
 FEATCPU_RE  = re.compile("^C:(.*)$") # CPU features, comma-separated
 FREQCPU_RE  = re.compile("^F:([0-9]+)$") # CPU frequency
+NETMASK_RE  = re.compile("^mask:(.+)$") # Netmask
+GATEWAY_RE  = re.compile("^gateway:(.+)$") # Netmask
 
 # Filesystems titles
 FILESYSTEMS_H = {
@@ -209,6 +211,12 @@ class BootInventory:
     freqcpu_info    = 0
     # the client MAC adress
     macaddr_info    = ''
+    # the client netmask
+    netmask_info    = ''
+    # the client gateway
+    gateway_info    = ''
+    # the client subnet
+    subnet_info    = ''
     # the inventory IP source (not necesary the client IP)
     ipaddr_info     = {'ip': '', 'port': 0}
     unprocessed     = []
@@ -371,6 +379,30 @@ class BootInventory:
                 self.ipaddr_info['ip'] = mo.group(1)
                 self.ipaddr_info['port'] = int(mo.group(2), 10)
                 continue
+            
+            mo = re.match(GATEWAY_RE, line)
+            if mo :
+                self.gateway_info = mo.group(1)
+                continue
+            
+            mo = re.match(NETMASK_RE, line)
+            if mo :
+                self.netmask_info = mo.group(1)
+                syslog('ip: '+str(self.ipaddr_info['ip']))
+                syslog('netmask: '+str(self.netmask_info))
+                # Compute network address (subnet) from ip and netmask
+                if self.netmask_info and self.ipaddr_info['ip']:
+                    try:
+                        iparr=self.ipaddr_info['ip'].split('.')
+                        netmaskarr=self.netmask_info.split('.')
+                        subnet=[]
+                        for i in [0,1,2,3]:
+                            subnet.append(str(int(iparr[i]) & int(netmaskarr[i])))
+                            self.subnet_info='.'.join(subnet)
+                    except:
+                        pass
+                continue
+
 
             self.unprocessed.append(line) # finally, store lines which didn't match
 
@@ -390,7 +422,9 @@ class BootInventory:
             'featcpu'   : self.featcpu_info,
             'freqcpu'   : self.freqcpu_info,
             'macaddr'   : self.macaddr_info,
-            'ipaddr'    : self.ipaddr_info}
+            'ipaddr'    : self.ipaddr_info,
+            'netmask'   : self.netmask_info,
+            'gateway'   : self.gateway_info}
 
     def dumpOCS(self, hostname, entity):
         """
@@ -464,6 +498,9 @@ class BootInventory:
 
 	IPADDR = ET.SubElement(HARDWARE,'IPADDR')
 	IPADDR.text = self.ipaddr_info['ip'].strip(' \t\n\r').strip()
+	
+	DEFAULTGATEWAY = ET.SubElement(HARDWARE,'DEFAULTGATEWAY')
+	DEFAULTGATEWAY.text = self.gateway_info.strip(' \t\n\r').strip()
 
 	NAME = ET.SubElement(HARDWARE,'NAME')
 	NAME.text = hostname.strip(' \t\n\r').strip()
@@ -505,7 +542,16 @@ class BootInventory:
 	MACADDR = ET.SubElement(NETWORKS,'MACADDR')
 	MACADDR.text = self.macaddr_info.strip(' \t\n\r').strip()
 
-	STATUS = ET.SubElement(NETWORKS,'STATUS')
+	IPMASK = ET.SubElement(NETWORKS,'IPMASK')
+	IPMASK.text = self.netmask_info.strip(' \t\n\r').strip()
+	
+	IPGATEWAY = ET.SubElement(NETWORKS,'IPGATEWAY')
+	IPGATEWAY.text = self.gateway_info.strip(' \t\n\r').strip()
+	
+        IPSUBNET = ET.SubElement(NETWORKS,'IPSUBNET')
+	IPSUBNET.text = self.subnet_info.strip(' \t\n\r').strip()
+	
+        STATUS = ET.SubElement(NETWORKS,'STATUS')
 	STATUS.text = 'Up'
 
 	TYPE = ET.SubElement(NETWORKS,'TYPE')
