@@ -20,7 +20,7 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-SUBDIRS = msc inventory imaging-server dyngroup imaging nagios package-server pulse2 dhcp
+SUBDIRS = msc inventory imaging-server dyngroup imaging nagios package-server pulse2 dhcp backuppc
 
 inventoryconfdir = $(sysconfdir)/mmc/pulse2/inventory-server
 dist_inventoryconf_DATA = OcsNGMap.xml
