@@ -46,6 +46,10 @@ $id = idGet();
 $imaging_server = quickGet('imaging_server');
 $group = new Group($id, true);
 $request = quickGet('request');
+if ($request == 'stored_in_session') {
+    $request = $_SESSION['request'];
+    unset($_SESSION['request']);
+}
 if (strlen($request)) {
     $r = new Request();
     $r->parse($request);
@@ -112,10 +116,11 @@ if (count($modules) == 1) {
         if ($name == quickGet('add_req')) {
             print "<td>$name</td>";
         } else {
+            $_SESSION['request'] = $request->toS();
             print "<td><a href='".
                 urlStr("base/computers/$target", array(
                                                     'add_req'=>$name,
-                                                    'request'=>$request->toURL(),
+                                                    'request'=>'stored_in_session',
                                                     'id'=>$id,
                                                     'imaging_server'=>$imaging_server
                 )).
@@ -145,8 +150,15 @@ if (quickGet('add_req')) {
             if ($param_name == quickGet('add_param')) {
                 print "<td>$param_name</td>";
             } else {
+                $_SESSION['request'] = $request->toS();
                 print "<td><a href='".
-                    urlStr("base/computers/$target", array( 'req'=>quickGet('add_req'), 'add_param'=>$param_name, 'request'=>$request->toURL(), 'id'=>$id, 'imaging_server'=>$imaging_server)).
+                    urlStr("base/computers/$target", array(
+                                                        'req'=>quickGet('add_req'),
+                                                        'add_param'=>$param_name,
+                                                        'request'=>'stored_in_session',
+                                                        'id'=>$id,
+                                                        'imaging_server'=>$imaging_server
+                        )).
                     "'>$param_name</a></td>";
             }
             $modulo += 1;
@@ -272,7 +284,8 @@ if (!$request->isEmpty())  {  # TODO check ACLs....
     print "<tr><td>";
     
     $b = new Button('base', 'computers', 'creator_step2');
-    $url = urlStr("base/computers/creator_step2", array('id'=>$id, 'request'=>$request->toS(), 'imaging_server'=>$imaging_server, 'is_group'=>($groupedit?'1':0)));
+    $_SESSION['request'] = $request->toS();
+    $url = urlStr("base/computers/creator_step2", array('id'=>$id, 'request'=>'stored_in_session', 'imaging_server'=>$imaging_server, 'is_group'=>($groupedit?'1':0)));
     print $b->getOnClickButton(_T("Go to save step", "dyngroup"), $url);
 
     print "</td><td>";

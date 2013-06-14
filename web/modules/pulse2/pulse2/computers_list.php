@@ -28,7 +28,7 @@ require("modules/pulse2/includes/locations_xmlrpc.inc.php");
 $param = array();
 if (isset($_GET['gid'])) { $param['gid'] = urlencode($_GET['gid']); }
 if (isset($_GET['groupname'])) { $param['groupname'] = urlencode($_GET['groupname']); }
-if (isset($_GET['request'])) { $param['request'] = urlencode($_GET['request']); }
+if (isset($_GET['request'])) { $param['request'] = $_SESSION['request'];}
 if (isset($_GET['equ_bool'])) { $param['equ_bool'] = urlencode($_GET['equ_bool']); }
 if (isset($_GET['imaging_server'])) { $param['imaging_server'] = urlencode($_GET['imaging_server']); }
 

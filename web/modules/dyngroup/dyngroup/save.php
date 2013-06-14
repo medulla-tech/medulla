@@ -36,6 +36,10 @@ $group = null;
 if ($id) { $group = getPGobject($id, true); }
 $imaging_server = quickGet('imaging_server');
 $request = quickGet('request');
+if ($request == 'stored_in_session') {
+    $request = $_SESSION['request'];
+    unset($_SESSION['request']);
+}
 if (!$request) { $request = $group->getRequest(); }
 if (!$request) { exit(0); }
 
@@ -57,7 +61,8 @@ $r->parse($request);
 
 $check = checkBoolEquation($bool, $r, isset($_POST['checkBool']));
 if ($check && isset($_POST['displayTmp'])) {
-    header("Location: " . urlStrRedirect("base/computers/tmpdisplay", array('id'=>$id, 'request'=>urlencode($r->toS()), 'is_group'=>$is_group, 'equ_bool'=>$bool, 'name'=>urlencode($name), 'save_type'=>$save_type, 'visible'=>$visible, 'imaging_server'=>$imaging_server)));
+    $_SESSION['request'] = $r->toS();
+    header("Location: " . urlStrRedirect("base/computers/tmpdisplay", array('id'=>$id, 'request'=>'stored_in_session', 'is_group'=>$is_group, 'equ_bool'=>$bool, 'name'=>urlencode($name), 'save_type'=>$save_type, 'visible'=>$visible, 'imaging_server'=>$imaging_server)));
     exit;
 }
 
@@ -68,7 +73,8 @@ if (!isset($_POST['btnPrimary']) || $name_exists || !$check || isset($_POST['che
     // TODO : put in class
     print "<hr/><table><tr>";
     if (hasCorrectAcl("base", "computers", "save")) {
-        print "<form method='POST' action='".urlStr("base/computers/save", array('request'=>$request, 'id'=>$id, 'is_group'=>$is_group, 'imaging_server'=>$imaging_server)).  "' >".
+        $_SESSION['request'] = $request;
+        print "<form method='POST' action='".urlStr("base/computers/save", array('request'=>'stored_in_session', 'id'=>$id, 'is_group'=>$is_group, 'imaging_server'=>$imaging_server)).  "' >".
             "<td>"._T('Name :', 'dyngroup')." <input name='name' type='text' value=\"" . htmlspecialchars($name) . "\" /></td>";
             if ($is_group) {
                 print "<td>"._T('save as', 'dyngroup')." <select name='save_type'><option value='1' ".($save_type == 1 ? 'selected' : '').">"._T("query", "dyngroup")."</option><option value='2' ".($save_type == 2 ? 'selected' : '').">"._T('result', 'dyngroup')."</option></select></td>";

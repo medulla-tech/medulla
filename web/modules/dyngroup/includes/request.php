@@ -102,7 +102,7 @@ class Request {
             $p['subedition'] = 1;
             #$p['delete'] = $id;
             $p['sub_id'] = $id;
-            $p['request'] = $this->toS();
+            $p['request'] = null;
             array_push($parameters, $p);
         }
         $n = new ListInfos($parts, _T('Search part', 'dyngroup'), "&amp;id=".$default_params['gid']);

@@ -28,6 +28,10 @@ $gid = quickGet('gid');
 if (!$gid) { // TODO !!
     require("modules/base/computers/localSidebar.php");
     $request = quickGet('request');
+    if ($request == 'stored_in_session') {
+        $request = $_SESSION['request'];
+        unset($_SESSION['request']);
+    }
     $r = new Request();
     $r->parse($request);
     $result = new Result($r, $group->getBool());
