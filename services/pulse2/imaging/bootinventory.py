@@ -388,8 +388,6 @@ class BootInventory:
             mo = re.match(NETMASK_RE, line)
             if mo :
                 self.netmask_info = mo.group(1)
-                syslog('ip: '+str(self.ipaddr_info['ip']))
-                syslog('netmask: '+str(self.netmask_info))
                 # Compute network address (subnet) from ip and netmask
                 if self.netmask_info and self.ipaddr_info['ip']:
                     try:
