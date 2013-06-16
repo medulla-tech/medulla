@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-10 01:00+0200\n"
+"POT-Creation-Date: 2013-06-17 01:00+0200\n"
 "PO-Revision-Date: 2013-06-04 17:23+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -311,7 +311,7 @@ msgstr ""
 msgid "Actions in bundle"
 msgstr ""
 
-#: modules/msc/msc/start_quick_action.php:146
+#: modules/msc/msc/start_quick_action.php:141
 msgid "Advanced"
 msgstr ""
 
@@ -1154,7 +1154,7 @@ msgstr ""
 msgid "Please confirm file deletion"
 msgstr ""
 
-#: modules/msc/msc/start_quick_action.php:144
+#: modules/msc/msc/start_quick_action.php:139
 msgid "Please confirm you really want to perform this action"
 msgstr ""
 
@@ -1182,11 +1182,6 @@ msgstr ""
 
 #: modules/msc/includes/command_history.php:311
 msgid "Proxy priority"
-msgstr ""
-
-#: modules/msc/msc/start_quick_action.php:108
-#, php-format
-msgid "Quick action has failed: %s"
 msgstr ""
 
 #: modules/msc/includes/widgets.inc.php:219
