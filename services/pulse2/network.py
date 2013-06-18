@@ -418,29 +418,6 @@ class ResolvingCallable :
 
 
 
-class ChoosePerDNS (ResolvingCallable):
-
-    name = "dns"
-
-    def __call__(self, target):
-        """ 
-        Request passed on DNS server 
-
-        @param target: container having complete networking info.
-        @type target: list
-
-        @return: IP address of reachable interface
-        @rtype: string
-        """
-        hostname, ifaces = target
-        ip = None
-        try:
-            ip = socket.gethostbyname(hostname)
-        except Exception, exc:
-            log.warn("Failed to get IP address by DNS request: %s" % str(exc))
-
-        return ip
-
 class ChoosePerIP (ResolvingCallable):
 
     name = "ip"
@@ -511,14 +488,20 @@ class ChoosePerFQDN (ResolvingCallable):
         """
         hostname, ifaces = target
 
-        cmd = "%s -s 1 -t a %s 2>/dev/null 1>/dev/null" % (self.fqdn_path, hostname)
+        cmd = "%s %s" % (self.fqdn_path, hostname)
 
         out = self.run_command(cmd)
-
-        if not out :
-            return hostname
-        else :
-            return None
+        # <example of a positive response> :
+        # <hostname> has address 192.168.127.3
+        # <example of a negative response> :
+        # Host <hostname> not found: 3(NXDOMAIN)
+        if out :
+            log.debug("\033[32mIBT23SEC5:\033[0m fqdn output: %s for host %s" % (out, hostname))
+            if len(out.split()) > 3 :
+                ip = out.split()[3] # 4th place is ip
+                if NetUtils.is_ipv4_format(ip) :
+                    return ip
+        return None
 
 class ChoosePerHosts (ResolvingCallable):
 
@@ -547,15 +530,20 @@ class ChoosePerHosts (ResolvingCallable):
         """
         hostname, ifaces = target
 
-        cmd = "%s hosts %s 2>/dev/null 1>/dev/null" % (self.hosts_path, hostname)
+        cmd = "%s hosts %s" % (self.hosts_path, hostname)
 
         out = self.run_command(cmd)
+        # <example of a positive response> :
+        # 192.168.127.3   <hostname>
+        # if negative, response empty 
+        if out :
+            log.debug("\033[32mIBT23SEC5:\033[0m hosts output: %s for host %s" % (out, hostname))
+            if len(out.split()) > 1 :
+                ip = out.split()[0] # 1st place is ip
+                if NetUtils.is_ipv4_format(ip) :
+                    return ip
+        return None
 
-        if not out :
-            return hostname
-        else :
-            return None
-               
 
 class ChooseFirstComplete (ResolvingCallable) :
 

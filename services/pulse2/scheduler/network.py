@@ -38,7 +38,7 @@ class SchedulerNetUtils :
         @return: target common format
         @rtype: tuple
         """
-        hostname = target["fqdn"]
+        hostname = target["shortname"]
         ips = target["ips"]
         macs = target["macs"]
         if "netmasks" in target :
