@@ -53,9 +53,6 @@ CREATE TABLE IF NOT EXISTS `backup_servers` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 
-INSERT INTO `backup_servers` (`id`, `entity_uuid`, `backupserver_url`) VALUES
-(1, 'UUID1', '192.168.71.90/backuppc/index.cgi');
-
 
 CREATE TABLE IF NOT EXISTS `hosts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -80,13 +77,13 @@ INSERT INTO `period_profiles` (`id`, `profilename`, `full`, `incr`, `exclude_per
 (1, 'Night time backup', 7, 1, '8.00=>19.50:1,2,3,4,5');
 
 
-CREATE TABLE IF NOT EXISTS `Version` (
+CREATE TABLE IF NOT EXISTS `version` (
   `Number` tinyint(4) unsigned NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
-INSERT INTO `Version` (`Number`) VALUES
+INSERT INTO `version` (`Number`) VALUES
 (1);
 
 
