@@ -1,0 +1,267 @@
+#!/usr/bin/python 
+# -*- coding: utf-8; -*-
+"""
+"""
+#
+# (c) 2011-2012 Mandriva, http://www.mandriva.com/
+#
+# This file is part of Pulse 2, http://pulse2.mandriva.org
+#
+# Pulse 2 is free software; you can redistribute it and/or modify  
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Pulse 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Pulse 2.  If not, see <http://www.gnu.org/licenses/>.
+
+import os
+import sys
+import stat
+import re
+from syslog import syslog
+
+from ConfigParser import ConfigParser
+
+from twisted.internet import task, reactor
+from twisted.web import xmlrpc
+
+COOKIES_FILE = '/tmp/mmc-cookies'
+host = ''
+
+class MMCQueryProtocol(xmlrpc.QueryProtocol):
+
+    def connectionMade(self):
+        self.sendCommand('POST', self.factory.path)
+        self.sendHeader('User-Agent', 'Twisted/XMLRPClib')
+        self.sendHeader('Host', self.factory.host)
+        self.sendHeader('Content-type', 'text/xml')
+        self.sendHeader('Content-length', str(len(self.factory.payload)))
+        if self.factory.user:
+            auth = '%s:%s' % (self.factory.user, self.factory.password)
+            auth = auth.encode('base64').strip()
+            self.sendHeader('Authorization', 'Basic %s' % (auth,))
+        try:
+            # Put MMC session cookie
+            if not '<methodName>base.ldapAuth</methodName>' in self.factory.payload:
+                h = open(COOKIES_FILE, 'r')
+                self.sendHeader('Cookie', h.read())
+                h.close()
+        except IOError:
+            pass
+        self.endHeaders()
+        self.transport.write(self.factory.payload)
+
+    def lineReceived(self, line):
+        xmlrpc.QueryProtocol.lineReceived(self, line)
+        if line:
+            if line.startswith("Set-Cookie: "):
+                self._session = line.split()[1]
+
+    def handleResponse(self, contents):
+        xmlrpc.QueryProtocol.handleResponse(self, contents)
+        if '<methodName>base.ldapAuth</methodName>' in self.factory.payload:
+            h = open(COOKIES_FILE, 'w+')
+            h.write(self._session)
+            h.close()
+            os.chmod(COOKIES_FILE, stat.S_IRUSR | stat.S_IWUSR)
+
+
+class MMCQueryFactory(xmlrpc._QueryFactory):
+
+    protocol = MMCQueryProtocol
+
+class Proxy(xmlrpc.Proxy):
+
+    queryFactory = MMCQueryFactory
+
+
+class ConfigReader :
+    """Read and parse config files"""
+    def __init__(self, filepath):
+       self._config = self.get_config(filepath)
+        
+
+    @classmethod
+    def get_config(cls, inifile):
+        """ 
+        Get the configuration from config file
+        
+        @param inifile: path to config file
+        @type inifile: string
+    
+        @return: ConfigParser.ConfigParser instance 
+        """
+        if not os.path.exists(inifile) :
+            syslog("Error while reading the config file: Not found.")
+            sys.exit(2)
+
+        config = ConfigParser()
+        config.readfp(open(inifile,'r'))
+
+        return config
+  
+    @property
+    def config (self):
+        """ 
+        Get the configuration instance 
+             
+        @return: ConfigParser.ConfigParser instance 
+        """
+        return self._config
+
+class MMCProxy :
+    """ Provider to connect at mmc-agent """
+    def __init__(self, config): 
+
+        self._config = config
+        
+        self._url = None
+        self._proxy = None
+
+        self._build_url()
+        self._build_proxy()
+
+    def _build_url(self):
+        """ URL building for XML-RPC proxy """
+        
+        if not self._config.has_section("mmc_agent") :
+            syslog("Error while reading the config file: Section 'mmc_agent' not exists")
+            sys.exit(2)
+
+        username = self._config.get("mmc_agent", "username")
+        host = self._config.get("mmc_agent", "host")
+        password = self._config.get("mmc_agent", "password")
+        port = self._config.get("mmc_agent", "port")
+        
+        syslog("Building the connection URL at mmc-agent")
+        self._url = 'https://%s:%s@%s:%s' % (username, password, host, port)
+        
+    def _get_ldap_password(self):
+        """ 
+        Password for LDAP authentification 
+        
+        @return: string
+        """
+        
+        if not self._config.has_section("ldap") :
+            syslog("Error while reading the config file: Section 'ldap'")
+            sys.exit(2)
+                                
+        return self._config.get("ldap","password")
+
+    def _build_proxy (self):
+        """ Builds the XML-RPC proxy to MMC agent. """
+        try :
+            self._proxy = Proxy(self._url)
+            syslog("Create a mmc-agent proxy")
+
+        except Exception, err :
+            syslog("Error while connecting to mmc-agent : %s" % err)
+            sys.exit(2)
+
+    @property
+    def proxy (self):
+        """ Get the XML-RPC proxy to MMC agent. """
+        return self._proxy
+        
+class CallMethod :
+    """ XML-RPC Handler to execute remote functions. """
+
+    def __init__(self, config, method, *args, **kwargs) :
+       
+        self._config = config
+
+        mmc_agent = MMCProxy(config)
+      
+        self.proxy = mmc_agent.proxy
+
+        self.method = method
+        self.args = args
+        self.kwargs = kwargs
+        
+        d = task.deferLater(reactor, 0, self.auth)
+        d.addErrback(self._errorback_proxy)
+
+    def _errorback_proxy(self, failure):
+        syslog("Proxy call failed : %s" % str(failure))
+        reactor.stop()
+
+    def auth(self):
+        passwd = self._config.get("ldap","password")
+        d = self.proxy.callRemote("base.ldapAuth", "root", passwd)
+
+        d.addCallback(self.call_method)
+        d.addErrback(self._errorback_auth)
+
+    def _errorback_auth(self, failure):
+        syslog("Authentification failed : %s" % str(failure))
+        reactor.stop()
+
+    def call_method(self, result=None):
+        d = self.proxy.callRemote(self.method, *self.args, **self.kwargs)
+        d.addCallback(self._method_result)
+        d.addErrback(self._errorback_method)
+
+    def _method_result(self, result):
+	 	ip_pattern = re.compile("\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}")
+		ip = str(result).strip()
+		if ip_pattern.match(ip):
+			print 'querying %s on 127.0.0.1' % host
+			print '%s %s<00>' % (ip,host)
+		# Writing on cache file
+		try:
+     		    f = open('/tmp/pulse2-uuid-resolve-cache','a+')
+		    f.write('%s:%s\n' % (host,ip))
+		    f.close()
+		except:
+		    syslog('Unable to open /tmp/pulse2-uuid-resolve-cache')
+		reactor.stop()
+
+    def _errorback_method(self, failure):
+        syslog("Method call failed : %s" % str(failure))
+        reactor.stop()
+
+if __name__ == "__main__" :
+
+    syslog(' '.join(sys.argv))
+    # Extracting params
+    if len(sys.argv)<2:
+		sys.exit(2)
+    if len(sys.argv)>2 and sys.argv[1].strip().lower() == '-a':
+		# IP > UUID Reverse resolving
+		# Opening cache file
+		ip = sys.argv[2].strip()
+		try:
+			f = open('/tmp/pulse2-uuid-resolve-cache','r')
+			if not f: sys.exit(2)
+			lines = f.readlines()
+			for line in reversed(lines):
+				z = line.split(':')
+				if z[1].strip() == ip:
+					host = z[0].strip()
+					print "\t%s   <00> -         B <ACTIVE>" % host
+					print "\tWORKGROUP       <00> - <GROUP> B <ACTIVE>"
+					print "\t%s   <20> -         B <ACTIVE>" % host
+					print "\tWORKGROUP       <1e> - <GROUP> B <ACTIVE>"
+					print ""
+					print "\tMAC Address = 00-01-02-03-04-00"
+					break
+			f.close()
+		except:
+			pass
+    else:
+		cfg_file_path = "/etc/pulse2-uuid-resolver/pulse2-uuid-resolver.ini"
+
+		config = ConfigReader(cfg_file_path).config
+		host = sys.argv[1].strip()
+		CallMethod(config, 
+	       "msc.scheduler_choose_client_ip", 
+	       "scheduler_01", 
+	       host.upper())
+		reactor.run()
