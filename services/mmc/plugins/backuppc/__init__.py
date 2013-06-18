@@ -25,19 +25,14 @@
 Plugin to manage the interface with BackupPC
 """
 import logging
-import os
-from time import time
 
 from mmc.plugins.backuppc.config import BackuppcConfig
 from mmc.plugins.backuppc import bpc
-from mmc.agent import PluginManager
-from mmc.support.mmctools import ContextMakerI, SecurityContext
+#from mmc.agent import PluginManager
+#from mmc.support.mmctools import ContextMakerI, SecurityContext
 from pulse2.version import getVersion, getRevision # pyflakes.ignore
 
 # Database
-from sqlalchemy.exc import DBAPIError
-import sqlalchemy.orm.query
-from pulse2.database.backuppc.config import BackuppcDatabaseConfig
 from pulse2.database.backuppc import BackuppcDatabase
 
 
@@ -180,5 +175,5 @@ def get_host_status(host):
 def set_backup_for_host(uuid):
     return bpc.set_backup_for_host(uuid)
 
-#def getBackupServerByUUID(uuid):
-#    return bpc.getBackupServerByUUID(uuid)
+def get_xfer_log(host,backupnum):
+    return bpc.get_xfer_log(host,backupnum)

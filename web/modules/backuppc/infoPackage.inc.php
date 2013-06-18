@@ -98,6 +98,12 @@ $submod->addPage($page);
 
 $page = new Page("viewFileVersions");
 $page->setFile("modules/backuppc/backuppc/viewFileVersions.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$submod->addPage($page);
+
+$page = new Page("viewXferLog");
+$page->setFile("modules/backuppc/backuppc/viewXferLog.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 
 $page = new Page("restoreZip");

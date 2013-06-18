@@ -114,11 +114,7 @@ if (isset($_GET['host']) && isset($_GET['sharename']) && isset($_GET['backupnum'
     $n->end = isset($_GET['end'])?$_GET['end']:$maxperpage;
     $n->setParamInfo($params); // Setting url params
     
-    //$n->addActionItem(new ActionItem(_T("View", "backuppc"),"restore","display","host", "backuppc", "backuppc"));
-    //$n->addActionItem(new ActionItem(_T("Edit config", "pkgs"),"edit","edit","pkgs", "pkgs", "pkgs"));
-    //$n->addActionItem(new ActionPopupItem(_T("Delete", "pkgs"),"delete","delete","pkgs", "pkgs", "pkgs"));
     $n->addActionItem(new ActionPopupItem(_T("View all versions"), "viewFileVersions", "display", "dir", "backuppc", "backuppc"));
-    
 
     print '<br/><br/><form id="restorefiles" method="post" action="">'; 
     printf('<input type="hidden" name="host" value="%s" />',$_GET['host']);

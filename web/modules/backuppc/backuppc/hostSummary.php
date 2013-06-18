@@ -86,14 +86,33 @@ if ($response['err']) {
 }
 
 // ==========================================================
+// Status lines
+// ==========================================================
+$status_strings = array(
+    'no ping' => '<span style="color:red">'._T('No ping response','backuppc').'</span>',
+    'backup failed' => '<span style="color:red">'._T('Backup failed','backuppc').'</span>',
+    'done' =>'<span style="color:green">'. _T('Backup up to date','backuppc').'</span>',
+    'nothing' =>'<span style="color:red">'. _T('This computer has never been backed up','backuppc').'</span>',
+    'in progress' => '<span style="color:orange">'._T('Backup in progress').'</span>'
+    );
+
+print '<p>'._T('Last known status: ','backuppc').'<b>';
+foreach ($response['status'] as $line)
+    print $status_strings[$line];
+    if ($line == 'nothing')
+        $nerverbackuped = 1;
+print "</b></p>";
+
+// ==========================================================
 // User actions Form
 // ==========================================================
 
-$f = new PopupForm(_T(""));
+$f = new PopupForm("");
 $hidden = new HiddenTpl("host");
 $f->add($hidden, array("value" => $uuid, "hide" => True));
 $f->addButton("startFullBackup","Start Full Backup");
-$f->addButton("startIncrBackup","Sart Incr Backup");
+if (!isset($nerverbackuped))
+    $f->addButton("startIncrBackup","Sart Incr Backup");
 $f->addButton("stopBackup","Stop Backup");
 $f->display();
 
@@ -141,6 +160,7 @@ if ($response['data']) {
 
     $n->setParamInfo($params); // Setting url params
     $n->addActionItem(new ActionItem(_T("View", "backuppc"),"BrowseShareNames","display","host", "backuppc", "backuppc"));
+    $n->addActionItem(new ActionPopupItem(_T("View Xfer Log"), "viewXferLog", "file", "dir", "backuppc", "backuppc"));
 
     print "<br/><br/>"; // to go below the location bar : FIXME, really ugly as line height dependent
 

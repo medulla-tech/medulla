@@ -1,6 +1,5 @@
 import os
 from pyquery import PyQuery as pq
-from lxml import etree
 import urllib,urllib2
 import re,string
 import logging
@@ -8,7 +7,6 @@ import tempfile
 import time
 
 # Twisted
-from twisted.internet import reactor, defer
 from twisted.python import threadable; threadable.init(1)
 from twisted.internet.threads import deferToThread
 deferred = deferToThread.__get__ #Create an alias for deferred functions
@@ -73,7 +71,7 @@ def send_request(params,url=''):
     If success, returns HTML response.
     """
     # Getting BackupServer URL
-    url = 'http://' + (url or getBackupServerByUUID(params['host']) )
+    url = 'http://' + (url or getBackupServerByUUID(params['host'].upper()) )
     if url == 'http://' : return
     # Host to lower case
     if 'host' in params: params['host'] = params['host'].lower()
@@ -223,7 +221,6 @@ def list_files(host,backup_num,share_name,dir,filter,recursive=0):
     # Init filecount var and files dictionnary
     linecount = len(filetable.find('tr'))
     result = [[],[],[],[],[],[],[]]
-    filecount = 0
     for i in xrange(1,linecount):
         cols = filetable.find('tr').eq(i).find('td')
         if len(cols) == 6:
@@ -366,7 +363,7 @@ def restore_files_to_host(host,backup_num,share_name,files,hostDest='',shareDest
     if hostDest:
         params['hostDest'] = hostDest.encode('utf8','ignore')
     else:
-        params['hostDest'] = host
+        params['hostDest'] = host.lower()
     if shareDest:
         params['shareDest'] = shareDest.encode('utf8','ignore')
     else :
@@ -522,6 +519,23 @@ def get_host_log(host):
         return d('pre:first').text()
 
 
+def get_xfer_log(host,backupnum):
+    params = {}
+    params['host'] = host
+    params['action'] = 'view'
+    params['type'] = 'XferErr'
+    params['num'] = backupnum
+    html = send_request(params)
+    if not html:
+        return _CONNECTION_ERROR
+    if getHTMLerr(html): 
+        return getHTMLerr(html)
+    d=pq(html)
+    if not d('pre:first'):
+        return _FORMAT_ERROR
+    else:
+        return {'err':0,'data':d('pre:first').text()}
+
 def apply_backup_profile(profileid):
     # Hosts corresponding to selected profile
     hosts = BackuppcDatabase().get_hosts_by_backup_profile(profileid)
@@ -617,6 +631,23 @@ def get_host_status(host):
         return _CONNECTION_ERROR
     if getHTMLerr(html): 
         return getHTMLerr(html)
+    result = {'err':0,'status':[]}
+    d = pq(html)
+    if d('ul:first').find('li'):
+        statuslines = d('ul:first').find('li').text()
+    else:
+        statuslines = ''
+    # Status strings
+    if 'no ping' in statuslines:
+        result['status'] += ['no ping']
+    if 'backup failed' in statuslines:
+        result['status'] += ['backup failed']
+    if 'done' in statuslines:
+        result['status'] += ['done']
+    if 'in progress' in statuslines:
+        result['status'] += ['in progress']
+    if len(result['status']) == 0:
+        result['status'] += ['nothing']
     try:
         tb_summary = getTableByTitle(html,'Backup Summary')
         xfer_summary = getTableByTitle(html,'Xfer Error Summary')
@@ -628,7 +659,7 @@ def get_host_status(host):
         xfer_summary = getTableContent(xfer_summary)
         size_summary = getTableContent(size_summary)
         #
-        return {'err':0,'data':{ \
+        result['data'] = { \
             'backup_nums':tb_summary[0], \
             'start_dates':tb_summary[4], \
             'durations':tb_summary[5], \
@@ -638,6 +669,7 @@ def get_host_status(host):
             'total_file_size':size_summary[3], \
             'new_file_count':size_summary[7], \
             'new_file_size':size_summary[8]
-        }}
+        }
     except:
-        return {'err':0,'data':{}}
+        result['data'] = {}
+    return result

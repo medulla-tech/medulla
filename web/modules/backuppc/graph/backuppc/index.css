@@ -9,6 +9,17 @@ li.info a {
         color: #FFF;
 }
 
+li.file a {
+        padding: 0px 0px 5px 20px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/backuppc/graph/img/file.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
 td.folder {
 	padding: 0 0 0 34px;
 	background-image: url("modules/backuppc/graph/img/folder.png");

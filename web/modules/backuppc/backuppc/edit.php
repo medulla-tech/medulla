@@ -83,8 +83,6 @@ if ( $backup_profile_id == -1 )
 {
     print "Host backup is not set.";
     return;
-    // TODO: Create a record for new host
-    // And send it to backuppc HOST LIST
 }
 
 $response = get_host_config($host);

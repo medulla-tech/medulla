@@ -23,7 +23,6 @@
  */
 
 require_once("modules/backuppc/includes/xmlrpc.php");
-require_once("modules/msc/includes/utilities.php");
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
@@ -64,7 +63,6 @@ $n->end = isset($_GET['end'])?$_GET['end']:$maxperpage;
 
 $n->addActionItem(new ActionItem(_T("View", "backuppc"),"BrowseBackups","display","host", "backuppc", "backuppc"));
 $n->addActionItem(new ActionItem(_T("Edit config", "backuppc"),"edit","edit","host", "backuppc", "backuppc"));
-//$n->addActionItem(new ActionPopupItem(_T("Delete", "pkgs"),"delete","delete","host", "backuppc", "backuppc"));
 
 print "<br/><br/>"; // to go below the location bar : FIXME, really ugly as line height dependent
 

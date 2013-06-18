@@ -1,4 +1,4 @@
-from mmc.support.config import PluginConfig, ConfigException
+from mmc.support.config import PluginConfig #, ConfigException
 from pulse2.database.backuppc.config import BackuppcDatabaseConfig
 
 class BackuppcConfig(PluginConfig,BackuppcDatabaseConfig):
@@ -43,5 +43,5 @@ class BackuppcConfig(PluginConfig,BackuppcDatabaseConfig):
 
     def activate():
         # Get module config from "/etc/mmc/plugins/module_name.ini"
-        config = BackuppcConfig("backuppc")
+        BackuppcConfig("backuppc")
         return True

@@ -22,25 +22,28 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require("graph/navbar.inc.php");
-require("localSidebar.php");
-require_once("modules/backuppc/includes/xmlrpc.php");
+print "<h1>"._T('XferLog','backuppc')."</h1>";
 
-$computer_name = $_GET['cn'];
-$uuid = $_GET['objectUUID'];
+require_once("includes/xmlrpc.inc.php");
+require_once('modules/backuppc/includes/xmlrpc.php');
 
-// Tab generator
-$p = new TabbedPageGenerator($computer_name._T(" Backup status", 'backuppc'));
-$p->addTop(_T(sprintf("%s's backup status",$computer_name), 'backuppc'));
+$response = get_xfer_log($_GET['host'],$_GET['backupnum']);
 
-// Adding tabs
-$i = 0;
-$p->addTab("tab".$i++, _T('Backup summary', 'backuppc'), "", "modules/backuppc/backuppc/hostSummary.php", array('objectUUID'=>$uuid, 'cn'=>$computer_name));
-$p->addTab("tab".$i++, _T('Configuration', 'backuppc'), "", "modules/backuppc/backuppc/edit.php", array('objectUUID'=>$uuid, 'cn'=>$computer_name));
+if (!$response['err']) {
+    //print "<pre>";
+    //print ;
+    $text  = "<h1>Xfer Error log</h1>";
+    $text .= '<div style="height:400px;width:100%;overflow-y:scroll;">';
+    $text .= nl2br($response['data']);
+    $text .= "</div>";
+    //new NotifyWidgetFailure(nl2br($text));
+    $f = new NotifyWidget();
+    $f->add($text);
+    //print "/<pre>";
+}
+else {
+    // Show the error message
+    die(nl2br($response['errtext']));
+}
 
-$p->setSideMenu($sidemenu);
-$p->display();
-
-// Downloaded files table
-include("modules/backuppc/backuppc/ajaxDownloadsTable.php");
 ?>
