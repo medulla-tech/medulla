@@ -177,6 +177,7 @@ COMPUTER_TYPES = {
 	"1d":"Blade Enclosure"}
 
 # CPU Family titles
+# These Infos comes from dmidecode.c
 FAMCPU_H = {
     "01": "Unknown processor",
     "02": "Unknown processor",
@@ -576,7 +577,9 @@ class BootInventory:
 
             mo = re.match(FAMCPU_RE, line)
             if mo :
-                self.famcpu_info = mo.group(1)
+                code = mo.group(1).upper()
+                if code in FAMCPU_H:
+                    self.famcpu_info = mo.group(1).upper()
                 continue
 
             mo = re.match(MACADDR_RE, line)
