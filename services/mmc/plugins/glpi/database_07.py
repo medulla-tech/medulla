@@ -2228,6 +2228,11 @@ class Glpi07(DyngroupDatabaseHelper):
             complete_ctx(ctx)
         session = create_session()
         query = session.query(Software)
+        query = query.select_from(
+            self.software \
+            .join(self.softwareversions) \
+            .join(self.inst_software)
+        )
         if self.glpi_version_new():
             my_parents_ids = self.getEntitiesParentsAsList(ctx.locationsid)
             query = query.filter(or_(self.software.c.FK_entities.in_(ctx.locationsid), and_(self.software.c.recursive == 1, self.software.c.FK_entities.in_(my_parents_ids))))

@@ -2263,8 +2263,21 @@ class Glpi08(DyngroupDatabaseHelper):
             complete_ctx(ctx)
         session = create_session()
         query = session.query(Software)
+        query = query.select_from(
+            self.software \
+            .join(self.softwareversions) \
+            .join(self.inst_software)
+        )
         my_parents_ids = self.getEntitiesParentsAsList(ctx.locationsid)
-        query = query.filter(or_(self.software.c.entities_id.in_(ctx.locationsid), and_(self.software.c.is_recursive == 1, self.software.c.entities_id.in_(my_parents_ids))))
+        query = query.filter(
+            or_(
+                self.software.c.entities_id.in_(ctx.locationsid),
+                and_(
+                    self.software.c.is_recursive == 1,
+                    self.software.c.entities_id.in_(my_parents_ids)
+                )
+            )
+        )
 
         if softname != '':
             query = query.filter(self.software.c.name.like('%'+softname+'%'))
