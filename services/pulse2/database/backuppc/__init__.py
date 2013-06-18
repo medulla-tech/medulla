@@ -26,9 +26,9 @@ BackupPC database handler
 """
 
 # SqlAlchemy
-from sqlalchemy import create_engine, MetaData, Table, Column, Text
+from sqlalchemy import create_engine, MetaData, Table #, Column, Text
 from sqlalchemy.orm import create_session, mapper
-from sqlalchemy.sql import and_
+#from sqlalchemy.sql import and_
 from sqlalchemy.exc import DBAPIError
 
 # PULSE2 modules
