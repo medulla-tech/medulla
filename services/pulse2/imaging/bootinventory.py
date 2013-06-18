@@ -43,6 +43,7 @@ MEMSLOT_RE  = re.compile("^SM:([0-9]+):([^:]*):([^:]*):([0-9]+):([0-9]+)$") # Si
 NUMCPU_RE   = re.compile("^S4:([0-9]+)$") # CPU number
 FEATCPU_RE  = re.compile("^C:(.*)$") # CPU features, comma-separated
 FREQCPU_RE  = re.compile("^F:([0-9]+)$") # CPU frequency
+FAMCPU_RE   = re.compile("^cpuf [0-9]+:(.+)h$") # CPU Family
 NETMASK_RE  = re.compile("^mask:(.+)$") # Netmask
 GATEWAY_RE  = re.compile("^gateway:(.+)$") # Netmask
 
@@ -175,6 +176,208 @@ COMPUTER_TYPES = {
 	"1c":"Blade",\
 	"1d":"Blade Enclosure"}
 
+# CPU Family titles
+FAMCPU_H = {
+    "01": "Unknown processor",
+    "02": "Unknown processor",
+    "03": "8086 (family)",
+    "04": "80286 (family)",
+    "05": "80386 (family)",
+    "06": "80486 (family)",
+    "07": "8087 (family)",
+    "08": "80287 (family)",
+    "09": "80387 (family)",
+    "0A": "80487 (family)",
+    "0B": "Pentium (family)",
+    "0C": "Pentium Pro (family)",
+    "0D": "Pentium II (family)",
+    "0E": "Pentium MMX (family)",
+    "0F": "Celeron (family)",
+    "10": "Pentium II Xeon (family)",
+    "11": "Pentium III (family)",
+    "12": "M1 (family)",
+    "13": "M2 (family)",
+    "14": "Celeron M (family)",
+    "15": "Pentium 4 HT (family)",
+    "18": "Duron (family)",
+    "19": "K5 (family)",
+    "1A": "K6 (family)",
+    "1B": "K6-2 (family)",
+    "1C": "K6-3 (family)",
+    "1D": "Athlon (family)",
+    "1E": "AMD29000 (family)",
+    "1F": "K6-2+ (family)",
+    "20": "Power PC (family)",
+    "21": "Power PC 601 (family)",
+    "22": "Power PC 603 (family)",
+    "23": "Power PC 603+ (family)",
+    "24": "Power PC 604 (family)",
+    "25": "Power PC 620 (family)",
+    "26": "Power PC x704 (family)",
+    "27": "Power PC 750 (family)",
+    "28": "Core Duo (family)",
+    "29": "Core Duo Mobile (family)",
+    "2A": "Core Solo Mobile (family)",
+    "2B": "Atom (family)",
+    "30": "Alpha (family)",
+    "31": "Alpha 21064 (family)",
+    "32": "Alpha 21066 (family)",
+    "33": "Alpha 21164 (family)",
+    "34": "Alpha 21164PC (family)",
+    "35": "Alpha 21164a (family)",
+    "36": "Alpha 21264 (family)",
+    "37": "Alpha 21364 (family)",
+    "38": "Turion II Ultra Dual-Core Mobile M (family)",
+    "39": "Turion II Dual-Core Mobile M (family)",
+    "3A": "Athlon II Dual-Core M (family)",
+    "3B": "Opteron 6100 (family)",
+    "3C": "Opteron 4100 (family)",
+    "3D": "Opteron 6200 (family)",
+    "3E": "Opteron 4200 (family)",
+    "3F": "FX (family)",
+    "40": "MIPS (family)",
+    "41": "MIPS R4000 (family)",
+    "42": "MIPS R4200 (family)",
+    "43": "MIPS R4400 (family)",
+    "44": "MIPS R4600 (family)",
+    "45": "MIPS R10000 (family)",
+    "46": "C-Series (family)",
+    "47": "E-Series (family)",
+    "48": "A-Series (family)",
+    "49": "G-Series (family)",
+    "4A": "Z-Series (family)",
+    "4B": "R-Series (family)",
+    "4C": "Opteron 4300 (family)",
+    "4D": "Opteron 6300 (family)",
+    "4E": "Opteron 3300 (family)",
+    "4F": "FirePro (family)",
+    "50": "SPARC (family)",
+    "51": "SuperSPARC (family)",
+    "52": "MicroSPARC II (family)",
+    "53": "MicroSPARC IIep (family)",
+    "54": "UltraSPARC (family)",
+    "55": "UltraSPARC II (family)",
+    "56": "UltraSPARC IIi (family)",
+    "57": "UltraSPARC III (family)",
+    "58": "UltraSPARC IIIi (family)",
+    "60": "68040 (family)",
+    "61": "68xxx (family)",
+    "62": "68000 (family)",
+    "63": "68010 (family)",
+    "64": "68020 (family)",
+    "65": "68030 (family)",
+    "70": "Hobbit (family)",
+    "78": "Crusoe TM5000 (family)",
+    "79": "Crusoe TM3000 (family)",
+    "7A": "Efficeon TM8000 (family)",
+    "80": "Weitek (family)",
+    "82": "Itanium (family)",
+    "83": "Athlon 64 (family)",
+    "84": "Opteron (family)",
+    "85": "Sempron (family)",
+    "86": "Turion 64 (family)",
+    "87": "Dual-Core Opteron (family)",
+    "88": "Athlon 64 X2 (family)",
+    "89": "Turion 64 X2 (family)",
+    "8A": "Quad-Core Opteron (family)",
+    "8B": "Third-Generation Opteron (family)",
+    "8C": "Phenom FX (family)",
+    "8D": "Phenom X4 (family)",
+    "8E": "Phenom X2 (family)",
+    "8F": "Athlon X2 (family)",
+    "90": "PA-RISC (family)",
+    "91": "PA-RISC 8500 (family)",
+    "92": "PA-RISC 8000 (family)",
+    "93": "PA-RISC 7300LC (family)",
+    "94": "PA-RISC 7200 (family)",
+    "95": "PA-RISC 7100LC (family)",
+    "96": "PA-RISC 7100 (family)",
+    "A0": "V30 (family)",
+    "A1": "Quad-Core Xeon 3200 (family)",
+    "A2": "Dual-Core Xeon 3000 (family)",
+    "A3": "Quad-Core Xeon 5300 (family)",
+    "A4": "Dual-Core Xeon 5100 (family)",
+    "A5": "Dual-Core Xeon 5000 (family)",
+    "A6": "Dual-Core Xeon LV (family)",
+    "A7": "Dual-Core Xeon ULV (family)",
+    "A8": "Dual-Core Xeon 7100 (family)",
+    "A9": "Quad-Core Xeon 5400 (family)",
+    "AA": "Quad-Core Xeon (family)",
+    "AB": "Dual-Core Xeon 5200 (family)",
+    "AC": "Dual-Core Xeon 7200 (family)",
+    "AD": "Quad-Core Xeon 7300 (family)",
+    "AE": "Quad-Core Xeon 7400 (family)",
+    "AF": "Multi-Core Xeon 7400 (family)",
+    "B0": "Pentium III Xeon (family)",
+    "B1": "Pentium III Speedstep (family)",
+    "B2": "Pentium 4 (family)",
+    "B3": "Xeon (family)",
+    "B4": "AS400 (family)",
+    "B5": "Xeon MP (family)",
+    "B6": "Athlon XP (family)",
+    "B7": "Athlon MP (family)",
+    "B8": "Itanium 2 (family)",
+    "B9": "Pentium M (family)",
+    "BA": "Celeron D (family)",
+    "BB": "Pentium D (family)",
+    "BC": "Pentium EE (family)",
+    "BD": "Core Solo (family)",
+    "BE": "Unknown processor",
+    "BF": "Core 2 Duo (family)",
+    "C0": "Core 2 Solo (family)",
+    "C1": "Core 2 Extreme (family)",
+    "C2": "Core 2 Quad (family)",
+    "C3": "Core 2 Extreme Mobile (family)",
+    "C4": "Core 2 Duo Mobile (family)",
+    "C5": "Core 2 Solo Mobile (family)",
+    "C6": "Core i7 (family)",
+    "C7": "Dual-Core Celeron (family)",
+    "C8": "IBM390 (family)",
+    "C9": "G4 (family)",
+    "CA": "G5 (family)",
+    "CB": "ESA/390 G6 (family)",
+    "CC": "z/Architectur (family)",
+    "CD": "Core i5 (family)",
+    "CE": "Core i3 (family)",
+    "D2": "C7-M (family)",
+    "D3": "C7-D (family)",
+    "D4": "C7 (family)",
+    "D5": "Eden (family)",
+    "D6": "Multi-Core Xeon (family)",
+    "D7": "Dual-Core Xeon 3xxx (family)",
+    "D8": "Quad-Core Xeon 3xxx (family)",
+    "D9": "Nano (family)",
+    "DA": "Dual-Core Xeon 5xxx (family)",
+    "DB": "Quad-Core Xeon 5xxx (family)",
+    "DD": "Dual-Core Xeon 7xxx (family)",
+    "DE": "Quad-Core Xeon 7xxx (family)",
+    "DF": "Multi-Core Xeon 7xxx (family)",
+    "E0": "Multi-Core Xeon 3400 (family)",
+    "E4": "Opteron 3000 (family)",
+    "E5": "Sempron II (family)",
+    "E6": "Embedded Opteron Quad-Core (family)",
+    "E7": "Phenom Triple-Core (family)",
+    "E8": "Turion Ultra Dual-Core Mobile (family)",
+    "E9": "Turion Dual-Core Mobile (family)",
+    "EA": "Athlon Dual-Core (family)",
+    "EB": "Sempron SI (family)",
+    "EC": "Phenom II (family)",
+    "ED": "Athlon II (family)",
+    "EE": "Six-Core Opteron (family)",
+    "EF": "Sempron M (family)",
+    "FA": "i860 (family)",
+    "FB": "i960 (family)",
+    "104": "SH-3 (family)",
+    "105": "SH-4 (family)",
+    "118": "ARM (family)",
+    "119": "StrongARM (family)",
+    "12C": "6x86 (family)",
+    "12D": "MediaGX (family)",
+    "12E": "MII (family)",
+    "140": "WinChip (family)",
+    "15E": "DSP (family)",
+    "1F4": "Video Processor (family)",
+}
 
 class BootInventory:
     """
@@ -209,6 +412,8 @@ class BootInventory:
     featcpu_info    = []
     # the CP frequencies
     freqcpu_info    = 0
+    # CPU Family
+    famcpu_info     = "02"
     # the client MAC adress
     macaddr_info    = ''
     # the client netmask
@@ -369,6 +574,11 @@ class BootInventory:
                 self.freqcpu_info = int(mo.group(1), 10)
                 continue
 
+            mo = re.match(FAMCPU_RE, line)
+            if mo :
+                self.famcpu_info = mo.group(1)
+                continue
+
             mo = re.match(MACADDR_RE, line)
             if mo :
                 self.macaddr_info = mo.group(1)
@@ -524,7 +734,7 @@ class BootInventory:
 	PROCESSORN.text = str(self.numcpu_info)
 
 	PROCESSORT = ET.SubElement(HARDWARE,'PROCESSORT')
-	PROCESSORT.text = 'Unknown processor'
+	PROCESSORT.text = FAMCPU_H[self.famcpu_info]
 
 	#### CPUS SECTION ###############################
 
@@ -534,7 +744,7 @@ class BootInventory:
             PROCESSORS.text = str(int(self.freqcpu_info / 1000))
 
             PROCESSORT = ET.SubElement(CPUS, 'NAME')
-            PROCESSORT.text = 'Unknown processor'
+            PROCESSORT.text = FAMCPU_H[self.famcpu_info]
 
 	#### NETWORK SECTION ###############################
 
