@@ -209,19 +209,19 @@ class CallMethod :
         d.addErrback(self._errorback_method)
 
     def _method_result(self, result):
-	 	ip_pattern = re.compile("\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}")
-		ip = str(result).strip()
-		if ip_pattern.match(ip):
-			print 'querying %s on 127.0.0.1' % host
-			print '%s %s<00>' % (ip,host)
-		# Writing on cache file
-		try:
-     		    f = open('/tmp/pulse2-uuid-resolve-cache','a+')
-		    f.write('%s:%s\n' % (host,ip))
-		    f.close()
-		except:
-		    syslog('Unable to open /tmp/pulse2-uuid-resolve-cache')
-		reactor.stop()
+        ip_pattern = re.compile("\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}")
+        ip = str(result).strip()
+        if ip_pattern.match(ip):
+            print 'querying %s on 127.0.0.1' % host
+            print '%s %s<00>' % (ip,host)
+        # Writing on cache file
+        try:
+            f = open('/tmp/pulse2-uuid-resolve-cache','a+')
+            f.write('%s:%s\n' % (host,ip))
+            f.close()
+        except:
+            syslog('Unable to open /tmp/pulse2-uuid-resolve-cache')
+        reactor.stop()
 
     def _errorback_method(self, failure):
         syslog("Method call failed : %s" % str(failure))
@@ -232,36 +232,36 @@ if __name__ == "__main__" :
     syslog(' '.join(sys.argv))
     # Extracting params
     if len(sys.argv)<2:
-		sys.exit(2)
+        sys.exit(2)
     if len(sys.argv)>2 and sys.argv[1].strip().lower() == '-a':
-		# IP > UUID Reverse resolving
-		# Opening cache file
-		ip = sys.argv[2].strip()
-		try:
-			f = open('/tmp/pulse2-uuid-resolve-cache','r')
-			if not f: sys.exit(2)
-			lines = f.readlines()
-			for line in reversed(lines):
-				z = line.split(':')
-				if z[1].strip() == ip:
-					host = z[0].strip()
-					print "\t%s   <00> -         B <ACTIVE>" % host
-					print "\tWORKGROUP       <00> - <GROUP> B <ACTIVE>"
-					print "\t%s   <20> -         B <ACTIVE>" % host
-					print "\tWORKGROUP       <1e> - <GROUP> B <ACTIVE>"
-					print ""
-					print "\tMAC Address = 00-01-02-03-04-00"
-					break
-			f.close()
-		except:
-			pass
+        # IP > UUID Reverse resolving
+        # Opening cache file
+        ip = sys.argv[2].strip()
+        try:
+            f = open('/tmp/pulse2-uuid-resolve-cache','r')
+            if not f: sys.exit(2)
+            lines = f.readlines()
+            for line in reversed(lines):
+                z = line.split(':')
+                if z[1].strip() == ip:
+                    host = z[0].strip()
+                    print "\t%s   <00> -         B <ACTIVE>" % host
+                    print "\tWORKGROUP       <00> - <GROUP> B <ACTIVE>"
+                    print "\t%s   <20> -         B <ACTIVE>" % host
+                    print "\tWORKGROUP       <1e> - <GROUP> B <ACTIVE>"
+                    print ""
+                    print "\tMAC Address = 00-01-02-03-04-00"
+                    break
+            f.close()
+        except:
+            pass
     else:
-		cfg_file_path = "/etc/mmc/pulse2/uuid-resolver/uuid-resolver.ini"
+        cfg_file_path = "/etc/mmc/pulse2/uuid-resolver/uuid-resolver.ini"
 
-		config = ConfigReader(cfg_file_path).config
-		host = sys.argv[1].strip()
-		CallMethod(config, 
-	       "msc.scheduler_choose_client_ip", 
-	       "scheduler_01", 
-	       host.upper())
-		reactor.run()
+        config = ConfigReader(cfg_file_path).config
+        host = sys.argv[1].strip()
+        CallMethod(config, 
+            "msc.scheduler_choose_client_ip", 
+            "scheduler_01", 
+            host.upper())
+        reactor.run()
