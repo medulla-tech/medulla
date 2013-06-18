@@ -496,7 +496,6 @@ class ChoosePerFQDN (ResolvingCallable):
         # <example of a negative response> :
         # Host <hostname> not found: 3(NXDOMAIN)
         if out :
-            log.debug("\033[32mIBT23SEC5:\033[0m fqdn output: %s for host %s" % (out, hostname))
             if len(out.split()) > 3 :
                 ip = out.split()[3] # 4th place is ip
                 if NetUtils.is_ipv4_format(ip) :
@@ -537,7 +536,6 @@ class ChoosePerHosts (ResolvingCallable):
         # 192.168.127.3   <hostname>
         # if negative, response empty 
         if out :
-            log.debug("\033[32mIBT23SEC5:\033[0m hosts output: %s for host %s" % (out, hostname))
             if len(out.split()) > 1 :
                 ip = out.split()[0] # 1st place is ip
                 if NetUtils.is_ipv4_format(ip) :
