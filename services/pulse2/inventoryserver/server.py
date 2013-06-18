@@ -313,7 +313,7 @@ class TreatInv(Thread):
                         self.logger.warn("GLPI machine couldn't be resolved, skipping the light pull.")
             except Exception, exc :
                 self.logger.error("GLPI light pull mode: %s" % str(exc))
-        if self.config.disable_create_inventory :
+        if self.config.enable_forward:
             self.logger.debug("Access to database disabled - exit the inventory creator")
             return False
 
@@ -474,7 +474,7 @@ class InventoryGetService(Singleton):
         except IOError, e:
             self.logger.error(e)
             return False
-        if self.config.disable_create_inventory :
+        if self.config.enable_forward:
             return True
 
         try:
