@@ -256,7 +256,7 @@ if __name__ == "__main__" :
 		except:
 			pass
     else:
-		cfg_file_path = "/etc/pulse2-uuid-resolver/pulse2-uuid-resolver.ini"
+		cfg_file_path = "/etc/mmc/pulse2/uuid-resolver/uuid-resolver.ini"
 
 		config = ConfigReader(cfg_file_path).config
 		host = sys.argv[1].strip()
