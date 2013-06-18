@@ -27,7 +27,7 @@ endif
 
 EXTRA_DIST = mmc.ini.in apache/mmc.conf.in
 
-CLEANFILES = mmc.ini apache/mmc.conf
+CLEANFILES = mmc.ini apache/mmc.conf pulse2-uuid-resolver.ini
 
 edit = sed \
         -e 's|@bindir[@]|$(bindir)|g' \
@@ -48,3 +48,6 @@ mmc.ini apache/mmc.conf: Makefile
 
 mmc.ini: $(srcdir)/mmc.ini.in
 apache/mmc.conf: $(srcdir)/apache/mmc.conf.in
+
+
+
