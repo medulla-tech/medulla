@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-06-07 10:55+0200\n"
-"PO-Revision-Date: 2013-06-09 23:01+0000\n"
+"POT-Creation-Date: 2013-06-17 10:09+0200\n"
+"PO-Revision-Date: 2013-06-18 08:38+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -158,36 +158,6 @@ msgstr ""
 
 #: includes/acl.inc.php:124
 msgid "You do not have required rights"
-msgstr ""
-
-#: includes/ajaxTools.php:63 includes/ajaxTools.php:69
-#: includes/PageGenerator.php:807 includes/PageGenerator.php:1063
-#: modules/base/includes/AjaxFilterLog.inc.php:112
-#: modules/base/includes/AjaxFilterLog.inc.php:116
-msgid "Previous"
-msgstr ""
-
-#: includes/ajaxTools.php:74 includes/ajaxTools.php:82
-#: includes/PageGenerator.php:821 includes/PageGenerator.php:1073
-#: modules/base/includes/AjaxFilterLog.inc.php:123
-#: modules/base/includes/AjaxFilterLog.inc.php:127
-msgid "Next"
-msgstr ""
-
-#: includes/auditCodesManager.php:33
-msgid "Daemon start"
-msgstr ""
-
-#: includes/auditCodesManager.php:34
-msgid "Daemon stop"
-msgstr ""
-
-#: includes/auditCodesManager.php:35
-msgid "MMC agent"
-msgstr ""
-
-#: includes/bgps_view.php:64
-msgid "No job."
 msgstr ""
 
 #: includes/commonErrorHandling.php:30
@@ -352,6 +322,20 @@ msgstr ""
 msgid "page"
 msgstr ""
 
+#: includes/PageGenerator.php:807 includes/PageGenerator.php:1063
+#: includes/ajaxTools.php:63 includes/ajaxTools.php:69
+#: modules/base/includes/AjaxFilterLog.inc.php:112
+#: modules/base/includes/AjaxFilterLog.inc.php:116
+msgid "Previous"
+msgstr ""
+
+#: includes/PageGenerator.php:821 includes/PageGenerator.php:1073
+#: includes/ajaxTools.php:74 includes/ajaxTools.php:82
+#: modules/base/includes/AjaxFilterLog.inc.php:123
+#: modules/base/includes/AjaxFilterLog.inc.php:127
+msgid "Next"
+msgstr ""
+
 #: includes/PageGenerator.php:840
 msgid "Pagination"
 msgstr ""
@@ -373,8 +357,8 @@ msgid "Close"
 msgstr ""
 
 #: includes/PageGenerator.php:2387 includes/PageGenerator.php:2457
-#: includes/PageGenerator.php:2483 modules/base/groups/edit.php:108
-#: modules/base/groups/members.php:188
+#: includes/PageGenerator.php:2483 modules/base/groups/members.php:188
+#: modules/base/groups/edit.php:108
 msgid "Confirm"
 msgstr ""
 
@@ -384,6 +368,22 @@ msgstr ""
 
 #: includes/PageGenerator.php:2607
 msgid "Unselect all"
+msgstr ""
+
+#: includes/auditCodesManager.php:33
+msgid "Daemon start"
+msgstr ""
+
+#: includes/auditCodesManager.php:34
+msgid "Daemon stop"
+msgstr ""
+
+#: includes/auditCodesManager.php:35
+msgid "MMC agent"
+msgstr ""
+
+#: includes/bgps_view.php:64
+msgid "No job."
 msgstr ""
 
 #: index.php:61 token.php:54
@@ -425,25 +425,6 @@ msgstr ""
 
 #: index.php:200
 msgid "Connect"
-msgstr ""
-
-#: license.php:27
-msgid ""
-"<p>\n"
-"The community version of this product is distributed in the hope that it\n"
-"will be useful, but <strong>without any warranty</strong>; without even the implied\n"
-"warranty of merchantability of fitness for a particular purpose. See the\n"
-"GNU General Public License for more details.</p>\n"
-"<p>\n"
-"Moreover, this product is a main and critical component of your information system. This community version is distributed without professional support of any kind,\n"
-"and without a tested and certified upgrade path from previous versions.\n"
-"</p>"
-msgstr ""
-
-#: license.php:38
-msgid ""
-"Click here to get more information about our support and maintenance "
-"subscription plan."
 msgstr ""
 
 #: logout/index.php:50
@@ -650,6 +631,14 @@ msgstr ""
 msgid "Computer list"
 msgstr ""
 
+#: modules/base/computers/trads.php:26
+msgid "Computer Name"
+msgstr ""
+
+#: modules/base/computers/trads.php:27
+msgid "Display Name"
+msgstr ""
+
 #: modules/base/computers/localSidebar.php:7
 msgid "All computers"
 msgstr ""
@@ -657,14 +646,6 @@ msgstr ""
 #: modules/base/computers/localSidebar.php:10
 #: modules/base/infoPackage.inc.php:282
 msgid "Add computer"
-msgstr ""
-
-#: modules/base/computers/trads.php:26
-msgid "Computer Name"
-msgstr ""
-
-#: modules/base/computers/trads.php:27
-msgid "Display Name"
 msgstr ""
 
 #: modules/base/groups/ajaxFilter.php:41 modules/base/infoPackage.inc.php:240
@@ -699,34 +680,6 @@ msgstr ""
 msgid "This group will be deleted even though it is not empty"
 msgstr ""
 
-#: modules/base/groups/edit.php:35
-#, php-format
-msgid "Group %s successfully added"
-msgstr ""
-
-#: modules/base/groups/edit.php:44
-#, php-format
-msgid "Group %s successfully modified"
-msgstr ""
-
-#: modules/base/groups/edit.php:49 modules/base/includes/auditCodes.php:32
-msgid "Add group"
-msgstr ""
-
-#: modules/base/groups/edit.php:73
-msgid ""
-"The group name can only contain letters and numeric, and must begin with a "
-"letter"
-msgstr ""
-
-#: modules/base/groups/edit.php:90
-msgid "Group name"
-msgstr ""
-
-#: modules/base/groups/edit.php:105
-msgid "Create"
-msgstr ""
-
 #: modules/base/groups/index.php:31 modules/base/infoPackage.inc.php:245
 msgid "Group list"
 msgstr ""
@@ -759,148 +712,32 @@ msgstr ""
 msgid "Group members"
 msgstr ""
 
-#: modules/base/includes/auditCodes.php:27 modules/base/users/edit.php:51
-msgid "Add user"
+#: modules/base/groups/edit.php:35
+#, php-format
+msgid "Group %s successfully added"
 msgstr ""
 
-#: modules/base/includes/auditCodes.php:28
-msgid "Enable user"
+#: modules/base/groups/edit.php:44
+#, php-format
+msgid "Group %s successfully modified"
 msgstr ""
 
-#: modules/base/includes/auditCodes.php:29
-msgid "Disable user"
+#: modules/base/groups/edit.php:49 modules/base/includes/auditCodes.php:32
+msgid "Add group"
 msgstr ""
 
-#: modules/base/includes/auditCodes.php:30
-msgid "Change user attribute"
+#: modules/base/groups/edit.php:73
+msgid ""
+"The group name can only contain letters and numeric, and must begin with a "
+"letter"
 msgstr ""
 
-#: modules/base/includes/auditCodes.php:31
-msgid "Change group attribute"
+#: modules/base/groups/edit.php:90
+msgid "Group name"
 msgstr ""
 
-#: modules/base/includes/auditCodes.php:33
-msgid "Add user to group"
-msgstr ""
-
-#: modules/base/includes/auditCodes.php:34
-msgid "Del user from group"
-msgstr ""
-
-#: modules/base/includes/auditCodes.php:35
-msgid "Del user from all group"
-msgstr ""
-
-#: modules/base/includes/auditCodes.php:36
-msgid "Change user primary group"
-msgstr ""
-
-#: modules/base/includes/auditCodes.php:37
-msgid "Del user"
-msgstr ""
-
-#: modules/base/includes/auditCodes.php:38
-msgid "Del user attribute"
-msgstr ""
-
-#: modules/base/includes/auditCodes.php:39
-msgid "Change user Password"
-msgstr ""
-
-#: modules/base/includes/auditCodes.php:40
-msgid "Del group"
-msgstr ""
-
-#: modules/base/includes/auditCodes.php:41
-msgid "Backup user"
-msgstr ""
-
-#: modules/base/includes/auditCodes.php:42
-msgid "User authentication"
-msgstr ""
-
-#: modules/base/includes/auditCodes.php:43
-msgid "Move user home"
-msgstr ""
-
-#: modules/base/includes/auditCodes.php:44
-msgid "Add organizational unit"
-msgstr ""
-
-#: modules/base/includes/auditCodes.php:46
-msgid "System user"
-msgstr ""
-
-#: modules/base/includes/auditCodes.php:47
-msgid "Group"
-msgstr ""
-
-#: modules/base/includes/auditCodes.php:48
-msgid "Attribute"
-msgstr ""
-
-#: modules/base/includes/auditCodes.php:49
-msgid "Organizational unit"
-msgstr ""
-
-#: modules/base/includes/auditCodes.php:50
-msgid "base"
-msgstr ""
-
-#: modules/base/includes/computers-i18n.php:25
-msgid "Computer's IP address"
-msgstr ""
-
-#: modules/base/includes/computers-i18n.php:26
-msgid "Computer's MAC address"
-msgstr ""
-
-#: modules/base/includes/computers-i18n.php:27
-msgid "Computer's netmask address"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:28
-msgid "Inventory"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:29
-msgid "GLPI Inventory"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:30
-msgid "Read log"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:31
-msgid "Software deployment"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:32
-msgid "Imaging management"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:33
-msgid "Download file"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:34
-msgid "Remote control"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:35
-msgid "Show Profile"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:148
-msgid "Computers list"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:171
-msgid "Delete computer"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:174
-msgid "Remove machine from group"
+#: modules/base/groups/edit.php:105
+msgid "Create"
 msgstr ""
 
 #: modules/base/includes/errorHandling.php:28
@@ -1281,6 +1118,158 @@ msgstr ""
 msgid "Refresh"
 msgstr ""
 
+#: modules/base/includes/auditCodes.php:27 modules/base/users/edit.php:51
+msgid "Add user"
+msgstr ""
+
+#: modules/base/includes/auditCodes.php:28
+msgid "Enable user"
+msgstr ""
+
+#: modules/base/includes/auditCodes.php:29
+msgid "Disable user"
+msgstr ""
+
+#: modules/base/includes/auditCodes.php:30
+msgid "Change user attribute"
+msgstr ""
+
+#: modules/base/includes/auditCodes.php:31
+msgid "Change group attribute"
+msgstr ""
+
+#: modules/base/includes/auditCodes.php:33
+msgid "Add user to group"
+msgstr ""
+
+#: modules/base/includes/auditCodes.php:34
+msgid "Del user from group"
+msgstr ""
+
+#: modules/base/includes/auditCodes.php:35
+msgid "Del user from all group"
+msgstr ""
+
+#: modules/base/includes/auditCodes.php:36
+msgid "Change user primary group"
+msgstr ""
+
+#: modules/base/includes/auditCodes.php:37
+msgid "Del user"
+msgstr ""
+
+#: modules/base/includes/auditCodes.php:38
+msgid "Del user attribute"
+msgstr ""
+
+#: modules/base/includes/auditCodes.php:39
+msgid "Change user Password"
+msgstr ""
+
+#: modules/base/includes/auditCodes.php:40
+msgid "Del group"
+msgstr ""
+
+#: modules/base/includes/auditCodes.php:41
+msgid "Backup user"
+msgstr ""
+
+#: modules/base/includes/auditCodes.php:42
+msgid "User authentication"
+msgstr ""
+
+#: modules/base/includes/auditCodes.php:43
+msgid "Move user home"
+msgstr ""
+
+#: modules/base/includes/auditCodes.php:44
+msgid "Add organizational unit"
+msgstr ""
+
+#: modules/base/includes/auditCodes.php:46
+msgid "System user"
+msgstr ""
+
+#: modules/base/includes/auditCodes.php:47
+msgid "Group"
+msgstr ""
+
+#: modules/base/includes/auditCodes.php:48
+msgid "Attribute"
+msgstr ""
+
+#: modules/base/includes/auditCodes.php:49
+msgid "Organizational unit"
+msgstr ""
+
+#: modules/base/includes/auditCodes.php:50
+msgid "base"
+msgstr ""
+
+#: modules/base/includes/computers-i18n.php:25
+msgid "Computer's IP address"
+msgstr ""
+
+#: modules/base/includes/computers-i18n.php:26
+msgid "Computer's MAC address"
+msgstr ""
+
+#: modules/base/includes/computers-i18n.php:27
+msgid "Computer's netmask address"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:28
+msgid "Inventory"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:29
+msgid "GLPI Inventory"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:30
+msgid "Read log"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:31
+msgid "Software deployment"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:32
+msgid "Imaging management"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:33
+msgid "Download file"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:34
+msgid "Remote control"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:35
+msgid "Show Profile"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:148
+msgid "Computers list"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:157
+msgid "Backup status"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:174
+msgid "Delete computer"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:177
+msgid "Remove machine from group"
+msgstr ""
+
+#: modules/base/logview/index.php:35
+msgid "LDAP operations log view"
+msgstr ""
+
 #: modules/base/logview/ajax_showlog.php:43
 msgid "Connection"
 msgstr ""
@@ -1297,60 +1286,12 @@ msgstr ""
 msgid "Extra informations"
 msgstr ""
 
-#: modules/base/logview/index.php:35
-msgid "LDAP operations log view"
-msgstr ""
-
 #: modules/base/main/favorites.php:4
 msgid "Root user cannot have favorites"
 msgstr ""
 
 #: modules/base/main/favorites.php:149
 msgid "Add this page to your favorite"
-msgstr ""
-
-#: modules/base/status/index.php:101
-msgid "Uptime: "
-msgstr ""
-
-#: modules/base/status/index.php:104
-msgid "day"
-msgstr ""
-
-#: modules/base/status/index.php:108
-msgid "hour"
-msgstr ""
-
-#: modules/base/status/index.php:111
-msgid "minute"
-msgstr ""
-
-#: modules/base/status/index.php:116
-msgid "Memory"
-msgstr ""
-
-#: modules/base/status/index.php:119
-msgid "Swap"
-msgstr ""
-
-#: modules/base/status/index.php:199
-msgid "Global view"
-msgstr ""
-
-#: modules/base/status/index.php:206
-msgid "Server status"
-msgstr ""
-
-#: modules/base/status/index.php:211
-msgid "LDAP Configuration"
-msgstr ""
-
-#: modules/base/status/index.php:218
-msgid "Hard drive partitions"
-msgstr ""
-
-#: modules/base/status/index.php:223
-msgid "Background jobs"
 msgstr ""
 
 #: modules/base/status/support.php:29
@@ -1409,6 +1350,50 @@ msgstr ""
 
 #: modules/base/status/support.php:59
 msgid "Support phone number"
+msgstr ""
+
+#: modules/base/status/index.php:101
+msgid "Uptime: "
+msgstr ""
+
+#: modules/base/status/index.php:104
+msgid "day"
+msgstr ""
+
+#: modules/base/status/index.php:108
+msgid "hour"
+msgstr ""
+
+#: modules/base/status/index.php:111
+msgid "minute"
+msgstr ""
+
+#: modules/base/status/index.php:116
+msgid "Memory"
+msgstr ""
+
+#: modules/base/status/index.php:119
+msgid "Swap"
+msgstr ""
+
+#: modules/base/status/index.php:199
+msgid "Global view"
+msgstr ""
+
+#: modules/base/status/index.php:206
+msgid "Server status"
+msgstr ""
+
+#: modules/base/status/index.php:211
+msgid "LDAP Configuration"
+msgstr ""
+
+#: modules/base/status/index.php:218
+msgid "Hard drive partitions"
+msgstr ""
+
+#: modules/base/status/index.php:223
+msgid "Background jobs"
 msgstr ""
 
 #: modules/base/users/ajaxFilter.php:79 modules/base/views/index.tpl.php:84
@@ -1842,6 +1827,25 @@ msgstr ""
 
 #: version.php:44
 msgid "web: plugin is not installed"
+msgstr ""
+
+#: license.php:27
+msgid ""
+"<p>\n"
+"The community version of this product is distributed in the hope that it\n"
+"will be useful, but <strong>without any warranty</strong>; without even the implied\n"
+"warranty of merchantability of fitness for a particular purpose. See the\n"
+"GNU General Public License for more details.</p>\n"
+"<p>\n"
+"Moreover, this product is a main and critical component of your information system. This community version is distributed without professional support of any kind,\n"
+"and without a tested and certified upgrade path from previous versions.\n"
+"</p>"
+msgstr ""
+
+#: license.php:38
+msgid ""
+"Click here to get more information about our support and maintenance "
+"subscription plan."
 msgstr ""
 
 
