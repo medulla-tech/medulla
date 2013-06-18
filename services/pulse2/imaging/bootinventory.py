@@ -526,6 +526,15 @@ class BootInventory:
 	PROCESSORT = ET.SubElement(HARDWARE,'PROCESSORT')
 	PROCESSORT.text = 'Unknown processor'
 
+	#### CPUS SECTION ###############################
+
+        for cpu in range(self.numcpu_info):
+            CPUS = ET.SubElement(CONTENT, 'CPUS')
+            PROCESSORS = ET.SubElement(CPUS, 'SPEED')
+            PROCESSORS.text = str(int(self.freqcpu_info / 1000))
+
+            PROCESSORT = ET.SubElement(CPUS, 'NAME')
+            PROCESSORT.text = 'Unknown processor'
 
 	#### NETWORK SECTION ###############################
 
