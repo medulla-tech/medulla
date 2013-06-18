@@ -433,7 +433,7 @@ class ChoosePerIP (ResolvingCallable):
         @rtype: string
  
         """
-        hostname, ifaces = target
+        hostname, fqdn, ifaces = target
         last_ip = last_netmask = None
 
         for iface in ifaces :
@@ -461,46 +461,6 @@ class ChoosePerIP (ResolvingCallable):
 
         return None
 
-class ChoosePerFQDN (ResolvingCallable):
-
-    name = "fqdn"
-
-    fqdn_path = "/usr/bin/host"
-
-    def validate(self):
-        if not os.path.exists(self.fqdn_path):
-            log.warn("Command '%s' not found, omitting '%s' method." % (self.fqdn_path, self.name))
-            return False
-        else :
-            return True
-
-
-    def __call__(self, target):
-        """ 
-        Implemented for the backward compatibility with scheduler networking. 
-
-        @param target: container having complete networking info.
-        @type target: list
-
-        @return: IP address of reachable interface
-        @rtype: string
- 
-        """
-        hostname, ifaces = target
-
-        cmd = "%s %s" % (self.fqdn_path, hostname)
-
-        out = self.run_command(cmd)
-        # <example of a positive response> :
-        # <hostname> has address 192.168.127.3
-        # <example of a negative response> :
-        # Host <hostname> not found: 3(NXDOMAIN)
-        if out :
-            if len(out.split()) > 3 :
-                ip = out.split()[3] # 4th place is ip
-                if NetUtils.is_ipv4_format(ip) :
-                    return ip
-        return None
 
 class ChoosePerHosts (ResolvingCallable):
 
@@ -527,9 +487,24 @@ class ChoosePerHosts (ResolvingCallable):
         @rtype: string
  
         """
-        hostname, ifaces = target
+        hostname, fqdn, ifaces = target
 
-        cmd = "%s hosts %s" % (self.hosts_path, hostname)
+        log.debug("'%s' method - trying to aply hostname '%s' as hosts key" % (self.name, hostname))
+        ip = self._command_apply(hostname)
+        if ip :
+            return ip
+
+        log.debug("'%s' method - trying to aply FQDN '%s' as hosts key" % (self.name, fqdn))
+        ip = self._command_apply(fqdn)
+        if ip :
+            return ip
+
+        return None
+ 
+        
+    def _command_apply(self, key):
+        
+        cmd = "%s hosts %s" % (self.hosts_path, key)
 
         out = self.run_command(cmd)
         # <example of a positive response> :
@@ -540,7 +515,10 @@ class ChoosePerHosts (ResolvingCallable):
                 ip = out.split()[0] # 1st place is ip
                 if NetUtils.is_ipv4_format(ip) :
                     return ip
+
         return None
+
+     
 
 
 class ChooseFirstComplete (ResolvingCallable) :
@@ -559,7 +537,7 @@ class ChooseFirstComplete (ResolvingCallable) :
         @rtype: string
  
         """
-        hostname, ifaces = target 
+        hostname, fqdn, ifaces = target 
         for iface in ifaces :
             if NetUtils.has_enough_info(iface) :
                 return iface["ip"]
@@ -590,7 +568,7 @@ class ChoosePerNMBLookup (ResolvingCallable) :
         @rtype: string
 
         """
-        hostname, ifaces = target 
+        hostname, fqdn, ifaces = target 
 
         cmd = "%s -U server -R '%s'" % (self.netbios_path, hostname)
 
@@ -717,11 +695,11 @@ class IPResolve (IPResolversContainer) :
             log.warn("Invalid target format.")
             return False
 
-        if len(target) != 2 :
+        if len(target) != 3 :
             log.warn("Invalid target format.")
             return False
 
-        hostname, ifaces = target
+        hostname, fqdn, ifaces = target
 
         if not isinstance(ifaces, dict) :
             log.warn("Invalid target format.")
@@ -747,7 +725,7 @@ class IPResolve (IPResolversContainer) :
         @type target: list
 
         Target structure :
-          (hostname, interfaces)
+          (hostname, fqdn, interfaces)
              interfaces = [iface1, iface2,..., ifacen]
                iface = {"ip":, "mac":, "netmask":, "gateway":,}
         """

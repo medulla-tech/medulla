@@ -39,6 +39,7 @@ class SchedulerNetUtils :
         @rtype: tuple
         """
         hostname = target["shortname"]
+        fqdn = target["fqdn"]
         ips = target["ips"]
         macs = target["macs"]
         if "netmasks" in target :
@@ -56,7 +57,7 @@ class SchedulerNetUtils :
             ifaces.append(iface)
             i += 1
 
-        return (hostname, ifaces)
+        return (hostname, fqdn, ifaces)
 
     @classmethod
     def get_ip_resolve(cls):

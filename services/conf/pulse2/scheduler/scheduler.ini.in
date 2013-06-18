@@ -99,8 +99,7 @@ scheduler_proxy_path = @sbindir@/pulse2-scheduler-proxy
 # prefered method to reach a client
 # available:
 # - ip: test if a machine exists on the same network
-# - fqdn: attempt to perform a DNS query on FQDN
-# - hosts: same, no DNS query
+# - hosts: query to hosts database (by getent)
 # - netbios: attempt to do a nmblookup on IP adress
 # tests are performed using ping
 # resolv_order = ip netbios fqdn hosts
