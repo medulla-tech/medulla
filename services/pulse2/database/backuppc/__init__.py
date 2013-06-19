@@ -315,6 +315,34 @@ class BackuppcDatabase(DatabaseHelper):
     
     # =====================================================================         
     
+    def get_backupservers_list(self):
+        session = create_session()
+        ret = session.query(Backup_servers).all()
+        session.close()
+        return dbOjb2dict(ret) or []
+    
+    def add_backupserver(self,entityuuid,serverURL):
+        session = create_session()
+        server = Backup_servers()
+        # Setting host fields
+        server.entity_uuid = entityuuid
+        server.backupserver_url = serverURL
+        #
+        session.add(server)
+        session.flush()
+        session.close()
+        return dbOjb2dict(server) or {}
+    
+    def remove_backupserver(self,entityuuid):
+        session = create_session()
+        ret = session.query(Backup_servers).filter(Backup_servers.entity_uuid == entityuuid).first()
+        if ret:
+            session.delete(ret)
+            session.flush()
+        else:
+            logger.warning("Can't find period profile with id = %d" % id)
+        session.close()
+    
 ##############################################################################################################
 class Backup_servers(database_helper.DBObject):
     to_be_exported = ['entity_uuid', 'backupserver_url']
