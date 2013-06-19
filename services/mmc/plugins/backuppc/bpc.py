@@ -481,7 +481,6 @@ def set_backup_for_host(uuid):
     server_url = getBackupServerByUUID(uuid)
     if not server_url: return
     config = get_host_config('',server_url)['general_config']
-    if config['err']: return config
     newid = str(int(max(config['Hosts'].keys()))+1)
     config['Hosts'][newid] = {'host':uuid,'dhcp':'0','user':'root','moreUsers':'0'}
     res = set_host_config('',config,1,server_url)
@@ -499,10 +498,12 @@ def set_backup_for_host(uuid):
     # Setting nmblookup cmds and Rsync cmds in conf
     # TODO : read NmbLookupCmd from ini file
     config = {}
-    config['NmbLookupCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolve -A $host -f -g'
-    config['NmbLookupFindHostCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolve $host'
+    config['NmbLookupCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolver -A $host -f -g'
+    config['NmbLookupFindHostCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolver $host'
     config['RsyncClientCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l root $hostIP $rsyncPath $argList+'
     config['RsyncClientRestoreCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l root $hostIP $rsyncPath $argList+'
+    config['XferMethod'] = 'rsync'
+    config['PingCmd'] = '/bin/true'
     set_host_config(uuid,config)
     # Adding host to the DB
     try:

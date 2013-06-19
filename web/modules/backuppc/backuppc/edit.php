@@ -63,10 +63,12 @@ if (isset($_POST['bconfirm'],$_POST['host'])){
     }
     
     // Rsync and NmbLookup command lines
-    $cfg['NmbLookupCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolve -A $host -f -g';
-    $cfg['NmbLookupFindHostCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolve $host';
+    $cfg['NmbLookupCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolver -A $host -f -g';
+    $cfg['NmbLookupFindHostCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolver $host';
     $cfg['RsyncClientCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l root $hostIP $rsyncPath $argList+';
     $cfg['RsyncClientRestoreCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l root $hostIP $rsyncPath $argList+';
+    $cfg['XferMethod'] = 'rsync';
+    $cfg['PingCmd'] = '/bin/true';
     
     set_host_config($_POST['host'], $cfg);
 }
