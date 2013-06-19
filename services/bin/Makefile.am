@@ -24,4 +24,4 @@ dist_sbin_SCRIPTS = pulse2-package-server pulse2-package-server-register-imaging
 	pulse2-ping pulse2-tcp-sproxy pulse2-setup pulse2-load-defaults \
 	pulse2-scheduler-proxy pulse2-extract-glpi-search-options
 
-dist_bin_SCRIPTS = pulse2-uuid-resolve
+dist_bin_SCRIPTS = pulse2-uuid-resolver

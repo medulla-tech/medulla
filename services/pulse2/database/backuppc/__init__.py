@@ -88,7 +88,7 @@ class BackuppcDatabase(DatabaseHelper):
         Initialize all SQLalchemy mappers needed for the BackupPC database
         """
         # version
-        self.version = Table("Version", self.metadata, autoload = True)
+        self.version = Table("version", self.metadata, autoload = True)
         # Backup servers
         self.backup_servers = Table("backup_servers", self.metadata, autoload = True)
         mapper(Backup_servers, self.backup_servers)
@@ -298,6 +298,10 @@ class BackuppcDatabase(DatabaseHelper):
         session.flush()
         session.close()
         return dbOjb2dict(host) or {} 
+    
+    # =====================================================================
+    # BACKUP SERVER FUNCTIONS
+    # =====================================================================         
         
     def get_backupserver_by_entity(self,entity_uuid):
         session = create_session()
@@ -308,7 +312,9 @@ class BackuppcDatabase(DatabaseHelper):
             ret = ''
         session.close()
         return ret
-        
+    
+    # =====================================================================         
+    
 ##############################################################################################################
 class Backup_servers(database_helper.DBObject):
     to_be_exported = ['entity_uuid', 'backupserver_url']

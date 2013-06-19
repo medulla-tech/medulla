@@ -490,6 +490,14 @@ def set_backup_for_host(uuid):
     if not is_added:
         logger.error("Unable to set host on BackupPC server")
         return {'err':22,'errtext':'Unable to set host on BackupPC server'}
+    # Setting nmblookup cmds and Rsync cmds in conf
+    # TODO : read NmbLookupCmd from ini file
+    config = {}
+    config['NmbLookupCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolve -A $host -f -g'
+    config['NmbLookupFindHostCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolve $host'
+    config['RsyncClientCmd'] = '$sshPath -q -x -l root $hostIP $rsyncPath $argList+'
+    config['RsyncClientRestoreCmd'] = '$sshPath -q -x -l root $hostIP $rsyncPath $argList+'
+    set_host_config(uuid,config)
     # Adding host to the DB
     try:
         BackuppcDatabase().add_host(uuid)
@@ -644,6 +652,8 @@ def get_host_status(host):
         result['status'] += ['backup failed']
     if 'done' in statuslines:
         result['status'] += ['done']
+    if '(idle)' in statuslines:
+        result['status'] += ['idle']
     if 'in progress' in statuslines:
         result['status'] += ['in progress']
     if len(result['status']) == 0:
