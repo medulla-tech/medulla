@@ -501,8 +501,8 @@ def set_backup_for_host(uuid):
     config = {}
     config['NmbLookupCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolve -A $host -f -g'
     config['NmbLookupFindHostCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolve $host'
-    config['RsyncClientCmd'] = '$sshPath -q -x -l root $hostIP $rsyncPath $argList+'
-    config['RsyncClientRestoreCmd'] = '$sshPath -q -x -l root $hostIP $rsyncPath $argList+'
+    config['RsyncClientCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l root $hostIP $rsyncPath $argList+'
+    config['RsyncClientRestoreCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l root $hostIP $rsyncPath $argList+'
     set_host_config(uuid,config)
     # Adding host to the DB
     try:
