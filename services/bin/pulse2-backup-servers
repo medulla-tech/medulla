@@ -1,0 +1,82 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+# (c) 2008-2012 Mandriva, http://www.mandriva.com/
+#
+# This file is part of Pulse 2, http://pulse2.mandriva.org
+#
+# Pulse 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Pulse 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Pulse 2; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+"""
+Little script to manage backuppc servers of the Pulse 2 backuppc module
+"""
+
+import sys
+from optparse import OptionParser
+from mmc.plugins import backuppc
+
+def initdb():
+    backuppc.activate()
+    return backuppc.BackuppcDatabase()
+
+def listBackupServers():
+    db = initdb()
+    servers = db.get_backupservers_list()
+    if not servers:
+	print "No entry found."
+	return
+    print "="*80
+    print "Entity UUID\tBackupPC Server CGI URL"
+    print "="*80
+    for server in servers:
+        print "%s\t\t%s" % (server['entity_uuid'],server['backupserver_url'])
+    print "="*80
+
+
+if __name__ == "__main__":
+    usage = "usage: %prog [--list] [--add] [--remove] [--entity UUID] [--url URL]"
+    parser = OptionParser(usage=usage)
+    parser.add_option("-a", "--add", action="store_true", dest="add", default=False)
+    parser.add_option("-r", "--remove", action="store_true", dest="remove", default=False)
+    parser.add_option("-e", "--entity", action="store", dest="entity")
+    parser.add_option("-p", "--url", action="store", dest="url", default=False)
+    parser.add_option("-l", "--list", action="store_true", dest="list", default=False)
+
+    (options, args) = parser.parse_args()
+
+    if options.list:
+	listBackupServers()
+        sys.exit(0)
+
+    if not options.add and not options.remove:
+        parser.print_help()
+        sys.exit(1)
+
+    if not options.entity:
+        print "Error: No entity UUID specified"
+        parser.print_help()
+        sys.exit(1)
+
+    if options.add:
+	if options.url:
+	    initdb().add_backupserver(options.entity.upper(),options.url)
+	else:
+	    print "Error: No Backup server URL specified"
+    else:
+        initdb().remove_backupserver(options.entity.upper())
+
+    sys.exit(0)
+
