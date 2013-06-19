@@ -48,7 +48,11 @@ class Target(object):
         return self.target_name
 
     def getShortName(self):
-        return self.target_name
+        try :
+            return self.target_name.split(".")[0]
+        except :
+            logging.getLogger().warn("Unable to get shortname from '%s'" % self.target_name)
+            return self.target_name
 
     def getIps(self):
         return self.target_ipaddr.split('||')

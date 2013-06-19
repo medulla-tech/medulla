@@ -489,22 +489,7 @@ class ChoosePerHosts (ResolvingCallable):
         """
         hostname, fqdn, ifaces = target
 
-        log.debug("'%s' method - trying to aply hostname '%s' as hosts key" % (self.name, hostname))
-        ip = self._command_apply(hostname)
-        if ip :
-            return ip
-
-        log.debug("'%s' method - trying to aply FQDN '%s' as hosts key" % (self.name, fqdn))
-        ip = self._command_apply(fqdn)
-        if ip :
-            return ip
-
-        return None
- 
-        
-    def _command_apply(self, key):
-        
-        cmd = "%s hosts %s" % (self.hosts_path, key)
+        cmd = "%s hosts %s" % (self.hosts_path, hostname)
 
         out = self.run_command(cmd)
         # <example of a positive response> :
@@ -518,7 +503,48 @@ class ChoosePerHosts (ResolvingCallable):
 
         return None
 
-     
+class ChoosePerFQDN (ResolvingCallable):
+
+    name = "fqdn"
+
+    hosts_path = "/usr/bin/getent"
+
+    def validate(self):
+        if not os.path.exists(self.hosts_path):
+            log.warn("Command '%s' not found, omitting '%s' method." % (self.hosts_path, self.name))
+            return False
+        else :
+            return True
+
+
+    def __call__(self, target):
+        """ 
+        Implemented for the backward compatibility with scheduler networking. 
+
+        @param target: container having complete networking info.
+        @type target: list
+
+        @return: IP address of reachable interface
+        @rtype: string
+ 
+        """
+        hostname, fqdn, ifaces = target
+
+        cmd = "%s hosts %s" % (self.hosts_path, fqdn)
+
+        out = self.run_command(cmd)
+        # <example of a positive response> :
+        # 192.168.127.3   <hostname>
+        # if negative, response empty 
+        if out :
+            if len(out.split()) > 1 :
+                ip = out.split()[0] # 1st place is ip
+                if NetUtils.is_ipv4_format(ip) :
+                    return ip
+
+        return None
+
+    
 
 
 class ChooseFirstComplete (ResolvingCallable) :
