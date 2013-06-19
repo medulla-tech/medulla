@@ -177,3 +177,13 @@ def set_backup_for_host(uuid):
 
 def get_xfer_log(host,backupnum):
     return bpc.get_xfer_log(host,backupnum)
+
+# Function to associate entities to backup servers
+# To be used by external script
+# TODO : remove this
+
+def get_backupservers_list():
+    return BackuppcDatabase().get_backupservers_list()
+
+def add_backupserver(entityuuid,serverURL):
+    return BackuppcDatabase().add_backupserver(entityuuid,serverURL)

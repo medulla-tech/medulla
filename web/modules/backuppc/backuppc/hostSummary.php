@@ -94,6 +94,7 @@ $status_strings = array(
     'done' =>'<span style="color:green">'. _T('Backup up to date','backuppc').'</span>',
     'nothing' =>'<span style="color:red">'. _T('This computer has never been backed up','backuppc').'</span>',
     'idle' =>'<span style="color:black">'. _T('Idle','backuppc').'</span>',
+    'canceled' =>'<span style="color:black">'. _T('Cancelled by user','backuppc').'</span>',
     'in progress' => '<span style="color:orange">'._T('Backup in progress').'</span>'
     );
 

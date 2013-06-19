@@ -71,8 +71,8 @@ def send_request(params,url=''):
     If success, returns HTML response.
     """
     # Getting BackupServer URL
-    url = 'http://' + (url or getBackupServerByUUID(params['host'].upper()) )
-    if url == 'http://' : return
+    url = url or getBackupServerByUUID(params['host'].upper())
+    if not url: return
     # Host to lower case
     if 'host' in params: params['host'] = params['host'].lower()
     # Converting params dict to an http query string
@@ -83,6 +83,7 @@ def send_request(params,url=''):
         return unicode(response.read(),'utf8').encode('ascii', 'xmlcharrefreplace')
     except:
         logger.error("Unable to connect to BackupPC server : %s" % url)
+        return ''
 
 
 # ==========================================================================
@@ -271,7 +272,7 @@ def get_file_versions(host,share_name,filepath):
 
 @deferred
 def download_file(filepath,params):
-    url = 'http://'+getBackupServerByUUID(params['host'])
+    url = getBackupServerByUUID(params['host'])
     # Host to lower case
     if 'host' in params: params['host'] = params['host'].lower()
     # Converting params dict to an http get string
@@ -468,18 +469,23 @@ def set_host_config(host,config,globalconfig=0,backupserver=''):
     if 'BackupFilesExclude' in _config:
         params['vflds.BackupFilesExclude'] = _config['RsyncShareName']
     # Sending HTTP request
-    send_request(params,backupserver)
+    html = send_request(params,backupserver)
+    if not html:
+        return _CONNECTION_ERROR
+    if getHTMLerr(html): 
+        return getHTMLerr(html)
+    return {'err':0}
     
     
 def set_backup_for_host(uuid):
     server_url = getBackupServerByUUID(uuid)
     if not server_url: return
     config = get_host_config('',server_url)['general_config']
+    if config['err']: return config
     newid = str(int(max(config['Hosts'].keys()))+1)
     config['Hosts'][newid] = {'host':uuid,'dhcp':'0','user':'root','moreUsers':'0'}
-    html = set_host_config('',config,1,server_url)
-    if getHTMLerr(html): 
-        return getHTMLerr(html)
+    res = set_host_config('',config,1,server_url)
+    if res['err']: return res
     # Checking if host has been added, then add it to DB
     config = get_host_config('',server_url)['general_config']
     is_added = 0
@@ -656,6 +662,8 @@ def get_host_status(host):
         result['status'] += ['idle']
     if 'in progress' in statuslines:
         result['status'] += ['in progress']
+    if 'canceled by user' in statuslines:
+        result['status'] += ['canceled']
     if len(result['status']) == 0:
         result['status'] += ['nothing']
     try:
