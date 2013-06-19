@@ -337,7 +337,7 @@ class Pulse2ConfigFile(object):
     """
     clsnames = [ 'PluginsPkgConfig', 'PluginsImagingConfig', # 'PluginsGlpiConfig',
                  'PluginsBaseConfig', 'PluginsDyngroupConfig', 'PluginsInventoryConfig',
-                 'PluginsPulse2Config', 'PluginsMscConfig', 'InventoryServerConfig',
+                 'PluginsPulse2Config', 'PluginsMscConfig', 'PluginsBackuppcConfig', 'InventoryServerConfig',
                  'LaunchersConfig', 'PackageServerConfig', 'SchedulerConfig',
                  'ImagingServerConfig', 'MMCAgentConfig' ]
     path = None
@@ -488,6 +488,9 @@ class PluginsPulse2Config(Pulse2ConfigFile):
 class PluginsMscConfig(Pulse2ConfigFile):
     path = 'plugins/msc.ini'
 
+class PluginsBackuppcConfig(Pulse2ConfigFile):
+    path = 'plugins/backuppc.ini'
+
 class InventoryServerConfig(LoggingConfig):
     path = 'pulse2/inventory-server/inventory-server.ini'
     log_path = 'pulse2-inventory-server.log'
@@ -537,7 +540,7 @@ class SetupApp(object):
             log.error('Can not find SQL snippets in %s' % self.sqldir)
 
         # Get db modules list
-        self.dbmodules = [ 'dyngroup', 'imaging', 'inventory', 'msc', 'pulse2' ]
+        self.dbmodules = [ 'dyngroup', 'imaging', 'inventory', 'msc', 'pulse2', 'backuppc' ]
 
         # Load conf files, if existing
         # self.confs will contain path->ConfigParser objects dictionary
@@ -864,6 +867,11 @@ class SetupApp(object):
         self.confs['plugins/pulse2.ini'].set('database', 'dbhost', self.config['dbhost'])
         self.confs['plugins/pulse2.ini'].set('database', 'dbuser', self.config['dbuser'])
         self.confs['plugins/pulse2.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
+        
+        # backuppc
+        self.confs['plugins/backuppc.ini'].set('database', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/backuppc.ini'].set('database', 'dbuser', self.config['dbuser'])
+        self.confs['plugins/backuppc.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
 
         # audit module (base MMC plugin)
         baseconf = self.confs['plugins/base.ini']
@@ -896,6 +904,9 @@ class SetupApp(object):
         # TODO: ask for the user. For the moment, choose inventory
         self.confs['plugins/inventory.ini'].set('main', 'disable', 0)
         self.confs['plugins/base.ini'].set('computers', 'method', 'inventory')
+
+	# Enable BackupPC module
+        self.confs['plugins/backuppc.ini'].set('main', 'disable', 0)
 
         # Ensure various dirs are created
         for path in [ self.confs['plugins/base.ini'].get('backup-tools', 'destpath'),
