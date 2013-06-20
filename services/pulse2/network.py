@@ -596,7 +596,7 @@ class ChoosePerNMBLookup (ResolvingCallable) :
         """
         hostname, fqdn, ifaces = target 
 
-        cmd = "%s -U server -R '%s'" % (self.netbios_path, hostname)
+        cmd = "%s '%s'" % (self.netbios_path, hostname)
 
         out = self.run_command(cmd)
         # <example of a positive response> :
