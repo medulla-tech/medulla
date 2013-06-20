@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-17 01:00+0200\n"
+"POT-Creation-Date: 2013-06-20 11:18+0200\n"
 "PO-Revision-Date: 2013-03-26 16:52+0000\n"
 "Last-Translator: Leonardo Coelho <leonardoc@mandriva.com.br>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
@@ -261,10 +261,10 @@ msgstr "Serviço de boot já foi criado"
 msgid "Boot menu"
 msgstr "Menu de boot"
 
-#: modules/imaging/imaging/addimage.php:63
-#: modules/imaging/imaging/addservice.php:63
 #: modules/imaging/imaging/bootmenu_remove.php:73
 #: modules/imaging/imaging/showtarget.php:79
+#: modules/imaging/imaging/addimage.php:63
+#: modules/imaging/imaging/addservice.php:63
 #: modules/imaging/manage/service_show_used.php:72
 #, php-format
 msgid "Boot menu generation failed for computer: %s"
@@ -272,12 +272,12 @@ msgstr "Geração do menu de boot falhou para o computador: %s"
 
 #: modules/imaging/imaging/showtarget.php:91
 #: modules/imaging/manage/imaging_server_link.php:64
+#: modules/imaging/manage/service_remove.php:48
 #: modules/imaging/manage/master_add.php:54
 #: modules/imaging/manage/master_remove.php:42
 #: modules/imaging/manage/service_add.php:54
-#: modules/imaging/manage/service_del.php:48
-#: modules/imaging/manage/service_remove.php:48
 #: modules/imaging/manage/service_show_used.php:84
+#: modules/imaging/manage/service_del.php:48
 #, php-format
 msgid "Boot menu generation failed for package server: %s"
 msgstr "Geração de menu de inicialização falha para o servidor de pacotes: %s"
@@ -344,14 +344,14 @@ msgid "Can't delete this post-imaging script, it's a global script."
 msgstr "Não é possivel deletar este script pós-imagem, ele é um script global."
 
 #: modules/imaging/imaging/bootmenu_remove.php:96
-#: modules/imaging/imaging/configure.php:382
-#: modules/imaging/imaging/images_delete.php:61
-#: modules/imaging/imaging/images_iso.php:102
 #: modules/imaging/imaging/showtarget.php:170
-#: modules/imaging/manage/master_delete.php:57
-#: modules/imaging/manage/master_iso.php:85
-#: modules/imaging/manage/master_remove.php:72
+#: modules/imaging/imaging/configure.php:382
+#: modules/imaging/imaging/images_iso.php:102
+#: modules/imaging/imaging/images_delete.php:61
 #: modules/imaging/manage/postinstall_delete.php:69
+#: modules/imaging/manage/master_delete.php:57
+#: modules/imaging/manage/master_remove.php:72
+#: modules/imaging/manage/master_iso.php:85
 #: modules/imaging/manage/service_show_used.php:149
 msgid "Cancel"
 msgstr "Cancelar"
@@ -374,8 +374,8 @@ msgstr ""
 "Clique em \"Forçar Geração\" se você deseja forçar a atualização de menu de "
 "inicialização."
 
-#: modules/imaging/imaging/configure.php:47
 #: modules/imaging/imaging/showtarget.php:150
+#: modules/imaging/imaging/configure.php:47
 #: modules/imaging/manage/service_show_used.php:129
 msgid "Computer"
 msgstr "Computador"
@@ -506,10 +506,10 @@ msgstr "Padrão num WOL"
 
 #: modules/imaging/imaging/bootmenu.php:257
 #: modules/imaging/includes/logs.inc.php:34
-#: modules/imaging/manage/ajaxLogs.php:58
+#: modules/imaging/manage/postinstall_delete.php:68
 #: modules/imaging/manage/ajaxMasterLevel2.php:68
 #: modules/imaging/manage/ajaxPostInstallLevel2.php:53
-#: modules/imaging/manage/postinstall_delete.php:68
+#: modules/imaging/manage/ajaxLogs.php:58
 msgid "Delete"
 msgstr "Excluir"
 
@@ -540,18 +540,18 @@ msgstr "Deletar Serviço"
 msgid "Delete the image"
 msgstr "Exluir a imagem"
 
-#: modules/imaging/imaging/ajaxImages.php:157
 #: modules/imaging/imaging/ajaxServices.php:99
 #: modules/imaging/imaging/bootmenu.php:349
+#: modules/imaging/imaging/ajaxImages.php:157
 #: modules/imaging/imaging/images.php:108
 #: modules/imaging/includes/post_install_script.php:65
 #: modules/imaging/manage/ajaxAvailableImagingServer.php:76
-#: modules/imaging/manage/ajaxBootmenu.php:98
 #: modules/imaging/manage/ajaxMasterLevel2.php:108
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:90
 #: modules/imaging/manage/ajaxServiceLevel2.php:93
 #: modules/imaging/manage/master_edit.php:57
 #: modules/imaging/manage/service_edit.php:59
+#: modules/imaging/manage/ajaxPostInstallLevel2.php:90
+#: modules/imaging/manage/ajaxBootmenu.php:98
 msgid "Description"
 msgstr "Descrição"
 
@@ -564,24 +564,24 @@ msgid "Display a groups of computers"
 msgstr "Exibir um grupo de computadores"
 
 #: modules/imaging/imaging/addimage.php:136
-#: modules/imaging/imaging/addservice.php:120
 #: modules/imaging/imaging/bootmenu.php:167
 #: modules/imaging/imaging/bootmenu.php:352
-#: modules/imaging/manage/ajaxBootmenu.php:100
-#: modules/imaging/manage/bootmenu_edit.php:86
+#: modules/imaging/imaging/addservice.php:120
 #: modules/imaging/manage/master_add.php:105
 #: modules/imaging/manage/service_add.php:104
+#: modules/imaging/manage/ajaxBootmenu.php:100
+#: modules/imaging/manage/bootmenu_edit.php:86
 msgid "Displayed"
 msgstr "Mostrado"
 
 #: modules/imaging/imaging/addimage.php:140
-#: modules/imaging/imaging/addservice.php:124
 #: modules/imaging/imaging/bootmenu.php:177
 #: modules/imaging/imaging/bootmenu.php:355
-#: modules/imaging/manage/ajaxBootmenu.php:102
-#: modules/imaging/manage/bootmenu_edit.php:96
+#: modules/imaging/imaging/addservice.php:124
 #: modules/imaging/manage/master_add.php:109
 #: modules/imaging/manage/service_add.php:108
+#: modules/imaging/manage/ajaxBootmenu.php:102
+#: modules/imaging/manage/bootmenu_edit.php:96
 msgid "Displayed on WOL"
 msgstr "Exibido num WOL"
 
@@ -757,8 +757,8 @@ msgstr "Forçar Geração"
 msgid "Force raw backup mode"
 msgstr "Forçar modo de backup raw"
 
-#: modules/imaging/imaging/ajaxImages.php:162
 #: modules/imaging/imaging/ajaxServices.php:102
+#: modules/imaging/imaging/ajaxImages.php:162
 msgid "From profile"
 msgstr "De perfil"
 
@@ -1004,15 +1004,15 @@ msgstr "Criação de iso da master <strong>%s</strong> em execução."
 msgid "Kernel parameters"
 msgstr "Parâmetros de kernel"
 
-#: modules/imaging/imaging/ajaxImages.php:155
 #: modules/imaging/imaging/ajaxServices.php:98
 #: modules/imaging/imaging/bootmenu.php:347
+#: modules/imaging/imaging/ajaxImages.php:155
 #: modules/imaging/imaging/images.php:104
-#: modules/imaging/manage/ajaxBootmenu.php:96
 #: modules/imaging/manage/ajaxMasterLevel2.php:106
 #: modules/imaging/manage/ajaxServiceLevel2.php:91
 #: modules/imaging/manage/master_edit.php:53
 #: modules/imaging/manage/service_edit.php:54
+#: modules/imaging/manage/ajaxBootmenu.php:96
 msgid "Label"
 msgstr "Título"
 
@@ -1300,8 +1300,8 @@ msgid "Removal of master failed"
 msgstr "Remoção do master falhou"
 
 #: modules/imaging/imaging/bootmenu_remove.php:95
-#: modules/imaging/imaging/images_delete.php:60
 #: modules/imaging/imaging/showtarget.php:169
+#: modules/imaging/imaging/images_delete.php:60
 #: modules/imaging/manage/master_delete.php:56
 #: modules/imaging/manage/master_remove.php:71
 #: modules/imaging/manage/service_show_used.php:148
@@ -1312,8 +1312,8 @@ msgstr "Excluir"
 msgid "Remove a service from a target"
 msgstr "Remover um serviço de um destino"
 
-#: modules/imaging/imaging/ajaxImages.php:71
 #: modules/imaging/imaging/bootmenu_remove.php:91
+#: modules/imaging/imaging/ajaxImages.php:71
 #: modules/imaging/infoPackage.inc.php:297
 #: modules/imaging/manage/ajaxMasterLevel2.php:56
 msgid "Remove from boot menu"
@@ -1441,20 +1441,20 @@ msgid "Select this hard disk"
 msgstr "Selecione o disco rígido"
 
 #: modules/imaging/imaging/addimage.php:134
-#: modules/imaging/imaging/addservice.php:118
 #: modules/imaging/imaging/bootmenu.php:162
-#: modules/imaging/manage/bootmenu_edit.php:81
+#: modules/imaging/imaging/addservice.php:118
 #: modules/imaging/manage/master_add.php:103
 #: modules/imaging/manage/service_add.php:102
+#: modules/imaging/manage/bootmenu_edit.php:81
 msgid "Selected by default"
 msgstr "Selecionado por padrão"
 
 #: modules/imaging/imaging/addimage.php:138
-#: modules/imaging/imaging/addservice.php:122
 #: modules/imaging/imaging/bootmenu.php:172
-#: modules/imaging/manage/bootmenu_edit.php:91
+#: modules/imaging/imaging/addservice.php:122
 #: modules/imaging/manage/master_add.php:107
 #: modules/imaging/manage/service_add.php:106
+#: modules/imaging/manage/bootmenu_edit.php:91
 msgid "Selected by default on WOL"
 msgstr "Selecionado por padrão num WOL"
 
@@ -1790,11 +1790,11 @@ msgid "Uptime: "
 msgstr "Tempo ligado: "
 
 #: modules/imaging/imaging/bootmenu.php:182
-#: modules/imaging/manage/ajaxConfiguration.php:183
-#: modules/imaging/manage/bootmenu_edit.php:101
-#: modules/imaging/manage/master_edit.php:70
 #: modules/imaging/manage/postinstall_edit.php:119
+#: modules/imaging/manage/master_edit.php:70
 #: modules/imaging/manage/service_edit.php:69
+#: modules/imaging/manage/bootmenu_edit.php:101
+#: modules/imaging/manage/ajaxConfiguration.php:183
 msgid "Validate"
 msgstr "Validar"
 

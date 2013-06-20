@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-17 01:00+0200\n"
+"POT-Creation-Date: 2013-06-20 11:18+0200\n"
 "PO-Revision-Date: 2013-03-21 16:42+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Spanish (Spain) (http://transifex.mandriva.com/projects/p/"
@@ -48,9 +48,9 @@ msgid ""
 "be rewritten</strong></p>"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/add_groups.php:218
 #: modules/dyngroup/dyngroup/import_from_file.php:45
 #: modules/dyngroup/dyngroup/save.php:98
+#: modules/dyngroup/dyngroup/add_groups.php:218
 #, php-format
 msgid "A group already exists with name '%s'"
 msgstr ""
@@ -60,8 +60,8 @@ msgstr ""
 #: modules/dyngroup/dyngroup/creator.php:243
 #: modules/dyngroup/dyngroup/creator.php:251
 #: modules/dyngroup/dyngroup/creator.php:255
-#: modules/dyngroup/includes/autocomplete.php:29
 #: modules/dyngroup/includes/double.php:36
+#: modules/dyngroup/includes/autocomplete.php:29
 msgid "Add"
 msgstr ""
 
@@ -288,8 +288,8 @@ msgstr ""
 msgid "Edit a dynamic group"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/edithead.php:52
 #: modules/dyngroup/dyngroup/groupshead.php:37
+#: modules/dyngroup/dyngroup/edithead.php:52
 msgid "Edit a static group"
 msgstr ""
 
@@ -357,8 +357,8 @@ msgstr ""
 msgid "Group share"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/add_groups.php:166
 #: modules/dyngroup/dyngroup/import_from_file.php:41
+#: modules/dyngroup/dyngroup/add_groups.php:166
 msgid "Group successfully created"
 msgstr ""
 
@@ -441,8 +441,8 @@ msgid "List all groups of computers"
 msgstr ""
 
 #: modules/dyngroup/dyngroup/creator.php:245
-#: modules/dyngroup/includes/autocomplete.php:31
 #: modules/dyngroup/includes/double.php:39
+#: modules/dyngroup/includes/autocomplete.php:31
 msgid "Modify"
 msgstr ""
 
@@ -642,9 +642,9 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/add_groups.php:213
 #: modules/dyngroup/dyngroup/save.php:100
 #: modules/dyngroup/dyngroup/save.php:102
+#: modules/dyngroup/dyngroup/add_groups.php:213
 msgid "You must specify a group name"
 msgstr ""
 
