@@ -512,10 +512,8 @@ class ImagingServerConfig(LoggingConfig):
     log_path = 'pulse2-imaging-server.log'
 
 class SetupApp(object):
-    defaults = {'imaging.service.enable': True,
-                'inventory.service.enable': True,
-                'package.service.enable': True}
 
+    defaults = {}
     def __init__(self, options):
         self.config = {}
         self.options = options
@@ -586,6 +584,7 @@ class SetupApp(object):
         else:
             return read_ip(name, default)
 
+
     def load_defaults(self):
         """ Load default values from config files objects
         Values are set from existing config files or default values in *Config classes.
@@ -594,6 +593,11 @@ class SetupApp(object):
         Note 2: current version does not support diffenriated db host or credentials. All
           db must be on the same host. Default value are taken from plugins/pulse2.ini file.
         """
+        self.defaults['imaging.service.enable'] = self.options["server_imaging"] 
+        self.defaults['inventory.service.enable'] = self.options["server_inventory"] 
+        self.defaults['package.service.enable'] = self.options["server_package"] 
+        
+
         self.defaults['ldapurl'] = self.options['ldapurl'] or self.confs['plugins/base.ini'].get('ldap', 'ldapurl')
         self.defaults['ldapbasedn'] = self.options['ldapbasedn'] or self.confs['plugins/base.ini'].get('ldap', 'baseDN')
         self.defaults['ldapadmindn'] = self.options['ldapadmindn'] or self.confs['plugins/base.ini'].get('ldap', 'rootName')
@@ -1054,7 +1058,16 @@ if __name__ == '__main__':
                       help="LDAP admin DN")
     parser.add_option("--ldap-passwd", dest="ldappasswd",
                       help="LDAP administrator password")
-
+    parser.add_option("--disable-inventory", dest="disable_inventory",
+                      default=False, action="store_true", 
+                      help="Disable inventory server")
+    parser.add_option("--disable-imaging", dest="disable_imaging",
+                      default=False, action="store_true", 
+                      help="Disable imaging server")
+    parser.add_option("--disable-package", dest="disable_package",
+                      default=False, action="store_true",
+                      help="Disable package server")
+ 
     # Parse and analyse args
     (options, args) = parser.parse_args()
     if options.debug:
@@ -1081,6 +1094,9 @@ if __name__ == '__main__':
         'ldapbasedn': options.ldapbasedn,
         'ldapadmindn': options.ldapadmindn,
         'ldappasswd': options.ldappasswd,
+        'server_inventory' : not options.disable_inventory,
+        'server_imaging' : not options.disable_imaging,
+        'server_package' : not options.disable_package,
     }
 
     # Run the setup app
