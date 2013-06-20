@@ -413,8 +413,8 @@ class BootInventory:
     featcpu_info    = []
     # the CP frequencies
     freqcpu_info    = 0
-    # CPU Family
-    famcpu_info     = "02"
+    # CPU Family, Initialize with "Unknown processor" =>  code 02
+    famcpu_code     = "02"
     # the client MAC adress
     macaddr_info    = ''
     # the client netmask
@@ -577,9 +577,13 @@ class BootInventory:
 
             mo = re.match(FAMCPU_RE, line)
             if mo :
-                code = mo.group(1).upper()
-                if code in FAMCPU_H:
-                    self.famcpu_info = mo.group(1).upper()
+                # Get CPU Family code, if it's a known code,
+                # Set it in self.famcpu_code
+                # Else famcpu_code is already initialized
+                # with "Unknown Processor" code
+                _code = mo.group(1).upper()
+                if _code in FAMCPU_H:
+                    self.famcpu_code = _code
                 continue
 
             mo = re.match(MACADDR_RE, line)
@@ -737,7 +741,7 @@ class BootInventory:
 	PROCESSORN.text = str(self.numcpu_info)
 
 	PROCESSORT = ET.SubElement(HARDWARE,'PROCESSORT')
-	PROCESSORT.text = FAMCPU_H[self.famcpu_info]
+	PROCESSORT.text = FAMCPU_H[self.famcpu_code]
 
 	#### CPUS SECTION ###############################
 
@@ -747,7 +751,7 @@ class BootInventory:
             PROCESSORS.text = str(int(self.freqcpu_info / 1000))
 
             PROCESSORT = ET.SubElement(CPUS, 'NAME')
-            PROCESSORT.text = FAMCPU_H[self.famcpu_info]
+            PROCESSORT.text = FAMCPU_H[self.famcpu_code]
 
 	#### NETWORK SECTION ###############################
 
