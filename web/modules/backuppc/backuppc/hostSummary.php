@@ -69,7 +69,7 @@ if ( get_host_backup_profile($uuid) == -1 )
 {
     printf("Backup is not set for this computer.");
     // Propose to set 
-    $f = new PopupForm(_T(""));
+    $f = new PopupForm("");
     $hidden = new HiddenTpl("host");
     $f->add($hidden, array("value" => $uuid, "hide" => True));
     $f->addButton("setBackup","Set backup for host");

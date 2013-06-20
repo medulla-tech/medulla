@@ -53,7 +53,7 @@ if ($response['data']) {
         $params[] = array('host'=>$_GET['host'], 'backupnum'=>$backups[$i]);
         preg_match("#.+ (.+)#",$bk_time[$i],$result);
         $time = time() - floatval($ages[$i])*24*60*60; 
-        $times[] = strftime(_T("%A, %B %e %Y"),$time).' - '.$result[1] ;
+        $times[] = strftime(_T("%A, %B %e %Y",'backuppc'),$time).' - '.$result[1] ;
     }
 
     $n = new OptimizedListInfos($times, _T("Backup#", "backuppc"));

@@ -85,20 +85,20 @@ $f->push(new Table());
 
 // Profile name
 $f->add(
-    new TrFormElement('Profile name', new InputTpl('profilename')),
+    new TrFormElement(_T('Profile name','backuppc'), new InputTpl('profilename')),
     array("value" => $profile['profilename'],"required" => True)
 );
 
 
 // FULL period
 $f->add(
-    new TrFormElement('Full period', new InputTpl('full')),
+    new TrFormElement(_T('Full period','backuppc'), new InputTpl('full')),
     array("value" => $profile['full'],"required" => True)
 );
 
 // INCR period
 $f->add(
-    new TrFormElement('Inremental period', new InputTpl('incr')),
+    new TrFormElement(_T('Inremental period','backuppc'), new InputTpl('incr')),
     array("value" => $profile['incr'],"required" => True)
 );
 
@@ -133,11 +133,11 @@ foreach ($exclude_periods as $period) {
     // Start hour
     $fields = array(
         new hourInputTpl('starthour[]'),
-        new textTpl('to'),
+        new textTpl(_T('to','backuppc')),
         new hourInputTpl('endhour[]'),
-        new textTpl('during'),
+        new textTpl(_T('during','backuppc')),
         $sel,
-        new buttonTpl('removePeriod',_T('Remove'),'removePeriod')
+        new buttonTpl('removePeriod',_T('Remove','backuppc'),'removePeriod')
         );
     
     $values = array(
@@ -149,7 +149,7 @@ foreach ($exclude_periods as $period) {
     );
     
     $f->add(
-        new TrFormElement('Do not backup from', new multifieldTpl($fields)),
+        new TrFormElement(_T('Do not backup from','backuppc'), new multifieldTpl($fields)),
         array("value" => $values,"required" => True)
     );
 
@@ -157,7 +157,7 @@ foreach ($exclude_periods as $period) {
 }
 
 // Add Period button
-$addPeriodBtn = new buttonTpl('addPeriod','Add period');
+$addPeriodBtn = new buttonTpl('addPeriod',_T('Add period','backuppc'));
 $addPeriodBtn->setClass('btnPrimary');
 $f->add(
     new TrFormElement('', $addPeriodBtn),
