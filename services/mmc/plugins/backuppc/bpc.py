@@ -227,7 +227,7 @@ def list_files(host,backup_num,share_name,dir,filter,recursive=0):
         if len(cols) == 6:
             if filter in cols.eq(0).text():
                 # Attributes
-                result[0] += [cols.eq(0).text()]
+                result[0] += [cols.eq(0).text().replace(u'\xa0',' ')]
                 result[1] += [cols.eq(0).find('input').val()]
                 result[2] += [cols.eq(3).text()]
                 result[3] += [cols.eq(1).text()]
@@ -498,12 +498,10 @@ def set_backup_for_host(uuid):
     # Setting nmblookup cmds and Rsync cmds in conf
     # TODO : read NmbLookupCmd from ini file
     config = {}
-    config['NmbLookupCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolver -A $host -f -g'
-    config['NmbLookupFindHostCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolver $host'
+    config['NmbLookupCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolve -A $host -f -g'
+    config['NmbLookupFindHostCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolve $host'
     config['RsyncClientCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l root $hostIP $rsyncPath $argList+'
     config['RsyncClientRestoreCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l root $hostIP $rsyncPath $argList+'
-    config['XferMethod'] = 'rsync'
-    config['PingCmd'] = '/bin/true'
     set_host_config(uuid,config)
     # Adding host to the DB
     try:
@@ -559,6 +557,7 @@ def apply_backup_profile(profileid):
     # Define config dict
     config = {}
     config['RsyncShareName'] = profile['sharenames'].split('\n')
+    config['ClientCharset'] = profile['encoding']
     excludes = profile['excludes'].split('||')
     for i in xrange(len(excludes)):
         excludes[i] = excludes[i].split('\n')
@@ -655,10 +654,14 @@ def get_host_status(host):
     # Status strings
     if 'no ping' in statuslines:
         result['status'] += ['no ping']
+    if 'restore failed' in statuslines:
+        result['status'] += ['restore failed']
     if 'backup failed' in statuslines:
         result['status'] += ['backup failed']
     if 'done' in statuslines:
-        result['status'] += ['done']
+        result['status'] += ['backup_done']
+    elif 'restore done' in statuslines:
+        result['status'] += ['restore_done']
     if '(idle)' in statuslines:
         result['status'] += ['idle']
     if 'in progress' in statuslines:

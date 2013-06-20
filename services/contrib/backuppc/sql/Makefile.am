@@ -21,4 +21,4 @@
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
 sqldir = $(datadir)/mmc/sql/backuppc
-dist_sql_DATA = schema-001.sql README
+dist_sql_DATA = schema-001.sql schema-002.sql README

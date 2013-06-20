@@ -23,5 +23,45 @@
  */
 ?>
 <h2><?php print _T('Restore files','backuppc'); ?></h2>
-<input type="button" value="<?php print _T('To original folder (overwrite)','backuppc'); ?>" class="btnPrimary" onclick="$('restorefiles').action='main.php?module=backuppc&submod=backuppc&action=restoreToHost';$('restoredir').value='/';$('restorefiles').submit();" />
-<input type="button" value="<?php print _T('To alternative folder','backuppc'); ?>" class="btnPrimary" onclick="$('restorefiles').action='main.php?module=backuppc&submod=backuppc&action=restoreToHost';$('restoredir').value='/Restore_<?php print(date('Y-m-d')); ?>/';$('restorefiles').submit();" />
+<input id="btnRestoreDirect1" type="button" value="<?php print _T('To original folder (overwrite)','backuppc'); ?>" class="btnPrimary" />
+<input id="btnRestoreDirect2" type="button" value="<?php print _T('To alternative folder','backuppc'); ?>" class="btnPrimary" />
+
+<script type="text/javascript">
+
+jQuery(function(){
+
+    jQuery('input#btnRestoreDirect1').click(function(){
+        jQuery('#restoredir').val('/');
+        form = jQuery('#restorefiles').serialize();
+        
+        jQuery.ajax({
+            type: "POST",
+            url: "<?php  echo 'main.php?module=backuppc&submod=backuppc&action=restoreToHost'; ?>",
+            data: form,
+
+            success: function(data){
+                setTimeout("location.reload(true);",5);
+        }
+        });
+        return false;
+    });
+    
+    jQuery('input#btnRestoreDirect2').click(function(){
+        jQuery('#restoredir').val('/Restore_<?php print(date('Y-m-d')); ?>/');
+        form = jQuery('#restorefiles').serialize();
+        
+        jQuery.ajax({
+            type: "POST",
+            url: "<?php  echo 'main.php?module=backuppc&submod=backuppc&action=restoreToHost'; ?>",
+            data: form,
+
+            success: function(data){
+                asetTimeout("location.reload(true);",5);
+        }
+        });
+        return false;
+    });    
+
+});
+
+</script>

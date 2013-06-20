@@ -91,19 +91,22 @@ if ($response['err']) {
 $status_strings = array(
     'no ping' => '<span style="color:red">'._T('No ping response','backuppc').'</span>',
     'backup failed' => '<span style="color:red">'._T('Backup failed','backuppc').'</span>',
-    'done' =>'<span style="color:green">'. _T('Backup up to date','backuppc').'</span>',
+    'restore failed' => '<span style="color:red">'._T('Restore failed','backuppc').'</span>',
+    'backup_done' =>'<span style="color:green">'. _T('Backup up to date','backuppc').'</span>',
+    'restore_done' =>'<span style="color:green">'. _T('Restore done','backuppc').'</span>',
     'nothing' =>'<span style="color:red">'. _T('This computer has never been backed up','backuppc').'</span>',
     'idle' =>'<span style="color:black">'. _T('Idle','backuppc').'</span>',
     'canceled' =>'<span style="color:black">'. _T('Cancelled by user','backuppc').'</span>',
     'in progress' => '<span style="color:orange">'._T('Backup in progress').'</span>'
     );
 
-print '<p>'._T('Last known status: ','backuppc').'<b>';
+print '<table><tr><td width="130" valign="top">'._T('Last known status: ','backuppc').'</td><td><b>';
 foreach ($response['status'] as $line)
-    print $status_strings[$line];
-    if ($line == 'nothing')
-        $nerverbackuped = 1;
-print "</b></p>";
+    print $status_strings[$line].'<br/>';
+if ($line == 'nothing')
+    $nerverbackuped = 1;
+print "</b></td></tr></table>";
+
 
 // ==========================================================
 // User actions Form

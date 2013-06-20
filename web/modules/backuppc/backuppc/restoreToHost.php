@@ -24,6 +24,7 @@
 
 // Prevent from corrupting files due to indesirable prints
 //ob_end_clean();
+print_r($_POST);
 
 require_once("includes/xmlrpc.inc.php");
 require_once('modules/backuppc/includes/xmlrpc.php');

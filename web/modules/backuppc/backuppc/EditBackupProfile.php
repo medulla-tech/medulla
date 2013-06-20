@@ -40,16 +40,19 @@ $ID = intval(@max($_GET['id'],$_POST['id']));
 if (isset($_POST['bconfirm'])){
     $cfg = array(
         'profilename' => $_POST['profilename'],
+        'encoding' => $_POST['encoding'],
         'sharenames'  => implode("\n",$_POST['sharenames']),
         'excludes'    => implode("||",$_POST["excludes"])
     );
     
-    if ($ID)
+    if ($ID) {
         $profile = edit_backup_profile($ID,$cfg);
+        // APPLY PROFILE TO ALL CONCERNED HOSTS
+        apply_backup_profile($ID);
+    }
     else
         $profile = add_backup_profile($cfg);
-    // APPLY PROFILE TO ALL CONCERNED HOSTS
-    apply_backup_profile($ID);
+    
 }
 else
     if ($ID)
@@ -76,6 +79,36 @@ $f->push(new Table());
 $f->add(
     new TrFormElement(_T('Profile name','backuppc'), new InputTpl('profilename')),
     array("value" => $profile['profilename'],"required" => True)
+);
+
+// Client host encoding
+
+$sel = new SelectItem("encoding");
+$list = array(
+    "utf8"=>'UTF8',
+    "cp1252" => _T('Windows-1252 — Western europe','backuppc'),
+    "cp874" => _T('Windows-874 — Thai','backuppc'),
+    "cp932" => _T('Windows-932 — Japanese','backuppc'),
+    "cp936" => _T('Windows-936 — Chinese (simplified)','backuppc'),
+    "cp949" => _T('Windows-949 — Korean','backuppc'),
+    "cp950" => _T('Windows-950 — Chinese (traditional)','backuppc'),
+    "cp1250" => _T('Windows-1250 — Latin (Central europe)','backuppc'),
+    "cp1251" => _T('Windows-1251 — Cyrillic','backuppc'),
+    "cp1253" => _T('Windows-1253 — Greek','backuppc'),
+    "cp1254" => _T('Windows-1254 — Turkish','backuppc'),
+    "cp1255" => _T('Windows-1255 — Hebrew','backuppc'),
+    "cp1256" => _T('Windows-1256 — Arabic','backuppc'),
+    "cp1257" => _T('Windows-1257 — Latin (Baltic languages)','backuppc'),
+    "cp1258" => _T('Windows-1258 — Vietnamese','backuppc')
+    );
+
+$sel->setElements(array_values($list));
+$sel->setElementsVal(array_keys($list));
+$sel->setSelected($profile['encoding']);
+
+ $f->add(
+    new TrFormElement(_T("Client encoding","backuppc"), $sel,
+    array())
 );
 
 // Exclude lists

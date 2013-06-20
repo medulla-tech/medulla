@@ -76,14 +76,14 @@ if (isset($_GET['host']) && isset($_GET['sharename']) && isset($_GET['backupnum'
         $params[] = array('host'=>$_GET['host'], 'backupnum'=>$_GET['backupnum'],'sharename'=>$_GET['sharename'],'dir'=>$paths[$i]);    
         $sizes[$i] = formatFileSize($sizes[$i]);
         if ($types[$i] == 'dir'){
-            $names[$i] = '<a href="#" onclick="BrowseDir(\''.$paths[$i].'\')">'.($names[$i])."</a>";
+            $names[$i] = '<a href="#" onclick="BrowseDir(\''.$paths[$i].'\')">'.  iconv("UTF-8", "ISO-8859-1",$names[$i])."</a>";
             $cssClasses[$i] = 'folder';
             $sizes[$i] = '';
         }
         else {
             $param_str = "host=".$_GET['host']."&backupnum=".$_GET['backupnum']."&sharename=".$_GET['sharename'];
             $param_str.= "&dir=".$paths[$i];
-            $names[$i] = '<a href="#" onclick="RestoreFile(\''.$param_str.'\')">'.($names[$i])."</a>";         
+            $names[$i] = '<a href="#" onclick="RestoreFile(\''.$param_str.'\')">'.iconv("UTF-8", "ISO-8859-1",$names[$i])."</a>";         
             $cssClasses[$i] = 'file';
         }
         $names[$i]=sprintf('<input type="checkbox" name="f%d" value="%s" /> &nbsp;&nbsp;',$i,$paths[$i]).$names[$i];
@@ -125,8 +125,29 @@ if (isset($_GET['host']) && isset($_GET['sharename']) && isset($_GET['backupnum'
         
 
 }
-//echo "<pre>"; print_r($_GET); echo "</pre>";
+
 ?>
-<input type="button" value="<?php print _T('Download selected (ZIP)','backuppc'); ?>" class="btnPrimary" onclick="$('restorefiles').action='main.php?module=backuppc&submod=backuppc&action=restoreZip';submit();" />
+<input id="btnRestoreZip" type="button" value="<?php print _T('Download selected (ZIP)','backuppc'); ?>" class="btnPrimary" />
 <input type="button" value="<?php print _T('Restore to Host','backuppc'); ?>" class="btnPrimary" onclick="showPopup(event,'main.php?module=backuppc&submod=backuppc&action=restorePopup'); return false;" />
 </form>
+
+<script type="text/javascript">
+jQuery(function(){
+    jQuery('input#btnRestoreZip').click(function(){
+        form = jQuery('#restorefiles').serialize();
+        
+        jQuery.ajax({
+            type: "POST",
+            url: "<?php  echo 'main.php?module=backuppc&submod=backuppc&action=restoreZip'; ?>",
+            data: form,
+
+            success: function(data){
+                setTimeout("location.reload(true);",5);
+        }
+        });
+        return false;
+
+    });
+});
+
+</script>

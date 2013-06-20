@@ -54,13 +54,15 @@ if (isset($_POST['bconfirm'])){
 
     $cfg['exclude_periods'] = trim($cfg['exclude_periods']);
 
-    if ($ID)
+    if ($ID){
         $profile = edit_period_profile($ID,$cfg);
+        // APPLY PROFILE TO ALL CONCERNED HOSTS
+        apply_period_profile($ID);
+    }
     else
         $profile = add_period_profile($cfg);
     
-    // APPLY PROFILE TO ALL CONCERNED HOSTS
-    apply_period_profile($ID);
+    
 }
 else
     if ($ID)

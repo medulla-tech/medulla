@@ -35,6 +35,8 @@ if (isset($_POST['bconfirm'],$_POST['host'])){
     $cfg = array();
     // 1 - Shares and exclude settings
     $cfg['RsyncShareName'] = $_POST['sharenames'];
+    // Charset 
+    $cfg['ClientCharset'] = $_POST['encoding'];
     
     // Splitting excludes by \n
     foreach ($_POST['excludes'] as $key => $value) 
@@ -63,12 +65,10 @@ if (isset($_POST['bconfirm'],$_POST['host'])){
     }
     
     // Rsync and NmbLookup command lines
-    $cfg['NmbLookupCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolver -A $host -f -g';
-    $cfg['NmbLookupFindHostCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolver $host';
-    $cfg['RsyncClientCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l root $hostIP $rsyncPath $argList+';
-    $cfg['RsyncClientRestoreCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l root $hostIP $rsyncPath $argList+';
-    $cfg['XferMethod'] = 'rsync';
-    $cfg['PingCmd'] = '/bin/true';
+    $cfg['NmbLookupCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolve -A $host -f -g';
+    $cfg['NmbLookupFindHostCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolve $host';
+    $cfg['RsyncClientCmd'] = '$sshPath -q -x -l root $hostIP $rsyncPath $argList+';
+    $cfg['RsyncClientRestoreCmd'] = '$sshPath -q -x -l root $hostIP $rsyncPath $argList+';
     
     set_host_config($_POST['host'], $cfg);
 }
@@ -101,7 +101,6 @@ if ($response['err']) {
     return;
 }
 
-
 // Getting all avavaible profiles
 $backup_profiles = get_backup_profiles();
 $period_profiles = get_period_profiles();
@@ -132,6 +131,37 @@ $sel->setSelected($backup_profile_id);
     new TrFormElement(_T("Backup profile","backuppc"), $sel,
     array())
 );
+
+ // Client host encoding
+
+$sel = new SelectItem("encoding");
+$list = array(
+    "utf8"=>'UTF8',
+    "cp1252" => _T('Windows-1252 — Western europe','backuppc'),
+    "cp874" => _T('Windows-874 — Thai','backuppc'),
+    "cp932" => _T('Windows-932 — Japanese','backuppc'),
+    "cp936" => _T('Windows-936 — Chinese (simplified)','backuppc'),
+    "cp949" => _T('Windows-949 — Korean','backuppc'),
+    "cp950" => _T('Windows-950 — Chinese (traditional)','backuppc'),
+    "cp1250" => _T('Windows-1250 — Latin (Central europe)','backuppc'),
+    "cp1251" => _T('Windows-1251 — Cyrillic','backuppc'),
+    "cp1253" => _T('Windows-1253 — Greek','backuppc'),
+    "cp1254" => _T('Windows-1254 — Turkish','backuppc'),
+    "cp1255" => _T('Windows-1255 — Hebrew','backuppc'),
+    "cp1256" => _T('Windows-1256 — Arabic','backuppc'),
+    "cp1257" => _T('Windows-1257 — Latin (Baltic languages)','backuppc'),
+    "cp1258" => _T('Windows-1258 — Vietnamese','backuppc')
+    );
+
+$sel->setElements(array_values($list));
+$sel->setElementsVal(array_keys($list));
+$sel->setSelected($host_config['ClientCharset']);
+
+ $f->add(
+    new TrFormElement(_T("Client encoding","backuppc"), $sel,
+    array())
+);
+
 
 // =====================================================================
 
@@ -237,9 +267,9 @@ foreach ($host_config['BlackoutPeriods'] as $period) {
     // Start hour
     $fields = array(
         new hourInputTpl('starthour[]'),
-	new textTpl(_T('to','backuppc')),
+        new textTpl(_T('to','backuppc')),
         new hourInputTpl('endhour[]'),
-	new textTpl(_T('during','backuppc')),
+        new textTpl(_T('during','backuppc')),
         $sel,
         new buttonTpl('removePeriod',_T('Remove','backuppc'),'removePeriod')
         );
@@ -253,7 +283,7 @@ foreach ($host_config['BlackoutPeriods'] as $period) {
     );
     
     $f->add(
-	new TrFormElement(_T('Do not backup from','backuppc'), new multifieldTpl($fields)),
+        new TrFormElement(_T('Do not backup from','backuppc'), new multifieldTpl($fields)),
         array("value" => $values,"required" => True)
     );
 
@@ -389,6 +419,7 @@ jQuery(function(){
                 // Adding profile shares
                 var _sharenames = backup_profiles[i]['sharenames'].split('\n');
                 var _excludes = backup_profiles[i]['excludes'].split('||');
+                jQuery('#encoding').val(backup_profiles[i]['encoding']);
                 for (var z = 0 ; z < _sharenames.length ; z++ ){
                     jQuery('#addShare').trigger('click');
                     jQuery('input[name="sharenames[]"]:last').val(_sharenames[z]).change(switchBckToCustom);

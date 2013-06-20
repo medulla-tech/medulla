@@ -137,6 +137,7 @@ class BackuppcDatabase(DatabaseHelper):
         profile.profilename = _profile['profilename']
         profile.sharenames = _profile['sharenames']
         profile.excludes = _profile['excludes']
+        profile.encoding = _profile['encoding']
         #
         session.add(profile)
         session.flush()
@@ -351,7 +352,7 @@ class Hosts(database_helper.DBObject):
     to_be_exported = ['uuid', 'backup_profile','period_profile']
 
 class Backup_profiles(database_helper.DBObject):
-    to_be_exported = ['id', 'profilename','sharenames','excludes']
+    to_be_exported = ['id', 'profilename','sharenames','excludes','encoding']
     
 class Period_profiles(database_helper.DBObject):
     to_be_exported = ['id', 'profilename','full','incr','exclude_periods']
