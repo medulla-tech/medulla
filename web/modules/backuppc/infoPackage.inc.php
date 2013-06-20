@@ -86,6 +86,11 @@ $page = new Page("download");
 $page->setFile("modules/backuppc/backuppc/download.php");
 $submod->addPage($page);
 
+$page = new Page("restorePopup");
+$page->setFile("modules/backuppc/backuppc/restorePopup.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$submod->addPage($page);
+
 $page = new Page("ajaxRestoreFile");
 $page->setFile("modules/backuppc/backuppc/ajaxRestoreFile.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));

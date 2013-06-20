@@ -51,7 +51,7 @@ $files[]=':';
 $response = restore_files_to_host($host,$backupnum,$sharename,$files,'','',$restoredir);
 
 if (!$response['err'])
-    new NotifyWidgetSuccess(_T('Restore requested to host '.$host.$restoredir));
+    new NotifyWidgetSuccess(_T('Restore requested to host','backuppc').' '.$host.$restoredir);
 else
     new NotifyWidgetFailure(nl2br($response['errtext']));
 

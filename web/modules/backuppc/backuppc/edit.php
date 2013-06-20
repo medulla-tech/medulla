@@ -89,7 +89,7 @@ $period_profile_id = get_host_period_profile($host);
 
 if ( $backup_profile_id == -1 )
 {
-    print "Host backup is not set.";
+    print _T("Host backup is not set.",'backuppc');
     return;
 }
 
@@ -113,7 +113,7 @@ $f->add(new HiddenTpl("host"), array("value" => $host, "hide" => True));
 
 // Backup Active
 $f->add(
-        new TrFormElement("Backup active", new CheckboxTpl('active')),
+        new TrFormElement(_T("Backup active","backuppc"), new CheckboxTpl('active')),
         array("value" => (1 ? 'checked' : ''))
     );
 
@@ -129,7 +129,7 @@ $sel->setElementsVal(array_keys($list));
 $sel->setSelected($backup_profile_id);
 
  $f->add(
-    new TrFormElement("Backup profile", $sel,
+    new TrFormElement(_T("Backup profile","backuppc"), $sel,
     array())
 );
 
@@ -151,7 +151,7 @@ foreach ($sharenames as $sharename) {
         new InputTpl('sharenames[]'),
         new textTpl(_T('Excluded files','backuppc')),
         new TextareaTpl('excludes[]'),
-        new buttonTpl('removeShare',_T('Remove'),'removeShare')
+        new buttonTpl('removeShare',_T('Remove','backuppc'),'removeShare')
         );
     
     $values = array(
@@ -188,7 +188,7 @@ $sel->setElementsVal(array_keys($list));
 $sel->setSelected($period_profile_id);
 
  $f->add(
-    new TrFormElement("Backup Periods profile", $sel,
+    new TrFormElement(_T("Backup Periods profile",'backuppc'), $sel,
     array())
 );
 
@@ -197,13 +197,13 @@ $sel->setSelected($period_profile_id);
 
 // FULL period
 $f->add(
-    new TrFormElement('Full period', new InputTpl('full')),
+    new TrFormElement(_T('Full period','backuppc'), new InputTpl('full')),
     array("value" => $host_config['FullPeriod'],"required" => True)
 );
 
 // INCR period
 $f->add(
-    new TrFormElement('Inremental period', new InputTpl('incr')),
+    new TrFormElement(_T('Inremental period','backuppc'), new InputTpl('incr')),
     array("value" => $host_config['IncrPeriod'],"required" => True)
 );
 
@@ -237,11 +237,11 @@ foreach ($host_config['BlackoutPeriods'] as $period) {
     // Start hour
     $fields = array(
         new hourInputTpl('starthour[]'),
-        new textTpl('to'),
+	new textTpl(_T('to','backuppc')),
         new hourInputTpl('endhour[]'),
-        new textTpl('during'),
+	new textTpl(_T('during','backuppc')),
         $sel,
-        new buttonTpl('removePeriod',_T('Remove'),'removePeriod')
+        new buttonTpl('removePeriod',_T('Remove','backuppc'),'removePeriod')
         );
     
     $values = array(
@@ -253,7 +253,7 @@ foreach ($host_config['BlackoutPeriods'] as $period) {
     );
     
     $f->add(
-        new TrFormElement('Do not backup from', new multifieldTpl($fields)),
+	new TrFormElement(_T('Do not backup from','backuppc'), new multifieldTpl($fields)),
         array("value" => $values,"required" => True)
     );
 
@@ -261,7 +261,7 @@ foreach ($host_config['BlackoutPeriods'] as $period) {
 }
 
 // Add Period button
-$addPeriodBtn = new buttonTpl('addPeriod','Add period');
+$addPeriodBtn = new buttonTpl('addPeriod',_T('Add period','backuppc'));
 $addPeriodBtn->setClass('btnPrimary');
 $f->add(
     new TrFormElement('', $addPeriodBtn),

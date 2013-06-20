@@ -25,12 +25,12 @@
 function formatFileSize($size){
     $size = intval($size);
     if (floor($size/pow(1024,3))>0)
-            return sprintf("%2.2f Gb",$size/pow(1024,3));
+            return sprintf("%2.2f "._T('GB','backuppc'),$size/pow(1024,3));
     else if (floor($size/pow(1024,2))>0)
-            return sprintf("%2.2f Mb",$size/pow(1024,2));
+            return sprintf("%2.2f "._T('MB','backuppc'),$size/pow(1024,2));
     else if (floor($size/1024)>0)
-            return sprintf("%2.2f Kb",$size/1024);
-    else return sprintf("%d Bytes",$size);
+            return sprintf("%2.2f "._T('KB','backuppc'),$size/1024);
+    else return sprintf("%d "._T('Bytes','backuppc'),$size);
 }
 
 require_once("modules/backuppc/includes/xmlrpc.php");
@@ -127,6 +127,6 @@ if (isset($_GET['host']) && isset($_GET['sharename']) && isset($_GET['backupnum'
 }
 //echo "<pre>"; print_r($_GET); echo "</pre>";
 ?>
-<input type="button" value="Download selected (ZIP)" class="btnPrimary" onclick="$('restorefiles').action='main.php?module=backuppc&submod=backuppc&action=restoreZip';submit();" />
-<input type="button" value="Restore to Host" class="btnPrimary" onclick="showPopup(event,'modules/backuppc/backuppc/restorePopup.php'); return false;" />
+<input type="button" value="<?php print _T('Download selected (ZIP)','backuppc'); ?>" class="btnPrimary" onclick="$('restorefiles').action='main.php?module=backuppc&submod=backuppc&action=restoreZip';submit();" />
+<input type="button" value="<?php print _T('Restore to Host','backuppc'); ?>" class="btnPrimary" onclick="showPopup(event,'main.php?module=backuppc&submod=backuppc&action=restorePopup'); return false;" />
 </form>

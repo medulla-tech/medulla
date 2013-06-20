@@ -30,16 +30,12 @@ require_once('modules/backuppc/includes/xmlrpc.php');
 $response = get_xfer_log($_GET['host'],$_GET['backupnum']);
 
 if (!$response['err']) {
-    //print "<pre>";
-    //print ;
-    $text  = "<h1>Xfer Error log</h1>";
+    $text  = "<h1>"._T('Xfer Error log','backuppc')."</h1>";
     $text .= '<div style="height:400px;width:100%;overflow-y:scroll;">';
     $text .= nl2br($response['data']);
     $text .= "</div>";
-    //new NotifyWidgetFailure(nl2br($text));
     $f = new NotifyWidget();
     $f->add($text);
-    //print "/<pre>";
 }
 else {
     // Show the error message

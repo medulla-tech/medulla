@@ -46,7 +46,6 @@ else
 
 $files[]=':';
 
-//restore_files_zip($host, $backupnum, $sharename, $files);
 restore_file($host,$backupnum,$sharename,$files);
 
 $_GET['host'] = $host;
@@ -54,6 +53,6 @@ $_GET['backupnum'] = $backupnum;
 $_GET['sharename'] = $sharename;
 include('modules/backuppc/backuppc/BrowseFiles.php');
 
-new NotifyWidgetSuccess(_T('Your ZIP file is being prepared, please wait.'));
+new NotifyWidgetSuccess(_T('Your ZIP file is being prepared, please wait.','backuupc'));
 
 ?>

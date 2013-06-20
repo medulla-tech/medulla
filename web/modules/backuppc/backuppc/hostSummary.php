@@ -67,12 +67,12 @@ if (isset($response))
     
 if ( get_host_backup_profile($uuid) == -1 )
 {
-    printf("Backup is not set for this computer.");
+    printf(_T("Backup is not set for this computer.",'backuppc'));
     // Propose to set 
     $f = new PopupForm("");
     $hidden = new HiddenTpl("host");
     $f->add($hidden, array("value" => $uuid, "hide" => True));
-    $f->addButton("setBackup","Set backup for host");
+    $f->addButton("setBackup",_T("Set backup for host",'backuppc'));
     $f->display();
     return;
 }
@@ -112,10 +112,10 @@ print "</b></p>";
 $f = new PopupForm("");
 $hidden = new HiddenTpl("host");
 $f->add($hidden, array("value" => $uuid, "hide" => True));
-$f->addButton("startFullBackup","Start Full Backup");
+$f->addButton("startFullBackup",_T("Start Full Backup",'backuppc'));
 if (!isset($nerverbackuped))
-    $f->addButton("startIncrBackup","Sart Incr Backup");
-$f->addButton("stopBackup","Stop Backup");
+    $f->addButton("startIncrBackup",_T("Sart Incr Backup",'backuppc'));
+$f->addButton("stopBackup",_T("Stop Backup",'backuppc'));
 $f->display();
 
 
