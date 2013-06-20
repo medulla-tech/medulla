@@ -154,7 +154,8 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
         $n->addActionItemArray($actionDownload);
     };
 
-    $n->addActionItem(new ActionItem(_("Backup status"),"hostStatus","backuppc","backuppc", "backuppc", "backuppc"));
+    if (in_array("backuppc", $_SESSION["supportModList"]))
+        $n->addActionItem(new ActionItem(_("Backup status"),"hostStatus","backuppc","backuppc", "backuppc", "backuppc"));
 
     if ($msc_vnc_show_icon) {
         $n->addActionItemArray($actionVncClient);
