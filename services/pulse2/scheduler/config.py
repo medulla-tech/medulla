@@ -108,7 +108,7 @@ class SchedulerConfig(pulse2.utils.Singleton):
     preempt_amount = 50
     preempt_period = 1
     port = 8000
-    resolv_order = ['ip', 'netbios', 'fqdn', 'shortname']
+    resolv_order = ['fqdn', 'shortname', 'netbios', 'ip']
     preferred_network = (None, None)
     netbios_path = "/usr/bin/nmblookup"
     scheduler_path = '/usr/sbin/pulse2-scheduler'

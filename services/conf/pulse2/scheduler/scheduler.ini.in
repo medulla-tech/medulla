@@ -103,7 +103,7 @@ scheduler_proxy_path = @sbindir@/pulse2-scheduler-proxy
 # - shortname: query to hosts database (by getent) with shortname
 # - netbios: attempt to do a nmblookup on IP adress
 # tests are performed using ping
-# resolv_order = ip netbios fqdn shortname
+# resolv_order = fqdn shortname netbios ip
 #
 # Preferred network parameter overrides default IP/netmask of server detected when scheduler is started.
 # Setting this parameter favorize the list of introduced networks prior to others networks availables.
