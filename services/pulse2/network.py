@@ -462,9 +462,9 @@ class ChoosePerIP (ResolvingCallable):
         return None
 
 
-class ChoosePerHosts (ResolvingCallable):
+class ChoosePerShortname (ResolvingCallable):
 
-    name = "hosts"
+    name = "shortname"
 
     hosts_path = "/usr/bin/getent"
 
@@ -478,7 +478,7 @@ class ChoosePerHosts (ResolvingCallable):
 
     def __call__(self, target):
         """ 
-        Implemented for the backward compatibility with scheduler networking. 
+        Request to "hosts" database using the shortname as key. 
 
         @param target: container having complete networking info.
         @type target: list
@@ -519,7 +519,7 @@ class ChoosePerFQDN (ResolvingCallable):
 
     def __call__(self, target):
         """ 
-        Implemented for the backward compatibility with scheduler networking. 
+        Request to "hosts" database using the fqdn as key. 
 
         @param target: container having complete networking info.
         @type target: list

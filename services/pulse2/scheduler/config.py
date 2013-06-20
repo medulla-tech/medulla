@@ -81,7 +81,7 @@ class SchedulerConfig(pulse2.utils.Singleton):
     analyse_hour = '' # empty by default
     active_analyse_hour = False # inactive by default
     announce_check = dict()
-    awake_time = 600
+    awake_time = 30
     checkstatus_period = 900
     clean_states_time = 3600
     active_clean_states =  '' # possible states are : stop run

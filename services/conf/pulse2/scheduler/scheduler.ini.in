@@ -27,7 +27,7 @@ scheduler_proxy_path = @sbindir@/pulse2-scheduler-proxy
 # initial_wait = 2
 #
 # attempt to start (and stop) commands every n seconds
-# awake_time = 600
+# awake_time = 30
 # cache settings: requests to package managers are cached
 # cache_size = 300
 # cache_timeout = 500
@@ -100,10 +100,10 @@ scheduler_proxy_path = @sbindir@/pulse2-scheduler-proxy
 # available:
 # - ip: test if a machine exists on the same network
 # - fqdn: query to hosts database (by getent) with fqdn
-# - hosts: query to hosts database (by getent) with shortname
+# - shortname: query to hosts database (by getent) with shortname
 # - netbios: attempt to do a nmblookup on IP adress
 # tests are performed using ping
-# resolv_order = ip netbios fqdn hosts
+# resolv_order = ip netbios fqdn shortname
 #
 # Preferred network parameter overrides default IP/netmask of server detected when scheduler is started.
 # Setting this parameter favorize the list of introduced networks prior to others networks availables.
