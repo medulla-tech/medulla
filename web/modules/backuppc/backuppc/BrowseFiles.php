@@ -63,7 +63,7 @@ function BrowseDir(dir){
 function RestoreFile(paramstr){
 //    new Ajax.Updater('container','main.php?module=backuppc&submod=backuppc&action=ajaxBrowseFiles&host=&sharename=', { asynchronous:true, evalScripts: true});
     new Ajax.Updater('restoreDiv','<?php echo  urlStrRedirect("backuppc/backuppc/ajaxRestoreFile"); ?>&'+paramstr, { asynchronous:true, evalScripts: true});
-    setTimeout("location.reload(true);",4000);
+    setTimeout("refresh();",4000);
 }
 
 </script>

@@ -40,7 +40,7 @@ jQuery(function(){
             data: form,
 
             success: function(data){
-                setTimeout("location.reload(true);",5);
+                jQuery('html').append(data);
         }
         });
         return false;
@@ -56,7 +56,7 @@ jQuery(function(){
             data: form,
 
             success: function(data){
-                asetTimeout("location.reload(true);",5);
+                jQuery('html').append(data);
         }
         });
         return false;

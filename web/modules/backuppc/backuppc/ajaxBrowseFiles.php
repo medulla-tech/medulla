@@ -143,7 +143,7 @@ jQuery(function(){
 
             success: function(data){
                 jQuery('html').append(data);
-                setTimeout("location.reload(true);",3000);
+                setTimeout("refresh();",3000);
         }
         });
         return false;

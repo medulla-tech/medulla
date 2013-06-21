@@ -56,5 +56,4 @@ if (!$response['err'])
 else
     new NotifyWidgetFailure(nl2br($response['errtext']));
 
-include('BrowseFiles.php');
 ?>
