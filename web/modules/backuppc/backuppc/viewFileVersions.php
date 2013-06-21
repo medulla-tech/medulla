@@ -22,7 +22,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-print "<h1>"._T('View all file versions','backuppc')."</h1>";
+print "<h1>"._T('View all versions','backuppc')."</h1>";
 
 require_once("includes/xmlrpc.inc.php");
 require_once('modules/backuppc/includes/xmlrpc.php');
@@ -30,6 +30,8 @@ require_once('modules/backuppc/includes/xmlrpc.php');
 $response = get_file_versions($_GET['host'],$_GET['sharename'],$_GET['dir']);
 
 if (!$response['err']) {
+    if (count($response['backup_nums']) == 0)
+        print _T('No other version.','backuppc');
     $points = $response['backup_nums'];
     $datetimes = $response['datetimes'];
     for ($i=0;$i<count($points);$i++) {

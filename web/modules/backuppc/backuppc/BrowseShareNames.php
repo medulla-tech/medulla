@@ -26,7 +26,7 @@
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 
-$p = new PageGenerator(_T("View share names", 'backuppc'));
+$p = new PageGenerator(_T("Browse backup", 'backuppc'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
@@ -45,13 +45,9 @@ $count = count($sharenames);
 
 $params = array();
 for ($i=0;$i<$count;$i++)
-    $params[] = array(
-	'host'=>$_GET['host'], 
-	'backupnum'=>$_GET['backupnum'], 
-	'sharename'=>str_replace('&nbsp;','%20',htmlentities($sharenames[$i]))
-);
+    $params[] = array('host'=>$_GET['host'], 'backupnum'=>$_GET['backupnum'], 'sharename'=>$sharenames[$i]);
 
-$n = new OptimizedListInfos($sharenames, _T("Share name", "backuppc"));
+$n = new OptimizedListInfos($sharenames, _T("Folder", "backuppc"));
 $n->setCssClass("folder"); // CSS for icons
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter1));
@@ -59,7 +55,7 @@ $n->start = 0;
 $n->end = 50;
 
 $n->setParamInfo($params); // Setting url params
-$n->addActionItem(new ActionItem(_T("View", "backuppc"),"BrowseFiles","display","host", "backuppc", "backuppc"));
+$n->addActionItem(new ActionItem(_T("Browse", "backuppc"),"BrowseFiles","display","host", "backuppc", "backuppc"));
 
 print "<br/><br/>"; // to go below the location bar : FIXME, really ugly as line height dependent
 

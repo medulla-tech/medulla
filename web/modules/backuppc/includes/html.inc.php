@@ -119,7 +119,7 @@ class hourInputTpl extends InputTpl{
     }
     
     function display($arrParam) {
-        $arrParam['disabled']= ' style="width:30px;" ';
+        $arrParam['disabled']= ' style="width:40px;" ';
         parent::display($arrParam);
     }
 

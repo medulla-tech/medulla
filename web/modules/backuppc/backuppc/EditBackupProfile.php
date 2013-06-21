@@ -64,9 +64,9 @@ else
 
 // Add or Edit
 if ($ID)
-    $p = new PageGenerator(_T("Edit Backup profile", "backuppc"));
+    $p = new PageGenerator(_T("Edit fileset", "backuppc"));
 else 
-    $p = new PageGenerator(_T("Add Backup profile", "backuppc"));
+    $p = new PageGenerator(_T("Add fileset", "backuppc"));
 
 $p->setSideMenu($sidemenu);
 $p->display();
@@ -77,7 +77,7 @@ $f->push(new Table());
 
 // Profile name
 $f->add(
-    new TrFormElement(_T('Profile name','backuppc'), new InputTpl('profilename')),
+    new TrFormElement(_T('Name','backuppc'), new InputTpl('profilename')),
     array("value" => $profile['profilename'],"required" => True)
 );
 
@@ -137,13 +137,13 @@ for ($i = 0 ; $i < count($sharenames) ; $i++) {
     );
     
     $f->add(
-        new TrFormElement(_T('Backupped directories','backuppc'), new multifieldTpl($fields)),
+        new TrFormElement(_T('Folder','backuppc'), new multifieldTpl($fields)),
         array("value" => $values,"required" => True)
     );
 }
 
 // Add Share button
-$addShareBtn = new buttonTpl('addShare',_T('Add Sharename','backuppc'));
+$addShareBtn = new buttonTpl('addShare',_T('Add folder','backuppc'));
 $addShareBtn->setClass('btnPrimary');
 $f->add(
     new TrFormElement('', $addShareBtn),

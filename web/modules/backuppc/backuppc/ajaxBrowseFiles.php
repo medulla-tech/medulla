@@ -102,7 +102,7 @@ if (isset($_GET['host']) && isset($_GET['sharename']) && isset($_GET['backupnum'
     //print($_GET["filter"]."=");
     //print($_GET["location"]);
 
-    $n = new OptimizedListInfos($names,_T("Host name", "backuppc"));
+    $n = new OptimizedListInfos($names,_T("Files", "backuppc"));
     $n->disableFirstColumnActionLink();
     $n->addExtraInfo($sizes, _T("Size", "backuppc"));
     //$n->addExtraInfo($checkboxes, "");
@@ -128,7 +128,7 @@ if (isset($_GET['host']) && isset($_GET['sharename']) && isset($_GET['backupnum'
 
 ?>
 <input id="btnRestoreZip" type="button" value="<?php print _T('Download selected (ZIP)','backuppc'); ?>" class="btnPrimary" />
-<input type="button" value="<?php print _T('Restore to Host','backuppc'); ?>" class="btnPrimary" onclick="showPopup(event,'main.php?module=backuppc&submod=backuppc&action=restorePopup'); return false;" />
+<input type="button" value="<?php print _T('Restore to host','backuppc'); ?>" class="btnPrimary" onclick="showPopup(event,'main.php?module=backuppc&submod=backuppc&action=restorePopup'); return false;" />
 </form>
 
 <script type="text/javascript">

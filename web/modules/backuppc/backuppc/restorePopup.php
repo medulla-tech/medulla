@@ -24,7 +24,7 @@
 ?>
 <h2><?php print _T('Restore files','backuppc'); ?></h2>
 <input id="btnRestoreDirect1" type="button" value="<?php print _T('To original folder (overwrite)','backuppc'); ?>" class="btnPrimary" />
-<input id="btnRestoreDirect2" type="button" value="<?php print _T('To alternative folder','backuppc'); ?>" class="btnPrimary" />
+<input id="btnRestoreDirect2" type="button" value="<?php print _T('To alternate folder','backuppc'); ?>" class="btnPrimary" />
 
 <script type="text/javascript">
 

@@ -25,7 +25,7 @@
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 
-$p = new PageGenerator(_T("Backup profiles", 'backuppc'));
+$p = new PageGenerator(_T("Filesets", 'backuppc'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
@@ -50,7 +50,7 @@ if ($profile_names) {
     $count = count($profile_names);
 
     
-    $n = new OptimizedListInfos($profile_names, _T("Backup profile", "backuppc"));
+    $n = new OptimizedListInfos($profile_names, _T("Fileset", "backuppc"));
 
     $n->setItemCount($count);
     $n->setNavBar(new AjaxNavBar($count, $filter1));
@@ -67,7 +67,7 @@ if ($profile_names) {
 
 // =========== PERIOD PROFILES =================================
 
-print "<br/><h2>"._T('Period profiles','backuppc')."</h2>";
+print "<br/><h2>"._T('Schedules','backuppc')."</h2>";
 
 $response = get_period_profiles();
 
@@ -85,7 +85,7 @@ if ($profile_names) {
     $count = count($profile_names);
 
     
-    $n = new OptimizedListInfos($profile_names, _T("Period profile", "backuppc"));
+    $n = new OptimizedListInfos($profile_names, _T("Schedule", "backuppc"));
 
     $n->setItemCount($count);
     $n->setNavBar(new AjaxNavBar($count, $filter1));

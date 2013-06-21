@@ -24,9 +24,9 @@
 
 $sidemenu= new SideMenu();
 $sidemenu->setClass("backuppc");
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Backup status", 'backuppc'), "backuppc", "backuppc", "index"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Backup profiles", 'backuppc'), "backuppc", "backuppc", "ViewProfiles"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Add Backup profile", 'backuppc'), "backuppc", "backuppc", "EditBackupProfile"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Add Period profile", 'backuppc'), "backuppc", "backuppc", "EditPeriodProfile"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Status", 'backuppc'), "backuppc", "backuppc", "index"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Profiles", 'backuppc'), "backuppc", "backuppc", "ViewProfiles"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Add fileset", 'backuppc'), "backuppc", "backuppc", "EditBackupProfile"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Add schedule", 'backuppc'), "backuppc", "backuppc", "EditPeriodProfile"));
 
 ?>

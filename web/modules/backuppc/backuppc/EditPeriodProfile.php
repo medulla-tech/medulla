@@ -73,9 +73,9 @@ else
 
 // Add or Edit
 if ($ID)
-    $p = new PageGenerator(_T("Edit Backup profile", "backuppc"));
+    $p = new PageGenerator(_T("Edit schedule", "backuppc"));
 else 
-    $p = new PageGenerator(_T("Add Backup profile", "backuppc"));
+    $p = new PageGenerator(_T("Add schedule", "backuppc"));
 
 $p->setSideMenu($sidemenu);
 $p->display();
@@ -87,20 +87,20 @@ $f->push(new Table());
 
 // Profile name
 $f->add(
-    new TrFormElement(_T('Profile name','backuppc'), new InputTpl('profilename')),
+    new TrFormElement(_T('Name','backuppc'), new InputTpl('profilename')),
     array("value" => $profile['profilename'],"required" => True)
 );
 
 
 // FULL period
 $f->add(
-    new TrFormElement(_T('Full period','backuppc'), new InputTpl('full')),
+    new TrFormElement(_T('Interval between two full backups (days)','backuppc'), new InputTpl('full')),
     array("value" => $profile['full'],"required" => True)
 );
 
 // INCR period
 $f->add(
-    new TrFormElement(_T('Inremental period','backuppc'), new InputTpl('incr')),
+    new TrFormElement(_T('Interval between two incr backups (days)','backuppc'), new InputTpl('incr')),
     array("value" => $profile['incr'],"required" => True)
 );
 
@@ -137,7 +137,7 @@ foreach ($exclude_periods as $period) {
         new hourInputTpl('starthour[]'),
         new textTpl(_T('to','backuppc')),
         new hourInputTpl('endhour[]'),
-        new textTpl(_T('during','backuppc')),
+        new textTpl(_T('on','backuppc')),
         $sel,
         new buttonTpl('removePeriod',_T('Remove','backuppc'),'removePeriod')
         );
@@ -159,7 +159,7 @@ foreach ($exclude_periods as $period) {
 }
 
 // Add Period button
-$addPeriodBtn = new buttonTpl('addPeriod',_T('Add period','backuppc'));
+$addPeriodBtn = new buttonTpl('addPeriod',_T('Add exclusion','backuppc'));
 $addPeriodBtn->setClass('btnPrimary');
 $f->add(
     new TrFormElement('', $addPeriodBtn),
@@ -196,7 +196,7 @@ jQuery(function(){
     jQuery("select").multiselect({
         height: 120,
         header: false,
-        minWidth : 180,
+        minWidth : 100,
         noneSelectedText : '<?php echo _T('Select days','backuppc'); ?>',
         selectedText : '<?php echo _T('Select days','backuppc'); ?>'
      });

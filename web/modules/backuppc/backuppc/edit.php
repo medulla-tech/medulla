@@ -65,10 +65,12 @@ if (isset($_POST['bconfirm'],$_POST['host'])){
     }
     
     // Rsync and NmbLookup command lines
-    $cfg['NmbLookupCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolve -A $host -f -g';
-    $cfg['NmbLookupFindHostCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolve $host';
-    $cfg['RsyncClientCmd'] = '$sshPath -q -x -l root $hostIP $rsyncPath $argList+';
-    $cfg['RsyncClientRestoreCmd'] = '$sshPath -q -x -l root $hostIP $rsyncPath $argList+';
+    $cfg['NmbLookupCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolver -A $host';
+    $cfg['NmbLookupFindHostCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolver $host';
+    $cfg['XferMethod'] = 'rsync';
+    $cfg['RsyncClientCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l root $hostIP $rsyncPath $argList+';
+    $cfg['RsyncClientRestoreCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l root $hostIP $rsyncPath $argList+';
+    $cfg['PingCmd'] = '/bin/true';
     
     set_host_config($_POST['host'], $cfg);
 }
@@ -112,7 +114,7 @@ $f->add(new HiddenTpl("host"), array("value" => $host, "hide" => True));
 
 // Backup Active
 $f->add(
-        new TrFormElement(_T("Backup active","backuppc"), new CheckboxTpl('active')),
+        new TrFormElement(_T("Enabled","backuppc"), new CheckboxTpl('active')),
         array("value" => (1 ? 'checked' : ''))
     );
 
@@ -120,7 +122,7 @@ $f->add(
 
 $sel = new SelectItem("backup_profile");
 $list = array();
-$list[0] = _T('Custom config','backuppc');
+$list[0] = _T('Custom','backuppc');
 foreach ($backup_profiles as $profile)
     $list[intval($profile['id'])] = $profile['profilename'];
 $sel->setElements(array_values($list));
@@ -128,7 +130,7 @@ $sel->setElementsVal(array_keys($list));
 $sel->setSelected($backup_profile_id);
 
  $f->add(
-    new TrFormElement(_T("Backup profile","backuppc"), $sel,
+    new TrFormElement(_T("Fileset","backuppc"), $sel,
     array())
 );
 
@@ -192,13 +194,13 @@ foreach ($sharenames as $sharename) {
     );
     
     $f->add(
-        new TrFormElement(_T('Backupped directories','backuppc'), new multifieldTpl($fields)),
+        new TrFormElement(_T('Folder','backuppc'), new multifieldTpl($fields)),
         array("value" => $values,"required" => True)
     );
 }
 
 // Add Share button
-$addShareBtn = new buttonTpl('addShare',_T('Add Sharename','backuppc'));
+$addShareBtn = new buttonTpl('addShare',_T('Add folder','backuppc'));
 $addShareBtn->setClass('btnPrimary');
 $f->add(
     new TrFormElement('', $addShareBtn),
@@ -210,7 +212,7 @@ $f->add(
 
 $sel = new SelectItem("period_profile");
 $list = array();
-$list[0] = _T('Custom config','backuppc');
+$list[0] = _T('Custom','backuppc');
 foreach ($period_profiles as $profile)
     $list[intval($profile['id'])] = $profile['profilename'];
 $sel->setElements(array_values($list));
@@ -218,7 +220,7 @@ $sel->setElementsVal(array_keys($list));
 $sel->setSelected($period_profile_id);
 
  $f->add(
-    new TrFormElement(_T("Backup Periods profile",'backuppc'), $sel,
+    new TrFormElement(_T("Schedule",'backuppc'), $sel,
     array())
 );
 
@@ -227,13 +229,13 @@ $sel->setSelected($period_profile_id);
 
 // FULL period
 $f->add(
-    new TrFormElement(_T('Full period','backuppc'), new InputTpl('full')),
+    new TrFormElement(_T('Interval between two full backups (days)','backuppc'), new InputTpl('full')),
     array("value" => $host_config['FullPeriod'],"required" => True)
 );
 
 // INCR period
 $f->add(
-    new TrFormElement(_T('Inremental period','backuppc'), new InputTpl('incr')),
+    new TrFormElement(_T('Interval between two incr backups (days)','backuppc'), new InputTpl('incr')),
     array("value" => $host_config['IncrPeriod'],"required" => True)
 );
 
@@ -269,7 +271,7 @@ foreach ($host_config['BlackoutPeriods'] as $period) {
         new hourInputTpl('starthour[]'),
         new textTpl(_T('to','backuppc')),
         new hourInputTpl('endhour[]'),
-        new textTpl(_T('during','backuppc')),
+        new textTpl(_T('on','backuppc')),
         $sel,
         new buttonTpl('removePeriod',_T('Remove','backuppc'),'removePeriod')
         );
@@ -291,7 +293,7 @@ foreach ($host_config['BlackoutPeriods'] as $period) {
 }
 
 // Add Period button
-$addPeriodBtn = new buttonTpl('addPeriod',_T('Add period','backuppc'));
+$addPeriodBtn = new buttonTpl('addPeriod',_T('Add schedule','backuppc'));
 $addPeriodBtn->setClass('btnPrimary');
 $f->add(
     new TrFormElement('', $addPeriodBtn),

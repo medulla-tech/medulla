@@ -100,7 +100,7 @@ $status_strings = array(
     'in progress' => '<span style="color:orange">'._T('Backup in progress').'</span>'
     );
 
-print '<table><tr><td width="130" valign="top">'._T('Last known status: ','backuppc').'</td><td><b>';
+print '<table><tr><td width="130" valign="top">'._T('Current state: ','backuppc').'</td><td><b>';
 foreach ($response['status'] as $line)
     print $status_strings[$line].'<br/>';
 if ($line == 'nothing')
@@ -148,15 +148,16 @@ if ($response['data']) {
         preg_match("#.+ (.+)#",$start_dates[$i],$result);
         $time = time() - floatval($ages[$i])*24*60*60; 
         $times[] = strftime(_T("%A, %B %e %Y"),$time).' - '.$result[1] ;
+        $durations[$i] = max(1,intval($durations[$i]));
+        $total_file_count[$i] .= ' ('.$new_file_count[$i].')';
+        $total_file_size[$i] = intval($total_file_size[$i]) . ' ('.intval($new_file_size[$i]).')';
     }
 
-    $n = new OptimizedListInfos($times, _T("Backup#", "backuppc"));
-    $n->addExtraInfo($durations, _T("Execution time (min.)", "backuppc"));
-    $n->addExtraInfo($xfer_errs, _T("Xfer Err", "backuppc"));
-    $n->addExtraInfo($total_file_count, _T("Total file count", "backuppc"));
-    $n->addExtraInfo($total_file_size, _T("Total file size", "backuppc"));
-    $n->addExtraInfo($new_file_count, _T("New file count", "backuppc"));
-    $n->addExtraInfo($new_file_size, _T("New file size", "backuppc"));
+    $n = new OptimizedListInfos($times, _T("Backup time", "backuppc"));
+    $n->addExtraInfo($durations, _T("Duration (min.)", "backuppc"));
+    $n->addExtraInfo($xfer_errs, _T("Errors", "backuppc"));
+    $n->addExtraInfo($total_file_count, _T("File count (new)", "backuppc"));
+    $n->addExtraInfo($total_file_size, _T("Backup size (new) [Mb]", "backuppc"));
     $n->setCssClass("file"); // CSS for icons
     $n->setItemCount($count);
     $n->setNavBar(new AjaxNavBar($count, $filter1));
@@ -164,8 +165,8 @@ if ($response['data']) {
     $n->end = 50;
 
     $n->setParamInfo($params); // Setting url params
-    $n->addActionItem(new ActionItem(_T("View", "backuppc"),"BrowseShareNames","display","host", "backuppc", "backuppc"));
-    $n->addActionItem(new ActionPopupItem(_T("View Xfer Log"), "viewXferLog", "file", "dir", "backuppc", "backuppc"));
+    $n->addActionItem(new ActionItem(_T("Browse", "backuppc"),"BrowseShareNames","display","host", "backuppc", "backuppc"));
+    $n->addActionItem(new ActionPopupItem(_T("View erros"), "viewXferLog", "file", "dir", "backuppc", "backuppc"));
 
     print "<br/><br/>"; // to go below the location bar : FIXME, really ugly as line height dependent
 

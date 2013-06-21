@@ -31,16 +31,14 @@ $uuid = $_GET['objectUUID'];
 
 // Tab generator
 $p = new TabbedPageGenerator($computer_name._T(" Backup status", 'backuppc'));
-$p->addTop(_T(sprintf("%s's backup status",$computer_name), 'backuppc'));
+$p->addTop(sprintf(_T("%s's backup status", 'backuppc'),$computer_name));
 
 // Adding tabs
 $i = 0;
-$p->addTab("tab".$i++, _T('Backup summary', 'backuppc'), "", "modules/backuppc/backuppc/hostSummary.php", array('objectUUID'=>$uuid, 'cn'=>$computer_name));
+$p->addTab("tab".$i++, _T('Summary', 'backuppc'), "", "modules/backuppc/backuppc/hostSummary.php", array('objectUUID'=>$uuid, 'cn'=>$computer_name));
 $p->addTab("tab".$i++, _T('Configuration', 'backuppc'), "", "modules/backuppc/backuppc/edit.php", array('objectUUID'=>$uuid, 'cn'=>$computer_name));
 
 $p->setSideMenu($sidemenu);
 $p->display();
 
-// Downloaded files table
-include("modules/backuppc/backuppc/ajaxDownloadsTable.php");
 ?>
