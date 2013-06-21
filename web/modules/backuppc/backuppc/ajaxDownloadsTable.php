@@ -41,6 +41,9 @@ if ($count=count($download_status)) {
     
     foreach ($download_status as $filepath => $dstatus)
     {
+        if (isset($_GET['host']) && $_GET['host'] != $dstatus['host'])
+            continue;
+        
         $params[] = array('dir'=>$filepath);
         $paths[] = $filepath;
         $name = basename($filepath);

@@ -79,6 +79,7 @@ if (isset($_GET['host']) && isset($_GET['sharename']) && isset($_GET['backupnum'
             $names[$i] = '<a href="#" onclick="BrowseDir(\''.$paths[$i].'\')">'.$names[$i]."</a>";
             $cssClasses[$i] = 'folder';
             $sizes[$i] = '';
+            $params[$i]['isdir'] = '1';
         }
         else {
             $param_str = "host=".$_GET['host']."&backupnum=".$_GET['backupnum']."&sharename=".$_GET['sharename'];
@@ -136,6 +137,13 @@ if (isset($_GET['host']) && isset($_GET['sharename']) && isset($_GET['backupnum'
 jQuery(function(){
     jQuery('input#btnRestoreZip').click(function(){
         form = jQuery('#restorefiles').serialize();
+        
+        // Test if no checkbox is checked
+        if (jQuery('input[type=checkbox]:checked').length == 0)
+            {
+                alert('You must select at least on file.');
+                return;
+            }
         
         jQuery.ajax({
             type: "POST",

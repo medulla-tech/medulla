@@ -29,7 +29,7 @@ class BackuppcConfig(PluginConfig,BackuppcDatabaseConfig):
         PluginConfig.readConf(self)
         BackuppcDatabaseConfig.setup(self, self.conffile)
         self.disable = self.getboolean("main", "disable")
-        #self.confOption = self.get("sectionname", "optionname")
+        self.tempdir = self.get("main", "tempdir")
         # ...
 
     def check(self):

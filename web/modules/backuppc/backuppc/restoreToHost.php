@@ -51,7 +51,7 @@ if (count($files) == 0)
 $response = restore_files_to_host($host,$backupnum,$sharename,$files,'','',$dir.$restoredir); //
 
 if (!$response['err'])
-    new NotifyWidgetSuccess(_T('Restore requested to host','backuppc').' '.$host);
+    new NotifyWidgetSuccess(_T('The selected files are going to be restored to','backuppc').' '.$sharename.$restoredir);
 else
     new NotifyWidgetFailure(nl2br($response['errtext']));
 

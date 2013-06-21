@@ -13,6 +13,8 @@ deferred = deferToThread.__get__ #Create an alias for deferred functions
 
 # BackupPC DB
 from pulse2.database.backuppc import BackuppcDatabase
+# BackupPC Config
+from mmc.plugins.backuppc.config import BackuppcConfig
 
 logger = logging.getLogger()
 
@@ -248,6 +250,7 @@ def get_file_versions(host,share_name,filepath):
     # Result array
     backup_nums = []
     datetimes = []
+    ages = []
     # Getting available restore points for the host
     restore_points = get_backup_list(host)
     if restore_points['err']:
@@ -259,11 +262,13 @@ def get_file_versions(host,share_name,filepath):
     for i in xrange(len(restore_points['data'][0])):
         point = restore_points['data'][0][i]
         datetime = restore_points['data'][4][i]
+        age = restore_points['data'][6][i]
         list = list_files(host,point,share_name,dir,filename)
         if 'data' in list.keys() and filename in list['data'][0]:
             backup_nums+= [point]
             datetimes+= [datetime]
-    return {'err':'0','backup_nums':backup_nums,'datetimes':datetimes}
+            ages+= [age]
+    return {'err':'0','backup_nums':backup_nums,'datetimes':datetimes,'ages':ages}
 
 
 # ==========================================================================
@@ -302,6 +307,12 @@ def download_file(filepath,params):
 
 def get_download_status():
     global download_status
+    # Purge the downloads that are older than 24 hours
+    for k in download_status.keys():
+        if download_status[k]['time'] == 1 and  int(time.time())-download_status[k]['time'] > 24*60*60:
+            del download_status[k]
+            # Delete files
+            os.unlink(k)
     return download_status
 
 
@@ -332,11 +343,15 @@ def restore_file(host,backup_num,share_name,files):
         logger.error(str(failure))
     # 
     # Generating temp filepath
-    #tempfile.tempdir = config.getTempDir()          # Setting temp dir
+    # If tempdir doesnt exist we create it
+    if not os.path.exists(BackuppcConfig().tempdir):
+        os.makedirs(BackuppcConfig().tempdir,511)
+        os.chmod(BackuppcConfig().tempdir,511)
+    tempfile.tempdir = BackuppcConfig().tempdir
     tempfiledir = tempfile.mkdtemp()
     os.chmod(tempfiledir,511)
     if isinstance(files,list):
-        destination= os.path.join(tempfiledir,'restore-%d.zip' % int(time.time()))
+        destination= os.path.join(tempfiledir,'restore-%s.zip' % time.strftime('%Y-%m-%d-%H%M%S'))
         # Setting params
         params = {'action':'Restore','host':host,'num':backup_num,'type':'2'}
         params.update({'share':share_name,'relative':'1','compressLevel':'5'})
@@ -351,7 +366,7 @@ def restore_file(host,backup_num,share_name,files):
         params['dir'] = files.encode('utf-8')
     # Updating download_status (0 = running) dict
     global download_status
-    download_status[destination] = {'status':0}
+    download_status[destination] = {'status':0,'host':host,'time':int(time.time())}
     # Setting a callback on download file functions
     download_file(destination,params).addCallback(_success).addErrback(_failure)
     return destination

@@ -24,6 +24,9 @@
 
 print "<h1>"._T('View all versions','backuppc')."</h1>";
 
+if (isset($_GET['isdir']))
+    die("Sorry, cannot view vesion history for directories.");
+
 require_once("includes/xmlrpc.inc.php");
 require_once('modules/backuppc/includes/xmlrpc.php');
 
@@ -34,10 +37,16 @@ if (!$response['err']) {
         print _T('No other version.','backuppc');
     $points = $response['backup_nums'];
     $datetimes = $response['datetimes'];
+    $ages = $response['ages'];
     for ($i=0;$i<count($points);$i++) {
         $param_str = "host=".$_GET['host']."&backupnum=".$points[$i]."&sharename=".$_GET['sharename'];
         $param_str.= "&dir=".$_GET['dir'];
-        print('<a href="#" onclick="RestoreFile(\''.$param_str.'\')">'._T("Restore","backuppc")." #".$datetimes[$i]."</a><br/>");
+        
+        preg_match("#.+ (.+)#",$datetimes[$i],$result);
+        $time = time() - floatval($ages[$i])*24*60*60; 
+        $time_str = strftime(_T("%A, %B %e %Y",'backuppc'),$time).' - '.$result[1] ;
+        
+        print('<a href="#" onclick="RestoreFile(\''.$param_str.'\')">'._T("Restore from ","backuppc").$time_str."</a><br/>");
     }
     die('');
 }

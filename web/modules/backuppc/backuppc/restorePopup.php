@@ -34,6 +34,13 @@ jQuery(function(){
         jQuery('#restoredir').val('/');
         form = jQuery('#restorefiles').serialize();
         
+        // Test if no checkbox is checked
+        if (jQuery('input[type=checkbox]:checked').length == 0)
+            {
+                alert('You must select at least on file.');
+                return;
+            }
+        
         jQuery.ajax({
             type: "POST",
             url: "<?php  echo 'main.php?module=backuppc&submod=backuppc&action=restoreToHost'; ?>",
@@ -49,6 +56,13 @@ jQuery(function(){
     jQuery('input#btnRestoreDirect2').click(function(){
         jQuery('#restoredir').val('/Restore_<?php print(date('Y-m-d')); ?>');
         form = jQuery('#restorefiles').serialize();
+        
+        // Test if no checkbox is checked
+        if (jQuery('input[type=checkbox]:checked').length == 0)
+            {
+                alert('You must select at least on file.');
+                return;
+            }
         
         jQuery.ajax({
             type: "POST",
