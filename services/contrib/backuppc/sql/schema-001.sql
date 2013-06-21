@@ -28,6 +28,16 @@ SET storage_engine=INNODB;
 SET GLOBAL character_set_server=UTF8;
 SET SESSION character_set_server=UTF8;
 
+CREATE TABLE IF NOT EXISTS `backup_profiles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `profilename` varchar(50) NOT NULL,
+  `sharenames` text NOT NULL,
+  `excludes` text NOT NULL,
+  `encoding` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
+
+
 INSERT INTO `backup_profiles` (`id`, `profilename`, `sharenames`, `excludes`, `encoding`) VALUES
 (1, 'Windows XP (User files)', '/cygdrive/c/Documents and Settings/', '/*/Cookies\n/*/Local Settings/Temporary Internet Files\n/*/Local Settings/Temp\n/*/NTUSER.DAT*\n/*/ntuser.dat*\n/*/Local Settings/Application Data/Microsoft/Windows/UsrClass.dat*\n/*/Local Settings/Application Data/Mozilla/Firefox/Profiles/*/Cache\n/*/Local Settings/Application Data/Mozilla/Firefox/Profiles/*/OfflineCache\n/*/Recent', 'cp1252'),
 (2, 'Windows XP (Whole C: Drive)', '/cygdrive/c/', '/Documents and Settings/*/Cookies\n/Documents and Settings/*/Local Settings/Temporary Internet Files\n/Documents and Settings/*/Local Settings/Temp\n/Documents and Settings/*/NTUSER.DAT*\n/Documents and Settings/*/ntuser.dat*\n/Documents and Settings/*/Local Settings/Application Data/Microsoft/Windows/UsrClass.dat*\n/Documents and Settings/*/Local Settings/Application Data/Mozilla/Firefox/Profiles/*/Cache\n/Documents and Settings/*/Local Settings/Application Data/Mozilla/Firefox/Profiles/*/OfflineCache\n/Documents and Settings/*/Recent\n/RECYCLER\n/MSOCache\n/System Volume Information\n/hiberfil.sys\n/pagefile.sys', 'cp1252'),
@@ -66,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `period_profiles` (
 
 INSERT INTO `period_profiles` (`id`, `profilename`, `full`, `incr`, `exclude_periods`) VALUES
 (1, 'Nightly', 7, 1, '7.00=>20.00:1,2,3,4,5,6,7'),
-(2 'Daytime', 7, 1, '19.00=>9.00:1,2,3,4,5,6,7');
+(2, 'Daytime', 7, 1, '19.00=>9.00:1,2,3,4,5,6,7');
 
 CREATE TABLE IF NOT EXISTS `version` (
   `Number` tinyint(4) unsigned NOT NULL DEFAULT '0'
