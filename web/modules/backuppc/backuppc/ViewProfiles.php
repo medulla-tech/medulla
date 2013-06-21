@@ -39,11 +39,16 @@ $response = get_backup_profiles();
 $profile_names = array();
 $params = array();
 
-foreach ($response as $profile){
-    $profile_names[] = $profile['profilename'];
-    $params[] = array('id' => $profile['id'],'type' => 0);
-}
-    
+foreach ($response as $profile)
+    $profile_names[$profile['id']] = $profile['profilename'];
+
+asort($profile_names);
+
+
+foreach ($profile_names as $pid => $pname)
+    $params[] = array('id' => $pid,'type' => 0);
+
+$profile_names = array_values($profile_names);
 
 if ($profile_names) {
 
@@ -74,10 +79,16 @@ $response = get_period_profiles();
 $profile_names = array();
 $params = array();
 
-foreach ($response as $profile){
-    $profile_names[] = $profile['profilename'];
-    $params[] = array('id' => $profile['id'],'type' => 1);
-}
+foreach ($response as $profile)
+    $profile_names[$profile['id']] = $profile['profilename'];
+
+asort($profile_names);
+
+
+foreach ($profile_names as $pid => $pname)
+    $params[] = array('id' => $pid,'type' => 0);
+
+$profile_names = array_values($profile_names);
     
 
 if ($profile_names) {

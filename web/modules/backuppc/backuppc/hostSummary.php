@@ -72,7 +72,7 @@ if ( get_host_backup_profile($uuid) == -1 )
     $f = new PopupForm("");
     $hidden = new HiddenTpl("host");
     $f->add($hidden, array("value" => $uuid, "hide" => True));
-    $f->addButton("setBackup",_T("Configure backup for host",'backuppc'));
+    $f->addButton("setBackup",_T("Configure",'backuppc'));
     $f->display();
     return;
 }
@@ -129,6 +129,7 @@ $f->display();
 if ($response['data']) {
 
     $backup_nums = $response['data']['backup_nums'];
+    $types = $response['data']['type'];
     $ages = $response['data']['ages'];
     $start_dates = $response['data']['start_dates'];
     $durations = $response['data']['durations'];
@@ -151,9 +152,11 @@ if ($response['data']) {
         $durations[$i] = max(1,intval($durations[$i]));
         $total_file_count[$i] .= ' ('.$new_file_count[$i].')';
         $total_file_size[$i] = intval($total_file_size[$i]) . ' ('.intval($new_file_size[$i]).')';
+        $types[$i] = _T($types[$i],'backuppc');
     }
 
     $n = new OptimizedListInfos($times, _T("Backup time", "backuppc"));
+    $n->addExtraInfo($types, _T("Type", "backuppc"));
     $n->addExtraInfo($durations, _T("Duration (min.)", "backuppc"));
     $n->addExtraInfo($xfer_errs, _T("Errors", "backuppc"));
     $n->addExtraInfo($total_file_count, _T("File count (new)", "backuppc"));

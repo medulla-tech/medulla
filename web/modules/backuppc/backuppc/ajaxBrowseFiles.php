@@ -120,6 +120,7 @@ if (isset($_GET['host']) && isset($_GET['sharename']) && isset($_GET['backupnum'
     printf('<input type="hidden" name="host" value="%s" />',$_GET['host']);
     printf('<input type="hidden" name="backupnum" value="%s" />',$_GET['backupnum']);
     printf('<input type="hidden" name="sharename" value="%s" />',$_GET['sharename']);
+    printf('<input type="hidden" name="dir" value="%s" />',$folder);
     print('<input type="hidden"  name="restoredir" id="restoredir" value=""  />');
     $n->display();
         

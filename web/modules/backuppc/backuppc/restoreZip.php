@@ -34,6 +34,7 @@ unset($_POST['host']);
 unset($_POST['backupnum']);
 unset($_POST['sharename']);
 unset($_POST['restoredir']);
+unset($_POST['dir']);
 
 if (isset($_GET['dir']))
     $files=array($_GET['dir']);

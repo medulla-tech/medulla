@@ -359,7 +359,7 @@ def restore_file(host,backup_num,share_name,files):
 
 def restore_files_to_host(host,backup_num,share_name,files,hostDest='',shareDest='',pathHdr='/'):
     # Setting params
-    params = {'action':'Restore','host':host,'num':backup_num,'type':'4'}
+    params = {'action':'Restore','host':host.lower(),'num':backup_num,'type':'4'}
     params['share'] = share_name.encode('utf8','ignore')
     if hostDest:
         params['hostDest'] = hostDest.encode('utf8','ignore')
@@ -660,10 +660,10 @@ def get_host_status(host):
         result['status'] += ['restore failed']
     if 'backup failed' in statuslines:
         result['status'] += ['backup failed']
-    if 'done' in statuslines:
-        result['status'] += ['backup_done']
-    elif 'restore done' in statuslines:
+    if 'restore done' in statuslines:
         result['status'] += ['restore_done']
+    elif 'done' in statuslines:
+        result['status'] += ['backup_done']
     if '(idle)' in statuslines:
         result['status'] += ['idle']
     if 'in progress' in statuslines:
@@ -685,6 +685,7 @@ def get_host_status(host):
         #
         result['data'] = { \
             'backup_nums':tb_summary[0], \
+            'type':tb_summary[1], \
             'start_dates':tb_summary[4], \
             'durations':tb_summary[5], \
             'ages':tb_summary[6], \

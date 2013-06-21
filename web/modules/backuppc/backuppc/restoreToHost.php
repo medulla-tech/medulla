@@ -22,10 +22,6 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-// Prevent from corrupting files due to indesirable prints
-//ob_end_clean();
-print_r($_POST);
-
 require_once("includes/xmlrpc.inc.php");
 require_once('modules/backuppc/includes/xmlrpc.php');
 
@@ -33,6 +29,7 @@ $host = $_POST['host'];
 $backupnum = $_POST['backupnum'];
 $sharename = $_POST['sharename'];
 $restoredir = $_POST['restoredir'];
+$dir = $_POST['dir'];
 
 $_GET = array_merge($_GET,$_POST);
 
@@ -41,18 +38,20 @@ unset($_POST['host']);
 unset($_POST['backupnum']);
 unset($_POST['sharename']);
 unset($_POST['restoredir']);
+unset($_POST['dir']);
 
-if (isset($_GET['dir']))
-    $files=array($_GET['dir']);
-else
-    $files = array_values($_POST);
+$files = array_values($_POST);
 
-$files[]=':';
+if (count($files) == 0)
+{
+    new NotifyWidgetFailure(_T('No file selected.','backuppc'));
+    die('');
+}
 
-$response = restore_files_to_host($host,$backupnum,$sharename,$files,'','',$restoredir);
+$response = restore_files_to_host($host,$backupnum,$sharename,$files,'','',$dir.$restoredir); //
 
 if (!$response['err'])
-    new NotifyWidgetSuccess(_T('Restore requested to host','backuppc').' '.$host.$restoredir);
+    new NotifyWidgetSuccess(_T('Restore requested to host','backuppc').' '.$host);
 else
     new NotifyWidgetFailure(nl2br($response['errtext']));
 

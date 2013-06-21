@@ -47,7 +47,7 @@ jQuery(function(){
     });
     
     jQuery('input#btnRestoreDirect2').click(function(){
-        jQuery('#restoredir').val('/Restore_<?php print(date('Y-m-d')); ?>/');
+        jQuery('#restoredir').val('/Restore_<?php print(date('Y-m-d')); ?>');
         form = jQuery('#restorefiles').serialize();
         
         jQuery.ajax({
