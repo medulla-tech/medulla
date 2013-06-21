@@ -22,10 +22,6 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-// Prevent from corrupting files due to indesirable prints
-//ob_end_clean();
-//set_time_limit(-1);
-
 require_once("includes/xmlrpc.inc.php");
 require_once('modules/backuppc/includes/xmlrpc.php');
 
@@ -51,7 +47,6 @@ restore_file($host,$backupnum,$sharename,$files);
 $_GET['host'] = $host;
 $_GET['backupnum'] = $backupnum;
 $_GET['sharename'] = $sharename;
-include('modules/backuppc/backuppc/BrowseFiles.php');
 
 new NotifyWidgetSuccess(_T('Your ZIP file is being prepared, please wait.','backuupc'));
 

@@ -22,6 +22,10 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+require_once("modules/backuppc/includes/xmlrpc.php");
+
+print '<div id="downloadTable">';
+
 $download_status = get_download_status();
 
 if ($count=count($download_status)) {
@@ -33,6 +37,7 @@ if ($count=count($download_status)) {
     $names = array();
     $status = array();
     
+    $refresh = 0; // Refresh is disabled by default
     
     foreach ($download_status as $filepath => $dstatus)
     {
@@ -43,6 +48,7 @@ if ($count=count($download_status)) {
         if ($dstatus['status']==0) {
             $status[] = '<img src="modules/msc/graph/images/status/inprogress.gif" alt=""/>';
             $name = sprintf('<a href="#">%s</a>',$name);
+            $refresh = 1; // We want a frefresh after X second
         }
         else
             if ($dstatus['err']==0)
@@ -62,4 +68,30 @@ if ($count=count($download_status)) {
     $n->addActionItem(new ActionItem(_T("Download", "backuppc"),"download","display","dir", "backuppc", "backuppc"));
     $n->display();
 }
+
+print '</div>';
 ?>
+
+<script src="modules/backuppc/lib/jquery-1.10.1.min.js"></script>
+<script type="text/javascript">
+// Avoid prototype <> jQuery conflicts
+jQuery.noConflict();
+
+function refresh(){
+        parentcontainer = jQuery('div#downloadTable').parent();
+        jQuery('div#downloadTable').remove();
+        jQuery.get(
+            "<?php  echo 'main.php?module=backuppc&submod=backuppc&action=ajaxDownloadsTable'; ?>",
+             function(data){
+                parentcontainer.append(data);
+        });
+}
+
+
+<?php 
+if ($refresh) {
+   print "setTimeout('refresh();',3000);" ;
+}
+?>
+
+</script>

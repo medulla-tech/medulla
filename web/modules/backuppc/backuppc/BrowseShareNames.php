@@ -45,7 +45,11 @@ $count = count($sharenames);
 
 $params = array();
 for ($i=0;$i<$count;$i++)
-    $params[] = array('host'=>$_GET['host'], 'backupnum'=>$_GET['backupnum'], 'sharename'=>$sharenames[$i]);
+    $params[] = array(
+      'host'=>$_GET['host'], 
+      'backupnum'=>$_GET['backupnum'], 
+      'sharename'=>str_replace('&nbsp;','%20',htmlentities($sharenames[$i]))
+    );
 
 $n = new OptimizedListInfos($sharenames, _T("Folder", "backuppc"));
 $n->setCssClass("folder"); // CSS for icons
@@ -65,7 +69,6 @@ $n->display();
 // Downloaded files table
 include("modules/backuppc/backuppc/ajaxDownloadsTable.php");
 ?>
-
 
 <style>
     .noborder { border:0px solid blue; }

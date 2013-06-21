@@ -113,7 +113,7 @@ $submod->addPage($page);
 
 $page = new Page("restoreZip");
 $page->setFile("modules/backuppc/backuppc/restoreZip.php");
-$page->setOptions(array("noHeader"=>True,"visible"=>False));
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 
 $page = new Page("restoreToHost");

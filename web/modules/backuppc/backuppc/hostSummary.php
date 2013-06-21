@@ -72,7 +72,7 @@ if ( get_host_backup_profile($uuid) == -1 )
     $f = new PopupForm("");
     $hidden = new HiddenTpl("host");
     $f->add($hidden, array("value" => $uuid, "hide" => True));
-    $f->addButton("setBackup",_T("Set backup for host",'backuppc'));
+    $f->addButton("setBackup",_T("Configure backup for host",'backuppc'));
     $f->display();
     return;
 }

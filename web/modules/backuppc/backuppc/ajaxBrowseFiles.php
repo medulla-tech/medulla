@@ -76,14 +76,14 @@ if (isset($_GET['host']) && isset($_GET['sharename']) && isset($_GET['backupnum'
         $params[] = array('host'=>$_GET['host'], 'backupnum'=>$_GET['backupnum'],'sharename'=>$_GET['sharename'],'dir'=>$paths[$i]);    
         $sizes[$i] = formatFileSize($sizes[$i]);
         if ($types[$i] == 'dir'){
-            $names[$i] = '<a href="#" onclick="BrowseDir(\''.$paths[$i].'\')">'.  iconv("UTF-8", "ISO-8859-1",$names[$i])."</a>";
+            $names[$i] = '<a href="#" onclick="BrowseDir(\''.$paths[$i].'\')">'.$names[$i]."</a>";
             $cssClasses[$i] = 'folder';
             $sizes[$i] = '';
         }
         else {
             $param_str = "host=".$_GET['host']."&backupnum=".$_GET['backupnum']."&sharename=".$_GET['sharename'];
             $param_str.= "&dir=".$paths[$i];
-            $names[$i] = '<a href="#" onclick="RestoreFile(\''.$param_str.'\')">'.iconv("UTF-8", "ISO-8859-1",$names[$i])."</a>";         
+            $names[$i] = '<a href="#" onclick="RestoreFile(\''.$param_str.'\')">'.$names[$i]."</a>";         
             $cssClasses[$i] = 'file';
         }
         $names[$i]=sprintf('<input type="checkbox" name="f%d" value="%s" /> &nbsp;&nbsp;',$i,$paths[$i]).$names[$i];
@@ -142,7 +142,8 @@ jQuery(function(){
             data: form,
 
             success: function(data){
-                setTimeout("location.reload(true);",5);
+                jQuery('html').append(data);
+                setTimeout("location.reload(true);",3000);
         }
         });
         return false;
