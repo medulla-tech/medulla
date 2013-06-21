@@ -39,7 +39,7 @@ INSERT INTO `backup_profiles` (`id`, `profilename`, `sharenames`, `excludes`, `e
 (8, 'Mac OS X (Whole / drive)', '/', '/cores/*\n/dev/*\n/net/*\n/private/tmp/*\n/Volumes/*', 'utf8');
 
 
-REATE TABLE IF NOT EXISTS `backup_servers` (
+CREATE TABLE IF NOT EXISTS `backup_servers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `entity_uuid` varchar(50) NOT NULL,
   `backupserver_url` varchar(255) NOT NULL,
