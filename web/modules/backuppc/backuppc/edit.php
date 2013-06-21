@@ -39,8 +39,11 @@ if (isset($_POST['bconfirm'],$_POST['host'])){
     $cfg['ClientCharset'] = $_POST['encoding'];
     
     // Splitting excludes by \n
-    foreach ($_POST['excludes'] as $key => $value) 
+    foreach ($_POST['excludes'] as $key => $value) {
         $_POST['excludes'][$key] = explode("\n",trim($value));
+        for ($j = 0 ; $j< count($_POST['excludes'][$key]); $j++)
+            $_POST['excludes'][$key][$j] = trim ($_POST['excludes'][$key][$j]);
+    }
     
     $cfg['BackupFilesExclude'] = array_combine($_POST['sharenames'],$_POST['excludes']);
     
