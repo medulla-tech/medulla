@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-20 11:19+0200\n"
+"POT-Creation-Date: 2013-06-24 01:00+0200\n"
 "PO-Revision-Date: 2013-03-14 14:51+0000\n"
 "Last-Translator: Cécile Adam <acecile@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
@@ -30,7 +30,7 @@ msgstr "<définir_un_nom>"
 msgid "Add"
 msgstr "Ajouter"
 
-#: modules/pkgs/pkgs/localSidebar.php:28 modules/pkgs/infoPackage.inc.php:46
+#: modules/pkgs/infoPackage.inc.php:46 modules/pkgs/pkgs/localSidebar.php:28
 msgid "Add a package"
 msgstr "Ajouter un package"
 
@@ -46,8 +46,8 @@ msgstr "Déjà présent sur le serveur"
 msgid "Associate package"
 msgstr "Associer des fichiers à un package"
 
-#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:135
 #: modules/pkgs/pkgs/add.php:304
+#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:135
 msgid ""
 "Change post_max_size and upload_max_filesize directives in php.ini file to "
 "increase upload size."
@@ -59,8 +59,8 @@ msgstr ""
 msgid "Choose package source"
 msgstr "Choisissez la source des packages"
 
-#: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:33
 #: modules/pkgs/includes/html.inc.php:61
+#: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:33
 msgid "Click here to select files"
 msgstr "Cliquer ici pour sélectionner les fichiers"
 
@@ -68,7 +68,7 @@ msgstr "Cliquer ici pour sélectionner les fichiers"
 msgid "Command : "
 msgstr "Commande : "
 
-#: modules/pkgs/pkgs/edit.php:165 modules/pkgs/pkgs/add.php:161
+#: modules/pkgs/pkgs/add.php:161 modules/pkgs/pkgs/edit.php:165
 msgid "Command's name : "
 msgstr "Nom de la commande : "
 
@@ -76,9 +76,9 @@ msgstr "Nom de la commande : "
 msgid "Command:"
 msgstr "Commande:"
 
+#: modules/pkgs/infoPackage.inc.php:70
 #: modules/pkgs/pkgs/ajaxPackageList.php:79
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:79
-#: modules/pkgs/infoPackage.inc.php:70
 msgid "Delete a package"
 msgstr "Supprimer un package"
 
@@ -86,14 +86,14 @@ msgstr "Supprimer un package"
 msgid "Delete this package"
 msgstr "Supprimer ce package"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:69 modules/pkgs/pkgs/edit.php:161
+#: modules/pkgs/pkgs/add.php:150 modules/pkgs/pkgs/ajaxPackageList.php:69
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
-#: modules/pkgs/pkgs/add.php:150
+#: modules/pkgs/pkgs/edit.php:161
 msgid "Description"
 msgstr "Description"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:78 modules/pkgs/pkgs/edit.php:111
 #: modules/pkgs/infoPackage.inc.php:48
+#: modules/pkgs/pkgs/ajaxPackageList.php:78 modules/pkgs/pkgs/edit.php:111
 msgid "Edit a package"
 msgstr "Éditer un package"
 
@@ -101,11 +101,11 @@ msgstr "Éditer un package"
 msgid "Edit package"
 msgstr "Modifier le package"
 
-#: modules/pkgs/pkgs/associate_files.php:75 modules/pkgs/pkgs/add.php:95
+#: modules/pkgs/pkgs/add.php:95 modules/pkgs/pkgs/associate_files.php:75
 msgid "Failed to associate files"
 msgstr "L'association de fichiers a échoué"
 
-#: modules/pkgs/pkgs/associate_files.php:72 modules/pkgs/pkgs/add.php:92
+#: modules/pkgs/pkgs/add.php:92 modules/pkgs/pkgs/associate_files.php:72
 #, php-format
 msgid "Failed to associate files%s"
 msgstr "L'association de fichiers a échoué %s"
@@ -114,19 +114,19 @@ msgstr "L'association de fichiers a échoué %s"
 msgid "Files directory"
 msgstr "Répertoire des fichiers"
 
-#: modules/pkgs/pkgs/associate_files.php:64 modules/pkgs/pkgs/add.php:84
+#: modules/pkgs/pkgs/add.php:84 modules/pkgs/pkgs/associate_files.php:64
 #, php-format
 msgid "Files successfully associated with package <b>%s (%s)</b>%s"
 msgstr ""
 "Les fichiers ont été associés avec le package <b>%s (%s)</b> avec succès.%s"
 
-#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:135
 #: modules/pkgs/pkgs/add.php:304
+#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:135
 #, php-format
 msgid "Files upload (<b><u title='%s'>%sM max</u></b>)"
 msgstr "Envoi de fichiers (<b><u title='%s'>%sM max</u></b>)"
 
-#: modules/pkgs/pkgs/index.php:45 modules/pkgs/pkgs/ajaxPackageList.php:53
+#: modules/pkgs/pkgs/ajaxPackageList.php:53 modules/pkgs/pkgs/index.php:45
 #, php-format
 msgid "MMC failed to contact package server %s."
 msgstr "Le MMC a échoué à contacter le package serveur %s."
@@ -139,11 +139,11 @@ msgstr "Faire un package vide"
 msgid "Name"
 msgstr "Nom"
 
-#: modules/pkgs/pkgs/edit.php:173 modules/pkgs/pkgs/add.php:169
+#: modules/pkgs/pkgs/add.php:169 modules/pkgs/pkgs/edit.php:173
 msgid "Need a reboot ?"
 msgstr "Besoin de redémarrer ?"
 
-#: modules/pkgs/pkgs/edit.php:141 modules/pkgs/pkgs/add.php:134
+#: modules/pkgs/pkgs/add.php:134 modules/pkgs/pkgs/edit.php:141
 msgid "Package API"
 msgstr "Api de package"
 
@@ -196,7 +196,7 @@ msgstr "Liste des packages"
 msgid "Pending packages list"
 msgstr "Liste des packages en attente"
 
-#: modules/pkgs/pkgs/index.php:53 modules/pkgs/pkgs/ajaxPackageList.php:63
+#: modules/pkgs/pkgs/ajaxPackageList.php:63 modules/pkgs/pkgs/index.php:53
 msgid "Please contact your administrator."
 msgstr "Veuillez contacter votre administrateur."
 
@@ -256,8 +256,8 @@ msgstr "La suppression du package a échoué."
 msgid "The package has been deleted."
 msgstr "Le package a été supprimé."
 
-#: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:34
 #: modules/pkgs/includes/html.inc.php:42
+#: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:34
 msgid "Upload Queued Files"
 msgstr "Transmettre les fichiers en attente"
 
@@ -265,8 +265,7 @@ msgstr "Transmettre les fichiers en attente"
 msgid "Upload from this web page"
 msgstr "Envoyer depuis cette page"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:70
+#: modules/pkgs/pkgs/add.php:149 modules/pkgs/pkgs/ajaxPackageList.php:70
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
-#: modules/pkgs/pkgs/add.php:149
 msgid "Version"
 msgstr "Version"
