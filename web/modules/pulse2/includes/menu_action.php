@@ -28,13 +28,14 @@ if ($_GET['action']) $_SESSION['action'] = $_GET['action'];
 $paramArray = array('cn' => $_SESSION['cn'], 'objectUUID' => $_SESSION['objectUUID']);
 
 $inventAction = new ActionItem(_T("Inventory", "pulse2"),"invtabs","inventory","inventory", "base", "computers");
+$backupAction = new ActionItem(_("Backup status"),"hostStatus","backuppc","backuppc", "backuppc", "backuppc");
 $vncClientAction = new ActionItem(_T("Remote control", "pulse2"), "vnc_client", "vncclient", "computer", "base", "computers");
 $logAction = new ActionItem(_T("Read log", "pulse2"),"msctabs","logfile","computer", "base", "computers", "tablogs");
 $mscAction = new ActionItem(_T("Software deployment", "pulse2"),"msctabs","install","computer", "base", "computers");
 $imgAction = new ActionItem(_T("Imaging management", "pulse2"),"imgtabs","imaging","computer", "base", "computers");
 
     
-$actions = array($inventAction, $vncClientAction, $logAction, $mscAction, $imgAction);
+$actions = array($inventAction, $backupAction, $vncClientAction, $logAction, $mscAction, $imgAction);
 
 /*
  * This function return True if action param is in enabled pulse modules
@@ -49,6 +50,7 @@ function modIsActive($action) {
         "inv" => "inventory",
         "vnc" => "msc",
         "msc" => "msc",
+        "hos" => "backuppc",
     );
     $modList = $_SESSION['supportModList'];
     if (in_array('glpi', $modList)) $modList[] = 'inventory';
