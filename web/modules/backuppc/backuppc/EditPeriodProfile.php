@@ -38,8 +38,8 @@ $ID = intval(@max($_GET['id'],$_POST['id']));
 if (isset($_POST['bconfirm'])){
     $cfg = array(
         'profilename' => $_POST['profilename'],
-        'full'  => $_POST['full'],
-        'incr'  => $_POST['incr'],
+        'full'  => floatval($_POST['full'])-0.03,
+        'incr'  => floatval($_POST['incr'])-0.03,
         'exclude_periods'=>''
     );
     // Formatting Exclude periods
@@ -95,13 +95,13 @@ $f->add(
 // FULL period
 $f->add(
     new TrFormElement(_T('Interval between two full backups (days)','backuppc'), new InputTpl('full')),
-    array("value" => $profile['full'],"required" => True)
+    array("value" => floatval($profile['full'])+0.03,"required" => True)
 );
 
 // INCR period
 $f->add(
     new TrFormElement(_T('Interval between two incr backups (days)','backuppc'), new InputTpl('incr')),
-    array("value" => $profile['incr'],"required" => True)
+    array("value" => floatval($profile['incr'])+0.03,"required" => True)
 );
 
 $daynames = array(

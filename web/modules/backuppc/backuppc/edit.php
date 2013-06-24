@@ -49,8 +49,8 @@ if (isset($_POST['bconfirm'],$_POST['host'])){
     
     // 2 -Backup Period settings
     
-    $cfg['FullPeriod'] = $_POST['full'];
-    $cfg['IncrPeriod'] = $_POST['incr'];
+    $cfg['FullPeriod'] = floatval($_POST['full'])-0.03;
+    $cfg['IncrPeriod'] = floatval($_POST['incr'])-0.03;
     
     // Blackout periods
     $starthours = $_POST['starthour'];
@@ -233,13 +233,13 @@ $sel->setSelected($period_profile_id);
 // FULL period
 $f->add(
     new TrFormElement(_T('Interval between two full backups (days)','backuppc'), new InputTpl('full')),
-    array("value" => $host_config['FullPeriod'],"required" => True)
+    array("value" => floatval($host_config['FullPeriod'])+0.03,"required" => True)
 );
 
 // INCR period
 $f->add(
     new TrFormElement(_T('Interval between two incr backups (days)','backuppc'), new InputTpl('incr')),
-    array("value" => $host_config['IncrPeriod'],"required" => True)
+    array("value" => floatval($host_config['IncrPeriod'])+0.03,"required" => True)
 );
 
 $daynames = array(
@@ -449,8 +449,8 @@ jQuery(function(){
                     jQuery(this).parents('tr:first').remove();
                 });
                 
-                jQuery('input[name=full]:last').val(period_profiles[i]['full']).change(switchPrdToCustom);
-                jQuery('input[name=incr]:last').val(period_profiles[i]['incr']).change(switchPrdToCustom);
+                jQuery('input[name=full]:last').val(parseFloat(period_profiles[i]['full'])+0.03).change(switchPrdToCustom);
+                jQuery('input[name=incr]:last').val(parseFloat(period_profiles[i]['incr'])+0.03).change(switchPrdToCustom);
                 
                 // Adding profile periods
                 var regex = /([0-9.]+)=>([0-9.]+):([^:]+)/;
