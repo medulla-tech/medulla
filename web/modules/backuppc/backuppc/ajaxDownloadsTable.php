@@ -35,6 +35,7 @@ if ($count=count($download_status)) {
     $params = array();
     $paths = array_keys($download_status);
     $names = array();
+    $times = array();
     $status = array();
     
     $refresh = 0; // Refresh is disabled by default
@@ -44,6 +45,8 @@ if ($count=count($download_status)) {
         if (isset($_GET['host']) && $_GET['host'] != $dstatus['host'])
             continue;
         
+        $times[] = strftime(_T("%A, %B %e %Y",'backuppc').' %H:%M',$dstatus['time']);
+        
         if (strpos($filepath,'>DIRECT:') === FALSE ) {
             $params[] = array('dir'=>$filepath);
             $paths[] = $filepath;
@@ -52,14 +55,16 @@ if ($count=count($download_status)) {
         else {
             $params[] = array('dir'=>'');
             $paths[] = '';
-            $name = sprintf('<a href="#">%s %s</a>',_T('Retore to','backuppc'),$dstatus['destdir']);
+            $name = sprintf('<a href="#"></a>%s (%s %s)',
+                    _T('Latest direct retore to host','backuppc'),_T('to','backuppc'),
+                    str_replace('//', '/', $dstatus['destdir']));
         }
         
         
         if ($dstatus['status']==0) {
             $status[] = '<img src="modules/msc/graph/images/status/inprogress.gif" alt=""/>';
             $name = sprintf('<a href="#">%s</a>',$name);
-            $refresh = 1; // We want a frefresh after X second
+            $refresh = 1; // We want a refresh after X second
         }
         else
             if ($dstatus['err']==0)
@@ -71,7 +76,8 @@ if ($count=count($download_status)) {
         $names[] = $name;
     }
     
-    $n = new OptimizedListInfos($names, _T("File", "backuppc"));
+    $n = new OptimizedListInfos($names, _T("Destination", "backuppc"));
+    $n->addExtraInfo($times, _T("Restore time", "backuppc"));
     $n->addExtraInfo($status, _T("Status", "backuppc"));
     $n->setCssClass("file");
     $n->setNavBar(new AjaxNavBar($count, $filter1));

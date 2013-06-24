@@ -110,9 +110,6 @@ if ($profile_names) {
     $n->display();
 }
 
-// Downloaded files table
-include("modules/backuppc/backuppc/ajaxDownloadsTable.php");
-
 ?>
 
 <style>

@@ -75,6 +75,9 @@ if (isset($_POST['bconfirm'],$_POST['host'])){
     $cfg['RsyncClientRestoreCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l root $hostIP $rsyncPath $argList+';
     $cfg['PingCmd'] = '/bin/true';
     
+    // Enable or disable backup
+    $cfg['BackupsDisable'] = isset($_POST['active'])?'0':'1';
+    
     set_host_config($_POST['host'], $cfg);
 }
 
@@ -118,7 +121,7 @@ $f->add(new HiddenTpl("host"), array("value" => $host, "hide" => True));
 // Backup Active
 $f->add(
         new TrFormElement(_T("Enabled","backuppc"), new CheckboxTpl('active')),
-        array("value" => (1 ? 'checked' : ''))
+        array("value" => ($host_config['BackupsDisable']=='0' ? 'checked' : ''))
     );
 
 // BACKUP PROFILE SELECT FIELD

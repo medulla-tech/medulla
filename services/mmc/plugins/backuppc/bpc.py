@@ -317,7 +317,7 @@ def download_file(filepath,params):
                 # Deleting old zip file
                 os.unlink(_filepath)
                 # Remove temp dir
-                rmtree(_tempdir,true)
+                rmtree(_tempdir,True)
             # Setting file mode to 777    
             os.chmod(filepath,511)
             return {'err':0,'filepath':filepath}
@@ -328,9 +328,10 @@ def download_file(filepath,params):
             else:
                 logger.warning('Unable to restore file, unkown error occured')
                 return _UNKNOWN_ERROR
-    except:
-            logger.warning('Unable to download file from BackupPC server')
-            return {'err':17,'errtext':'Unable to download file from BackupPC server'}
+    except Exception as e:
+        logger.warning(str(e))
+        logger.warning('Unable to download file from BackupPC server')
+        return {'err':17,'errtext':'Unable to download file from BackupPC server'}
 
 
 def get_download_status():
@@ -344,7 +345,6 @@ def get_download_status():
         elif '>DIRECT:' in k:
             # Check restore status
             status = get_host_status(download_status[k]['host'])['status']
-            logger.warning(status)
             if 'restore done' in status:
                 # We pass it to 1
                 download_status[k].update({'status':1,'err':0})
