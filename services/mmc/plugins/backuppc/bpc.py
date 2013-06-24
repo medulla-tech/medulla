@@ -755,3 +755,37 @@ def get_host_status(host):
     except:
         result['data'] = {}
     return result
+
+
+def get_global_status(entity_uuid):
+    params = {'action':'summary'}
+    url = BackuppcDatabase().get_backupserver_by_entity(entity_uuid)
+    if not url: return {'err':0,'data':{}}
+    html = send_request(params,url)
+    if not html:
+        return _CONNECTION_ERROR
+    if getHTMLerr(html): 
+        return getHTMLerr(html)
+    result = {'err':0,'data':{}}
+    d = pq(html)
+    try:
+        tb_good = getTableByTitle(html,'Hosts with good Backups')
+        tb_none = getTableByTitle(html,'Hosts with no Backups')
+        # Contents
+        if not tb_good or not tb_none:
+            return result
+        tb_good = getTableContent(tb_good)
+        tb_none = getTableContent(tb_none)
+        #
+        result['data'] = { \
+            'hosts':tb_good[0]+tb_none[0], \
+            'full':tb_good[2]+tb_none[2], \
+            'full_size':tb_good[4]+tb_none[4], \
+            'incr':tb_good[6]+tb_none[6], \
+            'last_backup':tb_good[8]+tb_none[8], \
+            'state':tb_good[9]+tb_none[9], \
+            'last_attempt':tb_good[10]+tb_none[10]
+        }
+    except:
+        result['data'] = {}
+    return result

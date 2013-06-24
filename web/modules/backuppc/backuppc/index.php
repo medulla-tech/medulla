@@ -25,33 +25,37 @@
 
 require("graph/navbar.inc.php");
 require("localSidebar.php");
+require_once("modules/backuppc/includes/xmlrpc.php");
+require_once("modules/pulse2/includes/locations_xmlrpc.inc.php");
 
 $p = new PageGenerator(_T("Backup status", 'backuppc'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-echo "TO DISCUSS";
-return;
+/*if (displayLocalisationBar()) {
+    $location = getCurrentLocation();*/
 
-require_once("modules/backuppc/includes/xmlrpc.php");
+$ajax = new AjaxFilterLocation(urlStrRedirect("backuppc/backuppc/ajaxBackupStatus"));
 
-$ajax = new AjaxFilterLocation(urlStrRedirect("backuppc/backuppc/ajaxHostsList"));
-if (isset($_GET['location'])) {
-    $ajax->setSelected($list_val[base64_decode($_GET['location'])]);
+$list = array();
+$values = array();
+$locations = getUserLocations();
+/*if (count($locations) > 1) {
+    $list['Pulse2ALL'] = _T('All my entities', 'pulse2');
+    $values['Pulse2ALL'] = '';
+}*/
+foreach ($locations as $loc) {
+    $values[$loc['uuid']] = $loc['uuid'];
+    if (isset($loc['altname'])) {
+        $list[$loc['uuid']] = $loc['altname'];
+    } else {
+        $list[$loc['uuid']] = $loc['name'];
+    }
 }
-$fils = array('-');
-$fils_v = array('+');
-$ajax->setElements($fils);
-$ajax->setElementsVal($fils_v);
+$ajax->setElements($list);
+$ajax->setElementsVal($values);
 $ajax->display();
 echo "<br/><br/>";
 $ajax->displayDivToUpdate();
 
-
-include("modules/backuppc/backuppc/ajaxDownloadsTable.php");
-
 ?>
-
-<style>
-    .noborder { border:0px solid blue; }
-</style>

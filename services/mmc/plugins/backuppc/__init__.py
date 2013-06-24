@@ -187,3 +187,8 @@ def get_backupservers_list():
 
 def add_backupserver(entityuuid,serverURL):
     return BackuppcDatabase().add_backupserver(entityuuid,serverURL)
+
+# Global status
+
+def get_global_status(entity_uuid):
+    return bpc.get_global_status(entity_uuid)

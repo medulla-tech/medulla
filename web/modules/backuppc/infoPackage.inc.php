@@ -123,8 +123,8 @@ $submod->addPage($page);
 
 
 // AJAX PAGES
-$page = new Page("ajaxHostsList");
-$page->setFile("modules/backuppc/backuppc/ajaxHostsList.php");
+$page = new Page('ajaxBackupStatus');
+$page->setFile("modules/backuppc/backuppc/ajaxBackupStatus.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 
@@ -138,12 +138,10 @@ $page->setFile("modules/backuppc/backuppc/ajaxBrowseShareNames.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 
-
 $page = new Page("ajaxBrowseFiles");
 $page->setFile("modules/backuppc/backuppc/ajaxBrowseFiles.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
-
 
 $mod->addSubmod($submod);
 

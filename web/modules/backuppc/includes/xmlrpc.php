@@ -171,4 +171,8 @@ function get_xfer_log($uuid,$backupnum){
     return xmlCall("backuppc.get_xfer_log", array($uuid,$backupnum));
 }
 
+function get_global_status($entity_uuid){
+    return xmlCall("backuppc.get_global_status", array($entity_uuid));
+}
+
 ?>

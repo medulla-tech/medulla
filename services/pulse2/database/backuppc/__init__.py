@@ -28,7 +28,6 @@ BackupPC database handler
 # SqlAlchemy
 from sqlalchemy import create_engine, MetaData, Table #, Column, Text
 from sqlalchemy.orm import create_session, mapper
-#from sqlalchemy.sql import and_
 from sqlalchemy.exc import DBAPIError
 
 # PULSE2 modules
@@ -45,14 +44,14 @@ def dbOjb2dict(obj):
         result = []
         for record in obj:
             dct = record.__dict__
-            del dct['_sa_instance_state']
+            if '_sa_instance_state' in dct: del dct['_sa_instance_state']
             for k in dct:
                 dct[k] = str(dct[k])
             result += [dct]
         return result
     else:
         dct = obj.__dict__
-        del dct['_sa_instance_state']
+        if '_sa_instance_state' in dct: del dct['_sa_instance_state']
         for k in dct:
             dct[k] = str(dct[k])
         return dct
@@ -326,6 +325,7 @@ class BackuppcDatabase(DatabaseHelper):
         session.close()
         return dbOjb2dict(ret) or []
     
+   
     def add_backupserver(self,entityuuid,serverURL):
         session = create_session()
         server = Backup_servers()

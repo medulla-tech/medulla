@@ -56,7 +56,7 @@ if ($count=count($download_status)) {
             $params[] = array('dir'=>'');
             $paths[] = '';
             $name = sprintf('<a href="#"></a>%s (%s %s)',
-                    _T('Latest direct retore to host','backuppc'),_T('to','backuppc'),
+                    _T('Latest direct restore to host','backuppc'),_T('to','backuppc'),
                     str_replace('//', '/', $dstatus['destdir']));
         }
         
