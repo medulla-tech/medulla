@@ -48,6 +48,7 @@ jQuery(function(){
 
             success: function(data){
                 jQuery('html').append(data);
+                setTimeout("refresh();",3000);
         }
         });
         return false;
@@ -71,6 +72,7 @@ jQuery(function(){
 
             success: function(data){
                 jQuery('html').append(data);
+                setTimeout("refresh();",3000);
         }
         });
         return false;

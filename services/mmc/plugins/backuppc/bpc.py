@@ -718,7 +718,7 @@ def get_host_status(host):
     if 'backup failed' in statuslines:
         result['status'] += ['backup failed']
     if 'restore done' in statuslines:
-        result['status'] += ['restore_done']
+        result['status'] += ['restore done']
     elif 'done' in statuslines:
         result['status'] += ['backup_done']
     if '(idle)' in statuslines:
