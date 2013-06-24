@@ -44,9 +44,17 @@ if ($count=count($download_status)) {
         if (isset($_GET['host']) && $_GET['host'] != $dstatus['host'])
             continue;
         
-        $params[] = array('dir'=>$filepath);
-        $paths[] = $filepath;
-        $name = basename($filepath);
+        if (strpos($filepath,'>DIRECT:') === FALSE ) {
+            $params[] = array('dir'=>$filepath);
+            $paths[] = $filepath;
+            $name = basename($filepath);
+        }
+        else {
+            $params[] = array('dir'=>'');
+            $paths[] = '';
+            $name = sprintf('<a href="#">%s %s</a>',_T('Retore to','backuppc'),$dstatus['destdir']);
+        }
+        
         
         if ($dstatus['status']==0) {
             $status[] = '<img src="modules/msc/graph/images/status/inprogress.gif" alt=""/>';

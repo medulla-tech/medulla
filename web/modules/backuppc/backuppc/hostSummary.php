@@ -93,7 +93,7 @@ $status_strings = array(
     'backup failed' => '<span style="color:red">'._T('Backup failed','backuppc').'</span>',
     'restore failed' => '<span style="color:red">'._T('Restore failed','backuppc').'</span>',
     'backup_done' =>'<span style="color:green">'. _T('Backup up to date','backuppc').'</span>',
-    'restore_done' =>'<span style="color:green">'. _T('Restore done','backuppc').'</span>',
+    'restore done' =>'<span style="color:green">'. _T('Restore done','backuppc').'</span>',
     'nothing' =>'<span style="color:red">'. _T('This computer has never been backed up','backuppc').'</span>',
     'idle' =>'<span style="color:black">'. _T('Idle','backuppc').'</span>',
     'canceled' =>'<span style="color:black">'. _T('Cancelled by user','backuppc').'</span>',
@@ -145,7 +145,7 @@ if ($response['data']) {
     $times = array();
     for ($i=0 ; $i<$count ; $i++)
     {
-        $params[] = array('host'=>$uuid, 'backupnum'=>$backup_nums[$i]);
+        $params[] = array('host'=>$uuid, 'backupnum'=>$backup_nums[$i],'cn'=>$_GET['cn']);
         preg_match("#.+ (.+)#",$start_dates[$i],$result);
         $time = time() - floatval($ages[$i])*24*60*60; 
         $times[] = strftime(_T("%A, %B %e %Y"),$time).' - '.$result[1] ;

@@ -26,7 +26,7 @@
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 
-$p = new PageGenerator(_T("Browse backup", 'backuppc'));
+$p = new PageGenerator(_T("Browse backup", 'backuppc').' ('.$_GET['cn'].')');
 $p->setSideMenu($sidemenu);
 $p->display();
 
@@ -47,6 +47,7 @@ $params = array();
 for ($i=0;$i<$count;$i++)
     $params[] = array(
       'host'=>$_GET['host'], 
+      'cn' => $_GET['cn'],
       'backupnum'=>$_GET['backupnum'], 
       'sharename'=>str_replace('&nbsp;','%20',htmlentities($sharenames[$i]))
     );

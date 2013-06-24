@@ -26,7 +26,7 @@
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 
-$p = new PageGenerator(_T("Browse files", 'backuppc'));
+$p = new PageGenerator(_T("Browse files", 'backuppc').' ('.$_GET['cn'].')');
 $p->setSideMenu($sidemenu);
 $p->display();
 
