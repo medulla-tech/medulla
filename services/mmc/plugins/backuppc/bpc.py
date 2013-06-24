@@ -1,3 +1,4 @@
+import os.path
 import os
 from pyquery import PyQuery as pq
 import urllib,urllib2
@@ -5,6 +6,7 @@ import re,string
 import logging
 import tempfile
 import time
+import subprocess
 
 # Twisted
 from twisted.python import threadable; threadable.init(1)
@@ -288,10 +290,35 @@ def download_file(filepath,params):
     #
     try:
         response = urllib.urlretrieve(url,filepath,None,params_str)
-        os.chmod(filepath,511)
         #Testing HTTP headers and checking for errors
         regex= 'attachment; filename="(.+)"'
         if 'content-disposition' in response[1].dict and re.match(regex,response[1].dict['content-disposition']):
+            # IF ZIP, We proceed to unzip and rezip
+            if os.path.splitext(filepath)[1] == '.zip':
+                parentpath = os.path.dirname(filepath)
+                # Making sub temp dir
+                _tempdir = parentpath+'/temp'
+                os.mkdir(_tempdir)
+                _filepath = filepath +'.old'
+                os.rename(filepath,_filepath)
+                # Unzip
+                proc = subprocess.Popen(['7z -o%s x %s'% (_tempdir,_filepath)], stdout=subprocess.PIPE, shell=True)
+                (out, err) = proc.communicate()
+                # Output to debug
+                logger.debug(out)
+                logger.debug(err)
+                # Switching to tempdir and rezip
+                proc = subprocess.Popen(['7z a ../%s .' % os.path.basename(filepath)], stdout=subprocess.PIPE, shell=True, cwd = _tempdir)
+                (out, err) = proc.communicate()
+                # Output to debug
+                logger.debug(out)
+                logger.debug(err)
+            # Deleting old zip file
+            os.unlink(_filepath)
+            # Remove temp dir
+            subprocess.Popen(['rm -r %s'% _tempdir], stdout=subprocess.PIPE, shell=True)
+            # Setting file mode to 777    
+            os.chmod(filepath,511)
             return {'err':0,'filepath':filepath}
         else:
             if response[1].type == 'text/html':

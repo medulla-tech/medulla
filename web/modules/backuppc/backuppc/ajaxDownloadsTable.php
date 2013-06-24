@@ -30,7 +30,7 @@ $download_status = get_download_status();
 
 if ($count=count($download_status)) {
     
-    printf("<br/><br/><h2>%s</h2>",_T('Requested files','backuppc'));
+    printf("<br/><br/><h2>%s</h2>",_T('Requested restores','backuppc'));
     
     $params = array();
     $paths = array_keys($download_status);

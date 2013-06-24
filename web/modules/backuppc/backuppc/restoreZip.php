@@ -49,6 +49,6 @@ $_GET['host'] = $host;
 $_GET['backupnum'] = $backupnum;
 $_GET['sharename'] = $sharename;
 
-new NotifyWidgetSuccess(_T('Your ZIP file is being prepared, please wait.','backuupc'));
+new NotifyWidgetSuccess(_T('Your ZIP file is being prepared, please wait.<br/>Please use 7zip to open this archive (for proper special characters handling).','backuupc'));
 
 ?>
