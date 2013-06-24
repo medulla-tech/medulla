@@ -105,35 +105,14 @@ class GlpiProxy :
 
         self._result = []
 
-    def send(self, content, glpi_uuid = False, from_pxe = False):
+    def send(self, content):
         """
         Sending the inventory to Fusion Inventory plugin by the POST method.
 
         @param content: inventory on XML format
         @type content: string
-
-        @param glpi_uuid: GLPI uuid
-        @type glpi_uuid: string or bool
-
-        @param from_pxe: is this content comes from pxe ?
-        @type from_pxe: bool
         """
         try:
-            if glpi_uuid and from_pxe:
-                # Quick and dirty hack for network inventory to be forwarded to GLPI
-                # Inventory from PXE is forwarded twice:
-                #   * minimal inventory
-                #   * more complete inventory
-                # While the more complete inventory is sended, network infos are skipped
-                # So send more complete inventory twice:
-                #   1/ without network infos
-                #   2/ with network infos
-                dom = parseString(content)
-                for elem in dom.getElementsByTagName("NETWORKS"):
-                    elem.parentNode.removeChild(elem)
-                noNetworkContent = dom.toxml()
-                request = urllib2.Request(self.url, noNetworkContent, self.HEADER)
-                response = urllib2.urlopen(request)
             request = urllib2.Request(self.url, content, self.HEADER)
             response = urllib2.urlopen(request)
 

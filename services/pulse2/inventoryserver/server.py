@@ -166,7 +166,7 @@ class InventoryServer:
                     invfix = InventoryFix(self.config, content)
                     content = invfix.get()
 
-                    glpi_proxy.send(content, glpi_uuid, InventoryUtils.is_comming_from_pxe(from_ip))
+                    glpi_proxy.send(content)
                     for msg in glpi_proxy.result :
                         self.logger.warn("GlpiProxy: %s" % msg)
             else :
