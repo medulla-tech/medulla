@@ -7,6 +7,7 @@ import logging
 import tempfile
 import time
 import subprocess
+from shutil import rmtree
 
 # Twisted
 from twisted.python import threadable; threadable.init(1)
@@ -316,7 +317,7 @@ def download_file(filepath,params):
                 # Deleting old zip file
                 os.unlink(_filepath)
                 # Remove temp dir
-                subprocess.Popen(['rm -r %s'% _tempdir], stdout=subprocess.PIPE, shell=True)
+                rmtree(_tempdir,true)
             # Setting file mode to 777    
             os.chmod(filepath,511)
             return {'err':0,'filepath':filepath}
