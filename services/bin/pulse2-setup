@@ -339,7 +339,7 @@ class Pulse2ConfigFile(object):
                  'PluginsBaseConfig', 'PluginsDyngroupConfig', 'PluginsInventoryConfig',
                  'PluginsPulse2Config', 'PluginsMscConfig', 'PluginsBackuppcConfig', 'InventoryServerConfig',
                  'LaunchersConfig', 'PackageServerConfig', 'SchedulerConfig',
-                 'ImagingServerConfig', 'MMCAgentConfig' ]
+                 'ImagingServerConfig', 'MMCAgentConfig', 'UUIDResolverConfig' ]
     path = None
     # If defaults is None, try to read default values from config file in
     # examplesdir
@@ -510,6 +510,10 @@ class SchedulerConfig(LoggingConfig):
 class ImagingServerConfig(LoggingConfig):
     path = 'pulse2/imaging-server/imaging-server.ini'
     log_path = 'pulse2-imaging-server.log'
+
+class UUIDResolverConfig(Pulse2ConfigFile):
+    path = 'pulse2/uuid-resolver/uuid-resolver.ini'
+
 
 class SetupApp(object):
 
@@ -686,6 +690,9 @@ class SetupApp(object):
         self.confs['plugins/base.ini'].set('ldap', 'baseDN', self.config['ldapbasedn'])
         self.confs['plugins/base.ini'].set('ldap', 'rootName', self.config['ldapadmindn'])
         self.confs['plugins/base.ini'].set('ldap', 'password', self.config['ldappasswd'])
+
+        # LDAP password for UUID resolver
+        self.confs['pulse2/uuid-resolver/uuid-resolver.ini'].set('ldap', 'password', self.config['ldappasswd'])
 
     def get_existing_databases (self, conn):
         """ Get a list of existing databases
@@ -989,15 +996,6 @@ class SetupApp(object):
                     log.error('Can not register imaging server')
             else:
                 log.info('Imaging server already registered')
-
-        # Associate local BackupPC server to first entity (UUID1)
-        binpath = path_lookup('pulse2-backup-servers')
-        cmd = binpath + ' -a -e UUID1 -p http://127.0.0.1/backuppc/index.cgi'
-        log.debug('Call: %s' % cmd)
-        if call(cmd, shell=True)<>0:
-            log.error('Unable to associate local BackupPC server to entity UUID1')
-        else:
-            log.info('Local BackupPC server http://127.0.0.1/backuppc/index.cgi associated to root entity UUID1')
 
     def commit(self):
         """ Write down all config files
