@@ -75,8 +75,8 @@ CREATE TABLE IF NOT EXISTS `period_profiles` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3;
 
 INSERT INTO `period_profiles` (`id`, `profilename`, `full`, `incr`, `exclude_periods`) VALUES
-(1, 'Nightly', 7, 1, '7.00=>20.00:1,2,3,4,5,6,7'),
-(2, 'Daytime', 7, 1, '19.00=>9.00:1,2,3,4,5,6,7');
+(1, 'Nightly', 6.97, 0.97, '7.00=>20.00:1,2,3,4,5,6,7'),
+(2, 'Daytime', 6.97, 0.97, '19.00=>9.00:1,2,3,4,5,6,7');
 
 CREATE TABLE IF NOT EXISTS `version` (
   `Number` tinyint(4) unsigned NOT NULL DEFAULT '0'
