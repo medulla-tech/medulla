@@ -423,6 +423,10 @@ def restore_files_to_host(host,backup_num,share_name,files,hostDest='',shareDest
         return getHTMLerr(html)
     else:
         return {'err':0}
+        # Updating download status table
+        global download_status
+        download_status['>DIRECT'] = {'status':0,'host':host,'time':int(time.time())}
+        
 
 # ==========================================================================
 # HOST CONFIG FUNCTIONS

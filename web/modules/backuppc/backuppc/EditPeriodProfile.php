@@ -95,13 +95,13 @@ $f->add(
 // FULL period
 $f->add(
     new TrFormElement(_T('Interval between two full backups (days)','backuppc'), new InputTpl('full')),
-    array("value" => floatval($profile['full'])+0.03,"required" => True)
+    array("value" => $profile['full']==''?'':floatval($profile['full'])+0.03,"required" => True)
 );
 
 // INCR period
 $f->add(
     new TrFormElement(_T('Interval between two incr backups (days)','backuppc'), new InputTpl('incr')),
-    array("value" => floatval($profile['incr'])+0.03,"required" => True)
+    array("value" => $profile['incr']==''?'':floatval($profile['incr'])+0.03,"required" => True)
 );
 
 $daynames = array(

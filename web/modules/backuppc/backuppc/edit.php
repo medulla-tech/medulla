@@ -233,13 +233,13 @@ $sel->setSelected($period_profile_id);
 // FULL period
 $f->add(
     new TrFormElement(_T('Interval between two full backups (days)','backuppc'), new InputTpl('full')),
-    array("value" => floatval($host_config['FullPeriod'])+0.03,"required" => True)
+    array("value" => $host_config['FullPeriod']==''?'':floatval($host_config['FullPeriod'])+0.03,"required" => True)
 );
 
 // INCR period
 $f->add(
     new TrFormElement(_T('Interval between two incr backups (days)','backuppc'), new InputTpl('incr')),
-    array("value" => floatval($host_config['IncrPeriod'])+0.03,"required" => True)
+    array("value" => $host_config['IncrPeriod']==''?'':floatval($host_config['IncrPeriod'])+0.03,"required" => True)
 );
 
 $daynames = array(
