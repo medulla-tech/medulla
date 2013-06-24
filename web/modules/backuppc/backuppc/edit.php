@@ -49,8 +49,8 @@ if (isset($_POST['bconfirm'],$_POST['host'])){
     
     // 2 -Backup Period settings
     
-    $cfg['FullPeriod'] = floatval($_POST['full'])-0.03;
-    $cfg['IncrPeriod'] = floatval($_POST['incr'])-0.03;
+    $cfg['FullPeriod'] = fmtFloat(fmtfloat($_POST['full'])-0.03);
+    $cfg['IncrPeriod'] = fmtFloat(fmtfloat($_POST['incr'])-0.03);
     
     // Blackout periods
     $starthours = $_POST['starthour'];

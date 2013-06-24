@@ -82,10 +82,10 @@ jQuery.noConflict();
 
 function refresh(){
         parentcontainer = jQuery('div#downloadTable').parent();
-        jQuery('div#downloadTable').remove();
         jQuery.get(
             "<?php  echo 'main.php?module=backuppc&submod=backuppc&action=ajaxDownloadsTable'; ?>",
              function(data){
+                jQuery('div#downloadTable').remove();
                 parentcontainer.append(data);
         });
 }

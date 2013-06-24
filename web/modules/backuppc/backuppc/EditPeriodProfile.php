@@ -32,14 +32,12 @@ require_once("modules/backuppc/includes/html.inc.php");
 // Getting Profile ID (if specified) else 0
 $ID = intval(@max($_GET['id'],$_POST['id']));
 
-
-
 // Receiving POST DATA
 if (isset($_POST['bconfirm'])){
     $cfg = array(
         'profilename' => $_POST['profilename'],
-        'full'  => floatval($_POST['full'])-0.03,
-        'incr'  => floatval($_POST['incr'])-0.03,
+        'full'  => fmtFloat(fmtfloat($_POST['full'])-0.03),
+        'incr'  => fmtFloat(fmtfloat($_POST['incr'])-0.03),
         'exclude_periods'=>''
     );
     // Formatting Exclude periods
@@ -90,7 +88,6 @@ $f->add(
     new TrFormElement(_T('Name','backuppc'), new InputTpl('profilename')),
     array("value" => $profile['profilename'],"required" => True)
 );
-
 
 // FULL period
 $f->add(

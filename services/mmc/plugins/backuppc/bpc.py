@@ -313,10 +313,10 @@ def download_file(filepath,params):
                 # Output to debug
                 logger.debug(out)
                 logger.debug(err)
-            # Deleting old zip file
-            os.unlink(_filepath)
-            # Remove temp dir
-            subprocess.Popen(['rm -r %s'% _tempdir], stdout=subprocess.PIPE, shell=True)
+                # Deleting old zip file
+                os.unlink(_filepath)
+                # Remove temp dir
+                subprocess.Popen(['rm -r %s'% _tempdir], stdout=subprocess.PIPE, shell=True)
             # Setting file mode to 777    
             os.chmod(filepath,511)
             return {'err':0,'filepath':filepath}
@@ -338,8 +338,18 @@ def get_download_status():
     for k in download_status.keys():
         if download_status[k]['time'] == 1 and  int(time.time())-download_status[k]['time'] > 24*60*60:
             del download_status[k]
-            # Delete files
-            os.unlink(k)
+            # Delete files (if not a direct restore)
+            if not '>DIRECT:' in k: os.unlink(k) 
+        elif '>DIRECT:' in k:
+            # Check restore status
+            status = get_host_status(download_status[k]['host'])['status']
+            logger.warning(status)
+            if 'restore done' in status:
+                # We pass it to 1
+                download_status[k].update({'status':1,'err':0})
+            elif 'restore failed' in status:
+                download_status[k].update({'status':1})
+                download_status[k].update({'err':34,'errtext':'Restore failed'})
     return download_status
 
 
@@ -422,10 +432,10 @@ def restore_files_to_host(host,backup_num,share_name,files,hostDest='',shareDest
     if getHTMLerr(html): 
         return getHTMLerr(html)
     else:
-        return {'err':0}
         # Updating download status table
         global download_status
-        download_status['>DIRECT'] = {'status':0,'host':host,'time':int(time.time())}
+        download_status['>DIRECT:'+host] = {'status':0,'host':host,'time':int(time.time()),'destdir':share_name+pathHdr}
+        return {'err':0}
         
 
 # ==========================================================================

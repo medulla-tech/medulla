@@ -46,11 +46,15 @@ def dbOjb2dict(obj):
         for record in obj:
             dct = record.__dict__
             del dct['_sa_instance_state']
+            for k in dct:
+                dct[k] = str(dct[k])
             result += [dct]
         return result
     else:
         dct = obj.__dict__
         del dct['_sa_instance_state']
+        for k in dct:
+            dct[k] = str(dct[k])
         return dct
 
 class BackuppcDatabase(DatabaseHelper):

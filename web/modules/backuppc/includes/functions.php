@@ -34,5 +34,10 @@ function hhmm2float($x){
     
 }
 
+function fmtFloat($x){
+    $x = str_replace(',','.',$x);
+    $x = floatval($x);
+    return number_format($x,2,'.','');
+}
 
 ?>
