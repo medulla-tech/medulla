@@ -78,3 +78,73 @@ textarea {
 
 /* remove label borders in IE6 because IE6 does not support transparency */
 * html .ui-multiselect-checkboxes label { border:none; padding:0 }
+
+/* 
+ * classes for top right shortcut icons
+ */
+li.inventory a {
+    	padding: 0px 0px 5px 23px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/inventory.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.backuppc a {
+        padding: 0px 0px 5px 25px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/backuppc.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.vncclient a {
+        padding: 0px 0px 5px 25px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/vncclient.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.logfile a {
+        padding: 0px 0px 5px 20px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/logfile.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.install a {
+        padding: 0px 0px 5px 20px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/install.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.imaging a {
+	padding: 1px 3px 5px 20px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/imaging.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+

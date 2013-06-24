@@ -29,6 +29,11 @@ require_once("modules/backuppc/includes/xmlrpc.php");
 $computer_name = $_GET['cn'];
 $uuid = $_GET['objectUUID'];
 
+/*
+ * Display right top shortcuts menu
+ */
+right_top_shortcuts_display();
+
 // Tab generator
 $p = new TabbedPageGenerator($computer_name._T(" Backup status", 'backuppc'));
 $p->addTop(sprintf(_T("%s's backup status", 'backuppc'),$computer_name));

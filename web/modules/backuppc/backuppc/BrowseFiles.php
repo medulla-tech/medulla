@@ -26,6 +26,11 @@
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 
+/*
+ * Display right top shortcuts menu
+ */
+right_top_shortcuts_display();
+
 $p = new PageGenerator(_T("Browse files", 'backuppc').' ('.$_GET['cn'].')');
 $p->setSideMenu($sidemenu);
 $p->display();
