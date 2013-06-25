@@ -24,6 +24,9 @@
 
 require_once("modules/backuppc/includes/xmlrpc.php");
 
+// Setting max per page to 50
+$conf["global"]["maxperpage"] = 50;
+
 print '<div id="downloadTable">';
 
 $download_status = get_download_status();
@@ -88,9 +91,12 @@ if ($count=count($download_status)) {
     $n->addExtraInfo($status, _T("Status", "backuppc"));
     $n->setCssClass("file");
     $filter1 = '';
-    $n->setNavBar(new AjaxNavBar($count, $filter1));
+    $n->setNavBar(new AjaxNavBar(0, $filter1));
     $n->setParamInfo($params);
     $n->addActionItem(new ActionItem(_T("Download", "backuppc"),"download","display","dir", "backuppc", "backuppc"));
+    $n->start = 0;
+    $n->end = 50;
+    $n->setItemCount(count($names));
     $n->display();
 }
 
