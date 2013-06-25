@@ -31,12 +31,18 @@ $uuid = $_GET['objectUUID'];
 // Receiving POST data for user actions
 // ==========================================================
 
-if (isset($_POST['startFullBackup']))
+if (isset($_POST['startFullBackup'])){
     $response = start_full_backup($_POST['host']);
-elseif (isset($_POST['startIncrBackup']))
+    sleep(2);
+}
+elseif (isset($_POST['startIncrBackup'])){
     $response = start_incr_backup($_POST['host']);
-elseif (isset($_POST['stopBackup']))
+    sleep(2);
+}
+elseif (isset($_POST['stopBackup'])){
     $response = stop_backup($_POST['host']);
+    sleep(2);
+}
 
 // Check if error occured
 if (isset($response)) {
