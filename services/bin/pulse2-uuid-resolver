@@ -31,7 +31,7 @@ from ConfigParser import ConfigParser
 from twisted.internet import task, reactor
 from twisted.web import xmlrpc
 
-COOKIES_FILE = '/tmp/mmc-cookies'
+COOKIES_FILE = '/tmp/pulse2-uuid-resolver-cookies'
 host = ''
 
 class MMCQueryProtocol(xmlrpc.QueryProtocol):
@@ -216,11 +216,11 @@ class CallMethod :
             print '%s %s<00>' % (ip,host)
         # Writing on cache file
         try:
-            f = open('/tmp/pulse2-uuid-resolve-cache','a+')
+            f = open('/tmp/pulse2-uuid-resolver-cache','a+')
             f.write('%s:%s\n' % (host,ip))
             f.close()
         except:
-            syslog('Unable to open /tmp/pulse2-uuid-resolve-cache')
+            syslog('Unable to open /tmp/pulse2-uuid-resolver-cache')
         reactor.stop()
 
     def _errorback_method(self, failure):
@@ -238,7 +238,7 @@ if __name__ == "__main__" :
         # Opening cache file
         ip = sys.argv[2].strip()
         try:
-            f = open('/tmp/pulse2-uuid-resolve-cache','r')
+            f = open('/tmp/pulse2-uuid-resolver-cache','r')
             if not f: sys.exit(2)
             lines = f.readlines()
             for line in reversed(lines):
