@@ -37,15 +37,20 @@ require_once("modules/backuppc/includes/xmlrpc.php");
 require_once("modules/msc/includes/utilities.php");
 
 global $conf;
-$maxperpage = 50; //$conf["global"]["maxperpage"];
+$maxperpage = $conf["global"]["maxperpage"];
 
-$filter = array('filter'=> $_GET["filter"], 'location'=> $_GET['location']);
-$filter1 = $_GET["filter"]. '##'.$_GET['location'];
 
-if ($_GET['location']) {
-    //$filter['packageapi'] = getPApiDetail(base64_decode($_GET['location']));
-    print "";
+if (isset($_GET['filter'])){
+    $prm = explode('|mDvPulse|',$_GET['filter']);
+    if (count($prm) == 2)
+        list($_GET['folder'],$_GET['location']) = $prm;
+    else
+	list($_GET['folder'],$_GET['location']) = array('/',$_GET['filter']);
 }
+
+if (!isset($_GET['location']))
+    $_GET['location'] = '';
+
 if (isset($_GET["start"])) {
     $start = $_GET["start"];
 } else {
@@ -54,8 +59,8 @@ if (isset($_GET["start"])) {
 
 if (isset($_GET['host']) && isset($_GET['sharename']) && isset($_GET['backupnum']) ) {
     
-    $folder = (isset($_GET['folder']) && $_GET['folder']!='//')?$_GET['folder']:'/'; 
-    $response = list_files($_GET['host'],$_GET['backupnum'],$_GET['sharename'],$folder,$_GET['filter']);
+    $folder = (isset($_GET['folder']) && trim($_GET['folder'])!='//')?$_GET['folder']:'/'; 
+    $response = list_files($_GET['host'],$_GET['backupnum'],$_GET['sharename'],$folder,$_GET['location']);
     
         // Check if error occured
     if ($response['err']) {
@@ -100,17 +105,13 @@ if (isset($_GET['host']) && isset($_GET['sharename']) && isset($_GET['backupnum'
     
     $count = count($names);
 
-    //print($_GET["filter"]."=");
-    //print($_GET["location"]);
-
     $n = new OptimizedListInfos($names,_T("Files", "backuppc"));
     $n->disableFirstColumnActionLink();
     $n->addExtraInfo($sizes, _T("Size", "backuppc"));
-    //$n->addExtraInfo($checkboxes, "");
     $n->setMainActionClasses($cssClasses);
-    //$n->setCssClass("machineName");
     $n->setItemCount($count);
-    $n->setNavBar(new AjaxNavBar($count, $filter1));
+    $filter = $_GET['folder'].'|mDvPulse|'.$_GET['location'];
+    $n->setNavBar(new AjaxNavBar($count, $filter));
     $n->start = isset($_GET['start'])?$_GET['start']:0;
     $n->end = isset($_GET['end'])?$_GET['end']:$maxperpage;
     $n->setParamInfo($params); // Setting url params

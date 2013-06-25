@@ -87,6 +87,7 @@ if ($count=count($download_status)) {
     $n->addExtraInfo($times, _T("Restore time", "backuppc"));
     $n->addExtraInfo($status, _T("Status", "backuppc"));
     $n->setCssClass("file");
+    $filter1 = '';
     $n->setNavBar(new AjaxNavBar($count, $filter1));
     $n->setParamInfo($params);
     $n->addActionItem(new ActionItem(_T("Download", "backuppc"),"download","display","dir", "backuppc", "backuppc"));
