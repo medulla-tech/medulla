@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-06-24 01:07+0200\n"
-"PO-Revision-Date: 2013-06-23 23:11+0000\n"
+"POT-Creation-Date: 2013-06-25 09:38+0200\n"
+"PO-Revision-Date: 2013-06-25 07:57+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,29 +16,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: en_US\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-
-#: modules/pulse2/includes/menu_action.php:30
-msgid "Inventory"
-msgstr ""
-
-#: modules/pulse2/includes/menu_action.php:31
-msgid "Remote control"
-msgstr ""
-
-#: modules/pulse2/includes/menu_action.php:32
-#: modules/pulse2/includes/menu_group_action.php:66
-#: modules/pulse2/includes/menu_group_action.php:80
-msgid "Read log"
-msgstr ""
-
-#: modules/pulse2/includes/menu_action.php:33
-msgid "Software deployment"
-msgstr ""
-
-#: modules/pulse2/includes/menu_action.php:34
-#: modules/pulse2/includes/menu_group_action.php:85
-msgid "Imaging management"
-msgstr ""
 
 #: modules/pulse2/includes/menu_group_action.php:49
 msgid "Delete this group"
@@ -62,6 +39,12 @@ msgstr ""
 
 #: modules/pulse2/includes/menu_group_action.php:64
 msgid "Share this group"
+msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:66
+#: modules/pulse2/includes/menu_group_action.php:80
+#: modules/pulse2/includes/menu_action.php:33
+msgid "Read log"
 msgstr ""
 
 #: modules/pulse2/includes/menu_group_action.php:67
@@ -88,12 +71,33 @@ msgstr ""
 msgid "Software deployment on this imaging group"
 msgstr ""
 
+#: modules/pulse2/includes/menu_group_action.php:85
+#: modules/pulse2/includes/menu_action.php:35
+msgid "Imaging management"
+msgstr ""
+
 #: modules/pulse2/includes/menu_group_action.php:98
 msgid "Csv export"
 msgstr ""
 
 #: modules/pulse2/includes/locations_xmlrpc.inc.php:31
 msgid "Root entity"
+msgstr ""
+
+#: modules/pulse2/includes/menu_action.php:30
+msgid "Inventory"
+msgstr ""
+
+#: modules/pulse2/includes/menu_action.php:31
+msgid "Backup status"
+msgstr ""
+
+#: modules/pulse2/includes/menu_action.php:32
+msgid "Remote control"
+msgstr ""
+
+#: modules/pulse2/includes/menu_action.php:34
+msgid "Software deployment"
 msgstr ""
 
 #: modules/pulse2/pulse2/computers_list.php:42
