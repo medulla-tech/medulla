@@ -58,8 +58,8 @@ $count = count($data['hosts']);
 $n = new OptimizedListInfos($data['hosts'], _T("Host name", "backuppc"));
 $n->addExtraInfo($data['full'], _T("Full number", "backuppc"));
 $n->addExtraInfo($data['full_size'], _T("Full size (GB)", "backuppc"));
-$n->addExtraInfo($data['incr'], _T("incr. number", "backuppc"));
-$n->addExtraInfo($data['last_backup'], _T("Mast backup (days)", "backuppc"));
+$n->addExtraInfo($data['incr'], _T("Incr. number", "backuppc"));
+$n->addExtraInfo($data['last_backup'], _T("Latest backup (days)", "backuppc"));
 $n->addExtraInfo($data['state'], _T("Current state", "backuppc"));
 $n->addExtraInfo($data['last_attempt'], _T("Last message", "backuppc"));
 $n->setCssClass("machineName"); // CSS for icons
