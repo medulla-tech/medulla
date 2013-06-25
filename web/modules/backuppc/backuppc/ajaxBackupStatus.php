@@ -53,13 +53,26 @@ if (count($data) == 0){
     return;
 }
 
+$cnames = array();
+
+for ($i = 0 ; $i<count($data['hosts']) ; $i++){
+    $cnames[] = $data['hosts'][$i];
+    if (preg_match('@uuid([0-9]+)@i',$data['hosts'][$i],$matches) == 1)
+    {
+	$cn = getComputersName(array('uuid' => $matches[1]));
+	if (count($cn))
+	    $cnames[$i] = sprintf('<a href="main.php?module=backuppc&submod=backuppc&action=hostStatus&
+		cn=%s&objectUUID=UUID%s">%s</a>',$cn[0],$matches[1],$cn[0]);
+    }
+}
+
 $count = count($data['hosts']);
 
-$n = new OptimizedListInfos($data['hosts'], _T("Host name", "backuppc"));
+$n = new OptimizedListInfos($cnames, _T("Host name", "backuppc"));
 $n->addExtraInfo($data['full'], _T("Full number", "backuppc"));
 $n->addExtraInfo($data['full_size'], _T("Full size (GB)", "backuppc"));
-$n->addExtraInfo($data['incr'], _T("Incr. number", "backuppc"));
-$n->addExtraInfo($data['last_backup'], _T("Latest backup (days)", "backuppc"));
+$n->addExtraInfo($data['incr'], _T("incr. number", "backuppc"));
+$n->addExtraInfo($data['last_backup'], _T("Mast backup (days)", "backuppc"));
 $n->addExtraInfo($data['state'], _T("Current state", "backuppc"));
 $n->addExtraInfo($data['last_attempt'], _T("Last message", "backuppc"));
 $n->setCssClass("machineName"); // CSS for icons
@@ -68,9 +81,6 @@ $filter1 = $_GET['location'];
 $n->setNavBar(new AjaxNavBar($count, $filter1));
 $n->start = isset($_GET['start'])?$_GET['start']:0;
 $n->end = (isset($_GET['end'])?$_GET['end']:$maxperpage)-1;
-
-//$n->addActionItem(new ActionItem(_T("View", "backuppc"),"BrowseBackups","display","host", "backuppc", "backuppc"));
-//$n->addActionItem(new ActionItem(_T("Edit config", "backuppc"),"edit","edit","host", "backuppc", "backuppc"));
 
 print "<br/><br/>"; // to go below the location bar : FIXME, really ugly as line height dependent
 
