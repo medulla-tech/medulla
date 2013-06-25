@@ -33,7 +33,7 @@ function cmp($a,$b){
     return ($a['time']<$b['time'])? 1 : -1;
 }
 
-print uasort($download_status,'cmp');
+uasort($download_status,'cmp');
 
 if ($count=count($download_status)) {
     
