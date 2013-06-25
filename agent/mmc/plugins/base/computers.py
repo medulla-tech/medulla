@@ -180,6 +180,12 @@ class ComputerI:
         """
         pass
 
+    def getComputersOS(self, uuids):
+        """
+        Get OS for a given computer
+        """
+        pass
+
     def getComputersListHeaders(self, ctx):
         """
         Get the headers of the computer list
@@ -371,6 +377,11 @@ class ComputerManager(Singleton):
         klass = self.components[self.main]
         instance = klass()
         return instance.getComputerByMac(mac)
+
+    def getComputersOS(self, uuids):
+        klass = self.components[self.main]
+        instance = klass()
+        return instance.getComputersOS(uuids)
 
     def getComputersListHeaders(self, ctx):
         klass = self.components[self.main]

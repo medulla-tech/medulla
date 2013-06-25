@@ -2536,6 +2536,9 @@ class RpcProxy(RpcProxyI):
         ret.sort(lambda x, y: cmp(x.lower(), y.lower()))
         return xmlrpcCleanup(ret)
 
+    def getComputersOS(self, uuids):
+        return xmlrpcCleanup(ComputerManager().getComputersOS(uuids))
+
     def getComputersList(self, filt = None):
         ctx = self.currentContext
         return xmlrpcCleanup(ComputerManager().getComputersList(ctx, filt))

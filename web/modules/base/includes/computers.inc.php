@@ -44,6 +44,18 @@ function getComputersName($filter = '') {
     return xmlCall("base.getComputersName", array($filter));
 }
 
+/*
+ * Get Operating system name for a given uuid or uuids' list
+ * @param $uuids: One UUID or a list of UUIDS
+ * @type $uuids: str or list
+ *
+ * @return: array of (uuid => UUIDXX, OSName => 'OS Name')
+ * @rtype: array
+ */
+function getComputersOS($uuids) {
+    return xmlCall("base.getComputersOS", array($uuids));
+}
+
 function getRestrictedComputersName($min = 0, $max = -1, $filt = null) {
     return xmlCall("base.getRestrictedComputersName", array($min, $max, $filt));
 }
