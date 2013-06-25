@@ -2528,6 +2528,23 @@ class Glpi07(DyngroupDatabaseHelper):
         session.close()
         return ret
 
+    def getComputersOS(self, uuids):
+        if isinstance(uuids, str):
+            uuids = [uuids]
+        session = create_session()
+        query = session.query(Machine) \
+                .add_column(self.os.c.name) \
+                .select_from(self.machine.join(self.os))
+        query = query.filter(self.machine.c.ID.in_([fromUUID(uuid) for uuid in uuids]))
+        session.close()
+        res = []
+        for machine, OSName in query:
+            res.append({
+                'uuid': toUUID(machine.ID),
+                'OSName': OSName,
+            })
+        return res
+
     def getMachineUUIDByMacAddress(self, mac):
         """
         Return a machine's UUID by MAC address.

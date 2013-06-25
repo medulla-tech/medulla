@@ -220,8 +220,6 @@ class GlpiComputers(ComputerI):
         """
         return self.glpi.delMachine(uuid)
 
-
-
     def getComputerByMac(self, mac):
         ret = self.glpi.getMachineByMacAddress('imaging_module', mac)
         if type(ret) == list:
@@ -230,6 +228,9 @@ class GlpiComputers(ComputerI):
             else:
                 return None
         return ret
+
+    def getComputersOS(self, uuids):
+        return self.glpi.getComputersOS(uuids)
 
     def getComputersListHeaders(self, ctx):
         ret = []

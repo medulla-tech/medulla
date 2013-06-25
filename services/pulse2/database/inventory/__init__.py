@@ -658,6 +658,35 @@ class Inventory(DyngroupDatabaseHelper):
 
         return ret
 
+    def getComputersOS(self, uuids):
+        """
+        Get OS for a given computer
+        """
+        if isinstance(uuids, str):
+            uuids = [uuids]
+        session = create_session()
+        q = session.query(Machine) \
+            .add_column(self.table['Hardware'].c.OperatingSystem) \
+                .select_from(self.machine
+                    .join(self.table['hasHardware'], self.machine.c.id == self.table['hasHardware'].c.machine) \
+                    .join(self.table['Hardware'], self.table['Hardware'].c.id == self.table['hasHardware'].c.hardware)
+                    .join(self.table['Inventory'], self.table['Inventory'].c.id == self.table['hasHardware'].c.inventory)
+                )
+        q = q.filter(
+            and_(
+                self.machine.c.id.in_([fromUUID(uuid) for uuid in uuids]),
+                self.inventory.c.Last == 1,
+            )
+        )
+        session.close()
+        res = []
+        for machine, OSName in q:
+            res.append({
+                'uuid': toUUID(machine.id),
+                'OSName': OSName,
+            })
+        return res
+
     def getMachineByInventory (self, ctx, inventory) :
         """
         Return the machine resolved by inventory content.

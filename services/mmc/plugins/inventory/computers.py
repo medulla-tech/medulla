@@ -219,6 +219,9 @@ class InventoryComputers(ComputerI):
                 return None
         return ret
 
+    def getComputersOS(self, uuids):
+        return self.inventory.getComputersOS(uuids)
+
     def getComputersListHeaders(self, ctx):
         """
         Computers list header is just hostname as Computer Name and Description as Description
