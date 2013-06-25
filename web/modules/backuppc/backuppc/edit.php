@@ -145,20 +145,20 @@ $sel->setSelected($backup_profile_id);
 $sel = new SelectItem("encoding");
 $list = array(
     "utf8"=>'UTF8',
-    "cp1252" => _T('Windows-1252 — Western europe','backuppc'),
-    "cp874" => _T('Windows-874 — Thai','backuppc'),
-    "cp932" => _T('Windows-932 — Japanese','backuppc'),
-    "cp936" => _T('Windows-936 — Chinese (simplified)','backuppc'),
-    "cp949" => _T('Windows-949 — Korean','backuppc'),
-    "cp950" => _T('Windows-950 — Chinese (traditional)','backuppc'),
-    "cp1250" => _T('Windows-1250 — Latin (Central europe)','backuppc'),
-    "cp1251" => _T('Windows-1251 — Cyrillic','backuppc'),
-    "cp1253" => _T('Windows-1253 — Greek','backuppc'),
-    "cp1254" => _T('Windows-1254 — Turkish','backuppc'),
-    "cp1255" => _T('Windows-1255 — Hebrew','backuppc'),
-    "cp1256" => _T('Windows-1256 — Arabic','backuppc'),
-    "cp1257" => _T('Windows-1257 — Latin (Baltic languages)','backuppc'),
-    "cp1258" => _T('Windows-1258 — Vietnamese','backuppc')
+    "cp1252" => _T('Windows-1252 - Western europe','backuppc'),
+    "cp874" => _T('Windows-874 - Thai','backuppc'),
+    "cp932" => _T('Windows-932 - Japanese','backuppc'),
+    "cp936" => _T('Windows-936 - Chinese (simplified)','backuppc'),
+    "cp949" => _T('Windows-949 - Korean','backuppc'),
+    "cp950" => _T('Windows-950 - Chinese (traditional)','backuppc'),
+    "cp1250" => _T('Windows-1250 - Latin (Central europe)','backuppc'),
+    "cp1251" => _T('Windows-1251 - Cyrillic','backuppc'),
+    "cp1253" => _T('Windows-1253 - Greek','backuppc'),
+    "cp1254" => _T('Windows-1254 - Turkish','backuppc'),
+    "cp1255" => _T('Windows-1255 - Hebrew','backuppc'),
+    "cp1256" => _T('Windows-1256 - Arabic','backuppc'),
+    "cp1257" => _T('Windows-1257 - Latin (Baltic languages)','backuppc'),
+    "cp1258" => _T('Windows-1258 - Vietnamese','backuppc')
     );
 
 $sel->setElements(array_values($list));
