@@ -43,14 +43,14 @@ $page = new Page("index", _T('Backup status', 'backuppc'));
 $submod->addPage($page);
 
 $page = new Page("hostStatus", _T('Host backup status', 'backuppc'));
-$submod->addPage($page);
+$page->setFile("modules/backuppc/backuppc/hostStatus.php");
 
-$page = new Page("hostSummary", _T('Host summary', 'backuppc'));
-$page->setOptions(array("noHeader"=>True,"visible"=>False));
-$submod->addPage($page);
+$tab = new Tab("tab1", _T('Host summary', 'backuppc'));
+$page->addTab($tab);
 
-$page = new Page("edit", _T('Edit host config', 'backuppc'));
-$page->setOptions(array("noHeader"=>True,"visible"=>False));
+$tab = new Tab("tab2", _T('Edit host config', 'backuppc'));
+$page->addTab($tab);
+
 $submod->addPage($page);
 
 $page = new Page("EditBackupProfile", _T('Edit Backup Profile', 'backuppc'));
