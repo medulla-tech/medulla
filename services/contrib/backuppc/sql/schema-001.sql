@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `backup_profiles` (
   `excludes` text NOT NULL,
   `encoding` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1000 ;
 
 
 INSERT INTO `backup_profiles` (`id`, `profilename`, `sharenames`, `excludes`, `encoding`) VALUES
@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `period_profiles` (
   `incr` float NOT NULL,
   `exclude_periods` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1000;
 
 INSERT INTO `period_profiles` (`id`, `profilename`, `full`, `incr`, `exclude_periods`) VALUES
 (1, 'Nightly', '6.97', '0.97', '7.00=>20.00:1,2,3,4,5,6,7'),
