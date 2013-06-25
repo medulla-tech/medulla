@@ -767,7 +767,6 @@ def get_global_status(entity_uuid):
     if getHTMLerr(html): 
         return getHTMLerr(html)
     result = {'err':0,'data':{}}
-    d = pq(html)
     try:
         tb_good = getTableByTitle(html,'Hosts with good Backups')
         tb_none = getTableByTitle(html,'Hosts with no Backups')
