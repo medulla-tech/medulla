@@ -26,61 +26,6 @@ require_once("modules/backuppc/includes/xmlrpc.php");
 require_once("modules/backuppc/includes/functions.php");
 require_once("modules/backuppc/includes/html.inc.php");
 
-// Receiving POST DATA
-if (isset($_POST['bconfirm'],$_POST['host'])){
-    // Setting host profiles
-    set_host_backup_profile($_POST['host'], $_POST['backup_profile']);
-    set_host_period_profile($_POST['host'], $_POST['period_profile']);
-    // Sending Host config to backupPC
-    $cfg = array();
-    // 1 - Shares and exclude settings
-    $cfg['RsyncShareName'] = $_POST['sharenames'];
-    // Charset 
-    $cfg['ClientCharset'] = $_POST['encoding'];
-    
-    // Splitting excludes by \n
-    foreach ($_POST['excludes'] as $key => $value) {
-        $_POST['excludes'][$key] = explode("\n",trim($value));
-        for ($j = 0 ; $j< count($_POST['excludes'][$key]); $j++)
-            $_POST['excludes'][$key][$j] = trim ($_POST['excludes'][$key][$j]);
-    }
-    
-    $cfg['BackupFilesExclude'] = array_combine($_POST['sharenames'],$_POST['excludes']);
-    
-    // 2 -Backup Period settings
-    
-    $cfg['FullPeriod'] = fmtFloat(fmtfloat($_POST['full'])-0.03);
-    $cfg['IncrPeriod'] = fmtFloat(fmtfloat($_POST['incr'])-0.03);
-    
-    // Blackout periods
-    $starthours = $_POST['starthour'];
-    $endhours = $_POST['endhour'];
-    
-    $cfg['BlackoutPeriods'] = array();
-    
-    for ($i = 0 ; $i<count($starthours); $i++) {
-        $daystring = implode(', ',$_POST['days'.$i]);
-        $cfg['BlackoutPeriods'][] = array(
-            'hourBegin' => hhmm2float($starthours[$i]), 
-            'hourEnd'   => hhmm2float($endhours[$i]),
-            'weekDays'  => $daystring
-                );
-    }
-    
-    // Rsync and NmbLookup command lines
-    $cfg['NmbLookupCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolver -A $host';
-    $cfg['NmbLookupFindHostCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolver $host';
-    $cfg['XferMethod'] = 'rsync';
-    $cfg['RsyncClientCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l root $hostIP $rsyncPath $argList+';
-    $cfg['RsyncClientRestoreCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l root $hostIP $rsyncPath $argList+';
-    $cfg['PingCmd'] = '/bin/true';
-    
-    // Enable or disable backup
-    $cfg['BackupsDisable'] = isset($_POST['active'])?'0':'1';
-    
-    set_host_config($_POST['host'], $cfg);
-}
-
 // ===========================================================================
 // ===========================================================================
 
@@ -145,20 +90,20 @@ $sel->setSelected($backup_profile_id);
 $sel = new SelectItem("encoding");
 $list = array(
     "utf8"=>'UTF8',
-    "cp1252" => _T('Windows-1252 - Western europe','backuppc'),
-    "cp874" => _T('Windows-874 - Thai','backuppc'),
-    "cp932" => _T('Windows-932 - Japanese','backuppc'),
-    "cp936" => _T('Windows-936 - Chinese (simplified)','backuppc'),
-    "cp949" => _T('Windows-949 - Korean','backuppc'),
-    "cp950" => _T('Windows-950 - Chinese (traditional)','backuppc'),
-    "cp1250" => _T('Windows-1250 - Latin (Central europe)','backuppc'),
-    "cp1251" => _T('Windows-1251 - Cyrillic','backuppc'),
-    "cp1253" => _T('Windows-1253 - Greek','backuppc'),
-    "cp1254" => _T('Windows-1254 - Turkish','backuppc'),
-    "cp1255" => _T('Windows-1255 - Hebrew','backuppc'),
-    "cp1256" => _T('Windows-1256 - Arabic','backuppc'),
-    "cp1257" => _T('Windows-1257 - Latin (Baltic languages)','backuppc'),
-    "cp1258" => _T('Windows-1258 - Vietnamese','backuppc')
+    "cp1252" => _T('Windows-1252 — Western europe','backuppc'),
+    "cp874" => _T('Windows-874 — Thai','backuppc'),
+    "cp932" => _T('Windows-932 — Japanese','backuppc'),
+    "cp936" => _T('Windows-936 — Chinese (simplified)','backuppc'),
+    "cp949" => _T('Windows-949 — Korean','backuppc'),
+    "cp950" => _T('Windows-950 — Chinese (traditional)','backuppc'),
+    "cp1250" => _T('Windows-1250 — Latin (Central europe)','backuppc'),
+    "cp1251" => _T('Windows-1251 — Cyrillic','backuppc'),
+    "cp1253" => _T('Windows-1253 — Greek','backuppc'),
+    "cp1254" => _T('Windows-1254 — Turkish','backuppc'),
+    "cp1255" => _T('Windows-1255 — Hebrew','backuppc'),
+    "cp1256" => _T('Windows-1256 — Arabic','backuppc'),
+    "cp1257" => _T('Windows-1257 — Latin (Baltic languages)','backuppc'),
+    "cp1258" => _T('Windows-1258 — Vietnamese','backuppc')
     );
 
 $sel->setElements(array_values($list));

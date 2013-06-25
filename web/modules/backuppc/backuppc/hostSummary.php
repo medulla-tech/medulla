@@ -27,20 +27,7 @@ require_once("modules/backuppc/includes/xmlrpc.php");
 $computer_name = $_GET['cn'];
 $uuid = $_GET['objectUUID'];
 
-// ==========================================================
-// Receiving request to set backup for host
-// ==========================================================
 
-if (isset($_POST['setBackup'],$_POST['host'])) {        
-    $response = set_backup_for_host($_POST['host']);
-    // Checking reponse
-    if (isset($response))
-        if (isXMLRPCError() || $response['err']) {
-            new NotifyWidgetFailure(nl2br($response['errtext']));
-        }
-    else
-        new NotifyWidgetSuccess(_T('Backup successfully set for host '.$_POST['cn'],'backuppc'));
-}
 
 // ==========================================================
 // Receiving POST data for user actions
@@ -54,13 +41,14 @@ elseif (isset($_POST['stopBackup']))
     $response = stop_backup($_POST['host']);
 
 // Check if error occured
-if (isset($response))
+if (isset($response)) {
     if (isXMLRPCError() || $response['err']) {
         new NotifyWidgetFailure(nl2br($response['errtext']));
     }
-    else
+    else {
         new NotifyWidgetSuccess(_T('Action requested successfully','backuppc'));
-    
+    }
+}
 // ==========================================================
 // Test if UUID is set on BackupPC Hosts DB
 // ==========================================================
