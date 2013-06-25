@@ -772,10 +772,14 @@ def get_global_status(entity_uuid):
         tb_good = getTableByTitle(html,'Hosts with good Backups')
         tb_none = getTableByTitle(html,'Hosts with no Backups')
         # Contents
-        if not tb_good or not tb_none:
+        if not (tb_good or tb_none):
             return result
         tb_good = getTableContent(tb_good)
+        if not tb_good:
+            tb_good = [[] for i in xrange(12)]
         tb_none = getTableContent(tb_none)
+        if not tb_none:
+            tb_none = [[] for i in xrange(12)]
         #
         result['data'] = { \
             'hosts':tb_good[0]+tb_none[0], \

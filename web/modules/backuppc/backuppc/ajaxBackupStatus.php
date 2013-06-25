@@ -24,16 +24,10 @@
 
 require_once("modules/backuppc/includes/xmlrpc.php");
 
-if (isset($_GET['location'])){
-    $location = $_GET['location'];
-    $_SESSION['backuppc_selentity'] = $_GET['location'];
-    
-}
-elseif (isset($_SESSION['backuppc_selentity'])){
-    $location = $_SESSION['backuppc_selentity'];  
-}
+if (!isset($_GET['location']))
+   return;
 else
-    return;
+    $location = $_GET['location'];
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
