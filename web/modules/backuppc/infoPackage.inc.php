@@ -82,7 +82,7 @@ $submod->addPage($page);
 
 // ========= RESTORE PAGES ===============
 
-$page = new Page("download");
+$page = new Page("download", _T("Download files/ZIP from backup", 'backuppc'));
 $page->setFile("modules/backuppc/backuppc/download.php");
 $submod->addPage($page);
 
