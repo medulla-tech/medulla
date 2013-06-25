@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-25 09:57+0200\n"
+"POT-Creation-Date: 2013-06-25 11:24+0200\n"
 "PO-Revision-Date: 2013-06-21 15:58+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/"
@@ -17,10 +17,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-
-#: modules/backuppc/backuppc/hostStatus.php:38
-msgid " Backup status"
-msgstr ""
 
 #: modules/backuppc/backuppc/BrowseBackups.php:56
 #: modules/backuppc/backuppc/ajaxDownloadsTable.php:48
@@ -119,7 +115,7 @@ msgstr ""
 msgid "Cancelled by user"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:44
+#: modules/backuppc/backuppc/hostStatus.php:43
 msgid "Configuration"
 msgstr ""
 
@@ -127,7 +123,7 @@ msgstr ""
 msgid "Configure"
 msgstr ""
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:69
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:63
 msgid "Current state"
 msgstr ""
 
@@ -181,7 +177,7 @@ msgstr ""
 msgid "Edit config"
 msgstr ""
 
-#: modules/backuppc/infoPackage.inc.php:52
+#: modules/backuppc/infoPackage.inc.php:51
 msgid "Edit host config"
 msgstr ""
 
@@ -229,11 +225,11 @@ msgstr ""
 msgid "Friday"
 msgstr ""
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:65
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:59
 msgid "Full number"
 msgstr ""
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:66
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:60
 msgid "Full size (GB)"
 msgstr ""
 
@@ -245,7 +241,7 @@ msgstr ""
 msgid "Host backup status"
 msgstr ""
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:64
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:58
 #: modules/backuppc/backuppc/ajaxHostsList.php:57
 msgid "Host name"
 msgstr ""
@@ -258,7 +254,7 @@ msgstr ""
 msgid "Idle"
 msgstr ""
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:67
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:61
 msgid "Incr. number"
 msgstr ""
 
@@ -274,11 +270,11 @@ msgstr ""
 msgid "KB"
 msgstr ""
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:70
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:64
 msgid "Last message"
 msgstr ""
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:68
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:62
 msgid "Latest backup (days)"
 msgstr ""
 
@@ -298,7 +294,7 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:58
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:52
 msgid "No entry found."
 msgstr ""
 
@@ -402,7 +398,7 @@ msgstr ""
 msgid "Stop Backup"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:43
+#: modules/backuppc/backuppc/hostStatus.php:42
 msgid "Summary"
 msgstr ""
 

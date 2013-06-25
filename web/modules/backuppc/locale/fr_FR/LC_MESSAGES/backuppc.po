@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-25 09:57+0200\n"
+"POT-Creation-Date: 2013-06-25 11:24+0200\n"
 "PO-Revision-Date: 2013-06-24 08:16+0000\n"
 "Last-Translator: Cécile Adam <acecile@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
@@ -19,10 +19,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
-
-#: modules/backuppc/backuppc/hostStatus.php:38
-msgid " Backup status"
-msgstr " Statut de sauvegarde"
 
 #: modules/backuppc/backuppc/BrowseBackups.php:56
 #: modules/backuppc/backuppc/ajaxDownloadsTable.php:48
@@ -121,7 +117,7 @@ msgstr "Octets"
 msgid "Cancelled by user"
 msgstr "Annulé par l'utilisateur"
 
-#: modules/backuppc/backuppc/hostStatus.php:44
+#: modules/backuppc/backuppc/hostStatus.php:43
 msgid "Configuration"
 msgstr "Configuration"
 
@@ -129,7 +125,7 @@ msgstr "Configuration"
 msgid "Configure"
 msgstr "Configurer"
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:69
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:63
 #, fuzzy
 msgid "Current state"
 msgstr "Etat courant: "
@@ -184,7 +180,7 @@ msgstr "Editer la période de sauvegarde"
 msgid "Edit config"
 msgstr "Editer"
 
-#: modules/backuppc/infoPackage.inc.php:52
+#: modules/backuppc/infoPackage.inc.php:51
 msgid "Edit host config"
 msgstr "Editer la configuration de la machine"
 
@@ -232,11 +228,11 @@ msgstr "Dossier"
 msgid "Friday"
 msgstr "Vendredi"
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:65
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:59
 msgid "Full number"
 msgstr ""
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:66
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:60
 msgid "Full size (GB)"
 msgstr ""
 
@@ -248,7 +244,7 @@ msgstr "Go"
 msgid "Host backup status"
 msgstr "Statut de la sauvegarde"
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:64
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:58
 #: modules/backuppc/backuppc/ajaxHostsList.php:57
 msgid "Host name"
 msgstr "Nom de la machine"
@@ -261,7 +257,7 @@ msgstr "Résumé"
 msgid "Idle"
 msgstr "Rien à faire"
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:67
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:61
 msgid "Incr. number"
 msgstr ""
 
@@ -277,11 +273,11 @@ msgstr "Intervalle entre deux sauvegardes incrémentales (jours)"
 msgid "KB"
 msgstr "Ko"
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:70
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:64
 msgid "Last message"
 msgstr ""
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:68
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:62
 #, fuzzy
 msgid "Latest backup (days)"
 msgstr "Statut de la sauvegarde"
@@ -303,7 +299,7 @@ msgstr "Lundi"
 msgid "Name"
 msgstr "Nom"
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:58
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:52
 msgid "No entry found."
 msgstr ""
 
@@ -409,7 +405,7 @@ msgstr "Statut"
 msgid "Stop Backup"
 msgstr "Arrêter la sauvegarde"
 
-#: modules/backuppc/backuppc/hostStatus.php:43
+#: modules/backuppc/backuppc/hostStatus.php:42
 msgid "Summary"
 msgstr "Résumé"
 
@@ -493,6 +489,9 @@ msgstr "le"
 #: modules/backuppc/backuppc/ajaxDownloadsTable.php:59
 msgid "to"
 msgstr "à"
+
+#~ msgid " Backup status"
+#~ msgstr " Statut de sauvegarde"
 
 #~ msgid "File"
 #~ msgstr "Fichier"
