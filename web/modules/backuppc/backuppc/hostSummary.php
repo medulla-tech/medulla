@@ -27,8 +27,6 @@ require_once("modules/backuppc/includes/xmlrpc.php");
 $computer_name = $_GET['cn'];
 $uuid = $_GET['objectUUID'];
 
-
-
 // ==========================================================
 // Receiving POST data for user actions
 // ==========================================================
@@ -115,7 +113,7 @@ $f->display();
 // ==========================================================
 
 if ($response['data']) {
-
+    
     $backup_nums = $response['data']['backup_nums'];
     $types = $response['data']['type'];
     $ages = $response['data']['ages'];

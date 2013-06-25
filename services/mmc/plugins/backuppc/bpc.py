@@ -741,16 +741,16 @@ def get_host_status(host):
         size_summary = getTableContent(size_summary)
         #
         result['data'] = { \
-            'backup_nums':tb_summary[0], \
-            'type':tb_summary[1], \
-            'start_dates':tb_summary[4], \
-            'durations':tb_summary[5], \
-            'ages':tb_summary[6], \
-            'xfer_errs':xfer_summary[3], \
-            'total_file_count':size_summary[2], \
-            'total_file_size':size_summary[3], \
-            'new_file_count':size_summary[7], \
-            'new_file_size':size_summary[8]
+            'backup_nums':tb_summary[0][::-1], \
+            'type':tb_summary[1][::-1], \
+            'start_dates':tb_summary[4][::-1], \
+            'durations':tb_summary[5][::-1], \
+            'ages':tb_summary[6][::-1], \
+            'xfer_errs':xfer_summary[3][::-1], \
+            'total_file_count':size_summary[2][::-1], \
+            'total_file_size':size_summary[3][::-1], \
+            'new_file_count':size_summary[7][::-1], \
+            'new_file_size':size_summary[8][::-1]
         }
     except:
         result['data'] = {}
