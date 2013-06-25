@@ -97,7 +97,7 @@ jQuery.noConflict();
 function refresh(){
         parentcontainer = jQuery('div#downloadTable').parent();
         jQuery.get(
-            "<?php  echo 'main.php?module=backuppc&submod=backuppc&action=ajaxDownloadsTable&host='.$_GET['host']; ?>",
+            "<?php  echo 'main.php?module=backuppc&submod=backuppc&action=ajaxDownloadsTable'; ?>",
              function(data){
                 jQuery('div#downloadTable').remove();
                 parentcontainer.append(data);
