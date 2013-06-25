@@ -344,7 +344,7 @@ class Pulse2ConfigFile(object):
     # If defaults is None, try to read default values from config file in
     # examplesdir
     defaults = None
-    mode = stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP
+    mode = stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH
     # ConfigObj object
     config = None
 
