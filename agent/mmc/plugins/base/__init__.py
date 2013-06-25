@@ -2527,7 +2527,12 @@ class RpcProxy(RpcProxyI):
     def getComputersName(self, filt = None):
         ctx = self.currentContext
         ret = ComputerManager().getComputersList(ctx, filt)
-        ret = [ret[x][1]['cn'][0] for x in range(len(ret))]
+        if isinstance(ret, list): # inventory
+            ret = [ret[x][1]['cn'][0] for x in range(len(ret))]
+        elif isinstance(ret, dict): # glpi
+            ret = [ret[x][1]['cn'][0] for x in ret]
+        else:
+            raise Exception('Error when parsing ComputerList result')
         ret.sort(lambda x, y: cmp(x.lower(), y.lower()))
         return xmlrpcCleanup(ret)
 
