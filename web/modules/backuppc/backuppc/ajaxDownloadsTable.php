@@ -28,6 +28,13 @@ print '<div id="downloadTable">';
 
 $download_status = get_download_status();
 
+// Sorting function
+function cmp($a,$b){
+    return ($a['time']<$b['time'])? 1 : -1;
+}
+
+print uasort($download_status,'cmp');
+
 if ($count=count($download_status)) {
     
     printf("<br/><br/><h2>%s</h2>",_T('Requested restores','backuppc'));
