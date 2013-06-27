@@ -71,7 +71,7 @@ if (isset($_POST['setBackup'],$_POST['host'])) {
         }
     }
 
-    if ($bestSim > 15) {
+    if ($bestSim > 35) {
         $_GET['preselected_profile'] = $bestProfile['id'];
         set_host_backup_profile($_POST['host'], $bestProfile['id']);
     }
