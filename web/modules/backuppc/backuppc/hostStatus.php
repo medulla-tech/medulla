@@ -25,6 +25,7 @@
 require_once("modules/backuppc/includes/xmlrpc.php");
 require_once("modules/backuppc/includes/functions.php");
 require_once("modules/backuppc/includes/html.inc.php");
+require_once("modules/base/includes/computers.inc.php");
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 
@@ -47,6 +48,30 @@ if (isset($_POST['setBackup'],$_POST['host'])) {
             $_GET['tab'] = 'tab2';
         }
     }
+    
+    $rep = getComputersOS($_POST['host']);
+    $os = $rep[0]['OSName'];
+    // Init best profile
+    $bestProfile = NULL;
+    $bestSim = 0;
+
+    $backup_profiles = get_backup_profiles();
+    foreach ($backup_profiles as $profile){
+        $profilename = $profile['profilename'];
+        similar_text($os, $profilename,$perc);//
+        if ($perc > $bestSim){
+            $bestSim = $perc;
+            $bestProfile = $profile;
+        }
+        // Windows 7 special case
+        similar_text($os, str_replace('/Vista','',$profilename),$perc);//
+        if ($perc > $bestSim){
+            $bestSim = $perc;
+            $bestProfile = $profile;
+        }
+    }
+    $_GET['preselected_profile'] = $bestProfile['id'];
+    set_host_backup_profile($_POST['host'], $bestProfile['id']);
 }
 
 // ==========================================================
@@ -125,3 +150,4 @@ $p->setSideMenu($sidemenu);
 $p->display();
 
 ?>
+

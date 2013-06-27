@@ -425,6 +425,12 @@ jQuery(function(){
         jQuery(this).val(selProfile);
         
     });
+    
+    <?php
+    if (isset($_GET['preselected_profile']))
+        print "jQuery('select#backup_profile').trigger('change');";
+    ?>
+    
 });   
    
     
