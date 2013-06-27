@@ -38,7 +38,7 @@ def getBackupServerByUUID(uuid):
     """
     @param uuid: Machine uuid
     @type uuid: str
-    
+
     @returns: the Backup Server URL for the specified UUID
     @rtype: str
     """
@@ -57,9 +57,9 @@ def getBackupServerByUUID(uuid):
     # If we're here, Backup host not mapped
     logger.error("Cannot get BackupServer for this UUID (%s), please check Entity <> BackupServer mappings." % uuid)
     return ''
-   
-   
-def dictToURL(params):   
+
+
+def dictToURL(params):
     s = ''
     for k in params.keys():
         if type(params[k]) == type([]):
@@ -71,7 +71,7 @@ def dictToURL(params):
 def send_request(params,url=''):
     """Send a request to BackupPC web interface.
     params [dict]: params to be transmitten.
-    url : (Default empty) BackupPC Server url, if not specified 
+    url : (Default empty) BackupPC Server url, if not specified
     get the default server for the host entity.
     If success, returns HTML response.
     """
@@ -130,15 +130,15 @@ def getTableContent(table):
         lines += [line]
     return [list(i) for i in zip(*lines)]
 
-  
-def getHTMLerr(html):    
+
+def getHTMLerr(html):
     d = pq(html)
     page_title = d('title').text()
     if page_title == 'BackupPC: Error':
         # Printing error text
         logger.warning(d('.h1').text())
         return {'err':15,'errtext':d('.h1').text()}
-    
+
 
 # ==========================================================================
 # MAIN BACKUPPC FUNCTIONS
@@ -160,7 +160,7 @@ def get_host_list(pattern=""):
         if options.eq(i).attr('value') != '#' and pattern in options.eq(i).text():
             hosts = hosts + [options.eq(i).text()]
     return {'err':0,'data':hosts}
-    
+
 
 def get_backup_list(host):
     """Get available restore point for the specified host.
@@ -169,17 +169,17 @@ def get_backup_list(host):
     html=send_request({'host':host})
     if not html:
         return _CONNECTION_ERROR
-    if getHTMLerr(html): 
+    if getHTMLerr(html):
         return getHTMLerr(html)
-    tb_bak_sum = getTableByTitle(html,'Backup Summary')   
+    tb_bak_sum = getTableByTitle(html,'Backup Summary')
     if tb_bak_sum:
         bk_list = getTableContent(tb_bak_sum)
         return {'err':0,'data':bk_list}
     else:
         return _FORMAT_ERROR
- 
-   
-   
+
+
+
 def get_share_names(host,backup_num):
     # Setting params
     params = {}
@@ -190,7 +190,7 @@ def get_share_names(host,backup_num):
     html = send_request(params)
     if not html:
         return _CONNECTION_ERROR
-    if getHTMLerr(html): 
+    if getHTMLerr(html):
         return getHTMLerr(html)
     # Setting a pquery object on html
     d = pq(html)
@@ -205,7 +205,7 @@ def get_share_names(host,backup_num):
             if lines.eq(i).text()[0]=='/':
                     share_names = share_names + [lines.eq(i).text()]
     return {'err':0,'data':share_names}
-              
+
 
 
 def list_files(host,backup_num,share_name,dir,filter,recursive=0):
@@ -318,7 +318,7 @@ def download_file(filepath,params):
                 os.unlink(_filepath)
                 # Remove temp dir
                 rmtree(_tempdir,True)
-            # Setting file mode to 777    
+            # Setting file mode to 777
             os.chmod(filepath,511)
             return {'err':0,'filepath':filepath}
         else:
@@ -341,7 +341,7 @@ def get_download_status():
         if download_status[k]['time'] == 1 and  int(time.time())-download_status[k]['time'] > 24*60*60:
             del download_status[k]
             # Delete files (if not a direct restore)
-            if not '>DIRECT:' in k: os.unlink(k) 
+            if not '>DIRECT:' in k: os.unlink(k)
         elif '>DIRECT:' in k:
             # Check restore status
             status = get_host_status(download_status[k]['host'])['status']
@@ -364,10 +364,10 @@ def restore_file(host,backup_num,share_name,files):
     @type share_name: str
     @param files: Files to restore
     @type files: str,list
-    
+
     Launch a Download thread of the specified file from the Backup Server.
     If <files> is a List, a ZIP archive is generated.
-    
+
     @returns: Temporary Path to the restored file
     @rtype: str
     """
@@ -379,7 +379,7 @@ def restore_file(host,backup_num,share_name,files):
         download_status[destination].update(result)
     def _failure(failure):
         logger.error(str(failure))
-    # 
+    #
     # Generating temp filepath
     # If tempdir doesnt exist we create it
     if not os.path.exists(BackuppcConfig().tempdir):
@@ -430,14 +430,14 @@ def restore_files_to_host(host,backup_num,share_name,files,hostDest='',shareDest
     # Converting params dict to an http get string
     html = send_request(params)
     if not html: return _CONNECTION_ERROR
-    if getHTMLerr(html): 
+    if getHTMLerr(html):
         return getHTMLerr(html)
     else:
         # Updating download status table
         global download_status
         download_status['>DIRECT:'+host] = {'status':0,'host':host,'time':int(time.time()),'destdir':share_name+pathHdr}
         return {'err':0}
-        
+
 
 # ==========================================================================
 # HOST CONFIG FUNCTIONS
@@ -445,14 +445,14 @@ def restore_files_to_host(host,backup_num,share_name,files,hostDest='',shareDest
 
 def get_host_config(host,backupserver=''):
     # Function to convert _zZ_ to dict
-    def underscores_to_dict(cfg):        
+    def underscores_to_dict(cfg):
         for key in cfg.keys():
             if '_zZ_' in key:
                 keys = string.split(key,'_zZ_')
                 root = cfg
                 for i in xrange(len(keys)-1):
                     nkey = keys[i]
-                    if not nkey in root: 
+                    if not nkey in root:
                         root[nkey]={}
                     root=root[nkey]
                 root[keys[-1]] = cfg[key]
@@ -466,7 +466,7 @@ def get_host_config(host,backupserver=''):
     html = send_request(params,backupserver)
     if not html:
         return _CONNECTION_ERROR
-    if getHTMLerr(html): 
+    if getHTMLerr(html):
         return getHTMLerr(html)
     d=pq(html)
     inputs=d('form[name=editForm]').find('input')
@@ -476,7 +476,7 @@ def get_host_config(host,backupserver=''):
         key = inputs.eq(i).attr('name')
         value = inputs.eq(i).val()
         # Isolating host config params
-        if 'v_zZ_' in key:          
+        if 'v_zZ_' in key:
             host_config[key.replace('v_zZ_','')]= value
         # Isolating general config params
         elif 'orig_zZ_' in key:
@@ -529,17 +529,20 @@ def set_host_config(host,config,globalconfig=0,backupserver=''):
     html = send_request(params,backupserver)
     if not html:
         return _CONNECTION_ERROR
-    if getHTMLerr(html): 
+    if getHTMLerr(html):
         return getHTMLerr(html)
     return {'err':0}
-    
-    
+
+
 def set_backup_for_host(uuid):
     server_url = getBackupServerByUUID(uuid)
     if not server_url: return
     config = get_host_config('',server_url)['general_config']
-    newid = str(int(max(config['Hosts'].keys()))+1)
-    config['Hosts'][newid] = {'host':uuid,'dhcp':'0','user':'root','moreUsers':'0'}
+    try:
+        newid = str(int(max(config['Hosts'].keys()))+1)
+        config['Hosts'][newid] = {'host':uuid,'dhcp':'0','user':'root','moreUsers':'0'}
+    except:
+        config['Hosts'] = [{'host':uuid,'dhcp':'0','user':'root','moreUsers':'0'}]
     res = set_host_config('',config,1,server_url)
     if res['err']: return res
     # Checking if host has been added, then add it to DB
@@ -568,7 +571,7 @@ def set_backup_for_host(uuid):
     except:
         logger.error("Unable to add host to database")
         return {'err':23,'errtext':'Unable to add host to database'}
-    
+
 
 # ==========================================================================
 # SERVER, HOST INFO AND BACKUP LOGS
@@ -582,7 +585,7 @@ def get_host_log(host):
     html = send_request(params)
     if not html:
         return _CONNECTION_ERROR
-    if getHTMLerr(html): 
+    if getHTMLerr(html):
         return getHTMLerr(html)
     d=pq(html)
     if not d('pre:first'):
@@ -600,7 +603,7 @@ def get_xfer_log(host,backupnum):
     html = send_request(params)
     if not html:
         return _CONNECTION_ERROR
-    if getHTMLerr(html): 
+    if getHTMLerr(html):
         return getHTMLerr(html)
     d=pq(html)
     if not d('pre:first'):
@@ -666,7 +669,7 @@ def start_full_backup(host):
     html = send_request(params)
     if not html:
         return _CONNECTION_ERROR
-    if getHTMLerr(html): 
+    if getHTMLerr(html):
         return getHTMLerr(html)
     return {'err':0}
 
@@ -679,7 +682,7 @@ def start_incr_backup(host):
     html = send_request(params)
     if not html:
         return _CONNECTION_ERROR
-    if getHTMLerr(html): 
+    if getHTMLerr(html):
         return getHTMLerr(html)
     return {'err':0}
 
@@ -692,7 +695,7 @@ def stop_backup(host,backoff=''):
     html = send_request(params)
     if not html:
         return _CONNECTION_ERROR
-    if getHTMLerr(html): 
+    if getHTMLerr(html):
         return getHTMLerr(html)
     return {'err':0}
 
@@ -702,7 +705,7 @@ def get_host_status(host):
     html = send_request(params)
     if not html:
         return _CONNECTION_ERROR
-    if getHTMLerr(html): 
+    if getHTMLerr(html):
         return getHTMLerr(html)
     result = {'err':0,'status':[]}
     d = pq(html)
@@ -764,7 +767,7 @@ def get_global_status(entity_uuid):
     html = send_request(params,url)
     if not html:
         return _CONNECTION_ERROR
-    if getHTMLerr(html): 
+    if getHTMLerr(html):
         return getHTMLerr(html)
     result = {'err':0,'data':{}}
     try:
