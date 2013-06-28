@@ -343,8 +343,9 @@ class SendPackageCommand:
         self.root = root
         
         # If is an empty Package, avoid file uploading
-        if self.pinfos['size'] == 0 :
-            self.pinfos['files'] = None
+        if 'size' in self.pinfos:
+            if self.pinfos['size'] == 0 :
+                self.pinfos['files'] = None
         
         # Prepare command parameters for database insertion
         cmd = prepareCommand(self.pinfos, self.params)
