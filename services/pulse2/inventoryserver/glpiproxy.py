@@ -75,10 +75,14 @@ class FusionErrorHandler (_ErrorHandler):
             dom = parseString(response)
             for node in dom.getElementsByTagName('ERROR'):
                 if node.nodeType == node.ELEMENT_NODE :
-                    self._message.append(node.firstChild.nodeValue)
+                    self._message.append('An error occurred while talking with GLPI (details follow)')
+                    self._message.append("Error was: %s" % str(node.firstChild.nodeValue))
         except Exception, exc :
-            self._message.append("Unable to parse response from GLPI")
-            self._message.append('Getted response: "%s"' % str(exc))
+            self._message.append('An error occurred while talking with GLPI (details follow)')
+            self._message.append('Raw error was: %s' % str(response))
+            self._message.append('With exception: %s' % str(exc))
+
+
 
 
 
