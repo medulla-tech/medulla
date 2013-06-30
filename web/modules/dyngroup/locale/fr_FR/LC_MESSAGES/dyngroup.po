@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-25 13:50+0200\n"
+"POT-Creation-Date: 2013-07-01 01:01+0200\n"
 "PO-Revision-Date: 2013-03-26 13:28+0000\n"
 "Last-Translator: Jean-Christophe Vassort <jcvassort@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
@@ -55,9 +55,9 @@ msgstr ""
 "<p>Ces machines seront intégrées au groupe et leurs menus de démarrage "
 "<strong>seront écrasés</strong></p>"
 
+#: modules/dyngroup/dyngroup/add_groups.php:218
 #: modules/dyngroup/dyngroup/import_from_file.php:45
 #: modules/dyngroup/dyngroup/save.php:98
-#: modules/dyngroup/dyngroup/add_groups.php:218
 #, php-format
 msgid "A group already exists with name '%s'"
 msgstr "Un groupe portant le nom '%s' existe déjà"
@@ -67,8 +67,8 @@ msgstr "Un groupe portant le nom '%s' existe déjà"
 #: modules/dyngroup/dyngroup/creator.php:243
 #: modules/dyngroup/dyngroup/creator.php:251
 #: modules/dyngroup/dyngroup/creator.php:255
-#: modules/dyngroup/includes/double.php:36
 #: modules/dyngroup/includes/autocomplete.php:29
+#: modules/dyngroup/includes/double.php:36
 msgid "Add"
 msgstr "Ajouter"
 
@@ -301,8 +301,8 @@ msgstr "Éditer"
 msgid "Edit a dynamic group"
 msgstr "Éditer un groupe dynamique"
 
-#: modules/dyngroup/dyngroup/groupshead.php:37
 #: modules/dyngroup/dyngroup/edithead.php:52
+#: modules/dyngroup/dyngroup/groupshead.php:37
 msgid "Edit a static group"
 msgstr "Éditer un groupe statique"
 
@@ -370,8 +370,8 @@ msgstr "Détails du groupe d'ordinateurs"
 msgid "Group share"
 msgstr "Partage du groupe"
 
-#: modules/dyngroup/dyngroup/import_from_file.php:41
 #: modules/dyngroup/dyngroup/add_groups.php:166
+#: modules/dyngroup/dyngroup/import_from_file.php:41
 msgid "Group successfully created"
 msgstr "Groupe créé avec succès"
 
@@ -457,8 +457,8 @@ msgid "List all groups of computers"
 msgstr "Lister tous les groupes d'ordinateurs"
 
 #: modules/dyngroup/dyngroup/creator.php:245
-#: modules/dyngroup/includes/double.php:39
 #: modules/dyngroup/includes/autocomplete.php:31
+#: modules/dyngroup/includes/double.php:39
 msgid "Modify"
 msgstr "Modifier"
 
@@ -660,9 +660,9 @@ msgstr "visible"
 msgid "Yes"
 msgstr "Oui"
 
+#: modules/dyngroup/dyngroup/add_groups.php:213
 #: modules/dyngroup/dyngroup/save.php:100
 #: modules/dyngroup/dyngroup/save.php:102
-#: modules/dyngroup/dyngroup/add_groups.php:213
 msgid "You must specify a group name"
 msgstr "Le nom du groupe est obligatoire"
 
