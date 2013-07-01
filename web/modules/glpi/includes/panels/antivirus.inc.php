@@ -41,7 +41,7 @@ class AntivirusPanel extends Panel {
         $greenMessage = json_encode(_T("OK: %percent% (%d)", "glpi"));
         $orangeMessage = json_encode(_T("Not running or not up-to-date: %percent% (%d)", "glpi"));
         $redMessage = json_encode(_T("No antivirus found: %percent% (%d)", "glpi"));
-        $urlRedirect = json_encode(urlStrRedirect("base/computers/createStaticGroup"));
+        $urlRedirect = json_encode(urlStrRedirect("base/computers/createAntivirusStaticGroup"));
 
         echo <<< ANTIVIRUS
     <div id="antivirus-graphs"></div>
@@ -63,7 +63,7 @@ class AntivirusPanel extends Panel {
         data.push(machineCount.green);
         legend.push(legendText);
         colors.push("#73d216");
-        href.push();
+        href.push(urlRedirect + "&group=green");
     }
 
     if (machineCount.orange) {
@@ -71,7 +71,7 @@ class AntivirusPanel extends Panel {
         data.push(machineCount.orange);
         legend.push(legendText);
         colors.push("#ff9c00");
-        href.push();
+        href.push(urlRedirect + "&group=orange");
     }
 
     if (machineCount.red) {
@@ -79,7 +79,7 @@ class AntivirusPanel extends Panel {
         data.push(machineCount.red);
         legend.push(legendText);
         colors.push("#ef2929");
-        href.push();
+        href.push(urlRedirect + "&group=red");
     }
 
     // get data percentage values for bar chart generation

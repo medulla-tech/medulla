@@ -65,4 +65,7 @@ function getAntivirusStatus() {
     return xmlCall("glpi.getAntivirusStatus");
 }
 
+function getMachineListByAntivirusState($groupName) {
+    return xmlCall("glpi.getMachineListByAntivirusState", array($groupName));
+}
 ?>

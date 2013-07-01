@@ -2866,6 +2866,30 @@ class Glpi08(DyngroupDatabaseHelper):
 
         return ret
 
+    def getMachineListByAntivirusState(self, ctx, groupName):
+        session = create_session()
+
+        __computersListQ = self.__getRestrictedComputersListQuery
+
+        complete_ctx(ctx)
+        filt = {
+            'ctxlocation': ctx.locations
+        }
+        query = __computersListQ(ctx, dict(filt, **{'antivirus': groupName}), session)
+
+        # Limit list according to max_elements_for_static_list param in dyngroup.ini
+        limit = DGConfig().maxElementsForStaticList
+        
+        query = query.limit(limit)
+
+        ret = {}
+        for machine in query.all():
+            if machine.name is not None:
+                ret[toUUID(machine.id) + '##' + machine.name] = {"hostname": machine.name, "uuid": toUUID(machine.id)}
+
+        session.close()
+        return ret
+
     def getIpFromMac(self, mac):
         """
         Get an ip address when a mac address is given

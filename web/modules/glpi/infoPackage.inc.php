@@ -35,6 +35,11 @@ $page->setFile("modules/glpi/glpi/createStaticGroup.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
 
+$page = new Page("createAntivirusStaticGroup", _T("Create static group from antivirus dashboard (GLPI)", "glpi"));
+$page->setFile("modules/glpi/glpi/createAntivirusStaticGroup.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
 /* groupes dynamiques */
 
 $page = new Page("locations", _T('Display locations', 'glpi'));
