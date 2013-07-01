@@ -82,7 +82,7 @@ $p->setSideMenu($sidemenu);
 $p->display();
 
 
-if ($ID < 1000){
+if ($ID && $ID < 1000){
     new NotifyWidgetWarning(_T("Default profiles cannot be modified, therefore your changes will be saved  as a new profile.",'backuppc'));
     $profile['profilename'] = '';
 }

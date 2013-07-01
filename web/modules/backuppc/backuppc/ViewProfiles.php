@@ -130,6 +130,18 @@ if ($profile_names) {
     $n->display();
 }
 
+
+_T('Linux (User files)','backuppc');
+_T('Linux (Whole / drive)','backuppc');
+_T('Mac OS X (User files)','backuppc');
+_T('Mac OS X (Whole / drive)','backuppc');
+_T('Windows 7/Vista (User files)','backuppc');
+_T('Windows 7/Vista (Whole C: Drive)','backuppc');
+_T('Windows XP (User files)','backuppc');
+_T('Windows XP (Whole C: Drive)','backuppc');
+_T('Daytime','backuppc');
+_T('Nightly','backuppc');
+
 ?>
 
 <style>
