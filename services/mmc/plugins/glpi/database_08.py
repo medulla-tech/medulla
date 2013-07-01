@@ -267,6 +267,8 @@ class Glpi08(DyngroupDatabaseHelper):
 
         # glpi_plugin_fusioninventory_locks
         self.fusionlocks = None
+        # glpi_plugin_fusioninventory_agents
+        self.fusionagents = None
 
         if self.fusionantivirus is not None: # Fusion is not installed
             self.logger.debug('Load glpi_plugin_fusioninventory_locks')
@@ -274,6 +276,11 @@ class Glpi08(DyngroupDatabaseHelper):
                 Column('items_id', Integer, ForeignKey('glpi_computers.id')),
                 autoload = True)
             mapper(FusionLocks, self.fusionlocks)
+            self.logger.debug('Load glpi_plugin_fusioninventory_agents')
+            self.fusionagents = Table('glpi_plugin_fusioninventory_agents', self.metadata,
+                Column('items_id', Integer, ForeignKey('glpi_computers.id')),
+                autoload = True)
+            mapper(FusionAgents, self.fusionagents)
 
         # glpi_computerdisks
         self.disk = Table('glpi_computerdisks', self.metadata,
@@ -493,6 +500,9 @@ class Glpi08(DyngroupDatabaseHelper):
                     join_query = join_query.outerjoin(self.state)
                 if 'location' in self.config.summary:
                     join_query = join_query.outerjoin(self.locations)
+
+            if self.fusionagents is not None:
+                join_query = join_query.outerjoin(self.fusionagents)
 
             query = query.select_from(join_query).filter(query_filter)
             query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
@@ -763,6 +773,8 @@ class Glpi08(DyngroupDatabaseHelper):
         }
 
         date_mod = self.machine.c.date_mod
+        if self.fusionagents is not None:
+            date_mod = FusionAgents.last_contact
 
         for value in ['green', 'orange', 'red']:
             # This loop instanciate self.filt_green,
@@ -2741,6 +2753,8 @@ class Glpi08(DyngroupDatabaseHelper):
         red = now - datetime.timedelta(red)
 
         date_mod = self.machine.c.date_mod
+        if self.fusionagents is not None:
+            date_mod = FusionAgents.last_contact
 
         query = self.__getRestrictedComputersListQuery(ctx, filt, session)
 
@@ -2913,6 +2927,9 @@ class FusionAntivirus(object):
 
 class FusionLocks(object):
     pass
+
+class FusionAgents(object):
+    to_be_exported = ['last_contact']
 
 class Disk(object):
     pass
