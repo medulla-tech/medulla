@@ -33,8 +33,6 @@ from mmc.plugins.glpi.computers import GlpiComputers
 from mmc.plugins.glpi.provisioning import GlpiProvisioner
 from pulse2.managers.location import ComputerLocationManager
 from mmc.plugins.glpi.location import GlpiLocation
-from mmc.plugins.dashboard.manager import DashboardManager
-from mmc.plugins.dashboard.panel import Panel
 
 from pulse2.version import getVersion, getRevision # pyflakes.ignore
 
@@ -69,16 +67,15 @@ def activate():
 
     # Register the panel to the DashboardManager
     try:
+        logging.getLogger().debug('Try to load glpi panels')
         from mmc.plugins.dashboard.manager import DashboardManager
-        from mmc.plugins.glpi.panel import GlpiPanel
+        from mmc.plugins.dashboard.panel import Panel
         DM = DashboardManager()
-        DM.register_panel(GlpiPanel("glpi"))
+        DM.register_panel(Panel("inventory"))
+        DM.register_panel(Panel("antivirus"))
     except ImportError:
-        pass
+        logging.getLogger().debug('Failed to load glpi panels')
 
-    DM = DashboardManager()
-    DM.register_panel(Panel("inventory"))
-    DM.register_panel(Panel("antivirus"))
     return True
 
 class ContextMaker(ContextMakerI):
