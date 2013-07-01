@@ -48,7 +48,10 @@ if (isset($_POST['setBackup'],$_POST['host'])) {
             $_GET['tab'] = 'tab2';
         }
     }
-    
+
+    // Setting default profile to nightly
+    set_host_period_profile($_POST['host'], 1);
+
     $rep = getComputersOS($_POST['host']);
     $os = $rep[0]['OSName'];
     // Init best profile

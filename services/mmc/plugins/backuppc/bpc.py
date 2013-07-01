@@ -535,7 +535,8 @@ def set_host_config(host,config,globalconfig=0,backupserver=''):
 
 
 def set_host_backup_profile(uuid,newprofile):
-    if BackuppcDatabase().set_host_backup_profile(uuid,newprofile):
+    newprofile = int(newprofile)
+    if BackuppcDatabase().set_host_backup_profile(uuid,newprofile) and newprofile:
         # Get profile data
         profile = BackuppcDatabase().edit_backup_profile(newprofile,{})
         # Define config dict
@@ -550,7 +551,8 @@ def set_host_backup_profile(uuid,newprofile):
         set_host_config(uuid,config)
 
 def set_host_period_profile(uuid,newprofile):
-    if BackuppcDatabase().set_host_period_profile(uuid,newprofile):
+    newprofile = int(newprofile)
+    if BackuppcDatabase().set_host_period_profile(uuid,newprofile) and newprofile:
         # Get profile data
         profile = BackuppcDatabase().edit_period_profile(newprofile,{})
         # Define config dict
