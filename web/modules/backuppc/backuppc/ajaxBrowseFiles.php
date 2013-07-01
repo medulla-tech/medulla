@@ -57,10 +57,22 @@ if (isset($_GET["start"])) {
     $start = 0;
 }
 
-if (isset($_GET['host']) && isset($_GET['sharename']) && isset($_GET['backupnum']) ) {
+if (isset($_GET['host'],$_GET['sharename'],$_GET['backupnum'])) {
     
     $folder = (isset($_GET['folder']) && trim($_GET['folder'])!='//')?$_GET['folder']:'/'; 
     $response = list_files($_GET['host'],$_GET['backupnum'],$_GET['sharename'],$folder,$_GET['location']);
+    
+    $z = '';
+    $z = _T('Current directory :  ','backuppc');
+    $z .= sprintf('<a href="#" onclick="BrowseDir(\'/\')">%s</a>',$_GET['sharename']);
+    
+    $asc_folder = '/';
+    $a_folder = explode('/',$folder);
+    foreach ($a_folder as $s)
+        if ($s) {
+            $asc_folder .= $s.'/';
+            $z .= sprintf(' &gt; <a href="#" onclick="BrowseDir(\'%s\')">%s</a>',$asc_folder,$s);
+        }
     
         // Check if error occured
     if ($response['err']) {
@@ -105,7 +117,7 @@ if (isset($_GET['host']) && isset($_GET['sharename']) && isset($_GET['backupnum'
     
     $count = count($names);
 
-    $n = new OptimizedListInfos($names,_T("Files", "backuppc"));
+    $n = new OptimizedListInfos($names,$z);
     $n->disableFirstColumnActionLink();
     $n->addExtraInfo($sizes, _T("Size", "backuppc"));
     $n->setMainActionClasses($cssClasses);
