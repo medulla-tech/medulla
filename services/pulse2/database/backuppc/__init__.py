@@ -104,8 +104,8 @@ class BackuppcDatabase(DatabaseHelper):
         # Period profiles
         self.period_profiles = Table("period_profiles", self.metadata, autoload = True)
         mapper(Period_profiles, self.period_profiles)
-        
-        
+
+
 
     def getDbConnection(self):
         NB_DB_CONN_TRY = 2
@@ -121,21 +121,21 @@ class BackuppcDatabase(DatabaseHelper):
         if not ret:
             raise "Database connection error"
         return ret
-   
+
     # =====================================================================
     # BACKUP PROFILES FUNCTIONS
     # =====================================================================
-   
+
     def get_backup_profiles(self):
         session = create_session()
         ret = session.query(Backup_profiles).all()
         session.close()
         return dbOjb2dict(ret) or []
-       
-    
+
+
     def add_backup_profile(self, _profile):
         session = create_session()
-        profile = Backup_profiles() 
+        profile = Backup_profiles()
         # Setting profile fields
         profile.profilename = _profile['profilename']
         profile.sharenames = _profile['sharenames']
@@ -145,11 +145,12 @@ class BackuppcDatabase(DatabaseHelper):
         session.add(profile)
         session.flush()
         session.close()
-        return dbOjb2dict(profile) or {} 
+        return dbOjb2dict(profile) or {}
 
-        
+
     def delete_backup_profile(self,id):
         session = create_session()
+        id = int(id)
         ret = session.query(Backup_profiles).filter(Backup_profiles.id == id).first()
         if ret:
             session.delete(ret)
@@ -157,9 +158,10 @@ class BackuppcDatabase(DatabaseHelper):
         else:
             logger.warning("Can't find backup profile with id = %d" % id)
         session.close()
-        
+
     def edit_backup_profile(self,id,override):
         session = create_session()
+        id = int(id)
         ret = session.query(Backup_profiles).filter(Backup_profiles.id == id).first()
         if ret:
             # Setting all overrided fields
@@ -170,22 +172,22 @@ class BackuppcDatabase(DatabaseHelper):
             logger.warning("Can't find backup profile with id = %d" % id)
         session.close()
         return dbOjb2dict(ret) or {}
-    
-    
+
+
     # =====================================================================
     # PERIOD PROFILES FUNCTIONS
     # =====================================================================
-   
+
     def get_period_profiles(self):
         session = create_session()
         ret = session.query(Period_profiles).all()
         session.close()
         return dbOjb2dict(ret) or []
-       
-    
+
+
     def add_period_profile(self, _profile):
         session = create_session()
-        profile = Period_profiles() 
+        profile = Period_profiles()
         # Setting profile fields
         profile.profilename = _profile['profilename']
         profile.full = _profile['full']
@@ -195,11 +197,12 @@ class BackuppcDatabase(DatabaseHelper):
         session.add(profile)
         session.flush()
         session.close()
-        return dbOjb2dict(profile) or {} 
+        return dbOjb2dict(profile) or {}
 
-        
+
     def delete_period_profile(self,id):
         session = create_session()
+        id = int(id)
         ret = session.query(Period_profiles).filter(Period_profiles.id == id).first()
         if ret:
             session.delete(ret)
@@ -207,8 +210,9 @@ class BackuppcDatabase(DatabaseHelper):
         else:
             logger.warning("Can't find period profile with id = %d" % id)
         session.close()
-        
+
     def edit_period_profile(self,id,override):
+        id = int(id)
         session = create_session()
         ret = session.query(Period_profiles).filter(Period_profiles.id == id).first()
         if ret:
@@ -219,12 +223,12 @@ class BackuppcDatabase(DatabaseHelper):
         else:
             logger.warning("Can't find period profile with id = %d" % id)
         session.close()
-        return dbOjb2dict(ret) or {}    
+        return dbOjb2dict(ret) or {}
 
     # =====================================================================
     # HOSTS TABLE FUNCTIONS
-    # =====================================================================  
-   
+    # =====================================================================
+
     def get_host_backup_profile(self,uuid):
         session = create_session()
         host = session.query(Hosts).filter(Hosts.uuid == uuid).first()
@@ -253,7 +257,7 @@ class BackuppcDatabase(DatabaseHelper):
             return -1
         else:
             return host.period_profile
-    
+
     def set_host_period_profile(self,uuid,newprofile):
         session = create_session()
         ret = session.query(Hosts).filter(Hosts.uuid == uuid).first()
@@ -261,8 +265,8 @@ class BackuppcDatabase(DatabaseHelper):
             ret.period_profile = newprofile
             session.flush()
         session.close()
-        
-        
+
+
     def get_hosts_by_backup_profile(self,profileid):
         session = create_session()
         ret = session.query(Hosts.uuid).filter(Hosts.backup_profile== profileid).all()
@@ -273,8 +277,8 @@ class BackuppcDatabase(DatabaseHelper):
             return ret
         else:
             return []
-        
-        
+
+
     def get_hosts_by_period_profile(self,profileid):
         session = create_session()
         ret = session.query(Hosts.uuid).filter(Hosts.period_profile== profileid).all()
@@ -288,8 +292,8 @@ class BackuppcDatabase(DatabaseHelper):
 
     # =====================================================================
     # HOSTS TABLE FUNCTIONS
-    # =====================================================================  
-        
+    # =====================================================================
+
     def add_host(self,uuid):
         session = create_session()
         host = Hosts()
@@ -301,12 +305,12 @@ class BackuppcDatabase(DatabaseHelper):
         session.add(host)
         session.flush()
         session.close()
-        return dbOjb2dict(host) or {} 
-    
+        return dbOjb2dict(host) or {}
+
     # =====================================================================
     # BACKUP SERVER FUNCTIONS
-    # =====================================================================         
-        
+    # =====================================================================
+
     def get_backupserver_by_entity(self,entity_uuid):
         session = create_session()
         try:
@@ -316,16 +320,16 @@ class BackuppcDatabase(DatabaseHelper):
             ret = ''
         session.close()
         return ret
-    
-    # =====================================================================         
-    
+
+    # =====================================================================
+
     def get_backupservers_list(self):
         session = create_session()
         ret = session.query(Backup_servers).all()
         session.close()
         return dbOjb2dict(ret) or []
-    
-   
+
+
     def add_backupserver(self,entityuuid,serverURL):
         session = create_session()
         server = Backup_servers()
@@ -337,7 +341,7 @@ class BackuppcDatabase(DatabaseHelper):
         session.flush()
         session.close()
         return dbOjb2dict(server) or {}
-    
+
     def remove_backupserver(self,entityuuid):
         session = create_session()
         ret = session.query(Backup_servers).filter(Backup_servers.entity_uuid == entityuuid).first()
@@ -345,9 +349,9 @@ class BackuppcDatabase(DatabaseHelper):
             session.delete(ret)
             session.flush()
         else:
-            logger.warning("Can't find period profile with id = %d" % id)
+            logger.warning("Can't find BackupServer associated to entity %s" % entityuuid)
         session.close()
-    
+
 ##############################################################################################################
 class Backup_servers(database_helper.DBObject):
     to_be_exported = ['entity_uuid', 'backupserver_url']
@@ -357,6 +361,6 @@ class Hosts(database_helper.DBObject):
 
 class Backup_profiles(database_helper.DBObject):
     to_be_exported = ['id', 'profilename','sharenames','excludes','encoding']
-    
+
 class Period_profiles(database_helper.DBObject):
     to_be_exported = ['id', 'profilename','full','incr','exclude_periods']
