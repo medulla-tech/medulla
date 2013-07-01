@@ -33,6 +33,8 @@ from mmc.plugins.glpi.computers import GlpiComputers
 from mmc.plugins.glpi.provisioning import GlpiProvisioner
 from pulse2.managers.location import ComputerLocationManager
 from mmc.plugins.glpi.location import GlpiLocation
+from mmc.plugins.dashboard.manager import DashboardManager
+from mmc.plugins.dashboard.panel import Panel
 
 from pulse2.version import getVersion, getRevision # pyflakes.ignore
 
@@ -74,6 +76,9 @@ def activate():
     except ImportError:
         pass
 
+    DM = DashboardManager()
+    DM.register_panel(Panel("inventory"))
+    DM.register_panel(Panel("antivirus"))
     return True
 
 class ContextMaker(ContextMakerI):
@@ -90,6 +95,10 @@ class RpcProxy(RpcProxyI):
     def getMachineListByState(self, groupName):
         ctx = self.currentContext
         return xmlrpcCleanup(Glpi().getMachineListByState(ctx, groupName))
+
+    def getAntivirusStatus(self):
+        ctx = self.currentContext
+        return xmlrpcCleanup(Glpi().getAntivirusStatus(ctx))
 
 def getLastMachineInventoryFull(uuid):
     return xmlrpcCleanup(Glpi().getLastMachineInventoryFull(uuid))

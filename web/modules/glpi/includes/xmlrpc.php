@@ -61,4 +61,8 @@ function setGlpiEditableValue($uuid, $name, $value) {
     return xmlCall("glpi.setGlpiEditableValue", array($uuid, $name, $value));
 }
 
+function getAntivirusStatus() {
+    return xmlCall("glpi.getAntivirusStatus");
+}
+
 ?>

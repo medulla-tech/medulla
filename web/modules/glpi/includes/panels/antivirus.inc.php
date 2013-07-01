@@ -24,35 +24,32 @@ include_once("modules/dashboard/includes/panel.class.php");
 require_once("modules/glpi/includes/xmlrpc.php");
 
 $options = array(
-    "class" => "GlpiPanel",
-    "id" => "inventory",
+    "class" => "AntivirusPanel",
+    "id" => "antivirus",
     "refresh" => 3600,
-    "title" => _T("Computers", "glpi"),
+    "title" => _T("Antivirus", "glpi"),
 );
 
-class GlpiPanel extends Panel {
+class AntivirusPanel extends Panel {
 
     function display_content() {
 
-        $result = getMachineNumberByState();
-        $count = $result['count'];
-        $days = $result['days'];
+        $count = getAntivirusStatus();
 
         $jsonCount = json_encode($count);
-        $jsonDays= json_encode($days);
         $createGroupText = json_encode(_T("Create a group", "glpi"));
-        $lessThanText = json_encode(_T("< %s days: %percent% (%d)", "glpi"));
-        $moreThanText = json_encode(_T("> %s days: %percent% (%d)", "glpi"));
+        $greenMessage = json_encode(_T("OK: %percent% (%d)", "glpi"));
+        $orangeMessage = json_encode(_T("Not running or not up-to-date: %percent% (%d)", "glpi"));
+        $redMessage = json_encode(_T("No antivirus found: %percent% (%d)", "glpi"));
         $urlRedirect = json_encode(urlStrRedirect("base/computers/createStaticGroup"));
 
-        print _T("Latest Inventory Date", "glpi");
-        echo <<< INVENTORY
-    <div id="inventory-graphs"></div>
+        echo <<< ANTIVIRUS
+    <div id="antivirus-graphs"></div>
     <script type="text/javascript">
     var machineCount = $jsonCount,
-        days = $jsonDays,
-        lessThanText = $lessThanText,
-        moreThanText = $moreThanText,
+        greenMessage = $greenMessage,
+        orangeMessage = $orangeMessage,
+        redMessage = $redMessage,
         createGroupText = $createGroupText,
         urlRedirect = $urlRedirect;
 
@@ -62,27 +59,27 @@ class GlpiPanel extends Panel {
     var href = [];
 
     if (machineCount.green) {
-        var legendText = lessThanText.replace('%s', days.orange).replace('%d', machineCount.green)
+        var legendText = greenMessage.replace('%d', machineCount.green)
         data.push(machineCount.green);
         legend.push(legendText);
         colors.push("#73d216");
-        href.push(urlRedirect + "&group=green&days=" + days.orange);
+        href.push();
     }
 
     if (machineCount.orange) {
-        var legendText = moreThanText.replace('%s', days.orange).replace('%d', machineCount.orange)
+        var legendText = orangeMessage.replace('%d', machineCount.orange)
         data.push(machineCount.orange);
         legend.push(legendText);
         colors.push("#ff9c00");
-        href.push(urlRedirect + "&group=orange&days=" + days.orange);
+        href.push();
     }
 
     if (machineCount.red) {
-        var legendText = moreThanText.replace('%s', days.red).replace('%d', machineCount.red)
+        var legendText = redMessage.replace('%d', machineCount.red)
         data.push(machineCount.red);
         legend.push(legendText);
         colors.push("#ef2929");
-        href.push(urlRedirect + "&group=red&days=" + days.red);
+        href.push();
     }
 
     // get data percentage values for bar chart generation
@@ -93,7 +90,7 @@ class GlpiPanel extends Panel {
         legend[i] = legend[i].replace('%percent', data[i]);
     }
 
-    var r = Raphael("inventory-graphs", 200, 50);
+    var r = Raphael("antivirus-graphs", 200, 50);
         fin = function () {
         },
         fout = function () {
@@ -105,17 +102,17 @@ class GlpiPanel extends Panel {
         stacked: true,
         colors: colors
     }).hover(fin, fout);
-    $('inventory-graphs').insert('<ul>');
+    $('antivirus-graphs').insert('<ul>');
     for (var i = 0; i < legend.length; i++) {
-        $('inventory-graphs').insert(
+        $('antivirus-graphs').insert(
             '<li style="color: ' + colors[i]  + '"><span style="color: #000">' + legend[i]
             + '<a href="' + href[i] + '"><img title="' + createGroupText +
             '" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a></span></li>'
         );
     }
-    $('inventory-graphs').insert('</ul>');
+    $('antivirus-graphs').insert('</ul>');
     </script>
-INVENTORY;
+ANTIVIRUS;
     }
 }
 
