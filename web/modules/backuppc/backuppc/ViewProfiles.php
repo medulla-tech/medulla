@@ -36,7 +36,14 @@ require_once("modules/backuppc/includes/xmlrpc.php");
 
 $response = get_backup_profiles();
 
+// Defining element actions
+$editAction = new ActionItem(_T("Edit profile", "backuppc"),"EditBackupProfile","edit","profile",  "backuppc", "backuppc");
+$delAction = new ActionPopupItem(_T("Delete profile", "backuppc"),"deleteProfile","delete",       "profile", "backuppc", "backuppc");
+$emptyAction = new EmptyActionItem();
+
 $profile_names = array();
+$editActions = array();
+$delActions = array();
 $params = array();
 
 foreach ($response as $profile)
@@ -45,8 +52,12 @@ foreach ($response as $profile)
 asort($profile_names);
 
 
-foreach ($profile_names as $pid => $pname)
+foreach ($profile_names as $pid => $pname){
     $params[] = array('id' => $pid,'type' => 0);
+    // Delete only for user defined profiles [id>=1000]
+    //$editActions[] = ($pid<1000)?$emptyAction:$editAction;
+    $delActions[] = ($pid<1000)?$emptyAction:$delAction;
+}
 
 $profile_names = array_values($profile_names);
 
@@ -63,8 +74,8 @@ if ($profile_names) {
     $n->end = 50;
 
     $n->setParamInfo($params); // Setting url params
-    $n->addActionItem(new ActionItem(_T("Edit profile", "backuppc"),"EditBackupProfile","edit","profile", "backuppc", "backuppc"));
-    $n->addActionItem(new ActionPopupItem(_T("Delete profile", "backuppc"),"deleteProfile","delete","profile", "backuppc", "backuppc"));
+    $n->addActionItem($editAction);
+    $n->addActionItemArray($delActions);
 
     $n->display();
 }
@@ -76,7 +87,12 @@ print "<br/><h2>"._T('Schedules','backuppc')."</h2>";
 
 $response = get_period_profiles();
 
+$editAction = new ActionItem(_T("Edit profile", "backuppc"),"EditPeriodProfile","edit","profile",         "backuppc", "backuppc");
+$delAction = new ActionPopupItem(_T("Delete profile", "backuppc"),"deleteProfile","delete",               "profile", "backuppc", "backuppc");
+
 $profile_names = array();
+$editActions = array();
+$delActions = array();
 $params = array();
 
 foreach ($response as $profile)
@@ -85,8 +101,12 @@ foreach ($response as $profile)
 asort($profile_names);
 
 
-foreach ($profile_names as $pid => $pname)
-    $params[] = array('id' => $pid,'type' => 0);
+foreach ($profile_names as $pid => $pname){
+    $params[] = array('id' => $pid,'type' => 1);
+    // Delete and edit only for user defined profiles [id>=1000]
+    //$editActions[] = ($pid<1000)? $emptyAction:$editAction;
+    $delActions[] = ($pid<1000)? $emptyAction:$delAction;
+}
 
 $profile_names = array_values($profile_names);
     
@@ -104,8 +124,8 @@ if ($profile_names) {
     $n->end = 50;
 
     $n->setParamInfo($params); // Setting url params
-    $n->addActionItem(new ActionItem(_T("Edit", "backuppc"),"EditPeriodProfile","edit","profile", "backuppc", "backuppc"));
-    $n->addActionItem(new ActionPopupItem(_T("Delete profile", "backuppc"),"deleteProfile","delete","profile", "backuppc", "backuppc"));
+    $n->addActionItem($editAction);
+    $n->addActionItemArray($delActions);
 
     $n->display();
 }

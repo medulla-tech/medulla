@@ -534,6 +534,45 @@ def set_host_config(host,config,globalconfig=0,backupserver=''):
     return {'err':0}
 
 
+def set_host_backup_profile(uuid,newprofile):
+    if BackuppcDatabase().set_host_backup_profile(uuid,newprofile):
+        # Get profile data
+        profile = BackuppcDatabase().edit_backup_profile(newprofile,{})
+        # Define config dict
+        config = {}
+        config['RsyncShareName'] = profile['sharenames'].split('\n')
+        config['ClientCharset'] = profile['encoding']
+        excludes = profile['excludes'].split('||')
+        for i in xrange(len(excludes)):
+            excludes[i] = excludes[i].split('\n')
+        config['BackupFilesExclude'] = dict(zip(config['RsyncShareName'],excludes))
+        # Setting new host config
+        set_host_config(uuid,config)
+
+def set_host_period_profile(uuid,newprofile):
+    if BackuppcDatabase().set_host_period_profile(uuid,newprofile):
+        # Get profile data
+        profile = BackuppcDatabase().edit_period_profile(newprofile,{})
+        # Define config dict
+        config = {}
+        config['FullPeriod'] = profile['full']
+        config['IncrPeriod'] = profile['incr']
+        # Blackout periods
+        periods = profile['exclude_periods'].split('\n')
+        #
+        config['BlackoutPeriods'] = []
+        #
+        for period in periods:
+             m = re.search('([0-9.]+)=>([0-9.]+):([^:]+)',period)
+             config['BlackoutPeriods'] += [{ \
+                    'hourBegin':m.group(1), \
+                    'hourEnd': m.group(2), \
+                    'weekDays' : m.group(3) \
+                     }]
+        # Setting host config
+        set_host_config(uuid,config)
+
+
 def set_backup_for_host(uuid):
     server_url = getBackupServerByUUID(uuid)
     if not server_url: return

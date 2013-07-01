@@ -42,7 +42,7 @@ APIVERSION = "4:1:3"
 
 logger = logging.getLogger()
 
-  
+
 # #############################################################
 # PLUGIN GENERAL FUNCTIONS
 # #############################################################
@@ -87,7 +87,7 @@ def get_file_versions(host,share_name,filepath):
 
 def get_download_status():
     return bpc.get_download_status()
-    
+
 def restore_file(host,backup_num,share_name,restore_path):
     return bpc.restore_file(host,backup_num,share_name,restore_path)
 
@@ -109,42 +109,42 @@ def set_host_config(host,config):
 
 def get_backup_profiles():
     return BackuppcDatabase().get_backup_profiles()
-    
+
 def add_backup_profile(profile):
     return BackuppcDatabase().add_backup_profile(profile)
-    
+
 def delete_backup_profile(id):
     return BackuppcDatabase().delete_backup_profile(id)
-    
+
 def edit_backup_profile(id,override):
     return BackuppcDatabase().edit_backup_profile(id,override)
-    
+
 def get_host_backup_profile(uuid):
     return BackuppcDatabase().get_host_backup_profile(uuid)
-    
+
 def set_host_backup_profile(uuid,newprofile):
-    return BackuppcDatabase().set_host_backup_profile(uuid,newprofile)
+    return bpc.set_host_backup_profile(uuid,newprofile)
 
 
 # PERIOD PROFILES
 
 def get_period_profiles():
     return BackuppcDatabase().get_period_profiles()
-    
+
 def add_period_profile(profile):
     return BackuppcDatabase().add_period_profile(profile)
-    
+
 def delete_period_profile(id):
     return BackuppcDatabase().delete_period_profile(id)
-    
+
 def edit_period_profile(id,override):
     return BackuppcDatabase().edit_period_profile(id,override)
-    
+
 def get_host_period_profile(uuid):
     return BackuppcDatabase().get_host_period_profile(uuid)
-    
+
 def set_host_period_profile(uuid,newprofile):
-    return BackuppcDatabase().set_host_period_profile(uuid,newprofile)
+    return bpc.set_host_period_profile(uuid,newprofile)
 
 # Apply profiles to hosts
 

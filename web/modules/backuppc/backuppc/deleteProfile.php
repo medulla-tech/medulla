@@ -30,9 +30,10 @@ if (isset($_POST["bconfirm"])) {
     $id = intval($_POST["id"]);
     $type = $_POST["type"];
     
-    // If id not set exit script
-    if (!$id) return;
-    
+    // If id not set, or default profile exit script
+    if (!$id or $id<1000) return;
+
+    // Deleting fileset or period according to type
     if ($type == 0)
         $ret = delete_backup_profile($id);
     else
@@ -51,6 +52,10 @@ else
 {
     $id = $_GET["id"];
     $type = $_GET["type"];
+
+    // If default profile, we can't delete
+    if ($id < 1000)
+        print _T('Error : Default profiles cannot be deleted','backuppc');
     
     $f = new PopupForm(_T("Delete this profile"));
     $hidden = new HiddenTpl("id");

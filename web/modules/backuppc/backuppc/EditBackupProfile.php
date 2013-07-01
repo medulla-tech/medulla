@@ -44,7 +44,10 @@ if (isset($_POST['bconfirm'])){
         'sharenames'  => implode("\n",$_POST['sharenames']),
         'excludes'    => implode("||",$_POST["excludes"])
     );
-    
+
+    // If a default profile is edited, we create a new herited profile
+    if ($ID<1000) $ID = 0;
+
     if ($ID) {
         $profile = edit_backup_profile($ID,$cfg);
         // APPLY PROFILE TO ALL CONCERNED HOSTS
@@ -67,6 +70,11 @@ if ($ID)
     $p = new PageGenerator(_T("Edit fileset", "backuppc"));
 else 
     $p = new PageGenerator(_T("Add fileset", "backuppc"));
+
+if ($ID < 1000){
+    new NotifyWidgetWarning(_T("Default profiles cannot be modified, therefore your changes will be saved as a new profile.",'backuppc'));
+    $profile['profilename'] = '';
+}
 
 $p->setSideMenu($sidemenu);
 $p->display();

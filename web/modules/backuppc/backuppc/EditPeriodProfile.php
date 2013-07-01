@@ -52,6 +52,9 @@ if (isset($_POST['bconfirm'])){
 
     $cfg['exclude_periods'] = trim($cfg['exclude_periods']);
 
+    // If default profile, we add a new herited one
+    if ($ID<1000) $ID = 0;
+
     if ($ID){
         $profile = edit_period_profile($ID,$cfg);
         // APPLY PROFILE TO ALL CONCERNED HOSTS
@@ -77,6 +80,12 @@ else
 
 $p->setSideMenu($sidemenu);
 $p->display();
+
+
+if ($ID < 1000){
+    new NotifyWidgetWarning(_T("Default profiles cannot be modified, therefore your changes will be saved  as a new profile.",'backuppc'));
+    $profile['profilename'] = '';
+}
 
 // display an edit profile form 
 $f = new ValidatingForm();
