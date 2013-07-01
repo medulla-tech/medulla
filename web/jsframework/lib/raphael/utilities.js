@@ -9,18 +9,20 @@
  * @param data: list of values
  * @type: array of integers
  *
- * @percent: total we want for the list (100 by default to obtain a percentage)
- * @type: integger
+ * @rtype: Raphael chart type, default is Pie chart
+ *          possible values are 'pie', 'bar'
+ * @type: string
  *
  * @return: original datas in percentage
  * @rtype: array
  */
 
-function getPercentageData(data, percent) {
-    // If percent is not defined, set to 100
-    var percent = typeof percent !== 'undefined' ? percent : 100;
+function getPercentageData(data, rtype) {
+    // If rtype is not defined, set it to 'pie'
+    var rtype = typeof rtype !== 'undefined' ? rtype : 'pie';
     var result = new Array();
     var val = 0;
+    var percent = 100;
     var decrem = percent;
     var sumData = 0;
     var total = 0;
@@ -41,10 +43,20 @@ function getPercentageData(data, percent) {
 
         // sum of result array must be equal to percent (100 by default)
         if (val < decrem) {
-            result.push(val);
+            if (rtype == 'bar') {
+                result.push([val]);
+            }
+            else {
+                result.push(val);
+            }
         }
         else {
-            result.push(percent - total);
+            if (rtype == 'bar') {
+                result.push([percent - total]);
+            }
+            else {
+                result.push(percent - total);
+            }
         }
         decrem -= val;
         total += val;

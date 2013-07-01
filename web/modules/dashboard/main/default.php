@@ -29,6 +29,7 @@ require("modules/dashboard/includes/dashboard-xmlrpc.inc.php");
 <script type="text/javascript" src="jsframework/lib/raphael/g.raphael-min.js"></script>
 <script type="text/javascript" src="jsframework/lib/raphael/g.pie-min.js"></script>
 <script type="text/javascript" src="jsframework/lib/raphael/g.line-min.js"></script>
+<script type="text/javascript" src="jsframework/lib/raphael/g.bar-min.js"></script>
 <script type="text/javascript" src="jsframework/lib/raphael/utilities.js"></script>
 <?php
 
