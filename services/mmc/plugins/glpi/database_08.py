@@ -41,7 +41,7 @@ import os
 from configobj import ConfigObj
 
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
-        Integer, ForeignKey, asc, or_, not_, desc, func, distinct
+        Integer, ForeignKey, asc, or_, not_, desc, func
 from sqlalchemy.orm import create_session, mapper
 from sqlalchemy.sql.expression import ColumnOperators
 
@@ -431,7 +431,7 @@ class Glpi08(DyngroupDatabaseHelper):
         """
         if session == None:
             session = create_session()
-        query = count and session.query(func.count(distinct(self.machine.c.id)), Machine) or session.query(Machine)
+        query = count and session.query(func.count(self.machine.c.id), Machine) or session.query(Machine)
         if filt:
             # filtering on query
             join_query = self.machine
@@ -503,8 +503,9 @@ class Glpi08(DyngroupDatabaseHelper):
 
             if self.fusionagents is not None:
                 join_query = join_query.outerjoin(self.fusionagents)
-            if 'antivirus' in filt:
+            if 'antivirus' in filt: # Used for Antivirus dashboard
                 join_query = join_query.outerjoin(self.fusionantivirus)
+                join_query = join_query.outerjoin(self.os)
 
             query = query.select_from(join_query).filter(query_filter)
             query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
