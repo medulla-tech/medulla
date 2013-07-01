@@ -1,0 +1,348 @@
+#!/usr/bin/python
+# -*- coding: utf-8; -*-
+#
+# (c) 2011-2012 Mandriva, http://www.mandriva.com/
+#
+# This file is part of Pulse 2, http://pulse2.mandriva.org
+#
+# Pulse 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Pulse 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Pulse 2.  If not, see <http://www.gnu.org/licenses/>.
+
+import os
+import sys
+import stat
+import re
+from syslog import syslog
+import shlex
+import pprint
+import readline
+import mmc.plugins
+
+from ConfigParser import ConfigParser
+
+from twisted.internet import task, reactor
+from twisted.web import xmlrpc
+
+COOKIES_FILE = '/tmp/pulse2-debug-cookies'
+host = ''
+module = ''
+funcs = {}
+pluginsdir = os.path.dirname(mmc.plugins.__file__)
+commands = ['cd ','use ','ls','pwd','exit']
+
+class MMCQueryProtocol(xmlrpc.QueryProtocol):
+
+    def connectionMade(self):
+        self.sendCommand('POST', self.factory.path)
+        self.sendHeader('User-Agent', 'Twisted/XMLRPClib')
+        self.sendHeader('Host', self.factory.host)
+        self.sendHeader('Content-type', 'text/xml')
+        self.sendHeader('Content-length', str(len(self.factory.payload)))
+        if self.factory.user:
+            auth = '%s:%s' % (self.factory.user, self.factory.password)
+            auth = auth.encode('base64').strip()
+            self.sendHeader('Authorization', 'Basic %s' % (auth,))
+        try:
+            # Put MMC session cookie
+            if not '<methodName>base.ldapAuth</methodName>' in self.factory.payload:
+                h = open(COOKIES_FILE, 'r')
+                self.sendHeader('Cookie', h.read())
+                h.close()
+        except IOError:
+            pass
+        self.endHeaders()
+        self.transport.write(self.factory.payload)
+
+    def lineReceived(self, line):
+        xmlrpc.QueryProtocol.lineReceived(self, line)
+        if line:
+            if line.startswith("Set-Cookie: "):
+                self._session = line.split()[1]
+
+    def handleResponse(self, contents):
+        xmlrpc.QueryProtocol.handleResponse(self, contents)
+        if '<methodName>base.ldapAuth</methodName>' in self.factory.payload:
+            h = open(COOKIES_FILE, 'w+')
+            h.write(self._session)
+            h.close()
+            os.chmod(COOKIES_FILE, stat.S_IRUSR | stat.S_IWUSR)
+
+
+class MMCQueryFactory(xmlrpc._QueryFactory):
+
+    protocol = MMCQueryProtocol
+
+class Proxy(xmlrpc.Proxy):
+
+    queryFactory = MMCQueryFactory
+
+
+class ConfigReader :
+    """Read and parse config files"""
+    def __init__(self):
+       self._config  = self.get_config('/etc/mmc/mmc.ini')
+       self._config2 = self.get_config('/etc/mmc/plugins/base.ini')
+
+
+    @classmethod
+    def get_config(cls, inifile):
+        """
+        Get the configuration from config file
+
+        @param inifile: path to config file
+        @type inifile: string
+
+        @return: ConfigParser.ConfigParser instance
+        """
+        if not os.path.exists(inifile):
+            print("Error while reading the config file: Not found.")
+            sys.exit(2)
+
+        config = ConfigParser()
+        config.readfp(open(inifile,'r'))
+
+        return config
+
+    @property
+    def config(self):
+        """
+        Get the configuration instance
+
+        @return: ConfigParser.ConfigParser instance
+        """
+        return [self._config,self._config2]
+
+class MMCProxy:
+    """ Provider to connect at mmc-agent """
+    def __init__(self, config):
+
+        self._config = config
+
+        self._url = None
+        self._proxy = None
+
+        self._build_url()
+        self._build_proxy()
+
+    def _build_url(self):
+        """ URL building for XML-RPC proxy """
+
+        # Readming mmc.ini config
+        _config = self._config[0]
+        if not _config.has_section("global") or not _config.has_section("server_01") :
+            print("Error while reading the config file: Section 'login' not exists")
+            sys.exit(2)
+
+        username = _config.get("global", "login")
+        password = _config.get("global", "password")
+
+        url = _config.get("server_01", "url")
+        if not 'https://' in url:
+            print('Error reading mmc-agent URL')
+        self._url = url.replace('https://','https://%s:%s@' % (username,password) )
+
+
+    def _get_ldap_password(self):
+        """
+        Password for LDAP authentification
+
+        @return: string
+        """
+        # Reading LDAP Config (MMC base plugin base.ini]
+        _config = self._config[1]
+        if not _config.has_section("ldap") :
+            print("Error while reading the config file: Section 'ldap'")
+            sys.exit(2)
+
+        return _config.get("ldap","password")
+
+    def _build_proxy (self):
+        """ Builds the XML-RPC proxy to MMC agent. """
+        try :
+            self._proxy = Proxy(self._url)
+            #D: print("Create a mmc-agent proxy")
+
+        except Exception, err :
+            print("Error while connecting to mmc-agent : %s" % err)
+            sys.exit(2)
+
+    @property
+    def proxy (self):
+        """ Get the XML-RPC proxy to MMC agent. """
+        return self._proxy
+
+class CallMethod :
+    """ XML-RPC Handler to execute remote functions. """
+
+    def __init__(self, config, method, *args, **kwargs) :
+        self._config = config
+
+        mmc_agent = MMCProxy(config)
+
+        self.proxy = mmc_agent.proxy
+
+        self.method = method
+        self.args = args
+        self.kwargs = kwargs
+
+        d = task.deferLater(reactor, 0, self.auth)
+        d.addErrback(self._errorback_proxy)
+
+    def _errorback_proxy(self, failure):
+        print("Proxy call failed : %s" % str(failure))
+        #reactor.stop()
+
+    def auth(self):
+        passwd = self._config[1].get("ldap","password")
+        d = self.proxy.callRemote("base.ldapAuth", "root", passwd)
+
+        d.addCallback(self.call_method)
+        d.addErrback(self._errorback_auth)
+
+    def _errorback_auth(self, failure):
+        print("Authentification failed : %s" % str(failure))
+        d = task.deferLater(reactor, 0, prompt)
+
+    def call_method(self, result=None):
+        d = self.proxy.callRemote(self.method, *self.args, **self.kwargs)
+        d.addCallback(self._method_result)
+        d.addErrback(self._errorback_method)
+
+    def _method_result(self, result):
+        s = pprint.pformat(result)
+        print s
+        d = task.deferLater(reactor, 0, prompt)
+
+    def _errorback_method(self, failure):
+        print("Method call failed")
+        fstr = str(failure)
+        if 'Fault NO_SUCH_FUNCTION' in fstr:
+            print "No such method"
+        d = task.deferLater(reactor, 0, prompt)
+
+
+def _use(args):
+    global module
+    # TODO : check if module exists
+    module = args[1]
+    # Return to prompt
+    task.deferLater(reactor, 0, prompt)
+
+
+# PRINT CURRENT MODULE
+def _pwd(args):
+    global module
+    print module
+    task.deferLater(reactor, 0, prompt)
+
+def _ls(args):
+    #print '\t'.join(funcs[module]['names'])
+    if module in funcs:
+        pprint.pprint(funcs[module]['names'])
+    else:
+        print "No entry found"
+    task.deferLater(reactor, 0, prompt)
+
+def _help(args):
+    if len(args) < 2:
+        print 'Base commands: use, ls, pwd, exit\nType help <command_name> to get command help'
+    elif args[1] == 'use':
+        print 'use <module_name>\n\tSwitch to module name'
+    elif args[1] == 'ls':
+        print 'ls\n\tList all exported methods for the selected module'
+    elif args[1] == 'pwd':
+        print 'pwd\n\tPrint selected module name'
+    elif args[1] == 'exit':
+        print 'exit\n\tExit pulse2-debug console'
+    else:
+       try:
+           print 'params\n\t'+funcs[module]['args'][funcs[module]['names'].index(args[1])]
+       except:
+           print "No help entry found"
+    task.deferLater(reactor, 0, prompt)
+
+
+def completer(text, state):
+    possib = commands + funcs.keys()
+    if module in funcs:
+        possib += funcs[module]['names']
+    options = [i for i in possib if i.startswith(text)]
+    if state < len(options):
+        return options[state]
+    else:
+        return None
+
+# PROMPT FUNCTION ]>
+def prompt():
+    global module
+    input = ''
+    while not input:
+        input = raw_input("]> ")
+    # Parsing args
+    args = shlex.split(input)
+    # Main command
+    cmd = args[0].lower()
+
+    # Command to switch to specific module
+    if (cmd == "use" or cmd == "cd") and len(args)>1:
+        _use(args)
+    elif (cmd == 'pwd'):
+        _pwd(args)
+    elif (cmd == 'ls'):
+        _ls(args)
+    elif (cmd == 'help'):
+        _help(args)
+    elif (cmd == 'x' or cmd == 'exit'):
+        reactor.stop()
+    else:
+        # Call XML rpc Method   "msc.scheduler_choose_client_ip"
+        func = module+'.'+args[0] if module else args[0]
+        CallMethod(config, func, *args[1:])
+
+
+def initFuncDB():
+    def get_subdirs(dir):
+        return [name for name in os.listdir(dir)
+            if os.path.isdir(os.path.join(dir, name))]
+    modules = get_subdirs(pluginsdir)
+    fpattern = re.compile(r'def ([^ ]+)\((.*)\):')
+    for module in modules:
+        initpath = os.path.join(pluginsdir,module,'__init__.py')
+        if os.path.exists(initpath):
+            funcs[module]={'names':[],'args':[]}
+            f = open(initpath,'r')
+            lines = f.readlines()
+            for line in lines:
+                matches = fpattern.match(line)
+                if matches:
+                    funcs[module]['names'] += [matches.group(1)]
+                    funcs[module]['args'] += [matches.group(2)]
+
+
+if __name__ == "__main__" :
+
+    # init all xmlrpc exported methods
+    initFuncDB()
+
+    config = ConfigReader().config
+    print "Pulse2 console 0.01 (June 28 2013)"
+    print "Type help for more information"
+
+    # Setting command completer
+    readline.parse_and_bind("tab: complete")
+    readline.set_completer(completer)
+
+    task.deferLater(reactor, 0, prompt)
+    #prompt()
+    reactor.run()
+
