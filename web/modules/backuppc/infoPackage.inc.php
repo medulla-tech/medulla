@@ -101,6 +101,11 @@ $page->setFile("modules/backuppc/backuppc/ajaxDownloadsTable.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 
+$page = new Page("ajaxGetStatus");
+$page->setFile("modules/backuppc/backuppc/ajaxGetStatus.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$submod->addPage($page);
+
 $page = new Page("viewFileVersions");
 $page->setFile("modules/backuppc/backuppc/viewFileVersions.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));

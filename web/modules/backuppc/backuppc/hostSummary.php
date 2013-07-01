@@ -89,10 +89,10 @@ $status_strings = array(
     'nothing' =>'<span style="color:red">'. _T('This computer has never been backed up','backuppc').'</span>',
     'idle' =>'<span style="color:black">'. _T('Idle','backuppc').'</span>',
     'canceled' =>'<span style="color:black">'. _T('Cancelled by user','backuppc').'</span>',
-    'in progress' => '<span style="color:orange">'._T('Backup in progress').'</span>'
+    'in progress' => '<img src="modules/msc/graph/images/status/inprogress.gif" width="14" alt="" /> <span style="color:orange">'._T('Backup in progress').'</span>'
     );
 
-print '<table><tr><td width="130" valign="top">'._T('Current state: ','backuppc').'</td><td><b>';
+print '<table><tr><td width="130" valign="top">'._T('Current state: ','backuppc').'</td><td><b id="statustext">';
 foreach ($response['status'] as $line)
     print $status_strings[$line].'<br/>';
 if ($line == 'nothing')
@@ -168,3 +168,21 @@ if ($response['data']) {
     $n->display();
 }
 ?>
+
+
+<script src="modules/backuppc/lib/jquery-1.10.1.min.js"></script>
+<script type="text/javascript">
+// Avoid prototype <> jQuery conflicts
+jQuery.noConflict();
+
+function refresh_status(){
+        jQuery.get(
+            "<?php  echo 'main.php?module=backuppc&submod=backuppc&action=ajaxGetStatus&q=GET_STATUS&host='.$_GET['objectUUID']; ?>",
+             function(data){
+                jQuery('#statustext').html(data);
+                setTimeout('refresh_status();',3000);
+        });
+}
+
+setTimeout('refresh_status();',3000);
+</script>
