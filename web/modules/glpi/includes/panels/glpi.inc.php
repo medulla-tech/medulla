@@ -40,8 +40,9 @@ class GlpiPanel extends Panel {
 
         $jsonCount = json_encode($count);
         $jsonDays= json_encode($days);
-        $lessThanText = json_encode(_T("Less than %s days:\n %percent% (%d computers)", "glpi"));
-        $moreThanText = json_encode(_T("More than %s days:\n %percent% (%d computers)", "glpi"));
+        $createGroupText = json_encode(_T("Create a group", "glpi"));
+        $lessThanText = json_encode(_T("< %s days: %percent% (%d)", "glpi"));
+        $moreThanText = json_encode(_T("> %s days: %percent% (%d)", "glpi"));
         $urlRedirect = json_encode(urlStrRedirect("base/computers/createStaticGroup"));
 
         print _T("Latest Inventory Date", "glpi");
@@ -52,11 +53,8 @@ class GlpiPanel extends Panel {
         days = $jsonDays,
         lessThanText = $lessThanText,
         moreThanText = $moreThanText,
-        urlRedirect = $urlRedirect,
-        r = Raphael("inventory-graphs", 200, 300),
-        radius = 80,
-        x = 90,
-        y = 90;
+        createGroupText = $createGroupText,
+        urlRedirect = $urlRedirect;
 
     var data = [];
     var legend = [];
@@ -88,36 +86,35 @@ class GlpiPanel extends Panel {
     }
 
     // get data percentage values for pie chart generation
-    data = getPercentageData(data);
+    data = getPercentageData(data, 'bar');
+
 
     // put percentage values in legend
     for (var i = 0; i < data.length; i++) {
         legend[i] = legend[i].replace('%percent', data[i]);
     }
 
-    var pie = r.piechart(x, y, radius, data, 
-                     {legend: legend,
-                      legendpos: "south",
-                      colors: colors, 
-                      href: href});
-    pie.hover(function () {
-        this.sector.stop();
-        this.sector.animate({ transform: 's1.1 1.1 ' + this.cx + ' ' + this.cy }, 800, "elastic");
+    var r = Raphael("inventory-graphs", 200, 50);
+        fin = function () {
+        },
+        fout = function () {
+        },
+        txtattr = { font: "12px sans-serif" };
 
-        if (this.label) {
-            this.label[0].stop();
-            this.label[0].attr({ r: 7.5 });
-            this.label[1].attr({ "font-weight": 800 });
-        }
-    }, function () {
-        this.sector.animate({ transform: 's1 1 ' + this.cx + ' ' + this.cy }, 800, "elastic");
-
-        if (this.label) {
-            this.label[0].animate({ r: 5 }, 500, "bounce");
-            this.label[1].attr({ "font-weight": 400 });
-        }
-    });
-
+    r.hbarchart(0, 10, 200, 30, data, {
+        type: 'round',
+        stacked: true,
+        colors: colors
+    }).hover(fin, fout);
+    $('inventory-graphs').insert('<ul>');
+    for (var i = 0; i < legend.length; i++) {
+        $('inventory-graphs').insert(
+            '<li style="color: ' + colors[i]  + '"><span style="color: #000">' + legend[i]
+            + '<a href="' + href[i] + '"><img title="' + createGroupText +
+            '" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a></span></li>'
+        );
+    }
+    $('inventory-graphs').insert('</ul>');
     </script>
 INVENTORY;
     }
