@@ -48,6 +48,11 @@ if ($count=count($download_status)) {
     $times = array();
     $status = array();
     
+    // Icons
+    $emptyAction = new EmptyActionItem();
+    $downloadAction = new ActionItem(_T("Download", "backuppc"),"download","display","dir", "backuppc", "backuppc");
+    $actions = array(); // Actions array
+    
     $refresh = 0; // Refresh is disabled by default
     
     foreach ($download_status as $filepath => $dstatus)
@@ -57,17 +62,23 @@ if ($count=count($download_status)) {
         
         $times[] = strftime(_T("%A, %B %e %Y",'backuppc').' %H:%M',$dstatus['time']);
         
+        // If it is not a direct restore
         if (strpos($filepath,'>DIRECT:') === FALSE ) {
             $params[] = array('dir'=>$filepath);
             $paths[] = $filepath;
             $name = basename($filepath);
+            
+            $actions[] = $downloadAction;
         }
         else {
+            // Direct restore
             $params[] = array('dir'=>'');
             $paths[] = '';
             $name = sprintf('<a href="#"></a>%s (%s %s)',
                     _T('Latest direct restore to host','backuppc'),_T('to','backuppc'),
                     str_replace('//', '/', $dstatus['destdir']));
+            
+            $actions[] = $emptyAction;
         }
         
         
@@ -93,7 +104,7 @@ if ($count=count($download_status)) {
     $filter1 = '';
     $n->setNavBar(new AjaxNavBar(0, $filter1));
     $n->setParamInfo($params);
-    $n->addActionItem(new ActionItem(_T("Download", "backuppc"),"download","display","dir", "backuppc", "backuppc"));
+    $n->addActionItemArray($actions);
     $n->start = 0;
     $n->end = 50;
     $n->setItemCount(count($names));
