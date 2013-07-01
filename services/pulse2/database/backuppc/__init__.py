@@ -246,10 +246,8 @@ class BackuppcDatabase(DatabaseHelper):
         if ret:
             ret.backup_profile = newprofile
             session.flush()
-            return True
-        else:
-            return False
         session.close()
+        return ret != None
 
     def get_host_period_profile(self,uuid):
         session = create_session()
@@ -267,10 +265,8 @@ class BackuppcDatabase(DatabaseHelper):
         if ret:
             ret.period_profile = newprofile
             session.flush()
-            return True
-        else:
-            return False
         session.close()
+        return ret != None
 
 
     def get_hosts_by_backup_profile(self,profileid):
