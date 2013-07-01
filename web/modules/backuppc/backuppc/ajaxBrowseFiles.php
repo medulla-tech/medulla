@@ -88,6 +88,11 @@ if (isset($_GET['host'],$_GET['sharename'],$_GET['backupnum'])) {
     $sizes = $files[5];
     $cssClasses = array();
     
+    $emptyAction = new EmptyActionItem();
+    $viewVersionsAction = new ActionPopupItem(_T("View all versions"), "viewFileVersions", "display", "dir", "backuppc", "backuppc");
+    $viewVersionsActions = array();
+    
+    
     $params = array();
     for ($i=0;$i<count($names);$i++){
         $params[] = array('host'=>$_GET['host'], 'backupnum'=>$_GET['backupnum'],'sharename'=>$_GET['sharename'],'dir'=>$paths[$i]);    
@@ -97,12 +102,15 @@ if (isset($_GET['host'],$_GET['sharename'],$_GET['backupnum'])) {
             $cssClasses[$i] = 'folder';
             $sizes[$i] = '';
             $params[$i]['isdir'] = '1';
+            $viewVersionsActions[] = $emptyAction;
         }
         else {
             $param_str = "host=".$_GET['host']."&backupnum=".$_GET['backupnum']."&sharename=".$_GET['sharename'];
             $param_str.= "&dir=".$paths[$i];
             $names[$i] = '<a href="#" onclick="RestoreFile(\''.$param_str.'\')">'.$names[$i]."</a>";         
             $cssClasses[$i] = 'file';
+            
+            $viewVersionsActions[] = $viewVersionsAction;
         }
         $names[$i]=sprintf('<input type="checkbox" name="f%d" value="%s" /> &nbsp;&nbsp;',$i,$paths[$i]).$names[$i];
     }
@@ -113,6 +121,7 @@ if (isset($_GET['host'],$_GET['sharename'],$_GET['backupnum'])) {
         $cssClasses = array_merge(array('folder'),$cssClasses);
         $sizes = array_merge(array(''),$sizes);
         $params = array_merge(array(''),$params);
+        $viewVersionsActions = array_merge(array($emptyAction),$viewVersionsActions);
     }
     
     $count = count($names);
@@ -128,7 +137,7 @@ if (isset($_GET['host'],$_GET['sharename'],$_GET['backupnum'])) {
     $n->end = isset($_GET['end'])?$_GET['end']:$maxperpage;
     $n->setParamInfo($params); // Setting url params
     
-    $n->addActionItem(new ActionPopupItem(_T("View all versions"), "viewFileVersions", "display", "dir", "backuppc", "backuppc"));
+    $n->addActionItemArray($viewVersionsActions);
 
     print '<br/><br/><form id="restorefiles" method="post" action="">'; 
     printf('<input type="hidden" name="host" value="%s" />',$_GET['host']);
