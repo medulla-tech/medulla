@@ -178,3 +178,20 @@ if (strlen($_GET['uuid'])) {
     // Display an error message
 }
 ?>
+<script src="modules/backuppc/lib/jquery-1.10.1.min.js"></script>
+<script type="text/javascript">
+// Avoid prototype <> jQuery conflicts
+jQuery.noConflict();
+
+function refresh_page(){
+    // If we find a loading image, we refresh after 3 seconds
+    if (jQuery('img[alt="WORK_IN_PROGRESS"]').length != 0){
+        // Reload the page
+        window.location.reload();
+        setTimeout('refresh_page();',5000);
+    }
+}
+
+setTimeout('refresh_page();',5000);
+
+</script>
