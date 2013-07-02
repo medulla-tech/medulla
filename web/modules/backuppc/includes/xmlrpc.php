@@ -175,4 +175,8 @@ function get_global_status($entity_uuid){
     return xmlCall("backuppc.get_global_status", array($entity_uuid));
 }
 
+function host_exists($uuid){
+    return xmlCall("backuppc.host_exists", array($uuid));
+}
+
 ?>

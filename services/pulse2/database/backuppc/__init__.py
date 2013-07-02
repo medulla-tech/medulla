@@ -308,6 +308,28 @@ class BackuppcDatabase(DatabaseHelper):
         session.flush()
         session.close()
         return dbOjb2dict(host) or {}
+    
+    def remove_host(self,uuid):
+        session = create_session()
+        try:
+            ret = session.query(Hosts).filter(Hosts.uuid == uuid.upper()).one()
+            if ret:
+                session.delete(ret)
+                session.flush()
+        except:
+            logger.error("Can't remove host where uuid=%s" % uuid)
+        session.close()
+        
+    def host_exists(self,uuid):
+        session = create_session()
+        try:
+            ret = session.query(Hosts).filter(Hosts.uuid == uuid.upper()).one()
+            exists = (ret != None)
+            session.close()
+            return ret
+        except:
+            logger.error("DB Error")
+        
 
     # =====================================================================
     # BACKUP SERVER FUNCTIONS

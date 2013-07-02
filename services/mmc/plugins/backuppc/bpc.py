@@ -575,6 +575,9 @@ def set_host_period_profile(uuid,newprofile):
         set_host_config(uuid,config)
 
 
+def host_exists(uuid):
+    return BackuppcDatabase().host_exists(uuid)
+
 def set_backup_for_host(uuid):
     server_url = getBackupServerByUUID(uuid)
     if not server_url: return
@@ -612,6 +615,39 @@ def set_backup_for_host(uuid):
     except:
         logger.error("Unable to add host to database")
         return {'err':23,'errtext':'Unable to add host to database'}
+
+
+
+def unset_backup_for_host(uuid):
+    #TODO: Check if host is in DB
+    # is_backup_set(uuid)
+    server_url = getBackupServerByUUID(uuid)
+    if not server_url: return
+    config = get_host_config('',server_url)['general_config']
+    try:
+        for i in config['Hosts'].keys():
+            if config['Hosts'][i]['host'].lower() == uuid.lower():
+                del config['Hosts'][i]
+                res = set_host_config('',config,1,server_url)
+                if res['err']: return res
+                break
+        else:
+            logger.warning('Host is already removed from BackupPC')
+    except:
+        logger.warning('No host found, passing')
+    # Checking if host has been removed, then remove it from DB
+    config = get_host_config('',server_url)['general_config']
+    if 'Hosts' in config:
+        for i in config['Hosts']:
+            if config['Hosts'][i]['host'].lower() == uuid.lower():
+                logger.error('Unable to remove host from BackupPC')
+                return {'err':37,'errtext':'Unable to remove host from BackupPC'}
+    # Removing host from the DB
+    try:
+        BackuppcDatabase().remove_host(uuid)
+    except:
+        logger.error("Unable to remove host from database")
+        return {'err':23,'errtext':'Unable to remove host from database'}
 
 
 # ==========================================================================
