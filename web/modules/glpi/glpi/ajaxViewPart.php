@@ -222,6 +222,7 @@ _T('Size', 'glpi');
 _T('Free Size', 'glpi');
 _T('Supplier', 'glpi');
 _T('Invoice Number', 'glpi');
+_T('Date Of Purchase', 'glpi');
 _T('Warranty End Date', 'glpi');
 _T('Vendor', 'glpi');
 _T('Name', 'glpi');
