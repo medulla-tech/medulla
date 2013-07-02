@@ -233,31 +233,21 @@ class GlpiComputers(ComputerI):
         return self.glpi.getComputersOS(uuids)
 
     def getComputersListHeaders(self, ctx):
-        ret = []
-        if 'cn' in self.config.summary:
-            ret.append(['cn', 'Computer Name'])
-        if 'os' in self.config.summary:
-            ret.append(['os', 'Operating System'])
-        if 'description' in self.config.summary:
-            ret.append(['displayName', 'Description'])
-        if 'type' in self.config.summary:
-            ret.append(['type', 'Computer Type'])
-        if 'user' in self.config.summary:
-            ret.append(['user', 'Last Logged User'])
-        if 'inventorynumber' in self.config.summary:
-            ret.append(['inventorynumber', 'Inventory Number'])
-        if 'state' in self.config.summary:
-            ret.append(['state', 'State'])
-        if 'entity' in self.config.summary:
-            ret.append(['entity', 'Entity'])
-        if 'location' in self.config.summary:
-            ret.append(['location', 'Location'])
-        if 'model' in self.config.summary:
-            ret.append(['model', 'Model'])
-        if 'manufacturer' in self.config.summary:
-            ret.append(['manufacturer', 'Manufacturer'])
+        __headers = {
+            'cn': ['cn', 'Computer Name'],
+            'os': ['os', 'Operating System'],
+            'description': ['displayName', 'Description'],
+            'type': ['type', 'Computer Type'],
+            'user': ['user', 'Last Logged User'],
+            'inventorynumber': ['inventorynumber', 'Inventory Number'],
+            'state': ['state', 'State'],
+            'entity': ['entity', 'Entity'],
+            'location': ['location', 'Location'],
+            'model': ['model', 'Model'],
+            'manufacturer': ['manufacturer', 'Manufacturer'],
+        }
 
-        return ret
+        return [__headers[x] for x in self.config.summary]
 
     def isComputerNameAvailable(self, ctx, locationUUID, name):
         return self.glpi.isComputerNameAvailable(ctx, locationUUID, name)
