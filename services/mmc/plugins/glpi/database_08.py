@@ -512,7 +512,7 @@ class Glpi08(DyngroupDatabaseHelper):
             query = self.__filter_on(query)
             query = self.__filter_on_entity(query, ctx)
 
-            if 'hostname' in filt:
+            if filt.get('hostname'):
                 if displayList:
                     clauses = []
                     if 'cn' in self.config.summary:
