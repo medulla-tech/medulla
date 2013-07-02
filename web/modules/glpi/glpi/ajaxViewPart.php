@@ -80,6 +80,7 @@ function display_part($part, $get, $simpleTableParts, $displayNavBar = True, $pa
              * if it's an array, it's an editable field
              */
 
+            $vals[1] = str_replace('@@FALSE_POSITIVE@@', _T(' (Not an antivirus)', 'glpi'), $vals[1]);
             $all[$vals[0]][$i] = '';
             if (!is_array($vals[1]) && $vals[1] != '') { // translatable fields
                 $all[$vals[0]][$i] = _T($vals[1]);

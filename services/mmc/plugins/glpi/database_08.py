@@ -1533,8 +1533,15 @@ class Glpi08(DyngroupDatabaseHelper):
                 self.machine.outerjoin(self.fusionantivirus).outerjoin(self.manufacturers)
             ), uuid)
 
-        # Exclude some false positives
-        query = query.filter(not_(FusionAntivirus.name.in_(self.config.av_false_positive)))
+        def __getAntivirusName(manufacturerName, antivirusName):
+            """
+            Return complete antivirus name (manufacturer + antivirus name)
+            if antivirus name is a false positive, display it in bracket
+            """
+            if antivirusName in self.config.av_false_positive:
+                antivirusName += '@@FALSE_POSITIVE@@'
+
+            return manufacturerName and ' '.join([manufacturerName, antivirusName]) or antivirusName
 
         if count:
             ret = query.count()
@@ -1543,7 +1550,7 @@ class Glpi08(DyngroupDatabaseHelper):
             for antivirus, manufacturerName in query:
                 if antivirus:
                     l = [
-                        ['Name', manufacturerName and manufacturerName+' '+antivirus.name or antivirus.name],
+                        ['Name', __getAntivirusName(manufacturerName, antivirus.name)],
                         ['Enabled', antivirus.is_active == 1 and 'Yes' or 'No'],
                         ['Up-to-date', antivirus.uptodate == 1 and 'Yes' or 'No'],
                     ]
