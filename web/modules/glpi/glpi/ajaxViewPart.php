@@ -236,6 +236,7 @@ _T('OS', 'glpi');
 _T('Operating System', 'glpi');
 _T('Computer Type', 'glpi');
 _T('Model / Type', 'glpi');
+_T('Model', 'glpi');
 _T('Manufacturer', 'glpi');
 _T('Serial Number', 'glpi');
 _T('Frequency', 'glpi');

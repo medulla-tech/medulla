@@ -252,6 +252,10 @@ class GlpiComputers(ComputerI):
             ret.append(['entity', 'Entity'])
         if 'location' in self.config.summary:
             ret.append(['location', 'Location'])
+        if 'model' in self.config.summary:
+            ret.append(['model', 'Model'])
+        if 'manufacturer' in self.config.summary:
+            ret.append(['manufacturer', 'Manufacturer'])
 
         return ret
 

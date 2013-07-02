@@ -396,6 +396,10 @@ class Glpi07(DyngroupDatabaseHelper):
                     query = query.add_column(self.location.c.name) # entities
                 if 'location' in self.config.summary:
                     query = query.add_column(self.locations.c.name) # locations
+                if 'model' in self.config.summary:
+                    query = query.add_column(self.glpi_dropdown_model.c.name)
+                if 'manufacturer' in self.config.summary:
+                    query = query.add_column(self.glpi_enterprises.c.name)
 
             query_filter = None
 
@@ -447,6 +451,10 @@ class Glpi07(DyngroupDatabaseHelper):
                     join_query = join_query.outerjoin(self.state)
                 if 'location' in self.config.summary:
                     join_query = join_query.outerjoin(self.locations)
+                if 'model' in self.config.summary:
+                    join_query = join_query.outerjoin(self.glpi_dropdown_model)
+                if 'manufacturer' in self.config.summary:
+                    join_query = join_query.outerjoin(self.glpi_enterprises)
 
             query = query.select_from(join_query).filter(query_filter)
             query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
@@ -474,6 +482,10 @@ class Glpi07(DyngroupDatabaseHelper):
                         clauses.append(self.location.c.name.like('%'+filt['hostname']+'%'))
                     if 'location' in self.config.summary:
                         clauses.append(self.locations.c.name.like('%'+filt['hostname']+'%'))
+                    if 'model' in self.config.summary:
+                        clauses.append(self.glpi_dropdown_model.c.name.like('%'+filt['hostname']+'%'))
+                    if 'manufacturer' in self.config.summary:
+                        clauses.append(self.glpi_enterprises.c.name.like('%'+filt['hostname']+'%'))
                     # Filtering on computer list page
                     if clauses:
                         query = query.filter(or_(*clauses))
@@ -893,6 +905,10 @@ class Glpi07(DyngroupDatabaseHelper):
                 # List of fields defined around line 402
                 # m, os, type, inventorynumber, state, entity, location = m
                 l = list(m)
+                if 'manufacturer' in self.config.summary:
+                    manufacturer = l.pop()
+                if 'model' in self.config.summary:
+                    model = l.pop()
                 if 'location' in self.config.summary:
                     location = l.pop()
                 if 'entity' in self.config.summary:
@@ -915,6 +931,10 @@ class Glpi07(DyngroupDatabaseHelper):
             }
 
             if displayList:
+                if 'manufacturer' in self.config.summary:
+                    datas['manufacturer'] = manufacturer
+                if 'model' in self.config.summary:
+                    datas['model'] = model
                 if 'location' in self.config.summary:
                     datas['location'] = location
                 if 'entity' in self.config.summary:

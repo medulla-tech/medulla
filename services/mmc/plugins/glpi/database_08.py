@@ -449,6 +449,10 @@ class Glpi08(DyngroupDatabaseHelper):
                     query = query.add_column(self.location.c.name) # entities
                 if 'location' in self.config.summary:
                     query = query.add_column(self.locations.c.name) # locations
+                if 'model' in self.config.summary:
+                    query = query.add_column(self.glpi_computermodels.c.name)
+                if 'manufacturer' in self.config.summary:
+                    query = query.add_column(self.manufacturers.c.name)
 
             query_filter = None
 
@@ -500,6 +504,10 @@ class Glpi08(DyngroupDatabaseHelper):
                     join_query = join_query.outerjoin(self.state)
                 if 'location' in self.config.summary:
                     join_query = join_query.outerjoin(self.locations)
+                if 'model' in self.config.summary:
+                    join_query = join_query.outerjoin(self.glpi_computermodels)
+                if 'manufacturer' in self.config.summary:
+                    join_query = join_query.outerjoin(self.manufacturers)
 
             if self.fusionagents is not None:
                 join_query = join_query.outerjoin(self.fusionagents)
@@ -533,6 +541,10 @@ class Glpi08(DyngroupDatabaseHelper):
                         clauses.append(self.location.c.name.like('%'+filt['hostname']+'%'))
                     if 'location' in self.config.summary:
                         clauses.append(self.locations.c.name.like('%'+filt['hostname']+'%'))
+                    if 'model' in self.config.summary:
+                        clauses.append(self.glpi_computermodels.c.name.like('%'+filt['hostname']+'%'))
+                    if 'manufacturer' in self.config.summary:
+                        clauses.append(self.manufacturers.c.name.like('%'+filt['hostname']+'%'))
                     # Filtering on computer list page
                     if clauses:
                         query = query.filter(or_(*clauses))
@@ -983,9 +995,13 @@ class Glpi08(DyngroupDatabaseHelper):
             displayList = False
             if isinstance(m, tuple):
                 displayList = True
-                # List of fields defined around line 402
-                # m, os, type, inventorynumber, state, entity, location = m
+                # List of fields defined around line 439
+                # m, os, type, inventorynumber, state, entity, location, model, manufacturer = m
                 l = list(m)
+                if 'manufacturer' in self.config.summary:
+                    manufacturer = l.pop()
+                if 'model' in self.config.summary:
+                    model = l.pop()
                 if 'location' in self.config.summary:
                     location = l.pop()
                 if 'entity' in self.config.summary:
@@ -1008,6 +1024,10 @@ class Glpi08(DyngroupDatabaseHelper):
             }
 
             if displayList:
+                if 'manufacturer' in self.config.summary:
+                    datas['manufacturer'] = manufacturer
+                if 'model' in self.config.summary:
+                    datas['model'] = model
                 if 'location' in self.config.summary:
                     datas['location'] = location
                 if 'entity' in self.config.summary:

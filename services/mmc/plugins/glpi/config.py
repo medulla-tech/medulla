@@ -40,7 +40,7 @@ class GlpiConfig(PluginConfig):
     red = 35
 
     # computer_list section
-    # complete list: ['cn', 'description', 'os', 'type', 'user', 'inventorynumber', 'state', 'entity', 'location']
+    # complete list: ['cn', 'description', 'os', 'type', 'user', 'inventorynumber', 'state', 'entity', 'location', 'model', 'manufacturer']
     summary = ['cn', 'description', 'os', 'type', 'user', 'entity', 'location']
     ordered = False
 
