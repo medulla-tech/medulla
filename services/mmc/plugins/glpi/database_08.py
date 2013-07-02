@@ -41,7 +41,7 @@ import os
 from configobj import ConfigObj
 
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
-        Integer, ForeignKey, asc, or_, not_, desc, func
+        Integer, ForeignKey, asc, or_, not_, desc, func, distinct
 from sqlalchemy.orm import create_session, mapper
 from sqlalchemy.sql.expression import ColumnOperators
 
@@ -431,7 +431,7 @@ class Glpi08(DyngroupDatabaseHelper):
         """
         if session == None:
             session = create_session()
-        query = count and session.query(func.count(self.machine.c.id), Machine) or session.query(Machine)
+        query = count and session.query(func.count(distinct(self.machine.c.id)), Machine) or session.query(Machine)
         if filt:
             # filtering on query
             join_query = self.machine
@@ -587,6 +587,7 @@ class Glpi08(DyngroupDatabaseHelper):
                             FusionAntivirus.is_active == 1,
                             FusionAntivirus.uptodate == 1,
                             OS.name.ilike('%windows%'),
+                            not_(FusionAntivirus.name.in_(self.config.av_false_positive)),
                         )
                     )
                 elif filt['antivirus'] == 'orange':
@@ -597,8 +598,9 @@ class Glpi08(DyngroupDatabaseHelper):
                                 and_(
                                     FusionAntivirus.is_active == 1,
                                     FusionAntivirus.uptodate == 1,
-                                )
-                            )
+                                ),
+                            ),
+                            not_(FusionAntivirus.name.in_(self.config.av_false_positive)),
                         )
                     )
                 elif filt['antivirus'] == 'red':
@@ -608,7 +610,13 @@ class Glpi08(DyngroupDatabaseHelper):
                             or_(
                                 FusionAntivirus.is_active == None,
                                 FusionAntivirus.uptodate == None,
-                            )
+                                and_(
+                                    FusionAntivirus.name.in_(self.config.av_false_positive),
+                                    not_(FusionAntivirus.computers_id.in_(
+                                        self.getMachineIdsNotInAntivirusRed(ctx),
+                                    )),
+                                ),
+                            ),
                         )
                     )
 
@@ -1524,6 +1532,9 @@ class Glpi08(DyngroupDatabaseHelper):
             session.query(FusionAntivirus).add_column(self.manufacturers.c.name).select_from(
                 self.machine.outerjoin(self.fusionantivirus).outerjoin(self.manufacturers)
             ), uuid)
+
+        # Exclude some false positives
+        query = query.filter(not_(FusionAntivirus.name.in_(self.config.av_false_positive)))
 
         if count:
             ret = query.count()
@@ -2865,6 +2876,26 @@ class Glpi08(DyngroupDatabaseHelper):
         session.close()
 
         return ret
+
+    def getMachineIdsNotInAntivirusRed(self, ctx):
+        """
+        return ids list of machines who are not in antivirus red status
+        """
+        session = create_session()
+        __computersListQ = self.__getRestrictedComputersListQuery
+
+        complete_ctx(ctx)
+
+        filt = {
+            'ctxlocation': ctx.locations
+        }
+
+        query1 = __computersListQ(ctx, dict(filt, **{'antivirus': 'green'}), session)
+        query2 = __computersListQ(ctx, dict(filt, **{'antivirus': 'orange'}), session)
+
+        session.close()
+
+        return [machine.id for machine in query1.all()] + [machine.id for machine in query2.all()]
 
     def getMachineListByAntivirusState(self, ctx, groupName):
         session = create_session()

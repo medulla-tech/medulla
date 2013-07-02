@@ -64,6 +64,18 @@ class Glpi(DyngroupDatabaseHelper):
         # activate the backend
         ret = self.database.activate(self.config)
         self.is_activated = self.database.is_activated
+        # Register the panel to the DashboardManager
+        try:
+            logging.getLogger().debug('Try to load glpi panels')
+            from mmc.plugins.dashboard.manager import DashboardManager
+            from mmc.plugins.dashboard.panel import Panel
+            DM = DashboardManager()
+            DM.register_panel(Panel("inventory"))
+            if self.database.fusionantivirus is not None:
+                DM.register_panel(Panel("antivirus"))
+        except ImportError:
+            logging.getLogger().debug('Failed to load glpi panels')
+
 
         # we get all the needed methods
         methods = ['initMappers', 'getMachineUUID', 'activate', 'config', 'decode', 'doesUserHaveAccessToMachine', 'doesUserHaveAccessToMachines', \

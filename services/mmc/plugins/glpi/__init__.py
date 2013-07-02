@@ -65,17 +65,6 @@ def activate():
     if config.check_db_enable:
         scheduleCheckStatus(config.check_db_interval)
 
-    # Register the panel to the DashboardManager
-    try:
-        logging.getLogger().debug('Try to load glpi panels')
-        from mmc.plugins.dashboard.manager import DashboardManager
-        from mmc.plugins.dashboard.panel import Panel
-        DM = DashboardManager()
-        DM.register_panel(Panel("inventory"))
-        DM.register_panel(Panel("antivirus"))
-    except ImportError:
-        logging.getLogger().debug('Failed to load glpi panels')
-
     return True
 
 class ContextMaker(ContextMakerI):

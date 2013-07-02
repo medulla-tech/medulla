@@ -44,6 +44,9 @@ class GlpiConfig(PluginConfig):
     summary = ['cn', 'description', 'os', 'type', 'user', 'entity', 'location']
     ordered = False
 
+    # antivirus section
+    av_false_positive = []
+
     # manufacturer section
     manufacturerWarrantyUrl = {}
 
@@ -93,6 +96,9 @@ class GlpiConfig(PluginConfig):
 
         if self.has_option("computer_list", "summary"):
             self.summary = self.get("computer_list", "summary").split(' ')
+
+        if self.has_option("antivirus", "av_false_positive"):
+            self.av_false_positive = self.get("antivirus", "av_false_positive").split('||')
 
         if self.has_option("computer_list", "ordered"):
             self.ordered = self.getint("computer_list", "ordered")
