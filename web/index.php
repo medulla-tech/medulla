@@ -120,24 +120,7 @@ if ($error) {
 
 		<form class="form-inline" action="index.php" method="post" name="loginForm" id="loginForm">
 
-            <div class="control-group">
-                <label class="control-label" for="username"><?php echo  _("Login"); ?></label>
-                <div class="controls">
-                    <input name="username" type="text" class="input-small" id="username" value="<?= $login ?>" />
-                </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label" for="password"><?php echo  _("Password"); ?></label>
-                <div class="controls">
-                    <input name="password" type="password" class="input-small" id="password" value="" />
-                </div>
-            </div>
-            <script type="text/javascript">
-                function changeServerLang() {
-                    window.location = "index.php?server=" + document.getElementById('server').value + "&lang=" + document.getElementById('lang').value;
-                }
-            </script>
-			<?php
+            		<?php
 
             $servLabelList = array();
             $servDescList = array();
@@ -171,6 +154,23 @@ if ($error) {
             $langList->setElements($langDescList);
             $langList->setElementsVal($langLabelList);
 
+            // Get browser lang
+            $lang_1 = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+            $lang_2 = str_replace('-','_',substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 5));
+            
+            // If lang1 = en => LANG =  C
+            if ($lang_1 == 'en')
+                $_SESSION['lang'] = 'C';
+            else // We check other languages 
+                // Searching with xx_XX pattern
+                if (in_array($lang_2, $languages))
+                    $_SESSION['lang'] = $lang_2;
+                else
+                    // Searching with xx pattern
+                    foreach ($languages as $lang)
+                        if (substr($lang, 0, 2) == $lang_1)
+                            $_SESSION['lang'] = $lang;
+            
             if (isset($_SESSION['lang']))
                 $langList->setSelected($_SESSION['lang']);
             else
@@ -194,6 +194,23 @@ if ($error) {
                     <?= $langList->display() ?>
                 </div>
             </div>
+            <div class="control-group">
+                <label class="control-label" for="username"><?php echo  _("Login"); ?></label>
+                <div class="controls">
+                    <input name="username" type="text" class="input-small" id="username" value="<?= $login ?>" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="password"><?php echo  _("Password"); ?></label>
+                <div class="controls">
+                    <input name="password" type="password" class="input-small" id="password" value="" />
+                </div>
+            </div>
+            <script type="text/javascript">
+                function changeServerLang() {
+                    window.location = "index.php?server=" + document.getElementById('server').value + "&lang=" + document.getElementById('lang').value;
+                }
+            </script>
             <div class="control-group">
                 <label class="control-label"></label>
                 <div class="controls">
