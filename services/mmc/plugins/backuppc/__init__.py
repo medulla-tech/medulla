@@ -123,7 +123,7 @@ def get_host_backup_profile(uuid):
     return BackuppcDatabase().get_host_backup_profile(uuid)
     
 def set_host_backup_profile(uuid,newprofile):
-    return BackuppcDatabase().set_host_backup_profile(uuid,newprofile)
+    return bpc.set_host_backup_profile(uuid,newprofile)
 
 
 # PERIOD PROFILES
@@ -144,7 +144,7 @@ def get_host_period_profile(uuid):
     return BackuppcDatabase().get_host_period_profile(uuid)
     
 def set_host_period_profile(uuid,newprofile):
-    return BackuppcDatabase().set_host_period_profile(uuid,newprofile)
+    return bpc.set_host_period_profile(uuid,newprofile)
 
 # Apply profiles to hosts
 
@@ -175,12 +175,11 @@ def get_host_status(host):
 def set_backup_for_host(uuid):
     return bpc.set_backup_for_host(uuid)
 
+def unset_backup_for_host(uuid):
+    return bpc.unset_backup_for_host(uuid)
+
 def get_xfer_log(host,backupnum):
     return bpc.get_xfer_log(host,backupnum)
-
-# Function to associate entities to backup servers
-# To be used by external script
-# TODO : remove this
 
 def get_backupservers_list():
     return BackuppcDatabase().get_backupservers_list()
@@ -195,3 +194,10 @@ def get_global_status(entity_uuid):
 
 def host_exists(uuid):
     return BackuppcDatabase().host_exists(uuid)
+
+
+def build_fileindex(host):
+    return bpc.build_fileindex(host)
+
+def file_search(host,backupnum_0,sharename_0,filename_0,filesize_min=-1,filesize_max=-1,type_0=' '):
+    return bpc.file_search(host,backupnum_0,sharename_0,filename_0,filesize_min,filesize_max,type_0)

@@ -51,6 +51,9 @@ $page->addTab($tab);
 $tab = new Tab("tab2", _T('Edit host config', 'backuppc'));
 $page->addTab($tab);
 
+$tab = new Tab("tab3", _T('File search', 'backuppc'));
+$page->addTab($tab);
+
 $submod->addPage($page);
 
 $page = new Page("EditBackupProfile", _T('Edit Backup Profile', 'backuppc'));
@@ -145,6 +148,11 @@ $submod->addPage($page);
 
 $page = new Page("ajaxBrowseFiles");
 $page->setFile("modules/backuppc/backuppc/ajaxBrowseFiles.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$submod->addPage($page);
+
+$page = new Page("ajaxFileSearch");
+$page->setFile("modules/backuppc/backuppc/ajaxFileSearch.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 

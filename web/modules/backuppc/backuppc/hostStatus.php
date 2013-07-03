@@ -144,16 +144,24 @@ if (isset($_POST['bconfirm'],$_POST['host'])){
  */
 right_top_shortcuts_display();
 
+
+// ==========================================================
 // Tab generator
+// ==========================================================
+
 $p = new TabbedPageGenerator();
 $p->addTop(sprintf(_T("%s's backup status", 'backuppc'),$computer_name), "modules/backuppc/backuppc/header.php");
 
 // Adding tabs
 $p->addTab("tab1", _T('Summary', 'backuppc'), "", "modules/backuppc/backuppc/hostSummary.php", array('objectUUID'=>$uuid, 'cn'=>$computer_name));
-$p->addTab("tab2", _T('Configuration', 'backuppc'), "", "modules/backuppc/backuppc/edit.php", array('objectUUID'=>$uuid, 'cn'=>$computer_name));
+
+if (host_exists($uuid))
+{
+    $p->addTab("tab2", _T('Configuration', 'backuppc'), "", "modules/backuppc/backuppc/edit.php", array('objectUUID'=>$uuid, 'cn'=>$computer_name));
+    $p->addTab("tab3", _T('File search', 'backuppc'), "", "modules/backuppc/backuppc/fileSearch.php", array('objectUUID'=>$uuid, 'cn'=>$computer_name));
+}
 
 $p->setSideMenu($sidemenu);
 $p->display();
 
 ?>
-

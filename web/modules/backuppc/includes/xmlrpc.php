@@ -179,4 +179,8 @@ function host_exists($uuid){
     return xmlCall("backuppc.host_exists", array($uuid));
 }
 
+function file_search($host,$backupnum_0,$sharename_0,$filename_0,$filesize_min=-1,$filesize_max=-1,$type_0=' '){
+    return xmlCall("backuppc.file_search", array($host,$backupnum_0,$sharename_0,$filename_0,$filesize_min,$filesize_max,$type_0));
+} 
+
 ?>

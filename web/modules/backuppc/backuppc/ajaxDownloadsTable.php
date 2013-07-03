@@ -48,6 +48,14 @@ if ($count=count($download_status)) {
     $times = array();
     $status = array();
     
+    // Host
+    if (isset($_GET['host'])) 
+        $host = $_GET['host'];
+    elseif (isset($_GET['objectUUID'])) 
+        $host = $_GET['objectUUID'];
+    else
+        return;
+    
     // Icons
     $emptyAction = new EmptyActionItem();
     $downloadAction = new ActionItem(_T("Download", "backuppc"),"download","display","dir", "backuppc", "backuppc");
@@ -57,7 +65,7 @@ if ($count=count($download_status)) {
     
     foreach ($download_status as $filepath => $dstatus)
     {
-        if (isset($_GET['host']) && $_GET['host'] != $dstatus['host'])
+        if ($host != $dstatus['host'])
             continue;
         
         $times[] = strftime(_T("%A, %B %e %Y",'backuppc').' %H:%M',$dstatus['time']);
@@ -122,7 +130,7 @@ jQuery.noConflict();
 function refresh(){
         parentcontainer = jQuery('div#downloadTable').parent();
         jQuery.get(
-            "<?php  echo 'main.php?module=backuppc&submod=backuppc&action=ajaxDownloadsTable&host='.$_GET['host']; ?>",
+            "<?php  echo 'main.php?module=backuppc&submod=backuppc&action=ajaxDownloadsTable&host='.$host; ?>",
              function(data){
                 jQuery('div#downloadTable').remove();
                 parentcontainer.append(data);

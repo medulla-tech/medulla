@@ -29,6 +29,7 @@ _UNKNOWN_ERROR = {'err':20,'errtext':'Unable to perform selected action, unknown
 
 # Global vars
 download_status = {}
+file_index = {}
 
 # ==========================================================================
 # BACKUP SERVER I/O FUNCTIONS
@@ -232,13 +233,13 @@ def list_files(host,backup_num,share_name,dir,filter,recursive=0):
         if len(cols) == 6:
             if filter in cols.eq(0).text():
                 # Attributes
-                result[0] += [cols.eq(0).text().replace(u'\xa0',' ')]
-                result[1] += [cols.eq(0).find('input').val()]
-                result[2] += [cols.eq(3).text()]
-                result[3] += [cols.eq(1).text()]
-                result[4] += [cols.eq(2).text()]
-                result[5] += [cols.eq(4).text()]
-                result[6] += [cols.eq(5).text()]
+                result[0] += [cols.eq(0).text().replace(u'\xa0',' ')] #filename
+                result[1] += [cols.eq(0).find('input').val()] #filepath
+                result[2] += [cols.eq(3).text()] # type (int)
+                result[3] += [cols.eq(1).text()] # type (str)
+                result[4] += [cols.eq(2).text()] # mode
+                result[5] += [cols.eq(4).text()] # size
+                result[6] += [cols.eq(5).text()] # last modification 
             # if recursive is on, we add directories to dirs array to browse them
             if recursive and cols.eq(1).text()=='dir':
                 subdir = urllib.unquote(cols.eq(0).find('input').val())
@@ -619,10 +620,13 @@ def set_backup_for_host(uuid):
 
 
 def unset_backup_for_host(uuid):
-    #TODO: Check if host is in DB
-    # is_backup_set(uuid)
+    if not host_exists(uuid):
+        logger.warning('Backup is not set for the machine %s' % uuid)
+        return
+    #
     server_url = getBackupServerByUUID(uuid)
     if not server_url: return
+    # Removing entry from hosts
     config = get_host_config('',server_url)['general_config']
     try:
         for i in config['Hosts'].keys():
@@ -687,6 +691,125 @@ def get_xfer_log(host,backupnum):
         return _FORMAT_ERROR
     else:
         return {'err':0,'data':d('pre:first').text()}
+
+
+def build_fileindex(host):
+    res = get_backup_list(host)
+    # If error is returned, we abort
+    if res['err'] : return res
+    # Retreiving Backup nums array
+    if not res['data']: return {'err':33,'errtext':'No backup point found'}
+    backups = res['data'][0]
+    #
+    global file_index
+    # If file_index doesnt contain host, we add it
+    if not host in file_index:
+        file_index[host]={}
+    # Building file index for all Backup points
+    for backupnum in backups:
+        # Setting params for XferLog page
+        params = {}
+        params['host'] = host
+        params['action'] = 'view'
+        params['type'] = 'XferLOG'
+        params['num'] = backupnum
+        # Sending request
+        html = send_request(params)
+        # Error treatment
+        if not html:
+            return _CONNECTION_ERROR
+        #
+        if getHTMLerr(html):
+            return getHTMLerr(html)
+        #
+        d=pq(html)
+        # 
+        if not d('pre:first'):
+            return _FORMAT_ERROR
+        #
+        log = d('pre:first').text()
+        lines = log.split('\n')
+        #
+        current_share = ''
+        file_index[host][backupnum] = {}
+        for line in lines:
+            if len(line)<3:
+                continue 
+            if line[0:2]!= '  ':
+                if 'backup started' in line:
+                    r1 = re.search('for directory ([^(^)]+) \(baseline backup.+\)',line)
+                    r2 = re.search('for directory ([^(^)]+)',line)
+                    r = r1 or r2
+                    if r: current_share = r.group(1)
+                    file_index[host][backupnum][current_share] = {\
+                                                                        'actions':[], \
+                                                                        'types':[], \
+                                                                        'modes':[], \
+                                                                        'pts':[], \
+                                                                        'sizes':[], \
+                                                                        'paths':[] \
+                                                                        }
+                continue
+            # If filename is . or .. , we pass
+            if line[37:].strip() in ['.' ,'..']: continue
+            # extracting info
+            file_index[host][backupnum][current_share]['actions'].append(line[2:8].strip())
+            file_index[host][backupnum][current_share]['types'].append(line[9])
+            #file_index[host][backupnum][current_share]['modes'].append(line[11:14])
+            #file_index[host][backupnum][current_share]['pts'].append(line[17:24])
+            file_index[host][backupnum][current_share]['sizes'].append(int(line[25:36]))
+            file_index[host][backupnum][current_share]['paths'].append(line[37:])
+    return {'err':0}
+
+
+def file_search(host,backupnum_0,sharename_0,filename_0,filesize_min=-1,filesize_max=-1,type_0=''):
+    global file_index
+    # If no entry in file_index, we build host file index
+    if not host in file_index:
+        res = build_fileindex(host)
+        # If error, we abort
+        if res['err']: return res
+    # Adapting Params
+    # filename_0 to lower, for case insensitive search
+    filename_0 = filename_0.lower()
+    # If sharename0_, backupnum_0 are strings, we convert them to lists
+    if backupnum_0 and type(backupnum_0) == type('a'): backupnum_0 = [backupnum_0]
+    if sharename_0 and type(sharename_0) == type('a'): sharename_0 = [sharename_0]
+    filesize_min = int(filesize_min)
+    filesize_max = int(filesize_max)
+    # init result list
+    result = []
+    #
+    for backupnum in file_index[host]:
+        # If there is a backupnum filter, we apply it
+        if backupnum_0 and not backupnum in backupnum_0: continue
+        for sharename in file_index[host][backupnum]:
+            # If there is a sharename filter, we apply it
+            if sharename_0 and not sharename in sharename_0: continue
+            for i in xrange(len(file_index[host][backupnum][sharename]['paths'])):
+                # ========== TYPE FILTERING =============================
+                _type = file_index[host][backupnum][sharename]['types'][i]
+                # if symlink, we pass
+                if _type == "l": continue
+                if type_0 and _type != type_0: continue 
+                # ========== FILENAME FILTERING =============================
+                filepath = file_index[host][backupnum][sharename]['paths'][i]
+                filename = os.path.basename(filepath).lower()
+                if filename_0 and not filename_0 in filename: continue
+                # ========== FILESIZE FILTERING =============================
+                size = file_index[host][backupnum][sharename]['sizes'][i]
+                if filesize_max != -1 and size > filesize_max: continue
+                if filesize_min != -1 and size < filesize_min: continue
+                # =========== APPENDING RESULT ENTRY =================================
+                result.append({   'backupnum' : backupnum, \
+                                    'sharename' : sharename, \
+                                    'filepath'  : '/'+filepath, \
+                                    'filename'  : filename, \
+                                    'filesize'  : size, \
+                                    'type'      : _type
+                                })
+    return {'err':0, 'data' : result}
+        
 
 def apply_backup_profile(profileid):
     # Hosts corresponding to selected profile
