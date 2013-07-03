@@ -323,12 +323,13 @@ class BackuppcDatabase(DatabaseHelper):
     def host_exists(self,uuid):
         session = create_session()
         try:
-            ret = session.query(Hosts).filter(Hosts.uuid == uuid.upper()).one()
-            exists = (ret != None)
-            session.close()
-            return ret
+            session.query(Hosts).filter(Hosts.uuid == uuid.upper()).one()
+            exists = True
         except:
-            logger.error("DB Error")
+            exists = False
+        #
+        session.close()
+        return exists
         
 
     # =====================================================================

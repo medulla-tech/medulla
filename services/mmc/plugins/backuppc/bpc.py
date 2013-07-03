@@ -8,6 +8,7 @@ import tempfile
 import time
 import subprocess
 from shutil import rmtree
+import fnmatch
 
 # Twisted
 from twisted.python import threadable; threadable.init(1)
@@ -795,7 +796,7 @@ def file_search(host,backupnum_0,sharename_0,filename_0,filesize_min=-1,filesize
                 # ========== FILENAME FILTERING =============================
                 filepath = file_index[host][backupnum][sharename]['paths'][i]
                 filename = os.path.basename(filepath).lower()
-                if filename_0 and not filename_0 in filename: continue
+                if filename_0 and not fnmatch.fnmatch(filename,filename_0) : continue
                 # ========== FILESIZE FILTERING =============================
                 size = file_index[host][backupnum][sharename]['sizes'][i]
                 if filesize_max != -1 and size > filesize_max: continue
