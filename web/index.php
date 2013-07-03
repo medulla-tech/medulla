@@ -181,21 +181,20 @@ if ($error) {
                 <p><a href="forgotpassword.php?server=<?=$servList->selected?>&lang=<?=$langList->selected?>"><?=_("Forgot password ?")?></a></p>
             <?php
             }
+            
+            if (count($servDescList) == 1)
+            {
+                printf('<input type="hidden" name="server" value="%s" />',$servLabelList[0]);
+            }
+            else {
             ?>
             <div class="control-group">
                 <label class="control-label" for="server"><?php echo  _("Server"); ?></label>
                 <div class="controls">
-                    <?php 
-                    if (count($servDescList) == 1)
-                    {
-                        printf('<label style="margin-top:5px;">%s</label>',$servDescList[0]);
-                        printf('<input type="hidden" name="server" value="%s" />',$servLabelList[0]);
-                    }
-                    else
-                        $servList->display();
-                    ?>
+                    <?php $servList->display(); ?>
                 </div>
             </div>
+            <?php } ?>
             <div class="control-group">
                 <label class="control-label" for="lang"><?php echo  _("Language"); ?></label>
                 <div class="controls">
