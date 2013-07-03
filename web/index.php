@@ -185,7 +185,15 @@ if ($error) {
             <div class="control-group">
                 <label class="control-label" for="server"><?php echo  _("Server"); ?></label>
                 <div class="controls">
-                    <?= $servList->display() ?>
+                    <?php 
+                    if (count($servDescList) == 1)
+                    {
+                        printf('<label style="margin-top:5px;">%s</label>',$servDescList[0]);
+                        printf('<input type="hidden" name="server" value="%s" />',$servLabelList[0]);
+                    }
+                    else
+                        $servList->display();
+                    ?>
                 </div>
             </div>
             <div class="control-group">
