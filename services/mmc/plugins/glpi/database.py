@@ -73,6 +73,8 @@ class Glpi(DyngroupDatabaseHelper):
             DM.register_panel(Panel("inventory"))
             if self.database.fusionantivirus is not None:
                 DM.register_panel(Panel("antivirus"))
+            # Registring OS Repartition panel
+            DM.register_panel(Panel("os_repartition"))
         except ImportError:
             logging.getLogger().debug('Failed to load glpi panels')
 
