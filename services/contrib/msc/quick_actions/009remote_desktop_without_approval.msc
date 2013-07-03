@@ -1,0 +1,3 @@
+title=Remote desktop connection WITH user approval
+titlefr=Prise en main à distance AVEC autorisation de l'utilisateur
+command=reg add "HKLM\SOFTWARE\TightVNC\Server" /f /v QueryAcceptOnTimeout /t REG_DWORD /d 0 && net stop tvnserver && net start tvnserver

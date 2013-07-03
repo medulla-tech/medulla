@@ -25,7 +25,10 @@ qa_DATA = \
 	001reboot.msc \
 	002shutdown.msc \
 	006run_inventory_win32.msc \
-	007wake_on_lan.msc
+	007wake_on_lan.msc \
+        008remote_desktop_without_approval.msc \
+        009remote_desktop_without_approval.msc
+        
 
 qaexamplesdir = $(docdir)/qactions
 qaexamples_DATA = \
