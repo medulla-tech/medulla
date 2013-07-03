@@ -39,18 +39,26 @@ class os_repartitionPanel extends Panel {
         
         // Get All OS Repartition for the user locations
         $locations = getUserLocations();
-        $osTable = array();
 
+        // Declare classes from higher priority to lower (note that Microsoft Windows is latest)
         $osClasses = array(
             'Other',
             'Microsoft Windows 7',
-            'Microsoft Windiws XP'
+            'Microsoft Windows XP',
+            'Microsoft Windows'
+        );
+        
+        $osLabels = array(
+            'Other',
+            'Windows 7',
+            'Windows XP',
+            'Other Windows'
         );
 
-        $osCount = array(0,0,0);
+        $osCount = array(0,0,0,0);
 
         foreach ($locations as $location){
-            //$location['uuid']
+            
             $result = getRestrictedComputersList(0,-1,array('location'=>$location['uuid']), False);
             foreach ($result as $uuid => $info){
                 $gotOS = False;
@@ -68,14 +76,27 @@ class os_repartitionPanel extends Panel {
             }
         }
          
-        for ($i = 0; $i<count($osClasses); $i++)
-            $osClasses[$i] .= ' ('.$osCount[$i].')';
-        $osClasses = json_encode(str_replace('Microsoft ','',$osClasses));
-        $osCount = json_encode($osCount);
+        for ($i = 0; $i<count($osLabels); $i++)
+            $osLabels[$i] .= ' ('.$osCount[$i].')';
         
+        
+        $n = count($osCount);
+        // Treating osCount for adapting to raphaeljs
+        for ($i = 0; $i < $n ; $i++){
+            if ($osCount[$i] == 0){
+                unset($osCount[$i]);
+                unset($osLabels[$i]);
+                
+            }
+            elseif ($osCount[$i]/array_sum($osCount) < 0.015)
+                $osCount[$i] = 0.015/(1-0.015)*(array_sum($osCount)-$osCount[$i]);
+        }
+        
+        $osLabels = json_encode(array_values($osLabels));
+        $osCount = json_encode(array_values($osCount));
 
         echo <<< SPACE
-        <div id="os-graphs" style="height:130px;"></div>
+        <div id="os-graphs" style="height:230px;"></div>
         <script type="text/javascript">
         var    r = Raphael("os-graphs"),
                 radius = 40,
@@ -85,11 +106,9 @@ class os_repartitionPanel extends Panel {
         
 
         var data = $osCount,
-            legend = $osClasses,
+            legend = $osLabels,
             colors = [],
             title = 'OS Repartition';
-        //if (partition.usage.percent < 1)
-        
         
         /*r.text(5, y - radius - 10, title)
          .attr({ font: "12px sans-serif" })
