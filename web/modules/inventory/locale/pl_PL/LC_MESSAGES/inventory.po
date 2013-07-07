@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-01 01:01+0200\n"
+"POT-Creation-Date: 2013-07-08 01:00+0200\n"
 "PO-Revision-Date: 2013-06-25 14:16+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,6 +26,14 @@ msgstr ""
 #: modules/inventory/inventory/tabs.php:44
 #, php-format
 msgid "%s's inventory"
+msgstr ""
+
+#: modules/inventory/includes/panels/inventory.inc.php:44
+msgid "< %s days: %percent% (%d)"
+msgstr ""
+
+#: modules/inventory/includes/panels/inventory.inc.php:45
+msgid "> %s days: %percent% (%d)"
 msgstr ""
 
 #: modules/inventory/inventory/inventory_diff.php:114
@@ -190,6 +198,10 @@ msgstr ""
 
 #: modules/inventory/inventory/i18n_labels.php:49
 msgid "Cpu Vendor"
+msgstr ""
+
+#: modules/inventory/includes/panels/inventory.inc.php:43
+msgid "Create a group"
 msgstr ""
 
 #: modules/inventory/infoPackage.inc.php:99
@@ -475,7 +487,7 @@ msgstr ""
 msgid "Last year"
 msgstr ""
 
-#: modules/inventory/includes/panels/inventory.inc.php:47
+#: modules/inventory/includes/panels/inventory.inc.php:48
 msgid "Latest Inventory Date"
 msgstr ""
 
@@ -491,12 +503,6 @@ msgstr ""
 
 #: modules/inventory/inventory/i18n_labels.php:90
 msgid "Length"
-msgstr ""
-
-#: modules/inventory/includes/panels/inventory.inc.php:43
-msgid ""
-"Less than %s days:\n"
-" %percent% (%d computers)"
 msgstr ""
 
 #: modules/inventory/inventory/incoming.php:73
@@ -569,12 +575,6 @@ msgstr ""
 
 #: modules/inventory/inventory/body.php:50
 msgid "Monitor list"
-msgstr ""
-
-#: modules/inventory/includes/panels/inventory.inc.php:44
-msgid ""
-"More than %s days:\n"
-" %percent% (%d computers)"
 msgstr ""
 
 #: modules/inventory/inventory/i18n_labels.php:106

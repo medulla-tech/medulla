@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-01 01:01+0200\n"
+"POT-Creation-Date: 2013-07-08 01:00+0200\n"
 "PO-Revision-Date: 2013-03-14 17:12+0000\n"
 "Last-Translator: Leonardo Coelho <leonardoc@mandriva.com.br>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
@@ -30,6 +30,20 @@ msgstr "Inventário do conteúdo de %s"
 #, php-format
 msgid "%s's inventory"
 msgstr "inventário de %s"
+
+#: modules/inventory/includes/panels/inventory.inc.php:44
+#, fuzzy
+msgid "< %s days: %percent% (%d)"
+msgstr ""
+"Menos que %s dias:\n"
+" %percent% (%d computadores)"
+
+#: modules/inventory/includes/panels/inventory.inc.php:45
+#, fuzzy
+msgid "> %s days: %percent% (%d)"
+msgstr ""
+"Menos que %s dias:\n"
+" %percent% (%d computadores)"
 
 #: modules/inventory/inventory/inventory_diff.php:114
 msgid "Added elements"
@@ -194,6 +208,11 @@ msgstr "Quantidade de Processador"
 #: modules/inventory/inventory/i18n_labels.php:49
 msgid "Cpu Vendor"
 msgstr "Vendedor do processador"
+
+#: modules/inventory/includes/panels/inventory.inc.php:43
+#, fuzzy
+msgid "Create a group"
+msgstr "Aba do Controlador para um grupo"
 
 #: modules/inventory/infoPackage.inc.php:99
 msgid "Create static group from dashboard"
@@ -478,7 +497,7 @@ msgstr "Última Semana"
 msgid "Last year"
 msgstr "Último Ano"
 
-#: modules/inventory/includes/panels/inventory.inc.php:47
+#: modules/inventory/includes/panels/inventory.inc.php:48
 msgid "Latest Inventory Date"
 msgstr "Ultima data do inventario"
 
@@ -495,14 +514,6 @@ msgstr "Último inventario é maior que tantos %s dias a %s"
 #: modules/inventory/inventory/i18n_labels.php:90
 msgid "Length"
 msgstr "Tamanho"
-
-#: modules/inventory/includes/panels/inventory.inc.php:43
-msgid ""
-"Less than %s days:\n"
-" %percent% (%d computers)"
-msgstr ""
-"Menos que %s dias:\n"
-" %percent% (%d computadores)"
 
 #: modules/inventory/inventory/incoming.php:73
 msgid "Load only the computers which were new when the inventory was made"
@@ -577,14 +588,6 @@ msgstr "Monitor"
 #: modules/inventory/inventory/body.php:50
 msgid "Monitor list"
 msgstr "Lista de monitores"
-
-#: modules/inventory/includes/panels/inventory.inc.php:44
-msgid ""
-"More than %s days:\n"
-" %percent% (%d computers)"
-msgstr ""
-"Mais que %s dias:\n"
-" %percent% (%d computadores)"
 
 #: modules/inventory/inventory/i18n_labels.php:106
 msgid "Name"
@@ -966,3 +969,10 @@ msgstr "Data da Operação"
 #: modules/inventory/inventory/graphs.php:47
 msgid "back"
 msgstr "voltar"
+
+#~ msgid ""
+#~ "More than %s days:\n"
+#~ " %percent% (%d computers)"
+#~ msgstr ""
+#~ "Mais que %s dias:\n"
+#~ " %percent% (%d computadores)"
