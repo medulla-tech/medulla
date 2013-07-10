@@ -94,6 +94,15 @@ class os_repartitionPanel extends Panel {
         
         $osLabels = json_encode(array_values($osLabels));
         $osCount = json_encode(array_values($osCount));
+        
+        /*$links = json_encode(array("#",
+                "main.php?module=base&submod=computers&action=computersgroupcreator&req=glpi&add_param=OS&request=stored_in_session&id=&value=Microsoft Windows 7 *",
+                "main.php?module=base&submod=computers&action=computersgroupcreator&req=glpi&add_param=OS&request=stored_in_session&id=&value=Microsoft Windows XP *",
+                    "#"));  DYNGROUP LINKS*/ 
+        $links = json_encode(array("#", // Static group links
+                "main.php?module=base&submod=computers&action=createOSStaticGroup&os=Microsoft Windows 7",
+                "main.php?module=base&submod=computers&action=createOSStaticGroup&os=Microsoft Windows XP",
+                    "#"));
 
         echo <<< SPACE
         <div id="os-graphs" style="height:250px;"></div>
@@ -108,10 +117,6 @@ class os_repartitionPanel extends Panel {
         var data = $osCount,
             legend = $osLabels,
             colors = ["#000","#73d216","#ef2929","#003399"],
-            links = ["#",
-                "main.php?module=base&submod=computers&action=computersgroupcreator&req=glpi&add_param=OS&request=stored_in_session&id=&value=Microsoft Windows 7 *",
-                "main.php?module=base&submod=computers&action=computersgroupcreator&req=glpi&add_param=OS&request=stored_in_session&id=&value=Microsoft Windows XP *",
-                    "#"],
             title = 'OS Repartition';
         
         /*r.text(5, y - radius - 10, title)
@@ -121,7 +126,7 @@ class os_repartitionPanel extends Panel {
         pie = r.piechart(x, y + 5, radius, data,
                    {legend: legend,
                     legendpos: "south",
-                    href : links,
+                    href : $links,
                     colors: colors})
          .hover(function () {
             this.sector.stop();
@@ -142,7 +147,6 @@ class os_repartitionPanel extends Panel {
          });
         
         y += (radius * 2) + margin + 5;
-        
         
         r.setSize(200, 3 * (radius * 2 + margin) + 10);
         </script>
