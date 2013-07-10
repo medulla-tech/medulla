@@ -56,14 +56,18 @@ class os_repartitionPanel extends Panel {
         );
 
         $osCount = array(0,0,0,0);
+        $uuids = array();
 
         foreach ($locations as $location){
             
             $result = getRestrictedComputersList(0,-1,array('location'=>$location['uuid']), False);
             foreach ($result as $info){
+                $uuid = $info[1]['objectUUID'][0];
+                $os = str_replace('&nbsp;',' ',htmlentities($info[1]['os']));
+                if (in_array($uuid, $uuids)) continue;
+                $uuids[] = $uuid;
                 $gotOS = False;
                 for ($i = 1; $i< count($osClasses) ; $i++){
-                    $os = str_replace('&nbsp;',' ',htmlentities($info[1]['os']));
                     if (stripos($os,$osClasses[$i]) !== False){
                         $osCount[$i]++;
                         $gotOS = True;
