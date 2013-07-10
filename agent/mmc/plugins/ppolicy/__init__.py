@@ -372,12 +372,12 @@ class UserPPolicy(ldapUserGroupControl):
    	    try:
 	        from mmc.plugins import samba
 	        if samba.isSmbUser(self.userUid):
-		    samba.changeSambaAttributes(self.userUid, {'sambaPwdLastSet': str(int(time.time())-int(pwd_minage))})
+                samba.changeSambaAttributes(self.userUid, {'sambaPwdLastSet': str(int(time.time())-int(pwd_minage))})
 	        else:
-		    logger.debug('sambaPwdLastSet failed to set beause %s is not a samba user (pwdReset workaround)' % self.userUid)
+                logging.getLogger().debug('sambaPwdLastSet failed to set beause %s is not a samba user (pwdReset workaround)' % self.userUid)
 	    except Exception as inst:
-		print str(inst)
-		
+    		print str(inst)
+
 
     def hasPPolicy(self):
         """
