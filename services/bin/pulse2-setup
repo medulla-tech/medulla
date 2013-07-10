@@ -237,9 +237,41 @@ class DebianHandler(DistroHandler):
                    shell=True)
         return ret==0
 
+class SystemctlHandler(object):
+    ldap_schemas_dir = None
+    ldap_config = False
+    apache_service = None
+    apache_dir = None
+
+    def enable_srv(self, name):
+        ret = call("/bin/systemctl enable %(name)s.service" % {'name': name}, shell=True)
+        if ret != 0:
+            return False
+        return ret==0
+
+    def disable_srv(self, name):
+        ret = call("/bin/systemctl disable %(name)s.service" % {'name': name}, shell=True)
+        if ret != 0:
+            return False
+        return ret==0
+
+    def start_srv(self, name):
+        ret = call("/sbin/service %(name)s start" % {'name': name}, shell=True)
+        return ret==0
+
+    def stop_srv(self, name):
+        ret = call("/sbin/service %(name)s stop" % {'name': name}, shell=True)
+        return ret==0
+
+    def reload_srv(self, name):
+        ret = call("/sbin/service %(name)s reload" % {'name': name}, shell=True)
+        return ret==0
+
 def get_distro_handler():
     if os.path.exists('/usr/sbin/update-rc.d'):
         return DebianHandler()
+    elif os.path.exists('/bin/systemctl'):
+        return SystemctlHandler()
     else:
         return DistroHandler()
 
