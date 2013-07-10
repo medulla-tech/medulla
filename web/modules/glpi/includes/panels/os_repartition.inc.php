@@ -107,7 +107,7 @@ class os_repartitionPanel extends Panel {
 
         var data = $osCount,
             legend = $osLabels,
-            colors = [],
+            colors = ["#000","#73d216","#ef2929","#003399"],
             title = 'OS Repartition';
         
         /*r.text(5, y - radius - 10, title)
