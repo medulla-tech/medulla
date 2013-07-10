@@ -108,15 +108,20 @@ class os_repartitionPanel extends Panel {
         var data = $osCount,
             legend = $osLabels,
             colors = ["#000","#73d216","#ef2929","#003399"],
+            links = ["#",
+                "main.php?module=base&submod=computers&action=computersgroupcreator&req=glpi&add_param=OS&request=stored_in_session&id=&value=Microsoft Windows 7 *",
+                "main.php?module=base&submod=computers&action=computersgroupcreator&req=glpi&add_param=OS&request=stored_in_session&id=&value=Microsoft Windows XP *",
+                    "#"],
             title = 'OS Repartition';
         
         /*r.text(5, y - radius - 10, title)
          .attr({ font: "12px sans-serif" })
          .attr({ "text-anchor": "start" });*/
         data = getPercentageData(data);
-        r.piechart(x, y + 5, radius, data,
+        pie = r.piechart(x, y + 5, radius, data,
                    {legend: legend,
                     legendpos: "south",
+                    href : links,
                     colors: colors})
          .hover(function () {
             this.sector.stop();
@@ -135,6 +140,7 @@ class os_repartitionPanel extends Panel {
                 this.label[1].attr({ "font-weight": 400 });
             }
          });
+        
         y += (radius * 2) + margin + 5;
         
         
