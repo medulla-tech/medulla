@@ -364,6 +364,20 @@ class UserPPolicy(ldapUserGroupControl):
         except ldap.INVALID_SYNTAX:
             logging.getLogger().error("Invalid Syntax from the attribute value of %s on ldap" % nameattribute)
         r.commit()
+	# if password reset request, we set sambaPwdLastSet to time()-24hours
+	if nameattribute == 'pwdReset' and value == 'TRUE':
+	    userpolicy = self.getPPolicy()
+	    if not userpolicy: userpolicy = 'default'
+	    pwd_minage =  PPolicy().listPPolicy(userpolicy)[0][1]['pwdMinAge'][0]
+   	    try:
+	        from mmc.plugins import samba
+	        if samba.isSmbUser(self.userUid):
+		    samba.changeSambaAttributes(self.userUid, {'sambaPwdLastSet': str(int(time.time())-int(pwd_minage))})
+	        else:
+		    logger.debug('sambaPwdLastSet failed to set beause %s is not a samba user (pwdReset workaround)' % self.userUid)
+	    except Exception as inst:
+		print str(inst)
+		
 
     def hasPPolicy(self):
         """
