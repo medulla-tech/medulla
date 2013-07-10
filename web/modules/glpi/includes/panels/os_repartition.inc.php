@@ -49,10 +49,10 @@ class os_repartitionPanel extends Panel {
         );
         
         $osLabels = array(
-            'Other',
+            _T('Other','glpi'),
             'Windows 7',
             'Windows XP',
-            'Other Windows'
+            _T('Other Windows','glpi')
         );
 
         $osCount = array(0,0,0,0);
@@ -60,7 +60,7 @@ class os_repartitionPanel extends Panel {
         foreach ($locations as $location){
             
             $result = getRestrictedComputersList(0,-1,array('location'=>$location['uuid']), False);
-            foreach ($result as $uuid => $info){
+            foreach ($result as $info){
                 $gotOS = False;
                 for ($i = 1; $i< count($osClasses) ; $i++){
                     $os = str_replace('&nbsp;',' ',htmlentities($info[1]['os']));
@@ -96,13 +96,13 @@ class os_repartitionPanel extends Panel {
         $osCount = json_encode(array_values($osCount));
 
         echo <<< SPACE
-        <div id="os-graphs" style="height:230px;"></div>
+        <div id="os-graphs" style="height:250px;"></div>
         <script type="text/javascript">
         var    r = Raphael("os-graphs"),
-                radius = 40,
-                margin = 30,
-                x = 50,
-                y = 60;
+                radius = 70,
+                margin = 60,
+                x = 100,
+                y = 80;
         
 
         var data = $osCount,
@@ -116,7 +116,7 @@ class os_repartitionPanel extends Panel {
         data = getPercentageData(data);
         r.piechart(x, y + 5, radius, data,
                    {legend: legend,
-                    legendpos: "east",
+                    legendpos: "south",
                     colors: colors})
          .hover(function () {
             this.sector.stop();
