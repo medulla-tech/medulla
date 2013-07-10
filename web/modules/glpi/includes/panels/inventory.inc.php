@@ -73,7 +73,7 @@ class GlpiPanel extends Panel {
         var legendText = moreThanText.replace('%s', days.orange).replace('%d', machineCount.orange)
         data.push(machineCount.orange);
         legend.push(legendText);
-        colors.push("#ff9c00");
+        colors.push("#f3602c");
         href.push(urlRedirect + "&group=orange&days=" + days.orange);
     }
 
