@@ -1117,6 +1117,9 @@ class TrFormElement extends FormElement {
         if ($field_name && is_string($old_value)) {
             print '<input type="hidden" name="old_'.$field_name.'" value="'.$old_value.'" />';
         }
+	else {
+	    print '<input type="hidden" name="old_'.$field_name.'" value="" />';
+	}
 
         // display real field
         parent::display($arrParam);
