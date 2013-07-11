@@ -39,6 +39,7 @@ from pulse2.package_server.package_api_get import PackageApiGet
 from pulse2.package_server.package_api_put import PackageApiPut
 from pulse2.package_server.user_package_api import UserPackageApi
 from pulse2.package_server.imaging.api import ImagingApi
+from pulse2.package_server.imaging.pxe.server import PXEProxy
 
 import pulse2.xmlrpc
 
@@ -111,6 +112,13 @@ def initialize(config):
                 'proto'  : config.proto
             })
             logger.info("Package Server initialized with imaging API")
+            try:
+                PXEProxy(config, imaging.api)
+            except Exception, e:
+                logger.exception("Imaging error: %s" % e)
+                logger.error("PXE imaging service initialization failed, exiting.")
+            logger.info("Package Server initialized with PXE imaging API") 
+            
         except Exception, e:
             logger.exception("Imaging error: %s" % e)
             logger.error("Error while initializing the imaging API")
