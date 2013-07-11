@@ -106,7 +106,7 @@ class PXEImagingApi (PXEMethodParser):
 
             d = task.deferLater(reactor, 0, self.glpi_register, mac, hostname, ip_address)
             d.addCallback(self._computerRegister, hostname, mac, 2)
-            d.addErrback(self, _ebRegisterError)
+            d.addErrback(self._ebRegisterError)
 
             return d
 
@@ -133,8 +133,8 @@ class PXEImagingApi (PXEMethodParser):
         """
  
         d = task.deferLater(reactor, delay, self.api.computerRegister, hostname, mac)
-        d.addCallback(self, _cbRegisterOk)
-        d.addErrback(self, _ebRegisterError)
+        d.addCallback(self._cbRegisterOk)
+        d.addErrback(self._ebRegisterError)
 
         return d
 

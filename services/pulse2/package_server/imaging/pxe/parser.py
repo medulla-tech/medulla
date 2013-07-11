@@ -30,9 +30,7 @@ by normalized prefixes.
 Output of this engine is method to execute with arguments.
 """
 
-import sys
 import inspect
-import logging
 from functools import wraps
 
 from pulse2.utils import isMACAddress

@@ -26,7 +26,6 @@ import logging
 
 from pulse2.package_server.xmlrpc import MyXmlrpc
 from pulse2.package_server.imaging.api.functions import Imaging
-from pulse2.package_server.imaging.cache import UUIDCache
 
 
 class ImagingApi (MyXmlrpc):

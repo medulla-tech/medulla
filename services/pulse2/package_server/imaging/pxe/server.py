@@ -69,11 +69,6 @@ class ProcessPacket :
 
         fnc, args = self.imaging.get_method(data)
         
-        try:
-            marker = hex(ord(data[0]))
-        except Exception, e:
-            logging.getLogger().warn("PXE Proxy: Marker getting: %s" % (str(e)))
-
         d = self.method_exec(fnc, args)
 
         d.addCallback(self.send_response, client)
