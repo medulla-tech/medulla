@@ -20,4 +20,4 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-SUBDIRS = init.d src 3rd_party bin contrib mmc pulse2 conf clients
+SUBDIRS = init.d 3rd_party bin contrib mmc pulse2 conf clients

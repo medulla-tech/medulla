@@ -20,8 +20,6 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-SUBDIRS = hooks
-
 MAINTAINERCLEANFILES = pci.ids README.pci.ids
 
 EXTRA_DIST = dhcpd.conf pci.ids README.exports README.pci.ids README.tftp-server \
