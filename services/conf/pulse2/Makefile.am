@@ -37,15 +37,15 @@ nobase_pulseconf_DATA = \
 	inventory-server/xml-fix/04_Adobe_consistency.py \
 	inventory-server/xml-fix/05_HP_consistency.py \
 	scheduler/scheduler.ini launchers/launchers.ini atftpd/pcre.conf \
-	imaging-server/imaging-server.ini uuid-resolver/uuid-resolver.ini \
+	uuid-resolver/uuid-resolver.ini \
 	$(certca) $(certpriv)
 
-EXTRA_DIST = $(nobase_pulseconf_DATA)  imaging-server/imaging-server.ini.in \
+EXTRA_DIST = $(nobase_pulseconf_DATA) \
              scheduler/scheduler.ini.in launchers/launchers.ini.in
-CLEANFILES = imaging-server/imaging-server.ini scheduler/scheduler.ini \
+CLEANFILES = scheduler/scheduler.ini \
              launchers/launchers.ini 
 
-imaging-server/imaging-server.ini scheduler/scheduler.ini launchers/launchers.ini: Makefile
+scheduler/scheduler.ini launchers/launchers.ini: Makefile
 	rm -f $@ $@.tmp
 	$(MKDIR_P) $(@D)
 	srcdir=''; \
