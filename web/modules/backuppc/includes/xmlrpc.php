@@ -167,6 +167,10 @@ function set_backup_for_host($uuid){
     return xmlCall("backuppc.set_backup_for_host", array($uuid));
 }
 
+function unset_backup_for_host($uuid){
+    return xmlCall("backuppc.unset_backup_for_host", array($uuid));
+}
+
 function get_xfer_log($uuid,$backupnum){
     return xmlCall("backuppc.get_xfer_log", array($uuid,$backupnum));
 }
