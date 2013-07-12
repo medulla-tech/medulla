@@ -277,7 +277,7 @@ def get_distro_handler():
 
 class Service(object):
     name = None
-    clsnames = [ 'SrvMmcAgent', 'SrvImagingServer',
+    clsnames = [ 'SrvMmcAgent', 
                  'SrvInventoryserver', 'SrvLauncher', 'SrvPkgServer',
                  'SrvScheduler' ]
 
@@ -338,11 +338,6 @@ class SrvApache(Service):
         if handler.apache_service:
             self.__class__.name = handler.apache_service
 
-class SrvImagingServer(Service):
-    name = 'pulse2-imaging-server'
-
-    def is_enable(self):
-        return self.config['imaging.service.enable']
 
 class SrvInventoryserver(Service):
     name = 'pulse2-inventory-server'
@@ -371,7 +366,7 @@ class Pulse2ConfigFile(object):
                  'PluginsBaseConfig', 'PluginsDyngroupConfig', 'PluginsInventoryConfig',
                  'PluginsPulse2Config', 'PluginsMscConfig', 'PluginsBackuppcConfig', 'InventoryServerConfig',
                  'LaunchersConfig', 'PackageServerConfig', 'SchedulerConfig',
-                 'ImagingServerConfig', 'MMCAgentConfig', 'UUIDResolverConfig' ]
+                 'MMCAgentConfig', 'UUIDResolverConfig' ]
     path = None
     # If defaults is None, try to read default values from config file in
     # examplesdir
@@ -539,10 +534,6 @@ class SchedulerConfig(LoggingConfig):
     path = 'pulse2/scheduler/scheduler.ini'
     log_path = 'pulse2-scheduler.log'
 
-class ImagingServerConfig(LoggingConfig):
-    path = 'pulse2/imaging-server/imaging-server.ini'
-    log_path = 'pulse2-imaging-server.log'
-
 class UUIDResolverConfig(Pulse2ConfigFile):
     path = 'pulse2/uuid-resolver/uuid-resolver.ini'
 
@@ -629,7 +620,6 @@ class SetupApp(object):
         Note 2: current version does not support diffenriated db host or credentials. All
           db must be on the same host. Default value are taken from plugins/pulse2.ini file.
         """
-        self.defaults['imaging.service.enable'] = self.options["server_imaging"] 
         self.defaults['inventory.service.enable'] = self.options["server_inventory"] 
         self.defaults['package.service.enable'] = self.options["server_package"] 
         
@@ -661,8 +651,6 @@ class SetupApp(object):
                                                             self.defaults['audit.module.enable'])
         self.config['inventory.service.enable'] = self.read_bool('Enable inventory server',
                                                                  self.defaults['inventory.service.enable'])
-        self.config['imaging.service.enable'] = self.read_bool('Enable imaging server',
-                                                               self.defaults['imaging.service.enable'])
         self.config['package.service.enable'] = self.read_bool('Enable package server (proxy)',
                                                                self.defaults['package.service.enable'])
         self.config['server.ip.external'] = self.read_ip('Server external IP address',
@@ -1010,7 +998,7 @@ class SetupApp(object):
 
     def post_restart(self):
         # Register imaging server, if necessary
-        if self.config['imaging.service.enable']:
+        if self.config['package.service.enable']:
             binpath = path_lookup('pulse2-package-server-register-imaging')
             ps_conf = self.confs['pulse2/package-server/package-server.ini']
             basecmd = binpath + ' -m https://%s:%s@%s:%s ' % (ps_conf.get('mmc_agent', 'username'),
@@ -1103,9 +1091,6 @@ if __name__ == '__main__':
     parser.add_option("--disable-inventory", dest="disable_inventory",
                       default=False, action="store_true", 
                       help="Disable inventory server")
-    parser.add_option("--disable-imaging", dest="disable_imaging",
-                      default=False, action="store_true", 
-                      help="Disable imaging server")
     parser.add_option("--disable-package", dest="disable_package",
                       default=False, action="store_true",
                       help="Disable package server")
@@ -1137,7 +1122,6 @@ if __name__ == '__main__':
         'ldapadmindn': options.ldapadmindn,
         'ldappasswd': options.ldappasswd,
         'server_inventory' : not options.disable_inventory,
-        'server_imaging' : not options.disable_imaging,
         'server_package' : not options.disable_package,
     }
 
