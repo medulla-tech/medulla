@@ -35,6 +35,11 @@ if (isset($_POST["bconfirm"])) {
         $uuid = $_POST["objectUUID"];
         $backup = ($_POST["backup"]?True:False);
         delComputer($uuid, $backup);
+        // Unset computer backup if BackupPC module is activated
+        if (in_array("backuppc", $_SESSION["supportModList"])) {
+            include_once("modules/backuppc/includes/xmlrpc.php");
+            unset_backup_for_host($uuid);
+        }
         if (!isXMLRPCError()) new NotifyWidgetSuccess(_("The computer has been deleted."));
         header("Location: " . urlStrRedirect("base/computers/index"));
         exit;
