@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-07-01 12:19+0200\n"
-"PO-Revision-Date: 2013-07-07 23:04+0000\n"
+"POT-Creation-Date: 2013-07-12 15:59+0200\n"
+"PO-Revision-Date: 2013-07-14 23:01+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -86,74 +86,6 @@ msgstr ""
 
 #: includes/ErrorHandling.php:78
 msgid "Complete Traceback"
-msgstr ""
-
-#: includes/FormGenerator.php:58 includes/FormGenerator.php:274
-#: includes/FormGenerator.php:637 includes/FormGenerator.php:796
-msgid "unavailable"
-msgstr ""
-
-#: includes/FormGenerator.php:216
-msgid "Delete photo"
-msgstr ""
-
-#: includes/FormGenerator.php:260
-msgid "yes"
-msgstr ""
-
-#: includes/FormGenerator.php:263
-msgid "no"
-msgstr ""
-
-#: includes/FormGenerator.php:458
-msgid "Year: "
-msgstr ""
-
-#: includes/FormGenerator.php:458
-msgid "Month: "
-msgstr ""
-
-#: includes/FormGenerator.php:458
-msgid "Day: "
-msgstr ""
-
-#: includes/FormGenerator.php:459
-msgid "Hour: "
-msgstr ""
-
-#: includes/FormGenerator.php:459
-msgid "Min.: "
-msgstr ""
-
-#: includes/FormGenerator.php:459
-msgid "Sec.: "
-msgstr ""
-
-#: includes/FormGenerator.php:529 includes/FormGenerator.php:535
-#: modules/base/includes/AjaxFilterLog.inc.php:184
-#: modules/base/includes/AjaxFilterLog.inc.php:188
-msgid "or <a href='#'"
-msgstr ""
-
-#: includes/FormGenerator.php:531
-#: modules/base/includes/AjaxFilterLog.inc.php:186
-msgid "value=\"now\";'>now</a>"
-msgstr ""
-
-#: includes/FormGenerator.php:537
-#: modules/base/includes/AjaxFilterLog.inc.php:190
-msgid "value=\"never\";'>never</a>"
-msgstr ""
-
-#: includes/FormGenerator.php:602 modules/base/groups/localSidebar.php:29
-#: modules/base/users/localSidebar.php:29
-msgid "Add"
-msgstr ""
-
-#: includes/FormGenerator.php:1019 modules/base/groups/ajaxFilter.php:48
-#: modules/base/users/ajaxFilter.php:85 modules/base/views/index.tpl.php:92
-#: modules/ppolicy/default/delete.php:45
-msgid "Delete"
 msgstr ""
 
 #: includes/acl.inc.php:124
@@ -386,45 +318,72 @@ msgstr ""
 msgid "No job."
 msgstr ""
 
-#: index.php:61 token.php:54
-#, php-format
-msgid "The server %s does not exist"
+#: includes/FormGenerator.php:58 includes/FormGenerator.php:274
+#: includes/FormGenerator.php:637 includes/FormGenerator.php:796
+msgid "unavailable"
 msgstr ""
 
-#: index.php:71
-msgid "Login failed"
+#: includes/FormGenerator.php:216
+msgid "Delete photo"
 msgstr ""
 
-#: index.php:77
-msgid ""
-"You have been logged out because the session between the MMC web interface "
-"and the MMC agent expired."
+#: includes/FormGenerator.php:260
+msgid "yes"
 msgstr ""
 
-#: index.php:124 modules/base/includes/publicFunc.php:285
-#: modules/base/users/ajaxFilter.php:68 modules/base/views/index.tpl.php:78
-msgid "Login"
+#: includes/FormGenerator.php:263
+msgid "no"
 msgstr ""
 
-#: index.php:130 modules/base/includes/publicFunc.php:300
-#: modules/base/infoPackage.inc.php:326
-msgid "Password"
+#: includes/FormGenerator.php:458
+msgid "Year: "
 msgstr ""
 
-#: index.php:181
-msgid "Forgot password ?"
+#: includes/FormGenerator.php:458
+msgid "Month: "
 msgstr ""
 
-#: index.php:186
-msgid "Server"
+#: includes/FormGenerator.php:458
+msgid "Day: "
 msgstr ""
 
-#: index.php:192
-msgid "Language"
+#: includes/FormGenerator.php:459
+msgid "Hour: "
 msgstr ""
 
-#: index.php:200
-msgid "Connect"
+#: includes/FormGenerator.php:459
+msgid "Min.: "
+msgstr ""
+
+#: includes/FormGenerator.php:459
+msgid "Sec.: "
+msgstr ""
+
+#: includes/FormGenerator.php:529 includes/FormGenerator.php:535
+#: modules/base/includes/AjaxFilterLog.inc.php:184
+#: modules/base/includes/AjaxFilterLog.inc.php:188
+msgid "or <a href='#'"
+msgstr ""
+
+#: includes/FormGenerator.php:531
+#: modules/base/includes/AjaxFilterLog.inc.php:186
+msgid "value=\"now\";'>now</a>"
+msgstr ""
+
+#: includes/FormGenerator.php:537
+#: modules/base/includes/AjaxFilterLog.inc.php:190
+msgid "value=\"never\";'>never</a>"
+msgstr ""
+
+#: includes/FormGenerator.php:602 modules/base/groups/localSidebar.php:29
+#: modules/base/users/localSidebar.php:29
+msgid "Add"
+msgstr ""
+
+#: includes/FormGenerator.php:1019 modules/base/groups/ajaxFilter.php:48
+#: modules/base/users/ajaxFilter.php:85 modules/base/views/index.tpl.php:92
+#: modules/ppolicy/default/delete.php:45
+msgid "Delete"
 msgstr ""
 
 #: logout/index.php:50
@@ -571,30 +530,6 @@ msgstr ""
 msgid "Value"
 msgstr ""
 
-#: modules/base/computers/delete.php:30
-msgid ""
-"You have to check the box <b>\"I am aware that all related images (non-"
-"master) will be deleted\"</b> if you want to remove this computer."
-msgstr ""
-
-#: modules/base/computers/delete.php:38
-msgid "The computer has been deleted."
-msgstr ""
-
-#: modules/base/computers/delete.php:44
-msgid "Delete this computer"
-msgstr ""
-
-#: modules/base/computers/delete.php:47
-msgid "Do you want a backup to be done ?"
-msgstr ""
-
-#: modules/base/computers/delete.php:53
-msgid ""
-"I am aware that <b>all related images (non-master)</b> will be "
-"<b>DELETED</b>.<br />Check this box if it is what you want."
-msgstr ""
-
 #: modules/base/computers/edit.php:36
 msgid "Computer successfully added"
 msgstr ""
@@ -646,6 +581,30 @@ msgstr ""
 #: modules/base/computers/localSidebar.php:10
 #: modules/base/infoPackage.inc.php:282
 msgid "Add computer"
+msgstr ""
+
+#: modules/base/computers/delete.php:30
+msgid ""
+"You have to check the box <b>\"I am aware that all related images (non-"
+"master) will be deleted\"</b> if you want to remove this computer."
+msgstr ""
+
+#: modules/base/computers/delete.php:43
+msgid "The computer has been deleted."
+msgstr ""
+
+#: modules/base/computers/delete.php:49
+msgid "Delete this computer"
+msgstr ""
+
+#: modules/base/computers/delete.php:52
+msgid "Do you want a backup to be done ?"
+msgstr ""
+
+#: modules/base/computers/delete.php:58
+msgid ""
+"I am aware that <b>all related images (non-master)</b> will be "
+"<b>DELETED</b>.<br />Check this box if it is what you want."
 msgstr ""
 
 #: modules/base/groups/ajaxFilter.php:41 modules/base/infoPackage.inc.php:240
@@ -943,6 +902,17 @@ msgstr ""
 
 #: modules/base/includes/publicFunc.php:276
 msgid "User attributes"
+msgstr ""
+
+#: modules/base/includes/publicFunc.php:285
+#: modules/base/users/ajaxFilter.php:68 modules/base/views/index.tpl.php:78
+#: index.php:205
+msgid "Login"
+msgstr ""
+
+#: modules/base/includes/publicFunc.php:300
+#: modules/base/infoPackage.inc.php:326 index.php:211
+msgid "Password"
 msgstr ""
 
 #: modules/base/includes/publicFunc.php:304
@@ -1801,6 +1771,11 @@ msgid_plural "%d inactive services"
 msgstr[0] ""
 msgstr[1] ""
 
+#: token.php:54 index.php:61
+#, php-format
+msgid "The server %s does not exist"
+msgstr ""
+
 #: token.php:66
 msgid "Token not valid"
 msgstr ""
@@ -1846,6 +1821,32 @@ msgstr ""
 msgid ""
 "Click here to get more information about our support and maintenance "
 "subscription plan."
+msgstr ""
+
+#: index.php:71
+msgid "Login failed"
+msgstr ""
+
+#: index.php:77
+msgid ""
+"You have been logged out because the session between the MMC web interface "
+"and the MMC agent expired."
+msgstr ""
+
+#: index.php:181
+msgid "Forgot password ?"
+msgstr ""
+
+#: index.php:192
+msgid "Server"
+msgstr ""
+
+#: index.php:199
+msgid "Language"
+msgstr ""
+
+#: index.php:224
+msgid "Connect"
 msgstr ""
 
 
