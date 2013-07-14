@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-08 01:00+0200\n"
+"POT-Creation-Date: 2013-07-15 01:00+0200\n"
 "PO-Revision-Date: 2013-05-30 09:20+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Spanish (Spain) (http://transifex.mandriva.com/projects/p/"
@@ -43,7 +43,7 @@ msgstr ""
 msgid "Administrative"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:79 modules/glpi/infoPackage.inc.php:109
+#: modules/glpi/infoPackage.inc.php:84 modules/glpi/infoPackage.inc.php:114
 msgid "Administrative tab (GLPI)"
 msgstr ""
 
@@ -66,7 +66,7 @@ msgstr ""
 msgid "Antivirus status is OK at %s"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:85 modules/glpi/infoPackage.inc.php:115
+#: modules/glpi/infoPackage.inc.php:90 modules/glpi/infoPackage.inc.php:120
 msgid "Antivirus tab (GLPI)"
 msgstr ""
 
@@ -99,6 +99,7 @@ msgid "Computers"
 msgstr ""
 
 #: modules/glpi/glpi/createAntivirusStaticGroup.php:46
+#: modules/glpi/glpi/createOSStaticGroup.php:64
 #: modules/glpi/glpi/createStaticGroup.php:43
 #, php-format
 msgid "Computers list has been truncated at %d computers"
@@ -121,6 +122,10 @@ msgstr ""
 msgid "Create static group from dashboard (GLPI)"
 msgstr ""
 
+#: modules/glpi/infoPackage.inc.php:43
+msgid "Create static group from dashboard OS Repartition plugin (GLPI)"
+msgstr ""
+
 #: modules/glpi/glpi/ajaxViewPart.php:250
 msgid "Date"
 msgstr ""
@@ -137,7 +142,7 @@ msgstr ""
 msgid "Device"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:45
+#: modules/glpi/infoPackage.inc.php:50
 msgid "Display locations"
 msgstr "Mostrar localizaciones"
 
@@ -189,7 +194,7 @@ msgstr ""
 msgid "Hardware"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:67 modules/glpi/infoPackage.inc.php:97
+#: modules/glpi/infoPackage.inc.php:72 modules/glpi/infoPackage.inc.php:102
 msgid "Hardware tab (GLPI)"
 msgstr ""
 
@@ -201,7 +206,7 @@ msgstr ""
 msgid "History"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:82 modules/glpi/infoPackage.inc.php:112
+#: modules/glpi/infoPackage.inc.php:87 modules/glpi/infoPackage.inc.php:117
 msgid "History tab (GLPI)"
 msgstr ""
 
@@ -214,11 +219,11 @@ msgstr ""
 msgid "Invalid hostname"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:60
+#: modules/glpi/infoPackage.inc.php:65
 msgid "Inventory (GLPI) on a group of machines"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:90
+#: modules/glpi/infoPackage.inc.php:95
 msgid "Inventory (GLPI) on machine"
 msgstr "Inventario (GLPI) en equipo"
 
@@ -264,6 +269,11 @@ msgstr ""
 msgid "MAC Address"
 msgstr ""
 
+#: modules/glpi/glpi/createOSStaticGroup.php:34
+#, php-format
+msgid "Machine with %s installed at %s"
+msgstr ""
+
 #: modules/glpi/glpi/ajaxViewPart.php:241
 msgid "Manufacturer"
 msgstr ""
@@ -306,7 +316,7 @@ msgstr ""
 msgid "Network Type"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:73 modules/glpi/infoPackage.inc.php:103
+#: modules/glpi/infoPackage.inc.php:78 modules/glpi/infoPackage.inc.php:108
 msgid "Network tab (GLPI)"
 msgstr ""
 
@@ -347,6 +357,18 @@ msgstr ""
 msgid "Operating System"
 msgstr ""
 
+#: modules/glpi/includes/panels/os_repartition.inc.php:31
+msgid "Operating systems"
+msgstr ""
+
+#: modules/glpi/includes/panels/os_repartition.inc.php:52
+msgid "Other"
+msgstr ""
+
+#: modules/glpi/includes/panels/os_repartition.inc.php:55
+msgid "Other Windows"
+msgstr ""
+
 #: modules/glpi/glpi/ajaxViewPart.php:196
 msgid "Others"
 msgstr ""
@@ -382,7 +404,7 @@ msgstr ""
 msgid "Softwares"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:76 modules/glpi/infoPackage.inc.php:106
+#: modules/glpi/infoPackage.inc.php:81 modules/glpi/infoPackage.inc.php:111
 msgid "Softwares tab (GLPI)"
 msgstr ""
 
@@ -398,7 +420,7 @@ msgstr ""
 msgid "Storage"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:70 modules/glpi/infoPackage.inc.php:100
+#: modules/glpi/infoPackage.inc.php:75 modules/glpi/infoPackage.inc.php:105
 msgid "Storage tab (GLPI)"
 msgstr ""
 
@@ -406,7 +428,7 @@ msgstr ""
 msgid "Summary"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:64 modules/glpi/infoPackage.inc.php:94
+#: modules/glpi/infoPackage.inc.php:69 modules/glpi/infoPackage.inc.php:99
 msgid "Summary tab (GLPI)"
 msgstr ""
 

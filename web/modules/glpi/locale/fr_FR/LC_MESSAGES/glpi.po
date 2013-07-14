@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-08 01:00+0200\n"
+"POT-Creation-Date: 2013-07-15 01:00+0200\n"
 "PO-Revision-Date: 2013-06-03 13:39+0000\n"
 "Last-Translator: Cécile Adam <acecile@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
@@ -52,7 +52,7 @@ msgstr "Action"
 msgid "Administrative"
 msgstr "Administratif"
 
-#: modules/glpi/infoPackage.inc.php:79 modules/glpi/infoPackage.inc.php:109
+#: modules/glpi/infoPackage.inc.php:84 modules/glpi/infoPackage.inc.php:114
 msgid "Administrative tab (GLPI)"
 msgstr "Onglet administratif (GLPI)"
 
@@ -75,7 +75,7 @@ msgstr ""
 msgid "Antivirus status is OK at %s"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:85 modules/glpi/infoPackage.inc.php:115
+#: modules/glpi/infoPackage.inc.php:90 modules/glpi/infoPackage.inc.php:120
 msgid "Antivirus tab (GLPI)"
 msgstr "Onglet antivirus (GLPI)"
 
@@ -108,6 +108,7 @@ msgid "Computers"
 msgstr "Machines"
 
 #: modules/glpi/glpi/createAntivirusStaticGroup.php:46
+#: modules/glpi/glpi/createOSStaticGroup.php:64
 #: modules/glpi/glpi/createStaticGroup.php:43
 #, php-format
 msgid "Computers list has been truncated at %d computers"
@@ -131,6 +132,11 @@ msgstr "Créer un groupe statique depuis le tableau de bord (GLPI)"
 msgid "Create static group from dashboard (GLPI)"
 msgstr "Créer un groupe statique depuis le tableau de bord (GLPI)"
 
+#: modules/glpi/infoPackage.inc.php:43
+#, fuzzy
+msgid "Create static group from dashboard OS Repartition plugin (GLPI)"
+msgstr "Créer un groupe statique depuis le tableau de bord (GLPI)"
+
 #: modules/glpi/glpi/ajaxViewPart.php:250
 msgid "Date"
 msgstr "Date"
@@ -147,7 +153,7 @@ msgstr "Description"
 msgid "Device"
 msgstr "Périphérique"
 
-#: modules/glpi/infoPackage.inc.php:45
+#: modules/glpi/infoPackage.inc.php:50
 msgid "Display locations"
 msgstr "Montrer les lieux"
 
@@ -199,7 +205,7 @@ msgstr "Disques Durs"
 msgid "Hardware"
 msgstr "Matériel"
 
-#: modules/glpi/infoPackage.inc.php:67 modules/glpi/infoPackage.inc.php:97
+#: modules/glpi/infoPackage.inc.php:72 modules/glpi/infoPackage.inc.php:102
 msgid "Hardware tab (GLPI)"
 msgstr "Onglet matériel (GLPI)"
 
@@ -211,7 +217,7 @@ msgstr "Masquer les MAJ Windows Update"
 msgid "History"
 msgstr "Historique"
 
-#: modules/glpi/infoPackage.inc.php:82 modules/glpi/infoPackage.inc.php:112
+#: modules/glpi/infoPackage.inc.php:87 modules/glpi/infoPackage.inc.php:117
 msgid "History tab (GLPI)"
 msgstr "Onglet historique (GLPI)"
 
@@ -224,11 +230,11 @@ msgstr "IP"
 msgid "Invalid hostname"
 msgstr "Nom de machine invalide"
 
-#: modules/glpi/infoPackage.inc.php:60
+#: modules/glpi/infoPackage.inc.php:65
 msgid "Inventory (GLPI) on a group of machines"
 msgstr "Inventaire (GLPI) sur un groupe de machines"
 
-#: modules/glpi/infoPackage.inc.php:90
+#: modules/glpi/infoPackage.inc.php:95
 msgid "Inventory (GLPI) on machine"
 msgstr "Inventaire (GLPI) de la machine"
 
@@ -274,6 +280,11 @@ msgstr "Lieu"
 msgid "MAC Address"
 msgstr "Adresse MAC"
 
+#: modules/glpi/glpi/createOSStaticGroup.php:34
+#, php-format
+msgid "Machine with %s installed at %s"
+msgstr ""
+
 #: modules/glpi/glpi/ajaxViewPart.php:241
 msgid "Manufacturer"
 msgstr "Fabriquant"
@@ -316,7 +327,7 @@ msgstr "Cartes Réseaux"
 msgid "Network Type"
 msgstr "Type de Réseau"
 
-#: modules/glpi/infoPackage.inc.php:73 modules/glpi/infoPackage.inc.php:103
+#: modules/glpi/infoPackage.inc.php:78 modules/glpi/infoPackage.inc.php:108
 msgid "Network tab (GLPI)"
 msgstr "Onglet réseau (GLPI)"
 
@@ -357,6 +368,21 @@ msgstr "OS"
 msgid "Operating System"
 msgstr "Système d'exploitation"
 
+#: modules/glpi/includes/panels/os_repartition.inc.php:31
+#, fuzzy
+msgid "Operating systems"
+msgstr "Système d'exploitation"
+
+#: modules/glpi/includes/panels/os_repartition.inc.php:52
+#, fuzzy
+msgid "Other"
+msgstr "Autres"
+
+#: modules/glpi/includes/panels/os_repartition.inc.php:55
+#, fuzzy
+msgid "Other Windows"
+msgstr "Autres"
+
 #: modules/glpi/glpi/ajaxViewPart.php:196
 msgid "Others"
 msgstr "Autres"
@@ -394,7 +420,7 @@ msgstr "Taille"
 msgid "Softwares"
 msgstr "Logiciels"
 
-#: modules/glpi/infoPackage.inc.php:76 modules/glpi/infoPackage.inc.php:106
+#: modules/glpi/infoPackage.inc.php:81 modules/glpi/infoPackage.inc.php:111
 msgid "Softwares tab (GLPI)"
 msgstr "Onglet logiciel (GLPI)"
 
@@ -410,7 +436,7 @@ msgstr "Statut:"
 msgid "Storage"
 msgstr "Stockage"
 
-#: modules/glpi/infoPackage.inc.php:70 modules/glpi/infoPackage.inc.php:100
+#: modules/glpi/infoPackage.inc.php:75 modules/glpi/infoPackage.inc.php:105
 msgid "Storage tab (GLPI)"
 msgstr "Onglet stockage (GLPI)"
 
@@ -418,7 +444,7 @@ msgstr "Onglet stockage (GLPI)"
 msgid "Summary"
 msgstr "Résumé"
 
-#: modules/glpi/infoPackage.inc.php:64 modules/glpi/infoPackage.inc.php:94
+#: modules/glpi/infoPackage.inc.php:69 modules/glpi/infoPackage.inc.php:99
 msgid "Summary tab (GLPI)"
 msgstr "Onglet résumé (GLPI)"
 
