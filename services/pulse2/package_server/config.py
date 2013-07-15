@@ -354,6 +354,8 @@ class P2PServerCP(pulse2.utils.Singleton):
             inventory_enablessl = False
             # on glpi, PXE register by minimal inventory
             glpi_mode = False
+            # identification on PXE console
+            pxe_password = "pxe"
 
 
             if self.cp.has_option("imaging_api", 'mount_point'):
@@ -418,6 +420,8 @@ class P2PServerCP(pulse2.utils.Singleton):
                 inventory_port = self.cp.get("imaging_api", 'inventory_port')
             if self.cp.has_option("imaging_api", 'inventory_enablessl'):
                 inventory_enablessl = self.cp.get("imaging_api", 'inventory_enablessl')
+            if self.cp.has_option("imaging_api", 'pxe_password'):
+                pxe_password = self.cp.get("imaging_api", 'pxe_password')
             if not isUUID(uuid):
                 raise TypeError("'%s' is not an valid UUID : in my config file, section [imaging_api], set a correct uuid." % uuid)
 
@@ -443,6 +447,7 @@ class P2PServerCP(pulse2.utils.Singleton):
                 'isogen_tool'         : isogen_tool,
                 'src'                 : src,
                 'pxe_port'            : pxe_port,
+                'pxe_password'        : pxe_password,
                 'inventory_host'      : inventory_host,
                 'inventory_port'      : inventory_port,
                 'inventory_enablessl' : inventory_enablessl,

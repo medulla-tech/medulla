@@ -30,13 +30,12 @@ are optimized to direct communication by variables.
 import logging
 
 from twisted.internet import reactor, task
-from twisted.internet.defer import succeed
+from twisted.internet.defer import succeed, fail
 from twisted.web.client import Agent
 from twisted.web.http_headers import Headers
 from twisted.web.iweb import IBodyProducer
 from zope.interface import implements
 
-from pulse2.package_server.config import P2PServerCP as PackageServerConfig
 from pulse2.package_server.imaging.pxe.parser import PXEMethodParser, assign
 from pulse2.imaging.bootinventory import BootInventory
 
@@ -76,6 +75,7 @@ class PXEImagingApi (PXEMethodParser):
 
     def __init__(self, config):
         PXEMethodParser.__init__(self)
+        self.config = config
 
     # argument of decorator @assign is identifying each method
     # which can be executed.
@@ -102,7 +102,7 @@ class PXEImagingApi (PXEMethodParser):
         
         """
 
-        if PackageServerConfig().imaging_api["glpi_mode"] :
+        if self.config.imaging_api["glpi_mode"] :
 
             d = task.deferLater(reactor, 0, self.glpi_register, mac, hostname, ip_address)
             d.addCallback(self._computerRegister, hostname, mac, 2)
@@ -166,6 +166,25 @@ class PXEImagingApi (PXEMethodParser):
         inventory = boot_inv.dumpOCS(hostname, "root")
 
         return self.send_inventory(inventory, hostname)
+
+    @assign(0xAF)
+    def clientAuth(self, mac, password):
+        """ 
+        Authentification on PXE console.
+
+        @param mac: MAC address
+        @type mac: str
+
+        @param password: prompted password on PXE
+        @type password: str
+
+        @return: "ok" if correct, otherwise "ko"
+        @rtype: str
+        """
+        if self.config.imaging_api["pxe_password"] == password :
+            return succeed("ok")
+        else :
+            return fail("ko")
 
        
 
@@ -280,14 +299,14 @@ class PXEImagingApi (PXEMethodParser):
 
         try:
 
-            if PackageServerConfig().imaging_api["inventory_enablessl"]:
+            if self.config.imaging_api["inventory_enablessl"]:
                 protocol = "https"
             else : 
                 protocol = "http"
 
             url = "%s://%s:%d/" % (protocol,
-                                   PackageServerConfig().imaging_api["inventory_host"], 
-                                   PackageServerConfig().imaging_api["inventory_port"])
+                                   self.config.imaging_api["inventory_host"], 
+                                   self.config.imaging_api["inventory_port"])
 
             # POST the inventory to the inventory server
             logging.getLogger().debug("PXE Proxy: inventory will be sent to url: %s" % url)
@@ -474,6 +493,7 @@ class PXEImagingApi (PXEMethodParser):
         @d.addErrback
         def _eb(failure):
             logging.getLogger().warn("PXE Proxy: computer's hostname get failed: %s" % str(failure))
+            
 
         return d
 

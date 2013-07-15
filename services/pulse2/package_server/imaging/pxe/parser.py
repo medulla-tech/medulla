@@ -29,7 +29,6 @@ by normalized prefixes.
 
 Output of this engine is method to execute with arguments.
 """
-
 import inspect
 from functools import wraps
 
@@ -194,6 +193,12 @@ class ArgumentContainer :
             end = self.packet.index(self.MAC_FLAG)
             return self.packet[1:end].replace("\x00", "") # TODO
 
+    @property
+    def password(self):
+        """ Client identification controlled by server"""
+        if self.MAC_FLAG in self.packet :
+            end = self.packet.index(self.MAC_FLAG)
+            return self.packet[2:end].replace("\x00", "") 
 
 class PXEMethodParser :
     """
