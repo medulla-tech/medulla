@@ -122,15 +122,15 @@ class ArgumentContainer :
 
     # ---------- logAction args -------------- #
 
-    LOG_ACTION = {0 : ("boot", "'booted'"), 
-                  1 : ("menu", "'choosen menu entry'"),
-                  2 : ("restoration", "'restoration started'"),
-                  3 : ("restoration", "'restoration finished'"),
-                  4 : ("backup", "'backup started'"),
-                  5 : ("backup", "'backup finished'"),
-                  6 : ("postinst", "'postinstall started'"),
-                  7 : ("postinst", "'postinstall finished'"),
-                  8 : ("error", "'critical error'"),
+    LOG_ACTION = {0 : ("boot", "booted"), 
+                  1 : ("menu", "choosen menu entry"),
+                  2 : ("restoration", "restoration started"),
+                  3 : ("restoration", "restoration finished"),
+                  4 : ("backup", "backup started"),
+                  5 : ("backup", "backup finished"),
+                  6 : ("postinst", "postinstall started"),
+                  7 : ("postinst", "postinstall finished"),
+                  8 : ("error", "critical error"),
                   }
     @property
     def level(self):
@@ -158,8 +158,11 @@ class ArgumentContainer :
         if self.level in [2,3,4,5] :
             if self.packet[2] == "-" :
                 complement = self.packet[3:]
+                if "\x00" in complement :
+                    end = complement.index("\x00")
+                    complement = complement[:end]
         if complement :
-            return "%s : %s" % (message, complement)
+            return "%s: %s" % (message, complement)
         else :
             return message
     # --------- injectInventory args ----------- #
