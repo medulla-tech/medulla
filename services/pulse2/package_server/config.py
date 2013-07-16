@@ -445,7 +445,6 @@ class P2PServerCP(pulse2.utils.Singleton):
                 'archives_folder'     : archives_folder,
                 'isos_folder'         : isos_folder,
                 'isogen_tool'         : isogen_tool,
-                'src'                 : src,
                 'pxe_port'            : pxe_port,
                 'pxe_password'        : pxe_password,
                 'inventory_host'      : inventory_host,
