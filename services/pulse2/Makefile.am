@@ -29,6 +29,7 @@ pythonmodules = apis apis.clients database database.dyngroup \
 	package_server.assign_algo.terminal_type \
         package_server.common package_server.description \
 	package_server.imaging package_server.imaging.api \
+	package_server.imaging.pxe \
 	package_server.imaging.common package_server.mirror \
 	package_server.mirror_api package_server.package_api_get \
 	package_server.package_api_put package_server.scheduler_api \
