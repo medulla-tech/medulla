@@ -134,8 +134,7 @@ class os_repartitionPanel extends Panel {
          .attr({ "text-anchor": "start" });*/
         data = getPercentageData(data);
         pie = r.piechart(x, y + 5, radius, data,
-                   {href : $links,
-                    colors: colors})
+                   {colors: colors})
          .hover(function () {
             this.sector.stop();
             this.sector.animate({ transform: 's1.1 1.1 ' + this.cx + ' ' + this.cy }, 800, "elastic");
