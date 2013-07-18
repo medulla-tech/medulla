@@ -1276,3 +1276,7 @@ ul.roACL {
     margin-top: 1em;
     margin-bottom: 0.2em;
 }
+
+.listinfos tbody>tr:hover{
+    background:#D8E7EF !important;
+}
