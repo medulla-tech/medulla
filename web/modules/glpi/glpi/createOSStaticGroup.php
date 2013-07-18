@@ -49,7 +49,17 @@ foreach ($locations as $location){
             if (in_array($uuid, $uuids)) continue;
             $uuids[] = $uuid;
             //
-            if (stripos($os,$requestedOS) !== False){
+            if ($requestedOS == 'Other' && stripos($os,'Microsoft Windows') === False)
+            {    
+                // Add OS to group members
+                $groupmembers["$uuid##$cn"] = array('hostname' => $cn, 'uuid' => $uuid);
+            }
+            elseif ($requestedOS == 'Otherw' && stripos($os,'Microsoft Windows') !== False)
+            {
+                // Add OS to group members
+                $groupmembers["$uuid##$cn"] = array('hostname' => $cn, 'uuid' => $uuid);
+            }
+            elseif (stripos($os,$requestedOS) !== False){
                 // Add OS to group members
                 $groupmembers["$uuid##$cn"] = array('hostname' => $cn, 'uuid' => $uuid);
             }

@@ -95,18 +95,22 @@ class os_repartitionPanel extends Panel {
             elseif ($osCount[$i]/array_sum($osCount) < 0.015)
                 $osCount[$i] = 0.015/(1-0.015)*(array_sum($osCount)-$osCount[$i]);
         }
-        
         $osLabels = json_encode(array_values($osLabels));
         $osCount = json_encode(array_values($osCount));
+        
         
         /*$links = json_encode(array("#",
                 "main.php?module=base&submod=computers&action=computersgroupcreator&req=glpi&add_param=OS&request=stored_in_session&id=&value=Microsoft Windows 7 *",
                 "main.php?module=base&submod=computers&action=computersgroupcreator&req=glpi&add_param=OS&request=stored_in_session&id=&value=Microsoft Windows XP *",
                     "#"));  DYNGROUP LINKS*/ 
-        $links = json_encode(array("#", // Static group links
+        $urlRedirect = json_encode(urlStrRedirect("base/computers/createOSStaticGroup"));
+        $createGroupText = json_encode(_T("Create a group", "glpi"));
+        $links = json_encode(array(
+                "main.php?module=base&submod=computers&action=createOSStaticGroup&os=Other", // Static group links
                 "main.php?module=base&submod=computers&action=createOSStaticGroup&os=Microsoft Windows 7",
                 "main.php?module=base&submod=computers&action=createOSStaticGroup&os=Microsoft Windows XP",
-                    "#"));
+                "main.php?module=base&submod=computers&action=createOSStaticGroup&os=Otherw"
+            ));
 
         echo <<< SPACE
         <div id="os-graphs" style="height:250px;"></div>
@@ -119,8 +123,10 @@ class os_repartitionPanel extends Panel {
         
 
         var data = $osCount,
+            createGroupText = $createGroupText,
             legend = $osLabels,
             colors = ["#000","#73d216","#ef2929","#003399"],
+            href = $links,
             title = 'OS Repartition';
         
         /*r.text(5, y - radius - 10, title)
@@ -128,9 +134,7 @@ class os_repartitionPanel extends Panel {
          .attr({ "text-anchor": "start" });*/
         data = getPercentageData(data);
         pie = r.piechart(x, y + 5, radius, data,
-                   {legend: legend,
-                    legendpos: "south",
-                    href : $links,
+                   {href : $links,
                     colors: colors})
          .hover(function () {
             this.sector.stop();
@@ -152,7 +156,17 @@ class os_repartitionPanel extends Panel {
         
         y += (radius * 2) + margin + 5;
         
-        r.setSize(200, 3 * (radius * 2 + margin) + 10);
+        r.setSize(200, (radius * 1 + margin) + 50);
+        // Legend
+        $('os-graphs').insert('<ul>');
+        for (var i = 0; i < legend.length; i++) {
+            $('os-graphs').insert(
+                '<li style="color: ' + colors[i]  + '"><span style="color: #000">' + legend[i]
+                + '<a href="' + href[i] + '"><img title="' + createGroupText +
+                '" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a></span></li>'
+            );
+        }
+        $('os-graphs').insert('</ul>');
         </script>
 SPACE;
     }
