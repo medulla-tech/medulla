@@ -30,7 +30,7 @@ are optimized to direct communication by variables.
 import logging
 
 from twisted.internet import reactor, task
-from twisted.internet.defer import succeed, fail
+from twisted.internet.defer import succeed
 from twisted.web.client import Agent
 from twisted.web.http_headers import Headers
 from twisted.web.iweb import IBodyProducer
@@ -61,7 +61,7 @@ class LOG_STATE (object):
     ERROR = "error"
     DELETE = "delete"
     INVENTORY = "inventory"
-    INDENTITY = "identity"
+    IDENTITY = "identity"
 
 
 
@@ -173,14 +173,12 @@ class PXEImagingApi (PXEMethodParser):
                                  LOG_LEVEL.DEBUG, 
                                  LOG_STATE.MENU,
                                  "identification success")
-        return "OK"
 
     def _ebRegisterError (self, failure, mac):
         self.api.logClientAction(mac, 
                                  LOG_LEVEL.WARNING, 
                                  LOG_STATE.MENU,
                                  "identification failure")
-        return "KO"
 
 
     def glpi_register(self, mac, hostname, ip_address):
@@ -226,9 +224,11 @@ class PXEImagingApi (PXEMethodParser):
 
        
         if self.config.imaging_api["pxe_password"] == password :
+            logging.getLogger().debug("PXE Proxy: client authentification OK")
             return succeed("ok")
         else :
-            return fail("ko")
+            logging.getLogger().warn("PXE Proxy: client authentification FAILED")
+            return succeed("ko")
 
        
 
@@ -487,21 +487,35 @@ class PXEImagingApi (PXEMethodParser):
         return d
         
     @assign(0xCD)
-    def computerChangeDefaultMenuItem(self):
+    def computerChangeDefaultMenuItem(self, mac, num):
         """ 
         Menu item change
 
         @return: ACK to confirm a correct reception, otherwise ERROR
         @rtype: str
         """
-        d= self.api.computerChangeDefaultMenuItem()
+        self.api.logClientAction(mac, 
+                                 LOG_LEVEL.DEBUG, 
+                                 LOG_STATE.MENU,
+                                 "preselected-menu-entry-change request : %d" % num)
+        d = self.api.computerChangeDefaultMenuItem(mac, num)
 
         @d.addCallback
         def _cb (result):
+            self.api.logClientAction(mac, 
+                                     LOG_LEVEL.DEBUG, 
+                                     LOG_STATE.MENU,
+                                     "preselected-menu-entry-change success : %d" % num)
+ 
             return "ACK"
 
         @d.addErrback
         def _eb (failure):
+            self.api.logClientAction(mac, 
+                                     LOG_LEVEL.WARN, 
+                                     LOG_STATE.MENU,
+                                     "preselected-menu-entry-change failed : %d" % num)
+ 
             return "ERROR"
 
         return d

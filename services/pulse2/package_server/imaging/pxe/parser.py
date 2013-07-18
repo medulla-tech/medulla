@@ -30,6 +30,7 @@ by normalized prefixes.
 Output of this engine is method to execute with arguments.
 """
 import inspect
+import logging
 from functools import wraps
 
 from pulse2.utils import isMACAddress
@@ -203,6 +204,14 @@ class ArgumentContainer :
             end = self.packet.index(self.MAC_FLAG)
             return self.packet[2:end].replace("\x00", "") 
 
+    @property
+    def num(self):
+        """ Menu item number """
+        if len(self.packet) > 1 :
+            return ord(self.packet[1])
+        else :
+            return 0
+
 class PXEMethodParser :
     """
     Extracting the methods and arguments from packet.
@@ -268,6 +277,8 @@ class PXEMethodParser :
                 value = getattr(arg_container, name)
 
                 args.append(value)
+        
+        logging.getLogger().debug("PXE Proxy: executed method: (%s) %s" % (str(hex(marker)), method.__name__ ))
 
         return method, args
 

@@ -34,7 +34,6 @@ from twisted.internet import reactor
 
 from pulse2.package_server.imaging.pxe.api import PXEImagingApi
 
-
 class ProcessPacket :
     """Common packet processing"""
 
@@ -68,16 +67,16 @@ class ProcessPacket :
     def process_data (self, data, client=None):
 
         fnc, args = self.imaging.get_method(data)
-        
+     
         d = self.method_exec(fnc, args)
 
-        d.addCallback(self.send_response, client)
+        d.addCallback(self.send_response, fnc, client)
         d.addErrback(self.on_exec_error)
 
         return d
 
-
-    def send_response(self, result, client=None):
+ 
+    def send_response(self, result, fnc, client=None):
         """
         Sending the result of executed method to client.
 
@@ -87,17 +86,17 @@ class ProcessPacket :
         @param client: tuple of (host, port)
         @type client: tuple
         """
-        data = bytes(result)
-        logging.getLogger().debug("PXE Proxy: send response: %s" % str(data))
+        if result :
+            data = bytes(result) 
+            try :
+                if client :
+                    self.transport.write(data, client) # UDP response
+                else :
+                    self.transport.write(data)         # TCP response
+                logging.getLogger().debug("PXE Proxy: method: %s / response sent: %s" % (fnc.__name__, str(data)))
 
-        try :
-            if client :
-                self.transport.write(data, client) # UDP response
-            else :
-                self.transport.write(data)         # TCP response
-
-        except Exception, e:
-            logging.getLogger().warn("PXE Proxy: send response error: %s" % (str(e)))
+            except Exception, e:
+                logging.getLogger().warn("PXE Proxy: send response error: %s" % (str(e)))
 
         return result
 
@@ -121,6 +120,7 @@ class TCPProxy(ProcessPacket, Protocol):
     """Proxy to processing methods of backup"""
     def dataReceived(self, data):
         self.process_data(data)
+
 
 
 class PXEProxy :
