@@ -23,6 +23,7 @@
 
 if ($_GET['cn']) $_SESSION['cn'] = $_GET['cn'];
 if ($_GET['objectUUID']) $_SESSION['objectUUID'] = $_GET['objectUUID'];
+elseif ($_GET['uuid']) $_SESSION['objectUUID'] = $_GET['uuid'];
 if ($_GET['action']) $_SESSION['action'] = $_GET['action'];
 
 $paramArray = array('cn' => $_SESSION['cn'], 'objectUUID' => $_SESSION['objectUUID']);
