@@ -47,6 +47,7 @@ if (isset($_POST["bconfirm"])) {
     $params['default_WOL'] = ($_POST['do_default_WOL'] == 'on');
 
     $ret = xmlrpc_addServiceToTarget($item_uuid, $target_uuid, $params, $type);
+    $ret = xmlrpc_editServiceToTarget($item_uuid, $target_uuid, $params, $type);
 
     // goto images list
     if ($ret[0] and !isXMLRPCError()) {
