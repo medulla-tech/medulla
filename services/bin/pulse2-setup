@@ -994,7 +994,8 @@ class SetupApp(object):
 
     def restart_services(self):
         for srv in self.services:
-            srv.restart()
+            if srv.is_enable :
+                srv.restart()
 
     def post_restart(self):
         # Register imaging server, if necessary
