@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-25 13:50+0200\n"
+"POT-Creation-Date: 2013-07-22 01:00+0200\n"
 "PO-Revision-Date: 2013-06-24 14:07+0000\n"
 "Last-Translator: Andre Machado <andre@mandriva.com>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
@@ -26,7 +26,7 @@ msgstr ""
 msgid "All my entities"
 msgstr "Todas as minhas entidades"
 
-#: modules/pulse2/includes/menu_action.php:31
+#: modules/pulse2/includes/menu_action.php:32
 msgid "Backup status"
 msgstr "Status do Becape"
 
@@ -62,12 +62,12 @@ msgstr "Editar este grupo"
 msgid "Edit this imaging group"
 msgstr "Editar esse grupo de imagem"
 
-#: modules/pulse2/includes/menu_action.php:35
+#: modules/pulse2/includes/menu_action.php:36
 #: modules/pulse2/includes/menu_group_action.php:85
 msgid "Imaging management"
 msgstr "Gerenciamento de imagens"
 
-#: modules/pulse2/includes/menu_action.php:30
+#: modules/pulse2/includes/menu_action.php:31
 msgid "Inventory"
 msgstr "Inventário"
 
@@ -87,13 +87,13 @@ msgstr "Seleção de localização em um computador"
 msgid "Pulse2"
 msgstr "Pulse2"
 
-#: modules/pulse2/includes/menu_action.php:33
+#: modules/pulse2/includes/menu_action.php:34
 #: modules/pulse2/includes/menu_group_action.php:66
 #: modules/pulse2/includes/menu_group_action.php:80
 msgid "Read log"
 msgstr "Ler Log"
 
-#: modules/pulse2/includes/menu_action.php:32
+#: modules/pulse2/includes/menu_action.php:33
 msgid "Remote control"
 msgstr "Controle Remoto"
 
@@ -109,7 +109,7 @@ msgstr "Compartilhar este grupo"
 msgid "Share this imaging group"
 msgstr "Compartilhar esse grupo de imagem"
 
-#: modules/pulse2/includes/menu_action.php:34
+#: modules/pulse2/includes/menu_action.php:35
 msgid "Software deployment"
 msgstr "Implantação de Software"
 
