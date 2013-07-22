@@ -234,7 +234,7 @@ class PXEImagingApi (PXEMethodParser):
 
     #  ------------------------ process inventory ---------------------------
     @assign(0xAA)
-    def injectInventory(self, mac, inventory):
+    def injectInventory(self, mac, inventory, ip_address):
         """
         Minimal inventory received from PXE.
 
@@ -250,6 +250,7 @@ class PXEImagingApi (PXEMethodParser):
         inventory = [i.strip() for i in inventory.split("\n")]
         parsed_inventory = BootInventory(inventory).dump()
         parsed_inventory["macaddr"] = mac
+        parsed_inventory["ipaddr"] = {"ip": ip_address, "port": 0}
         
         self.api.logClientAction(mac, 
                                  LOG_LEVEL.DEBUG, 
@@ -342,7 +343,7 @@ class PXEImagingApi (PXEMethodParser):
         entity = computer['entity']
 
         inventory = inventory.dumpOCS(hostname, entity)
-
+ 
         d = self.send_inventory(inventory, hostname)
         @d.addCallback
         def _cb(result):
