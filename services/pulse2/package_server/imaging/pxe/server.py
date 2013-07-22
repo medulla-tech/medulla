@@ -87,13 +87,19 @@ class ProcessPacket :
         @type client: tuple
         """
         if result :
-            data = bytes(result) 
+            data = bytes(result + "\x00")
             try :
                 if client :
                     self.transport.write(data, client) # UDP response
                 else :
                     self.transport.write(data)         # TCP response
-                logging.getLogger().debug("PXE Proxy: method: %s / response sent: %s" % (fnc.__name__, str(data)))
+                if client :
+                    ip, port = client
+                    logging.getLogger().debug("PXE Proxy: method: %s / response sent: %s on %s:%d" % 
+                            (fnc.__name__, str(data), ip, port))
+                else :
+                    logging.getLogger().debug("PXE Proxy: method: %s / response sent: %s" % 
+                            (fnc.__name__, str(data)))
 
             except Exception, e:
                 logging.getLogger().warn("PXE Proxy: send response error: %s" % (str(e)))
@@ -105,13 +111,13 @@ class ProcessPacket :
         logging.getLogger().warn("PXE Proxy: send response error: %s" % str(failure))
         return failure
 
-
 class UDPProxy(ProcessPacket, DatagramProtocol):
     """Proxy to processing a major part of methods"""
     def datagramReceived(self, data, client):
         # special case for GLPI :
         # add the IP address of client as a next argument
         ip, port = client
+        logging.getLogger().debug("PXE Proxy: packet received from: %s" % ip)
         data += "IPADDR:%s\n" % ip
         self.process_data(data, client)
 

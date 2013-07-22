@@ -405,7 +405,6 @@ class Imaging (Singleton):
                 return False
 
         def _getmacCB(result):
-            logging.getLogger().info("imaging.inject \033[33m MAC result: %s\033[0m" % str(result))
             if result and type(result) == dict:
                 client = self._getXMLRPCClient()
                 func = 'imaging.injectInventory'

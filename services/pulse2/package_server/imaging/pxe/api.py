@@ -225,7 +225,7 @@ class PXEImagingApi (PXEMethodParser):
        
         if self.config.imaging_api["pxe_password"] == password :
             logging.getLogger().debug("PXE Proxy: client authentification OK")
-            return succeed("ok")
+            return succeed('ok')
         else :
             logging.getLogger().warn("PXE Proxy: client authentification FAILED")
             return succeed("ko")
@@ -549,7 +549,8 @@ class PXEImagingApi (PXEMethodParser):
 
         @d.addCallback
         def _cb(result):
-            return "ACK"
+            if level != 1 :
+                return "ACK"
 
         @d.addErrback
         def _eb(failure):
