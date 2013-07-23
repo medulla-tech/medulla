@@ -1,0 +1,127 @@
+#!/usr/bin/env python
+# -*- coding: utf-8; -*-
+#
+# (c) 2011-2012 Mandriva, http://www.mandriva.com/
+#
+# Author(s):
+#   Jean Parpaillon <jparpaillon@mandriva.com>
+#   Jean-Philippe Braun <jpbraun@mandriva.com>
+#
+# This file is part of Pulse 2, http://pulse2.mandriva.org
+#
+# Pulse 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Pulse 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Pulse 2.  If not, see <http://www.gnu.org/licenses/>.
+
+""" Database version detect and update """
+
+import sys
+import logging
+
+from optparse import OptionParser
+
+from pulse2.ddl import DBControl
+
+log = logging.getLogger("pulse2-dbupdate")
+
+def db_update (options):
+    """
+    Call of database update engine.
+
+    @param options: optparse options container
+    @type options: optparse.Option
+    """
+    try :
+        db_control = DBControl(user=options.user, 
+                               passwd=options.password, 
+                               host=options.host, 
+                               port=options.port, 
+                               module=options.database,
+                               log=log) 
+        db_control.process()
+    except Exception, exc :
+        log.warn("An error occured when running dbupdate : %s" % str(exc))
+
+def options_validate(options):
+    """
+    Check all required options
+
+    @param options: optparse options container
+    @type options: optparse.Option
+
+    @return: True if all required options
+    @rtype: bool
+    """
+
+    is_complete = True
+
+    if not options.user :
+        log.warn("Option --user required.")
+        is_complete = False
+
+    if not options.password :
+        log.warn("Option --password required.")
+        is_complete = False
+
+    if not options.host :
+        log.warn("Option --host required.")
+        is_complete = False
+
+    if not options.database :
+        log.warn("Option --db required.")
+        is_complete = False
+
+    return is_complete
+
+
+if __name__ == "__main__" :
+
+    parser = OptionParser()
+
+    parser.add_option("--user", 
+                      dest="user",
+                      help="MySQL administrator username")
+    parser.add_option("--password", 
+                      dest="password",
+                      help="MySQL administrator password")
+    parser.add_option("--host", 
+                      dest="host",
+                      help="MySQL server host")
+    parser.add_option("--db", 
+                      dest="database",
+                      help="MySQL server database")
+    parser.add_option("--port", 
+                      dest="port", 
+                      default=3306, 
+                      help="MySQL port")
+    parser.add_option("-q", "--quiet",
+                      action="store_true", 
+                      dest="verbose",
+                      help="Silent output")
+
+    (options, args) = parser.parse_args()
+
+    if options.verbose :
+        level = logging.NOTSET
+    else :
+        level = logging.DEBUG
+
+
+    handler = logging.StreamHandler()
+    handler.setLevel(level)
+    log.addHandler(handler)
+    log.setLevel(level)
+
+    if options_validate(options): 
+        db_update(options) 
+    
+ 
