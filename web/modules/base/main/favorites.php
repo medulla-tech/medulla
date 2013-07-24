@@ -94,7 +94,7 @@ foreach(getSorted($MMCApp->getModules()) as $mkey => $mod) {
             $getrecop['fav_action']='del';
 
             $getrecop['uri']=$uri;
-            ?> <span class="redbutton"><a href="#" onClick="new Ajax.Updater('__popup_container','<?php echo  urlStr('base/main/favorites',$getrecop); ?>'); return false">X</a></span> <?php
+            ?> <span class="redbutton"><a href="#" onClick="jQuery('#__popup_container').load('<?php echo  urlStr('base/main/favorites',$getrecop); ?>'); return false">X</a></span> <?php
 
 
 
@@ -146,7 +146,7 @@ if ($local_page->isVisible()) {
 
     ?>
 
-    <p><a href="#" onClick="new Ajax.Updater('__popup_container','<?php echo  urlStr('base/main/favorites',$_GET); ?>'); return false"><?php echo  _("Add this page to your favorite") ?></a></p>
+    <p><a href="#" onClick="jQuery('__popup_container').load('<?php echo  urlStr('base/main/favorites',$_GET); ?>'); return false"><?php echo  _("Add this page to your favorite") ?></a></p>
     <?php
 }
 

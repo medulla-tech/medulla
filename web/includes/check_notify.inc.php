@@ -35,15 +35,18 @@ if (isset($_SESSION['notify']) && count($_SESSION['notify']) > 0) {
     }
     $content .= NotifyWidget::end();
     $content = json_encode($content);
-    echo '
-    <script type="text/javascript">
-        var message = ' . $content . ';
-        try {
-            $("__popup_container").update(message);
-        }
-        catch(ex) {
-            $("__popup_container").innerHTML = messages;
-        }
-        displayPopupCenter();
-    </script>';
+    echo "
+    <script type=\"text/javascript\">
+        PopupWindow(null, null, 0,function(evt){
+
+            jQuery('#popup').css({
+                'width': '50%',
+                'left': '25%',
+                'top':'15%'
+            });
+            jQuery('#overlay').fadeIn().click(closePopup);
+            
+        },$content);
+    </script>";
 }
+?>

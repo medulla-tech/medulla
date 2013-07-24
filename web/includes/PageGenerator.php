@@ -103,7 +103,7 @@ class EditInPlace extends ActionEncapsulator{
         $str.= "<span id=\"id$idx\" class=\"editinplace\">".$this->origText."</span>";
 
 
-       $str .= '<script type="text/javascript">';
+       /*$str .= '<script type="text/javascript">';
        $str .= "     new Ajax.InPlaceEditor($('id$idx'),'".$this->url."', {\n
                 okButton: true, cancelLink: true, cancelText : '"._('Cancel')."',
                 highlightcolor : '#FF9966',
@@ -112,7 +112,7 @@ class EditInPlace extends ActionEncapsulator{
                     return '$urlparam&value='+value\n
                 }\n
             });\n
-        </script>\n";
+        </script>\n"; ===> CLASS NOT USED */
       return $str;
     }
 
@@ -244,6 +244,8 @@ class ActionItem {
  */
 class ActionPopupItem extends ActionItem {
 
+    private $_displayType = 0;
+    
     function ActionPopupItem($desc, $action, $classCss, $paramString, $module = null, $submod = null, $tab = null, $width = 300, $mod = false) {
         $this->ActionItem($desc, $action, $classCss, $paramString, $module, $submod, $tab, $mod);
         $this->setWidth($width);
@@ -257,6 +259,10 @@ class ActionPopupItem extends ActionItem {
         $this->width = $width;
     }
 
+    function displayType($type){
+        $this->_displayType = $type;
+    }
+    
     function displayWithRight($param, $extraParams = array()) {
         /* Add special param for actionPopupItem */
         if (is_array($extraParams)) {
@@ -552,7 +558,7 @@ class ListInfos extends HtmlElement {
                 if (!isset($this->first_elt_padding)) {
                     $this->first_elt_padding = 32;
                 }
-                echo "<td style=\"$width_styl\"><span style=\"color: #777; padding-left: ".$this->first_elt_padding."px;\">$desc</span></td>";
+                echo "<td style=\"$width_styl\"><span style=\" padding-left: ".$this->first_elt_padding."px;\">$desc</span></td>";
                 $first = True;
 
             } else {
@@ -565,7 +571,7 @@ class ListInfos extends HtmlElement {
                     $tooltipbegin = "";
                     $tooltipend = "";
                 }
-                echo "<td style=\"$width_styl\"><span style=\"color: #777;\">$tooltipbegin$desc$tooltipend</span></td>";
+                echo "<td style=\"$width_styl\"><span style=\" \">$tooltipbegin$desc$tooltipend</span></td>";
             }
         }
 
@@ -574,7 +580,7 @@ class ListInfos extends HtmlElement {
                 $width_styl = $this->col_width[count($this->col_width) - 1];
             }
             $width_styl = isset($width_styl) ? sprintf('width: %s;', $width_styl) : '';
-            echo "<td style=\"text-align: right; $width_styl\"><span style=\"color: #AAA;\" >Actions</span></td>";
+            echo "<td style=\"text-align: right; $width_styl\"><span>Actions</span></td>";
         }
 
         echo "</tr></thead>";
@@ -645,7 +651,7 @@ class ListInfos extends HtmlElement {
         if (false) {
             /* Code disabled because not used and make javavascript errors */
             print '<script type="text/javascript"><!--';
-            print '$(\'help\').innerHTML=\'\''."\n";
+            print "jQuery('#help').html('');\n";
             print '$(\'help\').innerHTML+=\'<ul>\''."\n";
             print '$(\'help\').innerHTML+=\'<li><h3>Aide contextuelle</h3></li>\''."\n";
             foreach ($this->arrAction as $objActionItem) {
@@ -864,20 +870,20 @@ class SimpleNavBar extends HtmlElement {
          * the ListInfos.
          */
 ?>
-        <script type="javascript">
-	    updateMaxPerPage = function(elem) {
+        <script type="text/javascript">
+        updateMaxPerPage = function(elem) {
             // Get the selector element (the first of the page)
-	        var maxperpageElement = document.getElementById('maxperpage');
-            if(maxperpageElement != undefined) {
-                // Synchronize the value of the two selectors of the page :
-                // the ListInfos widget print two Navbar, so the maxperpage value can be changed in both
-                maxperpageElement.selectedIndex = elem.selectedIndex;
-                var maxperpageValue = elem.value;
+            var maxperpageElement = document.getElementById('maxperpage');
+            if (jQuery('#maxperpage').length)
+            {
+                jQuery('#maxperpage').val(jQuery(elem).val());
+                var maxperpageValue = jQuery('#maxperpage').val();
                 // Evaluate the end depending on the maxperpage value selected
                 var end = parseInt(maxperpageValue) + parseInt(<?php echo $start ?>) - 1;
                 // Call the function to update the ListInfos
                 <?php echo $jsfunc ?>('<?php echo $this->filter ?>', '<?php echo $start ?>', end);
             }
+
             return false;
         }
         </script>
@@ -890,26 +896,16 @@ class SimpleNavBar extends HtmlElement {
      */
     function displayNextListBorder() {
 ?>
-        <script type="javascript">
-        var nextList = [];
-        var nextListClass = "";
-        if(document.getElementsByClassName("nextListInactive").length > 0) {
-            nextListClass = "nextListInactive";
-        }
-        if(document.getElementsByClassName("nextList").length > 0) {
-            nextListClass = "nextList";
-        }
-        if(nextListClass != "") {
-            nextList = document.getElementsByClassName(nextListClass);
-            nextList[0].style.borderLeft = "solid 1px #CCC";
-            nextList[1].style.borderLeft = "solid 1px #CCC";
-        }
+        <script type="text/javascript">
+            jQuery('.nextListInactive').css('borderLeft','solid 1px #CCC');
+            jQuery('.nextList').css('borderLeft','solid 1px #CCC');
         </script>
 <?php
     }
 
     function displayGotoPageField() {
-        echo '<script type="text/javascript">
+        echo '
+        <script type="text/javascript">
             gotoPage = function(input) {
                 page = input.value;
                 if (page <= '.$this->nbpages.') {
@@ -1196,7 +1192,7 @@ class AjaxFilter extends HtmlElement {
 <?php
 if(!$this->formid) {
 ?>
-        document.getElementById('param<?php echo $this->formid ?>').focus();
+        jQuery('#param<?php echo $this->formid ?>').focus();
 <?php
 }
 if(isset($this->storedfilter)) {
@@ -1216,8 +1212,8 @@ if (isset($this->storedmax)) {
 <?php
 }
 ?>
-        if(document.getElementById('maxperpage') != undefined)
-            maxperpage = document.getElementById('maxperpage').value;
+        if(jQuery('#maxperpage').length)
+            maxperpage = jQuery('#maxperpage').val();
 
         /**
          * Clear the timers set vith setTimeout
@@ -1242,10 +1238,13 @@ if (isset($this->storedmax)) {
         ?>
 
         updateSearch<?php echo $this->formid ?> = function() {
-            new Ajax.Updater('<?php echo  $this->divid; ?>',
-            '<?php echo $url ?>',
-            { asynchronous:true, evalScripts: true}
-            );
+            jQuery.ajax({
+                'url': '<?php echo $url ?>',
+                type: 'get',
+                success: function(data){
+                    jQuery("#<?php echo  $this->divid; ?>").html(data);
+                }
+            });
 
 <?php
 if ($this->refresh) {
@@ -1261,10 +1260,16 @@ if ($this->refresh) {
          */
         updateSearchParam<?php echo $this->formid ?> = function(filter, start, end, max) {
             clearTimers<?php echo $this->formid ?>();
-            if(document.getElementById('maxperpage') != undefined)
-                maxperpage = document.getElementById('maxperpage').value;
+            if (jQuery('#maxperpage').length)
+                maxperpage = jQuery('#maxperpage').val();
 
-            new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?>filter='+filter+'&start='+start+'&end='+end+'&maxperpage='+maxperpage+'<?php echo  $this->params ?>', { asynchronous:true, evalScripts: true});
+            jQuery.ajax({
+                'url': '<?php echo  $this->url; ?>filter='+filter+'&start='+start+'&end='+end+'&maxperpage='+maxperpage+'<?php echo  $this->params ?>',
+                type: 'get',
+                success: function(data){
+                    jQuery("#<?php echo  $this->divid; ?>").html(data);
+                }
+            });
 <?php
 if ($this->refresh) {
 ?>
@@ -1382,7 +1387,7 @@ class AjaxFilterLocation extends AjaxFilter {
     </div>
 
     <script type="text/javascript">
-        document.getElementById('param').focus();
+        jQuery('#param').focus();
 
 <?php
 if(isset($this->storedfilter)) {
@@ -1392,8 +1397,8 @@ if(isset($this->storedfilter)) {
 }
 ?>
         var maxperpage = <?php echo $conf["global"]["maxperpage"] ?>;
-        if(document.getElementById('maxperpage') != undefined)
-            maxperpage = document.getElementById('maxperpage').value;
+        if (jQuery('#maxperpage').length)
+                maxperpage = jQuery('#maxperpage').val();
 
         /**
         * update div with user
@@ -1402,7 +1407,13 @@ if(isset($this->storedfilter)) {
             launch--;
 
                 if (launch==0) {
-                    new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?>filter='+document.Form.param.value+'<?php echo  $this->params ?>&<?php echo  $this->paramname ?>='+document.Form.<?php echo  $this->paramname ?>.value+'&maxperpage='+maxperpage, { asynchronous:true, evalScripts: true});
+                    jQuery.ajax({
+                        'url': '<?php echo  $this->url; ?>filter='+document.Form.param.value+'<?php echo  $this->params ?>&<?php echo  $this->paramname ?>='+document.Form.<?php echo  $this->paramname ?>.value+'&maxperpage='+maxperpage,
+                        type: 'get',
+                        success: function(data){
+                            jQuery("#<?php echo  $this->divid; ?>").html(data);
+                        }
+                    });
                 }
             }
 
@@ -1428,12 +1439,17 @@ if(isset($this->storedfilter)) {
                     location = tableau[0];
                 }
             }
-            if(document.getElementById('maxperpage') != undefined)
-            {
-                maxperpage = document.getElementById('maxperpage').value;
-            }
+            if (jQuery('#maxperpage').length)
+                maxperpage = jQuery('#maxperpage').val();
 
-            new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?>filter='+filter+'<?php echo  $this->params ?>&<?php echo  $this->paramname ?>='+location+'&start='+start+'&end='+end+'&maxperpage='+maxperpage, { asynchronous:true, evalScripts: true});
+            jQuery.ajax({
+                'url': '<?php echo  $this->url; ?>filter='+filter+'<?php echo  $this->params ?>&<?php echo  $this->paramname ?>='+location+'&start='+start+'&end='+end+'&maxperpage='+maxperpage,
+                type: 'get',
+                success: function(data){
+                    jQuery("#<?php echo  $this->divid; ?>").html(data);
+                }
+            });
+            
             }
 
         /**
@@ -1486,8 +1502,15 @@ class AjaxLocation extends AjaxFilterLocation {
         function updateSearchLocation() {
             launch--;
             if (launch==0) {
-                new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?><?php echo  $this->params ?>&<?php echo  $this->paramname ?>='+document.FormLocation.<?php echo  $this->paramname ?>.value, { asynchronous:true, evalScripts: true});
-                }
+                jQuery.ajax({
+                    'url': '<?php echo  $this->url; ?><?php echo  $this->params ?>&<?php echo  $this->paramname ?>='+document.FormLocation.<?php echo  $this->paramname ?>.value,
+                    type: 'get',
+                    success: function(data){
+                        jQuery("#<?php echo  $this->divid; ?>").html(data);
+                    }
+                });
+
+            }
         }
         /**
         * wait 500ms and update search
@@ -2407,9 +2430,7 @@ class ValidatingForm extends Form {
         $str = parent::end();
         $str .= "
         <script type=\"text/javascript\">
-            if(Form.findFirstElement(\"".$this->options["id"]."\")) {
-                Form.focusFirstElement(\"".$this->options["id"]."\");
-            }
+            jQuery('#".$this->options["id"].":not(.filter) :input:visible:enabled:first').focus();
         </script>\n";
         return $str;
     }
@@ -2454,11 +2475,11 @@ class PopupForm extends Form {
     }
 
     function addValidateButtonWithFade($name) {
-        $this->buttons[] = $this->getButtonString($name, _("Confirm"), "btnPrimary", "onclick=\"new Effect.Fade('popup'); return true;\"" );
+        $this->buttons[] = $this->getButtonString($name, _("Confirm"), "btnPrimary", "onclick=\"jQuery('#popup').fadeOut(); return true;\"" );
     }
 
     function addCancelButton($name) {
-        $this->buttons[] = $this->getButtonString($name, _("Cancel"), "btnSecondary", "onclick=\"new Effect.Fade('popup'); return false;\"" );
+        $this->buttons[] = $this->getButtonString($name, _("Cancel"), "btnSecondary", "onclick=\"jQuery('#popup').fadeOut(); return false;\"" );
     }
 
 }
@@ -2480,7 +2501,7 @@ class PopupWindowForm extends PopupForm {
     }
 
     function addValidateButtonWithFade($name) {
-        $this->buttons[] = $this->getButtonString($name, _("Confirm"), "btnPrimary", "onclick=\"new Effect.Fade('popup'); window.open('".$this->target_uri."', '', 'toolbar=no, location=no, menubar=no, status=no, status=no, scrollbars=no, width=330, height=200'); return false;\"" );
+        $this->buttons[] = $this->getButtonString($name, _("Confirm"), "btnPrimary", "onclick=\"jQuery('popup').fadeOut(); window.open('".$this->target_uri."', '', 'toolbar=no, location=no, menubar=no, status=no, status=no, scrollbars=no, width=330, height=200'); return false;\"" );
     }
 }
 
@@ -2638,12 +2659,19 @@ class AjaxPage extends HtmlElement {
 echo <<< EOT
         <div id="{$this->id}" class="{$this->class}"></div>
         <script type="text/javascript">
-        new Ajax.PeriodicalUpdater("{$this->id}", "{$this->url}", {
-            method: "get",
-            frequency: {$this->refresh},
-            parameters: {$this->params},
-            evalScripts: true
-        });
+        function update_{$this->id}(){
+            jQuery.ajax({
+                'url': '{$this->url}',
+                type: 'get',
+                data: {$this->params},
+                success: function(data){
+                    jQuery("#{$this->id}").html(data);
+                    setTimeout('update_{$this->id}()',1000*{$this->refresh});
+                }
+            });
+        }
+        update_{$this->id}();
+        
         </script>
 EOT;
     }

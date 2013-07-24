@@ -37,7 +37,7 @@ function linkToRemote($obj,$id,$url,$options = null) {
 
     $javaopt = '{'.implode(',',$arrOpt).'}';
 
-    $javascriptcode = "new Ajax.Updater('$id','$url',$javaopt); return false;";
+    $javascriptcode = "jQuery('$id').load('$url',$javaopt); return false;";
 
 
     echo "<a href=\"#\" onClick=\"$javascriptcode\">";
@@ -106,7 +106,7 @@ if (strstr($action,'?')===False) {
     </div>
 
     <script type="text/javascript">
-        document.getElementById('param').focus();
+        jQuery('#param').focus();
 
 
                 /**
@@ -115,18 +115,18 @@ if (strstr($action,'?')===False) {
         function updateSearch() {
             launch--;
 
-                if (launch==0) {
-                    new Ajax.Updater('container','<?php echo  $action ?>&filter='+document.Form.param.value, { asynchronous:true, evalScripts: true});
-                }
+            if (launch==0) {
+                jQuery("#container").load('<?php echo  $action ?>&filter='+document.Form.param.value);
             }
+        }
 
         /**
         * provide navigation in ajax for user
         */
 
         function updateSearchParam(filter, start, end) {
-            new Ajax.Updater('container','<?php echo  $action ?>&filter='+filter+'&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
-            }
+            jQuery("#container").load('<?php echo  $action ?>&filter='+filter+'&start='+start+'&end='+end);
+        }
 
         /**
         * wait 500ms and update search

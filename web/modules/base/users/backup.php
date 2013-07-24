@@ -89,7 +89,7 @@ else {
 <br><br>
 <input name="user" type="hidden" value="<?php echo $user; ?>" />
 <input name="bgo" type="submit" class="btnPrimary" value="<?php echo  _("Launch backup"); ?>" />
-<input name="bback" type="submit" class="btnSecondary" value="<?php echo  _("Cancel"); ?>" onclick="new Effect.Fade('popup'); return false;" />
+<input name="bback" type="submit" class="btnSecondary" value="<?php echo  _("Cancel"); ?>" onclick="jQuery('#popup').fadeOut(); return false;" />
 </form>
 <?php
 }

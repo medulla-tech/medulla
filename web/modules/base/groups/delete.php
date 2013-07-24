@@ -64,5 +64,5 @@ if (isset($_POST["bconfirm"])) {
 <form action="main.php?module=base&submod=groups&action=delete" method="post">
 <input type="hidden" name="groupname" value="<?php echo $group; ?>" />
 <input type="submit" name="bconfirm" class="btnPrimary" value="<?php echo  _("Delete group"); ?>" />
-<input type="submit" name="bback" class="btnSecondary" value="<?php echo  _("Cancel"); ?>" onclick="new Effect.Fade('popup'); return false;" />
+<input type="submit" name="bback" class="btnSecondary" value="<?php echo  _("Cancel"); ?>" onclick="jQuery('#popup').fadeOut(); return false;" />
 </form>

@@ -56,6 +56,10 @@ function getComputersOS($uuids) {
     return xmlCall("base.getComputersOS", array($uuids));
 }
 
+function getComputersCountByOS($osname) {
+    return xmlCall("base.getComputersCountByOS", array($osname));
+}
+
 function getRestrictedComputersName($min = 0, $max = -1, $filt = null) {
     return xmlCall("base.getRestrictedComputersName", array($min, $max, $filt));
 }

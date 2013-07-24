@@ -9,33 +9,17 @@ class DisabledInputTpl extends AbstractTpl{
         if ($arrParam=='') {
             $arrParam = $_POST[$this->name];
         }
-        print '<span id="container_input_'.$this->name.'"><input name="'.$this->name.'" id="'.$this->name.'" type="" value="'.$arrParam["value"].'" disabled="'.$arrParam["disabled"].'" /></span>';
+        
+        $required_attr = isset($arrParam["required"])?' rel="required"':'';
+        $regexp_attr = isset($this->regexp)?' regexp="'.$this->regexp.'"':'';
+        
+        print '<span id="container_input_'.$this->name.'"><input name="'.$this->name.'" id="'.$this->name.'" type="" value="'.$arrParam["value"].'" disabled="'.$arrParam["disabled"].$required_attr.$regexp_attr.'" /></span>';
 
-        print '<script type="text/javascript">
-                $(\''.$this->name.'\').validate = function() {';
-        if (!isset($arrParam["required"])) {
-            /* If a value is not required, and the input field is empty, that's ok */
-            print '
-                    if ($(\''.$this->name.'\').value == \'\') { //if is empty (hidden value)
-                        return true
-                    }';
-        }
-        if (false) print alert("' . $this->name . '"); // Used for debug only
-        /*print '
-                    var rege = '.$this->regexp.'
-                    if ((rege.exec($(\''.$this->name.'\').value))!=null) {
-                        return true
-                    } else {
-                        $(\''.$this->name.'\').style.backgroundColor = \'pink\';
-                        new Element.scrollTo(\'container_input_'.$this->name.'\');
-                        return 0;
-                    }
-                };';*/
         if (isset($arrParam["onchange"])) {
-            print '$(\''.$this->name.'\').onchange = function() {' . $arrParam["onchange"] . '};';
+            print '<script type="text/javascript">';
+            print 'jQuery(\'#'.$this->name.'\').change( function() {' . $arrParam["onchange"] . '});';
+            print '</script">';
         }
-
-        print '</script>';
     }
 }
 
@@ -385,7 +369,7 @@ class AjaxFilterLog extends AjaxFilter {
     </div>
     <script type="text/javascript">
     
-        Event.observe(window, 'load', function() {
+        jQuery(document).ready(function(){
             searchbar();
         });
         
@@ -393,16 +377,16 @@ class AjaxFilterLog extends AjaxFilter {
         * update div with user
         */
         function searchbar() {
-            new Ajax.Updater('searchfilter','<?php echo $this->urlsearch ?>&filtertype='+document.Form.filtertype.value, { onSuccess: pushSearch });
+            jQuery('#searchfilter').load('<?php echo $this->urlsearch ?>&filtertype='+document.Form.filtertype.value,pushSearch);
         }
                 
         function updateSearch() {
             launch--;
             if (launch==0) {
                 if (document.getElementById('param') == null)
-                    new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?>filter=&filtertype='+document.Form.filtertype.value+'&begindate='+encodeURI(document.Form.begindate.value)+'&enddate='+document.Form.enddate.value+'&page=<?php echo  $this->page; ?>', { asynchronous:true, evalScripts: true});    
+                    jQuery('#<?php echo  $this->divid; ?>').load('<?php echo  $this->url; ?>filter=&filtertype='+document.Form.filtertype.value+'&begindate='+encodeURI(document.Form.begindate.value)+'&enddate='+document.Form.enddate.value+'&page=<?php echo  $this->page; ?>');
                 else
-                    new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?>filter='+document.Form.param.value+'&filtertype='+document.Form.filtertype.value+'&begindate='+encodeURI(document.Form.begindate.value)+'&enddate='+document.Form.enddate.value+'&page=<?php echo  $this->page; ?>', { asynchronous:true, evalScripts: true});
+                    jQuery('#<?php echo  $this->divid; ?>').load('<?php echo  $this->url; ?>filter='+document.Form.param.value+'&filtertype='+document.Form.filtertype.value+'&begindate='+encodeURI(document.Form.begindate.value)+'&enddate='+document.Form.enddate.value+'&page=<?php echo  $this->page; ?>');
             }
         }
 
@@ -415,7 +399,7 @@ class AjaxFilterLog extends AjaxFilter {
             var tableau = filter.split(reg);
             filter = tableau[0];
             var location = tableau[1];
-            new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?>filter='+document.Form.param.value+'&filtertype='+document.Form.filtertype.value+'&begindate='+encodeURI(document.Form.begindate.value)+'&enddate='+document.Form.enddate.value+'&page=<?php echo  $this->page; ?>&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
+            jQuery('#<?php echo  $this->divid; ?>').load('<?php echo  $this->url; ?>filter='+document.Form.param.value+'&filtertype='+document.Form.filtertype.value+'&begindate='+encodeURI(document.Form.begindate.value)+'&enddate='+document.Form.enddate.value+'&page=<?php echo  $this->page; ?>&start='+start+'&end='+end);
             }
 
         /**

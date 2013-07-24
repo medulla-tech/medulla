@@ -313,32 +313,16 @@ class InputTpl extends AbstractTpl{
         if (!isset($arrParam['placeholder'])) {
             $arrParam['placeholder'] = '';
         }
-        print '<span id="container_input_'.$this->name.'"><input name="'.$this->name.'" id="'.$this->name.'" type="' . $this->fieldType . '" size="'.$this->size.'" value="'.$arrParam["value"].'" placeholder="'.$arrParam["placeholder"].'" '.$arrParam["disabled"].' autocomplete="off" /></span>';
-        print '<script type="text/javascript">
-                $(\''.$this->name.'\').validate = function() {';
-        if (!isset($arrParam["required"]))
-            /* If a value is not required, and the input field is empty, that's ok */
-            print '
-                    if ($(\''.$this->name.'\').value == \'\') { //if is empty (hidden value)
-                        return true
-                    }';
-        if (false) print 'alert("' . $this->name . '");'; // Used for debug only
-        print '
-                    var rege = '.$this->regexp.';
-                    if ((rege.exec($(\''.$this->name.'\').value))!=null) {
-                        $(\''.$this->name.'\').setStyle({backgroundColor: \'\'});
-                        return true;
-                    } else {
-                        $(\''.$this->name.'\').setStyle({backgroundColor: \'pink\'});
-                        new Element.scrollTo(\'container_input_'.$this->name.'\');
-                        return 0;
-                    }
-                };';
-        if (isset($arrParam["onchange"])) {
-            print '$(\''.$this->name.'\').onchange = function() {' . $arrParam["onchange"] . '};';
-        }
+        $required_attr = isset($arrParam["required"])?' rel="required"':'';
+        $regexp_attr = isset($this->regexp)?' regexp="'.$this->regexp.'"':'';
+            
+        print '<span id="container_input_'.$this->name.'"><input name="'.$this->name.'" id="'.$this->name.'" type="' . $this->fieldType . '" size="'.$this->size.'" value="'.$arrParam["value"].'" placeholder="'.$arrParam["placeholder"].'" '.$arrParam["disabled"].$required_attr.$regexp_attr.' autocomplete="off" /></span>';
 
-        print '</script>';
+        if (isset($arrParam["onchange"])) {
+            print '<script type="text/javascript">';
+            print 'jQuery(\'#'.$this->name.'\').change( function() {' . $arrParam["onchange"] . '});';
+            print '</script">';
+        }
     }
 }
 
@@ -541,15 +525,15 @@ class DynamicDateTpl extends InputTpl {
             </span>';
         print '
             <script type="text/javascript">
-            Calendar.setup({
-            inputField      :   "'.$this->name.'",
-            ifFormat        :   "%Y-%m-%d %H:%M:00",       // format of the input field
-            showsTime       :   true,
-            timeFormat      :   "24",
-            button          :   "'.$this->name.'_button",
-            firstDay        :   1,
-            weekNumbers     :   false
-            });
+                Calendar.setup({
+                inputField      :   "'.$this->name.'",
+                ifFormat        :   "%Y-%m-%d %H:%M:00",       // format of the input field
+                showsTime       :   true,
+                timeFormat      :   "24",
+                button          :   "'.$this->name.'_button",
+                firstDay        :   1,
+                weekNumbers     :   false
+                });
             </script>';
     }
 }
@@ -600,8 +584,10 @@ class MultipleInputTpl extends AbstractTpl {
         }
         print '</td><td>';
         print '<input name="b'.$this->name.'" type="button" class="btn btn-primary" value="'._("Add").'" onclick="
-        new Ajax.Updater(\''.$this->name.'\',\'includes/FormGenerator/MultipleInput.tpl.php\',
-        { evalScripts: true, parameters: Form.serialize($(\'' . $this->formId . '\'))+\'&amp;minputname='.$this->name.'&amp;desc='.urlencode($this->desc) . '&amp;regexp='.rawurlencode($this->regexp).'\' }); return false;"/>';
+        jQuery.post(\'includes/FormGenerator/MultipleInput.tpl.php\',jQuery(this).parents(\'form:first\').serialize()+\'&amp;minputname='.$this->name.'&amp;desc='.urlencode($this->desc) . '&amp;regexp='.rawurlencode($this->regexp).'\' ,function(res){
+            jQuery(\'#'.$this->name.'\').html(res);
+        });
+        return false;"/>';
         print '</td></tr>';
         print '</table>';
         print '</div>';
@@ -726,37 +712,7 @@ class MembersTpl extends AbstractTpl {
     </table>
     <script type="text/javascript">
         switch_' . $this->name .' = function(from, to) {
-            var emptyOption = new Element("option", { value: "" }).update("");
-            var toAdd = $$("#"+from+" option").findAll(function(e) {
-                return e.selected;
-            });
-            var len = toAdd.length;
-            for(var i=0; i<len; i++) {
-                try {
-                    // If the first option is empty
-                    // and we are about to add one, remove it
-                    if ($(to).options[0] && $(to).options[0].value == "") {
-                        $(to).options.remove($(to).options[0]); 
-                    }
-                    $(to).options.add(toAdd[i]);
-                    // always add an empty option if the select box
-                    // is empty in order to have
-                    // the select box in the $POST array
-                    if ($(from).options.length == 0) {
-                        $(from).options.add(emptyOption);
-                    }
-                }
-                catch(ex) {
-                    // For IE
-                    if ($(to).options[0] && $(to).options[0].value == "") {
-                        $(to).options.removeChild($(to).options[0]); 
-                    }
-                    $(to).appendChild(toAdd[i]);
-                    if ($(from).options.length == 0) {
-                        $(from).options.appendChild(emptyOption);
-                    }
-                }
-            }
+            jQuery("#"+from+" option:selected").appendTo("#"+to);
         };
     </script>';
     }
@@ -1017,8 +973,9 @@ class DeletableTrFormElement extends FormElement{
         // reald field display
         parent::display($arrParam);
         print ' <input name="bdel" type="submit" class="btn btn-small" value="'._("Delete").'" onclick="
-        new Ajax.Updater(\''.$this->name.'\',\'includes/FormGenerator/MultipleInput.tpl.php\',
-        { evalScripts: true, parameters: Form.serialize($(\'' . $this->formId . '\'))+\'&amp;minputname='.$this->name.'&amp;del='.$this->key.'&amp;desc='.urlencode($this->desc) . '&amp;regexp='.rawurlencode($this->template->regexp) . '\' }); return false;"/>';
+        jQuery.post(\'includes/FormGenerator/MultipleInput.tpl.php\',jQuery(this).parents(\'form:first\').serialize()+\'&amp;minputname='.$this->name.'&amp;del='.$this->key.'&amp;desc='.urlencode($this->desc) . '&amp;regexp='.rawurlencode($this->template->regexp) . '\' ,function(res){
+            jQuery(\'#'.$this->name.'\').html(res);
+        }); return false;"/>';
 
         print '</td></tr>';
     }
@@ -1117,9 +1074,6 @@ class TrFormElement extends FormElement {
         if ($field_name && is_string($old_value)) {
             print '<input type="hidden" name="old_'.$field_name.'" value="'.$old_value.'" />';
         }
-	else {
-	    print '<input type="hidden" name="old_'.$field_name.'" value="" />';
-	}
 
         // display real field
         parent::display($arrParam);

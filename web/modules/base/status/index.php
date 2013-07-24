@@ -223,7 +223,12 @@ $p->displayTitle();
     <h2 class="statusPad"><?php echo   _("Background jobs") ?></h2>
     <div id="bgps"> </div>
     <script type="text/javascript">
-        new Ajax.PeriodicalUpdater('bgps','includes/bgps_view.php', {asynchronous: true, frequency: 2});
+        function update_bgps(){
+            jQuery('#bgps').load('includes/bgps_view.php',function(){
+                setTimeout('update_bgps();',2000);
+            });
+        }
+        update_bgps();
     </script>
   </div>
 </div>

@@ -43,7 +43,7 @@ class GeneralPanel extends Panel {
         <div><strong>' . _T('RAM') . '</strong>
             <div id="ram-graph"></div>
             </div>
-        <script type="text/javacript">
+        <script>
             var load = ' . $load . ',
                 height = 65,
                 width = 200,
