@@ -362,7 +362,7 @@ class Pulse2ConfigFile(object):
     - load the config file
     - then populate with default values if not set from the file
     """
-    clsnames = [ 'PluginsPkgConfig', 'PluginsImagingConfig', # 'PluginsGlpiConfig',
+    clsnames = [ 'PluginsPkgConfig', 'PluginsImagingConfig', 'PluginsGlpiConfig',
                  'PluginsBaseConfig', 'PluginsDyngroupConfig', 'PluginsInventoryConfig',
                  'PluginsPulse2Config', 'PluginsMscConfig', 'PluginsBackuppcConfig', 'InventoryServerConfig',
                  'LaunchersConfig', 'PackageServerConfig', 'SchedulerConfig',
@@ -621,9 +621,9 @@ class SetupApp(object):
           db must be on the same host. Default value are taken from plugins/pulse2.ini file.
         """
         self.defaults['inventory.service.enable'] = self.options["server_inventory"] 
-        self.defaults['package.service.enable'] = self.options["server_package"] 
+        self.defaults['package.service.enable'] = self.options["server_package"]
+        self.defaults['glpi.plugin.enable'] = self.options["glpi_enable"]
         
-
         self.defaults['ldapurl'] = self.options['ldapurl'] or self.confs['plugins/base.ini'].get('ldap', 'ldapurl')
         self.defaults['ldapbasedn'] = self.options['ldapbasedn'] or self.confs['plugins/base.ini'].get('ldap', 'baseDN')
         self.defaults['ldapadmindn'] = self.options['ldapadmindn'] or self.confs['plugins/base.ini'].get('ldap', 'rootName')
@@ -644,6 +644,14 @@ class SetupApp(object):
         self.defaults['wol'] = self.confs['pulse2/launchers/launchers.ini'].get('wol', 'wol_path')
         self.defaults['audit.module.enable'] = self.confs['plugins/base.ini'].has_section('audit')
 
+        self.defaults['glpiurl'] = self.options["glpi_url"] or "http://localhost"
+        self.defaults['glpidbuser'] = self.options["glpi_dbuser"]
+        self.defaults['glpidbpassword'] = self.options["glpi_dbpassword"] or ""
+        self.defaults['glpidbname'] = self.options["glpi_dbname"] or "glpi"
+        self.defaults['glpidbhost'] = self.options["glpi_dbhost"] or "localhost"
+
+
+
     def read_config(self):
         """ Read some global config values
         """
@@ -651,6 +659,8 @@ class SetupApp(object):
                                                             self.defaults['audit.module.enable'])
         self.config['inventory.service.enable'] = self.read_bool('Enable inventory server',
                                                                  self.defaults['inventory.service.enable'])
+        self.config["glpi.plugin.enable"] = self.read_bool('Enable GLPI plugin',
+                                                           self.defaults['glpi.plugin.enable'])
         self.config['package.service.enable'] = self.read_bool('Enable package server (proxy)',
                                                                self.defaults['package.service.enable'])
         self.config['server.ip.external'] = self.read_ip('Server external IP address',
@@ -923,6 +933,45 @@ class SetupApp(object):
         else:
             baseconf.remove_section('audit')
 
+    def init_glpi(self):
+        """GLPI coupling"""
+        
+        glpi_conf = self.confs["plugins/glpi.ini"]
+
+        url = self.read_opt("Glpi URL", self.defaults["glpiurl"])
+        if not url.endswith("/") :
+            url = url + "/"
+        if url.startswith("http") :
+            base_url = "%sglpi/" % url
+            computer_url = "%sglpi/front/computer.form.php?id=" % url
+            fusion_url = "%sglpi/plugins/fusioninventory/front/plugin_fusioninventory.communication.php" % url
+        else :
+            base_url = "http://%sglpi/" % url
+            computer_url = "http://%sglpi/front/computer.form.php?id=" % url
+            fusion_url = "http://%sglpi/plugins/fusioninventory/front/plugin_fusioninventory.communication.php" % url
+ 
+        glpi_conf.set("main", "glpi_computer_uri", computer_url)
+        glpi_conf.set("authentication_glpi","baseurl", base_url)
+        glpi_conf.set("provisioning_glpi","doauth", 1)
+        glpi_conf.set("provisioning_glpi","profiles_order", "profile1 profile2 profile3")
+        glpi_conf.set("provisioning_glpi", "exclude", "root")
+
+
+        db_user = self.read_opt("GLPI database user", self.defaults["glpidbuser"])
+        glpi_conf.set("main", "dbuser", db_user)
+        db_password = self.read_passwd("GLPI database password", self.defaults["glpidbpassword"])
+        glpi_conf.set("main", "dbpasswd", db_password)
+        db_host = self.read_opt("GLPI database host", self.defaults["glpidbhost"])
+        glpi_conf.set("main", "dbhost", db_host)
+        db_name = self.read_opt("GLPI database name", self.defaults["glpidbname"])
+        glpi_conf.set("main", "dbname", db_name)
+
+
+        if self.defaults['inventory.service.enable'] :
+            invsvr_conf = self.confs["pulse2/inventory-server/inventory-server.ini"]
+            invsvr_conf.set("main", "url_to_forward", fusion_url)
+
+
     def init_misc(self):
         # Setup server IP address
         conf = self.confs['pulse2/launchers/launchers.ini']
@@ -931,10 +980,32 @@ class SetupApp(object):
         conf = self.confs['pulse2/package-server/package-server.ini']
         conf.set('main', 'public_ip', self.config['server.ip.external'])
 
-        # Choose glpi or inventory backend, and check config files coherency
-        # TODO: ask for the user. For the moment, choose inventory
-        self.confs['plugins/inventory.ini'].set('main', 'disable', 0)
-        self.confs['plugins/base.ini'].set('computers', 'method', 'inventory')
+        # Base GLPI configuration
+        if self.config["glpi.plugin.enable"] :
+            self.confs['plugins/glpi.ini'].set('main', 'disable', 0)
+            self.confs['plugins/inventory.ini'].set('main', 'disable', 1)
+            self.confs['plugins/base.ini'].set('computers', 'method', 'glpi')
+            if self.defaults['package.service.enable'] :
+                pkg_conf = self.confs["pulse2/package-server/package-server.ini"]
+                pkg_conf.set("imaging_api", "glpi_mode", True)
+
+            if self.defaults['inventory.service.enable'] :
+                invsvr_conf = self.confs["pulse2/inventory-server/inventory-server.ini"]
+                invsvr_conf.set("main", "enable_forward", True)
+
+        else :
+            self.confs['plugins/glpi.ini'].set('main', 'disable', 1)
+            self.confs['plugins/inventory.ini'].set('main', 'disable', 0)
+            self.confs['plugins/base.ini'].set('computers', 'method', 'inventory')
+
+            if self.defaults['package.service.enable'] :
+                pkg_conf = self.confs["pulse2/package-server/package-server.ini"]
+                pkg_conf.set("imaging_api", "glpi_mode", False)
+
+            if self.defaults['inventory.service.enable'] :
+                invsvr_conf = self.confs["pulse2/inventory-server/inventory-server.ini"]
+                invsvr_conf.set("main", "enable_forward", False)
+
 
 	# Enable BackupPC module
         self.confs['plugins/backuppc.ini'].set('main', 'disable', 0)
@@ -1045,6 +1116,8 @@ class SetupApp(object):
 
         log.info("Run setup")
         self.init_db()
+        if self.config["glpi.plugin.enable"] :
+            self.init_glpi()
         self.init_ldap()
         self.init_misc()
 
@@ -1095,6 +1168,19 @@ if __name__ == '__main__':
     parser.add_option("--disable-package", dest="disable_package",
                       default=False, action="store_true",
                       help="Disable package server")
+    parser.add_option("--glpi-enable", dest="enable_glpi",
+                      default=False, action="store_true",
+                      help="Enable GLPI plugin")
+    parser.add_option("--glpi-url", dest="glpiurl",
+                      help="GLPI url")
+    parser.add_option("--glpi-dbhost", dest="glpidbhost",
+                      help="MySQL server hostname")
+    parser.add_option("--glpi-dbname", dest="glpidbname",
+                      help="MySQL server database name")
+    parser.add_option("--glpi-dbuser", dest="glpidbuser",
+                      help="MySQL administrator username")
+    parser.add_option("--glpi-dbpasswd", dest="glpidbpasswd",
+                      help="MySQL administrator password")
  
     # Parse and analyse args
     (options, args) = parser.parse_args()
@@ -1124,6 +1210,12 @@ if __name__ == '__main__':
         'ldappasswd': options.ldappasswd,
         'server_inventory' : not options.disable_inventory,
         'server_package' : not options.disable_package,
+        'glpi_enable' : options.enable_glpi,
+        'glpi_url' : options.glpiurl,
+        'glpi_dbuser' : options.glpidbuser,
+        'glpi_dbpassword' : options.glpidbpasswd,
+        'glpi_dbname' : options.glpidbname,
+        'glpi_dbhost' : options.glpidbhost,
     }
 
     # Run the setup app
