@@ -69,5 +69,5 @@ foreach ($masters as $master) {
     <p><?php printf(_T("Are you sure you want to remove <b>%s</b> master ?", "imaging"), $label); ?></p>
     <input name='menu_item_id' type='hidden' value="<?php echo  $menu_item_id ?>" />
     <input name='valid' type="submit" class="btnPrimary" value="<?php echo  _T("Remove", "imaging"); ?>" />
-    <input name="bback" type="submit" class="btnSecondary" value="<?php echo  _T("Cancel", "imaging"); ?>" onClick="new Effect.Fade('popup'); return false;"/>
+    <input name="bback" type="submit" class="btnSecondary" value="<?php echo  _T("Cancel", "imaging"); ?>" onClick="jQuery('#popup').fadeOut(); return false;"/>
 </form>

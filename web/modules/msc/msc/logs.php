@@ -178,10 +178,7 @@ if (strlen($_GET['uuid'])) {
     // Display an error message
 }
 ?>
-<script src="modules/backuppc/lib/jquery-1.10.1.min.js"></script>
 <script type="text/javascript">
-// Avoid prototype <> jQuery conflicts
-jQuery.noConflict();
 
 function refresh_page(){
     // If we find a loading image, we refresh after 3 seconds

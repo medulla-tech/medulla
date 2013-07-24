@@ -44,10 +44,8 @@ class MultiFileTpl extends AbstractTpl {
     
         <script src="modules/pkgs/lib/fileuploader/fileuploader.js" type="text/javascript"></script>
         <link href="modules/pkgs/lib/fileuploader/fileuploader.css" rel="stylesheet" type="text/css">
-        <script>
-        var box = $(\'p_api\');
-        var selectedIndex = box.selectedIndex;
-        var selectedPapi = box.options[selectedIndex].value;
+        <script type="text/javascript">
+        var selectedPapi = jQuery("#p_api").val();
         function createUploader(){
             var uploader = new qq.FileUploader({
                 element: document.getElementById(\'file-uploader\'),
@@ -69,26 +67,31 @@ class MultiFileTpl extends AbstractTpl {
                     url = \'' . urlStrRedirect("pkgs/pkgs/ajaxGetSuggestedCommand") . '&papiid=\' + selectedPapi;
                     url += \'&tempdir=' . $random_dir . '\';
 
-                    new Ajax.Request(url, {
-                        onSuccess: function(response) {
-                            var googleFileName = \'\'
-                            $(\'version\').value = response.headerJSON.version;
-                            $(\'commandcmd\').value = response.headerJSON.commandcmd;
-                            var file = $$(\'.qq-upload-file\').each(function(a) {
-                                googleFileName = a.innerHTML;
-                                throw $break;
+                    jQuery.ajax({
+                        \'url\': url,
+                        type: \'get\',
+                        success: function(data){
+                            var googleFileName = \'\';
+                            jQuery(\'#version\').val(data.version);
+                            jQuery(\'#commandcmd\').val(data.commandcmd);
+                            jQuery(\'.qq-upload-file\').each(function() {
+                                googleFileName = jQuery(this).text();
+                                return false;
                             });
-                            $$(\'.label span a\').each(function(a) {
+                            
+                            jQuery(\'.label span a\').each(function() {
                                 url = \'http://www.google.com/#q=\' + googleFileName + \'+silent+install\';
-                                a.writeAttribute(\'href\', url);
-                                a.writeAttribute(\'target\', \'_blank\');
-                                throw $break;
+                                jQuery(this).attr(\'href\', url);
+                                jQuery(this).attr(\'target\', \'_blank\');
+                                return false;
                             });
                         }
                     });
+
                 }
             });           
-            $(\'triggerUpload\').observe(\'click\', function() {
+          
+            jQuery(\'#triggerUpload\').click(function() {
                 uploader.uploadStoredFiles();
             });
         }

@@ -58,5 +58,5 @@ $params['mod'] = 'delete';
     <p><?php printf(_T("Are you sure you want to delete <b>%s</b> image ?", "imaging"), $label); ?></p>
     <input name='itemid' type='hidden' value='<?php echo  $id; ?>' />
     <input name='valid' type="submit" class="btnPrimary" value="<?php echo  _T("Remove", "imaging"); ?>" />
-    <input name="bback" type="submit" class="btnSecondary" value="<?php echo  _T("Cancel", "imaging"); ?>" onClick="new Effect.Fade('popup'); return false;"/>
+    <input name="bback" type="submit" class="btnSecondary" value="<?php echo  _T("Cancel", "imaging"); ?>" onClick="jQuery('#popup').fadeOut(); return false;"/>
 </form>

@@ -57,12 +57,12 @@ class ProxySelector extends HtmlElement {
 
 <script lang=javascript>
 function disableLocalProxyForm() {
-    changeObjectDisplay('localproxytable', 'none');
-    changeObjectDisplay('container_input_proxy_number', 'inline');
+    jQuery('#localproxytable').hide();
+    jQuery('#container_input_proxy_number').show();
 }
 function enableLocalProxyForm() {
-    changeObjectDisplay('localproxytable', 'inline');
-    changeObjectDisplay('container_input_proxy_number', 'none');
+    jQuery('#localproxytable').show();
+    jQuery('#container_input_proxy_number').hide();
 }
 </script>
 <input type="radio" name="local_proxy_selection_mode" value="semi_auto" onClick="javascript:disableLocalProxyForm();" <?php echo  $this->local_proxy_selection_mode == "manual" ? "" : "checked"; ?>><?php echo  _T("Random (indicate number of proxies) : ", "msc"); ?>

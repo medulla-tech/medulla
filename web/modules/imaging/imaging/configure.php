@@ -560,7 +560,7 @@ else {
                 $f->push(new Table());
                 $f->add(new TrFormElement(_T("Select this hard disk", "imaging"), new CheckboxTpl($inputvar)),
                     array("value" => $value,
-                    "extraArg"=>'onclick="toggleVisibility(\''. $divid .'\');"'));
+                    "extraArg"=>'onclick="jQuery(\''. $divid .'\').toggle();"'));
                 $f->pop();
                 $diskdiv = new Div(array("id" => $divid));
                 $diskdiv->setVisibility($value == "CHECKED");

@@ -66,7 +66,7 @@ if ($_POST) {
         <p><?php printf(_T("Are you sure you want to delete the <b>%s</b> script ?", "imaging"), $label); ?></p>
         <input name='itemid' type='hidden' value="<?php echo $script_id ?>" />
         <input name='valid' type="submit" class="btnPrimary" value="<?php echo  _T("Delete", "imaging"); ?>" />
-        <input name="bback" type="submit" class="btnSecondary" value="<?php echo  _T("Cancel", "imaging"); ?>" onClick="new Effect.Fade('popup'); return false;"/>
+        <input name="bback" type="submit" class="btnSecondary" value="<?php echo  _T("Cancel", "imaging"); ?>" onClick="jQuery('#popup').fadeOut(); return false;"/>
     </form>
     <?php
     }

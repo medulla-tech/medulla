@@ -179,9 +179,9 @@ if (quickGet('add_param')) {
     // need to be changed in getCriterionType (we don't use the second part of the array...
     $type = getTypeForCriterionInModule(quickGet('req'), quickGet('add_param'));
     $extended = getExtended(quickGet('req'), quickGet('add_param'));
+    
     print "<tr><td>".quickGet('req')." > ".quickGet('add_param')."</td><td>";
     if(strlen($extended)) {
-
         // Insert a hidden input which contains the type of data
         print "<input type='hidden' name='type_extended' value='" . $extended . "' />";
 

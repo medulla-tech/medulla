@@ -93,5 +93,5 @@ $params['bs_uuid'] = $bs_uuid;
 <form action="<?php echo urlStr("base/computers/bootmenu_remove",$params) ?>" method="post">
     <p><?php printf(_T("Are you sure you want to remove <b>%s</b> from the boot menu ?", "imaging"), $label); ?></p>
     <input name='valid' type="submit" class="btnPrimary" value="<?php echo  _T("Remove", "imaging"); ?>" />
-    <input name="bback" type="submit" class="btnSecondary" value="<?php echo  _T("Cancel", "imaging"); ?>" onClick="new Effect.Fade('popup'); return false;"/>
+    <input name="bback" type="submit" class="btnSecondary" value="<?php echo  _T("Cancel", "imaging"); ?>" onClick="jQuery('#popup').fadeOut(); return false;"/>
 </form>

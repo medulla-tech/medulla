@@ -273,7 +273,7 @@ jQuery(function(){
      // Remove Share button
      jQuery('.removeShare').click(function(){
          if (jQuery('.removeShare').length > 1)
-             jQuery(this).parents('tr:first').remove();
+             jQuery(this).parents('tr:first').fadeOut().delay(400).remove();
          // Switch to custom profile
          jQuery('select#backup_profile').val(0);
      });
@@ -281,13 +281,13 @@ jQuery(function(){
      
      // Add Share button
      jQuery('#addShare').click(function(){
-        var newline = shareLine.clone().insertBefore(jQuery(this).parents('tr:first'));
+        var newline = shareLine.clone().insertBefore(jQuery(this).parents('tr:first')).hide().fadeIn();
          newline.find('input[type=text]').val('');
          newline.find('textarea').val('');
 
          newline.find('.removeShare').click(function(){
             if (jQuery('.removeShare').length > 1)
-                jQuery(this).parents('tr:first').remove();
+                jQuery(this).parents('tr:first').fadeOut().delay(400).remove();
         });
         // Switch to custom profile
          jQuery('select#backup_profile').val(0);
@@ -323,7 +323,7 @@ jQuery(function(){
      jQuery('#addPeriod').click(function(event,nobtn){
         var idx = parseInt(jQuery('select:last').attr('name').replace('days','').replace('[]',''))+1;        
         if (isNaN(idx)) idx = 0;
-        var newline = periodLine.clone().insertBefore(jQuery(this).parents('tr:first'));
+        var newline = periodLine.clone().insertBefore(jQuery(this).parents('tr:first')).hide().fadeIn();
          newline.find('input[type=text]').val('');
          newline.find('select').val([])
                  .attr({'name':'days'+idx+'[]','id':'days'+idx+'[]'})

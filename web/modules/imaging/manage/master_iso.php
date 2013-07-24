@@ -82,5 +82,5 @@ several files of your media size will be created.</p>
 <input name="label" type="hidden" value="<?php echo $label ?>" />
 <input name="itemid" type="hidden" value="<?php echo $id; ?>" />
 <input name="bgo" type="submit" class="btnPrimary" value="<?php echo  _T("Launch backup", "imaging"); ?>" />
-<input name="bback" type="submit" class="btnSecondary" value="<?php echo  _("Cancel"); ?>" onclick="new Effect.Fade('popup'); return false;" />
+<input name="bback" type="submit" class="btnSecondary" value="<?php echo  _("Cancel"); ?>" onclick="jQuery('#popup').fadeOut(); return false;" />
 </form>

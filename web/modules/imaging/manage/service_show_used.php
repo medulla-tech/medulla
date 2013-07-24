@@ -146,5 +146,5 @@ else {
     <p><a onclick="checkAll('imaging_checkbox_',1);checkAll('computer_checkbox_',1);" href="javascript:void(0);"><?php printf(_T("Select all", "imaging")); ?></a> 
     / <a onclick="checkAll('imaging_checkbox_',0);checkAll('computer_checkbox_',0);" href="javascript:void(0);"><?php printf(_T("Unselect all", "imaging")); ?></a></p>
     <input name='removeServices' type="submit" class="btnPrimary" value="<?php echo  _T("Remove", "imaging"); ?>" />
-    <input name="bback" type="submit" class="btnSecondary" value="<?php echo  _T("Cancel", "imaging"); ?>" onClick="new Effect.Fade('popup'); return false;"/>
+    <input name="bback" type="submit" class="btnSecondary" value="<?php echo  _T("Cancel", "imaging"); ?>" onClick="jQuery('#popup').fadeOut(); return false;"/>
 </form>

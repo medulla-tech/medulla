@@ -105,15 +105,14 @@ class GlpiPanel extends Panel {
         stacked: true,
         colors: colors
     }).hover(fin, fout);
-    $('inventory-graphs').insert('<ul>');
+    jQuery('#inventory-graphs').append('<ul></ul>');
     for (var i = 0; i < legend.length; i++) {
-        $('inventory-graphs').insert(
+        jQuery('#inventory-graphs ul').append(
             '<li style="color: ' + colors[i]  + '"><span style="color: #000">' + legend[i]
             + '<a href="' + href[i] + '"><img title="' + createGroupText +
             '" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a></span></li>'
         );
     }
-    $('inventory-graphs').insert('</ul>');
     </script>
 INVENTORY;
     }

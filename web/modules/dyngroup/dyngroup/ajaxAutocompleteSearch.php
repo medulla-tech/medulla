@@ -27,7 +27,7 @@ ob_end_clean();
 
 $module = quickGet("modulename");
 $criterion = quickGet("criterion");
-$search = quickGet("value");
+$search = quickGet("data");
 if (!$search) { $search = '' ; }
 
 $value1 = quickGet("value1");
@@ -40,6 +40,13 @@ if (strlen($search) > 2) {
     }
 }
 
+header("Content-type: application/json");
+
+$output = array_combine($res,$res);
+
+print json_encode($output);
+
+return;
 print '<ul>';
 foreach($res as $items) {
     ?> <li><?php echo  $items ?></li> <?php 

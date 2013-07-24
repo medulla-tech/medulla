@@ -205,11 +205,11 @@ You may also ask Google for the silent installation switches. If you\'re feeling
 <link href="modules/pkgs/lib/fileuploader/fileuploader.css" rel="stylesheet" type="text/css"> <!-- css for file upload -->
 
 <script type="text/javascript">
-Event.observe(window, 'load', function() { // load this piece of code when page is loaded
-    $$('.label span a').each(function(a) {
-        a.writeAttribute('href', 'http://www.google.com/#q=file.exe+silent+install');
-        a.writeAttribute('target', '_blank');
-        throw $break;
+jQuery(function() { // load this piece of code when page is loaded
+    jQuery('.label span a').each(function() {
+        jQuery(this).attr('href', 'http://www.google.com/#q=file.exe+silent+install');
+        jQuery(this).attr('target', '_blank');
+        return false; // break the loop
     });
     /*
      * Auto fill fields of form
@@ -222,10 +222,13 @@ Event.observe(window, 'load', function() { // load this piece of code when page 
         if (tempdir != undefined) {
             url += '&tempdir=' + tempdir;
         }
-        new Ajax.Request(url, {
-            onSuccess: function(response) {
-                $('version').value = response.headerJSON.version;
-                $('commandcmd').value = response.headerJSON.commandcmd;
+        
+        jQuery.ajax({
+            'url': url,
+            type: 'get',
+            success: function(data){
+                jQuery('#version').val(data.version);
+                jQuery('commandcmd').val(data.commandcmd);
             }
         });
     }
@@ -235,25 +238,31 @@ Event.observe(window, 'load', function() { // load this piece of code when page 
      * in package API tempdir
      */
     function refreshTempPapi() {
-        var packageMethodValue= $$('input:checked[type="radio"][name="package-method"]').pluck('value');
-        var box = $('p_api');
-        var selectedIndex = box.selectedIndex;
-        var selectedPapi = box.options[selectedIndex].value;
+        var packageMethodValue= jQuery('input:checked[type="radio"][name="package-method"]').val();
+        var selectedPapi = jQuery("#p_api").val();
         if (packageMethodValue == "package") {
-            new Ajax.Updater('package-temp-directory', '<?php echo urlStrRedirect("pkgs/pkgs/ajaxRefreshPackageTempDir") ?>&papi=' + selectedPapi, { 
+            /*new Ajax.Updater('package-temp-directory', '<?php echo urlStrRedirect("pkgs/pkgs/ajaxRefreshPackageTempDir") ?>&papi=' + selectedPapi, { 
                 method: "get", 
                     evalScripts: true,
                     onComplete: fillForm(selectedPapi)
+            });*/
+            
+            jQuery('#package-temp-directory').load('<?php echo urlStrRedirect("pkgs/pkgs/ajaxRefreshPackageTempDir") ?>&papi=' + selectedPapi,function(){
+                fillForm(selectedPapi);
             });
+            
         }
         else {
-            new Ajax.Updater('package-temp-directory', '<?php echo urlStrRedirect("pkgs/pkgs/ajaxDisplayUploadForm") ?>&papi=' + selectedPapi, { 
+            /*new Ajax.Updater('package-temp-directory', '<?php echo urlStrRedirect("pkgs/pkgs/ajaxDisplayUploadForm") ?>&papi=' + selectedPapi, { 
                 method: "get", 
                 evalScripts: true
-            });
+            });*/
+            
+            jQuery('#package-temp-directory').load('<?php echo urlStrRedirect("pkgs/pkgs/ajaxDisplayUploadForm") ?>&papi=' + selectedPapi);
+            
             // reset form fields
-            $('version').value = "";
-            $('commandcmd').value = "";
+            jQuery('#version').val("");
+            jQuery('#commandcmd').val("");
         }
         
         return selectedPapi;
@@ -263,59 +272,53 @@ Event.observe(window, 'load', function() { // load this piece of code when page 
     var selectedPapi = refreshTempPapi();
 
     // When change Package API, update available temp packages
-    $('p_api').observe('change', function() {
+    jQuery('#p_api').change(function() {
         selectedPapi = refreshTempPapi();
     });
 
-    document.observe('click', function(event) {
-        var elem = event.element();
-        
+    
+    jQuery('input[name="package-method"]').click( function() {
+  
         // display temp package or upload form
         // according to package-method chosen ("package" or "upload")
-        if (elem.match('input[name="package-method"]')) {
-            var selectedValue= $$('input:checked[type="radio"][name="package-method"]').pluck('value');
-            if (selectedValue == "package") {
-                selectedPapi = refreshTempPapi();
-                $('directory-label').update("<?php echo _T("Files directory", "pkgs") ?>");
-                $('directory-label').parentNode.parentNode.show();
-            }
-            else if (selectedValue == "empty"){
-                var jcArray = new Array('label', 'version', 'description', 'commandcmd');
-                for (var dummy in jcArray) {
-                    try {
-                        $(jcArray[dummy]).setStyle("background: #FFF;");
-                        $(jcArray[dummy]).enable();
-                    }
-                    catch (err){
-                        // this php file is prototype ajax request with evalscript
-                        // enabled.
-                    }
-                }
-                $('directory-label').parentNode.parentNode.hide();
-            }
-            else if (selectedValue == "upload"){
-                new Ajax.Updater('package-temp-directory', '<?php echo urlStrRedirect("pkgs/pkgs/ajaxDisplayUploadForm") ?>&papi=' + selectedPapi, { 
-                    method: "get", 
-                    evalScripts: true
-                });
-                // reset form fields
-                $('version').value = "";
-                $('commandcmd').value = "";
-                $('directory-label').update("<?php echo sprintf(_T("Files upload (<b><u title='%s'>%sM max</u></b>)", "pkgs"), _T("Change post_max_size and upload_max_filesize directives in php.ini file to increase upload size.", "pkgs"), get_php_max_upload_size()) ?>");
-                $('directory-label').parentNode.parentNode.show();
-            }
+        var selectedValue= jQuery('input:checked[type="radio"][name="package-method"]').val();
+        if (selectedValue == "package") {
+            selectedPapi = refreshTempPapi();
+            jQuery('#directory-label').html("<?php echo _T("Files directory", "pkgs") ?>");
+            jQuery('#directory-label').parent().parent().fadeIn();
         }
+        else if (selectedValue == "empty"){
+            var jcArray = new Array('label', 'version', 'description', 'commandcmd');
+            for (var dummy in jcArray) {
+                try {
+                    jQuery('#'+jcArray[dummy]).css("background","#FFF");
+                    jQuery('#'+jcArray[dummy]).removeAttr('disabled'); // TODO: Check if no error here
+                }
+                catch (err){
+                    // this php file is prototype ajax request with evalscript
+                    // enabled.
+                }
+            }
+            jQuery('#directory-label').parent().parent().fadeOut();
+        }
+        else if (selectedValue == "upload"){
+            jQuery('#package-temp-directory').load('<?php echo urlStrRedirect("pkgs/pkgs/ajaxDisplayUploadForm") ?>&papi=' + selectedPapi);
+            // reset form fields
+            jQuery('#version').val("");
+            jQuery('#commandcmd').val("");
+            jQuery('#directory-label').html("<?php echo sprintf(_T("Files upload (<b><u title='%s'>%sM max</u></b>)", "pkgs"), _T("Change post_max_size and upload_max_filesize directives in php.ini file to increase upload size.", "pkgs"), get_php_max_upload_size()) ?>");
+            jQuery('#directory-label').parent().parent().fadeIn();
+        }
+
     });
+    
 });
 <?php
     // if one package API, hide field
     if (count($list) < 2) {
         echo <<< EOT
-            $$('table tbody tr').each(function(item, index) {
-                if (index == 1) {
-                    item.hide();
-                }
-            });
+            // Hide package api field
+            jQuery('#p_api').parents('tr:first').hide();
 EOT;
     }
 ?>

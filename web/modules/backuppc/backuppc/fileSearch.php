@@ -243,11 +243,11 @@ jQuery(function(){
 
 <script type="text/javascript">
 function BrowseDir(dir){
-    new Ajax.Updater('<?php echo  $ajax->divid; ?>','<?php echo  $ajax->url; ?>folder='+dir+'<?php echo  $ajax->params ?>', { asynchronous:true, evalScripts: true});
+    jQuery('#<?php echo  $ajax->divid; ?>').load('<?php echo  $ajax->url; ?>folder='+dir+'<?php echo  $ajax->params ?>');
 }
 
 function RestoreFile(paramstr){
-    new Ajax.Updater('restoreDiv','<?php echo urlStrRedirect("backuppc/backuppc/ajaxRestoreFile"); ?>&'+paramstr, { asynchronous:true, evalScripts: true});
+    jQuery('#restoreDiv').load('<?php echo urlStrRedirect("backuppc/backuppc/ajaxRestoreFile"); ?>&'+paramstr);
     setTimeout("refresh();",4000);
 }
 

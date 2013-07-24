@@ -115,8 +115,6 @@ if (isset($_GET['host'],$_GET['sharename'],$_GET['backupnum'],$_GET['filename'],
         $params[] = $param;    
     }
 
-    //print_r($sizes);
-    
     $count = count($data);
     
     $n = new OptimizedListInfos($names,  _T('File','backuppc'));
