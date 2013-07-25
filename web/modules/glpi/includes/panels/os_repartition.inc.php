@@ -23,6 +23,7 @@ require_once("modules/pulse2/includes/xmlrpc.inc.php");
 require_once("modules/pulse2/includes/locations_xmlrpc.inc.php");
 include_once("modules/dashboard/includes/panel.class.php");
 require_once("modules/base/includes/computers.inc.php");
+require_once("modules/glpi/includes/xmlrpc.php");
 
 $options = array(
     "class" => "os_repartitionPanel",
@@ -37,15 +38,12 @@ class os_repartitionPanel extends Panel {
 
     function display_content() {
         
-        // Get All OS Repartition for the user locations
-        $locations = getUserLocations();
-
-        // Declare classes from higher priority to lower (note that Microsoft Windows is latest)
+        // Declare OS classes
         $osClasses = array(
-            'Other',
+            'other',
             'Microsoft Windows 7',
             'Microsoft Windows XP',
-            'Microsoft Windows'
+            'otherw'
         );
         
         $osLabels = array(
@@ -55,36 +53,15 @@ class os_repartitionPanel extends Panel {
             _T('Other Windows','glpi')
         );
 
-        $osCount = array(0,0,0,0);
-        $uuids = array();
-
-        foreach ($locations as $location){
-            
-            $result = getRestrictedComputersList(0,-1,array('location'=>$location['uuid']), False);
-            foreach ($result as $info){
-                $uuid = $info[1]['objectUUID'][0];
-                $os = str_replace('&nbsp;',' ',htmlentities($info[1]['os']));
-                if (in_array($uuid, $uuids)) continue;
-                $uuids[] = $uuid;
-                $gotOS = False;
-                for ($i = 1; $i< count($osClasses) ; $i++){
-                    if (stripos($os,$osClasses[$i]) !== False){
-                        $osCount[$i]++;
-                        $gotOS = True;
-                        break;
-                    }
-                }
-                // If no os got, add it to others
-                if (!$gotOS)
-                    $osCount[0]++;
-            }
-        }
-         
-        for ($i = 0; $i<count($osLabels); $i++)
+        $osCount = array();
+      
+        for ($i = 0; $i< count($osClasses) ; $i++){
+            $osCount[] = getMachineByOsLike($osClasses[$i],1);
             $osLabels[$i] .= ' ('.$osCount[$i].')';
-        
+        }
         
         $n = count($osCount);
+
         // Treating osCount for adapting to raphaeljs
         for ($i = 0; $i < $n ; $i++){
             if ($osCount[$i] == 0){
@@ -106,10 +83,10 @@ class os_repartitionPanel extends Panel {
         $urlRedirect = json_encode(urlStrRedirect("base/computers/createOSStaticGroup"));
         $createGroupText = json_encode(_T("Create a group", "glpi"));
         $links = json_encode(array(
-                "main.php?module=base&submod=computers&action=createOSStaticGroup&os=Other", // Static group links
+                "main.php?module=base&submod=computers&action=createOSStaticGroup&os=other", // Static group links
                 "main.php?module=base&submod=computers&action=createOSStaticGroup&os=Microsoft Windows 7",
                 "main.php?module=base&submod=computers&action=createOSStaticGroup&os=Microsoft Windows XP",
-                "main.php?module=base&submod=computers&action=createOSStaticGroup&os=Otherw"
+                "main.php?module=base&submod=computers&action=createOSStaticGroup&os=otherw"
             ));
 
         echo <<< SPACE
@@ -157,15 +134,14 @@ class os_repartitionPanel extends Panel {
         
         r.setSize(200, (radius * 1 + margin) + 50);
         // Legend
-        $('os-graphs').insert('<ul>');
+        jQuery('#os-graphs').append('<ul></ul>');
         for (var i = 0; i < legend.length; i++) {
-            $('os-graphs').insert(
+            jQuery('#os-graphs ul').append(
                 '<li style="color: ' + colors[i]  + '"><span style="color: #000">' + legend[i]
                 + '<a href="' + href[i] + '"><img title="' + createGroupText +
                 '" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a></span></li>'
             );
         }
-        $('os-graphs').insert('</ul>');
         </script>
 SPACE;
     }

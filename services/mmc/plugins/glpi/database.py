@@ -87,7 +87,7 @@ class Glpi(DyngroupDatabaseHelper):
             'getAllComments', 'getAllContactNums', 'getAllContacts', 'getAllEntities', 'getAllGroups', 'getAllHostnames', 'getAllLocations', \
             'getAllModels', 'getAllNetworks', 'getAllOs', 'getAllOsSps', 'getAllSoftwares', 'getAllVersion4Software', 'glpi_version_new', 'getMachineByMacAddress', \
             'getMachineUUIDByMacAddress', 'getMachineByComment', 'getMachineByContact', 'getMachineByContactNum', 'getMachineByEntity', 'getMachineByGroup', 'getMachineByHostname', \
-            'getMachineByLocation', 'getMachineByModel', 'getMachineByNetwork', 'getMachineByOs', 'getMachineByOsSp', 'getMachineBySoftware', 'getMachineBySoftwareAndVersion', \
+            'getMachineByLocation', 'getMachineByModel', 'getMachineByNetwork', 'getMachineByOs', 'getMachineByOsLike', 'getMachineByOsSp', 'getMachineBySoftware', 'getMachineBySoftwareAndVersion', \
             'glpi_chosen_version', 'getLocationsFromPathString', 'getLocationParentPath', 'getTotalComputerCount', 'isComputerNameAvailable', 'getMachineNumberByState', \
             'getMachineListByState', 'countLastMachineInventoryPart', 'delMachine', 'setGlpiEditableValue', 'hasKnownOS', 'getComputersOS', 'getAntivirusStatus', \
             'getMachineListByAntivirusState'

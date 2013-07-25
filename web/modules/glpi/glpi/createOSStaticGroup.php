@@ -34,36 +34,14 @@ $requestedOS = $_GET['os'];
 $groupname = sprintf (_T("Machine with %s installed at %s", "glpi"), $requestedOS, date("Y-m-d H:i:s"));;
 
 // Get user locations
-$locations = getUserLocations();
-$uuids = array();
-
 $groupmembers = array();
 
-foreach ($locations as $location){
-    $result = getRestrictedComputersList(0,-1,array('location'=>$location['uuid']), False);
-    foreach ($result as $info){
-            $os = str_replace('&nbsp;',' ',htmlentities($info[1]['os']));
-            $cn = $info[1]['cn'][0];
-            $uuid = $info[1]['objectUUID'][0];
-            //
-            if (in_array($uuid, $uuids)) continue;
-            $uuids[] = $uuid;
-            //
-            if ($requestedOS == 'Other' && stripos($os,'Microsoft Windows') === False)
-            {    
-                // Add OS to group members
-                $groupmembers["$uuid##$cn"] = array('hostname' => $cn, 'uuid' => $uuid);
-            }
-            elseif ($requestedOS == 'Otherw' && stripos($os,'Microsoft Windows') !== False)
-            {
-                // Add OS to group members
-                $groupmembers["$uuid##$cn"] = array('hostname' => $cn, 'uuid' => $uuid);
-            }
-            elseif (stripos($os,$requestedOS) !== False){
-                // Add OS to group members
-                $groupmembers["$uuid##$cn"] = array('hostname' => $cn, 'uuid' => $uuid);
-            }
-    }
+$result = getMachineByOsLike($requestedOS,0);
+
+foreach ($result as $entry){
+    $uuid = 'UUID'.$entry[0];
+    $cn = $entry[1];
+    $groupmembers["$uuid##$cn"] = array('hostname' => $cn, 'uuid' => $uuid);
 }
 
 $group = new Group();
