@@ -942,13 +942,13 @@ class SetupApp(object):
         if not url.endswith("/") :
             url = url + "/"
         if url.startswith("http") :
-            base_url = "%sglpi/" % url
-            computer_url = "%sglpi/front/computer.form.php?id=" % url
-            fusion_url = "%sglpi/plugins/fusioninventory/front/plugin_fusioninventory.communication.php" % url
+            base_url = "%s/" % url
+            computer_url = "%s/front/computer.form.php?id=" % url
+            fusion_url = "%s/plugins/fusioninventory/front/plugin_fusioninventory.communication.php" % url
         else :
-            base_url = "http://%sglpi/" % url
-            computer_url = "http://%sglpi/front/computer.form.php?id=" % url
-            fusion_url = "http://%sglpi/plugins/fusioninventory/front/plugin_fusioninventory.communication.php" % url
+            base_url = "http://%s/" % url
+            computer_url = "http://%s/front/computer.form.php?id=" % url
+            fusion_url = "http://%s/plugins/fusioninventory/front/plugin_fusioninventory.communication.php" % url
  
         glpi_conf.set("main", "glpi_computer_uri", computer_url)
         glpi_conf.set("authentication_glpi","baseurl", base_url)
