@@ -134,15 +134,16 @@ class os_repartitionPanel extends Panel {
         
         r.setSize(200, (radius * 1 + margin) + 50);
         // Legend
-        jQuery('#os-graphs').append('<ul></ul>');
+	$('os-graphs').insert('<ul>');
         for (var i = 0; i < legend.length; i++) {
-            jQuery('#os-graphs ul').append(
+            $('os-graphs').insert(
                 '<li style="color: ' + colors[i]  + '"><span style="color: #000">' + legend[i]
                 + '<a href="' + href[i] + '"><img title="' + createGroupText +
                 '" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a></span></li>'
             );
         }
-        </script>
+        $('os-graphs').insert('</ul>');
+	</script>
 SPACE;
     }
 }
