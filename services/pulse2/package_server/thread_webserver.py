@@ -28,6 +28,7 @@ import logging
 import twisted
 import re
 from twisted.web import resource, static
+from twisted.internet.error import CannotListenError
 
 from pulse2.package_server.server import P2PSite
 from pulse2.package_server.description import Description
@@ -114,10 +115,16 @@ def initialize(config):
             logger.info("Package Server initialized with imaging API")
             try:
                 PXEProxy(config, imaging.api)
+            except CannotListenError :
+                logger.error("PXE proxy: start failed")
+                logger.error("PXE Proxy: Adress already in use: old LRS imaging-server still installed and not yet stopped")
+                logger.error("PXE proxy: Please verify your configuration and restart the service")
+
             except Exception, e:
                 logger.exception("Imaging error: %s" % e)
                 logger.error("PXE imaging service initialization failed, exiting.")
-            logger.info("Package Server initialized with PXE imaging API") 
+            else :
+                logger.info("Package Server initialized with PXE imaging API") 
             
         except Exception, e:
             logger.exception("Imaging error: %s" % e)
