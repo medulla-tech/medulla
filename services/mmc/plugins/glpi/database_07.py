@@ -2144,7 +2144,6 @@ class Glpi07(DyngroupDatabaseHelper):
         """
         @return: all machines that have this os using LIKE
         """
-        # TODO use the ctx...
         session = create_session()
         if int(count) == 1:
             query = session.query(func.count(self.machine.c.id), Machine).select_from(self.machine.join(self.os))
