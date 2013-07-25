@@ -118,7 +118,7 @@ class UDPProxy(ProcessPacket, DatagramProtocol):
         # add the IP address of client as a next argument
         ip, port = client
         logging.getLogger().debug("PXE Proxy: packet received from: %s" % ip)
-        data += "IPADDR:%s\n" % ip
+        data += "\nIPADDR:%s:0" % ip
         self.process_data(data, client)
 
 

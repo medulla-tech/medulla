@@ -246,12 +246,19 @@ class PXEImagingApi (PXEMethodParser):
 
         @rtype: deferred
         """
-        inventory = inventory.replace("Mc", "MAC Address")
+        # XXX - A little hack to add networking info on GLPI mode
+        if not "Mc" in inventory :
+            inventory = inventory + "\nMAC Address:%s\n" % mac 
+        else :
+            inventory = inventory.replace("Mc", "MAC Address")
+        if not "IPADDR" in inventory :
+            inventory = inventory + "\nIP Address:%\n" % ip_address
+        else :
+            inventory = inventory.replace("IPADDR", "IP Address")
+
         inventory = [i.strip() for i in inventory.split("\n")]
         parsed_inventory = BootInventory(inventory).dump()
-        parsed_inventory["macaddr"] = mac
-        parsed_inventory["ipaddr"] = {"ip": ip_address, "port": 0}
-        
+
         self.api.logClientAction(mac, 
                                  LOG_LEVEL.DEBUG, 
                                  LOG_STATE.MENU, 
@@ -384,7 +391,6 @@ class PXEImagingApi (PXEMethodParser):
 
             # POST the inventory to the inventory server
             logging.getLogger().debug("PXE Proxy: inventory will be sent to url: %s" % url)
-
             agent = Agent(reactor)
             d = agent.request('POST',
                               url,  
