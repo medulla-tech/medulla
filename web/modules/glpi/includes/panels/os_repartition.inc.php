@@ -41,8 +41,8 @@ class os_repartitionPanel extends Panel {
         // Declare OS classes
         $osClasses = array(
             'other',
-            'Microsoft Windows 7',
-            'Microsoft Windows XP',
+            'Microsoft%Windows 7',
+            'Microsoft%Windows XP',
             'otherw'
         );
         

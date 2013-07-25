@@ -2257,6 +2257,7 @@ class Glpi08(DyngroupDatabaseHelper):
         """
         @return: all machines that have this os using LIKE
         """
+        # TODO use the ctx...
         session = create_session()
         if int(count) == 1:
             query = session.query(func.count(self.machine.c.id), Machine).select_from(self.machine.join(self.os))
@@ -2264,10 +2265,10 @@ class Glpi08(DyngroupDatabaseHelper):
             query = session.query(Machine).select_from(self.machine.join(self.os))
         #
         if osname == "other":
-            query = query.filter(not_(self.os.c.name.like('%Microsoft Windows%')))
+            query = query.filter(not_(self.os.c.name.like('%Microsoft%Windows%')))
         elif osname == "otherw":
-            query = query.filter(and_(not_(self.os.c.name.like('%Microsoft Windows 7%')),\
-                not_(self.os.c.name.like('%Microsoft Windows XP%')), self.os.c.name.like('%Microsoft Windows%')))
+            query = query.filter(and_(not_(self.os.c.name.like('%Microsoft%Windows 7%')),\
+                not_(self.os.c.name.like('%Microsoft%Windows%XP%')), self.os.c.name.like('%Microsoft%Windows%')))
         else:
             query = query.filter(self.os.c.name.like('%'+osname+'%'))
         query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
