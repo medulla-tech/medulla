@@ -823,9 +823,12 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 ###########################################################
     def getEntityUrl(self, location_uuid):
         q = self.getImagingServerByEntityUUID(location_uuid)
-        if q == None:
+        if not q:
             return None
-        return q.url
+        if isinstance(q, list) :
+            return q[0].url
+        else :
+            return q.url
 
     def __ImagingLogs4Location(self, session, location_uuid, filter):
         n = session.query(ImagingLog).add_entity(Target).select_from(self.imaging_log.join(self.target).join(self.entity)).filter(self.entity.c.uuid == location_uuid)
