@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-01 01:01+0200\n"
+"POT-Creation-Date: 2013-07-29 01:00+0200\n"
 "PO-Revision-Date: 2013-03-21 09:54+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Spanish (Spain) (http://transifex.mandriva.com/projects/p/"
@@ -122,7 +122,7 @@ msgstr ""
 msgid "Add service to default boot menu"
 msgstr ""
 
-#: modules/imaging/imaging/addservice.php:106
+#: modules/imaging/imaging/addservice.php:107
 #, php-format
 msgid "Add the boot service <b>%s</b> to <b>%s</b>"
 msgstr ""
@@ -256,7 +256,7 @@ msgid "Boot menu"
 msgstr ""
 
 #: modules/imaging/imaging/addimage.php:63
-#: modules/imaging/imaging/addservice.php:63
+#: modules/imaging/imaging/addservice.php:64
 #: modules/imaging/imaging/bootmenu_remove.php:73
 #: modules/imaging/imaging/showtarget.php:79
 #: modules/imaging/manage/service_show_used.php:72
@@ -552,7 +552,7 @@ msgid "Display a groups of computers"
 msgstr ""
 
 #: modules/imaging/imaging/addimage.php:136
-#: modules/imaging/imaging/addservice.php:120
+#: modules/imaging/imaging/addservice.php:121
 #: modules/imaging/imaging/bootmenu.php:167
 #: modules/imaging/imaging/bootmenu.php:352
 #: modules/imaging/manage/ajaxBootmenu.php:100
@@ -563,7 +563,7 @@ msgid "Displayed"
 msgstr ""
 
 #: modules/imaging/imaging/addimage.php:140
-#: modules/imaging/imaging/addservice.php:124
+#: modules/imaging/imaging/addservice.php:125
 #: modules/imaging/imaging/bootmenu.php:177
 #: modules/imaging/imaging/bootmenu.php:355
 #: modules/imaging/manage/ajaxBootmenu.php:102
@@ -1411,7 +1411,7 @@ msgid "Select this hard disk"
 msgstr ""
 
 #: modules/imaging/imaging/addimage.php:134
-#: modules/imaging/imaging/addservice.php:118
+#: modules/imaging/imaging/addservice.php:119
 #: modules/imaging/imaging/bootmenu.php:162
 #: modules/imaging/manage/bootmenu_edit.php:81
 #: modules/imaging/manage/master_add.php:103
@@ -1420,7 +1420,7 @@ msgid "Selected by default"
 msgstr ""
 
 #: modules/imaging/imaging/addimage.php:138
-#: modules/imaging/imaging/addservice.php:122
+#: modules/imaging/imaging/addservice.php:123
 #: modules/imaging/imaging/bootmenu.php:172
 #: modules/imaging/manage/bootmenu_edit.php:91
 #: modules/imaging/manage/master_add.php:107
