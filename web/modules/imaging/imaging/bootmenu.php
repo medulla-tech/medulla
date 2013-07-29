@@ -254,7 +254,7 @@ function item_list() {
     $upAction = new ActionItem(_T("Move Up"), $type."imgtabs", "up", "item", $module, $submod, $type."tabbootmenu", "up");
     $downAction = new ActionItem(_T("Move down"), $type."imgtabs", "down", "item", $module, $submod, $type."tabbootmenu", "down");
     $editAction = new ActionItem(_T("Edit"), $type."imgtabs", "edit", "item", $module, $submod, $type."tabbootmenu", "edit");
-    $deleteAction = new ActionPopupItem(_T("Delete"), "bootmenu_remove", "delete", "item", $module, $submod, $type."tabbootmenu", 300, "delete");
+    $deleteAction = new ActionPopupItem(_T("Delete"), $type."bootmenu_remove", "delete", "item", $module, $submod, $type."tabbootmenu", 300, "delete");
 
     $emptyAction = new EmptyActionItem();
     $actionUp = array();

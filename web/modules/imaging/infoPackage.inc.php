@@ -221,6 +221,10 @@ if (in_array("dyngroup", $_SESSION["modulesList"])) {
         $tab = new Tab("grouptabconfigure", _T("Menu configuration", "imaging"));
         $page->addTab($tab);
         $submod->addPage($page);
+        $page = new Page("groupbootmenu_remove",_T("Remove from boot menu","imaging"));
+        $page->setFile("modules/imaging/imaging/bootmenu_remove.php");
+        $page->setOptions(array("visible" => False, "noHeader" => True));
+        $submod->addPage($page);
         $page = new Page("display",_T("Display a groups of computers","dyngroup"));
         $page->setFile("modules/dyngroup/dyngroup/display.php");
         $page->setOptions(array("visible"=>False));
