@@ -126,7 +126,9 @@ class MscDatabase(msc.MscDatabase):
         macs = []
         for i in range(len(computer[1]['ipHostNumber'])):
             if computer[1]['ipHostNumber'][i] in ipAddresses:
-                macs.append(macAddresses[i])
+                # MAC address can be non-existent (for non-physical interfaces like VPN)
+                if macAddresses[i]:
+                    macs.append(macAddresses[i])
         macAddresses = macs
         self.logger.debug("Computer known IP addresses after filter: " + str(ipAddresses))
 
