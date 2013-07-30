@@ -131,6 +131,17 @@ class Imaging (Singleton):
             PackageServerConfig().mmc_agent['cacert'],
             PackageServerConfig().mmc_agent['localcert'])
 
+    def getClientShortname(self, mac):
+        """
+        Querying cache to get client shortname
+
+        @param mac: client's MAC address
+        @return: client shortname if exists
+        @rtype: str or bool
+        """
+        res = self.myUUIDCache.getByMac(mac)
+        return res and res['shortname']
+
     def getServerDetails(self):
         # FIXME: I don't know if it is needed
         pass
@@ -154,9 +165,9 @@ class Imaging (Singleton):
         def _getmacCB(result):
             if result and type(result) == dict :
                 if message == "'booted'":
-                    res = self.myUUIDCache.getByMac(mac)
-                    if res:
-                        self.logger.info('Imaging: Client %s (%s) has booted' % (res['shortname'], mac))
+                    shortname = self.getClientShortname(mac)
+                    if shortname:
+                        self.logger.info('Imaging: Client %s (%s) has booted' % (shortname, mac))
                     else:
                         self.logger.info('Imaging: Unknown client (%s) has booted' % (mac))
                 client = self._getXMLRPCClient()
@@ -167,7 +178,7 @@ class Imaging (Singleton):
                 return d
 
             if message == "'booted'":
-                self.logger.warn('Imaging: Unknown client (%s) has booted' % (mac))
+                self.logger.info('Imaging: Unknown client (%s) has booted' % (mac))
             return False
 
         if not isMACAddress(mac):
@@ -258,14 +269,14 @@ class Imaging (Singleton):
 
         def onSuccess(result):
             if type(result) != list and len(result) != 2:
-                self.logger.warn('Imaging: Couldn\'t register client %s (%s) : %s' % (computerName, macAddress, str(result)))
+                self.logger.error('Imaging: Registering client %s (%s) failed: %s' % (computerName, macAddress, str(result)))
                 ret = False
             elif not result[0]:
-                self.logger.warn('Imaging: Couldn\'t register client %s (%s) : %s' % (computerName, macAddress, result[1]))
+                self.logger.error('Imaging: Registering client %s (%s) failed: %s' % (computerName, macAddress, result[1]))
                 ret = False
             else:
                 uuid = result[1]
-                self.logger.info('Imaging: Register client %s (%s) as %s' % (computerName, macAddress, uuid))
+                self.logger.info('Imaging: Client %s (%s) registered as %s' % (computerName, macAddress, uuid))
                 self.myUUIDCache.set(uuid, macAddress, hostname, domain, entity)
                 ret = self.computerPrepareImagingDirectory(uuid, {'mac': macAddress, 'hostname': hostname})
             return ret
@@ -286,7 +297,7 @@ class Imaging (Singleton):
 
         if not imagingData:
             # Registration is coming from the imaging server
-            self.logger.info('Imaging: Starting registration for %s as %s' % (macAddress, computerName))
+            self.logger.info('Imaging: Registering %s as %s' % (macAddress, computerName))
             client = self._getXMLRPCClient()
             func = 'imaging.computerRegister'
             args = (self.config.imaging_api['uuid'], hostname, domain,
@@ -350,15 +361,16 @@ class Imaging (Singleton):
         """
         target_folder = os.path.join(PackageServerConfig().imaging_api['base_folder'], PackageServerConfig().imaging_api['computers_folder'], uuid)
         if os.path.isdir(target_folder):
-            self.logger.warn('Imaging: folder %s for client %s : It already exists !' % (target_folder, uuid))
+            self.logger.debug('Imaging: folder %s for client %s : It already exists !' % (target_folder, uuid))
             return True
         if os.path.exists(target_folder):
             self.logger.warn('Imaging: folder %s for client %s : It already exists, but is not a folder !' % (target_folder, uuid))
             return False
         try:
             os.mkdir(target_folder)
+            self.logger.debug('Imaging: folder %s for client %s was created' % (target_folder, uuid))
         except Exception, e:
-            self.logger.warn('Imaging: I was not able to create folder %s for client %s : %s' % (target_folder, uuid, e))
+            self.logger.error('Imaging: I was not able to create folder %s for client %s : %s' % (target_folder, uuid, e))
             return False
         return True
 
@@ -399,23 +411,23 @@ class Imaging (Singleton):
         @rtype: int
         """
         def _onSuccess(result):
-            res = self.myUUIDCache.getByMac(MACAddress)
+            shortname = self.getClientShortname(MACAddress)
             if result and type(result) == list and len(result) == 2:
                 if result[0] == True :
-                    if res:
-                        self.logger.debug('Imaging: Imaging database disks and partitions information successfully updated for client %s (%s)' % (res['shortname'], MACAddress))
+                    if shortname:
+                        self.logger.debug('Imaging: Imaging database disks and partitions information successfully updated for client %s (%s)' % (shortname, MACAddress))
                     else:
                         self.logger.debug('Imaging: Imaging database disks and partitions information successfully updated for unknown client (%s)' % (MACAddress))
                     return True
                 else:
-                    if res:
-                        self.logger.error('Imaging: Failed to update disks and partitions information for client %s (%s): %s' % (res['shortname'], MACAddress, result[1]))
+                    if shortname:
+                        self.logger.error('Imaging: Failed to update disks and partitions information for client %s (%s): %s' % (shortname, MACAddress, result[1]))
                     else:
                         self.logger.error('Imaging: Failed to update disks and partitions information for unknown client (%s): %s' % (MACAddress, result[1]))
                     return False
             else:
-                if res:
-                    self.logger.error('Imaging: Failed to update disks and partitions information for client %s (%s): %s' % (res['shortname'], MACAddress, result))
+                if shortname:
+                    self.logger.error('Imaging: Failed to update disks and partitions information for client %s (%s): %s' % (shortname, MACAddress, result))
                 else:
                     self.logger.error('Imaging: Failed to update disks and partitions information for unknown client (%s): %s' % (MACAddress, result))
                 return False
@@ -457,13 +469,13 @@ class Imaging (Singleton):
             try:
                 if result[0]:
                     self.myUUIDCache.set(result[1]['uuid'], MACAddress, result[1]['shortname'], result[1]['fqdn'], result[1]['entity'])
-                    self.logger.info('Imaging: Updating cache for %s' % (MACAddress))
+                    self.logger.debug('Imaging: Updating cache for %s' % (MACAddress))
                     return result[1]
                 else:
-                    self.logger.warning("Imaging: Unable to resolve %s neither from cache nor from database (unknown computer?)" % (MACAddress))
+                    self.logger.debug("Imaging: Unable to resolve %s neither from cache nor from database (unknown computer?)" % (MACAddress))
                     return False
             except Exception, e:
-                self.logger.warning('Imaging: While processing result %s for %s : %s' % (result, MACAddress, e))
+                self.logger.error('Imaging: While processing result %s for %s : %s' % (result, MACAddress, e))
 
         if not isMACAddress(MACAddress):
             raise TypeError('Bad MAC address: %s' % MACAddress)

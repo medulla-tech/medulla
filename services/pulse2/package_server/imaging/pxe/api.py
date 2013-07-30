@@ -340,7 +340,7 @@ class PXEImagingApi (PXEMethodParser):
                                  "hardware inventory received")
 
         if not isinstance(computer, dict) :
-            logging.getLogger().info("PXE Proxy: computer not resolved, inventory sending don't be processed")
+            logging.getLogger().debug("PXE Proxy: Unknown client, ignore received inventory")
             return
          
         inventory = BootInventory(inventory)
