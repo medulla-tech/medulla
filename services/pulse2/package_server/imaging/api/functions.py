@@ -153,6 +153,12 @@ class Imaging (Singleton):
 
         def _getmacCB(result):
             if result and type(result) == dict :
+                if message == "'booted'":
+                    res = self.myUUIDCache.getByMac(mac)
+                    if res:
+                        self.logger.info('Imaging: Client %s (%s) has booted' % (res['shortname'], mac))
+                    else:
+                        self.logger.info('Imaging: Unknown client (%s) has booted' % (mac))
                 client = self._getXMLRPCClient()
                 func = 'imaging.logClientAction'
                 args = (self.config.imaging_api['uuid'], result['uuid'], level, phase, message)
@@ -160,7 +166,8 @@ class Imaging (Singleton):
                 d.addCallbacks(lambda x : True, RPCReplay().onError, errbackArgs = (func, args, 0))
                 return d
 
-            self.logger.warn('Imaging: Failed resolving UUID for client %s : %s' % (mac, result))
+            if message == "'booted'":
+                self.logger.warn('Imaging: Unknown client (%s) has booted' % (mac))
             return False
 
         if not isMACAddress(mac):
@@ -185,7 +192,6 @@ class Imaging (Singleton):
             if result and type(result) == dict :
                 # TODO : call menu refresh here
                 return True
-            self.logger.warn('Imaging: Failed resolving UUID for client %s : %s' % (mac, result))
             return False
 
         if not isMACAddress(mac):
@@ -393,15 +399,25 @@ class Imaging (Singleton):
         @rtype: int
         """
         def _onSuccess(result):
+            res = self.myUUIDCache.getByMac(MACAddress)
             if result and type(result) == list and len(result) == 2:
                 if result[0] == True :
-                    self.logger.info('Imaging: injected inventory for client %s' % (MACAddress))
+                    if res:
+                        self.logger.debug('Imaging: Imaging database disks and partitions information successfully updated for client %s (%s)' % (res['shortname'], MACAddress))
+                    else:
+                        self.logger.debug('Imaging: Imaging database disks and partitions information successfully updated for unknown client (%s)' % (MACAddress))
                     return True
                 else:
-                    self.logger.warn('Imaging: failed injecting inventory for client %s : %s' % (MACAddress, result[1]))
+                    if res:
+                        self.logger.error('Imaging: Failed to update disks and partitions information for client %s (%s): %s' % (res['shortname'], MACAddress, result[1]))
+                    else:
+                        self.logger.error('Imaging: Failed to update disks and partitions information for unknown client (%s): %s' % (MACAddress, result[1]))
                     return False
             else:
-                self.logger.warn('Imaging: failed injecting inventory for client %s : %s' % (MACAddress, result))
+                if res:
+                    self.logger.error('Imaging: Failed to update disks and partitions information for client %s (%s): %s' % (res['shortname'], MACAddress, result))
+                else:
+                    self.logger.error('Imaging: Failed to update disks and partitions information for unknown client (%s): %s' % (MACAddress, result))
                 return False
 
         def _getmacCB(result):
@@ -412,12 +428,11 @@ class Imaging (Singleton):
                 d = client.callRemote(func, *args)
                 d.addCallbacks(_onSuccess, client.onError, errbackArgs=(func, args, 0))
                 return d
-            self.logger.warn('Imaging: Failed resolving UUID for client %s : %s' % (MACAddress, result))
             return False
 
         if not isMACAddress(MACAddress):
             raise TypeError
-        self.logger.debug('Imaging: Starting inventory processing for %s' % (MACAddress))
+        self.logger.debug('Imaging: New PXE inventory received from client %s' % (MACAddress))
         d = self.getComputerByMac(MACAddress)
         d.addCallback(_getmacCB)
         return d
@@ -445,7 +460,7 @@ class Imaging (Singleton):
                     self.logger.info('Imaging: Updating cache for %s' % (MACAddress))
                     return result[1]
                 else:
-                    self.logger.warning("Imaging: Empty result for MAC: %s" % (MACAddress))
+                    self.logger.warning("Imaging: Unable to resolve %s neither from cache nor from database (unknown computer?)" % (MACAddress))
                     return False
             except Exception, e:
                 self.logger.warning('Imaging: While processing result %s for %s : %s' % (result, MACAddress, e))
@@ -458,7 +473,7 @@ class Imaging (Singleton):
         if res:  # fetched from cache
             return maybeDeferred(lambda x: x, res)
         else:  # cache fetching failed, try to obtain the real value
-            self.logger.info('Imaging: Getting computer UUID for %s' % (MACAddress))
+            self.logger.debug('Imaging: Unable to resolve %s from cache, querying database' % (MACAddress))
             client = self._getXMLRPCClient()
             func = 'imaging.getComputerByMac'
             args = [MACAddress]

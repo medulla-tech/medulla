@@ -59,12 +59,11 @@ class ThreadPackageDetect(ThreadPackageHelper):
                 self.logger.debug("###############= ThreadPackageDetect already running")
                 return
             self.working = True
-            logging.getLogger().debug("\n")
             logging.getLogger().debug("###############> ThreadPackageDetect is running")
             if self.config.package_detect_tmp_activate:
                 Common().moveCorrectPackages()
             Common().detectNewPackages()
-            logging.getLogger().debug("###############< ThreadPackageDetect end\n")
+            logging.getLogger().debug("###############< ThreadPackageDetect end")
         except Exception, e:
             logging.getLogger().error('an Exception happened when trying to detect packages:' + str(e))
         self.working = False

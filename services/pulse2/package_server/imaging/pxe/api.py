@@ -30,7 +30,7 @@ are optimized to direct communication by variables.
 import logging
 
 from twisted.internet import reactor, task
-from twisted.internet.defer import succeed
+from twisted.internet.defer import succeed, Deferred
 from twisted.web.client import Agent
 from twisted.web.http_headers import Headers
 from twisted.web.iweb import IBodyProducer
@@ -275,7 +275,7 @@ class PXEImagingApi (PXEMethodParser):
 
     def _injectedInventoryError(self, failure):
         """ Inject inventory failed """
-        logging.getLogger().warn("PXE Proxy: inject inventory failed: %s" % str(failure))
+        logging.getLogger().error("PXE Proxy: something were wrong while injecting inventory: %s" % str(failure))
 
     def _injectedInventoryOk (self, result, mac, inventory):
         """ 
@@ -378,6 +378,7 @@ class PXEImagingApi (PXEMethodParser):
         @type hostname: str
         """
 
+        url = "http://"
         try:
 
             if self.config.imaging_api["inventory_enablessl"]:
@@ -386,14 +387,14 @@ class PXEImagingApi (PXEMethodParser):
                 protocol = "http"
 
             url = "%s://%s:%d/" % (protocol,
-                                   self.config.imaging_api["inventory_host"], 
+                                   self.config.imaging_api["inventory_host"],
                                    self.config.imaging_api["inventory_port"])
 
             # POST the inventory to the inventory server
-            logging.getLogger().debug("PXE Proxy: inventory will be sent to url: %s" % url)
+            logging.getLogger().debug("PXE Proxy: PXE inventory forwarded to inventory server at %s" % url)
             agent = Agent(reactor)
             d = agent.request('POST',
-                              url,  
+                              url,
                               Headers({
                                 'Content-Type': ['application/x-www-form-urlencoded'],
                                 'Content-Length': [str(len(inventory))],
@@ -404,14 +405,16 @@ class PXEImagingApi (PXEMethodParser):
             @d.addCallback
             def _cb (result):
                 if result :
-                    logging.getLogger().info("PXE Proxy: inventory of %s sent successfully" % hostname)
+                    logging.getLogger().info("PXE Proxy: PXE inventory from client %s successfully injected" % hostname)
                 return result
 
             return d
 
         except Exception, e:
-            logging.getLogger().warn("PXE Proxy: Inventory send failed: %s" % str(e))
- 
+            logging.getLogger().error("PXE Proxy: Unable to forward PXE inventory to inventory server at %s: %s" % (url, str(e)))
+            # This method must return a Deferred
+            return Deferred()
+
 
     # ----------------------- backup -------------------------------
 
