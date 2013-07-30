@@ -614,7 +614,8 @@ class Imaging (Singleton):
                 self.logger.error('Imaging: Couldn\'t register on the MMC agent the image with UUID %s : %s' % (image_uuid, result[1]))
                 ret = False
             else:
-                self.logger.info('Imaging: Successfully registered image %s' % image_uuid)
+                image_path = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['masters_folder'], image_uuid)
+                self.logger.debug('Imaging: Successfully registered disk image to %s' % image_path)
                 ret = image_uuid
             return ret
 
@@ -644,7 +645,7 @@ class Imaging (Singleton):
                 d.addCallbacks(_onSuccess, RPCReplay().onError, errbackArgs = (func, args, False))
                 return image_uuid
 
-        self.logger.debug('Imaging: Client %s want to create an image' % (mac))
+        self.logger.info('Imaging: Client %s is creating a disk image' % (mac))
         if not isMACAddress(mac):
             raise TypeError
 
@@ -739,7 +740,8 @@ class Imaging (Singleton):
                 self.logger.error('Imaging: Couldn\'t update on the MMC agent the image with UUID %s : %s' % (imageUUID, result[1]))
                 ret = False
             else:
-                self.logger.info('Imaging: Successfully updated image %s' % imageUUID)
+                image_path = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['masters_folder'], imageUUID)
+                self.logger.debug('Imaging: Successfully updated disk image %s' % image_path)
                 ret = True
             return ret
 
