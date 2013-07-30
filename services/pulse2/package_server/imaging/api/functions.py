@@ -162,14 +162,38 @@ class Imaging (Singleton):
         @rtype: int
         """
 
+        def _infoLogs(message):
+            """
+            Display Some info logs:
+                * When a machine is booting
+                * When a restoration is done
+            """
+            shortname = self.getClientShortname(mac)
+            if 'booted' in message:
+                if shortname:
+                    self.logger.info('Imaging: Client %s (%s) has booted' % (shortname, mac))
+                else:
+                    self.logger.info('Imaging: Unknown client (%s) has booted' % (mac))
+            elif 'restoration started' in message:
+                # image UUID is in the 36 last characters of message variable
+                # message[-37:-1] to get image UUID
+                if shortname:
+                    self.logger.info('Imaging: Client %s (%s) is restoring a disk image (%s)' % (shortname, mac, message[-37:-1]))
+                else:
+                    self.logger.info('Imaging: Unknown client (%s) is restoring a disk image (%s)' % (mac, message[-37:-1]))
+            elif 'restoration finished' in message:
+                # image UUID is in the 36 last characters of message variable
+                # message[-37:-1] to get image UUID
+                if shortname:
+                    self.logger.info('Imaging: Disk image (%s) restored successfully to client %s (%s)' % (message[-37:-1], shortname, mac))
+                else:
+                    self.logger.info('Imaging: Disk image (%s) restored successfully to unknown client (%s)' % (message[-37:-1], mac))
+
         def _getmacCB(result):
+            displayed_statuses = ['booted', 'restoration started', 'restoration finished']
             if result and type(result) == dict :
-                if message == "'booted'":
-                    shortname = self.getClientShortname(mac)
-                    if shortname:
-                        self.logger.info('Imaging: Client %s (%s) has booted' % (shortname, mac))
-                    else:
-                        self.logger.info('Imaging: Unknown client (%s) has booted' % (mac))
+                if any(s in message for s in displayed_statuses):
+                    _infoLogs(message) # Display some info logs
                 client = self._getXMLRPCClient()
                 func = 'imaging.logClientAction'
                 args = (self.config.imaging_api['uuid'], result['uuid'], level, phase, message)
@@ -177,8 +201,8 @@ class Imaging (Singleton):
                 d.addCallbacks(lambda x : True, RPCReplay().onError, errbackArgs = (func, args, 0))
                 return d
 
-            if message == "'booted'":
-                self.logger.info('Imaging: Unknown client (%s) has booted' % (mac))
+            if any(s in message for s in displayed_statuses):
+                _infoLogs(message) # Display some info logs
             return False
 
         if not isMACAddress(mac):
@@ -741,7 +765,11 @@ class Imaging (Singleton):
                 ret = False
             else:
                 image_path = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['masters_folder'], imageUUID)
-                self.logger.debug('Imaging: Successfully updated disk image %s' % image_path)
+                shortname = self.getClientShortname(computerMACAddress)
+                if shortname:
+                    self.logger.info('Imaging: Disk image of client %s (%s) created successfully into %s' % (shortname, computerMACAddress, image_path))
+                else:
+                    self.logger.info('Imaging: Disk image of unknown client (%s) created successfully into %s' % (computerMACAddress, image_path))
                 ret = True
             return ret
 
