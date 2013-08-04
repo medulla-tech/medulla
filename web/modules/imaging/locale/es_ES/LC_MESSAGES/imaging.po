@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-29 01:00+0200\n"
+"POT-Creation-Date: 2013-08-05 01:00+0200\n"
 "PO-Revision-Date: 2013-03-21 09:54+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Spanish (Spain) (http://transifex.mandriva.com/projects/p/"
@@ -90,11 +90,11 @@ msgstr ""
 msgid "Add <b>%s</b> to available Boot Services ?"
 msgstr ""
 
-#: modules/imaging/infoPackage.inc.php:360
+#: modules/imaging/infoPackage.inc.php:364
 msgid "Add a image to a target"
 msgstr ""
 
-#: modules/imaging/infoPackage.inc.php:347
+#: modules/imaging/infoPackage.inc.php:351
 msgid "Add a service to a target"
 msgstr ""
 
@@ -251,7 +251,7 @@ msgstr ""
 
 #: modules/imaging/imaging/tabs.php:164 modules/imaging/imaging/tabs.php:241
 #: modules/imaging/infoPackage.inc.php:213
-#: modules/imaging/infoPackage.inc.php:284
+#: modules/imaging/infoPackage.inc.php:288
 msgid "Boot menu"
 msgstr ""
 
@@ -317,7 +317,7 @@ msgstr ""
 
 #: modules/imaging/imaging/tabs.php:168 modules/imaging/imaging/tabs.php:245
 #: modules/imaging/infoPackage.inc.php:217
-#: modules/imaging/infoPackage.inc.php:288
+#: modules/imaging/infoPackage.inc.php:292
 msgid "Boot services"
 msgstr ""
 
@@ -380,7 +380,7 @@ msgstr ""
 msgid "Computer:"
 msgstr ""
 
-#: modules/imaging/infoPackage.inc.php:232
+#: modules/imaging/infoPackage.inc.php:236
 msgid "Computers Group Editor"
 msgstr ""
 
@@ -441,7 +441,7 @@ msgstr ""
 msgid "Create iso from master"
 msgstr ""
 
-#: modules/imaging/infoPackage.inc.php:372
+#: modules/imaging/infoPackage.inc.php:376
 msgid "Create iso image"
 msgstr ""
 
@@ -501,12 +501,12 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: modules/imaging/infoPackage.inc.php:228
+#: modules/imaging/infoPackage.inc.php:232
 msgid "Delete a group of computers"
 msgstr ""
 
 #: modules/imaging/imaging/images_delete.php:56
-#: modules/imaging/infoPackage.inc.php:368
+#: modules/imaging/infoPackage.inc.php:372
 msgid "Delete image"
 msgstr ""
 
@@ -547,7 +547,7 @@ msgstr ""
 msgid "Diskless Linux command line access"
 msgstr ""
 
-#: modules/imaging/infoPackage.inc.php:224
+#: modules/imaging/infoPackage.inc.php:228
 msgid "Display a groups of computers"
 msgstr ""
 
@@ -621,11 +621,11 @@ msgstr ""
 msgid "Edit master : "
 msgstr ""
 
-#: modules/imaging/infoPackage.inc.php:364
+#: modules/imaging/infoPackage.inc.php:368
 msgid "Edit parameters of a image on a target"
 msgstr ""
 
-#: modules/imaging/infoPackage.inc.php:351
+#: modules/imaging/infoPackage.inc.php:355
 msgid "Edit parameters of a service on a target"
 msgstr ""
 
@@ -880,7 +880,7 @@ msgstr ""
 
 #: modules/imaging/imaging/tabs.php:166
 #: modules/imaging/infoPackage.inc.php:215
-#: modules/imaging/infoPackage.inc.php:286
+#: modules/imaging/infoPackage.inc.php:290
 msgid "Images and Masters"
 msgstr ""
 
@@ -893,7 +893,7 @@ msgid "Imaging Configuration"
 msgstr ""
 
 #: modules/imaging/infoPackage.inc.php:219
-#: modules/imaging/infoPackage.inc.php:290
+#: modules/imaging/infoPackage.inc.php:294
 msgid "Imaging Log"
 msgstr ""
 
@@ -915,7 +915,7 @@ msgstr ""
 msgid "Imaging log"
 msgstr ""
 
-#: modules/imaging/infoPackage.inc.php:281
+#: modules/imaging/infoPackage.inc.php:285
 msgid "Imaging on computer"
 msgstr ""
 
@@ -1022,19 +1022,19 @@ msgstr ""
 msgid "Load on server"
 msgstr ""
 
-#: modules/imaging/infoPackage.inc.php:249
+#: modules/imaging/infoPackage.inc.php:253
 msgid "MSC bundle tab for a group"
 msgstr ""
 
-#: modules/imaging/infoPackage.inc.php:255
+#: modules/imaging/infoPackage.inc.php:259
 msgid "MSC history tab for a group"
 msgstr ""
 
-#: modules/imaging/infoPackage.inc.php:246
+#: modules/imaging/infoPackage.inc.php:250
 msgid "MSC launch tab for a group"
 msgstr ""
 
-#: modules/imaging/infoPackage.inc.php:252
+#: modules/imaging/infoPackage.inc.php:256
 msgid "MSC logs tab for a group"
 msgstr ""
 
@@ -1077,7 +1077,7 @@ msgstr ""
 
 #: modules/imaging/imaging/tabs.php:172 modules/imaging/imaging/tabs.php:249
 #: modules/imaging/infoPackage.inc.php:221
-#: modules/imaging/infoPackage.inc.php:292
+#: modules/imaging/infoPackage.inc.php:296
 msgid "Menu configuration"
 msgstr ""
 
@@ -1246,7 +1246,7 @@ msgstr ""
 msgid "Redirect to Boot Services page"
 msgstr ""
 
-#: modules/imaging/infoPackage.inc.php:276
+#: modules/imaging/infoPackage.inc.php:280
 msgid "Register a computer in the imaging module"
 msgstr ""
 
@@ -1278,13 +1278,14 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: modules/imaging/infoPackage.inc.php:355
+#: modules/imaging/infoPackage.inc.php:359
 msgid "Remove a service from a target"
 msgstr ""
 
 #: modules/imaging/imaging/ajaxImages.php:71
 #: modules/imaging/imaging/bootmenu_remove.php:91
-#: modules/imaging/infoPackage.inc.php:297
+#: modules/imaging/infoPackage.inc.php:224
+#: modules/imaging/infoPackage.inc.php:301
 #: modules/imaging/manage/ajaxMasterLevel2.php:56
 msgid "Remove from boot menu"
 msgstr ""
@@ -1397,7 +1398,7 @@ msgstr ""
 msgid "Script value"
 msgstr ""
 
-#: modules/imaging/infoPackage.inc.php:242
+#: modules/imaging/infoPackage.inc.php:246
 msgid "Secure control on a group of computers"
 msgstr ""
 
@@ -1452,7 +1453,7 @@ msgstr ""
 msgid "Service <strong>%s</strong> successfully removed"
 msgstr ""
 
-#: modules/imaging/infoPackage.inc.php:236
+#: modules/imaging/infoPackage.inc.php:240
 msgid "Share a group of computers"
 msgstr ""
 
@@ -1461,11 +1462,11 @@ msgstr ""
 msgid "Show all targets that use that image in their boot menu"
 msgstr ""
 
-#: modules/imaging/infoPackage.inc.php:305
+#: modules/imaging/infoPackage.inc.php:309
 msgid "Show sync status"
 msgstr ""
 
-#: modules/imaging/infoPackage.inc.php:301
+#: modules/imaging/infoPackage.inc.php:305
 msgid "Show target that use that image"
 msgstr ""
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-29 01:00+0200\n"
+"POT-Creation-Date: 2013-08-05 01:00+0200\n"
 "PO-Revision-Date: 2013-03-21 09:54+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/"
@@ -95,11 +95,11 @@ msgstr "<strong>%s</strong> сценарий не был удален"
 msgid "Add <b>%s</b> to available Boot Services ?"
 msgstr ""
 
-#: modules/imaging/infoPackage.inc.php:360
+#: modules/imaging/infoPackage.inc.php:364
 msgid "Add a image to a target"
 msgstr "Добавить снимок пользователю"
 
-#: modules/imaging/infoPackage.inc.php:347
+#: modules/imaging/infoPackage.inc.php:351
 msgid "Add a service to a target"
 msgstr "Добавить службу к пользователю"
 
@@ -256,7 +256,7 @@ msgstr ""
 
 #: modules/imaging/imaging/tabs.php:164 modules/imaging/imaging/tabs.php:241
 #: modules/imaging/infoPackage.inc.php:213
-#: modules/imaging/infoPackage.inc.php:284
+#: modules/imaging/infoPackage.inc.php:288
 msgid "Boot menu"
 msgstr "Меню загрузки"
 
@@ -322,7 +322,7 @@ msgstr ""
 
 #: modules/imaging/imaging/tabs.php:168 modules/imaging/imaging/tabs.php:245
 #: modules/imaging/infoPackage.inc.php:217
-#: modules/imaging/infoPackage.inc.php:288
+#: modules/imaging/infoPackage.inc.php:292
 msgid "Boot services"
 msgstr "Службы загрузки"
 
@@ -386,7 +386,7 @@ msgstr "UUID Компьютера отправлено"
 msgid "Computer:"
 msgstr ""
 
-#: modules/imaging/infoPackage.inc.php:232
+#: modules/imaging/infoPackage.inc.php:236
 msgid "Computers Group Editor"
 msgstr ""
 
@@ -447,7 +447,7 @@ msgstr "Создать образ для <strong>%s</strong>"
 msgid "Create iso from master"
 msgstr "Создать образ мастера"
 
-#: modules/imaging/infoPackage.inc.php:372
+#: modules/imaging/infoPackage.inc.php:376
 msgid "Create iso image"
 msgstr "Создать ISO-образ"
 
@@ -507,12 +507,12 @@ msgstr "По умолчанию на WOL"
 msgid "Delete"
 msgstr "Удалить"
 
-#: modules/imaging/infoPackage.inc.php:228
+#: modules/imaging/infoPackage.inc.php:232
 msgid "Delete a group of computers"
 msgstr ""
 
 #: modules/imaging/imaging/images_delete.php:56
-#: modules/imaging/infoPackage.inc.php:368
+#: modules/imaging/infoPackage.inc.php:372
 msgid "Delete image"
 msgstr "Удалить снимок"
 
@@ -553,7 +553,7 @@ msgstr "Описание"
 msgid "Diskless Linux command line access"
 msgstr "Доступ к командной строке Diskless Linux"
 
-#: modules/imaging/infoPackage.inc.php:224
+#: modules/imaging/infoPackage.inc.php:228
 msgid "Display a groups of computers"
 msgstr ""
 
@@ -629,11 +629,11 @@ msgstr "Редактировать мастер"
 msgid "Edit master : "
 msgstr "Редактировать мастер: "
 
-#: modules/imaging/infoPackage.inc.php:364
+#: modules/imaging/infoPackage.inc.php:368
 msgid "Edit parameters of a image on a target"
 msgstr "Редактировать параметры снимка пользователя"
 
-#: modules/imaging/infoPackage.inc.php:351
+#: modules/imaging/infoPackage.inc.php:355
 msgid "Edit parameters of a service on a target"
 msgstr "Редактировать параметры службы пользователя"
 
@@ -892,7 +892,7 @@ msgstr "Параметры снимка"
 
 #: modules/imaging/imaging/tabs.php:166
 #: modules/imaging/infoPackage.inc.php:215
-#: modules/imaging/infoPackage.inc.php:286
+#: modules/imaging/infoPackage.inc.php:290
 msgid "Images and Masters"
 msgstr "Снимки и Мастеры"
 
@@ -905,7 +905,7 @@ msgid "Imaging Configuration"
 msgstr "Конфигурация Снимков"
 
 #: modules/imaging/infoPackage.inc.php:219
-#: modules/imaging/infoPackage.inc.php:290
+#: modules/imaging/infoPackage.inc.php:294
 msgid "Imaging Log"
 msgstr ""
 
@@ -927,7 +927,7 @@ msgstr ""
 msgid "Imaging log"
 msgstr "Журнал Снимков"
 
-#: modules/imaging/infoPackage.inc.php:281
+#: modules/imaging/infoPackage.inc.php:285
 msgid "Imaging on computer"
 msgstr "Снимки по компьютеру"
 
@@ -1036,19 +1036,19 @@ msgstr ""
 msgid "Load on server"
 msgstr "Загрузить на сервер"
 
-#: modules/imaging/infoPackage.inc.php:249
+#: modules/imaging/infoPackage.inc.php:253
 msgid "MSC bundle tab for a group"
 msgstr ""
 
-#: modules/imaging/infoPackage.inc.php:255
+#: modules/imaging/infoPackage.inc.php:259
 msgid "MSC history tab for a group"
 msgstr ""
 
-#: modules/imaging/infoPackage.inc.php:246
+#: modules/imaging/infoPackage.inc.php:250
 msgid "MSC launch tab for a group"
 msgstr ""
 
-#: modules/imaging/infoPackage.inc.php:252
+#: modules/imaging/infoPackage.inc.php:256
 msgid "MSC logs tab for a group"
 msgstr ""
 
@@ -1091,7 +1091,7 @@ msgstr "Меню"
 
 #: modules/imaging/imaging/tabs.php:172 modules/imaging/imaging/tabs.php:249
 #: modules/imaging/infoPackage.inc.php:221
-#: modules/imaging/infoPackage.inc.php:292
+#: modules/imaging/infoPackage.inc.php:296
 msgid "Menu configuration"
 msgstr "Настройка меню"
 
@@ -1268,7 +1268,7 @@ msgstr ""
 msgid "Redirect to Boot Services page"
 msgstr ""
 
-#: modules/imaging/infoPackage.inc.php:276
+#: modules/imaging/infoPackage.inc.php:280
 msgid "Register a computer in the imaging module"
 msgstr "Зарегистрировать компьютер в модуле снимков"
 
@@ -1300,13 +1300,14 @@ msgstr ""
 msgid "Remove"
 msgstr "Переместить"
 
-#: modules/imaging/infoPackage.inc.php:355
+#: modules/imaging/infoPackage.inc.php:359
 msgid "Remove a service from a target"
 msgstr "Удалить службу с пользователя"
 
 #: modules/imaging/imaging/ajaxImages.php:71
 #: modules/imaging/imaging/bootmenu_remove.php:91
-#: modules/imaging/infoPackage.inc.php:297
+#: modules/imaging/infoPackage.inc.php:224
+#: modules/imaging/infoPackage.inc.php:301
 #: modules/imaging/manage/ajaxMasterLevel2.php:56
 msgid "Remove from boot menu"
 msgstr "Удалить из меню загрузки"
@@ -1419,7 +1420,7 @@ msgstr "Сохранить настройки Сервера Снимков "
 msgid "Script value"
 msgstr "Значение сценария"
 
-#: modules/imaging/infoPackage.inc.php:242
+#: modules/imaging/infoPackage.inc.php:246
 msgid "Secure control on a group of computers"
 msgstr ""
 
@@ -1474,7 +1475,7 @@ msgstr "Служба <strong>%s</strong> удалена с меню загруз
 msgid "Service <strong>%s</strong> successfully removed"
 msgstr ""
 
-#: modules/imaging/infoPackage.inc.php:236
+#: modules/imaging/infoPackage.inc.php:240
 msgid "Share a group of computers"
 msgstr ""
 
@@ -1483,11 +1484,11 @@ msgstr ""
 msgid "Show all targets that use that image in their boot menu"
 msgstr "Показать пользователей, которые используют снимки в их меню загрузки"
 
-#: modules/imaging/infoPackage.inc.php:305
+#: modules/imaging/infoPackage.inc.php:309
 msgid "Show sync status"
 msgstr "Показать состояние синхронизации"
 
-#: modules/imaging/infoPackage.inc.php:301
+#: modules/imaging/infoPackage.inc.php:305
 msgid "Show target that use that image"
 msgstr "Показать пользователей, который используют снимки"
 

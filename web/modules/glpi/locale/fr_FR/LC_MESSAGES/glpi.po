@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-22 01:00+0200\n"
+"POT-Creation-Date: 2013-08-05 01:00+0200\n"
 "PO-Revision-Date: 2013-06-03 13:39+0000\n"
 "Last-Translator: Cécile Adam <acecile@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
@@ -108,7 +108,7 @@ msgid "Computers"
 msgstr "Machines"
 
 #: modules/glpi/glpi/createAntivirusStaticGroup.php:46
-#: modules/glpi/glpi/createOSStaticGroup.php:74
+#: modules/glpi/glpi/createOSStaticGroup.php:52
 #: modules/glpi/glpi/createStaticGroup.php:43
 #, php-format
 msgid "Computers list has been truncated at %d computers"
@@ -120,7 +120,7 @@ msgstr "Contrôleurs"
 
 #: modules/glpi/includes/panels/antivirus.inc.php:40
 #: modules/glpi/includes/panels/inventory.inc.php:43
-#: modules/glpi/includes/panels/os_repartition.inc.php:107
+#: modules/glpi/includes/panels/os_repartition.inc.php:84
 msgid "Create a group"
 msgstr ""
 
@@ -369,17 +369,17 @@ msgstr "OS"
 msgid "Operating System"
 msgstr "Système d'exploitation"
 
-#: modules/glpi/includes/panels/os_repartition.inc.php:31
+#: modules/glpi/includes/panels/os_repartition.inc.php:32
 #, fuzzy
 msgid "Operating systems"
 msgstr "Système d'exploitation"
 
-#: modules/glpi/includes/panels/os_repartition.inc.php:52
+#: modules/glpi/includes/panels/os_repartition.inc.php:50
 #, fuzzy
 msgid "Other"
 msgstr "Autres"
 
-#: modules/glpi/includes/panels/os_repartition.inc.php:55
+#: modules/glpi/includes/panels/os_repartition.inc.php:53
 #, fuzzy
 msgid "Other Windows"
 msgstr "Autres"
