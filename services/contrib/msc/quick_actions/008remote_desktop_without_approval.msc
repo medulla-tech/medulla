@@ -1,3 +1,4 @@
 title=Remote desktop connection WITHOUT user approval
 titlefr=Prise en main à distance SANS autorisation de l'utilisateur
+titlede=Entfernte Desktopverbindung OHNE Benutzerzustimmung
 command=reg add "HKLM\SOFTWARE\TightVNC\Server" /f /v QueryAcceptOnTimeout /t REG_DWORD /d 1 && net stop tvnserver && net start tvnserver

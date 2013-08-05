@@ -1,3 +1,4 @@
 title=Shutdown
 titlefr=Arrêter
+titlede=Herunterfahren
 command=@@do_halt@@
