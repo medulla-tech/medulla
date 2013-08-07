@@ -55,7 +55,7 @@ function updateSearchGroup() {   // ===> NOT USED
     if (launch==0) {
         jQuery('#groupContainer').load('main.php?module=base&submod=groups&action=ajaxFilter&filter='+document.groupForm.param.value);
     }
-    
+
 }
 
 /**
@@ -75,4 +75,11 @@ function updateSearchGroupParam(filter, start, end) {  // => NOT USED
 function pushSearchGroup() {  // ===> NOT USED
     launch++;
     setTimeout("updateSearchGroup()",500);
+}
+
+/* Toggle an element visibility
+ * by its id
+ */
+function toggleVisibility(id) {
+    jQuery('#' + id).toggle();
 }
