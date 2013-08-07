@@ -669,7 +669,12 @@ class Imaging (Singleton):
                 d.addCallbacks(_onSuccess, RPCReplay().onError, errbackArgs = (func, args, False))
                 return image_uuid
 
-        self.logger.info('Imaging: Client %s is creating a disk image' % (mac))
+        shortname = self.getClientShortname(mac)
+        if shortname:
+            self.logger.info('Imaging: Client %s (%s) is creating a disk image' % (shortname, mac))
+        else:
+            self.logger.info('Imaging: Client %s is creating a disk image' % (mac))
+
         if not isMACAddress(mac):
             raise TypeError
 
