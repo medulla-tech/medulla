@@ -23,21 +23,13 @@
  */
 
 require("modules/pulse2/includes/xmlrpc.inc.php");
-require("modules/pulse2/includes/locations_xmlrpc.inc.php");
+require_once("modules/pulse2/includes/utilities.php");
 
 function select_locations($selected, $name = 'locations') {
     $sel = new SelectItem($name);
-    $list = array();
-    $locations = getUserLocations();
-    if (is_array($locations)) {
-        foreach ($locations as $loc) {
-            $list[$loc['uuid']] = $loc['altname'];
-        }
-    } else {
-        $locations = array();
-    }
-    $sel->setElements(array_values($list));
-    $sel->setElementsVal(array_keys($list));
+    list($list, $values) = getEntitiesSelectableElements();
+    $sel->setElements($list);
+    $sel->setElementsVal($values);
     $sel->setSelected($selected);
     return $sel;
 }

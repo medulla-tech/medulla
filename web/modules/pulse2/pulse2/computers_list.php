@@ -23,7 +23,7 @@
  */
 
 require("modules/pulse2/includes/xmlrpc.inc.php");
-require("modules/pulse2/includes/locations_xmlrpc.inc.php");
+require_once("modules/pulse2/includes/utilities.php");
 
 $param = array();
 if (isset($_GET['gid'])) { $param['gid'] = urlencode($_GET['gid']); }
@@ -35,21 +35,7 @@ if (isset($_GET['imaging_server'])) { $param['imaging_server'] = urlencode($_GET
 if (displayLocalisationBar() && (isset($_GET['imaging_server']) && $_GET['imaging_server'] == '' || !isset($_GET['imaging_server']))) {
     $ajax = new AjaxFilterLocation(urlStrRedirect("base/computers/ajaxComputersList"), "container", 'location', $param);
 
-    $list = array();
-    $values = array();
-    $locations = getUserLocations();
-    if (count($locations) > 1) {
-        $list['Pulse2ALL'] = _T('All my entities', 'pulse2');
-        $values['Pulse2ALL'] = '';
-    }
-    foreach ($locations as $loc) {
-        $values[$loc['uuid']] = $loc['uuid'];
-        if (isset($loc['altname'])) {
-            $list[$loc['uuid']] = $loc['altname'];
-        } else {
-            $list[$loc['uuid']] = $loc['name'];
-        }
-    }
+    list($list, $values) = getEntitiesSelectableElements(True);
     $ajax->setElements($list);
     $ajax->setElementsVal($values);
     if (!empty($param['gid'])) {

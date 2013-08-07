@@ -21,6 +21,8 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once("modules/pulse2/includes/locations_xmlrpc.inc.php");
+
 function quickGet($name, $p_first = false, $urldecode = True) {
     if ($p_first) {
         if (strlen($_POST[$name])) {
@@ -61,6 +63,35 @@ function right_top_shortcuts_display() {
     elseif(isset($_GET['gid'])) { // Groups
         include('modules/pulse2/includes/menu_group_action.php');
     }
+}
+
+/*
+ * Used to get $list and $values variables to
+ * build an ajaxFilter or SelectItem element
+ *
+ * @param bool AllEntitiesValue: If True, include 'All my entities' value in element list
+ * @return array list and values params
+ */
+function getEntitiesSelectableElements($AllEntitiesValue = False) {
+    $list = array();
+    $values = array();
+    $locations = getUserLocations();
+    if ($AllEntitiesValue) {
+        if (count($locations) > 1) {
+            $list['Pulse2ALL'] = _T('All my entities', 'pulse2');
+            $values['Pulse2ALL'] = '';
+        }
+    }
+    foreach ($locations as $loc) {
+        $values[$loc['uuid']] = $loc['uuid'];
+        if (isset($loc['altname'])) {
+            $list[$loc['uuid']] = $loc['altname'];
+        } else {
+            $list[$loc['uuid']] = $loc['name'];
+        }
+    }
+
+    return array($list, $values);
 }
 
 ?>
