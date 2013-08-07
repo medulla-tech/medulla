@@ -702,6 +702,41 @@ class Imaging (Singleton):
         d.addCallback(_gotMAC)
         return d
 
+    def getDefaultMenuItem(self, mac):
+        """
+        Getting of default menu entry from the database.
+
+        @param mac: MAC address of machine
+        @type mac: str
+
+        @return: default menu entry
+        @rtype: int
+        """
+        if not isMACAddress(mac):
+            self.logger.error("Get default menu item: bad computer MAC %s" % str(mac))
+            ret = False
+        else:
+            computerUUID = self.myUUIDCache.getByMac(mac)
+            if not computerUUID:
+                self.logger.error("Can't get computer UUID for MAC address %s" % mac)
+                ret = False
+            else:
+                computerUUID = computerUUID['uuid']
+                client = self._getXMLRPCClient()
+                func = 'imaging.getDefaultMenuItem'
+                d = client.callRemote(func, computerUUID)
+                @d.addCallback
+                def _cb(result):
+                    if isinstance(result, list) :
+                        success, order = result 
+                        if success :
+                            self.logger.info("default menu item: %s for MAC: %s" % (order, str(mac)))
+                            return order
+                return d
+        return ret
+
+
+
     def computerChangeDefaultMenuItem(self, mac, num):
         """
         Called by computer MAC when he want to set its default entry to num

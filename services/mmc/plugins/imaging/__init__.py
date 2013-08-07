@@ -55,7 +55,9 @@ NOAUTHNEEDED = ['computerRegister',
                 'injectInventory',
                 'getDefaultMenuForRegistering',
                 'linkImagingServerToLocation',
-                'computerChangeDefaultMenuItem']
+                'computerChangeDefaultMenuItem',
+                'getDefaultMenuItem']
+
 
 def getApiVersion():
     return APIVERSION

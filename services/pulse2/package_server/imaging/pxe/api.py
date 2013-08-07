@@ -37,32 +37,9 @@ from twisted.web.iweb import IBodyProducer
 from zope.interface import implements
 
 from pulse2.package_server.imaging.pxe.parser import PXEMethodParser, assign
+from pulse2.package_server.imaging.pxe.parser import LOG_LEVEL, LOG_STATE
+from pulse2.package_server.imaging.pxe.tracking import EntryTracking
 from pulse2.imaging.bootinventory import BootInventory
-
-
-class LOG_LEVEL (object):
-    """Logging levels for ImagingLog"""
-    EMERG = 1
-    ALERT = 2
-    CRIT = 3
-    ERR = 4
-    WARNING = 5
-    NOTICE = 6
-    INFO = 7
-    DEBUG = 8
-
-class LOG_STATE (object):
-    """Logging states for ImagingLog"""
-    BOOT = "boot"
-    MENU = "menu"
-    RESTO = "restoration"
-    BACKUP = "backup"
-    POSTINST = "postinst"
-    ERROR = "error"
-    DELETE = "delete"
-    INVENTORY = "inventory"
-    IDENTITY = "identity"
-
 
 
 class InventorySender(object):
@@ -499,7 +476,16 @@ class PXEImagingApi (PXEMethodParser):
     @assign(0xCD)
     def computerChangeDefaultMenuItem(self, mac, num):
         """ 
-        Menu item change
+        Menu item change.
+
+        First step : reading of default menu entry from database,
+        which will be compared with the selected menu entry.
+
+        @param mac: MAC address of client machine
+        @type mac: str
+
+        @param entry: Menu entry order
+        @type entry: int
 
         @return: ACK to confirm a correct reception, otherwise ERROR
         @rtype: str
@@ -508,14 +494,57 @@ class PXEImagingApi (PXEMethodParser):
                                  LOG_LEVEL.DEBUG, 
                                  LOG_STATE.MENU,
                                  "preselected-menu-entry-change request : %d" % num)
-        d = self.api.computerChangeDefaultMenuItem(mac, num)
+
+        d = self.api.getDefaultMenuItem(mac)
+        d.addCallback(self._computerChangeDefaultMenuItem, mac, num)
+
+        @d.addErrback
+        def _eb (failure):
+            self.api.logClientAction(mac, 
+                                     LOG_LEVEL.WARN, 
+                                     LOG_STATE.MENU,
+                                     "preselected-menu-entry-change failed : %d" % num)
+        return d
+
+
+    def _computerChangeDefaultMenuItem(self, default_entry, mac, num):
+        """ 
+        Menu item change.
+
+        Second step : To avoid the cyclic restore or backup, default menu entry
+        is tested to backup/restore message occurence.
+        If this test is positive, default menu entry is changed by "num" value,
+        otherwise our menu entry is correctly preselected like before.
+
+        @param default_entry: preselected position readed from database
+        @type default_entry: int 
+
+        @param mac: MAC address of client machine
+        @type mac: str
+
+        @param entry: Menu entry order
+        @type entry: int
+
+        @return: ACK to confirm a correct reception, otherwise ERROR
+        @rtype: str
+        """
+        logging.getLogger().info("PXE Proxy: default menu item order: %s (mac: %s)" % (default_entry, mac))
+ 
+        actual_entry, marked = EntryTracking().get(mac)
+        if marked and actual_entry == int(default_entry):
+            entry = num
+        else :
+            entry = int(default_entry)
+ 
+        d = self.api.computerChangeDefaultMenuItem(mac, entry)
+        EntryTracking().delete(mac)
 
         @d.addCallback
         def _cb (result):
             self.api.logClientAction(mac, 
                                      LOG_LEVEL.DEBUG, 
                                      LOG_STATE.MENU,
-                                     "preselected-menu-entry-change success : %d" % num)
+                                     "preselected-menu-entry-change success : %d" % entry)
  
             return "ACK"
 
@@ -529,6 +558,7 @@ class PXEImagingApi (PXEMethodParser):
             return "ERROR"
 
         return d
+
 
     @assign(0x4C)
     def logClientAction(self, mac, level, phase, message):
@@ -559,6 +589,7 @@ class PXEImagingApi (PXEMethodParser):
 
         @d.addCallback
         def _cb(result):
+            EntryTracking().search_and_extract(mac, phase, message)
             if level != 1 :
                 return "ACK"
 
@@ -569,6 +600,7 @@ class PXEImagingApi (PXEMethodParser):
 
         return d
 
+ 
     @assign(0x1B)
     def getComputerUUID(self, mac):
         """

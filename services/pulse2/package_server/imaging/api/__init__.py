@@ -89,6 +89,9 @@ class ImagingApi (MyXmlrpc):
     def xmlrpc_computerChangeDefaultMenuItem(self, mac, num):
         return self.api.computerChangeDefaultMenuItem(mac, num)
 
+    def xmlrpc_getDefaultMenuItem(self, mac):
+        return self.api.getDefaultMenuItem(mac)
+
     def xmlrpc_imageDone(self, computerMACAddress, imageUUID):
         return self.api.imageDone(computerMACAddress, imageUUID)
 

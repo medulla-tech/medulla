@@ -1169,6 +1169,13 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session.add(menu)
         return menu
 
+    def getDefaultMenuItemOrder(self, id):
+        session = create_session()
+        mis = session.query(MenuItem).select_from(self.menu_item)
+        mis = mis.filter(self.menu_item.c.id == id)
+        return mis.all()
+
+
     def __computerChangeDefaultMenuItem(self, session, menu, mis, item_number):
         mi = mis[item_number]
         params = {'default':True}

@@ -35,6 +35,40 @@ from functools import wraps
 
 from pulse2.utils import isMACAddress
 
+LOG_ACTION = {0 : ("boot", "booted"), 
+              1 : ("menu", "choosen menu entry"),
+              2 : ("restoration", "restoration started"),
+              3 : ("restoration", "restoration finished"),
+              4 : ("backup", "backup started"),
+              5 : ("backup", "backup finished"),
+              6 : ("postinst", "postinstall started"),
+              7 : ("postinst", "postinstall finished"),
+              8 : ("error", "critical error"),
+              }
+
+class LOG_LEVEL (object):
+    """Logging levels for ImagingLog"""
+    EMERG = 1
+    ALERT = 2
+    CRIT = 3
+    ERR = 4
+    WARNING = 5
+    NOTICE = 6
+    INFO = 7
+    DEBUG = 8
+
+class LOG_STATE (object):
+    """Logging states for ImagingLog"""
+    BOOT = "boot"
+    MENU = "menu"
+    RESTO = "restoration"
+    BACKUP = "backup"
+    POSTINST = "postinst"
+    ERROR = "error"
+    DELETE = "delete"
+    INVENTORY = "inventory"
+    IDENTITY = "identity"
+
 
 def assign(id):
     """
@@ -123,16 +157,6 @@ class ArgumentContainer :
 
     # ---------- logAction args -------------- #
 
-    LOG_ACTION = {0 : ("boot", "booted"), 
-                  1 : ("menu", "choosen menu entry"),
-                  2 : ("restoration", "restoration started"),
-                  3 : ("restoration", "restoration finished"),
-                  4 : ("backup", "backup started"),
-                  5 : ("backup", "backup finished"),
-                  6 : ("postinst", "postinstall started"),
-                  7 : ("postinst", "postinstall finished"),
-                  8 : ("error", "critical error"),
-                  }
     @property
     def level(self):
         """ logAction argument """ 
@@ -144,14 +168,14 @@ class ArgumentContainer :
         """ logAction argument """ 
         assert len(self.packet) > 1
 
-        phase, message = self.LOG_ACTION[self.level]
+        phase, message = LOG_ACTION[self.level]
 
         return phase
 
     @property
     def message(self):
         """ logAction argument """ 
-        phase, message = self.LOG_ACTION[self.level]
+        phase, message = LOG_ACTION[self.level]
 
         complement = None
         if self.level == 1 :

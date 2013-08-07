@@ -1751,6 +1751,28 @@ class ImagingRpcProxy(RpcProxyI):
         return ImagingDatabase().getProfileLocation(uuid)
 
     ###### Menus
+    def getDefaultMenuItem(self, uuid):
+        """
+        Getting of default menu entry from the database.
+
+        @param uuid: UUID of computer
+        @type uuid: str
+ 
+        @return: True and menu item order if success
+        @rtype: tuple
+        """
+        menu = self.getMyMenuComputer(uuid)
+        if menu :
+            if "fk_default_item" in menu[1]:
+                item_id = menu[1]["fk_default_item"]
+                try:
+                    order = ImagingDatabase().getDefaultMenuItemOrder(item_id)[0].order
+                    return [True, order]
+                except Exception:
+                    logging.getLogger.warn("Get default menu item failed for UUID:%s" % uuid)
+        return [False, 0]
+
+
     def getMyMenuTarget(self, uuid, target_type):
         """
         get a target's boot menu and configuration
