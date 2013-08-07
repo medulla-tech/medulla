@@ -68,7 +68,7 @@ function checkAll (prefix, check_state) {
         if (jQuery(this).attr('name').indexOf(prefix) > -1 )
             jQuery(this).prop('checked', check_state);
     });
-    
+
 }
 
 // prefix: radio prefix, value null,ro,rw
@@ -77,7 +77,7 @@ function checkAllRadio (prefix, value) {
         if (jQuery(this).attr('name').indexOf(prefix) > -1 && jQuery(this).val() == value)
             jQuery(this).prop('checked', 1);
     });
-    
+
 }
 
 // select all select with class 'list' options in the page
@@ -93,17 +93,17 @@ jQuery(function(){
     jQuery('a.popup_close_btn').click(function(){
         closePopup();
     });
-    
+
     // Ajax handlers
     jQuery(document).bind("ajaxSend",ajaxSend).bind("ajaxStop",ajaxComplete);
 });
 
-// Popup under mouseevent 
+// Popup under mouseevent
 function _defaultPlacement(evt){
     var left = Math.max(0,evt.clientX - jQuery('#popup').outerWidth()+ jQuery(window).scrollLeft());
     var top = Math.max(0, evt.clientY + jQuery(window).scrollTop());
     jQuery('#popup').css({'left': left+"px",'top':top+"px"});
-}   
+}
 
 function _centerPlacement(evt){
 
@@ -118,17 +118,17 @@ function _centerPlacement(evt){
 function PopupWindow(evt, url, width,callback,content) {
     jQuery('#popup').css("width", width + "px" );
     if (!evt) evt = window.event;
-    
+
     // If content is specified, we skip ajax request
     if (content){
         jQuery("#__popup_container").html(content);
-        
+
         callback = callback || _defaultPlacement;
         callback(evt);
         jQuery('#popup').fadeIn();
         return;
     }
-    
+
     jQuery.ajax({
         'url': url,
         type: 'get',
@@ -174,7 +174,7 @@ function showPopupCenter(url) {
 }
 
 function displayConfirmationPopup(message, url_yes, url_no, klass) {
-    
+
     if (!klass) var klass = '';
     var message = '<div style="padding: 10px"><div class="alert alert-info ' + klass + '">' + message + '</div>';
     message += '<div style="text-align: center"><a class="btn btn-primary" href="' + url_yes + '"><?=_('Yes')?></a>';
@@ -194,7 +194,7 @@ function displayConfirmationPopup(message, url_yes, url_no, klass) {
                 'top':'15%'
             });
             jQuery('#overlay').fadeIn().click(closePopup);
-            
+
         },message);
 }
 
@@ -205,52 +205,52 @@ function closePopup() {
 
 
 function validateForm(formId,errmsg) {
-    
+
     // By default, we show the error message
     if (errmsg == null ) errmsg = true;
-    
+
     var err = 0;
     // Required fields
     jQuery('#'+formId).find('input[rel=required],textarea[rel=required],select[rel=required]').each(function(){
-        if (jQuery(this).val() == ''){
-            jQuery(this).css('background','pink');
+        if (jQuery(this).val() == '') {
+            jQuery(this).addClass('form-error');
             err == 0 && jQuery(this);
             err = 1;
         }
         else
-            jQuery(this).css('background','white');
+            jQuery(this).removeClass('form-error');
     });
-    
+
     // Regexp fields
     jQuery('#'+formId).find('input[regexp],textarea[regexp]').each(function(){
 
-        if (jQuery(this).attr('regexp') != '/.+/'){
+        if (jQuery(this).val() && jQuery(this).attr('regexp') != '/.+/') {
             var flags = jQuery(this).attr('regexp').replace(/.*\/([gimy]*)$/, '$1');
             var pattern = jQuery(this).attr('regexp').replace(new RegExp('^/(.*?)/'+flags+'$'), '$1');
-            
+
             var re = new RegExp(pattern, flags);
-            
+
             if (!re.test(jQuery(this).val()))
             {
                 err = 1;
-                jQuery(this).css('background','pink');
+                jQuery(this).addClass('form-error');
             }
             else
-                jQuery(this).css('background','white');
-                
+                jQuery(this).removeClass('form-error');
+
         }
     });
-    
+
     // Particular case: password match
     if (jQuery('#pass').val() != null && jQuery('#confpass').val() != null)
         if (jQuery('#pass').val() != jQuery('#confpass').val()){
             err = 1;
-            jQuery('#confpass').css('background','pink');
+            jQuery('#confpass').addClass('form-error');
         }
-    
+
     if (errmsg && err != 0)
         alert('<?php echo  _("Form cannot be submit. Input errors are highlighted in red.") ?>');
-    
+
     return err==0;
 }
 
@@ -294,7 +294,7 @@ function restartServices() {
                     statusElem.addClass("alert-error");
                 }
         } });
-        
+
         /*new Ajax.Request(service.check, {
             onSuccess: function(r) {
                 var statusElem = $(service.id + 'Status');

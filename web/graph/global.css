@@ -32,6 +32,10 @@ body {
 }
 
 .error { color : #A40000; }
+.form-error {
+    background: #D44848 !important;
+    color: white !important;
+}
 a { color: #2A557E;}
 a:visited { color: #2A557E; }
 a:visited.error { color: #A40000; }
@@ -1278,6 +1282,7 @@ ul.roACL {
     margin-bottom: 0.2em;
 }
 
-.listinfos tbody>tr:hover{
-    background:#D8E7EF !important;
+.listinfos tbody>tr:hover {
+    background: #D8E7EF !important;
 }
+
