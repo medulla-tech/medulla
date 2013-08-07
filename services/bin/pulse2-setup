@@ -1091,7 +1091,7 @@ class SetupApp(object):
 
         # Associate local BackupPC server to first entity (UUID1)
         binpath = path_lookup('pulse2-backup-servers')
-        if binpath :
+        if binpath is not None:
             cmd = binpath + ' -a -e UUID1 -p http://127.0.0.1/backuppc/index.cgi'
             log.debug('Call: %s' % cmd)
             if call(cmd, shell=True)<>0:
