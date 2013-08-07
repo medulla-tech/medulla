@@ -48,6 +48,7 @@ def listBackupServers():
 
 if __name__ == "__main__":
     usage = "usage: %prog [--list] [--add] [--remove] [--entity UUID] [--url URL]"
+    usage+= "\nURL Example : http://127.0.0.1/backuppc/index.cgi"
     parser = OptionParser(usage=usage)
     parser.add_option("-a", "--add", action="store_true", dest="add", default=False)
     parser.add_option("-r", "--remove", action="store_true", dest="remove", default=False)
