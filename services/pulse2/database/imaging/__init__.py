@@ -1169,6 +1169,31 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session.add(menu)
         return menu
 
+    def __sortMenuItems(self, menu_id, session):
+        """
+        Executed when a item is deleted to have a correct order
+        of remaining items.
+
+        @param menu_id: computers menu id
+        @type menu_id: int
+
+        @param session: SqlAlchemy session
+        @type: object
+        """
+        items = session.query(MenuItem).select_from(self.menu_item)
+        items = items.filter(self.menu_item.c.fk_menu == menu_id)
+        items = items.order_by(self.menu_item.c.order).all()
+
+        new_order = 0
+
+        for item in items:
+            item.order = new_order
+            new_order += 1
+            session.flush()
+
+
+
+
     def getDefaultMenuItemOrder(self, id):
         session = create_session()
         mis = session.query(MenuItem).select_from(self.menu_item)
@@ -1276,6 +1301,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         self.__addMenuDefaults(session, menu, mi, params)
         self.__addBootServiceInMenu(session, mi.id, bs_uuid)
 
+        self.__sortMenuItems(menu.id, session)
         session.close()
         return None
 
@@ -1396,6 +1422,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         bsim = bsim.filter(and_(self.boot_service.c.id == uuid2id(bs_uuid), self.target.c.uuid == target_uuid)).first()
         # if mi is the fk_default_item or the fk_default_item_WOL, we need to change that
         menu = session.query(Menu).filter(self.menu.c.id == mi.fk_menu).first()
+        menu_id = menu.id
         need_to_save_menu = False
         first_mi = None
         if menu.fk_default_item == mi.id:
@@ -1422,6 +1449,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.delete(mi)
         session.flush()
 
+        self.__sortMenuItems(menu_id, session)
         session.close()
         return [True]
 
