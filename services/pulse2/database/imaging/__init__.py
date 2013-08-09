@@ -112,7 +112,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             },
         }
         self.__loadNomenclatureTables()
-        self.sortAllMenuItems()
         self.loadDefaults()
         self.loadLanguage()
         self.loadImagingServerLanguage()
@@ -1169,18 +1168,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if is_menu_modified:
             session.add(menu)
         return menu
-
-    def sortAllMenuItems(self):
-        """ Sort all menu items """
-        session = create_session()
-        counter = 0
-        menus = session.query(Menu).select_from(self.menu_item).all()
-        for menu in menus:
-            self.__sortMenuItems(menu.id, session)
-            counter += 1
-        logging.getLogger().debug("Imaging: Menu items sorting... %d menus sorted" % counter)
-        session.close()
- 
 
 
     def __sortMenuItems(self, menu_id, session):
