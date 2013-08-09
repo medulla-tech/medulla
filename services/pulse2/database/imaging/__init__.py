@@ -2157,6 +2157,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         iim = iim.filter(and_(self.image.c.id == uuid2id(item_uuid), self.target.c.uuid == target_uuid)).first()
 
         menu = session.query(Menu).filter(self.menu.c.id == mi.fk_menu).first()
+        menu_id = menu.id
         need_to_save_menu = False
         first_mi = None
         if menu.fk_default_item == mi.id:
@@ -2184,7 +2185,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.delete(mi)
         # TODO when it's not a master and the computer is the only one, what should we do with the image?
         session.flush()
-
+        self.__sortMenuItems(menu_id, session)
         session.close()
         return None
 
