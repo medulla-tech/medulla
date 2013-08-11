@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-22 01:00+0200\n"
+"POT-Creation-Date: 2013-08-12 01:00+0200\n"
 "PO-Revision-Date: 2013-06-24 14:07+0000\n"
 "Last-Translator: Andre Machado <andre@mandriva.com>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
-#: modules/pulse2/pulse2/computers_list.php:42
+#: modules/pulse2/includes/utilities.php:81
 msgid "All my entities"
 msgstr "Todas as minhas entidades"
 

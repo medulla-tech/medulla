@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-22 01:00+0200\n"
+"POT-Creation-Date: 2013-08-12 01:00+0200\n"
 "PO-Revision-Date: 2013-06-24 11:20+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/"
@@ -20,7 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
 
-#: modules/pulse2/pulse2/computers_list.php:42
+#: modules/pulse2/includes/utilities.php:81
 msgid "All my entities"
 msgstr "Все мои объекты"
 
