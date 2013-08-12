@@ -528,15 +528,21 @@ class PXEImagingApi (PXEMethodParser):
         @return: ACK to confirm a correct reception, otherwise ERROR
         @rtype: str
         """
-        logging.getLogger().info("PXE Proxy: default menu item order: %s (mac: %s)" % (default_entry, mac))
- 
         actual_entry, marked = EntryTracking().get(mac)
         if marked and actual_entry == int(default_entry):
+            setDefaultMenuItem = True
             entry = num
         else :
+            setDefaultMenuItem = False
             entry = int(default_entry)
- 
-        d = self.api.computerChangeDefaultMenuItem(mac, entry)
+
+        logging.getLogger().debug("PXE Proxy: Client %s has selected menu entry %s" % (mac, actual_entry))
+
+        if setDefaultMenuItem:
+            d = self.api.computerChangeDefaultMenuItem(mac, entry)
+        else:
+            d = Deferred()
+
         EntryTracking().delete(mac)
 
         @d.addCallback
@@ -545,7 +551,7 @@ class PXEImagingApi (PXEMethodParser):
                                      LOG_LEVEL.DEBUG, 
                                      LOG_STATE.MENU,
                                      "preselected-menu-entry-change success : %d" % entry)
- 
+
             return "ACK"
 
         @d.addErrback

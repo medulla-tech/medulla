@@ -730,7 +730,11 @@ class Imaging (Singleton):
                     if isinstance(result, list) :
                         success, order = result 
                         if success :
-                            self.logger.info("default menu item: %s for MAC: %s" % (order, str(mac)))
+                            shortname = self.getClientShortname(mac)
+                            if shortname:
+                                self.logger.debug("Client %s (%s) default menu entry is %s" % (shortname, str(mac), order))
+                            else:
+                                self.logger.debug("Unknown client (%s) default menu entry is %s" % (shortname, str(mac), order))
                             return order
                 return d
         return ret
@@ -755,7 +759,11 @@ class Imaging (Singleton):
                 self.logger.error('Couldn\'t set default entry on %s for %s : %s' % (num, computerUUID, str(result)))
                 ret = False
             else:
-                self.logger.info('Successfully set default entry on %s for %s' % (num, computerUUID))
+                shortname = self.getClientShortname(mac)
+                if shortname:
+                    self.logger.info('Default entry set to %s after disk image creation/restoration for client %s (%s)' % (num, shortname, mac))
+                else:
+                    self.logger.info('Default entry set to %s after disk image creation/restoration for unknown client (%s)' % (num, mac))
                 ret = True
             return ret
 
