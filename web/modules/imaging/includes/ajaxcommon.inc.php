@@ -30,7 +30,7 @@ require("../../../includes/PageGenerator.php");
 require("../includes/includes.php");
 require('../includes/xmlrpc.inc.php');
 require("../../base/includes/edit.inc.php");
-require("../../pulse2/includes/locations_xmlrpc.inc.php");
+require_once("../../pulse2/includes/locations_xmlrpc.inc.php");
 
 $location = getCurrentLocation();
 if ($location == "UUID1")

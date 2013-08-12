@@ -30,7 +30,7 @@ require_once('modules/imaging/includes/web_def.inc.php');
 
 // get entities
 require("modules/pulse2/includes/xmlrpc.inc.php");
-require("modules/pulse2/includes/locations_xmlrpc.inc.php");
+require_once("modules/pulse2/includes/locations_xmlrpc.inc.php");
 
 
 $location = getCurrentLocation();
