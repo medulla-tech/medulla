@@ -1240,7 +1240,7 @@ def stopCommandsOnHosts(ids):
         # Restore imaging default bootmenus
         for myCommandOnHostID in ids:
             (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-            imgdeferred = ImagingAPI().unsetWOLMenu(myT.target_uuid)
+            imgdeferred = ImagingAPI().unsetWOLMenu(myT.target_uuid, myT.target_name)
             if imgdeferred:
                 deffereds.append(imgdeferred)
 
@@ -1264,7 +1264,7 @@ def stopCommand(myCommandOnHostID):
 
     if SchedulerConfig().imaging:
         # Restore Bootmenu (No WOL)
-        imgdeferred = ImagingAPI().unsetWOLMenu(myT.target_uuid)
+        imgdeferred = ImagingAPI().unsetWOLMenu(myT.target_uuid, myT.target_name)
 
         def _cb(result, myCommandOnHostID):
             for launcher in SchedulerConfig().launchers_uri.values():
@@ -1492,7 +1492,7 @@ def performWOLPhase(myCommandOnHostID):
 
     if SchedulerConfig().imaging:
         # Set WOL Bootmenu
-        imgdeferred = ImagingAPI().setWOLMenu(myT.target_uuid)
+        imgdeferred = ImagingAPI().setWOLMenu(myT.target_uuid, myT.target_name)
 
         def _cb(result, myCommandOnHostID):
             # perform call
@@ -2385,7 +2385,7 @@ def parseWOLAttempt(attempt_result, myCommandOnHostID):
         if myCoH.switchToWOLDone():
             if SchedulerConfig().imaging:
                 # Restore Bootmenu (No WOL)
-                imgdeferred = ImagingAPI().unsetWOLMenu(myT.target_uuid)
+                imgdeferred = ImagingAPI().unsetWOLMenu(myT.target_uuid, myT.target_name)
 
                 def _cb(result, myCommandOnHostID):
                     WOLTracking().unlockwol(myCommandOnHostID)
@@ -2688,7 +2688,7 @@ def parseWOLError(reason, myCommandOnHostID, decrement_attempts_left = False, er
     if not myCoH.switchToWOLFailed(myC.getNextConnectionDelay(), decrement_attempts_left):
         if SchedulerConfig().imaging:
             # Restore Bootmenu (No WOL)
-            imgdeferred = ImagingAPI().unsetWOLMenu(myT.target_uuid)
+            imgdeferred = ImagingAPI().unsetWOLMenu(myT.target_uuid, myT.target_name)
 
             def _cb(result, myCommandOnHostID):
                 WOLTracking().unlockwol(myCommandOnHostID)

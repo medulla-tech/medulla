@@ -43,10 +43,10 @@ class ImagingAPI(RPCClient):
         d.addErrback(_errBack)
         return d
 
-    def setWOLMenu(self, uuid):
-        log.debug("Set WOL bootmenu for computer %s" % uuid)
+    def setWOLMenu(self, uuid, name):
+        log.info("Wake-on-lan received for client %s, creating WOL specific imaging boot menu" % name)
         return self.synchroComputer(uuid, wol = True)
 
-    def unsetWOLMenu(self, uuid):
-        log.debug("Restore bootmenu (No WOL) for computer %s" % uuid)
+    def unsetWOLMenu(self, uuid, name):
+        log.info("Wake-on-lan done for client %s (maximum time reached), restoring non-WOL imaging boot menu" % name)
         return self.synchroComputer(uuid, wol = False)
