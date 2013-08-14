@@ -169,11 +169,7 @@ if ($response['data']) {
 }
 ?>
 
-
-<script src="modules/backuppc/lib/jquery-1.10.1.min.js"></script>
 <script type="text/javascript">
-// Avoid prototype <> jQuery conflicts
-jQuery.noConflict();
 
 function refresh_status(){
         jQuery.get(
@@ -185,4 +181,92 @@ function refresh_status(){
 }
 
 setTimeout('refresh_status();',3000);
+</script>
+<style>
+body { min-width: 520px; }
+.column { width: 170px; float: left; padding-bottom: 100px; }
+.portlet { margin: 0 1em 1em 0; }
+.portlet-header { margin: 0.3em; padding-bottom: 4px; padding-left: 0.2em; }
+.portlet-header .ui-icon { float: right; }
+.portlet-content { padding: 0.4em; }
+.ui-sortable-placeholder { border: 1px dotted black; visibility: visible !important; height: 50px !important; }
+.ui-sortable-placeholder * { visibility: hidden; }
+</style>
+
+<script>
+// function that writes the list order to a cookie
+function saveOrder() {
+    jQuery(".column").each(function(index, value){
+        var colid = value.id;
+        var cookieName = "cookie-" + colid;
+        // Get the order for this column.
+        var order = jQuery('#' + colid).sortable("toArray");
+        // For each portlet in the column
+        for ( var i = 0, n = order.length; i < n; i++ ) {
+            // Determine if it is 'opened' or 'closed'
+            var v = jQuery('#' + order[i] ).find('.portlet-content').is(':visible');
+            // Modify the array we're saving to indicate what's open and
+            //  what's not.
+            order[i] = order[i] + ":" + v;
+        }
+        jQuery.cookie(cookieName, order, { path: "/", expiry: new Date(2012, 1, 1)});
+    });
+}
+
+// function that restores the list order from a cookie
+function restoreOrder() {
+    jQuery(".column").each(function(index, value) {
+        var colid = value.id;
+        var cookieName = "cookie-" + colid
+        var cookie = jQuery.cookie(cookieName);
+        if ( cookie == null ) { return; }
+        var IDs = cookie.split(",");
+        for (var i = 0, n = IDs.length; i < n; i++ ) {
+            var toks = IDs[i].split(":");
+            if ( toks.length != 2 ) {
+                continue;
+            }
+            var portletID = toks[0];
+            var visible = toks[1]
+            var portlet = jQuery(".column")
+                .find('#' + portletID)
+                .appendTo(jQuery('#' + colid));
+            if (visible === 'false') {
+                portlet.find(".ui-icon").toggleClass("ui-icon-minus");
+                portlet.find(".ui-icon").toggleClass("ui-icon-plus");
+                portlet.find(".portlet-content").hide();
+            }
+        }
+    });
+} 
+
+
+jQuery(document).ready( function () {
+    jQuery(".column").sortable({
+        connectWith: ['.column'],
+        stop: function() { saveOrder(); }
+    }); 
+
+    jQuery(".portlet")
+        .addClass("ui-widget ui-widget-content")
+        .addClass("ui-helper-clearfix ui-corner-all")
+        .find(".portlet-header")
+        .addClass("ui-widget-header ui-corner-all")
+        .prepend('<span class="ui-icon ui-icon-minus"></span>')
+        .end()
+        .find(".portlet-content");
+
+    restoreOrder();
+
+    jQuery(".portlet-header .ui-icon").click(function() {
+        jQuery(this).toggleClass("ui-icon-minus");
+        jQuery(this).toggleClass("ui-icon-plus");
+        jQuery(this).parents(".portlet:first").find(".portlet-content").toggle();
+        saveOrder(); // This is important
+    });
+    jQuery(".portlet-header .ui-icon").hover(
+        function() {jQuery(this).addClass("ui-icon-hover"); },
+        function() {jQuery(this).removeClass('ui-icon-hover'); }
+    );
+});  
 </script>

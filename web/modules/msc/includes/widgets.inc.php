@@ -51,7 +51,9 @@ class RenderedMSCHost extends RenderedLabel {
     function ajaxDisplay() {
         $buffer = '
             <script type="text/javascript">
-            new Ajax.Updater("ping", "'     . urlStrRedirect("base/computers/ajaxPingProbe"). "&hostname=" . $this->hostname ."&probe_order=" . $this->probe_order . '&uuid='. $this->uuid .'", { method: "get" });
+            jQuery(function(){
+                jQuery("#ping").load("'. urlStrRedirect("base/computers/ajaxPingProbe"). "&hostname=" . $this->hostname ."&probe_order=" . $this->probe_order . '&uuid='. $this->uuid .'");
+            });
             </script>
         ';
         $this->text .= ' <span id="ping"><img src="img/common/loader_p.gif" /></span>';
@@ -152,7 +154,7 @@ class RenderedMSCActions extends HtmlElement {
             $onSubmit = "";
         } elseif (!$this->error) {
             $selectDisabled = "";
-            $onSubmit = 'onsubmit="showQAPopup(event,\'' . urlStrRedirect($this->module . "/" . $this->submod . "/" . $this->action, $this->params) . '&launchAction=\' + $(\'launchAction\').value); return false;"';
+            $onSubmit = 'onsubmit="showQAPopup(event,\'' . urlStrRedirect($this->module . "/" . $this->submod . "/" . $this->action, $this->params) . '&launchAction=\' + jQuery(\'#launchAction\').val()); return false;"';
         } else {
             $selectDisabled = "DISABLED";
             $onSubmit = "";
@@ -164,6 +166,7 @@ class RenderedMSCActions extends HtmlElement {
 
 ?>
     <script type="text/javascript">
+        /* ==> NOT USED
             document.observe("dom:loaded", function() { 
                 var inputImg = $('launchActionImg');
                 var src = inputImg.src;
@@ -183,6 +186,7 @@ class RenderedMSCActions extends HtmlElement {
                     }
                 });
             });
+    */
 </script>
 <?php
 
@@ -236,21 +240,12 @@ class RenderedMSCActions extends HtmlElement {
 ?>
 <script text="text/javascript">
 function showQAPopup(evt, url) {
-    $('popup').style.width = '300px';
-    /*new Ajax.Updater('__popup_container', url, {onComplete: displayPopup(evt), evalScripts:true});*/
-    new Ajax.Request(url, {
-        onSuccess: function(t) {
-            try {
-                $('__popup_container').update(t.responseText);
-            }
-            catch(ex) {
-                $('__popup_container').innerHTML = t.responseText;
-            }
-            $('popup').setStyle({"top": "280px",
-                                 "left": "210px"
-                                });
-        },
-        onComplete: displayPopup(evt)
+    PopupWindow(evt, url, 300,function(evt){
+    jQuery('#popup').css({
+        'left': '210px',
+        'top':'280px'
+    });
+    jQuery("#overlay").fadeIn();
     });
 }
 </script>
@@ -356,7 +351,7 @@ class AjaxFilterCommands extends AjaxFilter {
     </div>
 
     <script type="text/javascript">
-        document.getElementById('param').focus();
+        jQuery('#param').focus();
         var refreshtimer = null;
         var refreshparamtimer = null;
         var refreshdelay = <?php echo  $this->refresh ?>;
@@ -384,7 +379,7 @@ if(isset($this->storedfilter)) {
          * Update div
          */
         function updateSearch() {
-            new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?>filter='+document.Form.param.value+'<?php echo  $this->params ?>&<?php echo  $this->paramname ?>='+document.Form.<?php echo  $this->paramname ?>.value, { asynchronous:true, evalScripts: true});
+            jQuery('<?php echo  $this->divid; ?>').load('<?php echo  $this->url; ?>filter='+document.Form.param.value+'<?php echo  $this->params ?>&<?php echo  $this->paramname ?>='+document.Form.<?php echo  $this->paramname ?>.value);
 
 <?php
 if ($this->refresh) {
@@ -400,7 +395,7 @@ if ($this->refresh) {
          */
         function updateSearchParam(filter, start, end) {
             clearTimers();
-            new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?>filter='+filter+'<?php echo  $this->params ?>&<?php echo  $this->paramname ?>='+document.Form.<?php echo  $this->paramname ?>.value+'&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
+            jQuery('<?php echo  $this->divid; ?>').load('<?php echo  $this->url; ?>filter='+filter+'<?php echo  $this->params ?>&<?php echo  $this->paramname ?>='+document.Form.<?php echo  $this->paramname ?>.value+'&start='+start+'&end='+end);
 
 <?php
 if ($this->refresh) {
@@ -487,7 +482,7 @@ class AjaxFilterCommandsStates extends AjaxFilter {
     </div>
 
     <script type="text/javascript">
-        document.getElementById('param').focus();
+        jQuery('#param').focus();
         var refreshtimer = null;
         var refreshparamtimer = null;
         var refreshdelay = <?php echo  $this->refresh ?>;
@@ -516,7 +511,7 @@ if(isset($this->storedfilter)) {
          */
         function updateSearch() {
             clearTimers();
-            new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?>filter='+document.Form.param.value+'<?php echo  $this->params ?>&<?php echo  $this->paramname1 ?>='+document.Form.<?php echo  $this->paramname1 ?>.value+'&<?php echo  $this->paramname2 ?>='+document.Form.<?php echo  $this->paramname2 ?>.value, { asynchronous:true, evalScripts: true});
+            jQuery('<?php echo  $this->divid; ?>').load('<?php echo  $this->url; ?>filter='+document.Form.param.value+'<?php echo  $this->params ?>&<?php echo  $this->paramname1 ?>='+document.Form.<?php echo  $this->paramname1 ?>.value+'&<?php echo  $this->paramname2 ?>='+document.Form.<?php echo  $this->paramname2 ?>.value);
 
 <?php
 if ($this->refresh) {
@@ -533,7 +528,7 @@ if ($this->refresh) {
         function updateStates() {
             var ind = document.getElementById('<?php echo  $this->paramname2; ?>');
             var val = ind.options[ind.selectedIndex].value;
-            new Ajax.Updater('<?php echo  $this->paramname2; ?>', '<?php echo  urlStrRedirect('msc/logs/state_list', array('paramname2'=>$this->paramname2)); ?>&<?php echo  $this->paramname1 ?>='+document.Form.<?php echo  $this->paramname1 ?>.value+'&selected='+document.Form.<?php echo  $this->paramname2 ?>.value, {asynchronous:true, evalScripts: true });
+            jQuery('<?php echo  $this->paramname2; ?>').load('<?php echo  urlStrRedirect('msc/logs/state_list', array('paramname2'=>$this->paramname2)); ?>&<?php echo  $this->paramname1 ?>='+document.Form.<?php echo  $this->paramname1 ?>.value+'&selected='+document.Form.<?php echo  $this->paramname2 ?>.value);
             refreshtimer = setTimeout("updateSearch()", 500);
         }
 
@@ -542,7 +537,7 @@ if ($this->refresh) {
          */
         function updateSearchParam(filter, start, end) {
             clearTimers();
-            new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?>filter='+filter+'<?php echo  $this->params ?>&<?php echo  $this->paramname1 ?>='+document.Form.<?php echo  $this->paramname1 ?>.value+'&<?php echo  $this->paramname2 ?>='+document.Form.<?php echo  $this->paramname2 ?>.value+'&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
+            jQuery('<?php echo  $this->divid; ?>').load('<?php echo  $this->url; ?>filter='+filter+'<?php echo  $this->params ?>&<?php echo  $this->paramname1 ?>='+document.Form.<?php echo  $this->paramname1 ?>.value+'&<?php echo  $this->paramname2 ?>='+document.Form.<?php echo  $this->paramname2 ?>.value+'&start='+start+'&end='+end);
 
 <?php
 if ($this->refresh) {

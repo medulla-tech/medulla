@@ -46,12 +46,6 @@ class DoubleAutocomplete {
     <td style="text-align:right;"><?php echo  $this->field1; ?> : </td>
     <td>
         <input type="text" id="autocomplete" name="value" size="23" value="<?php echo $this->val ?>" /> 
-        <div id="autocomplete_choices" class="autocomplete">
-            <ul>
-                <li>A</li>
-                <li>B</li>
-            </ul>
-        </div>
     </td>
     <td id='secondButton'>
         <input name="next" type="button" class="btnPrimary" value="<?php echo  _T("->", "dyngroup"); ?>" onClick="addSlave('autocomplete'); return false;"/>
@@ -64,12 +58,6 @@ class DoubleAutocomplete {
         <td id='secondPart1' style="text-align:right;"><?php echo  $this->field2; ?> : </td>
         <td id='secondPart2'>
             <input type="text" id="autocomplete2" name="value2" size="23" /> 
-            <div id="autocomplete2_choices" class="autocomplete">
-                <ul>
-                    <li>A</li>
-                    <li>B</li>
-                </ul>
-            </div>
         </td>
         <td id='secondPart3'>
             <input name="buser" type="submit" class="btnPrimary" value="<?php echo  $this->b_label; ?>" />   
@@ -77,18 +65,30 @@ class DoubleAutocomplete {
         </tr></table>
     </div>
    
+    <script src="jsframework/lib/jquery.jqEasySuggest.min.js" type="text/javascript"></script>
     <script type="text/javascript">
 
     <!--
         function addSlave(id) {
-            var autocomplete = document.getElementById(id);
-            var value = autocomplete.getValue();
-            autocomplete.setAttribute('readonly', true);
+            //var autocomplete = document.getElementById(id);
+            var value = jQuery('#'+id).val();
+            jQuery('#'+id).attr('readonly', true);
 
-            /* slave */
-            new Ajax.Autocompleter('autocomplete2','autocomplete2_choices',
-                'main.php?module=base&submod=computers&action=ajaxAutocompleteSearch&modulename=<?php echo  $this->module ?>&criterion=<?php echo  $this->criterion ?>&value1='+value, {paramName: "value"});
-                
+            jQuery('#autocomplete2').jqEasySuggest({
+		ajax_file_path 		: 'main.php?module=base&submod=computers&action=ajaxAutocompleteSearch&modulename=<?php echo  $this->module ?>&criterion=<?php echo  $this->criterion ?>&value1='+value,
+		min_keyword_length	: 1,
+		showLoadingImage	: false,
+		focus_color		: "red",
+		keyupDelay		: 1000,
+		//id_element	 	: "autocomplete_old",
+		sql_match_type	 	: "starts",
+		es_width		: "215",
+		es_opacity		: 0.95,
+		es_max_results		: 10,
+		es_offset_left		: 0,
+		es_offset_top		: 0	
+            });
+            
             var secondPart = document.getElementById('secondPart');
 
             var secondButton = document.getElementById('secondButton');
@@ -106,10 +106,70 @@ class DoubleAutocomplete {
         <?php
             include_once("modules/dyngroup/includes/xmlrpc.php");
         ?>
-        new Ajax.Autocompleter('autocomplete','autocomplete_choices',
-            'main.php?module=base&submod=computers&action=ajaxAutocompleteSearch&modulename=<?php echo  $this->module ?>&criterion=<?php echo  $this->criterion ?>', {paramName: "value"});
+
+        jQuery('#autocomplete').jqEasySuggest({
+		ajax_file_path 		: 'main.php?module=base&submod=computers&action=ajaxAutocompleteSearch&modulename=<?php echo  $this->module ?>&criterion=<?php echo  $this->criterion ?>',
+		min_keyword_length	: 3,
+		showLoadingImage	: false,
+		focus_color		: "red",
+		keyupDelay		: 100,
+		//id_element	 	: "autocomplete_old",
+		sql_match_type	 	: "starts",
+		es_width		: "215",
+		es_opacity		: 0.95,
+		es_max_results		: 10,
+		es_offset_left		: 0,
+		es_offset_top		: 0	
+        });
     -->
     </script>
+    <style type="text/css">
+        .easy_suggest{
+                background-color: #e5e5e5;
+                border: 1px solid #ccc;
+                border-width: 0px 1px;
+                -moz-box-shadow: 0 2px 4px #ccc;
+                -webkit-box-shadow: 0 2px 4px #ccc;
+                box-shadow: 0 2px 4px #ccc;
+                -webkit-border-bottom-right-radius: 8px;
+                -webkit-border-bottom-left-radius: 8px;
+                -moz-border-radius-bottomright: 8px;
+                -moz-border-radius-bottomleft: 8px;
+                border-bottom-right-radius: 8px;
+                border-bottom-left-radius: 8px;
+                display: none;
+                overflow: hidden;
+                position: absolute;
+                z-index: 9999;
+        }
+        .easy_list{
+                list-style-type: none;
+                margin: 0px;
+                padding: 0px;
+                width : 100%;
+        }
+        .easy_list li{
+                border: 1px solid #ccc;
+                border-width: 0px 1px 1px 0px;
+                font-size:12px;
+                list-style : none;
+                text-align:left;
+                width : 100%;
+        }
+        .easy_list li a{
+                color: #000;
+                display: block;
+                padding: 5px;
+                text-decoration: none;
+        }
+        .easy_list li.selected{
+                background-color: #678FD6;
+                color: #fff;
+        }
+        .easy_list li.selected a{
+                color : #fff;
+        }
+    </style>
     <?php
     }
 }

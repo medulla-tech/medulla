@@ -43,5 +43,4 @@ else {
     // Show the error message
     die(nl2br($response['errtext']));
 }
-
 ?>

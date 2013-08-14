@@ -269,73 +269,44 @@ _T('Up-to-date', 'glpi');
 
 </table>
 <script type="text/javascript">
-$$('tbody tr td:not(.action)').invoke('observe', 'click', function(event) {
-    var tdValue = this.innerHTML.stripTags();
-    $('param').value = tdValue.replace(/&nbsp;/g, ' ');
+// TODO: To remove
+jQuery('tbody tr td:not(.action)').on('click',function(){
+    jQuery('#param').val(jQuery(this).text().replace(/&nbsp;/g, ' '));
     pushSearch();
 });
 
-// Label clicking functions
-$$('label.editableField').each(function(item) { 
-    item.observe('click', function(event,element) {
-        // item name
-        var name = item.readAttribute('name');
-        var value = item.innerHTML;
-        // corresponding input
-        var input = $$('input.editableField[name="'+name+'"]').first();
-        input.setStyle({'display':'block'});
-        item.setStyle({'display':'none'});
-        input.setValue(value);
-        input.focus();
-    })});
+// Editable fields label click
+jQuery('label.editableField').on('click',function(){
+    var name = jQuery(this).attr('name');
+    var value = jQuery(this).text();
+    // corresponding input
+    var input = jQuery('input.editableField[name="'+name+'"]').first();
+    jQuery(this).hide();
+    input.val(value).show().focus();
+});
 
-// Input validate functions
-$$('input.editableField').each(function(item) { 
-    item.observe('keyup', function(e,element) {
-        if (e.which == 13) {
-            // item name
-            var name = item.readAttribute('name');
-            var value = item.getValue();
-            
-            var cname_regex = /^([a-zA-Z0-9][a-zA-Z0-9-_]*[a-zA-Z0-9])$/;
-            if (name=='computer_name' && !cname_regex.test(value)) {
-                alert('<?php print(_T('Invalid hostname','glpi')); ?>');
-                return;
-            }
-            new Ajax.Request('<?php echo urlStrRedirect("base/computers/ajaxSetGlpiEditableValue")?>&uuid=<?php print($_GET['objectUUID']); ?>&name='+name+'&value='+value, {
-                onSuccess: function(response) {
-                    // showing corresponding label and hide input
-                    var label = $$('label.editableField[name="'+name+'"]').first();
-                    label.setStyle({'display':'block'});
-                    label.innerHTML = value;
-                    item.setStyle({'display':'none'});
-                }
-              });
-            e.preventDefault();
-        }
-    });
+jQuery('input.editableField').bind('keyup focusout',function(e){ 
+    // If we receive a keycode (keyup), it must be #13 [return]
+    if (e.keyCode != null && e.keyCode != 13) return;
     
-    item.observe('focusout', function(e,element) {
-        // item name
-        var name = item.readAttribute('name');
-        var value = item.getValue();
+    var name = jQuery(this).attr('name');
+    var value = jQuery(this).val();
+    var input = jQuery(this);
+    
+    // Special case: computername regex
+    var cname_regex = /^([a-zA-Z0-9][a-zA-Z0-9-_]*[a-zA-Z0-9])$/;
+    if (name=='computer_name' && !cname_regex.test(value)) {
+        alert('<?php print(_T('Invalid hostname','glpi')); ?>');
+        return;
+    }
+    
+    // Posting ajax request
+    jQuery.get('<?php echo urlStrRedirect("base/computers/ajaxSetGlpiEditableValue")?>&uuid=<?php print($_GET['objectUUID']); ?>&name='+name+'&value='+value).success(function(){
+        var label = jQuery('label.editableField[name="'+name+'"]').first();
+        label.html(value).show();
+        input.hide();
+    });
+});
 
-        var cname_regex = /^([a-zA-Z0-9][a-zA-Z0-9-_]*[a-zA-Z0-9])$/;
-        if (name=='computer_name' && !cname_regex.test(value)) {
-            alert('<?php print(_T('Invalid hostname','glpi')); ?>');
-            return;
-        }
-        new Ajax.Request('<?php echo urlStrRedirect("base/computers/ajaxSetGlpiEditableValue")?>&uuid=<?php print($_GET['objectUUID']); ?>&name='+name+'&value='+value, {
-            onSuccess: function(response) {
-                // showing corresponding label and hide input
-                var label = $$('label.editableField[name="'+name+'"]').first();
-                label.setStyle({'display':'block'});
-                label.innerHTML = value;
-                item.setStyle({'display':'none'});
-            }
-          });
-        e.preventDefault();
-    });    
-    
-    });
+
 </script>

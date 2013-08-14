@@ -71,11 +71,11 @@ class AjaxFilterGlpi extends AjaxFilter {
     <br /><br /><br />
 
     <script type="text/javascript">
-    <?php if (!in_array($_GET['part'], array('Softwares', 'History'))) echo "$('Form').hide();" ?>
+    <?php if (!in_array($_GET['part'], array('Softwares', 'History'))) echo "jQuery('#Form').hide();" ?>
 <?php
 if(!$this->formid) {
 ?>
-        document.getElementById('param<?php echo $this->formid ?>').focus();
+        jQuery('#param<?php echo $this->formid ?>').focus();
 <?php
 }
 if(isset($this->storedfilter)) {
@@ -133,10 +133,7 @@ if (isset($this->storedmax)) {
         ?>
 
         updateSearch<?php echo $this->formid ?> = function() {
-            new Ajax.Updater('<?php echo  $this->divid; ?>',
-            '<?php echo $url ?>',
-            { asynchronous:true, evalScripts: true}
-            );
+            jQuery('#<?php echo  $this->divid; ?>').load('<?php echo $url ?>');
 
 <?php
 if ($this->refresh) {
@@ -155,7 +152,7 @@ if ($this->refresh) {
             if(document.getElementById('maxperpage') != undefined)
                 maxperpage = document.getElementById('maxperpage').value;
 
-            new Ajax.Updater('<?php echo  $this->divid; ?>','<?php echo  $this->url; ?>filter='+filter+'&start='+start+'&end='+end+'&maxperpage='+maxperpage+'&hide_win_updates='+hide_win_updates+'&history_delta='+history_delta+'<?php echo  $this->params ?>', { asynchronous:true, evalScripts: true});
+            jQuery('#<?php echo  $this->divid; ?>').load('<?php echo  $this->url; ?>filter='+filter+'&start='+start+'&end='+end+'&maxperpage='+maxperpage+'&hide_win_updates='+hide_win_updates+'&history_delta='+history_delta+'<?php echo  $this->params ?>');
 <?php
 if ($this->refresh) {
 ?>

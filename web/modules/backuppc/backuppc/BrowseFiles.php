@@ -61,25 +61,17 @@ include("modules/backuppc/backuppc/ajaxDownloadsTable.php");
 
 <script type="text/javascript">
 function BrowseDir(dir){
-//    new Ajax.Updater('container','main.php?module=backuppc&submod=backuppc&action=ajaxBrowseFiles&host=&sharename=', { asynchronous:true, evalScripts: true});
-    new Ajax.Updater('<?php echo  $ajax->divid; ?>','<?php echo  $ajax->url; ?>folder='+dir+'<?php echo  $ajax->params ?>', { asynchronous:true, evalScripts: true});
+    jQuery('#<?php echo  $ajax->divid; ?>').load('<?php echo  $ajax->url; ?>folder='+dir+'<?php echo  $ajax->params ?>');
 }
 
 function RestoreFile(paramstr){
-//    new Ajax.Updater('container','main.php?module=backuppc&submod=backuppc&action=ajaxBrowseFiles&host=&sharename=', { asynchronous:true, evalScripts: true});
-    new Ajax.Updater('restoreDiv','<?php echo  urlStrRedirect("backuppc/backuppc/ajaxRestoreFile"); ?>&'+paramstr, { asynchronous:true, evalScripts: true});
-    setTimeout("refresh();",4000);
+    jQuery('#restoreDiv').load('<?php echo  urlStrRedirect("backuppc/backuppc/ajaxRestoreFile"); ?>&'+paramstr);
+    setTimeout("refresh();closePopup();",4000);
 }
 
 </script>
-
+<!-- jQuery('#container').append('<div style="float:left;top: 0;left: 0;width:100%;height:100%;background:#fff;opacity:0.4;z-index:9999;">LOADING</div>'); -->
 
 <style>
     .noborder { border:0px solid blue; }
 </style>
-
-<script src="modules/backuppc/lib/jquery-1.10.1.min.js"></script>
-<script type="text/javascript">
-// Avoid prototype <> jQuery conflicts
-jQuery.noConflict();
-</script>

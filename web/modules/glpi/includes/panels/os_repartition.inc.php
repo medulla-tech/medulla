@@ -33,11 +33,11 @@ $options = array(
 );
 
 
-  
+
 class os_repartitionPanel extends Panel {
 
     function display_content() {
-        
+
         // Declare OS classes
         $osClasses = array(
             'other',
@@ -45,7 +45,7 @@ class os_repartitionPanel extends Panel {
             'Microsoft%Windows XP',
             'otherw'
         );
-        
+
         $osLabels = array(
             _T('Other','glpi'),
             'Windows 7',
@@ -54,12 +54,12 @@ class os_repartitionPanel extends Panel {
         );
 
         $osCount = array();
-      
+
         for ($i = 0; $i< count($osClasses) ; $i++){
             $osCount[] = getMachineByOsLike($osClasses[$i],1);
             $osLabels[$i] .= ' ('.$osCount[$i].')';
         }
-        
+
         $n = count($osCount);
 
         // Treating osCount for adapting to raphaeljs
@@ -67,19 +67,19 @@ class os_repartitionPanel extends Panel {
             if ($osCount[$i] == 0){
                 unset($osCount[$i]);
                 unset($osLabels[$i]);
-                
+
             }
             elseif ($osCount[$i]/array_sum($osCount) < 0.015)
                 $osCount[$i] = 0.015/(1-0.015)*(array_sum($osCount)-$osCount[$i]);
         }
         $osLabels = json_encode(array_values($osLabels));
         $osCount = json_encode(array_values($osCount));
-        
-        
+
+
         /*$links = json_encode(array("#",
                 "main.php?module=base&submod=computers&action=computersgroupcreator&req=glpi&add_param=OS&request=stored_in_session&id=&value=Microsoft Windows 7 *",
                 "main.php?module=base&submod=computers&action=computersgroupcreator&req=glpi&add_param=OS&request=stored_in_session&id=&value=Microsoft Windows XP *",
-                    "#"));  DYNGROUP LINKS*/ 
+                    "#"));  DYNGROUP LINKS*/
         $urlRedirect = json_encode(urlStrRedirect("base/computers/createOSStaticGroup"));
         $createGroupText = json_encode(_T("Create a group", "glpi"));
         $links = json_encode(array(
@@ -97,7 +97,7 @@ class os_repartitionPanel extends Panel {
                 margin = 60,
                 x = 100,
                 y = 80;
-        
+
 
         var data = $osCount,
             createGroupText = $createGroupText,
@@ -105,7 +105,7 @@ class os_repartitionPanel extends Panel {
             colors = ["#000","#73d216","#ef2929","#003399"],
             href = $links,
             title = 'OS Repartition';
-        
+
         /*r.text(5, y - radius - 10, title)
          .attr({ font: "12px sans-serif" })
          .attr({ "text-anchor": "start" });*/
@@ -129,21 +129,20 @@ class os_repartitionPanel extends Panel {
                 this.label[1].attr({ "font-weight": 400 });
             }
          });
-        
+
         y += (radius * 2) + margin + 5;
-        
+
         r.setSize(200, (radius * 1 + margin) + 50);
         // Legend
-	$('os-graphs').insert('<ul>');
+        jQuery('#os-graphs').append('<ul></ul>');
         for (var i = 0; i < legend.length; i++) {
-            $('os-graphs').insert(
+            jQuery('#os-graphs ul').append(
                 '<li style="color: ' + colors[i]  + '"><span style="color: #000">' + legend[i]
                 + '<a href="' + href[i] + '"><img title="' + createGroupText +
                 '" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a></span></li>'
             );
         }
-        $('os-graphs').insert('</ul>');
-	</script>
+        </script>
 SPACE;
     }
 }

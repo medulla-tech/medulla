@@ -63,28 +63,28 @@ if(count($files)) {
         if (tempdir != undefined) {
             url += '&tempdir=' + tempdir;
         }
-        new Ajax.Request(url, {
-            onSuccess: function(response) {
-                $('version').value = response.headerJSON.version;
-                $('commandcmd').value = response.headerJSON.commandcmd;
+        jQuery.ajax({
+            'url': url,
+            type: 'get',
+            success: function(data){
+                jQuery('#version').val(data.version);
+                jQuery('commandcmd').val(data.commandcmd);
             }
         });
+        
     }
     // fill form when changing temp package
-    $('rdo_files').observe('change', function() {
-        var box = $('rdo_files');
-        var selectedIndex = box.selectedIndex;
-        var tempdir = box.options[selectedIndex].value;
-        var box = $('p_api');
-        var selectedIndex = box.selectedIndex;
-        var selectedPapi = box.options[selectedIndex].value;
+    jQuery('#rdo_files').change(function() {
+        var tempdir = jQuery(this).val();
+        var selectedPapi = jQuery('#p_api').val();
         fillForm(selectedPapi, tempdir);
     });
+    
     var jcArray = new Array('label', 'version', 'description', 'commandcmd');
     for (var dummy in jcArray) {
         try {
-            $(jcArray[dummy]).setStyle("background: #FFF;");
-            $(jcArray[dummy]).enable();
+            jQuery('#'+jcArray[dummy]).css("background","#FFF");
+            jQuery('#'+jcArray[dummy]).removeAttr('disabled'); // TODO: Check if no error here
         }
         catch (err){
             // this php file is prototype ajax request with evalscript
@@ -102,38 +102,32 @@ else {
     print "<strong style='color: red;'>" . _T("Package API temporary directory is empty", "pkgs") . "<strong>";
 ?>
         <script type="text/javascript">
-        var jcArray = new Array('label', 'version', 'description', 'commandcmd');
-        for (var dummy in jcArray) {
-            try {
-                $(jcArray[dummy]).value = "";
-                $(jcArray[dummy]).setStyle("background: #DDD;");
-                $(jcArray[dummy]).disable();
-            }
-            catch (err){
-                // this php file is prototype ajax request with evalscript
-                // enabled.
-            }
+    var jcArray = new Array('label', 'version', 'description', 'commandcmd');
+    for (var dummy in jcArray) {
+        try {
+            jQuery('#'+jcArray[dummy]).css("background","#DDD");
+            jQuery('#'+jcArray[dummy]).attr('disabled', 'disabled'); // TODO: Check if no error here
         }
+        catch (err){
+            // this php file is prototype ajax request with evalscript
+            // enabled.
+        }
+    }
         </script>
 
 <?php
     }
     else {
 ?>
-        <script type="text/javascript">
-        var box = $('p_api');
-        var selectedIndex = box.selectedIndex;
-        var selectedPapi = box.options[selectedIndex].value;
-        new Ajax.Updater('package-temp-directory', '<?php echo urlStrRedirect("pkgs/pkgs/ajaxDisplayUploadForm") ?>&papi=' + selectedPapi, { 
-            method: "get", 
-                evalScripts: true
-        });
-        // reset form fields
-        $('version').value = "";
-        $('commandcmd').value = "";
-        $$('input[type="radio"][name="package-method"][value="upload"]')[0].writeAttribute("checked", "checked");
-                $('directory-label').update("<?php echo sprintf(_T("Files upload (<b><u title='%s'>%sM max</u></b>)", "pkgs"), _T("Change post_max_size and upload_max_filesize directives in php.ini file to increase upload size.", "pkgs"), get_php_max_upload_size()) ?>");
-        </script>
+<script type="text/javascript">
+    var selectedPapi = jQuery('#p_api').val();
+    jQuery('#package-temp-directory').load( '<?php echo urlStrRedirect("pkgs/pkgs/ajaxDisplayUploadForm") ?>&papi=' + selectedPapi);
+    // reset form fields
+    jQuery('#version').val('');
+    jQuery('#commandcmd').val('');
+    jQuery('input[type="radio"][name="package-method"][value="upload"]:first').attr("checked", "checked");
+    jQuery('#directory-label').html("<?php echo sprintf(_T("Files upload (<b><u title='%s'>%sM max</u></b>)", "pkgs"), _T("Change post_max_size and upload_max_filesize directives in php.ini file to increase upload size.", "pkgs"), get_php_max_upload_size()) ?>");
+</script>
 <?php
     }
 }

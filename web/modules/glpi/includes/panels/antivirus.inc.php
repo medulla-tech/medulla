@@ -102,15 +102,14 @@ class AntivirusPanel extends Panel {
         stacked: true,
         colors: colors
     }).hover(fin, fout);
-    $('antivirus-graphs').insert('<ul>');
+    jQuery('#antivirus-graphs').append('<ul></ul>');
     for (var i = 0; i < legend.length; i++) {
-        $('antivirus-graphs').insert(
+        jQuery('#antivirus-graphs ul').append(
             '<li style="color: ' + colors[i]  + '"><span style="color: #000">' + legend[i]
             + '<a href="' + href[i] + '"><img title="' + createGroupText +
             '" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a></span></li>'
         );
     }
-    $('antivirus-graphs').insert('</ul>');
     </script>
 ANTIVIRUS;
     }

@@ -162,10 +162,10 @@ jQuery(function(){
         
         // Test if no checkbox is checked
         if (jQuery('input[type=checkbox]:checked').length == 0)
-            {
-                alert('You must select at least on file.');
-                return;
-            }
+        {
+            alert('You must select at least on file.');
+            return;
+        }
         
         jQuery.ajax({
             type: "POST",

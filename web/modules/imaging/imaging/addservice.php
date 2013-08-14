@@ -48,11 +48,10 @@ if (isset($_POST["bconfirm"])) {
 
     $ret = xmlrpc_addServiceToTarget($item_uuid, $target_uuid, $params, $type);
     $ret = xmlrpc_editServiceToTarget($item_uuid, $target_uuid, $params, $type);
-
+    
     // goto images list
     if ($ret[0] and !isXMLRPCError()) {
         /* insert notification code here if needed */
-
         // Synchronize boot menu
         if ($type == 'group') {
             $ret = xmlrpc_synchroProfile($target_uuid);

@@ -58,7 +58,7 @@ if (quickGet('valid')) {
 ?>
 </p>
 <input name='valid' type="submit" class="btnPrimary" value="<?php echo  _T("Remove Computer", "dyngroup"); ?>" />
-<input name="bback" type="submit" class="btnSecondary" value="<?php echo  _T("Cancel", "dyngroup"); ?>" onClick="new Effect.Fade('popup'); return false;"/>
+<input name="bback" type="submit" class="btnSecondary" value="<?php echo  _T("Cancel", "dyngroup"); ?>" onClick="jQuery('#popup').fadeOut(); return false;"/>
 </form>
 
 

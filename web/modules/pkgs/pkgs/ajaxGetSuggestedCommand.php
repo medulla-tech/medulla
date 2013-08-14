@@ -35,5 +35,6 @@ else {
 }
 
 $datas = getTemporaryFileSuggestedCommand($papiid, $tempdir);
-header("X-JSON: " . json_encode($datas));
+header('Content-type: application/json');
+print(json_encode($datas));
 ?>
