@@ -75,9 +75,3 @@ function RestoreFile(paramstr){
 <style>
     .noborder { border:0px solid blue; }
 </style>
-
-<script src="modules/backuppc/lib/jquery-1.10.1.min.js"></script>
-<script type="text/javascript">
-// Avoid prototype <> jQuery conflicts
-jQuery.noConflict();
-</script>

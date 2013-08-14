@@ -258,14 +258,9 @@ $f->addValidateButton("bconfirm");
 $f->display();
 ?>
 
-<script src="modules/backuppc/lib/jquery-1.10.1.min.js"></script>
-<script src="modules/backuppc/lib/jquery-ui.min.js"></script>
 <script src="modules/backuppc/lib/jquery.maskedinput-1.3.min.js"></script>
 <script src="modules/backuppc/lib/jquery.multiselect.js"></script>
 <script type="text/javascript">
-// Avoid prototype <> jQuery conflicts
-jQuery.noConflict();
-
 jQuery(function(){
     
     shareLine = jQuery('.removeShare:first').parents('tr:first').clone();

@@ -200,10 +200,7 @@ $ajax->displayDivToUpdate();
 
 ?>
 
-<script src="modules/backuppc/lib/jquery-1.10.1.min.js"></script>
 <script type="text/javascript">
-// Avoid prototype <> jQuery conflicts
-jQuery.noConflict();
 
 jQuery(function(){
     
