@@ -25,6 +25,8 @@
  */
 var launch = 0;
 
+// functions below are not used
+
 function url_encode(str) {
     var hex_chars = "0123456789ABCDEF";
     var noEncode = /^([a-zA-Z0-9\_\-\.])$/;
@@ -47,11 +49,11 @@ function url_encode(str) {
 /**
  * update group div via ajax request
  */
-function updateSearchGroup() {
+function updateSearchGroup() {   // ===> NOT USED
     launch--;
 
     if (launch==0) {
-        new Ajax.Updater('groupContainer','main.php?module=base&submod=groups&action=ajaxFilter&filter='+document.groupForm.param.value, { asynchronous:true, evalScripts: true});
+        jQuery('#groupContainer').load('main.php?module=base&submod=groups&action=ajaxFilter&filter='+document.groupForm.param.value);
     }
 }
 
@@ -59,15 +61,24 @@ function updateSearchGroup() {
  * provide navigation in ajax for group
  */
 
-function updateSearchGroupParam(filter, start, end) {
-    new Ajax.Updater('groupContainer','main.php?module=base&submod=groups&action=ajaxFilter&filter='+filter+'&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
+function updateSearchGroupParam(filter, start, end) {  // => NOT USED
+    jQuery('#groupContainer').load('main.php?module=base&submod=groups&action=ajaxFilter&filter='+filter+'&start='+start+'&end='+end);
 }
+
+
 
 /**
  * wait 500ms and update search
  * prevent ajax request on each keydown
  */
-function pushSearchGroup() {
+function pushSearchGroup() {  // ===> NOT USED
     launch++;
     setTimeout("updateSearchGroup()",500);
+}
+
+/* Toggle an element visibility
+ * by its id
+ */
+function toggleVisibility(id) {
+    jQuery('#' + id).toggle();
 }

@@ -1,4 +1,3 @@
-
 <?php
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
@@ -57,18 +56,28 @@ function display_submod($submod,$mod) {
     echo '</div>';
 }
 
+$i = 1;
+
 function display_mod($mod) {
     if (!$mod->hasVisible()) {
         return;
     }
 
+    global $i;
 ?>
-    <div class="module" id="<?php echo $mod->getName(); ?>">
-        <h3 class="handle"><?php echo $mod->getDescription(); ?></h3>
-        <?php foreach (getSorted($mod->getSubmodules()) as $submod) {
-            display_submod($submod,$mod);
-        }
-        ?>
+    <div class="column" id="col<?php echo $i; ?>" style="width:250px;">
+                <div id="<?php echo $mod->getName(); ?>" class="portlet">
+                    <div class="portlet-header"><?php echo $mod->getDescription(); ?></div>
+                    <div class="portlet-content">
+    <?php foreach (getSorted($mod->getSubmodules()) as $submod) {
+    ?>
+        
+                    <?php display_submod($submod,$mod); $i++; ?>
+    <?php
+    }
+    ?>
+            </div>
+        </div>
     </div>
 <?php
 }
@@ -91,116 +100,93 @@ $p->display();
     <div class="clearer"></div>
 </div>
 
-<script src="jsframework/cookiejar.js"></script>
+
+<style>
+.column { width: 230px; float: left; padding-bottom: 100px; }
+.portlet { margin: 0 1em 1em 0; border:1px solid #333; -moz-border-radius: 5px; border-radius: 5px; }
+.portlet-header { margin: 0.3em; padding-bottom: 4px; padding-left: 0.2em; font-size:14px; background:#324C96; color:#fff; padding:5px; -moz-border-radius: 5px; border-radius: 5px; cursor:move; }
+.portlet-header .ui-icon { float: right; }
+.portlet-content { padding: 0.4em; }
+.ui-sortable-placeholder { border: 2px dotted #324C96; visibility: visible !important; height: 50px !important; }
+.ui-sortable-placeholder * { visibility: hidden; }
+</style>
+
+
 <script type="text/javascript">
-    Event.observe(window, 'load', function() {
-
-        load = function() {
-            try {
-                settings = mmcookie.get('home-settings');
-                saved_modules = 0;
-                for(zone in settings)
-                    for(module in settings[zone])
-                        saved_modules++;
-                // if there is more or less modules loaded
-                // invalidate the settings
-                if (modules.length != saved_modules)
-                    settings = false;
-            }
-            catch (err) {
-                mmcookie.remove('home-settings');
-                settings = false;
-            }
-            if (!settings) {
-                // create default settings
-                settings = {};
-                // store column info
-                for(var c=0; c<cols; c++)
-                    settings['dashboard-column_'+c] = {};
-                // add each module in a column
-                for(var m=0, c=0; m<modules.length; m++, c++) {
-                    settings['dashboard-column_'+c][modules[m].id] = modules[m].id;
-                    // don't fill the first column
-                    // base module can be very high
-                    if (c == cols-1)
-                        c = 0;
-                }
-                // save the settings
-                mmcookie.put('home-settings', settings);
-            }
-            // apply the settings
-            zone_no = 0;
-            for(zone in settings) {
-                // create che columns
-                var z = new Element('div', {'class': 'dashboard-column', 'id': 'dashboard-column_'+zone_no});
-                // add modules in columns
-                for(module in settings[zone])
-                    z.appendChild(modules.find(function(m) { return m.id == module; }));
-                // display the column
-                home.appendChild(z);
-                zone_no++;
-            }
-            // add more columns if needed
-            if(Object.keys(settings).length < cols) {
-                for(var i=Object.keys(settings).length; i<cols; i++) {
-                    var z = new Element('div', {'class': 'dashboard-column', 'id': 'dashboard-column_'+i});
-                    home.appendChild(z);
-                }
-            }
+// function that writes the list order to a cookie
+function saveOrder() {
+    jQuery(".column script").remove();
+    jQuery(".column").each(function(index, value){
+        var colid = value.id;
+        var cookieName = "home-cookie-" + colid;
+        // Get the order for this column.
+        var order = jQuery('#' + colid).sortable("toArray");
+        // For each portlet in the column
+        for ( var i = 0, n = order.length; i < n; i++ ) {
+            // Determine if it is 'opened' or 'closed'
+            var v = jQuery('#' + order[i] ).find('.portlet-content').is(':visible');
+            // Modify the array we're saving to indicate what's open and
+            //  what's not.
+            order[i] = order[i] + ":" + v;
         }
-
-        save = function() {
-            new_settings = {};
-            sortables.each(function (z) {
-                $$('#'+z.id+' .module').each(function(m) {
-                    if (!new_settings[z.id])
-                        new_settings[z.id] = {};
-                    new_settings[z.id][m.id] = m.id;
-                });
-            });
-            mmcookie.put('home-settings', new_settings);
-        }
-
-        var settings = false;
-        var mmcookie = new CookieJar({
-            expires: 604800, // one week
-            path: '/mmc/'
-        });
-        var home = $('home');
-        var modules = $$('.module');
-        // calculate the number of columns for the screen
-        var cols = Math.floor($('home').offsetWidth / 210);
-        // load the modules in the columns
-        load();
-        // make the modules sortable
-        var sortables = $$('.dashboard-column');
-        sortables.each(function (sortable) {
-          Sortable.create(sortable, {
-            containment: sortables,
-            constraint: false,
-            tag: 'div',
-            only: 'module',
-            dropOnEmpty: true,
-            handle: 'handle',
-            hoverclass: 'module-hover'
-          });
-          $$('.handle').each(function(m) {
-            m.observe("mousedown", function(m) {
-                sortables.each(function (s) {
-                    s.style.border = "1px solid #ccc";
-                    s.style.background = "#FFFAFA";
-                });
-            });
-          });
-          $$('.handle').each(function(m) {
-            m.observe("mouseup", function(m) {
-                save();
-                sortables.each(function (s) {
-                    s.style.border = "1px solid white";
-                    s.style.background = "white";
-                });
-            });
-          });
-        });
+        jQuery.cookie(cookieName, order, { path: "/", expiry: new Date(2012, 1, 1)});
     });
+}
+
+// function that restores the list order from a cookie
+function restoreOrder() {
+    jQuery(".column").each(function(index, value) {
+        var colid = value.id;
+        var cookieName = "home-cookie-" + colid
+        var cookie = jQuery.cookie(cookieName);
+        if ( cookie == null ) { return; }
+        var IDs = cookie.split(",");
+        for (var i = 0, n = IDs.length; i < n; i++ ) {
+            var toks = IDs[i].split(":");
+            if ( toks.length != 2 ) {
+                continue;
+            }
+            var portletID = toks[0];
+            var visible = toks[1]
+            var portlet = jQuery(".column")
+                .find('#' + portletID)
+                .appendTo(jQuery('#' + colid));
+            if (visible === 'false') {
+                portlet.find(".ui-icon").toggleClass("ui-icon-minus");
+                portlet.find(".ui-icon").toggleClass("ui-icon-plus");
+                portlet.find(".portlet-content").hide();
+            }
+        }
+    });
+} 
+
+jQuery(document).ready( function () {
+    jQuery(".column").sortable({
+        connectWith: ['.column'],
+        stop: function(event,ui) { ui.item.css('opacity',1);saveOrder(); },
+        sort: function(event,ui) { ui.item.css('opacity',0.7); }
+    }); 
+
+    jQuery(".portlet")
+        .addClass("ui-widget ui-widget-content")
+        .addClass("ui-helper-clearfix ui-corner-all")
+        .find(".portlet-header")
+        .addClass("ui-widget-header ui-corner-all")
+        .prepend('<span class="ui-icon ui-icon-minus"></span>')
+        .end()
+        .find(".portlet-content");
+
+    restoreOrder();
+
+    jQuery(".portlet-header .ui-icon").click(function() {
+        jQuery(this).toggleClass("ui-icon-minus");
+        jQuery(this).toggleClass("ui-icon-plus");
+        jQuery(this).parents(".portlet:first").find(".portlet-content").toggle();
+        saveOrder(); // This is important
+    });
+    jQuery(".portlet-header .ui-icon").hover(
+        function() {jQuery(this).addClass("ui-icon-hover"); },
+        function() {jQuery(this).removeClass('ui-icon-hover'); }
+    );
+});  
 </script>

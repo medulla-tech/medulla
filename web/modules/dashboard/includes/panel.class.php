@@ -31,8 +31,11 @@ class Panel {
     }
 
     function display() {
-        echo '<h3 class="handle">' . $this->title . '</h3>';
+        //echo '<h3 class="handle">' . $this->title . '</h3>';
+        echo '<div class="portlet-header">' . $this->title . '</div>';
+        echo '<div class="portlet-content">';
         echo $this->display_content();
+        echo '</div>';
     }
 
     function display_content() {

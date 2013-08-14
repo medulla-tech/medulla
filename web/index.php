@@ -83,12 +83,12 @@ if (isset($_GET["agentsessionexpired"])) {
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-	<title>Mandriva Linux / Mandriva Management Console</title>
-	<link href="graph/login/index.css" rel="stylesheet" media="screen" type="text/css" />
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<link rel="icon" href="img/common/favicon.ico" />
-    <script src="jsframework/lib/prototype.js" type="text/javascript"></script>
-    <script src="jsframework/src/scriptaculous.js" type="text/javascript"></script>
+        <title>Mandriva Linux / Mandriva Management Console</title>
+        <link href="graph/login/index.css" rel="stylesheet" media="screen" type="text/css" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <link rel="icon" href="img/common/favicon.ico" />
+        <script src="jsframework/lib/jquery-1.10.2.min.js" type="text/javascript"></script>
+        <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 </head>
 <body onload="Form.focusFirstElement('loginForm')">
 
@@ -154,22 +154,24 @@ if ($error) {
             $langList->setElements($langDescList);
             $langList->setElementsVal($langLabelList);
 
-            // Get browser lang
-            $lang_1 = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
-            $lang_2 = str_replace('-','_',substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 5));
-            
-            // If lang1 = en => LANG =  C
-            if ($lang_1 == 'en')
-                $_SESSION['lang'] = 'C';
-            else // We check other languages 
-                // Searching with xx_XX pattern
-                if (in_array($lang_2, $languages))
-                    $_SESSION['lang'] = $lang_2;
-                else
-                    // Searching with xx pattern
-                    foreach ($languages as $lang)
-                        if (substr($lang, 0, 2) == $lang_1)
-                            $_SESSION['lang'] = $lang;
+            if (!isset($_GET['lang'])) {
+                // Get browser lang
+                $lang_1 = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+                $lang_2 = str_replace('-','_',substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 5));
+
+                // If lang1 = en => LANG =  C
+                if ($lang_1 == 'en')
+                    $_SESSION['lang'] = 'C';
+                else // We check other languages 
+                    // Searching with xx_XX pattern
+                    if (in_array($lang_2, $languages))
+                        $_SESSION['lang'] = $lang_2;
+                    else
+                        // Searching with xx pattern
+                        foreach ($languages as $lang)
+                            if (substr($lang, 0, 2) == $lang_1)
+                                $_SESSION['lang'] = $lang;
+            }
             
             if (isset($_SESSION['lang']))
                 $langList->setSelected($_SESSION['lang']);
@@ -184,7 +186,7 @@ if ($error) {
             
             if (count($servDescList) == 1)
             {
-                printf('<input type="hidden" name="server" value="%s" />',$servLabelList[0]);
+                printf('<input type="hidden" id="server" name="server" value="%s" />',$servLabelList[0]);
             }
             else {
             ?>
@@ -215,7 +217,7 @@ if ($error) {
             </div>
             <script type="text/javascript">
                 function changeServerLang() {
-                    window.location = "index.php?server=" + document.getElementById('server').value + "&lang=" + document.getElementById('lang').value;
+                    window.location = "index.php?server=" + jQuery('#server').val() + "&lang=" + jQuery('#lang').val();
                 }
             </script>
             <div class="control-group">
@@ -238,7 +240,7 @@ if ($error) {
 if (isCommunityVersion() && is_file("license.php"))
     require("license.php");
 if ($error)
-    print '<script type="text/javascript">new Effect.Shake($("alert"));</script>';
+    print '<script type="text/javascript">$("#alert").effect("shake");</script>';
 ?>
 </body>
 </html>

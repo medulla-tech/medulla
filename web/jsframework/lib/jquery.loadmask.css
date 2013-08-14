@@ -1,0 +1,44 @@
+.loadmask {
+    z-index: 100;
+    position: absolute;
+    top:0;
+    left:0;
+    -moz-opacity: 0.5;
+    opacity: .50;
+    filter: alpha(opacity=50);
+    background-color: #FFF;
+    width: 100%;
+    height: 100%;
+    zoom: 1;
+}
+.loadmask-msg {
+    z-index: 20001;
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size:20px;
+    padding:2px;
+    /*background:#fff;
+    border: 1px solid #ccc;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    opacity: 0.8;*/
+}
+.loadmask-msg div {
+    padding:25px 10px 5px 25px;
+    font-size:20px;
+    line-height: 16px;
+    color:#222;
+    cursor:wait;
+    background: url(../../graph/ajax_loading.gif) no-repeat;
+    background-position: 50% 15%;
+}
+.masked {
+    overflow: hidden !important;
+}
+.masked-relative {
+    position: relative !important;
+}
+.masked-hidden {
+    visibility: hidden !important;
+}

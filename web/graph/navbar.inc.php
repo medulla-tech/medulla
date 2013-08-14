@@ -93,7 +93,7 @@ if ($_SESSION["login"]=='root') {
 
 <div id="overlay" class="overlay" style="display: none"></div>
 <div id="popup" class="popup" style="display: none;">
-    <div style="float:right"><a href="#" onclick="toggleVisibility('popup'); $('overlay').hide(); return false;"><img src="img/common/icn_close.png" alt ="[x]"/></a></div>
+    <div style="float:right"><a href="#" class="popup_close_btn"><img src="img/common/icn_close.png" alt ="[x]"/></a></div>
     <div id="__popup_container"><?php echo  _("If this phrase does not change, you browser is not supported by the MMC application"); ?></div>
 </div>
 

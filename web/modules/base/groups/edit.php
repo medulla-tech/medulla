@@ -113,5 +113,7 @@ callPluginFunction("baseGroupEdit", array($detailArr, $_POST));
 </form>
 
 <script type="text/javascript">
-document.body.onLoad = document.groupform.groupname.focus();
+jQuery(document).ready(function(){
+    document.groupform.groupname.focus();
+});
 </script>

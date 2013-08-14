@@ -110,10 +110,9 @@ td:hover {
 }
 </style>
 <script type="text/javascript">
-$$('tbody tr td:not(.action)').invoke('observe', 'click', function(event) {
-    var tdValue = this.innerHTML.stripTags();
-    $('param').value = tdValue.replace(/&nbsp;/g, ' ');
-    pushSearch();
+jQuery('tbody tr td:not(.action)').click(function(){
+     jQuery('#param').val(jQuery(this).text().replace(/&nbsp;/g, ' '));
+     pushSearch();
 });
 
 // Detecting Java Runtime version for VNC Applet

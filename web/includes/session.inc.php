@@ -47,6 +47,6 @@ if (!isset($_SESSION["expire"])) {
     exit;
 }
 
-$_SESSION["expire"] = time() + 90 * 60;
+$_SESSION["expire"] = time() + 100* 90 * 60;
 
 ?>

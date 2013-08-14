@@ -1,5 +1,5 @@
 <?php if ($_SESSION['__notify'])  { ?>
-<script>
+<script type="text/javascript">
     window.location= 'main.php'
 </script>
 <?php
@@ -20,8 +20,8 @@ $oparr = array();
 
 foreach (xmlCall("base.getLdapLog",array($_SESSION['ajax']['filter'])) as $line) {
     if (is_array($line)) {
-    $connectionNumber[] = '<a href="#" onClick="$(\'param\').value=\''.'conn='.$line["conn"].'\'; pushSearch(); return false">'.$line["conn"].'</a>';
-    $action[] = '<a href="#" onClick="$(\'param\').value=\''.$line["op"].'\'; pushSearch(); return false">'.$line["op"].'</a>';
+    $connectionNumber[] = '<a href="#" onClick="jQuery(\'#param\').val(\''.'conn='.$line["conn"].'\'); pushSearch(); return false">'.$line["conn"].'</a>';
+    $action[] = '<a href="#" onClick="jQuery(\'#param\').val(\''.$line["op"].'\'); pushSearch(); return false">'.$line["op"].'</a>';
     $extra[] = $line["extra"];
     $dateparsed = strftime('%b %d %H:%M:%S',$line["time"]);
     $date[] = str_replace(" ", "&nbsp;", $dateparsed);
