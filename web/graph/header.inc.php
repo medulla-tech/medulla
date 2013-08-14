@@ -44,8 +44,10 @@ $root = $conf["global"]["root"];
     <script src="jsframework/lib/prototype.js" type="text/javascript"></script>
     <script src="jsframework/src/scriptaculous.js" type="text/javascript"></script>
     <script src="jsframework/common.js" type="text/javascript"></script>
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
-    <link href='http://fonts.googleapis.com/css?family=Tauri' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="jsframework/lib/jquery.ui.css" />
+    <script src="jsframework/lib/jquery.loadmask.js" type="text/javascript"></script>
+    <link href='jsframework/lib/jquery.loadmask.css' rel='stylesheet' type='text/css'>
+    <script src="jsframework/lib/jquery.mousewheel-3.0.6.pack.js" type="text/javascript"></script>
 <?php
 unset($css);
 ?>
@@ -55,11 +57,23 @@ unset($css);
 //jQuery ajax response handlers
 function ajaxSend(){
     jQuery('#loadimg').attr('src','<?php echo $root; ?>img/common/loader_p.gif');
+    try
+    {
+        jQuery('#container').mask("");
+        jQuery('#container').width('100%');
+    }
+    catch(err)
+    {
+        console.log('Error masking')
+    }
+
 }
 
 function ajaxComplete(){
-    if (!jQuery.active && !jQuery.ajax.active)
+    if (!jQuery.active && !jQuery.ajax.active){
         jQuery('#loadimg').attr('src','<?php echo $root; ?>img/common/loader.gif');
+        jQuery('#container').unmask();
+    }
 }
 
 // prefix: checkbox prefix, check_state 0/1
@@ -68,7 +82,6 @@ function checkAll (prefix, check_state) {
         if (jQuery(this).attr('name').indexOf(prefix) > -1 )
             jQuery(this).prop('checked', check_state);
     });
-
 }
 
 // prefix: radio prefix, value null,ro,rw
@@ -77,7 +90,6 @@ function checkAllRadio (prefix, value) {
         if (jQuery(this).attr('name').indexOf(prefix) > -1 && jQuery(this).val() == value)
             jQuery(this).prop('checked', 1);
     });
-
 }
 
 // select all select with class 'list' options in the page
@@ -93,9 +105,10 @@ jQuery(function(){
     jQuery('a.popup_close_btn').click(function(){
         closePopup();
     });
-
+    
     // Ajax handlers
     jQuery(document).bind("ajaxSend",ajaxSend).bind("ajaxStop",ajaxComplete);
+    
 });
 
 // Popup under mouseevent
@@ -118,17 +131,17 @@ function _centerPlacement(evt){
 function PopupWindow(evt, url, width,callback,content) {
     jQuery('#popup').css("width", width + "px" );
     if (!evt) evt = window.event;
-
+    
     // If content is specified, we skip ajax request
     if (content){
         jQuery("#__popup_container").html(content);
-
+        
         callback = callback || _defaultPlacement;
         callback(evt);
         jQuery('#popup').fadeIn();
         return;
     }
-
+    
     jQuery.ajax({
         'url': url,
         type: 'get',
@@ -174,7 +187,7 @@ function showPopupCenter(url) {
 }
 
 function displayConfirmationPopup(message, url_yes, url_no, klass) {
-
+    
     if (!klass) var klass = '';
     var message = '<div style="padding: 10px"><div class="alert alert-info ' + klass + '">' + message + '</div>';
     message += '<div style="text-align: center"><a class="btn btn-primary" href="' + url_yes + '"><?=_('Yes')?></a>';
@@ -194,7 +207,38 @@ function displayConfirmationPopup(message, url_yes, url_no, klass) {
                 'top':'15%'
             });
             jQuery('#overlay').fadeIn().click(closePopup);
+            
+        },message);
+}
 
+// Replacement function for Javascript alert (override)
+function alert(message, title, klass) {
+    
+    function nl2br (str, is_xhtml) {
+        var breakTag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';
+        return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
+    }
+
+    message = nl2br(message);
+    
+    if (!klass) klass = '';
+    if (!title) title = '';
+    var message = '<div style="padding: 10px"><div class="alert alert-error ' + klass + '">' + message + '</div>';
+    //message += '<div style="text-align: center"><a class="btn btn-primary" href="' + url_yes + '"><?=_('Yes')?></a>';
+
+    message += ' <center><button class="btn" onclick="closePopup(); return false;"><?=_('Close')?></button></center>';
+
+    message += '</div></div>';
+
+    PopupWindow(null, null, 0,function(evt){
+
+            jQuery('#popup').css({
+                'width': '50%',
+                'left': '25%',
+                'top':'15%'
+            });
+            jQuery('#overlay').fadeIn().click(closePopup);
+            
         },message);
 }
 
@@ -205,14 +249,14 @@ function closePopup() {
 
 
 function validateForm(formId,errmsg) {
-
+    
     // By default, we show the error message
     if (errmsg == null ) errmsg = true;
-
+    
     var err = 0;
     // Required fields
     jQuery('#'+formId).find('input[rel=required],textarea[rel=required],select[rel=required]').each(function(){
-        if (jQuery(this).val() == '') {
+        if (jQuery(this).val() == ''){
             jQuery(this).addClass('form-error');
             err == 0 && jQuery(this);
             err = 1;
@@ -222,11 +266,11 @@ function validateForm(formId,errmsg) {
     });
 
     // Regexp fields
-    jQuery('#'+formId).find('input[regexp],textarea[regexp]').each(function(){
+    jQuery('#'+formId).find('input[data-regexp],textarea[data-regexp]').each(function(){
 
-        if (jQuery(this).val() && jQuery(this).attr('regexp') != '/.+/') {
-            var flags = jQuery(this).attr('regexp').replace(/.*\/([gimy]*)$/, '$1');
-            var pattern = jQuery(this).attr('regexp').replace(new RegExp('^/(.*?)/'+flags+'$'), '$1');
+        if (jQuery(this).val() && jQuery(this).attr('data-regexp') != '/.+/'){
+            var flags = jQuery(this).attr('data-regexp').replace(/.*\/([gimy]*)$/, '$1');
+            var pattern = jQuery(this).attr('data-regexp').replace(new RegExp('^/(.*?)/'+flags+'$'), '$1');
 
             var re = new RegExp(pattern, flags);
 
@@ -237,7 +281,6 @@ function validateForm(formId,errmsg) {
             }
             else
                 jQuery(this).removeClass('form-error');
-
         }
     });
 
@@ -247,11 +290,11 @@ function validateForm(formId,errmsg) {
             err = 1;
             jQuery('#confpass').addClass('form-error');
         }
-
+    
     if (errmsg && err != 0)
         alert('<?php echo  _("Form cannot be submit. Input errors are highlighted in red.") ?>');
-
-    return err==0;
+    
+    return err == 0;
 }
 
 <?php
@@ -294,40 +337,7 @@ function restartServices() {
                     statusElem.addClass("alert-error");
                 }
         } });
-
-        /*new Ajax.Request(service.check, {
-            onSuccess: function(r) {
-                var statusElem = $(service.id + 'Status');
-                if (r.responseJSON) {
-                    var status = r.responseJSON[1];
-                    if (status != "active" && status != "failed") {
-                        setTimeout(function() {
-                            checkService(service);
-                        }, 800);
-                    }
-                    else {
-                        if (status == "failed") {
-                            statusElem.update(service.msg_fail);
-                            statusElem.removeClassName("alert-info");
-                            statusElem.addClassName("alert-error");
-                        }
-                        else {
-                            statusElem.update(service.msg_success);
-                            statusElem.removeClassName("alert-info");
-                            statusElem.addClassName("alert-success");
-                        }
-                    }
-                }
-                else {
-                    statusElem.update(service.msg_fail);
-                    statusElem.removeClassName("alert-info");
-                    statusElem.addClassName("alert-error");
-                    r.responseText.evalScripts();
-                }
-
-            }
-        });
-    };*/
+        
 
     services.each(function(service) {
         jQuery.get({
@@ -348,24 +358,7 @@ function restartServices() {
                     checkService(service);
                 }, 1000);
         } });
-        /*new Ajax.Request(service.restart, {
-            onSuccess: function() {
-                var message = $(service.id + 'Status');
-                if (!message) {
-                    message = new Element('p', {'id': service.id + 'Status',
-                                                'class': 'alert alert-info'});
-                    $('restartStatus').appendChild(message);
-                }
-                message.update(service.msg_exec);
-                message.removeClassName("alert-success");
-                message.removeClassName("alert-error");
-                message.addClassName("alert-info");
-                $('restartStatus').show();
-                setTimeout(function() {
-                    checkService(service);
-                }, 1000);
-            }
-        });*/
+
     });
 }
 

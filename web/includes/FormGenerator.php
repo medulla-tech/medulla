@@ -314,7 +314,7 @@ class InputTpl extends AbstractTpl{
             $arrParam['placeholder'] = '';
         }
         $required_attr = isset($arrParam["required"])?' rel="required"':'';
-        $regexp_attr = isset($this->regexp)?' regexp="'.$this->regexp.'"':'';
+        $regexp_attr = isset($this->regexp)?' data-regexp="'.$this->regexp.'"':'';
             
         print '<span id="container_input_'.$this->name.'"><input name="'.$this->name.'" id="'.$this->name.'" type="' . $this->fieldType . '" size="'.$this->size.'" value="'.$arrParam["value"].'" placeholder="'.$arrParam["placeholder"].'" '.$arrParam["disabled"].$required_attr.$regexp_attr.' autocomplete="off" /></span>';
 

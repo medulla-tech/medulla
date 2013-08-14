@@ -180,7 +180,7 @@ h2.statusPad {
 div.statusPad {
         padding: 0px;
         text-align: center;
-        font-size: 11px;
+        font-size: 12px;
         color: #666;
         background-color: #F0F4F7;
         border: solid 1px #CCC;

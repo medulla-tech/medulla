@@ -37,7 +37,7 @@ function linkToRemote($obj,$id,$url,$options = null) {
 
     $javaopt = '{'.implode(',',$arrOpt).'}';
 
-    $javascriptcode = "jQuery('$id').load('$url',$javaopt); return false;";
+    $javascriptcode = "jQuery('#$id').load('$url',$javaopt); return false;";
 
 
     echo "<a href=\"#\" onClick=\"$javascriptcode\">";

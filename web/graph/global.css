@@ -20,7 +20,7 @@
  */
 
 * {
-    font-family: "Tauri",Verdana, Lucida, Geneva, Helvetica, Arial, sans-serif;
+    font-family: Verdana, Lucida, Geneva, Helvetica, Arial, sans-serif;
     font-size: 11px;
 }
 
@@ -1024,12 +1024,11 @@ div.autocomplete ul li {
 }
 
 .listinfos thead {
-    background-color: #324C96;
+    background-color: #eee;
 }
 
 .listinfos thead td {
     border-width: 1px 0px 1px 0px;
-    color:#fff;
 }
 
 form.inplaceeditor-form input[type="text"] {
@@ -1285,4 +1284,3 @@ ul.roACL {
 .listinfos tbody>tr:hover {
     background: #D8E7EF !important;
 }
-

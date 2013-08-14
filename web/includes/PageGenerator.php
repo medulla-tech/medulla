@@ -293,6 +293,42 @@ class ActionPopupItem extends ActionItem {
     }
 }
 
+/**
+ * display confirm box before redirecting to action link
+ *
+ * @see ActionItem
+ * @see showPopup (js)
+ */
+class ActionConfirmItem extends ActionItem {
+
+    var $_displayType = 0;
+    var $_confirmMessage = '';
+    
+    function ActionConfirmItem($desc, $action, $classCss, $paramString, $module = null, $submod = null, $confirmMessage, $tab = null, $width = 300, $mod = false) {
+        $this->ActionItem($desc, $action, $classCss, $paramString, $module, $submod, $tab, $mod);
+        //$this->setWidth($width);
+        $this->_confirmMessage = $confirmMessage;
+    }
+
+    function displayWithRight($param, $extraParams = array()) {
+        /* Add special param for actionPopupItem */
+        if (is_array($extraParams)) {
+            $extraParams['mod'] = $this->mod;
+        }
+        if (is_array($extraParams) & !empty($extraParams)) {
+            $urlChunk = $this->buildUrlChunk($extraParams);
+        } else {
+            $urlChunk = "&amp;" . $this->paramString."=" . rawurlencode($param);
+        }
+        echo "<li class=\"".$this->classCss."\">";
+        echo "<a title=\"".$this->desc."\" href=\"#\" ";
+        echo " onclick=\"displayConfirmationPopup('".$this->_confirmMessage."', 'main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=" . $this->action . $urlChunk."')\" ";
+        echo ">&nbsp;</a>";
+        echo "</li>";
+    }
+
+}
+
 class EmptyActionItem extends ActionItem {
 
     function EmptyActionItem() {

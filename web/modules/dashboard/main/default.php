@@ -108,6 +108,7 @@ function saveOrder() {
             order[i] = order[i] + ":" + v;
         }
         jQuery.cookie(cookieName, order, { path: "/", expiry: new Date(2012, 1, 1)});
+        jQuery.cookie(cookieName+'-width',jQuery(this).width());
     });
 }
 
@@ -135,15 +136,18 @@ function restoreOrder() {
                 portlet.find(".portlet-content").hide();
             }
         }
+        jQuery(this).width(jQuery.cookie(cookieName+'-width'));
     });
 } 
 
 jQuery(document).ready( function () {
+    
+    // Make columns sortable    
     jQuery(".column").sortable({
         connectWith: ['.column'],
-        stop: function(event,ui) { ui.item.css('opacity',1);saveOrder(); },
+        stop: function(event,ui) { ui.item.css('opacity',1);saveOrder();},
         sort: function(event,ui) { ui.item.css('opacity',0.7); }
-    }); 
+    });
 
     jQuery(".portlet")
         .addClass("ui-widget ui-widget-content")
@@ -154,6 +158,7 @@ jQuery(document).ready( function () {
         .end()
         .find(".portlet-content");
 
+    // Restore order from cookie
     restoreOrder();
 
     jQuery(".portlet-header .ui-icon").click(function() {
@@ -166,5 +171,13 @@ jQuery(document).ready( function () {
         function() {jQuery(this).addClass("ui-icon-hover"); },
         function() {jQuery(this).removeClass('ui-icon-hover'); }
     );
+        
+    setTimeout(function(){
+        jQuery('.portlet-content').resizable({handles:'e'}).resize(function(){
+            jQuery(this).parents('.column:first').width(jQuery(this).width()+25);
+            saveOrder();
+        })
+    },1000);
+    
 });  
 </script>
