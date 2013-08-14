@@ -2593,6 +2593,15 @@ class Glpi07(DyngroupDatabaseHelper):
                 'OSName': OSName,
             })
         return res
+    
+    def getComputersCountByOS(self, osname):
+        session = create_session()
+        query = session.query(func.count(self.machine.c.ID), Machine) \
+                .select_from(self.machine.join(self.os))
+        query = query.filter(self.os.c.name.like('%'+osname+'%'))
+        count = query.scalar()
+        session.close()
+        return count
 
     def getMachineUUIDByMacAddress(self, mac):
         """
