@@ -1311,7 +1311,7 @@ def runCommand(myCommandOnHostID):
                 not CommandsOnHostTracking().preempt(myCommandOnHostID): 
             return
         log.info("command_on_host #%s: Preempting" % myCommandOnHostID)
-        return runWOLPhase(myCommandOnHostID)
+        return runImagingMenuPhase(myCommandOnHostID)
     else:
         log.info("command_on_host #%s: NOT preempting" % myCommandOnHostID)
 
@@ -1375,6 +1375,44 @@ def checkAndFixCommand(myCommandOnHostID):
     log.debug("command state is %s" % myC.toH())
     myCoH.setStartDate()
     return True
+
+def runImagingMenuPhase(myCommandOnHostID):
+
+    (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    log.info("command_on_host #%s: imaging menu phase" % myCommandOnHostID)
+    if myCoH == None:
+        return runGiveUpPhase(myCommandOnHostID)
+
+    # check for upload condition in order to give up if needed
+    if myCoH.isImagingMenuRunning(): # imaging menu still running, immediately returns
+        log.info("command_on_host #%s: still running" % myCoH.getId())
+        return runGiveUpPhase(myCommandOnHostID)
+    if myCoH.isImagingMenuIgnored(): # imaging menu has already been ignored, jump to next stage
+        log.debug("command_on_host #%s: imaging menu ignored" % myCoH.getId())
+        return runWOLPhase(myCoH.getId())
+    if myCoH.isImagingMenuDone(): # imaging menu has already already done, jump to next stage
+        log.info("command_on_host #%s: imaging menu done" % myCoH.getId())
+        return runWOLPhase(myCoH.getId())
+    if not myCoH.isImagingMenuImminent(): # nothing to do right now, give out
+        log.info("command_on_host #%s: nothing to do on imaging menu right now" % myCoH.getId())
+        return runGiveUpPhase(myCommandOnHostID)
+    if not myC.hasToImagingMenu(): # nothing to do on imaging menu here, jump to next stage
+        log.info("command_on_host #%s: nothing to do on imaging menu" % myCoH.getId())
+        myCoH.setImagingMenuIgnored()
+        myCoH.setStateScheduled()
+        return runWOLPhase(myCoH.getId())
+
+    myCoH.setImagingMenuInProgress()
+    myCoH.setStateImagingMenuInProgress()
+    updateHistory(myCommandOnHostID, 'imgmenu_in_progress')
+
+    # Set WOL Bootmenu
+    imgdeferred = ImagingAPI().setWOLMenu(myT.target_uuid, myT.target_name)
+    imgdeferred.addCallback(parseImagingMenuResult, myCommandOnHostID)
+    imgdeferred.addErrback(parseImagingMenuError, myCommandOnHostID)
+
+    return imgdeferred
+
 
 def runWOLPhase(myCommandOnHostID):
     """
@@ -1490,43 +1528,19 @@ def runWOLPhase(myCommandOnHostID):
 def performWOLPhase(myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
 
-    if SchedulerConfig().imaging:
-        # Set WOL Bootmenu
-        imgdeferred = ImagingAPI().setWOLMenu(myT.target_uuid, myT.target_name)
-
-        def _cb(result, myCommandOnHostID):
-            # perform call
-            mydeffered = callOnBestLauncher(myCommandOnHostID,
-                'wol',
-                False,
-                myT.target_macaddr.split('||'),
-                myT.target_bcast.split('||')
-            )
-
-            mydeffered.\
-                addCallback(parseWOLAttempt, myCommandOnHostID).\
-                addErrback(parseWOLError, myCommandOnHostID).\
-                addErrback(gotErrorInError, myCommandOnHostID)
-            return mydeffered
-
-        imgdeferred.addCallback(_cb, myCommandOnHostID). \
-                addErrback(parseWOLError, myCommandOnHostID)
-
-        return imgdeferred
-    else:
-        # perform call
-        mydeffered = callOnBestLauncher(myCommandOnHostID,
+    # perform call
+    mydeffered = callOnBestLauncher(myCommandOnHostID,
             'wol',
             False,
             myT.target_macaddr.split('||'),
             myT.target_bcast.split('||')
         )
 
-        mydeffered.\
+    mydeffered.\
             addCallback(parseWOLAttempt, myCommandOnHostID).\
             addErrback(parseWOLError, myCommandOnHostID).\
             addErrback(gotErrorInError, myCommandOnHostID)
-        return mydeffered
+    return mydeffered
 
 def runUploadPhase(myCommandOnHostID):
     """
@@ -2383,7 +2397,7 @@ def parseWOLAttempt(attempt_result, myCommandOnHostID):
             return runGiveUpPhase(myCommandOnHostID)
         updateHistory(myCommandOnHostID, 'wol_done', PULSE2_SUCCESS_ERROR, stdout, stderr)
         if myCoH.switchToWOLDone():
-            if SchedulerConfig().imaging:
+            if myCoH.isImagingMenuDone():
                 # Restore Bootmenu (No WOL)
                 imgdeferred = ImagingAPI().unsetWOLMenu(myT.target_uuid, myT.target_name)
 
@@ -2402,6 +2416,7 @@ def parseWOLAttempt(attempt_result, myCommandOnHostID):
             WOLTracking().unlockwol(myCommandOnHostID)
             return runGiveUpPhase(myCommandOnHostID)
 
+
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     try:
         (exitcode, stdout, stderr) = attempt_result
@@ -2418,6 +2433,22 @@ def parseWOLAttempt(attempt_result, myCommandOnHostID):
     log.info("command_on_host #%s: WOL done, now waiting %s seconds for the computer to wake up" % (myCommandOnHostID,SchedulerConfig().max_wol_time))
     twisted.internet.reactor.callLater(SchedulerConfig().max_wol_time, setstate, myCommandOnHostID, stdout, stderr)
     return runGiveUpPhase(myCommandOnHostID)
+
+def parseImagingMenuResult(result, myCommandOnHostID):
+    (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    if myCoH == None:
+        return runGiveUpPhase(myCommandOnHostID)
+    if result :
+        updateHistory(myCommandOnHostID, "imgmenu_done")
+        return runWOLPhase(myCommandOnHostID)
+    else :
+        log.info("command_on_host #%s: imaging menu set failed (exitcode != 0)" % myCommandOnHostID)
+        updateHistory(myCommandOnHostID, "imgmenu_failed")
+
+        if not myCoH.switchToImagingMenuFailed(myC.getNextConnectionDelay()):
+            return runFailedPhase(myCommandOnHostID)
+        return runGiveUpPhase(myCommandOnHostID)
+
 
 def parsePushResult((exitcode, stdout, stderr), myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
@@ -2703,6 +2734,21 @@ def parseWOLError(reason, myCommandOnHostID, decrement_attempts_left = False, er
             return runFailedPhase(myCommandOnHostID)
     WOLTracking().unlockwol(myCommandOnHostID)
     return runGiveUpPhase(myCommandOnHostID)
+
+def parseImagingMenuError(reason, myCommandOnHostID, decrement_attempts_left = False, error_code = PULSE2_UNKNOWN_ERROR):
+    """
+       decrement_attempts_left : by default do not decrement tries as the error has most likeley be produced by an internal condition
+       error_code : by default we consider un unknwo error was raised (PULSE2_UNKNOWN_ERROR)
+    """
+    (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    log.warn("command_on_host #%s: imaging menu change failed, unattented reason: %s" % (myCommandOnHostID, reason))
+    if myCoH == None:
+        return runGiveUpPhase(myCommandOnHostID)
+    updateHistory(myCommandOnHostID, 'imgmenu_failed', error_code, '', reason.getErrorMessage())
+    if not myCoH.switchToImagingMenuFailed(myC.getNextConnectionDelay(), decrement_attempts_left):
+        return runFailedPhase(myCommandOnHostID)
+    return runGiveUpPhase(myCommandOnHostID)
+
 
 def parsePushError(reason, myCommandOnHostID, decrement_attempts_left = False, error_code = PULSE2_UNKNOWN_ERROR):
     """

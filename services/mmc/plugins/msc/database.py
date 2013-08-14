@@ -302,7 +302,8 @@ class MscDatabase(msc.MscDatabase):
                                           cmd['start_date'], cmd['end_date'], 
                                           cmd['connect_as'], ctx.userid, 
                                           cmd['title'], cmd['issue_halt_to'], 
-                                          cmd['do_reboot'], cmd['do_wol'], 
+                                          cmd['do_reboot'], cmd['do_wol'],
+                                          cmd['do_wol_with_imaging'],
                                           cmd['next_connection_delay'], 
                                           cmd['max_connection_attempt'], 
                                           cmd['do_inventory'], cmd['maxbw'], 
@@ -382,6 +383,7 @@ class MscDatabase(msc.MscDatabase):
                 do_halt = "done",
                 do_reboot = 'disable',
                 do_wol = 'enable',
+                do_wol_with_imaging = 'disable',
                 next_connection_delay = 60,
                 max_connection_attempt = 3,
                 do_inventory = 'disable',
@@ -465,7 +467,8 @@ class MscDatabase(msc.MscDatabase):
             cmd = self.createCommand(session, package_id, start_file, parameters, 
                                      files, start_script, clean_on_success, 
                                      start_date, end_date, connect_as, ctx.userid, 
-                                     title, do_halt, do_reboot, do_wol, next_connection_delay, 
+                                     title, do_halt, do_reboot, do_wol,
+                                     do_wol_with_imaging, next_connection_delay, 
                                      max_connection_attempt, do_inventory, maxbw, 
                                      deployment_intervals, fk_bundle, 
                                      order_in_bundle, proxies, proxy_mode, state)
@@ -545,6 +548,7 @@ class MscDatabase(msc.MscDatabase):
                 'do_halt': self.config.web_def_issue_halt_to,
                 'do_inventory': "disable",
                 'do_wol': "disable",
+                'do_wol_with_imaging': "disable",
             }
 
         if "@@do_reboot@@" in cmd:
@@ -559,6 +563,11 @@ class MscDatabase(msc.MscDatabase):
         if "@@do_wol@@" in cmd:
             patternActions['do_wol'] = "enable"
             cmd = cmd.replace("@@do_wol@@", "")
+        if "@@do_wol_with_imaging@@" in cmd:
+            patternActions['do_wol'] = "enable"
+            patternActions['do_wol_with_imaging'] = "enable"
+            cmd = cmd.replace("@@do_wol_with_imaging@@", "")
+
 
         return [cmd, patternActions]
 
@@ -611,6 +620,7 @@ class MscDatabase(msc.MscDatabase):
             patternActions['do_halt'],
             patternActions['do_reboot'],
             patternActions['do_wol'],
+            patternActions['do_wol_with_imaging'],
             60,
             3,
             patternActions['do_inventory'],

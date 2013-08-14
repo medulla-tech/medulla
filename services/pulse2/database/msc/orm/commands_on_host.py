@@ -286,6 +286,59 @@ class CommandsOnHost(object):
         self.flush()
 ### /Handle wol states ###
 
+### Handle imaging menu states ###
+    def isImagingMenuImminent(self):
+        result = ((self.isStateScheduled() or self.isStateImagingMenuFailed() or
+            self.isStateWOLDone()) and self.isInTimeSlot())
+        logging.getLogger().debug("isImagingMenuImminent(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setImagingMenuIgnored(self):
+        self.setImagingMenuStatut('IGNORED')
+
+    def isImagingMenuIgnored(self):
+        result = (self.imgmenu_changed == 'IGNORED')
+        logging.getLogger().debug("isImagingMenuIgnored(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setImagingMenuFailed(self):
+        self.setImagingMenuStatut('FAILED')
+
+    def isImagingMenuFailed(self):
+        result = (self.imgmenu_changed == 'FAILED')
+        logging.getLogger().debug("isImagingMenuFailed(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setImagingMenuDone(self):
+        self.setImagingMenuStatut('DONE')
+
+    def isImagingMenuDone(self):
+        result = (self.imgmenu_changed == 'DONE')
+        logging.getLogger().debug("isImagingMenuDone(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setImagingMenuInProgress(self):
+        self.setImagingMenuStatut('WORK_IN_PROGRESS')
+
+    def isImagingMenuRunning(self):
+        result = (self.imgmenu_changed == 'WORK_IN_PROGRESS')
+        logging.getLogger().debug("isImagingMenuRunning(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setImagingMenuToDo(self):
+        self.setImagingMenuStatut('TODO')
+
+    def isImagingMenuToDo(self):
+        result = (self.imgmenu_changed == 'TODO')
+        logging.getLogger().debug("isImagingMenuToDo(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setImagingMenuStatut(self, statut):
+        self.imgmenu_changed = statut
+        self.flush()
+### /Handle imaging menu states ###
+
+
 ### Handle reboot states ###
     def isRebootImminent(self):
         result = ((self.isStateScheduled() or self.isStateRebootFailed() or self.isStateInventoryDone()) and self.isInTimeSlot())
@@ -529,6 +582,27 @@ class CommandsOnHost(object):
         logging.getLogger().debug("isStateInventoryFailed(#%s): %s" % (self.getId(), result))
         return result
 
+    def setStateImagingMenuInProgress(self):
+        self.setCommandStatut('imgmenu_in_progress')
+    def isStateImagingMenuInProgress(self):
+        result = (self.getCommandStatut() == 'imgmenu_in_progress')
+        logging.getLogger().debug("isStateImagingMenuInProgress(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setStateImagingMenuDone(self):
+        self.setCommandStatut('imgmenu_done')
+    def isStateImagingMenuDone(self):
+        result = (self.getCommandStatut() == 'imgmenu_done')
+        logging.getLogger().debug("isStateImagingMenuDone(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setStateImagingMenuFailed(self):
+        self.setCommandStatut('imgmenu_failed')
+    def isStateImagingMenuFailed(self):
+        result = (self.getCommandStatut() == 'imgmenu_failed')
+        logging.getLogger().debug("isStateImagingMenuFailed(#%s): %s" % (self.getId(), result))
+        return result
+
     def setStateRebootInProgress(self):
         self.setCommandStatut('reboot_in_progress')
     def isStateRebootInProgress(self):
@@ -549,6 +623,7 @@ class CommandsOnHost(object):
         result = (self.getCommandStatut() == 'reboot_failed')
         logging.getLogger().debug("isStateRebootFailed(#%s): %s" % (self.getId(), result))
         return result
+
 
     def setStateHaltInProgress(self):
         self.setCommandStatut('halt_in_progress')
@@ -831,6 +906,50 @@ class CommandsOnHost(object):
         else:                                               # other state (paused, stopped, etc ...)
             return False                                    # simply break flow
 
+    def switchToImagingMenuFailed(self, delay = 0, decrement = True):
+        """
+            goes in "imgmenu_failed" state only if we where in
+            "imgmenu_in_progress" state, reschedule stuff.
+            Returns True if processing can continue (most likely never),
+            False else.
+        """
+        self.setImagingMenuFailed()                         # set task status
+        ret = self.reSchedule(delay, decrement)             # always reschedule
+        if self.isStateImagingMenuInProgress():             # normal flow
+            self.setStateImagingMenuFailed()                # set command status
+        return ret                                          # returns is processing may be continued
+
+    def switchToImagingMenuFailedIgnored(self):
+        """
+            This method is called in case of "imgmenu" is part
+            of non_fatal_steps
+
+            goes in "imgmenu_done" state only if we where in
+            "imgmenu_in_progress" state.
+            Returns True if processing can continue,
+            False else.
+        """
+        self.setImagingMenuFailed()                         # set task status
+        if self.isStateImagingMenuInProgress():             # normal flow
+            self.setStateImagingMenuDone()                  # set command status
+            return True                                     # continue command flow
+        else:                                               # other state (paused, stopped, etc ...)
+            return False                                    # simply break flow
+
+    def switchToImagingMenuDone(self):
+        """
+            goes in "imgmenu_done" state only if we where in
+            "imgmenu_in_progress" state.
+            Returns True if processing can continue,
+            False else.
+        """
+        self.setImagingMenuDone()                           # set task status
+        if self.isStateImagingMenuInProgress():             # normal flow
+            self.setStateImagingMenuDone()                  # set command status
+            return True                                     # continue command flow
+        else:                                               # other state (paused, stopped, etc ...)
+            return False                                    # simply break flow
+
     def switchToRebootFailed(self, delay = 0, decrement = True):
         """
             goes in "reboot_failed" state only if we where in
@@ -874,6 +993,7 @@ class CommandsOnHost(object):
             return True                                     # continue command flow
         else:                                               # other state (paused, stopped, etc ...)
             return False                                    # simply break flow
+
 
     def switchToHaltFailed(self, delay = 0, decrement = True):
         """
@@ -938,6 +1058,7 @@ class CommandsOnHost(object):
             'current_state': self.current_state,
             'stage': self.stage,
             'awoken': self.awoken,
+            'imgmenu_changed': self.imgmenu_changed,
             'uploaded': self.uploaded,
             'executed': self.executed,
             'deleted': self.deleted,
@@ -1003,6 +1124,8 @@ def stopCommandOnHost(coh_id):
         myCommandOnHost.setInventoryFailed()
     if myCommandOnHost.isRebootRunning():
         myCommandOnHost.setRebootFailed()
+    if myCommandOnHost.isImagingMenuRunning():
+        myCommandOnHost.setImagingMenuFailed()
     if myCommandOnHost.isHaltRunning():
         myCommandOnHost.setHaltFailed()
     myCommandOnHost.next_launch_date = "2031-12-31 23:59:59"
@@ -1121,6 +1244,7 @@ class CoHManager :
                 myCommandOnHost.inventoried = "IGNORED"
                 myCommandOnHost.rebooted = "IGNORED"
                 myCommandOnHost.halted = "IGNORED"
+                myCommandOnHost.imgmenu_changed = "IGNORED"
                
                 myCommandOnHost.current_state = "scheduled"
 

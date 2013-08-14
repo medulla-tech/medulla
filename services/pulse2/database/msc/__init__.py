@@ -191,7 +191,8 @@ class MscDatabase(DatabaseHelper):
 
     def createCommand(self, session, package_id, start_file, parameters, files,
             start_script, clean_on_success, start_date, end_date, connect_as,
-            creator, title, do_halt, do_reboot, do_wol, next_connection_delay,
+            creator, title, do_halt, do_reboot, do_wol, 
+            do_wol_with_imaging, next_connection_delay,
             max_connection_attempt, do_inventory, maxbw, deployment_intervals,
             fk_bundle, order_in_bundle, proxies, proxy_mode, state):
         """
@@ -216,6 +217,7 @@ class MscDatabase(DatabaseHelper):
         cmd.do_halt = ','.join(do_halt)
         cmd.do_reboot = do_reboot
         cmd.do_wol = do_wol
+        cmd.do_imaging_menu = do_wol_with_imaging
         cmd.next_connection_delay = next_connection_delay
         cmd.max_connection_attempt = max_connection_attempt
         cmd.do_inventory = do_inventory

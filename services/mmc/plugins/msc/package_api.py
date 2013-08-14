@@ -112,6 +112,7 @@ class SendBundleCommand:
 
         # treat bundle inventory and halt (put on the last command)
         self.do_wol = self.params['do_wol']
+        self.do_imaging_menu = self.params['do_wol_with_imaging']
         self.do_inventory = self.params['do_inventory']
         try:
             self.issue_halt_to = self.params['issue_halt_to']

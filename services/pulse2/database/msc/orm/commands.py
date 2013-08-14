@@ -65,6 +65,12 @@ class Commands(object):
         logging.getLogger().debug("hasToWOL(#%s): %s" % (self.id, result))
         return result
 
+    def hasToImagingMenu(self):
+        result = self.do_imaging_menu == 'enable'
+        logging.getLogger().debug("hasToImagingMenu(#%s): %s" % (self.id, result))
+        return result
+
+
     def hasToRunInventory(self):
         result = self.do_inventory == 'enable'
         logging.getLogger().debug("hasToRunInventory(#%s): %s" % (self.id, result))
@@ -200,6 +206,7 @@ class Commands(object):
             'do_inventory': self.do_inventory,
             'do_reboot': self.do_reboot,
             'do_wol': self.do_wol,
+            'do_imaging_menu': self.do_imaging_menu,
             'do_halt': self.do_halt,
             'next_connection_delay': self.next_connection_delay,
             'max_connection_attempt': self.max_connection_attempt,

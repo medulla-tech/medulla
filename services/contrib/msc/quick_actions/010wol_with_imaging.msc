@@ -1,0 +1,4 @@
+title=Wake on Lan with imaging
+titlefr=Réveil réseau avec imaging
+titlede=Wake on LAN with imaging
+command=@@do_wol_with_imaging@@
