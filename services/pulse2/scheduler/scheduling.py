@@ -2440,7 +2440,8 @@ def parseImagingMenuResult(result, myCommandOnHostID):
         return runGiveUpPhase(myCommandOnHostID)
     if result :
         updateHistory(myCommandOnHostID, "imgmenu_done")
-        return runWOLPhase(myCommandOnHostID)
+        if myCoH.switchToImagingMenuDone():
+            return runWOLPhase(myCommandOnHostID)
     else :
         log.info("command_on_host #%s: imaging menu set failed (exitcode != 0)" % myCommandOnHostID)
         updateHistory(myCommandOnHostID, "imgmenu_failed")

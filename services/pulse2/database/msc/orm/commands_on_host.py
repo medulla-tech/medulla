@@ -229,7 +229,7 @@ class CommandsOnHost(object):
 
 ### Handle WOL states ###
     def isWOLImminent(self):
-        result = ((self.isStateScheduled() or self.isStateWOLFailed()) and self.isInTimeSlot())
+        result = ((self.isStateScheduled() or self.isStateWOLFailed() or self.isStateImagingMenuDone()) and self.isInTimeSlot())
         logging.getLogger().debug("isWOLImminent(#%s): %s" % (self.getId(), result))
         return result
     def wasWOLPreviouslyRan(self):
@@ -288,8 +288,7 @@ class CommandsOnHost(object):
 
 ### Handle imaging menu states ###
     def isImagingMenuImminent(self):
-        result = ((self.isStateScheduled() or self.isStateImagingMenuFailed() or
-            self.isStateWOLDone()) and self.isInTimeSlot())
+        result = ((self.isStateScheduled() or self.isStateImagingMenuFailed()) and self.isInTimeSlot())
         logging.getLogger().debug("isImagingMenuImminent(#%s): %s" % (self.getId(), result))
         return result
 

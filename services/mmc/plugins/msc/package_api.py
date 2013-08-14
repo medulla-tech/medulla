@@ -112,7 +112,7 @@ class SendBundleCommand:
 
         # treat bundle inventory and halt (put on the last command)
         self.do_wol = self.params['do_wol']
-        self.do_imaging_menu = self.params['do_wol_with_imaging']
+        self.do_imaging_menu = 'disable'
         self.do_inventory = self.params['do_inventory']
         try:
             self.issue_halt_to = self.params['issue_halt_to']
@@ -228,6 +228,7 @@ def prepareCommand(pinfos, params):
     ret['start_script'] = (params['start_script'] == 'on' and 'enable' or 'disable')
     ret['clean_on_success'] = (params['clean_on_success'] == 'on' and 'enable' or 'disable')
     ret['do_wol'] = (params['do_wol'] == 'on' and 'enable' or 'disable')
+    ret['do_wol_on_imaging'] = 'disable'
     ret['next_connection_delay'] = params['next_connection_delay']
     ret['max_connection_attempt'] = params['max_connection_attempt']
     ret['do_inventory'] = (params['do_inventory'] == 'on' and 'enable' or 'disable')
@@ -353,12 +354,13 @@ class SendPackageCommand:
 
         # cmd['maxbw'] is in kbits, set in bits
         cmd['maxbw'] = int(cmd['maxbw']) * 1024
-
+        cmd['do_wol_with_imaging'] = 'disable'
         cmd['start_file'], patternActions = MscDatabase().applyCmdPatterns(cmd['start_file'],
                                                                            {
                                                                                'do_reboot': cmd['do_reboot'],
                                                                                'do_halt': cmd['issue_halt_to'],
                                                                                'do_wol': cmd['do_wol'],
+                                                                               'do_wol_with_imaging': cmd['do_wol_with_imaging'],
                                                                                'do_inventory': cmd['do_inventory'],
                                                                            }
                                                                           )
@@ -381,6 +383,7 @@ class SendPackageCommand:
             patternActions['do_halt'],
             patternActions['do_reboot'],
             patternActions['do_wol'],
+            patternActions['do_wol_with_imaging'],
             cmd['next_connection_delay'],
             cmd['max_connection_attempt'],
             patternActions['do_inventory'],
