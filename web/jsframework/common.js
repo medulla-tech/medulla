@@ -55,7 +55,6 @@ function updateSearchGroup() {   // ===> NOT USED
     if (launch==0) {
         jQuery('#groupContainer').load('main.php?module=base&submod=groups&action=ajaxFilter&filter='+document.groupForm.param.value);
     }
-
 }
 
 /**

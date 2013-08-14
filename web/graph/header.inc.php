@@ -105,7 +105,7 @@ jQuery(function(){
     jQuery('a.popup_close_btn').click(function(){
         closePopup();
     });
-    
+
     // Ajax handlers
     jQuery(document).bind("ajaxSend",ajaxSend).bind("ajaxStop",ajaxComplete);
     
@@ -131,7 +131,7 @@ function _centerPlacement(evt){
 function PopupWindow(evt, url, width,callback,content) {
     jQuery('#popup').css("width", width + "px" );
     if (!evt) evt = window.event;
-    
+
     // If content is specified, we skip ajax request
     if (content){
         jQuery("#__popup_container").html(content);
@@ -141,7 +141,7 @@ function PopupWindow(evt, url, width,callback,content) {
         jQuery('#popup').fadeIn();
         return;
     }
-    
+
     jQuery.ajax({
         'url': url,
         type: 'get',
@@ -249,10 +249,10 @@ function closePopup() {
 
 
 function validateForm(formId,errmsg) {
-    
+
     // By default, we show the error message
     if (errmsg == null ) errmsg = true;
-    
+
     var err = 0;
     // Required fields
     jQuery('#'+formId).find('input[rel=required],textarea[rel=required],select[rel=required]').each(function(){
@@ -268,9 +268,9 @@ function validateForm(formId,errmsg) {
     // Regexp fields
     jQuery('#'+formId).find('input[data-regexp],textarea[data-regexp]').each(function(){
 
-        if (jQuery(this).val() && jQuery(this).attr('data-regexp') != '/.+/'){
-            var flags = jQuery(this).attr('data-regexp').replace(/.*\/([gimy]*)$/, '$1');
-            var pattern = jQuery(this).attr('data-regexp').replace(new RegExp('^/(.*?)/'+flags+'$'), '$1');
+        if (jQuery(this).val() && jQuery(this).data('regexp') != '/.+/'){
+            var flags = jQuery(this).data('regexp').replace(/.*\/([gimy]*)$/, '$1');
+            var pattern = jQuery(this).data('regexp').replace(new RegExp('^/(.*?)/'+flags+'$'), '$1');
 
             var re = new RegExp(pattern, flags);
 
@@ -290,10 +290,10 @@ function validateForm(formId,errmsg) {
             err = 1;
             jQuery('#confpass').addClass('form-error');
         }
-    
+
     if (errmsg && err != 0)
         alert('<?php echo  _("Form cannot be submit. Input errors are highlighted in red.") ?>');
-    
+
     return err == 0;
 }
 

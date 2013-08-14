@@ -141,8 +141,8 @@ function restoreOrder() {
 } 
 
 jQuery(document).ready( function () {
-    
-    // Make columns sortable    
+
+    // Make columns sortable
     jQuery(".column").sortable({
         connectWith: ['.column'],
         stop: function(event,ui) { ui.item.css('opacity',1);saveOrder();},
@@ -179,5 +179,5 @@ jQuery(document).ready( function () {
         })
     },1000);
     
-});  
+}); 
 </script>
