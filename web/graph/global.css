@@ -1206,47 +1206,31 @@ ul.roACL {
 /**
  * Dashboard and home page
  */
-#dashboard .dashboard-column, #home .dashboard-column {
-    float: left;
-    width: 220px;
-    border: 1px solid white;
-    background: white;
-    min-height: 100px;
-    border-radius: 4px;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    margin-right: 5px;
-    margin-bottom: 5px;
-}
 
-#dashboard .panel .handle, #home .module .handle {
-    cursor: move;
-}
-
-.panel, .module {
+.portlet, .module {
     float: left;
-    background-color: #f6f6f6;
+    background-color: #fafafa;
     padding: 5px;
     margin: 5px 5px 10px;
-    width: 200px;
+    width: 205px;
     -webkit-border-radius: 4px;
        -moz-border-radius: 4px;
             border-radius: 4px;
     border: 1px solid #ddd;
-    -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
-    -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
-    -o-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
-    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
+    -webkit-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.05);
+       -moz-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.05);
+         -o-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.05);
+            box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.05);
     filter:progid:DXImageTransform.Microsoft.Shadow(color=#aaaaaa, Direction=NaN, Strength=2);
 }
 
 .subpanel, .submod {
-    background-color: #eee;
+    background-color: #f1f1f1;
     padding: 5px;
-    margin: 10px;
-    -webkit-border-radius: 2px;
-       -moz-border-radius: 2px;
-            border-radius: 2px;
+    margin-bottom: 10px;
+    -webkit-border-radius: 4px;
+       -moz-border-radius: 4px;
+            border-radius: 4px;
 }
 
 .subpanel ul, .submod ul {
@@ -1258,12 +1242,12 @@ ul.roACL {
     padding: 0;
 }
 
-.panel .errors {
+.portlet .errors {
     color: #a40000;
     font-weight: bold;
 }
 
-.panel .alert, .panel .alert {
+.portlet .alert, .portlet .alert {
     padding: 4px;
 }
 

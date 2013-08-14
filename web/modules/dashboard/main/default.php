@@ -55,7 +55,7 @@ foreach(getPanels() as $panelName) {
                             $options["refresh"] = 10;
                         if ($options["enable"]) {
                             if ($i % 2 == 1)
-                                print '<div class="column" id="col'.$z++.'" style="width:250px;">';
+                                print '<div class="column" id="col'.$z++.'" style="width: 230px;">';
                             $panel = new AjaxPage(urlStrRedirect('dashboard/main/ajaxPanels'), $options["id"], array("file" => urlencode($file)), $options["refresh"]);
                             $panel->class = "portlet";
                             $panel->display();
@@ -74,19 +74,20 @@ foreach(getPanels() as $panelName) {
 // print final closing div
 if ($i>1 && ($i % 2 == 0))
     print '</div>';
-    
+
 // Adding more columns (user custom) [8 for full HD resolution]
 for ($i = $z; $i<=8; $i++)
     print '<div class="column" id="col'.$i.'"></div>';
 
 ?>
+
 <style>
 .column { width: 230px; float: left; padding-bottom: 100px; }
 .portlet { margin: 0 1em 1em 0; }
-.portlet-header { margin: 0.3em; padding-bottom: 4px; padding-left: 0.2em; font-size:14px; background:#324C96; color:#fff; padding:5px; -moz-border-radius: 5px; border-radius: 5px; cursor:move; }
+.portlet-header { font-size:14px; color: #666; padding: 0 0 10px; cursor:move; }
 .portlet-header .ui-icon { float: right; }
 .portlet-content { padding: 0.4em; }
-.ui-sortable-placeholder { border: 2px dotted #324C96; visibility: visible !important; height: 50px !important; }
+.ui-sortable-placeholder { border: 1px dotted #324C96; visibility: visible !important; height: 50px !important; }
 .ui-sortable-placeholder * { visibility: hidden; }
 </style>
 
@@ -138,7 +139,7 @@ function restoreOrder() {
         }
         jQuery(this).width(jQuery.cookie(cookieName+'-width'));
     });
-} 
+}
 
 jQuery(document).ready( function () {
 
@@ -150,7 +151,7 @@ jQuery(document).ready( function () {
     });
 
     jQuery(".portlet")
-        .addClass("ui-widget ui-widget-content")
+        .addClass("ui-widget")
         .addClass("ui-helper-clearfix ui-corner-all")
         .find(".portlet-header")
         .addClass("ui-widget-header ui-corner-all")
@@ -171,13 +172,13 @@ jQuery(document).ready( function () {
         function() {jQuery(this).addClass("ui-icon-hover"); },
         function() {jQuery(this).removeClass('ui-icon-hover'); }
     );
-        
+
     setTimeout(function(){
         jQuery('.portlet-content').resizable({handles:'e'}).resize(function(){
             jQuery(this).parents('.column:first').width(jQuery(this).width()+25);
             saveOrder();
         })
     },1000);
-    
-}); 
+
+});
 </script>
