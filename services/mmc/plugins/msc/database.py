@@ -293,6 +293,7 @@ class MscDatabase(msc.MscDatabase):
 
                 time_defaults = self.__getTimeDefaults(cmd["start_date"], cmd["end_date"])
                 cmd["start_date"], cmd["end_date"], cmd["max_connection_attempt"] = time_defaults
+                cmd["do_wol_with_imaging"] = "disable"
 
                 cobj = self.createCommand(session, 
                                           cmd['package_id'], 
