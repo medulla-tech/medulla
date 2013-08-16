@@ -32,10 +32,14 @@ $options = array(
 class ShortcutsPanel extends Panel {
 
     function display_content() {
-        $this->display_links("base", "users", array("add", "passwd"));
+        if ($_SESSION['login'] != 'root')
+            $this->display_links("base", "users", array("add", "passwd"));
+        else
+            $this->display_links("base", "users", array("add"));
         $this->display_links("base", "groups", array("add"));
         $this->display_links("samba", "shares", array("add", "index"));
         $this->display_links("network", "network", array("index", "subnetindex"));
+        $this->display_links("shorewall", "shorewall", array("internal_fw", "external_fw"));
     }
 
     function display_links($module, $submod, $pages) {
