@@ -85,7 +85,7 @@ function print_exclusive_orders_js($a_pis_id) {
                 if (self_element.name != elem.name) {
                     if (self_element.value == elem.value && self_element.value != 'None') {
                         self_element.value = "None";
-                        alert("<?php echo  _T("This values is already taken, please only put one element for each order.", "imaging"); ?>");
+                        alert("<?php echo  _T("This value is already taken, please only put one element for each order.", "imaging"); ?>");
                         break;
                     } else if (self_element.value == 'None') {
                         break;

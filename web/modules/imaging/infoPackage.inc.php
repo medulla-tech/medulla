@@ -225,7 +225,7 @@ if (in_array("dyngroup", $_SESSION["modulesList"])) {
         $page->setFile("modules/imaging/imaging/bootmenu_remove.php");
         $page->setOptions(array("visible" => False, "noHeader" => True));
         $submod->addPage($page);
-        $page = new Page("display",_T("Display a groups of computers","dyngroup"));
+        $page = new Page("display",_T("Display a group of computers","dyngroup"));
         $page->setFile("modules/dyngroup/dyngroup/display.php");
         $page->setOptions(array("visible"=>False));
         $submod->addPage($page);
