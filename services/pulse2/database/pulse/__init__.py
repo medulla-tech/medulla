@@ -32,8 +32,8 @@ from sqlalchemy.sql import and_
 from sqlalchemy.exc import DBAPIError
 
 # PULSE2 modules
-# from pulse2.database.database_helper import DBObject
-from pulse2.database import database_helper
+# from mmc.database.database_helper import DBObject
+from mmc.database import database_helper
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 
 # Imported last

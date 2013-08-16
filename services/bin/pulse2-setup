@@ -39,7 +39,7 @@ import logging
 import ldap
 from pulse2.utils import get_default_ip
 from pulse2.site import examplesdir
-from pulse2.ddl import DBControl
+from mmc.database.ddl import DBControl
 from mmc.site import sysconfdir, mmcconfdir, prefix
 from mmc.core.log import ColoredFormatter
 

@@ -23,7 +23,7 @@
 # MA 02110-1301, USA.
 
 # MMC
-from pulse2.database.config import DatabaseConfig
+from mmc.database.config import DatabaseConfig
 
 class MscDatabaseConfig(DatabaseConfig):
 

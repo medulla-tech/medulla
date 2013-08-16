@@ -26,15 +26,13 @@ BackupPC database handler
 """
 
 # SqlAlchemy
-from sqlalchemy import create_engine, MetaData, Table
-from sqlalchemy.orm import create_session, mapper
+from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker; Session = sessionmaker()
 from sqlalchemy.exc import DBAPIError
 
 
 # PULSE2 modules
-from pulse2.database import database_helper
-from pulse2.database.database_helper import DatabaseHelper
+from mmc.database.database_helper import DatabaseHelper
 from pulse2.database.backuppc.schema import Backup_profiles, Period_profiles, Backup_servers, Hosts
 
 # Imported last

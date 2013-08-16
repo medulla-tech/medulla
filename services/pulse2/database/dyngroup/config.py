@@ -23,7 +23,7 @@
 # MA 02110-1301, USA.
 
 # PULSE2
-from pulse2.database.config import DatabaseConfig
+from mmc.database.config import DatabaseConfig
 
 class DyngroupDatabaseConfig(DatabaseConfig):
 

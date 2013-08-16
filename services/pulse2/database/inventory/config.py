@@ -26,7 +26,7 @@
 Configuration class for MMC agent inventory plugin
 """
 
-from pulse2.database.config import DatabaseConfig
+from mmc.database.config import DatabaseConfig
 
 class InventoryDatabaseConfigSkel(DatabaseConfig):
     dbname = "inventory"

@@ -25,7 +25,7 @@ from sets import Set
 from sqlalchemy import and_, or_, not_
 from pulse2.managers.group import ComputerGroupManager
 
-from pulse2.database.database_helper import DatabaseHelper
+from mmc.database.database_helper import DatabaseHelper
 
 
 # USAGE :

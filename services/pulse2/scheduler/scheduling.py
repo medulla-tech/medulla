@@ -48,7 +48,7 @@ from pulse2.database.msc.orm.commands import Commands
 from pulse2.database.msc.orm.commands_on_host import CommandsOnHost, CoHManager
 from pulse2.database.msc.orm.commands_history import CommandsHistory
 from pulse2.database.msc.orm.target import Target
-from pulse2.database.utilities import handle_deconnect
+from mmc.database.utilities import handle_deconnect
 
 # our modules
 from pulse2.consts import PULSE2_BUNDLE_MISSING_MANDATORY_ERROR,PULSE2_POST_HALT_STATES

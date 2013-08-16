@@ -32,7 +32,7 @@ from sqlalchemy.orm import create_session, mapper, relation
 from sqlalchemy.exc import DBAPIError
 
 # PULSE2 modules
-from pulse2.database.database_helper import DatabaseHelper
+from mmc.database.database_helper import DatabaseHelper
 
 # Imported last
 import logging

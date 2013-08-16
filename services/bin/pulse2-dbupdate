@@ -28,7 +28,7 @@ import logging
 
 from optparse import OptionParser
 
-from pulse2.ddl import DBControl
+from mmc.database.ddl import DBControl
 
 log = logging.getLogger("pulse2-dbupdate")
 

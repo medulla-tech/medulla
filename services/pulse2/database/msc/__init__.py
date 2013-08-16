@@ -42,7 +42,7 @@ from pulse2.database.msc.orm.commands_on_host import CommandsOnHost
 from pulse2.database.msc.orm.commands_history import CommandsHistory
 from pulse2.database.msc.orm.target import Target
 from pulse2.database.msc.orm.bundle import Bundle
-from pulse2.database.database_helper import DatabaseHelper
+from mmc.database.database_helper import DatabaseHelper
 
 # Pulse 2 stuff
 from pulse2.managers.location import ComputerLocationManager

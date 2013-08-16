@@ -32,7 +32,7 @@ from xml.dom.minidom import Document
 from sqlalchemy import create_engine
 
 from mmc.site import mmcconfdir
-from pulse2.database.config import DatabaseConfig
+from mmc.database.config import DatabaseConfig
 
 def generation_Pserver(directory):
     """

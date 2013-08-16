@@ -29,8 +29,8 @@ Inventory database backend
 from pulse2.managers.group import ComputerGroupManager
 
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
-from pulse2.database.utilities import unique, handle_deconnect
-from pulse2.database.utilities import DbObject # pyflakes.ignore
+from mmc.database.utilities import unique, handle_deconnect
+from mmc.database.utilities import DbObject # pyflakes.ignore
 from pulse2.database.inventory.mapping import OcsMapping
 from mmc.site import mmcconfdir
 from pulse2.inventoryserver.config import Pulse2OcsserverConfigParser
