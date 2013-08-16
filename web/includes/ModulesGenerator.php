@@ -175,10 +175,10 @@ class SubModule {
 
     /**
      * Set Module that owns this SubModule
-     */ 
+     */
     function setModule($module) {
         $this->_module = $module;
-    }    
+    }
 
     /**
      * provide alias to submod
@@ -325,12 +325,12 @@ class SubModule {
 
     /**
      * Add the submodule icon and the URL link to the top navigation bar
-     */ 
+     */
     function generateNavBar() {
         if (($this->_visibility == False)||(!hasCorrectModuleAcl($this->_parentname))) {
             return;
         }
-        list($module,$submod,$action) = split('/',$this->_defaultpage,3);
+        list($module,$submod,$action) = explode('/', $this->_defaultpage, 3);
         /*
            If the user has no right to access the default page, try to find
            another page.
@@ -406,13 +406,12 @@ class Module {
     function setRevision($rev) {
         // STAY FOR COMPATIBILITY REASON
         global $__revision;
-	$tmp = split(" ", $rev);
-	if (count($tmp)>1)
-	  $rev = $tmp[1];
-	else
-	  $rev = 0;
+        $tmp = explode(" ", $rev);
+        if (count($tmp)>1)
+            $rev = $tmp[1];
+        else
+             $rev = 0;
         $__revision[$this->getName()]=$rev;
-
         $this->_revision = $rev;
     }
 
@@ -539,19 +538,19 @@ class Page {
         $this->_options["visible"] = True;
         $this->_options["noHeader"] = False;
         $this->_options["AJAX"] = False;
-        $this->_options["noACL"] = False;	
+        $this->_options["noACL"] = False;
     }
 
     /**
      * Set Module that owns this page
-     */ 
+     */
     function setModule($module) {
         $this->_module = $module;
     }
-    
+
     /**
      * Set SubModule that owns this page
-     */ 
+     */
     function setSubModule($submod) {
         $this->_submod = $submod;
     }
@@ -576,7 +575,7 @@ class Page {
             || ($this->_options["noACL"])
             || isset($_SESSION["acl"][$module->getName()][$submod->getName()][$this->_action]["right"]);
     }
-        
+
     /**
      * Return true if the current user can access this page, and the page
        shortcut can be displayed on the home page
@@ -624,7 +623,7 @@ class Page {
      * @param $options same as describe in setFile member
      */
     function setOptions($options = array()) {
-        foreach($options as $key => $value) {	  
+        foreach($options as $key => $value) {
             $this->_options[$key] = $value;
         }
     }
@@ -694,7 +693,7 @@ class Tab {
     function Tab($name, $description) {
         $this->_name = $name;
         $this->_desc = $description;
-        $this->_options["noACL"] = False;	
+        $this->_options["noACL"] = False;
     }
 
     function getName() {
@@ -710,7 +709,7 @@ class Tab {
      * @param $options same as describe in setFile member
      */
     function setOptions($options = array()) {
-        foreach($options as $key => $value) {	  
+        foreach($options as $key => $value) {
             $this->_options[$key] = $value;
         }
     }
