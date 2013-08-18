@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-08-05 01:05+0200\n"
-"PO-Revision-Date: 2013-08-11 23:01+0000\n"
+"POT-Creation-Date: 2013-08-16 14:42+0200\n"
+"PO-Revision-Date: 2013-08-18 23:01+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -37,15 +37,19 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
-#: graph/header.inc.php:251
+#: graph/header.inc.php:193 graph/header.inc.php:227
 msgid "Yes"
 msgstr ""
 
-#: graph/header.inc.php:254 graph/header.inc.php:256
+#: graph/header.inc.php:196 graph/header.inc.php:198
 msgid "No"
 msgstr ""
 
-#: graph/header.inc.php:297
+#: graph/header.inc.php:229 includes/PageGenerator.php:2093
+msgid "Close"
+msgstr ""
+
+#: graph/header.inc.php:295
 msgid "Form cannot be submit. Input errors are highlighted in red."
 msgstr ""
 
@@ -69,7 +73,7 @@ msgstr ""
 msgid "Logout"
 msgstr ""
 
-#: graph/navbar.inc.php:62 modules/base/main/default.php:80
+#: graph/navbar.inc.php:62 modules/base/main/default.php:89
 #: modules/base/infoPackage.inc.php:43
 msgid "Home"
 msgstr ""
@@ -78,14 +82,6 @@ msgstr ""
 msgid ""
 "If this phrase does not change, you browser is not supported by the MMC "
 "application"
-msgstr ""
-
-#: includes/ErrorHandling.php:77
-msgid "Show complete trackback"
-msgstr ""
-
-#: includes/ErrorHandling.php:78
-msgid "Complete Traceback"
 msgstr ""
 
 #: includes/acl.inc.php:124
@@ -234,74 +230,6 @@ msgid ""
 "this error."
 msgstr ""
 
-#: includes/PageGenerator.php:108 includes/PageGenerator.php:2391
-#: includes/PageGenerator.php:2461 modules/base/groups/delete.php:67
-#: modules/base/groups/members.php:189 modules/base/users/backup.php:92
-#: modules/ppolicy/default/delete.php:46
-msgid "Cancel"
-msgstr ""
-
-#: includes/PageGenerator.php:496 includes/PageGenerator.php:727
-msgid "to"
-msgstr ""
-
-#: includes/PageGenerator.php:498 includes/PageGenerator.php:729
-#, php-format
-msgid " - Total <b>%s </b>"
-msgstr ""
-
-#: includes/PageGenerator.php:501 includes/PageGenerator.php:732
-msgid "page"
-msgstr ""
-
-#: includes/PageGenerator.php:807 includes/PageGenerator.php:1063
-#: includes/ajaxTools.php:63 includes/ajaxTools.php:69
-#: modules/base/includes/AjaxFilterLog.inc.php:112
-#: modules/base/includes/AjaxFilterLog.inc.php:116
-msgid "Previous"
-msgstr ""
-
-#: includes/PageGenerator.php:821 includes/PageGenerator.php:1073
-#: includes/ajaxTools.php:74 includes/ajaxTools.php:82
-#: modules/base/includes/AjaxFilterLog.inc.php:123
-#: modules/base/includes/AjaxFilterLog.inc.php:127
-msgid "Next"
-msgstr ""
-
-#: includes/PageGenerator.php:840
-msgid "Pagination"
-msgstr ""
-
-#: includes/PageGenerator.php:924
-msgid "Go to page"
-msgstr ""
-
-#: includes/PageGenerator.php:1306
-msgid "No item available"
-msgstr ""
-
-#: includes/PageGenerator.php:1471
-msgid "Select entity"
-msgstr ""
-
-#: includes/PageGenerator.php:2034
-msgid "Close"
-msgstr ""
-
-#: includes/PageGenerator.php:2387 includes/PageGenerator.php:2457
-#: includes/PageGenerator.php:2483 modules/base/groups/members.php:188
-#: modules/base/groups/edit.php:108
-msgid "Confirm"
-msgstr ""
-
-#: includes/PageGenerator.php:2606
-msgid "Select all"
-msgstr ""
-
-#: includes/PageGenerator.php:2607
-msgid "Unselect all"
-msgstr ""
-
 #: includes/auditCodesManager.php:33
 msgid "Daemon start"
 msgstr ""
@@ -318,8 +246,16 @@ msgstr ""
 msgid "No job."
 msgstr ""
 
+#: includes/ErrorHandling.php:77
+msgid "Show complete trackback"
+msgstr ""
+
+#: includes/ErrorHandling.php:78
+msgid "Complete Traceback"
+msgstr ""
+
 #: includes/FormGenerator.php:58 includes/FormGenerator.php:274
-#: includes/FormGenerator.php:637 includes/FormGenerator.php:796
+#: includes/FormGenerator.php:623 includes/FormGenerator.php:752
 msgid "unavailable"
 msgstr ""
 
@@ -335,55 +271,118 @@ msgstr ""
 msgid "no"
 msgstr ""
 
-#: includes/FormGenerator.php:458
+#: includes/FormGenerator.php:442
 msgid "Year: "
 msgstr ""
 
-#: includes/FormGenerator.php:458
+#: includes/FormGenerator.php:442
 msgid "Month: "
 msgstr ""
 
-#: includes/FormGenerator.php:458
+#: includes/FormGenerator.php:442
 msgid "Day: "
 msgstr ""
 
-#: includes/FormGenerator.php:459
+#: includes/FormGenerator.php:443
 msgid "Hour: "
 msgstr ""
 
-#: includes/FormGenerator.php:459
+#: includes/FormGenerator.php:443
 msgid "Min.: "
 msgstr ""
 
-#: includes/FormGenerator.php:459
+#: includes/FormGenerator.php:443
 msgid "Sec.: "
 msgstr ""
 
-#: includes/FormGenerator.php:529 includes/FormGenerator.php:535
-#: modules/base/includes/AjaxFilterLog.inc.php:184
-#: modules/base/includes/AjaxFilterLog.inc.php:188
+#: includes/FormGenerator.php:513 includes/FormGenerator.php:519
+#: modules/base/includes/AjaxFilterLog.inc.php:168
+#: modules/base/includes/AjaxFilterLog.inc.php:172
 msgid "or <a href='#'"
 msgstr ""
 
-#: includes/FormGenerator.php:531
-#: modules/base/includes/AjaxFilterLog.inc.php:186
+#: includes/FormGenerator.php:515
+#: modules/base/includes/AjaxFilterLog.inc.php:170
 msgid "value=\"now\";'>now</a>"
 msgstr ""
 
-#: includes/FormGenerator.php:537
-#: modules/base/includes/AjaxFilterLog.inc.php:190
+#: includes/FormGenerator.php:521
+#: modules/base/includes/AjaxFilterLog.inc.php:174
 msgid "value=\"never\";'>never</a>"
 msgstr ""
 
-#: includes/FormGenerator.php:602 modules/base/groups/localSidebar.php:29
+#: includes/FormGenerator.php:586 modules/base/groups/localSidebar.php:29
 #: modules/base/users/localSidebar.php:29
 msgid "Add"
 msgstr ""
 
-#: includes/FormGenerator.php:1019 modules/base/groups/ajaxFilter.php:48
+#: includes/FormGenerator.php:975 modules/base/groups/ajaxFilter.php:48
 #: modules/base/users/ajaxFilter.php:85 modules/base/views/index.tpl.php:92
 #: modules/ppolicy/default/delete.php:45
 msgid "Delete"
+msgstr ""
+
+#: includes/PageGenerator.php:538 includes/PageGenerator.php:769
+msgid "to"
+msgstr ""
+
+#: includes/PageGenerator.php:540 includes/PageGenerator.php:771
+#, php-format
+msgid " - Total <b>%s </b>"
+msgstr ""
+
+#: includes/PageGenerator.php:543 includes/PageGenerator.php:774
+msgid "page"
+msgstr ""
+
+#: includes/PageGenerator.php:849 includes/PageGenerator.php:1095
+#: includes/ajaxTools.php:63 includes/ajaxTools.php:69
+#: modules/base/includes/AjaxFilterLog.inc.php:96
+#: modules/base/includes/AjaxFilterLog.inc.php:100
+msgid "Previous"
+msgstr ""
+
+#: includes/PageGenerator.php:863 includes/PageGenerator.php:1105
+#: includes/ajaxTools.php:74 includes/ajaxTools.php:82
+#: modules/base/includes/AjaxFilterLog.inc.php:107
+#: modules/base/includes/AjaxFilterLog.inc.php:111
+msgid "Next"
+msgstr ""
+
+#: includes/PageGenerator.php:882
+msgid "Pagination"
+msgstr ""
+
+#: includes/PageGenerator.php:956
+msgid "Go to page"
+msgstr ""
+
+#: includes/PageGenerator.php:1347
+msgid "No item available"
+msgstr ""
+
+#: includes/PageGenerator.php:1523
+msgid "Select entity"
+msgstr ""
+
+#: includes/PageGenerator.php:2446 includes/PageGenerator.php:2514
+#: includes/PageGenerator.php:2540 modules/base/groups/members.php:188
+#: modules/base/groups/edit.php:108
+msgid "Confirm"
+msgstr ""
+
+#: includes/PageGenerator.php:2450 includes/PageGenerator.php:2518
+#: modules/base/groups/members.php:189 modules/base/groups/delete.php:67
+#: modules/base/users/backup.php:92 modules/ppolicy/default/delete.php:46
+msgid "Cancel"
+msgstr ""
+
+#: includes/PageGenerator.php:2663
+msgid "Select all"
+msgstr ""
+
+#: includes/PageGenerator.php:2664
+msgid "Unselect all"
 msgstr ""
 
 #: logout/index.php:50
@@ -399,12 +398,12 @@ msgid " configuration page"
 msgstr ""
 
 #: modules/base/audit/ajaxLogFilter.php:49
-#: modules/base/includes/AjaxFilterLog.inc.php:341
+#: modules/base/includes/AjaxFilterLog.inc.php:325
 msgid "Begin date"
 msgstr ""
 
 #: modules/base/audit/ajaxLogFilter.php:52
-#: modules/base/includes/AjaxFilterLog.inc.php:342
+#: modules/base/includes/AjaxFilterLog.inc.php:326
 msgid "End date"
 msgstr ""
 
@@ -627,18 +626,6 @@ msgstr ""
 msgid "Groups management"
 msgstr ""
 
-#: modules/base/groups/delete.php:55 modules/base/groups/delete.php:66
-msgid "Delete group"
-msgstr ""
-
-#: modules/base/groups/delete.php:58
-msgid "You will delete group"
-msgstr ""
-
-#: modules/base/groups/delete.php:61
-msgid "This group will be deleted even though it is not empty"
-msgstr ""
-
 #: modules/base/groups/index.php:31 modules/base/infoPackage.inc.php:245
 msgid "Group list"
 msgstr ""
@@ -669,6 +656,18 @@ msgstr ""
 
 #: modules/base/groups/members.php:162 modules/base/infoPackage.inc.php:261
 msgid "Group members"
+msgstr ""
+
+#: modules/base/groups/delete.php:55 modules/base/groups/delete.php:66
+msgid "Delete group"
+msgstr ""
+
+#: modules/base/groups/delete.php:58
+msgid "You will delete group"
+msgstr ""
+
+#: modules/base/groups/delete.php:61
+msgid "This group will be deleted even though it is not empty"
 msgstr ""
 
 #: modules/base/groups/edit.php:35
@@ -906,12 +905,12 @@ msgstr ""
 
 #: modules/base/includes/publicFunc.php:285
 #: modules/base/users/ajaxFilter.php:68 modules/base/views/index.tpl.php:78
-#: index.php:205
+#: index.php:207
 msgid "Login"
 msgstr ""
 
 #: modules/base/includes/publicFunc.php:300
-#: modules/base/infoPackage.inc.php:326 index.php:211
+#: modules/base/infoPackage.inc.php:326 index.php:213
 msgid "Password"
 msgstr ""
 
@@ -1084,10 +1083,6 @@ msgstr ""
 msgid "User %s successfully created"
 msgstr ""
 
-#: modules/base/includes/AjaxFilterLog.inc.php:382
-msgid "Refresh"
-msgstr ""
-
 #: modules/base/includes/auditCodes.php:27 modules/base/users/edit.php:51
 msgid "Add user"
 msgstr ""
@@ -1236,8 +1231,8 @@ msgstr ""
 msgid "Remove machine from group"
 msgstr ""
 
-#: modules/base/logview/index.php:35
-msgid "LDAP operations log view"
+#: modules/base/includes/AjaxFilterLog.inc.php:366
+msgid "Refresh"
 msgstr ""
 
 #: modules/base/logview/ajax_showlog.php:43
@@ -1254,6 +1249,10 @@ msgstr ""
 
 #: modules/base/logview/ajax_showlog.php:46
 msgid "Extra informations"
+msgstr ""
+
+#: modules/base/logview/index.php:35
+msgid "LDAP operations log view"
 msgstr ""
 
 #: modules/base/main/favorites.php:4
@@ -1393,54 +1392,6 @@ msgstr ""
 #: modules/base/users/ajaxFilter.php:90 modules/base/views/index.tpl.php:95
 #: modules/base/infoPackage.inc.php:166
 msgid "Users"
-msgstr ""
-
-#: modules/base/users/backup.php:38
-msgid "Backup a user's folder"
-msgstr ""
-
-#: modules/base/users/backup.php:52
-msgid "Backup a user's home directory"
-msgstr ""
-
-#: modules/base/users/backup.php:54
-#, php-format
-msgid "Backup of <b>%s</b> user's folder has been launched in background."
-msgstr ""
-
-#: modules/base/users/backup.php:56
-#, php-format
-msgid ""
-"The files will be stored in the directory %s of the server at the end of the"
-" backup."
-msgstr ""
-
-#: modules/base/users/backup.php:58
-msgid "Please go to the status page to check the backup status."
-msgstr ""
-
-#: modules/base/users/backup.php:60
-msgid "This operation will last according to the amount of data to backup."
-msgstr ""
-
-#: modules/base/users/backup.php:75
-#, php-format
-msgid "%s home directory will be archived."
-msgstr ""
-
-#: modules/base/users/backup.php:80
-#, php-format
-msgid ""
-"Please select media size. If your data exceeds the volume size, several "
-"files of your media size will be created."
-msgstr ""
-
-#: modules/base/users/backup.php:84
-msgid "Media size"
-msgstr ""
-
-#: modules/base/users/backup.php:91
-msgid "Launch backup"
 msgstr ""
 
 #: modules/base/users/delete.php:33
@@ -1614,6 +1565,54 @@ msgstr ""
 
 #: modules/base/users/passwd.php:81 modules/base/users/resetpasswd.php:64
 msgid "Passwords are mismatching. Please retry."
+msgstr ""
+
+#: modules/base/users/backup.php:38
+msgid "Backup a user's folder"
+msgstr ""
+
+#: modules/base/users/backup.php:52
+msgid "Backup a user's home directory"
+msgstr ""
+
+#: modules/base/users/backup.php:54
+#, php-format
+msgid "Backup of <b>%s</b> user's folder has been launched in background."
+msgstr ""
+
+#: modules/base/users/backup.php:56
+#, php-format
+msgid ""
+"The files will be stored in the directory %s of the server at the end of the"
+" backup."
+msgstr ""
+
+#: modules/base/users/backup.php:58
+msgid "Please go to the status page to check the backup status."
+msgstr ""
+
+#: modules/base/users/backup.php:60
+msgid "This operation will last according to the amount of data to backup."
+msgstr ""
+
+#: modules/base/users/backup.php:75
+#, php-format
+msgid "%s home directory will be archived."
+msgstr ""
+
+#: modules/base/users/backup.php:80
+#, php-format
+msgid ""
+"Please select media size. If your data exceeds the volume size, several "
+"files of your media size will be created."
+msgstr ""
+
+#: modules/base/users/backup.php:84
+msgid "Media size"
+msgstr ""
+
+#: modules/base/users/backup.php:91
+msgid "Launch backup"
 msgstr ""
 
 #: modules/base/infoPackage.inc.php:36
@@ -1833,19 +1832,19 @@ msgid ""
 "and the MMC agent expired."
 msgstr ""
 
-#: index.php:181
+#: index.php:183
 msgid "Forgot password ?"
 msgstr ""
 
-#: index.php:192
+#: index.php:194
 msgid "Server"
 msgstr ""
 
-#: index.php:199
+#: index.php:201
 msgid "Language"
 msgstr ""
 
-#: index.php:224
+#: index.php:226
 msgid "Connect"
 msgstr ""
 
