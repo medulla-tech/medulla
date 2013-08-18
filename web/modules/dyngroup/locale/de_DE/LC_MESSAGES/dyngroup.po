@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-01 01:01+0200\n"
+"POT-Creation-Date: 2013-08-19 01:00+0200\n"
 "PO-Revision-Date: 2013-04-09 10:23+0000\n"
 "Last-Translator: Maik Wagner <maikwagner@yahoo.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/"
@@ -34,7 +34,7 @@ msgstr "%s) Suche %s %s %s in Modul %s"
 msgid "%s) Search %s %s (%s) in module %s"
 msgstr "%s) Suche %s %s (%s) in Modul %s"
 
-#: modules/dyngroup/includes/double.php:57
+#: modules/dyngroup/includes/double.php:51
 msgid "->"
 msgstr "->"
 

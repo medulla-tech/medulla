@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-05 01:00+0200\n"
+"POT-Creation-Date: 2013-08-19 01:00+0200\n"
 "PO-Revision-Date: 2013-03-26 16:52+0000\n"
 "Last-Translator: Leonardo Coelho <leonardoc@mandriva.com.br>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
@@ -128,7 +128,7 @@ msgstr "Adicionar serviço ao menu de boot"
 msgid "Add service to default boot menu"
 msgstr "Adicionar serviço ao menu de boot padrão"
 
-#: modules/imaging/imaging/addservice.php:107
+#: modules/imaging/imaging/addservice.php:106
 #, php-format
 msgid "Add the boot service <b>%s</b> to <b>%s</b>"
 msgstr "Adicionar o serviço de boot <b>%s</b> em <b>%s</b>"
@@ -262,7 +262,7 @@ msgid "Boot menu"
 msgstr "Menu de boot"
 
 #: modules/imaging/imaging/addimage.php:63
-#: modules/imaging/imaging/addservice.php:64
+#: modules/imaging/imaging/addservice.php:63
 #: modules/imaging/imaging/bootmenu_remove.php:73
 #: modules/imaging/imaging/showtarget.php:79
 #: modules/imaging/manage/service_show_used.php:72
@@ -560,11 +560,12 @@ msgid "Diskless Linux command line access"
 msgstr "Acesso a linha de comando Linux"
 
 #: modules/imaging/infoPackage.inc.php:228
-msgid "Display a groups of computers"
+#, fuzzy
+msgid "Display a group of computers"
 msgstr "Exibir um grupo de computadores"
 
 #: modules/imaging/imaging/addimage.php:136
-#: modules/imaging/imaging/addservice.php:121
+#: modules/imaging/imaging/addservice.php:120
 #: modules/imaging/imaging/bootmenu.php:167
 #: modules/imaging/imaging/bootmenu.php:352
 #: modules/imaging/manage/ajaxBootmenu.php:100
@@ -575,7 +576,7 @@ msgid "Displayed"
 msgstr "Mostrado"
 
 #: modules/imaging/imaging/addimage.php:140
-#: modules/imaging/imaging/addservice.php:125
+#: modules/imaging/imaging/addservice.php:124
 #: modules/imaging/imaging/bootmenu.php:177
 #: modules/imaging/imaging/bootmenu.php:355
 #: modules/imaging/manage/ajaxBootmenu.php:102
@@ -839,17 +840,19 @@ msgid "Identifier"
 msgstr "Identificador"
 
 #: modules/imaging/imaging/tabs.php:129
+#, fuzzy
 msgid ""
-"If the generation runs since more than 5 minutes, please reset the synchro "
+"If the generation runs for more than 5 minutes, please reset the synchro "
 "state of this computer's menu."
 msgstr ""
 "Se a geração está rodando por mais de 5 minutos, reinicia o estado de "
 "sincronia do menu de inicialização deste computador."
 
 #: modules/imaging/imaging/tabs.php:218
+#, fuzzy
 msgid ""
-"If the synchro runs since more than 5 minutes, please reset the synchro "
-"state of this computer's menu."
+"If the synchro runs for more than 5 minutes, please reset the synchro state "
+"of this computer's menu."
 msgstr ""
 "Se a sincronia está rodando a mais de 5 minutos recomendamos um reset no "
 "estado da sincronia."
@@ -1165,8 +1168,9 @@ msgid "Not selected"
 msgstr "Não selecionado"
 
 #: modules/imaging/imaging/bootmenu.php:343
+#, fuzzy
 msgid ""
-"Once the operation triggered by a choice is successfull, the preselected "
+"Once the operation triggered by a choice is successful, the preselected "
 "choice will default to the first item of the boot menu."
 msgstr ""
 "Uma vez a opção padrão tendo sido usada, a opção padrão voltará a ser a "
@@ -1442,7 +1446,7 @@ msgid "Select this hard disk"
 msgstr "Selecione o disco rígido"
 
 #: modules/imaging/imaging/addimage.php:134
-#: modules/imaging/imaging/addservice.php:119
+#: modules/imaging/imaging/addservice.php:118
 #: modules/imaging/imaging/bootmenu.php:162
 #: modules/imaging/manage/bootmenu_edit.php:81
 #: modules/imaging/manage/master_add.php:103
@@ -1451,7 +1455,7 @@ msgid "Selected by default"
 msgstr "Selecionado por padrão"
 
 #: modules/imaging/imaging/addimage.php:138
-#: modules/imaging/imaging/addservice.php:123
+#: modules/imaging/imaging/addservice.php:122
 #: modules/imaging/imaging/bootmenu.php:172
 #: modules/imaging/manage/bootmenu_edit.php:91
 #: modules/imaging/manage/master_add.php:107
@@ -1658,9 +1662,10 @@ msgstr ""
 "<br/>"
 
 #: modules/imaging/imaging/bootmenu.php:345
+#, fuzzy
 msgid ""
 "Then for each computer, once the operation triggered by a choice is "
-"successfull, the preselected choice will default to the first item of the "
+"successful, the preselected choice will default to the first item of the "
 "boot menu."
 msgstr ""
 "Para cada computador, uma vez a opção padrão tendo sido usada, a opção "
@@ -1720,8 +1725,9 @@ msgid "This target's boot menu is up-to-date."
 msgstr "O menu de inicialização do destino está atualizado."
 
 #: modules/imaging/includes/post_install_script.php:88
+#, fuzzy
 msgid ""
-"This values is already taken, please only put one element for each order."
+"This value is already taken, please only put one element for each order."
 msgstr ""
 "Estes valores já foram usados, apenas coloque um elemento para cada ordem."
 

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-05 01:00+0200\n"
+"POT-Creation-Date: 2013-08-19 01:00+0200\n"
 "PO-Revision-Date: 2013-05-31 13:17+0000\n"
 "Last-Translator: Leonardo Coelho <leonardoc@mandriva.com.br>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
@@ -225,8 +225,7 @@ msgstr "Aba Histórico (GLPI)"
 msgid "IP"
 msgstr "IP"
 
-#: modules/glpi/glpi/ajaxViewPart.php:302
-#: modules/glpi/glpi/ajaxViewPart.php:325
+#: modules/glpi/glpi/ajaxViewPart.php:299
 msgid "Invalid hostname"
 msgstr "Hostname Inválido"
 

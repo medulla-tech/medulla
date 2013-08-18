@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-05 01:00+0200\n"
+"POT-Creation-Date: 2013-08-19 01:00+0200\n"
 "PO-Revision-Date: 2013-05-30 09:20+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Spanish (Spain) (http://transifex.mandriva.com/projects/p/"
@@ -215,8 +215,7 @@ msgstr ""
 msgid "IP"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:302
-#: modules/glpi/glpi/ajaxViewPart.php:325
+#: modules/glpi/glpi/ajaxViewPart.php:299
 msgid "Invalid hostname"
 msgstr ""
 

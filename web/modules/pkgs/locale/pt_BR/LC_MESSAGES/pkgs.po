@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-01 01:01+0200\n"
+"POT-Creation-Date: 2013-08-19 01:00+0200\n"
 "PO-Revision-Date: 2013-03-14 19:47+0000\n"
 "Last-Translator: Leonardo Coelho <leonardoc@mandriva.com.br>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
@@ -46,8 +46,8 @@ msgstr "Já enviado para o servidor"
 msgid "Associate package"
 msgstr "Associar pacote"
 
-#: modules/pkgs/pkgs/add.php:304
-#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:135
+#: modules/pkgs/pkgs/add.php:309
+#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:129
 msgid ""
 "Change post_max_size and upload_max_filesize directives in php.ini file to "
 "increase upload size."
@@ -59,7 +59,7 @@ msgstr ""
 msgid "Choose package source"
 msgstr "Escolha a fonte do pacote"
 
-#: modules/pkgs/includes/html.inc.php:61
+#: modules/pkgs/includes/html.inc.php:59
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:33
 msgid "Click here to select files"
 msgstr "Clique aqui para selecionar os arquivos"
@@ -110,7 +110,7 @@ msgstr "Falha ao associar arquivos"
 msgid "Failed to associate files%s"
 msgstr "Falha ao associar os arquivos%s"
 
-#: modules/pkgs/pkgs/add.php:139 modules/pkgs/pkgs/add.php:279
+#: modules/pkgs/pkgs/add.php:139 modules/pkgs/pkgs/add.php:287
 msgid "Files directory"
 msgstr "Diretório de arquivos"
 
@@ -119,8 +119,8 @@ msgstr "Diretório de arquivos"
 msgid "Files successfully associated with package <b>%s (%s)</b>%s"
 msgstr "Os arquivos foram associados com sucesso ao pacote <b>%s (%s)</b>%s"
 
-#: modules/pkgs/pkgs/add.php:304
-#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:135
+#: modules/pkgs/pkgs/add.php:309
+#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:129
 #, php-format
 msgid "Files upload (<b><u title='%s'>%sM max</u></b>)"
 msgstr "Arquivos Enviados (<b><u title='%s'>%sM max</u></b>)"

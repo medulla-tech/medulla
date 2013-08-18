@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-01 01:01+0200\n"
+"POT-Creation-Date: 2013-08-19 01:00+0200\n"
 "PO-Revision-Date: 2013-06-11 14:40+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
@@ -47,7 +47,7 @@ msgstr "%s (em %s)"
 msgid "%s <i>(no additional parameter given)</i>"
 msgstr "%s <i>(parâmetro adicional não informado)</i>"
 
-#: modules/msc/includes/widgets.inc.php:85
+#: modules/msc/includes/widgets.inc.php:87
 #, php-format
 msgid ""
 "%s host is not defined in the MSC module, or you don't have permissions to "
@@ -325,8 +325,8 @@ msgstr "Avançado"
 msgid "Advanced launch"
 msgstr "Lançamento Avançado"
 
-#: modules/msc/includes/widgets.inc.php:312
-#: modules/msc/includes/widgets.inc.php:438
+#: modules/msc/includes/widgets.inc.php:307
+#: modules/msc/includes/widgets.inc.php:433
 msgid "All users commands"
 msgstr "Comandos de todos os usuários"
 
@@ -721,7 +721,7 @@ msgstr ""
 "verifique a conexidade de rede, e que o agente de segurança está instalado "
 "nessa máquina."
 
-#: modules/msc/includes/widgets.inc.php:196
+#: modules/msc/includes/widgets.inc.php:200
 msgid "Execute action..."
 msgstr "Executar ação..."
 
@@ -1027,8 +1027,8 @@ msgstr "Múltiplo, modos de cliente%s"
 msgid "Multiple, server mode"
 msgstr "Múltiplo, modo servidor"
 
-#: modules/msc/includes/widgets.inc.php:312
-#: modules/msc/includes/widgets.inc.php:438
+#: modules/msc/includes/widgets.inc.php:307
+#: modules/msc/includes/widgets.inc.php:433
 msgid "My commands"
 msgstr "Meus comandos"
 
@@ -1220,11 +1220,11 @@ msgstr "Modo de Proxy"
 msgid "Proxy priority"
 msgstr "Prioridade do Proxy"
 
-#: modules/msc/includes/widgets.inc.php:219
+#: modules/msc/includes/widgets.inc.php:223
 msgid "Quick action list is empty"
 msgstr "A lista de ações rápidas está vazia"
 
-#: modules/msc/includes/widgets.inc.php:162
+#: modules/msc/includes/widgets.inc.php:164
 #, php-format
 msgid "Quick action on %s"
 msgstr "Ação rápida em %s"
@@ -1668,7 +1668,7 @@ msgstr "Trabalho em andamento"
 msgid "Y-m-d H:i:s"
 msgstr "A-m-d H:m:s"
 
-#: modules/msc/includes/widgets.inc.php:102
+#: modules/msc/includes/widgets.inc.php:104
 msgid "You don't have the right permissions to display this command"
 msgstr "Você não tem as devidas permissões para visualizar este comando"
 
@@ -1814,7 +1814,7 @@ msgstr "Falha durante remoção"
 msgid "failed during upload"
 msgstr "Falha durante o envio"
 
-#: modules/msc/includes/widgets.inc.php:67
+#: modules/msc/includes/widgets.inc.php:69
 #, php-format
 msgid ""
 "group \"%s\" is not defined in the MSC module, or you don't have permissions "

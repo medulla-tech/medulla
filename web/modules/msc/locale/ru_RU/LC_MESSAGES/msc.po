@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-01 01:01+0200\n"
+"POT-Creation-Date: 2013-08-19 01:00+0200\n"
 "PO-Revision-Date: 2013-06-11 14:40+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/"
@@ -46,7 +46,7 @@ msgstr "%s (на %s)"
 msgid "%s <i>(no additional parameter given)</i>"
 msgstr "%s <i>(не задано дополнительных параметров)</i>"
 
-#: modules/msc/includes/widgets.inc.php:85
+#: modules/msc/includes/widgets.inc.php:87
 #, php-format
 msgid ""
 "%s host is not defined in the MSC module, or you don't have permissions to "
@@ -322,8 +322,8 @@ msgstr "Расширенный"
 msgid "Advanced launch"
 msgstr ""
 
-#: modules/msc/includes/widgets.inc.php:312
-#: modules/msc/includes/widgets.inc.php:438
+#: modules/msc/includes/widgets.inc.php:307
+#: modules/msc/includes/widgets.inc.php:433
 msgid "All users commands"
 msgstr "Команды всех пользователей"
 
@@ -721,7 +721,7 @@ msgstr ""
 "Ошибка при подключении к безопасному агенту на этом хосте. Пожалуйста, "
 "проверьте подключение к сети и наличие безопасного агента на этом хосте."
 
-#: modules/msc/includes/widgets.inc.php:196
+#: modules/msc/includes/widgets.inc.php:200
 msgid "Execute action..."
 msgstr "Выполнение..."
 
@@ -1024,8 +1024,8 @@ msgstr "Сложный, режим клиента %s"
 msgid "Multiple, server mode"
 msgstr "Сложный, режим сервера"
 
-#: modules/msc/includes/widgets.inc.php:312
-#: modules/msc/includes/widgets.inc.php:438
+#: modules/msc/includes/widgets.inc.php:307
+#: modules/msc/includes/widgets.inc.php:433
 msgid "My commands"
 msgstr "Мои команды"
 
@@ -1218,11 +1218,11 @@ msgstr "Режим прокси"
 msgid "Proxy priority"
 msgstr "Приоритет прокси"
 
-#: modules/msc/includes/widgets.inc.php:219
+#: modules/msc/includes/widgets.inc.php:223
 msgid "Quick action list is empty"
 msgstr "список быстрых действий пуст"
 
-#: modules/msc/includes/widgets.inc.php:162
+#: modules/msc/includes/widgets.inc.php:164
 #, php-format
 msgid "Quick action on %s"
 msgstr "Быстрое действие над %s"
@@ -1665,7 +1665,7 @@ msgstr "Выполняется работа"
 msgid "Y-m-d H:i:s"
 msgstr "Г-м-д.Ч:м:с"
 
-#: modules/msc/includes/widgets.inc.php:102
+#: modules/msc/includes/widgets.inc.php:104
 msgid "You don't have the right permissions to display this command"
 msgstr "У вас нет права доступа для просмотра данной команды"
 
@@ -1813,7 +1813,7 @@ msgstr "ошибка при подавлении"
 msgid "failed during upload"
 msgstr "ошибка при загрузке"
 
-#: modules/msc/includes/widgets.inc.php:67
+#: modules/msc/includes/widgets.inc.php:69
 #, php-format
 msgid ""
 "group \"%s\" is not defined in the MSC module, or you don't have permissions "

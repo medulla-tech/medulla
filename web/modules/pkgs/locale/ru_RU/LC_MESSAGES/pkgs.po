@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-01 01:01+0200\n"
+"POT-Creation-Date: 2013-08-19 01:00+0200\n"
 "PO-Revision-Date: 2013-03-14 14:48+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/"
@@ -44,8 +44,8 @@ msgstr ""
 msgid "Associate package"
 msgstr "Объединить пакет"
 
-#: modules/pkgs/pkgs/add.php:304
-#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:135
+#: modules/pkgs/pkgs/add.php:309
+#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:129
 msgid ""
 "Change post_max_size and upload_max_filesize directives in php.ini file to "
 "increase upload size."
@@ -55,7 +55,7 @@ msgstr ""
 msgid "Choose package source"
 msgstr ""
 
-#: modules/pkgs/includes/html.inc.php:61
+#: modules/pkgs/includes/html.inc.php:59
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:33
 msgid "Click here to select files"
 msgstr ""
@@ -106,7 +106,7 @@ msgstr "Не удалось объединить файлы"
 msgid "Failed to associate files%s"
 msgstr "Не удалось объединить файлы %s"
 
-#: modules/pkgs/pkgs/add.php:139 modules/pkgs/pkgs/add.php:279
+#: modules/pkgs/pkgs/add.php:139 modules/pkgs/pkgs/add.php:287
 msgid "Files directory"
 msgstr ""
 
@@ -115,8 +115,8 @@ msgstr ""
 msgid "Files successfully associated with package <b>%s (%s)</b>%s"
 msgstr "Файлы успешно объединены с пакетом  <b>%s (%s)</b>%s"
 
-#: modules/pkgs/pkgs/add.php:304
-#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:135
+#: modules/pkgs/pkgs/add.php:309
+#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:129
 #, php-format
 msgid "Files upload (<b><u title='%s'>%sM max</u></b>)"
 msgstr ""
