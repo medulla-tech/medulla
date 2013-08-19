@@ -47,6 +47,7 @@ from mmc.plugins.msc.qaction import qa_list_files, qa_detailled_info
 from mmc.plugins.msc.machines import Machines, Machine
 from mmc.plugins.msc.download import MscDownloadedFiles, MscDownloadProcess
 from mmc.plugins.dyngroup.database import DyngroupDatabase
+from mmc.plugins.dyngroup.config import DGConfig
 import mmc.plugins.msc.actions
 import mmc.plugins.msc.keychain
 import mmc.plugins.msc.package_api
@@ -459,11 +460,13 @@ class RpcProxy(RpcProxyI):
 
     def getMachineNamesOnGroupStatus(self, cmd_id, state):
         ctx = self.currentContext
-        return xmlrpcCleanup(MscDatabase().getMachineNamesOnGroupStatus(ctx, cmd_id, state))
+        limit = DGConfig().maxElementsForStaticList
+        return xmlrpcCleanup(MscDatabase().getMachineNamesOnGroupStatus(ctx, cmd_id, state, limit))
 
     def getMachineNamesOnBundleStatus(self, bundle_id, state):
         ctx = self.currentContext
-        return xmlrpcCleanup(MscDatabase().getMachineNamesOnBundleStatus(ctx, bundle_id, state))
+        limit = DGConfig().maxElementsForStaticList
+        return xmlrpcCleanup(MscDatabase().getMachineNamesOnBundleStatus(ctx, bundle_id, state, limit))
 
     #
     # default WEB values handling

@@ -48,8 +48,6 @@ from pulse2.database.database_helper import DatabaseHelper
 from pulse2.managers.location import ComputerLocationManager
 import pulse2.time_intervals
 
-from mmc.plugins.dyngroup.config import DGConfig
-
 # Imported last
 import logging
 
@@ -967,7 +965,7 @@ class MscDatabase(DatabaseHelper):
         session.close()
         return ret
 
-    def getMachineNamesOnGroupStatus(self, ctx, cmd_id, state):
+    def getMachineNamesOnGroupStatus(self, ctx, cmd_id, state, limit):
         session = create_session()
         query = session.query(CommandsOnHost).add_column(self.target.c.target_uuid).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.commands.c.id == cmd_id)
         if state in ['success', 'paused', 'stopped', 'running', 'failure']: # Global statues
@@ -991,14 +989,12 @@ class MscDatabase(DatabaseHelper):
             query = query.filter(self.commands_on_host.c.current_state == 'over_timed')
 
         # Limit list according to max_elements_for_static_list param in dyngroup.ini
-        limit = DGConfig().maxElementsForStaticList
-
         query.limit(limit)
         ret = [{'hostname': machine[0].host, 'target_uuid': machine[1]} for machine in query]
         session.close()
         return ret
 
-    def getMachineNamesOnBundleStatus(self, ctx, fk_bundle, state):
+    def getMachineNamesOnBundleStatus(self, ctx, fk_bundle, state, limit):
         session = create_session()
         query = session.query(CommandsOnHost).add_column(self.target.c.target_uuid).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.commands.c.fk_bundle == fk_bundle)
         if state in ['success', 'paused', 'stopped', 'running', 'failure']: # Global statues
@@ -1023,8 +1019,6 @@ class MscDatabase(DatabaseHelper):
 
 
         # Limit list according to max_elements_for_static_list param in dyngroup.ini
-        limit = DGConfig().maxElementsForStaticList
-
         query.limit(limit)
         ret = [{'hostname': machine[0].host, 'target_uuid': machine[1]} for machine in query]
         session.close()
