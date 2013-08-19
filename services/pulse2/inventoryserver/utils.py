@@ -43,10 +43,6 @@ class ConfigReader :
                                       "pulse2",  
                                       "package-server", 
                                       "package-server.ini")
-        self._img_server_ini = os.path.join(mmcconfdir, 
-                                      "pulse2",  
-                                      "imaging-server", 
-                                      "imaging-server.ini")
         
 
     @classmethod
@@ -69,15 +65,6 @@ class ConfigReader :
 
         return ConfigObj(inifile)
  
-    @property
-    def img_server_config (self):
-        """ 
-        Get the configuration of imaging server 
-             
-        @return: ConfigParser.ConfigParser instance 
-        """
-        return self.get_config(self._img_server_ini)
-
     @property
     def pkg_server_config (self):
         """ 
@@ -212,12 +199,12 @@ class InventoryUtils :
         
         @return: string
         """
-        config = ConfigReader().img_server_config
+        config = ConfigReader().pkg_server_config
 
-        if "package-server" in config :
-            if "host" in config["package-server"] :
+        if "main" in config :
+            if "host" in config["main"] :
 
-                host = config["package-server"]["host"]
+                host = config["main"]["host"]
                 return gethostbyname(host)
 
         return "127.0.0.1"
