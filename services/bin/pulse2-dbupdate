@@ -24,7 +24,6 @@
 
 """ Database version detect and update """
 
-import sys
 import logging
 
 from optparse import OptionParser
