@@ -528,7 +528,7 @@ if ($this->refresh) {
         function updateStates() {
             var ind = document.getElementById('<?php echo  $this->paramname2; ?>');
             var val = ind.options[ind.selectedIndex].value;
-            jQuery('<?php echo  $this->paramname2; ?>').load('<?php echo  urlStrRedirect('msc/logs/state_list', array('paramname2'=>$this->paramname2)); ?>&<?php echo  $this->paramname1 ?>='+document.Form.<?php echo  $this->paramname1 ?>.value+'&selected='+document.Form.<?php echo  $this->paramname2 ?>.value);
+            jQuery('#<?php echo  $this->paramname2; ?>').load('<?php echo  urlStrRedirect('msc/logs/state_list', array('paramname2'=>$this->paramname2)); ?>&<?php echo  $this->paramname1 ?>='+document.Form.<?php echo  $this->paramname1 ?>.value+'&selected='+document.Form.<?php echo  $this->paramname2 ?>.value);
             refreshtimer = setTimeout("updateSearch()", 500);
         }
 

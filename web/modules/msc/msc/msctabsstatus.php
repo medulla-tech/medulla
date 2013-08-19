@@ -299,7 +299,7 @@ $machines_have_failed = ($status['failure']['total'][0]) ? True : False;
 print "</table>";
 
 print "    <div id=\"msc-graphs\"></div>";
-if ($machines_have_failed) print "    <div id=\"msc-graphs-failed\"></div>";
+ print "    <div id=\"msc-graphs-failed\"></div>";
 echo <<< MSC
     <script type="text/javascript">
     // First pie chart with globals states
