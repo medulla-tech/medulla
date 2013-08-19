@@ -354,7 +354,7 @@ class AjaxFilterCommands extends AjaxFilter {
         jQuery('#param').focus();
         var refreshtimer = null;
         var refreshparamtimer = null;
-        var refreshdelay = <?php echo  $this->refresh ?>;
+        var refreshdelay = <?php echo  $this->refresh; ?>;
 
 <?php
 if(isset($this->storedfilter)) {
@@ -379,7 +379,7 @@ if(isset($this->storedfilter)) {
          * Update div
          */
         function updateSearch() {
-            jQuery('<?php echo  $this->divid; ?>').load('<?php echo  $this->url; ?>filter='+document.Form.param.value+'<?php echo  $this->params ?>&<?php echo  $this->paramname ?>='+document.Form.<?php echo  $this->paramname ?>.value);
+            jQuery('#<?php echo  $this->divid; ?>').load('<?php echo  $this->url; ?>filter='+document.Form.param.value+'<?php echo  $this->params ?>&<?php echo  $this->paramname ?>='+document.Form.<?php echo  $this->paramname ?>.value);
 
 <?php
 if ($this->refresh) {
@@ -395,7 +395,7 @@ if ($this->refresh) {
          */
         function updateSearchParam(filter, start, end) {
             clearTimers();
-            jQuery('<?php echo  $this->divid; ?>').load('<?php echo  $this->url; ?>filter='+filter+'<?php echo  $this->params ?>&<?php echo  $this->paramname ?>='+document.Form.<?php echo  $this->paramname ?>.value+'&start='+start+'&end='+end);
+            jQuery('#<?php echo  $this->divid; ?>').load('<?php echo  $this->url; ?>filter='+filter+'<?php echo  $this->params ?>&<?php echo  $this->paramname ?>='+document.Form.<?php echo  $this->paramname ?>.value+'&start='+start+'&end='+end);
 
 <?php
 if ($this->refresh) {
@@ -511,7 +511,7 @@ if(isset($this->storedfilter)) {
          */
         function updateSearch() {
             clearTimers();
-            jQuery('<?php echo  $this->divid; ?>').load('<?php echo  $this->url; ?>filter='+document.Form.param.value+'<?php echo  $this->params ?>&<?php echo  $this->paramname1 ?>='+document.Form.<?php echo  $this->paramname1 ?>.value+'&<?php echo  $this->paramname2 ?>='+document.Form.<?php echo  $this->paramname2 ?>.value);
+            jQuery('#<?php echo  $this->divid; ?>').load('<?php echo  $this->url; ?>filter='+document.Form.param.value+'<?php echo  $this->params ?>&<?php echo  $this->paramname1 ?>='+document.Form.<?php echo  $this->paramname1 ?>.value+'&<?php echo  $this->paramname2 ?>='+document.Form.<?php echo  $this->paramname2 ?>.value);
 
 <?php
 if ($this->refresh) {
@@ -537,7 +537,7 @@ if ($this->refresh) {
          */
         function updateSearchParam(filter, start, end) {
             clearTimers();
-            jQuery('<?php echo  $this->divid; ?>').load('<?php echo  $this->url; ?>filter='+filter+'<?php echo  $this->params ?>&<?php echo  $this->paramname1 ?>='+document.Form.<?php echo  $this->paramname1 ?>.value+'&<?php echo  $this->paramname2 ?>='+document.Form.<?php echo  $this->paramname2 ?>.value+'&start='+start+'&end='+end);
+            jQuery('#<?php echo  $this->divid; ?>').load('<?php echo  $this->url; ?>filter='+filter+'<?php echo  $this->params ?>&<?php echo  $this->paramname1 ?>='+document.Form.<?php echo  $this->paramname1 ?>.value+'&<?php echo  $this->paramname2 ?>='+document.Form.<?php echo  $this->paramname2 ?>.value+'&start='+start+'&end='+end);
 
 <?php
 if ($this->refresh) {
