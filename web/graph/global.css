@@ -1207,9 +1207,16 @@ ul.roACL {
  * Dashboard and home page
  */
 
-.portlet, .module {
+.column {
+    width: 230px;
+    float: left;
+    padding-bottom: 100px;
+}
+
+.portlet {
     background-color: #fafafa;
     padding: 5px;
+    margin: 0 1em 1em 0;
     -webkit-border-radius: 4px;
        -moz-border-radius: 4px;
             border-radius: 4px;
@@ -1219,6 +1226,31 @@ ul.roACL {
          -o-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.05);
             box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.05);
     filter:progid:DXImageTransform.Microsoft.Shadow(color=#aaaaaa, Direction=NaN, Strength=2);
+}
+
+.portlet-header {
+    font-size:14px;
+    color: #666;
+    padding: 0 0 10px;
+    cursor:move;
+}
+
+.portlet-header .ui-icon {
+    float: right;
+}
+
+.portlet-content {
+    padding: 0.4em;
+}
+
+.ui-sortable-placeholder {
+    border: 1px dotted #324C96;
+    visibility: visible !important;
+    height: 50px !important;
+}
+
+.ui-sortable-placeholder * {
+    visibility: hidden;
 }
 
 .subpanel, .submod {
