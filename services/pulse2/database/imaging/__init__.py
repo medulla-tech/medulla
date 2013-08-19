@@ -1968,10 +1968,15 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         mi = mi.first()
         return mi
 
-    def editImageToTarget(self, item_uuid, target_uuid, params):
+    def editImageToTarget(self, item_uuid, target_uuid, target_type, params):
         session = create_session()
         menu = self.getTargetsMenuTUUID(target_uuid, session)
         mi = self.__getImageMenuItem(session, item_uuid, target_uuid)
+        if target_type == P2IT.PROFILE:
+            for computer in ComputerProfileManager().getProfileContent(target_uuid):
+                cmenu = self.getTargetsMenuTUUID(computer.uuid, session)
+                self.__editImage(session, item_uuid, cmenu, mi, params)
+
         ret = self.__editImage(session, item_uuid, menu, mi, params)
         session.close()
         return ret

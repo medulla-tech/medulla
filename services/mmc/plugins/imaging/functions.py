@@ -523,7 +523,11 @@ class ImagingRpcProxy(RpcProxyI):
         target_type = self.__convertType(target_type, target_uuid)
         try:
             db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
-            ret = db.editImageToTarget(item_uuid, target_uuid, params)
+            if target_type == P2IT.PROFILE:
+                uuids = [c.uuid for c in ComputerProfileManager().getProfileContent(target_uuid)]
+                db.changeTargetsSynchroState(uuids, P2IT.COMPUTER_IN_PROFILE, P2ISS.TODO)
+
+            ret = db.editImageToTarget(item_uuid, target_uuid, target_type, params)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
             return xmlrpcCleanup([False, e])
@@ -949,7 +953,7 @@ class ImagingRpcProxy(RpcProxyI):
         try:
             db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
             if target_type == P2IT.PROFILE:
-                uuids = map(lambda c:c.uuid, ComputerProfileManager().getProfileContent(target_uuid))
+                uuids = [c.uuid for c in ComputerProfileManager().getProfileContent(target_uuid)]
                 db.changeTargetsSynchroState(uuids, P2IT.COMPUTER_IN_PROFILE, P2ISS.TODO)
 
             ret = ImagingDatabase().editServiceToTarget(bs_uuid, target_uuid, target_type, params)
