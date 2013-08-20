@@ -27,7 +27,7 @@ qa_DATA = \
 	006run_inventory_win32.msc \
 	007wake_on_lan.msc \
         008remote_desktop_without_approval.msc \
-        009remote_desktop_without_approval.msc \
+        009remote_desktop_with_approval.msc \
 	010wol_with_imaging.msc
         
 
