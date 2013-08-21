@@ -47,10 +47,12 @@ VERSION = "3.1.0"
 APIVERSION = "0:1:0"
 REVISION = scmRevision("$Rev$")
 
-def getVersion(): return VERSION
-def getApiVersion(): return APIVERSION
-def getRevision(): return REVISION
-
+def getVersion():
+    return VERSION
+def getApiVersion():
+    return APIVERSION
+def getRevision():
+    return REVISION
 
 def activate():
     ldapObj = ldapUserGroupControl()
@@ -66,7 +68,7 @@ def activate():
     for objectClass in ppolicySchema:
         schema = ldapObj.getSchema(objectClass)
         if not len(schema):
-            logger.error("LDAP Password Policy schema is not included in LDAP directory: %s objectClass is not available" % objectClass);
+            logger.error("LDAP Password Policy schema is not included in LDAP directory: %s objectClass is not available" % objectClass)
             return False
 
     # Register default password policy into the LDAP if it does not exist
@@ -99,17 +101,17 @@ class PPolicyConfig(PluginConfig):
             else:
                 self.ppolicyAttributes[attribute[0]] = attribute[1]
 
-class PPolicy(ldapUserGroupControl):
 
+class PPolicy(ldapUserGroupControl):
     """
     Class for objects that manages the default LDAP password policy.
     """
 
-    def __init__(self, conffile = None):
+    def __init__(self, conffile=None):
         ldapUserGroupControl.__init__(self, conffile)
         self.configPPolicy = PPolicyConfig("ppolicy", conffile)
 
-    def checkPPolicy(self, ppolicyName = None):
+    def checkPPolicy(self, ppolicyName=None):
         '''
         Check the presence of a Password Policy
 
@@ -128,7 +130,7 @@ class PPolicy(ldapUserGroupControl):
             pass
         return ret
 
-    def addPPolicy(self, ppolicyName = None, ppolicyDesc = None):
+    def addPPolicy(self, ppolicyName=None, ppolicyDesc=None):
         """
         Add a password policy in LDAP if not available.
         """
@@ -211,7 +213,7 @@ class PPolicy(ldapUserGroupControl):
         else:
             raise ldap.NO_SUCH_OBJECT
 
-    def listPPolicy(self, filt = ''):
+    def listPPolicy(self, filt=''):
         """
         Get ppolicy list from directory
 
@@ -222,7 +224,7 @@ class PPolicy(ldapUserGroupControl):
         else: filt = "*" + filt + "*"
         return self.l.search_s(self.configPPolicy.ppolicydn, ldap.SCOPE_SUBTREE, "(&(objectClass=pwdPolicy)(cn=%s))" % filt)
 
-    def getAttribute(self, nameattribute = None, ppolicyName = None):
+    def getAttribute(self, nameattribute=None, ppolicyName=None):
         """
         Get the given attribute value of the default password policies.
 
@@ -238,7 +240,7 @@ class PPolicy(ldapUserGroupControl):
             ppolicyDN = "cn=" + ppolicyName + "," + self.configPPolicy.ppolicydn
         try:
             result = (self.l.search_s(ppolicyDN, ldap.SCOPE_BASE))[0][1]
-            if nameattribute == None:
+            if nameattribute is None:
                 return result
             elif nameattribute in result:
                 return result[nameattribute]
@@ -247,7 +249,7 @@ class PPolicy(ldapUserGroupControl):
         except KeyError:
             return None
 
-    def setAttribute(self, nameattribute, value, ppolicyName = None):
+    def setAttribute(self, nameattribute, value, ppolicyName=None):
         """
         Set value to the given attribute.
 
@@ -263,20 +265,20 @@ class PPolicy(ldapUserGroupControl):
             ppolicyDN = "cn=" + ppolicyName + "," + self.configPPolicy.ppolicydn
 
         r = AF().log(PLUGIN_NAME, AA.PPOLICY_MOD_ATTR, [(ppolicyDN, AT.PPOLICY), (nameattribute, AT.ATTRIBUTE)], value)
-        if value != None:
+        if value is not None:
             if type(value) == bool:
                 value = str(value).upper()
             elif type(value) == int:
                 value = str(value)
         try:
-            self.l.modify_s(ppolicyDN, [(ldap.MOD_REPLACE,nameattribute,value)])
+            self.l.modify_s(ppolicyDN, [(ldap.MOD_REPLACE, nameattribute, value)])
         except ldap.UNDEFINED_TYPE:
             logging.getLogger().error("Attribute %s isn't defined on ldap" % nameattribute)
         except ldap.INVALID_SYNTAX:
             logging.getLogger().error("Invalid Syntax from the attribute value of %s on ldap" % nameattribute)
         r.commit()
 
-    def getDefaultAttributes (self):
+    def getDefaultAttributes(self):
         """
         Returns the list of LDAP password policies attributes.
 
@@ -288,7 +290,7 @@ class PPolicy(ldapUserGroupControl):
             ret.append(k)
         return ret
 
-    def setDefaultConfigAttributes (self, ppolicyName = None):
+    def setDefaultConfigAttributes(self, ppolicyName=None):
         """
         Set all the password policies attributes to the value specified in the
         plugin configuration file.
@@ -303,7 +305,7 @@ class UserPPolicy(ldapUserGroupControl):
     Class for objects that manage user password policies attributes.
     """
 
-    def __init__(self, uid, conffile = None):
+    def __init__(self, uid, conffile=None):
         """
         Class constructor.
 
@@ -315,7 +317,7 @@ class UserPPolicy(ldapUserGroupControl):
         self.userUid = uid
         self.dn = 'uid=' + uid + ',' + self.baseUsersDN
 
-    def getPPolicyAttribute(self, name = None):
+    def getPPolicyAttribute(self, name=None):
         """
         Get value of the given LDAP attribute.
 
@@ -325,8 +327,8 @@ class UserPPolicy(ldapUserGroupControl):
         @returns: the attribute value
         @rtype: str
         """
-        result = self.getUserEntry(self.userUid, operational = True)
-        if name == None:
+        result = self.getUserEntry(self.userUid, operational=True)
+        if name is None:
             ret = result
         elif name in result:
             ret = result[name]
@@ -345,7 +347,7 @@ class UserPPolicy(ldapUserGroupControl):
         @param value: LDAP attribute value
         @type value: str
         """
-        if value != None:
+        if value is not None:
             r = AF().log(PLUGIN_NAME, AA.PPOLICY_MOD_USER_ATTR, [(self.dn, AT.USER), (nameattribute, AT.ATTRIBUTE)], value)
             if type(value) == bool:
                 value = str(value).upper()
@@ -364,22 +366,22 @@ class UserPPolicy(ldapUserGroupControl):
         except ldap.INVALID_SYNTAX:
             logging.getLogger().error("Invalid Syntax from the attribute value of %s on ldap" % nameattribute)
         r.commit()
-	# if password reset request, we set sambaPwdLastSet to time()-24hours
-	if nameattribute == 'pwdReset' and value == 'TRUE':
-	    userpolicy = self.getPPolicy()
-	    if not userpolicy: userpolicy = 'default'
-	    pwd_minage =  PPolicy().listPPolicy(userpolicy)[0][1]['pwdMinAge'][0]
-   	    try:
-	        from mmc.plugins import samba
-	        if samba.isSmbUser(self.userUid):
-                    samba.changeSambaAttributes(self.userUid, \
-                        {'sambaPwdLastSet': str(int(time.time())-int(pwd_minage))})
-	        else:
+        # if password reset request, we set sambaPwdLastSet to time()-24hours
+        if nameattribute == 'pwdReset' and value == 'TRUE':
+            userpolicy = self.getPPolicy()
+            if not userpolicy:
+                userpolicy = 'default'
+            pwd_minage = PPolicy().listPPolicy(userpolicy)[0][1]['pwdMinAge'][0]
+            try:
+                from mmc.plugins import samba
+                if samba.isSmbUser(self.userUid):
+                    samba.changeSambaAttributes(self.userUid,
+                                                {'sambaPwdLastSet': str(int(time.time()) - int(pwd_minage))})
+                else:
                     logging.getLogger().debug('sambaPwdLastSet failed to set \
                         beause %s is not a samba user (pwdReset workaround)' % self.userUid)
-	    except Exception as inst:
-                print str(inst)
-
+            except ImportError:
+                pass
 
     def hasPPolicy(self):
         """
@@ -408,7 +410,7 @@ class UserPPolicy(ldapUserGroupControl):
         if not self.hasPPolicy():
             r = AF().log(PLUGIN_NAME, AA.PPOLICY_ADD_USER_PPOLICY, [(self.dn, AT.USER)])
             # Get current user entry
-            s = self.l.search_s(self.dn, ldap.SCOPE_BASE, attrlist = ['+', '*'])
+            s = self.l.search_s(self.dn, ldap.SCOPE_BASE, attrlist=['+', '*'])
             c, old = s[0]
             new = copy.deepcopy(old)
             if not "pwdPolicy" in new["objectClass"]:
@@ -455,7 +457,7 @@ class UserPPolicy(ldapUserGroupControl):
         # Remove pwdPolicy object class
         self.removeUserObjectClass(self.userUid, 'pwdPolicy')
         # Remove pwdPolicySubentry attribute from current user entry
-        s = self.l.search_s(self.dn, ldap.SCOPE_BASE, attrlist = ['+', '*'])
+        s = self.l.search_s(self.dn, ldap.SCOPE_BASE, attrlist=['+', '*'])
         c, old = s[0]
         new = copy.deepcopy(old)
         if 'pwdPolicySubentry' in new:
@@ -482,7 +484,7 @@ class UserPPolicy(ldapUserGroupControl):
         @returns: -1 if the user account has been locked permanently, 0 if not, else the lock timestamp
         @rtype: int
         """
-        user = self.getUserEntry(self.userUid, operational = True)
+        user = self.getUserEntry(self.userUid, operational=True)
         if 'pwdAccountLockedTime' in user:
             try:
                 ret = self._strpTime(user['pwdAccountLockedTime'][0])
@@ -551,8 +553,7 @@ class UserPPolicy(ldapUserGroupControl):
         @rtype int:
         """
         ret = -1
-        user = self.getUserEntry(self.userUid, operational = True)
-
+        user = self.getUserEntry(self.userUid, operational=True)
         if 'pwdGraceUseTime' in user:
             count = len(user['pwdGraceUseTime'])
             if 'pwdGraceAuthNLimit' in user:
@@ -570,7 +571,7 @@ class UserPPolicy(ldapUserGroupControl):
         @returns: True if the password is expired
         @rtype: bool
         """
-        user = self.getUserEntry(self.userUid, operational = True)
+        user = self.getUserEntry(self.userUid, operational=True)
         ret = False
         if 'pwdChangedTime' in user:
             pwdChangedTime = user['pwdChangedTime'][0]
@@ -580,7 +581,7 @@ class UserPPolicy(ldapUserGroupControl):
                 pwdMaxAge = PPolicy().getAttribute('pwdMaxAge', self.getPPolicy())[0]
             else:
                 pwdMaxAge = PPolicy().getAttribute('pwdMaxAge')[0]
-            if pwdMaxAge == "0" or pwdMaxAge == None:
+            if pwdMaxAge == "0" or pwdMaxAge is None:
                 ret = False
             else:
                 last = calendar.timegm(time.strptime(pwdChangedTime[:-1], '%Y%m%d%H%M%S'))
@@ -590,7 +591,7 @@ class UserPPolicy(ldapUserGroupControl):
 # XML-RPC methods
 
 # for PPolicys management
-def checkPPolicy(ppolicyName = None):
+def checkPPolicy(ppolicyName=None):
     return PPolicy().checkPPolicy(ppolicyName)
 
 def getDefaultPPolicy():
@@ -599,32 +600,33 @@ def getDefaultPPolicy():
 def getPPolicy(ppolicyName):
     return PPolicy().getPPolicy(ppolicyName)
 
-def addPPolicy(ppolicyName = None, ppolicyDesc = None):
+def addPPolicy(ppolicyName=None, ppolicyDesc=None):
     return PPolicy().addPPolicy(ppolicyName, ppolicyDesc)
 
 def removePPolicy(ppolicyName):
     return PPolicy().removePPolicy(ppolicyName)
 
-def listPPolicy(filt = ''):
+def listPPolicy(filt=''):
     return PPolicy().listPPolicy(filt)
 
-def getPPolicyAttribute(nameAttribute, ppolicyName = None):
+def getPPolicyAttribute(nameAttribute, ppolicyName=None):
     return PPolicy().getAttribute(nameAttribute, ppolicyName)
 
-def getAllPPolicyAttributes (ppolicyName = None):
+def getAllPPolicyAttributes(ppolicyName=None):
     return PPolicy().getAttribute(None, ppolicyName)
 
-def setPPolicyAttribute (nameAttribute, value, ppolicyName = None):
-    if value == '': value = None
+def setPPolicyAttribute(nameAttribute, value, ppolicyName=None):
+    if value == '':
+        value = None
     return PPolicy().setAttribute(nameAttribute, value, ppolicyName)
 
-def getDefaultPPolicyAttributes ():
+def getDefaultPPolicyAttributes():
     return PPolicy().getDefaultAttributes()
 
-def setPPolicyDefaultConfigAttributes (ppolicyName = None):
+def setPPolicyDefaultConfigAttributes(ppolicyName=None):
     return PPolicy().setDefaultConfigAttributes(ppolicyName)
 
-def updateGroupPPolicy(groupName, ppolicyName = None):
+def updateGroupPPolicy(groupName, ppolicyName=None):
     return PPolicy().updateGroupPPolicy(groupName, ppolicyName)
 
 # for user PPolicy management
