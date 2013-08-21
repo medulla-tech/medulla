@@ -2260,22 +2260,28 @@ class Glpi08(DyngroupDatabaseHelper):
         # TODO use the ctx...
         session = create_session()
         if int(count) == 1:
-            query = session.query(func.count(self.machine.c.id), Machine).select_from(self.machine.join(self.os))
+            query = session.query(func.count(self.machine.c.id), Machine).select_from(self.machine.outerjoin(self.os))
         else:
-            query = session.query(Machine).select_from(self.machine.join(self.os))
-        #
+            query = session.query(Machine).select_from(self.machine.outerjoin(self.os))
+
         if osname == "other":
-            query = query.filter(not_(self.os.c.name.like('%Microsoft%Windows%')))
+            query = query.filter(
+                or_(
+                    not_(self.os.c.name.like('%Microsoft%Windows%')),
+                    self.machine.c.operatingsystems_id == 0,
+                )
+            )
         elif osname == "otherw":
-            query = query.filter(and_(not_(self.os.c.name.like('%Microsoft%Windows 7%')),\
+            query = query.filter(and_(not_(self.os.c.name.like('%Microsoft%Windows%7%')),\
                 not_(self.os.c.name.like('%Microsoft%Windows%XP%')), self.os.c.name.like('%Microsoft%Windows%')))
         else:
             query = query.filter(self.os.c.name.like('%'+osname+'%'))
         query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
-        #ret = query.all()
+
         session.close()
+
         if int(count) == 1:
             return int(query.scalar())
         else:
