@@ -37,7 +37,7 @@ class MultiFileTpl extends AbstractTpl {
                 </noscript>         
         </div>
 
-        <input id="random_dir" name="random_dir" type="hidden">
+        <input id="random_dir" name="random_dir" type="hidden" value="'.$random_dir.'">
         <div id="parentTrigger">
         <div id="triggerUpload">' . _T('Upload Queued Files', "pkgs") . '</div>
         </div>
@@ -45,7 +45,7 @@ class MultiFileTpl extends AbstractTpl {
         <script src="modules/pkgs/lib/fileuploader/fileuploader.js" type="text/javascript"></script>
         <link href="modules/pkgs/lib/fileuploader/fileuploader.css" rel="stylesheet" type="text/css">
         <script type="text/javascript">
-        var selectedPapi = jQuery("#p_api").val();
+        var selectedPapi = jQuery("[name=p_api]").val();
         function createUploader(){
             var uploader = new qq.FileUploader({
                 element: document.getElementById(\'file-uploader\'),
@@ -57,6 +57,56 @@ class MultiFileTpl extends AbstractTpl {
                 selectedPapi: selectedPapi,
                 autoUpload: false,
                 uploadButtonText: "' . _T('Click here to select files', "pkgs") . '",
+                cancelButtonText: "' . _T('Cancel', "pkgs") . '"
+            });           
+          
+            jQuery(\'#triggerUpload\').click(function() {
+                uploader.uploadStoredFiles();
+            });
+        }
+        
+        createUploader();
+    </script>';
+    }
+}
+
+
+class MultiFileTpl2 extends AbstractTpl {
+
+    function MultiFileTpl2($name) {
+        $this->name=$name;
+    }
+
+    function display() {
+        
+        $random_dir = "pulse_rdir_" . uniqid();
+        print '<div id="file-uploader">          
+                <noscript>                      
+                        <p>Please enable JavaScript to use file uploader.</p>
+                        <!-- or put a simple form for upload here -->
+                </noscript>    
+                
+        </div>
+
+        <input id="random_dir" name="random_dir" type="hidden" value="'.$random_dir.'">
+        
+    
+        <script src="modules/pkgs/lib/fileuploader/fileuploader.js" type="text/javascript"></script>
+        <link href="modules/pkgs/lib/fileuploader/fileuploader2.css" rel="stylesheet" type="text/css">
+        <script type="text/javascript">
+        var selectedPapi = jQuery("[name=p_api]").val();
+        function createUploader(){
+            var uploader = new qq.FileUploader({
+                element: document.getElementById(\'file-uploader\'),
+                action: \'modules/pkgs/lib/fileuploader/fileuploader.php\',
+                debug: true,
+                multiple: true,
+                demoMode: false,
+                random_dir: \'' . $random_dir . '\',
+                selectedPapi: selectedPapi,
+                autoUpload: false,
+                uploadButtonText: "' . _T('Add files', "pkgs") . '",
+                cancelButtonText: "' . _T('Cancel', "pkgs") . '",
                 onComplete: function(id, file, responseJson){
                     // queue
                     if(uploader.getInProgress() > 0){
@@ -91,12 +141,19 @@ class MultiFileTpl extends AbstractTpl {
                 }
             });           
           
-            jQuery(\'#triggerUpload\').click(function() {
+            jQuery("<div class=\"uploadFiles btnPrimary\">'._T('Upload selected files','pkgs').'</div>").css("margin","0 0 0 10px").insertAfter(jQuery(".qq-upload-button"));
+            jQuery(".qq-upload-button").addClass("btnPrimary").removeClass("qq-upload-button").css("margin","0 0 0 0");
+            
+            jQuery(\'.uploadFiles\').click(function() {
                 uploader.uploadStoredFiles();
             });
         }
         
         createUploader();
+        
+        
+
+        
     </script>';
     }
 }

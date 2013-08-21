@@ -134,6 +134,12 @@ class PackageApiPut(PackageApiGet):
         ret_assoc[1] = errors
         return ret_assoc
 
+    def xmlrpc_removeFilesFromPackage(self, pid, files):
+        try:
+            return Common().removeFilesFromPackage(pid, files)
+        except Exception as e:
+            return [False, str(e)]
+
     def xmlrpc_putPackageDetail(self, package, need_assign = True):
         self.logger.debug("xmlrpc_putPackageDetail")
         pa = Package()

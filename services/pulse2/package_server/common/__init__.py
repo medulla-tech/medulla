@@ -25,6 +25,7 @@
 """
     Pulse2 PackageServer
 """
+import os.path
 import os
 import stat
 import time
@@ -158,7 +159,7 @@ class Common(pulse2.utils.Singleton):
                     mp = mirror_params['mount_point']
                     if self.mp2src.has_key(mp): del self.mp2src[mp]
                     self.logger.error("_detectPackages failed for mirrors")
-                    self.logger.error(e)
+                    self.logger.error(str(e))
 
         if len(self.config.package_api_get) > 0:
             for mirror_params in self.config.package_api_get:
@@ -515,12 +516,16 @@ class Common(pulse2.utils.Singleton):
         return [pid, confdir]
 
     def associateFiles(self, mp, pid, files, level = 0):
+        # Always need assign because this function can
+        # add new files to existing package
+        Common().need_assign[pid] = True
         if not self.packages.has_key(pid):
             return [False, "This package don't exists"]
         path = self._getPackageRoot(pid)
         self.logger.debug("File association will put files in %s" % (path))
         files_out = []
         err = 0
+        level = int(level)
         for f in files:
             if level == 0:
                 fo = os.path.join(path, os.path.basename(f))
@@ -550,13 +555,43 @@ class Common(pulse2.utils.Singleton):
                         os.unlink(f1)
                 self.logger.debug("File association will remove %s"%(f1))
                 shutil.rmtree(f)
-
         self._treatFiles(files_out, mp, pid, access = {})
+        self._createMD5File(os.path.dirname(files_out[0]))
         del Common().need_assign[pid]
         Common().newAssociation[pid] = True
         if self.config.package_mirror_activate:
             Common().rsyncPackageOnMirrors(pid)
+        # Force new packages detection
+        self.detectNewPackages()
+        # Reloading all packages info
+        desc = self.desc
+        self.init(self.config)
+        self.desc = desc
         return [True, err]
+
+    def removeFilesFromPackage(self,pid,files):
+        # Checking if package exists
+        if not self.packages.has_key(pid):
+            return [False, "This package don't exists"]
+        # Checking files param
+        if type(files) == str:
+            files = [files]
+        if type(files) != list:
+            return [False, "files param must be string or array of string"]
+        path = self._getPackageRoot(pid)
+        # Deleting files
+        try:
+            for file in files:
+                filepath = os.path.join(path, file)
+                os.unlink(filepath)
+            # Reloading all packages info
+            desc = self.desc
+            self.init(self.config)
+            self.desc = desc
+            return [True,0]
+        except Exception as e:
+            return [False,str(e)]
+        
 
     def dropPackage(self, pid, mp):
         """
@@ -568,6 +603,7 @@ class Common(pulse2.utils.Singleton):
             raise Exception("UNDEFPKG")
         params = self.h_desc(mp)
         path = params['src']
+        #self.logger.debug()
 
         if self.config.real_package_deletion: # TODO : why do we pass here when modifying!
             p_dir = os.path.join(path, pid)
@@ -699,6 +735,8 @@ class Common(pulse2.utils.Singleton):
         Create the MD5SUMS file for a directory content
         """
         fmd5name = os.path.join(dirname, self.MD5SUMS)
+        if os.path.exists(fmd5name):
+            os.unlink(fmd5name)
         if not os.path.exists(fmd5name): # create file only if it do not exists
             self.logger.info("Computing MD5 sums file %s" % fmd5name)
             md5sums = []
@@ -716,6 +754,7 @@ class Common(pulse2.utils.Singleton):
             md5sums.sort(lambda x, y: cmp(x[0], y[0]))
             for name, md5hash in md5sums:
                 fmd5.write("%s  %s\n" % (md5hash, name))
+                self.logger.error("%s  %s\n" % (md5hash, name))
             fmd5.close()
 
     def _hasChanged(self, dir, pid, runid = -1):
@@ -990,6 +1029,7 @@ class Common(pulse2.utils.Singleton):
         if not self.file_properties.has_key(f):
             fsize = os.path.getsize(f)
             fmd5 = md5file(f)
+            self.logger.debug('ish: Creating md5 entry for '+f)
             self.file_properties[f] = [fsize, fmd5]
         else:
             (fsize, fmd5) = self.file_properties[f]

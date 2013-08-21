@@ -27,6 +27,7 @@ require("graph/navbar.inc.php");
 
 require_once("modules/pkgs/includes/xmlrpc.php");
 require_once("modules/pkgs/includes/functions.php");
+require_once("modules/pkgs/includes/html.inc.php");
 
 $p = new PageGenerator(_T("Edit package", "pkgs"));
 $p->setSideMenu($sidemenu);
@@ -58,6 +59,9 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
     }
     // Send Package Infos via XMLRPC
     $ret = putPackageDetail($p_api_id, $package, $need_assign);
+    $plabel = $ret[3]['label'];
+    $pversion = $ret[3]['version'];
+    
     if (!isXMLRPCError() and $ret and $ret != -1) {
         if ($ret[0]) {
             if ($_GET["action"]=="add") {
@@ -70,33 +74,33 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
                 new NotifyWidgetSuccess(_T("Package successfully edited", "pkgs"));
                 $package = $ret[3];
             }
-            if (isset($_POST["bassoc"])) {
-                // If no error with sending package infos, push package previously uploaded
-                $package_id = $ret[3]['id'];
-                $upload_tmp_dir = sys_get_temp_dir();
-
-                $file_list = get_directory_list($upload_tmp_dir . '/' . $random_dir);
-
-                $files = array();
-                foreach ($file_list as $filename) {
-                    $file = $upload_tmp_dir . '/' . $random_dir . '/' . $filename;
-                    // Read and put content of $file to $filebinary
-                    $filebinary = fread(fopen($file, "r"), filesize($file));
-                    $files[] = array(
-                        "filename" => $filename,
-                        "filebinary" => base64_encode($filebinary),
-                    );
-                }
-
-                $push_package_result = pushPackage($p_api_id, $random_dir, $files);
-                // Delete package from PHP /tmp dir
-                delete_directory($upload_tmp_dir . '/' . $random_dir);
-
-                if (!isXMLRPCError() and $push_package_result) {
-                    header("Location: " . urlStrRedirect("pkgs/pkgs/associate_files", array('p_api'=>base64_encode($p_api_id), 'random_dir'=>base64_encode($random_dir), 'pid'=>base64_encode($ret[3]['id']), 'plabel'=>base64_encode($ret[3]['label']), 'pversion'=>base64_encode($ret[3]['version']))));
+            $pid = $package['id'];
+            print($_POST['random_dir']);
+            
+            $cbx = array($_POST['random_dir']);
+            
+            // === BEGIN ASSOCIATING FILES ==========================
+            $ret = associatePackages($p_api_id, $pid, $cbx, 1);
+            if (!isXMLRPCError() and is_array($ret)) {
+                if ($ret[0]) {
+                    $explain = '';
+                    if (count($ret) > 1) {
+                        $explain = sprintf(" : <br/>%s", implode("<br/>", $ret[1]));
+                    }
+                    new NotifyWidgetSuccess(sprintf(_T("Files successfully added to the package <b>%s (%s)</b>", "pkgs"), $plabel, $pversion));
+                    header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location'=>base64_encode($p_api_id))));
                     exit;
+                } else {
+                    $reason = '';
+                    if (count($ret) > 1) {
+                        $reason = sprintf(" : <br/>%s", $ret[1]);
+                    }
+                    new NotifyWidgetFailure(sprintf(_T("Failed to associate files%s", "pkgs"), $reason));
                 }
+            } else {
+                new NotifyWidgetFailure(_T("Failed to associate files", "pkgs"));
             }
+            // === END ASSOCIATING FILES ==========================
         } else {
             new NotifyWidgetFailure($ret[1]);
         }
@@ -106,6 +110,28 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
 }
 
 $p_api_id = base64_decode($_GET['p_api']);
+$pid = base64_decode($_GET['pid']);
+
+if (isset($_GET['delete_file'],$_GET['filename'])){
+    $ret = removeFilesFromPackage ($p_api_id, $pid, array($_GET['filename']));
+    if (!isXMLRPCError() and is_array($ret)) {
+        if ($ret[0]) {
+            $explain = '';
+            if (count($ret) > 1) {
+                $explain = sprintf(" : <br/>%s", implode("<br/>", $ret[1]));
+            }
+            new NotifyWidgetSuccess(sprintf(_T("File successfully deleted.", "pkgs")));
+        } else {
+            $reason = '';
+            if (count($ret) > 1) {
+                $reason = sprintf(" : <br/>%s", $ret[1]);
+            }
+            new NotifyWidgetFailure(sprintf(_T("Failed to delete files%s", "pkgs"), $reason));
+        }
+    } else {
+        new NotifyWidgetFailure(_T("Failed to delete files", "pkgs"));
+    }
+}
 
 if (count($package) == 0 ) {
     $title = _T("Edit a package", "pkgs");
@@ -198,6 +224,72 @@ foreach ($cmds as $p) {
         array("value" => htmlspecialchars($package[$p[0]]['command']))
     );
 }
+
+/* =================   BEGIN FILE LIST  ===================== */
+
+global $conf;
+$maxperpage = $conf["global"]["maxperpage"];
+
+$names = array();
+$cssClasses = array();
+$params = array();
+
+foreach ($package['files'] as $file){
+    if ($file['name'] == "MD5SUMS")
+        continue;
+    $names[] = $file['name'];
+    $params[] = array(
+        'p_api'=>$_GET['p_api'],
+        'pid'=>$_GET['pid'],
+        'filename'=>$file['name'],
+        'delete_file'=>1
+    );
+    //$sizes[$i] = formatFileSize($sizes[$i]);
+    $viewVersionsActions[] = $viewVersionsAction;
+    $cssClasses[] = 'file';
+}
+
+$count = count($names);
+
+$n = new OptimizedListInfos($names,_T('File','pkgs'));
+$n->disableFirstColumnActionLink();
+//$n->addExtraInfo($sizes, _T("Size", "pkgs"));
+$n->setCssClass('file');
+$n->setItemCount($count);
+$n->start = isset($_GET['start'])?$_GET['start']:0;
+$n->end = 1000;
+$n->setParamInfo($params); // Setting url params
+
+$n->addActionItem(new ActionConfirmItem(_T("Delete file",'pkgs'), "edit", "delete", "filename", "pkgs", "pkgs",_T('Are you sure to delete this file?','pkgs')));
+
+/* =================   END FILE LIST   ===================== */
+
+// =========================================================================
+// UPLOAD FORM
+// =========================================================================
+
+if (isset($_SESSION['random_dir'])) {
+    $upload_tmp_dir = sys_get_temp_dir();
+    delete_directory($upload_tmp_dir . '/' . $_SESSION['random_dir']);
+}
+
+$m = new MultiFileTpl2('filepackage');
+_T("Click here to select files", "pkgs");
+_T("Upload Queued Files", "pkgs");
+
+// =========================================================================
+
+$f->add(
+        new TrFormElement("Files", $n,
+        array())
+);
+
+$f->add(
+        new TrFormElement("", $m,
+        array())
+);
+
+// =========================================================================
 
 $f->pop();
 

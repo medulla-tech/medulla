@@ -223,6 +223,17 @@ class RpcProxy(RpcProxyI):
         d = self.upaa_getUserPackageApi()
         d.addCallback(_ppa_associatePackages)
         return d
+    
+    
+    def ppa_removeFilesFromPackage(self, pp_api_id, pid, files):
+        def _ppa_removeFilesFromPackage(result, pp_api_id = pp_api_id, pid = pid, files = files):
+            for upa in result:
+                if upa['uuid'] == pp_api_id:
+                    return PackagePutA(upa).removeFilesFromPackage(pid, files)
+            return []
+        d = self.upaa_getUserPackageApi()
+        d.addCallback(_ppa_removeFilesFromPackage)
+        return d
 
     def ppa_getRsyncStatus(self, pp_api_id, pid):
         def _ppa_getRsyncStatus(result, pp_api_id = pp_api_id, pid = pid):

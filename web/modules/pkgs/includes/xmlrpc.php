@@ -68,6 +68,10 @@ function associatePackages($papiid, $pid, $files, $level = 0) {
     return xmlCall("pkgs.ppa_associatePackages", array($papiid, $pid, $files, $level));
 }
 
+function removeFilesFromPackage($papiid, $pid, $files) {
+    return xmlCall("pkgs.ppa_removeFilesFromPackage", array($papiid, $pid, $files));
+}
+
 function dropPackage($p_api, $pid) {
     return xmlCall("pkgs.ppa_dropPackage", array($p_api, $pid));
 }
