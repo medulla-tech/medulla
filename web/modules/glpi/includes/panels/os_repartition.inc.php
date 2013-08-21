@@ -55,6 +55,20 @@ class os_repartitionPanel extends Panel {
 
         $osCount = array();
 
+        $urlRedirect = urlStrRedirect("base/computers/createOSStaticGroup");
+        
+        $links = array(
+                "$urlRedirect&os=other", // Static group links
+                "$urlRedirect&os=Microsoft Windows 7",
+                "$urlRedirect&os=Microsoft Windows XP",
+                "$urlRedirect&os=otherw"
+        );
+        
+        /*$links = json_encode(array("#",
+        "main.php?module=base&submod=computers&action=computersgroupcreator&req=glpi&add_param=OS&request=stored_in_session&id=&value=Microsoft Windows 7 *",
+        "main.php?module=base&submod=computers&action=computersgroupcreator&req=glpi&add_param=OS&request=stored_in_session&id=&value=Microsoft Windows XP *",
+        "#"));  DYNGROUP LINKS*/
+        
         for ($i = 0; $i< count($osClasses) ; $i++){
             $osCount[] = getMachineByOsLike($osClasses[$i],1);
             $osLabels[$i] .= ' ('.$osCount[$i].')';
@@ -67,27 +81,17 @@ class os_repartitionPanel extends Panel {
             if ($osCount[$i] == 0){
                 unset($osCount[$i]);
                 unset($osLabels[$i]);
-
+                unset($links[$i]);
             }
             elseif ($osCount[$i]/array_sum($osCount) < 0.015)
                 $osCount[$i] = 0.015/(1-0.015)*(array_sum($osCount)-$osCount[$i]);
         }
         $osLabels = json_encode(array_values($osLabels));
         $osCount = json_encode(array_values($osCount));
+        $links = json_encode(array_values($links));
 
-
-        /*$links = json_encode(array("#",
-                "main.php?module=base&submod=computers&action=computersgroupcreator&req=glpi&add_param=OS&request=stored_in_session&id=&value=Microsoft Windows 7 *",
-                "main.php?module=base&submod=computers&action=computersgroupcreator&req=glpi&add_param=OS&request=stored_in_session&id=&value=Microsoft Windows XP *",
-                    "#"));  DYNGROUP LINKS*/
-        $urlRedirect = json_encode(urlStrRedirect("base/computers/createOSStaticGroup"));
         $createGroupText = json_encode(_T("Create a group", "glpi"));
-        $links = json_encode(array(
-                "main.php?module=base&submod=computers&action=createOSStaticGroup&os=other", // Static group links
-                "main.php?module=base&submod=computers&action=createOSStaticGroup&os=Microsoft Windows 7",
-                "main.php?module=base&submod=computers&action=createOSStaticGroup&os=Microsoft Windows XP",
-                "main.php?module=base&submod=computers&action=createOSStaticGroup&os=otherw"
-            ));
+        
 
         echo <<< SPACE
         <div id="os-graphs" style="height:250px;"></div>
