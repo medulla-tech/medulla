@@ -26,10 +26,11 @@ Computer Manager is used to call methods giving informations on computers whatev
 
 """
 import logging
-from mmc.support.mmctools import Singleton
+from mmc.support.mmctools import Singleton, SingletonN
 
 
 class ComputerI:
+    __metaclass__ = SingletonN
 
     def canAddComputer(self):
         """
