@@ -146,6 +146,7 @@ function PopupWindow(evt, url, width,callback,content) {
         'url': url,
         type: 'get',
         success: function(data){
+            jQuery('#popup').fadeIn();
             jQuery("#__popup_container").html(data);
         },
         error: function(e){
@@ -157,7 +158,6 @@ function PopupWindow(evt, url, width,callback,content) {
                 callback = _centerPlacement;
             callback = callback || _defaultPlacement;
             callback(evt);
-            jQuery('#popup').fadeIn();
         }
     });
 }
