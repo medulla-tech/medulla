@@ -1813,6 +1813,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         self.__addMenuDefaults(session, menu, mi, params)
         self.__addImageInMenu(session, mi.id, item_uuid)
 
+        self.__sortMenuItems(menu.id, session)
         session.close()
         return None
 

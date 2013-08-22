@@ -523,10 +523,6 @@ class ImagingRpcProxy(RpcProxyI):
         target_type = self.__convertType(target_type, target_uuid)
         try:
             db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
-            if target_type == P2IT.PROFILE:
-                uuids = [c.uuid for c in ComputerProfileManager().getProfileContent(target_uuid)]
-                db.changeTargetsSynchroState(uuids, P2IT.COMPUTER_IN_PROFILE, P2ISS.TODO)
-
             ret = db.editImageToTarget(item_uuid, target_uuid, target_type, params)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
@@ -952,10 +948,6 @@ class ImagingRpcProxy(RpcProxyI):
             return [False, "You are trying to access to editServiceToTarget without any Target ID."]
         try:
             db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
-            if target_type == P2IT.PROFILE:
-                uuids = [c.uuid for c in ComputerProfileManager().getProfileContent(target_uuid)]
-                db.changeTargetsSynchroState(uuids, P2IT.COMPUTER_IN_PROFILE, P2ISS.TODO)
-
             ret = ImagingDatabase().editServiceToTarget(bs_uuid, target_uuid, target_type, params)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
@@ -3061,9 +3053,6 @@ def generateMenus(logger, db, uuids):
         if profile != None:
             logger.debug("\tis in profile %s"%(str(profile.id)))
             menu = db.getTargetsMenuTUUID(profile.id)
-            m_menu = db.getTargetsMenuTUUID(m_uuid)
-            menu.fk_default_item = m_menu.fk_default_item
-            menu.fk_default_item_WOL = m_menu.fk_default_item_WOL
         else:
             menu = db.getTargetsMenuTUUID(m_uuid)
         menu = menu.toH()
