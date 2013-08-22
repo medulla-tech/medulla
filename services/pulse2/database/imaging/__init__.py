@@ -3797,11 +3797,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def getProfileLocation(self, uuid):
         """ get Location of given Profile """
         session = create_session()
-        q = session.query(Target)
-        q = q.select_from(self.target).filter(self.target.c.uuid == uuid)
+        q = session.query(Entity)
+        q = q.join(Target).filter(Target.uuid == uuid)
         q = q.first()
         session.close()
-        return toUUID(q.fk_entity)
+        return q.uuid
 
     def getMyMenuTarget(self, uuid, type):
         session = create_session()

@@ -3122,7 +3122,7 @@ def computersUnregister(computers_UUID, backup):
 
     h_location = {}
     for en, target in location:
-        en_uuid = en.getUUID()
+        en_uuid = en.uuid
         if not h_location.has_key(en_uuid):
             h_location[en_uuid] = [en, []]
         h_location[en_uuid][1].append(target)
