@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-19 01:00+0200\n"
+"POT-Creation-Date: 2013-08-26 01:00+0200\n"
 "PO-Revision-Date: 2013-03-26 13:30+0000\n"
 "Last-Translator: Jean-Christophe Vassort <jcvassort@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
@@ -142,7 +142,7 @@ msgid "Add the boot service <b>%s</b> to the default boot menu"
 msgstr ""
 "Ajout du service de démarrage <b>%s</b> au menu de démarrage par défaut"
 
-#: modules/imaging/imaging/addimage.php:122
+#: modules/imaging/imaging/addimage.php:123
 #: modules/imaging/manage/master_add.php:89
 #, php-format
 msgid "Add the image <b>%s</b> to <b>%s</b>"
@@ -265,7 +265,7 @@ msgstr "Le service de démarrage existe déjà"
 msgid "Boot menu"
 msgstr "Menu de démarrage"
 
-#: modules/imaging/imaging/addimage.php:63
+#: modules/imaging/imaging/addimage.php:64
 #: modules/imaging/imaging/addservice.php:63
 #: modules/imaging/imaging/bootmenu_remove.php:73
 #: modules/imaging/imaging/showtarget.php:79
@@ -572,7 +572,7 @@ msgstr "Accès en ligne de commande au linux diskless"
 msgid "Display a group of computers"
 msgstr "Afficher un groupe de machines"
 
-#: modules/imaging/imaging/addimage.php:136
+#: modules/imaging/imaging/addimage.php:137
 #: modules/imaging/imaging/addservice.php:120
 #: modules/imaging/imaging/bootmenu.php:167
 #: modules/imaging/imaging/bootmenu.php:352
@@ -583,7 +583,7 @@ msgstr "Afficher un groupe de machines"
 msgid "Displayed"
 msgstr "Affiché"
 
-#: modules/imaging/imaging/addimage.php:140
+#: modules/imaging/imaging/addimage.php:141
 #: modules/imaging/imaging/addservice.php:124
 #: modules/imaging/imaging/bootmenu.php:177
 #: modules/imaging/imaging/bootmenu.php:355
@@ -1468,7 +1468,7 @@ msgstr "Tout sélectionner"
 msgid "Select this hard disk"
 msgstr "Sélectionner ce disque dur"
 
-#: modules/imaging/imaging/addimage.php:134
+#: modules/imaging/imaging/addimage.php:135
 #: modules/imaging/imaging/addservice.php:118
 #: modules/imaging/imaging/bootmenu.php:162
 #: modules/imaging/manage/bootmenu_edit.php:81
@@ -1477,7 +1477,7 @@ msgstr "Sélectionner ce disque dur"
 msgid "Selected by default"
 msgstr "Sélectionné par défaut"
 
-#: modules/imaging/imaging/addimage.php:138
+#: modules/imaging/imaging/addimage.php:139
 #: modules/imaging/imaging/addservice.php:122
 #: modules/imaging/imaging/bootmenu.php:172
 #: modules/imaging/manage/bootmenu_edit.php:91

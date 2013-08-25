@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-19 01:00+0200\n"
+"POT-Creation-Date: 2013-08-26 01:00+0200\n"
 "PO-Revision-Date: 2013-03-14 14:48+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/"
@@ -32,6 +32,10 @@ msgstr ""
 msgid "Add a package"
 msgstr "Добавить пакет"
 
+#: modules/pkgs/includes/html.inc.php:108
+msgid "Add files"
+msgstr ""
+
 #: modules/pkgs/pkgs/add.php:31
 msgid "Add package"
 msgstr ""
@@ -40,9 +44,18 @@ msgstr ""
 msgid "Already uploaded on the server"
 msgstr ""
 
+#: modules/pkgs/pkgs/edit.php:263
+msgid "Are you sure to delete this file?"
+msgstr ""
+
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:50
 msgid "Associate package"
 msgstr "Объединить пакет"
+
+#: modules/pkgs/includes/html.inc.php:60
+#: modules/pkgs/includes/html.inc.php:109
+msgid "Cancel"
+msgstr ""
 
 #: modules/pkgs/pkgs/add.php:309
 #: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:129
@@ -57,14 +70,15 @@ msgstr ""
 
 #: modules/pkgs/includes/html.inc.php:59
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:33
+#: modules/pkgs/pkgs/edit.php:277
 msgid "Click here to select files"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:165
+#: modules/pkgs/pkgs/edit.php:191
 msgid "Command : "
 msgstr "Команда: "
 
-#: modules/pkgs/pkgs/add.php:161 modules/pkgs/pkgs/edit.php:165
+#: modules/pkgs/pkgs/add.php:161 modules/pkgs/pkgs/edit.php:191
 msgid "Command's name : "
 msgstr "Название команды: "
 
@@ -78,37 +92,68 @@ msgstr ""
 msgid "Delete a package"
 msgstr "Удалить пакет"
 
+#: modules/pkgs/pkgs/edit.php:263
+#, fuzzy
+msgid "Delete file"
+msgstr "Удалить этот пакет"
+
 #: modules/pkgs/pkgs/remove.php:43
 msgid "Delete this package"
 msgstr "Удалить этот пакет"
 
 #: modules/pkgs/pkgs/add.php:150 modules/pkgs/pkgs/ajaxPackageList.php:69
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
-#: modules/pkgs/pkgs/edit.php:161
+#: modules/pkgs/pkgs/edit.php:187
 msgid "Description"
 msgstr "Описание"
 
 #: modules/pkgs/infoPackage.inc.php:48
-#: modules/pkgs/pkgs/ajaxPackageList.php:78 modules/pkgs/pkgs/edit.php:111
+#: modules/pkgs/pkgs/ajaxPackageList.php:78 modules/pkgs/pkgs/edit.php:137
 msgid "Edit a package"
 msgstr "Редактировать пакет"
 
-#: modules/pkgs/pkgs/edit.php:31
+#: modules/pkgs/pkgs/edit.php:32
 msgid "Edit package"
 msgstr ""
 
 #: modules/pkgs/pkgs/add.php:95 modules/pkgs/pkgs/associate_files.php:75
+#: modules/pkgs/pkgs/edit.php:101
 msgid "Failed to associate files"
 msgstr "Не удалось объединить файлы"
 
 #: modules/pkgs/pkgs/add.php:92 modules/pkgs/pkgs/associate_files.php:72
+#: modules/pkgs/pkgs/edit.php:98
 #, php-format
 msgid "Failed to associate files%s"
 msgstr "Не удалось объединить файлы %s"
 
+#: modules/pkgs/pkgs/edit.php:132
+#, fuzzy
+msgid "Failed to delete files"
+msgstr "Не удалось объединить файлы"
+
+#: modules/pkgs/pkgs/edit.php:129
+#, fuzzy, php-format
+msgid "Failed to delete files%s"
+msgstr "Не удалось объединить файлы %s"
+
+#: modules/pkgs/pkgs/edit.php:254
+msgid "File"
+msgstr ""
+
+#: modules/pkgs/pkgs/edit.php:123
+#, fuzzy
+msgid "File successfully deleted."
+msgstr "Пакет успешно отредактирован"
+
 #: modules/pkgs/pkgs/add.php:139 modules/pkgs/pkgs/add.php:287
 msgid "Files directory"
 msgstr ""
+
+#: modules/pkgs/pkgs/edit.php:90
+#, fuzzy, php-format
+msgid "Files successfully added to the package <b>%s (%s)</b>"
+msgstr "Файлы успешно объединены с пакетом  <b>%s (%s)</b>%s"
 
 #: modules/pkgs/pkgs/add.php:84 modules/pkgs/pkgs/associate_files.php:64
 #, php-format
@@ -134,11 +179,11 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:169 modules/pkgs/pkgs/edit.php:173
+#: modules/pkgs/pkgs/add.php:169 modules/pkgs/pkgs/edit.php:199
 msgid "Need a reboot ?"
 msgstr "Нужна перезагрузка?"
 
-#: modules/pkgs/pkgs/add.php:134 modules/pkgs/pkgs/edit.php:141
+#: modules/pkgs/pkgs/add.php:134 modules/pkgs/pkgs/edit.php:167
 msgid "Package API"
 msgstr "API пакета"
 
@@ -150,11 +195,11 @@ msgstr ""
 msgid "Package Creation"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:104
+#: modules/pkgs/pkgs/edit.php:108
 msgid "Package failed to save"
 msgstr "Не удалось сохранить пакет"
 
-#: modules/pkgs/pkgs/edit.php:159
+#: modules/pkgs/pkgs/edit.php:185
 msgid "Package label"
 msgstr "Ярлык пакета"
 
@@ -171,11 +216,11 @@ msgstr "Размер пакета"
 msgid "Package source"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:70
+#: modules/pkgs/pkgs/edit.php:74
 msgid "Package successfully edited"
 msgstr "Пакет успешно отредактирован"
 
-#: modules/pkgs/pkgs/edit.php:160
+#: modules/pkgs/pkgs/edit.php:186
 msgid "Package version"
 msgstr "Версия пакета"
 
@@ -239,11 +284,16 @@ msgstr "Пакет был удален."
 
 #: modules/pkgs/includes/html.inc.php:42
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:34
+#: modules/pkgs/pkgs/edit.php:278
 msgid "Upload Queued Files"
 msgstr ""
 
 #: modules/pkgs/pkgs/add.php:128
 msgid "Upload from this web page"
+msgstr ""
+
+#: modules/pkgs/includes/html.inc.php:144
+msgid "Upload selected files"
 msgstr ""
 
 #: modules/pkgs/pkgs/add.php:149 modules/pkgs/pkgs/ajaxPackageList.php:70

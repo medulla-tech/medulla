@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-19 01:00+0200\n"
+"POT-Creation-Date: 2013-08-26 01:00+0200\n"
 "PO-Revision-Date: 2013-03-14 19:47+0000\n"
 "Last-Translator: Leonardo Coelho <leonardoc@mandriva.com.br>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
@@ -34,6 +34,10 @@ msgstr "Adicionar"
 msgid "Add a package"
 msgstr "Adicionar um pacote"
 
+#: modules/pkgs/includes/html.inc.php:108
+msgid "Add files"
+msgstr ""
+
 #: modules/pkgs/pkgs/add.php:31
 msgid "Add package"
 msgstr "Adicionar Pacote"
@@ -42,9 +46,18 @@ msgstr "Adicionar Pacote"
 msgid "Already uploaded on the server"
 msgstr "Já enviado para o servidor"
 
+#: modules/pkgs/pkgs/edit.php:263
+msgid "Are you sure to delete this file?"
+msgstr ""
+
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:50
 msgid "Associate package"
 msgstr "Associar pacote"
+
+#: modules/pkgs/includes/html.inc.php:60
+#: modules/pkgs/includes/html.inc.php:109
+msgid "Cancel"
+msgstr ""
 
 #: modules/pkgs/pkgs/add.php:309
 #: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:129
@@ -61,14 +74,15 @@ msgstr "Escolha a fonte do pacote"
 
 #: modules/pkgs/includes/html.inc.php:59
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:33
+#: modules/pkgs/pkgs/edit.php:277
 msgid "Click here to select files"
 msgstr "Clique aqui para selecionar os arquivos"
 
-#: modules/pkgs/pkgs/edit.php:165
+#: modules/pkgs/pkgs/edit.php:191
 msgid "Command : "
 msgstr "Comando : "
 
-#: modules/pkgs/pkgs/add.php:161 modules/pkgs/pkgs/edit.php:165
+#: modules/pkgs/pkgs/add.php:161 modules/pkgs/pkgs/edit.php:191
 msgid "Command's name : "
 msgstr "Nome do comando : "
 
@@ -82,37 +96,68 @@ msgstr "Comando:"
 msgid "Delete a package"
 msgstr "Excluir um pacote"
 
+#: modules/pkgs/pkgs/edit.php:263
+#, fuzzy
+msgid "Delete file"
+msgstr "Excluir este pacote"
+
 #: modules/pkgs/pkgs/remove.php:43
 msgid "Delete this package"
 msgstr "Excluir este pacote"
 
 #: modules/pkgs/pkgs/add.php:150 modules/pkgs/pkgs/ajaxPackageList.php:69
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
-#: modules/pkgs/pkgs/edit.php:161
+#: modules/pkgs/pkgs/edit.php:187
 msgid "Description"
 msgstr "Descrição"
 
 #: modules/pkgs/infoPackage.inc.php:48
-#: modules/pkgs/pkgs/ajaxPackageList.php:78 modules/pkgs/pkgs/edit.php:111
+#: modules/pkgs/pkgs/ajaxPackageList.php:78 modules/pkgs/pkgs/edit.php:137
 msgid "Edit a package"
 msgstr "Editar um pacote"
 
-#: modules/pkgs/pkgs/edit.php:31
+#: modules/pkgs/pkgs/edit.php:32
 msgid "Edit package"
 msgstr "Editar pacote"
 
 #: modules/pkgs/pkgs/add.php:95 modules/pkgs/pkgs/associate_files.php:75
+#: modules/pkgs/pkgs/edit.php:101
 msgid "Failed to associate files"
 msgstr "Falha ao associar arquivos"
 
 #: modules/pkgs/pkgs/add.php:92 modules/pkgs/pkgs/associate_files.php:72
+#: modules/pkgs/pkgs/edit.php:98
 #, php-format
 msgid "Failed to associate files%s"
 msgstr "Falha ao associar os arquivos%s"
 
+#: modules/pkgs/pkgs/edit.php:132
+#, fuzzy
+msgid "Failed to delete files"
+msgstr "Falha ao associar arquivos"
+
+#: modules/pkgs/pkgs/edit.php:129
+#, fuzzy, php-format
+msgid "Failed to delete files%s"
+msgstr "Falha ao associar os arquivos%s"
+
+#: modules/pkgs/pkgs/edit.php:254
+msgid "File"
+msgstr ""
+
+#: modules/pkgs/pkgs/edit.php:123
+#, fuzzy
+msgid "File successfully deleted."
+msgstr "Pacote editado com sucesso"
+
 #: modules/pkgs/pkgs/add.php:139 modules/pkgs/pkgs/add.php:287
 msgid "Files directory"
 msgstr "Diretório de arquivos"
+
+#: modules/pkgs/pkgs/edit.php:90
+#, fuzzy, php-format
+msgid "Files successfully added to the package <b>%s (%s)</b>"
+msgstr "Os arquivos foram associados com sucesso ao pacote <b>%s (%s)</b>%s"
 
 #: modules/pkgs/pkgs/add.php:84 modules/pkgs/pkgs/associate_files.php:64
 #, php-format
@@ -138,11 +183,11 @@ msgstr "Fazer um pacote vazio"
 msgid "Name"
 msgstr "Nome"
 
-#: modules/pkgs/pkgs/add.php:169 modules/pkgs/pkgs/edit.php:173
+#: modules/pkgs/pkgs/add.php:169 modules/pkgs/pkgs/edit.php:199
 msgid "Need a reboot ?"
 msgstr "Necessita reiniciar ?"
 
-#: modules/pkgs/pkgs/add.php:134 modules/pkgs/pkgs/edit.php:141
+#: modules/pkgs/pkgs/add.php:134 modules/pkgs/pkgs/edit.php:167
 msgid "Package API"
 msgstr "API do pacote"
 
@@ -154,11 +199,11 @@ msgstr "Diretorio temporário de API de pacotes está vazio"
 msgid "Package Creation"
 msgstr "Criação do pacote"
 
-#: modules/pkgs/pkgs/edit.php:104
+#: modules/pkgs/pkgs/edit.php:108
 msgid "Package failed to save"
 msgstr "Falha ao salvar pacote"
 
-#: modules/pkgs/pkgs/edit.php:159
+#: modules/pkgs/pkgs/edit.php:185
 msgid "Package label"
 msgstr "Rótulo do pacote"
 
@@ -175,11 +220,11 @@ msgstr "Tamanho do pacote"
 msgid "Package source"
 msgstr "Fonte do pacote"
 
-#: modules/pkgs/pkgs/edit.php:70
+#: modules/pkgs/pkgs/edit.php:74
 msgid "Package successfully edited"
 msgstr "Pacote editado com sucesso"
 
-#: modules/pkgs/pkgs/edit.php:160
+#: modules/pkgs/pkgs/edit.php:186
 msgid "Package version"
 msgstr "Versão do pacote"
 
@@ -247,12 +292,18 @@ msgstr "O pacote foi excluído."
 
 #: modules/pkgs/includes/html.inc.php:42
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:34
+#: modules/pkgs/pkgs/edit.php:278
 msgid "Upload Queued Files"
 msgstr "Fila de arquivos enviados"
 
 #: modules/pkgs/pkgs/add.php:128
 msgid "Upload from this web page"
 msgstr "Enviar a partir desta pagina web"
+
+#: modules/pkgs/includes/html.inc.php:144
+#, fuzzy
+msgid "Upload selected files"
+msgstr "Fila de arquivos enviados"
 
 #: modules/pkgs/pkgs/add.php:149 modules/pkgs/pkgs/ajaxPackageList.php:70
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
