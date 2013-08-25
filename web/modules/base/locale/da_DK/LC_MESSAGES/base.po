@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-08-16 14:42+0200\n"
-"PO-Revision-Date: 2013-08-18 23:01+0000\n"
+"POT-Creation-Date: 2013-08-21 13:18+0200\n"
+"PO-Revision-Date: 2013-08-25 23:01+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -35,22 +35,6 @@ msgstr ""
 
 #: forgotpassword.php:81
 msgid "Back"
-msgstr ""
-
-#: graph/header.inc.php:193 graph/header.inc.php:227
-msgid "Yes"
-msgstr ""
-
-#: graph/header.inc.php:196 graph/header.inc.php:198
-msgid "No"
-msgstr ""
-
-#: graph/header.inc.php:229 includes/PageGenerator.php:2093
-msgid "Close"
-msgstr ""
-
-#: graph/header.inc.php:295
-msgid "Form cannot be submit. Input errors are highlighted in red."
 msgstr ""
 
 #: graph/navbar.inc.php:40
@@ -82,6 +66,22 @@ msgstr ""
 msgid ""
 "If this phrase does not change, you browser is not supported by the MMC "
 "application"
+msgstr ""
+
+#: graph/header.inc.php:193 graph/header.inc.php:227
+msgid "Yes"
+msgstr ""
+
+#: graph/header.inc.php:196 graph/header.inc.php:198
+msgid "No"
+msgstr ""
+
+#: graph/header.inc.php:229 includes/PageGenerator.php:2093
+msgid "Close"
+msgstr ""
+
+#: graph/header.inc.php:295
+msgid "Form cannot be submit. Input errors are highlighted in red."
 msgstr ""
 
 #: includes/acl.inc.php:124
