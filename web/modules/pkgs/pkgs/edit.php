@@ -258,7 +258,7 @@ $n->start = isset($_GET['start']) ? $_GET['start'] : 0;
 $n->end = 1000;
 $n->setParamInfo($params); // Setting url params
 
-$n->addActionItem(new ActionConfirmItem(_T("Delete file", 'pkgs'), "edit", "delete", "filename", "pkgs", "pkgs", _T('Are you sure to delete this file?', 'pkgs')));
+$n->addActionItem(new ActionConfirmItem(_T("Delete file", 'pkgs'), "edit", "delete", "filename", "pkgs", "pkgs", _T('Are you sure you want to delete this file?', 'pkgs')));
 
 /* =================   END FILE LIST   ===================== */
 
