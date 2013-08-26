@@ -57,7 +57,39 @@ class MultiFileTpl extends AbstractTpl {
                 selectedPapi: selectedPapi,
                 autoUpload: false,
                 uploadButtonText: "' . _T('Click here to select files', "pkgs") . '",
-                cancelButtonText: "' . _T('Cancel', "pkgs") . '"
+                cancelButtonText: "' . _T('Cancel', "pkgs") . '",
+                onComplete: function(id, file, responseJson){
+                    // queue
+                    if(uploader.getInProgress() > 0){
+                        return;
+                    }
+                    // DEBUG: write action to do when upload complete
+
+                    url = \'' . urlStrRedirect("pkgs/pkgs/ajaxGetSuggestedCommand") . '&papiid=\' + selectedPapi;
+                    url += \'&tempdir=' . $random_dir . '\';
+
+                    jQuery.ajax({
+                        \'url\': url,
+                        type: \'get\',
+                        success: function(data){
+                            var googleFileName = \'\';
+                            jQuery(\'#version\').val(data.version);
+                            jQuery(\'#commandcmd\').val(data.commandcmd);
+                            jQuery(\'.qq-upload-file\').each(function() {
+                                googleFileName = jQuery(this).text();
+                                return false;
+                            });
+                            
+                            jQuery(\'.label span a\').each(function() {
+                                url = \'http://www.google.com/#q=\' + googleFileName + \'+silent+install\';
+                                jQuery(this).attr(\'href\', url);
+                                jQuery(this).attr(\'target\', \'_blank\');
+                                return false;
+                            });
+                        }
+                    });
+
+                }
             });           
           
             jQuery(\'#triggerUpload\').click(function() {
@@ -122,8 +154,7 @@ class MultiFileTpl2 extends AbstractTpl {
                         type: \'get\',
                         success: function(data){
                             var googleFileName = \'\';
-                            jQuery(\'#version\').val(data.version);
-                            jQuery(\'#commandcmd\').val(data.commandcmd);
+                            jQuery(\'#commandcmd\').val(jQuery(\'#commandcmd\').val()+\'\\n\'+data.commandcmd);
                             jQuery(\'.qq-upload-file\').each(function() {
                                 googleFileName = jQuery(this).text();
                                 return false;
