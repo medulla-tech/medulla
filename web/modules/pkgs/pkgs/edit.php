@@ -1,4 +1,5 @@
 <?php
+
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com
@@ -21,7 +22,6 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 
@@ -45,7 +45,7 @@ $package = array();
 if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
     $p_api_id = $_POST['p_api'];
     $need_assign = False;
-    if ($_GET["action"]=="add") {
+    if ($_GET["action"] == "add") {
         $need_assign = True;
     }
     foreach (array('id', 'label', 'version', 'description') as $post) {
@@ -55,19 +55,19 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
         $package[$post] = ($_POST[$post] == 'on' ? 1 : 0);
     }
     foreach (array('command') as $post) {
-        $package[$post] = array('name'=>$_POST[$post.'name'], 'command'=>stripslashes($_POST[$post.'cmd']));
+        $package[$post] = array('name' => $_POST[$post . 'name'], 'command' => stripslashes($_POST[$post . 'cmd']));
     }
     // Send Package Infos via XMLRPC
     $ret = putPackageDetail($p_api_id, $package, $need_assign);
     $plabel = $ret[3]['label'];
     $pversion = $ret[3]['version'];
-    
+
     if (!isXMLRPCError() and $ret and $ret != -1) {
         if ($ret[0]) {
-            if ($_GET["action"]=="add") {
+            if ($_GET["action"] == "add") {
                 #new NotifyWidgetSuccess(sprintf(_T("Package successfully added in %s", "pkgs"), $ret[2]));
-                if (! isset($_POST["bassoc"])) {
-                    header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location'=>base64_encode($p_api_id)))); # TODO add params to go on the good p_api
+                if (!isset($_POST["bassoc"])) {
+                    header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location' => base64_encode($p_api_id)))); # TODO add params to go on the good p_api
                     exit;
                 }
             } else {
@@ -75,32 +75,33 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
                 $package = $ret[3];
             }
             $pid = $package['id'];
-            print($_POST['random_dir']);
-            
+
             $cbx = array($_POST['random_dir']);
-            
-            // === BEGIN ASSOCIATING FILES ==========================
-            $ret = associatePackages($p_api_id, $pid, $cbx, 1);
-            if (!isXMLRPCError() and is_array($ret)) {
-                if ($ret[0]) {
-                    $explain = '';
-                    if (count($ret) > 1) {
-                        $explain = sprintf(" : <br/>%s", implode("<br/>", $ret[1]));
+            // If there is uploaded files to associate
+            if ($_POST['files_uploaded']) {
+                // === BEGIN ASSOCIATING FILES ==========================
+                $ret = associatePackages($p_api_id, $pid, $cbx, 1);
+                if (!isXMLRPCError() and is_array($ret)) {
+                    if ($ret[0]) {
+                        $explain = '';
+                        if (count($ret) > 1) {
+                            $explain = sprintf(" : <br/>%s", implode("<br/>", $ret[1]));
+                        }
+                        new NotifyWidgetSuccess(sprintf(_T("Files successfully added to the package <b>%s (%s)</b>", "pkgs"), $plabel, $pversion));
+                        header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location' => base64_encode($p_api_id))));
+                        exit;
+                    } else {
+                        $reason = '';
+                        if (count($ret) > 1) {
+                            $reason = sprintf(" : <br/>%s", $ret[1]);
+                        }
+                        new NotifyWidgetFailure(sprintf(_T("Failed to associate files%s", "pkgs"), $reason));
                     }
-                    new NotifyWidgetSuccess(sprintf(_T("Files successfully added to the package <b>%s (%s)</b>", "pkgs"), $plabel, $pversion));
-                    header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location'=>base64_encode($p_api_id))));
-                    exit;
                 } else {
-                    $reason = '';
-                    if (count($ret) > 1) {
-                        $reason = sprintf(" : <br/>%s", $ret[1]);
-                    }
-                    new NotifyWidgetFailure(sprintf(_T("Failed to associate files%s", "pkgs"), $reason));
+                    new NotifyWidgetFailure(_T("Failed to associate files", "pkgs"));
                 }
-            } else {
-                new NotifyWidgetFailure(_T("Failed to associate files", "pkgs"));
+                // === END ASSOCIATING FILES ==========================
             }
-            // === END ASSOCIATING FILES ==========================
         } else {
             new NotifyWidgetFailure($ret[1]);
         }
@@ -112,8 +113,8 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
 $p_api_id = base64_decode($_GET['p_api']);
 $pid = base64_decode($_GET['pid']);
 
-if (isset($_GET['delete_file'],$_GET['filename'])){
-    $ret = removeFilesFromPackage ($p_api_id, $pid, array($_GET['filename']));
+if (isset($_GET['delete_file'], $_GET['filename'])) {
+    $ret = removeFilesFromPackage($p_api_id, $pid, array($_GET['filename']));
     if (!isXMLRPCError() and is_array($ret)) {
         if ($ret[0]) {
             $explain = '';
@@ -131,9 +132,10 @@ if (isset($_GET['delete_file'],$_GET['filename'])){
     } else {
         new NotifyWidgetFailure(_T("Failed to delete files", "pkgs"));
     }
+    header("Location: " . urlStrRedirect("pkgs/pkgs/edit", array('p_api' => $_GET['p_api'], 'pid' => $_GET['pid'])));
 }
 
-if (count($package) == 0 ) {
+if (count($package) == 0) {
     $title = _T("Edit a package", "pkgs");
     $activeItem = "index";
     # get existing package
@@ -164,20 +166,20 @@ $selectpapi = new HiddenTpl('p_api');
 
 if ($p_api_number > 1) {
     $f->add(
-        new TrFormElement(_T("Package API", "pkgs"), $selectpapi),
-        array("value" => $p_api_id, "hide" => $hide)
+            new TrFormElement(_T("Package API", "pkgs"), $selectpapi), array("value" => $p_api_id, "hide" => $hide)
     );
-}
-else {
+} else {
     $f->add(
-        $selectpapi,
-        array("value" => $p_api_id, "hide" => True)
+            $selectpapi, array("value" => $p_api_id, "hide" => True)
     );
 }
 
 $f->add(new HiddenTpl("id"), array("value" => $package['id'], "hide" => True));
 
-if ($_GET["action"]=="add") {
+// Uploaded field,
+$f->add(new HiddenTpl("files_uploaded"), array("value" => 0, "hide" => True));
+
+if ($_GET["action"] == "add") {
     $f->add(new HiddenTpl("mode"), array("value" => "creation", "hide" => True));
 }
 
@@ -188,11 +190,11 @@ $fields = array(
 );
 
 $cmds = array(
-    array('command', _T('Command\'s name : ', 'pkgs'), _T('Command : ', 'pkgs')),/*
-    array('installInit', _T('installInit', 'pkgs'), _T('Install Init', 'pkgs')),
-    array('preCommand', _T('preCommand', 'pkgs'), _T('Pre Command', 'pkgs')),
-    array('postCommandFailure', _T('postCommandFailure', 'pkgs'), _T('postCommandFailure', 'pkgs')),
-    array('postCommandSuccess', _T('postCommandSuccess', 'pkgs'), _T('postCommandSuccess', 'pkgs')) //*/
+    array('command', _T('Command\'s name : ', 'pkgs'), _T('Command : ', 'pkgs')), /*
+          array('installInit', _T('installInit', 'pkgs'), _T('Install Init', 'pkgs')),
+          array('preCommand', _T('preCommand', 'pkgs'), _T('Pre Command', 'pkgs')),
+          array('postCommandFailure', _T('postCommandFailure', 'pkgs'), _T('postCommandFailure', 'pkgs')),
+          array('postCommandSuccess', _T('postCommandSuccess', 'pkgs'), _T('postCommandSuccess', 'pkgs')) // */
 );
 
 $options = array(
@@ -201,27 +203,23 @@ $options = array(
 
 foreach ($fields as $p) {
     $f->add(
-        new TrFormElement($p[1], new InputTpl($p[0])),
-        array_merge(array("value" => $package[$p[0]]), $p[2])
+            new TrFormElement($p[1], new InputTpl($p[0])), array_merge(array("value" => $package[$p[0]]), $p[2])
     );
 }
 
 foreach ($options as $p) {
     $op = ($package[$p[0]] == 1 || $package[$p[0]] == '1' || $package[$p[0]] === 'enable');
     $f->add(
-        new TrFormElement($p[1], new CheckboxTpl($p[0])),
-        array("value" => ($op ? 'checked' : ''))
+            new TrFormElement($p[1], new CheckboxTpl($p[0])), array("value" => ($op ? 'checked' : ''))
     );
 }
 
 foreach ($cmds as $p) {
     $f->add(
-        new HiddenTpl($p[0].'name'),
-        array("value" => $package[$p[0]]['name'], "hide" => True)
+            new HiddenTpl($p[0] . 'name'), array("value" => $package[$p[0]]['name'], "hide" => True)
     );
     $f->add(
-        new TrFormElement($p[2], new TextareaTpl($p[0].'cmd')),
-        array("value" => htmlspecialchars($package[$p[0]]['command']))
+            new TrFormElement($p[2], new TextareaTpl($p[0] . 'cmd')), array("value" => htmlspecialchars($package[$p[0]]['command']))
     );
 }
 
@@ -234,15 +232,15 @@ $names = array();
 $cssClasses = array();
 $params = array();
 
-foreach ($package['files'] as $file){
+foreach ($package['files'] as $file) {
     if ($file['name'] == "MD5SUMS")
         continue;
     $names[] = $file['name'];
     $params[] = array(
-        'p_api'=>$_GET['p_api'],
-        'pid'=>$_GET['pid'],
-        'filename'=>$file['name'],
-        'delete_file'=>1
+        'p_api' => $_GET['p_api'],
+        'pid' => $_GET['pid'],
+        'filename' => $file['name'],
+        'delete_file' => 1
     );
     //$sizes[$i] = formatFileSize($sizes[$i]);
     $viewVersionsActions[] = $viewVersionsAction;
@@ -251,16 +249,16 @@ foreach ($package['files'] as $file){
 
 $count = count($names);
 
-$n = new OptimizedListInfos($names,_T('File','pkgs'));
+$n = new OptimizedListInfos($names, _T('File', 'pkgs'));
 $n->disableFirstColumnActionLink();
 //$n->addExtraInfo($sizes, _T("Size", "pkgs"));
 $n->setCssClass('file');
 $n->setItemCount($count);
-$n->start = isset($_GET['start'])?$_GET['start']:0;
+$n->start = isset($_GET['start']) ? $_GET['start'] : 0;
 $n->end = 1000;
 $n->setParamInfo($params); // Setting url params
 
-$n->addActionItem(new ActionConfirmItem(_T("Delete file",'pkgs'), "edit", "delete", "filename", "pkgs", "pkgs",_T('Are you sure to delete this file?','pkgs')));
+$n->addActionItem(new ActionConfirmItem(_T("Delete file", 'pkgs'), "edit", "delete", "filename", "pkgs", "pkgs", _T('Are you sure to delete this file?', 'pkgs')));
 
 /* =================   END FILE LIST   ===================== */
 
@@ -280,13 +278,11 @@ _T("Upload Queued Files", "pkgs");
 // =========================================================================
 
 $f->add(
-        new TrFormElement("Files", $n,
-        array())
+        new TrFormElement("Files", $n, array())
 );
 
 $f->add(
-        new TrFormElement("", $m,
-        array())
+        new TrFormElement("", $m, array())
 );
 
 // =========================================================================
@@ -296,5 +292,4 @@ $f->pop();
 $f->addValidateButton("bcreate");
 
 $f->display();
-
 ?>
