@@ -236,6 +236,59 @@ class ArgumentContainer :
         else :
             return 0
 
+    @property
+    def pnum(self):
+        """imagingServerStatus argument"""
+        # packet format: T;%c%d;%d
+        try:
+            if ";" in self.packet and self.packet.count(";") == 2:
+                idx = self.packet.index(";") + 1
+                return ord(self.packet[idx])
+        except Exception, e:
+            logging.getLogger().warn("An eror occured while parsing pnum argument: %s" % str(e))
+            logging.getLogger().debug("Packet content: %s" % self.packet[1:])
+            
+
+    @property
+    def bnum(self):
+        """imagingServerStatus argument"""
+        # packet format: T;%c%d;%d
+        try:
+            if ";" in self.packet and self.packet.count(";") == 2:
+                start_slice = self.packet.index(";") + 2
+                packet_slice = self.packet[start_slice:]
+                end = packet_slice.index(";")
+                value = packet_slice[:-end]
+                try:
+                    return int(value)
+                except ValueError :
+                    return None
+        except Exception, e:
+            logging.getLogger().warn("An eror occured while parsing pnum argument: %s" % str(e))
+            logging.getLogger().debug("Packet content: %s" % self.packet[1:])
+ 
+    @property
+    def to(self):
+        """imagingServerStatus argument"""
+        # packet format: T;%c%d;%d
+        try:
+            if ";" in self.packet and self.packet.count(";") == 2:
+                start_slice = self.packet.index(";") + 2
+                packet_slice = self.packet[start_slice:]
+                end = packet_slice.index(";")
+                value = packet_slice[-end:]
+                try:
+                    return int(value)
+                except ValueError :
+                    return None
+        except Exception, e:
+            logging.getLogger().warn("An eror occured while parsing pnum argument: %s" % str(e))
+            logging.getLogger().debug("Packet content: %s" % self.packet[1:])
+ 
+
+
+
+
 class PXEMethodParser :
     """
     Extracting the methods and arguments from packet.

@@ -27,6 +27,7 @@ only functions using temporary text files to exchange longer strings
 are optimized to direct communication by variables.
 """
 
+import time
 import logging
 
 from twisted.internet import reactor, task
@@ -71,6 +72,9 @@ class PXEImagingApi (PXEMethodParser):
     - don't forget to initialize PXEMethodParser instance.
     """
     api = None
+
+    lasttime = 0
+    lastfile = 0
 
     def set_api(self, api):
         self.api = api
@@ -590,6 +594,10 @@ class PXEImagingApi (PXEMethodParser):
         """
 
         level += 1 # (different offset on imaging client)
+        
+        if level == 3:
+            self.lasttime = 0
+            self.lastfile = 0
 
         d = self.api.logClientAction(mac, level, phase, repr(message))
 
@@ -686,7 +694,7 @@ class PXEImagingApi (PXEMethodParser):
         return d
 
     @assign(0x54)
-    def imagingServerStatus(self, mac):
+    def imagingServerStatus(self, mac, pnum, bnum, to):
         """
         Returns the percentage of remaining size from the part where the images are stored.
 
@@ -696,11 +704,44 @@ class PXEImagingApi (PXEMethodParser):
         @return: a percentage, or -1 if it fails
         @rtype: int
         """
-        d = self.api.imagingServerStatus(mac)
+        d = Deferred()
+
+        @d.addCallback
+        def _mftp_wait_barrier(result, pnum, bnum, to):
+            wait = 0
+
+            try:
+                f = (pnum << 16) + bnum
+
+                if time.time() - self.lasttime > 3600 :
+                    self.lasttime = 0 # reset MTFTP time barriers
+                    self.lastfile = 0
+
+                if f == self.lastfile :
+                    wait = to + (self.lasttime - time())
+                    if wait < 0:
+                        wait = 0
+
+                elif f < self.lastfile :
+                    wait = to
+
+                elif f > self.lastfile :
+                    if self.lastfile == 0 :
+                        wait += 10 # 1st wait after a boot
+                        self.lastfile = f
+                        self.lasttime = time.time()
+
+                return str(wait)
+            except Exception, e :
+                logging.getLogger().warn("imagingServerStatus: %s" % str(e))
+                
+
+       
 
         @d.addErrback
         def _eb(failure):
             logging.getLogger().warn("PXE Proxy: server status get failed: %s" % str(failure))
 
         return d
- 
+
+
