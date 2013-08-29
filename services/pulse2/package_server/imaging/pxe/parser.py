@@ -239,7 +239,7 @@ class ArgumentContainer :
     @property
     def pnum(self):
         """imagingServerStatus argument"""
-        # packet format: T;%c%d;%d
+        # packet format: T;P1000;10 Mc:52:54:00:61:1B:14
         try:
             if ";" in self.packet and self.packet.count(";") == 2:
                 idx = self.packet.index(";") + 1
@@ -252,13 +252,13 @@ class ArgumentContainer :
     @property
     def bnum(self):
         """imagingServerStatus argument"""
-        # packet format: T;%c%d;%d
+        # packet format: T;P1000;10 Mc:52:54:00:61:1B:14
         try:
             if ";" in self.packet and self.packet.count(";") == 2:
                 start_slice = self.packet.index(";") + 2
                 packet_slice = self.packet[start_slice:]
                 end = packet_slice.index(";")
-                value = packet_slice[:-end]
+                value = packet_slice[:end]
                 try:
                     return int(value)
                 except ValueError :
@@ -270,13 +270,14 @@ class ArgumentContainer :
     @property
     def to(self):
         """imagingServerStatus argument"""
-        # packet format: T;%c%d;%d
+        # packet format: T;P1000;10 Mc:52:54:00:61:1B:14
         try:
             if ";" in self.packet and self.packet.count(";") == 2:
                 start_slice = self.packet.index(";") + 2
                 packet_slice = self.packet[start_slice:]
-                end = packet_slice.index(";")
-                value = packet_slice[-end:]
+                start = packet_slice.index(";") + 1
+                end = packet_slice.index(" " + self.MAC_FLAG)
+                value = packet_slice[start:end]
                 try:
                     return int(value)
                 except ValueError :
@@ -356,7 +357,6 @@ class PXEMethodParser :
                 args.append(value)
         
         logging.getLogger().debug("PXE Proxy: executed method: (%s) %s" % (str(hex(marker)), method.__name__ ))
-
         return method, args
 
        

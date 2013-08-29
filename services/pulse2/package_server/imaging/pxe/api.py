@@ -706,17 +706,15 @@ class PXEImagingApi (PXEMethodParser):
         """
         d = Deferred()
 
-        @d.addCallback
-        def _mftp_wait_barrier(result, pnum, bnum, to):
+        def _mftp_wait_barrier(result):
             wait = 0
-
             try:
-                f = (pnum << 16) + bnum
+                f = pnum + bnum
 
                 if time.time() - self.lasttime > 3600 :
                     self.lasttime = 0 # reset MTFTP time barriers
                     self.lastfile = 0
-
+            
                 if f == self.lastfile :
                     wait = to + (self.lasttime - time())
                     if wait < 0:
@@ -733,15 +731,16 @@ class PXEImagingApi (PXEMethodParser):
 
                 return str(wait)
             except Exception, e :
-                logging.getLogger().warn("imagingServerStatus: %s" % str(e))
+                logging.getLogger().warn("PXE Proxy: method imagingServerStatus failed: %s" % str(e))
                 
 
        
-
+        d.addCallback(_mftp_wait_barrier)
         @d.addErrback
         def _eb(failure):
             logging.getLogger().warn("PXE Proxy: server status get failed: %s" % str(failure))
 
+        d.callback(True)
         return d
-
+ 
 
