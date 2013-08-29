@@ -86,7 +86,7 @@ if ($_POST) {
 
 </td></tr>
 <tr><td><?php echo  _T("Media size", "imaging"); ?></td><td>
-<select name="media" />
+<select name="media">
 <option value="681574400">CD (650 MB)</option>
 <option value="734003200">CD (700 MB)</option>
 <option value="4617089843">DVD (4.3 GB)</option>
