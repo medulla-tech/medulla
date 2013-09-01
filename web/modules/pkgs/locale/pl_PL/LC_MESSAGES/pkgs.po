@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-26 01:00+0200\n"
+"POT-Creation-Date: 2013-09-02 01:00+0200\n"
 "PO-Revision-Date: 2013-08-11 23:06+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,7 +30,7 @@ msgstr ""
 msgid "Add a package"
 msgstr ""
 
-#: modules/pkgs/includes/html.inc.php:108
+#: modules/pkgs/includes/html.inc.php:140
 msgid "Add files"
 msgstr ""
 
@@ -42,8 +42,8 @@ msgstr ""
 msgid "Already uploaded on the server"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:263
-msgid "Are you sure to delete this file?"
+#: modules/pkgs/pkgs/edit.php:261
+msgid "Are you sure you want to delete this file?"
 msgstr ""
 
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:50
@@ -51,7 +51,7 @@ msgid "Associate package"
 msgstr ""
 
 #: modules/pkgs/includes/html.inc.php:60
-#: modules/pkgs/includes/html.inc.php:109
+#: modules/pkgs/includes/html.inc.php:141
 msgid "Cancel"
 msgstr ""
 
@@ -68,15 +68,15 @@ msgstr ""
 
 #: modules/pkgs/includes/html.inc.php:59
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:33
-#: modules/pkgs/pkgs/edit.php:277
+#: modules/pkgs/pkgs/edit.php:275
 msgid "Click here to select files"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:191
+#: modules/pkgs/pkgs/edit.php:193
 msgid "Command : "
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:161 modules/pkgs/pkgs/edit.php:191
+#: modules/pkgs/pkgs/add.php:161 modules/pkgs/pkgs/edit.php:193
 msgid "Command's name : "
 msgstr ""
 
@@ -90,7 +90,7 @@ msgstr ""
 msgid "Delete a package"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:263
+#: modules/pkgs/pkgs/edit.php:261
 msgid "Delete file"
 msgstr ""
 
@@ -100,12 +100,12 @@ msgstr ""
 
 #: modules/pkgs/pkgs/add.php:150 modules/pkgs/pkgs/ajaxPackageList.php:69
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
-#: modules/pkgs/pkgs/edit.php:187
+#: modules/pkgs/pkgs/edit.php:189
 msgid "Description"
 msgstr ""
 
 #: modules/pkgs/infoPackage.inc.php:48
-#: modules/pkgs/pkgs/ajaxPackageList.php:78 modules/pkgs/pkgs/edit.php:137
+#: modules/pkgs/pkgs/ajaxPackageList.php:78 modules/pkgs/pkgs/edit.php:139
 msgid "Edit a package"
 msgstr ""
 
@@ -124,20 +124,20 @@ msgstr ""
 msgid "Failed to associate files%s"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:132
+#: modules/pkgs/pkgs/edit.php:133
 msgid "Failed to delete files"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:129
+#: modules/pkgs/pkgs/edit.php:130
 #, php-format
 msgid "Failed to delete files%s"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:254
+#: modules/pkgs/pkgs/edit.php:252
 msgid "File"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:123
+#: modules/pkgs/pkgs/edit.php:124
 msgid "File successfully deleted."
 msgstr ""
 
@@ -174,11 +174,11 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:169 modules/pkgs/pkgs/edit.php:199
+#: modules/pkgs/pkgs/add.php:169 modules/pkgs/pkgs/edit.php:201
 msgid "Need a reboot ?"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:134 modules/pkgs/pkgs/edit.php:167
+#: modules/pkgs/pkgs/add.php:134 modules/pkgs/pkgs/edit.php:169
 msgid "Package API"
 msgstr ""
 
@@ -190,11 +190,11 @@ msgstr ""
 msgid "Package Creation"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:108
+#: modules/pkgs/pkgs/edit.php:109
 msgid "Package failed to save"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:185
+#: modules/pkgs/pkgs/edit.php:187
 msgid "Package label"
 msgstr ""
 
@@ -215,7 +215,7 @@ msgstr ""
 msgid "Package successfully edited"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:186
+#: modules/pkgs/pkgs/edit.php:188
 msgid "Package version"
 msgstr ""
 
@@ -279,7 +279,7 @@ msgstr ""
 
 #: modules/pkgs/includes/html.inc.php:42
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:34
-#: modules/pkgs/pkgs/edit.php:278
+#: modules/pkgs/pkgs/edit.php:276
 msgid "Upload Queued Files"
 msgstr ""
 
@@ -287,7 +287,7 @@ msgstr ""
 msgid "Upload from this web page"
 msgstr ""
 
-#: modules/pkgs/includes/html.inc.php:144
+#: modules/pkgs/includes/html.inc.php:178
 msgid "Upload selected files"
 msgstr ""
 
