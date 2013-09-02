@@ -1684,7 +1684,7 @@ class Glpi07(DyngroupDatabaseHelper):
                 if processor is not None:
                     l = [
                         ['Name', designation],
-                        ['Frequency', processor.specificity and str(processor.specificity) + ' Hz' or ''],
+                        ['Frequency', processor.specificity and str(processor.specificity) + ' MHz' or ''],
                     ]
                     ret.append(l)
         return ret
