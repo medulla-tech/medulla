@@ -408,7 +408,7 @@ class Glpi08(DyngroupDatabaseHelper):
             elif len(a_filter_on) == 1:
                 return a_filter_on[0]
             else:
-                return or_(*a_filter_on)
+                return and_(*a_filter_on)
         return None
 
     def __filter_on_entity(self, query, ctx, other_locids = []):
