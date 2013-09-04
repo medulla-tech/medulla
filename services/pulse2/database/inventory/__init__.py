@@ -48,6 +48,7 @@ import logging
 
 MAX_REQ_NUM = 100
 
+
 class UserTable(object):
     pass
 
@@ -69,6 +70,8 @@ class Inventory(DyngroupDatabaseHelper):
         return DyngroupDatabaseHelper.db_check(self)
 
     def activate(self, config):
+        # Activating or not SQLAlchemy logging
+        #logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
         self.logger = logging.getLogger()
         DyngroupDatabaseHelper.init(self)
         if self.is_activated:
@@ -1101,7 +1104,8 @@ class Inventory(DyngroupDatabaseHelper):
         select_from = haspartTable.join(self.inventory).join(partTable).outerjoin(self.machine)
         # Also join on the entity related table to filter on the computers the
         # user has the right to see
-        select_from = select_from.join(self.table['hasEntity'], self.table['hasEntity'].c.machine == self.machine.c.id)
+        # one machine only view
+        #select_from = select_from.join(self.table['hasEntity'], self.table['hasEntity'].c.machine == self.machine.c.id)
 
         if noms.has_key(part):
             for nom in noms[part]:
@@ -1118,7 +1122,8 @@ class Inventory(DyngroupDatabaseHelper):
         else:
             result = result.select_from(select_from).filter(self.inventory.c.Last == 1)
         # Filter on the entities the user has the right to see
-        result = result.filter(self.table['hasEntity'].c.entity.in_(ctx.locationsid))
+        # No entity filtering
+        #result = result.filter(self.table['hasEntity'].c.entity.in_(ctx.locationsid))
         # Apply other filters
         result = self.__filterQuery(part, ctx, result, params)
 
