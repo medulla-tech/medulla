@@ -48,7 +48,7 @@ function display_part($part, $get, $simpleTableParts, $displayNavBar = True, $pa
     }
 
     global $maxperpage;
-    $end = $start + $maxperpage;
+    $end = 50; // There is no need for multipaging in these parts
 
     $hide_win_updates = (isset($get['hide_win_updates'])) ? $get['hide_win_updates'] : False;
     $hide_win_updates = (strtolower($hide_win_updates) == 'true') ? True : False;
@@ -63,7 +63,7 @@ function display_part($part, $get, $simpleTableParts, $displayNavBar = True, $pa
     //$inv = getLastMachineInventoryPart2($uuid, $part, $start, $end, $filter, $options);
     $inv = getLastMachineInventoryPart2($part, array('uuid' => $uuid, 'filter' => $filter, 'min' => $start, 'max' => $end, 'software_filter' => '')); //'date' => $date,
     //$itemCount = countLastMachineGlpiPart($uuid, $part, $filter, $options);
-    $itemCount = 1; // TODO: Calculate it from array
+    $itemCount = count($inv); // TODO: Calculate it from array
 
     if (!is_array($inv))
         $inv = array();
