@@ -923,7 +923,8 @@ class Inventory(DyngroupDatabaseHelper):
             if hardware:
                 hardware = hardware[0][1][0]
                 fields.append(['Name', hardware['ProcessorType']])
-                fields.append(['Frequency', hardware['ProcessorFrequency'] + ' MHz'])
+                if hardware['ProcessorFrequency']:
+                    fields.append(['Frequency', hardware['ProcessorFrequency'] + ' MHz'])
             ret.append(fields)
 
         # ============== Memory ===================================
@@ -932,10 +933,12 @@ class Inventory(DyngroupDatabaseHelper):
             memory = Inventory().getLastMachineInventoryPart(ctx, "Memory", params)
             if memory:
                 for item in memory[0][1]:
-                    ret.append([['Name', item['Description']], \
+                    z = [['Name', item['Description']], \
                             ['Type', item['ChipsetType']], \
-                            ['Frequency', item['Frequency']], \
-                            ['Size', str(item['Size']) + ' Mb']])
+                            ['Frequency', item['Frequency']]]
+                    if item['Size']:
+                        z.append(['Size', str(item['Size']) + ' Mb'])
+                    ret.append(z)
 
         # Drives and Harddrives are ignored and replaced by Drives section
         # Inventory DB doesn't differentiate between the two
@@ -986,12 +989,16 @@ class Inventory(DyngroupDatabaseHelper):
             Storages = Inventory().getLastMachineInventoryPart(ctx, "Drive", params)
             if Storages:
                 for item in Storages[0][1]:
-                    ret.append([['Name', item['DriveLetter'] + ' ' +str(item['VolumeName'])], \
-                            ['Device', item['DriveType']], \
+                    z = [ ['Device', item['DriveType']], \
                             ['Mount Point', item['DriveLetter']], \
-                            ['Filesystem', item['FileSystem']], \
-                            ['Size', str(item['TotalSpace']) + ' Mb'], \
-                            ['Free Size', str(item['FreeSpace']) + ' Mb']])
+                            ['Filesystem', item['FileSystem']]]
+                    if item['DriveLetter'] and item['VolumeName']:
+                        z.insert(0,['Name', item['DriveLetter'] + ' ' +str(item['VolumeName'])])
+                    if item['TotalSpace']:
+                        z.append(['Size', str(item['TotalSpace']) + ' Mb'])
+                    if item['FreeSpace']:
+                        z.append(['Free Size', str(item['FreeSpace']) + ' Mb'])
+                    ret.append(z)
 
         # ============== Network ================================
 
