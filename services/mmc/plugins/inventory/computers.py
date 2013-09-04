@@ -138,6 +138,7 @@ class InventoryComputers(ComputerI):
 
         filt['min'] = min
         filt['max'] = max
+
         if justId:
             return map(lambda m:m.uuid(), self.inventory.getMachinesOnly(ctx, filt))
         elif toH:
@@ -227,5 +228,3 @@ class InventoryComputers(ComputerI):
         Computers list header is just hostname as Computer Name and Description as Description
         """
         return self.config.display
-
-

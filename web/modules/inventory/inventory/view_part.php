@@ -1,4 +1,5 @@
 <?php
+
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com
@@ -21,7 +22,6 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 require_once("modules/inventory/includes/xmlrpc.php");
 require_once("modules/inventory/includes/html.php");
 require_once("modules/base/includes/AjaxFilterLog.inc.php");
@@ -37,14 +37,13 @@ foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab', 'part') 
 }
 $ajax = new AjaxFilterInventory(urlStrRedirect("inventory/inventory/ajaxViewPart"), "container", $params);
 
-/*$url = 'modules/inventory/inventory/ajaxViewPart.php?from=base%2Fcomputers%2Finvtabs';
-foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab', 'part') as $get) {
-    $url .= "&$get=".$_GET[$get];
-}
-$ajax = new AjaxFilter($url);*/
+/* $url = 'modules/inventory/inventory/ajaxViewPart.php?from=base%2Fcomputers%2Finvtabs';
+  foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab', 'part') as $get) {
+  $url .= "&$get=".$_GET[$get];
+  }
+  $ajax = new AjaxFilter($url); */
 
 $ajax->display();
-print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
 ?>
 

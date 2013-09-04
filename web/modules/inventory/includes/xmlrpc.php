@@ -1,4 +1,5 @@
 <?php
+
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com/
@@ -32,6 +33,10 @@ function getLastMachineInventoryPart($part, $params) {
     return xmlCall("inventory.getLastMachineInventoryPart", array($part, $params));
 }
 
+function getLastMachineInventoryPart2($part, $params) {
+    return xmlCall("inventory.getLastMachineInventoryPart2", array($part, $params));
+}
+
 function countLastMachineInventoryPart($part, $params) {
     return xmlCall("inventory.countLastMachineInventoryPart", array($part, $params));
 }
@@ -41,7 +46,7 @@ function getLastMachineInventoryFull($uuid) {
 }
 
 function getMachines($pattern = null) {
-    return xmlCall("inventory.getMachines", array(array('hostname'=>$pattern)));
+    return xmlCall("inventory.getMachines", array(array('hostname' => $pattern)));
 }
 
 function getInventoryParts() {
@@ -88,6 +93,7 @@ function getMachineInventoryDiff($params) {
  *  * orange: less than 35 days
  *  * red: more than 35 days
  */
+
 function getMachineNumberByState() {
     return xmlCall("inventory.getMachineNumberByState");
 }
@@ -95,4 +101,5 @@ function getMachineNumberByState() {
 function getMachineListByState($groupName) {
     return xmlCall("inventory.getMachineListByState", array($groupName));
 }
+
 ?>

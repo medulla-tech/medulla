@@ -1,4 +1,5 @@
 <?php
+
 /*
  * (c) 2008 Mandriva, http://www.mandriva.com
  *
@@ -31,11 +32,25 @@ require_once("modules/pulse2/includes/utilities.php");
  */
 right_top_shortcuts_display();
 
-if (!isset($_GET['hostname'])) { $_GET['hostname'] = $_GET['cn']; }
-if (!isset($_GET['uuid'])) { $_GET['uuid'] = $_GET['objectUUID']; }
-if (!isset($_GET['part'])) { $_GET['part'] = 'Hardware'; }
-if (isset($_GET['groupname'])) { $groupname = $_GET['groupname']; } else { $groupname = ""; }
-if (isset($_GET['gid'])) { $gid = $_GET['gid']; } else { $gid = ""; }
+if (!isset($_GET['hostname'])) {
+    $_GET['hostname'] = $_GET['cn'];
+}
+if (!isset($_GET['uuid'])) {
+    $_GET['uuid'] = $_GET['objectUUID'];
+}
+if (!isset($_GET['part'])) {
+    $_GET['part'] = 'Summary';
+}
+if (isset($_GET['groupname'])) {
+    $groupname = $_GET['groupname'];
+} else {
+    $groupname = "";
+}
+if (isset($_GET['gid'])) {
+    $gid = $_GET['gid'];
+} else {
+    $gid = "";
+}
 
 $p = new TabbedPageGenerator();
 $p->setSideMenu($sidemenu);
@@ -48,23 +63,29 @@ if ($_GET['hostname'] != '') {
 }
 
 // TODO get the list with trads from agent (conf file...)
+$tab = 'Summary';
+$i = 7;
+$p->addTab($prefix . "tab$i", _T($tab, 'inventory'), "", "modules/inventory/inventory/view_part.php", array('uuid' => $_GET['uuid'], 'hostname' => $_GET['hostname'], 'part' => $tab, 'gid' => $gid, 'groupname' => $groupname));
 $tab = 'Hardware';
 $i = 0;
-$p->addTab($prefix."tab$i", _T($tab, 'inventory'), "", "modules/inventory/inventory/view_part.php", array('uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname'], 'part' => $tab, 'gid'=>$gid, 'groupname'=>$groupname));
-$tab = 'Bios';
-$i = 5;
-$p->addTab($prefix."tab$i", _T($tab, 'inventory'), "", "modules/inventory/inventory/view_part.php", array('uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname'], 'part' => $tab, 'gid'=>$gid, 'groupname'=>$groupname));
+$p->addTab($prefix . "tab$i", _T($tab, 'inventory'), "", "modules/inventory/inventory/view_part.php", array('uuid' => $_GET['uuid'], 'hostname' => $_GET['hostname'], 'part' => $tab, 'gid' => $gid, 'groupname' => $groupname));
+$tab = 'Storage';
+$i = 8;
+$p->addTab($prefix . "tab$i", _T($tab, 'inventory'), "", "modules/inventory/inventory/view_part.php", array('uuid' => $_GET['uuid'], 'hostname' => $_GET['hostname'], 'part' => $tab, 'gid' => $gid, 'groupname' => $groupname));
+/* $tab = 'Bios';
+  $i = 5;
+  $p->addTab($prefix . "tab$i", _T($tab, 'inventory'), "", "modules/inventory/inventory/view_part.php", array('uuid' => $_GET['uuid'], 'hostname' => $_GET['hostname'], 'part' => $tab, 'gid' => $gid, 'groupname' => $groupname));
+ */
 
 $i = 1;
-foreach (array('Software', 'Network', 'Controller', 'Registry') as $tab) {
-    $p->addTab($prefix."tab$i", _T($tab, 'inventory'), "", "modules/inventory/inventory/view_part.php", array('uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname'], 'part' => $tab, 'gid'=>$gid, 'groupname'=>$groupname));
+foreach (array('Network', 'Software') as $tab) { // , 'Administrative'
+    $p->addTab($prefix . "tab$i", _T($tab, 'inventory'), "", "modules/inventory/inventory/view_part.php", array('uuid' => $_GET['uuid'], 'hostname' => $_GET['hostname'], 'part' => $tab, 'gid' => $gid, 'groupname' => $groupname));
     $i++;
 }
 
 $tab = 'History';
 $i++;
-$p->addTab($prefix."tab$i", _T('History', 'inventory'), "", "modules/inventory/inventory/history.php", array('uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname'], 'part'=>$tab, 'gid'=>$gid, 'groupname'=>$groupname));
+$p->addTab($prefix . "tab$i", _T('History', 'inventory'), "", "modules/inventory/inventory/history.php", array('uuid' => $_GET['uuid'], 'hostname' => $_GET['hostname'], 'part' => $tab, 'gid' => $gid, 'groupname' => $groupname));
 
 $p->display();
-
 ?>

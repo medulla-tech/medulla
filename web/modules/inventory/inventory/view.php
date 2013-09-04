@@ -1,5 +1,4 @@
 <?php
-
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  *
@@ -21,7 +20,6 @@
  * along with LMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/inventory/includes/xmlrpc.php");
@@ -30,93 +28,92 @@ require_once("modules/inventory/includes/xmlrpc.php");
 if (isset($_POST["inventaire"])) {
     $_GET["inventaire"] = $_POST["inventaire"];
 }
-
 ?>
 
 <style type="text/css">
 
-#expertMode table {
-  background-color: #FEE;
-}
+    #expertMode table {
+        background-color: #FEE;
+    }
 
 </style>
 
 <table>
 
-<?php
+    <?php
+    $p = new PageGenerator(sprintf(_T("Inventory of %s"), $_GET["inventaire"]));
+    $p->setSideMenu($sidemenu);
+    $p->display();
 
-$p = new PageGenerator(sprintf(_T("Inventory of %s"), $_GET["inventaire"]));
-$p->setSideMenu($sidemenu);
-$p->display();                                                       
+    $inv = getLastMachineInventoryFull($_GET["inventaire"]);
 
-$inv = getLastMachineInventoryFull($_GET["inventaire"]);
+    $uniq = array('Bios', 'Hardware');
+    $display = array('Summary', 'Network', 'Controller', 'Drive', 'Input', 'Memory', 'Monitor', 'Port', 'Printer', 'Sound', 'Storage', 'VideoCard', 'Software');
 
-$uniq = array('Bios', 'Hardware');
-$display = array('Network', 'Controller', 'Drive', 'Input', 'Memory', 'Monitor', 'Port', 'Printer', 'Sound', 'Storage', 'VideoCard', 'Software');
+    $max = $conf["global"]["maxperpage"];
 
-$max = $conf["global"]["maxperpage"];
+    /* display the first table, with all information that is uniq to a machine */
+    $prop = array();
+    $val = array();
 
-/* display the first table, with all information that is uniq to a machine */
-$prop = array();
-$val = array();
+    $conf["global"]["maxperpage"] = 0;
+    echo "<h3>General</h3>";
+    foreach ($uniq as $table) {
+        $n = null;
 
-$conf["global"]["maxperpage"] = 0;
-echo "<h3>General</h3>";
-foreach ($uniq as $table) {
-    $n = null;
+        $disabled_columns = (isExpertMode() ? array() : getInventoryEM($table));
 
-    $disabled_columns = (isExpertMode() ? array() : getInventoryEM($table));
-    
-    foreach ($inv[$table][0] as $k => $v) {
-        if ($v != null && $v != '' && $k != 'id' && $k != 'timestamp' && !in_array($k, $disabled_columns)) {
-            $prop[] = $k;
-            $val[] = $v;
-        }
-    }
-    $conf["global"]["maxperpage"] += count($inv[$table][0]);
-}
-$n = new ListInfos($prop, _T("Properties"));
-$n->addExtraInfo($val, _T("Value"));
-
-if ($n != null) {
-    $n->drawTable(0);
-}
-echo "<br/><br/>";
-
-/* display everything else in separated tables */
-foreach ($display as $table) {
-    $n = null;
-    $h = array();
-    $index = 0;
-    foreach ($inv[$table] as $def) {
-        foreach ($def as $k => $v) {
-            $h[$k][$index] = $v;
-        }
-        $index+=1;
-    }
-    $max = 0;
-    $conf["global"]["maxperpage"] = $index;
-    $disabled_columns = (isExpertMode() ? array() : getInventoryEM($table));
-    foreach ($h as $k => $v) {
-        
-        if ($k != 'id' && $k != 'timestamp' && !in_array($k, $disabled_columns)) {
-            if ($n == null) {
-                $n = new ListInfos($h[$k], $k);
-            } else {
-                $n->addExtraInfo($h[$k], $k);
+        foreach ($inv[$table][0] as $k => $v) {
+            if ($v != null && $v != '' && $k != 'id' && $k != 'timestamp' && !in_array($k, $disabled_columns)) {
+                $prop[] = $k;
+                $val[] = $v;
             }
-            if (count($h[$k]) > $max) { $max = count($h[$k]); }
         }
+        $conf["global"]["maxperpage"] += count($inv[$table][0]);
     }
-    if ($max > 0 && $n != null) {
-        echo "<h3>$table ($max)</h3>";
-        $n->drawTable(0);
-        echo "<br/><br/>";
-    }
-    $conf["global"]["maxperpage"] = $max;
-}
+    $n = new ListInfos($prop, _T("Properties"));
+    $n->addExtraInfo($val, _T("Value"));
 
-?>
+    if ($n != null) {
+        $n->drawTable(0);
+    }
+    echo "<br/><br/>";
+
+    /* display everything else in separated tables */
+    foreach ($display as $table) {
+        $n = null;
+        $h = array();
+        $index = 0;
+        foreach ($inv[$table] as $def) {
+            foreach ($def as $k => $v) {
+                $h[$k][$index] = $v;
+            }
+            $index+=1;
+        }
+        $max = 0;
+        $conf["global"]["maxperpage"] = $index;
+        $disabled_columns = (isExpertMode() ? array() : getInventoryEM($table));
+        foreach ($h as $k => $v) {
+
+            if ($k != 'id' && $k != 'timestamp' && !in_array($k, $disabled_columns)) {
+                if ($n == null) {
+                    $n = new ListInfos($h[$k], $k);
+                } else {
+                    $n->addExtraInfo($h[$k], $k);
+                }
+                if (count($h[$k]) > $max) {
+                    $max = count($h[$k]);
+                }
+            }
+        }
+        if ($max > 0 && $n != null) {
+            echo "<h3>$table ($max)</h3>";
+            $n->drawTable(0);
+            echo "<br/><br/>";
+        }
+        $conf["global"]["maxperpage"] = $max;
+    }
+    ?>
 
 </table>
 
