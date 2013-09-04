@@ -30,17 +30,17 @@ $base = &$MMCApp->getModule('base');
 /* Get the computers sub-module instance */
 $submod = & $base->getSubmod('computers');
 
-$page = new Page("createStaticGroup", _T("Create static group from dashboard (GLPI)", "glpi"));
+$page = new Page("createStaticGroup", _T("Create static group from dashboard widgets (GLPI)", "glpi"));
 $page->setFile("modules/glpi/glpi/createStaticGroup.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
 
-$page = new Page("createAntivirusStaticGroup", _T("Create static group from antivirus dashboard (GLPI)", "glpi"));
+$page = new Page("createAntivirusStaticGroup", _T("Create static group from antivirus dashboard widget (GLPI)", "glpi"));
 $page->setFile("modules/glpi/glpi/createAntivirusStaticGroup.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
 
-$page = new Page("createOSStaticGroup", _T("Create static group from dashboard OS Repartition plugin (GLPI)", "glpi"));
+$page = new Page("createOSStaticGroup", _T("Create static group from OS distribution dashboard widget (GLPI)", "glpi"));
 $page->setFile("modules/glpi/glpi/createOSStaticGroup.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);

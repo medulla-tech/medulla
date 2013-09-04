@@ -337,12 +337,12 @@ function item_list() {
         $a_defaultWOL[] = $entry['default_WOL'];
         $a_displayWOL[] = ($entry['hidden_WOL'] ? False:True);
     }
-    $firstp = "<p>" . _T("\"Preselected choice\" and \"Preselected choice on WOL\" values will be used to set the default imaging client menu item to run, if no choice is made by the user on the client side prior to the menu timeout.", "imaging") . "</p>";
+    $firstp = "<p>" . _T("Use \"Preselected choice\" or \"Preselected choice on WOL\" to define the default boot entry.", "imaging") . "</p>";
     /* Build tooltip text on column name */
     if ($type == "") {
-        $text = $firstp . "<p>" . _T("Once the operation triggered by a choice is successful, the preselected choice will default to the first item of the boot menu.", "imaging") . "</p>";
+        $text = $firstp . "<p>" . _T("If the default entry is an image creation or restore, the following network boots will fall back to the first menu entry.", "imaging") . "</p>";
     } else {
-        $text = $firstp . "<p>" . _T("When you modify the \"Preselected choice\" or \"Preselected choice on WOL\" values on a profile, those values will be set on all the boot menu of the computers owned by the profile.", "imaging") . "</p>" . "<p>" . _T("Then for each computer, once the operation triggered by a choice is successful, the preselected choice will default to the first item of the boot menu.", "imaging") . "</p>";
+        $text = $firstp . "<p>" . _T("When changing \"Preselected choice\" or \"Preselected choice on WOL\" entry, this value will be set on all the computers in this group.", "imaging") . "</p>" . "<p>" . _T("If the default entry is an image creation or restore, the following network boots will fall back to the first menu entry.", "imaging") . "</p>";
     }
     $l = new ListInfos($a_label, _T("Label"));
     $l->setParamInfo($list_params);

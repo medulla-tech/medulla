@@ -83,7 +83,7 @@ $p->display();
 
 
 if ($ID && $ID < 1000){
-    new NotifyWidgetWarning(_T("Default profiles cannot be modified, therefore your changes will be saved  as a new profile.",'backuppc'));
+    new NotifyWidgetWarning(_T("Default profiles can't be modified. Your changes will be saved as a new profile.",'backuppc'));
     $profile['profilename'] = '';
 }
 

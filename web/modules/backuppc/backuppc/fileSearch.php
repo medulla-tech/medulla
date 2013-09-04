@@ -51,7 +51,7 @@ if ($response['err']) {
 if (count($response['data']))
     $backups = $response['data'][0];
 else {
-    print _T('There is no backup point for this machine.','backuppc');
+    print _T('There is no backup for this machine yet.','backuppc');
     return;
 }
 
@@ -104,7 +104,7 @@ else
     $sel->setSelected(-1);
 
  $f->add(
-    new TrFormElement(_T("Backup point","backuppc"), $sel,
+    new TrFormElement(_T("Date","backuppc"), $sel,
     array())
 );
 
@@ -150,7 +150,7 @@ $f->add(new HiddenTpl("maxsize"), array(
 $sel = new SelectItem("filesize");
 
 $sizes = array(
-    '0' => _T('Any','backuppc'),
+    '0' => _T('Any size','backuppc'),
     '1' => _T('Less than 1 Mb','backuppc'),
     '2' => _T('1 Mb to 10 Mb','backuppc'),
     '3' => _T('10 Mb to 100 Mb','backuppc'),

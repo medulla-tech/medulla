@@ -123,10 +123,10 @@ if (isset($params['uuid'])) {
             $p->display();
             $a_href_open = "<a href=''>";
 
-            $msg = sprintf(_T("The boot menu generation is currently running, please wait or reload the page %shere%s.<br/>", "imaging"), $a_href_open, '</a>');
+            $msg = sprintf(_T("Generating boot menu... Please wait or reload the page %shere%s.<br/>", "imaging"), $a_href_open, '</a>');
             $t1 = new TitleElement($msg, 3);
             $t1->display();
-            $msg = sprintf(_T("If the generation runs for more than 5 minutes, please reset the synchro state of this computer's menu.", "imaging"));
+            $msg = sprintf(_T("If the processing exceeds 5 minutes, please reset the synchro state of this computer.", "imaging"));
             $t2 = new TitleElement($msg, 3);
             $t2->display();
 
@@ -212,10 +212,10 @@ if (isset($params['uuid'])) {
             $p->display();
             $a_href_open = "<a href=''>";
 
-            $msg = sprintf(_T("The synchro is currently running, please wait or reload the page %shere%s.<br/>", "imaging"), $a_href_open, '</a>');
+            $msg = sprintf(_T("Generating boot menu... Please wait or reload the page %shere%s.<br/>", "imaging"), $a_href_open, '</a>');
             $t1 = new TitleElement($msg, 3);
             $t1->display();
-            $msg = sprintf(_T("If the synchro runs for more than 5 minutes, please reset the synchro state of this computer's menu.", "imaging"));
+            $msg = sprintf(_T("If the processing exceeds 5 minutes, please reset the synchro state of this computer.", "imaging"));
             $t2 = new TitleElement($msg, 3);
             $t2->display();
 
