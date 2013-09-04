@@ -210,7 +210,7 @@ class Inventory(DyngroupDatabaseHelper):
         q = q.filter(self.table['Network'].c.MACAddress == macaddr)
 
         session.close()
-
+        
         return bool(q.count())
 
     def complete_ctx(self, ctx):
@@ -428,15 +428,12 @@ class Inventory(DyngroupDatabaseHelper):
                     for inv in row[1]:
                         computers[uuid][1][inv["Path"]] = inv["Value"]
             # Build the result
-            ret = {}
+            ret = []
             for uuid in uuids:
                 ret.append(computers[uuid])
         else:
             result = self.getMachinesOnly(ctx, filt)
-            ret = {}
-            for m in result: # glpi mapping
-                ret[m.uuid()] = m.toDN(ctx)
-            #ret = map(lambda m: m.toDN(ctx), result) #old inventory mapping
+            ret = map(lambda m: m.toDN(ctx), result)
         return ret
 
     # needed by DyngroupDatabaseHelper
@@ -693,16 +690,16 @@ class Inventory(DyngroupDatabaseHelper):
     def getMachineByInventory (self, ctx, inventory) :
         """
         Return the machine resolved by inventory content.
-
+        
         The machine resolving is based on existing MAC address registered
         in the database.
-
+        
         @param ctx: Inventory context
         @type ctx: InventoryContext
-
+        
         @param inventory: Incoming inventory from the client
         @type inventory: dict
-
+        
         @return: MAC Address, Machine UUID, Machine name
         @rtype: tuple
         """
@@ -713,9 +710,9 @@ class Inventory(DyngroupDatabaseHelper):
                 if "MACAddress" in network:
                     mac = network["MACAddress"]
                     logging.getLogger().debug("Searching for a machine with MAC %s" % mac)
-                    machines = self.getMachinesBy(self.ctx,
-                                                  "Network",
-                                                  "MACAddress",
+                    machines = self.getMachinesBy(self.ctx, 
+                                                  "Network", 
+                                                  "MACAddress", 
                                                   mac,
                                                   False)
 
@@ -873,142 +870,6 @@ class Inventory(DyngroupDatabaseHelper):
     def getLastMachineInventoryPart(self, ctx, part, params):
         return self.__getLastMachineInventoryPart(part, params, ctx)
 
-    def getLastMachineInventoryPart2(self, ctx, part, params):
-        # =========================================================
-        # Function to Adapt inventory output to
-        # GLPI-plugin Like getLastMachineInventoryPart function
-        # To use for some inventory sections
-        #
-        # Making all sections manually
-        # =========================================================
-        ret = []
-
-        # ============== SUMMARY ==================================
-        if part == 'Summary':
-            fields = []
-            hardware = Inventory().getLastMachineInventoryPart(ctx, "Hardware", params)
-            if hardware:
-                hardware = hardware[0][1][0]
-                fields.append(['Computer Name', ['computer_name', 'text', hardware['Host']]])
-                fields.append(['Domain', hardware['Workgroup']])
-                fields.append(['Last Logged User', hardware['User']])
-                fields.append(['OS', hardware['OperatingSystem']])
-                fields.append(['Service Pack', hardware['Build']])
-                fields.append(['Windows Key', hardware['OsSerialKey']])
-            bios = Inventory().getLastMachineInventoryPart(ctx, "Bios", params)
-            if bios:
-                bios = bios[0][1][0]
-                fields.append(['Model / Type', bios['Chipset']])
-                fields.append(['Manufacturer', bios['ChipVendor']])
-                fields.append(['Serial Number', bios['Serial']])
-            entity = Inventory().getComputersLocations([params['uuid']])
-            if entity.values():
-                fields.append(['Entity (Location)', entity.values()[0]['Label']])
-            # Non-supported fields
-            fields.append(['Inventory Number', ''])
-            fields.append(['State', ''])
-            #
-            custom = Inventory().getMachineCustom(ctx, params)
-
-            if len(custom):
-                fields.append(['Description', ['description', 'text', custom[0][1][0]['Comments'] ]])
-                fields.append(['Warranty End Date', custom[0][1][0]['WarrantyEnd']])
-
-            ret.append(fields)
-
-        # ============== Processors ==================================
-        if part == 'Processors':
-            fields = []
-            hardware = Inventory().getLastMachineInventoryPart(ctx, "Hardware", params)
-            if hardware:
-                hardware = hardware[0][1][0]
-                fields.append(['Name', hardware['ProcessorType']])
-                fields.append(['Frequency', hardware['ProcessorFrequency'] + ' MHz'])
-            ret.append(fields)
-
-        # ============== Memory ===================================
-
-        if part == 'Memory':
-            memory = Inventory().getLastMachineInventoryPart(ctx, "Memory", params)
-            if memory:
-                for item in memory[0][1]:
-                    ret.append([['Name', item['Description']], \
-                            ['Type', item['ChipsetType']], \
-                            ['Frequency', item['Frequency']], \
-                            ['Size', str(item['Size']) + ' Mb']])
-
-        # Drives and Harddrives are ignored and replaced by Drives section
-        # Inventory DB doesn't differentiate between the two
-        # ============== Drives ==================================
-        if part == 'Drives':
-            #fields = []
-            storage = Inventory().getLastMachineInventoryPart(ctx, "Storage", params)
-            if storage:
-                for item in storage[0][1]:
-                    ret.append([['Name', item['Model']], \
-                            #['DiskSize', item['DiskSize']], \
-                            ['DiskSize ', item['DiskSize']]])
-
-
-        # ============== Controllers ================================
-
-        if part == 'Controllers':
-            #fields = []
-            controllers = Inventory().getLastMachineInventoryPart(ctx, "Controller", params)
-            if controllers:
-                for item in controllers[0][1]:
-                    ret.append([['Name', item['ExpandedType']]])
-
-
-        # ============== GraphicCards ================================
-
-        if part == 'GraphicCards':
-            graphicCards = Inventory().getLastMachineInventoryPart(ctx, "VideoCard", params)
-            if graphicCards:
-                for item in graphicCards[0][1]:
-                    ret.append([['Name', item['Model']], \
-                            ['Memory', item['VRAMSize']], \
-                            ['Type ', item['Chipset']]])
-
-        # ============== Soundcards ================================
-
-        if part == 'SoundCards':
-            SoundCards = Inventory().getLastMachineInventoryPart(ctx, "Sound", params)
-            if SoundCards:
-                for item in SoundCards[0][1]:
-                    ret.append([['Name', item['Name']]])
-
-        #>>>>>> TODO : Check if other section is not empty
-
-        # ============== Storage ================================
-
-        if part == 'Storage':
-            Storages = Inventory().getLastMachineInventoryPart(ctx, "Drive", params)
-            if Storages:
-                for item in Storages[0][1]:
-                    ret.append([['Name', item['DriveLetter'] + ' ' +str(item['VolumeName'])], \
-                            ['Device', item['DriveType']], \
-                            ['Mount Point', item['DriveLetter']], \
-                            ['Filesystem', item['FileSystem']], \
-                            ['Size', str(item['TotalSpace']) + ' Mb'], \
-                            ['Free Size', str(item['FreeSpace']) + ' Mb']])
-
-        # ============== Network ================================
-
-        if part == 'Network' or part == 'NetworkCards':
-            Network = Inventory().getLastMachineInventoryPart(ctx, "Network", params)
-            if Network:
-                for item in Network[0][1]:
-                    ret.append([['Name', item['CardType']], \
-                            ['Network Type', item['NetworkType']], \
-                            ['MAC Address', item['MACAddress']], \
-                            ['IP', item['IP']], \
-                            ['Netmask', item['SubnetMask']], \
-                            ['Gateway', item['Gateway']]])
-
-        return ret
-
-
     def __getLastMachineInventoryPart(self, part, params, ctx = None):
         """
         Return a list where each item belongs to the last machine inventory.
@@ -1122,10 +983,6 @@ class Inventory(DyngroupDatabaseHelper):
             for softFilter in software_filter:
                 # Filter the query result foreach software filter
                 result = result.filter(not_(partKlass.ProductName.like(softFilter)))
-
-        # Apply a filter to hide windows updates
-        if params.has_key('hide_win_updates') and params['hide_win_updates'] == True and part == 'Software':
-            result = result.filter(not_(partKlass.ProductName.op('regexp')('KB[0-9]+(-v[0-9]+)?(v[0-9]+)?')))
 
         # this can't be put in __filterQuer because it's not a generic filter on Machine...
         if params.has_key('where') and params['where'] != '':
@@ -1641,7 +1498,7 @@ class Inventory(DyngroupDatabaseHelper):
                 if res[1].id == prev[1].id and \
                 res[0].Date >= prev[0].Date and res[0].Time > prev[0].Time :
                     newMachine = False
-                    break
+                    break 
 
             timestamp = datetime.datetime.combine(res[0].Date, res[0].Time)
             ret.append((res[1].Name, timestamp, newMachine, toUUID(res[1].id)))
@@ -1862,15 +1719,15 @@ class Inventory(DyngroupDatabaseHelper):
                     # in the returned tuple
                     if removed:
                         removed_elements[part].append(previous_elem)
-        # Do ignore to report the identical inventories
+        # Do ignore to report the identical inventories 
         # which unimportants elements makes the differences
-        if self.__isIdenticalInventory(added_elements,
-                                 removed_elements,
+        if self.__isIdenticalInventory(added_elements, 
+                                 removed_elements, 
                                  exclude={"Hardware": ["ProcessorFrequency", "id"],
                                           }
                                  ) :
             return [[],[]]
-
+  
         ret = [added_elements, removed_elements]
         return ret
 
@@ -1938,7 +1795,7 @@ class Inventory(DyngroupDatabaseHelper):
             * green: less than 10 days
             * orange: more than 10 days and less than 35 days
             * red: more than 35 days
-
+        
         @return: dictionnary with state as key, number as value
         @rtype: dict
         """
@@ -1971,14 +1828,14 @@ class Inventory(DyngroupDatabaseHelper):
         """
         Compare two inventories excluding ignored elements.
 
-        @param added: inventory diff containing added elements
+        @param added: inventory diff containing added elements 
         @type added: dict
 
         @param removed: inventory diff containing removed elements
         @type added: dict
 
         @param exclude: ignored parts and elements of inventory
-        @type exclude: dict (format: {"part": [list of element keys], ..}
+        @type exclude: dict (format: {"part": [list of element keys], ..} 
 
         @return: True if passed diffs are the sames (excluding ignored elements)
         @rtype: bool
@@ -1986,7 +1843,7 @@ class Inventory(DyngroupDatabaseHelper):
         a_keys = set(added.keys())
         r_keys = set(removed.keys())
 
-        # test of egality between the intersections of added/removed parts
+        # test of egality between the intersections of added/removed parts    
         if len(a_keys - r_keys) != 0 and len(r_keys - a_keys) != 0 :
             return False
 
@@ -1999,7 +1856,7 @@ class Inventory(DyngroupDatabaseHelper):
                 if len(a_elem_keys - r_elem_keys) != 0 and \
                         len(r_elem_keys - a_elem_keys) != 0 :
                     return False
-
+                
                 for elem_key in a_elem_keys :
                     if part_key in exclude :
                         # ignore unimportants elements
@@ -2032,43 +1889,38 @@ class Machine(object):
         return toUUID(self.id)
 
     def toDN(self, ctx, advanced = False):
-        # Basic info
         ret = [ False, {'cn':[self.Name], 'objectUUID':[toUUID(self.id)]} ]
-        # Get requested cols to display SET
-        requested_cols = {col[0] for col in Inventory().config.display}
-        # If comment is requested, we request it
-        if 'displayName' in requested_cols:
-            comment = Inventory().getMachineCustom(ctx, {'uuid':toUUID(self.id)})
-            if len(comment) != 0:
-                ret[1]['displayName'] = [comment[0][1][0]['Comments']]
-                ret[1]['location'] = [comment[0][1][0]['Location']]
-        # If a network field is requested
-        if {'macAddress','ipHostNumber','subnetMask'} & requested_cols:
+        comment = Inventory().getMachineCustom(ctx, {'uuid':toUUID(self.id)})
+        if len(comment) != 0:
+            ret[1]['displayName'] = [comment[0][1][0]['Comments']]
+        for table in Inventory().config.content:
+            content = Inventory().config.content[table]
+            for col in content:
+                params = {'uuid':toUUID(self.id)}
+                if len(col) > 2:
+                    for p in col[2:]:
+                        if not params.has_key('where'):
+                            params['where'] = []
+                        params['where'].append(p)
+
+                part = Inventory().getLastMachineInventoryPart(ctx, table, params)
+                if len(part) == 0:
+                    ret[1][col[1]] = ''
+                else:
+                    part = part[0][1]
+                    ret[1][col[1]] = []
+                    for n in part:
+                        ret[1][col[1]].append(n[col[0]])
+
+        if advanced:
             net = Inventory().getMachineNetwork(ctx, {'uuid':toUUID(self.id)})
-            if len(net):
+            if len(net) == 0:
+                ret[1]['ipHostNumber'] = ''
+                ret[1]['macAddress'] = ''
+                ret[1]['subnetMask'] = ''
+            else:
                 net = net[0]
                 (ret[1]['macAddress'], ret[1]['ipHostNumber'], ret[1]['subnetMask'],  ret[1]['networkUuids']) = orderIpAdresses(net[1])
-                ret[1]['networkUuids'] = map(lambda x:'UUID'+str(x),ret[1]['networkUuids'])
-        # If a hardware table field is requested
-        if {'os','user','type','domain','fullname'} & requested_cols:
-            hardware = Inventory().getLastMachineInventoryPart(ctx, "Hardware", {'uuid':toUUID(self.id)})
-            if len(hardware):
-                ret[1]['os'] = hardware[0][1][0]['OperatingSystem']
-                ret[1]['user'] = hardware[0][1][0]['User']
-                ret[1]['type'] = hardware[0][1][0]['Type']
-                ret[1]['domain'] = [hardware[0][1][0]['Workgroup']]
-                ret[1]['fullname'] = self.Name + '.' + hardware[0][1][0]['Workgroup']
-        # If entity is requested
-        if 'entity' in requested_cols:
-            entity = Inventory().getComputersLocations([toUUID(self.id)])
-            if entity.values():
-                ret[1]['entity'] = entity.values()[0]['Label']
-            else:
-                ret[1]['entity'] = ''
-        # Non-supported attributes
-        ret[1]['inventorynumber'] = '';
-        ret[1]['state'] = '';
-        #
         return ret
 
     def toCustom(self, get):
@@ -2189,7 +2041,7 @@ class InventoryCreator(Inventory):
                 m = Machine()
                 m.Name = hostname
                 session.add(m)
-
+            
 
             if machine_exists :
                 if setLastFlag:
@@ -2364,14 +2216,14 @@ class InventoryNetworkComplete :
 
                     logging.getLogger().debug("Resolved netmask: %s" % netmask)
                     logging.getLogger().debug("Resolved gateway: %s" % gateway)
-
+    
                     self._inventory = inventory
 
     def _get_networking (self) :
         """
-        Getting the server's netmask & gateway
+        Getting the server's netmask & gateway 
 
-        @return: netmask and gateway
+        @return: netmask and gateway 
         @rtype: tuple
         """
 
@@ -2383,7 +2235,7 @@ class InventoryNetworkComplete :
 
         route = []
         try :
-            r_file = open(filename, "r")
+            r_file = open(filename, "r") 
 
             for line in r_file.readlines():
                 r_fields = line.strip().split()
@@ -2411,7 +2263,7 @@ class InventoryNetworkComplete :
         return socket.inet_ntoa(netmask), socket.inet_ntoa(gateway)
 
     def get(self) :
-        """
+        """ 
         Get the updated inventory.
 
         @return: inventory
