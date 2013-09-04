@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-26 01:00+0200\n"
+"POT-Creation-Date: 2013-09-04 17:49+0200\n"
 "PO-Revision-Date: 2013-05-30 09:20+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/"
@@ -118,16 +118,16 @@ msgstr ""
 msgid "Create a group"
 msgstr ""
 
+#: modules/glpi/infoPackage.inc.php:43
+msgid "Create static group from OS distribution dashboard widget (GLPI)"
+msgstr ""
+
 #: modules/glpi/infoPackage.inc.php:38
-msgid "Create static group from antivirus dashboard (GLPI)"
+msgid "Create static group from antivirus dashboard widget (GLPI)"
 msgstr ""
 
 #: modules/glpi/infoPackage.inc.php:33
-msgid "Create static group from dashboard (GLPI)"
-msgstr ""
-
-#: modules/glpi/infoPackage.inc.php:43
-msgid "Create static group from dashboard OS Repartition plugin (GLPI)"
+msgid "Create static group from dashboard widgets (GLPI)"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:250

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-19 01:00+0200\n"
+"POT-Creation-Date: 2013-09-04 17:49+0200\n"
 "PO-Revision-Date: 2013-06-25 14:14+0000\n"
 "Last-Translator: Andre Machado <andre@mandriva.com>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
@@ -69,7 +69,7 @@ msgid "All"
 msgstr ""
 
 #: modules/backuppc/backuppc/fileSearch.php:153
-msgid "Any"
+msgid "Any size"
 msgstr ""
 
 #: modules/backuppc/infoPackage.inc.php:33
@@ -94,11 +94,6 @@ msgstr "Backup em execução"
 #: modules/backuppc/backuppc/hostSummary.php:62
 msgid "Backup is not set for this computer."
 msgstr "O backup não está configurado para este computador."
-
-#: modules/backuppc/backuppc/fileSearch.php:107
-#, fuzzy
-msgid "Backup point"
-msgstr "Tempo de backup"
 
 #: modules/backuppc/backuppc/hostSummary.php:155
 msgid "Backup size (new) [Mb]"
@@ -191,20 +186,19 @@ msgstr "Status atual: "
 msgid "Custom"
 msgstr "Personalizar"
 
+#: modules/backuppc/backuppc/fileSearch.php:107
+msgid "Date"
+msgstr ""
+
 #: modules/backuppc/backuppc/ViewProfiles.php:142
 msgid "Daytime"
 msgstr ""
 
+#: modules/backuppc/backuppc/EditBackupProfile.php:75
 #: modules/backuppc/backuppc/EditPeriodProfile.php:86
 msgid ""
-"Default profiles cannot be modified, therefore your changes will be saved  "
-"as a new profile."
-msgstr ""
-
-#: modules/backuppc/backuppc/EditBackupProfile.php:75
-msgid ""
-"Default profiles cannot be modified, therefore your changes will be saved as "
-"a new profile."
+"Default profiles can't be modified. Your changes will be saved as a new "
+"profile."
 msgstr ""
 
 #: modules/backuppc/backuppc/ViewProfiles.php:41
@@ -590,7 +584,7 @@ msgid "The selected files are going to be restored to"
 msgstr "Os arquivos selecionados estão sendo restaurados"
 
 #: modules/backuppc/backuppc/fileSearch.php:54
-msgid "There is no backup point for this machine."
+msgid "There is no backup for this machine yet."
 msgstr ""
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:48
@@ -759,6 +753,10 @@ msgstr "Ligado"
 #: modules/backuppc/backuppc/edit.php:223
 msgid "to"
 msgstr "para"
+
+#, fuzzy
+#~ msgid "Backup point"
+#~ msgstr "Tempo de backup"
 
 #~ msgid "Edit"
 #~ msgstr "Editar"

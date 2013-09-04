@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-08 01:00+0200\n"
+"POT-Creation-Date: 2013-09-04 17:49+0200\n"
 "PO-Revision-Date: 2013-03-13 15:57+0000\n"
 "Last-Translator: Jean-Christophe Vassort <jcvassort@mandriva.com>\n"
 "Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/"
@@ -21,12 +21,16 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
 
-#: modules/inventory/inventory/tabs.php:46
+#: modules/inventory/inventory/ajaxViewPart.php:83
+msgid " (Not an antivirus)"
+msgstr ""
+
+#: modules/inventory/inventory/tabs.php:61
 #, php-format
 msgid "%s's content inventory"
 msgstr "Инвентаризация содержимого %s"
 
-#: modules/inventory/inventory/tabs.php:44
+#: modules/inventory/inventory/tabs.php:59
 #, php-format
 msgid "%s's inventory"
 msgstr "Инвентаризация %s"
@@ -39,6 +43,11 @@ msgstr ""
 msgid "> %s days: %percent% (%d)"
 msgstr ""
 
+#: modules/inventory/inventory/ajaxViewPart.php:510
+#, fuzzy
+msgid "Action"
+msgstr "Локализация"
+
 #: modules/inventory/inventory/inventory_diff.php:114
 msgid "Added elements"
 msgstr "Добавленный элемент"
@@ -46,6 +55,10 @@ msgstr "Добавленный элемент"
 #: modules/inventory/inventory/infos.php:33
 msgid "Additionnal informations"
 msgstr "Дополнительная информация"
+
+#: modules/inventory/inventory/ajaxViewPart.php:514
+msgid "All"
+msgstr ""
 
 #: modules/inventory/inventory/i18n_labels.php:26
 msgid "Application"
@@ -55,7 +68,11 @@ msgstr "Приложение"
 msgid "Availability"
 msgstr "Доступность"
 
-#: modules/inventory/infoPackage.inc.php:46
+#: modules/inventory/inventory/ajaxViewPart.php:503
+msgid "Bandwidth"
+msgstr ""
+
+#: modules/inventory/infoPackage.inc.php:44
 #: modules/inventory/inventory/i18n_labels.php:28
 #: modules/inventory/inventory/localSidebar.php:29
 msgid "Bios"
@@ -69,11 +86,11 @@ msgstr ""
 msgid "Bios Version"
 msgstr ""
 
-#: modules/inventory/inventory/body.php:41
+#: modules/inventory/inventory/body.php:40
 msgid "Bios list"
 msgstr "Список Bios "
 
-#: modules/inventory/infoPackage.inc.php:157
+#: modules/inventory/infoPackage.inc.php:169
 msgid "Bios tab for a computer in a group"
 msgstr "Вкладка Bios для компьютера в группе"
 
@@ -109,6 +126,10 @@ msgstr "Заголовок"
 msgid "Card Type"
 msgstr ""
 
+#: modules/inventory/inventory/ajaxViewPart.php:509
+msgid "Category"
+msgstr ""
+
 #: modules/inventory/infoPackage.inc.php:91
 #: modules/inventory/inventory/graphs.php:35
 msgid "Chart"
@@ -142,6 +163,15 @@ msgstr ""
 msgid "Class"
 msgstr "Класс"
 
+#: modules/inventory/inventory/ajaxViewPart.php:106
+msgid "Click here to see this computer on manufacturer website"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:506
+#, fuzzy
+msgid "Comment"
+msgstr "Коментирии"
+
 #: modules/inventory/inventory/i18n_labels.php:44
 msgid "Comments"
 msgstr "Коментирии"
@@ -155,6 +185,16 @@ msgstr "Компания"
 #: modules/inventory/inventory/i18n_labels.php:96
 msgid "Computer"
 msgstr "Компьютер"
+
+#: modules/inventory/inventory/ajaxViewPart.php:487
+#, fuzzy
+msgid "Computer Name"
+msgstr "Имя компьютера"
+
+#: modules/inventory/inventory/ajaxViewPart.php:495
+#, fuzzy
+msgid "Computer Type"
+msgstr "Имя компьютера"
 
 #: modules/inventory/inventory/ajaxIncoming.php:78
 msgid "Computer name"
@@ -173,7 +213,7 @@ msgstr ""
 msgid "Connector"
 msgstr "Коннектор"
 
-#: modules/inventory/infoPackage.inc.php:52
+#: modules/inventory/infoPackage.inc.php:50
 #: modules/inventory/inventory/i18n_labels.php:47
 #: modules/inventory/inventory/localSidebar.php:33
 msgid "Controller"
@@ -183,17 +223,22 @@ msgstr "Котроллер"
 msgid "Controller list"
 msgstr "Список контроллера"
 
-#: modules/inventory/infoPackage.inc.php:187
+#: modules/inventory/infoPackage.inc.php:199
 msgid "Controller tab for a computer"
 msgstr "Вкладке Контроллер для компьютера"
 
-#: modules/inventory/infoPackage.inc.php:166
+#: modules/inventory/infoPackage.inc.php:178
 msgid "Controller tab for a computer in a group"
 msgstr "Вкладка Контроллер для компьютера в группе"
 
-#: modules/inventory/infoPackage.inc.php:148
+#: modules/inventory/infoPackage.inc.php:154
 msgid "Controller tab for a group"
 msgstr "Вкладка Контроллер для группы"
+
+#: modules/inventory/inventory/ajaxViewPart.php:229
+#, fuzzy
+msgid "Controllers"
+msgstr "Котроллер"
 
 #: modules/inventory/inventory/i18n_labels.php:48
 msgid "Cpu Num"
@@ -228,14 +273,19 @@ msgstr "Cyl"
 msgid "DNS"
 msgstr "DNS"
 
-#: modules/inventory/includes/html.php:62
-#: modules/inventory/inventory/ajaxViewPart.php:35
+#: modules/inventory/includes/html.php:65
+#: modules/inventory/inventory/ajaxViewPart.php:188
+#: modules/inventory/inventory/ajaxViewPart.php:507
 #: modules/inventory/inventory/i18n_labels.php:53
 msgid "Date"
 msgstr "Дата"
 
 #: modules/inventory/inventory/i18n_labels.php:54
 msgid "Date Last Switch On"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:482
+msgid "Date Of Purchase"
 msgstr ""
 
 #: modules/inventory/inventory/i18n_labels.php:57
@@ -250,15 +300,17 @@ msgstr ""
 msgid "Department"
 msgstr "Департамент"
 
+#: modules/inventory/inventory/ajaxViewPart.php:488
 #: modules/inventory/inventory/i18n_labels.php:60
 msgid "Description"
 msgstr "Описание"
 
+#: modules/inventory/inventory/ajaxViewPart.php:475
 #: modules/inventory/inventory/i18n_labels.php:61
 msgid "Device"
 msgstr "Устройство"
 
-#: modules/inventory/infoPackage.inc.php:195
+#: modules/inventory/infoPackage.inc.php:207
 msgid "Differences between two inventories"
 msgstr "Различия между двумя инвентаризациями"
 
@@ -270,7 +322,11 @@ msgstr "Диск"
 msgid "Disk Size"
 msgstr ""
 
-#: modules/inventory/infoPackage.inc.php:55
+#: modules/inventory/inventory/ajaxViewPart.php:517
+msgid "Domain"
+msgstr ""
+
+#: modules/inventory/infoPackage.inc.php:56
 #: modules/inventory/inventory/i18n_labels.php:64
 #: modules/inventory/inventory/localSidebar.php:37
 msgid "Drive"
@@ -292,6 +348,11 @@ msgstr "Список дисков"
 msgid "Driver"
 msgstr "Драйвер"
 
+#: modules/inventory/inventory/ajaxViewPart.php:231
+#, fuzzy
+msgid "Drives"
+msgstr "Накопитель"
+
 #: modules/inventory/inventory/inventory_diff.php:75
 #: modules/inventory/inventory/inventory_diff.php:100
 msgid "Element"
@@ -300,6 +361,19 @@ msgstr "Элемент"
 #: modules/inventory/inventory/ajaxIncoming.php:91
 msgid "Elements"
 msgstr "Элементы"
+
+#: modules/inventory/inventory/ajaxViewPart.php:522
+msgid "Enabled"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:490
+msgid "Entity"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:489
+#, fuzzy
+msgid "Entity (Location)"
+msgstr "Локализация"
 
 #: modules/inventory/inventory/i18n_labels.php:68
 msgid "Executable Size"
@@ -329,6 +403,15 @@ msgstr ""
 msgid "File System"
 msgstr ""
 
+#: modules/inventory/inventory/ajaxViewPart.php:477
+#, fuzzy
+msgid "Filesystem"
+msgstr "Система"
+
+#: modules/inventory/includes/html.php:98
+msgid "Filter softwares"
+msgstr ""
+
 #: modules/inventory/inventory/infos.php:43
 msgid "First apparition"
 msgstr "Первое появление"
@@ -341,6 +424,11 @@ msgstr "Флаг"
 msgid "Form"
 msgstr "Форум"
 
+#: modules/inventory/inventory/ajaxViewPart.php:479
+#, fuzzy
+msgid "Free Size"
+msgstr "Размер"
+
 #: modules/inventory/inventory/i18n_labels.php:77
 msgid "Free Space"
 msgstr ""
@@ -349,6 +437,7 @@ msgstr ""
 msgid "Freq"
 msgstr "Част"
 
+#: modules/inventory/inventory/ajaxViewPart.php:500
 #: modules/inventory/inventory/i18n_labels.php:79
 msgid "Frequency"
 msgstr "Частота"
@@ -357,11 +446,16 @@ msgstr "Частота"
 msgid "Func"
 msgstr "Функция"
 
+#: modules/inventory/inventory/ajaxViewPart.php:474
 #: modules/inventory/inventory/i18n_labels.php:81
 msgid "Gateway"
 msgstr "Шлюз"
 
-#: modules/inventory/infoPackage.inc.php:48
+#: modules/inventory/inventory/ajaxViewPart.php:232
+msgid "Graphic Cards"
+msgstr ""
+
+#: modules/inventory/infoPackage.inc.php:46
 #: modules/inventory/inventory/i18n_labels.php:82
 #: modules/inventory/inventory/localSidebar.php:30
 msgid "Hardware"
@@ -375,11 +469,11 @@ msgstr ""
 msgid "Hardware and OS information list"
 msgstr "Список оборудования и информации об ОС"
 
-#: modules/inventory/infoPackage.inc.php:178
+#: modules/inventory/infoPackage.inc.php:190
 msgid "Hardware tab for a computer"
 msgstr "Вкладке Оборудование для компьютера"
 
-#: modules/inventory/infoPackage.inc.php:154
+#: modules/inventory/infoPackage.inc.php:160
 msgid "Hardware tab for a computer in a group"
 msgstr "Вкладка Оборудование для компьютера в группе"
 
@@ -395,19 +489,24 @@ msgstr "Заголовок"
 msgid "Header"
 msgstr "Заголовок"
 
+#: modules/inventory/includes/html.php:103
+msgid "Hide Windows Updates"
+msgstr ""
+
 #: modules/inventory/inventory/i18n_labels.php:85
 msgid "High Mem"
 msgstr ""
 
-#: modules/inventory/inventory/tabs.php:66
+#: modules/inventory/inventory/tabs.php:88
 msgid "History"
 msgstr "История"
 
+#: modules/inventory/inventory/ajaxViewPart.php:472
 #: modules/inventory/inventory/i18n_labels.php:86
 msgid "IP"
 msgstr "IP"
 
-#: modules/inventory/infoPackage.inc.php:44
+#: modules/inventory/infoPackage.inc.php:42
 #: modules/inventory/inventory/localSidebar.php:28
 msgid "Incoming"
 msgstr "Входящий"
@@ -416,13 +515,13 @@ msgstr "Входящий"
 msgid "Incoming Inventories"
 msgstr "Входящие Реестры"
 
-#: modules/inventory/infoPackage.inc.php:82
+#: modules/inventory/infoPackage.inc.php:83
 #: modules/inventory/inventory/ajaxIncoming.php:85
-#: modules/inventory/inventory/ajaxViewPart.php:246
+#: modules/inventory/inventory/ajaxViewPart.php:439
 msgid "Informations"
 msgstr "Информация"
 
-#: modules/inventory/infoPackage.inc.php:57
+#: modules/inventory/infoPackage.inc.php:58
 #: modules/inventory/inventory/i18n_labels.php:87
 #: modules/inventory/inventory/localSidebar.php:38
 msgid "Input"
@@ -432,8 +531,8 @@ msgstr "Вход"
 msgid "Input device list"
 msgstr "Список устройств ввода"
 
-#: modules/inventory/infoPackage.inc.php:34
-#: modules/inventory/infoPackage.inc.php:40
+#: modules/inventory/infoPackage.inc.php:32
+#: modules/inventory/infoPackage.inc.php:38
 #: modules/inventory/inventory/history.php:80
 msgid "Inventory"
 msgstr "Инвентаризация"
@@ -441,6 +540,11 @@ msgstr "Инвентаризация"
 #: modules/inventory/inventory/history.php:75
 msgid "Inventory Date"
 msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:520
+#, fuzzy
+msgid "Inventory Number"
+msgstr "Данные Инвентаризации"
 
 #: modules/inventory/inventory/inventory_diff.php:48
 msgid "Inventory changes"
@@ -450,7 +554,7 @@ msgstr "Изменения инвентаризации"
 msgid "Inventory date"
 msgstr "Данные Инвентаризации"
 
-#: modules/inventory/inventory/view.php:48
+#: modules/inventory/inventory/view.php:44
 #, php-format
 msgid "Inventory of %s"
 msgstr "Инвентаризация %s"
@@ -459,9 +563,14 @@ msgstr "Инвентаризация %s"
 msgid "Inventory on a group of computers"
 msgstr "Инвентаризация группы компьютеров"
 
-#: modules/inventory/infoPackage.inc.php:174
+#: modules/inventory/infoPackage.inc.php:186
 msgid "Inventory on a single computer"
 msgstr "Инвентаризация на одном компьютере"
+
+#: modules/inventory/inventory/ajaxViewPart.php:481
+#, fuzzy
+msgid "Invoice Number"
+msgstr "Число"
 
 #: modules/inventory/inventory/i18n_labels.php:88
 msgid "Ip Address"
@@ -470,6 +579,20 @@ msgstr ""
 #: modules/inventory/inventory/i18n_labels.php:89
 msgid "KEY"
 msgstr "Ключ"
+
+#: modules/inventory/inventory/ajaxViewPart.php:513
+msgid "Last 30 days"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:512
+#, fuzzy
+msgid "Last 7 days"
+msgstr "Прошлый год"
+
+#: modules/inventory/inventory/ajaxViewPart.php:492
+#, fuzzy
+msgid "Last Logged User"
+msgstr "Прошлый семестр"
 
 #: modules/inventory/inventory/incoming.php:56
 msgid "Last month"
@@ -515,6 +638,7 @@ msgstr ""
 "Загрузить только те компьютеры, которые были новыми на момент завершения "
 "инвентаризации"
 
+#: modules/inventory/inventory/ajaxViewPart.php:491
 #: modules/inventory/inventory/i18n_labels.php:91
 msgid "Location"
 msgstr "Локализация"
@@ -523,6 +647,7 @@ msgstr "Локализация"
 msgid "Low Mem"
 msgstr ""
 
+#: modules/inventory/inventory/ajaxViewPart.php:471
 #: modules/inventory/inventory/i18n_labels.php:93
 msgid "MAC Address"
 msgstr ""
@@ -539,6 +664,7 @@ msgstr ""
 msgid "Manuf"
 msgstr "Произв"
 
+#: modules/inventory/inventory/ajaxViewPart.php:498
 #: modules/inventory/inventory/i18n_labels.php:98
 msgid "Manufacturer"
 msgstr "Производитель"
@@ -547,7 +673,9 @@ msgstr "Производитель"
 msgid "Media"
 msgstr "Носитель"
 
-#: modules/inventory/infoPackage.inc.php:59
+#: modules/inventory/infoPackage.inc.php:60
+#: modules/inventory/inventory/ajaxViewPart.php:227
+#: modules/inventory/inventory/ajaxViewPart.php:505
 #: modules/inventory/inventory/i18n_labels.php:100
 #: modules/inventory/inventory/localSidebar.php:39
 msgid "Memory"
@@ -565,15 +693,20 @@ msgstr ""
 msgid "Misc SMB"
 msgstr ""
 
+#: modules/inventory/inventory/ajaxViewPart.php:497
 #: modules/inventory/inventory/i18n_labels.php:103
 msgid "Model"
 msgstr "Модель"
+
+#: modules/inventory/inventory/ajaxViewPart.php:496
+msgid "Model / Type"
+msgstr ""
 
 #: modules/inventory/inventory/i18n_labels.php:104
 msgid "Modem"
 msgstr "Модем"
 
-#: modules/inventory/infoPackage.inc.php:61
+#: modules/inventory/infoPackage.inc.php:62
 #: modules/inventory/inventory/i18n_labels.php:105
 #: modules/inventory/inventory/localSidebar.php:40
 msgid "Monitor"
@@ -583,16 +716,32 @@ msgstr "Монитор"
 msgid "Monitor list"
 msgstr "Список мониторов"
 
+#: modules/inventory/inventory/ajaxViewPart.php:476
+msgid "Mount Point"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:469
+#: modules/inventory/inventory/ajaxViewPart.php:485
 #: modules/inventory/inventory/i18n_labels.php:106
 msgid "Name"
 msgstr "Имя"
 
-#: modules/inventory/infoPackage.inc.php:50
+#: modules/inventory/inventory/ajaxViewPart.php:473
+msgid "Netmask"
+msgstr ""
+
+#: modules/inventory/infoPackage.inc.php:48
 #: modules/inventory/inventory/i18n_labels.php:107
 #: modules/inventory/inventory/localSidebar.php:32
 msgid "Network"
 msgstr "Сеть"
 
+#: modules/inventory/inventory/ajaxViewPart.php:230
+#, fuzzy
+msgid "Network Cards"
+msgstr "Сеть"
+
+#: modules/inventory/inventory/ajaxViewPart.php:470
 #: modules/inventory/inventory/i18n_labels.php:108
 msgid "Network Type"
 msgstr ""
@@ -601,21 +750,33 @@ msgstr ""
 msgid "Network card and configuration list"
 msgstr "Список сетевых карт и настроек"
 
-#: modules/inventory/infoPackage.inc.php:184
+#: modules/inventory/infoPackage.inc.php:196
 msgid "Network tab for a computer"
 msgstr "Вкладке Сеть для компьютера"
 
-#: modules/inventory/infoPackage.inc.php:163
+#: modules/inventory/infoPackage.inc.php:175
 msgid "Network tab for a computer in a group"
 msgstr "Вкладка Сеть для компьютера в группе"
 
-#: modules/inventory/infoPackage.inc.php:145
+#: modules/inventory/infoPackage.inc.php:151
 msgid "Network tab for a group"
 msgstr "Вкладка Сеть для группы"
 
 #: modules/inventory/inventory/ajaxIncoming.php:82
 msgid "New computer"
 msgstr "Новый компьютер"
+
+#: modules/inventory/inventory/ajaxViewPart.php:468
+msgid "No"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:140
+msgid "No record found for this period."
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:147
+msgid "No record found."
+msgstr ""
 
 #: modules/inventory/inventory/i18n_labels.php:109
 msgid "Num"
@@ -625,6 +786,10 @@ msgstr "Чис"
 msgid "Number"
 msgstr "Число"
 
+#: modules/inventory/inventory/ajaxViewPart.php:493
+msgid "OS"
+msgstr ""
+
 #: modules/inventory/inventory/i18n_labels.php:111
 msgid "OS Serial Number"
 msgstr ""
@@ -633,6 +798,7 @@ msgstr ""
 msgid "Only new computers"
 msgstr "Только новые компьютеры"
 
+#: modules/inventory/inventory/ajaxViewPart.php:494
 #: modules/inventory/inventory/i18n_labels.php:114
 msgid "Operating System"
 msgstr ""
@@ -643,6 +809,10 @@ msgstr ""
 
 #: modules/inventory/inventory/i18n_labels.php:112
 msgid "Os Installation Date"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:234
+msgid "Others"
 msgstr ""
 
 #: modules/inventory/inventory/i18n_labels.php:115
@@ -658,11 +828,17 @@ msgstr "Период"
 msgid "Phone"
 msgstr "Телефон"
 
+#: modules/inventory/inventory/ajaxViewPart.php:144
+msgid ""
+"Please ensure you are running GLPI with FusionInventory plugin and "
+"FusionInventory Agent on this client."
+msgstr ""
+
 #: modules/inventory/inventory/i18n_labels.php:117
 msgid "Point Type"
 msgstr ""
 
-#: modules/inventory/infoPackage.inc.php:63
+#: modules/inventory/infoPackage.inc.php:64
 #: modules/inventory/inventory/i18n_labels.php:118
 #: modules/inventory/inventory/localSidebar.php:41
 msgid "Port"
@@ -676,7 +852,7 @@ msgstr ""
 msgid "Port list"
 msgstr "Список портов"
 
-#: modules/inventory/infoPackage.inc.php:65
+#: modules/inventory/infoPackage.inc.php:66
 #: modules/inventory/inventory/i18n_labels.php:120
 #: modules/inventory/inventory/localSidebar.php:42
 msgid "Printer"
@@ -698,6 +874,10 @@ msgstr ""
 msgid "Processor Type"
 msgstr ""
 
+#: modules/inventory/inventory/ajaxViewPart.php:226
+msgid "Processors"
+msgstr ""
+
 #: modules/inventory/inventory/i18n_labels.php:124
 msgid "Product Name"
 msgstr ""
@@ -710,7 +890,8 @@ msgstr ""
 msgid "Product Version"
 msgstr ""
 
-#: modules/inventory/inventory/view.php:78
+#: modules/inventory/inventory/ajaxViewPart.php:121
+#: modules/inventory/inventory/view.php:74
 msgid "Properties"
 msgstr "Свойства"
 
@@ -718,7 +899,7 @@ msgstr "Свойства"
 msgid "Ram Total"
 msgstr ""
 
-#: modules/inventory/includes/html.php:102
+#: modules/inventory/includes/html.php:117
 msgid "Refresh"
 msgstr "Обновить"
 
@@ -730,7 +911,7 @@ msgstr ""
 msgid "Registered Name"
 msgstr ""
 
-#: modules/inventory/infoPackage.inc.php:75
+#: modules/inventory/infoPackage.inc.php:76
 #: modules/inventory/inventory/localSidebar.php:34
 msgid "Registry"
 msgstr "Реестр"
@@ -739,15 +920,15 @@ msgstr "Реестр"
 msgid "Registry keys/values list"
 msgstr "Список ключей реестра/значений"
 
-#: modules/inventory/infoPackage.inc.php:190
+#: modules/inventory/infoPackage.inc.php:202
 msgid "Registry tab for a computer"
 msgstr "Вкладке Реестр для компьютера"
 
-#: modules/inventory/infoPackage.inc.php:169
+#: modules/inventory/infoPackage.inc.php:181
 msgid "Registry tab for a computer in a group"
 msgstr "Вкладка Реестр для компьютера в группе"
 
-#: modules/inventory/infoPackage.inc.php:151
+#: modules/inventory/infoPackage.inc.php:157
 msgid "Registry tab for a group"
 msgstr "Вкладка Реестр для группы"
 
@@ -767,6 +948,17 @@ msgstr "Сектор"
 msgid "Serial"
 msgstr "Серийный номер"
 
+#: modules/inventory/inventory/ajaxViewPart.php:499
+#, fuzzy
+msgid "Serial Number"
+msgstr "Число"
+
+#: modules/inventory/inventory/ajaxViewPart.php:515
+msgid "Service Pack"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:478
+#: modules/inventory/inventory/ajaxViewPart.php:502
 #: modules/inventory/inventory/i18n_labels.php:133
 msgid "Size"
 msgstr "Размер"
@@ -800,7 +992,7 @@ msgstr ""
 msgid "Smb Version"
 msgstr ""
 
-#: modules/inventory/infoPackage.inc.php:73
+#: modules/inventory/infoPackage.inc.php:74
 #: modules/inventory/inventory/i18n_labels.php:141
 #: modules/inventory/inventory/localSidebar.php:31
 msgid "Software"
@@ -810,23 +1002,28 @@ msgstr "ПрограммноеОбеспечение"
 msgid "Software list"
 msgstr "Список программного обеспечения"
 
-#: modules/inventory/infoPackage.inc.php:181
+#: modules/inventory/infoPackage.inc.php:193
 msgid "Software tab for a computer"
 msgstr "Вкладке ПО для компьютера"
 
-#: modules/inventory/infoPackage.inc.php:160
+#: modules/inventory/infoPackage.inc.php:172
 msgid "Software tab for a computer in a group"
 msgstr "Вкладка ПО для компьютера в группе"
 
-#: modules/inventory/infoPackage.inc.php:142
+#: modules/inventory/infoPackage.inc.php:148
 msgid "Software tab for a group"
 msgstr "Вкладка ПО для группы"
 
-#: modules/inventory/infoPackage.inc.php:67
+#: modules/inventory/infoPackage.inc.php:68
 #: modules/inventory/inventory/i18n_labels.php:142
 #: modules/inventory/inventory/localSidebar.php:43
 msgid "Sound"
 msgstr "Звук"
+
+#: modules/inventory/inventory/ajaxViewPart.php:233
+#, fuzzy
+msgid "Sound Cards"
+msgstr "Список звуков"
 
 #: modules/inventory/inventory/body.php:53
 msgid "Sound list"
@@ -848,11 +1045,13 @@ msgstr ""
 msgid "Standard Type"
 msgstr ""
 
+#: modules/inventory/inventory/ajaxViewPart.php:518
 #: modules/inventory/inventory/i18n_labels.php:147
 msgid "State"
 msgstr "Состояние"
 
-#: modules/inventory/infoPackage.inc.php:69
+#: modules/inventory/infoPackage.inc.php:70
+#: modules/inventory/inventory/ajaxViewPart.php:228
 #: modules/inventory/inventory/i18n_labels.php:148
 #: modules/inventory/inventory/localSidebar.php:44
 msgid "Storage"
@@ -862,8 +1061,37 @@ msgstr "Хранение"
 msgid "Storage medium list"
 msgstr "Список накопителей"
 
+#: modules/inventory/infoPackage.inc.php:166
+#, fuzzy
+msgid "Storage tab for a computer in a group"
+msgstr "Вкладка ПО для компьютера в группе"
+
+#: modules/inventory/infoPackage.inc.php:145
+#, fuzzy
+msgid "Storage tab for a group"
+msgstr "Вкладка ПО для группы"
+
 #: modules/inventory/inventory/i18n_labels.php:149
 msgid "Subnet Mask"
+msgstr ""
+
+#: modules/inventory/infoPackage.inc.php:52
+#: modules/inventory/inventory/body.php:41
+msgid "Summary"
+msgstr ""
+
+#: modules/inventory/infoPackage.inc.php:163
+#, fuzzy
+msgid "Summary tab for a computer in a group"
+msgstr "Вкладка ПО для компьютера в группе"
+
+#: modules/inventory/infoPackage.inc.php:142
+#, fuzzy
+msgid "Summary tab for a group"
+msgstr "Вкладка ПО для группы"
+
+#: modules/inventory/inventory/ajaxViewPart.php:480
+msgid "Supplier"
 msgstr ""
 
 #: modules/inventory/inventory/i18n_labels.php:150
@@ -882,6 +1110,10 @@ msgstr "Система"
 msgid "Time"
 msgstr "Время"
 
+#: modules/inventory/inventory/ajaxViewPart.php:511
+msgid "Today"
+msgstr ""
+
 #: modules/inventory/inventory/i18n_labels.php:154
 msgid "Total Mem"
 msgstr ""
@@ -890,6 +1122,7 @@ msgstr ""
 msgid "Total Space"
 msgstr ""
 
+#: modules/inventory/inventory/ajaxViewPart.php:501
 #: modules/inventory/inventory/i18n_labels.php:156
 msgid "Type"
 msgstr "Тип"
@@ -898,10 +1131,23 @@ msgstr "Тип"
 msgid "Type Machine"
 msgstr ""
 
+#: modules/inventory/inventory/ajaxViewPart.php:143
+msgid "Unable to detect any Antivirus software on this machine."
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:519
+msgid "Unknown"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:523
+msgid "Up-to-date"
+msgstr ""
+
 #: modules/inventory/inventory/i18n_labels.php:158
 msgid "Used"
 msgstr "Использованный"
 
+#: modules/inventory/inventory/ajaxViewPart.php:508
 #: modules/inventory/inventory/i18n_labels.php:159
 msgid "User"
 msgstr "Пользователь"
@@ -910,17 +1156,20 @@ msgstr "Пользователь"
 msgid "VRAM Size"
 msgstr ""
 
+#: modules/inventory/inventory/ajaxViewPart.php:122
 #: modules/inventory/inventory/i18n_labels.php:161
 #: modules/inventory/inventory/inventory_diff.php:76
 #: modules/inventory/inventory/inventory_diff.php:101
-#: modules/inventory/inventory/view.php:79
+#: modules/inventory/inventory/view.php:75
 msgid "Value"
 msgstr "Значение"
 
+#: modules/inventory/inventory/ajaxViewPart.php:484
 #: modules/inventory/inventory/i18n_labels.php:162
 msgid "Vendor"
 msgstr "Производитель"
 
+#: modules/inventory/inventory/ajaxViewPart.php:486
 #: modules/inventory/inventory/i18n_labels.php:163
 msgid "Version"
 msgstr "Версия"
@@ -929,14 +1178,14 @@ msgstr "Версия"
 msgid "Video card list"
 msgstr "Список видео карт"
 
-#: modules/inventory/infoPackage.inc.php:71
+#: modules/inventory/infoPackage.inc.php:72
 #: modules/inventory/inventory/localSidebar.php:45
 msgid "VideoCard"
 msgstr "ВидеоКарта"
 
-#: modules/inventory/infoPackage.inc.php:78
+#: modules/inventory/infoPackage.inc.php:79
 #: modules/inventory/inventory/ajaxIncoming.php:84
-#: modules/inventory/inventory/ajaxViewPart.php:245
+#: modules/inventory/inventory/ajaxViewPart.php:438
 msgid "View"
 msgstr "Вид"
 
@@ -948,9 +1197,18 @@ msgstr "Просмотр различий с предыдущей инвента
 msgid "VolumeName"
 msgstr "НазваниеРазмера"
 
+#: modules/inventory/inventory/ajaxViewPart.php:483
+#, fuzzy
+msgid "Warranty End Date"
+msgstr "ОкончаниеГарантии"
+
 #: modules/inventory/inventory/i18n_labels.php:165
 msgid "WarrantyEnd"
 msgstr "ОкончаниеГарантии"
+
+#: modules/inventory/inventory/ajaxViewPart.php:516
+msgid "Windows Key"
+msgstr ""
 
 #: modules/inventory/inventory/i18n_labels.php:166
 msgid "Workgroup"
@@ -959,6 +1217,14 @@ msgstr "Рабочая группа"
 #: modules/inventory/inventory/i18n_labels.php:167
 msgid "WorkingDate"
 msgstr "ДатаРаботы"
+
+#: modules/inventory/inventory/ajaxViewPart.php:504
+msgid "Writer"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:467
+msgid "Yes"
+msgstr ""
 
 #: modules/inventory/inventory/graphs.php:47
 msgid "back"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-26 01:00+0200\n"
+"POT-Creation-Date: 2013-09-04 17:49+0200\n"
 "PO-Revision-Date: 2013-03-21 09:54+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Spanish (Spain) (http://transifex.mandriva.com/projects/p/"
@@ -17,13 +17,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-
-#: modules/imaging/imaging/bootmenu.php:340
-msgid ""
-"\"Preselected choice\" and \"Preselected choice on WOL\" values will be used "
-"to set the default imaging client menu item to run, if no choice is made by "
-"the user on the client side prior to the menu timeout."
-msgstr ""
 
 #: modules/imaging/imaging/configure.php:47
 #, php-format
@@ -548,7 +541,7 @@ msgid "Diskless Linux command line access"
 msgstr ""
 
 #: modules/imaging/infoPackage.inc.php:228
-msgid "Display a group of computers"
+msgid "Display computers group content"
 msgstr ""
 
 #: modules/imaging/imaging/addimage.php:137
@@ -766,6 +759,11 @@ msgstr ""
 msgid "Generate Menu"
 msgstr ""
 
+#: modules/imaging/imaging/tabs.php:126 modules/imaging/imaging/tabs.php:215
+#, php-format
+msgid "Generating boot menu... Please wait or reload the page %shere%s.<br/>"
+msgstr ""
+
 #: modules/imaging/imaging/configure.php:550
 #, php-format
 msgid "Hard disk number: %d"
@@ -823,16 +821,17 @@ msgstr ""
 msgid "Identifier"
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:129
+#: modules/imaging/imaging/bootmenu.php:343
+#: modules/imaging/imaging/bootmenu.php:345
 msgid ""
-"If the generation runs for more than 5 minutes, please reset the synchro "
-"state of this computer's menu."
+"If the default entry is an image creation or restore, the following network "
+"boots will fall back to the first menu entry."
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:218
+#: modules/imaging/imaging/tabs.php:129 modules/imaging/imaging/tabs.php:218
 msgid ""
-"If the synchro runs for more than 5 minutes, please reset the synchro state "
-"of this computer's menu."
+"If the processing exceeds 5 minutes, please reset the synchro state of this "
+"computer."
 msgstr ""
 
 #: modules/imaging/manage/service_show_used.php:145
@@ -1137,12 +1136,6 @@ msgstr ""
 
 #: modules/imaging/includes/post_install_script.php:28
 msgid "Not selected"
-msgstr ""
-
-#: modules/imaging/imaging/bootmenu.php:343
-msgid ""
-"Once the operation triggered by a choice is successful, the preselected "
-"choice will default to the first item of the boot menu."
 msgstr ""
 
 #: modules/imaging/includes/post_install_script.php:66
@@ -1547,13 +1540,6 @@ msgid ""
 "background."
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:126
-#, php-format
-msgid ""
-"The boot menu generation is currently running, please wait or reload the "
-"page %shere%s.<br/>"
-msgstr ""
-
 #: modules/imaging/imaging/configure.php:396
 #, php-format
 msgid "The computer %s has correctly been unregistered from imaging"
@@ -1602,20 +1588,6 @@ msgstr ""
 #: modules/imaging/imaging/tabs.php:145
 #: modules/imaging/includes/ajaxcommon.inc.php:126
 msgid "The registering in the imaging server has failed."
-msgstr ""
-
-#: modules/imaging/imaging/tabs.php:215
-#, php-format
-msgid ""
-"The synchro is currently running, please wait or reload the page %shere%s."
-"<br/>"
-msgstr ""
-
-#: modules/imaging/imaging/bootmenu.php:345
-msgid ""
-"Then for each computer, once the operation triggered by a choice is "
-"successful, the preselected choice will default to the first item of the "
-"boot menu."
 msgstr ""
 
 #: modules/imaging/includes/includes.php:35
@@ -1670,8 +1642,7 @@ msgid "This target's boot menu is up-to-date."
 msgstr ""
 
 #: modules/imaging/includes/post_install_script.php:88
-msgid ""
-"This value is already taken, please only put one element for each order."
+msgid "This value is already used."
 msgstr ""
 
 #: modules/imaging/imaging/ajaxLogs.php:90
@@ -1730,6 +1701,12 @@ msgstr ""
 msgid "Uptime: "
 msgstr ""
 
+#: modules/imaging/imaging/bootmenu.php:340
+msgid ""
+"Use \"Preselected choice\" or \"Preselected choice on WOL\" to define the "
+"default boot entry."
+msgstr ""
+
 #: modules/imaging/imaging/bootmenu.php:182
 #: modules/imaging/manage/ajaxConfiguration.php:183
 #: modules/imaging/manage/bootmenu_edit.php:101
@@ -1745,9 +1722,8 @@ msgstr ""
 
 #: modules/imaging/imaging/bootmenu.php:345
 msgid ""
-"When you modify the \"Preselected choice\" or \"Preselected choice on WOL\" "
-"values on a profile, those values will be set on all the boot menu of the "
-"computers owned by the profile."
+"When changing \"Preselected choice\" or \"Preselected choice on WOL\" entry, "
+"this value will be set on all the computers in this group."
 msgstr ""
 
 #: modules/imaging/imaging/configure.php:369

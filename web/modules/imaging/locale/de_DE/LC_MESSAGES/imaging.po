@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-26 01:00+0200\n"
+"POT-Creation-Date: 2013-09-04 17:49+0200\n"
 "PO-Revision-Date: 2013-04-15 07:43+0000\n"
 "Last-Translator: Maik Wagner <maikwagner@yahoo.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/"
@@ -18,16 +18,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-
-#: modules/imaging/imaging/bootmenu.php:340
-msgid ""
-"\"Preselected choice\" and \"Preselected choice on WOL\" values will be used "
-"to set the default imaging client menu item to run, if no choice is made by "
-"the user on the client side prior to the menu timeout."
-msgstr ""
-"\"Vorausgewählte Wahl\" und \"Vorausgewählte Wahl bei WOL\" Werte werden "
-"verwendet um den Standard-Imagingclient-Menüeintrag zum starten zu setzen "
-"sofern keine Wahl des Benutzers auf Clientseite vor dem Menütimeout erfolgt."
 
 #: modules/imaging/imaging/configure.php:47
 #, php-format
@@ -563,7 +553,7 @@ msgstr "Plattenloser Linux Befehlszeilenzugang"
 
 #: modules/imaging/infoPackage.inc.php:228
 #, fuzzy
-msgid "Display a group of computers"
+msgid "Display computers group content"
 msgstr "Eine Gruppe von Rechnern anzeigen"
 
 #: modules/imaging/imaging/addimage.php:137
@@ -785,6 +775,13 @@ msgstr "Geniereren von ISO für <strong>%s</strong>"
 msgid "Generate Menu"
 msgstr "Menü generieren"
 
+#: modules/imaging/imaging/tabs.php:126 modules/imaging/imaging/tabs.php:215
+#, fuzzy, php-format
+msgid "Generating boot menu... Please wait or reload the page %shere%s.<br/>"
+msgstr ""
+"Die Bootmenüerstellung läuft gerade, bitte warten Sie oder laden Sie %shier"
+"%s die Seite neu.<br/>"
+
 #: modules/imaging/imaging/configure.php:550
 #, php-format
 msgid "Hard disk number: %d"
@@ -842,20 +839,18 @@ msgstr "Erfolg bei Identifikation"
 msgid "Identifier"
 msgstr "Identifier"
 
-#: modules/imaging/imaging/tabs.php:129
-#, fuzzy
+#: modules/imaging/imaging/bootmenu.php:343
+#: modules/imaging/imaging/bootmenu.php:345
 msgid ""
-"If the generation runs for more than 5 minutes, please reset the synchro "
-"state of this computer's menu."
+"If the default entry is an image creation or restore, the following network "
+"boots will fall back to the first menu entry."
 msgstr ""
-"Wenn die Erstellung schon seit mehr als 5 Minuten läuft, setzen Sie bitte "
-"den Synchrostatus für das Menü dieses Rechners zurück."
 
-#: modules/imaging/imaging/tabs.php:218
+#: modules/imaging/imaging/tabs.php:129 modules/imaging/imaging/tabs.php:218
 #, fuzzy
 msgid ""
-"If the synchro runs for more than 5 minutes, please reset the synchro state "
-"of this computer's menu."
+"If the processing exceeds 5 minutes, please reset the synchro state of this "
+"computer."
 msgstr ""
 "Wenn die Synchro schon seit mehr als 5 Minuten läuft, setzen Sie bitte den "
 "Synchrostatus für das Menü dieses Rechners zurück."
@@ -1169,15 +1164,6 @@ msgstr "Nicht genug Informationen"
 #: modules/imaging/includes/post_install_script.php:28
 msgid "Not selected"
 msgstr "Nicht ausgewählt"
-
-#: modules/imaging/imaging/bootmenu.php:343
-#, fuzzy
-msgid ""
-"Once the operation triggered by a choice is successful, the preselected "
-"choice will default to the first item of the boot menu."
-msgstr ""
-"Sobald der Vorgang, der durch eine Auswahl gestartet wird, wird die "
-"vorausgewählte Wahl der erste Eintrag des Bootmenüs sein."
 
 #: modules/imaging/includes/post_install_script.php:66
 msgid "Order"
@@ -1591,15 +1577,6 @@ msgstr ""
 "Die ISO-Imageerstellung von Master <strong>%s</strong> wurde im Hintergrund "
 "gestartet."
 
-#: modules/imaging/imaging/tabs.php:126
-#, php-format
-msgid ""
-"The boot menu generation is currently running, please wait or reload the "
-"page %shere%s.<br/>"
-msgstr ""
-"Die Bootmenüerstellung läuft gerade, bitte warten Sie oder laden Sie %shier"
-"%s die Seite neu.<br/>"
-
 #: modules/imaging/imaging/configure.php:396
 #, php-format
 msgid "The computer %s has correctly been unregistered from imaging"
@@ -1661,26 +1638,6 @@ msgstr "Das Profil kann nicht in das Imaging-Module registriert werden."
 msgid "The registering in the imaging server has failed."
 msgstr "Das Registrieren im Imagingserver ist fehlgeschlagen."
 
-#: modules/imaging/imaging/tabs.php:215
-#, php-format
-msgid ""
-"The synchro is currently running, please wait or reload the page %shere%s."
-"<br/>"
-msgstr ""
-"Synchro läuft momentan, bitte warten Sie oder laden Sie die Seite neu %shere"
-"%s.<br/> "
-
-#: modules/imaging/imaging/bootmenu.php:345
-#, fuzzy
-msgid ""
-"Then for each computer, once the operation triggered by a choice is "
-"successful, the preselected choice will default to the first item of the "
-"boot menu."
-msgstr ""
-"Dann wird für jeden Rechner, sobald der Vorgang, der durch eine Auswahl "
-"gestartet wird, das vorausgewählte erste Item des Bootmenüs standardmäßig "
-"gesetzt."
-
 #: modules/imaging/includes/includes.php:35
 msgid "There was an error (this is a default message)."
 msgstr "Es ist ein Fehler aufgetreten (dies ist eine Standard-Nachricht)."
@@ -1737,11 +1694,8 @@ msgstr "Das Bootmenü des Ziels ist aktuell."
 
 #: modules/imaging/includes/post_install_script.php:88
 #, fuzzy
-msgid ""
-"This value is already taken, please only put one element for each order."
-msgstr ""
-"Dieser Wert wird bereits verwendet, bitte setzen Sie nur ein Element für "
-"jede einzelne Ordnung."
+msgid "This value is already used."
+msgstr "Dieses Image existiert bereits."
 
 #: modules/imaging/imaging/ajaxLogs.php:90
 #: modules/imaging/manage/ajaxLogs.php:109
@@ -1809,6 +1763,16 @@ msgstr "Den NT-Bootloader aktualisieren falls die Festplatte verändert wurde"
 msgid "Uptime: "
 msgstr "Uptime: "
 
+#: modules/imaging/imaging/bootmenu.php:340
+#, fuzzy
+msgid ""
+"Use \"Preselected choice\" or \"Preselected choice on WOL\" to define the "
+"default boot entry."
+msgstr ""
+"Wenn Sie die \"Vorausgewählte Wahl\" und \"Vorausgewählte Wahl bei WOL\" "
+"Werte in einem Profil modifizieren, werden diese Werte auf allen Bootmenüs "
+"der Computer im Profil gesetzt."
+
 #: modules/imaging/imaging/bootmenu.php:182
 #: modules/imaging/manage/ajaxConfiguration.php:183
 #: modules/imaging/manage/bootmenu_edit.php:101
@@ -1823,10 +1787,10 @@ msgid "View image log"
 msgstr "Imagelog anschauen"
 
 #: modules/imaging/imaging/bootmenu.php:345
+#, fuzzy
 msgid ""
-"When you modify the \"Preselected choice\" or \"Preselected choice on WOL\" "
-"values on a profile, those values will be set on all the boot menu of the "
-"computers owned by the profile."
+"When changing \"Preselected choice\" or \"Preselected choice on WOL\" entry, "
+"this value will be set on all the computers in this group."
 msgstr ""
 "Wenn Sie die \"Vorausgewählte Wahl\" und \"Vorausgewählte Wahl bei WOL\" "
 "Werte in einem Profil modifizieren, werden diese Werte auf allen Bootmenüs "
@@ -1934,3 +1898,53 @@ msgstr "tftp"
 #: modules/imaging/includes/ajaxcommon.inc.php:103
 msgid "the entity itself"
 msgstr "die Einheit selbst"
+
+#~ msgid ""
+#~ "\"Preselected choice\" and \"Preselected choice on WOL\" values will be "
+#~ "used to set the default imaging client menu item to run, if no choice is "
+#~ "made by the user on the client side prior to the menu timeout."
+#~ msgstr ""
+#~ "\"Vorausgewählte Wahl\" und \"Vorausgewählte Wahl bei WOL\" Werte werden "
+#~ "verwendet um den Standard-Imagingclient-Menüeintrag zum starten zu setzen "
+#~ "sofern keine Wahl des Benutzers auf Clientseite vor dem Menütimeout "
+#~ "erfolgt."
+
+#, fuzzy
+#~ msgid ""
+#~ "If the generation runs for more than 5 minutes, please reset the synchro "
+#~ "state of this computer's menu."
+#~ msgstr ""
+#~ "Wenn die Erstellung schon seit mehr als 5 Minuten läuft, setzen Sie bitte "
+#~ "den Synchrostatus für das Menü dieses Rechners zurück."
+
+#, fuzzy
+#~ msgid ""
+#~ "Once the operation triggered by a choice is successful, the preselected "
+#~ "choice will default to the first item of the boot menu."
+#~ msgstr ""
+#~ "Sobald der Vorgang, der durch eine Auswahl gestartet wird, wird die "
+#~ "vorausgewählte Wahl der erste Eintrag des Bootmenüs sein."
+
+#~ msgid ""
+#~ "The synchro is currently running, please wait or reload the page %shere%s."
+#~ "<br/>"
+#~ msgstr ""
+#~ "Synchro läuft momentan, bitte warten Sie oder laden Sie die Seite neu "
+#~ "%shere%s.<br/> "
+
+#, fuzzy
+#~ msgid ""
+#~ "Then for each computer, once the operation triggered by a choice is "
+#~ "successful, the preselected choice will default to the first item of the "
+#~ "boot menu."
+#~ msgstr ""
+#~ "Dann wird für jeden Rechner, sobald der Vorgang, der durch eine Auswahl "
+#~ "gestartet wird, das vorausgewählte erste Item des Bootmenüs standardmäßig "
+#~ "gesetzt."
+
+#, fuzzy
+#~ msgid ""
+#~ "This value is already taken, please only put one element for each order."
+#~ msgstr ""
+#~ "Dieser Wert wird bereits verwendet, bitte setzen Sie nur ein Element für "
+#~ "jede einzelne Ordnung."

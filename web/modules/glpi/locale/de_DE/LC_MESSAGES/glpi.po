@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-26 01:00+0200\n"
+"POT-Creation-Date: 2013-09-04 17:49+0200\n"
 "PO-Revision-Date: 2013-06-25 13:01+0000\n"
 "Last-Translator: Maik Wagner <maikwagner@yahoo.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/"
@@ -123,18 +123,19 @@ msgstr "Controller"
 msgid "Create a group"
 msgstr ""
 
+#: modules/glpi/infoPackage.inc.php:43
+#, fuzzy
+msgid "Create static group from OS distribution dashboard widget (GLPI)"
+msgstr "Statische Gruppe vom Dashboard (GLPI) erstellen "
+
 #: modules/glpi/infoPackage.inc.php:38
 #, fuzzy
-msgid "Create static group from antivirus dashboard (GLPI)"
+msgid "Create static group from antivirus dashboard widget (GLPI)"
 msgstr "Statische Gruppe vom Dashboard (GLPI) erstellen "
 
 #: modules/glpi/infoPackage.inc.php:33
-msgid "Create static group from dashboard (GLPI)"
-msgstr "Statische Gruppe vom Dashboard (GLPI) erstellen "
-
-#: modules/glpi/infoPackage.inc.php:43
 #, fuzzy
-msgid "Create static group from dashboard OS Repartition plugin (GLPI)"
+msgid "Create static group from dashboard widgets (GLPI)"
 msgstr "Statische Gruppe vom Dashboard (GLPI) erstellen "
 
 #: modules/glpi/glpi/ajaxViewPart.php:250
@@ -502,6 +503,10 @@ msgstr "Writer"
 #: modules/glpi/glpi/ajaxViewPart.php:210
 msgid "Yes"
 msgstr "Ja"
+
+#, fuzzy
+#~ msgid "Create static group from dashboard OS Repartition plugin (GLPI)"
+#~ msgstr "Statische Gruppe vom Dashboard (GLPI) erstellen "
 
 #~ msgid ""
 #~ "More than %s days:\n"
