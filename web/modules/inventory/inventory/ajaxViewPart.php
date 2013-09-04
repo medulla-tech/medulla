@@ -48,7 +48,7 @@ function display_part($part, $get, $simpleTableParts, $displayNavBar = True, $pa
     }
 
     global $maxperpage;
-    $end = 50; // There is no need for multipaging in these parts
+    $end = 100; // There is no need for multipaging in these parts
 
     $hide_win_updates = (isset($get['hide_win_updates'])) ? $get['hide_win_updates'] : False;
     $hide_win_updates = (strtolower($hide_win_updates) == 'true') ? True : False;

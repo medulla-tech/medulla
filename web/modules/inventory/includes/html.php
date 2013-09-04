@@ -163,10 +163,9 @@ class AjaxFilterInventory extends AjaxFilter {
                    * Update div
                    */
                   updateSearch<?php echo $this->formid ?> = function() {
-                      new Ajax.Updater('<?php echo $this->divid; ?>',
-                              '<?php echo $this->url; ?>filter=' + document.Form<?php echo $this->formid ?>.param.value + '&date=' + document.Form<?php echo $this->formid ?>.date.value + '<?php echo $this->params ?>&software_filter=' + software_filter + '&hide_win_updates=' + hide_win_updates,
-                              {asynchronous: true, evalScripts: true}
-                      );
+                      jQuery('#<?php echo $this->divid; ?>').load(
+                              '<?php echo $this->url; ?>filter=' + document.Form<?php echo $this->formid ?>.param.value + '&date=' + document.Form<?php echo $this->formid ?>.date.value + '<?php echo $this->params ?>&software_filter=' + software_filter + '&hide_win_updates=' + hide_win_updates
+                              );
 
         <?php
         if ($this->refresh) {
@@ -182,7 +181,7 @@ class AjaxFilterInventory extends AjaxFilter {
                    */
                   updateSearchParam<?php echo $this->formid ?> = function(filter, start, end) {
                       clearTimers<?php echo $this->formid ?>();
-                      new Ajax.Updater('<?php echo $this->divid; ?>', '<?php echo $this->url; ?>filter=' + filter + '&start=' + start + '&end=' + end + '&date=' + document.Form<?php echo $this->formid ?>.date.value + '<?php echo $this->params ?>&software_filter=' + software_filter + '&hide_win_updates=' + hide_win_updates, {asynchronous: true, evalScripts: true});
+                      jQuery('#<?php echo $this->divid; ?>').load('<?php echo $this->url; ?>filter=' + filter + '&start=' + start + '&end=' + end + '&date=' + document.Form<?php echo $this->formid ?>.date.value + '<?php echo $this->params ?>&software_filter=' + software_filter + '&hide_win_updates=' + hide_win_updates);
 
         <?php
         if ($this->refresh) {
