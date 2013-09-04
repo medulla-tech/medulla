@@ -99,6 +99,12 @@ class RpcProxy(RpcProxyI):
 #        ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid)
         return xmlrpcCleanup(Inventory().getLastMachineInventoryPart(ctx, part, params))
 
+    def getLastMachineInventoryPart2(self, part, params):
+        ctx = self.currentContext
+#        uuid = name # TODO : get uuid from name, or something like that...
+#        ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid)
+        return xmlrpcCleanup(Inventory().getLastMachineInventoryPart2(ctx, part, params))
+
     def getLastMachineInventoryFull(self, params):
         ctx = self.currentContext
 #        if not ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid):
