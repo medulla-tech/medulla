@@ -168,7 +168,7 @@ Please fill the field with the right port."
   ${EndIF}
   ${EndIF}
 
-  StrCpy $0 "$EXEDIR\${INVENTORY_AGENT_EXE} /S /acceptlicense /runnow /server=http://$INV_SERVER:$INV_SERVER_PORT"
+  StrCpy $0 "$EXEDIR\${INVENTORY_AGENT_EXE} /S /runnow /server=http://$INV_SERVER:$INV_SERVER_PORT"
   DetailPrint "Running $0"
   nsExec::ExecToLog $0
   DetailPrint ""
