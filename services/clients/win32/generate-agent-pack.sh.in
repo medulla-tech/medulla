@@ -35,7 +35,7 @@ cd "`dirname $0`"
 # Latest version of agents
 ssh_ver=2.0.3
 vnc_ver=2.0.2
-inv_ver=2.2.6-1
+inv_ver=2.3.0-1
 
 # Compute filenames
 ssh_file=pulse2-secure-agent-${ssh_ver}.exe
