@@ -38,7 +38,7 @@ from pulse2.utils import same_network, Singleton, isUUID
 from mmc.plugins.dyngroup.config import DGConfig
 
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, \
-        Integer, ForeignKey, asc, or_, desc, func, not_
+        Integer, ForeignKey, or_, desc, func, not_
 from sqlalchemy.orm import create_session, mapper
 import sqlalchemy.databases
 
@@ -235,8 +235,18 @@ class Inventory(DyngroupDatabaseHelper):
 
         # Join on entity table for location support
         join_query = join_query.join(self.table['hasEntity']).join(self.table['Entity']).join(self.inventory)
-        # Custom Table join
-        #join_query = join_query.join(self.table['hasCustom']).join(self.table['Custom']).join(self.inventory)
+
+        # Getting requested cols
+        requested_cols = set([col[0] for col in Inventory().config.display])
+
+        # Avoid doing joins if search is not requested
+        if 'hostname' in pattern and pattern['hostname'].strip():
+            if 'displayName' in requested_cols:
+                join_query = join_query.outerjoin(self.table['hasCustom']).outerjoin(self.table['Custom'])
+            if set(['macAddress','ipHostNumber','subnetMask']) & requested_cols:
+                join_query = join_query.outerjoin(self.table['hasNetwork'], self.table['hasNetwork'].c.machine == Machine.id).outerjoin(self.table['Network'], self.table['Network'].c.id == self.table['hasNetwork'].c.network)
+            if set(['os','user','type','domain','fullname']) & requested_cols:
+                join_query = join_query.outerjoin(self.table['hasHardware'], self.table['hasHardware'].c.machine == Machine.id).outerjoin(self.table['Hardware'], self.table['Hardware'].c.id == self.table['hasHardware'].c.hardware)
 
         query = session.query(Machine).select_from(join_query).filter(query_filter)
         # end of dyngroups
@@ -263,9 +273,29 @@ class Inventory(DyngroupDatabaseHelper):
                 date_mod = pattern['red']['date_mod']
                 red = pattern['red']['red']
                 query = query.filter(date_mod < red)
-            if 'hostname' in pattern:
-                query = query.filter(self.machine.c.Name.like("%" + pattern['hostname'] + "%"))
-                #query = query.filter(self.table['Custom'].c.Comments.like("%" + pattern['hostname'] + "%"))
+            if 'hostname' in pattern and pattern['hostname'].strip():
+                clauses = []
+                # Filtering on hostname
+                clauses.append(self.machine.c.Name.like("%" + pattern['hostname'] + "%"))
+                # Filtering on description
+                if 'displayName' in requested_cols:
+                    clauses.append(self.table['Custom'].c.Comments.like("%" + pattern['hostname'] + "%"))
+                # Filtering on Network params
+                if set(['macAddress','ipHostNumber','subnetMask']) & requested_cols:
+                    clauses.append(self.table['Network'].c.MACAddress.like("%" + pattern['hostname'] + "%"))
+                    clauses.append(self.table['Network'].c.IP.like("%" + pattern['hostname'] + "%"))
+                    clauses.append(self.table['Network'].c.SubnetMask.like("%" + pattern['hostname'] + "%"))
+                # Filtering on Hardware params
+                if set(['os','user','type','domain','fullname']) & requested_cols:
+                    clauses.append(self.table['Hardware'].c.OperatingSystem.like("%" + pattern['hostname'] + "%"))
+                    clauses.append(self.table['Hardware'].c.User.like("%" + pattern['hostname'] + "%"))
+                    clauses.append(self.table['Hardware'].c.Type.like("%" + pattern['hostname'] + "%"))
+                    clauses.append(self.table['Hardware'].c.Workgroup.like("%" + pattern['hostname'] + "%"))
+                # Entity filtering
+                if 'entity' in requested_cols:
+                    clauses.append(self.table['Entity'].c.Label.like("%" + pattern['hostname'] + "%"))
+                # Combining clauses and filetering
+                query = query.filter(or_(*clauses))
             if 'filter' in pattern:
                 query = query.filter(self.machine.c.Name.like("%" + pattern['filter'] + "%"))
             if 'uuid' in pattern:
@@ -319,10 +349,13 @@ class Inventory(DyngroupDatabaseHelper):
                     else:
                         return query
 
+        # Grouping by machine.id
+        query = query.group_by(self.machine.c.id)
+
         if count:
             return query.count()
         else:
-            return query.group_by(self.machine.c.id)
+            return query
 
     def getTotalComputerCount(self):
         session = create_session()
