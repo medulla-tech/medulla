@@ -92,6 +92,8 @@ ALTER TABLE  `Memory` CHANGE  `Size`  `Size` INT( 11 ) NULL DEFAULT NULL ;
 ALTER TABLE  `User` CHANGE  `id`  `id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT ;
 ALTER TABLE  `UserEntities` CHANGE  `fk_User`  `fk_User` INT( 11 ) UNSIGNED NOT NULL ;
 ALTER TABLE  `UserEntities` CHANGE  `fk_Entity`  `fk_Entity` INT( 11 ) UNSIGNED NOT NULL DEFAULT  '1';
+ALTER TABLE  `hasEntity` CHANGE  `entity`  `entity` INT( 11 ) UNSIGNED NOT NULL DEFAULT  '1';
+ALTER TABLE  `hasEntity` CHANGE  `inventory`  `inventory` INT( 11 ) UNSIGNED NOT NULL ;
 
 
 DELETE FROM Version;
