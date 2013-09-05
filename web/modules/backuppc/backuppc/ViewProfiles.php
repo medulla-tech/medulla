@@ -21,7 +21,6 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 
@@ -37,8 +36,8 @@ require_once("modules/backuppc/includes/xmlrpc.php");
 $response = get_backup_profiles();
 
 // Defining element actions
-$editAction = new ActionItem(_T("Edit profile", "backuppc"),"EditBackupProfile","edit","profile",  "backuppc", "backuppc");
-$delAction = new ActionPopupItem(_T("Delete profile", "backuppc"),"deleteProfile","delete",       "profile", "backuppc", "backuppc");
+$editAction = new ActionItem(_T("Edit profile", "backuppc"), "EditBackupProfile", "edit", "profile", "backuppc", "backuppc");
+$delAction = new ActionPopupItem(_T("Delete profile", "backuppc"), "deleteProfile", "delete", "profile", "backuppc", "backuppc");
 $emptyAction = new EmptyActionItem();
 
 $profile_names = array();
@@ -47,16 +46,16 @@ $delActions = array();
 $params = array();
 
 foreach ($response as $profile)
-    $profile_names[$profile['id']] = $profile['profilename'];
+    $profile_names[$profile['id']] = _T($profile['profilename'], 'backuppc');
 
 asort($profile_names);
 
 
-foreach ($profile_names as $pid => $pname){
-    $params[] = array('id' => $pid,'type' => 0);
+foreach ($profile_names as $pid => $pname) {
+    $params[] = array('id' => $pid, 'type' => 0);
     // Delete only for user defined profiles [id>=1000]
     //$editActions[] = ($pid<1000)?$emptyAction:$editAction;
-    $delActions[] = ($pid<1000)?$emptyAction:$delAction;
+    $delActions[] = ($pid < 1000) ? $emptyAction : $delAction;
 }
 
 $profile_names = array_values($profile_names);
@@ -65,7 +64,7 @@ if ($profile_names) {
 
     $count = count($profile_names);
 
-    
+
     $n = new OptimizedListInfos($profile_names, _T("Fileset", "backuppc"));
 
     $n->setItemCount($count);
@@ -83,12 +82,12 @@ if ($profile_names) {
 
 // =========== PERIOD PROFILES =================================
 
-print "<br/><h2>"._T('Schedules','backuppc')."</h2>";
+print "<br/><h2>" . _T('Schedules', 'backuppc') . "</h2>";
 
 $response = get_period_profiles();
 
-$editAction = new ActionItem(_T("Edit profile", "backuppc"),"EditPeriodProfile","edit","profile",         "backuppc", "backuppc");
-$delAction = new ActionPopupItem(_T("Delete profile", "backuppc"),"deleteProfile","delete",               "profile", "backuppc", "backuppc");
+$editAction = new ActionItem(_T("Edit profile", "backuppc"), "EditPeriodProfile", "edit", "profile", "backuppc", "backuppc");
+$delAction = new ActionPopupItem(_T("Delete profile", "backuppc"), "deleteProfile", "delete", "profile", "backuppc", "backuppc");
 
 $profile_names = array();
 $editActions = array();
@@ -96,26 +95,26 @@ $delActions = array();
 $params = array();
 
 foreach ($response as $profile)
-    $profile_names[$profile['id']] = $profile['profilename'];
+    $profile_names[$profile['id']] = _T($profile['profilename'], 'backuppc');
 
 asort($profile_names);
 
 
-foreach ($profile_names as $pid => $pname){
-    $params[] = array('id' => $pid,'type' => 1);
+foreach ($profile_names as $pid => $pname) {
+    $params[] = array('id' => $pid, 'type' => 1);
     // Delete and edit only for user defined profiles [id>=1000]
     //$editActions[] = ($pid<1000)? $emptyAction:$editAction;
-    $delActions[] = ($pid<1000)? $emptyAction:$delAction;
+    $delActions[] = ($pid < 1000) ? $emptyAction : $delAction;
 }
 
 $profile_names = array_values($profile_names);
-    
+
 
 if ($profile_names) {
 
     $count = count($profile_names);
 
-    
+
     $n = new OptimizedListInfos($profile_names, _T("Schedule", "backuppc"));
 
     $n->setItemCount($count);
@@ -131,17 +130,16 @@ if ($profile_names) {
 }
 
 
-_T('Linux (User files)','backuppc');
-_T('Linux (Whole / drive)','backuppc');
-_T('Mac OS X (User files)','backuppc');
-_T('Mac OS X (Whole / drive)','backuppc');
-_T('Windows 7/Vista (User files)','backuppc');
-_T('Windows 7/Vista (Whole C: Drive)','backuppc');
-_T('Windows XP (User files)','backuppc');
-_T('Windows XP (Whole C: Drive)','backuppc');
-_T('Daytime','backuppc');
-_T('Nightly','backuppc');
-
+_T('Linux (User files)', 'backuppc');
+_T('Linux (Whole / drive)', 'backuppc');
+_T('Mac OS X (User files)', 'backuppc');
+_T('Mac OS X (Whole / drive)', 'backuppc');
+_T('Windows 7/Vista (User files)', 'backuppc');
+_T('Windows 7/Vista (Whole C: Drive)', 'backuppc');
+_T('Windows XP (User files)', 'backuppc');
+_T('Windows XP (Whole C: Drive)', 'backuppc');
+_T('Daytime', 'backuppc');
+_T('Nightly', 'backuppc');
 ?>
 
 <style>
