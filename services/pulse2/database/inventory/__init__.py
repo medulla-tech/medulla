@@ -235,6 +235,8 @@ class Inventory(DyngroupDatabaseHelper):
 
         # Join on entity table for location support
         join_query = join_query.join(self.table['hasEntity']).join(self.table['Entity']).join(self.inventory)
+        # Custom Table join
+        #join_query = join_query.join(self.table['hasCustom']).join(self.table['Custom']).join(self.inventory)
 
         query = session.query(Machine).select_from(join_query).filter(query_filter)
         # end of dyngroups
@@ -263,6 +265,7 @@ class Inventory(DyngroupDatabaseHelper):
                 query = query.filter(date_mod < red)
             if 'hostname' in pattern:
                 query = query.filter(self.machine.c.Name.like("%" + pattern['hostname'] + "%"))
+                #query = query.filter(self.table['Custom'].c.Comments.like("%" + pattern['hostname'] + "%"))
             if 'filter' in pattern:
                 query = query.filter(self.machine.c.Name.like("%" + pattern['filter'] + "%"))
             if 'uuid' in pattern:
@@ -334,7 +337,8 @@ class Inventory(DyngroupDatabaseHelper):
         session = create_session()
         query = self.__machinesOnlyQuery(ctx, pattern, session)
 
-        query = query.order_by(asc(self.machine.c.Name))
+        # Disable ORDERBY machine name
+        #query = query.order_by(asc(self.machine.c.Name))
 
         if 'max' in pattern:
             if pattern['max'] != -1:
@@ -1175,6 +1179,7 @@ class Inventory(DyngroupDatabaseHelper):
             clauses = []
             for column in self.__getattribute__(part.lower()).c: # All columns of current tab
                 clauses.append(column.like('%'+params['filter']+'%'))
+                #clauses.append(column.like('%'+params['filter']+'%')) # self.table['Custom'].c.Comments.like("%" + pattern['hostname'] + "%")
             # Don't forget to search into Machine's Name
             clauses.append(Machine.Name.like('%'+params['filter']+'%'))
             query = query.filter(or_(*clauses))
@@ -2047,7 +2052,7 @@ class Machine(object):
         # Basic info
         ret = [ False, {'cn':[self.Name], 'objectUUID':[toUUID(self.id)]} ]
         # Get requested cols to display SET
-        requested_cols = {col[0] for col in Inventory().config.display}
+        requested_cols = set([col[0] for col in Inventory().config.display])
         # If comment is requested, we request it
         if 'displayName' in requested_cols:
             comment = Inventory().getMachineCustom(ctx, {'uuid':toUUID(self.id)})
@@ -2055,14 +2060,14 @@ class Machine(object):
                 ret[1]['displayName'] = [comment[0][1][0]['Comments']]
                 ret[1]['location'] = [comment[0][1][0]['Location']]
         # If a network field is requested
-        if {'macAddress','ipHostNumber','subnetMask'} & requested_cols:
+        if set(['macAddress','ipHostNumber','subnetMask']) & requested_cols:
             net = Inventory().getMachineNetwork(ctx, {'uuid':toUUID(self.id)})
             if len(net):
                 net = net[0]
                 (ret[1]['macAddress'], ret[1]['ipHostNumber'], ret[1]['subnetMask'],  ret[1]['networkUuids']) = orderIpAdresses(net[1])
                 ret[1]['networkUuids'] = map(lambda x:'UUID'+str(x),ret[1]['networkUuids'])
         # If a hardware table field is requested
-        if {'os','user','type','domain','fullname'} & requested_cols:
+        if set(['os','user','type','domain','fullname']) & requested_cols:
             hardware = Inventory().getLastMachineInventoryPart(ctx, "Hardware", {'uuid':toUUID(self.id)})
             if len(hardware):
                 ret[1]['os'] = hardware[0][1][0]['OperatingSystem']
