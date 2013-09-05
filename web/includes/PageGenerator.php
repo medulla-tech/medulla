@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 require ("FormGenerator.php");
 
 /**
@@ -38,17 +37,15 @@ function getUniqId() {
  */
 function echo_obj($obj) {
 
-   if (is_object($obj)){
-        echo $obj->__toString();
-   }
-   else if(is_bool($obj)) {
-        if($obj)
+    if (is_object($obj)) {
+        echo nl2br($obj->__toString());
+    } else if (is_bool($obj)) {
+        if ($obj)
             echo '<img src="img/common/icn_yes.gif" alt="yes" />';
-   }
-   else {
-        echo ($obj);
-   }
-
+    }
+    else {
+        echo nl2br($obj);
+    }
 }
 
 /**
@@ -57,6 +54,7 @@ function echo_obj($obj) {
  * @see EditInPlace
  */
 class ActionEncapsulator {
+
     function ActionEncapsulator() {
 
     }
@@ -64,56 +62,56 @@ class ActionEncapsulator {
     function __toString() {
         return "default action encapsulator";
     }
+
 }
 
 /**
  * AutoGenerate an EditInPlace text
  * based on scriptaculous javascript
  */
-class EditInPlace extends ActionEncapsulator{
+class EditInPlace extends ActionEncapsulator {
 
     var $origText;
     var $url;
     var $param;
 
-    function EditInPlace($origText,$url,$param) {
+    function EditInPlace($origText, $url, $param) {
         $this->origText = $origText;
         $this->url = $url;
         $this->param = $param;
-
     }
 
     function __toString() {
 
         $param = array();
 
-        foreach ($this->param as $key=>$value) {
+        foreach ($this->param as $key => $value) {
             $param[] = "$key=$value";
         }
 
-        $urlparam = implode("&",$param);
+        $urlparam = implode("&", $param);
 
-        if ($this->origText== '') {
-            $this->origText= "n/a";
+        if ($this->origText == '') {
+            $this->origText = "n/a";
         }
 
         $idx = getUniqId();
 
         $str = '';
-        $str.= "<span id=\"id$idx\" class=\"editinplace\">".$this->origText."</span>";
+        $str.= "<span id=\"id$idx\" class=\"editinplace\">" . $this->origText . "</span>";
 
 
-       /*$str .= '<script type="text/javascript">';
-       $str .= "     new Ajax.InPlaceEditor($('id$idx'),'".$this->url."', {\n
-                okButton: true, cancelLink: true, cancelText : '"._('Cancel')."',
-                highlightcolor : '#FF9966',
-                ajaxOptions: {method: 'get' },\n
-                callback: function(form,value) {\n
-                    return '$urlparam&value='+value\n
-                }\n
-            });\n
-        </script>\n"; ===> CLASS NOT USED */
-      return $str;
+        /* $str .= '<script type="text/javascript">';
+          $str .= "     new Ajax.InPlaceEditor($('id$idx'),'".$this->url."', {\n
+          okButton: true, cancelLink: true, cancelText : '"._('Cancel')."',
+          highlightcolor : '#FF9966',
+          ajaxOptions: {method: 'get' },\n
+          callback: function(form,value) {\n
+          return '$urlparam&value='+value\n
+          }\n
+          });\n
+          </script>\n"; ===> CLASS NOT USED */
+        return $str;
     }
 
 }
@@ -122,6 +120,7 @@ class EditInPlace extends ActionEncapsulator{
  *  class for action in various application
  */
 class ActionItem {
+
     var $desc;
     var $action;
     var $classCss;
@@ -137,14 +136,18 @@ class ActionItem {
      * @param $paramString add "&$param=" at the very end of the url
      */
     function ActionItem($desc, $action, $classCss, $paramString, $module = null, $submod = null, $tab = null, $mod = false) {
-        $this->desc=$desc;
-        $this->action=$action;
-        $this->classCss=$classCss;
-        $this->paramString=$paramString;
-        if ($module == null) $this->module = $_GET["module"];
-        else $this->module = $module;
-        if ($submod == null) $this->submod = $_GET["submod"];
-        else $this->submod = $submod;
+        $this->desc = $desc;
+        $this->action = $action;
+        $this->classCss = $classCss;
+        $this->paramString = $paramString;
+        if ($module == null)
+            $this->module = $_GET["module"];
+        else
+            $this->module = $module;
+        if ($submod == null)
+            $this->submod = $_GET["submod"];
+        else
+            $this->submod = $submod;
         $this->tab = $tab;
         $this->mod = $mod;
         $this->path = $this->module . "/" . $this->submod . "/" . $this->action;
@@ -159,7 +162,7 @@ class ActionItem {
      *  display "displayWithRight" if you have correct right
      */
     function display($param, $extraParams = array()) {
-        if (hasCorrectAcl($this->module,$this->submod,$this->action)) {
+        if (hasCorrectAcl($this->module, $this->submod, $this->action)) {
             $this->displayWithRight($param, $extraParams);
         } else {
             $this->displayWithNoRight($param, $extraParams);
@@ -174,10 +177,12 @@ class ActionItem {
         if (is_array($extraParams)) {
             $extraParams['mod'] = $this->mod;
         }
-        echo "<li class=\"".$this->classCss."\">";
-        if (is_array($extraParams) & !empty($extraParams)) $urlChunk = $this->buildUrlChunk($extraParams);
-        else $urlChunk = "&amp;" . $this->paramString."=" . rawurlencode($extraParams);
-        echo "<a title=\"".$this->desc."\" href=\"" . urlStr($this->path) . $urlChunk . "\">&nbsp;</a>";
+        echo "<li class=\"" . $this->classCss . "\">";
+        if (is_array($extraParams) & !empty($extraParams))
+            $urlChunk = $this->buildUrlChunk($extraParams);
+        else
+            $urlChunk = "&amp;" . $this->paramString . "=" . rawurlencode($extraParams);
+        echo "<a title=\"" . $this->desc . "\" href=\"" . urlStr($this->path) . $urlChunk . "\">&nbsp;</a>";
         echo "</li>";
     }
 
@@ -185,8 +190,8 @@ class ActionItem {
      * display function if you don't have the right for this action
      */
     function displayWithNoRight($param, $extraParams = array()) {
-        echo "<li class=\"".$this->classCss."\" style=\"opacity: 0.30;\">";
-        echo "<a title=\"".$this->desc."\" href=\"#\" onclick='return false;'>&nbsp;</a>";
+        echo "<li class=\"" . $this->classCss . "\" style=\"opacity: 0.30;\">";
+        echo "<a title=\"" . $this->desc . "\" href=\"#\" onclick='return false;'>&nbsp;</a>";
         echo "</li>";
     }
 
@@ -194,18 +199,18 @@ class ActionItem {
      * transform $obj param in link for this action
      */
     function encapsulate($obj, $extraParams = Array()) {
-        if (hasCorrectAcl($this->module,$this->submod,$this->action)) {
+        if (hasCorrectAcl($this->module, $this->submod, $this->action)) {
             if (is_array($extraParams) & !empty($extraParams)) {
                 $urlChunk = $this->buildUrlChunk($extraParams);
             } else {
-                $urlChunk = "&amp;" . $this->paramString."=" . rawurlencode($obj);
+                $urlChunk = "&amp;" . $this->paramString . "=" . rawurlencode($obj);
             }
-            $str= "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action . $urlChunk ."\">";
+            $str = "<a title=\"" . $this->desc . "\" href=\"main.php?module=" . $this->module . "&amp;submod=" . $this->submod . "&amp;action=" . $this->action . $urlChunk . "\">";
             $str.= trim($obj);
             $str.= "</a>";
             return $str;
         } else {
-            $str= "<a title=\"".$this->desc."\" href=\"#\">";
+            $str = "<a title=\"" . $this->desc . "\" href=\"#\">";
             $str.= "$obj";
             $str.=" </a>";
             return $str;
@@ -217,23 +222,23 @@ class ActionItem {
      */
     function buildUrlChunk($arr) {
         $urlChunk = "";
-        foreach($arr as $option => $value) {
+        foreach ($arr as $option => $value) {
             $urlChunk .= "&amp;" . $option . "=" . urlencode($value);
         }
         return $urlChunk;
     }
-
 
     /**
      * display help (not use for the moment)
      */
     function strHelp() {
         $str = "";
-        $str.= "<li class=\"".$this->classCss."\">";
-        $str.= "<a title=\"".$this->desc."\" href=\"#\">";
-        $str.= " </a>".$this->desc."</li>";
+        $str.= "<li class=\"" . $this->classCss . "\">";
+        $str.= "<a title=\"" . $this->desc . "\" href=\"#\">";
+        $str.= " </a>" . $this->desc . "</li>";
         return $str;
     }
+
 }
 
 /**
@@ -245,7 +250,7 @@ class ActionItem {
 class ActionPopupItem extends ActionItem {
 
     private $_displayType = 0;
-    
+
     function ActionPopupItem($desc, $action, $classCss, $paramString, $module = null, $submod = null, $tab = null, $width = 300, $mod = false) {
         $this->ActionItem($desc, $action, $classCss, $paramString, $module, $submod, $tab, $mod);
         $this->setWidth($width);
@@ -259,10 +264,10 @@ class ActionPopupItem extends ActionItem {
         $this->width = $width;
     }
 
-    function displayType($type){
+    function displayType($type) {
         $this->_displayType = $type;
     }
-    
+
     function displayWithRight($param, $extraParams = array()) {
         /* Add special param for actionPopupItem */
         if (is_array($extraParams)) {
@@ -271,11 +276,11 @@ class ActionPopupItem extends ActionItem {
         if (is_array($extraParams) & !empty($extraParams)) {
             $urlChunk = $this->buildUrlChunk($extraParams);
         } else {
-            $urlChunk = "&amp;" . $this->paramString."=" . rawurlencode($param);
+            $urlChunk = "&amp;" . $this->paramString . "=" . rawurlencode($param);
         }
-        echo "<li class=\"".$this->classCss."\">";
-        echo "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=" . $this->action . $urlChunk . "\"";
-        echo " onclick=\"PopupWindow(event,'main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=" .$this->action . $urlChunk . "', " . $this->width . "); return false;\">&nbsp;</a>";
+        echo "<li class=\"" . $this->classCss . "\">";
+        echo "<a title=\"" . $this->desc . "\" href=\"main.php?module=" . $this->module . "&amp;submod=" . $this->submod . "&amp;action=" . $this->action . $urlChunk . "\"";
+        echo " onclick=\"PopupWindow(event,'main.php?module=" . $this->module . "&amp;submod=" . $this->submod . "&amp;action=" . $this->action . $urlChunk . "', " . $this->width . "); return false;\">&nbsp;</a>";
         echo "</li>";
     }
 
@@ -283,14 +288,15 @@ class ActionPopupItem extends ActionItem {
         if (is_array($extraParams) & !empty($extraParams)) {
             $urlChunk = $this->buildUrlChunk($extraParams);
         } else {
-            $urlChunk = "&amp;" . $this->paramString."=" . rawurlencode($obj);
+            $urlChunk = "&amp;" . $this->paramString . "=" . rawurlencode($obj);
         }
-        $str= "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action . $urlChunk . "\" ";
-        $str.= "  onclick=\"showPopup(event,'main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action . $urlChunk . "', " . $this->width . "); return false;\">";
+        $str = "<a title=\"" . $this->desc . "\" href=\"main.php?module=" . $this->module . "&amp;submod=" . $this->submod . "&amp;action=" . $this->action . $urlChunk . "\" ";
+        $str.= "  onclick=\"showPopup(event,'main.php?module=" . $this->module . "&amp;submod=" . $this->submod . "&amp;action=" . $this->action . $urlChunk . "', " . $this->width . "); return false;\">";
         $str.= "$obj";
         $str.=" </a>";
         return $str;
     }
+
 }
 
 /**
@@ -303,7 +309,7 @@ class ActionConfirmItem extends ActionItem {
 
     var $_displayType = 0;
     var $_confirmMessage = '';
-    
+
     function ActionConfirmItem($desc, $action, $classCss, $paramString, $module = null, $submod = null, $confirmMessage, $tab = null, $width = 300, $mod = false) {
         $this->ActionItem($desc, $action, $classCss, $paramString, $module, $submod, $tab, $mod);
         //$this->setWidth($width);
@@ -318,11 +324,11 @@ class ActionConfirmItem extends ActionItem {
         if (is_array($extraParams) & !empty($extraParams)) {
             $urlChunk = $this->buildUrlChunk($extraParams);
         } else {
-            $urlChunk = "&amp;" . $this->paramString."=" . rawurlencode($param);
+            $urlChunk = "&amp;" . $this->paramString . "=" . rawurlencode($param);
         }
-        echo "<li class=\"".$this->classCss."\">";
-        echo "<a title=\"".$this->desc."\" href=\"#\" ";
-        echo " onclick=\"displayConfirmationPopup('".$this->_confirmMessage."', 'main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=" . $this->action . $urlChunk."')\" ";
+        echo "<li class=\"" . $this->classCss . "\">";
+        echo "<a title=\"" . $this->desc . "\" href=\"#\" ";
+        echo " onclick=\"displayConfirmationPopup('" . $this->_confirmMessage . "', 'main.php?module=" . $this->module . "&amp;submod=" . $this->submod . "&amp;action=" . $this->action . $urlChunk . "')\" ";
         echo ">&nbsp;</a>";
         echo "</li>";
     }
@@ -332,6 +338,7 @@ class ActionConfirmItem extends ActionItem {
 class EmptyActionItem extends ActionItem {
 
     function EmptyActionItem() {
+
     }
 
     function display($param = null, $extraParams = Array()) {
@@ -344,24 +351,24 @@ class EmptyActionItem extends ActionItem {
  *  class who maintain array presentation of information
  */
 class ListInfos extends HtmlElement {
-    var $arrInfo; /**< main list */
+
+    var $arrInfo; /*     * < main list */
     var $extraInfo;
     var $paramInfo;
     var $name;
-    var $arrAction; /**< list of possible action */
+    var $arrAction; /*     * < list of possible action */
     var $end, $start;
-
-    var $description; /**< list of description (not an obligation) */
-    var $col_width; /**< Contains the columns width */
-    var $tooltip; /**< Contains the tooltip for column label */
+    var $description; /*     * < list of description (not an obligation) */
+    var $col_width; /*     * < Contains the columns width */
+    var $tooltip; /*     * < Contains the tooltip for column label */
 
     /**
      * constructor
      * @param $tab must be an array of array
      */
     function ListInfos($tab, $description = "", $extranavbar = "", $width = "", $tooltip = "") {
-        $this->arrInfo=$tab;
-        $this->arrAction=array();
+        $this->arrInfo = $tab;
+        $this->arrAction = array();
         $this->description[] = $description;
         $this->extranavbar = $extranavbar;
         $this->initVar();
@@ -405,7 +412,6 @@ class ListInfos extends HtmlElement {
         $this->arrAction[] = &$objActionItemArray;
     }
 
-
     /**
      *  add an array String to display
      *  @param $arrString an Array String to display
@@ -413,7 +419,7 @@ class ListInfos extends HtmlElement {
      *  @param width Table column width
      *  @param tooltip Tooltip to display on the column name
      */
-    function addExtraInfo($arrString, $description= "", $width="", $tooltip = "") {
+    function addExtraInfo($arrString, $description = "", $width = "", $tooltip = "") {
         assert(is_array($arrString));
         $this->extraInfo[] = &$arrString;
         $this->description[] = $description;
@@ -452,11 +458,11 @@ class ListInfos extends HtmlElement {
      */
     function initVar() {
 
-        $this->name="Elements";
+        $this->name = "Elements";
 
         global $conf;
 
-	$this->maxperpage = (isset($_REQUEST['maxperpage'])) ? $_REQUEST['maxperpage'] : $conf['global']['maxperpage'];
+        $this->maxperpage = (isset($_REQUEST['maxperpage'])) ? $_REQUEST['maxperpage'] : $conf['global']['maxperpage'];
 
         if (!isset($_GET["start"])) {
             if (!isset($_POST["start"])) {
@@ -476,19 +482,18 @@ class ListInfos extends HtmlElement {
         $this->setNavBar(new SimpleNavBar($this->start, $this->end, count($this->arrInfo), $this->extranavbar));
     }
 
-
     /**
      *  set the name of the array (for CSS)
      */
     function setName($name) {
-        $this->name=$name;
+        $this->name = $name;
     }
 
     /**
      *  set the cssclass of a row
      */
     function setCssClass($name) {
-        $this->cssClass=$name;
+        $this->cssClass = $name;
     }
 
     /**
@@ -497,13 +502,13 @@ class ListInfos extends HtmlElement {
     function setCssClasses($a_names) {
         $this->cssClasses = $a_names;
     }
-    
+
     /**
      * set cssclass for each MainAction column
      */
     function setMainActionClasses($classes) {
         $this->mainActionClasses = $classes;
-    }    
+    }
 
     /**
      * Set the ListInfos navigation bar
@@ -519,7 +524,8 @@ class ListInfos extends HtmlElement {
      * @param $navbar: if $navbar is true the navigation bar is displayed
      */
     function displayNavbar($navbar) {
-        if ($navbar) $this->navbar->display();
+        if ($navbar)
+            $this->navbar->display();
     }
 
     /**
@@ -534,16 +540,16 @@ class ListInfos extends HtmlElement {
          * Management of the numbers "start" and "end" to display depending on the maxperpage set in the selector
          * These numbers are more user-friendly and do not begin with 0
          */
-        echo $this->name." <strong>".min($this->start + 1, count($this->arrInfo)) . "</strong>\n ";
-        echo _("to")." <strong>".min($this->end + 1, count($this->arrInfo))."</strong>\n";
+        echo $this->name . " <strong>" . min($this->start + 1, count($this->arrInfo)) . "</strong>\n ";
+        echo _("to") . " <strong>" . min($this->end + 1, count($this->arrInfo)) . "</strong>\n";
 
-        printf (_(" - Total <b>%s </b>")."\n",count($this->arrInfo));
+        printf(_(" - Total <b>%s </b>") . "\n", count($this->arrInfo));
         /* Display page counter only when useful */
         if (count($this->arrInfo) > $this->maxperpage) {
-            echo "("._("page")." ";
+            echo "(" . _("page") . " ";
             printf("%.0f", ($this->end + 1) / $this->maxperpage);
             echo " / ";
-            $pages = intval((count($this->arrInfo) / $this->maxperpage)) ;
+            $pages = intval((count($this->arrInfo) / $this->maxperpage));
             if ((count($this->arrInfo) % $this->maxperpage > 0) && (count($this->arrInfo) > $this->maxperpage))
                 $pages++;
             else if ((count($this->arrInfo) > 0) && ($pages < 1))
@@ -561,9 +567,9 @@ class ListInfos extends HtmlElement {
      */
     function drawMainAction($idx) {
         if (!empty($this->cssClass)) {
-            echo "<td class=\"".$this->cssClass."\">";
+            echo "<td class=\"" . $this->cssClass . "\">";
         } else if (!empty($this->mainActionClasses)) {
-            echo "<td class=\"".$this->mainActionClasses[$idx]."\">";
+            echo "<td class=\"" . $this->mainActionClasses[$idx] . "\">";
         } else {
             echo "<td>";
         }
@@ -585,7 +591,7 @@ class ListInfos extends HtmlElement {
         $first = False;
         foreach ($this->description as $key => $desc) {
             if (isset($this->col_width[$key])) {
-                $width_styl = 'width: '.$this->col_width[$key].';';
+                $width_styl = 'width: ' . $this->col_width[$key] . ';';
             } else {
                 $width_styl = '';
             }
@@ -594,9 +600,8 @@ class ListInfos extends HtmlElement {
                 if (!isset($this->first_elt_padding)) {
                     $this->first_elt_padding = 32;
                 }
-                echo "<td style=\"$width_styl\"><span style=\" padding-left: ".$this->first_elt_padding."px;\">$desc</span></td>";
+                echo "<td style=\"$width_styl\"><span style=\" padding-left: " . $this->first_elt_padding . "px;\">$desc</span></td>";
                 $first = True;
-
             } else {
                 /* Draw table header line */
                 /* Add a tooltip to the column name if there is one set */
@@ -611,7 +616,7 @@ class ListInfos extends HtmlElement {
             }
         }
 
-        if (count($this->arrAction)!=0) { //if we have actions
+        if (count($this->arrAction) != 0) { //if we have actions
             if (!empty($this->col_width)) {
                 $width_styl = $this->col_width[count($this->col_width) - 1];
             }
@@ -621,17 +626,17 @@ class ListInfos extends HtmlElement {
 
         echo "</tr></thead>";
 
-        for ( $idx = $this->start; ($idx < count($this->arrInfo)) && ($idx <= $this->end); $idx++) {
+        for ($idx = $this->start; ($idx < count($this->arrInfo)) && ($idx <= $this->end); $idx++) {
             if (($this->start - $idx) % 2) {
                 echo "<tr";
                 if (!empty($this->cssClasses[$idx])) {
-                    echo " class=\"".$this->cssClasses[$idx]."\"";
+                    echo " class=\"" . $this->cssClasses[$idx] . "\"";
                 }
                 echo ">";
             } else {
                 echo "<tr class=\"alternate";
                 if (!empty($this->cssClasses[$idx])) {
-                    echo " ".$this->cssClasses[$idx];
+                    echo " " . $this->cssClasses[$idx];
                 }
                 echo "\">";
             }
@@ -641,9 +646,9 @@ class ListInfos extends HtmlElement {
                 $this->drawMainAction($idx);
             } else {
                 if (!empty($this->cssClass)) {
-                    echo "<td class=\"".$this->cssClass."\">";
+                    echo "<td class=\"" . $this->cssClass . "\">";
                 } else if (!empty($this->mainActionClasses)) {
-                    echo "<td class=\"".$this->mainActionClasses[$idx]."\">";
+                    echo "<td class=\"" . $this->mainActionClasses[$idx] . "\">";
                 } else {
                     echo "<td>";
                 }
@@ -654,15 +659,14 @@ class ListInfos extends HtmlElement {
             if ($this->extraInfo)
                 foreach ($this->extraInfo as $arrayTMP) {
                     echo "<td>";
-                    if(trim($arrayTMP[$idx]) != "") {
+                    if (trim($arrayTMP[$idx]) != "") {
                         echo_obj($arrayTMP[$idx]);
-                    }
-                    else {
+                    } else {
                         echo "&nbsp;";
                     }
                     echo "</td>";
                 }
-            if (count($this->arrAction)!=0) {
+            if (count($this->arrAction) != 0) {
                 echo "<td class=\"action\">";
                 echo "<ul class=\"action\">";
                 foreach ($this->arrAction as $objActionItem) {
@@ -688,19 +692,18 @@ class ListInfos extends HtmlElement {
             /* Code disabled because not used and make javavascript errors */
             print '<script type="text/javascript"><!--';
             print "jQuery('#help').html('');\n";
-            print '$(\'help\').innerHTML+=\'<ul>\''."\n";
-            print '$(\'help\').innerHTML+=\'<li><h3>Aide contextuelle</h3></li>\''."\n";
+            print '$(\'help\').innerHTML+=\'<ul>\'' . "\n";
+            print '$(\'help\').innerHTML+=\'<li><h3>Aide contextuelle</h3></li>\'' . "\n";
             foreach ($this->arrAction as $objActionItem) {
                 $content = $objActionItem->strHelp();
-                print '$(\'help\').innerHTML+=\''.$content.'\';'."\n";
+                print '$(\'help\').innerHTML+=\'' . $content . '\';' . "\n";
             }
-            print '$(\'help\').innerHTML+=\'</ul>\''."\n";
+            print '$(\'help\').innerHTML+=\'</ul>\'' . "\n";
             print '--></script>';
         }
-
     }
 
-    function display($navbar = 1, $header =1 ) {
+    function display($navbar = 1, $header = 1) {
         if (!isset($this->paramInfo)) {
             $this->paramInfo = $this->arrInfo;
         }
@@ -709,8 +712,8 @@ class ListInfos extends HtmlElement {
         }
         $this->drawTable($navbar);
     }
-}
 
+}
 
 /**
  * A modified version of Listinfos
@@ -732,7 +735,7 @@ class OptimizedListInfos extends ListInfos {
      *  init class' vars
      */
     function initVar() {
-        $this->name="Elements";
+        $this->name = "Elements";
         global $conf;
         if (!isset($_GET["start"])) {
             if (!isset($_POST["start"])) {
@@ -756,7 +759,7 @@ class OptimizedListInfos extends ListInfos {
     /**
      *  draw number of page etc...
      */
-    function drawHeader($navbar=1) {
+    function drawHeader($navbar = 1) {
         $count = $this->getItemCount();
         $this->displayNavbar($navbar);
         echo "<p class=\"listInfos\">";
@@ -765,16 +768,16 @@ class OptimizedListInfos extends ListInfos {
          * Management of the numbers "start" and "end" to display depending on the maxperpage set in the selector
          * These numbers are more user-friendly and do not begin with 0
          */
-        echo $this->name." <strong>".min($this->startreal + 1, $count) . "</strong>\n ";
-        echo _("to")." <strong>".min($this->endreal + 1, $count)."</strong>\n";
+        echo $this->name . " <strong>" . min($this->startreal + 1, $count) . "</strong>\n ";
+        echo _("to") . " <strong>" . min($this->endreal + 1, $count) . "</strong>\n";
 
-        printf (_(" - Total <b>%s </b>")."\n", $count);
+        printf(_(" - Total <b>%s </b>") . "\n", $count);
         /* Display page counter only when useful */
         if ($count > $this->maxperpage) {
-            echo "("._("page")." ";
+            echo "(" . _("page") . " ";
             printf("%.0f", ($this->endreal + 1) / $this->maxperpage);
             echo " / ";
-            $pages = intval(($count / $this->maxperpage)) ;
+            $pages = intval(($count / $this->maxperpage));
             if (($count % $this->maxperpage > 0) && ($count > $this->maxperpage))
                 $pages++;
             else if (($count > 0) && ($pages < 1))
@@ -786,22 +789,23 @@ class OptimizedListInfos extends ListInfos {
         }
         echo "</p>";
     }
+
 }
 
 /**
  * specific class for UserDisplay
  */
 class UserInfos extends OptimizedListInfos {
+
     var $css = array(); //css for first column
 
     function drawMainAction($idx) {
-        echo "<td class=\"".$this->css[$idx]."\">";
+        echo "<td class=\"" . $this->css[$idx] . "\">";
         echo $this->arrAction[0]->encapsulate($this->arrInfo[$idx], $this->paramInfo[$idx]);
         echo "</td>";
     }
 
 }
-
 
 /**
  *
@@ -820,7 +824,7 @@ class SimpleNavBar extends HtmlElement {
      */
     function SimpleNavBar($curstart, $curend, $itemcount, $extra = "", $max = "", $paginator = false) {
         global $conf;
-        if(isset($max) && $max != "") {
+        if (isset($max) && $max != "") {
             $this->max = $max;
         } else {
             $this->max = $conf["global"]["maxperpage"];
@@ -843,13 +847,13 @@ class SimpleNavBar extends HtmlElement {
         if ($this->curstart != 0 || ($this->curstart - $this->max > 0)) {
             $start = $this->curstart - $this->max;
             $end = $this->curstart - 1;
-            echo "<li class=\"previousList\"><a href=\"".$_SERVER["SCRIPT_NAME"];
+            echo "<li class=\"previousList\"><a href=\"" . $_SERVER["SCRIPT_NAME"];
             /* FIXME: maybe we can get rid of $_GET["filter"] ? */
-            printf("?module=%s&amp;submod=%s&amp;action=%s&amp;start=%d&amp;end=%d&amp;filter=%s%s", $_GET["module"],$_GET["submod"],$_GET["action"],$start, $end, $_GET["filter"], $this->extra);
-            echo "\">"._("Previous")."</a></li>\n";
+            printf("?module=%s&amp;submod=%s&amp;action=%s&amp;start=%d&amp;end=%d&amp;filter=%s%s", $_GET["module"], $_GET["submod"], $_GET["action"], $start, $end, $_GET["filter"], $this->extra);
+            echo "\">" . _("Previous") . "</a></li>\n";
         }
 
-        if($this->paginator) {
+        if ($this->paginator) {
             // Display the maxperpage selector
             $this->displaySelectMax();
         }
@@ -858,12 +862,12 @@ class SimpleNavBar extends HtmlElement {
             $start = $this->curend + 1;
             $end = $this->curend + $this->max;
             $filter = isset($_GET["filter"]) ? $_GET["filter"] : "";
-            echo "<li class=\"nextList\"><a href=\"".$_SERVER["SCRIPT_NAME"];
-            printf("?module=%s&amp;submod=%s&amp;action=%s&amp;start=%d&amp;end=%d&amp;filter=%s%s", $_GET["module"],$_GET["submod"],$_GET["action"],$start, $end, $filter, $this->extra);
-            echo "\">"._("Next")."</a></li>\n";
+            echo "<li class=\"nextList\"><a href=\"" . $_SERVER["SCRIPT_NAME"];
+            printf("?module=%s&amp;submod=%s&amp;action=%s&amp;start=%d&amp;end=%d&amp;filter=%s%s", $_GET["module"], $_GET["submod"], $_GET["action"], $start, $end, $filter, $this->extra);
+            echo "\">" . _("Next") . "</a></li>\n";
         }
 
-        if($this->paginator) {
+        if ($this->paginator) {
             // Display a border at the left of the "Next" link
             $this->displayNextListBorder();
         }
@@ -877,10 +881,11 @@ class SimpleNavBar extends HtmlElement {
      * This is useful with AjaxNavBar
      * @param $jsfunc: optional javascript function which updates ListInfos
      */
-    function displaySelectMax($jsfunc=null) {
+
+    function displaySelectMax($jsfunc = null) {
         global $conf;
-        echo '<span class="pagination">'._('Pagination').': ';
-        if(isset($jsfunc)) {
+        echo '<span class="pagination">' . _('Pagination') . ': ';
+        if (isset($jsfunc)) {
             $start = $this->curstart;
 
             echo "<select id=\"maxperpage\" name=\"maxperpage\" onChange=\"updateMaxPerPage(this); return false;\">";
@@ -888,11 +893,11 @@ class SimpleNavBar extends HtmlElement {
             echo "<select id=\"maxperpage\" name=\"maxperpage\">";
         }
         /* Display the selector and each option of the array set in the config
-           file */
-        foreach($conf["global"]["pagination"] as $quantity) {
+          file */
+        foreach ($conf["global"]["pagination"] as $quantity) {
             $selected = '';
             if ($_REQUEST['maxperpage'] == $quantity)
-                /* Set by default if already selected before */
+            /* Set by default if already selected before */
                 $selected = ' selected="selected"';
             echo "<option value=\"$quantity\"$selected>$quantity</option>";
         }
@@ -905,38 +910,37 @@ class SimpleNavBar extends HtmlElement {
          * Then it calls the javascript function which do an AJAX update of
          * the ListInfos.
          */
-?>
+        ?>
         <script type="text/javascript">
-        updateMaxPerPage = function(elem) {
-            // Get the selector element (the first of the page)
-            var maxperpageElement = document.getElementById('maxperpage');
-            if (jQuery('#maxperpage').length)
-            {
-                jQuery('#maxperpage').val(jQuery(elem).val());
-                var maxperpageValue = jQuery('#maxperpage').val();
-                // Evaluate the end depending on the maxperpage value selected
-                var end = parseInt(maxperpageValue) + parseInt(<?php echo $start ?>) - 1;
-                // Call the function to update the ListInfos
-                <?php echo $jsfunc ?>('<?php echo $this->filter ?>', '<?php echo $start ?>', end);
+            updateMaxPerPage = function(elem) {
+                // Get the selector element (the first of the page)
+                var maxperpageElement = document.getElementById('maxperpage');
+                if (jQuery('#maxperpage').length)
+                {
+                    jQuery('#maxperpage').val(jQuery(elem).val());
+                    var maxperpageValue = jQuery('#maxperpage').val();
+                    // Evaluate the end depending on the maxperpage value selected
+                    var end = parseInt(maxperpageValue) + parseInt(<?php echo $start ?>) - 1;
+                    // Call the function to update the ListInfos
+        <?php echo $jsfunc ?>('<?php echo $this->filter ?>', '<?php echo $start ?>', end);
+                }
+
+                return false;
             }
-
-            return false;
-        }
         </script>
-<?php
-
+        <?php
     }
 
     /**
      * This function just print a script which add a border at the left of the "Next" link
      */
     function displayNextListBorder() {
-?>
+        ?>
         <script type="text/javascript">
-            jQuery('.nextListInactive').css('borderLeft','solid 1px #CCC');
-            jQuery('.nextList').css('borderLeft','solid 1px #CCC');
+            jQuery('.nextListInactive').css('borderLeft', 'solid 1px #CCC');
+            jQuery('.nextList').css('borderLeft', 'solid 1px #CCC');
         </script>
-<?php
+        <?php
     }
 
     function displayGotoPageField() {
@@ -944,25 +948,25 @@ class SimpleNavBar extends HtmlElement {
         <script type="text/javascript">
             gotoPage = function(input) {
                 page = input.value;
-                if (page <= '.$this->nbpages.') {
-                    end = ('.$this->max.' * page);
-                    start = end - '.$this->max.';
+                if (page <= ' . $this->nbpages . ') {
+                    end = (' . $this->max . ' * page);
+                    start = end - ' . $this->max . ';
                     end -= 1;
-                    cur =  ('.$this->curend.' + 1) / 10;
-                    '.$this->jsfunc.'("'.$this->filter.'", start, end, document.getElementById("maxperpage"));
+                    cur =  (' . $this->curend . ' + 1) / 10;
+                    ' . $this->jsfunc . '("' . $this->filter . '", start, end, document.getElementById("maxperpage"));
                 }
             }
         </script>';
-        echo '<span class="pagination">'._("Go to page").': <input type="text" size="2" onchange="gotoPage(this)" /></span>';
+        echo '<span class="pagination">' . _("Go to page") . ': <input type="text" size="2" onchange="gotoPage(this)" /></span>';
     }
 
     function displayPagesNumbers() {
         # pages links
         # show all pages
         if ($this->nbpages <= 10) {
-            if($this->nbpages > 1) {
+            if ($this->nbpages > 1) {
                 echo '<span class="pagination">';
-                for($i=1; $i<=$this->nbpages; $i++) {
+                for ($i = 1; $i <= $this->nbpages; $i++) {
                     echo $this->makePageLink($i);
                 }
                 echo '</span>';
@@ -971,28 +975,28 @@ class SimpleNavBar extends HtmlElement {
         # show start/end pages and current page
         else {
             echo '<span class="pagination">';
-            for($i=1; $i<=3; $i++) {
+            for ($i = 1; $i <= 3; $i++) {
                 echo $this->makePageLink($i);
             }
-            if($this->curpage > 2 and $this->curpage < 5) {
-                for($i=$this->curpage;$i<=$this->curpage+2;$i++) {
+            if ($this->curpage > 2 and $this->curpage < 5) {
+                for ($i = $this->curpage; $i <= $this->curpage + 2; $i++) {
                     if ($i > 3)
                         echo $this->makePageLink($i);
                 }
             }
-            else if ($this->curpage > 4 and $this->curpage < $this->nbpages-3) {
+            else if ($this->curpage > 4 and $this->curpage < $this->nbpages - 3) {
                 echo '.. ';
-                for($i=$this->curpage-1;$i<=$this->curpage+1;$i++) {
+                for ($i = $this->curpage - 1; $i <= $this->curpage + 1; $i++) {
                     echo $this->makePageLink($i);
                 }
             }
             echo '.. ';
-            if ($this->curpage <= $this->nbpages-2 and $this->curpage >= $this->nbpages-3) {
-                for($i=$this->nbpages-4; $i<=$this->nbpages-3; $i++) {
+            if ($this->curpage <= $this->nbpages - 2 and $this->curpage >= $this->nbpages - 3) {
+                for ($i = $this->nbpages - 4; $i <= $this->nbpages - 3; $i++) {
                     echo $this->makePageLink($i);
                 }
             }
-            for($i=$this->nbpages-2; $i<=$this->nbpages; $i++) {
+            for ($i = $this->nbpages - 2; $i <= $this->nbpages; $i++) {
                 echo $this->makePageLink($i);
             }
             echo '</span>';
@@ -1004,10 +1008,9 @@ class SimpleNavBar extends HtmlElement {
         $start = $end - $this->max;
         $end -= 1;
         if ($page == $this->curpage) {
-            return '<span>'.$page.'</span> ';
-        }
-        else {
-            return '<a href="#" onclick="'.$this->jsfunc.'(\''.$this->filter.'\',\''.$start.'\',\''.$end.'\', document.getElementById(\'maxperpage\')); return false;">'.$page.'</a> ';
+            return '<span>' . $page . '</span> ';
+        } else {
+            return '<a href="#" onclick="' . $this->jsfunc . '(\'' . $this->filter . '\',\'' . $start . '\',\'' . $end . '\', document.getElementById(\'maxperpage\')); return false;">' . $page . '</a> ';
         }
     }
 
@@ -1060,13 +1063,14 @@ class AjaxNavBar extends SimpleNavBar {
             $curend = $_GET["end"];
         } else {
             $curstart = 0;
-            if ($itemcount > 0){
-                if($max != "") {
-                    $curend = $max -1;
+            if ($itemcount > 0) {
+                if ($max != "") {
+                    $curend = $max - 1;
                 } else {
                     $curend = $conf["global"]["maxperpage"] - 1;
                 }
-            } else
+            }
+            else
                 $curend = 0;
         }
         $this->SimpleNavBar($curstart, $curend, $itemcount, null, $max, $paginator);
@@ -1078,7 +1082,7 @@ class AjaxNavBar extends SimpleNavBar {
         echo '<form method="post">';
         echo "<ul class=\"navList\">\n";
 
-        if($this->paginator) {
+        if ($this->paginator) {
             // Display the maxperpage selector
             $this->displaySelectMax($this->jsfunc);
         }
@@ -1112,6 +1116,7 @@ class AjaxNavBar extends SimpleNavBar {
 
         echo "</ul>\n";
     }
+
 }
 
 /**
@@ -1119,6 +1124,7 @@ class AjaxNavBar extends SimpleNavBar {
  * default
  */
 class AjaxPaginator extends AjaxNavBar {
+
     /**
      * Just call the constructor of AjaxNavBar with "true" value for the $paginator attribute
      *
@@ -1138,7 +1144,6 @@ class AjaxPaginator extends AjaxNavBar {
  * Create an AjaxFilter Form that updates a div according to an url output
  *
  */
-
 class AjaxFilter extends HtmlElement {
 
     /**
@@ -1148,17 +1153,17 @@ class AjaxFilter extends HtmlElement {
      */
     function AjaxFilter($url, $divid = "container", $params = array(), $formid = "") {
         if (strpos($url, "?") === False)
-            /* Add extra ? needed to build the URL */
+        /* Add extra ? needed to build the URL */
             $this->url = $url . "?";
         else
-            /* Add extra & needed to build the URL */
+        /* Add extra & needed to build the URL */
             $this->url = $url . "&";
         $this->divid = $divid;
         $this->formid = $formid;
-        $this->refresh= 0;
+        $this->refresh = 0;
         $this->params = '';
         foreach ($params as $k => $v) {
-            $this->params .= "&".$k."=".$v;
+            $this->params .= "&" . $k . "=" . $v;
         }
 
         // get the current module pages
@@ -1179,22 +1184,22 @@ class AjaxFilter extends HtmlElement {
         else
             $__tab = "default";
         $extra = "";
-        foreach($_GET as $key => $value) {
+        foreach ($_GET as $key => $value) {
             if (!in_array($key, array('module', 'submod', 'tab', 'action', 'filter', 'start', 'end', 'maxperpage')))
                 $extra += $key + "_" + $value;
         }
         // then get our filter info
-        if(isset($_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_filter_".$extra])) {
-            $this->storedfilter = $_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_filter_".$extra];
+        if (isset($_SESSION[$__module . "_" . $__submod . "_" . $__action . "_" . $__tab . "_filter_" . $extra])) {
+            $this->storedfilter = $_SESSION[$__module . "_" . $__submod . "_" . $__action . "_" . $__tab . "_filter_" . $extra];
         }
-        if(isset($_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_maxperpage_".$extra])) {
-            $this->storedmax = $_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_maxperpage_".$extra];
+        if (isset($_SESSION[$__module . "_" . $__submod . "_" . $__action . "_" . $__tab . "_maxperpage_" . $extra])) {
+            $this->storedmax = $_SESSION[$__module . "_" . $__submod . "_" . $__action . "_" . $__tab . "_maxperpage_" . $extra];
         }
-        if(isset($_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_start_".$extra])) {
-            $this->storedstart = $_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_start_".$extra];
+        if (isset($_SESSION[$__module . "_" . $__submod . "_" . $__action . "_" . $__tab . "_start_" . $extra])) {
+            $this->storedstart = $_SESSION[$__module . "_" . $__submod . "_" . $__action . "_" . $__tab . "_start_" . $extra];
         }
-        if(isset($_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_end_".$extra])) {
-            $this->storedend = $_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_end_".$extra];
+        if (isset($_SESSION[$__module . "_" . $__submod . "_" . $__action . "_" . $__tab . "_end_" . $extra])) {
+            $this->storedend = $_SESSION[$__module . "_" . $__submod . "_" . $__action . "_" . $__tab . "_end_" . $extra];
         }
     }
 
@@ -1210,130 +1215,133 @@ class AjaxFilter extends HtmlElement {
         global $conf;
         $root = $conf["global"]["root"];
         $maxperpage = $conf["global"]["maxperpage"];
+        ?>
+        <form name="Form<?php echo $this->formid ?>" id="Form<?php echo $this->formid ?>" action="#" onsubmit="return false;">
 
-?>
-<form name="Form<?php echo $this->formid ?>" id="Form<?php echo $this->formid ?>" action="#" onsubmit="return false;">
+            <div id="loader<?php echo $this->formid ?>">
+                <img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/>
+            </div>
+            <div id="searchSpan<?php echo $this->formid ?>" class="searchbox" style="float: right;">
+                <img src="graph/search.gif" style="position:relative; top: 5px; float: left;" alt="search" /> <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param<?php echo $this->formid ?>" onkeyup="pushSearch<?php echo $this->formid ?>();
+                        return false;" />
+                    <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 4px;"
+                         onclick="document.getElementById('param<?php echo $this->formid ?>').value = '';
+                        pushSearch<?php echo $this->formid ?>();
+                        return false;" />
+                </span>
+            </div>
 
-    <div id="loader<?php echo $this->formid ?>">
-        <img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/>
-    </div>
-    <div id="searchSpan<?php echo $this->formid ?>" class="searchbox" style="float: right;">
-    <img src="graph/search.gif" style="position:relative; top: 5px; float: left;" alt="search" /> <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param<?php echo $this->formid ?>" onkeyup="pushSearch<?php echo $this->formid ?>(); return false;" />
-    <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 4px;"
-    onclick="document.getElementById('param<?php echo $this->formid ?>').value =''; pushSearch<?php echo $this->formid ?>(); return false;" />
-    </span>
-    </div>
-
-    <script type="text/javascript">
-<?php
-if(!$this->formid) {
-?>
-        jQuery('#param<?php echo $this->formid ?>').focus();
-<?php
-}
-if(isset($this->storedfilter)) {
-?>
-        document.Form<?php echo $this->formid ?>.param.value = "<?php echo $this->storedfilter ?>";
-<?php
-}
-?>
-        var refreshtimer<?php echo $this->formid ?> = null;
-        var refreshparamtimer<?php echo $this->formid ?> = null;
-        var refreshdelay<?php echo $this->formid ?> = <?php echo  $this->refresh ?>;
-        var maxperpage = <?php echo $maxperpage ?>;
-<?php
-if (isset($this->storedmax)) {
-?>
-        maxperpage = <?php echo $this->storedmax ?>;
-<?php
-}
-?>
-        if(jQuery('#maxperpage').length)
-            maxperpage = jQuery('#maxperpage').val();
-
-        /**
-         * Clear the timers set vith setTimeout
-         */
-        clearTimers<?php echo $this->formid ?> = function() {
-            if (refreshtimer<?php echo $this->formid ?> != null) {
-                clearTimeout(refreshtimer<?php echo $this->formid ?>);
-            }
-            if (refreshparamtimer<?php echo $this->formid ?> != null) {
-                clearTimeout(refreshparamtimer<?php echo $this->formid ?>);
-            }
-        }
-
-        /**
-         * Update div
-         */
+            <script type="text/javascript">
         <?php
-        $url = $this->url."filter='+document.Form".$this->formid.".param.value+'&maxperpage='+maxperpage+'".$this->params;
-        if (isset($this->storedstart) && isset($this->storedend)) {
-            $url .= "&start=".$this->storedstart."&end=".$this->storedend;
+        if (!$this->formid) {
+            ?>
+                jQuery('#param<?php echo $this->formid ?>').focus();
+            <?php
+        }
+        if (isset($this->storedfilter)) {
+            ?>
+                document.Form<?php echo $this->formid ?>.param.value = "<?php echo $this->storedfilter ?>";
+            <?php
         }
         ?>
-
-        updateSearch<?php echo $this->formid ?> = function() {
-            jQuery.ajax({
-                'url': '<?php echo $url ?>',
-                type: 'get',
-                success: function(data){
-                    jQuery("#<?php echo  $this->divid; ?>").html(data);
-                }
-            });
-
-<?php
-if ($this->refresh) {
-?>
-            refreshtimer<?php echo $this->formid ?> = setTimeout("updateSearch<?php echo $this->formid ?>()", refreshdelay<?php echo $this->formid ?>)
-<?php
-}
-?>
+            var refreshtimer<?php echo $this->formid ?> = null;
+            var refreshparamtimer<?php echo $this->formid ?> = null;
+            var refreshdelay<?php echo $this->formid ?> = <?php echo $this->refresh ?>;
+            var maxperpage = <?php echo $maxperpage ?>;
+        <?php
+        if (isset($this->storedmax)) {
+            ?>
+                maxperpage = <?php echo $this->storedmax ?>;
+            <?php
         }
-
-        /**
-         * Update div when clicking previous / next
-         */
-        updateSearchParam<?php echo $this->formid ?> = function(filter, start, end, max) {
-            clearTimers<?php echo $this->formid ?>();
+        ?>
             if (jQuery('#maxperpage').length)
                 maxperpage = jQuery('#maxperpage').val();
 
-            jQuery.ajax({
-                'url': '<?php echo  $this->url; ?>filter='+filter+'&start='+start+'&end='+end+'&maxperpage='+maxperpage+'<?php echo  $this->params ?>',
-                type: 'get',
-                success: function(data){
-                    jQuery("#<?php echo  $this->divid; ?>").html(data);
+            /**
+             * Clear the timers set vith setTimeout
+             */
+            clearTimers<?php echo $this->formid ?> = function() {
+                if (refreshtimer<?php echo $this->formid ?> != null) {
+                    clearTimeout(refreshtimer<?php echo $this->formid ?>);
                 }
-            });
-<?php
-if ($this->refresh) {
-?>
-            refreshparamtimer<?php echo $this->formid ?> = setTimeout("updateSearchParam<?php echo $this->formid ?>('"+filter+"',"+start+","+end+","+maxperpage+")", refreshdelay<?php echo $this->formid ?>);
-<?php
-}
-?>
+                if (refreshparamtimer<?php echo $this->formid ?> != null) {
+                    clearTimeout(refreshparamtimer<?php echo $this->formid ?>);
+                }
+            }
+
+            /**
+             * Update div
+             */
+        <?php
+        $url = $this->url . "filter='+document.Form" . $this->formid . ".param.value+'&maxperpage='+maxperpage+'" . $this->params;
+        if (isset($this->storedstart) && isset($this->storedend)) {
+            $url .= "&start=" . $this->storedstart . "&end=" . $this->storedend;
         }
+        ?>
 
-        /**
-         * wait 500ms and update search
-         */
-        pushSearch<?php echo $this->formid ?> = function() {
-            clearTimers<?php echo $this->formid ?>();
-            refreshtimer<?php echo $this->formid ?> = setTimeout("updateSearch<?php echo $this->formid ?>()", 500);
+            updateSearch<?php echo $this->formid ?> = function() {
+                jQuery.ajax({
+                    'url': '<?php echo $url ?>',
+                    type: 'get',
+                    success: function(data) {
+                        jQuery("#<?php echo $this->divid; ?>").html(data);
+                    }
+                });
+
+        <?php
+        if ($this->refresh) {
+            ?>
+                    refreshtimer<?php echo $this->formid ?> = setTimeout("updateSearch<?php echo $this->formid ?>()", refreshdelay<?php echo $this->formid ?>)
+            <?php
         }
+        ?>
+            }
 
-        pushSearch<?php echo $this->formid ?>();
+            /**
+             * Update div when clicking previous / next
+             */
+            updateSearchParam<?php echo $this->formid ?> = function(filter, start, end, max) {
+                clearTimers<?php echo $this->formid ?>();
+                if (jQuery('#maxperpage').length)
+                    maxperpage = jQuery('#maxperpage').val();
 
-    </script>
+                jQuery.ajax({
+                    'url': '<?php echo $this->url; ?>filter=' + filter + '&start=' + start + '&end=' + end + '&maxperpage=' + maxperpage + '<?php echo $this->params ?>',
+                    type: 'get',
+                    success: function(data) {
+                        jQuery("#<?php echo $this->divid; ?>").html(data);
+                    }
+                });
+        <?php
+        if ($this->refresh) {
+            ?>
+                    refreshparamtimer<?php echo $this->formid ?> = setTimeout("updateSearchParam<?php echo $this->formid ?>('" + filter + "'," + start + "," + end + "," + maxperpage + ")", refreshdelay<?php echo $this->formid ?>);
+            <?php
+        }
+        ?>
+            }
 
-</form>
-<?php
-          }
+            /**
+             * wait 500ms and update search
+             */
+            pushSearch<?php echo $this->formid ?> = function() {
+                clearTimers<?php echo $this->formid ?>();
+                refreshtimer<?php echo $this->formid ?> = setTimeout("updateSearch<?php echo $this->formid ?>()", 500);
+            }
+
+            pushSearch<?php echo $this->formid ?>();
+
+            </script>
+
+        </form>
+        <?php
+    }
 
     function displayDivToUpdate() {
         print '<div id="' . $this->divid . '"></div>' . "\n";
     }
+
 }
 
 class NoLocationTpl extends AbstractTpl {
@@ -1345,11 +1353,13 @@ class NoLocationTpl extends AbstractTpl {
 
     function display($arrParam = array()) {
         print '<span class="error">' . _("No item available") . '</span>';
-        print '<input name="'.$this->name.'" id="'.$this->name.'" type="HIDDEN" size="'.$this->size.'" value="" class="searchfieldreal" />';
+        print '<input name="' . $this->name . '" id="' . $this->name . '" type="HIDDEN" size="' . $this->size . '" value="" class="searchfieldreal" />';
     }
 
     function setSelected($elemnt) {
+
     }
+
 }
 
 class SingleLocationTpl extends AbstractTpl {
@@ -1366,16 +1376,18 @@ class SingleLocationTpl extends AbstractTpl {
     }
 
     function setSelected($elemnt) {
+
     }
 
     function display($arrParam = array()) {
         print $this->label;
-        print '<input name="'.$this->name.'" id="'.$this->name.'" type="HIDDEN" value="'. $this->value .'" class="searchfieldreal" />';
+        print '<input name="' . $this->name . '" id="' . $this->name . '" type="HIDDEN" value="' . $this->value . '" class="searchfieldreal" />';
     }
 
 }
 
 class AjaxFilterLocation extends AjaxFilter {
+
     function AjaxFilterLocation($url, $divid = "container", $paramname = 'location', $params = array()) {
         $this->AjaxFilter($url, $divid, $params);
         $this->location = new SelectItem($paramname, 'pushSearch', 'searchfieldreal noborder');
@@ -1406,103 +1418,107 @@ class AjaxFilterLocation extends AjaxFilter {
     function display($arrParam = array()) {
         global $conf;
         $root = $conf["global"]["root"];
-?>
-<form name="Form" id="Form" action="#" onsubmit="return false;">
-    <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
-    <div id="searchSpan" class="searchbox" style="float: right;">
-    <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" />
-    <span class="searchfield">
-<?php
-     $this->location->display();
-?>
-    </span>&nbsp;
-    <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch(); return false;" />
-    <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
-    onclick="document.getElementById('param').value =''; pushSearch(); return false;" />
-    </span>
-    </div>
+        ?>
+        <form name="Form" id="Form" action="#" onsubmit="return false;">
+            <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
+            <div id="searchSpan" class="searchbox" style="float: right;">
+                <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" />
+                <span class="searchfield">
+                    <?php
+                    $this->location->display();
+                    ?>
+                </span>&nbsp;
+                <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch();
+                        return false;" />
+                    <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
+                         onclick="document.getElementById('param').value = '';
+                        pushSearch();
+                        return false;" />
+                </span>
+            </div>
 
-    <script type="text/javascript">
-        jQuery('#param').focus();
+            <script type="text/javascript">
+            jQuery('#param').focus();
 
-<?php
-if(isset($this->storedfilter)) {
-?>
-        document.Form.param.value = "<?php echo $this->storedfilter ?>";
-<?php
-}
-?>
-        var maxperpage = <?php echo $conf["global"]["maxperpage"] ?>;
-        if (jQuery('#maxperpage').length)
+        <?php
+        if (isset($this->storedfilter)) {
+            ?>
+                document.Form.param.value = "<?php echo $this->storedfilter ?>";
+            <?php
+        }
+        ?>
+            var maxperpage = <?php echo $conf["global"]["maxperpage"] ?>;
+            if (jQuery('#maxperpage').length)
                 maxperpage = jQuery('#maxperpage').val();
 
-        /**
-        * update div with user
-        */
-        function updateSearch() {
-            launch--;
+            /**
+             * update div with user
+             */
+            function updateSearch() {
+                launch--;
 
-                if (launch==0) {
+                if (launch == 0) {
                     jQuery.ajax({
-                        'url': '<?php echo  $this->url; ?>filter='+document.Form.param.value+'<?php echo  $this->params ?>&<?php echo  $this->paramname ?>='+document.Form.<?php echo  $this->paramname ?>.value+'&maxperpage='+maxperpage,
+                        'url': '<?php echo $this->url; ?>filter=' + document.Form.param.value + '<?php echo $this->params ?>&<?php echo $this->paramname ?>=' + document.Form.<?php echo $this->paramname ?>.value + '&maxperpage=' + maxperpage,
                         type: 'get',
-                        success: function(data){
-                            jQuery("#<?php echo  $this->divid; ?>").html(data);
+                        success: function(data) {
+                            jQuery("#<?php echo $this->divid; ?>").html(data);
                         }
                     });
                 }
             }
 
-        /**
-        * provide navigation in ajax for user
-        */
+            /**
+             * provide navigation in ajax for user
+             */
 
-        function updateSearchParam(filt, start, end) {
-            var reg = new RegExp("##", "g");
-            var tableau = filt.split(reg);
-            var location = "";
-            var filter = "";
-            var reg1 = new RegExp(tableau[0]+"##", "g");
-            if (filt.match(reg1)) {
-                if (tableau[0] != undefined) {
-                    filter = tableau[0];
+            function updateSearchParam(filt, start, end) {
+                var reg = new RegExp("##", "g");
+                var tableau = filt.split(reg);
+                var location = "";
+                var filter = "";
+                var reg1 = new RegExp(tableau[0] + "##", "g");
+                if (filt.match(reg1)) {
+                    if (tableau[0] != undefined) {
+                        filter = tableau[0];
+                    }
+                    if (tableau[1] != undefined) {
+                        location = tableau[1];
+                    }
+                } else if (tableau.length == 1) {
+                    if (tableau[0] != undefined) {
+                        location = tableau[0];
+                    }
                 }
-                if (tableau[1] != undefined) {
-                    location = tableau[1];
-                }
-            } else if (tableau.length == 1) {
-                if (tableau[0] != undefined) {
-                    location = tableau[0];
-                }
+                if (jQuery('#maxperpage').length)
+                    maxperpage = jQuery('#maxperpage').val();
+
+                jQuery.ajax({
+                    'url': '<?php echo $this->url; ?>filter=' + filter + '<?php echo $this->params ?>&<?php echo $this->paramname ?>=' + location + '&start=' + start + '&end=' + end + '&maxperpage=' + maxperpage,
+                    type: 'get',
+                    success: function(data) {
+                        jQuery("#<?php echo $this->divid; ?>").html(data);
+                    }
+                });
+
             }
-            if (jQuery('#maxperpage').length)
-                maxperpage = jQuery('#maxperpage').val();
 
-            jQuery.ajax({
-                'url': '<?php echo  $this->url; ?>filter='+filter+'<?php echo  $this->params ?>&<?php echo  $this->paramname ?>='+location+'&start='+start+'&end='+end+'&maxperpage='+maxperpage,
-                type: 'get',
-                success: function(data){
-                    jQuery("#<?php echo  $this->divid; ?>").html(data);
-                }
-            });
-            
+            /**
+             * wait 500ms and update search
+             */
+
+            function pushSearch() {
+                launch++;
+                setTimeout("updateSearch()", 500);
             }
 
-        /**
-        * wait 500ms and update search
-        */
+            pushSearch();
+            </script>
 
-        function pushSearch() {
-            launch++;
-            setTimeout("updateSearch()",500);
-        }
+        </form>
+        <?php
+    }
 
-        pushSearch();
-    </script>
-
-</form>
-<?php
-          }
 }
 
 class AjaxLocation extends AjaxFilterLocation {
@@ -1515,53 +1531,54 @@ class AjaxLocation extends AjaxFilterLocation {
     function display($arrParam = array()) {
         global $conf;
         $root = $conf["global"]["root"];
-?>
-<form name="FormLocation" id="FormLocation" action="#" onsubmit="return false;">
-    <div id="Location">
-        <span id="searchSpan" class="searchbox">
-            <img src="graph/search.gif"/>
-            <span class="locationtext">&nbsp;<?php echo _("Select entity") ?>:&nbsp;</span>
-            <span class="locationfield">
-            <?php
-            $this->location->display();
-            ?>
-            </span>
-        </span>
-        <img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" />
-    </div>
+        ?>
+        <form name="FormLocation" id="FormLocation" action="#" onsubmit="return false;">
+            <div id="Location">
+                <span id="searchSpan" class="searchbox">
+                    <img src="graph/search.gif"/>
+                    <span class="locationtext">&nbsp;<?php echo _("Select entity") ?>:&nbsp;</span>
+                    <span class="locationfield">
+                        <?php
+                        $this->location->display();
+                        ?>
+                    </span>
+                </span>
+                <img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" />
+            </div>
 
 
-    <script type="text/javascript">
-        /**
-        * update div with user
-        */
-        function updateSearchLocation() {
-            launch--;
-            if (launch==0) {
-                jQuery.ajax({
-                    'url': '<?php echo  $this->url; ?><?php echo  $this->params ?>&<?php echo  $this->paramname ?>='+document.FormLocation.<?php echo  $this->paramname ?>.value,
-                    type: 'get',
-                    success: function(data){
-                        jQuery("#<?php echo  $this->divid; ?>").html(data);
-                    }
-                });
+            <script type="text/javascript">
+            /**
+             * update div with user
+             */
+            function updateSearchLocation() {
+                launch--;
+                if (launch == 0) {
+                    jQuery.ajax({
+                        'url': '<?php echo $this->url; ?><?php echo $this->params ?>&<?php echo $this->paramname ?>=' + document.FormLocation.<?php echo $this->paramname ?>.value,
+                        type: 'get',
+                        success: function(data) {
+                            jQuery("#<?php echo $this->divid; ?>").html(data);
+                        }
+                    });
 
+                }
             }
-        }
-        /**
-        * wait 500ms and update search
-        */
+            /**
+             * wait 500ms and update search
+             */
 
-        function pushSearchLocation() {
-            launch++;
-            setTimeout("updateSearchLocation()",500);
-        }
-        pushSearchLocation();
-    </script>
+            function pushSearchLocation() {
+                launch++;
+                setTimeout("updateSearchLocation()", 500);
+            }
+            pushSearchLocation();
+            </script>
 
-</form>
-<?php
+        </form>
+        <?php
     }
+
 }
 
 /**
@@ -1574,7 +1591,9 @@ class AjaxLocation extends AjaxFilterLocation {
  *     new SideMenuItem("foobar example","foo","subfoo","bar");
  */
 class SideMenuItem {
+
     var $text, $module, $submod, $action, $activebg, $inactivebg;
+
     /**
      *  main constructor
      * @param $text text for the link
@@ -1584,7 +1603,7 @@ class SideMenuItem {
      * @param $activebg background image to use when menu is currently activated
      * @param $inactivebg background image to use when menu is currently inactivated
      */
-    function SideMenuItem($text,$module,$submod,$action, $activebg = "", $inactivebg = "") {
+    function SideMenuItem($text, $module, $submod, $action, $activebg = "", $inactivebg = "") {
         $this->text = $text;
         $this->module = $module;
         $this->submod = $submod;
@@ -1599,17 +1618,16 @@ class SideMenuItem {
      *
      */
     function getLink() {
-        return 'main.php?module='.$this->module.'&amp;submod='.$this->submod.'&amp;action='.$this->action;
+        return 'main.php?module=' . $this->module . '&amp;submod=' . $this->submod . '&amp;action=' . $this->action;
     }
-
 
     /**
      *  display the SideMenuItem on the screen
      */
     function display() {
         if (hasCorrectAcl($this->module, $this->submod, $this->action)) {
-            echo '<li id="'.$this->cssId.'">';
-            echo '<a href="'.$this->getLink().'">'.$this->text.'</a></li>'."\n";
+            echo '<li id="' . $this->cssId . '">';
+            echo '<a href="' . $this->getLink() . '">' . $this->text . '</a></li>' . "\n";
         }
     }
 
@@ -1643,8 +1661,7 @@ class SideMenuItem {
                         border-top: solid 1px #ccc;
                         $bgi_active
             }";
-        }
-        else if ($bgi_inactive){
+        } else if ($bgi_inactive) {
             return "#sidebar ul.$this->submod li#$this->cssId a {
                         $bgi_inactive
                     }
@@ -1655,16 +1672,19 @@ class SideMenuItem {
 
         return;
     }
+
 }
 
 class SideMenuItemNoAclCheck extends SideMenuItem {
+
     /**
      *  display the SideMenuItem on the screen
      */
     function display() {
-        echo '<li id="'.$this->cssId.'">';
-        echo '<a href="'.$this->getLink().'" target="_self">'.$this->text.'</a></li>'."\n";
+        echo '<li id="' . $this->cssId . '">';
+        echo '<a href="' . $this->getLink() . '" target="_self">' . $this->text . '</a></li>' . "\n";
     }
+
 }
 
 /**
@@ -1677,6 +1697,7 @@ class SideMenuItemNoAclCheck extends SideMenuItem {
  *     this class require SideMenuItem
  */
 class SideMenu {
+
     var $itemArray;
     var $className;
     var $backgroundImage;
@@ -1697,14 +1718,14 @@ class SideMenu {
      * @param $objSideMenuItem object SideMenuItem
      */
     function addSideMenuItem($objSideMenuItem) {
-        $this->itemArray[]=&$objSideMenuItem;
+        $this->itemArray[] = &$objSideMenuItem;
     }
 
     /**
      * CSS class
      */
     function setClass($class) {
-        $this->className=$class;
+        $this->className = $class;
     }
 
     /**
@@ -1734,7 +1755,7 @@ class SideMenu {
     function display() {
         echo "<style>#section { margin-left: 200px; border-left: 2px solid #bbb; }</style>";
         echo "<div id=\"sidebar\">\n";
-        echo "<ul class=\"".$this->className."\">\n";
+        echo "<ul class=\"" . $this->className . "\">\n";
         foreach ($this->itemArray as $objSideMenuItem) {
             $objSideMenuItem->display();
         }
@@ -1772,14 +1793,15 @@ class SideMenu {
  *  PageGenerator class
  */
 class PageGenerator {
-    var $sidemenu;  /*< SideMenu Object */
-    var $content;   /*< array who contains contents Objects */
+
+    var $sidemenu;  /* < SideMenu Object */
+    var $content;   /* < array who contains contents Objects */
 
     /**
      *  Constructor
      */
     function PageGenerator($title = "") {
-        $content=array();
+        $content = array();
         $this->title = $title;
     }
 
@@ -1787,7 +1809,7 @@ class PageGenerator {
      *  set the sideMenu object
      */
     function setSideMenu($objSideMenu) {
-        $this->sidemenu=$objSideMenu;
+        $this->sidemenu = $objSideMenu;
     }
 
     /**
@@ -1807,11 +1829,11 @@ class PageGenerator {
     }
 
     function displayCss() {
-        echo'<style type="text/css">'."\n";
-        echo '<!--'."\n";
+        echo'<style type="text/css">' . "\n";
+        echo '<!--' . "\n";
         echo $this->sidemenu->getSideBarCss();
-        echo '-->'."\n";
-        echo '</style>'."\n\n";
+        echo '-->' . "\n";
+        echo '</style>' . "\n\n";
     }
 
     /**
@@ -1828,7 +1850,8 @@ class PageGenerator {
      *  display the page title
      */
     function displayTitle() {
-        if (isset($this->title)) print "<h2>" . $this->title . "</h2>\n";
+        if (isset($this->title))
+            print "<h2>" . $this->title . "</h2>\n";
     }
 
     /**
@@ -1837,6 +1860,7 @@ class PageGenerator {
     function setNoFixHeight() {
         $this->fixheight = False;
     }
+
 }
 
 /**
@@ -1852,6 +1876,7 @@ class DisplayFile extends HtmlElement {
     function display($arrParam = array()) {
         require($this->file);
     }
+
 }
 
 /**
@@ -1905,7 +1930,7 @@ class TabWidget extends HtmlElement {
             $klass = "";
         print '<li id="' . $this->id . '"' . $klass . '"> '
                 . '<a href="' . $this->getLink() . '">'
-            . $this->title . "</a></li>";
+                . $this->title . "</a></li>";
     }
 
 }
@@ -1930,7 +1955,6 @@ class TabbedPageGenerator extends PageGenerator {
         $this->title = $title;
         $this->topfile = $file;
     }
-
 
     /**
      * Add a new tab to a page
@@ -1966,7 +1990,8 @@ class TabbedPageGenerator extends PageGenerator {
         $this->page = null;
         $this->displaySideMenu();
         $this->displayTitle();
-        if ($this->topfile) require($this->topfile);
+        if ($this->topfile)
+            require($this->topfile);
         $this->tabselector->display();
         if (isset($_GET["tab"]) && isset($this->pages[$_GET["tab"]])) {
             list($title, $file) = $this->pages[$_GET["tab"]];
@@ -1979,7 +2004,8 @@ class TabbedPageGenerator extends PageGenerator {
                 $this->page = new TabbedPage($title, $file);
             }
         }
-        if ($this->page != null) $this->page->display();
+        if ($this->page != null)
+            $this->page->display();
     }
 
 }
@@ -2097,6 +2123,7 @@ class NotifyWidget {
     function flush() {
         unset($_SESSION["notify_render"][$this->id]);
     }
+
 }
 
 /**
@@ -2139,6 +2166,7 @@ class NotifyWidgetWarning extends NotifyWidget {
         $this->level = 3;
         $this->save();
     }
+
 }
 
 /**
@@ -2154,22 +2182,31 @@ class Message extends HtmlElement {
     function display($arrParam = array()) {
         print '<div class="alert alert-' . $this->type . '">' . $this->msg . '</div>';
     }
+
 }
 
 class ErrorMessage extends Message {
+
     function __construct($msg) {
         parent::__construct($msg, "error");
     }
+
 }
+
 class SuccessMessage extends Message {
+
     function __construct($msg) {
         parent::__construct($msg, "success");
     }
+
 }
+
 class WarningMessage extends Message {
+
     function __construct($msg) {
         parent::__construct($msg, "warning");
     }
+
 }
 
 /**
@@ -2182,20 +2219,22 @@ class WarningMessage extends Message {
  */
 function urlStr($link, $param = array(), $ampersandEncode = True) {
     $arr = array();
-    $arr = explode ('/',$link);
+    $arr = explode('/', $link);
 
-    if ($ampersandEncode) $amp = "&amp;";
-    else $amp = "&";
+    if ($ampersandEncode)
+        $amp = "&amp;";
+    else
+        $amp = "&";
 
     $enc_param = "";
-    foreach ($param as $key=>$value) {
-        $enc_param.= "$amp"."$key=$value";
+    foreach ($param as $key => $value) {
+        $enc_param.= "$amp" . "$key=$value";
     }
 
     if (count($arr) == 3) {
-        $ret = "main.php?module=".$arr[0]."$amp"."submod=".$arr[1]."$amp"."action=".$arr[2].$enc_param;
+        $ret = "main.php?module=" . $arr[0] . "$amp" . "submod=" . $arr[1] . "$amp" . "action=" . $arr[2] . $enc_param;
     } else if (count($arr) == 4) {
-        $ret = "main.php?module=".$arr[0]."$amp"."submod=".$arr[1]."$amp"."action=".$arr[2]. "$amp" . "tab=" . $arr[3] . $enc_param;
+        $ret = "main.php?module=" . $arr[0] . "$amp" . "submod=" . $arr[1] . "$amp" . "action=" . $arr[2] . "$amp" . "tab=" . $arr[3] . $enc_param;
     } else {
         die("Can't build URL");
     }
@@ -2207,9 +2246,9 @@ function urlStrRedirect($link, $param = array()) {
     return(urlStr($link, $param, False));
 }
 
-function findInSideBar($sidebar,$query) {
+function findInSideBar($sidebar, $query) {
     foreach ($sidebar['content'] as $arr) {
-        if (ereg($query,$arr['link'])) {
+        if (ereg($query, $arr['link'])) {
             return $arr['text'];
         }
     }
@@ -2218,7 +2257,6 @@ function findInSideBar($sidebar,$query) {
 function findFirstInSideBar($sidebar) {
     return $sidebar['content'][0]['text'];
 }
-
 
 class HtmlElement {
 
@@ -2265,7 +2303,8 @@ class HtmlContainer {
 
     function display() {
         print "\n" . $this->begin() . "\n";
-        foreach($this->elements as $element) $element->display();
+        foreach ($this->elements as $element)
+            $element->display();
         print "\n" . $this->end() . "\n";
     }
 
@@ -2295,9 +2334,12 @@ class HtmlContainer {
 
     function hasBeenPopped() {
 
-        if ($this->popped) $ret = True;
-        else if ($this->index == -1) $ret = False;
-        else $ret = False;
+        if ($this->popped)
+            $ret = True;
+        else if ($this->index == -1)
+            $ret = False;
+        else
+            $ret = False;
         return $ret;
     }
 
@@ -2307,13 +2349,15 @@ class HtmlContainer {
                 $this->popped = True;
             else if ($this->elements[$this->index]->hasBeenPopped())
                 $this->popped = True;
-            else $this->elements[$this->index]->pop();
+            else
+                $this->elements[$this->index]->pop();
             //if ($this->popped) print "popping " . $this->options["id"] . "<br>";
-        } else die("Nothing more to pop");
+        }
+        else
+            die("Nothing more to pop");
     }
 
 }
-
 
 class Div extends HtmlContainer {
 
@@ -2326,13 +2370,16 @@ class Div extends HtmlContainer {
 
     function begin() {
         $str = "";
-        foreach($this->options as $key => $value) $str.= " $key=\"$value\"";
-        if (!$this->display) $displayStyle = ' style =" display: none;"';
-        else $displayStyle = "";
+        foreach ($this->options as $key => $value)
+            $str.= " $key=\"$value\"";
+        if (!$this->display)
+            $displayStyle = ' style =" display: none;"';
+        else
+            $displayStyle = "";
         return "<div$str$displayStyle>";
     }
 
-    function end () {
+    function end() {
         return "</div>";
     }
 
@@ -2357,7 +2404,8 @@ class Form extends HtmlContainer {
 
     function begin() {
         $str = "";
-        foreach($this->options as $key => $value) $str.= " $key=\"$value\"";
+        foreach ($this->options as $key => $value)
+            $str.= " $key=\"$value\"";
         $ret = "<form$str>";
         if (isset($this->summary)) {
             $ret = "<p>" . $this->summary . "</p>\n" . $ret;
@@ -2367,7 +2415,8 @@ class Form extends HtmlContainer {
 
     function end() {
         $str = "";
-        foreach($this->buttons as $button) $str .= "\n$button\n";
+        foreach ($this->buttons as $button)
+            $str .= "\n$button\n";
         $str .= "\n</form>\n";
         return $str;
     }
@@ -2406,9 +2455,11 @@ class Form extends HtmlContainer {
         $b = new Button();
         $this->buttons[] = $b->getOnClickButton($text, $url);
     }
+
 }
 
 class Button {
+
     function Button($module = null, $submod = null, $action = null) { # TODO also verify ACL on tabs
         if ($module == null) {
             $this->module = $_GET["module"];
@@ -2428,7 +2479,7 @@ class Button {
     }
 
     function getButtonString($name, $value, $klass = "btnPrimary", $extra = "", $type = "submit") {
-        if (hasCorrectAcl($this->module,$this->submod,$this->action)) {
+        if (hasCorrectAcl($this->module, $this->submod, $this->action)) {
             return $this->getButtonStringWithRight($name, $value, $klass, $extra, $type);
         } else {
             return $this->getButtonStringWithNoRight($name, $value, $klass, $extra, $type);
@@ -2438,6 +2489,7 @@ class Button {
     function getButtonStringWithRight($name, $value, $klass = "btnPrimary", $extra = "", $type = "submit") {
         return "<input type=\"$type\" name=\"$name\" value=\"$value\" class=\"$klass\" $extra />";
     }
+
     function getButtonStringWithNoRight($name, $value, $klass = "btnPrimary", $extra = "", $type = "submit") {
         return "<input disabled type=\"$type\" name=\"$name\" value=\"$value\" class=\"btnDisabled\" $extra />";
     }
@@ -2453,20 +2505,21 @@ class Button {
     function getOnClickButton($text, $url, $klass = "btnPrimary", $extra = "", $type = "button") {
         return $this->getButtonString("onclick", $text, $klass, $extra = "onclick=\"location.href='" . $url . "';\"", $type);
     }
+
 }
 
 class ValidatingForm extends Form {
 
     function ValidatingForm($options = array()) {
         $this->Form($options);
-        $this->options["onsubmit"] = "selectAll('" . $this->options["id"] . "'); return validateForm('" . $this->options["id"]. "');";
+        $this->options["onsubmit"] = "selectAll('" . $this->options["id"] . "'); return validateForm('" . $this->options["id"] . "');";
     }
 
     function end() {
         $str = parent::end();
         $str .= "
         <script type=\"text/javascript\">
-            jQuery('#".$this->options["id"].":not(.filter) :input:visible:enabled:first').focus();
+            jQuery('#" . $this->options["id"] . ":not(.filter) :input:visible:enabled:first').focus();
         </script>\n";
         return $str;
     }
@@ -2491,7 +2544,7 @@ class PopupForm extends Form {
     function begin() {
         $str = "<h2>" . $this->title . "</h2>\n";
         $str .= parent::begin();
-        foreach($this->text as $text)
+        foreach ($this->text as $text)
             $str .= "<p>" . $text . "</p>";
         return $str;
     }
@@ -2511,11 +2564,11 @@ class PopupForm extends Form {
     }
 
     function addValidateButtonWithFade($name) {
-        $this->buttons[] = $this->getButtonString($name, _("Confirm"), "btnPrimary", "onclick=\"jQuery('#popup').fadeOut(); return true;\"" );
+        $this->buttons[] = $this->getButtonString($name, _("Confirm"), "btnPrimary", "onclick=\"jQuery('#popup').fadeOut(); return true;\"");
     }
 
     function addCancelButton($name) {
-        $this->buttons[] = $this->getButtonString($name, _("Cancel"), "btnSecondary", "onclick=\"jQuery('#popup').fadeOut(); return false;\"" );
+        $this->buttons[] = $this->getButtonString($name, _("Cancel"), "btnSecondary", "onclick=\"jQuery('#popup').fadeOut(); return false;\"");
     }
 
 }
@@ -2537,8 +2590,9 @@ class PopupWindowForm extends PopupForm {
     }
 
     function addValidateButtonWithFade($name) {
-        $this->buttons[] = $this->getButtonString($name, _("Confirm"), "btnPrimary", "onclick=\"jQuery('popup').fadeOut(); window.open('".$this->target_uri."', '', 'toolbar=no, location=no, menubar=no, status=no, status=no, scrollbars=no, width=330, height=200'); return false;\"" );
+        $this->buttons[] = $this->getButtonString($name, _("Confirm"), "btnPrimary", "onclick=\"jQuery('popup').fadeOut(); window.open('" . $this->target_uri . "', '', 'toolbar=no, location=no, menubar=no, status=no, status=no, scrollbars=no, width=330, height=200'); return false;\"");
     }
+
 }
 
 class Table extends HtmlContainer {
@@ -2549,8 +2603,12 @@ class Table extends HtmlContainer {
         $this->tr_style = '';
         $this->td_style = '';
         $this->options = $options;
-        if (isset($options['tr_style'])) { $this->tr_style = $options['tr_style']; }
-        if (isset($options['td_style'])) { $this->td_style = $options['td_style']; }
+        if (isset($options['tr_style'])) {
+            $this->tr_style = $options['tr_style'];
+        }
+        if (isset($options['td_style'])) {
+            $this->td_style = $options['td_style'];
+        }
     }
 
     function setLines($lines) {
@@ -2597,6 +2655,7 @@ class DivForModule extends Div {
         print parent::begin();
         print "<h3>" . $this->title . "</h3>";
     }
+
 }
 
 class DivExpertMode extends Div {
@@ -2613,72 +2672,79 @@ class DivExpertMode extends Div {
 
 }
 
-class ModuleTitleElement extends HtmlElement{
+class ModuleTitleElement extends HtmlElement {
 
-    function ModuleTitleElement($title){
-        $this->title=$title;
+    function ModuleTitleElement($title) {
+        $this->title = $title;
     }
 
-    function display($arrParam = array()){
-        print '<br><h1>'.$this->title.'</h1>';
+    function display($arrParam = array()) {
+        print '<br><h1>' . $this->title . '</h1>';
     }
+
 }
 
 class TitleElement extends HtmlElement {
-    function TitleElement($title, $level = 2){
-        $this->title=$title;
+
+    function TitleElement($title, $level = 2) {
+        $this->title = $title;
         $this->level = $level;
     }
-    function display($arrParam = array()){
-        print '<br/><h'.$this->level.'>'.$this->title.'</h'.$this->level.'>';
+
+    function display($arrParam = array()) {
+        print '<br/><h' . $this->level . '>' . $this->title . '</h' . $this->level . '>';
     }
+
 }
 
 class SpanElement extends HtmlElement {
-    function SpanElement($content, $class = Null){
+
+    function SpanElement($content, $class = Null) {
         $this->name = $class;
         $this->content = $content;
         $this->class = $class;
     }
 
-    function display($arrParam = array()){
+    function display($arrParam = array()) {
         if ($this->class) {
             $class = ' class="' . $this->class . '"';
-        }
-        else {
+        } else {
             $class = '';
         }
-        printf ('<span%s>%s</span>', $class, $this->content);
+        printf('<span%s>%s</span>', $class, $this->content);
     }
+
 }
 
-class SelectElement extends HtmlElement{
+class SelectElement extends HtmlElement {
 
-    function SelectElement($name, $nametab){
+    function SelectElement($name, $nametab) {
         $this->name = $name;
         $this->nametab = $nametab;
     }
 
     function display($arrParam = array()) {
-        print '<a href="javascript:void(0);" onclick="checkAll(\''.$this->name.'\',1);checkAll(\''.$this->nametab.'\',1);">'._("Select all").' </a> / ';
-        print '<a href="javascript:void(0);" onclick="checkAll(\''.$this->name.'\',0);checkAll(\''.$this->nametab.'\',0);">'._("Unselect all").'</a><br/>';
+        print '<a href="javascript:void(0);" onclick="checkAll(\'' . $this->name . '\',1);checkAll(\'' . $this->nametab . '\',1);">' . _("Select all") . ' </a> / ';
+        print '<a href="javascript:void(0);" onclick="checkAll(\'' . $this->name . '\',0);checkAll(\'' . $this->nametab . '\',0);">' . _("Unselect all") . '</a><br/>';
     }
+
 }
 
-class TrTitleElement extends HtmlElement{
+class TrTitleElement extends HtmlElement {
 
-        function TrTitleElement($arrtitles){
-            $this->titles=$arrtitles;
-        }
+    function TrTitleElement($arrtitles) {
+        $this->titles = $arrtitles;
+    }
 
-        function display($arrParam = array()){
-            $colsize=100/sizeof($this->titles);
-            print '<tr>';
-            foreach( $this->titles as $value ){
-                    print '<td width="'.$colsize.'%"><b>'.$value.'</b></td>';
-            }
-            print '</tr>';
+    function display($arrParam = array()) {
+        $colsize = 100 / sizeof($this->titles);
+        print '<tr>';
+        foreach ($this->titles as $value) {
+            print '<td width="' . $colsize . '%"><b>' . $value . '</b></td>';
         }
+        print '</tr>';
+    }
+
 }
 
 class AjaxPage extends HtmlElement {
@@ -2692,7 +2758,7 @@ class AjaxPage extends HtmlElement {
     }
 
     function display($arrParam = array()) {
-echo <<< EOT
+        echo <<< EOT
         <div id="{$this->id}" class="{$this->class}"></div>
         <script type="text/javascript">
         function update_{$this->id}(){
@@ -2707,10 +2773,10 @@ echo <<< EOT
             });
         }
         update_{$this->id}();
-        
+
         </script>
 EOT;
     }
-}
 
+}
 ?>
