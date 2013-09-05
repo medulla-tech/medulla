@@ -32,4 +32,5 @@ dist_sql_DATA = \
 	schema-008.sql \
 	schema-009.sql \
 	schema-010.sql \
-	schema-011.sql
+	schema-011.sql \
+	schema-012.sql
