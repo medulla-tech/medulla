@@ -38,21 +38,58 @@ def activate():
 
 def queryPossibilities():
     ret = {}
-    ret['Nom'] = ['list', getAllHostnames]
+    ret['Computer name'] = ['list', getAllHostnames]
     ret['Contact'] = ['list', getAllContacts]
-    ret['Numero du contact'] = ['list', getAllContactNums]
-    ret['Comments'] = ['list', getAllComments]
-    ret['Modele'] = ['list', getAllModels]
-    ret['Lieu'] = ['list', getAllLocations]
-    ret['OS'] = ['list', getAllOs]
-    ret['ServicePack'] = ['list', getAllOsSps]
-    ret['Groupe'] = ['list', getAllGroups]
-    ret['Reseau'] = ['list', getAllNetworks]
-    ret['Logiciel'] = ['list', getAllSoftwares, 3]
-    ret['Version'] = ['double', getAllSoftwaresAndVersions, 3, 2]
+    ret['Contact number'] = ['list', getAllContactNums]
+    ret['Description'] = ['list', getAllComments]
+    ret['Model'] = ['list', getAllModels]
+    ret['Manufacturer'] = ['list', getAllManufacturers]
+    ret['State'] = ['list', getAllStates]
+    ret['Location'] = ['list', getAllLocations]
+    ret['Opeating system'] = ['list', getAllOs]
+    ret['Service Pack'] = ['list', getAllOsSps]
+    ret['Group'] = ['list', getAllGroups]
+    #ret['Network'] = ['list', getAllNetworks]  # Disabled (TODO: discuss)
+    ret['Software name'] = ['list', getAllSoftwares, 3]
+    ret['Software name & version'] = ['double', getAllSoftwaresAndVersions, 3, 2]
     ret['Entity'] = ['list', getAllEntities]
 
     logging.getLogger().info('queryPossibilities %s'%(str(ret)))
+    return ret
+
+def queryGroups():
+    # Assign criterions to categories
+    ret = {}
+    # Identification cat
+    ret['Identification'] = [ \
+                                ['Computer name','Get all computers by hostname pattern'], \
+                                ['Description','Get all computers by description pattern'], \
+                                ['Group',''] \
+                            ]
+    # Hardware cat
+    ret['Hardware'] =       [ \
+                                ['Model'], \
+                                ['Manufacturer'], \
+                                ['State',''] \
+                            ]
+    # Contact
+    ret['Contact'] =        [ \
+                                ['Contact',''], \
+                                ['Contact number',''] \
+                            ]
+    #Zone
+    ret['Zone'] =           [ \
+                                ['Location',''], \
+                                ['Entity',''] \
+                            ]
+    # Software
+    ret['Software'] =       [ \
+                                ['OS',''], \
+                                ['Service Pack',''], \
+                                ['Software name',''], \
+                                ['Software name & version',''] \
+                            ]
+    #
     return ret
 
 def extendedPossibilities():
@@ -66,31 +103,35 @@ def query(ctx, criterion, value):
     logging.getLogger().info(criterion)
     logging.getLogger().info(value)
     machines = []
-    if criterion == 'OS':
+    if criterion == 'OS' or criterion == 'Operating system':
         machines = [x.name for x in Glpi().getMachineByOs(ctx, value)]
     elif criterion == 'ENTITY' or criterion == 'Entity':
         machines = [x.name for x in Glpi().getMachineByEntity(ctx, value)]
-    elif criterion == 'SOFTWARE' or criterion == 'Logiciel':
+    elif criterion == 'SOFTWARE' or criterion == 'Software name':
         machines = [x.name for x in Glpi().getMachineBySoftware(ctx, value)]
-    elif criterion == 'Version':
+    elif criterion == 'Software name & version':
         machines = [x.name for x in Glpi().getMachineBySoftwareAndVersion(ctx, value)]
-    elif criterion == 'Nom':
+    elif criterion == 'Computer name':
         machines = [x.name for x in Glpi().getMachineByHostname(ctx, value)]
     elif criterion == 'Contact':
         machines = [x.name for x in Glpi().getMachineByContact(ctx, value)]
-    elif criterion == 'Numero du contact':
+    elif criterion == 'Contact number':
         machines = [x.name for x in Glpi().getMachineByContactNum(ctx, value)]
-    elif criterion == 'Comments':
+    elif criterion == 'Description':
         machines = [x.name for x in Glpi().getMachineByComment(ctx, value)]
-    elif criterion == 'Modele':
+    elif criterion == 'Model':
         machines = [x.name for x in Glpi().getMachineByModel(ctx, value)]
-    elif criterion == 'Lieu':
+    elif criterion == 'Manufacturer':
+        machines = [x.name for x in Glpi().getMachineByManufacturer(ctx, value)]
+    elif criterion == 'State':
+        machines = [x.name for x in Glpi().getMachineByState(ctx, value)]
+    elif criterion == 'Location':
         machines = [x.name for x in Glpi().getMachineByLocation(ctx, value)]
-    elif criterion == 'ServicePack':
+    elif criterion == 'Service Pack':
         machines = [x.name for x in Glpi().getMachineByOsSp(ctx, value)]
-    elif criterion == 'Groupe':
+    elif criterion == 'Group':
         machines = [x.name for x in Glpi().getMachineByGroup(ctx, value)]
-    elif criterion == 'Reseau':
+    elif criterion == 'Network':
         machines = [x.name for x in Glpi().getMachineByNetwork(ctx, value)]
     #elif criterion == '':
     #    machines = map(lambda x: x.name, Glpi().getMachineBy(ctx, value))
@@ -139,6 +180,12 @@ def getAllComments(ctx, value = ''):
 
 def getAllModels(ctx, value = ''):
     return unique([x.name for x in Glpi().getAllModels(ctx, value)])
+
+def getAllManufacturers(ctx, value = ''):
+    return unique([x.name for x in Glpi().getAllManufacturers(ctx, value)])
+
+def getAllStates(ctx, value = ''):
+    return unique([x.name for x in Glpi().getAllStates(ctx, value)])
 
 def getAllLocations(ctx, value = ''):
     return unique([x.completename for x in Glpi().getAllLocations(ctx, value)])

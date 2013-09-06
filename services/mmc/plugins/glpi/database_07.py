@@ -584,32 +584,36 @@ class Glpi07(DyngroupDatabaseHelper):
             return base
         elif query[2] == 'SOFTWARE':
             return base + [self.inst_software, self.licenses, self.software]
-        elif query[2] == 'Nom':
+        elif query[2] == 'Computer name':
             return base
         elif query[2] == 'Contact':
             return base
-        elif query[2] == 'Numero du contact':
+        elif query[2] == 'Contact number':
             return base
-        elif query[2] == 'Comments':
+        elif query[2] == 'Description':
             return base
-        elif query[2] == 'Modele':
+        elif query[2] == 'Model':
             return base + [self.model]
-        elif query[2] == 'Lieu':
+        elif query[2] == 'Manufacturer':
+            return base + [self.manufacturers]
+        elif query[2] == 'State':
+            return base + [self.state]
+        elif query[2] == 'Location':
             return base + [self.locations]
-        elif query[2] == 'OS':
+        elif query[2] == 'Opeating system':
             return base + [self.os]
-        elif query[2] == 'ServicePack':
+        elif query[2] == 'Service Pack':
             return base + [self.os_sp]
-        elif query[2] == 'Groupe':
+        elif query[2] == 'Group':
             return base + [self.group]
-        elif query[2] == 'Reseau':
+        elif query[2] == 'Network':
             return base + [self.net]
-        elif query[2] == 'Logiciel':
+        elif query[2] == 'Software name':
             if self.glpi_version_new():
                 return base + [self.inst_software, self.softwareversions, self.software]
             else:
                 return base + [self.inst_software, self.licenses, self.software]
-        elif query[2] == 'Version':
+        elif query[2] == 'Software name & version':
             if self.glpi_version_new():
                 return base + [self.inst_software, self.softwareversions, self.software]
             else:
@@ -673,27 +677,31 @@ class Glpi07(DyngroupDatabaseHelper):
                 return [[self.location.c.name, query[3]]]
         elif query[2] == 'SOFTWARE':
             return [[self.software.c.name, query[3]]]
-        elif query[2] == 'Nom':
+        elif query[2] == 'Computer name':
             return [[self.machine.c.name, query[3]]]
         elif query[2] == 'Contact':
             return [[self.machine.c.contact, query[3]]]
-        elif query[2] == 'Numero du contact':
+        elif query[2] == 'Contact number':
             return [[self.machine.c.contact_num, query[3]]]
-        elif query[2] == 'Comments':
+        elif query[2] == 'Description':
             return [[self.machine.c.comments, query[3]]]
-        elif query[2] == 'Modele':
+        elif query[2] == 'Model':
             return [[self.model.c.name, query[3]]]
-        elif query[2] == 'Lieu':
+        elif query[2] == 'Manufacturer':
+            return [[self.manufacturers.c.name, query[3]]]
+        elif query[2] == 'State':
+            return [[self.state.c.name, query[3]]]
+        elif query[2] == 'Location':
             return [[self.locations.c.completename, query[3]]]
-        elif query[2] == 'ServicePack':
+        elif query[2] == 'Service Pack':
             return [[self.os_sp.c.name, query[3]]]
-        elif query[2] == 'Groupe': # TODO double join on Entity
+        elif query[2] == 'Group': # TODO double join on Entity
             return [[self.group.c.name, query[3]]]
-        elif query[2] == 'Reseau':
+        elif query[2] == 'Network':
             return [[self.net.c.name, query[3]]]
-        elif query[2] == 'Logiciel': # TODO double join on Entity
+        elif query[2] == 'Software name': # TODO double join on Entity
             return [[self.software.c.name, query[3]]]
-        elif query[2] == 'Version': # TODO double join on Entity
+        elif query[2] == 'Software name & version': # TODO double join on Entity
             if self.glpi_version_new():
                 return [[self.software.c.name, query[3][0]], [self.softwareversions.c.name, query[3][1]]]
             else:
@@ -1384,7 +1392,7 @@ class Glpi07(DyngroupDatabaseHelper):
             return False
 
     def getSearchOptionId(self, filter, lang = 'en_US'):
-        """ 
+        """
         return a list of ids corresponding to filter
         @param filter: a value to search
         @type filter: string
@@ -1399,7 +1407,7 @@ class Glpi07(DyngroupDatabaseHelper):
         return ids
 
     def getLinkedActionKey(self, filter, lang = 'en_US'):
-        """ 
+        """
         return a list of ids corresponding to filter
         """
         ids = []
@@ -2185,7 +2193,7 @@ class Glpi07(DyngroupDatabaseHelper):
         query = session.query(Location)
         if filter != '':
             query = query.filter(self.location.c.name.like('%'+filt+'%'))
-        
+
         # Request only entites current user can access
         if not hasattr(ctx, 'locationsid'):
             complete_ctx(ctx)
@@ -2448,7 +2456,7 @@ class Glpi07(DyngroupDatabaseHelper):
         return ret
 
     def getAllModels(self, ctx, filt = ''):
-        """ @return: all hostnames defined in the GLPI database """
+        """ @return: all machine models defined in the GLPI database """
         session = create_session()
         query = session.query(Model).select_from(self.model.join(self.machine))
         query = self.__filter_on(query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0))
@@ -2458,14 +2466,63 @@ class Glpi07(DyngroupDatabaseHelper):
         ret = query.group_by(self.model.c.name).all()
         session.close()
         return ret
+
+    def getAllManufacturer(self, ctx, filt = ''):
+        """ @return: all machine Manufacturers defined in the GLPI database """
+        session = create_session()
+        query = session.query(Manufacturers).select_from(self.manufacturers.join(self.machine))
+        query = self.__filter_on(query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0))
+        query = self.__filter_on_entity(query, ctx)
+        if filter != '':
+            query = query.filter(self.manufacturers.c.name.like('%'+filt+'%'))
+        ret = query.group_by(self.manufacturers.c.name).all()
+        session.close()
+        return ret
+
+    def getAllStates(self, ctx, filt = ''):
+        """ @return: all machine states defined in the GLPI database """
+        session = create_session()
+        query = session.query(State).select_from(self.state.join(self.machine))
+        query = self.__filter_on(query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0))
+        query = self.__filter_on_entity(query, ctx)
+        if filter != '':
+            query = query.filter(self.state.c.name.like('%'+filt+'%'))
+        ret = query.group_by(self.state.c.name).all()
+        session.close()
+        return ret
+
     def getMachineByModel(self, ctx, filt):
-        """ @return: all machines that have this contact number """
+        """ @return: all machines that have this model """
         session = create_session()
         query = session.query(Machine).select_from(self.machine.join(self.model))
         query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
         query = query.filter(self.model.c.name == filt)
+        ret = query.all()
+        session.close()
+        return ret
+
+    def getMachineByManufacturer(self, ctx, filt):
+        """ @return: all machines that have this Manufacturer """
+        session = create_session()
+        query = session.query(Machine).select_from(self.machine.join(self.manufacturers))
+        query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
+        query = self.__filter_on(query)
+        query = self.__filter_on_entity(query, ctx)
+        query = query.filter(self.manufacturers.c.name == filt)
+        ret = query.all()
+        session.close()
+        return ret
+
+    def getMachineByState(self, ctx, filt):
+        """ @return: all machines that have this state """
+        session = create_session()
+        query = session.query(Machine).select_from(self.machine.join(self.state))
+        query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
+        query = self.__filter_on(query)
+        query = self.__filter_on_entity(query, ctx)
+        query = query.filter(self.state.c.name == filt)
         ret = query.all()
         session.close()
         return ret
@@ -2602,7 +2659,7 @@ class Glpi07(DyngroupDatabaseHelper):
                 'OSName': OSName,
             })
         return res
-    
+
     def getComputersCountByOS(self, osname):
         session = create_session()
         query = session.query(func.count(self.machine.c.ID), Machine) \
@@ -2802,7 +2859,7 @@ class Glpi07(DyngroupDatabaseHelper):
             * green: less than 10 days
             * orange: more than 10 days and less than 35 days
             * red: more than 35 days
-        
+
         @return: dictionnary with state as key, number as value
         @rtype: dict
         """
@@ -2810,7 +2867,7 @@ class Glpi07(DyngroupDatabaseHelper):
         # Read config from ini file
         orange = self.config.orange
         red = self.config.red
-        
+
         complete_ctx(ctx)
         filt = {'ctxlocation': ctx.locations}
 
@@ -2862,7 +2919,7 @@ class Glpi07(DyngroupDatabaseHelper):
     def isComputerNameAvailable(self, ctx, locationUUID, name):
         raise Exception("need to be implemented when we would be able to add computers")
 
-           
+
     def delMachine(self, uuid):
         """
         Deleting a machine in GLPI (only the flag 'is_deleted' updated)

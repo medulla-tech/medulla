@@ -39,6 +39,14 @@ def queryPossibilities():
     ret['groupname'] = ['list', getAllGroupName]
     return ret
 
+def queryGroups():
+    # Assign criterions to categories
+    ret = {}
+    #
+    ret['Group'] = [ ['groupname',''] ]
+    #
+    return ret
+
 def extendedPossibilities():
     return ""
 

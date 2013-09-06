@@ -351,6 +351,12 @@ class RpcProxy(RpcProxyI):
             return False
         return xmlrpcCleanup(queryManager.getPossiblesModules(ctx))
 
+    def getQueryGroupsForModule(self, moduleName):
+        ctx = self.currentContext
+        if not isDynamicEnable():
+            return False
+        return xmlrpcCleanup(queryManager.getQueryGroupsForModule(ctx, moduleName))
+
     def getPossiblesCriterionsInMainModule(self):
         moduleName = ComputerManager().main
         return self.getPossiblesCriterionsInModule(moduleName)
@@ -377,7 +383,7 @@ class RpcProxy(RpcProxyI):
         """
         Used in "double" type. It's used where you search on 2 fields of a table.
         Example: On table Software, you can search on ProductName and ProductVersion
-        
+
         This function is related to field 1
         """
         ctx = self.currentContext
@@ -394,7 +400,7 @@ class RpcProxy(RpcProxyI):
         """
         Used in "double" type. It's used where you search on 2 fields of a table.
         Example: On table Software, you can search on ProductName and ProductVersion
-        
+
         This function is related to field 2
         """
         ctx = self.currentContext

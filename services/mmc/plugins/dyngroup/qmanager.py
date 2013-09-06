@@ -54,11 +54,14 @@ class QueryManager(Singleton):
 
         # list[ possibilities ]
         self.queryPossibilities = {}
+        # query fields groups
+        self.queryGroups = {}
         # extended possibilites
         self.extendedPossibilities = {}
         for pluginName in self.queryablePlugins:
             module = self.queryablePlugins[pluginName]
             self.queryPossibilities[pluginName] = self._getPluginQueryPossibilities(module)
+            self.queryGroups[pluginName] = self._getPluginQueryGroups(module)
             self.extendedPossibilities[pluginName] = self._getPluginExtendedPossibilities(module)
 
     def _getQueryablePlugins(self):
@@ -92,6 +95,13 @@ class QueryManager(Singleton):
         func = getattr(pluginModule, 'queryPossibilities')
         return func()
 
+    def _getPluginQueryGroups(self, pluginModule):
+        try:
+            func = getattr(pluginModule, 'queryGroups')
+            return func()
+        except:
+            return {}
+
     def _getPluginExtendedPossibilities(self, pluginModule):
         func = getattr(pluginModule, 'extendedPossibilities')
         return func()
@@ -103,11 +113,21 @@ class QueryManager(Singleton):
     def getQueryPossibilities(self, ctx):
         return self.queryPossibilities
 
+    def getQueryGroups(self, ctx):
+        return self.queryGroups
+
     def getExtendedPossibilities(self, ctx):
         return self.extendedPossibilities
 
     def getPossiblesModules(self, ctx):
         return self.queryPossibilities.keys()
+
+    def getQueryGroupsForModule(self, ctx, moduleName):
+        try:
+            return self.queryGroups[moduleName]
+        except:
+            self.logger.error("Dyngroup module %s don't exists"%(moduleName))
+            return []
 
     def getPossiblesCriterionsInModule(self, ctx, moduleName):
         try:

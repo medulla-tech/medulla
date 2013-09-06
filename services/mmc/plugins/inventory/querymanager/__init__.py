@@ -39,6 +39,16 @@ def queryPossibilities():
             ret[possible] = [type, funcGet(possible, type)]
     return ret
 
+def queryGroups():
+    # Assign criterions to categories
+    ret = {}
+    # Identification cat
+    ret['Criterions'] = []
+    for type in ['list', 'double', 'halfstatic']:
+        for possible in PossibleQueries().possibleQueries(type):
+            ret['Criterions'].append([possible,''])
+    return ret
+
 def extendedPossibilities():
     ret = {}
     for possible in PossibleQueries().possibleQueries('extended'):

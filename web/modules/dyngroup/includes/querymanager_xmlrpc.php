@@ -1,4 +1,5 @@
 <?php
+
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
@@ -20,7 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 function getQueryPossibilities() {
     return myXmlCall("dyngroup.getQueryPossibilities");
 }
@@ -31,6 +31,10 @@ function getPossiblesModules() {
 
 function getPossiblesCriterionsInMainModule() {
     return myXmlCall("dyngroup.getPossiblesCriterionsInMainModule");
+}
+
+function getQueryGroupsForModule($moduleName) {
+    return myXmlCall("dyngroup.getQueryGroupsForModule", array($moduleName));
 }
 
 function getPossiblesCriterionsInModule($moduleName) {
@@ -60,4 +64,5 @@ function checkBoolean($bool) {
 function getExtended($moduleName, $criterion) {
     return myXmlCall("dyngroup.getExtended", array($moduleName, $criterion));
 }
+
 ?>
