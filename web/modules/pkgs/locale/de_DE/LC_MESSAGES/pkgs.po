@@ -1,73 +1,28 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
-# # Translators:
+# 
+## Translators:
 #   <maikwagner@yahoo.com>, 2011, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-09 01:00+0200\n"
-"PO-Revision-Date: 2013-08-26 12:38+0000\n"
-"Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
-"Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/"
-"pulse2/team/de_DE/)\n"
-"Language: de_DE\n"
+"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
+"POT-Creation-Date: 2013-09-06 17:43+0200\n"
+"PO-Revision-Date: 2013-09-06 08:46+0000\n"
+"Last-Translator: Maik Wagner <maikwagner@yahoo.com>\n"
+"Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/pulse2/team/de_DE/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: de_DE\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
-#: modules/pkgs/pkgs/add.php:148
-msgid "<fill_package_name>"
-msgstr "<paketname_eintragen>"
-
-#: modules/pkgs/pkgs/add.php:199
-msgid "Add"
-msgstr "Hinzufügen"
-
-#: modules/pkgs/infoPackage.inc.php:46 modules/pkgs/pkgs/localSidebar.php:28
-msgid "Add a package"
-msgstr "Hinzufügen eines Pakets"
-
-#: modules/pkgs/includes/html.inc.php:140
-msgid "Add files"
-msgstr ""
-
-#: modules/pkgs/pkgs/add.php:31
-msgid "Add package"
-msgstr "Paket hinzufügen"
-
-#: modules/pkgs/pkgs/add.php:128
-msgid "Already uploaded on the server"
-msgstr "Bereits auf den Server hochgeladen"
-
-#: modules/pkgs/pkgs/edit.php:261
-msgid "Are you sure you want to delete this file?"
-msgstr ""
-
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:50
-msgid "Associate package"
-msgstr "Paket Assoziieren"
-
-#: modules/pkgs/includes/html.inc.php:60
-#: modules/pkgs/includes/html.inc.php:141
-msgid "Cancel"
-msgstr ""
-
-#: modules/pkgs/pkgs/add.php:309
-#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:129
-msgid ""
-"Change post_max_size and upload_max_filesize directives in php.ini file to "
-"increase upload size."
-msgstr ""
-"Ändern Sie post_max_size und upload_maxfilesize Direktiven in der php.ini um "
-"die Uploadgröße zu erhöhen."
-
-#: modules/pkgs/pkgs/add.php:114
-msgid "Choose package source"
-msgstr "Paketquelle wählen"
+#: modules/pkgs/includes/html.inc.php:42
+#: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:34
+#: modules/pkgs/pkgs/edit.php:276
+msgid "Upload Queued Files"
+msgstr "Eingereihte Dateien hochladen"
 
 #: modules/pkgs/includes/html.inc.php:59
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:33
@@ -75,17 +30,43 @@ msgstr "Paketquelle wählen"
 msgid "Click here to select files"
 msgstr "Klicken Sie hier um Dateien zu wählen"
 
-#: modules/pkgs/pkgs/edit.php:193
-msgid "Command : "
-msgstr "Command:"
+#: modules/pkgs/includes/html.inc.php:60
+#: modules/pkgs/includes/html.inc.php:141
+msgid "Cancel"
+msgstr "Abbrechen"
 
-#: modules/pkgs/pkgs/add.php:161 modules/pkgs/pkgs/edit.php:193
-msgid "Command's name : "
-msgstr "Command Name:"
+#: modules/pkgs/includes/html.inc.php:140
+msgid "Add files"
+msgstr "Dateien hinzufügen"
 
-#: modules/pkgs/pkgs/add.php:153
-msgid "Command:"
-msgstr "Befehl:"
+#: modules/pkgs/includes/html.inc.php:178
+msgid "Upload selected files"
+msgstr "Gewählte Dateien hochladen"
+
+#: modules/pkgs/infoPackage.inc.php:34 modules/pkgs/infoPackage.inc.php:40
+msgid "Packages"
+msgstr "Pakete"
+
+#: modules/pkgs/infoPackage.inc.php:44
+msgid "Show all packages"
+msgstr "Alle Pakete anzeigen"
+
+#: modules/pkgs/infoPackage.inc.php:46 modules/pkgs/pkgs/localSidebar.php:28
+msgid "Add a package"
+msgstr "Hinzufügen eines Pakets"
+
+#: modules/pkgs/infoPackage.inc.php:48
+#: modules/pkgs/pkgs/ajaxPackageList.php:78 modules/pkgs/pkgs/edit.php:139
+msgid "Edit a package"
+msgstr "Edit einem Paket"
+
+#: modules/pkgs/infoPackage.inc.php:51
+msgid "See pending packages"
+msgstr "noch nicht erledigt Pakete anzeigen"
+
+#: modules/pkgs/infoPackage.inc.php:66
+msgid "Show mirror status"
+msgstr "Spiegel-Status anzeigen"
 
 #: modules/pkgs/infoPackage.inc.php:70
 #: modules/pkgs/pkgs/ajaxPackageList.php:79
@@ -93,138 +74,59 @@ msgstr "Befehl:"
 msgid "Delete a package"
 msgstr "Paket löschen"
 
-#: modules/pkgs/pkgs/edit.php:261
-msgid "Delete file"
-msgstr ""
-
-#: modules/pkgs/pkgs/remove.php:43
-msgid "Delete this package"
-msgstr "dieses Paket löschen"
-
-#: modules/pkgs/pkgs/add.php:150 modules/pkgs/pkgs/ajaxPackageList.php:69
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
-#: modules/pkgs/pkgs/edit.php:189
-msgid "Description"
-msgstr "Beschreibung"
-
-#: modules/pkgs/infoPackage.inc.php:48
-#: modules/pkgs/pkgs/ajaxPackageList.php:78 modules/pkgs/pkgs/edit.php:139
-msgid "Edit a package"
-msgstr "Edit einem Paket"
-
-#: modules/pkgs/pkgs/edit.php:32
-msgid "Edit package"
-msgstr "Paket bearbeiten"
-
-#: modules/pkgs/pkgs/add.php:95 modules/pkgs/pkgs/associate_files.php:75
-#: modules/pkgs/pkgs/edit.php:101
-msgid "Failed to associate files"
-msgstr "Dateiassoziierung fehlgeschlagen"
-
-#: modules/pkgs/pkgs/add.php:92 modules/pkgs/pkgs/associate_files.php:72
-#: modules/pkgs/pkgs/edit.php:98
-#, php-format
-msgid "Failed to associate files%s"
-msgstr "Dateiassoziierung fehlgeschlagen %s"
-
-#: modules/pkgs/pkgs/edit.php:133
-msgid "Failed to delete files"
-msgstr ""
-
-#: modules/pkgs/pkgs/edit.php:130
-#, php-format
-msgid "Failed to delete files%s"
-msgstr ""
-
-#: modules/pkgs/pkgs/edit.php:252
-msgid "File"
-msgstr ""
-
-#: modules/pkgs/pkgs/edit.php:124
-msgid "File successfully deleted."
-msgstr ""
-
-#: modules/pkgs/pkgs/add.php:139 modules/pkgs/pkgs/add.php:287
-msgid "Files directory"
-msgstr "Dateien-Verzeichnis"
-
-#: modules/pkgs/pkgs/edit.php:90
-#, php-format
-msgid "Files successfully added to the package <b>%s (%s)</b>"
-msgstr ""
-
-#: modules/pkgs/pkgs/add.php:84 modules/pkgs/pkgs/associate_files.php:64
-#, php-format
-msgid "Files successfully associated with package <b>%s (%s)</b>%s"
-msgstr "Dateien erfolgreich Verbinden mit Paket <b>t%s (%s)</b> %s"
-
-#: modules/pkgs/pkgs/add.php:309
-#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:129
-#, php-format
-msgid "Files upload (<b><u title='%s'>%sM max</u></b>)"
-msgstr "Dateien Upload (<b><u title='%s'>%sM max</u></b>)"
-
 #: modules/pkgs/pkgs/ajaxPackageList.php:53 modules/pkgs/pkgs/index.php:45
 #, php-format
 msgid "MMC failed to contact package server %s."
 msgstr "MMC konnte sich nicht mit dem Paket-Server %s verbinden"
 
-#: modules/pkgs/pkgs/add.php:128
-msgid "Make an empty package"
-msgstr "Ein leeres Paket erstellen"
-
-#: modules/pkgs/pkgs/add.php:148
-msgid "Name"
-msgstr "Name"
-
-#: modules/pkgs/pkgs/add.php:169 modules/pkgs/pkgs/edit.php:201
-msgid "Need a reboot ?"
-msgstr "Braucht einen Neustart?"
-
-#: modules/pkgs/pkgs/add.php:134 modules/pkgs/pkgs/edit.php:169
-msgid "Package API"
-msgstr "Paket API"
-
-#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:102
-msgid "Package API temporary directory is empty"
-msgstr "Paket-API Temporärverzeichnis ist leer"
-
-#: modules/pkgs/pkgs/add.php:142
-msgid "Package Creation"
-msgstr "Paketerstellung"
-
-#: modules/pkgs/pkgs/edit.php:109
-msgid "Package failed to save"
-msgstr "Paket speicher fehlgeschlagen"
-
-#: modules/pkgs/pkgs/edit.php:187
-msgid "Package label"
-msgstr "Paket Beschriftung"
+#: modules/pkgs/pkgs/ajaxPackageList.php:63 modules/pkgs/pkgs/index.php:53
+msgid "Please contact your administrator."
+msgstr "Bitte wenden Sie sich an Ihren Administrator."
 
 #: modules/pkgs/pkgs/ajaxPackageList.php:66
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:66
 msgid "Package name"
 msgstr "Paketname"
 
+#: modules/pkgs/pkgs/ajaxPackageList.php:69
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
+#: modules/pkgs/pkgs/add.php:150 modules/pkgs/pkgs/edit.php:189
+msgid "Description"
+msgstr "Beschreibung"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:70
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
+#: modules/pkgs/pkgs/add.php:149
+msgid "Version"
+msgstr "Version"
+
 #: modules/pkgs/pkgs/ajaxPackageList.php:71
 msgid "Package size"
 msgstr "Paket Größe"
 
-#: modules/pkgs/pkgs/add.php:138
-msgid "Package source"
-msgstr "Paketquelle"
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:50
+msgid "Associate package"
+msgstr "Paket Assoziieren"
 
-#: modules/pkgs/pkgs/edit.php:74
-msgid "Package successfully edited"
-msgstr "Paket erfolgreich bearbeitet"
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:78
+msgid "Show mirrors"
+msgstr "Spiegel anzeigen"
 
-#: modules/pkgs/pkgs/edit.php:188
-msgid "Package version"
-msgstr "Paket Version"
+#: modules/pkgs/pkgs/associate_files.php:64 modules/pkgs/pkgs/add.php:84
+#, php-format
+msgid "Files successfully associated with package <b>%s (%s)</b>%s"
+msgstr "Dateien erfolgreich Verbinden mit Paket <b>t%s (%s)</b> %s"
 
-#: modules/pkgs/infoPackage.inc.php:34 modules/pkgs/infoPackage.inc.php:40
-msgid "Packages"
-msgstr "Pakete"
+#: modules/pkgs/pkgs/associate_files.php:72 modules/pkgs/pkgs/add.php:92
+#: modules/pkgs/pkgs/edit.php:98
+#, php-format
+msgid "Failed to associate files%s"
+msgstr "Dateiassoziierung fehlgeschlagen %s"
+
+#: modules/pkgs/pkgs/associate_files.php:75 modules/pkgs/pkgs/add.php:95
+#: modules/pkgs/pkgs/edit.php:101
+msgid "Failed to associate files"
+msgstr "Dateiassoziierung fehlgeschlagen"
 
 #: modules/pkgs/pkgs/index.php:29 modules/pkgs/pkgs/localSidebar.php:27
 msgid "Packages list"
@@ -234,78 +136,168 @@ msgstr "Pakete Liste"
 msgid "Pending packages list"
 msgstr "noch nicht erledigt Pakete Liste"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:63 modules/pkgs/pkgs/index.php:53
-msgid "Please contact your administrator."
-msgstr "Bitte wenden Sie sich an Ihren Administrator."
+#: modules/pkgs/pkgs/remove.php:33
+msgid "The package has been deleted."
+msgstr "Das Paket wurde gelöscht."
 
-#: modules/pkgs/pkgs/add.php:154
-msgid ""
-"Pulse will try to figure out how to install the uploaded files.\\n\\n\n"
-"If the detection fails, it doesn't mean that the application cannot be "
-"installed using Pulse but that you'll have to figure out the proper command."
-"\\n\\n\n"
-"Many vendors (Acrobat, Flash, Skype) provide a MSI version of their "
-"applications which can be processed automatically by Pulse.\\n\n"
-"You may also ask Google for the silent installation switches. If you're "
-"feeling lucky, here is a Google search that may help:\\n\\n\n"
-"<a href=\"@@GOOGLE_SEARCH_URL@@\">Google search</a>"
-msgstr ""
-"Pulse wird versuchen herauszufinden wie die hochgeladenen Dateien "
-"installiert werden sollen.\\n\\n\n"
-"Wenn die Erkennung fehlschlägt, bedeutet dies nicht dass die Applikation "
-"nicht mit Pulse installiert werden kann aber Sie müssen den richtigen Befehl "
-"finden.\\n\\n\n"
-"Viele Hersteller (Acrobat, Flash, Skype) stellen eine MSI Version ihrer "
-"Anwendungen bereit, die automatisch von Pulse verarbeitet werden können.\\n\n"
-"Sie möchten vielleicht auch Google nach den stillen Installationsschaltern "
-"konsultieren. Wenn Sie dies möchten, hier ist eine Googlesuche, die helfen "
-"kann::\\n\\n\n"
-"<a href=\"@@GOOGLE_SEARCH_URL@@\">Googlesuche</a>"
+#: modules/pkgs/pkgs/remove.php:34
+msgid "The package failed to delete"
+msgstr "Das Paket konnte nicht gelöscht werden"
 
-#: modules/pkgs/infoPackage.inc.php:51
-msgid "See pending packages"
-msgstr "noch nicht erledigt Pakete anzeigen"
-
-#: modules/pkgs/infoPackage.inc.php:44
-msgid "Show all packages"
-msgstr "Alle Pakete anzeigen"
-
-#: modules/pkgs/infoPackage.inc.php:66
-msgid "Show mirror status"
-msgstr "Spiegel-Status anzeigen"
-
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:78
-msgid "Show mirrors"
-msgstr "Spiegel anzeigen"
+#: modules/pkgs/pkgs/remove.php:43
+msgid "Delete this package"
+msgstr "dieses Paket löschen"
 
 #: modules/pkgs/pkgs/rsync.php:32
 #, php-format
 msgid "The package %s (%s) is not associated"
 msgstr "Das Paket %s (%s) ist nicht verbunden"
 
-#: modules/pkgs/pkgs/remove.php:34
-msgid "The package failed to delete"
-msgstr "Das Paket konnte nicht gelöscht werden"
+#: modules/pkgs/pkgs/add.php:31
+msgid "Add package"
+msgstr "Paket hinzufügen"
 
-#: modules/pkgs/pkgs/remove.php:33
-msgid "The package has been deleted."
-msgstr "Das Paket wurde gelöscht."
+#: modules/pkgs/pkgs/add.php:114
+msgid "Choose package source"
+msgstr "Paketquelle wählen"
 
-#: modules/pkgs/includes/html.inc.php:42
-#: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:34
-#: modules/pkgs/pkgs/edit.php:276
-msgid "Upload Queued Files"
-msgstr "Eingereihte Dateien hochladen"
+#: modules/pkgs/pkgs/add.php:128
+msgid "Already uploaded on the server"
+msgstr "Bereits auf den Server hochgeladen"
 
 #: modules/pkgs/pkgs/add.php:128
 msgid "Upload from this web page"
 msgstr "Von dieser Webseite hochladen"
 
-#: modules/pkgs/includes/html.inc.php:178
-msgid "Upload selected files"
-msgstr ""
+#: modules/pkgs/pkgs/add.php:128
+msgid "Make an empty package"
+msgstr "Ein leeres Paket erstellen"
 
-#: modules/pkgs/pkgs/add.php:149 modules/pkgs/pkgs/ajaxPackageList.php:70
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
-msgid "Version"
-msgstr "Version"
+#: modules/pkgs/pkgs/add.php:134 modules/pkgs/pkgs/edit.php:169
+msgid "Package API"
+msgstr "Paket API"
+
+#: modules/pkgs/pkgs/add.php:138
+msgid "Package source"
+msgstr "Paketquelle"
+
+#: modules/pkgs/pkgs/add.php:139 modules/pkgs/pkgs/add.php:287
+msgid "Files directory"
+msgstr "Dateien-Verzeichnis"
+
+#: modules/pkgs/pkgs/add.php:142
+msgid "Package Creation"
+msgstr "Paketerstellung"
+
+#: modules/pkgs/pkgs/add.php:148
+msgid "Name"
+msgstr "Name"
+
+#: modules/pkgs/pkgs/add.php:148
+msgid "<fill_package_name>"
+msgstr "<paketname_eintragen>"
+
+#: modules/pkgs/pkgs/add.php:153
+msgid "Command:"
+msgstr "Befehl:"
+
+#: modules/pkgs/pkgs/add.php:154
+msgid ""
+"Pulse will try to figure out how to install the uploaded files.\\n\\n\n"
+"If the detection fails, it doesn't mean that the application cannot be installed using Pulse but that you'll have to figure out the proper command.\\n\\n\n"
+"Many vendors (Acrobat, Flash, Skype) provide a MSI version of their applications which can be processed automatically by Pulse.\\n\n"
+"You may also ask Google for the silent installation switches. If you're feeling lucky, here is a Google search that may help:\\n\\n\n"
+"<a href=\"@@GOOGLE_SEARCH_URL@@\">Google search</a>"
+msgstr ""
+"Pulse wird versuchen herauszufinden wie die hochgeladenen Dateien installiert werden sollen.\\n\\n\n"
+"Wenn die Erkennung fehlschlägt, bedeutet dies nicht dass die Applikation nicht mit Pulse installiert werden kann aber Sie müssen den richtigen Befehl finden.\\n\\n\n"
+"Viele Hersteller (Acrobat, Flash, Skype) stellen eine MSI Version ihrer Anwendungen bereit, die automatisch von Pulse verarbeitet werden können.\\n\n"
+"Sie möchten vielleicht auch Google nach den stillen Installationsschaltern konsultieren. Wenn Sie dies möchten, hier ist eine Googlesuche, die helfen kann::\\n\\n\n"
+"<a href=\"@@GOOGLE_SEARCH_URL@@\">Googlesuche</a>"
+
+#: modules/pkgs/pkgs/add.php:161 modules/pkgs/pkgs/edit.php:193
+msgid "Command's name : "
+msgstr "Command Name:"
+
+#: modules/pkgs/pkgs/add.php:169 modules/pkgs/pkgs/edit.php:201
+msgid "Need a reboot ?"
+msgstr "Braucht einen Neustart?"
+
+#: modules/pkgs/pkgs/add.php:199
+msgid "Add"
+msgstr "Hinzufügen"
+
+#: modules/pkgs/pkgs/add.php:309
+#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:129
+#, php-format
+msgid "Files upload (<b><u title='%s'>%sM max</u></b>)"
+msgstr "Dateien Upload (<b><u title='%s'>%sM max</u></b>)"
+
+#: modules/pkgs/pkgs/add.php:309
+#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:129
+msgid ""
+"Change post_max_size and upload_max_filesize directives in php.ini file to "
+"increase upload size."
+msgstr ""
+"Ändern Sie post_max_size und upload_maxfilesize Direktiven in der php.ini um"
+" die Uploadgröße zu erhöhen."
+
+#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:102
+msgid "Package API temporary directory is empty"
+msgstr "Paket-API Temporärverzeichnis ist leer"
+
+#: modules/pkgs/pkgs/edit.php:32
+msgid "Edit package"
+msgstr "Paket bearbeiten"
+
+#: modules/pkgs/pkgs/edit.php:74
+msgid "Package successfully edited"
+msgstr "Paket erfolgreich bearbeitet"
+
+#: modules/pkgs/pkgs/edit.php:90
+#, php-format
+msgid "Files successfully added to the package <b>%s (%s)</b>"
+msgstr "Dateien erfolgreich zum Paket  <b>%s (%s)</b> hinzugefügt"
+
+#: modules/pkgs/pkgs/edit.php:109
+msgid "Package failed to save"
+msgstr "Paket speicher fehlgeschlagen"
+
+#: modules/pkgs/pkgs/edit.php:124
+msgid "File successfully deleted."
+msgstr "Datei wurde erfolgreich gelöscht."
+
+#: modules/pkgs/pkgs/edit.php:130
+#, php-format
+msgid "Failed to delete files%s"
+msgstr "Fehler beim Löschen von Dateien%s"
+
+#: modules/pkgs/pkgs/edit.php:133
+msgid "Failed to delete files"
+msgstr "Fehler beim Löschen der Dateien"
+
+#: modules/pkgs/pkgs/edit.php:187
+msgid "Package label"
+msgstr "Paket Beschriftung"
+
+#: modules/pkgs/pkgs/edit.php:188
+msgid "Package version"
+msgstr "Paket Version"
+
+#: modules/pkgs/pkgs/edit.php:193
+msgid "Command : "
+msgstr "Command:"
+
+#: modules/pkgs/pkgs/edit.php:252
+msgid "File"
+msgstr "Datei"
+
+#: modules/pkgs/pkgs/edit.php:261
+msgid "Delete file"
+msgstr "Datei löschen"
+
+#: modules/pkgs/pkgs/edit.php:261
+msgid "Are you sure you want to delete this file?"
+msgstr "Sind Sie sicher, dass Sie die Datei löschen möchten?"
+
+
