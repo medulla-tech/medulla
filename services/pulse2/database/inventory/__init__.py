@@ -237,7 +237,10 @@ class Inventory(DyngroupDatabaseHelper):
         join_query = join_query.join(self.table['hasEntity']).join(self.table['Entity']).join(self.inventory)
 
         # Getting requested cols
-        requested_cols = set([col[0] for col in Inventory().config.display])
+        try:
+            requested_cols = set([col[0] for col in Inventory().config.display])
+        except:
+            requested_cols = set([])
 
         # Avoid doing joins if search is not requested
         if 'hostname' in pattern and pattern['hostname'].strip():
