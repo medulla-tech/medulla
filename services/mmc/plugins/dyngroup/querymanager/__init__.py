@@ -41,9 +41,9 @@ def queryPossibilities():
 
 def queryGroups():
     # Assign criterions to categories
-    ret = {}
+    ret = []
     #
-    ret['Group'] = [ ['groupname',''] ]
+    ret.append(['Group', [ ['groupname',''] ]])
     #
     return ret
 

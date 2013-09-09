@@ -41,13 +41,12 @@ def queryPossibilities():
 
 def queryGroups():
     # Assign criterions to categories
-    ret = {}
     # Identification cat
-    ret['Criterions'] = []
+    criterions = []
     for type in ['list', 'double', 'halfstatic']:
         for possible in PossibleQueries().possibleQueries(type):
-            ret['Criterions'].append([possible,''])
-    return ret
+            criterions.append([possible,''])
+    return [['Criterions',criterions]]
 
 def extendedPossibilities():
     ret = {}
