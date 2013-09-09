@@ -298,6 +298,34 @@ if (!$request->isEmpty()) {  # TODO check ACLs....
     print "</td></tr>";
     print "</table>";
 }
+
+_T('Identification', 'dyngroup');
+_T('Computer name', 'dyngroup');
+_T('Hostname of the computer', 'dyngroup');
+_T('Description', 'dyngroup');
+_T('Description of the computer', 'dyngroup');
+_T('Inventory number', 'dyngroup');
+_T('Your internal inventory number', 'dyngroup');
+_T('Hardware', 'dyngroup');
+_T('System type', 'dyngroup');
+_T('Laptop, Desktop, Rack Mount Chassis ...', 'dyngroup');
+_T('System manufacturer', 'dyngroup');
+_T('Dell, HP, Apple ...', 'dyngroup');
+_T('System model', 'dyngroup');
+_T('Latitude E6420, ProLiant DL120, MacBookAir5,2 ...', 'dyngroup');
+_T('Location', 'dyngroup');
+_T('Third Floor, Room 401, Headquarters building ... (user defined)', 'dyngroup');
+_T('State', 'dyngroup');
+_T('In Production, Under Maintenance, Decommissioned ... (user defined)', 'dyngroup');
+_T('Entity', 'dyngroup');
+_T('Organizational structure (automatic assignment)', 'dyngroup');
+_T('Software', 'dyngroup');
+_T('Operating system', 'dyngroup');
+_T('Microsoft Windows 7, Debian GNU/Linux 7.1 ...', 'dyngroup');
+_T('Installed software', 'dyngroup');
+_T('Mozilla Firefox, LibreOffice, Microsoft Office 2003 ...', 'dyngroup');
+_T('Installed software (specific version)', 'dyngroup');
+_T('Two-step query: Mozilla Firefox -> 23.0.1, LibreOffice -> 4.0.4 ...', 'dyngroup');
 ?>
 <style>
     li.delete a {
