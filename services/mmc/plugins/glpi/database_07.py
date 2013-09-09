@@ -350,7 +350,10 @@ class Glpi07(DyngroupDatabaseHelper):
                 if filter_key == 'type':
                     self.logger.debug('will filter %s in (%s)' % (filter_key, str(filter_values)))
                     a_filter_on.append(self.machine.c.type.in_(filter_values))
-                if not filter_key in ('state','type') :
+                if filter_key == 'entity':
+                    self.logger.debug('will filter %s in (%s)' % (filter_key, str(filter_values)))
+                    a_filter_on.append(self.machine.c.entities_id.in_(filter_values))
+                if not filter_key in ('state','type','entity') :
                     self.logger.warn('dont know how to filter on %s' % (filter_key))
             if len(a_filter_on) == 0:
                 return None
