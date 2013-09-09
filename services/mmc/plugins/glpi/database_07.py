@@ -2470,12 +2470,12 @@ class Glpi07(DyngroupDatabaseHelper):
     def getAllManufacturer(self, ctx, filt = ''):
         """ @return: all machine Manufacturers defined in the GLPI database """
         session = create_session()
-        query = session.query(Manufacturers).select_from(self.manufacturers.join(self.machine))
+        query = session.query(self.klass['glpi_dropdown_manufacturer']).select_from(self.glpi_dropdown_manufacturer.join(self.machine))
         query = self.__filter_on(query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0))
         query = self.__filter_on_entity(query, ctx)
         if filter != '':
-            query = query.filter(self.manufacturers.c.name.like('%'+filt+'%'))
-        ret = query.group_by(self.manufacturers.c.name).all()
+            query = query.filter(self.glpi_dropdown_manufacturer.c.name.like('%'+filt+'%'))
+        ret = query.group_by(self.glpi_dropdown_manufacturer.c.name).all()
         session.close()
         return ret
 
@@ -2506,11 +2506,11 @@ class Glpi07(DyngroupDatabaseHelper):
     def getMachineByManufacturer(self, ctx, filt):
         """ @return: all machines that have this Manufacturer """
         session = create_session()
-        query = session.query(Machine).select_from(self.machine.join(self.manufacturers))
+        query = session.query(Machine).select_from(self.machine.join(self.glpi_dropdown_manufacturer))
         query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
-        query = query.filter(self.manufacturers.c.name == filt)
+        query = query.filter(self.glpi_dropdown_manufacturer.c.name == filt)
         ret = query.all()
         session.close()
         return ret
