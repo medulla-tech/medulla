@@ -2539,20 +2539,20 @@ class Glpi07(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def getMachineByType(self, ctx, filt):
+    def getMachineByManufacturer(self, ctx, filt):
         """ @return: all machines that have this model """
         session = create_session()
-        query = session.query(Machine).select_from(self.machine.join(self.glpi_type_computers))
+        query = session.query(Machine).select_from(self.machine.join(self.glpi_dropdown_manufacturer))
         query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
-        query = query.filter(self.glpi_type_computers.c.name == filt)
+        query = query.filter(self.glpi_dropdown_manufacturer.c.name == filt)
         ret = query.all()
         session.close()
         return ret
 
     def getMachineByInventoryNumber(self, ctx, filt):
-        """ @return: all machines that have this Manufacturer """
+        """ @return: all machines that have this inventory number """
         session = create_session()
         query = session.query(Machine).select_from(self.machine)
         query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
@@ -2588,6 +2588,7 @@ class Glpi07(DyngroupDatabaseHelper):
         ret = query.group_by(self.locations.c.completename).all()
         session.close()
         return ret
+
     def getMachineByLocation(self, ctx, filt):
         """ @return: all machines that have this contact number """
         session = create_session()
