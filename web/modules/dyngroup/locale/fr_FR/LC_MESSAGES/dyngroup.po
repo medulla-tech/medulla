@@ -12,9 +12,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-09-06 17:43+0200\n"
-"PO-Revision-Date: 2013-09-06 15:43+0000\n"
-"Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
+"POT-Creation-Date: 2013-09-09 17:28+0200\n"
+"PO-Revision-Date: 2013-09-09 15:39+0000\n"
+"Last-Translator: Cécile Adam <acecile@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/pulse2/team/fr_FR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -230,14 +230,14 @@ msgid "Please choose the type of group you want to create"
 msgstr "Veuillez sélectionner le type de groupe que vous souhaitez créer"
 
 #: modules/dyngroup/dyngroup/import_from_file.php:54
-#: modules/dyngroup/dyngroup/creator.php:253
-#: modules/dyngroup/dyngroup/creator.php:259
+#: modules/dyngroup/dyngroup/creator.php:255
+#: modules/dyngroup/dyngroup/creator.php:261
 #: modules/dyngroup/includes/groups.inc.php:165
 msgid "Yes"
 msgstr "Oui"
 
 #: modules/dyngroup/dyngroup/import_from_file.php:54
-#: modules/dyngroup/dyngroup/creator.php:254
+#: modules/dyngroup/dyngroup/creator.php:256
 #: modules/dyngroup/includes/groups.inc.php:166
 msgid "No"
 msgstr "Non"
@@ -516,37 +516,148 @@ msgstr "Enlever l'ordinateur"
 msgid "Choose the module you want to query : "
 msgstr "Sélectionnez le module que vous désirez requêter : "
 
-#: modules/dyngroup/dyngroup/creator.php:199
+#: modules/dyngroup/dyngroup/creator.php:201
 msgid "Comparison operator : "
 msgstr "Opérateur de comparaison : "
 
-#: modules/dyngroup/dyngroup/creator.php:212
+#: modules/dyngroup/dyngroup/creator.php:214
 msgid "Date"
 msgstr "Date"
 
-#: modules/dyngroup/dyngroup/creator.php:215
-#: modules/dyngroup/dyngroup/creator.php:224
-#: modules/dyngroup/dyngroup/creator.php:248
-#: modules/dyngroup/dyngroup/creator.php:256
-#: modules/dyngroup/dyngroup/creator.php:260
+#: modules/dyngroup/dyngroup/creator.php:217
+#: modules/dyngroup/dyngroup/creator.php:226
+#: modules/dyngroup/dyngroup/creator.php:250
+#: modules/dyngroup/dyngroup/creator.php:258
+#: modules/dyngroup/dyngroup/creator.php:262
 #: modules/dyngroup/includes/autocomplete.php:29
 #: modules/dyngroup/includes/double.php:36
 msgid "Add"
 msgstr "Ajouter"
 
-#: modules/dyngroup/dyngroup/creator.php:250
+#: modules/dyngroup/dyngroup/creator.php:252
 #: modules/dyngroup/includes/autocomplete.php:31
 #: modules/dyngroup/includes/double.php:39
 msgid "Modify"
 msgstr "Modifier"
 
-#: modules/dyngroup/dyngroup/creator.php:276
+#: modules/dyngroup/dyngroup/creator.php:278
 msgid "The request is : "
 msgstr "La requête est : "
 
-#: modules/dyngroup/dyngroup/creator.php:292
-msgid " Go       to save step"
+#: modules/dyngroup/dyngroup/creator.php:295
+msgid "Go to save step"
+msgstr "Sauvegarder"
+
+#: modules/dyngroup/dyngroup/creator.php:302
+msgid "Identification"
+msgstr "Identification"
+
+#: modules/dyngroup/dyngroup/creator.php:303
+msgid "Computer name"
+msgstr "Nom de machine"
+
+#: modules/dyngroup/dyngroup/creator.php:304
+msgid "Hostname of the computer"
+msgstr "Le \"hostname\" de la machine"
+
+#: modules/dyngroup/dyngroup/creator.php:305
+msgid "Description"
+msgstr "Description"
+
+#: modules/dyngroup/dyngroup/creator.php:306
+msgid "Description of the computer"
+msgstr "Description de la machine"
+
+#: modules/dyngroup/dyngroup/creator.php:307
+msgid "Inventory number"
+msgstr "Numéro d'inventaire"
+
+#: modules/dyngroup/dyngroup/creator.php:308
+msgid "Your internal inventory number"
+msgstr "Numéro d'inventaire interne"
+
+#: modules/dyngroup/dyngroup/creator.php:309
+msgid "Hardware"
+msgstr "Matériel"
+
+#: modules/dyngroup/dyngroup/creator.php:310
+msgid "System type"
+msgstr "Type de machine"
+
+#: modules/dyngroup/dyngroup/creator.php:311
+msgid "Laptop, Desktop, Rack Mount Chassis ..."
+msgstr "Laptop, Desktop, Rack Mount Chassis ..."
+
+#: modules/dyngroup/dyngroup/creator.php:312
+msgid "System manufacturer"
+msgstr "Fabriquant du poste"
+
+#: modules/dyngroup/dyngroup/creator.php:313
+msgid "Dell, HP, Apple ..."
+msgstr "Dell, HP, Apple ..."
+
+#: modules/dyngroup/dyngroup/creator.php:314
+msgid "System model"
+msgstr "Modèle du poste"
+
+#: modules/dyngroup/dyngroup/creator.php:315
+msgid "Latitude E6420, ProLiant DL120, MacBookAir5,2 ..."
+msgstr "Latitude E6420, ProLiant DL120, MacBookAir5,2 ..."
+
+#: modules/dyngroup/dyngroup/creator.php:316
+msgid "Location"
+msgstr "Emplacement"
+
+#: modules/dyngroup/dyngroup/creator.php:317
+msgid "Third Floor, Room 401, Headquarters building ... (user defined)"
 msgstr ""
+"Troisième étage, Bureau 401, Bâtiment direction ... (défini par "
+"l'utilisateur)"
+
+#: modules/dyngroup/dyngroup/creator.php:318
+msgid "State"
+msgstr "État"
+
+#: modules/dyngroup/dyngroup/creator.php:319
+msgid "In Production, Under Maintenance, Decommissioned ... (user defined)"
+msgstr "En Production, En Réparation, Rebut ... (défini par l'utilisateur)"
+
+#: modules/dyngroup/dyngroup/creator.php:320
+msgid "Entity"
+msgstr "Entité"
+
+#: modules/dyngroup/dyngroup/creator.php:321
+msgid "Organizational structure (automatic assignment)"
+msgstr "Emplacement organisationnel (affectation automatique)"
+
+#: modules/dyngroup/dyngroup/creator.php:322
+msgid "Software"
+msgstr "Logiciel"
+
+#: modules/dyngroup/dyngroup/creator.php:323
+msgid "Operating system"
+msgstr "Système d'exploitation"
+
+#: modules/dyngroup/dyngroup/creator.php:324
+msgid "Microsoft Windows 7, Debian GNU/Linux 7.1 ..."
+msgstr "Microsoft Windows 7, Debian GNU/Linux 7.1 ..."
+
+#: modules/dyngroup/dyngroup/creator.php:325
+msgid "Installed software"
+msgstr "Logiciel installé"
+
+#: modules/dyngroup/dyngroup/creator.php:326
+msgid "Mozilla Firefox, LibreOffice, Microsoft Office 2003 ..."
+msgstr "Mozilla Firefox, LibreOffice, Microsoft Office 2003 ..."
+
+#: modules/dyngroup/dyngroup/creator.php:327
+msgid "Installed software (specific version)"
+msgstr "Logiciel installé (version spécifique)"
+
+#: modules/dyngroup/dyngroup/creator.php:328
+msgid "Two-step query: Mozilla Firefox -> 23.0.1, LibreOffice -> 4.0.4 ..."
+msgstr ""
+"Requête en deux étapes: Mozilla Firefox -> 23.0.1, LibreOffice -> 4.0.4 ..."
 
 #: modules/dyngroup/includes/groups.inc.php:36
 msgid "All share entities"
