@@ -59,36 +59,36 @@ def queryPossibilities():
 
 def queryGroups():
     # Assign criterions to categories
-    ret = {}
+    ret = []
     # Identification cat
-    ret['Identification'] = [ \
-                                ['Computer name','Get all computers by hostname pattern'], \
-                                ['Description','Get all computers by description pattern'], \
-                                ['Group',''] \
-                            ]
+    ret.append(['Identification', [ \
+                                ['Computer name','Hostname of the computer'], \
+                                ['Description','Description of the computer'], \
+                                ['Inventory number','Your internal inventory number'] \
+                            ]])
     # Hardware cat
-    ret['Hardware'] =       [ \
-                                ['Model'], \
-                                ['Manufacturer'], \
-                                ['State',''] \
-                            ]
+    ret.append(['Hardware',      [ \
+                                ['System type','Laptop, Desktop, Rack Mount Chassis ...'], \
+                                ['System manufacturer','Dell, HP, Apple ...'], \
+                                ['System model','Latitude E6420, ProLiant DL120, MacBookAir5,2 ...'] \
+                            ]])
     # Contact
-    ret['Contact'] =        [ \
-                                ['Contact',''], \
-                                ['Contact number',''] \
-                            ]
+    #ret['Contact'] =        [ \
+    #                            ['Contact',''], \
+    #                            ['Contact number',''] \
+    #                        ]
     #Zone
-    ret['Zone'] =           [ \
-                                ['Location',''], \
-                                ['Entity',''] \
-                            ]
+    ret.append(['Location',       [ \
+                                ['Location','Third Floor, Room 401, Headquarters building ... (user defined)'], \
+                                ['State','In Production, Under Maintenance, Decommissioned ... (user defined)'], \
+                                ['Entity','Organizational structure (automatic assignment)'] \
+                            ]])
     # Software
-    ret['Software'] =       [ \
-                                ['OS',''], \
-                                ['Service Pack',''], \
-                                ['Software name',''], \
-                                ['Software name & version',''] \
-                            ]
+    ret.append(['Software',       [ \
+                                ['Operating system','Microsoft Windows 7, Debian GNU/Linux 7.1 ...'], \
+                                ['Installed software','Mozilla Firefox, LibreOffice, Microsoft Office 2003 ...'], \
+                                ['Installed software (specific version)','Two-step query: Mozilla Firefox -> 23.0.1, LibreOffice -> 4.0.4 ...'] \
+                            ]])
     #
     return ret
 

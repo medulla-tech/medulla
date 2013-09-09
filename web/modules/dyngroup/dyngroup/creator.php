@@ -146,9 +146,11 @@ if (quickGet('add_req')) {
         // Display All categories
         $categories = getQueryGroupsForModule(quickGet('add_req'));
         // Title
-        print "<table style=\"width:600px;\" cellspacing=0 class=\"listinfos\">";
+        print "<table style=\"width:700px;\" cellspacing=0 class=\"listinfos\">";
         // Printing category fields
-        foreach ($categories as $cat_label => $fields) {
+        foreach ($categories as $category) {
+            $cat_label = $category[0];
+            $fields = $category[1];
             // Category title
             print "<thead><tr><td style=\"text-transform:uppercase;font-size:0.9em;width:250px;\">" . _T($cat_label, "dyngroup") . "</td><td></td></tr></thead>";
             foreach ($fields as $field) {
@@ -167,135 +169,136 @@ if (quickGet('add_req')) {
                                 'imaging_server' => $imaging_server
                             )) .
                             "'>" . _T($param_name, 'dyngroup') . "</a></td>" .
-                            "<td>" . ($description ==''?'':_T($description, 'dyngroup' ) ) . "</td>" .
-                    "</tr>";
+                            "<td>" . ($description == '' ? '' : _T($description, 'dyngroup') ) . "</td>" .
+                            "</tr>";
                 }
-                }
-                        }
-                print "</table>";
-                }
-                }
+            }
+        }
+        print "</table>";
+    }
+}
 
 // allow to select/write a value for the criterion
 //TODO put in class
-                                if (quickGet('add_param')) {
-                        print "<form action = '" . urlStr("base/computers/$target", array ( )) . "' method = 'POST'><table>";
-                        print "<input type = 'hidden' name = 'imaging_server' value = '$imaging_server'/>";
-                // need to be changed in getCriterionType (we don't use the second part of the array...
-                        $type = getTypeForCriterionInModule (quickGet('req'), quickGet('add_param'));
-                        $extended  =   getExtended(quickGet('req'), quickGet('add_param'));
+if (quickGet('add_param')) {
+    print "<form action = '" . urlStr("base/computers/$target", array()) . "' method = 'POST'><table>";
+    print "<input type = 'hidden' name = 'imaging_server' value = '$imaging_server'/>";
+    // need to be changed in getCriterionType (we don't use the second part of the array...
+    $type = getTypeForCriterionInModule(quickGet('req'), quickGet('add_param'));
+    $extended = getExtended(quickGet('req'), quickGet('add_param'));
 
-                                print "<tr><td>" . quickGet ( 'req') . " > " . quickGet('add_param') . "</td><td>";
-                if (strlen($extended)) {
-                // Insert a hidden input which contains the type of data
-                        print "<input type = 'hidden' name = 'type_extended' value = '" . $extended . "' />";
+    print "<tr><td>" . quickGet('req') . " > " . quickGet('add_param') . "</td><td>";
+    if (strlen($extended)) {
+        // Insert a hidden input which contains the type of data
+        print "<input type = 'hidden' name = 'type_extended' value = '" . $extended . "' />";
 
-                // Display an option list to chose the comparison operator
-                        $operators = array ('=', '<', '>', '!=');
-                        $listbox =  new SelectItem("operator");
-                        $listbox->setElements($operators);
-                        $listbox->setElementsVal($operators);
+        // Display an option list to chose the comparison operator
+        $operators = array('=', '<', '>', '!=');
+        $listbox = new SelectItem("operator");
+        $listbox->setElements($operators);
+        $listbox->setElementsVal($operators);
 
-                                print _T("Comparison operator : ");
-                $listbox->display();
+        print _T("Comparison operator : ");
+        $listbox->display();
 
+        print "</td><td>";
+
+        switch ($extended) {
+            // Execute a regexp that checks the right type
+            case 'int':
+                // Nothing to do for the moment.
+                break;
+            // Display a calendar widget instead of an input
+            case 'date':
+                include("modules/base/includes/AjaxFilterLog.inc.php");
+                $dateWidget = new LogDynamicDateTpl("value", _("Date"));
+                $dateWidget->display();
                 print "</td><td>";
-
-                switch ($extended) {
-                // Execute a regexp that checks the right type
-                    case 'int':
-                    // Nothing to do for the moment.
-                break;
-                // Display a calendar widget instead of an input
-                    case 'date':
-                            include("modules/base/includes/AjaxFilterLog.inc.php");
-                            $dateWidget =  new LogDynamicDateTpl("value", _("Date"));
-                    $dateWidget->display();
-                    print "</td><td>";
-                            print "<input class = 'btnPrimary' value = '"  . _T("Add", "dyngroup") . "' name = 'Add' type = 'submit'/>";
-                    print "</td><td>";
-                break;
-                        }
-                        }
-                if ($extended != "date") {
-                switch ($type) { #$param[0] ) {
-                    case 'string':
-                            print "<input name = 'value' type = 'text'></input>";
-                            print "<input class = 'btnPrimary' value = '"  . _T("Add", "dyngroup") . "' name = 'Add' type = 'submit'/>";
-                break;
-                    case 'list':
-                            $module  = clean(quickGet('req'));
-                            $criterion =  clean(quickGet('add_param'));
-                            include("modules/dyngroup/includes/autocomplete.php");
-                            $auto =  new Autocomplete($module,  $criterion, quickGet('value'), $subedition);
-                    $auto->display();
-                break;
-                    case 'double':
-                            $module  = clean(quickGet('req'));
-                            $criterion =  clean(quickGet('add_param'));
-                            include("modules/dyngroup/includes/double.php");
-                            $auto = new  DoubleAutocomplete($module,  $criterion, quickGet('value'), $subedition);
-                    $auto->display();
-                break;
-                    case 'halfstatic':
-                            $module  = clean(quickGet('req'));
-                            $criterion =  clean(quickGet('add_param'));
-                            include("modules/dyngroup/includes/autocomplete.php");
-                            $auto =  new Autocomplete($module,  $criterion, quickGet('value'), $subedition);
-                    $auto->display();
-                break;
-                    case 'bool':
-                             $b_label = _T("Add", "dyngroup");
-                    if ($subedition) {
-                             $b_label =  _T("Modify", "dyngroup");
-                            }
-                            print "<select name = 'value'>";
-                            print "<option name = 'True' value = 'True'>"  . _T("Yes", "dyngroup") . "</option>";
-                            print "<option name = 'False' value = 'False'>"  . _T("No", "dyngroup") . "</option>";
-                    print "</select>";
-                            print "<input class = 'btnPrimary' value = '"  . _T("Add", "dyngroup") . "' name = 'Add' type = 'submit'/>";
-                break;
-                    case 'true':
-                            print "<input type = 'hidden' value = 'True' name = 'value'/><input type = 'text' readonly value = '"  . _T("Yes", "dyngroup") . "'/>";
-                            print "<input class = 'btnPrimary' value = '"  . _T("Add", "dyngroup") . "' name = 'Add' type = 'submit'/>";
-                break;
-                        }
-                }
+                print "<input class = 'btnPrimary' value = '" . _T("Add", "dyngroup") . "' name = 'Add' type = 'submit'/>";
                 print "</td><td>";
-                        print "<input type = 'hidden' name = 'req' value = '" .  quickGet('req') . "'/>";
-                        print "<input type = 'hidden' name = 'param' value = '" .  quickGet('add_param') . "'/>";
-                        print "<input type = 'hidden' name = 'request' value = '" . $request->toURL() . "'/>";
-                        print "<input type = 'hidden' name = 'id' value = '$id'/>";
-                print "</td></tr>";
-                print "</table></form>";
+                break;
+        }
+    }
+    if ($extended != "date") {
+        switch ($type) { #$param[0] ) {
+            case 'string':
+                print "<input name = 'value' type = 'text'></input>";
+                print "<input class = 'btnPrimary' value = '" . _T("Add", "dyngroup") . "' name = 'Add' type = 'submit'/>";
+                break;
+            case 'list':
+                $module = clean(quickGet('req'));
+                $criterion = clean(quickGet('add_param'));
+                include("modules/dyngroup/includes/autocomplete.php");
+                $auto = new Autocomplete($module, $criterion, quickGet('value'), $subedition);
+                $auto->display();
+                break;
+            case 'double':
+                $module = clean(quickGet('req'));
+                $criterion = clean(quickGet('add_param'));
+                include("modules/dyngroup/includes/double.php");
+                $auto = new DoubleAutocomplete($module, $criterion, quickGet('value'), $subedition);
+                $auto->display();
+                break;
+            case 'halfstatic':
+                $module = clean(quickGet('req'));
+                $criterion = clean(quickGet('add_param'));
+                include("modules/dyngroup/includes/autocomplete.php");
+                $auto = new Autocomplete($module, $criterion, quickGet('value'), $subedition);
+                $auto->display();
+                break;
+            case 'bool':
+                $b_label = _T("Add", "dyngroup");
+                if ($subedition) {
+                    $b_label = _T("Modify", "dyngroup");
                 }
+                print "<select name = 'value'>";
+                print "<option name = 'True' value = 'True'>" . _T("Yes", "dyngroup") . "</option>";
+                print "<option name = 'False' value = 'False'>" . _T("No", "dyngroup") . "</option>";
+                print "</select>";
+                print "<input class = 'btnPrimary' value = '" . _T("Add", "dyngroup") . "' name = 'Add' type = 'submit'/>";
+                break;
+            case 'true':
+                print "<input type = 'hidden' value = 'True' name = 'value'/><input type = 'text' readonly value = '" . _T("Yes", "dyngroup") . "'/>";
+                print "<input class = 'btnPrimary' value = '" . _T("Add", "dyngroup") . "' name = 'Add' type = 'submit'/>";
+                break;
+        }
+    }
+    print "</td><td>";
+    print "<input type = 'hidden' name = 'req' value = '" . quickGet('req') . "'/>";
+    print "<input type = 'hidden' name = 'param' value = '" . quickGet('add_param') . "'/>";
+    print "<input type = 'hidden' name = 'request' value = '" . $request->toURL() . "'/>";
+    print "<input type = 'hidden' name = 'id' value = '$id'/>";
+    print "</td></tr>";
+    print "</table></form>";
+}
 
 // display the request in detail
-                if (!$request->isEmpty()) {
-                        print "<hr/>";
-                                print "<h3>" . _T("The request is : ",  "dyngroup") . "</h3>";
-                if ($edition) {
-                        $request-> displayReqListInfos(true, array ('id' => $id, 'gid' => $id, 'target' => $target, 'target_edit' => 'computersgroupsubedit', 'target_del' => 'computersgroupsubdel', 'request' => $request->toS()));
-                } else {
-                        $request-> displayReqListInfos(true, array ('id' => $id, 'gid' => $id, 'target' => $target, 'target_edit' => 'computersgroupcreatesubedit', 'target_del' => 'computersgroupcreatesubdel', 'request' => $request->toS(), 'tab' => 'tabdyn'));
-                }
-                }
+if (!$request->isEmpty()) {
+    print "<hr/>";
+    print "<h3>" . _T("The request is : ", "dyngroup") . "</h3>";
+    if ($edition) {
+        $request->displayReqListInfos(true, array('id' => $id, 'gid' => $id, 'target' => $target, 'target_edit' => 'computersgroupsubedit', 'target_del' => 'computersgroupsubdel', 'request' => $request->toS()));
+    } else {
+        $request->displayReqListInfos(true, array('id' => $id, 'gid' => $id, 'target' => $target, 'target_edit' => 'computersgroupcreatesubedit', 'target_del' => 'computersgroupcreatesubdel', 'request' => $request->toS(), 'tab' => 'tabdyn'));
+    }
+}
 
 // display action buttons in the bottom
 //TODO put in class
-                if (!$request->isEmpty()) {  # TODO check ACLs....
-                        print "<hr/>";
-                        print "<table>";
-                print "<tr><td>"; $b = new Button('base', 'computers', 'creator_step2');
-                        $_SESSION['request'] = $request->toS();
-                        $url = urlStr( "base/computers/creator_step2", array ('id' => $id, 'request' => 'stored_in_session', 'imaging_server' => $imaging_server, 'is_group' => ( $groupedit ? '1' : 0)));
-                                print $b->getOnClickButton(_T(  " Go       to save step", "dyngroup"), $url);
+if (!$request->isEmpty()) {  # TODO check ACLs....
+    print "<hr/>";
+    print "<table>";
+    print "<tr><td>";
+    $b = new Button('base', 'computers', 'creator_step2');
+    $_SESSION['request'] = $request->toS();
+    $url = urlStr("base/computers/creator_step2", array('id' => $id, 'request' => 'stored_in_session', 'imaging_server' => $imaging_server, 'is_group' => ( $groupedit ? '1' : 0)));
+    print $b->getOnClickButton(_T("Go to save step", "dyngroup"), $url);
 
-                print "</td><td>";
-                print "</td></tr>";
-                print "</table>";
-                }
-                ?>
+    print "</td><td>";
+    print "</td></tr>";
+    print "</table>";
+}
+?>
 <style>
     li.delete a {
         padding: 3px 0px 5px 20px;
