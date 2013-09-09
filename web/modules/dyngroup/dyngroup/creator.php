@@ -179,7 +179,7 @@ if (quickGet('add_req')) {
 // allow to select/write a value for the criterion
 //TODO put in class
                                 if (quickGet('add_param')) {
-                        print "<form action = '" . urlStr(" base/computers/$target", array ( )) . "' method = 'POST'><table>";
+                        print "<form action = '" . urlStr("base/computers/$target", array ( )) . "' method = 'POST'><table>";
                         print "<input type = 'hidden' name = 'imaging_server' value = '$imaging_server'/>";
                 // need to be changed in getCriterionType (we don't use the second part of the array...
                         $type = getTypeForCriterionInModule (quickGet('req'), quickGet('add_param'));
@@ -288,7 +288,7 @@ if (quickGet('add_req')) {
                         print "<table>";
                 print "<tr><td>"; $b = new Button('base', 'computers', 'creator_step2');
                         $_SESSION['request'] = $request->toS();
-                        $url = urlStr( "  base/computers/creator_step2", array ('id' => $id, 'request' => 'stored_in_session', 'imaging_server' => $imaging_server, 'is_group' => ( $groupedit ? '1' : 0)));
+                        $url = urlStr( "base/computers/creator_step2", array ('id' => $id, 'request' => 'stored_in_session', 'imaging_server' => $imaging_server, 'is_group' => ( $groupedit ? '1' : 0)));
                                 print $b->getOnClickButton(_T(  " Go       to save step", "dyngroup"), $url);
 
                 print "</td><td>";
