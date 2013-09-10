@@ -30,8 +30,12 @@ $canbedeletedfromgroup = null;
 $canbedeleted = true;
 $is_group = false;
 
-$filter = array('hostname'=> $_GET["filter"]);
-if (isset($_GET["start"])) { $start = $_GET["start"]; } else { $start = 0; }
+$filter = array('hostname' => $_GET["filter"]);
+if (isset($_GET["start"])) {
+    $start = $_GET["start"];
+} else {
+    $start = 0;
+}
 if (isset($_GET['location'])) {
     $filter['location'] = $_GET['location'];
     if (!empty($_GET['gid'])) {
@@ -40,9 +44,15 @@ if (isset($_GET['location'])) {
         $_SESSION['computers.selected_location'] = $_GET['location'];
     }
 }
-if (isset($_GET['request'])) { $filter['request'] = $_GET['request']; }
-if (isset($_GET['equ_bool'])) { $filter['equ_bool'] = $_GET['equ_bool']; }
-if (isset($_GET['imaging_server'])) { $filter['imaging_server'] = $_GET['imaging_server']; }
+if (isset($_SESSION['request'])) {
+    $filter['request'] = $_SESSION['request'];
+}
+if (isset($_GET['equ_bool'])) {
+    $filter['equ_bool'] = $_GET['equ_bool'];
+}
+if (isset($_GET['imaging_server'])) {
+    $filter['imaging_server'] = $_GET['imaging_server'];
+}
 
 if (in_array("dyngroup", $_SESSION["modulesList"])) {
     require_once("modules/pulse2/includes/groups_xmlrpc.inc.php");
@@ -60,14 +70,16 @@ if (in_array("dyngroup", $_SESSION["modulesList"])) {
 $cl = getRestrictedComputersList($start, $start + $maxperpage, $filter, False);
 $cl1 = array();
 foreach ($cl as $k => $v) {
-    $cl1[$v[1]['cn'][0].$k] = $k;
+    $cl1[$v[1]['cn'][0] . $k] = $k;
 }
 $names = array();
+
 function my_cmp($a, $b) {
     return strcmp(strtolower($a), strtolower($b));
 }
+
 uksort($cl1, "my_cmp");
-foreach ($cl1 as $k1 =>$k) {
+foreach ($cl1 as $k1 => $k) {
     $names[] = join_value($cl[$k]);
 }
 $count = getComputerCount($filter);
@@ -88,7 +100,7 @@ list_computers($names, $filter, $count, $canbedeleted, $canbedeletedfromgroup, $
 
 function join_value($n) {
     $ret = array();
-    foreach ($n[1] as $k=>$v) {
+    foreach ($n[1] as $k => $v) {
         if (is_array($v)) {
             $ret[$k] = join(", ", $v);
         } else {
@@ -99,39 +111,38 @@ function join_value($n) {
 }
 
 if (in_array("dyngroup", $_SESSION["modulesList"]) and isset($_GET['gid'])) {
-    ?><a href='<?php echo  urlStr("base/computers/csv", array('gid'=>$_GET['gid'], 'location' => $_GET['location'], 'groupname' => $_GET['groupname'])) ?>'><img src='modules/pulse2/graph/csv.png' alt='export csv'/></a><?php
+    ?><a href='<?php echo urlStr("base/computers/csv", array('gid' => $_GET['gid'], 'location' => $_GET['location'], 'groupname' => $_GET['groupname'])) ?>'><img src='modules/pulse2/graph/csv.png' alt='export csv'/></a><?php
 }
-
 ?>
 
 <style type="text/css">
-td:hover {
-    cursor:pointer;
-}
+    td:hover {
+        cursor:pointer;
+    }
 </style>
 <script type="text/javascript">
-jQuery('tbody tr td:not(.action)').click(function(){
-     jQuery('#param').val(jQuery(this).text().replace(/&nbsp;/g, ' '));
-     pushSearch();
-});
+    jQuery('tbody tr td:not(.action)').click(function() {
+        jQuery('#param').val(jQuery(this).text().replace(/&nbsp;/g, ' '));
+        pushSearch();
+    });
 
 // Detecting Java Runtime version for VNC Applet
 
-function JavaVersion()
-{
-  var result = null;
-  // Walk through the full list of mime types.
-  for(var i=0; i<navigator.mimeTypes.length; i++ )
-  {
-      // The jpi-version is the plug-in version.  This is the best
-      // version to use.
-      if( (result = navigator.mimeTypes[i].type.match(/^application\/x-java-applet;jpi-version=(.*)$/)) !== null )
-          return result[1];
-  }
-  return null;
-}    
-    
+    function JavaVersion()
+    {
+        var result = null;
+        // Walk through the full list of mime types.
+        for (var i = 0; i < navigator.mimeTypes.length; i++)
+        {
+            // The jpi-version is the plug-in version.  This is the best
+            // version to use.
+            if ((result = navigator.mimeTypes[i].type.match(/^application\/x-java-applet;jpi-version=(.*)$/)) !== null)
+                return result[1];
+        }
+        return null;
+    }
+
 // Setting a cookie for Java Version
-document.cookie = "javaenabled="+JavaVersion();
+    document.cookie = "javaenabled=" + JavaVersion();
 
 </script>
