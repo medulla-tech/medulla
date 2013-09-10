@@ -528,6 +528,7 @@ class Page {
     var $_desc;
     var $_options;
     var $_file;
+    var $_img;
 
     function Page($action,$desc = "") {
         $this->_action = $action;
@@ -539,6 +540,7 @@ class Page {
         $this->_options["noHeader"] = False;
         $this->_options["AJAX"] = False;
         $this->_options["noACL"] = False;
+        $this->_img = array("default" => "", "active" => "");
     }
 
     /**
@@ -616,6 +618,14 @@ class Page {
     function setFile($file = False,$options = array()) {
         $this->_file = $file;
         $this->setOptions($options);
+    }
+
+    function setImg($img_active, $img) {
+        $this->_img = array("active" => $img_active, "default" => $img);
+    }
+
+    function getImg($type) {
+        return $this->_img[$type];
     }
 
     /**

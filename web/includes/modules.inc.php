@@ -158,10 +158,10 @@ function insert_without_delete($arr,$ind,$value) {
 
 function getSorted($objlist) {
     $prio = array();
-   foreach ($objlist as $obj) {
+    foreach ($objlist as $obj) {
+        if ($obj)
             $prio = insert_without_delete($prio,$obj->getPriority(),$obj);
     }
-
     ksort($prio);
     return $prio;
 }
