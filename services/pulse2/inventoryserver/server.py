@@ -154,7 +154,7 @@ class InventoryServer:
                         self.logger.debug("GlpiProxy: Resolved machine UUID='%s'" % str(glpi_uuid))
                         has_known_os = hasKnownOS(glpi_uuid)
                         break
-                if glpi_uuid and has_known_os and InventoryUtils.is_comming_from_pxe(from_ip):
+                if glpi_uuid and has_known_os and InventoryUtils.is_coming_from_pxe(content):
                     self.logger.info("GlpiProxy: Incoming from PXE, ignoring the forward for a existing machine")
                 else :
                     if not has_known_os:
@@ -322,7 +322,7 @@ class TreatInv(Thread):
                     glpi_machine_uuid = resolveGlpiMachineUUIDByMAC(macaddr)
                     if glpi_machine_uuid :
                         self.logger.debug("Resolved machine UUID='%s'" % str(glpi_machine_uuid))
-                        AttemptToScheduler(from_ip, glpi_machine_uuid)
+                        AttemptToScheduler(content, glpi_machine_uuid)
                         final_macaddr = macaddr
                         break
                     else :
@@ -333,7 +333,7 @@ class TreatInv(Thread):
             self.logger.debug("Access to database disabled - exit the inventory creator")
             return False
 
-        if InventoryUtils.is_comming_from_pxe(from_ip):
+        if InventoryUtils.is_coming_from_pxe(content):
             self.logger.debug("Inventory is coming from PXE")
             inv = Inventory()
             inv.activate(self.config)
@@ -435,7 +435,7 @@ class TreatInv(Thread):
                 # disabling light pull on GLPI mode when Pulse2 inventory creator is enabled
                 if not self.config.enable_forward :
                     ret, machine_uuid = result
-                    AttemptToScheduler(from_ip, machine_uuid)
+                    AttemptToScheduler(content, machine_uuid)
             else :
                 ret = result
 

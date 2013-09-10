@@ -210,16 +210,19 @@ class InventoryUtils :
         return "127.0.0.1"
 
     @classmethod
-    def is_comming_from_pxe(cls, from_ip):
+    def is_coming_from_pxe(cls, xml_content):
         """ 
         Check if the inventory is coming from PXE.
+        Return True if OSNAME value = 'Unknown operating system (PXE network boot inventory)'
 
-        @param from_ip: IP address of inventory source 
-        @type from_ip: string
+        @param xml_content: XML inventory
+        @type xml_content: string
 
         @return: bool
         """
-        return from_ip == cls.get_pkg_server_ip()
+        xmldoc = parseString(xml_content)
+        osname = xmldoc.getElementsByTagName('OSNAME')[0].firstChild.nodeValue
+        return osname == 'Unknown operating system (PXE network boot inventory)'
 
     @classmethod
     def getMACs(cls, content):

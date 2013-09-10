@@ -41,7 +41,7 @@ class AttemptToScheduler :
     FIRST_DELAY = 60 
     BETWEEN_TASKS_DELAY = 1
 
-    def __init__(self, from_ip, uuid):
+    def __init__(self, xml_content, uuid):
         """
         @param from_ip: IP address of inventory source 
         @type from_ip: string
@@ -52,7 +52,7 @@ class AttemptToScheduler :
         """
         # Test to resolve the inventory source
   
-        if not InventoryUtils.is_comming_from_pxe(from_ip) :
+        if not InventoryUtils.is_coming_from_pxe(xml_content) :
 
             logging.getLogger().info("<scheduler> : Start")
             self.uuid = uuid
