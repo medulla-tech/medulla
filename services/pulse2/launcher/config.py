@@ -118,8 +118,8 @@ class LauncherConfig(pulse2.utils.Singleton):
     tcp_sproxy_check = True
     tcp_sproxy_port_range_start = 8100
     tcp_sproxy_port_range_end = 8200
-    tcp_sproxy_establish_delay = 20
-    tcp_sproxy_connect_delay = 60
+    tcp_sproxy_establish_delay = 60
+    tcp_sproxy_connect_delay = 120
     tcp_sproxy_session_lenght = 3600
 
     # Smart Cleaner Stuff

@@ -94,9 +94,9 @@ tcp_sproxy_path = @sbindir@/pulse2-tcp-sproxy
 # The TCP range to attribue to the proxy
 # tcp_sproxy_port_range = 8100-8200
 # the initial ssh connection to the client timeout
-# tcp_sproxy_establish_delay = 20
+# tcp_sproxy_establish_delay = 60
 # the initial VNC connection to the proxy timeout
-# tcp_sproxy_connect_delay = 60
+# tcp_sproxy_connect_delay = 120
 # the number of seconds a connection will stay open after the initial handshake
 # tcp_sproxy_session_lenght = 3600
 # Check the requestor IP address

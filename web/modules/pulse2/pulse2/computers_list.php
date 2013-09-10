@@ -1,4 +1,5 @@
 <?php
+
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com/
@@ -21,16 +22,26 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 require("modules/pulse2/includes/xmlrpc.inc.php");
 require_once("modules/pulse2/includes/utilities.php");
 
 $param = array();
-if (isset($_GET['gid'])) { $param['gid'] = urlencode($_GET['gid']); }
-if (isset($_GET['groupname'])) { $param['groupname'] = urlencode($_GET['groupname']); }
-if (isset($_GET['request'])) { $param['request'] = $_SESSION['request'];}
-if (isset($_GET['equ_bool'])) { $param['equ_bool'] = urlencode($_GET['equ_bool']); }
-if (isset($_GET['imaging_server'])) { $param['imaging_server'] = urlencode($_GET['imaging_server']); }
+if (isset($_GET['gid'])) {
+    $param['gid'] = urlencode($_GET['gid']);
+}
+if (isset($_GET['groupname'])) {
+    $param['groupname'] = urlencode($_GET['groupname']);
+}
+//if (isset($_GET['request'])) { $param['request'] = $_SESSION['request'];}
+/* if (isset($_GET['request'])) {
+  $_SESSION['request'] = $_GET['request'];
+  } */
+if (isset($_GET['equ_bool'])) {
+    $param['equ_bool'] = urlencode($_GET['equ_bool']);
+}
+if (isset($_GET['imaging_server'])) {
+    $param['imaging_server'] = urlencode($_GET['imaging_server']);
+}
 
 if (displayLocalisationBar() && (isset($_GET['imaging_server']) && $_GET['imaging_server'] == '' || !isset($_GET['imaging_server']))) {
     $ajax = new AjaxFilterLocation(urlStrRedirect("base/computers/ajaxComputersList"), "container", 'location', $param);
@@ -55,5 +66,4 @@ $ajax->display();
 print "<br/><br/>";
 
 $ajax->displayDivToUpdate();
-
 ?>
