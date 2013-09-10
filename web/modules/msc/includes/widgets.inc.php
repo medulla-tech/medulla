@@ -33,15 +33,17 @@ function msg_err_qa($msg) {
 _T("Other/N.A.", "msc");
 
 /* HTML display for known MSC host */
+
 class RenderedMSCHost extends RenderedLabel {
+
     function RenderedMSCHost($machine, $probe_order) {
         $this->hostname = $machine->hostname;
         $this->machine = $machine;
         $this->platform = $machine->platform;
         $this->uuid = $machine->uuid;
         $this->level = 3;
-	$this->text = sprintf(_T('%s status', 'msc'), $machine->hostname);
-	$this->probe_order = $probe_order;
+        $this->text = sprintf(_T('%s status', 'msc'), $machine->hostname);
+        $this->probe_order = $probe_order;
     }
 
     function line($label, $text) { # FIXME: should use CSS instead of hard coded styles
@@ -52,7 +54,7 @@ class RenderedMSCHost extends RenderedLabel {
         $buffer = '
             <script type="text/javascript">
             jQuery(function(){
-                jQuery("#ping").load("'. urlStrRedirect("base/computers/ajaxPingProbe"). "&hostname=" . $this->hostname ."&probe_order=" . $this->probe_order . '&uuid='. $this->uuid .'");
+                jQuery("#ping").load("' . urlStrRedirect("base/computers/ajaxPingProbe") . "&hostname=" . $this->hostname . "&probe_order=" . $this->probe_order . '&uuid=' . $this->uuid . '");
             });
             </script>
         ';
@@ -60,17 +62,22 @@ class RenderedMSCHost extends RenderedLabel {
         print $buffer;
         $this->display();
     }
+
 }
 
 /* HTML display for UNknown MSC host */
+
 class RenderedMSCGroupDontExists extends HtmlElement {
+
     function RenderedMSCGroupDontExists($name) {
         $this->name = $name;
         $this->str = sprintf(_T('group "%s" is not defined in the MSC module, or you don\'t have permissions to access it', 'msc'), $this->name);
     }
+
     function display() {
         $this->headerDisplay();
     }
+
     function headerDisplay() {
         $buffer = '<div class="indent"><table>';
         $buffer .= '<tr><td><span style="color:red;">';
@@ -79,16 +86,20 @@ class RenderedMSCGroupDontExists extends HtmlElement {
         $buffer .= '</table></div>';
         print $buffer;
     }
+
 }
 
 class RenderedMSCHostDontExists extends HtmlElement {
+
     function RenderedMSCHostDontExists($name) {
         $this->name = $name;
         $this->str = sprintf(_T('%s host is not defined in the MSC module, or you don\'t have permissions to access it', 'msc'), $this->name);
     }
+
     function display() {
         $this->headerDisplay();
     }
+
     function headerDisplay() {
         $buffer = '<div class="indent"><table>';
         $buffer .= '<tr><td><span style="color:red;">';
@@ -97,23 +108,30 @@ class RenderedMSCHostDontExists extends HtmlElement {
         $buffer .= '</table></div>';
         print $buffer;
     }
+
 }
 
 class RenderedMSCCommandDontExists extends RenderedMSCHostDontExists {
+
     function RenderedMSCCommandDontExists() {
         $this->str = _T("You don't have the right permissions to display this command", "msc");
     }
+
 }
 
 class RedirectMSC extends HtmlElement {
+
     function RedirectMSC($dest) {
         print "<html><head><meta http-equiv=\"refresh\" content=\"0;url=$dest\"></head></html>";
         exit();
     }
+
 }
 
 /* top label, with nav links */
+
 class RenderedLabel extends HtmlElement {
+
     function RenderedLabel($level, $text) {
         $this->level = $level;
         $this->text = $text;
@@ -122,9 +140,11 @@ class RenderedLabel extends HtmlElement {
     function display() {
         print "<h$this->level>$this->text</h$this->level>";
     }
+
 }
 
 /* Quick actions dropdown list */
+
 class RenderedMSCActions extends HtmlElement {
 
     function RenderedMSCActions($script_list, $qa_on_name, $params) {
@@ -163,41 +183,53 @@ class RenderedMSCActions extends HtmlElement {
         if (!$this->error && count($this->list) > 0) {
             $label = new RenderedLabel(3, sprintf(_T('Quick action on %s', 'msc'), $this->qa_on_name));
             $label->display();
+            ?>
+            <script type="text/javascript">
+                /* ==> NOT USED
+                 document.observe("dom:loaded", function() {
+                 var inputImg = $('launchActionImg');
+                 var src = inputImg.src;
+                 var style = inputImg.style;
 
-?>
-    <script type="text/javascript">
-        /* ==> NOT USED
-            document.observe("dom:loaded", function() { 
-                var inputImg = $('launchActionImg');
-                var src = inputImg.src;
-                var style = inputImg.style;
+                 var inputImgInactive= new Element("img", {src: src, style: style, id: "launchActionImg"});
+                 var inputImgActive= new Element("input", {src: src, style: style, type: "image", id: "launchActionImg"});
 
-                var inputImgInactive= new Element("img", {src: src, style: style, id: "launchActionImg"});
-                var inputImgActive= new Element("input", {src: src, style: style, type: "image", id: "launchActionImg"});
-                
-                inputImg.replace(inputImgInactive.setOpacity(0.3));
+                 inputImg.replace(inputImgInactive.setOpacity(0.3));
 
-                $('launchAction').observe('change', function() {
-                    if ($('launchAction').selectedIndex == 0) {
-                        $('launchActionImg').replace(inputImgInactive.setOpacity(0.3));
-                    }
-                    else {
-                        $('launchActionImg').replace(inputImgActive);
-                    }
+                 $('launchAction').observe('change', function() {
+                 if ($('launchAction').selectedIndex == 0) {
+                 $('launchActionImg').replace(inputImgInactive.setOpacity(0.3));
+                 }
+                 else {
+                 $('launchActionImg').replace(inputImgActive);
+                 }
+                 });
+                 });
+                 */
+
+                jQuery(function() {
+                    //jQuery('#launchActionImg')
+
+                    jQuery('#launchActionImg').attr('src', 'modules/msc/graph/images/status/success.png').hide();
+
+                    jQuery('#launchAction').change(function() {
+                        if (jQuery(this).val() == '')
+                            jQuery('#launchActionImg').hide();
+                        else
+                            jQuery('#launchActionImg').show();
+                    });
+
                 });
-            });
-    */
-</script>
-<?php
-
+            </script>
+            <?php
             print '
                 <div id="msc-standard-host-actions"> <!-- STANDARD HOST ACTIONS -->
                     <table>
                         <tr>
                         <td>
-                            <form ' . $onSubmit . ' name="' . $this->name . '" id="'.$this->name . '">
+                            <form ' . $onSubmit . ' name="' . $this->name . '" id="' . $this->name . '">
                             <select name="launchAction" id="launchAction" style="border: 1px solid grey;" ' . $selectDisabled . '>
-                                <option value="">'._T('Execute action...', 'msc').'</option>';
+                                <option value="">' . _T('Execute action...', 'msc') . '</option>';
             foreach ($this->list as $script) {
                 $script->display();
             }
@@ -220,7 +252,7 @@ class RenderedMSCActions extends HtmlElement {
                     <table>
                         <tr>
                         <td>
-                            '._T('Quick action list is empty', 'msc').'
+                            ' . _T('Quick action list is empty', 'msc') . '
                         </td>
                         </tr>
                     </table>
@@ -231,30 +263,33 @@ class RenderedMSCActions extends HtmlElement {
                     <table>
                         <tr>
                         <td>
-                            '.$this->errmsg.'
+                            ' . $this->errmsg . '
                         </td>
                         </tr>
                     </table>
                 </div>';
         }
-?>
-<script text="text/javascript">
-function showQAPopup(evt, url) {
-    PopupWindow(evt, url, 300,function(evt){
-    jQuery('#popup').css({
-        'left': '210px',
-        'top':'280px'
-    });
-    jQuery("#overlay").fadeIn();
-    });
-}
-</script>
-<?php
+        ?>
+        <script text="text/javascript">
+            function showQAPopup(evt, url) {
+                PopupWindow(evt, url, 300, function(evt) {
+                    jQuery('#popup').css({
+                        'left': '210px',
+                        'top': '280px'
+                    });
+                    jQuery("#overlay").fadeIn();
+                });
+            }
+        </script>
+        <?php
     }
+
 }
 
 /* Quick action element */
+
 class RenderedMSCAction extends HtmlElement {
+
     function RenderedMSCAction($script) {
         $this->filename = $script['filename'];
         /* Try to find a localized version of the quick action title */
@@ -269,11 +304,13 @@ class RenderedMSCAction extends HtmlElement {
     }
 
     function display() {
-        print '<option value="'.$this->filename.'">'.$this->title.'</option>';
+        print '<option value="' . $this->filename . '">' . $this->title . '</option>';
     }
+
 }
 
 class RenderedImgInput extends HtmlElement {
+
     function RenderedImgInput($path, $style = '') {
         $this->path = $path;
         $this->style = $style;
@@ -284,18 +321,19 @@ class RenderedImgInput extends HtmlElement {
              <input
                 id="launchActionImg"
                 type="image"
-                src="'.$this->path.'"
-                style="'.$this->style.'"
+                src="' . $this->path . '"
+                style="' . $this->style . '"
             />';
     }
 
     function displayWithNoRight() {
         print '
              <img
-                src="'.$this->path.'"
-                style="'.$this->style.';opacity: 0.30;"
+                src="' . $this->path . '"
+                style="' . $this->style . ';opacity: 0.30;"
             />';
     }
+
 }
 
 class AjaxFilterCommands extends AjaxFilter {
@@ -329,97 +367,100 @@ class AjaxFilterCommands extends AjaxFilter {
     function display() {
         global $conf;
         $root = $conf["global"]["root"];
+        ?>
+        <form name="Form" id="Form" action="#" onsubmit="return false;">
 
-?>
-<form name="Form" id="Form" action="#" onsubmit="return false;">
+            <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
 
-    <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
+            <div id="searchSpan" class="searchbox" style="float: right;">
+                <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" />
 
-    <div id="searchSpan" class="searchbox" style="float: right;">
-    <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" />
+                <span class="searchfield">
+                    <?php
+                    $this->commands->display();
+                    ?>
+                </span>&nbsp;
 
-    <span class="searchfield">
-<?php
-        $this->commands->display();
-?>
-    </span>&nbsp;
+                <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch();
+                return false;" />
+                    <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
+                         onclick="document.getElementById('param').value = '';
+                pushSearch();
+                return false;" />
+                </span>
+            </div>
 
-    <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch(); return false;" />
-    <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
-    onclick="document.getElementById('param').value =''; pushSearch(); return false;" />
-    </span>
-    </div>
+            <script type="text/javascript">
+            jQuery('#param').focus();
+            var refreshtimer = null;
+            var refreshparamtimer = null;
+            var refreshdelay = <?php echo $this->refresh; ?>;
 
-    <script type="text/javascript">
-        jQuery('#param').focus();
-        var refreshtimer = null;
-        var refreshparamtimer = null;
-        var refreshdelay = <?php echo  $this->refresh; ?>;
-
-<?php
-if(isset($this->storedfilter)) {
-?>
-        document.Form<?php echo $this->formid ?>.param.value = "<?php echo $this->storedfilter ?>";
-<?php
-}    
-?>
-        /**
-         * Clear the timers set vith setTimeout
-         */
-        function clearTimers() {
-            if (refreshtimer != null) {
-                clearTimeout(refreshtimer);
+        <?php
+        if (isset($this->storedfilter)) {
+            ?>
+                document.Form<?php echo $this->formid ?>.param.value = "<?php echo $this->storedfilter ?>";
+            <?php
+        }
+        ?>
+            /**
+             * Clear the timers set vith setTimeout
+             */
+            function clearTimers() {
+                if (refreshtimer != null) {
+                    clearTimeout(refreshtimer);
+                }
+                if (refreshparamtimer != null) {
+                    clearTimeout(refreshparamtimer);
+                }
             }
-            if (refreshparamtimer != null) {
-                clearTimeout(refreshparamtimer);
+
+            /**
+             * Update div
+             */
+            function updateSearch() {
+                jQuery('#<?php echo $this->divid; ?>').load('<?php echo $this->url; ?>filter=' + document.Form.param.value + '<?php echo $this->params ?>&<?php echo $this->paramname ?>=' + document.Form.<?php echo $this->paramname ?>.value);
+
+        <?php
+        if ($this->refresh) {
+            ?>
+                    refreshtimer = setTimeout("updateSearch()", refreshdelay)
+            <?php
+        }
+        ?>
             }
+
+            /**
+             * Update div when clicking previous / next
+             */
+            function updateSearchParam(filter, start, end) {
+                clearTimers();
+                jQuery('#<?php echo $this->divid; ?>').load('<?php echo $this->url; ?>filter=' + filter + '<?php echo $this->params ?>&<?php echo $this->paramname ?>=' + document.Form.<?php echo $this->paramname ?>.value + '&start=' + start + '&end=' + end);
+
+        <?php
+        if ($this->refresh) {
+            ?>
+                    refreshparamtimer = setTimeout("updateSearchParam('" + filter + "'," + start + "," + end + ")", refreshdelay);
+            <?php
         }
+        ?>
+            }
 
-        /**
-         * Update div
-         */
-        function updateSearch() {
-            jQuery('#<?php echo  $this->divid; ?>').load('<?php echo  $this->url; ?>filter='+document.Form.param.value+'<?php echo  $this->params ?>&<?php echo  $this->paramname ?>='+document.Form.<?php echo  $this->paramname ?>.value);
+            /**
+             * wait 500ms and update search
+             */
+            function pushSearch() {
+                clearTimers();
+                refreshtimer = setTimeout("updateSearch()", 500);
+            }
 
-<?php
-if ($this->refresh) {
-?>
-            refreshtimer = setTimeout("updateSearch()", refreshdelay)
-<?php
-}
-?>
-        }
+            pushSearch();
+            </script>
 
-        /**
-         * Update div when clicking previous / next
-         */
-        function updateSearchParam(filter, start, end) {
-            clearTimers();
-            jQuery('#<?php echo  $this->divid; ?>').load('<?php echo  $this->url; ?>filter='+filter+'<?php echo  $this->params ?>&<?php echo  $this->paramname ?>='+document.Form.<?php echo  $this->paramname ?>.value+'&start='+start+'&end='+end);
+        </form>
+        <?php
+    }
 
-<?php
-if ($this->refresh) {
-?>
-            refreshparamtimer = setTimeout("updateSearchParam('"+filter+"',"+start+","+end+")", refreshdelay);
-<?php
-}
-?>
-        }
-
-        /**
-         * wait 500ms and update search
-         */
-        function pushSearch() {
-            clearTimers();
-            refreshtimer = setTimeout("updateSearch()", 500);
-        }
-
-        pushSearch();
-    </script>
-
-</form>
-<?php
-          }
 }
 
 class AjaxFilterCommandsStates extends AjaxFilter {
@@ -459,115 +500,116 @@ class AjaxFilterCommandsStates extends AjaxFilter {
     function display() {
         global $conf;
         $root = $conf["global"]["root"];
+        ?>
+        <form name="Form" id="Form" action="#" onsubmit="return false;">
 
-?>
-<form name="Form" id="Form" action="#" onsubmit="return false;">
+            <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
 
-    <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
+            <div id="searchSpan" class="searchbox" style="float: right;">
+                <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" />
 
-    <div id="searchSpan" class="searchbox" style="float: right;">
-    <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" />
+                <span class="searchfield">
+                    <?php
+                    $this->commands->display();
+                    $this->states->display();
+                    ?>
+                </span>&nbsp;
 
-    <span class="searchfield">
-<?php
-        $this->commands->display();
-        $this->states->display();
-?>
-    </span>&nbsp;
+                <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch();
+                return false;" />
+                    <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
+                         onclick="document.getElementById('param').value = '';
+                pushSearch();
+                return false;" />
+                </span>
+            </div>
 
-    <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch(); return false;" />
-    <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
-    onclick="document.getElementById('param').value =''; pushSearch(); return false;" />
-    </span>
-    </div>
+            <script type="text/javascript">
+            jQuery('#param').focus();
+            var refreshtimer = null;
+            var refreshparamtimer = null;
+            var refreshdelay = <?php echo $this->refresh ?>;
 
-    <script type="text/javascript">
-        jQuery('#param').focus();
-        var refreshtimer = null;
-        var refreshparamtimer = null;
-        var refreshdelay = <?php echo  $this->refresh ?>;
-
-<?php
-if(isset($this->storedfilter)) {
-?>
-        document.Form<?php echo $this->formid ?>.param.value = "<?php echo $this->storedfilter ?>";
-<?php
-}    
-?>
-        /**
-         * Clear the timers set vith setTimeout
-         */
-        function clearTimers() {
-            if (refreshtimer != null) {
-                clearTimeout(refreshtimer);
+        <?php
+        if (isset($this->storedfilter)) {
+            ?>
+                document.Form<?php echo $this->formid ?>.param.value = "<?php echo $this->storedfilter ?>";
+            <?php
+        }
+        ?>
+            /**
+             * Clear the timers set vith setTimeout
+             */
+            function clearTimers() {
+                if (refreshtimer != null) {
+                    clearTimeout(refreshtimer);
+                }
+                if (refreshparamtimer != null) {
+                    clearTimeout(refreshparamtimer);
+                }
             }
-            if (refreshparamtimer != null) {
-                clearTimeout(refreshparamtimer);
+
+            /**
+             * Update div
+             */
+            function updateSearch() {
+                clearTimers();
+                jQuery('#<?php echo $this->divid; ?>').load('<?php echo $this->url; ?>filter=' + document.Form.param.value + '<?php echo $this->params ?>&<?php echo $this->paramname1 ?>=' + document.Form.<?php echo $this->paramname1 ?>.value + '&<?php echo $this->paramname2 ?>=' + document.Form.<?php echo $this->paramname2 ?>.value);
+
+        <?php
+        if ($this->refresh) {
+            ?>
+                    refreshtimer = setTimeout("updateSearch()", refreshdelay)
+            <?php
+        }
+        ?>
             }
+
+            /**
+             *
+             */
+            function updateStates() {
+                var ind = document.getElementById('<?php echo $this->paramname2; ?>');
+                var val = ind.options[ind.selectedIndex].value;
+                jQuery('#<?php echo $this->paramname2; ?>').load('<?php echo urlStrRedirect('msc/logs/state_list', array('paramname2' => $this->paramname2)); ?>&<?php echo $this->paramname1 ?>=' + document.Form.<?php echo $this->paramname1 ?>.value + '&selected=' + document.Form.<?php echo $this->paramname2 ?>.value);
+                refreshtimer = setTimeout("updateSearch()", 500);
+            }
+
+            /**
+             * Update div when clicking previous / next
+             */
+            function updateSearchParam(filter, start, end) {
+                clearTimers();
+                jQuery('#<?php echo $this->divid; ?>').load('<?php echo $this->url; ?>filter=' + filter + '<?php echo $this->params ?>&<?php echo $this->paramname1 ?>=' + document.Form.<?php echo $this->paramname1 ?>.value + '&<?php echo $this->paramname2 ?>=' + document.Form.<?php echo $this->paramname2 ?>.value + '&start=' + start + '&end=' + end);
+
+        <?php
+        if ($this->refresh) {
+            ?>
+                    refreshparamtimer = setTimeout("updateSearchParam('" + filter + "'," + start + "," + end + ")", refreshdelay);
+            <?php
         }
+        ?>
+            }
 
-        /**
-         * Update div
-         */
-        function updateSearch() {
-            clearTimers();
-            jQuery('#<?php echo  $this->divid; ?>').load('<?php echo  $this->url; ?>filter='+document.Form.param.value+'<?php echo  $this->params ?>&<?php echo  $this->paramname1 ?>='+document.Form.<?php echo  $this->paramname1 ?>.value+'&<?php echo  $this->paramname2 ?>='+document.Form.<?php echo  $this->paramname2 ?>.value);
+            /**
+             * wait 500ms and update search
+             */
+            function pushSearch2() {
+                clearTimers();
+                refreshtimer = setTimeout("updateSearch()", 750);
+            }
 
-<?php
-if ($this->refresh) {
-?>
-            refreshtimer = setTimeout("updateSearch()", refreshdelay)
-<?php
-}
-?>
-        }
+            function pushSearch() {
+                clearTimers();
+                setTimeout("updateStates()", 100);
+            }
 
-        /**
-         *
-         */
-        function updateStates() {
-            var ind = document.getElementById('<?php echo  $this->paramname2; ?>');
-            var val = ind.options[ind.selectedIndex].value;
-            jQuery('#<?php echo  $this->paramname2; ?>').load('<?php echo  urlStrRedirect('msc/logs/state_list', array('paramname2'=>$this->paramname2)); ?>&<?php echo  $this->paramname1 ?>='+document.Form.<?php echo  $this->paramname1 ?>.value+'&selected='+document.Form.<?php echo  $this->paramname2 ?>.value);
-            refreshtimer = setTimeout("updateSearch()", 500);
-        }
+            pushSearch2();
+            </script>
 
-        /**
-         * Update div when clicking previous / next
-         */
-        function updateSearchParam(filter, start, end) {
-            clearTimers();
-            jQuery('#<?php echo  $this->divid; ?>').load('<?php echo  $this->url; ?>filter='+filter+'<?php echo  $this->params ?>&<?php echo  $this->paramname1 ?>='+document.Form.<?php echo  $this->paramname1 ?>.value+'&<?php echo  $this->paramname2 ?>='+document.Form.<?php echo  $this->paramname2 ?>.value+'&start='+start+'&end='+end);
-
-<?php
-if ($this->refresh) {
-?>
-            refreshparamtimer = setTimeout("updateSearchParam('"+filter+"',"+start+","+end+")", refreshdelay);
-<?php
-}
-?>
-        }
-
-        /**
-         * wait 500ms and update search
-         */
-        function pushSearch2() {
-            clearTimers();
-            refreshtimer = setTimeout("updateSearch()", 750);
-        }
-
-        function pushSearch() {
-            clearTimers();
-            setTimeout("updateStates()", 100);
-        }
-
-        pushSearch2();
-    </script>
-
-</form>
-<?php
-          }
+        </form>
+        <?php
+    }
 
 }
-
 ?>

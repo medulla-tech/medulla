@@ -1,5 +1,4 @@
 <?php
-
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
@@ -62,12 +61,12 @@ foreach ($masters as $master) {
         break;
     }
 }
-
 ?>
-<h2><?php echo  _T("Remove master", "imaging") ?></h2>
+<h2><?php echo _T("Remove master", "imaging") ?></h2>
 <form action="<?php echo urlStr("imaging/manage/master_remove") ?>" method="post">
     <p><?php printf(_T("Are you sure you want to remove <b>%s</b> master ?", "imaging"), $label); ?></p>
-    <input name='menu_item_id' type='hidden' value="<?php echo  $menu_item_id ?>" />
-    <input name='valid' type="submit" class="btnPrimary" value="<?php echo  _T("Remove", "imaging"); ?>" />
-    <input name="bback" type="submit" class="btnSecondary" value="<?php echo  _T("Cancel", "imaging"); ?>" onClick="jQuery('#popup').fadeOut(); return false;"/>
+    <input name='menu_item_id' type='hidden' value="<?php echo $menu_item_id ?>" />
+    <input name='valid' type="submit" class="btnPrimary" value="<?php echo _T("Remove", "imaging"); ?>" />
+    <input name="bback" type="submit" class="btnSecondary" value="<?php echo _T("Cancel", "imaging"); ?>" onClick="closePopup();
+            return false;"/>
 </form>

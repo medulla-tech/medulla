@@ -1,5 +1,4 @@
 <?php
-
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
@@ -37,6 +36,7 @@ if ($params['from'] == 'tabimages') {
     $item_uuid = $_GET['mi_itemid'];
     $params['mi_itemid'] = $_GET['mi_itemid'];
 } elseif ($params['from'] == 'tabbootmenu') {
+
 }
 
 $label = urldecode($_GET['itemlabel']);
@@ -45,7 +45,7 @@ $item = xmlrpc_getMenuItemByUUID($item_uuid);
 $bs_uuid = $item['boot_service']['imaging_uuid'];
 $im_uuid = $item['image']['imaging_uuid'];
 
-if(isset($_GET['gid'])) {
+if (isset($_GET['gid'])) {
     $type = 'group';
     $target_uuid = $_GET['gid'];
 } else {
@@ -65,8 +65,7 @@ if (quickGet('valid')) {
         // Synchronize boot menu
         if ($type == 'group') {
             $ret = xmlrpc_synchroProfile($target_uuid);
-        }
-        else {
+        } else {
             $ret = xmlrpc_synchroComputer($target_uuid);
         }
         if (isXMLRPCError()) {
@@ -76,9 +75,9 @@ if (quickGet('valid')) {
         new NotifyWidgetFailure($ret[1]);
     }
     $params['mod'] = 'remove_success';
-    $params['tab'] = $type.$params['from'];
+    $params['tab'] = $type . $params['from'];
     $urlRedirect = ($type == 'group') ? 'imaging/manage/' : 'base/computers/';
-    header("Location: " . urlStrRedirect($urlRedirect.$type."imgtabs", $params));
+    header("Location: " . urlStrRedirect($urlRedirect . $type . "imgtabs", $params));
     exit;
 }
 
@@ -86,12 +85,12 @@ if (quickGet('valid')) {
 $params['itemid'] = $item_uuid;
 $params['mod'] = 'remove';
 $params['bs_uuid'] = $bs_uuid;
-
 ?>
-<h2><?php echo  _T("Remove from boot menu", "imaging") ?></h2>
+<h2><?php echo _T("Remove from boot menu", "imaging") ?></h2>
 
-<form action="<?php echo urlStr("base/computers/bootmenu_remove",$params) ?>" method="post">
+<form action="<?php echo urlStr("base/computers/bootmenu_remove", $params) ?>" method="post">
     <p><?php printf(_T("Are you sure you want to remove <b>%s</b> from the boot menu ?", "imaging"), $label); ?></p>
-    <input name='valid' type="submit" class="btnPrimary" value="<?php echo  _T("Remove", "imaging"); ?>" />
-    <input name="bback" type="submit" class="btnSecondary" value="<?php echo  _T("Cancel", "imaging"); ?>" onClick="jQuery('#popup').fadeOut(); return false;"/>
+    <input name='valid' type="submit" class="btnPrimary" value="<?php echo _T("Remove", "imaging"); ?>" />
+    <input name="bback" type="submit" class="btnSecondary" value="<?php echo _T("Cancel", "imaging"); ?>" onClick="closePopup();
+            return false;"/>
 </form>

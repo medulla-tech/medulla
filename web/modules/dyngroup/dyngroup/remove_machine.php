@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 require_once("modules/dyngroup/includes/includes.php");
 
 $gid = quickGet('gid');
@@ -43,22 +42,21 @@ if (quickGet('valid')) {
             xmlrpc_synchroLocation($location);
         }
     }
-    header("Location: " . urlStrRedirect("base/computers/display", array('gid'=>$gid)));
+    header("Location: " . urlStrRedirect("base/computers/display", array('gid' => $gid)));
     exit;
 }
-
-?> <h2><?php echo  _T("Remove a computer", "dyngroup") ?></h2> <?php
-
+?> <h2><?php echo _T("Remove a computer", "dyngroup") ?></h2> <?php
 ?>
 
-<form action="<?php echo  urlStr("base/computers/remove_machine", array('gid'=>$gid, 'hostname'=>$machine, 'objectUUID'=>$uuid)) ?>" method="post">
-<p>
+<form action="<?php echo urlStr("base/computers/remove_machine", array('gid' => $gid, 'hostname' => $machine, 'objectUUID' => $uuid)) ?>" method="post">
+    <p>
 <?php
-    printf(_T("You will remove computer <b>%s</b> from group <b>%s</b>.", "dyngroup"), $machine, $group->getName());
+printf(_T("You will remove computer <b>%s</b> from group <b>%s</b>.", "dyngroup"), $machine, $group->getName());
 ?>
-</p>
-<input name='valid' type="submit" class="btnPrimary" value="<?php echo  _T("Remove Computer", "dyngroup"); ?>" />
-<input name="bback" type="submit" class="btnSecondary" value="<?php echo  _T("Cancel", "dyngroup"); ?>" onClick="jQuery('#popup').fadeOut(); return false;"/>
+    </p>
+    <input name='valid' type="submit" class="btnPrimary" value="<?php echo _T("Remove Computer", "dyngroup"); ?>" />
+    <input name="bback" type="submit" class="btnSecondary" value="<?php echo _T("Cancel", "dyngroup"); ?>" onClick="closePopup();
+            return false;"/>
 </form>
 
 

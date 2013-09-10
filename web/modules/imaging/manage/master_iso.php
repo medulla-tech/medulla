@@ -1,5 +1,4 @@
 <?php
-
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
@@ -40,7 +39,7 @@ if ($_POST) {
     $ret = xmlrpc_imagingServerISOCreate($image_uuid, $size, $title);
     // goto images list
     if ($ret[0] and !isXMLRPCError()) {
-        $str = "<h2>"._T("Create iso from master", "imaging")."</h2>";
+        $str = "<h2>" . _T("Create iso from master", "imaging") . "</h2>";
         $str .= "<p>";
         $str .= sprintf(_T("Iso of master <strong>%s</strong> has been launched in background.", "imaging"), $label);
         $str .= "</p><p>";
@@ -61,26 +60,26 @@ if ($_POST) {
         new NotifyWidgetFailure($ret[1]);
     }
 }
-
 ?>
 <form action="<?php echo urlStr("imaging/manage/master_iso") ?>" method="post">
-<h2><?php echo  sprintf(_T("Create iso for <strong>%s</strong>", "imaging"), $label) ?></h2>
-<table>
-<tr><td><?php echo  _T('Title', 'imaging'); ?></td><td> <input name="title" type="text" value="" /></td></tr>
-<tr><td colspan="2">
-<p>Please select media size. If your data exceeds the volume size,
-several files of your media size will be created.</p>
-</td></tr>
-<tr><td><?php echo  _T("Media size", "imaging"); ?></td><td>
-<select name="media" />
-<option value="681574400">CD (650 Mo)</option>
-<option value="734003200">CD (700 Mo)</option>
-<option value="5046586572">DVD (4.7 Go)</option>
-</select>
-</td></tr></table>
-<br/><br/>
-<input name="label" type="hidden" value="<?php echo $label ?>" />
-<input name="itemid" type="hidden" value="<?php echo $id; ?>" />
-<input name="bgo" type="submit" class="btnPrimary" value="<?php echo  _T("Launch backup", "imaging"); ?>" />
-<input name="bback" type="submit" class="btnSecondary" value="<?php echo  _("Cancel"); ?>" onclick="jQuery('#popup').fadeOut(); return false;" />
+    <h2><?php echo sprintf(_T("Create iso for <strong>%s</strong>", "imaging"), $label) ?></h2>
+    <table>
+        <tr><td><?php echo _T('Title', 'imaging'); ?></td><td> <input name="title" type="text" value="" /></td></tr>
+        <tr><td colspan="2">
+                <p>Please select media size. If your data exceeds the volume size,
+                    several files of your media size will be created.</p>
+            </td></tr>
+        <tr><td><?php echo _T("Media size", "imaging"); ?></td><td>
+                <select name="media" />
+        <option value="681574400">CD (650 Mo)</option>
+        <option value="734003200">CD (700 Mo)</option>
+        <option value="5046586572">DVD (4.7 Go)</option>
+        </select>
+        </td></tr></table>
+    <br/><br/>
+    <input name="label" type="hidden" value="<?php echo $label ?>" />
+    <input name="itemid" type="hidden" value="<?php echo $id; ?>" />
+    <input name="bgo" type="submit" class="btnPrimary" value="<?php echo _T("Launch backup", "imaging"); ?>" />
+    <input name="bback" type="submit" class="btnSecondary" value="<?php echo _("Cancel"); ?>" onclick="closePopup();
+            return false;" />
 </form>

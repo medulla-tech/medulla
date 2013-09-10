@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 require_once("modules/dyngroup/includes/includes.php");
 
 $id = quickGet('gid');
@@ -54,28 +53,27 @@ if (quickGet('valid')) {
             // Synchro Location
             xmlrpc_synchroLocation($location);
         }
-        header("Location: " . urlStrRedirect("imaging/manage/list$stype" ));
+        header("Location: " . urlStrRedirect("imaging/manage/list$stype"));
         new NotifyWidgetSuccess(sprintf(_T("Imaging group %s was successfully deleted", "imaging"), $group->getName()));
-    }
-    else { // simple group
-        header("Location: " . urlStrRedirect("base/computers/list$stype" ));
+    } else { // simple group
+        header("Location: " . urlStrRedirect("base/computers/list$stype"));
         new NotifyWidgetSuccess(sprintf(_T("Group %s was successfully deleted", "imaging"), $group->getName()));
     }
     exit;
 }
-
 ?>
 
-<h2><?php echo  $title ?></h2>
+<h2><?php echo $title ?></h2>
 
-<form action="<?php echo  urlStr("base/computers/delete_group", array('gid'=>$id, 'type'=>$type)) ?>" method="post">
-<p>
+<form action="<?php echo urlStr("base/computers/delete_group", array('gid' => $id, 'type' => $type)) ?>" method="post">
+    <p>
 
 <?php
-    printf($popup, $_GET["groupname"]);
+printf($popup, $_GET["groupname"]);
 ?>
 
-</p>
-<input name='valid' type="submit" class="btnPrimary" value="<?php echo  $delete ?>" />
-<input name="bback" type="submit" class="btnSecondary" value="<?php echo  _T("Cancel", "dyngroup"); ?>" onClick="jQuery('#popup').fadeOut(); return false;"/>
+    </p>
+    <input name='valid' type="submit" class="btnPrimary" value="<?php echo $delete ?>" />
+    <input name="bback" type="submit" class="btnSecondary" value="<?php echo _T("Cancel", "dyngroup"); ?>" onClick="closePopup();
+            return false;"/>
 </form>

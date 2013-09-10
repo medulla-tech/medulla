@@ -1,5 +1,4 @@
 <?php
-
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
@@ -56,20 +55,20 @@ if ($_POST) {
     $script = xmlrpc_getPostInstallScript($script_id, $location);
 
     if (!$script['is_local']) {
-    ?>
-    <h2><?php echo  _T("Can't delete this post-imaging script, it's a global script.", "imaging") ?></h2>
-    <?php
+        ?>
+        <h2><?php echo _T("Can't delete this post-imaging script, it's a global script.", "imaging") ?></h2>
+        <?php
     } else {
-    ?>
-    <h2><?php echo  _T("Delete post-imaging script", "imaging") ?></h2>
-    <form action="<?php echo urlStr("imaging/manage/postinstall_delete") ?>" method="post">
-        <p><?php printf(_T("Are you sure you want to delete the <b>%s</b> script ?", "imaging"), $label); ?></p>
-        <input name='itemid' type='hidden' value="<?php echo $script_id ?>" />
-        <input name='valid' type="submit" class="btnPrimary" value="<?php echo  _T("Delete", "imaging"); ?>" />
-        <input name="bback" type="submit" class="btnSecondary" value="<?php echo  _T("Cancel", "imaging"); ?>" onClick="jQuery('#popup').fadeOut(); return false;"/>
-    </form>
-    <?php
+        ?>
+        <h2><?php echo _T("Delete post-imaging script", "imaging") ?></h2>
+        <form action="<?php echo urlStr("imaging/manage/postinstall_delete") ?>" method="post">
+            <p><?php printf(_T("Are you sure you want to delete the <b>%s</b> script ?", "imaging"), $label); ?></p>
+            <input name='itemid' type='hidden' value="<?php echo $script_id ?>" />
+            <input name='valid' type="submit" class="btnPrimary" value="<?php echo _T("Delete", "imaging"); ?>" />
+            <input name="bback" type="submit" class="btnSecondary" value="<?php echo _T("Cancel", "imaging"); ?>" onClick="closePopup();
+                    return false;"/>
+        </form>
+        <?php
     }
 }
-
 ?>

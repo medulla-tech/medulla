@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 require_once("modules/dyngroup/includes/includes.php");
 
 $id = idGet();
@@ -28,43 +27,39 @@ $group = new Stagroup($id);
 if ($group->isDyn()) {
     $group = $group->toDyn();
 }
-
-?> <h2><?php echo  sprintf(_T("%s's details", 'dyngroup'), $group->getName()) ?></h2> <?php
-
+?> <h2><?php echo sprintf(_T("%s's details", 'dyngroup'), $group->getName()) ?></h2> <?php
 if ($_GET['bregen'] || $_POST['bregen']) {
     $group->reload();
-    header("Location: " . urlStrRedirect("base/computers/list" ));
+    header("Location: " . urlStrRedirect("base/computers/list"));
     exit;
 }
 if ($_GET['bshow'] || $_POST['bshow']) {
     $group->show();
-    header("Location: " . urlStrRedirect("base/computers/list" ));
+    header("Location: " . urlStrRedirect("base/computers/list"));
     exit;
 }
 if ($_GET['bhide'] || $_POST['bhide']) {
     $group->hide();
-    header("Location: " . urlStrRedirect("base/computers/list" ));
+    header("Location: " . urlStrRedirect("base/computers/list"));
     exit;
 }
 
 //$group->prettyDisplay();
-
-?> <form action="<?php echo  urlStr("base/computers/details", array('id'=>$id)) ?>" method="post"> <?php  
-?> <input name="bback" type="submit" class="btnPrimary" value="<?php echo  _T("Close", "dyngroup") ?>" onClick="jQuery('#popup').fadeOut(); return false;"/> <?php
-
+?> <form action="<?php echo urlStr("base/computers/details", array('id' => $id)) ?>" method="post"> <?php
+?> <input name="bback" type="submit" class="btnPrimary" value="<?php echo _T("Close", "dyngroup") ?>" onClick="closePopup();
+        return false;"/> <?php
 if ($group->isDyn() && $group->isGroup()) {
-    print '<input name="bregen" type="submit" class="btnSecondary" value="'._T("Regenerate", "dyngroup").'"/>';
+    print '<input name="bregen" type="submit" class="btnSecondary" value="' . _T("Regenerate", "dyngroup") . '"/>';
 }
 if ($group->canShow()) {
-    print '<input name="bhide" type="submit" class="btnSecondary" value="'._T("Hide", "dyngroup").'"/>';
+    print '<input name="bhide" type="submit" class="btnSecondary" value="' . _T("Hide", "dyngroup") . '"/>';
 } else {
-    print '<input name="bshow" type="submit" class="btnSecondary" value="'._T("Show", "dyngroup").'"/>';
+    print '<input name="bshow" type="submit" class="btnSecondary" value="' . _T("Show", "dyngroup") . '"/>';
 }
-
 ?>
 
 </form>
-    
+
 
 
 
