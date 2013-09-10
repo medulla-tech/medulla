@@ -1223,11 +1223,11 @@ class AjaxFilter extends HtmlElement {
             </div>
             <div id="searchSpan<?php echo $this->formid ?>" class="searchbox" style="float: right;">
                 <img src="graph/search.gif" style="position:relative; top: 5px; float: left;" alt="search" /> <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param<?php echo $this->formid ?>" onkeyup="pushSearch<?php echo $this->formid ?>();
-                        return false;" />
+                return false;" />
                     <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 4px;"
                          onclick="document.getElementById('param<?php echo $this->formid ?>').value = '';
-                        pushSearch<?php echo $this->formid ?>();
-                        return false;" />
+                pushSearch<?php echo $this->formid ?>();
+                return false;" />
                 </span>
             </div>
 
@@ -1429,11 +1429,11 @@ class AjaxFilterLocation extends AjaxFilter {
                     ?>
                 </span>&nbsp;
                 <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch();
-                        return false;" />
+                return false;" />
                     <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
                          onclick="document.getElementById('param').value = '';
-                        pushSearch();
-                        return false;" />
+                pushSearch();
+                return false;" />
                 </span>
             </div>
 
@@ -2564,11 +2564,11 @@ class PopupForm extends Form {
     }
 
     function addValidateButtonWithFade($name) {
-        $this->buttons[] = $this->getButtonString($name, _("Confirm"), "btnPrimary", "onclick=\"jQuery('#popup').fadeOut(); return true;\"");
+        $this->buttons[] = $this->getButtonString($name, _("Confirm"), "btnPrimary", "onclick=\"closePopup(); return true;\"");
     }
 
     function addCancelButton($name) {
-        $this->buttons[] = $this->getButtonString($name, _("Cancel"), "btnSecondary", "onclick=\"jQuery('#popup').fadeOut(); return false;\"");
+        $this->buttons[] = $this->getButtonString($name, _("Cancel"), "btnSecondary", "onclick=\"closePopup(); return false;\"");
     }
 
 }
