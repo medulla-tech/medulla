@@ -137,9 +137,20 @@ def activate():
         ouName = head.split("=")[1]
         ldapObj.addOu(ouName, path)
 
-    # Issue a warning if the default user group doesn't exist
+    # Create the default user group
     if not ldapObj.existGroup(ldapObj.defaultUserGroup):
-        logger.warning("The default user group %s does not exist. Please create it before adding new users." % ldapObj.defaultUserGroup)
+        if not ldapObj.defaultUserGroup in ("Domain Users", "Account Operators",
+                                            "Administrators", "Backup Operators",
+                                            "Domain Admins", "Domain Computers",
+                                            "Domain Guests", "Print Operators",
+                                            "Replicators"):
+            logger.info("The default user group %s does not exist. Creating..." %
+                        ldapObj.defaultUserGroup)
+            ldapObj.addGroup(ldapObj.defaultUserGroup)
+        else:
+            # Can't create automatically a SAMBA group
+            logger.warning("The default user group %s must be created with the smbldap-populate command" %
+                           ldapObj.defaultUserGroup)
 
     # Plug the subscription system
     SubscriptionManager().init(config)
