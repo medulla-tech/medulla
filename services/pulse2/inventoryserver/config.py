@@ -43,6 +43,8 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
     port = 9999
     ocsmapping = mmcconfdir + '/pulse2/inventory-server/OcsNGMap.xml'
     xmlfixplugindir = mmcconfdir + '/pulse2/inventory-server/xml-fix'
+    xmldumpdir = '/tmp/'
+    xmldumpactive = 0
     enablessl = False
     verifypeer = False
     cacert = mmcconfdir + '/pulse2/inventory-server/keys/cacert.pem'
@@ -84,6 +86,12 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
             self.port = self.cp.get("main", 'port')
         if self.cp.has_option('main', 'ocsmapping'):
             self.ocsmapping = self.cp.get("main", 'ocsmapping')
+        if self.cp.has_option('main', 'xmlfixplugindir'):
+            self.xmlfixplugindir = self.cp.get("main", 'xmlfixplugindir')
+        if self.cp.has_option('main', 'xmldumpdir'):
+            self.xmldumpdir = self.cp.get("main", 'xmldumpdir')
+        if self.cp.has_option('main', 'xmldumpactive'):
+            self.xmldumpactive = self.cp.get("main", 'xmldumpactive')
         if self.cp.has_option('main', 'xmlfixplugindir'):
             self.xmlfixplugindir = self.cp.get("main", 'xmlfixplugindir')
         if self.cp.has_option('main', 'pidfile'):

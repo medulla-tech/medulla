@@ -195,21 +195,21 @@ class InventoryFix :
         self.fixers = []
         self._check_in()
         self._update()
- 
+
     def _check_in (self):
-       """ 
+       """
        Find and pre-check all .py from xmlfixplugindir.
-       Checked module must have a calable function named 'xml_fix'.       
+       Checked module must have a calable function named 'xml_fix'.
        """
        for (path, dirs, files) in os.walk(self.config.xmlfixplugindir):
           for filename in files:
               pathname = os.path.join(path, filename)
               if re.match('^.*\.py$',pathname):
-                  mod_name = filename 
+                  mod_name = filename
                   py_mod = fnc = None
                   try:
                       py_mod = imp.load_source(mod_name, pathname)
-                      
+
                   except ImportError :
                       self.logger.warn("Cannot load fixing script '%s'" % filename)
                       continue
@@ -225,10 +225,19 @@ class InventoryFix :
                           self.logger.warn("module %s : attribute xml_fix is not a function or method" %  filename)
                   else :
                       self.logger.warn("Unable to run %s script: missing xml_fix() function" % filename)
-                                      
- 
+
+
     def _update (self):
         """Aply the script on inventory"""
+        # Logging pre-modified xml to temp file
+        if int(self.config.xmldumpactive) == 1:
+            dumpdir = self.config.xmldumpdir
+            #
+            timestamp = str(int(time.time()))
+            f = open(dumpdir + '/inventorylog-pre-' + timestamp + '.xml', 'w')
+            f.write(self._inventory)
+            f.close()
+        #
         for fnc in self.fixers :
             try :
                 self._inventory = fnc(self._inventory)
@@ -239,6 +248,13 @@ class InventoryFix :
                     args = (fname, linenumber, fnc_name)
                     self.logger.error("module: %s line: %d in function: %s" % args)
                     self.logger.error("Failed on: %s" % text)
+
+        # Logging the post modified xml file
+        if int(self.config.xmldumpactive) == 1:
+            dumpdir = self.config.xmldumpdir
+            f = open(dumpdir + '/inventorylog-post-' + timestamp + '.xml', 'w')
+            f.write(self._inventory)
+            f.close()
 
     def get (self):
         """get the fixed inventory"""
@@ -298,12 +314,12 @@ class TreatInv(Thread):
 
         setLastFlag = True
 
-        # GLPI case - inventory creating disabled 
+        # GLPI case - inventory creating disabled
         if self.config.enable_forward and len(macaddresses) > 0:
             try :
                 for macaddr in macaddresses :
                     self.logger.debug("Trying to resolve a machine with MAC address=%s" % macaddr)
-                    glpi_machine_uuid = resolveGlpiMachineUUIDByMAC(macaddr) 
+                    glpi_machine_uuid = resolveGlpiMachineUUIDByMAC(macaddr)
                     if glpi_machine_uuid :
                         self.logger.debug("Resolved machine UUID='%s'" % str(glpi_machine_uuid))
                         AttemptToScheduler(from_ip, glpi_machine_uuid)
