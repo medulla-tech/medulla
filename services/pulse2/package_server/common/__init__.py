@@ -556,7 +556,8 @@ class Common(pulse2.utils.Singleton):
                 self.logger.debug("File association will remove %s"%(f1))
                 shutil.rmtree(f)
         self._treatFiles(files_out, mp, pid, access = {})
-        self._createMD5File(os.path.dirname(files_out[0]))
+        if len(files_out):
+            self._createMD5File(os.path.dirname(files_out[0]))
         del Common().need_assign[pid]
         Common().newAssociation[pid] = True
         if self.config.package_mirror_activate:
@@ -591,7 +592,7 @@ class Common(pulse2.utils.Singleton):
             return [True,0]
         except Exception as e:
             return [False,str(e)]
-        
+
 
     def dropPackage(self, pid, mp):
         """
