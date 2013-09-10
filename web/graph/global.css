@@ -268,18 +268,6 @@ p {
 }
 
 /* ---------------------------------------- */
-/* 3a. Subnav / Configuration 		        */
-/* ---------------------------------------- */
-
-#sidebar ul.shares li#globalConfig a {
-    background-image: url("../img/config/icn_global.gif");
-}
-
-#sidebar ul.shares li#globalConfig a:hover {
-    background-image: url("../img/config/icn_global_ro.gif");
-}
-
-/* ---------------------------------------- */
 /* 3b. Subnav / Users    		            */
 /* ---------------------------------------- */
 
@@ -325,74 +313,6 @@ p {
 
 #sidebar ul.groups li#addGroup a:hover {
     background-image: url("../img/groups/icn_addGroup_ro.gif");
-}
-
-/* ---------------------------------------- */
-/* 3d. Subnav / Shares         		        */
-/* ---------------------------------------- */
-
-#sidebar ul.shares li#global a {
-    background-image: url("../img/shares/icn_global.gif");
-}
-
-#sidebar ul.shares li#global a:hover {
-    background-image: url("../img/shares/icn_global_ro.gif");
-}
-
-#sidebar ul.shares li#addShare a {
-    background-image: url("../img/shares/icn_addShare.gif");
-}
-
-#sidebar ul.shares li#addShare a:hover {
-    background-image: url("../img/shares/icn_addShare_ro.gif");
-}
-
-/* ---------------------------------------- */
-/* 3e. Subnav / Machines          	        */
-/* ---------------------------------------- */
-
-#sidebar ul.shares li#globalMachine a {
-    background-image: url("../img/machines/icn_global.gif");
-}
-
-#sidebar ul.shares li#globalMachine a:hover {
-    background-image: url("../img/machines/icn_global_ro.gif");
-}
-
-#sidebar ul.shares li#addMachine a {
-    background-image: url("../img/machines/icn_addMachines.gif");
-}
-
-#sidebar ul.shares li#addMachine a:hover {
-    background-image: url("../img/machines/icn_addMachines_ro.gif");
-}
-
-/* ---------------------------------------- */
-/* 3f. Subnav / Imprimantes     	        */
-/* ---------------------------------------- */
-
-#sidebar ul.printers li#global a {
-    background-image: url("../img/printers/icn_global.gif");
-}
-
-#sidebar ul.printers li#global a:hover {
-    background-image: url("../img/printers/icn_global_ro.gif");
-}
-
-#sidebar ul.printers li#addPrinter a {
-    background-image: url("../img/printers/icn_addPrinter.gif");
-}
-
-#sidebar ul.printers li#addPrinter a:hover {
-    background-image: url("../img/printers/icn_addPrinter_ro.gif");
-}
-
-#sidebar ul.printers li#expert a {
-    background-image: url("../img/printers/icn_expertPrinter.gif");
-}
-
-#sidebar ul.printers li#expert a:hover {
-    background-image: url("../img/printers/icn_expertPrinter_ro.gif");
 }
 
 /* ---------------------------------------- */
