@@ -1,4 +1,5 @@
 <?php
+
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com/
@@ -21,9 +22,12 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 require("localSidebar.php");
 require("graph/navbar.inc.php");
+
+// Unset dyngroup request if found
+if (isset($_SESSION['request']))
+    unset($_SESSION['request']);
 
 $p = new PageGenerator(_("Computer list"));
 $p->setSideMenu($sidemenu);
@@ -33,13 +37,14 @@ if (in_array("pulse2", $_SESSION["modulesList"])) {
     include("modules/pulse2/pulse2/computers_list.php");
 } else {
     $param = array();
-    if (isset($_GET['gid'])) { $param['gid'] = $_GET['gid']; }
+    if (isset($_GET['gid'])) {
+        $param['gid'] = $_GET['gid'];
+    }
 
     $ajax = new AjaxFilter(urlStrRedirect('base/computers/ajaxComputersList'), "container", $param);
     $ajax->display();
     print "<br/><br/><br/>";
     $ajax->displayDivToUpdate();
 }
-
 ?>
 
