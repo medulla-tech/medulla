@@ -109,7 +109,7 @@ class MscConfig(MscDatabaseConfig):
 
     # Probe behavior
     web_probe_order =  ""
-    web_probe_order_on_demand = "ping"
+    web_probe_order_on_demand = "ping_ssh"
 
     # IP blacklists settings
     # To filter out everything which is not a valid unicast address
@@ -298,7 +298,7 @@ class MscConfig(MscDatabaseConfig):
             self.web_def_proxy_selection_mode = self.cp.get("web", "web_def_coh_life_time")
         if self.cp.has_option("web", "web_def_attempts_per_day"):
             self.web_def_proxy_selection_mode = self.cp.get("web", "web_def_attempts_per_day")
- 
+
         # VNC stuff
         if self.cp.has_option("web", "vnc_show_icon"):
             self.web_vnc_show_icon = self.cp.getboolean("web", "vnc_show_icon")
