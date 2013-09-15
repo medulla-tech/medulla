@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-09-05 16:11+0200\n"
-"PO-Revision-Date: 2013-09-08 23:01+0000\n"
+"POT-Creation-Date: 2013-09-12 16:30+0200\n"
+"PO-Revision-Date: 2013-09-15 23:01+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -151,27 +151,6 @@ msgid ""
 "                            <li> Your Samba server is not properly configured</li>\n"
 "                        </ul>"
 msgstr ""
-
-#: includes/modules.inc.php:384
-#, php-format
-msgid "%s service restarting..."
-msgstr ""
-
-#: includes/modules.inc.php:385
-#, php-format
-msgid "%s service restarted successfully."
-msgstr ""
-
-#: includes/modules.inc.php:386
-#, php-format
-msgid "%s service failed to restart."
-msgstr ""
-
-#: includes/modules.inc.php:391
-msgid "Restart the service ?"
-msgid_plural "Restart the services ?"
-msgstr[0] ""
-msgstr[1] ""
 
 #: includes/xmlrpc.inc.php:166
 msgid "Can't connect to MMC agent"
@@ -336,6 +315,27 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
+#: includes/modules.inc.php:384
+#, php-format
+msgid "%s service restarting..."
+msgstr ""
+
+#: includes/modules.inc.php:385
+#, php-format
+msgid "%s service restarted successfully."
+msgstr ""
+
+#: includes/modules.inc.php:386
+#, php-format
+msgid "%s service failed to restart."
+msgstr ""
+
+#: includes/modules.inc.php:391
+msgid "Restart the service ?"
+msgid_plural "Restart the services ?"
+msgstr[0] ""
+msgstr[1] ""
+
 #: includes/PageGenerator.php:544 includes/PageGenerator.php:772
 msgid "to"
 msgstr ""
@@ -372,8 +372,8 @@ msgid "Confirm"
 msgstr ""
 
 #: includes/PageGenerator.php:2502 includes/PageGenerator.php:2571
-#: modules/base/groups/members.php:189 modules/base/groups/delete.php:67
-#: modules/base/users/backup.php:92 modules/ppolicy/default/delete.php:46
+#: modules/base/groups/members.php:189 modules/base/groups/delete.php:66
+#: modules/base/users/backup.php:91 modules/ppolicy/default/delete.php:46
 msgid "Cancel"
 msgstr ""
 
@@ -561,10 +561,6 @@ msgstr ""
 msgid "Location"
 msgstr ""
 
-#: modules/base/computers/index.php:28 modules/base/infoPackage.inc.php:279
-msgid "Computer list"
-msgstr ""
-
 #: modules/base/computers/trads.php:26
 msgid "Computer Name"
 msgstr ""
@@ -604,6 +600,10 @@ msgstr ""
 msgid ""
 "I am aware that <b>all related images (non-master)</b> will be "
 "<b>DELETED</b>.<br />Check this box if it is what you want."
+msgstr ""
+
+#: modules/base/computers/index.php:32 modules/base/infoPackage.inc.php:279
+msgid "Computer list"
 msgstr ""
 
 #: modules/base/groups/ajaxFilter.php:41 modules/base/infoPackage.inc.php:240
@@ -658,18 +658,6 @@ msgstr ""
 msgid "Group members"
 msgstr ""
 
-#: modules/base/groups/delete.php:55 modules/base/groups/delete.php:66
-msgid "Delete group"
-msgstr ""
-
-#: modules/base/groups/delete.php:58
-msgid "You will delete group"
-msgstr ""
-
-#: modules/base/groups/delete.php:61
-msgid "This group will be deleted even though it is not empty"
-msgstr ""
-
 #: modules/base/groups/edit.php:35
 #, php-format
 msgid "Group %s successfully added"
@@ -696,6 +684,18 @@ msgstr ""
 
 #: modules/base/groups/edit.php:105
 msgid "Create"
+msgstr ""
+
+#: modules/base/groups/delete.php:54 modules/base/groups/delete.php:65
+msgid "Delete group"
+msgstr ""
+
+#: modules/base/groups/delete.php:57
+msgid "You will delete group"
+msgstr ""
+
+#: modules/base/groups/delete.php:60
+msgid "This group will be deleted even though it is not empty"
 msgstr ""
 
 #: modules/base/includes/errorHandling.php:28
@@ -1595,23 +1595,23 @@ msgstr ""
 msgid "This operation will last according to the amount of data to backup."
 msgstr ""
 
-#: modules/base/users/backup.php:75
+#: modules/base/users/backup.php:74
 #, php-format
 msgid "%s home directory will be archived."
 msgstr ""
 
-#: modules/base/users/backup.php:80
+#: modules/base/users/backup.php:79
 #, php-format
 msgid ""
 "Please select media size. If your data exceeds the volume size, several "
 "files of your media size will be created."
 msgstr ""
 
-#: modules/base/users/backup.php:84
+#: modules/base/users/backup.php:83
 msgid "Media size"
 msgstr ""
 
-#: modules/base/users/backup.php:91
+#: modules/base/users/backup.php:90
 msgid "Launch backup"
 msgstr ""
 
