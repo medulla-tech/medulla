@@ -28,6 +28,12 @@ require("localSidebar.php");
 require_once("modules/backuppc/includes/xmlrpc.php");
 require_once("modules/pulse2/includes/utilities.php");
 
+// Unset backup for selected host
+if (isset($_GET['objectUUID'])){
+    unset_backup_for_host($_GET['objectUUID']);
+    if (!isXMLRPCError()) new NotifyWidgetSuccess(_("The computer has been removed from the backup system."));
+}
+
 $p = new PageGenerator(_T("Backup status", 'backuppc'));
 $p->setSideMenu($sidemenu);
 $p->display();
