@@ -1,5 +1,4 @@
 <?php
-
 /**
  * (c) 2008 Mandriva, http://www.mandriva.com/
  *
@@ -164,9 +163,8 @@ if (isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
   echo "[connection]\r\nhost=$host \r\nport=$port\r\n";
  *
  */ else {
-?>
+    ?>
     <?php
-
     // Test if Java Runtime is installed
     if (!isset($_COOKIE['javaenabled']))
         print('<script type="text/javascript">document.location.href=document.location.href;</script>');
@@ -181,4 +179,7 @@ if (isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
     $f->addCancelButton("bback");
     $f->display();
 }
-    ?>
+?>
+<script type="text/javascript">
+    jQuery('input[name=bconfirm]').click(closePopup);
+</script>
