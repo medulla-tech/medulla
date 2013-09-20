@@ -1,4 +1,5 @@
 <?php
+
 /**
  * (c) 2008 Mandriva, http://www.mandriva.com/
  *
@@ -20,14 +21,13 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 require('modules/msc/includes/scheduler_xmlrpc.php');
 require('modules/msc/includes/mscoptions_xmlrpc.php');
 
 # FIXME: I'm not really proud of this piece of code :/
-if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
+if (isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
     // Check if we're here thru a proxy defining HTTP_X_FORWARDED_FOR
-    $remoteaddr = isset($_SERVER["HTTP_X_FORWARDED_FOR"])? $_SERVER["HTTP_X_FORWARDED_FOR"]: $_SERVER["REMOTE_ADDR"];
+    $remoteaddr = isset($_SERVER["HTTP_X_FORWARDED_FOR"]) ? $_SERVER["HTTP_X_FORWARDED_FOR"] : $_SERVER["REMOTE_ADDR"];
     $result = scheduler_establish_vnc_proxy('', $_GET['objectUUID'], $remoteaddr);
 
     # $result is expected to be an array containing host, port, let's check it:
@@ -37,16 +37,16 @@ if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
             <head>
                 <title>Mandriva Management Console</title>
                 <link href='/mmc/graph/master.css' rel='stylesheet' media='screen' type='text/css' />
-                
+
             </head>
             <BODY style='background-color: #FFFFFF;'>
             <center>
                 <div class='popup' style='position: relative;'>
                     <div class='__popup_container'>
-                        <h2 style='color: red;'>"._T("Connection Failed !", "msc") . "</h2>
+                        <h2 style='color: red;'>" . _T("Connection Failed !", "msc") . "</h2>
                         <br/>
-                        "._T("Connection was refused by the other side.", "msc") . "<br/>
-                            
+                        " . _T("Connection was refused by the other side.", "msc") . "<br/>
+
                         <br/>
                         <button id='btnPrimary' onclick='window.close();'>Close window</button>
                     </div>
@@ -69,20 +69,25 @@ if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
             <center>
                 <div class='popup' style='position: relative;height:90%;'>
                     <div class='__popup_container'>
-                        <h2>"._T("Connection Succeedeed !", "msc") . "</h2>
+                        <h2>" . _T("Connection Succeedeed !", "msc") . "</h2>
                         <br/>
-                        "._T("This connection will be automatically shut down in 60 minutes.", "msc") . "<br/>
+                        " . _T("This connection will be automatically shut down in 60 minutes.", "msc") . "<br/>
                         <br/>
-                        "._T("Please close this windows when you are done.", "msc") . "<br/>
+                        " . _T("Please close this windows when you are done.", "msc") . "<br/>
                         <br/>
                         <button id='btnPrimary' onclick='window.close();'>Close window</button>
                     </div>
 
-            <APPLET CODE=VncViewer.class ARCHIVE='modules/msc/graph/java/VncViewer.jar' WIDTH=100 HEIGHT=10>
-            <PARAM NAME='PORT' VALUE='$port'>
-            <PARAM NAME='HOST' VALUE='$host'>
-            <PARAM NAME='Open new window' VALUE='Yes'>
-            <PARAM NAME='Offer Relogin' VALUE='No'>
+            <APPLET CODE=com.glavsoft.viewer.Viewer.class ARCHIVE='modules/msc/graph/java/tightvnc-jviewer.jar' WIDTH=100 HEIGHT=10>
+            <PARAM NAME='Port' VALUE='$port'>
+            <PARAM NAME='Host' VALUE='$host'>
+            <PARAM NAME='OpenNewWindow' VALUE='yes'>
+            <PARAM NAME='ShowControls' VALUE='yes'>
+            <PARAM NAME='AllowClipboardTransfer' VALUE='yes'>
+            <PARAM NAME='ShareDesktop' VALUE='yes'>
+            <PARAM NAME='ScalingFactor' VALUE='auto'>
+            <PARAM NAME='ZoomToFit' VALUE='yes'>
+            <PARAM NAME='CompressionLevel' value='9'>
             ";
 
         if (web_vnc_allow_user_control()) {
@@ -97,26 +102,24 @@ if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
 
         if (web_vnc_view_only()) {
             echo "
-                <PARAM NAME='View only' VALUE='Yes'>
-                <PARAM NAME='Cursor shape updates' VALUE='Ignore'>
+                <PARAM NAME='Viewonly' VALUE='Yes'>
                 ";
         } else {
             echo "
-                <PARAM NAME='View only' VALUE='No'>
-                <PARAM NAME='Cursor shape updates' VALUE='Enable'>
+                <PARAM NAME='Viewonly' VALUE='No'>
                 ";
         }
 
         if (web_vnc_network_connectivity() == 'fiber') {
             echo "
-                <PARAM NAME='Encoding' VALUE='Raw'>
+                <PARAM NAME='Encoding' VALUE='Tight'>
                 <PARAM NAME='Compression Level' VALUE='1'>
                 <PARAM NAME='Restricted colors' VALUE='No'>
                 <PARAM NAME='JPEG image quality' VALUE='Jpeg Off'>
                 ";
         } elseif (web_vnc_network_connectivity() == 'lan') {
             echo "
-                <PARAM NAME='Encoding' VALUE='Hextile'>
+                <PARAM NAME='Encoding' VALUE='Tight'>
                 <PARAM NAME='Compression Level' VALUE='1'>
                 <PARAM NAME='Restricted colors' VALUE='No'>
                 <PARAM NAME='JPEG image quality' VALUE='Jpeg Off'>
@@ -155,30 +158,27 @@ if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
 }
 /*
  * to send a true VNC config file:
-    header("Content-type: VncViewer/Config");
-    header("Content-Disposition: inline; filename=\"config.vnc\"");
-    header("Cache-control: private");
-    echo "[connection]\r\nhost=$host \r\nport=$port\r\n";
+  header("Content-type: VncViewer/Config");
+  header("Content-Disposition: inline; filename=\"config.vnc\"");
+  header("Cache-control: private");
+  echo "[connection]\r\nhost=$host \r\nport=$port\r\n";
  *
- */
+ */ else {
+?>
+    <?php
 
-else {
-    ?>
-<?php
     // Test if Java Runtime is installed
-    if(!isset($_COOKIE['javaenabled']))
+    if (!isset($_COOKIE['javaenabled']))
         print('<script type="text/javascript">document.location.href=document.location.href;</script>');
-    if(!isset($_COOKIE['javaenabled']) || $_COOKIE['javaenabled']=="null") {
-        $f = new PopupWindowForm("");    
-        print("<br/><span style='color:red'>"._T("Java Runtime is not installed, please download it from <a href='http://www.java.com/download/'>http://www.java.com/download/</a> and retry.", "msc")."</span>");
-    }    
-    else
-    {
-        $f = new PopupWindowForm(_T("Take control of this computer", "msc"));    
+    if (!isset($_COOKIE['javaenabled']) || $_COOKIE['javaenabled'] == "null") {
+        $f = new PopupWindowForm("");
+        print("<br/><span style='color:red'>" . _T("Java Plugin is not installed on <u>your own computer</u>. Please download it from <a href='http://www.java.com/download/'>http://www.java.com/download/</a>, install it, restart your browser and then, verify your installation on <a target='_blank' href='http://www.java.com/verify/'>http://www.java.com/verify/</a>.", "msc") . "</span>");
+    } else {
+        $f = new PopupWindowForm(_T("Take control of this computer", "msc"));
         $f->target_uri = $_SERVER["REQUEST_URI"] . "&establishproxy=yes";
         $f->addValidateButtonWithFade("bconfirm");
     }
     $f->addCancelButton("bback");
     $f->display();
 }
-?>
+    ?>
