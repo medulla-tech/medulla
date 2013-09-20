@@ -21,6 +21,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+# It is nomore necessary to sign the TightVNC plugin
+# because it is already signed and his signature is better for
+# security checks
+
 export JAVA_HOME=/usr/lib/j2sdk1.5-sun
 export PATH=$JAVA_HOME/bin:$PATH
 
