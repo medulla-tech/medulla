@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-16 01:00+0200\n"
+"POT-Creation-Date: 2013-09-23 01:00+0200\n"
 "PO-Revision-Date: 2013-09-04 15:32+0000\n"
 "Last-Translator: Cécile Adam <acecile@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
@@ -73,6 +73,11 @@ msgstr "Tous"
 msgid "Any size"
 msgstr "N'importe quelle taille"
 
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:84
+#, fuzzy
+msgid "Are you sure you want to unset backup for this computer?"
+msgstr "Pas de sauvegarde définie pour cette machine"
+
 #: modules/backuppc/infoPackage.inc.php:33
 #: modules/backuppc/infoPackage.inc.php:38
 msgid "Backup"
@@ -100,7 +105,7 @@ msgstr "Pas de sauvegarde définie pour cette machine"
 msgid "Backup size (new) [Mb]"
 msgstr "Taille de sauvegarde (nouveaux) [Mo]"
 
-#: modules/backuppc/backuppc/index.php:31
+#: modules/backuppc/backuppc/index.php:37
 #: modules/backuppc/infoPackage.inc.php:42
 msgid "Backup status"
 msgstr "Statut"
@@ -174,7 +179,7 @@ msgstr "Configurer"
 msgid "Current directory :  "
 msgstr "Dossier courant:  "
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:76
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:82
 msgid "Current state"
 msgstr "Etat courant"
 
@@ -340,11 +345,11 @@ msgstr "Dossier"
 msgid "Friday"
 msgstr "Vendredi"
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:72
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:78
 msgid "Full number"
 msgstr "Nb complètes"
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:73
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:79
 msgid "Full size (GB)"
 msgstr "Taille (Go)"
 
@@ -365,7 +370,7 @@ msgstr "Sauvegarde de l'hôte non définie."
 msgid "Host backup status"
 msgstr "Statut de la sauvegarde"
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:71
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:77
 #: modules/backuppc/backuppc/ajaxHostsList.php:57
 msgid "Host name"
 msgstr "Nom de la machine"
@@ -394,7 +399,7 @@ msgstr "Intervalle entre deux sauvegardes incrémentales (jours)"
 msgid "KB"
 msgstr "Ko"
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:77
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:83
 msgid "Last message"
 msgstr "Dernier message"
 
@@ -427,7 +432,7 @@ msgstr "Mac OS X (Fichiers utilisateurs)"
 msgid "Mac OS X (Whole / drive)"
 msgstr "Mac OS X (Disque / complet)"
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:75
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:81
 msgid "Mast backup (days)"
 msgstr "Dernière sauvegarde (jours)"
 
@@ -445,7 +450,7 @@ msgstr "Nom"
 msgid "Nightly"
 msgstr "La nuit"
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:52
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:53
 msgid "No entry found."
 msgstr "Aucune entrée trouvée"
 
@@ -574,6 +579,11 @@ msgstr "Résumé"
 msgid "Sunday"
 msgstr "Dimanche"
 
+#: modules/backuppc/backuppc/index.php:34
+#, fuzzy
+msgid "The computer has been removed from the backup system."
+msgstr "Cette machine n'a jamais été sauvegardée"
+
 #: modules/backuppc/backuppc/deleteProfile.php:43
 msgid "The profile has been deleted successfully."
 msgstr "Le profil a été supprimé avec succès"
@@ -617,6 +627,11 @@ msgstr "Mardi"
 #: modules/backuppc/backuppc/hostSummary.php:150
 msgid "Type"
 msgstr "Type"
+
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:84
+#, fuzzy
+msgid "Unset backup"
+msgstr "Parcourir la sauvegarde"
 
 #: modules/backuppc/backuppc/BrowseBackups.php:68
 #: modules/backuppc/backuppc/ajaxHostsList.php:64
@@ -743,7 +758,7 @@ msgstr ""
 msgid "Your file is being prepared, please wait."
 msgstr "Fichier en cours de préparation, veuillez patienter."
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:74
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:80
 msgid "incr. number"
 msgstr "Nb incrémentales"
 

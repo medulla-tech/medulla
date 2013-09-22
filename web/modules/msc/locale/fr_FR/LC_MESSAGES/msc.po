@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-16 01:00+0200\n"
+"POT-Creation-Date: 2013-09-23 01:00+0200\n"
 "PO-Revision-Date: 2013-06-11 14:40+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
@@ -536,11 +536,11 @@ msgstr "Statut de la commande"
 msgid "Computers in this command"
 msgstr "Ordinateurs dans cette commande"
 
-#: modules/msc/msc/vnc_client.php:46
+#: modules/msc/msc/vnc_client.php:45
 msgid "Connection Failed !"
 msgstr "Erreur de connexion !"
 
-#: modules/msc/msc/vnc_client.php:72
+#: modules/msc/msc/vnc_client.php:71
 msgid "Connection Succeedeed !"
 msgstr "La connexion a réussi !"
 
@@ -555,7 +555,7 @@ msgid ""
 "Connection was refused by the other side while trying to probe the machine"
 msgstr "La connexion a été refusée lors de la tentative de probe de la machine"
 
-#: modules/msc/msc/vnc_client.php:48
+#: modules/msc/msc/vnc_client.php:47
 msgid "Connection was refused by the other side."
 msgstr "La connexion a été refusée"
 
@@ -888,12 +888,12 @@ msgstr "Inventaire en cours"
 
 #: modules/msc/msc/vnc_client.php:173
 msgid ""
-"Java Runtime is not installed, please download it from <a href='http://www."
-"java.com/download/'>http://www.java.com/download/</a> and retry."
+"Java Plugin is not installed on <u>your own computer</u>. Please download it "
+"from <a href='http://www.java.com/download/'>http://www.java.com/download/</"
+"a>, install it, restart your browser and then, verify your installation on "
+"<a target='_blank' href='http://www.java.com/verify/'>http://www.java.com/"
+"verify/</a>."
 msgstr ""
-"Le plugin Java n'est pas installé. Merci de le télécharger à l'adresse "
-"suivante: <a href='http://www.java.com/download/'>http://www.java.com/"
-"download/</a> puis recommencez."
 
 #: modules/msc/msc/package_detail.php:36
 msgid "Label"
@@ -1188,7 +1188,7 @@ msgstr "Système d'exploitation"
 msgid "Play a command"
 msgstr "Jouer une commande"
 
-#: modules/msc/msc/vnc_client.php:76
+#: modules/msc/msc/vnc_client.php:75
 msgid "Please close this windows when you are done."
 msgstr "Please close this windows when you are done."
 
@@ -1506,7 +1506,7 @@ msgstr "Terminé: %percent% (%d packages)"
 msgid "Take control of a computer"
 msgstr "Prendre le contrôle d'un ordinateur"
 
-#: modules/msc/msc/vnc_client.php:177
+#: modules/msc/msc/vnc_client.php:175
 msgid "Take control of this computer"
 msgstr "Prendre le contrôle de cet ordinateur"
 
@@ -1592,7 +1592,7 @@ msgstr "Les packages suivants peuvent être installés sur le client \"%s\""
 msgid "These packages can be installed on group \"%s\""
 msgstr "Les packages suivants peuvent être installés sur le groupe \"%s\""
 
-#: modules/msc/msc/vnc_client.php:74
+#: modules/msc/msc/vnc_client.php:73
 msgid "This connection will be automatically shut down in 60 minutes."
 msgstr "La connexion sera automatiquement interrompue dans 60 minutes."
 
@@ -2008,3 +2008,11 @@ msgstr "en attente de téléchargement pour la seconde fois"
 #: modules/msc/includes/command_history.php:297
 msgid "yes"
 msgstr "oui"
+
+#~ msgid ""
+#~ "Java Runtime is not installed, please download it from <a href='http://"
+#~ "www.java.com/download/'>http://www.java.com/download/</a> and retry."
+#~ msgstr ""
+#~ "Le plugin Java n'est pas installé. Merci de le télécharger à l'adresse "
+#~ "suivante: <a href='http://www.java.com/download/'>http://www.java.com/"
+#~ "download/</a> puis recommencez."

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-16 01:00+0200\n"
+"POT-Creation-Date: 2013-09-23 01:00+0200\n"
 "PO-Revision-Date: 2013-06-11 14:40+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/"
@@ -529,11 +529,11 @@ msgstr "Состояние команды"
 msgid "Computers in this command"
 msgstr "Компьютеры в этой команде:"
 
-#: modules/msc/msc/vnc_client.php:46
+#: modules/msc/msc/vnc_client.php:45
 msgid "Connection Failed !"
 msgstr ""
 
-#: modules/msc/msc/vnc_client.php:72
+#: modules/msc/msc/vnc_client.php:71
 msgid "Connection Succeedeed !"
 msgstr ""
 
@@ -550,7 +550,7 @@ msgid ""
 "Connection was refused by the other side while trying to probe the machine"
 msgstr "Было отказано в подключении с другой стороны при исследовании машины"
 
-#: modules/msc/msc/vnc_client.php:48
+#: modules/msc/msc/vnc_client.php:47
 msgid "Connection was refused by the other side."
 msgstr "Было отказано в подключении с другой стороны."
 
@@ -882,8 +882,11 @@ msgstr "Выполняется инвентаризация"
 
 #: modules/msc/msc/vnc_client.php:173
 msgid ""
-"Java Runtime is not installed, please download it from <a href='http://www."
-"java.com/download/'>http://www.java.com/download/</a> and retry."
+"Java Plugin is not installed on <u>your own computer</u>. Please download it "
+"from <a href='http://www.java.com/download/'>http://www.java.com/download/</"
+"a>, install it, restart your browser and then, verify your installation on "
+"<a target='_blank' href='http://www.java.com/verify/'>http://www.java.com/"
+"verify/</a>."
 msgstr ""
 
 #: modules/msc/msc/package_detail.php:36
@@ -1179,7 +1182,7 @@ msgstr "Платформа"
 msgid "Play a command"
 msgstr "Запустить команду"
 
-#: modules/msc/msc/vnc_client.php:76
+#: modules/msc/msc/vnc_client.php:75
 msgid "Please close this windows when you are done."
 msgstr ""
 
@@ -1496,7 +1499,7 @@ msgstr ""
 msgid "Take control of a computer"
 msgstr "Управлять компьютером"
 
-#: modules/msc/msc/vnc_client.php:177
+#: modules/msc/msc/vnc_client.php:175
 msgid "Take control of this computer"
 msgstr ""
 
@@ -1582,7 +1585,7 @@ msgstr "Эти пакеты могуть быть установлены на к
 msgid "These packages can be installed on group \"%s\""
 msgstr "Эти пакеты могут быть установлены на группу \"%s\""
 
-#: modules/msc/msc/vnc_client.php:74
+#: modules/msc/msc/vnc_client.php:73
 msgid "This connection will be automatically shut down in 60 minutes."
 msgstr ""
 

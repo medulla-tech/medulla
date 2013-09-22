@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-16 01:00+0200\n"
+"POT-Creation-Date: 2013-09-23 01:00+0200\n"
 "PO-Revision-Date: 2013-09-04 14:09+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/"
@@ -72,6 +72,10 @@ msgstr ""
 msgid "Any size"
 msgstr ""
 
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:84
+msgid "Are you sure you want to unset backup for this computer?"
+msgstr ""
+
 #: modules/backuppc/infoPackage.inc.php:33
 #: modules/backuppc/infoPackage.inc.php:38
 msgid "Backup"
@@ -99,7 +103,7 @@ msgstr ""
 msgid "Backup size (new) [Mb]"
 msgstr ""
 
-#: modules/backuppc/backuppc/index.php:31
+#: modules/backuppc/backuppc/index.php:37
 #: modules/backuppc/infoPackage.inc.php:42
 msgid "Backup status"
 msgstr ""
@@ -170,7 +174,7 @@ msgstr ""
 msgid "Current directory :  "
 msgstr ""
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:76
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:82
 msgid "Current state"
 msgstr ""
 
@@ -334,11 +338,11 @@ msgstr ""
 msgid "Friday"
 msgstr ""
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:72
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:78
 msgid "Full number"
 msgstr ""
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:73
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:79
 msgid "Full size (GB)"
 msgstr ""
 
@@ -359,7 +363,7 @@ msgstr ""
 msgid "Host backup status"
 msgstr ""
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:71
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:77
 #: modules/backuppc/backuppc/ajaxHostsList.php:57
 msgid "Host name"
 msgstr ""
@@ -388,7 +392,7 @@ msgstr ""
 msgid "KB"
 msgstr ""
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:77
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:83
 msgid "Last message"
 msgstr ""
 
@@ -421,7 +425,7 @@ msgstr ""
 msgid "Mac OS X (Whole / drive)"
 msgstr ""
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:75
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:81
 msgid "Mast backup (days)"
 msgstr ""
 
@@ -439,7 +443,7 @@ msgstr ""
 msgid "Nightly"
 msgstr ""
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:52
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:53
 msgid "No entry found."
 msgstr ""
 
@@ -568,6 +572,10 @@ msgstr ""
 msgid "Sunday"
 msgstr ""
 
+#: modules/backuppc/backuppc/index.php:34
+msgid "The computer has been removed from the backup system."
+msgstr ""
+
 #: modules/backuppc/backuppc/deleteProfile.php:43
 msgid "The profile has been deleted successfully."
 msgstr ""
@@ -609,6 +617,10 @@ msgstr ""
 
 #: modules/backuppc/backuppc/hostSummary.php:150
 msgid "Type"
+msgstr ""
+
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:84
+msgid "Unset backup"
 msgstr ""
 
 #: modules/backuppc/backuppc/BrowseBackups.php:68
@@ -734,7 +746,7 @@ msgstr ""
 msgid "Your file is being prepared, please wait."
 msgstr ""
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:74
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:80
 msgid "incr. number"
 msgstr ""
 
