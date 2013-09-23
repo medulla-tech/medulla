@@ -86,6 +86,10 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return xmlrpcCleanup(Glpi().getAntivirusStatus(ctx))
 
+    def getRestrictedComputersListLen(self):
+        ctx = self.currentContext
+        return Glpi().getRestrictedComputersListLen(ctx, {})
+
     def getMachineByOsLike(self,osname,count):
         ctx = self.currentContext
         return xmlrpcCleanup(Glpi().getMachineByOsLike(ctx,osname,count))
