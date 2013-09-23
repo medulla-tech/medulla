@@ -49,7 +49,7 @@ base_url=http://pulse2.mandriva.org/pub/pulse2/client/windows/win32
 ssh_url=http://pulse2.mandriva.org/pub/pulse2/client/windows/win32/pulse2-secure-agent/${ssh_file}
 vnc_url=http://pulse2.mandriva.org/pub/pulse2/client/windows/win32/pulse2-rda-agent/${vnc_file}
 inv_url=http://pulse2.mandriva.org/pub/pulse2/client/windows/win32/inventory-agent/${inv_file}
-sfx_url=http://www.7zsfx.info/files/7zsd_150_2478.7z
+sfx_url=http://pulse2.mandriva.org/pub/pulse2/client/windows/win32/${sfx_file}
 
 # Others variables
 my_fqdn=`hostname -f`
@@ -244,9 +244,7 @@ if [ -e "${sfx_file}" ]; then
 else
   echo
   echo "Downloading ${sfx_file}..."
-  curl --progress-bar -o ${sfx_file}.7z ${sfx_url}
-  7z -bd e ${sfx_file}.7z >/dev/null
-  rm -f ${sfx_file}.7z
+  curl --progress-bar -o ${sfx_file} ${sfx_url}
   echo
   if [ ! -e ${sfx_file} ]; then
     echo
