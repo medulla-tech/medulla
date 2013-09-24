@@ -421,8 +421,9 @@ class Glpi07(DyngroupDatabaseHelper):
             else:
                 location = None
 
-            if 'entity_uuid' in filt:
-                location = filt['entity_uuid']
+            # Imaging group
+            if 'imaging_entities' in filt:
+                location = filt['imaging_entities']
 
             if 'ctxlocation' in filt:
                 ctxlocation = filt['ctxlocation']
@@ -439,14 +440,23 @@ class Glpi07(DyngroupDatabaseHelper):
                 join_query = join_query.join(self.location)
 
                 if location != None:
-                    locationid = int(location.replace('UUID', ''))
-                    try:
-                        locsid.index(locationid) # just check that location is in locs, or throw an exception
-                        query_filter = self.__addQueryFilter(query_filter, (self.machine.c.FK_entities == locationid))
-                    except ValueError:
-                        self.logger.warn("User '%s' is trying to get the content of an unauthorized entity : '%s'" % (ctx.userid, location))
-                        session.close()
-                        return None
+                    # Imaging group case
+                    if isinstance(location, list):
+                        locationids = [int(x.replace('UUID', '')) for x in location]
+                        for locationid in locationids:
+                            if not locationid in locsid:
+                                self.logger.warn("User '%s' is trying to get the content of an unauthorized entity : '%s'" % (ctx.userid, 'UUID' + location))
+                                session.close()
+                                return None
+                        query_filter = self.__addQueryFilter(query_filter, (self.machine.c.FK_entities.in_(locationids)))
+                    else:
+                        locationid = int(location.replace('UUID', ''))
+                        if locationid in locsid:
+                            query_filter = self.__addQueryFilter(query_filter, (self.machine.c.FK_entities == locationid))
+                        else:
+                            self.logger.warn("User '%s' is trying to get the content of an unauthorized entity : '%s'" % (ctx.userid, location))
+                            session.close()
+                            return None
 
             if displayList:
                 if 'os' in self.config.summary:

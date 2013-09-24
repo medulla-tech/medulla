@@ -70,6 +70,10 @@ class ComputerImagingManager(Singleton):
         klass = self.components[self.main]
         return klass().getImagingServerEntityUUID(imaging_uuid)
 
+    def isChildOfImagingServer(self, loc_uuid, main_imaging_server_uuid):
+        klass = self.components[self.main]
+        return klass().isChildOfImagingServer(loc_uuid, main_imaging_server_uuid)
+
 class ComputerImagingI:
     def isImagingInProfilePossible(self):
         """

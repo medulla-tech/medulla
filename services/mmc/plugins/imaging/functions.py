@@ -1420,19 +1420,19 @@ class ImagingRpcProxy(RpcProxyI):
                         ret = 4
                         break
                     i += 1
-            if not ret:
-                # Still no error ? Now checks that all the computers belong to the
-                # same entity
-                locations = ComputerLocationManager().getMachinesLocations(uuids)
-                locations_uuid = [l['uuid'] for l in locations.values() if 'uuid' in l]
-                if len(locations_uuid) != len(uuids):
-                    # some computers have no location ?
-                    logger.info("Some computers don't have location in the profile %s" % profileUUID)
-                    ret = 5
-                elif locations_uuid.count(locations_uuid[0]) != len(locations_uuid):
-                    # All the computers don't belong to the same location
-                    logger.info("All the computers don't belong to the same location (%s)" % profileUUID)
-                    ret = 6
+                    #if not ret:
+                    #    # Still no error ? Now checks that all the computers belong to the
+                    #    # same entity
+                    #    locations = ComputerLocationManager().getMachinesLocations(uuids)
+                    #    locations_uuid = [l['uuid'] for l in locations.values() if 'uuid' in l]
+                    #    if len(locations_uuid) != len(uuids):
+                    #        # some computers have no location ?
+                    #        logger.info("Some computers don't have location in the profile %s" % profileUUID)
+                    #        ret = 5
+                    #    elif locations_uuid.count(locations_uuid[0]) != len(locations_uuid):
+                    #        # All the computers don't belong to the same location
+                    #        logger.info("All the computers don't belong to the same location (%s)" % profileUUID)
+                    #        ret = 6
         return ret
 
     def isProfileRegistered(self, profile_uuid):
@@ -2899,7 +2899,8 @@ def synchroTargets(ctx, uuids, target_type, wol = False):
                     failures = uuids
                     for l_uuid in results:
                         db.setTargetRegisteredInPackageServer(l_uuid, P2IT.ALL_COMPUTERS)
-                        failures.remove(l_uuid)
+                        if l_uuid in failures:
+                            failures.remove(l_uuid)
                     return failures
 
                 d = i.computersRegister(computers)

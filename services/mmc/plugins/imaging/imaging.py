@@ -63,3 +63,14 @@ class ComputerImagingImaging(ComputerImagingI):
             return en.uuid
         return None
 
+    def isChildOfImagingServer(self, loc_uuid, main_imaging_server_uuid):
+        """
+        Check if loc_uuid is child of main_imaging_server_uuid
+        """
+        parents = ComputerLocationManager().getLocationParentPath(loc_uuid)
+        # Check if loc_uuid is child of main_imaging_server_uuid
+        if main_imaging_server_uuid in parents:
+            # Cool ! Now check if loc_uuid has not his own imaging server
+            if not ImagingDatabase().doesLocationHasImagingServer(loc_uuid):
+                return True
+        return False
