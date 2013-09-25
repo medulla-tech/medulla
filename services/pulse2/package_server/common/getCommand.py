@@ -4,11 +4,48 @@
 import os
 import logging
 from xml.dom import minidom
+from optparse import OptionParser
+
+BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = range(8)
+
+#The background is set with 40 plus the number of the color, and the foreground with 30
+
+#These are the sequences need to get colored ouput
+RESET_SEQ = "\033[0m"
+COLOR_SEQ = "\033[1;%dm"
+BOLD_SEQ = "\033[1m"
+
+def formatter_message(message, use_color = True):
+    if use_color:
+        message = message.replace("$RESET", RESET_SEQ).replace("$BOLD", BOLD_SEQ)
+    else:
+        message = message.replace("$RESET", "").replace("$BOLD", "")
+    return message
+
+COLORS = {
+    'WARNING': YELLOW,
+    'INFO': WHITE,
+    'DEBUG': BLUE,
+    'CRITICAL': YELLOW,
+    'ERROR': RED
+}
+
+class ColoredFormatter(logging.Formatter):
+    def __init__(self, msg, use_color = True):
+        logging.Formatter.__init__(self, msg)
+        self.use_color = use_color
+
+    def format(self, record):
+        levelname = record.levelname
+        if self.use_color and levelname in COLORS:
+            levelname_color = COLOR_SEQ % (30 + COLORS[levelname]) + levelname + RESET_SEQ
+            record.levelname = levelname_color
+        return logging.Formatter.format(self, record)
 
 class getCommand(object):
-    def __init__(self, file):
+    def __init__(self, file, log = False):
         self.file = file
-        self.logger = logging.getLogger()
+        self.logger = log and log or logging.getLogger()
 
     def getStringsData(self):
         strings_command = 'strings "%s"' % self.file
@@ -140,3 +177,36 @@ class getCommand(object):
             return self.getShCommand()
         else:
             return self.logger.info("I don't know what to do with %s (%s)" % (self.file, file_data[self.file]))
+
+if __name__ == "__main__":
+    parser = OptionParser()
+    parser.add_option("-d", "--debug", action="store_true", dest="debug", default=False,
+                      help="Print debug messages")
+    parser.add_option("--dir", dest="dir", default=False,
+                      help="Directory who will be analyzed (default current directory)")
+
+    # Parse and analyse args
+    (options, args) = parser.parse_args()
+    if options.debug:
+        level = logging.DEBUG
+    else:
+        level = logging.INFO
+
+    if options.dir:
+        dir = options.dir
+    else:
+        dir = '.'
+
+    log = logging.getLogger('getCommand')
+    log.setLevel(level)
+    formatter = ColoredFormatter("%(levelname)-18s %(message)s")
+    handler_stream = logging.StreamHandler()
+    handler_stream.setFormatter(formatter)
+    #handler_stream.setLevel(level)
+    log.addHandler(handler_stream)
+
+    for file in os.listdir(dir):
+        c = getCommand(file, log)
+        command = c.getCommand()
+        if command is not None:
+            log.info("%s: %s" % (file, command))
