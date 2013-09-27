@@ -178,6 +178,23 @@ class GlpiComputers(ComputerI):
             filt = filt[1]
         except exceptions.AttributeError:
             pass
+        if 'imaging_entities' in filt: # imaging group creation
+            computersList = self.glpi.getRestrictedComputersList(ctx, min, max, filt, advanced, justId, toH)
+            # display only "imaging compliant" computers
+            uuids = []
+            networks = self.getComputersNetwork(ctx, {'uuids': computersList.keys()})
+            for network in networks:
+                network = network[1]
+                # Check if computer has macAddress and ipHostNumber
+                if network['macAddress'] and network['ipHostNumber']:
+                    uuids.append(network['objectUUID'][0])
+                else:
+                    logging.getLogger().debug("Computer %s cannot be added in an imaging group:" % network['cn'])
+                    if not network['macAddress']:
+                        logging.getLogger().debug("No MAC found !")
+                    if not network['ipHostNumber']:
+                        logging.getLogger().debug("No IP address found !")
+            filt['uuids'] = uuids
         return self.glpi.getRestrictedComputersList(ctx, min, max, filt, advanced, justId, toH)
 
     def getTotalComputerCount(self):
