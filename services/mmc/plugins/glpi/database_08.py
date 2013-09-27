@@ -41,7 +41,7 @@ import os
 from configobj import ConfigObj
 
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
-        Integer, ForeignKey, asc, or_, not_, desc, func, distinct
+        Integer, ForeignKey, asc, or_, not_, desc, func
 from sqlalchemy.orm import create_session, mapper
 from sqlalchemy.sql.expression import ColumnOperators
 
@@ -434,12 +434,12 @@ class Glpi08(DyngroupDatabaseHelper):
         """
         if session == None:
             session = create_session()
-        query = count and session.query(func.count(distinct(self.machine.c.id)), Machine) or session.query(Machine)
+        query = count and session.query(func.count(Machine.id)) or session.query(Machine)
         if filt:
             # filtering on query
             join_query = self.machine
 
-            if displayList:
+            if displayList and not count:
                 if 'os' in self.config.summary:
                     query = query.add_column(self.os.c.name)
                 if 'type' in self.config.summary:
@@ -2289,7 +2289,7 @@ class Glpi08(DyngroupDatabaseHelper):
         # TODO use the ctx...
         session = create_session()
         if int(count) == 1:
-            query = session.query(func.count(self.machine.c.id), Machine).select_from(self.machine.outerjoin(self.os))
+            query = session.query(func.count(Machine.id)).select_from(self.machine.outerjoin(self.os))
         else:
             query = session.query(Machine).select_from(self.machine.outerjoin(self.os))
 
@@ -2820,7 +2820,7 @@ class Glpi08(DyngroupDatabaseHelper):
 
     def getComputersCountByOS(self, osname):
         session = create_session()
-        query = session.query(func.count(self.machine.c.id), Machine) \
+        query = session.query(func.count(Machine.id)) \
                 .select_from(self.machine.join(self.os))
         query = query.filter(self.os.c.name.like('%'+osname+'%'))
         count = query.scalar()

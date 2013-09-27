@@ -2721,7 +2721,7 @@ class Glpi07(DyngroupDatabaseHelper):
 
     def getComputersCountByOS(self, osname):
         session = create_session()
-        query = session.query(func.count(self.machine.c.ID), Machine) \
+        query = session.query(func.count(Machine.ID)) \
                 .select_from(self.machine.join(self.os))
         query = query.filter(self.os.c.name.like('%'+osname+'%'))
         count = query.scalar()
