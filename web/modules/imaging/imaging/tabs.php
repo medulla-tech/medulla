@@ -22,11 +22,9 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 if ($_GET['module'] == 'base' && $_GET['submod'] == 'computers') {
     require("modules/base/computers/localSidebar.php");
-}
-else {
+} else {
     require("modules/imaging/manage/localSidebar.php");
 }
 require_once('graph/navbar.inc.php');
@@ -42,11 +40,44 @@ global $SYNCHROSTATE_TODO;
 global $SYNCHROSTATE_SYNCHRO;
 global $SYNCHROSTATE_RUNNING;
 global $SYNCHROSTATE_INIT_ERROR;
+global $CUSTOM_MENU;
+global $IN_GROUP;
+
+$CUSTOM_MENU = -1;
+$IN_GROUP = -1;
 
 /*
  * Display right top shortcuts menu
  */
 right_top_shortcuts_display();
+
+//  ===============================================================
+// Restore default location boot menu
+//  ===============================================================
+
+function resetDefaultMenu($uuid) {
+    $ret = xmlrpc_resetComputerBootMenu($uuid);
+    if (!isXMLRPCError() && $ret)
+        new NotifyWidgetSuccess(sprintf(_T("Default menu has been successfully restored.", "imaging")));
+}
+
+if (isset($_GET['reset_defaultMenu']) && $_GET['reset_defaultMenu'] == 1) {
+    resetDefaultMenu($params['uuid']);
+}
+
+
+//  ===============================================================
+// Leave a group and reset default bootmenu
+//  ===============================================================
+
+if (isset($_GET['leave_group'], $_GET['group_uuid'], $params['uuid'])) {
+    // Leave the group
+    $uuid = $params['uuid'];
+    $ret = __xmlrpc_delmembers_to_group($_GET['group_uuid'], array($uuid => array('uuid' => $uuid)));
+    if (!isXMLRPCError() && $ret) {
+        resetDefaultMenu($params['uuid']);
+    }
+}
 
 if (isset($_POST['bsync'])) {
     if (isset($params['uuid'])) {
@@ -58,15 +89,15 @@ if (isset($_POST['bsync'])) {
     if ($ret[0] and !isXMLRPCError()) {
         /* insert notification code here if needed */
     } elseif (!$ret[0] and !isXMLRPCError()) {
-         unset($_SESSION["imaging.isComputerInProfileRegistered_".$params['uuid']]);
-         unset($_SESSION["imaging.isComputerRegistered_".$params['uuid']]);
-         if (!xmlrpc_isComputerInProfileRegistered($params['uuid']) && !xmlrpc_isComputerRegistered($params['uuid'])) {
+        unset($_SESSION["imaging.isComputerInProfileRegistered_" . $params['uuid']]);
+        unset($_SESSION["imaging.isComputerRegistered_" . $params['uuid']]);
+        if (!xmlrpc_isComputerInProfileRegistered($params['uuid']) && !xmlrpc_isComputerRegistered($params['uuid'])) {
             new NotifyWidgetFailure(sprintf(_T("This computer is no longer registered : %s", "imaging"), $params['uuid']));
-            header("Location: ".urlStrRedirect("base/computers/index", $params));
+            header("Location: " . urlStrRedirect("base/computers/index", $params));
             exit;
-         } else {
+        } else {
             new NotifyWidgetFailure(sprintf(_T("Boot Menu Generation failed for : %s", "imaging"), implode(', ', $ret[1])));
-         }
+        }
     }
 }
 
@@ -98,7 +129,7 @@ if (isset($params['uuid'])) {
         # give a link to the profile registering
         if (count($canReg) == 2 and $canReg[1] != '') {
             $group = new Group($canReg[1], true);
-            $params = array("id"=>$canReg[1], "gid"=>$canReg[1], "groupname"=>$group->getName());
+            $params = array("id" => $canReg[1], "gid" => $canReg[1], "groupname" => $group->getName());
             $url = urlStr("imaging/manage/groupimgtabs", $params);
             $msg = sprintf(_T("Please declare the imaging group first %shere%s.", "imaging"), "<a href='$url'>", "</a>");
             $t2 = new TitleElement($msg, 3);
@@ -109,7 +140,7 @@ if (isset($params['uuid'])) {
         if (isset($_POST["bresetsynchrostate"])) {
             if (xmlrpc_resetSynchroState($params['uuid'], '')) {
                 new NotifyWidgetSuccess(sprintf(_T("Reset synchronisation state for %s (%s) succeed", "imaging"), $params['target_name'], $params['uuid']));
-                header("Location: ".urlStrRedirect("base/computers/imgtabs", $params));
+                header("Location: " . urlStrRedirect("base/computers/imgtabs", $params));
                 exit;
             } else {
                 new NotifyWidgetFailure(sprintf(_T("Failed to reset synchronise state.", "imaging")));
@@ -131,12 +162,11 @@ if (isset($params['uuid'])) {
             $t2->display();
 
             $f = new ValidatingForm();
-            $f->add(new HiddenTpl("target_uuid"),                    array("value" => $target_uuid,            "hide" => True));
-            $f->add(new HiddenTpl("target_name"),                    array("value" => $target_name,            "hide" => True));
-            $f->add(new HiddenTpl("type"),                           array("value" => $type,                   "hide" => True));
+            $f->add(new HiddenTpl("target_uuid"), array("value" => $target_uuid, "hide" => True));
+            $f->add(new HiddenTpl("target_name"), array("value" => $target_name, "hide" => True));
+            $f->add(new HiddenTpl("type"), array("value" => $type, "hide" => True));
             $f->addButton("bresetsynchrostate", _T("Reset Synchro state", "imaging"));
             $f->display();
-
         } elseif ($ret['id'] == $SYNCHROSTATE_INIT_ERROR) {
             $p = new PageGenerator(sprintf(_T("%s's computer imaging", 'imaging'), $hostname));
             $sidemenu->forceActiveItem("index");
@@ -154,23 +184,19 @@ if (isset($params['uuid'])) {
             # check if we are in a profile
             $in_profile = xmlrpc_isComputerInProfileRegistered($params['target_uuid']);
             if ($in_profile) {
-                $p->addTop(sprintf(_T("%s's computer imaging (in group)", 'imaging'), $hostname),
-                    "modules/imaging/imaging/header.php");
+                $p->addTop(sprintf(_T("%s's computer imaging (in group)", 'imaging'), $hostname), "modules/imaging/imaging/header.php");
+                $IN_GROUP = 1;
             } else {
-                $p->addTop(sprintf(_T("%s's computer imaging", 'imaging'), $hostname),
-                    "modules/imaging/imaging/header.php");
+                $CUSTOM_MENU = xmlrpc_getComputerCustomMenuFlag($params['target_uuid']);
+                $p->addTop(sprintf(_T("%s's computer imaging", 'imaging'), $hostname), "modules/imaging/imaging/header.php");
+                $IN_GROUP = 0;
             }
 
-            $p->addTab("tabbootmenu", _T("Boot menu", 'imaging'), _T("Current boot menu", "imaging"),
-                "modules/imaging/imaging/bootmenu.php", $params);
-            $p->addTab("tabimages", _T("Images and Masters", 'imaging'), "",
-                "modules/imaging/imaging/images.php", $params);
-            $p->addTab("tabservices", _T("Boot services", 'imaging'), _T("Available boot menu services", "imaging"),
-                "modules/imaging/imaging/services.php", $params);
-            $p->addTab("tabimlogs", _T("Imaging log", 'imaging'), "",
-                "modules/imaging/imaging/logs.php", $params);
-            $p->addTab("tabconfigure", _T("Menu configuration", 'imaging'), "",
-                "modules/imaging/imaging/configure.php", $params);
+            $p->addTab("tabbootmenu", _T("Boot menu", 'imaging'), _T("Current boot menu", "imaging"), "modules/imaging/imaging/bootmenu.php", $params);
+            $p->addTab("tabimages", _T("Images and Masters", 'imaging'), "", "modules/imaging/imaging/images.php", $params);
+            $p->addTab("tabservices", _T("Boot services", 'imaging'), _T("Available boot menu services", "imaging"), "modules/imaging/imaging/services.php", $params);
+            $p->addTab("tabimlogs", _T("Imaging log", 'imaging'), "", "modules/imaging/imaging/logs.php", $params);
+            $p->addTab("tabconfigure", _T("Menu configuration", 'imaging'), "", "modules/imaging/imaging/configure.php", $params);
             $p->display();
         }
     }
@@ -198,7 +224,7 @@ if (isset($params['uuid'])) {
         if (isset($_POST["bresetsynchrostate"])) {
             if (xmlrpc_resetSynchroState($params['target_uuid'], $params['type'])) {
                 new NotifyWidgetSuccess(sprintf(_T("Reset synchronisation state for %s (%s) succeed", "imaging"), $params['target_name'], $params['target_uuid']));
-                header("Location: ".urlStrRedirect("base/computers/imgtabs", $params));
+                header("Location: " . urlStrRedirect("base/computers/imgtabs", $params));
                 exit;
             } else {
                 new NotifyWidgetFailure(sprintf(_T("Failed to reset synchronise state.", "imaging")));
@@ -220,12 +246,11 @@ if (isset($params['uuid'])) {
             $t2->display();
 
             $f = new ValidatingForm();
-            $f->add(new HiddenTpl("gid"),                    array("value" => $params['target_uuid'],            "hide" => True));
-            $f->add(new HiddenTpl("groupname"),                    array("value" => $params['target_name'],            "hide" => True));
-            $f->add(new HiddenTpl("type"),                           array("value" => $params['type'],                   "hide" => True));
+            $f->add(new HiddenTpl("gid"), array("value" => $params['target_uuid'], "hide" => True));
+            $f->add(new HiddenTpl("groupname"), array("value" => $params['target_name'], "hide" => True));
+            $f->add(new HiddenTpl("type"), array("value" => $params['type'], "hide" => True));
             $f->addButton("bresetsynchrostate", _T("Reset Synchro state", "imaging"));
             $f->display();
-
         } else {
             # do nothing special if $SYNCHROSTATE_DONE
             $p = new TabbedPageGenerator();
@@ -236,18 +261,12 @@ if (isset($params['uuid'])) {
 
             $params['groupname'] = $group->getName();
             $params['target_name'] = $params['groupname'];
-            $p->addTop(sprintf(_T("%s's imaging group", 'imaging'), $group->getName()),
-                "modules/imaging/imaging/header.php");
-            $p->addTab("grouptabbootmenu", _T("Boot menu", 'imaging'), _T("Current boot menu", "imaging"),
-                "modules/imaging/imaging/bootmenu.php", $params);
-            $p->addTab("grouptabimages", _T("Masters", 'imaging'), "",
-                "modules/imaging/imaging/images.php", $params);
-            $p->addTab("grouptabservices", _T("Boot services", 'imaging'), _T("Available boot menu services", "imaging"),
-                "modules/imaging/imaging/services.php", $params);
-            $p->addTab("grouptabimlogs", _T("Imaging log", 'imaging'), "",
-                "modules/imaging/imaging/logs.php", $params);
-            $p->addTab("grouptabconfigure", _T("Menu configuration", 'imaging'), "",
-                "modules/imaging/imaging/configure.php", $params);
+            $p->addTop(sprintf(_T("%s's imaging group", 'imaging'), $group->getName()), "modules/imaging/imaging/header.php");
+            $p->addTab("grouptabbootmenu", _T("Boot menu", 'imaging'), _T("Current boot menu", "imaging"), "modules/imaging/imaging/bootmenu.php", $params);
+            $p->addTab("grouptabimages", _T("Masters", 'imaging'), "", "modules/imaging/imaging/images.php", $params);
+            $p->addTab("grouptabservices", _T("Boot services", 'imaging'), _T("Available boot menu services", "imaging"), "modules/imaging/imaging/services.php", $params);
+            $p->addTab("grouptabimlogs", _T("Imaging log", 'imaging'), "", "modules/imaging/imaging/logs.php", $params);
+            $p->addTab("grouptabconfigure", _T("Menu configuration", 'imaging'), "", "modules/imaging/imaging/configure.php", $params);
             $p->display();
         }
     }
@@ -257,5 +276,4 @@ if (isset($params['uuid'])) {
     $p->display();
     print _T("Not enough informations", "imaging");
 }
-
 ?>

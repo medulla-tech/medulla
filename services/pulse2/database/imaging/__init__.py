@@ -602,7 +602,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if need_to_close_session:
             session.close()
 
-        if q == None: 
+        if q == None:
             return None
 
         if q[1] != None and q[1] != 'NOTTRANSLATED':
@@ -1107,7 +1107,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def countEntityBootServices(self, loc_id, filter):
         session = create_session()
-        
+
         # With last param of self.__EntityBootServices set to True,
         # we get number of EntityBootServices
         q = self.__EntityBootServices(session, loc_id, filter, True)
@@ -2052,8 +2052,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         for target in q:
             target = target.toH()
             ret.append({
-                'uuid': target['imaging_uuid'], 
-                'type': target['type'], 
+                'uuid': target['imaging_uuid'],
+                'type': target['type'],
                 'name': target['name'],
             })
 
@@ -2068,7 +2068,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         for target in q:
             target = target.toH()
             ret.append({
-                'uuid': target['imaging_uuid'], 
+                'uuid': target['imaging_uuid'],
                 'type': -1,
                 'name': target['name'],
             })
@@ -2727,8 +2727,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             parent_path = ComputerLocationManager().getLocationParentPath(uuid)
             q = session.query(Entity).add_column(self.entity.c.uuid).select_from(self.imaging_server.join(self.entity)) \
                 .filter(and_(
-                    self.entity.c.uuid.in_(parent_path), 
-                    self.imaging_server.c.recursive == 1, 
+                    self.entity.c.uuid.in_(parent_path),
+                    self.imaging_server.c.recursive == 1,
                     self.imaging_server.c.associated == 1
                 )).all()
             h_temp = {}
@@ -3371,6 +3371,25 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session.close()
         return q
 
+
+    def getTargetsByCustomMenuInEntity(self, loc_id, custom_menu , session = None):
+        session_need_to_close = False
+        if session == None:
+            session_need_to_close = True
+            session = create_session()
+
+        q = session.query(Target.uuid)
+        q = q.select_from(self.target.join(self.menu).join(self.entity, self.target.c.fk_entity == self.entity.c.id))
+        q = q.filter(and_(
+                self.entity.c.uuid == loc_id, \
+                self.menu.c.custom_menu == custom_menu, \
+                self.target.c.type == P2IT.COMPUTER \
+            )).group_by(self.target.c.id).all()
+
+        if session_need_to_close:
+            session.close()
+        return [z[0] for z in q]
+
     def __getSynchroStates(self, uuids, target_type, session):
         q = session.query(SynchroState).add_entity(Menu)
         q = q.select_from(self.synchro_state.join(self.menu).join(self.target, self.menu.c.id == self.target.c.fk_menu))
@@ -3387,6 +3406,29 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if q:
             return map(lambda x: x[0], q)
         return None
+
+    def getTargetsCustomMenuFlag(self, uuids, target_type):
+        session = create_session()
+        q = self.__getSynchroStates(uuids, target_type, session)
+        session.close()
+        if q:
+            try:
+                return q[0][1].custom_menu
+            except:
+                return None
+        return None
+
+
+    def setComputerCustomMenuFlag(self, uuids, value):
+        session = create_session()
+        q = self.__getSynchroStates(uuids, P2IT.ALL_COMPUTERS, session)
+        if q:
+            q[0][1].custom_menu = value
+        session.flush()
+        session.close()
+        return True
+
+
 
     def getLocationSynchroState(self, uuid):
         """
@@ -3504,10 +3546,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return True
 
     def switchMenusToDefault(self, uuids):
-        """ 
+        """
         Menus of deleted computers from profile wil be switched
         to default entity menu.
- 
+
         @param uuids: list of UUIDs of removed computers
         @type uuids: list
         """

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
@@ -20,18 +21,17 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 function xmlrpc_isProfileRegistered($profile_uuid) {
     # we call as long as it's not registered, but once it is,
     # we can store that information in the session.
-    if (!isset($_SESSION["imaging.isProfileRegistered_".$profile_uuid])) {
+    if (!isset($_SESSION["imaging.isProfileRegistered_" . $profile_uuid])) {
         $ret = xmlCall("imaging.isProfileRegistered", array($profile_uuid));
         if ($ret) {
-            $_SESSION["imaging.isProfileRegistered_".$profile_uuid] = $ret;
+            $_SESSION["imaging.isProfileRegistered_" . $profile_uuid] = $ret;
         }
         return $ret;
     }
-    return ($_SESSION["imaging.isProfileRegistered_".$profile_uuid] == 1);
+    return ($_SESSION["imaging.isProfileRegistered_" . $profile_uuid] == 1);
 }
 
 function xmlrpc_getProfileLocation($target_uuid) {
@@ -41,41 +41,42 @@ function xmlrpc_getProfileLocation($target_uuid) {
 function xmlrpc_getMyMenuProfile($target_uuid) {
     return xmlCall("imaging.getMyMenuProfile", array($target_uuid));
 }
+
 function xmlrpc_setMyMenuProfile($target_uuid, $params) {
     return xmlCall("imaging.setMyMenuProfile", array($target_uuid, $params));
 }
 
 function xmlrpc_isComputerRegistered($machine_uuid) {
-    if (isset($_SESSION["imaging.isComputerInProfileRegistered_".$machine_uuid])) {
+    if (isset($_SESSION["imaging.isComputerInProfileRegistered_" . $machine_uuid])) {
         # we check because if we pass to computer_in_profile, there is chances we are no more in computer
-        unset($_SESSION["imaging.isComputerRegistered_".$machine_uuid]);
+        unset($_SESSION["imaging.isComputerRegistered_" . $machine_uuid]);
     }
     # we call as long as it's not registered, but once it is,
     # we can store that information in the session.
-    if (!isset($_SESSION["imaging.isComputerRegistered_".$machine_uuid])) {
+    if (!isset($_SESSION["imaging.isComputerRegistered_" . $machine_uuid])) {
         $ret = xmlCall("imaging.isComputerRegistered", array($machine_uuid));
         if ($ret) {
-            $_SESSION["imaging.isComputerRegistered_".$machine_uuid] = $ret;
+            $_SESSION["imaging.isComputerRegistered_" . $machine_uuid] = $ret;
         }
         return $ret;
     }
-    return ($_SESSION["imaging.isComputerRegistered_".$machine_uuid] == 1);
+    return ($_SESSION["imaging.isComputerRegistered_" . $machine_uuid] == 1);
 }
 
 function xmlrpc_isComputerInProfileRegistered($machine_uuid) {
-    if (isset($_SESSION["imaging.isComputerRegistered_".$machine_uuid])) {
+    if (isset($_SESSION["imaging.isComputerRegistered_" . $machine_uuid])) {
         # we check because if we pass to computer, there is chances that we are no more in computer_in_profile!
-        unset($_SESSION["imaging.isComputerInProfileRegistered_".$machine_uuid]);
+        unset($_SESSION["imaging.isComputerInProfileRegistered_" . $machine_uuid]);
     }
 
-    if (!isset($_SESSION["imaging.isComputerInProfileRegistered_".$machine_uuid])) {
+    if (!isset($_SESSION["imaging.isComputerInProfileRegistered_" . $machine_uuid])) {
         $ret = xmlCall("imaging.isComputerInProfileRegistered", array($machine_uuid));
         if ($ret) {
-            $_SESSION["imaging.isComputerInProfileRegistered_".$machine_uuid] = $ret;
+            $_SESSION["imaging.isComputerInProfileRegistered_" . $machine_uuid] = $ret;
         }
         return $ret;
     }
-    return ($_SESSION["imaging.isComputerInProfileRegistered_".$machine_uuid] == 1);
+    return ($_SESSION["imaging.isComputerInProfileRegistered_" . $machine_uuid] == 1);
 }
 
 function xmlrpc_canIRegisterThisComputer($target_uuid) {
@@ -97,12 +98,17 @@ function xmlrpc_delComputersImaging($computers_UUID, $backup) {
 function xmlrpc_getMyMenuComputer($target_uuid) {
     return xmlCall("imaging.getMyMenuComputer", array($target_uuid));
 }
+
 function xmlrpc_setMyMenuComputer($target_uuid, $params) {
     return xmlCall("imaging.setMyMenuComputer", array($target_uuid, $params));
 }
 
 function xmlrpc_getComputerBootMenu($id) {
     return xmlCall("imaging.getComputerBootMenu", array($id));
+}
+
+function xmlrpc_resetComputerBootMenu($uuid) {
+    return xmlCall("imaging.resetComputerBootMenu", array($uuid));
 }
 
 function xmlrpc_getProfileNetworks($uuid) {
@@ -117,7 +123,6 @@ function xmlrpc_getLocationBootMenu($id) {
     return xmlCall("imaging.getLocationBootMenu", array($id));
 }
 
-
 function xmlrpc_resetSynchroState($tid, $type) {
     return xmlCall("imaging.resetSynchroState", array($tid, $type));
 }
@@ -125,9 +130,19 @@ function xmlrpc_resetSynchroState($tid, $type) {
 function xmlrpc_getComputerSynchroState($id) {
     return xmlCall("imaging.getComputerSynchroState", array($id));
 }
+
+function xmlrpc_getComputerCustomMenuFlag($id) {
+    return xmlCall("imaging.getComputerCustomMenuFlag", array($id));
+}
+
+function xmlrpc_applyLocationDefaultBootMenu($loc_uuid) {
+    return xmlCall("imaging.applyLocationDefaultBootMenu", array($loc_uuid));
+}
+
 function xmlrpc_getProfileSynchroState($id) {
     return xmlCall("imaging.getProfileSynchroState", array($id));
 }
+
 function xmlrpc_getLocationSynchroState($id) {
     return xmlCall("imaging.getLocationSynchroState", array($id));
 }
@@ -135,9 +150,11 @@ function xmlrpc_getLocationSynchroState($id) {
 function xmlrpc_synchroComputer($id) {
     return xmlCall("imaging.synchroComputer", array($id));
 }
+
 function xmlrpc_synchroProfile($id) {
     return xmlCall("imaging.synchroProfile", array($id));
 }
+
 function xmlrpc_synchroLocation($id) {
     return xmlCall("imaging.synchroLocation", array($id));
 }
@@ -160,6 +177,7 @@ function xmlrpc_moveItemUpInMenu4Location($loc_id, $item_uuid) {
 }
 
 /* Images */
+
 function xmlrpc_imagingServerISOCreate($image_uuid, $size, $title) {
     return xmlCall("imaging.imagingServerISOCreate", array($image_uuid, $size, $title));
 }
@@ -195,6 +213,7 @@ function xmlrpc_isServiceUsed($bs_uuid) {
 function xmlrpc_imagingServerImageDelete($image_uuid) {
     return xmlCall("imaging.imagingServerImageDelete", array($image_uuid));
 }
+
 //Actions
 function xmlrpc_addImageToTarget($item_uuid, $target_uuid, $params, $type_target) {
     return xmlCall("imaging.addImageToTarget", array($item_uuid, $target_uuid, $params, $type_target));
@@ -229,6 +248,7 @@ function xmlrpc_editImageLocation($item_uuid, $loc_uuid, $params) {
 }
 
 /* BootServices */
+
 function xmlrpc_getPossibleBootServices($id, $start = 0, $end = -1, $filter = '') {
     return xmlCall("imaging.getPossibleBootServices", array($id, $start, $end, $filter));
 }
@@ -278,8 +298,8 @@ function xmlrpc_removeService($item_uuid, $location_id, $params) {
     return xmlCall("imaging.removeService", array($item_uuid, $location_id, $params));
 }
 
-
 /* Logs */
+
 function xmlrpc_getComputerLogs($id, $start = 0, $end = -1, $filter = '') {
     return xmlCall("imaging.getComputerLogs", array($id, $start, $end, $filter));
 }
@@ -315,6 +335,7 @@ function xmlrpc_getLogs4Location($location, $start = 0, $end = -1, $filter = '')
 }
 
 /* entity and imaging server */
+
 function xmlrpc_getAllNonLinkedImagingServer($start = 0, $end = -1, $filter = '') {
     return xmlCall("imaging.getAllNonLinkedImagingServer", array($start, $end, $filter));
 }
@@ -326,14 +347,14 @@ function xmlrpc_linkImagingServerToLocation($is_uuid, $loc_id, $loc_name) {
 function xmlrpc_doesLocationHasImagingServer($location) {
     # we call as long as it's not registered, but once it is,
     # we can store that information in the session.
-    if (!isset($_SESSION["imaging.doesLocationHasImagingServer_".$location])) {
+    if (!isset($_SESSION["imaging.doesLocationHasImagingServer_" . $location])) {
         $ret = xmlCall("imaging.doesLocationHasImagingServer", array($location));
         if ($ret) {
-            $_SESSION["imaging.doesLocationHasImagingServer_".$location] = $ret;
+            $_SESSION["imaging.doesLocationHasImagingServer_" . $location] = $ret;
         }
         return $ret;
     }
-    return ($_SESSION["imaging.doesLocationHasImagingServer_".$location] == 1);
+    return ($_SESSION["imaging.doesLocationHasImagingServer_" . $location] == 1);
 }
 
 function xmlrpc_getImagingServerConfig($location) {
@@ -345,6 +366,7 @@ function xmlrpc_setImagingServerConfig($location, $config) {
 }
 
 /* postinstall scripts */
+
 function xmlrpc_getAllTargetPostInstallScript($target_uuid, $start = 0, $end = -1, $filter = '') {
     return xmlCall("imaging.getAllTargetPostInstallScript", array($target_uuid, $start, $end, $filter));
 }
@@ -382,6 +404,7 @@ function xmlrpc_getPartitionsToBackupRestore($target_uuid) {
 }
 
 /* computers */
+
 function xmlrpc_getComputerByMac($mac) {
     return xmlCall("imaging.getComputerByMac", array($mac));
 }

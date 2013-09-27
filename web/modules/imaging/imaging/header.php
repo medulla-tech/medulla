@@ -25,6 +25,9 @@
 
 global $stateid;
 global $SYNCHROSTATE_TODO;
+global $CUSTOM_MENU;
+global $IN_GROUP;
+
 
 if ($stateid == $SYNCHROSTATE_TODO) {
     print "<table><tr><td><b>";
@@ -47,5 +50,30 @@ if ($stateid == $SYNCHROSTATE_TODO) {
     print "<table><tr><td>";
     print _T('This target\'s boot menu is up-to-date.', 'imaging');
     print "</td></tr></table>";
+}
+
+
+if ($CUSTOM_MENU == 1) {
+    /* This is a machine custom menu, so we propose to restore default location
+     * menu */
+    print "<table><tr><td>";
+    printf(_T('This computer has a <u>custom boot menu</u>. <a href="%s">Click here</a> to get back the default one.', 'imaging'), $_SERVER['REQUEST_URI'] . '&reset_defaultMenu=1');
+    ;
+    print "</td></tr></table>";
+}
+
+if ($IN_GROUP == 1) {
+    /* This machine is in an imaging group, so we propose to leave the group */
+    $params = getParams();
+    $uuid = $params['uuid'];
+
+    if (count($group = arePartOfAProfile(array($uuid)))) {
+
+        $groupname = $group[$uuid]['groupname'];
+        $groupid = $group[$uuid]['groupid'];
+        print "<table><tr><td>";
+        printf(_T('This computer is currently member of "%s". <a href="%s">Click here</a> to leave the group and customize the boot menu.', 'imaging'), $groupname, $_SERVER['REQUEST_URI'] . '&leave_group=1&group_uuid=' . $groupid);
+        print "</td></tr></table>";
+    }
 }
 ?>
