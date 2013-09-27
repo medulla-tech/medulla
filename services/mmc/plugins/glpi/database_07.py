@@ -384,12 +384,12 @@ class Glpi07(DyngroupDatabaseHelper):
         """
         if session == None:
             session = create_session()
-        query = count and session.query(func.count(self.machine.c.ID), Machine) or session.query(Machine)
+        query = count and session.query(func.count(Machine.ID)) or session.query(Machine)
         if filt:
             # filtering on query
             join_query = self.machine
 
-            if displayList:
+            if displayList and not count:
                 if 'os' in self.config.summary:
                     query = query.add_column(self.os.c.name)
                 if 'type' in self.config.summary:
@@ -408,10 +408,9 @@ class Glpi07(DyngroupDatabaseHelper):
                     query = query.add_column(self.glpi_enterprises.c.name)
 
             query_filter = None
-
             filters = [self.machine.c.deleted == 0, self.machine.c.is_template == 0, self.__filter_on_filter(query), self.__filter_on_entity_filter(query, ctx)]
 
-            join_query, query_filter = self.filter(ctx, self.machine, filt, session.query(Machine), self.machine.c.ID, filters)
+            join_query, query_filter = self.filter(ctx, self.machine, filt, session.query(Machine), Machine.ID, filters)
 
             # filtering on locations
             if 'location' in filt:
@@ -519,7 +518,6 @@ class Glpi07(DyngroupDatabaseHelper):
 
             if 'uuids' in filt and type(filt['uuids']) == list and len(filt['uuids']) > 0:
                 query = self.filterOnUUID(query, filt['uuids'])
-
             if 'gid' in filt:
                 gid = filt['gid']
                 machines = []
@@ -528,7 +526,6 @@ class Glpi07(DyngroupDatabaseHelper):
                 else:
                     machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, gid, 0, -1, ''))
                 query = query.filter(self.machine.c.ID.in_(machines))
-
             if 'request' in filt:
                 request = filt['request']
                 bool = None
@@ -616,7 +613,7 @@ class Glpi07(DyngroupDatabaseHelper):
         elif query[2] == 'Inventory number':
             return base
         elif query[2] == 'Location':
-            return base + [self.locations]
+            return base + [self.glpi_dropdown_locations]
         elif query[2] == 'Operating system':
             return base + [self.os]
         elif query[2] == 'Service Pack':
@@ -713,7 +710,7 @@ class Glpi07(DyngroupDatabaseHelper):
         elif query[2] == 'Inventory number':
             return [[self.machine.c.otherserial, query[3]]]
         elif query[2] == 'Location':
-            return [[self.locations.c.completename, query[3]]]
+            return [[self.glpi_dropdown_locations.c.completename, query[3]]]
         elif query[2] == 'Service Pack':
             return [[self.os_sp.c.name, query[3]]]
         elif query[2] == 'Group': # TODO double join on Entity
@@ -2179,7 +2176,7 @@ class Glpi07(DyngroupDatabaseHelper):
         # TODO use the ctx...
         session = create_session()
         if int(count) == 1:
-            query = session.query(func.count(self.machine.c.ID), Machine).select_from(self.machine.outerjoin(self.os))
+            query = session.query(func.count(Machine.ID)).select_from(self.machine.outerjoin(self.os))
         else:
             query = session.query(Machine).select_from(self.machine.outerjoin(self.os))
 
