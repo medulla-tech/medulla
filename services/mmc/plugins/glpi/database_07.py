@@ -528,11 +528,12 @@ class Glpi07(DyngroupDatabaseHelper):
                 query = query.filter(self.machine.c.ID.in_(machines))
             if 'request' in filt:
                 request = filt['request']
-                bool = None
-                if 'equ_bool' in filt:
-                    bool = filt['equ_bool']
-                machines = map(lambda m: fromUUID(m), ComputerGroupManager().request(ctx, request, bool, 0, -1, ''))
-                query = query.filter(self.machine.c.ID.in_(machines))
+                if request != 'EMPTY':
+                    bool = None
+                    if 'equ_bool' in filt:
+                        bool = filt['equ_bool']
+                    machines = map(lambda m: fromUUID(m), ComputerGroupManager().request(ctx, request, bool, 0, -1, ''))
+                    query = query.filter(self.machine.c.ID.in_(machines))
 
             if 'date' in filt:
                 state = filt['date']['states']

@@ -312,12 +312,13 @@ class Inventory(DyngroupDatabaseHelper):
                 query = query.filter(self.table['Entity'].c.id == fromUUID(pattern['location']))
             if 'request' in pattern:
                 request = pattern['request']
-                if 'equ_bool' in pattern:
-                    bool = pattern['equ_bool']
-                else:
-                    bool = None
-                machines = map(lambda m: fromUUID(m), ComputerGroupManager().request(ctx, request, bool, 0, -1, ''))
-                query = query.filter(self.machine.c.id.in_(machines))
+                if request != 'EMPTY':
+                    if 'equ_bool' in pattern:
+                        bool = pattern['equ_bool']
+                    else:
+                        bool = None
+                    machines = map(lambda m: fromUUID(m), ComputerGroupManager().request(ctx, request, bool, 0, -1, ''))
+                    query = query.filter(self.machine.c.id.in_(machines))
             if 'gid' in pattern:
                 gid = pattern['gid']
 
