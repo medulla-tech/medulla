@@ -130,18 +130,9 @@ if (in_array("dyngroup", $_SESSION["modulesList"]) and isset($_GET['gid'])) {
 
     function JavaVersion()
     {
-        var result = null;
-        // Test with navigator.javaEnabled
-        if (navigator.javaEnabled)
-            return navigator.javaEnabled;
-        // Walk through the full list of mime types.
-        for (var i = 0; i < navigator.mimeTypes.length; i++)
-        {
-            // The jpi-version is the plug-in version.  This is the best
-            // version to use.
-            if ((result = navigator.mimeTypes[i].type.match(/^application\/x-java-applet;jpi-version=(.*)$/)) !== null)
-                return result[1];
-        }
+
+        if (deployJava.versionCheck("1.6.0+"))
+            return deployJava.versionCheck("1.6.0+");
         return null;
     }
 
