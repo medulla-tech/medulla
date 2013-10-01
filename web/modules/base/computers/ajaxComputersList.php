@@ -131,6 +131,9 @@ if (in_array("dyngroup", $_SESSION["modulesList"]) and isset($_GET['gid'])) {
     function JavaVersion()
     {
         var result = null;
+        // Test with navigator.javaEnabled
+        if (navigator.javaEnabled)
+            return navigator.javaEnabled;
         // Walk through the full list of mime types.
         for (var i = 0; i < navigator.mimeTypes.length; i++)
         {
