@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-09-23 01:04+0200\n"
-"PO-Revision-Date: 2013-09-29 23:01+0000\n"
+"POT-Creation-Date: 2013-10-01 11:57+0200\n"
+"PO-Revision-Date: 2013-10-06 23:01+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -68,19 +68,19 @@ msgid ""
 "application"
 msgstr ""
 
-#: graph/header.inc.php:192 graph/header.inc.php:228
+#: graph/header.inc.php:193 graph/header.inc.php:229
 msgid "Yes"
 msgstr ""
 
-#: graph/header.inc.php:195 graph/header.inc.php:197
+#: graph/header.inc.php:196 graph/header.inc.php:198
 msgid "No"
 msgstr ""
 
-#: graph/header.inc.php:230 includes/PageGenerator.php:2119
+#: graph/header.inc.php:231 includes/PageGenerator.php:2119
 msgid "Close"
 msgstr ""
 
-#: graph/header.inc.php:297
+#: graph/header.inc.php:298
 msgid "Form cannot be submit. Input errors are highlighted in red."
 msgstr ""
 
