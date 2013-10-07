@@ -230,7 +230,6 @@ class ImagingRpcProxy(RpcProxyI):
         old_bootMenu = self.getComputerBootMenu(uuid)
         # Adding location default menu entries
         # get computer location
-        from pulse2.managers.location import ComputerLocationManager
         entity_uuid = ComputerLocationManager().getMachinesLocations([uuid])[uuid]['uuid']
         # get location bootMenu
         locationBM = self.getLocationBootMenu(entity_uuid)
@@ -851,7 +850,7 @@ class ImagingRpcProxy(RpcProxyI):
             ret = db.addImageToEntity(item_uuid, loc_id, params)
             return xmlrpcCleanup([True, ret])
             # Applying this menu on all machines that have no custom_menu
-            self.applyLocationDefaultBootMenu(location_id)
+            self.applyLocationDefaultBootMenu(loc_id)
         except Exception, e:
             raise e
             return xmlrpcCleanup([False, e])
@@ -863,7 +862,7 @@ class ImagingRpcProxy(RpcProxyI):
             db.setLocationSynchroState(loc_id, P2ISS.TODO)
             ret = db.editImageToEntity(item_uuid, loc_id, params)
             # Applying this menu on all machines that have no custom_menu
-            self.applyLocationDefaultBootMenu(location_id)
+            self.applyLocationDefaultBootMenu(loc_id)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
             return xmlrpcCleanup([False, e])
@@ -875,7 +874,7 @@ class ImagingRpcProxy(RpcProxyI):
             db.setLocationSynchroState(loc_id, P2ISS.TODO)
             ret = db.delImageToEntity(menu_item_id)
             # Applying this menu on all machines that have no custom_menu
-            self.applyLocationDefaultBootMenu(location_id)
+            self.applyLocationDefaultBootMenu(loc_id)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
             return xmlrpcCleanup([False, e])
