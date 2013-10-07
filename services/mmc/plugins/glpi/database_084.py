@@ -42,7 +42,7 @@ from configobj import ConfigObj
 
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
         Integer, ForeignKey, asc, or_, not_, desc, func
-from sqlalchemy.orm import create_session, mapper, relationship
+from sqlalchemy.orm import create_session, mapper, relationship, backref
 from sqlalchemy.sql.expression import ColumnOperators
 
 import logging
@@ -51,7 +51,7 @@ from sets import Set
 import datetime
 import calendar
 
-class Glpi08(DyngroupDatabaseHelper):
+class Glpi084(DyngroupDatabaseHelper):
     """
     Singleton Class to query the glpi database in version > 0.80.
 
@@ -70,13 +70,13 @@ class Glpi08(DyngroupDatabaseHelper):
         self.config = config
         dburi = self.makeConnectionPath()
         self.db = create_engine(dburi, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
-        logging.getLogger().debug('Trying to detect if GLPI version is lesser than 0.84')
+        logging.getLogger().debug('Trying to detect if GLPI version is higher than 0.84')
         self._glpi_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
-        if self._glpi_version < '0.84':
-            logging.getLogger().debug('GLPI version lesser than 0.84 found !')
+        if self._glpi_version >= '0.84':
+            logging.getLogger().debug('GLPI version higher than 0.84 found !')
             return True
         else:
-            logging.getLogger().debug('GLPI lesser than version 0.84 was not detected')
+            logging.getLogger().debug('GLPI higher than version 0.84 was not detected')
             return False
 
     def glpi_version(self):
@@ -103,12 +103,12 @@ class Glpi08(DyngroupDatabaseHelper):
         self.db = create_engine(dburi, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
         try:
             self.db.execute(u'SELECT "\xe9"')
-            setattr(Glpi08, "decode", decode_utf8)
-            setattr(Glpi08, "encode", encode_utf8)
+            setattr(Glpi084, "decode", decode_utf8)
+            setattr(Glpi084, "encode", encode_utf8)
         except:
             self.logger.warn("Your database is not in utf8, will fallback in latin1")
-            setattr(Glpi08, "decode", decode_latin1)
-            setattr(Glpi08, "encode", encode_latin1)
+            setattr(Glpi084, "decode", decode_latin1)
+            setattr(Glpi084, "encode", encode_latin1)
         self._glpi_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
         self.metadata = MetaData(self.db)
         self.initMappers()
@@ -157,8 +157,8 @@ class Glpi08(DyngroupDatabaseHelper):
             mapper(eval(j), getattr(self, i))
             self.klass[i] = eval(j)
 
-            setattr(self, "computers_%s"%i, Table("glpi_computers_%s"%i, self.metadata,
-                Column('computers_id', Integer, ForeignKey('glpi_computers.id')),
+            setattr(self, "computers_%s"%i, Table("glpi_items_%s"%i, self.metadata,
+                Column('items_id', Integer, ForeignKey('glpi_computers.id')),
                 Column('%s_id'%i, Integer, ForeignKey('glpi_%s.id'%i)),
                 autoload = True))
             j = self.getTableName("computers_%s"%i)
@@ -184,8 +184,8 @@ class Glpi08(DyngroupDatabaseHelper):
         self.processor = Table("glpi_deviceprocessors", self.metadata, autoload = True)
         mapper(Processor, self.processor)
 
-        self.computerProcessor = Table("glpi_computers_deviceprocessors", self.metadata,
-            Column('computers_id', Integer, ForeignKey('glpi_computers.id')),
+        self.computerProcessor = Table("glpi_items_deviceprocessors", self.metadata,
+            Column('items_id', Integer, ForeignKey('glpi_computers.id')),
             Column('deviceprocessors_id', Integer, ForeignKey('glpi_deviceprocessors.id')),
             autoload = True)
         mapper(ComputerProcessor, self.computerProcessor)
@@ -199,27 +199,14 @@ class Glpi08(DyngroupDatabaseHelper):
         self.memoryType = Table("glpi_devicememorytypes", self.metadata, autoload = True)
         mapper(MemoryType, self.memoryType)
 
-        self.computerMemory = Table("glpi_computers_devicememories", self.metadata,
-            Column('computers_id', Integer, ForeignKey('glpi_computers.id')),
+        self.computerMemory = Table("glpi_items_devicememories", self.metadata,
+            Column('items_id', Integer, ForeignKey('glpi_computers.id')),
             Column('devicememories_id', Integer, ForeignKey('glpi_devicememories.id')),
             autoload = True)
         mapper(ComputerMemory, self.computerMemory)
 
         # interfaces types
         self.interfaceType = Table("glpi_interfacetypes", self.metadata, autoload = True)
-
-        # network # TODO take care with the itemtype should we always set it to Computer?
-        self.network = Table("glpi_networkports", self.metadata,
-            Column('items_id', Integer, ForeignKey('glpi_computers.id')),
-            Column('networkinterfaces_id', Integer, ForeignKey('glpi_networkinterfaces.id')),
-            autoload = True)
-        mapper(Network, self.network)
-
-        self.networkinterfaces = Table("glpi_networkinterfaces", self.metadata, autoload = True)
-        mapper(NetworkInterfaces, self.networkinterfaces)
-
-        self.net = Table("glpi_networks", self.metadata, autoload = True)
-        mapper(Net, self.net)
 
         # os
         self.os = Table("glpi_operatingsystems", self.metadata, autoload = True)
@@ -255,7 +242,7 @@ class Glpi08(DyngroupDatabaseHelper):
         self.fusionantivirus = None
         try:
             self.logger.debug('Try to load fusion antivirus table...')
-            self.fusionantivirus = Table('glpi_plugin_fusinvinventory_antivirus', self.metadata,
+            self.fusionantivirus = Table('glpi_plugin_fusioninventory_inventorycomputerantiviruses', self.metadata,
                 Column('computers_id', Integer, ForeignKey('glpi_computers.id')),
                 Column('manufacturers_id', Integer, ForeignKey('glpi_manufacturers.id')),
                 autoload = True)
@@ -279,7 +266,7 @@ class Glpi08(DyngroupDatabaseHelper):
             mapper(FusionLocks, self.fusionlocks)
             self.logger.debug('Load glpi_plugin_fusioninventory_agents')
             self.fusionagents = Table('glpi_plugin_fusioninventory_agents', self.metadata,
-                Column('items_id', Integer, ForeignKey('glpi_computers.id')),
+                Column('computers_id', Integer, ForeignKey('glpi_computers.id')),
                 autoload = True)
             mapper(FusionAgents, self.fusionagents)
 
@@ -289,6 +276,57 @@ class Glpi08(DyngroupDatabaseHelper):
                           Column('filesystems_id', Integer, ForeignKey('glpi_filesystems.id')),
                           autoload = True)
         mapper(Disk, self.disk)
+
+        #####################################
+        # GLPI 0.84 Network tables
+        # TODO take care with the itemtype should we always set it to Computer => Yes
+        #####################################
+
+        # TODO Are these table needed (inherit of previous glpi database*py files) ?
+        self.networkinterfaces = Table("glpi_networkinterfaces", self.metadata, autoload = True)
+        mapper(NetworkInterfaces, self.networkinterfaces)
+
+        self.net = Table("glpi_networks", self.metadata, autoload = True)
+        mapper(Net, self.net)
+
+        # New network tables
+        self.ipnetworks = Table("glpi_ipnetworks", self.metadata, autoload = True)
+        mapper(IPNetworks, self.ipnetworks)
+
+        self.ipaddresses_ipnetworks = Table("glpi_ipaddresses_ipnetworks", self.metadata,
+            Column('ipaddresses_id', Integer, ForeignKey('glpi_ipaddresses.id')),
+            Column('ipnetworks_id', Integer, ForeignKey('glpi_networks.id')),
+            autoload = True)
+        mapper(IPAddresses_IPNetworks, self.ipaddresses_ipnetworks)
+
+        self.ipaddresses = Table("glpi_ipaddresses", self.metadata, autoload = True)
+        mapper(IPAddresses, self.ipaddresses, properties = {
+            'ipnetworks': relationship(IPNetworks, secondary = self.ipaddresses_ipnetworks,
+                primaryjoin = self.ipaddresses.c.id == self.ipaddresses_ipnetworks.c.ipaddresses_id,
+                secondaryjoin = self.ipnetworks.c.id == self.ipaddresses_ipnetworks.c.ipnetworks_id,
+                foreign_keys = [
+                    self.ipaddresses_ipnetworks.c.ipaddresses_id,
+                    self.ipaddresses_ipnetworks.c.ipnetworks_id,
+                ])
+        })
+
+        self.networknames = Table("glpi_networknames", self.metadata, autoload = True)
+        mapper(NetworkNames, self.networknames, properties = {
+            # ipaddresses is a one2many relation from NetworkNames to IPAddresses
+            # so uselist must be set to True
+            'ipaddresses': relationship(IPAddresses, primaryjoin=and_(
+                IPAddresses.items_id == self.networknames.c.id,
+                IPAddresses.itemtype == 'NetworkName'
+            ), uselist = True, foreign_keys = [self.networknames.c.id]),
+        })
+
+        self.networkports = Table("glpi_networkports", self.metadata, autoload = True)
+        mapper(NetworkPorts, self.networkports, properties = {
+            'networknames': relationship(NetworkNames, primaryjoin=and_(
+                NetworkNames.items_id == self.networkports.c.id,
+                NetworkNames.itemtype == 'NetworkPort'
+            ), foreign_keys = [self.networkports.c.id]),
+        })
 
         # machine (we need the foreign key, so we need to declare the table by hand ...
         #          as we don't need all columns, we don't declare them all)
@@ -315,11 +353,15 @@ class Glpi08(DyngroupDatabaseHelper):
             Column('comment', String(255), nullable=False),
             autoload = True)
         mapper(Machine, self.machine, properties = {
-            'computer_network': relationship(Network, primaryjoin=and_(
-                self.network.c.items_id == self.machine.c.id,
-                self.network.c.itemtype == 'Computer'
-            ), foreign_keys = [self.machine.c.id]),
+            # networkports is a one2many relation from Machine to NetworkPorts
+            # so uselist must be set to True
+            'networkports': relationship(NetworkPorts, primaryjoin=and_(
+                NetworkPorts.items_id == self.machine.c.id,
+                NetworkPorts.itemtype == 'Computer'
+            ), uselist = True, foreign_keys = [self.machine.c.id]),
+            'domains': relationship(Domain),
         })
+
 
         # states
         self.state = Table("glpi_states", self.metadata, autoload = True)
@@ -1510,27 +1552,34 @@ class Glpi08(DyngroupDatabaseHelper):
         return self.getLastMachineInventoryPart(uuid, part, filt = filt, options = options, count = True)
 
     def getLastMachineNetworkPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
-        query = self.filterOnUUID(
-            session.query(Network).add_column(self.networkinterfaces.c.name) \
-            .select_from(
-                self.machine.outerjoin(self.network).outerjoin(self.networkinterfaces)
-            ), uuid)
+        query = self.filterOnUUID(session.query(Machine), uuid)
 
-        query = query.filter(self.network.c.itemtype == "Computer")
-
-        if count:
-            ret = query.count()
-        else:
-            ret = []
-            for network, interface in query:
-                if network is not None:
+        ret = []
+        for machine in query:
+            if count:
+                ret = len(machine.networkports)
+            else:
+                for networkport in machine.networkports:
+                    # Get IP, one networkport can have multiple IPs
+                    ipaddresses = []
+                    gateways = []
+                    netmasks = []
+                    if networkport.networknames is not None:
+                        ipaddresses = list(set([ip.name for ip in networkport.networknames.ipaddresses]))
+                        gateways = []
+                        netmasks = []
+                        for ip in networkport.networknames.ipaddresses:
+                            gateways += [ipnetwork.gateway for ipnetwork in ip.ipnetworks]
+                            netmasks += [ipnetwork.netmask for ipnetwork in ip.ipnetworks]
+                        gateways = list(set(gateways))
+                        netmasks = list(set(netmasks))
                     l = [
-                        ['Name', network.name],
-                        ['Network Type', interface],
-                        ['MAC Address', network.mac],
-                        ['IP', network.ip],
-                        ['Netmask', network.netmask],
-                        ['Gateway', network.gateway],
+                        ['Name', networkport.name],
+                        ['Network Type', ''], # glpi_networkinterfaces ????
+                        ['MAC Address', networkport.mac],
+                        ['IP', ' / '.join(ipaddresses)],
+                        ['Netmask', ' / '.join(netmasks)],
+                        ['Gateway', ' / '.join(gateways)],
                     ]
                     ret.append(l)
         return ret
@@ -1803,7 +1852,6 @@ class Glpi08(DyngroupDatabaseHelper):
                 if location:
                     entityValue += ' (%s)' % location
 
-                logging.getLogger().error(machine.computer_network.gateway)
                 l = [
                     ['Computer Name', ['computer_name', 'text', machine.name]],
                     ['Description', ['description', 'text', machine.comment]],
@@ -1839,7 +1887,7 @@ class Glpi08(DyngroupDatabaseHelper):
                 if processor is not None:
                     l = [
                         ['Name', designation],
-                        ['Frequency', processor.specificity and str(processor.specificity) + ' MHz' or ''],
+                        ['Frequency', processor.frequency and str(processor.frequency) + ' MHz' or ''],
                     ]
                     ret.append(l)
         return ret
@@ -1865,7 +1913,7 @@ class Glpi08(DyngroupDatabaseHelper):
                         ['Name', designation],
                         ['Type', type],
                         ['Frequency', frequence],
-                        ['Size', memory.specificity and str(memory.specificity) + ' MB' or ''],
+                        ['Size', memory.size and str(memory.size) + ' MB' or ''],
                     ]
                     ret.append(l)
         return ret
@@ -1887,7 +1935,7 @@ class Glpi08(DyngroupDatabaseHelper):
                 if hd is not None:
                     l = [
                         ['Name', designation],
-                        ['Size', hd.specificity and str(hd.specificity) + ' MB' or ''],
+                        ['Size', hd.capacity and str(hd.capacity) + ' MB' or ''],
                     ]
                     ret.append(l)
         return ret
@@ -1952,7 +2000,7 @@ class Glpi08(DyngroupDatabaseHelper):
                 if card is not None:
                     l = [
                         ['Name', card.designation],
-                        ['Memory', card.specif_default and str(card.specif_default) + ' MB' or ''],
+                        ['Memory', card.memory_default and str(card.memory_default) + ' MB' or ''],
                         ['Type', interfaceType],
                     ]
                     ret.append(l)
@@ -2799,9 +2847,9 @@ class Glpi08(DyngroupDatabaseHelper):
     def getMachineByMacAddress(self, ctx, filt):
         """ @return: all computers that have this mac address """
         session = create_session()
-        query = session.query(Machine).select_from(self.machine.join(self.network))
+        query = session.query(Machine).select_from(self.machine.join(self.networkports))
         query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
-        query = query.filter(and_(self.network.c.itemtype == 'Computer', self.network.c.mac == filt))
+        query = query.filter(and_(self.networkports.c.itemtype == 'Computer', self.networkports.c.mac == filt))
         query = self.__filter_on(query)
         if ctx != 'imaging_module':
             query = self.__filter_on_entity(query, ctx)
@@ -2871,51 +2919,59 @@ class Glpi08(DyngroupDatabaseHelper):
             etc.,
             }
         """
+        def getComputerNetwork(machine, domain):
+            result = []
+            for networkport in machine.networkports:
+                d = {
+                    'uuid': toUUID(networkport.id),
+                    'domain': domain,
+                    'ifmac': networkport.mac,
+                    'name': networkport.name,
+                    'netmask': '',
+                    'subnet': '',
+                    'gateway': '',
+                    'ifaddr': '',
+                }
+                if networkport.networknames is not None:
+                    if len(networkport.networknames.ipaddresses) > 1:
+                        self.logger.warn('Machine %s: More than one IP address for Network Port ID %s, we choose the first one' % (machine.name, networkport.networknames.id))
+                    d['ifaddr'] = networkport.networknames.ipaddresses[0].name
+                    if len(networkport.networknames.ipaddresses[0].ipnetworks) > 1:
+                        self.logger.warn('Machine %s: More than one IP network for IP %s, we choose the first one' % (machine.name, networkport.networknames.id))
+                    ipnetwork = networkport.networknames.ipaddresses[0].ipnetworks[0]
+                    d['netmask'] = ipnetwork.netmask
+                    d['gateway'] = ipnetwork.gateway
+                    d['subnet'] = ipnetwork.address
+                result.append(d)
+            return result
+
         session = create_session()
-        query = session.query(Network).add_column(self.machine.c.id).add_column(self.domain.c.name).select_from(self.machine.join(self.network).outerjoin(self.domain))
-        query = self.filterOnUUID(query.filter(self.network.c.itemtype == 'Computer'), uuids)
+        query = self.filterOnUUID(session.query(Machine), uuids)
         ret = {}
-        for n in query.group_by(self.network.c.id).all():
-            net = n[0].toH()
-            if n[2] != None:
-                net['domain'] = n[2]
-            else:
-                net['domain'] = ''
-            uuid = toUUID(n[1])
-            if uuid not in ret:
-                ret[uuid] = [net]
-            else:
-                ret[uuid].append(net)
+        for machine in query:
+            uuid = toUUID(machine.id)
+            domain = machine.domains.name
+            ret[uuid] = getComputerNetwork(machine, domain)
         session.close()
         return ret
 
     def getMachineNetwork(self, uuid):
         """
         Get a machine network
+        @see getMachinesNetwork()
         """
-        session = create_session()
-        query = session.query(Network).select_from(self.machine.join(self.network))
-        query = self.filterOnUUID(query.filter(self.network.c.itemtype == 'Computer'), uuid)
-        ret = unique(map(lambda m: m.toH(), query.all()))
-        session.close()
-        return ret
+        return self.getMachinesNetwork(uuid)[uuid]
 
     def getMachinesMac(self, uuids):
         """
         Get several machines mac addresses
         """
         session = create_session()
-        query = session.query(Network).add_column(self.machine.c.id).select_from(self.machine.join(self.network))
-        query = self.filterOnUUID(query.filter(self.network.c.itemtype == 'Computer'), uuids)
-        query = query.all()
-        session.close()
+        query = self.filterOnUUID(session.query(Machine), uuids)
         ret = {}
-        for n, cid in query:
-            cuuid = toUUID(cid)
-            if not ret.has_key(cuuid):
-                ret[cuuid] = []
-            if not n.mac in ret[cuuid]:
-                ret[cuuid].append(n.mac)
+        for machine in query:
+            cuuid = toUUID(machine.id)
+            ret[cuuid] = [networkport.mac for networkport in machine.networkports]
         return ret
 
 
@@ -2923,12 +2979,7 @@ class Glpi08(DyngroupDatabaseHelper):
         """
         Get a machine mac addresses
         """
-        session = create_session()
-        query = session.query(Network).select_from(self.machine.join(self.network))
-        query = self.filterOnUUID(query.filter(self.network.c.itemtype == 'Computer'), uuid)
-        ret = unique(map(lambda m: m.mac, query.all()))
-        session.close()
-        return ret
+        return self.getMachinesMac(uuid)[uuid]
 
     def orderIpAdresses(self, uuid, hostname, netiface):
         ret_ifmac = []
@@ -2975,25 +3026,30 @@ class Glpi08(DyngroupDatabaseHelper):
 
         return (ret_ifmac, ret_ifaddr, ret_netmask, ret_domain, ret_networkUuids)
 
+    def dict2obj(d):
+        """
+        Get a dictionnary and return an object
+        """
+        from collections import namedtuple
+        o = namedtuple('dict2obj', ' '.join(d.keys()))
+        return o(**d) 
+
     def getMachineIp(self, uuid):
         """
         Get a machine ip addresses
         """
-        # FIXME: should be done on the same model as orderIpAdresses
-        session = create_session()
-        query = session.query(Network).select_from(self.machine.join(self.network))
-        query = self.filterOnUUID(query.filter(self.network.c.itemtype == 'Computer'), uuid)
+        machine_network = self.getMachineNetwork(uuid)
         ret_gw = []
         ret_nogw = []
-        for m in query.all():
-            if same_network(m.ip, m.gateway, m.netmask):
-                ret_gw.append(m.ip)
+        for m in machine_network:
+            m = self.dict2obj(m)
+            if same_network(m.ifaddr, m.gateway, m.netmask):
+                ret_gw.append(m.ifaddr)
             else:
-                ret_nogw.append(m.ip)
+                ret_nogw.append(m.ifaddr)
         ret_gw = unique(ret_gw)
         ret_gw.extend(unique(ret_nogw))
 
-        session.close()
         return ret_gw
 
     def getMachineListByState(self, ctx, groupName):
@@ -3140,8 +3196,9 @@ class Glpi08(DyngroupDatabaseHelper):
         Get an ip address when a mac address is given
         """
         session = create_session()
-        query = session.query(Network).filter(self.network.c.mac == mac)
-        ret = query.first().ip
+        query = session.query(NetworkPorts).filter(NetworkPorts.mac == mac)
+        # Get first IP address found
+        ret = query.first().networknames.ipaddresses[0]
         session.close()
         return ret
 
@@ -3157,12 +3214,8 @@ class Glpi08(DyngroupDatabaseHelper):
         Get a machine domain name
         """
         session = create_session()
-        query = self.filterOnUUID(session.query(Domain).select_from(self.domain.join(self.machine)), uuid)
-        ret = query.first()
-        if ret != None:
-            return ret.name
-        else:
-            return ''
+        machine = self.filterOnUUID(session.query(Machine), uuid).first()
+        return machine.domains.name
 
     def isComputerNameAvailable(self, ctx, locationUUID, name):
         raise Exception("need to be implemented when we would be able to add computers")
@@ -3207,6 +3260,8 @@ class Glpi08(DyngroupDatabaseHelper):
 
 # Class for SQLalchemy mapping
 class Machine(object):
+    __tablename__ = 'glpi_computers'
+
     def getUUID(self):
         return toUUID(self.id)
     def toH(self):
@@ -3231,7 +3286,7 @@ class Machine(object):
             ['model',self.computermodels_id],
             ['type',self.computertypes_id],
             ['entity',self.entities_id],
-            ['uuid',Glpi08().getMachineUUID(self)]
+            ['uuid',Glpi084().getMachineUUID(self)]
         ]
 
 class Location(object):
@@ -3295,7 +3350,7 @@ class Profile(object):
 class UserProfile(object):
     pass
 
-class Network(object):
+class NetworkPorts(object):
     def toH(self):
         return {
             'uuid':toUUID(self.id),
@@ -3347,4 +3402,16 @@ class Net(object):
     pass
 
 class NetworkInterfaces(object):
+    pass
+
+class IPAddresses(object):
+    pass
+
+class IPNetworks(object):
+    pass
+
+class NetworkNames(object):
+    pass
+
+class IPAddresses_IPNetworks(object):
     pass
