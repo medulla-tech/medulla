@@ -309,7 +309,7 @@ class ImagingMenu:
             self.colors['highlight']['bg'])
 
         # the key mapping
-        if self.keyboard == 'fr':
+        if PackageServerConfig().pxe_keymap == 'fr_FR':
             buf += 'kbdfr\n'
 
         # do we hide the menu ? Splash screen will still be displayed
