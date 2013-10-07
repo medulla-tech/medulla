@@ -31,10 +31,10 @@ ALTER TABLE  `Entity` ADD  `pxe_password` VARCHAR( 255 ) NOT NULL DEFAULT  '',
                       ADD  `pxe_keymap` VARCHAR( 10 ) NOT NULL DEFAULT  'C';
 
 -- Adding keymap field for languages (and setting it for existing records)
-ALTER TABLE  `Language` ADD  `keymap` VARCHAR( 10 ) NOT NULL
-UPDATE  `imaging`.`Language` SET  `keymap` =  'C' WHERE  `Language`.`id` =1;
-UPDATE  `imaging`.`Language` SET  `keymap` =  'fr_FR' WHERE  `Language`.`id` =2;
-UPDATE  `imaging`.`Language` SET  `keymap` =  'pt_BR' WHERE  `Language`.`id` =3;
-UPDATE  `imaging`.`Language` SET  `keymap` =  'de_DE' WHERE  `Language`.`id` =4;
+ALTER TABLE  `Language` ADD  `keymap` VARCHAR( 10 ) NOT NULL;
+UPDATE  `Language` SET  `keymap` =  'C' WHERE  `id` =1;
+UPDATE  `Language` SET  `keymap` =  'fr_FR' WHERE  `id` =2;
+UPDATE  `Language` SET  `keymap` =  'pt_BR' WHERE  `id` =3;
+UPDATE  `Language` SET  `keymap` =  'de_DE' WHERE  `id` =4;
 
 UPDATE version set Number = 7;
