@@ -362,8 +362,6 @@ class P2PServerCP(pulse2.utils.Singleton):
             # on glpi, PXE register by minimal inventory
             glpi_mode = False
             # identification on PXE console
-            pxe_password = ""
-
 
             if self.cp.has_option("imaging_api", 'mount_point'):
                 imaging_mp = self.cp.get("imaging_api", 'mount_point')
