@@ -26,6 +26,7 @@ import logging
 
 from pulse2.package_server.xmlrpc import MyXmlrpc
 from pulse2.package_server.imaging.api.functions import Imaging
+from pulse2.package_server.config import P2PServerCP
 
 
 class ImagingApi (MyXmlrpc):
@@ -38,8 +39,9 @@ class ImagingApi (MyXmlrpc):
         @type config: P2PServerCP
         """
         MyXmlrpc.__init__(self)
-        self.api = Imaging(config)
-    
+        self.api = Imaging()
+        self.api.init1(config)
+
         self.name = name
         self.logger = logging.getLogger('imaging')
         self.logger.info("Initializing %s" % self.myType)
@@ -109,4 +111,3 @@ class ImagingApi (MyXmlrpc):
 
     def xmlrpc_bsUnlinkShFile(self, datas):
         return self.api.bsUnlinkShFile(datas)
-

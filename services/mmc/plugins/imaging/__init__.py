@@ -54,6 +54,7 @@ NOAUTHNEEDED = ['computerRegister',
                 'logClientAction',
                 'injectInventory',
                 'getDefaultMenuForRegistering',
+                'getPXEParams',
                 'linkImagingServerToLocation',
                 'computerChangeDefaultMenuItem',
                 'getDefaultMenuItem']

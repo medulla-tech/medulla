@@ -43,15 +43,16 @@ from pulse2.package_server.imaging.iso import ISOImage
 from pulse2.package_server.imaging.archiver import Archiver
 from pulse2.package_server.imaging.rpcreplay import RPCReplay
 
-from pulse2.utils import isMACAddress, splitComputerPath, macToNode, isUUID, rfc3339Time, humanReadable, Singleton
+from pulse2.utils import isMACAddress, splitComputerPath, macToNode, isUUID, rfc3339Time, humanReadable, SingletonN
 from pulse2.apis import makeURL
 from pulse2.imaging.image import Pulse2Image
 
 
-class Imaging (Singleton):
+class Imaging(object):
+    __metaclass__ = SingletonN
     """ Common imaging function to perform PXE actions and others """
 
-    def __init__(self, config):
+    def init1(self, config):
         """
         @param config: Package server config
         @type config: P2PServerCP
@@ -94,7 +95,6 @@ class Imaging (Singleton):
 
         def _cbDefaultMenu(menu):
             self.logger.debug('Default computer boot menu received.')
-            self.logger.debug(menu)
             if not menu:
                 self.logger.info('Default computer boot menu is empty. Looks like this package server has not been registered.')
             else:
@@ -117,6 +117,22 @@ class Imaging (Singleton):
         args = (self.config.imaging_api['uuid'], )
         d = client.callRemote(func, *args)
         d.addCallbacks(_cbDefaultMenu, _errDefaultMenu)
+
+    def refreshPXEParams(self, callback = None, *args, **kw):
+        def _success(params):
+            PackageServerConfig().pxe_password = params['pxe_password']
+            PackageServerConfig().pxe_keymap = params['pxe_keymap']
+            if callback: callback.__call__(*args, **kw)
+        def _error(error):
+            self.logger.error("Error while retreiving PXE Params: %s" % error)
+        RPCReplay().init()
+        RPCReplay().firstRun()
+        client = self._getXMLRPCClient()
+        func = 'imaging.getPXEParams'
+        args0 = (self.config.imaging_api['uuid'], )
+        d = client.callRemote(func, *args0)
+        d.addCallbacks(_success, _error)
+
 
     def _getXMLRPCClient(self):
         """
@@ -728,7 +744,7 @@ class Imaging (Singleton):
                 @d.addCallback
                 def _cb(result):
                     if isinstance(result, list) :
-                        success, order = result 
+                        success, order = result
                         if success :
                             shortname = self.getClientShortname(mac)
                             if shortname:

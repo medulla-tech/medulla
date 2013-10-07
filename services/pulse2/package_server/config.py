@@ -63,6 +63,9 @@ class P2PServerCP(pulse2.utils.Singleton):
     password = ''
     tmp_input_dir = '/tmp/packages/default'
 
+    pxe_password = ''
+    pxe_keymap = 'C'
+
     if sys.platform != "win32":
         daemon_group = 0
         daemon_user = pwd.getpwnam('root')[2]
@@ -122,8 +125,10 @@ class P2PServerCP(pulse2.utils.Singleton):
     cp = None
 
     mmc_agent = {}
+    config_file = ''
 
     def pre_setup(self, config_file):
+        self.config_file = config_file
         if sys.platform != "win32":
             self.cp = Pulse2ConfigParser()
         else:
@@ -133,7 +138,9 @@ class P2PServerCP(pulse2.utils.Singleton):
         if self.cp.has_option("handler_hand01", "args"):
             self.logdir = os.path.dirname(re.compile("['|\"]").split(self.cp.get("handler_hand01", "args"))[1])
 
+
     def setup(self, config_file):
+        self.config_file = config_file
         if self.cp == None:
             # Load configuration file
             if sys.platform != "win32":
@@ -344,7 +351,7 @@ class P2PServerCP(pulse2.utils.Singleton):
             rpc_interval = 2
             # Package Server UUID
             uuid = ""
-            # listening on this port to communicate with PXE 
+            # listening on this port to communicate with PXE
             pxe_port = 1001
             # inventory host
             inventory_host = "127.0.0.1"
@@ -355,7 +362,7 @@ class P2PServerCP(pulse2.utils.Singleton):
             # on glpi, PXE register by minimal inventory
             glpi_mode = False
             # identification on PXE console
-            pxe_password = "pxe"
+            pxe_password = ""
 
 
             if self.cp.has_option("imaging_api", 'mount_point'):
@@ -420,8 +427,6 @@ class P2PServerCP(pulse2.utils.Singleton):
                 inventory_port = self.cp.get("imaging_api", 'inventory_port')
             if self.cp.has_option("imaging_api", 'inventory_enablessl'):
                 inventory_enablessl = self.cp.get("imaging_api", 'inventory_enablessl')
-            if self.cp.has_option("imaging_api", 'pxe_password'):
-                pxe_password = self.cp.get("imaging_api", 'pxe_password')
             if not isUUID(uuid):
                 raise TypeError("'%s' is not an valid UUID : in my config file, section [imaging_api], set a correct uuid." % uuid)
 
@@ -446,7 +451,6 @@ class P2PServerCP(pulse2.utils.Singleton):
                 'isos_folder'         : isos_folder,
                 'isogen_tool'         : isogen_tool,
                 'pxe_port'            : pxe_port,
-                'pxe_password'        : pxe_password,
                 'inventory_host'      : inventory_host,
                 'inventory_port'      : inventory_port,
                 'inventory_enablessl' : inventory_enablessl,
