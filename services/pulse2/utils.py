@@ -89,6 +89,17 @@ class Singleton(object):
         return cls._the_instance
 
 
+class SingletonN(type):
+
+    def __init__(cls, name, bases, dict):
+        super(SingletonN, cls).__init__(name, bases, dict)
+        cls.instance = None
+
+    def __call__(cls, *args, **kw):
+        if cls.instance is None:
+            cls.instance = super(SingletonN, cls).__call__(*args, **kw)
+        return cls.instance
+
 class Pulse2ConfigParser(ConfigParser):
     """
         Duplicate from the MMCConfigParser() class from the MMC Project,
@@ -592,7 +603,7 @@ def get_default_netif():
         # so, we take 1st iface (16th element) to get our default interface
 
         netif = out.split()[15].strip()
- 
+
     return netif
 
 
@@ -606,13 +617,13 @@ def get_default_ip():
 
 class HasSufficientMemory :
     """
-    Can be used as a decorator to avoid executing the functions with high costs. 
+    Can be used as a decorator to avoid executing the functions with high costs.
 
-    When usage of memory is less than mem_limit, this decorator returns 
+    When usage of memory is less than mem_limit, this decorator returns
     decorated function, otherwise neg_ret_value.
 
     Examples:
-    --------- 
+    ---------
     @HasSufficientMemory(80)
     def called_function(arg1, arg2, ..)
         ...
