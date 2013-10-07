@@ -54,8 +54,6 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
         $params['message'] = $_POST['boot_msg'];
         $params['protocol'] = $_POST['rest_type'];
         $params['language'] = $_POST['language'];
-        if ($_POST['pxe_password'] != $_POST['old_pxe_password'])
-            $params['pxe_password'] = $_POST['pxe_password'];
         $params['mtftp_restore_timeout'] = $_POST['rest_wait'];
 
         $ret = xmlrpc_setImagingServerConfig($location, $params);
@@ -76,4 +74,5 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
 }
 header("Location: " . urlStrRedirect("imaging/manage/configuration", $params));
 exit;
+
 ?>
