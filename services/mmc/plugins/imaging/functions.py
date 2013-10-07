@@ -28,10 +28,12 @@ imaging plugin
 
 import logging
 from twisted.internet import defer
+from twisted.internet import reactor
 from sets import Set as set
 import time
 
 from mmc.support.mmctools import xmlrpcCleanup
+from mmc.support.mmctools import SingletonN
 from mmc.support.mmctools import RpcProxyI #, ContextMakerI, SecurityContext
 from mmc.plugins.imaging.config import ImagingConfig
 from mmc.plugins.base.computers import ComputerManager
@@ -44,6 +46,32 @@ from pulse2.apis.clients.imaging import ImagingApi
 import pulse2.utils
 
 
+class TaskManager(object):
+    __metaclass__ = SingletonN
+
+    tasks = {}
+
+
+    def deferTask(self, label, countdown, func, *args, **kw):
+        # If task already exists, we cancel it to put it back
+        if label in self.tasks:
+            self.tasks[label].cancel()
+        # Calling later
+        self.tasks[label] = reactor.callLater(countdown, func, *args, **kw)
+        return self.tasks[label]
+
+    def cancelTask(self, label):
+        if label in self.tasks:
+            self.tasks[label].cancel()
+            return True
+        else:
+            return False
+
+    def getTask(self, label):
+        if label in self.tasks:
+            return self.tasks[label]
+        else:
+            return None
 
 class ImagingRpcProxy(RpcProxyI):
     """ XML/RPC Bindings """
@@ -202,6 +230,7 @@ class ImagingRpcProxy(RpcProxyI):
         old_bootMenu = self.getComputerBootMenu(uuid)
         # Adding location default menu entries
         # get computer location
+        from pulse2.managers.location import ComputerLocationManager
         entity_uuid = ComputerLocationManager().getMachinesLocations([uuid])[uuid]['uuid']
         # get location bootMenu
         locationBM = self.getLocationBootMenu(entity_uuid)
@@ -237,7 +266,7 @@ class ImagingRpcProxy(RpcProxyI):
         return True
 
 
-    def applyLocationDefaultBootMenu(self, loc_uuid):
+    def applyLocationDefaultBootMenu(self, loc_uuid, immediate = False):
         """
         apply location boot menu to all location machines that have
         no custom menu
@@ -248,14 +277,21 @@ class ImagingRpcProxy(RpcProxyI):
         @returns: return a list with result status
         @rtype: list
         """
-        try:
-            # Get all machine that have not a custom_menu
-            for uuid in self.getTargetsByCustomMenuInEntity(loc_uuid, 0):
-                self.resetComputerBootMenu(uuid)
-            return True
-        except Exception, e:
-            return xmlrpcCleanup([False, e])
+        def _applyLocationDefaultBootMenu(loc_uuid):
+            try:
+                # Get all machine that have not a custom_menu
+                logging.getLogger().info('Applying default location BootMenu [%s]', loc_uuid)
+                for uuid in self.getTargetsByCustomMenuInEntity(loc_uuid, 0):
+                    self.resetComputerBootMenu(uuid)
+            except Exception, e:
+                logging.getLogger().error('Unable to apply location default bootmenu')
+                logging.getLogger().error(e)
 
+        if not immediate:
+            TaskManager().deferTask('imaging.applyLocationDefaultBootMenu', 120 ,_applyLocationDefaultBootMenu, loc_uuid)
+        else:
+            _applyLocationDefaultBootMenu(loc_uuid)
+        return [True]
 
     def getLocationBootMenu(self, loc_id, start = 0, end = -1, filter = ''):
         """
@@ -815,7 +851,7 @@ class ImagingRpcProxy(RpcProxyI):
             ret = db.addImageToEntity(item_uuid, loc_id, params)
             return xmlrpcCleanup([True, ret])
             # Applying this menu on all machines that have no custom_menu
-            self.applyLocationDefaultBootMenu(loc_id)
+            self.applyLocationDefaultBootMenu(location_id)
         except Exception, e:
             raise e
             return xmlrpcCleanup([False, e])
@@ -827,7 +863,7 @@ class ImagingRpcProxy(RpcProxyI):
             db.setLocationSynchroState(loc_id, P2ISS.TODO)
             ret = db.editImageToEntity(item_uuid, loc_id, params)
             # Applying this menu on all machines that have no custom_menu
-            self.applyLocationDefaultBootMenu(loc_id)
+            self.applyLocationDefaultBootMenu(location_id)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
             return xmlrpcCleanup([False, e])
@@ -839,7 +875,7 @@ class ImagingRpcProxy(RpcProxyI):
             db.setLocationSynchroState(loc_id, P2ISS.TODO)
             ret = db.delImageToEntity(menu_item_id)
             # Applying this menu on all machines that have no custom_menu
-            self.applyLocationDefaultBootMenu(loc_id)
+            self.applyLocationDefaultBootMenu(location_id)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
             return xmlrpcCleanup([False, e])
@@ -1352,6 +1388,10 @@ class ImagingRpcProxy(RpcProxyI):
         elif imaging_server:
             return [False, ":cant find the default menu for location %s" % (location), xmlrpcCleanup(imaging_server.toH())]
 
+
+    def getPXEPasswordHash(self, location_uuid):
+        return ImagingDatabase().getPXEPasswordHash(location_uuid)
+
     def setImagingServerConfig(self, location, config):
         """
         set an imaging server configuration
@@ -1368,11 +1408,17 @@ class ImagingRpcProxy(RpcProxyI):
         @rtype: list
         """
         db = ImagingDatabase()
+        # Set PXE params
+        if 'pxe_password' in config or 'language' in config:
+            db.setLocationPXEParams(location, config)
+        #
         menu = db.getEntityDefaultMenu(location)
         menu = menu.toH()
         try:
             db.setLocationSynchroState(location, P2ISS.TODO)
             db.checkLanguage(location, config['language'])
+            # Regenerate bootmenus
+            self.applyLocationDefaultBootMenu(location)
             return xmlrpcCleanup([db.modifyMenu(menu['imaging_uuid'], config)])
         except Exception, e:
             return xmlrpcCleanup([False, e])
@@ -1680,6 +1726,7 @@ class ImagingRpcProxy(RpcProxyI):
         if type(ret) != list:
             ret = ret.toH()
         return xmlrpcCleanup(ret)
+
 
     def __generateDefaultSuscribeMenu(self, logger, db, imaging_server_uuid):
         location = db.getImagingServerEntity(imaging_server_uuid)
@@ -2840,6 +2887,21 @@ class ImagingRpcProxy(RpcProxyI):
         to backup and restore.
         """
         return ImagingDatabase().getPartitionsToBackupRestore(computer_uuid)
+
+
+    def getPXEParams(self, imaging_server_uuid):
+        """
+        Called by the Package Server to get the PXE Password and keymap
+        """
+        location = ImagingDatabase().getImagingServerEntity(imaging_server_uuid)
+        if location == None:
+            # Package server has not been registered, we return an empty menu
+            return {}
+        params = {}
+        params['pxe_keymap'] = location.pxe_keymap
+        params['pxe_password'] = location.pxe_password
+        return xmlrpcCleanup(params)
+
 
     def getDefaultMenuForRegistering(self, imaging_server_uuid):
         """

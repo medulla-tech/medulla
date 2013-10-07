@@ -3477,6 +3477,39 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return ret
 
+    def __sha1_crypt_password(self,password):
+            if not password: return ''
+            import hashlib
+            passphrase = 'DzmCpUs3'
+            return hashlib.sha1(password + passphrase).hexdigest()
+
+    def getPXEPasswordHash(self, location_uuid):
+        session = create_session()
+        password = session.query(Entity.pxe_password).filter(Entity.uuid == location_uuid).scalar()
+        session.close()
+        return password
+
+    def setLocationPXEParams(self, uuid, params):
+        session = create_session()
+        try:
+            location = session.query(Entity).filter(Entity.uuid == uuid).one()
+            if 'pxe_password' in params:
+                location.pxe_password = self.__sha1_crypt_password(params['pxe_password'])
+            if 'pxe_keymap' in params:
+                location.pxe_keymap = params['pxe_keymap']
+            elif 'language' in params:
+                keymap = session.query(Language.keymap).filter(Language.id == int(params['language'].replace('UUID','')) ).scalar()
+                location.pxe_keymap = keymap
+            session.flush()
+            session.close()
+            return True
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            session.close()
+            return False
+
+
+
     def setLocationSynchroState(self, uuid, state):
         self.logger.debug(">>> setLocationSynchroState %s %s"%(uuid, str(state)))
         session = create_session()

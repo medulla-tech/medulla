@@ -361,6 +361,10 @@ function xmlrpc_getImagingServerConfig($location) {
     return xmlCall("imaging.getImagingServerConfig", array($location));
 }
 
+function xmlrpc_getPXEPasswordHash($location) {
+    return xmlCall("imaging.getPXEPasswordHash", array($location));
+}
+
 function xmlrpc_setImagingServerConfig($location, $config) {
     return xmlCall("imaging.setImagingServerConfig", array($location, $config));
 }
