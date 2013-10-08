@@ -367,7 +367,6 @@ class ImagingMenu:
 
 
         def _write(self):
-            logging.getLogger().error(self)
             try:
                 buf = self.buildMenu()
             except Exception, e:
