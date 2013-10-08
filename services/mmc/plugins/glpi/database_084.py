@@ -1384,6 +1384,8 @@ class Glpi084(DyngroupDatabaseHelper):
         en_id = fromUUID(loc_uuid)
         en = session.query(Location).filter(self.location.c.id == en_id).first()
         parent_id = en.entities_id
+        if parent_id == -1: # parent_id is -1 for root entity
+            parent_id = 0
 
         while parent_id != 0:
             en_id = parent_id
