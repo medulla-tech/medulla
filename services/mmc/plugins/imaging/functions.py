@@ -1691,6 +1691,9 @@ class ImagingRpcProxy(RpcProxyI):
         else:
             return False
 
+    def getCustomMenuCount(self, location):
+        return ImagingDatabase().getCustomMenuCount(location)
+
     def getComputerSynchroState(self, uuid):
         """ see getTargetSynchroState """
         if self.isTargetRegister(uuid, P2IT.COMPUTER):

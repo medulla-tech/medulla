@@ -58,7 +58,7 @@ if (!empty($global_status)) {
         <div class="status_block">
             <?php //<a href=" echo urlStrRedirect("imaging/imaging/createCustomMenuStaticGroup"); &location=UUID1">ZZZ</a> ?>
             <h3><?php echo _T('Stats', 'imaging') ?></h3>
-            <p class="stat"><a href=" <?php echo urlStrRedirect("base/computers/createCustomMenuStaticGroup"); ?>&location=UUID1">ZZZ</a><img src="img/machines/icn_machinesList.gif" /> <strong><?php echo $short_status['total']; ?></strong> <?php echo _T("client(s) registered", "imaging") ?> (<?php echo $customMenu_count; ?> <?php echo _T("with custom menu", "imaging") ?>)</p>
+            <p class="stat"><img src="img/machines/icn_machinesList.gif" /> <strong><?php echo $short_status['total']; ?></strong> <?php echo _T("client(s) registered", "imaging") ?> (<?php echo $customMenu_count; ?> <?php echo _T("with custom menu", "imaging") ?>)</p>
             <p class="stat"><img src="img/machines/icn_machinesList.gif" /> <strong><?php echo $short_status['rescue']; ?></strong>/<?php echo $short_status['total']; ?> <?php echo _T("client(s) have rescue image(s)", "imaging") ?></p>
             <p class="stat"><img src="img/common/cd.png" />
                 <strong><?php echo $short_status['master']; ?></strong>
