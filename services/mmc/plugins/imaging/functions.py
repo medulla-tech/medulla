@@ -292,6 +292,17 @@ class ImagingRpcProxy(RpcProxyI):
             _applyLocationDefaultBootMenu(loc_uuid)
         return [True]
 
+    def SynchroAllLocationComputers(self, loc_uuid):
+        try:
+            computers = ImagingDatabase().getRegisteredComputersForEntity(loc_uuid)
+            for computer in computers:
+                self.synchroComputer(computer)
+            return True
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return False
+
+
     def getLocationBootMenu(self, loc_id, start = 0, end = -1, filter = ''):
         """
         get a location boot menu
@@ -1417,7 +1428,7 @@ class ImagingRpcProxy(RpcProxyI):
             db.setLocationSynchroState(location, P2ISS.TODO)
             db.checkLanguage(location, config['language'])
             # Regenerate bootmenus
-            self.applyLocationDefaultBootMenu(location)
+            self.SynchroAllLocationComputers(location)
             return xmlrpcCleanup([db.modifyMenu(menu['imaging_uuid'], config)])
         except Exception, e:
             return xmlrpcCleanup([False, e])

@@ -489,6 +489,13 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return l
 
 ###########################################################
+    def getRegisteredComputersForEntity(self, loc_uuid):
+        session = create_session()
+        ret = session.query(Target.uuid).select_from(self.target.join(self.entity, self.target.c.fk_entity == self.entity.c.id)) \
+            .filter(and_(self.entity.c.uuid == loc_uuid, self.target.c.type.in_([P2IT.COMPUTER,P2IT.COMPUTER_IN_PROFILE]) )).all()
+        session.close()
+        return [m[0] for m in ret]
+
     def getTargetsEntity(self, uuids):
         session = create_session()
         e = session.query(Entity).add_entity(Target).select_from(self.entity.join(self.target, self.target.c.fk_entity == self.entity.c.id)).filter(self.target.c.uuid.in_(uuids)).all()
@@ -3389,6 +3396,13 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if session_need_to_close:
             session.close()
         return [z[0] for z in q]
+
+    def getCustomMenuCount(self, location):
+        session = create_session()
+        ret = session.query(func.count(Menu.id)).select_from(self.menu.join(self.target, self.target.c.fk_menu == self.menu.c.id) \
+                #self.entity.c.id == self.imaging_server.c.fk_entity
+                .join(self.entity, self.target.c.fk_entity == self.entity.c.id)).filter(and_(Menu.custom_menu == 1, self.entity.c.uuid == location))
+        return ret.scalar()
 
     def __getSynchroStates(self, uuids, target_type, session):
         q = session.query(SynchroState).add_entity(Menu)
