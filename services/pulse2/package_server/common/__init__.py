@@ -755,7 +755,7 @@ class Common(pulse2.utils.Singleton):
             md5sums.sort(lambda x, y: cmp(x[0], y[0]))
             for name, md5hash in md5sums:
                 fmd5.write("%s  %s\n" % (md5hash, name))
-                self.logger.error("%s  %s\n" % (md5hash, name))
+                self.logger.debug("%s  %s\n" % (md5hash, name))
             fmd5.close()
 
     def _hasChanged(self, dir, pid, runid = -1):
