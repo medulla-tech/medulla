@@ -22,7 +22,6 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 /**
  * module declaration
  */
@@ -31,7 +30,7 @@ require_once("modules/pulse2/version.php");
 $mod = new Module("imaging");
 $mod->setVersion(VERSION);
 $mod->setRevision(REVISION);
-$mod->setDescription(_T("Imaging service","imaging"));
+$mod->setDescription(_T("Imaging service", "imaging"));
 $mod->setAPIVersion("0:0:0");
 $mod->setPriority(600);
 
@@ -40,85 +39,85 @@ $submod->setDescription(_T("Imaging", "manage"));
 $submod->setImg("modules/imaging/img/imaging");
 $submod->setDefaultPage("imaging/manage/index");
 
-$page = new Page("index",_T("Server status","imaging"));
+$page = new Page("index", _T("Server status", "imaging"));
 $submod->addPage($page);
 
-$page = new Page("master",_T("Manage masters","imaging"));
+$page = new Page("master", _T("Manage masters", "imaging"));
 $submod->addPage($page);
-$page = new Page("master_remove",_T("Remove master","imaging"));
+$page = new Page("master_remove", _T("Remove master", "imaging"));
 $page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
-$page = new Page("master_delete",_T("Delete master","imaging"));
+$page = new Page("master_delete", _T("Delete master", "imaging"));
 $page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
-$page = new Page("master_edit",_T("Edit master","imaging"));
+$page = new Page("master_edit", _T("Edit master", "imaging"));
 $page->setOptions(array("visible" => False));
 $submod->addPage($page);
-$page = new Page("master_add",_T("Add master","imaging"));
+$page = new Page("master_add", _T("Add master", "imaging"));
 $page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
-$page = new Page("master_iso",_T("Create iso from master","imaging"));
-$page->setOptions(array("visible" => False, "noHeader" => True));
-$submod->addPage($page);
-
-$page = new Page("service",_T("Manage boot services","imaging"));
-$submod->addPage($page);
-$page = new Page("service_edit",_T("Edit service","imaging"));
-$page->setOptions(array("visible" => False));
-$submod->addPage($page);
-$page = new Page("service_del",_T("Remove service","imaging"));
-$page->setOptions(array("noHeader" => True, "visible" => False));
-$submod->addPage($page);
-$page = new Page("service_add",_T("Add service","imaging"));
-$page->setOptions(array("noHeader" => True, "visible" => False));
-$submod->addPage($page);
-$page = new Page("service_remove",_T("Remove service","imaging"));
-$page->setOptions(array("noHeader" => True, "visible" => False));
-$submod->addPage($page);
-$page = new Page("service_show_used",_T("Show used services","imaging"));
-$page->setOptions(array("noHeader" => True, "visible" => False));
-$submod->addPage($page);
-
-$page = new Page("bootmenu",_T("Default boot menu","imaging"));
-$submod->addPage($page);
-$page = new Page("bootmenu_up",_T("Up service","imaging"));
-$page->setOptions(array("visible" => False, "noHeader" => True));
-$submod->addPage($page);
-$page = new Page("bootmenu_down",_T("Down service","imaging"));
-$page->setOptions(array("visible" => False, "noHeader" => True));
-$submod->addPage($page);
-$page = new Page("bootmenu_edit",_T("Down service","imaging"));
-$page->setOptions(array("visible" => False));
-$submod->addPage($page);
-
-$page = new Page("postinstall",_T("Post-imaging scripts","imaging"));
-$submod->addPage($page);
-$page = new Page("postinstall_edit",_T("Edit post-imaging script","imaging"));
-$page->setOptions(array("visible" => False));
-$submod->addPage($page);
-$page = new Page("postinstall_duplicate",_T("Edit post-imaging script","imaging"));
-$page->setOptions(array("visible" => False));
-$submod->addPage($page);
-$page = new Page("postinstall_create_boot_service",_T("Create boot service from postinstall script","imaging"));
-$page->setOptions(array("noHeader" => True, "visible" => False));
-$submod->addPage($page);
-$page = new Page("postinstall_redirect_to_boot_service",_T("Redirect to Boot Services page","imaging"));
-$page->setOptions(array("noHeader" => True, "visible" => False));
-$submod->addPage($page);
-$page = new Page("postinstall_delete",_T("Delete post-imaging script","imaging"));
+$page = new Page("master_iso", _T("Create iso from master", "imaging"));
 $page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
 
-$page = new Page("configuration",_T("Imaging configuration","imaging"));
+$page = new Page("service", _T("Manage boot services", "imaging"));
 $submod->addPage($page);
-$page = new Page("save_configuration",_T("Save an Imaging Server configuration","imaging"));
+$page = new Page("service_edit", _T("Edit service", "imaging"));
+$page->setOptions(array("visible" => False));
+$submod->addPage($page);
+$page = new Page("service_del", _T("Remove service", "imaging"));
+$page->setOptions(array("noHeader" => True, "visible" => False));
+$submod->addPage($page);
+$page = new Page("service_add", _T("Add service", "imaging"));
+$page->setOptions(array("noHeader" => True, "visible" => False));
+$submod->addPage($page);
+$page = new Page("service_remove", _T("Remove service", "imaging"));
+$page->setOptions(array("noHeader" => True, "visible" => False));
+$submod->addPage($page);
+$page = new Page("service_show_used", _T("Show used services", "imaging"));
+$page->setOptions(array("noHeader" => True, "visible" => False));
+$submod->addPage($page);
+
+$page = new Page("bootmenu", _T("Default boot menu", "imaging"));
+$submod->addPage($page);
+$page = new Page("bootmenu_up", _T("Up service", "imaging"));
+$page->setOptions(array("visible" => False, "noHeader" => True));
+$submod->addPage($page);
+$page = new Page("bootmenu_down", _T("Down service", "imaging"));
+$page->setOptions(array("visible" => False, "noHeader" => True));
+$submod->addPage($page);
+$page = new Page("bootmenu_edit", _T("Down service", "imaging"));
 $page->setOptions(array("visible" => False));
 $submod->addPage($page);
 
-$page = new Page("ajaxAvailableImagingServer",_T("Available Imaging Server","imaging"));
+$page = new Page("postinstall", _T("Post-imaging scripts", "imaging"));
+$submod->addPage($page);
+$page = new Page("postinstall_edit", _T("Edit post-imaging script", "imaging"));
+$page->setOptions(array("visible" => False));
+$submod->addPage($page);
+$page = new Page("postinstall_duplicate", _T("Edit post-imaging script", "imaging"));
+$page->setOptions(array("visible" => False));
+$submod->addPage($page);
+$page = new Page("postinstall_create_boot_service", _T("Create boot service from postinstall script", "imaging"));
+$page->setOptions(array("noHeader" => True, "visible" => False));
+$submod->addPage($page);
+$page = new Page("postinstall_redirect_to_boot_service", _T("Redirect to Boot Services page", "imaging"));
+$page->setOptions(array("noHeader" => True, "visible" => False));
+$submod->addPage($page);
+$page = new Page("postinstall_delete", _T("Delete post-imaging script", "imaging"));
+$page->setOptions(array("visible" => False, "noHeader" => True));
+$submod->addPage($page);
+
+$page = new Page("configuration", _T("Imaging configuration", "imaging"));
+$submod->addPage($page);
+$page = new Page("save_configuration", _T("Save an Imaging Server configuration", "imaging"));
+$page->setOptions(array("visible" => False));
+$submod->addPage($page);
+
+$page = new Page("ajaxAvailableImagingServer", _T("Available Imaging Server", "imaging"));
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
-$page = new Page("imaging_server_link",_T("Link an Imaging Server","imaging"));
+$page = new Page("imaging_server_link", _T("Link an Imaging Server", "imaging"));
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
@@ -126,7 +125,7 @@ if (in_array("dyngroup", $_SESSION["modulesList"])) {
     require_once("modules/dyngroup/includes/includes.php");
     if (isProfilesEnable()) {
         if (isDynamicEnable()) {
-            $page = new Page("computersprofilecreator",_T("Computers Profile Creator","dyngroup"));
+            $page = new Page("computersprofilecreator", _T("Computers Profile Creator", "dyngroup"));
             $page->setFile("modules/dyngroup/dyngroup/tab.php");
 
             $tab = new Tab("tabdyn", _T("Profile creation's tab from dynamic request", "dyngroup"));
@@ -139,9 +138,9 @@ if (in_array("dyngroup", $_SESSION["modulesList"])) {
             $page->addTab($tab);
             $submod->addPage($page);
 
-            $page = new Page("computersprofilecreatesubedit",_T("Computers Profile Creator Sub Request Editor","dyngroup"));
+            $page = new Page("computersprofilecreatesubedit", _T("Computers Profile Creator Sub Request Editor", "dyngroup"));
             $page->setFile("modules/dyngroup/dyngroup/tab.php");
-            $page->setOptions(array("visible"=>False));
+            $page->setOptions(array("visible" => False));
 
             $tab = new Tab("tabdyn", _T("Profile creation's tab from dynamic request", "dyngroup"));
             $page->addTab($tab);
@@ -153,9 +152,9 @@ if (in_array("dyngroup", $_SESSION["modulesList"])) {
             $page->addTab($tab);
             $submod->addPage($page);
 
-            $page = new Page("computersprofilecreatesubdel",_T("Computers Profile Creator Sub Request Delete","dyngroup"));
+            $page = new Page("computersprofilecreatesubdel", _T("Computers Profile Creator Sub Request Delete", "dyngroup"));
             $page->setFile("modules/dyngroup/dyngroup/tab.php");
-            $page->setOptions(array("visible"=>False));
+            $page->setOptions(array("visible" => False));
 
             $tab = new Tab("tabdyn", _T("Profile creation's tab from dynamic request", "dyngroup"));
             $page->addTab($tab);
@@ -167,36 +166,35 @@ if (in_array("dyngroup", $_SESSION["modulesList"])) {
             $page->addTab($tab);
             $submod->addPage($page);
 
-            $page = new Page("computersprofileedit",_T("Computers Profile Editor","dyngroup"));
+            $page = new Page("computersprofileedit", _T("Computers Profile Editor", "dyngroup"));
             $page->setFile("modules/dyngroup/dyngroup/edithead.php");
-            $page->setOptions(array("visible"=>False));
+            $page->setOptions(array("visible" => False));
             $submod->addPage($page);
 
-            $page = new Page("computersprofilesubedit",_T("Computers Profile Sub Request Editor","dyngroup"));
+            $page = new Page("computersprofilesubedit", _T("Computers Profile Sub Request Editor", "dyngroup"));
             $page->setFile("modules/dyngroup/dyngroup/edithead.php");
-            $page->setOptions(array("visible"=>False, "noACL"=>True));
+            $page->setOptions(array("visible" => False, "noACL" => True));
             $submod->addPage($page);
 
-            $page = new Page("computersprofilesubdel",_T("Computers Profile Sub Request Delete","dyngroup"));
+            $page = new Page("computersprofilesubdel", _T("Computers Profile Sub Request Delete", "dyngroup"));
             $page->setFile("modules/dyngroup/dyngroup/edithead.php");
-            $page->setOptions(array("visible"=>False, "noACL"=>True));
+            $page->setOptions(array("visible" => False, "noACL" => True));
             $submod->addPage($page);
 
-            $page = new Page("list_profiles",_T("List all profiles of computers","dyngroup"));
+            $page = new Page("list_profiles", _T("List all profiles of computers", "dyngroup"));
             $page->setFile("modules/dyngroup/dyngroup/list_profiles.php");
             $submod->addPage($page);
-        }
-        else {
-            $page = new Page("computersprofilecreator",_T("Computers Profile Creator","dyngroup"));
+        } else {
+            $page = new Page("computersprofilecreator", _T("Computers Profile Creator", "dyngroup"));
             $page->setFile("modules/dyngroup/dyngroup/groupshead.php");
             $submod->addPage($page);
 
-            $page = new Page("computersprofileedit",_T("Computers Profile Editor","dyngroup"));
+            $page = new Page("computersprofileedit", _T("Computers Profile Editor", "dyngroup"));
             $page->setFile("modules/dyngroup/dyngroup/groupshead.php");
-            $page->setOptions(array("visible"=>False));
+            $page->setOptions(array("visible" => False));
             $submod->addPage($page);
 
-            $page = new Page("list_profiles",_T("List all profiles of computers","dyngroup"));
+            $page = new Page("list_profiles", _T("List all profiles of computers", "dyngroup"));
             $page->setFile("modules/dyngroup/dyngroup/list_profiles.php");
             $submod->addPage($page);
         }
@@ -206,6 +204,7 @@ if (in_array("dyngroup", $_SESSION["modulesList"])) {
         $page->setFile("modules/imaging/imaging/register_target.php");
         $page->setOptions(array("visible" => False));
         $submod->addPage($page);
+
 
         $page = new Page("groupimgtabs", _T("Imaging on group", "imaging"));
         $page->setFile("modules/imaging/imaging/tabs.php");
@@ -221,31 +220,31 @@ if (in_array("dyngroup", $_SESSION["modulesList"])) {
         $tab = new Tab("grouptabconfigure", _T("Menu configuration", "imaging"));
         $page->addTab($tab);
         $submod->addPage($page);
-        $page = new Page("groupbootmenu_remove",_T("Remove from boot menu","imaging"));
+        $page = new Page("groupbootmenu_remove", _T("Remove from boot menu", "imaging"));
         $page->setFile("modules/imaging/imaging/bootmenu_remove.php");
         $page->setOptions(array("visible" => False, "noHeader" => True));
         $submod->addPage($page);
-        $page = new Page("display",_T("Display computers group content","dyngroup"));
+        $page = new Page("display", _T("Display computers group content", "dyngroup"));
         $page->setFile("modules/dyngroup/dyngroup/display.php");
-        $page->setOptions(array("visible"=>False));
+        $page->setOptions(array("visible" => False));
         $submod->addPage($page);
-        $page = new Page("delete_group",_T("Delete a group of computers","dyngroup"));
+        $page = new Page("delete_group", _T("Delete a group of computers", "dyngroup"));
         $page->setFile("modules/dyngroup/dyngroup/delete_group.php");
-        $page->setOptions(array("visible"=>False, "noHeader" =>True));
+        $page->setOptions(array("visible" => False, "noHeader" => True));
         $submod->addPage($page);
-        $page = new Page("computersgroupedit",_T("Computers Group Editor","dyngroup"));
+        $page = new Page("computersgroupedit", _T("Computers Group Editor", "dyngroup"));
         $page->setFile("modules/dyngroup/dyngroup/groupshead.php");
-        $page->setOptions(array("visible"=>False));
+        $page->setOptions(array("visible" => False));
         $submod->addPage($page);
-        $page = new Page("edit_share",_T("Share a group of computers","dyngroup"));
+        $page = new Page("edit_share", _T("Share a group of computers", "dyngroup"));
         $page->setFile("modules/dyngroup/dyngroup/edit_share.php");
-        $page->setOptions(array("visible"=>False));
+        $page->setOptions(array("visible" => False));
         $submod->addPage($page);
 
         if (in_array("msc", $_SESSION["modulesList"])) {
             $page = new Page("groupmsctabs", _T("Secure control on a group of computers", "msc"));
             $page->setFile("modules/msc/msc/tabs.php");
-            $page->setOptions(array("visible"=>False));
+            $page->setOptions(array("visible" => False));
 
             $tab = new Tab("grouptablaunch", _T("MSC launch tab for a group", "msc"));
             $page->addTab($tab);
@@ -261,12 +260,11 @@ if (in_array("dyngroup", $_SESSION["modulesList"])) {
 
             $submod->addPage($page);
         }
-
     }
 }
 
 $mod->addSubmod($submod);
-$MMCApp =& MMCApp::getInstance();
+$MMCApp = & MMCApp::getInstance();
 $MMCApp->addModule($mod);
 
 /* put in base/computer */
@@ -280,6 +278,11 @@ if (!empty($submod)) {
     $page = new Page("register_target", _T("Register a computer in the imaging module", "imaging"));
     $page->setFile("modules/imaging/imaging/register_target.php");
     $page->setOptions(array("visible" => False));
+    $submod->addPage($page);
+
+    $page = new Page("createCustomMenuStaticGroup", _T("Create static group with location computers that have a custom menu", "imaging"));
+    $page->setFile("modules/imaging/imaging/createCustomMenuStaticGroup.php");
+    $page->setOptions(array("visible" => False, "noHeader" => True));
     $submod->addPage($page);
 
     $page = new Page("imgtabs", _T("Imaging on computer", "imaging"));
@@ -298,15 +301,15 @@ if (!empty($submod)) {
     $submod->addPage($page);
 
     // actions on computer & groups
-    $page = new Page("bootmenu_remove",_T("Remove from boot menu","imaging"));
+    $page = new Page("bootmenu_remove", _T("Remove from boot menu", "imaging"));
     $page->setFile("modules/imaging/imaging/bootmenu_remove.php");
     $page->setOptions(array("visible" => False, "noHeader" => True));
     $submod->addPage($page);
-    $page = new Page("showtarget",_T("Show target that use that image","imaging"));
+    $page = new Page("showtarget", _T("Show target that use that image", "imaging"));
     $page->setFile("modules/imaging/imaging/showtarget.php");
     $page->setOptions(array("visible" => False, "noHeader" => True));
     $submod->addPage($page);
-    $page = new Page("showsyncstatus",_T("Show sync status","imaging"));
+    $page = new Page("showsyncstatus", _T("Show sync status", "imaging"));
     $page->setFile("modules/imaging/imaging/showsyncstatus.php");
     $page->setOptions(array("visible" => False, "noHeader" => True));
     $submod->addPage($page);
@@ -369,16 +372,15 @@ if (!empty($submod)) {
     $page->setFile("modules/imaging/imaging/addimage.php");
     $page->setOptions(array("visible" => False, "noHeader" => True));
     $submod->addPage($page);
-    $page = new Page("images_delete",_T("Delete image","imaging"));
+    $page = new Page("images_delete", _T("Delete image", "imaging"));
     $page->setFile("modules/imaging/imaging/images_delete.php");
     $page->setOptions(array("visible" => False, "noHeader" => True));
     $submod->addPage($page);
-    $page = new Page("images_iso",_T("Create iso image","imaging"));
+    $page = new Page("images_iso", _T("Create iso image", "imaging"));
     $page->setFile("modules/imaging/imaging/images_iso.php");
     $page->setOptions(array("visible" => False, "noHeader" => True));
     $submod->addPage($page);
 
     unset($submod);
 }
-
 ?>

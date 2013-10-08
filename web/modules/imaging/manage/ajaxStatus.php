@@ -27,56 +27,59 @@ require("../includes/ajaxcommon.inc.php");
 $t = new TitleElement(_T("Status", "imaging"), 3);
 $t->display();
 
+$customMenu_count = xmlrpc_getCustomMenuCount($location);
 $global_status = xmlrpc_getGlobalStatus($location);
 if (!empty($global_status)) {
     $disk_info = format_disk_info($global_status['disk_info']);
     $health = format_health($global_status['uptime'], $global_status['mem_info']);
     $short_status = $global_status['short_status'];
-?>
-
-<div class="status">
-<div class="status_block">
-    <h3><?php echo _T('Space available on server', 'imaging') ?></h3>
-    <?php echo $disk_info; ?>
-</div>
-<div class="status_block">
-    <h3><?php echo _T('Load on server', 'imaging') ?></h3>
-    <?php echo $health; ?>
-</div>
-</div>
-
-<div class="status">
-<!--<div class="status_block">
-    <h3 style="display: inline"><?php echo _T('Synchronization state', 'imaging') ?> : </h3>
-    <?php
-    $led = new LedElement('green');
-    $led->display();
-    echo "&nbsp;"._T("Up-to-date", "imaging");
     ?>
-</div>-->
-<div class="status_block">
-    <h3><?php echo _T('Stats', 'imaging') ?></h3>
-      <p class="stat"><img src="img/machines/icn_machinesList.gif" /> <strong><?php echo $short_status['rescue']; ?></strong>/<?php echo $short_status['total']; ?> <?php echo _T("client(s) have rescue image(s)", "imaging") ?></p>                                                       <p class="stat"><img src="img/common/cd.png" />
-      <strong><?php echo $short_status['master']; ?></strong>
-      <?php echo _T("masters are available", "imaging") ?>
-</div>
-</div>
 
-<div class="spacer"></div>
+    <div class="status">
+        <div class="status_block">
+            <h3><?php echo _T('Space available on server', 'imaging') ?></h3>
+            <?php echo $disk_info; ?>
+        </div>
+        <div class="status_block">
+            <h3><?php echo _T('Load on server', 'imaging') ?></h3>
+            <?php echo $health; ?>
+        </div>
+    </div>
 
-<h3 class="activity"><?php echo _T('Recent activity', 'imaging') ?></h3>
+    <div class="status">
+        <!--<div class="status_block">
+            <h3 style="display: inline"><?php echo _T('Synchronization state', 'imaging') ?> : </h3>
+        <?php
+        $led = new LedElement('green');
+        $led->display();
+        echo "&nbsp;" . _T("Up-to-date", "imaging");
+        ?>
+        </div>-->
+        <div class="status_block">
+            <?php //<a href=" echo urlStrRedirect("imaging/imaging/createCustomMenuStaticGroup"); &location=UUID1">ZZZ</a> ?>
+            <h3><?php echo _T('Stats', 'imaging') ?></h3>
+            <p class="stat"><a href=" <?php echo urlStrRedirect("base/computers/createCustomMenuStaticGroup"); ?>&location=UUID1">ZZZ</a><img src="img/machines/icn_machinesList.gif" /> <strong><?php echo $short_status['total']; ?></strong> <?php echo _T("client(s) registered", "imaging") ?> (<?php echo $customMenu_count; ?> <?php echo _T("with custom menu", "imaging") ?>)</p>
+            <p class="stat"><img src="img/machines/icn_machinesList.gif" /> <strong><?php echo $short_status['rescue']; ?></strong>/<?php echo $short_status['total']; ?> <?php echo _T("client(s) have rescue image(s)", "imaging") ?></p>
+            <p class="stat"><img src="img/common/cd.png" />
+                <strong><?php echo $short_status['master']; ?></strong>
+                <?php echo _T("masters are available", "imaging") ?>
+        </div>
+    </div>
 
-<?php
-        $ajax = new AjaxFilter("modules/imaging/manage/ajaxLogs.php", "container_logs", array(), "Logs");
-        //$ajax->setRefresh(10000);
-        $ajax->display();
-        echo "<br/><br/><br/>";
-        $ajax->displayDivToUpdate();
-    } else {
-        $e = new ErrorMessage(_T("Can't connect to the imaging server linked to the selected entity.", "imaging"));
-        print $e->display();
-    }
+    <div class="spacer"></div>
+
+    <h3 class="activity"><?php echo _T('Recent activity', 'imaging') ?></h3>
+
+    <?php
+    $ajax = new AjaxFilter("modules/imaging/manage/ajaxLogs.php", "container_logs", array(), "Logs");
+    //$ajax->setRefresh(10000);
+    $ajax->display();
+    echo "<br/><br/><br/>";
+    $ajax->displayDivToUpdate();
+} else {
+    $e = new ErrorMessage(_T("Can't connect to the imaging server linked to the selected entity.", "imaging"));
+    print $e->display();
+}
 
 require("../includes/ajaxcommon_bottom.inc.php");
-
 ?>

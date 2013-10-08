@@ -135,6 +135,14 @@ function xmlrpc_getComputerCustomMenuFlag($id) {
     return xmlCall("imaging.getComputerCustomMenuFlag", array($id));
 }
 
+function xmlrpc_getCustomMenuCount($location) {
+    return xmlCall("imaging.getCustomMenuCount", array($location));
+}
+
+function xmlrpc_getTargetsByCustomMenuInEntity($location, $custom_menu = 1) {
+    return xmlCall("imaging.getTargetsByCustomMenuInEntity", array($location, $custom_menu));
+}
+
 function xmlrpc_applyLocationDefaultBootMenu($loc_uuid) {
     return xmlCall("imaging.applyLocationDefaultBootMenu", array($loc_uuid));
 }
