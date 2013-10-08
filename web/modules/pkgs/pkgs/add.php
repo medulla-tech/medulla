@@ -228,7 +228,7 @@ jQuery(function() { // load this piece of code when page is loaded
             type: 'get',
             success: function(data){
                 jQuery('#version').val(data.version);
-                jQuery('commandcmd').val(data.commandcmd);
+                jQuery('#commandcmd').val(data.commandcmd);
             }
         });
     }
