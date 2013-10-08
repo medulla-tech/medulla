@@ -2935,17 +2935,18 @@ class Glpi084(DyngroupDatabaseHelper):
                     'ifaddr': '',
                 }
                 if networkport.networknames is not None:
-                    if len(networkport.networknames.ipaddresses) > 1:
-                        self.logger.warn('Machine %s: More than one IP address for Network Port ID %s, we choose the first one' % (machine.name, networkport.networknames.id))
-                    d['ifaddr'] = networkport.networknames.ipaddresses[0].name
-                    if len(networkport.networknames.ipaddresses[0].ipnetworks) > 1:
-                        self.logger.warn('Machine %s: More than one IP network for IP %s, we choose the first one' % (machine.name, networkport.networknames.id))
                     if networkport.networknames.ipaddresses:
-                        if networkport.networknames.ipaddresses[0].ipnetworks:
-                            ipnetwork = networkport.networknames.ipaddresses[0].ipnetworks[0]
-                            d['netmask'] = ipnetwork.netmask
-                            d['gateway'] = ipnetwork.gateway
-                            d['subnet'] = ipnetwork.address
+                        if len(networkport.networknames.ipaddresses) > 1:
+                            self.logger.warn('Machine %s: More than one IP address for Network Port ID %s, we choose the first one' % (machine.name, networkport.networknames.id))
+                        d['ifaddr'] = networkport.networknames.ipaddresses[0].name
+                        if len(networkport.networknames.ipaddresses[0].ipnetworks) > 1:
+                            self.logger.warn('Machine %s: More than one IP network for IP %s, we choose the first one' % (machine.name, networkport.networknames.id))
+                        if networkport.networknames.ipaddresses:
+                            if networkport.networknames.ipaddresses[0].ipnetworks:
+                                ipnetwork = networkport.networknames.ipaddresses[0].ipnetworks[0]
+                                d['netmask'] = ipnetwork.netmask
+                                d['gateway'] = ipnetwork.gateway
+                                d['subnet'] = ipnetwork.address
                 result.append(d)
             return result
 
