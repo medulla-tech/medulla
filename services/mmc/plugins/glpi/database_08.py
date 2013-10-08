@@ -314,12 +314,7 @@ class Glpi08(DyngroupDatabaseHelper):
             Column('states_id', Integer, ForeignKey('glpi_states.id'), nullable=False),
             Column('comment', String(255), nullable=False),
             autoload = True)
-        mapper(Machine, self.machine, properties = {
-            'computer_network': relationship(Network, primaryjoin=and_(
-                self.network.c.items_id == self.machine.c.id,
-                self.network.c.itemtype == 'Computer'
-            ), foreign_keys = [self.machine.c.id]),
-        })
+        mapper(Machine, self.machine)
 
         # states
         self.state = Table("glpi_states", self.metadata, autoload = True)
@@ -1803,7 +1798,6 @@ class Glpi08(DyngroupDatabaseHelper):
                 if location:
                     entityValue += ' (%s)' % location
 
-                logging.getLogger().error(machine.computer_network.gateway)
                 l = [
                     ['Computer Name', ['computer_name', 'text', machine.name]],
                     ['Description', ['description', 'text', machine.comment]],

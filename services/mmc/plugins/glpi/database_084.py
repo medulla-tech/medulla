@@ -42,7 +42,7 @@ from configobj import ConfigObj
 
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
         Integer, ForeignKey, asc, or_, not_, desc, func
-from sqlalchemy.orm import create_session, mapper, relationship, backref
+from sqlalchemy.orm import create_session, mapper, relationship
 from sqlalchemy.sql.expression import ColumnOperators
 
 import logging
