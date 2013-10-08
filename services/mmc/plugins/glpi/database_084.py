@@ -2847,9 +2847,9 @@ class Glpi084(DyngroupDatabaseHelper):
     def getMachineByMacAddress(self, ctx, filt):
         """ @return: all computers that have this mac address """
         session = create_session()
-        query = session.query(Machine).select_from(self.machine.join(self.networkports))
-        query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
-        query = query.filter(and_(self.networkports.c.itemtype == 'Computer', self.networkports.c.mac == filt))
+        query = session.query(Machine)
+        query = query.filter(Machine.is_deleted == 0).filter(Machine.is_template == 0)
+        query = query.filter(NetworkPorts.mac == filt)
         query = self.__filter_on(query)
         if ctx != 'imaging_module':
             query = self.__filter_on_entity(query, ctx)
@@ -2938,10 +2938,12 @@ class Glpi084(DyngroupDatabaseHelper):
                     d['ifaddr'] = networkport.networknames.ipaddresses[0].name
                     if len(networkport.networknames.ipaddresses[0].ipnetworks) > 1:
                         self.logger.warn('Machine %s: More than one IP network for IP %s, we choose the first one' % (machine.name, networkport.networknames.id))
-                    ipnetwork = networkport.networknames.ipaddresses[0].ipnetworks[0]
-                    d['netmask'] = ipnetwork.netmask
-                    d['gateway'] = ipnetwork.gateway
-                    d['subnet'] = ipnetwork.address
+                    if networkport.networknames.ipaddresses:
+                        if networkport.networknames.ipaddresses[0].ipnetworks:
+                            ipnetwork = networkport.networknames.ipaddresses[0].ipnetworks[0]
+                            d['netmask'] = ipnetwork.netmask
+                            d['gateway'] = ipnetwork.gateway
+                            d['subnet'] = ipnetwork.address
                 result.append(d)
             return result
 
@@ -2950,7 +2952,9 @@ class Glpi084(DyngroupDatabaseHelper):
         ret = {}
         for machine in query:
             uuid = toUUID(machine.id)
-            domain = machine.domains.name
+            domain = ''
+            if machine.domains is not None:
+                domain = machine.domains.name
             ret[uuid] = getComputerNetwork(machine, domain)
         session.close()
         return ret
@@ -3215,7 +3219,10 @@ class Glpi084(DyngroupDatabaseHelper):
         """
         session = create_session()
         machine = self.filterOnUUID(session.query(Machine), uuid).first()
-        return machine.domains.name
+        domain = ''
+        if machine.domains is not None:
+            domain = machine.domains.name
+        return domain
 
     def isComputerNameAvailable(self, ctx, locationUUID, name):
         raise Exception("need to be implemented when we would be able to add computers")
