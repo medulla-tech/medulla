@@ -3201,6 +3201,8 @@ class Glpi08(DyngroupDatabaseHelper):
 
 # Class for SQLalchemy mapping
 class Machine(object):
+    __tablename__ = 'glpi_computers' # Used for Glpi editable fields
+
     def getUUID(self):
         return toUUID(self.id)
     def toH(self):
