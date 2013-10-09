@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-10-07 01:04+0200\n"
-"PO-Revision-Date: 2013-09-17 09:39+0000\n"
-"Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
+"POT-Creation-Date: 2013-10-09 14:52+0200\n"
+"PO-Revision-Date: 2013-10-09 12:29+0000\n"
+"Last-Translator: Maik Wagner <maikwagner@yahoo.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/pulse2/team/de_DE/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -630,7 +630,7 @@ msgstr "Konfigurieren"
 
 #: modules/backuppc/backuppc/hostSummary.php:68
 msgid "There is no backup server assigned for the computer entity."
-msgstr ""
+msgstr "Es ist kein Backupserver für diese Rechnereinheit zugewiesen."
 
 #: modules/backuppc/backuppc/hostSummary.php:95
 msgid "Current state: "
@@ -706,15 +706,16 @@ msgstr "Letzte Nachricht"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:84
 msgid "Unset backup"
-msgstr ""
+msgstr "Backup abwählen"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:84
 msgid "Are you sure you want to unset backup for this computer?"
 msgstr ""
+"Sind Sie sicher, dass Sie das Backup für diesen Rechner abwählen möchten?"
 
 #: modules/backuppc/backuppc/index.php:34
 msgid "The computer has been removed from the backup system."
-msgstr ""
+msgstr "Der Rechner wurde von dem Backupsystem entfernt."
 
 #: modules/backuppc/backuppc/index.php:37
 #: modules/backuppc/infoPackage.inc.php:42

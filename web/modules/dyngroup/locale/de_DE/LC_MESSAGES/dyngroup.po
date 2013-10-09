@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-09-30 14:10+0200\n"
-"PO-Revision-Date: 2013-09-09 15:28+0000\n"
-"Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
+"POT-Creation-Date: 2013-10-09 14:52+0200\n"
+"PO-Revision-Date: 2013-10-09 12:27+0000\n"
+"Last-Translator: Maik Wagner <maikwagner@yahoo.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/pulse2/team/de_DE/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -467,115 +467,119 @@ msgstr "Der Antrag lautet:"
 
 #: modules/dyngroup/dyngroup/creator.php:295
 msgid "Go to save step"
-msgstr ""
+msgstr "Zum Speichern Schritt gehen"
 
 #: modules/dyngroup/dyngroup/creator.php:302
 msgid "Identification"
-msgstr ""
+msgstr "Identifikation"
 
 #: modules/dyngroup/dyngroup/creator.php:303
 msgid "Computer name"
-msgstr ""
+msgstr "Rechnername"
 
 #: modules/dyngroup/dyngroup/creator.php:304
 msgid "Hostname of the computer"
-msgstr ""
+msgstr "Hostname des Rechners"
 
 #: modules/dyngroup/dyngroup/creator.php:305
 msgid "Description"
-msgstr ""
+msgstr "Beschreibung"
 
 #: modules/dyngroup/dyngroup/creator.php:306
 msgid "Description of the computer"
-msgstr ""
+msgstr "Beschreibung des Computers"
 
 #: modules/dyngroup/dyngroup/creator.php:307
 msgid "Inventory number"
-msgstr ""
+msgstr "Inventarnummer"
 
 #: modules/dyngroup/dyngroup/creator.php:308
 msgid "Your internal inventory number"
-msgstr ""
+msgstr "Ihre interne Inventarnummer"
 
 #: modules/dyngroup/dyngroup/creator.php:309
 msgid "Hardware"
-msgstr ""
+msgstr "Hardware"
 
 #: modules/dyngroup/dyngroup/creator.php:310
 msgid "System type"
-msgstr ""
+msgstr "Systemart"
 
 #: modules/dyngroup/dyngroup/creator.php:311
 msgid "Laptop, Desktop, Rack Mount Chassis ..."
-msgstr ""
+msgstr "Laptop, Desktop, Rack Mount Chassis ..."
 
 #: modules/dyngroup/dyngroup/creator.php:312
 msgid "System manufacturer"
-msgstr ""
+msgstr "Systemhersteller"
 
 #: modules/dyngroup/dyngroup/creator.php:313
 msgid "Dell, HP, Apple ..."
-msgstr ""
+msgstr "Dell, HP, Apple ..."
 
 #: modules/dyngroup/dyngroup/creator.php:314
 msgid "System model"
-msgstr ""
+msgstr "Systemmodell"
 
 #: modules/dyngroup/dyngroup/creator.php:315
 msgid "Latitude E6420, ProLiant DL120, MacBookAir5,2 ..."
-msgstr ""
+msgstr "Latitude E6420, ProLiant DL120, MacBookAir5,2 ..."
 
 #: modules/dyngroup/dyngroup/creator.php:316
 msgid "Location"
-msgstr ""
+msgstr "Ort"
 
 #: modules/dyngroup/dyngroup/creator.php:317
 msgid "Third Floor, Room 401, Headquarters building ... (user defined)"
-msgstr ""
+msgstr "Dritter Stock, Raum 401, Hauptquartiergebäude ... (benutzerdefiniert)"
 
 #: modules/dyngroup/dyngroup/creator.php:318
 msgid "State"
-msgstr ""
+msgstr "Zustand"
 
 #: modules/dyngroup/dyngroup/creator.php:319
 msgid "In Production, Under Maintenance, Decommissioned ... (user defined)"
 msgstr ""
+"Im Einsatz/Produktion, in Wartung, nicht mehr im Einsatz ... "
+"(benutzerdefiniert)"
 
 #: modules/dyngroup/dyngroup/creator.php:320
 msgid "Entity"
-msgstr ""
+msgstr "Entität"
 
 #: modules/dyngroup/dyngroup/creator.php:321
 msgid "Organizational structure (automatic assignment)"
-msgstr ""
+msgstr "Organisationsstruktur (automatische Zuweisung)"
 
 #: modules/dyngroup/dyngroup/creator.php:322
 msgid "Software"
-msgstr ""
+msgstr "Software"
 
 #: modules/dyngroup/dyngroup/creator.php:323
 msgid "Operating system"
-msgstr ""
+msgstr "Betriebssystem"
 
 #: modules/dyngroup/dyngroup/creator.php:324
 msgid "Microsoft Windows 7, Debian GNU/Linux 7.1 ..."
-msgstr ""
+msgstr "Microsoft Windows 7, Debian GNU/Linux 7.1 ..."
 
 #: modules/dyngroup/dyngroup/creator.php:325
 msgid "Installed software"
-msgstr ""
+msgstr "Installierte Software"
 
 #: modules/dyngroup/dyngroup/creator.php:326
 msgid "Mozilla Firefox, LibreOffice, Microsoft Office 2003 ..."
-msgstr ""
+msgstr "Mozilla Firefox, LibreOffice, Microsoft Office 2003 ..."
 
 #: modules/dyngroup/dyngroup/creator.php:327
 msgid "Installed software (specific version)"
-msgstr ""
+msgstr "Installierte Software (spezifische Version)"
 
 #: modules/dyngroup/dyngroup/creator.php:328
 msgid "Two-step query: Mozilla Firefox -> 23.0.1, LibreOffice -> 4.0.4 ..."
 msgstr ""
+"Abfrage in zwei Schritten: Mozilla Firefox -> 23.0.1, LibreOffice -> 4.0.4 "
+"..."
 
 #: modules/dyngroup/dyngroup/delete_group.php:31
 #: modules/dyngroup/dyngroup/delete_group.php:33

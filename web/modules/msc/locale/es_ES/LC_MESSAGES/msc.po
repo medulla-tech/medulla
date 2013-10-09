@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-10-07 01:04+0200\n"
+"POT-Creation-Date: 2013-10-09 14:52+0200\n"
 "PO-Revision-Date: 2013-09-20 12:59+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Spanish (Spain) (http://transifex.mandriva.com/projects/p/pulse2/team/es_ES/)\n"
@@ -1396,18 +1396,6 @@ msgstr ""
 msgid "Label"
 msgstr ""
 
-#: modules/msc/msc/start_quick_action.php:103
-msgid "Failed to retrieve this quick action."
-msgstr ""
-
-#: modules/msc/msc/start_quick_action.php:139
-msgid "Please confirm you really want to perform this action"
-msgstr ""
-
-#: modules/msc/msc/start_quick_action.php:141
-msgid "Advanced"
-msgstr ""
-
 #: modules/msc/msc/statuscsv.php:91
 msgid "uuid"
 msgstr ""
@@ -1954,6 +1942,18 @@ msgstr ""
 
 #: modules/msc/msc/vnc_client.php:175
 msgid "Take control of this computer"
+msgstr ""
+
+#: modules/msc/msc/start_quick_action.php:104
+msgid "Failed to retrieve this quick action."
+msgstr ""
+
+#: modules/msc/msc/start_quick_action.php:140
+msgid "Please confirm you really want to perform this action"
+msgstr ""
+
+#: modules/msc/msc/start_quick_action.php:142
+msgid "Advanced"
 msgstr ""
 
 
