@@ -280,7 +280,7 @@ if (!empty($submod)) {
     $page->setOptions(array("visible" => False));
     $submod->addPage($page);
 
-    $page = new Page("createCustomMenuStaticGroup", _T("Create static group with location computers that have a custom menu", "imaging"));
+    $page = new Page("createCustomMenuStaticGroup", _T("Create a static group containing computers with custom imaging menu", "imaging"));
     $page->setFile("modules/imaging/imaging/createCustomMenuStaticGroup.php");
     $page->setOptions(array("visible" => False, "noHeader" => True));
     $submod->addPage($page);
