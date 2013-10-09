@@ -65,7 +65,7 @@ function BrowseDir(dir){
 }
 
 function RestoreFile(paramstr){
-    jQuery('#restoreDiv').load('<?php echo  urlStrRedirect("backuppc/backuppc/ajaxRestoreFile"); ?>&'+paramstr);
+    jQuery('#restoreDiv').load('<?php echo urlStrRedirect("backuppc/backuppc/ajaxRestoreFile"); ?>&'+paramstr);
     setTimeout("refresh();closePopup();",4000);
 }
 

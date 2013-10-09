@@ -105,7 +105,7 @@ if (isset($_GET['host'],$_GET['sharename'],$_GET['backupnum'])) {
             $viewVersionsActions[] = $emptyAction;
         }
         else {
-            $param_str = "host=".$_GET['host']."&backupnum=".$_GET['backupnum']."&sharename=".$_GET['sharename'];
+            $param_str = "host=".$_GET['host']."&backupnum=".$_GET['backupnum']."&sharename=".urlencode($_GET['sharename']);
             $param_str.= "&dir=".$paths[$i];
             $names[$i] = '<a href="#" onclick="RestoreFile(\''.$param_str.'\')">'.$names[$i]."</a>";         
             $cssClasses[$i] = 'file';
