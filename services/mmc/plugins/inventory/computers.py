@@ -99,20 +99,30 @@ class InventoryComputers(ComputerI):
 
     def __restrictLocationsOnImagingServerOrEntity(self, filt, ctx):
         if filt.has_key('imaging_server') and filt['imaging_server'] != '':
-            entity_uuid = ComputerImagingManager().getImagingServerEntityUUID(filt['imaging_server'])
-            if entity_uuid != None:
-                filt['location'] = entity_uuid
+            # Get main imaging entity uuid
+            self.logger.debug('Get main imaging entity UUID of imaging server %s' % filt['imaging_server'])
+            main_imaging_entity_uuid = ComputerImagingManager().getImagingServerEntityUUID(filt['imaging_server'])
+            if main_imaging_entity_uuid != None:
+                self.logger.debug('Found: %s' % main_imaging_entity_uuid)
+                filt['imaging_entities'] = [main_imaging_entity_uuid]
+                self.logger.debug('Get now children entities of this main imaging entity')
+                # Get childs entities of this main_imaging_entity_uuid
+                # Search only in user context
+                for loc in self.inventory.getUserLocations(ctx.userid):
+                    if ComputerImagingManager().isChildOfImagingServer(loc.uuid, main_imaging_entity_uuid):
+                        self.logger.debug('Found %s as child entity of %s' % (loc.uuid, main_imaging_entity_uuid))
+                        filt['imaging_entities'].append(loc.uuid)
             else:
                 self.logger.warn("can't get the entity that correspond to the imaging server %s"%(filt['imaging_server']))
                 return [False]
 
-        if filt.has_key('entity_uuid') and filt['entity_uuid'] != '':
-            grep_entity = None
+        if 'imaging_entities' in filt:
+            grep_entity = []
             for l in ctx.locations:
-                if l.uuid == filt['entity_uuid']:
-                    grep_entity = l
-            if grep_entity != None:
-                filt['location'] = [grep_entity]
+                if l.uuid in filt['imaging_entities']:
+                    grep_entity.append(l)
+            if grep_entity:
+                filt['ctxlocation'] = grep_entity
             else:
                 self.logger.warn("the user '%s' try to filter on an entity he shouldn't access '%s'"%(ctx.userid, filt['entity_uuid']))
                 return [False]
