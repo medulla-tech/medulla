@@ -51,7 +51,8 @@ function action($action, $target, $is_advanced) {
     }
 
     if ($is_advanced) {
-        $params = array('from'=> 'base|computers|msctabs|tablaunch');
+        $group = (isset($_GET['gid'])) ? 'group' : '';
+        $params = array('from'=> 'base|computers|' . $group . 'msctabs|tablaunch');
         foreach (array('gid', 'uuid', 'hostname') as $param) {
             $params[$param] = $_GET[$param];
         }
