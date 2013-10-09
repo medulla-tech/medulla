@@ -27,8 +27,7 @@ imaging plugin
 """
 
 import logging
-from twisted.internet import defer
-from twisted.internet import reactor
+from twisted.internet import defer, reactor
 from sets import Set as set
 import time
 
@@ -53,16 +52,29 @@ class TaskManager(object):
 
 
     def deferTask(self, label, countdown, func, *args, **kw):
-        # If task already exists, we cancel it to put it back
+        def _taskFunc():
+            # TODO Implement beforeCall callback
+            # Unset task
+            del self.tasks[label]
+            try:
+                func.__call__(*args, **kw)
+            except Exception, e:
+                logging.getLogger().error(str(e))
+            # TODO Implement beforeCall callback
+            #logging.getLogger().error('After call')
+        # =================================================
+        # If task already exists, we delay it
         if label in self.tasks:
-            self.tasks[label].cancel()
+            self.tasks[label].delay(countdown)
         # Calling later
-        self.tasks[label] = reactor.callLater(countdown, func, *args, **kw)
+        else:
+            self.tasks[label] = reactor.callLater(countdown, _taskFunc)
         return self.tasks[label]
 
     def cancelTask(self, label):
         if label in self.tasks:
             self.tasks[label].cancel()
+            del self.tasks[label]
             return True
         else:
             return False
@@ -75,7 +87,6 @@ class TaskManager(object):
 
 class ImagingRpcProxy(RpcProxyI):
     """ XML/RPC Bindings """
-
     ################################################### web def
     """ Functions to access the web default values as defined in the configuration """
     def get_web_def_date_fmt(self):
@@ -287,7 +298,7 @@ class ImagingRpcProxy(RpcProxyI):
                 logging.getLogger().error(e)
 
         if not immediate:
-            TaskManager().deferTask('imaging.applyLocationDefaultBootMenu', 120 ,_applyLocationDefaultBootMenu, loc_uuid)
+            TaskManager().deferTask('imaging.applyLocationDefaultBootMenu', 30 ,_applyLocationDefaultBootMenu, loc_uuid)
         else:
             _applyLocationDefaultBootMenu(loc_uuid)
         return [True]
