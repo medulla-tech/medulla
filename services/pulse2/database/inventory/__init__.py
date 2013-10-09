@@ -2111,7 +2111,7 @@ class Machine(object):
                 ret[1]['user'] = hardware[0][1][0]['User']
                 ret[1]['type'] = hardware[0][1][0]['Type']
                 ret[1]['domain'] = [hardware[0][1][0]['Workgroup']]
-                ret[1]['fullname'] = self.Name + '.' + hardware[0][1][0]['Workgroup']
+                ret[1]['fullname'] = '.'.join(filter(None, [self.Name, hardware[0][1][0]['Workgroup']]))
         # If entity is requested
         if 'entity' in requested_cols:
             entity = Inventory().getComputersLocations([toUUID(self.id)])
