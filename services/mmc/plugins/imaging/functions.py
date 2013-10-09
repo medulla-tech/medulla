@@ -292,7 +292,10 @@ class ImagingRpcProxy(RpcProxyI):
                 # Get all machine that have not a custom_menu
                 logging.getLogger().info('Applying default location BootMenu [%s]', loc_uuid)
                 for uuid in self.getTargetsByCustomMenuInEntity(loc_uuid, 0):
-                    self.resetComputerBootMenu(uuid)
+                    try:
+                        self.resetComputerBootMenu(uuid)
+                    except Exception, e:
+                        logging.getLogger().error(str(e))
             except Exception, e:
                 logging.getLogger().error('Unable to apply location default bootmenu')
                 logging.getLogger().error(e)
