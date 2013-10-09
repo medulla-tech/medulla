@@ -149,6 +149,24 @@ class InventoryComputers(ComputerI):
         filt['min'] = min
         filt['max'] = max
 
+        if 'imaging_entities' in filt: # imaging group creation
+            machines_uuids = map(lambda m:m.uuid(), self.inventory.getMachinesOnly(ctx, filt))
+            # display only "imaging compliant" computers
+            uuids = []
+            networks = self.getComputersNetwork(ctx, {'uuids': machines_uuids})
+            for network in networks:
+                network = network[1]
+                # Check if computer has macAddress and ipHostNumber
+                if network['macAddress'] and network['ipHostNumber']:
+                    uuids.append(network['objectUUID'][0])
+                else:
+                    logging.getLogger().debug("Computer %s cannot be added in an imaging group:" % network['cn'])
+                    if not network['macAddress']:
+                        logging.getLogger().debug("No MAC found !")
+                    if not network['ipHostNumber']:
+                        logging.getLogger().debug("No IP address found !")
+            filt['uuids'] = uuids
+
         if justId:
             return map(lambda m:m.uuid(), self.inventory.getMachinesOnly(ctx, filt))
         elif toH:
