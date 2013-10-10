@@ -159,18 +159,8 @@ if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
     header("Content-Disposition: inline; filename=\"config.vnc\"");
     header("Cache-control: private");
     echo "[connection]\r\nhost=$host \r\nport=$port\r\n";
- *
-<<<<<<< HEAD
- */ else {
-    ?>
-    <?php
-=======
  */
-
 else {
-    ?>
-<?php
->>>>>>> parent of 3e24b4b... msc: Updating TightVNC Java applet params
     // Test if Java Runtime is installed
     if(!isset($_COOKIE['javaenabled']))
         print('<script type="text/javascript">document.location.href=document.location.href;</script>');
@@ -188,9 +178,6 @@ else {
     $f->display();
 }
 ?>
-<<<<<<< HEAD
 <script type="text/javascript">
     jQuery('input[name=bconfirm]').click(closePopup);
 </script>
-=======
->>>>>>> parent of 3e24b4b... msc: Updating TightVNC Java applet params
