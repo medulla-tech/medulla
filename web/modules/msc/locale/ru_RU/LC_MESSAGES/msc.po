@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-10-09 14:52+0200\n"
-"PO-Revision-Date: 2013-09-20 12:59+0000\n"
+"POT-Creation-Date: 2013-10-10 16:34+0200\n"
+"PO-Revision-Date: 2013-10-10 13:51+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/pulse2/team/ru_RU/)\n"
 "MIME-Version: 1.0\n"
@@ -1947,40 +1947,6 @@ msgstr ""
 msgid "One"
 msgstr "Один"
 
-#: modules/msc/msc/vnc_client.php:45
-msgid "Connection Failed !"
-msgstr ""
-
-#: modules/msc/msc/vnc_client.php:47
-msgid "Connection was refused by the other side."
-msgstr "Было отказано в подключении с другой стороны."
-
-#: modules/msc/msc/vnc_client.php:71
-msgid "Connection Succeedeed !"
-msgstr ""
-
-#: modules/msc/msc/vnc_client.php:73
-msgid "This connection will be automatically shut down in 60 minutes."
-msgstr ""
-
-#: modules/msc/msc/vnc_client.php:75
-msgid "Please close this windows when you are done."
-msgstr ""
-
-#: modules/msc/msc/vnc_client.php:173
-msgid ""
-"Java Plugin is not installed on <u>your own computer</u>. Please download it"
-" from <a "
-"href='http://www.java.com/download/'>http://www.java.com/download/</a>, "
-"install it, restart your browser and then, verify your installation on <a "
-"target='_blank' "
-"href='http://www.java.com/verify/'>http://www.java.com/verify/</a>."
-msgstr ""
-
-#: modules/msc/msc/vnc_client.php:175
-msgid "Take control of this computer"
-msgstr ""
-
 #: modules/msc/msc/start_quick_action.php:104
 msgid "Failed to retrieve this quick action."
 msgstr "Ошибка при получении этих быстрых действий."
@@ -1993,5 +1959,36 @@ msgstr ""
 #: modules/msc/msc/start_quick_action.php:142
 msgid "Advanced"
 msgstr "Расширенный"
+
+#: modules/msc/msc/vnc_client.php:46
+msgid "Connection Failed !"
+msgstr ""
+
+#: modules/msc/msc/vnc_client.php:48
+msgid "Connection was refused by the other side."
+msgstr "Было отказано в подключении с другой стороны."
+
+#: modules/msc/msc/vnc_client.php:72
+msgid "Connection Succeedeed !"
+msgstr ""
+
+#: modules/msc/msc/vnc_client.php:74
+msgid "This connection will be automatically shut down in 60 minutes."
+msgstr ""
+
+#: modules/msc/msc/vnc_client.php:76
+msgid "Please close this windows when you are done."
+msgstr ""
+
+#: modules/msc/msc/vnc_client.php:169
+msgid ""
+"Java Runtime is not installed, please download it from <a "
+"href='http://www.java.com/download/'>http://www.java.com/download/</a> and "
+"retry."
+msgstr ""
+
+#: modules/msc/msc/vnc_client.php:173
+msgid "Take control of this computer"
+msgstr ""
 
 

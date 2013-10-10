@@ -12,9 +12,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-10-09 14:52+0200\n"
-"PO-Revision-Date: 2013-09-20 14:02+0000\n"
-"Last-Translator: Andre Machado <andre@mandriva.com>\n"
+"POT-Creation-Date: 2013-10-10 16:34+0200\n"
+"PO-Revision-Date: 2013-10-10 13:51+0000\n"
+"Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/projects/p/pulse2/team/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1951,46 +1951,6 @@ msgstr "Falha no desligamento: %percent% (%d pacotes)"
 msgid "One"
 msgstr "Um"
 
-#: modules/msc/msc/vnc_client.php:45
-msgid "Connection Failed !"
-msgstr "Conexão Falhou!"
-
-#: modules/msc/msc/vnc_client.php:47
-msgid "Connection was refused by the other side."
-msgstr "A conexão foi recusada do outro lado."
-
-#: modules/msc/msc/vnc_client.php:71
-msgid "Connection Succeedeed !"
-msgstr "Conectado com sucesso !"
-
-#: modules/msc/msc/vnc_client.php:73
-msgid "This connection will be automatically shut down in 60 minutes."
-msgstr "Está conexão será automaticamente desligada em 60 minutos."
-
-#: modules/msc/msc/vnc_client.php:75
-msgid "Please close this windows when you are done."
-msgstr "Porfavor feche a janela quando terminar."
-
-#: modules/msc/msc/vnc_client.php:173
-msgid ""
-"Java Plugin is not installed on <u>your own computer</u>. Please download it"
-" from <a "
-"href='http://www.java.com/download/'>http://www.java.com/download/</a>, "
-"install it, restart your browser and then, verify your installation on <a "
-"target='_blank' "
-"href='http://www.java.com/verify/'>http://www.java.com/verify/</a>."
-msgstr ""
-"O plugin do Java não está instalado em <u>seu computador</u>. Por favor "
-"baixe-o <a "
-"href='http://www.java.com/download/'>http://www.java.com/download/</a>, "
-"instale-o, reinicie o seu navegador e verifique sua instalação em <a "
-"target='_blank' "
-"href='http://www.java.com/verify/'>http://www.java.com/verify/</a>."
-
-#: modules/msc/msc/vnc_client.php:175
-msgid "Take control of this computer"
-msgstr "Assumir o controle deste computador"
-
 #: modules/msc/msc/start_quick_action.php:104
 msgid "Failed to retrieve this quick action."
 msgstr "Falha ao buscar está ação rápida"
@@ -2002,5 +1962,36 @@ msgstr "Por favor, confirme se deseja realmente executar esta ação"
 #: modules/msc/msc/start_quick_action.php:142
 msgid "Advanced"
 msgstr "Avançado"
+
+#: modules/msc/msc/vnc_client.php:46
+msgid "Connection Failed !"
+msgstr "Conexão Falhou!"
+
+#: modules/msc/msc/vnc_client.php:48
+msgid "Connection was refused by the other side."
+msgstr "A conexão foi recusada do outro lado."
+
+#: modules/msc/msc/vnc_client.php:72
+msgid "Connection Succeedeed !"
+msgstr "Conectado com sucesso !"
+
+#: modules/msc/msc/vnc_client.php:74
+msgid "This connection will be automatically shut down in 60 minutes."
+msgstr "Está conexão será automaticamente desligada em 60 minutos."
+
+#: modules/msc/msc/vnc_client.php:76
+msgid "Please close this windows when you are done."
+msgstr "Porfavor feche a janela quando terminar."
+
+#: modules/msc/msc/vnc_client.php:169
+msgid ""
+"Java Runtime is not installed, please download it from <a "
+"href='http://www.java.com/download/'>http://www.java.com/download/</a> and "
+"retry."
+msgstr ""
+
+#: modules/msc/msc/vnc_client.php:173
+msgid "Take control of this computer"
+msgstr "Assumir o controle deste computador"
 
 

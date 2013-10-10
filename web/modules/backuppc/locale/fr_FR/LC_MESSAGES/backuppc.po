@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-10-09 14:52+0200\n"
+"POT-Creation-Date: 2013-10-10 16:34+0200\n"
 "PO-Revision-Date: 2013-10-09 10:58+0000\n"
 "Last-Translator: Stéphane Pointu <spointu@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/pulse2/team/fr_FR/)\n"
@@ -183,7 +183,7 @@ msgstr ""
 "pour l'ouvrir (pour une support optimal des caractères spéciaux)."
 
 #: modules/backuppc/backuppc/viewFileVersions.php:25
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:92
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:93
 msgid "View all versions"
 msgstr "Toutes les versions"
 
@@ -227,49 +227,6 @@ msgstr "Configuration"
 msgid "File search"
 msgstr "Recherche de fichiers"
 
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:28
-#: modules/backuppc/backuppc/ajaxFileSearch.php:28
-msgid "GB"
-msgstr "Go"
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:30
-#: modules/backuppc/backuppc/ajaxFileSearch.php:30
-msgid "MB"
-msgstr "Mo"
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:32
-#: modules/backuppc/backuppc/ajaxFileSearch.php:32
-msgid "KB"
-msgstr "Ko"
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:33
-#: modules/backuppc/backuppc/ajaxFileSearch.php:33
-msgid "Bytes"
-msgstr "Octets"
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:66
-msgid "Current directory :  "
-msgstr "Dossier courant:  "
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:131
-#: modules/backuppc/backuppc/ajaxFileSearch.php:122
-msgid "Size"
-msgstr "Taille"
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:154
-#: modules/backuppc/backuppc/ajaxFileSearch.php:145
-msgid "Download selected (ZIP)"
-msgstr "Télécharger les items sélectionnés (ZIP)"
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:155
-#: modules/backuppc/backuppc/ajaxFileSearch.php:146
-msgid "Restore to host"
-msgstr "Restaurer vers la machine"
-
-#: modules/backuppc/backuppc/ajaxFileSearch.php:120
-msgid "File"
-msgstr "Fichier"
-
 #: modules/backuppc/backuppc/viewXferLog.php:25
 msgid "XferLog"
 msgstr "Journal d'erreurs"
@@ -277,11 +234,6 @@ msgstr "Journal d'erreurs"
 #: modules/backuppc/backuppc/viewXferLog.php:35
 msgid "Error log"
 msgstr "Journal d'erreurs"
-
-#: modules/backuppc/backuppc/BrowseFiles.php:34
-#: modules/backuppc/infoPackage.inc.php:76
-msgid "Browse files"
-msgstr "Parcourir les fichiers"
 
 #: modules/backuppc/backuppc/ajaxDownloadsTable.php:43
 msgid "Requested restores"
@@ -723,6 +675,54 @@ msgstr "L'ordinateur a été supprimé du système de sauvegarde."
 #: modules/backuppc/infoPackage.inc.php:42
 msgid "Backup status"
 msgstr "Statut"
+
+#: modules/backuppc/backuppc/BrowseFiles.php:32
+#: modules/backuppc/infoPackage.inc.php:76
+msgid "Browse files"
+msgstr "Parcourir les fichiers"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:28
+#: modules/backuppc/backuppc/ajaxFileSearch.php:28
+msgid "GB"
+msgstr "Go"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:30
+#: modules/backuppc/backuppc/ajaxFileSearch.php:30
+msgid "MB"
+msgstr "Mo"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:32
+#: modules/backuppc/backuppc/ajaxFileSearch.php:32
+msgid "KB"
+msgstr "Ko"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:34
+#: modules/backuppc/backuppc/ajaxFileSearch.php:34
+msgid "Bytes"
+msgstr "Octets"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:67
+msgid "Current directory :  "
+msgstr "Dossier courant:  "
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:131
+#: modules/backuppc/backuppc/ajaxFileSearch.php:124
+msgid "Size"
+msgstr "Taille"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:151
+#: modules/backuppc/backuppc/ajaxFileSearch.php:143
+msgid "Download selected (ZIP)"
+msgstr "Télécharger les items sélectionnés (ZIP)"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:152
+#: modules/backuppc/backuppc/ajaxFileSearch.php:144
+msgid "Restore to host"
+msgstr "Restaurer vers la machine"
+
+#: modules/backuppc/backuppc/ajaxFileSearch.php:122
+msgid "File"
+msgstr "Fichier"
 
 #: modules/backuppc/infoPackage.inc.php:33
 #: modules/backuppc/infoPackage.inc.php:38

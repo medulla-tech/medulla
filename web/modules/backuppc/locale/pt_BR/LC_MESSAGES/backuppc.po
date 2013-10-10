@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-10-09 14:52+0200\n"
+"POT-Creation-Date: 2013-10-10 16:34+0200\n"
 "PO-Revision-Date: 2013-09-17 19:48+0000\n"
 "Last-Translator: Andre Machado <andre@mandriva.com>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/projects/p/pulse2/team/pt_BR/)\n"
@@ -182,7 +182,7 @@ msgstr ""
 " arquivo (adequado para manuseio de caracteres especiais)."
 
 #: modules/backuppc/backuppc/viewFileVersions.php:25
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:92
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:93
 msgid "View all versions"
 msgstr "Ver todas as versões"
 
@@ -225,49 +225,6 @@ msgstr "Configuração"
 msgid "File search"
 msgstr "Busca de arquivos"
 
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:28
-#: modules/backuppc/backuppc/ajaxFileSearch.php:28
-msgid "GB"
-msgstr "GB"
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:30
-#: modules/backuppc/backuppc/ajaxFileSearch.php:30
-msgid "MB"
-msgstr "MB"
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:32
-#: modules/backuppc/backuppc/ajaxFileSearch.php:32
-msgid "KB"
-msgstr "KB"
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:33
-#: modules/backuppc/backuppc/ajaxFileSearch.php:33
-msgid "Bytes"
-msgstr "Bytes"
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:66
-msgid "Current directory :  "
-msgstr "Diretório atual :  "
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:131
-#: modules/backuppc/backuppc/ajaxFileSearch.php:122
-msgid "Size"
-msgstr "Tamanho"
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:154
-#: modules/backuppc/backuppc/ajaxFileSearch.php:145
-msgid "Download selected (ZIP)"
-msgstr "Baixar selecionados (ZIP)"
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:155
-#: modules/backuppc/backuppc/ajaxFileSearch.php:146
-msgid "Restore to host"
-msgstr "Restaurar para a máquina"
-
-#: modules/backuppc/backuppc/ajaxFileSearch.php:120
-msgid "File"
-msgstr "Arquivo"
-
 #: modules/backuppc/backuppc/viewXferLog.php:25
 msgid "XferLog"
 msgstr "XferLog"
@@ -275,11 +232,6 @@ msgstr "XferLog"
 #: modules/backuppc/backuppc/viewXferLog.php:35
 msgid "Error log"
 msgstr "Log de erro"
-
-#: modules/backuppc/backuppc/BrowseFiles.php:34
-#: modules/backuppc/infoPackage.inc.php:76
-msgid "Browse files"
-msgstr "Localizar arquivos"
 
 #: modules/backuppc/backuppc/ajaxDownloadsTable.php:43
 msgid "Requested restores"
@@ -720,6 +672,54 @@ msgstr "O computador foi removido do sistema de backup."
 #: modules/backuppc/infoPackage.inc.php:42
 msgid "Backup status"
 msgstr "Status do Backup"
+
+#: modules/backuppc/backuppc/BrowseFiles.php:32
+#: modules/backuppc/infoPackage.inc.php:76
+msgid "Browse files"
+msgstr "Localizar arquivos"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:28
+#: modules/backuppc/backuppc/ajaxFileSearch.php:28
+msgid "GB"
+msgstr "GB"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:30
+#: modules/backuppc/backuppc/ajaxFileSearch.php:30
+msgid "MB"
+msgstr "MB"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:32
+#: modules/backuppc/backuppc/ajaxFileSearch.php:32
+msgid "KB"
+msgstr "KB"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:34
+#: modules/backuppc/backuppc/ajaxFileSearch.php:34
+msgid "Bytes"
+msgstr "Bytes"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:67
+msgid "Current directory :  "
+msgstr "Diretório atual :  "
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:131
+#: modules/backuppc/backuppc/ajaxFileSearch.php:124
+msgid "Size"
+msgstr "Tamanho"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:151
+#: modules/backuppc/backuppc/ajaxFileSearch.php:143
+msgid "Download selected (ZIP)"
+msgstr "Baixar selecionados (ZIP)"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:152
+#: modules/backuppc/backuppc/ajaxFileSearch.php:144
+msgid "Restore to host"
+msgstr "Restaurar para a máquina"
+
+#: modules/backuppc/backuppc/ajaxFileSearch.php:122
+msgid "File"
+msgstr "Arquivo"
 
 #: modules/backuppc/infoPackage.inc.php:33
 #: modules/backuppc/infoPackage.inc.php:38
