@@ -47,6 +47,6 @@ class ImagingAPI(RPCClient):
         log.info("Wake-on-lan received for client %s, creating WOL specific imaging boot menu" % name)
         return self.synchroComputer(uuid, wol = True)
 
-    def unsetWOLMenu(self, uuid, name):
-        log.info("Wake-on-lan done for client %s (maximum time reached), restoring non-WOL imaging boot menu" % name)
+    def unsetWOLMenu(self, uuid, name, status='done', message="maximum time reached"):
+        log.info("Wake-on-lan %s for client %s (%s), restoring non-WOL imaging boot menu" % (status, name, message))
         return self.synchroComputer(uuid, wol = False)

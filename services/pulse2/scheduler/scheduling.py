@@ -1236,14 +1236,6 @@ def getRunningCommandsOnHostFromLaunchers(scheduler_name):
 def stopCommandsOnHosts(ids):
     deffereds = [] # will hold all deferred
 
-    if SchedulerConfig().imaging:
-        # Restore imaging default bootmenus
-        for myCommandOnHostID in ids:
-            (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-            imgdeferred = ImagingAPI().unsetWOLMenu(myT.target_uuid, myT.target_name)
-            if imgdeferred:
-                deffereds.append(imgdeferred)
-
     if len(ids) > 0:
         log.info('scheduler "%s": STOP: %d commands to stop' % (SchedulerConfig().name, len(ids)))
         for launcher in SchedulerConfig().launchers_uri.values():
@@ -1262,27 +1254,9 @@ def stopCommand(myCommandOnHostID):
     log.debug("command_on_host state is %s" % myCoH.toH())
     log.debug("command state is %s" % myC.toH())
 
-    if SchedulerConfig().imaging:
-        # Restore Bootmenu (No WOL)
-        imgdeferred = ImagingAPI().unsetWOLMenu(myT.target_uuid, myT.target_name)
-
-        def _cb(result, myCommandOnHostID):
-            for launcher in SchedulerConfig().launchers_uri.values():
-                callOnLauncher(None, launcher, 'term_process', myCommandOnHostID)
-            return True
-
-        def _eb(result):
-            log.debug("Restoring bootmenu (No WOL) failed: %s" % result)
-            return False
-
-        imgdeferred.addCallback(_cb, myCommandOnHostID). \
-                addErrback(_eb)
-
-        return True
-    else:
-        for launcher in SchedulerConfig().launchers_uri.values():
-            callOnLauncher(None, launcher, 'term_process', myCommandOnHostID)
-        return True
+    for launcher in SchedulerConfig().launchers_uri.values():
+        callOnLauncher(None, launcher, 'term_process', myCommandOnHostID)
+    return True
 
 def startCommand(myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
@@ -1425,18 +1399,42 @@ def runWOLPhase(myCommandOnHostID):
             2 => ping OK, ssh OK => don't do WOL
         """
         if result == 2:
-            log.info("command_on_host #%s: do not wol (target already up)" % \
-                         myCommandOnHostID)
-            # FIXME: state will be 'wol_ignored' when implemented in database
-            updateHistory(myCommandOnHostID, 
-                          None, 
-                          PULSE2_SUCCESS_ERROR, 
-                          "skipped: host already up", 
-                          "")
-            myCoH.setWOLIgnored()
-            myCoH.setStateScheduled()
-            WOLTracking().unlockwol(myCommandOnHostID)
-            return runUploadPhase(myCommandOnHostID)
+            message = "target already up"
+            log.info("command_on_host #%s: do not wol (%s)" % (myCommandOnHostID, message))
+            if myCoH.isImagingMenuDone():
+                def _unsetWOLcb(result, myCommandOnHostID):
+                    # FIXME: state will be 'wol_ignored' when implemented in database
+                    updateHistory(myCommandOnHostID, 
+                                  None, 
+                                  PULSE2_SUCCESS_ERROR, 
+                                  "skipped: host already up", 
+                                  "")
+                    myCoH.setWOLIgnored()
+                    myCoH.setStateScheduled()
+                    WOLTracking().unlockwol(myCommandOnHostID)
+                    return runUploadPhase(myCommandOnHostID)
+                def _unsetWOLeb(result):
+                    log.error("Restoring bootmenu (No WOL) failed: %s" % result)
+                    return False
+
+                # Restore Bootmenu (No WOL)
+                imgdeferred = ImagingAPI().unsetWOLMenu(myT.target_uuid, myT.target_name, \
+                                                        message=message, status='aborted')
+                imgdeferred.addCallback(_unsetWOLcb, myCommandOnHostID)
+                imgdeferred.addErrback(_unsetWOLeb, myCommandOnHostID)
+                return imgdeferred
+            else:
+                # FIXME: state will be 'wol_ignored' when implemented in database
+                updateHistory(myCommandOnHostID, 
+                              None, 
+                              PULSE2_SUCCESS_ERROR, 
+                              "skipped: host already up", 
+                              "")
+                myCoH.setWOLIgnored()
+                myCoH.setStateScheduled()
+                WOLTracking().unlockwol(myCommandOnHostID)
+                return runUploadPhase(myCommandOnHostID)
+
         log.info("command_on_host #%s: do wol (target not up)" % myCommandOnHostID)
         return performWOLPhase(myCommandOnHostID)
 
@@ -1494,15 +1492,36 @@ def runWOLPhase(myCommandOnHostID):
         return runUploadPhase(myCommandOnHostID)
     if not myT.hasEnoughInfoToWOL(): 
         # not enough information to perform WOL: ignoring phase but writting this in DB
-        log.warn("command_on_host #%s: wol couldn't be performed; not enough information in target table" % myCoH.getId())
+        status = "couldn't be performed"
+        message = 'not enough information in target table'
+        log.warn("command_on_host #%s: wol %s: %s" % (myCoH.getId(), status, message))
         # FIXME: state will be 'wol_ignored' when implemented in database
-        updateHistory(myCommandOnHostID, 
-                      'wol_failed', 
-                      PULSE2_TARGET_NOTENOUGHINFO_ERROR, 
-                      " skipped : not enough information in target table")
-        myCoH.setWOLIgnored()
-        myCoH.setStateScheduled()
-        return runUploadPhase(myCommandOnHostID)
+        if myCoH.isImagingMenuDone(): # Imaging WOL
+            def _unsetWOLcb(result, myCommandOnHostID):
+                updateHistory(myCommandOnHostID, 
+                              'wol_failed', 
+                              PULSE2_TARGET_NOTENOUGHINFO_ERROR, 
+                              " skipped : not enough information in target table")
+                myCoH.setWOLIgnored()
+                myCoH.setStateScheduled()
+                return runUploadPhase(myCommandOnHostID)
+            def _unsetWOLeb(result):
+                log.error("Restoring bootmenu (No WOL) failed: %s" % result)
+                return False
+            # Restore Bootmenu (No WOL)
+            imgdeferred = ImagingAPI().unsetWOLMenu(myT.target_uuid, myT.target_name, \
+                                                    message=message, status=status)
+            imgdeferred.addCallback(_unsetWOLcb, myCommandOnHostID)
+            imgdeferred.addErrback(_unsetWOLeb, myCommandOnHostID)
+            return imgdeferred
+        else:
+            updateHistory(myCommandOnHostID, 
+                          'wol_failed', 
+                          PULSE2_TARGET_NOTENOUGHINFO_ERROR, 
+                          " skipped : not enough information in target table")
+            myCoH.setWOLIgnored()
+            myCoH.setStateScheduled()
+            return runUploadPhase(myCommandOnHostID)
 
     # WOL has to be performed, but only if computer is down (ie. no ping)
 
@@ -2718,7 +2737,7 @@ def parseWOLError(reason, myCommandOnHostID, decrement_attempts_left = False, er
         return runGiveUpPhase(myCommandOnHostID)
     updateHistory(myCommandOnHostID, 'wol_failed', error_code, '', reason.getErrorMessage())
     if not myCoH.switchToWOLFailed(myC.getNextConnectionDelay(), decrement_attempts_left):
-        if SchedulerConfig().imaging:
+        if myCoH.switchToWOLDone():
             # Restore Bootmenu (No WOL)
             imgdeferred = ImagingAPI().unsetWOLMenu(myT.target_uuid, myT.target_name)
 
