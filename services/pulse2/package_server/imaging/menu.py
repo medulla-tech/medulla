@@ -215,7 +215,7 @@ class ImagingMenu:
         # key 'to' : the replacement to perform
         # key 'when' : when to perform the replacement (only 'global' for now)
         replacements = [
-            ('##PULSE2_LANG##', self.language, 'global'),
+            ('##PULSE2_LANG##', PackageServerConfig().pxe_keymap, 'global'),
             ('##PULSE2_BOOTLOADER_DIR##', self.config.imaging_api['bootloader_folder'], 'global'),
             ('##PULSE2_BOOTSPLASH_FILE##', self.config.imaging_api['bootsplash_file'], 'global'),
             ('##PULSE2_DISKLESS_DIR##', self.config.imaging_api['diskless_folder'], 'global'),
