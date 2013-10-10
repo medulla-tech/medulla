@@ -21,8 +21,6 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
-
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 
@@ -31,22 +29,16 @@ require("localSidebar.php");
  */
 right_top_shortcuts_display();
 
-$p = new PageGenerator(_T("Browse files", 'backuppc').' ('.$_GET['cn'].')');
+$p = new PageGenerator(_T("Browse files", 'backuppc') . ' (' . $_GET['cn'] . ')');
 $p->setSideMenu($sidemenu);
 $p->display();
 
 require_once("modules/backuppc/includes/xmlrpc.php");
 
-$params = array('host'=>$_GET['host'],'sharename'=>$_GET['sharename'],'backupnum'=>$_GET['backupnum']);
+$params = array('host' => $_GET['host'], 'sharename' => $_GET['sharename'], 'backupnum' => $_GET['backupnum']);
 
-$ajax = new AjaxFilterLocation(urlStrRedirect("backuppc/backuppc/ajaxBrowseFiles"),'container','location',$params);
-/*if (isset($_GET['location'])) {
-    $ajax->setSelected($list_val[base64_decode($_GET['location'])]);
-}*/
-$fils = array('.');
-$fils_v = array('.');
-$ajax->setElements($fils);
-$ajax->setElementsVal($fils_v);
+$ajax = new AjaxFilterLocation(urlStrRedirect("backuppc/backuppc/ajaxBrowseFiles"), 'container', 'location', $params);
+
 $ajax->display();
 echo "<br/><br/>";
 $ajax->displayDivToUpdate();
@@ -54,20 +46,19 @@ $ajax->displayDivToUpdate();
 
 // Downloaded files table
 include("modules/backuppc/backuppc/ajaxDownloadsTable.php");
-
 ?>
 
 <div id="restoreDiv"></div>
 
 <script type="text/javascript">
-function BrowseDir(dir){
-    jQuery('#<?php echo  $ajax->divid; ?>').load('<?php echo  $ajax->url; ?>folder='+dir+'<?php echo  $ajax->params ?>');
-}
+    function BrowseDir(dir) {
+        jQuery('#<?php echo $ajax->divid; ?>').load('<?php echo $ajax->url; ?>folder=' + encodeURIComponent(dir) + '<?php echo $ajax->params ?>');
+    }
 
-function RestoreFile(paramstr){
-    jQuery('#restoreDiv').load('<?php echo urlStrRedirect("backuppc/backuppc/ajaxRestoreFile"); ?>&'+paramstr);
-    setTimeout("refresh();closePopup();",4000);
-}
+    function RestoreFile(paramstr) {
+        jQuery('#restoreDiv').load('<?php echo urlStrRedirect("backuppc/backuppc/ajaxRestoreFile"); ?>&' + paramstr);
+        setTimeout("refresh();closePopup();", 4000);
+    }
 
 </script>
 <!-- jQuery('#container').append('<div style="float:left;top: 0;left: 0;width:100%;height:100%;background:#fff;opacity:0.4;z-index:9999;">LOADING</div>'); -->
