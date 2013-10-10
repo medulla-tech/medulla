@@ -2096,13 +2096,11 @@ class Machine(object):
             if len(comment) != 0:
                 ret[1]['displayName'] = [comment[0][1][0]['Comments']]
                 ret[1]['location'] = [comment[0][1][0]['Location']]
-        # If a network field is requested
-        if set(['macAddress','ipHostNumber','subnetMask']) & requested_cols:
-            net = Inventory().getMachineNetwork(ctx, {'uuid':toUUID(self.id)})
-            if len(net):
-                net = net[0]
-                (ret[1]['macAddress'], ret[1]['ipHostNumber'], ret[1]['subnetMask'],  ret[1]['networkUuids']) = orderIpAdresses(net[1])
-                ret[1]['networkUuids'] = map(lambda x:'UUID'+str(x),ret[1]['networkUuids'])
+        net = Inventory().getMachineNetwork(ctx, {'uuid':toUUID(self.id)})
+        if len(net):
+            net = net[0]
+            (ret[1]['macAddress'], ret[1]['ipHostNumber'], ret[1]['subnetMask'],  ret[1]['networkUuids']) = orderIpAdresses(net[1])
+            ret[1]['networkUuids'] = map(lambda x:'UUID'+str(x),ret[1]['networkUuids'])
         # If a hardware table field is requested
         if set(['os','user','type','domain','fullname']) & requested_cols:
             hardware = Inventory().getLastMachineInventoryPart(ctx, "Hardware", {'uuid':toUUID(self.id)})
