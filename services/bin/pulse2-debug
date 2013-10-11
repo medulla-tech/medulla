@@ -23,7 +23,7 @@ import sys
 import stat
 import re
 from syslog import syslog
-import shlex
+import subprocess
 import pprint
 import readline
 import mmc.plugins
@@ -31,7 +31,10 @@ import mmc.plugins
 from ConfigParser import ConfigParser
 
 from twisted.internet import task, reactor
+from twisted.python import threadable; threadable.init(1)
+from twisted.internet.threads import deferToThread
 from twisted.web import xmlrpc
+deferred = deferToThread.__get__ #Create a decorator for deferred functions
 
 COOKIES_FILE = '/tmp/pulse2-debug-cookies'
 host = ''
@@ -234,7 +237,10 @@ class CallMethod :
 def _use(args):
     global module
     # TODO : check if module exists
-    module = args[1]
+    if len(args):
+        module = args[0]
+    else:
+        module = ''
     # Return to prompt
     task.deferLater(reactor, 0, prompt)
 
@@ -253,16 +259,22 @@ def _ls(args):
         print "No entry found"
     task.deferLater(reactor, 0, prompt)
 
+
+def _showmsg(msg):
+    print msg
+    task.deferLater(reactor, 0, prompt)
+
+
 def _help(args):
-    if len(args) < 2:
+    if len(args) == 0:
         print 'Base commands: use, ls, pwd, exit\nType help <command_name> to get command help'
-    elif args[1] == 'use':
+    elif args[0] == 'use':
         print 'use <module_name>\n\tSwitch to module name'
-    elif args[1] == 'ls':
+    elif args[0] == 'ls':
         print 'ls\n\tList all exported methods for the selected module'
-    elif args[1] == 'pwd':
+    elif args[0] == 'pwd':
         print 'pwd\n\tPrint selected module name'
-    elif args[1] == 'exit':
+    elif args[0] == 'exit':
         print 'exit\n\tExit pulse2-debug console'
     else:
        try:
@@ -287,14 +299,29 @@ def prompt():
     global module
     input = ''
     while not input:
-        input = raw_input("]> ")
-    # Parsing args
-    args = shlex.split(input)
-    # Main command
-    cmd = args[0].lower()
+        input = raw_input(module + "]> ").strip()
+    
+    # TODO : Treat final pipes
 
+    # From hereon, we have func(args) syntax
+    if input[-1] != ')':
+        _showmsg('Syntax error')
+        return
+    parts = input[0:-1].split('(')
+    if len(parts) < 2:
+        _showmsg('Syntax error')
+        return
+    #
+    cmd = parts[0]
+    # Parsing args
+    try:
+        args = eval('['+ '('.join(parts[1:])+ ']' )
+    except Exception, e:
+        _showmsg('Syntax error: %s' % str(e))
+        return
+    
     # Command to switch to specific module
-    if (cmd == "use" or cmd == "cd") and len(args)>1:
+    if (cmd == "use" or cmd == "cd"):
         _use(args)
     elif (cmd == 'pwd'):
         _pwd(args)
@@ -306,8 +333,8 @@ def prompt():
         reactor.stop()
     else:
         # Call XML rpc Method   "msc.scheduler_choose_client_ip"
-        func = module+'.'+args[0] if module else args[0]
-        CallMethod(config, func, *args[1:])
+        func = module+'.'+cmd if module else cmd
+        CallMethod(config, func, *args)
 
 
 def initFuncDB():
@@ -328,6 +355,10 @@ def initFuncDB():
                     funcs[module]['names'] += [matches.group(1)]
                     funcs[module]['args'] += [matches.group(2)]
 
+@deferred
+def logSniffer():
+    subprocess.call('tail -f /var/log/mmc/mmc-agent.log|grep "RPC method call from user root:"',shell=True)
+    
 
 if __name__ == "__main__" :
 
@@ -335,14 +366,16 @@ if __name__ == "__main__" :
     initFuncDB()
 
     config = ConfigReader().config
-    print "Pulse2 console 0.01 (June 28 2013)"
+    print "Pulse2 console 0.02 (Oct 11 2013)"
     print "Type help for more information"
 
     # Setting command completer
     readline.parse_and_bind("tab: complete")
     readline.set_completer(completer)
+    
+    # Activating log sniffer
+    logSniffer()
 
-    task.deferLater(reactor, 0, prompt)
-    #prompt()
+    task.deferLater(reactor, 1, prompt)
     reactor.run()
 
