@@ -139,5 +139,5 @@ class RPCClient(MMCProxy) :
 
         d = self.proxy()
 
-        log.error("Execute remote function %s" % (fnc))
+        log.debug("Execute remote function %s" % (fnc))
         return d.callRemote(fnc, *args, **kwargs)
