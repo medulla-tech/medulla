@@ -165,8 +165,8 @@ else {
     if(!isset($_COOKIE['javaenabled']))
         print('<script type="text/javascript">document.location.href=document.location.href;</script>');
     if(!isset($_COOKIE['javaenabled']) || $_COOKIE['javaenabled']=="null") {
-        $f = new PopupWindowForm("");    
-        print("<br/><span style='color:red'>"._T("Java Runtime is not installed, please download it from <a href='http://www.java.com/download/'>http://www.java.com/download/</a> and retry.", "msc")."</span>");
+        $f = new PopupWindowForm("");
+        print("<br/><span style='color:red'>" . _T("Java Plugin is not installed on <u>your own computer</u>. Please download it from <a href='http://www.java.com/download/'>http://www.java.com/download/</a>, install it, restart your browser and then, verify your installation on <a target='_blank' href='http://www.java.com/verify/'>http://www.java.com/verify/</a>.", "msc") . "</span>");
     }    
     else
     {
