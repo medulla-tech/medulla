@@ -66,6 +66,11 @@ from pulse2.version import getVersion, getRevision # pyflakes.ignore
 
 APIVERSION = '0:0:0'
 
+NOAUTHNEEDED = [
+    'get_web_def_coh_life_time',
+    'get_web_def_attempts_per_day',
+]
+
 def getApiVersion(): return APIVERSION
 
 def activate():

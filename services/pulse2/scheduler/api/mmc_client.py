@@ -24,8 +24,6 @@
 import os
 import logging
 
-from xmlrpclib import Fault, ProtocolError
-from socket import error as SocketError
 from mmc.site import mmcconfdir
 from ConfigParser import ConfigParser
 from mmc.client.async import Proxy
@@ -35,15 +33,11 @@ log = logging.getLogger()
 class ConfigReader(object):
     """Read and parse config files"""
     def __init__(self):
-        base_ini = os.path.join(mmcconfdir, 
-                                "plugins", 
-                                "base.ini")
         scheduler_ini = os.path.join(mmcconfdir, 
                                       "pulse2",  
                                       "scheduler", 
                                       "scheduler.ini")
 
-        self._base_config = self.get_config(base_ini)
         self._scheduler_config = self.get_config(scheduler_ini)
 
 
@@ -76,15 +70,6 @@ class ConfigReader(object):
         """
         return self._scheduler_config
 
-    @property
-    def base_config(self):
-        """ 
-        Get the configuration from base.ini
-
-        @return: ConfigParser.ConfigParser instance 
-        """
-        return self._base_config
-
 class MMCProxy(object):
     """ Provider to connect at mmc-agent """
     def __init__(self): 
@@ -92,7 +77,6 @@ class MMCProxy(object):
         config = ConfigReader()
 
         self.scheduler_config = config.scheduler_config
-        self.base_config = config.base_config
 
         self._url = None
         self._proxy = None
@@ -114,29 +98,14 @@ class MMCProxy(object):
         log.debug("Building the connection URL at mmc-agent") 
         self._url = 'https://%s:%s/XMLRPC' % (host, port)
 
-    def _get_ldap_password(self):
-        """ 
-        Password for LDAP authentification 
-
-        @return: string
-        """
-
-        if not self.base_config.has_section("ldap") :
-            log.error("Error while reading the config file: Section 'ldap'")
-            return False
-
-        return self.base_config.get("ldap","password")
-
     def _build_proxy(self):
         """ Builds the XML-RPC proxy to MMC agent. """
         log.debug("Building mmc-agent proxy")
 
-        try :
-            self._proxy = Proxy(self._url, self._username, self._password)
-            log.debug("LDAP Authentication")
-            return self._proxy.callRemote('base.ldapAuth', 'root', self._get_ldap_password())
+        try:
+            return Proxy(self._url, self._username, self._password)
 
-        except Exception, err :
+        except Exception, err:
             log.error("Error while connecting to mmc-agent : %s" % err)
             return False
 
@@ -154,7 +123,7 @@ class RPCClient(MMCProxy) :
     XML-RPC Handler to execute remote functions. 
     """
 
-    def rpc_execute(self, fnc, *args, **kwargs) :
+    def rpc_execute(self, fnc, *args, **kwargs):
         """ 
         Remote execution handler
 
@@ -167,33 +136,8 @@ class RPCClient(MMCProxy) :
         @param kwargs: Arguments of called function
         @type kwargs: **kwargs type (dict) 
         """
+
         d = self.proxy()
 
-        log.debug("Execute remote function %s" % (fnc))
-
-        def _eb(result):
-            log.error("Error while executing remote function: %s" % result)
-
-        def _cb(result):
-            try :
-                ret_msg = self._proxy.callRemote(fnc, *args, **kwargs)
-            except Fault, err :
-                log.error(err)
-                return False
-
-            except SocketError, err :
-                err_code, err_msg = err.args
-                log.error("%s: %s" % (err_code, err_msg))
-                log.error("Service 'mmc-agent' isn't running ?")
-                return False
-
-            except ProtocolError, err :
-                log.error(err)
-                return False
-
-            return ret_msg
-
-        d.addCallback(_cb). \
-                addErrback(_eb)
-
-        return d
+        log.error("Execute remote function %s" % (fnc))
+        return d.callRemote(fnc, *args, **kwargs)

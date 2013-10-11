@@ -57,6 +57,7 @@ NOAUTHNEEDED = ['computerRegister',
                 'getPXEParams',
                 'linkImagingServerToLocation',
                 'computerChangeDefaultMenuItem',
+                'synchroComputer',
                 'getDefaultMenuItem']
 
 
