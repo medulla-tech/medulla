@@ -1236,6 +1236,14 @@ def getRunningCommandsOnHostFromLaunchers(scheduler_name):
 def stopCommandsOnHosts(ids):
     deffereds = [] # will hold all deferred
 
+    # Restore imaging default bootmenus
+    for myCommandOnHostID in ids:
+        (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+        if myCoH.isImagingMenuDone():
+            imgdeferred = ImagingAPI().unsetWOLMenu(myT.target_uuid, myT.target_name)
+            if imgdeferred:
+                deffereds.append(imgdeferred)
+
     if len(ids) > 0:
         log.info('scheduler "%s": STOP: %d commands to stop' % (SchedulerConfig().name, len(ids)))
         for launcher in SchedulerConfig().launchers_uri.values():
@@ -1254,9 +1262,27 @@ def stopCommand(myCommandOnHostID):
     log.debug("command_on_host state is %s" % myCoH.toH())
     log.debug("command state is %s" % myC.toH())
 
-    for launcher in SchedulerConfig().launchers_uri.values():
-        callOnLauncher(None, launcher, 'term_process', myCommandOnHostID)
-    return True
+    if myCoH.isImagingMenuDone():
+        # Restore Bootmenu (No WOL)
+        imgdeferred = ImagingAPI().unsetWOLMenu(myT.target_uuid, myT.target_name)
+
+        def _cb(result, myCommandOnHostID):
+            for launcher in SchedulerConfig().launchers_uri.values():
+                callOnLauncher(None, launcher, 'term_process', myCommandOnHostID)
+            return True
+
+        def _eb(result):
+            log.debug("Restoring bootmenu (No WOL) failed: %s" % result)
+            return False
+
+        imgdeferred.addCallback(_cb, myCommandOnHostID). \
+                addErrback(_eb)
+
+        return True
+    else:
+        for launcher in SchedulerConfig().launchers_uri.values():
+            callOnLauncher(None, launcher, 'term_process', myCommandOnHostID)
+        return True
 
 def startCommand(myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
