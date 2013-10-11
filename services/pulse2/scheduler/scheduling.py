@@ -1237,10 +1237,13 @@ def stopCommandsOnHosts(ids):
     deffereds = [] # will hold all deferred
 
     # Restore imaging default bootmenus
+    message = 'Command stopped'
+    status = 'aborted'
     for myCommandOnHostID in ids:
         (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
         if myCoH.isImagingMenuDone():
-            imgdeferred = ImagingAPI().unsetWOLMenu(myT.target_uuid, myT.target_name)
+            imgdeferred = ImagingAPI().unsetWOLMenu(myT.target_uuid, myT.target_name, \
+                                                   message=message, status=status)
             if imgdeferred:
                 deffereds.append(imgdeferred)
 
@@ -1264,7 +1267,10 @@ def stopCommand(myCommandOnHostID):
 
     if myCoH.isImagingMenuDone():
         # Restore Bootmenu (No WOL)
-        imgdeferred = ImagingAPI().unsetWOLMenu(myT.target_uuid, myT.target_name)
+        message = 'Command stopped'
+        status = 'aborted'
+        imgdeferred = ImagingAPI().unsetWOLMenu(myT.target_uuid, myT.target_name, \
+                                               message=message, status=status)
 
         def _cb(result, myCommandOnHostID):
             for launcher in SchedulerConfig().launchers_uri.values():
