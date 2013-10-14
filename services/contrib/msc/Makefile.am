@@ -29,11 +29,14 @@ EXTRA_DIST = pulse2-msc-clean-database.README \
 	analysis/scheduler_health_using_logs.py \
 	analysis/command_evolution_using_logs.py \
 	analysis/command_evolution_from_history_table.py \
+	quick_actions/101mdv_test_utf8.msc \
+	quick_actions/102mdv_test_blocking.msc \
+	quick_actions/103mdv_test_demux.msc \
 	quick_actions/104mdv_test_sleep_1minute.msc \
 	quick_actions/001reboot.msc \
-	quick_actions/101mdv_test_utf8.msc \
 	quick_actions/002shutdown.msc \
+	quick_actions/006run_inventory_win32.msc \
 	quick_actions/007wake_on_lan.msc \
-	quick_actions/103mdv_test_demux.msc \
-	quick_actions/102mdv_test_blocking.msc \
-	quick_actions/006run_inventory_win32.msc
+	quick_actions/008remote_desktop_without_approval.msc \
+	quick_actions/009remote_desktop_with_approval.msc \
+	quick_actions/010wol_with_imaging.msc
