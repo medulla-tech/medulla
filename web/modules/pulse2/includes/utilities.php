@@ -98,4 +98,11 @@ function getEntitiesSelectableElements($AllEntitiesValue = False) {
     return array($list, $values);
 }
 
+/*
+ *  * Convert timestamp to date
+ *   */
+
+function timestamp_to_date($timestamp) {
+        return date('Y/m/d', $timestamp);
+}
 ?>
