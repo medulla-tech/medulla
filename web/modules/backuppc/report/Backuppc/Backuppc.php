@@ -228,7 +228,7 @@ elseif (isset($_POST['display_results'])) {
              */
 
             $kargs['entities'] = $entity_id;
-            $span = new ReportSVG('backuppc_server_disc_space', array('backuppc', 'Backuppc.Backuppc', 'get_backuppc_used_disc_space_per_machine_svg', $args, $kargs));
+            $span = new ReportSVG('backuppc_disc_space_per_machine', array('backuppc', 'Backuppc.Backuppc', 'get_backuppc_used_disc_space_per_machine_svg', $args, $kargs));
 
             $f->add((new multicol())
                 ->add($table, '60%', '0 2% 0 0')
