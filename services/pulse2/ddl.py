@@ -395,6 +395,8 @@ class DBControl :
                                                    version_to_install)
             for script in scripts :
                 if self.script_manager.execute(script) is None:
+                    if self.module == 'dyngroup':
+                        self.log.warn('Dyngroup known issue: Check if your MySQL engine is set to InnoDB instead of MyISAM')
 		    return False
             return True
         else :
