@@ -21,7 +21,9 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require('modules/imaging/includes/xmlrpc.inc.php');
+if(in_array("imaging", $_SESSION["modulesList"]))
+    require('modules/imaging/includes/xmlrpc.inc.php');
+
 require_once('modules/dyngroup/includes/dyngroup.php'); // for getPGobject method
 
 function drawGroupShare($nonmemb, $members, $listOfMembers, $diff, $gid, $name) {
