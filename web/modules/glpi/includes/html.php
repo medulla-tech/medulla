@@ -126,7 +126,7 @@ if (isset($this->storedmax)) {
          * Update div
          */
         <?php
-        $url = $this->url."filter='+document.Form".$this->formid.".param.value+'&maxperpage='+maxperpage+'&hide_win_updates='+hide_win_updates+'&history_delta='+history_delta+'".$this->params;
+        $url = $this->url."filter='+encodeURIComponent(document.Form".$this->formid.".param.value)+'&maxperpage='+maxperpage+'&hide_win_updates='+hide_win_updates+'&history_delta='+history_delta+'".$this->params;
         if (isset($this->storedstart) && isset($this->storedend)) {
             $url .= "&start=".$this->storedstart."&end=".$this->storedend;
         }

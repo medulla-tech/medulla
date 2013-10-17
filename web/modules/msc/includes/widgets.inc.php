@@ -419,7 +419,7 @@ class AjaxFilterCommands extends AjaxFilter {
              * Update div
              */
             function updateSearch() {
-                jQuery('#<?php echo $this->divid; ?>').load('<?php echo $this->url; ?>filter=' + document.Form.param.value + '<?php echo $this->params ?>&<?php echo $this->paramname ?>=' + document.Form.<?php echo $this->paramname ?>.value);
+                jQuery('#<?php echo $this->divid; ?>').load('<?php echo $this->url; ?>filter=' + encodeURIComponent(document.Form.param.value) + '<?php echo $this->params ?>&<?php echo $this->paramname ?>=' + document.Form.<?php echo $this->paramname ?>.value);
 
         <?php
         if ($this->refresh) {
@@ -554,7 +554,7 @@ class AjaxFilterCommandsStates extends AjaxFilter {
              */
             function updateSearch() {
                 clearTimers();
-                jQuery('#<?php echo $this->divid; ?>').load('<?php echo $this->url; ?>filter=' + document.Form.param.value + '<?php echo $this->params ?>&<?php echo $this->paramname1 ?>=' + document.Form.<?php echo $this->paramname1 ?>.value + '&<?php echo $this->paramname2 ?>=' + document.Form.<?php echo $this->paramname2 ?>.value);
+                jQuery('#<?php echo $this->divid; ?>').load('<?php echo $this->url; ?>filter=' + encodeURIComponent(document.Form.param.value) + '<?php echo $this->params ?>&<?php echo $this->paramname1 ?>=' + document.Form.<?php echo $this->paramname1 ?>.value + '&<?php echo $this->paramname2 ?>=' + document.Form.<?php echo $this->paramname2 ?>.value);
 
         <?php
         if ($this->refresh) {
