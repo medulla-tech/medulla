@@ -138,9 +138,13 @@ class DBScriptLaunchInterface :
         @param filename: script to execute
         @type filename: str
         """
-        process = Popen(self.cmd, stdout=PIPE, stdin=PIPE, shell=True)
+        process = Popen(self.cmd, stdout=PIPE, stdin=PIPE, stderr=PIPE, shell=True)
         try:
-            return process.communicate('source ' + filename)[0]
+            ret, err = process.communicate('source ' + filename)
+	    if err:
+                self.log.error("Error while execute script '%s': %s" % (filename, err))
+		return None
+	    return ret
         except Exception, exc:
             self.log.error("Error while execute script '%s': %s" % (filename, str(exc)))
             return None
@@ -390,7 +394,8 @@ class DBControl :
             scripts = self._get_scripts_to_install(version_in_db, 
                                                    version_to_install)
             for script in scripts :
-                self.script_manager.execute(script)
+                if self.script_manager.execute(script) is None:
+		    return False
             return True
         else :
             self.log.error("Database '%s' version conflict" % self.module)
