@@ -21,10 +21,12 @@
 import pygal
 from os import chmod
 from pygal.style import Style
-from datetime import datetime
+from datetime import datetime, timedelta
 from base64 import b64encode
 
 from mmc.plugins.backuppc.database import ReportDatabase
+from mmc.plugins.backuppc import bpc
+from mmc.plugins.base.computers import ComputerManager
 
 class Backuppc(object):
     def get_backuppc_server_disc_space(self, *args, **kargs):
@@ -292,3 +294,34 @@ class Backuppc(object):
             chmod(filepath, 0644)
             return filepath
         return line_chart.render()
+
+    def get_backuppc_last_backup_date(self, *args, **kargs):
+        entities = [int(str(x).replace('UUID', '')) for x in [kargs['entities']]]
+
+        def get_computer_hostname(uuid, computers_list):
+            if uuid in computers_list:
+                return computers_list[uuid][1]['cn'][0]
+            else:
+                return uuid
+        def get_last_backup_timestamp(last_backup):
+            now = datetime.now()
+            delta = timedelta(float(last_backup))
+            return (now - delta).strftime('%s')
+
+        ret = {}
+        for entity in entities:
+            status = bpc.get_global_status('UUID' + str(entity))
+            hosts = status['data']['hosts']
+            last_backup = status['data']['last_backup']
+            computers_list = ComputerManager().getComputersList({'uuids': [uuid.upper() for uuid in hosts if uuid != 'localhost']})
+            ret[str(entity)] = {
+                'hosts': [get_computer_hostname(uuid.upper(), computers_list) for uuid in hosts],
+                'last_backup': [get_last_backup_timestamp(x) for x in last_backup],
+            }
+        return ret
+
+    def get_backuppc_last_backup_date_xls(self, *args, **kargs):
+        pass
+
+    def get_backuppc_last_backup_date_pdf(self, *args, **kargs):
+        pass

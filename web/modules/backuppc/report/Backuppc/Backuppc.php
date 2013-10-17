@@ -112,6 +112,19 @@ if (!array_intersect_key($_POST, array('display_results' => '', 'get_xls' => '',
 
     $f->pop(); // pop table
     $f->pop(); // pop div
+
+    $f->push(new Table());
+
+    /*
+     * BackupPC Last Backup Date
+     */
+
+    $f->add(new TrFormElement(
+        _T('BackupPC Last Backup Date', 'report'), 
+        new CheckboxTpl("backuppc_last_backup_date")), array("value" => False ? "checked" : "")
+    );
+
+    $f->pop(); // pop table
 }
 // second step, display results
 elseif (isset($_POST['display_results'])) {
@@ -240,7 +253,63 @@ elseif (isset($_POST['display_results'])) {
         if (isset($_SESSION['report_files']['backuppc']['Used Disc Space Per Machine']))
             unset($_SESSION['report_files']['backuppc']['Used Disc Space Per Machine']);
     }
+    if ($_POST['backuppc_last_backup_date']) {
+        /*
+         * Title
+         */
 
+        $f->push(new Div());
+        $title = new TitleElement(_T("BackupPC Last Backup Date", "report"));
+        $f->add($title);
+        $f->pop();
+
+        /*
+         * Table
+         */
+
+        $args = array();
+
+        $kargs = array('entities' => $_POST['entities']);
+
+        $_SESSION['report_files']['backuppc']['BackupPC Last Backup Date'] = array('backuppc', 'Backuppc.Backuppc', 'get_backuppc_last_backup_date', $args, $kargs);
+        $result = get_report_datas('backuppc', 'Backuppc.Backuppc', 'get_backuppc_last_backup_date', $args, $kargs);
+
+        #foreach ($result as $entity_id => $values) {
+        #    ksort($values);
+
+        #    $table = null;
+        #    foreach ($values as $k => $v) {
+        #        if ($table == null) {
+        #            $table = new OptimizedListInfos($v, "");
+        #        }
+        #        else {
+        #            $table->addExtraInfo($v, timestamp_to_date($k));
+        #        }
+        #    }
+
+        #    if ($table) {
+        #        $table->setNavBar(new AjaxNavBar($itemCount, $filter));
+        #    }
+
+        #    /*
+        #     * SVG
+        #     */
+
+        #    $kargs = array(
+        #        'entities' => $entity_id,
+        #    );
+        #    $span = new ReportSVG('backuppc_server_disc_space', array('backuppc', 'Backuppc.Backuppc', 'get_backuppc_server_disc_space_svg', $args, $kargs));
+
+        #    $f->add((new multicol())
+        #        ->add($table, '60%', '0 2% 0 0')
+        #        ->add($span, '40%')
+        #    );
+        #}
+    }
+    else {
+        if (isset($_SESSION['report_files']['backuppc']['BackupPC Last Backup Date']))
+            unset($_SESSION['report_files']['backuppc']['BackupPC Last Backup Date']);
+    }
 }
 // third step, get xls or pdf report, nothing to do here
 else {
