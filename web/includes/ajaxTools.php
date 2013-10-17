@@ -116,7 +116,7 @@ if (strstr($action,'?')===False) {
             launch--;
 
             if (launch==0) {
-                jQuery("#container").load('<?php echo  $action ?>&filter='+document.Form.param.value);
+                jQuery("#container").load('<?php echo  $action ?>&filter='+encodeURIComponent(document.Form.param.value));
             }
         }
 
@@ -125,7 +125,7 @@ if (strstr($action,'?')===False) {
         */
 
         function updateSearchParam(filter, start, end) {
-            jQuery("#container").load('<?php echo  $action ?>&filter='+filter+'&start='+start+'&end='+end);
+            jQuery("#container").load('<?php echo  $action ?>&filter='+encodeURIComponent(filter)+'&start='+start+'&end='+end);
         }
 
         /**

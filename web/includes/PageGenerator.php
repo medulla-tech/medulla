@@ -1274,7 +1274,7 @@ class AjaxFilter extends HtmlElement {
              * Update div
              */
         <?php
-        $url = $this->url . "filter='+document.Form" . $this->formid . ".param.value+'&maxperpage='+maxperpage+'" . $this->params;
+        $url = $this->url . "filter='+encodeURIComponent(document.Form" . $this->formid . ".param.value)+'&maxperpage='+maxperpage+'" . $this->params;
         if (isset($this->storedstart) && isset($this->storedend)) {
             $url .= "&start=" . $this->storedstart . "&end=" . $this->storedend;
         }
@@ -1459,7 +1459,7 @@ class AjaxFilterLocation extends AjaxFilter {
 
                 if (launch == 0) {
                     jQuery.ajax({
-                        'url': '<?php echo $this->url; ?>filter=' + document.Form.param.value + '<?php echo $this->params ?>&<?php echo $this->paramname ?>=' + document.Form.<?php echo $this->paramname ?>.value + '&maxperpage=' + maxperpage,
+                        'url': '<?php echo $this->url; ?>filter=' + encodeURIComponent(document.Form.param.value) + '<?php echo $this->params ?>&<?php echo $this->paramname ?>=' + document.Form.<?php echo $this->paramname ?>.value + '&maxperpage=' + maxperpage,
                         type: 'get',
                         success: function(data) {
                             jQuery("#<?php echo $this->divid; ?>").html(data);
@@ -1494,7 +1494,7 @@ class AjaxFilterLocation extends AjaxFilter {
                     maxperpage = jQuery('#maxperpage').val();
 
                 jQuery.ajax({
-                    'url': '<?php echo $this->url; ?>filter=' + filter + '<?php echo $this->params ?>&<?php echo $this->paramname ?>=' + location + '&start=' + start + '&end=' + end + '&maxperpage=' + maxperpage,
+                    'url': '<?php echo $this->url; ?>filter=' + encodeURIComponent(filter) + '<?php echo $this->params ?>&<?php echo $this->paramname ?>=' + location + '&start=' + start + '&end=' + end + '&maxperpage=' + maxperpage,
                     type: 'get',
                     success: function(data) {
                         jQuery("#<?php echo $this->divid; ?>").html(data);

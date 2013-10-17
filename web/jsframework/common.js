@@ -53,7 +53,7 @@ function updateSearchGroup() {   // ===> NOT USED
     launch--;
 
     if (launch==0) {
-        jQuery('#groupContainer').load('main.php?module=base&submod=groups&action=ajaxFilter&filter='+document.groupForm.param.value);
+        jQuery('#groupContainer').load('main.php?module=base&submod=groups&action=ajaxFilter&filter='+encodeURIComponent(document.groupForm.param.value));
     }
 }
 

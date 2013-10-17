@@ -386,7 +386,7 @@ class AjaxFilterLog extends AjaxFilter {
                 if (document.getElementById('param') == null)
                     jQuery('#<?php echo  $this->divid; ?>').load('<?php echo  $this->url; ?>filter=&filtertype='+document.Form.filtertype.value+'&begindate='+encodeURI(document.Form.begindate.value)+'&enddate='+document.Form.enddate.value+'&page=<?php echo  $this->page; ?>');
                 else
-                    jQuery('#<?php echo  $this->divid; ?>').load('<?php echo  $this->url; ?>filter='+document.Form.param.value+'&filtertype='+document.Form.filtertype.value+'&begindate='+encodeURI(document.Form.begindate.value)+'&enddate='+document.Form.enddate.value+'&page=<?php echo  $this->page; ?>');
+                    jQuery('#<?php echo  $this->divid; ?>').load('<?php echo  $this->url; ?>filter='+encodeURIComponent(document.Form.param.value)+'&filtertype='+document.Form.filtertype.value+'&begindate='+encodeURI(document.Form.begindate.value)+'&enddate='+document.Form.enddate.value+'&page=<?php echo  $this->page; ?>');
             }
         }
 
@@ -399,7 +399,7 @@ class AjaxFilterLog extends AjaxFilter {
             var tableau = filter.split(reg);
             filter = tableau[0];
             var location = tableau[1];
-            jQuery('#<?php echo  $this->divid; ?>').load('<?php echo  $this->url; ?>filter='+document.Form.param.value+'&filtertype='+document.Form.filtertype.value+'&begindate='+encodeURI(document.Form.begindate.value)+'&enddate='+document.Form.enddate.value+'&page=<?php echo  $this->page; ?>&start='+start+'&end='+end);
+            jQuery('#<?php echo  $this->divid; ?>').load('<?php echo  $this->url; ?>filter='+encodeURIComponent(document.Form.param.value)+'&filtertype='+document.Form.filtertype.value+'&begindate='+encodeURI(document.Form.begindate.value)+'&enddate='+document.Form.enddate.value+'&page=<?php echo  $this->page; ?>&start='+start+'&end='+end);
             }
 
         /**
