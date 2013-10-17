@@ -2629,8 +2629,9 @@ class ImagingRpcProxy(RpcProxyI):
             d.addCallback(treatAddComputersToProfile)
         else:
             logger.debug("computer %s (%s) dont need registration" % (hostname, MACAddress))
-            d = defer.succeed(uuid)
-
+            # Synchronize menu
+            d = self.synchroComputer(uuid)
+            d.addCallback(sendResult, uuid)
         return d
 
     def imagingServerRegister(self, name, url, uuid):
