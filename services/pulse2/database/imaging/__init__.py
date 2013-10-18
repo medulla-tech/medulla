@@ -34,7 +34,7 @@ from pulse2.utils import isUUID
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 from pulse2.database.imaging.types import P2ISS, P2IT, P2IM, P2IIK, P2ERR, P2ILL
 from pulse2.database import database_helper
-from pulse2.database.utilities import toUUID
+from pulse2.database.utilities import toUUID, fromUUID
 
 from sqlalchemy import create_engine, ForeignKey, Integer, MetaData, Table, Column, and_, or_, desc, func, distinct
 from sqlalchemy.orm import create_session, mapper, relation
@@ -4022,6 +4022,27 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = q.count()
         session.close()
         return q
+
+    def getAComputerWithThisPostInstallScript(self, pis_uuid):
+        """
+        Get a computer with a master attached who contains this postinstall script
+        @param pis_uuid: Postinstall script UUID
+        @type pis_uuid: str
+
+        @return: Computer UUID if any, else False
+        @rtype: str or bool
+        """
+        session = create_session()
+        query = session.query(PostInstallScriptInImage).filter(PostInstallScriptInImage.fk_post_install_script == fromUUID(pis_uuid))
+        session.close()
+
+        for pis in query:
+            master_uuid = toUUID(pis.fk_image)
+            used = self.areImagesUsed([[master_uuid, '', '']])
+            if len(used[master_uuid]) > 0:
+                if used[master_uuid][0][1] != -1: # Master is attached to default boot menu
+                    return used[master_uuid][0][0]
+        return False
 
     def getPostInstallScript(self, pis_uuid, session = None, location_id = None):
         session_need_to_close = False

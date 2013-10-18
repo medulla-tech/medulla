@@ -167,6 +167,9 @@ def toH(w):
 def toUUID(id):
     return "UUID%s" % (str(id))
 
+def fromUUID(uuid):
+    return int(uuid.replace('UUID', ''))
+
 class DbObject(object):
     def toH(self):
         ret = {}

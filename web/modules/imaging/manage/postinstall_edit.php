@@ -72,8 +72,20 @@ if (count($_POST) > 0) {
     $script_desc = $_POST["postinstall_desc"];
 
     if ($task == "edit"){
+        /*
+         * First step, we edit postinstall script on database
+         * Second step, we must edit postinstall script on /var/lib/pulse2/imaging/master/postinst.d/
+         * To do this, we have to check if a machine have a linked master with this postinstall script
+         * If True, synchronize bootmenu of this computer will update postinstall script
+         */
         // store new values for script
         $ret = xmlrpc_editPostInstallScript($script_id, array('default_name'=>$script_name, 'default_desc'=>$script_desc, 'value'=>$script_value));
+        if ($ret) {
+            // If this postinstall script is used, try to update it
+            $computer_uuid = xmlrpc_getAComputerWithThisPostInstallScript($script_id);
+            if ($computer_uuid)
+                $ret = xmlrpc_synchroComputer($computer_uuid);
+        }
     } elseif ($task == "duplicate") {
         // create new script
         $ret = xmlrpc_addPostInstallScript($location, array('default_name'=>$script_name, 'default_desc'=>$script_desc, 'value'=>$script_value));
