@@ -395,8 +395,8 @@ function xmlrpc_delPostInstallScript($script_id) {
     return xmlCall("imaging.delPostInstallScript", array($script_id));
 }
 
-function xmlrpc_getAComputerWithThisPostInstallScript($script_id) {
-    return xmlCall("imaging.getAComputerWithThisPostInstallScript", array($script_id));
+function xmlrpc_getComputersWithThisPostInstallScript($script_id) {
+    return xmlCall("imaging.getComputersWithThisPostInstallScript", array($script_id));
 }
 
 function xmlrpc_editPostInstallScript($script_id, $params) {

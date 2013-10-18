@@ -4023,26 +4023,29 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return q
 
-    def getAComputerWithThisPostInstallScript(self, pis_uuid):
+    def getComputersWithThisPostInstallScript(self, pis_uuid):
         """
-        Get a computer with a master attached who contains this postinstall script
+        For each master who have this postinstall script, get one computer UUID
+        Used to update Postinstall script
+
         @param pis_uuid: Postinstall script UUID
         @type pis_uuid: str
 
-        @return: Computer UUID if any, else False
-        @rtype: str or bool
+        @return: list of Computer UUID
+        @rtype: list
         """
         session = create_session()
         query = session.query(PostInstallScriptInImage).filter(PostInstallScriptInImage.fk_post_install_script == fromUUID(pis_uuid))
         session.close()
 
+        ret = []
         for pis in query:
             master_uuid = toUUID(pis.fk_image)
             used = self.areImagesUsed([[master_uuid, '', '']])
             if len(used[master_uuid]) > 0:
                 if used[master_uuid][0][1] != -1: # Master is attached to default boot menu
-                    return used[master_uuid][0][0]
-        return False
+                    ret.append(used[master_uuid][0][0])
+        return ret
 
     def getPostInstallScript(self, pis_uuid, session = None, location_id = None):
         session_need_to_close = False

@@ -2324,7 +2324,7 @@ class ImagingRpcProxy(RpcProxyI):
         except Exception, e:
             return xmlrpcCleanup([False, e])
 
-    def getAComputerWithThisPostInstallScript(self, pis_uuid):
+    def getComputersWithThisPostInstallScript(self, pis_uuid):
         """
         Get a computer who have a master attached with this postinstall script
         Used to update postinstall script on /var/lib/pulse2/imaging/master/postinst.d/
@@ -2332,10 +2332,10 @@ class ImagingRpcProxy(RpcProxyI):
         @param pis_uuid: postinstall script UUID
         @type pis_uuid: str
 
-        @return: a computer UUID if any, else False
-        @rtype: str or bool
+        @return: list of Computer UUID
+        @rtype: list
         """
-        return xmlrpcCleanup(ImagingDatabase().getAComputerWithThisPostInstallScript(pis_uuid))
+        return xmlrpcCleanup(ImagingDatabase().getComputersWithThisPostInstallScript(pis_uuid))
 
     def editPostInstallScript(self, pis_uuid, params):
         """
