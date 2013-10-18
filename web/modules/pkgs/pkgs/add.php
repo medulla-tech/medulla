@@ -21,7 +21,6 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 
@@ -42,7 +41,9 @@ if (isset($_POST['bconfirm'])) {
     $need_assign = True;
     $mode = $_POST['mode'];
     $level = 0;
-    if ($mode == "creation") { $level = 1; }
+    if ($mode == "creation") {
+        $level = 1;
+    }
 
     foreach (array('id', 'label', 'version', 'description', 'mode') as $post) {
         $package[$post] = $_POST[$post];
@@ -50,9 +51,9 @@ if (isset($_POST['bconfirm'])) {
     foreach (array('reboot') as $post) {
         $package[$post] = ($_POST[$post] == 'on' ? 1 : 0);
     }
-    foreach (array('command') as $post) {
-        $package[$post] = array('name'=>$_POST[$post.'name'], 'command'=>stripslashes($_POST[$post.'cmd']));
-    }
+    // Package command
+    $package['command'] = array('name' => $_POST['commandname'], 'command' => $_POST['commandcmd']);
+
     // Send Package Infos via XMLRPC
     $ret = putPackageDetail($p_api_id, $package, $need_assign);
     $pid = $ret[3]['id'];
@@ -62,8 +63,7 @@ if (isset($_POST['bconfirm'])) {
     if (!isXMLRPCError() and $ret and $ret != -1) {
         if ($_POST['package-method'] == "upload") {
             $cbx = array($random_dir);
-        }
-        else if ($_POST['package-method'] == "package") {
+        } else if ($_POST['package-method'] == "package") {
             $cbx = array();
             foreach ($_POST as $post => $v) {
                 if (preg_match("/cbx_/", $post) > 0) {
@@ -82,7 +82,7 @@ if (isset($_POST['bconfirm'])) {
                     $explain = sprintf(" : <br/>%s", implode("<br/>", $ret[1]));
                 }
                 new NotifyWidgetSuccess(sprintf(_T("Files successfully associated with package <b>%s (%s)</b>%s", "pkgs"), $plabel, $pversion, $explain));
-                header("Location: " . urlStrRedirect("pkgs/pkgs/pending", array('location'=>base64_encode($p_api_id))));
+                header("Location: " . urlStrRedirect("pkgs/pkgs/pending", array('location' => base64_encode($p_api_id))));
                 exit;
             } else {
                 $reason = '';
@@ -95,8 +95,7 @@ if (isset($_POST['bconfirm'])) {
             new NotifyWidgetFailure(_T("Failed to associate files", "pkgs"));
         }
     }
-}
-else {
+} else {
     // Get number of PackageApi
     $res = getUserPackageApi();
 
@@ -104,7 +103,9 @@ else {
     $p_api_id = $res[0]['uuid'];
 
     $list_val = $list = array();
-    if (!isset($_SESSION['PACKAGEAPI'])) { $_SESSION['PACKAGEAPI'] = array(); }
+    if (!isset($_SESSION['PACKAGEAPI'])) {
+        $_SESSION['PACKAGEAPI'] = array();
+    }
     foreach ($res as $mirror) {
         $list_val[$mirror['uuid']] = $mirror['uuid'];
         $list[$mirror['uuid']] = $mirror['mountpoint'];
@@ -131,8 +132,7 @@ else {
 
     // Package API
     $f->add(
-        new TrFormElement("<div id=\"p_api_label\">" . _T("Package API", "pkgs") . "</div>", $selectpapi),
-        array("value" => $p_api_id, "required" => True)
+            new TrFormElement("<div id=\"p_api_label\">" . _T("Package API", "pkgs") . "</div>", $selectpapi), array("value" => $p_api_id, "required" => True)
     );
 
     $f->add(new TrFormElement(_T("Package source", "pkgs"), $r), array());
@@ -158,11 +158,11 @@ You may also ask Google for the silent installation switches. If you\'re feeling
 <a href="@@GOOGLE_SEARCH_URL@@">Google search</a>', 'pkgs') . '</span>';
     $command = $command . str_replace('\n', '<br />', $commandHelper);
     $cmds = array(
-        array('command', _T('Command\'s name : ', 'pkgs'), $command),/*
-        array('installInit', _T('installInit', 'pkgs'), _T('Install Init', 'pkgs')),
-        array('preCommand', _T('preCommand', 'pkgs'), _T('Pre Command', 'pkgs')),
-        array('postCommandFailure', _T('postCommandFailure', 'pkgs'), _T('postCommandFailure', 'pkgs')),
-        array('postCommandSuccess', _T('postCommandSuccess', 'pkgs'), _T('postCommandSuccess', 'pkgs')) //*/
+        array('command', _T('Command\'s name : ', 'pkgs'), $command), /*
+              array('installInit', _T('installInit', 'pkgs'), _T('Install Init', 'pkgs')),
+              array('preCommand', _T('preCommand', 'pkgs'), _T('Pre Command', 'pkgs')),
+              array('postCommandFailure', _T('postCommandFailure', 'pkgs'), _T('postCommandFailure', 'pkgs')),
+              array('postCommandSuccess', _T('postCommandSuccess', 'pkgs'), _T('postCommandSuccess', 'pkgs')) // */
     );
 
     $options = array(
@@ -171,26 +171,22 @@ You may also ask Google for the silent installation switches. If you\'re feeling
 
     foreach ($fields as $p) {
         $f->add(
-            new TrFormElement($p[1], new InputTpl($p[0])),
-            array_merge(array("value" => ''), $p[2])
+                new TrFormElement($p[1], new InputTpl($p[0])), array_merge(array("value" => ''), $p[2])
         );
     }
 
     foreach ($options as $p) {
         $f->add(
-            new TrFormElement($p[1], new CheckboxTpl($p[0])),
-            array("value" => '')
+                new TrFormElement($p[1], new CheckboxTpl($p[0])), array("value" => '')
         );
     }
 
     foreach ($cmds as $p) {
         $f->add(
-            new HiddenTpl($p[0].'name'),
-            array("value" => '', "hide" => True)
+                new HiddenTpl($p[0] . 'name'), array("value" => '', "hide" => True)
         );
         $f->add(
-            new TrFormElement($p[2], new TextareaTpl($p[0].'cmd')),
-            array("value" => '')
+                new TrFormElement($p[2], new TextareaTpl($p[0] . 'cmd')), array("value" => '')
         );
     }
 
@@ -205,121 +201,121 @@ You may also ask Google for the silent installation switches. If you\'re feeling
 <link href="modules/pkgs/lib/fileuploader/fileuploader.css" rel="stylesheet" type="text/css"> <!-- css for file upload -->
 
 <script type="text/javascript">
-jQuery(function() { // load this piece of code when page is loaded
-    jQuery('.label span a').each(function() {
-        jQuery(this).attr('href', 'http://www.google.com/#q=file.exe+silent+install');
-        jQuery(this).attr('target', '_blank');
-        return false; // break the loop
-    });
-    /*
-     * Auto fill fields of form
-     * if tempdir is empty (when changing packageAPI)
-     * default tempdir will be chosen in ajaxGetSuggestedCommand
-     * php file.
-     */
-    function fillForm(selectedPapi, tempdir) {
-        url = '<?php echo urlStrRedirect("pkgs/pkgs/ajaxGetSuggestedCommand")?>&papiid=' + selectedPapi;
-        if (tempdir != undefined) {
-            url += '&tempdir=' + tempdir;
-        }
-        
-        jQuery.ajax({
-            'url': url,
-            type: 'get',
-            success: function(data){
-                jQuery('#version').val(data.version);
-                jQuery('#commandcmd').val(data.commandcmd);
-            }
+    jQuery(function() { // load this piece of code when page is loaded
+        jQuery('.label span a').each(function() {
+            jQuery(this).attr('href', 'http://www.google.com/#q=file.exe+silent+install');
+            jQuery(this).attr('target', '_blank');
+            return false; // break the loop
         });
-    }
-    /*
-     * Refresh Package API tempdir content
-     * When called, display available packages
-     * in package API tempdir
-     */
-    function refreshTempPapi() {
-        var packageMethodValue= jQuery('input:checked[type="radio"][name="package-method"]').val();
-        var selectedPapi = jQuery("#p_api").val();
-        if (packageMethodValue == "package") {
-            /*new Ajax.Updater('package-temp-directory', '<?php echo urlStrRedirect("pkgs/pkgs/ajaxRefreshPackageTempDir") ?>&papi=' + selectedPapi, { 
-                method: "get", 
-                    evalScripts: true,
-                    onComplete: fillForm(selectedPapi)
-            });*/
-            
-            jQuery('#package-temp-directory').load('<?php echo urlStrRedirect("pkgs/pkgs/ajaxRefreshPackageTempDir") ?>&papi=' + selectedPapi,function(){
-                fillForm(selectedPapi);
-            });
-            
-        }
-        else {
-            /*new Ajax.Updater('package-temp-directory', '<?php echo urlStrRedirect("pkgs/pkgs/ajaxDisplayUploadForm") ?>&papi=' + selectedPapi, { 
-                method: "get", 
-                evalScripts: true
-            });*/
-            
-            jQuery('#package-temp-directory').load('<?php echo urlStrRedirect("pkgs/pkgs/ajaxDisplayUploadForm") ?>&papi=' + selectedPapi);
-            
-            // reset form fields
-            jQuery('#version').val("");
-            jQuery('#commandcmd').val("");
-        }
-        
-        return selectedPapi;
-    }
-
-    // on page load, display available temp packages
-    var selectedPapi = refreshTempPapi();
-
-    // When change Package API, update available temp packages
-    jQuery('#p_api').change(function() {
-        selectedPapi = refreshTempPapi();
-    });
-
-    
-    jQuery('input[name="package-method"]').click( function() {
-  
-        // display temp package or upload form
-        // according to package-method chosen ("package" or "upload")
-        var selectedValue= jQuery('input:checked[type="radio"][name="package-method"]').val();
-        if (selectedValue == "package") {
-            selectedPapi = refreshTempPapi();
-            jQuery('#directory-label').html("<?php echo _T("Files directory", "pkgs") ?>");
-            jQuery('#directory-label').parent().parent().fadeIn();
-        }
-        else if (selectedValue == "empty"){
-            var jcArray = new Array('label', 'version', 'description', 'commandcmd');
-            for (var dummy in jcArray) {
-                try {
-                    jQuery('#'+jcArray[dummy]).css("background","#FFF");
-                    jQuery('#'+jcArray[dummy]).removeAttr('disabled'); // TODO: Check if no error here
-                }
-                catch (err){
-                    // this php file is prototype ajax request with evalscript
-                    // enabled.
-                }
+        /*
+         * Auto fill fields of form
+         * if tempdir is empty (when changing packageAPI)
+         * default tempdir will be chosen in ajaxGetSuggestedCommand
+         * php file.
+         */
+        function fillForm(selectedPapi, tempdir) {
+            url = '<?php echo urlStrRedirect("pkgs/pkgs/ajaxGetSuggestedCommand") ?>&papiid=' + selectedPapi;
+            if (tempdir != undefined) {
+                url += '&tempdir=' + tempdir;
             }
-            jQuery('#directory-label').parent().parent().fadeOut();
+
+            jQuery.ajax({
+                'url': url,
+                type: 'get',
+                success: function(data) {
+                    jQuery('#version').val(data.version);
+                    jQuery('commandcmd').val(data.commandcmd);
+                }
+            });
         }
-        else if (selectedValue == "upload"){
-            jQuery('#package-temp-directory').load('<?php echo urlStrRedirect("pkgs/pkgs/ajaxDisplayUploadForm") ?>&papi=' + selectedPapi);
-            // reset form fields
-            jQuery('#version').val("");
-            jQuery('#commandcmd').val("");
-            jQuery('#directory-label').html("<?php echo sprintf(_T("Files upload (<b><u title='%s'>%sM max</u></b>)", "pkgs"), _T("Change post_max_size and upload_max_filesize directives in php.ini file to increase upload size.", "pkgs"), get_php_max_upload_size()) ?>");
-            jQuery('#directory-label').parent().parent().fadeIn();
+        /*
+         * Refresh Package API tempdir content
+         * When called, display available packages
+         * in package API tempdir
+         */
+        function refreshTempPapi() {
+            var packageMethodValue = jQuery('input:checked[type="radio"][name="package-method"]').val();
+            var selectedPapi = jQuery("#p_api").val();
+            if (packageMethodValue == "package") {
+                /*new Ajax.Updater('package-temp-directory', '<?php echo urlStrRedirect("pkgs/pkgs/ajaxRefreshPackageTempDir") ?>&papi=' + selectedPapi, {
+                 method: "get",
+                 evalScripts: true,
+                 onComplete: fillForm(selectedPapi)
+                 });*/
+
+                jQuery('#package-temp-directory').load('<?php echo urlStrRedirect("pkgs/pkgs/ajaxRefreshPackageTempDir") ?>&papi=' + selectedPapi, function() {
+                    fillForm(selectedPapi);
+                });
+
+            }
+            else {
+                /*new Ajax.Updater('package-temp-directory', '<?php echo urlStrRedirect("pkgs/pkgs/ajaxDisplayUploadForm") ?>&papi=' + selectedPapi, {
+                 method: "get",
+                 evalScripts: true
+                 });*/
+
+                jQuery('#package-temp-directory').load('<?php echo urlStrRedirect("pkgs/pkgs/ajaxDisplayUploadForm") ?>&papi=' + selectedPapi);
+
+                // reset form fields
+                jQuery('#version').val("");
+                jQuery('#commandcmd').val("");
+            }
+
+            return selectedPapi;
         }
 
+        // on page load, display available temp packages
+        var selectedPapi = refreshTempPapi();
+
+        // When change Package API, update available temp packages
+        jQuery('#p_api').change(function() {
+            selectedPapi = refreshTempPapi();
+        });
+
+
+        jQuery('input[name="package-method"]').click(function() {
+
+            // display temp package or upload form
+            // according to package-method chosen ("package" or "upload")
+            var selectedValue = jQuery('input:checked[type="radio"][name="package-method"]').val();
+            if (selectedValue == "package") {
+                selectedPapi = refreshTempPapi();
+                jQuery('#directory-label').html("<?php echo _T("Files directory", "pkgs") ?>");
+                jQuery('#directory-label').parent().parent().fadeIn();
+            }
+            else if (selectedValue == "empty") {
+                var jcArray = new Array('label', 'version', 'description', 'commandcmd');
+                for (var dummy in jcArray) {
+                    try {
+                        jQuery('#' + jcArray[dummy]).css("background", "#FFF");
+                        jQuery('#' + jcArray[dummy]).removeAttr('disabled'); // TODO: Check if no error here
+                    }
+                    catch (err) {
+                        // this php file is prototype ajax request with evalscript
+                        // enabled.
+                    }
+                }
+                jQuery('#directory-label').parent().parent().fadeOut();
+            }
+            else if (selectedValue == "upload") {
+                jQuery('#package-temp-directory').load('<?php echo urlStrRedirect("pkgs/pkgs/ajaxDisplayUploadForm") ?>&papi=' + selectedPapi);
+                // reset form fields
+                jQuery('#version').val("");
+                jQuery('#commandcmd').val("");
+                jQuery('#directory-label').html("<?php echo sprintf(_T("Files upload (<b><u title='%s'>%sM max</u></b>)", "pkgs"), _T("Change post_max_size and upload_max_filesize directives in php.ini file to increase upload size.", "pkgs"), get_php_max_upload_size()) ?>");
+                jQuery('#directory-label').parent().parent().fadeIn();
+            }
+
+        });
+
     });
-    
-});
 <?php
-    // if one package API, hide field
-    if (count($list) < 2) {
-        echo <<< EOT
+// if one package API, hide field
+if (count($list) < 2) {
+    echo <<< EOT
             // Hide package api field
             jQuery('#p_api').parents('tr:first').hide();
 EOT;
-    }
+}
 ?>
 </script>

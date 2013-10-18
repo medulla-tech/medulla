@@ -54,9 +54,10 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
     foreach (array('reboot') as $post) {
         $package[$post] = ($_POST[$post] == 'on' ? 1 : 0);
     }
-    foreach (array('command') as $post) {
-        $package[$post] = array('name' => $_POST[$post . 'name'], 'command' => stripslashes($_POST[$post . 'cmd']));
-    }
+
+    // Package command
+    $package['command'] = array('name' => $_POST['commandname'], 'command' => $_POST['commandcmd']);
+
     // Send Package Infos via XMLRPC
     $ret = putPackageDetail($p_api_id, $package, $need_assign);
     $plabel = $ret[3]['label'];
