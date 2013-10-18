@@ -395,6 +395,10 @@ class DBControl :
                                                    version_to_install)
             for script in scripts :
                 if self.script_manager.execute(script) is None:
+                    if self.module == 'dyngroup':
+                        self.log.warn('Dyngroup known issue: Maybe your SQL engine is MyISAM, you can check with: SHOW TABLE STATUS')
+                        self.log.warn('Here is SQL request who will help you to convert from MyISAM to InnoBD engine:')
+			self.log.warn('SELECT CONCAT("ALTER TABLE ",table_schema,".",table_name," ENGINE=InnoDB;") FROM information_schema.tables WHERE table_schema="dyngroup";')
 		    return False
             return True
         else :
