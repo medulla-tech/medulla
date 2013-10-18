@@ -286,7 +286,26 @@ if ($_GET['uuid'] != '') {
          * Use an array to display friendly names
          * instead of Ugly table name
          */
-        foreach ($h as $k => $v) {
+        
+	function __sort($a, $b){
+	 
+	 $__order = array('Path','Value');
+	 if (array_search($a, $__order) === FALSE && array_search($b, $__order) === FALSE)
+	   return 0;
+	 if (array_search($a, $__order) === FALSE)
+	   return -1;
+	 if (array_search($b, $__order) === FALSE)
+	   return 1;
+	// print (array_search($a, $__order) .' - '. array_search($b, $__order) );
+	 if (array_search($a, $__order) < array_search($b, $__order) )
+	   return -1;
+	 else
+	   return 1;
+	}
+	// Sorting Columns
+	uksort($h,'__sort');
+	
+	foreach ($h as $k => $v) {
             /*
              * If a machine has many IP Adresses, they are stored like this
              * in database (separated by a slash):
@@ -320,6 +339,7 @@ if ($_GET['uuid'] != '') {
 
                 if ($n == null) {
                     $n = new OptimizedListInfos($v, $k);
+		    //print_r($k);
                 } else {
                     $n->addExtraInfo($v, $k);
                 }

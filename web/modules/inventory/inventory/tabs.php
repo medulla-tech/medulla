@@ -78,7 +78,7 @@ $p->addTab($prefix . "tab$i", _T($tab, 'inventory'), "", "modules/inventory/inve
  */
 
 $i = 1;
-foreach (array('Network', 'Software') as $tab) { // , 'Administrative'
+foreach (array('Network', 'Software', 'Registry') as $tab) { // , 'Administrative'
     $p->addTab($prefix . "tab$i", _T($tab, 'inventory'), "", "modules/inventory/inventory/view_part.php", array('uuid' => $_GET['uuid'], 'hostname' => $_GET['hostname'], 'part' => $tab, 'gid' => $gid, 'groupname' => $groupname));
     $i++;
 }
