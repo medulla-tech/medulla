@@ -472,7 +472,7 @@ class Inventory(DyngroupDatabaseHelper):
                     for inv in row[1]:
                         computers[uuid][1][inv["Path"]] = inv["Value"]
             # Build the result
-            ret = {}
+            ret = []
             for uuid in uuids:
                 ret.append(computers[uuid])
         else:
@@ -480,7 +480,6 @@ class Inventory(DyngroupDatabaseHelper):
             ret = {}
             for m in result: # glpi mapping
                 ret[m.uuid()] = m.toDN(ctx)
-            #ret = map(lambda m: m.toDN(ctx), result) #old inventory mapping
         return ret
 
     # needed by DyngroupDatabaseHelper
