@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-14 01:00+0200\n"
+"POT-Creation-Date: 2013-10-21 01:00+0200\n"
 "PO-Revision-Date: 2013-10-09 12:53+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/"
@@ -60,7 +60,7 @@ msgstr ""
 msgid "<i>undefined</i>"
 msgstr "<i>неопределенный</i>"
 
-#: modules/imaging/manage/postinstall_edit.php:83
+#: modules/imaging/manage/postinstall_edit.php:99
 #, php-format
 msgid "<strong>%s</strong> script %s"
 msgstr "<strong>%s</strong> сценарий %s"
@@ -70,7 +70,7 @@ msgstr "<strong>%s</strong> сценарий %s"
 msgid "<strong>%s</strong> script deleted"
 msgstr "<strong>%s</strong> сценарий удален"
 
-#: modules/imaging/manage/postinstall_edit.php:90
+#: modules/imaging/manage/postinstall_edit.php:106
 #, php-format
 msgid "<strong>%s</strong> script wasn't %s"
 msgstr "<strong>%s</strong> не было сценария %s"
@@ -1418,7 +1418,7 @@ msgstr "Сохранить (конвертируя в снимок)"
 msgid "Save an Imaging Server configuration"
 msgstr "Сохранить настройки Сервера Снимков "
 
-#: modules/imaging/manage/postinstall_edit.php:115
+#: modules/imaging/manage/postinstall_edit.php:131
 msgid "Script value"
 msgstr "Значение сценария"
 
@@ -1779,7 +1779,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxConfiguration.php:191
 #: modules/imaging/manage/bootmenu_edit.php:101
 #: modules/imaging/manage/master_edit.php:70
-#: modules/imaging/manage/postinstall_edit.php:119
+#: modules/imaging/manage/postinstall_edit.php:135
 #: modules/imaging/manage/service_edit.php:69
 msgid "Validate"
 msgstr "Проверка"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-14 01:00+0200\n"
+"POT-Creation-Date: 2013-10-21 01:00+0200\n"
 "PO-Revision-Date: 2013-09-09 15:28+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/"
@@ -40,12 +40,12 @@ msgstr "%s) Искать %s %s (%s) в модуле %s"
 msgid "->"
 msgstr "->"
 
-#: modules/dyngroup/includes/groups.inc.php:243
+#: modules/dyngroup/includes/groups.inc.php:245
 #, php-format
 msgid "<li>%s is part of <a href=\"%s\">%s</a></li>"
 msgstr ""
 
-#: modules/dyngroup/includes/groups.inc.php:265
+#: modules/dyngroup/includes/groups.inc.php:267
 msgid ""
 "<p>These computers will move to this group and their bootmenus <strong>will "
 "be rewritten</strong></p>"
@@ -85,8 +85,8 @@ msgid "Add an imaging group"
 msgstr ""
 
 #: modules/dyngroup/dyngroup/import_from_file.php:57
-#: modules/dyngroup/includes/groups.inc.php:117
-#: modules/dyngroup/includes/groups.inc.php:121
+#: modules/dyngroup/includes/groups.inc.php:119
+#: modules/dyngroup/includes/groups.inc.php:123
 msgid "Add shortcut"
 msgstr ""
 
@@ -98,15 +98,15 @@ msgstr "Все группы"
 msgid "All imaging groups"
 msgstr ""
 
-#: modules/dyngroup/includes/groups.inc.php:176
+#: modules/dyngroup/includes/groups.inc.php:178
 msgid "All machines"
 msgstr "Все машины"
 
-#: modules/dyngroup/includes/groups.inc.php:266
+#: modules/dyngroup/includes/groups.inc.php:268
 msgid "All related images to these computers will be <strong>DELETED</strong>"
 msgstr ""
 
-#: modules/dyngroup/includes/groups.inc.php:36
+#: modules/dyngroup/includes/groups.inc.php:38
 msgid "All share entities"
 msgstr "Общий доступ для всех"
 
@@ -131,8 +131,8 @@ msgstr ""
 
 #: modules/dyngroup/dyngroup/delete_group.php:77
 #: modules/dyngroup/dyngroup/remove_machine.php:58
-#: modules/dyngroup/includes/groups.inc.php:84
-#: modules/dyngroup/includes/groups.inc.php:279
+#: modules/dyngroup/includes/groups.inc.php:86
+#: modules/dyngroup/includes/groups.inc.php:281
 msgid "Cancel"
 msgstr "Отмена"
 
@@ -188,16 +188,16 @@ msgstr "Computers Group Sub Request Editor"
 msgid "Computers list has been truncated at %d computers"
 msgstr "Список компьютеров был усечен до %d компьютеров "
 
-#: modules/dyngroup/includes/groups.inc.php:240
+#: modules/dyngroup/includes/groups.inc.php:242
 msgid "Computers listed below are already part of another imaging group."
 msgstr ""
 
-#: modules/dyngroup/includes/groups.inc.php:255
+#: modules/dyngroup/includes/groups.inc.php:257
 msgid "Computers listed below are already stand-alone registered in imaging."
 msgstr ""
 
-#: modules/dyngroup/includes/groups.inc.php:83
-#: modules/dyngroup/includes/groups.inc.php:278
+#: modules/dyngroup/includes/groups.inc.php:85
+#: modules/dyngroup/includes/groups.inc.php:280
 msgid "Confirm"
 msgstr "Подтвердить"
 
@@ -357,16 +357,16 @@ msgstr "Не удалось предоставить общий доступ к 
 msgid "Group list"
 msgstr "Список групп"
 
-#: modules/dyngroup/includes/groups.inc.php:118
-#: modules/dyngroup/includes/groups.inc.php:122
+#: modules/dyngroup/includes/groups.inc.php:120
+#: modules/dyngroup/includes/groups.inc.php:124
 msgid "Group members"
 msgstr "Участники группы"
 
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:78
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:80
 #: modules/dyngroup/dyngroup/import_from_file.php:51
-#: modules/dyngroup/includes/groups.inc.php:116
-#: modules/dyngroup/includes/groups.inc.php:120
+#: modules/dyngroup/includes/groups.inc.php:118
+#: modules/dyngroup/includes/groups.inc.php:122
 msgid "Group name"
 msgstr "Имя группы"
 
@@ -374,7 +374,7 @@ msgstr "Имя группы"
 msgid "Group of computers details"
 msgstr "Информация о группе компьютеров"
 
-#: modules/dyngroup/includes/groups.inc.php:59
+#: modules/dyngroup/includes/groups.inc.php:61
 msgid "Group share"
 msgstr "Общий доступ к группе"
 
@@ -521,7 +521,7 @@ msgstr "Имя :"
 
 #: modules/dyngroup/dyngroup/creator.php:256
 #: modules/dyngroup/dyngroup/import_from_file.php:54
-#: modules/dyngroup/includes/groups.inc.php:166
+#: modules/dyngroup/includes/groups.inc.php:168
 msgid "No"
 msgstr "Нет"
 
@@ -745,7 +745,7 @@ msgstr "видимая"
 #: modules/dyngroup/dyngroup/creator.php:255
 #: modules/dyngroup/dyngroup/creator.php:261
 #: modules/dyngroup/dyngroup/import_from_file.php:54
-#: modules/dyngroup/includes/groups.inc.php:165
+#: modules/dyngroup/includes/groups.inc.php:167
 msgid "Yes"
 msgstr "Да"
 

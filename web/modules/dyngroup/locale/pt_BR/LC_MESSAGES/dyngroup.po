@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-14 01:00+0200\n"
+"POT-Creation-Date: 2013-10-21 01:00+0200\n"
 "PO-Revision-Date: 2013-10-10 16:36+0000\n"
 "Last-Translator: Marcos Polidoro <marcos@mandriva.com.br>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
@@ -43,12 +43,12 @@ msgstr "%s) Procurar %s %s (%s) no modulo %s"
 msgid "->"
 msgstr "->"
 
-#: modules/dyngroup/includes/groups.inc.php:243
+#: modules/dyngroup/includes/groups.inc.php:245
 #, php-format
 msgid "<li>%s is part of <a href=\"%s\">%s</a></li>"
 msgstr "<li>%s é parte de <a href=\"%s\">%s</a></li>"
 
-#: modules/dyngroup/includes/groups.inc.php:265
+#: modules/dyngroup/includes/groups.inc.php:267
 msgid ""
 "<p>These computers will move to this group and their bootmenus <strong>will "
 "be rewritten</strong></p>"
@@ -90,8 +90,8 @@ msgid "Add an imaging group"
 msgstr "Adicionar um grupo de imagem"
 
 #: modules/dyngroup/dyngroup/import_from_file.php:57
-#: modules/dyngroup/includes/groups.inc.php:117
-#: modules/dyngroup/includes/groups.inc.php:121
+#: modules/dyngroup/includes/groups.inc.php:119
+#: modules/dyngroup/includes/groups.inc.php:123
 msgid "Add shortcut"
 msgstr "Adicionar Atalho"
 
@@ -103,17 +103,17 @@ msgstr "Todos os grupos"
 msgid "All imaging groups"
 msgstr "Todos os grupo de imagem"
 
-#: modules/dyngroup/includes/groups.inc.php:176
+#: modules/dyngroup/includes/groups.inc.php:178
 msgid "All machines"
 msgstr "Todas os computadores"
 
-#: modules/dyngroup/includes/groups.inc.php:266
+#: modules/dyngroup/includes/groups.inc.php:268
 msgid "All related images to these computers will be <strong>DELETED</strong>"
 msgstr ""
 "Todas as imagens relacionadas a esse computador serão <strong>DELETADAS</"
 "strong>"
 
-#: modules/dyngroup/includes/groups.inc.php:36
+#: modules/dyngroup/includes/groups.inc.php:38
 msgid "All share entities"
 msgstr "Todas as entradas compartilhadas"
 
@@ -139,8 +139,8 @@ msgstr ""
 
 #: modules/dyngroup/dyngroup/delete_group.php:77
 #: modules/dyngroup/dyngroup/remove_machine.php:58
-#: modules/dyngroup/includes/groups.inc.php:84
-#: modules/dyngroup/includes/groups.inc.php:279
+#: modules/dyngroup/includes/groups.inc.php:86
+#: modules/dyngroup/includes/groups.inc.php:281
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -196,17 +196,17 @@ msgstr "Edição Subconsulta de Grupo de Computadores"
 msgid "Computers list has been truncated at %d computers"
 msgstr "A lista de computadores foi reduzida em %d computadores"
 
-#: modules/dyngroup/includes/groups.inc.php:240
+#: modules/dyngroup/includes/groups.inc.php:242
 msgid "Computers listed below are already part of another imaging group."
 msgstr ""
 "Os computadores listados abaixo já fazem parte de outro grupo de imagem."
 
-#: modules/dyngroup/includes/groups.inc.php:255
+#: modules/dyngroup/includes/groups.inc.php:257
 msgid "Computers listed below are already stand-alone registered in imaging."
 msgstr "Os computadores listados abaixo já estão registrados."
 
-#: modules/dyngroup/includes/groups.inc.php:83
-#: modules/dyngroup/includes/groups.inc.php:278
+#: modules/dyngroup/includes/groups.inc.php:85
+#: modules/dyngroup/includes/groups.inc.php:280
 msgid "Confirm"
 msgstr "Confirmar"
 
@@ -366,16 +366,16 @@ msgstr "Grupo falhou ao tentar compartilhar"
 msgid "Group list"
 msgstr "Lista de grupos"
 
-#: modules/dyngroup/includes/groups.inc.php:118
-#: modules/dyngroup/includes/groups.inc.php:122
+#: modules/dyngroup/includes/groups.inc.php:120
+#: modules/dyngroup/includes/groups.inc.php:124
 msgid "Group members"
 msgstr "Membros do grupo"
 
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:78
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:80
 #: modules/dyngroup/dyngroup/import_from_file.php:51
-#: modules/dyngroup/includes/groups.inc.php:116
-#: modules/dyngroup/includes/groups.inc.php:120
+#: modules/dyngroup/includes/groups.inc.php:118
+#: modules/dyngroup/includes/groups.inc.php:122
 msgid "Group name"
 msgstr "Nome do grupo"
 
@@ -383,7 +383,7 @@ msgstr "Nome do grupo"
 msgid "Group of computers details"
 msgstr "Detalhes do grupo de computadores"
 
-#: modules/dyngroup/includes/groups.inc.php:59
+#: modules/dyngroup/includes/groups.inc.php:61
 msgid "Group share"
 msgstr "Compartilhamento de grupo"
 
@@ -532,7 +532,7 @@ msgstr "Nome :"
 
 #: modules/dyngroup/dyngroup/creator.php:256
 #: modules/dyngroup/dyngroup/import_from_file.php:54
-#: modules/dyngroup/includes/groups.inc.php:166
+#: modules/dyngroup/includes/groups.inc.php:168
 msgid "No"
 msgstr "Não"
 
@@ -756,7 +756,7 @@ msgstr "visível"
 #: modules/dyngroup/dyngroup/creator.php:255
 #: modules/dyngroup/dyngroup/creator.php:261
 #: modules/dyngroup/dyngroup/import_from_file.php:54
-#: modules/dyngroup/includes/groups.inc.php:165
+#: modules/dyngroup/includes/groups.inc.php:167
 msgid "Yes"
 msgstr "Sim"
 
