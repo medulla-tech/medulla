@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-10-07 01:04+0200\n"
-"PO-Revision-Date: 2013-10-13 23:01+0000\n"
+"POT-Creation-Date: 2013-10-17 10:59+0200\n"
+"PO-Revision-Date: 2013-10-20 23:01+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -301,20 +301,6 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: includes/ajaxTools.php:63 includes/ajaxTools.php:69
-#: includes/PageGenerator.php:853 includes/PageGenerator.php:1099
-#: modules/base/includes/AjaxFilterLog.inc.php:96
-#: modules/base/includes/AjaxFilterLog.inc.php:100
-msgid "Previous"
-msgstr ""
-
-#: includes/ajaxTools.php:74 includes/ajaxTools.php:82
-#: includes/PageGenerator.php:867 includes/PageGenerator.php:1109
-#: modules/base/includes/AjaxFilterLog.inc.php:107
-#: modules/base/includes/AjaxFilterLog.inc.php:111
-msgid "Next"
-msgstr ""
-
 #: includes/modules.inc.php:384
 #, php-format
 msgid "%s service restarting..."
@@ -347,6 +333,20 @@ msgstr ""
 
 #: includes/PageGenerator.php:549 includes/PageGenerator.php:777
 msgid "page"
+msgstr ""
+
+#: includes/PageGenerator.php:853 includes/PageGenerator.php:1099
+#: includes/ajaxTools.php:63 includes/ajaxTools.php:69
+#: modules/base/includes/AjaxFilterLog.inc.php:96
+#: modules/base/includes/AjaxFilterLog.inc.php:100
+msgid "Previous"
+msgstr ""
+
+#: includes/PageGenerator.php:867 includes/PageGenerator.php:1109
+#: includes/ajaxTools.php:74 includes/ajaxTools.php:82
+#: modules/base/includes/AjaxFilterLog.inc.php:107
+#: modules/base/includes/AjaxFilterLog.inc.php:111
+msgid "Next"
 msgstr ""
 
 #: includes/PageGenerator.php:887
