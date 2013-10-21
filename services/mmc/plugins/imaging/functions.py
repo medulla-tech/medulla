@@ -2352,9 +2352,14 @@ class ImagingRpcProxy(RpcProxyI):
             * the error in case of failure
         @rtype: list
         """
-        # TODO should be sync
         try:
-            return xmlrpcCleanup(ImagingDatabase().editPostInstallScript(pis_uuid, params))
+            db = ImagingDatabase()
+            res_db = db.editPostInstallScript(pis_uuid, params)
+            if res_db:
+                computer_uuids = self.getComputersWithThisPostInstallScript(pis_uuid)
+                return self.__synchroTargets(computer_uuids, P2IT.COMPUTER)
+
+            return xmlrpcCleanup(res_db)
         except Exception, e:
             return xmlrpcCleanup([False, e])
 

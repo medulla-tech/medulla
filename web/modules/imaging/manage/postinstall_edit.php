@@ -81,15 +81,6 @@ if (count($_POST) > 0) {
          */
         // store new values for script
         $ret = xmlrpc_editPostInstallScript($script_id, array('default_name'=>$script_name, 'default_desc'=>$script_desc, 'value'=>$script_value));
-        if ($ret) {
-            // If this postinstall script is used, try to update it
-            $computer_uuids = xmlrpc_getComputersWithThisPostInstallScript($script_id);
-            foreach ($computer_uuids as $computer_uuid) {
-                if ($ret) {
-                    $ret = xmlrpc_synchroComputer($computer_uuid);
-                }
-            }
-        }
     } elseif ($task == "duplicate") {
         // create new script
         $ret = xmlrpc_addPostInstallScript($location, array('default_name'=>$script_name, 'default_desc'=>$script_desc, 'value'=>$script_value));
