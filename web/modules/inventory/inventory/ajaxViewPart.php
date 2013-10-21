@@ -289,7 +289,7 @@ if ($_GET['uuid'] != '') {
         
 	function __sort($a, $b){
 	 
-	 $__order = array('Path','Value');
+	 $__order = array('Path','Value','Company','ProductName','ProductVersion');
 	 if (array_search($a, $__order) === FALSE && array_search($b, $__order) === FALSE)
 	   return 0;
 	 if (array_search($a, $__order) === FALSE)
