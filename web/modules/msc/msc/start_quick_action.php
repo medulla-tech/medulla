@@ -68,7 +68,7 @@ function action($action, $target, $is_advanced) {
                 $params['ltitle'] = trim('[QA] '.$qa['title']);
             }
 
-            if ($action == '007wake_on_lan.msc') {
+            if (in_array($action, array('007wake_on_lan.msc', '010wol_with_imaging.msc'))) {
                 # this is a very special case for WOL, it's not a command as we usualy understand it...
                 $params['failure'] = '1';
                 $params['create_directory'] = 'off';
