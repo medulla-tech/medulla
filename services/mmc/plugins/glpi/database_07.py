@@ -2137,7 +2137,7 @@ class Glpi07(DyngroupDatabaseHelper):
         if unknown_os_pxe_id:
             unknown_os_ids.append(unknown_os_pxe_id)
 
-        query = self.filterOnUUID(session.query(Machine).filter(not_(self.machine.c.operatingsystems_id.in_(unknown_os_ids))), uuid)
+        query = self.filterOnUUID(session.query(Machine).filter(not_(self.machine.c.os.in_(unknown_os_ids))), uuid)
         session.close()
 
         return query.first() and True or False
