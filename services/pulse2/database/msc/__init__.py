@@ -512,50 +512,16 @@ class MscDatabase(DatabaseHelper):
         return []
 
     def getAllCommandsConsult(self, ctx, min, max, filt):
-        filtering2_1 = and_(
-            self.commands.c.fk_bundle == None, 
-            or_(
-                self.commands.c.title.like('%%%s%%'%(filt)),
-                self.commands.c.creator.like('%%%s%%'%(filt)),
-                self.commands.c.start_date.like('%%%s%%'%(filt)),
-                self.target.c.target_name.like('%%%s%%'%(filt))
-            ), 
-            self.__queryUsersFilterBis(ctx)
-        )
-
-        filtering2_2 = and_(
-            self.commands.c.fk_bundle == self.bundle.c.id, 
-            or_(
-                self.commands.c.title.like('%%%s%%'%(filt)), 
-                self.commands.c.creator.like('%%%s%%'%(filt)), 
-                self.commands.c.start_date.like('%%%s%%'%(filt)),
-                self.bundle.c.title.like('%%%s%%'%(filt)),
-                self.target.c.target_name.like('%%%s%%'%(filt))
-            ), 
-            self.__queryUsersFilterBis(ctx)
-        )
-
+        filtering2_1 = and_(self.commands.c.fk_bundle == None, or_(self.commands.c.title.like('%%%s%%'%(filt)), self.commands.c.creator.like('%%%s%%'%(filt))), self.__queryUsersFilterBis(ctx))
+        filtering2_2 = and_(self.commands.c.fk_bundle == self.bundle.c.id, or_(self.commands.c.title.like('%%%s%%'%(filt)), self.commands.c.creator.like('%%%s%%'%(filt)), self.bundle.c.title.like('%%%s%%'%(filt))), self.__queryUsersFilterBis(ctx))
+                
         session = create_session()
-        size1 = session.query(Commands) \
-                .filter(filtering2_1) \
-                .filter(self.commands.c.fk_bundle == None) \
-                .count() or 0
-
-        size2 = select(
-            ['bid'], 
-            True, 
-            select(
-                [self.commands.c.fk_bundle.label('bid')], 
-                and_(
-                    filtering2_2, 
-                    self.commands.c.fk_bundle != None
-                )) \
-            .group_by('bid').alias('BIDS')
-        ).alias('C').count()
-
+        size1 = session.query(Commands).filter(filtering2_1).filter(self.commands.c.fk_bundle == None).count() or 0
+        size2 = select(['bid'], True, select([self.commands.c.fk_bundle.label('bid')], and_(filtering2_2, self.commands.c.fk_bundle != None)).group_by('bid').alias('BIDS') ).alias('C').count()
+ 
         conn = self.getDbConnection()
         size2 = conn.execute(size2).fetchone()
-
+        
         size = int(size1) + int(size2[0])
 
         u2 = union(
@@ -572,7 +538,7 @@ class MscDatabase(DatabaseHelper):
         query = session.query(Commands).add_column(self.commands.c.fk_bundle).add_column(self.commands_on_host.c.host).add_column(self.commands_on_host.c.id)
         query = query.add_column(self.target.c.id_group).add_column(self.bundle.c.title).add_column(self.target.c.target_uuid)
         query = query.select_from(self.commands.join(self.commands_on_host).join(self.target).outerjoin(self.bundle))
-
+        
         cmds = query.filter(self.commands.c.id.in_(cmds)).group_by(self.commands.c.id).order_by(desc(self.commands.c.creation_date)).all()
 
         session.close()
@@ -631,7 +597,7 @@ class MscDatabase(DatabaseHelper):
                             'status':{},
                             'current_state':self.getCommandOnHostCurrentState(ctx, cmd.id)
                     })
-
+            
         return [size, ret]
 
     ###################
