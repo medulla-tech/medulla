@@ -614,6 +614,23 @@ def get_default_ip():
     netif = get_default_netif()
     return get_ip_address(netif)
 
+def noNone(var, res = ''):
+    """
+    Some times, we don't want to see any None affected to a variable
+    This function checks if variable is None. If True, return empty string by default
+
+    @param var: variable who will be checked
+    @type var: any...
+
+    @param res: what we want if var is None, default empty string
+    @type res: any...
+
+    @return: var if var is not None else res
+    @rtype: any...
+    """
+    if var is None:
+        return res
+    return var
 
 class HasSufficientMemory :
     """
