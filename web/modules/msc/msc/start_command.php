@@ -93,7 +93,9 @@ $halt_to = array();
 foreach ($_POST as $p=>$v) {
     if (preg_match('/^issue_halt_to_/', $p)) {
         $p = preg_replace('/^issue_halt_to_/', '', $p);
-        $halt_to[] = $p;
+        if ($v == 'on') {
+            $halt_to[] = $p;
+        }
     }
 }
 $params['issue_halt_to'] = $halt_to;
