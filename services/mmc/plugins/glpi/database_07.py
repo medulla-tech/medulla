@@ -954,7 +954,7 @@ class Glpi07(DyngroupDatabaseHelper):
                 m = l.pop()
 
             datas = {
-                'cn': m.name not in ['', None] and [m.name] or ['(%s)' % m.id],
+                'cn': m.name not in ['', None] and [m.name] or ['(%s)' % m.ID],
                 'displayName': [m.comments],
                 'objectUUID': [m.getUUID()],
                 'user': [m.contact],
@@ -1232,7 +1232,7 @@ class Glpi07(DyngroupDatabaseHelper):
             if len(q) != 1:
                 ens.append(False)
             else:
-                ens.append(toUUID(str(q[0].id)))
+                ens.append(toUUID(str(q[0].ID)))
         session.close()
         return ens
 
@@ -1246,7 +1246,7 @@ class Glpi07(DyngroupDatabaseHelper):
         while parent_id != 0:
             en_id = parent_id
             en = session.query(Location).filter(self.location.c.ID == parent_id).first()
-            path.append(toUUID(en.id))
+            path.append(toUUID(en.ID))
             parent_id = en.parentId
         path.append('UUID0')
         return path
@@ -2216,7 +2216,7 @@ class Glpi07(DyngroupDatabaseHelper):
         # Request only entites current user can access
         if not hasattr(ctx, 'locationsid'):
             complete_ctx(ctx)
-        query = query.filter(self.location.c.id.in_(ctx.locationsid))
+        query = query.filter(self.location.c.ID.in_(ctx.locationsid))
 
         query = query.order_by(self.location.c.name)
         ret = query.limit(10)
@@ -2741,7 +2741,7 @@ class Glpi07(DyngroupDatabaseHelper):
         ret = self.getMachineByMacAddress('imaging_module', mac)
         if type(ret) == list:
            if len(ret) != 0:
-              return str(toUUID(ret[0].id))
+              return str(toUUID(ret[0].ID))
         return None
 
 
@@ -2907,7 +2907,7 @@ class Glpi07(DyngroupDatabaseHelper):
         ret = {}
         for machine in result.all():
             if machine.name is not None:
-                ret[toUUID(machine.id) + '##' + machine.name] = {"hostname": machine.name, "uuid": toUUID(machine.id)}
+                ret[toUUID(machine.ID) + '##' + machine.name] = {"hostname": machine.name, "uuid": toUUID(machine.ID)}
 
         session.close()
         return ret
@@ -2993,7 +2993,7 @@ class Glpi07(DyngroupDatabaseHelper):
         session = create_session()
         id = fromUUID(uuid)
 
-        machine = session.query(Machine).filter(self.machine.c.id == id).first()
+        machine = session.query(Machine).filter(self.machine.c.ID == id).first()
 
         if machine :
             connection = self.getDbConnection()
