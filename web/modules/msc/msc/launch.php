@@ -207,12 +207,14 @@ if (isset($_POST['bback'])) {
     $module = $path[0];
     $submod = $path[1];
     $page = $path[2];
-    if (isset($_POST["gid"]))
+    if (isset($_POST["gid"])) {
         header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>"grouptablaunch", 'gid'=>$_POST["gid"])));
         exit;
-    if (isset($_POST["uuid"]))
+    }
+    if (isset($_POST["uuid"])) {
         header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>"msctabs", 'uuid'=>$_POST["uuid"])));
         exit;
+    }
 }
 
 /* local proxy selection handling */
