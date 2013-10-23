@@ -2291,7 +2291,8 @@ class InventoryCreator(Inventory):
                         # Check if the length of fields is big enough to put the data
                         for field in entry:
                             trunc_entry[field] = entry[field]
-                            if hasattr(klass, field):
+
+                            if isinstance(field,str) and  hasattr(klass, field):
                                 attr = getattr(klass, field)
 
                                 if isinstance(attr, sqlalchemy.types.Integer):
