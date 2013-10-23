@@ -150,13 +150,6 @@ class OcsMapping(Singleton):
                         try:
                             field = tag.getElementsByTagName(fieldname)[0]
                             dbfieldname = self.tables[tablename][1][fieldname]
-
-                            if dbtablename in self.nomenclatures and isinstance(dbfieldname, tuple):
-                                if dbfieldname[1] in self.nomenclatures[dbtablename] :
-                                    nm_table, dbfieldname = self.tables[tablename][1][fieldname]
-                                    inventory[nm_table]=[{dbfieldname:field.childNodes[0].nodeValue}]
-                                    continue
-
                             entry[dbfieldname] = field.childNodes[0].nodeValue
                         except IndexError:
                             pass
