@@ -1567,12 +1567,12 @@ class Glpi084(DyngroupDatabaseHelper):
                     gateways = []
                     netmasks = []
                     if networkport.networknames is not None:
-                        ipaddresses = list(set([ip.name for ip in networkport.networknames.ipaddresses]))
+                        ipaddresses = list(set([ip.name for ip in networkport.networknames.ipaddresses if ip.name != '']))
                         gateways = []
                         netmasks = []
                         for ip in networkport.networknames.ipaddresses:
-                            gateways += [ipnetwork.gateway for ipnetwork in ip.ipnetworks]
-                            netmasks += [ipnetwork.netmask for ipnetwork in ip.ipnetworks]
+                            gateways += [ipnetwork.gateway for ipnetwork in ip.ipnetworks if ipnetwork.gateway != '']
+                            netmasks += [ipnetwork.netmask for ipnetwork in ip.ipnetworks if ipnetwork.netmask != '']
                         gateways = list(set(gateways))
                         netmasks = list(set(netmasks))
                     l = [
