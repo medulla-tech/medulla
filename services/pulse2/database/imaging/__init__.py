@@ -917,9 +917,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def __getLocLanguage(self, session, loc_id):
         lang = 1
         if self.imagingServer_entity.has_key(loc_id):
-            if not self.imagingServer_lang.has_key(self.imagingServer_entity[loc_id]):
+            if not loc_id in self.imagingServer_lang:
                 ims = session.query(ImagingServer).select_from(self.imaging_server.join(self.entity, self.entity.c.id == self.imaging_server.c.fk_entity)).filter(self.entity.c.uuid == loc_id).first()
-                self.imagingServer_lang[self.imagingServer_entity[loc_id]] = ims.fk_language
+                self.imagingServer_lang[loc_id] = ims.fk_language
         else:
             q = session.query(ImagingServer).add_entity(Entity).select_from(self.imaging_server.join(self.entity, self.entity.c.id == self.imaging_server.c.fk_entity)).filter(self.entity.c.uuid == loc_id).first()
             if q != None:
