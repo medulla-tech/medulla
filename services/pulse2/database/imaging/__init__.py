@@ -85,7 +85,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         self.r_nomenclatures = {}
         self.nomenclatures = {
             'ImagingLogState': ImagingLogState,
-            'ImagingLogLevel': ImagingLogLevel,
             'TargetType': TargetType,
             'Protocol': Protocol,
             'SynchroState': SynchroState,
@@ -95,7 +94,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         self.fk_nomenclatures = {
             'ImagingLog': {
                 'fk_imaging_log_state': 'ImagingLogState',
-                'fk_imaging_log_level': 'ImagingLogLevel'
             },
             'Target': {
                 'type': 'TargetType'
@@ -176,7 +174,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         mapper(Language, self.language)
         mapper(ImagingLog, self.imaging_log)
         mapper(ImagingLogState, self.imaging_log_state)
-        mapper(ImagingLogLevel, self.imaging_log_level)
         mapper(MasteredOn, self.mastered_on)
         mapper(Menu, self.menu) #, properties = { 'default_item':relation(MenuItem), 'default_item_WOL':relation(MenuItem) } )
         mapper(MenuItem, self.menu_item) #, properties = { 'menu' : relation(Menu) })
@@ -218,12 +215,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         self.imaging_log_state = Table(
             "ImagingLogState",
-            self.metadata,
-            autoload = True
-        )
-
-        self.imaging_log_level = Table(
-            "ImagingLogLevel",
             self.metadata,
             autoload = True
         )
@@ -386,7 +377,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             "ImagingLog",
             self.metadata,
             Column('fk_imaging_log_state', Integer, ForeignKey('ImagingLogState.id')),
-            Column('fk_imaging_log_level', Integer, ForeignKey('ImagingLogLevel.id')),
             Column('fk_target', Integer, ForeignKey('Target.id')),
             useexisting=True,
             autoload = True
@@ -4372,9 +4362,6 @@ class ImagingLog(DBObject):
     need_iteration = ['target']
 
 class ImagingLogState(DBObject):
-    to_be_exported = ['id', 'label']
-
-class ImagingLogLevel(DBObject):
     to_be_exported = ['id', 'label']
 
 class ImageOnImagingServer(DBObject):
