@@ -303,8 +303,11 @@ if ($_GET['uuid'] != '') {
 	   return 1;
 	}
 	// Sorting Columns
-	uksort($h,'__sort');
-	
+    uksort($h,'__sort');
+    // If Path, Value are present (Registry) and sort lines by Paths
+    if (isset( $h['Path'], $h['Value'] ))//&& in_array('Value',$h) )
+        array_multisort($h['Path'],$h['Value']);
+
 	foreach ($h as $k => $v) {
             /*
              * If a machine has many IP Adresses, they are stored like this
