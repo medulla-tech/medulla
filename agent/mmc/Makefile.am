@@ -22,7 +22,7 @@
 #
 pythonmodules = support plugins plugins.base plugins.ppolicy \
 	core core.audit client plugins.dashboard plugins.dashboard.panels \
-	plugins.services
+	plugins.services core.signals
 
 all-local: site.py
 
