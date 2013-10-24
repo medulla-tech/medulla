@@ -69,12 +69,14 @@ if (strlen($request)) {
 if ($_GET['action'] == 'computersgroupsubedit' || $_GET['action'] == 'computersgroupcreatesubedit') {
     if (strlen(quickGet('sub_id'))) {
         $sub = $request->getSub(quickGet('sub_id'));
+        quickSet('sub_id', quickGet('sub_id'));
         quickSet('req', $sub->module);
         quickSet('add_param', $sub->crit);
         quickSet('value', $sub->val);
-        $request->removeSub(quickGet('sub_id'));
     }
 }
+
+// remove criterion
 if ($_GET['action'] == 'computersgroupsubdel' || $_GET['action'] == 'computersgroupcreatesubdel') {
     $request->removeSub(quickGet('sub_id'));
 }
@@ -97,7 +99,11 @@ if (quickGet('req') && quickGet('param')) {
     }
     if ($correct) {
         $sub = new SubRequest(quickGet('req'), quickGet('param'), quickGet('value'), quickGet('value2'), quickGet('operator'));
-        $request->addSub($sub);
+        if (quickGet('sub_id') != '') {
+            $sub->id = quickGet('sub_id');
+            $request->editSub($sub);
+        } else
+            $request->addSub($sub);
     }
 }
 
@@ -121,13 +127,17 @@ if (count($modules) == 1) {
             print "<td style=\"width:80px;border:0\">$name</td>";
         } else {
             $_SESSION['request'] = $request->toS();
+            $url_params = array(
+                'add_req' => $name,
+                'request' => 'stored_in_session',
+                'id' => $id,
+                'imaging_server' => $imaging_server
+            );
+            // When sub_id is transmitted add it to params
+            if (quickGet('sub_id') != '')
+                $url_params['sub_id'] = quickGet('sub_id');
             print "<td style=\"width:80px;border:0\"><a href='" .
-                    urlStr("base/computers/$target", array(
-                        'add_req' => $name,
-                        'request' => 'stored_in_session',
-                        'id' => $id,
-                        'imaging_server' => $imaging_server
-                    )) .
+                    urlStr("base/computers/$target", $url_params) .
                     "'>$name</a></td>";
         }
     }
@@ -160,14 +170,17 @@ if (quickGet('add_req')) {
                     print "<td>$param_name</td>";
                 } else {
                     $_SESSION['request'] = $request->toS();
+                    $url_params = array(
+                        'req' => quickGet('add_req'),
+                        'add_param' => $param_name,
+                        'request' => 'stored_in_session',
+                        'id' => $id,
+                        'imaging_server' => $imaging_server
+                    );
+                    if (quickGet('sub_id') != '')
+                        $url_params['sub_id'] = quickGet('sub_id');
                     print "<tr><td style=\"padding-left:20px;\"><a href='" .
-                            urlStr("base/computers/$target", array(
-                                'req' => quickGet('add_req'),
-                                'add_param' => $param_name,
-                                'request' => 'stored_in_session',
-                                'id' => $id,
-                                'imaging_server' => $imaging_server
-                            )) .
+                            urlStr("base/computers/$target", $url_params) .
                             "'>" . _T($param_name, 'dyngroup') . "</a></td>" .
                             "<td>" . ($description == '' ? '' : _T($description, 'dyngroup') ) . "</td>" .
                             "</tr>";
@@ -182,6 +195,8 @@ if (quickGet('add_req')) {
 //TODO put in class
 if (quickGet('add_param')) {
     print "<form action = '" . urlStr("base/computers/$target", array()) . "' method = 'POST'><table>";
+    if (quickGet('sub_id') != '')
+        print "<input type = 'hidden' name ='sub_id' value = '" . quickGet('sub_id') . "'/>";
     print "<input type = 'hidden' name = 'imaging_server' value = '$imaging_server'/>";
     // need to be changed in getCriterionType (we don't use the second part of the array...
     $type = getTypeForCriterionInModule(quickGet('req'), quickGet('add_param'));
