@@ -2849,7 +2849,7 @@ class Glpi084(DyngroupDatabaseHelper):
     def getMachineByMacAddress(self, ctx, filt):
         """ @return: all computers that have this mac address """
         session = create_session()
-        query = session.query(Machine)
+        query = session.query(Machine).join(NetworkPorts, and_(Machine.id == NetworkPorts.items_id, NetworkPorts.itemtype == 'Computer'))
         query = query.filter(Machine.is_deleted == 0).filter(Machine.is_template == 0)
         query = query.filter(NetworkPorts.mac == filt)
         query = self.__filter_on(query)
