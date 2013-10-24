@@ -516,7 +516,7 @@ class MscDatabase(DatabaseHelper):
         filtering2_2 = and_(self.commands.c.fk_bundle == self.bundle.c.id, or_(self.commands.c.title.like('%%%s%%'%(filt)), self.commands.c.creator.like('%%%s%%'%(filt)), self.bundle.c.title.like('%%%s%%'%(filt))), self.__queryUsersFilterBis(ctx))
                 
         session = create_session()
-        size1 = session.query(Commands).filter(filtering2_1).filter(self.commands.c.fk_bundle == None).count() or 0
+        size1 = session.query(func.count(Commands.id)).filter(filtering2_1).filter(self.commands.c.fk_bundle == None).scalar() or 0
         size2 = select(['bid'], True, select([self.commands.c.fk_bundle.label('bid')], and_(filtering2_2, self.commands.c.fk_bundle != None)).group_by('bid').alias('BIDS') ).alias('C').count()
  
         conn = self.getDbConnection()
