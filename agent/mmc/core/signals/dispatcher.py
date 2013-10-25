@@ -184,9 +184,7 @@ class Signal(object):
         if not self.receivers or self.sender_receivers_cache.get(sender) is NO_RECEIVERS:
             return responses
 
-        print "find receiver"
         for receiver in self._live_receivers(sender):
-            print receiver
             response = receiver(signal=self, sender=sender, **named)
             responses.append((receiver, response))
         return responses
