@@ -76,9 +76,6 @@ if (isset($_GET['host'], $_GET['sharename'], $_GET['backupnum'], $_GET['filename
 
     $data = $response['data'];
 
-    //print_r($response);
-    //return;
-
     $names = array();
     $paths = array();
     $types = array();
@@ -87,9 +84,6 @@ if (isset($_GET['host'], $_GET['sharename'], $_GET['backupnum'], $_GET['filename
     $shares = array();
     $cssClasses = array();
 
-    /* $emptyAction = new EmptyActionItem();
-      $viewVersionsAction = new ActionPopupItem(_T("View all versions"), "viewFileVersions", "display", "dir", "backuppc", "backuppc");
-      $viewVersionsActions = array(); */
     $i = 0;
     $params = array();
     foreach ($data as $entry) {
@@ -129,20 +123,10 @@ if (isset($_GET['host'], $_GET['sharename'], $_GET['backupnum'], $_GET['filename
     $n->start = isset($_GET['start']) ? $_GET['start'] : 0;
     $n->end = isset($_GET['end']) ? $_GET['end'] : $maxperpage;
     $n->setParamInfo($params); // Setting url params
-    //$n->addActionItemArray($viewVersionsActions);
 
-    /* print '<br/><br/><form id="restorefiles" method="post" action="">';
-      printf('<input type="hidden" name="host" value="%s" />',$_GET['host']);
-      printf('<input type="hidden" name="backupnum" value="%s" />',$_GET['backupnum']);
-      printf('<input type="hidden" name="sharename" value="%s" />',$_GET['sharename']);
-      printf('<input type="hidden" name="dir" value="%s" />',$folder);
-      print('<input type="hidden"  name="restoredir" id="restoredir" value=""  />'); */
     $n->display();
 }
 ?>
-<!-- <input id="btnRestoreZip" type="button" value="<?php print _T('Download selected (ZIP)', 'backuppc'); ?>" class="btnPrimary" />
-<input type="button" value="<?php print _T('Restore to host', 'backuppc'); ?>" class="btnPrimary" onclick="showPopup(event,'main.php?module=backuppc&submod=backuppc&action=restorePopup'); return false;" />
-</form> -->
 
 <script type="text/javascript">
     jQuery(function() {

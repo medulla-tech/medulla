@@ -21,7 +21,6 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 require_once("modules/backuppc/includes/xmlrpc.php");
 
 // Setting max per page to 50
@@ -32,79 +31,77 @@ print '<div id="downloadTable">';
 $download_status = get_download_status();
 
 // Sorting function
-function cmp($a,$b){
-    return ($a['time']<$b['time'])? 1 : -1;
+function cmp($a, $b) {
+    return ($a['time'] < $b['time']) ? 1 : -1;
 }
 
-uasort($download_status,'cmp');
+if (count($download_status) > 1)
+    uasort($download_status, 'cmp');
 
-if ($count=count($download_status)) {
-    
-    printf("<br/><br/><h2>%s</h2>",_T('Requested restores','backuppc'));
-    
+if ($count = count($download_status)) {
+
+    printf("<br/><br/><h2>%s</h2>", _T('Requested restores', 'backuppc'));
+
     $params = array();
     $paths = array_keys($download_status);
     $names = array();
     $times = array();
     $status = array();
-    
+
     // Host
-    if (isset($_GET['host'])) 
+    if (isset($_GET['host']))
         $host = $_GET['host'];
-    elseif (isset($_GET['objectUUID'])) 
+    elseif (isset($_GET['objectUUID']))
         $host = $_GET['objectUUID'];
-    else
+    else {
+        print '--------------NO HOST ----------------';
         return;
-    
+    }
+
     // Icons
     $emptyAction = new EmptyActionItem();
-    $downloadAction = new ActionItem(_T("Download", "backuppc"),"download","display","dir", "backuppc", "backuppc");
+    $downloadAction = new ActionItem(_T("Download", "backuppc"), "download", "display", "dir", "backuppc", "backuppc");
     $actions = array(); // Actions array
-    
+
     $refresh = 0; // Refresh is disabled by default
-    
-    foreach ($download_status as $filepath => $dstatus)
-    {
+
+    foreach ($download_status as $filepath => $dstatus) {
         if ($host != $dstatus['host'])
             continue;
-        
-        $times[] = strftime(_T("%A, %B %e %Y",'backuppc').' %H:%M',$dstatus['time']);
-        
+
+        $times[] = strftime(_T("%A, %B %e %Y", 'backuppc') . ' %H:%M', $dstatus['time']);
+
         // If it is not a direct restore
-        if (strpos($filepath,'>DIRECT:') === FALSE ) {
-            $params[] = array('dir'=>$filepath);
+        if (strpos($filepath, '>DIRECT:') === FALSE) {
+            $params[] = array('dir' => $filepath);
             $paths[] = $filepath;
             $name = basename($filepath);
-            
+
             $actions[] = $downloadAction;
-        }
-        else {
+        } else {
             // Direct restore
-            $params[] = array('dir'=>'');
+            $params[] = array('dir' => '');
             $paths[] = '';
-            $name = sprintf('<a href="#"></a>%s (%s %s)',
-                    _T('Latest direct restore to host','backuppc'),_T('to','backuppc'),
-                    str_replace('//', '/', $dstatus['destdir']));
-            
+            $name = sprintf('<a href="#"></a>%s (%s %s)', _T('Latest direct restore to host', 'backuppc'), _T('to', 'backuppc'), str_replace('//', '/', $dstatus['destdir']));
+
             $actions[] = $emptyAction;
         }
-        
-        
-        if ($dstatus['status']==0) {
+
+
+        if ($dstatus['status'] == 0) {
             $status[] = '<img src="modules/msc/graph/images/status/inprogress.gif" alt=""/>';
-            $name = sprintf('<a href="#">%s</a>',$name);
+            $name = sprintf('<a href="#">%s</a>', $name);
             $refresh = 1; // We want a refresh after X second
+        } else
+        if ($dstatus['err'] == 0)
+            $status[] = '<img src="modules/msc/graph/images/status/success.png" alt=""/>';
+        else {
+            $status[] = '<img src="modules/msc/graph/images/status/failed.png" alt=""/> ' . $dstatus['errtext'];
+            $name = sprintf('<a href="#">%s</a>', $name);
         }
-        else
-            if ($dstatus['err']==0)
-                $status[] = '<img src="modules/msc/graph/images/status/success.png" alt=""/>';
-            else {
-                $status[] = '<img src="modules/msc/graph/images/status/failed.png" alt=""/> '.$dstatus['errtext'];
-                $name = sprintf('<a href="#">%s</a>',$name);
-            }
         $names[] = $name;
     }
-    
+
     $n = new OptimizedListInfos($names, _T("Destination", "backuppc"));
     $n->addExtraInfo($times, _T("Restore time", "backuppc"));
     $n->addExtraInfo($status, _T("Status", "backuppc"));
@@ -123,20 +120,14 @@ print '</div>';
 ?>
 
 <script type="text/javascript">
-function refresh(){
-        parentcontainer = jQuery('div#downloadTable').parent();
-        jQuery.get(
-            "<?php  echo 'main.php?module=backuppc&submod=backuppc&action=ajaxDownloadsTable&host='.$host; ?>",
-             function(data){
-                jQuery('div#downloadTable').remove();
-                parentcontainer.append(data);
-        });
-}
+    function refresh() {
+        jQuery('div#downloadTable').load("<?php echo 'main.php?module=backuppc&submod=backuppc&action=ajaxDownloadsTable&host=' . $host; ?>");
+    }
 
 
-<?php 
+<?php
 if ($refresh) {
-   print "setTimeout('refresh();',3000);" ;
+    print "setTimeout('refresh();',3000);";
 }
 ?>
 

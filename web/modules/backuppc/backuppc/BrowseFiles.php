@@ -60,6 +60,12 @@ include("modules/backuppc/backuppc/ajaxDownloadsTable.php");
         setTimeout("refresh();closePopup();", 4000);
     }
 
+    function refresh() {
+        jQuery('div#downloadTable').load("<?php echo 'main.php?module=backuppc&submod=backuppc&action=ajaxDownloadsTable&host=' . $_GET['host']; ?>");
+    }
+
+
+
 </script>
 <!-- jQuery('#container').append('<div style="float:left;top: 0;left: 0;width:100%;height:100%;background:#fff;opacity:0.4;z-index:9999;">LOADING</div>'); -->
 

@@ -21,7 +21,6 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 require_once("modules/backuppc/includes/xmlrpc.php");
 require_once("modules/backuppc/includes/functions.php");
 require_once("modules/backuppc/includes/html.inc.php");
@@ -31,7 +30,7 @@ require_once("modules/backuppc/includes/html.inc.php");
 
 $package = array();
 
-// display an edit config form 
+// display an edit config form
 $f = new ValidatingForm();
 $f->push(new Table());
 
@@ -51,7 +50,7 @@ if ($response['err']) {
 if (count($response['data']))
     $backups = $response['data'][0];
 else {
-    print _T('There is no backup for this machine yet.','backuppc');
+    print _T('There is no backup for this machine yet.', 'backuppc');
     return;
 }
 
@@ -59,15 +58,15 @@ else {
 
 $sharenames = array();
 // Get all sharenames
-foreach ($backups as $backup_num){
+foreach ($backups as $backup_num) {
     $response = get_share_names($host, $backup_num);
-    
+
     if ($response['err']) {
-    new NotifyWidgetFailure(nl2br($response['errtext']));
-    return;
+        new NotifyWidgetFailure(nl2br($response['errtext']));
+        return;
     }
-    
-    $sharenames = array_merge($sharenames,$response['data']);
+
+    $sharenames = array_merge($sharenames, $response['data']);
 }
 
 $sharenames = array_unique($sharenames);
@@ -75,14 +74,13 @@ $sharenames = array_unique($sharenames);
 // ========= BUILDING FORM ========================================
 
 $f->add(new HiddenTpl("host"), array("value" => $host, "hide" => True));
- 
+
 // =====================================================================
 // FILENAME
 // =====================================================================
- 
+
 $f->add(
-    new TrFormElement(_T('File name','backuppc'), new InputTpl('filename')),
-    array("value" => isset($_POST['filename'])?$_POST['filename']:'',"required" => True)
+        new TrFormElement(_T('File name', 'backuppc'), new InputTpl('filename')), array("value" => isset($_POST['filename']) ? $_POST['filename'] : '', "required" => True)
 );
 
 // =============================================================================
@@ -91,10 +89,10 @@ $f->add(
 
 $sel = new SelectItem("backupnum");
 $list = array();
-$list[-1] = _T('All','backuppc');
+$list[-1] = _T('All', 'backuppc');
 
 foreach ($backups as $num)
-    $list[intval($num)] = _T('Backup#','backuppc').$num;  #TODO : Change this to backuptime
+    $list[intval($num)] = _T('Backup#', 'backuppc') . $num;#TODO : Change this to backuptime
 $sel->setElements(array_values($list));
 $sel->setElementsVal(array_keys($list));
 
@@ -103,9 +101,8 @@ if (isset($_POST['backupnum']))
 else
     $sel->setSelected(-1);
 
- $f->add(
-    new TrFormElement(_T("Date","backuppc"), $sel,
-    array())
+$f->add(
+        new TrFormElement(_T("Date", "backuppc"), $sel, array())
 );
 
 // =============================================================================
@@ -114,10 +111,10 @@ else
 
 $sel = new SelectItem("sharename");
 $list = array();
-$list[-1] = _T('All','backuppc');
+$list[-1] = _T('All', 'backuppc');
 
 foreach ($sharenames as $sharename)
-    $list[$sharename] = $sharename;  #TODO : Change this to backuptime
+    $list[$sharename] = $sharename;#TODO : Change this to backuptime
 $sel->setElements(array_values($list));
 $sel->setElementsVal(array_keys($list));
 
@@ -126,9 +123,8 @@ if (isset($_POST['sharename']))
 else
     $sel->setSelected(-1);
 
- $f->add(
-    new TrFormElement(_T("Folder","backuppc"), $sel,
-    array())
+$f->add(
+        new TrFormElement(_T("Folder", "backuppc"), $sel, array())
 );
 
 
@@ -137,10 +133,10 @@ else
 // =====================================================================
 
 $f->add(new HiddenTpl("minsize"), array(
-    "value" => isset($_POST['minsize'])?$_POST['minsize']:'-1',
+    "value" => isset($_POST['minsize']) ? $_POST['minsize'] : '-1',
     "hide" => True));
 $f->add(new HiddenTpl("maxsize"), array(
-    "value" => isset($_POST['maxsize'])?$_POST['maxsize']:'-1',
+    "value" => isset($_POST['maxsize']) ? $_POST['maxsize'] : '-1',
     "hide" => True));
 
 // =============================================================================
@@ -150,11 +146,11 @@ $f->add(new HiddenTpl("maxsize"), array(
 $sel = new SelectItem("filesize");
 
 $sizes = array(
-    '0' => _T('Any size','backuppc'),
-    '1' => _T('Less than 1 Mb','backuppc'),
-    '2' => _T('1 Mb to 10 Mb','backuppc'),
-    '3' => _T('10 Mb to 100 Mb','backuppc'),
-    '4' => _T('Greater than 100 Mb','backuppc')
+    '0' => _T('Any size', 'backuppc'),
+    '1' => _T('Less than 1 Mb', 'backuppc'),
+    '2' => _T('1 Mb to 10 Mb', 'backuppc'),
+    '3' => _T('10 Mb to 100 Mb', 'backuppc'),
+    '4' => _T('Greater than 100 Mb', 'backuppc')
 );
 $sel->setElements(array_values($sizes));
 $sel->setElementsVal(array_keys($sizes));
@@ -164,31 +160,30 @@ if (isset($_POST['filesize']))
 else
     $sel->setSelected(0);
 
- $f->add(
-    new TrFormElement(_T("File size","backuppc"), $sel,
-    array())
+$f->add(
+        new TrFormElement(_T("File size", "backuppc"), $sel, array())
 );
 
 /*
-$f->add(
-    new TrFormElement(_T('Minimum file size','backuppc'), new InputTpl('minsize')),
-    array("value" => isset($_POST['minsize'])?$_POST['minsize']:'',"required" => True)
-);
+  $f->add(
+  new TrFormElement(_T('Minimum file size','backuppc'), new InputTpl('minsize')),
+  array("value" => isset($_POST['minsize'])?$_POST['minsize']:'',"required" => True)
+  );
 
-$f->add(
-    new TrFormElement(_T('Maximum file size','backuppc'), new InputTpl('maxsize')),
-    array("value" => isset($_POST['maxsize'])?$_POST['maxsize']:'',"required" => True)
-);
-*/
+  $f->add(
+  new TrFormElement(_T('Maximum file size','backuppc'), new InputTpl('maxsize')),
+  array("value" => isset($_POST['maxsize'])?$_POST['maxsize']:'',"required" => True)
+  );
+ */
 // =====================================================================
 
 $f->pop();
-$f->addButton("bsearch",_T('Search','backuppc'));
+$f->addButton("bsearch", _T('Search', 'backuppc'));
 $f->display();
 
 // ===== AJAX FILE TABLE ==============================================
 
-$ajax = new AjaxFilterLocation(urlStrRedirect("backuppc/backuppc/ajaxFileSearch"),'container','location',$_POST);
+$ajax = new AjaxFilterLocation(urlStrRedirect("backuppc/backuppc/ajaxFileSearch"), 'container', 'location', $_POST);
 
 $fils = array('.');
 $fils_v = array('.');
@@ -197,41 +192,44 @@ $ajax->setElementsVal($fils_v);
 $ajax->display();
 echo "<br/><br/>";
 $ajax->displayDivToUpdate();
-
 ?>
 
 <script type="text/javascript">
 
-jQuery(function(){
-    
-    // File size selection
-    jQuery('select#filesize').change(function(){
-        switch (jQuery('select#filesize').val()) {
-            case "1":  // Less than 1Mb
-                jQuery('input[name=minsize]').val(-1);
-                jQuery('input[name=maxsize]').val(1048576);
-                break;
-            case "2": // 1 Mb to 10 Mb
-                jQuery('input[name=minsize]').val(1048576);
-                jQuery('input[name=maxsize]').val(10485760);
-                break;
-            case "3": // 10 Mb to 100Mb
-                jQuery('input[name=minsize]').val(10485760);
-                jQuery('input[name=maxsize]').val(104857600);
-                break;
-            case "4": // > 100 Mb
-                jQuery('input[name=minsize]').val(104857600);
-                jQuery('input[name=maxsize]').val(-1);
-                break;
-            default: 
-                jQuery('input[name=minsize]').val(-1);
-                jQuery('input[name=maxsize]').val(-1);
-                break;
-        }
+    jQuery(function() {
+
+        // File size selection
+        jQuery('select#filesize').change(function() {
+            switch (jQuery('select#filesize').val()) {
+                case "1":  // Less than 1Mb
+                    jQuery('input[name=minsize]').val(-1);
+                    jQuery('input[name=maxsize]').val(1048576);
+                    break;
+                case "2": // 1 Mb to 10 Mb
+                    jQuery('input[name=minsize]').val(1048576);
+                    jQuery('input[name=maxsize]').val(10485760);
+                    break;
+                case "3": // 10 Mb to 100Mb
+                    jQuery('input[name=minsize]').val(10485760);
+                    jQuery('input[name=maxsize]').val(104857600);
+                    break;
+                case "4": // > 100 Mb
+                    jQuery('input[name=minsize]').val(104857600);
+                    jQuery('input[name=maxsize]').val(-1);
+                    break;
+                default:
+                    jQuery('input[name=minsize]').val(-1);
+                    jQuery('input[name=maxsize]').val(-1);
+                    break;
+            }
+        });
+
     });
-      
-});   
-   
+
+    function refresh() {
+        jQuery('div#downloadTable').load("<?php echo 'main.php?module=backuppc&submod=backuppc&action=ajaxDownloadsTable&host=' . $_GET['objectUUID']; ?>");
+    }
+
 </script>
 
 
@@ -239,19 +237,18 @@ jQuery(function(){
 <div id="restoreDiv"></div>
 
 <script type="text/javascript">
-function BrowseDir(dir){
-    jQuery('#<?php echo  $ajax->divid; ?>').load('<?php echo  $ajax->url; ?>folder='+dir+'<?php echo  $ajax->params ?>');
-}
+    function BrowseDir(dir) {
+        jQuery('#<?php echo $ajax->divid; ?>').load('<?php echo $ajax->url; ?>folder=' + dir + '<?php echo $ajax->params ?>');
+    }
 
-function RestoreFile(paramstr){
-    jQuery('#restoreDiv').load('<?php echo urlStrRedirect("backuppc/backuppc/ajaxRestoreFile"); ?>&'+paramstr);
-    setTimeout("refresh();",4000);
-}
+    function RestoreFile(paramstr) {
+        jQuery('#restoreDiv').load('<?php echo urlStrRedirect("backuppc/backuppc/ajaxRestoreFile"); ?>&' + paramstr);
+        setTimeout("refresh();", 4000);
+    }
 
 </script>
 
 <?php
 // Downloaded files table
 include("modules/backuppc/backuppc/ajaxDownloadsTable.php");
-
 ?>
