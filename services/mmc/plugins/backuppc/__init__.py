@@ -204,3 +204,6 @@ def build_fileindex(host):
 
 def file_search(host,backupnum_0,sharename_0,filename_0,filesize_min=-1,filesize_max=-1,type_0=' '):
     return bpc.file_search(host,backupnum_0,sharename_0,filename_0,filesize_min,filesize_max,type_0)
+
+def calldb(func, *args, **kw):
+    return getattr(BackuppcDatabase(),func).__call__(*args, **kw)

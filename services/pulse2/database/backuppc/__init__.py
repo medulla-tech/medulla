@@ -26,35 +26,22 @@ BackupPC database handler
 """
 
 # SqlAlchemy
-from sqlalchemy import create_engine, MetaData, Table #, Column, Text
+from sqlalchemy import create_engine, MetaData, Table
 from sqlalchemy.orm import create_session, mapper
+from sqlalchemy.orm import sessionmaker; Session = sessionmaker()
 from sqlalchemy.exc import DBAPIError
+
 
 # PULSE2 modules
 from pulse2.database import database_helper
 from pulse2.database.database_helper import DatabaseHelper
+from pulse2.database.backuppc.schema import Backup_profiles, Period_profiles, Backup_servers, Hosts
 
 # Imported last
 import logging
 
 logger = logging.getLogger()
 
-def dbOjb2dict(obj):
-    if isinstance(obj,list):
-        result = []
-        for record in obj:
-            dct = record.__dict__
-            if '_sa_instance_state' in dct: del dct['_sa_instance_state']
-            for k in dct:
-                dct[k] = str(dct[k])
-            result += [dct]
-        return result
-    else:
-        dct = obj.__dict__
-        if '_sa_instance_state' in dct: del dct['_sa_instance_state']
-        for k in dct:
-            dct[k] = str(dct[k])
-        return dct
 
 class BackuppcDatabase(DatabaseHelper):
     """
@@ -62,6 +49,7 @@ class BackuppcDatabase(DatabaseHelper):
 
     """
     is_activated = False
+    session = None
 
     def db_check(self):
         self.my_name = "backuppc"
@@ -81,30 +69,21 @@ class BackuppcDatabase(DatabaseHelper):
             self.session = None
             return False
         self.metadata.create_all()
-        self.session = create_session()
         self.is_activated = True
-        self.logger.debug("BackupPC database connected (version:%s)"%(self.version.select().execute().fetchone()[0]))
+        self.logger.debug("BackupPC database connected (version:%s)"%(self.db_version))
         return True
+
+
+    @property
+    def db_version(self):
+        return self.db.execute("select Number from version").scalar()
 
     def initMappers(self):
         """
         Initialize all SQLalchemy mappers needed for the BackupPC database
         """
-        # version
-        self.version = Table("version", self.metadata, autoload = True)
-        # Backup servers
-        self.backup_servers = Table("backup_servers", self.metadata, autoload = True)
-        mapper(Backup_servers, self.backup_servers)
-        # Hosts
-        self.hosts = Table("hosts", self.metadata, autoload = True)
-        mapper(Hosts, self.hosts)
-        # Backup profiles
-        self.backup_profiles = Table("backup_profiles", self.metadata, autoload = True)
-        mapper(Backup_profiles, self.backup_profiles)
-        # Period profiles
-        self.period_profiles = Table("period_profiles", self.metadata, autoload = True)
-        mapper(Period_profiles, self.period_profiles)
-
+        # No mapping is needed, all is done on schema file
+        return
 
 
     def getDbConnection(self):
@@ -126,169 +105,138 @@ class BackuppcDatabase(DatabaseHelper):
     # BACKUP PROFILES FUNCTIONS
     # =====================================================================
 
-    def get_backup_profiles(self):
-        session = create_session()
+    def _session(func):
+        def __session(self, *args, **kw):
+            if not self.session:
+                self.session = Session(bind=self.db)
+            result = func(self, self.session,*args, **kw)
+            self.session.close()
+            self.session = None
+            return result
+        return __session
+
+    @_session
+    def get_backup_profiles(self, session):
         ret = session.query(Backup_profiles).all()
-        session.close()
-        return dbOjb2dict(ret) or []
+        return [row.toDict() for row in ret]
 
-
-    def add_backup_profile(self, _profile):
-        session = create_session()
+    @_session
+    def add_backup_profile(self, session, _profile):
         profile = Backup_profiles()
-        # Setting profile fields
-        profile.profilename = _profile['profilename']
-        profile.sharenames = _profile['sharenames']
-        profile.excludes = _profile['excludes']
-        profile.encoding = _profile['encoding']
-        #
+        profile.fromDict(_profile)
         session.add(profile)
         session.flush()
-        session.close()
-        return dbOjb2dict(profile) or {}
+        return profile.toDict()
 
+    @_session
+    def delete_backup_profile(self, session, id):
+        ret = session.query(Backup_profiles).get(int(id))
+        session.delete(ret)
+        session.flush()
 
-    def delete_backup_profile(self,id):
-        session = create_session()
-        id = int(id)
-        ret = session.query(Backup_profiles).filter(Backup_profiles.id == id).first()
+    @_session
+    def edit_backup_profile(self, session, id, override):
+        ret = session.query(Backup_profiles).get(int(id))
         if ret:
-            session.delete(ret)
+            ret.fromDict(override)
             session.flush()
+            return ret.toDict()
         else:
             logger.warning("Can't find backup profile with id = %d" % id)
-        session.close()
-
-    def edit_backup_profile(self,id,override):
-        session = create_session()
-        id = int(id)
-        ret = session.query(Backup_profiles).filter(Backup_profiles.id == id).first()
-        if ret:
-            # Setting all overrided fields
-            for k,v in override.iteritems():
-                setattr(ret,k,v)
-            session.flush()
-        else:
-            logger.warning("Can't find backup profile with id = %d" % id)
-        session.close()
-        return dbOjb2dict(ret) or {}
-
+            return False
 
     # =====================================================================
     # PERIOD PROFILES FUNCTIONS
     # =====================================================================
 
-    def get_period_profiles(self):
-        session = create_session()
+    @_session
+    def get_period_profiles(self, session):
         ret = session.query(Period_profiles).all()
-        session.close()
-        return dbOjb2dict(ret) or []
+        return [row.toDict() for row in ret]
 
-
-    def add_period_profile(self, _profile):
-        session = create_session()
+    @_session
+    def add_period_profile(self, session, _profile):
         profile = Period_profiles()
-        # Setting profile fields
-        profile.profilename = _profile['profilename']
-        profile.full = _profile['full']
-        profile.incr = _profile['incr']
-        profile.exclude_periods = _profile['exclude_periods']
-        #
+        profile.fromDict(_profile)
         session.add(profile)
         session.flush()
-        session.close()
-        return dbOjb2dict(profile) or {}
+        return profile.toDict()
 
 
-    def delete_period_profile(self,id):
-        session = create_session()
-        id = int(id)
-        ret = session.query(Period_profiles).filter(Period_profiles.id == id).first()
+    @_session
+    def delete_period_profile(self, session, id):
+        ret = session.query(Period_profiles).get(int(id))
+        session.delete(ret)
+        session.flush()
+
+    @_session
+    def edit_period_profile(self, session, id,override):
+        ret = session.query(Period_profiles).get(int(id))
         if ret:
-            session.delete(ret)
+            ret.fromDict(override)
             session.flush()
+            return ret.toDict()
         else:
-            logger.warning("Can't find period profile with id = %d" % id)
-        session.close()
-
-    def edit_period_profile(self,id,override):
-        id = int(id)
-        session = create_session()
-        ret = session.query(Period_profiles).filter(Period_profiles.id == id).first()
-        if ret:
-            # Setting all overrided fields
-            for k,v in override.iteritems():
-                setattr(ret,k,v)
-            session.flush()
-        else:
-            logger.warning("Can't find period profile with id = %d" % id)
-        session.close()
-        return dbOjb2dict(ret) or {}
+            logger.warning("Can't find backup profile with id = %d" % id)
+            return False
 
     # =====================================================================
     # HOSTS TABLE FUNCTIONS
     # =====================================================================
 
-    def get_host_backup_profile(self,uuid):
-        session = create_session()
-        host = session.query(Hosts).filter(Hosts.uuid == uuid).first()
-        session.close()
+    @_session
+    def get_all_hosts(self, session):
+        ret = session.query(Hosts).all()
+        return [row.toDict() for row in ret]
+
+    @_session
+    def get_host_backup_profile(self, session, uuid):
+        host = session.query(Hosts).filter_by(uuid = uuid).one()
         if not host:
             logger.warning("Can't find configured host with uuid = %s" % uuid)
             return -1
         else:
             return host.backup_profile
 
-
-    def set_host_backup_profile(self,uuid,newprofile):
-        session = create_session()
-        ret = session.query(Hosts).filter(Hosts.uuid == uuid).first()
-        if ret:
-            ret.backup_profile = newprofile
+    @_session
+    def set_host_backup_profile(self, session, uuid, newprofile):
+        host = session.query(Hosts).filter_by(uuid = uuid).one()
+        if host:
+            host.backup_profile = newprofile
             session.flush()
-        session.close()
-        return ret != None
+        return host != None
 
-    def get_host_period_profile(self,uuid):
-        session = create_session()
-        host = session.query(Hosts).filter(Hosts.uuid == uuid).first()
-        session.close()
+    @_session
+    def get_host_period_profile(self, session, uuid):
+        host = session.query(Hosts).filter_by(uuid = uuid).one()
         if not host:
             logger.warning("Can't find configured host with uuid = %s" % uuid)
             return -1
         else:
             return host.period_profile
 
-    def set_host_period_profile(self,uuid,newprofile):
-        session = create_session()
-        ret = session.query(Hosts).filter(Hosts.uuid == uuid).first()
+    @_session
+    def set_host_period_profile(self, session, uuid, newprofile):
+        ret = session.query(Hosts).filter_by(uuid = uuid).one()
         if ret:
             ret.period_profile = newprofile
             session.flush()
-        session.close()
         return ret != None
 
-
-    def get_hosts_by_backup_profile(self,profileid):
-        session = create_session()
-        ret = session.query(Hosts.uuid).filter(Hosts.backup_profile== profileid).all()
-        session.close()
+    @_session
+    def get_hosts_by_backup_profile(self, session, profileid):
+        ret = session.query(Hosts.uuid).filter_by(backup_profile = profileid).all()
         if ret:
-            for i in xrange(len(ret)):
-                ret[i] = ret[i][0]
-            return ret
+            return [m[0] for m in ret]
         else:
             return []
 
 
-    def get_hosts_by_period_profile(self,profileid):
-        session = create_session()
-        ret = session.query(Hosts.uuid).filter(Hosts.period_profile== profileid).all()
-        session.close()
+    @_session
+    def get_hosts_by_period_profile(self, session, profileid):
+        ret = session.query(Hosts.uuid).filter_by(period_profile = profileid).all()
         if ret:
-            for i in xrange(len(ret)):
-                ret[i] = ret[i][0]
-            return ret
+            return [m[0] for m in ret]
         else:
             return []
 
@@ -296,96 +244,71 @@ class BackuppcDatabase(DatabaseHelper):
     # HOSTS TABLE FUNCTIONS
     # =====================================================================
 
-    def add_host(self,uuid):
-        session = create_session()
-        host = Hosts()
+    @_session
+    def add_host(self, session, uuid):
+        host = Hosts(uuid = uuid)
         # Setting host fields
-        host.uuid = uuid
         host.backup_profile = 0
         host.period_profile = 0
-        #
         session.add(host)
         session.flush()
-        session.close()
-        return dbOjb2dict(host) or {}
-    
-    def remove_host(self,uuid):
-        session = create_session()
+        return host.toDict()
+
+    @_session
+    def remove_host(self, session, uuid):
         try:
-            ret = session.query(Hosts).filter(Hosts.uuid == uuid.upper()).one()
+            ret = session.query(Hosts).filter_by(uuid = uuid.upper()).one()
             if ret:
                 session.delete(ret)
                 session.flush()
-        except:
+            return True
+        except Exception, e:
             logger.error("Can't remove host where uuid=%s" % uuid)
-        session.close()
-        
-    def host_exists(self,uuid):
-        session = create_session()
+            logger.error(str(e))
+
+    @_session
+    def host_exists(self, session, uuid):
         try:
-            session.query(Hosts).filter(Hosts.uuid == uuid.upper()).one()
-            exists = True
-        except:
-            exists = False
-        #
-        session.close()
-        return exists
-        
+            ret = session.query(Hosts).filter_by(uuid = uuid.upper()).all()
+            return len(ret) == 1
+        except Exception, e:
+            logger.error("Database error: %s " % str(e))
+
 
     # =====================================================================
     # BACKUP SERVER FUNCTIONS
     # =====================================================================
 
-    def get_backupserver_by_entity(self,entity_uuid):
-        session = create_session()
+    @_session
+    def get_backupserver_by_entity(self, session, entity_uuid):
         try:
-            ret = session.query(Backup_servers.backupserver_url).filter(Backup_servers.entity_uuid == entity_uuid).one()
+            ret = session.query(Backup_servers.backupserver_url).filter_by(entity_uuid = entity_uuid).one()
             if ret: return ret.backupserver_url
         except:
             ret = ''
-        session.close()
         return ret
 
     # =====================================================================
 
-    def get_backupservers_list(self):
-        session = create_session()
+    @_session
+    def get_backupservers_list(self, session):
         ret = session.query(Backup_servers).all()
-        session.close()
-        return dbOjb2dict(ret) or []
+        return [row.toDict() for row in ret]
 
 
-    def add_backupserver(self,entityuuid,serverURL):
-        session = create_session()
-        server = Backup_servers()
-        # Setting host fields
-        server.entity_uuid = entityuuid
-        server.backupserver_url = serverURL
-        #
+    @_session
+    def add_backupserver(self, session, entityuuid, serverURL):
+        server = Backup_servers(entity_uuid = entityuuid, backupserver_url = serverURL)
         session.add(server)
         session.flush()
-        session.close()
-        return dbOjb2dict(server) or {}
+        return server.toDict()
 
-    def remove_backupserver(self,entityuuid):
-        session = create_session()
-        ret = session.query(Backup_servers).filter(Backup_servers.entity_uuid == entityuuid).first()
+    @_session
+    def remove_backupserver(self, session, entityuuid):
+        ret = session.query(Backup_servers).filter_by(entity_uuid = entityuuid).first()
         if ret:
             session.delete(ret)
             session.flush()
+            return True
         else:
             logger.warning("Can't find BackupServer associated to entity %s" % entityuuid)
-        session.close()
-
-##############################################################################################################
-class Backup_servers(database_helper.DBObject):
-    to_be_exported = ['entity_uuid', 'backupserver_url']
-
-class Hosts(database_helper.DBObject):
-    to_be_exported = ['uuid', 'backup_profile','period_profile']
-
-class Backup_profiles(database_helper.DBObject):
-    to_be_exported = ['id', 'profilename','sharenames','excludes','encoding']
-
-class Period_profiles(database_helper.DBObject):
-    to_be_exported = ['id', 'profilename','full','incr','exclude_periods']
