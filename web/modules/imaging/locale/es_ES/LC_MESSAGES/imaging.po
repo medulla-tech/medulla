@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-21 01:00+0200\n"
+"POT-Creation-Date: 2013-10-28 01:00+0100\n"
 "PO-Revision-Date: 2013-10-09 12:53+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Spanish (Spain) (http://transifex.mandriva.com/projects/p/"
@@ -58,7 +58,7 @@ msgstr ""
 msgid "<i>undefined</i>"
 msgstr ""
 
-#: modules/imaging/manage/postinstall_edit.php:99
+#: modules/imaging/manage/postinstall_edit.php:90
 #, php-format
 msgid "<strong>%s</strong> script %s"
 msgstr ""
@@ -68,7 +68,7 @@ msgstr ""
 msgid "<strong>%s</strong> script deleted"
 msgstr ""
 
-#: modules/imaging/manage/postinstall_edit.php:106
+#: modules/imaging/manage/postinstall_edit.php:97
 #, php-format
 msgid "<strong>%s</strong> script wasn't %s"
 msgstr ""
@@ -1403,7 +1403,7 @@ msgstr ""
 msgid "Save an Imaging Server configuration"
 msgstr ""
 
-#: modules/imaging/manage/postinstall_edit.php:131
+#: modules/imaging/manage/postinstall_edit.php:122
 msgid "Script value"
 msgstr ""
 
@@ -1741,7 +1741,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxConfiguration.php:191
 #: modules/imaging/manage/bootmenu_edit.php:101
 #: modules/imaging/manage/master_edit.php:70
-#: modules/imaging/manage/postinstall_edit.php:135
+#: modules/imaging/manage/postinstall_edit.php:126
 #: modules/imaging/manage/service_edit.php:69
 msgid "Validate"
 msgstr ""

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-14 01:00+0200\n"
+"POT-Creation-Date: 2013-10-28 01:00+0100\n"
 "PO-Revision-Date: 2013-10-10 13:51+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/"
@@ -509,7 +509,7 @@ msgid "Command line to run"
 msgstr "Командная строка для запуска"
 
 #: modules/msc/includes/command_history.php:110
-#: modules/msc/includes/command_history.php:278 modules/msc/msc/launch.php:304
+#: modules/msc/includes/command_history.php:278 modules/msc/msc/launch.php:308
 msgid "Command name"
 msgstr "Название команды"
 
@@ -559,7 +559,7 @@ msgstr "Было отказано в подключении с другой ст
 msgid "Consolidated view"
 msgstr "Консолидированный просмотр"
 
-#: modules/msc/includes/bundle_widgets.php:371 modules/msc/msc/launch.php:355
+#: modules/msc/includes/bundle_widgets.php:371 modules/msc/msc/launch.php:359
 msgid "Copy Mode"
 msgstr "Режим копирования"
 
@@ -631,7 +631,7 @@ msgstr "Ошибка удаления"
 msgid "Delete file"
 msgstr "Удалить файл"
 
-#: modules/msc/includes/bundle_widgets.php:351 modules/msc/msc/launch.php:308
+#: modules/msc/includes/bundle_widgets.php:351 modules/msc/msc/launch.php:312
 msgid "Delete files after a successful execution"
 msgstr "Удалить файлы после успешного выполнения"
 
@@ -643,7 +643,7 @@ msgstr "Удалить файлы после успешного выполнен
 msgid "Delete in progress"
 msgstr "Выполняется удаление"
 
-#: modules/msc/includes/bundle_widgets.php:376 modules/msc/msc/launch.php:360
+#: modules/msc/includes/bundle_widgets.php:376 modules/msc/msc/launch.php:364
 msgid "Deploy using a local proxy"
 msgstr "Развернуть, используя локальный прокси"
 
@@ -667,7 +667,7 @@ msgstr "Подробнее"
 msgid "Direct launch"
 msgstr ""
 
-#: modules/msc/msc/launch.php:309
+#: modules/msc/msc/launch.php:313
 msgid "Do an inventory after a successful execution"
 msgstr "Совершить открытие после успешного выполнения"
 
@@ -803,7 +803,7 @@ msgstr "Получить загруженный файл"
 msgid "Group"
 msgstr "Группа"
 
-#: modules/msc/msc/launch.php:258
+#: modules/msc/msc/launch.php:262
 #, php-format
 msgid "Group Advanced launch : action \"%s\" on \"%s\""
 msgstr "Групповой продвинутый запуск: действие \"%s\" над \"%s\""
@@ -816,7 +816,7 @@ msgstr ""
 msgid "Halt Failed: %percent% (%d packages)"
 msgstr ""
 
-#: modules/msc/includes/bundle_widgets.php:354 modules/msc/msc/launch.php:311
+#: modules/msc/includes/bundle_widgets.php:354 modules/msc/msc/launch.php:315
 msgid "Halt client after"
 msgstr "Остановить клиент после"
 
@@ -1001,7 +1001,7 @@ msgstr "Вкладка журналов MSC для машины"
 msgid "Machine"
 msgstr "Машина"
 
-#: modules/msc/includes/bundle_widgets.php:362 modules/msc/msc/launch.php:317
+#: modules/msc/includes/bundle_widgets.php:362 modules/msc/msc/launch.php:321
 msgid "Max bandwidth (kbits/s)"
 msgstr ""
 
@@ -1205,7 +1205,7 @@ msgstr "Пожалуйста, свяжитесь с вашим админист�
 msgid "Possible actions"
 msgstr "Возможные действия"
 
-#: modules/msc/msc/launch.php:385
+#: modules/msc/msc/launch.php:389
 msgid "Probe status"
 msgstr ""
 
@@ -1251,7 +1251,7 @@ msgstr ""
 msgid "Reboot Failed: %percent% (%d packages)"
 msgstr ""
 
-#: modules/msc/msc/launch.php:310
+#: modules/msc/msc/launch.php:314
 msgid "Reboot client"
 msgstr "Перезагрузка клиента"
 
@@ -1307,7 +1307,7 @@ msgstr "Запланирован"
 msgid "Scheduler"
 msgstr "Планировщик"
 
-#: modules/msc/msc/launch.php:305
+#: modules/msc/msc/launch.php:309
 msgid "Script parameters"
 msgstr "Параметры сценария"
 
@@ -1371,7 +1371,7 @@ msgstr "Показать журналы ожидающих задач"
 msgid "Show running task's logs"
 msgstr "Показать журналы выполняющихся задач"
 
-#: modules/msc/msc/launch.php:249
+#: modules/msc/msc/launch.php:253
 #, php-format
 msgid "Single advanced launch : action \"%s\" on \"%s\""
 msgstr "Простой продвинутый запуск: действие \"%s\" над \"%s\""
@@ -1405,7 +1405,7 @@ msgid "Start"
 msgstr "Запуск"
 
 #: modules/msc/includes/command_history.php:117
-#: modules/msc/includes/command_history.php:293 modules/msc/msc/launch.php:306
+#: modules/msc/includes/command_history.php:293 modules/msc/msc/launch.php:310
 msgid "Start \"Wake On Lan\" query if connection fails"
 msgstr "Старт запроса \"Wake On Lan\", если соединение оборвано"
 
@@ -1440,7 +1440,7 @@ msgstr "Запустить инвентаризацию"
 msgid "Start inventory agent"
 msgstr "Запуск агента инвентаризации"
 
-#: modules/msc/msc/launch.php:307
+#: modules/msc/msc/launch.php:311
 msgid "Start script"
 msgstr "Запустить сценарий"
 
@@ -1512,11 +1512,11 @@ msgstr "пользователь"
 msgid "Target platform is %s"
 msgstr ""
 
-#: modules/msc/msc/launch.php:315
+#: modules/msc/msc/launch.php:319
 msgid "The command must start after"
 msgstr ""
 
-#: modules/msc/msc/launch.php:316
+#: modules/msc/msc/launch.php:320
 msgid "The command must stop before"
 msgstr "Команда должна останавливаться перед"
 
@@ -1861,7 +1861,7 @@ msgstr "есть"
 msgid "logs list"
 msgstr "Список журналов"
 
-#: modules/msc/msc/launch.php:82 modules/msc/msc/launch.php:152
+#: modules/msc/msc/launch.php:84 modules/msc/msc/launch.php:154
 msgid "never"
 msgstr "Никогда"
 
@@ -1873,7 +1873,7 @@ msgstr "Никогда"
 msgid "no"
 msgstr "нет"
 
-#: modules/msc/msc/launch.php:80 modules/msc/msc/launch.php:149
+#: modules/msc/msc/launch.php:82 modules/msc/msc/launch.php:151
 msgid "now"
 msgstr "Сейчас"
 
@@ -1889,11 +1889,11 @@ msgstr "вне_интервала"
 msgid "over_time"
 msgstr "сверх_урочный"
 
-#: modules/msc/includes/bundle_widgets.php:368 modules/msc/msc/launch.php:352
+#: modules/msc/includes/bundle_widgets.php:368 modules/msc/msc/launch.php:356
 msgid "push"
 msgstr "нажать"
 
-#: modules/msc/includes/bundle_widgets.php:368 modules/msc/msc/launch.php:352
+#: modules/msc/includes/bundle_widgets.php:368 modules/msc/msc/launch.php:356
 msgid "push / pull"
 msgstr "нажать/отпустить"
 

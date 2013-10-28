@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-21 01:00+0200\n"
+"POT-Creation-Date: 2013-10-28 01:00+0100\n"
 "PO-Revision-Date: 2013-09-04 10:25+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/"
@@ -43,7 +43,7 @@ msgstr ""
 msgid "> %s days: %percent% (%d)"
 msgstr ""
 
-#: modules/inventory/inventory/ajaxViewPart.php:530
+#: modules/inventory/inventory/ajaxViewPart.php:533
 msgid "Action"
 msgstr ""
 
@@ -55,7 +55,7 @@ msgstr "Добавленный элемент"
 msgid "Additionnal informations"
 msgstr "Дополнительная информация"
 
-#: modules/inventory/inventory/ajaxViewPart.php:534
+#: modules/inventory/inventory/ajaxViewPart.php:537
 msgid "All"
 msgstr ""
 
@@ -67,7 +67,7 @@ msgstr "Приложение"
 msgid "Availability"
 msgstr "Доступность"
 
-#: modules/inventory/inventory/ajaxViewPart.php:523
+#: modules/inventory/inventory/ajaxViewPart.php:526
 msgid "Bandwidth"
 msgstr ""
 
@@ -125,7 +125,7 @@ msgstr "Заголовок"
 msgid "Card Type"
 msgstr ""
 
-#: modules/inventory/inventory/ajaxViewPart.php:529
+#: modules/inventory/inventory/ajaxViewPart.php:532
 msgid "Category"
 msgstr ""
 
@@ -166,7 +166,7 @@ msgstr "Класс"
 msgid "Click here to see this computer on manufacturer website"
 msgstr ""
 
-#: modules/inventory/inventory/ajaxViewPart.php:526
+#: modules/inventory/inventory/ajaxViewPart.php:529
 msgid "Comment"
 msgstr ""
 
@@ -184,11 +184,11 @@ msgstr "Компания"
 msgid "Computer"
 msgstr "Компьютер"
 
-#: modules/inventory/inventory/ajaxViewPart.php:507
+#: modules/inventory/inventory/ajaxViewPart.php:510
 msgid "Computer Name"
 msgstr ""
 
-#: modules/inventory/inventory/ajaxViewPart.php:515
+#: modules/inventory/inventory/ajaxViewPart.php:518
 msgid "Computer Type"
 msgstr ""
 
@@ -269,7 +269,7 @@ msgstr "DNS"
 
 #: modules/inventory/includes/html.php:65
 #: modules/inventory/inventory/ajaxViewPart.php:188
-#: modules/inventory/inventory/ajaxViewPart.php:527
+#: modules/inventory/inventory/ajaxViewPart.php:530
 #: modules/inventory/inventory/i18n_labels.php:53
 msgid "Date"
 msgstr "Дата"
@@ -278,7 +278,7 @@ msgstr "Дата"
 msgid "Date Last Switch On"
 msgstr ""
 
-#: modules/inventory/inventory/ajaxViewPart.php:502
+#: modules/inventory/inventory/ajaxViewPart.php:505
 msgid "Date Of Purchase"
 msgstr ""
 
@@ -294,12 +294,12 @@ msgstr ""
 msgid "Department"
 msgstr "Департамент"
 
-#: modules/inventory/inventory/ajaxViewPart.php:508
+#: modules/inventory/inventory/ajaxViewPart.php:511
 #: modules/inventory/inventory/i18n_labels.php:60
 msgid "Description"
 msgstr "Описание"
 
-#: modules/inventory/inventory/ajaxViewPart.php:495
+#: modules/inventory/inventory/ajaxViewPart.php:498
 #: modules/inventory/inventory/i18n_labels.php:61
 msgid "Device"
 msgstr "Устройство"
@@ -316,7 +316,7 @@ msgstr "Диск"
 msgid "Disk Size"
 msgstr ""
 
-#: modules/inventory/inventory/ajaxViewPart.php:537
+#: modules/inventory/inventory/ajaxViewPart.php:540
 msgid "Domain"
 msgstr ""
 
@@ -355,15 +355,15 @@ msgstr "Элемент"
 msgid "Elements"
 msgstr "Элементы"
 
-#: modules/inventory/inventory/ajaxViewPart.php:542
+#: modules/inventory/inventory/ajaxViewPart.php:545
 msgid "Enabled"
 msgstr ""
 
-#: modules/inventory/inventory/ajaxViewPart.php:510
+#: modules/inventory/inventory/ajaxViewPart.php:513
 msgid "Entity"
 msgstr ""
 
-#: modules/inventory/inventory/ajaxViewPart.php:509
+#: modules/inventory/inventory/ajaxViewPart.php:512
 msgid "Entity (Location)"
 msgstr ""
 
@@ -395,7 +395,7 @@ msgstr ""
 msgid "File System"
 msgstr ""
 
-#: modules/inventory/inventory/ajaxViewPart.php:497
+#: modules/inventory/inventory/ajaxViewPart.php:500
 msgid "Filesystem"
 msgstr ""
 
@@ -415,7 +415,7 @@ msgstr "Флаг"
 msgid "Form"
 msgstr "Форум"
 
-#: modules/inventory/inventory/ajaxViewPart.php:499
+#: modules/inventory/inventory/ajaxViewPart.php:502
 msgid "Free Size"
 msgstr ""
 
@@ -427,7 +427,7 @@ msgstr ""
 msgid "Freq"
 msgstr "Част"
 
-#: modules/inventory/inventory/ajaxViewPart.php:520
+#: modules/inventory/inventory/ajaxViewPart.php:523
 #: modules/inventory/inventory/i18n_labels.php:79
 msgid "Frequency"
 msgstr "Частота"
@@ -436,7 +436,7 @@ msgstr "Частота"
 msgid "Func"
 msgstr "Функция"
 
-#: modules/inventory/inventory/ajaxViewPart.php:494
+#: modules/inventory/inventory/ajaxViewPart.php:497
 #: modules/inventory/inventory/i18n_labels.php:81
 msgid "Gateway"
 msgstr "Шлюз"
@@ -491,7 +491,7 @@ msgstr ""
 msgid "History"
 msgstr "История"
 
-#: modules/inventory/inventory/ajaxViewPart.php:492
+#: modules/inventory/inventory/ajaxViewPart.php:495
 #: modules/inventory/inventory/i18n_labels.php:86
 msgid "IP"
 msgstr "IP"
@@ -507,7 +507,7 @@ msgstr "Входящие Реестры"
 
 #: modules/inventory/infoPackage.inc.php:83
 #: modules/inventory/inventory/ajaxIncoming.php:85
-#: modules/inventory/inventory/ajaxViewPart.php:459
+#: modules/inventory/inventory/ajaxViewPart.php:462
 msgid "Informations"
 msgstr "Информация"
 
@@ -531,7 +531,7 @@ msgstr "Инвентаризация"
 msgid "Inventory Date"
 msgstr ""
 
-#: modules/inventory/inventory/ajaxViewPart.php:540
+#: modules/inventory/inventory/ajaxViewPart.php:543
 msgid "Inventory Number"
 msgstr ""
 
@@ -556,7 +556,7 @@ msgstr "Инвентаризация группы компьютеров"
 msgid "Inventory on a single computer"
 msgstr "Инвентаризация на одном компьютере"
 
-#: modules/inventory/inventory/ajaxViewPart.php:501
+#: modules/inventory/inventory/ajaxViewPart.php:504
 msgid "Invoice Number"
 msgstr ""
 
@@ -568,15 +568,15 @@ msgstr ""
 msgid "KEY"
 msgstr "Ключ"
 
-#: modules/inventory/inventory/ajaxViewPart.php:533
+#: modules/inventory/inventory/ajaxViewPart.php:536
 msgid "Last 30 days"
 msgstr ""
 
-#: modules/inventory/inventory/ajaxViewPart.php:532
+#: modules/inventory/inventory/ajaxViewPart.php:535
 msgid "Last 7 days"
 msgstr ""
 
-#: modules/inventory/inventory/ajaxViewPart.php:512
+#: modules/inventory/inventory/ajaxViewPart.php:515
 msgid "Last Logged User"
 msgstr ""
 
@@ -624,7 +624,7 @@ msgstr ""
 "Загрузить только те компьютеры, которые были новыми на момент завершения "
 "инвентаризации"
 
-#: modules/inventory/inventory/ajaxViewPart.php:511
+#: modules/inventory/inventory/ajaxViewPart.php:514
 #: modules/inventory/inventory/i18n_labels.php:91
 msgid "Location"
 msgstr "Локализация"
@@ -633,7 +633,7 @@ msgstr "Локализация"
 msgid "Low Mem"
 msgstr ""
 
-#: modules/inventory/inventory/ajaxViewPart.php:491
+#: modules/inventory/inventory/ajaxViewPart.php:494
 #: modules/inventory/inventory/i18n_labels.php:93
 msgid "MAC Address"
 msgstr ""
@@ -650,7 +650,7 @@ msgstr ""
 msgid "Manuf"
 msgstr "Произв"
 
-#: modules/inventory/inventory/ajaxViewPart.php:518
+#: modules/inventory/inventory/ajaxViewPart.php:521
 #: modules/inventory/inventory/i18n_labels.php:98
 msgid "Manufacturer"
 msgstr "Производитель"
@@ -661,7 +661,7 @@ msgstr "Носитель"
 
 #: modules/inventory/infoPackage.inc.php:60
 #: modules/inventory/inventory/ajaxViewPart.php:227
-#: modules/inventory/inventory/ajaxViewPart.php:525
+#: modules/inventory/inventory/ajaxViewPart.php:528
 #: modules/inventory/inventory/i18n_labels.php:100
 #: modules/inventory/inventory/localSidebar.php:39
 msgid "Memory"
@@ -679,12 +679,12 @@ msgstr ""
 msgid "Misc SMB"
 msgstr ""
 
-#: modules/inventory/inventory/ajaxViewPart.php:517
+#: modules/inventory/inventory/ajaxViewPart.php:520
 #: modules/inventory/inventory/i18n_labels.php:103
 msgid "Model"
 msgstr "Модель"
 
-#: modules/inventory/inventory/ajaxViewPart.php:516
+#: modules/inventory/inventory/ajaxViewPart.php:519
 msgid "Model / Type"
 msgstr ""
 
@@ -702,17 +702,17 @@ msgstr "Монитор"
 msgid "Monitor list"
 msgstr "Список мониторов"
 
-#: modules/inventory/inventory/ajaxViewPart.php:496
+#: modules/inventory/inventory/ajaxViewPart.php:499
 msgid "Mount Point"
 msgstr ""
 
-#: modules/inventory/inventory/ajaxViewPart.php:489
-#: modules/inventory/inventory/ajaxViewPart.php:505
+#: modules/inventory/inventory/ajaxViewPart.php:492
+#: modules/inventory/inventory/ajaxViewPart.php:508
 #: modules/inventory/inventory/i18n_labels.php:106
 msgid "Name"
 msgstr "Имя"
 
-#: modules/inventory/inventory/ajaxViewPart.php:493
+#: modules/inventory/inventory/ajaxViewPart.php:496
 msgid "Netmask"
 msgstr ""
 
@@ -726,7 +726,7 @@ msgstr "Сеть"
 msgid "Network Cards"
 msgstr ""
 
-#: modules/inventory/inventory/ajaxViewPart.php:490
+#: modules/inventory/inventory/ajaxViewPart.php:493
 #: modules/inventory/inventory/i18n_labels.php:108
 msgid "Network Type"
 msgstr ""
@@ -751,7 +751,7 @@ msgstr "Вкладка Сеть для группы"
 msgid "New computer"
 msgstr "Новый компьютер"
 
-#: modules/inventory/inventory/ajaxViewPart.php:488
+#: modules/inventory/inventory/ajaxViewPart.php:491
 msgid "No"
 msgstr ""
 
@@ -771,7 +771,7 @@ msgstr "Чис"
 msgid "Number"
 msgstr "Число"
 
-#: modules/inventory/inventory/ajaxViewPart.php:513
+#: modules/inventory/inventory/ajaxViewPart.php:516
 msgid "OS"
 msgstr ""
 
@@ -783,7 +783,7 @@ msgstr ""
 msgid "Only new computers"
 msgstr "Только новые компьютеры"
 
-#: modules/inventory/inventory/ajaxViewPart.php:514
+#: modules/inventory/inventory/ajaxViewPart.php:517
 #: modules/inventory/inventory/i18n_labels.php:114
 msgid "Operating System"
 msgstr ""
@@ -933,16 +933,16 @@ msgstr "Сектор"
 msgid "Serial"
 msgstr "Серийный номер"
 
-#: modules/inventory/inventory/ajaxViewPart.php:519
+#: modules/inventory/inventory/ajaxViewPart.php:522
 msgid "Serial Number"
 msgstr ""
 
-#: modules/inventory/inventory/ajaxViewPart.php:535
+#: modules/inventory/inventory/ajaxViewPart.php:538
 msgid "Service Pack"
 msgstr ""
 
-#: modules/inventory/inventory/ajaxViewPart.php:498
-#: modules/inventory/inventory/ajaxViewPart.php:522
+#: modules/inventory/inventory/ajaxViewPart.php:501
+#: modules/inventory/inventory/ajaxViewPart.php:525
 #: modules/inventory/inventory/i18n_labels.php:133
 msgid "Size"
 msgstr "Размер"
@@ -1028,7 +1028,7 @@ msgstr ""
 msgid "Standard Type"
 msgstr ""
 
-#: modules/inventory/inventory/ajaxViewPart.php:538
+#: modules/inventory/inventory/ajaxViewPart.php:541
 #: modules/inventory/inventory/i18n_labels.php:147
 msgid "State"
 msgstr "Состояние"
@@ -1069,7 +1069,7 @@ msgstr ""
 msgid "Summary tab for a group"
 msgstr ""
 
-#: modules/inventory/inventory/ajaxViewPart.php:500
+#: modules/inventory/inventory/ajaxViewPart.php:503
 msgid "Supplier"
 msgstr ""
 
@@ -1089,7 +1089,7 @@ msgstr "Система"
 msgid "Time"
 msgstr "Время"
 
-#: modules/inventory/inventory/ajaxViewPart.php:531
+#: modules/inventory/inventory/ajaxViewPart.php:534
 msgid "Today"
 msgstr ""
 
@@ -1101,7 +1101,7 @@ msgstr ""
 msgid "Total Space"
 msgstr ""
 
-#: modules/inventory/inventory/ajaxViewPart.php:521
+#: modules/inventory/inventory/ajaxViewPart.php:524
 #: modules/inventory/inventory/i18n_labels.php:156
 msgid "Type"
 msgstr "Тип"
@@ -1114,11 +1114,11 @@ msgstr ""
 msgid "Unable to detect any Antivirus software on this machine."
 msgstr ""
 
-#: modules/inventory/inventory/ajaxViewPart.php:539
+#: modules/inventory/inventory/ajaxViewPart.php:542
 msgid "Unknown"
 msgstr ""
 
-#: modules/inventory/inventory/ajaxViewPart.php:543
+#: modules/inventory/inventory/ajaxViewPart.php:546
 msgid "Up-to-date"
 msgstr ""
 
@@ -1126,7 +1126,7 @@ msgstr ""
 msgid "Used"
 msgstr "Использованный"
 
-#: modules/inventory/inventory/ajaxViewPart.php:528
+#: modules/inventory/inventory/ajaxViewPart.php:531
 #: modules/inventory/inventory/i18n_labels.php:159
 msgid "User"
 msgstr "Пользователь"
@@ -1143,12 +1143,12 @@ msgstr ""
 msgid "Value"
 msgstr "Значение"
 
-#: modules/inventory/inventory/ajaxViewPart.php:504
+#: modules/inventory/inventory/ajaxViewPart.php:507
 #: modules/inventory/inventory/i18n_labels.php:162
 msgid "Vendor"
 msgstr "Производитель"
 
-#: modules/inventory/inventory/ajaxViewPart.php:506
+#: modules/inventory/inventory/ajaxViewPart.php:509
 #: modules/inventory/inventory/i18n_labels.php:163
 msgid "Version"
 msgstr "Версия"
@@ -1164,7 +1164,7 @@ msgstr "ВидеоКарта"
 
 #: modules/inventory/infoPackage.inc.php:79
 #: modules/inventory/inventory/ajaxIncoming.php:84
-#: modules/inventory/inventory/ajaxViewPart.php:458
+#: modules/inventory/inventory/ajaxViewPart.php:461
 msgid "View"
 msgstr "Вид"
 
@@ -1176,7 +1176,7 @@ msgstr "Просмотр различий с предыдущей инвента
 msgid "VolumeName"
 msgstr "НазваниеРазмера"
 
-#: modules/inventory/inventory/ajaxViewPart.php:503
+#: modules/inventory/inventory/ajaxViewPart.php:506
 msgid "Warranty End Date"
 msgstr ""
 
@@ -1184,7 +1184,7 @@ msgstr ""
 msgid "WarrantyEnd"
 msgstr "ОкончаниеГарантии"
 
-#: modules/inventory/inventory/ajaxViewPart.php:536
+#: modules/inventory/inventory/ajaxViewPart.php:539
 msgid "Windows Key"
 msgstr ""
 
@@ -1196,11 +1196,11 @@ msgstr "Рабочая группа"
 msgid "WorkingDate"
 msgstr "ДатаРаботы"
 
-#: modules/inventory/inventory/ajaxViewPart.php:524
+#: modules/inventory/inventory/ajaxViewPart.php:527
 msgid "Writer"
 msgstr ""
 
-#: modules/inventory/inventory/ajaxViewPart.php:487
+#: modules/inventory/inventory/ajaxViewPart.php:490
 msgid "Yes"
 msgstr ""
 

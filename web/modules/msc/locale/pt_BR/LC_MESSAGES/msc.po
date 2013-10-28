@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-14 01:00+0200\n"
+"POT-Creation-Date: 2013-10-28 01:00+0100\n"
 "PO-Revision-Date: 2013-10-10 13:51+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
@@ -510,7 +510,7 @@ msgid "Command line to run"
 msgstr "Linha de comando a executar"
 
 #: modules/msc/includes/command_history.php:110
-#: modules/msc/includes/command_history.php:278 modules/msc/msc/launch.php:304
+#: modules/msc/includes/command_history.php:278 modules/msc/msc/launch.php:308
 msgid "Command name"
 msgstr "Nome do comando"
 
@@ -559,7 +559,7 @@ msgstr "A conexão foi recusada do outro lado."
 msgid "Consolidated view"
 msgstr "Visão consolidada"
 
-#: modules/msc/includes/bundle_widgets.php:371 modules/msc/msc/launch.php:355
+#: modules/msc/includes/bundle_widgets.php:371 modules/msc/msc/launch.php:359
 msgid "Copy Mode"
 msgstr "Modo de Transferência"
 
@@ -631,7 +631,7 @@ msgstr "A remoção falhou"
 msgid "Delete file"
 msgstr "Apagar arquivo"
 
-#: modules/msc/includes/bundle_widgets.php:351 modules/msc/msc/launch.php:308
+#: modules/msc/includes/bundle_widgets.php:351 modules/msc/msc/launch.php:312
 msgid "Delete files after a successful execution"
 msgstr "Apagar arquivos após execução bem sucedida"
 
@@ -643,7 +643,7 @@ msgstr "Apagar arquivos após execução bem sucedida ?"
 msgid "Delete in progress"
 msgstr "Removendo"
 
-#: modules/msc/includes/bundle_widgets.php:376 modules/msc/msc/launch.php:360
+#: modules/msc/includes/bundle_widgets.php:376 modules/msc/msc/launch.php:364
 msgid "Deploy using a local proxy"
 msgstr "Implantação utilizando um proxy local"
 
@@ -667,7 +667,7 @@ msgstr "Detalhes"
 msgid "Direct launch"
 msgstr "Lançamento Direto"
 
-#: modules/msc/msc/launch.php:309
+#: modules/msc/msc/launch.php:313
 msgid "Do an inventory after a successful execution"
 msgstr "Inventariar após uma execução sucedida"
 
@@ -804,7 +804,7 @@ msgstr "Obter um arquivo baixado"
 msgid "Group"
 msgstr "Grupo"
 
-#: modules/msc/msc/launch.php:258
+#: modules/msc/msc/launch.php:262
 #, php-format
 msgid "Group Advanced launch : action \"%s\" on \"%s\""
 msgstr "Lançador d eGrupo Avançado: ação  \"%s\" em \"%s\""
@@ -817,7 +817,7 @@ msgstr "Falha no desligamento: %percent% (%d computadores)"
 msgid "Halt Failed: %percent% (%d packages)"
 msgstr "Falha no desligamento: %percent% (%d pacotes)"
 
-#: modules/msc/includes/bundle_widgets.php:354 modules/msc/msc/launch.php:311
+#: modules/msc/includes/bundle_widgets.php:354 modules/msc/msc/launch.php:315
 msgid "Halt client after"
 msgstr "Interromper cliente após"
 
@@ -1002,7 +1002,7 @@ msgstr "Aba de logs MSC para uma máquina"
 msgid "Machine"
 msgstr "Máquina"
 
-#: modules/msc/includes/bundle_widgets.php:362 modules/msc/msc/launch.php:317
+#: modules/msc/includes/bundle_widgets.php:362 modules/msc/msc/launch.php:321
 msgid "Max bandwidth (kbits/s)"
 msgstr "Max Banda (kbits/s)"
 
@@ -1205,7 +1205,7 @@ msgstr "Contate seu administrador."
 msgid "Possible actions"
 msgstr "Ações Possíveis"
 
-#: modules/msc/msc/launch.php:385
+#: modules/msc/msc/launch.php:389
 msgid "Probe status"
 msgstr "Status de Detecção"
 
@@ -1251,7 +1251,7 @@ msgstr "Falha no reboot: %percent% (%d computadores)"
 msgid "Reboot Failed: %percent% (%d packages)"
 msgstr "Falha no reboot: %percent% (%d pacotes)"
 
-#: modules/msc/msc/launch.php:310
+#: modules/msc/msc/launch.php:314
 msgid "Reboot client"
 msgstr "Reiniciar cliente"
 
@@ -1307,7 +1307,7 @@ msgstr "Agendado"
 msgid "Scheduler"
 msgstr "Agendador"
 
-#: modules/msc/msc/launch.php:305
+#: modules/msc/msc/launch.php:309
 msgid "Script parameters"
 msgstr "Parâmetros do Script"
 
@@ -1371,7 +1371,7 @@ msgstr "Mostrar logs das tarefas pendentes"
 msgid "Show running task's logs"
 msgstr "Mostrar logs ds tarefas em execução"
 
-#: modules/msc/msc/launch.php:249
+#: modules/msc/msc/launch.php:253
 #, php-format
 msgid "Single advanced launch : action \"%s\" on \"%s\""
 msgstr "Único com lançamento avançado: ação \"%s\" em \"%s\""
@@ -1405,7 +1405,7 @@ msgid "Start"
 msgstr "Iniciar"
 
 #: modules/msc/includes/command_history.php:117
-#: modules/msc/includes/command_history.php:293 modules/msc/msc/launch.php:306
+#: modules/msc/includes/command_history.php:293 modules/msc/msc/launch.php:310
 msgid "Start \"Wake On Lan\" query if connection fails"
 msgstr "Iniciar requisição \"Wake On Lan\" se a conexão falhar"
 
@@ -1440,7 +1440,7 @@ msgstr "Iniciar inventário"
 msgid "Start inventory agent"
 msgstr "Iniciar agente do inventário"
 
-#: modules/msc/msc/launch.php:307
+#: modules/msc/msc/launch.php:311
 msgid "Start script"
 msgstr "Iniciar script"
 
@@ -1512,11 +1512,11 @@ msgstr "Alvo"
 msgid "Target platform is %s"
 msgstr "Plataforma de destino é %s"
 
-#: modules/msc/msc/launch.php:315
+#: modules/msc/msc/launch.php:319
 msgid "The command must start after"
 msgstr "O comando precisa iniciar após"
 
-#: modules/msc/msc/launch.php:316
+#: modules/msc/msc/launch.php:320
 msgid "The command must stop before"
 msgstr "O comando deve parar antes de"
 
@@ -1861,7 +1861,7 @@ msgstr "é"
 msgid "logs list"
 msgstr "lista de logs"
 
-#: modules/msc/msc/launch.php:82 modules/msc/msc/launch.php:152
+#: modules/msc/msc/launch.php:84 modules/msc/msc/launch.php:154
 msgid "never"
 msgstr "nunca"
 
@@ -1873,7 +1873,7 @@ msgstr "nunca"
 msgid "no"
 msgstr "não"
 
-#: modules/msc/msc/launch.php:80 modules/msc/msc/launch.php:149
+#: modules/msc/msc/launch.php:82 modules/msc/msc/launch.php:151
 msgid "now"
 msgstr "agora"
 
@@ -1889,11 +1889,11 @@ msgstr "fora_do_intervalo"
 msgid "over_time"
 msgstr "tempo_excedido"
 
-#: modules/msc/includes/bundle_widgets.php:368 modules/msc/msc/launch.php:352
+#: modules/msc/includes/bundle_widgets.php:368 modules/msc/msc/launch.php:356
 msgid "push"
 msgstr "Empurrar"
 
-#: modules/msc/includes/bundle_widgets.php:368 modules/msc/msc/launch.php:352
+#: modules/msc/includes/bundle_widgets.php:368 modules/msc/msc/launch.php:356
 msgid "push / pull"
 msgstr "Empurrar / Puxar"
 

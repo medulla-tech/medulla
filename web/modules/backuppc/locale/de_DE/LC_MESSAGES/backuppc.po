@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-14 01:00+0200\n"
+"POT-Creation-Date: 2013-10-28 01:00+0100\n"
 "PO-Revision-Date: 2013-10-09 12:29+0000\n"
 "Last-Translator: Maik Wagner <maikwagner@yahoo.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/"
@@ -20,7 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 #: modules/backuppc/backuppc/BrowseBackups.php:56
-#: modules/backuppc/backuppc/ajaxDownloadsTable.php:71
+#: modules/backuppc/backuppc/ajaxDownloadsTable.php:72
 #: modules/backuppc/backuppc/hostSummary.php:142
 #: modules/backuppc/backuppc/viewFileVersions.php:47
 msgid "%A, %B %e %Y"
@@ -31,11 +31,11 @@ msgstr "%A, %B %e %Y"
 msgid "%s's backup status"
 msgstr "%s's Sicherungsstatus"
 
-#: modules/backuppc/backuppc/fileSearch.php:155
+#: modules/backuppc/backuppc/fileSearch.php:151
 msgid "1 Mb to 10 Mb"
 msgstr "1 Mb bis 10 Mb"
 
-#: modules/backuppc/backuppc/fileSearch.php:156
+#: modules/backuppc/backuppc/fileSearch.php:152
 msgid "10 Mb to 100 Mb"
 msgstr "10 Mb bis 100 Mb"
 
@@ -63,12 +63,12 @@ msgstr "Ordner hinzufügen"
 msgid "Add schedule"
 msgstr "Zeitplan hinzufügen"
 
-#: modules/backuppc/backuppc/fileSearch.php:94
-#: modules/backuppc/backuppc/fileSearch.php:117
+#: modules/backuppc/backuppc/fileSearch.php:92
+#: modules/backuppc/backuppc/fileSearch.php:114
 msgid "All"
 msgstr "Alle"
 
-#: modules/backuppc/backuppc/fileSearch.php:153
+#: modules/backuppc/backuppc/fileSearch.php:149
 msgid "Any size"
 msgstr "Jegliche Größe"
 
@@ -119,7 +119,7 @@ msgid "Backup up to date"
 msgstr "Backup aktuell"
 
 #: modules/backuppc/backuppc/BrowseBackups.php:59
-#: modules/backuppc/backuppc/fileSearch.php:97
+#: modules/backuppc/backuppc/fileSearch.php:95
 msgid "Backup#"
 msgstr "Backup#"
 
@@ -190,7 +190,7 @@ msgstr "Aktueller Status:"
 msgid "Custom"
 msgstr "Eigene"
 
-#: modules/backuppc/backuppc/fileSearch.php:107
+#: modules/backuppc/backuppc/fileSearch.php:105
 msgid "Date"
 msgstr "Datum"
 
@@ -217,7 +217,7 @@ msgstr "Profil löschen"
 msgid "Delete this profile"
 msgstr "Dieses Profil löschen"
 
-#: modules/backuppc/backuppc/ajaxDownloadsTable.php:108
+#: modules/backuppc/backuppc/ajaxDownloadsTable.php:105
 msgid "Destination"
 msgstr "Ziel"
 
@@ -226,7 +226,7 @@ msgstr "Ziel"
 msgid "Do not backup from"
 msgstr "Nicht sichern von"
 
-#: modules/backuppc/backuppc/ajaxDownloadsTable.php:61
+#: modules/backuppc/backuppc/ajaxDownloadsTable.php:63
 msgid "Download"
 msgstr "Download"
 
@@ -235,7 +235,6 @@ msgid "Download files/ZIP from backup"
 msgstr "Herunterladen von Dateien/ZIP aus Backup"
 
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:151
-#: modules/backuppc/backuppc/ajaxFileSearch.php:143
 msgid "Download selected (ZIP)"
 msgstr "Ausgewählte herunterladen (ZIP)"
 
@@ -301,7 +300,7 @@ msgstr "Ausgeschlossene Dateien"
 msgid "Failed to delete the selected profile"
 msgstr "Fehler beim Löschen des gewählten Profils"
 
-#: modules/backuppc/backuppc/ajaxFileSearch.php:122
+#: modules/backuppc/backuppc/ajaxFileSearch.php:116
 msgid "File"
 msgstr "Datei"
 
@@ -309,7 +308,7 @@ msgstr "Datei"
 msgid "File count (new)"
 msgstr "Dateianzahl (neu)"
 
-#: modules/backuppc/backuppc/fileSearch.php:84
+#: modules/backuppc/backuppc/fileSearch.php:83
 msgid "File name"
 msgstr "Dateiname"
 
@@ -318,7 +317,7 @@ msgstr "Dateiname"
 msgid "File search"
 msgstr "Dateisuche"
 
-#: modules/backuppc/backuppc/fileSearch.php:168
+#: modules/backuppc/backuppc/fileSearch.php:164
 msgid "File size"
 msgstr "Dateigröße"
 
@@ -334,7 +333,7 @@ msgstr "Filesets"
 #: modules/backuppc/backuppc/BrowseShareNames.php:60
 #: modules/backuppc/backuppc/EditBackupProfile.php:148
 #: modules/backuppc/backuppc/edit.php:142
-#: modules/backuppc/backuppc/fileSearch.php:130
+#: modules/backuppc/backuppc/fileSearch.php:127
 msgid "Folder"
 msgstr "Ordner"
 
@@ -356,7 +355,7 @@ msgstr "Vollständige Größe (GB)"
 msgid "GB"
 msgstr "GB"
 
-#: modules/backuppc/backuppc/fileSearch.php:157
+#: modules/backuppc/backuppc/fileSearch.php:153
 msgid "Greater than 100 Mb"
 msgstr "Mehr als 100 Mb"
 
@@ -401,11 +400,11 @@ msgstr "KB"
 msgid "Last message"
 msgstr "Letzte Nachricht"
 
-#: modules/backuppc/backuppc/ajaxDownloadsTable.php:86
+#: modules/backuppc/backuppc/ajaxDownloadsTable.php:85
 msgid "Latest direct restore to host"
 msgstr "Letzte direkte Wiederherstellung zum Host"
 
-#: modules/backuppc/backuppc/fileSearch.php:154
+#: modules/backuppc/backuppc/fileSearch.php:150
 msgid "Less than 1 Mb"
 msgstr "Weniger als 1 Mb"
 
@@ -502,12 +501,11 @@ msgstr "wiederherstellen von"
 msgid "Restore points"
 msgstr "Wiederherstellungspunkte "
 
-#: modules/backuppc/backuppc/ajaxDownloadsTable.php:109
+#: modules/backuppc/backuppc/ajaxDownloadsTable.php:106
 msgid "Restore time"
 msgstr "Wiederherstellungszeit"
 
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:152
-#: modules/backuppc/backuppc/ajaxFileSearch.php:144
 msgid "Restore to host"
 msgstr "Auf Host wiederherstellen"
 
@@ -529,7 +527,7 @@ msgstr "Zeitplan"
 msgid "Schedules"
 msgstr "Zeitpläne"
 
-#: modules/backuppc/backuppc/fileSearch.php:186
+#: modules/backuppc/backuppc/fileSearch.php:181
 msgid "Search"
 msgstr "Suchen"
 
@@ -551,7 +549,7 @@ msgid "Share names"
 msgstr "Freigabennamen"
 
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:131
-#: modules/backuppc/backuppc/ajaxFileSearch.php:124
+#: modules/backuppc/backuppc/ajaxFileSearch.php:118
 msgid "Size"
 msgstr "Größe"
 
@@ -559,7 +557,7 @@ msgstr "Größe"
 msgid "Start Full Backup"
 msgstr "Vollständiges Backup starten"
 
-#: modules/backuppc/backuppc/ajaxDownloadsTable.php:110
+#: modules/backuppc/backuppc/ajaxDownloadsTable.php:107
 #: modules/backuppc/backuppc/localSidebar.php:27
 msgid "Status"
 msgstr "Status"
@@ -589,7 +587,7 @@ msgstr "Das Profil wurde erfolgreich entfernt."
 msgid "The selected files are going to be restored to"
 msgstr "Die ausgewählten Dateien werden wiederhergestellt in"
 
-#: modules/backuppc/backuppc/fileSearch.php:54
+#: modules/backuppc/backuppc/fileSearch.php:53
 msgid "There is no backup for this machine yet."
 msgstr "Es existiert noch keine Sicherung für diesen Rechner."
 
@@ -763,7 +761,7 @@ msgid "on"
 msgstr "auf"
 
 #: modules/backuppc/backuppc/EditPeriodProfile.php:144
-#: modules/backuppc/backuppc/ajaxDownloadsTable.php:86
+#: modules/backuppc/backuppc/ajaxDownloadsTable.php:85
 #: modules/backuppc/backuppc/edit.php:211
 msgid "to"
 msgstr "bis"

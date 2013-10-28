@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-14 01:00+0200\n"
+"POT-Creation-Date: 2013-10-28 01:00+0100\n"
 "PO-Revision-Date: 2013-10-10 13:51+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Spanish (Spain) (http://transifex.mandriva.com/projects/p/"
@@ -482,7 +482,7 @@ msgid "Command line to run"
 msgstr ""
 
 #: modules/msc/includes/command_history.php:110
-#: modules/msc/includes/command_history.php:278 modules/msc/msc/launch.php:304
+#: modules/msc/includes/command_history.php:278 modules/msc/msc/launch.php:308
 msgid "Command name"
 msgstr ""
 
@@ -530,7 +530,7 @@ msgstr ""
 msgid "Consolidated view"
 msgstr ""
 
-#: modules/msc/includes/bundle_widgets.php:371 modules/msc/msc/launch.php:355
+#: modules/msc/includes/bundle_widgets.php:371 modules/msc/msc/launch.php:359
 msgid "Copy Mode"
 msgstr ""
 
@@ -602,7 +602,7 @@ msgstr ""
 msgid "Delete file"
 msgstr ""
 
-#: modules/msc/includes/bundle_widgets.php:351 modules/msc/msc/launch.php:308
+#: modules/msc/includes/bundle_widgets.php:351 modules/msc/msc/launch.php:312
 msgid "Delete files after a successful execution"
 msgstr ""
 
@@ -614,7 +614,7 @@ msgstr ""
 msgid "Delete in progress"
 msgstr ""
 
-#: modules/msc/includes/bundle_widgets.php:376 modules/msc/msc/launch.php:360
+#: modules/msc/includes/bundle_widgets.php:376 modules/msc/msc/launch.php:364
 msgid "Deploy using a local proxy"
 msgstr ""
 
@@ -638,7 +638,7 @@ msgstr ""
 msgid "Direct launch"
 msgstr ""
 
-#: modules/msc/msc/launch.php:309
+#: modules/msc/msc/launch.php:313
 msgid "Do an inventory after a successful execution"
 msgstr ""
 
@@ -772,7 +772,7 @@ msgstr ""
 msgid "Group"
 msgstr ""
 
-#: modules/msc/msc/launch.php:258
+#: modules/msc/msc/launch.php:262
 #, php-format
 msgid "Group Advanced launch : action \"%s\" on \"%s\""
 msgstr ""
@@ -785,7 +785,7 @@ msgstr ""
 msgid "Halt Failed: %percent% (%d packages)"
 msgstr ""
 
-#: modules/msc/includes/bundle_widgets.php:354 modules/msc/msc/launch.php:311
+#: modules/msc/includes/bundle_widgets.php:354 modules/msc/msc/launch.php:315
 msgid "Halt client after"
 msgstr ""
 
@@ -970,7 +970,7 @@ msgstr ""
 msgid "Machine"
 msgstr ""
 
-#: modules/msc/includes/bundle_widgets.php:362 modules/msc/msc/launch.php:317
+#: modules/msc/includes/bundle_widgets.php:362 modules/msc/msc/launch.php:321
 msgid "Max bandwidth (kbits/s)"
 msgstr ""
 
@@ -1171,7 +1171,7 @@ msgstr ""
 msgid "Possible actions"
 msgstr ""
 
-#: modules/msc/msc/launch.php:385
+#: modules/msc/msc/launch.php:389
 msgid "Probe status"
 msgstr ""
 
@@ -1217,7 +1217,7 @@ msgstr ""
 msgid "Reboot Failed: %percent% (%d packages)"
 msgstr ""
 
-#: modules/msc/msc/launch.php:310
+#: modules/msc/msc/launch.php:314
 msgid "Reboot client"
 msgstr ""
 
@@ -1273,7 +1273,7 @@ msgstr ""
 msgid "Scheduler"
 msgstr ""
 
-#: modules/msc/msc/launch.php:305
+#: modules/msc/msc/launch.php:309
 msgid "Script parameters"
 msgstr ""
 
@@ -1337,7 +1337,7 @@ msgstr ""
 msgid "Show running task's logs"
 msgstr ""
 
-#: modules/msc/msc/launch.php:249
+#: modules/msc/msc/launch.php:253
 #, php-format
 msgid "Single advanced launch : action \"%s\" on \"%s\""
 msgstr ""
@@ -1371,7 +1371,7 @@ msgid "Start"
 msgstr ""
 
 #: modules/msc/includes/command_history.php:117
-#: modules/msc/includes/command_history.php:293 modules/msc/msc/launch.php:306
+#: modules/msc/includes/command_history.php:293 modules/msc/msc/launch.php:310
 msgid "Start \"Wake On Lan\" query if connection fails"
 msgstr ""
 
@@ -1406,7 +1406,7 @@ msgstr ""
 msgid "Start inventory agent"
 msgstr ""
 
-#: modules/msc/msc/launch.php:307
+#: modules/msc/msc/launch.php:311
 msgid "Start script"
 msgstr ""
 
@@ -1478,11 +1478,11 @@ msgstr ""
 msgid "Target platform is %s"
 msgstr ""
 
-#: modules/msc/msc/launch.php:315
+#: modules/msc/msc/launch.php:319
 msgid "The command must start after"
 msgstr ""
 
-#: modules/msc/msc/launch.php:316
+#: modules/msc/msc/launch.php:320
 msgid "The command must stop before"
 msgstr ""
 
@@ -1819,7 +1819,7 @@ msgstr ""
 msgid "logs list"
 msgstr ""
 
-#: modules/msc/msc/launch.php:82 modules/msc/msc/launch.php:152
+#: modules/msc/msc/launch.php:84 modules/msc/msc/launch.php:154
 msgid "never"
 msgstr ""
 
@@ -1831,7 +1831,7 @@ msgstr ""
 msgid "no"
 msgstr ""
 
-#: modules/msc/msc/launch.php:80 modules/msc/msc/launch.php:149
+#: modules/msc/msc/launch.php:82 modules/msc/msc/launch.php:151
 msgid "now"
 msgstr ""
 
@@ -1847,11 +1847,11 @@ msgstr ""
 msgid "over_time"
 msgstr ""
 
-#: modules/msc/includes/bundle_widgets.php:368 modules/msc/msc/launch.php:352
+#: modules/msc/includes/bundle_widgets.php:368 modules/msc/msc/launch.php:356
 msgid "push"
 msgstr ""
 
-#: modules/msc/includes/bundle_widgets.php:368 modules/msc/msc/launch.php:352
+#: modules/msc/includes/bundle_widgets.php:368 modules/msc/msc/launch.php:356
 msgid "push / pull"
 msgstr ""
 
