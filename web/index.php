@@ -88,9 +88,8 @@ if (isset($_GET["agentsessionexpired"])) {
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <link rel="icon" href="img/common/favicon.ico" />
         <script src="jsframework/lib/jquery-1.10.2.min.js" type="text/javascript"></script>
-        <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 </head>
-<body onload="Form.focusFirstElement('loginForm')">
+<body onload="$('#username').focus()">
 
 <div id="loginBox">
         <div id="header">
@@ -162,7 +161,7 @@ if ($error) {
                 // If lang1 = en => LANG =  C
                 if ($lang_1 == 'en')
                     $_SESSION['lang'] = 'C';
-                else // We check other languages 
+                else // We check other languages
                     // Searching with xx_XX pattern
                     if (in_array($lang_2, $languages))
                         $_SESSION['lang'] = $lang_2;
@@ -172,7 +171,7 @@ if ($error) {
                             if (substr($lang, 0, 2) == $lang_1)
                                 $_SESSION['lang'] = $lang;
             }
-            
+
             if (isset($_SESSION['lang']))
                 $langList->setSelected($_SESSION['lang']);
             else
@@ -183,7 +182,7 @@ if ($error) {
                 <p><a href="forgotpassword.php?server=<?=$servList->selected?>&lang=<?=$langList->selected?>"><?=_("Forgot password ?")?></a></p>
             <?php
             }
-            
+
             if (count($servDescList) == 1)
             {
                 printf('<input type="hidden" id="server" name="server" value="%s" />',$servLabelList[0]);
