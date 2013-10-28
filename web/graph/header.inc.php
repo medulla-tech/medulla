@@ -304,70 +304,59 @@ $root = $conf["global"]["root"];
 if (isset($_SESSION['servicesInfos'])) {
     ?>
                 function restartServices() {
-
                     services = JSON.parse('<?= $_SESSION['servicesInfos'] ?>');
 
                     checkService = function(service) {
-                        jQuery.get({
-                            'url': service.check,
-                            type: 'get',
-                            success: function(data) {
-                                var statusElem = jQuery('#' + service.id + 'Status');
-                                // If the response is json
-                                if (typeof data == 'object') {
-                                    var status = data[1];
-                                    if (status != "active" && status != "failed") {
-                                        setTimeout(function() {
-                                            checkService(service);
-                                        }, 800);
-                                    }
-                                    else {
-                                        if (status == "failed") {
-                                            statusElem.html(service.msg_fail);
-                                            statusElem.removeClass("alert-info");
-                                            statusElem.addClass("alert-error");
-                                        }
-                                        else {
-                                            statusElem.html(service.msg_success);
-                                            statusElem.removeClass("alert-info");
-                                            statusElem.addClass("alert-success");
-                                        }
-                                    }
-                                }
-                                else {
-                                    statusElem.html(service.msg_fail);
-                                    statusElem.removeClass("alert-info");
-                                    statusElem.addClass("alert-error");
-                                }
-                            }});
-
-
-                        services.each(function(service) {
-                            jQuery.get({
-                                'url': service.restart,
-                                type: 'get',
-                                success: function(data) {
-                                    var message = jQuery('#' + service.id + 'Status');
-                                    if (!message.length) {
-                                        message = jQuery('<p></p>').attr({'id': service.id + 'Status',
-                                            'class': 'alert alert-info'}).appendTo('#restartStatus');
-                                    }
-                                    message.html(service.msg_exec);
-                                    message.removeClass("alert-success");
-                                    message.removeClass("alert-error");
-                                    message.addClass("alert-info");
-                                    jQuery('#restartStatus').show();
+                        jQuery.get(service.check, function(data) {
+                            var statusElem = jQuery('#' + service.id + 'Status');
+                            // If the response is json
+                            if (typeof data == 'object') {
+                                var status = data[1];
+                                if (status != "active" && status != "failed") {
                                     setTimeout(function() {
                                         checkService(service);
-                                    }, 1000);
-                                }});
-
+                                    }, 800);
+                                }
+                                else {
+                                    if (status == "failed") {
+                                        statusElem.html(service.msg_fail);
+                                        statusElem.removeClass("alert-info");
+                                        statusElem.addClass("alert-error");
+                                    }
+                                    else {
+                                        statusElem.html(service.msg_success);
+                                        statusElem.removeClass("alert-info");
+                                        statusElem.addClass("alert-success");
+                                    }
+                                }
+                            }
+                            else {
+                                statusElem.html(service.msg_fail);
+                                statusElem.removeClass("alert-info");
+                                statusElem.addClass("alert-error");
+                            }
                         });
                     }
 
+                    services.each(function(service) {
+                        jQuery.get(service.restart, function(data) {
+                            var message = jQuery('#' + service.id + 'Status');
+                            if (!message.length) {
+                                message = jQuery('<p></p>').attr({'id': service.id + 'Status',
+                                    'class': 'alert alert-info'}).appendTo('#restartStatus');
+                            }
+                            message.html(service.msg_exec);
+                            message.removeClass("alert-success");
+                            message.removeClass("alert-error");
+                            message.addClass("alert-info");
+                            jQuery('#restartStatus').show();
+                            setTimeout(function() {
+                                checkService(service);
+                            }, 1000);
+                        });
+                    });
                 }
     <?php
 }
 ?>
-
             </script>
