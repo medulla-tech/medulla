@@ -315,7 +315,7 @@ class InputTpl extends AbstractTpl{
         }
         $required_attr = isset($arrParam["required"])?' rel="required"':'';
         $regexp_attr = isset($this->regexp)?' data-regexp="'.$this->regexp.'"':'';
-            
+
         print '<span id="container_input_'.$this->name.'"><input name="'.$this->name.'" id="'.$this->name.'" type="' . $this->fieldType . '" size="'.$this->size.'" value="'.$arrParam["value"].'" placeholder="'.$arrParam["placeholder"].'" '.$arrParam["disabled"].$required_attr.$regexp_attr.' autocomplete="off" /></span>';
 
         if (isset($arrParam["onchange"])) {
@@ -757,7 +757,7 @@ class MembersTpl extends AbstractTpl {
  *  display select html tags with specified
  *  entry, autoselect.
  */
-class SelectItem extends AbstractTpl{
+class SelectItem extends AbstractTpl {
     var $elements; /**< list of all elements*/
     var $elementsVal; /**< list of elements values*/
     var $selected; /**< element who are selected*/
@@ -867,7 +867,7 @@ class FormElement extends HtmlElement {
      */
     function display($arrParam = array()) {
         if (empty($arrParam)) $arrParam = $this->options;
-        $existACL=existAclAttr($this->template->name);
+        $existACL = existAclAttr(isset($this->template->name) ? $this->template->name : "");
 
         //if not
         if (!$existACL) {
@@ -1032,7 +1032,7 @@ class TrFormElement extends FormElement {
      */
     function display($arrParam = array()) {
         if (empty($arrParam)) $arrParam = $this->options;
-        if (!isset($this->cssErrorName)) $this->cssErrorName = $this->template->name;
+        if (!isset($this->cssErrorName)) $this->cssErrorName = isset($this->template->name) ? $this->template->name : "";
 
         printf('<tr');
 	if ($this->class !== null)
@@ -1063,7 +1063,7 @@ class TrFormElement extends FormElement {
             $old_value = "";
         }
         if(is_object($this->template)) {
-            $field_name = $this->template->name;
+            $field_name = isset($this->template->name) ? $this->template->name : "";
         }
         else if(is_array($this->template)) {
             $field_name = $this->template["name"];
