@@ -30,6 +30,7 @@ pulse2 modules.
 from mmc.support.mmctools import Singleton
 from mmc.database.ddl import DDLContentManager, DBControl
 from mmc.database.sqlalchemy_tests import checkSqlalchemy, MIN_VERSION, MAX_VERSION, CUR_VERSION
+from sqlalchemy.orm import sessionmaker; Session = sessionmaker()
 from sqlalchemy.exc import DBAPIError, NoSuchTableError
 
 import logging
@@ -38,6 +39,7 @@ NB_DB_CONN_TRY = 2
 class DatabaseHelper(Singleton):
     is_activated = False
     config = None
+    session = None
 
     def db_check(self):
         required_version = DDLContentManager().get_version(self.my_name)
@@ -59,17 +61,17 @@ class DatabaseHelper(Singleton):
         return True
     def db_update(self):
         """Automatic database update"""
- 
-        db_control = DBControl(user=self.config.dbuser, 
-                               passwd=self.config.dbpasswd, 
-                               host=self.config.dbhost, 
-                               port=self.config.dbport, 
+
+        db_control = DBControl(user=self.config.dbuser,
+                               passwd=self.config.dbpasswd,
+                               host=self.config.dbhost,
+                               port=self.config.dbport,
                                module=self.config.dbname,
                                log=self.logger,
                                use_same_db=True)
 
         return db_control.process()
-       
+
 
     def connected(self):
         try:
@@ -152,6 +154,27 @@ class DatabaseHelper(Singleton):
             return False
         return True
 
+
+    @property
+    def db_version(self):
+        return self.db.execute("select Number from version").scalar()
+
+
+    # Session decorator to create and close session automatically
+    @classmethod
+    def _session(self, func):
+        def __session(self, *args, **kw):
+            created = False
+            if not self.session:
+                self.session = Session(bind=self.db)
+                created = True
+            result = func(self, self.session,*args, **kw)
+            if created:
+                self.session.close()
+                self.session = None
+            return result
+        return __session
+
 ###########################################################
 def id2uuid(id):
     return "UUID%d" % id
@@ -194,3 +217,20 @@ class DBObject(object):
             ret['db_uuid'] = self.getUUID()
         return ret
 
+
+# new Class to remplace current DBObject
+class DBObj(object):
+
+    # Function to convert mapped object to Dict
+    # TODO : Do the same for relations [convert relations to subdicts]
+    def toDict(self, relations = False):
+        d = self.__dict__
+        if '_sa_instance_state' in d: del d['_sa_instance_state']
+        return d
+
+    def fromDict(self, d, relations = False):
+        #TODO: Test if d is dict
+        if '_sa_instance_state' in d: del d['_sa_instance_state']
+        for key, value in d.iteritems():
+            if key:
+                setattr(self, key, value)
