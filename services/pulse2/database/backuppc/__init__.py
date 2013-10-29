@@ -72,10 +72,6 @@ class BackuppcDatabase(DatabaseHelper):
         return True
 
 
-    @property
-    def db_version(self):
-        return self.db.execute("select Number from version").scalar()
-
     def initMappers(self):
         """
         Initialize all SQLalchemy mappers needed for the BackupPC database
@@ -103,22 +99,12 @@ class BackuppcDatabase(DatabaseHelper):
     # BACKUP PROFILES FUNCTIONS
     # =====================================================================
 
-    def _session(func):
-        def __session(self, *args, **kw):
-            if not self.session:
-                self.session = Session(bind=self.db)
-            result = func(self, self.session,*args, **kw)
-            self.session.close()
-            self.session = None
-            return result
-        return __session
-
-    @_session
+    @DatabaseHelper._session
     def get_backup_profiles(self, session):
         ret = session.query(Backup_profiles).all()
         return [row.toDict() for row in ret]
 
-    @_session
+    @DatabaseHelper._session
     def add_backup_profile(self, session, _profile):
         profile = Backup_profiles()
         profile.fromDict(_profile)
@@ -126,13 +112,13 @@ class BackuppcDatabase(DatabaseHelper):
         session.flush()
         return profile.toDict()
 
-    @_session
+    @DatabaseHelper._session
     def delete_backup_profile(self, session, id):
         ret = session.query(Backup_profiles).get(int(id))
         session.delete(ret)
         session.flush()
 
-    @_session
+    @DatabaseHelper._session
     def edit_backup_profile(self, session, id, override):
         ret = session.query(Backup_profiles).get(int(id))
         if ret:
@@ -147,12 +133,12 @@ class BackuppcDatabase(DatabaseHelper):
     # PERIOD PROFILES FUNCTIONS
     # =====================================================================
 
-    @_session
+    @DatabaseHelper._session
     def get_period_profiles(self, session):
         ret = session.query(Period_profiles).all()
         return [row.toDict() for row in ret]
 
-    @_session
+    @DatabaseHelper._session
     def add_period_profile(self, session, _profile):
         profile = Period_profiles()
         profile.fromDict(_profile)
@@ -161,13 +147,13 @@ class BackuppcDatabase(DatabaseHelper):
         return profile.toDict()
 
 
-    @_session
+    @DatabaseHelper._session
     def delete_period_profile(self, session, id):
         ret = session.query(Period_profiles).get(int(id))
         session.delete(ret)
         session.flush()
 
-    @_session
+    @DatabaseHelper._session
     def edit_period_profile(self, session, id,override):
         ret = session.query(Period_profiles).get(int(id))
         if ret:
@@ -182,12 +168,12 @@ class BackuppcDatabase(DatabaseHelper):
     # HOSTS TABLE FUNCTIONS
     # =====================================================================
 
-    @_session
+    @DatabaseHelper._session
     def get_all_hosts(self, session):
         ret = session.query(Hosts).all()
         return [row.toDict() for row in ret]
 
-    @_session
+    @DatabaseHelper._session
     def get_host_backup_profile(self, session, uuid):
         host = session.query(Hosts).filter_by(uuid = uuid).one()
         if not host:
@@ -196,7 +182,7 @@ class BackuppcDatabase(DatabaseHelper):
         else:
             return host.backup_profile
 
-    @_session
+    @DatabaseHelper._session
     def set_host_backup_profile(self, session, uuid, newprofile):
         host = session.query(Hosts).filter_by(uuid = uuid).one()
         if host:
@@ -204,7 +190,7 @@ class BackuppcDatabase(DatabaseHelper):
             session.flush()
         return host != None
 
-    @_session
+    @DatabaseHelper._session
     def get_host_period_profile(self, session, uuid):
         host = session.query(Hosts).filter_by(uuid = uuid).one()
         if not host:
@@ -213,7 +199,7 @@ class BackuppcDatabase(DatabaseHelper):
         else:
             return host.period_profile
 
-    @_session
+    @DatabaseHelper._session
     def set_host_period_profile(self, session, uuid, newprofile):
         ret = session.query(Hosts).filter_by(uuid = uuid).one()
         if ret:
@@ -221,7 +207,7 @@ class BackuppcDatabase(DatabaseHelper):
             session.flush()
         return ret != None
 
-    @_session
+    @DatabaseHelper._session
     def get_hosts_by_backup_profile(self, session, profileid):
         ret = session.query(Hosts.uuid).filter_by(backup_profile = profileid).all()
         if ret:
@@ -230,7 +216,7 @@ class BackuppcDatabase(DatabaseHelper):
             return []
 
 
-    @_session
+    @DatabaseHelper._session
     def get_hosts_by_period_profile(self, session, profileid):
         ret = session.query(Hosts.uuid).filter_by(period_profile = profileid).all()
         if ret:
@@ -242,7 +228,7 @@ class BackuppcDatabase(DatabaseHelper):
     # HOSTS TABLE FUNCTIONS
     # =====================================================================
 
-    @_session
+    @DatabaseHelper._session
     def add_host(self, session, uuid):
         host = Hosts(uuid = uuid)
         # Setting host fields
@@ -252,7 +238,7 @@ class BackuppcDatabase(DatabaseHelper):
         session.flush()
         return host.toDict()
 
-    @_session
+    @DatabaseHelper._session
     def remove_host(self, session, uuid):
         try:
             ret = session.query(Hosts).filter_by(uuid = uuid.upper()).one()
@@ -264,7 +250,7 @@ class BackuppcDatabase(DatabaseHelper):
             logger.error("Can't remove host where uuid=%s" % uuid)
             logger.error(str(e))
 
-    @_session
+    @DatabaseHelper._session
     def host_exists(self, session, uuid):
         try:
             ret = session.query(Hosts).filter_by(uuid = uuid.upper()).all()
@@ -277,7 +263,7 @@ class BackuppcDatabase(DatabaseHelper):
     # BACKUP SERVER FUNCTIONS
     # =====================================================================
 
-    @_session
+    @DatabaseHelper._session
     def get_backupserver_by_entity(self, session, entity_uuid):
         try:
             ret = session.query(Backup_servers.backupserver_url).filter_by(entity_uuid = entity_uuid).one()
@@ -288,20 +274,20 @@ class BackuppcDatabase(DatabaseHelper):
 
     # =====================================================================
 
-    @_session
+    @DatabaseHelper._session
     def get_backupservers_list(self, session):
         ret = session.query(Backup_servers).all()
         return [row.toDict() for row in ret]
 
 
-    @_session
+    @DatabaseHelper._session
     def add_backupserver(self, session, entityuuid, serverURL):
         server = Backup_servers(entity_uuid = entityuuid, backupserver_url = serverURL)
         session.add(server)
         session.flush()
         return server.toDict()
 
-    @_session
+    @DatabaseHelper._session
     def remove_backupserver(self, session, entityuuid):
         ret = session.query(Backup_servers).filter_by(entity_uuid = entityuuid).first()
         if ret:

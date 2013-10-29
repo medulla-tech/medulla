@@ -26,25 +26,13 @@ import logging
 
 from sqlalchemy import Column, String, Text, Integer, Float
 from sqlalchemy.ext.declarative import declarative_base; Base = declarative_base()
+from mmc.database.database_helper import DBObj
 
-class BackupPCDBObj(object):
 
+
+class BackupPCDBObj(DBObj):
     # All BackupPC tables have id colmun as primary key
     id = Column(Integer, primary_key=True)
-
-    # Function to convert mapped object to Dict
-    # TODO : Do the same for relations [convert relations to subdicts]
-    def toDict(self, relations = False):
-        d = self.__dict__
-        if '_sa_instance_state' in d: del d['_sa_instance_state']
-        return d
-
-    def fromDict(self, d, relations = False):
-        #TODO: Test if d is dict
-        if '_sa_instance_state' in d: del d['_sa_instance_state']
-        for key, value in d.iteritems():
-            if key:
-                setattr(self, key, value)
 
 
 class Backup_profiles(Base, BackupPCDBObj):

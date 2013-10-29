@@ -1,7 +1,7 @@
 # -*- coding: utf-8; -*-
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# (c) 2007-2013 Mandriva, http://www.mandriva.com/
+# (c) 2007 Mandriva, http://www.mandriva.com/
 #
 # $Id$
 #
@@ -22,12 +22,16 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-Report part of pkgs module
+Plugin to manage the interface with BackupPC
 """
 
-import Backuppc
 
-class DummyReportReport(object):
-    __enable__ = False
-    def getDatas(self, *args, **kargs):
-        return 42
+class exportedReport(object):
+    #Add meta class singleton_N
+
+    def getServerUsedDiskSpace(self, servername, num):
+        #output format
+        result = []
+        result.append({'entity_id': 'UUID1', 'value': 14})
+        result.append({'entity_id': 'UUID2', 'value': 18})
+        return result
