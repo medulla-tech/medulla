@@ -27,13 +27,13 @@ imaging plugin
 """
 
 import logging
-from twisted.internet import defer, reactor
+from twisted.internet import defer
 from sets import Set as set
 import time
 
 from mmc.support.mmctools import xmlrpcCleanup
-from mmc.support.mmctools import SingletonN
 from mmc.support.mmctools import RpcProxyI #, ContextMakerI, SecurityContext
+from mmc.core.tasks import TaskManager
 from mmc.plugins.imaging.config import ImagingConfig
 from mmc.plugins.base.computers import ComputerManager
 from pulse2.managers.profile import ComputerProfileManager
@@ -44,46 +44,6 @@ from pulse2.database.imaging.types import P2IT, P2ISS, P2IM, P2ERR
 from pulse2.apis.clients.imaging import ImagingApi
 import pulse2.utils
 
-
-class TaskManager(object):
-    __metaclass__ = SingletonN
-
-    tasks = {}
-
-
-    def deferTask(self, label, countdown, func, *args, **kw):
-        def _taskFunc():
-            # TODO Implement beforeCall callback
-            # Unset task
-            del self.tasks[label]
-            try:
-                func.__call__(*args, **kw)
-            except Exception, e:
-                logging.getLogger().error(str(e))
-            # TODO Implement beforeCall callback
-            #logging.getLogger().error('After call')
-        # =================================================
-        # If task already exists, we delay it
-        if label in self.tasks:
-            self.tasks[label].delay(countdown)
-        # Calling later
-        else:
-            self.tasks[label] = reactor.callLater(countdown, _taskFunc)
-        return self.tasks[label]
-
-    def cancelTask(self, label):
-        if label in self.tasks:
-            self.tasks[label].cancel()
-            del self.tasks[label]
-            return True
-        else:
-            return False
-
-    def getTask(self, label):
-        if label in self.tasks:
-            return self.tasks[label]
-        else:
-            return None
 
 class ImagingRpcProxy(RpcProxyI):
     """ XML/RPC Bindings """
@@ -301,7 +261,7 @@ class ImagingRpcProxy(RpcProxyI):
                 logging.getLogger().error(e)
 
         if not immediate:
-            TaskManager().deferTask('imaging.applyLocationDefaultBootMenu', 30 ,_applyLocationDefaultBootMenu, loc_uuid)
+            TaskManager().addTask('imaging.applyLocationDefaultBootMenu', (_applyLocationDefaultBootMenu, [loc_uuid]), delay=30)
         else:
             _applyLocationDefaultBootMenu(loc_uuid)
         return [True]
@@ -2328,7 +2288,7 @@ class ImagingRpcProxy(RpcProxyI):
         """
         Get a computer who have a master attached with this postinstall script
         Used to update postinstall script on /var/lib/pulse2/imaging/master/postinst.d/
-        
+
         @param pis_uuid: postinstall script UUID
         @type pis_uuid: str
 
