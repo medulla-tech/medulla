@@ -48,34 +48,6 @@ class Monitoring(object):
         db = ReportDatabase()
         return db.getDiscSpace(from_timestamp, to_timestamp, splitter)
 
-    def get_disc_space_xls(self, *args, **kargs):
-        def timestamp_to_date(timestamp):
-            return datetime.fromtimestamp(int(timestamp)).strftime('%Y/%m/%d')
-
-        title = kargs['title']
-        wbk = kargs['wbk']
-        r = self.get_disc_space(*args, **kargs)
-        sheet = wbk.add_sheet(title)
-        line = 0
-        column = 0
-        sheet.write(line, column, '')
-        for i in xrange(len(r['titles'])):
-            line += 1
-            sheet.write(line, column, r['titles'][i])
-        r.pop('titles', None)
-
-        # get r keys and order them
-        headers = r.keys()
-        headers.sort()
-        for i in xrange(len(headers)):
-            column += 1
-            line = 0
-            sheet.write(line, column, timestamp_to_date(headers[i]))
-            for j in xrange(len(r[headers[i]])):
-                line += 1
-                sheet.write(line, column, r[headers[i]][j])
-        return wbk
-
     def get_disc_space_pdf(self, *args, **kargs):
         def timestamp_to_date(timestamp):
             return datetime.fromtimestamp(int(timestamp)).strftime('%Y/%m/%d')
@@ -186,34 +158,6 @@ class Monitoring(object):
         splitter = int(args[2])
         db = ReportDatabase()
         return db.getRamUsage(from_timestamp, to_timestamp, splitter)
-
-    def get_ram_usage_xls(self, *args, **kargs):
-        def timestamp_to_date(timestamp):
-            return datetime.fromtimestamp(int(timestamp)).strftime('%Y/%m/%d')
-
-        title = kargs['title']
-        wbk = kargs['wbk']
-        r = self.get_ram_usage(*args, **kargs)
-        sheet = wbk.add_sheet(title)
-        line = 0
-        column = 0
-        sheet.write(line, column, '')
-        for i in xrange(len(r['titles'])):
-            line += 1
-            sheet.write(line, column, r['titles'][i])
-        r.pop('titles', None)
-
-        # get r keys and order them
-        headers = r.keys()
-        headers.sort()
-        for i in xrange(len(headers)):
-            column += 1
-            line = 0
-            sheet.write(line, column, timestamp_to_date(headers[i]))
-            for j in xrange(len(r[headers[i]])):
-                line += 1
-                sheet.write(line, column, r[headers[i]][j])
-        return wbk
 
     def get_ram_usage_pdf(self, *args, **kargs):
         def timestamp_to_date(timestamp):

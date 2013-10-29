@@ -22,17 +22,16 @@
 """
 
 import logging
-import xlwt
 from os import chmod
 from weasyprint import HTML, CSS
 from importlib import import_module
-from datetime import datetime
 
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 from mmc.plugins.base import LdapUserGroupControl
 from mmc.plugins.report.config import ReportConfig
 from mmc.plugins.report.manager import ReportManager
 from mmc.plugins.report.database import ReportDatabase
+from mmc.plugins.report.XlsGenerator import XlsGenerator
 
 VERSION = "0.0.0"
 APIVERSION = "0:1:0"
@@ -126,7 +125,7 @@ class RpcProxy(RpcProxyI):
         """
         method to get xls report
         """
-        wbk = xlwt.Workbook()
+        xls = XlsGenerator()
         plugins = reports.keys()
         plugins.sort()
         for plugin in plugins:
@@ -134,18 +133,14 @@ class RpcProxy(RpcProxyI):
                 if len(params) == 4:
                     params.append({})
                 plugin, report_name, method, args, kargs = params
-                kargs['title'] = title
-                kargs['wbk'] = wbk
-                wbk = self.get_report_datas(plugin, report_name, method + '_xls', (args, kargs))
+                datas = self.get_report_datas(plugin, report_name, method, (args, kargs))
 
-        wbk.save('/tmp/report.xls')
-        chmod('/tmp/report.xls', 0644)
-        return '/tmp/report.xls'
+                kargs['title'] = title
+                xls.get_xls_sheet(datas, *args, **kargs)
+
+        return xls.save()
 
     def get_pdf_report(self, reports):
-        def timestamp_to_date(timestamp):
-            return datetime.fromtimestamp(int(timestamp)).strftime('%Y/%m/%d')
-
         # Front page
         front = HTML(string='<h1>Report</h1>').render()
         # Summary
