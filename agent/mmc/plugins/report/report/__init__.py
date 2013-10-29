@@ -25,8 +25,7 @@
 Report part of pkgs module
 """
 
-import logging
-import Monitoring
+import Monitoring # pyflakes.ignore
 
 class DummyReportReport(object):
     __enable__ = False
