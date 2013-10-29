@@ -20,9 +20,10 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-pythonmodules = support plugins plugins.base plugins.ppolicy \
-	core core.audit client plugins.dashboard plugins.dashboard.panels \
-	plugins.services plugins.report core.signals database
+pythonmodules = core core.audit core.signals core.tasks \
+				support client database \
+				plugins plugins.base plugins.ppolicy plugins.dashboard \
+				plugins.services plugins.dashboard.panels plugins.report
 
 all-local: site.py
 
