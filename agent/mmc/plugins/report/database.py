@@ -24,12 +24,16 @@ Declare Report database
 
 import logging
 from datetime import timedelta
+from time import time
 
-from mmc.database.database_helper import DatabaseHelper, DBObject
+from mmc.database.database_helper import DatabaseHelper, DBObj
 
 from sqlalchemy import (create_engine, MetaData, Table, Integer, Column,
                         DateTime, and_)
 from sqlalchemy.orm import create_session, mapper
+
+from mmc.plugins.report.schema import ReportingData, Indicator
+
 
 class ReportDatabase(DatabaseHelper):
     """
@@ -55,90 +59,58 @@ class ReportDatabase(DatabaseHelper):
             self.session = None
             return False
         # Uncomment this line to connect to mysql and parse tables
-        #self.metadata.create_all()
-        self.session = create_session()
         self.is_activated = True
         self.logger.debug("Report database connected")
         return True
 
     def initMappers(self):
         """
-        Initialize all SQLalchemy mappers needed for the Report database
+        This Method is nomore need, all tables are mapped on schema.py
         """
-        # DiscSpace
-        self.disc_space = Table("DiscSpace", self.metadata,
-                                Column('id', Integer, primary_key = True),
-                                Column('timestamp', DateTime),
-                                Column('used', Integer),
-                                Column('free', Integer),
-                                mysql_engine='InnoDB'
-                                )
-        mapper(DiscSpace, self.disc_space)
+        return
 
-        self.ram_usage = Table("RamUsage", self.metadata,
-                                Column('id', Integer, primary_key = True),
-                                Column('timestamp', DateTime),
-                                Column('used', Integer),
-                                Column('free', Integer),
-                                mysql_engine='InnoDB'
-                                )
-        mapper(RamUsage, self.ram_usage)
+
+    @DatabaseHelper._session
+    def get_indicator_by_name(self, session, name):
+        return session.query(Indicator).filter_by(name = name).one()
+
+    @DatabaseHelper._session
+    def historize_indicator(self, session, name):
+        indicator = self.get_indicator_by_name(name)
+        # TODO: Test if history is 1 if not WARNING
+        # Save the indicator values to Db
+        for entry in indicator.getCurrentValue():
+            data = ReportingData()
+            # Import value and enity_id from entry
+            data.fromDict(entry)
+            #
+            data.indicator_id = indicator.id
+            data.timestamp = int(time())
+            session.add(data)
+        session.commit()
+
+    @DatabaseHelper._session
+    def historize_all(self, session):
+        indicators = session.query(Indicator).filter_by(active = 1, keep_history = 1).all()
+        for indicator in indicators:
+            # Save the indicator values to Db
+            try:
+                values = indicator.getCurrentValue()
+            except Exception, e:
+                logging.getLogger().warning('Unable to get data for indicator : %s' % indicator.name )
+                logging.getLogger().warning(str(e))
+                continue
+            #
+            for entry in values:
+                data = ReportingData()
+                # Import value and enity_id from entry
+                data.fromDict(entry)
+                #
+                data.indicator_id = indicator.id
+                data.timestamp = int(time())
+                session.add(data)
+        session.commit()
 
     def feed_db(self):
         logging.getLogger().debug('Successfully feeded Report database')
         return True
-
-    #################
-    ## Report Methods
-    #################
-
-    def getDiscSpace(self, from_timestamp, to_timestamp, splitter):
-        delta = to_timestamp - from_timestamp
-        if delta.days < splitter:
-            step = 1
-        else:
-            step = delta.days / splitter
-
-        session = create_session()
-        query = session.query(DiscSpace)
-        query = query.filter(and_(
-            DiscSpace.timestamp >= from_timestamp,
-            DiscSpace.timestamp <= to_timestamp + timedelta(1),
-        ))
-        session.close()
-
-        l = [(x.timestamp, x.used, x.free) for x in query.all()]
-
-        res = {'titles': ['Used', 'Free']}
-        for x in xrange(0, len(l), step):
-            res[l[x][0].strftime('%s')] = [l[x][1], l[x][2]]
-
-        return res
-
-    def getRamUsage(self, from_timestamp, to_timestamp, splitter):
-        delta = to_timestamp - from_timestamp
-        if delta.days < splitter:
-            step = 1
-        else:
-            step = delta.days / splitter
-
-        session = create_session()
-        query = session.query(RamUsage)
-        query = query.filter(and_(
-            RamUsage.timestamp >= from_timestamp,
-            RamUsage.timestamp <= to_timestamp + timedelta(1),
-        ))
-        session.close()
-
-        l = [(x.timestamp, x.used, x.free) for x in query.all()]
-
-        res = {'titles': ['Used', 'Free']}
-        for x in xrange(0, len(l), step):
-            res[l[x][0].strftime('%s')] = [l[x][1], l[x][2]]
-
-        return res
-
-class DiscSpace(DBObject):
-    pass
-class RamUsage(DBObject):
-    pass

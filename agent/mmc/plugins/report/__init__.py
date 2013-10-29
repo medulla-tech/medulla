@@ -98,7 +98,7 @@ class RpcProxy(RpcProxyI):
     def get_report_datas(self, plugin, report_name, method, args):
         """
         Method to get a report result.
-        Give plugin, report_name, method to call, optionaly  args and kargs 
+        Give plugin, report_name, method to call, optionaly  args and kargs
         for this method
 
         @param plugin: mmc plugin name (aka pkgs, imaging, glpi, ...)
@@ -162,8 +162,8 @@ class RpcProxy(RpcProxyI):
 
         css = CSS(string="""
                   table {
-                   border-width:1px; 
-                   border-style:solid; 
+                   border-width:1px;
+                   border-style:solid;
                    border-color:black;
                    border-collapse:collapse;
                   font-size: 10px;
@@ -173,8 +173,8 @@ class RpcProxy(RpcProxyI):
                   td {
                  }
                   td, th {
-                   border-width:1px; 
-                   border-style:solid; 
+                   border-width:1px;
+                   border-style:solid;
                    border-color:black;
                  }
                  """
@@ -208,3 +208,8 @@ class RpcProxy(RpcProxyI):
         plugin, report_name, method, args, kargs = params
         r = self.get_report_datas(plugin, report_name, method, (args, kargs))
         return r
+
+
+    def calldb(self, func, *args, **kw):
+        return getattr(ReportDatabase(),func).__call__(*args, **kw)
+
