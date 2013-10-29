@@ -34,7 +34,6 @@ from pulse2.version import getVersion, getRevision # pyflakes.ignore
 
 # Database
 from pulse2.database.backuppc import BackuppcDatabase
-from mmc.plugins.backuppc.database import ReportDatabase
 
 
 VERSION = "2.0.0"
@@ -63,9 +62,6 @@ def activate():
         return False
     if not BackuppcDatabase().activate(config):
         logger.warning("Plugin backuppc: an error occurred during the database initialization")
-        return False
-    if not ReportDatabase().activate(config):
-        logger.error("BackupPC Report database not activated")
         return False
     return True
 
