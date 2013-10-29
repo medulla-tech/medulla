@@ -21,7 +21,7 @@
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
 mmcconfdir = $(sysconfdir)/mmc
-nobase_dist_mmcconf_DATA = plugins/ppolicy.ini plugins/dashboard.ini \
+nobase_dist_mmcconf_DATA = plugins/ppolicy.ini plugins/dashboard.ini plugins/report.ini \
 	agent/keys/cacert.pem agent/keys/localcert.pem
 nobase_nodist_mmcconf_DATA = agent/config.ini plugins/base.ini plugins/services.ini
 
