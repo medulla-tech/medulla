@@ -29,6 +29,8 @@
 import logging
 import sqlalchemy
 import time
+import datetime
+
 
 # ORM mappings
 from pulse2.database.msc.orm.commands_on_host import CommandsOnHost, stopCommandOnHost
@@ -164,14 +166,23 @@ class Commands(object):
             logging.getLogger().debug("inDeploymentInterval(#%s): %s" % (self.id, result))
         return result
 
+    def in_valid_time(self) :
+        now = datetime.datetime.now()
+        return now > self.start_date and now < self.end_date
+
+
     def getCohIds(self):
         """
         Returns the list of commands_on_host linked to this command
         """
-        session = sqlalchemy.create_session()
+        session = sqlalchemy.orm.create_session()
         myCommandOnHosts = session.query(CommandsOnHost).filter(CommandsOnHost.fk_commands == self.getId())
         session.close()
         return myCommandOnHosts.all()
+
+    def getFilesList(self):
+        return [a.split("/").pop() for a in self.files.split("\n")]
+ 
 
     def setNextConnectionDelay(self, delay):
         """"set delay to the next attept """

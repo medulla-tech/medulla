@@ -24,9 +24,14 @@
 
 """ Class to map msc.target to SA
 """
-
+import re
 import sqlalchemy
 import logging
+
+re_file_prot = re.compile('^file://')
+re_http_prot = re.compile('^http://')
+re_https_prot = re.compile('^https://')
+
 
 class Target(object):
     """ Mapping between msc.target and SA
@@ -88,6 +93,15 @@ class Target(object):
         result = (ips_len > 0 ) or (names_len > 0)
         logging.getLogger().debug("hasEnoughInfoToConnect(#%s): %s" % (self.id, result))
         return result
+
+    def hasFileMirror(self):
+        return re_file_prot.match(self.mirrors)
+
+    def hasHTTPMirror(self):
+        mirrors = self.mirrors.split('||')
+        mirror = mirrors[0] # TODO: handle when several mirrors are available
+        return re_http_prot.match(mirror) or re_https_prot.match(mirror)
+
 
     def toH(self):
         return {
