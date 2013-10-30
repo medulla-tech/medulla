@@ -117,13 +117,13 @@ def start_scheduler(config):
         sys.exit(1)
     
     # Scheduler's XMLRPC Proxy
-    scheduler_proxy_path = config.scheduler_proxy_path
-    logger.info('Starting XMLRPC Proxy "%s"' % (scheduler_proxy_path))
-    try :
-        Popen([scheduler_proxy_path])
-    except OSError, e:
-        logger.error('Start of XMLRPC Proxy failed')
-        sys.exit(1)
+#    scheduler_proxy_path = config.scheduler_proxy_path
+#    logger.info('Starting XMLRPC Proxy "%s"' % (scheduler_proxy_path))
+#    try :
+#        Popen([scheduler_proxy_path])
+#    except OSError, e:
+#        logger.error('Start of XMLRPC Proxy failed')
+#        sys.exit(1)
  
 
     # drop privs

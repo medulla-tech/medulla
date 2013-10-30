@@ -1,9 +1,6 @@
-#!/usr/bin/python
 # -*- coding: utf-8; -*-
 #
-# (c) 2007-2008 Mandriva, http://www.mandriva.com/
-#
-# $Id$
+# (c) 2013 Mandriva, http://www.mandriva.com/
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
 #
@@ -22,18 +19,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+""" 
+A proxy providing the communication between scheduler and launcher (or mmc).
 """
-    Pulse2 PackageServer
-"""
-
-from pulse2.scheduler.assign_algo import MGAssignAlgo
-
-class MGUserAssignAlgo(MGAssignAlgo):
-    name = 'default'
-    # functions has to be put
-    def getMachineGroup(self, myT):
-        return ""
-
-    def getMaxNumberOfGroups(self):
-        return 1
-

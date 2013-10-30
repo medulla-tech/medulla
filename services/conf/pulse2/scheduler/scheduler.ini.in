@@ -5,7 +5,10 @@ id = scheduler_01
 ## MANAGING ##
 scheduler_path = @sbindir@/pulse2-scheduler
 scheduler_proxy_path = @sbindir@/pulse2-scheduler-proxy
-
+# UNIX socket to communicate between scheduler and scheduler-proxy
+# scheduler_proxy_socket_path = /var/run/pulse2/scheduler-proxy.sock
+# temp file to backup the unprocessed responses on scheduler-proxy
+# scheduler_proxy_buffer_tmp = /tmp/pulse2-scheduler-proxy.buff.tmp
 
 ## NETWORK ##
 # port = 8000
@@ -20,8 +23,9 @@ scheduler_proxy_path = @sbindir@/pulse2-scheduler-proxy
 # localcert = /etc/mmc/pulse2/scheduler/keys/privkey.pem
 
 ## SCHEDULING ##
-# for some functions below, we add this factor, to prevent load peaks
-# incertitude_factor = .2
+# delay between requests during command launching - this lag avoids a huge load
+# on the reqested side, i.e. on a launcher 
+# emitting_period = .3
 #
 # initial wait time, in seconds, to make stuff stabilize
 # initial_wait = 2
@@ -31,10 +35,6 @@ scheduler_proxy_path = @sbindir@/pulse2-scheduler-proxy
 # cache settings: requests to package managers are cached
 # cache_size = 300
 # cache_timeout = 500
-#
-# preemption settings : preempting every N second, run M commands
-# preempt_amount = 50
-# preempt_period = 1
 #
 # status settings : check every N second, +/- incertitude_factor %
 # checkstatus_period = 900
@@ -102,9 +102,8 @@ scheduler_proxy_path = @sbindir@/pulse2-scheduler-proxy
 # - shortname: query name resolver system (/etc/hosts, dns...) with getent using the shortname (domain stripped)
 # - netbios: attempt a netbios lookup on shortname (domain stripped)
 # - ip: extract addresses from target's inventory and choose the right one according to preferred_network
-# - first: select the first network interface having enough info
 # tests are performed using ping
-# resolv_order = fqdn shortname netbios ip first
+# resolv_order = fqdn shortname netbios ip
 #
 # Preferred network parameter overrides default IP/netmask of server detected when scheduler is started.
 # Setting this parameter favorize the list of introduced networks prior to others networks availables.
@@ -138,6 +137,9 @@ scheduler_proxy_path = @sbindir@/pulse2-scheduler-proxy
 
 ## Computer / Group assignment ##
 # mg_assign_algo = default
+
+## Imaging: Used for wake-on-lan stuff
+# imaging = False
 
 [database]
 dbdriver = mysql
@@ -189,6 +191,9 @@ port=8001
 username = username
 password = password
 enablessl = True
+# networks near the launcher which can be compared with the IP addresses of machines
+# for pre-detecting a preferred launcher.
+# preferred_network =
 
 [loggers]
 keys=root

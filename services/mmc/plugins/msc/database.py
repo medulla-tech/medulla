@@ -48,6 +48,7 @@ from mmc.plugins.msc import blacklist
 # Pulse 2 stuff
 from pulse2.database import msc
 from pulse2.database.msc.orm.target import Target
+from pulse2.database.msc.orm.commands import Commands
 
 class MscDatabase(msc.MscDatabase):
     """
@@ -289,6 +290,7 @@ class MscDatabase(msc.MscDatabase):
                 session = create_session(transactional = True)
             session.begin()
             ret = []
+            cohs = []
             for cmd, targets_to_insert in zip(commands, targets_to_insert_list):
 
                 time_defaults = self.__getTimeDefaults(cmd["start_date"], cmd["end_date"])
@@ -302,12 +304,13 @@ class MscDatabase(msc.MscDatabase):
                                           cmd['clean_on_success'], 
                                           cmd['start_date'], cmd['end_date'], 
                                           cmd['connect_as'], ctx.userid, 
-                                          cmd['title'], cmd['issue_halt_to'], 
-                                          cmd['do_reboot'], cmd['do_wol'],
-                                          cmd['do_wol_with_imaging'],
+                                          cmd['title'], #cmd['issue_halt_to'], 
+                                          #cmd['do_reboot'], cmd['do_wol'],
+                                          #cmd['do_wol_with_imaging'],
                                           cmd['next_connection_delay'], 
                                           cmd['max_connection_attempt'], 
-                                          cmd['do_inventory'], cmd['maxbw'], 
+                                          #cmd['do_inventory'], 
+                                          cmd['maxbw'], 
                                           cmd['deployment_intervals'], 
                                           cmd['fk_bundle'], cmd['order_in_bundle'], 
                                           cmd['proxies'], cmd['proxy_mode'],
@@ -354,6 +357,36 @@ class MscDatabase(msc.MscDatabase):
                     
             session.execute(self.commands_on_host.insert(), coh_to_insert)
             session.commit()
+
+            __cmd_ids = [[v for (k, v) in coh.items() if k=="fk_commands"] for coh in [c for c in coh_to_insert]]
+            cmd_ids = []
+            [cmd_ids.append(i) for i in __cmd_ids if not cmd_ids.count(i)]
+
+
+            session = create_session()
+            cohs = []
+            for id in cmd_ids:
+                
+                _cohs = session.query(Commands).get(id).getCohIds()
+                cohs.extend(_cohs)
+            session.close()
+
+                #for coh_id in command_obj.getCohIds():
+                #    cohs.append(coh_id)
+            session = create_session()
+            self._createPhases(session,
+                               cohs, 
+                               cmd['do_wol_with_imaging'], 
+                               #cmd['do_imaging_menu'], 
+                               cmd['do_wol'],
+                               cmd['files'],
+                               cmd['start_script'],
+                               cmd['clean_on_success'],
+                               cmd['do_inventory'],
+                               #cmd['do_halt'], 
+                               cmd['issue_halt_to'], 
+                               cmd['do_reboot'])
+
 
             return ret
         
@@ -468,9 +501,12 @@ class MscDatabase(msc.MscDatabase):
             cmd = self.createCommand(session, package_id, start_file, parameters, 
                                      files, start_script, clean_on_success, 
                                      start_date, end_date, connect_as, ctx.userid, 
-                                     title, do_halt, do_reboot, do_wol,
-                                     do_wol_with_imaging, next_connection_delay, 
-                                     max_connection_attempt, do_inventory, maxbw, 
+                                     title, #do_halt, do_reboot, do_wol,
+                                     #do_wol_with_imaging, 
+                                     next_connection_delay, 
+                                     max_connection_attempt, 
+                                     #do_inventory, 
+                                     maxbw, 
                                      deployment_intervals, fk_bundle, 
                                      order_in_bundle, proxies, proxy_mode, state)
             session.flush()
@@ -512,6 +548,19 @@ class MscDatabase(msc.MscDatabase):
                                                                max_clients_per_proxy))
             session.execute(self.commands_on_host.insert(), coh_to_insert)
             session.commit()
+
+            cohs = cmd.getCohIds()
+            session = create_session()
+            self._createPhases(session,
+                               cohs, 
+                               do_wol_with_imaging, 
+                               do_wol,
+                               files,
+                               start_script,
+                               clean_on_success,
+                               do_inventory,
+                               do_halt, 
+                               do_reboot)
 
             return cmd.getId()
 

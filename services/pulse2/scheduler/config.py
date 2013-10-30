@@ -89,35 +89,33 @@ class SchedulerConfig(pulse2.utils.Singleton):
     client_check = None
     dbencoding = 'utf-8'
     enablessl = True
-    incertitude_factor = .2
+    emitting_period = .3
     initial_wait = 2
     localcert = mmcconfdir + "/pulse2/scheduler/keys/privkey.pem"
     lock_processed_commands = False
     loghealth_period = 60
     host = "127.0.0.1"
     max_command_time = 3600
-    max_slots = 300
     max_threads = 20
     non_fatal_steps = []
     max_upload_time = 21600
     max_wol_time = 300
-    mg_assign_algo = 'default'
     mode = 'async'
-    multithreading = True
     password = 'password'
-    preempt_amount = 50
-    preempt_period = 1
     port = 8000
     resolv_order = ['fqdn', 'shortname', 'netbios', 'ip']
-    preferred_network = (None, None)
+    preferred_network = [(None, None)]
     netbios_path = "/usr/bin/nmblookup"
     scheduler_path = '/usr/sbin/pulse2-scheduler'
     scheduler_proxy_path = '/usr/sbin/pulse2-scheduler-proxy'
+    scheduler_proxy_socket_path = '/var/run/pulse2/scheduler-proxy.sock'
+    scheduler_proxy_buffer_tmp = '/tmp/pulse2-scheduler-proxy.buff.tmp'
     server_check = None
     username = 'username'
     verifypeer = False
     cache_size = 300
     cache_timeout = 500
+    imaging = False
 
     # [daemon] section
     daemon_group = 0
@@ -133,7 +131,7 @@ class SchedulerConfig(pulse2.utils.Singleton):
     }
 
     launchers_uri = {}
-
+    launchers_networks = {}
     def setoption(self, section, key, attrib, type = 'str'):
         if type == 'str':
             if self.cp.has_option(section, key):
@@ -188,11 +186,9 @@ class SchedulerConfig(pulse2.utils.Singleton):
 
         self.setoption("scheduler", "awake_time", "awake_time", 'int')
         self.setoption("scheduler", "initial_wait", "initial_wait", 'int')
-        self.setoption("scheduler", "preempt_amount", "preempt_amount", 'int')
-        self.setoption("scheduler", "preempt_period", "preempt_period", 'int')
         self.setoption("scheduler", "checkstatus_period", "checkstatus_period", 'int')
         self.setoption("scheduler", "loghealth_period", "loghealth_period", 'int')
-        self.setoption("scheduler", "incertitude_factor", "incertitude_factor", 'float')
+        self.setoption("scheduler", "emitting_period", "emitting_period", 'float')
 
         # cache settings
         self.setoption("scheduler", "cache_size", "cache_size", 'int')
@@ -221,15 +217,15 @@ class SchedulerConfig(pulse2.utils.Singleton):
             if s == 'run': self.active_clean_states_run = True
             if s == 'stop': self.active_clean_states_stop = True
 
-        self.setoption("scheduler", "max_slots", "max_slots", 'int')
         self.setoption("scheduler", "max_command_time", "max_command_time", 'int')
         self.setoption("scheduler", "max_upload_time", "max_upload_time", 'int')
         self.setoption("scheduler", "max_wol_time", "max_wol_time", 'int')
         self.setoption("scheduler", "dbencoding", "dbencoding")
         self.setoption("scheduler", "enablessl", "enablessl", 'bool')
         self.setoption("scheduler", "lock_processed_commands", "lock_processed_commands", 'bool')
-        self.setoption("scheduler", "multithreading", "multithreading", 'bool')
         self.setoption("scheduler", "max_threads", "max_threads", 'int')
+
+        self.setoption("scheduler", "imaging", "imaging", 'bool')
 
         if self.cp.has_option("scheduler", "non_fatal_steps"):
             self.non_fatal_steps = self.cp.get("scheduler", "non_fatal_steps").split(' ')
@@ -237,8 +233,6 @@ class SchedulerConfig(pulse2.utils.Singleton):
         else:
             log.debug("scheduler %s: section %s, option %s not set, using default value '%s'" % (self.name, "scheduler", "non_fatal_steps", self.non_fatal_steps))
 
-        if self.cp.has_option("scheduler", "mg_assign_algo"):
-            self.mg_assign_algo = self.cp.get("scheduler", 'mg_assign_algo')
 
         if self.enablessl:
             if self.cp.has_option("scheduler", "privkey"):
@@ -298,6 +292,11 @@ class SchedulerConfig(pulse2.utils.Singleton):
         self.setoption("scheduler", "scheduler_path", "scheduler_path")
         self.setoption("scheduler", "scheduler_proxy_path", "scheduler_proxy_path")
 
+        if self.cp.has_option("scheduler", "scheduler_proxy_socket_path"):
+            self.scheduler_proxy_socket_path = self.cp.get("scheduler", "scheduler_proxy_socket_path")
+        if self.cp.has_option("scheduler", "scheduler_proxy_buffer_tmp"):
+            self.scheduler_proxy_buffer_tmp = self.cp.get("scheduler", "scheduler_proxy_buffer_tmp")
+ 
 
         if self.cp.has_option("scheduler", "client_check"):
             self.client_check = {}
@@ -391,5 +390,14 @@ class SchedulerConfig(pulse2.utils.Singleton):
                     uri += '%s:%s@' % (self.launchers[section]['username'], self.launchers[section]['password'])
                 uri += '%s:%d' % (self.launchers[section]['host'], int(self.launchers[section]['port']))
                 self.launchers_uri.update({section: uri})
+
+                pnp = PreferredNetworkParser(None, None)
+                if self.cp.has_option(section, "preferred_network"):
+                    _networks = pnp.parse(self.cp.get(section, "preferred_network"))
+                else :
+                    _networks = pnp.get_default()
+                self.launchers_networks.update({section: _networks})
+
+               
 
 
