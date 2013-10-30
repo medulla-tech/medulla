@@ -24,7 +24,10 @@
 
 from importlib import import_module
 import logging
+import time
+import datetime
 
+from sqlalchemy import func
 from sqlalchemy import Column, String, Text, Integer, Float, BigInteger
 from sqlalchemy.ext.declarative import declarative_base; Base = declarative_base()
 
@@ -52,14 +55,34 @@ class Indicator(Base, DBObj):
     module = Column(String(255))
     request_function = Column(String(255))
     params = Column(String(255))
+    data_type = Column(Integer)
     active = Column(Integer)
     keep_history = Column(Integer)
 
 
-    def getCurrentValue(self):
+    def getCurrentValue(self, entities = []):
         report = import_module('.'.join(['mmc.plugins', self.module, 'report'])).exportedReport()
-        args = eval('[' + self.params + ']')
+        args = [entities] + eval('[' + self.params + ']')
         return getattr(report, self.request_function)(*args)
 
-    def getValueAtTime(self):
-        return 0
+    def getValueAtDate(self, session, date, entities = []):
+        # example date : 2013-05-21
+        # Creating a timestamp range for specified date
+        min = int(time.mktime(datetime.datetime.strptime(date, "%Y-%m-%d").timetuple()))
+        max = min + 86400 # max = min + 1day (sec)
+        #
+        ret = session.query(ReportingData.value).filter_by(indicator_id = self.id)
+        # Selected entities filter, else all entities are included
+        if entities:
+            ret = ret.filter(ReportingData.entity_id.in_(entities))
+        # Timestamp range filter
+        ret = ret.filter(ReportingData.timestamp.between(min, max))
+        # Avoid having multiple values per entity and per date
+        ret = ret.group_by(ReportingData.entity_id).all()
+        # TODO: Implement string case according to self.data_type
+        # ==> numeric case
+        result = 0
+        for row in ret:
+            result += float(row[0])
+        return result
+

@@ -32,6 +32,7 @@ from mmc.plugins.report.config import ReportConfig
 from mmc.plugins.report.manager import ReportManager
 from mmc.plugins.report.database import ReportDatabase
 from mmc.plugins.report.XlsGenerator import XlsGenerator
+import xml.etree.ElementTree as ET
 
 VERSION = "0.0.0"
 APIVERSION = "0:1:0"
@@ -212,4 +213,119 @@ class RpcProxy(RpcProxyI):
 
     def calldb(self, func, *args, **kw):
         return getattr(ReportDatabase(),func).__call__(*args, **kw)
+
+    def get_report_sections(self, lang):
+        result = {}
+        xmltemp = ET.parse('/etc/mmc/pulse2/report/templates/%s.xml' % lang).getroot()
+        for section in xmltemp.iter('section'):
+            attr = section.attrib
+            if not attr['module'] in result:
+                result[attr['module']] = []
+            result[attr['module']].append(attr)
+        return result
+
+    def generate_report(self, period, sections, entities, lang):
+        # TODO : Get entity names from entity uuids
+        entity_names = entities
+        # Parsing report XML
+        # TODO; Language
+        xmltemp = ET.parse('/etc/mmc/pulse2/report/templates/%s.xml' % lang).getroot()
+        if xmltemp.tag != 'template':
+            logging.getLogger().error('Incorrect XML')
+            return False
+        # xmltemp.attrib ??? if necessary ?? ==> date and time format
+
+        def _h1(text):
+            # send text to pdf, html, ...
+            pass
+
+        def _h2(text):
+            # send text to pdf, html, ...
+            pass
+
+        def _periodDict(item_container):
+            data_dict = {'titles' : []}
+            indicators = []
+            for item in item_container:
+                if item.tag.lower() != 'item' : continue
+                indicator_name = item.attrib['indicator']
+                data_dict['titles'].append(item.attrib['title'])
+                indicators.append(item.attrib['indicator'])
+            for date in period:
+                data_dict[date] = []
+                for indicator in indicators:
+                    # TODO: data_dict[formatted_date]
+                    data_dict[date].append(ReportDatabase().get_indicator_value_at_date(indicator,date, entities))
+            logging.getLogger().warning('GOT PERIOD DICT')
+            logging.getLogger().warning(data_dict)
+            return data_dict
+
+        def _keyvalueDict(item_container):
+            #TODO : implement importign Clé, Valeur string from XML
+            data_dict = {'headers' : ['Clé','Valeur'], 'values' : []}
+            indicators = []
+            for item in item_container:
+                if item.tag.lower() != 'item' : continue
+                indicator_name = item.attrib['indicator']
+                indicator_label = item.attrib['title']
+                indicator_value = ReportDatabase().get_indicator_current_value(indicator_name, entities)
+                # indicator_value is a list of dict {'entity_id' : .., 'value' .. }
+                for entry in indicator_value:
+                    # TODO: Print entity names not UUIDs
+                    data_dict['values'].append([indicator_label + (' (%s)' % entry['entity_id'] ), entry['value']])
+            logging.getLogger().warning('GOT KEY/VALUE DICT')
+            logging.getLogger().warning(data_dict)
+
+        # Browsing all childs
+        for level1 in xmltemp:
+            attr1 = level1.attrib
+            ## =========< H1 >===================
+            if level1.tag.lower() == 'h1':
+                _h1(level1.text)
+            ## =========< H2 >===================
+            if level1.tag.lower() == 'h2':
+                _h2(level1.text)
+            ## =========< SECTION >===================
+            if level1.tag.lower() == 'section':
+                # Checking if section is present in sections
+                # else we skip it
+                if not attr1['name'] in sections:
+                    continue
+                # Printing section
+                for level2 in level1:
+                    attr2 = level2.attrib
+                    ## =========< TABLE >===================
+                    if level2.tag.lower() == 'table':
+                        # printing table items
+                        # ====> PERIOD TABLE TYPE
+                        if attr2['type'] == 'period':
+                            data_dict = _periodDict(level2)
+                            # ==> TO PDF
+                            # ==> to XLS
+                        # ====> KEY-VALUE TABLE TYPE
+                        if attr2['type'] == 'key_value':
+                            data_dict = _keyvalueDict(level2)
+                            # ==> TO PDF
+                            # ==> to XLS
+                    ## =========< CHART >===================
+                    if level2.tag.lower() == 'chart':
+                        # printing table items
+                        # ====> PERIOD TABLE TYPE
+                        if attr2['type'] == 'period':
+                            data_dict = _periodDict(level2)
+                            # ==> to SVG (handle cases)
+                        # ====> KEY-VALUE TABLE TYPE
+                        if attr2['type'] == 'key_value':
+                            data_dict = _keyvalueDict(level2)
+                            # ==> to SVG (handle cases)
+
+
+
+
+
+
+
+
+
+
 
