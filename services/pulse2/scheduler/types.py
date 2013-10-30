@@ -25,23 +25,18 @@ import random
 import time
 import datetime
 
-from twisted.internet.defer import Deferred, maybeDeferred, DeferredList
-from twisted.internet.threads import deferToThread, blockingCallFromThread
-from twisted.internet.task import LoopingCall
-from twisted.internet import reactor
+from twisted.internet.defer import Deferred, maybeDeferred
+from twisted.internet.threads import deferToThread
 
 from pulse2.consts import PULSE2_SUCCESS_ERROR
 from pulse2.utils import SingletonN, extractExceptionMessage
 from pulse2.network import NetUtils
-from pulse2.scheduler.queries import CoHQuery, get_cohs, is_command_in_valid_time
-from pulse2.scheduler.utils import PackUtils 
-from pulse2.utils import extractExceptionMessage
-from pulse2.scheduler.utils import chooseClientNetwork, launcher_proxymethod
+from pulse2.scheduler.queries import CoHQuery
+from pulse2.scheduler.utils import chooseClientNetwork
 from pulse2.scheduler.config import SchedulerConfig
-from pulse2.scheduler.balance import ParabolicBalance, randomListByBalance, getBalanceByAttempts
-from pulse2.scheduler.xmlrpc import getProxy
+from pulse2.scheduler.balance import ParabolicBalance
 from pulse2.scheduler.launchers_driving import RemoteCallProxy
-from pulse2.scheduler.checks import getCheck, getAnnounceCheck
+from pulse2.scheduler.checks import getAnnounceCheck
 from pulse2.scheduler.utils import getClientCheck, getServerCheck
 
 from pulse2.database.msc.orm.commands_history import CommandsHistory
@@ -362,7 +357,7 @@ class Phase (PhaseBase):
         delay = self.calc_next_attempt_delay()
         self.coh.reSchedule(delay, decrement)
         
-        ret = self.phase.switch_to_failed()
+        self.phase.switch_to_failed()
         if self.coh.is_out_of_attempts():
             logging.getLogger().info("Circuit #%s: failed" % (self.coh.id))
             self.coh.setStateFailed()

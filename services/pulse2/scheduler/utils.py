@@ -32,7 +32,7 @@ from twisted.internet.defer import maybeDeferred
 
 from pulse2.scheduler.config import SchedulerConfig
 from pulse2.scheduler.network import chooseClientIP 
-from pulse2.scheduler.checks import getCheck, getAnnounceCheck
+from pulse2.scheduler.checks import getCheck
 
 import traceback
 
@@ -172,7 +172,7 @@ class ProxyProcessProtocol(ProcessProtocol):
          logging.getLogger().warn("XML Proxy: Process exited: %s" % (reason.value.exitCode))
  
      def errReceived(self, data):
-         logging.getLogger().warn("XMLRPC Proxy: STDERR: %" % repr(data))
+         logging.getLogger().warn("XMLRPC Proxy: STDERR: %s" % repr(data))
     
      def outConnectionLost(self, reason):
          logging.getLogger().info("XMLRPC Proxy: Connection lost: %s" % (reason.value.exitCode))

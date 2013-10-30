@@ -20,14 +20,11 @@
 # MA 02110-1301, USA.
 
 import random
-import traceback
 
-from twisted.internet.defer import Deferred, maybeDeferred, DeferredList, inlineCallbacks
+from twisted.internet.defer import Deferred, maybeDeferred, DeferredList
 from twisted.internet.threads import deferToThread
 from twisted.internet.task import LoopingCall
 from twisted.internet import reactor
-from twisted.internet.task import deferLater
-
 
 from pulse2.scheduler.config import SchedulerConfig
 from pulse2.scheduler.types import MscContainer, Circuit, CC_STATUS 

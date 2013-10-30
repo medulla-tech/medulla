@@ -33,8 +33,6 @@ except ImportError:
 
 from pulse2.utils import xmlrpcCleanup
 
-from pulse2.scheduler.config import SchedulerConfig
-
 
 class ForwardingProxy(XMLRPC):
     """ XMLRPC Scheduler Proxy """
