@@ -76,6 +76,8 @@ class MscDatabase(DatabaseHelper):
         self.config = config
         self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, \
 		pool_size = self.config.dbpoolsize, pool_timeout = self.config.dbpooltimeout, convert_unicode = True)
+        if not self.db_check():
+            return False
         self.metadata = MetaData(self.db)
         if not self.initTables():
             return False
@@ -86,7 +88,7 @@ class MscDatabase(DatabaseHelper):
         self.session = create_session()
         self.is_activated = True
         self.logger.debug("Msc database connected")
-        return self.db_check()
+        return True 
 
     def initTables(self):
         """
