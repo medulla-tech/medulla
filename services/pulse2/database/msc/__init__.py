@@ -39,6 +39,7 @@ from sqlalchemy.exc import NoSuchTableError, TimeoutError
 # ORM mappings
 from pulse2.database.msc.orm.commands import Commands
 from pulse2.database.msc.orm.commands_on_host import CommandsOnHost
+from pulse2.database.msc.orm.commands_on_host_phase import CommandsOnHostPhase
 from pulse2.database.msc.orm.commands_history import CommandsHistory
 from pulse2.database.msc.orm.target import Target
 from pulse2.database.msc.orm.bundle import Bundle
@@ -116,6 +117,13 @@ class MscDatabase(DatabaseHelper):
                 self.metadata,
                 autoload = True
             )
+            # commands_on_host_phase
+            self.commands_on_host_phase = Table(
+                "phase",
+                self.metadata,
+                Column('fk_commands_on_host', Integer, ForeignKey('commands_on_host.id')),
+                autoload = True
+            )
             # commands_on_host
             self.commands_on_host = Table(
                 "commands_on_host",
@@ -140,6 +148,7 @@ class MscDatabase(DatabaseHelper):
         Initialize all SQLalchemy mappers needed for the msc database
         """
         mapper(CommandsHistory, self.commands_history)
+        mapper(CommandsOnHostPhase, self.commands_on_host_phase)
         mapper(CommandsOnHost, self.commands_on_host, properties = {
             'historys' : relation(CommandsHistory),
             }
@@ -189,9 +198,12 @@ class MscDatabase(DatabaseHelper):
 
     def createCommand(self, session, package_id, start_file, parameters, files,
             start_script, clean_on_success, start_date, end_date, connect_as,
-            creator, title, do_halt, do_reboot, do_wol, 
-            do_wol_with_imaging, next_connection_delay,
-            max_connection_attempt, do_inventory, maxbw, deployment_intervals,
+            creator, title, #do_halt, do_reboot, do_wol, 
+            #do_wol_with_imaging, 
+            next_connection_delay,
+            max_connection_attempt, 
+            #do_inventory, 
+            maxbw, deployment_intervals,
             fk_bundle, order_in_bundle, proxies, proxy_mode, state):
         """
         Return a Command object
@@ -212,13 +224,13 @@ class MscDatabase(DatabaseHelper):
         cmd.connect_as = connect_as
         cmd.creator = creator
         cmd.title = title
-        cmd.do_halt = ','.join(do_halt)
-        cmd.do_reboot = do_reboot
-        cmd.do_wol = do_wol
-        cmd.do_imaging_menu = do_wol_with_imaging
+        #cmd.do_halt = ','.join(do_halt)
+        #cmd.do_reboot = do_reboot
+        #cmd.do_wol = do_wol
+        #cmd.do_imaging_menu = do_wol_with_imaging
         cmd.next_connection_delay = next_connection_delay
         cmd.max_connection_attempt = max_connection_attempt
-        cmd.do_inventory = do_inventory
+        #cmd.do_inventory = do_inventory
         cmd.maxbw = maxbw
         cmd.deployment_intervals = pulse2.time_intervals.normalizeinterval(deployment_intervals)
         cmd.fk_bundle = fk_bundle
@@ -228,6 +240,82 @@ class MscDatabase(DatabaseHelper):
         session.add(cmd)
         session.flush()
         return cmd
+
+    def _createPhases(self,
+                      session,
+                      cohs, 
+                      do_imaging_menu, 
+                      do_wol,
+                      files,
+                      start_script,
+                      clean_on_success,
+                      do_inventory, 
+                      do_halt, 
+                      do_reboot):
+        wf_list = ["pre_menu", 
+           "wol",
+           "post_menu",
+           "upload",
+           "execute",
+           "delete",
+           "inventory",
+           "reboot",
+           "halt",
+           "done",
+           ]
+
+        if isinstance(cohs, int):
+            cohs = [cohs]
+        elif isinstance(cohs, list):
+            pass
+        else :
+            raise TypeError("list or int type required")
+        phases_values = []
+        for coh in cohs :
+            #if coh.id in [k for (k,v) in phases_values]
+            order = 0
+
+            for name in wf_list:
+                if name == "pre_menu" and do_imaging_menu == "disable" :
+                    continue
+                if name == "post_menu" and do_imaging_menu == "disable" :
+                    continue
+                if name == "wol" and do_wol == "disable" :
+                    continue
+                if name == "upload" and len(files) == 0:
+                    continue
+                if name == "execute" and start_script == "disable":
+                    continue
+                if name == "delete" and clean_on_success == "disable":
+                    continue
+                if name == "inventory" and do_inventory == "disable" :
+                    continue
+                if name == "reboot" and do_reboot == "disable" :
+                    continue
+                if name == "halt" and do_halt != "done" :
+                    continue
+
+                phases_values.append({"fk_commands_on_host": coh.id, 
+                                      "phase_order" : order, 
+                                      "name" : name})
+
+                coh_phase = CommandsOnHostPhase()
+                coh_phase.fk_commands_on_host = coh.id
+                coh_phase.name = name
+                coh_phase.phase_order = order
+                coh_phase.flush()
+
+                order += 1
+
+        session.execute(self.commands_on_host_phase.insert(), phases_values)
+ 
+
+
+
+
+
+
+
 
     def createCommandsOnHost(self, command, target, target_id, 
                              target_name, cmd_max_connection_attempt, 
