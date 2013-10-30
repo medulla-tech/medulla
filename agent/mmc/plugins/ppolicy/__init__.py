@@ -42,6 +42,9 @@ from mmc.core.version import scmRevision
 from mmc.core.audit import AuditFactory as AF
 from mmc.plugins.ppolicy.audit import AT, AA, PLUGIN_NAME
 
+from mmc.plugins.ppolicy.signals import ppolicy_applied, ppolicy_removed, ppolicy_attr_changed
+
+logger = logging.getLogger()
 
 VERSION = "3.1.0"
 APIVERSION = "0:1:0"
@@ -56,7 +59,6 @@ def getRevision():
 
 def activate():
     ldapObj = ldapUserGroupControl()
-    logger = logging.getLogger()
 
     config = PPolicyConfig("ppolicy")
     if config.disabled:
@@ -166,7 +168,7 @@ class PPolicy(ldapUserGroupControl):
 
             attributes = modlist.addModlist(attrs)
             self.l.add_s(ppolicyDN, attributes)
-            self.logger.info("Password policy registered at: %s" % ppolicyDN)
+            logger.info("Password policy registered at: %s" % ppolicyDN)
 
     def removePPolicy(self, ppolicyName):
         """
@@ -177,15 +179,12 @@ class PPolicy(ldapUserGroupControl):
             return False
 
         if self.checkPPolicy(ppolicyName):
+            # remove ppolicy applied to users first
+            for uid in self.getPPolicyUsers(ppolicyName):
+                UserPPolicy(uid).removePPolicy()
             ppolicyDN = "cn=" + ppolicyName + "," + self.configPPolicy.ppolicydn
             self.delRecursiveEntry(ppolicyDN)
-            # remove ppolicy applied to users
-            s = self.l.search_s(self.baseUsersDN, ldap.SCOPE_SUBTREE, "(&(objectClass=pwdPolicy)(pwdPolicySubentry=%s))" % ppolicyDN)
-            for user in s:
-                uid = user[1]['uid'][0]
-                UserPPolicy(uid).removePPolicy()
             return True
-
         return False
 
     def updateGroupPPolicy(self, groupName, ppolicyName):
@@ -201,6 +200,16 @@ class PPolicy(ldapUserGroupControl):
         Return the default ppolicy entry
         """
         return self.getPPolicy(self.configPPolicy.ppolicydefault)
+
+    def getPPolicyUsers(self, ppolicyName):
+        """
+        Return the uids with the ppolicy
+        """
+        if self.checkPPolicy(ppolicyName):
+            ppolicyDN = "cn=" + ppolicyName + "," + self.configPPolicy.ppolicydn
+            s = self.l.search_s(self.baseUsersDN, ldap.SCOPE_SUBTREE, "(&(objectClass=pwdPolicy)(pwdPolicySubentry=%s))" % ppolicyDN)
+            return [user[1]['uid'][0] for user in s]
+        return []
 
     def getPPolicy(self, ppolicyName):
         """
@@ -272,10 +281,11 @@ class PPolicy(ldapUserGroupControl):
                 value = str(value)
         try:
             self.l.modify_s(ppolicyDN, [(ldap.MOD_REPLACE, nameattribute, value)])
+            ppolicy_attr_changed.send(sender=self, ppolicy_name=ppolicyName, ppolicy_attr=nameattribute, ppolicy_attr_value=value)
         except ldap.UNDEFINED_TYPE:
-            logging.getLogger().error("Attribute %s isn't defined on ldap" % nameattribute)
+            logger.error("Attribute %s isn't defined on ldap" % nameattribute)
         except ldap.INVALID_SYNTAX:
-            logging.getLogger().error("Invalid Syntax from the attribute value of %s on ldap" % nameattribute)
+            logger.error("Invalid Syntax from the attribute value of %s on ldap" % nameattribute)
         r.commit()
 
     def getDefaultAttributes(self):
@@ -354,17 +364,17 @@ class UserPPolicy(ldapUserGroupControl):
             elif type(value) == int:
                 value = str(value)
             mode = ldap.MOD_REPLACE
-            logging.getLogger().debug('Setting %s to %s' % (nameattribute, value))
+            logger.debug('Setting %s to %s' % (nameattribute, value))
         else:
             r = AF().log(PLUGIN_NAME, AA.PPOLICY_DEL_USER_ATTR, [(self.dn, AT.USER), (nameattribute, AT.ATTRIBUTE)], value)
             mode = ldap.MOD_DELETE
-            logging.getLogger().debug('Removing %s' % nameattribute)
+            logger.debug('Removing %s' % nameattribute)
         try:
             self.l.modify_s(self.dn, [(mode, nameattribute, value)])
         except ldap.UNDEFINED_TYPE:
-            logging.getLogger().error("Attribute %s isn't defined on LDAP" % nameattribute)
+            logger.error("Attribute %s isn't defined on LDAP" % nameattribute)
         except ldap.INVALID_SYNTAX:
-            logging.getLogger().error("Invalid Syntax from the attribute value of %s on ldap" % nameattribute)
+            logger.error("Invalid Syntax from the attribute value of %s on ldap" % nameattribute)
         r.commit()
         # if password reset request, we set sambaPwdLastSet to time()-24hours
         if nameattribute == 'pwdReset' and value == 'TRUE':
@@ -378,7 +388,7 @@ class UserPPolicy(ldapUserGroupControl):
                     samba.changeSambaAttributes(self.userUid,
                                                 {'sambaPwdLastSet': str(int(time.time()) - int(pwd_minage))})
                 else:
-                    logging.getLogger().debug('sambaPwdLastSet failed to set \
+                    logger.debug('sambaPwdLastSet failed to set \
                         beause %s is not a samba user (pwdReset workaround)' % self.userUid)
             except ImportError:
                 pass
@@ -421,6 +431,7 @@ class UserPPolicy(ldapUserGroupControl):
             modlist = ldap.modlist.modifyModlist(old, new)
             self.l.modify_s(self.dn, modlist)
             r.commit()
+            ppolicy_applied.send(sender=self, ppolicy_name=ppolicyName)
             return True
         return False
 
@@ -437,11 +448,12 @@ class UserPPolicy(ldapUserGroupControl):
                 r = AF().log(PLUGIN_NAME, AA.PPOLICY_MOD_USER_PPOLICY, [(self.dn, AT.USER)])
                 try:
                     self.l.modify_s(self.dn, [(ldap.MOD_REPLACE, 'pwdPolicySubentry', ppolicyDN)])
+                    ppolicy_applied.send(sender=self, ppolicy_name=ppolicyName)
+                    r.commit()
                 except ldap.UNDEFINED_TYPE:
-                    logging.getLogger().error("Attribute %s isn't defined on ldap" % 'pwdPolicySubentry')
+                    logger.error("Attribute %s isn't defined on ldap" % 'pwdPolicySubentry')
                 except ldap.INVALID_SYNTAX:
-                    logging.getLogger().error("Invalid Syntax from the attribute value of %s on ldap" % 'pwdPolicySubentry')
-                r.commit()
+                    logger.error("Invalid Syntax from the attribute value of %s on ldap" % 'pwdPolicySubentry')
                 return True
         else:
             return self.addPPolicy(ppolicyName)
@@ -465,6 +477,7 @@ class UserPPolicy(ldapUserGroupControl):
         # Update LDAP
         modlist = ldap.modlist.modifyModlist(old, new)
         self.l.modify_s(self.dn, modlist)
+        ppolicy_removed.send(sender=self)
         r.commit()
         return True
 
@@ -614,6 +627,9 @@ def getPPolicyAttribute(nameAttribute, ppolicyName=None):
 
 def getAllPPolicyAttributes(ppolicyName=None):
     return PPolicy().getAttribute(None, ppolicyName)
+
+def getPPolicyUsers(ppolicyName):
+    return PPolicy().getPPolicyUsers(ppolicyName)
 
 def setPPolicyAttribute(nameAttribute, value, ppolicyName=None):
     if value == '':
