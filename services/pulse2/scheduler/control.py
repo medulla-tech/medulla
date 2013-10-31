@@ -138,7 +138,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         waiting_circuits = self.get_waiting_circuits(already_initialized_ids)
         circuits = self.get_circuits(already_initialized_ids)
         circuits.extend(waiting_circuits)
-        return [(True,(True, c)) for c in circuits]
+        return circuits
 
     def _start_failed(self, failure):
         """
@@ -251,15 +251,11 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         @return: checked circuits:
         @rtype: generator
         """
-        for success, result in circuits :
-            if success and len(result) == 2 and isinstance(result, tuple):
-                ok, circuit = result
-                if ok :
-                    yield circuit
-                else :
-                    self.logger.warn("Circuit setup failed: %s" % str(circuit))
-            else :
-                self.logger.warn("Circuit setup failed: %s" % str(result))
+        for success, circuit in circuits :
+            if not success :
+                self.logger.warn("Circuit #%s: setup failed" % circuit.id)
+
+            yield circuit
 
  
     def _assign_launcher(self, incoming_circuits):

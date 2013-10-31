@@ -556,8 +556,9 @@ class CircuitBase(object):
         @rtype: str
         """
         if not host :
-            return None
-
+            
+            self.logger.warn("Circuit #%s: IP address detect failed" % (self.id))
+ 
         self.host = host
 
         for pref_net_ip, pref_netmask in SchedulerConfig().preferred_network :
@@ -586,9 +587,10 @@ class CircuitBase(object):
         """
         if address :
             self.network_address = address
-            return (True, self)
         else :
-            return (False, None)
+            self.logger.debug("Circuit #%s: network not assigned" % (self.id))
+ 
+        return True
 
     def _init_end(self, reason):
         """
@@ -597,12 +599,12 @@ class CircuitBase(object):
         @param reason: True and Circuit instance when success
         @type reason: tuple
 
-        @return reason: True and Circuit instance when success
-        @rtype reason: tuple
+        @return: Circuit instance
+        @rtype: Circuit
         """
-        if reason[0] :
-            self.initialized = True
-        return reason
+
+        self.initialized = True
+        return self
 
     def _init_failed(self, failure):
         """
@@ -617,7 +619,6 @@ class Circuit (CircuitBase):
  
     def run(self):
         """ Start the workflow scenario. """
-        assert self.host, "host info empty"
 
         self.logger.debug("circuit #%s - assigned network: %s" % (self.id, self.network_address))
  
