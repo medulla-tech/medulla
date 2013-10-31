@@ -2392,9 +2392,10 @@ class Glpi084(DyngroupDatabaseHelper):
         query = query.filter(self.location.c.id.in_(ctx.locationsid))
 
         query = query.order_by(self.location.c.name)
-        ret = query.limit(10)
+        ret = query.all()
         session.close()
         return ret
+
     def getMachineByEntity(self, ctx, enname):
         """
         @return: all machines that are in this entity
@@ -2494,13 +2495,17 @@ class Glpi084(DyngroupDatabaseHelper):
         ret = query.group_by(self.software.c.name).order_by(self.software.c.name).all()
         session.close()
         return ret
-    def getMachineBySoftware(self, ctx, swname):
+
+    def getMachineBySoftware(self, ctx, swname, count=0):
         """
         @return: all machines that have this software
         """
         # TODO use the ctx...
         session = create_session()
-        query = session.query(Machine)
+        if int(count) == 1:
+            query = session.query(func.count(Machine))
+        else:
+            query = session.query(Machine)
         query = query.select_from(self.machine.join(self.inst_software).join(self.softwareversions).join(self.software))
         query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
@@ -2510,14 +2515,18 @@ class Glpi084(DyngroupDatabaseHelper):
             # is wrong, so for the moment we need this loop:
             while type(swname[0]) == list:
                 swname = swname[0]
-            query = query.filter(and_(self.software.c.name == swname[0], self.licenses.version == swname[1]))
+            query = query.filter(and_(self.software.c.name == swname[0], self.softwareversions.version == swname[1]))
         else:
-            query = query.filter(self.software.c.name == swname).order_by(self.licenses.version)
-        ret = query.all()
+            query = query.filter(self.software.c.name == swname).order_by(self.softwareversions.version)
+        if int(count) == 1:
+            ret = int(query.scalar())
+        else:
+            ret = query.all()
         session.close()
         return ret
-    def getMachineBySoftwareAndVersion(self, ctx, swname):
-        return self.getMachineBySoftware(ctx, swname)
+
+    def getMachineBySoftwareAndVersion(self, ctx, swnamei, count=0):
+        return self.getMachineBySoftware(ctx, swname, count)
 
     def getAllHostnames(self, ctx, filt = ''):
         """
@@ -2736,15 +2745,21 @@ class Glpi084(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def getMachineByState(self, ctx, filt):
+    def getMachineByState(self, ctx, filt, count=0):
         """ @return: all machines that have this state """
         session = create_session()
-        query = session.query(State).select_from(self.machine.join(self.state))
+        if int(count) == 1:
+            query = session.query(func.count(Machine)).select_from(self.machine.join(self.state))
+        else:
+            query = session.query(Machine).select_from(self.machine.join(self.state))
         query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
         query = query.filter(self.state.c.name == filt)
-        ret = query.all()
+        if int(count) == 1:
+            ret = int(query.scalar())
+        else:
+            ret = query.all()
         session.close()
         return ret
 
@@ -3042,7 +3057,7 @@ class Glpi084(DyngroupDatabaseHelper):
         """
         from collections import namedtuple
         o = namedtuple('dict2obj', ' '.join(d.keys()))
-        return o(**d) 
+        return o(**d)
 
     def getMachineIp(self, uuid):
         """

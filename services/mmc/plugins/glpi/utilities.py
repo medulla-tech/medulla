@@ -47,4 +47,3 @@ def complete_ctx(ctx):
     if not hasattr(ctx, "profile"):
         logging.getLogger().debug("adding profiles in context for user %s" % (ctx.userid))
         ctx.profile = ComputerLocationManager().getUserProfile(ctx.userid)
-

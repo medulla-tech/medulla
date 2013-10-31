@@ -21,7 +21,7 @@
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
 pythonmodules = plugins plugins.dyngroup plugins.dyngroup.querymanager \
-	plugins.glpi plugins.glpi.querymanager plugins.imaging \
+	plugins.glpi plugins.glpi.querymanager plugins.glpi.report plugins.imaging \
 	plugins.inventory plugins.inventory.provisioning_plugins \
 	plugins.inventory.provisioning_plugins.network_to_entity \
 	plugins.inventory.querymanager plugins.msc plugins.msc.client \

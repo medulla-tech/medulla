@@ -488,7 +488,10 @@ class Glpi08(DyngroupDatabaseHelper):
                 if isinstance(ctxlocation, list):
                     for loc in ctxlocation:
                         locsid.append(self.__getId(loc))
-                join_query = join_query.join(self.location)
+
+                # Seems to be redundantwith the following filters
+                # Also it anihilates the hack to show the GLPI root entity
+                #join_query = join_query.join(self.location)
 
                 if location is not None:
                     # Imaging group case
@@ -501,7 +504,7 @@ class Glpi08(DyngroupDatabaseHelper):
                                 return None
                         query_filter = self.__addQueryFilter(query_filter, (self.machine.c.entities_id.in_(locationids)))
                     else:
-                        locationid = int(location.replace('UUID', ''))
+                        locationid = fromUUID(location)
                         if locationid in locsid:
                             query_filter = self.__addQueryFilter(query_filter, (self.machine.c.entities_id == locationid))
                         else:
@@ -1223,6 +1226,9 @@ class Glpi08(DyngroupDatabaseHelper):
         session.close()
         for location in q:
             ret.append(location)
+        # Append a fake entity record for the root entity
+        # since it isn't referenced in the entity table.
+        ret.insert(0, rootLocation())
         return ret
 
     def __add_children(self, child):
@@ -2273,6 +2279,7 @@ class Glpi08(DyngroupDatabaseHelper):
         ret = query.all()
         session.close()
         return ret
+
     def getMachineByOs(self, ctx, osname):
         """
         @return: all machines that have this os
@@ -2287,7 +2294,7 @@ class Glpi08(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def getMachineByOsLike(self, ctx, osname,count = 0):
+    def getMachineByOsLike(self, ctx, osname, count = 0):
         """
         @return: all machines that have this os using LIKE
         """
@@ -2334,11 +2341,15 @@ class Glpi08(DyngroupDatabaseHelper):
         if not hasattr(ctx, 'locationsid'):
             complete_ctx(ctx)
         query = query.filter(self.location.c.id.in_(ctx.locationsid))
-
         query = query.order_by(self.location.c.name)
-        ret = query.limit(10)
+        ret = query.all()
         session.close()
+        if 0 in ctx.locationsid:
+            # Append a fake entity record for the root entity
+            # since it isn't referenced in the entity table.
+            ret.insert(0, rootLocation())
         return ret
+
     def getMachineByEntity(self, ctx, enname):
         """
         @return: all machines that are in this entity
@@ -2438,13 +2449,17 @@ class Glpi08(DyngroupDatabaseHelper):
         ret = query.group_by(self.software.c.name).order_by(self.software.c.name).all()
         session.close()
         return ret
-    def getMachineBySoftware(self, ctx, swname):
+
+    def getMachineBySoftware(self, ctx, swname, count=0):
         """
         @return: all machines that have this software
         """
         # TODO use the ctx...
         session = create_session()
-        query = session.query(Machine)
+        if int(count) == 1:
+            query = session.query(func.count(Machine))
+        else:
+            query = session.query(Machine)
         query = query.select_from(self.machine.join(self.inst_software).join(self.softwareversions).join(self.software))
         query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
@@ -2454,14 +2469,18 @@ class Glpi08(DyngroupDatabaseHelper):
             # is wrong, so for the moment we need this loop:
             while type(swname[0]) == list:
                 swname = swname[0]
-            query = query.filter(and_(self.software.c.name == swname[0], self.licenses.version == swname[1]))
+            query = query.filter(and_(self.software.c.name == swname[0], self.softwareversions.c.name == swname[1]))
         else:
-            query = query.filter(self.software.c.name == swname).order_by(self.licenses.version)
-        ret = query.all()
+            query = query.filter(self.software.c.name == swname).order_by(self.softwareversions.c.name)
+        if int(count) == 1:
+            ret = int(query.scalar())
+        else:
+            ret = query.all()
         session.close()
         return ret
-    def getMachineBySoftwareAndVersion(self, ctx, swname):
-        return self.getMachineBySoftware(ctx, swname)
+
+    def getMachineBySoftwareAndVersion(self, ctx, swname, count=0):
+        return self.getMachineBySoftware(ctx, swname, count)
 
     def getAllHostnames(self, ctx, filt = ''):
         """
@@ -2644,15 +2663,21 @@ class Glpi08(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def getMachineByType(self, ctx, filt):
+    def getMachineByType(self, ctx, filt, count=0):
         """ @return: all machines that have this type """
         session = create_session()
-        query = session.query(Machine).select_from(self.machine.join(self.glpi_computertypes))
+        if int(count) == 1:
+            query = session.query(func.count(Machine.id)).select_from(self.machine.join(self.glpi_computertypes))
+        else:
+            query = session.query(Machine).select_from(self.machine.join(self.glpi_computertypes))
         query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
         query = query.filter(self.glpi_computertypes.c.name == filt)
-        ret = query.all()
+        if int(count) == 1:
+            ret = int(query.scalar())
+        else:
+            ret = query.all()
         session.close()
         return ret
 
@@ -2680,15 +2705,21 @@ class Glpi08(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def getMachineByState(self, ctx, filt):
+    def getMachineByState(self, ctx, filt, count=0):
         """ @return: all machines that have this state """
         session = create_session()
-        query = session.query(State).select_from(self.machine.join(self.state))
+        if int(count) == 1:
+            query = session.query(func.count(Machine)).select_from(self.machine.join(self.state))
+        else:
+            query = session.query(Machine).select_from(self.machine.join(self.state))
         query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
         query = query.filter(self.state.c.name == filt)
-        ret = query.all()
+        if int(count) == 1:
+            ret = int(query.scalar())
+        else:
+            ret = query.all()
         session.close()
         return ret
 
@@ -3242,6 +3273,20 @@ class Location(object):
             'comments':self.comment,
             'level':self.level
         }
+
+# Since the root entity is not defined in GLPI
+# database, use a fake record to make queries in
+# the root entity.
+def rootLocation():
+    """
+    Returns a fake root entity DB entry
+    """
+    root_entity = Location()
+    root_entity.id = 0L
+    root_entity.name = "root"
+    root_entity.completename = "Root entity"
+    root_entity.level = 0
+    return root_entity
 
 class State(object):
     pass
