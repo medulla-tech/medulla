@@ -31,7 +31,7 @@ from twisted.internet.threads import deferToThread
 from pulse2.consts import PULSE2_SUCCESS_ERROR
 from pulse2.utils import SingletonN, extractExceptionMessage
 from pulse2.network import NetUtils
-from pulse2.scheduler.queries import CoHQuery
+from pulse2.scheduler.queries import CoHQuery, any_failed
 from pulse2.scheduler.utils import chooseClientNetwork
 from pulse2.scheduler.config import SchedulerConfig
 from pulse2.scheduler.balance import ParabolicBalance
@@ -720,12 +720,13 @@ class Circuit (CircuitBase):
             return False
         elif res == DIRECTIVE.OVER_TIMED :
             self.logger.info("Circuit #%s: overtimed" % self.id)
-            #self.logger.info("Circuit #%s: overtimed" % self.running_phase.coh.id)
-            self.running_phase.coh.setStateOverTimed()
+            if self.running_phase.coh.attempts_failed > 0 or any_failed(self.id) :
+                self.running_phase.coh.setStateFailed()
+            else :
+                self.running_phase.coh.setStateOverTimed()
             self.release()
             return
         elif res == DIRECTIVE.KILLED :
-            #self.logger.info("Circuit #%s: killed" % self.running_phase.coh.id)
             self.logger.info("Circuit #%s: killed" % self.id)
             self.release()
             return
