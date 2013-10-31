@@ -301,12 +301,6 @@ class MscDatabase(DatabaseHelper):
                                       "phase_order" : order, 
                                       "name" : name})
 
-                coh_phase = CommandsOnHostPhase()
-                coh_phase.fk_commands_on_host = coh.id
-                coh_phase.name = name
-                coh_phase.phase_order = order
-                coh_phase.flush()
-
                 order += 1
 
         session.execute(self.commands_on_host_phase.insert(), phases_values)
