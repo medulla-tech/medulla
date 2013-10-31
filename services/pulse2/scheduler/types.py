@@ -719,15 +719,16 @@ class Circuit (CircuitBase):
         elif res == DIRECTIVE.GIVE_UP :
             return False
         elif res == DIRECTIVE.OVER_TIMED :
-            self.logger.info("Circuit #%s: overtimed" % self.id)
             if self.running_phase.coh.attempts_failed > 0 or any_failed(self.id) :
                 self.running_phase.coh.setStateFailed()
+                self.logger.info("Circuit #%s: failed" % self.id)
             else :
                 self.running_phase.coh.setStateOverTimed()
+                self.logger.info("Circuit #%s: overtimed" % self.id)
             self.release()
             return
         elif res == DIRECTIVE.KILLED :
-            self.logger.info("Circuit #%s: killed" % self.id)
+            self.logger.info("Circuit #%s: released" % self.id)
             self.release()
             return
         else :
