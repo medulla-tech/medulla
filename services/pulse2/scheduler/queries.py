@@ -320,7 +320,7 @@ def process_non_valid(scheduler_name, ids_to_exclude = []):
  
     for q in commands_query.all():
         cohq = CoHQuery(q.id)
-        if any_failed(q.id):
+        if any_failed(q.id) or q.attempts_failed > 0 :
             logging.getLogger().info("Circuit #%s: Switched to failed" % q.id)
             cohq.coh.setStateFailed()
         else :
