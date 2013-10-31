@@ -531,7 +531,10 @@ class MscDispatcher (MscQueryManager, MethodProxy):
 
     def process_non_valid(self, result):
         ids = [c.id for c in self.circuits if c.initialized] 
-        process_non_valid(self.config.name, ids)
+        for id in process_non_valid(self.config.name, ids):
+            circuit = self.get(id)
+            if circuit :
+                circuit.release()
  
     def mainloop(self):
         """ The main loop of scheduler """
