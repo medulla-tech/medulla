@@ -212,8 +212,6 @@ foreach ($fields as $p) {
             new TrFormElement($p[1], new InputTpl($p[0])), array_merge(array("value" => $package[$p[0]]), $p[2])
     );
 }
-var_dump($package['query']);
-var_dump($package['boolcnd']);
 
 foreach ($options as $p) {
     $op = ($package[$p[0]] == 1 || $package[$p[0]] == '1' || $package[$p[0]] === 'enable');
