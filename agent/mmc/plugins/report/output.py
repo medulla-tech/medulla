@@ -29,8 +29,6 @@ from pygal.style import Style
 from os import chmod
 from base64 import b64encode
 
-from mmc.plugins.report.utils import timestamp_to_date
-
 class XlsGenerator(object):
     def __init__(self, path = '/tmp/report.xls'):
         self.wbk = xlwt.Workbook()
@@ -75,7 +73,7 @@ class XlsGenerator(object):
         for i in xrange(len(headers)):
             column += 1
             line = 0
-            sheet.write(line, column, timestamp_to_date(headers[i]))
+            sheet.write(line, column, headers[i])
             for j in xrange(len(datas[headers[i]])):
                 line += 1
                 sheet.write(line, column, datas[headers[i]][j])
@@ -162,7 +160,7 @@ class PdfGenerator(object):
         self.html += '</th>'
         for h in headers:
             self.html += '<th>'
-            self.html += timestamp_to_date(h)
+            self.html += str(h)
             self.html += '</th>'
         for x in xrange(len(titles)):
             self.html += '<tr>'
@@ -289,7 +287,7 @@ class SvgGenerator(object):
             labels = datas.keys()
             labels.sort()
 
-            self.chart.x_labels = [timestamp_to_date(x) for x in labels]
+            self.chart.x_labels = [x for x in labels]
             for i in xrange(len(titles)):
                 self.chart.add(titles[i], [datas[x][i] for x in labels])
         elif type == 'key_value': # Pie Chart
