@@ -24,7 +24,7 @@ import time
 
 from twisted.internet import defer, reactor
 from twisted.internet.task import deferLater
-from twisted.internet.error import TimeoutError
+from twisted.internet.error import TimeoutError, ConnectionRefusedError
 
 from pulse2.scheduler.queries import CoHQuery
 
@@ -421,9 +421,11 @@ class UploadPhase(RemoteControlPhase):
 
     def _eb_mirror_check(self, failure):
         if hasattr(failure, "trap"):
-            err = result.trap(TimeoutError)
+            err = failure.trap(TimeoutError)
             if err == TimeoutError :
                 self.logger.warn("Timeout raised during mirror check")
+            elif err == ConnectionRefusedError :
+                self.logger.warn("Connection refused during mirror check")
             else :
                 self.logger.warn("An error occurred during mirror check: %s" % str(e))
 
