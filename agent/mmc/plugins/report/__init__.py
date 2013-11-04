@@ -22,6 +22,8 @@
 """
 
 import logging
+from os import chmod
+from weasyprint import HTML, CSS
 from importlib import import_module
 
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
@@ -29,8 +31,8 @@ from mmc.plugins.base import LdapUserGroupControl
 from mmc.plugins.report.config import ReportConfig
 from mmc.plugins.report.manager import ReportManager
 from mmc.plugins.report.database import ReportDatabase
+from mmc.plugins.report.XlsGenerator import XlsGenerator
 import xml.etree.ElementTree as ET
-from mmc.plugins.report.output import XlsGenerator, PdfGenerator, SvgGenerator
 
 VERSION = "0.0.0"
 APIVERSION = "0:1:0"
@@ -134,12 +136,18 @@ class RpcProxy(RpcProxyI):
                 plugin, report_name, method, args, kargs = params
                 datas = self.get_report_datas(plugin, report_name, method, (args, kargs))
 
-                xls.pushTable(title, datas)
+                kargs['title'] = title
+                xls.get_xls_sheet(datas, *args, **kargs)
 
         return xls.save()
 
-    def get_pdf_report(self, reports, graph = True):
-        pdf = PdfGenerator()
+    def get_pdf_report(self, reports):
+        # Front page
+        front = HTML(string='<h1>Report</h1>').render()
+        # Summary
+        summary = HTML(string='<p>Summary</p>').render()
+
+        html = ''
 
         plugins = reports.keys()
         plugins.sort()
@@ -148,15 +156,54 @@ class RpcProxy(RpcProxyI):
                 if len(params) == 4:
                     params.append({})
                 plugin, report_name, method, args, kargs = params
-                datas = self.get_report_datas(plugin, report_name, method, (args, kargs))
-                datas_copy = datas.copy()
-                pdf.pushTable(title, datas)
-                if graph:
-                    svg = SvgGenerator()
-                    svg.barChart(datas_copy)
-                    pdf.pushSVG(svg.toXML())
+                kargs['title'] = title
+                kargs['html'] = html
+                html = self.get_report_datas(plugin, report_name, method + '_pdf', (args, kargs))
 
-        return pdf.save()
+
+        css = CSS(string="""
+                  table {
+                   border-width:1px;
+                   border-style:solid;
+                   border-color:black;
+                   border-collapse:collapse;
+                  font-size: 10px;
+                  font-weight: normal;
+                  text-align: center;
+                 }
+                  td {
+                 }
+                  td, th {
+                   border-width:1px;
+                   border-style:solid;
+                   border-color:black;
+                 }
+                 """
+                 )
+        content = HTML(string=html).render(stylesheets=[css])
+
+        # PDF report is a list of all documents
+        pdf_report = [front, summary, content]
+
+        # To make one PDF report, we have to get all pages of all documents...
+        # First step , we obtain a list of sublists like this :
+        # [
+        #     [doc1.page1, doc1, page2],
+        #     [doc2.page1, doc2.page2],
+        #     [doc3.page1, doc3.page2, doc3.page3]
+        # ]
+
+        all_pages = [doc.pages for doc in pdf_report]
+
+        # Second step, clean sublist and make a simple list
+        # http://stackoverflow.com/questions/952914/making-a-flat-list-out-of-list-of-lists-in-python
+        all_pages = [item for sublist in all_pages for item in sublist]
+
+        # ...And combine these pages into a single report Document
+        pdf_report[0].copy(all_pages).write_pdf('/tmp/report.pdf')
+
+        chmod('/tmp/report.pdf', 0644)
+        return '/tmp/report.pdf'
 
     def get_svg_file(self, params):
         plugin, report_name, method, args, kargs = params
