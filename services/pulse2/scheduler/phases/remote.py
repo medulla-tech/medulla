@@ -24,6 +24,7 @@ import time
 
 from twisted.internet import defer, reactor
 from twisted.internet.task import deferLater
+from twisted.internet.error import TimeoutError
 
 from pulse2.scheduler.queries import CoHQuery
 
@@ -35,7 +36,7 @@ from pulse2.apis.consts import PULSE2_ERR_CONN_REF, PULSE2_ERR_404
 from pulse2.scheduler.tracking.proxy import LocalProxiesUsageTracking
 from pulse2.apis.clients.mirror import Mirror
 from pulse2.scheduler.utils import getClientCheck, getServerCheck
-from pulse2.scheduler.utils import extractCredentials, chooseClientInfo 
+from pulse2.scheduler.utils import chooseClientInfo 
 from pulse2.scheduler.checks import getAnnounceCheck
 
 
@@ -408,15 +409,25 @@ class UploadPhase(RemoteControlPhase):
             fbmirror = mirrors[1]
 
             try:
-                credentials, mirror = extractCredentials(mirror)
-                ma = Mirror(credentials, mirror)
+                ma = Mirror(mirror)
+                ma.errorback = self._eb_mirror_check
                 d = ma.isAvailable(self.cmd.package_id)
                 d.addCallback(self._cbRunPushPullPhaseTestMainMirror, mirror, fbmirror, client)
             except Exception, e:
-                self.logger.ing.getLogger().error("Circuit #%s: exception while gathering information about %s on primary mirror %s : %s" % (self.coh.getId(), self.cmd.package_id, mirror, e))
+                self.logger.error("Circuit #%s: exception while gathering information about %s on primary mirror %s : %s" % (self.coh.getId(), self.cmd.package_id, mirror, e))
                 return self._cbRunPushPullPhaseTestMainMirror(False, mirror, fbmirror, client)
 
         return d
+
+    def _eb_mirror_check(self, failure):
+        if hasattr(failure, "trap"):
+            err = result.trap(TimeoutError)
+            if err == TimeoutError :
+                self.logger.warn("Timeout raised during mirror check")
+            else :
+                self.logger.warn("An error occurred during mirror check: %s" % str(e))
+
+
 
     def _cbRunPushPullPhaseTestMainMirror(self, result, mirror, fbmirror, client):
         if result:
@@ -437,13 +448,13 @@ class UploadPhase(RemoteControlPhase):
             # Test the fallback mirror only if the URL is the different than the
             # primary mirror
             try:
-                credentials, mirror = extractCredentials(mirror)
-                ma = Mirror(credentials, fbmirror)
+                ma = Mirror(mirror, fbmirror)
+                ma.errorback = self._eb_mirror_check
                 d = ma.isAvailable(self.cmd.package_id)
                 d.addCallback(self._cbRunPushPullPhase, mirror, fbmirror, client, True)
                 return d
             except Exception, e:
-                self.logger.ing.getLogger().error("Circuit #%s: exception while gathering information about %s on fallback mirror %s : %s" % (self.coh.getId(), self.cmd.package_id, fbmirror, e))
+                self.logger.error("Circuit #%s: exception while gathering information about %s on fallback mirror %s : %s" % (self.coh.getId(), self.cmd.package_id, fbmirror, e))
         else:
             # Go to upload phase, but pass False to tell that the package is not
             # available on the fallback mirror too
@@ -594,8 +605,8 @@ class UploadPhase(RemoteControlPhase):
                                             '%s\n%s' % (self.cmd.package_id, mirror))
         self.logger.debug("Circuit #%s: Package '%s' is available on %s" % (self.coh.getId(), self.cmd.package_id, mirror))
 
-        credentials, mirror = extractCredentials(mirror)
-        ma = Mirror(credentials, mirror)
+        ma = Mirror(mirror)
+        ma.errorback = self._eb_mirror_check
         fids = []
         for line in self.cmd.files.split("\n"):
             fids.append(line.split('##')[0])

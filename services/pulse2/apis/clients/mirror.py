@@ -26,9 +26,24 @@ from pulse2.apis.clients import Pulse2Api
 # need to get a PackageApiManager, it will manage a PackageApi for each mirror
 # defined in the conf file.
 class Mirror(Pulse2Api):
-    def __init__(self, *attr):
+
+    errorback = None
+
+    def __init__(self, base_mirror, fb_mirror=None):
         self.name = "Mirror"
-        Pulse2Api.__init__(self, *attr)
+        credentials, mirror = self.extractCredentials(base_mirror)
+        if fb_mirror :
+            Pulse2Api.__init__(self, credentials, fb_mirror)
+        else :
+            Pulse2Api.__init__(self, credentials, mirror)
+
+
+    def extractCredentials(self, mirror):
+        if not '@' in mirror:
+            return ('', mirror)
+        mirror = mirror.replace('http://', '')
+        credentials, mirror = mirror.split("@")
+        return (credentials, 'http://%s'%mirror)
 
     def convertMachineIntoH(self, machine):
         if type(machine) != dict:
@@ -38,17 +53,26 @@ class Mirror(Pulse2Api):
     def isAvailable(self, pid):
         """ Is my package (identified by pid) available ? """
         d = self.callRemote("isAvailable", pid)
-        d.addErrback(self.onErrorRaise, "Mirror:isAvailable", pid)
+        if self.errorback :
+            d.addErrback(self.errorback)
+        else :
+            d.addErrback(self.onErrorRaise, "Mirror:isAvailable", pid)
         return d
 
     def getFileURI(self, fid):
         """ convert from a fid (File ID) to a file URI """
         d = self.callRemote("getFileURI", fid)
-        d.addErrback(self.onErrorRaise, "Mirror:getFileURI", fid)
+        if self.errorback :
+            d.addErrback(self.errorback)
+        else :
+            d.addErrback(self.onErrorRaise, "Mirror:getFileURI", fid)
         return d
 
     def getFilesURI(self, fids):
         """ convert from a list of fids (File ID) to a list of files URI """
         d = self.callRemote("getFilesURI", fids)
-        d.addErrback(self.onErrorRaise, "Mirror:getFilesURI", fids)
+        if self.errorback :
+            d.addErrback(self.errorback)
+        else :
+            d.addErrback(self.onErrorRaise, "Mirror:getFilesURI", fids)
         return d

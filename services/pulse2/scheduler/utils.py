@@ -63,13 +63,6 @@ def getServerCheck(target):
         'macs': target.getMacs()
     })
 
-def extractCredentials(mirror):
-    if not '@' in mirror:
-        return ('', mirror)
-    mirror = mirror.replace('http://', '')
-    credentials, mirror = mirror.split("@")
-    return (credentials, 'http://%s'%mirror)
-
 def chooseClientInfo(target):
     ips = target.getIps()
     if len(ips) > 0 :
