@@ -73,7 +73,8 @@ def extractCredentials(mirror):
 def chooseClientInfo(target):
     ips = target.getIps()
     if len(ips) > 0 :
-        if NetUtils.is_ipv4_format(ips):
+        # if at least one element from list of IPs is IP format
+        if any([NetUtils.is_ipv4_format(ip) for ip in ips]) :
             host_dict = {'uuid': target.getUUID(),
                          'fqdn': target.getFQDN(),
                          'shortname': target.getShortName(),
