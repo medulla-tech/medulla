@@ -32,7 +32,7 @@ from pulse2.consts import PULSE2_SUCCESS_ERROR
 from pulse2.utils import SingletonN, extractExceptionMessage
 from pulse2.network import NetUtils
 from pulse2.scheduler.queries import CoHQuery, any_failed
-from pulse2.scheduler.utils import chooseClientNetwork
+from pulse2.scheduler.utils import chooseClientInfo
 from pulse2.scheduler.config import SchedulerConfig
 from pulse2.scheduler.balance import ParabolicBalance
 from pulse2.scheduler.launchers_driving import RemoteCallProxy
@@ -174,8 +174,8 @@ class PhaseBase (PhaseProxyMethodContainer):
         try:
             if self.apply_initial_rules():
                 return self.coh
-        except:
-            self.logger.error("flags or rules error \033[31m %s\033[0m"  % traceback.format_exc())
+        except Exception, e:
+            self.logger.error("Flags or rules failed: %s"  % str(e))
         return self.perform()
 
     def perform(self):
@@ -231,14 +231,10 @@ class PhaseBase (PhaseProxyMethodContainer):
 
             delay = delay_in_seconds // 60
             self.logger.debug("Next delay for CoH %s : + %s min" %(str(self.coh.id),str(delay)))
-            #self.logger.info("\033[33mNext delay for CoH %s : + %s min\033[0m" % (str(self.coh.id),str(delay)))
             return delay
-            #if self.cmd.getNextConnectionDelay() != delay :
-            #    self.cmd.setNextConnectionDelay(delay)
-            #self.coh.
 
-        except:
-            self.logger.error("\033[31m calc next delay err:%s\033[0m"  % traceback.format_exc())
+        except Exception, e:
+            self.logger.error("Next delay calculation failed: %s"  % str(e))
 
 class Phase (PhaseBase):
 
@@ -329,13 +325,18 @@ class Phase (PhaseBase):
 
     def get_client(self, announce):
         client_group = ""
+        if self.host :
 
-        for pref_net_ip, pref_netmask in SchedulerConfig().preferred_network :
-            if NetUtils.on_same_network(self.host, pref_net_ip, pref_netmask):
+            for pref_net_ip, pref_netmask in SchedulerConfig().preferred_network :
+                if NetUtils.on_same_network(self.host, pref_net_ip, pref_netmask):
 
-                client_group = pref_net_ip
-                break
-                                                                                    
+                    client_group = pref_net_ip
+                    break
+        else :
+            if len(SchedulerConfig().preferred_network) > 0 :
+                (pref_net_ip, pref_netmask) = SchedulerConfig().preferred_network[0] 
+                client_group = pref_net_ip 
+            
 
         return {'host': self.host, 
                 'uuid': self.target.getUUID(), 
@@ -346,6 +347,7 @@ class Phase (PhaseBase):
                 'action': getAnnounceCheck(announce), 
                 'group': client_group
                }
+
     def give_up(self):
         self.logger.debug("Circuit #%s: Releasing" % self.coh.id)
         return DIRECTIVE.GIVE_UP
@@ -376,8 +378,6 @@ class Phase (PhaseBase):
             return self.switch_phase_failed(True)
 
 
-
-import traceback
 
 class QueryContext :
     """A simply aliasing of CoHQuery container of circuit. """
@@ -516,8 +516,8 @@ class CircuitBase(object):
         """
         try :
             self.releaser(self.cohq.coh.id, suspend_to_waitings)
-        except :
-            self.logger.error("release error: \033[31m %s\033[0m" % traceback.format_exc())
+        except Exception, e:
+            self.logger.error("Circuit release failed: %s" % str(e))
 
 
     @property
@@ -540,7 +540,7 @@ class CircuitBase(object):
         @param reason: void parameter, used as twisted callback reason
         @type reason: twisted callback reason
         """
-        return chooseClientNetwork(self.cohq.target)
+        return chooseClientInfo(self.cohq.target)
 
       
     def _host_detect(self, host):
@@ -555,25 +555,27 @@ class CircuitBase(object):
         @return: network address
         @rtype: str
         """
-        if not host :
-            
-            self.logger.warn("Circuit #%s: IP address detect failed" % (self.id))
- 
-        self.host = host
+        if host :
+            self.host = host
 
-        for pref_net_ip, pref_netmask in SchedulerConfig().preferred_network :
-            if NetUtils.on_same_network(host, pref_net_ip, pref_netmask):
+            for pref_net_ip, pref_netmask in SchedulerConfig().preferred_network :
+                if NetUtils.on_same_network(host, pref_net_ip, pref_netmask):
 
+                    return pref_net_ip
+
+            if len(SchedulerConfig().preferred_network) > 0 :
+                self.logger.debug("Circuit #%s: network detect failed, assigned the first of scheduler" % (self.id))
+                (pref_net_ip, pref_netmask) = SchedulerConfig().preferred_network[0] 
                 return pref_net_ip
+        else:
+            self.logger.warn("Circuit #%s: IP address detect failed" % (self.id))
 
         if len(SchedulerConfig().preferred_network) > 0 :
             self.logger.debug("Circuit #%s: network detect failed, assigned the first of scheduler" % (self.id))
             (pref_net_ip, pref_netmask) = SchedulerConfig().preferred_network[0] 
             return pref_net_ip
+
  
-
-        return None
-
  
     def _network_detect(self, address):
         """

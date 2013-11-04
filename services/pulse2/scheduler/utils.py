@@ -30,6 +30,8 @@ from twisted.protocols.basic import LineOnlyReceiver
 from twisted.internet import reactor
 from twisted.internet.defer import maybeDeferred
 
+from pulse2.network import NetUtils 
+
 from pulse2.scheduler.config import SchedulerConfig
 from pulse2.scheduler.network import chooseClientIP 
 from pulse2.scheduler.checks import getCheck
@@ -69,14 +71,20 @@ def extractCredentials(mirror):
     return (credentials, 'http://%s'%mirror)
 
 def chooseClientInfo(target):
-    return chooseClientIP({
-        'uuid': target.getUUID(),
-        'fqdn': target.getFQDN(),
-        'shortname': target.getShortName(),
-        'ips': target.getIps(),
-        'macs': target.getMacs(),
-        'netmasks': target.getNetmasks()
-    })
+    ips = target.getIps()
+    if len(ips) > 0 :
+        if NetUtils.is_ipv4_format(ips):
+            host_dict = {'uuid': target.getUUID(),
+                         'fqdn': target.getFQDN(),
+                         'shortname': target.getShortName(),
+                         'ips': ips,
+                         'macs': target.getMacs(),
+                         'netmasks': target.getNetmasks()
+                        }
+
+            return chooseClientIP(host_dict)
+
+    return None
 
 
 
