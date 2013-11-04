@@ -24,8 +24,6 @@
 
 from importlib import import_module
 import logging
-import time
-import datetime
 
 from sqlalchemy import func
 from sqlalchemy import Column, String, Text, Integer, Float, BigInteger
@@ -65,24 +63,28 @@ class Indicator(Base, DBObj):
         args = [entities] + eval('[' + self.params + ']')
         return getattr(report, self.request_function)(*args)
 
-    def getValueAtDate(self, session, date, entities = []):
-        # example date : 2013-05-21
-        # Creating a timestamp range for specified date
-        min = int(time.mktime(datetime.datetime.strptime(date, "%Y-%m-%d").timetuple()))
-        max = min + 86400 # max = min + 1day (sec)
-        #
+    def getValueAtTime(self, session, ts_min, ts_max , entities = []):
         ret = session.query(ReportingData.value).filter_by(indicator_id = self.id)
         # Selected entities filter, else all entities are included
         if entities:
             ret = ret.filter(ReportingData.entity_id.in_(entities))
         # Timestamp range filter
-        ret = ret.filter(ReportingData.timestamp.between(min, max))
+        ret = ret.filter(ReportingData.timestamp.between(ts_min, ts_max))
         # Avoid having multiple values per entity and per date
         ret = ret.group_by(ReportingData.entity_id).all()
-        # TODO: Implement string case according to self.data_type
-        # ==> numeric case
-        result = 0
-        for row in ret:
-            result += float(row[0])
+        # data_type == 0 > numeric
+        if self.data_type == 0:
+            result = 0
+            for row in ret:
+                result += float(row[0])
+            if len(ret) == 0:
+                result = None
+        # data_type == 0 > string
+        if self.data_type == 1:
+            result = ''
+            for row in ret:
+                result += row[0] + '\n'
+            if len(ret) == 0:
+                result = None
         return result
 

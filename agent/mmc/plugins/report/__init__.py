@@ -22,6 +22,8 @@
 """
 
 import logging
+import time
+import datetime
 from importlib import import_module
 
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
@@ -181,12 +183,13 @@ class RpcProxy(RpcProxyI):
         # TODO : Get entity names from entity uuids
         entity_names = entities
         # Parsing report XML
-        # TODO; Language
         xmltemp = ET.parse('/etc/mmc/pulse2/report/templates/%s.xml' % lang).getroot()
         if xmltemp.tag != 'template':
             logging.getLogger().error('Incorrect XML')
             return False
         # xmltemp.attrib ??? if necessary ?? ==> date and time format
+        #TODO: Read date format from XML
+        date_format = '%d/%m/%Y'
 
         def _h1(text):
             # send text to pdf, html, ...
@@ -205,10 +208,14 @@ class RpcProxy(RpcProxyI):
                 data_dict['titles'].append(item.attrib['title'])
                 indicators.append(item.attrib['indicator'])
             for date in period:
-                data_dict[date] = []
+                # Creating a timestamp range for the specified date
+                ts_min = int(time.mktime(datetime.datetime.strptime(date, "%Y-%m-%d").timetuple()))
+                ts_max = ts_min + 86400 # max = min + 1day (sec)
+                #
+                formatted_date = datetime.datetime.fromtimestamp(ts_min).strftime(date_format)
+                data_dict[formatted_date] = []
                 for indicator in indicators:
-                    # TODO: data_dict[formatted_date]
-                    data_dict[date].append(ReportDatabase().get_indicator_value_at_date(indicator,date, entities))
+                    data_dict[formatted_date].append(ReportDatabase().get_indicator_value_at_time(indicator, ts_min, ts_max, entities))
             logging.getLogger().warning('GOT PERIOD DICT')
             logging.getLogger().warning(data_dict)
             return data_dict
