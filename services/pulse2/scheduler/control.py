@@ -138,7 +138,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         waiting_circuits = self.get_waiting_circuits(already_initialized_ids)
         circuits = self.get_circuits(already_initialized_ids)
         circuits.extend(waiting_circuits)
-        return [(True,(True, c)) for c in circuits]
+        return circuits
 
     def _start_failed(self, failure):
         """
@@ -239,43 +239,54 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         """
         return [launcher for (launcher, networks) in self.launchers_networks.items() 
                          if network in networks]
+
+
+    def _setup_check(self, circuits):
+        """
+        Checks the setup result and transforms its to simple list (generator).
+
+        @param circuits: circuits to check
+        @type circuits: DeferredList results
+
+        @return: checked circuits:
+        @rtype: generator
+        """
+        for success, circuit in circuits :
+            if not success :
+                self.logger.warn("Circuit #%s: setup failed" % circuit.id)
+
+            yield circuit
+
  
     def _assign_launcher(self, incoming_circuits):
         """
         Assigning the launcher provider favorizing the best launcher.
 
         @param incoming_circuits: circuits to start 
-        @type incoming_circuits: list
+        @type incoming_circuits: DeferredList results
 
         @return: circuits to start with assigned launcher provider
         @rtype: list
         """
-        for success, result in incoming_circuits :
-            # TODO - setup check
-            if success and len(result) == 2 and isinstance(result, tuple):
-                ok, circuit = result
-                if ok :
-                    launchers = self.get_launchers_by_network(circuit.network_address)
-                    if len(launchers) > 0 :
-                        circuit.launchers_provider = RemoteCallProxy(self.config.launchers_uri, 
-                                                                     launchers[0])
-                        self.logger.info("Circuit #%s: assigned launcher <%s>" % 
-                                (circuit.id, launchers[0]))
-                    else:
-                        launcher = self.config.launchers.keys()[0]
-                        circuit.launchers_provider = RemoteCallProxy(self.config.launchers_uri, 
-                                                                     launcher)
- 
-                        self.logger.warn("Launcher pre-detect failed, assigning the first launcher '%s' to circuit #%s" % 
-                                  (launcher, circuit.id))
-                else :
-                    self.logger.warn("Launcher pre-detect for an undefined circuit failed!")
+        for circuit in self._setup_check(incoming_circuits):
+            if self.launchers_provider.single_mode :
+                launcher = self.config.launchers.keys()[0]
+                circuit.launchers_provider = RemoteCallProxy(self.config.launchers_uri, 
+                                                             launcher)
             else :
-                self.logger.error("Launchers pre-detect failed!")
- 
-
-        return incoming_circuits
-
+                launchers = self.get_launchers_by_network(circuit.network_address)
+                if len(launchers) > 0 :
+                    circuit.launchers_provider = RemoteCallProxy(self.config.launchers_uri, 
+                                                                 launchers.keys()[0])
+                    self.logger.debug("Circuit #%s: assigned launcher <%s>" % 
+                            (circuit.id, launchers[0]))
+                else:
+                    launcher = self.config.launchers.keys()[0]
+                    circuit.launchers_provider = RemoteCallProxy(self.config.launchers_uri, 
+                                                                 launcher)
+                    self.logger.debug("Launcher pre-detect failed, assigning the first launcher '%s' to circuit #%s" % 
+                                  (launcher, circuit.id))
+            yield circuit
 
     def _class_all(self, incoming_circuits):
         """
@@ -290,12 +301,9 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         """
         new_circuits = []
         circuits_to_start = []
-        for success, result in incoming_circuits :
-            if success :
-                ok, wf_instance = result
-            if ok :
-                wf_instance.status = CC_STATUS.WAITING
-                new_circuits.append(wf_instance)
+        for circuit in incoming_circuits :
+            circuit.status = CC_STATUS.WAITING
+            new_circuits.append(circuit)
 
         grouped = self._select_balanced(new_circuits)
 
@@ -502,7 +510,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         waiting_circuits = self._get_candidats_to_overtimed(self.waiting_circuits)
 
         for circuit in circuits + waiting_circuits :
-            if any_failed(circuit.id):
+            if any_failed(circuit.id) or circuit.qm.coh.attempts_failed > 0 :
                 circuit.qm.coh.setStateFailed()
                 self.logger.info("Circuit #%s: going to failed" % circuit.id)
             else :
@@ -519,7 +527,10 @@ class MscDispatcher (MscQueryManager, MethodProxy):
 
     def process_non_valid(self, result):
         ids = [c.id for c in self.circuits if c.initialized] 
-        process_non_valid(self.config.name, ids)
+        for id in process_non_valid(self.config.name, ids):
+            circuit = self.get(id)
+            if circuit :
+                circuit.release()
  
     def mainloop(self):
         """ The main loop of scheduler """
