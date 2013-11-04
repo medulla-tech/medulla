@@ -421,13 +421,14 @@ class UploadPhase(RemoteControlPhase):
 
     def _eb_mirror_check(self, failure):
         if hasattr(failure, "trap"):
-            err = failure.trap(TimeoutError)
+            err = failure.trap(TimeoutError, ConnectionRefusedError)
             if err == TimeoutError :
                 self.logger.warn("Timeout raised during mirror check")
             elif err == ConnectionRefusedError :
                 self.logger.warn("Connection refused during mirror check")
             else :
                 self.logger.warn("An error occurred during mirror check: %s" % str(e))
+        return failure
 
 
 
@@ -437,6 +438,8 @@ class UploadPhase(RemoteControlPhase):
                 if result[1] == PULSE2_ERR_CONN_REF:
                     self.update_history_failed(PULSE2_PSERVER_MIRRORFAILED_CONNREF_ERROR, '', result[2])
                 elif result[1] == PULSE2_ERR_404:
+                    self.update_history_failed(PULSE2_PSERVER_MIRRORFAILED_404_ERROR, '', result[2])
+                elif result[1] == PULSE2_UNKNOWN_ERROR:
                     self.update_history_failed(PULSE2_PSERVER_MIRRORFAILED_404_ERROR, '', result[2])
                 return self._cbRunPushPullPhaseTestFallbackMirror(result, mirror, fbmirror, client)
             else:

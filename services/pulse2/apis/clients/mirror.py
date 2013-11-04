@@ -20,8 +20,10 @@
 # You should have received a copy of the GNU General Public License
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+from twisted.internet.error import ConnectionRefusedError
 
 from pulse2.apis.clients import Pulse2Api
+from pulse2.apis.consts import PULSE2_ERR_404, PULSE2_ERR_CONN_REF, PULSE2_ERR_UNKNOWN
 
 # need to get a PackageApiManager, it will manage a PackageApi for each mirror
 # defined in the conf file.
@@ -55,8 +57,7 @@ class Mirror(Pulse2Api):
         d = self.callRemote("isAvailable", pid)
         if self.errorback :
             d.addErrback(self.errorback)
-        else :
-            d.addErrback(self.onErrorRaise, "Mirror:isAvailable", pid)
+        d.addErrback(self.ebDefault, "Mirror:isAvailable", pid)
         return d
 
     def getFileURI(self, fid):
@@ -64,8 +65,7 @@ class Mirror(Pulse2Api):
         d = self.callRemote("getFileURI", fid)
         if self.errorback :
             d.addErrback(self.errorback)
-        else :
-            d.addErrback(self.onErrorRaise, "Mirror:getFileURI", fid)
+        d.addErrback(self.ebDefault, "Mirror:getFileURI", fid)
         return d
 
     def getFilesURI(self, fids):
@@ -73,6 +73,26 @@ class Mirror(Pulse2Api):
         d = self.callRemote("getFilesURI", fids)
         if self.errorback :
             d.addErrback(self.errorback)
-        else :
-            d.addErrback(self.onErrorRaise, "Mirror:getFilesURI", fids)
+        d.addErrback(self.ebDefault, "Mirror:getFilesURI", fids)
         return d
+
+    def ebDefault(self, error, funcname, args, default_return = []):
+        """
+        To use as a deferred error back
+
+        @returns: a list containing error informations
+        @rtype: list
+        """
+        if error.type == ConnectionRefusedError:
+            self.logger.error("%s %s has failed: connection refused" % (funcname, args))
+            ret = ['PULSE2_ERR', PULSE2_ERR_CONN_REF,
+                   self.server_addr, default_return]
+        elif error.type == exceptions.ValueError:
+            self.logger.error("%s %s has failed: the mountpoint don't exists" % (funcname, args))
+            ret = ['PULSE2_ERR', PULSE2_ERR_404,
+                   self.server_addr, default_return]
+        else:
+            self.logger.error("%s %s has failed: %s" % (funcname, args, error))
+            ret = ['PULSE2_ERR', PULSE2_ERR_UNKNOWN,
+                   self.server_addr, default_return]
+        return ret
