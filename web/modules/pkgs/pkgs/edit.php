@@ -48,7 +48,7 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
     if ($_GET["action"] == "add") {
         $need_assign = True;
     }
-    foreach (array('id', 'label', 'version', 'description') as $post) {
+    foreach (array('id', 'label', 'version', 'description', 'query', 'boolcnd') as $post) {
         $package[$post] = $_POST[$post];
     }
     foreach (array('reboot') as $post) {
@@ -202,16 +202,29 @@ $options = array(
     array('reboot', _T('Need a reboot ?', 'pkgs'))
 );
 
+$groups = array(
+    array('query', _T('Query', 'pkgs')),
+    array('boolcnd', _T('Bool', 'pkgs')),
+);
+ 
 foreach ($fields as $p) {
     $f->add(
             new TrFormElement($p[1], new InputTpl($p[0])), array_merge(array("value" => $package[$p[0]]), $p[2])
     );
 }
+var_dump($package['query']);
+var_dump($package['boolcnd']);
 
 foreach ($options as $p) {
     $op = ($package[$p[0]] == 1 || $package[$p[0]] == '1' || $package[$p[0]] === 'enable');
     $f->add(
             new TrFormElement($p[1], new CheckboxTpl($p[0])), array("value" => ($op ? 'checked' : ''))
+    );
+}
+
+foreach ($groups as $p) {
+    $f->add(
+        new TrFormElement($p[1], new InputTpl($p[0])), array("value" => $package[$p[0]])
     );
 }
 

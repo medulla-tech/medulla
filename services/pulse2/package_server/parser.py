@@ -99,6 +99,17 @@ class PackageParserXML:
                 else:
                     cmds[c] = ''
 
+            logging.debug('here')
+            groups = root.getElementsByTagName('groups')
+            query = ''
+            boolcnd = ''
+            if len(groups) == 1 and groups[0].firstChild != None:
+                query = groups[0].getElementsByTagName('query')
+                boolcnd = groups[0].getElementsByTagName('boolcnd')
+                logging.debug(query)
+                logging.debug(boolcnd)
+            logging.debug('there')
+
             p = Package()
             p.init(
                 pid,
@@ -111,7 +122,9 @@ class PackageParserXML:
                 cmds['preCommand'],
                 cmds['postCommandSuccess'],
                 cmds['postCommandFailure'],
-                reboot
+                reboot,
+                query,
+                boolcnd
             )
         except Exception, e:
             logging.getLogger().error("parse_str failed")
@@ -198,11 +211,21 @@ class PackageParserXML:
 
         docr.appendChild(commands)
 
+        group = doc.createElement('group')
+        query = doc.createElement('query')
+        query.appendChild(doc.createTextNode(package.query))
+        boolcnd = doc.createElement('bool')
+        boolcnd.appendChild(doc.createTextNode(package.boolcnd))
+        group.appendChild(query)
+        group.appendChild(boolcnd)
+        
+        docr.appendChild(group)
+
         return doc.toprettyxml(encoding = 'utf-8')
 
     def doctype(self):
         return """
-    <!ELEMENT package (name,version,description?,commands,files?)>
+    <!ELEMENT package (name,version,description?,commands,files?, group?)>
     <!ATTLIST package id ID #REQUIRED>
 
     <!ELEMENT name (#PCDATA)>
@@ -229,6 +252,9 @@ class PackageParserXML:
     <!ATTLIST file fid ID #IMPLIED>
     <!ATTLIST file md5sum CDATA "">
     <!ATTLIST file size CDATA "">
+    <!ELEMENT group (query, bool)>
+    <!ELEMENT query (#PCDATA)>
+    <!ELEMENT bool (#PCDATA)>
 """
 
 

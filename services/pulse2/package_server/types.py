@@ -96,7 +96,7 @@ class Package:
         self.files = AFiles()
         self.specifiedFiles = []
 
-    def init(self, id, label, version, size, description, cmd, initcmd = '', precmd = '', postcmd_ok = '', postcmd_ko = '', reboot = 0):
+    def init(self, id, label, version, size, description, cmd, initcmd = '', precmd = '', postcmd_ok = '', postcmd_ko = '', reboot = 0, query = '', boolcnd = ''):
         self.label = label
         self.version = version
         self.size = size
@@ -111,6 +111,8 @@ class Package:
         self.reboot = reboot
         self.id = id
         self.root = ''
+        self.query = query
+        self.boolcnd = boolcnd
 
     def addFile(self, file):
         self.files.append(file)
@@ -137,7 +139,9 @@ class Package:
             'postCommandSuccess':self.postcmd_ok.toH(),
             'postCommandFailure':self.postcmd_ko.toH(),
             'reboot':self.reboot,
-            'files':self.files.toH()
+            'files':self.files.toH(),
+            'query':self.query,
+            'boolcnd':self.boolcnd
         }
         if self.root != '':
             # The package root is decoded using the current encoding to get a Python
@@ -192,6 +196,10 @@ class Package:
         self.root = ''
         if h.has_key('basepath'):
             self.root = h['basepath']
+        if h.has_key('query'):
+            self.query = h['query']
+        if h.has_key('boolcnd'):
+            self.boolcnd = h['boolcnd']
         return self
 
     def equal(self, p):

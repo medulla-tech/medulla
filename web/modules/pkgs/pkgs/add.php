@@ -45,7 +45,7 @@ if (isset($_POST['bconfirm'])) {
         $level = 1;
     }
 
-    foreach (array('id', 'label', 'version', 'description', 'mode') as $post) {
+    foreach (array('id', 'label', 'version', 'description', 'mode', 'query', 'boolcnd') as $post) {
         $package[$post] = $_POST[$post];
     }
     foreach (array('reboot') as $post) {
@@ -169,6 +169,11 @@ You may also ask Google for the silent installation switches. If you\'re feeling
         array('reboot', _T('Need a reboot ?', 'pkgs'))
     );
 
+    $groups = array(
+            array('query', _T('Query', 'pkgs')),
+            array('boolcnd', _T('Bool', 'pkgs')),
+    );
+    
     foreach ($fields as $p) {
         $f->add(
                 new TrFormElement($p[1], new InputTpl($p[0])), array_merge(array("value" => ''), $p[2])
@@ -180,7 +185,12 @@ You may also ask Google for the silent installation switches. If you\'re feeling
                 new TrFormElement($p[1], new CheckboxTpl($p[0])), array("value" => '')
         );
     }
-
+    foreach ($groups as $p) {
+        $f->add(
+                new TrFormElement($p[1], new InputTpl($p[0])), array("value" => '')
+        );
+    }
+    
     foreach ($cmds as $p) {
         $f->add(
                 new HiddenTpl($p[0] . 'name'), array("value" => '', "hide" => True)
