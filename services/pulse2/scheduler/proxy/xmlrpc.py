@@ -22,7 +22,7 @@
 import logging
 import xmlrpclib
 
-from twisted.internet.defer import maybeDeferred
+
 from twisted.web.xmlrpc import XMLRPC, Fault
 from twisted.web.server import NOT_DONE_YET
 
@@ -45,7 +45,7 @@ class ForwardingProxy(XMLRPC):
     def register_forwarder(self, forwarder):
         self.forwarder = forwarder
 
-    def _ebRender(self, failure, request):
+    def _ebRender(self, failure, func, args):
         self.logger.error("XMLRPC Proxy : %s" % str(failure))
         if isinstance(failure.value, xmlrpclib.Fault):
             return failure.value
@@ -71,13 +71,10 @@ class ForwardingProxy(XMLRPC):
             f = xmlrpclib.Fault(self.FAILURE, "can't serialize output")
             s = xmlrpclib.dumps(f, methodresponse=1)
         request.setHeader("content-length", str(len(s)))
-        try:
-            request.write(s)
-            request.finish()
-        except Exception, e :
-            self.logger.debug("XMLRPC Proxy : request finish: %s" % str(e))
+        request.write(s)
+        request.finish()
 
-
+    
 
     def render(self, request):
         """ override method of xmlrpc python twisted framework """
@@ -85,11 +82,7 @@ class ForwardingProxy(XMLRPC):
 
         if not self._auth_validate(request, func_name, args):
             return NOT_DONE_YET
-
-        d = maybeDeferred(self.forwarder.call_remote, request, func_name, args)
-        d.addErrback(self._ebRender, func_name, args)
-        d.addCallback(self._cbRender, request, func_name, args)
-
+        self.forwarder.call_remote(request, func_name, args)
 
         return NOT_DONE_YET
 

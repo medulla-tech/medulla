@@ -45,7 +45,7 @@ def app() :
 
     config = SchedulerConfig()
     app = App(config)
-    d = task.deferLater(reactor, config.initial_wait, app.run)
+    d = task.deferLater(reactor, 0, app.run)
     @d.addCallback
     def cb(result):
         if result :
