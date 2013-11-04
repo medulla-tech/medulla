@@ -121,7 +121,33 @@ class PdfGenerator(object):
         """
         return CSS(string=string)
 
-    def pushTable(self, title, datas):
+    def get_simple_sheet(self, title, datas):
+        self.html += '<h1>%s</h1>' % title
+
+        headers = datas.pop('headers', [])
+        values = datas.pop('values', [])
+
+        # Table headers
+        self.html += '<table>'
+        self.html += '<tr>'
+        for h in headers:
+            self.html += '<th>'
+            self.html += h
+            self.html += '</th>'
+        self.html += '</tr>'
+
+        # Table content
+        for line in values:
+            self.html += '<tr>'
+            for td in line:
+                self.html += '<td>'
+                self.html += str(td)
+                self.html += '</td>'
+            self.html += '</tr>'
+
+        self.html += '</table>'
+
+    def get_period_sheet(self, title, datas):
         self.html += '<h1>%s</h1>' % title
 
         titles = datas.pop('titles', None)
@@ -153,6 +179,12 @@ class PdfGenerator(object):
 
         self.html += '</tr>'
         self.html += '</table>'
+
+    def pushTable(self, title, datas):
+        if 'headers' in datas: # simple sheets
+            return self.get_simple_sheet(title, datas)
+        else: # period sheets
+            return self.get_period_sheet(title, datas)
 
     def pushSVG(self, svg):
         self.html += '<img src="data:image/svg+xml;charset=utf-8;base64,%s" />' % b64encode(svg.encode('utf8'))
