@@ -538,15 +538,32 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         d.addCallback(self.process_overtimed)
         d.addCallback(self.process_non_valid)
         d.addCallback(self.launch_remaining_waitings)
+        d.addCallback(self._cb_cycle_finished)
         d.addErrback(self.eb_mainloop)
 
         return d
 
     def eb_mainloop(self, failure):
         self.logger.error("Mainloop failed: %s" % str(failure))
+
+    cycle_finished = False
+
+    def _cb_cycle_finished(self, result):
+        """ A finalback called when mainloop ends """
+        if result :
+            self.cycle_finished = True
  
     def _mainloop(self):
         """ The main loop of scheduler """
+        d = Deferred()
+        @d.addCallback
+        def fb(result):
+            return False
+
+        if not self.cycle_finished :
+            self.logger.info("Previous step not finished yet")
+            return d
+
         self.logger.info("Looking for new commands")
         try :
             self.rn_stats()
@@ -568,17 +585,21 @@ class MscDispatcher (MscQueryManager, MethodProxy):
                         self.logger.info("Prepare %d new commands to initialize" % len(ids))
                     else :
                         self.logger.info("Nothing to initialize")
-                    self.start_all(ids)
-                    return True
+                    d = self.start_all(ids)
+
+                    @d.addCallback
+                    def cb(result):
+                        return True
+                    return d
                 else :
                     self.logger.info("Slots will be filled with by waiting circuits")
             else :
                 self.logger.info("Slots full: continue and waiting on next awake")
-            return True
+            return d
 
         except Exception, e:
             self.logger.error("Mainloop execution failed: %s" % str(e))
-            return False
+            return d
 
        
         
