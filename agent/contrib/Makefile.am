@@ -24,6 +24,8 @@ contribdir = $(datadir)/doc/mmc/contrib
 
 nobase_dist_contrib_DATA = audit/sql/install.sh \
 						  audit/sql/schema-2.sql \
+						  report/sql/schema-001.sql \
+						  report/sql/README \
 						  monit/mmc-agent \
 						  scripts/mmc-check-expired-passwords-example \
 						  scripts/mmc-check-users-primary-group \

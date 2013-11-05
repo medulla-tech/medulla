@@ -1,0 +1,8 @@
+This directory contains every material needed to create the database
+required by the Report module to store its informations.
+
+As the PULSE2 evolve, so does the Report database. This directory contains the
+base schema (schema-001.sql) and subsequents evolutions (schema-xxx.sql).
+
+To obtain a state-of-the-art Report database, just run the install script.
+
