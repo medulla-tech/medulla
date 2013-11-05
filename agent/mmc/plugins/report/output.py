@@ -315,7 +315,8 @@ class SvgGenerator(object):
             height=250
         )
 
-    def _feedChart(self, datas, type='period'):
+    def _feedChart(self, title, datas, type='period'):
+        self.chart.title = title
         if type == 'period':
             titles = datas['titles']
             values = datas['values']
@@ -331,20 +332,20 @@ class SvgGenerator(object):
 
         return True
 
-    def barChart(self, datas):
+    def barChart(self, title, datas):
         self.style = self._get_bar_style()
         self.chart = self._get_bar_chart()
-        self._feedChart(datas)
+        self._feedChart(title, datas)
 
-    def lineChart(self, datas):
+    def lineChart(self, title, datas):
         self.style = self._get_line_style()
         self.chart = self._get_line_chart()
-        self._feedChart(datas)
+        self._feedChart(title, datas)
 
-    def pieChart(self, datas):
+    def pieChart(self, title, datas):
         self.style = self._get_pie_style()
         self.chart = self._get_pie_chart()
-        self._feedChart(datas, type='key_value')
+        self._feedChart(title, datas, type='key_value')
 
     def toXML(self):
         return self.chart.render()
