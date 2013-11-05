@@ -201,7 +201,7 @@ class RpcProxy(RpcProxyI):
                     ## =========< CHART >===================
                     if level2.tag.lower() == 'chart':
                         # Generatinng SVG
-                        svg_filename = attr1['name'] + '_' + attr2['name'] + '.png'
+                        svg_filename = attr1['name'] + '_' + attr2['name']
                         svg = SvgGenerator(path = os.path.join(svg_path, svg_filename))
                         if attr2['chart_type'] == 'line':
                             data_dict = _periodDict(level2)
@@ -215,6 +215,8 @@ class RpcProxy(RpcProxyI):
                             svg.pieChart(data_dict)
                         # Insert SVG into the PDF
                         pdf.pushSVG(svg.toXML())
+                        # Save SVG files (SVG/PNG)
+                        svg.save()
 
         # Saving outputs
         xls.save()

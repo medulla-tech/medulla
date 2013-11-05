@@ -350,6 +350,16 @@ class SvgGenerator(object):
         return self.chart.render()
 
     def toPNG(self):
-        self.chart.render_to_png(self.path)
-        chmod(self.path, 0644)
-        return self.path
+        self.chart.render_to_png(self.path + '.png')
+        chmod(self.path + '.png', 0644)
+        return True
+
+    def save(self):
+        # Saving PNG file
+        self.toPNG()
+        # Saving SVG file
+        f = open(self.path + '.svg', 'w')
+        f.write(self.toXML().encode('utf8'))
+        f.close()
+        chmod(self.path + '.svg', 0644)
+        return True
