@@ -31,7 +31,7 @@ from pulse2.scheduler.types import MscContainer, Circuit, CC_STATUS
 from pulse2.scheduler.analyses import MscQueryManager
 from pulse2.scheduler.launchers_driving import RemoteCallProxy
 from pulse2.scheduler.queries import get_cohs, is_command_in_valid_time
-from pulse2.scheduler.queries import any_failed, process_non_valid, get_ids_to_start
+from pulse2.scheduler.queries import process_non_valid, get_ids_to_start
 
 
 class MethodProxy(MscContainer):
@@ -509,22 +509,6 @@ class MscDispatcher (MscQueryManager, MethodProxy):
 
         return False
 
-         
-    def process_overtimed(self, reason):
-        """ Switchs the overtimed circuits from container """
-
-        circuits = self._get_candidats_to_overtimed(self.circuits)
-        waiting_circuits = self._get_candidats_to_overtimed(self.waiting_circuits)
-
-        for circuit in circuits + waiting_circuits :
-            if any_failed(circuit.id) or circuit.qm.coh.attempts_failed > 0 :
-                circuit.qm.coh.setStateFailed()
-                self.logger.info("Circuit #%s: going to failed" % circuit.id)
-            else :
-                circuit.qm.coh.setStateOverTimed()
-                self.logger.info("Circuit #%s: going to overtimed" % circuit.id)
-            circuit.release()
-
 
     def launch_remaining_waitings(self, reason):
         while self.free_slots > 0 :
@@ -533,8 +517,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
                 break
 
     def process_non_valid(self, result):
-        ids = [c.id for c in self.circuits if c.initialized] 
-        for id in process_non_valid(self.config.name, ids):
+        for id in process_non_valid(self.config.name, 1000):
             circuit = self.get(id)
             if circuit :
                 circuit.release()
@@ -542,7 +525,6 @@ class MscDispatcher (MscQueryManager, MethodProxy):
     def mainloop(self):
         """ The main loop of scheduler """
         d = maybeDeferred(self._mainloop)
-        d.addCallback(self.process_overtimed)
         d.addCallback(self.process_non_valid)
         d.addCallback(self.launch_remaining_waitings)
         d.addErrback(self.eb_mainloop)

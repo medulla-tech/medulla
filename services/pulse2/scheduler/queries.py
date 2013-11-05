@@ -28,7 +28,7 @@ from sqlalchemy import not_, or_
 from pulse2.database.msc import MscDatabase
 
 from pulse2.database.msc.orm.commands import Commands
-from pulse2.database.msc.orm.commands_on_host import CommandsOnHost
+from pulse2.database.msc.orm.commands_on_host import CommandsOnHost, CoHManager
 from pulse2.database.msc.orm.commands_on_host_phase import CommandsOnHostPhase
 from pulse2.database.msc.orm.target import Target
 
@@ -301,7 +301,7 @@ def get_ids_to_start(scheduler_name, ids_to_exclude = [], top=None):
     session.close()
     return commands_to_perform
 
-def process_non_valid(scheduler_name, ids_to_exclude = []):
+def process_non_valid(scheduler_name, top, ids_to_exclude = []):
     database = MscDatabase()
     session = create_session()
   
@@ -314,21 +314,29 @@ def process_non_valid(scheduler_name, ids_to_exclude = []):
         ).filter(or_(database.commands_on_host.c.scheduler == '',
                      database.commands_on_host.c.scheduler == scheduler_name,
                      database.commands_on_host.c.scheduler == None))
+    
+    commands_query = commands_query.limit(top)
     if len(ids_to_exclude) > 0 :
         commands_query = commands_query.filter(not_(database.commands_on_host.c.id.in_(ids_to_exclude)))
-    ids_to_release = []
+    fls = []
+    otd = []
+
     for q in commands_query.all():
-        cohq = CoHQuery(q.id)
         if any_failed(q.id) or q.attempts_failed > 0 :
-            logging.getLogger().info("Circuit #%s: Switched to failed" % q.id)
-            cohq.coh.setStateFailed()
+            fls.append(q.id)
         else :
-            logging.getLogger().info("Circuit #%s: Switched to overtimed" % q.id)
-            cohq.coh.setStateOverTimed()
-        #yield q.id
-        ids_to_release.append(q.id)
+            otd.append(q.id)
+
+        yield q.id
 
     session.close()
-    return ids_to_release
+
+    if len(otd) > 0 :
+        logging.getLogger().info("Switching %d circuits to overtimed" % len(otd))
+        CoHManager.setCoHsStateOverTimed(otd)
+    if len(fls) > 0 :
+        logging.getLogger().info("Switching %d circuits to failed" % len(fls))
+        CoHManager.setCoHsStateFailed(fls)
+
 
 
