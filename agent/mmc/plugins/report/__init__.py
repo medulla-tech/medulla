@@ -23,6 +23,7 @@
 
 import logging
 import time
+import os
 import datetime
 from importlib import import_module
 
@@ -180,6 +181,18 @@ class RpcProxy(RpcProxyI):
         return result
 
     def generate_report(self, period, sections, entities, lang):
+        #
+        temp_path = '/var/tmp/'
+        report_path = os.path.join(temp_path, 'report-%d' % int(time.time()))
+        pdf_path = os.path.join(report_path, 'report.pdf')
+        xls_path = os.path.join(report_path, 'report.xls')
+        os.mkdir(report_path)
+        os.chmod(report_path, 511)
+        #TODO : Chmod this path
+        xls = XlsGenerator(path = xls_path)
+        pdf = PdfGenerator(path = pdf_path)
+        result = {}
+        #
         # TODO : Get entity names from entity uuids
         entity_names = entities
         # Parsing report XML
@@ -199,7 +212,7 @@ class RpcProxy(RpcProxyI):
             # send text to pdf, html, ...
             pass
 
-        def _periodDict(item_container):
+        def _periodDict(item_container, title = ''):
             data_dict = {'titles' : []}
             indicators = []
             for item in item_container:
@@ -220,9 +233,9 @@ class RpcProxy(RpcProxyI):
             logging.getLogger().warning(data_dict)
             return data_dict
 
-        def _keyvalueDict(item_container):
+        def _keyvalueDict(item_container, title = ''):
             #TODO : implement importign Clé, Valeur string from XML
-            data_dict = {'headers' : ['Clé','Valeur'], 'values' : []}
+            data_dict = {'headers' : ['Key','Value'], 'values' : []}
             indicators = []
             for item in item_container:
                 if item.tag.lower() != 'item' : continue
@@ -235,6 +248,7 @@ class RpcProxy(RpcProxyI):
                     data_dict['values'].append([indicator_label + (' (%s)' % entry['entity_id'] ), entry['value']])
             logging.getLogger().warning('GOT KEY/VALUE DICT')
             logging.getLogger().warning(data_dict)
+            return data_dict
 
         # Browsing all childs
         for level1 in xmltemp:
@@ -259,14 +273,18 @@ class RpcProxy(RpcProxyI):
                         # printing table items
                         # ====> PERIOD TABLE TYPE
                         if attr2['type'] == 'period':
-                            data_dict = _periodDict(level2)
+                            data_dict = _periodDict(level2, attr2['title'])
                             # ==> TO PDF
                             # ==> to XLS
+                            xls.pushTable(attr2['title'], data_dict)
+                            pdf.pushTable(attr2['title'], data_dict)
                         # ====> KEY-VALUE TABLE TYPE
                         if attr2['type'] == 'key_value':
-                            data_dict = _keyvalueDict(level2)
+                            data_dict = _keyvalueDict(level2, attr2['title'])
                             # ==> TO PDF
                             # ==> to XLS
+                            xls.pushTable(attr2['title'], data_dict)
+                            pdf.pushTable(attr2['title'], data_dict)
                     ## =========< CHART >===================
                     if level2.tag.lower() == 'chart':
                         # printing table items
@@ -278,6 +296,14 @@ class RpcProxy(RpcProxyI):
                         if attr2['type'] == 'key_value':
                             data_dict = _keyvalueDict(level2)
                             # ==> to SVG (handle cases)
+
+        # Saving outputs
+        xls.save()
+        pdf.save()
+        result['pdf_path'] = pdf_path
+        result['xls_path'] = xls_path
+        return result
+
 
 
 

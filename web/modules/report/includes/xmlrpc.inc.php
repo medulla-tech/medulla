@@ -1,4 +1,5 @@
 <?php
+
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com
@@ -21,7 +22,6 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 /*
  * Get all available reports
  */
@@ -32,7 +32,7 @@ function getAllReports() {
 
 /*
  * Method to get a report result.
- * Give plugin, report_name, method to call, 
+ * Give plugin, report_name, method to call,
  * optionaly args and kargs for this method
  *
  * @param $plugin: mmc plugin name (aka pkgs, imaging, glpi, ...)
@@ -59,6 +59,14 @@ function get_pdf_report($reports) {
 
 function get_svg_file($report) {
     return xmlCall("report.get_svg_file", array($report));
+}
+
+function get_report_sections($lang) {
+    return xmlCall("report.get_report_sections", array($lang));
+}
+
+function generate_report($period, $sections, $entities, $lang) {
+    return xmlCall("report.generate_report", array($period, $sections, $entities, $lang));
 }
 
 ?>

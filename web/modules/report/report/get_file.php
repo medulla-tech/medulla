@@ -1,4 +1,5 @@
 <?php
+
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com
@@ -21,53 +22,42 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 require_once("modules/report/includes/xmlrpc.inc.php");
 
-/* 
+/*
  * Function to permit big files transfer
  * @see: http://teddy.fr/2007/11/28/how-serve-big-files-through-php/
  */
+
 function readfile_chunked($filename, $retbytes = true) {
-   $chunksize = 1*(1024*1024); // how many bytes per chunk
-   $buffer = '';
-   $cnt = 0;
-   $handle = fopen($filename, 'rb');
-   if ($handle === false) {
-       return false;
-   }
-   while (!feof($handle)) {
-       $buffer = fread($handle, $chunksize);
-       echo $buffer;
-       ob_flush();
-       flush();
-       if ($retbytes) {
-           $cnt += strlen($buffer);
-       }
-   }
-       $status = fclose($handle);
-   if ($retbytes && $status) {
-       return $cnt; // return num. bytes delivered like readfile() does. 
-   }
-   return $status;
+    $chunksize = 1 * (1024 * 1024); // how many bytes per chunk
+    $buffer = '';
+    $cnt = 0;
+    $handle = fopen($filename, 'rb');
+    if ($handle === false) {
+        return false;
+    }
+    while (!feof($handle)) {
+        $buffer = fread($handle, $chunksize);
+        echo $buffer;
+        ob_flush();
+        flush();
+        if ($retbytes) {
+            $cnt += strlen($buffer);
+        }
+    }
+    $status = fclose($handle);
+    if ($retbytes && $status) {
+        return $cnt; // return num. bytes delivered like readfile() does.
+    }
+    return $status;
 }
 
-if (isset($_GET['type'])) {
+if (isset($_GET['path'])) {
     // Prevent download to stop after PHP timeout
     set_time_limit(0);
 
-    switch($_GET['type']) {
-    case 'xls':
-        $filepath = get_xls_report($_SESSION['report_files']);
-        break;
-    case 'pdf':
-        $filepath = get_pdf_report($_SESSION['report_files']);
-        break;
-    case 'svg':
-        $filepath = get_svg_file($_SESSION['svg_files'][$_GET['svg']]);
-        break;
-    }
-
+    $filepath = $_GET['path'];
     $file_name = basename($filepath);
 
     // Prevent from corrupting files due to indesirable prints
@@ -80,8 +70,8 @@ if (isset($_GET['type'])) {
 
     // Sending HTTP headers
     header("Content-Type: $mime_type");
-    header("Content-Transfer-Encoding: Binary"); 
-    header("Content-disposition: attachment; filename=\"".$file_name."\""); 
+    header("Content-Transfer-Encoding: Binary");
+    header("Content-disposition: attachment; filename=\"" . $file_name . "\"");
 
     // Sending binary data
     readfile_chunked($filepath);

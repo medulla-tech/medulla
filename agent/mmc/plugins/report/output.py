@@ -65,12 +65,11 @@ class XlsGenerator(object):
         for i in xrange(len(datas['titles'])):
             line += 1
             sheet.write(line, column, datas['titles'][i])
-        datas.pop('titles', None)
-
         # get datas keys and order them
         headers = datas.keys()
         headers.sort()
         for i in xrange(len(headers)):
+            if headers[i] == 'titles' : continue
             column += 1
             line = 0
             sheet.write(line, column, headers[i])
@@ -101,8 +100,8 @@ class PdfGenerator(object):
     def get_css(self):
         string = """
         table {
-        border-width:1px; 
-        border-style:solid; 
+        border-width:1px;
+        border-style:solid;
         border-color:black;
         border-collapse:collapse;
         font-size: 10px;
@@ -112,8 +111,8 @@ class PdfGenerator(object):
         td {
         }
         td, th {
-        border-width:1px; 
-        border-style:solid; 
+        border-width:1px;
+        border-style:solid;
         border-color:black;
         }
         """
@@ -122,13 +121,14 @@ class PdfGenerator(object):
     def get_simple_sheet(self, title, datas):
         self.html += '<h1>%s</h1>' % title
 
-        headers = datas.pop('headers', [])
-        values = datas.pop('values', [])
+        headers = datas['headers']
+        values = datas['values']
 
         # Table headers
         self.html += '<table>'
         self.html += '<tr>'
         for h in headers:
+            if h == 'titles' : continue
             self.html += '<th>'
             self.html += h
             self.html += '</th>'
@@ -147,8 +147,7 @@ class PdfGenerator(object):
 
     def get_period_sheet(self, title, datas):
         self.html += '<h1>%s</h1>' % title
-
-        titles = datas.pop('titles', None)
+        titles = datas['titles']
         # get r keys and order them
         headers = datas.keys()
         headers.sort()
@@ -159,6 +158,7 @@ class PdfGenerator(object):
         self.html += '<th>'
         self.html += '</th>'
         for h in headers:
+            if h == 'titles' : continue
             self.html += '<th>'
             self.html += str(h)
             self.html += '</th>'
@@ -169,6 +169,7 @@ class PdfGenerator(object):
             self.html += titles[x]
             self.html += '</td>'
             for y in headers:
+                if y == 'titles' : continue
                 self.html += '<td>'
                 self.html += str(datas[y][x])
                 self.html += '</td>'
@@ -283,15 +284,15 @@ class SvgGenerator(object):
 
     def _feedChart(self, datas, type='period'):
         if type == 'period':
-            titles = datas.pop('titles', None)
+            titles = datas['titles']
             labels = datas.keys()
             labels.sort()
 
-            self.chart.x_labels = [x for x in labels]
+            self.chart.x_labels = [x for x in labels if x!= 'titles']
             for i in xrange(len(titles)):
                 self.chart.add(titles[i], [datas[x][i] for x in labels])
         elif type == 'key_value': # Pie Chart
-            titles = datas.pop('headers', None)
+            titles = datas['headers']
             values = datas['values']
             for x in xrange(len(values)):
                 self.chart.add(values[x][0], values[x][1])

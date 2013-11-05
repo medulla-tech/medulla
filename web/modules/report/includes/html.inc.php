@@ -1,4 +1,5 @@
 <?php
+
 /**
  * (c) 2013 Mandriva, http://www.mandriva.com
  *
@@ -19,13 +20,11 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-
-class MultipleSelect extends SelectItem{
+class MultipleSelect extends SelectItem {
 
     function setSelected($elemnt) {
         if (isset($this->selected))
-            $this->selected[]= $elemnt;
+            $this->selected[] = $elemnt;
         else
             $this->selected = array($elemnt);
     }
@@ -41,12 +40,12 @@ class MultipleSelect extends SelectItem{
         }
         $ret = '';
         foreach ($this->elements as $key => $item) {
-            if ( in_array($this->elementsVal[$key],$this->selected) ) {
-                $selected='selected="selected"';
+            if (in_array($this->elementsVal[$key], $this->selected)) {
+                $selected = 'selected="selected"';
             } else {
-                $selected="";
+                $selected = "";
             }
-            $ret .= "\t<option value=\"".$this->elementsVal[$key]."\" $selected>$item</option>\n";
+            $ret .= "\t<option value=\"" . $this->elementsVal[$key] . "\" $selected>$item</option>\n";
         }
         return $ret;
     }
@@ -54,64 +53,61 @@ class MultipleSelect extends SelectItem{
     function to_string($paramArray = null) {
         $ret = "<select multiple=\"true\" ";
         if ($this->style) {
-            $ret .= " class=\"".$this->style."\"";
+            $ret .= " class=\"" . $this->style . "\"";
         }
         if ($this->jsFunc) {
-            $ret .= " onchange=\"".$this->jsFunc."(";
+            $ret .= " onchange=\"" . $this->jsFunc . "(";
             if ($this->jsFuncParams) {
                 $ret .= implode(", ", $this->jsFuncParams);
             }
             $ret .= "); return false;\"";
         }
-        $ret .= " name=\"".$this->id."[]\" id=\"".$this->id."\">\n";
+        $ret .= " name=\"" . $this->id . "[]\" id=\"" . $this->id . "\">\n";
         $ret .= $this->content_to_string($paramArray);
         $ret .= "</select>";
         return $ret;
     }
+
 }
 
 class multifieldTpl extends AbstractTpl {
+
     var $fields;
 
     function multifieldTpl($fields) {
         $this->fields = $fields;
     }
 
-
-
     function display($arrParam) {
-        
+
         if (!isset($this->fields))
             return;
-        
-        $separator = isset($arrParam['separator'])?$arrParam['separator']:' &nbsp;&nbsp; ';
-        
-        for ($i = 0 ; $i < count($this->fields) ; $i++) {
+
+        $separator = isset($arrParam['separator']) ? $arrParam['separator'] : ' &nbsp;&nbsp; ';
+
+        for ($i = 0; $i < count($this->fields); $i++) {
             if (count($arrParam[$i])) {
                 $this->fields[$i]->display($arrParam[$i]);
-            }
-            else {
-                $this->fields[$i]->display(array('value'=>''));
+            } else {
+                $this->fields[$i]->display(array('value' => ''));
             }
             echo $separator;
         }
-            
     }
+
 }
 
-
 class textTpl extends AbstractTpl {
-    
+
     function textTpl($text) {
         $this->text = $text;
     }
 
-
-    function display($arrParam) {      
+    function display($arrParam) {
         echo $this->text;
     }
-}
 
+}
 
 class dateInputTpl extends InputTpl {
 
@@ -119,15 +115,16 @@ class dateInputTpl extends InputTpl {
         $this->InputTpl($name, $regexp);
         $this->fieldType = "text";
     }
-    
+
     function display($arrParam) {
-        $arrParam['disabled']= ' style="width:80px;" ';
+        $arrParam['disabled'] = ' style="width:80px;" ';
         parent::display($arrParam);
     }
 
 }
 
 class periodInputTpl extends multifieldTpl {
+
     function periodInputTpl($from_txt, $from_id, $to_txt, $to_id) {
         $this->fields = array(
             new textTpl($from_txt),
@@ -173,6 +170,7 @@ class periodInputTpl extends multifieldTpl {
             </script>
 JQUERY;
     }
+
     function display($arrParam) {
         // Set default values for this class
         $arrParam = array(
@@ -185,6 +183,7 @@ JQUERY;
         );
         parent::display($arrParam);
     }
+
 }
 
 class multicol extends HtmlElement {
@@ -266,6 +265,37 @@ class ReportSVG extends HtmlElement {
         $result = new SpanElement($svg . '<br /><a href="' . urlStrRedirect("report/report/get_file", array('type' => 'svg', 'svg' => $this->indicator)) . '">' . 'Download me !' . '</a>');
         print $result->display();
     }
+
+}
+
+class ValueCheckboxTpl extends CheckboxTpl {
+    /*
+     * With this class, we can set values to checkboxes
+     * Example:
+     *   foreach ($sections as $section) {
+     *       $f->add(new TrFormElement(
+     *           $section['title'], new ValueCheckboxTpl("selected_sections[]")), array("value" => $section['name'])
+     *       );
+     *   }
+     *
+     * $_POST['selected_sections'] will be an array with checked checkboxes
+     */
+
+    function display($arrParam = array()) {
+        if (empty($arrParam))
+            $arrParam = $this->options;
+        if (!isset($arrParam['extraArg'])) {
+            $arrParam["extraArg"] = '';
+        }
+        print '<input value=' . $arrParam["value"] . ' name="' . $this->name . '" id="' . $this->name . '" type="checkbox" class="checkbox" ' . $arrParam["extraArg"];
+        if ($this->jsFunc) {
+            print " onchange=\"" . $this->jsFunc . "(); return false;\"";
+        }
+        print ' />';
+        if (isset($this->rightlabel))
+            print $this->rightlabel . "\n<br/>\n";
+    }
+
 }
 
 ?>

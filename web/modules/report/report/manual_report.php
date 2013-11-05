@@ -1,4 +1,5 @@
 <?php
+
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2013 Mandriva, http://www.mandriva.com
@@ -21,32 +22,16 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 require_once("modules/report/includes/xmlrpc.inc.php");
 require_once("modules/report/includes/html.inc.php");
 require_once("modules/pulse2/includes/utilities.php");
 
-function parseReports($f) {
-    foreach(getAllReports() as $plugin => $reports) {
-        $f->push(new Div());
 
-        foreach($reports as $report) {
-            $report_path = implode('/', $report);
-            try {
-                $include_path = "modules/$plugin/report/$report_path.php";
-                if (! @include_once($include_path))
-                    throw new Exception("$include_path does not exists");
-            }
-            catch (Exception $e){
-                $f->add(new TitleElement(_T('WARNING missing file: ', 'report')));
-                $f->add(new textTpl($e->getMessage()));
-            }
-            print '<br />';
-        }
-        $f->pop();
-    }
-}
+$modules = get_report_sections($_SESSION['lang']);
 
+#print '<pre>';
+#print_r($modules);
+#print '</pre>';
 // New validating form
 $f = new ValidatingForm();
 
@@ -56,10 +41,11 @@ $f = new ValidatingForm();
  * $_SESSION['report_files'][mmc_plugin_name][report_name]
  */
 
-if (!isset($_SESSION['report_files'])) $_SESSION['report_files'] = array();
+if (!isset($_SESSION['report_files']))
+    $_SESSION['report_files'] = array();
 
 // first step, display selectors
-if (!array_intersect_key($_POST, array('display_results' => '', 'get_xls' => '', 'get_pdf' => ''))) {
+if (!array_intersect_key($_POST, array('generate_report' => '', 'get_xls' => '', 'get_pdf' => ''))) {
     // Push a table
     $f->push(new Table());
 
@@ -68,8 +54,7 @@ if (!array_intersect_key($_POST, array('display_results' => '', 'get_xls' => '',
      */
 
     $f->add(
-        new TrFormElement(_T('Period:','report'), new periodInputTpl(_T('from', 'report'), 'period_from', _T('to', 'report'), 'period_to')),
-        array("value" => $values,"required" => True)
+            new TrFormElement(_T('Period:', 'report'), new periodInputTpl(_T('from', 'report'), 'period_from', _T('to', 'report'), 'period_to')), array("value" => $values, "required" => True)
     );
 
     /*
@@ -82,36 +67,57 @@ if (!array_intersect_key($_POST, array('display_results' => '', 'get_xls' => '',
     //$entities->setSelected($selected);
 
     $f->add(
-        new TrFormElement(_T('Entities', 'report'), $entities),
-        array()
+            new TrFormElement(_T('Entities', 'report'), $entities), array()
     );
 
     // close the table
     $f->pop();
-}
 
-// Parse reports
-parseReports($f);
+    foreach ($modules as $module_name => $sections) {
+        $f->add(new TitleElement($module_name));
+        $f->push(new Table());
+        foreach ($sections as $section) {
+            $f->add(new TrFormElement(
+                    $section['title'], new ValueCheckboxTpl("selected_sections[]")), array("value" => $section['name'])
+            );
+        }
+        $f->pop();
+    }
+}
 
 // A <br /> to add space up to validate buttons
 $f->push(new Div());
 $f->add(new SpanElement('<br />'));
 $f->pop();
 
-if (!array_intersect_key($_POST, array('display_results' => '', 'get_xls' => '', 'get_pdf' => ''))) {
-    $f->addButton("display_results", _T('Display Report', 'report'));
+if (!array_intersect_key($_POST, array('generate_report' => '', 'get_xls' => '', 'get_pdf' => ''))) {
+    $f->addButton("generate_report", _T('Generate Report', 'report'));
 }
 // second step, display results
-elseif (isset($_POST['display_results'])) {
-    $f->addButton("get_xls", _T("Get XLS Report", "report"));
-    $f->addButton("get_pdf", _T("Get PDF Report", "report"));
+elseif (isset($_POST['generate_report'])) {
+    print '<pre>';
+    print_r($_POST['selected_sections']);
+    print '</pre>';
+
+    $ts_from = intval($_POST['period_from_timestamp']);
+    $ts_to = intval($_POST['period_to_timestamp']);
+
+    $nb_days = intval(($ts_to - $ts_from) / 86400);
+    $nb_periods = max($nb_days, 7);
+
+    $periods = array();
+
+    for ($i = 0; $i < $nb_days; $i++) {
+        $period_ts = $ts_from + $i * ($ts_to - $ts_from) / ($nb_days - 1);
+        $periods[] = strftime('%Y-%m-%d', $period_ts);
+    }
+
+    $result = generate_report($periods, $_POST['selected_sections'], array($_POST['entities']), $_SESSION['lang']);
+
+
+    printf('<a class="btnPrimary" href="%s">%s</a>', urlStrRedirect("report/report/get_file", array('path' => $result['xls_path'])), _T("Get XLS Report", "report"));
+    printf('<a class="btnPrimary" href="%s">%s</a>', urlStrRedirect("report/report/get_file", array('path' => $result['pdf_path'])), _T("Get PDF Report", "report"));
 }
-// third step, get xls or pdf report
-else {
-    if (isset($_POST['get_xls']))
-        header("Location: " . urlStrRedirect("report/report/get_file", array('type' => 'xls')));
-    elseif(isset($_POST['get_pdf']))
-        header("Location: " . urlStrRedirect("report/report/get_file", array('type' => 'pdf')));
-}
+
 $f->display();
 ?>
