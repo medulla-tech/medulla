@@ -186,9 +186,11 @@ class RpcProxy(RpcProxyI):
         report_path = os.path.join(temp_path, 'report-%d' % int(time.time()))
         pdf_path = os.path.join(report_path, 'report.pdf')
         xls_path = os.path.join(report_path, 'report.xls')
+        svg_path = os.path.join(report_path, 'svg')
         os.mkdir(report_path)
+        os.mkdir(svg_path)
         os.chmod(report_path, 511)
-        #TODO : Chmod this path
+        os.chmod(svg_path, 511)
         xls = XlsGenerator(path = xls_path)
         pdf = PdfGenerator(path = pdf_path)
         result = {}
@@ -289,15 +291,21 @@ class RpcProxy(RpcProxyI):
                             pdf.pushTable(attr2['title'], data_dict)
                     ## =========< CHART >===================
                     if level2.tag.lower() == 'chart':
-                        # printing table items
-                        # ====> PERIOD TABLE TYPE
-                        if attr2['type'] == 'period':
+                        # Generatinng SVG
+                        svg_filename = attr1['name'] + '_' + attr2['name'] + '.png'
+                        svg = SvgGenerator(path = os.path.join(svg_path, svg_filename))
+                        if attr2['chart_type'] == 'line':
                             data_dict = _periodDict(level2)
-                            # ==> to SVG (handle cases)
+                            svg.lineChart(data_dict)
+                        if attr2['chart_type'] == 'bar':
+                            data_dict = _periodDict(level2)
+                            svg.barChart(data_dict)
                         # ====> KEY-VALUE TABLE TYPE
-                        if attr2['type'] == 'key_value':
+                        if attr2['chart_type'] == 'pie':
                             data_dict = _keyvalueDict(level2)
-                            # ==> to SVG (handle cases)
+                            svg.pieChart(data_dict)
+                        # Insert SVG into the PDF
+                        pdf.pushSVG(svg.toXML())
 
         # Saving outputs
         xls.save()
