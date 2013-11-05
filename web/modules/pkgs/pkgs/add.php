@@ -224,7 +224,7 @@ You may also ask Google for the silent installation switches. If you\'re feeling
                 type: 'get',
                 success: function(data) {
                     jQuery('#version').val(data.version);
-                    jQuery('commandcmd').val(data.commandcmd);
+                    jQuery('#commandcmd').val(data.commandcmd);
                 }
             });
         }
