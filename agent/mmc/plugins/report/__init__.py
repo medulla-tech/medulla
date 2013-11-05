@@ -213,7 +213,7 @@ class RpcProxy(RpcProxyI):
             pass
 
         def _periodDict(item_container, title = ''):
-            data_dict = {'titles' : []}
+            data_dict = {'titles' : [], 'dates' : [], 'values' : [] }
             indicators = []
             for item in item_container:
                 if item.tag.lower() != 'item' : continue
@@ -226,9 +226,11 @@ class RpcProxy(RpcProxyI):
                 ts_max = ts_min + 86400 # max = min + 1day (sec)
                 #
                 formatted_date = datetime.datetime.fromtimestamp(ts_min).strftime(date_format)
-                data_dict[formatted_date] = []
+                data_dict['dates'].append(formatted_date)
+                values = []
                 for indicator in indicators:
-                    data_dict[formatted_date].append(ReportDatabase().get_indicator_value_at_time(indicator, ts_min, ts_max, entities))
+                    values.append(ReportDatabase().get_indicator_value_at_time(indicator, ts_min, ts_max, entities))
+                data_dict['values'].append(values)
             logging.getLogger().warning('GOT PERIOD DICT')
             logging.getLogger().warning(data_dict)
             return data_dict
@@ -273,14 +275,14 @@ class RpcProxy(RpcProxyI):
                         # printing table items
                         # ====> PERIOD TABLE TYPE
                         if attr2['type'] == 'period':
-                            data_dict = _periodDict(level2, attr2['title'])
+                            data_dict = _periodDict(level2)
                             # ==> TO PDF
                             # ==> to XLS
                             xls.pushTable(attr2['title'], data_dict)
                             pdf.pushTable(attr2['title'], data_dict)
                         # ====> KEY-VALUE TABLE TYPE
                         if attr2['type'] == 'key_value':
-                            data_dict = _keyvalueDict(level2, attr2['title'])
+                            data_dict = _keyvalueDict(level2)
                             # ==> TO PDF
                             # ==> to XLS
                             xls.pushTable(attr2['title'], data_dict)
