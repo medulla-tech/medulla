@@ -102,10 +102,12 @@ class RpcProxy(RpcProxyI):
         os.chmod(svg_path, 511)
         xls = XlsGenerator(path = xls_path)
         pdf = PdfGenerator(path = pdf_path)
-        result = {}
+        result = {'sections': []}
         #
-        # TODO : Get entity names from entity uuids
-        entity_names = entities
+        #TODO: Get entity names from entity uuids
+        from pulse2.managers.location import ComputerLocationManager
+        entity_names = {} #dict([(location, ComputerLocationManager().getLocationName([location])) for location in entities])
+        logging.getLogger().warning(ComputerLocationManager().getLocationName(1))
         # Parsing report XML
         xmltemp = ET.parse('/etc/mmc/pulse2/report/templates/%s.xml' % lang).getroot()
         if xmltemp.tag != 'template':
@@ -113,7 +115,14 @@ class RpcProxy(RpcProxyI):
             return False
         # xmltemp.attrib ??? if necessary ?? ==> date and time format
         #TODO: Read date format from XML
-        date_format = '%d/%m/%Y'
+        # Setting default params
+        params = {}
+        params['date_format'] = '%d-%m-%Y'
+
+        def _params(params_tag):
+            for tag in params_tag:
+                if tag.tag.lower() != 'param': continue
+                params[tag.attrib['name']] = tag.attrib['value']
 
         def _h1(text):
             # send text to pdf, html, ...
@@ -123,7 +132,7 @@ class RpcProxy(RpcProxyI):
             # send text to pdf, html, ...
             pass
 
-        def _periodDict(item_container, title = ''):
+        def _periodDict(item_container):
             data_dict = {'titles' : [], 'dates' : [], 'values' : [] }
             indicators = []
             for item in item_container:
@@ -136,7 +145,7 @@ class RpcProxy(RpcProxyI):
                 ts_min = int(time.mktime(datetime.datetime.strptime(date, "%Y-%m-%d").timetuple()))
                 ts_max = ts_min + 86400 # max = min + 1day (sec)
                 #
-                formatted_date = datetime.datetime.fromtimestamp(ts_min).strftime(date_format)
+                formatted_date = datetime.datetime.fromtimestamp(ts_min).strftime(params['date_format'])
                 data_dict['dates'].append(formatted_date)
                 values = []
                 for indicator in indicators:
@@ -146,7 +155,7 @@ class RpcProxy(RpcProxyI):
             logging.getLogger().warning(data_dict)
             return data_dict
 
-        def _keyvalueDict(item_container, title = ''):
+        def _keyvalueDict(item_container):
             #TODO : implement importign Clé, Valeur string from XML
             data_dict = {'headers' : ['Key','Value'], 'values' : []}
             indicators = []
@@ -158,7 +167,11 @@ class RpcProxy(RpcProxyI):
                 # indicator_value is a list of dict {'entity_id' : .., 'value' .. }
                 for entry in indicator_value:
                     # TODO: Print entity names not UUIDs
-                    data_dict['values'].append([indicator_label + (' (%s)' % entry['entity_id'] ), entry['value']])
+                    if entry['entity_id'] in entity_names:
+                        entity_name = entity_names[entry['entity_id']]
+                    else:
+                        entity_name = entry['entity_id']
+                    data_dict['values'].append([indicator_label + (' (%s)' % entity_name ), entry['value']])
             logging.getLogger().warning('GOT KEY/VALUE DICT')
             logging.getLogger().warning(data_dict)
             return data_dict
@@ -166,6 +179,9 @@ class RpcProxy(RpcProxyI):
         # Browsing all childs
         for level1 in xmltemp:
             attr1 = level1.attrib
+            ## =========< params >===================
+            if level1.tag.lower() == 'params':
+                _params(level1)
             ## =========< H1 >===================
             if level1.tag.lower() == 'h1':
                 _h1(level1.text)
@@ -178,6 +194,7 @@ class RpcProxy(RpcProxyI):
                 # else we skip it
                 if not attr1['name'] in sections:
                     continue
+                section_data = {'title' : attr1['title'], 'content': []}
                 # Printing section
                 for level2 in level1:
                     attr2 = level2.attrib
@@ -191,6 +208,12 @@ class RpcProxy(RpcProxyI):
                             # ==> to XLS
                             xls.pushTable(attr2['title'], data_dict)
                             pdf.pushTable(attr2['title'], data_dict)
+                            # Add table to result dict
+                            section_data['content'].append({ \
+                                'type':'table',\
+                                'data': data_dict,\
+                                'title': attr2['title']\
+                            })
                         # ====> KEY-VALUE TABLE TYPE
                         if attr2['type'] == 'key_value':
                             data_dict = _keyvalueDict(level2)
@@ -198,11 +221,18 @@ class RpcProxy(RpcProxyI):
                             # ==> to XLS
                             xls.pushTable(attr2['title'], data_dict)
                             pdf.pushTable(attr2['title'], data_dict)
+                            # Add table to result dict
+                            section_data['content'].append({ \
+                                'type':'table',\
+                                'data': data_dict,\
+                                'title': attr2['title']\
+                            })
                     ## =========< CHART >===================
                     if level2.tag.lower() == 'chart':
                         # Generatinng SVG
                         svg_filename = attr1['name'] + '_' + attr2['name']
-                        svg = SvgGenerator(path = os.path.join(svg_path, svg_filename))
+                        svg_filepath = os.path.join(svg_path, svg_filename)
+                        svg = SvgGenerator(path = svg_filepath)
                         if attr2['chart_type'] == 'line':
                             data_dict = _periodDict(level2)
                             svg.lineChart(data_dict)
@@ -215,8 +245,13 @@ class RpcProxy(RpcProxyI):
                             svg.pieChart(data_dict)
                         # Insert SVG into the PDF
                         pdf.pushSVG(svg.toXML())
-                        # Save SVG files (SVG/PNG)
-                        svg.save()
+                        section_data['content'].append({ \
+                                'type':'chart',\
+                                'svg_path': svg_filepath + '.svg',\
+                                'png_path': svg_filepath + '.png'\
+                            })
+
+                result['sections'].append(section_data)
 
         # Saving outputs
         xls.save()
