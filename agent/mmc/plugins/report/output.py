@@ -139,8 +139,9 @@ class PdfGenerator(object):
         for line in values:
             self.html += '<tr>'
             for td in line:
+                if isinstance(td, (int, float)): td = str(td)
                 self.html += '<td>'
-                self.html += str(td)
+                self.html += td
                 self.html += '</td>'
             self.html += '</tr>'
 
@@ -159,7 +160,7 @@ class PdfGenerator(object):
         self.html += '</th>'
         for d in dates:
             self.html += '<th>'
-            self.html += str(d)
+            self.html += d
             self.html += '</th>'
         for x in xrange(len(titles)):
             self.html += '<tr>'
@@ -168,9 +169,12 @@ class PdfGenerator(object):
             self.html += titles[x]
             self.html += '</td>'
             for v in values:
-                if v[x] is None: v[x] = ''
+                if v[x] is None:
+                    v[x] = ''
+                elif isinstance(v[x], (int, float)):
+                    v[x] = str(v[x])
                 self.html += '<td>'
-                self.html += str(v[x])
+                self.html += v[x]
                 self.html += '</td>'
 
             self.html += '</tr>'
