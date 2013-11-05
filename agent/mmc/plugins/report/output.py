@@ -113,6 +113,15 @@ class PdfGenerator(object):
         self.html = ''
         self.path = path
 
+    def h1(self, str):
+        return '<h1>%s</h1>' % str
+
+    def h2(self, str):
+        return '<h2>%s</h2>' % str
+
+    def h3(self, str):
+        return '<h3>%s</h3>' % str
+
     def get_front_page(self):
         return HTML(string='<h1>Report</h1>').render()
 
@@ -141,7 +150,7 @@ class PdfGenerator(object):
         return CSS(string=string)
 
     def get_simple_sheet(self, title, datas):
-        self.html += '<h1>%s</h1>' % title
+        self.html += self.h3(title)
 
         headers = datas['headers']
         values = datas['values']
@@ -169,7 +178,7 @@ class PdfGenerator(object):
         self.html += '</table>'
 
     def get_period_sheet(self, title, datas):
-        self.html += '<h1>%s</h1>' % title
+        self.html += self.h3(title)
         titles = datas['titles']
         dates = datas['dates']
         values = datas['values']
