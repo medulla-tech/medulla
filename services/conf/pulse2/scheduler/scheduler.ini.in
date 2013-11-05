@@ -138,9 +138,6 @@ scheduler_proxy_path = @sbindir@/pulse2-scheduler-proxy
 ## Computer / Group assignment ##
 # mg_assign_algo = default
 
-## Imaging: Used for wake-on-lan stuff
-# imaging = False
-
 [database]
 dbdriver = mysql
 dbhost = localhost
