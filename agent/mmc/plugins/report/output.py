@@ -40,8 +40,28 @@ class XlsGenerator(object):
         else: # period sheets
             return self.get_period_sheet(title, datas)
 
-    def get_simple_sheet(self, title, datas):
-        sheet = self.wbk.add_sheet(title)
+    def _clean_sheet_name(self, sheet_name):
+        """
+        Check if sheet_name is clean
+        Replace forbidden characters by underscore
+        @see xlwt.Utils.valid_sheet_name()
+        """
+        if sheet_name == "":
+            sheet_name = "Empty name"
+        if sheet_name[0] == "'":
+            sheet_name = list(sheet_name)
+            sheet_name[0] = '_'
+            sheet_name = ''.join(sheet_name)
+        if len(sheet_name) > 31:
+            sheet_name = sheet_name[:31]
+        for c in "[]:\\?/*\x00":
+            if c in sheet_name:
+                sheet_name = sheet_name.replace(c, '_')
+        return sheet_name
+
+    def get_simple_sheet(self, sheet_name, datas):
+        sheet_name = self._clean_sheet_name(sheet_name)
+        sheet = self.wbk.add_sheet(sheet_name)
         line = 0
         column = 0
         # Write headers
@@ -57,8 +77,9 @@ class XlsGenerator(object):
             line += 1
         return self.wbk
 
-    def get_period_sheet(self, title, datas):
-        sheet = self.wbk.add_sheet(title)
+    def get_period_sheet(self, sheet_name, datas):
+        sheet_name = self._clean_sheet_name(sheet_name)
+        sheet = self.wbk.add_sheet(sheet_name)
 
         titles = datas['titles']
         dates = datas['dates']
