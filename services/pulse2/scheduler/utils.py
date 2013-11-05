@@ -36,8 +36,6 @@ from pulse2.scheduler.config import SchedulerConfig
 from pulse2.scheduler.network import chooseClientIP 
 from pulse2.scheduler.checks import getCheck
 
-import traceback
-
 class PackUtils :
     @classmethod
     def pack(cls, data):
@@ -45,7 +43,16 @@ class PackUtils :
 
     @classmethod
     def unpack(cls, packet):
-        return pickle.loads(packet)
+        try :
+            ret = pickle.loads(packet)
+            return ret
+        except EOFError, e:
+            logging.getLogger().warn("EOF: Losing a packet from scheduler-proxy: %s" % str(e))
+            return None
+        except Exception, e:
+            logging.getLogger().warn("Losing a packet from scheduler-proxy: %s" % str(e))
+            return None
+
 
 def getClientCheck(target):
     return getCheck(SchedulerConfig().client_check, {
@@ -85,10 +92,17 @@ def chooseClientInfo(target):
 class UnixProtocol (object, LineOnlyReceiver):
     def dataReceived(self, data):
         try :
-            name, args = PackUtils.unpack(data)
-            method = self._lookup_procedure(name)
-        except :
-            logging.getLogger().error("unix socket recv failed: %s"  % traceback.format_exc())
+            packet = PackUtils.unpack(data)
+            if isinstance(packet, list) and len(packet) == 2:
+                name, args = packet
+                method = self._lookup_procedure(name)
+            else :
+                logging.getLogger().warn("Response unpacking failed")
+                d = maybeDeferred(self._send_response, "NOK")
+                d.addErrback(self._eb_call_failed, "response:failed")
+                return 
+        except Exception, e:
+            logging.getLogger().error("Unix socket reading failed: %s"  % str(e))
 
         d = maybeDeferred(method, self, *args)
         d.addCallback(self._send_response)
@@ -100,8 +114,8 @@ class UnixProtocol (object, LineOnlyReceiver):
         logging.getLogger().debug("response: %s" % (response))
         try:
             self.sendLine(response)
-        except :
-            logging.getLogger().error("UX resp send failed: %s"  % traceback.format_exc())
+        except Exception, e:
+            logging.getLogger().error("UX response sending failed: %s"  % str(e))
 
 
     def _eb_call_failed(self, failure, method_name):

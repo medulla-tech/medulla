@@ -46,7 +46,7 @@ class MethodProxy(MscContainer):
             for cmd_id in cmds :
                 if is_command_in_valid_time(cmd_id):
                     cohs = get_cohs(cmd_id, scheduler)
-                    self.start_all(cohs)
+                    self.start_all(cohs, True)
         
     def stop_commands(self, cmds=[]):
         # TODO - distinct the directives 'stop' and 'pause'
@@ -101,7 +101,7 @@ class MethodProxy(MscContainer):
 class MscDispatcher (MscQueryManager, MethodProxy):
     """Core of scheduler """
             
-    def start_all(self, ids):
+    def start_all(self, ids, truncate=False):
         """
         A starting point of the workflow.
 
@@ -116,6 +116,13 @@ class MscDispatcher (MscQueryManager, MethodProxy):
                                   ]
         
         new_ids = [id for id in ids if not id in already_initialized_ids]
+
+        if truncate and len(new_ids) > 2 * self.free_slots :
+            
+            self.logger.info("Number of new circuits was truncated from %d to %d" %
+                    (len(new_ids), 2 * self.free_slots))
+            new_ids = new_ids[:2*self.free_slots]
+            self.logger.info("Remaining circuits will be requested soon")
 
         if len(new_ids) > 0 :
             d1 = self._setup_all(new_ids)
@@ -538,7 +545,6 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         d.addCallback(self.process_overtimed)
         d.addCallback(self.process_non_valid)
         d.addCallback(self.launch_remaining_waitings)
-        d.addCallback(self._cb_cycle_finished)
         d.addErrback(self.eb_mainloop)
 
         return d
@@ -546,23 +552,9 @@ class MscDispatcher (MscQueryManager, MethodProxy):
     def eb_mainloop(self, failure):
         self.logger.error("Mainloop failed: %s" % str(failure))
 
-    cycle_finished = False
-
-    def _cb_cycle_finished(self, result):
-        """ A finalback called when mainloop ends """
-        if result :
-            self.cycle_finished = True
  
     def _mainloop(self):
         """ The main loop of scheduler """
-        d = Deferred()
-        @d.addCallback
-        def fb(result):
-            return False
-
-        if not self.cycle_finished :
-            self.logger.info("Previous step not finished yet")
-            return d
 
         self.logger.info("Looking for new commands")
         try :
@@ -570,13 +562,14 @@ class MscDispatcher (MscQueryManager, MethodProxy):
             self.wt_stats()
 
             if self.has_free_slots() : 
-                top = self.free_slots - len(self.get_valid_waitings())
+                top = self.free_slots * 2
                 if top > 0 :
 
+                    starting_ids = [c.id for c in self.circuits if not c.is_running]
                     running_ids = [c.id for c in self.circuits if c.initialized]
                     waiting_ids = [c.id for c in self.get_valid_waitings()]
 
-                    ids_to_exclude = running_ids + waiting_ids
+                    ids_to_exclude = running_ids + waiting_ids + starting_ids
 
                     ids = get_ids_to_start(SchedulerConfig().name,
                                            ids_to_exclude, 
@@ -585,21 +578,18 @@ class MscDispatcher (MscQueryManager, MethodProxy):
                         self.logger.info("Prepare %d new commands to initialize" % len(ids))
                     else :
                         self.logger.info("Nothing to initialize")
-                    d = self.start_all(ids)
-
-                    @d.addCallback
-                    def cb(result):
                         return True
-                    return d
+
+                    self.start_all(ids)
                 else :
                     self.logger.info("Slots will be filled with by waiting circuits")
             else :
                 self.logger.info("Slots full: continue and waiting on next awake")
-            return d
+            return True
 
         except Exception, e:
             self.logger.error("Mainloop execution failed: %s" % str(e))
-            return d
+            return True
 
        
         

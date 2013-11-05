@@ -296,9 +296,8 @@ def get_ids_to_start(scheduler_name, ids_to_exclude = [], top=None):
         # using of descending order allows to favouring the commands
         # which state is approaching to end of worklow.
 
-
     commands_to_perform = [q.id for q in commands_query.all()]
-
+ 
     session.close()
     return commands_to_perform
 
@@ -317,7 +316,7 @@ def process_non_valid(scheduler_name, ids_to_exclude = []):
                      database.commands_on_host.c.scheduler == None))
     if len(ids_to_exclude) > 0 :
         commands_query = commands_query.filter(not_(database.commands_on_host.c.id.in_(ids_to_exclude)))
-
+    ids_to_release = []
     for q in commands_query.all():
         cohq = CoHQuery(q.id)
         if any_failed(q.id) or q.attempts_failed > 0 :
@@ -326,8 +325,10 @@ def process_non_valid(scheduler_name, ids_to_exclude = []):
         else :
             logging.getLogger().info("Circuit #%s: Switched to overtimed" % q.id)
             cohq.coh.setStateOverTimed()
-        yield q.id
+        #yield q.id
+        ids_to_release.append(q.id)
 
     session.close()
+    return ids_to_release
 
 
