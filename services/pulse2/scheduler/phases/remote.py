@@ -24,14 +24,15 @@ import time
 
 from twisted.internet import defer, reactor
 from twisted.internet.task import deferLater
-from twisted.internet.error import TimeoutError, ConnectionRefusedError
+from twisted.internet.error import TimeoutError, ConnectionRefusedError, ConnectionLost
 
 from pulse2.scheduler.queries import CoHQuery
 
 from pulse2.scheduler.types import Phase, DIRECTIVE
 from pulse2.scheduler.utils import launcher_proxymethod
 
-from pulse2.apis.consts import PULSE2_ERR_CONN_REF, PULSE2_ERR_404
+from pulse2.apis.consts import PULSE2_ERR_CONN_REF, PULSE2_ERR_404, PULSE2_ERR_LOST
+from pulse2.apis.consts import PULSE2_ERR_TIMEOUT
 
 from pulse2.scheduler.tracking.proxy import LocalProxiesUsageTracking
 from pulse2.apis.clients.mirror import Mirror
@@ -421,13 +422,17 @@ class UploadPhase(RemoteControlPhase):
 
     def _eb_mirror_check(self, failure):
         if hasattr(failure, "trap"):
-            err = failure.trap(TimeoutError, ConnectionRefusedError)
+            err = failure.trap(TimeoutError, 
+                               ConnectionRefusedError,
+                               ConnectionLost)
             if err == TimeoutError :
                 self.logger.warn("Timeout raised during mirror check")
             elif err == ConnectionRefusedError :
                 self.logger.warn("Connection refused during mirror check")
+            elif err == ConnectionLost :
+                self.logger.warn("Connection lost during mirror check")
             else :
-                self.logger.warn("An error occurred during mirror check: %s" % str(e))
+                self.logger.warn("An error occurred during mirror check: %s" % str(err))
         return failure
 
 
@@ -436,9 +441,19 @@ class UploadPhase(RemoteControlPhase):
         if result:
             if type(result) == list and result[0] == 'PULSE2_ERR':
                 if result[1] == PULSE2_ERR_CONN_REF:
-                    self.update_history_failed(PULSE2_PSERVER_MIRRORFAILED_CONNREF_ERROR, '', result[2])
+                    self.update_history_failed(PULSE2_PSERVER_MIRRORFAILED_CONNREF_ERROR, 
+                                               'Connection refused', 
+                                               result[2])
                 elif result[1] == PULSE2_ERR_404:
                     self.update_history_failed(PULSE2_PSERVER_MIRRORFAILED_404_ERROR, '', result[2])
+                elif result[1] == PULSE2_ERR_LOST:
+                    self.update_history_failed(PULSE2_PSERVER_MIRRORFAILED_404_ERROR, 
+                                               'Connection Lost', 
+                                               result[2])
+                elif result[1] == PULSE2_ERR_TIMEOUT:
+                    self.update_history_failed(PULSE2_PSERVER_MIRRORFAILED_404_ERROR, 
+                                               'Timeout', 
+                                               result[2])
                 elif result[1] == PULSE2_UNKNOWN_ERROR:
                     self.update_history_failed(PULSE2_PSERVER_MIRRORFAILED_404_ERROR, '', result[2])
                 return self._cbRunPushPullPhaseTestFallbackMirror(result, mirror, fbmirror, client)

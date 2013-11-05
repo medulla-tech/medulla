@@ -22,10 +22,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import exceptions
 
-from twisted.internet.error import ConnectionRefusedError
+from twisted.internet.error import ConnectionRefusedError, ConnectionLost
+from twisted.internet.error import TimeoutError
 
 from pulse2.apis.clients import Pulse2Api
 from pulse2.apis.consts import PULSE2_ERR_404, PULSE2_ERR_CONN_REF, PULSE2_ERR_UNKNOWN
+from pulse2.apis.consts import PULSE2_ERR_LOST, PULSE2_ERR_TIMEOUT
 
 # need to get a PackageApiManager, it will manage a PackageApi for each mirror
 # defined in the conf file.
@@ -88,6 +90,14 @@ class Mirror(Pulse2Api):
         if error.type == ConnectionRefusedError:
             self.logger.error("%s %s has failed: connection refused" % (funcname, args))
             ret = ['PULSE2_ERR', PULSE2_ERR_CONN_REF,
+                   self.server_addr, default_return]
+        elif error.type == ConnectionLost:
+            self.logger.error("%s %s has failed: connection lost" % (funcname, args))
+            ret = ['PULSE2_ERR', PULSE2_ERR_LOST,
+                   self.server_addr, default_return]
+        elif error.type == TimeoutError:
+            self.logger.error("%s %s has failed: timeout" % (funcname, args))
+            ret = ['PULSE2_ERR', PULSE2_ERR_TIMEOUT,
                    self.server_addr, default_return]
         elif error.type == exceptions.ValueError:
             self.logger.error("%s %s has failed: the mountpoint don't exists" % (funcname, args))
