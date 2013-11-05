@@ -99,7 +99,6 @@ class PackageParserXML:
                 else:
                     cmds[c] = ''
 
-            logging.debug('here')
             groups = root.getElementsByTagName('groups')
             query = ''
             boolcnd = ''
@@ -108,7 +107,6 @@ class PackageParserXML:
                 boolcnd = groups[0].getElementsByTagName('boolcnd')
                 logging.debug(query)
                 logging.debug(boolcnd)
-            logging.debug('there')
 
             p = Package()
             p.init(
