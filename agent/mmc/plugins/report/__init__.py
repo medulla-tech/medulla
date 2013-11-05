@@ -75,97 +75,6 @@ class ContextMaker(ContextMakerI):
 #        return s
 
 class RpcProxy(RpcProxyI):
-    def getAllReports(self):
-        """
-        XMLRPC method to get All activated reports
-        """
-        RM = ReportManager()
-        if RM.report is None:
-            RM.registerReports()
-        return RM.report
-
-    def feed_database(self):
-        """
-        Search all plugins with report and feed their database
-        """
-        for plugin in self.getAllReports():
-            logging.getLogger().debug('Report: I will feed report database of %s plugin', plugin)
-            # Get database.py from mmc plugin
-            plugin_db = import_module('.'.join(['mmc.plugins', plugin, 'database']))
-            # And get its ReportDatabase class
-            report_db = getattr(plugin_db, 'ReportDatabase')
-            # Call feed_db method
-            report_db().feed_db()
-
-    def get_report_datas(self, plugin, report_name, method, args):
-        """
-        Method to get a report result.
-        Give plugin, report_name, method to call, optionaly  args and kargs
-        for this method
-
-        @param plugin: mmc plugin name (aka pkgs, imaging, glpi, ...)
-        @type plugin: str
-        @param report_name: report class name
-        @type report_name: str
-        @param method: report class method to be called
-        @type method: str
-        @return: report method result
-        """
-        args, kargs = args
-        if not kargs:
-            kargs = {}
-        #Add context to kargs
-        kargs['ctx'] = self.currentContext
-        report_name = report_name.split('.')
-        report_class = report_name.pop()
-        report = import_module('.'.join(['mmc.plugins', plugin, 'report'] + report_name))
-        r = getattr(report, report_class)()
-        m = getattr(r, method)
-        return m(*args, **kargs)
-
-    def get_xls_report(self, reports):
-        """
-        method to get xls report
-        """
-        xls = XlsGenerator()
-        plugins = reports.keys()
-        plugins.sort()
-        for plugin in plugins:
-            for (title, params) in reports[plugin].iteritems():
-                if len(params) == 4:
-                    params.append({})
-                plugin, report_name, method, args, kargs = params
-                datas = self.get_report_datas(plugin, report_name, method, (args, kargs))
-
-                xls.pushTable(title, datas)
-
-        return xls.save()
-
-    def get_pdf_report(self, reports, graph = True):
-        pdf = PdfGenerator()
-
-        plugins = reports.keys()
-        plugins.sort()
-        for plugin in plugins:
-            for (title, params) in reports[plugin].iteritems():
-                if len(params) == 4:
-                    params.append({})
-                plugin, report_name, method, args, kargs = params
-                datas = self.get_report_datas(plugin, report_name, method, (args, kargs))
-                datas_copy = datas.copy()
-                pdf.pushTable(title, datas)
-                if graph:
-                    svg = SvgGenerator()
-                    svg.barChart(datas_copy)
-                    pdf.pushSVG(svg.toXML())
-
-        return pdf.save()
-
-    def get_svg_file(self, params):
-        plugin, report_name, method, args, kargs = params
-        r = self.get_report_datas(plugin, report_name, method, (args, kargs))
-        return r
-
 
     def calldb(self, func, *args, **kw):
         return getattr(ReportDatabase(),func).__call__(*args, **kw)
@@ -315,7 +224,8 @@ class RpcProxy(RpcProxyI):
         return result
 
 
-
+    def historize_all(self):
+        ReportDatabase().historize_all()
 
 
 
