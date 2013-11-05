@@ -29,7 +29,7 @@ Plugin to manage the interface with BackupPC
 class exportedReport(object):
     #Add meta class singleton_N
 
-    def getServerUsedDiskSpace(self, servername, num):
+    def getServerUsedDiskSpace(self, entities, servername, num):
         #output format
         result = []
         result.append({'entity_id': 'UUID1', 'value': 14})
