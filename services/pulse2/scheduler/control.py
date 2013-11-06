@@ -517,7 +517,9 @@ class MscDispatcher (MscQueryManager, MethodProxy):
                 break
 
     def process_non_valid(self, result):
-        for id in process_non_valid(self.config.name, 1000):
+        for id in process_non_valid(self.config.name, 
+                                    1000, 
+                                    self.config.non_fatal_steps):
             circuit = self.get(id)
             if circuit :
                 circuit.release()

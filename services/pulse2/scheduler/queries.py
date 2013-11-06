@@ -258,9 +258,9 @@ def get_all_phases(id):
     session.close()
     return phases.all()
 
-def any_failed(id):
+def any_failed(id, non_fatal_steps=[]):
     for phase in get_all_phases(id):
-        if phase.state == "failed":
+        if phase.state == "failed" and not phase.name in non_fatal_steps :
             return True
     return False
 
@@ -301,7 +301,7 @@ def get_ids_to_start(scheduler_name, ids_to_exclude = [], top=None):
     session.close()
     return commands_to_perform
 
-def process_non_valid(scheduler_name, top, ids_to_exclude = []):
+def process_non_valid(scheduler_name, top, non_fatal_steps, ids_to_exclude = []):
     database = MscDatabase()
     session = create_session()
   
@@ -322,7 +322,7 @@ def process_non_valid(scheduler_name, top, ids_to_exclude = []):
     otd = []
 
     for q in commands_query.all():
-        if any_failed(q.id) or q.attempts_failed > 0 :
+        if any_failed(q.id, non_fatal_steps) or q.attempts_failed > 0 :
             fls.append(q.id)
         else :
             otd.append(q.id)

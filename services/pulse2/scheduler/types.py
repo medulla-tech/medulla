@@ -726,7 +726,8 @@ class Circuit (CircuitBase):
         elif res == DIRECTIVE.GIVE_UP :
             return False
         elif res == DIRECTIVE.OVER_TIMED :
-            if self.running_phase.coh.attempts_failed > 0 or any_failed(self.id) :
+            if self.running_phase.coh.attempts_failed > 0 \
+                    or any_failed(self.id, SchedulerConfig().non_fatal_steps) :
                 self.running_phase.coh.setStateFailed()
                 self.logger.info("Circuit #%s: failed" % self.id)
             else :
