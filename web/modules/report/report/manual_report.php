@@ -96,12 +96,12 @@ elseif (isset($_POST['generate_report'])) {
     $ts_to = intval($_POST['period_to_timestamp']);
 
     $nb_days = intval(($ts_to - $ts_from) / 86400);
-    $nb_periods = max($nb_days, 7);
+    $nb_periods = min($nb_days, 7);
 
     $periods = array();
 
-    for ($i = 0; $i < $nb_days; $i++) {
-        $period_ts = $ts_from + $i * ($ts_to - $ts_from) / ($nb_days - 1);
+    for ($i = 0; $i < $nb_periods; $i++) {
+        $period_ts = $ts_from + $i * ($ts_to - $ts_from) / ($nb_periods - 1);
         $periods[] = strftime('%Y-%m-%d', $period_ts);
     }
 
@@ -196,7 +196,7 @@ elseif (isset($_POST['generate_report'])) {
 
 
     $f->push(new Div());
-    $link = new SpanElement(sprintf('<a class="btnPrimary" href="%s">%s</a>', urlStrRedirect("report/report/get_file", array('path' => $result['xls_path'])), _T("Get XLS Report", "report")));
+    $link = new SpanElement(sprintf('<br /><a class="btnPrimary" href="%s">%s</a>&nbsp;&nbsp;', urlStrRedirect("report/report/get_file", array('path' => $result['xls_path'])), _T("Get XLS Report", "report")));
     $f->add($link);
     $link = new SpanElement(sprintf('<a class="btnPrimary" href="%s">%s</a>', urlStrRedirect("report/report/get_file", array('path' => $result['pdf_path'])), _T("Get PDF Report", "report")));
     $f->add($link);
