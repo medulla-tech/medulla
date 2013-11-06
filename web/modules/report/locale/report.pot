@@ -1,0 +1,95 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-11-06 15:51+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: modules/report/report/index.php:41
+msgid "Reporting Management"
+msgstr ""
+
+#: modules/report/report/index.php:44 modules/report/infoPackage.inc.php:44
+msgid "Manual Report"
+msgstr ""
+
+#: modules/report/report/index.php:45 modules/report/infoPackage.inc.php:47
+msgid "Automatic Report"
+msgstr ""
+
+#: modules/report/report/manual_report.php:54
+msgid "Period:"
+msgstr ""
+
+#: modules/report/report/manual_report.php:54
+msgid "from"
+msgstr ""
+
+#: modules/report/report/manual_report.php:54
+msgid "to"
+msgstr ""
+
+#: modules/report/report/manual_report.php:67
+msgid "Entities"
+msgstr ""
+
+#: modules/report/report/manual_report.php:91
+msgid "Generate Report"
+msgstr ""
+
+#: modules/report/report/manual_report.php:167
+msgid "Download image"
+msgstr ""
+
+#: modules/report/report/manual_report.php:199
+msgid "Get XLS Report"
+msgstr ""
+
+#: modules/report/report/manual_report.php:201
+msgid "Get PDF Report"
+msgstr ""
+
+#: modules/report/report/localSidebar.php:27
+msgid "Main page"
+msgstr ""
+
+#: modules/report/report/Monitoring/Monitoring.php:33
+msgid "Monitoring"
+msgstr ""
+
+#: modules/report/report/Monitoring/Monitoring.php:41
+#: modules/report/report/Monitoring/Monitoring.php:66
+msgid "Disc Space"
+msgstr ""
+
+#: modules/report/report/Monitoring/Monitoring.php:45
+msgid "RAM"
+msgstr ""
+
+#: modules/report/report/Monitoring/Monitoring.php:127
+msgid "Ram Usage"
+msgstr ""
+
+#: modules/report/infoPackage.inc.php:32
+msgid "Reporting"
+msgstr ""
+
+#: modules/report/infoPackage.inc.php:36 modules/report/infoPackage.inc.php:42
+msgid "Report"
+msgstr ""
+
+#: modules/report/infoPackage.inc.php:52
+msgid "Download a file from report module (report or PNG)"
+msgstr ""
