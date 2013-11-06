@@ -29,9 +29,6 @@ require_once("modules/pulse2/includes/utilities.php");
 
 $modules = get_report_sections($_SESSION['lang']);
 
-#print '<pre>';
-#print_r($modules);
-#print '</pre>';
 // New validating form
 $f = new ValidatingForm();
 
@@ -95,10 +92,6 @@ if (!array_intersect_key($_POST, array('generate_report' => '', 'get_xls' => '',
 }
 // second step, display results
 elseif (isset($_POST['generate_report'])) {
-    print '<pre>';
-    print_r($_POST['selected_sections']);
-    print '</pre>';
-
     $ts_from = intval($_POST['period_from_timestamp']);
     $ts_to = intval($_POST['period_to_timestamp']);
 
@@ -113,10 +106,101 @@ elseif (isset($_POST['generate_report'])) {
     }
 
     $result = generate_report($periods, $_POST['selected_sections'], array($_POST['entities']), $_SESSION['lang']);
+    // display sections
+
+    foreach ($result['sections'] as $section) {
+        // Section Title
+        $f->push(new Div());
+        $title = new TitleElement($section['title']);
+        $f->add($title);
+        $f->pop();
+
+        // Display tables and graphs for this section
+        $report_objects = array();
+        $report_types = array();
+        foreach ($section['content'] as $content) {
+            $table = False;
+            $svg = False;
+            if ($content['type'] == 'table') {
+                $title = new SpanElement(sprintf('<h3>%s</h3>', $content['title']));
+                $report_objects[] = $title;
+                $report_types[] = 'title';
+
+                if (in_array('titles', array_keys($content['data']))) {
+                    // period table
+                    $titles = $content['data']['titles'];
+                    $values = $content['data']['values'];
+                    $dates = $content['data']['dates'];
+                    $table = new OptimizedListInfos($titles, "");
+                    for ($i = 0; $i < count($dates); $i++) {
+                        $table->addExtraInfo($values[$i], $dates[$i]);
+                    }
+
+                    if ($table) {
+                        $table->setNavBar(new AjaxNavBar($itemCount, $filter));
+                    }
+                }
+                elseif (in_array('headers', array_keys($content['data']))) {
+                    // key_value table
+                    $headers = $content['data']['headers'];
+                    $values = $content['data']['values'];
+
+                    for ($i = 0; $i < count($headers); $i++) {
+                        $tab_values = array();
+                        foreach ($values as $value) {
+                            $tab_values[] = $value[$i];
+                        }
+                        if (!$table) {
+                            $table = new ListInfos($tab_values, $headers[$i]);
+                        }
+                        else {
+                            $table->addExtraInfo($tab_values, $headers[$i]);
+                        }
+                    }
+                }
+            }
+            elseif ($content['type'] == 'chart') {
+                $filename = $content['svg_path'];
+                $handle = fopen($filename, 'r');
+                $svg_content = fread($handle, filesize($filename));
+                fclose($handle);
+                $svg = new SpanElement(sprintf('<div align="center">%s<br /><a align="center" class="btn" href="%s">%s</a></div>', $svg_content, urlStrRedirect("report/report/get_file", array('path' => $content['png_path'])), _T('Download image', 'report')));
+            }
+            if ($table) {
+                $report_objects[] = $table;
+                $report_types[] = 'table';
+            }
+            if ($svg) {
+                $report_objects[] = $svg;
+                $report_types[] = 'svg';
+            }
+        }
+
+        // report_objects and report_types are collected
+        // Now if there is any chart, put it right of table
+        for ($i = 0; $i < count($report_types); $i++) {
+            $f->push(new Div());
+            if ($report_types[$i] == 'table' && $report_types[$i + 1] == 'svg') {
+                $f->add((new multicol())
+                    ->add($report_objects[$i], '60%', '0 2% 0 0')
+                    ->add($report_objects[$i + 1], '40%')
+                );
+                $i++;
+            }
+            else {
+                $f->add($report_objects[$i]);
+            }
+            $f->pop();
+        }
+    }
 
 
-    printf('<a class="btnPrimary" href="%s">%s</a>', urlStrRedirect("report/report/get_file", array('path' => $result['xls_path'])), _T("Get XLS Report", "report"));
-    printf('<a class="btnPrimary" href="%s">%s</a>', urlStrRedirect("report/report/get_file", array('path' => $result['pdf_path'])), _T("Get PDF Report", "report"));
+    $f->push(new Div());
+    $link = new SpanElement(sprintf('<a class="btnPrimary" href="%s">%s</a>', urlStrRedirect("report/report/get_file", array('path' => $result['xls_path'])), _T("Get XLS Report", "report")));
+    $f->add($link);
+    $link = new SpanElement(sprintf('<a class="btnPrimary" href="%s">%s</a>', urlStrRedirect("report/report/get_file", array('path' => $result['pdf_path'])), _T("Get PDF Report", "report")));
+    $f->add($link);
+    $f->pop();
 }
 
 $f->display();

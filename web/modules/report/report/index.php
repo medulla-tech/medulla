@@ -41,7 +41,7 @@ $p->setSideMenu($sidemenu);
 $p->addTop(_T("Reporting Management", 'report'), "modules/report/report/header.php");
 
 // Add tabs
-$p->addTab("manual_report", _T('Manual Report', 'report'), _T('Manual Report', 'report'), "modules/report/report/manual_report.php", array());
+$p->addTab("manual_report", _T('Manual Report', 'report'), '', "modules/report/report/manual_report.php", array());
 $p->addTab("automatic_report", _T('Automatic Report', 'report'), _T('Automatic Report', 'report'), "modules/report/report/automatic_report.php", array());
 
 $p->display();
