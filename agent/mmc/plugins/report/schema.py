@@ -23,10 +23,8 @@
 # MA 02110-1301, USA.
 
 from importlib import import_module
-import logging
 
-from sqlalchemy import func
-from sqlalchemy import Column, String, Text, Integer, Float, BigInteger
+from sqlalchemy import Column, String, Integer, BigInteger
 from sqlalchemy.ext.declarative import declarative_base; Base = declarative_base()
 
 from mmc.database.database_helper import DBObj

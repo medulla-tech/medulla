@@ -23,17 +23,13 @@ Declare Report database
 """
 
 import logging
-from datetime import timedelta
 from time import time
 
-from mmc.database.database_helper import DatabaseHelper, DBObj
+from mmc.database.database_helper import DatabaseHelper
 
-from sqlalchemy import (create_engine, MetaData, Table, Integer, Column,
-                        DateTime, and_)
-from sqlalchemy.orm import create_session, mapper
+from sqlalchemy import create_engine, MetaData
 
 from mmc.plugins.report.schema import ReportingData, Indicator
-
 
 class ReportDatabase(DatabaseHelper):
     """

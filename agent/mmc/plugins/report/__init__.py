@@ -25,12 +25,10 @@ import logging
 import time
 import os
 import datetime
-from importlib import import_module
 
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 from mmc.plugins.base import LdapUserGroupControl
 from mmc.plugins.report.config import ReportConfig
-from mmc.plugins.report.manager import ReportManager
 from mmc.plugins.report.database import ReportDatabase
 import xml.etree.ElementTree as ET
 from mmc.plugins.report.output import XlsGenerator, PdfGenerator, SvgGenerator
@@ -65,17 +63,7 @@ class ContextMaker(ContextMakerI):
         s.userdn = LdapUserGroupControl().searchUserDN(self.userid)
         return s
 
-#class ContextMaker(ContextMakerI):
-#    def getContext(self):
-#        s = SecurityContext()
-#        s.userid = self.userid
-#        s.locationsCount = ComputerLocationManager().getLocationsCount()
-#        s.userids = ComputerLocationManager().getUsersInSameLocations(self.userid)
-#        s.filterType = "mine"
-#        return s
-
 class RpcProxy(RpcProxyI):
-
     def calldb(self, func, *args, **kw):
         return getattr(ReportDatabase(),func).__call__(*args, **kw)
 
@@ -90,7 +78,6 @@ class RpcProxy(RpcProxyI):
         return result
 
     def generate_report(self, period, sections, entities, lang): #TODO: Add item selection
-        #
         temp_path = '/var/tmp/'
         report_path = os.path.join(temp_path, 'report-%d' % int(time.time()))
         pdf_path = os.path.join(report_path, 'report.pdf')
@@ -189,7 +176,7 @@ class RpcProxy(RpcProxyI):
         def _keyvalueDict(item_root):
             #TODO : implement importign Clé, Valeur string from XML
             data_dict = {'headers' : ['Key','Value'], 'values' : []}
-            indicators = []
+            #indicators = []
             def _fetchSubs(container, parent = None, level = 0):
                 for item in container:
                     if item.tag.lower() != 'item' : continue
