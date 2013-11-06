@@ -47,7 +47,8 @@ class Sender(Protocol):
     def register_response_handler(cls, handler):
         cls.response = handler
 
-    def dataReceived(self, data):
+    def dataReceived(self, packet):
+        data = PackUtils.unpack(packet)
         self.send_locked = False
         self.response(data, 
                       self.request, 

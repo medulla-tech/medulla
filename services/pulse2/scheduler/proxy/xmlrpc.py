@@ -81,15 +81,16 @@ class ForwardingProxy(XMLRPC):
 
     def render(self, request):
         """ override method of xmlrpc python twisted framework """
-        args, func_name = xmlrpclib.loads(request.content.read())
+        try :
+            args, func_name = xmlrpclib.loads(request.content.read())
+        except Exception, e:
+            self.logger.error("xmlrpc render failed: %s"% str(e))
 
         if not self._auth_validate(request, func_name, args):
             return NOT_DONE_YET
 
         d = maybeDeferred(self.forwarder.call_remote, request, func_name, args)
         d.addErrback(self._ebRender, func_name, args)
-        d.addCallback(self._cbRender, request, func_name, args)
-
 
         return NOT_DONE_YET
 

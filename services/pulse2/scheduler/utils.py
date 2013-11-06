@@ -109,11 +109,10 @@ class UnixProtocol (object, LineOnlyReceiver):
         d.addErrback(self._eb_call_failed, name)
         
     def _send_response(self, response):
-        if not response :
-            response = "OK" 
-        logging.getLogger().debug("response: %s" % (response))
+        logging.getLogger().debug("response: %s" % str(response))
         try:
-            self.sendLine(response)
+            packet = PackUtils.pack(response)
+            self.sendLine(packet)
         except Exception, e:
             logging.getLogger().error("UX response sending failed: %s"  % str(e))
 
