@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-28 01:00+0100\n"
+"POT-Creation-Date: 2013-11-06 15:40+0100\n"
 "PO-Revision-Date: 2013-09-17 19:48+0000\n"
 "Last-Translator: Andre Machado <andre@mandriva.com>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
@@ -122,6 +122,25 @@ msgstr "Backup atualizado"
 msgid "Backup#"
 msgstr "Backup#"
 
+#: modules/backuppc/report/Backuppc/Backuppc.php:123
+#: modules/backuppc/report/Backuppc/Backuppc.php:262
+#, fuzzy
+msgid "BackupPC Last Backup Date"
+msgstr "Backup atualizado"
+
+#: modules/backuppc/report/Backuppc/Backuppc.php:137
+msgid "BackupPC Server Disc Space"
+msgstr ""
+
+#: modules/backuppc/report/Backuppc/Backuppc.php:46
+msgid "BackupPC Server Used Disc Space"
+msgstr ""
+
+#: modules/backuppc/report/Backuppc/Backuppc.php:33
+#, fuzzy
+msgid "Backuppc"
+msgstr "Backup"
+
 #: modules/backuppc/backuppc/BrowseShareNames.php:68
 #: modules/backuppc/backuppc/hostSummary.php:162
 msgid "Browse"
@@ -172,6 +191,10 @@ msgstr "Configuração salva"
 msgid "Configure"
 msgstr "Configurar"
 
+#: modules/backuppc/report/Backuppc/Backuppc.php:103
+msgid "Critical Disc Space Limit"
+msgstr ""
+
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:67
 msgid "Current directory :  "
 msgstr "Diretório atual :  "
@@ -219,6 +242,16 @@ msgstr "Excluir esse perfil"
 #: modules/backuppc/backuppc/ajaxDownloadsTable.php:105
 msgid "Destination"
 msgstr "Destino"
+
+#: modules/backuppc/report/Backuppc/Backuppc.php:83
+msgid "Display All Machines"
+msgstr ""
+
+#: modules/backuppc/report/Backuppc/Backuppc.php:77
+msgid ""
+"Display only machines where critical Disc Space Limit is reached except if "
+"\"Display All Machines\" is checked"
+msgstr ""
 
 #: modules/backuppc/backuppc/EditPeriodProfile.php:160
 #: modules/backuppc/backuppc/edit.php:227
@@ -624,6 +657,12 @@ msgstr "Tipo"
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:84
 msgid "Unset backup"
 msgstr "Backup não configurado"
+
+#: modules/backuppc/report/Backuppc/Backuppc.php:55
+#: modules/backuppc/report/Backuppc/Backuppc.php:76
+#: modules/backuppc/report/Backuppc/Backuppc.php:198
+msgid "Used Disc Space Per Machine"
+msgstr ""
 
 #: modules/backuppc/backuppc/BrowseBackups.php:68
 #: modules/backuppc/backuppc/ajaxHostsList.php:64
