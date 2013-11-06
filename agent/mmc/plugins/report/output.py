@@ -259,7 +259,6 @@ class SvgGenerator(object):
             foreground='#000',
             foreground_light='#000',
             foreground_dark='#000',
-            colors=('red', 'blue'),
         )
 
     def _get_bar_chart(self):
@@ -280,7 +279,6 @@ class SvgGenerator(object):
             foreground='#000',
             foreground_light='#000',
             foreground_dark='#000',
-            colors=('red', 'blue'),
         )
 
     def _get_line_chart(self):
@@ -301,7 +299,6 @@ class SvgGenerator(object):
             foreground='#000',
             foreground_light='#000',
             foreground_dark='#000',
-            colors=('red', 'blue'),
         )
 
     def _get_pie_chart(self):
@@ -323,7 +320,7 @@ class SvgGenerator(object):
 
             self.chart.x_labels = datas['dates']
             for i in xrange(len(titles)):
-                self.chart.add(titles[i], values[i])
+                self.chart.add(titles[i], [x[i] for x in values])
         elif type == 'key_value': # Pie Chart
             titles = datas['headers']
             values = datas['values']
