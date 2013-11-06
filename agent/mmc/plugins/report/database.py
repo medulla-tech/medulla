@@ -116,8 +116,12 @@ class ReportDatabase(DatabaseHelper):
         return True
 
     @DatabaseHelper._session
-    def get_indicator_value_at_time(self, session, indicator_name, ts_min, ts_max, entities): #'2013-10-29', ['UUID1']
+    def get_indicator_value_at_time(self, session, indicator_name, ts_min, ts_max, entities):
         return self.get_indicator_by_name(indicator_name).getValueAtTime(session, ts_min, ts_max , entities)
+
+    @DatabaseHelper._session
+    def get_indicator_datatype(self, session, indicator_name):
+        return self.get_indicator_by_name(indicator_name).data_type
 
     @DatabaseHelper._session
     def get_indicator_current_value(self, session, name, entities = []):
