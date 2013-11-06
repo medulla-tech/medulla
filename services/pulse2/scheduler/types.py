@@ -206,7 +206,7 @@ class PhaseBase (PhaseProxyMethodContainer):
 
             attempts_total = self.coh.attempts_left
             self.logger.debug("Number of failed attempts %d / %d" % (self.coh.attempts_failed, attempts_total))
-
+            now = time.time()
             start_timestamp = time.mktime(self.cmd.start_date.timetuple())
             end_timestamp = time.mktime(self.cmd.end_date.timetuple())
 
@@ -229,7 +229,11 @@ class PhaseBase (PhaseProxyMethodContainer):
             else :
                 return 0
 
+            if now + delay_in_seconds > end_timestamp :
+                delay_in_seconds = (end_timestamp - SchedulerConfig().max_wol_time) - now 
             delay = delay_in_seconds // 60
+
+
             self.logger.debug("Next delay for CoH %s : + %s min" %(str(self.coh.id),str(delay)))
             return delay
 
@@ -776,7 +780,7 @@ class MscContainer (object):
 
     @property
     def max_slots(self):
-        return reduce(lambda x, y: (x + y), self.slots.values())
+        return reduce(lambda x, y: (x + y), self.slots.values()) 
 
     @property
     def free_slots(self):
