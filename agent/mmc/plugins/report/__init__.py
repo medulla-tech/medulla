@@ -89,7 +89,7 @@ class RpcProxy(RpcProxyI):
             result[attr['module']].append(attr)
         return result
 
-    def generate_report(self, period, sections, entities, lang):
+    def generate_report(self, period, sections, entities, lang): #TODO: Add item selection
         #
         temp_path = '/var/tmp/'
         report_path = os.path.join(temp_path, 'report-%d' % int(time.time()))
@@ -132,48 +132,84 @@ class RpcProxy(RpcProxyI):
             # send text to pdf, html, ...
             pass
 
-        def _periodDict(item_container):
+        def _sum_None(lst):
+            result = None
+            for x in lst:
+                if x:
+                    if result != None:
+                        result += x
+                    else:
+                        result = x
+            return result
+
+        def _periodDict(item_root):
             data_dict = {'titles' : [], 'dates' : [], 'values' : [] }
-            indicators = []
-            for item in item_container:
-                if item.tag.lower() != 'item' : continue
-                indicator_name = item.attrib['indicator']
-                data_dict['titles'].append(item.attrib['title'])
-                indicators.append(item.attrib['indicator'])
             for date in period:
-                # Creating a timestamp range for the specified date
                 ts_min = int(time.mktime(datetime.datetime.strptime(date, "%Y-%m-%d").timetuple()))
-                ts_max = ts_min + 86400 # max = min + 1day (sec)
-                #
                 formatted_date = datetime.datetime.fromtimestamp(ts_min).strftime(params['date_format'])
                 data_dict['dates'].append(formatted_date)
-                values = []
-                for indicator in indicators:
-                    values.append(ReportDatabase().get_indicator_value_at_time(indicator, ts_min, ts_max, entities))
-                data_dict['values'].append(values)
-            logging.getLogger().warning('GOT PERIOD DICT')
-            logging.getLogger().warning(data_dict)
+                data_dict['values'].append([])
+
+            def _fetchSubs(container, parent = None, level = 0):
+                # If no subelements in container, return
+                if len(container) == 0: return []
+                # Adding titles
+                GValues = []
+                for item in container:
+                    if item.tag.lower() != 'item' : continue
+                    data_dict['titles'].append( '..' * level + ' ' + item.attrib['title'])
+                    indicator_name = item.attrib['indicator']
+                    # temp list to do arithmetic operations
+                    values = []
+                    for i in xrange(len(period)):
+                        date = period[i]
+                        # Creating a timestamp range for the specified date
+                        ts_min = int(time.mktime(datetime.datetime.strptime(date, "%Y-%m-%d").timetuple()))
+                        ts_max = ts_min + 86400 # max = min + 1day (sec)
+                        #
+                        value = ReportDatabase().get_indicator_value_at_time(indicator_name, ts_min, ts_max, entities)
+                        values.append(value)
+                        data_dict['values'][i].append(value)
+                    # Fetch this item subitems if period is last
+                    GValues.append(values)
+                    childGValues = _fetchSubs(item, container, level + 1)
+                    # Calcating "other" line if indicator type is numeric
+                    if ReportDatabase().get_indicator_datatype(indicator_name) == 0 and childGValues:
+                        data_dict['titles'].append( '..' * (level+1) + ' Other (%s)' % '') #TODO: parent node name
+                        for i in xrange(len(period)):
+                            child_sum = _sum_None([ l[i] for l in childGValues ])
+                            other_value = (values[i] - child_sum) if child_sum else None
+                            data_dict['values'][i].append(other_value)
+                return GValues
+            _fetchSubs(item_root)
+            #logging.getLogger().warning('GOT PERIOD DICT')
+            #logging.getLogger().warning(data_dict)
             return data_dict
 
-        def _keyvalueDict(item_container):
+        def _keyvalueDict(item_root):
             #TODO : implement importign Clé, Valeur string from XML
             data_dict = {'headers' : ['Key','Value'], 'values' : []}
             indicators = []
-            for item in item_container:
-                if item.tag.lower() != 'item' : continue
-                indicator_name = item.attrib['indicator']
-                indicator_label = item.attrib['title']
-                indicator_value = ReportDatabase().get_indicator_current_value(indicator_name, entities)
-                # indicator_value is a list of dict {'entity_id' : .., 'value' .. }
-                for entry in indicator_value:
-                    # TODO: Print entity names not UUIDs
-                    if entry['entity_id'] in entity_names:
-                        entity_name = entity_names[entry['entity_id']]
-                    else:
-                        entity_name = entry['entity_id']
-                    data_dict['values'].append([indicator_label + (' (%s)' % entity_name ), entry['value']])
-            logging.getLogger().warning('GOT KEY/VALUE DICT')
-            logging.getLogger().warning(data_dict)
+            def _fetchSubs(container, parent = None, level = 0):
+                for item in container:
+                    if item.tag.lower() != 'item' : continue
+                    indicator_name = item.attrib['indicator']
+                    indicator_label = item.attrib['title']
+                    indicator_value = ReportDatabase().get_indicator_current_value(indicator_name, entities)
+                    # indicator_value is a list of dict {'entity_id' : .., 'value' .. }
+                    for entry in indicator_value:
+                        # TODO: Print entity names not UUIDs
+                        if entry['entity_id'] in entity_names:
+                            entity_name = entity_names[entry['entity_id']]
+                        else:
+                            entity_name = entry['entity_id']
+                        data_dict['values'].append([ '..' * level + indicator_label + (' (%s)' % entity_name ), entry['value']])
+                    # TODO: Calculate other cols
+                    # Fetch this item subitems
+                    _fetchSubs(item, container, level + 1)
+            _fetchSubs(item_root)
+            #logging.getLogger().warning('GOT KEY/VALUE DICT')
+            #logging.getLogger().warning(data_dict)
             return data_dict
 
         # Browsing all childs
@@ -235,14 +271,14 @@ class RpcProxy(RpcProxyI):
                         svg = SvgGenerator(path = svg_filepath)
                         if attr2['chart_type'] == 'line':
                             data_dict = _periodDict(level2)
-                            svg.lineChart(data_dict)
+                            svg.lineChart(attr2['title'], data_dict)
                         if attr2['chart_type'] == 'bar':
                             data_dict = _periodDict(level2)
-                            svg.barChart(data_dict)
+                            svg.barChart(attr2['title'], data_dict)
                         # ====> KEY-VALUE TABLE TYPE
                         if attr2['chart_type'] == 'pie':
                             data_dict = _keyvalueDict(level2)
-                            svg.pieChart(data_dict)
+                            svg.pieChart(attr2['title'], data_dict)
                         # Insert SVG into the PDF
                         pdf.pushSVG(svg.toXML())
                         section_data['content'].append({ \
@@ -250,6 +286,8 @@ class RpcProxy(RpcProxyI):
                                 'svg_path': svg_filepath + '.svg',\
                                 'png_path': svg_filepath + '.png'\
                             })
+                        # Save SVG files (SVG/PNG)
+                        svg.save()
 
                 result['sections'].append(section_data)
 
