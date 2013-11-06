@@ -40,6 +40,7 @@ and mmc-agent.
 import logging
 
 from twisted.internet.protocol import Factory
+from twisted.internet.defer import Deferred
 
 from pulse2.scheduler.network import chooseClientIP
 from pulse2.scheduler.control import MscDispatcher
@@ -50,6 +51,14 @@ class SchedulerGateway(UnixProtocol):
     """
     Provides incomming requests from scheduler-proxy trough the unix socket.
     """
+    def _nok(self):
+        """A negative deferred response"""
+        d = Deferred()
+        @d.addCallback
+        def cb(reslut):
+            return False
+        d.callback(True)
+        return d
 
     def ping_client(self, uuid, fqdn, shortname, ips, macs, netmasks):
         client = chooseClientIP({
@@ -60,8 +69,10 @@ class SchedulerGateway(UnixProtocol):
             'macs': macs,
             'netmasks': netmasks
         })
-  
-        return MscDispatcher().launcher_provider.ping_client(client)
+        if client : 
+            return MscDispatcher().launchers_provider.ping_client(client)
+        else :
+            return self._nok()
 
     def probe_client(self, uuid, fqdn, shortname, ips, macs, netmasks):
         client = chooseClientIP({
@@ -73,7 +84,12 @@ class SchedulerGateway(UnixProtocol):
             'netmasks': netmasks
         })
  
-        return MscDispatcher().launcher_provider.probe_client(client)
+        if client :
+            return MscDispatcher().launchers_provider.probe_client(client)
+        else :
+            return self._nok()
+
+       
 
     def ping_and_probe_client(self, uuid, fqdn, shortname, ips, macs, netmasks):
         client = chooseClientIP({
@@ -85,13 +101,17 @@ class SchedulerGateway(UnixProtocol):
             'netmasks': netmasks
         })
         
-        return MscDispatcher().launcher_provider.ping_and_probe_client(client)
+        if client :
+            return MscDispatcher().launchers_provider.ping_and_probe_client(client)
+        else :
+            return self._nok()
+
 
     def download_file(self, uuid, fqdn, shortname, ips, macs, netmasks, path, bwlimit):
-        return MscDispatcher().launcher_provider.download_file(uuid, fqdn, shortname, ips, macs, netmasks, path, bwlimit)
+        return MscDispatcher().launchers_provider.download_file(uuid, fqdn, shortname, ips, macs, netmasks, path, bwlimit)
 
     def tcp_sproxy(self, uuid, fqdn, shortname, ips, macs, netmasks, requestor_ip, requested_port):
-        return MscDispatcher().launcher_provider.establish_proxy(uuid, fqdn, shortname, ips, macs, netmasks, requestor_ip, requested_port)
+        return MscDispatcher().launchers_provider.establish_proxy(uuid, fqdn, shortname, ips, macs, netmasks, requestor_ip, requested_port)
 
 
     def start_all_commands(self):

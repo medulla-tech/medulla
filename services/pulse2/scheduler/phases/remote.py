@@ -207,8 +207,6 @@ class WOLPhase(Phase):
     
 
     def _apply_initial_rules(self):
-        if not self.last_wol_attempt and self.phase.is_ready():
-            return DIRECTIVE.PERFORM
 
         if self.phase.is_done() :
             self.logger.info("Circuit #%s: wol done" % self.coh.id)
@@ -217,13 +215,15 @@ class WOLPhase(Phase):
         if not self.target.hasEnoughInfoToWOL(): 
             # not enough information to perform WOL: ignoring phase but writting this in DB
             self.logger.warn("Circuit #%s: wol couldn't be performed; not enough information in target table" % self.coh.getId())
-            # FIXME: state will be 'wol_ignored' when implemented in database
             self.update_history_failed(PULSE2_TARGET_NOTENOUGHINFO_ERROR, 
                                " skipped : not enough information in target table")
             self.coh.setStateScheduled()
             return self.next()
 
-      
+        if not self.last_wol_attempt and self.phase.is_ready():
+            return DIRECTIVE.PERFORM
+
+     
     def perform(self):
  
         def _cb(result):
@@ -240,7 +240,6 @@ class WOLPhase(Phase):
  
                 self.phase.set_done()
                 self.coh.setStateScheduled()
-                #WOLTracking().unlockwol(self.coh.id)
                 return self.next()
             self.logger.info("Circuit #%s: do wol (target not up)" % self.coh.id)
             return self._performWOLPhase()
@@ -277,10 +276,8 @@ class WOLPhase(Phase):
             self.update_history_done(PULSE2_SUCCESS_ERROR, stdout, stderr)
         
             if self.phase.switch_to_done():
-                #WOLTracking().unlockwol(self.coh.id)
                 return self.next()
             else:
-                #WOLTracking().unlockwol(self.coh.id)
                 return self.give_up()
 
         try:
@@ -290,18 +287,11 @@ class WOLPhase(Phase):
 
             self.coh.setStateScheduled()
             self.phase.set_ready()
-            # TODO - ????
-            #self.coh.resetLastWOLAttempt()
-            #WOLTracking().unlockwol(self.coh.id)
             return self.give_up()
-        #TODO
-        #self.coh.setLastWOLAttempt()
         self.last_wol_attempt = time.time()
         self.logger.info("Circuit #%s: WOL done, now waiting %s seconds for the computer to wake up" % (self.coh.id,SchedulerConfig().max_wol_time))
-        #reactor.callLater(SchedulerConfig().max_wol_time, setstate, stdout, stderr)
         d = deferLater(reactor, SchedulerConfig().max_wol_time, setstate, stdout, stderr)
         return d
-        #return self.give_up()
 
     def parseWOLError(self, reason, decrement_attempts_left = False, error_code = PULSE2_UNKNOWN_ERROR):
         """
