@@ -28,6 +28,7 @@ import pygal
 from pygal.style import Style
 from os import chmod
 from base64 import b64encode
+import logging
 
 class XlsGenerator(object):
     def __init__(self, path = '/tmp/report.xls'):
@@ -107,20 +108,20 @@ class XlsGenerator(object):
 
 class PdfGenerator(object):
     def __init__(self, path = '/tmp/report.pdf'):
-        self.front = self.get_front_page()
-        self.summary = self.get_summary_page()
+        self.homepage = ''
+        self.summary = ''
         self.css = self.get_css()
-        self.html = ''
+        self.content = ''
         self.path = path
 
     def h1(self, str):
-        self.html += '<h1>%s</h1>' % str
+        self.content += '<h1>%s</h1>' % str
 
     def h2(self, str):
-        self.html += '<h2>%s</h2>' % str
+        self.content += '<h2>%s</h2>' % str
 
     def h3(self, str):
-        self.html += '<h3>%s</h3>' % str
+        self.content += '<h3>%s</h3>' % str
 
     def get_front_page(self):
         return HTML(string='<h1>Report</h1>').render()
@@ -156,26 +157,26 @@ class PdfGenerator(object):
         values = datas['values']
 
         # Table headers
-        self.html += '<table>'
-        self.html += '<tr>'
+        self.content += '<table>'
+        self.content += '<tr>'
         for h in headers:
             if h == 'titles' : continue
-            self.html += '<th>'
-            self.html += h
-            self.html += '</th>'
-        self.html += '</tr>'
+            self.content += '<th>'
+            self.content += h
+            self.content += '</th>'
+        self.content += '</tr>'
 
         # Table content
         for line in values:
-            self.html += '<tr>'
+            self.content += '<tr>'
             for td in line:
                 if isinstance(td, (int, float)): td = str(td)
-                self.html += '<td>'
-                self.html += td if td != None else ''
-                self.html += '</td>'
-            self.html += '</tr>'
+                self.content += '<td>'
+                self.content += td if td != None else ''
+                self.content += '</td>'
+            self.content += '</tr>'
 
-        self.html += '</table>'
+        self.content += '</table>'
 
     def get_period_sheet(self, title, datas):
         self.h3(title)
@@ -184,37 +185,37 @@ class PdfGenerator(object):
         values = datas['values']
 
         # Table
-        self.html += '<table>'
-        self.html += '<tr>'
-        self.html += '<th>'
-        self.html += '</th>'
+        self.content += '<table>'
+        self.content += '<tr>'
+        self.content += '<th>'
+        self.content += '</th>'
         for d in dates:
-            self.html += '<th>'
-            self.html += d
-            self.html += '</th>'
+            self.content += '<th>'
+            self.content += d
+            self.content += '</th>'
         for x in xrange(len(titles)):
-            self.html += '<tr>'
+            self.content += '<tr>'
 
-            self.html += '<td>'
-            self.html += titles[x]
-            self.html += '</td>'
+            self.content += '<td>'
+            self.content += titles[x]
+            self.content += '</td>'
             for v in values:
                 value = v[x]
                 if value is None:
                     value = ''
                 elif isinstance(value, (int, float)):
                     value = str(value)
-                self.html += '<td>'
-                self.html += value
-                self.html += '</td>'
+                self.content += '<td>'
+                self.content += value
+                self.content += '</td>'
 
-            self.html += '</tr>'
+            self.content += '</tr>'
 
-        self.html += '</tr>'
-        self.html += '</table>'
+        self.content += '</tr>'
+        self.content += '</table>'
 
     def pushHTML(self, html):
-        self.html += html
+        self.content += html
 
     def pushTable(self, title, datas):
         if 'headers' in datas: # simple sheets
@@ -223,12 +224,13 @@ class PdfGenerator(object):
             return self.get_period_sheet(title, datas)
 
     def pushSVG(self, svg):
-        self.html += '<img src="data:image/svg+xml;charset=utf-8;base64,%s" />' % b64encode(svg.encode('utf8'))
+        self.content += '<img src="data:image/svg+xml;charset=utf-8;base64,%s" />' % b64encode(svg.encode('utf8'))
 
     def save(self):
-        content = HTML(string=self.html).render(stylesheets=[self.css])
         # PDF report is a list of all documents
-        pdf_report = [self.front, self.summary, content]
+        self.homepage = '<h1>Report</h1>'
+        self.summary = '<h1>Summary</h1>'
+        pdf_pages = [self.homepage, self.summary, self.content]
 
         # To make one PDF report, we have to get all pages of all documents...
         # First step , we obtain a list of sublists like this :
@@ -237,6 +239,33 @@ class PdfGenerator(object):
         #     [doc2.page1, doc2.page2],
         #     [doc3.page1, doc3.page2, doc3.page3]
         # ]
+
+        # Rendering content
+        content = HTML(string=self.content).render(stylesheets=[self.css])
+
+        #Priting summary table BEGIN
+        self.summary += '<table style="border:0">'
+
+        def _printSummary(bookmarks, indent=0, numer = ''):
+            for i, (label, (page, _, _), children) in enumerate(bookmarks, 1):
+                tr_style = 'style="border-top:1px solid #CCC;border-bottom:1px solid #CCC"'
+                title_td_style = 'style="border:0;text-align:left;width:550px;padding:10px;"'
+                page_num_td_style = 'style="border:0;width:50px"'
+                if indent == 0 and i == 1:
+                    tr_style = 'style="border-bottom:1px solid #CCC"'
+                self.summary += ('<tr %s><td %s>%s%s. %s</td><td %s>%d</td></tr>' % (
+                    tr_style, title_td_style, '&nbsp;' * indent, numer+str(i), label.lstrip('0123456789. '), page_num_td_style, page+1))
+                _printSummary(children, indent + 2, numer+str(i)+'.')
+        _printSummary(content.make_bookmark_tree())
+
+        #Priting summary table END
+        self.summary += '</table>'
+
+        homepage = HTML(string=self.homepage).render(stylesheets=[self.css])
+        summary = HTML(string=self.summary).render(stylesheets=[self.css])
+
+        pdf_report = [homepage, summary ,content]
+        logging.getLogger().warning(pdf_report[2].make_bookmark_tree())
 
         all_pages = [doc.pages for doc in pdf_report]
 
