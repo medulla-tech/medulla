@@ -287,7 +287,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
                 launchers = self.get_launchers_by_network(circuit.network_address)
                 if len(launchers) > 0 :
                     circuit.launchers_provider = RemoteCallProxy(self.config.launchers_uri, 
-                                                                 launchers.keys()[0])
+                                                                 launchers[0])
                     self.logger.debug("Circuit #%s: assigned launcher <%s>" % 
                             (circuit.id, launchers[0]))
                 else:
