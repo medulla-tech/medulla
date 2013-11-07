@@ -508,7 +508,12 @@ class Imaging(object):
                 return False
             try:
                 if result[0]:
-                    self.myUUIDCache.set(result[1]['uuid'], MACAddress, result[1]['shortname'], result[1]['fqdn'], result[1]['entity'])
+                    self.myUUIDCache.set(result[1]['uuid'],
+                                         MACAddress,
+                                         result[1]['shortname'].encode('utf-8'),
+                                         result[1]['fqdn'].encode('utf-8'),
+                                         result[1]['entity'].encode('utf-8')
+                                        )
                     self.logger.debug('Imaging: Updating cache for %s' % (MACAddress))
                     return result[1]
                 else:
@@ -523,6 +528,9 @@ class Imaging(object):
         # try to extract from our cache
         res = self.myUUIDCache.getByMac(MACAddress)
         if res:  # fetched from cache
+            res['shortname'] = res['shortname'].decode('utf-8')
+            res['fqdn'] = res['fqdn'].decode('utf-8')
+            res['entity'] = res['entity'].decode('utf-8')
             return maybeDeferred(lambda x: x, res)
         else:  # cache fetching failed, try to obtain the real value
             self.logger.debug('Imaging: Unable to resolve %s from cache, querying database' % (MACAddress))
