@@ -237,8 +237,11 @@ class Commands(object):
 
 class Schedule :
     def __init__(self, ids, start_date, end_date, attempts, phases):
-        self.start_date = start_date
-        self.end_date = end_date
+
+        fmt = "%Y-%m-%d %H:%M:%S"
+
+        self.start_date = start_date.strftime(fmt)
+        self.end_date = end_date.strftime(fmt)
         self.attempts = attempts
         self.phases = phases
 
@@ -272,6 +275,8 @@ class Schedule :
             coh.fk_commands = cmd.id
             coh.flush()
             self._create_phases(coh.id)
+
+        return cmd.id
 
 
     def _create_phases(self, coh_id):

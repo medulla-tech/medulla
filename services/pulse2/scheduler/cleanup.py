@@ -20,6 +20,7 @@
 # MA 02110-1301, USA.
 import time
 import datetime
+import logging
 
 from twisted.internet.defer import DeferredList
 
@@ -61,7 +62,7 @@ class CleanUpSchedule :
     _checked_phase = "execute"
     _checked_status = "failed"
 
-    _phases = ["wol", "delete", "done"]
+    _phases = ["delete", "done"]
 
     def __init__(self, ids):
         self.ids = ids
@@ -75,14 +76,19 @@ class CleanUpSchedule :
 
     def process(self):
         start_date, end_date = self._delta()
-
+        logging.getLogger().info("Clean up step check: %d circuits failed on %s" % (len(self.ids), self._checked_phase))
         schedule = Schedule(self.ids,
                             start_date,
                             end_date,
                             defaults.attempts_per_day,
                             self._phases
                             )
-        schedule.create()
+        new_cmd_id = schedule.create()
+        fmt = "%d/%m/%Y %H:%M"
+        logging.getLogger().info("Clean up step schedule: created command (id=%s)" % new_cmd_id) 
+        logging.getLogger().info("Clean up step schedule: command valid from %s to %s" % (start_date.strftime(fmt),
+                                                                         end_date.strftime(fmt)))
+                
         
 
     def _delta (self):
@@ -92,14 +98,13 @@ class CleanUpSchedule :
         @return: start and end date of rescheduled command
         @rtype: tuple
         """
-        fmt = "%Y-%m-%d %H:%M:%S"
         
         start_timestamp = time.time()
-        start_date = datetime.datetime.fromtimestamp(start_timestamp).strftime(fmt)
+        start_date = datetime.datetime.fromtimestamp(start_timestamp)
             
         delta = int(defaults.life_time) * 60 * 60
         end_timestamp = start_timestamp + delta
-        end_date = datetime.datetime.fromtimestamp(end_timestamp).strftime(fmt)
+        end_date = datetime.datetime.fromtimestamp(end_timestamp)
       
         return start_date, end_date
 
