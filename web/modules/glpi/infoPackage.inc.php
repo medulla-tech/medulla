@@ -24,6 +24,14 @@
 
 $MMCApp =& MMCApp::getInstance();
 
+$mod = new Module("glpi");
+$mod->setVersion("1.5.1");
+$mod->setRevision('');
+$mod->setDescription(_T("GLPI Inventory", "glpi"));
+$mod->setAPIVersion("0:0:0");
+
+$MMCApp->addModule($mod);
+
 /* Get the base module instance */
 $base = &$MMCApp->getModule('base');
 
