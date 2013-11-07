@@ -73,3 +73,5 @@ class GlpiLocation(ComputerLocationI):
     def getLocationParentPath(self, loc_uuid):
         return Glpi().getLocationParentPath(loc_uuid)
 
+    def getLocationName(self, loc_uuid):
+        return Glpi().getLocationName(loc_uuid)

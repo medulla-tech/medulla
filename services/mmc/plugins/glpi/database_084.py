@@ -1294,6 +1294,9 @@ class Glpi084(DyngroupDatabaseHelper):
         session.close()
         return ret
 
+    def getLocationName(self, uuid):
+        return self.getLocation(uuid[0]).name
+
     def getLocationsList(self, ctx, filt = None):
         """
         Get the list of all entities that user can access
