@@ -2531,7 +2531,9 @@ class ImagingRpcProxy(RpcProxyI):
         # address is also matching
         ctx = self.currentContext
         if uuid :
-            db_computer = getJustOneMacPerComputer(ctx, ComputerManager().getMachineMac(ctx, {'uuid': uuid}))
+            # Get list of mac of uuid:
+            # dict of computer with their MAC Addresses ({'UUIDX': ['MAC1', 'MAC2']})
+            db_computer = ComputerManager().getMachineMac(ctx, {'uuid': uuid})
 
         if db_computer:
             if len(db_computer) > 1:
@@ -2543,8 +2545,9 @@ class ImagingRpcProxy(RpcProxyI):
                 macs = [db_computer[x].lower() for x in db_computer]
                 logger.debug("A computer (uuid = %s) with a corresponding hostname already exists in the database, checking its MAC addresses" % uuid)
                 hasMAC = False
-                if '' in macs:
+                if not macs:
                     # No MAC address ? We consider we have a match
+                    logger.warn('Merging computer %s with already existing %s without checking its MAC address (empty MAC address list returned)' % (hostname, uuid))
                     hasMAC = True
                 elif MACAddress.lower() in macs:
                     hasMAC = True
