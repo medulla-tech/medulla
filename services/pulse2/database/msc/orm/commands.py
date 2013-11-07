@@ -257,6 +257,7 @@ class Schedule :
         cmd.creation_date = self.start_date
         cmd.start_date = self.start_date
         cmd.end_date = self.end_date
+        cmd.files = ""
 
         cmd.flush()
 
