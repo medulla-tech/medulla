@@ -93,7 +93,7 @@ if (!array_intersect_key($_POST, array('generate_report' => '', 'get_xls' => '',
 // second step, display results
 elseif (isset($_POST['generate_report'])) {
     $ts_from = intval($_POST['period_from_timestamp']);
-    $ts_to = intval($_POST['period_to_timestamp']);
+    $ts_to = intval($_POST['period_to_timestamp']) + 86400;
 
     $nb_days = intval(($ts_to - $ts_from) / 86400);
     $nb_periods = min($nb_days, 7);
