@@ -26,6 +26,10 @@ import time
 import os
 import datetime
 
+try:
+    from pulse2.managers.location import ComputerLocationManager
+except ImportError:
+    logging.getLogger().warn("report: I can't load Pulse ComputerLocationManager")
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 from mmc.plugins.base import LdapUserGroupControl
 from mmc.plugins.report.config import ReportConfig
@@ -93,7 +97,6 @@ class RpcProxy(RpcProxyI):
         return result
 
     def generate_report(self, period, sections, items, entities, lang):
-        #
         temp_path = '/var/tmp/'
         report_path = os.path.join(temp_path, 'report-%d' % int(time.time()))
         pdf_path = os.path.join(report_path, 'report.pdf')
@@ -106,11 +109,12 @@ class RpcProxy(RpcProxyI):
         xls = XlsGenerator(path = xls_path)
         pdf = PdfGenerator(path = pdf_path)
         result = {'sections': []}
-        #
-        #TODO: Get entity names from entity uuids
-        from pulse2.managers.location import ComputerLocationManager
-        entity_names = {} #dict([(location, ComputerLocationManager().getLocationName([location])) for location in entities])
-        #logging.getLogger().warning(ComputerLocationManager().getLocationName(1))
+        try:
+            getLocationName = ComputerLocationManager().getLocationName
+            entity_names = dict([(location, getLocationName([location]).decode('utf-8')) for location in entities])
+        except NameError:
+            logger.warn("Pulse ComputerLocationManager() not loaded")
+            entity_names = {}
         # Parsing report XML
         xmltemp = ET.parse('/etc/mmc/pulse2/report/templates/%s.xml' % lang).getroot()
         if xmltemp.tag != 'template':
