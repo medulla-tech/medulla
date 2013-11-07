@@ -338,5 +338,40 @@ def process_non_valid(scheduler_name, top, non_fatal_steps, ids_to_exclude = [])
         logging.getLogger().info("Switching %d circuits to failed" % len(fls))
         CoHManager.setCoHsStateFailed(fls)
 
+def get_cohs_with_failed_phase(id, phase_name):
+    database = MscDatabase()
+    session = create_session()
+  
+    query = session.query(CommandsOnHost).\
+        select_from(database.commands_on_host.join(database.commands).\
+        join(database.commands_on_host_phase)
+        ).filter(database.commands.c.id == id
+        ).filter(database.commands_on_host_phase.c.name==phase_name
+        ).filter(database.commands_on_host_phase.c.state=="failed")
+    return [q.id for q in query.all()]
+    session.close()
+ 
 
+def is_command_finished(scheduler_name, id):
+    database = MscDatabase()
+    session = create_session()
+  
+    now = time.strftime("%Y-%m-%d %H:%M:%S")
+
+    query = session.query(CommandsOnHost).\
+        select_from(database.commands_on_host.join(database.commands)
+        ).filter(not_(database.commands_on_host.c.current_state.in_(("failed", "over_timed", "done")))
+        ).filter(database.commands.c.id == id
+        ).filter(database.commands.c.end_date < now
+        ).filter(or_(database.commands_on_host.c.scheduler == '',
+                     database.commands_on_host.c.scheduler == scheduler_name,
+                     database.commands_on_host.c.scheduler == None))
+    nbr = query.count()
+    session.close()
+    if nbr > 1 :
+        return False
+    else :
+        return True
+
+ 
 

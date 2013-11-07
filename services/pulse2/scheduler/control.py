@@ -32,7 +32,10 @@ from pulse2.scheduler.analyses import MscQueryManager
 from pulse2.scheduler.launchers_driving import RemoteCallProxy
 from pulse2.scheduler.queries import get_cohs, is_command_in_valid_time
 from pulse2.scheduler.queries import process_non_valid, get_ids_to_start
+from pulse2.scheduler.queries import is_command_finished, get_cohs_with_failed_phase
+from pulse2.scheduler.cleanup import CleanUpSchedule, Defaults
 
+Defaults().setup()
 
 class MethodProxy(MscContainer):
     """ Interface to dispatch the circuit operations from exterior. """
@@ -517,17 +520,39 @@ class MscDispatcher (MscQueryManager, MethodProxy):
                 break
 
     def process_non_valid(self, result):
+        commands_to_cleanup_check = []
         for id in process_non_valid(self.config.name, 
                                     1000, 
                                     self.config.non_fatal_steps):
             circuit = self.get(id)
             if circuit :
+                if not circuit.cmd_id in commands_to_cleanup_check :
+                    commands_to_cleanup_check.append(circuit.cmd_id)
                 circuit.release()
+        return commands_to_cleanup_check
+
+    def check_for_clean_up(self, commands_to_cleanup_check):
+        for cmd_id in commands_to_cleanup_check:
+            if is_command_finished(SchedulerConfig().name, cmd_id):
+                self.set_ready_to_cleanup(cmd_id)
+
+    def clean_up(self, result):
+        cohs = []
+        for cmd_id in self.ready_candidats_to_cleanup :
+
+            cohs.extend(get_cohs_with_failed_phase(cmd_id, "execute"))
+            del self.candidats_to_cleanup[cmd_id]
+        if len(cohs) > 0 :
+            schedule = CleanUpSchedule(cohs)
+            schedule.process()
+
  
     def mainloop(self):
         """ The main loop of scheduler """
         d = maybeDeferred(self._mainloop)
         d.addCallback(self.process_non_valid)
+        d.addCallback(self.check_for_clean_up)
+        d.addCallback(self.clean_up)
         d.addCallback(self.launch_remaining_waitings)
         d.addErrback(self.eb_mainloop)
 
@@ -574,6 +599,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         except Exception, e:
             self.logger.error("Mainloop execution failed: %s" % str(e))
             return True
+
 
        
         

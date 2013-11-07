@@ -400,6 +400,13 @@ class CircuitBase(object):
 
     
     """
+    # commands_on_host id
+    id = None
+    # commands id
+    cmd_id = None
+
+
+
     status = CC_STATUS.ACTIVE
     # Main container of selected phases
     phases = None
@@ -438,6 +445,8 @@ class CircuitBase(object):
         self.id = id
 
         self.cohq = CoHQuery(int(id))
+        self.cmd_id = self.cohq.cmd.id
+
         self.installed_phases = installed_phases
 
     @property 
@@ -763,12 +772,43 @@ class MscContainer (object):
     """
     slots = {}
  
-    # All the workflow circuits stocked here
+    # All the workflow circuits are stocked here
     _circuits = []
 
     # A lookup to refer all phases to use
     installed_phases = []
 
+    # commands id to process a cleanup when a command expires
+    # {cmd_id: fully_expired}
+    # fully_expired :
+    # - True if expired and ready to cleanup
+    # - False if contains some unprocessed commands_on_host
+    # This cmd_id is removed after the cleanup
+    candidats_to_cleanup = {}
+
+    @property
+    def ready_candidats_to_cleanup(self):
+        return [cmd_id for (cmd_id, expired) in self.candidats_to_cleanup.items() if expired]
+
+    def checkout_command(self, cmd_id):
+        """
+        Called on circuit releasing to hold a commands.id for cleanup
+
+        @param cmd_id: id of commands record
+        @type cmd_id: int
+        """
+        if cmd_id not in self.candidats_to_cleanup :
+            self.candidats_to_cleanup[cmd_id] = False
+
+    def set_ready_to_cleanup(self, cmd_id):
+        """
+        Corrensponding released circuits are ready to cleanup check
+
+        @param cmd_id: id of commands record
+        @type cmd_id: int
+        """
+        self.candidats_to_cleanup[cmd_id] = True
+    
     @property 
     def circuits(self):
         return [c for c in self._circuits if c.status == CC_STATUS.ACTIVE]
@@ -777,6 +817,13 @@ class MscContainer (object):
         return [c for c in self._circuits if c.status == CC_STATUS.WAITING]
 
     def remove_circuit(self, circuit):
+        """ 
+        Release the circuit from container 
+
+        @param circuit: circuit to remove
+        @type circuit: Circuit
+        """
+        self.checkout_command(circuit.cmd_id)
         self._circuits.remove(circuit)
 
     @property

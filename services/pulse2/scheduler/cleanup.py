@@ -18,18 +18,53 @@
 # along with Pulse 2; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
+import time
+import datetime
 
+from twisted.internet.defer import DeferredList
+
+from pulse2.utils import SingletonN
+
+from pulse2.database.msc.orm.commands import Schedule
+
+#from pulse2.scheduler.config import SchedulerConfig
 from pulse2.scheduler.queries import get_phases
+from pulse2.scheduler.api.msc import MscAPI
+
+class Defaults(object):
+    """ Gets and holds the default values from msc-plugin """
+    __metaclass__ = SingletonN
+
+    life_time = None
+    attempts_per_day = None
+
+    def setup(self):
+        d1 = MscAPI().get_web_def_coh_life_time()
+        d1.addCallback(self._set_life_time)
+
+        d2 = MscAPI().get_web_def_attempts_per_day()
+        d2.addCallback(self._set_attempts_per_day)
+
+        return DeferredList([d1, d2])
+
+
+    def _set_life_time(self, result):
+        self.life_time = result
+
+    def _set_attempts_per_day(self, result):
+        self.attempts_per_day = result
+
+defaults = Defaults()
 
 class CleanUpSchedule :
 
-    _checked_phase = "exec"
-    _workflow = ["wol", "delete"]
+    _checked_phase = "execute"
     _checked_status = "failed"
 
-    def __init__(self, config, id):
-        self.config = config
-        self.id = id
+    _phases = ["wol", "delete", "done"]
+
+    def __init__(self, ids):
+        self.ids = ids
 
     def is_candidate(self):
         for phase in get_phases():
@@ -37,6 +72,40 @@ class CleanUpSchedule :
                 if phase.state == self._checked_status :
                     return True
         return False
+
+    def process(self):
+        start_date, end_date = self._delta()
+
+        schedule = Schedule(self.ids,
+                            start_date,
+                            end_date,
+                            defaults.attempts_per_day,
+                            self._phases
+                            )
+        schedule.create()
+        
+
+    def _delta (self):
+        """ 
+        Calculate of timedelta between new command start and end.
+
+        @return: start and end date of rescheduled command
+        @rtype: tuple
+        """
+        fmt = "%Y-%m-%d %H:%M:%S"
+        
+        start_timestamp = time.time()
+        start_date = datetime.datetime.fromtimestamp(start_timestamp).strftime(fmt)
+            
+        delta = int(defaults.life_time) * 60 * 60
+        end_timestamp = start_timestamp + delta
+        end_date = datetime.datetime.fromtimestamp(end_timestamp).strftime(fmt)
+      
+        return start_date, end_date
+
+        
+
+
 
 
 
