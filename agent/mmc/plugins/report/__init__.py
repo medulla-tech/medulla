@@ -64,20 +64,36 @@ class ContextMaker(ContextMakerI):
         return s
 
 class RpcProxy(RpcProxyI):
+
     def calldb(self, func, *args, **kw):
         return getattr(ReportDatabase(),func).__call__(*args, **kw)
 
     def get_report_sections(self, lang):
+        def _fetchItems(container):
+            result = []
+            for item in container:
+                attr = item.attrib
+                result.append(attr)
+                attr['items'] = _fetchItems(item)
+            return result
         result = {}
         xmltemp = ET.parse('/etc/mmc/pulse2/report/templates/%s.xml' % lang).getroot()
         for section in xmltemp.iter('section'):
-            attr = section.attrib
-            if not attr['module'] in result:
-                result[attr['module']] = []
-            result[attr['module']].append(attr)
+            attr_section = section.attrib
+            if not attr_section['module'] in result:
+                result[attr_section['module']] = []
+            # Adding item to attr
+            #attr_section['items'] = _fetchItems(section)
+            attr_section['tables'] = []
+            for table in section.iter('table'):
+                dct = table.attrib
+                dct['items'] = _fetchItems(table)
+                attr_section['tables'].append(dct)
+            result[attr_section['module']].append(attr_section)
         return result
 
-    def generate_report(self, period, sections, entities, lang): #TODO: Add item selection
+    def generate_report(self, period, sections, items, entities, lang):
+        #
         temp_path = '/var/tmp/'
         report_path = os.path.join(temp_path, 'report-%d' % int(time.time()))
         pdf_path = os.path.join(report_path, 'report.pdf')
@@ -144,8 +160,9 @@ class RpcProxy(RpcProxyI):
                 GValues = []
                 for item in container:
                     if item.tag.lower() != 'item' : continue
-                    data_dict['titles'].append( '..' * level + ' ' + item.attrib['title'])
                     indicator_name = item.attrib['indicator']
+                    if not indicator_name in items: continue
+                    data_dict['titles'].append( '> ' * level + ' ' + item.attrib['title'])
                     # temp list to do arithmetic operations
                     values = []
                     for i in xrange(len(period)):
@@ -162,7 +179,7 @@ class RpcProxy(RpcProxyI):
                     childGValues = _fetchSubs(item, container, level + 1)
                     # Calcating "other" line if indicator type is numeric
                     if ReportDatabase().get_indicator_datatype(indicator_name) == 0 and childGValues:
-                        data_dict['titles'].append( '..' * (level+1) + ' Other (%s)' % '') #TODO: parent node name
+                        data_dict['titles'].append( '> ' * (level+1) + ' Other (%s)' % '') #TODO: parent node name
                         for i in xrange(len(period)):
                             child_sum = _sum_None([ l[i] for l in childGValues ])
                             other_value = (values[i] - child_sum) if child_sum else None
@@ -176,11 +193,11 @@ class RpcProxy(RpcProxyI):
         def _keyvalueDict(item_root):
             #TODO : implement importign Clé, Valeur string from XML
             data_dict = {'headers' : ['Key','Value'], 'values' : []}
-            #indicators = []
             def _fetchSubs(container, parent = None, level = 0):
                 for item in container:
                     if item.tag.lower() != 'item' : continue
                     indicator_name = item.attrib['indicator']
+                    if not indicator_name in items: continue
                     indicator_label = item.attrib['title']
                     indicator_value = ReportDatabase().get_indicator_current_value(indicator_name, entities)
                     # indicator_value is a list of dict {'entity_id' : .., 'value' .. }
@@ -190,7 +207,7 @@ class RpcProxy(RpcProxyI):
                             entity_name = entity_names[entry['entity_id']]
                         else:
                             entity_name = entry['entity_id']
-                        data_dict['values'].append([ '..' * level + indicator_label + (' (%s)' % entity_name ), entry['value']])
+                        data_dict['values'].append([ '> ' * level + indicator_label + (' (%s)' % entity_name ), entry['value']])
                     # TODO: Calculate other cols
                     # Fetch this item subitems
                     _fetchSubs(item, container, level + 1)
@@ -198,6 +215,23 @@ class RpcProxy(RpcProxyI):
             #logging.getLogger().warning('GOT KEY/VALUE DICT')
             #logging.getLogger().warning(data_dict)
             return data_dict
+
+        def _period_None_to_empty_str(data):
+            from copy import deepcopy
+            datas = deepcopy(data)
+            for i in xrange(len(datas['titles'])):
+                for v in datas['values']:
+                    if v[i] is None:
+                        v[i] = ''
+            return datas
+
+        def _keyval_None_to_empty_str(data):
+            from copy import deepcopy
+            datas = deepcopy(data)
+            for line in datas['values']:
+                for td in line:
+                    td = td if td != None else ''
+            return datas
 
         # Browsing all childs
         for level1 in xmltemp:
@@ -224,57 +258,51 @@ class RpcProxy(RpcProxyI):
                     ## =========< TABLE >===================
                     if level2.tag.lower() == 'table':
                         # printing table items
-                        # ====> PERIOD TABLE TYPE
                         if attr2['type'] == 'period':
-                            data_dict = _periodDict(level2)
-                            # ==> TO PDF
-                            # ==> to XLS
-                            xls.pushTable(attr2['title'], data_dict)
-                            pdf.pushTable(attr2['title'], data_dict)
-                            # Add table to result dict
-                            section_data['content'].append({ \
-                                'type':'table',\
-                                'data': data_dict,\
-                                'title': attr2['title']\
-                            })
-                        # ====> KEY-VALUE TABLE TYPE
-                        if attr2['type'] == 'key_value':
-                            data_dict = _keyvalueDict(level2)
-                            # ==> TO PDF
-                            # ==> to XLS
-                            xls.pushTable(attr2['title'], data_dict)
-                            pdf.pushTable(attr2['title'], data_dict)
-                            # Add table to result dict
-                            section_data['content'].append({ \
-                                'type':'table',\
-                                'data': data_dict,\
-                                'title': attr2['title']\
-                            })
-                    ## =========< CHART >===================
-                    if level2.tag.lower() == 'chart':
-                        # Generatinng SVG
-                        svg_filename = attr1['name'] + '_' + attr2['name']
-                        svg_filepath = os.path.join(svg_path, svg_filename)
-                        svg = SvgGenerator(path = svg_filepath)
-                        if attr2['chart_type'] == 'line':
-                            data_dict = _periodDict(level2)
-                            svg.lineChart(attr2['title'], data_dict)
-                        if attr2['chart_type'] == 'bar':
-                            data_dict = _periodDict(level2)
-                            svg.barChart(attr2['title'], data_dict)
-                        # ====> KEY-VALUE TABLE TYPE
-                        if attr2['chart_type'] == 'pie':
-                            data_dict = _keyvalueDict(level2)
-                            svg.pieChart(attr2['title'], data_dict)
-                        # Insert SVG into the PDF
-                        pdf.pushSVG(svg.toXML())
+                            data_dict = _periodDict(level2) # period table type
+                            logging.getLogger().warning(data_dict)
+                            data_dict_without_none = _period_None_to_empty_str(data_dict)
+                            logging.getLogger().warning(data_dict)
+                        elif attr2['type'] == 'key_value':
+                            data_dict = _keyvalueDict(level2) #key/value type
+                            data_dict_without_none = _keyval_None_to_empty_str(data_dict)
+
+                        logging.getLogger().error(data_dict)
+                        # Push table to PDF and XLS
+                        xls.pushTable(attr2['title'], data_dict)
+                        logging.getLogger().error(data_dict)
+                        pdf.pushTable(attr2['title'], data_dict)
+                        logging.getLogger().error(data_dict)
+
+                        # Add table to result dict [to interface]
                         section_data['content'].append({ \
+                            'type':'table',\
+                            'data': data_dict_without_none,\
+                            'title': attr2['title']\
+                        })
+
+                        if 'chart_type' in attr2:
+                            # Generatinng SVG
+                            svg_filename = attr1['name'] + '_' + attr2['name']
+                            svg_filepath = os.path.join(svg_path, svg_filename)
+                            svg = SvgGenerator(path = svg_filepath)
+                            logging.getLogger().error(attr2['chart_type'])
+                            logging.getLogger().error(data_dict)
+                            if attr2['chart_type'] == 'line':
+                                svg.lineChart(attr2['title'], data_dict)
+                            elif attr2['chart_type'] == 'bar':
+                                svg.barChart(attr2['title'], data_dict)
+                            elif attr2['chart_type'] == 'pie':
+                                svg.pieChart(attr2['title'], data_dict)
+                            # Insert SVG into the PDF
+                            pdf.pushSVG(svg.toXML())
+                            section_data['content'].append({ \
                                 'type':'chart',\
                                 'svg_path': svg_filepath + '.svg',\
                                 'png_path': svg_filepath + '.png'\
                             })
-                        # Save SVG files (SVG/PNG)
-                        svg.save()
+                            # Save SVG files (SVG/PNG)
+                            svg.save()
 
                 result['sections'].append(section_data)
 
