@@ -546,6 +546,12 @@ class MscDispatcher (MscQueryManager, MethodProxy):
             schedule = CleanUpSchedule(cohs)
             schedule.process()
 
+    def awake_waiting_overtimed(self, result):
+        circuits = self._get_candidats_to_overtimed(self.waiting_circuits)
+        for circuit in circuits :
+            circuit.release()
+
+
  
     def mainloop(self):
         """ The main loop of scheduler """
@@ -554,6 +560,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         d.addCallback(self.check_for_clean_up)
         d.addCallback(self.clean_up)
         d.addCallback(self.launch_remaining_waitings)
+        d.addCallback(self.awake_waiting_overtimed)
         d.addErrback(self.eb_mainloop)
 
         return d
