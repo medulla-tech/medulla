@@ -127,12 +127,13 @@ class RpcProxy(RpcProxyI):
                 locale[entry.attrib['name']] = entry.attrib['value']
 
         def _h1(text):
-            # send text to pdf, html, ...
-            pass
+            pdf.h1(text)
 
         def _h2(text):
-            # send text to pdf, html, ...
-            pass
+            pdf.h2(text)
+
+        def _h3(text):
+            pdf.h3(text)
 
         def _sum_None(lst):
             result = None
