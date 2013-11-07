@@ -145,7 +145,7 @@ class periodInputTpl extends multifieldTpl {
                     changeMonth: true,
                     showWeek: true,
                     showAnim: 'slideDown',
-                    maxDate: 0,
+                    maxDate: -1,
                     onClose: function( selectedDate ) {
                         jQuery("#$to_id").datepicker( "option", "minDate", selectedDate );
                         var timestamp = new Date(selectedDate).valueOf() / 1000;
@@ -157,7 +157,7 @@ class periodInputTpl extends multifieldTpl {
                     changeMonth: true,
                     showWeek: true,
                     showAnim: 'slideDown',
-                    maxDate: 0,
+                    maxDate: -1,
                     onClose: function( selectedDate ) {
                         jQuery("input[name=$to_id" + "_timestamp]").val('toto');
                         var timestamp = new Date(selectedDate).valueOf() / 1000;
