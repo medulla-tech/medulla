@@ -93,7 +93,7 @@ if (!array_intersect_key($_POST, array('generate_report' => '', 'get_xls' => '',
 // second step, display results
 elseif (isset($_POST['generate_report'])) {
     $ts_from = intval($_POST['period_from_timestamp']);
-    $ts_to = intval($_POST['period_to_timestamp']) + 86400;
+    $ts_to = intval($_POST['period_to_timestamp']);
 
     $nb_days = intval(($ts_to - $ts_from) / 86400);
     $nb_periods = min($nb_days, 7);
@@ -105,7 +105,7 @@ elseif (isset($_POST['generate_report'])) {
         $periods[] = strftime('%Y-%m-%d', $period_ts);
     }
 
-    $result = generate_report($periods, $_POST['selected_sections'], array($_POST['entities']), $_SESSION['lang']);
+    $result = generate_report($periods, $_POST['selected_sections'], array(), array($_POST['entities']), $_SESSION['lang']);
     // display sections
 
     foreach ($result['sections'] as $section) {
@@ -139,8 +139,7 @@ elseif (isset($_POST['generate_report'])) {
                     if ($table) {
                         $table->setNavBar(new AjaxNavBar($itemCount, $filter));
                     }
-                }
-                elseif (in_array('headers', array_keys($content['data']))) {
+                } elseif (in_array('headers', array_keys($content['data']))) {
                     // key_value table
                     $headers = $content['data']['headers'];
                     $values = $content['data']['values'];
@@ -152,14 +151,12 @@ elseif (isset($_POST['generate_report'])) {
                         }
                         if (!$table) {
                             $table = new ListInfos($tab_values, $headers[$i]);
-                        }
-                        else {
+                        } else {
                             $table->addExtraInfo($tab_values, $headers[$i]);
                         }
                     }
                 }
-            }
-            elseif ($content['type'] == 'chart') {
+            } elseif ($content['type'] == 'chart') {
                 $filename = $content['svg_path'];
                 $handle = fopen($filename, 'r');
                 $svg_content = fread($handle, filesize($filename));
@@ -182,12 +179,11 @@ elseif (isset($_POST['generate_report'])) {
             $f->push(new Div());
             if ($report_types[$i] == 'table' && $report_types[$i + 1] == 'svg') {
                 $f->add((new multicol())
-                    ->add($report_objects[$i], '60%', '0 2% 0 0')
-                    ->add($report_objects[$i + 1], '40%')
+                                ->add($report_objects[$i], '60%', '0 2% 0 0')
+                                ->add($report_objects[$i + 1], '40%')
                 );
                 $i++;
-            }
-            else {
+            } else {
                 $f->add($report_objects[$i]);
             }
             $f->pop();

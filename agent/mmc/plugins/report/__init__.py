@@ -110,22 +110,21 @@ class RpcProxy(RpcProxyI):
         #TODO: Get entity names from entity uuids
         from pulse2.managers.location import ComputerLocationManager
         entity_names = {} #dict([(location, ComputerLocationManager().getLocationName([location])) for location in entities])
-        logging.getLogger().warning(ComputerLocationManager().getLocationName(1))
+        #logging.getLogger().warning(ComputerLocationManager().getLocationName(1))
         # Parsing report XML
         xmltemp = ET.parse('/etc/mmc/pulse2/report/templates/%s.xml' % lang).getroot()
         if xmltemp.tag != 'template':
-            logging.getLogger().error('Incorrect XML')
+            logger.error('Incorrect XML')
             return False
         # xmltemp.attrib ??? if necessary ?? ==> date and time format
-        #TODO: Read date format from XML
         # Setting default params
-        params = {}
-        params['date_format'] = '%d-%m-%Y'
+        locale = {}
+        locale['date_format'] = '%d-%m-%Y'
 
-        def _params(params_tag):
-            for tag in params_tag:
-                if tag.tag.lower() != 'param': continue
-                params[tag.attrib['name']] = tag.attrib['value']
+        def _localization(loc_tag):
+            for entry in loc_tag:
+                if entry.tag.lower() != 'entry': continue
+                locale[entry.attrib['name']] = entry.attrib['value']
 
         def _h1(text):
             # send text to pdf, html, ...
@@ -149,7 +148,7 @@ class RpcProxy(RpcProxyI):
             data_dict = {'titles' : [], 'dates' : [], 'values' : [] }
             for date in period:
                 ts_min = int(time.mktime(datetime.datetime.strptime(date, "%Y-%m-%d").timetuple()))
-                formatted_date = datetime.datetime.fromtimestamp(ts_min).strftime(params['date_format'])
+                formatted_date = datetime.datetime.fromtimestamp(ts_min).strftime(locale['date_format'])
                 data_dict['dates'].append(formatted_date)
                 data_dict['values'].append([])
 
@@ -161,7 +160,7 @@ class RpcProxy(RpcProxyI):
                 for item in container:
                     if item.tag.lower() != 'item' : continue
                     indicator_name = item.attrib['indicator']
-                    if not indicator_name in items: continue
+                    if items and not indicator_name in items: continue
                     data_dict['titles'].append( '> ' * level + ' ' + item.attrib['title'])
                     # temp list to do arithmetic operations
                     values = []
@@ -179,25 +178,22 @@ class RpcProxy(RpcProxyI):
                     childGValues = _fetchSubs(item, container, level + 1)
                     # Calcating "other" line if indicator type is numeric
                     if ReportDatabase().get_indicator_datatype(indicator_name) == 0 and childGValues:
-                        data_dict['titles'].append( '> ' * (level+1) + ' Other (%s)' % '') #TODO: parent node name
+                        data_dict['titles'].append( '> ' * (level+1) + ' Other %s' % item.attrib['title'])
                         for i in xrange(len(period)):
                             child_sum = _sum_None([ l[i] for l in childGValues ])
                             other_value = (values[i] - child_sum) if child_sum else None
                             data_dict['values'][i].append(other_value)
                 return GValues
             _fetchSubs(item_root)
-            #logging.getLogger().warning('GOT PERIOD DICT')
-            #logging.getLogger().warning(data_dict)
             return data_dict
 
         def _keyvalueDict(item_root):
-            #TODO : implement importign Clé, Valeur string from XML
-            data_dict = {'headers' : ['Key','Value'], 'values' : []}
+            data_dict = {'headers' : [locale['STR_KEY'],locale['STR_VALUE']], 'values' : []}
             def _fetchSubs(container, parent = None, level = 0):
                 for item in container:
                     if item.tag.lower() != 'item' : continue
                     indicator_name = item.attrib['indicator']
-                    if not indicator_name in items: continue
+                    if items and not indicator_name in items: continue
                     indicator_label = item.attrib['title']
                     indicator_value = ReportDatabase().get_indicator_current_value(indicator_name, entities)
                     # indicator_value is a list of dict {'entity_id' : .., 'value' .. }
@@ -212,8 +208,6 @@ class RpcProxy(RpcProxyI):
                     # Fetch this item subitems
                     _fetchSubs(item, container, level + 1)
             _fetchSubs(item_root)
-            #logging.getLogger().warning('GOT KEY/VALUE DICT')
-            #logging.getLogger().warning(data_dict)
             return data_dict
 
         def _period_None_to_empty_str(data):
@@ -236,9 +230,9 @@ class RpcProxy(RpcProxyI):
         # Browsing all childs
         for level1 in xmltemp:
             attr1 = level1.attrib
-            ## =========< params >===================
-            if level1.tag.lower() == 'params':
-                _params(level1)
+            ## =========< localization strings >===================
+            if level1.tag.lower() == 'localization':
+                _localization(level1)
             ## =========< H1 >===================
             if level1.tag.lower() == 'h1':
                 _h1(level1.text)
@@ -260,19 +254,14 @@ class RpcProxy(RpcProxyI):
                         # printing table items
                         if attr2['type'] == 'period':
                             data_dict = _periodDict(level2) # period table type
-                            logging.getLogger().warning(data_dict)
                             data_dict_without_none = _period_None_to_empty_str(data_dict)
-                            logging.getLogger().warning(data_dict)
                         elif attr2['type'] == 'key_value':
                             data_dict = _keyvalueDict(level2) #key/value type
                             data_dict_without_none = _keyval_None_to_empty_str(data_dict)
 
-                        logging.getLogger().error(data_dict)
                         # Push table to PDF and XLS
                         xls.pushTable(attr2['title'], data_dict)
-                        logging.getLogger().error(data_dict)
                         pdf.pushTable(attr2['title'], data_dict)
-                        logging.getLogger().error(data_dict)
 
                         # Add table to result dict [to interface]
                         section_data['content'].append({ \
@@ -285,9 +274,8 @@ class RpcProxy(RpcProxyI):
                             # Generatinng SVG
                             svg_filename = attr1['name'] + '_' + attr2['name']
                             svg_filepath = os.path.join(svg_path, svg_filename)
+                            # TODO: Pass "No Data" text to the SvgGenerator
                             svg = SvgGenerator(path = svg_filepath)
-                            logging.getLogger().error(attr2['chart_type'])
-                            logging.getLogger().error(data_dict)
                             if attr2['chart_type'] == 'line':
                                 svg.lineChart(attr2['title'], data_dict)
                             elif attr2['chart_type'] == 'bar':
