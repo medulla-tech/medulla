@@ -24,10 +24,11 @@
  */
 require_once("modules/report/includes/xmlrpc.inc.php");
 require_once("modules/report/includes/html.inc.php");
+require_once("modules/report/includes/report.inc.php");
 require_once("modules/pulse2/includes/utilities.php");
 
-
-$modules = get_report_sections($_SESSION['lang']);
+$MMCApp =& MMCApp::getInstance();
+$report = get_report_sections($_SESSION['lang']);
 
 // New validating form
 $f = new ValidatingForm();
@@ -64,22 +65,18 @@ if (!array_intersect_key($_POST, array('generate_report' => '', 'get_xls' => '',
     //$entities->setSelected($selected);
 
     $f->add(
-            new TrFormElement(_T('Entities', 'report'), $entities), array()
-    );
+        new TrFormElement(_T('Entities', 'report'), $entities),
+        array());
 
-    // close the table
-    $f->pop();
-
-    foreach ($modules as $module_name => $sections) {
-        $f->add(new TitleElement($module_name));
-        $f->push(new Table());
-        foreach ($sections as $section) {
-            $f->add(new TrFormElement(
-                    $section['title'], new ValueCheckboxTpl("selected_sections[]")), array("value" => $section['name'])
-            );
-        }
-        $f->pop();
+    foreach($report as $module_name => $sections) {
+        $moduleObj = $MMCApp->getModule($module_name);
+        $f->add(
+            new TrFormElement($moduleObj->getDescription(),
+                              new ReportModule($module_name, $sections)),
+            array());
     }
+
+    $f->pop();
 }
 
 // A <br /> to add space up to validate buttons
@@ -91,7 +88,7 @@ if (!array_intersect_key($_POST, array('generate_report' => '', 'get_xls' => '',
     $f->addButton("generate_report", _T('Generate Report', 'report'));
 }
 // second step, display results
-elseif (isset($_POST['generate_report'])) {
+else if (isset($_POST['generate_report'])) {
     $ts_from = intval($_POST['period_from_timestamp']);
     $ts_to = intval($_POST['period_to_timestamp']) + 86400;
 
@@ -105,7 +102,17 @@ elseif (isset($_POST['generate_report'])) {
         $periods[] = strftime('%Y-%m-%d', $period_ts);
     }
 
-    $result = generate_report($periods, $_POST['selected_sections'], array(), array($_POST['entities']), $_SESSION['lang']);
+    $items = array();
+    foreach($_POST['indicators'] as $name => $status) {
+        $items[] = $name;
+    }
+    $sections = array();
+    foreach($_POST['sections'] as $section) {
+        if ($section)
+            $sections[] = $section;
+    }
+
+    $result = generate_report($periods, $sections, $items, array($_POST['entities']), $_SESSION['lang']);
     // display sections
 
     foreach ($result['sections'] as $section) {
@@ -200,4 +207,11 @@ elseif (isset($_POST['generate_report'])) {
 }
 
 $f->display();
+
 ?>
+
+<style>
+    .report-indicator label {
+        display: inline !important;
+    }
+</style>
