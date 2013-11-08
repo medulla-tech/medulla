@@ -30,7 +30,6 @@ import time
 import datetime
 import sqlalchemy.orm
 
-from pulse2.database.msc.orm.commands_on_host_phase import CommandsOnHostPhase
 
 class CommandsOnHost(object):
     """ Mapping between msc.commands_on_host and SA
@@ -45,6 +44,13 @@ class CommandsOnHost(object):
         return self.fk_target
 
 ### Handle general states ###
+    def setStateRunning(self):
+        self.setCommandStatut('in_progress')
+    def isStateRunning(self):
+        result = self.getCommandStatut() == 'in_progress'
+        logging.getLogger().debug("isStateRunning(#%s): %s" % (self.getId(), result))
+        return result
+
     def setStateScheduled(self):
         self.setCommandStatut('scheduled')
     def isStateScheduled(self):
@@ -268,22 +274,6 @@ def stopCommandOnHost(coh_id):
     myCommandOnHost = session.query(CommandsOnHost).get(coh_id)
     session.close()
     myCommandOnHost.setStateStopped()
-    if myCommandOnHost.isWOLRunning():
-        myCommandOnHost.setWOLFailed()
-    if myCommandOnHost.isUploadRunning():
-        myCommandOnHost.setUploadFailed()
-    if myCommandOnHost.isExecutionRunning():
-        myCommandOnHost.setExecutionFailed()
-    if myCommandOnHost.isDeleteRunning():
-        myCommandOnHost.setDeleteFailed()
-    if myCommandOnHost.isInventoryRunning():
-        myCommandOnHost.setInventoryFailed()
-    if myCommandOnHost.isRebootRunning():
-        myCommandOnHost.setRebootFailed()
-    if myCommandOnHost.isImagingMenuRunning():
-        myCommandOnHost.setImagingMenuFailed()
-    if myCommandOnHost.isHaltRunning():
-        myCommandOnHost.setHaltFailed()
     myCommandOnHost.next_launch_date = "2031-12-31 23:59:59"
     myCommandOnHost.flush()
 
@@ -339,6 +329,7 @@ class CoHManager :
         @type ids: list
         """
         CoHManager.setCoHsStates(ids, "over_timed")
+
 
     @classmethod
     def setCoHsStateStopped(cls, ids):

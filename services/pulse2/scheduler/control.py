@@ -49,15 +49,30 @@ class MethodProxy(MscContainer):
             for cmd_id in cmds :
                 if is_command_in_valid_time(cmd_id):
                     cohs = get_cohs(cmd_id, scheduler)
-                    self.start_all(cohs, True)
+                    
+                    active_circuits = self.get_active_circuits(cohs)
+                    
+                    active_cohs = [c.id for c in active_circuits]
+                    new_cohs = [id for id in cohs if id not in active_cohs]
+
+                    self.start_all(new_cohs, True)
+
+                    for circuit in active_circuits :
+                        self.logger.info("Circuit #%s: start" % circuit.id)
+                        # set the next_launch_date for now
+                        circuit.qm.coh.reSchedule(0, False)
+                        circuit.qm.coh.setStateScheduled()
+ 
         
-    def stop_commands(self, cmds=[]):
+    def stop_commands(self, cohs=[]):
         # TODO - distinct the directives 'stop' and 'pause'
 
-        circuits = self.get_active_circuits(cmds)
+        cohs = [int(c) for c in cohs]
+        circuits = self.get_active_circuits(cohs)
         for circuit in circuits :
             self.logger.info("Circuit #%s: stopping" % circuit.id)
             circuit.qm.coh.setStateStopped()
+            circuit.release()
             # TODO - give up ?
 
  
