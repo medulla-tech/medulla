@@ -165,6 +165,7 @@ class periodInputTpl extends multifieldTpl {
                     }
                 }).datepicker('setDate', '0');
             });
+            var timestamp = new Date().valueOf() / 1000;
             jQuery("input[name=$to_id" + "_timestamp]").val(timestamp);
             jQuery("input[name=$from_id" + "_timestamp]").val(timestamp);
             </script>
