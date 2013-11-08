@@ -166,6 +166,7 @@ class RpcProxy(RpcProxyI):
                 for item in container:
                     if item.tag.lower() != 'item' : continue
                     indicator_name = item.attrib['indicator']
+                    #if items and not indicator_name in items: continue
                     if not items or indicator_name in items:
                         data_dict['titles'].append( '> ' * level + ' ' + item.attrib['title'])
                     # temp list to do arithmetic operations
@@ -178,10 +179,12 @@ class RpcProxy(RpcProxyI):
                         #
                         value = ReportDatabase().get_indicator_value_at_time(indicator_name, ts_min, ts_max, entities)
                         values.append(value)
+                        # if item is not selected, don't add value to the Data Dict
                         if not items or indicator_name in items:
                             data_dict['values'][i].append(value)
-                    # Fetch this item subitems if period is last
-                    GValues.append(values)
+                    # If item is not selected don't add values to arithmetic table list
+                    if not items or indicator_name in items:
+                        GValues.append(values)
                     childGValues = _fetchSubs(item, container, level + 1)
                     # Calcating "other" line if indicator type is numeric
                     if ReportDatabase().get_indicator_datatype(indicator_name) == 0 and childGValues:
@@ -200,7 +203,6 @@ class RpcProxy(RpcProxyI):
                 for item in container:
                     if item.tag.lower() != 'item' : continue
                     indicator_name = item.attrib['indicator']
-                    if items and not indicator_name in items: continue
                     indicator_label = item.attrib['title']
                     indicator_value = ReportDatabase().get_indicator_current_value(indicator_name, entities)
                     # indicator_value is a list of dict {'entity_id' : .., 'value' .. }
@@ -210,7 +212,8 @@ class RpcProxy(RpcProxyI):
                             entity_name = entity_names[entry['entity_id']]
                         else:
                             entity_name = entry['entity_id']
-                        data_dict['values'].append([ '> ' * level + indicator_label + (' (%s)' % entity_name ), entry['value']])
+                        if not items or indicator_name in items:
+                            data_dict['values'].append([ '> ' * level + indicator_label + (' (%s)' % entity_name ), entry['value']])
                     # TODO: Calculate other cols
                     # Fetch this item subitems
                     _fetchSubs(item, container, level + 1)
