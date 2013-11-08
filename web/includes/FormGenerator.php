@@ -851,7 +851,19 @@ class SelectMultiTpl extends SelectItem {
     }
 
     function to_string($paramArray = null) {
-        $ret = "<select";
+        $ret = "<script>
+            var toggleMultiAll = function(link) {
+                var select = jQuery(link).parent().prev('select');
+                select.find('option').each(function() {
+                    var option = jQuery(this);
+                    if (option.prop('selected'))
+                        option.prop('selected', false);
+                    else
+                        option.prop('selected', true);
+                });
+            }
+            </script>
+            <select";
         if ($this->style) {
             $ret .= " class=\"".$this->style."\"";
         }
@@ -868,6 +880,7 @@ class SelectMultiTpl extends SelectItem {
         $ret .= " name=\"".$this->name."\" id=\"".$this->id."\" multiple>\n";
         $ret .= $this->content_to_string($paramArray);
         $ret .= "</select>";
+        $ret .= '<p style="margin-top: 5px;"><button class="btn btn-small" onclick="toggleMultiAll(this); return false;">' . _("Toggle selection") . '</button></p>';
         return $ret;
     }
 }
