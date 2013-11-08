@@ -112,7 +112,7 @@ class PdfGenerator(object):
         self.homepage = ''
         self.summary = ''
 
-        self.content = ''
+        self.content = '<header>Entete</header>'
         self.path = path
         # Localization strings
         self.locale = locale
@@ -274,6 +274,9 @@ class PdfGenerator(object):
         self.content += '</tr>'
         self.content += '</table>'
 
+    def pushHomePageHTML(self, html):
+        self.homepage += html
+
     def pushHTML(self, html):
         self.content += html
 
@@ -288,7 +291,6 @@ class PdfGenerator(object):
 
     def save(self):
         # PDF report is a list of all documents
-        self.homepage = '<h1>Report</h1>'
         self.summary = '<h1>%s</h1>' % (self.locale['STR_SUMMARY'])
         pdf_pages = [self.homepage, self.summary, self.content]
 

@@ -25,6 +25,7 @@ import logging
 import time
 import os
 import datetime
+from base64 import b64encode
 
 try:
     from pulse2.managers.location import ComputerLocationManager
@@ -123,6 +124,9 @@ class RpcProxy(RpcProxyI):
         locale = {}
         locale['date_format'] = '%d-%m-%Y'
 
+        # Filling global pdf_vars
+        pdf_vars = {}
+
         xls = XlsGenerator(path = xls_path)
         pdf = PdfGenerator(path = pdf_path, locale = locale)
 
@@ -130,6 +134,15 @@ class RpcProxy(RpcProxyI):
             for entry in loc_tag:
                 if entry.tag.lower() != 'entry': continue
                 locale[entry.attrib['name']] = entry.attrib['value']
+
+            # Setting Period start and period end PDF var
+            pdf_vars['__PERIOD_START__'] = datetime.datetime.strptime(period[0], "%Y-%m-%d").strftime(locale['date_format'])
+            pdf_vars['__PERIOD_END__'] = datetime.datetime.strptime(period[-1], "%Y-%m-%d").strftime(locale['date_format'])
+
+        def _replace_pdf_vars(text):
+            for key in pdf_vars:
+                text = text.replace(key, pdf_vars[key])
+            return text
 
         def _h1(text):
             pdf.h1(text)
@@ -139,6 +152,13 @@ class RpcProxy(RpcProxyI):
 
         def _h3(text):
             pdf.h3(text)
+
+        def _html(text):
+            #TODO: Add vars replacers
+            pdf.pushHTML(_replace_pdf_vars(text))
+
+        def _homepage(text):
+            pdf.pushHomePageHTML(_replace_pdf_vars(text))
 
         def _sum_None(lst):
             result = None
@@ -264,6 +284,15 @@ class RpcProxy(RpcProxyI):
             ## =========< H2 >===================
             if level1.tag.lower() == 'h2':
                 _h2(level1.text)
+            ## =========< H3 >===================
+            if level1.tag.lower() == 'h3':
+                _h3(level1.text)
+            ## =========< HTML >===================
+            if level1.tag.lower() == 'html':
+                _html(level1.text)
+            ## =========< HTML >===================
+            if level1.tag.lower() == 'homepage':
+                _homepage(level1.text)
             ## =========< SECTION >===================
             if level1.tag.lower() == 'section':
                 # Checking if section is present in sections
