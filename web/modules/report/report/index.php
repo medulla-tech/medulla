@@ -21,30 +21,193 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
-require("graph/navbar.inc.php");
-require("localSidebar.php");
-
-/* DEBUG 
-//print_r(getPluginsWithReports());
-print '<pre>';
-//print_r(getAllReports());
-print_r($_POST);
-print '</pre>';
-//*/
-
-$p = new TabbedPageGenerator();
-
-$p->setSideMenu($sidemenu);
-
-// Tabbed page main title
-$p->addTop(_T("Reporting Management", 'report'), "modules/report/report/header.php");
-
-// Add tabs
-$p->addTab("manual_report", _T('Manual Report', 'report'), '', "modules/report/report/manual_report.php", array());
-$p->addTab("automatic_report", _T('Automatic Report', 'report'), _T('Automatic Report', 'report'), "modules/report/report/automatic_report.php", array());
-
-$p->display();
 ?>
+
 <script type="text/javascript" src="modules/report/lib/pygal/svg.jquery.js"></script>
 <script type="text/javascript" src="modules/report/lib/pygal/pygal-tooltips.js"></script>
+
+<?php
+require("graph/navbar.inc.php");
+require_once("modules/report/includes/xmlrpc.inc.php");
+require_once("modules/report/includes/html.inc.php");
+require_once("modules/report/includes/report.inc.php");
+require_once("modules/pulse2/includes/utilities.php");
+
+$MMCApp =& MMCApp::getInstance();
+$report = get_report_sections($_SESSION['lang']);
+
+$t = new TitleElement(_T("Reporting Management", 'report'));
+$t->display();
+
+$f = new ValidatingForm();
+
+/*
+ * $_SESSION['report_files']
+ * Used to store datas for PDF/XLS reports
+ * $_SESSION['report_files'][mmc_plugin_name][report_name]
+ */
+if (!isset($_SESSION['report_files']))
+    $_SESSION['report_files'] = array();
+
+// first step, display selectors
+if (!array_intersect_key($_POST, array('generate_report' => '', 'get_xls' => '', 'get_pdf' => ''))) {
+    $f->push(new Table());
+    /* Period */
+    $f->add(
+        new TrFormElement(_T('Period', 'report'),
+                          new periodInputTpl(_T('from', 'report'), 'period_from', _T('to', 'report'), 'period_to')),
+        array("value" => $values, "required" => True)
+    );
+    /* Entities */
+    $entities = new SelectMultiTpl('entities[]');
+    list($list, $values) = getEntitiesSelectableElements();
+    $entities->setElements($list);
+    $entities->setElementsVal($values);
+    $entities->setFullHeight();
+    $f->add(
+        new TrFormElement(_T('Entities', 'report'), $entities),
+        array("required" => true));
+    /* Modules indicators */
+    foreach($report as $module_name => $sections) {
+        $moduleObj = $MMCApp->getModule($module_name);
+        $f->add(
+            new TrFormElement($moduleObj->getDescription(),
+                              new ReportModule($module_name, $sections)),
+            array());
+    }
+
+    $f->pop();
+    $f->addButton("generate_report", _T('Generate Report', 'report'));
+}
+// second step, display results
+else if (isset($_POST['generate_report'])) {
+    $ts_from = intval($_POST['period_from_timestamp']);
+    $ts_to = intval($_POST['period_to_timestamp']) + 86400;
+
+    $nb_days = intval(($ts_to - $ts_from) / 86400);
+    $nb_periods = min($nb_days, 7);
+
+    $periods = array();
+
+    for ($i = 0; $i < $nb_periods; $i++) {
+        $period_ts = $ts_from + $i * ($ts_to - $ts_from) / ($nb_periods - 1);
+        $periods[] = strftime('%Y-%m-%d', $period_ts);
+    }
+
+    $items = array();
+    foreach($_POST['indicators'] as $name => $status) {
+        $items[] = $name;
+    }
+    $sections = array();
+    foreach($_POST['sections'] as $section) {
+        if ($section)
+            $sections[] = $section;
+    }
+    $entities = array();
+    foreach($_POST['entities'] as $uuid) {
+        if ($uuid)
+            $entities[] = $uuid;
+    }
+
+    if (empty($items)) {
+        new NotifyWidgetFailure(_T("Select some data to include in the report.", "report"));
+        redirectTo(urlStrRedirect("report/report/index"));
+    }
+
+    $result = generate_report($periods, $sections, $items, $entities, $_SESSION['lang']);
+
+    // display sections
+    foreach ($result['sections'] as $section) {
+        // Section Title
+        $f->push(new Div());
+        $title = new TitleElement($section['title']);
+        $f->add($title);
+        $f->pop();
+
+        // Display tables and graphs for this section
+        $report_objects = array();
+        $report_types = array();
+        foreach ($section['content'] as $content) {
+            $table = False;
+            $svg = False;
+            if ($content['type'] == 'table') {
+                $title = new SpanElement(sprintf('<h3>%s</h3>', $content['title']));
+                $report_objects[] = $title;
+                $report_types[] = 'title';
+
+                if (in_array('titles', array_keys($content['data']))) {
+                    // period table
+                    $titles = $content['data']['titles'];
+                    $values = $content['data']['values'];
+                    $dates = $content['data']['dates'];
+                    $table = new OptimizedListInfos($titles, "");
+                    for ($i = 0; $i < count($dates); $i++) {
+                        $table->addExtraInfo($values[$i], $dates[$i]);
+                    }
+
+                    if ($table) {
+                        $table->setNavBar(new AjaxNavBar($itemCount, $filter));
+                    }
+                } elseif (in_array('headers', array_keys($content['data']))) {
+                    // key_value table
+                    $headers = $content['data']['headers'];
+                    $values = $content['data']['values'];
+
+                    for ($i = 0; $i < count($headers); $i++) {
+                        $tab_values = array();
+                        foreach ($values as $value) {
+                            $tab_values[] = $value[$i];
+                        }
+                        if (!$table) {
+                            $table = new ListInfos($tab_values, $headers[$i]);
+                        } else {
+                            $table->addExtraInfo($tab_values, $headers[$i]);
+                        }
+                    }
+                }
+            } elseif ($content['type'] == 'chart') {
+                $filename = $content['svg_path'];
+                $handle = fopen($filename, 'r');
+                $svg_content = fread($handle, filesize($filename));
+                fclose($handle);
+                $svg = new SpanElement(sprintf('<div align="center">%s<br /><a align="center" class="btn" href="%s">%s</a></div>', $svg_content, urlStrRedirect("report/report/get_file", array('path' => $content['png_path'])), _T('Download image', 'report')));
+            }
+            if ($table) {
+                $report_objects[] = $table;
+                $report_types[] = 'table';
+            }
+            if ($svg) {
+                $report_objects[] = $svg;
+                $report_types[] = 'svg';
+            }
+        }
+
+        // report_objects and report_types are collected
+        // Now if there is any chart, put it right of table
+        for ($i = 0; $i < count($report_types); $i++) {
+            $f->push(new Div());
+            if ($report_types[$i] == 'table' && $report_types[$i + 1] == 'svg') {
+                $f->add((new multicol())
+                                ->add($report_objects[$i], '60%', '0 2% 0 0')
+                                ->add($report_objects[$i + 1], '40%')
+                );
+                $i++;
+            } else {
+                $f->add($report_objects[$i]);
+            }
+            $f->pop();
+        }
+    }
+
+
+    $f->push(new Div());
+    $link = new SpanElement(sprintf('<br /><a class="btn btn-primary" href="%s">%s</a>&nbsp;&nbsp;', urlStrRedirect("report/report/get_file", array('path' => $result['xls_path'])), _T("Get XLS Report", "report")));
+    $f->add($link);
+    $link = new SpanElement(sprintf('<a class="btn btn-primary" href="%s">%s</a>', urlStrRedirect("report/report/get_file", array('path' => $result['pdf_path'])), _T("Get PDF Report", "report")));
+    $f->add($link);
+    $f->pop();
+}
+
+$f->display();
+
+?>
