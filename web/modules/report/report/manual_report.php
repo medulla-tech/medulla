@@ -58,10 +58,11 @@ if (!array_intersect_key($_POST, array('generate_report' => '', 'get_xls' => '',
     /*
      * Entities
      */
-    $entities = new SelectItem('entities');
+    $entities = new SelectMultiTpl('entities[]');
     list($list, $values) = getEntitiesSelectableElements();
     $entities->setElements($list);
     $entities->setElementsVal($values);
+    $entities->setFullHeight();
     //$entities->setSelected($selected);
 
     $f->add(
@@ -111,8 +112,13 @@ else if (isset($_POST['generate_report'])) {
         if ($section)
             $sections[] = $section;
     }
+    $entities = array();
+    foreach($_POST['entities'] as $uuid) {
+        if ($uuid)
+            $entities[] = $uuid;
+    }
 
-    $result = generate_report($periods, $sections, $items, array($_POST['entities']), $_SESSION['lang']);
+    $result = generate_report($periods, $sections, $items, $entities, $_SESSION['lang']);
     // display sections
 
     foreach ($result['sections'] as $section) {
