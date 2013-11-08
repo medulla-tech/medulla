@@ -251,7 +251,10 @@ class Inventory(DyngroupDatabaseHelper):
             if set(['os','user','type','domain','fullname']) & requested_cols:
                 join_query = join_query.outerjoin(self.table['hasHardware'], self.table['hasHardware'].c.machine == Machine.id).outerjoin(self.table['Hardware'], self.table['Hardware'].c.id == self.table['hasHardware'].c.hardware)
 
-        query = session.query(Machine).select_from(join_query).filter(query_filter)
+        if count:
+            query = session.query(func.count(Machine.id)).select_from(join_query).filter(query_filter)
+        else:
+            query = session.query(Machine).select_from(join_query).filter(query_filter)
         # end of dyngroups
 
         # Always select the last inventory
@@ -353,13 +356,12 @@ class Inventory(DyngroupDatabaseHelper):
                     else:
                         return query
 
+        if count:
+            return query.scalar()
+
         # Grouping by machine.id
         query = query.group_by(self.machine.c.id)
-
-        if count:
-            return query.count()
-        else:
-            return query
+        return query
 
     def getTotalComputerCount(self):
         session = create_session()
