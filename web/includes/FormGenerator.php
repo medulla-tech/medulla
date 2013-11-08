@@ -767,8 +767,8 @@ class SelectItem extends AbstractTpl {
      *constructor
      */
     function SelectItem($idElt, $jsFunc = null, $style = null) {
-        $this->id=$idElt;
-        $this->name=$idElt;
+        $this->id = str_replace("[]", "", $idElt);
+        $this->name = $idElt;
         $this->jsFunc = $jsFunc;
         $this->style = $style;
         $this->jsFuncParams = null;
@@ -832,7 +832,40 @@ class SelectItem extends AbstractTpl {
             }
             $ret .= "); return false;\"";
         }
-        $ret .= " name=\"".$this->id."\" id=\"".$this->id."\">\n";
+        $ret .= " name=\"".$this->name."\" id=\"".$this->id."\">\n";
+        $ret .= $this->content_to_string($paramArray);
+        $ret .= "</select>";
+        return $ret;
+    }
+}
+
+
+class SelectMultiTpl extends SelectItem {
+
+    function setHeight($size) {
+        $this->height = $size;
+    }
+
+    function setFullHeight() {
+        $this->height = count($this->elements);
+    }
+
+    function to_string($paramArray = null) {
+        $ret = "<select";
+        if ($this->style) {
+            $ret .= " class=\"".$this->style."\"";
+        }
+        if ($this->jsFunc) {
+            $ret .= " onchange=\"".$this->jsFunc."(";
+            if ($this->jsFuncParams) {
+                $ret .= implode(", ", $this->jsFuncParams);
+            }
+            $ret .= "); return false;\"";
+        }
+        if ($this->height) {
+            $ret .= ' size="' . $this->height . '"';
+        }
+        $ret .= " name=\"".$this->name."\" id=\"".$this->id."\" multiple>\n";
         $ret .= $this->content_to_string($paramArray);
         $ret .= "</select>";
         return $ret;
