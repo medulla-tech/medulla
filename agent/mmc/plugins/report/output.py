@@ -107,12 +107,14 @@ class XlsGenerator(object):
         return self.path
 
 class PdfGenerator(object):
-    def __init__(self, path = '/tmp/report.pdf'):
+    def __init__(self, path = '/tmp/report.pdf', locale = {}):
         self.homepage = ''
         self.summary = ''
-        self.css = self.get_css()
+
         self.content = ''
         self.path = path
+        # Localization strings
+        self.locale = locale
 
     def h1(self, str):
         self.content += '<h1>%s</h1>' % str
@@ -123,14 +125,68 @@ class PdfGenerator(object):
     def h3(self, str):
         self.content += '<h3>%s</h3>' % str
 
-    def get_front_page(self):
-        return HTML(string='<h1>Report</h1>').render()
 
-    def get_summary_page(self):
-        return HTML(string='<p>Summary</p>').render()
-
-    def get_css(self):
+    @property
+    def homepage_css(self):
         string = """
+
+        table {
+        border-width:1px;
+        border-style:solid;
+        border-color:black;
+        border-collapse:collapse;
+        font-size: 10px;
+        font-weight: normal;
+        text-align: center;
+        }
+        td {
+        }
+        td, th {
+        border-width:1px;
+        border-style:solid;
+        border-color:black;
+        }
+        """
+        return CSS(string=string)
+
+    @property
+    def content_css(self):
+        string = """
+
+        @page {
+            counter-increment: page;
+            margin: 8mm 8mm 15mm 8mm;
+            size: letter;
+
+            @top-left {
+                content: element(header);
+            }
+
+            @bottom-left {
+                content: "Printed ${now}";
+                font-size: .75em;
+                padding-bottom: 6mm;
+            }
+
+            @bottom-right {
+                content: "Page " counter(page) " of " counter(pages);
+                font-size: .75em;
+                padding-bottom: 6mm;
+            }
+        }
+        p, li {
+            text-align: justify;
+            -weasy-hyphens: auto;
+        }
+
+        #header {
+            position: running(header);
+        }
+
+        #header-right {
+            text-align: right;
+        }
+
         table {
         border-width:1px;
         border-style:solid;
@@ -229,7 +285,7 @@ class PdfGenerator(object):
     def save(self):
         # PDF report is a list of all documents
         self.homepage = '<h1>Report</h1>'
-        self.summary = '<h1>Summary</h1>'
+        self.summary = '<h1>%s</h1>' % (self.locale['STR_SUMMARY'])
         pdf_pages = [self.homepage, self.summary, self.content]
 
         # To make one PDF report, we have to get all pages of all documents...
@@ -241,7 +297,7 @@ class PdfGenerator(object):
         # ]
 
         # Rendering content
-        content = HTML(string=self.content).render(stylesheets=[self.css])
+        content = HTML(string=self.content).render(stylesheets=[self.content_css])
 
         #Priting summary table BEGIN
         self.summary += '<table style="border:0">'
@@ -261,8 +317,8 @@ class PdfGenerator(object):
         #Priting summary table END
         self.summary += '</table>'
 
-        homepage = HTML(string=self.homepage).render(stylesheets=[self.css])
-        summary = HTML(string=self.summary).render(stylesheets=[self.css])
+        homepage = HTML(string=self.homepage).render(stylesheets=[self.homepage_css])
+        summary = HTML(string=self.summary).render(stylesheets=[self.homepage_css])
 
         pdf_report = [homepage, summary ,content]
         logging.getLogger().warning(pdf_report[2].make_bookmark_tree())
@@ -280,10 +336,11 @@ class PdfGenerator(object):
         return self.path
 
 class SvgGenerator(object):
-    def __init__(self, path = '/tmp/graph.png'):
+    def __init__(self, path = '/tmp/graph.png', locale = {}):
         self.style = None
         self.chart = None
         self.path = path
+        self.locale = locale
 
     def _get_bar_style(self):
         return Style(

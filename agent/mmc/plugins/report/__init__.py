@@ -106,8 +106,6 @@ class RpcProxy(RpcProxyI):
         os.mkdir(svg_path)
         os.chmod(report_path, 511)
         os.chmod(svg_path, 511)
-        xls = XlsGenerator(path = xls_path)
-        pdf = PdfGenerator(path = pdf_path)
         result = {'sections': []}
         try:
             getLocationName = ComputerLocationManager().getLocationName
@@ -124,6 +122,9 @@ class RpcProxy(RpcProxyI):
         # Setting default params
         locale = {}
         locale['date_format'] = '%d-%m-%Y'
+
+        xls = XlsGenerator(path = xls_path)
+        pdf = PdfGenerator(path = pdf_path, locale = locale)
 
         def _localization(loc_tag):
             for entry in loc_tag:
@@ -279,8 +280,7 @@ class RpcProxy(RpcProxyI):
                             # Generatinng SVG
                             svg_filename = attr1['name'] + '_' + attr2['name']
                             svg_filepath = os.path.join(svg_path, svg_filename)
-                            # TODO: Pass "No Data" text to the SvgGenerator
-                            svg = SvgGenerator(path = svg_filepath)
+                            svg = SvgGenerator(path = svg_filepath, locale = locale)
                             if attr2['chart_type'] == 'line':
                                 svg.lineChart(attr2['title'], data_dict)
                             elif attr2['chart_type'] == 'bar':
