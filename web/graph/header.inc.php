@@ -251,39 +251,36 @@ $root = $conf["global"]["root"];
 
 
             function validateForm(formId, errmsg) {
-
                 // By default, we show the error message
                 if (errmsg == null)
                     errmsg = true;
-
                 var err = 0;
+
                 // Required fields
                 jQuery('#' + formId).find('input[rel=required],textarea[rel=required],select[rel=required]').each(function() {
-                    if (jQuery(this).val() == '') {
-                        jQuery(this).addClass('form-error');
-                        err == 0 && jQuery(this);
+                    var elem = jQuery(this);
+                    if (elem.val() == '' || elem.val() == null) {
+                        elem.addClass('form-error');
                         err = 1;
                     }
                     else
-                        jQuery(this).removeClass('form-error');
+                        elem.removeClass('form-error');
                 });
 
                 // Regexp fields
                 jQuery('#' + formId).find('input[data-regexp],textarea[data-regexp]').each(function() {
-
-                    if (jQuery(this).val() && jQuery(this).data('regexp') != '/.+/') {
-                        var flags = jQuery(this).data('regexp').replace(/.*\/([gimy]*)$/, '$1');
-                        var pattern = jQuery(this).data('regexp').replace(new RegExp('^/(.*?)/' + flags + '$'), '$1');
-
-                        var re = new RegExp(pattern, flags);
-
-                        if (!re.test(jQuery(this).val()))
-                        {
-                            err = 1;
-                            jQuery(this).addClass('form-error');
+                    var elem = jQuery(this);
+                    if (elem.val()) {
+                        var flags = elem.data('regexp').replace(/.*\/([gimy]*)$/, '$1');
+                        var pattern = elem.data('regexp').replace(new RegExp('^/(.*?)/' + flags + '$'), '$1');
+                        var regexp = new RegExp(pattern, flags);
+                        if (regexp.test(elem.val())) {
+                            elem.removeClass('form-error');
                         }
-                        else
-                            jQuery(this).removeClass('form-error');
+                        else {
+                            elem.addClass('form-error');
+                            err = 1;
+                        }
                     }
                 });
 
@@ -294,7 +291,7 @@ $root = $conf["global"]["root"];
                         jQuery('#confpass').addClass('form-error');
                     }
 
-                if (errmsg && err != 0)
+                if (err != 0)
                     alert('<?php echo _("Form cannot be submit. Input errors are highlighted in red.") ?>');
 
                 return err == 0;

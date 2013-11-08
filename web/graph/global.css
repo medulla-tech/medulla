@@ -33,8 +33,7 @@ body {
 
 .error { color : #A40000; }
 .form-error {
-    background: #D44848 !important;
-    color: white !important;
+    border-color: #D44848 !important;
 }
 a { color: #2A557E;}
 a:visited { color: #2A557E; }
