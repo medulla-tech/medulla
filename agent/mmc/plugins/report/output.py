@@ -155,7 +155,7 @@ class PdfGenerator(object):
 
         @page {
             counter-increment: page;
-            margin: 8mm 8mm 15mm 8mm;
+            /*margin: 8mm 8mm 15mm 8mm;*/
             size: letter;
 
             @top-left {
@@ -169,7 +169,7 @@ class PdfGenerator(object):
             }
 
             @bottom-right {
-                content: "Page " counter(page) " of " counter(pages);
+                content: "Page " counter(page) " sur " counter(pages);
                 font-size: .75em;
                 padding-bottom: 6mm;
             }
@@ -193,8 +193,11 @@ class PdfGenerator(object):
         border-color:black;
         border-collapse:collapse;
         font-size: 10px;
+        font-family: "DejaVu Sans";
         font-weight: normal;
         text-align: center;
+        width: 550px;
+        border-radius:15px;
         }
         td {
         }

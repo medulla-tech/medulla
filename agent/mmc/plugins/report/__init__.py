@@ -166,8 +166,8 @@ class RpcProxy(RpcProxyI):
                 for item in container:
                     if item.tag.lower() != 'item' : continue
                     indicator_name = item.attrib['indicator']
-                    if items and not indicator_name in items: continue
-                    data_dict['titles'].append( '> ' * level + ' ' + item.attrib['title'])
+                    if not items or indicator_name in items:
+                        data_dict['titles'].append( '> ' * level + ' ' + item.attrib['title'])
                     # temp list to do arithmetic operations
                     values = []
                     for i in xrange(len(period)):
@@ -178,7 +178,8 @@ class RpcProxy(RpcProxyI):
                         #
                         value = ReportDatabase().get_indicator_value_at_time(indicator_name, ts_min, ts_max, entities)
                         values.append(value)
-                        data_dict['values'][i].append(value)
+                        if not items or indicator_name in items:
+                            data_dict['values'][i].append(value)
                     # Fetch this item subitems if period is last
                     GValues.append(values)
                     childGValues = _fetchSubs(item, container, level + 1)
