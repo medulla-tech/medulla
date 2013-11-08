@@ -2542,7 +2542,10 @@ class ImagingRpcProxy(RpcProxyI):
                 return [False, err]
             else:
                 # Checking if MAC address match
-                macs = [db_computer[x].lower() for x in db_computer]
+                if uuid:
+                    macs = [x.lower() for x in db_computer[uuid] if x is not None]
+                else:
+                    macs = []
                 logger.debug("A computer (uuid = %s) with a corresponding hostname already exists in the database, checking its MAC addresses" % uuid)
                 hasMAC = False
                 if not macs:
