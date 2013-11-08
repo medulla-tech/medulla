@@ -99,14 +99,16 @@ class PackageParserXML:
                 else:
                     cmds[c] = ''
 
-            groups = root.getElementsByTagName('groups')
+            group = root.getElementsByTagName('group')
             query = ''
             boolcnd = ''
-            if len(groups) == 1 and groups[0].firstChild != None:
-                query = groups[0].getElementsByTagName('query')
-                boolcnd = groups[0].getElementsByTagName('boolcnd')
-                logging.debug(query)
-                logging.debug(boolcnd)
+            if len(group) == 1 and group[0].firstChild != None:
+                tmp = group[0].getElementsByTagName('query')
+                if len(tmp) ==1 and tmp[0].firstChild != None:
+                    query = tmp[0].firstChild.wholeText.strip()
+                tmp = group[0].getElementsByTagName('bool')
+                if len(tmp) ==1 and tmp[0].firstChild != None:
+                    boolcnd = tmp[0].firstChild.wholeText.strip()
 
             p = Package()
             p.init(
