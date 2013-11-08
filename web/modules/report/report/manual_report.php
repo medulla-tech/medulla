@@ -67,7 +67,7 @@ if (!array_intersect_key($_POST, array('generate_report' => '', 'get_xls' => '',
 
     $f->add(
         new TrFormElement(_T('Entities', 'report'), $entities),
-        array());
+        array("required" => true));
 
     foreach($report as $module_name => $sections) {
         $moduleObj = $MMCApp->getModule($module_name);
