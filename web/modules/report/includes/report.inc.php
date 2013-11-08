@@ -20,6 +20,11 @@
  */
 ?>
 
+<style>
+    .report-indicator label {
+        display: inline !important;
+    }
+</style>
 <script>
     var toggleSubIndicators = function(link) {
         var indicator = jQuery(link).parent();

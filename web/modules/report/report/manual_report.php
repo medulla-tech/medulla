@@ -30,7 +30,6 @@ require_once("modules/pulse2/includes/utilities.php");
 $MMCApp =& MMCApp::getInstance();
 $report = get_report_sections($_SESSION['lang']);
 
-// New validating form
 $f = new ValidatingForm();
 
 /*
@@ -38,37 +37,28 @@ $f = new ValidatingForm();
  * Used to store datas for PDF/XLS reports
  * $_SESSION['report_files'][mmc_plugin_name][report_name]
  */
-
 if (!isset($_SESSION['report_files']))
     $_SESSION['report_files'] = array();
 
 // first step, display selectors
 if (!array_intersect_key($_POST, array('generate_report' => '', 'get_xls' => '', 'get_pdf' => ''))) {
-    // Push a table
     $f->push(new Table());
-
-    /*
-     * Period
-     */
-
+    /* Period */
     $f->add(
-            new TrFormElement(_T('Period:', 'report'), new periodInputTpl(_T('from', 'report'), 'period_from', _T('to', 'report'), 'period_to')), array("value" => $values, "required" => True)
+        new TrFormElement(_T('Period', 'report'),
+                          new periodInputTpl(_T('from', 'report'), 'period_from', _T('to', 'report'), 'period_to')),
+        array("value" => $values, "required" => True)
     );
-
-    /*
-     * Entities
-     */
+    /* Entities */
     $entities = new SelectMultiTpl('entities[]');
     list($list, $values) = getEntitiesSelectableElements();
     $entities->setElements($list);
     $entities->setElementsVal($values);
     $entities->setFullHeight();
-    //$entities->setSelected($selected);
-
     $f->add(
         new TrFormElement(_T('Entities', 'report'), $entities),
         array("required" => true));
-
+    /* Modules indicators */
     foreach($report as $module_name => $sections) {
         $moduleObj = $MMCApp->getModule($module_name);
         $f->add(
@@ -78,14 +68,6 @@ if (!array_intersect_key($_POST, array('generate_report' => '', 'get_xls' => '',
     }
 
     $f->pop();
-}
-
-// A <br /> to add space up to validate buttons
-$f->push(new Div());
-$f->add(new SpanElement('<br />'));
-$f->pop();
-
-if (!array_intersect_key($_POST, array('generate_report' => '', 'get_xls' => '', 'get_pdf' => ''))) {
     $f->addButton("generate_report", _T('Generate Report', 'report'));
 }
 // second step, display results
@@ -118,9 +100,14 @@ else if (isset($_POST['generate_report'])) {
             $entities[] = $uuid;
     }
 
-    $result = generate_report($periods, $sections, $items, $entities, $_SESSION['lang']);
-    // display sections
+    if (empty($items)) {
+        new NotifyWidgetFailure(_T("Select some data to include in the report.", "report"));
+        redirectTo(urlStrRedirect("report/report/index"));
+    }
 
+    $result = generate_report($periods, $sections, $items, $entities, $_SESSION['lang']);
+
+    // display sections
     foreach ($result['sections'] as $section) {
         // Section Title
         $f->push(new Div());
@@ -205,9 +192,9 @@ else if (isset($_POST['generate_report'])) {
 
 
     $f->push(new Div());
-    $link = new SpanElement(sprintf('<br /><a class="btnPrimary" href="%s">%s</a>&nbsp;&nbsp;', urlStrRedirect("report/report/get_file", array('path' => $result['xls_path'])), _T("Get XLS Report", "report")));
+    $link = new SpanElement(sprintf('<br /><a class="btn btn-primary" href="%s">%s</a>&nbsp;&nbsp;', urlStrRedirect("report/report/get_file", array('path' => $result['xls_path'])), _T("Get XLS Report", "report")));
     $f->add($link);
-    $link = new SpanElement(sprintf('<a class="btnPrimary" href="%s">%s</a>', urlStrRedirect("report/report/get_file", array('path' => $result['pdf_path'])), _T("Get PDF Report", "report")));
+    $link = new SpanElement(sprintf('<a class="btn btn-primary" href="%s">%s</a>', urlStrRedirect("report/report/get_file", array('path' => $result['pdf_path'])), _T("Get PDF Report", "report")));
     $f->add($link);
     $f->pop();
 }
@@ -215,9 +202,3 @@ else if (isset($_POST['generate_report'])) {
 $f->display();
 
 ?>
-
-<style>
-    .report-indicator label {
-        display: inline !important;
-    }
-</style>
