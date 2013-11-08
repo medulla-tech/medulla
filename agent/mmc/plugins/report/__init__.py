@@ -199,24 +199,39 @@ class RpcProxy(RpcProxyI):
 
         def _keyvalueDict(item_root):
             data_dict = {'headers' : [locale['STR_KEY'],locale['STR_VALUE']], 'values' : []}
-            def _fetchSubs(container, parent = None, level = 0):
+            def _fetchSubs(container, parent = None, level = 0, parent_value = 0):
+                values = []
                 for item in container:
                     if item.tag.lower() != 'item' : continue
                     indicator_name = item.attrib['indicator']
                     indicator_label = item.attrib['title']
                     indicator_value = ReportDatabase().get_indicator_current_value(indicator_name, entities)
                     # indicator_value is a list of dict {'entity_id' : .., 'value' .. }
-                    for entry in indicator_value:
-                        # TODO: Print entity names not UUIDs
-                        if entry['entity_id'] in entity_names:
-                            entity_name = entity_names[entry['entity_id']]
-                        else:
-                            entity_name = entry['entity_id']
-                        if not items or indicator_name in items:
-                            data_dict['values'].append([ '> ' * level + indicator_label + (' (%s)' % entity_name ), entry['value']])
+                    # ==============================================================
+                    # ==> Generate one entry for each entity [disabled]
+                    #for entry in indicator_value:
+                    #    if entry['entity_id'] in entity_names:
+                    #        entity_name = entity_names[entry['entity_id']]
+                    #    else:
+                    #        entity_name = entry['entity_id']
+                    #    if not items or indicator_name in items:
+                    #        data_dict['values'].append([ '> ' * level + indicator_label + (' (%s)' % entity_name ), entry['value']])
+                    # =================================================================
+                    # Calculating sum value for entities
+                    logging.getLogger().warning(indicator_value)
+                    value = _sum_None([x['value'] for x in indicator_value])
+                    values.append(value)
+                    if not items or indicator_name in items:
+                        data_dict['values'].append([ '> ' * level + indicator_label, value])
+
                     # TODO: Calculate other cols
                     # Fetch this item subitems
-                    _fetchSubs(item, container, level + 1)
+                    _fetchSubs(item, container, level + 1, value)
+                # Generating others value
+                if parent and values:
+                    logging.getLogger().warning(values)
+                    others_value = parent_value - _sum_None(values)
+                    data_dict['values'].append(['> ' * level + ' Other %s' % parent.attrib['title'], others_value])
             _fetchSubs(item_root)
             return data_dict
 
