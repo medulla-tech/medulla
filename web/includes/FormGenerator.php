@@ -832,6 +832,7 @@ class SelectItem extends AbstractTpl {
             }
             $ret .= "); return false;\"";
         }
+        $ret .= isset($paramArray["required"]) ? ' rel="required"' : '';
         $ret .= " name=\"".$this->name."\" id=\"".$this->id."\">\n";
         $ret .= $this->content_to_string($paramArray);
         $ret .= "</select>";
@@ -877,7 +878,8 @@ class SelectMultiTpl extends SelectItem {
         if ($this->height) {
             $ret .= ' size="' . $this->height . '"';
         }
-        $ret .= " name=\"".$this->name."\" id=\"".$this->id."\" multiple>\n";
+        $ret .= isset($paramArray["required"]) ? ' rel="required"' : '';
+        $ret .= " name=\"".$this->name."\" id=\"".$this->id."\" style=\"width: auto\" multiple>\n";
         $ret .= $this->content_to_string($paramArray);
         $ret .= "</select>";
         $ret .= '<p style="margin-top: 5px;"><button class="btn btn-small" onclick="toggleMultiAll(this); return false;">' . _("Toggle selection") . '</button></p>';
