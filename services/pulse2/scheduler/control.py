@@ -19,6 +19,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+""" Main dispatching of scheduler """
+
 import random
 
 from twisted.internet.defer import Deferred, maybeDeferred, DeferredList
@@ -41,6 +43,12 @@ class MethodProxy(MscContainer):
     """ Interface to dispatch the circuit operations from exterior. """
 
     def start_commands(self, cmds=[]):
+        """
+        Starts all or selected commands.
+
+        @param cmd_ids: list of commands ids
+        @type cmd_ids: list
+        """
         self.logger.info("start_commands: %s" % str(cmds))
 
         scheduler = SchedulerConfig().name
@@ -65,8 +73,13 @@ class MethodProxy(MscContainer):
  
         
     def stop_commands(self, cohs=[]):
-        # TODO - distinct the directives 'stop' and 'pause'
+        """
+        Stops all or selected circuits.
 
+        @param cohs: list of commands_on_host
+        @type cohs: list
+        """
+ 
         cohs = [int(c) for c in cohs]
         circuits = self.get_active_circuits(cohs)
         for circuit in circuits :
@@ -97,8 +110,6 @@ class MethodProxy(MscContainer):
         circuit = self.get(id)
         if not circuit :
             if id in [c.id for c in self.get_valid_waitings()]:
-            #FIXME    
-                 self.logger.warn("\033[1;35mCalling method <%s> - Circuit #%d in waitings\033[0m" % (name, id))
                  circuit = [c for c in self.get_valid_waitings() if c.id == id]
             else :
                  self.logger.debug("Aborted execution of method <%s> (Circuit #%d)" % (name, id))
@@ -150,7 +161,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
             d1.addCallback(self._run_all)
             d1.addErrback(self._start_failed)
         if len(already_initialized_ids) > 0 :
-            d2 = maybeDeferred(self._prepare, already_initialized_ids)
+            d2 = maybeDeferred(self._consolidate, already_initialized_ids)
             d2.addCallback(self._class_all)
             d2.addCallback(self._revolve_all)
             d2.addCallback(self._run_all)
@@ -159,7 +170,16 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         return DeferredList([d1, d2])
 
 
-    def _prepare(self, already_initialized_ids):
+    def _consolidate(self, already_initialized_ids):
+        """
+        Gets all circuits (active+waiting) to restart.
+
+        @param already_initialized_ids: ids of circuits
+        @type already_initialized_ids: int
+
+        @return: circuits to restart
+        @rtype: list
+        """
         waiting_circuits = self.get_waiting_circuits(already_initialized_ids)
         circuits = self.get_circuits(already_initialized_ids)
         circuits.extend(waiting_circuits)
@@ -529,12 +549,21 @@ class MscDispatcher (MscQueryManager, MethodProxy):
 
 
     def launch_remaining_waitings(self, reason):
+        """ Calls the next waiting circuit. """
         while self.free_slots > 0 :
             started_next = self.launch_next_waiting()
             if not started_next :
                 break
 
     def process_non_valid(self, result):
+        """
+        Calls the database method checking overtimed circuits and removes
+        them from internal container.
+
+        @return: list of commands to check to clean up
+        @rtype: list
+        
+        """
         commands_to_cleanup_check = []
         for id in process_non_valid(self.config.name, 
                                     1000, 
@@ -547,11 +576,19 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         return commands_to_cleanup_check
 
     def check_for_clean_up(self, commands_to_cleanup_check):
+        """
+        Checks if commands to check are already finished.
+
+        @param commands_to_cleanup_check: list of commands
+        @type commands_to_cleanup_check: list
+        """
         for cmd_id in commands_to_cleanup_check:
             if is_command_finished(SchedulerConfig().name, cmd_id):
                 self.set_ready_to_cleanup(cmd_id)
 
     def clean_up(self, result):
+        """ Calls the clean up scheduler if commands are candidats. """
+
         cohs = []
         for cmd_id in self.ready_candidats_to_cleanup :
 
@@ -562,6 +599,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
             schedule.process()
 
     def awake_waiting_overtimed(self, result):
+        """Looks for zombies circuits in waitings and releases them """
         circuits = self._get_candidats_to_overtimed(self.waiting_circuits)
         for circuit in circuits :
             circuit.release()

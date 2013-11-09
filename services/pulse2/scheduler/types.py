@@ -19,6 +19,28 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+""" 
+Definitions of base types of scheduler. 
+
+Atomic structure / relationships:
+
+<MscDispatcher> (inherited from <MscContainer>) is the core of scheduler.
+Internal container stocks at least one <Circuit> instance which represents 
+in database model one record in commands_on_host table.
+
+<MscDispatcher> provides all the operations trough the circuits
+and communicates with these external services :
+    - outgoing requests on launchers
+    - incoming responses from launchers (on push_pull mode)
+    - incoming requests from mmc-agent
+
+<Circuit> represents the workflow with custom steps personnalized 
+on creation. One circuit is destinated on one target (machine)
+
+<Phase> represents a step of circuit, which can be an action
+doing something on target.
+"""
+
 import logging
 import inspect
 import random
@@ -45,11 +67,18 @@ SchedulerConfig().setup("/etc/mmc/pulse2/scheduler/scheduler.ini")
 
 
 def enum(*args, **kwargs):
+    """
+    Returns a named enumerator based on simple list of integers.
+
+    @param *args: list of names of constants to create
+    @type *args: list 
+    """
     return type('Enum', 
                 (), 
                 dict((y, x) for x, y in enumerate(args), **kwargs)
                ) 
 
+# List of phase actions 
 DIRECTIVE = enum("GIVE_UP", 
                  "PERFORM", 
                  "NEXT", 
@@ -57,6 +86,7 @@ DIRECTIVE = enum("GIVE_UP",
                  "FAILED",
                  "KILLED",
                  )
+# status of circuit
 CC_STATUS = enum("ACTIVE",
                  "WAITING"
                  )
@@ -64,7 +94,12 @@ CC_STATUS = enum("ACTIVE",
 
 class PhaseProxyMethodContainer :
     """
+    Identification of methods tagged by launcher_proxymethod decorator.
 
+    Each phase checks occurences the tagged methods and registers them
+    to internal dictionnary (_proxy_methods).
+    This methods represents an interface for incoming responses 
+    from launchers. 
     """
 
     _register_only = False
@@ -73,9 +108,11 @@ class PhaseProxyMethodContainer :
 
     @property
     def proxy_methods(self):
+        """Returns all proxy methods of phase"""
         return self._proxy_methods
 
     def register(self):
+        """Registers all proxymethods in inherited Phase class"""
         self._register_only = True
         for name in dir(self) :
             fnc = getattr(self, name)
@@ -91,22 +128,41 @@ class PhaseProxyMethodContainer :
  
         
 class PhaseBase (PhaseProxyMethodContainer):
+    """A base frame of phase """
 
+    # name of phase
     name = None
     state_name = None
 
+
+    # commands_on_host record
     coh = None
+    # commands record
     cmd = None
+    # target record
     target = None
-    
+    # phase record
     phase = None
 
+    # hostname or IP address of target
     host = None
+
+    # reference to RemoteCallProxy providing the communication with launchers
     launchers_provider = None
+    # shortcut to main MscContainer
     dispatcher = None
+
     last_activity_time = None
 
     def __init__(self, cohq=None, host=None):
+        """
+        @param cohq: database reference
+        @type cohq: CoHQuery 
+
+        @param host: hostname or IP address
+        @type host: str
+
+        """
         self.register()
         
         self.logger = logging.getLogger()
@@ -115,6 +171,12 @@ class PhaseBase (PhaseProxyMethodContainer):
             self.set_cohq(cohq)
 
     def set_cohq(self, cohq):
+        """
+        CoHQuery setter.
+
+        @param cohq: database reference
+        @type cohq: CoHQuery 
+        """
 
         if not isinstance(cohq, CoHQuery):
            raise TypeError("Not CoHQuery type")
@@ -126,6 +188,14 @@ class PhaseBase (PhaseProxyMethodContainer):
         self.phase = cohq.get_phase(self.name)
 
     def _apply_initial_rules(self):
+        """
+        Checks the phase states and decides on next behavoir.
+
+        @return: action or state of phase 
+        @rtype: DIRECTIVE
+        """
+        if self.coh.isStateStopped():
+            return DIRECTIVE.GIVE_UP
         if not self.cmd.in_valid_time(): 
             return DIRECTIVE.OVER_TIMED
  
@@ -142,10 +212,10 @@ class PhaseBase (PhaseProxyMethodContainer):
         if self.phase.is_running(): 
             # phase still running, immediately returns, do nothing
             self.logger.debug("command_on_host #%s: %s still running" % (self.coh.id, self.name))
-            #return self.give_up() # XXX - !!!!!!!!!!!!!!!!!!!!!!!
         return DIRECTIVE.PERFORM
 
     def _switch_on(self):
+        """Phase is ready to run, let's go !"""
         self.phase.set_running()
         if not self.state_name :
             self.state_name = self.name
@@ -154,6 +224,12 @@ class PhaseBase (PhaseProxyMethodContainer):
 
 
     def apply_initial_rules(self):
+        """
+        Checks the phase states and decides on next behavoir.
+
+        @return: action or state of phase 
+        @rtype: DIRECTIVE
+        """
         ret = self._apply_initial_rules()
         if ret not in (DIRECTIVE.NEXT,
                        DIRECTIVE.GIVE_UP, 
@@ -202,8 +278,6 @@ class PhaseBase (PhaseProxyMethodContainer):
         """
         try :
 
-            #self.logger.info("\033[33mStart the delay calculation for CoH: %s\033[0m" % self.coh.id)
-
             attempts_total = self.coh.attempts_left
             self.logger.debug("Number of failed attempts %d / %d" % (self.coh.attempts_failed, attempts_total))
             now = time.time()
@@ -241,11 +315,18 @@ class PhaseBase (PhaseProxyMethodContainer):
             self.logger.error("Next delay calculation failed: %s"  % str(e))
 
 class Phase (PhaseBase):
+    """ Main phase frame providing all the actions"""
 
-    def got_error_in_error(self, reason):
+    def got_error_in_error(self, failure):
+        """
+        An errorback called if an error occured in an error response.
+
+        @param failure: reason of error
+        @type failure: twisted failure 
+        """
 
         logging.getLogger().error("Circuit #%s: got an error within an error: %s" %
-                (self.coh.id, extractExceptionMessage(reason)))
+                (self.coh.id, extractExceptionMessage(failure)))
         return self.give_up()
 
     def update_history_in_progress(self, 
@@ -353,13 +434,32 @@ class Phase (PhaseBase):
                }
 
     def give_up(self):
+        """
+        Encapsulates give-up directive.
+
+        @return: give-up directive
+        @rtype: DIRECTIVE
+        """
         self.logger.debug("Circuit #%s: Releasing" % self.coh.id)
+
         return DIRECTIVE.GIVE_UP
 
     def failed(self):
+        """
+        Encapsulates failed directive.
+
+        @return: failed directive
+        @rtype: DIRECTIVE
+        """
         return DIRECTIVE.FAILED
 
     def switch_phase_failed(self, decrement=True):
+        """
+        Toggles phase to failed.
+
+        @param decrement: decrements the number of failed attempts
+        @type decrement: bool
+        """
         delay = self.calc_next_attempt_delay()
         self.coh.reSchedule(delay, decrement)
         
@@ -371,6 +471,15 @@ class Phase (PhaseBase):
         return self.failed() 
            
     def parse_order(self, name, taken_in_account):
+        """
+        Resolves if remote call on push_pull mode is successfull.
+
+        @param name: name of phase
+        @type name: str
+
+        @param taken_in_account: if True, order successfully stacked
+        @type taken_in_account: bool
+        """
         if taken_in_account: # success
             self.update_history_in_progress()
             self.logger.info("Circuit #%s: %s order stacked" %
@@ -395,10 +504,11 @@ class QueryContext :
   
 
 class CircuitBase(object):
-    """
-    A container processing the base workflow.
-
+    """ 
+    Data container of circuit.
     
+    Provides the base operations with phases and builds all the needed
+    references between phases and dispatcher.
     """
     # commands_on_host id
     id = None
@@ -454,9 +564,7 @@ class CircuitBase(object):
         return isinstance(self.running_phase, Phase)
 
     def setup(self):
-        """
-        Post-init - detecting the networking info of target.
-        """
+        """Post-init - detecting the networking info of target. """
 
         if not self.initialized :
             d = maybeDeferred(self._flow_create)
@@ -509,12 +617,26 @@ class CircuitBase(object):
 
 
     def install_releaser(self, releaser):
+        """
+        Links a release method of main dispatcher.
+
+        When this method is called, circuit is removed from contaner.
+
+        @param releaser: link to MscContainer().release()
+        @type releaser: callable
+        """
         if callable(releaser) :
             self.releaser = releaser
         else :
             raise TypeError("Releaser must be a callable")
 
     def install_dispatcher(self, dispatcher):
+        """
+        Link to dispatcher.
+
+        @param dispatcher: link to main dispatcher
+        @type dispatcher: MscDispatcher 
+        """
         self.dispatcher = dispatcher
 
         # handle the dispatcher's release() method
@@ -631,6 +753,12 @@ class CircuitBase(object):
         self.logger.error("An error occured while detecting target's ip address: %s" % str(failure))
 
 class Circuit (CircuitBase):
+    """
+    This frame represets the workflow destinated on one machine.
+
+    All steps is provided with Phase instances which represents several actions 
+    destinated to a computer.
+    """
  
     def run(self):
         """ Start the workflow scenario. """
@@ -646,6 +774,7 @@ class Circuit (CircuitBase):
                 self.running_phase.dispatcher = self.dispatcher
 
         except StopIteration :
+            # All phases passed -> relase the circuit
             self.release()
             return
  
@@ -788,6 +917,7 @@ class MscContainer (object):
 
     @property
     def ready_candidats_to_cleanup(self):
+        """ Shortcut to expired circuits according to cleanup conditions """
         return [cmd_id for (cmd_id, expired) in self.candidats_to_cleanup.items() if expired]
 
     def checkout_command(self, cmd_id):
@@ -811,9 +941,11 @@ class MscContainer (object):
     
     @property 
     def circuits(self):
+        """Shortcut to all active circuits"""
         return [c for c in self._circuits if c.status == CC_STATUS.ACTIVE]
     @property 
     def waiting_circuits(self):
+        """Shortcut to all waiting circuits"""
         return [c for c in self._circuits if c.status == CC_STATUS.WAITING]
 
     def remove_circuit(self, circuit):
@@ -828,10 +960,12 @@ class MscContainer (object):
 
     @property
     def max_slots(self):
+        """ All slots from all detected launchers """
         return reduce(lambda x, y: (x + y), self.slots.values()) 
 
     @property
     def free_slots(self):
+        """ Free slots to use """
         return self.max_slots - len(self.get_active_circuits())
 
     def _in_waitings(self, id):
@@ -860,6 +994,7 @@ class MscContainer (object):
         return id in [wf.id for wf in self.circuits]
 
     def initialize(self):
+        """ Initial setup """
         self.logger = logging.getLogger()
         self.config = SchedulerConfig()
         
@@ -907,6 +1042,7 @@ class MscContainer (object):
         return result
 
     def has_free_slots(self):
+        """ Checks if at least one slot is free"""
         return len(self.get_running_circuits()) < self.max_slots
  
     def get(self, id):
