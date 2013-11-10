@@ -36,29 +36,6 @@ scheduler_proxy_path = @sbindir@/pulse2-scheduler-proxy
 # cache_size = 300
 # cache_timeout = 500
 #
-# status settings : check every N second, +/- incertitude_factor %
-# checkstatus_period = 900
-#
-# health logging : log some stats every N seconds, +/- incertitude_factor %
-# loghealth_period = 60
-#
-# once per day, hour specified below (HH:MM:SS), the scheduler will
-# analyse the database, looking to weird / broken commands;
-# you should enable this if you see stalled commands in logs
-# in this case, please specify an hour when the scheduler is
-# not very used (8 pm can be a good choice: analyse_hour = 20:00:00)
-# set to empty by default to disable analysis
-# analyse_hour =
-#
-# attempt to clean states in commands every n seconds
-# clean_states_time = 3600
-# clean state that are going to be clean
-# (from the launcher point of view, ie :
-#  * stop -> the command is not running on the launcher but it's state in the db say it is)
-#  * run -> the command
-# possible states : run, stop
-# active_clean_states =
-#
 # default database encoding (used to inject log files)
 # dbencoding = utf-8
 #
@@ -134,9 +111,6 @@ scheduler_proxy_path = @sbindir@/pulse2-scheduler-proxy
 # announce_check =
 # server_check =
 # client_check =
-
-## Computer / Group assignment ##
-# mg_assign_algo = default
 
 [database]
 dbdriver = mysql

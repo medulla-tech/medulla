@@ -78,13 +78,8 @@ class SchedulerConfig(pulse2.utils.Singleton):
     cp = None
 
     # [scheduler] section default values
-    analyse_hour = '' # empty by default
-    active_analyse_hour = False # inactive by default
     announce_check = dict()
     awake_time = 30
-    checkstatus_period = 900
-    clean_states_time = 3600
-    active_clean_states =  '' # possible states are : stop run
     cacert = mmcconfdir + "/pulse2/scheduler/keys/cacert.pem"
     client_check = None
     dbencoding = 'utf-8'
@@ -92,8 +87,6 @@ class SchedulerConfig(pulse2.utils.Singleton):
     emitting_period = .3
     initial_wait = 2
     localcert = mmcconfdir + "/pulse2/scheduler/keys/privkey.pem"
-    lock_processed_commands = False
-    loghealth_period = 60
     host = "127.0.0.1"
     max_command_time = 3600
     max_threads = 20
@@ -186,43 +179,17 @@ class SchedulerConfig(pulse2.utils.Singleton):
 
         self.setoption("scheduler", "awake_time", "awake_time", 'int')
         self.setoption("scheduler", "initial_wait", "initial_wait", 'int')
-        self.setoption("scheduler", "checkstatus_period", "checkstatus_period", 'int')
-        self.setoption("scheduler", "loghealth_period", "loghealth_period", 'int')
         self.setoption("scheduler", "emitting_period", "emitting_period", 'float')
 
         # cache settings
         self.setoption("scheduler", "cache_size", "cache_size", 'int')
         self.setoption("scheduler", "cache_timeout", "cache_timeout", 'int')
 
-        self.setoption("scheduler", "analyse_hour", "analyse_hour")
-        if len(self.analyse_hour) == 0: # no option given
-            log.info("analyse loop disabled as requested")
-            self.active_analyse_hour = False
-        else:
-            try:
-                splitted = self.analyse_hour.split(':')
-                assert len(splitted) == 3 # only accept "HH:MM:SS"
-                self.analyse_hour = (int(splitted[0]) * 60 + int(splitted[1])) * 60 + int(splitted[2])
-                log.info("analyse loop enabled, will run every day at %s" % ":".join(splitted))
-                self.active_analyse_hour = True
-            except:
-                log.warning("can't parse analyse_hour (read %s, expecting 'HH:MM:SS'), neutralysing analyse loop" % (self.analyse_hour))
-                self.active_analyse_hour = False
-
-        self.setoption("scheduler", "clean_states_time", "clean_states_time", 'int')
-        self.setoption("scheduler", "active_clean_states", "active_clean_states")
-        self.active_clean_states_run = False
-        self.active_clean_states_stop = False
-        for s in self.active_clean_states.split(','):
-            if s == 'run': self.active_clean_states_run = True
-            if s == 'stop': self.active_clean_states_stop = True
-
         self.setoption("scheduler", "max_command_time", "max_command_time", 'int')
         self.setoption("scheduler", "max_upload_time", "max_upload_time", 'int')
         self.setoption("scheduler", "max_wol_time", "max_wol_time", 'int')
         self.setoption("scheduler", "dbencoding", "dbencoding")
         self.setoption("scheduler", "enablessl", "enablessl", 'bool')
-        self.setoption("scheduler", "lock_processed_commands", "lock_processed_commands", 'bool')
         self.setoption("scheduler", "max_threads", "max_threads", 'int')
 
         self.setoption("scheduler", "imaging", "imaging", 'bool')
