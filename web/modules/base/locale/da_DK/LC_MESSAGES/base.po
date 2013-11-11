@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-11-06 16:40+0100\n"
-"PO-Revision-Date: 2013-11-06 16:16+0000\n"
+"POT-Creation-Date: 2013-11-08 17:59+0100\n"
+"PO-Revision-Date: 2013-11-11 00:22+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -80,7 +80,7 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: graph/header.inc.php:298
+#: graph/header.inc.php:295
 msgid "Form cannot be submit. Input errors are highlighted in red."
 msgstr ""
 
@@ -379,7 +379,11 @@ msgstr ""
 msgid "Add"
 msgstr ""
 
-#: includes/FormGenerator.php:975 modules/base/groups/ajaxFilter.php:48
+#: includes/FormGenerator.php:885
+msgid "Toggle selection"
+msgstr ""
+
+#: includes/FormGenerator.php:1023 modules/base/groups/ajaxFilter.php:48
 #: modules/base/users/ajaxFilter.php:85 modules/base/views/index.tpl.php:92
 #: modules/ppolicy/default/delete.php:45
 msgid "Delete"
