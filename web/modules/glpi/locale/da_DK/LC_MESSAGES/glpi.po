@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-06 15:40+0100\n"
+"POT-Creation-Date: 2013-11-11 01:11+0100\n"
 "PO-Revision-Date: 2013-10-28 00:04+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,7 +42,7 @@ msgstr ""
 msgid "Administrative"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:84 modules/glpi/infoPackage.inc.php:114
+#: modules/glpi/infoPackage.inc.php:92 modules/glpi/infoPackage.inc.php:122
 msgid "Administrative tab (GLPI)"
 msgstr ""
 
@@ -65,7 +65,7 @@ msgstr ""
 msgid "Antivirus status is OK at %s"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:90 modules/glpi/infoPackage.inc.php:120
+#: modules/glpi/infoPackage.inc.php:98 modules/glpi/infoPackage.inc.php:128
 msgid "Antivirus tab (GLPI)"
 msgstr ""
 
@@ -114,15 +114,15 @@ msgstr ""
 msgid "Create a group"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:43
+#: modules/glpi/infoPackage.inc.php:51
 msgid "Create static group from OS distribution dashboard widget (GLPI)"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:38
+#: modules/glpi/infoPackage.inc.php:46
 msgid "Create static group from antivirus dashboard widget (GLPI)"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:33
+#: modules/glpi/infoPackage.inc.php:41
 msgid "Create static group from dashboard widgets (GLPI)"
 msgstr ""
 
@@ -142,7 +142,7 @@ msgstr ""
 msgid "Device"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:50
+#: modules/glpi/infoPackage.inc.php:58
 msgid "Display locations"
 msgstr ""
 
@@ -178,6 +178,10 @@ msgstr ""
 msgid "Frequency"
 msgstr ""
 
+#: modules/glpi/infoPackage.inc.php:30
+msgid "GLPI Inventory"
+msgstr ""
+
 #: modules/glpi/glpi/ajaxViewPart.php:217
 msgid "Gateway"
 msgstr ""
@@ -194,7 +198,7 @@ msgstr ""
 msgid "Hardware"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:72 modules/glpi/infoPackage.inc.php:102
+#: modules/glpi/infoPackage.inc.php:80 modules/glpi/infoPackage.inc.php:110
 msgid "Hardware tab (GLPI)"
 msgstr ""
 
@@ -206,7 +210,7 @@ msgstr ""
 msgid "History"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:87 modules/glpi/infoPackage.inc.php:117
+#: modules/glpi/infoPackage.inc.php:95 modules/glpi/infoPackage.inc.php:125
 msgid "History tab (GLPI)"
 msgstr ""
 
@@ -218,11 +222,11 @@ msgstr ""
 msgid "Invalid hostname"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:65
+#: modules/glpi/infoPackage.inc.php:73
 msgid "Inventory (GLPI) on a group of machines"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:95
+#: modules/glpi/infoPackage.inc.php:103
 msgid "Inventory (GLPI) on machine"
 msgstr ""
 
@@ -315,7 +319,7 @@ msgstr ""
 msgid "Network Type"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:78 modules/glpi/infoPackage.inc.php:108
+#: modules/glpi/infoPackage.inc.php:86 modules/glpi/infoPackage.inc.php:116
 msgid "Network tab (GLPI)"
 msgstr ""
 
@@ -403,7 +407,7 @@ msgstr ""
 msgid "Softwares"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:81 modules/glpi/infoPackage.inc.php:111
+#: modules/glpi/infoPackage.inc.php:89 modules/glpi/infoPackage.inc.php:119
 msgid "Softwares tab (GLPI)"
 msgstr ""
 
@@ -419,7 +423,7 @@ msgstr ""
 msgid "Storage"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:75 modules/glpi/infoPackage.inc.php:105
+#: modules/glpi/infoPackage.inc.php:83 modules/glpi/infoPackage.inc.php:113
 msgid "Storage tab (GLPI)"
 msgstr ""
 
@@ -427,7 +431,7 @@ msgstr ""
 msgid "Summary"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:69 modules/glpi/infoPackage.inc.php:99
+#: modules/glpi/infoPackage.inc.php:77 modules/glpi/infoPackage.inc.php:107
 msgid "Summary tab (GLPI)"
 msgstr ""
 

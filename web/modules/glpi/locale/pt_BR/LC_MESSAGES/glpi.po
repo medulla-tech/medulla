@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-06 15:40+0100\n"
+"POT-Creation-Date: 2013-11-11 01:11+0100\n"
 "PO-Revision-Date: 2013-09-06 19:30+0000\n"
 "Last-Translator: Andre Machado <andre@mandriva.com>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
@@ -46,7 +46,7 @@ msgstr "Ação"
 msgid "Administrative"
 msgstr "Administrativo"
 
-#: modules/glpi/infoPackage.inc.php:84 modules/glpi/infoPackage.inc.php:114
+#: modules/glpi/infoPackage.inc.php:92 modules/glpi/infoPackage.inc.php:122
 msgid "Administrative tab (GLPI)"
 msgstr "Aba Administrativa (GLPI)"
 
@@ -69,7 +69,7 @@ msgstr "Antivírus não está rodando ou não atualizado em %s"
 msgid "Antivirus status is OK at %s"
 msgstr "Antivírus está OK em %s"
 
-#: modules/glpi/infoPackage.inc.php:90 modules/glpi/infoPackage.inc.php:120
+#: modules/glpi/infoPackage.inc.php:98 modules/glpi/infoPackage.inc.php:128
 msgid "Antivirus tab (GLPI)"
 msgstr "Aba Antivírus(GLPI)"
 
@@ -118,15 +118,15 @@ msgstr "Controladores"
 msgid "Create a group"
 msgstr "Criar um grupo"
 
-#: modules/glpi/infoPackage.inc.php:43
+#: modules/glpi/infoPackage.inc.php:51
 msgid "Create static group from OS distribution dashboard widget (GLPI)"
 msgstr "Criar um grupo estático através do widget SO no painel (GLPI)"
 
-#: modules/glpi/infoPackage.inc.php:38
+#: modules/glpi/infoPackage.inc.php:46
 msgid "Create static group from antivirus dashboard widget (GLPI)"
 msgstr "Criar um grupo estático através do widget do antivírus (GLPI)"
 
-#: modules/glpi/infoPackage.inc.php:33
+#: modules/glpi/infoPackage.inc.php:41
 msgid "Create static group from dashboard widgets (GLPI)"
 msgstr "Criar um grupo estático através dos widgets do painel (GLPI)"
 
@@ -146,7 +146,7 @@ msgstr "Descrição"
 msgid "Device"
 msgstr "Dispositivo"
 
-#: modules/glpi/infoPackage.inc.php:50
+#: modules/glpi/infoPackage.inc.php:58
 msgid "Display locations"
 msgstr "Mostrar locais"
 
@@ -182,6 +182,11 @@ msgstr "Espaço Livre"
 msgid "Frequency"
 msgstr "Frequencia"
 
+#: modules/glpi/infoPackage.inc.php:30
+#, fuzzy
+msgid "GLPI Inventory"
+msgstr "Última data do inventário"
+
 #: modules/glpi/glpi/ajaxViewPart.php:217
 msgid "Gateway"
 msgstr "Gateway"
@@ -198,7 +203,7 @@ msgstr "Discos Rígidos"
 msgid "Hardware"
 msgstr "Hardware"
 
-#: modules/glpi/infoPackage.inc.php:72 modules/glpi/infoPackage.inc.php:102
+#: modules/glpi/infoPackage.inc.php:80 modules/glpi/infoPackage.inc.php:110
 msgid "Hardware tab (GLPI)"
 msgstr "Aba Hardware (GLPI)"
 
@@ -210,7 +215,7 @@ msgstr "Esconder Updates do Windows"
 msgid "History"
 msgstr "Historico"
 
-#: modules/glpi/infoPackage.inc.php:87 modules/glpi/infoPackage.inc.php:117
+#: modules/glpi/infoPackage.inc.php:95 modules/glpi/infoPackage.inc.php:125
 msgid "History tab (GLPI)"
 msgstr "Aba Histórico (GLPI)"
 
@@ -222,11 +227,11 @@ msgstr "IP"
 msgid "Invalid hostname"
 msgstr "Hostname Inválido"
 
-#: modules/glpi/infoPackage.inc.php:65
+#: modules/glpi/infoPackage.inc.php:73
 msgid "Inventory (GLPI) on a group of machines"
 msgstr "Inventário (GLPI) em um grupo de máquinas"
 
-#: modules/glpi/infoPackage.inc.php:95
+#: modules/glpi/infoPackage.inc.php:103
 msgid "Inventory (GLPI) on machine"
 msgstr "Inventário (GLPI) na máquina"
 
@@ -319,7 +324,7 @@ msgstr "Placa de Rede"
 msgid "Network Type"
 msgstr "Tipo de Rede"
 
-#: modules/glpi/infoPackage.inc.php:78 modules/glpi/infoPackage.inc.php:108
+#: modules/glpi/infoPackage.inc.php:86 modules/glpi/infoPackage.inc.php:116
 msgid "Network tab (GLPI)"
 msgstr "Aba Redes (GLPI)"
 
@@ -409,7 +414,7 @@ msgstr "Tamanho"
 msgid "Softwares"
 msgstr "Programas"
 
-#: modules/glpi/infoPackage.inc.php:81 modules/glpi/infoPackage.inc.php:111
+#: modules/glpi/infoPackage.inc.php:89 modules/glpi/infoPackage.inc.php:119
 msgid "Softwares tab (GLPI)"
 msgstr "Aba Programas (GLPI)"
 
@@ -425,7 +430,7 @@ msgstr "Estado"
 msgid "Storage"
 msgstr "Armazenamento"
 
-#: modules/glpi/infoPackage.inc.php:75 modules/glpi/infoPackage.inc.php:105
+#: modules/glpi/infoPackage.inc.php:83 modules/glpi/infoPackage.inc.php:113
 msgid "Storage tab (GLPI)"
 msgstr "Aba Armazenamento (GLPI)"
 
@@ -433,7 +438,7 @@ msgstr "Aba Armazenamento (GLPI)"
 msgid "Summary"
 msgstr "Sumário"
 
-#: modules/glpi/infoPackage.inc.php:69 modules/glpi/infoPackage.inc.php:99
+#: modules/glpi/infoPackage.inc.php:77 modules/glpi/infoPackage.inc.php:107
 msgid "Summary tab (GLPI)"
 msgstr "Aba Sumario (GLPI)"
 
