@@ -1809,7 +1809,7 @@ class ImagingRpcProxy(RpcProxyI):
             db.setLocationSynchroState(loc_uuid, P2ISS.TODO)
         return defer.fail()
 
-    def __synchroTargets(self, uuids, target_type, ctx = None, wol = False):
+    def __synchroTargets(self, uuids, target_type, macs = {}, ctx = None, wol = False):
         """
         synchronize targets with their imaging servers
 
@@ -1831,15 +1831,16 @@ class ImagingRpcProxy(RpcProxyI):
         """
         if ctx == None:
             ctx = self.currentContext
-        return synchroTargets(ctx, uuids, target_type, wol = wol)
+        return synchroTargets(ctx, uuids, target_type, macs = macs, wol = wol)
 
-    def synchroComputer(self, uuid, wol = False):
+    def synchroComputer(self, uuid, mac = False, wol = False):
         """ see __synchroTargets """
         logging.getLogger().debug("I'm going to synchronize computer %s bootmenu, Wake-on-lan is %s" % (uuid, wol and 'on' or 'off'))
+        macs = mac and {uuid: mac} or {}
         if self.isTargetRegister(uuid, P2IT.COMPUTER):
-            ret = self.__synchroTargets([uuid], P2IT.COMPUTER, wol = wol)
+            ret = self.__synchroTargets([uuid], P2IT.COMPUTER, macs = macs, wol = wol)
         elif self.isTargetRegister(uuid, P2IT.COMPUTER_IN_PROFILE):
-            ret = self.__synchroTargets([uuid], P2IT.COMPUTER_IN_PROFILE, wol = wol)
+            ret = self.__synchroTargets([uuid], P2IT.COMPUTER_IN_PROFILE, macs = macs, wol = wol)
         else:
             return False
         return xmlrpcCleanup(ret)
@@ -2591,7 +2592,7 @@ class ImagingRpcProxy(RpcProxyI):
             # Tell the MMC agent to synchronize the menu
             # As it in some way returns a deferred object, it is run in
             # background
-            d = self.synchroComputer(uuid)
+            d = self.synchroComputer(uuid, mac = MACAddress)
             d.addCallback(sendResult, uuid)
         elif not is_registrated:
             is_pregistrated = db.isTargetRegister(p.getUUID(), P2IT.PROFILE)
@@ -3031,7 +3032,24 @@ def synchroComputers(ctx, uuids, ctype = P2IT.COMPUTER):
     ret = synchroTargets(ctx, uuids, ctype)
     return xmlrpcCleanup(ret)
 
-def synchroTargets(ctx, uuids, target_type, wol = False):
+def synchroTargets(ctx, uuids, target_type, macs = {}, wol = False):
+    """
+    synchronize boot menus
+    @param uuids: list of computers UUIDS
+    @type uuids: list
+
+    @param target_type: Pulse imaging type (P2IT COMPUTER, PROFILE, ...)
+    @type target_type: int
+
+    @param macs: Dict with computer UUID as key, imaging MAC as value ({'UUIDXXX': 'xx:xx:xx:xx:xx:xx'})
+    @type macs: dict
+
+    @param wol: WOL bootmenu will be set or not
+    @type wol: bool
+
+    @return: Deferred list
+    @rtype: defer_list
+    """
 
     # initialize stuff
     logger = logging.getLogger()
@@ -3093,7 +3111,10 @@ def synchroTargets(ctx, uuids, target_type, wol = False):
             h_hostnames[hostnames['uuid']] = hostnames['hostname']
 
         # store into h_macaddress the MAC addr of computers to register
-        h_macaddress = getJustOneMacPerComputer(ctx, ComputerManager().getMachineMac(ctx, {'uuids' : to_register.keys()}))
+        if macs:
+            h_macaddress = macs
+        else:
+            h_macaddress = getJustOneMacPerComputer(ctx, ComputerManager().getMachineMac(ctx, {'uuids' : to_register.keys()}))
 
         # then try to build a list of computer with menus, hostname, mac addr and so on
         computers = []
@@ -3144,17 +3165,17 @@ def synchroTargets(ctx, uuids, target_type, wol = False):
 
     distinct_loc = xmlrpcCleanup(distinct_loc)
     if len(defer_list) == 0:
-        return synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid)
+        return synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid, macs = macs)
     else:
         def sendResult(results, distinct_loc = distinct_loc, target_type = target_type, pid = pid, db = db):
             for result, uuids in results:
                 db.delProfileMenuTarget(uuids)
-            return synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid)
+            return synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid, macs = macs)
         defer_list = defer.DeferredList(defer_list)
         defer_list.addCallback(sendResult)
         return defer_list
 
-def synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid):
+def synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid, macs = {}):
     logger = logging.getLogger()
     db = ImagingDatabase()
     def treatFailures(result, location_uuid, url, distinct_loc = distinct_loc, logger = logger, target_type = target_type, pid = pid, db = db):
@@ -3191,7 +3212,7 @@ def synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid):
             logger.error("couldn't initialize the ImagingApi to %s"%(url))
 
         l_menus = distinct_loc[location_uuid][1]
-        macaddresses = getJustOneMacPerComputer(ctx, ComputerManager().getMachineMac(ctx, {'uuids' : l_menus.keys()}))
+        macaddresses = macs and macs or getJustOneMacPerComputer(ctx, ComputerManager().getMachineMac(ctx, {'uuids' : l_menus.keys()}))
 
         for uuid in l_menus.keys():
             l_menus[uuid]['target']['macaddress'] = macaddresses[uuid]
