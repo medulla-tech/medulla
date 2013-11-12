@@ -373,5 +373,7 @@ def is_command_finished(scheduler_name, id):
     else :
         return True
 
+def switch_commands_to_stop(cohs):
+    CoHManager.setCoHsStateStopped(cohs)
  
 

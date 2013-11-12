@@ -339,7 +339,16 @@ class CoHManager :
         @param ids: list of ids to update
         @type ids: list
         """
-        CoHManager.setCoHsStates(ids, "stopped")
+        session = sqlalchemy.orm.create_session()
+        for id in ids :
+            myCommandOnHost = session.query(CommandsOnHost).get(id)
+            if myCommandOnHost :
+                myCommandOnHost.current_state = "stopped"
+                myCommandOnHost.next_launch_date = myCommandOnHost.end_date
+                session.add(myCommandOnHost)
+                session.flush()
+        session.close()
+
 
     @classmethod
     def setCoHsStateFailed(cls, ids):

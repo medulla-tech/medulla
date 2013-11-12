@@ -28,11 +28,11 @@ from twisted.internet.threads import deferToThread
 from twisted.internet.task import LoopingCall
 from twisted.internet import reactor
 
-from pulse2.scheduler.config import SchedulerConfig
 from pulse2.scheduler.types import MscContainer, Circuit, CC_STATUS 
 from pulse2.scheduler.analyses import MscQueryManager
 from pulse2.scheduler.launchers_driving import RemoteCallProxy
 from pulse2.scheduler.queries import get_cohs, is_command_in_valid_time
+from pulse2.scheduler.queries import switch_commands_to_stop
 from pulse2.scheduler.queries import process_non_valid, get_ids_to_start
 from pulse2.scheduler.queries import is_command_finished, get_cohs_with_failed_phase
 from pulse2.scheduler.cleanup import CleanUpSchedule, Defaults
@@ -79,14 +79,9 @@ class MethodProxy(MscContainer):
         @param cohs: list of commands_on_host
         @type cohs: list
         """
+        self.logger.info("Prepare %d circuits to STOP ..." % len(cohs))
+        switch_commands_to_stop(cohs) 
  
-        cohs = [int(c) for c in cohs]
-        circuits = self.get_active_circuits(cohs)
-        for circuit in circuits :
-            self.logger.info("Circuit #%s: stopping" % circuit.id)
-            circuit.qm.coh.setStateStopped()
-            circuit.release()
-            # TODO - give up ?
 
  
     def run_proxymethod(self, launcher, id, name, args):

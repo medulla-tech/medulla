@@ -49,7 +49,6 @@ from pulse2.consts import PULSE2_PSERVER_MIRRORFAILED_CONNREF_ERROR, PULSE2_PSER
 from pulse2.consts import PULSE2_SUCCESS_ERROR, PULSE2_TARGET_NOTENOUGHINFO_ERROR
 from pulse2.consts import PULSE2_UNKNOWN_ERROR 
 
-from pulse2.scheduler.config import SchedulerConfig
 
 re_file_prot = re.compile('^file://')
 re_http_prot = re.compile('^http://')
@@ -176,7 +175,9 @@ class RemoteControlPhase(Phase):
         if exitcode == PULSE2_SUCCESS_ERROR: # success
             self.logger.info("Circuit #%s: %s done (exitcode == 0)" % (self.coh.id, self.name))
             self.update_history_done(exitcode, stdout, stderr)
-
+            if self.coh.isStateStopped():
+                return DIRECTIVE.KILLED
+     
             if self.phase.switch_to_done():
                 return self.next()
             return self.give_up()
@@ -217,7 +218,8 @@ class WOLPhase(Phase):
             self.logger.warn("Circuit #%s: wol couldn't be performed; not enough information in target table" % self.coh.getId())
             self.update_history_failed(PULSE2_TARGET_NOTENOUGHINFO_ERROR, 
                                " skipped : not enough information in target table")
-            self.coh.setStateScheduled()
+            if not self.coh.isStateStopped():
+                self.coh.setStateScheduled()
             return self.next()
 
         if not self.last_wol_attempt and self.phase.is_ready():
@@ -239,7 +241,8 @@ class WOLPhase(Phase):
                 self.update_history_done(PULSE2_SUCCESS_ERROR, "skipped: host already up") 
  
                 self.phase.set_done()
-                self.coh.setStateScheduled()
+                if not self.isStateStopped():
+                    self.coh.setStateScheduled()
                 return self.next()
             self.logger.info("Circuit #%s: do wol (target not up)" % self.coh.id)
             return self._performWOLPhase()
@@ -284,7 +287,7 @@ class WOLPhase(Phase):
             (exitcode, stdout, stderr) = attempt_result
         except TypeError: # xmlrpc call failed
             self.logger.error("Circuit #%s: WOL request seems to have failed ?!" % (self.coh.id))
-
+        if not self.coh.isStateStopped():
             self.coh.setStateScheduled()
             self.phase.set_ready()
             return self.give_up()
@@ -337,8 +340,8 @@ class UploadPhase(RemoteControlPhase):
         if result == 'waiting':
             self.logger.info("Circuit #%s: waiting for a local proxy" % self.coh.getId())
             #TODO
-            #self.coh.setUploadToDo()
-            self.coh.setStateScheduled()
+            if not self.coh.isStateStopped():
+                self.coh.setStateScheduled()
             return self.give_up()
         elif result == 'dead':
             self.logger.warn("Circuit #%s: waiting for a local proxy which will never be ready !" % self.coh.getId())
@@ -809,8 +812,8 @@ class ExecutionPhase(RemoteControlPhase):
             cohq = CoHQuery(self.coh.id)
             if not self.dispatcher.local_proxy_may_continue(cohq):
                 self.logger.info("Circuit #%s: execution postponed, waiting for some clients" % self.coh.id)
-                self.coh.setStateScheduled()
-                return self.give_up()
+                if not self.isStateStopped():
+                    self.coh.setStateScheduled()
         if ret not in (DIRECTIVE.NEXT,
                        DIRECTIVE.GIVE_UP, 
                        DIRECTIVE.KILLED,
@@ -872,7 +875,9 @@ class InventoryPhase(RemoteControlPhase):
                                                  self.name): 
             # there is still a coh in the same bundle that has to launch inventory, jump to next stage
             self.logger.info("Circuit #%s: another circuit from the same bundle will launch the inventory" % self.coh.id)
-            self.coh.setStateScheduled()
+            if not self.isStateStopped():
+                self.coh.setStateScheduled()
+                
             return self.next()
 
         if ret not in (DIRECTIVE.NEXT,

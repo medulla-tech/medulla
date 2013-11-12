@@ -43,7 +43,6 @@ doing something on target.
 
 import logging
 import inspect
-import random
 import time
 import datetime
 
@@ -195,7 +194,8 @@ class PhaseBase (PhaseProxyMethodContainer):
         @rtype: DIRECTIVE
         """
         if self.coh.isStateStopped():
-            return DIRECTIVE.GIVE_UP
+            self.logger.info("Circuit #%s: Stop"  %self.coh.id)
+            return DIRECTIVE.KILLED
         if not self.cmd.in_valid_time(): 
             return DIRECTIVE.OVER_TIMED
  
@@ -443,8 +443,10 @@ class Phase (PhaseBase):
         @rtype: DIRECTIVE
         """
         self.logger.debug("Circuit #%s: Releasing" % self.coh.id)
-
-        return DIRECTIVE.GIVE_UP
+        if self.coh.isStateStopped():
+            return DIRECTIVE.KILLED
+        else :
+            return DIRECTIVE.GIVE_UP
 
     def failed(self):
         """
@@ -489,6 +491,9 @@ class Phase (PhaseBase):
                     (self.coh.id, name))
             return self.give_up()
         else: # failed: launcher seems to have rejected it
+            if self.coh.isStateStopped():
+                return self.give_up()
+
             self.coh.setStateScheduled()
             self.logger.warn("Circuit #%s: %s order NOT stacked" % (self.coh.id, name))
             return self.switch_phase_failed(True)
@@ -801,13 +806,17 @@ class Circuit (CircuitBase):
         @return: recursive workflow routine
         @rtype: func
         """
-
+        self.cohq = CoHQuery(self.id)
         # if give-up - actual phase is probably running - do not move - wait...
         if result == DIRECTIVE.GIVE_UP or result == None :
             return lambda : DIRECTIVE.GIVE_UP
         elif result == DIRECTIVE.FAILED :
             self.logger.info("Circuit #%s: failed - releasing" % self.id)
             self.release(True)
+            return
+        elif result == DIRECTIVE.KILLED :
+            self.logger.info("Circuit #%s: releasing" % self.id)
+            self.release()
             return
         else :
             return self.phase_step() 
