@@ -18,11 +18,14 @@
 # You should have received a copy of the GNU General Public License
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 
+from ConfigParser import NoOptionError, NoSectionError
+
 from mmc.support.config import PluginConfig
 from mmc.database.config import DatabaseConfig
 
+
 class ReportConfig(PluginConfig, DatabaseConfig):
-    def __init__(self, name = 'report', conffile = None):
+    def __init__(self, name='report', conffile=None):
         if not hasattr(self, 'initdone'):
             PluginConfig.__init__(self, name, conffile)
             DatabaseConfig.__init__(self)
@@ -31,3 +34,7 @@ class ReportConfig(PluginConfig, DatabaseConfig):
     def readConf(self):
         PluginConfig.readConf(self)
         DatabaseConfig.setup(self, self.conffile)
+        try:
+            self.historization = self.get('data', 'historization')
+        except (NoOptionError, NoSectionError):
+            self.historization = '15 2 * * *'

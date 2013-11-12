@@ -131,14 +131,17 @@ class TaskManager(object):
 
         if interval:
             self.tasks[label] = LoopingCall(tmp_task[0], *tmp_task[1], **tmp_task[2])
+            logger.debug("Creating interval task %s (interval: %s)" % (label, interval))
             return self.tasks[label].start(interval)
 
         if cron_expression:
             self.tasks[label] = ScheduledCall(tmp_task[0], *tmp_task[1], **tmp_task[2])
+            logger.debug("Creating cron task %s (cron: %s)" % (label, cron_expression))
             return self.tasks[label].start(CronSchedule(cron_expression))
 
         # If no delay nor interval nor cron_expression
         # a DelayedCall is run with a 0s delay
+        logger.debug("Creating delayed task %s (delay: %i)" % (label, delay))
         self.tasks[label] = DelayedCall(tmp_task[0], *tmp_task[1], **tmp_task[2])
         return self.tasks[label].start(delay)
 

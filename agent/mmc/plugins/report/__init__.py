@@ -25,28 +25,30 @@ import logging
 import time
 import os
 import datetime
-from base64 import b64encode
+import xml.etree.ElementTree as ET
+
+logger = logging.getLogger()
 
 try:
     from pulse2.managers.location import ComputerLocationManager
 except ImportError:
-    logging.getLogger().warn("report: I can't load Pulse ComputerLocationManager")
+    logger.warn("report: I can't load Pulse ComputerLocationManager")
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
+from mmc.core.tasks import TaskManager
 from mmc.plugins.base import LdapUserGroupControl
 from mmc.plugins.report.config import ReportConfig
 from mmc.plugins.report.database import ReportDatabase
-import xml.etree.ElementTree as ET
 from mmc.plugins.report.output import XlsGenerator, PdfGenerator, SvgGenerator
 
 VERSION = "0.0.0"
 APIVERSION = "0:1:0"
 REVISION = ""
 
-logger = logging.getLogger()
 
 def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION
 def getRevision(): return REVISION
+
 
 def activate():
     config = ReportConfig("report")
@@ -56,10 +58,12 @@ def activate():
     if not ReportDatabase().activate(config):
         logger.error("Report database not activated")
         return False
-
+    # Add historization task in the task manager
+    TaskManager().addTask("report.historize_all",
+                          (ReportDatabase().historize_all,),
+                          cron_expression=config.historization)
     return True
 
-## XMLRPC Methods
 
 class ContextMaker(ContextMakerI):
     def getContext(self):
@@ -67,6 +71,7 @@ class ContextMaker(ContextMakerI):
         s.userid = self.userid
         s.userdn = LdapUserGroupControl().searchUserDN(self.userid)
         return s
+
 
 class RpcProxy(RpcProxyI):
 
