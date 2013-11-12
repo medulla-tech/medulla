@@ -216,6 +216,8 @@ class PhaseBase (PhaseProxyMethodContainer):
 
     def _switch_on(self):
         """Phase is ready to run, let's go !"""
+        if self.phase.is_failed():
+            self.cmd.dec_failed()
         self.phase.set_running()
         if not self.state_name :
             self.state_name = self.name
@@ -468,6 +470,7 @@ class Phase (PhaseBase):
             logging.getLogger().info("Circuit #%s: failed" % (self.coh.id))
             self.coh.setStateFailed()
             return DIRECTIVE.KILLED
+        self.cmd.inc_failed()
         return self.failed() 
            
     def parse_order(self, name, taken_in_account):

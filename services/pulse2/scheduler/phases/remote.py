@@ -927,6 +927,7 @@ class DonePhase(Phase):
     def perform(self): 
        self.phase.set_done()
        self.coh.setStateDone()
+       self.cmd.inc_done()
        return self.next()
 
 

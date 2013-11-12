@@ -189,6 +189,29 @@ class Commands(object):
         self.next_connection_delay = delay
         self.flush()
 
+    def inc_failed(self):
+        """Increments the total of failed commands"""
+        self.sum_running -= 1
+        self.sum_failed += 1
+        self.flush()
+
+    def dec_failed(self):
+        """Decrements the total of failed commands"""
+ 
+        self.sum_running += 1
+        self.sum_failed -= 1
+        self.flush()
+
+
+    def inc_done(self):
+        """Increments the total of finished commands"""
+        self.sum_running -= 1
+        self.sum_done += 1
+        self.flush()
+
+       
+
+
     def flush(self):
         """ Handle SQL flushing """
         session = sqlalchemy.orm.create_session()
