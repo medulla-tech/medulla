@@ -1295,7 +1295,10 @@ class Glpi084(DyngroupDatabaseHelper):
         return ret
 
     def getLocationName(self, uuid):
-        return self.getLocation(uuid[0]).name
+        if isinstance(uuid, list):
+            uuid = uuid[0]
+
+        return self.getLocation(uuid).name
 
     def getLocationsList(self, ctx, filt = None):
         """

@@ -1252,10 +1252,13 @@ class Glpi08(DyngroupDatabaseHelper):
         return ret
 
     def getLocationName(self, uuid):
+        if isinstance(uuid, list):
+            uuid = uuid[0]
+
         # Faking the root entity name
-        if uuid[0] == 'UUID0':
+        if uuid == 'UUID0':
             return rootLocation().name
-        return self.getLocation(uuid[0]).name
+        return self.getLocation(uuid).name
 
     def getLocationsList(self, ctx, filt = None):
         """
