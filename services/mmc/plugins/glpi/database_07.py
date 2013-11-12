@@ -1254,7 +1254,10 @@ class Glpi07(DyngroupDatabaseHelper):
         path = []
         en_id = fromUUID(loc_uuid)
         en = session.query(Location).filter(self.location.c.ID == en_id).first()
-        parent_id = en.parentID
+        if en is not None:
+            parent_id = en.parentID
+        else:
+            parent_id = 0
 
         while parent_id != 0:
             en_id = parent_id
