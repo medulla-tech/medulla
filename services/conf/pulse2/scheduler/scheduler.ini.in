@@ -26,6 +26,8 @@ scheduler_proxy_path = @sbindir@/pulse2-scheduler-proxy
 # delay between requests during command launching - this lag avoids a huge load
 # on the reqested side, i.e. on a launcher 
 # emitting_period = .3
+# proxy buffer emitting period 
+# proxy_buffer_period = .1
 #
 # initial wait time, in seconds, to make stuff stabilize
 # initial_wait = 2
@@ -42,19 +44,11 @@ scheduler_proxy_path = @sbindir@/pulse2-scheduler-proxy
 # scheduler mode, see doc !
 # mode = async
 #
-# max number of slots to uses, for all launchers
-# max_slots = 300
-#
-# locking system
-# please use with caution: the only reason to activate this feature
-# is for systems under heavy load; risk of double-preemption is
-# drastically reduce using this, but your system will be even more slow
-# lock_processed_commands = False
-#
 # multithreading application
-# for huge installaiton, go threads
-# multithreading = True
 # max_threads = 20
+#
+# number of overtimed circuits in one batch
+# max_to_overtimed = 1000
 #
 # In some cases, some steps failure are non-fatal for the final state of the command.
 # Example: inventory fail but if other steps are ok, we want a success result for

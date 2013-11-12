@@ -87,6 +87,8 @@ class SchedulerConfig(object):
     dbencoding = 'utf-8'
     enablessl = True
     emitting_period = .3
+    proxy_buffer_period = .1
+    proxy_buffer_start_delay = 4
     initial_wait = 2
     localcert = mmcconfdir + "/pulse2/scheduler/keys/privkey.pem"
     host = "127.0.0.1"
@@ -111,6 +113,7 @@ class SchedulerConfig(object):
     cache_size = 300
     cache_timeout = 500
     imaging = False
+    max_to_overtimed = 1000
 
     # [daemon] section
     daemon_group = 0
@@ -182,6 +185,8 @@ class SchedulerConfig(object):
         self.setoption("scheduler", "awake_time", "awake_time", 'int')
         self.setoption("scheduler", "initial_wait", "initial_wait", 'int')
         self.setoption("scheduler", "emitting_period", "emitting_period", 'float')
+        self.setoption("scheduler", "proxy_buffer_period", "proxy_buffer_period", 'float')
+        self.setoption("scheduler", "proxy_buffer_start_delay", "proxy_buffer_start_delay", 'int')
 
         # cache settings
         self.setoption("scheduler", "cache_size", "cache_size", 'int')
@@ -195,6 +200,7 @@ class SchedulerConfig(object):
         self.setoption("scheduler", "max_threads", "max_threads", 'int')
 
         self.setoption("scheduler", "imaging", "imaging", 'bool')
+        self.setoption("scheduler", "max_to_overtimed", "max_to_overtimed", 'int')
 
         if self.cp.has_option("scheduler", "non_fatal_steps"):
             self.non_fatal_steps = self.cp.get("scheduler", "non_fatal_steps").split(' ')

@@ -39,7 +39,7 @@ class Sender(Protocol):
         try :
             self.transport.write(pack)
         except Exception, e:
-            self.logger.error("\033[31mux call failed: %s\033[0m" % str(e))
+            logging.getLogger().error("\033[31mux call failed: %s\033[0m" % str(e))
 
         self.send_locked = True
 

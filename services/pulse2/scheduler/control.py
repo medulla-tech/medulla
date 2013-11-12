@@ -566,7 +566,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         """
         commands_to_cleanup_check = []
         for id in process_non_valid(self.config.name, 
-                                    1000, 
+                                    self.config.max_to_overtimed, 
                                     self.config.non_fatal_steps):
             circuit = self.get(id)
             if circuit :

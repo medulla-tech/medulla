@@ -79,7 +79,9 @@ class App :
 
         self.xmlrpc_proxy.register_forwarder(self.forwarder)
 
-        d = task.deferLater(reactor, 4, self.start_emitting_buffer)
+        d = task.deferLater(reactor, 
+                            self.config.proxy_buffer_start_delay, 
+                            self.start_emitting_buffer)
         d.addErrback(self._eb_got_forwarder)
  
     def _eb_got_forwarder(self, failure):
@@ -90,7 +92,7 @@ class App :
         SendingBuffer().restore_buffer()
         SendingBuffer().register_sender(self.forwarder.protocol)
         t = task.LoopingCall(SendingBuffer().send)
-        t.start(0.1)
+        t.start(self.config.proxy_buffer_period)
 
     listening_port = None
 
