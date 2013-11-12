@@ -188,6 +188,7 @@ class DelayedCall:
         return d
 
     def __call__(self):
+        logger.debug("Running task %s" % self.f)
         def cb(result):
             d, self.deferred = self.deferred, None
             self.result = result
@@ -290,6 +291,7 @@ class ScheduledCall:
             d.callback(self)
 
     def __call__(self):
+        logger.debug("Running task %s" % self.f)
         def cb(result):
             if self.running:
                 self._reschedule()
