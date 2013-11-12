@@ -930,7 +930,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 self.imagingServer_lang[self.imagingServer_entity[loc_id]] = ims.fk_language
             else:
                 return 1 # default to english
-        lang = self.imagingServer_lang[loc_id]
+        if loc_id in self.imagingServer_lang:
+            lang = self.imagingServer_lang[loc_id]
         return lang
 
     def __PossibleBootServices(self, session, target_uuid, filter, count = False):
