@@ -48,14 +48,25 @@ class getCommand(object):
         self.logger = log and log or logging.getLogger()
 
     def getStringsData(self):
+        """
+        Get strings command output as XML string if <?xml is found
+        else return all strings datas
+        """
         strings_command = 'strings "%s"' % self.file
         strings_data = os.popen(strings_command).read()
         xml_pos = strings_data.find('<?xml')
-        strings_data = strings_data[xml_pos:]
-        end_pos = strings_data.find('</assembly>') + 11
-        return strings_data[:end_pos]
+        if xml_pos != -1:
+            strings_data = strings_data[xml_pos:]
+            end_pos = strings_data.find('</assembly>') + 11
+            return strings_data[:end_pos]
+        else:
+            self.logger.debug('getStringsData: <?xml tag not found :-(, return all strings_data')
+            return strings_data
 
     def getFileData(self):
+        """
+        return file command output as dictionary
+        """
         file_command = 'file "%s"' % self.file
         file_data = os.popen(file_command).read()
         l = file_data.split(': ')
@@ -69,6 +80,9 @@ class getCommand(object):
             d[l[i-1].split(', ').pop()] = " ".join(l[i].split(', ')[:lcount-1]).replace('\n', '')
 
         return d
+
+    def getAdobeCommand(self):
+        return './"%s" /sAll' % self.file.split('/').pop()
 
     def getInnoCommand(self):
         return './"%s" /SP /VERYSILENT /NORESTART' % self.file.split('/').pop()
@@ -117,6 +131,11 @@ class getCommand(object):
             self.logger.debug("%s is a PE32 executable" % self.file)
             installer = None
 
+            # If strings_data startswith <?xml, it is propably
+            # standard InnoSetup or NSIS installer
+            # else, we check for another custom installer
+            # (Adobe, ....)
+
             if strings_data.startswith('<?xml'):
                 xmldoc = minidom.parseString(strings_data)
                 identity = xmldoc.getElementsByTagName('assemblyidentity')
@@ -128,6 +147,9 @@ class getCommand(object):
                 if identity > 0:
                     if identity[0].hasAttribute('name'):
                         installer = identity[0].getAttribute('name')
+            elif 'AdobeSelfExtractorApp' in strings_data:
+                self.logger.debug('Adobe application detected')
+                return self.getAdobeCommand()
 
             if installer == "JR.Inno.Setup":
                 self.logger.debug("InnoSetup detected")
