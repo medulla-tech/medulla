@@ -436,7 +436,8 @@ class Glpi07(DyngroupDatabaseHelper):
                 if isinstance(ctxlocation, list):
                     for loc in ctxlocation:
                         locsid.append(self.__getId(loc))
-                join_query = join_query.join(self.location)
+
+                join_query = join_query.outerjoin(self.location)
 
                 if location != None:
                     # Imaging group case

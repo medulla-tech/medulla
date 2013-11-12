@@ -489,9 +489,7 @@ class Glpi08(DyngroupDatabaseHelper):
                     for loc in ctxlocation:
                         locsid.append(self.__getId(loc))
 
-                # Seems to be redundantwith the following filters
-                # Also it anihilates the hack to show the GLPI root entity
-                #join_query = join_query.join(self.location)
+                join_query = join_query.outerjoin(self.location)
 
                 if location is not None:
                     # Imaging group case
