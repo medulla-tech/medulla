@@ -32,31 +32,13 @@ import logging
 
 from twisted.internet import reactor, task
 from twisted.internet.defer import succeed, Deferred
-from twisted.web.client import Agent
-from twisted.web.http_headers import Headers
-from twisted.web.iweb import IBodyProducer
-from zope.interface import implements
+from twisted.web.client import getPage
 
 from pulse2.package_server.imaging.pxe.parser import PXEMethodParser, assign
 from pulse2.package_server.imaging.pxe.parser import LOG_LEVEL, LOG_STATE
 from pulse2.package_server.imaging.pxe.tracking import EntryTracking
 from pulse2.package_server.config import P2PServerCP
 from pulse2.imaging.bootinventory import BootInventory
-
-
-class InventorySender(object):
-    """ POST request to inventory-server """
-
-    implements(IBodyProducer)
-
-    def __init__(self, inventory):
-        self.body = inventory
-        self.length = len(self.body)
-
-    def startProducing(self, consumer):
-        consumer.write(self.body)
-        return succeed(None)
-
 
 class PXEImagingApi (PXEMethodParser):
     """
@@ -380,16 +362,15 @@ class PXEImagingApi (PXEMethodParser):
 
             # POST the inventory to the inventory server
             logging.getLogger().debug("PXE Proxy: PXE inventory forwarded to inventory server at %s" % url)
-            agent = Agent(reactor)
-            d = agent.request('POST',
-                              url,
-                              Headers({
-                                'Content-Type': ['application/x-www-form-urlencoded'],
-                                'Content-Length': [str(len(inventory))],
-                                'User-Agent': ['Pulse2 Imaging server inventory hook']
-                              }),
-                              InventorySender(inventory),
-                             )
+            d = getPage(url,
+                        method='POST',
+                        postdata=inventory,
+                        headers={
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'Content-Length': str(len(inventory)),
+                            'User-Agent': 'Pulse2 Imaging server inventory hook'
+                        },
+                       )
             @d.addCallback
             def _cb (result):
                 if result :
