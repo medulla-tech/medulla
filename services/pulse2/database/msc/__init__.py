@@ -200,11 +200,11 @@ class MscDatabase(DatabaseHelper):
 
     def createCommand(self, session, package_id, start_file, parameters, files,
             start_script, clean_on_success, start_date, end_date, connect_as,
-            creator, title, #do_halt, do_reboot, do_wol, 
-            #do_wol_with_imaging, 
+            creator, title, #do_halt, do_reboot, do_wol,
+            #do_wol_with_imaging,
             next_connection_delay,
-            max_connection_attempt, 
-            #do_inventory, 
+            max_connection_attempt,
+            #do_inventory,
             maxbw, deployment_intervals,
             fk_bundle, order_in_bundle, proxies, proxy_mode, state):
         """
@@ -245,16 +245,16 @@ class MscDatabase(DatabaseHelper):
 
     def _createPhases(self,
                       session,
-                      cohs, 
-                      do_imaging_menu, 
+                      cohs,
+                      do_imaging_menu,
                       do_wol,
                       files,
                       start_script,
                       clean_on_success,
-                      do_inventory, 
-                      do_halt, 
+                      do_inventory,
+                      do_halt,
                       do_reboot):
-        wf_list = ["pre_menu", 
+        wf_list = ["pre_menu",
            "wol",
            "post_menu",
            "upload",
@@ -297,14 +297,13 @@ class MscDatabase(DatabaseHelper):
                 if name == "halt" and do_halt != "done" :
                     continue
 
-                phases_values.append({"fk_commands_on_host": coh.id, 
-                                      "phase_order" : order, 
+                phases_values.append({"fk_commands_on_host": coh.id,
+                                      "phase_order" : order,
                                       "name" : name})
 
                 order += 1
 
         session.execute(self.commands_on_host_phase.insert(), phases_values)
- 
 
 
 
@@ -313,9 +312,10 @@ class MscDatabase(DatabaseHelper):
 
 
 
-    def createCommandsOnHost(self, command, target, target_id, 
-                             target_name, cmd_max_connection_attempt, 
-                             start_date, end_date, scheduler = None, 
+
+    def createCommandsOnHost(self, command, target, target_id,
+                             target_name, cmd_max_connection_attempt,
+                             start_date, end_date, scheduler = None,
                              order_in_proxy = None, max_clients_per_proxy = 0):
         logging.getLogger().debug("Create new command on host '%s'" % target_name)
         return {
@@ -598,19 +598,19 @@ class MscDatabase(DatabaseHelper):
     def getAllCommandsConsult(self, ctx, min, max, filt):
         filtering2_1 = and_(self.commands.c.fk_bundle == None, or_(self.commands.c.title.like('%%%s%%'%(filt)), self.commands.c.creator.like('%%%s%%'%(filt))), self.__queryUsersFilterBis(ctx))
         filtering2_2 = and_(self.commands.c.fk_bundle == self.bundle.c.id, or_(self.commands.c.title.like('%%%s%%'%(filt)), self.commands.c.creator.like('%%%s%%'%(filt)), self.bundle.c.title.like('%%%s%%'%(filt))), self.__queryUsersFilterBis(ctx))
-                
+
         session = create_session()
         size1 = session.query(func.count(Commands.id)).filter(filtering2_1).filter(self.commands.c.fk_bundle == None).scalar() or 0
         size2 = select(['bid'], True, select([self.commands.c.fk_bundle.label('bid')], and_(filtering2_2, self.commands.c.fk_bundle != None)).group_by('bid').alias('BIDS') ).alias('C').count()
- 
+
         conn = self.getDbConnection()
         size2 = conn.execute(size2).fetchone()
-        
+
         size = int(size1) + int(size2[0])
 
         u2 = union(
-                select([self.commands.c.id, func.concat('CMD_', self.commands.c.id).label('bid'), self.commands.c.creation_date], filtering2_1),
-                select([self.commands.c.id, self.commands.c.fk_bundle.label('bid'), self.commands.c.creation_date], filtering2_2) 
+                select([self.commands.c.id, func.concat('CMD_', self.commands.c.id).label('bid'), self.commands.c.creation_date, self.commands.c.start_date, self.commands.c.end_date, self.commands.c.sum_running, self.commands.c.sum_failed, self.commands.c.sum_done], filtering2_1),
+                select([self.commands.c.id, self.commands.c.fk_bundle.label('bid'), self.commands.c.creation_date, self.commands.c.start_date, self.commands.c.end_date, self.commands.c.sum_running, self.commands.c.sum_failed, self.commands.c.sum_done], filtering2_2)
         ).group_by('bid').order_by(desc('creation_date')).offset(int(min)).limit(int(max)-int(min))
 
         conn = self.getDbConnection()
@@ -622,7 +622,7 @@ class MscDatabase(DatabaseHelper):
         query = session.query(Commands).add_column(self.commands.c.fk_bundle).add_column(self.commands_on_host.c.host).add_column(self.commands_on_host.c.id)
         query = query.add_column(self.target.c.id_group).add_column(self.bundle.c.title).add_column(self.target.c.target_uuid)
         query = query.select_from(self.commands.join(self.commands_on_host).join(self.target).outerjoin(self.bundle))
-        
+
         cmds = query.filter(self.commands.c.id.in_(cmds)).group_by(self.commands.c.id).order_by(desc(self.commands.c.creation_date)).all()
 
         session.close()
@@ -635,10 +635,15 @@ class MscDatabase(DatabaseHelper):
                             'title':btitle,
                             'creator':cmd.creator,
                             'creation_date':cmd.creation_date,
+                            'start_date':cmd.start_date,
+                            'end_date':cmd.end_date,
+                            'sum_running':cmd.sum_running,
+                            'sum_failed':cmd.sum_failed,
+                            'sum_done':cmd.sum_done,
                             'bid':bid,
                             'cmdid':'',
                             'target':'group %s'%gid,
-                            'gid':gid, 
+                            'gid':gid,
                             'uuid':'',
                             'status':self.getCommandOnBundleStatus(ctx, bid)
                     })
@@ -647,6 +652,11 @@ class MscDatabase(DatabaseHelper):
                             'title':btitle,
                             'creator':cmd.creator,
                             'creation_date':cmd.creation_date,
+                            'start_date':cmd.start_date,
+                            'end_date':cmd.end_date,
+                            'sum_running':cmd.sum_running,
+                            'sum_failed':cmd.sum_failed,
+                            'sum_done':cmd.sum_done,
                             'bid':bid,
                             'cmdid':'',
                             'target':target_name,
@@ -660,6 +670,11 @@ class MscDatabase(DatabaseHelper):
                             'title':cmd.title,
                             'creator':cmd.creator,
                             'creation_date':cmd.creation_date,
+                            'start_date':cmd.start_date,
+                            'end_date':cmd.end_date,
+                            'sum_running':cmd.sum_running,
+                            'sum_failed':cmd.sum_failed,
+                            'sum_done':cmd.sum_done,
                             'bid':'',
                             'cmdid':cmd.id,
                             'target':'group %s'%gid,
@@ -672,6 +687,11 @@ class MscDatabase(DatabaseHelper):
                             'title':cmd.title,
                             'creator':cmd.creator,
                             'creation_date':cmd.creation_date,
+                            'start_date':cmd.start_date,
+                            'end_date':cmd.end_date,
+                            'sum_running':cmd.sum_running,
+                            'sum_failed':cmd.sum_failed,
+                            'sum_done':cmd.sum_done,
                             'bid':'',
                             'cmdid':cmd.id,
                             'cohid':cohid,
@@ -681,7 +701,7 @@ class MscDatabase(DatabaseHelper):
                             'status':{},
                             'current_state':self.getCommandOnHostCurrentState(ctx, cmd.id)
                     })
-            
+
         return [size, ret]
 
     ###################
@@ -1041,7 +1061,7 @@ class MscDatabase(DatabaseHelper):
         session.close()
         if max != -1: ret = ret[min:max]
         return map(lambda coh: {'coh_id':coh.id, 'uuid':coh.target_uuid, 'host':coh.host, 'start_date':coh.start_date, 'end_date':coh.end_date, 'current_state':coh.current_state}, ret)
-    
+
     def getCommandOnGroupStatus(self, ctx, cmd_id):# TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         session = create_session()
         query = session.query(func.count(self.commands_on_host.c.id), CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.id == cmd_id)
@@ -1115,7 +1135,7 @@ class MscDatabase(DatabaseHelper):
         session.close()
         if max != -1: ret = ret[min:max]
         return map(lambda coh: {'coh_id': coh.id, 'uuid':coh.target_uuid, 'host':coh.host, 'start_date':coh.start_date, 'end_date':coh.end_date, 'current_state':coh.current_state}, ret)
-        
+
     def getCommandOnBundleStatus(self, ctx, fk_bundle):
         session = create_session()
         query = session.query(func.count(self.commands_on_host.c.id), CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.fk_bundle == fk_bundle)
@@ -1126,7 +1146,7 @@ class MscDatabase(DatabaseHelper):
     def __putUUIDInCOH(self, coh, uuid):
         setattr(coh, 'target_uuid', uuid)
         return coh
-    
+
     def __filterOnStatus(self, ctx, query, state):
         query = map(lambda x: self.__putUUIDInCOH(x[0], x[1]), query)
         ret = self.__getStatus(ctx, query, True)
@@ -1138,7 +1158,7 @@ class MscDatabase(DatabaseHelper):
         return None
 
     def getStateCoh(self, query, filter):
-        """ 
+        """
         Add filters to query and return a SQL count() of this query
         @param query: the query
         @type query: sqlalchemy query object
@@ -1161,7 +1181,7 @@ class MscDatabase(DatabaseHelper):
         return [machine[0] for machine in query]
 
     def getStateLen(self, query, filter):
-        """ 
+        """
         Add filters to query and return a SQL count() of this query
         @param query: the query
         @type query: sqlalchemy query object
@@ -1221,7 +1241,7 @@ class MscDatabase(DatabaseHelper):
 	    ["end_date", [now], '>='],
 	    ["current_state", paused, False],
 	    ["current_state", stopped, False],
-            ["attempts_left", [0], False], 
+            ["attempts_left", [0], False],
             ["uploaded", ["FAILED"]],
         ])
         sec_ex = self.getStateLen(query, [
@@ -1229,7 +1249,7 @@ class MscDatabase(DatabaseHelper):
 	    ["end_date", [now], '>='],
 	    ["current_state", paused, False],
 	    ["current_state", stopped, False],
-            ["attempts_left", [0], False], 
+            ["attempts_left", [0], False],
             ["executed", ["FAILED"]],
         ])
         sec_rm = self.getStateLen(query, [
@@ -1237,7 +1257,7 @@ class MscDatabase(DatabaseHelper):
 	    ["end_date", [now], '>='],
 	    ["current_state", paused, False],
 	    ["current_state", stopped, False],
-            ["attempts_left", [0], False], 
+            ["attempts_left", [0], False],
             ["deleted", ["FAILED"]],
         ])
         sec_inv = self.getStateLen(query, [
@@ -1245,7 +1265,7 @@ class MscDatabase(DatabaseHelper):
 	    ["end_date", [now], '>='],
 	    ["current_state", paused, False],
 	    ["current_state", stopped, False],
-            ["attempts_left", [0], False], 
+            ["attempts_left", [0], False],
             ["inventoried", ["FAILED"]],
         ])
 
@@ -1275,7 +1295,7 @@ class MscDatabase(DatabaseHelper):
             },
             'running':{
                 'total': [running_total, []],
-                'wait_up': [sum([sec_up, 
+                'wait_up': [sum([sec_up,
                                 self.getStateLen(query,
                                                 [
                                                  ["current_state", ["over_timed"], False],
@@ -1284,12 +1304,12 @@ class MscDatabase(DatabaseHelper):
                                                  ["uploaded", ["TODO"]],
                                                 ]
                                                 )]),[]],
-                'run_up':[self.getStateLen(query, 
+                'run_up':[self.getStateLen(query,
                                            [
                                                ["current_state", "upload_in_progress"],
                                            ]), []],
                 'sec_up': [sec_up, []],
-                'wait_ex': [sum([sec_ex, 
+                'wait_ex': [sum([sec_ex,
                                 self.getStateLen(query,
                                                 [
                                                  ["current_state", ["over_timed"], False],
@@ -1299,12 +1319,12 @@ class MscDatabase(DatabaseHelper):
                                                  ["executed", ["TODO"]],
                                                 ]
                                                 )]),[]],
-                'run_ex':[self.getStateLen(query, 
+                'run_ex':[self.getStateLen(query,
                                            [
                                                ["current_state", ["execution_in_progress"]],
                                            ]), []],
                 'sec_ex': [sec_ex, []],
-                'wait_rm': [sum([sec_rm, 
+                'wait_rm': [sum([sec_rm,
                                 self.getStateLen(query,
                                                 [
                                                  ["current_state", ["over_timed"], False],
@@ -1314,12 +1334,12 @@ class MscDatabase(DatabaseHelper):
                                                  ["deleted", ["TODO"]],
                                                 ]
                                                 )]),[]],
-                'run_rm':[self.getStateLen(query, 
+                'run_rm':[self.getStateLen(query,
                                            [
                                                ["current_state", ["delete_in_progress"]],
                                            ]), []],
                 'sec_rm': [sec_rm, []],
-                'wait_inv': [sum([sec_inv, 
+                'wait_inv': [sum([sec_inv,
                                 self.getStateLen(query,
                                                 [
                                                  ["current_state", ["over_timed"], False],
@@ -1329,7 +1349,7 @@ class MscDatabase(DatabaseHelper):
                                                  ["inventoried", ["TODO"]],
                                                 ]
                                                 )]),[]],
-                'run_inv':[self.getStateLen(query, 
+                'run_inv':[self.getStateLen(query,
                                            [
                                                ["current_state", ["inventory_in_progress"]],
                                            ]), []],
