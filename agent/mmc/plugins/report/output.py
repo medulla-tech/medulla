@@ -403,7 +403,7 @@ class SvgGenerator(object):
     def _get_bar_chart(self):
         return pygal.StackedBar(
             style=self.style,
-            no_data_text=self.no_data_text,
+            no_data_text=self.config.no_data_text,
             disable_xml_declaration=True, # for correct svg in web page
             explicit_size=True,
             show_dots=False
@@ -439,7 +439,7 @@ class SvgGenerator(object):
     def _get_pie_chart(self):
         return pygal.Pie(
             style=self.style,
-            no_data_text=self.no_data_text,
+            no_data_text=self.config.no_data_text,
             disable_xml_declaration=True, # for correct svg in web page
             explicit_size=True,
             show_dots=False
