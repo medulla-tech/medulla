@@ -134,6 +134,51 @@ class periodInputTpl extends multifieldTpl {
             new HiddenTpl($from_id . "_timestamp"),
             new HiddenTpl($to_id . "_timestamp"),
         );
+
+        $months = json_encode(array(_T("January", "report"),
+                        _T("February", "report"),
+                        _T("March", "report"),
+                        _T("April", "report"),
+                        _T("May", "report"),
+                        _T("June", "report"),
+                        _T("July", "report"),
+                        _T("August", "report"),
+                        _T("September", "report"),
+                        _T("October", "report"),
+                        _T("November", "report"),
+                        _T("December", "report")));
+        $monthsShort = json_encode(array(_T("Jan", "report"),
+                             _T("Feb", "report"),
+                             _T("Mar", "report"),
+                             _T("Apr", "report"),
+                             _T("May", "report"),
+                             _T("Jun", "report"),
+                             _T("Jul", "report"),
+                             _T("Aug", "report"),
+                             _T("Sep", "report"),
+                             _T("Oct", "report"),
+                             _T("Nov", "report"),
+                             _T("Dec", "report")));
+        $days = json_encode(array(_T("Sunday", "report"),
+                      _T("Monday", "report"),
+                      _T("Tuesday", "report"),
+                      _T("Wednesday", "report"),
+                      _T("Thirsday", "report"),
+                      _T("Friday", "report"),
+                      _T("Saturday", "report")));
+        $daysShort = json_encode(array(_T("Sun", "report"),
+                           _T("Mon", "report"),
+                           _T("Tue", "report"),
+                           _T("Wed", "report"),
+                           _T("Thi", "report"),
+                           _T("Fri", "report"),
+                           _T("Sat", "report")));
+        $daysMin = json_encode(array(_T("Su", "report"), _T("Mo", "report"), _T("Tu", "report"),
+                         _T("We", "report"), _T("Th", "report"), _T("Fr", "report"),
+                         _T("Sa", "report")));
+        $weekHeader = json_encode(_T("Wk", "report"));
+        $dateFormat = json_encode(_T("yy/mm/dd", "report"));
+
         echo <<< JQUERY
             <script>
             jQuery(function() {
@@ -146,6 +191,13 @@ class periodInputTpl extends multifieldTpl {
                     showWeek: true,
                     showAnim: 'slideDown',
                     maxDate: -1,
+                    monthNames: $months,
+                    monthNamesShort: $monthsShort,
+                    dayNames: $days,
+                    dayNamesShort: $daysShort,
+                    dayNamesMin: $daysMin,
+                    weekHeader: $weekHeader,
+                    dateFormat: $dateFormat,
                     onClose: function( selectedDate ) {
                         jQuery("#$to_id").datepicker( "option", "minDate", selectedDate );
                         var timestamp = new Date(selectedDate).valueOf() / 1000;
@@ -158,6 +210,13 @@ class periodInputTpl extends multifieldTpl {
                     showWeek: true,
                     showAnim: 'slideDown',
                     maxDate: -1,
+                    monthNames: $months,
+                    monthNamesShort: $monthsShort,
+                    dayNames: $days,
+                    dayNamesShort: $daysShort,
+                    dayNamesMin: $daysMin,
+                    weekHeader: $weekHeader,
+                    dateFormat: $dateFormat,
                     onClose: function( selectedDate ) {
                         jQuery("input[name=$to_id" + "_timestamp]").val('toto');
                         var timestamp = new Date(selectedDate).valueOf() / 1000;
