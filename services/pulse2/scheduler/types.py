@@ -63,7 +63,6 @@ from pulse2.scheduler.utils import getClientCheck, getServerCheck
 
 from pulse2.database.msc.orm.commands_history import CommandsHistory
 
-SchedulerConfig().setup("/etc/mmc/pulse2/scheduler/scheduler.ini")
 
 
 def enum(*args, **kwargs):
@@ -154,7 +153,7 @@ class PhaseBase (PhaseProxyMethodContainer):
 
     last_activity_time = None
 
-    def __init__(self, cohq=None, host=None):
+    def __init__(self, cohq, host, config):
         """
         @param cohq: database reference
         @type cohq: CoHQuery 
@@ -169,6 +168,7 @@ class PhaseBase (PhaseProxyMethodContainer):
         self.host = host
         if cohq:
             self.set_cohq(cohq)
+        self.config = config
 
     def set_cohq(self, cohq):
         """
@@ -304,7 +304,7 @@ class PhaseBase (PhaseProxyMethodContainer):
                 return 0
 
             if now + delay_in_seconds > end_timestamp :
-                delay_in_seconds = (end_timestamp - SchedulerConfig().max_wol_time) - now 
+                delay_in_seconds = (end_timestamp - self.config.max_wol_time) - now 
             delay = delay_in_seconds // 60
 
 
@@ -397,7 +397,7 @@ class Phase (PhaseBase):
         @param stderr: remote command error output
         @type stderr: str
         """
-        encoding = SchedulerConfig().dbencoding
+        encoding = self.config.dbencoding
         history = CommandsHistory()
         history.fk_commands_on_host = self.coh.id
         history.date = time.time()
@@ -412,14 +412,14 @@ class Phase (PhaseBase):
         client_group = ""
         if self.host :
 
-            for pref_net_ip, pref_netmask in SchedulerConfig().preferred_network :
+            for pref_net_ip, pref_netmask in self.config.preferred_network :
                 if NetUtils.on_same_network(self.host, pref_net_ip, pref_netmask):
 
                     client_group = pref_net_ip
                     break
         else :
-            if len(SchedulerConfig().preferred_network) > 0 :
-                (pref_net_ip, pref_netmask) = SchedulerConfig().preferred_network[0] 
+            if len(self.config.preferred_network) > 0 :
+                (pref_net_ip, pref_netmask) = self.config.preferred_network[0] 
                 client_group = pref_net_ip 
             
 
@@ -543,18 +543,22 @@ class CircuitBase(object):
     launcher = None
     launchers_provider = None
 
-    def __init__(self, id, installed_phases):
+    def __init__(self, _id, installed_phases, config):
         """
         @param id: CommandOnHost id
         @type id: int
 
         @param installed_phases: all possible phases classes to use
         @type installed_phases: list
+
+        @param config: scheduler's configuration container
+        @type config: SchedulerConfig
         """
         self.logger = logging.getLogger()
-        self.id = id
+        self.id = _id
+        self.config = config
 
-        self.cohq = CoHQuery(int(id))
+        self.cohq = CoHQuery(int(_id))
         self.cmd_id = self.cohq.cmd.id
 
         self.installed_phases = installed_phases
@@ -693,21 +697,21 @@ class CircuitBase(object):
         if host :
             self.host = host
 
-            for pref_net_ip, pref_netmask in SchedulerConfig().preferred_network :
+            for pref_net_ip, pref_netmask in self.config.preferred_network :
                 if NetUtils.on_same_network(host, pref_net_ip, pref_netmask):
 
                     return pref_net_ip
 
-            if len(SchedulerConfig().preferred_network) > 0 :
+            if len(self.config.preferred_network) > 0 :
                 self.logger.debug("Circuit #%s: network detect failed, assigned the first of scheduler" % (self.id))
-                (pref_net_ip, pref_netmask) = SchedulerConfig().preferred_network[0] 
+                (pref_net_ip, pref_netmask) = self.config.preferred_network[0] 
                 return pref_net_ip
         else:
             self.logger.warn("Circuit #%s: IP address detect failed" % (self.id))
 
-        if len(SchedulerConfig().preferred_network) > 0 :
+        if len(self.config.preferred_network) > 0 :
             self.logger.debug("Circuit #%s: network detect failed, assigned the first of scheduler" % (self.id))
-            (pref_net_ip, pref_netmask) = SchedulerConfig().preferred_network[0] 
+            (pref_net_ip, pref_netmask) = self.config.preferred_network[0] 
             return pref_net_ip
 
  
@@ -726,7 +730,8 @@ class CircuitBase(object):
             self.network_address = address
         else :
             self.logger.debug("Circuit #%s: network not assigned" % (self.id))
- 
+
+
         return True
 
     def _init_end(self, reason):
@@ -769,7 +774,9 @@ class Circuit (CircuitBase):
             if not self.running_phase:
 
                 first = next(self.phases)
-                self.running_phase = first(self.cohq, self.host)
+                self.running_phase = first(self.cohq, 
+                                           self.host,
+                                           self.config)
                 self.running_phase.launchers_provider = self.launchers_provider
                 self.running_phase.dispatcher = self.dispatcher
 
@@ -833,7 +840,9 @@ class Circuit (CircuitBase):
 
             try :
                 next_phase = next(self.phases)
-                self.running_phase = next_phase(self.cohq, self.host)
+                self.running_phase = next_phase(self.cohq, 
+                                                self.host,
+                                                self.config)
                 self.running_phase.launchers_provider = self.launchers_provider
                 self.running_phase.dispatcher = self.dispatcher
                 self.logger.debug("next phase :%s" % (self.running_phase))
@@ -865,7 +874,7 @@ class Circuit (CircuitBase):
             return False
         elif res == DIRECTIVE.OVER_TIMED :
             if self.running_phase.coh.attempts_failed > 0 \
-                    or any_failed(self.id, SchedulerConfig().non_fatal_steps) :
+                    or any_failed(self.id, self.config.non_fatal_steps) :
                 self.running_phase.coh.setStateFailed()
                 self.logger.info("Circuit #%s: failed" % self.id)
             else :
@@ -906,6 +915,9 @@ class MscContainer (object):
 
     # A lookup to refer all phases to use
     installed_phases = []
+
+    # list of all networks
+    groups = []
 
     # commands id to process a cleanup when a command expires
     # {cmd_id: fully_expired}
@@ -993,11 +1005,12 @@ class MscContainer (object):
         """
         return id in [wf.id for wf in self.circuits]
 
-    def initialize(self):
+    def initialize(self, config):
         """ Initial setup """
         self.logger = logging.getLogger()
-        self.config = SchedulerConfig()
-        
+        self.config = config
+
+        self.groups = [net for (net, mask) in self.config.preferred_network]
         self.launchers_networks = dict([(launcher,[n[0] for n in net_and_mask]) 
                   for (launcher,net_and_mask) in self.config.launchers_networks.items()])
         self.logger.info("preferred networks by launchers: %s" % str(self.launchers_networks))

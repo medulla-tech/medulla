@@ -37,6 +37,7 @@ from mmc.site import mmcconfdir
 
 # Others Pulse2 Stuff
 import pulse2.utils
+from pulse2.utils import SingletonN
 from pulse2.network import PreferredNetworkParser
 from pulse2.xmlrpc import isTwistedEnoughForLoginPass
 from pulse2.database.msc.config import MscDatabaseConfig
@@ -69,7 +70,8 @@ class SchedulerDatabaseConfig(MscDatabaseConfig):
         else:
             raise Exception("can find any config file")
 
-class SchedulerConfig(pulse2.utils.Singleton):
+class SchedulerConfig(object):
+    __metaclass__ = SingletonN
     """
     Singleton Class to hold configuration directives
 

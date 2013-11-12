@@ -51,7 +51,7 @@ class MethodProxy(MscContainer):
         """
         self.logger.info("start_commands: %s" % str(cmds))
 
-        scheduler = SchedulerConfig().name
+        scheduler = self.config.name
 
         if len(cmds) > 0 : 
             for cmd_id in cmds :
@@ -192,7 +192,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         @param failure: reason of failure
         @type failure: twisted failure
         """
-        self.logger.error("\033[31mRun WF failed: %s\033[0m" % failure)
+        self.logger.error("Circuit start failed: %s" % failure)
 
 
     def _setup_all(self, ids):
@@ -211,7 +211,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
                 circuit = self.get(id)
                 self._run_one(circuit)
             else :
-                wf = Circuit(id, self.installed_phases)
+                wf = Circuit(id, self.installed_phases, self.config)
                 wf.install_dispatcher(self)
                 d = wf.setup()
                 dl.append(d)
@@ -583,7 +583,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         @type commands_to_cleanup_check: list
         """
         for cmd_id in commands_to_cleanup_check:
-            if is_command_finished(SchedulerConfig().name, cmd_id):
+            if is_command_finished(self.config.name, cmd_id):
                 self.set_ready_to_cleanup(cmd_id)
 
     def clean_up(self, result):
@@ -640,7 +640,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
 
                     ids_to_exclude = running_ids + waiting_ids + starting_ids
 
-                    ids = get_ids_to_start(SchedulerConfig().name,
+                    ids = get_ids_to_start(self.config.name,
                                            ids_to_exclude, 
                                            top)
                     if len(ids) > 0 :

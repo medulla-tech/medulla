@@ -122,7 +122,7 @@ class App :
     def initialize_dispatcher(self, reason):
         MscDispatcher().installed_phases = installed_phases
 
-        d = maybeDeferred(MscDispatcher().initialize)
+        d = maybeDeferred(MscDispatcher().initialize, self.config)
         @d.addErrback
         def _eb(failure):
             self.logger.error("Dispatcher init error: %s" % str(failure))
@@ -198,9 +198,8 @@ def get_next_delay(base):
 
 
 
-def startService():
+def startService(config):
     logger = logging.getLogger()
-    config = SchedulerConfig()
     if not config.username:
         logger.warn('scheduler %s: no username set !!' % (config.name))
     if not config.password:
@@ -247,7 +246,6 @@ def startService():
 
  
     App(config).start()
-    #reactor.callWhenRunning(App(config).start)
 
     logger.info('scheduler %s: setting threadpool max size to %d' % (config.name, config.max_threads))
     reactor.suggestThreadPoolSize(config.max_threads)
@@ -288,9 +286,10 @@ def main():
         logger.addHandler(hdlr2)
 
     # parse conf
+    config = SchedulerConfig()
     logger.info("Reading configuration file: %s" % options.config_file)
     try:
-        SchedulerConfig().setup(options.config_file)
+        config.setup(options.config_file)
     except Exception, e:
         logger.error(e)
         logger.error("Please fix the configuration file")
@@ -306,8 +305,9 @@ def main():
         logger.error("Please fix the configuration file")
         sys.exit(1)
 
+
     # start service
-    sys.exit(startService())
+    sys.exit(startService(config))
 
 if __name__ == '__main__':
     main()

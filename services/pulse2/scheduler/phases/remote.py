@@ -80,10 +80,10 @@ class RemoteControlPhase(Phase):
         @return: command to execute
         @rtype: str
         """
-        if SchedulerConfig().mode == "sync":
+        if self.config.mode == "sync":
             method_name = "sync_remote_%s" % self.name
 
-        elif SchedulerConfig().mode == 'async':
+        elif self.config.mode == 'async':
             method_name = "async_remote_%s" % self.name
         return method_name
 
@@ -127,10 +127,10 @@ class RemoteControlPhase(Phase):
 
             return fd
 
-        if SchedulerConfig().mode == "sync":
+        if self.config.mode == "sync":
             cb = self.parse_remote_phase_result
 
-        elif SchedulerConfig().mode == 'async':
+        elif self.config.mode == 'async':
             cb = self.parse_remote_phase_order
         else :
             return self.give_up()
@@ -140,12 +140,12 @@ class RemoteControlPhase(Phase):
             args = [self.coh.id,
                     client,
                     filelist,
-                    SchedulerConfig().max_command_time,
+                    self.config.max_command_time,
                    ]
         else :
             args = [self.coh.id,
                     client,
-                    SchedulerConfig().max_command_time,
+                    self.config.max_command_time,
                    ]
             
         d = self.get_remote_method(*args)
@@ -181,7 +181,7 @@ class RemoteControlPhase(Phase):
                 return self.next()
             return self.give_up()
 
-        elif self.name in SchedulerConfig().non_fatal_steps:
+        elif self.name in self.config.non_fatal_steps:
             self.logger.info("Circuit #%s: %s failed (exitcode != 0), but non fatal according to scheduler config file" % (self.coh.id, self.name))
             self.update_history_failed(exitcode, stdout, stderr)
             self.phase.set_failed()
@@ -289,8 +289,8 @@ class WOLPhase(Phase):
             self.phase.set_ready()
             return self.give_up()
         self.last_wol_attempt = time.time()
-        self.logger.info("Circuit #%s: WOL done, now waiting %s seconds for the computer to wake up" % (self.coh.id,SchedulerConfig().max_wol_time))
-        d = deferLater(reactor, SchedulerConfig().max_wol_time, setstate, stdout, stderr)
+        self.logger.info("Circuit #%s: WOL done, now waiting %s seconds for the computer to wake up" % (self.coh.id,self.config.max_wol_time))
+        d = deferLater(reactor, self.config.max_wol_time, setstate, stdout, stderr)
         return d
 
     def parseWOLError(self, reason, decrement_attempts_left = False, error_code = PULSE2_UNKNOWN_ERROR):
@@ -529,23 +529,23 @@ class UploadPhase(RemoteControlPhase):
             files_list.append(fname)
 
         # prepare deffereds
-        if SchedulerConfig().mode == 'sync':
+        if self.config.mode == 'sync':
             self.update_history_in_progress()
             mydeffered = self.launchers_provider.sync_remote_pull(self.coh.getId(),
                                                              client,
                                                              files_list,
-                                                             SchedulerConfig().max_upload_time
+                                                             self.config.max_upload_time
                                                             )
             mydeffered.\
                 addCallback(self.parsePushResult).\
                 addErrback(self.parsePushError).\
                 addErrback(self.got_error_in_error)
-        elif SchedulerConfig().mode == 'async':
+        elif self.config.mode == 'async':
             # 'server_check': {'IP': '192.168.0.16', 'MAC': 'abbcd'}
             mydeffered = self.launchers_provider.async_remote_pull(self.coh.getId(),
                                                               client,
                                                               files_list,
-                                                              SchedulerConfig().max_upload_time
+                                                              self.config.max_upload_time
                                                              )
 
             mydeffered.\
@@ -570,13 +570,13 @@ class UploadPhase(RemoteControlPhase):
             files_list.append(os.path.join(re_file_prot_path.search(self.target.mirrors).group(1), fname)) # get folder on mirror
 
         # prepare deffereds
-        if SchedulerConfig().mode == 'sync':
+        if self.config.mode == 'sync':
             #self.updateHistory('upload_in_progress')
             self.update_history_in_progress()
             mydeffered = self.launchers_provider.sync_remote_push(self.coh.getId(),
                                                              client,
                                                              files_list,
-                                                             SchedulerConfig().max_upload_time
+                                                             self.config.max_upload_time
                                                              )
 
 
@@ -584,12 +584,12 @@ class UploadPhase(RemoteControlPhase):
                 addCallback(self.parsePushResult).\
                 addErrback(self.parsePushError).\
                 addErrback(self.got_error_in_error)
-        elif SchedulerConfig().mode == 'async':
+        elif self.config.mode == 'async':
             # 'server_check': {'IP': '192.168.0.16', 'MAC': 'abbcd'}
             mydeffered = self.launchers_provider.async_remote_push(self.coh.getId(),
                                                               client,
                                                               files_list,
-                                                              SchedulerConfig().max_upload_time
+                                                              self.config.max_upload_time
                                                              )
 
             mydeffered.\
@@ -682,23 +682,23 @@ class UploadPhase(RemoteControlPhase):
         files_list = file_uris['files']
 
         # upload starts here
-        if SchedulerConfig().mode == 'sync':
+        if self.config.mode == 'sync':
             self.update_history_in_progress()
             mydeffered = self.launchers_provider.sync_remote_pull(self.coh.getId(),
                                                              client,
                                                              files_list,
-                                                             SchedulerConfig().max_upload_time
+                                                             self.config.max_upload_time
                                                              )
 
             mydeffered.\
                 addCallback(self.parsePullResult).\
                 addErrback(self.parsePullError).\
                 addErrback(self.got_error_in_error)
-        elif SchedulerConfig().mode == 'async':
+        elif self.config.mode == 'async':
             mydeffered = self.launchers_provider.async_remote_pull(self.coh.getId(),
                                                               client,
                                                               files_list,
-                                                              SchedulerConfig().max_upload_time
+                                                              self.config.max_upload_time
                                                               )
 
 
@@ -735,7 +735,7 @@ class UploadPhase(RemoteControlPhase):
             # see if we can unload a proxy
             # no ret val
             LocalProxiesUsageTracking().untake(proxy_uuid, self.cmd.getId())
-            self.logger.debug("scheduler %s: coh #%s used coh #%s as local proxy, releasing one slot (%d left)" % (SchedulerConfig().name,
+            self.logger.debug("scheduler %s: coh #%s used coh #%s as local proxy, releasing one slot (%d left)" % (self.config.name,
                     self.coh.id, proxy_coh_id, LocalProxiesUsageTracking().how_much_left_for(proxy_uuid, self.cmd.getId())))
 
         if exitcode == PULSE2_SUCCESS_ERROR: # success
@@ -785,7 +785,7 @@ class UploadPhase(RemoteControlPhase):
             # see if we can unload a proxy
             # no ret val
             LocalProxiesUsageTracking().untake(proxy_uuid, self.cmd.getId())
-            self.logger.debug("scheduler %s: coh #%s used coh #%s as local proxy, releasing one slot (%d left)" % (SchedulerConfig().name,
+            self.logger.debug("scheduler %s: coh #%s used coh #%s as local proxy, releasing one slot (%d left)" % (self.config.name,
                     self.coh.id, proxy_coh_id,
                     LocalProxiesUsageTracking().how_much_left_for(proxy_uuid,
                         self.cmd.getId())))
@@ -820,13 +820,13 @@ class ExecutionPhase(RemoteControlPhase):
 
     def get_remote_command(self):
 
-        if SchedulerConfig().mode == "sync":
+        if self.config.mode == "sync":
             if self.cmd.isQuickAction():
                 return "sync_remote_quickaction"
             else :
                 return "sync_remote_exec"
 
-        elif SchedulerConfig().mode == 'async':
+        elif self.config.mode == 'async':
             if self.cmd.isQuickAction():
                 return "async_remote_quickaction"
             else :

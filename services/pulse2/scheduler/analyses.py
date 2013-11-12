@@ -91,7 +91,7 @@ class MscQueryManager(MscContainer):
         return [c for c in self.waiting_circuits if c.id in ids]
 
 
-    def get_active_circuits(self, cmd_ids=[]):
+    def get_active_circuits(self, coh_ids=[]):
         """
         Get the all circuits already initialized and having a running phase.
 
@@ -110,8 +110,8 @@ class MscQueryManager(MscContainer):
                        if not (c.qm.coh.isStateStopped() or c.qm.coh.isStatePaused())
                        and c.qm.cmd.in_valid_time()
                    ]
-        if len(cmd_ids) > 1:
-            circuits = [c for c in circuits if c.qm.cmd.id in cmd_ids]
+        if len(coh_ids) > 1:
+            circuits = [c for c in circuits if c.id in coh_ids]
             return circuits
         else :
             return []
