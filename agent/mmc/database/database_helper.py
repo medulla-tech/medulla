@@ -26,6 +26,7 @@
 Define classes to help implementing the database access in all the
 pulse2 modules.
 """
+import functools
 
 from mmc.support.mmctools import Singleton
 from mmc.database.ddl import DDLContentManager, DBControl
@@ -163,6 +164,7 @@ class DatabaseHelper(Singleton):
     # Session decorator to create and close session automatically
     @classmethod
     def _session(self, func):
+        @functools.wraps(func)
         def __session(self, *args, **kw):
             created = False
             if not self.session:
