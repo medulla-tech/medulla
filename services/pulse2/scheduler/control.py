@@ -625,7 +625,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
     def _mainloop(self):
         """ The main loop of scheduler """
 
-        self.logger.info("Looking for new commands")
+        self.logger.debug("Looking for new commands")
         try :
             self.rn_stats()
             self.wt_stats()
@@ -646,7 +646,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
                     if len(ids) > 0 :
                         self.logger.info("Prepare %d new commands to initialize" % len(ids))
                     else :
-                        self.logger.info("Nothing to initialize")
+                        self.logger.debug("Nothing to initialize")
                         return True
 
                     self.start_all(ids)
