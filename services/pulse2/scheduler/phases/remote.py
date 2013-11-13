@@ -839,7 +839,7 @@ class ExecutionPhase(RemoteControlPhase):
         return self.parse_remote_phase_result((exitcode, stdout, stderr))
 
     @launcher_proxymethod("completed_quick_action")
-    def parseExecutionResult(self, (exitcode, stdout, stderr)):
+    def parseQuickActionResult(self, (exitcode, stdout, stderr)):
         return self.parse_remote_phase_result((exitcode, stdout, stderr))
 
 
