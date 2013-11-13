@@ -223,6 +223,7 @@ class WOLPhase(Phase):
             return self.next()
 
         if not self.last_wol_attempt and self.phase.is_ready():
+            self.phase.set_running()
             return DIRECTIVE.PERFORM
 
      
@@ -259,13 +260,11 @@ class WOLPhase(Phase):
         return d
 
     def _performWOLPhase(self):
-
         # perform call
         mac_addrs = self.target.target_macaddr.split('||') 
         target_bcast = self.target.target_bcast.split('||')
 
         d = self.launchers_provider.wol(mac_addrs, target_bcast)
-
         d.addCallback(self.parseWOLAttempt)
         d.addErrback(self.parseWOLError)
         d.addErrback(self.got_error_in_error)
@@ -273,7 +272,7 @@ class WOLPhase(Phase):
         return d
 
     def parseWOLAttempt(self, attempt_result):
-
+ 
         def setstate(stdout, stderr):
             self.logger.info("Circuit #%s: WOL done and done waiting" % (self.coh.id))
             self.update_history_done(PULSE2_SUCCESS_ERROR, stdout, stderr)
@@ -287,9 +286,9 @@ class WOLPhase(Phase):
             (exitcode, stdout, stderr) = attempt_result
         except TypeError: # xmlrpc call failed
             self.logger.error("Circuit #%s: WOL request seems to have failed ?!" % (self.coh.id))
-        if not self.coh.isStateStopped():
-            self.coh.setStateScheduled()
-            self.phase.set_ready()
+            if not self.coh.isStateStopped():
+                self.coh.setStateScheduled()
+                self.phase.set_ready()
             return self.give_up()
         self.last_wol_attempt = time.time()
         self.logger.info("Circuit #%s: WOL done, now waiting %s seconds for the computer to wake up" % (self.coh.id,self.config.max_wol_time))
@@ -877,6 +876,8 @@ class InventoryPhase(RemoteControlPhase):
             self.logger.info("Circuit #%s: another circuit from the same bundle will launch the inventory" % self.coh.id)
             if not self.isStateStopped():
                 self.coh.setStateScheduled()
+            else :
+                return self.give_up()
                 
             return self.next()
 
