@@ -185,9 +185,8 @@ class RemoteControlPhase(Phase):
         elif self.name in self.config.non_fatal_steps:
             self.logger.info("Circuit #%s: %s failed (exitcode != 0), but non fatal according to scheduler config file" % (self.coh.id, self.name))
             self.update_history_failed(exitcode, stdout, stderr)
-            self.phase.set_failed()
+            self.switch_phase_failed()
             return self.next()
-            #return self.switch_phase_failed()
 
         else: # failure: immediately give up
             self.logger.info("Circuit #%s: %s failed (exitcode != 0)" % (self.coh.id, self.name))
