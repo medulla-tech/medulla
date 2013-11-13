@@ -43,6 +43,11 @@ import logging
 
 APIVERSION = "0:0:0"
 
+NOAUTHNEEDED = [
+    'getMachineUUIDByMacAddress',
+    'hasKnownOS',
+]
+
 def getApiVersion(): return APIVERSION
 
 def activate():
