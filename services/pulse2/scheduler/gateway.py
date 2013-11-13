@@ -136,6 +136,7 @@ class SchedulerGateway(UnixProtocol):
     ### XMLRPC functions used from a launcher ###
     def tell_i_am_alive(self, launcher):
         logging.getLogger().info("Launcher %s tells us it is alive" % launcher)
+        return True
 
 
 
