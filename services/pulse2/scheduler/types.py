@@ -47,14 +47,12 @@ import time
 import datetime
 
 from twisted.internet.defer import Deferred, maybeDeferred
-from twisted.internet.threads import deferToThread
 
 from pulse2.consts import PULSE2_SUCCESS_ERROR
 from pulse2.utils import SingletonN, extractExceptionMessage
 from pulse2.network import NetUtils
 from pulse2.scheduler.queries import CoHQuery, any_failed
 from pulse2.scheduler.utils import chooseClientInfo
-from pulse2.scheduler.config import SchedulerConfig
 from pulse2.scheduler.balance import ParabolicBalance
 from pulse2.scheduler.launchers_driving import RemoteCallProxy
 from pulse2.scheduler.checks import getAnnounceCheck
@@ -201,6 +199,7 @@ class PhaseBase (PhaseProxyMethodContainer):
  
         if self.coh.is_out_of_attempts() and self.phase.is_failed():
             self.coh.setStateFailed()
+            self.cmd.inc_failed()
             return DIRECTIVE.KILLED
  
         self.logger.debug("Circuit #%s: %s phase" % (self.coh.id, self.name))
@@ -216,8 +215,6 @@ class PhaseBase (PhaseProxyMethodContainer):
 
     def _switch_on(self):
         """Phase is ready to run, let's go !"""
-        if self.phase.is_failed():
-            self.cmd.dec_failed()
         self.phase.set_running()
         if not self.state_name :
             self.state_name = self.name
@@ -471,8 +468,8 @@ class Phase (PhaseBase):
         if self.coh.is_out_of_attempts():
             logging.getLogger().info("Circuit #%s: failed" % (self.coh.id))
             self.coh.setStateFailed()
+            self.cmd.inc_failed()
             return DIRECTIVE.KILLED
-        self.cmd.inc_failed()
         return self.failed() 
            
     def parse_order(self, name, taken_in_account):
@@ -615,7 +612,7 @@ class CircuitBase(object):
 
 
     @phases.setter 
-    def phases(self, value):
+    def phases(self, value):  #pyflakes.ignore
         """
         Phases property set processing.
 
@@ -888,6 +885,7 @@ class Circuit (CircuitBase):
             if self.running_phase.coh.attempts_failed > 0 \
                     or any_failed(self.id, self.config.non_fatal_steps) :
                 self.running_phase.coh.setStateFailed()
+                self.running_phase.cmd.inc_failed()
                 self.logger.info("Circuit #%s: failed" % self.id)
             else :
                 self.running_phase.coh.setStateOverTimed()
@@ -896,7 +894,10 @@ class Circuit (CircuitBase):
             return
         elif res == DIRECTIVE.KILLED :
             self.logger.info("Circuit #%s: released" % self.id)
-            self.release()
+            try :
+                self.release()
+            except Exception, e:
+                self.logger.error("Release failed: %s"  % str(e))
             return
         else :
             self.logger.error("UNRECOGNIZED DIRECTIVE") 

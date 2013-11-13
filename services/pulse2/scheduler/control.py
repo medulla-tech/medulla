@@ -567,7 +567,10 @@ class MscDispatcher (MscQueryManager, MethodProxy):
             if circuit :
                 if not circuit.cmd_id in commands_to_cleanup_check :
                     commands_to_cleanup_check.append(circuit.cmd_id)
-                circuit.release()
+                try:
+                    circuit.release()
+                except Exception, e:
+                    self.logger.error("Release of overtimed circuits failed: %s" % str(e))
         return commands_to_cleanup_check
 
     def check_for_clean_up(self, commands_to_cleanup_check):
@@ -605,8 +608,6 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         """ The main loop of scheduler """
         d = maybeDeferred(self._mainloop)
         d.addCallback(self.process_non_valid)
-        d.addCallback(self.check_for_clean_up)
-        d.addCallback(self.clean_up)
         d.addCallback(self.launch_remaining_waitings)
         d.addCallback(self.awake_waiting_overtimed)
         d.addErrback(self.eb_mainloop)
@@ -638,6 +639,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
                     ids = get_ids_to_start(self.config.name,
                                            ids_to_exclude, 
                                            top)
+                    #ids.extend(waiting_ids)
                     if len(ids) > 0 :
                         self.logger.info("Prepare %d new commands to initialize" % len(ids))
                     else :
