@@ -304,17 +304,15 @@ class MscDatabase(msc.MscDatabase):
                                           cmd['clean_on_success'], 
                                           cmd['start_date'], cmd['end_date'], 
                                           cmd['connect_as'], ctx.userid, 
-                                          cmd['title'], #cmd['issue_halt_to'], 
-                                          #cmd['do_reboot'], cmd['do_wol'],
-                                          #cmd['do_wol_with_imaging'],
+                                          cmd['title'],  
                                           cmd['next_connection_delay'], 
                                           cmd['max_connection_attempt'], 
-                                          #cmd['do_inventory'], 
                                           cmd['maxbw'], 
                                           cmd['deployment_intervals'], 
                                           cmd['fk_bundle'], cmd['order_in_bundle'], 
                                           cmd['proxies'], cmd['proxy_mode'],
-                                          cmd['state'])
+                                          cmd['state'],
+                                          len(targets_to_insert))
                 session.flush()
                 ret.append(cobj.getId())
 
@@ -501,14 +499,13 @@ class MscDatabase(msc.MscDatabase):
             cmd = self.createCommand(session, package_id, start_file, parameters, 
                                      files, start_script, clean_on_success, 
                                      start_date, end_date, connect_as, ctx.userid, 
-                                     title, #do_halt, do_reboot, do_wol,
-                                     #do_wol_with_imaging, 
+                                     title, 
                                      next_connection_delay, 
                                      max_connection_attempt, 
-                                     #do_inventory, 
                                      maxbw, 
                                      deployment_intervals, fk_bundle, 
-                                     order_in_bundle, proxies, proxy_mode, state)
+                                     order_in_bundle, proxies, proxy_mode, 
+                                     state, len(targets))
             session.flush()
 
             for atarget, target_name, ascheduler in targets_to_insert :
