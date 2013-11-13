@@ -550,7 +550,7 @@ class RemoteCallProxy :
         return self.call_method('download_file', client, path, bwlimit)
 
 
-    def establishProxy(self, 
+    def establish_proxy(self, 
                        uuid, 
                        fqdn, 
                        shortname, 
