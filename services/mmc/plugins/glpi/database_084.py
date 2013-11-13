@@ -1559,6 +1559,29 @@ class Glpi084(DyngroupDatabaseHelper):
     def countLastMachineInventoryPart(self, uuid, part, filt = None, options = {}):
         return self.getLastMachineInventoryPart(uuid, part, filt = filt, options = options, count = True)
 
+    @property
+    def _network_types(self):
+        """
+        Dict with GLPI available Network types
+        """
+        return {
+            'NetworkPortLocal': 'Local',
+            'NetworkPortEthernet': 'Ethernet',
+            'NetworkPortWifi': 'Wifi',
+            'NetworkPortDialup': 'Dialup',
+            'NetworkPortAggregate': 'Aggregate',
+            'NetworkPortAlias': 'Alias',
+        }
+
+    def _get_network_type(self, instantiation_type):
+        """
+        Return human readable glpi network type for given instantiation_type
+        If not found, return instantiation_type
+        """
+        if instantiation_type in self._network_types:
+            return self._network_types[instantiation_type]
+        return instantiation_type
+
     def getLastMachineNetworkPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
         query = self.filterOnUUID(session.query(Machine), uuid)
 
@@ -1583,7 +1606,7 @@ class Glpi084(DyngroupDatabaseHelper):
                         netmasks = list(set(netmasks))
                     l = [
                         ['Name', networkport.name],
-                        ['Network Type', ''], # glpi_networkinterfaces ????
+                        ['Network Type', self._get_network_type(networkport.instantiation_type)],
                         ['MAC Address', networkport.mac],
                         ['IP', ' / '.join(ipaddresses)],
                         ['Netmask', ' / '.join(netmasks)],
