@@ -390,7 +390,7 @@ class CoHManager :
         session = sqlalchemy.orm.create_session()
         for id in ids :
             myCommandOnHost = session.query(CommandsOnHost).get(id)
-            if myCommandOnHost :
+            if myCommandOnHost.current_state not in ("done", "failed", "over_timed"):
 
                 myCommandOnHost.start_date = start_date
                 myCommandOnHost.end_date = end_date
