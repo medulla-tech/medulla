@@ -20,21 +20,21 @@
 # MA 02110-1301, USA.
 
 import logging
-import time
 try :
-    import cPickle as pickle 
+    import cPickle as pickle #pyflakes.ignore
 except ImportError :
-    import pickle   #pyflakes.ignore
+    import pickle   
+from StringIO import StringIO
 
 from twisted.internet.protocol import Factory, ProcessProtocol
-from twisted.protocols.basic import LineOnlyReceiver
+from twisted.protocols.basic import LineReceiver
 from twisted.internet import reactor
 from twisted.internet.defer import maybeDeferred
 
-from pulse2.network import NetUtils 
+from pulse2.network import NetUtils
 
 from pulse2.scheduler.config import SchedulerConfig
-from pulse2.scheduler.network import chooseClientIP 
+from pulse2.scheduler.network import chooseClientIP
 from pulse2.scheduler.checks import getCheck
 
 class PackUtils :
@@ -44,17 +44,15 @@ class PackUtils :
 
     @classmethod
     def unpack(cls, packet):
-        while True:
-            try :
-                ret = pickle.loads(packet)
-                return ret
-            except EOFError, e:
-                logging.getLogger().debug("EOF: Losing a packet from scheduler-proxy: %s" % str(e))
-                time.sleep(0.1)
-            except Exception, e:
-                logging.getLogger().warn("Losing a packet from scheduler-proxy: %s" % str(e))
-                return None
-
+        try :
+            ret = pickle.loads(packet)
+            return ret
+        except EOFError, e:
+            logging.getLogger().debug("EOF: Losing a packet from scheduler-proxy: %s" % str(e))
+            return None
+        except Exception, e:
+            logging.getLogger().warn("Losing a packet from scheduler-proxy: %s" % str(e))
+            return None
 
 def getClientCheck(target):
     return getCheck(SchedulerConfig().client_check, {
@@ -90,26 +88,40 @@ def chooseClientInfo(target):
     return None
 
 
+class UnixProtocol (object, LineReceiver):
 
-class UnixProtocol (object, LineOnlyReceiver):
+    __data = None
+
     def dataReceived(self, data):
         try :
-            packet = PackUtils.unpack(data)
-            if isinstance(packet, list) and len(packet) == 2:
-                name, args = packet
-                method = self._lookup_procedure(name)
-            else :
-                logging.getLogger().warn("Response unpacking failed")
-                d = maybeDeferred(self._send_response, "NOK")
-                d.addErrback(self._eb_call_failed, "response:failed")
-                return 
-        except Exception, e:
-            logging.getLogger().error("Unix socket reading failed: %s"  % str(e))
+            if not self.__data :
+                self.__data = StringIO()
+
+            self.__data.write(data)
+            packet = pickle.loads(self.__data.getvalue())
+        except EOFError:
+            logging.getLogger().debug("EOF:completing the packet len=%d" % len(self.__data.getvalue()))
+            return
+        except pickle.UnpicklingError:
+            logging.getLogger().debug("Unpickle:completing the packet len=%d" % len(self.__data.getvalue()))
+            return
+
+        if isinstance(packet, list) and len(packet) == 2:
+            name, args = packet
+            method = self._lookup_procedure(name)
+        else :
+            logging.getLogger().warn("Response unpacking failed")
+            d = maybeDeferred(self._send_response, "NOK")
+            d.addErrback(self._eb_call_failed, "response:failed")
+            return
+
+        self.__data = None
 
         d = maybeDeferred(method, self, *args)
         d.addCallback(self._send_response)
         d.addErrback(self._eb_call_failed, name)
-        
+
+       
     def _send_response(self, response):
         logging.getLogger().debug("response: %s" % str(response))
         try:
