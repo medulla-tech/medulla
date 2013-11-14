@@ -67,10 +67,14 @@ class SchedulerSetupError(Exception):
         return "Scheduler setup failed: %s" % self.msg
 
 class App :
+    listen_unix = None
+    socket_file = None
+
     def __init__(self, config):
         self.config = config
         self.logger = logging.getLogger()
-
+        self.socket_file = self.config.scheduler_proxy_socket_path
+ 
         reactor.addSystemEventTrigger("before", 
                                       "shutdown", 
                                        self.clean_up)
@@ -111,7 +115,9 @@ class App :
         """
         try:
             gateway = SchedulerGatewayFactory()
-            self.socket_file = self.config.scheduler_proxy_socket_path
+            if os.path.exists(self.socket_file):
+                self.logger.info("Unix socket: unlinking old file")
+                os.unlink(self.socket_file)
             self.listen_unix = reactor.listenUNIX(self.socket_file, gateway)
 
         except Exception, e:
