@@ -378,12 +378,22 @@ class CommandHistory {
 
 
         $phase_labels = array(
+            'wol' => _T('Wake on LAN'),
             'upload' => _T('File upload'),
             'execute' => _T('Install script execution'),
             'delete' => _T('Clean temporary files'),
             'inventory' => _T('Inventory'),
+            'reboot' => _T('Restart computer'),
+            'halt' => _T('Shutdown computer'),
+            'pre_menu' => _T('Before bootmenu actions'),
+            'post_menu' => _T('After bootmenu actions'),
             'done' => _T('Finish')
         );
+
+        $hidden_phases = array(
+            'done', 'pre_menu', 'post_menu'
+        );
+
         $phase_names = array();
         $phase_dates = array();
         $phase_states = array();
@@ -404,8 +414,8 @@ class CommandHistory {
 
         foreach ($phases as $phase) {
 
-            // Avoid printing finish step
-            if ($phase['name'] == 'done')
+            // Passing hidden phases
+            if (in_array($phase['name'], $hidden_phases))
                 continue;
 
             $phase_names[] = $phase_labels[$phase['name']];

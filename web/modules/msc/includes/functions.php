@@ -79,6 +79,7 @@ function return_icon($state) {
         case "FAILED":
             return "failed.png";
             break;
+        case "running":
         case "WORK_IN_PROGRESS":
             return "inprogress.gif";
             break;
