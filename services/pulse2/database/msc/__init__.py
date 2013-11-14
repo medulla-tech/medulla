@@ -737,14 +737,18 @@ class MscDatabase(DatabaseHelper):
             return False
         return True
 
-    def __displayLogsQuery2(self, ctx, params, session):
+    def __displayLogsQuery2(self, ctx, params, session, count = False):
         filter = []
         group_by = False
         group_clause = False
 
         # Get query parts
-        query = session.query(Commands).select_from(self.commands.join(self.commands_on_host).join(self.target))
-        query = query.add_column(self.commands_on_host.c.id).add_column(self.commands_on_host.c.current_state)
+        if count:
+            query = session.query(func.count(Commands.id)).select_from(self.commands.join(self.commands_on_host).join(self.target))
+        else:
+            query = session.query(Commands).select_from(self.commands.join(self.commands_on_host).join(self.target))
+            query = query.add_column(self.commands_on_host.c.id).add_column(self.commands_on_host.c.current_state)
+
         if params['cmd_id'] != None: # COH
             filter = [self.commands.c.id == params['cmd_id']]
             if params['b_id'] != None:
@@ -782,7 +786,7 @@ class MscDatabase(DatabaseHelper):
         if group_by:
             query = query.group_by(group_clause)
 
-        return query
+        return query if not count else query.scalar()
 
     def __displayLogsQueryGetIds(self, cmds, min = 0, max = -1, params = {}):
         i = 0
@@ -868,14 +872,14 @@ class MscDatabase(DatabaseHelper):
                 # Using min/max, we get a range of commands, but we always want
                 # the total count of commands.
                 ret = self.__displayLogsQuery2(ctx, params, session).offset(int(params['min'])).limit(int(params['max'])-int(params['min'])).all()
-                size = self.__displayLogsQuery2(ctx, params, session).count()
+                size = self.__displayLogsQuery2(ctx, params, session, True)
                 session.close()
                 return size, self.__displayLogReturn(ctx, ret)
             elif params['b_id']:                # we want informations about one bundle on one group / host
                 # Using min/max, we get a range of commands, but we always want
                 # the total count of commands.
                 ret = self.__displayLogsQuery2(ctx, params, session).order_by(self.commands.c.order_in_bundle).offset(int(params['min'])).limit(int(params['max'])-int(params['min'])).all()
-                size = self.__displayLogsQuery2(ctx, params, session).order_by(self.commands.c.order_in_bundle).distinct().count()
+                size = self.__displayLogsQuery2(ctx, params, session, True)
                 session.close()
                 return size, self.__displayLogReturn(ctx, ret)
             else:                               # we want all informations about on one group / host
@@ -908,13 +912,13 @@ class MscDatabase(DatabaseHelper):
             if params['cmd_id']:                # we want all informations about one command
                 ret = self.__displayLogsQuery2(ctx, params, session).all()
                 # FIXME: using distinct, size will always return 1 ...
-                size = self.__displayLogsQuery2(ctx, params, session).distinct().count()
+                size = self.__displayLogsQuery2(ctx, params, session, True)
                 session.close()
                 return size, self.__displayLogReturn(ctx, ret)
             elif params['b_id']:                # we want all informations about one bundle
                 ret = self.__displayLogsQuery2(ctx, params, session).order_by(self.commands.c.order_in_bundle).all()
                 # FIXME: using distinct, size will always return 1 ...
-                size = self.__displayLogsQuery2(ctx, params, session).order_by(self.commands.c.order_in_bundle).distinct().count()
+                size = self.__displayLogsQuery2(ctx, params, session, True)
                 session.close()
                 return size, self.__displayLogReturn(ctx, ret)
             else:                               # we want all informations about everything

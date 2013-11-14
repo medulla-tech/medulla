@@ -22,7 +22,6 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 require_once("modules/msc/includes/widgets.inc.php");
 require_once("modules/msc/includes/functions.php");
 require_once("modules/msc/includes/commands_xmlrpc.inc.php");
@@ -32,13 +31,15 @@ global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 
 $filter = $_GET["filter"];
-if (isset($_GET["start"])) $start = $_GET["start"];
-else $start = 0;
+if (isset($_GET["start"]))
+    $start = $_GET["start"];
+else
+    $start = 0;
 
-$uuid       = isset($_GET['uuid']) ? $_GET['uuid'] : '';
-$gid        = isset($_GET['gid']) ? $_GET['gid'] : '';
-$history    = isset($_GET['history']) ? $_GET['history'] : '';
-$tab        = isset($_GET['tab']) ? $_GET['tab'] : '';
+$uuid = isset($_GET['uuid']) ? $_GET['uuid'] : '';
+$gid = isset($_GET['gid']) ? $_GET['gid'] : '';
+$history = isset($_GET['history']) ? $_GET['history'] : '';
+$tab = isset($_GET['tab']) ? $_GET['tab'] : '';
 
 $areCommands = False;
 
@@ -49,17 +50,17 @@ if (isset($_GET["commands"])) {
 if ($uuid) {
     $hostname = $_GET['hostname'];
     if (strlen($_GET['bundle_id']) or strlen($_GET['cmd_id'])) {
-        list($count, $cmds) = displayLogs(array('uuid'=>$uuid, 'cmd_id'=>$_GET['cmd_id'], 'b_id'=>$_GET['bundle_id'], 'min'=>$start, 'max'=>$start + $maxperpage, 'filt'=>$filter, 'finished'=>$history));
+        list($count, $cmds) = displayLogs(array('uuid' => $uuid, 'cmd_id' => $_GET['cmd_id'], 'b_id' => $_GET['bundle_id'], 'min' => $start, 'max' => $start + $maxperpage, 'filt' => $filter, 'finished' => $history));
     } else {
-        list($count, $cmds) = displayLogs(array('uuid'=>$uuid, 'min'=>$start, 'max'=>$start + $maxperpage, 'filt'=>$filter, 'finished'=>$history));
+        list($count, $cmds) = displayLogs(array('uuid' => $uuid, 'min' => $start, 'max' => $start + $maxperpage, 'filt' => $filter, 'finished' => $history));
         $areCommands = True;
     }
     $action = "msctabs";
 } elseif ($gid) { # FIXME: same thing to do on groups
     if ($_GET['cmd_id']) {
-        list($count, $cmds) = displayLogs(array('gid'=>$gid, 'b_id'=>$_GET['bundle_id'], 'cmd_id'=>$_GET['cmd_id'], 'min'=>$start, 'max'=>$start + $maxperpage, 'filt'=>$filter, 'finished'=>$history));
+        list($count, $cmds) = displayLogs(array('gid' => $gid, 'b_id' => $_GET['bundle_id'], 'cmd_id' => $_GET['cmd_id'], 'min' => $start, 'max' => $start + $maxperpage, 'filt' => $filter, 'finished' => $history));
     } else {
-        list($count, $cmds) = displayLogs(array('gid'=>$gid, 'b_id'=>$_GET['bundle_id'], 'min'=>$start, 'max'=>$start + $maxperpage, 'filt'=>$filter, 'finished'=>$history));
+        list($count, $cmds) = displayLogs(array('gid' => $gid, 'b_id' => $_GET['bundle_id'], 'min' => $start, 'max' => $start + $maxperpage, 'filt' => $filter, 'finished' => $history));
         $areCommands = True;
     }
     $action = "groupmsctabs";
@@ -70,22 +71,22 @@ $a_cmd = array();
 $a_date = array();
 $a_uploaded = array();
 $a_executed = array();
-$a_deleted  = array();
-$a_current  = array();
+$a_deleted = array();
+$a_current = array();
 $params = array();
 
 /* available buttons */
-$actionplay    = new ActionPopupItem(_T("Start", "msc"), "msctabsplay",  "start",   "msc", "base", "computers");
-$actionpause   = new ActionPopupItem(_T("Pause", "msc"), "msctabspause", "pause",   "msc", "base", "computers");
-$actionstop    = new ActionPopupItem(_T("Stop", "msc"),  "msctabsstop",  "stop",    "msc", "base", "computers");
-$actionstatus  = new ActionPopupItem(_T("Status", "msc"), "msctabsstatus","status", "msc", "base", "computers");
+$actionplay = new ActionPopupItem(_T("Start", "msc"), "msctabsplay", "start", "msc", "base", "computers");
+$actionpause = new ActionPopupItem(_T("Pause", "msc"), "msctabspause", "pause", "msc", "base", "computers");
+$actionstop = new ActionPopupItem(_T("Stop", "msc"), "msctabsstop", "stop", "msc", "base", "computers");
+$actionstatus = new ActionPopupItem(_T("Status", "msc"), "msctabsstatus", "status", "msc", "base", "computers");
 $actionstatus->setWidth("400");
 if (strlen($gid)) {
-    $actiondetails = new ActionItem(_T("Details", "msc"),    "groupmsctabs",    "display", "msc", "base", "computers");
+    $actiondetails = new ActionItem(_T("Details", "msc"), "groupmsctabs", "display", "msc", "base", "computers");
 } else {
-    $actiondetails = new ActionItem(_T("Details", "msc"),    "msctabs",         "display", "msc", "base", "computers");
+    $actiondetails = new ActionItem(_T("Details", "msc"), "msctabs", "display", "msc", "base", "computers");
 }
-$actionempty   = new EmptyActionItem();
+$actionempty = new EmptyActionItem();
 
 $a_start = array();
 $a_pause = array();
@@ -100,7 +101,7 @@ if ($areCommands) { // display several commands
         $coh_id = $cmd[1];
         $coh = $cmd[3];
         $cmd = $cmd[0];
-        $p = array('tab'=>$tab, 'hostname'=>$hostname, 'uuid'=>$uuid, 'from'=>'base|computers|'.$action.'|'.$tab, 'gid'=>$gid);
+        $p = array('tab' => $tab, 'hostname' => $hostname, 'uuid' => $uuid, 'from' => 'base|computers|' . $action . '|' . $tab, 'gid' => $gid);
 
         ### gathering command components ###
         if (strlen($cmd['bundle_id']) and !strlen($_GET['cmd_id'])) { // BUNDLE case
@@ -133,9 +134,9 @@ if ($areCommands) { // display several commands
         if (
                 (strlen($uuid) and strlen($cmd['bundle_id']) and !strlen($_GET['bundle_id'])) or
                 (strlen($gid) and !strlen($_GET['cmd_id']))
-            ) {
-            $a_uploaded[] ='';
-            $a_executed[] ='';
+        ) {
+            $a_uploaded[] = '';
+            $a_executed[] = '';
             $a_deleted[] = '';
             if (!$history) {
                 if (strlen($cmd['bundle_id']) and !strlen($_GET['bundle_id'])) {
@@ -145,14 +146,14 @@ if ($areCommands) { // display several commands
                 }
             }
             $icons = state_tmpl_macro($status);
-            $icons['play']  == '' ? $a_start[] = $actionempty : $a_start[] = $actionplay;
-            $icons['stop']  == '' ? $a_stop[]  = $actionempty : $a_stop[]  = $actionstop;
+            $icons['play'] == '' ? $a_start[] = $actionempty : $a_start[] = $actionplay;
+            $icons['stop'] == '' ? $a_stop[] = $actionempty : $a_stop[] = $actionstop;
             $icons['pause'] == '' ? $a_pause[] = $actionempty : $a_pause[] = $actionpause;
             $a_current[] = '';
         } else {
-            $a_uploaded[] ='<img style="vertical-align: middle;" alt="'.$coh['uploaded'].'" src="modules/msc/graph/images/status/'.return_icon($coh['uploaded']).'"/> ';
-            $a_executed[] ='<img style="vertical-align: middle;" alt="'.$coh['executed'].'" src="modules/msc/graph/images/status/'.return_icon($coh['executed']).'"/> ';
-            $a_deleted[] = '<img style="vertical-align: middle;" alt="'.$coh['deleted'].'" src="modules/msc/graph/images/status/'.return_icon($coh['deleted']).'"/> ';
+            $a_uploaded[] = '<img style="vertical-align: middle;" alt="' . $coh['uploaded'] . '" src="modules/msc/graph/images/status/' . return_icon($coh['uploaded']) . '"/> ';
+            $a_executed[] = '<img style="vertical-align: middle;" alt="' . $coh['executed'] . '" src="modules/msc/graph/images/status/' . return_icon($coh['executed']) . '"/> ';
+            $a_deleted[] = '<img style="vertical-align: middle;" alt="' . $coh['deleted'] . '" src="modules/msc/graph/images/status/' . return_icon($coh['deleted']) . '"/> ';
             if ($coh['current_state'] == 'scheduled' && $cmd['max_connection_attempt'] != $coh['attempts_left']) {
                 $coh['current_state'] = 'rescheduled';
             }
@@ -161,13 +162,13 @@ if ($areCommands) { // display several commands
             } else {
                 $a_current[] = $coh['current_state'];
             }
-            $p = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id'], 'tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'from'=>'base|computers|'.$action.'|'.$tab, 'gid'=>$gid);
+            $p = array('coh_id' => $coh_id, 'cmd_id' => $cmd['id'], 'tab' => $tab, 'uuid' => $uuid, 'hostname' => $hostname, 'from' => 'base|computers|' . $action . '|' . $tab, 'gid' => $gid);
             if (strlen($cmd['bundle_id'])) {
                 $p['bundle_id'] = $cmd['bundle_id'];
             }
             $icons = state_tmpl($coh['current_state']);
-            $icons['play']  == '' ? $a_start[] = $actionempty : $a_start[] = $actionplay;
-            $icons['stop']  == '' ? $a_stop[]  = $actionempty : $a_stop[]  = $actionstop;
+            $icons['play'] == '' ? $a_start[] = $actionempty : $a_start[] = $actionplay;
+            $icons['stop'] == '' ? $a_stop[] = $actionempty : $a_stop[] = $actionstop;
             $icons['pause'] == '' ? $a_pause[] = $actionempty : $a_pause[] = $actionpause;
         }
 
@@ -241,27 +242,26 @@ if ($areCommands) { // display several commands
             }
 
             if ($cmd['proxy_mode'] == 'none') {
-                $a_mode[] ='<img style="vertical-align: middle;" title="'._T('Normal', 'msc').'" src="modules/msc/graph/images/proxy/no_proxy.png"/> ';
+                $a_mode[] = '<img style="vertical-align: middle;" title="' . _T('Normal', 'msc') . '" src="modules/msc/graph/images/proxy/no_proxy.png"/> ';
             } elseif ($cmd['proxy_mode'] == 'split') {
                 if ($coh['order_in_proxy'] == '')
-                    $a_mode[] ='<img style="vertical-align: middle;" title="'.sprintf(_T('Multiple, client mode%s', 'msc'), $proxy_str).'" src="modules/msc/graph/images/proxy/proxy_client.png"/> ';
+                    $a_mode[] = '<img style="vertical-align: middle;" title="' . sprintf(_T('Multiple, client mode%s', 'msc'), $proxy_str) . '" src="modules/msc/graph/images/proxy/proxy_client.png"/> ';
                 else
-                    $a_mode[] ='<img style="vertical-align: middle;" title="'._T('Multiple, server mode', 'msc').'" src="modules/msc/graph/images/proxy/proxy_server.png"/> ';
+                    $a_mode[] = '<img style="vertical-align: middle;" title="' . _T('Multiple, server mode', 'msc') . '" src="modules/msc/graph/images/proxy/proxy_server.png"/> ';
             } elseif ($cmd['proxy_mode'] == 'queue') {
                 if ($coh['order_in_proxy'] == '')
-                    $a_mode[] ='<img style="vertical-align: middle;" title="'.sprintf(_T('Single, client mode%s', 'msc'), $proxy_str).'" src="modules/msc/graph/images/proxy/proxy_client.png"/> ';
+                    $a_mode[] = '<img style="vertical-align: middle;" title="' . sprintf(_T('Single, client mode%s', 'msc'), $proxy_str) . '" src="modules/msc/graph/images/proxy/proxy_client.png"/> ';
                 else
-                    $a_mode[] ='<img style="vertical-align: middle;" title="'._T('Single, server mode', 'msc').'" src="modules/msc/graph/images/proxy/proxy_server.png"/> ';
+                    $a_mode[] = '<img style="vertical-align: middle;" title="' . _T('Single, server mode', 'msc') . '" src="modules/msc/graph/images/proxy/proxy_server.png"/> ';
             } else {
-                $a_mode[] ='<img style="vertical-align: middle;" title="'._T('Normal', 'msc').'" src="modules/msc/graph/images/proxy/no_proxy.png"/> ';
+                $a_mode[] = '<img style="vertical-align: middle;" title="' . _T('Normal', 'msc') . '" src="modules/msc/graph/images/proxy/no_proxy.png"/> ';
             }
 
-            $a_progression[] =
-                '<img style="vertical-align: middle;" title="'.$statusTable[$coh['uploaded']].'" src="modules/msc/graph/images/status/'.return_icon($coh['uploaded']).'"/> '
-                .
-                '<img style="vertical-align: middle;" title="'.$statusTable[$coh['executed']].'" src="modules/msc/graph/images/status/'.return_icon($coh['executed']).'"/> '
-                .
-                '<img style="vertical-align: middle;" title="'.$statusTable[$coh['deleted']].'" src="modules/msc/graph/images/status/'.return_icon($coh['deleted']).'"/> ';
+            $a_progression[] = '<img style="vertical-align: middle;" title="' . $statusTable[$coh['uploaded']] . '" src="modules/msc/graph/images/status/' . return_icon($coh['uploaded']) . '"/> '
+                    .
+                    '<img style="vertical-align: middle;" title="' . $statusTable[$coh['executed']] . '" src="modules/msc/graph/images/status/' . return_icon($coh['executed']) . '"/> '
+                    .
+                    '<img style="vertical-align: middle;" title="' . $statusTable[$coh['deleted']] . '" src="modules/msc/graph/images/status/' . return_icon($coh['deleted']) . '"/> ';
 
             if ($coh['current_state'] == 'scheduled' && $cmd['max_connection_attempt'] != $coh['attempts_left']) {
                 $coh['current_state'] = 'rescheduled';
@@ -271,15 +271,15 @@ if ($areCommands) { // display several commands
             } else {
                 $a_current[] = $coh['current_state'];
             }
-            $p = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id'], 'tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$coh['host'], 'from'=>'base|computers|'.$action.'|'.$tab, 'gid'=>$gid);
+            $p = array('coh_id' => $coh_id, 'cmd_id' => $cmd['id'], 'tab' => $tab, 'uuid' => $uuid, 'hostname' => $coh['host'], 'from' => 'base|computers|' . $action . '|' . $tab, 'gid' => $gid);
             if (strlen($cmd['bundle_id'])) {
                 $p['bundle_id'] = $cmd['bundle_id'];
             }
 
             $params[] = $p;
             $icons = state_tmpl($coh['current_state']);
-            $icons['play']  == '' ? $a_start[] = $actionempty : $a_start[] = $actionplay;
-            $icons['stop']  == '' ? $a_stop[]  = $actionempty : $a_stop[]  = $actionstop;
+            $icons['play'] == '' ? $a_start[] = $actionempty : $a_start[] = $actionplay;
+            $icons['stop'] == '' ? $a_stop[] = $actionempty : $a_stop[] = $actionstop;
             $icons['pause'] == '' ? $a_pause[] = $actionempty : $a_pause[] = $actionpause;
 
             if (isset($_GET['coh_id']) && $coh_id == $_GET['coh_id']) {
@@ -325,6 +325,4 @@ if ($n != null) {
 
     $n->display();
 }
-
-
 ?>

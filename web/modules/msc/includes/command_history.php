@@ -379,19 +379,19 @@ class CommandHistory {
 
         $phase_labels = array(
             'wol' => _T('Wake on LAN'),
-            'upload' => _T('File upload'),
-            'execute' => _T('Install script execution'),
-            'delete' => _T('Clean temporary files'),
+            'upload' => _T('Upload'),
+            'execute' => _T('Execution'),
+            'delete' => _T('Clean'),
             'inventory' => _T('Inventory'),
-            'reboot' => _T('Restart computer'),
-            'halt' => _T('Shutdown computer'),
+            'reboot' => _T('Restart'),
+            'halt' => _T('Shutdown'),
             'pre_menu' => _T('Before bootmenu actions'),
             'post_menu' => _T('After bootmenu actions'),
             'done' => _T('Finish')
         );
 
         $hidden_phases = array(
-            'done', 'pre_menu', 'post_menu'
+            'done'
         );
 
         $phase_names = array();
@@ -471,6 +471,16 @@ class CommandHistory {
             for ($i = $last_lines_number; $i > 0; $i--)
                 if (isset($last_try[count($last_try) - ($i + 1)]))
                     $log_last_lines .= $last_try[count($last_try) - ($i + 1)];
+
+            // if log_last_lines didnt change (no previous line),
+            // we return exit code
+            // else ''
+            if ($log_last_lines == '...<br/>')
+                if (isset($last_try[count($last_try) - 1]))
+                    $log_last_lines = $last_try[count($last_try) - 1];
+                else
+                    $log_last_lines = '';
+
             $phase_logs[] = $log_last_lines;
         }
 
