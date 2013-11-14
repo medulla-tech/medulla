@@ -21,60 +21,61 @@
  * along with LMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 function getStatusTable() {
     return array("upload_in_progress" => _T("Upload in progress", "msc"),
-                     "upload_done" => _T("Upload done", "msc"),
-                     "upload_failed" => _T("Upload failed", "msc"),
-                     "execution_in_progress" => _T("Execution in progress", "msc"),
-                     "execution_done" => _T("Execution done", "msc"),
-                     "execution_failed" => _T("Execution failed", "msc"),
-                     "delete_in_progress" => _T("Delete in progress", "msc"),
-                     "delete_done" => _T("Delete done", "msc"),
-                     "delete_failed" => _T("Delete failed", "msc"),
-                     "inventory_in_progress" => _T("Inventory in progress", "msc"),
-                     "inventory_failed" => _T("Inventory failed", "msc"),
-                     "inventory_done" => _T("Inventory done", "msc"),
-                     "reboot_in_progress" => _T("Reboot in progress", "msc"),
-                     "reboot_failed" => _T("Reboot failed", "msc"),
-                     "reboot_done" => _T("Reboot done", "msc"),
-                     "wol_in_progress" => _T("WOL request being sent", "msc"),
-                     "wol_failed" => _T("Failed to send WOL request", "msc"),
-                     "wol_done" => _T("WOL request has been sent", "msc"),
-                     "halt_in_progress" => _T("Halt in progress", "msc"),
-                     "halt_done" => _T("Halt done", "msc"),
-                     "halt_failed" => _T("Halt failed", "msc"),
-                     "not_reachable" => _T("Not reachable", "msc"),
-                     "done" => _T("Done", "msc"),
-                     "pause" => _T("Paused", "msc"),
-                     "stop" => _T("Stopped", "msc"),
-                     "stopped" => _T("Stopped", "msc"),
-                     "scheduled" => _T("Scheduled", "msc"),
-                     "rescheduled" => _T("Rescheduled", "msc"),
-                     "failed" => _T("Failed", "msc"),
-                     "over_timed" => _T("Time Exceeded", "msc"),
-                     "TODO" => _T("To do", "msc"),
-                     "IGNORED" => _T("Ignored", "msc"),
-                     "DONE" => _T("Done", "msc"),
-                     "FAILED" => _T("Failed", "msc"),
-                     "WORK_IN_PROGRESS" => _T("Work in progress", "msc")
-                     );
+        "upload_done" => _T("Upload done", "msc"),
+        "upload_failed" => _T("Upload failed", "msc"),
+        "execution_in_progress" => _T("Execution in progress", "msc"),
+        "execution_done" => _T("Execution done", "msc"),
+        "execution_failed" => _T("Execution failed", "msc"),
+        "delete_in_progress" => _T("Delete in progress", "msc"),
+        "delete_done" => _T("Delete done", "msc"),
+        "delete_failed" => _T("Delete failed", "msc"),
+        "inventory_in_progress" => _T("Inventory in progress", "msc"),
+        "inventory_failed" => _T("Inventory failed", "msc"),
+        "inventory_done" => _T("Inventory done", "msc"),
+        "reboot_in_progress" => _T("Reboot in progress", "msc"),
+        "reboot_failed" => _T("Reboot failed", "msc"),
+        "reboot_done" => _T("Reboot done", "msc"),
+        "wol_in_progress" => _T("WOL request being sent", "msc"),
+        "wol_failed" => _T("Failed to send WOL request", "msc"),
+        "wol_done" => _T("WOL request has been sent", "msc"),
+        "halt_in_progress" => _T("Halt in progress", "msc"),
+        "halt_done" => _T("Halt done", "msc"),
+        "halt_failed" => _T("Halt failed", "msc"),
+        "not_reachable" => _T("Not reachable", "msc"),
+        "done" => _T("Done", "msc"),
+        "pause" => _T("Paused", "msc"),
+        "stop" => _T("Stopped", "msc"),
+        "stopped" => _T("Stopped", "msc"),
+        "scheduled" => _T("Scheduled", "msc"),
+        "rescheduled" => _T("Rescheduled", "msc"),
+        "failed" => _T("Failed", "msc"),
+        "over_timed" => _T("Time Exceeded", "msc"),
+        "TODO" => _T("To do", "msc"),
+        "IGNORED" => _T("Ignored", "msc"),
+        "DONE" => _T("Done", "msc"),
+        "FAILED" => _T("Failed", "msc"),
+        "WORK_IN_PROGRESS" => _T("Work in progress", "msc")
+    );
 }
 
 $statusTable = getStatusTable();
 
-function return_icon($state)
-{
-    switch($state) {
+function return_icon($state) {
+    switch ($state) {
         case "TODO":
+        case 'ready':
             return "todo.png";
             break;
         case "IGNORED":
             return "ignored.gif";
             break;
+        case 'done':
         case "DONE":
             return "success.png";
             break;
+        case 'failed':
         case "FAILED":
             return "failed.png";
             break;
@@ -123,6 +124,7 @@ function state2icon($current_state) {
             return "led_circle_grey.png";
     }
 }
+
 function history_stat2icon($state) {
     switch ($state) {
         case "wol_done";
@@ -200,13 +202,12 @@ function state_tmpl($current_state) {
     # and http://pulse2.mandriva.org/ticket/473
     # task is completed
     if (in_array(
-        $current_state,
-        array(
-            'over_timed',
-            'failed',
-            'done'
-        )
-    ))
+                    $current_state, array(
+                'over_timed',
+                'failed',
+                'done'
+                    )
+            ))
         return array(
             'play' => '',
             'stop' => '',
@@ -214,12 +215,11 @@ function state_tmpl($current_state) {
         );
 
     if (in_array(
-        $current_state,
-        array(
-            'stop',
-            'stopped'
-        )
-    ))
+                    $current_state, array(
+                'stop',
+                'stopped'
+                    )
+            ))
         return array(
             'play' => 'BUTTON_START',
             'stop' => '',
@@ -229,11 +229,10 @@ function state_tmpl($current_state) {
 
     # task is paused
     if (in_array(
-        $current_state,
-        array(
-            'pause',
-        )
-    ))
+                    $current_state, array(
+                'pause',
+                    )
+            ))
         return array(
             'play' => 'BUTTON_START',
             'stop' => 'BUTTON_STOP',
@@ -242,17 +241,16 @@ function state_tmpl($current_state) {
 
     # task is running
     if (in_array(
-        $current_state,
-        array(
-            'upload_in_progress',
-            'execution_in_progress',
-            'delete_in_progress',
-            'inventory_in_progress',
-            'reboot_in_progress',
-            'wol_in_progress',
-            'halt_in_progress',
-        )
-    ))
+                    $current_state, array(
+                'upload_in_progress',
+                'execution_in_progress',
+                'delete_in_progress',
+                'inventory_in_progress',
+                'reboot_in_progress',
+                'wol_in_progress',
+                'halt_in_progress',
+                    )
+            ))
         return array(
             'play' => '',
             'stop' => 'BUTTON_STOP',
@@ -272,7 +270,7 @@ function template_set_cmd_by_page(&$template, $tmpl_name, $number_command_by_pag
     /**
      * Number command by page display item selected
      */
-    if ($number_command_by_page==10) {
+    if ($number_command_by_page == 10) {
         $template->set_block($tmpl_name, "NUMBER_BY_PAGE_10_SELECTED", "page_10_selected");
         $template->parse("page_10_selected", "NUMBER_BY_PAGE_10_SELECTED");
     } else {
@@ -280,7 +278,7 @@ function template_set_cmd_by_page(&$template, $tmpl_name, $number_command_by_pag
         $template->set_var("page_10_selected", "");
     }
 
-    if ($number_command_by_page==20) {
+    if ($number_command_by_page == 20) {
         $template->set_block($tmpl_name, "NUMBER_BY_PAGE_20_SELECTED", "page_20_selected");
         $template->parse("page_20_selected", "NUMBER_BY_PAGE_20_SELECTED");
     } else {
@@ -288,7 +286,7 @@ function template_set_cmd_by_page(&$template, $tmpl_name, $number_command_by_pag
         $template->set_var("page_20_selected", "");
     }
 
-    if ($number_command_by_page==50) {
+    if ($number_command_by_page == 50) {
         $template->set_block($tmpl_name, "NUMBER_BY_PAGE_50_SELECTED", "page_50_selected");
         $template->parse("page_50_selected", "NUMBER_BY_PAGE_50_SELECTED");
     } else {
@@ -296,7 +294,7 @@ function template_set_cmd_by_page(&$template, $tmpl_name, $number_command_by_pag
         $template->set_var("page_50_selected", "");
     }
 
-    if ($number_command_by_page==100) {
+    if ($number_command_by_page == 100) {
         $template->set_block($tmpl_name, "NUMBER_BY_PAGE_100_SELECTED", "page_100_selected");
         $template->parse("page_100_selected", "NUMBER_BY_PAGE_100_SELECTED");
     } else {
@@ -304,6 +302,5 @@ function template_set_cmd_by_page(&$template, $tmpl_name, $number_command_by_pag
         $template->set_var("page_100_selected", "");
     }
 }
-
 
 ?>

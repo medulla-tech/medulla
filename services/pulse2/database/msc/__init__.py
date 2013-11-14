@@ -200,11 +200,11 @@ class MscDatabase(DatabaseHelper):
 
     def createCommand(self, session, package_id, start_file, parameters, files,
             start_script, clean_on_success, start_date, end_date, connect_as,
-            creator, title, 
+            creator, title,
             next_connection_delay,
             max_connection_attempt,
             maxbw, deployment_intervals,
-            fk_bundle, order_in_bundle, proxies, proxy_mode, 
+            fk_bundle, order_in_bundle, proxies, proxy_mode,
             state, sum_running):
         """
         Return a Command object
@@ -955,6 +955,8 @@ class MscDatabase(DatabaseHelper):
         if coh == None:
             self.logger.warn("User %s try to access an coh that don't exists '%s'" % (ctx.userid, coh_id))
             return False
+        coh.phases = session.query(CommandsOnHostPhase).filter_by(fk_commands_on_host = coh_id).all()
+        coh.phases = [phase.toDict() for phase in coh.phases]
         session.close()
         target = self.getTargetForCoh(ctx, coh_id)
         if ComputerLocationManager().doesUserHaveAccessToMachine(ctx, target.target_uuid):

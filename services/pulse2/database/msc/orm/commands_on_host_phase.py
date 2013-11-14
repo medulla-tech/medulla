@@ -31,7 +31,7 @@ class CommandsOnHostPhase(object):
         session.add(self)
         session.flush()
         session.close()
- 
+
     def is_ready(self):
         return self.is_state("ready")
     def is_running(self):
@@ -54,14 +54,14 @@ class CommandsOnHostPhase(object):
     # TODO - reschedule ???
     def switch_to_failed(self):
         return self.switch_to("failed")
- 
+
     def switch_to(self, state):
         if self.is_running():
             self.set_state(state)
             return True
         else:
             return False
-        
+
 
 
     def set_ready(self):
@@ -83,4 +83,9 @@ class CommandsOnHostPhase(object):
         self.state = state
         logging.getLogger().debug("<%s> phase state: %s" % (self.name, state))
         self.flush()
- 
+
+    def toDict(self, relations = False):
+        d = self.__dict__
+        if '_sa_instance_state' in d: del d['_sa_instance_state']
+        return d
+

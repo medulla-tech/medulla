@@ -182,7 +182,7 @@ class Commands(object):
 
     def getFilesList(self):
         return [a.split("/").pop() for a in self.files.split("\n")]
- 
+
 
     def setNextConnectionDelay(self, delay):
         """"set delay to the next attept """
@@ -197,7 +197,7 @@ class Commands(object):
 
     def dec_failed(self):
         """Decrements the total of failed commands"""
- 
+
         self.sum_running += 1
         self.sum_failed -= 1
         self.flush()
@@ -209,7 +209,7 @@ class Commands(object):
         self.sum_done += 1
         self.flush()
 
-       
+
 
 
     def flush(self):
@@ -225,6 +225,11 @@ class Commands(object):
             'id': self.id,
             'state': self.state,
             'creation_date': self.creation_date,
+            'start_date': self.start_date,
+            'end_date': self.end_date,
+            'sum_running': self.sum_running,
+            'sum_done': self.sum_done,
+            'sum_failed': self.sum_failed,
             'start_file': self.start_file,
             'parameters': self.parameters,
             'start_script': self.start_script,

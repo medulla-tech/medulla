@@ -235,7 +235,8 @@ class CommandsOnHost(object):
             'last_wol_attempt': self.last_wol_attempt,
             'order_in_proxy': self.order_in_proxy,
             'fk_use_as_proxy': self.fk_use_as_proxy,
-            'max_clients_per_proxy': self.max_clients_per_proxy
+            'max_clients_per_proxy': self.max_clients_per_proxy,
+            'phases' : self.phases
         }
 
     def setStartDate(self):
@@ -258,7 +259,7 @@ class CommandsOnHost(object):
         """
         Set balance value to calculate next_launch_date
         """
-        self.balance = balance        
+        self.balance = balance
         self.flush()
 
 def startCommandOnHost(coh_id):
@@ -365,11 +366,11 @@ class CoHManager :
         """
         Failed command_on_host re-scheduling to delete only.
 
-        When a command_on_host fails, failed install package 
+        When a command_on_host fails, failed install package
         is staying on host. To make clean the remote install directory,
         we need to re-create a new command on host with delete-only step.
 
-        First step is duration extending of failed command to default 
+        First step is duration extending of failed command to default
         command time and setting default number of attempts.
         Second step is switching needed flags to simulate a deleting
         phase as last step (without sending of inventory, reboot or halt)
@@ -395,13 +396,13 @@ class CoHManager :
                 myCommandOnHost.start_date = start_date
                 myCommandOnHost.end_date = end_date
                 myCommandOnHost.attempts_failed = 0
-                
+
                 myCommandOnHost.deleted = "TODO"
                 myCommandOnHost.inventoried = "IGNORED"
                 myCommandOnHost.rebooted = "IGNORED"
                 myCommandOnHost.halted = "IGNORED"
                 myCommandOnHost.imgmenu_changed = "IGNORED"
-               
+
                 myCommandOnHost.current_state = "scheduled"
 
                 session.flush()

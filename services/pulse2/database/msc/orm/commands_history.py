@@ -38,7 +38,8 @@ class CommandsHistory(object):
             'stderr': self.stderr,
             'stdout': self.stdout,
             'error_code': self.error_code,
-            'state': self.state
+            'state': self.state,
+            'phase': self.phase
         }
 
     def flush(self):
