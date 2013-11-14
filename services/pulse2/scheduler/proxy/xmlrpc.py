@@ -85,6 +85,7 @@ class ForwardingProxy(XMLRPC):
             args, func_name = xmlrpclib.loads(request.content.read())
         except Exception, e:
             self.logger.error("xmlrpc render failed: %s"% str(e))
+            return NOT_DONE_YET
 
         if not self._auth_validate(request, func_name, args):
             return NOT_DONE_YET
