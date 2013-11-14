@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import re
 import logging
 from xml.dom import minidom
 from optparse import OptionParser
@@ -90,6 +91,9 @@ class getCommand(object):
     def getNSISCommand(self):
         return './"%s" /S' % self.file.split('/').pop()
 
+    def getNSISUpdateCommand(self):
+        return './"%s" /S /UPDATE' % self.file.split('/').pop()
+
     def getMozillaCommand(self):
         return './"%s" -ms' % self.file.split('/').pop()
 
@@ -156,6 +160,9 @@ class getCommand(object):
                 return self.getInnoCommand()
             elif installer == "Nullsoft.NSIS.exehead":
                 self.logger.debug("NSIS detected")
+                if re.match('^pulse2-secure-agent-.*\.exe$', self.file):
+                    self.logger.debug("Pulse Secure Agent detected, add /UPDATE flag")
+                    return self.getNSISUpdateCommand()
                 return self.getNSISCommand()
             elif installer == "7zS.sfx.exe":
                 self.logger.debug("7zS.sfx detected (Mozilla app inside ?)")
