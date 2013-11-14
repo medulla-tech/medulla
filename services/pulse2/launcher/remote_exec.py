@@ -30,7 +30,7 @@
 
 import os
 import logging
-
+from base64 import b64encode
 # gather our modules
 import pulse2.launcher.process_control
 import pulse2.launcher.utils
@@ -909,8 +909,8 @@ def __cb_async_process_end(shprocess):
     if not shprocess.isnotifyingparent:
         shprocess.isnotifyingparent = True
         exitcode = shprocess.exit_code
-        stdout = unicode(shprocess.stdout, 'utf-8', 'strict')
-        stderr = unicode(shprocess.stderr, 'utf-8', 'strict')
+        stdout = b64encode(shprocess.stdout)
+        stderr = b64encode(shprocess.stderr)
         id = shprocess.id
 
         scheduler = pulse2.launcher.utils.getScheduler()

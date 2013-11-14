@@ -22,6 +22,7 @@
 """ Main dispatching of scheduler """
 
 import random
+from base64 import b64decode
 
 from twisted.internet.defer import Deferred, maybeDeferred, DeferredList
 from twisted.internet.threads import deferToThread
@@ -117,7 +118,14 @@ class MethodProxy(MscContainer):
                 method = px_dict[name]
                 self.logger.debug("Incoming result from launcher <%s>,executing method <%s> from phase <%s>" %
                             (launcher, method_name, circuit.running_phase.name))
-                result = method(circuit.running_phase, args)
+                if len(args) == 3:
+                    exitcode, _stdout, _stderr = args
+                    stdout = unicode(b64decode(_stdout),'utf-8', 'strict')
+                    stderr = unicode(b64decode(_stderr),'utf-8', 'strict')
+                    result = method(circuit.running_phase, (exitcode, stdout, stderr))
+                else: 
+                 result = method(circuit.running_phase, args)
+
                 circuit.phase_process(result)
                 return "OK"
 
