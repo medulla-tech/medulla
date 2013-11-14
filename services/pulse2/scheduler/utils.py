@@ -20,10 +20,11 @@
 # MA 02110-1301, USA.
 
 import logging
+import time
 try :
-    import cPickle as pickle
+    import cPickle as pickle 
 except ImportError :
-    import pickle
+    import pickle   #pyflakes.ignore
 
 from twisted.internet.protocol import Factory, ProcessProtocol
 from twisted.protocols.basic import LineOnlyReceiver
@@ -43,15 +44,16 @@ class PackUtils :
 
     @classmethod
     def unpack(cls, packet):
-        try :
-            ret = pickle.loads(packet)
-            return ret
-        except EOFError, e:
-            logging.getLogger().warn("EOF: Losing a packet from scheduler-proxy: %s" % str(e))
-            return None
-        except Exception, e:
-            logging.getLogger().warn("Losing a packet from scheduler-proxy: %s" % str(e))
-            return None
+        while True:
+            try :
+                ret = pickle.loads(packet)
+                return ret
+            except EOFError, e:
+                logging.getLogger().debug("EOF: Losing a packet from scheduler-proxy: %s" % str(e))
+                time.sleep(0.1)
+            except Exception, e:
+                logging.getLogger().warn("Losing a packet from scheduler-proxy: %s" % str(e))
+                return None
 
 
 def getClientCheck(target):
