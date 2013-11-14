@@ -21,9 +21,9 @@
 
 import logging
 try :
-    import cPickle as pickle #pyflakes.ignore
+    import cPickle as pickle 
 except ImportError :
-    import pickle   
+    import pickle # pyflakes.ignore 
 from StringIO import StringIO
 
 from twisted.internet.protocol import Factory, ProcessProtocol
@@ -105,6 +105,11 @@ class UnixProtocol (object, LineReceiver):
         except pickle.UnpicklingError:
             logging.getLogger().debug("Unpickle:completing the packet len=%d" % len(self.__data.getvalue()))
             return
+        except Exception, e:
+            logging.getLogger().debug("Another:completing the packet len=%d" % len(self.__data.getvalue()))
+            logging.getLogger().debug("Another exception when completing packet %s"  % str(e))
+            return
+
 
         if isinstance(packet, list) and len(packet) == 2:
             name, args = packet
