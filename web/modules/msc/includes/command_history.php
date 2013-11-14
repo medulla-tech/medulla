@@ -420,8 +420,22 @@ class CommandHistory {
 
             $phase_names[] = $phase_labels[$phase['name']];
             $phase_states[] = _plusIcon($phase['state']);
-            //$phase_logs[] = '<pre>' . print_r($logs_by_phase[$phase['name']], True) . '</pre>';
-            $formatted_logs = array_map('formatLog', $logs_by_phase[$phase['name']]);
+            if (count($logs_by_phase[$phase['name']]))
+                $formatted_logs = array_map('formatLog', $logs_by_phase[$phase['name']]);
+            else {
+
+                if ($ts_next_launch_time > mktime() && ($phase['state'] == 'failed' || $phase['state'] == 'ready')) {
+                    $last_try_time = _toDate($this->db_coh['next_launch_date']) . sprintf(' (%s)', _T('next attempt', 'msc'));
+                    $ts_next_launch_time = 0;
+                } else
+                    $last_try_time = '';
+
+                $phase_dates[] = $last_try_time;
+                $phase_logs[] = '';
+
+                continue;
+            }
+
             $log = '';
             foreach ($formatted_logs as $onetry_log) {
                 // info: $onetry_log == array($history, $log_lines)
@@ -438,7 +452,6 @@ class CommandHistory {
 
             $divid = $phase['name'] . '_log';
             printf('<div id="%s" style="display:none">%s</div>', $divid, $f->begin() . $f->content() . $f->end());
-            //$phase_logs[] = $log;
             $btn_showfull_log[] = sprintf('<ul class="action"><li class="status"><a title="%s" href="#" onclick="PopupWindow(null, \'\', 300, _centerPlacement,jQuery(\'#%s\').html());return false;"></a></li></ul>', _T('Show log', 'msc'), $divid);
 
             $last_try = $formatted_logs[count($formatted_logs) - 1][1];
@@ -449,8 +462,16 @@ class CommandHistory {
                 $ts_next_launch_time = 0;
             } else
                 $last_try_time = $formatted_logs[count($formatted_logs) - 1][0];
+
             $phase_dates[] = $last_try_time;
-            $phase_logs[] = $last_try[count($last_try) - 4] . $last_try[count($last_try) - 3] . $last_try[count($last_try) - 2];
+
+            $log_last_lines = '...<br/>';
+            $last_lines_number = 3;
+
+            for ($i = $last_lines_number; $i > 0; $i--)
+                if (isset($last_try[count($last_try) - ($i + 1)]))
+                    $log_last_lines .= $last_try[count($last_try) - ($i + 1)];
+            $phase_logs[] = $log_last_lines;
         }
 
 
