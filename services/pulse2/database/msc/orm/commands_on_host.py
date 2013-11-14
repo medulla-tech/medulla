@@ -34,6 +34,9 @@ import sqlalchemy.orm
 class CommandsOnHost(object):
     """ Mapping between msc.commands_on_host and SA
     """
+
+    phases = []
+
     def getId(self):
         return self.id
 
