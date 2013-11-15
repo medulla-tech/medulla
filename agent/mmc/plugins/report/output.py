@@ -265,7 +265,7 @@ class PdfGenerator(object):
         # ]
 
         # Rendering content
-        content = HTML(string=self.content).render(stylesheets=[self.content_css])
+        content = HTML(string=self.content, encoding="utf-8").render(stylesheets=[self.content_css])
 
         #Priting summary table BEGIN
         self.summary += '<table style="border:0">'
@@ -285,8 +285,8 @@ class PdfGenerator(object):
         #Priting summary table END
         self.summary += '</table>'
 
-        homepage = HTML(string=self.homepage).render(stylesheets=[self.homepage_css])
-        summary = HTML(string=self.summary).render(stylesheets=[self.homepage_css])
+        homepage = HTML(string=self.homepage, encoding="utf-8").render(stylesheets=[self.homepage_css])
+        summary = HTML(string=self.summary, encoding="utf-8").render(stylesheets=[self.homepage_css])
 
         pdf_report = [homepage, summary ,content]
         logging.getLogger().warning(pdf_report[2].make_bookmark_tree())
