@@ -948,8 +948,14 @@ class MscDatabase(DatabaseHelper):
         targets = self.getTargetsForCoh(ctx, coh_ids)
         if ComputerLocationManager().doesUserHaveAccessToMachines(ctx, map(lambda t:t.target_uuid, targets), False):
             ret = {}
+            session = create_session()
             for e in cohs:
+                logging.getLogger().warning(e)
+                # Loading coh phases
+                e[0].phases = session.query(CommandsOnHostPhase).filter_by(fk_commands_on_host = e[1]).all()
+                e[0].phases = [phase.toDict() for phase in e[0].phases]
                 ret[e[1]] = e[0]
+            session.close()
             return ret
         return {}
 
