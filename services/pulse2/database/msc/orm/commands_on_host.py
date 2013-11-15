@@ -206,6 +206,15 @@ class CommandsOnHost(object):
         self.setCommandStatut('phase_failed')
 ### /Misc state changes handling  ###
 
+    def extend(self, start_date, end_date, attempts):
+        self.start_date = start_date
+        self.next_launch_date = start_date
+        self.end_date = end_date
+        #self.attempts_left += attempts
+        self.attempts_failed = 0
+        self.flush()
+
+
     def flush(self):
         """ Handle SQL flushing """
         session = sqlalchemy.orm.create_session()

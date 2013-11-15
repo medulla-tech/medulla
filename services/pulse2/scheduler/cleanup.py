@@ -25,11 +25,7 @@ import logging
 from twisted.internet.defer import DeferredList
 
 from pulse2.utils import SingletonN
-
-from pulse2.database.msc.orm.commands import Schedule
-
-#from pulse2.scheduler.config import SchedulerConfig
-from pulse2.scheduler.queries import get_phases
+from pulse2.scheduler.types import CC_STATUS
 from pulse2.scheduler.api.msc import MscAPI
 
 class Defaults(object):
@@ -59,37 +55,19 @@ defaults = Defaults()
 
 class CleanUpSchedule :
 
-    _checked_phase = "execute"
-    _checked_status = "failed"
-
-    _phases = ["delete", "done"]
-
-    def __init__(self, ids):
-        self.ids = ids
-
-    def is_candidate(self):
-        for phase in get_phases():
-            if phase.name == self._checked_phase :
-                if phase.state == self._checked_status :
-                    return True
-        return False
+    def __init__(self, cmd_id, circuits):
+        self.cmd_id = cmd_id
+        self.circuits = circuits
 
     def process(self):
         start_date, end_date = self._delta()
-        logging.getLogger().info("Clean up step check: %d circuits failed on %s" % (len(self.ids), self._checked_phase))
-        schedule = Schedule(self.ids,
-                            start_date,
-                            end_date,
-                            defaults.attempts_per_day,
-                            self._phases
-                            )
-        new_cmd_id = schedule.create()
-        fmt = "%d/%m/%Y %H:%M"
-        logging.getLogger().info("Clean up step schedule: created command (id=%s)" % new_cmd_id) 
-        logging.getLogger().info("Clean up step schedule: command valid from %s to %s" % (start_date.strftime(fmt),
-                                                                         end_date.strftime(fmt)))
-                
-        
+        for circuit in self.circuits :
+            circuit.qm.cmd.extend(start_date, end_date) 
+            circuit.qm.coh.extend(start_date, end_date, defaults.attempts_per_day)
+            circuit.qm.coh.setStateScheduled()
+            circuit.status = CC_STATUS.ACTIVE
+            logging.getLogger().info("Circuit #%s: lifetime incrementing to %d hours" % (circuit.id, defaults.life_time))
+            yield circuit
 
     def _delta (self):
         """ 

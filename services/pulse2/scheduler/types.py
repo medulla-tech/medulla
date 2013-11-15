@@ -297,12 +297,12 @@ class PhaseBase (PhaseProxyMethodContainer):
             # -----------------------------------------------------
             if self.coh.attempts_failed +1 <= attempts_total :
                 b = ParabolicBalance(attempts_total)
-                coef = b.balances[self.coh.attempts_failed]
+                coef = b.balances[self.coh.attempts_failed] * 1.0
                 delay_in_seconds = coef * total_secs
             else :
                 return 0
 
-            if now + delay_in_seconds > end_timestamp :
+            if now + delay_in_seconds + self.config.max_wol_time > end_timestamp :
                 delay_in_seconds = (end_timestamp - self.config.max_wol_time) - now 
             delay = delay_in_seconds // 60
 
@@ -612,7 +612,7 @@ class CircuitBase(object):
 
 
     @phases.setter 
-    def phases(self, value):  #pyflakes.ignore
+    def phases(self, value):  # pyflakes.ignore
         """
         Phases property set processing.
 
@@ -787,6 +787,8 @@ class Circuit (CircuitBase):
 
         except StopIteration :
             # All phases passed -> relase the circuit
+            self.logger.info("Circuit #%s: all phases already processed  - releasing" % self.id)
+            self.cohq.coh.setStateDone()
             self.release()
             return
  
@@ -813,7 +815,7 @@ class Circuit (CircuitBase):
             return
         elif result == DIRECTIVE.KILLED :
             self.logger.info("Circuit #%s: releasing" % self.id)
-            self.release()
+            self.release(True)
             return
         else :
             return self.phase_step() 
@@ -890,7 +892,7 @@ class Circuit (CircuitBase):
             else :
                 self.running_phase.coh.setStateOverTimed()
                 self.logger.info("Circuit #%s: overtimed" % self.id)
-            self.release()
+            self.release(True)
             return
         elif res == DIRECTIVE.KILLED :
             self.logger.info("Circuit #%s: released" % self.id)

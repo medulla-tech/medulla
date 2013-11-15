@@ -209,7 +209,10 @@ class Commands(object):
         self.sum_done += 1
         self.flush()
 
-
+    def extend(self, start_date, end_date):
+        self.start_date = start_date
+        self.end_date = end_date
+        self.flush()
 
 
     def flush(self):
@@ -262,65 +265,6 @@ class Commands(object):
             'order_in_bundle': self.order_in_bundle,
             'proxy_mode': self.proxy_mode
         }
-
-class Schedule :
-    def __init__(self, ids, start_date, end_date, attempts, phases):
-
-        fmt = "%Y-%m-%d %H:%M:%S"
-
-        self.start_date = start_date.strftime(fmt)
-        self.end_date = end_date.strftime(fmt)
-        self.attempts = attempts
-        self.phases = phases
-
-        self.cohs = self._get_cohs(ids)
-
-    def _get_cohs(self, ids):
-        session = sqlalchemy.orm.create_session()
-        cohs = session.query(CommandsOnHost
-                ).filter(CommandsOnHost.id.in_(ids)).all()
-        session.close()
-        return cohs
-
-    def create(self):
-        cmd = Commands()
-        cmd.title = "Auto clean up schedule"
-        cmd.creation_date = self.start_date
-        cmd.start_date = self.start_date
-        cmd.end_date = self.end_date
-        cmd.files = ""
-
-        cmd.flush()
-
-        for old_coh in self.cohs :
-            coh = CommandsOnHost()
-            coh.fk_target = old_coh.fk_target
-            coh.start_date = self.start_date
-            coh.next_launch_date = self.start_date
-            coh.end_date = self.end_date
-            coh.scheduler = old_coh.scheduler
-            coh.attempts_left = self.attempts
-            coh.fk_commands = cmd.id
-            coh.flush()
-            self._create_phases(coh.id)
-
-        return cmd.id
-
-
-    def _create_phases(self, coh_id):
-        for order, name in enumerate(self.phases) :
-            phase = CommandsOnHostPhase()
-            phase.name = name
-            phase.phase_order = order
-            phase.fk_commands_on_host = coh_id
-            phase.flush()
-
-
-
-
-
-
-
 
 
 def stopCommand(c_id):
