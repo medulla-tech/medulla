@@ -38,15 +38,7 @@
         });
     }
 
-    var checkIndicator = function(check) {
-        var indicator = jQuery(check).parent();
-
-        // uncheck child indicators
-        indicator.nextAll('.report-indicators').find('input').attr("checked", false);
-
-        // uncheck all parents indicators
-        indicator.parent().parents('.report-indicators').find('> .report-indicator > input').attr("checked", false);
-
+    var sectionsSelected = function() {
         // check if something in the section is selected
         jQuery('.report-section').each(function() {
             var section = jQuery(this);
@@ -56,6 +48,35 @@
                 section.find('> input').val("");
         });
     }
+
+    var checkIndicator = function(check) {
+        var indicator = jQuery(check).parent();
+        // uncheck child indicators
+        indicator.nextAll('.report-indicators').find('input').attr("checked", false);
+        // uncheck all parents indicators
+        indicator.parent().parents('.report-indicators').find('> .report-indicator > input').attr("checked", false);
+        sectionsSelected();
+    }
+
+    var checkInitialIndicators = function() {
+        var indicators = jQuery('.report-indicators').find('input:checked');
+        indicators.each(function() {
+            var indicator = jQuery(this).parent();
+            var level = 0;
+            indicator.parents('.report-indicators').each(function() {
+                if (level > 0)
+                    jQuery(this).find("> .report-indicator > a").html("<?php echo _T("Less detail", "report") ?>");
+                else
+                    level += 1;
+                jQuery(this).show();
+            })
+        })
+    }
+
+    jQuery(document).ready(function() {
+        checkInitialIndicators();
+        sectionsSelected();
+    });
 </script>
 
 <?
@@ -133,6 +154,7 @@ class ReportIndicator extends HtmlContainer {
         $this->name = $indicator['indicator'];
         $this->title = $indicator['title'];
         $this->level = $level;
+        $this->selected = isset($indicator['selected']) ? $indicator['selected'] : "no";
         foreach($indicator['items'] as $indicator) {
             $this->elements[] = new ReportIndicator($indicator, ($this->level + 1));
         }
@@ -144,8 +166,11 @@ class ReportIndicator extends HtmlContainer {
             echo 'display: none;';
         echo '">
                 <div class="report-indicator">
-                    <input type="checkbox" id="' . $this->name . '" name="indicators[' . $this->name . ']" onchange="checkIndicator(this)" />
-                    <label for="' . $this->name . '" class="report-indicator-label">' . $this->title . '</label>';
+                  <input type="checkbox" id="' . $this->name . '" name="indicators[' . $this->name . ']" onchange="checkIndicator(this)"';
+        if ($this->selected == "yes")
+            echo ' checked="checked"';
+        echo '    />
+                   <label for="' . $this->name . '" class="report-indicator-label">' . $this->title . '</label>';
                     if ($this->elements)
                         echo '&nbsp;&nbsp;(<a href="#" onclick="toggleSubIndicators(this)">' . _T("More detail", "report") . '</a>)';
         echo '</div>';

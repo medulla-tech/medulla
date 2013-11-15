@@ -29,14 +29,14 @@
         <table type="period" title="Number of devices by OS">
             <item module="glpi" indicator="os_count" title="OS">
                 <item module="glpi" indicator="os_count_windows" title="Windows">
-                    <item module="glpi" indicator="os_count_windows_xp" title="Windows XP">
+                    <item module="glpi" indicator="os_count_windows_xp" title="Windows XP" selected="yes">
                         <item module="glpi" indicator="os_count_windows_xp_pro" title="Windows XP Professional" />
                         <item module="glpi" indicator="os_count_windows_xp_home" title="Windows XP Home" />
                     </item>
-                    <item module="glpi" indicator="os_count_windows_seven" title="Windows 7" />
+                    <item module="glpi" indicator="os_count_windows_seven" title="Windows 7" selected="yes" />
                 </item>
-                <item module="glpi" indicator="os_count_macos" title="Mac OS X" />
-                <item module="glpi" indicator="os_count_linux" title="Linux" />
+                <item module="glpi" indicator="os_count_macos" title="Mac OS X" selected="yes" />
+                <item module="glpi" indicator="os_count_linux" title="Linux" selected="yes" />
             </item>
         </table>
     </section>
