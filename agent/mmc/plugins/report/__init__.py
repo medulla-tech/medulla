@@ -62,6 +62,21 @@ def activate():
     TaskManager().addTask("report.historize_all",
                           (ReportDatabase().historize_all,),
                           cron_expression=config.historization)
+    # Import indicators from XML
+    import_indicators()
+    return True
+
+
+
+def import_indicators():
+    xmltemp = ET.parse('/etc/mmc/plugins/report/indicators.xml').getroot()
+    for module in xmltemp.iter('module'):
+        module_name = module.attrib['name']
+        for indicator in module.iter('indicator'):
+            indicator_attr = indicator.attrib
+            indicator_attr['module'] = module_name
+            # Add indicator if not exists
+            ReportDatabase().add_indicator(indicator_attr)
     return True
 
 
@@ -358,7 +373,6 @@ class RpcProxy(RpcProxyI):
         result['pdf_path'] = pdf_path
         result['xls_path'] = xls_path
         return result
-
 
     def historize_all(self):
         ReportDatabase().historize_all()

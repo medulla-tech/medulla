@@ -70,6 +70,20 @@ class ReportDatabase(DatabaseHelper):
     def get_indicator_by_name(self, session, name):
         return session.query(Indicator).filter_by(name = name).one()
 
+
+    @DatabaseHelper._session
+    def add_indicator(self, session, indicator_attr):
+        indicator = session.query(Indicator).filter_by(name = indicator_attr['name']).first()
+        if indicator:
+            indicator.fromDict(indicator_attr)
+        else:
+            logging.getLogger().info('Adding new indicator %s' % indicator_attr['name'])
+            indicator = Indicator(**indicator_attr)
+            session.add(indicator)
+        session.commit()
+        return True
+
+
     @DatabaseHelper._session
     def historize_indicator(self, session, name):
         indicator = self.get_indicator_by_name(name)
@@ -84,6 +98,7 @@ class ReportDatabase(DatabaseHelper):
             data.timestamp = int(time())
             session.add(data)
         session.commit()
+
 
     @DatabaseHelper._session
     def historize_all(self, session):
