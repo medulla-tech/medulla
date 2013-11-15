@@ -2551,7 +2551,7 @@ class Glpi084(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def getMachineBySoftwareAndVersion(self, ctx, swnamei, count=0):
+    def getMachineBySoftwareAndVersion(self, ctx, swname, count=0):
         return self.getMachineBySoftware(ctx, swname, count)
 
     def getAllHostnames(self, ctx, filt = ''):
