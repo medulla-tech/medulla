@@ -112,7 +112,8 @@ class textTpl extends AbstractTpl {
 class dateInputTpl extends InputTpl {
 
     function dateInputTpl($name, $regexp='/(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[012])\/(\d\d\d\d)/') {
-        $this->InputTpl($name, $regexp);
+        # TODO: handle localized regexp for date format
+        $this->InputTpl($name);
         $this->fieldType = "text";
     }
 

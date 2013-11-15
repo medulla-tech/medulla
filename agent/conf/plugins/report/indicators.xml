@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+     <indicator
+        name = "indicator_name"         # Indicator name (unique)
+        label = "indicator_label"
+        request_function = "myFunc"     # The module_name.exportedReport.myFunc
+                                        # will be called to get data
+        params = "_params_"             # params to pass to request_function
+                                        # can be a string, a list, a dict
+                                        # or any type supported by python
+        data_type = "0"                 # 0 : numeric
+                                        # 1 : text
+        active = "1"                    # Active or not
+        keep_history = "1"              # 0 : Historization disabled
+                                        # 1 : Historization enabled
+    />
+-->
+<indicators>
+    <!-- GLPI indicators -->
+    <module name="glpi">
+         <indicator
+            name="os_count"
+            label="All OS"
+            request_functioni="getComputerCountByOSes"
+            params="'*'"
+            data_type="0"
+            activei="1"
+            keep_history="1"
+        />
+         <indicator
+            name="os_count_windows"
+            label="Windows"
+            request_functioni="getComputerCountByOSes"
+            params="'*Windows*'"
+            data_type="0"
+            activei="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_xp"
+            label="Windows XP"
+            request_function="getComputerCountByOSes"
+            params="'*Windows XP*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_xp_pro"
+            label="Windows XP Professionnal"
+            request_function="getComputerCountByOSes"
+            params="'*Windows XP Pro*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_xp_home"
+            label="Windows XP Home"
+            request_function="getComputerCountByOSes"
+            params="['*Windows XP Home*', '*Windows XP*Familiale']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_seven"
+            label="Windows Seven"
+            request_function="getComputerCountByOSes"
+            params="'*Windows*7*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_macos"
+            label="Linux"
+            request_function="getComputerCountByOSes"
+            params="'Mac OS X*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_linux"
+            label="Linux"
+            request_function="getComputerCountByOSes"
+            params="['*Linux*', '*linux*', 'Mageia*', 'Fedora*', 'CentOS*', 'Ubuntu*']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+    </module>
+</indicators>

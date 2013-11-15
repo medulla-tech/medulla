@@ -18,27 +18,10 @@
 # You should have received a copy of the GNU General Public License
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 
-[ ! -d modules ] && echo "Run this script from the web directory." && exit 1
+[ ! -d mmc/plugins ] && echo "Run this script from the agent directory." && exit 1
 
-for module in base ppolicy services dashboard report; do
-    POT="modules/${module}/locale/${module}.pot"
-    rm -f $POT
-    touch $POT
-    # Change gettext keyword according to the module
-    if [ "${module}" == "base" ]; then
-    	keyword="_"
-    	fpath=.
-    else
-    	keyword=_T
-    	fpath=modules/${module}
-    fi
-    find $fpath -iname "*.php" -exec xgettext -C -j -o ${POT} --language=PHP --keyword=${keyword} {} \;
-    # Build only the POT files
-    #for name in `find modules/${module}/locale -type f -name *.po`; do
-    #    echo -n "updating ${name}..."
-    #    msgmerge --update --add-location --sort-output ${name} ${POT}
-    #    echo "done"
-    #done
-done
+# Generate POT for report templates
+[ ! -x /usr/bin/pybabel ] && echo "You need to install python-babel to generate reports templates POT file." && exit 1
+pybabel extract -F scripts/babel.ini conf/plugins/report/templates/ > mmc/plugins/report/locale/templates.pot
 
 exit 0

@@ -38,3 +38,11 @@ class ReportConfig(PluginConfig, DatabaseConfig):
             self.historization = self.get('data', 'historization')
         except (NoOptionError, NoSectionError):
             self.historization = '15 2 * * *'
+        try:
+            self.indicators = self.get('data', 'indicators')
+        except (NoOptionError, NoSectionError):
+            self.indicators = 'indicators.xml'
+        try:
+            self.reportTemplate = self.get('data', 'reportTemplate')
+        except (NoOptionError, NoSectionError):
+            self.reportTemplate = 'default.xml'

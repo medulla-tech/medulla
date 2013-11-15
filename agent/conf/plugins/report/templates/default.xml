@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+    <localization>
+        <entry name="DATE_FORMAT" value="%Y/%m/%d"/>
+        <entry name="STR_KEY" value="Key"/>
+        <entry name="STR_VALUE" value="Value"/>
+        <entry name="STR_SUMMARY" value="Summary"/>
+        <entry name="STR_OTHER" value="Other"/>
+    </localization>
+
+    <!-- Homepage HTML -->
+    <homepage><![CDATA[
+        <table style="width:600px;border:0">
+            <tr>
+                <td style="border:0;text-align:left">
+                    <img style="max-width:250px;" src="file:///etc/mmc/plugins/report/img/mandriva.png" />
+                </td>
+            </tr>
+        </table>
+        <div style="height:200px" />
+        <h1>Activity report</h1>
+        Period from <b>__PERIOD_START__</b> to <b>__PERIOD_END__</b>
+        <div style="height:100px" />
+        edited by <b>__USERNAME__</b>
+    ]]>
+    </homepage>
+
+    <section module="glpi" title="Device evolution" name="glpi">
+        <table type="period" title="Number of devices by OS">
+            <item module="glpi" indicator="os_count" title="OS">
+                <item module="glpi" indicator="os_count_windows" title="Windows">
+                    <item module="glpi" indicator="os_count_windows_xp" title="Windows XP">
+                        <item module="glpi" indicator="os_count_windows_xp_pro" title="Windows XP Professional" />
+                        <item module="glpi" indicator="os_count_windows_xp_home" title="Windows XP Home" />
+                    </item>
+                    <item module="glpi" indicator="os_count_windows_seven" title="Windows 7" />
+                </item>
+                <item module="glpi" indicator="os_count_macos" title="Mac OS X" />
+                <item module="glpi" indicator="os_count_linux" title="Linux" />
+            </item>
+        </table>
+    </section>
+</template>
