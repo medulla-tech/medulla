@@ -190,7 +190,7 @@ class periodInputTpl extends multifieldTpl {
                     changeMonth: true,
                     showWeek: true,
                     showAnim: 'slideDown',
-                    maxDate: -1,
+                    maxDate: -2,
                     monthNames: $months,
                     monthNamesShort: $monthsShort,
                     dayNames: $days,
@@ -199,7 +199,9 @@ class periodInputTpl extends multifieldTpl {
                     weekHeader: $weekHeader,
                     dateFormat: $dateFormat,
                     onClose: function( selectedDate ) {
-                        jQuery("#$to_id").datepicker( "option", "minDate", selectedDate );
+                        toid_minDate = new Date(selectedDate);
+                        toid_minDate.setDate(toid_minDate.getDate() + 1);
+                        jQuery("#$to_id").datepicker( "option", "minDate", toid_minDate);
                         var timestamp = new Date(selectedDate).valueOf() / 1000;
                         jQuery("input[name=$from_id" + "_timestamp]").val(timestamp);
                     }
