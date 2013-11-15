@@ -508,8 +508,9 @@ class MscDispatcher (MscQueryManager, MethodProxy):
                     self.logger.info("Circuit #%s: (group %s) is going to start" %  
                             (circuit.id, slightest_network))
                     circuit.status = CC_STATUS.ACTIVE
-                    if circuit.qm.coh.isStateFailed() or circuit.qm.coh.isStateOverTimed():
-                        circuit.qm.cmd.dec_failed()
+                    if circuit.is_running :
+                        if circuit.qm.coh.isStateFailed() or circuit.qm.coh.isStateOverTimed():
+                            circuit.qm.cmd.dec_failed()
                     return circuit
         return None
      
