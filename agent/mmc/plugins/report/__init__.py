@@ -33,6 +33,7 @@ try:
     from pulse2.managers.location import ComputerLocationManager
 except ImportError:
     logger.warn("report: I can't load Pulse ComputerLocationManager")
+from mmc.site import mmcconfdir
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 from mmc.core.tasks import TaskManager
 from mmc.plugins.base import LdapUserGroupControl
@@ -44,6 +45,7 @@ VERSION = "0.0.0"
 APIVERSION = "0:1:0"
 REVISION = ""
 
+reportconfdir = os.path.join(mmcconfdir, 'plugins/report/')
 
 def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION
@@ -69,7 +71,7 @@ def activate():
 
 
 def import_indicators():
-    xmltemp = ET.parse('/etc/mmc/plugins/report/indicators.xml').getroot()
+    xmltemp = ET.parse(os.path.join(reportconfdir,'indicators.xml')).getroot()
     for module in xmltemp.iter('module'):
         module_name = module.attrib['name']
         for indicator in module.iter('indicator'):
@@ -102,7 +104,7 @@ class RpcProxy(RpcProxyI):
                 attr['items'] = _fetchItems(item)
             return result
         result = {}
-        xmltemp = ET.parse('/etc/mmc/pulse2/report/templates/%s.xml' % lang).getroot()
+        xmltemp = ET.parse(os.path.join(reportconfdir,'templates/%s.xml' % lang)).getroot()
         for section in xmltemp.iter('section'):
             attr_section = section.attrib
             if not attr_section['module'] in result:
@@ -135,7 +137,7 @@ class RpcProxy(RpcProxyI):
             logger.warn("Pulse ComputerLocationManager() not loaded")
             entity_names = {}
         # Parsing report XML
-        xmltemp = ET.parse('/etc/mmc/pulse2/report/templates/%s.xml' % lang).getroot()
+        xmltemp = ET.parse(os.path.join(reportconfdir,'templates/%s.xml' % lang)).getroot()
         if xmltemp.tag != 'template':
             logger.error('Incorrect XML')
             return False
