@@ -46,7 +46,6 @@ APIVERSION = "0:1:0"
 REVISION = ""
 
 localedir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "locale")
-bindtextdomain("templates", localedir)
 
 TRANSLATE_ATTRS = ("title", "value")
 TRANSLATE_ELEMS = ("homepage", "h1", "h2", "h3")
@@ -93,6 +92,15 @@ def translate_attrs(attrs):
     return attrs
 
 
+def setup_lang(lang):
+    bindtextdomain("templates", localedir)
+    try:
+        lang = gettext.translation('templates', localedir, [lang])
+        lang.install()
+    except IOError:
+        pass
+
+
 class ContextMaker(ContextMakerI):
     def getContext(self):
         s = SecurityContext()
@@ -110,8 +118,7 @@ class RpcProxy(RpcProxyI):
         return getattr(ReportDatabase(),func).__call__(*args, **kw)
 
     def get_report_sections(self, lang):
-        lang = gettext.translation('templates', localedir, [lang])
-        lang.install()
+        setup_lang(lang)
 
         def _fetchItems(container):
             result = []
@@ -138,8 +145,7 @@ class RpcProxy(RpcProxyI):
         return result
 
     def generate_report(self, period, sections, items, entities, lang):
-        lang = gettext.translation('templates', localedir, [lang])
-        lang.install()
+        setup_lang(lang)
 
         temp_path = '/var/tmp/'
         report_path = os.path.join(temp_path, 'report-%d' % int(time.time()))
