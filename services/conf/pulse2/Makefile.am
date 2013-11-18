@@ -36,6 +36,7 @@ nobase_pulseconf_DATA = \
 	inventory-server/xml-fix/03_ASUS_consistency.py \
 	inventory-server/xml-fix/04_Adobe_consistency.py \
 	inventory-server/xml-fix/05_HP_consistency.py \
+	inventory-server/xml-fix/06_Laptop_type.py \
 	scheduler/scheduler.ini launchers/launchers.ini atftpd/pcre.conf \
 	uuid-resolver/uuid-resolver.ini \
 	$(certca) $(certpriv)
