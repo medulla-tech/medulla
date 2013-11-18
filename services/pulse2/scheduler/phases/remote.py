@@ -309,6 +309,7 @@ class UploadPhase(RemoteControlPhase):
 
     def apply_initial_rules(self):
         if not self.cmd.hasSomethingToUpload():
+            self.logger.info("Circuit #%s: Nothing to upload" % self.coh.id)
             return self.next()
         ret = self._apply_initial_rules()
         if ret not in (DIRECTIVE.NEXT,
@@ -807,6 +808,10 @@ class ExecutionPhase(RemoteControlPhase):
 
     def apply_initial_rules(self):
         ret = self._apply_initial_rules()
+        if not self.cmd.hasSomethingToExecute():
+            self.logger.info("Circuit #%s: Nothing to execute" % self.coh.id)
+            self.phase.set_done()
+            return self.next()
         if self.cmd.hasToUseProxy():
             cohq = CoHQuery(self.coh.id)
             if not self.dispatcher.local_proxy_may_continue(cohq):
@@ -850,6 +855,20 @@ class DeletePhase(RemoteControlPhase):
 
     def get_filelist(self):
         return self.cmd.getFilesList()
+
+    def apply_initial_rules(self):
+        ret = self._apply_initial_rules()
+        if not self.cmd.hasSomethingToDelete():
+            self.logger.info("Circuit #%s: Nothing to delete" % self.coh.id)
+            self.phase.set_done()
+            return self.next()
+
+        if ret not in (DIRECTIVE.NEXT,
+                       DIRECTIVE.GIVE_UP, 
+                       DIRECTIVE.KILLED,
+                       DIRECTIVE.OVER_TIMED) :
+            return self._switch_on()
+        return ret
 
 
     def perform(self):

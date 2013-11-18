@@ -126,12 +126,12 @@ class Commands(object):
         return result
 
     def hasSomethingToExecute(self):
-        result = (self.start_script == 'enable' and len(self.start_file) != 0)
+        result = len(self.start_file) != 0
         logging.getLogger().debug("hasSomethingToExecute(#%s): %s" % (self.getId(), result))
         return result
 
     def hasSomethingToDelete(self):
-        result = (self.clean_on_success == 'enable' and len(self.files) != 0)
+        result = len(self.files) != 0
         logging.getLogger().debug("hasSomethingToDelete(#%s): %s" % (self.getId(), result))
         return result
 
