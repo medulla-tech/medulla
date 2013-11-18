@@ -1,4 +1,5 @@
 <?php
+
 /**
  * (c) 2012 Mandriva, http://www.mandriva.com
  *
@@ -18,7 +19,6 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 require_once("modules/pulse2/includes/xmlrpc.inc.php");
 require_once("modules/pulse2/includes/locations_xmlrpc.inc.php");
 include_once("modules/dashboard/includes/panel.class.php");
@@ -31,8 +31,6 @@ $options = array(
     "refresh" => 960,
     "title" => _T("Operating systems", "dashboard"),
 );
-
-
 
 class os_repartitionPanel extends Panel {
 
@@ -47,51 +45,51 @@ class os_repartitionPanel extends Panel {
         );
 
         $osLabels = array(
-            _T('Other','glpi'),
+            _T('Other', 'glpi'),
             'Windows 7',
             'Windows XP',
-            _T('Other Windows','glpi')
+            _T('Other Windows', 'glpi')
         );
 
         $osCount = array();
 
         $urlRedirect = urlStrRedirect("base/computers/createOSStaticGroup");
-        
+
+
         $links = array(
-                "$urlRedirect&os=other", // Static group links
-                "$urlRedirect&os=Microsoft Windows 7",
-                "$urlRedirect&os=Microsoft Windows XP",
-                "$urlRedirect&os=otherw"
+            "$urlRedirect&os=other", // Static group links
+            "$urlRedirect&os=Microsoft Windows 7",
+            "$urlRedirect&os=Microsoft Windows XP",
+            "$urlRedirect&os=otherw"
         );
-        
-        /*$links = json_encode(array("#",
-        "main.php?module=base&submod=computers&action=computersgroupcreator&req=glpi&add_param=OS&request=stored_in_session&id=&value=Microsoft Windows 7 *",
-        "main.php?module=base&submod=computers&action=computersgroupcreator&req=glpi&add_param=OS&request=stored_in_session&id=&value=Microsoft Windows XP *",
-        "#"));  DYNGROUP LINKS*/
-        
-        for ($i = 0; $i< count($osClasses) ; $i++){
-            $osCount[] = getMachineByOsLike($osClasses[$i],1);
-            $osLabels[$i] .= ' ('.$osCount[$i].')';
+
+        /* $links = json_encode(array("#",
+          "main.php?module=base&submod=computers&action=computersgroupcreator&req=glpi&add_param=OS&request=stored_in_session&id=&value=Microsoft Windows 7 *",
+          "main.php?module=base&submod=computers&action=computersgroupcreator&req=glpi&add_param=OS&request=stored_in_session&id=&value=Microsoft Windows XP *",
+          "#"));  DYNGROUP LINKS */
+
+        for ($i = 0; $i < count($osClasses); $i++) {
+            $osCount[] = getMachineByOsLike($osClasses[$i], 1);
+            $osLabels[$i] .= ' (' . $osCount[$i] . ')';
         }
 
         $n = count($osCount);
 
         // Treating osCount for adapting to raphaeljs
-        for ($i = 0; $i < $n ; $i++){
-            if ($osCount[$i] == 0){
+        for ($i = 0; $i < $n; $i++) {
+            if ($osCount[$i] == 0) {
                 unset($osCount[$i]);
                 unset($osLabels[$i]);
                 unset($links[$i]);
-            }
-            elseif ($osCount[$i]/array_sum($osCount) < 0.015)
-                $osCount[$i] = 0.015/(1-0.015)*(array_sum($osCount)-$osCount[$i]);
+            } elseif ($osCount[$i] / array_sum($osCount) < 0.015)
+                $osCount[$i] = 0.015 / (1 - 0.015) * (array_sum($osCount) - $osCount[$i]);
         }
         $osLabels = json_encode(array_values($osLabels));
         $osCount = json_encode(array_values($osCount));
         $links = json_encode(array_values($links));
 
         $createGroupText = json_encode(_T("Create a group", "glpi"));
-        
+
 
         echo <<< SPACE
         <div id="os-graphs" style="height:250px;"></div>
@@ -106,7 +104,7 @@ class os_repartitionPanel extends Panel {
         var data = $osCount,
             createGroupText = $createGroupText,
             legend = $osLabels,
-            colors = ["#000","#73d216","#ef2929","#003399"],
+            colors = ["000-#000000-#666665","000-#73d216-#42780D","000-#ef2929-#A31A1A","000-#003399-#0251ED"],
             href = $links,
             title = 'OS Repartition';
 
@@ -149,6 +147,7 @@ class os_repartitionPanel extends Panel {
         </script>
 SPACE;
     }
+
 }
 
 ?>
