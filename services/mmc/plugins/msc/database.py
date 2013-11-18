@@ -410,7 +410,7 @@ class MscDatabase(msc.MscDatabase):
                 end_date = "0000-00-00 00:00:00",
                 connect_as = "root",
                 title = "",
-                do_halt = "done",
+                do_halt = "disable",
                 do_reboot = 'disable',
                 do_wol = 'enable',
                 do_wol_with_imaging = 'disable',

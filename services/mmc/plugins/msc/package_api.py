@@ -114,10 +114,7 @@ class SendBundleCommand:
         self.do_wol = self.params['do_wol']
         self.do_imaging_menu = 'disable'
         self.do_inventory = self.params['do_inventory']
-        try:
-            self.issue_halt_to = self.params['issue_halt_to']
-        except: # just in case issue_halt_to has not been set
-            self.issue_halt_to = ''
+        self.issue_halt_to = self.params["issue_halt_to"]
 
         # Build the list of all the different package APIs to connect to
         self.p_apis = []
@@ -187,10 +184,16 @@ class SendBundleCommand:
 
             if int(order) == int(self.last_order):
                 params['do_inventory'] = self.do_inventory
-                params['issue_halt_to'] = self.issue_halt_to
+                if len(self.issue_halt_to) > 0 :
+                    if self.issue_halt_to[0] == "done":
+                        params['issue_halt_to'] = "enable"
+                    else :
+                        params['issue_halt_to'] = "disable"
+                else :
+                    params['issue_halt_to'] = "disable"
             else:
                 params['do_inventory'] = 'off'
-                params['issue_halt_to'] = ''
+                params['issue_halt_to'] = 'disable'
 
             # override possible choice of do_reboot from the gui by the one declared in the package
             # (in bundle mode, the gui does not offer enough choice to say when to reboot)
@@ -232,7 +235,7 @@ def prepareCommand(pinfos, params):
     ret['next_connection_delay'] = params['next_connection_delay']
     ret['max_connection_attempt'] = params['max_connection_attempt']
     ret['do_inventory'] = (params['do_inventory'] == 'on' and 'enable' or 'disable')
-    ret['issue_halt_to'] = params['issue_halt_to']
+    ret['issue_halt_to'] = (params['issue_halt_to'] == ["done"] and "enable" or "disable")
     ret['maxbw'] = params['maxbw']
     if 'state' not in params :
         ret['state'] = 'active'
