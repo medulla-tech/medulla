@@ -195,6 +195,7 @@ else if (isset($_POST['generate_report'])) {
             } else {
                 $f->add($report_objects[$i]);
             }
+            if ($report_types[$i] != 'title') $f->add(new SpanElement('<br /><hr style="border-top: 1px solid #DDDDDD"/><br />'));
             $f->pop();
         }
     }
