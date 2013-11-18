@@ -186,7 +186,7 @@ class periodInputTpl extends multifieldTpl {
                     jQuery("#$from_id").datepicker("show");
                 });
                 jQuery("#$from_id").datepicker({
-                    defaultDate: 0,
+                    defaultDate: -2,
                     changeMonth: true,
                     showWeek: true,
                     showAnim: 'slideDown',
@@ -205,9 +205,9 @@ class periodInputTpl extends multifieldTpl {
                         var timestamp = new Date(selectedDate).valueOf() / 1000;
                         jQuery("input[name=$from_id" + "_timestamp]").val(timestamp);
                     }
-                }).datepicker('setDate', '0');
+                }).datepicker('setDate', '-2');
                 jQuery("#$to_id").datepicker({
-                    defaultDate: 0,
+                    defaultDate: -1,
                     changeMonth: true,
                     showWeek: true,
                     showAnim: 'slideDown',
@@ -220,28 +220,37 @@ class periodInputTpl extends multifieldTpl {
                     weekHeader: $weekHeader,
                     dateFormat: $dateFormat,
                     onClose: function( selectedDate ) {
-                        jQuery("input[name=$to_id" + "_timestamp]").val('toto');
                         var timestamp = new Date(selectedDate).valueOf() / 1000;
                         jQuery("input[name=$to_id" + "_timestamp]").val(timestamp);
                     }
-                }).datepicker('setDate', '0');
+                }).datepicker('setDate', '-1');
             });
-            var timestamp = new Date().valueOf() / 1000;
-            jQuery("input[name=$to_id" + "_timestamp]").val(timestamp);
-            jQuery("input[name=$from_id" + "_timestamp]").val(timestamp);
             </script>
 JQUERY;
     }
 
     function display($arrParam) {
-        // Set default values for this class
+        /*
+         * Set default values for this class
+         * $from_id_timestamp is set by default to now() - 2 days
+         * $to_id_timestamp is set by default to yesterday
+         *
+         * We need for these 2 values timestamp at 00:00:00
+         */
+
+        $from_ts = time() - 86400 * 2;
+        $to_ts = time() - 86400;
+
+        // Getting timestamp for these 2 values at 00:00:00
+        $from_id_timestamp = mktime(0, 0, 0, date('m', $from_ts), date('d', $from_ts), date('Y', $from_ts));
+        $to_id_timestamp = mktime(0, 0, 0, date('m', $to_ts), date('d', $to_ts), date('Y', $to_ts));
         $arrParam = array(
             array(), // from_txt
             array(), // from_id
             array(), // to_txt
             array(), // to_id
-            array('value' => time(), 'hide' => True), // from_id_timestamp
-            array('value' => time(), 'hide' => True), // to_id_timestamp
+            array('value' => $from_id_timestamp, 'hide' => True),
+            array('value' => $to_id_timestamp, 'hide' => True),
         );
         parent::display($arrParam);
     }
