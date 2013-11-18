@@ -84,11 +84,25 @@ class raphaelPie extends HtmlElement {
     function display($arrParam = array()) {
 
 
-        $_data = json_encode($this->data);
-        $_labels = json_encode($this->labels);
-        $_colors = json_encode($this->colors);
-        $_links = json_encode($this->links);
+        $_data = array_map('intval', $this->data);
+        $_labels = $this->labels;
+        $_colors = $this->colors;
+        $_links = $this->links;
 
+        $count = count($_data);
+        for ($i = 0; $i < $count; $i++) {
+            if ($_data[$i] <= 0) {
+                unset($_data[$i]);
+                unset($_labels[$i]);
+                unset($_colors[$i]);
+                unset($_links[$i]);
+            }
+        }
+
+        $_data = json_encode(array_values($_data));
+        $_labels = json_encode(array_values($_labels));
+        $_colors = json_encode(array_values($_colors));
+        $_links = json_encode(array_values($_links));
 
         echo <<< SPACE
         <div id="$this->id" style="height:250px;"></div>

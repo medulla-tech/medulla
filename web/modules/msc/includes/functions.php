@@ -84,6 +84,9 @@ function return_icon($state) {
         case "WORK_IN_PROGRESS":
             return "inprogress.gif";
             break;
+        case "stopped":
+            return "pause.png";
+            break;
     }
 }
 

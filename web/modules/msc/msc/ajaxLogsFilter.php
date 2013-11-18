@@ -277,7 +277,6 @@ if ($areCommands) { // display several commands
             // Set current step state array
             $last_phase = FALSE;
             $running = FALSE;
-            //debug($coh['phases']);
             foreach ($coh['phases'] as $phase) {
                 if ($phase['state'] == 'running')
                     $running = TRUE;
