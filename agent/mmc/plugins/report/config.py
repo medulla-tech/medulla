@@ -20,9 +20,12 @@
 
 from ConfigParser import NoOptionError, NoSectionError
 
+import os
 from mmc.support.config import PluginConfig
 from mmc.database.config import DatabaseConfig
+from mmc.site import mmcconfdir
 
+reportconfdir = os.path.join(mmcconfdir, 'plugins/report/')
 
 class ReportConfig(PluginConfig, DatabaseConfig):
     def __init__(self, name='report', conffile=None):

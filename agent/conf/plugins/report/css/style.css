@@ -1,0 +1,48 @@
+#homepage table {
+    border-width:1px;
+    border-style:solid;
+    border-color:black;
+    border-collapse:collapse;
+    font-size: 10px;
+    font-weight: normal;
+    text-align: center;
+}
+
+#homepage td, #homepage th {
+    border-width:1px;
+    border-style:solid;
+    border-color:black;
+}
+
+p, li {
+    text-align: justify;
+    -weasy-hyphens: auto;
+}
+
+#header {
+    position: running(header);
+}
+
+#header-right {
+    text-align: right;
+}
+
+table {
+    border-width:1px;
+    border-style:solid;
+    border-color:black;
+    border-collapse:collapse;
+    font-size: 10px;
+    font-family: "DejaVu Sans";
+    font-weight: normal;
+    text-align: center;
+    width: 550px;
+    border-radius:15px;
+}
+td {
+}
+td, th {
+    border-width:1px;
+    border-style:solid;
+    border-color:black;
+}

@@ -34,11 +34,10 @@ try:
     from pulse2.managers.location import ComputerLocationManager
 except ImportError:
     logger.warn("report: I can't load Pulse ComputerLocationManager")
-from mmc.site import mmcconfdir
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 from mmc.core.tasks import TaskManager
 from mmc.plugins.base import LdapUserGroupControl
-from mmc.plugins.report.config import ReportConfig
+from mmc.plugins.report.config import ReportConfig, reportconfdir
 from mmc.plugins.report.database import ReportDatabase
 from mmc.plugins.report.output import XlsGenerator, PdfGenerator, SvgGenerator
 
@@ -46,7 +45,6 @@ VERSION = "0.0.0"
 APIVERSION = "0:1:0"
 REVISION = ""
 
-reportconfdir = os.path.join(mmcconfdir, 'plugins', 'report')
 localedir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "locale")
 bindtextdomain("templates", localedir)
 

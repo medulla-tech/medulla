@@ -22,6 +22,7 @@
 This module generate XLS, PDF and SVG output files
 """
 
+import os
 import xlwt
 from weasyprint import HTML, CSS
 import pygal
@@ -30,6 +31,7 @@ from pygal.style import Style
 from os import chmod
 from base64 import b64encode
 import logging
+from mmc.plugins.report.config import reportconfdir
 
 class XlsGenerator(object):
     def __init__(self, path = '/tmp/report.xls'):
@@ -126,29 +128,20 @@ class PdfGenerator(object):
     def h3(self, str):
         self.content += '<h3>%s</h3>' % str
 
+    @property
+    def _css_file_content(self):
+        string = ''
+        try:
+            f = open(os.path.join(reportconfdir, 'css', 'style.css'))
+            string = f.read()
+            f.close()
+        except IOError, e:
+            logging.getLogger().warning(e)
+        return string
 
     @property
     def homepage_css(self):
-        string = """
-
-        table {
-        border-width:1px;
-        border-style:solid;
-        border-color:black;
-        border-collapse:collapse;
-        font-size: 10px;
-        font-weight: normal;
-        text-align: center;
-        }
-        td {
-        }
-        td, th {
-        border-width:1px;
-        border-style:solid;
-        border-color:black;
-        }
-        """
-        return CSS(string=string)
+        return CSS(string=self._css_file_content)
 
     @property
     def content_css(self):
@@ -157,7 +150,7 @@ class PdfGenerator(object):
         @page {
             counter-increment: page;
             /*margin: 8mm 8mm 15mm 8mm;*/
-            size: letter;
+            /*size: letter;*/
 
             @top-left {
                 content: element(header);
@@ -175,39 +168,8 @@ class PdfGenerator(object):
                 padding-bottom: 6mm;
             }
         }
-        p, li {
-            text-align: justify;
-            -weasy-hyphens: auto;
-        }
-
-        #header {
-            position: running(header);
-        }
-
-        #header-right {
-            text-align: right;
-        }
-
-        table {
-        border-width:1px;
-        border-style:solid;
-        border-color:black;
-        border-collapse:collapse;
-        font-size: 10px;
-        font-family: "DejaVu Sans";
-        font-weight: normal;
-        text-align: center;
-        width: 550px;
-        border-radius:15px;
-        }
-        td {
-        }
-        td, th {
-        border-width:1px;
-        border-style:solid;
-        border-color:black;
-        }
         """
+        string += self._css_file_content
         return CSS(string=string)
 
     def get_simple_sheet(self, title, datas):
@@ -292,7 +254,6 @@ class PdfGenerator(object):
     def save(self):
         # PDF report is a list of all documents
         self.summary = '<h1>%s</h1>' % (self.locale['STR_SUMMARY'])
-        pdf_pages = [self.homepage, self.summary, self.content]
 
         # To make one PDF report, we have to get all pages of all documents...
         # First step , we obtain a list of sublists like this :
