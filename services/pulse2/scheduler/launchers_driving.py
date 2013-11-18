@@ -25,6 +25,7 @@ import logging
 
 from twisted.internet.defer import DeferredList, fail
 from twisted.internet.error import TCPTimedOutError, ConnectionRefusedError
+from twisted.internet.error import ConnectError
 from pulse2.scheduler.config import SchedulerConfig
 from pulse2.scheduler.network import chooseClientIP
 from pulse2.scheduler.checks import getCheck, getAnnounceCheck
@@ -244,7 +245,11 @@ class LauncherCallingProvider(type):
         d.addCallback(self._extract_total_slots)
         @d.addErrback
         def _eb(failure):
-            logging.getLogger().error("An error occured when getting the slots from launcher: %s" % failure)
+            err = failure.trap(ConnectError)
+            if err == ConnectError:
+                logging.getLogger().warn("Unable to get the slots from launcher")
+            else :
+                logging.getLogger().error("An error occured when getting the slots from launcher: %s" % failure)
         return d
  
 
@@ -279,9 +284,9 @@ class LauncherCallingProvider(type):
                 slots[launcher] = stats.slots.slottotal
             else :
                 if hasattr(result, "trap"):
-                    err = result.trap(ConnectionRefusedError)
-                    if err == ConnectionRefusedError :
-                        logging.getLogger().warn("Cannot contact a launcher to detect the slots !")
+                    err = result.trap(ConnectionRefusedError, ConnectError)
+                    if err in (ConnectionRefusedError, ConnectError) :
+                        logging.getLogger().warn("Cannot contact a launcher from list to detect the slots !")
                     else :
                         logging.getLogger().warn("Getting the slots number failed: %s" % result)
                 else :
