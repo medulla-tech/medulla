@@ -254,15 +254,6 @@ class MscConfig(MscDatabaseConfig):
             self.web_def_delay = self.cp.get("web", "web_def_delay")
         if self.cp.has_option("web", "web_def_attempts"):
             self.web_def_attempts = self.cp.get("web", "web_def_attempts")
-        if self.cp.has_option("web", "web_def_issue_halt_to"):
-            self.web_def_issue_halt_to = []
-            #p_wdiht = ['done', 'failed', 'over_time', 'out_of_interval']
-            p_wdiht = ['done']
-            for wdiht in self.cp.get("web", "web_def_issue_halt_to").split(','):
-                if wdiht in p_wdiht:
-                    self.web_def_issue_halt_to.append(wdiht)
-                else:
-                    logging.getLogger().warn("Plugin MSC: web_def_issue_halt_to cannot be '%s' (possible choices : %s)"%(wdiht, str(p_wdiht)))
         if self.cp.has_option("web", "web_show_reboot"):
             self.web_show_reboot = self.cp.getboolean("web", "web_show_reboot")
         if self.cp.has_option("web", "web_dlpath"):

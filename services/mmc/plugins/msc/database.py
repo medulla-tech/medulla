@@ -375,13 +375,11 @@ class MscDatabase(msc.MscDatabase):
             self._createPhases(session,
                                cohs, 
                                cmd['do_wol_with_imaging'], 
-                               #cmd['do_imaging_menu'], 
                                cmd['do_wol'],
                                cmd['files'],
                                cmd['start_script'],
                                cmd['clean_on_success'],
                                cmd['do_inventory'],
-                               #cmd['do_halt'], 
                                cmd['issue_halt_to'], 
                                cmd['do_reboot'])
 
@@ -608,7 +606,7 @@ class MscDatabase(msc.MscDatabase):
         if patternActions is None:
             patternActions = {
                 'do_reboot': "disable",
-                'do_halt': self.config.web_def_issue_halt_to,
+                'do_halt': "disable",  
                 'do_inventory': "disable",
                 'do_wol': "disable",
                 'do_wol_with_imaging': "disable",
@@ -618,7 +616,7 @@ class MscDatabase(msc.MscDatabase):
             patternActions['do_reboot'] = "enable"
             cmd = cmd.replace("@@do_reboot@@", "")
         if "@@do_halt@@" in cmd:
-            patternActions['do_halt'] = ["done"]
+            patternActions['do_halt'] = "enable"
             cmd = cmd.replace("@@do_halt@@", "")
         if "@@do_inventory@@" in cmd:
             patternActions['do_inventory'] = "enable"
