@@ -21,19 +21,19 @@
          <indicator
             name="os_count"
             label="All OS"
-            request_functioni="getComputerCountByOSes"
+            request_function="getComputerCountByOSes"
             params="'*'"
             data_type="0"
-            activei="1"
+            active="1"
             keep_history="1"
         />
          <indicator
             name="os_count_windows"
             label="Windows"
-            request_functioni="getComputerCountByOSes"
+            request_function="getComputerCountByOSes"
             params="'*Windows*'"
             data_type="0"
-            activei="1"
+            active="1"
             keep_history="1"
         />
         <indicator
