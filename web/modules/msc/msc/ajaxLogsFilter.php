@@ -22,6 +22,7 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+require_once("modules/msc/includes/html.inc.php");
 require_once("modules/msc/includes/widgets.inc.php");
 require_once("modules/msc/includes/functions.php");
 require_once("modules/msc/includes/commands_xmlrpc.inc.php");
@@ -29,6 +30,8 @@ require_once("modules/msc/includes/command_history.php");
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
+
+$DISPLAY_TABLE = TRUE;
 
 $filter = $_GET["filter"];
 if (isset($_GET["start"]))
@@ -64,6 +67,10 @@ if ($uuid) {
         $areCommands = True;
     }
     $action = "groupmsctabs";
+
+    $sum_running = $cmds[0][0]['sum_running'];
+    $sum_done = $cmds[0][0]['sum_done'];
+    $sum_failed = $cmds[0][0]['sum_failed'];
 }
 
 
@@ -93,6 +100,7 @@ $a_pause = array();
 $a_stop = array();
 $a_details = array();
 $a_status = array();
+$a_step_state = array();
 $a_progression = array();
 $n = null;
 
@@ -266,11 +274,37 @@ if ($areCommands) { // display several commands
             if ($coh['current_state'] == 'scheduled' && $cmd['max_connection_attempt'] != $coh['attempts_left']) {
                 $coh['current_state'] = 'rescheduled';
             }
-            if (isset($statusTable[$coh['current_state']])) {
-                $a_current[] = $statusTable[$coh['current_state']];
-            } else {
-                $a_current[] = $coh['current_state'];
+            // Set current step state array
+            $last_phase = FALSE;
+            $running = FALSE;
+            //debug($coh['phases']);
+            foreach ($coh['phases'] as $phase) {
+                if ($phase['state'] == 'running')
+                    $running = TRUE;
+                if ($phase['state'] == 'failed' || $phase['state'] == 'ready' || $phase['state'] == 'running') {
+                    $a_step_state[] = sprintf('%s (%s)', $phase['name'], $phase['state']);
+                    $last_phase = FALSE;
+                    break;
+                }
+                $last_phase = $phase;
             }
+            if ($last_phase) {
+                $a_step_state[] = sprintf('%s (%s)', $phase['name'], $phase['state']);
+            }
+            if (!$running) {
+                if (isset($statusTable[$coh['current_state']])) {
+                    $global_state = $statusTable[$coh['current_state']];
+                } else {
+                    $global_state = $coh['current_state'];
+                }
+                $global_state = sprintf('<img style="vertical-align: middle;" alt="%s" src="modules/msc/graph/images/status/%s"/> &nbsp;&nbsp;', $coh['current_state'], return_icon($coh['current_state'])) . $global_state;
+            } else {
+                $global_state = sprintf('<img style="vertical-align: middle;" alt="%s" src="modules/msc/graph/images/status/%s"/> &nbsp;&nbsp;%s', 'running', return_icon('running'), _T('Running', 'msc)'));
+            }
+
+
+
+            $a_current[] = $global_state;
             $p = array('coh_id' => $coh_id, 'cmd_id' => $cmd['id'], 'tab' => $tab, 'uuid' => $uuid, 'hostname' => $coh['host'], 'from' => 'base|computers|' . $action . '|' . $tab, 'gid' => $gid);
             if (strlen($cmd['bundle_id'])) {
                 $p['bundle_id'] = $cmd['bundle_id'];
@@ -303,15 +337,39 @@ if ($areCommands) { // display several commands
         $n->addExtraInfo($a_client, _T("Client", "msc"));
     }
     $n->addExtraInfo($a_date, $datelabel);
-    $n->addExtraInfo($a_current, _T("Current State", "msc"));
-    $n->addExtraInfo($a_progression, _T("Progression", "msc"));
+    $n->addExtraInfo($a_current, _T("Global State", "msc"));
+    //$n->addExtraInfo($a_current, _T("Global State", "msc"));
+    $n->addExtraInfo($a_step_state, _T("Current step", "msc"));
     $n->addActionItemArray($a_details);
     if (!$history) {
         $n->addActionItemArray($a_start);
         $n->addActionItemArray($a_pause);
         $n->addActionItemArray($a_stop);
     }
-    $n->col_width = array("30px", "", "", "", "80px", "0");
+    $n->col_width = array("30px", "", "", "", "", "");
+    $n->setParamInfo($params);
+    $n->setTableHeaderPadding(1);
+    $n->setItemCount($count);
+    $n->setNavBar(new AjaxNavBar($count, $filter));
+    $n->start = 0;
+    $n->end = $maxperpage;
+    $n->disableFirstColumnActionLink();
+
+    $pieChart = new raphaelPie('deploy-pie');
+    $pieChart->data = array($sum_running, $sum_done, $sum_failed);
+    $pieChart->colors = array('#282AC7', '#14B82D', '#A10325');
+    $pieChart->labels = array(
+        _T('Running', 'msc'),
+        _T('Done', 'msc'),
+        _T('Failed', 'msc')
+    );
+    $pieChart->links = array('#', '#', '#');
+    $pieChart->title = _T('Deploy status');
+
+    $mc = new multicol();
+    $mc->add($n, '', '0 0 0 0')
+            ->add($pieChart, '310px', '30px 0 0 0')->display();
+    $DISPLAY_TABLE = FALSE;
 }
 
 if ($n != null) {
@@ -323,6 +381,7 @@ if ($n != null) {
     $n->end = $maxperpage;
     $n->disableFirstColumnActionLink();
 
-    $n->display();
+    if ($DISPLAY_TABLE)
+        $n->display();
 }
 ?>

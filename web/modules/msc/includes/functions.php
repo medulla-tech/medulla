@@ -65,6 +65,7 @@ $statusTable = getStatusTable();
 function return_icon($state) {
     switch ($state) {
         case "TODO":
+        case "scheduled":
         case 'ready':
             return "todo.png";
             break;
