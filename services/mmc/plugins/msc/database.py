@@ -569,6 +569,22 @@ class MscDatabase(msc.MscDatabase):
         d.addErrback(lambda err: err)
         return d
 
+    def extend_command(self, cmd_id, start_date, end_date):
+        """
+        Custom command re-scheduling.
+
+        @param cmd_id: Commands id
+        @type cmd_id: int
+
+        @param start_date: new start date of command
+        @type start_date: str
+
+        @param end_date: new end date of command
+        @type end_date: str
+        """
+       
+        self.extendCommand(cmd_id, start_date, end_date)
+
     def applyCmdPatterns(self, cmd, patternActions = None):
         """
         Replace special patterns in command by special action

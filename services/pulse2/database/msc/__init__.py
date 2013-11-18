@@ -243,6 +243,61 @@ class MscDatabase(DatabaseHelper):
         session.flush()
         return cmd
 
+    def extendCommand(self, cmd_id, start_date, end_date):
+        """
+        Custom command re-scheduling.
+
+        @param cmd_id: Commands id
+        @type cmd_id: int
+
+        @param start_date: new start date of command
+        @type start_date: str
+
+        @param end_date: new end date of command
+        @type end_date: str
+        """
+        session = create_session()
+        cmd = session.query(Commands).get(cmd_id)
+        if cmd :
+            cmd.start_date = start_date
+            cmd.end_date = end_date
+            cmd.sum_running = cmd.sum_failed
+            cmd.sum_failed = 0
+            session.add(cmd)
+            session.flush()
+
+        self._extendCommandsOnHost(session, cmd_id, start_date, end_date)
+
+        session.close()
+
+    def _extendCommandsOnHost(self, session, cmd_id, start_date, end_date):
+        """
+        Update of all commands on host attached on updated command.
+
+        @param cmd_id: Commands id
+        @type cmd_id: int
+
+        @param start_date: new start date of command_on_host
+        @type start_date: str
+
+        @param end_date: new end date of command_on_host
+        @type end_date: str
+        """
+        query = session.query(CommandsOnHost)
+        query = query.select_from(self.commands_on_host)
+        query = query.filter(self.commands_on_host.c.fk_commands == cmd_id)
+        query = query.filter(self.commands_on_host.c.current_state != "done")
+        for coh in query.all():
+            coh.start_date = start_date
+            coh.end_date = end_date
+            coh.attempts_failed = 0
+            coh.current_state = "scheduled"
+            session.add(coh)
+            session.flush()
+
+
+
+
     def _createPhases(self,
                       session,
                       cohs,
