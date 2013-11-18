@@ -357,7 +357,7 @@ if ($areCommands) { // display several commands
 
     $pieChart = new raphaelPie('deploy-pie');
     $pieChart->data = array($sum_running, $sum_done, $sum_failed);
-    $pieChart->colors = array('#282AC7', '#14B82D', '#A10325');
+    $pieChart->colors = array('000-#291FE0-#130F69', '000-#1C9139-#105722', '000-#D93D11-#752008');
     $pieChart->labels = array(
         _T('Running', 'msc'),
         _T('Done', 'msc'),
