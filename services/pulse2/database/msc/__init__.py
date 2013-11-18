@@ -349,7 +349,7 @@ class MscDatabase(DatabaseHelper):
                     continue
                 if name == "reboot" and do_reboot == "disable" :
                     continue
-                if name == "halt" and do_halt != "done" :
+                if name == "halt" and do_halt == "done" :
                     continue
 
                 phases_values.append({"fk_commands_on_host": coh.id,
