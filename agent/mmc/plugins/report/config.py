@@ -49,3 +49,7 @@ class ReportConfig(PluginConfig, DatabaseConfig):
             self.reportTemplate = self.get('data', 'reportTemplate')
         except (NoOptionError, NoSectionError):
             self.reportTemplate = 'default.xml'
+        try:
+            self.reportCSS = self.get('data', 'reportCSS')
+        except (NoOptionError, NoSectionError):
+            self.reportCSS = 'style.css'

@@ -31,7 +31,7 @@ from pygal.style import Style
 from os import chmod
 from base64 import b64encode
 import logging
-from mmc.plugins.report.config import reportconfdir
+from mmc.plugins.report.config import ReportConfig, reportconfdir
 
 class XlsGenerator(object):
     def __init__(self, path = '/tmp/report.xls'):
@@ -113,6 +113,7 @@ class PdfGenerator(object):
     def __init__(self, path = '/tmp/report.pdf', locale = {}):
         self.homepage = ''
         self.summary = ''
+        self.config = ReportConfig("report")
 
         self.content = '<header>Entete</header>'
         self.path = path
@@ -132,7 +133,7 @@ class PdfGenerator(object):
     def _css_file_content(self):
         string = ''
         try:
-            f = open(os.path.join(reportconfdir, 'css', 'style.css'))
+            f = open(os.path.join(reportconfdir, 'css', self.config.reportCSS))
             string = f.read()
             f.close()
         except IOError, e:
