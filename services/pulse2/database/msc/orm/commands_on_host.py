@@ -356,6 +356,8 @@ class CoHManager :
         for id in ids :
             myCommandOnHost = session.query(CommandsOnHost).get(id)
             if myCommandOnHost :
+                if myCommandOnHost.isStateDone():
+                    continue
                 myCommandOnHost.current_state = "stopped"
                 myCommandOnHost.next_launch_date = myCommandOnHost.end_date
                 session.add(myCommandOnHost)

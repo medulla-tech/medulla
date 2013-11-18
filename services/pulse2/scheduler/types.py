@@ -199,7 +199,6 @@ class PhaseBase (PhaseProxyMethodContainer):
  
         if self.coh.is_out_of_attempts() and self.phase.is_failed():
             self.coh.setStateFailed()
-            self.cmd.inc_failed()
             return DIRECTIVE.KILLED
  
         self.logger.debug("Circuit #%s: %s phase" % (self.coh.id, self.name))
@@ -468,7 +467,6 @@ class Phase (PhaseBase):
         if self.coh.is_out_of_attempts():
             logging.getLogger().info("Circuit #%s: failed" % (self.coh.id))
             self.coh.setStateFailed()
-            self.cmd.inc_failed()
             return DIRECTIVE.KILLED
         return self.failed() 
            
@@ -813,9 +811,10 @@ class Circuit (CircuitBase):
             self.logger.info("Circuit #%s: failed - releasing" % self.id)
             self.release(True)
             return
-        elif result == DIRECTIVE.KILLED :
+        elif result in (DIRECTIVE.KILLED, DIRECTIVE.OVER_TIMED) :
             self.logger.info("Circuit #%s: releasing" % self.id)
-            self.release(True)
+            #self.release(True)
+            self.release()
             return
         else :
             return self.phase_step() 
@@ -887,15 +886,18 @@ class Circuit (CircuitBase):
             if self.running_phase.coh.attempts_failed > 0 \
                     or any_failed(self.id, self.config.non_fatal_steps) :
                 self.running_phase.coh.setStateFailed()
-                self.running_phase.cmd.inc_failed()
                 self.logger.info("Circuit #%s: failed" % self.id)
             else :
                 self.running_phase.coh.setStateOverTimed()
                 self.logger.info("Circuit #%s: overtimed" % self.id)
-            self.release(True)
+
+            self.cohq.cmd.inc_failed()
+            self.release()
             return
         elif res == DIRECTIVE.KILLED :
             self.logger.info("Circuit #%s: released" % self.id)
+            if not self.running_phase.coh.isStateStopped():
+                self.cohq.cmd.inc_failed()
             try :
                 self.release()
             except Exception, e:

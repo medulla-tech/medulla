@@ -35,10 +35,6 @@ from pulse2.scheduler.launchers_driving import RemoteCallProxy
 from pulse2.scheduler.queries import get_cohs, is_command_in_valid_time
 from pulse2.scheduler.queries import switch_commands_to_stop
 from pulse2.scheduler.queries import get_ids_to_start
-#from pulse2.scheduler.queries import is_command_finished, get_cohs_with_failed_phase
-from pulse2.scheduler.cleanup import CleanUpSchedule, Defaults
-
-Defaults().setup()
 
 class MethodProxy(MscContainer):
     """ Interface to dispatch the circuit operations from exterior. """
@@ -69,10 +65,9 @@ class MethodProxy(MscContainer):
                     for circuit in active_circuits :
                         self.logger.info("Circuit #%s: start" % circuit.id)
                         # set the next_launch_date for now
-                        circuit.qm.coh.reSchedule(0, False)
-                        circuit.qm.coh.setStateScheduled()
- 
-        
+                        circuit.cohq.coh.reSchedule(0, False)
+                        circuit.cohq.coh.setStateScheduled()
+
     def stop_commands(self, cohs=[]):
         """
         Stops all or selected circuits.
@@ -440,7 +435,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
                 return new_grps_stat
             else :
 
-                to_add = dict((group, 0) for group in self.groups)# if group in new_grps)
+                to_add = dict((group, 0) for group in self.groups)
 
                 zero_blacklist = []
                 while True :
@@ -508,9 +503,6 @@ class MscDispatcher (MscQueryManager, MethodProxy):
                     self.logger.info("Circuit #%s: (group %s) is going to start" %  
                             (circuit.id, slightest_network))
                     circuit.status = CC_STATUS.ACTIVE
-                    if circuit.is_running :
-                        if circuit.qm.coh.isStateFailed() or circuit.qm.coh.isStateOverTimed():
-                            circuit.qm.cmd.dec_failed()
                     return circuit
         return None
      
@@ -525,7 +517,8 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         """
     
         running = self._analyze_groups(self.circuits)
-        remaining = self._analyze_groups(self.waiting_circuits)
+        #remaining = self._analyze_groups(self.waiting_circuits)
+        remaining = self._analyze_groups(self.get_valid_waitings())
 
         for _ in xrange(self.nbr_groups):
             # the least saturated network
@@ -561,80 +554,11 @@ class MscDispatcher (MscQueryManager, MethodProxy):
             if not started_next :
                 break
 
-
-    def process_non_valid(self, result):
-        """
-        Calls the database method checking overtimed circuits and removes
-        them from internal container.
-
-        @return: list of commands to check to clean up
-        @rtype: list
         
-        """
-        for cmd_id, circuits in self.get_unfinished_circuits().items():
-            schedule = CleanUpSchedule(cmd_id, circuits)
-            ids_to_restart = [c.id for c in schedule.process()]
-            self.start_all(ids_to_restart)
-            #for circuit in schedule.process():
-            #    if self.has_free_slots():
-            #        circuit.status = CC_STATUS.ACTIVE
-            #        reactor.callFromThread(circuit.run)
-
-
-
-
-
-        #circuits_to_cleanup_check = []
-        #circuits = [c for c in self._circuits if c.initialized and c.is_running]
-        #for circuit in circuits :
-        #    if circuit.qm.coh.isStateFailed() or circuit.qm.coh.isStateOverTimed() :
-        #        if not circuit in circuits_to_cleanup_check :
-        #            circuits_to_cleanup_check.append(circuit)
-
-
-                    
-
-#    #def check_for_clean_up(self, commands_to_cleanup_check):
-#    def check_for_clean_up(self, circuits_to_cleanup_check):
-#        """
-#        Checks if commands to check are already finished.
-#
-#        @param commands_to_cleanup_check: list of commands
-#        @type commands_to_cleanup_check: list
-#        """
-#        
-#        for circuit in circuits_to_cleanup_check:
-#            #if is_command_finished(self.config.name, cmd_id):
-#            #    self.set_ready_to_cleanup(cmd_id)
-#            
-
-
-#    def clean_up(self, result):
-#        """ Calls the clean up scheduler if commands are candidats. """
-#
-#        cohs = []
-#        for cmd_id in self.ready_candidats_to_cleanup :
-#
-#            cohs.extend(get_cohs_with_failed_phase(cmd_id, "execute"))
-#            del self.candidats_to_cleanup[cmd_id]
-#        if len(cohs) > 0 :
-#            schedule = CleanUpSchedule(cohs)
-#            schedule.process()
-#
-#    def awake_waiting_overtimed(self, result):
-#        """Looks for zombies circuits in waitings and releases them """
-#        circuits = self._get_candidats_to_overtimed(self.waiting_circuits)
-#        for circuit in circuits :
-#            circuit.release()
-
-
- 
     def mainloop(self):
         """ The main loop of scheduler """
         d = maybeDeferred(self._mainloop)
-        d.addCallback(self.process_non_valid)
         d.addCallback(self.launch_remaining_waitings)
-        #d.addCallback(self.awake_waiting_overtimed)
         d.addErrback(self.eb_mainloop)
 
         return d
@@ -664,7 +588,6 @@ class MscDispatcher (MscQueryManager, MethodProxy):
                     ids = get_ids_to_start(self.config.name,
                                            ids_to_exclude, 
                                            top)
-                    #ids.extend(waiting_ids)
                     if len(ids) > 0 :
                         self.logger.info("Prepare %d new commands to initialize" % len(ids))
                     else :
@@ -681,10 +604,6 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         except Exception, e:
             self.logger.error("Mainloop execution failed: %s" % str(e))
             return True
-
-
-       
-        
 
 
 
