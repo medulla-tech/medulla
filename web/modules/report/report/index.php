@@ -82,17 +82,21 @@ if (!array_intersect_key($_POST, array('generate_report' => '', 'get_xls' => '',
 // second step, display results
 else if (isset($_POST['generate_report'])) {
     $ts_from = intval($_POST['period_from_timestamp']);
-    $ts_to = intval($_POST['period_to_timestamp']) + 86400;
+    $ts_to = intval($_POST['period_to_timestamp']);
 
-    $nb_days = intval(($ts_to - $ts_from) / 86400);
+    $datediff = $ts_to + 86400 - $ts_from;
+    $nb_days = floor($datediff/(60*60*24));
+
     $nb_periods = min($nb_days, 7);
 
-    $periods = array();
+    $interval = ($nb_days > 7) ? $nb_days / 7 : 1;
 
-    for ($i = 0; $i < $nb_periods; $i++) {
-        $period_ts = $ts_from + $i * ($ts_to - $ts_from) / ($nb_periods - 1);
-        $periods[] = strftime('%Y-%m-%d', $period_ts);
+    $periods = array(date('Y-m-d', $ts_from));
+
+    for ($i = 1; $i < ($nb_periods - 1); $i++) {
+        $periods[] = date('Y-m-d', strtotime("+" . round($interval * $i) . " days", $ts_from));
     }
+    $periods[] = date('Y-m-d', $ts_to);
 
     $items = array();
     foreach($_POST['indicators'] as $name => $status) {
