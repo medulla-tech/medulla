@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-11-08 17:59+0100\n"
-"PO-Revision-Date: 2013-11-11 00:22+0000\n"
+"POT-Creation-Date: 2013-11-15 17:00+0100\n"
+"PO-Revision-Date: 2013-11-18 00:01+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -76,7 +76,7 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: graph/header.inc.php:231 includes/PageGenerator.php:2123
+#: graph/header.inc.php:231 includes/PageGenerator.php:2136
 msgid "Close"
 msgstr ""
 
@@ -255,66 +255,17 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: includes/ajaxTools.php:63 includes/ajaxTools.php:69
-#: includes/PageGenerator.php:857 includes/PageGenerator.php:1103
+#: includes/PageGenerator.php:869 includes/PageGenerator.php:1114
 #: modules/base/includes/AjaxFilterLog.inc.php:96
 #: modules/base/includes/AjaxFilterLog.inc.php:100
 msgid "Previous"
 msgstr ""
 
 #: includes/ajaxTools.php:74 includes/ajaxTools.php:82
-#: includes/PageGenerator.php:871 includes/PageGenerator.php:1113
+#: includes/PageGenerator.php:883 includes/PageGenerator.php:1124
 #: modules/base/includes/AjaxFilterLog.inc.php:107
 #: modules/base/includes/AjaxFilterLog.inc.php:111
 msgid "Next"
-msgstr ""
-
-#: includes/PageGenerator.php:544 includes/PageGenerator.php:776
-msgid "to"
-msgstr ""
-
-#: includes/PageGenerator.php:546 includes/PageGenerator.php:778
-#, php-format
-msgid " - Total <b>%s </b>"
-msgstr ""
-
-#: includes/PageGenerator.php:549 includes/PageGenerator.php:781
-msgid "page"
-msgstr ""
-
-#: includes/PageGenerator.php:891
-msgid "Pagination"
-msgstr ""
-
-#: includes/PageGenerator.php:964
-msgid "Go to page"
-msgstr ""
-
-#: includes/PageGenerator.php:1359
-msgid "No item available"
-msgstr ""
-
-#: includes/PageGenerator.php:1543
-msgid "Select entity"
-msgstr ""
-
-#: includes/PageGenerator.php:2502 includes/PageGenerator.php:2571
-#: includes/PageGenerator.php:2597 modules/base/groups/members.php:188
-#: modules/base/groups/edit.php:108
-msgid "Confirm"
-msgstr ""
-
-#: includes/PageGenerator.php:2506 includes/PageGenerator.php:2575
-#: modules/base/groups/members.php:189 modules/base/groups/delete.php:66
-#: modules/base/users/backup.php:91 modules/ppolicy/default/delete.php:46
-msgid "Cancel"
-msgstr ""
-
-#: includes/PageGenerator.php:2731
-msgid "Select all"
-msgstr ""
-
-#: includes/PageGenerator.php:2732
-msgid "Unselect all"
 msgstr ""
 
 #: includes/FormGenerator.php:58 includes/FormGenerator.php:274
@@ -387,6 +338,55 @@ msgstr ""
 #: modules/base/users/ajaxFilter.php:85 modules/base/views/index.tpl.php:92
 #: modules/ppolicy/default/delete.php:45
 msgid "Delete"
+msgstr ""
+
+#: includes/PageGenerator.php:558 includes/PageGenerator.php:788
+msgid "to"
+msgstr ""
+
+#: includes/PageGenerator.php:560 includes/PageGenerator.php:790
+#, php-format
+msgid " - Total <b>%s </b>"
+msgstr ""
+
+#: includes/PageGenerator.php:563 includes/PageGenerator.php:793
+msgid "page"
+msgstr ""
+
+#: includes/PageGenerator.php:903
+msgid "Pagination"
+msgstr ""
+
+#: includes/PageGenerator.php:976
+msgid "Go to page"
+msgstr ""
+
+#: includes/PageGenerator.php:1370
+msgid "No item available"
+msgstr ""
+
+#: includes/PageGenerator.php:1554
+msgid "Select entity"
+msgstr ""
+
+#: includes/PageGenerator.php:2514 includes/PageGenerator.php:2583
+#: includes/PageGenerator.php:2609 modules/base/groups/members.php:188
+#: modules/base/groups/edit.php:108
+msgid "Confirm"
+msgstr ""
+
+#: includes/PageGenerator.php:2518 includes/PageGenerator.php:2587
+#: modules/base/groups/members.php:189 modules/base/groups/delete.php:66
+#: modules/base/users/backup.php:91 modules/ppolicy/default/delete.php:46
+msgid "Cancel"
+msgstr ""
+
+#: includes/PageGenerator.php:2743
+msgid "Select all"
+msgstr ""
+
+#: includes/PageGenerator.php:2744
+msgid "Unselect all"
 msgstr ""
 
 #: logout/index.php:50
