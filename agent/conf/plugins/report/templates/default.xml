@@ -8,6 +8,23 @@
         <entry name="STR_OTHER" value="Other"/>
     </localization>
 
+    <!--
+        For page count => two ###css_counter### variable
+        the first is the current page
+        the second is the total page count
+    -->
+    <header>
+        <entry name="left" value="" />
+        <entry name="center" value="Activity report from __PERIOD_START__ to __PERIOD_END__" />
+        <entry name="right" value="" />
+    </header>
+
+    <footer>
+        <entry name="left" value="Printed __NOW_DATE__ at __NOW_HOUR__" />
+        <entry name="center" value="" />
+        <entry name="right" value="Page ###css_counter### on ###css_counter###" />
+    </footer>
+
     <!-- Homepage HTML -->
     <homepage><![CDATA[
         <table style="width:600px;border:0">

@@ -183,6 +183,50 @@ class RpcProxy(RpcProxyI):
         xls = XlsGenerator(path = xls_path)
         pdf = PdfGenerator(path = pdf_path, locale = locale)
 
+        def _hf_format(str):
+            """
+            _hf_format for header-footer format
+            Add needed double-quotes and replace PDF variables with
+            good values
+
+            @return: well formated content for header or footer
+            """
+            if str.count('###css_counter###') == 2:
+                # 1st css_counter is current page
+                str = str.replace('###css_counter###', '" counter(page) "', 1)
+                #2nd css_counter is CSS total pages count
+                str = str.replace('###css_counter###', '" counter(pages) "', 1)
+                if not str.startswith('counter(page)'):
+                    str = '"' + str
+                if not str.endswith('counter(pages)'):
+                    str = str + '"'
+            else:
+                str = '"' + str + '"'
+            return _replace_pdf_vars(str)
+
+
+        def _header(tag):
+            for entry in tag:
+                if entry.tag.lower() != 'entry':
+                    continue
+                if entry.attrib['name'] == "left":
+                    pdf.setHeaderLeft(_hf_format(entry.attrib['value']))
+                elif entry.attrib['name'] == "center":
+                    pdf.setHeaderCenter(_hf_format(entry.attrib['value']))
+                elif entry.attrib['name'] == "right":
+                    pdf.setHeaderRight(_hf_format(entry.attrib['value']))
+
+        def _footer(tag):
+            for entry in tag:
+                if entry.tag.lower() != 'entry':
+                    continue
+                if entry.attrib['name'] == "left":
+                    pdf.setFooterLeft(_hf_format(entry.attrib['value']))
+                elif entry.attrib['name'] == "center":
+                    pdf.setFooterCenter(_hf_format(entry.attrib['value']))
+                elif entry.attrib['name'] == "right":
+                    pdf.setFooterRight(_hf_format(entry.attrib['value']))
+
         def _localization(loc_tag):
             for entry in loc_tag:
                 if entry.tag.lower() != 'entry':
@@ -192,6 +236,8 @@ class RpcProxy(RpcProxyI):
             # Setting Period start and period end PDF var
             pdf_vars['__PERIOD_START__'] = datetime.strptime(period[0], "%Y-%m-%d").strftime(locale['DATE_FORMAT'])
             pdf_vars['__PERIOD_END__'] = datetime.strptime(period[-1], "%Y-%m-%d").strftime(locale['DATE_FORMAT'])
+            pdf_vars['__NOW_DATE__'] = datetime.now().strftime(locale['DATE_FORMAT'])
+            pdf_vars['__NOW_HOUR__'] = datetime.now().strftime('%H:%M:%S')
 
         def _replace_pdf_vars(text):
             for key in pdf_vars:
@@ -345,8 +391,12 @@ class RpcProxy(RpcProxyI):
             if level1.tag.lower() == 'html':
                 _html(level1.text)
             ## =========< HTML >===================
+            if level1.tag.lower() == 'header':
+                _header(level1)
             if level1.tag.lower() == 'homepage':
                 _homepage(level1.text)
+            if level1.tag.lower() == 'footer':
+                _footer(level1)
             ## =========< SECTION >===================
             if level1.tag.lower() == 'section':
                 # Checking if section is present in sections

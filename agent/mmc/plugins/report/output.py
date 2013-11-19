@@ -115,7 +115,13 @@ class PdfGenerator(object):
         self.summary = ''
         self.config = ReportConfig("report")
 
-        self.content = '<header>Entete</header>'
+        self.content = ''
+        self.header_left = ''
+        self.header_right = ''
+        self.header_center = ''
+        self.footer_left = ''
+        self.footer_right = ''
+        self.footer_left = ''
         self.path = path
         # Localization strings
         self.locale = locale
@@ -128,6 +134,24 @@ class PdfGenerator(object):
 
     def h3(self, str):
         self.content += '<h3>%s</h3>' % str
+
+    def setHeaderLeft(self, str):
+        self.header_left = str.strip()
+
+    def setHeaderCenter(self, str):
+        self.header_center = str.strip()
+
+    def setHeaderRight(self, str):
+        self.header_right = str.strip()
+
+    def setFooterLeft(self, str):
+        self.footer_left = str.strip()
+
+    def setFooterCenter(self, str):
+        self.footer_center = str.strip()
+
+    def setFooterRight(self, str):
+        self.footer_right = str.strip()
 
     @property
     def _css_file_content(self):
@@ -154,22 +178,46 @@ class PdfGenerator(object):
             /*size: letter;*/
 
             @top-left {
-                content: element(header);
+                content: %s;
+                font-size: .75em;
+            }
+
+            @top-center {
+                content: %s;
+                font-size: .75em;
+            }
+
+            @top-right {
+                content: %s;
+                font-size: .75em;
             }
 
             @bottom-left {
-                content: "Printed ${now}";
+                content: %s;
+                font-size: .75em;
+                padding-bottom: 6mm;
+            }
+
+            @bottom-center {
+                content: %s;
                 font-size: .75em;
                 padding-bottom: 6mm;
             }
 
             @bottom-right {
-                content: "Page " counter(page) " sur " counter(pages);
+                content: %s;
                 font-size: .75em;
                 padding-bottom: 6mm;
             }
         }
-        """
+        """ % (
+            self.header_left,
+            self.header_center,
+            self.header_right,
+            self.footer_left,
+            self.footer_center,
+            self.footer_right
+        )
         string += self._css_file_content
         return CSS(string=string)
 
