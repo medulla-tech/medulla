@@ -1,4 +1,5 @@
 <?php
+
 /**
  * (c) 2012 Mandriva, http://www.mandriva.com
  *
@@ -18,7 +19,6 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 include_once("modules/dashboard/includes/panel.class.php");
 
 $options = array(
@@ -57,11 +57,11 @@ class SpacePanel extends Panel {
                 used = Math.round(partition.usage.percent);
             data.push(used);
             legend.push(partition.usage.used + " $used");
-            colors.push("#ef2929");
+            colors.push("000-#ef2929-#A31A1A");
             if (free > 0) {
                 data.push(free);
                 legend.push(partition.usage.free + " $free");
-                colors.push("#73d216");
+                colors.push("000-#73d216-#42780D");
             }
             if (partition.device.length < 30)
                 title += " (" + partition.device + ") ";
@@ -96,7 +96,7 @@ class SpacePanel extends Panel {
         </script>
 SPACE;
     }
-}
 
+}
 
 ?>
