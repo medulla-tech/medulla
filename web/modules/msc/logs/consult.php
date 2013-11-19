@@ -1,5 +1,4 @@
 <?php
-
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2010 Mandriva, http://www.mandriva.com
@@ -21,7 +20,6 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 require("modules/msc/logs/localSidebar.php");
 require("graph/navbar.inc.php");
 
@@ -42,8 +40,6 @@ $ajax->setRefresh(web_def_refresh_time());
 $ajax->display();
 print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
-
-
 ?>
 
 <script type="text/javascript" src="jsframework/lib/raphael/raphael-min.js"></script>

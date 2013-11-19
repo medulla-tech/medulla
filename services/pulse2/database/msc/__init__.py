@@ -350,7 +350,7 @@ class MscDatabase(DatabaseHelper):
                     continue
                 if name == "reboot" and do_reboot == "disable" :
                     continue
-                if name == "halt" and do_halt == "disable" : 
+                if name == "halt" and do_halt == "disable" :
                     continue
 
                 phases_values.append({"fk_commands_on_host": coh.id,
@@ -822,7 +822,11 @@ class MscDatabase(DatabaseHelper):
             filter.append(self.target.c.target_uuid == params['uuid'])
 
         if params['filt'] != None: # Filter on a commande names
-            filter.append(self.commands.c.title.like('%s%s%s' % ('%', params['filt'], '%')))
+            filter.append(self.commands.c.title.like('%s%s%s' % ('%', params['filt'], '%')) | self.target.c.target_name.like('%s%s%s' % ('%', params['filt'], '%')) )
+
+        # Filtering on COH State
+        if 'state' in params and params['state']:
+            filter.append(self.commands_on_host.c.current_state.in_(params['state']))
 
         if params['b_id'] == None:
             is_done = self.__doneBundle(params, session)

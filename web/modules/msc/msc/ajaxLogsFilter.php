@@ -292,6 +292,7 @@ if ($areCommands) { // display several commands
             if ($last_phase) {
                 $a_step_state[] = sprintf('%s (%s)', $phase_labels[$phase['name']], $state_labels[$phase['state']]);
             }
+
             if (!$running) {
                 if (isset($statusTable[$coh['current_state']])) {
                     $global_state = $statusTable[$coh['current_state']];
