@@ -52,8 +52,9 @@
                         <item module="glpi" indicator="os_count_windows_7_ultimate" title="Windows 7 Ultimate" />
                     </item>
                     <item module="glpi" indicator="os_count_windows_8" title="Windows 8" selected="yes">
+                        <item module="glpi" indicator="os_count_windows_8_home" title="Windows 8" />
                         <item module="glpi" indicator="os_count_windows_8_pro" title="Windows 8 Professionnal" />
-                        <item module="glpi" indicator="os_count_windows_8_rt" title="Windows 8 RT" />
+                        <item module="glpi" indicator="os_count_windows_8_rt" title="Windows RT" />
                     </item>
                     <item module="glpi" indicator="os_count_windows_server" title="Windows Server" selected="yes">
                         <item module="glpi" indicator="os_count_windows_server_2000" title="Windows Server 2000" />
