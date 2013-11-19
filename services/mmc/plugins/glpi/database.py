@@ -88,7 +88,7 @@ class Glpi(DyngroupDatabaseHelper):
             'getUserLocations', 'getUserParentLocations', 'getUserProfile', 'getUserProfiles', 'getUsersInSameLocations', 'init', 'inventoryExists', 'glpi_version', \
             'getRestrictedComputersList', 'getRestrictedComputersListLen', 'getComputersList', 'getComputer', 'getComputerCount', 'getMachinesLocations', \
             'getAllComments', 'getAllContactNums', 'getAllContacts', 'getAllEntities', 'getAllGroups', 'getAllHostnames', 'getAllLocations', \
-            'getAllModels', 'getAllNetworks', 'getAllOs', 'getAllOsSps', 'getAllSoftwares', 'getAllVersion4Software', 'glpi_version_new', 'getMachineByMacAddress', \
+            'getAllModels', 'getAllNetworks', 'getAllOs', 'getAllOsSps', 'getAllSoftwares', 'getAllSoftwaresByManufacturer', 'getAllVersion4Software', 'glpi_version_new', 'getMachineByMacAddress', \
             'getAllManufacturers', 'getAllStates', 'getAllTypes', 'getAllInventoryNumbers', 'getMachineByManufacturer', 'getMachineByState', 'getMachineByType', 'getMachineByInventoryNumber', \
             'getMachineUUIDByMacAddress', 'getMachineByComment', 'getMachineByContact', 'getMachineByContactNum', 'getMachineByEntity', 'getMachineByGroup', 'getMachineByHostname', \
             'getMachineByLocation', 'getMachineByModel', 'getMachineByNetwork', 'getMachineByOs', 'getMachineByOsLike', 'getMachineByOsSp', 'getMachineBySoftware', 'getMachineBySoftwareAndVersion', \

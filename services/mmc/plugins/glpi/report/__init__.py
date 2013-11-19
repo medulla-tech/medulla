@@ -107,12 +107,10 @@ class exportedReport(object):
             result.append({'entity_id': toUUID(entity), 'value': state_count})
         return result
 
-    def getComputerCountBySoftware(self, entities, name, version=None):
+    def getComputerCountBySoftware(self, entities, name, vendor=None, version=None):
         result = []
         for entity in self._getEntitiesIds(entities):
             self.ctx.locationsid = [entity]
-            if version:
-                name = [name, version]
-            software_count = self.db.getMachineBySoftwareAndVersion(self.ctx, name, count=1)
+            software_count = self.db.getMachineBySoftware(self.ctx, name, vendor=vendor, version=version, count=1)
             result.append({'entity_id': toUUID(entity), 'value': software_count})
         return result

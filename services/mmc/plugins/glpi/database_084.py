@@ -24,20 +24,12 @@
 This module declare all the necessary stuff to connect to a glpi database in it's
 version 0.8x
 """
-
-# TODO rename location into entity (and locations in location)
-from mmc.plugins.glpi.config import GlpiConfig
-from mmc.plugins.glpi.utilities import complete_ctx
-from pulse2.utils import same_network, unique, noNone
-from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
-from pulse2.managers.group import ComputerGroupManager
-from mmc.plugins.glpi.database_utils import decode_latin1, encode_latin1, decode_utf8, encode_utf8, fromUUID, toUUID, setUUID
-from mmc.plugins.dyngroup.config import DGConfig
-from mmc.plugins.glpi.database_utils import DbTOA # pyflakes.ignore
-
-# GLPI Historical tab needed imports
-from mmc.site import mmcconfdir
 import os
+import logging
+import re
+from sets import Set
+import datetime
+import calendar
 from configobj import ConfigObj
 
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
@@ -45,11 +37,18 @@ from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
 from sqlalchemy.orm import create_session, mapper, relationship
 from sqlalchemy.sql.expression import ColumnOperators
 
-import logging
-import re
-from sets import Set
-import datetime
-import calendar
+from mmc.site import mmcconfdir
+from mmc.database.database_helper import DatabaseHelper
+# TODO rename location into entity (and locations in location)
+from pulse2.utils import same_network, unique, noNone
+from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
+from pulse2.managers.group import ComputerGroupManager
+from mmc.plugins.glpi.config import GlpiConfig
+from mmc.plugins.glpi.utilities import complete_ctx
+from mmc.plugins.glpi.database_utils import decode_latin1, encode_latin1, decode_utf8, encode_utf8, fromUUID, toUUID, setUUID
+from mmc.plugins.glpi.database_utils import DbTOA # pyflakes.ignore
+from mmc.plugins.dyngroup.config import DGConfig
+
 
 class Glpi084(DyngroupDatabaseHelper):
     """
@@ -2522,37 +2521,56 @@ class Glpi084(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def getMachineBySoftware(self, ctx, swname, count=0):
+    @DatabaseHelper._session
+    def getAllSoftwaresByManufacturer(self, session, ctx, vendor):
+        """
+        Return all softwares of a vendor
+        """
+        if not hasattr(ctx, 'locationsid'):
+            complete_ctx(ctx)
+        query = session.query(Software)
+        query = query.join(Manufacturers)
+        query = query.filter(Manufacturers.name.like(vendor))
+        ret = query.group_by(Software.name).order_by(Software.name).all()
+        return ret
+
+    @DatabaseHelper._session
+    def getMachineBySoftware(self, session, ctx, name, vendor=None, version=None, count=0):
         """
         @return: all machines that have this software
         """
-        # TODO use the ctx...
-        session = create_session()
         if int(count) == 1:
             query = session.query(func.count(Machine))
         else:
             query = session.query(Machine)
-        query = query.select_from(self.machine.join(self.inst_software).join(self.softwareversions).join(self.software))
+
+        query = query.select_from(self.machine.join(self.inst_software).join(self.softwareversions).join(self.software).join(self.manufacturers))
         query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
-        if type(swname) == list:
-            # FIXME: the way the web interface process dynamic group sub-query
-            # is wrong, so for the moment we need this loop:
-            while type(swname[0]) == list:
-                swname = swname[0]
-            query = query.filter(and_(self.software.c.name == swname[0], self.softwareversions.version == swname[1]))
-        else:
-            query = query.filter(self.software.c.name == swname).order_by(self.softwareversions.version)
+
+        query = query.filter(self.software.c.name == name)
+        if version:
+            query = query.filter(self.softwareversions.c.name == version)
+        if vendor:
+            query = query.filter(self.manufacturers.c.name == vendor)
+
         if int(count) == 1:
             ret = int(query.scalar())
         else:
             ret = query.all()
-        session.close()
         return ret
 
     def getMachineBySoftwareAndVersion(self, ctx, swname, count=0):
-        return self.getMachineBySoftware(ctx, swname, count)
+        # FIXME: the way the web interface process dynamic group sub-query
+        # is wrong, so for the moment we need this loop:
+        version = None
+        if type(swname) == list:
+            while type(swname[0]) == list:
+                swname = swname[0]
+            name = swname[0]
+            version = swname[1]
+        return self.getMachineBySoftware(ctx, name, version, count=count)
 
     def getAllHostnames(self, ctx, filt = ''):
         """
