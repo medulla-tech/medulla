@@ -20,7 +20,6 @@
 # MA 02110-1301, USA.
 import logging
 import time
-import datetime
 
 from sqlalchemy.orm import create_session
 from sqlalchemy import not_, or_, func 

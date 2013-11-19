@@ -47,7 +47,6 @@ import time
 import datetime
 
 from twisted.internet.defer import Deferred, maybeDeferred
-from twisted.internet import reactor
 
 from pulse2.consts import PULSE2_SUCCESS_ERROR
 from pulse2.utils import SingletonN, extractExceptionMessage
@@ -940,7 +939,7 @@ class Circuit (CircuitBase):
             self.cohq.coh.setStateStopped()
             self.release()
             return
-        elif result == DIRECTIVE.FAILED :
+        elif res == DIRECTIVE.FAILED :
             self.logger.info("Circuit #%s: failed - releasing" % self.id)
             self.release(True)
         else :

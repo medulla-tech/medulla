@@ -35,8 +35,6 @@ class ImagingRpcPhase(Phase):
 
     def perform(self):
         try :
-            d = ImagingAPI().setWOLMenu(self.target.target_uuid,
-                                        self.target.target_name)
             method = getattr(ImagingAPI(), self.rpc_method_name)
             args = self._get_rpc_method_args()
 
