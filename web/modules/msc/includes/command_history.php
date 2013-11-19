@@ -198,6 +198,7 @@ class Command {
         // Start/Stop buttons
         $n->addActionItem(new ActionPopupItem(_T("Start", "msc"), "msctabsplay", "start", "msc", "base", "computers"));
         $n->addActionItem(new ActionPopupItem(_T("Stop", "msc"), "msctabsstop", "stop", "msc", "base", "computers"));
+        $n->disableFirstColumnActionLink();
         $n->drawTable(0);
         print '<br/>';
         return true;
