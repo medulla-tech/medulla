@@ -64,7 +64,11 @@ class CommandOnHost {
         $params = array(
             'cmd_id' => $_GET['cmd_id'],
             'bundle_id' => $_GET['bundle_id'],
-            'coh_id' => $_GET['coh_id']
+            'coh_id' => $_GET['coh_id'],
+            'uuid' => $_GET['uuid'],
+            'from' => 'msc|logs|consult',
+            'tab' => 'tablogs',
+            'hostname' => $this->db_coh['host']
         );
         foreach ($this->values as $col) {
             if ($col[2]) {
@@ -129,7 +133,9 @@ class Command {
         }
         $this->values = array(
             array(_T('Command name', 'msc'), $this->db_cmd['title'], 1),
-            array(_T('Creation date', 'msc'), _toDate($this->db_cmd['creation_date']), 1),
+            //array(_T('Creation date', 'msc'), _toDate($this->db_cmd['creation_date']), 1),
+            array(_T('Start date', 'msc'), _toDate($this->db_cmd['start_date']), 1),
+            array(_T('End date', 'msc'), _toDate($this->db_cmd['end_date']), 1),
             array(_T('User command creator', 'msc'), $this->db_cmd['creator'], 0),
             array(_T('Execute file', 'msc'), $this->db_cmd['start_file'], 0),
             array(_T('Execution arguments', 'msc'), $this->db_cmd['parameters'], 0),
@@ -156,6 +162,7 @@ class Command {
         $n->setRowsPerPage(count($this->values));
 
         $n->drawTable(0);
+        print '<br/>';
         return true;
     }
 
@@ -180,6 +187,7 @@ class Command {
             $n->addActionItem($a);
         }
         $n->drawTable(0);
+        print '<br/>';
         return true;
     }
 
@@ -486,10 +494,10 @@ class CommandHistory {
 
 
         //$n = new ListInfos(array_map("_names", $values), _T('<b>Command Overview</b>', 'msc'));
-        $n = new ListInfos($phase_names, '<b>' . _T('Step', 'msc') . '</b>', '', '150px');
+        $n = new ListInfos($phase_names, '<b>' . _T('Step', 'msc') . '</b>', '', '80px');
         //$n->addExtraInfo(array_map("_values", $values), '', '400px');
         $n->addExtraInfo($phase_states, 'State', '20px');
-        $n->addExtraInfo($phase_dates, 'Execution time');
+        $n->addExtraInfo($phase_dates, 'Execution time', '120px');
         $n->addExtraInfo($phase_logs, 'Details');
         $n->addExtraInfo($btn_showfull_log, '', '20px');
         $n->setTableHeaderPadding(0);
