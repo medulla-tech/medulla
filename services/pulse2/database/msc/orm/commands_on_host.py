@@ -30,7 +30,6 @@ import time
 import datetime
 import sqlalchemy.orm
 
-
 class CommandsOnHost(object):
     """ Mapping between msc.commands_on_host and SA
     """
@@ -351,18 +350,29 @@ class CoHManager :
 
         @param ids: list of ids to update
         @type ids: list
+
+        @return: number of stopped cohs per command
+        @rtype: dict
         """
+        cmd_groups = {}
         session = sqlalchemy.orm.create_session()
+        count = 0
         for id in ids :
-            myCommandOnHost = session.query(CommandsOnHost).get(id)
-            if myCommandOnHost :
-                if myCommandOnHost.isStateDone():
+            coh = session.query(CommandsOnHost).get(id)
+            if coh :
+                if coh.isStateDone():
                     continue
-                myCommandOnHost.current_state = "stopped"
-                myCommandOnHost.next_launch_date = myCommandOnHost.end_date
-                session.add(myCommandOnHost)
+                coh.current_state = "stopped"
+                coh.next_launch_date = coh.end_date
+                session.add(coh)
                 session.flush()
+                if coh.fk_commands in cmd_groups :
+                    cmd_groups[coh.fk_commands] += 1
+                else :
+                    cmd_groups[coh.fk_commands] = 0
+                
         session.close()
+        return cmd_groups
 
 
     @classmethod
@@ -374,53 +384,5 @@ class CoHManager :
         @type ids: list
         """
         CoHManager.setCoHsStates(ids, "failed")
-
-    @classmethod
-    def extendTimeAndSwitchToDelete(cls, ids, start_date, end_date):
-        """
-        Failed command_on_host re-scheduling to delete only.
-
-        When a command_on_host fails, failed install package
-        is staying on host. To make clean the remote install directory,
-        we need to re-create a new command on host with delete-only step.
-
-        First step is duration extending of failed command to default
-        command time and setting default number of attempts.
-        Second step is switching needed flags to simulate a deleting
-        phase as last step (without sending of inventory, reboot or halt)
-        and flag it as failed.
-
-        In other words, this a shortcut in the workflow to failed state,
-        including the deleting phase.
-
-        @param ids: commands_on_host ids to update
-        @type ids: list
-
-        @param start_date: new start date of command
-        @type start_date: str
-
-        @param end_date: new end date of command
-        @type end_date: str
-        """
-        session = sqlalchemy.orm.create_session()
-        for id in ids :
-            myCommandOnHost = session.query(CommandsOnHost).get(id)
-            if myCommandOnHost.current_state not in ("done", "failed", "over_timed"):
-
-                myCommandOnHost.start_date = start_date
-                myCommandOnHost.end_date = end_date
-                myCommandOnHost.attempts_failed = 0
-
-                myCommandOnHost.deleted = "TODO"
-                myCommandOnHost.inventoried = "IGNORED"
-                myCommandOnHost.rebooted = "IGNORED"
-                myCommandOnHost.halted = "IGNORED"
-                myCommandOnHost.imgmenu_changed = "IGNORED"
-
-                myCommandOnHost.current_state = "scheduled"
-
-                session.flush()
-        session.close()
-
 
 

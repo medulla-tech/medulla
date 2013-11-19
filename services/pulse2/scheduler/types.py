@@ -47,6 +47,7 @@ import time
 import datetime
 
 from twisted.internet.defer import Deferred, maybeDeferred
+from twisted.internet import reactor
 
 from pulse2.consts import PULSE2_SUCCESS_ERROR
 from pulse2.utils import SingletonN, extractExceptionMessage
@@ -57,6 +58,7 @@ from pulse2.scheduler.balance import ParabolicBalance
 from pulse2.scheduler.launchers_driving import RemoteCallProxy
 from pulse2.scheduler.checks import getAnnounceCheck
 from pulse2.scheduler.utils import getClientCheck, getServerCheck
+from pulse2.scheduler.stats import StatisticsProcessing
 
 from pulse2.database.msc.orm.commands_history import CommandsHistory
 
@@ -80,6 +82,7 @@ DIRECTIVE = enum("GIVE_UP",
                  "NEXT", 
                  "OVER_TIMED",
                  "FAILED",
+                 "STOPPED",
                  "KILLED",
                  )
 # status of circuit
@@ -193,7 +196,7 @@ class PhaseBase (PhaseProxyMethodContainer):
         """
         if self.coh.isStateStopped():
             self.logger.info("Circuit #%s: Stop"  %self.coh.id)
-            return DIRECTIVE.KILLED
+            return DIRECTIVE.STOPPED
         if not self.cmd.in_valid_time(): 
             return DIRECTIVE.OVER_TIMED
  
@@ -231,7 +234,8 @@ class PhaseBase (PhaseProxyMethodContainer):
         ret = self._apply_initial_rules()
         if ret not in (DIRECTIVE.NEXT,
                        DIRECTIVE.GIVE_UP, 
-                       DIRECTIVE.KILLED, 
+                       DIRECTIVE.KILLED,
+                       DIRECTIVE.STOPPED,
                        DIRECTIVE.OVER_TIMED) :
             return self._switch_on()
         return ret
@@ -440,7 +444,7 @@ class Phase (PhaseBase):
         """
         self.logger.debug("Circuit #%s: Releasing" % self.coh.id)
         if self.coh.isStateStopped():
-            return DIRECTIVE.KILLED
+            return DIRECTIVE.STOPPED
         else :
             return DIRECTIVE.GIVE_UP
 
@@ -658,6 +662,7 @@ class CircuitBase(object):
         """
         try :
             self.releaser(self.cohq.coh.id, suspend_to_waitings)
+            self.update_stats()
         except Exception, e:
             self.logger.error("Circuit release failed: %s" % str(e))
 
@@ -674,6 +679,26 @@ class CircuitBase(object):
         - self.qm.target
         """
         return QueryContext(self.running_phase)
+
+    def update_stats(self):
+        """
+        Handle the collected statistics from global collector.
+
+        Statistics are collected each awake_time period and 
+        updated when the circuit is processed.
+        """
+
+        if self.cmd_id in self.dispatcher.statistics.stats :
+            stats = self.dispatcher.statistics.stats[self.cmd_id]
+            self.cohq.cmd.update_stats(**stats)
+
+    def schedule_last_stats(self):
+        """
+        Called when circuit is going to expire.
+
+        Schedules the final update of command statistics.
+        """
+        self.dispatcher.statistics.watchdog_schedule(self.cmd_id)
 
     def _chooseClientNetwork(self, reason=None):
         """
@@ -804,6 +829,7 @@ class Circuit (CircuitBase):
         @rtype: func
         """
         self.cohq = CoHQuery(self.id)
+        self.update_stats()
         # if give-up - actual phase is probably running - do not move - wait...
         if result == DIRECTIVE.GIVE_UP or result == None :
             return lambda : DIRECTIVE.GIVE_UP
@@ -813,7 +839,14 @@ class Circuit (CircuitBase):
             return
         elif result in (DIRECTIVE.KILLED, DIRECTIVE.OVER_TIMED) :
             self.logger.info("Circuit #%s: releasing" % self.id)
-            #self.release(True)
+            if result == DIRECTIVE.OVER_TIMED :
+                self.schedule_last_stats()
+            self.release()
+            return
+        elif result == DIRECTIVE.STOPPED :
+            self.logger.info("Circuit #%s: stopping" % self.id)
+            self.cohq.cmd.inc_stopped()
+            self.cohq.coh.setStateStopped()
             self.release()
             return
         else :
@@ -865,7 +898,7 @@ class Circuit (CircuitBase):
 
             else:
                 d = Deferred()
-                self.logger.debug("next phase: %s" % (self.running_phase))
+                self.logger.debug("next phase: %s" % (self.running_phase.name))
                 d.addCallback(self.phase_process)
                 d.addErrback(self.phase_error)
                 d.callback(True)
@@ -873,7 +906,7 @@ class Circuit (CircuitBase):
         # perform the phase (initial rules allready passed)
         elif res == DIRECTIVE.PERFORM :
             d = maybeDeferred(self.running_phase.perform)
-            self.logger.debug("perform the phase: %s" % (self.running_phase))
+            self.logger.debug("perform the phase: %s" % (self.running_phase.name))
             d.addCallback(self.phase_process)
             d.addCallback(self._last_activity_record)
             d.addErrback(self.phase_error)
@@ -885,24 +918,31 @@ class Circuit (CircuitBase):
         elif res == DIRECTIVE.OVER_TIMED :
             if self.running_phase.coh.attempts_failed > 0 \
                     or any_failed(self.id, self.config.non_fatal_steps) :
-                self.running_phase.coh.setStateFailed()
+                self.cohq.coh.setStateFailed()
                 self.logger.info("Circuit #%s: failed" % self.id)
             else :
-                self.running_phase.coh.setStateOverTimed()
+                self.cohq.coh.setStateOverTimed()
                 self.logger.info("Circuit #%s: overtimed" % self.id)
 
-            self.cohq.cmd.inc_failed()
+            self.schedule_last_stats()
+            
             self.release()
             return
         elif res == DIRECTIVE.KILLED :
             self.logger.info("Circuit #%s: released" % self.id)
-            if not self.running_phase.coh.isStateStopped():
-                self.cohq.cmd.inc_failed()
             try :
                 self.release()
             except Exception, e:
                 self.logger.error("Release failed: %s"  % str(e))
             return
+        elif res == DIRECTIVE.STOPPED :
+            self.logger.info("Circuit #%s: stopped" % self.id)
+            self.cohq.coh.setStateStopped()
+            self.release()
+            return
+        elif result == DIRECTIVE.FAILED :
+            self.logger.info("Circuit #%s: failed - releasing" % self.id)
+            self.release(True)
         else :
             self.logger.error("UNRECOGNIZED DIRECTIVE") 
 
@@ -916,6 +956,7 @@ class Circuit (CircuitBase):
     def gotErrorInResult(self, id, reason):
         self.logger.error("Circuit #%s: got an error within an result: %s" % (id, extractExceptionMessage(reason)))
         return DIRECTIVE.GIVE_UP
+
 
 
 class MscContainer (object):
@@ -943,6 +984,9 @@ class MscContainer (object):
     # - False if contains some unprocessed commands_on_host
     # This cmd_id is removed after the cleanup
     candidats_to_cleanup = {}
+
+    # a provider to collect the commands statistics
+    statistics = None
 
     @property
     def ready_candidats_to_cleanup(self):
@@ -1026,6 +1070,8 @@ class MscContainer (object):
         """ Initial setup """
         self.logger = logging.getLogger()
         self.config = config
+
+        self.statistics = StatisticsProcessing(config)
 
         self.groups = [net for (net, mask) in self.config.preferred_network]
         self.launchers_networks = dict([(launcher,[n[0] for n in net_and_mask]) 

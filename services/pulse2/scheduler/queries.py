@@ -20,14 +20,15 @@
 # MA 02110-1301, USA.
 import logging
 import time
+import datetime
 
 from sqlalchemy.orm import create_session
-from sqlalchemy import not_, or_ 
+from sqlalchemy import not_, or_, func 
 
 
 from pulse2.database.msc import MscDatabase
 
-from pulse2.database.msc.orm.commands import Commands
+from pulse2.database.msc.orm.commands import Commands, stop_commands_on_host
 from pulse2.database.msc.orm.commands_on_host import CommandsOnHost, CoHManager
 from pulse2.database.msc.orm.commands_on_host_phase import CommandsOnHostPhase
 from pulse2.database.msc.orm.target import Target
@@ -301,7 +302,7 @@ def get_ids_to_start(scheduler_name, ids_to_exclude = [], top=None):
     session.close()
     return commands_to_perform
 
-def process_non_valid(scheduler_name, top, non_fatal_steps, ids_to_exclude = []):
+def process_non_valid(scheduler_name, non_fatal_steps, ids_to_exclude = []):
     database = MscDatabase()
     session = create_session()
   
@@ -315,7 +316,7 @@ def process_non_valid(scheduler_name, top, non_fatal_steps, ids_to_exclude = [])
                      database.commands_on_host.c.scheduler == scheduler_name,
                      database.commands_on_host.c.scheduler == None))
     
-    commands_query = commands_query.limit(top)
+    #commands_query = commands_query.limit(top)
     if len(ids_to_exclude) > 0 :
         commands_query = commands_query.filter(not_(database.commands_on_host.c.id.in_(ids_to_exclude)))
     fls = []
@@ -327,7 +328,7 @@ def process_non_valid(scheduler_name, top, non_fatal_steps, ids_to_exclude = [])
         else :
             otd.append(q.id)
 
-        yield q.id
+        #yield q.id
 
     session.close()
 
@@ -337,6 +338,7 @@ def process_non_valid(scheduler_name, top, non_fatal_steps, ids_to_exclude = [])
     if len(fls) > 0 :
         logging.getLogger().info("Switching %d circuits to failed" % len(fls))
         CoHManager.setCoHsStateFailed(fls)
+    
 
 def get_cohs_with_failed_phase(id, phase_name):
     database = MscDatabase()
@@ -374,6 +376,43 @@ def is_command_finished(scheduler_name, id):
         return True
 
 def switch_commands_to_stop(cohs):
-    CoHManager.setCoHsStateStopped(cohs)
+    stop_commands_on_host(cohs)
+    #CoHManager.setCoHsStateStopped(cohs)
  
+def get_commands_stats(scheduler_name, cmd_id=None):
+    database = MscDatabase()
+    session = create_session()
+  
+    now = time.strftime("%Y-%m-%d %H:%M:%S")
 
+    query = session.query(CommandsOnHost.fk_commands,
+                          CommandsOnHost.current_state,
+                          func.count(CommandsOnHost.current_state))
+    query = query.select_from(database.commands_on_host.join(database.commands))
+
+    if cmd_id :
+        query = query.filter(database.commands.c.id== cmd_id)
+    else:
+        query = query.filter(database.commands.c.end_date > now)
+        query = query.filter(database.commands.c.start_date < now)
+
+    query = query.filter(or_(database.commands_on_host.c.scheduler == '',
+                     database.commands_on_host.c.scheduler == scheduler_name,
+                     database.commands_on_host.c.scheduler == None))
+    query = query.group_by(database.commands_on_host.c.fk_commands,
+                           database.commands_on_host.c.current_state)
+
+    ret = [q for q in query.all()]
+    session.close()
+    return ret
+
+def update_commands_stats(cmd_id, stats):
+    session = create_session()
+  
+    cmd = session.query(Commands).get(cmd_id)
+    cmd.update_stats(session, **stats)
+
+    session.add(cmd)
+    session.flush()
+    session.close()
+ 

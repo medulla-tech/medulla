@@ -315,6 +315,7 @@ class UploadPhase(RemoteControlPhase):
         if ret not in (DIRECTIVE.NEXT,
                        DIRECTIVE.GIVE_UP, 
                        DIRECTIVE.OVER_TIMED,
+                       DIRECTIVE.STOPPED,
                        DIRECTIVE.KILLED,
                        ) :
             return self._switch_on()
@@ -821,6 +822,7 @@ class ExecutionPhase(RemoteControlPhase):
         if ret not in (DIRECTIVE.NEXT,
                        DIRECTIVE.GIVE_UP, 
                        DIRECTIVE.KILLED,
+                       DIRECTIVE.STOPPED,
                        DIRECTIVE.OVER_TIMED) :
             return self._switch_on()
         return ret
@@ -866,6 +868,7 @@ class DeletePhase(RemoteControlPhase):
         if ret not in (DIRECTIVE.NEXT,
                        DIRECTIVE.GIVE_UP, 
                        DIRECTIVE.KILLED,
+                       DIRECTIVE.STOPPED,
                        DIRECTIVE.OVER_TIMED) :
             return self._switch_on()
         return ret
@@ -907,6 +910,7 @@ class InventoryPhase(RemoteControlPhase):
         if ret not in (DIRECTIVE.NEXT,
                        DIRECTIVE.GIVE_UP, 
                        DIRECTIVE.KILLED,
+                       DIRECTIVE.STOPPED,
                        DIRECTIVE.OVER_TIMED) :
             return self._switch_on()
         return ret
@@ -956,7 +960,6 @@ class DonePhase(Phase):
     def perform(self): 
        self.phase.set_done()
        self.coh.setStateDone()
-       self.cmd.inc_done()
        return self.next()
 
 

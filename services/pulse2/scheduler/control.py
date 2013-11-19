@@ -36,6 +36,7 @@ from pulse2.scheduler.queries import get_cohs, is_command_in_valid_time
 from pulse2.scheduler.queries import switch_commands_to_stop
 from pulse2.scheduler.queries import get_ids_to_start
 
+
 class MethodProxy(MscContainer):
     """ Interface to dispatch the circuit operations from exterior. """
 
@@ -46,7 +47,7 @@ class MethodProxy(MscContainer):
         @param cmd_ids: list of commands ids
         @type cmd_ids: list
         """
-        self.logger.info("start_commands: %s" % str(cmds))
+        self.logger.info("Prepare %d circuits to START..." % len(cmds))
 
         scheduler = self.config.name
 
@@ -76,7 +77,8 @@ class MethodProxy(MscContainer):
         @type cohs: list
         """
         self.logger.info("Prepare %d circuits to STOP ..." % len(cohs))
-        switch_commands_to_stop(cohs) 
+        switch_commands_to_stop(cohs)
+            
  
 
  
@@ -554,11 +556,18 @@ class MscDispatcher (MscQueryManager, MethodProxy):
             if not started_next :
                 break
 
+    def update_stats(self, result):
+        """ Update of global statistics of all valid running commands """
+        self.statistics.update()
+
+        self.logger.debug("Command stats - %s" % self.statistics.stats)
+        
         
     def mainloop(self):
         """ The main loop of scheduler """
         d = maybeDeferred(self._mainloop)
         d.addCallback(self.launch_remaining_waitings)
+        d.addCallback(self.update_stats)
         d.addErrback(self.eb_mainloop)
 
         return d

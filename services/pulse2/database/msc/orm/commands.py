@@ -33,8 +33,7 @@ import datetime
 
 # ORM mappings
 from pulse2.database.msc.orm.commands_on_host import CommandsOnHost, stopCommandOnHost
-from pulse2.database.msc.orm.commands_on_host_phase import CommandsOnHostPhase
-
+from pulse2.database.msc.orm.commands_on_host import CoHManager
 # Pulse 2 stuff
 import pulse2.time_intervals
 
@@ -189,30 +188,45 @@ class Commands(object):
         self.next_connection_delay = delay
         self.flush()
 
-    def inc_failed(self):
-        """Increments the total of failed commands"""
-        self.sum_running -= 1
-        self.sum_failed += 1
-        self.flush()
-
-    def dec_failed(self):
-        """Decrements the total of failed commands"""
-
-        self.sum_running += 1
-        self.sum_failed -= 1
-        self.flush()
-
-
-    def inc_done(self):
-        """Increments the total of finished commands"""
-        self.sum_running -= 1
-        self.sum_done += 1
-        self.flush()
 
     def extend(self, start_date, end_date):
         self.start_date = start_date
         self.end_date = end_date
         self.flush()
+
+    def update_stats(self, session=None, **kwargs):
+        if "scheduled" in kwargs :
+            self.sum_running = kwargs["scheduled"]
+        else :
+            self.sum_running = 0
+
+        if "done" in kwargs :
+            self.sum_done = kwargs["done"]
+        else:
+            self.dum_done = 0
+
+        if "stopped" in kwargs :
+            self.sum_stopped = kwargs["stopped"]
+        else :
+            self.sum_stopped = 0
+
+        if "failed" in kwargs :
+            self.sum_failed = kwargs["failed"]
+        else:
+            self.sum_failed = 0
+
+        if "over_timed" in kwargs :
+            self.sum_overtimed = kwargs["over_timed"]
+        else :
+            self.sum_overtimed = 0
+
+        if not session :
+            self.flush()
+
+
+
+
+
 
 
     def flush(self):
@@ -265,6 +279,19 @@ class Commands(object):
             'order_in_bundle': self.order_in_bundle,
             'proxy_mode': self.proxy_mode
         }
+
+def stop_commands_on_host(cohs):
+    groups = CoHManager.setCoHsStateStopped(cohs)
+    session = sqlalchemy.orm.create_session()
+
+    for cmd_id, count in groups.items():
+        cmd = session.query(Commands).get(cmd_id)
+        # update stats
+        cmd.sum_running -= count
+        cmd.sum_stopped += count
+        session.add(cmd)
+    session.close()
+        
 
 
 def stopCommand(c_id):
