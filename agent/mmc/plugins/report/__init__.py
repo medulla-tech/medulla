@@ -175,7 +175,10 @@ class RpcProxy(RpcProxyI):
         locale['DATE_FORMAT'] = '%Y/%m/%d'
 
         # Filling global pdf_vars
-        pdf_vars = {'__USERNAME__': self.currentContext.userid}
+        pdf_vars = {
+            '__USERNAME__': self.currentContext.userid,
+            '__COMPANY__': self.config.company,
+        }
 
         xls = XlsGenerator(path = xls_path)
         pdf = PdfGenerator(path = pdf_path, locale = locale)

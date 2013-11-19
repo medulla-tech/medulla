@@ -53,3 +53,7 @@ class ReportConfig(PluginConfig, DatabaseConfig):
             self.reportCSS = self.get('data', 'reportCSS')
         except (NoOptionError, NoSectionError):
             self.reportCSS = 'style.css'
+        try:
+            self.company = self.get('pdfvars', 'company')
+        except (NoOptionError, NoSectionError):
+            self.company = 'Company'

@@ -17,6 +17,7 @@
 p, li {
     text-align: justify;
     -weasy-hyphens: auto;
+    font-size: x-small;
 }
 
 #header {

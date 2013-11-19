@@ -22,6 +22,12 @@
         Period from <b>__PERIOD_START__</b> to <b>__PERIOD_END__</b>
         <div style="height:100px" />
         edited by <b>__USERNAME__</b>
+
+        <div style="height:700px; page-break-before: always" />
+        <h3>Confidentiality</h3>
+        <p>This is a confidential document, in which all content is considered the intellectual property of Mandriva S.A. Written exclusively for <b>__COMPANY__</b> it should not be disclosed or communicated to any third parties without prior written consent from <b>__COMPANY__</b>.
+        <h3>Caveats and Conditions</h3>
+        <p>This document was written from data coming from the inventory agent. Although every attempt has been made to ensure the accuracy of this document, Mandriva S.A cannot be held responsible for any omissions, mistakes or errors in the preparation of this document.</p>
     ]]>
     </homepage>
 
