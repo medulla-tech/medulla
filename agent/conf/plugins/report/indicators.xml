@@ -207,11 +207,12 @@
             active="1"
             keep_history="1"
         />
+        <!-- Treat all Win2k as servers -->
         <indicator
             name="os_count_windows_server_2000"
             label="Windows Server 2000"
             request_function="getComputerCountByOSes"
-            params="['*Windows*Server 2000*', '*Windows*Serveur 2000*']"
+            params="['*Windows 2000*']"
             data_type="0"
             active="1"
             keep_history="1"
