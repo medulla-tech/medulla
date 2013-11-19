@@ -96,7 +96,7 @@ class os_repartitionPanel extends Panel {
         <script type="text/javascript">
         var    r = Raphael("os-graphs"),
                 radius = 70,
-                margin = 60,
+                margin = 40,
                 x = 100,
                 y = 80;
 
@@ -123,6 +123,7 @@ class os_repartitionPanel extends Panel {
                 this.label[0].attr({ r: 7.5 });
                 this.label[1].attr({ "font-weight": 800 });
             }
+            //jQuery('#os-graphs ul:first').find('li')
          }, function () {
             this.sector.animate({ transform: 's1 1 ' + this.cx + ' ' + this.cy }, 800, "elastic");
 
@@ -139,12 +140,27 @@ class os_repartitionPanel extends Panel {
         jQuery('#os-graphs').append('<ul></ul>');
         for (var i = 0; i < legend.length; i++) {
             jQuery('#os-graphs ul').append(
-                '<li style="color: ' + colors[i]  + '"><span style="color: #000">' + legend[i]
+                '<li style="color: ' + colors[i].split('-')[1]  + ' ;left 5px;font-size: 24px;height:18px;"><span style="color: #000">' + legend[i]
                 + '<a href="' + href[i] + '"><img title="' + createGroupText +
                 '" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a></span></li>'
             );
         }
         </script>
+        <style type="text/css">
+            #os-graphs li{
+                list-style: none;
+                font-size: 13px;
+            }
+            #os-graphs li:before {
+            content:"•";
+            font-size:40px;
+            vertical-align:bottom;
+            line-height:20px;
+            margin-right:3px;
+            }
+
+
+        </style>
 SPACE;
     }
 
