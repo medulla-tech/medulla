@@ -36,13 +36,46 @@
             <item module="glpi" indicator="os_count" title="OS">
                 <item module="glpi" indicator="os_count_windows" title="Windows">
                     <item module="glpi" indicator="os_count_windows_xp" title="Windows XP" selected="yes">
-                        <item module="glpi" indicator="os_count_windows_xp_pro" title="Windows XP Professional" />
                         <item module="glpi" indicator="os_count_windows_xp_home" title="Windows XP Home" />
+                        <item module="glpi" indicator="os_count_windows_xp_pro" title="Windows XP Professional" />
                     </item>
-                    <item module="glpi" indicator="os_count_windows_seven" title="Windows 7" selected="yes" />
+                    <item module="glpi" indicator="os_count_windows_vista" title="Windows Vista" selected="yes">
+                        <item module="glpi" indicator="os_count_windows_vista_home" title="Windows Vista Home" />
+                        <item module="glpi" indicator="os_count_windows_vista_pro" title="Windows Vista Professionnal" />
+                        <item module="glpi" indicator="os_count_windows_vista_enterprise" title="Windows Vista Enterprise" />
+                        <item module="glpi" indicator="os_count_windows_vista_ultimate" title="Windows Vista Ultimate" />
+                    </item>
+                    <item module="glpi" indicator="os_count_windows_7" title="Windows 7" selected="yes">
+                        <item module="glpi" indicator="os_count_windows_7_home" title="Windows 7 Home" />
+                        <item module="glpi" indicator="os_count_windows_7_pro" title="Windows 7 Professionnal" />
+                        <item module="glpi" indicator="os_count_windows_7_enterprise" title="Windows 7 Enterprise" />
+                        <item module="glpi" indicator="os_count_windows_7_ultimate" title="Windows 7 Ultimate" />
+                    </item>
+                    <item module="glpi" indicator="os_count_windows_8" title="Windows 8" selected="yes">
+                        <item module="glpi" indicator="os_count_windows_8_pro" title="Windows 8 Professionnal" />
+                        <item module="glpi" indicator="os_count_windows_8_rt" title="Windows 8 RT" />
+                    </item>
+                    <item module="glpi" indicator="os_count_windows_server" title="Windows Server" selected="yes">
+                        <item module="glpi" indicator="os_count_windows_server_2000" title="Windows Server 2000" />
+                        <item module="glpi" indicator="os_count_windows_server_2003" title="Windows Server 2003" />
+                        <item module="glpi" indicator="os_count_windows_server_2008" title="Windows Server 2008" />
+                        <item module="glpi" indicator="os_count_windows_server_2012" title="Windows Server 2012" />
+                    </item>
                 </item>
-                <item module="glpi" indicator="os_count_macos" title="Mac OS X" selected="yes" />
-                <item module="glpi" indicator="os_count_linux" title="Linux" selected="yes" />
+                <item module="glpi" indicator="os_count_macos" title="Mac OS X" selected="yes">
+                    <item module="glpi" indicator="os_count_linux_macos_desktop" title="Mac OS X" />
+                    <item module="glpi" indicator="os_count_linux_macos_server" title="Mac OS X Server" />
+                </item>
+                <item module="glpi" indicator="os_count_linux" title="Linux" selected="yes">
+                    <item module="glpi" indicator="os_count_linux_debian" title="Debian GNU/Linux" />
+                    <item module="glpi" indicator="os_count_linux_ubuntu" title="Ubuntu" />
+                    <item module="glpi" indicator="os_count_linux_redhat" title="Red Hat" />
+                    <item module="glpi" indicator="os_count_linux_centos" title="CentOS" />
+                    <item module="glpi" indicator="os_count_linux_fedora" title="Fedora" />
+                    <item module="glpi" indicator="os_count_linux_mandriva" title="Mandriva Linux" />
+                    <item module="glpi" indicator="os_count_linux_mageia" title="Mageia" />
+                </item>
+                <item module="glpi" indicator="os_count_unix" title="Unix" selected="yes" />
             </item>
         </table>
     </section>

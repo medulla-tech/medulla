@@ -58,14 +58,59 @@
             name="os_count_windows_xp_home"
             label="Windows XP Home"
             request_function="getComputerCountByOSes"
-            params="['*Windows XP Home*', '*Windows XP*Familiale']"
+            params="['*Windows XP Home', '*Windows XP*Familiale']"
             data_type="0"
             active="1"
             keep_history="1"
         />
         <indicator
-            name="os_count_windows_seven"
-            label="Windows Seven"
+            name="os_count_windows_vista"
+            label="Windows Vista"
+            request_function="getComputerCountByOSes"
+            params="'*Windows Vista*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_vista_home"
+            label="Windows Vista Home"
+            request_function="getComputerCountByOSes"
+            params="['*Windows Vista Home', '*Windows Vista*Familiale*']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_vista_business"
+            label="Windows Vista Business"
+            request_function="getComputerCountByOSes"
+            params="['*Windows Vista Pro*', '*Windows Vista Business*']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_vista_enterprise"
+            label="Windows Vista Enterprise"
+            request_function="getComputerCountByOSes"
+            params="['*Windows Vista Enterprise*', '*Windows Vista Entreprise*']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_vista_ultimate"
+            label="Windows Vista Ultimate"
+            request_function="getComputerCountByOSes"
+            params="['*Windows Vista*Intégrale*', '*Windows Vista Ultimate*']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_7"
+            label="Windows 7"
             request_function="getComputerCountByOSes"
             params="'*Windows*7*'"
             data_type="0"
@@ -73,10 +118,145 @@
             keep_history="1"
         />
         <indicator
-            name="os_count_macos"
-            label="Linux"
+            name="os_count_windows_7_home"
+            label="Windows 7 Home"
             request_function="getComputerCountByOSes"
-            params="'Mac OS X*'"
+            params="['*Windows 7 Home', 'Windows 7*Familiale']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_7_pro"
+            label="Windows 7 Professionnal"
+            request_function="getComputerCountByOSes"
+            params="'*Windows 7 Pro*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_7_enterprise"
+            label="Windows 7 Enterprise"
+            request_function="getComputerCountByOSes"
+            params="['*Windows 7 Enterprise*', '*Windows 7 Entreprise*']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_7_ultimate"
+            label="Windows 7 Ultimate"
+            request_function="getComputerCountByOSes"
+            params="['*Windows 7 Ultimate*', '*Windows 7*Intégrale*']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_8"
+            label="Windows 8"
+            request_function="getComputerCountByOSes"
+            params="'*Windows 8*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_8_pro"
+            label="Windows 8 Professionnal"
+            request_function="getComputerCountByOSes"
+            params="'*Windows 8 Pro*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_8_enterprise"
+            label="Windows 8 Enterprise"
+            request_function="getComputerCountByOSes"
+            params="['*Windows 8 Enterprise*', '*Windows 8 Entreprise*']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_8_rt"
+            label="Windows 8 RRT"
+            request_function="getComputerCountByOSes"
+            params="'*Windows 8 RT*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_server"
+            label="Windows Server"
+            request_function="getComputerCountByOSes"
+            params="'*Windows*Server*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_server_2000"
+            label="Windows Server 2000"
+            request_function="getComputerCountByOSes"
+            params="'*Windows*Server 2000*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_server_2003"
+            label="Windows Server 2003"
+            request_function="getComputerCountByOSes"
+            params="'*Windows*Server 2003*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_server_2008"
+            label="Windows Server 2008"
+            request_function="getComputerCountByOSes"
+            params="'*Windows*Server 2008*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_server_2012"
+            label="Windows Server 2012"
+            request_function="getComputerCountByOSes"
+            params="'*Windows*Server 2012*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_macos"
+            label="Mac OS X"
+            request_function="getComputerCountByOSes"
+            params="'*OS X*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_macos_desktop"
+            label="Mac OS X"
+            request_function="getComputerCountByOSes"
+            params="'*OS X 10*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_macos_server"
+            label="Mac OS X Server"
+            request_function="getComputerCountByOSes"
+            params="'*OS X Server*'"
             data_type="0"
             active="1"
             keep_history="1"
@@ -86,6 +266,78 @@
             label="Linux"
             request_function="getComputerCountByOSes"
             params="['*Linux*', '*linux*', 'Mageia*', 'Fedora*', 'CentOS*', 'Ubuntu*']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_linux_debian"
+            label="Debian GNU/Linux"
+            request_function="getComputerCountByOSes"
+            params="'Debian*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_linux_ubuntu"
+            label="Ubuntu"
+            request_function="getComputerCountByOSes"
+            params="'Ubuntu*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_linux_redhat"
+            label="Red Hat"
+            request_function="getComputerCountByOSes"
+            params="'Red Hat*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_linux_centos"
+            label="CentOS"
+            request_function="getComputerCountByOSes"
+            params="'CentOS*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_linux_fedora"
+            label="Fedora"
+            request_function="getComputerCountByOSes"
+            params="'Fedora*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_linux_mageia"
+            label="Mageia"
+            request_function="getComputerCountByOSes"
+            params="'Mageia*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_linux_mandriva"
+            label="Mandriva"
+            request_function="getComputerCountByOSes"
+            params="'Mandriva*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_unix"
+            label="Unix"
+            request_function="getComputerCountByOSes"
+            params="['AIX*', 'SunOs*', 'Solaris*', 'HP-UX*', 'IRIX*']"
             data_type="0"
             active="1"
             keep_history="1"
