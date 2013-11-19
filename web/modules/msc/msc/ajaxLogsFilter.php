@@ -216,6 +216,8 @@ if ($areCommands) { // display several commands
 } else { // display only one command
     $proxies = array();
     $a_client = array();
+    $phase_labels = getPhaseLabels();
+    $state_labels = getPhaseStatesLabels();
     foreach ($cmds as $cmd) {
 
         $coh_id = $cmd[1];
@@ -281,14 +283,14 @@ if ($areCommands) { // display several commands
                 if ($phase['state'] == 'running')
                     $running = TRUE;
                 if ($phase['state'] == 'failed' || $phase['state'] == 'ready' || $phase['state'] == 'running') {
-                    $a_step_state[] = sprintf('%s (%s)', $phase['name'], $phase['state']);
+                    $a_step_state[] = sprintf('%s (%s)', $phase_labels[$phase['name']], $state_labels[$phase['state']]);
                     $last_phase = FALSE;
                     break;
                 }
                 $last_phase = $phase;
             }
             if ($last_phase) {
-                $a_step_state[] = sprintf('%s (%s)', $phase['name'], $phase['state']);
+                $a_step_state[] = sprintf('%s (%s)', $phase_labels[$phase['name']], $state_labels[$phase['state']]);
             }
             if (!$running) {
                 if (isset($statusTable[$coh['current_state']])) {

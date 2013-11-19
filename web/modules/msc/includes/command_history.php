@@ -61,7 +61,7 @@ class CommandOnHost {
     function quickDisplay($actions = array(), $params = array()) {
         $statusTable = getStatusTable();
         $n = null;
-        $params = array(
+        $params = array_merge($params, array(
             'cmd_id' => $_GET['cmd_id'],
             'bundle_id' => $_GET['bundle_id'],
             'coh_id' => $_GET['coh_id'],
@@ -69,6 +69,7 @@ class CommandOnHost {
             'from' => 'msc|logs|consult',
             'tab' => 'tablogs',
             'hostname' => $this->db_coh['host']
+                )
         );
         foreach ($this->values as $col) {
             if ($col[2]) {
@@ -182,10 +183,21 @@ class Command {
                 }
             }
         }
+
+        $params = array_merge($params, array(
+            'cmd_id' => $_GET['cmd_id'],
+            'gid' => $_GET['gid'],
+            'from' => 'msc|logs|consult'
+                )
+        );
+
         $n->setParamInfo(array($params));
         foreach ($actions as $a) {
             $n->addActionItem($a);
         }
+        // Start/Stop buttons
+        $n->addActionItem(new ActionPopupItem(_T("Start", "msc"), "msctabsplay", "start", "msc", "base", "computers"));
+        $n->addActionItem(new ActionPopupItem(_T("Stop", "msc"), "msctabsstop", "stop", "msc", "base", "computers"));
         $n->drawTable(0);
         print '<br/>';
         return true;
@@ -383,20 +395,7 @@ class CommandHistory {
         // =====================================================================
         ### Display command phases ###
         $phases = $this->db_coh['phases'];
-
-
-        $phase_labels = array(
-            'wol' => _T('Wake on LAN'),
-            'upload' => _T('Upload'),
-            'execute' => _T('Execution'),
-            'delete' => _T('Clean'),
-            'inventory' => _T('Inventory'),
-            'reboot' => _T('Restart'),
-            'halt' => _T('Shutdown'),
-            'pre_menu' => _T('Before bootmenu actions'),
-            'post_menu' => _T('After bootmenu actions'),
-            'done' => _T('Finish')
-        );
+        $phase_labels = getPhaseLabels();
 
         $hidden_phases = array(
             'done'
