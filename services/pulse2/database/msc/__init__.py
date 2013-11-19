@@ -308,7 +308,8 @@ class MscDatabase(DatabaseHelper):
                       clean_on_success,
                       do_inventory,
                       do_halt,
-                      do_reboot):
+                      do_reboot,
+                      is_quick_action=False):
         wf_list = ["pre_menu",
            "wol",
            "post_menu",
@@ -341,9 +342,9 @@ class MscDatabase(DatabaseHelper):
                     continue
                 if name == "upload" and len(files) == 0:
                     continue
-                if name == "execute" and start_script == "disable":
+                if name == "execute" and (start_script == "disable" or is_quick_action):
                     continue
-                if name == "delete" and clean_on_success == "disable":
+                if name == "delete" and (clean_on_success == "disable" or is_quick_action):
                     continue
                 if name == "inventory" and do_inventory == "disable" :
                     continue

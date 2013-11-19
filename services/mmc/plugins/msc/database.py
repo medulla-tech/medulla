@@ -424,7 +424,8 @@ class MscDatabase(msc.MscDatabase):
                 order_in_bundle = None,
                 proxy_mode = 'none',
                 proxies = [],
-                state = 'active'
+                state = 'active',
+                is_quick_action=False
             ):
         """
         Main func to inject a new command in our MSC database
@@ -555,7 +556,8 @@ class MscDatabase(msc.MscDatabase):
                                clean_on_success,
                                do_inventory,
                                do_halt, 
-                               do_reboot)
+                               do_reboot,
+                               is_quick_action)
 
             return cmd.getId()
 
@@ -658,6 +660,8 @@ class MscDatabase(msc.MscDatabase):
 
         cmd, patternActions = self.applyCmdPatterns(cmd)
 
+        is_quick_action = any([True for a in patternActions.values() if a=="enable"])
+
         # run a built-in script
         p1 = re.compile('^\/scripts\/')
         if p1.match(cmd):
@@ -692,7 +696,8 @@ class MscDatabase(msc.MscDatabase):
             None,
             'none',
             [],
-            'active'
+            'active',
+            is_quick_action
         )
 
     def startBundle(self, fk_bundle):
