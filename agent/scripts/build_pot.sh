@@ -22,6 +22,6 @@
 
 # Generate POT for report templates
 [ ! -x /usr/bin/pybabel ] && echo "You need to install python-babel to generate reports templates POT file." && exit 1
-pybabel extract -F scripts/babel.ini conf/plugins/report/templates/ > mmc/plugins/report/locale/templates.pot
+PYTHONPATH=${PYTHONPATH}:scripts pybabel extract -F scripts/babel.ini conf/plugins/report/templates/ > mmc/plugins/report/locale/templates.pot
 
 exit 0
