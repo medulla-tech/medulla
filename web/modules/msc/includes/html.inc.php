@@ -25,8 +25,9 @@
 
 class multicol extends HtmlElement {
 
-    var $cols;
-    var $widths;
+    public $cols;
+    public $widths;
+    public $valigns;
 
     function multicol() {
         $this->cols = array();
@@ -34,15 +35,27 @@ class multicol extends HtmlElement {
         $this->paddings = array();
     }
 
-    function add($col, $width = 0, $padding = 0, $arrParam = array()) {
+    function add($col, $params = array(), $arrParam = array()) {
         $this->cols[] = $col;
-        $this->widths[] = $width;
-        $this->paddings[] = $padding;
+        $def_params = array(
+            'padding' => '0',
+            'valign' => 'middle',
+            'width' => 'auto'
+        );
+        $params = array_merge($def_params, $params);
+        $this->widths[] = $params['width'];
+        $this->paddings[] = $params['padding'];
+        $this->valigns[] = $params['valign'];
         $this->arrParams[] = $arrParam;
         return $this;
     }
 
     function display($arrParam = array()) {
+        /* print '<table style="border:0"><tr><td>';
+          $col = $this->cols[0];
+          $col->display();
+          print '</td></tr></table>';
+          return; */
         if (count($this->cols) == 0)
             return;
 
@@ -55,9 +68,10 @@ class multicol extends HtmlElement {
             $col = $this->cols[$i];
             $width = is_int($this->widths[$i]) ? $this->widths[$i] . 'px' : $this->widths[$i];
             $padding = is_int($this->paddings[$i]) ? $this->paddings[$i] . 'px' : $this->paddings[$i];
+            $valign = $this->valigns[$i];
 
-            print "<td style=\"border:0;width:$width;padding:$padding\">";
-            $col->display($this->arrParams[$i]);
+            print "<td style=\"border:0;width:$width;padding:$padding;vertical-align:$valign\">";
+            $col->display();
             print '</td>';
         }
 
@@ -75,6 +89,7 @@ class raphaelPie extends HtmlElement {
     public $labels = array();
     public $colors = array();
     public $links = array();
+    public $legendpos = 'east';
 
     function __construct($id) {
         $this->id = $id;
@@ -126,7 +141,12 @@ class raphaelPie extends HtmlElement {
          .attr({ "text-anchor": "start" });*/
         data = getPercentageData(data);
         pie = r.piechart(x, y, radius, data,
-                   {colors: colors, legendpos: "east", 'legend': legend})
+                   {
+                       colors: colors,
+                        legendpos: "$this->legendpos",
+                        'legend': legend,
+                        strokewidth : 1.5
+                    })
          .hover(function () {
             this.sector.stop();
             this.sector.animate({ transform: 's1.1 1.1 ' + this.cx + ' ' + this.cy }, 800, "elastic");
@@ -147,7 +167,7 @@ class raphaelPie extends HtmlElement {
 
         y += (radius * 2) + margin + 5;
 
-        r.setSize(300, (radius * 1 + margin) + 100);
+        r.setSize(200, (radius * 1 + margin) + 200);
         // Legend
         /*jQuery('#$this->id').append('<ul></ul>');
         for (var i = 0; i < legend.length; i++) {
@@ -162,5 +182,5 @@ SPACE;
     }
 
 }
-
 ?>
+

@@ -68,9 +68,9 @@ if ($uuid) {
     }
     $action = "groupmsctabs";
 
-    $sum_running = $cmds[0][0]['sum_running'];
-    $sum_done = $cmds[0][0]['sum_done'];
-    $sum_failed = $cmds[0][0]['sum_failed'];
+    $sum_running = intval($cmds[0][0]['sum_running']);
+    $sum_done = intval($cmds[0][0]['sum_done']);
+    $sum_failed = intval($cmds[0][0]['sum_failed']);
 }
 
 
@@ -335,7 +335,7 @@ if ($areCommands) { // display several commands
     } else {
         $n->addExtraInfo($a_client, _T("Client", "msc"));
     }
-    $n->addExtraInfo($a_date, $datelabel);
+    //$n->addExtraInfo($a_date, $datelabel);
     $n->addExtraInfo($a_current, _T("Global State", "msc"));
     //$n->addExtraInfo($a_current, _T("Global State", "msc"));
     $n->addExtraInfo($a_step_state, _T("Current step", "msc"));
@@ -356,22 +356,25 @@ if ($areCommands) { // display several commands
 
     $pieChart = new raphaelPie('deploy-pie');
     $pieChart->data = array($sum_running, $sum_done, $sum_failed);
-    $pieChart->colors = array('000-#291FE0-#130F69', '000-#1C9139-#105722', '000-#D93D11-#752008');
+
+    $total = $sum_running + $sum_done + $sum_failed;
+    $pieChart->colors = array('000-#7991F2-#3D61F2', '000-#1C9139-#105722', '000-#D93D11-#752008');
     $pieChart->labels = array(
-        _T('Running', 'msc'),
-        _T('Done', 'msc'),
-        _T('Failed', 'msc')
+        _T('Running', 'msc') . sprintf(' %d%%  (%d)', 100 * $sum_running / $total, $sum_running),
+        _T('Done', 'msc') . sprintf(' %d%% (%d)', 100 * $sum_done / $total, $sum_done),
+        _T('Failed', 'msc') . sprintf(' %d%%  (%d)', 100 * $sum_failed / $total, $sum_failed)
     );
+    $pieChart->legendpos = 'south';
     $pieChart->links = array('#', '#', '#');
-    $pieChart->title = _T('Deploy status');
+    $pieChart->title = _T('Deploy status', 'msc');
 
     $mc = new multicol();
-    $mc->add($n, '', '0 0 0 0')
-            ->add($pieChart, '310px', '30px 0 0 0')->display();
+    $mc->add($n)
+            ->add($pieChart, array('width' => '200px', 'padding' => '30px 0 0 0', 'valign' => 'top'))->display();
     $DISPLAY_TABLE = FALSE;
 }
 
-if ($n != null) {
+if ($n != null && $DISPLAY_TABLE) {
     $n->setParamInfo($params);
     $n->setTableHeaderPadding(1);
     $n->setItemCount($count);
@@ -379,8 +382,6 @@ if ($n != null) {
     $n->start = 0;
     $n->end = $maxperpage;
     $n->disableFirstColumnActionLink();
-
-    if ($DISPLAY_TABLE)
-        $n->display();
+    $n->display();
 }
 ?>
