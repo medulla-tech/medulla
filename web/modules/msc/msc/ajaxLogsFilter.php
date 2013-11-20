@@ -71,6 +71,8 @@ if ($uuid) {
     $sum_running = intval($cmds[0][0]['sum_running']);
     $sum_done = intval($cmds[0][0]['sum_done']);
     $sum_failed = intval($cmds[0][0]['sum_failed']);
+    $sum_stopped = intval($cmds[0][0]['sum_stopped']);
+    $sum_overtimed = intval($cmds[0][0]['sum_overtimed']);
 }
 
 
@@ -358,17 +360,19 @@ if ($areCommands) { // display several commands
     $n->disableFirstColumnActionLink();
 
     $pieChart = new raphaelPie('deploy-pie');
-    $pieChart->data = array($sum_running, $sum_done, $sum_failed);
+    $pieChart->data = array($sum_running, $sum_done, $sum_failed, $sum_stopped, $sum_overtimed);
 
-    $total = $sum_running + $sum_done + $sum_failed;
-    $pieChart->colors = array('000-#7991F2-#3D61F2', '000-#1C9139-#105722', '000-#D93D11-#752008');
+    $total = array_sum($pieChart->data);
+    $pieChart->colors = array('000-#7991F2-#3D61F2', '000-#1C9139-#105722', '000-#D93D11-#752008', '000-#F2B87E-#ED7D0C', '000-#919191-#292829');
     $pieChart->labels = array(
         _T('Running', 'msc') . sprintf(' %d%%  (%d)', 100 * $sum_running / $total, $sum_running),
         _T('Done', 'msc') . sprintf(' %d%% (%d)', 100 * $sum_done / $total, $sum_done),
-        _T('Failed', 'msc') . sprintf(' %d%%  (%d)', 100 * $sum_failed / $total, $sum_failed)
+        _T('Failed', 'msc') . sprintf(' %d%%  (%d)', 100 * $sum_failed / $total, $sum_failed),
+        _T('Stopped', 'msc') . sprintf(' %d%%  (%d)', 100 * $sum_stopped / $total, $sum_stopped),
+        _T('Overtime', 'msc') . sprintf(' %d%%  (%d)', 100 * $sum_overtimed / $total, $sum_overtimed)
     );
     $pieChart->legendpos = 'south';
-    $pieChart->links = array('#', '#', '#');
+    $pieChart->links = array('#', '#', '#', '#', '#');
     $pieChart->title = _T('Deploy status', 'msc');
 
     $mc = new multicol();

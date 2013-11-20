@@ -72,8 +72,11 @@ foreach ($cmds as $item) {
     $sum_running = $item['sum_running'];
     $sum_done = $item['sum_done'];
     $sum_failed = $item['sum_failed'];
-    if ($sum_running + $sum_done + $sum_failed != 0)
-        $done_percent = round(100 * $sum_done / ($sum_running + $sum_done + $sum_failed)) . '%';
+    $sum_stopped = $item['sum_stopped'];
+    $sum_overtimed = $item['sum_overtimed'];
+    $total_machines = $sum_running + $sum_done + $sum_failed + $sum_stopped + $sum_overtimed;
+    if ($total_machines != 0)
+        $done_percent = round(100 * $sum_done / $total_machines) . '%';
     else
         $done_percent = '-';
     $creator = $item['creator'];
@@ -127,7 +130,7 @@ foreach ($cmds as $item) {
     else {
         if ($sum_running == 0)
             $icons['stop'] = '';
-        if ($sum_failed == 0 && $sum_running == 0)
+        if ($sum_failed == 0 && $sum_running == 0 && $sum_stopped == 0)
             $icons['play'] = '';
     }
     if ($target == 'UNVISIBLEMACHINE') {
