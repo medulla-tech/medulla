@@ -665,8 +665,8 @@ class MscDatabase(DatabaseHelper):
         size = int(size1) + int(size2[0])
 
         u2 = union(
-                select([self.commands.c.id, func.concat('CMD_', self.commands.c.id).label('bid'), self.commands.c.creation_date, self.commands.c.start_date, self.commands.c.end_date, self.commands.c.sum_running, self.commands.c.sum_failed, self.commands.c.sum_done], filtering2_1),
-                select([self.commands.c.id, self.commands.c.fk_bundle.label('bid'), self.commands.c.creation_date, self.commands.c.start_date, self.commands.c.end_date, self.commands.c.sum_running, self.commands.c.sum_failed, self.commands.c.sum_done], filtering2_2)
+                select([self.commands.c.id, func.concat('CMD_', self.commands.c.id).label('bid'), self.commands.c.creation_date, self.commands.c.start_date, self.commands.c.end_date, self.commands.c.sum_running, self.commands.c.sum_failed, self.commands.c.sum_done, self.commands.c.sum_stopped, self.commands.c.sum_overtimed], filtering2_1),
+                select([self.commands.c.id, self.commands.c.fk_bundle.label('bid'), self.commands.c.creation_date, self.commands.c.start_date, self.commands.c.end_date, self.commands.c.sum_running, self.commands.c.sum_failed, self.commands.c.sum_done, self.commands.c.sum_stopped, self.commands.c.sum_overtimed], filtering2_2)
         ).group_by('bid').order_by(desc('creation_date')).offset(int(min)).limit(int(max)-int(min))
 
         conn = self.getDbConnection()
@@ -696,6 +696,8 @@ class MscDatabase(DatabaseHelper):
                             'sum_running':cmd.sum_running,
                             'sum_failed':cmd.sum_failed,
                             'sum_done':cmd.sum_done,
+                            'sum_stopped':cmd.sum_stopped,
+                            'sum_overtimed':cmd.sum_overtimed,
                             'bid':bid,
                             'cmdid':'',
                             'target':'group %s'%gid,
@@ -713,6 +715,8 @@ class MscDatabase(DatabaseHelper):
                             'sum_running':cmd.sum_running,
                             'sum_failed':cmd.sum_failed,
                             'sum_done':cmd.sum_done,
+                            'sum_stopped':cmd.sum_stopped,
+                            'sum_overtimed':cmd.sum_overtimed,
                             'bid':bid,
                             'cmdid':'',
                             'target':target_name,
@@ -731,6 +735,8 @@ class MscDatabase(DatabaseHelper):
                             'sum_running':cmd.sum_running,
                             'sum_failed':cmd.sum_failed,
                             'sum_done':cmd.sum_done,
+                            'sum_stopped':cmd.sum_stopped,
+                            'sum_overtimed':cmd.sum_overtimed,
                             'bid':'',
                             'cmdid':cmd.id,
                             'target':'group %s'%gid,
@@ -748,6 +754,8 @@ class MscDatabase(DatabaseHelper):
                             'sum_running':cmd.sum_running,
                             'sum_failed':cmd.sum_failed,
                             'sum_done':cmd.sum_done,
+                            'sum_stopped':cmd.sum_stopped,
+                            'sum_overtimed':cmd.sum_overtimed,
                             'bid':'',
                             'cmdid':cmd.id,
                             'cohid':cohid,

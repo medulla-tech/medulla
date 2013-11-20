@@ -246,6 +246,8 @@ class Commands(object):
             'end_date': self.end_date,
             'sum_running': self.sum_running,
             'sum_done': self.sum_done,
+            'sum_stopped': self.sum_stopped,
+            'sum_overtimed': self.sum_overtimed,
             'sum_failed': self.sum_failed,
             'start_file': self.start_file,
             'parameters': self.parameters,
@@ -291,7 +293,7 @@ def stop_commands_on_host(cohs):
         cmd.sum_stopped += count
         session.add(cmd)
     session.close()
-        
+
 
 
 def stopCommand(c_id):
