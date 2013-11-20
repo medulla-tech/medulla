@@ -58,7 +58,7 @@
                     </item>
                     <item module="glpi" indicator="os_count_windows_vista" title="Windows Vista" selected="yes">
                         <item module="glpi" indicator="os_count_windows_vista_home" title="Windows Vista Home" />
-                        <item module="glpi" indicator="os_count_windows_vista_pro" title="Windows Vista Professionnal" />
+                        <item module="glpi" indicator="os_count_windows_vista_business" title="Windows Vista Professionnal" />
                         <item module="glpi" indicator="os_count_windows_vista_enterprise" title="Windows Vista Enterprise" />
                         <item module="glpi" indicator="os_count_windows_vista_ultimate" title="Windows Vista Ultimate" />
                     </item>
@@ -81,8 +81,8 @@
                     </item>
                 </item>
                 <item module="glpi" indicator="os_count_macos" title="Mac OS X" selected="yes">
-                    <item module="glpi" indicator="os_count_linux_macos_desktop" title="Mac OS X" />
-                    <item module="glpi" indicator="os_count_linux_macos_server" title="Mac OS X Server" />
+                    <item module="glpi" indicator="os_count_macos_desktop" title="Mac OS X" />
+                    <item module="glpi" indicator="os_count_macos_server" title="Mac OS X Server" />
                 </item>
                 <item module="glpi" indicator="os_count_linux" title="Linux" selected="yes">
                     <item module="glpi" indicator="os_count_linux_debian" title="Debian GNU/Linux" />
