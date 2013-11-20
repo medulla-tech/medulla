@@ -135,22 +135,22 @@ class PdfGenerator(object):
     def h3(self, str):
         self.content += '<h3>%s</h3>' % str
 
-    def setHeaderLeft(self, str):
+    def set_header_left(self, str):
         self.header_left = str.strip()
 
-    def setHeaderCenter(self, str):
+    def set_header_center(self, str):
         self.header_center = str.strip()
 
-    def setHeaderRight(self, str):
+    def set_header_right(self, str):
         self.header_right = str.strip()
 
-    def setFooterLeft(self, str):
+    def set_footer_left(self, str):
         self.footer_left = str.strip()
 
-    def setFooterCenter(self, str):
+    def set_footer_center(self, str):
         self.footer_center = str.strip()
 
-    def setFooterRight(self, str):
+    def set_footer_right(self, str):
         self.footer_right = str.strip()
 
     @property

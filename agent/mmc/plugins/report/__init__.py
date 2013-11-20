@@ -205,27 +205,25 @@ class RpcProxy(RpcProxyI):
             return _replace_pdf_vars(str)
 
 
-        def _header(tag):
-            for entry in tag:
-                if entry.tag.lower() != 'entry':
-                    continue
-                if entry.attrib['name'] == "left":
-                    pdf.setHeaderLeft(_hf_format(entry.attrib['value']))
-                elif entry.attrib['name'] == "center":
-                    pdf.setHeaderCenter(_hf_format(entry.attrib['value']))
-                elif entry.attrib['name'] == "right":
-                    pdf.setHeaderRight(_hf_format(entry.attrib['value']))
+        def _hf_feeder(tag, to_feed):
+            """
+            This function feed header or footer
 
-        def _footer(tag):
+            @param tag: XML tag content (header or footer)
+            @type tag: xml object
+
+            @param to_feed: item who will be feeded: header or footer
+            @type to_feed: str
+            """
             for entry in tag:
                 if entry.tag.lower() != 'entry':
                     continue
-                if entry.attrib['name'] == "left":
-                    pdf.setFooterLeft(_hf_format(entry.attrib['value']))
-                elif entry.attrib['name'] == "center":
-                    pdf.setFooterCenter(_hf_format(entry.attrib['value']))
-                elif entry.attrib['name'] == "right":
-                    pdf.setFooterRight(_hf_format(entry.attrib['value']))
+                try:
+                    func = getattr(pdf, '_'.join(['set', to_feed, entry.attrib['name']]))
+                    func(_hf_format(entry.attrib['value']))
+                except Exception, e:
+                    logging.getLogger().warn("Something were wrong where feeding %s: tag is %s", to_feed, tag)
+                    logging.getLogger().warn("Exception: %s", e)
 
         def _localization(loc_tag):
             for entry in loc_tag:
@@ -391,12 +389,12 @@ class RpcProxy(RpcProxyI):
             if level1.tag.lower() == 'html':
                 _html(level1.text)
             ## =========< HTML >===================
-            if level1.tag.lower() == 'header':
-                _header(level1)
             if level1.tag.lower() == 'homepage':
                 _homepage(level1.text)
+            if level1.tag.lower() == 'header':
+                _hf_feeder(level1, 'header')
             if level1.tag.lower() == 'footer':
-                _footer(level1)
+                _hf_feeder(level1, 'footer')
             ## =========< SECTION >===================
             if level1.tag.lower() == 'section':
                 # Checking if section is present in sections
