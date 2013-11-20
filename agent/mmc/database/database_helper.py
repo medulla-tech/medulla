@@ -27,6 +27,7 @@ Define classes to help implementing the database access in all the
 pulse2 modules.
 """
 import functools
+import logging
 
 from mmc.support.mmctools import Singleton
 from mmc.database.ddl import DDLContentManager, DBControl
@@ -34,8 +35,13 @@ from mmc.database.sqlalchemy_tests import checkSqlalchemy, MIN_VERSION, MAX_VERS
 from sqlalchemy.orm import sessionmaker; Session = sessionmaker()
 from sqlalchemy.exc import DBAPIError, NoSuchTableError
 
-import logging
+logger = logging.getLogger()
 NB_DB_CONN_TRY = 2
+
+
+class DatabaseConnectionError(Exception):
+    pass
+
 
 class DatabaseHelper(Singleton):
     is_activated = False
@@ -45,7 +51,7 @@ class DatabaseHelper(Singleton):
     def db_check(self):
         required_version = DDLContentManager().get_version(self.my_name)
         if not checkSqlalchemy():
-            self.logger.error("Sqlalchemy: current version is %s. Must be between %s and %s" % (CUR_VERSION, MIN_VERSION, MAX_VERSION))
+            logger.error("Sqlalchemy: current version is %s. Must be between %s and %s" % (CUR_VERSION, MIN_VERSION, MAX_VERSION))
             return False
 
         conn = self.connected()
@@ -53,13 +59,13 @@ class DatabaseHelper(Singleton):
             if required_version > conn :
                 return self.db_update()
             elif required_version != -1 and conn != required_version:
-                self.logger.error("%s database version error: v.%s needeed, v.%s found; please update your schema !" % (self.my_name, required_version, conn))
+                logger.error("%s database version error: v.%s needeed, v.%s found; please update your schema !" % (self.my_name, required_version, conn))
                 return False
         else:
-            self.logger.error("Can't connect to database (s=%s, p=%s, b=%s, l=%s, p=******). Please check %s." % (self.config.dbhost, self.config.dbport, self.config.dbbase, self.config.dbuser, self.configfile))
+            logger.error("Can't connect to database (s=%s, p=%s, b=%s, l=%s, p=******). Please check %s." % (self.config.dbhost, self.config.dbport, self.config.dbbase, self.config.dbuser, self.configfile))
             return False
-
         return True
+
     def db_update(self):
         """Automatic database update"""
 
@@ -68,11 +74,10 @@ class DatabaseHelper(Singleton):
                                host=self.config.dbhost,
                                port=self.config.dbport,
                                module=self.config.dbname,
-                               log=self.logger,
+                               log=logger,
                                use_same_db=True)
 
         return db_control.process()
-
 
     def connected(self):
         try:
@@ -85,7 +90,7 @@ class DatabaseHelper(Singleton):
                     return True
             return False
         except:
-            if (self.db != None) and (self.session != None):
+            if self.db is not None and self.session is not None:
                 return True
             return False
 
@@ -112,7 +117,7 @@ class DatabaseHelper(Singleton):
                 url = url + "&ssl_ca=%s&ssl_key=%s&ssl_cert=%s" % (self.config.dbsslca, self.config.dbsslkey, self.config.dbsslcert)
         return url
 
-    def enableLogging(self, level = None):
+    def enableLogging(self, level=None):
         """
         Enable log for sqlalchemy.engine module using the level configured by the db_debug option of the plugin configuration file.
         The SQL queries will be loggued.
@@ -135,31 +140,28 @@ class DatabaseHelper(Singleton):
         for i in range(NB_DB_CONN_TRY):
             try:
                 ret = self.db.connect()
-            except DBAPIError, e:
-                self.logger.error(e)
-            except Exception, e:
-                self.logger.error(e)
-            if ret: break
+            except:
+                logger.exception("Error on DB connection")
+            if ret:
+                break
         if not ret:
-            raise "Database connection error"
+            raise DatabaseConnectionError("Database connection error")
         return ret
 
     def initMappersCatchException(self):
         try:
             self.initMappers()
         except NoSuchTableError, e:
-            logging.getLogger().warn('The table %s does not exists.'%str(e))
+            logger.warn('The table %s does not exists.' % str(e))
             return False
-        except Exception, e:
-            logging.getLogger().warn(e)
+        except:
+            logger.exception(e)
             return False
         return True
-
 
     @property
     def db_version(self):
         return self.db.execute("select Number from version").scalar()
-
 
     # Session decorator to create and close session automatically
     @classmethod
@@ -177,25 +179,21 @@ class DatabaseHelper(Singleton):
             return result
         return __session
 
-###########################################################
-def id2uuid(id):
-    return "UUID%d" % id
 
-def uuid2id(uuid):
-    return uuid.replace("UUID", "")
-
-###########################################################
 class DBObject(object):
     to_be_exported = ['id', 'name', 'label']
     need_iteration = []
     i18n = []
+
     def getUUID(self):
         if hasattr(self, 'id'):
             return id2uuid(self.id)
         logging.getLogger().warn("try to get %s uuid!"%(type(self)))
         return False
+
     def to_h(self):
         return self.toH()
+
     def toH(self, level = 0):
         ret = {}
         for i in dir(self):
@@ -222,7 +220,6 @@ class DBObject(object):
 
 # new Class to remplace current DBObject
 class DBObj(object):
-
     # Function to convert mapped object to Dict
     # TODO : Do the same for relations [convert relations to subdicts]
     def toDict(self, relations = False):
@@ -236,3 +233,11 @@ class DBObj(object):
         for key, value in d.iteritems():
             if key:
                 setattr(self, key, value)
+
+
+def id2uuid(id):
+    return "UUID%d" % id
+
+
+def uuid2id(uuid):
+    return uuid.replace("UUID", "")
