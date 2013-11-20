@@ -458,3 +458,9 @@ class RpcProxy(RpcProxyI):
 
     def historize_all(self):
         ReportDatabase().historize_all()
+
+    def get_indicator_value_at_time(self, indicator_name, ts_min, ts_max, entities=[]):
+        return ReportDatabase().get_indicator_value_at_time(indicator_name, ts_min, ts_max, entities)
+
+    def get_indicator_current_value(self, indicator_name, entities=[]):
+        return ReportDatabase().get_indicator_current_value(indicator_name, entities)
