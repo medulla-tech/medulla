@@ -1,7 +1,7 @@
 # -*- coding: utf-8; -*-
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# (c) 2007-2012 Mandriva, http://www.mandriva.com
+# (c) 2007-2013 Mandriva, http://www.mandriva.com
 #
 # This file is part of Mandriva Management Console (MMC).
 #
@@ -17,7 +17,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
-
 """
 Declare Report database
 """
@@ -25,11 +24,15 @@ Declare Report database
 import logging
 from time import time
 
-from mmc.database.database_helper import DatabaseHelper
-
 from sqlalchemy import create_engine, MetaData
+from sqlalchemy.orm.exc import NoResultFound
 
+from mmc.database.database_helper import DatabaseHelper
 from mmc.plugins.report.schema import ReportingData, Indicator
+
+
+logger = logging.getLogger()
+
 
 class ReportDatabase(DatabaseHelper):
     """
@@ -43,11 +46,10 @@ class ReportDatabase(DatabaseHelper):
         return DatabaseHelper.db_check(self)
 
     def activate(self, config):
-        self.logger = logging.getLogger()
         if self.is_activated:
             return None
 
-        self.logger.info("Report database is connecting")
+        logger.info("Report database is connecting")
         self.config = config
         self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
         self.metadata = MetaData(self.db)
@@ -56,7 +58,7 @@ class ReportDatabase(DatabaseHelper):
             return False
         # Uncomment this line to connect to mysql and parse tables
         self.is_activated = True
-        self.logger.debug("Report database connected")
+        logger.debug("Report database connected")
         return True
 
     def initMappers(self):
@@ -65,24 +67,29 @@ class ReportDatabase(DatabaseHelper):
         """
         return
 
-
     @DatabaseHelper._session
     def get_indicator_by_name(self, session, name):
-        return session.query(Indicator).filter_by(name = name).one()
-
+        try:
+            return session.query(Indicator).filter_by(name=name).one()
+        except NoResultFound:
+            logger.error("Can't find indicator %s in the DB" % name)
+            return False
 
     @DatabaseHelper._session
     def add_indicator(self, session, indicator_attr):
-        indicator = session.query(Indicator).filter_by(name = indicator_attr['name']).first()
-        if indicator:
-            indicator.fromDict(indicator_attr)
-        else:
-            logging.getLogger().info('Adding new indicator %s' % indicator_attr['name'])
-            indicator = Indicator(**indicator_attr)
-            session.add(indicator)
-        session.commit()
+        try:
+            indicator = session.query(Indicator).filter_by(name = indicator_attr['name']).first()
+            if indicator:
+                indicator.fromDict(indicator_attr)
+            else:
+                logger.info('Adding new indicator %s' % indicator_attr['name'])
+                indicator = Indicator(**indicator_attr)
+                session.add(indicator)
+            session.commit()
+        except:
+            logger.exception("Failed to add indicator with values %s" % indicator_attr)
+            return False
         return True
-
 
     @DatabaseHelper._session
     def historize_indicator(self, session, name):
@@ -93,48 +100,44 @@ class ReportDatabase(DatabaseHelper):
             data = ReportingData()
             # Import value and enity_id from entry
             data.fromDict(entry)
-            #
             data.indicator_id = indicator.id
             data.timestamp = int(time())
             session.add(data)
         session.commit()
 
-
     @DatabaseHelper._session
     def historize_all(self, session):
-        indicators = session.query(Indicator).filter_by(active = 1, keep_history = 1).all()
+        indicators = session.query(Indicator).filter_by(active=1, keep_history=1).all()
         for indicator in indicators:
             # Save the indicator values to Db
             try:
                 values = indicator.getCurrentValue()
-            except Exception, e:
-                logging.getLogger().warning('Unable to get data for indicator : %s' % indicator.name )
-                logging.getLogger().warning(str(e))
+            except:
+                logger.exception('Unable to get data for indicator : %s' % indicator.name)
                 continue
-            #
             for entry in values:
                 data = ReportingData()
                 # Import value and enity_id from entry
                 data.fromDict(entry)
-                #
                 data.indicator_id = indicator.id
                 data.timestamp = int(time())
                 session.add(data)
         session.commit()
 
-    def feed_db(self):
-        logging.getLogger().debug('Successfully feeded Report database')
-        return True
-
     @DatabaseHelper._session
     def get_indicator_value_at_time(self, session, indicator_name, ts_min, ts_max, entities):
-        return self.get_indicator_by_name(indicator_name).getValueAtTime(session, ts_min, ts_max , entities)
+        indicator = self.get_indicator_by_name(indicator_name)
+        if indicator:
+            return indicator.getValueAtTime(session, ts_min, ts_max, entities)
 
     @DatabaseHelper._session
     def get_indicator_datatype(self, session, indicator_name):
-        return self.get_indicator_by_name(indicator_name).data_type
+        indicator = self.get_indicator_by_name(indicator_name)
+        if indicator:
+            return indicator.data_type
 
     @DatabaseHelper._session
-    def get_indicator_current_value(self, session, name, entities = []):
-        indicator = self.get_indicator_by_name(name)
-        return indicator.getCurrentValue(entities)
+    def get_indicator_current_value(self, session, indicator_name, entities=[]):
+        indicator = self.get_indicator_by_name(indicator_name)
+        if indicator:
+            return indicator.getCurrentValue(entities)
