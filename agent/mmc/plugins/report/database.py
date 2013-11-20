@@ -125,7 +125,7 @@ class ReportDatabase(DatabaseHelper):
         session.commit()
 
     @DatabaseHelper._session
-    def get_indicator_value_at_time(self, session, indicator_name, ts_min, ts_max, entities):
+    def get_indicator_value_at_time(self, session, indicator_name, ts_min, ts_max, entities=[]):
         indicator = self.get_indicator_by_name(indicator_name)
         if indicator:
             return indicator.getValueAtTime(session, ts_min, ts_max, entities)
