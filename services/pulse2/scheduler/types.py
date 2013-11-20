@@ -695,6 +695,7 @@ class CircuitBase(object):
         Statistics are collected each awake_time period and 
         updated when the circuit is processed.
         """
+        self.dispatcher.statistics.update(self.cmd_id)
 
         if self.cmd_id in self.dispatcher.statistics.stats :
             stats = self.dispatcher.statistics.stats[self.cmd_id]

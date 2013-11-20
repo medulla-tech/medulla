@@ -53,9 +53,13 @@ class StatisticsProcessing :
         self.config = config
         self.logger = logging.getLogger()
 
-    def update(self):
-        """ Updates the global statistics """
-        self.stats = self._get_stats()
+    def update(self, cmd_id=None):
+        """ Updates the global statistics or just for one command """
+        if cmd_id :
+            self.stats[cmd_id] = self._get_stats(cmd_id)[cmd_id]
+        else:
+            self.stats = self._get_stats()
+
         self.check_and_schedule_for_expired()
     
     def check_and_schedule_for_expired(self):
