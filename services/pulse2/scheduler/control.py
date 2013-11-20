@@ -34,7 +34,7 @@ from pulse2.scheduler.analyses import MscQueryManager
 from pulse2.scheduler.launchers_driving import RemoteCallProxy
 from pulse2.scheduler.queries import get_cohs, is_command_in_valid_time
 from pulse2.scheduler.queries import switch_commands_to_stop
-from pulse2.scheduler.queries import get_ids_to_start
+from pulse2.scheduler.queries import get_ids_to_start, get_commands
 
 
 class MethodProxy(MscContainer):
@@ -78,6 +78,10 @@ class MethodProxy(MscContainer):
         """
         self.logger.info("Prepare %d circuits to STOP ..." % len(cohs))
         switch_commands_to_stop(cohs)
+        
+        for cmd_id in get_commands(cohs):
+            # final statistics calculate
+            self.statistics.watchdog_schedule(cmd_id)
             
  
 

@@ -129,6 +129,20 @@ def get_cohs(cmd_id, scheduler):
     session.close()
     return [q.id for q in cohs.all()]
 
+def get_commands(cohs):
+    database = MscDatabase()
+    session = create_session()
+    query = session.query(CommandsOnHost)
+    query = query.filter(database.commands_on_host.c.id.in_(cohs))
+        
+    session.close()
+
+    cmd_ids = []
+    [cmd_ids.append(q.fk_commands) for q in query.all() if q.fk_commands not in cmd_ids]
+
+    return cmd_ids
+
+
 def get_phases(id):
     database = MscDatabase()
     session = create_session()
