@@ -48,7 +48,7 @@ REVISION = ""
 localedir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "locale")
 
 TRANSLATE_ATTRS = ("title", "value")
-TRANSLATE_ELEMS = ("homepage", "h1", "h2", "h3")
+TRANSLATE_ELEMS = ("homepage", "h1", "h2", "h3", "p", "header", "footer")
 
 def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION
