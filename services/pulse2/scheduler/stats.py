@@ -44,6 +44,9 @@ class StatisticsProcessing :
     stats = {}
     # scheduled final statistics updates
     wdogs = {}
+
+    # previous commands (missing command == expired)
+    previous = []
     
 
     def __init__(self, config):
@@ -53,6 +56,17 @@ class StatisticsProcessing :
     def update(self):
         """ Updates the global statistics """
         self.stats = self._get_stats()
+        self.check_and_schedule_for_expired()
+    
+    def check_and_schedule_for_expired(self):
+        """Looks for expired commands and schedules an update"""
+        for cmd_id in self.previous :
+            if cmd_id not in self.stats :
+                # during previous awake presented, so now expired
+                self.watchdog_schedule(cmd_id)
+
+        self.previous = self.stats.keys()
+ 
 
 
     def _get_stats(self, cmd_id=None):
