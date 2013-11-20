@@ -282,7 +282,7 @@ if ($areCommands) { // display several commands
             $last_phase = FALSE;
             $running = FALSE;
             foreach ($coh['phases'] as $phase) {
-                if ($phase['state'] == 'running')
+                if ($phase['state'] == 'running' && $coh['current_state'] == 'scheduled')
                     $running = TRUE;
                 if ($phase['state'] == 'failed' || $phase['state'] == 'ready' || $phase['state'] == 'running') {
                     $a_step_state[] = sprintf('%s (%s)', $phase_labels[$phase['name']], $state_labels[$phase['state']]);
