@@ -24,6 +24,9 @@
     .report-indicator label {
         display: inline !important;
     }
+    .report-indicator-level-0 {
+        margin-bottom: 20px;
+    }
 </style>
 <script>
     var toggleSubIndicators = function(link) {
@@ -70,6 +73,8 @@
                     level += 1;
                 jQuery(this).show();
             })
+            indicator.parent().nextAll('.report-indicators').show();
+            indicator.parent().prevAll('.report-indicators').show();
         })
     }
 
@@ -114,7 +119,7 @@ class ReportSection extends HtmlContainer {
 
     function begin() {
         echo '<div class="report-section" data-name="' . $this->name . '">
-                <p><strong>' . $this->title . '</strong></p>
+                <h3>' . $this->title . '</h3>
                 <input type="hidden" name="sections[]" value="" />
                 <div style="margin-left: 15px">';
     }
@@ -138,7 +143,8 @@ class ReportTable extends HtmlContainer {
     }
 
     function begin() {
-        echo '<div class="report-table">';
+        echo '<div class="report-table">
+                <p><strong>' . $this->title . '</strong></p>';
     }
 
     function end() {
@@ -172,7 +178,7 @@ class ReportIndicator extends HtmlContainer {
         echo '    />
                    <label for="' . $this->name . '" class="report-indicator-label">' . $this->title . '</label>';
                     if ($this->elements)
-                        echo '&nbsp;&nbsp;(<a href="#" onclick="toggleSubIndicators(this)">' . _T("More detail", "report") . '</a>)';
+                        echo '&nbsp;&nbsp;(<a href="#" onclick="toggleSubIndicators(this); return false;">' . _T("More detail", "report") . '</a>)';
         echo '</div>';
         if ($this->elements) {
             foreach ($this->elements as $element)
