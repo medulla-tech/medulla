@@ -625,6 +625,15 @@ class CircuitBase(object):
         else :
             raise TypeError("All elements must be <Phase> type")
 
+        self.__phases_list = value
+ 
+    def on_last_phase(self):
+        try:
+            last_phase_names = [p.name for p in self.__phases_list[-2:]]
+            return self.running_phase.name in last_phase_names
+        except Exception, e:
+
+            self.logger.error("\033[32mlast phase failed: %s\033[0m" % str(e))
 
     def install_releaser(self, releaser):
         """
@@ -862,7 +871,7 @@ class Circuit (CircuitBase):
         self.logger.error("Phase error: %s" % str(failure))
 
 
-    def phase_step(self): 
+    def phase_step(self, forced_directive=None): 
         """
         Main workflow processing.
 
@@ -874,8 +883,11 @@ class Circuit (CircuitBase):
         @rtype: func
         """
 
-        # state tests before phase processing to resolving next flow
-        res = self.running_phase.apply_initial_rules()
+        if forced_directive :
+            res = forced_directive
+        else :
+            # state tests before phase processing to resolving next flow
+            res = self.running_phase.apply_initial_rules()
 
         # move on the next phase ->
         if res == DIRECTIVE.NEXT :
@@ -915,6 +927,12 @@ class Circuit (CircuitBase):
         elif res == DIRECTIVE.GIVE_UP :
             return False
         elif res == DIRECTIVE.OVER_TIMED :
+
+            if self.on_last_phase() :
+                self.logger.info("Circuit #%s: forced finish" % self.id)
+                return self.phase_step(DIRECTIVE.NEXT)
+
+
             if self.running_phase.coh.attempts_failed > 0 \
                     or any_failed(self.id, self.config.non_fatal_steps) :
                 self.cohq.coh.setStateFailed()
