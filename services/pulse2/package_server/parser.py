@@ -99,16 +99,13 @@ class PackageParserXML:
                 else:
                     cmds[c] = ''
 
-            group = root.getElementsByTagName('group')
-            query = ''
-            boolcnd = ''
-            if len(group) == 1 and group[0].firstChild != None:
-                tmp = group[0].getElementsByTagName('query')
-                if len(tmp) ==1 and tmp[0].firstChild != None:
-                    query = tmp[0].firstChild.wholeText.strip()
-                tmp = group[0].getElementsByTagName('bool')
-                if len(tmp) ==1 and tmp[0].firstChild != None:
-                    boolcnd = tmp[0].firstChild.wholeText.strip()
+            query = root.getElementsByTagName('query')
+            queries = {'Qvendor': '*', 'Qsoftware': '*', 'Qversion': '*', 'boolcnd': '*'}
+            if query.length >= 1 and query[0].firstChild:
+                for k in queries:
+                    tmp = query[0].getElementsByTagName(k)
+                    if tmp.length >= 1 and tmp[0].firstChild:
+                        queries[k] = tmp[0].firstChild.wholeText.strip()
 
             p = Package()
             p.init(
@@ -123,8 +120,10 @@ class PackageParserXML:
                 cmds['postCommandSuccess'],
                 cmds['postCommandFailure'],
                 reboot,
-                query,
-                boolcnd
+                queries['Qvendor'],
+                queries['Qsoftware'],
+                queries['Qversion'],
+                queries['boolcnd']
             )
         except Exception, e:
             logging.getLogger().error("parse_str failed")
@@ -211,15 +210,21 @@ class PackageParserXML:
 
         docr.appendChild(commands)
 
-        group = doc.createElement('group')
         query = doc.createElement('query')
-        query.appendChild(doc.createTextNode(package.query))
-        boolcnd = doc.createElement('bool')
+        Qvendor = doc.createElement('Qvendor')
+        Qvendor.appendChild(doc.createTextNode(package.Qvendor))
+        query.appendChild(Qvendor)
+        Qsoftware = doc.createElement('Qsoftware')
+        Qsoftware.appendChild(doc.createTextNode(package.Qsoftware))
+        query.appendChild(Qsoftware)
+        Qversion = doc.createElement('Qversion')
+        Qversion.appendChild(doc.createTextNode(package.Qversion))
+        query.appendChild(Qversion)
+        boolcnd = doc.createElement('boolcnd')
         boolcnd.appendChild(doc.createTextNode(package.boolcnd))
-        group.appendChild(query)
-        group.appendChild(boolcnd)
+        query.appendChild(boolcnd)
         
-        docr.appendChild(group)
+        docr.appendChild(query)
 
         return doc.toprettyxml(encoding = 'utf-8')
 
@@ -252,9 +257,11 @@ class PackageParserXML:
     <!ATTLIST file fid ID #IMPLIED>
     <!ATTLIST file md5sum CDATA "">
     <!ATTLIST file size CDATA "">
-    <!ELEMENT group (query, bool)>
-    <!ELEMENT query (#PCDATA)>
-    <!ELEMENT bool (#PCDATA)>
+    <!ELEMENT query (Qvendor, Qsoftware, Qversion, boolnd)>
+    <!ELEMENT Qvendor (#PCDATA)>
+    <!ELEMENT Qsoftware (#PCDATA)>
+    <!ELEMENT Qversion (#PCDATA)>
+    <!ELEMENT boolcnd (#PCDATA)>
 """
 
 

@@ -55,6 +55,8 @@ def queryPossibilities():
     ret['Installed software'] = ['list', getAllSoftwares, 3]
     ret['Installed software (specific version)'] = ['double', getAllSoftwaresAndVersions, 3, 2]
     ret['Entity'] = ['list', getAllEntities]
+    ret['Vendors'] = ['list', getAllSoftwareVendors]
+    ret ['Software versions'] = ['list', getAllSoftwareVersions]
 
     logging.getLogger().info('queryPossibilities %s'%(str(ret)))
     return ret
@@ -210,3 +212,11 @@ def getAllGroups(ctx, value = ''):
 
 def getAllNetworks(ctx, value = ''):
     return unique([x.name for x in Glpi().getAllNetworks(ctx, value)])
+
+def getAllSoftwareVendors(ctx, value = ''):
+    res = Glpi().getAllSoftwareVendors(ctx, value)
+    return unique([x.name for x in res])
+
+def getAllSoftwareVersions(ctx, value = ''):
+    res = Glpi().getAllSoftwareVersions(ctx, value)
+    return unique([x.name for x in res])

@@ -2712,6 +2712,29 @@ class Glpi084(DyngroupDatabaseHelper):
         session.close()
         return ret
 
+    def getAllSoftwareVendors(self, ctx, filt=''):
+        """ @return: all software vendors defined in the GPLI database"""
+        session = create_session()
+        query = session.query(Manufacturers).select_from(self.manufacturers.join(self.software))
+        query = self.__filter_on(query.filter(self.software.c.is_deleted == 0).filter(self.software.c.is_template == 0))
+        query = self.__filter_on_entity(query, ctx)
+        if filt != '':
+            query = query.filter(self.manufacturers.c.name.like('%' + filt + '%'))
+        ret = query.group_by(self.manufacturers.c.name).all()
+        session.close()
+        return ret
+
+    def getAllSoftwareVersions(self, ctx, filt=''):
+        """ @return: all software versions defined in the GPLI database"""
+        session = create_session()
+        query = session.query(SoftwareVersion).select_from(self.softwareversions.join(self.software))
+        query = self.__filter_on_entity(query, ctx)
+        if filt != '':
+            query = query.filter(self.softwareversions.c.name.like('%' + filt + '%'))
+        ret = query.group_by(self.softwareversions.c.name).all()
+        session.close()
+        return ret
+
     def getAllStates(self, ctx, filt = ''):
         """ @return: all machine models defined in the GLPI database """
         session = create_session()

@@ -2541,6 +2541,16 @@ class Glpi07(DyngroupDatabaseHelper):
         session.close()
         return ret
 
+    def getAllSoftwareVendors(self, ctx, filt=''):
+        """ @return: all software vendors defined in the GPLI database"""
+        logging.debug('datbase_07.getAllSoftwareVendors')
+        pass
+
+    def getAllSoftwareVersions(self, ctx, filt=''):
+        """ @return: all software versions defined in the GPLI database"""
+        logging.debug('datbase_07.getAllSoftwareVendors')
+        pass
+
     def getAllStates(self, ctx, filt = ''):
         """ @return: all machine states defined in the GLPI database """
         session = create_session()

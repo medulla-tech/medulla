@@ -29,6 +29,18 @@ require_once("modules/pkgs/includes/xmlrpc.php");
 require_once("modules/pkgs/includes/functions.php");
 require_once("modules/pkgs/includes/html.inc.php");
 
+include ("modules/pkgs/includes/autocomplete.php");
+function addQuery($Form, $p, $pack, $field = 'Installed+software', $limit = 3, $extracriterion = '') {
+    $module = clean ( quickGet ( 'req' ) );
+    $criterion = clean ( quickGet ( 'add_param' ) );
+    $auto = new Autocomplete ( $p [0], 'main.php?module=pkgs&submod=pkgs&action=ajaxAutocompleteSearch', "glpi", $field, $value = $pack [$p [0]]/*quickGet ( 'value' )*/, $limit, $extracriterion, $subedition );
+    $Form->add ( new TrFormElement ( $p [1], $auto, array (
+            "value" => $pack [$p [0]]
+    ) ) );
+    //     $Form->pop();
+}
+
+
 $p = new PageGenerator(_T("Edit package", "pkgs"));
 $p->setSideMenu($sidemenu);
 $p->display();
@@ -48,7 +60,7 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
     if ($_GET["action"] == "add") {
         $need_assign = True;
     }
-    foreach (array('id', 'label', 'version', 'description', 'query', 'boolcnd') as $post) {
+    foreach (array('id', 'label', 'version', 'description', 'Qvendor', 'Qsoftware', 'Qversion', 'boolcnd') as $post) {
         $package[$post] = $_POST[$post];
     }
     foreach (array('reboot') as $post) {
@@ -202,11 +214,6 @@ $options = array(
     array('reboot', _T('Need a reboot ?', 'pkgs'))
 );
 
-$groups = array(
-    array('query', _T('Query', 'pkgs')),
-    array('boolcnd', _T('Bool', 'pkgs')),
-);
- 
 foreach ($fields as $p) {
     $f->add(
             new TrFormElement($p[1], new InputTpl($p[0])), array_merge(array("value" => $package[$p[0]]), $p[2])
@@ -217,12 +224,6 @@ foreach ($options as $p) {
     $op = ($package[$p[0]] == 1 || $package[$p[0]] == '1' || $package[$p[0]] === 'enable');
     $f->add(
             new TrFormElement($p[1], new CheckboxTpl($p[0])), array("value" => ($op ? 'checked' : ''))
-    );
-}
-
-foreach ($groups as $p) {
-    $f->add(
-        new TrFormElement($p[1], new InputTpl($p[0])), array("value" => $package[$p[0]])
     );
 }
 
@@ -273,6 +274,24 @@ $n->setParamInfo($params); // Setting url params
 $n->addActionItem(new ActionConfirmItem(_T("Delete file", 'pkgs'), "edit", "delete", "filename", "pkgs", "pkgs", _T('Are you sure you want to delete this file?', 'pkgs')));
 
 /* =================   END FILE LIST   ===================== */
+
+/* =================    BEGIN QUERY    ===================== */
+$Fquery = new DivForModule(_T("Query","pkgs"));
+$Tquery = new Table();
+
+addQuery ( $Tquery, array ('Qvendor', _T ( 'Vendor', 'pkgs' )), $package, 'Vendors');
+addQuery ( $Tquery, array ('Qsoftware', _T ( 'Software', 'pkgs' )), $package, 'Installed+software', 3, Qvendor);
+addQuery ( $Tquery, array ('Qversion', _T ( 'Version', 'pkgs' )), $package , 'Software versions', 1, Qsoftware );
+$Fquery->push($Tquery);
+
+$f->push ( $Fquery );
+$Bool = new TrFormElement ( _T ( 'Bool', 'pkgs' ), new InputTpl ( 'boolcnd' ));
+$Bool->setStyle ( "display:none" );
+
+$f->add ( $Bool, array (
+        "value" => $package ['boolcnd']) );
+/* =================     END QUERY    ===================== */
+
 
 // =========================================================================
 // UPLOAD FORM

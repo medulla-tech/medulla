@@ -118,8 +118,14 @@ class PackageApiGet(MyXmlrpc):
     def xmlrpc_getPackageHasToReboot(self, pid):
         return Common().package(pid, self.mp).reboot
 
-    def xmlrpc_getPackageQuery(self, pid):
-        return Common().package(pid, self.mp).query
+    def xmlrpc_getPackageQvendor(self, pid):
+        return Common().package(pid, self.mp).Qvendor
+
+    def xmlrpc_getPackageQsoftware(self, pid):
+        return Common().package(pid, self.mp).Qsoftware
+
+    def xmlrpc_getPackageQversion(self, pid):
+        return Common().package(pid, self.mp).Qversion
 
     def xmlrpc_getPackageBoolcnd(self, pid):
         return Common().package(pid, self.mp).boolcnd
