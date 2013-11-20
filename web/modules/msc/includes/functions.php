@@ -77,6 +77,7 @@ function return_icon($state) {
             return "success.png";
             break;
         case 'failed':
+        case 'over_timed':
         case "FAILED":
             return "failed.png";
             break;

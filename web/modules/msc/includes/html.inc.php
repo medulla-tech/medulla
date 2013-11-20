@@ -1,5 +1,4 @@
 <?php
-
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com
@@ -85,34 +84,58 @@ class raphaelPie extends HtmlElement {
 
     public $id;
     public $title = 'Example title';
-    public $data = array();
-    public $labels = array();
-    public $colors = array();
-    public $links = array();
     public $legendpos = 'east';
+    public $data_array = array();
 
     function __construct($id) {
         $this->id = $id;
         //$this->colors = array("#000", "#73d216", "#ef2929", "#003399");
     }
 
+    function addData($value, $label, $color, $href = '#') {
+        $this->data_array[] = array(
+            'value' => $value,
+            'label' => $label,
+            'color' => $color,
+            'href' => $href
+        );
+        return $this;
+    }
+
     function display($arrParam = array()) {
 
-
-        $_data = array_map('intval', $this->data);
-        $_labels = $this->labels;
-        $_colors = $this->colors;
-        $_links = $this->links;
-
-        $count = count($_data);
-        for ($i = 0; $i < $count; $i++) {
-            if ($_data[$i] <= 0) {
-                unset($_data[$i]);
-                unset($_labels[$i]);
-                unset($_colors[$i]);
-                unset($_links[$i]);
-            }
+        function cmp_value($a, $b) {
+            if ($a['value'] == $b['value'])
+                return 0;
+            return ($a['value'] > $b['value']) ? -1 : 1;
         }
+
+        function extract_col(&$item, $key, $col) {
+            $item = $item[$col];
+        }
+
+        function extract_value($item) {
+            return $item['value'];
+        }
+
+        // Removing null values
+        $this->data_array = array_filter($this->data_array, 'extract_value');
+        // Sorting data_array
+        usort($this->data_array, 'cmp_value');
+
+        $_data = $this->data_array;
+        $_labels = $this->data_array;
+        $_colors = $this->data_array;
+        $_links = $this->data_array;
+
+        // Extacting cols
+        array_walk($_data, 'extract_col', 'value');
+        array_walk($_labels, 'extract_col', 'label');
+        array_walk($_colors, 'extract_col', 'color');
+        array_walk($_links, 'extract_col', 'href');
+
+        // Ensure data are ints
+        $_data = array_map('intval', $_data);
 
         $_data = json_encode(array_values($_data));
         $_labels = json_encode(array_values($_labels));
@@ -139,7 +162,6 @@ class raphaelPie extends HtmlElement {
         /*r.text(5, y - radius - 10, title)
          .attr({ font: "12px sans-serif" })
          .attr({ "text-anchor": "start" });*/
-        data = getPercentageData(data);
         pie = r.piechart(x, y, radius, data,
                    {
                        colors: colors,
@@ -179,6 +201,182 @@ class raphaelPie extends HtmlElement {
         }*/
         </script>
 SPACE;
+    }
+
+}
+
+class GroupDeployAjaxFilter extends AjaxFilter {
+
+    function AjaxFilterGlpi($url, $divid = "container", $params = array(), $formid = "") {
+        $this->AjaxFilter($url, $divid, $params, $formid);
+    }
+
+    function display() {
+        global $conf;
+        $root = $conf["global"]["root"];
+        $maxperpage = $conf["global"]["maxperpage"];
+        ?>
+        <form name="Form<?php echo $this->formid ?>" id="Form<?php echo $this->formid ?>" action="#" onsubmit="return fals
+                        e;">
+
+            <div id="loader<?php echo $this->formid ?>">
+                <img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/>
+            </div>
+            <div id="searchSpan<?php echo $this->formid ?>" class="searchbox" style="float: right;">
+
+
+                <?php // ============ EDIT THIS TO ADD SEARCH FIELDS ============    ?>
+                <!-- Hide Windows Updates checkbox -->
+                <input checked style="top: 2px; left: 5px; position: relative; float: left"
+                       type="checkbox"
+                       class="searchfieldreal"
+                       name="hide_win_updates"
+                       id="hide_win_updates<?php echo $this->formid ?>" onchange="pushSearch<?php echo $this->formid ?>();
+                                       return fals
+                                       e;" />
+                <span style="padding: 7px 15px; position: relative; float: left"><?php echo _T('Hide Windows Updates', "glpi") ?></span>
+                <?php // ========================================================     ?>
+
+                <?php if ($_GET['part'] == 'History') { ?>
+                    <select style="position: relative; float: left"
+                            class="searchfieldreal"
+                            name="history_delta"
+                            id="history_delta<?php echo $this->formid ?>" onchange="pushSearch<?php echo $this->formid ?>();
+                                                return fals
+                                                e;" >
+                        <option value="today"><?php echo _T('Today', 'glpi') ?></option>
+                        <option selected="selected" value="week"><?php echo _T('Last 7 days', 'glpi') ?></option>
+                        <option value="month"><?php echo _T('Last 30 days', 'glpi') ?></option>
+                        <option value="older"><?php echo _T('All', 'glpi') ?></option>
+                    </select>
+                <?php } ?>
+
+                <img src="graph/search.gif" style="position:relative; top: 5px; float: left;" alt="search" />
+                <span class="searchfield">
+                    <input type="text" class="searchfieldreal" name="param" id="param<?php echo $this->formid ?>" onkeyup="pushSearch<?php echo $this->formid ?>();
+                                    return fals
+                                    e;" />
+                    <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 4px;"
+                         onclick="document.getElementById('param<?php echo $this->formid ?>').value = '';
+                                         pushSearch<?php echo $this->formid ?>();
+                                         return fals
+                                         e;" />
+                </span>
+            </div>
+            <br /><br /><br />
+
+            <script type="text/javascript">
+        <?php if (!in_array($_GET['part'], array('Softwares', 'History'))) echo "jQuery('#Form').hide();" ?>
+        <?php
+        if (!$this->formid) {
+            ?>
+                    jQuery('#param<?php echo $this->formid ?>').focus();
+            <?php
+        }
+        if (isset($this->storedfilter)) {
+            ?>
+                    document.Form<?php echo $this->formid ?>.param.value = "<?php echo $this->storedfilter ?>";
+            <?php
+        }
+        ?>
+                var refreshtimer<?php echo $this->formid ?> = null;
+                var refreshparamtimer<?php echo $this->formid ?> = null;
+                var refreshdelay<?php echo $this->formid ?> = <?php echo $this->refresh ?>;
+                var maxperpage = <?php echo $maxperpage ?>;
+
+                // Get the state of the hide_win_updates checkbox
+                var hide_win_updates = "";
+                if (document.Form<?php echo $this->formid ?>.hide_win_updates != undefined) {
+                    hide_win_updates = document.Form<?php echo $this->formid ?>.hide_win_updates.checked;
+                }
+                // Get the state of the history_delta dropdown
+                var history_delta = "";
+                if (document.Form<?php echo $this->formid ?>.history_delta != undefined) {
+                    history_delta = document.Form<?php echo $this->formid ?>.history_delta.value;
+                }
+
+        <?php
+        if (isset($this->storedmax)) {
+            ?>
+                    maxperpage = <?php echo $this->storedmax ?>;
+            <?php
+        }
+        ?>
+                if (document.getElementById('maxperpage') != undefined)
+                    maxperpage = document.getElementById('maxperpage').value;
+
+                /**
+                 * Clear the timers set vith setTimeout
+                 */
+                clearTimers<?php echo $this->formid ?> = function() {
+                    if (refreshtimer<?php echo $this->formid ?> != null) {
+                        clearTimeout(refreshtimer<?php echo $this->formid ?>);
+                    }
+                    if (refreshparamtimer<?php echo $this->formid ?> != null) {
+                        clearTimeout(refreshparamtimer<?php echo $this->formid ?>);
+                    }
+                }
+
+                /**
+                 * Update div
+                 */
+        <?php
+        $url = $this->url . "filter='+encodeURIComponent(document.Form" . $this->formid . ".param.value)+'&maxperpage='+maxperpage+'&hide_win_updates='+hide_win_updates+'&history_delta='+history_delta+'" . $this->params;
+        if (isset($this->storedstart) && isset($this->storedend)) {
+            $url .= "&start=" . $this->storedstart . "&end=" . $this->storedend;
+        }
+        ?>
+
+                updateSearch<?php echo $this->formid ?> = function() {
+                    jQuery('#<?php echo $this->divid; ?>').load('<?php echo $url ?>');
+
+        <?php
+        if ($this->refresh) {
+            ?>
+                        refreshtimer<?php echo $this->formid ?> = setTimeout("updateSearch<?php echo $this->formid ?>()", refreshdelay<?php echo $this->formid ?>)
+            <?php
+        }
+        ?>
+                }
+
+                /**
+                 * Update div when clicking previous / next
+                 */
+                updateSearchParam<?php echo $this->formid ?> = function(filter, start, end, max) {
+                    clearTimers<?php echo $this->formid ?>();
+                    if (document.getElementById('maxperpage') != undefined)
+                        maxperpage = document.getElementById('maxperpage').value;
+
+                    jQuery('#<?php echo $this->divid; ?>').load('<?php echo $this->url; ?>filter=' + filter + '&start=' + start + '&end=' + end + '&maxperpage=' + maxperpage + '&hide_win_updates=' + hide_win_updates + '&history_delta=' + history_delta + '<?php echo $this->params ?>');
+        <?php
+        if ($this->refresh) {
+            ?>
+                        refreshparamtimer<?php echo $this->formid ?> = setTimeout("updateSearchParam<?php echo $this->formid ?>('" + filter + "'," + start + "," + end + "," + maxperpage + ")", refreshdelay<?php echo $this->formid ?>);
+            <?php
+        }
+        ?>
+                }
+
+                /**
+                 * wait 500ms and update search
+                 */
+                pushSearch<?php echo $this->formid ?> = function() {
+                    clearTimers<?php echo $this->formid ?>();
+                    refreshtimer<?php echo $this->formid ?> = setTimeout("updateSearch<?php echo $this->formid ?>()", 500);
+                    // Refresh the state of the hide_win_updates checkbox
+                    if (document.Form<?php echo $this->formid ?>.hide_win_updates != undefined) {
+                        hide_win_updates = document.Form<?php echo $this->formid ?>.hide_win_updates.checked;
+                    }
+                    // Refresh the state of the history_delta dropdown
+                    if (document.Form<?php echo $this->formid ?>.history_delta != undefined) {
+                        history_delta = document.Form<?php echo $this->formid ?>.history_delta.value;
+                    }
+                }
+
+                pushSearch<?php echo $this->formid ?>();</script>
+
+        </form>
+        <?php
     }
 
 }

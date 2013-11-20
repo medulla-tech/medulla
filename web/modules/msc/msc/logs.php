@@ -21,6 +21,7 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+require_once('modules/msc/includes/html.inc.php');
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 require_once('modules/msc/includes/command_history.php');
 require_once('modules/msc/includes/functions.php');
@@ -136,6 +137,7 @@ if (strlen($_GET['uuid'])) {
         $ch = new CommandHistory($coh_id);
         $ch->display();
     } elseif (strlen($_GET['cmd_id'])) { # Display a specific command for a specific group
+        // =========+> HERE DEPLOY ON GROUP
         $params = array('tab' => $_GET['tab'], 'gid' => $_GET['gid']);
         $bdlink = '';
         if (strlen($_GET['bundle_id'])) {
@@ -160,7 +162,11 @@ if (strlen($_GET['uuid'])) {
                 "cmd_id" => $_GET['cmd_id'],
                 "tab" => "grouptablogs",
             );
-            $ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), "container", "commands", $params);
+
+            //$ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), "container", "commands", $params);
+            $ajax = new GroupDeployAjaxFilter(urlStrRedirect("base/computers/ajaxLogsFilter"), "container", $params);
+            // TODO: Add state filter
+
             $ajax->display();
             print "<br/><br/><br/>";
             $ajax->displayDivToUpdate();
