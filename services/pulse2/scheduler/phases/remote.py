@@ -213,7 +213,7 @@ class WOLPhase(Phase):
             self.logger.info("Circuit #%s: wol done" % self.coh.id)
             return self.next()
 
-        if not self.target.hasEnoughInfoToWOL(): 
+        if not self.target.hasEnoughInfoToWOL() or not self.host: 
             # not enough information to perform WOL: ignoring phase but writting this in DB
             self.logger.warn("Circuit #%s: wol couldn't be performed; not enough information in target table" % self.coh.getId())
             self.update_history_failed(PULSE2_TARGET_NOTENOUGHINFO_ERROR, 
