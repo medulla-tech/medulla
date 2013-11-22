@@ -144,15 +144,13 @@ else if (isset($_POST['generate_report'])) {
                     $titles = $content['data']['titles'];
                     $values = $content['data']['values'];
                     $dates = $content['data']['dates'];
-                    $table = new OptimizedListInfos($titles, "");
+                    $table = new ListInfos($titles, "");
                     for ($i = 0; $i < count($dates); $i++) {
                         $table->addExtraInfo($values[$i], $dates[$i]);
                     }
-
-                    if ($table) {
-                        $table->setNavBar(new AjaxNavBar($itemCount, $filter));
-                    }
-                } elseif (in_array('headers', array_keys($content['data']))) {
+                    $table->end = count($titles);
+                }
+                else if (in_array('headers', array_keys($content['data']))) {
                     // key_value table
                     $headers = $content['data']['headers'];
                     $values = $content['data']['values'];
@@ -169,12 +167,16 @@ else if (isset($_POST['generate_report'])) {
                         }
                     }
                 }
-            } elseif ($content['type'] == 'chart') {
+            }
+            else if ($content['type'] == 'chart') {
                 $filename = $content['svg_path'];
                 $handle = fopen($filename, 'r');
                 $svg_content = fread($handle, filesize($filename));
                 fclose($handle);
-                $svg = new SpanElement(sprintf('<div align="center">%s<br /><a align="center" class="btn" href="%s">%s</a></div>', $svg_content, urlStrRedirect("report/report/get_file", array('path' => $content['png_path'])), _T('Download image', 'report')));
+                $svg = new SpanElement(sprintf('<div align="center">%s<br /><a align="center" class="btn" href="%s">%s</a></div>',
+                                       $svg_content,
+                                       urlStrRedirect("report/report/get_file", array('path' => $content['png_path'])),
+                                       _T('Download image', 'report')));
             }
             if ($table) {
                 $report_objects[] = $table;
@@ -189,18 +191,22 @@ else if (isset($_POST['generate_report'])) {
         // report_objects and report_types are collected
         // Now if there is any chart, put it right of table
         for ($i = 0; $i < count($report_types); $i++) {
-            $f->push(new Div());
-            if ($report_types[$i] == 'table' && $report_types[$i + 1] == 'svg') {
-                $f->add((new multicol())
-                                ->add($report_objects[$i], '60%', '0 2% 0 0')
-                                ->add($report_objects[$i + 1], '40%')
-                );
-                $i++;
-            } else {
-                $f->add($report_objects[$i]);
+            if (count($report_objects[$i]->arrInfo) > 0) {
+                $f->push(new Div());
+                if ($report_types[$i] == 'table' && $report_types[$i + 1] == 'svg') {
+                    $f->add((new multicol())
+                                    ->add($report_objects[$i], '60%', '0 2% 0 0')
+                                    ->add($report_objects[$i + 1], '40%')
+                                );
+                    $i++;
+                }
+                else {
+                    $f->add($report_objects[$i]);
+                }
+                if ($report_types[$i] != 'title')
+                    $f->add(new SpanElement('<br /><hr style="border-top: 1px solid #DDDDDD"/><br />'));
+                $f->pop();
             }
-            if ($report_types[$i] != 'title') $f->add(new SpanElement('<br /><hr style="border-top: 1px solid #DDDDDD"/><br />'));
-            $f->pop();
         }
     }
 
