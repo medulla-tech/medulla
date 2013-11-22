@@ -71,8 +71,8 @@ class exportedReport(object):
                 count = False
                 for result in results:
                     if os_result['entity_id'] == result['entity_id']:
-                         result['value'] = oper(result['value'], os_result['value'])
-                         count = True
+                        result['value'] = oper(result['value'], os_result['value'])
+                        count = True
                 if not count and oper == operator.add:
                     results.append(os_result)
         return results
@@ -168,8 +168,8 @@ class exportedReport(object):
                 count = False
                 for result in results:
                     if soft_result['entity_id'] == result['entity_id']:
-                         result['value'] = oper(result['value'], soft_result['value'])
-                         count = True
+                        result['value'] = oper(result['value'], soft_result['value'])
+                        count = True
                 if not count and oper == operator.add:
                     results.append(soft_result)
         return results
