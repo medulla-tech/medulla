@@ -38,7 +38,7 @@ $submod->setDefaultPage("report/report/index");
 $submod->setImg('modules/report/graph/navbar/report');
 $submod->setPriority(990);
 
-$page = new Page("index", _T("Report", "report"));
+$page = new Page("index", _T("Report creation", "report"));
 $submod->addPage($page);
 
 $page = new Page("get_file", _T("Download a file from report module (report or PNG)", "report"));

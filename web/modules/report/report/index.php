@@ -36,7 +36,7 @@ require_once("modules/pulse2/includes/utilities.php");
 $MMCApp =& MMCApp::getInstance();
 $report = get_report_sections($_SESSION['lang']);
 
-$t = new TitleElement(_T("Reporting Management", 'report'));
+$t = new TitleElement(_T("Report creation", 'report'));
 $t->display();
 
 $f = new ValidatingForm();
@@ -70,10 +70,12 @@ if (!array_intersect_key($_POST, array('generate_report' => '', 'get_xls' => '',
     /* Modules indicators */
     foreach($report as $module_name => $sections) {
         $moduleObj = $MMCApp->getModule($module_name);
-        $f->add(
-            new TrFormElement($moduleObj->getDescription(),
-                              new ReportModule($module_name, $sections)),
-            array());
+        if ($moduleObj) {
+            $f->add(
+                new TrFormElement($moduleObj->getDescription(),
+                                  new ReportModule($module_name, $sections)),
+                array());
+        }
     }
 
     $f->pop();
