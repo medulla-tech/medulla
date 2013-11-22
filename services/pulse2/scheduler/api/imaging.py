@@ -36,7 +36,8 @@ class ImagingAPI(RPCClient):
 
         # Function to call
         fnc = "imaging.synchroComputer"
-        args = [uuid, wol]
+        # imaging.synchroComputer args are (uuid, mac, wol)
+        args = [uuid, False, wol]
 
         d = self.rpc_execute(fnc, *args)
         d.addCallback(_callback)
