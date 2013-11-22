@@ -100,6 +100,7 @@ class exportedReport(object):
 
     def getComputerCountByType(self, entities, type):
         result = []
+        type = type.replace("*", "%")
         for entity in self._getEntitiesIds(entities):
             self.ctx.locationsid = [entity]
             type_count = self.db.getMachineByType(self.ctx, type, count=1)
@@ -108,6 +109,7 @@ class exportedReport(object):
 
     def getComputerCountByState(self, entities, state):
         result = []
+        state = state.replace("*", "%")
         for entity in self._getEntitiesIds(entities):
             self.ctx.locationsid = [entity]
             state_count = self.db.getMachineByState(self.ctx, state, count=1)

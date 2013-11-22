@@ -2760,7 +2760,10 @@ class Glpi084(DyngroupDatabaseHelper):
         query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
-        query = query.filter(self.glpi_computertypes.c.name == filt)
+        if '%' in filt:
+            query = query.filter(self.glpi_computertypes.c.name.like(filt))
+        else:
+            query = query.filter(self.glpi_computertypes.c.name == filt)
         ret = query.all()
         session.close()
         return ret
@@ -2799,7 +2802,10 @@ class Glpi084(DyngroupDatabaseHelper):
         query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
-        query = query.filter(self.state.c.name == filt)
+        if '%' in filt:
+            query = query.filter(self.state.c.name.like(filt))
+        else:
+            query = query.filter(self.state.c.name == filt)
         if int(count) == 1:
             ret = int(query.scalar())
         else:
