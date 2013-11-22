@@ -163,10 +163,7 @@ if (strlen($_GET['uuid'])) {
                 "tab" => "grouptablogs",
             );
 
-            //$ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), "container", "commands", $params);
-            $ajax = new GroupDeployAjaxFilter(urlStrRedirect("base/computers/ajaxLogsFilter"), "container", $params);
-            // TODO: Add state filter
-
+            $ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), "container", "commands", $params);
             $ajax->display();
             print "<br/><br/><br/>";
             $ajax->displayDivToUpdate();

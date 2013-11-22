@@ -338,8 +338,8 @@ class RenderedImgInput extends HtmlElement {
 
 class AjaxFilterCommands extends AjaxFilter {
 
-    function AjaxFilterCommands($url, $divid = "container", $paramname = 'commands', $params = array()) {
-        $this->AjaxFilter($url, $divid, $params);
+    function AjaxFilterCommands($url, $divid = "container", $paramname = 'commands', $params = array(), $formid = 'Form') {
+        $this->AjaxFilter($url, $divid, $params, $formid);
         $this->commands = new SelectItem($paramname, 'pushSearch', 'searchfieldreal noborder');
         $this->paramname = $paramname;
         $elts = array("mine" => _T("My commands", "msc"), "all" => _T("All users commands", "msc"));
@@ -377,84 +377,114 @@ class AjaxFilterCommands extends AjaxFilter {
 
                 <span class="searchfield">
                     <?php
+                    /* if (isset($_GET['cmd_id'], $_GET['gid']))
+                      print '<div style="display:none">'; */
                     $this->commands->display();
+                    /* if (isset($_GET['cmd_id'], $_GET['gid']))
+                      print '</div>'; */
                     ?>
                 </span>&nbsp;
 
                 <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch();
-                return false;" />
+                                return false;" />
                     <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
                          onclick="document.getElementById('param').value = '';
-                pushSearch();
-                return false;" />
+                                         pushSearch();
+                                         return false;" />
                 </span>
+
+
+                <?php if (isset($_GET['cmd_id'], $_GET['gid'])) { ?>
+                    <!-- <form id="cbx_form"> -->
+                    <span class="searchfield">
+                        <br/>
+                        <br/>
+                        <label style="padding: 7px 10px; position: relative; float: left"><b><?php print(_T('State filter', 'msc')); ?>:</b></label>
+                        <input type="checkbox" name="cbx_state[]" id="cbx_done" value="done" style="top: 2px; left: 5px; position: relative; float: left" />
+                        <label for="cbx_done" style="padding: 7px 10px; position: relative; float: left"><?php print(_T('Done', 'msc')); ?></label>
+                        <input type="checkbox" name="cbx_state[]" id="cbx_failed" value="failed" style="top: 2px; left: 5px; position: relative; float: left" />
+                        <label for="cbx_failed" style="padding: 7px 10px; position: relative; float: left"><?php print(_T('Failed', 'msc')); ?></label>
+                        <input type="checkbox" name="cbx_state[]" id="cbx_running" value="scheduled" style="top: 2px; left: 5px; position: relative; float: left" />
+                        <label for="cbx_running" style="padding: 7px 10px; position: relative; float: left"><?php print(_T('In progress', 'msc')); ?></label>
+                        <input type="checkbox" name="cbx_state[]" id="cbx_overtimed" value="over_timed" style="top: 2px; left: 5px; position: relative; float: left" />
+                        <label for="cbx_overtimed" style="padding: 7px 10px; position: relative; float: left"><?php print(_T('Overtime', 'msc')); ?></label>
+                        <input type="checkbox" name="cbx_state[]" id="cbx_stopped" value="stopped" style="top: 2px; left: 5px; position: relative; float: left" />
+                        <label for="cbx_stopped" style="padding: 7px 10px; position: relative; float: left"><?php print(_T('Stopped', 'msc')); ?></label>
+                    </span>
+                    <!-- </form> -->
+                <?php } ?>
+
             </div>
 
             <script type="text/javascript">
-            jQuery('#param').focus();
-            var refreshtimer = null;
-            var refreshparamtimer = null;
-            var refreshdelay = <?php echo $this->refresh; ?>;
+                var $ = jQuery;
+                $(function() {
+                    $('#Form input[type=checkbox]').click(pushSearch);
+                });
+                jQuery('#param').focus();
+                var refreshtimer = null;
+                var refreshparamtimer = null;
+                var refreshdelay = <?php echo $this->refresh; ?>;
 
         <?php
         if (isset($this->storedfilter)) {
             ?>
-                document.Form<?php echo $this->formid ?>.param.value = "<?php echo $this->storedfilter ?>";
+                    document.Form<?php echo $this->formid ?>.param.value = "<?php echo $this->storedfilter ?>";
             <?php
         }
         ?>
-            /**
-             * Clear the timers set vith setTimeout
-             */
-            function clearTimers() {
-                if (refreshtimer != null) {
-                    clearTimeout(refreshtimer);
+                /**
+                 * Clear the timers set vith setTimeout
+                 */
+                function clearTimers() {
+                    if (refreshtimer != null) {
+                        clearTimeout(refreshtimer);
+                    }
+                    if (refreshparamtimer != null) {
+                        clearTimeout(refreshparamtimer);
+                    }
                 }
-                if (refreshparamtimer != null) {
-                    clearTimeout(refreshparamtimer);
-                }
-            }
 
-            /**
-             * Update div
-             */
-            function updateSearch() {
-                jQuery('#<?php echo $this->divid; ?>').load('<?php echo $this->url; ?>filter=' + encodeURIComponent(document.Form.param.value) + '<?php echo $this->params ?>&<?php echo $this->paramname ?>=' + document.Form.<?php echo $this->paramname ?>.value);
+                /**
+                 * Update div
+                 */
+                function updateSearch() {
+                    jQuery('#<?php echo $this->divid; ?>').load('<?php echo $this->url; ?>filter=' + encodeURIComponent(document.Form.param.value) + '<?php echo $this->params ?>&<?php echo $this->paramname ?>=' + document.Form.<?php echo $this->paramname ?>.value + '&' + jQuery('#<?php echo $this->formid; ?>').serialize());
 
         <?php
         if ($this->refresh) {
             ?>
-                    refreshtimer = setTimeout("updateSearch()", refreshdelay)
+                        refreshtimer = setTimeout("updateSearch()", refreshdelay)
             <?php
         }
         ?>
-            }
+                }
 
-            /**
-             * Update div when clicking previous / next
-             */
-            function updateSearchParam(filter, start, end) {
-                clearTimers();
-                jQuery('#<?php echo $this->divid; ?>').load('<?php echo $this->url; ?>filter=' + filter + '<?php echo $this->params ?>&<?php echo $this->paramname ?>=' + document.Form.<?php echo $this->paramname ?>.value + '&start=' + start + '&end=' + end);
+                /**
+                 * Update div when clicking previous / next
+                 */
+                function updateSearchParam(filter, start, end) {
+                    clearTimers();
+                    jQuery('#<?php echo $this->divid; ?>').load('<?php echo $this->url; ?>filter=' + filter + '<?php echo $this->params ?>&<?php echo $this->paramname ?>=' + document.Form.<?php echo $this->paramname ?>.value + '&start=' + start + '&end=' + end + '&' + jQuery('#<?php echo $this->formid; ?>').serialize());
 
         <?php
         if ($this->refresh) {
             ?>
-                    refreshparamtimer = setTimeout("updateSearchParam('" + filter + "'," + start + "," + end + ")", refreshdelay);
+                        refreshparamtimer = setTimeout("updateSearchParam('" + filter + "'," + start + "," + end + ")", refreshdelay);
             <?php
         }
         ?>
-            }
+                }
 
-            /**
-             * wait 500ms and update search
-             */
-            function pushSearch() {
-                clearTimers();
-                refreshtimer = setTimeout("updateSearch()", 500);
-            }
+                /**
+                 * wait 500ms and update search
+                 */
+                function pushSearch() {
+                    clearTimers();
+                    refreshtimer = setTimeout("updateSearch()", 500);
+                }
 
-            pushSearch();
+                pushSearch();
             </script>
 
         </form>
@@ -516,95 +546,95 @@ class AjaxFilterCommandsStates extends AjaxFilter {
                 </span>&nbsp;
 
                 <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch();
-                return false;" />
+                                return false;" />
                     <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
                          onclick="document.getElementById('param').value = '';
-                pushSearch();
-                return false;" />
+                                         pushSearch();
+                                         return false;" />
                 </span>
             </div>
 
             <script type="text/javascript">
-            jQuery('#param').focus();
-            var refreshtimer = null;
-            var refreshparamtimer = null;
-            var refreshdelay = <?php echo $this->refresh ?>;
+                jQuery('#param').focus();
+                var refreshtimer = null;
+                var refreshparamtimer = null;
+                var refreshdelay = <?php echo $this->refresh ?>;
 
         <?php
         if (isset($this->storedfilter)) {
             ?>
-                document.Form<?php echo $this->formid ?>.param.value = "<?php echo $this->storedfilter ?>";
+                    document.Form<?php echo $this->formid ?>.param.value = "<?php echo $this->storedfilter ?>";
             <?php
         }
         ?>
-            /**
-             * Clear the timers set vith setTimeout
-             */
-            function clearTimers() {
-                if (refreshtimer != null) {
-                    clearTimeout(refreshtimer);
+                /**
+                 * Clear the timers set vith setTimeout
+                 */
+                function clearTimers() {
+                    if (refreshtimer != null) {
+                        clearTimeout(refreshtimer);
+                    }
+                    if (refreshparamtimer != null) {
+                        clearTimeout(refreshparamtimer);
+                    }
                 }
-                if (refreshparamtimer != null) {
-                    clearTimeout(refreshparamtimer);
-                }
-            }
 
-            /**
-             * Update div
-             */
-            function updateSearch() {
-                clearTimers();
-                jQuery('#<?php echo $this->divid; ?>').load('<?php echo $this->url; ?>filter=' + encodeURIComponent(document.Form.param.value) + '<?php echo $this->params ?>&<?php echo $this->paramname1 ?>=' + document.Form.<?php echo $this->paramname1 ?>.value + '&<?php echo $this->paramname2 ?>=' + document.Form.<?php echo $this->paramname2 ?>.value);
+                /**
+                 * Update div
+                 */
+                function updateSearch() {
+                    clearTimers();
+                    jQuery('#<?php echo $this->divid; ?>').load('<?php echo $this->url; ?>filter=' + encodeURIComponent(document.Form.param.value) + '<?php echo $this->params ?>&<?php echo $this->paramname1 ?>=' + document.Form.<?php echo $this->paramname1 ?>.value + '&<?php echo $this->paramname2 ?>=' + document.Form.<?php echo $this->paramname2 ?>.value);
 
         <?php
         if ($this->refresh) {
             ?>
-                    refreshtimer = setTimeout("updateSearch()", refreshdelay)
+                        refreshtimer = setTimeout("updateSearch()", refreshdelay)
             <?php
         }
         ?>
-            }
+                }
 
-            /**
-             *
-             */
-            function updateStates() {
-                var ind = document.getElementById('<?php echo $this->paramname2; ?>');
-                var val = ind.options[ind.selectedIndex].value;
-                jQuery('#<?php echo $this->paramname2; ?>').load('<?php echo urlStrRedirect('msc/logs/state_list', array('paramname2' => $this->paramname2)); ?>&<?php echo $this->paramname1 ?>=' + document.Form.<?php echo $this->paramname1 ?>.value + '&selected=' + document.Form.<?php echo $this->paramname2 ?>.value);
-                refreshtimer = setTimeout("updateSearch()", 500);
-            }
+                /**
+                 *
+                 */
+                function updateStates() {
+                    var ind = document.getElementById('<?php echo $this->paramname2; ?>');
+                    var val = ind.options[ind.selectedIndex].value;
+                    jQuery('#<?php echo $this->paramname2; ?>').load('<?php echo urlStrRedirect('msc/logs/state_list', array('paramname2' => $this->paramname2)); ?>&<?php echo $this->paramname1 ?>=' + document.Form.<?php echo $this->paramname1 ?>.value + '&selected=' + document.Form.<?php echo $this->paramname2 ?>.value);
+                    refreshtimer = setTimeout("updateSearch()", 500);
+                }
 
-            /**
-             * Update div when clicking previous / next
-             */
-            function updateSearchParam(filter, start, end) {
-                clearTimers();
-                jQuery('#<?php echo $this->divid; ?>').load('<?php echo $this->url; ?>filter=' + filter + '<?php echo $this->params ?>&<?php echo $this->paramname1 ?>=' + document.Form.<?php echo $this->paramname1 ?>.value + '&<?php echo $this->paramname2 ?>=' + document.Form.<?php echo $this->paramname2 ?>.value + '&start=' + start + '&end=' + end);
+                /**
+                 * Update div when clicking previous / next
+                 */
+                function updateSearchParam(filter, start, end) {
+                    clearTimers();
+                    jQuery('#<?php echo $this->divid; ?>').load('<?php echo $this->url; ?>filter=' + filter + '<?php echo $this->params ?>&<?php echo $this->paramname1 ?>=' + document.Form.<?php echo $this->paramname1 ?>.value + '&<?php echo $this->paramname2 ?>=' + document.Form.<?php echo $this->paramname2 ?>.value + '&start=' + start + '&end=' + end);
 
         <?php
         if ($this->refresh) {
             ?>
-                    refreshparamtimer = setTimeout("updateSearchParam('" + filter + "'," + start + "," + end + ")", refreshdelay);
+                        refreshparamtimer = setTimeout("updateSearchParam('" + filter + "'," + start + "," + end + ")", refreshdelay);
             <?php
         }
         ?>
-            }
+                }
 
-            /**
-             * wait 500ms and update search
-             */
-            function pushSearch2() {
-                clearTimers();
-                refreshtimer = setTimeout("updateSearch()", 750);
-            }
+                /**
+                 * wait 500ms and update search
+                 */
+                function pushSearch2() {
+                    clearTimers();
+                    refreshtimer = setTimeout("updateSearch()", 750);
+                }
 
-            function pushSearch() {
-                clearTimers();
-                setTimeout("updateStates()", 100);
-            }
+                function pushSearch() {
+                    clearTimers();
+                    setTimeout("updateStates()", 100);
+                }
 
-            pushSearch2();
+                pushSearch2();
             </script>
 
         </form>

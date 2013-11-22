@@ -61,7 +61,10 @@ if ($uuid) {
     $action = "msctabs";
 } elseif ($gid) { # FIXME: same thing to do on groups
     if ($_GET['cmd_id']) {
-        list($count, $cmds) = displayLogs(array('gid' => $gid, 'b_id' => $_GET['bundle_id'], 'cmd_id' => $_GET['cmd_id'], 'min' => $start, 'max' => $start + $maxperpage, 'filt' => $filter, 'finished' => $history));
+        $_params = array('gid' => $gid, 'b_id' => $_GET['bundle_id'], 'cmd_id' => $_GET['cmd_id'], 'min' => $start, 'max' => $start + $maxperpage, 'filt' => $filter, 'finished' => $history);
+        if (isset($_GET['cbx_state']))
+            $_params['state'] = $_GET['cbx_state'];
+        list($count, $cmds) = displayLogs($_params);
     } else {
         list($count, $cmds) = displayLogs(array('gid' => $gid, 'b_id' => $_GET['bundle_id'], 'min' => $start, 'max' => $start + $maxperpage, 'filt' => $filter, 'finished' => $history));
         $areCommands = True;
