@@ -276,7 +276,7 @@
             name="os_count_linux"
             label="Linux"
             request_function="getComputerCountByOSes"
-            params="['*Linux*', '*linux*', 'Mageia*', 'Fedora*', 'CentOS*', 'Ubuntu*']"
+            params="['*Linux*', 'Mageia*', 'Fedora*', 'CentOS*', 'Ubuntu*']"
             data_type="0"
             active="1"
             keep_history="1"
@@ -337,9 +337,9 @@
         />
         <indicator
             name="os_count_linux_mandriva"
-            label="Mandriva"
+            label="Mandriva Linux"
             request_function="getComputerCountByOSes"
-            params="'Mandriva*'"
+            params="['Mandriva Linux*', 'Mandrakelinux*']"
             data_type="0"
             active="1"
             keep_history="1"
