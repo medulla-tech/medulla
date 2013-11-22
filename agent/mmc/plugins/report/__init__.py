@@ -276,7 +276,7 @@ class RpcProxy(RpcProxyI):
                 data_dict['dates'].append(formatted_date)
                 data_dict['values'].append([])
 
-            def _fetchSubs(container, parent = None, level = 0):
+            def _fetchSubs(container, parent = None, level = -1):
                 # If no subelements in container, return
                 if len(container) == 0: return []
                 # Adding titles
@@ -317,7 +317,7 @@ class RpcProxy(RpcProxyI):
 
         def _keyvalueDict(item_root):
             data_dict = {'headers' : [locale['STR_KEY'], locale['STR_VALUE']], 'values' : []}
-            def _fetchSubs(container, parent = None, level = 0, parent_value = 0):
+            def _fetchSubs(container, parent = None, level = -1, parent_value = 0):
                 values = []
                 for item in container:
                     if item.tag.lower() != 'item' : continue

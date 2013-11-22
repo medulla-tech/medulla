@@ -24,7 +24,7 @@
     .report-indicator label {
         display: inline !important;
     }
-    .report-indicator-level-0 {
+    .report-table {
         margin-bottom: 20px;
     }
 </style>
@@ -167,24 +167,30 @@ class ReportIndicator extends HtmlContainer {
     }
 
     function display() {
-        echo '<div class="report-indicators report-indicator-level-' . $this->level .'" style="margin-left: 15px;';
-        if ($this->level > 0)
-            echo 'display: none;';
-        echo '">
-                <div class="report-indicator">
-                  <input type="checkbox" id="' . $this->name . '" name="indicators[' . $this->name . ']" onchange="checkIndicator(this)"';
-        if ($this->selected == "yes")
-            echo ' checked="checked"';
-        echo '    />
-                   <label for="' . $this->name . '" class="report-indicator-label">' . $this->title . '</label>';
-                    if ($this->elements)
-                        echo '&nbsp;&nbsp;(<a href="#" onclick="toggleSubIndicators(this); return false;">' . _T("More detail", "report") . '</a>)';
-        echo '</div>';
+        // Dont show the first level
+        // Only used to calculate "other" value
+        if ($this->level > 0) {
+            echo '<div class="report-indicators report-indicator-level-' . $this->level .'" style="margin-left: 15px;';
+            if ($this->level > 1)
+                echo 'display: none;';
+            echo '">
+                    <div class="report-indicator">
+                      <input type="checkbox" id="' . $this->name . '" name="indicators[' . $this->name . ']" onchange="checkIndicator(this)"';
+            if ($this->selected == "yes")
+                echo ' checked="checked"';
+            echo '    />
+                       <label for="' . $this->name . '" class="report-indicator-label">' . $this->title . '</label>';
+                        if ($this->elements)
+                            echo '&nbsp;&nbsp;(<a href="#" onclick="toggleSubIndicators(this); return false;">' . _T("More detail", "report") . '</a>)';
+            echo '</div>';
+        }
         if ($this->elements) {
             foreach ($this->elements as $element)
                 $element->display();
         }
-        echo '</div>';
+        if ($this->level > 0) {
+            echo '</div>';
+        }
     }
 
 }
