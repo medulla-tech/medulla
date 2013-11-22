@@ -38,7 +38,7 @@ SCHEMA_MASK = "schema-xxx.sql"
 
 # This logger is created only for the case when this module
 # is called as standallone.
-# (usualy is called by pulse2-setup with a passed logger) 
+# (usualy is called by pulse2-setup with a passed logger)
 def myLogger ():
     """ Default logging instance """
     log = logging.getLogger("DDL")
@@ -89,7 +89,7 @@ class DBEngine :
         """
         @return: dataset cursor
         @rtype: object
-        """ 
+        """
         try:
             return self.conn.cursor()
         except Exception, exc:
@@ -126,7 +126,7 @@ class DBScriptLaunchInterface :
         """
         self.log = log or myLogger()
         self.cmd = "mysql %s -u%s -h%s" % (db, user, host)
-        if len(passwd) > 0 : 
+        if len(passwd) > 0 :
             self.cmd += " -p%s" % passwd
         if port :
             self.cmd += " -P%d" % port
@@ -152,13 +152,13 @@ class DBScriptLaunchInterface :
 class DDLContentManager :
     """ Class to manage DDL scripts content """
 
-    # ommitting of checking the following databases : 
+    # ommitting of checking the following databases :
     blacklisted_databases = ("glpi")
 
     def __init__(self, log=None):
         """
         @param log: logger instance
-        @type log: logger object  
+        @type log: logger object
         """
         self.log = log or myLogger()
 
@@ -195,7 +195,7 @@ class DDLContentManager :
             return filename.replace(number, "xxx") == SCHEMA_MASK
         return False
 
-    def get_scripts (self, module, fullpath=False):
+    def get_scripts(self, module, fullpath=False):
         """
         Get a list of scripts to install assigned on module.
 
@@ -206,23 +206,29 @@ class DDLContentManager :
                          otherwise only filenames
         @type fullpath: bool
 
-        @return: list generator of filenames 
+        @return: list generator of filenames
         @rtype: string
         """
-        sqldir = os.path.join(prefix, 'share', 'mmc', 'sql')
-        directory = os.path.join(sqldir, module)
+        sqldirs = [os.path.join(prefix, 'share', 'mmc', 'sql', module),
+                   os.path.join(prefix, 'share', 'doc', 'mmc', 'contrib', module, 'sql')]
+        found = False
+        for sqldir in sqldirs:
+            if os.path.exists(sqldir):
+                found = True
+                break
+        if not found:
+            raise Exception("SQL schemas not found for module %s" % module)
 
         # get only schema scripts - schema-xxx.sql
-        scripts = [s for s in os.listdir(directory) if self.is_schema_builder(s)]
+        scripts = [s for s in os.listdir(sqldir) if self.is_schema_builder(s)]
 
         for script in sorted(scripts):
-
-            if fullpath :
-                yield os.path.join(sqldir, module, script)
-            else :
+            if fullpath:
+                yield os.path.join(sqldir, script)
+            else:
                 yield script
-    
-    def get_version (self, module):
+
+    def get_version(self, module):
         """
         Getting the last schema version on SQL folder.
 
@@ -232,7 +238,7 @@ class DDLContentManager :
         @return: last schema version to install
         @rtype: int
         """
-        if module.lower() in self.blacklisted_databases : 
+        if module.lower() in self.blacklisted_databases:
             return -1
 
         scripts = self.get_scripts(module)
@@ -243,7 +249,7 @@ class DDLContentManager :
 class DBControl :
     """ Main base to check and update the database """
 
-    def __init__(self, user, passwd, host, port, 
+    def __init__(self, user, passwd, host, port,
                  module, log=None, use_same_db=False):
         """
         @param user: database user
@@ -267,38 +273,38 @@ class DBControl :
         @param use_same_db: If True, same database used, otherwise "mysql"
         @type use_same_db: bool
         """
- 
+
         self.log = log or myLogger()
 
         if use_same_db :
             db = module
         else :
             db = "mysql"
-        self.db = DBEngine(user, 
-                           passwd, 
-                           host, 
-                           db, 
-                           port=port, 
+        self.db = DBEngine(user,
+                           passwd,
+                           host,
+                           db,
+                           port=port,
                            log=log)
 
         self.module = module
         self.ddl_manager = DDLContentManager(log)
-        self.script_manager = DBScriptLaunchInterface(user, 
-                                                      passwd, 
-                                                      host, 
+        self.script_manager = DBScriptLaunchInterface(user,
+                                                      passwd,
+                                                      host,
                                                       port,
-                                                      module, 
+                                                      module,
                                                       log)
 
     @property
     def db_exists (self):
-        """ 
+        """
         Test if database exists.
 
         @return: True if database exists
         @rtype: bool
         """
-        statement = "SELECT 1 FROM information_schema.schemata" 
+        statement = "SELECT 1 FROM information_schema.schemata"
         statement += " WHERE schema_name = '%s';" % self.module
         c = self.db.cursor()
         c.execute(statement)
@@ -326,7 +332,7 @@ class DBControl :
 
     @property
     def db_version (self):
-        """ 
+        """
         Getting of version installed in database.
 
         @return: database version
@@ -386,11 +392,11 @@ class DBControl :
         if version_in_db == version_to_install :
             self.log.debug("Database '%s' is up-to-date" % (self.module))
             return True
- 
+
         elif version_in_db < version_to_install :
             self.log.info("'%s' database updated from version %d to %d" %
                               (self.module, version_in_db, version_to_install))
-            scripts = self._get_scripts_to_install(version_in_db, 
+            scripts = self._get_scripts_to_install(version_in_db,
                                                    version_to_install)
             for script in scripts :
                 if self.script_manager.execute(script) is None:
@@ -405,5 +411,5 @@ class DBControl :
             self.log.error("Installed version is %d, but you are trying to install the version %d." %
                                                   (self.module, version_in_db, version_to_install))
             return False
- 
+
 
