@@ -162,7 +162,7 @@
             </item>
         </table>
         <table type="period" title="Software installations" name="table_soft">
-            <item module="glpi" indicator="soft_count" title="software">
+            <item module="glpi" indicator="soft_count" title="softwares">
                 <item module="glpi" indicator="soft_count_photoshop" title="Adobe Photoshop CS" selected="yes">
                     <item module="glpi" indicator="soft_count_photoshop_cs6" title="Adobe Photoshop CS6" />
                 </item>
@@ -170,5 +170,22 @@
                 <item module="glpi" indicator="soft_count_autocad" title="AutoCAD" />
             </item>
         </table>
+        <table type="period" title="Computer types" name="table_types">
+            <item module="glpi" indicator="type_count" title="types">
+                <item module="glpi" indicator="type_count_desktop" title="Desktop" selected="yes" />
+                <item module="glpi" indicator="type_count_laptop" title="Laptop" selected="yes" />
+                <item module="glpi" indicator="type_count_notebook" title="Notebook" selected="yes" />
+                <item module="glpi" indicator="type_count_portable" title="Portable" selected="yes" />
+                <item module="glpi" indicator="type_count_server_tower" title="Server Tower" selected="yes" />
+                <item module="glpi" indicator="type_count_vm" title="Virtual Machine" selected="yes" />
+            </item>
+        </table>
+        <!-- State table example
+        <table type="period" title="Computer states" name="table_states">
+            <item module="glpi" indicator="state_count" title="states">
+                <item module="glpi" indicator="state_count_production" title="Production" selected="yes" />
+            </item>
+        </table>
+        -->
     </section>
 </template>
