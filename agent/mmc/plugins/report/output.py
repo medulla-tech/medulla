@@ -33,15 +33,16 @@ from base64 import b64encode
 import logging
 from mmc.plugins.report.config import ReportConfig, reportconfdir
 
+
 class XlsGenerator(object):
-    def __init__(self, path = '/tmp/report.xls'):
+    def __init__(self, path='/tmp/report.xls'):
         self.wbk = xlwt.Workbook()
         self.path = path
 
     def pushTable(self, title, datas):
-        if 'headers' in datas: # simple sheets
+        if 'headers' in datas:    # simple sheets
             return self.get_simple_sheet(title, datas)
-        else: # period sheets
+        else:    # period sheets
             return self.get_period_sheet(title, datas)
 
     def _clean_sheet_name(self, sheet_name):
@@ -109,8 +110,9 @@ class XlsGenerator(object):
         chmod(self.path, 0644)
         return self.path
 
+
 class PdfGenerator(object):
-    def __init__(self, path = '/tmp/report.pdf', locale = {}):
+    def __init__(self, path='/tmp/report.pdf', locale={}):
         self.homepage = ''
         self.summary = ''
         self.config = ReportConfig("report")
@@ -231,7 +233,8 @@ class PdfGenerator(object):
         self.content += '<table>'
         self.content += '<tr>'
         for h in headers:
-            if h == 'titles' : continue
+            if h == 'titles':
+                continue
             self.content += '<th>'
             self.content += h
             self.content += '</th>'
@@ -241,9 +244,10 @@ class PdfGenerator(object):
         for line in values:
             self.content += '<tr>'
             for td in line:
-                if isinstance(td, (int, float)): td = str(td)
+                if isinstance(td, (int, float)):
+                    td = str(td)
                 self.content += '<td>'
-                self.content += td if td != None else ''
+                self.content += td if td is not None else ''
                 self.content += '</td>'
             self.content += '</tr>'
 
@@ -292,9 +296,9 @@ class PdfGenerator(object):
         self.content += html
 
     def pushTable(self, title, datas):
-        if 'headers' in datas: # simple sheets
+        if 'headers' in datas:   # simple sheets
             return self.get_simple_sheet(title, datas)
-        else: # period sheets
+        else:   # period sheets
             return self.get_period_sheet(title, datas)
 
     def pushSVG(self, svg):
@@ -318,7 +322,7 @@ class PdfGenerator(object):
         #Priting summary table BEGIN
         self.summary += '<table style="border:0">'
 
-        def _printSummary(bookmarks, indent=0, numer = ''):
+        def _printSummary(bookmarks, indent=0, numer=''):
             for i, (label, (page, _, _), children) in enumerate(bookmarks, 1):
                 tr_style = 'style="border-top:1px solid #CCC;border-bottom:1px solid #CCC"'
                 title_td_style = 'style="border:0;text-align:left;width:550px;padding:10px;"'
@@ -326,8 +330,8 @@ class PdfGenerator(object):
                 if indent == 0 and i == 1:
                     tr_style = 'style="border-bottom:1px solid #CCC"'
                 self.summary += ('<tr %s><td %s>%s%s. %s</td><td %s>%d</td></tr>' % (
-                    tr_style, title_td_style, '&nbsp;' * indent, numer+str(i), label.lstrip('0123456789. '), page_num_td_style, page+1))
-                _printSummary(children, indent + 2, numer+str(i)+'.')
+                    tr_style, title_td_style, '&nbsp;' * indent, numer + str(i), label.lstrip('0123456789. '), page_num_td_style, page + 1))
+                _printSummary(children, indent + 2, numer + str(i) + '.')
         _printSummary(content.make_bookmark_tree())
 
         #Priting summary table END
@@ -336,7 +340,7 @@ class PdfGenerator(object):
         homepage = HTML(string=self.homepage, encoding="utf-8").render(stylesheets=[self.homepage_css])
         summary = HTML(string=self.summary, encoding="utf-8").render(stylesheets=[self.homepage_css])
 
-        pdf_report = [homepage, summary ,content]
+        pdf_report = [homepage, summary, content]
         logging.getLogger().warning(pdf_report[2].make_bookmark_tree())
 
         all_pages = [doc.pages for doc in pdf_report]
@@ -351,8 +355,9 @@ class PdfGenerator(object):
         chmod(self.path, 0644)
         return self.path
 
+
 class SvgGenerator(object):
-    def __init__(self, path = '/tmp/graph.png', locale = {}):
+    def __init__(self, path='/tmp/graph.png', locale={}):
         self.style = None
         self.chart = None
         self.path = path
@@ -395,7 +400,7 @@ class SvgGenerator(object):
         """
         custom_css_file = '/tmp/pygal_custom_style.css'
         with open(custom_css_file, 'w') as f:
-              f.write(custom_css)
+            f.write(custom_css)
         self.config.css.append(custom_css_file)
 
         if 'STR_NODATA' in self.locale:
@@ -414,7 +419,7 @@ class SvgGenerator(object):
         return pygal.StackedBar(
             style=self.style,
             no_data_text=self.config.no_data_text,
-            disable_xml_declaration=True, # for correct svg in web page
+            disable_xml_declaration=True,   # for correct svg in web page
             explicit_size=True,
             show_dots=False
         )
@@ -432,7 +437,7 @@ class SvgGenerator(object):
         return pygal.Line(
             self.config,
             style=self.style,
-            disable_xml_declaration=True, # for correct svg in web page
+            disable_xml_declaration=True,   # for correct svg in web page
             explicit_size=True,
             show_dots=False,
         )
@@ -450,7 +455,7 @@ class SvgGenerator(object):
         return pygal.Pie(
             style=self.style,
             no_data_text=self.config.no_data_text,
-            disable_xml_declaration=True, # for correct svg in web page
+            disable_xml_declaration=True,   # for correct svg in web page
             explicit_size=True,
             show_dots=False
         )
@@ -464,7 +469,7 @@ class SvgGenerator(object):
             self.chart.x_labels = datas['dates']
             for i in xrange(len(titles)):
                 self.chart.add(titles[i], [x[i] for x in values])
-        elif type == 'key_value': # Pie Chart
+        elif type == 'key_value':   # Pie Chart
             titles = datas['headers']
             values = datas['values']
             for x in xrange(len(values)):
