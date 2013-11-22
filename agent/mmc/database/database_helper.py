@@ -1,9 +1,7 @@
 # -*- coding: utf-8; -*-
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# (c) 2007-2009 Mandriva, http://www.mandriva.com/
-#
-# $Id$
+# (c) 2007-2013 Mandriva, http://www.mandriva.com/
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
 #
@@ -33,7 +31,7 @@ from mmc.support.mmctools import Singleton
 from mmc.database.ddl import DDLContentManager, DBControl
 from mmc.database.sqlalchemy_tests import checkSqlalchemy, MIN_VERSION, MAX_VERSION, CUR_VERSION
 from sqlalchemy.orm import sessionmaker; Session = sessionmaker()
-from sqlalchemy.exc import DBAPIError, NoSuchTableError
+from sqlalchemy.exc import NoSuchTableError
 
 logger = logging.getLogger()
 NB_DB_CONN_TRY = 2
