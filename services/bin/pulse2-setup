@@ -21,12 +21,14 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with Pulse 2.  If not, see <http://www.gnu.org/licenses/>.
-import os, sys, stat
+import os
+import sys
+import stat
 import re
 import getpass
 import string
 import uuid
-import readline # pyflakes=ignore
+import readline   # pyflakes.ignore
 import shutil
 from random import choice
 from subprocess import call
@@ -45,12 +47,14 @@ from mmc.core.log import ColoredFormatter
 
 log = logging.getLogger('pulse2-setup')
 
+
 def path_lookup(exe):
     for d in os.environ['PATH'].split(':'):
         fullpath = os.path.join(d, exe)
         if os.path.exists(fullpath):
             return fullpath
     return None
+
 
 def read_opt(prompt, default=None):
     if default is not None:
@@ -60,6 +64,7 @@ def read_opt(prompt, default=None):
     if not s and default is not None:
         s = default
     return s
+
 
 def read_bool(prompt, default):
     if default is True:
@@ -71,7 +76,7 @@ def read_bool(prompt, default):
     ret = default
     while not correct:
         s = raw_input(prompt)
-        if len(s)==0:
+        if len(s) == 0:
             break
 
         if s in ['y', 'Y']:
@@ -84,8 +89,10 @@ def read_bool(prompt, default):
             log.info('Incorrect value. Retry.')
     return ret
 
+
 def gen_passwd(size=10):
     return ''.join([choice(string.letters + string.digits) for _ in range(size)])
+
 
 def read_passwd(prompt, default, check=False):
     prompt += ' (default: ' + default + ')'
@@ -94,7 +101,7 @@ def read_passwd(prompt, default, check=False):
         pwd = getpass.getpass('INPUT    - ' + prompt + ': ')
         if check:
             pwd2 = getpass.getpass('INPUT    - ' + prompt + ' (confirm): ')
-            match = pwd==pwd2
+            match = (pwd == pwd2)
             if not match:
                 log.info('Passwords do not match. Retry.')
         else:
@@ -115,7 +122,7 @@ def read_ip(prompt, default):
     ret = default
     while not correct:
         s = raw_input(prompt)
-        if len(s)==0:
+        if len(s) == 0:
             break
 
         if re_ip4.match(s):
@@ -277,7 +284,7 @@ def get_distro_handler():
 
 class Service(object):
     name = None
-    clsnames = [ 'SrvMmcAgent', 
+    clsnames = [ 'SrvMmcAgent',
                  'SrvInventoryserver', 'SrvLauncher', 'SrvPkgServer',
                  'SrvScheduler' ]
 
@@ -539,15 +546,15 @@ class UUIDResolverConfig(Pulse2ConfigFile):
 
 
 class SetupApp(object):
-
     defaults = {}
+
     def __init__(self, options):
         self.config = {}
         self.options = options
         self.distro_handler = get_distro_handler()
 
         # Check if we run as root
-        if os.getuid()<>0:
+        if os.getuid() != 0:
             log.error("Please run this application as root")
             sys.exit(2)
 
@@ -559,13 +566,8 @@ class SetupApp(object):
                 log.info("OK. Exiting")
                 sys.exit(0)
 
-        # Check sql snippets
-        self.sqldir = os.path.join(prefix, 'share', 'mmc', 'sql')
-        if not os.path.isdir(self.sqldir):
-            log.error('Can not find SQL snippets in %s' % self.sqldir)
-
         # Get db modules list
-        self.dbmodules = [ 'dyngroup', 'imaging', 'inventory', 'msc', 'pulse2', 'backuppc' ]
+        self.dbmodules = ['dyngroup', 'imaging', 'inventory', 'msc', 'pulse2', 'backuppc', 'report']
 
         # Load conf files, if existing
         # self.confs will contain path->ConfigParser objects dictionary
@@ -620,10 +622,10 @@ class SetupApp(object):
         Note 2: current version does not support diffenriated db host or credentials. All
           db must be on the same host. Default value are taken from plugins/pulse2.ini file.
         """
-        self.defaults['inventory.service.enable'] = self.options["server_inventory"] 
+        self.defaults['inventory.service.enable'] = self.options["server_inventory"]
         self.defaults['package.service.enable'] = self.options["server_package"]
         self.defaults['glpi.plugin.enable'] = self.options["glpi_enable"]
-        
+
         self.defaults['ldapurl'] = self.options['ldapurl'] or self.confs['plugins/base.ini'].get('ldap', 'ldapurl')
         self.defaults['ldapbasedn'] = self.options['ldapbasedn'] or self.confs['plugins/base.ini'].get('ldap', 'baseDN')
         self.defaults['ldapadmindn'] = self.options['ldapadmindn'] or self.confs['plugins/base.ini'].get('ldap', 'rootName')
@@ -642,7 +644,6 @@ class SetupApp(object):
             self.defaults['dbpasswd'] = self.confs['plugins/pulse2.ini'].get('database', 'dbpasswd')
 
         self.defaults['wol'] = self.confs['pulse2/launchers/launchers.ini'].get('wol', 'wol_path')
-        self.defaults['audit.module.enable'] = self.confs['plugins/base.ini'].has_section('audit')
 
         self.defaults['glpiurl'] = self.options["glpi_url"] or "http://localhost"
         self.defaults['glpidbuser'] = self.options["glpi_dbuser"]
@@ -655,8 +656,6 @@ class SetupApp(object):
     def read_config(self):
         """ Read some global config values
         """
-        self.config['audit.module.enable'] = self.read_bool('Enable audit module',
-                                                            self.defaults['audit.module.enable'])
         self.config['inventory.service.enable'] = self.read_bool('Enable inventory server',
                                                                  self.defaults['inventory.service.enable'])
         self.config["glpi.plugin.enable"] = self.read_bool('Enable GLPI plugin',
@@ -728,13 +727,13 @@ class SetupApp(object):
         """ Get a list of existing databases
         """
         databases = []
-        
+
         try:
             crs = conn.execute("SELECT schema_name FROM information_schema.schemata;")
             databases = [line[0] for line in crs.fetchall()]
         except sa.exc.OperationalError, e:
             raise e
-                        
+
         return databases
 
     def init_db(self):
@@ -762,8 +761,8 @@ class SetupApp(object):
         # Drop databases
         if self.options['reset_db']:
             existing_dbs = self.get_existing_databases(conn)
-            for db in self.dbmodules + ['audit']:
-                if db in existing_dbs :
+            for db in self.dbmodules:
+                if db in existing_dbs:
                     try:
                         conn.execute('DROP DATABASE IF EXISTS `%s`' % db)
                         log.info("Database '%s' dropped" % db)
@@ -788,24 +787,15 @@ class SetupApp(object):
                     log.info("Removing computer %s data..." % comp_uuid)
                     shutil.rmtree(comp_dir)
 
-        # Special case for audit db
-        if self.config['audit.module.enable']:
-            try:
-                conn.execute('CREATE DATABASE IF NOT EXISTS `audit`')
-                log.info("Creates database 'audit'")
-            except sa.exc.OperationalError, e:
-                raise e
-
-        # All other modules have install.sh script
         env = os.environ
         for module in self.dbmodules:
             log.info("Update database schema for module %s" % module)
-            db_control = DBControl(user=self.config['dbadminuser'], 
-                                   passwd=self.config['dbadminpasswd'], 
-                                   host=self.config['dbhost'], 
+            db_control = DBControl(user=self.config['dbadminuser'],
+                                   passwd=self.config['dbadminpasswd'],
+                                   host=self.config['dbhost'],
                                    # TODO - get the port number from config file
-                                   port=3306, 
-                                   module=module, 
+                                   port=3306,
+                                   module=module,
                                    log=log)
             db_control.process()
 
@@ -844,8 +834,6 @@ class SetupApp(object):
             # Grant rights in DB
             try:
                 dbs = self.dbmodules
-                if self.config['audit.module.enable']:
-                    dbs.append('audit')
                 for module in dbs:
                     log.info('Grant rights on db %s' % module)
                     # Put db name without sqlalchemy quoting: it was surrounded by `''
@@ -908,34 +896,15 @@ class SetupApp(object):
         self.confs['plugins/pulse2.ini'].set('database', 'dbhost', self.config['dbhost'])
         self.confs['plugins/pulse2.ini'].set('database', 'dbuser', self.config['dbuser'])
         self.confs['plugins/pulse2.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
-        
+
         # backuppc
         self.confs['plugins/backuppc.ini'].set('database', 'dbhost', self.config['dbhost'])
         self.confs['plugins/backuppc.ini'].set('database', 'dbuser', self.config['dbuser'])
         self.confs['plugins/backuppc.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
 
-        # audit module (base MMC plugin)
-        baseconf = self.confs['plugins/base.ini']
-        if self.config['audit.module.enable']:
-            log.info('Update database schema for module audit')
-            baseconf.set('audit', 'dbhost', self.config['dbhost'])
-            baseconf.set('audit', 'dbuser', self.config['dbuser'])
-            baseconf.set('audit', 'dbpassword', self.config['dbpasswd'])
-            baseconf.commit()
-
-            binpath = path_lookup('mmc-helper')
-            if binpath is None:
-                log.error('Could not find \'mmc-helper\' in PATH. Is MMC installed ?')
-                sys.exit(2)
-            ret = call(binpath + ' audit init', env=env, shell=True)
-            if ret<>0:
-                log.error('Can not initialize database for module: audit')
-        else:
-            baseconf.remove_section('audit')
-
     def init_glpi(self):
         """GLPI coupling"""
-        
+
         glpi_conf = self.confs["plugins/glpi.ini"]
 
         url = self.read_opt("Glpi URL", self.defaults["glpiurl"])
@@ -949,7 +918,7 @@ class SetupApp(object):
             base_url = "http://%s/" % url
             computer_url = "http://%s/front/computer.form.php?id=" % url
             fusion_url = "http://%s/plugins/fusioninventory/front/plugin_fusioninventory.communication.php" % url
- 
+
         glpi_conf.set("main", "glpi_computer_uri", computer_url)
         glpi_conf.set("authentication_glpi","baseurl", base_url)
         glpi_conf.set("provisioning_glpi","doauth", 1)
@@ -1100,7 +1069,7 @@ class SetupApp(object):
                 log.info('Local BackupPC server http://127.0.0.1/backuppc/index.cgi associated to root entity UUID1')
         else :
             log.error("BackupPC server is not probably installed")
-                             
+
     def commit(self):
         """ Write down all config files
         """
@@ -1163,7 +1132,7 @@ if __name__ == '__main__':
     parser.add_option("--ldap-passwd", dest="ldappasswd",
                       help="LDAP administrator password")
     parser.add_option("--disable-inventory", dest="disable_inventory",
-                      default=False, action="store_true", 
+                      default=False, action="store_true",
                       help="Disable inventory server")
     parser.add_option("--disable-package", dest="disable_package",
                       default=False, action="store_true",
@@ -1181,7 +1150,7 @@ if __name__ == '__main__':
                       help="MySQL administrator username")
     parser.add_option("--glpi-dbpasswd", dest="glpidbpasswd",
                       help="MySQL administrator password")
- 
+
     # Parse and analyse args
     (options, args) = parser.parse_args()
     if options.debug:
