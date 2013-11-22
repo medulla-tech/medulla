@@ -840,5 +840,115 @@
             active="1"
             keep_history="1"
         />
+        <!-- Other softwares -->
+        <indicator
+            name="soft_count"
+            label="Software"
+            request_function="getComputerCountBySoftwares"
+            params="'*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_photoshop"
+            label="Adobe Photoshop"
+            request_function="getComputerCountBySoftwares"
+            params="{'name': 'Adobe Photoshop CS*', 'vendor': 'Adobe'}, {'name': 'Adobe Photoshop CS*Support', 'vendor': 'Adobe'}"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_photoshop_cs6"
+            label="Adobe Photoshop CS6"
+            request_function="getComputerCountBySoftwares"
+            params="{'name': 'Adobe Photoshop CS6*', 'vendor': 'Adobe'}, {'name': 'Adobe Photoshop CS6*Support', 'vendor': 'Adobe'}"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_business_objects"
+            label="Business Objects"
+            request_function="getComputerCountBySoftwares"
+            params="[{'name': '*BusinessObjects*XI*', 'vendor': '*Business*Objects*'}, {'name': '*BusinessObjects*XI*', 'vendor': '*SAP*'}]"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_autocad"
+            label="AutoCAD"
+            request_function="getComputerCountBySoftwares"
+            params="{'name': 'AutoCAD*', 'vendor': 'Autodesk'}"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <!-- getComputerCountByType -->
+        <indicator
+            name="type_count"
+            label="Types"
+            request_function="getComputerCountByType"
+            params="'*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="type_count_desktop"
+            label="Desktop"
+            request_function="getComputerCountByType"
+            params="'Desktop'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="type_count_laptop"
+            label="Laptop"
+            request_function="getComputerCountByType"
+            params="'Laptop'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="type_count_notebook"
+            label="Notebook"
+            request_function="getComputerCountByType"
+            params="'Notebook'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="type_count_portable"
+            label="Portable"
+            request_function="getComputerCountByType"
+            params="'Portable'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="type_count_server_tower"
+            label="Server Tower"
+            request_function="getComputerCountByType"
+            params="'Server Tower'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="type_count_vm"
+            label="Virtual Machine"
+            request_function="getComputerCountByType"
+            params="'Virtual Machine'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
     </module>
 </indicators>

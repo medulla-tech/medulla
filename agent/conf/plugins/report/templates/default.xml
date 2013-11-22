@@ -49,7 +49,7 @@
     </homepage>
 
     <section module="glpi" title="Device evolution" name="glpi">
-        <table type="period" title="Number of devices by OS" chart_type="bar">
+        <table type="period" title="Number of devices by OS" name="table_os" chart_type="line">
             <item module="glpi" indicator="os_count" title="OS">
                 <item module="glpi" indicator="os_count_windows" title="Windows">
                     <item module="glpi" indicator="os_count_windows_xp" title="Windows XP" selected="yes">
@@ -96,7 +96,7 @@
                 <item module="glpi" indicator="os_count_unix" title="Unix" selected="yes" />
             </item>
         </table>
-        <table type="period" title="Microsoft Office installations">
+        <table type="period" title="Microsoft Office installations" name="table_office">
             <item module="glpi" indicator="soft_count_office" title="Microsoft Office">
                 <item module="glpi" indicator="soft_count_office_97" title="Microsoft Office 97" />
                 <item module="glpi" indicator="soft_count_office_98" title="Microsoft Office 98" />
@@ -159,6 +159,15 @@
                 <item module="glpi" indicator="soft_count_office_mac_2004" title="Microsoft Office Mac 2004" />
                 <item module="glpi" indicator="soft_count_office_mac_2008" title="Microsoft Office Mac 2008" />
                 <item module="glpi" indicator="soft_count_office_mac_2011" title="Microsoft Office Mac 2011" />
+            </item>
+        </table>
+        <table type="period" title="Software installations" name="table_soft">
+            <item module="glpi" indicator="soft_count" title="software">
+                <item module="glpi" indicator="soft_count_photoshop" title="Adobe Photoshop CS" selected="yes">
+                    <item module="glpi" indicator="soft_count_photoshop_cs6" title="Adobe Photoshop CS6" />
+                </item>
+                <item module="glpi" indicator="soft_count_business_objects" title="Business Objects" />
+                <item module="glpi" indicator="soft_count_autocad" title="AutoCAD" />
             </item>
         </table>
     </section>
