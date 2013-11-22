@@ -96,7 +96,7 @@
                 <item module="glpi" indicator="os_count_unix" title="Unix" selected="yes" />
             </item>
         </table>
-        <table type="period" title="Microsoft Office installations" name="table_office">
+        <table type="period" title="Microsoft Office installations" name="table_office" chart_type="bar">
             <item module="glpi" indicator="soft_count_office" title="Microsoft Office">
                 <item module="glpi" indicator="soft_count_office_97" title="Microsoft Office 97" />
                 <item module="glpi" indicator="soft_count_office_98" title="Microsoft Office 98" />
@@ -161,7 +161,7 @@
                 <item module="glpi" indicator="soft_count_office_mac_2011" title="Microsoft Office Mac 2011" />
             </item>
         </table>
-        <table type="period" title="Software installations" name="table_soft">
+        <table type="period" title="Software installations" name="table_soft" chart_type="line">
             <item module="glpi" indicator="soft_count" title="softwares">
                 <item module="glpi" indicator="soft_count_photoshop" title="Adobe Photoshop CS" selected="yes">
                     <item module="glpi" indicator="soft_count_photoshop_cs6" title="Adobe Photoshop CS6" />
@@ -170,7 +170,7 @@
                 <item module="glpi" indicator="soft_count_autocad" title="AutoCAD" />
             </item>
         </table>
-        <table type="period" title="Computer types" name="table_types">
+        <table type="period" title="Computer types" name="table_types" chart_type="bar">
             <item module="glpi" indicator="type_count" title="types">
                 <item module="glpi" indicator="type_count_desktop" title="Desktop" selected="yes" />
                 <item module="glpi" indicator="type_count_laptop" title="Laptop" selected="yes" />
