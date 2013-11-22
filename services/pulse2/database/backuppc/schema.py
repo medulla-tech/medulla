@@ -1,9 +1,7 @@
 # -*- coding: utf-8; -*-
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# (c) 2007-2010 Mandriva, http://www.mandriva.com/
-#
-# $Id$
+# (c) 2007-2013 Mandriva, http://www.mandriva.com/
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
 #
@@ -22,12 +20,12 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-import logging
-
 from sqlalchemy import Column, String, Text, Integer, Float
-from sqlalchemy.ext.declarative import declarative_base; Base = declarative_base()
+from sqlalchemy.ext.declarative import declarative_base
 from mmc.database.database_helper import DBObj
 
+
+Base = declarative_base()
 
 
 class BackupPCDBObj(DBObj):
@@ -61,6 +59,7 @@ class Backup_servers(Base, BackupPCDBObj):
     # ====== Fields =============================
     entity_uuid = Column(String(50))
     backupserver_url = Column(String(255))
+
 
 class Hosts(Base, BackupPCDBObj):
     # ====== Table name =========================
