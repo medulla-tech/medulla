@@ -27,6 +27,7 @@ from mmc.site import mmcconfdir
 
 reportconfdir = os.path.join(mmcconfdir, 'plugins/report/')
 
+
 class ReportConfig(PluginConfig, DatabaseConfig):
     def __init__(self, name='report', conffile=None):
         if not hasattr(self, 'initdone'):
@@ -50,9 +51,13 @@ class ReportConfig(PluginConfig, DatabaseConfig):
         except (NoOptionError, NoSectionError):
             self.reportTemplate = 'default.xml'
         try:
-            self.reportCSS = self.get('data', 'reportCSS')
-        except (NoOptionError, NoSectionError):
-            self.reportCSS = 'style.css'
+            self.reportCSS = os.path.join(reportconfdir, 'css', self.get('data', 'reportCSS'))
+        except (NoOptionError, NoSectionError, OSError):
+            self.reportCSS = os.path.join(reportconfdir, 'css', 'style.css')
+        try:
+            self.graphCSS = [os.path.join(reportconfdir, 'css', f) for f in self.get('data', 'graphCSS').replace(' ', '').split(',')]
+        except (NoOptionError, NoSectionError, OSError):
+            self.graphCSS = []
         try:
             self.company = self.get('pdfvars', 'company')
         except (NoOptionError, NoSectionError):

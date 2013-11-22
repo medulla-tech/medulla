@@ -31,10 +31,11 @@ from pygal.style import Style
 from os import chmod
 from base64 import b64encode
 import logging
+
 from mmc.plugins.report.config import ReportConfig, reportconfdir
 
 
-class XlsGenerator(object):
+class XLSGenerator(object):
     def __init__(self, path='/tmp/report.xls'):
         self.wbk = xlwt.Workbook()
         self.path = path
@@ -111,7 +112,7 @@ class XlsGenerator(object):
         return self.path
 
 
-class PdfGenerator(object):
+class PDFGenerator(object):
     def __init__(self, path='/tmp/report.pdf', locale={}):
         self.homepage = ''
         self.summary = ''
@@ -356,116 +357,95 @@ class PdfGenerator(object):
         return self.path
 
 
-class SvgGenerator(object):
-    def __init__(self, path='/tmp/graph.png', locale={}):
+class SVGGenerator(object):
+    def __init__(self, path='/tmp/graph.png', locale={}, extra_css=[]):
         self.style = None
         self.chart = None
         self.path = path
         self.locale = locale
         self.config = Config()
         self.config.no_data_text = 'No result found'
-        self.config.no_data_font_size = 20
-        self.config.x_label_rotation = 40
-
-        custom_css = """
-            {{ id }}.title {
-                font-family: "DejaVu Sans", sans-serif;
-                letter-spacing: -1.5px;
-            }
-
-            {{ id }}.legends .legend text {
-                font-family: "DejaVu Sans", sans-serif;
-                letter-spacing: -1.5px;
-            }
-
-            {{ id }}.axis text {
-                font-family: "DejaVu Sans", sans-serif;
-                letter-spacing: -1.5px;
-            }
-
-            {{ id }}.axis text.major {
-                font-family: "DejaVu Sans", sans-serif;
-                letter-spacing: -1.5px;
-            }
-
-            {{ id }}.series text {
-                font-family: "DejaVu Sans", sans-serif;
-                letter-spacing: -1.5px;
-            }
-
-            {{ id }}#tooltip text {
-                font-family: "DejaVu Sans", sans-serif;
-                letter-spacing: -1.5px;
-            }
-        """
-        custom_css_file = '/tmp/pygal_custom_style.css'
-        with open(custom_css_file, 'w') as f:
-            f.write(custom_css)
-        self.config.css.append(custom_css_file)
-
+        self.config.no_data_font_size = 13
+        self.config.x_label_rotation = 45
+        for css in extra_css:
+            self.config.css.append(css)
         if 'STR_NODATA' in self.locale:
             self.config.no_data_text = self.locale['STR_NODATA']
 
-    def _get_bar_style(self):
+    def _get_style(self):
+        colors = ('#fce94f', '#8ae234', '#fcaf3e', '#729fcf', '#e9b96e', '#ad7fa8', '#ef2929',
+                  '#edd400', '#73d216', '#f57900', '#3465a4', '#c17d11', '#75507b', '#cc0000')
+        colors = ('#87CEEB', '#32CD32', '#BA55D3', '#F08080', '#4682B4', '#9ACD32', '#40E0D0',
+                  '#FF69B4', '#F0E68C', '#D2B48C', '#8FBC8B', '#6495ED', '#DDA0DD', '#5F9EA0',
+                  '#FFDAB9', '#FFA07A')
         return Style(
-            background='transparent',
-            plot_background='transparent',
-            foreground='#000',
-            foreground_light='#000',
-            foreground_dark='#000'
-        )
+            background='#fff',
+            plot_background='#f7f7f7',
+            foreground='#333',
+            foreground_light='#555',
+            foreground_dark='#111',
+            opacity='1',
+            opacity_hover='1',
+            transition='500ms ease-in',
+            colors=colors)
 
     def _get_bar_chart(self):
         return pygal.StackedBar(
-            style=self.style,
+            self.config,
+            style=self._get_style(),
             no_data_text=self.config.no_data_text,
             disable_xml_declaration=True,   # for correct svg in web page
             explicit_size=True,
             show_dots=False
-        )
-
-    def _get_line_style(self):
-        return Style(
-            background='transparent',
-            plot_background='transparent',
-            foreground='#000',
-            foreground_light='#000',
-            foreground_dark='#000'
         )
 
     def _get_line_chart(self):
         return pygal.Line(
             self.config,
-            style=self.style,
+            style=self._get_style(),
             disable_xml_declaration=True,   # for correct svg in web page
             explicit_size=True,
             show_dots=False,
         )
 
-    def _get_pie_style(self):
-        return Style(
-            background='transparent',
-            plot_background='transparent',
-            foreground='#000',
-            foreground_light='#000',
-            foreground_dark='#000'
-        )
-
     def _get_pie_chart(self):
         return pygal.Pie(
-            style=self.style,
+            self.config,
+            style=self._get_style(),
             no_data_text=self.config.no_data_text,
             disable_xml_declaration=True,   # for correct svg in web page
             explicit_size=True,
             show_dots=False
         )
 
+    def _filterDatas(self, datas):
+        """
+        Remove items where all values are 0 or None for all periods
+        """
+        values_idx = range(0, len(datas['titles']))
+        values_idx.reverse()
+        periods_idx = range(0, len(datas['dates']))
+        periods_idx.reverse()
+        for value_idx in values_idx:
+            remove = True
+            for period_idx in periods_idx:
+                if datas['values'][period_idx][value_idx] is not None and \
+                        datas['values'][period_idx][value_idx] > 0:
+                    remove = False
+                    break
+            if remove:
+                del datas['titles'][value_idx]
+                for period in datas['values']:
+                    del period[value_idx]
+        return datas
+
     def _feedChart(self, title, datas, type='period'):
+        if type == 'period':
+            datas = self._filterDatas(datas)
         self.chart.title = title
         if type == 'period':
             titles = datas['titles']
             values = datas['values']
-
             self.chart.x_labels = datas['dates']
             for i in xrange(len(titles)):
                 self.chart.add(titles[i], [x[i] for x in values])
@@ -474,43 +454,40 @@ class SvgGenerator(object):
             values = datas['values']
             for x in xrange(len(values)):
                 self.chart.add(values[x][0], values[x][1])
-
         return True
 
     def barChart(self, title, datas):
-        self.style = self._get_bar_style()
         self.chart = self._get_bar_chart()
         self._feedChart(title, datas)
 
     def lineChart(self, title, datas):
-        self.style = self._get_line_style()
         self.chart = self._get_line_chart()
         self._feedChart(title, datas)
 
     def pieChart(self, title, datas):
-        self.style = self._get_pie_style()
         self.chart = self._get_pie_chart()
         self._feedChart(title, datas, type='key_value')
 
     def toXML(self):
         self.chart.config.width = 500
         self.chart.config.height = 280
-
+        self.chart.config.legend_font_size = 11
         self.chart.config.label_font_size = 11
         self.chart.config.major_label_font_size = 11
-        self.chart.config.value_font_size = 8
-        self.chart.config.title_font_size = 16
-
+        self.chart.config.value_font_size = 10
+        self.chart.config.tooltip_font_size = 10
+        self.chart.config.title_font_size = 13
         return self.chart.render()
 
     def toPNG(self):
         self.chart.config.width = 800
         self.chart.config.height = 600
 
-        self.chart.config.label_font_size = 20
-        self.chart.config.major_label_font_size = 20
-        self.chart.config.value_font_size = 16
-        self.chart.config.title_font_size = 32
+        self.chart.config.legend_font_size = 11
+        self.chart.config.label_font_size = 11
+        self.chart.config.major_label_font_size = 11
+        self.chart.config.value_font_size = 10
+        self.chart.config.title_font_size = 16
 
         self.chart.render_to_png(self.path + '.png')
         chmod(self.path + '.png', 0644)

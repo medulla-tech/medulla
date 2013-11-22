@@ -30,16 +30,16 @@ from gettext import bindtextdomain, dgettext as _T
 
 logger = logging.getLogger()
 
-try:
-    from pulse2.managers.location import ComputerLocationManager
-except ImportError:
-    logger.warn("report: I can't load Pulse ComputerLocationManager")
+#try:
+    #from pulse2.managers.location import ComputerLocationManager
+#except ImportError:
+    #logger.warn("report: I can't load Pulse ComputerLocationManager")
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 from mmc.core.tasks import TaskManager
 from mmc.plugins.base import LdapUserGroupControl
 from mmc.plugins.report.config import ReportConfig, reportconfdir
 from mmc.plugins.report.database import ReportDatabase
-from mmc.plugins.report.output import XlsGenerator, PdfGenerator, SvgGenerator
+from mmc.plugins.report.output import XLSGenerator, PDFGenerator, SVGGenerator
 
 VERSION = "0.0.0"
 APIVERSION = "0:1:0"
@@ -49,6 +49,7 @@ localedir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "locale")
 
 TRANSLATE_ATTRS = ("title", "value")
 TRANSLATE_ELEMS = ("homepage", "h1", "h2", "h3", "p", "header", "footer")
+
 
 def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION
@@ -115,7 +116,7 @@ class RpcProxy(RpcProxyI):
         self.config = ReportConfig("report")
 
     def calldb(self, func, *args, **kw):
-        return getattr(ReportDatabase(),func).__call__(*args, **kw)
+        return getattr(ReportDatabase(), func).__call__(*args, **kw)
 
     def get_report_sections(self, lang):
         setup_lang(lang)
@@ -157,14 +158,14 @@ class RpcProxy(RpcProxyI):
         os.chmod(report_path, 511)
         os.chmod(svg_path, 511)
         result = {'sections': []}
-        try:
-            getLocationName = ComputerLocationManager().getLocationName
-            entity_names = dict([(location, getLocationName([location]).decode('utf-8')) for location in entities])
-        except NameError:
-            logger.warn("Pulse ComputerLocationManager() not loaded")
-            entity_names = {}
+        #try:
+            #getLocationName = ComputerLocationManager().getLocationName
+            #entity_names = dict([(location, getLocationName([location]).decode('utf-8')) for location in entities])
+        #except NameError:
+            #logger.warn("Pulse ComputerLocationManager() not loaded")
+            #entity_names = {}
         # Parsing report XML
-        xmltemp = ET.parse(os.path.join(reportconfdir,'templates', self.config.reportTemplate)).getroot()
+        xmltemp = ET.parse(os.path.join(reportconfdir, 'templates', self.config.reportTemplate)).getroot()
         if xmltemp.tag != 'template':
             logger.error('Incorrect XML')
             return False
@@ -180,8 +181,8 @@ class RpcProxy(RpcProxyI):
             '__COMPANY__': self.config.company,
         }
 
-        xls = XlsGenerator(path = xls_path)
-        pdf = PdfGenerator(path = pdf_path, locale = locale)
+        xls = XLSGenerator(path=xls_path)
+        pdf = PDFGenerator(path=pdf_path, locale=locale)
 
         def _hf_format(str):
             """
@@ -203,7 +204,6 @@ class RpcProxy(RpcProxyI):
             else:
                 str = '"' + str + '"'
             return _replace_pdf_vars(str)
-
 
         def _hf_feeder(tag, to_feed):
             """
@@ -262,38 +262,40 @@ class RpcProxy(RpcProxyI):
             result = None
             for x in lst:
                 if x:
-                    if result != None:
+                    if result is not None:
                         result += x
                     else:
                         result = x
             return result
 
         def _periodDict(item_root):
-            data_dict = {'titles' : [], 'dates' : [], 'values' : [] }
+            data_dict = {'titles': [], 'dates': [], 'values': []}
             for date in period:
                 ts_min = int(time.mktime(datetime.strptime(date, "%Y-%m-%d").timetuple()))
                 formatted_date = datetime.fromtimestamp(ts_min).strftime(locale['DATE_FORMAT'])
                 data_dict['dates'].append(formatted_date)
                 data_dict['values'].append([])
 
-            def _fetchSubs(container, parent = None, level = -1):
+            def _fetchSubs(container, parent=None, level=-1):
                 # If no subelements in container, return
-                if len(container) == 0: return []
+                if len(container) == 0:
+                    return []
                 # Adding titles
                 GValues = []
                 for item in container:
-                    if item.tag.lower() != 'item' : continue
+                    if item.tag.lower() != 'item':
+                        continue
                     indicator_name = item.attrib['indicator']
                     #if items and not indicator_name in items: continue
                     if not items or indicator_name in items:
-                        data_dict['titles'].append( '> ' * level + ' ' + _T("templates", item.attrib['title']))
+                        data_dict['titles'].append('> ' * level + ' ' + _T("templates", item.attrib['title']))
                     # temp list to do arithmetic operations
                     values = []
                     for i in xrange(len(period)):
                         date = period[i]
                         # Creating a timestamp range for the specified date
                         ts_min = int(time.mktime(datetime.strptime(date, "%Y-%m-%d").timetuple()))
-                        ts_max = ts_min + 86400 # max = min + 1day (sec)
+                        ts_max = ts_min + 86400   # max = min + 1day (sec)
                         #
                         value = ReportDatabase().get_indicator_value_at_time(indicator_name, ts_min, ts_max, entities)
                         values.append(value)
@@ -306,9 +308,9 @@ class RpcProxy(RpcProxyI):
                     childGValues = _fetchSubs(item, container, level + 1)
                     # Calcating "other" line if indicator type is numeric
                     if ReportDatabase().get_indicator_datatype(indicator_name) == 0 and childGValues:
-                        data_dict['titles'].append( '> ' * (level+1) + ' %s %s' % (locale['STR_OTHER'],  _T("templates", item.attrib['title'])))
+                        data_dict['titles'].append('> ' * (level + 1) + ' %s %s' % (locale['STR_OTHER'], _T("templates", item.attrib['title'])))
                         for i in xrange(len(period)):
-                            child_sum = _sum_None([ l[i] for l in childGValues ])
+                            child_sum = _sum_None([l[i] for l in childGValues])
                             other_value = (values[i] - child_sum) if child_sum else None
                             data_dict['values'][i].append(other_value)
                 return GValues
@@ -316,11 +318,13 @@ class RpcProxy(RpcProxyI):
             return data_dict
 
         def _keyvalueDict(item_root):
-            data_dict = {'headers' : [locale['STR_KEY'], locale['STR_VALUE']], 'values' : []}
-            def _fetchSubs(container, parent = None, level = -1, parent_value = 0):
+            data_dict = {'headers': [locale['STR_KEY'], locale['STR_VALUE']], 'values': []}
+
+            def _fetchSubs(container, parent=None, level=-1, parent_value=0):
                 values = []
                 for item in container:
-                    if item.tag.lower() != 'item' : continue
+                    if item.tag.lower() != 'item':
+                        continue
                     indicator_name = item.attrib['indicator']
                     indicator_label = _T("templates", item.attrib['title'])
                     indicator_value = ReportDatabase().get_indicator_current_value(indicator_name, entities)
@@ -340,7 +344,7 @@ class RpcProxy(RpcProxyI):
                     value = _sum_None([x['value'] for x in indicator_value])
                     values.append(value)
                     if not items or indicator_name in items:
-                        data_dict['values'].append([ '> ' * level + indicator_label, value])
+                        data_dict['values'].append(['> ' * level + indicator_label, value])
 
                     # TODO: Calculate other cols
                     # Fetch this item subitems
@@ -367,7 +371,7 @@ class RpcProxy(RpcProxyI):
             datas = deepcopy(data)
             for line in datas['values']:
                 for td in line:
-                    td = td if td != None else ''
+                    td = td if td is not None else ''
             return datas
 
         # Browsing all childs
@@ -401,7 +405,7 @@ class RpcProxy(RpcProxyI):
                 # else we skip it
                 if not attr1['name'] in sections:
                     continue
-                section_data = {'title' : attr1['title'], 'content': []}
+                section_data = {'title': attr1['title'], 'content': []}
                 # Printing section
                 for level2 in level1:
                     attr2 = translate_attrs(level2.attrib)
@@ -409,10 +413,10 @@ class RpcProxy(RpcProxyI):
                     if level2.tag.lower() == 'table':
                         # printing table items
                         if attr2['type'] == 'period':
-                            data_dict = _periodDict(level2) # period table type
+                            data_dict = _periodDict(level2)   # period table type
                             data_dict_without_none = _period_None_to_empty_str(data_dict)
                         elif attr2['type'] == 'key_value':
-                            data_dict = _keyvalueDict(level2) #key/value type
+                            data_dict = _keyvalueDict(level2)   # key/value type
                             data_dict_without_none = _keyval_None_to_empty_str(data_dict)
 
                         # Push table to PDF and XLS
@@ -420,17 +424,17 @@ class RpcProxy(RpcProxyI):
                         pdf.pushTable(attr2['title'], data_dict)
 
                         # Add table to result dict [to interface]
-                        section_data['content'].append({ \
-                            'type':'table',\
-                            'data': data_dict_without_none,\
-                            'title': attr2['title']\
+                        section_data['content'].append({
+                            'type': 'table',
+                            'data': data_dict_without_none,
+                            'title': attr2['title']
                         })
 
                         if 'chart_type' in attr2:
                             # Generatinng SVG
                             svg_filename = attr1['name'] + '_' + attr2['name']
                             svg_filepath = os.path.join(svg_path, svg_filename)
-                            svg = SvgGenerator(path = svg_filepath, locale = locale)
+                            svg = SVGGenerator(path=svg_filepath, locale=locale, extra_css=self.config.graphCSS)
                             if attr2['chart_type'] == 'line':
                                 svg.lineChart(attr2['title'], data_dict)
                             elif attr2['chart_type'] == 'bar':
@@ -439,10 +443,10 @@ class RpcProxy(RpcProxyI):
                                 svg.pieChart(attr2['title'], data_dict)
                             # Insert SVG into the PDF
                             pdf.pushSVG(svg.toXML())
-                            section_data['content'].append({ \
-                                'type':'chart',\
-                                'svg_path': svg_filepath + '.svg',\
-                                'png_path': svg_filepath + '.png'\
+                            section_data['content'].append({
+                                'type': 'chart',
+                                'svg_path': svg_filepath + '.svg',
+                                'png_path': svg_filepath + '.png'
                             })
                             # Save SVG files (SVG/PNG)
                             svg.save()

@@ -49,7 +49,7 @@
     </homepage>
 
     <section module="glpi" title="Device evolution" name="glpi">
-        <table type="period" title="Number of devices by OS" name="table_os" chart_type="line">
+        <table type="period" title="Number of devices by OS" name="table_os" chart_type="bar">
             <item module="glpi" indicator="os_count" title="OS">
                 <item module="glpi" indicator="os_count_windows" title="Windows">
                     <item module="glpi" indicator="os_count_windows_xp" title="Windows XP" selected="yes">
