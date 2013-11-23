@@ -84,7 +84,7 @@ class exportedReport(object):
         @param os_names: list of OS names to count
         @param exclude_names: list of OS names to exclude
 
-        @return: count of machines
+        @return: count of machines by entity
         """
         if isinstance(os_names, basestring):
             os_names = [os_names]
@@ -98,14 +98,38 @@ class exportedReport(object):
 
         return results
 
-    def getComputerCountByType(self, entities, type):
+    def _getComputerCountByType(self, entities, type):
         result = []
-        type = type.replace("*", "%")
         for entity in self._getEntitiesIds(entities):
             self.ctx.locationsid = [entity]
             type_count = self.db.getMachineByType(self.ctx, type, count=1)
             result.append({'entity_id': toUUID(entity), 'value': type_count})
         return result
+
+    def getComputerCountByTypes(self, entities, types):
+        """
+        Get computer count for types
+
+        @param types: list of computer types to count
+
+        @return: count of machines by entity
+        """
+        if isinstance(types, basestring):
+            types = [types]
+        types = [type.replace("*", "%") for type in types]
+
+        results = []
+        for type in types:
+            type_results = self._getComputerCountByType(entities, type)
+            for type_result in type_results:
+                count = False
+                for result in results:
+                    if type_result['entity_id'] == result['entity_id']:
+                        result['value'] += type_result['value']
+                        count = True
+                if not count:
+                    results.append(type_result)
+        return results
 
     def getComputerCountByState(self, entities, state):
         result = []
