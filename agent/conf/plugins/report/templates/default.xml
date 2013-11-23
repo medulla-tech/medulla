@@ -174,20 +174,19 @@
             <item module="glpi" indicator="type_count" title="types">
                 <item module="glpi" indicator="type_count_desktop" title="Desktop" selected="yes" />
                 <item module="glpi" indicator="type_count_laptop" title="Laptop" selected="yes" />
-                <item module="glpi" indicator="type_count_notebook" title="Notebook" selected="yes" />
-                <item module="glpi" indicator="type_count_portable" title="Portable" selected="yes" />
-                <item module="glpi" indicator="type_count_server_tower" title="Server Tower" selected="yes" />
+                <item module="glpi" indicator="type_count_server" title="Server" selected="yes" />
                 <item module="glpi" indicator="type_count_vm" title="Virtual Machine" selected="yes" />
+                <item module="glpi" indicator="type_count_tablet" title="Tablet" selected="yes" />
             </item>
         </table>
         <!-- State table example
-        <table 
+        <table
             type = "period|key_value"
-            title = "Table title" 
+            title = "Table title"
             name = "table_identifier"
             chart_type = "bar|line|pie"
         >
-            <item 
+            <item
                 module="MODULE_NAME"
                 indicator="indicator_name"
                 title="Indicator label"

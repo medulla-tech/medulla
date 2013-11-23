@@ -891,7 +891,7 @@
         <indicator
             name="type_count"
             label="Types"
-            request_function="getComputerCountByType"
+            request_function="getComputerCountByTypes"
             params="'*'"
             data_type="0"
             active="1"
@@ -900,8 +900,8 @@
         <indicator
             name="type_count_desktop"
             label="Desktop"
-            request_function="getComputerCountByType"
-            params="'Desktop'"
+            request_function="getComputerCountByTypes"
+            params="['Desktop', 'Mini Tower', 'Lunch Box', 'Low Profile Desktop', 'Tower']"
             data_type="0"
             active="1"
             keep_history="1"
@@ -909,35 +909,17 @@
         <indicator
             name="type_count_laptop"
             label="Laptop"
-            request_function="getComputerCountByType"
-            params="'Laptop'"
+            request_function="getComputerCountByTypes"
+            params="['Laptop', 'Notebook', 'Portable', 'Netbook']"
             data_type="0"
             active="1"
             keep_history="1"
         />
         <indicator
-            name="type_count_notebook"
-            label="Notebook"
-            request_function="getComputerCountByType"
-            params="'Notebook'"
-            data_type="0"
-            active="1"
-            keep_history="1"
-        />
-        <indicator
-            name="type_count_portable"
-            label="Portable"
-            request_function="getComputerCountByType"
-            params="'Portable'"
-            data_type="0"
-            active="1"
-            keep_history="1"
-        />
-        <indicator
-            name="type_count_server_tower"
-            label="Server Tower"
-            request_function="getComputerCountByType"
-            params="'Server Tower'"
+            name="type_count_server"
+            label="Server"
+            request_function="getComputerCountByTypes"
+            params="['Server*', 'Serveur*', 'Rack Mount Chassis', 'Main System Chassis']"
             data_type="0"
             active="1"
             keep_history="1"
@@ -945,8 +927,17 @@
         <indicator
             name="type_count_vm"
             label="Virtual Machine"
-            request_function="getComputerCountByType"
-            params="'Virtual Machine'"
+            request_function="getComputerCountByTypes"
+            params="['Virtual Machine', 'Machine virtuelle']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="type_count_tablet"
+            label="Tablet"
+            request_function="getComputerCountByTypes"
+            params="['Tablet', 'Tablette tactile']"
             data_type="0"
             active="1"
             keep_history="1"
